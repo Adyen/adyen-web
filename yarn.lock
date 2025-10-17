@@ -20,6 +20,8 @@ __metadata:
     "@changesets/cli": "npm:2.29.7"
     "@changesets/get-github-info": "npm:0.6.0"
     concurrently: "npm:9.2.1"
+    husky: "npm:9.1.7"
+    lint-staged: "npm:15.5.1"
     prettier: "npm:3.6.2"
   languageName: unknown
   linkType: soft
@@ -116,12 +118,10 @@ __metadata:
     eslint-plugin-storybook: "npm:0.12.0"
     eslint-plugin-testing-library: "npm:7.8.0"
     globals: "npm:16.4.0"
-    husky: "npm:9.1.7"
     jest: "npm:29.7.0"
     jest-environment-jsdom: "npm:29.7.0"
     jest-fixed-jsdom: "npm:^0.0.10"
     jest-mock-extended: "npm:3.0.7"
-    lint-staged: "npm:15.5.1"
     msw: "npm:2.10.4"
     msw-storybook-addon: "npm:2.0.5"
     postcss: "npm:8.5.6"

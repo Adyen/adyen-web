@@ -1,4 +1,4 @@
-import { h } from "preact";
+import { h } from 'preact';
 import { MetaConfiguration, PaymentMethodStoryProps } from '../../../../../storybook/types';
 import { DropinConfiguration } from '../../types';
 import { AdyenCheckout, components } from '../../../..';

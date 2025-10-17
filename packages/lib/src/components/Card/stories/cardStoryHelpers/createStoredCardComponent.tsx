@@ -1,4 +1,4 @@
-import { Fragment, h } from "preact";
+import { Fragment, h } from 'preact';
 import { PaymentMethodStoryProps } from '../../../../../storybook/types';
 import { CardConfiguration } from '../../types';
 import { Checkout } from '../../../../../storybook/components/Checkout';

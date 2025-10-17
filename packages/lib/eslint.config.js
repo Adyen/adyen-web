@@ -22,6 +22,7 @@ const config = tseslint.config(
             'auto/*',
             'postcss.config.cjs',
             'eslint.config.js',
+            'lint-staged.config.js',
             '**/*_*.*'
         ]
     },

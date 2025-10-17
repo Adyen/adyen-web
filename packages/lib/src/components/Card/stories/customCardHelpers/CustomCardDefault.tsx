@@ -1,4 +1,4 @@
-import { Fragment, h } from "preact";
+import { Fragment, h } from 'preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { createAdvancedFlowCheckout } from '../../../../../storybook/helpers/create-advanced-checkout';
 import { createSessionsCheckout } from '../../../../../storybook/helpers/create-sessions-checkout';

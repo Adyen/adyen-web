@@ -1,4 +1,4 @@
-import { h } from "preact";
+import { h } from 'preact';
 import { Checkout } from '../../../storybook/components/Checkout';
 import { ComponentContainer } from '../../../storybook/components/ComponentContainer';
 

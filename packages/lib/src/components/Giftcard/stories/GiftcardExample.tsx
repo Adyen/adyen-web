@@ -1,4 +1,4 @@
-import { h } from "preact";
+import { h } from 'preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { createSessionsCheckout } from '../../../../storybook/helpers/create-sessions-checkout';
 import { createAdvancedFlowCheckout } from '../../../../storybook/helpers/create-advanced-checkout';
@@ -69,7 +69,7 @@ export const GiftcardExample = ({ contextArgs, renderCard = true }: GiftcardExam
                 .then(() => {
                     if (container.current) {
                         element.mount(container.current);
-                    }                        
+                    }
                 })
                 .catch(error => {
                     setErrorMessage(error.toString());
@@ -77,7 +77,8 @@ export const GiftcardExample = ({ contextArgs, renderCard = true }: GiftcardExam
         } else if (element) {
             if (container.current) {
                 element.mount(container.current);
-            }                        }
+            }
+        }
     }, [element]);
 
     return (

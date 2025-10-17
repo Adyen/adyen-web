@@ -27,7 +27,7 @@ export const Default: UpiStory = {
     }
 };
 
-const MANDATE = { amount: '30000', frequency: 'monthly', amountRule: 'max' }
+const MANDATE = { amount: '30000', frequency: 'monthly', amountRule: 'max' };
 
 export const AutoPaySession: UpiStory = {
     render: ({ componentConfiguration, ...checkoutConfig }: PaymentMethodStoryProps<UPIConfiguration>) => (

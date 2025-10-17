@@ -1,4 +1,4 @@
-import { h } from "preact";
+import { h } from 'preact';
 import { PaymentMethodStoryProps } from '../../../../../storybook/types';
 import { CardConfiguration } from '../../types';
 import { Checkout } from '../../../../../storybook/components/Checkout';
