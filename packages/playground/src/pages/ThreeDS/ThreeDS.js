@@ -45,7 +45,6 @@ import { handleOnPaymentCompleted, handleOnPaymentFailed } from '../../handlers'
                     //         isMDFlow: true
                     //     })
                     //     .mount('.threeds-field');
-
                 } else {
                     actions.resolve({
                         resultCode,
