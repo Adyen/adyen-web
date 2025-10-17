@@ -147,8 +147,8 @@
         "preact": "10.22.1"
     },
     "lint-staged": {
-        "*.{js,jsx,ts,tsx}": "eslint",
-        "*.{scss,css}": "stylelint",
+        "*.{js,jsx,ts,tsx}": "eslint --fix",
+        "*.{scss,css}": "stylelint --fix",
         "*.{js,jsx,ts,tsx,html,md}": "prettier --write"
     },
     "msw": {
