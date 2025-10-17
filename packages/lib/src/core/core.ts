@@ -270,7 +270,7 @@ class Core implements ICore {
                         // This is safe because this is internal framework code.
                         (component as unknown as { handleAdditionalDetails: (state: AdditionalDetailsData) => void }).handleAdditionalDetails(state);
                     } else {
-                        this.submitDetails(state.data); // Fallback. Not sure if there are circumstances in which this will ever fire? But we have a unit test for it, just in case.
+                        this.submitDetails(state.data); // Fallback for when onComplete is called without a component instance, which is covered by a unit test.
                     }
                 },
                 ...options // allow for any passed options to overwrite the mapped onComplete fn, above e.g. in the MDFlow we want to use the original, passed, onComplete fn
