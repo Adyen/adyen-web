@@ -28,15 +28,18 @@
         "test:e2e": "yarn workspace @adyen/adyen-web-playwright test:headless",
         "test:automated-a11y": "yarn workspace @adyen/adyen-web-playwright test:automated-a11y:headless",
         "type-check": "yarn workspace @adyen/adyen-web type-check",
-        "prepare": "yarn workspace @adyen/adyen-web prepare",
+        "prepare": "husky",
         "changeset": "changeset",
-        "version": "changeset version"
+        "version": "changeset version",
+        "validate": "yarn workspaces foreach --all run validate"
     },
     "devDependencies": {
         "@adyen/adyen-web-server": "1.0.0",
         "@changesets/cli": "2.29.7",
         "@changesets/get-github-info": "0.6.0",
         "concurrently": "9.2.1",
+        "husky": "9.1.7",
+        "lint-staged": "15.5.1",
         "prettier": "3.6.2"
     },
     "resolutions": {
