@@ -146,11 +146,6 @@
         "classnames": "2.5.1",
         "preact": "10.22.1"
     },
-    "lint-staged": {
-        "*.{js,jsx,ts,tsx}": "eslint --fix",
-        "*.{scss,css}": "stylelint --fix",
-        "*.{js,jsx,ts,tsx,html,md}": "prettier --write"
-    },
     "msw": {
         "workerDirectory": [
             "storybook/public"
