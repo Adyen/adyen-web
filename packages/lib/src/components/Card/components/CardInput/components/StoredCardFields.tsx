@@ -5,6 +5,7 @@ import { useCoreContext } from '../../../../../core/Context/CoreProvider';
 import { StoredCardFieldsProps } from './types';
 import { ENCRYPTED_SECURITY_CODE } from '../../../../internal/SecuredFields/lib/constants';
 import InputText from '../../../../internal/FormFields/InputText';
+import Fieldset from '../../../../internal/FormFields/Fieldset';
 
 export default function StoredCardFields({
     brand,
@@ -34,12 +35,11 @@ export default function StoredCardFields({
 
     return (
         <div className="adyen-checkout__card__form adyen-checkout__card__form--oneClick" aria-label={ariaLabel}>
-            <div className="adyen-checkout__card__exp-cvc adyen-checkout__field-wrapper">
+            <Fieldset classNamesFields={['adyen-checkout__card__exp-cvc']}>
                 {expiryMonth && expiryYear && (
                     <Field
                         label={i18n.get('creditCard.expiryDate.label')}
-                        className="adyen-checkout__field--50"
-                        classNameModifiers={['storedCard']}
+                        classNameModifiers={['col-50', 'storedCard']}
                         name={'expiryDateField'}
                         disabled
                     >
@@ -62,14 +62,13 @@ export default function StoredCardFields({
                         isValid={!!valid.encryptedSecurityCode}
                         label={i18n.get('creditCard.securityCode.label')}
                         onFocusField={onFocusField}
-                        {...(expiryMonth && expiryYear && { className: 'adyen-checkout__field--50' })}
-                        classNameModifiers={['storedCard']}
+                        classNameModifiers={[...(expiryMonth && expiryYear ? ['col-50', 'storedCard'] : ['storedCard'])]}
                         frontCVC={isAmex}
                         showContextualElement={showContextualElement}
                         contextualText={cvcContextualText}
                     />
                 )}
-            </div>
+            </Fieldset>
         </div>
     );
 }
