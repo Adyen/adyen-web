@@ -75,7 +75,7 @@
         "lint-styles": "stylelint  \"**/*.scss\"",
         "styles:fix": "npm run lint-styles -- --fix",
         "lint:fix": "npm run lint -- --fix",
-        "prettier:fix": "prettier \"src/**/*.{js,ts,tsx}\" \"package.json\" --write --loglevel silent",
+        "prettier:fix": "prettier \"src/**/*.{js,jsx,ts,tsx,html,md}\" \"package.json\" --write --loglevel silent",
         "prepublishOnly": "npm run build && rm -rf ./styles && mkdir ./styles && cp ./dist/es/adyen.css ./styles/adyen.css",
         "size": "npm run build && size-limit",
         "validate": "lint-staged"
