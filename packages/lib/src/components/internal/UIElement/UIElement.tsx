@@ -26,11 +26,12 @@ import type {
 import type { IDropin } from '../../Dropin/types';
 import type { NewableComponent } from '../../../core/core.registry';
 import CancelError from '../../../core/Errors/CancelError';
-
-import './UIElement.scss';
 import { AnalyticsEvent } from '../../../core/Analytics/AnalyticsEvent';
 import { AnalyticsLogEvent } from '../../../core/Analytics/AnalyticsLogEvent';
 import { AnalyticsErrorEvent } from '../../../core/Analytics/AnalyticsErrorEvent';
+import { AnalyticsInfoEvent, InfoEventType } from '../../../core/Analytics/AnalyticsInfoEvent';
+
+import './UIElement.scss';
 
 export abstract class UIElement<P extends UIElementProps = UIElementProps> extends BaseElement<P> {
     protected componentRef: any;
@@ -71,6 +72,35 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
 
         this.onEnterKeyPressed = this.onEnterKeyPressed.bind(this);
         this.onActionHandled = this.onActionHandled.bind(this);
+
+        this.createBeforeRenderHook(props);
+    }
+
+    /**
+     * Creates a hook tied to render() method. This hook is called every time render() is invoked.
+     * Currently useful for Analytics
+     *
+     * @param configSetByMerchant
+     * @private
+     */
+    private createBeforeRenderHook(props: P): void {
+        const originalRender = this.render;
+
+        this.render = (...args: any[]) => {
+            this.beforeRender(props);
+            return originalRender.apply(this, args);
+        };
+    }
+
+    protected beforeRender(props: P) {
+        const event = new AnalyticsInfoEvent({
+            type: InfoEventType.rendered,
+            component: this.type,
+            configData: { ...props, showPayButton: this.props.showPayButton },
+            ...(props.oneClick && { isStoredPaymentMethod: true })
+        });
+
+        this.analytics.sendAnalytics(event);
     }
 
     get analytics(): AnalyticsModule {
@@ -79,9 +109,10 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
 
     protected override buildElementProps(componentProps?: P) {
         const globalCoreProps = this.core.getCorePropsForComponent();
-        const isStoredPaymentMethod = !!componentProps?.isStoredPaymentMethod;
 
-        const paymentMethodFromResponse = isStoredPaymentMethod ? {} : this.getPaymentMethodFromPaymentMethodsResponse(componentProps?.type);
+        const paymentMethodFromResponse = componentProps?.storedPaymentMethodId
+            ? this.getStoredPaymentMethodDetails(componentProps.storedPaymentMethodId)
+            : this.getPaymentMethodFromPaymentMethodsResponse(componentProps?.type);
 
         const finalProps = {
             showPayButton: true,
@@ -97,6 +128,10 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
             ...getRegulatoryDefaults(this.core.options.countryCode, isDropin), // regulatory defaults
             ...finalProps // the rest (inc. merchant defined config)
         });
+    }
+
+    protected getStoredPaymentMethodDetails(storedPaymentMethodId: string) {
+        return this.core.paymentMethodsResponse.findStoredPaymentMethod(storedPaymentMethodId);
     }
 
     /**
@@ -181,7 +216,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         try {
             analyticsObj.component = this.getComponent(analyticsObj);
 
-            this.props.modules.analytics.sendAnalytics(analyticsObj);
+            this.analytics.sendAnalytics(analyticsObj);
         } catch (error) {
             console.warn('Failed to submit the analytics event. Error:', error);
         }

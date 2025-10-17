@@ -9,14 +9,14 @@ import type { PaymentMethodsConfiguration } from '../types';
  *
  * @param paymentMethods - Array of PaymentMethod objects from the /paymentMethods response
  * @param paymentMethodsConfiguration - Dropin paymentMethodsConfiguration object
- * @param commonProps - High level props to be passed through to every component
+ * @param dropinProps - High level props to be passed through to every component
  * @param core - Reference to the checkout core object
  */
 const createStoredElements = (
     paymentMethods: StoredPaymentMethod[] = [],
     paymentMethodsConfiguration: PaymentMethodsConfiguration,
-    commonProps,
+    dropinProps,
     core: ICore
-): Promise<UIElement[]> => createElements(paymentMethods, paymentMethodsConfiguration, { ...commonProps, oneClick: true }, core);
+): Promise<UIElement[]> => createElements(paymentMethods, paymentMethodsConfiguration, { ...dropinProps, oneClick: true }, core);
 
 export default createStoredElements;

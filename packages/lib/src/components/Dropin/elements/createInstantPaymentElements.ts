@@ -9,22 +9,17 @@ import type { PaymentMethodsConfiguration } from '../types';
  *
  * @param instantPaymentMethods - Array of PaymentMethod objects from the /paymentMethods response
  * @param paymentMethodsConfiguration - Dropin paymentMethodsConfiguration object
- * @param commonProps - High level props to be passed through to every component
+ * @param dropinProps - High level props to be passed through to every component
  * @param core - Reference to the checkout core object
  */
 const createInstantPaymentElements = (
     instantPaymentMethods: PaymentMethod[] = [],
     paymentMethodsConfiguration: PaymentMethodsConfiguration,
-    commonProps,
+    dropinProps,
     core: ICore
 ): Promise<UIElement[]> => {
     if (instantPaymentMethods.length) {
-        return createElements(
-            instantPaymentMethods,
-            paymentMethodsConfiguration,
-            { ...commonProps, isInstantPayment: true, showPayButton: true },
-            core
-        );
+        return createElements(instantPaymentMethods, paymentMethodsConfiguration, { ...dropinProps, isInstantPayment: true }, core);
     }
     return Promise.resolve([]);
 };

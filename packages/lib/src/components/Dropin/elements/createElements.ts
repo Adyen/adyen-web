@@ -11,20 +11,21 @@ import type { ICore } from '../../../core/types';
  *
  * @param paymentMethods - Array of PaymentMethod objects from the /paymentMethods response
  * @param paymentMethodsConfiguration - Dropin paymentMethodsConfiguration object
- * @param commonProps - High level props to be passed through to every component
+ * @param dropinProps - High level props to be passed through to every component
  * @param core - Reference to the checkout core object
  */
 const createElements = (
     paymentMethods: PaymentMethod[] | StoredPaymentMethod[],
     paymentMethodsConfiguration: PaymentMethodsConfiguration,
-    commonProps,
+    dropinProps,
     core: ICore
 ): Promise<UIElement[]> => {
     const elements = optionallyFilterUpiSubTxVariants(paymentMethods)
         .filter(filterUnsupportedPaymentMethod)
         .map(paymentMethod => {
             const isStoredPaymentMethod = 'isStoredPaymentMethod' in paymentMethod && paymentMethod.isStoredPaymentMethod;
-            const paymentMethodConfigurationProps = getComponentConfiguration(paymentMethod.type, paymentMethodsConfiguration, isStoredPaymentMethod);
+            const paymentMethodConfigFromDropin = getComponentConfiguration(paymentMethod.type, paymentMethodsConfiguration, isStoredPaymentMethod);
+
             const PaymentMethodElement = core.getComponent(paymentMethod.type);
 
             if (!PaymentMethodElement) {
@@ -38,7 +39,16 @@ const createElements = (
                 return null;
             }
 
-            const elementProps = { ...paymentMethod, ...commonProps, ...paymentMethodConfigurationProps };
+            const requiredPropsWhenUsingDropin = {
+                type: paymentMethod.type,
+                ...(isStoredPaymentMethod && { storedPaymentMethodId: paymentMethod.storedPaymentMethodId }),
+                ...dropinProps
+            };
+
+            const elementProps = {
+                ...requiredPropsWhenUsingDropin,
+                ...paymentMethodConfigFromDropin
+            };
 
             return new PaymentMethodElement(core, elementProps);
         })

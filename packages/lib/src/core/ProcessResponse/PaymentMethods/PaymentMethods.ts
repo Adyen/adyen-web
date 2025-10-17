@@ -24,6 +24,10 @@ class PaymentMethods {
     find(paymentMethod: string): PaymentMethod {
         return this.paymentMethods.find(pm => pm.type === this.mapCreatedComponentType(paymentMethod));
     }
+
+    findStoredPaymentMethod(storedPaymentMethodId: string): StoredPaymentMethod {
+        return this.storedPaymentMethods.find(pm => pm.id === storedPaymentMethodId);
+    }
 }
 
 export default PaymentMethods;
