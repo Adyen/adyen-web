@@ -13,13 +13,59 @@
             <form class="merchant-checkout__form" method="post">
                 <div class="merchant-checkout__payment-method">
                     <div class="merchant-checkout__payment-method__header">
+                        <div style="display:flex;justify-content:space-between;">
                         <h2>ThreeDS2</h2>
+                        <span style="margin-top:-3px;font-size:0.9em">
+                            <label for="useCreateFromAction">Handle 3DS2 using <i>createFromAction</i></label>
+                            <input type="checkbox" id="useCreateFromAction" name="useCreateFromAction" value="compat">
+                        </span>
+                        </div>
                     </div>
                     <div class="merchant-checkout__payment-method__details">
-                        <div class="threeds-field"></div>
+                        <div class="card-field"></div>
                     </div>
                 </div>
             </form>
+            <div class="merchant-checkout__form">
+                        <div class="threeds-field"></div>
+                    </div>
+            <div class="info">
+                <h2>3DS2:</h2>
+                <table style="margin-bottom: 0">
+                    <caption>
+                        3DS2 test cards
+                    </caption>
+                    <thead>
+                    <tr>
+                        <th scope="col">3DS2 Action</th>
+                        <th scope="col">Card Number</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>Frictionless flow (mc)</td>
+                        <td>5201281505129736</td>
+                    </tr>
+                    <tr>
+                        <td>Challenge-only flow (visa)</td>
+                        <td>4212345678910006</td>
+                    </tr>
+                    <tr>
+                        <td>Full flow (maestro)</td>
+                        <td>5000550000000029</td>
+                    </tr>
+                    </tbody>
+                </table>
+                <p>
+                    <a
+                            href="https://docs.adyen.com/development-resources/testing/3d-secure-2-authentication/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                    >
+                        More information →
+                    </a>
+                </p>
+                </div>
         </main>
 
         <script type="text/javascript">
