@@ -266,9 +266,8 @@ class Core implements ICore {
                 ...this.getCorePropsForComponent(),
                 onComplete: (state: AdditionalDetailsData, component?: UIElement) => {
                     if (component) {
-                        // We use a type assertion to call the protected 'handleAdditionalDetails' method from the UIElement.
-                        // This is safe because this is internal framework code.
-                        (component as unknown as { handleAdditionalDetails: (state: AdditionalDetailsData) => void }).handleAdditionalDetails(state);
+                        // Use "contract" between core and UIElement to call the 'handleAdditionalDetails' method from the UIElement in a type-safe way
+                        component._internalHandleAdditionalDetails(state);
                     } else {
                         this.submitDetails(state.data); // Fallback for when onComplete is called without a component instance, which is covered by a unit test.
                     }

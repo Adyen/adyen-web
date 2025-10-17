@@ -146,6 +146,14 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         return this;
     }
 
+    /**
+     * Function that can be called for core.ts - forms part of the "contract" between core and UIElement
+     * @param state -
+     */
+    public _internalHandleAdditionalDetails(state: AdditionalDetailsData): void {
+        this.handleAdditionalDetails(state);
+    }
+
     protected onChange(): void {
         this.props.onChange?.(
             {
