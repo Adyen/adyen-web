@@ -247,8 +247,8 @@ class Card extends Base {
         await this.expiryDateInput.pressSequentially(expiryDate, { delay: USER_TYPE_DELAY });
     }
 
-    async fillCvc(cvc: string) {
-        await this.cvcInput.fill(cvc);
+    async fillCvc(cvc: string, options?: { timeout?: number }) {
+        await this.cvcInput.fill(cvc, options);
     }
 
     async typeCvc(cvc: string) {

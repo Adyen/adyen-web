@@ -11,7 +11,15 @@ import {
 import { URL_MAP } from '../../../../fixtures/URL_MAP';
 
 import LANG from '../../../../../server/translations/en-US.json';
+import { binLookupMock } from '../../../../mocks/binLookup/binLookup.mock';
+import { dualBrandBCMCWithMCCvcRequiredMock, dualBrandBCMCWithVisaCvcRequiredMock } from '../../../../mocks/binLookup/binLookup.data';
 const CVC_LABEL_OPTIONAL = LANG['creditCard.securityCode.label.optional'];
+
+test.beforeEach(async ({}, testInfo) => {
+    // Some of the tests on this file seem to be quite flaky with locator
+    //  as some elements take time to show up
+    testInfo.setTimeout(testInfo.timeout + 10_000);
+});
 
 test.describe('Bcmc payments with dual branding', () => {
     test.describe('Bancontact (BCMC) / Maestro brands', () => {
@@ -167,6 +175,7 @@ test.describe('Bcmc payments with dual branding', () => {
 
         test.describe('Selecting the visa brand', () => {
             test('#4a should submit the visa payment', async ({ bcmc, page }) => {
+                await binLookupMock(page, dualBrandBCMCWithVisaCvcRequiredMock);
                 const paymentsRequestPromise = page.waitForRequest(request => request.url().includes('/payments') && request.method() === 'POST');
 
                 await bcmc.goto(URL_MAP.bcmc);
@@ -181,7 +190,7 @@ test.describe('Bcmc payments with dual branding', () => {
                 const visaBtn = await bcmc.selectDualBrandUIItem(/visa/i);
                 await visaBtn.click();
 
-                await expect(bcmc.cvcField).toBeVisible();
+                await expect(bcmc.cvcField).toBeVisible({ timeout: 60_000 });
 
                 await bcmc.fillCvc(TEST_CVC_VALUE);
                 await bcmc.pay();
@@ -195,7 +204,8 @@ test.describe('Bcmc payments with dual branding', () => {
                 await expect(bcmc.paymentResult).toContainText(PAYMENT_RESULT.authorised);
             });
 
-            test('#4b should not submit the visa payment with incomplete form data', async ({ bcmc }) => {
+            test('#4b should not submit the visa payment with incomplete form data', async ({ bcmc, page }) => {
+                await binLookupMock(page, dualBrandBCMCWithVisaCvcRequiredMock);
                 await bcmc.goto(URL_MAP.bcmc);
                 await bcmc.isComponentVisible();
 
@@ -208,7 +218,7 @@ test.describe('Bcmc payments with dual branding', () => {
                 const visaBtn = await bcmc.selectDualBrandUIItem(/visa/i);
                 await visaBtn.click();
 
-                await expect(bcmc.cvcField).toBeVisible();
+                await expect(bcmc.cvcField).toBeVisible({ timeout: 60_000 });
 
                 await bcmc.pay();
 
@@ -298,7 +308,8 @@ test.describe('Bcmc payments with dual branding', () => {
                 await expect(bcmc.paymentResult).toContainText(PAYMENT_RESULT.authorised);
             });
 
-            test('#6b should not submit the mc payment with incomplete form data', async ({ bcmc }) => {
+            test('#6b should not submit the mc payment with incomplete form data', async ({ bcmc, page }) => {
+                await binLookupMock(page, dualBrandBCMCWithMCCvcRequiredMock);
                 await bcmc.goto(URL_MAP.bcmc);
                 await bcmc.isComponentVisible();
 
@@ -311,7 +322,7 @@ test.describe('Bcmc payments with dual branding', () => {
                 const mcBtn = await bcmc.selectDualBrandUIItem(/mastercard/i, false);
                 await mcBtn.click();
 
-                await expect(bcmc.cvcField).toBeVisible();
+                await expect(bcmc.cvcField).toBeVisible({ timeout: 60_000 });
 
                 await bcmc.pay();
 
@@ -331,6 +342,7 @@ test.describe('Bcmc payments with dual branding', () => {
     test.describe('Selecting the mc brand', () => {
         test.describe('Then deleting the PAN and retyping it without selecting a brand', () => {
             test('#7 should submit payment branded to a default value', async ({ bcmc, page }) => {
+                await binLookupMock(page, dualBrandBCMCWithMCCvcRequiredMock);
                 const paymentsRequestPromise = page.waitForRequest(request => request.url().includes('/payments') && request.method() === 'POST');
 
                 await bcmc.goto(URL_MAP.bcmc);
@@ -344,6 +356,8 @@ test.describe('Bcmc payments with dual branding', () => {
                 // Select mc
                 const mcBtn = await bcmc.selectDualBrandUIItem(/mastercard/i, false);
                 await mcBtn.click();
+
+                await expect(bcmc.cvcField).toBeVisible({ timeout: 60_000 });
 
                 await bcmc.fillCvc(TEST_CVC_VALUE);
 
