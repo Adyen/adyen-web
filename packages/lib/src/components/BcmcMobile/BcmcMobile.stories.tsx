@@ -5,7 +5,7 @@ import { ComponentContainer } from '../../../storybook/components/ComponentConta
 import { Checkout } from '../../../storybook/components/Checkout';
 import BcmcMobile from './BcmcMobile';
 
-type PayconicStory = StoryConfiguration<QRLoaderConfiguration>;
+type BcmcMobileStory = StoryConfiguration<QRLoaderConfiguration>;
 
 const meta: MetaConfiguration<QRLoaderConfiguration> = {
     title: 'Components/BcmcMobile'
@@ -17,7 +17,7 @@ const render = ({ componentConfiguration, ...checkoutConfig }: PaymentMethodStor
     </Checkout>
 );
 
-export const Default: PayconicStory = {
+export const Default: BcmcMobileStory = {
     render,
     args: {
         countryCode: 'BE'
