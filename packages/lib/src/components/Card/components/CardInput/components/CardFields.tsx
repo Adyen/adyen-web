@@ -61,7 +61,7 @@ export default function CardFields({
             <AvailableBrands activeBrand={brand} brands={allowedBrands} />
 
             <div
-                className={classNames('adyen-checkout__card__exp-cvc adyen-checkout__fieldset__fields', {
+                className={classNames('adyen-checkout__card__exp-cvc', {
                     'adyen-checkout__card__exp-cvc__exp-date__input--hidden': expiryDatePolicy === DATE_POLICY_HIDDEN
                 })}
             >
