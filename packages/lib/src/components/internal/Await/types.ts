@@ -30,7 +30,6 @@ export interface AwaitComponentProps {
     brandLogo?: string;
     messageText?: string;
     awaitText: string;
-    ref?: any;
     onActionHandled?: (rtnObj: ActionHandledReturnObject) => void;
     pollStatus?: () => Promise<RawPaymentResponse>;
     instructions?: string | (() => h.JSX.Element);

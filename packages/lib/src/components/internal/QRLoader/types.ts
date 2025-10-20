@@ -3,7 +3,6 @@ import { ActionHandledReturnObject, PaymentAmount } from '../../../types/global-
 import Language from '../../../language/Language';
 import { AnalyticsEvent } from '../../../core/Analytics/AnalyticsEvent';
 import { CountdownTime } from '../Countdown/types';
-import { ComponentMethodsRef } from '../../types';
 
 export interface QRLoaderProps {
     delay?: number;
@@ -33,7 +32,6 @@ export interface QRLoaderProps {
     copyBtn?: boolean;
     onActionHandled?: (rtnObj: ActionHandledReturnObject) => void;
     onSubmitAnalytics?: (aObj: AnalyticsEvent) => void;
-    ref?: ComponentMethodsRef | ((ref: QRLoaderProps) => void);
     children?: ComponentChildren;
 }
 

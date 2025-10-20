@@ -35,9 +35,6 @@ class QRLoaderContainer<T extends QRLoaderConfiguration = QRLoaderConfiguration>
             <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
                 <SRPanelProvider srPanel={this.props.modules.srPanel}>
                     <QRLoader
-                        ref={ref => {
-                            this.componentRef = ref;
-                        }}
                         {...this.props}
                         delay={this.props.delay}
                         countdownTime={this.props.countdownTime}

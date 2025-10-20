@@ -24,7 +24,6 @@ describe('Await', () => {
         clientKey: 'test_client_key',
         messageText: 'test',
         paymentData: 'dummy',
-        ref: null,
         type: 'mbway',
         awaitText: 'test'
     };
