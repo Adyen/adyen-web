@@ -12,8 +12,7 @@ class QRLoaderContainer<T extends QRLoaderConfiguration = QRLoaderConfiguration>
         qrCodeImage: '',
         amount: null,
         paymentData: null,
-        onError: () => {},
-        onComplete: () => {}
+        onError: () => {}
     };
 
     formatData() {
