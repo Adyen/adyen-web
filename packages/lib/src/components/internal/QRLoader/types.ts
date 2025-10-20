@@ -37,16 +37,6 @@ export interface QRLoaderProps {
     children?: ComponentChildren;
 }
 
-export interface QRLoaderState {
-    buttonStatus: string;
-    completed: boolean;
-    delay: any;
-    expired: boolean;
-    loading: boolean;
-    percentage: number;
-    timePassed: number;
-}
-
 export interface QRCountdownProps {
     countdownTime: number;
     timeToPay: string;
