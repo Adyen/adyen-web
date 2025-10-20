@@ -264,14 +264,6 @@ class Core implements ICore {
 
             const props = {
                 ...this.getCorePropsForComponent(),
-                onComplete: (state: AdditionalDetailsData, component?: UIElement) => {
-                    if (component) {
-                        // Use "contract" between core and UIElement to call the 'handleAdditionalDetails' method from the UIElement in a type-safe way
-                        component._internalHandleAdditionalDetails(state);
-                    } else {
-                        this.submitDetails(state.data); // Fallback for when onComplete is called without a component instance, which is covered by a unit test.
-                    }
-                },
                 ...options // allow for any passed options to overwrite the mapped onComplete fn, above e.g. in the MDFlow we want to use the original, passed, onComplete fn
             };
 

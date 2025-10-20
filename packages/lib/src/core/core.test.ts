@@ -164,7 +164,7 @@ describe('Core', () => {
             expect(actionComponent.props.showSpinner).not.toBeDefined();
         });
 
-        test('should call onAdditionalDetails with correct params when the action object calls onComplete', async () => {
+        test('should call (global) onAdditionalDetails with correct params when the action object (= a UIElement) calls onComplete', async () => {
             const onAdditionalDetails = jest.fn().mockName('onAdditionalDetailsGlobal');
             const checkout = new AdyenCheckout({
                 countryCode: 'US',
@@ -182,8 +182,9 @@ describe('Core', () => {
                 paymentData: 'test'
             });
 
-            // @ts-ignore onComplete is not public method, although we call it here to test the callback
+            // @ts-ignore onComplete is not public method, although we call it here to test the callback (equates to UIElement.onComplete)
             paymentAction.onComplete({});
+
             expect(onAdditionalDetails).toHaveBeenCalledWith(
                 {},
                 expect.any(BCMCMobileElement),
@@ -194,7 +195,7 @@ describe('Core', () => {
             );
         });
 
-        test('should call submitDetails with correct params when the action object calls onComplete and no component is defined', async () => {
+        test('should call the passed onComplete function instead of onAdditionalDetails', async () => {
             const onAdditionalDetails = jest.fn().mockName('onAdditionalDetailsGlobal');
             const checkout = new AdyenCheckout({
                 countryCode: 'US',
@@ -204,28 +205,28 @@ describe('Core', () => {
             });
             await checkout.initialize();
 
-            // Overwrite core.submitDetails
-            const submitDetails = jest.fn(() => {});
-            checkout.submitDetails = submitDetails;
+            const localOnComplete = jest.fn(() => {});
 
             AdyenCheckout.register(BCMCMobileElement);
-            const paymentAction = checkout.createFromAction({
-                paymentMethodType: 'bcmc_mobile_QR',
-                qrCodeData: 'BEP://1bcmc-test.adyen.com/pal/bep$ZTHYT3DHKVXYJ3GHBQNNCX4M',
-                type: 'qrCode',
-                paymentData: 'test'
-            });
+            const paymentAction = checkout.createFromAction(
+                {
+                    paymentMethodType: 'bcmc_mobile_QR',
+                    qrCodeData: 'BEP://1bcmc-test.adyen.com/pal/bep$ZTHYT3DHKVXYJ3GHBQNNCX4M',
+                    type: 'qrCode',
+                    paymentData: 'test'
+                },
+                {
+                    onComplete: localOnComplete
+                }
+            );
 
-            // @ts-ignore onComplete is not public method - we need to overwrite UIElement.onComplete to test this edge-case scenario
-            paymentAction.onComplete = state => {
-                if (paymentAction.props.onComplete) paymentAction.props.onComplete(state, null);
-            };
-
-            // @ts-ignore onComplete is not public method, although we call it here to test the callback
+            // @ts-ignore onComplete is not public method, although we call it here to test the callback (equates to UIElement.onComplete)
             paymentAction.onComplete({ data: { foo: 'bar' } });
 
-            // should be called with state.data
-            expect(submitDetails).toHaveBeenCalledWith({ foo: 'bar' });
+            // Passed onComplete should be called with state.data
+            expect(localOnComplete).toHaveBeenCalledWith({ data: { foo: 'bar' } }, paymentAction);
+
+            expect(onAdditionalDetails).not.toHaveBeenCalled();
         });
     });
 
@@ -304,7 +305,7 @@ describe('Core', () => {
             expect(ach.props.onAdditionalDetails).toBe(onAdditionalDetailsPaymentMethodConfig);
         });
 
-        test('createFromAction - should use local property instead of global configuration property', async () => {
+        test('createFromAction - should use local onAdditionalDetails property instead of global configuration property', async () => {
             const checkout = new AdyenCheckout({
                 countryCode: 'US',
                 environment: 'test',
@@ -337,6 +338,8 @@ describe('Core', () => {
                     reject: expect.any(Function)
                 })
             );
+
+            expect(onAdditionalDetailsGlobal).not.toHaveBeenCalled();
         });
     });
 

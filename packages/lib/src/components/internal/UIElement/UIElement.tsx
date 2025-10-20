@@ -146,14 +146,6 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         return this;
     }
 
-    /**
-     * Function that can be called for core.ts - forms part of the "contract" between core and UIElement
-     * @param state -
-     */
-    public _internalHandleAdditionalDetails(state: AdditionalDetailsData): void {
-        this.handleAdditionalDetails(state);
-    }
-
     protected onChange(): void {
         this.props.onChange?.(
             {
@@ -309,7 +301,11 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     }
 
     protected onComplete(state): void {
-        if (this.props.onComplete) this.props.onComplete(state, this.elementRef);
+        if (this.props.onComplete) {
+            this.props.onComplete(state, this.elementRef);
+        } else {
+            this.handleAdditionalDetails(state);
+        }
     }
 
     protected handleError = (error: AdyenCheckoutError): void => {

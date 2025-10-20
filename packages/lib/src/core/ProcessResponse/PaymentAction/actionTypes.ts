@@ -20,7 +20,7 @@ const getActionHandler = statusType => {
         const config = {
             ...props,
             ...action,
-            onComplete: props.onComplete,
+            onComplete: props.onComplete ? props.onComplete : undefined,
             onError: props.onError,
             statusType,
             originalAction: action
@@ -57,7 +57,9 @@ const actionTypes = {
             token: action.token,
             paymentData,
             onActionHandled: props.onActionHandled,
-            onComplete: props.onComplete,
+            // Be clear about the fact that we only define an onComplete handler if one has been explicitly passed to the action (which in this case
+            // we only expect to happen for the MDFlow)
+            onComplete: props.onComplete ? props.onComplete : undefined,
             onError: props.onError,
             isDropin: !!props.isDropin,
             loadingContext: props.loadingContext,
