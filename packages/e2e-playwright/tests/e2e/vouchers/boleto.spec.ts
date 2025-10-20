@@ -14,8 +14,7 @@ const test = base.extend<Fixture>({
     }
 });
 
-// TODO: remove skip after the Test Release V1_507 on 16-10-2025
-test.skip('should make a Boleto payment', async ({ boleto }) => {
+test('should make a Boleto payment', async ({ boleto }) => {
     await boleto.personalDetails.firstNameInput.fill('Jose');
     await boleto.personalDetails.lastNameInput.fill('Fernandez');
     await boleto.personalDetails.socialSecurityNumberInput.fill('56861752509');
