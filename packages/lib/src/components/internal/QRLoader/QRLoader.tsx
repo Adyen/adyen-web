@@ -1,4 +1,4 @@
-import { h, ComponentChildren } from 'preact';
+import { h } from 'preact';
 import { useState, useEffect, useRef } from 'preact/hooks';
 import Button from '../Button';
 import Spinner from '../Spinner';
@@ -100,7 +100,7 @@ function QRLoader(props: QRLoaderProps) {
     };
 
     useEffect(() => {
-        checkStatus();
+        void checkStatus();
     }, []);
 
     useEffect(() => {
@@ -126,11 +126,12 @@ function QRLoader(props: QRLoaderProps) {
 
             if (actualTimePassed >= props.throttleTime && currentDelay !== props.throttledInterval) {
                 setDelay(props.throttledInterval);
+                currentDelay = props.throttledInterval;
             }
         };
 
         timeoutRef.current = setTimeout(() => {
-            statusInterval();
+            void statusInterval();
         }, currentDelay);
 
         return () => {
@@ -143,14 +144,13 @@ function QRLoader(props: QRLoaderProps) {
     const qrCodeImage = props.qrCodeData ? `${loadingContext}${QRCODE_URL}${props.qrCodeData}&clientKey=${props.clientKey}` : props.qrCodeImage;
 
     const handleCopy = (complete: () => void) => {
-        copyToClipboard(props.qrCodeData);
+        void copyToClipboard(props.qrCodeData);
 
         const event = new AnalyticsInfoEvent({
             type: ANALYTICS_DOWNLOAD_STR,
             target: ANALYTICS_QR_CODE_DOWNLOAD
         });
         props.onSubmitAnalytics(event);
-
         complete();
     };
 

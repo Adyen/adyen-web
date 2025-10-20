@@ -12,8 +12,6 @@ jest.mock('../../../core/Services/payment-status');
 
 const TIMEOUT_OFFSET = 200;
 
-const wait = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
-
 const renderQRLoader = (props: Partial<QRLoaderProps> = {}) => {
     const srPanel = new SRPanel(global.core);
     const defaultProps: QRLoaderProps = {
