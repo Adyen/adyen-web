@@ -3,17 +3,16 @@ import { useState, useEffect } from 'preact/hooks';
 import classnames from 'classnames';
 import checkPaymentStatus from '../../../core/Services/payment-status';
 import processResponse from '../../../core/ProcessResponse';
-
 import Spinner from '../../internal/Spinner';
 import Countdown from '../Countdown';
 import Button from '../Button';
 import { useCoreContext } from '../../../core/Context/CoreProvider';
 import { AwaitComponentProps, StatusObject } from './types';
-import './Await.scss';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 import ContentSeparator from '../ContentSeparator';
 import useImage from '../../../core/Context/useImage';
 import { CountdownTime } from '../Countdown/types';
+import './Await.scss';
 
 function Await(props: AwaitComponentProps) {
     const { i18n, loadingContext } = useCoreContext();
@@ -50,7 +49,7 @@ function Await(props: AwaitComponentProps) {
                 }
             };
             // Send success response to onAdditionalDetails
-            return props.onComplete(state, this);
+            return props.onComplete(state);
         }
 
         // Show error state & call merchant defined error callback if we do not have a payload
@@ -70,7 +69,7 @@ function Await(props: AwaitComponentProps) {
                 }
             };
             // Send error response to onAdditionalDetails
-            return props.onComplete(state, this);
+            return props.onComplete(state);
         }
 
         // Call merchant defined error callback if we do not have a payload

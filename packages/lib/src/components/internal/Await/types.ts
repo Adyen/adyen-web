@@ -26,7 +26,7 @@ export interface AwaitComponentProps {
     classNameModifiers?: string[];
     clientKey: string;
     onError: (error) => void;
-    onComplete: (status, component) => void;
+    onComplete: (status) => void;
     brandLogo?: string;
     messageText?: string;
     awaitText: string;

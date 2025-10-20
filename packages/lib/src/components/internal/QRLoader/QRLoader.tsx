@@ -58,7 +58,7 @@ function QRLoader(props: QRLoaderProps) {
             }
         };
 
-        props.onComplete(state, this);
+        props.onComplete(state);
     };
 
     const onError = (status: StatusObject): void => {
@@ -72,7 +72,7 @@ function QRLoader(props: QRLoaderProps) {
                     paymentData: props.paymentData
                 }
             };
-            props.onComplete(state, this);
+            props.onComplete(state);
         }
 
         const error = new AdyenCheckoutError('ERROR', 'error result with no payload in response');
