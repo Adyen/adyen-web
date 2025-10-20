@@ -1,4 +1,3 @@
-
 import { h } from 'preact';
 import { MetaConfiguration, StoryConfiguration } from '../../../../storybook/types';
 import { ApplePayConfiguration } from '../../ApplePay/types';
