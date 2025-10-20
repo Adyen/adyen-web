@@ -81,7 +81,7 @@
         "validate:fix": "lint-staged"
     },
     "devDependencies": {
-        "@adyen/bento-design-tokens": "1.10.0",
+        "@adyen/bento-design-tokens": "1.64.1",
         "@eslint/js": "9.35.0",
         "@preact/preset-vite": "2.10.2",
         "@rollup/plugin-commonjs": "28.0.6",
