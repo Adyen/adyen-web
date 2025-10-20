@@ -1,4 +1,4 @@
-import { h } from "preact";
+import { h } from 'preact';
 import { MetaConfiguration, StoryConfiguration } from '../../../storybook/types';
 import { ComponentContainer } from '../../../storybook/components/ComponentContainer';
 import { KlarnaConfiguration } from './types';
