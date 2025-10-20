@@ -33,7 +33,7 @@ export interface QRLoaderProps {
     copyBtn?: boolean;
     onActionHandled?: (rtnObj: ActionHandledReturnObject) => void;
     onSubmitAnalytics?: (aObj: AnalyticsEvent) => void;
-    ref?: ComponentMethodsRef;
+    ref?: ComponentMethodsRef | ((ref: QRLoaderProps) => void);
     children?: ComponentChildren;
 }
 
