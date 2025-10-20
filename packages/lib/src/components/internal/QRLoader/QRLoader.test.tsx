@@ -71,7 +71,7 @@ describe('QRLoader', () => {
 
         // Wait for the onComplete callback to be called
         await waitFor(() => expect(onCompleteMock).toHaveBeenCalledTimes(1));
-        expect(onCompleteMock).toHaveBeenCalledWith(expectedOnCompleteData, expect.any(Object));
+        expect(onCompleteMock).toHaveBeenCalledWith(expectedOnCompleteData);
         expect(onErrorMock).not.toHaveBeenCalled();
 
         expect(screen.getByTestId('Payment Successful')).toBeInTheDocument();

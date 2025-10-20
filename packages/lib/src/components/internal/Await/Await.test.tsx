@@ -109,15 +109,12 @@ describe('Await', () => {
         test('should call onComplete if there is a payload', async () => {
             renderAwait(defaultProps);
             await waitFor(() =>
-                expect(defaultProps.onComplete).toHaveBeenCalledWith(
-                    {
-                        data: {
-                            details: { payload: checkPaymentStatusValue.payload },
-                            paymentData: defaultProps.paymentData
-                        }
-                    },
-                    expect.any(Object)
-                )
+                expect(defaultProps.onComplete).toHaveBeenCalledWith({
+                    data: {
+                        details: { payload: checkPaymentStatusValue.payload },
+                        paymentData: defaultProps.paymentData
+                    }
+                })
             );
         });
 
@@ -147,15 +144,12 @@ describe('Await', () => {
 
         test('should call onComplete if there is a payload', () => {
             renderAwait(defaultProps);
-            expect(defaultProps.onComplete).toHaveBeenCalledWith(
-                {
-                    data: {
-                        details: { payload: checkPaymentStatusValue.payload },
-                        paymentData: defaultProps.paymentData
-                    }
-                },
-                expect.any(Object)
-            );
+            expect(defaultProps.onComplete).toHaveBeenCalledWith({
+                data: {
+                    details: { payload: checkPaymentStatusValue.payload },
+                    paymentData: defaultProps.paymentData
+                }
+            });
         });
     });
 
