@@ -1,15 +1,15 @@
-import { Fragment, h } from "preact";
-import { useEffect, useState } from "preact/hooks";
-import { PayByBankPix } from "../../..";
-import { MetaConfiguration, PaymentMethodStoryProps } from "../../../../../storybook/types";
-import { AdyenCheckout, OnChangeData, UIElement } from "../../../../types";
-import { DropinConfiguration } from "../../types";
-import { handleError, handleFinalState } from "../../../../../storybook/helpers/checkout-handlers";
+import { Fragment, h } from 'preact';
+import { useEffect, useState } from 'preact/hooks';
+import { PayByBankPix } from '../../..';
+import { MetaConfiguration, PaymentMethodStoryProps } from '../../../../../storybook/types';
+import { AdyenCheckout, OnChangeData, UIElement } from '../../../../types';
+import { DropinConfiguration } from '../../types';
+import { handleError, handleFinalState } from '../../../../../storybook/helpers/checkout-handlers';
 import DropinComponent from '../../Dropin';
-import { getSearchParameter } from "../../../../../storybook/utils/get-query-parameters";
-import { Checkout } from "../../../../../storybook/components/Checkout";
-import { ComponentContainer } from "../../../../../storybook/components/ComponentContainer";
-import { mockEnrollmentPayload } from "../../../PayByBankPix/stories/mocks";
+import { getSearchParameter } from '../../../../../storybook/utils/get-query-parameters';
+import { Checkout } from '../../../../../storybook/components/Checkout';
+import { ComponentContainer } from '../../../../../storybook/components/ComponentContainer';
+import { mockEnrollmentPayload } from '../../../PayByBankPix/stories/mocks';
 
 const meta: MetaConfiguration<DropinConfiguration> = {
     title: 'Components/Dropin/PayByBankPix',
