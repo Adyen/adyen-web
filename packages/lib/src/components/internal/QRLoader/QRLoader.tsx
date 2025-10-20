@@ -22,7 +22,7 @@ import './QRLoader.scss';
 
 const QRCODE_URL = 'utility/v1/barcode.png?type=qrCode&data=';
 
-function QRLoader(props: QRLoaderProps & { children?: ComponentChildren }) {
+function QRLoader(props: QRLoaderProps) {
     const { i18n, loadingContext } = useCoreContext();
     const getImage = useImage();
     const [completed, setCompleted] = useState(false);
@@ -43,7 +43,6 @@ function QRLoader(props: QRLoaderProps & { children?: ComponentChildren }) {
 
     const onTimeUp = (): void => {
         setExpired(true);
-        console.log('clear timeout expired', new Date().toISOString());
         clearTimeout(timeoutRef.current);
         props.onError(new AdyenCheckoutError('ERROR', 'Payment Expired'));
     };
@@ -101,19 +100,16 @@ function QRLoader(props: QRLoaderProps & { children?: ComponentChildren }) {
     };
 
     useEffect(() => {
-        console.log('initial check', new Date().toISOString());
         checkStatus();
     }, []);
 
     useEffect(() => {
         if (expired || completed) {
-            console.log({ expired, completed }, new Date().toISOString());
             clearTimeout(timeoutRef.current);
             return;
         }
 
         if (loading) {
-            console.log({ loading }, new Date().toISOString());
             return;
         }
 
@@ -121,7 +117,6 @@ function QRLoader(props: QRLoaderProps & { children?: ComponentChildren }) {
 
         const statusInterval = async (): Promise<void> => {
             const start = performance.now();
-            console.log('status interval', new Date().toISOString());
             await checkStatus();
             const end = performance.now();
             const responseTime = end - start;
@@ -134,13 +129,11 @@ function QRLoader(props: QRLoaderProps & { children?: ComponentChildren }) {
             }
         };
 
-        console.log('setting timeout', new Date().toISOString());
         timeoutRef.current = setTimeout(() => {
             statusInterval();
         }, currentDelay);
 
         return () => {
-            console.log('clear timeout', new Date().toISOString());
             clearTimeout(timeoutRef.current);
         };
     }, [expired, completed, loading, timePassed]);
@@ -178,7 +171,7 @@ function QRLoader(props: QRLoaderProps & { children?: ComponentChildren }) {
                     src={getImage({ imageFolder: 'components/' })(image)}
                     alt={status}
                 />
-                <div className="adyen-checkout__qr-loader__subtitle">{status}</div>
+                <p className="adyen-checkout__qr-loader__subtitle">{status}</p>
             </div>
         );
     };

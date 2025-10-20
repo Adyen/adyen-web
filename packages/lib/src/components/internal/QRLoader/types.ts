@@ -1,8 +1,9 @@
+import { ComponentChildren, h } from 'preact';
 import { ActionHandledReturnObject, PaymentAmount } from '../../../types/global-types';
 import Language from '../../../language/Language';
-import { h } from 'preact';
 import { AnalyticsEvent } from '../../../core/Analytics/AnalyticsEvent';
 import { CountdownTime } from '../Countdown/types';
+import { ComponentMethodsRef } from '../../types';
 
 export interface QRLoaderProps {
     delay?: number;
@@ -32,7 +33,8 @@ export interface QRLoaderProps {
     copyBtn?: boolean;
     onActionHandled?: (rtnObj: ActionHandledReturnObject) => void;
     onSubmitAnalytics?: (aObj: AnalyticsEvent) => void;
-    ref?: any;
+    ref?: ComponentMethodsRef;
+    children?: ComponentChildren;
 }
 
 export interface QRLoaderState {

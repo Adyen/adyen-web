@@ -164,7 +164,7 @@ function Await(props: AwaitComponentProps) {
                 src={getImage({ imageFolder: 'components/' })(image)}
                 alt={i18n.get(message)}
             />
-            <div className="adyen-checkout__await__subtitle adyen-checkout__await__subtitle--result">{i18n.get(message)}</div>
+            <p className="adyen-checkout__await__subtitle adyen-checkout__await__subtitle--result">{i18n.get(message)}</p>
         </div>
     );
 
