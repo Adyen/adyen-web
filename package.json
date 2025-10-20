@@ -31,7 +31,7 @@
         "prepare": "husky",
         "changeset": "changeset",
         "version": "changeset version",
-        "validate": "yarn workspaces foreach --all run validate"
+        "validate:fix": "yarn workspaces foreach --all run validate:fix"
     },
     "devDependencies": {
         "@adyen/adyen-web-server": "1.0.0",

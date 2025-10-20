@@ -78,7 +78,7 @@
         "prettier:fix": "prettier \"src/**/*.{js,jsx,ts,tsx,html,md}\" \"package.json\" --write --loglevel silent",
         "prepublishOnly": "yarn run build && rm -rf ./styles && mkdir ./styles && cp ./dist/es/adyen.css ./styles/adyen.css",
         "size": "yarn run build && size-limit",
-        "validate": "lint-staged"
+        "validate:fix": "lint-staged"
     },
     "devDependencies": {
         "@adyen/bento-design-tokens": "1.10.0",

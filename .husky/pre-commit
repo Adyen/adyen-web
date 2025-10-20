@@ -2,9 +2,9 @@
 if which vagrant; then
   vagrant ssh -- -t <<HEREDOC
   cd workspace/adyen-web;
-  echo "head -n -1 ~/.bashrc > temp.txt ; mv temp.txt ~/.bashrc && yarn run validate;" >> ~/.bashrc;
+  echo "head -n -1 ~/.bashrc > temp.txt ; mv temp.txt ~/.bashrc && yarn run validate:fix;" >> ~/.bashrc;
   /bin/bash -i
 HEREDOC
 else
-  yarn run validate
+  yarn run validate:fix
 fi
