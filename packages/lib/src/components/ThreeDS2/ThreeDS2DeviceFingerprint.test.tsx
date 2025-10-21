@@ -43,4 +43,36 @@ describe('ThreeDS2DeviceFingerprint: calls that generate analytics should produc
 
         expect(view).toBe(null);
     });
+
+    test('ThreeDS2DeviceFingerprint - when onComplete is called handleAdditionalDetails should then be called ', () => {
+        const spy = jest.spyOn(fingerprint, 'handleAdditionalDetails');
+
+        fingerprint.onComplete({ foo: 'bar' });
+
+        expect(spy).toHaveBeenCalledWith({ foo: 'bar' });
+    });
+
+    test('ThreeDS2DeviceFingerprint - when onComplete is called the passed onComplete function should then be called', () => {
+        const onComplete = jest.fn();
+
+        const nuFingerprint = new ThreeDS2DeviceFingerprint(global.core, {
+            onActionHandled: () => {},
+            modules: {
+                analytics: analyticsModule
+            },
+            onError: () => {},
+            showSpinner: null,
+            onComplete
+        });
+
+        // @ts-ignore - spied on function does exist
+        const spy = jest.spyOn(nuFingerprint, 'handleAdditionalDetails');
+
+        // @ts-ignore - we don't care about the type
+        nuFingerprint.onComplete({ foo: 'bar' });
+
+        expect(onComplete).toHaveBeenCalledWith({ foo: 'bar' }, nuFingerprint);
+
+        expect(spy).not.toHaveBeenCalled();
+    });
 });
