@@ -264,7 +264,7 @@ class Core implements ICore {
 
             const props = {
                 ...this.getCorePropsForComponent(),
-                ...options // allow for any passed options to overwrite the mapped onComplete fn, above e.g. in the MDFlow we want to use the original, passed, onComplete fn
+                ...options
             };
 
             return getComponentForAction(this, registry, action, props);

@@ -194,40 +194,6 @@ describe('Core', () => {
                 })
             );
         });
-
-        test('should call the passed onComplete function instead of onAdditionalDetails', async () => {
-            const onAdditionalDetails = jest.fn().mockName('onAdditionalDetailsGlobal');
-            const checkout = new AdyenCheckout({
-                countryCode: 'US',
-                environment: 'test',
-                clientKey: 'test_123456',
-                onAdditionalDetails
-            });
-            await checkout.initialize();
-
-            const localOnComplete = jest.fn(() => {});
-
-            AdyenCheckout.register(BCMCMobileElement);
-            const paymentAction = checkout.createFromAction(
-                {
-                    paymentMethodType: 'bcmc_mobile_QR',
-                    qrCodeData: 'BEP://1bcmc-test.adyen.com/pal/bep$ZTHYT3DHKVXYJ3GHBQNNCX4M',
-                    type: 'qrCode',
-                    paymentData: 'test'
-                },
-                {
-                    onComplete: localOnComplete
-                }
-            );
-
-            // @ts-ignore onComplete is not public method, although we call it here to test the callback (equates to UIElement.onComplete)
-            paymentAction.onComplete({ data: { foo: 'bar' } });
-
-            // Passed onComplete should be called with state.data
-            expect(localOnComplete).toHaveBeenCalledWith({ data: { foo: 'bar' } }, paymentAction);
-
-            expect(onAdditionalDetails).not.toHaveBeenCalled();
-        });
     });
 
     describe('Props order', () => {

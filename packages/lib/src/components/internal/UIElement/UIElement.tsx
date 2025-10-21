@@ -301,11 +301,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     }
 
     protected onComplete(state): void {
-        if (this.props.onComplete) {
-            this.props.onComplete(state, this.elementRef);
-        } else {
-            this.handleAdditionalDetails(state);
-        }
+        this.handleAdditionalDetails(state);
     }
 
     protected handleError = (error: AdyenCheckoutError): void => {
