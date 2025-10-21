@@ -1,0 +1,11 @@
+@use 'styles/index';
+
+.adyen-checkout__card__exp-cvc {
+    @include index.fieldset-fields-layout;
+
+    @include index.screen-s-and-up {
+        .adyen-checkout__field {
+            margin-bottom: 0;
+        }
+    }
+}

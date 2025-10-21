@@ -8,13 +8,22 @@ import { useMemo } from 'preact/hooks';
 interface FieldsetProps {
     children: ComponentChildren;
     classNameModifiers?: string[];
+    classNamesFields?: string[];
     label?: string;
     description?: string;
     readonly?: boolean;
     id?: string;
 }
 
-export default function Fieldset({ children, classNameModifiers = [], label, readonly = false, description, id }: FieldsetProps) {
+export default function Fieldset({
+    children,
+    classNameModifiers: classNameFieldsetModifiers = [],
+    classNamesFields = [],
+    label,
+    readonly = false,
+    description,
+    id
+}: Readonly<FieldsetProps>) {
     const { i18n } = useCoreContext();
 
     const describedById = useMemo(() => getUniqueId('fieldset-description'), []);
@@ -24,7 +33,7 @@ export default function Fieldset({ children, classNameModifiers = [], label, rea
             id={id}
             className={cx([
                 'adyen-checkout__fieldset',
-                ...classNameModifiers.map(m => `adyen-checkout__fieldset--${m}`),
+                ...classNameFieldsetModifiers.map(m => `adyen-checkout__fieldset--${m}`),
                 { 'adyen-checkout__fieldset--readonly': readonly }
             ])}
             aria-describedby={description ? describedById : null}
@@ -35,7 +44,7 @@ export default function Fieldset({ children, classNameModifiers = [], label, rea
                     {i18n.get(description)}
                 </p>
             )}
-            <div className="adyen-checkout__fieldset__fields">{children}</div>
+            <div className={cx('adyen-checkout__fieldset__fields', classNamesFields)}>{children}</div>
         </fieldset>
     );
 }
