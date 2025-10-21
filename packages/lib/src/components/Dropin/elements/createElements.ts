@@ -39,6 +39,8 @@ const createElements = (
                 return null;
             }
 
+            // TODO: Giftcard needs brand + name here
+            // This will impact when there are same tx variants of the same type
             const requiredPropsWhenUsingDropin = {
                 type: paymentMethod.type,
                 ...(isStoredPaymentMethod && { storedPaymentMethodId: paymentMethod.storedPaymentMethodId }),
