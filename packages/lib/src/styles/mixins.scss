@@ -142,7 +142,7 @@ $adyen-checkout-media-query-l-min: 1024px;
 }
 
 @mixin adyen-checkout-text-caption-stronger {
-   @include adyen-checkout-text-caption;
+    @include adyen-checkout-text-caption;
 
     font-weight: token(text-caption-stronger-font-weight);
 }
@@ -173,4 +173,15 @@ $adyen-checkout-media-query-l-min: 1024px;
 
 @mixin adyen-checkout-component-loading {
     pointer-events: none;
+}
+
+@mixin fieldset-fields-layout {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    width: 100%;
+
+    > .adyen-checkout__field:last-of-type {
+        margin-bottom: 0;
+    }
 }
