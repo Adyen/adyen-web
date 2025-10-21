@@ -133,15 +133,13 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
     }
 
     protected override beforeRender(configSetByMerchant: GooglePayConfiguration) {
+        console.log('render');
         const event = new AnalyticsInfoEvent({
             type: InfoEventType.rendered,
             component: this.type,
             configData: { ...configSetByMerchant, showPayButton: this.props.showPayButton },
-            /**
-             * TODO: Check with Leon if we can ditch the high level props. They are already beint sent there
-             */
-            ...(configSetByMerchant.isExpress && { isExpress: this.props.isExpress }),
-            ...(configSetByMerchant.expressPage && { expressPage: this.props.expressPage })
+            ...(configSetByMerchant?.isExpress && { isExpress: this.props.isExpress }),
+            ...(configSetByMerchant?.expressPage && { expressPage: this.props.expressPage })
         });
 
         this.analytics.sendAnalytics(event);

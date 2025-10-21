@@ -1,14 +1,16 @@
 import BacsDD from './BacsDD';
 import { render, screen, within } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
+import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 
 describe('Bacs Direct Debit', () => {
     test('should make a Bacs Direct Debit payment', async () => {
         const user = userEvent.setup();
         const onSubmitMock = jest.fn();
+        const core = setupCoreMock();
 
-        const bacs = new BacsDD(global.core, {
-            modules: { analytics: global.analytics, resources: global.resources },
+        const bacs = new BacsDD(core, {
+            modules: { resources: global.resources },
             i18n: global.i18n,
             onSubmit: onSubmitMock,
             loadingContext: 'https://checkoutshopper-live.adyen.com/checkoutshopper/'
@@ -60,11 +62,12 @@ describe('Bacs Direct Debit', () => {
 
     test('should not let shopper continue if email is wrong or checkboxes are not checked', async () => {
         const user = userEvent.setup();
+        const core = setupCoreMock();
 
         const onSubmitMock = jest.fn();
 
-        const bacs = new BacsDD(global.core, {
-            modules: { analytics: global.analytics, resources: global.resources },
+        const bacs = new BacsDD(core, {
+            modules: { resources: global.resources },
             i18n: global.i18n,
             onSubmit: onSubmitMock,
             loadingContext: 'https://checkoutshopper-live.adyen.com/checkoutshopper/'
@@ -95,10 +98,11 @@ describe('Bacs Direct Debit', () => {
 
     test('should allow shopper to Edit the details before making the payment', async () => {
         const user = userEvent.setup();
+        const core = setupCoreMock();
 
         const onSubmitMock = jest.fn();
 
-        const bacs = new BacsDD(global.core, {
+        const bacs = new BacsDD(core, {
             modules: { analytics: global.analytics, resources: global.resources },
             i18n: global.i18n,
             onSubmit: onSubmitMock,
@@ -175,7 +179,9 @@ describe('Bacs Direct Debit', () => {
     });
 
     test('should render the Voucher when the URL is retrieved', () => {
-        const bacs = new BacsDD(global.core, {
+        const core = setupCoreMock();
+
+        const bacs = new BacsDD(core, {
             modules: { analytics: global.analytics, resources: global.resources },
             i18n: global.i18n,
             loadingContext: 'https://checkoutshopper-live.adyen.com/checkoutshopper/',

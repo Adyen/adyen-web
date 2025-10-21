@@ -32,6 +32,7 @@ import { AnalyticsErrorEvent } from '../../../core/Analytics/AnalyticsErrorEvent
 import { AnalyticsInfoEvent, InfoEventType } from '../../../core/Analytics/AnalyticsInfoEvent';
 
 import './UIElement.scss';
+import { SRPanel } from '../../../core/Errors/SRPanel';
 
 export abstract class UIElement<P extends UIElementProps = UIElementProps> extends BaseElement<P> {
     protected componentRef: any;
@@ -97,7 +98,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
             type: InfoEventType.rendered,
             component: this.type,
             configData: { ...props, showPayButton: this.props.showPayButton },
-            ...(props.oneClick && { isStoredPaymentMethod: true })
+            ...(props?.oneClick && { isStoredPaymentMethod: true })
         });
 
         this.analytics.sendAnalytics(event);
@@ -107,12 +108,18 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         return this.core.modules.analytics;
     }
 
+    get srPanel(): SRPanel {
+        return this.core.modules.srPanel;
+    }
+
     protected override buildElementProps(componentProps?: P) {
         const globalCoreProps = this.core.getCorePropsForComponent();
 
         const paymentMethodFromResponse = componentProps?.storedPaymentMethodId
             ? this.getStoredPaymentMethodDetails(componentProps.storedPaymentMethodId)
             : this.getPaymentMethodFromPaymentMethodsResponse(componentProps?.type);
+
+        console.log(paymentMethodFromResponse);
 
         const finalProps = {
             showPayButton: true,
@@ -128,6 +135,8 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
             ...getRegulatoryDefaults(this.core.options.countryCode, isDropin), // regulatory defaults
             ...finalProps // the rest (inc. merchant defined config)
         });
+
+        console.log(this.props);
     }
 
     protected getStoredPaymentMethodDetails(storedPaymentMethodId: string) {
@@ -215,7 +224,6 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     protected submitAnalytics(analyticsObj: AnalyticsEvent) {
         try {
             analyticsObj.component = this.getComponent(analyticsObj);
-
             this.analytics.sendAnalytics(analyticsObj);
         } catch (error) {
             console.warn('Failed to submit the analytics event. Error:', error);

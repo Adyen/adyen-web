@@ -107,7 +107,13 @@ export class AnalyticsInfoEvent extends AnalyticsEvent {
         const FIELDS_INJECTED_BY_DROPIN = ['elementRef', 'isDropin', 'oneClick', 'storedPaymentMethodId', 'isInstantPayment', 'type'];
         const PII_FIELDS = ['data', 'shopperEmail', 'telephoneNumber'];
 
-        return [...DROPIN_FIELDS, ...FIELDS_INJECTED_BY_DROPIN, ...PII_FIELDS];
+        /**
+         * TODO: Many unit tests are passing 'modules' as props, which leads to circular structure issue
+         * The components must use the 'modules' from the core and not from the props
+         */
+        const UNIT_TEST_FIELDS = ['modules'];
+
+        return [...DROPIN_FIELDS, ...FIELDS_INJECTED_BY_DROPIN, ...PII_FIELDS, ...UNIT_TEST_FIELDS];
     }
     /**
      * Creates a serializable analytics payload from the given config object.

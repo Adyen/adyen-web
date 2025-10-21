@@ -7,12 +7,10 @@ import { hasOwnProperty } from '../../utils/hasOwnProperty';
 import { TxVariants } from '../tx-variants';
 import { ThreeDS2ChallengeConfiguration } from './types';
 import AdyenCheckoutError, { API_ERROR } from '../../core/Errors/AdyenCheckoutError';
-import { ANALYTICS_ERROR_TYPE, Analytics3DS2Errors, ANALYTICS_RENDERED_STR, Analytics3DS2Events } from '../../core/Analytics/constants';
+import { ANALYTICS_ERROR_TYPE, Analytics3DS2Errors, Analytics3DS2Events } from '../../core/Analytics/constants';
 import { CoreProvider } from '../../core/Context/CoreProvider';
 import { ActionHandledReturnObject } from '../../types/global-types';
 import { AnalyticsLogEvent } from '../../core/Analytics/AnalyticsLogEvent';
-import { AnalyticsEvent } from '../../core/Analytics/AnalyticsEvent';
-import { AnalyticsInfoEvent } from '../../core/Analytics/AnalyticsInfoEvent';
 import { AnalyticsErrorEvent } from '../../core/Analytics/AnalyticsErrorEvent';
 
 class ThreeDS2Challenge extends UIElement<ThreeDS2ChallengeConfiguration> {
@@ -24,11 +22,9 @@ class ThreeDS2Challenge extends UIElement<ThreeDS2ChallengeConfiguration> {
         type: THREEDS2_CHALLENGE
     };
 
-    protected submitAnalytics = (aObj: AnalyticsEvent) => {
-        if (aObj instanceof AnalyticsInfoEvent && aObj.type === ANALYTICS_RENDERED_STR) return; // suppress the rendered event (it will have the same timestamp as the "creq sent" event)
-
-        super.submitAnalytics(aObj);
-    };
+    protected beforeRender() {
+        /* Do not send rendered events for ThreeDS2Challenge */
+    }
 
     protected onActionHandled = (rtnObj: ActionHandledReturnObject) => {
         const event = new AnalyticsLogEvent({

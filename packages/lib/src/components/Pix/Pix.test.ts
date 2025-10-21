@@ -2,6 +2,7 @@ import Pix from './Pix';
 import { render, screen, waitFor } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import { NO_CHECKOUT_ATTEMPT_ID } from '../../core/Analytics/constants';
+import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 
 test('should return only payment type if personalDetails is not required', () => {
     const pixElement = new Pix(global.core);
@@ -9,8 +10,10 @@ test('should return only payment type if personalDetails is not required', () =>
 });
 
 test('should show personal details form if enabled', async () => {
+    const core = setupCoreMock();
     const i18n = global.i18n;
-    const pixElement = new Pix(global.core, {
+
+    const pixElement = new Pix(core, {
         personalDetailsRequired: true,
         i18n,
         loadingContext: 'ggg',
@@ -24,8 +27,9 @@ test('should show personal details form if enabled', async () => {
 });
 
 test('should show pay button by default', async () => {
+    const core = setupCoreMock();
     const i18n = global.i18n;
-    const pixElement = new Pix(global.core, { i18n, loadingContext: 'ggg', modules: { resources: global.resources } });
+    const pixElement = new Pix(core, { i18n, loadingContext: 'ggg', modules: { resources: global.resources } });
     render(pixElement.render());
 
     expect(await screen.findByRole('button', { name: 'Continue to pix' })).toBeTruthy();
@@ -34,7 +38,9 @@ test('should show pay button by default', async () => {
 test('should validate Brazil SSN', async () => {
     const user = userEvent.setup();
     const i18n = global.i18n;
-    const pixElement = new Pix(global.core, {
+    const core = setupCoreMock();
+
+    const pixElement = new Pix(core, {
         personalDetailsRequired: true,
         i18n,
         loadingContext: 'ggg',
@@ -63,7 +69,9 @@ test('should validate Brazil SSN', async () => {
 test('should trigger submit when Pay button is pressed', async () => {
     const user = userEvent.setup();
     const i18n = global.i18n;
-    const pixElement = new Pix(global.core, { i18n, loadingContext: 'ggg', modules: { resources: global.resources } });
+    const core = setupCoreMock();
+
+    const pixElement = new Pix(core, { i18n, loadingContext: 'ggg', modules: { resources: global.resources } });
     pixElement.submit = jest.fn();
     render(pixElement.render());
 

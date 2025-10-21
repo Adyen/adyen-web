@@ -1,14 +1,19 @@
 import { render, screen } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import PayByBank from './PayByBank';
+import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 
 test('should return expected data to perform the payment', () => {
-    const payByBankEle = new PayByBank(global.core, { loadingContext: 'test', modules: { resources: global.resources } });
+    const core = setupCoreMock();
+
+    const payByBankEle = new PayByBank(core, { loadingContext: 'test', modules: { resources: global.resources } });
     expect(payByBankEle.formatData()).toEqual({ paymentMethod: { type: 'paybybank' } });
 });
 
 test('should show the pay button by default', async () => {
-    const payByBankEle = new PayByBank(global.core, {
+    const core = setupCoreMock();
+
+    const payByBankEle = new PayByBank(core, {
         name: 'Pay By Bank',
         i18n: global.i18n,
         loadingContext: 'test',
@@ -20,7 +25,9 @@ test('should show the pay button by default', async () => {
 });
 
 test('should hide pay button if property is set to false', () => {
-    const payByBankEle = new PayByBank(global.core, {
+    const core = setupCoreMock();
+
+    const payByBankEle = new PayByBank(core, {
         showPayButton: false,
         i18n: global.i18n,
         loadingContext: 'test',
@@ -32,8 +39,9 @@ test('should hide pay button if property is set to false', () => {
 
 test('should trigger submit when Pay button is pressed', async () => {
     const user = userEvent.setup();
+    const core = setupCoreMock();
 
-    const payByBankEle = new PayByBank(global.core, {
+    const payByBankEle = new PayByBank(core, {
         name: 'Pay By Bank',
         i18n: global.i18n,
         loadingContext: 'test',

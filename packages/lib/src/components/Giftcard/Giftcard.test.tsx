@@ -5,6 +5,7 @@ import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { AnalyticsModule } from '../../types/global-types';
 import { mockDeep } from 'jest-mock-extended';
 import { ANALYTICS_ERROR_TYPE } from '../../core/Analytics/constants';
+import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 
 const flushPromises = () => new Promise(process.nextTick);
 
@@ -98,9 +99,10 @@ describe('Giftcard', () => {
     describe('onBalanceCheck handling', () => {
         test('onBalanceCheck should be called on pay button click', async () => {
             const onBalanceCheck = jest.fn();
+            const core = setupCoreMock();
 
             // mounting and clicking pay button
-            const giftcard = new Giftcard(global.core, {
+            const giftcard = new Giftcard(core, {
                 ...baseProps,
                 onBalanceCheck
             });
@@ -120,9 +122,10 @@ describe('Giftcard', () => {
                 })
             );
             const onOrderRequest = jest.fn();
+            const core = setupCoreMock();
 
             // mounting and clicking pay button
-            const giftcard = new Giftcard(global.core, {
+            const giftcard = new Giftcard(core, {
                 ...baseProps,
                 onBalanceCheck,
                 onOrderRequest
@@ -138,18 +141,17 @@ describe('Giftcard', () => {
 
         test('should send an error event to the analytics if the createOrder call fails for the session flow', async () => {
             const code = 'mockErrorCode';
-            const analytics = mockDeep<AnalyticsModule>();
-            const mockedSendAnalytics = analytics.sendAnalytics as jest.Mock;
             const onBalanceCheck = jest.fn(resolve =>
                 resolve({
                     balance: { value: 500, currency: 'EUR' }
                 })
             );
-            const giftcard = new Giftcard(global.core, {
+            const core = setupCoreMock();
+
+            const giftcard = new Giftcard(core, {
                 ...baseProps,
                 modules: {
-                    ...baseProps.modules,
-                    analytics
+                    ...baseProps.modules
                 },
                 onError: () => {},
                 onBalanceCheck,
@@ -163,8 +165,10 @@ describe('Giftcard', () => {
             render(giftcard.render());
             giftcard.setState({ isValid: true });
             giftcard.balanceCheck();
+
             await flushPromises();
-            expect(mockedSendAnalytics).toHaveBeenCalledWith({
+
+            expect(core.modules.analytics.sendAnalytics).toHaveBeenCalledWith({
                 code,
                 component: 'giftcard',
                 errorType: ANALYTICS_ERROR_TYPE.apiError,
@@ -180,9 +184,10 @@ describe('Giftcard', () => {
                 })
             );
             const onRequiringConfirmation = jest.fn();
+            const core = setupCoreMock();
 
             // mounting and clicking pay button
-            const giftcard = new Giftcard(global.core, {
+            const giftcard = new Giftcard(core, {
                 ...baseProps,
                 onBalanceCheck,
                 onRequiringConfirmation
@@ -208,10 +213,11 @@ describe('Giftcard', () => {
                     balance: { value: 0, currency: 'EUR' }
                 })
             );
+            const core = setupCoreMock();
 
             // mounting and clicking pay button
             const onError = jest.fn();
-            const giftcard = new Giftcard(global.core, {
+            const giftcard = new Giftcard(core, {
                 ...baseProps,
                 onBalanceCheck,
                 onError
@@ -240,9 +246,10 @@ describe('Giftcard', () => {
                 })
             );
             const onSubmit = jest.fn();
+            const core = setupCoreMock();
 
             // mounting and clicking pay button
-            const giftcard = new Giftcard(global.core, {
+            const giftcard = new Giftcard(core, {
                 ...baseProps,
                 onBalanceCheck,
                 onOrderRequest,
@@ -269,9 +276,10 @@ describe('Giftcard', () => {
                 })
             );
             const onSubmit = jest.fn();
+            const core = setupCoreMock();
 
             // mounting and clicking pay button
-            const giftcard = new Giftcard(global.core, {
+            const giftcard = new Giftcard(core, {
                 ...baseProps,
                 order: {
                     orderData: 'mock',
@@ -303,9 +311,10 @@ describe('Giftcard', () => {
             const onRequiringConfirmation = jest.fn(async resolve => {
                 await resolve();
             });
+            const core = setupCoreMock();
 
             // mounting and clicking pay button
-            const giftcard = new Giftcard(global.core, {
+            const giftcard = new Giftcard(core, {
                 ...baseProps,
                 onBalanceCheck,
                 onOrderRequest,
@@ -335,9 +344,10 @@ describe('Giftcard', () => {
             const onOrderRequest = jest.fn(resolve => resolve({}));
             const onSubmit = jest.fn();
             const onRequiringConfirmation = jest.fn((resolve, reject) => reject());
+            const core = setupCoreMock();
 
             // mounting and clicking pay button
-            const giftcard = new Giftcard(global.core, {
+            const giftcard = new Giftcard(core, {
                 ...baseProps,
                 onBalanceCheck,
                 onOrderRequest,
@@ -367,9 +377,10 @@ describe('Giftcard', () => {
             const onOrderRequest = jest.fn(resolve => resolve({}));
             const onSubmit = jest.fn();
             const onRequiringConfirmation = jest.fn(resolve => resolve());
+            const core = setupCoreMock();
 
             // mounting and clicking pay button
-            const giftcard = new Giftcard(global.core, {
+            const giftcard = new Giftcard(core, {
                 ...baseProps,
                 order: {
                     orderData: 'mockOrderData',
@@ -409,9 +420,10 @@ describe('Giftcard', () => {
             const onOrderRequest = jest.fn(resolve => resolve({}));
             const onSubmit = jest.fn();
             const onRequiringConfirmation = jest.fn(resolve => resolve());
+            const core = setupCoreMock();
 
             // mounting and clicking pay button
-            const giftcard = new Giftcard(global.core, {
+            const giftcard = new Giftcard(core, {
                 ...baseProps,
                 order: {
                     orderData: 'mockOrderData',
