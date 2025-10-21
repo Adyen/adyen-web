@@ -6,7 +6,7 @@ import { render } from '@testing-library/preact';
 
 describe('ThreeDS2DeviceFingerprint', () => {
     describe('Analytics', () => {
-        test('should not send "rendered" events', async () => {
+        test('should not send "rendered" events', () => {
             const core = setupCoreMock();
 
             const fingerprintComponent = new ThreeDS2DeviceFingerprint(core, {

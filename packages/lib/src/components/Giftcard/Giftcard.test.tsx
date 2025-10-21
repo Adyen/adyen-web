@@ -2,8 +2,6 @@ import Giftcard from './Giftcard';
 import { render, screen } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
-import { AnalyticsModule } from '../../types/global-types';
-import { mockDeep } from 'jest-mock-extended';
 import { ANALYTICS_ERROR_TYPE } from '../../core/Analytics/constants';
 import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 

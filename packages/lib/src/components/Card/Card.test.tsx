@@ -3,15 +3,23 @@ import { CardElement } from './Card';
 import { render, screen, waitFor } from '@testing-library/preact';
 import { CoreProvider } from '../../core/Context/CoreProvider';
 import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
+import PaymentMethods from '../../core/ProcessResponse/PaymentMethods';
 
 describe('Card', () => {
     describe('formatProps', function () {
-        test.only('should not require a billingAddress if it is a stored card', () => {
-            const card = new CardElement(global.core, {
+        test('should not require a billingAddress if it is a stored card', () => {
+            const core = setupCoreMock({
+                paymentMethodsResponse: new PaymentMethods({
+                    storedPaymentMethods: [{ name: 'Card', type: 'scheme', id: 'test', supportedShopperInteractions: ['Ecommerce'] }]
+                })
+            });
+
+            const card = new CardElement(core, {
                 billingAddressRequired: true,
                 storedPaymentMethodId: 'test',
                 supportedShopperInteractions: ['Ecommerce']
             });
+
             expect(card.props.billingAddressRequired).toBe(false);
             expect(card.props.type).toEqual('scheme');
         });

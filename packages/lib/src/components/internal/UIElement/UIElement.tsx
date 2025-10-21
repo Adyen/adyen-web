@@ -119,8 +119,6 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
             ? this.getStoredPaymentMethodDetails(componentProps.storedPaymentMethodId)
             : this.getPaymentMethodFromPaymentMethodsResponse(componentProps?.type);
 
-        console.log(paymentMethodFromResponse);
-
         const finalProps = {
             showPayButton: true,
             ...globalCoreProps,
@@ -135,8 +133,6 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
             ...getRegulatoryDefaults(this.core.options.countryCode, isDropin), // regulatory defaults
             ...finalProps // the rest (inc. merchant defined config)
         });
-
-        console.log(this.props);
     }
 
     protected getStoredPaymentMethodDetails(storedPaymentMethodId: string) {
