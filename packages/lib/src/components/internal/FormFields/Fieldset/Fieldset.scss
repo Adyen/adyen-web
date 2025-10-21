@@ -46,26 +46,8 @@
     }
 }
 
-.adyen-checkout__fieldset__fields,
-.adyen-checkout__field-group {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    width: 100%;
-}
-
-.adyen-checkout__field-group:last-of-type .adyen-checkout__field {
-    @include index.screen-s-and-up {
-        margin-bottom: 0;
-    }
-
-    &:last-of-type {
-        margin-bottom: 0;
-    }
-}
-
-:not(.adyen-checkout__field-group) > .adyen-checkout__field:last-of-type {
-    margin-bottom: 0;
+.adyen-checkout__fieldset__fields {
+    @include index.fieldset-fields-layout;
 }
 
 .adyen-checkout__fieldset--readonly .adyen-checkout__fieldset__fields {

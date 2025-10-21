@@ -87,6 +87,7 @@ export interface DualBrandingIconProps {
 
 export interface ExpirationDateProps {
     className?: string;
+    classNameModifiers?: string[];
     error?: string;
     filled?: boolean;
     focused?: boolean;
