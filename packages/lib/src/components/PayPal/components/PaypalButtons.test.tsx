@@ -65,6 +65,17 @@ describe('PaypalButtons', () => {
         expect(renderedButtons).toEqual(['paypal', 'credit', 'pay-later', 'venmo']);
     });
 
+    test('should not call paypalRef.Buttons().render for blocked paypal button', () => {
+        jest.clearAllMocks();
+        const buttonPropsMock = mock<PayPalButtonsProps>({
+            paypalRef: paypalRefMock
+        });
+        renderWithCoreProvider(<PaypalButtons {...buttonPropsMock} blockPayPalButton />);
+        // eslint-disable-next-line testing-library/render-result-naming-convention
+        const renderedButtons = getRenderedButtons(paypalRenderMock.mock.calls);
+        expect(renderedButtons).toEqual(['credit', 'pay-later', 'venmo']);
+    });
+
     test('should not call paypalRef.Buttons().render for blocked paypal credit button', () => {
         jest.clearAllMocks();
         const buttonPropsMock = mock<PayPalButtonsProps>({

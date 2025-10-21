@@ -9,6 +9,7 @@ const defaultProps: Partial<PayPalConfiguration> = {
     style: {
         height: 50 // The height of the buttons is set to 50px to align with the default size of our Pay buttons.
     },
+    blockPayPalButton: false,
     blockPayPalCreditButton: false,
     blockPayPalPayLaterButton: false,
     blockPayPalVenmoButton: false
