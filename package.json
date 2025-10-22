@@ -30,7 +30,7 @@
         "type-check": "yarn workspace @adyen/adyen-web type-check",
         "prepare": "husky",
         "changeset": "changeset",
-        "version": "changeset version",
+        "version": "changeset version && yarn install",
         "validate:fix": "yarn workspaces foreach --all run validate:fix"
     },
     "devDependencies": {
