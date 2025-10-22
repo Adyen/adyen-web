@@ -118,7 +118,7 @@ export const CardWith3DS2CreateFromAction = (contextArgs: PaymentMethodStoryProp
             ) : (
                 <div>
                     <div ref={container} id="component-root" className="component-wrapper" />
-                    <div id={'threeDSField'}></div>
+                    <div id={'threeDSField'} className={'threeds2-field'}></div>
                     <div className="info">
                         <h2>3DS2 Test card numbers:</h2>
                         <table style="margin-bottom: 0">
