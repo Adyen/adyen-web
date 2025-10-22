@@ -22,7 +22,6 @@
         "start:storybook": "node start.js storybook"
     },
     "devDependencies": {
-        "cross-env": "^10.0.0",
         "dotenv": "17.2.2",
         "express": "^5.0.0"
     },

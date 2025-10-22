@@ -1,4 +1,10 @@
-import { ThreeDS2FlowObject, FingerPrintData, ThreeDS2DeviceFingerprintConfiguration, FingerprintResolveData } from '../../types';
+import {
+    ThreeDS2FlowObject,
+    FingerPrintData,
+    ThreeDS2DeviceFingerprintConfiguration,
+    FingerprintResolveData,
+    LegacyFingerprintResolveData
+} from '../../types';
 import { ActionHandledReturnObject } from '../../../../types/global-types';
 import { ErrorObject } from '../../../../core/Errors/types';
 import { AnalyticsEvent } from '../../../../core/Analytics/AnalyticsEvent';
@@ -16,7 +22,7 @@ export interface DoFingerprint3DS2State {
 }
 
 export interface PrepareFingerprint3DS2Props extends ThreeDS2DeviceFingerprintConfiguration {
-    onComplete: (data: FingerprintResolveData) => void;
+    onComplete: (data: LegacyFingerprintResolveData | FingerprintResolveData) => void;
     onSubmitAnalytics: (aObj: AnalyticsEvent) => void;
     environment?: string;
     _environmentUrls?: {

@@ -13,7 +13,7 @@ import type {
 } from '../../src/types';
 import type { CheckoutSessionSetupResponse } from '../../src/core/CheckoutSession/types';
 import type { DonationAmount, DonationComponentProps } from '../../src/components/Donation/components/types';
-import type { ShopperDetails } from '../stories/types';
+import type { ShopperDetails } from '../types';
 
 type DonationCampaign = Omit<DonationComponentProps, 'onDonate' | 'onCancel'> & { id: string };
 

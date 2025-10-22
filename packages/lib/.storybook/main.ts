@@ -17,7 +17,7 @@ const certKeyPath = process.env.CERT_KEY_PATH ?? path.resolve(__dirname, 'localh
 const isHttps = process.env.IS_HTTPS === 'true';
 
 const config: StorybookConfig = {
-    stories: ['../storybook/**/*.stories.@(js|jsx|ts|tsx)'],
+    stories: ['../**/*.stories.@(js|jsx|ts|tsx)'],
 
     addons: [
         {

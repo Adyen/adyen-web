@@ -14,7 +14,7 @@ const test = base.extend<Fixture>({
     }
 });
 
-test('should make a Boleto payment', async ({ boleto, page }) => {
+test('should make a Boleto payment', async ({ boleto }) => {
     await boleto.personalDetails.firstNameInput.fill('Jose');
     await boleto.personalDetails.lastNameInput.fill('Fernandez');
     await boleto.personalDetails.socialSecurityNumberInput.fill('56861752509');

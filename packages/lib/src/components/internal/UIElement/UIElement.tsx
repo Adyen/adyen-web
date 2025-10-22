@@ -301,7 +301,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     }
 
     protected onComplete(state): void {
-        if (this.props.onComplete) this.props.onComplete(state, this.elementRef);
+        this.handleAdditionalDetails(state);
     }
 
     protected handleError = (error: AdyenCheckoutError): void => {
@@ -377,8 +377,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
 
         const paymentAction = this.core.createFromAction(action, {
             ...this.elementRef.props,
-            ...props,
-            onAdditionalDetails: this.handleAdditionalDetails
+            ...props
         });
 
         if (paymentAction) {
