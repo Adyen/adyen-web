@@ -23,6 +23,7 @@ const config = tseslint.config(
             'postcss.config.cjs',
             'eslint.config.js',
             'lint-staged.config.js',
+            'analyze-unused-scss.js',
             '**/*_*.*'
         ]
     },

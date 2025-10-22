@@ -1,0 +1,540 @@
+{
+  "unusedClasses": [
+    {
+      "className": "adyen-checkout-await-logo-open-finance",
+      "definedIn": [
+        "src/components/PayByBankPix/components/Enrollment/Enrollment.scss",
+        "src/components/PayByBankPix/components/StoredPayment/StoredPayment.scss"
+      ]
+    },
+    {
+      "className": "adyen-checkout-await-logo-arrow-down",
+      "definedIn": [
+        "src/components/PayByBankPix/components/Enrollment/Enrollment.scss"
+      ]
+    },
+    {
+      "className": "adyen-checkout-await-logo-bank",
+      "definedIn": [
+        "src/components/PayByBankPix/components/Enrollment/Enrollment.scss"
+      ]
+    },
+    {
+      "className": "adyen-checkout__await--paybybank_pix",
+      "definedIn": [
+        "src/components/PayByBankPix/components/Enrollment/components/PayBankBankPixAwait.scss"
+      ]
+    },
+    {
+      "className": "adyen-checkout__voucher-result--paybybank_pix",
+      "definedIn": [
+        "src/components/PayByBankPix/components/StoredPayment/StoredPayment.scss"
+      ]
+    },
+    {
+      "className": "adyen-checkout__card-input__form",
+      "definedIn": [
+        "src/components/Card/components/CardInput/CardInput.scss"
+      ]
+    },
+    {
+      "className": "adyen-checkout__field--storedCard",
+      "definedIn": [
+        "src/components/Card/components/CardInput/CardInput.scss"
+      ]
+    },
+    {
+      "className": "adyen-checkout__fieldset--billingAddress",
+      "definedIn": [
+        "src/components/Card/components/CardInput/CardInput.scss",
+        "src/components/internal/OpenInvoice/OpenInvoice.scss"
+      ]
+    },
+    {
+      "className": "adyen-checkout__field--cardNumber",
+      "definedIn": [
+        "src/components/Card/components/CardInput/CardInput.scss"
+      ]
+    },
+    {
+      "className": "adyen-checkout__field--securityCode",
+      "definedIn": [
+        "src/components/Card/components/CardInput/CardInput.scss"
+      ]
+    },
+    {
+      "className": "adyen-checkout__fieldset--revolving-plan",
+      "definedIn": [
+        "src/components/Card/components/CardInput/CardInput.scss",
+        "src/components/Card/components/CardInput/components/Installments/Installments.scss"
+      ]
+    },
+    {
+      "className": "adyen-checkout__field--revolving-plan-installments",
+      "definedIn": [
+        "src/components/Card/components/CardInput/CardInput.scss"
+      ]
+    },
+    {
+      "className": "adyen-checkout__button--fastlane-info-modal",
+      "definedIn": [
+        "src/components/Card/components/Fastlane/FastlaneSignup.scss"
+      ]
+    },
+    {
+      "className": "secured-fields-si",
+      "definedIn": [
+        "src/components/Card/stories/customCardHelpers/customCard.style.scss"
+      ]
+    },
+    {
+      "className": "adyen-checkout__await--payto",
+      "definedIn": [
+        "src/components/PayTo/components/MandateSummary.scss"
+      ]
+    },
+    {
+      "className": "adyen-checkout__payment-method--paybybank_AIS_DD",
+      "definedIn": [
+        "src/components/PayByBankUS/PayByBankUS.scss"
+      ]
+    },
+    {
+      "className": "adyen-checkout-tooltip-arrow--top",
+      "definedIn": [
+        "src/components/internal/Tooltip/Tooltip.scss"
+      ]
+    },
+    {
+      "className": "adyen-checkout-tooltip-arrow--bottom",
+      "definedIn": [
+        "src/components/internal/Tooltip/Tooltip.scss"
+      ]
+    },
+    {
+      "className": "adyen-checkout__field--sendCopyToEmail",
+      "definedIn": [
+        "src/components/internal/SendCopyToEmail/SendCopyToEmail.scss"
+      ]
+    },
+    {
+      "className": "adyen-checkout__alert-message--error",
+      "definedIn": [
+        "src/components/internal/Alert/Alert.scss"
+      ]
+    },
+    {
+      "className": "adyen-checkout__alert-message--warning",
+      "definedIn": [
+        "src/components/internal/Alert/Alert.scss"
+      ]
+    },
+    {
+      "className": "adyen-checkout__alert-message--info",
+      "definedIn": [
+        "src/components/internal/Alert/Alert.scss",
+        "src/components/UPI/components/UPIComponent/UPIComponent.scss"
+      ]
+    },
+    {
+      "className": "adyen-checkout__alert-message--success",
+      "definedIn": [
+        "src/components/internal/Alert/Alert.scss"
+      ]
+    },
+    {
+      "className": "adyen-checkout__field--separateDeliveryAddress",
+      "definedIn": [
+        "src/components/internal/OpenInvoice/OpenInvoice.scss"
+      ]
+    },
+    {
+      "className": "adyen-checkout__input--separateDeliveryAddress",
+      "definedIn": [
+        "src/components/internal/OpenInvoice/OpenInvoice.scss"
+      ]
+    },
+    {
+      "className": "adyen-checkout__fieldset--phone-input",
+      "definedIn": [
+        "src/components/internal/PhoneInput/PhoneInput.scss"
+      ]
+    },
+    {
+      "className": "adyen-checkout__modal-wrapper--ctp",
+      "definedIn": [
+        "src/components/internal/ClickToPay/components/CtPInfo/CtPInfoModal/CtPInfoModal.scss"
+      ]
+    },
+    {
+      "className": "adyen_checkout-ctp__brand-wrapper--popup",
+      "definedIn": [
+        "src/components/internal/ClickToPay/components/CtPInfo/CtPInfoModal/CtPInfoModal.scss"
+      ]
+    },
+    {
+      "className": "adyen-checkout__iframe--ctpIframe",
+      "definedIn": [
+        "src/components/internal/ClickToPay/components/CtPCards/CtPCards.scss"
+      ]
+    },
+    {
+      "className": "adyen-checkout__iframe--ctpIframe-hidden",
+      "definedIn": [
+        "src/components/internal/ClickToPay/components/CtPCards/CtPCards.scss"
+      ]
+    },
+    {
+      "className": "adyen-checkout__field--otp",
+      "definedIn": [
+        "src/components/internal/ClickToPay/components/CtPOneTimePassword/CtPOneTimePasswordInput/CtPOneTimePasswordInput.scss"
+      ]
+    },
+    {
+      "className": "adyen-checkout__button--section-logout-button",
+      "definedIn": [
+        "src/components/internal/ClickToPay/components/CtPSection/CtPLogoutLink.scss"
+      ]
+    },
+    {
+      "className": "adyen-checkout__button--section-logout-button--disabled",
+      "definedIn": [
+        "src/components/internal/ClickToPay/components/CtPSection/CtPLogoutLink.scss"
+      ]
+    },
+    {
+      "className": "adyen-checkout__field--shopperLogin",
+      "definedIn": [
+        "src/components/internal/ClickToPay/components/CtPLogin/CtPLogin.scss"
+      ]
+    },
+    {
+      "className": "adyen-checkout__button--pay",
+      "definedIn": [
+        "src/components/internal/Button/Button.scss",
+        "src/components/Dropin/stories/dropin/customization.scss",
+        "src/components/UPI/components/UPIComponent/UPIComponent.scss",
+        "src/components/Econtext/components/EcontextInput/EcontextInput.scss"
+      ]
+    },
+    {
+      "className": "adyen-checkout__button--standalone",
+      "definedIn": [
+        "src/components/internal/Button/Button.scss"
+      ]
+    },
+    {
+      "className": "adyen-checkout__button--completed",
+      "definedIn": [
+        "src/components/internal/Button/Button.scss"
+      ]
+    },
+    {
+      "className": "adyen-checkout__field--gender",
+      "definedIn": [
+        "src/components/internal/PersonalDetails/PersonalDetails.scss"
+      ]
+    },
+    {
+      "className": "adyen-checkout__field--issuer-list",
+      "definedIn": [
+        "src/components/internal/IssuerList/IssuerList.scss"
+      ]
+    },
+    {
+      "className": "adyen-checkout__qr-loader--app",
+      "definedIn": [
+        "src/components/internal/Await/Await.scss",
+        "src/components/internal/QRLoader/QRLoader.scss"
+      ]
+    },
+    {
+      "className": "adyen-checkout__radio_group__label--selected",
+      "definedIn": [
+        "src/components/internal/FormFields/RadioGroup/RadioGroup.scss"
+      ]
+    },
+    {
+      "className": "adyen-checkout__radio_group--button",
+      "definedIn": [
+        "src/components/internal/FormFields/RadioGroup/RadioGroup.scss",
+        "src/components/internal/FormFields/RadioGroupExtended/RadioGroupExtended.scss"
+      ]
+    },
+    {
+      "className": "adyen-checkout__dropdown__button-icon--left",
+      "definedIn": [
+        "src/components/internal/FormFields/Select/Select.scss"
+      ]
+    },
+    {
+      "className": "adyen-checkout__dropdown__element--selected",
+      "definedIn": [
+        "src/components/internal/FormFields/Select/Select.scss"
+      ]
+    },
+    {
+      "className": "adyen-checkout__dropdown__element__flag",
+      "definedIn": [
+        "src/components/internal/FormFields/Select/Select.scss"
+      ]
+    },
+    {
+      "className": "adyen-checkout__input--date",
+      "definedIn": [
+        "src/components/internal/FormFields/FormFields.scss"
+      ]
+    },
+    {
+      "className": "adyen-checkout__button--qr-loader",
+      "definedIn": [
+        "src/components/internal/QRLoader/QRLoader.scss"
+      ]
+    },
+    {
+      "className": "adyen-checkout__dropin--loading",
+      "definedIn": [
+        "src/components/Dropin/components/PaymentMethod/InstantPaymentMethods.scss"
+      ]
+    },
+    {
+      "className": "adyen-checkout__button--dropin-show-paymentmethods",
+      "definedIn": [
+        "src/components/Dropin/components/DropinComponent.scss"
+      ]
+    },
+    {
+      "className": "adyen-checkout__button--donate",
+      "definedIn": [
+        "src/components/Donation/Donation.scss"
+      ]
+    },
+    {
+      "className": "adyen-checkout__button--decline",
+      "definedIn": [
+        "src/components/Donation/Donation.scss"
+      ]
+    },
+    {
+      "className": "adyen-checkout__threeds2__challenge-container",
+      "definedIn": [
+        "src/components/ThreeDS2/ThreeDS2.scss"
+      ]
+    },
+    {
+      "className": "adyen-checkout__iframe--threeDSIframe",
+      "definedIn": [
+        "src/components/ThreeDS2/ThreeDS2.scss"
+      ]
+    },
+    {
+      "className": "adyen-checkout__qr-loader--swish",
+      "definedIn": [
+        "src/components/Swish/Swish.scss"
+      ]
+    },
+    {
+      "className": "adyen-checkout__giftcard-result__header",
+      "definedIn": [
+        "src/components/Giftcard/components/GiftcardResult.scss"
+      ]
+    },
+    {
+      "className": "adyen-checkout__giftcard-result__header__title",
+      "definedIn": [
+        "src/components/Giftcard/components/GiftcardResult.scss"
+      ]
+    },
+    {
+      "className": "adyen-checkout__giftcard-result__name",
+      "definedIn": [
+        "src/components/Giftcard/components/GiftcardResult.scss"
+      ]
+    },
+    {
+      "className": "adyen-checkout__voucher-result--boletobancario",
+      "definedIn": [
+        "src/components/Boleto/components/BoletoVoucherResult/BoletoVoucherResult.scss"
+      ]
+    },
+    {
+      "className": "adyen-checkout__segmented-control--upi-margin-bottom",
+      "definedIn": [
+        "src/components/UPI/components/UPIComponent/UPIComponent.scss"
+      ]
+    },
+    {
+      "className": "adyen-checkout__field--vpa",
+      "definedIn": [
+        "src/components/UPI/components/VpaInput/VpaInput.scss"
+      ]
+    },
+    {
+      "className": "adyen-checkout-expand-button--upi-app-item",
+      "definedIn": [
+        "src/components/UPI/components/UPIIntentAppList/UPIIntentAppItem/UPIIntentAppItem.scss"
+      ]
+    },
+    {
+      "className": "adyen-checkout__voucher-result--oxxo",
+      "definedIn": [
+        "src/components/Oxxo/components/OxxoVoucherResult/OxxoVoucherResult.scss"
+      ]
+    }
+  ],
+  "byFile": {
+    "src/components/PayByBankPix/components/Enrollment/Enrollment.scss": [
+      "adyen-checkout-await-logo-arrow-down",
+      "adyen-checkout-await-logo-bank",
+      "adyen-checkout-await-logo-open-finance"
+    ],
+    "src/components/PayByBankPix/components/StoredPayment/StoredPayment.scss": [
+      "adyen-checkout-await-logo-open-finance",
+      "adyen-checkout__voucher-result--paybybank_pix"
+    ],
+    "src/components/PayByBankPix/components/Enrollment/components/PayBankBankPixAwait.scss": [
+      "adyen-checkout__await--paybybank_pix"
+    ],
+    "src/components/Card/components/CardInput/CardInput.scss": [
+      "adyen-checkout__card-input__form",
+      "adyen-checkout__field--cardNumber",
+      "adyen-checkout__field--revolving-plan-installments",
+      "adyen-checkout__field--securityCode",
+      "adyen-checkout__field--storedCard",
+      "adyen-checkout__fieldset--billingAddress",
+      "adyen-checkout__fieldset--revolving-plan"
+    ],
+    "src/components/internal/OpenInvoice/OpenInvoice.scss": [
+      "adyen-checkout__field--separateDeliveryAddress",
+      "adyen-checkout__fieldset--billingAddress",
+      "adyen-checkout__input--separateDeliveryAddress"
+    ],
+    "src/components/Card/components/CardInput/components/Installments/Installments.scss": [
+      "adyen-checkout__fieldset--revolving-plan"
+    ],
+    "src/components/Card/components/Fastlane/FastlaneSignup.scss": [
+      "adyen-checkout__button--fastlane-info-modal"
+    ],
+    "src/components/Card/stories/customCardHelpers/customCard.style.scss": [
+      "secured-fields-si"
+    ],
+    "src/components/PayTo/components/MandateSummary.scss": [
+      "adyen-checkout__await--payto"
+    ],
+    "src/components/PayByBankUS/PayByBankUS.scss": [
+      "adyen-checkout__payment-method--paybybank_AIS_DD"
+    ],
+    "src/components/internal/Tooltip/Tooltip.scss": [
+      "adyen-checkout-tooltip-arrow--bottom",
+      "adyen-checkout-tooltip-arrow--top"
+    ],
+    "src/components/internal/SendCopyToEmail/SendCopyToEmail.scss": [
+      "adyen-checkout__field--sendCopyToEmail"
+    ],
+    "src/components/internal/Alert/Alert.scss": [
+      "adyen-checkout__alert-message--error",
+      "adyen-checkout__alert-message--info",
+      "adyen-checkout__alert-message--success",
+      "adyen-checkout__alert-message--warning"
+    ],
+    "src/components/UPI/components/UPIComponent/UPIComponent.scss": [
+      "adyen-checkout__alert-message--info",
+      "adyen-checkout__button--pay",
+      "adyen-checkout__segmented-control--upi-margin-bottom"
+    ],
+    "src/components/internal/PhoneInput/PhoneInput.scss": [
+      "adyen-checkout__fieldset--phone-input"
+    ],
+    "src/components/internal/ClickToPay/components/CtPInfo/CtPInfoModal/CtPInfoModal.scss": [
+      "adyen-checkout__modal-wrapper--ctp",
+      "adyen_checkout-ctp__brand-wrapper--popup"
+    ],
+    "src/components/internal/ClickToPay/components/CtPCards/CtPCards.scss": [
+      "adyen-checkout__iframe--ctpIframe",
+      "adyen-checkout__iframe--ctpIframe-hidden"
+    ],
+    "src/components/internal/ClickToPay/components/CtPOneTimePassword/CtPOneTimePasswordInput/CtPOneTimePasswordInput.scss": [
+      "adyen-checkout__field--otp"
+    ],
+    "src/components/internal/ClickToPay/components/CtPSection/CtPLogoutLink.scss": [
+      "adyen-checkout__button--section-logout-button",
+      "adyen-checkout__button--section-logout-button--disabled"
+    ],
+    "src/components/internal/ClickToPay/components/CtPLogin/CtPLogin.scss": [
+      "adyen-checkout__field--shopperLogin"
+    ],
+    "src/components/internal/Button/Button.scss": [
+      "adyen-checkout__button--completed",
+      "adyen-checkout__button--pay",
+      "adyen-checkout__button--standalone"
+    ],
+    "src/components/Dropin/stories/dropin/customization.scss": [
+      "adyen-checkout__button--pay"
+    ],
+    "src/components/Econtext/components/EcontextInput/EcontextInput.scss": [
+      "adyen-checkout__button--pay"
+    ],
+    "src/components/internal/PersonalDetails/PersonalDetails.scss": [
+      "adyen-checkout__field--gender"
+    ],
+    "src/components/internal/IssuerList/IssuerList.scss": [
+      "adyen-checkout__field--issuer-list"
+    ],
+    "src/components/internal/Await/Await.scss": [
+      "adyen-checkout__qr-loader--app"
+    ],
+    "src/components/internal/QRLoader/QRLoader.scss": [
+      "adyen-checkout__button--qr-loader",
+      "adyen-checkout__qr-loader--app"
+    ],
+    "src/components/internal/FormFields/RadioGroup/RadioGroup.scss": [
+      "adyen-checkout__radio_group--button",
+      "adyen-checkout__radio_group__label--selected"
+    ],
+    "src/components/internal/FormFields/RadioGroupExtended/RadioGroupExtended.scss": [
+      "adyen-checkout__radio_group--button"
+    ],
+    "src/components/internal/FormFields/Select/Select.scss": [
+      "adyen-checkout__dropdown__button-icon--left",
+      "adyen-checkout__dropdown__element--selected",
+      "adyen-checkout__dropdown__element__flag"
+    ],
+    "src/components/internal/FormFields/FormFields.scss": [
+      "adyen-checkout__input--date"
+    ],
+    "src/components/Dropin/components/PaymentMethod/InstantPaymentMethods.scss": [
+      "adyen-checkout__dropin--loading"
+    ],
+    "src/components/Dropin/components/DropinComponent.scss": [
+      "adyen-checkout__button--dropin-show-paymentmethods"
+    ],
+    "src/components/Donation/Donation.scss": [
+      "adyen-checkout__button--decline",
+      "adyen-checkout__button--donate"
+    ],
+    "src/components/ThreeDS2/ThreeDS2.scss": [
+      "adyen-checkout__iframe--threeDSIframe",
+      "adyen-checkout__threeds2__challenge-container"
+    ],
+    "src/components/Swish/Swish.scss": [
+      "adyen-checkout__qr-loader--swish"
+    ],
+    "src/components/Giftcard/components/GiftcardResult.scss": [
+      "adyen-checkout__giftcard-result__header",
+      "adyen-checkout__giftcard-result__header__title",
+      "adyen-checkout__giftcard-result__name"
+    ],
+    "src/components/Boleto/components/BoletoVoucherResult/BoletoVoucherResult.scss": [
+      "adyen-checkout__voucher-result--boletobancario"
+    ],
+    "src/components/UPI/components/VpaInput/VpaInput.scss": [
+      "adyen-checkout__field--vpa"
+    ],
+    "src/components/UPI/components/UPIIntentAppList/UPIIntentAppItem/UPIIntentAppItem.scss": [
+      "adyen-checkout-expand-button--upi-app-item"
+    ],
+    "src/components/Oxxo/components/OxxoVoucherResult/OxxoVoucherResult.scss": [
+      "adyen-checkout__voucher-result--oxxo"
+    ]
+  }
+}
