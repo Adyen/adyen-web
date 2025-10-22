@@ -6,12 +6,10 @@ import { existy } from '../../utils/commonUtils';
 import { TxVariants } from '../tx-variants';
 import { ThreeDS2DeviceFingerprintConfiguration } from './types';
 import AdyenCheckoutError, { API_ERROR } from '../../core/Errors/AdyenCheckoutError';
-import { ANALYTICS_ERROR_TYPE, Analytics3DS2Errors, ANALYTICS_RENDERED_STR, Analytics3DS2Events } from '../../core/Analytics/constants';
+import { ANALYTICS_ERROR_TYPE, Analytics3DS2Errors, Analytics3DS2Events } from '../../core/Analytics/constants';
 import { THREEDS2_FINGERPRINT, THREEDS2_FINGERPRINT_ERROR, THREEDS2_FULL } from './constants';
 import { ActionHandledReturnObject } from '../../types/global-types';
 import { AnalyticsLogEvent } from '../../core/Analytics/AnalyticsLogEvent';
-import { AnalyticsEvent } from '../../core/Analytics/AnalyticsEvent';
-import { AnalyticsInfoEvent } from '../../core/Analytics/AnalyticsInfoEvent';
 import { AnalyticsErrorEvent } from '../../core/Analytics/AnalyticsErrorEvent';
 
 class ThreeDS2DeviceFingerprint extends UIElement<ThreeDS2DeviceFingerprintConfiguration> {
@@ -24,11 +22,9 @@ class ThreeDS2DeviceFingerprint extends UIElement<ThreeDS2DeviceFingerprintConfi
 
     private callSubmit3DS2Fingerprint = callSubmit3DS2Fingerprint.bind(this); // New 3DS2 flow
 
-    protected submitAnalytics = (aObj: AnalyticsEvent) => {
-        if (aObj instanceof AnalyticsInfoEvent && aObj.type === ANALYTICS_RENDERED_STR) return; // suppress the rendered event (it will have the same timestamp as the "threeDSMethodData sent" event)
-
-        super.submitAnalytics(aObj);
-    };
+    protected beforeRender() {
+        /* Do not send rendered events for ThreeDS2DeviceFingerprint */
+    }
 
     protected onActionHandled = (rtnObj: ActionHandledReturnObject) => {
         const event = new AnalyticsLogEvent({

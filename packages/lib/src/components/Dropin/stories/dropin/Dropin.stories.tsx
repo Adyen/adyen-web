@@ -5,7 +5,7 @@ import { ComponentContainer } from '../../../../../storybook/components/Componen
 import { DropinConfiguration } from '../../types';
 import { Checkout } from '../../../../../storybook/components/Checkout';
 import { getComponentConfigFromUrl } from '../../../../../storybook/utils/get-configuration-from-url';
-import { StoredPaymentMethod } from '../../../../types/global-types';
+import { RawStoredPaymentMethod } from '../../../../types/global-types';
 import DropinComponent from '../../Dropin';
 import './customization.scss';
 
@@ -88,7 +88,7 @@ export const OnlySavedACH: DropinStory = {
                             new DropinComponent(checkout, {
                                 ...componentConfiguration,
                                 showPaymentMethods: false,
-                                filterStoredPaymentMethods: (storedPaymentMethods: StoredPaymentMethod[]) =>
+                                filterStoredPaymentMethods: (storedPaymentMethods: RawStoredPaymentMethod[]) =>
                                     storedPaymentMethods.filter(pm => pm.type === 'ach')
                             })
                         }

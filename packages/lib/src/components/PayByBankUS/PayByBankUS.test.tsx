@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/preact';
 import PayByBankUS from './PayByBankUS';
 import userEvent from '@testing-library/user-event';
+import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 
 describe('PayByBank US', () => {
     let onSubmitMock;
@@ -12,7 +13,9 @@ describe('PayByBank US', () => {
     });
 
     test('should render payment description by default', async () => {
-        const pbb = new PayByBankUS(global.core, {
+        const core = setupCoreMock();
+
+        const pbb = new PayByBankUS(core, {
             i18n: global.i18n,
             loadingContext: 'test',
             modules: { resources: global.resources }
@@ -24,7 +27,9 @@ describe('PayByBank US', () => {
     });
 
     test('should render redirect button by default', async () => {
-        const pbb = new PayByBankUS(global.core, {
+        const core = setupCoreMock();
+
+        const pbb = new PayByBankUS(core, {
             onSubmit: onSubmitMock,
             i18n: global.i18n,
             loadingContext: 'test',
@@ -41,7 +46,9 @@ describe('PayByBank US', () => {
     });
 
     test('should not render pay button if showPayButton is false', () => {
-        const pbb = new PayByBankUS(global.core, {
+        const core = setupCoreMock();
+
+        const pbb = new PayByBankUS(core, {
             onSubmit: onSubmitMock,
             i18n: global.i18n,
             loadingContext: 'test',
@@ -58,7 +65,9 @@ describe('PayByBank US', () => {
     });
 
     test('should not show disclaimer if is stored payment method', () => {
-        const pbb = new PayByBankUS(global.core, {
+        const core = setupCoreMock();
+
+        const pbb = new PayByBankUS(core, {
             storedPaymentMethodId: 'MOCK_ID',
             i18n: global.i18n,
             loadingContext: 'test',
@@ -71,7 +80,9 @@ describe('PayByBank US', () => {
     });
 
     test('should no show payButton with label Pay... if is stored payment method', () => {
-        const pbb = new PayByBankUS(global.core, {
+        const core = setupCoreMock();
+
+        const pbb = new PayByBankUS(core, {
             storedPaymentMethodId: 'MOCK_ID',
             i18n: global.i18n,
             loadingContext: 'test',
@@ -83,7 +94,9 @@ describe('PayByBank US', () => {
     });
 
     test('should use label instead of payment method name if stored payment', () => {
-        const pbb = new PayByBankUS(global.core, {
+        const core = setupCoreMock();
+
+        const pbb = new PayByBankUS(core, {
             storedPaymentMethodId: 'MOCK_ID',
             label: 'Label mock',
             i18n: global.i18n,

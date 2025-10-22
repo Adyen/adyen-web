@@ -3,7 +3,6 @@ import UIElement from '../internal/UIElement/UIElement';
 import defaultProps from './defaultProps';
 import DropinComponent from '../../components/Dropin/components/DropinComponent';
 import { CoreProvider } from '../../core/Context/CoreProvider';
-import { getCommonProps } from './components/utils';
 import { createElements, createStoredElements } from './elements';
 import createInstantPaymentElements from './elements/createInstantPaymentElements';
 import { hasOwnProperty } from '../../utils/hasOwnProperty';
@@ -123,20 +122,23 @@ class DropinElement extends UIElement<DropinConfiguration> implements IDropin {
             instantPaymentTypes
         );
 
-        const commonProps = getCommonProps({ ...this.props, elementRef: this.elementRef });
+        const dropinProps = {
+            elementRef: this.elementRef,
+            isDropin: true
+        };
 
-        const elements = showPaymentMethods ? createElements(paymentMethods, paymentMethodsConfiguration, commonProps, this.core) : [];
-        const instantPaymentElements = createInstantPaymentElements(instantPaymentMethods, paymentMethodsConfiguration, commonProps, this.core);
+        const elements = showPaymentMethods ? createElements(paymentMethods, paymentMethodsConfiguration, dropinProps, this.core) : [];
+        const instantPaymentElements = createInstantPaymentElements(instantPaymentMethods, paymentMethodsConfiguration, dropinProps, this.core);
         const storedElements = showStoredPaymentMethods
             ? createStoredElements(
                   this.props.filterStoredPaymentMethods?.(storedPaymentMethods) ?? storedPaymentMethods,
                   paymentMethodsConfiguration,
-                  commonProps,
+                  dropinProps,
                   this.core
               )
             : [];
         const fastlanePaymentElement = fastlanePaymentMethod
-            ? createElements([fastlanePaymentMethod], paymentMethodsConfiguration, commonProps, this.core)
+            ? createElements([fastlanePaymentMethod], paymentMethodsConfiguration, dropinProps, this.core)
             : [];
 
         return [storedElements, elements, instantPaymentElements, fastlanePaymentElement];

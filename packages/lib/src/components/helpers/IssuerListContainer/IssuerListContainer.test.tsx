@@ -2,9 +2,12 @@ import { h } from 'preact';
 import IssuerListContainer from './IssuerListContainer';
 import { render, screen, waitFor } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
+import { setupCoreMock } from '../../../../config/testMocks/setup-core-mock';
 
 describe('IssuerListContainer: Multiple instances focus behavior', () => {
     test('Pressing Continue button on second IssuerListContainer should focus on that specific IssuerList input', async () => {
+        const core = setupCoreMock();
+
         const items = [
             { name: 'Issuer 1', id: '1' },
             { name: 'Issuer 2', id: '2' },
@@ -12,7 +15,7 @@ describe('IssuerListContainer: Multiple instances focus behavior', () => {
         ];
 
         // Create two IssuerListContainer instances
-        const issuerListContainer1 = new IssuerListContainer(global.core, {
+        const issuerListContainer1 = new IssuerListContainer(core, {
             issuers: items,
             showPayButton: true,
             i18n: global.i18n,
@@ -20,7 +23,7 @@ describe('IssuerListContainer: Multiple instances focus behavior', () => {
             modules: { resources: global.resources, srPanel: global.srPanel }
         });
 
-        const issuerListContainer2 = new IssuerListContainer(global.core, {
+        const issuerListContainer2 = new IssuerListContainer(core, {
             issuers: items,
             showPayButton: true,
             i18n: global.i18n,

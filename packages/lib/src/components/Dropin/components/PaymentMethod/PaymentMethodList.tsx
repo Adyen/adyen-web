@@ -3,7 +3,7 @@ import getProp from '../../../../utils/getProp';
 import UIElement from '../../../internal/UIElement/UIElement';
 import { Order, OrderStatus } from '../../../../types/global-types';
 import OrderPaymentMethods from './OrderPaymentMethods';
-import InstantPaymentMethods from './InstantPaymentMethods';
+import { InstantPaymentMethods } from './InstantPaymentMethods';
 import { useCoreContext } from '../../../../core/Context/CoreProvider';
 import { useBrandLogoConfiguration } from './useBrandLogoConfiguration';
 import PaymentMethodsContainer, { PaymentMethodsContainerProps } from './PaymentMethodsContainer';

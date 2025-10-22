@@ -8,18 +8,12 @@ import collectBrowserInfo from '../../utils/browserInfo';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { TxVariants } from '../tx-variants';
 import { sanitizeResponse, verifyPaymentDidNotFail } from '../internal/UIElement/utils';
-import {
-    ANALYTICS_EXPRESS_PAGES_ARRAY,
-    ANALYTICS_INSTANT_PAYMENT_BUTTON,
-    ANALYTICS_RENDERED_STR,
-    ANALYTICS_SELECTED_STR
-} from '../../core/Analytics/constants';
+import { ANALYTICS_INSTANT_PAYMENT_BUTTON, ANALYTICS_SELECTED_STR } from '../../core/Analytics/constants';
 
-import type { AddressData, BrowserInfo, PaymentMethod, PaymentResponseData, RawPaymentResponse } from '../../types/global-types';
+import type { AddressData, BrowserInfo, RawPaymentMethod, PaymentResponseData, RawPaymentResponse } from '../../types/global-types';
 import type { GooglePayConfiguration } from './types';
 import type { ICore } from '../../core/types';
-import { AnalyticsInfoEvent } from '../../core/Analytics/AnalyticsInfoEvent';
-import { AnalyticsEvent } from '../../core/Analytics/AnalyticsEvent';
+import { AnalyticsInfoEvent, InfoEventType } from '../../core/Analytics/AnalyticsInfoEvent';
 import { mapGooglePayBrands } from './utils/map-adyen-brands-to-googlepay-brands';
 
 const DEFAULT_ALLOWED_CARD_NETWORKS: google.payments.api.CardNetwork[] = ['AMEX', 'DISCOVER', 'JCB', 'MASTERCARD', 'VISA'];
@@ -65,7 +59,9 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
      * @param type
      * @returns
      */
-    protected override getPaymentMethodFromPaymentMethodsResponse(type?: string): PaymentMethod {
+    protected override getPaymentMethodFromPaymentMethodsResponse(type?: string, paymentMethodId?: string): RawPaymentMethod {
+        if (paymentMethodId) return this.core.paymentMethodsResponse.findById(paymentMethodId);
+
         return (
             this.core.paymentMethodsResponse.find(type || this.constructor['type']) || this.core.paymentMethodsResponse.find(TxVariants.paywithgoogle)
         );
@@ -138,22 +134,16 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
         return DEFAULT_ALLOWED_CARD_NETWORKS;
     }
 
-    protected submitAnalytics(analyticsObj: AnalyticsEvent) {
-        // Analytics will need to know about this.props.isExpress & this.props.expressPage
-        if (analyticsObj instanceof AnalyticsInfoEvent && analyticsObj.type === ANALYTICS_RENDERED_STR) {
-            const { isExpress, expressPage } = this.props;
-            const hasExpressPage = expressPage && ANALYTICS_EXPRESS_PAGES_ARRAY.includes(expressPage);
+    protected override beforeRender(configSetByMerchant: GooglePayConfiguration) {
+        const event = new AnalyticsInfoEvent({
+            type: InfoEventType.rendered,
+            component: this.type,
+            configData: { ...configSetByMerchant, showPayButton: this.props.showPayButton },
+            ...(configSetByMerchant?.isExpress && { isExpress: this.props.isExpress }),
+            ...(configSetByMerchant?.expressPage && { expressPage: this.props.expressPage })
+        });
 
-            if (typeof isExpress === 'boolean') {
-                analyticsObj.isExpress = isExpress;
-            }
-
-            if (isExpress === true && hasExpressPage) {
-                analyticsObj.expressPage = expressPage; // We only care about the expressPage value if isExpress is true
-            }
-        }
-
-        super.submitAnalytics(analyticsObj);
+        this.analytics.sendAnalytics(event);
     }
 
     /**

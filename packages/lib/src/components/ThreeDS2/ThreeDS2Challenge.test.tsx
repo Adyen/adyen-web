@@ -1,45 +1,43 @@
 import { ThreeDS2Challenge } from './index';
-import Analytics from '../../core/Analytics';
-import { ANALYTICS_ERROR_TYPE, Analytics3DS2Errors, ANALYTICS_RENDERED_STR } from '../../core/Analytics/constants';
+import { ANALYTICS_ERROR_TYPE, Analytics3DS2Errors } from '../../core/Analytics/constants';
 import { THREEDS2_CHALLENGE_ERROR } from './constants';
-import { AnalyticsInfoEvent } from '../../core/Analytics/AnalyticsInfoEvent';
+import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 
-const analyticsModule = Analytics({ analytics: {}, analyticsContext: '', locale: '', clientKey: '' });
+describe('ThreeDS2Challenge', () => {
+    describe('Analytics', () => {
+        test('should not send "rendered" events', () => {
+            const core = setupCoreMock();
 
-describe('ThreeDS2Challenge: calls that generate analytics should produce objects with the expected shapes ', () => {
-    let challenge;
-    beforeEach(() => {
-        console.log = jest.fn(() => {});
+            const threeDS2Challenge = new ThreeDS2Challenge(core, {
+                onError: () => {}
+            });
 
-        challenge = new ThreeDS2Challenge(global.core, {
-            onActionHandled: () => {},
-            modules: {
-                analytics: analyticsModule
-            },
-            onError: () => {}
+            threeDS2Challenge.render();
+
+            const wasCalledWithRenderedEvent = (core.modules.analytics.sendAnalytics as jest.Mock).mock.calls.some(
+                callArgs => callArgs[0].type === 'rendered'
+            );
+
+            expect(wasCalledWithRenderedEvent).toBe(false);
         });
 
-        analyticsModule.sendAnalytics = jest.fn(() => null);
-    });
+        test('should generate analytics error event if not initiated with paymentData', () => {
+            const core = setupCoreMock();
 
-    test('A call to ThreeDS2Challenge.submitAnalytics with an object with type "rendered" should not lead to an analytics event', () => {
-        challenge.submitAnalytics(new AnalyticsInfoEvent({ type: ANALYTICS_RENDERED_STR }));
+            const threeDS2Challenge = new ThreeDS2Challenge(core, {
+                onError: () => {}
+            });
 
-        expect(analyticsModule.sendAnalytics).not.toHaveBeenCalled();
-    });
+            threeDS2Challenge.render();
 
-    test('ThreeDS2Challenge instantiated without paymentData should generate an analytics error', () => {
-        const view = challenge.render();
-
-        expect(analyticsModule.sendAnalytics).toHaveBeenCalledWith({
-            component: challenge.constructor['type'],
-            errorType: ANALYTICS_ERROR_TYPE.apiError,
-            message: `${THREEDS2_CHALLENGE_ERROR}: Missing 'paymentData' property from threeDS2 action`,
-            code: Analytics3DS2Errors.ACTION_IS_MISSING_PAYMENT_DATA,
-            timestamp: expect.any(String),
-            id: expect.any(String)
+            expect(core.modules.analytics.sendAnalytics).toHaveBeenCalledWith({
+                component: 'threeDS2Challenge',
+                errorType: ANALYTICS_ERROR_TYPE.apiError,
+                message: `${THREEDS2_CHALLENGE_ERROR}: Missing 'paymentData' property from threeDS2 action`,
+                code: Analytics3DS2Errors.ACTION_IS_MISSING_PAYMENT_DATA,
+                timestamp: expect.any(String),
+                id: expect.any(String)
+            });
         });
-
-        expect(view).toBe(null);
     });
 });

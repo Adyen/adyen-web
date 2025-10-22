@@ -5,6 +5,7 @@ import ApplePaySdkLoader from './services/ApplePaySdkLoader';
 import { mock } from 'jest-mock-extended';
 import { NO_CHECKOUT_ATTEMPT_ID } from '../../core/Analytics/constants';
 import { render, screen } from '@testing-library/preact';
+import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 
 jest.mock('../../core/Services/http');
 jest.mock('./services/ApplePayService');
@@ -92,7 +93,9 @@ describe('ApplePay', () => {
 
     describe('showPayButton', () => {
         test('should not render anything if showPayButton is false', () => {
-            const applepay = new ApplePay(global.core, {
+            const core = setupCoreMock();
+
+            const applepay = new ApplePay(core, {
                 showPayButton: false
             });
             render(applepay.render());
@@ -100,7 +103,9 @@ describe('ApplePay', () => {
         });
 
         test('should render apple-pay-button by default', () => {
-            const applepay = new ApplePay(global.core);
+            const core = setupCoreMock();
+
+            const applepay = new ApplePay(core);
             render(applepay.render());
             expect(screen.getByTestId('apple-pay-button')).toBeInTheDocument();
         });

@@ -2,14 +2,12 @@ import { ComponentChild, h, render } from 'preact';
 import getProp from '../../../utils/getProp';
 import uuid from '../../../utils/uuid';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
-import { ANALYTICS_RENDERED_STR, NO_CHECKOUT_ATTEMPT_ID } from '../../../core/Analytics/constants';
-
+import { NO_CHECKOUT_ATTEMPT_ID } from '../../../core/Analytics/constants';
 import type { ICore } from '../../../core/types';
 import type { BaseElementProps, IBaseElement } from './types';
 import type { PaymentData } from '../../../types/global-types';
 import { AnalyticsInitialEvent } from '../../../core/Analytics/types';
 import { off, on } from '../../../utils/listenerUtils';
-import { AnalyticsInfoEvent } from '../../../core/Analytics/AnalyticsInfoEvent';
 import { AnalyticsEvent } from '../../../core/Analytics/AnalyticsEvent';
 
 /**
@@ -159,14 +157,6 @@ abstract class BaseElement<P extends BaseElementProps> implements IBaseElement {
                     containerWidth: node && node.offsetWidth,
                     component: !this.props.isDropin ? (this.constructor['analyticsType'] ?? this.constructor['type']) : 'dropin',
                     flavor: !this.props.isDropin ? 'components' : 'dropin'
-                }).then(() => {
-                    // Once the initial analytics set up call has been made...
-                    // ...create an analytics event  declaring that the component has been rendered
-                    // (The dropin will do this itself from DropinComponent once the PM list has rendered)
-                    if (!this.props.isDropin) {
-                        const event = new AnalyticsInfoEvent({ type: ANALYTICS_RENDERED_STR });
-                        this.submitAnalytics(event);
-                    }
                 });
             }
         }

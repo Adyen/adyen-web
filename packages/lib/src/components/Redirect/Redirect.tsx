@@ -25,6 +25,13 @@ class RedirectElement extends UIElement<RedirectConfiguration> {
         };
     }
 
+    protected override beforeRender(props: RedirectConfiguration) {
+        /** Do not send 'rendered' event if redirecting */
+        if (!this.isRedirecting) {
+            super.beforeRender(props);
+        }
+    }
+
     private handleRedirectError = () => {
         const event = new AnalyticsErrorEvent({
             component: this.props.paymentMethodType,
@@ -33,6 +40,10 @@ class RedirectElement extends UIElement<RedirectConfiguration> {
         });
         super.submitAnalytics(event);
     };
+
+    get isRedirecting() {
+        return !!this.props.url && !!this.props.method;
+    }
 
     get isValid() {
         return true;
@@ -43,7 +54,7 @@ class RedirectElement extends UIElement<RedirectConfiguration> {
     }
 
     render() {
-        if (this.props.url && this.props.method) {
+        if (this.isRedirecting) {
             return (
                 <RedirectShopper
                     url={this.props.url}

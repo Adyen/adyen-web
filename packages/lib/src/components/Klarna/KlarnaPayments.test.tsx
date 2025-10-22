@@ -3,16 +3,19 @@ import KlarnaPayments from './KlarnaPayments';
 import Dropin from '../Dropin';
 import { AnalyticsModule, PaymentAction } from '../../types/global-types';
 import { mock } from 'jest-mock-extended';
+import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 
 describe('KlarnaPayments', () => {
     const coreProps = {
         name: 'Klarna',
         i18n: global.i18n,
         loadingContext: 'test',
-        modules: { resources: global.resources, analytics: global.analytics }
+        modules: { resources: global.resources }
     };
     const renderKlarna = props => {
-        const KlarnaPaymentsEle = new KlarnaPayments(global.core, {
+        const core = setupCoreMock();
+
+        const KlarnaPaymentsEle = new KlarnaPayments(core, {
             ...coreProps,
             ...props
         });
@@ -30,10 +33,12 @@ describe('KlarnaPayments', () => {
     });
 
     test('should call setStatus if elementRef is a drop-in', async () => {
-        const klarna = new KlarnaPayments(global.core, {
+        const core = setupCoreMock();
+
+        const klarna = new KlarnaPayments(core, {
             ...coreProps
         });
-        klarna.elementRef = new Dropin(global.core);
+        klarna.elementRef = new Dropin(core);
         render(klarna.render());
 
         const spy = jest.spyOn(klarna.elementRef, 'setStatus');
@@ -46,8 +51,10 @@ describe('KlarnaPayments', () => {
     });
 
     test('should call handleAdditionalDetails onComplete', async () => {
+        const core = setupCoreMock();
+
         const onAdditionalDetailsMock = jest.fn(() => {});
-        const klarna = new KlarnaPayments(global.core, {
+        const klarna = new KlarnaPayments(core, {
             ...coreProps,
             onAdditionalDetails: onAdditionalDetailsMock
         });
