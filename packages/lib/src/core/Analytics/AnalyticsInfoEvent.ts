@@ -104,7 +104,15 @@ export class AnalyticsInfoEvent extends AnalyticsEvent {
      */
     private get configDataExcludedFields() {
         const DROPIN_FIELDS = ['paymentMethodsConfiguration'];
-        const FIELDS_INJECTED_BY_DROPIN = ['elementRef', 'isDropin', 'oneClick', 'storedPaymentMethodId', 'isInstantPayment', 'type'];
+        const FIELDS_INJECTED_BY_DROPIN = [
+            'elementRef',
+            'isDropin',
+            'oneClick',
+            'storedPaymentMethodId',
+            'paymentMethodId',
+            'isInstantPayment',
+            'type'
+        ];
         const PII_FIELDS = ['data', 'shopperEmail', 'telephoneNumber'];
 
         /**
@@ -125,19 +133,24 @@ export class AnalyticsInfoEvent extends AnalyticsEvent {
         const MAX_STRING_LENGTH = 128;
         const result = {};
 
-        for (const [key, value] of Object.entries(config)) {
-            if (!this.configDataExcludedFields.includes(key)) {
-                if (typeof value === 'function') {
-                    result[key] = 'function';
-                } else if (typeof value === 'object' && value !== null) {
-                    result[key] = JSON.stringify(value).substring(0, MAX_STRING_LENGTH);
-                } else {
-                    result[key] = value;
+        try {
+            for (const [key, value] of Object.entries(config)) {
+                if (!this.configDataExcludedFields.includes(key)) {
+                    if (typeof value === 'function') {
+                        result[key] = 'function';
+                    } else if (typeof value === 'object' && value !== null) {
+                        result[key] = JSON.stringify(value).substring(0, MAX_STRING_LENGTH);
+                    } else {
+                        result[key] = value;
+                    }
                 }
             }
-        }
 
-        return result;
+            return result;
+        } catch (error: unknown) {
+            if (process.env.NODE_ENV === 'development') console.warn('AnalyticsInfoEvent: Error when creating configData\n', error);
+            return result;
+        }
     }
 
     public getEventCategory(): string {

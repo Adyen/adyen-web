@@ -135,7 +135,6 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
     }
 
     protected override beforeRender(configSetByMerchant: GooglePayConfiguration) {
-        console.log('render');
         const event = new AnalyticsInfoEvent({
             type: InfoEventType.rendered,
             component: this.type,
