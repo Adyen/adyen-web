@@ -1,3 +1,4 @@
+@use 'styles/index';
 @import 'styles/variable-generator';
 
 .adyen-checkout__await {
@@ -12,15 +13,14 @@
     padding: 100px;
 }
 
-.adyen-checkout__qr-loader--app {
-    border: 0;
-    border-radius: 0;
-    padding: 0;
-}
-
 .adyen-checkout__await__brand-logo {
     width: 74px;
     border-radius: 3px;
+}
+
+.adyen-checkout__await__instructions {
+    display: flex;
+    justify-content: center;
 }
 
 .adyen-checkout__await__subtitle,
@@ -78,7 +78,7 @@
 
 .adyen-checkout__await__app-link {
     margin-top: token(spacer-070);
-    display: none;
+    display: block;
 }
 
 .adyen-checkout__await__amount {
@@ -88,8 +88,8 @@
     text-align: center;
 }
 
-@media only screen and (max-device-width: 1200px) {
+@include index.screen-xl-and-up {
     .adyen-checkout__await__app-link {
-        display: block;
+        display: none;
     }
 }
