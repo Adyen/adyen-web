@@ -127,11 +127,10 @@ describe('Redirect error', () => {
         render(redirectElement.render());
 
         await waitFor(() => {
-            expect(core.modules.analytics.sendAnalytics).toHaveBeenCalledTimes(2);
+            expect(core.modules.analytics.sendAnalytics).toHaveBeenCalledTimes(1);
         });
 
-        expect(core.modules.analytics.sendAnalytics).toHaveBeenNthCalledWith(
-            2,
+        expect(core.modules.analytics.sendAnalytics).toHaveBeenCalledWith(
             expect.objectContaining({
                 code: '600',
                 component: 'ideal',

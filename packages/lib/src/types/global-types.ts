@@ -86,12 +86,10 @@ type Issuer = {
     disabled?: boolean;
 };
 
-export interface PaymentMethod {
-    /**
-     * Internal ID generated when parsing the payment method list
-     */
-    _id: string;
-
+/**
+ * Raw payment method object returned in the /paymentMethods response.
+ */
+export interface RawPaymentMethod {
     /**
      * The unique payment method code.
      */
@@ -141,14 +139,17 @@ export interface PaymentMethodsResponse {
     /**
      * Detailed list of payment methods required to generate payment forms.
      */
-    paymentMethods?: PaymentMethod[];
+    paymentMethods?: RawPaymentMethod[];
     /**
      * List of all stored payment methods.
      */
-    storedPaymentMethods?: StoredPaymentMethod[];
+    storedPaymentMethods?: RawStoredPaymentMethod[];
 }
 
-export interface StoredPaymentMethod extends PaymentMethod {
+/**
+ * Raw stored payment method object returned in the /paymentMethods response.
+ */
+export interface RawStoredPaymentMethod extends RawPaymentMethod {
     id: string;
     name: string;
     supportedShopperInteractions: string[];
@@ -162,16 +163,6 @@ export interface StoredPaymentMethod extends PaymentMethod {
     shopperEmail?: string;
     /** The shopper’s issuer account label */
     label?: string;
-    /**
-     * A unique identifier of this stored payment method. Mapped from 'storedPaymentMethod.id'
-     * @internal
-     */
-    storedPaymentMethodId?: string;
-    /**
-     * Internal flag
-     * @internal
-     */
-    isStoredPaymentMethod?: boolean;
 }
 
 /**

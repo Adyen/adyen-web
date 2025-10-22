@@ -19,7 +19,7 @@ import type {
     PaymentAction,
     PaymentAmount,
     PaymentData,
-    PaymentMethod,
+    RawPaymentMethod,
     PaymentMethodsResponse,
     PaymentResponseData
 } from '../../../types/global-types';
@@ -152,7 +152,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
      *
      * @param type - The type of the payment method to get. (This prop is passed by Drop-in OR Standalone components containing the property 'type' as part of their configuration)
      */
-    protected getPaymentMethodFromPaymentMethodsResponse(type?: string, paymentMethodId?: string): PaymentMethod {
+    protected getPaymentMethodFromPaymentMethodsResponse(type?: string, paymentMethodId?: string): RawPaymentMethod {
         if (paymentMethodId) return this.core.paymentMethodsResponse.findById(paymentMethodId);
         return this.core.paymentMethodsResponse?.find(type || this.constructor['type']);
     }

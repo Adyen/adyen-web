@@ -295,8 +295,11 @@ describe('Core', () => {
             await checkout.initialize();
             const paymentMethodsResponse = { paymentMethods: [{ name: 'Credit Card', type: 'scheme', brands: ['visa'] }] };
             expect(checkout.paymentMethodsResponse).toHaveProperty('paymentMethods', []);
+
             await checkout.update({ paymentMethodsResponse });
-            expect(checkout.paymentMethodsResponse).toHaveProperty('paymentMethods', paymentMethodsResponse.paymentMethods);
+            expect(checkout.paymentMethodsResponse.paymentMethods).toMatchObject([
+                { name: 'Credit Card', type: 'scheme', brands: ['visa'], _id: expect.any(String) }
+            ]);
         });
     });
 

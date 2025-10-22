@@ -10,7 +10,7 @@ import { TxVariants } from '../tx-variants';
 import { sanitizeResponse, verifyPaymentDidNotFail } from '../internal/UIElement/utils';
 import { ANALYTICS_INSTANT_PAYMENT_BUTTON, ANALYTICS_SELECTED_STR } from '../../core/Analytics/constants';
 
-import type { AddressData, BrowserInfo, PaymentMethod, PaymentResponseData, RawPaymentResponse } from '../../types/global-types';
+import type { AddressData, BrowserInfo, RawPaymentMethod, PaymentResponseData, RawPaymentResponse } from '../../types/global-types';
 import type { GooglePayConfiguration } from './types';
 import type { ICore } from '../../core/types';
 import { AnalyticsInfoEvent, InfoEventType } from '../../core/Analytics/AnalyticsInfoEvent';
@@ -59,7 +59,7 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
      * @param type
      * @returns
      */
-    protected override getPaymentMethodFromPaymentMethodsResponse(type?: string, paymentMethodId?: string): PaymentMethod {
+    protected override getPaymentMethodFromPaymentMethodsResponse(type?: string, paymentMethodId?: string): RawPaymentMethod {
         if (paymentMethodId) return this.core.paymentMethodsResponse.findById(paymentMethodId);
 
         return (

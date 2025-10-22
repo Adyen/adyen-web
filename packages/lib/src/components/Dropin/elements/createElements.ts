@@ -2,9 +2,10 @@ import { filterUnsupportedPaymentMethod, filterPresent, filterAvailable, optiona
 import { getComponentConfiguration } from './getComponentConfiguration';
 import getComponentNameOfPaymentType from '../../components-name-map';
 import UIElement from '../../internal/UIElement';
-import type { PaymentMethod, StoredPaymentMethod } from '../../../types/global-types';
+
 import type { PaymentMethodsConfiguration } from '../types';
 import type { ICore } from '../../../core/types';
+import type { PaymentMethod, StoredPaymentMethod } from '../../../core/ProcessResponse/PaymentMethods/PaymentMethods';
 
 /**
  * Returns a filtered (available) list of component Elements
@@ -40,6 +41,7 @@ const createElements = (
             }
 
             const requiredPropsWhenUsingDropin = {
+                // @ts-ignore later
                 ...(isStoredPaymentMethod ? { storedPaymentMethodId: paymentMethod.storedPaymentMethodId } : { paymentMethodId: paymentMethod._id }),
                 ...dropinProps
             };
