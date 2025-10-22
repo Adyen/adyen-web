@@ -4,7 +4,7 @@ import PrepareFingerprint from './components/DeviceFingerprint';
 import callSubmit3DS2Fingerprint from './callSubmit3DS2Fingerprint';
 import { existy } from '../../utils/commonUtils';
 import { TxVariants } from '../tx-variants';
-import { ThreeDS2DeviceFingerprintConfiguration } from './types';
+import { FingerprintResolveData, LegacyFingerprintResolveData, ThreeDS2DeviceFingerprintConfiguration } from './types';
 import AdyenCheckoutError, { API_ERROR } from '../../core/Errors/AdyenCheckoutError';
 import { ANALYTICS_ERROR_TYPE, Analytics3DS2Errors, ANALYTICS_RENDERED_STR, Analytics3DS2Events } from '../../core/Analytics/constants';
 import { THREEDS2_FINGERPRINT, THREEDS2_FINGERPRINT_ERROR, THREEDS2_FULL } from './constants';
@@ -42,8 +42,13 @@ class ThreeDS2DeviceFingerprint extends UIElement<ThreeDS2DeviceFingerprintConfi
         super.onActionHandled(rtnObj);
     };
 
-    onComplete(state) {
-        super.onComplete(state);
+    onComplete(state: LegacyFingerprintResolveData | FingerprintResolveData) {
+        if (this.props.onComplete) {
+            this.props.onComplete(state, this.elementRef);
+        } else {
+            super.onComplete(state);
+        }
+
         this.unmount(); // re. fixing issue around back to back fingerprinting calls
     }
 

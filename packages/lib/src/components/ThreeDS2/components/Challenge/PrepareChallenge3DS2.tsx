@@ -2,7 +2,7 @@ import { Component, h } from 'preact';
 import DoChallenge3DS2 from './DoChallenge3DS2';
 import { createChallengeResolveData, prepareChallengeData, createOldChallengeResolveData, isErrorObject } from '../utils';
 import { PrepareChallenge3DS2Props, PrepareChallenge3DS2State, StatusErrorInfoObject } from './types';
-import { ChallengeData, ResultObject, ThreeDS2FlowObject, ErrorCodeObject } from '../../types';
+import { ChallengeData, ResultObject, ThreeDS2FlowObject, ErrorCodeObject, LegacyChallengeResolveData, ChallengeResolveData } from '../../types';
 import '../../ThreeDS2.scss';
 import Img from '../../../internal/Img';
 import './challenge.scss';
@@ -166,7 +166,11 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
              *  This is different for the flow triggered by the threeds2InMDFlow process than for the new, v67, 'threeDS2' action
              */
             const resolveDataFunction = this.props.isMDFlow ? createOldChallengeResolveData : createChallengeResolveData;
-            const data = resolveDataFunction(this.props.dataKey, resultObj.transStatus, this.props.paymentData);
+            const data: LegacyChallengeResolveData | ChallengeResolveData = resolveDataFunction(
+                this.props.dataKey,
+                resultObj.transStatus,
+                this.props.paymentData
+            );
 
             if (errorCodeObject) {
                 console.debug('### PrepareChallenge3DS2::errorCodeObject::', errorCodeObject);

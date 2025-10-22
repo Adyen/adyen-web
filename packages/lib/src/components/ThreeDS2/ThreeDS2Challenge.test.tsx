@@ -42,4 +42,35 @@ describe('ThreeDS2Challenge: calls that generate analytics should produce object
 
         expect(view).toBe(null);
     });
+
+    test('ThreeDS2Challenge - when onComplete is called handleAdditionalDetails should then be called ', () => {
+        const spy = jest.spyOn(challenge, 'handleAdditionalDetails');
+
+        challenge.onComplete({ foo: 'bar' });
+
+        expect(spy).toHaveBeenCalledWith({ foo: 'bar' });
+    });
+
+    test('ThreeDS2Challenge - when onComplete is called the passed onComplete function should then be called', () => {
+        const onComplete = jest.fn();
+
+        const nuChallenge = new ThreeDS2Challenge(global.core, {
+            onActionHandled: () => {},
+            modules: {
+                analytics: analyticsModule
+            },
+            onError: () => {},
+            onComplete
+        });
+
+        // @ts-ignore - spied on function does exist
+        const spy = jest.spyOn(nuChallenge, 'handleAdditionalDetails');
+
+        // @ts-ignore - we don't care about the type
+        nuChallenge.onComplete({ foo: 'bar' });
+
+        expect(onComplete).toHaveBeenCalledWith({ foo: 'bar' }, nuChallenge);
+
+        expect(spy).not.toHaveBeenCalled();
+    });
 });

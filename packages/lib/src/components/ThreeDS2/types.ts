@@ -120,11 +120,29 @@ export interface FingerprintResolveData {
     };
 }
 
+export interface LegacyFingerprintResolveData {
+    data: {
+        details: {
+            [key: string]: string;
+        };
+        paymentData: string;
+    };
+}
+
 export interface ChallengeResolveData {
     data: {
         details: {
             [key: string]: string;
         };
+    };
+}
+
+export interface LegacyChallengeResolveData {
+    data: {
+        details: {
+            [key: string]: string;
+        };
+        paymentData: string;
     };
 }
 
