@@ -43,7 +43,6 @@ function QRLoader(props: QRLoaderProps) {
 
     const onTimeUp = (): void => {
         setExpired(true);
-        clearTimeout(timeoutRef.current);
         props.onError(new AdyenCheckoutError('ERROR', 'Payment Expired'));
     };
 
@@ -104,12 +103,7 @@ function QRLoader(props: QRLoaderProps) {
     }, []);
 
     useEffect(() => {
-        if (expired || completed) {
-            clearTimeout(timeoutRef.current);
-            return;
-        }
-
-        if (loading) {
+        if (expired || completed || loading) {
             return;
         }
 
@@ -119,7 +113,7 @@ function QRLoader(props: QRLoaderProps) {
             const start = performance.now();
             await checkStatus();
             const end = performance.now();
-            const responseTime = end - start;
+            const responseTime = Math.round(end - start);
 
             const actualTimePassed = timePassed + responseTime + currentDelay;
             setTimePassed(actualTimePassed);
