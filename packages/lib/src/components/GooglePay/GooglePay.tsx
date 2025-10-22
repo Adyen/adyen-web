@@ -59,7 +59,9 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
      * @param type
      * @returns
      */
-    protected override getPaymentMethodFromPaymentMethodsResponse(type?: string): PaymentMethod {
+    protected override getPaymentMethodFromPaymentMethodsResponse(type?: string, paymentMethodId?: string): PaymentMethod {
+        if (paymentMethodId) return this.core.paymentMethodsResponse.findById(paymentMethodId);
+
         return (
             this.core.paymentMethodsResponse.find(type || this.constructor['type']) || this.core.paymentMethodsResponse.find(TxVariants.paywithgoogle)
         );

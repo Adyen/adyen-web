@@ -88,6 +88,11 @@ type Issuer = {
 
 export interface PaymentMethod {
     /**
+     * Internal ID generated when parsing the payment method list
+     */
+    _id: string;
+
+    /**
      * The unique payment method code.
      */
     type: string;

@@ -93,7 +93,12 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         };
     }
 
-    protected beforeRender(props: P) {
+    protected beforeRender(props?: P): void {
+        // We don't send 'rendered' events when rendering actions
+        if (props?.originalAction) {
+            return;
+        }
+
         const event = new AnalyticsInfoEvent({
             type: InfoEventType.rendered,
             component: this.type,
@@ -112,12 +117,15 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         return this.core.modules.srPanel;
     }
 
+    private getPaymentMethodConfigFromResponse(componentProps: P) {
+        if (componentProps?.storedPaymentMethodId) return this.getStoredPaymentMethodDetails(componentProps.storedPaymentMethodId);
+        return this.getPaymentMethodFromPaymentMethodsResponse(componentProps?.type, componentProps?.paymentMethodId);
+    }
+
     protected override buildElementProps(componentProps?: P) {
         const globalCoreProps = this.core.getCorePropsForComponent();
 
-        const paymentMethodFromResponse = componentProps?.storedPaymentMethodId
-            ? this.getStoredPaymentMethodDetails(componentProps.storedPaymentMethodId)
-            : this.getPaymentMethodFromPaymentMethodsResponse(componentProps?.type);
+        const paymentMethodFromResponse = this.getPaymentMethodConfigFromResponse(componentProps);
 
         const finalProps = {
             showPayButton: true,
@@ -126,11 +134,11 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
             ...componentProps
         };
 
-        const isDropin = assertIsDropin(this as unknown as IDropin);
+        const isDropinInstance = assertIsDropin(this as unknown as IDropin);
 
         this.props = this.formatProps({
             ...this.constructor['defaultProps'], // component defaults
-            ...getRegulatoryDefaults(this.core.options.countryCode, isDropin), // regulatory defaults
+            ...getRegulatoryDefaults(this.core.options.countryCode, isDropinInstance), // regulatory defaults
             ...finalProps // the rest (inc. merchant defined config)
         });
     }
@@ -144,7 +152,8 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
      *
      * @param type - The type of the payment method to get. (This prop is passed by Drop-in OR Standalone components containing the property 'type' as part of their configuration)
      */
-    protected getPaymentMethodFromPaymentMethodsResponse(type?: string): PaymentMethod {
+    protected getPaymentMethodFromPaymentMethodsResponse(type?: string, paymentMethodId?: string): PaymentMethod {
+        if (paymentMethodId) return this.core.paymentMethodsResponse.findById(paymentMethodId);
         return this.core.paymentMethodsResponse?.find(type || this.constructor['type']);
     }
 

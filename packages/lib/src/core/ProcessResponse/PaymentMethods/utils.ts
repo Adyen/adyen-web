@@ -5,6 +5,7 @@ import {
     filterRemovedPaymentMethods,
     filterSupportedStoredPaymentMethods
 } from './filters';
+import uuidv4 from '../../../utils/uuid';
 
 const processStoredPaymentMethod = (pm): StoredPaymentMethod => ({
     ...pm,
@@ -12,10 +13,24 @@ const processStoredPaymentMethod = (pm): StoredPaymentMethod => ({
     isStoredPaymentMethod: true
 });
 
+/**
+ * Generate unique ID per payment method. Useful to fetch the correct payment method properties from the response
+ * @param paymentMethod
+ */
+function generatePaymentMethodId(paymentMethod: PaymentMethod): PaymentMethod {
+    return {
+        ...paymentMethod,
+        _id: uuidv4()
+    };
+}
+
 export const processPaymentMethods = (paymentMethods: PaymentMethod[], { allowPaymentMethods = [], removePaymentMethods = [] }): PaymentMethod[] => {
     if (!paymentMethods) return [];
 
-    return paymentMethods.filter(filterAllowedPaymentMethods, allowPaymentMethods).filter(filterRemovedPaymentMethods, removePaymentMethods);
+    return paymentMethods
+        .filter(filterAllowedPaymentMethods, allowPaymentMethods)
+        .filter(filterRemovedPaymentMethods, removePaymentMethods)
+        .map(generatePaymentMethodId);
 };
 
 export const processStoredPaymentMethods = (
