@@ -26,6 +26,7 @@ export const CardWith3DS2CreateFromAction = (contextArgs: PaymentMethodStoryProp
             amount: { currency: getCurrency(countryCode), value: amount },
             countryCode,
             locale: shopperLocale,
+            // eslint-disable-next-line @typescript-eslint/no-misused-promises
             onSubmit: async (state, component, actions) => {
                 try {
                     const paymentData = {
@@ -53,7 +54,7 @@ export const CardWith3DS2CreateFromAction = (contextArgs: PaymentMethodStoryProp
                     actions.reject();
                 }
             },
-
+            // eslint-disable-next-line @typescript-eslint/no-misused-promises
             onAdditionalDetails: async (state, component, actions) => {
                 try {
                     const { resultCode, action, order, donationToken } = await makeDetailsCall(state.data);
