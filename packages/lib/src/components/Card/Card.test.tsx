@@ -9,7 +9,7 @@ describe('Card', () => {
     describe('formatProps', function () {
         test('should not require a billingAddress if it is a stored card', () => {
             const core = setupCoreMock({
-                paymentMethodsResponse: new PaymentMethods({
+                paymentMethods: new PaymentMethods({
                     storedPaymentMethods: [{ name: 'Card', type: 'scheme', id: 'test', supportedShopperInteractions: ['Ecommerce'] }]
                 })
             });

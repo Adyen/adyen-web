@@ -10,10 +10,10 @@ import enUS from '../../../server/translations/en-US.json';
 
 interface SetupCoreMockProps {
     mockSessions?: boolean;
-    paymentMethodsResponse?: PaymentMethods;
+    paymentMethods?: PaymentMethods;
 }
 
-function setupCoreMock({ mockSessions = true, paymentMethodsResponse = null }: SetupCoreMockProps = {}): ICore {
+function setupCoreMock({ mockSessions = true, paymentMethods = null }: SetupCoreMockProps = {}): ICore {
     const core = mock<ICore>({});
 
     const analytics = mock<AnalyticsModule>();
@@ -24,14 +24,7 @@ function setupCoreMock({ mockSessions = true, paymentMethodsResponse = null }: S
         enabled: false
     });
 
-    core.options.countryCode = 'NL';
-
-    // TODO: fix this ugly code
-    core.paymentMethodsResponse =
-        paymentMethodsResponse ||
-        new PaymentMethods({
-            paymentMethods: [{ name: 'Card', type: 'scheme' }]
-        });
+    core.paymentMethodsResponse = paymentMethods || new PaymentMethods({});
 
     if (mockSessions) {
         core.session = mock<CheckoutSession>();
