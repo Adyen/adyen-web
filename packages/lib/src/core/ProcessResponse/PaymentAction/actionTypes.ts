@@ -56,7 +56,7 @@ const actionTypes = {
             token: action.token,
             paymentData,
             onActionHandled: props.onActionHandled,
-            onComplete: props.onComplete, // NOTE: We only expect props.onComplete to be defined for the MDFlow
+            onComplete: props.onComplete, // NOTE: We only ever expect props.onComplete to be defined for the MDFlow
             onError: props.onError,
             isDropin: !!props.isDropin,
             loadingContext: props.loadingContext,
