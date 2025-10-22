@@ -11,6 +11,10 @@ function InstantPaymentMethods({ paymentMethods, onSelect }: InstantPaymentMetho
     return (
         <ul className="adyen-checkout__instant-payment-methods-list">
             {paymentMethods.map(pm => (
+                /**
+                 * Apple Pay button click event does not bubble up, therefore we need to use 'onClickCapture' here
+                 * to capture the button interaction
+                 */
                 <li key={pm._id} data-testid={pm.type} onClickCapture={() => onSelect(pm)}>
                     {pm.render()}
                 </li>
