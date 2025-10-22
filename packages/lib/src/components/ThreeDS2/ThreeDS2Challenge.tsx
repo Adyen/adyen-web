@@ -5,7 +5,7 @@ import { DEFAULT_CHALLENGE_WINDOW_SIZE, THREEDS2_CHALLENGE, THREEDS2_CHALLENGE_E
 import { existy } from '../../utils/commonUtils';
 import { hasOwnProperty } from '../../utils/hasOwnProperty';
 import { TxVariants } from '../tx-variants';
-import { ThreeDS2ChallengeConfiguration } from './types';
+import { ChallengeResolveData, LegacyChallengeResolveData, ThreeDS2ChallengeConfiguration } from './types';
 import AdyenCheckoutError, { API_ERROR } from '../../core/Errors/AdyenCheckoutError';
 import { ANALYTICS_ERROR_TYPE, Analytics3DS2Errors, ANALYTICS_RENDERED_STR, Analytics3DS2Events } from '../../core/Analytics/constants';
 import { CoreProvider } from '../../core/Context/CoreProvider';
@@ -42,13 +42,18 @@ class ThreeDS2Challenge extends UIElement<ThreeDS2ChallengeConfiguration> {
         super.onActionHandled(rtnObj);
     };
 
-    onComplete(state) {
+    onComplete(state: LegacyChallengeResolveData | ChallengeResolveData) {
         /**
          * Equals a call to onAdditionalDetails (as set in actionTypes.ts) for the regular, "native" flow.
          * However, if the action to create this component came from the 3DS2InMDFlow process it will instead equal a call to the onComplete callback
          * (as defined in the 3DS2InMDFlow and passed in as a config prop).
          */
-        if (state) super.onComplete(state);
+        if (this.props.onComplete) {
+            this.props.onComplete(state, this.elementRef);
+        } else {
+            super.onComplete(state);
+        }
+
         this.unmount(); // re. fixing issue around back to back challenge calls
     }
 

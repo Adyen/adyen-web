@@ -66,17 +66,6 @@ describe('UIElement', () => {
         });
     });
 
-    describe('onComplete()', () => {
-        test('should call "onComplete" prop if available', () => {
-            const onCompleteCb = jest.fn();
-            const element = new MyElement(core, { onComplete: onCompleteCb });
-
-            element.callOnComplete();
-
-            expect(onCompleteCb.mock.calls.length).toBe(1);
-        });
-    });
-
     describe('onChange()', () => {
         test('should call "onChange" prop if available', () => {
             const onChange = jest.fn();
