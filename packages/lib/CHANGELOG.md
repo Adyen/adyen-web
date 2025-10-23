@@ -1,5 +1,19 @@
 # @adyen/adyen-web
 
+## 6.24.0
+
+### Minor Changes
+
+- Add prop to enable blocking paypal button ([#3597](https://github.com/Adyen/adyen-web/pull/3597))
+
+### Patch Changes
+
+- Apple Pay - Fixed issue where Apple Pay was not being set as active payment method when using it as instant payment method ([#3581](https://github.com/Adyen/adyen-web/pull/3581))
+
+- Fixing issue with actions in onAdditionalDetails when initiated from createFromAction ([#3589](https://github.com/Adyen/adyen-web/pull/3589))
+
+- Stacked the expiration date and security code fields on smaller screens to enhance layout and usability. ([#3583](https://github.com/Adyen/adyen-web/pull/3583))
+
 ## 6.23.0
 
 ### Minor Changes
