@@ -7,7 +7,7 @@ import QRCodeCopyButton from './QRCodeCopyButton';
 import { useQRLoaderDetails } from '../QRLoaderDetailsProvider';
 
 const QRDetails = () => {
-    const { qrCodeImage, percentage, timeToPay, copyBtn, instructions, onTick, countdownTime, onQRCodeLoad, onTimeUp, handleCopy } =
+    const { qrCodeData, qrCodeImage, percentage, timeToPay, copyBtn, instructions, onTick, countdownTime, onQRCodeLoad, onTimeUp, handleCopy } =
         useQRLoaderDetails();
 
     return (
@@ -22,7 +22,7 @@ const QRDetails = () => {
 
             {copyBtn && (
                 <div className="adyen-checkout__qr-loader__actions">
-                    <QRCodeCopyButton handleCopy={handleCopy} />
+                    <QRCodeCopyButton text={qrCodeData} handleCopy={handleCopy} />
                 </div>
             )}
         </Fragment>

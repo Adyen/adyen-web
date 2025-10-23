@@ -1,29 +1,16 @@
 import { h } from 'preact';
-import Button from '../../Button';
-import { PREFIX } from '../../Icon/constants';
-import useImage from '../../../../core/Context/useImage';
-import { useCoreContext } from '../../../../core/Context/CoreProvider';
+import { CopyButton } from '../../Button/CopyButton';
 
 interface QRCodeCopyButtonProps {
+    text: string;
     copyLabel?: string;
     copiedLabel?: string;
-    handleCopy: (onComplete: () => void) => void;
+    handleCopy: () => void;
 }
 
-const QRCodeCopyButton = ({ copyLabel, copiedLabel, handleCopy }: QRCodeCopyButtonProps) => {
-    const { i18n } = useCoreContext();
-    const getImage = useImage();
-
-    return (
-        <Button
-            variant="action"
-            onClick={(_, { complete }) => handleCopy(complete)}
-            icon={getImage({ imageFolder: 'components/' })(`${PREFIX}copy`)}
-            onClickCompletedIcon={getImage({ imageFolder: 'components/' })(`${PREFIX}checkmark`)}
-            label={copyLabel ?? i18n.get('button.copy')}
-            onClickCompletedLabel={copiedLabel ?? i18n.get('button.copied')}
-        />
-    );
+const QRCodeCopyButton = ({ text, copyLabel, copiedLabel, handleCopy }: QRCodeCopyButtonProps) => {
+    // todo think about how to use it
+    return <CopyButton onClick={handleCopy} text={text} label={copyLabel} onClickCompletedLabel={copiedLabel} />;
 };
 
 export default QRCodeCopyButton;
