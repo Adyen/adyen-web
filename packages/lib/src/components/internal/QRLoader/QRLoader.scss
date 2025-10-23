@@ -17,12 +17,6 @@
     gap: token(spacer-090);
 }
 
-.adyen-checkout__qr-loader--app {
-    border: 0;
-    border-radius: 0;
-    padding: 0;
-}
-
 .adyen-checkout__qr-loader__brand-logo-wrapper {
     border-radius: token(border-radius-s);
     box-shadow: token(shadow-low);
@@ -103,11 +97,6 @@
     line-height: 1.5;
     margin-top: token(spacer-090);
     text-align: center;
-}
-
-.adyen-checkout__await__instructions {
-    display: flex;
-    justify-content: center;
 }
 
 .adyen-checkout__qr-loader__actions {
