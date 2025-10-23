@@ -10,8 +10,6 @@ import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 import { useCoreContext } from '../../../core/Context/CoreProvider';
 import ContentSeparator from '../ContentSeparator';
 import { StatusObject } from '../Await/types';
-import useImage from '../../../core/Context/useImage';
-import { useA11yReporter } from '../../../core/Errors/useA11yReporter';
 import useAutoFocus from '../../../utils/useAutoFocus';
 import { ANALYTICS_DOWNLOAD_STR, ANALYTICS_QR_CODE_DOWNLOAD } from '../../../core/Analytics/constants';
 import { AnalyticsInfoEvent } from '../../../core/Analytics/AnalyticsInfoEvent';
@@ -19,12 +17,12 @@ import { CountdownTime } from '../Countdown/types';
 import QRDetails from './components/QRDetails';
 import { QRLoaderDetailsProvider } from './QRLoaderDetailsProvider';
 import './QRLoader.scss';
+import { QRFinalState } from './components/QRFinalState';
 
 const QRCODE_URL = 'utility/v1/barcode.png?type=qrCode&data=';
 
 function QRLoader(props: QRLoaderProps) {
     const { i18n, loadingContext } = useCoreContext();
-    const getImage = useImage();
     const [completed, setCompleted] = useState(false);
     const [delay, setDelay] = useState(props.delay);
     const [expired, setExpired] = useState(false);
@@ -75,7 +73,7 @@ function QRLoader(props: QRLoaderProps) {
         }
 
         const error = new AdyenCheckoutError('ERROR', 'error result with no payload in response');
-        return props.onError(error);
+        props.onError(error);
     };
 
     const checkStatus = async (): Promise<void> => {
@@ -155,27 +153,14 @@ function QRLoader(props: QRLoaderProps) {
         });
     };
 
-    const finalState = (image: string, message: string) => {
-        const status = i18n.get(message);
-        useA11yReporter(status);
-        return (
-            <div className="adyen-checkout__qr-loader adyen-checkout__qr-loader--result">
-                <img
-                    className="adyen-checkout__qr-loader__icon adyen-checkout__qr-loader__icon--result"
-                    src={getImage({ imageFolder: 'components/' })(image)}
-                    alt={status}
-                />
-                <p className="adyen-checkout__qr-loader__subtitle">{status}</p>
-            </div>
-        );
-    };
+    const qrSubtitleRef = useAutoFocus();
 
     if (expired) {
-        return finalState('error', 'error.subtitle.payment');
+        return <QRFinalState image="error" message={i18n.get('error.subtitle.payment')} />;
     }
 
     if (completed) {
-        return finalState('success', 'creditCard.success');
+        return <QRFinalState image="success" message={i18n.get('creditCard.success')} />;
     }
 
     if (loading) {
@@ -191,7 +176,6 @@ function QRLoader(props: QRLoaderProps) {
         );
     }
 
-    const qrSubtitleRef = useAutoFocus();
     const classnames = props.classNameModifiers.map(m => `adyen-checkout__qr-loader--${m}`);
 
     return (
