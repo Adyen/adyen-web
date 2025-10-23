@@ -9,6 +9,7 @@ import { VoucherProps } from './types';
 import useImage from '../../../core/Context/useImage';
 import { PREFIX } from '../Icon/constants';
 import DetailsTable from '../DetailsTable';
+import { CopyButton } from '../Button/CopyButton';
 
 export default function Voucher({ voucherDetails = [], className = '', ...props }: VoucherProps) {
     const { i18n } = useCoreContext();
@@ -87,16 +88,7 @@ export default function Voucher({ voucherDetails = [], className = '', ...props 
                     <ul className="adyen-checkout__voucher-result__actions">
                         {!!props.copyBtn && (
                             <li className="adyen-checkout__voucher-result__actions__item">
-                                <Button
-                                    inline
-                                    variant="action"
-                                    onClick={(e, { complete }) => {
-                                        void copyToClipboard(props.reference);
-                                        complete();
-                                    }}
-                                    icon={getImage({ imageFolder: 'components/' })(`${PREFIX}copy`)}
-                                    label={i18n.get('button.copy')}
-                                />
+                                <CopyButton text={props.reference} />
                             </li>
                         )}
 
