@@ -8,6 +8,7 @@ import { GIFT_CARD } from '../../internal/SecuredFields/lib/constants';
 import { GiftCardFields } from './GiftcardFields';
 import { GiftcardFieldsProps, Placeholders } from './types';
 import { useSRPanelForGiftcardErrors } from './useSRPanelForGiftcardErrors';
+import { GiftCardBalanceCheckErrors, GiftCardBalanceCheckErrorType } from '../types';
 
 interface GiftcardComponentProps {
     onChange: (state) => void;
@@ -38,7 +39,7 @@ class Giftcard extends Component<GiftcardComponentProps> {
         isValid: false,
         sfpState: {},
         isValidating: false,
-        transformedErrors: {}
+        transformedErrors: {},
     };
 
     public static defaultProps = {
@@ -50,7 +51,7 @@ class Giftcard extends Component<GiftcardComponentProps> {
         fieldsLayoutComponent: GiftCardFields
     };
 
-    public sfp;
+    public sfp: SecuredFieldsProvider;
 
     /**
      * Maps string error codes from SecuredFields to validation rule objects
@@ -61,14 +62,16 @@ class Giftcard extends Component<GiftcardComponentProps> {
         return this.sfp.mapErrorsToValidationRuleResult();
     };
 
-    public onChange = sfpState => {
-        // Add transformed errors to the state
+    private updateTransformedErrors = (balanceCheckErrors?: Record<string, any>) => {
         const transformedErrors = this.mapErrorsToValidationObjects();
 
-        this.setState({
-            sfpState,
-            transformedErrors
-        });
+        const mergedErrors = { ...transformedErrors, ...balanceCheckErrors };
+
+        this.setState({ transformedErrors: mergedErrors });
+    };
+
+    public onChange = sfpState => {
+        this.setState({ sfpState }, () => this.updateTransformedErrors());
 
         this.props.onChange({
             data: sfpState.data,
@@ -91,6 +94,55 @@ class Giftcard extends Component<GiftcardComponentProps> {
         this.setState({ balance, transactionLimit });
     };
 
+    /**
+     * Generates balance check errors in the same format as SFP errors
+     * Compatible with the transformedErrors structure
+     */
+    private generateBalanceCheckErrors(errorType?: GiftCardBalanceCheckErrorType | null): Record<string, any> {
+        const balanceCheckErrors: Record<string, any> = {};
+        
+        // This is the field that the error is associated with, only used for SR logic
+        const fieldToAnnounce = 'encryptedCardNumber';
+
+        // If errorType is null, clear errors
+        if (errorType === null) {
+            return balanceCheckErrors;
+        }
+        
+        // Use provided errorType or get from component state
+        if (errorType) {
+            // Create error in the same format as SFP errors for consistency
+            balanceCheckErrors[fieldToAnnounce] = {
+                isValid: false,
+                errorMessage: `error.giftcard.${errorType}`,
+                error: errorType
+            };
+        }
+        
+        return balanceCheckErrors;
+    }
+
+    /**
+     * Checks if a status represents a balance check error
+     */
+    private isBalanceCheckError(status: string): boolean {
+        return ['no-balance', 'card-error', 'currency-error'].includes(status);
+    }
+
+    /**
+     * Method called by GiftcardElement to set balance check errors only
+     */
+    public setBalanceCheckErrors = (errorType: GiftCardBalanceCheckErrorType | null): void => {
+        // Check if the errors should be displayed
+        if (this.isBalanceCheckError(errorType)) {
+            // Generate balance check errors in the style of useForm
+            // This is usefull because then we can use the same logic for SF and balance check errors
+            // Also we can use the same logic for SRPanel errors
+            const balanceCheckErrors = this.generateBalanceCheckErrors(errorType);
+            this.updateTransformedErrors(balanceCheckErrors);
+        }
+    };
+
     public showValidation = () => {
         this.setState({ isValidating: true });
 
@@ -100,7 +152,7 @@ class Giftcard extends Component<GiftcardComponentProps> {
 
     render(props, { focusedElement, balance, transactionLimit, isValidating, transformedErrors }) {
         const { i18n } = useCoreContext();
-
+        
         // Handle SRPanel errors in render with transformed error objects
         useSRPanelForGiftcardErrors({
             errors: transformedErrors,
@@ -129,16 +181,13 @@ class Giftcard extends Component<GiftcardComponentProps> {
         const getCardErrorMessage = sfpState => {
             if (sfpState.errors.encryptedCardNumber) return i18n.get(sfpState.errors.encryptedCardNumber);
 
-            switch (this.state.status) {
-                case 'no-balance':
-                    return i18n.get('error.giftcard.no-balance');
-                case 'card-error':
-                    return i18n.get('error.giftcard.card-error');
-                case 'currency-error':
-                    return i18n.get('error.giftcard.currency-error');
-                default:
-                    return null;
+            // This logic is a bit of a hack, but it's the only way to get the error message for balance check errors
+            // In the future we should move this logic to useForm
+            if (transformedErrors.encryptedCardNumber) {
+                return i18n.get(transformedErrors.encryptedCardNumber.errorMessage);
             }
+
+            return null;
         };
 
         return (

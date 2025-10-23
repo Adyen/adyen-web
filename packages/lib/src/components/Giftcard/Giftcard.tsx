@@ -5,12 +5,14 @@ import { CoreProvider } from '../../core/Context/CoreProvider';
 import PayButton from '../internal/PayButton';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { PaymentAmount } from '../../types/global-types';
-import { GiftCardElementData, GiftCardConfiguration, balanceCheckResponseType } from './types';
+import { GiftCardElementData, GiftCardConfiguration, balanceCheckResponseType, GiftCardValidationError, GiftCardBalanceCheckErrors, GiftCardBalanceCheckErrorType } from './types';
 import { TxVariants } from '../tx-variants';
 import SRPanelProvider from '../../core/Errors/SRPanelProvider';
 
 export class GiftcardElement extends UIElement<GiftCardConfiguration> {
     public static type = TxVariants.giftcard;
+
+    protected componentRef: GiftcardComponent | undefined;
 
     protected static defaultProps = {
         brandsConfiguration: {}
@@ -44,6 +46,10 @@ export class GiftcardElement extends UIElement<GiftCardConfiguration> {
 
     get displayName() {
         return this.props.brandsConfiguration[this.props.brand]?.name || this.props.name;
+    }
+
+    private setBalanceCheckError(errorMessage: GiftCardBalanceCheckErrorType | null): void {
+        this.componentRef?.setBalanceCheckErrors?.(errorMessage);
     }
 
     private handleBalanceCheck = (data: GiftCardElementData): Promise<balanceCheckResponseType> => {
@@ -86,6 +92,10 @@ export class GiftcardElement extends UIElement<GiftCardConfiguration> {
 
         this.handleBalanceCheck(this.formatData())
             .then(({ balance, transactionLimit = {} as PaymentAmount }) => {
+                // Clear any previous balance check errors on success
+                this.setBalanceCheckError(null);
+
+                // We still need to throw these errors, otherwise it would be a breaking changing
                 if (!balance) throw new Error('card-error'); // card doesn't exist
                 if (balance?.currency !== this.props.amount?.currency) throw new Error('currency-error');
                 if (balance?.value <= 0) throw new Error('no-balance');
@@ -104,13 +114,14 @@ export class GiftcardElement extends UIElement<GiftCardConfiguration> {
                 }
             })
             .catch(error => {
-                this.setStatus(error?.message || 'error');
-                if (this.props.onError) {
-                    if (error instanceof AdyenCheckoutError) {
-                        this.handleError(error);
-                    } else {
-                        this.handleError(new AdyenCheckoutError('ERROR', error));
-                    }
+                // Simply pass the raw error message to setBalanceCheckError
+                this.setBalanceCheckError(error?.message);
+
+                // Still call handleError for other side effects (analytics, onError callback)
+                if (error instanceof AdyenCheckoutError) {
+                    this.handleError(error);
+                } else {
+                    this.handleError(new AdyenCheckoutError('ERROR', error));
                 }
             });
     };
