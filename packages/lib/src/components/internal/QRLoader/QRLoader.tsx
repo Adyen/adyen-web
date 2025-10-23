@@ -161,16 +161,12 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
             ? `${loadingContext}${QRCODE_URL}${this.props.qrCodeData}&clientKey=${this.props.clientKey}`
             : this.props.qrCodeImage;
 
-        const handleCopy = (complete: () => void) => {
-            void copyToClipboard(this.props.qrCodeData);
-
+        const handleCopy = () => {
             const event = new AnalyticsInfoEvent({
                 type: ANALYTICS_DOWNLOAD_STR,
                 target: ANALYTICS_QR_CODE_DOWNLOAD
             });
             this.props.onSubmitAnalytics(event);
-
-            complete();
         };
 
         const onQrCodeLoad = () => {

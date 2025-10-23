@@ -14,7 +14,7 @@ interface QRLoaderDetailsProviderProps {
     onTick: (time: CountdownTime) => void;
     onQRCodeLoad: () => void;
     onTimeUp: () => void;
-    handleCopy: (onComplete: () => void) => void;
+    handleCopy: () => void;
     children: ComponentChildren;
 }
 
