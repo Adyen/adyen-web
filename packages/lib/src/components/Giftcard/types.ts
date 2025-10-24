@@ -47,3 +47,22 @@ export interface GiftCardConfiguration extends UIElementProps {
      */
     fieldsLayoutComponent?: FunctionComponent<GiftcardFieldsProps>;
 }
+
+/**
+ * Unified error interface that matches useForm error structure for gift cards
+ */
+export interface GiftCardValidationError {
+    isValid: boolean;
+    errorMessage: string;
+    errorI18n?: string;
+    error?: string; // Original error code
+}
+
+export type GiftCardBalanceCheckErrorType = 'no-balance' | 'card-error' | 'currency-error';
+
+/**
+ * Balance check errors for gift card components
+ */
+export interface GiftCardBalanceCheckErrors {
+    balanceCheck?: GiftCardValidationError | null;
+}
