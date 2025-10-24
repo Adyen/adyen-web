@@ -6,6 +6,7 @@ import { StoredCardFieldsProps } from './types';
 import { ENCRYPTED_SECURITY_CODE } from '../../../../internal/SecuredFields/lib/constants';
 import InputText from '../../../../internal/FormFields/InputText';
 import Fieldset from '../../../../internal/FormFields/Fieldset';
+import './StoredCardFields.scss';
 
 export default function StoredCardFields({
     brand,
