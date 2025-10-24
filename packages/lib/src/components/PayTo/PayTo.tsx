@@ -131,9 +131,6 @@ export class PayToElement extends UIElement<PayToConfiguration> {
                 <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
                     <SRPanelProvider srPanel={this.props.modules.srPanel}>
                         <Await
-                            ref={ref => {
-                                this.componentRef = ref;
-                            }}
                             amount={this.props.amount}
                             showAmount={true}
                             instructions={PayToInstructions}

@@ -3,16 +3,16 @@ import { useState, useEffect } from 'preact/hooks';
 import classnames from 'classnames';
 import checkPaymentStatus from '../../../core/Services/payment-status';
 import processResponse from '../../../core/ProcessResponse';
-
 import Spinner from '../../internal/Spinner';
 import Countdown from '../Countdown';
 import Button from '../Button';
 import { useCoreContext } from '../../../core/Context/CoreProvider';
 import { AwaitComponentProps, StatusObject } from './types';
-import './Await.scss';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 import ContentSeparator from '../ContentSeparator';
 import useImage from '../../../core/Context/useImage';
+import { CountdownTime } from '../Countdown/types';
+import './Await.scss';
 
 function Await(props: AwaitComponentProps) {
     const { i18n, loadingContext } = useCoreContext();
@@ -25,7 +25,7 @@ function Await(props: AwaitComponentProps) {
     const [percentage, setPercentage] = useState(100);
     const [timePassed, setTimePassed] = useState(0);
     const [hasAdjustedTime, setHasAdjustedTime] = useState(false);
-    const [storedTimeout, setStoredTimeout] = useState(null);
+    const [storedTimeout, setStoredTimeout] = useState<NodeJS.Timeout | number | null>(null);
     const { amount } = props;
 
     const onTimeUp = (): void => {
@@ -34,7 +34,7 @@ function Await(props: AwaitComponentProps) {
         props.onError(new AdyenCheckoutError('ERROR', 'Payment Expired'));
     };
 
-    const onTick = (time): void => {
+    const onTick = (time: CountdownTime): void => {
         setPercentage(time.percentage);
     };
 
@@ -49,7 +49,7 @@ function Await(props: AwaitComponentProps) {
                 }
             };
             // Send success response to onAdditionalDetails
-            return props.onComplete(state, this);
+            return props.onComplete(state);
         }
 
         // Show error state & call merchant defined error callback if we do not have a payload
@@ -69,7 +69,7 @@ function Await(props: AwaitComponentProps) {
                 }
             };
             // Send error response to onAdditionalDetails
-            return props.onComplete(state, this);
+            return props.onComplete(state);
         }
 
         // Call merchant defined error callback if we do not have a payload
@@ -113,7 +113,7 @@ function Await(props: AwaitComponentProps) {
             });
     };
 
-    const redirectToApp = (url): void => {
+    const redirectToApp = (url: string): void => {
         window.location.assign(url);
     };
 
@@ -156,14 +156,14 @@ function Await(props: AwaitComponentProps) {
         }
     }, [loading, expired, completed, timePassed]);
 
-    const finalState = (image, message) => (
+    const finalState = (image: string, message: string) => (
         <div className="adyen-checkout__await adyen-checkout__await--result">
             <img
                 className="adyen-checkout__await__icon adyen-checkout__await__icon--result"
                 src={getImage({ imageFolder: 'components/' })(image)}
                 alt={i18n.get(message)}
             />
-            <div className="adyen-checkout__await__subtitle adyen-checkout__await__subtitle--result">{i18n.get(message)}</div>
+            <p className="adyen-checkout__await__subtitle adyen-checkout__await__subtitle--result">{i18n.get(message)}</p>
         </div>
     );
 

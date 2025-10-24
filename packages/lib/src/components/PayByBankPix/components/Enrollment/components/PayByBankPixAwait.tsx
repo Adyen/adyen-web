@@ -21,7 +21,7 @@ function PayByBankPixAwait(props: IPayByBankPixAwait) {
                 instructions={props.instructions}
                 pollStatus={props.pollStatus}
                 endSlot={props.endSlot}
-            ></Await>
+            />
         </div>
     );
 }
