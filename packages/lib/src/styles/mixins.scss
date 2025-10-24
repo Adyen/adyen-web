@@ -180,8 +180,9 @@ $adyen-checkout-media-query-l-min: 1024px;
     flex-wrap: wrap;
     justify-content: space-between;
     width: 100%;
+    gap: token(spacer-070);
 
-    > .adyen-checkout__field:last-of-type {
+    > .adyen-checkout__field {
         margin-bottom: 0;
     }
 }
