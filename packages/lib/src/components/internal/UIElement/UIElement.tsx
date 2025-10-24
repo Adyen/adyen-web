@@ -235,19 +235,9 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         }
     }
 
-    /** Work out what the component's "type" is:
-     * - first check for a dedicated "analyticsType" (currently only applies to custom-cards)
-     * - otherwise, distinguish cards from non-cards: cards will use their static type property, everything else will use props.type
-     */
     private getComponent({ component }: AnalyticsEvent): string {
         if (component) {
             return component;
-        }
-        if (this.constructor['analyticsType']) {
-            return this.constructor['analyticsType'];
-        }
-        if (this.constructor['type'] === 'scheme' || this.constructor['type'] === 'bcmc') {
-            return this.constructor['type'];
         }
         return this.type;
     }

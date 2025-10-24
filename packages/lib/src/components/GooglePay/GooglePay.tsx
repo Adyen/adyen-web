@@ -134,13 +134,18 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
         return DEFAULT_ALLOWED_CARD_NETWORKS;
     }
 
-    protected override beforeRender(configSetByMerchant: GooglePayConfiguration) {
+    protected override beforeRender(configSetByMerchant?: GooglePayConfiguration) {
+        // We don't send 'rendered' events when rendering actions
+        if (configSetByMerchant?.originalAction) {
+            return;
+        }
+
         const event = new AnalyticsInfoEvent({
             type: InfoEventType.rendered,
             component: this.type,
             configData: { ...configSetByMerchant, showPayButton: this.props.showPayButton },
-            ...(configSetByMerchant?.isExpress && { isExpress: this.props.isExpress }),
-            ...(configSetByMerchant?.expressPage && { expressPage: this.props.expressPage })
+            ...(configSetByMerchant?.isExpress && { isExpress: configSetByMerchant.isExpress }),
+            ...(configSetByMerchant?.expressPage && { expressPage: configSetByMerchant.expressPage })
         });
 
         this.analytics.sendAnalytics(event);
