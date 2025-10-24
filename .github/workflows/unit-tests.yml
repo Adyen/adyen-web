@@ -21,9 +21,19 @@ jobs:
         fetch-depth: 0
 
     - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v4
+      uses: actions/setup-node@v5
       with:
         node-version: ${{ matrix.node-version }}
+
+    - name: Enable Corepack
+      run: corepack enable
+
+      # https://github.com/actions/setup-node/issues/1075#issuecomment-2165643488
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v5
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: yarn
 
     - name: Cache node modules
       id: node-modules-cache
@@ -34,8 +44,6 @@ jobs:
         path: node_modules
         key: ${{ runner.os }}-cache-${{ env.cache-name }}-node-${{ matrix.node-version }}-yarn-${{ hashFiles('**/yarn.lock') }}
 
-    - name: Enable Corepack
-      run: corepack enable
 
     - name: Install Project Dependencies
       if: steps.node-modules-cache.outputs.cache-hit != 'true'
