@@ -22,7 +22,7 @@ describe('MealVoucherFR Error Handling', () => {
 
     describe('Inherited Error Handling from GiftCard', () => {
         test('should display "no-balance" error message when balance is zero', async () => {
-            const onBalanceCheck = jest.fn((resolve, reject) => {
+            const onBalanceCheck = jest.fn(resolve => {
                 // Simulate successful balance check but with zero balance (triggers no-balance error)
                 resolve({
                     balance: { value: 0, currency: 'EUR' }
@@ -49,7 +49,7 @@ describe('MealVoucherFR Error Handling', () => {
         });
 
         test('should display "card-error" error message when card does not exist', async () => {
-            const onBalanceCheck = jest.fn((resolve, reject) => {
+            const onBalanceCheck = jest.fn(resolve => {
                 // Simulate successful balance check but with no balance property (triggers card-error)
                 resolve({});
             });
@@ -74,7 +74,7 @@ describe('MealVoucherFR Error Handling', () => {
         });
 
         test('should display "currency-error" error message when currencies do not match', async () => {
-            const onBalanceCheck = jest.fn((resolve, reject) => {
+            const onBalanceCheck = jest.fn(resolve => {
                 // Simulate successful balance check but with different currency (triggers currency-error)
                 resolve({
                     balance: { value: 1000, currency: 'USD' }
@@ -103,7 +103,7 @@ describe('MealVoucherFR Error Handling', () => {
 
     describe('Error State Persistence for MealVoucher', () => {
         test('error message should persist after handleError is called', async () => {
-            const onBalanceCheck = jest.fn((resolve, reject) => {
+            const onBalanceCheck = jest.fn(resolve => {
                 // Resolve with zero balance to trigger no-balance error
                 resolve({
                     balance: { value: 0, currency: 'EUR' }
@@ -134,7 +134,7 @@ describe('MealVoucherFR Error Handling', () => {
         });
 
         test('component should be in ready state after error while preserving error message', async () => {
-            const onBalanceCheck = jest.fn((resolve, reject) => {
+            const onBalanceCheck = jest.fn(resolve => {
                 // Resolve with no balance property to trigger card-error
                 resolve({});
             });
@@ -156,7 +156,7 @@ describe('MealVoucherFR Error Handling', () => {
             // Component should be in ready state (not loading)
             // @ts-ignore - accessing protected property for testing
             expect(mealVoucher.componentRef.state.status).toBe('ready');
-            
+
             // But error message should still be displayed
             expect(screen.getByText('In our records we have no gift card with this number')).toBeInTheDocument();
         });

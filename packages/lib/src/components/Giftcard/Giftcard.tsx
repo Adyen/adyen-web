@@ -5,7 +5,7 @@ import { CoreProvider } from '../../core/Context/CoreProvider';
 import PayButton from '../internal/PayButton';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { PaymentAmount } from '../../types/global-types';
-import { GiftCardElementData, GiftCardConfiguration, balanceCheckResponseType, GiftCardValidationError, GiftCardBalanceCheckErrors, GiftCardBalanceCheckErrorType } from './types';
+import { GiftCardElementData, GiftCardConfiguration, balanceCheckResponseType, GiftCardBalanceCheckErrorType } from './types';
 import { TxVariants } from '../tx-variants';
 import SRPanelProvider from '../../core/Errors/SRPanelProvider';
 

@@ -8,7 +8,7 @@ import { GIFT_CARD } from '../../internal/SecuredFields/lib/constants';
 import { GiftCardFields } from './GiftcardFields';
 import { GiftcardFieldsProps, Placeholders } from './types';
 import { useSRPanelForGiftcardErrors } from './useSRPanelForGiftcardErrors';
-import { GiftCardBalanceCheckErrors, GiftCardBalanceCheckErrorType } from '../types';
+import { GiftCardBalanceCheckErrorType } from '../types';
 
 interface GiftcardComponentProps {
     onChange: (state) => void;
@@ -39,7 +39,7 @@ class Giftcard extends Component<GiftcardComponentProps> {
         isValid: false,
         sfpState: {},
         isValidating: false,
-        transformedErrors: {},
+        transformedErrors: {}
     };
 
     public static defaultProps = {
@@ -100,7 +100,7 @@ class Giftcard extends Component<GiftcardComponentProps> {
      */
     private generateBalanceCheckErrors(errorType?: GiftCardBalanceCheckErrorType | null): Record<string, any> {
         const balanceCheckErrors: Record<string, any> = {};
-        
+
         // This is the field that the error is associated with, only used for SR logic
         const fieldToAnnounce = 'encryptedCardNumber';
 
@@ -108,7 +108,7 @@ class Giftcard extends Component<GiftcardComponentProps> {
         if (errorType === null) {
             return balanceCheckErrors;
         }
-        
+
         // Use provided errorType or get from component state
         if (errorType) {
             // Create error in the same format as SFP errors for consistency
@@ -118,7 +118,7 @@ class Giftcard extends Component<GiftcardComponentProps> {
                 error: errorType
             };
         }
-        
+
         return balanceCheckErrors;
     }
 
@@ -152,7 +152,7 @@ class Giftcard extends Component<GiftcardComponentProps> {
 
     render(props, { focusedElement, balance, transactionLimit, isValidating, transformedErrors }) {
         const { i18n } = useCoreContext();
-        
+
         // Handle SRPanel errors in render with transformed error objects
         useSRPanelForGiftcardErrors({
             errors: transformedErrors,
