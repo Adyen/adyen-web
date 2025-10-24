@@ -1,21 +1,7 @@
 @use 'styles/index';
-@import 'styles/variable-generator';
 
 .adyen-checkout__fieldset--address {
     .adyen-checkout__field-group {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-between;
-        width: 100%;
-    }
-
-    .adyen-checkout__field-group:last-of-type .adyen-checkout__field {
-        @include index.media-s-and-up {
-            margin-bottom: 0;
-        }
-
-        &:last-of-type {
-            margin-bottom: 0;
-        }
+        @include index.fieldset-fields-layout;
     }
 }
