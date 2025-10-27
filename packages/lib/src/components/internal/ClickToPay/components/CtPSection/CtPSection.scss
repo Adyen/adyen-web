@@ -37,8 +37,8 @@
         padding: 0;
         margin: 0;
         width: auto;
-       
-        @include index.screen-s-and-up {
+
+        @include index.media-s-and-up {
             font-size: token(text-title-font-size);
         }
     }

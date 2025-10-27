@@ -88,7 +88,7 @@
     text-align: center;
 }
 
-@include index.screen-xl-and-up {
+@include index.media-xl-and-up {
     .adyen-checkout__await__app-link {
         display: none;
     }
