@@ -26,11 +26,10 @@ export interface AwaitComponentProps {
     classNameModifiers?: string[];
     clientKey: string;
     onError: (error) => void;
-    onComplete: (status, component) => void;
+    onComplete: (status) => void;
     brandLogo?: string;
     messageText?: string;
     awaitText: string;
-    ref?: any;
     onActionHandled?: (rtnObj: ActionHandledReturnObject) => void;
     pollStatus?: () => Promise<RawPaymentResponse>;
     instructions?: string | (() => h.JSX.Element);

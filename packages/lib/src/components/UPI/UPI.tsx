@@ -104,9 +104,6 @@ class UPI extends UIElement<UPIConfiguration> {
             case 'qrCode':
                 return (
                     <QRLoader
-                        ref={ref => {
-                            this.componentRef = ref;
-                        }}
                         {...this.props}
                         qrCodeData={this.props.qrCodeData ? encodeURIComponent(this.props.qrCodeData) : null}
                         type={TxVariants.upi_qr}
@@ -121,9 +118,6 @@ class UPI extends UIElement<UPIConfiguration> {
             case 'await':
                 return (
                     <Await
-                        ref={ref => {
-                            this.componentRef = ref;
-                        }}
                         url={url}
                         type={paymentMethodType}
                         showCountdownTimer
