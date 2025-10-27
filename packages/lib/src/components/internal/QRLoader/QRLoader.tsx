@@ -16,8 +16,8 @@ import { AnalyticsInfoEvent } from '../../../core/Analytics/AnalyticsInfoEvent';
 import { CountdownTime } from '../Countdown/types';
 import QRDetails from './components/QRDetails';
 import { QRLoaderDetailsProvider } from './QRLoaderDetailsProvider';
-import './QRLoader.scss';
 import { QRFinalState } from './components/QRFinalState';
+import './QRLoader.scss';
 
 const QRCODE_URL = 'utility/v1/barcode.png?type=qrCode&data=';
 
