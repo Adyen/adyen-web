@@ -1,6 +1,6 @@
+import { ComponentChildren, h } from 'preact';
 import { ActionHandledReturnObject, PaymentAmount } from '../../../types/global-types';
 import Language from '../../../language/Language';
-import { h } from 'preact';
 import { AnalyticsEvent } from '../../../core/Analytics/AnalyticsEvent';
 import { CountdownTime } from '../Countdown/types';
 
@@ -8,7 +8,7 @@ export interface QRLoaderProps {
     delay?: number;
     countdownTime?: number;
     onError?: (error) => void;
-    onComplete?: (data, component) => void;
+    onComplete?: (data) => void;
     throttleTime?: number;
     throttledInterval?: number;
     url?: string;
@@ -32,16 +32,7 @@ export interface QRLoaderProps {
     copyBtn?: boolean;
     onActionHandled?: (rtnObj: ActionHandledReturnObject) => void;
     onSubmitAnalytics?: (aObj: AnalyticsEvent) => void;
-}
-
-export interface QRLoaderState {
-    buttonStatus: string;
-    completed: boolean;
-    delay: any;
-    expired: boolean;
-    loading: boolean;
-    percentage: number;
-    timePassed: number;
+    children?: ComponentChildren;
 }
 
 export interface QRCountdownProps {
