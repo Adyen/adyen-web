@@ -1,3 +1,4 @@
+@use 'styles/index';
 @import 'styles/variable-generator';
 
 .adyen-checkout-ctp__section {
@@ -30,15 +31,15 @@
     align-items: center;
 
     &-title {
-        font-size: token(text-title-font-size);
+        font-size: token(text-body-font-size);
         font-weight: token(text-title-font-weight);
         line-height: 22px;
         padding: 0;
         margin: 0;
         width: auto;
 
-        @media screen and (max-width: 400px) {
-            font-size: token(text-body-font-size);
+        @include index.media-s-and-up {
+            font-size: token(text-title-font-size);
         }
     }
 

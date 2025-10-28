@@ -96,9 +96,6 @@ export class ANCVElement extends UIElement<ANCVConfiguration> {
                 <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
                     <SRPanelProvider srPanel={this.props.modules.srPanel}>
                         <Await
-                            ref={ref => {
-                                this.componentRef = ref;
-                            }}
                             clientKey={this.props.clientKey}
                             paymentData={this.props.paymentData}
                             onError={this.props.onError}

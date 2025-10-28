@@ -10,7 +10,7 @@
     }
 
     .adyen-checkout__field-group:last-of-type .adyen-checkout__field {
-        @include index.screen-s-and-up {
+        @include index.media-s-and-up {
             margin-bottom: 0;
         }
 
