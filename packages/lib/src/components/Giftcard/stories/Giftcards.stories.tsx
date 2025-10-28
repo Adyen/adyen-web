@@ -25,7 +25,14 @@ export const Default: GifcardStory = {
     render: args => {
         return <GiftcardExample contextArgs={args} />;
     },
-    args: baseArgs,
+    args: baseArgs
+};
+
+export const WithGiftcard: GifcardStory = {
+    render: args => {
+        return <GiftcardExample contextArgs={args} renderCard={false} />;
+    },
+    args: baseArgs
 };
 
 export const NoBalanceError: GifcardStory = {
