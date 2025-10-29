@@ -2,8 +2,8 @@ import { Component, h } from 'preact';
 import classNames from 'classnames';
 import Spinner from '../Spinner';
 import { useCoreContext } from '../../../core/Context/CoreProvider';
-import './Button.scss';
 import { ButtonProps, ButtonState } from './types';
+import './Button.scss';
 
 class Button extends Component<ButtonProps, ButtonState> {
     public static defaultProps = {
