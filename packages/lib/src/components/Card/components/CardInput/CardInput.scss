@@ -69,22 +69,9 @@
     padding-left: token(spacer-060);
 }
 
-.adyen-checkout__card__exp-date__input--oneclick {
-    line-height: token(text-title-line-height);
-    font-weight: token(text-body-font-weight);
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
-    text-align: left;
-}
-
-.adyen-checkout__field--storedCard,
-.adyen-checkout__field--expiryDate,
 .adyen-checkout__card__holderName {
     margin-bottom: 0;
 }
-
-
 
 .adyen-checkout__card__holderName,
 .adyen-checkout__card__kcp-authentication,
@@ -108,7 +95,9 @@
 }
 
 /* Hide checkmark when cardNumber is in a valid state (only show brand icon) */
-.adyen-checkout__field--cardNumber .adyen-checkout__input--valid:not(.adyen-checkout__card__cardNumber__input--noBrand) + .adyen-checkout-input__inline-validation--valid {
+.adyen-checkout__field--cardNumber
+    .adyen-checkout__input--valid:not(.adyen-checkout__card__cardNumber__input--noBrand)
+    + .adyen-checkout-input__inline-validation--valid {
     display: none;
 }
 

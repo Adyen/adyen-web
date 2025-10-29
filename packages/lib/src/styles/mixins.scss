@@ -191,10 +191,10 @@ $adyen-checkout-media-query-xl-min: 1280px;
 @mixin fieldset-fields-layout {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
     width: 100%;
+    gap: token(spacer-070);
 
-    > .adyen-checkout__field:last-of-type {
+    > .adyen-checkout__field {
         margin-bottom: 0;
     }
 }
