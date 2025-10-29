@@ -8,13 +8,14 @@ jobs:
   publish-npm:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       # Setup .npmrc file to publish to npm
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: 22.18.0
           registry-url: https://registry.npmjs.org/
+          package-manager-cache: false
 
       - name: Enable Corepack
         run: corepack enable

@@ -16,14 +16,15 @@ jobs:
         node-version: [22.18.0]
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
       with:
         fetch-depth: 0
 
     - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v4
+      uses: actions/setup-node@v5
       with:
         node-version: ${{ matrix.node-version }}
+        package-manager-cache: false
 
     - name: Cache node modules
       id: node-modules-cache

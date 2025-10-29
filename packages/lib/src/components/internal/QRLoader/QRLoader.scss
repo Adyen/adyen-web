@@ -17,12 +17,6 @@
     gap: token(spacer-090);
 }
 
-.adyen-checkout__qr-loader--app {
-    border: 0;
-    border-radius: 0;
-    padding: 0;
-}
-
 .adyen-checkout__qr-loader__brand-logo-wrapper {
     border-radius: token(border-radius-s);
     box-shadow: token(shadow-low);
@@ -105,18 +99,13 @@
     text-align: center;
 }
 
-.adyen-checkout__await__instructions {
-    display: flex;
-    justify-content: center;
-}
-
 .adyen-checkout__qr-loader__actions {
     margin-top: token(spacer-100);
     width: 100%;
     max-width: 400px;
 }
 
-@include index.screen-l-and-down {
+@include index.media-l-and-down {
     .adyen-checkout__qr-loader__app-link {
         display: block;
         min-width: 220px;

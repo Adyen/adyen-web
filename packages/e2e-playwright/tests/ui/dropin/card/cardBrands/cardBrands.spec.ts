@@ -8,6 +8,8 @@ dotenv.config();
 const apiVersion = Number(process.env.API_VERSION.substring(1));
 
 const CARD_HEADER_LABEL = apiVersion <= 70 ? 'Credit Card' : 'Cards';
+const TOTAL_BRANDS_COUNT = 17;
+const VISIBLE_BRANDS_COUNT = 3;
 
 test.describe('Dropin - Card brands displayed in the Payment Method List and underneath the PAN field', () => {
     test('should display the 3 logos and left over amount of brands, and then display all available brands under the PAN field', async ({
@@ -20,10 +22,10 @@ test.describe('Dropin - Card brands displayed in the Payment Method List and und
         await header.rootElement.scrollIntoViewIfNeeded();
 
         const brands = await header.getVisibleCardBrands();
-        expect(brands).toHaveLength(3);
+        expect(brands).toHaveLength(VISIBLE_BRANDS_COUNT);
 
         const remainingBrandsText = await header.getRemainingBrandsNumberText();
-        expect(remainingBrandsText).toBe('+12');
+        expect(remainingBrandsText).toBe(`+${TOTAL_BRANDS_COUNT - VISIBLE_BRANDS_COUNT}`);
 
         const { paymentMethodDetailsLocator } = await dropinWithSession.selectNonStoredPaymentMethod('scheme');
 
@@ -32,7 +34,7 @@ test.describe('Dropin - Card brands displayed in the Payment Method List and und
 
         expect(await header.getVisibleCardBrands()).toHaveLength(0);
         await expect(await header.getRemainingBrandsNumberLocator()).toHaveCount(0);
-        expect(await card.availableBrands).toHaveLength(15);
+        expect(await card.availableBrands).toHaveLength(TOTAL_BRANDS_COUNT);
     });
 
     test('should exclude non-valid brands and display only the right amount in the payment header and underneath the PAN field', async ({
