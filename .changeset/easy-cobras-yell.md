@@ -2,4 +2,4 @@
 '@adyen/adyen-web': patch
 ---
 
-Fix button component focus boxshadow
+Fix button hover and focused states styles for better accessibility
