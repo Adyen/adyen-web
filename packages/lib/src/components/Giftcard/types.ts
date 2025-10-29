@@ -59,10 +59,3 @@ export interface GiftCardValidationError {
 }
 
 export type GiftCardBalanceCheckErrorType = 'no-balance' | 'card-error' | 'currency-error';
-
-/**
- * Balance check errors for gift card components
- */
-export interface GiftCardBalanceCheckErrors {
-    balanceCheck?: GiftCardValidationError | null;
-}

@@ -109,15 +109,12 @@ class Giftcard extends Component<GiftcardComponentProps> {
             return balanceCheckErrors;
         }
 
-        // Use provided errorType or get from component state
-        if (errorType) {
-            // Create error in the same format as SFP errors for consistency
-            balanceCheckErrors[fieldToAnnounce] = {
-                isValid: false,
-                errorMessage: `error.giftcard.${errorType}`,
-                error: errorType
-            };
-        }
+        // Create error in the same format as SFP errors for consistency
+        balanceCheckErrors[fieldToAnnounce] = {
+            isValid: false,
+            errorMessage: `error.giftcard.${errorType}`,
+            error: errorType
+        };
 
         return balanceCheckErrors;
     }
