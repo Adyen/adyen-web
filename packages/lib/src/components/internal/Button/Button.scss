@@ -19,7 +19,9 @@
     width: 100%;
 
     &:focus {
-        box-shadow: 0 0 0 1px token(color-outline-tertiary);
+        box-shadow:
+            0 0 0 token(focus-ring-spacer) token(color-background-primary),
+            0 0 0 token(focus-ring-outline) token(focus-ring-color);
         outline: 0;
     }
 
