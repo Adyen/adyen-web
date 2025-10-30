@@ -1,5 +1,23 @@
 # @adyen/adyen-web
 
+## 6.25.0
+
+### Minor Changes
+
+- Replace hardcoded media queries with mixins and rename media query mixins ([#3602](https://github.com/Adyen/adyen-web/pull/3602))
+
+- Refactor Interal QR loader component from a class component to a functional component ([#3591](https://github.com/Adyen/adyen-web/pull/3591))
+
+### Patch Changes
+
+- Fix button hover and focused states styles for better accessibility ([#3616](https://github.com/Adyen/adyen-web/pull/3616))
+
+- Move StoredCardFields related styles into its own scss file. ([#3606](https://github.com/Adyen/adyen-web/pull/3606))
+
+    Refactor internal styles.
+
+- Fix Gift Card error message display issue ([#3605](https://github.com/Adyen/adyen-web/pull/3605))
+
 ## 6.24.0
 
 ### Minor Changes
