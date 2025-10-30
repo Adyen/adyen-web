@@ -73,7 +73,7 @@ export const WithAVS: CardStory = {
             _disableClickToPay: true,
             billingAddressRequired: true,
             billingAddressAllowedCountries: ['US', 'CA', 'GB'],
-            // billingAddressRequiredFields: ['postalCode', 'country'],
+            //billingAddressRequiredFields: ['postalCode', 'country'],
             data: {
                 billingAddress: {
                     street: 'Virginia Street',
