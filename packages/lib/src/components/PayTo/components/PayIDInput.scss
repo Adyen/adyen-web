@@ -1,16 +1,15 @@
 @import 'styles/variable-generator';
 
 .adyen-checkout__payto-component {
-  .adyen-checkout__fieldset {
-    margin-top: token(spacer-070);
+    .adyen-checkout__fieldset {
+        margin-top: token(spacer-070);
 
-    .adyen-checkout__fieldset__fields {
-      margin-top: token(spacer-070);
-      gap: 0 token(spacer-060);
+        .adyen-checkout__fieldset__fields {
+            margin-top: token(spacer-070);
+        }
     }
-  }
 
-  .adyen-checkout-field--phone-prefix {
-    width: 98px;
-  }
+    .adyen-checkout-field--phone-prefix {
+        width: 98px;
+    }
 }
