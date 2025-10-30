@@ -7,12 +7,13 @@ import copyToClipboard from '../../../utils/clipboard';
 import { PREFIX } from '../Icon/constants';
 import useImage from '../../../core/Context/useImage';
 
-export interface CopyButtonProps extends ButtonProps {
+export interface CopyButtonProps extends Omit<ButtonProps, 'onClickCompletedLabel'> {
     /**
      * String that will get copied to the clipboard
      */
     text: string;
     copiedLabel?: string;
+    onClick?: (e: h.JSX.TargetedMouseEvent<HTMLButtonElement>) => void;
 }
 
 const CopyButton = (props: CopyButtonProps) => {

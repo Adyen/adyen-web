@@ -12,7 +12,7 @@ const QR_CODE_DATA = 'qrCodeData';
 const onTickMock = jest.fn();
 const onQRCodeLoadMock = jest.fn();
 const onTimeUpMock = jest.fn();
-const handleCopyMock = jest.fn((completed: () => void) => completed());
+const handleCopyMock = jest.fn();
 
 const renderPixQRDetails = () => {
     return render(
