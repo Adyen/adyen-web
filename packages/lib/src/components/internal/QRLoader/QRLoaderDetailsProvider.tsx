@@ -14,7 +14,7 @@ interface QRLoaderDetailsProviderProps {
     onTick: (time: CountdownTime) => void;
     onQRCodeLoad: () => void;
     onTimeUp: () => void;
-    handleCopy: () => void;
+    handleCopy?: (e: h.JSX.TargetedMouseEvent<HTMLButtonElement>) => void;
     children: ComponentChildren;
 }
 

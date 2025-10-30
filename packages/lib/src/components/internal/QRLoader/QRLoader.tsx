@@ -5,7 +5,6 @@ import Spinner from '../Spinner';
 import checkPaymentStatus from '../../../core/Services/payment-status';
 import processResponse from '../../../core/ProcessResponse';
 import { QRLoaderProps } from './types';
-import copyToClipboard from '../../../utils/clipboard';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 import { useCoreContext } from '../../../core/Context/CoreProvider';
 import ContentSeparator from '../ContentSeparator';
@@ -135,15 +134,12 @@ function QRLoader(props: QRLoaderProps) {
 
     const qrCodeImage = props.qrCodeData ? `${loadingContext}${QRCODE_URL}${props.qrCodeData}&clientKey=${props.clientKey}` : props.qrCodeImage;
 
-    const handleCopy = (complete: () => void) => {
-        void copyToClipboard(props.qrCodeData);
-
+    const handleCopy = () => {
         const event = new AnalyticsInfoEvent({
             type: ANALYTICS_DOWNLOAD_STR,
             target: ANALYTICS_QR_CODE_DOWNLOAD
         });
         props.onSubmitAnalytics(event);
-        complete();
     };
 
     const onQrCodeLoad = () => {
