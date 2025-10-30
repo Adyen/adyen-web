@@ -19,7 +19,7 @@ describe('CopyButton', () => {
     const user = userEvent.setup();
 
     beforeEach(() => {
-        (copyToClipboard as jest.Mock).mockClear();
+        jest.clearAllMocks();
     });
 
     test('Renders the button with the default label', () => {
@@ -69,5 +69,43 @@ describe('CopyButton', () => {
         await waitFor(() => {
             expect(screen.getByRole('button', { name: /Copy me/i })).toBeInTheDocument();
         });
+    });
+
+    test('stops keydown event propagation for Enter key', async () => {
+        const parentKeyDownSpy = jest.fn();
+        render(
+            // eslint-disable-next-line jsx-a11y/no-static-element-interactions
+            <div onKeyDown={parentKeyDownSpy}>
+                <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+                    <CopyButton text="test" />
+                </CoreProvider>
+            </div>
+        );
+
+        const button = screen.getByRole('button', { name: /copy/i });
+        await user.tab();
+        expect(button).toHaveFocus();
+
+        await user.keyboard('{Enter}');
+        expect(parentKeyDownSpy).not.toHaveBeenCalled();
+    });
+
+    test('stops keydown event propagation for Space key', async () => {
+        const parentKeyDownSpy = jest.fn();
+        render(
+            // eslint-disable-next-line jsx-a11y/no-static-element-interactions
+            <div onKeyDown={parentKeyDownSpy}>
+                <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+                    <CopyButton text="test" />
+                </CoreProvider>
+            </div>
+        );
+
+        const button = screen.getByRole('button', { name: /copy/i });
+        await user.tab();
+        expect(button).toHaveFocus();
+
+        await user.keyboard(' ');
+        expect(parentKeyDownSpy).not.toHaveBeenCalled();
     });
 });
