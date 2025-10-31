@@ -113,7 +113,7 @@ __metadata:
     eslint-plugin-jsx-a11y: "npm:6.10.2"
     eslint-plugin-react: "npm:7.37.5"
     eslint-plugin-storybook: "npm:0.12.0"
-    eslint-plugin-testing-library: "npm:7.8.0"
+    eslint-plugin-testing-library: "npm:7.13.1"
     globals: "npm:16.4.0"
     jest: "npm:29.7.0"
     jest-environment-jsdom: "npm:29.7.0"
@@ -7063,15 +7063,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-testing-library@npm:7.8.0":
-  version: 7.8.0
-  resolution: "eslint-plugin-testing-library@npm:7.8.0"
+"eslint-plugin-testing-library@npm:7.13.1":
+  version: 7.13.1
+  resolution: "eslint-plugin-testing-library@npm:7.13.1"
   dependencies:
     "@typescript-eslint/scope-manager": "npm:^8.15.0"
     "@typescript-eslint/utils": "npm:^8.15.0"
   peerDependencies:
     eslint: ^8.57.0 || ^9.0.0
-  checksum: 10c0/902a6d67fd5bab27e279ab51d6bdace524658bdda85b588f21d322f9249d7d5f1a738a7db2bd6562169b31bebb90db81c2eaae84dd8011f9e5462fef098c6c5a
+  checksum: 10c0/f12fcd5e0d1745a685e1c8111842768cbf1fc4fca5819f5acd5977712738652fad95185438dfb6412b674f7f1bfb06e04e1e26b222aa6105ef4da5f7d29b8c65
   languageName: node
   linkType: hard
 
