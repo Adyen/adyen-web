@@ -1,0 +1,69 @@
+.threeds2-field{
+  margin: auto;
+  max-width: 400px;
+  padding: 24px;
+}
+
+.adyen-checkout__status.storybook-status-container{
+  margin-top: 24px;
+}
+
+
+.info {
+  background: #e4ecf4;
+  border-left: 3px solid #0075FFFF;
+  color: #00112CFF;
+  font-size: 14px;
+  margin: 0 auto;
+  max-width: 600px;
+  overflow-x: auto;
+  padding: 24px;
+  width: 100%;
+}
+
+.info h2 {
+  font-size: 1.1em;
+  font-weight: 500;
+}
+
+/* stylelint-disable-next-line */
+.info a {
+  color: #0075FFFF;
+  font-weight: normal;
+  text-decoration: none;
+}
+
+.info a:hover {
+  text-decoration: underline;
+}
+
+p {
+  font-size: 11px;
+  font-weight: bold;
+}
+
+table {
+  border-spacing: 0;
+  border-collapse: separate;
+  font-size: 13px;
+  margin: 8px 0 36px;
+
+  caption {
+    display: none;
+  }
+
+  th,
+  td {
+    text-align: left;
+    padding: 8px 24px 8px 0;
+  }
+
+  td {
+    border-spacing: 0;
+    border-top: 1px solid #D4D9DBFF;
+
+    &:last-child {
+      padding-right: 0;
+    }
+  }
+}

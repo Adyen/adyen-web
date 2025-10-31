@@ -6,6 +6,7 @@ import { CardWith3DS2Redirect } from './cardStoryHelpers/CardWith3DS2Redirect';
 import { createStoredCardComponent } from './cardStoryHelpers/createStoredCardComponent';
 import { createCardComponent } from './cardStoryHelpers/createCardComponent';
 import { getComponentConfigFromUrl } from '../../../../storybook/utils/get-configuration-from-url';
+import { CardWith3DS2CreateFromAction } from './cardStoryHelpers/CardWith3DS2CreateFromAction';
 
 type CardStory = StoryConfiguration<CardConfiguration>;
 
@@ -174,6 +175,17 @@ export const WithClickToPay: CardStory = {
 
 export const CardWith_3DS2_Redirect: CardStory = {
     render: args => <CardWith3DS2Redirect {...args} />,
+
+    args: {
+        componentConfiguration: {
+            _disableClickToPay: true
+        },
+        useSessions: false
+    }
+};
+
+export const CardWith_3DS2_CreateFromAction: CardStory = {
+    render: args => <CardWith3DS2CreateFromAction {...args} />,
 
     args: {
         componentConfiguration: {
