@@ -86,7 +86,7 @@ export default function Voucher({ voucherDetails = [], className = '', ...props 
                     <ul className="adyen-checkout__voucher-result__actions">
                         {!!props.copyBtn && (
                             <li className="adyen-checkout__voucher-result__actions__item">
-                                <CopyButton text={props.reference} />
+                                <CopyButton inline text={props.reference} />
                             </li>
                         )}
 

@@ -44,7 +44,7 @@ const CopyButton = (props: CopyButtonProps) => {
 
     return (
         <Button
-            inline
+            {...props}
             variant="action"
             onClick={onClick}
             // It's ok to have both, browsers will fire only one click event for enter key pressed.

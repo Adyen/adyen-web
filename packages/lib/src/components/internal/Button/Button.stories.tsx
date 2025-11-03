@@ -9,6 +9,8 @@ import { PayButtonProps } from '../PayButton/PayButton';
 import { ButtonProps } from './types';
 import { CopyButton, CopyButtonProps } from './CopyButton';
 import { Resources } from '../../../core/Context/Resources';
+import { resolveEnvironments } from '../../../core/Environment';
+import type { CoreConfiguration } from '../../../core/types';
 
 const meta: Meta<ButtonProps> = {
     title: 'Internals/Button',
@@ -31,7 +33,7 @@ const meta: Meta<ButtonProps> = {
 };
 
 const coreProps = {
-    loadingContext: 'test',
+    loadingContext: process.env.CLIENT_ENV,
     i18n: new Language({
         locale: 'en-US',
         translations: {
@@ -42,7 +44,7 @@ const coreProps = {
             confirmPreauthorization: 'Confirm preauthorization'
         }
     }),
-    resources: new Resources('https://checkoutshopper-test.cdn.adyen.com/checkoutshopper/')
+    resources: new Resources(resolveEnvironments(process.env.CLIENT_ENV as CoreConfiguration['environment']).cdnImagesUrl)
 };
 
 export const Default: StoryObj<ButtonProps> = {
