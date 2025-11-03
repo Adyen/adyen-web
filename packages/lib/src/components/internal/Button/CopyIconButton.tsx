@@ -6,6 +6,7 @@ import { useCoreContext } from '../../../core/Context/CoreProvider';
 import copyToClipboard from '../../../utils/clipboard';
 import { SingletonTooltipProvider, useTooltip } from '../Tooltip/SingletonTooltipProvider';
 import './CopyIconButton.scss';
+import { stopPropagationForActionKeys } from './stopPropagationForActionKeys';
 
 export interface CopyIconButtonProps extends ButtonProps {
     /**
@@ -24,22 +25,10 @@ const CopyIconButton = (props: CopyIconButtonProps) => {
         showTooltip({ anchorRef, text: i18n.get('button.copied') });
     }, [props.text, i18n, showTooltip]);
 
-    // todo: remove it: onKeyPress is deprecated
-    const onKeyPress = useCallback(
-        (event: KeyboardEvent) => {
-            if (event.key === 'Enter' || event.code === 'Enter' || event.key === ' ' || event.code === 'Space') {
-                event.stopPropagation();
-            }
-        },
-        [hideTooltip]
-    );
-
     // We need it because onKeyPress does not trigger for Esc key
     const onKeyDown = useCallback(
         (event: KeyboardEvent) => {
-            if (event.key === 'Enter' || event.code === 'Enter' || event.key === ' ' || event.code === 'Space') {
-                event.stopPropagation();
-            }
+            stopPropagationForActionKeys(event);
 
             if (event.key === 'Escape' || event.code === 'Escape') {
                 event.stopPropagation();
@@ -65,7 +54,7 @@ const CopyIconButton = (props: CopyIconButtonProps) => {
             onBlur={hideTooltip}
             onClick={onClick}
             // It's ok to have both, browsers will fire only one click event for enter/space key pressed.
-            onKeyPress={onKeyPress}
+            onKeyPress={stopPropagationForActionKeys}
             onKeyDown={onKeyDown}
         >
             <svg

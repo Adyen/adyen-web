@@ -6,8 +6,9 @@ import { useCoreContext } from '../../../core/Context/CoreProvider';
 import copyToClipboard from '../../../utils/clipboard';
 import { PREFIX } from '../Icon/constants';
 import useImage from '../../../core/Context/useImage';
+import { stopPropagationForActionKeys } from './stopPropagationForActionKeys';
 
-export interface CopyButtonProps extends Omit<ButtonProps, 'onClickCompletedLabel'> {
+export interface CopyButtonProps extends Omit<ButtonProps, 'variant' | 'onClickCompletedLabel'> {
     /**
      * String that will get copied to the clipboard
      */
@@ -29,27 +30,14 @@ const CopyButton = (props: CopyButtonProps) => {
         [props.text, props.onClick]
     );
 
-    // todo: we should remove it from the whole sdk: onKeyPress is deprecated.
-    const onKeyPress = useCallback((event: KeyboardEvent) => {
-        if (event.key === 'Enter' || event.code === 'Enter' || event.key === ' ' || event.code === 'Space') {
-            event.stopPropagation();
-        }
-    }, []);
-
-    const onKeyDown = useCallback((event: KeyboardEvent) => {
-        if (event.key === 'Enter' || event.code === 'Enter' || event.key === ' ' || event.code === 'Space') {
-            event.stopPropagation();
-        }
-    }, []);
-
     return (
         <Button
             {...props}
             variant="action"
             onClick={onClick}
             // It's ok to have both, browsers will fire only one click event for enter key pressed.
-            onKeyPress={onKeyPress}
-            onKeyDown={onKeyDown}
+            onKeyPress={stopPropagationForActionKeys}
+            onKeyDown={stopPropagationForActionKeys}
             icon={props.icon ?? getImage({ imageFolder: 'components/' })(`${PREFIX}copy`)}
             label={props.label ?? i18n.get('button.copy')}
             onClickCompletedLabel={props.copiedLabel ?? i18n.get('button.copied')}
