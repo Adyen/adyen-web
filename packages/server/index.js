@@ -6,7 +6,7 @@ require('dotenv').config({ path: path.resolve('../../', '.env') });
 const getPaymentMethods = require('./api/paymentMethods');
 const getPaymentMethodsBalance = require('./api/paymentMethodsBalance');
 const makePayment = require('./api/payments');
-const postDetails = require('./api/details');
+const postPaymentsDetails = require('./api/paymentsDetails');
 const createOrder = require('./api/orders');
 const cancelOrder = require('./api/ordersCancel');
 const createSession = require('./api/sessions');
@@ -48,7 +48,7 @@ module.exports = (app = express(), options = {}) => {
 
     app.all('/api/payments', (req, res) => makePayment(res, req.body));
 
-    app.all('/api/details', (req, res) => postDetails(res, req.body));
+    app.all('/api/payments/details', (req, res) => postPaymentsDetails(res, req.body));
 
     app.all('/api/orders', (req, res) => createOrder(res, req.body));
 

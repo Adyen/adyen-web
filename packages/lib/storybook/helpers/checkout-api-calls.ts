@@ -52,7 +52,7 @@ export const makeDetailsCall = async (
     pspReference?: string;
     merchantReference?: string;
     paymentMethod?: any;
-}> => await httpPost('details', detailsData);
+}> => await httpPost('payments/details', detailsData);
 
 export const createSession = async (data: any): Promise<CheckoutSessionSetupResponse> => {
     const payload = { ...data, lineItems: paymentsConfig.lineItems };
