@@ -23,7 +23,12 @@ const PixQRDetails = () => {
                     aria-label={i18n.get('pix.code.label')}
                 />
             </Field>
-            <QRCodeCopyButton copyLabel={i18n.get('pix.code.copy.label')} copiedLabel={i18n.get('pix.code.copied.label')} handleCopy={handleCopy} />
+            <QRCodeCopyButton
+                text={qrCodeData}
+                copyLabel={i18n.get('pix.code.copy.label')}
+                copiedLabel={i18n.get('pix.code.copied.label')}
+                handleCopy={handleCopy}
+            />
         </div>
     );
 };

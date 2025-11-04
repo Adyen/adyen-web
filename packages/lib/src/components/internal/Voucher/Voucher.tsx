@@ -1,14 +1,13 @@
 import { h } from 'preact';
 import classNames from 'classnames';
 import Button from '../Button';
-import { copyToClipboard } from '../../../utils/clipboard';
-
 import { useCoreContext } from '../../../core/Context/CoreProvider';
 import './Voucher.scss';
 import { VoucherProps } from './types';
 import useImage from '../../../core/Context/useImage';
 import { PREFIX } from '../Icon/constants';
 import DetailsTable from '../DetailsTable';
+import { CopyButton } from '../Button/CopyButton';
 
 export default function Voucher({ voucherDetails = [], className = '', ...props }: VoucherProps) {
     const { i18n } = useCoreContext();
@@ -87,16 +86,7 @@ export default function Voucher({ voucherDetails = [], className = '', ...props 
                     <ul className="adyen-checkout__voucher-result__actions">
                         {!!props.copyBtn && (
                             <li className="adyen-checkout__voucher-result__actions__item">
-                                <Button
-                                    inline
-                                    variant="action"
-                                    onClick={(e, { complete }) => {
-                                        void copyToClipboard(props.reference);
-                                        complete();
-                                    }}
-                                    icon={getImage({ imageFolder: 'components/' })(`${PREFIX}copy`)}
-                                    label={i18n.get('button.copy')}
-                                />
+                                <CopyButton inline text={props.reference} />
                             </li>
                         )}
 

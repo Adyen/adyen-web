@@ -7,6 +7,10 @@ import { CoreProvider } from '../../../core/Context/CoreProvider';
 import { CopyIconButton, CopyIconButtonProps } from './CopyIconButton';
 import { PayButtonProps } from '../PayButton/PayButton';
 import { ButtonProps } from './types';
+import { CopyButton, CopyButtonProps } from './CopyButton';
+import { Resources } from '../../../core/Context/Resources';
+import { resolveEnvironments } from '../../../core/Environment';
+import type { CoreConfiguration } from '../../../core/types';
 
 const meta: Meta<ButtonProps> = {
     title: 'Internals/Button',
@@ -29,7 +33,7 @@ const meta: Meta<ButtonProps> = {
 };
 
 const coreProps = {
-    loadingContext: 'test',
+    loadingContext: process.env.CLIENT_ENV,
     i18n: new Language({
         locale: 'en-US',
         translations: {
@@ -40,7 +44,7 @@ const coreProps = {
             confirmPreauthorization: 'Confirm preauthorization'
         }
     }),
-    resources: global.resources
+    resources: new Resources(resolveEnvironments(process.env.CLIENT_ENV as CoreConfiguration['environment']).cdnImagesUrl)
 };
 
 export const Default: StoryObj<ButtonProps> = {
@@ -60,6 +64,22 @@ export const Default: StoryObj<ButtonProps> = {
         label: 'Dummy label',
         variant: 'primary',
         icon: 'https://checkoutshopper-test.cdn.adyen.com/checkoutshopper/images/components/bento_lock.svg'
+    }
+};
+
+export const CopyButtonWithIonAndText: StoryObj<CopyButtonProps> = {
+    render: args => {
+        return (
+            <CoreProvider {...coreProps}>
+                <CopyButton {...args} text={'Text to be copied'} onClick={() => console.log('Copy button clicked')} />
+            </CoreProvider>
+        );
+    },
+    parameters: {
+        controls: { include: ['disabled', 'inline', 'ariaLabel'] }
+    },
+    args: {
+        disabled: false
     }
 };
 

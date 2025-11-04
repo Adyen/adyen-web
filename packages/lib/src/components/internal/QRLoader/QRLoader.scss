@@ -100,6 +100,9 @@
 }
 
 .adyen-checkout__qr-loader__actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     margin-top: token(spacer-100);
     width: 100%;
     max-width: 400px;

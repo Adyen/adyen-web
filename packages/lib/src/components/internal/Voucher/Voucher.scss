@@ -1,3 +1,4 @@
+@use 'styles/index';
 @import 'styles/variable-generator';
 
 .adyen-checkout__voucher-result {
@@ -11,7 +12,7 @@
     background: token(color-background-primary);
     border: token(border-width-s) solid token(color-separator-primary);
 
-    .adyen-checkout__details-table{
+    .adyen-checkout__details-table {
         border-radius: token(border-radius-m);
         background: token(color-background-secondary);
         margin: 0 token(spacer-090) token(spacer-100);
@@ -165,16 +166,23 @@
 
 .adyen-checkout__voucher-result__actions {
     margin: 0 auto token(spacer-100);
-    max-width: 100%;
+    width: 100%;
+    max-width: 300px;
     min-width: 200px;
-    width: 300px;
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     justify-content: center;
     list-style: none;
-    padding: 0;
+    padding: 0 token(spacer-090);
+    gap: token(spacer-040);
 }
 
 .adyen-checkout__voucher-result__actions__item {
-    margin: 0 token(spacer-020);
+    flex: 1 1 0;
+    min-width: 100px; /* Prevent the copy button from shifting width when the text changes after copying */
+}
+
+.adyen-checkout__voucher-result__actions__item .adyen-checkout__button--inline {
+    width: 100%;
 }
