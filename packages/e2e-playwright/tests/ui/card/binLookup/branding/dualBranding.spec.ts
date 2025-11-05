@@ -163,7 +163,6 @@ test.describe('Card - Testing full UI (PAN icons & dual branding buttons) after 
         // Click a brand icon and see focus move to the PAN
         await card.selectBrandIcon(/bancontact/i);
 
-        await page.waitForTimeout(3000);
         await expect(card.cardNumberInput).toBeFocused();
     });
 
