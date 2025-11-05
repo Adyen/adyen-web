@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/preact';
 import Fastlane from './Fastlane';
 import { mock } from 'jest-mock-extended';
 import { Resources } from '../../core/Context/Resources';
+import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 
 describe('Fastlane', () => {
     test('should always be valid', () => {
@@ -85,7 +86,9 @@ describe('Fastlane', () => {
         const resources = mock<Resources>();
         resources.getImage.mockReturnValue((icon: string) => `https://checkout-adyen.com/${icon}`);
 
-        const fastlane = new Fastlane(global.core, {
+        const core = setupCoreMock();
+
+        const fastlane = new Fastlane(core, {
             modules: { resources },
             i18n: global.i18n,
             tokenId: 'token-id',

@@ -1,4 +1,5 @@
 import { h } from 'preact';
+import { memo } from 'preact/compat';
 import UIElement from '../../../internal/UIElement/UIElement';
 import './InstantPaymentMethods.scss';
 
@@ -7,7 +8,7 @@ interface InstantPaymentMethodsProps {
     onSelect: (paymentMethod: UIElement) => void;
 }
 
-function InstantPaymentMethods({ paymentMethods, onSelect }: InstantPaymentMethodsProps) {
+const InstantPaymentMethods = memo(({ paymentMethods, onSelect }: InstantPaymentMethodsProps) => {
     return (
         <ul className="adyen-checkout__instant-payment-methods-list">
             {paymentMethods.map(pm => (
@@ -21,6 +22,6 @@ function InstantPaymentMethods({ paymentMethods, onSelect }: InstantPaymentMetho
             ))}
         </ul>
     );
-}
+});
 
-export default InstantPaymentMethods;
+export { InstantPaymentMethods };
