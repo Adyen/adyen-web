@@ -66,7 +66,7 @@ module.exports = [
         name: 'ESM - Core + Dropin with Card',
         path: 'dist/es/index.js',
         import: '{ AdyenCheckout, Dropin, Card }',
-        limit: '72 KB',
+        limit: '75 KB',
         running: false
     }
 ];

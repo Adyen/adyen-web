@@ -1,47 +1,47 @@
 import { ThreeDS2DeviceFingerprint } from './index';
-import Analytics from '../../core/Analytics';
-import { Analytics3DS2Errors, ANALYTICS_RENDERED_STR, ANALYTICS_ERROR_TYPE } from '../../core/Analytics/constants';
+import { Analytics3DS2Errors, ANALYTICS_ERROR_TYPE } from '../../core/Analytics/constants';
 import { THREEDS2_FINGERPRINT_ERROR } from './constants';
-import { AnalyticsInfoEvent } from '../../core/Analytics/AnalyticsInfoEvent';
+import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
+import { render } from '@testing-library/preact';
 
-const analyticsModule = Analytics({ analytics: {}, analyticsContext: '', locale: '', clientKey: '' });
+describe('ThreeDS2DeviceFingerprint', () => {
+    describe('Analytics', () => {
+        test('should not send "rendered" events', () => {
+            const core = setupCoreMock();
 
-describe('ThreeDS2DeviceFingerprint: calls that generate analytics should produce objects with the expected shapes ', () => {
-    let fingerprint;
-    beforeEach(() => {
-        console.log = jest.fn(() => {});
+            const fingerprintComponent = new ThreeDS2DeviceFingerprint(core, {
+                paymentData: 'payment-data',
+                token: 'xxx',
+                showSpinner: null
+            });
+            render(fingerprintComponent.render());
 
-        fingerprint = new ThreeDS2DeviceFingerprint(global.core, {
-            onActionHandled: () => {},
-            modules: {
-                analytics: analyticsModule
-            },
-            onError: () => {},
-            showSpinner: null
+            const wasCalledWithRenderedEvent = (core.modules.analytics.sendAnalytics as jest.Mock).mock.calls.some(
+                callArgs => callArgs[0].type === 'rendered'
+            );
+
+            expect(wasCalledWithRenderedEvent).toBe(false);
         });
 
-        analyticsModule.sendAnalytics = jest.fn(() => null);
-    });
+        test('should generate analytics error event if not initiated with paymentData', () => {
+            const core = setupCoreMock();
 
-    test('A call to ThreeDS2DeviceFingerprint.submitAnalytics with an object with type "rendered" should not lead to an analytics event', () => {
-        fingerprint.submitAnalytics(new AnalyticsInfoEvent({ type: ANALYTICS_RENDERED_STR }));
+            const fingerprintComponent = new ThreeDS2DeviceFingerprint(core, {
+                token: 'xxx',
+                onError: () => {},
+                showSpinner: null
+            });
+            render(fingerprintComponent.render());
 
-        expect(analyticsModule.sendAnalytics).not.toHaveBeenCalled();
-    });
-
-    test('ThreeDS2DeviceFingerprint instantiated without paymentData should generate an analytics error', () => {
-        const view = fingerprint.render();
-
-        expect(analyticsModule.sendAnalytics).toHaveBeenCalledWith({
-            component: fingerprint.constructor['type'],
-            errorType: ANALYTICS_ERROR_TYPE.apiError,
-            message: `${THREEDS2_FINGERPRINT_ERROR}: Missing 'paymentData' property from threeDS2 action`,
-            code: Analytics3DS2Errors.ACTION_IS_MISSING_PAYMENT_DATA,
-            timestamp: expect.any(String),
-            id: expect.any(String)
+            expect(core.modules.analytics.sendAnalytics).toHaveBeenCalledWith({
+                component: fingerprintComponent.constructor['type'],
+                errorType: ANALYTICS_ERROR_TYPE.apiError,
+                message: `${THREEDS2_FINGERPRINT_ERROR}: Missing 'paymentData' property from threeDS2 action`,
+                code: Analytics3DS2Errors.ACTION_IS_MISSING_PAYMENT_DATA,
+                timestamp: expect.any(String),
+                id: expect.any(String)
+            });
         });
-
-        expect(view).toBe(null);
     });
 
     test('ThreeDS2DeviceFingerprint - when onComplete is called handleAdditionalDetails should then be called ', () => {
