@@ -271,7 +271,7 @@ test.describe.only('Bcmc payments with dual branding', () => {
         });
 
         test.describe('Selecting the mc brand', () => {
-            test('#6a should submit the mc payment', async ({ bcmc, page }) => {
+            test.only('#6a should submit the mc payment', async ({ bcmc, page }) => {
                 const paymentsRequestPromise = page.waitForRequest(request => request.url().includes('/payments') && request.method() === 'POST');
 
                 await bcmc.goto(URL_MAP.bcmc);
@@ -330,7 +330,7 @@ test.describe.only('Bcmc payments with dual branding', () => {
     });
     test.describe('Selecting the mc brand', () => {
         test.describe('Then deleting the PAN and retyping it without selecting a brand', () => {
-            test('#7 should submit payment branded to a default value', async ({ bcmc, page }) => {
+            test.only('#7 should submit payment branded to a default value', async ({ bcmc, page }) => {
                 const paymentsRequestPromise = page.waitForRequest(request => request.url().includes('/payments') && request.method() === 'POST');
 
                 await bcmc.goto(URL_MAP.bcmc);
@@ -344,6 +344,8 @@ test.describe.only('Bcmc payments with dual branding', () => {
                 // Select mc
                 const mcBtn = await bcmc.selectDualBrandUIItem(/mastercard/i, false);
                 await mcBtn.click();
+
+                await expect(bcmc.cvcField).toBeVisible();
 
                 await bcmc.fillCvc(TEST_CVC_VALUE);
 
