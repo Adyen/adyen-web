@@ -4,6 +4,8 @@ import { URL_MAP } from '../../../../../fixtures/URL_MAP';
 import { BCMC_DUAL_BRANDED_VISA, DUAL_BRANDED_CARD_EXCLUDED, DUAL_BRANDED_EFTPOS } from '../../../../utils/constants';
 
 import LANG from '../../../../../../server/translations/en-US.json';
+import { binLookupMock } from '../../../../../mocks/binLookup/binLookup.mock';
+import { dualBrandedBcmcAndVisa } from '../../../../../mocks/binLookup/binLookup.data';
 
 const PAN_ERROR_NOT_COMPLETE = LANG['cc.num.901'];
 
@@ -11,7 +13,7 @@ const componentConfig = {
     brands: ['mc', 'visa', 'amex', 'maestro', 'bcmc', 'star']
 };
 
-test.describe('Card - Testing full UI (PAN icons & dual branding buttons) after binLookup has given a dual brand result', () => {
+test.describe.only('Card - Testing full UI (PAN icons & dual branding buttons) after binLookup has given a dual brand result', () => {
     test(
         '#1 Fill in dual branded card, then ' +
             ' see dual brand icons and dual brand buttons appear as expected, with first element selected by default',
@@ -55,6 +57,8 @@ test.describe('Card - Testing full UI (PAN icons & dual branding buttons) after 
     );
 
     test('#2 Fill in dual branded card, see dual brand UI has expected effects when interacted with', async ({ card, page }) => {
+        await binLookupMock(page, dualBrandedBcmcAndVisa);
+
         await card.goto(getStoryUrl({ baseUrl: URL_MAP.card, componentConfig }));
 
         // Get a binLookup result
@@ -167,6 +171,8 @@ test.describe('Card - Testing full UI (PAN icons & dual branding buttons) after 
         card,
         page
     }) => {
+        await binLookupMock(page, dualBrandedBcmcAndVisa);
+
         await card.goto(getStoryUrl({ baseUrl: URL_MAP.card, componentConfig }));
 
         const firstDigits = BCMC_DUAL_BRANDED_VISA.substring(0, 11);
@@ -245,6 +251,8 @@ test.describe('Card - Testing full UI (PAN icons & dual branding buttons) after 
 
             // Expect dual brand UI not to be visible
             await expect(card.dualBrandingButtonsHolder).not.toBeVisible();
+
+            await page.waitForTimeout(2000);
         }
     );
 
