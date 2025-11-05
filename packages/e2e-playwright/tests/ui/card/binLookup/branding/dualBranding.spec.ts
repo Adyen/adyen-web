@@ -124,7 +124,7 @@ test.describe('Card - Testing full UI (PAN icons & dual branding buttons) after 
         await expect(card.cardNumberInput).toBeFocused();
     });
 
-    test.only('#3 Fill in dual branded card, but do not complete the number, see dual brand icons have expected effects when interacted with', async ({
+    test('#3 Fill in dual branded card, but do not complete the number, see dual brand icons have expected effects when interacted with', async ({
         card,
         page,
         browserName
