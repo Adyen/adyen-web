@@ -32,7 +32,7 @@ export const makePayment = (data, config = {}) => {
 };
 
 export const makeDetailsCall = data =>
-    httpPost('details', data)
+    httpPost('payments/details', data)
         .then(response => {
             if (response.error) throw 'Details call failed';
             return response;
