@@ -11,10 +11,6 @@ export interface PaymentMethodsContainerProps {
     classNameModifiers?: string[];
     paymentMethods: UIElement[];
     activePaymentMethod?: UIElement;
-    /**
-     * Map that keeps track of which Payment methods (UIElements) already got rendered in the UI
-     */
-    cachedPaymentMethods: Record<string, boolean>;
     showRemovePaymentMethodButton?: boolean;
     onSelect?: (paymentMethod: UIElement) => void;
     onDisableStoredPaymentMethod?: (storedPaymentMethod) => void;
@@ -28,7 +24,6 @@ function PaymentMethodsContainer({
     classNameModifiers = [],
     paymentMethods = [],
     activePaymentMethod = null,
-    cachedPaymentMethods = {},
     isLoading = false,
     isDisablingPaymentMethod = false,
     showRemovePaymentMethodButton,
@@ -62,7 +57,6 @@ function PaymentMethodsContainer({
             >
                 {paymentMethods.map((paymentMethod, index, paymentMethodsCollection) => {
                     const isSelected = activePaymentMethod && activePaymentMethod._id === paymentMethod._id;
-                    const isLoaded = paymentMethod._id in cachedPaymentMethods;
                     const isNextOneSelected =
                         activePaymentMethod &&
                         paymentMethodsCollection[index + 1] &&
@@ -75,7 +69,6 @@ function PaymentMethodsContainer({
                             paymentMethod={paymentMethod}
                             isSelected={isSelected}
                             isDisablingPaymentMethod={isSelected && isDisablingPaymentMethod}
-                            isLoaded={isLoaded}
                             isLoading={isLoading}
                             onSelect={onSelect}
                             key={paymentMethod._id}

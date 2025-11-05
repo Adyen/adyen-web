@@ -2,29 +2,31 @@ import { filterUnsupportedPaymentMethod, filterPresent, filterAvailable, optiona
 import { getComponentConfiguration } from './getComponentConfiguration';
 import getComponentNameOfPaymentType from '../../components-name-map';
 import UIElement from '../../internal/UIElement';
-import type { PaymentMethod, StoredPaymentMethod } from '../../../types/global-types';
+
 import type { PaymentMethodsConfiguration } from '../types';
 import type { ICore } from '../../../core/types';
+import type { PaymentMethod, StoredPaymentMethod } from '../../../core/ProcessResponse/PaymentMethods/PaymentMethods';
 
 /**
  * Returns a filtered (available) list of component Elements
  *
  * @param paymentMethods - Array of PaymentMethod objects from the /paymentMethods response
  * @param paymentMethodsConfiguration - Dropin paymentMethodsConfiguration object
- * @param commonProps - High level props to be passed through to every component
+ * @param dropinProps - High level props to be passed through to every component
  * @param core - Reference to the checkout core object
  */
 const createElements = (
     paymentMethods: PaymentMethod[] | StoredPaymentMethod[],
     paymentMethodsConfiguration: PaymentMethodsConfiguration,
-    commonProps,
+    dropinProps,
     core: ICore
 ): Promise<UIElement[]> => {
     const elements = optionallyFilterUpiSubTxVariants(paymentMethods)
         .filter(filterUnsupportedPaymentMethod)
         .map(paymentMethod => {
             const isStoredPaymentMethod = 'isStoredPaymentMethod' in paymentMethod && paymentMethod.isStoredPaymentMethod;
-            const paymentMethodConfigurationProps = getComponentConfiguration(paymentMethod.type, paymentMethodsConfiguration, isStoredPaymentMethod);
+            const paymentMethodConfigFromDropin = getComponentConfiguration(paymentMethod.type, paymentMethodsConfiguration, isStoredPaymentMethod);
+
             const PaymentMethodElement = core.getComponent(paymentMethod.type);
 
             if (!PaymentMethodElement) {
@@ -38,7 +40,16 @@ const createElements = (
                 return null;
             }
 
-            const elementProps = { ...paymentMethod, ...commonProps, ...paymentMethodConfigurationProps };
+            const requiredPropsWhenUsingDropin = {
+                // @ts-ignore later
+                ...(isStoredPaymentMethod ? { storedPaymentMethodId: paymentMethod.storedPaymentMethodId } : { paymentMethodId: paymentMethod._id }),
+                ...dropinProps
+            };
+
+            const elementProps = {
+                ...requiredPropsWhenUsingDropin,
+                ...paymentMethodConfigFromDropin
+            };
 
             return new PaymentMethodElement(core, elementProps);
         })
