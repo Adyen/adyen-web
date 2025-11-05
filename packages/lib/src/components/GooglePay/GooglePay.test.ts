@@ -1,13 +1,11 @@
 import GooglePay from './GooglePay';
 import GooglePayService from './GooglePayService';
 
-import Analytics from '../../core/Analytics';
 import { ANALYTICS_SELECTED_STR, NO_CHECKOUT_ATTEMPT_ID } from '../../core/Analytics/constants';
 import PaymentMethods from '../../core/ProcessResponse/PaymentMethods';
 import { mock } from 'jest-mock-extended';
 import { ICore } from '../../types';
-
-const analyticsModule = Analytics({ analytics: {}, analyticsContext: '', locale: '', clientKey: '' });
+import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 
 jest.mock('./GooglePayService');
 
@@ -547,33 +545,25 @@ describe('GooglePay', () => {
         });
     });
 
-    describe('GooglePay: calls that generate "info" analytics should produce objects with the expected shapes ', () => {
-        let gpay;
-        beforeEach(() => {
-            console.log = jest.fn(() => {});
+    describe('Analytics', () => {
+        test('should send "selected" event if payment flow is triggered when using instant payment button', () => {
+            const core = setupCoreMock();
 
-            gpay = new GooglePay(global.core, {
+            const googlepay = new GooglePay(core, {
                 configuration: { merchantId: 'merchant-id', gatewayMerchantId: 'gateway-id' },
                 type: 'googlepay',
-                isInstantPayment: true,
-                modules: {
-                    analytics: analyticsModule
-                }
+                isInstantPayment: true
             });
 
-            analyticsModule.sendAnalytics = jest.fn(() => null);
-        });
+            googlepay.submit();
 
-        test('Analytics should produce an "info" event, of type "selected", for GooglePay as an instant PM', () => {
-            gpay.submit();
-
-            expect(analyticsModule.sendAnalytics).toHaveBeenCalledWith({
-                component: gpay.props.type,
-                type: ANALYTICS_SELECTED_STR,
-                target: 'instant_payment_button',
-                timestamp: expect.any(String),
-                id: expect.any(String)
-            });
+            expect(core.modules.analytics.sendAnalytics).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    component: 'googlepay',
+                    type: ANALYTICS_SELECTED_STR,
+                    target: 'instant_payment_button'
+                })
+            );
         });
     });
 });

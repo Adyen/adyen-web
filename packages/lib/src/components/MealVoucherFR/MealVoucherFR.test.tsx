@@ -1,6 +1,7 @@
 import userEvent from '@testing-library/user-event';
 import MealVoucherFR from './MealVoucherFR';
 import { render, screen } from '@testing-library/preact';
+import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 
 describe('MealVoucherFR', () => {
     const i18n = global.i18n;
@@ -18,9 +19,10 @@ describe('MealVoucherFR', () => {
     describe('layout of mealvoucher', () => {
         test('should also display expiry date', async () => {
             const onBalanceCheck = jest.fn();
+            const core = setupCoreMock();
 
             // mounting and clicking pay button
-            const mealVoucherFR = new MealVoucherFR(global.core, {
+            const mealVoucherFR = new MealVoucherFR(core, {
                 ...baseProps,
                 onBalanceCheck
             });
@@ -46,9 +48,10 @@ describe('MealVoucherFR', () => {
     describe('basic gift card tests', () => {
         test('onBalanceCheck should be called on pay button click', async () => {
             const onBalanceCheck = jest.fn();
+            const core = setupCoreMock();
 
             // mounting and clicking pay button
-            const mealVoucherFR = new MealVoucherFR(global.core, {
+            const mealVoucherFR = new MealVoucherFR(core, {
                 ...baseProps,
                 onBalanceCheck
             });
@@ -74,9 +77,10 @@ describe('MealVoucherFR', () => {
                 })
             );
             const onSubmit = jest.fn();
+            const core = setupCoreMock();
 
             // mounting and clicking pay button
-            const mealVoucherFR = new MealVoucherFR(global.core, {
+            const mealVoucherFR = new MealVoucherFR(core, {
                 ...baseProps,
                 onBalanceCheck,
                 onOrderRequest,

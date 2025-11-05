@@ -2,6 +2,7 @@ import CashAppPay from './CashAppPay';
 import { render, screen } from '@testing-library/preact';
 import CashAppService from './services/CashAppService';
 import { CashAppPayEventData } from './types';
+import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 
 jest.mock('./services/CashAppService');
 jest.spyOn(CashAppService.prototype, 'subscribeToEvent').mockImplementation(() => () => {});
@@ -19,8 +20,9 @@ test('should return on-file data if available', () => {
     const onFileGrantId = 'xxxx-yyyy';
     const customerId = 'abcdef';
     const cashTag = '$john-doe';
+    const core = setupCoreMock();
 
-    const cashAppPayElement = new CashAppPay(global.core, { storePaymentMethod: true });
+    const cashAppPayElement = new CashAppPay(core, { storePaymentMethod: true });
 
     const data: CashAppPayEventData = {
         onFileGrantId,
@@ -39,8 +41,9 @@ test('should return on-file data if available', () => {
 test('should return grantId, customerId and correct txVariant', () => {
     const grantId = 'xxxx-yyyy';
     const customerId = 'abcdef';
+    const core = setupCoreMock();
 
-    const cashAppPayElement = new CashAppPay(global.core);
+    const cashAppPayElement = new CashAppPay(core);
 
     const data: CashAppPayEventData = {
         grantId,
@@ -53,7 +56,9 @@ test('should return grantId, customerId and correct txVariant', () => {
 });
 
 test('should initially display the loading spinner while SDK is being loaded', async () => {
-    const cashAppPayElement = new CashAppPay(global.core, {
+    const core = setupCoreMock();
+
+    const cashAppPayElement = new CashAppPay(core, {
         i18n: global.i18n,
         loadingContext: 'test',
         modules: { resources: global.resources }
@@ -66,7 +71,9 @@ test('should initially display the loading spinner while SDK is being loaded', a
 
 test('should create customer request and then begin CashApp flow when submit is triggered', async () => {
     const onClick = jest.fn().mockImplementation(actions => actions.resolve());
-    const cashAppPayElement = new CashAppPay(global.core, {
+    const core = setupCoreMock();
+
+    const cashAppPayElement = new CashAppPay(core, {
         onClick,
         i18n: global.i18n,
         loadingContext: 'test',

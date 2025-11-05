@@ -14,6 +14,7 @@ import { ANALYTICS_RENDERED_STR } from '../../core/Analytics/constants';
 
 import type { CoreConfiguration, ICore } from '../../core/types';
 import type { PaymentActionsType } from '../../types/global-types';
+import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 
 jest.mock('../../core/Services/get-translations');
 const mockedGetTranslations = getTranslations as jest.Mock;
@@ -277,29 +278,28 @@ describe('Dropin', () => {
     });
 
     describe('Analytics', () => {
-        test('should send the analytic config data after the payment method data is ready', async () => {
+        test('should send the "render" event with drop-in config data', () => {
             const srPanel = mock<SRPanel>();
-            srPanel.props.moveFocus = false;
-            const mockSendAnalytics = jest.fn();
-            global.analytics.sendAnalytics = mockSendAnalytics;
-            const mockOnCreateElements = jest.fn().mockImplementation(() => {
-                return [[Promise.resolve('Stored Element 1')], [Promise.resolve('Element 1')], [Promise.resolve('Instant Payment 1')]];
-            });
+            // srPanel.props.moveFocus = false;
 
-            const dropin = new Dropin(checkout, {
-                // @ts-ignore test only
-                onCreateElements: mockOnCreateElements,
-                modules: { srPanel, analytics: global.analytics, resources: global.resources }
+            const core = setupCoreMock();
+
+            const dropin = new Dropin(core, {
+                instantPaymentTypes: ['googlepay'],
+                modules: { srPanel }
             });
             render(dropin.render());
-            await new Promise(process.nextTick);
-            expect(mockSendAnalytics).toHaveBeenCalledWith({
-                type: ANALYTICS_RENDERED_STR,
-                component: 'dropin',
-                configData: dropin.dropinRef.analyticConfigData,
-                timestamp: expect.any(String),
-                id: expect.any(String)
-            });
+
+            expect(core.modules.analytics.sendAnalytics).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    type: ANALYTICS_RENDERED_STR,
+                    component: 'dropin',
+                    configData: {
+                        instantPaymentTypes: '["googlepay"]',
+                        showPayButton: true
+                    }
+                })
+            );
 
             jest.restoreAllMocks();
         });

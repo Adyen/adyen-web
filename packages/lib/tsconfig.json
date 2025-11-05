@@ -33,14 +33,10 @@
         "jsxFactory": "h",
 
         /* Include types for the browser: window, document, etc */
-        "lib": ["es2022","dom", "dom.iterable"],
+        "lib": ["es2022", "dom", "dom.iterable"],
 
-        "types": ["@testing-library/jest-dom", "applepayjs", "googlepay", "node"],
+        "types": ["@testing-library/jest-dom", "applepayjs", "googlepay", "node"]
     },
-    "include": [
-        "./src/**/*",
-        "./storybook/**/*",
-        "./src/types/custom.d.ts",
-    ],
-    "exclude": ["node_modules", "./dist/**", "**/*.scss", "**/*_*/**"],
+    "include": ["./src/**/*", "./storybook/**/*", "./src/types/custom.d.ts"],
+    "exclude": ["node_modules", "./dist/**", "**/*.scss", "**/*_*/**"]
 }

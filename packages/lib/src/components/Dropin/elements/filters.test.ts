@@ -63,23 +63,23 @@ describe('Elements filters', () => {
         test('should filter out the other upi children pms, if the upi parent type presents', () => {
             expect(
                 optionallyFilterUpiSubTxVariants([
-                    { type: 'upi', name: 'UPI' },
-                    { type: 'upi_intent', name: 'UPI Intent' }
+                    { type: 'upi', name: 'UPI', _id: 'upi-id' },
+                    { type: 'upi_intent', name: 'UPI Intent', _id: 'upi-intent-id' }
                 ])
-            ).toEqual([{ type: 'upi', name: 'UPI' }]);
+            ).toEqual([{ type: 'upi', name: 'UPI', _id: 'upi-id' }]);
         });
 
         test('should return all pms, if the upi parent type does not present', () => {
             expect(
                 optionallyFilterUpiSubTxVariants([
-                    { type: 'scheme', name: 'Card' },
-                    { type: 'upi_intent', name: 'UPI Intent' },
-                    { type: 'upi_collect', name: 'UPI Collect' }
+                    { type: 'scheme', name: 'Card', _id: 'card-id' },
+                    { type: 'upi_intent', name: 'UPI Intent', _id: 'upi-intent-id' },
+                    { type: 'upi_collect', name: 'UPI Collect', _id: 'upi-collect-id' }
                 ])
             ).toEqual([
-                { type: 'scheme', name: 'Card' },
-                { type: 'upi_intent', name: 'UPI Intent' },
-                { type: 'upi_collect', name: 'UPI Collect' }
+                { type: 'scheme', name: 'Card', _id: 'card-id' },
+                { type: 'upi_intent', name: 'UPI Intent', _id: 'upi-intent-id' },
+                { type: 'upi_collect', name: 'UPI Collect', _id: 'upi-collect-id' }
             ]);
         });
     });

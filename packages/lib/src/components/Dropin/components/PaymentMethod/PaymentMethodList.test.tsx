@@ -73,7 +73,7 @@ test('onSelect should be triggered only once', async () => {
     const paymentMethods = createPaymentMethodsMock();
     const onSelectMock = jest.fn();
 
-    customRender(<PaymentMethodList paymentMethods={paymentMethods} cachedPaymentMethods={{}} isLoading={false} onSelect={onSelectMock} />);
+    customRender(<PaymentMethodList paymentMethods={paymentMethods} isLoading={false} onSelect={onSelectMock} />);
 
     await user.click(await screen.findByRole('radio', { name: /Card/ }));
     await user.click(await screen.findByRole('radio', { name: /WeChat/ }));
@@ -85,9 +85,7 @@ test('onSelect should be triggered only once', async () => {
 test('should not call onSelect if there is no payment method', () => {
     const onSelectMock = jest.fn();
 
-    customRender(
-        <PaymentMethodList paymentMethods={[]} cachedPaymentMethods={{}} isLoading={false} onSelect={onSelectMock} openFirstPaymentMethod={true} />
-    );
+    customRender(<PaymentMethodList paymentMethods={[]} isLoading={false} onSelect={onSelectMock} openFirstPaymentMethod={true} />);
 
     expect(onSelectMock).toHaveBeenCalledTimes(0);
 });
@@ -96,15 +94,7 @@ test('should call onSelect when mounting the Component if openFirstPaymentMethod
     const onSelectMock = jest.fn();
     const paymentMethods = createPaymentMethodsMock();
 
-    customRender(
-        <PaymentMethodList
-            paymentMethods={paymentMethods}
-            cachedPaymentMethods={{}}
-            isLoading={false}
-            onSelect={onSelectMock}
-            openFirstPaymentMethod={true}
-        />
-    );
+    customRender(<PaymentMethodList paymentMethods={paymentMethods} isLoading={false} onSelect={onSelectMock} openFirstPaymentMethod={true} />);
 
     expect(onSelectMock).toHaveBeenCalledTimes(1);
     expect(onSelectMock).toHaveBeenCalledWith(paymentMethods[0]);
@@ -114,15 +104,7 @@ test('should not call onSelect if openFirstStoredPaymentMethod is set but there 
     const onSelectMock = jest.fn();
     const paymentMethods = createPaymentMethodsMock();
 
-    customRender(
-        <PaymentMethodList
-            paymentMethods={paymentMethods}
-            cachedPaymentMethods={{}}
-            isLoading={false}
-            onSelect={onSelectMock}
-            openFirstStoredPaymentMethod={true}
-        />
-    );
+    customRender(<PaymentMethodList paymentMethods={paymentMethods} isLoading={false} onSelect={onSelectMock} openFirstStoredPaymentMethod={true} />);
 
     expect(onSelectMock).toHaveBeenCalledTimes(0);
 });
@@ -135,7 +117,6 @@ test('should call onSelect if openFirstStoredPaymentMethod is set and there is n
     customRender(
         <PaymentMethodList
             storedPaymentMethods={paymentMethods}
-            cachedPaymentMethods={{}}
             isLoading={false}
             onSelect={onSelectMock}
             openFirstStoredPaymentMethod={true}
@@ -154,7 +135,6 @@ test('should display instant payment methods', () => {
         <PaymentMethodList
             paymentMethods={paymentMethods}
             instantPaymentMethods={instantPaymentMethods}
-            cachedPaymentMethods={{}}
             isLoading={false}
             openFirstStoredPaymentMethod={true}
         />
@@ -182,9 +162,7 @@ describe('Gift card', () => {
     });
 
     test('should display the gift card custom icon in the payment method list', async () => {
-        customRender(
-            <PaymentMethodList paymentMethods={[giftCardPayment]} cachedPaymentMethods={{}} isLoading={false} openFirstStoredPaymentMethod={true} />
-        );
+        customRender(<PaymentMethodList paymentMethods={[giftCardPayment]} isLoading={false} openFirstStoredPaymentMethod={true} />);
         const img = await screen.findByRole('img');
         // @ts-ignore img element contains src
         expect(img.src).toContain('https://example.com');
@@ -204,7 +182,6 @@ describe('Gift card', () => {
                 order={order}
                 orderStatus={orderStatus}
                 paymentMethods={[giftCardPayment]}
-                cachedPaymentMethods={{}}
                 isLoading={false}
                 openFirstStoredPaymentMethod={true}
             />

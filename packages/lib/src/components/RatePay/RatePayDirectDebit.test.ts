@@ -3,6 +3,7 @@ import { render, screen, waitFor, within } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import { setupServer } from 'msw/node';
 import { http, HttpResponse } from 'msw';
+import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 
 const server = setupServer(
     http.get('https://checkoutshopper-live.adyen.com/checkoutshopper/datasets/countries/en-US.json', () => {
@@ -19,10 +20,11 @@ describe('RatePay Direct Debit', () => {
         const user = userEvent.setup();
         const onSubmitMock = jest.fn();
         const onChangeMock = jest.fn();
+        const core = setupCoreMock();
 
-        const ratepay = new RatePayDirectDebit(global.core, {
+        const ratepay = new RatePayDirectDebit(core, {
             countryCode: 'DE',
-            modules: { analytics: global.analytics, resources: global.resources, srPanel: global.srPanel },
+            modules: { resources: global.resources, srPanel: global.srPanel },
             i18n: global.i18n,
             onSubmit: onSubmitMock,
             onChange: onChangeMock,
@@ -160,10 +162,11 @@ describe('RatePay Direct Debit', () => {
         const user = userEvent.setup();
         const onSubmitMock = jest.fn();
         const onChangeMock = jest.fn();
+        const core = setupCoreMock();
 
-        const ratepay = new RatePayDirectDebit(global.core, {
+        const ratepay = new RatePayDirectDebit(core, {
             countryCode: 'DE',
-            modules: { analytics: global.analytics, resources: global.resources, srPanel: global.srPanel },
+            modules: { resources: global.resources, srPanel: global.srPanel },
             i18n: global.i18n,
             onSubmit: onSubmitMock,
             onChange: onChangeMock,
@@ -347,11 +350,12 @@ describe('RatePay Direct Debit', () => {
 
     test('should not submit the payment if form is not valid', async () => {
         const user = userEvent.setup();
+        const core = setupCoreMock();
         const onSubmitMock = jest.fn();
 
-        const ratepay = new RatePayDirectDebit(global.core, {
+        const ratepay = new RatePayDirectDebit(core, {
             countryCode: 'DE',
-            modules: { analytics: global.analytics, resources: global.resources, srPanel: global.srPanel },
+            modules: { resources: global.resources, srPanel: global.srPanel },
             i18n: global.i18n,
             onSubmit: onSubmitMock,
             loadingContext: 'https://checkoutshopper-live.adyen.com/checkoutshopper/'

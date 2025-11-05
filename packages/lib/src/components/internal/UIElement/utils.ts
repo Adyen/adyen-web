@@ -66,11 +66,11 @@ export function assertIsDropin(element: any): element is IDropin {
     return isDropin;
 }
 
-export function getRegulatoryDefaults(countryCode: string, isDropin: boolean): Record<string, any> {
+export function getRegulatoryDefaults(countryCode: string, isDropinInstance: boolean): Record<string, any> {
     switch (countryCode) {
         // Finnish regulations state that no payment method can be open by default
         case 'FI':
-            return isDropin
+            return isDropinInstance
                 ? {
                       openFirstPaymentMethod: false,
                       openFirstStoredPaymentMethod: false
