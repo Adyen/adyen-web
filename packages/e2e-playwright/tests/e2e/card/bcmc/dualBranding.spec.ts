@@ -11,6 +11,14 @@ import {
 import { URL_MAP } from '../../../../fixtures/URL_MAP';
 
 import LANG from '../../../../../server/translations/en-US.json';
+import { binLookupMock } from '../../../../mocks/binLookup/binLookup.mock';
+import {
+    dualBcmcAndMaestro,
+    dualBrandedBcmcAndMc,
+    dualBrandedBcmcAndVisa,
+    dualBrandedMcAndBcmc,
+    dualBrandedVisaAndBcmc
+} from '../../../../mocks/binLookup/binLookup.data';
 const CVC_LABEL_OPTIONAL = LANG['creditCard.securityCode.label.optional'];
 
 test.describe.only('Bcmc payments with dual branding', () => {
@@ -67,6 +75,8 @@ test.describe.only('Bcmc payments with dual branding', () => {
 
         test.describe('Selecting the maestro brand', () => {
             test('#2a should submit the maestro payment', async ({ bcmc, page }) => {
+                await binLookupMock(page, dualBcmcAndMaestro);
+
                 const paymentsRequestPromise = page.waitForRequest(request => request.url().includes('/payments') && request.method() === 'POST');
 
                 await bcmc.goto(URL_MAP.bcmc);
@@ -121,7 +131,9 @@ test.describe.only('Bcmc payments with dual branding', () => {
 
     test.describe('Bancontact (BCMC) / Visa Debit brands', () => {
         test.describe('Selecting the Bancontact brand', () => {
-            test('#3a should submit the bcmc payment (without needing to fill CVC field)', async ({ bcmc }) => {
+            test('#3a should submit the bcmc payment (without needing to fill CVC field)', async ({ bcmc, page }) => {
+                await binLookupMock(page, dualBrandedVisaAndBcmc);
+
                 await bcmc.goto(URL_MAP.bcmc);
                 await bcmc.isComponentVisible();
 
@@ -167,6 +179,8 @@ test.describe.only('Bcmc payments with dual branding', () => {
 
         test.describe('Selecting the visa brand', () => {
             test('#4a should submit the visa payment', async ({ bcmc, page }) => {
+                await binLookupMock(page, dualBrandedBcmcAndVisa);
+
                 const paymentsRequestPromise = page.waitForRequest(request => request.url().includes('/payments') && request.method() === 'POST');
 
                 await bcmc.goto(URL_MAP.bcmc);
@@ -195,7 +209,9 @@ test.describe.only('Bcmc payments with dual branding', () => {
                 await expect(bcmc.paymentResult).toContainText(PAYMENT_RESULT.authorised);
             });
 
-            test('#4b should not submit the visa payment with incomplete form data', async ({ bcmc }) => {
+            test('#4b should not submit the visa payment with incomplete form data', async ({ bcmc, page }) => {
+                await binLookupMock(page, dualBrandedBcmcAndVisa);
+
                 await bcmc.goto(URL_MAP.bcmc);
                 await bcmc.isComponentVisible();
 
@@ -228,7 +244,9 @@ test.describe.only('Bcmc payments with dual branding', () => {
 
     test.describe('Bancontact (BCMC) / MC brands', () => {
         test.describe('Selecting the Bancontact brand', () => {
-            test('#5a should submit the bcmc payment', async ({ bcmc }) => {
+            test('#5a should submit the bcmc payment', async ({ bcmc, page }) => {
+                await binLookupMock(page, dualBrandedMcAndBcmc);
+
                 await bcmc.goto(URL_MAP.bcmc);
                 await bcmc.isComponentVisible();
 
@@ -272,12 +290,12 @@ test.describe.only('Bcmc payments with dual branding', () => {
 
         test.describe('Selecting the mc brand', () => {
             test('#6a should submit the mc payment', async ({ bcmc, page }) => {
+                await binLookupMock(page, dualBrandedBcmcAndMc);
+
                 const paymentsRequestPromise = page.waitForRequest(request => request.url().includes('/payments') && request.method() === 'POST');
 
                 await bcmc.goto(URL_MAP.bcmc);
                 await bcmc.isComponentVisible();
-
-                // try dualBrandedBcmcAndMc mock
 
                 await bcmc.fillCardNumber(BCMC_DUAL_BRANDED_MC);
                 await bcmc.fillExpiryDate(TEST_DATE_VALUE);
@@ -300,7 +318,9 @@ test.describe.only('Bcmc payments with dual branding', () => {
                 await expect(bcmc.paymentResult).toContainText(PAYMENT_RESULT.authorised);
             });
 
-            test('#6b should not submit the mc payment with incomplete form data', async ({ bcmc }) => {
+            test('#6b should not submit the mc payment with incomplete form data', async ({ bcmc, page }) => {
+                await binLookupMock(page, dualBrandedBcmcAndMc);
+
                 await bcmc.goto(URL_MAP.bcmc);
                 await bcmc.isComponentVisible();
 
@@ -333,12 +353,12 @@ test.describe.only('Bcmc payments with dual branding', () => {
     test.describe('Selecting the mc brand', () => {
         test.describe('Then deleting the PAN and retyping it without selecting a brand', () => {
             test('#7 should submit payment branded to a default value', async ({ bcmc, page }) => {
+                await binLookupMock(page, dualBrandedBcmcAndMc);
+
                 const paymentsRequestPromise = page.waitForRequest(request => request.url().includes('/payments') && request.method() === 'POST');
 
                 await bcmc.goto(URL_MAP.bcmc);
                 await bcmc.isComponentVisible();
-
-                // try dualBrandedBcmcAndMc mock
 
                 await bcmc.fillCardNumber(BCMC_DUAL_BRANDED_MC);
                 await bcmc.fillExpiryDate(TEST_DATE_VALUE);
