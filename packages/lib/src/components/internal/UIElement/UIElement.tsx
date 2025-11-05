@@ -151,6 +151,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
      *  Get the payment method from the paymentMethodsResponse
      *
      * @param type - The type of the payment method to get. (This prop is passed by Drop-in OR Standalone components containing the property 'type' as part of their configuration)
+     * @param paymentMethodId - Unique internal payment method ID
      */
     protected getPaymentMethodFromPaymentMethodsResponse(type?: string, paymentMethodId?: string): RawPaymentMethod {
         if (paymentMethodId) return this.core.paymentMethodsResponse.findById(paymentMethodId);
@@ -290,14 +291,13 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     }
 
     private async submitUsingAdvancedFlow(): Promise<CheckoutAdvancedFlowResponse> {
-        return new Promise<CheckoutAdvancedFlowResponse>((resolve, reject) => {
-            // Call analytics endpoint
-            const event = new AnalyticsLogEvent({
-                type: ANALYTICS_SUBMIT_STR,
-                message: 'Shopper clicked pay'
-            });
-            this.submitAnalytics(event);
+        const event = new AnalyticsLogEvent({
+            type: ANALYTICS_SUBMIT_STR,
+            message: 'Shopper clicked pay'
+        });
+        this.submitAnalytics(event);
 
+        return new Promise<CheckoutAdvancedFlowResponse>((resolve, reject) => {
             this.props.onSubmit(
                 {
                     data: this.data,

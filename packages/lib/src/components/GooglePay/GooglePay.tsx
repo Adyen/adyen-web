@@ -57,6 +57,7 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
      * If the merchant creates a standalone Google Pay component, we need to verify if the payment method is available using both tx variants
      *
      * @param type
+     * @param paymentMethodId - Unique internal payment method ID
      * @returns
      */
     protected override getPaymentMethodFromPaymentMethodsResponse(type?: string, paymentMethodId?: string): RawPaymentMethod {
