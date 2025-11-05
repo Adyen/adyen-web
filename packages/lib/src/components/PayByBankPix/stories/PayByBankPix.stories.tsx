@@ -54,7 +54,7 @@ export const MerchantPage: PixBiometricStory = {
                       http.post('https://localhost:3020/api/payments', () => {
                           return HttpResponse.json(mockPaymentsResponseMerchantPage);
                       }),
-                      http.post('/api/details', () => {
+                      http.post('/api/payments/details', () => {
                           return HttpResponse.json();
                       })
                   ]
@@ -104,7 +104,7 @@ export const HostedPageEnrollment: PixBiometricStory = {
                               );
                           }
                       ),
-                      http.post('/api/details', () => {
+                      http.post('/api/payments/details', () => {
                           detailsCallCount++;
                           if (detailsCallCount === 1) {
                               return HttpResponse.json(mockSubmitDetailsResponseSimulateHostedPage);
@@ -163,7 +163,7 @@ export const HostedPagePayment: PixBiometricStory = {
                         );
                     }
                 ),
-                http.post('/api/details', () => {
+                http.post('/api/payments/details', () => {
                     return HttpResponse.json(mockSubmitDetailsResponseSimulateHostedPage);
                 })
             ]
