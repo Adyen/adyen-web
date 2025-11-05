@@ -204,7 +204,7 @@ export const CardWith_3DS2_own_onAdditionalDetails: CardStory = {
     args: {
         componentConfiguration: {
             _disableClickToPay: true,
-            onAdditionalDetails(state: AdditionalDetailsData, component: any, actions: AdditionalDetailsActions) {
+            onAdditionalDetails(state: AdditionalDetailsData, _component, actions: AdditionalDetailsActions) {
                 // Display in-between screen to demonstrate that *this* callback has been called, rather than the checkout level one
                 displayResultMessage(true, 'success-own-onAdditionalDetails-called');
 
