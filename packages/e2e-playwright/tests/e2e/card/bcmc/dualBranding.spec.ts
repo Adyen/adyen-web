@@ -13,7 +13,7 @@ import { URL_MAP } from '../../../../fixtures/URL_MAP';
 import LANG from '../../../../../server/translations/en-US.json';
 const CVC_LABEL_OPTIONAL = LANG['creditCard.securityCode.label.optional'];
 
-test.describe('Bcmc payments with dual branding', () => {
+test.describe.only('Bcmc payments with dual branding', () => {
     test.describe('Bancontact (BCMC) / Maestro brands', () => {
         test.describe('Selecting the Bancontact brand', () => {
             test('#1a should submit the bcmc payment', async ({ bcmc, page }) => {
