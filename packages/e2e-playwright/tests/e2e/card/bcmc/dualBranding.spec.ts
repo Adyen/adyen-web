@@ -297,7 +297,7 @@ test.describe.only('Bcmc payments with dual branding', () => {
                 await bcmc.goto(URL_MAP.bcmc);
                 await bcmc.isComponentVisible();
 
-                await bcmc.fillCardNumber(BCMC_DUAL_BRANDED_MC);
+                await bcmc.typeCardNumber(BCMC_DUAL_BRANDED_MC);
                 await bcmc.fillExpiryDate(TEST_DATE_VALUE);
 
                 await expect(bcmc.dualBrandingButtonsHolder).toBeVisible();
@@ -360,7 +360,7 @@ test.describe.only('Bcmc payments with dual branding', () => {
                 await bcmc.goto(URL_MAP.bcmc);
                 await bcmc.isComponentVisible();
 
-                await bcmc.fillCardNumber(BCMC_DUAL_BRANDED_MC);
+                await bcmc.typeCardNumber(BCMC_DUAL_BRANDED_MC);
                 await bcmc.fillExpiryDate(TEST_DATE_VALUE);
 
                 await expect(bcmc.dualBrandingButtonsHolder).toBeVisible();
