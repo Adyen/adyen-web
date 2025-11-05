@@ -2,6 +2,7 @@ import { ThreeDS2Challenge } from './index';
 import { ANALYTICS_ERROR_TYPE, Analytics3DS2Errors } from '../../core/Analytics/constants';
 import { THREEDS2_CHALLENGE_ERROR } from './constants';
 import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
+import { ChallengeResolveData } from './types';
 
 describe('ThreeDS2Challenge', () => {
     describe('Analytics', () => {
@@ -41,34 +42,39 @@ describe('ThreeDS2Challenge', () => {
         });
     });
 
-    test('ThreeDS2Challenge - when onComplete is called handleAdditionalDetails should then be called ', () => {
-        const spy = jest.spyOn(challenge, 'handleAdditionalDetails');
+    describe('Additional details callbacks priority', () => {
+        test('should call default additional details flow if "onComplete" is not present', () => {
+            const core = setupCoreMock();
 
-        challenge.onComplete({ foo: 'bar' });
+            const threeDS2Challenge = new ThreeDS2Challenge(core, {
+                onError: () => {}
+            });
 
-        expect(spy).toHaveBeenCalledWith({ foo: 'bar' });
-    });
+            // @ts-ignore - spying internal method
+            const spy = jest.spyOn(threeDS2Challenge, 'handleAdditionalDetails');
+            const challengeResolveData: ChallengeResolveData = { data: { details: { foo: 'bar' } } };
 
-    test('ThreeDS2Challenge - when onComplete is called the passed onComplete function should then be called', () => {
-        const onComplete = jest.fn();
+            threeDS2Challenge.onComplete(challengeResolveData);
 
-        const nuChallenge = new ThreeDS2Challenge(global.core, {
-            onActionHandled: () => {},
-            modules: {
-                analytics: analyticsModule
-            },
-            onError: () => {},
-            onComplete
+            expect(spy).toHaveBeenCalledWith(challengeResolveData);
         });
 
-        // @ts-ignore - spied on function does exist
-        const spy = jest.spyOn(nuChallenge, 'handleAdditionalDetails');
+        test('should call "onComplete" if available', () => {
+            const core = setupCoreMock();
+            const onComplete = jest.fn();
 
-        // @ts-ignore - we don't care about the type
-        nuChallenge.onComplete({ foo: 'bar' });
+            const threeDS2Challenge = new ThreeDS2Challenge(core, {
+                onComplete
+            });
 
-        expect(onComplete).toHaveBeenCalledWith({ foo: 'bar' }, nuChallenge);
+            // @ts-ignore - spying internal method
+            const spy = jest.spyOn(threeDS2Challenge, 'handleAdditionalDetails');
+            const challengeResolveData: ChallengeResolveData = { data: { details: { foo: 'bar' } } };
 
-        expect(spy).not.toHaveBeenCalled();
+            threeDS2Challenge.onComplete(challengeResolveData);
+
+            expect(onComplete).toHaveBeenCalledWith(challengeResolveData, threeDS2Challenge);
+            expect(spy).not.toHaveBeenCalled();
+        });
     });
 });
