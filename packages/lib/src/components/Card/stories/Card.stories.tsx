@@ -218,7 +218,7 @@ export const CardWith_3DS2_own_onAdditionalDetails: CardStory = {
 
                         if (!resultCode) actions.reject();
 
-                        container.removeChild(resMsg);
+                        if (resMsg) container.removeChild(resMsg);
 
                         actions.resolve({
                             resultCode,
