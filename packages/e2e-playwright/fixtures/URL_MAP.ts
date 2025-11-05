@@ -15,6 +15,8 @@ export const URL_MAP = {
     cardWithVisibleSrPanel: '/iframe.html?args=srConfig.showPanel:!true&globals=&id=components-cards-card--default&viewMode=story',
     cardWithSsn: '/iframe.html?globals=&id=components-cards-card--with-ssn&viewMode=story',
     cardWithAdvancedFlow: '/iframe.html?args=useSessions:!false&globals=&id=components-cards-card--default&viewMode=story',
+    cardWithOwnOnAdditionalDetailsCallback:
+        '/iframe.html?args=useSessions:!false&globals=&id=components-cards-card--card-with-3-ds-2-own-on-additional-details&viewMode=story',
     cardWithAvs: '/iframe.html?args=&globals=&id=components-cards-card--with-avs&viewMode=story',
     cardWithPartialAvs: '/iframe.html?args=&globals=&id=components-cards-card--with-partial-avs&viewMode=story',
     cardWithInstallments: '/iframe.html?args=&id=components-cards-card--with-installments&viewMode=story',
