@@ -84,26 +84,26 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
      * @param configSetByMerchant
      * @private
      */
-    private createBeforeRenderHook(props: P): void {
+    private createBeforeRenderHook(configSetByMerchant: P): void {
         const originalRender = this.render;
 
         this.render = (...args: any[]) => {
-            this.beforeRender(props);
+            this.beforeRender(configSetByMerchant);
             return originalRender.apply(this, args);
         };
     }
 
-    protected beforeRender(props?: P): void {
+    protected beforeRender(configSetByMerchant?: P): void {
         // We don't send 'rendered' events when rendering actions
-        if (props?.originalAction) {
+        if (configSetByMerchant?.originalAction) {
             return;
         }
 
         const event = new AnalyticsInfoEvent({
             type: InfoEventType.rendered,
             component: this.type,
-            configData: { ...props, showPayButton: this.props.showPayButton },
-            ...(props?.oneClick && { isStoredPaymentMethod: true })
+            configData: { ...configSetByMerchant, showPayButton: this.props.showPayButton },
+            ...(configSetByMerchant?.oneClick && { isStoredPaymentMethod: true })
         });
 
         this.analytics.sendAnalytics(event);
