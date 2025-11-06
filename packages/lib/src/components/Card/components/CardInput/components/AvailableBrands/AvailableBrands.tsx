@@ -1,9 +1,9 @@
 import { h } from 'preact';
 import classNames from 'classnames';
-import Img from '../../../../../internal/Img';
 import './AvailableBrands.scss';
 import { BrandConfiguration } from '../../../../types';
 import { getFullBrandName } from '../../utils';
+import Brand from '../../../../../internal/Brand';
 
 type AvailableBrands = Array<BrandConfiguration>;
 
@@ -25,9 +25,7 @@ const AvailableBrands = ({ brands, activeBrand }: PaymentMethodBrandsProps) => {
             })}
         >
             {brands.map(({ name, icon }) => (
-                <span key={name} className="adyen-checkout__card__brands__brand-wrapper">
-                    <Img src={icon} alt={getFullBrandName(name)} />
-                </span>
+                <Brand wrapperClassName={'adyen-checkout__card__brands__brand-wrapper'} key={name} url={icon} alt={getFullBrandName(name)}></Brand>
             ))}
         </span>
     );

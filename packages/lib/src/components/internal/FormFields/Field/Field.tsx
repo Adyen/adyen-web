@@ -92,6 +92,7 @@ const Field: FunctionalComponent<FieldProps> = props => {
                             'adyen-checkout__label__text--error': errorMessage
                         })}
                         data-id={name}
+                        data-testid={name}
                     >
                         {label}
                     </span>
@@ -168,7 +169,7 @@ const Field: FunctionalComponent<FieldProps> = props => {
 
                     {isValid && showValidIcon !== false && (
                         <span className="adyen-checkout-input__inline-validation adyen-checkout-input__inline-validation--valid">
-                            <Icon type={`${PREFIX}checkmark`} alt={i18n?.get('field.valid')} />
+                            <Icon type={`${PREFIX}checkmark_black`} alt={i18n?.get('field.valid')} />
                         </span>
                     )}
 

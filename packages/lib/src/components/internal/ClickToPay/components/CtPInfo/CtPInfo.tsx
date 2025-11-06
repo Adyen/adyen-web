@@ -30,7 +30,7 @@ const CtPInfo = () => {
                 aria-label={i18n.get('ctp.aria.infoModalButton')}
                 type="button"
             >
-                <Img height="15" src={url} ariaHidden={true} />
+                <Img height="15" src={url} aria-hidden={true} />
             </button>
 
             <CtPInfoModal isOpen={isInfoModalOpen} onClose={handleOnClose} focusAfterClose={buttonRef.current} />

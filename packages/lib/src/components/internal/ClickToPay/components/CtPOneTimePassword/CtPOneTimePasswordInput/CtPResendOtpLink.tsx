@@ -69,7 +69,7 @@ const CtPResendOtpLink = ({ onError, onResendCode, disabled }: CtPResendOtpLinkP
         return (
             <div className="adyen-checkout-ctp__otp-resend-code--confirmation">
                 {i18n.get('ctp.otp.codeResent')}
-                <Icon type={`${PREFIX}checkmark`} height={14} width={14} />
+                <Icon type={`${PREFIX}checkmark_black`} height={14} width={14} />
             </div>
         );
     }

@@ -1,3 +1,4 @@
+@use 'styles/index';
 @import 'styles/variable-generator';
 
 .adyen-checkout-card-input {
@@ -40,13 +41,8 @@
     max-height: 100px;
 }
 
-.adyen-checkout__field.adyen-checkout__card__cvc__input--hidden,
-.adyen-checkout__field.adyen-checkout__card__exp-date__input--hidden {
+.adyen-checkout__field.adyen-checkout__card__cvc__input--hidden {
     display: none;
-}
-
-.adyen-checkout__card__exp-cvc__exp-date__input--hidden {
-    justify-content: flex-end;
 }
 
 .revolving-plan-installments {
@@ -156,27 +152,11 @@
 }
 
 .adyen-checkout__card__cvc__hint {
+    @include index.adyen-checkout-icon-shadow;
+
     backface-visibility: hidden;
     position: absolute;
     transition: opacity 0.1s linear;
-}
-
-.adyen-checkout__field__exp-date_hint_wrapper {
-    position: absolute;
-    right: 0;
-    display: flex;
-    align-items: center;
-    transition: opacity 0.1s linear;
-    margin-right: token(spacer-060);
-
-    &.adyen-checkout__field__exp-date_hint_wrapper--hidden {
-        opacity: 0;
-    }
-}
-
-.adyen-checkout__field__exp-date_hint {
-    width: 27px;
-    height: 18px;
 }
 
 // Front of the card is our back
@@ -217,5 +197,9 @@
 
     .adyen-checkout__fieldset__title {
         padding-bottom: 0;
+    }
+
+    .adyen-checkout-form-instruction {
+        margin: 0;
     }
 }
