@@ -1,0 +1,47 @@
+{/* GettingStarted.docs.mdx */}
+
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Welcome/Getting Started" />
+
+# Getting Started
+
+![Adyen Web Components](https://user-images.githubusercontent.com/7724351/198588741-f522c3ed-ff3c-4f70-b8cb-8ff9e6d41cfa.png)
+
+Welcome to the Adyen Web Components Storybook. This interactive documentation allows you to explore and test our payment components in isolation.
+
+## Resources
+
+- **GitHub Repository**: [adyen/adyen-web](https://github.com/adyen/adyen-web)
+- **Official Documentation**: [Adyen Docs](https://docs.adyen.com/online-payments/web-drop-in)
+
+## Testing Components
+
+Our Storybook is organized into three main sections:
+
+### 1. Dropin
+This section contains the Drop-in component, which provides a complete payment interface that automatically displays the available payment methods based on your configuration.
+
+### 2. Components
+This section contains the core payment method components that merchants can integrate into their checkout flows. These are the production-ready components that handle specific payment methods like Cards, PayPal, and more.
+
+### 3. Internals
+This section includes internal components and utilities used within the Adyen Web library. These are primarily for development purposes and provide insight into the building blocks of our payment components.
+
+## Can't Find a Component?
+
+If you're looking for a payment method component that isn't explicitly listed in the Components section, it may be a redirect-based payment method. These can be tested using our generic [Redirect](/story/components-redirect--default) component.
+
+### Testing Redirect Payment Methods
+
+Many payment methods use a redirect flow where the customer is redirected to the payment provider's page. You can test these using the [Redirect](/story/components-redirect--default) component story:
+
+1. Navigate to **Components → Redirect** in the Storybook navigation
+2. In the Controls panel, modify the following parameters:
+   - **countryCode**: Set the appropriate country code (e.g., 'NL' for Netherlands, 'HK' for Hong Kong)
+   - **componentConfiguration.type**: Set the payment method type (tx_variant) (e.g., 'ideal', 'alipay_hk')
+
+The Redirect component will automatically handle the specific payment method flow based on the type you specify. This allows you to test any redirect-based payment method without needing a dedicated component for each one.
+
+For a complete list of available payment method types, refer to the [Adyen Documentation](https://docs.adyen.com/payment-methods).
+

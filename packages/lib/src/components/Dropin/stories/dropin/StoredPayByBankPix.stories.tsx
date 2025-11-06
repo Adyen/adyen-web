@@ -12,7 +12,7 @@ import { ComponentContainer } from '../../../../../storybook/components/Componen
 import { mockEnrollmentPayload } from '../../../PayByBankPix/stories/mocks';
 
 const meta: MetaConfiguration<DropinConfiguration> = {
-    title: 'Components/Dropin/PayByBankPix',
+    title: 'Dropin/PayByBankPix',
     argTypes: {
         componentConfiguration: {
             control: 'object'
@@ -91,7 +91,7 @@ export const CreateEnrollment = {
         showPayButton: true,
         sessionData: {
             ...mockEnrollmentPayload,
-            returnUrl: `${globalThis.location.origin}/iframe.html?args=&globals=&id=components-dropin-paybybankpix--create-enrollment&viewMode=story`
+            returnUrl: `${globalThis.location.origin}/iframe.html?args=&globals=&id=dropin-paybybankpix--create-enrollment&viewMode=story`
         },
         redirectResult: getSearchParameter('redirectResult'),
         sessionId: getSearchParameter('sessionId'),
@@ -121,7 +121,7 @@ export const PayWithEnrolledDevice = {
         showPayButton: true,
         sessionData: {
             ...mockEnrollmentPayload,
-            returnUrl: `${globalThis.location.origin}/iframe.html?args=&globals=&id=components-dropin-paybybankpix--create-enrollment&viewMode=story`
+            returnUrl: `${globalThis.location.origin}/iframe.html?args=&globals=&id=dropin-paybybankpix--create-enrollment&viewMode=story`
         },
         componentConfiguration: {
             showRemovePaymentMethodButton: false,

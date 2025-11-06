@@ -12,7 +12,7 @@ import './customization.scss';
 type DropinStory = StoryConfiguration<DropinConfiguration>;
 
 const meta: MetaConfiguration<DropinConfiguration> = {
-    title: 'Components/Dropin/Default',
+    title: 'Dropin/Default',
     argTypes: {
         componentConfiguration: {
             control: 'object'

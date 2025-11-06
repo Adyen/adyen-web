@@ -5,13 +5,13 @@ import { Checkout } from '../../../../storybook/components/Checkout';
 import { RedirectConfiguration } from '../types';
 import RedirectElement from '..';
 
-type IdealStory = StoryConfiguration<RedirectConfiguration>;
+type RedirectStory = StoryConfiguration<RedirectConfiguration>;
 
 const meta: MetaConfiguration<RedirectConfiguration> = {
-    title: 'Components/Ideal'
+    title: 'Components/Redirect'
 };
 
-export const Default: IdealStory = {
+export const Default: RedirectStory = {
     render: ({ componentConfiguration, ...checkoutConfig }: PaymentMethodStoryProps<RedirectConfiguration>) => (
         <Checkout checkoutConfig={checkoutConfig}>
             {checkout => <ComponentContainer element={new RedirectElement(checkout, componentConfiguration)} />}

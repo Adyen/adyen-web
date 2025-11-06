@@ -7,7 +7,7 @@ import { ComponentContainer } from '../../../../../storybook/components/Componen
 import DropinComponent from '../../Dropin';
 
 const meta: MetaConfiguration<DropinConfiguration> = {
-    title: 'Components/Dropin/PayTo',
+    title: 'Dropin/PayTo',
     argTypes: {
         componentConfiguration: {
             control: 'object'
