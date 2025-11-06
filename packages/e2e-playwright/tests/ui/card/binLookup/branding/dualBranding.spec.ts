@@ -224,6 +224,7 @@ test.describe.only('Card - Testing full UI (PAN icons & dual branding buttons) a
         // Move focus to date
         await card.selectDateIcon();
         await expect(card.expiryDateInput).toBeFocused();
+        await page.waitForTimeout(300);
 
         // Clicking an element should not see focus move to the PAN or the date fields
         await visaBtn.click();
