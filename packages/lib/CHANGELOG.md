@@ -1,5 +1,13 @@
 # @adyen/adyen-web
 
+## 6.25.1
+
+### Patch Changes
+
+- Introduced a shared `CopyButton` component with unified clipboard logic and styling enhancements to the `Voucher` component. ([#3618](https://github.com/Adyen/adyen-web/pull/3618))
+
+- [FIX] Fixes regression introduced in `v6.24.0` which meant that if `onAdditionalDetails` was defined directly on the Card component, and was not defined where it should be, as a Checkout level config prop - it would fail to fire ([#3622](https://github.com/Adyen/adyen-web/pull/3622))
+
 ## 6.25.0
 
 ### Minor Changes
