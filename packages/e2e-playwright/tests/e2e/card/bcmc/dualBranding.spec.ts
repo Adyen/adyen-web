@@ -294,8 +294,6 @@ test.describe.only('Bcmc payments with dual branding', () => {
             test('#6a should submit the mc payment', async ({ bcmc, page }) => {
                 await binLookupMock(page, dualBrandedBcmcAndMc);
 
-                const paymentsRequestPromise = page.waitForRequest(request => request.url().includes('/payments') && request.method() === 'POST');
-
                 await bcmc.goto(URL_MAP.bcmc);
                 await bcmc.isComponentVisible();
 
@@ -311,6 +309,8 @@ test.describe.only('Bcmc payments with dual branding', () => {
                 await expect(bcmc.cvcField).toBeVisible();
 
                 await bcmc.fillCvc(TEST_CVC_VALUE);
+
+                const paymentsRequestPromise = page.waitForRequest(request => request.url().includes('/payments') && request.method() === 'POST');
                 await bcmc.pay();
 
                 const request = await paymentsRequestPromise;
