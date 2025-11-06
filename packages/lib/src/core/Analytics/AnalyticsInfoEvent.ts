@@ -1,10 +1,9 @@
 import { AnalyticsEvent } from './AnalyticsEvent';
-import { ANALYTICS_EVENT, ANALYTICS_VALIDATION_ERROR_STR } from './constants';
+import { ANALYTICS_EVENT } from './constants';
 import { mapErrorCodesForAnalytics } from './utils';
 
 type AnalyticsInfoEventProps = {
-    // TODO: This must be of type 'InfoEventType' - Added in next PR's
-    type: string;
+    type: InfoEventType;
     target?: string;
     issuer?: string;
     isExpress?: boolean;
@@ -21,7 +20,14 @@ type AnalyticsInfoEventProps = {
 export enum InfoEventType {
     clicked = 'clicked',
     rendered = 'rendered',
+    selected = 'selected',
     validationError = 'validationError',
+    focus = 'focus',
+    unfocus = 'unfocus',
+    configured = 'configured',
+    displayed = 'displayed',
+    input = 'input',
+    download = 'download',
     /**
      * Third party SDK events
      */
@@ -45,8 +51,7 @@ export class AnalyticsInfoEvent extends AnalyticsEvent {
     /**
      * Analytics event type
      */
-    // TODO: This must be of type 'InfoEventType' - Added in next PR's
-    private readonly type: string;
+    private readonly type: InfoEventType;
 
     /**
      * Component config data set by the merchant. Sent only in 'rendered' events
@@ -85,13 +90,13 @@ export class AnalyticsInfoEvent extends AnalyticsEvent {
         if (props.validationErrorMessage !== undefined) this.validationErrorMessage = props.validationErrorMessage;
 
         // @ts-ignore This will be fixed when we fixed the interface of this Component on next PR's
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
+
         if (this.type === InfoEventType.rendered) {
             this.configData = this.createAnalyticsConfigData(props?.configData);
         }
 
         // Some of the more generic validation error codes required combination with target to retrieve a specific code
-        if (this.type === ANALYTICS_VALIDATION_ERROR_STR) {
+        if (this.type === InfoEventType.validationError) {
             this.validationErrorCode = mapErrorCodesForAnalytics(this.validationErrorCode, this.target);
         }
     }

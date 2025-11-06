@@ -18,7 +18,6 @@ import type { PayButtonFunctionProps, UIElementStatus } from '../internal/UIElem
 import UIElement from '../internal/UIElement';
 import PayButton from '../internal/PayButton';
 import type { ICore } from '../../core/types';
-import { ANALYTICS_FOCUS_STR, ANALYTICS_CONFIGURED_STR, ANALYTICS_UNFOCUS_STR } from '../../core/Analytics/constants';
 import { ALL_SECURED_FIELDS } from '../internal/SecuredFields/lib/constants';
 import AdyenCheckoutError, { IMPLEMENTATION_ERROR } from '../../core/Errors/AdyenCheckoutError';
 import CardInputDefaultProps from './components/CardInput/defaultProps';
@@ -220,14 +219,14 @@ export class CardElement extends UIElement<CardConfiguration> {
     }
 
     private onConfigSuccess = (obj: CardConfigSuccessData) => {
-        const event = new AnalyticsInfoEvent({ type: ANALYTICS_CONFIGURED_STR });
+        const event = new AnalyticsInfoEvent({ type: InfoEventType.configured });
         this.submitAnalytics(event);
 
         this.props.onConfigSuccess?.(obj);
     };
 
     private onFocus = (obj: ComponentFocusObject) => {
-        const event = new AnalyticsInfoEvent({ type: ANALYTICS_FOCUS_STR, target: fieldTypeToSnakeCase(obj.fieldType) });
+        const event = new AnalyticsInfoEvent({ type: InfoEventType.focus, target: fieldTypeToSnakeCase(obj.fieldType) });
         this.submitAnalytics(event);
 
         // Call merchant defined callback
@@ -239,7 +238,7 @@ export class CardElement extends UIElement<CardConfiguration> {
     };
 
     private onBlur = (obj: ComponentFocusObject) => {
-        const event = new AnalyticsInfoEvent({ type: ANALYTICS_UNFOCUS_STR, target: fieldTypeToSnakeCase(obj.fieldType) });
+        const event = new AnalyticsInfoEvent({ type: InfoEventType.unfocus, target: fieldTypeToSnakeCase(obj.fieldType) });
         this.submitAnalytics(event);
 
         // Call merchant defined callback

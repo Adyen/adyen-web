@@ -28,12 +28,11 @@ import { CardBrandData, CardFocusData } from '../../../internal/SecuredFields/li
 import { PREFIX } from '../../../internal/Icon/constants';
 import useSRPanelForCardInputErrors from './useSRPanelForCardInputErrors';
 import FastlaneSignup from '../Fastlane/FastlaneSignup';
-import { ANALYTICS_VALIDATION_ERROR_STR, ANALYTICS_DISPLAYED_STR, ANALYTICS_SELECTED_STR } from '../../../../core/Analytics/constants';
 import { fieldTypeToSnakeCase } from '../../../internal/SecuredFields/utils';
 import { getErrorMessageFromCode } from '../../../../core/Errors/utils';
 import { SF_ErrorCodes } from '../../../../core/Errors/constants';
 import { usePrevious } from '../../../../utils/hookUtils';
-import { AnalyticsInfoEvent } from '../../../../core/Analytics/AnalyticsInfoEvent';
+import { AnalyticsInfoEvent, InfoEventType } from '../../../../core/Analytics/AnalyticsInfoEvent';
 
 const DUAL_BRAND_BUTTON = 'dual_brand_button';
 
@@ -402,7 +401,7 @@ const CardInput = (props: CardInputProps) => {
 
             newErrors?.forEach(errorItem => {
                 const event = new AnalyticsInfoEvent({
-                    type: ANALYTICS_VALIDATION_ERROR_STR,
+                    type: InfoEventType.validationError,
                     target: fieldTypeToSnakeCase(errorItem.field),
                     validationErrorCode: errorItem.errorCode,
                     validationErrorMessage: getErrorMessageFromCode(errorItem.errorCode, SF_ErrorCodes)
@@ -453,7 +452,7 @@ const CardInput = (props: CardInputProps) => {
             const dualBrands = dualBrandsArr.toString();
 
             const event = new AnalyticsInfoEvent({
-                type: ANALYTICS_DISPLAYED_STR,
+                type: InfoEventType.displayed,
                 target: DUAL_BRAND_BUTTON,
                 brand,
                 configData: { dualBrands }
@@ -470,7 +469,7 @@ const CardInput = (props: CardInputProps) => {
      */
     useEffect(() => {
         if (previousSelectedBrandValue?.length && selectedBrandValue?.length) {
-            const event = new AnalyticsInfoEvent({ type: ANALYTICS_SELECTED_STR, target: DUAL_BRAND_BUTTON, brand: selectedBrandValue });
+            const event = new AnalyticsInfoEvent({ type: InfoEventType.selected, target: DUAL_BRAND_BUTTON, brand: selectedBrandValue });
 
             props.onSubmitAnalytics(event);
         }

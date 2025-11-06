@@ -1,8 +1,8 @@
 import EventsQueue from './EventsQueue';
 import { ANALYTICS_PATH } from './constants';
-import { AnalyticsInfoEvent } from './AnalyticsInfoEvent';
+import { AnalyticsInfoEvent, InfoEventType } from './AnalyticsInfoEvent';
 
-const event = new AnalyticsInfoEvent({ type: 'rendered', component: 'scheme' });
+const event = new AnalyticsInfoEvent({ type: InfoEventType.rendered, component: 'scheme' });
 
 describe('CAEventsQueue', () => {
     const queue = EventsQueue({ analyticsContext: 'https://mydomain.com', clientKey: 'fsdjkh', analyticsPath: ANALYTICS_PATH });

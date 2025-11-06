@@ -2,11 +2,12 @@ import { render } from '@testing-library/preact';
 import GooglePay from './GooglePay';
 import GooglePayService from './GooglePayService';
 
-import { ANALYTICS_SELECTED_STR, NO_CHECKOUT_ATTEMPT_ID } from '../../core/Analytics/constants';
+import { NO_CHECKOUT_ATTEMPT_ID } from '../../core/Analytics/constants';
 import PaymentMethods from '../../core/ProcessResponse/PaymentMethods';
 import { mock } from 'jest-mock-extended';
 import { ICore } from '../../types';
 import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
+import { InfoEventType } from '../../core/Analytics/AnalyticsInfoEvent';
 
 jest.mock('./GooglePayService');
 
@@ -589,7 +590,7 @@ describe('GooglePay', () => {
             expect(core.modules.analytics.sendAnalytics).toHaveBeenCalledWith(
                 expect.objectContaining({
                     component: 'googlepay',
-                    type: ANALYTICS_SELECTED_STR,
+                    type: InfoEventType.selected,
                     target: 'instant_payment_button'
                 })
             );
