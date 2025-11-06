@@ -16,17 +16,9 @@ import { setFocusOnField } from '../../../utils/setFocus';
 import DisclaimerMessage from '../DisclaimerMessage';
 import Select from '../FormFields/Select';
 import { SelectTargetObject } from '../FormFields/Select/types';
-import {
-    ANALYTICS_DISPLAYED_STR,
-    ANALYTICS_FEATURED_ISSUER,
-    ANALYTICS_INPUT_STR,
-    ANALYTICS_LIST,
-    ANALYTICS_LIST_SEARCH,
-    ANALYTICS_SEARCH_DEBOUNCE_TIME,
-    ANALYTICS_SELECTED_STR
-} from '../../../core/Analytics/constants';
+import { ANALYTICS_FEATURED_ISSUER, ANALYTICS_LIST, ANALYTICS_LIST_SEARCH, ANALYTICS_SEARCH_DEBOUNCE_TIME } from '../../../core/Analytics/constants';
 import { debounce } from '../../../utils/debounce';
-import { AnalyticsInfoEvent } from '../../../core/Analytics/AnalyticsInfoEvent';
+import { AnalyticsInfoEvent, InfoEventType } from '../../../core/Analytics/AnalyticsInfoEvent';
 
 const payButtonLabel = ({ issuer, items }, i18n): string => {
     const issuerName = items.find(i => i.id === issuer)?.name;
@@ -84,7 +76,7 @@ function IssuerList({
             const issuerObj = items.find(issuer => issuer.id === (event.target as SelectTargetObject).value);
 
             const analyticsEvent = new AnalyticsInfoEvent({
-                type: ANALYTICS_SELECTED_STR,
+                type: InfoEventType.selected,
                 target,
                 issuer: issuerObj.name
             });
@@ -99,7 +91,7 @@ function IssuerList({
     const handleListToggle = useCallback((isOpen: boolean) => {
         if (isOpen) {
             const event = new AnalyticsInfoEvent({
-                type: ANALYTICS_DISPLAYED_STR,
+                type: InfoEventType.displayed,
                 target: ANALYTICS_LIST
             });
             props.onSubmitAnalytics(event);
@@ -109,7 +101,7 @@ function IssuerList({
     const debounceSearchAnalytics = useRef(debounce(props.onSubmitAnalytics, ANALYTICS_SEARCH_DEBOUNCE_TIME));
 
     const handleSearch = useCallback(() => {
-        debounceSearchAnalytics.current({ type: ANALYTICS_INPUT_STR, target: ANALYTICS_LIST_SEARCH });
+        debounceSearchAnalytics.current({ type: InfoEventType.input, target: ANALYTICS_LIST_SEARCH });
     }, []);
 
     useEffect(() => {

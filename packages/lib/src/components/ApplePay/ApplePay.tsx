@@ -10,7 +10,6 @@ import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { DecodeObject } from '../../types/global-types';
 import { TxVariants } from '../tx-variants';
 import { sanitizeResponse, verifyPaymentDidNotFail } from '../internal/UIElement/utils';
-import { ANALYTICS_INSTANT_PAYMENT_BUTTON, ANALYTICS_SELECTED_STR } from '../../core/Analytics/constants';
 import { resolveSupportedVersion } from './utils/resolve-supported-version';
 import { formatApplePayContactToAdyenAddressFormat } from './utils/format-applepay-contact-to-adyen-format';
 import { mapBrands } from './utils/map-adyen-brands-to-applepay-brands';
@@ -113,8 +112,8 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
         // Analytics
         if (this.props.isInstantPayment) {
             const event = new AnalyticsInfoEvent({
-                type: ANALYTICS_SELECTED_STR,
-                target: ANALYTICS_INSTANT_PAYMENT_BUTTON
+                type: InfoEventType.selected,
+                target: 'instant_payment_button'
             });
             this.submitAnalytics(event);
         }
