@@ -57,6 +57,7 @@ const actionTypes = {
             paymentData,
             onActionHandled: props.onActionHandled,
             onComplete: props.onComplete, // NOTE: We only ever expect props.onComplete to be defined for the MDFlow
+            onAdditionalDetails: props.onAdditionalDetails, // Needed to prevent regression in v6.24.0 re. supporting onAdditionalDetails being directly set on Card component (in v7 we will *not* allow this, & this line can be removed)
             onError: props.onError,
             isDropin: !!props.isDropin,
             loadingContext: props.loadingContext,

@@ -7,6 +7,9 @@ import { createStoredCardComponent } from './cardStoryHelpers/createStoredCardCo
 import { createCardComponent } from './cardStoryHelpers/createCardComponent';
 import { getComponentConfigFromUrl } from '../../../../storybook/utils/get-configuration-from-url';
 import { CardWith3DS2CreateFromAction } from './cardStoryHelpers/CardWith3DS2CreateFromAction';
+import { AdditionalDetailsActions, AdditionalDetailsData } from '../../../core/types';
+import { displayResultMessage } from '../../../../storybook/helpers/checkout-handlers';
+import { makeDetailsCall } from '../../../../storybook/helpers/checkout-api-calls';
 
 type CardStory = StoryConfiguration<CardConfiguration>;
 
@@ -190,6 +193,45 @@ export const CardWith_3DS2_CreateFromAction: CardStory = {
     args: {
         componentConfiguration: {
             _disableClickToPay: true
+        },
+        useSessions: false
+    }
+};
+
+export const CardWith_3DS2_own_onAdditionalDetails: CardStory = {
+    render: createCardComponent,
+
+    args: {
+        componentConfiguration: {
+            _disableClickToPay: true,
+            onAdditionalDetails(state: AdditionalDetailsData, _component, actions: AdditionalDetailsActions) {
+                // Display in-between screen to demonstrate that *this* callback has been called, rather than the checkout level one
+                displayResultMessage(true, 'success-own-onAdditionalDetails-called');
+
+                setTimeout(async () => {
+                    const container = document.getElementById('component-root');
+                    const resMsg = document.querySelector('[data-testid="result-message"]');
+
+                    // Go on to make the actual /details call in order to complete the flow
+                    try {
+                        const { resultCode, action, order, donationToken } = await makeDetailsCall(state.data);
+
+                        if (!resultCode) actions.reject();
+
+                        if (resMsg) container.removeChild(resMsg);
+
+                        actions.resolve({
+                            resultCode,
+                            action,
+                            order,
+                            donationToken
+                        });
+                    } catch (error) {
+                        console.error('## onAdditionalDetails - critical error', error);
+                        actions.reject();
+                    }
+                }, 1000);
+            }
         },
         useSessions: false
     }
