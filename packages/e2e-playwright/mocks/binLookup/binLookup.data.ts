@@ -157,7 +157,6 @@ const dualBrandedBcmcAndMc = {
             enableLuhnCheck: true,
             expiryDatePolicy: 'required',
             localeBrand: 'Bancontact card',
-            panLength: 16,
             paymentMethodVariant: 'bcmc',
             showSocialSecurityNumber: false,
             supported: true
@@ -185,7 +184,6 @@ const dualBrandedBcmcAndVisa = {
             enableLuhnCheck: true,
             expiryDatePolicy: 'required',
             localeBrand: 'Bancontact card',
-            panLength: 16,
             paymentMethodVariant: 'bcmc',
             showSocialSecurityNumber: false,
             supported: true
@@ -213,7 +211,6 @@ const dualBcmcAndMaestro = {
             enableLuhnCheck: true,
             expiryDatePolicy: 'required',
             localeBrand: 'Bancontact card',
-            panLength: 16,
             paymentMethodVariant: 'bcmc',
             showSocialSecurityNumber: false,
             supported: true
@@ -251,7 +248,6 @@ const dualBrandedVisaAndBcmc = {
             enableLuhnCheck: true,
             expiryDatePolicy: 'required',
             localeBrand: 'Bancontact card',
-            panLength: 16,
             paymentMethodVariant: 'bcmc',
             showSocialSecurityNumber: false,
             supported: true
@@ -279,7 +275,6 @@ const dualBrandedMcAndBcmc = {
             enableLuhnCheck: true,
             expiryDatePolicy: 'required',
             localeBrand: 'Bancontact card',
-            panLength: 16,
             paymentMethodVariant: 'bcmc',
             showSocialSecurityNumber: false,
             supported: true

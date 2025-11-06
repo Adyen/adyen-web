@@ -26,22 +26,21 @@ test.describe.only('Bcmc payments with dual branding', () => {
     test.describe('Bancontact (BCMC) / Maestro brands', () => {
         test.describe('Selecting the Bancontact brand', () => {
             test('#1a should submit the bcmc payment', async ({ bcmc, page }) => {
-                const paymentsRequestPromise = page.waitForRequest(request => request.url().includes('/payments') && request.method() === 'POST');
-
                 await bcmc.goto(URL_MAP.bcmc);
 
                 await bcmc.isComponentVisible();
 
                 await bcmc.fillCardNumber(BCMC_CARD);
+
                 await bcmc.fillExpiryDate(TEST_DATE_VALUE);
                 await bcmc.waitForVisibleDualBrandIcons();
-
                 const [firstBrand, secondBrand] = await bcmc.dualBrandIcons;
+
                 expect(firstBrand).toHaveAttribute('data-value', 'bcmc');
                 expect(secondBrand).toHaveAttribute('data-value', 'maestro');
-
                 await expect(bcmc.cvcField).toBeHidden();
 
+                const paymentsRequestPromise = page.waitForRequest(request => request.url().includes('/payments') && request.method() === 'POST');
                 await bcmc.pay();
 
                 // check brand has been set in paymentMethod data
@@ -79,27 +78,27 @@ test.describe.only('Bcmc payments with dual branding', () => {
             test('#2a should submit the maestro payment', async ({ bcmc, page }) => {
                 await binLookupMock(page, dualBcmcAndMaestro);
 
-                const paymentsRequestPromise = page.waitForRequest(request => request.url().includes('/payments') && request.method() === 'POST');
-
                 await bcmc.goto(URL_MAP.bcmc);
+
                 await bcmc.isComponentVisible();
-
                 await bcmc.fillCardNumber(BCMC_CARD);
-                await bcmc.fillExpiryDate(TEST_DATE_VALUE);
 
+                await bcmc.fillExpiryDate(TEST_DATE_VALUE);
                 await expect(bcmc.dualBrandingButtonsHolder).toBeVisible();
 
                 // Select maestro
+
                 const maestroBtn = await bcmc.selectDualBrandUIItem(/maestro/i);
                 await maestroBtn.click();
-
                 // Due to brand sorting and priority being given to the Bcmc brand - cvc should remain hidden
+
                 // even tho' maestro has been selected
                 // await expect(bcmc.cvcField).toBeHidden();// old rule
-
                 // Seems to be the new rule TODO confirm this is intentional
+
                 await expect(bcmc.cvcLabelText).toHaveText(CVC_LABEL_OPTIONAL);
 
+                const paymentsRequestPromise = page.waitForRequest(request => request.url().includes('/payments') && request.method() === 'POST');
                 await bcmc.pay();
 
                 const request = await paymentsRequestPromise;
@@ -183,23 +182,23 @@ test.describe.only('Bcmc payments with dual branding', () => {
             test('#4a should submit the visa payment', async ({ bcmc, page }) => {
                 await binLookupMock(page, dualBrandedBcmcAndVisa);
 
-                const paymentsRequestPromise = page.waitForRequest(request => request.url().includes('/payments') && request.method() === 'POST');
-
                 await bcmc.goto(URL_MAP.bcmc);
+
                 await bcmc.isComponentVisible();
-
                 await bcmc.fillCardNumber(BCMC_DUAL_BRANDED_VISA);
-                await bcmc.fillExpiryDate(TEST_DATE_VALUE);
 
+                await bcmc.fillExpiryDate(TEST_DATE_VALUE);
                 await expect(bcmc.dualBrandingButtonsHolder).toBeVisible();
 
                 // Select visa
+
                 const visaBtn = await bcmc.selectDualBrandUIItem(/visa/i);
                 await visaBtn.click();
-
                 await expect(bcmc.cvcField).toBeVisible();
 
                 await bcmc.fillCvc(TEST_CVC_VALUE);
+
+                const paymentsRequestPromise = page.waitForRequest(request => request.url().includes('/payments') && request.method() === 'POST');
                 await bcmc.pay();
 
                 const request = await paymentsRequestPromise;
@@ -357,8 +356,6 @@ test.describe.only('Bcmc payments with dual branding', () => {
             test('#7 should submit payment branded to a default value', async ({ bcmc, page }) => {
                 await binLookupMock(page, dualBrandedBcmcAndMc);
 
-                const paymentsRequestPromise = page.waitForRequest(request => request.url().includes('/payments') && request.method() === 'POST');
-
                 await bcmc.goto(URL_MAP.bcmc);
                 await bcmc.isComponentVisible();
 
@@ -381,6 +378,7 @@ test.describe.only('Bcmc payments with dual branding', () => {
                 // Give chance for UI to render in order to set correct brand in state
                 await expect(bcmc.dualBrandingButtonsHolder).toBeVisible();
 
+                const paymentsRequestPromise = page.waitForRequest(request => request.url().includes('/payments') && request.method() === 'POST');
                 await bcmc.pay();
 
                 const request = await paymentsRequestPromise;
