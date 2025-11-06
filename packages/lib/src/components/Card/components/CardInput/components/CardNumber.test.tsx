@@ -1,51 +1,51 @@
-import { mount } from 'enzyme';
 import { h } from 'preact';
+import { render, screen } from '@testing-library/preact';
 import CardNumber from './CardNumber';
 import { CoreProvider } from '../../../../../core/Context/CoreProvider';
+import { BRAND_READABLE_NAME_MAP } from '../../../../internal/SecuredFields/lib/constants';
 
-// https://github.com/enzymejs/enzyme/issues/1925#issuecomment-490637648
-const Proxy = props => (
-    <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
-        <CardNumber
-            label="Card number"
-            error=""
-            isValid={false}
-            focused={true}
-            filled={false}
-            showBrandIcon={true}
-            brand="card"
-            onFocusField={() => {}}
-            dualBrandingElements={null}
-            dualBrandingChangeHandler={() => {}}
-            dualBrandingSelected=""
-            {...props}
-        />
-    </CoreProvider>
-);
+const renderCardNumber = (props = {}) => {
+    return render(
+        <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+            <CardNumber
+                label="Card number"
+                error=""
+                isValid={false}
+                focused={true}
+                filled={false}
+                showBrandIcon={true}
+                brand="card"
+                onFocusField={() => {}}
+                {...props}
+            />
+        </CoreProvider>
+    );
+};
 
-const wrapper = mount(<Proxy />);
+const dualBrandingElements = [{ id: 'visa' }, { id: 'cartebancaire' }];
 
 describe('CardNumber and the (dual)branding icons that show in the PAN field', () => {
     test('Renders a CardNumber field, with standard brand image, and no dual branding', () => {
-        expect(wrapper.find('[data-cse="encryptedCardNumber"]')).toHaveLength(1);
-        expect(wrapper.find('.adyen-checkout__card__cardNumber__brandIcon')).toHaveLength(1);
-        expect(wrapper.find('.adyen-checkout__card__dual-branding__icons')).toHaveLength(0);
+        renderCardNumber();
+        expect(screen.getByTestId('encryptedCardNumber')).toBeInTheDocument();
+        expect(screen.getByAltText('card')).toBeInTheDocument();
+        const images = screen.getAllByRole('img');
+        expect(images).toHaveLength(1);
     });
 
     test('Renders a CardNumber field with inline dual branding icons', () => {
-        wrapper.setProps({ dualBrandingElements: [{ id: 'visa' }, { id: 'cartebancaire' }] });
-        expect(wrapper.find('.adyen-checkout__card__dual-branding__icons')).toHaveLength(1);
-    });
-
-    test('Dual branding icons should consist of 2 images and should replace the standard brand image', () => {
-        // dual branding icons
-        expect(wrapper.find('.adyen-checkout__card__dual-branding__icons .adyen-checkout__card__cardNumber__brandIcon')).toHaveLength(2);
-        // std brand image
-        expect(wrapper.find('.adyen-checkout__card__cardNumber__input .adyen-checkout__card__cardNumber__brandIcon')).toHaveLength(0);
+        renderCardNumber({ dualBrandingElements });
+        const images = screen.getAllByRole('img');
+        expect(images).toHaveLength(2);
+        expect(screen.getByAltText(BRAND_READABLE_NAME_MAP.visa)).toBeInTheDocument();
+        expect(screen.getByAltText('cartebancaire')).toBeInTheDocument();
     });
 
     test('Inline dual branding icons are hidden when the field is in error', () => {
-        wrapper.setProps({ error: true });
-        expect(wrapper.find('.adyen-checkout__card__dual-branding__icons')).toHaveLength(0);
+        renderCardNumber({ error: 'error message', dualBrandingElements });
+        const images = screen.getAllByRole('img');
+        expect(images).toHaveLength(1);
+        expect(screen.getByAltText('Error')).toBeInTheDocument();
+        expect(screen.getByText('error message')).toBeInTheDocument();
     });
 });

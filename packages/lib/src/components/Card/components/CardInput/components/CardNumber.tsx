@@ -1,13 +1,13 @@
 import { h } from 'preact';
 import classNames from 'classnames';
 import BrandIcon from './BrandIcon';
-import DualBrandingIcon from './DualBrandingIcon/DualBrandingIcon';
 import Field from '../../../../internal/FormFields/Field';
 import { useCoreContext } from '../../../../../core/Context/CoreProvider';
 import { CardNumberProps } from './types';
 import DataSfSpan from './DataSfSpan';
 import { ENCRYPTED_CARD_NUMBER } from '../../../../internal/SecuredFields/lib/constants';
 import { alternativeLabelContent } from './FieldLabelAlternative';
+import './CardNumber.scss';
 
 export default function CardNumber(props: CardNumberProps) {
     const { i18n } = useCoreContext();
@@ -33,6 +33,7 @@ export default function CardNumber(props: CardNumberProps) {
             contextVisibleToScreenReader={false} // securedFields have their own, internal, aria-describedby element
             useLabelElement={false}
             renderAlternativeToLabel={alternativeLabelContent}
+            onInputContainerClick={handleIconClick}
         >
             <DataSfSpan
                 encryptedFieldType={ENCRYPTED_CARD_NUMBER}
@@ -47,20 +48,12 @@ export default function CardNumber(props: CardNumberProps) {
                 })}
             ></DataSfSpan>
 
-            {props.showBrandIcon && !dualBrandingElements && (
-                <BrandIcon brandsConfiguration={props.brandsConfiguration} brand={props.brand} onClick={handleIconClick} />
-            )}
+            {props.showBrandIcon && !dualBrandingElements && <BrandIcon brandsConfiguration={props.brandsConfiguration} brand={props.brand} />}
 
             {dualBrandingElements && !error && (
                 <div className={classNames(['adyen-checkout__card__dual-branding__icons'])}>
                     {dualBrandingElements.map(element => (
-                        <DualBrandingIcon
-                            key={element.id}
-                            brand={element.id}
-                            brandsConfiguration={props.brandsConfiguration}
-                            dataValue={element.id}
-                            onClick={handleIconClick}
-                        />
+                        <BrandIcon key={element.id} brand={element.id} brandsConfiguration={props.brandsConfiguration} />
                     ))}
                 </div>
             )}

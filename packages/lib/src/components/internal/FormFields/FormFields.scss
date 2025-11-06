@@ -97,10 +97,6 @@ span.adyen-checkout__input {
     }
 }
 
-.adyen-checkout-input__inline-validation--valid {
-    color: token(color-label-success);
-}
-
 .adyen-checkout-input__inline-validation--invalid {
     color: token(color-label-critical);
 }

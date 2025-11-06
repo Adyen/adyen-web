@@ -1,0 +1,36 @@
+@import 'styles/variable-generator';
+
+.adyen-checkout__field.adyen-checkout__card__exp-date__input--hidden {
+    display: none;
+}
+
+.adyen-checkout__card__exp-cvc__exp-date__input--hidden {
+    justify-content: flex-end;
+}
+
+.adyen-checkout__field__exp-date {
+    .adyen-checkout__input-wrapper {
+        cursor: text;
+    }
+}
+
+.adyen-checkout__input-wrapper {
+    .adyen-checkout__field__exp-date_hint_wrapper {
+        position: absolute;
+        right: 0;
+        transition: opacity 0.1s linear;
+        margin-right: token(spacer-060);
+        width: 27px;
+        height: 18px;
+        border-radius: token(border-radius-s);
+
+        &.adyen-checkout__field__exp-date_hint_wrapper--hidden {
+            opacity: 0;
+        }
+    }
+}
+
+.adyen-checkout__field__exp-date_hint {
+    width: 27px;
+    height: 18px;
+}

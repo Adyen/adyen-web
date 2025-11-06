@@ -36,8 +36,8 @@ test.describe('Bcmc payments with dual branding', () => {
                 await bcmc.waitForVisibleDualBrandIcons();
                 const [firstBrand, secondBrand] = await bcmc.dualBrandIcons;
 
-                expect(firstBrand).toHaveAttribute('data-value', 'bcmc');
-                expect(secondBrand).toHaveAttribute('data-value', 'maestro');
+                await expect(firstBrand).toHaveAttribute('alt', 'Bancontact card');
+                await expect(secondBrand).toHaveAttribute('alt', 'Maestro');
                 await expect(bcmc.cvcField).toBeHidden();
 
                 const paymentsRequestPromise = page.waitForRequest(request => request.url().includes('/payments') && request.method() === 'POST');
