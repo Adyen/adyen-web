@@ -73,6 +73,7 @@ test.describe.only('Card - Testing full UI (PAN icons & dual branding buttons) a
         // Move focus to date
         await card.selectDateIcon();
         await expect(card.expiryDateInput).toBeFocused();
+        await page.waitForTimeout(300);
 
         // Select visa
         const visaBtn = card.selectDualBrandUIItem(/visa/i);
