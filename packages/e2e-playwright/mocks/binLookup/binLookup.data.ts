@@ -289,6 +289,23 @@ const dualBrandedMcAndBcmc = {
     requestId: '23fada4f-12dc-48f2-9380-873ae3702075'
 };
 
+const bcmcOnly = {
+    brands: [
+        {
+            brand: 'bcmc',
+            cvcPolicy: 'hidden',
+            enableLuhnCheck: true,
+            expiryDatePolicy: 'required',
+            localeBrand: 'Bancontact card',
+            paymentMethodVariant: 'bcmc',
+            showSocialSecurityNumber: false,
+            supported: true
+        }
+    ],
+    issuingCountryCode: 'BE',
+    requestId: '23fada4f-12dc-48f2-9380-873ae3702075'
+};
+
 export {
     optionalDateAndCvcMock,
     hiddenDateAndCvcMock,
@@ -305,5 +322,6 @@ export {
     dualBrandedBcmcAndMc,
     dualBcmcAndMaestro,
     dualBrandedVisaAndBcmc,
-    dualBrandedMcAndBcmc
+    dualBrandedMcAndBcmc,
+    bcmcOnly
 };
