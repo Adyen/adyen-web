@@ -30,7 +30,7 @@ test.describe.only('Card - Testing full UI (PAN icons & dual branding buttons) a
             /**
              * Dual brand icons
              */
-            // Expect inline dual brand icons to be visible
+            // Expect the inline dual brand icons to be visible
             await expect(card.dualBrandingIconsHolder).toBeVisible();
 
             const [firstIcon, secondIcon] = await card.dualBrandIcons;
