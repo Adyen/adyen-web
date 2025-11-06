@@ -1,3 +1,4 @@
+import { render } from '@testing-library/preact';
 import GooglePay from './GooglePay';
 import GooglePayService from './GooglePayService';
 
@@ -546,6 +547,34 @@ describe('GooglePay', () => {
     });
 
     describe('Analytics', () => {
+        test('should send rendered event', () => {
+            const core = setupCoreMock();
+
+            const googlepay = new GooglePay(core, {
+                configuration: { merchantId: 'merchant-id', gatewayMerchantId: 'gateway-id' },
+                showPayButton: false,
+                isExpress: true,
+                expressPage: 'cart'
+            });
+
+            render(googlepay.render());
+
+            expect(core.modules.analytics.sendAnalytics).toHaveBeenCalledWith({
+                component: 'googlepay',
+                configData: {
+                    configuration: '{"merchantId":"merchant-id","gatewayMerchantId":"gateway-id"}',
+                    showPayButton: false,
+                    isExpress: true,
+                    expressPage: 'cart'
+                },
+                id: expect.any(String),
+                timestamp: expect.any(String),
+                type: 'rendered',
+                isExpress: true,
+                expressPage: 'cart'
+            });
+        });
+
         test('should send "selected" event if payment flow is triggered when using instant payment button', () => {
             const core = setupCoreMock();
 

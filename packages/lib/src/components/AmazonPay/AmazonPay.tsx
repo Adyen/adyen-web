@@ -9,6 +9,7 @@ import { getCheckoutDetails } from './services';
 import './AmazonPay.scss';
 import { TxVariants } from '../tx-variants';
 import { sanitizeResponse, verifyPaymentDidNotFail } from '../internal/UIElement/utils';
+import { AnalyticsInfoEvent, InfoEventType } from '../../core/Analytics/AnalyticsInfoEvent';
 
 export class AmazonPayElement extends UIElement<AmazonPayConfiguration> {
     public static type = TxVariants.amazonpay;
@@ -37,6 +38,18 @@ export class AmazonPayElement extends UIElement<AmazonPayConfiguration> {
             },
             browserInfo: this.browserInfo
         };
+    }
+
+    protected override beforeRender(configSetByMerchant?: AmazonPayConfiguration) {
+        const event = new AnalyticsInfoEvent({
+            type: InfoEventType.rendered,
+            component: this.type,
+            configData: { ...configSetByMerchant, showPayButton: this.props.showPayButton },
+            ...(configSetByMerchant?.isExpress && { isExpress: configSetByMerchant.isExpress }),
+            ...(configSetByMerchant?.expressPage && { expressPage: configSetByMerchant.expressPage })
+        });
+
+        this.analytics.sendAnalytics(event);
     }
 
     getShopperDetails() {
