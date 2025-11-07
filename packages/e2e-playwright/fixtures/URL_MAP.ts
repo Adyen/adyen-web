@@ -38,7 +38,7 @@ export const URL_MAP = {
     /* Open invoice */
     riverty: '/iframe.html?globals=&args=&id=components-riverty--default&viewMode=story',
     /* Redirect */
-    ideal: '/iframe.html?globals=&id=components-redirect--ideal--default&viewMode=story',
+    ideal: '/iframe.html?globals=&id=components-redirect--ideal&viewMode=story',
     giftcard_with_card: '/iframe.html?args=&globals=&id=components-partial-payments-givex-giftcard--default&viewMode=story',
     giftcard_with_giftcard: '/iframe.html?args=&globals=&id=components-partial-payments-givex-giftcard--with-giftcard&viewMode=story',
 
