@@ -256,8 +256,6 @@ test.describe('Card - Testing full UI (PAN icons & dual branding buttons) after 
 
             // Expect dual brand UI not to be visible
             await expect(card.dualBrandingButtonsHolder).not.toBeVisible();
-
-            await page.waitForTimeout(2000);
         }
     );
 
