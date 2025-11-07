@@ -11,28 +11,36 @@ import {
 import { URL_MAP } from '../../../../fixtures/URL_MAP';
 
 import LANG from '../../../../../server/translations/en-US.json';
+import { binLookupMock } from '../../../../mocks/binLookup/binLookup.mock';
+import {
+    bcmcOnly,
+    dualBcmcAndMaestro,
+    dualBrandedBcmcAndMc,
+    dualBrandedBcmcAndVisa,
+    dualBrandedMcAndBcmc,
+    dualBrandedVisaAndBcmc
+} from '../../../../mocks/binLookup/binLookup.data';
 const CVC_LABEL_OPTIONAL = LANG['creditCard.securityCode.label.optional'];
 
 test.describe('Bcmc payments with dual branding', () => {
     test.describe('Bancontact (BCMC) / Maestro brands', () => {
         test.describe('Selecting the Bancontact brand', () => {
             test('#1a should submit the bcmc payment', async ({ bcmc, page }) => {
-                const paymentsRequestPromise = page.waitForRequest(request => request.url().includes('/payments') && request.method() === 'POST');
-
                 await bcmc.goto(URL_MAP.bcmc);
 
                 await bcmc.isComponentVisible();
 
-                await bcmc.fillCardNumber(BCMC_CARD);
-                await bcmc.fillExpiryDate(TEST_DATE_VALUE);
-                await bcmc.waitForVisibleDualBrandIcons();
+                await bcmc.typeCardNumber(BCMC_CARD);
 
+                await bcmc.typeExpiryDate(TEST_DATE_VALUE);
+                await bcmc.waitForVisibleDualBrandIcons();
                 const [firstBrand, secondBrand] = await bcmc.dualBrandIcons;
+
                 expect(firstBrand).toHaveAttribute('data-value', 'bcmc');
                 expect(secondBrand).toHaveAttribute('data-value', 'maestro');
-
                 await expect(bcmc.cvcField).toBeHidden();
 
+                const paymentsRequestPromise = page.waitForRequest(request => request.url().includes('/payments') && request.method() === 'POST');
                 await bcmc.pay();
 
                 // check brand has been set in paymentMethod data
@@ -48,17 +56,18 @@ test.describe('Bcmc payments with dual branding', () => {
             test('#1b should not submit the bcmc payment with incomplete form data', async ({ bcmc }) => {
                 await bcmc.goto(URL_MAP.bcmc);
                 await bcmc.isComponentVisible();
-                await bcmc.fillCardNumber(BCMC_CARD);
+                await bcmc.typeCardNumber(BCMC_CARD);
 
                 await bcmc.pay();
 
-                await expect(bcmc.expiryDateErrorElement).toHaveText('Enter the expiry date');
+                await expect(bcmc.expiryDateErrorElement).toHaveText(/Enter the (complete )?expiry date/);
             });
 
-            test('#1c should not submit the bcmc payment with invalid bcmc card number', async ({ bcmc }) => {
+            test('#1c should not submit the bcmc payment with invalid bcmc card number', async ({ bcmc, page }) => {
+                await binLookupMock(page, bcmcOnly);
                 await bcmc.goto(URL_MAP.bcmc);
                 await bcmc.isComponentVisible();
-                await bcmc.fillCardNumber(`${BCMC_CARD}111`);
+                await bcmc.typeCardNumber(`${BCMC_CARD}111`);
                 await bcmc.pay();
 
                 await expect(bcmc.cardNumberErrorElement).toHaveText('Enter a valid card number');
@@ -67,27 +76,29 @@ test.describe('Bcmc payments with dual branding', () => {
 
         test.describe('Selecting the maestro brand', () => {
             test('#2a should submit the maestro payment', async ({ bcmc, page }) => {
-                const paymentsRequestPromise = page.waitForRequest(request => request.url().includes('/payments') && request.method() === 'POST');
+                await binLookupMock(page, dualBcmcAndMaestro);
 
                 await bcmc.goto(URL_MAP.bcmc);
+
                 await bcmc.isComponentVisible();
+                await bcmc.typeCardNumber(BCMC_CARD);
 
-                await bcmc.fillCardNumber(BCMC_CARD);
-                await bcmc.fillExpiryDate(TEST_DATE_VALUE);
-
+                await bcmc.typeExpiryDate(TEST_DATE_VALUE);
                 await expect(bcmc.dualBrandingButtonsHolder).toBeVisible();
 
                 // Select maestro
+
                 const maestroBtn = await bcmc.selectDualBrandUIItem(/maestro/i);
                 await maestroBtn.click();
-
                 // Due to brand sorting and priority being given to the Bcmc brand - cvc should remain hidden
+
                 // even tho' maestro has been selected
                 // await expect(bcmc.cvcField).toBeHidden();// old rule
-
                 // Seems to be the new rule TODO confirm this is intentional
+
                 await expect(bcmc.cvcLabelText).toHaveText(CVC_LABEL_OPTIONAL);
 
+                const paymentsRequestPromise = page.waitForRequest(request => request.url().includes('/payments') && request.method() === 'POST');
                 await bcmc.pay();
 
                 const request = await paymentsRequestPromise;
@@ -100,33 +111,35 @@ test.describe('Bcmc payments with dual branding', () => {
             test('#2b should not submit the maestro payment with incomplete form data', async ({ bcmc }) => {
                 await bcmc.goto(URL_MAP.bcmc);
                 await bcmc.isComponentVisible();
-                await bcmc.fillCardNumber(BCMC_CARD);
+                await bcmc.typeCardNumber(BCMC_CARD);
                 await bcmc.waitForVisibleDualBrandIcons();
 
                 await bcmc.pay();
 
-                await expect(bcmc.expiryDateErrorElement).toHaveText('Enter the expiry date');
+                await expect(bcmc.expiryDateErrorElement).toHaveText(/Enter the (complete )?expiry date/); // For some reason webkit/safari sometimes gets the word "complete" in the error msg
             });
 
             test('#2c should not submit the maestro payment with invalid maestro card number', async ({ bcmc }) => {
                 await bcmc.goto(URL_MAP.bcmc);
                 await bcmc.isComponentVisible();
-                await bcmc.fillCardNumber(`${BCMC_CARD}111`);
+                await bcmc.typeCardNumber(`${BCMC_CARD}111`);
                 await bcmc.pay();
 
-                await expect(bcmc.expiryDateErrorElement).toHaveText('Enter the expiry date');
+                await expect(bcmc.expiryDateErrorElement).toHaveText(/Enter the (complete )?expiry date/);
             });
         });
     });
 
     test.describe('Bancontact (BCMC) / Visa Debit brands', () => {
         test.describe('Selecting the Bancontact brand', () => {
-            test('#3a should submit the bcmc payment (without needing to fill CVC field)', async ({ bcmc }) => {
+            test('#3a should submit the bcmc payment (without needing to fill CVC field)', async ({ bcmc, page }) => {
+                await binLookupMock(page, dualBrandedVisaAndBcmc);
+
                 await bcmc.goto(URL_MAP.bcmc);
                 await bcmc.isComponentVisible();
 
-                await bcmc.fillCardNumber(BCMC_DUAL_BRANDED_VISA);
-                await bcmc.fillExpiryDate(TEST_DATE_VALUE);
+                await bcmc.typeCardNumber(BCMC_DUAL_BRANDED_VISA);
+                await bcmc.typeExpiryDate(TEST_DATE_VALUE);
                 await bcmc.waitForVisibleDualBrandIcons();
 
                 // 2 brand icons
@@ -147,18 +160,18 @@ test.describe('Bcmc payments with dual branding', () => {
             test('#3b should not submit the bcmc payment with incomplete form data', async ({ bcmc }) => {
                 await bcmc.goto(URL_MAP.bcmc);
                 await bcmc.isComponentVisible();
-                await bcmc.fillCardNumber(BCMC_DUAL_BRANDED_VISA);
+                await bcmc.typeCardNumber(BCMC_DUAL_BRANDED_VISA);
                 await bcmc.waitForVisibleDualBrandIcons();
                 await bcmc.selectBrandIcon('Bancontact card');
                 await bcmc.pay();
 
-                await expect(bcmc.expiryDateErrorElement).toHaveText('Enter the expiry date');
+                await expect(bcmc.expiryDateErrorElement).toHaveText(/Enter the (complete )?expiry date/);
             });
 
             test('#3c should not submit the bcmc payment with invalid bcmc card number', async ({ bcmc }) => {
                 await bcmc.goto(URL_MAP.bcmc);
                 await bcmc.isComponentVisible();
-                await bcmc.fillCardNumber(`${BCMC_DUAL_BRANDED_VISA}111`);
+                await bcmc.typeCardNumber(`${BCMC_DUAL_BRANDED_VISA}111`);
                 await bcmc.pay();
 
                 await expect(bcmc.cardNumberErrorElement).toHaveText('Enter a valid card number');
@@ -167,23 +180,25 @@ test.describe('Bcmc payments with dual branding', () => {
 
         test.describe('Selecting the visa brand', () => {
             test('#4a should submit the visa payment', async ({ bcmc, page }) => {
-                const paymentsRequestPromise = page.waitForRequest(request => request.url().includes('/payments') && request.method() === 'POST');
+                await binLookupMock(page, dualBrandedBcmcAndVisa);
 
                 await bcmc.goto(URL_MAP.bcmc);
+
                 await bcmc.isComponentVisible();
+                await bcmc.typeCardNumber(BCMC_DUAL_BRANDED_VISA);
 
-                await bcmc.fillCardNumber(BCMC_DUAL_BRANDED_VISA);
-                await bcmc.fillExpiryDate(TEST_DATE_VALUE);
-
+                await bcmc.typeExpiryDate(TEST_DATE_VALUE);
                 await expect(bcmc.dualBrandingButtonsHolder).toBeVisible();
 
                 // Select visa
+
                 const visaBtn = await bcmc.selectDualBrandUIItem(/visa/i);
                 await visaBtn.click();
-
                 await expect(bcmc.cvcField).toBeVisible();
 
                 await bcmc.fillCvc(TEST_CVC_VALUE);
+
+                const paymentsRequestPromise = page.waitForRequest(request => request.url().includes('/payments') && request.method() === 'POST');
                 await bcmc.pay();
 
                 const request = await paymentsRequestPromise;
@@ -195,12 +210,14 @@ test.describe('Bcmc payments with dual branding', () => {
                 await expect(bcmc.paymentResult).toContainText(PAYMENT_RESULT.authorised);
             });
 
-            test('#4b should not submit the visa payment with incomplete form data', async ({ bcmc }) => {
+            test('#4b should not submit the visa payment with incomplete form data', async ({ bcmc, page }) => {
+                await binLookupMock(page, dualBrandedBcmcAndVisa);
+
                 await bcmc.goto(URL_MAP.bcmc);
                 await bcmc.isComponentVisible();
 
-                await bcmc.fillCardNumber(BCMC_DUAL_BRANDED_VISA);
-                await bcmc.fillExpiryDate(TEST_DATE_VALUE);
+                await bcmc.typeCardNumber(BCMC_DUAL_BRANDED_VISA);
+                await bcmc.typeExpiryDate(TEST_DATE_VALUE);
 
                 await expect(bcmc.dualBrandingButtonsHolder).toBeVisible();
 
@@ -218,7 +235,7 @@ test.describe('Bcmc payments with dual branding', () => {
             test('#4c should not submit the visa payment with invalid visa card number', async ({ bcmc }) => {
                 await bcmc.goto(URL_MAP.bcmc);
                 await bcmc.isComponentVisible();
-                await bcmc.fillCardNumber(`${BCMC_DUAL_BRANDED_VISA}111`);
+                await bcmc.typeCardNumber(`${BCMC_DUAL_BRANDED_VISA}111`);
                 await bcmc.pay();
 
                 await expect(bcmc.cardNumberErrorElement).toHaveText('Enter a valid card number');
@@ -228,12 +245,14 @@ test.describe('Bcmc payments with dual branding', () => {
 
     test.describe('Bancontact (BCMC) / MC brands', () => {
         test.describe('Selecting the Bancontact brand', () => {
-            test('#5a should submit the bcmc payment', async ({ bcmc }) => {
+            test('#5a should submit the bcmc payment', async ({ bcmc, page }) => {
+                await binLookupMock(page, dualBrandedMcAndBcmc);
+
                 await bcmc.goto(URL_MAP.bcmc);
                 await bcmc.isComponentVisible();
 
-                await bcmc.fillCardNumber(BCMC_DUAL_BRANDED_MC);
-                await bcmc.fillExpiryDate(TEST_DATE_VALUE);
+                await bcmc.typeCardNumber(BCMC_DUAL_BRANDED_MC);
+                await bcmc.typeExpiryDate(TEST_DATE_VALUE);
                 await bcmc.waitForVisibleDualBrandIcons();
 
                 // 2 brand icons
@@ -253,17 +272,17 @@ test.describe('Bcmc payments with dual branding', () => {
             test('#5b should not submit the bcmc payment with incomplete form data', async ({ bcmc }) => {
                 await bcmc.goto(URL_MAP.bcmc);
                 await bcmc.isComponentVisible();
-                await bcmc.fillCardNumber(BCMC_DUAL_BRANDED_MC);
+                await bcmc.typeCardNumber(BCMC_DUAL_BRANDED_MC);
 
                 await bcmc.pay();
 
-                await expect(bcmc.expiryDateErrorElement).toHaveText('Enter the expiry date');
+                await expect(bcmc.expiryDateErrorElement).toHaveText(/Enter the (complete )?expiry date/);
             });
 
             test('#5c should not submit the bcmc payment with invalid bcmc card number', async ({ bcmc }) => {
                 await bcmc.goto(URL_MAP.bcmc);
                 await bcmc.isComponentVisible();
-                await bcmc.fillCardNumber(`${BCMC_DUAL_BRANDED_MC}111`);
+                await bcmc.typeCardNumber(`${BCMC_DUAL_BRANDED_MC}111`);
                 await bcmc.pay();
 
                 await expect(bcmc.cardNumberErrorElement).toHaveText('Enter a valid card number');
@@ -272,13 +291,13 @@ test.describe('Bcmc payments with dual branding', () => {
 
         test.describe('Selecting the mc brand', () => {
             test('#6a should submit the mc payment', async ({ bcmc, page }) => {
-                const paymentsRequestPromise = page.waitForRequest(request => request.url().includes('/payments') && request.method() === 'POST');
+                await binLookupMock(page, dualBrandedBcmcAndMc);
 
                 await bcmc.goto(URL_MAP.bcmc);
                 await bcmc.isComponentVisible();
 
-                await bcmc.fillCardNumber(BCMC_DUAL_BRANDED_MC);
-                await bcmc.fillExpiryDate(TEST_DATE_VALUE);
+                await bcmc.typeCardNumber(BCMC_DUAL_BRANDED_MC);
+                await bcmc.typeExpiryDate(TEST_DATE_VALUE);
 
                 await expect(bcmc.dualBrandingButtonsHolder).toBeVisible();
 
@@ -289,6 +308,8 @@ test.describe('Bcmc payments with dual branding', () => {
                 await expect(bcmc.cvcField).toBeVisible();
 
                 await bcmc.fillCvc(TEST_CVC_VALUE);
+
+                const paymentsRequestPromise = page.waitForRequest(request => request.url().includes('/payments') && request.method() === 'POST');
                 await bcmc.pay();
 
                 const request = await paymentsRequestPromise;
@@ -298,12 +319,14 @@ test.describe('Bcmc payments with dual branding', () => {
                 await expect(bcmc.paymentResult).toContainText(PAYMENT_RESULT.authorised);
             });
 
-            test('#6b should not submit the mc payment with incomplete form data', async ({ bcmc }) => {
+            test('#6b should not submit the mc payment with incomplete form data', async ({ bcmc, page }) => {
+                await binLookupMock(page, dualBrandedBcmcAndMc);
+
                 await bcmc.goto(URL_MAP.bcmc);
                 await bcmc.isComponentVisible();
 
-                await bcmc.fillCardNumber(BCMC_DUAL_BRANDED_MC);
-                await bcmc.fillExpiryDate(TEST_DATE_VALUE);
+                await bcmc.typeCardNumber(BCMC_DUAL_BRANDED_MC);
+                await bcmc.typeExpiryDate(TEST_DATE_VALUE);
 
                 await expect(bcmc.dualBrandingButtonsHolder).toBeVisible();
 
@@ -321,7 +344,7 @@ test.describe('Bcmc payments with dual branding', () => {
             test('#6c should not submit the mc payment with invalid mc card number', async ({ bcmc }) => {
                 await bcmc.goto(URL_MAP.bcmc);
                 await bcmc.isComponentVisible();
-                await bcmc.fillCardNumber(`${BCMC_DUAL_BRANDED_MC}111`);
+                await bcmc.typeCardNumber(`${BCMC_DUAL_BRANDED_MC}111`);
                 await bcmc.pay();
 
                 await expect(bcmc.cardNumberErrorElement).toHaveText('Enter a valid card number');
@@ -331,13 +354,13 @@ test.describe('Bcmc payments with dual branding', () => {
     test.describe('Selecting the mc brand', () => {
         test.describe('Then deleting the PAN and retyping it without selecting a brand', () => {
             test('#7 should submit payment branded to a default value', async ({ bcmc, page }) => {
-                const paymentsRequestPromise = page.waitForRequest(request => request.url().includes('/payments') && request.method() === 'POST');
+                await binLookupMock(page, dualBrandedBcmcAndMc);
 
                 await bcmc.goto(URL_MAP.bcmc);
                 await bcmc.isComponentVisible();
 
-                await bcmc.fillCardNumber(BCMC_DUAL_BRANDED_MC);
-                await bcmc.fillExpiryDate(TEST_DATE_VALUE);
+                await bcmc.typeCardNumber(BCMC_DUAL_BRANDED_MC);
+                await bcmc.typeExpiryDate(TEST_DATE_VALUE);
 
                 await expect(bcmc.dualBrandingButtonsHolder).toBeVisible();
 
@@ -345,14 +368,17 @@ test.describe('Bcmc payments with dual branding', () => {
                 const mcBtn = await bcmc.selectDualBrandUIItem(/mastercard/i, false);
                 await mcBtn.click();
 
+                await expect(bcmc.cvcField).toBeVisible();
+
                 await bcmc.fillCvc(TEST_CVC_VALUE);
 
                 await bcmc.deleteCardNumber();
-                await bcmc.fillCardNumber(BCMC_DUAL_BRANDED_MC);
+                await bcmc.typeCardNumber(BCMC_DUAL_BRANDED_MC);
 
                 // Give chance for UI to render in order to set correct brand in state
                 await expect(bcmc.dualBrandingButtonsHolder).toBeVisible();
 
+                const paymentsRequestPromise = page.waitForRequest(request => request.url().includes('/payments') && request.method() === 'POST');
                 await bcmc.pay();
 
                 const request = await paymentsRequestPromise;
