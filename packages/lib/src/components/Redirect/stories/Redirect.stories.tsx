@@ -18,8 +18,32 @@ export const Default: RedirectStory = {
         </Checkout>
     ),
     args: {
+        countryCode: 'CH',
+        componentConfiguration: { type: 'unionpay' }
+    }
+};
+
+export const Ideal: RedirectStory = {
+    render: ({ componentConfiguration, ...checkoutConfig }: PaymentMethodStoryProps<RedirectConfiguration>) => (
+        <Checkout checkoutConfig={checkoutConfig}>
+            {checkout => <ComponentContainer element={new RedirectElement(checkout, componentConfiguration)} />}
+        </Checkout>
+    ),
+    args: {
         countryCode: 'NL',
         componentConfiguration: { type: 'ideal' }
+    }
+};
+
+export const AlipayHK: RedirectStory = {
+    render: ({ componentConfiguration, ...checkoutConfig }: PaymentMethodStoryProps<RedirectConfiguration>) => (
+        <Checkout checkoutConfig={checkoutConfig}>
+            {checkout => <ComponentContainer element={new RedirectElement(checkout, componentConfiguration)} />}
+        </Checkout>
+    ),
+    args: {
+        countryCode: 'HK',
+        componentConfiguration: { type: 'alipay_hk' }
     }
 };
 
