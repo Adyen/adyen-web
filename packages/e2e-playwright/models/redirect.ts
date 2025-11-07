@@ -2,7 +2,7 @@ import { Locator, Page } from '@playwright/test';
 import { capitalizeFirstLetter } from '../../lib/src/utils/textUtils';
 import { Base } from './base';
 
-const SELECT_YOUR_BANK = 'Select your Bank';
+const SELECT_YOUR_BANK = /Select your Bank/i;
 const TEST_BANK_NAME = 'TESTNL2A';
 
 export const SIMULATION_TYPE_SUCCESS = 'Success';
