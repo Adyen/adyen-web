@@ -13,7 +13,7 @@ const componentConfig = {
     brands: ['mc', 'visa', 'amex', 'maestro', 'bcmc', 'star']
 };
 
-test.describe.only('Card - Testing full UI (PAN icons & dual branding buttons) after binLookup has given a dual brand result', () => {
+test.describe('Card - Testing full UI (PAN icons & dual branding buttons) after binLookup has given a dual brand result', () => {
     test(
         '#1 Fill in dual branded card, then ' +
             ' see dual brand icons and dual brand buttons appear as expected, with first element selected by default',

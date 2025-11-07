@@ -22,7 +22,7 @@ import {
 } from '../../../../mocks/binLookup/binLookup.data';
 const CVC_LABEL_OPTIONAL = LANG['creditCard.securityCode.label.optional'];
 
-test.describe.only('Bcmc payments with dual branding', () => {
+test.describe('Bcmc payments with dual branding', () => {
     test.describe('Bancontact (BCMC) / Maestro brands', () => {
         test.describe('Selecting the Bancontact brand', () => {
             test('#1a should submit the bcmc payment', async ({ bcmc, page }) => {
