@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import { render, waitFor, screen } from '@testing-library/preact';
-import QRLoader from './QRLoader';
+import { QRLoader } from './QRLoader';
 import checkPaymentStatus from '../../../core/Services/payment-status';
 import { CoreProvider } from '../../../core/Context/CoreProvider';
 import { SRPanel } from '../../../core/Errors/SRPanel';

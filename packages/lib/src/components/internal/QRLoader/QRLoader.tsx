@@ -13,14 +13,14 @@ import useAutoFocus from '../../../utils/useAutoFocus';
 import { ANALYTICS_DOWNLOAD_STR, ANALYTICS_QR_CODE_DOWNLOAD } from '../../../core/Analytics/constants';
 import { AnalyticsInfoEvent } from '../../../core/Analytics/AnalyticsInfoEvent';
 import { CountdownTime } from '../Countdown/types';
-import QRDetails from './components/QRDetails';
+import { QRDetails } from './components/QRDetails';
 import { QRLoaderDetailsProvider } from './QRLoaderDetailsProvider';
 import { QRFinalState } from './components/QRFinalState';
 import './QRLoader.scss';
 
 const QRCODE_URL = 'utility/v1/barcode.png?type=qrCode&data=';
 
-function QRLoader(props: QRLoaderProps) {
+export function QRLoader(props: QRLoaderProps) {
     const { i18n, loadingContext } = useCoreContext();
     const [completed, setCompleted] = useState(false);
     const [delay, setDelay] = useState(props.delay);
@@ -219,17 +219,15 @@ function QRLoader(props: QRLoaderProps) {
 }
 
 QRLoader.defaultProps = {
-    delay: 2000,
+    delay: 2_000,
     countdownTime: 15,
     onError: () => {},
     onComplete: () => {},
-    throttleTime: 60000,
+    throttleTime: 60_000,
     classNameModifiers: [],
-    throttledInterval: 10000,
+    throttledInterval: 10_000,
     introduction: 'wechatpay.scanqrcode',
     timeToPay: 'wechatpay.timetopay',
     buttonLabel: 'openApp',
     showAmount: true
 };
-
-export default QRLoader;

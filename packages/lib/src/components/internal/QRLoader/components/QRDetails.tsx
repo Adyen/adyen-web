@@ -1,12 +1,12 @@
 import { h, Fragment } from 'preact';
-import QRImage from './QRImage';
-import QRProgressbar from './QRProgressbar';
-import QRCountdown from './QRCountdown';
-import QRInstructions from './QRIntructions';
-import QRCodeCopyButton from './QRCodeCopyButton';
+import { QRImage } from './QRImage';
+import { QRProgressbar } from './QRProgressbar';
+import { QRCountdown } from './QRCountdown';
+import { QRInstructions } from './QRIntructions';
+import { QRCodeCopyButton } from './QRCodeCopyButton';
 import { useQRLoaderDetails } from '../QRLoaderDetailsProvider';
 
-const QRDetails = () => {
+export const QRDetails = () => {
     const { qrCodeData, qrCodeImage, percentage, timeToPay, copyBtn, instructions, onTick, countdownTime, onQRCodeLoad, onTimeUp, handleCopy } =
         useQRLoaderDetails();
 
@@ -28,5 +28,3 @@ const QRDetails = () => {
         </Fragment>
     );
 };
-
-export default QRDetails;

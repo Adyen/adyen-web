@@ -5,7 +5,7 @@ import PixInput from './components/PixInput';
 import { cleanCPFCNPJ } from '../internal/SocialSecurityNumberBrazil/utils';
 import { PixElementData, PixConfiguration } from './types';
 import { TxVariants } from '../tx-variants';
-import QRLoader from '../internal/QRLoader';
+import { QRLoader } from '../internal/QRLoader';
 import SRPanelProvider from '../../core/Errors/SRPanelProvider';
 import PixQRDetails from './components/PixQRDetails';
 import './Pix.scss';
