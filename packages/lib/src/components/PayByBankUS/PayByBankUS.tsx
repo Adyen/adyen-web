@@ -14,7 +14,7 @@ export default class PayByBankUS extends RedirectElement {
         return {
             // paymentMethodBrands configuration
             keepBrandsVisible: true,
-            showOtherInsteafOfNumber: true,
+            showOtherInsteadOfNumber: true,
             ...props
         };
     }
