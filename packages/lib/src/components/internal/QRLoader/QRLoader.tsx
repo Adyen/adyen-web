@@ -128,7 +128,7 @@ export function QRLoader(props: QRLoaderProps) {
         return () => {
             clearTimeout(timeoutRef.current);
         };
-    }, [expired, completed, loading, delay, props.throttleTime, timePassed]);
+    }, [expired, completed, loading, delay, props.throttleTime, props.throttledInterval, timePassed]);
 
     const { amount, showAmount, url, brandLogo, brandName, countdownTime, type, onActionHandled } = props;
 

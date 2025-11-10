@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { useState, useEffect } from 'preact/hooks';
+import { useState, useEffect, useRef } from 'preact/hooks';
 import classnames from 'classnames';
 import checkPaymentStatus from '../../../core/Services/payment-status';
 import processResponse from '../../../core/ProcessResponse';
@@ -10,13 +10,12 @@ import { useCoreContext } from '../../../core/Context/CoreProvider';
 import { AwaitComponentProps, StatusObject } from './types';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 import ContentSeparator from '../ContentSeparator';
-import useImage from '../../../core/Context/useImage';
 import { CountdownTime } from '../Countdown/types';
 import './Await.scss';
+import { AwaitFinalState } from './components/AwaitFinalState';
 
 export function Await(props: AwaitComponentProps) {
     const { i18n, loadingContext } = useCoreContext();
-    const getImage = useImage();
     const [completed, setCompleted] = useState(false);
     const [expired, setExpired] = useState(false);
     const [loading, setLoading] = useState(true);
@@ -24,18 +23,21 @@ export function Await(props: AwaitComponentProps) {
     const [delay, setDelay] = useState(props.delay);
     const [percentage, setPercentage] = useState(100);
     const [timePassed, setTimePassed] = useState(0);
-    const [hasAdjustedTime, setHasAdjustedTime] = useState(false);
-    const [storedTimeout, setStoredTimeout] = useState<NodeJS.Timeout | number | null>(null);
+    const timeoutRef = useRef<NodeJS.Timeout | number | null>(null);
+
     const { amount } = props;
 
-    const onTimeUp = (): void => {
-        setExpired(true);
-        clearTimeout(storedTimeout);
-        props.onError(new AdyenCheckoutError('ERROR', 'Payment Expired'));
+    const redirectToApp = (url: string): void => {
+        window.location.assign(url);
     };
 
     const onTick = (time: CountdownTime): void => {
         setPercentage(time.percentage);
+    };
+
+    const onTimeUp = (): void => {
+        setExpired(true);
+        props.onError(new AdyenCheckoutError('ERROR', 'Payment Expired'));
     };
 
     const onComplete = (status: StatusObject): void => {
@@ -59,6 +61,7 @@ export function Await(props: AwaitComponentProps) {
 
     const onError = (status: StatusObject): void => {
         setExpired(true);
+        setLoading(false);
 
         // Only make details call if we have a payload
         if (status.props.payload) {
@@ -73,7 +76,8 @@ export function Await(props: AwaitComponentProps) {
         }
 
         // Call merchant defined error callback if we do not have a payload
-        props.onError(new AdyenCheckoutError('ERROR', 'error result with no payload in response'));
+        const error = new AdyenCheckoutError('ERROR', 'error result with no payload in response');
+        props.onError(error);
     };
 
     const checkStatus = async (): Promise<void> => {
@@ -113,10 +117,6 @@ export function Await(props: AwaitComponentProps) {
             });
     };
 
-    const redirectToApp = (url: string): void => {
-        window.location.assign(url);
-    };
-
     useEffect(() => {
         if (props.shouldRedirectAutomatically && props.url) {
             redirectToApp(props.url);
@@ -125,54 +125,46 @@ export function Await(props: AwaitComponentProps) {
 
     useEffect(() => {
         void checkStatus();
-        return (): void => {
-            clearTimeout(storedTimeout);
-        };
     }, []);
 
     useEffect(() => {
-        if (expired) return clearTimeout(storedTimeout);
-
-        if (completed) return clearTimeout(storedTimeout);
-
-        if (!loading) {
-            // Retry until getting a complete response from the server OR it times out
-            // Changes setTimeout time to new value (throttleInterval) after a certain amount of time (throttleTime) has passed
-            const statusInterval = async (): Promise<void> => {
-                await checkStatus();
-
-                const actualTimePassed = timePassed + delay;
-                // timePassed is the value that is the main "engine" that drives this useEffect/polling
-                setTimePassed(actualTimePassed);
-
-                if (actualTimePassed >= props.throttleTime && !hasAdjustedTime) {
-                    setDelay(props.throttleInterval);
-                    setHasAdjustedTime(true);
-                }
-            };
-
-            // Create (another) interval to poll for a result
-            setStoredTimeout(setTimeout(() => void statusInterval(), delay));
+        if (expired || completed || loading) {
+            return;
         }
-    }, [loading, expired, completed, timePassed]);
+        // Retry until getting a complete response from the server OR it times out
+        // Changes setTimeout time to new value (throttleInterval) after a certain amount of time (throttleTime) has passed
+        let currentDelay = delay;
 
-    const finalState = (image: string, message: string) => (
-        <div className="adyen-checkout__await adyen-checkout__await--result">
-            <img
-                className="adyen-checkout__await__icon adyen-checkout__await__icon--result"
-                src={getImage({ imageFolder: 'components/' })(image)}
-                alt={i18n.get(message)}
-            />
-            <p className="adyen-checkout__await__subtitle adyen-checkout__await__subtitle--result">{i18n.get(message)}</p>
-        </div>
-    );
+        const statusInterval = async (): Promise<void> => {
+            const start = performance.now();
+            await checkStatus();
+            const end = performance.now();
+            const responseTime = Math.round(end - start);
+
+            const actualTimePassed = timePassed + responseTime + currentDelay;
+            setTimePassed(actualTimePassed);
+
+            if (actualTimePassed >= props.throttleTime && currentDelay !== props.throttleInterval) {
+                setDelay(props.throttleInterval);
+                currentDelay = props.throttleInterval;
+            }
+        };
+
+        timeoutRef.current = setTimeout(() => {
+            void statusInterval();
+        }, currentDelay);
+
+        return () => {
+            clearTimeout(timeoutRef.current);
+        };
+    }, [expired, completed, loading, delay, props.throttleTime, props.throttleInterval, timePassed]);
 
     if (expired) {
-        return finalState('error', 'error.subtitle.payment');
+        return <AwaitFinalState image="error" message={i18n.get('error.subtitle.payment')} />;
     }
 
     if (completed) {
-        return finalState('success', 'creditCard.success');
+        return <AwaitFinalState image="success" message={i18n.get('creditCard.success')} />;
     }
 
     if (loading) {
