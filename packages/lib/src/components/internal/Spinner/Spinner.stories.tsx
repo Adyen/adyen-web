@@ -3,7 +3,7 @@ import { Meta, StoryObj } from '@storybook/preact';
 import Spinner from './Spinner';
 
 const meta: Meta = {
-    title: 'Internals/Spinner',
+    title: 'Internal Elements/Spinner',
     component: Spinner,
     argTypes: {
         size: {

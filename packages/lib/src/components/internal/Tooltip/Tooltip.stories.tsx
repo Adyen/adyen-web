@@ -5,7 +5,7 @@ import { Tooltip } from './Tooltip';
 import { SingletonTooltipProvider, useTooltip } from './SingletonTooltipProvider';
 
 const meta: Meta = {
-    title: 'Internals/Tooltip',
+    title: 'Internal Elements/Tooltip',
     component: Tooltip,
     argTypes: {
         margin: {

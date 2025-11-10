@@ -13,7 +13,7 @@ import { resolveEnvironments } from '../../../core/Environment';
 import type { CoreConfiguration } from '../../../core/types';
 
 const meta: Meta<ButtonProps> = {
-    title: 'Internals/Button',
+    title: 'Internal Elements/Button',
     component: Button as any,
     argTypes: {
         status: {

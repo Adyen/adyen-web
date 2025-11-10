@@ -10,7 +10,7 @@ const options = [
 ];
 
 const meta: Meta = {
-    title: 'Internals/SegmentedControl',
+    title: 'Internal Elements/SegmentedControl',
     component: SegmentedControl,
     argTypes: {
         selectedValue: {

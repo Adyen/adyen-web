@@ -4,7 +4,7 @@ import Toggle from './Toggle';
 import { useState } from 'preact/hooks';
 
 const meta: Meta = {
-    title: 'Internals/Toggle',
+    title: 'Internal Elements/Toggle',
     component: Toggle
 };
 

@@ -55,7 +55,7 @@ const formatPrefixName = item => {
 };
 
 const meta: Meta = {
-    title: 'Internals/PhoneInput',
+    title: 'Internal Elements/PhoneInput',
     component: PhoneInputForm
 };
 
