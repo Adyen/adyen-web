@@ -14,7 +14,7 @@ import useImage from '../../../core/Context/useImage';
 import { CountdownTime } from '../Countdown/types';
 import './Await.scss';
 
-function Await(props: AwaitComponentProps) {
+export function Await(props: AwaitComponentProps) {
     const { i18n, loadingContext } = useCoreContext();
     const getImage = useImage();
     const [completed, setCompleted] = useState(false);
@@ -254,5 +254,3 @@ Await.defaultProps = {
     classNameModifiers: [],
     url: null
 };
-
-export default Await;
