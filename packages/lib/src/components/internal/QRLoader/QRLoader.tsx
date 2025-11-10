@@ -1,134 +1,45 @@
 import { h } from 'preact';
-import { useState, useEffect, useRef } from 'preact/hooks';
-import Button from '../Button';
-import Spinner from '../Spinner';
-import checkPaymentStatus from '../../../core/Services/payment-status';
-import processResponse from '../../../core/ProcessResponse';
-import { QRLoaderProps } from './types';
-import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
-import { useCoreContext } from '../../../core/Context/CoreProvider';
-import ContentSeparator from '../ContentSeparator';
-import { StatusObject } from '../Await/types';
-import useAutoFocus from '../../../utils/useAutoFocus';
-import { ANALYTICS_DOWNLOAD_STR, ANALYTICS_QR_CODE_DOWNLOAD } from '../../../core/Analytics/constants';
 import { AnalyticsInfoEvent } from '../../../core/Analytics/AnalyticsInfoEvent';
+import { ANALYTICS_DOWNLOAD_STR, ANALYTICS_QR_CODE_DOWNLOAD } from '../../../core/Analytics/constants';
+import { useCoreContext } from '../../../core/Context/CoreProvider';
+import {
+    usePaymentStatusTimer,
+    DEFAULT_PAYMENT_STATUS_TIMER_COUNTDOWN_TIME,
+    DEFAULT_PAYMENT_STATUS_TIMER_DELAY,
+    DEFAULT_PAYMENT_STATUS_TIMER_THROTTLE_INTERVAL,
+    DEFAULT_PAYMENT_STATUS_TIMER_THROTTLE_TIME
+} from '../../../hooks/usePaymentStatusTimer';
+import useAutoFocus from '../../../utils/useAutoFocus';
+import Button from '../Button';
+import ContentSeparator from '../ContentSeparator';
 import { CountdownTime } from '../Countdown/types';
+import Spinner from '../Spinner';
 import { QRDetails } from './components/QRDetails';
-import { QRLoaderDetailsProvider } from './QRLoaderDetailsProvider';
 import { QRFinalState } from './components/QRFinalState';
 import './QRLoader.scss';
+import { QRLoaderDetailsProvider } from './QRLoaderDetailsProvider';
+import { QRLoaderProps } from './types';
+import { redirectToApp } from '../../../utils/urls';
 
 const QRCODE_URL = 'utility/v1/barcode.png?type=qrCode&data=';
 
 export function QRLoader(props: QRLoaderProps) {
     const { i18n, loadingContext } = useCoreContext();
-    const [completed, setCompleted] = useState(false);
-    const [delay, setDelay] = useState(props.delay);
-    const [expired, setExpired] = useState(false);
-    const [loading, setLoading] = useState(true);
-    const [percentage, setPercentage] = useState(100);
-    const [timePassed, setTimePassed] = useState(0);
-    const timeoutRef = useRef<NodeJS.Timeout | number | null>(null);
 
-    const redirectToApp = (url: string | URL): void => {
-        window.location.assign(url);
-    };
+    const { state: timerState, actions: timerActions } = usePaymentStatusTimer({
+        paymentData: props.paymentData,
+        clientKey: props.clientKey,
+        delay: props.delay,
+        throttleTime: props.throttleTime,
+        throttleInterval: props.throttledInterval,
+        type: props.type,
+        onError: props.onError,
+        onComplete: props.onComplete,
+        onActionHandled: props.onActionHandled
+    });
 
-    const onTick = (time: CountdownTime): void => {
-        setPercentage(time.percentage);
-    };
-
-    const onTimeUp = (): void => {
-        setExpired(true);
-        props.onError(new AdyenCheckoutError('ERROR', 'Payment Expired'));
-    };
-
-    const onComplete = (status: StatusObject): void => {
-        setCompleted(true);
-        setLoading(false);
-
-        const state = {
-            data: {
-                details: { payload: status.props.payload },
-                paymentData: props.paymentData
-            }
-        };
-
-        props.onComplete(state);
-    };
-
-    const onError = (status: StatusObject): void => {
-        setExpired(true);
-        setLoading(false);
-
-        if (status.props.payload) {
-            const state = {
-                data: {
-                    details: { payload: status.props.payload },
-                    paymentData: props.paymentData
-                }
-            };
-            props.onComplete(state);
-        }
-
-        const error = new AdyenCheckoutError('ERROR', 'error result with no payload in response');
-        props.onError(error);
-    };
-
-    const checkStatus = async (): Promise<void> => {
-        const { paymentData, clientKey, throttledInterval } = props;
-
-        return checkPaymentStatus(paymentData, clientKey, loadingContext, throttledInterval)
-            .then(processResponse)
-            .catch(response => ({ type: 'network-error', props: response }))
-            .then((status: StatusObject) => {
-                switch (status.type) {
-                    case 'success':
-                        onComplete(status);
-                        break;
-                    case 'error':
-                        onError(status);
-                        break;
-                    default:
-                        setLoading(false);
-                }
-            });
-    };
-
-    useEffect(() => {
-        void checkStatus();
-    }, []);
-
-    useEffect(() => {
-        if (expired || completed || loading) {
-            return;
-        }
-
-        let currentDelay = delay;
-
-        const statusInterval = async (): Promise<void> => {
-            const start = performance.now();
-            await checkStatus();
-            const end = performance.now();
-            const responseTime = Math.round(end - start);
-
-            const actualTimePassed = timePassed + responseTime + currentDelay;
-            setTimePassed(actualTimePassed);
-
-            if (actualTimePassed >= props.throttleTime && currentDelay !== props.throttledInterval) {
-                setDelay(props.throttledInterval);
-                currentDelay = props.throttledInterval;
-            }
-        };
-
-        timeoutRef.current = setTimeout(() => {
-            void statusInterval();
-        }, currentDelay);
-
-        return () => {
-            clearTimeout(timeoutRef.current);
-        };
-    }, [expired, completed, loading, delay, props.throttleTime, props.throttledInterval, timePassed]);
+    const { completed, expired, loading, percentage } = timerState;
+    const { onTick, onTimeUp } = timerActions;
 
     const { amount, showAmount, url, brandLogo, brandName, countdownTime, type, onActionHandled } = props;
 
@@ -219,13 +130,13 @@ export function QRLoader(props: QRLoaderProps) {
 }
 
 QRLoader.defaultProps = {
-    delay: 2_000,
-    countdownTime: 15,
+    countdownTime: DEFAULT_PAYMENT_STATUS_TIMER_COUNTDOWN_TIME,
+    delay: DEFAULT_PAYMENT_STATUS_TIMER_DELAY,
+    throttleTime: DEFAULT_PAYMENT_STATUS_TIMER_THROTTLE_TIME,
+    throttledInterval: DEFAULT_PAYMENT_STATUS_TIMER_THROTTLE_INTERVAL,
     onError: () => {},
     onComplete: () => {},
-    throttleTime: 60_000,
     classNameModifiers: [],
-    throttledInterval: 10_000,
     introduction: 'wechatpay.scanqrcode',
     timeToPay: 'wechatpay.timetopay',
     buttonLabel: 'openApp',

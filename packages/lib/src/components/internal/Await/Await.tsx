@@ -1,163 +1,49 @@
-import { h } from 'preact';
-import { useState, useEffect, useRef } from 'preact/hooks';
 import classnames from 'classnames';
-import checkPaymentStatus from '../../../core/Services/payment-status';
-import processResponse from '../../../core/ProcessResponse';
-import Spinner from '../../internal/Spinner';
-import Countdown from '../Countdown';
-import Button from '../Button';
+import { h } from 'preact';
+import { useEffect } from 'preact/hooks';
 import { useCoreContext } from '../../../core/Context/CoreProvider';
-import { AwaitComponentProps, StatusObject } from './types';
-import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
+import {
+    usePaymentStatusTimer,
+    DEFAULT_PAYMENT_STATUS_TIMER_COUNTDOWN_TIME,
+    DEFAULT_PAYMENT_STATUS_TIMER_DELAY,
+    DEFAULT_PAYMENT_STATUS_TIMER_THROTTLE_INTERVAL,
+    DEFAULT_PAYMENT_STATUS_TIMER_THROTTLE_TIME
+} from '../../../hooks/usePaymentStatusTimer';
+import Spinner from '../../internal/Spinner';
+import Button from '../Button';
 import ContentSeparator from '../ContentSeparator';
-import { CountdownTime } from '../Countdown/types';
+import Countdown from '../Countdown';
 import './Await.scss';
 import { AwaitFinalState } from './components/AwaitFinalState';
+import { AwaitComponentProps } from './types';
+import { redirectToApp } from '../../../utils/urls';
 
 export function Await(props: AwaitComponentProps) {
-    const { i18n, loadingContext } = useCoreContext();
-    const [completed, setCompleted] = useState(false);
-    const [expired, setExpired] = useState(false);
-    const [loading, setLoading] = useState(true);
-    const [hasCalledActionHandled, setHasCalledActionHandled] = useState(false);
-    const [delay, setDelay] = useState(props.delay);
-    const [percentage, setPercentage] = useState(100);
-    const [timePassed, setTimePassed] = useState(0);
-    const timeoutRef = useRef<NodeJS.Timeout | number | null>(null);
+    const { i18n } = useCoreContext();
+
+    const { state: timerState, actions: timerActions } = usePaymentStatusTimer({
+        paymentData: props.paymentData,
+        clientKey: props.clientKey,
+        delay: props.delay,
+        throttleTime: props.throttleTime,
+        throttleInterval: props.throttleInterval,
+        type: props.type,
+        onError: props.onError,
+        onComplete: props.onComplete,
+        pollStatus: props.pollStatus,
+        onActionHandled: props.onActionHandled
+    });
+
+    const { completed, expired, loading, percentage } = timerState;
+    const { onTick, onTimeUp } = timerActions;
 
     const { amount } = props;
-
-    const redirectToApp = (url: string): void => {
-        window.location.assign(url);
-    };
-
-    const onTick = (time: CountdownTime): void => {
-        setPercentage(time.percentage);
-    };
-
-    const onTimeUp = (): void => {
-        setExpired(true);
-        props.onError(new AdyenCheckoutError('ERROR', 'Payment Expired'));
-    };
-
-    const onComplete = (status: StatusObject): void => {
-        // Only make details call if we have a payload
-        if (status.props.payload) {
-            setCompleted(true);
-            const state = {
-                data: {
-                    details: { payload: status.props.payload },
-                    paymentData: props.paymentData
-                }
-            };
-            // Send success response to onAdditionalDetails
-            return props.onComplete(state);
-        }
-
-        // Show error state & call merchant defined error callback if we do not have a payload
-        setExpired(true);
-        props.onError(new AdyenCheckoutError('ERROR', 'successful result, but no payload in response'));
-    };
-
-    const onError = (status: StatusObject): void => {
-        setExpired(true);
-        setLoading(false);
-
-        // Only make details call if we have a payload
-        if (status.props.payload) {
-            const state = {
-                data: {
-                    details: { payload: status.props.payload },
-                    paymentData: props.paymentData
-                }
-            };
-            // Send error response to onAdditionalDetails
-            return props.onComplete(state);
-        }
-
-        // Call merchant defined error callback if we do not have a payload
-        const error = new AdyenCheckoutError('ERROR', 'error result with no payload in response');
-        props.onError(error);
-    };
-
-    const checkStatus = async (): Promise<void> => {
-        const { paymentData, clientKey, throttleInterval, pollStatus } = props;
-
-        // If there's a custom pollStatus function, call it.
-        // Otherwise, call the default one.
-        const pollStatusFunction = pollStatus ?? (() => checkPaymentStatus(paymentData, clientKey, loadingContext, throttleInterval));
-
-        if (!hasCalledActionHandled) {
-            props.onActionHandled?.({ componentType: props.type, actionDescription: 'polling-started' });
-            setHasCalledActionHandled(true);
-        }
-
-        return pollStatusFunction()
-            .then(processResponse)
-            .catch(({ message, ...response }) => ({
-                type: 'network-error',
-                props: {
-                    ...(message && { message: i18n.get(message) }),
-                    ...response
-                }
-            }))
-            .then((status: StatusObject) => {
-                switch (status.type) {
-                    case 'success':
-                        onComplete(status);
-                        break;
-
-                    case 'error':
-                        onError(status);
-                        break;
-
-                    default:
-                        setLoading(false);
-                }
-            });
-    };
 
     useEffect(() => {
         if (props.shouldRedirectAutomatically && props.url) {
             redirectToApp(props.url);
         }
     }, [props.shouldRedirectAutomatically, props.url]);
-
-    useEffect(() => {
-        void checkStatus();
-    }, []);
-
-    useEffect(() => {
-        if (expired || completed || loading) {
-            return;
-        }
-        // Retry until getting a complete response from the server OR it times out
-        // Changes setTimeout time to new value (throttleInterval) after a certain amount of time (throttleTime) has passed
-        let currentDelay = delay;
-
-        const statusInterval = async (): Promise<void> => {
-            const start = performance.now();
-            await checkStatus();
-            const end = performance.now();
-            const responseTime = Math.round(end - start);
-
-            const actualTimePassed = timePassed + responseTime + currentDelay;
-            setTimePassed(actualTimePassed);
-
-            if (actualTimePassed >= props.throttleTime && currentDelay !== props.throttleInterval) {
-                setDelay(props.throttleInterval);
-                currentDelay = props.throttleInterval;
-            }
-        };
-
-        timeoutRef.current = setTimeout(() => {
-            void statusInterval();
-        }, currentDelay);
-
-        return () => {
-            clearTimeout(timeoutRef.current);
-        };
-    }, [expired, completed, loading, delay, props.throttleTime, props.throttleInterval, timePassed]);
 
     if (expired) {
         return <AwaitFinalState image="error" message={i18n.get('error.subtitle.payment')} />;
@@ -236,12 +122,12 @@ export function Await(props: AwaitComponentProps) {
 }
 
 Await.defaultProps = {
-    countdownTime: 15,
+    countdownTime: DEFAULT_PAYMENT_STATUS_TIMER_COUNTDOWN_TIME,
+    delay: DEFAULT_PAYMENT_STATUS_TIMER_DELAY,
+    throttleTime: DEFAULT_PAYMENT_STATUS_TIMER_THROTTLE_TIME,
+    throttleInterval: DEFAULT_PAYMENT_STATUS_TIMER_THROTTLE_INTERVAL,
     onError: () => {},
     onComplete: () => {},
-    delay: 2_000,
-    throttleTime: 60_000,
-    throttleInterval: 10_000,
     showCountdownTimer: true,
     classNameModifiers: [],
     url: null
