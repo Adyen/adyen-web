@@ -4,6 +4,8 @@ import { URL_MAP } from '../../../../../fixtures/URL_MAP';
 import { BCMC_DUAL_BRANDED_VISA, DUAL_BRANDED_CARD_EXCLUDED, DUAL_BRANDED_EFTPOS } from '../../../../utils/constants';
 
 import LANG from '../../../../../../server/translations/en-US.json';
+import { binLookupMock } from '../../../../../mocks/binLookup/binLookup.mock';
+import { dualBrandedBcmcAndVisa } from '../../../../../mocks/binLookup/binLookup.data';
 
 const PAN_ERROR_NOT_COMPLETE = LANG['cc.num.901'];
 
@@ -28,7 +30,7 @@ test.describe('Card - Testing full UI (PAN icons & dual branding buttons) after 
             /**
              * Dual brand icons
              */
-            // Expect inline dual brand icons to be visible
+            // Expect the inline dual brand icons to be visible
             await expect(card.dualBrandingIconsHolder).toBeVisible();
 
             const [firstIcon, secondIcon] = await card.dualBrandIcons;
@@ -55,6 +57,8 @@ test.describe('Card - Testing full UI (PAN icons & dual branding buttons) after 
     );
 
     test('#2 Fill in dual branded card, see dual brand UI has expected effects when interacted with', async ({ card, page }) => {
+        await binLookupMock(page, dualBrandedBcmcAndVisa);
+
         await card.goto(getStoryUrl({ baseUrl: URL_MAP.card, componentConfig }));
 
         // Get a binLookup result
@@ -69,6 +73,7 @@ test.describe('Card - Testing full UI (PAN icons & dual branding buttons) after 
         // Move focus to date
         await card.selectDateIcon();
         await expect(card.expiryDateInput).toBeFocused();
+        await page.waitForTimeout(300);
 
         // Select visa
         const visaBtn = card.selectDualBrandUIItem(/visa/i);
@@ -170,6 +175,8 @@ test.describe('Card - Testing full UI (PAN icons & dual branding buttons) after 
         card,
         page
     }) => {
+        await binLookupMock(page, dualBrandedBcmcAndVisa);
+
         await card.goto(getStoryUrl({ baseUrl: URL_MAP.card, componentConfig }));
 
         const firstDigits = BCMC_DUAL_BRANDED_VISA.substring(0, 11);
@@ -221,6 +228,7 @@ test.describe('Card - Testing full UI (PAN icons & dual branding buttons) after 
         // Move focus to date
         await card.selectDateIcon();
         await expect(card.expiryDateInput).toBeFocused();
+        await page.waitForTimeout(300);
 
         // Clicking an element should not see focus move to the PAN or the date fields
         await visaBtn.click();

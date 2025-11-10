@@ -145,6 +145,162 @@ const socialSecurityNumberRequiredMock = {
     requestId: null
 };
 
+/**
+ * "Regular" bin lookups that often seem to fail in the pipline
+ * Fix them to the order in which the tests expect the brands to be returned
+ */
+const dualBrandedBcmcAndMc = {
+    brands: [
+        {
+            brand: 'bcmc',
+            cvcPolicy: 'hidden',
+            enableLuhnCheck: true,
+            expiryDatePolicy: 'required',
+            localeBrand: 'Bancontact card',
+            paymentMethodVariant: 'bcmc',
+            showSocialSecurityNumber: false,
+            supported: true
+        },
+        {
+            brand: 'mc',
+            cvcPolicy: 'required',
+            enableLuhnCheck: true,
+            expiryDatePolicy: 'required',
+            localeBrand: 'MasterCard',
+            paymentMethodVariant: 'mcstandarddebit',
+            showSocialSecurityNumber: false,
+            supported: true
+        }
+    ],
+    issuingCountryCode: 'BE',
+    requestId: 'b293c3aa-dfc0-40a6-87d4-f55fa951d60d'
+};
+
+const dualBrandedBcmcAndVisa = {
+    brands: [
+        {
+            brand: 'bcmc',
+            cvcPolicy: 'hidden',
+            enableLuhnCheck: true,
+            expiryDatePolicy: 'required',
+            localeBrand: 'Bancontact card',
+            paymentMethodVariant: 'bcmc',
+            showSocialSecurityNumber: false,
+            supported: true
+        },
+        {
+            brand: 'visa',
+            cvcPolicy: 'required',
+            enableLuhnCheck: true,
+            expiryDatePolicy: 'required',
+            localeBrand: 'VISA',
+            paymentMethodVariant: 'visa',
+            showSocialSecurityNumber: false,
+            supported: true
+        }
+    ],
+    issuingCountryCode: 'BE',
+    requestId: 'adf76310-9047-4339-912d-bb6e68f34966'
+};
+
+const dualBcmcAndMaestro = {
+    brands: [
+        {
+            brand: 'bcmc',
+            cvcPolicy: 'hidden',
+            enableLuhnCheck: true,
+            expiryDatePolicy: 'required',
+            localeBrand: 'Bancontact card',
+            paymentMethodVariant: 'bcmc',
+            showSocialSecurityNumber: false,
+            supported: true
+        },
+        {
+            brand: 'maestro',
+            cvcPolicy: 'optional',
+            enableLuhnCheck: true,
+            expiryDatePolicy: 'required',
+            localeBrand: 'Maestro',
+            paymentMethodVariant: 'maestro',
+            showSocialSecurityNumber: false,
+            supported: true
+        }
+    ],
+    issuingCountryCode: 'BE',
+    requestId: '1f69f1e3-ae7c-489a-8ccc-9096d2ce3c19'
+};
+
+const dualBrandedVisaAndBcmc = {
+    brands: [
+        {
+            brand: 'visa',
+            cvcPolicy: 'required',
+            enableLuhnCheck: true,
+            expiryDatePolicy: 'required',
+            localeBrand: 'VISA',
+            paymentMethodVariant: 'visa',
+            showSocialSecurityNumber: false,
+            supported: true
+        },
+        {
+            brand: 'bcmc',
+            cvcPolicy: 'hidden',
+            enableLuhnCheck: true,
+            expiryDatePolicy: 'required',
+            localeBrand: 'Bancontact card',
+            paymentMethodVariant: 'bcmc',
+            showSocialSecurityNumber: false,
+            supported: true
+        }
+    ],
+    issuingCountryCode: 'BE',
+    requestId: 'ccc09776-5f1b-4ccb-be9d-6171b07dd13c'
+};
+
+const dualBrandedMcAndBcmc = {
+    brands: [
+        {
+            brand: 'mc',
+            cvcPolicy: 'required',
+            enableLuhnCheck: true,
+            expiryDatePolicy: 'required',
+            localeBrand: 'MasterCard',
+            paymentMethodVariant: 'mcstandarddebit',
+            showSocialSecurityNumber: false,
+            supported: true
+        },
+        {
+            brand: 'bcmc',
+            cvcPolicy: 'hidden',
+            enableLuhnCheck: true,
+            expiryDatePolicy: 'required',
+            localeBrand: 'Bancontact card',
+            paymentMethodVariant: 'bcmc',
+            showSocialSecurityNumber: false,
+            supported: true
+        }
+    ],
+    issuingCountryCode: 'BE',
+    requestId: '23fada4f-12dc-48f2-9380-873ae3702075'
+};
+
+const bcmcOnly = {
+    brands: [
+        {
+            brand: 'bcmc',
+            cvcPolicy: 'hidden',
+            enableLuhnCheck: true,
+            expiryDatePolicy: 'required',
+            localeBrand: 'Bancontact card',
+            paymentMethodVariant: 'bcmc',
+            showSocialSecurityNumber: false,
+            supported: true
+        }
+    ],
+    issuingCountryCode: 'BE',
+    requestId: '23fada4f-12dc-48f2-9380-873ae3702075'
+};
+
 export {
     optionalDateAndCvcMock,
     hiddenDateAndCvcMock,
@@ -155,5 +311,12 @@ export {
     multiLengthMaestroWithPanLengthMock,
     amexWithPanLengthMock,
     kcpMockOptionalDateAndCvcWithPanLengthMock,
-    socialSecurityNumberRequiredMock
+    socialSecurityNumberRequiredMock,
+    // "regular" mocks
+    dualBrandedBcmcAndVisa,
+    dualBrandedBcmcAndMc,
+    dualBcmcAndMaestro,
+    dualBrandedVisaAndBcmc,
+    dualBrandedMcAndBcmc,
+    bcmcOnly
 };
