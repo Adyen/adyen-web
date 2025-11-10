@@ -8,15 +8,15 @@ import RedirectElement from '..';
 type RedirectStory = StoryConfiguration<RedirectConfiguration>;
 
 const meta: MetaConfiguration<RedirectConfiguration> = {
-    title: 'Components/Redirect'
-};
-
-export const Default: RedirectStory = {
+    title: 'Components/Redirect',
     render: ({ componentConfiguration, ...checkoutConfig }: PaymentMethodStoryProps<RedirectConfiguration>) => (
         <Checkout checkoutConfig={checkoutConfig}>
             {checkout => <ComponentContainer element={new RedirectElement(checkout, componentConfiguration)} />}
         </Checkout>
-    ),
+    )
+};
+
+export const Default: RedirectStory = {
     args: {
         countryCode: 'CH',
         componentConfiguration: { type: 'unionpay' }
@@ -24,11 +24,6 @@ export const Default: RedirectStory = {
 };
 
 export const Ideal: RedirectStory = {
-    render: ({ componentConfiguration, ...checkoutConfig }: PaymentMethodStoryProps<RedirectConfiguration>) => (
-        <Checkout checkoutConfig={checkoutConfig}>
-            {checkout => <ComponentContainer element={new RedirectElement(checkout, componentConfiguration)} />}
-        </Checkout>
-    ),
     args: {
         countryCode: 'NL',
         componentConfiguration: { type: 'ideal' }
@@ -36,11 +31,6 @@ export const Ideal: RedirectStory = {
 };
 
 export const AlipayHK: RedirectStory = {
-    render: ({ componentConfiguration, ...checkoutConfig }: PaymentMethodStoryProps<RedirectConfiguration>) => (
-        <Checkout checkoutConfig={checkoutConfig}>
-            {checkout => <ComponentContainer element={new RedirectElement(checkout, componentConfiguration)} />}
-        </Checkout>
-    ),
     args: {
         countryCode: 'HK',
         componentConfiguration: { type: 'alipay_hk' }

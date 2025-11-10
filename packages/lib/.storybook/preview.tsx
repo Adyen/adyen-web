@@ -53,7 +53,7 @@ const preview: Preview = {
                     'Welcome',
                     'Dropin',
                     'Components',
-                    ['Cards', ['Card', '*'], 'Dropin', 'Wallets', 'IssuerList', 'OpenInvoice', 'Partial Payments', 'Vouchers', 'Redirect', '*'],
+                    ['Cards', ['Card', '*'], 'Wallets', 'IssuerList', 'OpenInvoice', 'Partial Payments', 'Vouchers', 'Redirect', '*'],
                     'Internals',
                     '*'
                 ]
