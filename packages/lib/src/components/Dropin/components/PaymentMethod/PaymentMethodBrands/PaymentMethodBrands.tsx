@@ -17,7 +17,7 @@ interface PaymentMethodBrandsProps {
     excludedUIBrands?: Array<string>;
     isPaymentMethodSelected: boolean;
     keepBrandsVisible?: boolean;
-    showOtherInsteafOfNumber?: boolean;
+    showOtherInsteadOfNumber?: boolean;
 }
 
 const PaymentMethodBrands = ({
@@ -25,7 +25,7 @@ const PaymentMethodBrands = ({
     excludedUIBrands = [],
     isPaymentMethodSelected,
     keepBrandsVisible = false,
-    showOtherInsteafOfNumber = false
+    showOtherInsteadOfNumber = false
 }: PaymentMethodBrandsProps) => {
     const { i18n } = useCoreContext();
 
@@ -41,7 +41,7 @@ const PaymentMethodBrands = ({
             {visibleBrands.map(brand => (
                 <PaymentMethodIcon key={brand.name} altDescription={getFullBrandName(brand.name)} type={brand.name} src={brand.icon} />
             ))}
-            {showOtherInsteafOfNumber ? (
+            {showOtherInsteadOfNumber ? (
                 <span className="adyen-checkout__payment-method__brand-number">+ {i18n.get('paymentMethodBrand.other')}</span>
             ) : (
                 leftBrandsAmount !== 0 && <span className="adyen-checkout__payment-method__brand-number">+{leftBrandsAmount}</span>
