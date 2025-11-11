@@ -1,23 +1,21 @@
 import { useState, useEffect, useRef } from 'preact/hooks';
-import { useCoreContext } from '../../core/Context/CoreProvider';
 import checkPaymentStatus from '../../core/Services/payment-status';
 import processResponse from '../../core/ProcessResponse';
-import { StatusObject } from '../../components/internal/Await/types';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { CountdownTime } from '../../components/internal/Countdown/types';
 import { PaymentStatusTimerActions, PaymentStatusTimerState, UsePaymentStatusTimerProps } from './types';
 import {
-    DEFAULT_PAYMENT_STATUS_TIMER_DELAY,
-    DEFAULT_PAYMENT_STATUS_TIMER_THROTTLE_INTERVAL,
-    DEFAULT_PAYMENT_STATUS_TIMER_THROTTLE_TIME
+    DEFAULT_PAYMENT_STATUS_TIMER_DELAY_MS,
+    DEFAULT_PAYMENT_STATUS_TIMER_THROTTLE_INTERVAL_MS,
+    DEFAULT_PAYMENT_STATUS_TIMER_THROTTLE_TIME_MS
 } from './constants';
+import { PaymentStatusObject } from '../../types';
 
 export function usePaymentStatusTimer(props: UsePaymentStatusTimerProps): { state: PaymentStatusTimerState; actions: PaymentStatusTimerActions } {
-    const { loadingContext } = useCoreContext();
     const [completed, setCompleted] = useState(false);
     const [expired, setExpired] = useState(false);
     const [loading, setLoading] = useState(true);
-    const [delay, setDelay] = useState(props.delay ?? DEFAULT_PAYMENT_STATUS_TIMER_DELAY);
+    const [delay, setDelay] = useState(props.delay ?? DEFAULT_PAYMENT_STATUS_TIMER_DELAY_MS);
     const [percentage, setPercentage] = useState(0);
     const [timePassed, setTimePassed] = useState(0);
     const [onPollingStartedActionHandled, setOnPollingStartedActionHandled] = useState(false);
@@ -32,7 +30,7 @@ export function usePaymentStatusTimer(props: UsePaymentStatusTimerProps): { stat
         props.onError(new AdyenCheckoutError('ERROR', 'Payment Expired'));
     };
 
-    const onComplete = (status: StatusObject): void => {
+    const onComplete = (status: PaymentStatusObject): void => {
         setCompleted(true);
         setLoading(false);
 
@@ -50,7 +48,7 @@ export function usePaymentStatusTimer(props: UsePaymentStatusTimerProps): { stat
         }
     };
 
-    const onError = (status: StatusObject): void => {
+    const onError = (status: PaymentStatusObject): void => {
         setExpired(true);
         setLoading(false);
 
@@ -71,7 +69,7 @@ export function usePaymentStatusTimer(props: UsePaymentStatusTimerProps): { stat
     const checkStatus = async (): Promise<void> => {
         const { paymentData, clientKey, throttleInterval, pollStatus } = props;
 
-        const pollStatusFunction = pollStatus ?? (() => checkPaymentStatus(paymentData, clientKey, loadingContext, throttleInterval));
+        const pollStatusFunction = pollStatus ?? (() => checkPaymentStatus(paymentData, clientKey, props.loadingContext, throttleInterval));
 
         if (!onPollingStartedActionHandled) {
             props.onActionHandled?.({ componentType: props.type, actionDescription: 'polling-started' });
@@ -80,11 +78,11 @@ export function usePaymentStatusTimer(props: UsePaymentStatusTimerProps): { stat
 
         return pollStatusFunction()
             .then(processResponse)
-            .catch(({ message, ...response }) => ({
+            .catch(response => ({
                 type: 'network-error',
                 props: response
             }))
-            .then((status: StatusObject) => {
+            .then((status: PaymentStatusObject) => {
                 switch (status.type) {
                     case 'success':
                         onComplete(status);
@@ -119,11 +117,11 @@ export function usePaymentStatusTimer(props: UsePaymentStatusTimerProps): { stat
             setTimePassed(actualTimePassed);
 
             if (
-                actualTimePassed >= (props.throttleTime ?? DEFAULT_PAYMENT_STATUS_TIMER_THROTTLE_TIME) &&
-                currentDelay !== (props.throttleInterval ?? DEFAULT_PAYMENT_STATUS_TIMER_THROTTLE_INTERVAL)
+                actualTimePassed >= (props.throttleTime ?? DEFAULT_PAYMENT_STATUS_TIMER_THROTTLE_TIME_MS) &&
+                currentDelay !== (props.throttleInterval ?? DEFAULT_PAYMENT_STATUS_TIMER_THROTTLE_INTERVAL_MS)
             ) {
-                setDelay(props.throttleInterval ?? DEFAULT_PAYMENT_STATUS_TIMER_THROTTLE_INTERVAL);
-                currentDelay = props.throttleInterval ?? DEFAULT_PAYMENT_STATUS_TIMER_THROTTLE_INTERVAL;
+                setDelay(props.throttleInterval ?? DEFAULT_PAYMENT_STATUS_TIMER_THROTTLE_INTERVAL_MS);
+                currentDelay = props.throttleInterval ?? DEFAULT_PAYMENT_STATUS_TIMER_THROTTLE_INTERVAL_MS;
             }
         };
 

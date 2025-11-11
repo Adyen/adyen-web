@@ -2,6 +2,7 @@ import { CountdownTime } from '../../components/internal/Countdown/types';
 import { AdyenCheckoutError, RawPaymentResponse } from '../../types';
 
 export interface UsePaymentStatusTimerProps {
+    loadingContext: string;
     paymentData?: string;
     clientKey: string;
     delay?: number;

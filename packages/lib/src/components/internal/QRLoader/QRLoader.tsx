@@ -4,10 +4,10 @@ import { ANALYTICS_DOWNLOAD_STR, ANALYTICS_QR_CODE_DOWNLOAD } from '../../../cor
 import { useCoreContext } from '../../../core/Context/CoreProvider';
 import {
     usePaymentStatusTimer,
-    DEFAULT_PAYMENT_STATUS_TIMER_COUNTDOWN_TIME,
-    DEFAULT_PAYMENT_STATUS_TIMER_DELAY,
-    DEFAULT_PAYMENT_STATUS_TIMER_THROTTLE_INTERVAL,
-    DEFAULT_PAYMENT_STATUS_TIMER_THROTTLE_TIME
+    DEFAULT_PAYMENT_STATUS_TIMER_COUNTDOWN_TIME_MIN,
+    DEFAULT_PAYMENT_STATUS_TIMER_DELAY_MS,
+    DEFAULT_PAYMENT_STATUS_TIMER_THROTTLE_INTERVAL_MS,
+    DEFAULT_PAYMENT_STATUS_TIMER_THROTTLE_TIME_MS
 } from '../../../hooks/usePaymentStatusTimer';
 import useAutoFocus from '../../../utils/useAutoFocus';
 import Button from '../Button';
@@ -16,10 +16,10 @@ import { CountdownTime } from '../Countdown/types';
 import Spinner from '../Spinner';
 import { QRDetails } from './components/QRDetails';
 import { QRFinalState } from './components/QRFinalState';
-import './QRLoader.scss';
 import { QRLoaderDetailsProvider } from './QRLoaderDetailsProvider';
 import { QRLoaderProps } from './types';
 import { redirectToApp } from '../../../utils/urls';
+import './QRLoader.scss';
 
 const QRCODE_URL = 'utility/v1/barcode.png?type=qrCode&data=';
 
@@ -27,6 +27,7 @@ export function QRLoader(props: QRLoaderProps) {
     const { i18n, loadingContext } = useCoreContext();
 
     const { state: timerState, actions: timerActions } = usePaymentStatusTimer({
+        loadingContext,
         paymentData: props.paymentData,
         clientKey: props.clientKey,
         delay: props.delay,
@@ -130,10 +131,10 @@ export function QRLoader(props: QRLoaderProps) {
 }
 
 QRLoader.defaultProps = {
-    countdownTime: DEFAULT_PAYMENT_STATUS_TIMER_COUNTDOWN_TIME,
-    delay: DEFAULT_PAYMENT_STATUS_TIMER_DELAY,
-    throttleTime: DEFAULT_PAYMENT_STATUS_TIMER_THROTTLE_TIME,
-    throttledInterval: DEFAULT_PAYMENT_STATUS_TIMER_THROTTLE_INTERVAL,
+    countdownTime: DEFAULT_PAYMENT_STATUS_TIMER_COUNTDOWN_TIME_MIN,
+    delay: DEFAULT_PAYMENT_STATUS_TIMER_DELAY_MS,
+    throttleTime: DEFAULT_PAYMENT_STATUS_TIMER_THROTTLE_TIME_MS,
+    throttledInterval: DEFAULT_PAYMENT_STATUS_TIMER_THROTTLE_INTERVAL_MS,
     onError: () => {},
     onComplete: () => {},
     classNameModifiers: [],

@@ -399,3 +399,14 @@ export type DecodeObject = {
     error?: string;
     data?: string;
 };
+
+interface PaymentStatusObjectProps {
+    payload?: string | null;
+    resultCode: string;
+    type: string;
+}
+
+export interface PaymentStatusObject {
+    type: string;
+    props: PaymentStatusObjectProps;
+}

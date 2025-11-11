@@ -2,17 +2,6 @@ import { UIElementProps } from '../UIElement/types';
 import { ActionHandledReturnObject, PaymentAmount, RawPaymentResponse } from '../../../types/global-types';
 import { h } from 'preact';
 
-interface StatusObjectProps {
-    payload: string;
-    resultCode: string;
-    type: string;
-}
-
-export interface StatusObject {
-    type: string;
-    props: StatusObjectProps;
-}
-
 export interface AwaitComponentProps {
     type: string;
     delay?: number;

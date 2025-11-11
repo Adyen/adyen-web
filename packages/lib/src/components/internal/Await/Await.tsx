@@ -4,24 +4,25 @@ import { useEffect } from 'preact/hooks';
 import { useCoreContext } from '../../../core/Context/CoreProvider';
 import {
     usePaymentStatusTimer,
-    DEFAULT_PAYMENT_STATUS_TIMER_COUNTDOWN_TIME,
-    DEFAULT_PAYMENT_STATUS_TIMER_DELAY,
-    DEFAULT_PAYMENT_STATUS_TIMER_THROTTLE_INTERVAL,
-    DEFAULT_PAYMENT_STATUS_TIMER_THROTTLE_TIME
+    DEFAULT_PAYMENT_STATUS_TIMER_COUNTDOWN_TIME_MIN,
+    DEFAULT_PAYMENT_STATUS_TIMER_DELAY_MS,
+    DEFAULT_PAYMENT_STATUS_TIMER_THROTTLE_INTERVAL_MS,
+    DEFAULT_PAYMENT_STATUS_TIMER_THROTTLE_TIME_MS
 } from '../../../hooks/usePaymentStatusTimer';
 import Spinner from '../../internal/Spinner';
 import Button from '../Button';
 import ContentSeparator from '../ContentSeparator';
 import Countdown from '../Countdown';
-import './Await.scss';
 import { AwaitFinalState } from './components/AwaitFinalState';
 import { AwaitComponentProps } from './types';
 import { redirectToApp } from '../../../utils/urls';
+import './Await.scss';
 
 export function Await(props: AwaitComponentProps) {
-    const { i18n } = useCoreContext();
+    const { i18n, loadingContext } = useCoreContext();
 
     const { state: timerState, actions: timerActions } = usePaymentStatusTimer({
+        loadingContext,
         paymentData: props.paymentData,
         clientKey: props.clientKey,
         delay: props.delay,
@@ -122,10 +123,10 @@ export function Await(props: AwaitComponentProps) {
 }
 
 Await.defaultProps = {
-    countdownTime: DEFAULT_PAYMENT_STATUS_TIMER_COUNTDOWN_TIME,
-    delay: DEFAULT_PAYMENT_STATUS_TIMER_DELAY,
-    throttleTime: DEFAULT_PAYMENT_STATUS_TIMER_THROTTLE_TIME,
-    throttleInterval: DEFAULT_PAYMENT_STATUS_TIMER_THROTTLE_INTERVAL,
+    countdownTime: DEFAULT_PAYMENT_STATUS_TIMER_COUNTDOWN_TIME_MIN,
+    delay: DEFAULT_PAYMENT_STATUS_TIMER_DELAY_MS,
+    throttleTime: DEFAULT_PAYMENT_STATUS_TIMER_THROTTLE_TIME_MS,
+    throttleInterval: DEFAULT_PAYMENT_STATUS_TIMER_THROTTLE_INTERVAL_MS,
     onError: () => {},
     onComplete: () => {},
     showCountdownTimer: true,
