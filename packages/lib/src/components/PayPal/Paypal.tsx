@@ -13,7 +13,7 @@ import type { PaymentAction } from '../../types/global-types';
 import type { Intent, PayPalConfiguration } from './types';
 
 import './Paypal.scss';
-import { AnalyticsInfoEvent, InfoEventType } from '../../core/Analytics/AnalyticsInfoEvent';
+import { AnalyticsInfoEvent, InfoEventType } from '../../core/Analytics/events/AnalyticsInfoEvent';
 
 class PaypalElement extends UIElement<PayPalConfiguration> {
     public static type = TxVariants.paypal;

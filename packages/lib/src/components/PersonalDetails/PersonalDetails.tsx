@@ -5,7 +5,7 @@ import { CoreProvider } from '../../core/Context/CoreProvider';
 import { TxVariants } from '../tx-variants';
 import FormInstruction from '../internal/FormInstruction';
 import { UIElementProps } from '../internal/UIElement/types';
-import { AnalyticsInfoEvent, InfoEventType } from '../../core/Analytics/AnalyticsInfoEvent';
+import { AnalyticsInfoEvent, InfoEventType } from '../../core/Analytics/events/AnalyticsInfoEvent';
 
 interface PersonalDetailsConfiguration extends UIElementProps {}
 

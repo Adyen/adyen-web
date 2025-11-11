@@ -32,7 +32,7 @@ import { fieldTypeToSnakeCase } from '../../../internal/SecuredFields/utils';
 import { getErrorMessageFromCode } from '../../../../core/Errors/utils';
 import { SF_ErrorCodes } from '../../../../core/Errors/constants';
 import { usePrevious } from '../../../../utils/hookUtils';
-import { AnalyticsInfoEvent, InfoEventType } from '../../../../core/Analytics/AnalyticsInfoEvent';
+import { AnalyticsInfoEvent, InfoEventType } from '../../../../core/Analytics/events/AnalyticsInfoEvent';
 
 const DUAL_BRAND_BUTTON = 'dual_brand_button';
 
@@ -401,6 +401,7 @@ const CardInput = (props: CardInputProps) => {
 
             newErrors?.forEach(errorItem => {
                 const event = new AnalyticsInfoEvent({
+                    component: props.type,
                     type: InfoEventType.validationError,
                     target: fieldTypeToSnakeCase(errorItem.field),
                     validationErrorCode: errorItem.errorCode,
@@ -452,6 +453,7 @@ const CardInput = (props: CardInputProps) => {
             const dualBrands = dualBrandsArr.toString();
 
             const event = new AnalyticsInfoEvent({
+                component: props.type,
                 type: InfoEventType.displayed,
                 target: DUAL_BRAND_BUTTON,
                 brand,
@@ -469,7 +471,12 @@ const CardInput = (props: CardInputProps) => {
      */
     useEffect(() => {
         if (previousSelectedBrandValue?.length && selectedBrandValue?.length) {
-            const event = new AnalyticsInfoEvent({ type: InfoEventType.selected, target: DUAL_BRAND_BUTTON, brand: selectedBrandValue });
+            const event = new AnalyticsInfoEvent({
+                component: props.type,
+                type: InfoEventType.selected,
+                target: DUAL_BRAND_BUTTON,
+                brand: selectedBrandValue
+            });
 
             props.onSubmitAnalytics(event);
         }
@@ -564,6 +571,7 @@ const CardInput = (props: CardInputProps) => {
                     currentDetectedBrand={internallyDetectedBrand}
                     onChange={props.onChange}
                     onSubmitAnalytics={props.onSubmitAnalytics}
+                    type={props.type}
                 />
             )}
 

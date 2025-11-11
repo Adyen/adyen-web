@@ -2,8 +2,8 @@ import Giftcard from './Giftcard';
 import { render, screen } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
-import { ANALYTICS_ERROR_TYPE } from '../../core/Analytics/constants';
 import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
+import { ErrorEventType } from '../../core/Analytics/events/AnalyticsErrorEvent';
 
 const flushPromises = () => new Promise(process.nextTick);
 
@@ -25,8 +25,9 @@ describe('Giftcard', () => {
     // these test have been changed to trigger on submit instead of balance check
     describe('onBalanceCheck func in submit', () => {
         test('If onBalanceCheck is not provided, step is skipped ayarnnd calls onSubmit', async () => {
+            const core = setupCoreMock();
             const onSubmitMock = jest.fn();
-            const giftcard = new Giftcard(global.core, { ...baseProps, onSubmit: onSubmitMock });
+            const giftcard = new Giftcard(core, { ...baseProps, onSubmit: onSubmitMock });
             giftcard.setState({ isValid: true });
 
             giftcard.submit();
@@ -169,7 +170,7 @@ describe('Giftcard', () => {
             expect(core.modules.analytics.sendAnalytics).toHaveBeenCalledWith({
                 code,
                 component: 'giftcard',
-                errorType: ANALYTICS_ERROR_TYPE.apiError,
+                errorType: ErrorEventType.apiError,
                 timestamp: expect.any(String),
                 id: expect.any(String)
             });

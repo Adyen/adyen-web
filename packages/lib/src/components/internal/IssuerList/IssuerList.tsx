@@ -18,7 +18,7 @@ import Select from '../FormFields/Select';
 import { SelectTargetObject } from '../FormFields/Select/types';
 import { ANALYTICS_FEATURED_ISSUER, ANALYTICS_LIST, ANALYTICS_LIST_SEARCH, ANALYTICS_SEARCH_DEBOUNCE_TIME } from '../../../core/Analytics/constants';
 import { debounce } from '../../../utils/debounce';
-import { AnalyticsInfoEvent, InfoEventType } from '../../../core/Analytics/AnalyticsInfoEvent';
+import { AnalyticsInfoEvent, InfoEventType } from '../../../core/Analytics/events/AnalyticsInfoEvent';
 
 const payButtonLabel = ({ issuer, items }, i18n): string => {
     const issuerName = items.find(i => i.id === issuer)?.name;
@@ -76,6 +76,7 @@ function IssuerList({
             const issuerObj = items.find(issuer => issuer.id === (event.target as SelectTargetObject).value);
 
             const analyticsEvent = new AnalyticsInfoEvent({
+                component: props.type,
                 type: InfoEventType.selected,
                 target,
                 issuer: issuerObj.name
@@ -85,18 +86,22 @@ function IssuerList({
             setInputType(type);
             handleChangeFor('issuer')(event);
         },
-        [handleChangeFor]
+        [handleChangeFor, props.type]
     );
 
-    const handleListToggle = useCallback((isOpen: boolean) => {
-        if (isOpen) {
-            const event = new AnalyticsInfoEvent({
-                type: InfoEventType.displayed,
-                target: ANALYTICS_LIST
-            });
-            props.onSubmitAnalytics(event);
-        }
-    }, []);
+    const handleListToggle = useCallback(
+        (isOpen: boolean) => {
+            if (isOpen) {
+                const event = new AnalyticsInfoEvent({
+                    component: props.type,
+                    type: InfoEventType.displayed,
+                    target: ANALYTICS_LIST
+                });
+                props.onSubmitAnalytics(event);
+            }
+        },
+        [props.type]
+    );
 
     const debounceSearchAnalytics = useRef(debounce(props.onSubmitAnalytics, ANALYTICS_SEARCH_DEBOUNCE_TIME));
 

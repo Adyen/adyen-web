@@ -1,9 +1,11 @@
 import { PayButtonProps } from '../PayButton/PayButton';
 import { ComponentChildren } from 'preact';
-import { AnalyticsEvent } from '../../../core/Analytics/AnalyticsEvent';
+import { AbstractAnalyticsEvent } from '../../../core/Analytics/events/AbstractAnalyticsEvent';
 
 export interface IssuerListProps {
     items: IssuerItem[];
+    // Component type (e.g. onlineBanking)
+    type: string;
     showPayButton: boolean;
     payButton(props: Partial<PayButtonProps>): ComponentChildren;
     onChange(payload: any): void;
@@ -14,7 +16,7 @@ export interface IssuerListProps {
     showContextualElement?: boolean;
     contextualText?: string;
     selectFieldLabel?: string;
-    onSubmitAnalytics: (aObj: AnalyticsEvent) => void;
+    onSubmitAnalytics: (aObj: AbstractAnalyticsEvent) => void;
     ref?: any;
 }
 

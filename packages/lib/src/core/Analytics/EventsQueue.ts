@@ -1,6 +1,6 @@
 import { HttpOptions, httpPost } from '../Services/http';
 import { AnalyticsObject, EventQueueProps } from './types';
-import { AnalyticsEvent } from './AnalyticsEvent';
+import { AbstractAnalyticsEvent } from './events/AbstractAnalyticsEvent';
 
 interface CAActions {
     channel: 'Web';
@@ -11,7 +11,7 @@ interface CAActions {
 }
 
 export interface EventsQueueModule {
-    add: (t: string, event: AnalyticsEvent) => void;
+    add: (t: string, event: AbstractAnalyticsEvent) => void;
     run: (id: string) => Promise<any>;
     getQueue: () => CAActions;
 }

@@ -2,9 +2,9 @@ import Analytics from './Analytics';
 import collectId from '../Services/analytics/collect-id';
 import wait from '../../utils/wait';
 import { DEFAULT_DEBOUNCE_TIME_MS } from '../../utils/debounce';
-import { AnalyticsInfoEvent, InfoEventType } from './AnalyticsInfoEvent';
-import { AnalyticsErrorEvent } from './AnalyticsErrorEvent';
-import { AnalyticsLogEvent } from './AnalyticsLogEvent';
+import { AnalyticsInfoEvent, InfoEventType } from './events/AnalyticsInfoEvent';
+import { AnalyticsErrorEvent, ErrorEventType } from './events/AnalyticsErrorEvent';
+import { AnalyticsLogEvent, LogEventType } from './events/AnalyticsLogEvent';
 import { AnalyticsProps } from './types';
 import { CheckoutAttemptIdSession } from '../Services/analytics/types';
 import Storage from '../../utils/Storage';
@@ -60,7 +60,7 @@ describe('Analytics', () => {
             const errorEvent = new AnalyticsErrorEvent({
                 component: 'threeDS2Fingerprint',
                 code: 'web_704',
-                errorType: 'APIError',
+                errorType: ErrorEventType.apiError,
                 message: 'threeDS2Fingerprint Missing paymentData property from threeDS2 action'
             });
 
@@ -80,7 +80,7 @@ describe('Analytics', () => {
 
             const event = new AnalyticsLogEvent({
                 component: 'scheme',
-                type: 'Submit',
+                type: LogEventType.submit,
                 message: 'shopper clicked pay'
             });
 
@@ -132,7 +132,7 @@ describe('Analytics', () => {
 
             const event = new AnalyticsLogEvent({
                 component: 'scheme',
-                type: 'Submit',
+                type: LogEventType.submit,
                 message: 'shopper clicked pay'
             });
 

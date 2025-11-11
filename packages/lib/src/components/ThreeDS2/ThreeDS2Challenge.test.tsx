@@ -1,8 +1,8 @@
 import { ThreeDS2Challenge } from './index';
-import { ANALYTICS_ERROR_TYPE, Analytics3DS2Errors } from '../../core/Analytics/constants';
 import { THREEDS2_CHALLENGE_ERROR } from './constants';
 import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 import { ChallengeResolveData } from './types';
+import { ErrorEventCode, ErrorEventType } from '../../core/Analytics/events/AnalyticsErrorEvent';
 
 describe('ThreeDS2Challenge', () => {
     describe('Analytics', () => {
@@ -33,9 +33,9 @@ describe('ThreeDS2Challenge', () => {
 
             expect(core.modules.analytics.sendAnalytics).toHaveBeenCalledWith({
                 component: 'threeDS2Challenge',
-                errorType: ANALYTICS_ERROR_TYPE.apiError,
+                errorType: ErrorEventType.apiError,
                 message: `${THREEDS2_CHALLENGE_ERROR}: Missing 'paymentData' property from threeDS2 action`,
-                code: Analytics3DS2Errors.ACTION_IS_MISSING_PAYMENT_DATA,
+                code: ErrorEventCode.THREEDS2_ACTION_IS_MISSING_PAYMENT_DATA,
                 timestamp: expect.any(String),
                 id: expect.any(String)
             });

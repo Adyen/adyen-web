@@ -1,6 +1,6 @@
 import EventsQueue from './EventsQueue';
 import { ANALYTICS_PATH } from './constants';
-import { AnalyticsInfoEvent, InfoEventType } from './AnalyticsInfoEvent';
+import { AnalyticsInfoEvent, InfoEventType } from './events/AnalyticsInfoEvent';
 
 const event = new AnalyticsInfoEvent({ type: InfoEventType.rendered, component: 'scheme' });
 
