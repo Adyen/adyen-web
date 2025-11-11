@@ -37,7 +37,7 @@ describe('usePaymentStatusTimer', () => {
                 completed: false,
                 expired: false,
                 loading: true,
-                percentage: 0,
+                percentage: 100,
                 timePassed: 0
             });
         });

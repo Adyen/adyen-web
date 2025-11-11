@@ -16,7 +16,7 @@ export function usePaymentStatusTimer(props: UsePaymentStatusTimerProps): { stat
     const [expired, setExpired] = useState(false);
     const [loading, setLoading] = useState(true);
     const [delay, setDelay] = useState(props.delay ?? DEFAULT_PAYMENT_STATUS_TIMER_DELAY_MS);
-    const [percentage, setPercentage] = useState(0);
+    const [percentage, setPercentage] = useState(100);
     const [timePassed, setTimePassed] = useState(0);
     const [onPollingStartedActionHandled, setOnPollingStartedActionHandled] = useState(false);
     const timeoutRef = useRef<NodeJS.Timeout | number | null>(null);
@@ -105,29 +105,26 @@ export function usePaymentStatusTimer(props: UsePaymentStatusTimerProps): { stat
             return;
         }
 
-        let currentDelay = delay;
-
         const statusInterval = async (): Promise<void> => {
             const start = performance.now();
             await checkStatus();
             const end = performance.now();
             const responseTime = Math.round(end - start);
 
-            const actualTimePassed = timePassed + responseTime + currentDelay;
+            const actualTimePassed = timePassed + responseTime + delay;
             setTimePassed(actualTimePassed);
 
             if (
                 actualTimePassed >= (props.throttleTime ?? DEFAULT_PAYMENT_STATUS_TIMER_THROTTLE_TIME_MS) &&
-                currentDelay !== (props.throttleInterval ?? DEFAULT_PAYMENT_STATUS_TIMER_THROTTLE_INTERVAL_MS)
+                delay !== (props.throttleInterval ?? DEFAULT_PAYMENT_STATUS_TIMER_THROTTLE_INTERVAL_MS)
             ) {
                 setDelay(props.throttleInterval ?? DEFAULT_PAYMENT_STATUS_TIMER_THROTTLE_INTERVAL_MS);
-                currentDelay = props.throttleInterval ?? DEFAULT_PAYMENT_STATUS_TIMER_THROTTLE_INTERVAL_MS;
             }
         };
 
         timeoutRef.current = setTimeout(() => {
             void statusInterval();
-        }, currentDelay);
+        }, delay);
 
         return () => {
             clearTimeout(timeoutRef.current);

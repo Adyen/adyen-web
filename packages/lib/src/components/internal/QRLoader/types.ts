@@ -3,12 +3,14 @@ import { ActionHandledReturnObject, PaymentAmount } from '../../../types/global-
 import Language from '../../../language/Language';
 import { AnalyticsEvent } from '../../../core/Analytics/AnalyticsEvent';
 import { CountdownTime } from '../Countdown/types';
+import { AdyenCheckoutError } from '../../../types';
+import { PaymentCompeteStatus } from '../../../hooks/usePaymentStatusTimer/types';
 
 export interface QRLoaderProps {
     delay?: number;
     countdownTime?: number;
-    onError?: (error) => void;
-    onComplete?: (data) => void;
+    onError?: (error: AdyenCheckoutError) => void;
+    onComplete?: (status: PaymentCompeteStatus) => void;
     throttleTime?: number;
     throttledInterval?: number;
     url?: string;

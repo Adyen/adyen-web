@@ -1,6 +1,8 @@
 import { UIElementProps } from '../UIElement/types';
 import { ActionHandledReturnObject, PaymentAmount, RawPaymentResponse } from '../../../types/global-types';
 import { h } from 'preact';
+import { AdyenCheckoutError } from '../../../types';
+import { PaymentCompeteStatus } from '../../../hooks/usePaymentStatusTimer/types';
 
 export interface AwaitComponentProps {
     type: string;
@@ -14,8 +16,8 @@ export interface AwaitComponentProps {
     url?: string;
     classNameModifiers?: string[];
     clientKey: string;
-    onError: (error) => void;
-    onComplete: (status) => void;
+    onError: (error: AdyenCheckoutError) => void;
+    onComplete: (status: PaymentCompeteStatus) => void;
     brandLogo?: string;
     messageText?: string;
     awaitText: string;
