@@ -1,9 +1,10 @@
-import { AnalyticsEvent } from './AnalyticsEvent';
-import { ANALYTICS_EVENT } from './constants';
-import { mapErrorCodesForAnalytics } from './utils';
+import { AbstractAnalyticsEvent } from './AbstractAnalyticsEvent';
+import { ANALYTICS_EVENT } from '../constants';
+import { mapErrorCodesForAnalytics } from '../utils';
 
 type AnalyticsInfoEventProps = {
     type: InfoEventType;
+    component: string;
     target?: string;
     issuer?: string;
     isExpress?: boolean;
@@ -13,24 +14,30 @@ type AnalyticsInfoEventProps = {
     validationErrorCode?: string;
     validationErrorMessage?: string;
     configData?: Record<string, any>;
-    component?: string;
     cdnUrl?: string;
 };
 
 export enum InfoEventType {
+    /** When a UI element is clicked */
     clicked = 'clicked',
+    /** When a component is rendered in the browser (e.g. render() method is called) */
     rendered = 'rendered',
+    /** When a list item is selected (e.g. issuer list) */
     selected = 'selected',
+    /** When there is a validation issue with the input */
     validationError = 'validationError',
+    /** When input gets focus */
     focus = 'focus',
+    /** When input gets unfocus */
     unfocus = 'unfocus',
+    /** When iframe fields are configured */
     configured = 'configured',
+    /** When a dropdown list is displayed */
     displayed = 'displayed',
+    /** When shopper utilizes an input field to search for values (e.g. issuer list) */
     input = 'input',
+    /** When shopper clicks to download the image (e.g. QR code image) */
     download = 'download',
-    /**
-     * Third party SDK events
-     */
     sdkDownloadInitiated = 'sdkDownloadInitiated',
     sdkDownloadFailed = 'sdkDownloadFailed',
     sdkDownloadAborted = 'sdkDownloadAborted',
@@ -47,7 +54,7 @@ export enum InfoEventType {
     AddressChanged = 'addressChanged'
 }
 
-export class AnalyticsInfoEvent extends AnalyticsEvent {
+export class AnalyticsInfoEvent extends AbstractAnalyticsEvent {
     /**
      * Analytics event type
      */
@@ -73,9 +80,8 @@ export class AnalyticsInfoEvent extends AnalyticsEvent {
     public cdnUrl?: string;
 
     constructor(props: AnalyticsInfoEventProps) {
-        super();
+        super(props.component);
 
-        this.component = props.component;
         this.type = props.type;
 
         if (props.target !== undefined) this.target = props.target;
@@ -88,8 +94,6 @@ export class AnalyticsInfoEvent extends AnalyticsEvent {
         if (props.cdnUrl !== undefined) this.cdnUrl = props.cdnUrl;
         if (props.validationErrorCode !== undefined) this.validationErrorCode = props.validationErrorCode;
         if (props.validationErrorMessage !== undefined) this.validationErrorMessage = props.validationErrorMessage;
-
-        // @ts-ignore This will be fixed when we fixed the interface of this Component on next PR's
 
         if (this.type === InfoEventType.rendered) {
             this.configData = this.createAnalyticsConfigData(props?.configData);
@@ -126,6 +130,7 @@ export class AnalyticsInfoEvent extends AnalyticsEvent {
 
         return [...DROPIN_FIELDS, ...FIELDS_INJECTED_BY_DROPIN, ...PII_FIELDS, ...UNIT_TEST_FIELDS];
     }
+
     /**
      * Creates a serializable analytics payload from the given config object.
      * Functions are replaced with 'function', and objects/arrays are stringified.

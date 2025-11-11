@@ -21,7 +21,7 @@ import type { ICore } from '../../core/types';
 import { ALL_SECURED_FIELDS } from '../internal/SecuredFields/lib/constants';
 import AdyenCheckoutError, { IMPLEMENTATION_ERROR } from '../../core/Errors/AdyenCheckoutError';
 import CardInputDefaultProps from './components/CardInput/defaultProps';
-import { AnalyticsInfoEvent, InfoEventType } from '../../core/Analytics/AnalyticsInfoEvent';
+import { AnalyticsInfoEvent, InfoEventType } from '../../core/Analytics/events/AnalyticsInfoEvent';
 
 export class CardElement extends UIElement<CardConfiguration> {
     public static type = TxVariants.scheme;
@@ -219,14 +219,14 @@ export class CardElement extends UIElement<CardConfiguration> {
     }
 
     private onConfigSuccess = (obj: CardConfigSuccessData) => {
-        const event = new AnalyticsInfoEvent({ type: InfoEventType.configured });
+        const event = new AnalyticsInfoEvent({ component: this.type, type: InfoEventType.configured });
         this.submitAnalytics(event);
 
         this.props.onConfigSuccess?.(obj);
     };
 
     private onFocus = (obj: ComponentFocusObject) => {
-        const event = new AnalyticsInfoEvent({ type: InfoEventType.focus, target: fieldTypeToSnakeCase(obj.fieldType) });
+        const event = new AnalyticsInfoEvent({ component: this.type, type: InfoEventType.focus, target: fieldTypeToSnakeCase(obj.fieldType) });
         this.submitAnalytics(event);
 
         // Call merchant defined callback
@@ -238,7 +238,7 @@ export class CardElement extends UIElement<CardConfiguration> {
     };
 
     private onBlur = (obj: ComponentFocusObject) => {
-        const event = new AnalyticsInfoEvent({ type: InfoEventType.unfocus, target: fieldTypeToSnakeCase(obj.fieldType) });
+        const event = new AnalyticsInfoEvent({ component: this.type, type: InfoEventType.unfocus, target: fieldTypeToSnakeCase(obj.fieldType) });
         this.submitAnalytics(event);
 
         // Call merchant defined callback

@@ -9,7 +9,7 @@ import { getCheckoutDetails } from './services';
 import './AmazonPay.scss';
 import { TxVariants } from '../tx-variants';
 import { sanitizeResponse, verifyPaymentDidNotFail } from '../internal/UIElement/utils';
-import { AnalyticsInfoEvent, InfoEventType } from '../../core/Analytics/AnalyticsInfoEvent';
+import { AnalyticsInfoEvent, InfoEventType } from '../../core/Analytics/events/AnalyticsInfoEvent';
 
 export class AmazonPayElement extends UIElement<AmazonPayConfiguration> {
     public static type = TxVariants.amazonpay;

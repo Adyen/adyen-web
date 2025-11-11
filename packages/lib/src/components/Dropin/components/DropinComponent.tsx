@@ -9,7 +9,7 @@ import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 import Button from '../../internal/Button';
 import type { DropinComponentProps, DropinComponentState, DropinStatus, DropinStatusProps, onOrderCancelData } from '../types';
 import UIElement from '../../internal/UIElement';
-import { AnalyticsInfoEvent, InfoEventType } from '../../../core/Analytics/AnalyticsInfoEvent';
+import { AnalyticsInfoEvent, InfoEventType } from '../../../core/Analytics/events/AnalyticsInfoEvent';
 
 export class DropinComponent extends Component<DropinComponentProps, DropinComponentState> {
     public state: DropinComponentState = {

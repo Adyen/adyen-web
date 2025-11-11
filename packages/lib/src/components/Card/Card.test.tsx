@@ -4,7 +4,7 @@ import { render, screen, waitFor } from '@testing-library/preact';
 import { CoreProvider } from '../../core/Context/CoreProvider';
 import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 import PaymentMethods from '../../core/ProcessResponse/PaymentMethods';
-import { InfoEventType } from '../../core/Analytics/AnalyticsInfoEvent';
+import { InfoEventType } from '../../core/Analytics/events/AnalyticsInfoEvent';
 import { CardFocusData } from '../internal/SecuredFields/lib/types';
 import { mock } from 'jest-mock-extended';
 

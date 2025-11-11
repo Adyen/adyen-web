@@ -14,7 +14,7 @@ import { SRPanel } from '../../core/Errors/SRPanel';
 import type { CoreConfiguration, ICore } from '../../core/types';
 import type { PaymentActionsType } from '../../types/global-types';
 import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
-import { InfoEventType } from '../../core/Analytics/AnalyticsInfoEvent';
+import { InfoEventType } from '../../core/Analytics/events/AnalyticsInfoEvent';
 
 jest.mock('../../core/Services/get-translations');
 const mockedGetTranslations = getTranslations as jest.Mock;

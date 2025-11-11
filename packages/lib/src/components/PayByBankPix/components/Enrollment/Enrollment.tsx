@@ -92,6 +92,7 @@ function Enrollment(props: EnrollmentProps) {
                         payButton={props.payButton}
                         showPayButton={true}
                         ref={issuerListRef}
+                        type={'paybybank_pix'}
                     ></IssuerList>
                     <span className="adyen-checkout-disclaimer__label">
                         <LabelOnlyDisclaimerMessage message={i18n.get('paybybankpix.issuerList.disclaimer')} urls={[TERMS_CONDITIONS_URL]} />

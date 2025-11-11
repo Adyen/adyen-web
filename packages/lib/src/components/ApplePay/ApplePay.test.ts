@@ -316,6 +316,7 @@ describe('ApplePay', () => {
 
     describe('submit()', () => {
         test('should forward apple pay error (if available) to ApplePay if payment fails', async () => {
+            const core = setupCoreMock();
             const onPaymentFailedMock = jest.fn();
             const error = mock<ApplePayJS.ApplePayError>();
             const event = mock<ApplePayJS.ApplePayPaymentAuthorizedEvent>({
@@ -326,9 +327,8 @@ describe('ApplePay', () => {
                 }
             });
 
-            const applepay = new ApplePay(global.core, {
+            const applepay = new ApplePay(core, {
                 configuration: configurationMock,
-                modules: { analytics: global.analytics },
                 amount: { currency: 'EUR', value: 2000 },
                 onPaymentFailed: onPaymentFailedMock,
                 onSubmit(state, component, actions) {

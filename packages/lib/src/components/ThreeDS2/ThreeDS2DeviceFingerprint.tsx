@@ -6,11 +6,10 @@ import { existy } from '../../utils/commonUtils';
 import { TxVariants } from '../tx-variants';
 import { FingerprintResolveData, LegacyFingerprintResolveData, ThreeDS2DeviceFingerprintConfiguration } from './types';
 import AdyenCheckoutError, { API_ERROR } from '../../core/Errors/AdyenCheckoutError';
-import { ANALYTICS_ERROR_TYPE, Analytics3DS2Errors, Analytics3DS2Events } from '../../core/Analytics/constants';
-import { THREEDS2_FINGERPRINT, THREEDS2_FINGERPRINT_ERROR, THREEDS2_FULL } from './constants';
+import { THREEDS2_FINGERPRINT, THREEDS2_FINGERPRINT_ERROR } from './constants';
 import { ActionHandledReturnObject } from '../../types/global-types';
-import { AnalyticsLogEvent } from '../../core/Analytics/AnalyticsLogEvent';
-import { AnalyticsErrorEvent } from '../../core/Analytics/AnalyticsErrorEvent';
+import { AnalyticsLogEvent, LogEventSubtype, LogEventType } from '../../core/Analytics/events/AnalyticsLogEvent';
+import { AnalyticsErrorEvent, ErrorEventCode, ErrorEventType } from '../../core/Analytics/events/AnalyticsErrorEvent';
 
 class ThreeDS2DeviceFingerprint extends UIElement<ThreeDS2DeviceFingerprintConfiguration> {
     public static type = TxVariants.threeDS2Fingerprint;
@@ -27,10 +26,13 @@ class ThreeDS2DeviceFingerprint extends UIElement<ThreeDS2DeviceFingerprintConfi
     }
 
     protected onActionHandled = (rtnObj: ActionHandledReturnObject) => {
+        console.log('ThreeDS2DeviceFingerprint', this.props);
+
         const event = new AnalyticsLogEvent({
-            type: THREEDS2_FULL,
-            message: rtnObj.actionDescription,
-            subType: Analytics3DS2Events.FINGERPRINT_IFRAME_LOADED
+            component: this.type,
+            type: LogEventType.threeDS2,
+            subType: LogEventSubtype.fingerprintIframeLoaded,
+            message: rtnObj.actionDescription
         });
 
         this.submitAnalytics(event);
@@ -58,8 +60,9 @@ class ThreeDS2DeviceFingerprint extends UIElement<ThreeDS2DeviceFingerprintConfi
 
             // TODO - check logs to see if this *ever* happens
             const event = new AnalyticsErrorEvent({
-                code: Analytics3DS2Errors.ACTION_IS_MISSING_PAYMENT_DATA,
-                errorType: ANALYTICS_ERROR_TYPE.apiError,
+                component: this.type,
+                code: ErrorEventCode.THREEDS2_ACTION_IS_MISSING_PAYMENT_DATA,
+                errorType: ErrorEventType.apiError,
                 message: `${THREEDS2_FINGERPRINT_ERROR}: Missing 'paymentData' property from threeDS2 action`
             });
 

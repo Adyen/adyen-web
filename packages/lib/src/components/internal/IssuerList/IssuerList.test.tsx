@@ -5,7 +5,7 @@ import IssuerList from './IssuerList';
 import PayButton from '../PayButton';
 import { CoreProvider } from '../../../core/Context/CoreProvider';
 import { ANALYTICS_FEATURED_ISSUER, ANALYTICS_LIST } from '../../../core/Analytics/constants';
-import { InfoEventType } from '../../../core/Analytics/AnalyticsInfoEvent';
+import { InfoEventType } from '../../../core/Analytics/events/AnalyticsInfoEvent';
 
 /**
  * DON'T USE THIS FILE
@@ -29,6 +29,7 @@ describe('IssuerList', () => {
                     onChange={jest.fn()}
                     payButton={props => <PayButton {...props} amount={{ value: 50, currency: 'USD' }} />}
                     onSubmitAnalytics={() => {}}
+                    type={'onlineBanking_PL'}
                 />
             </CoreProvider>
         );
@@ -56,6 +57,7 @@ describe('IssuerList', () => {
                     onChange={jest.fn()}
                     payButton={props => <PayButton {...props} amount={{ value: 50, currency: 'USD' }} />}
                     onSubmitAnalytics={() => {}}
+                    type={'onlineBanking_PL'}
                 />
             </CoreProvider>
         );
@@ -85,6 +87,7 @@ describe('IssuerList', () => {
                     onChange={onChangeCb}
                     payButton={props => <PayButton {...props} amount={{ value: 50, currency: 'USD' }} />}
                     onSubmitAnalytics={() => {}}
+                    type={'onlineBanking_PL'}
                 />
             </CoreProvider>
         );
@@ -124,6 +127,7 @@ describe('IssuerList', () => {
                     onChange={jest.fn()}
                     payButton={props => <PayButton {...props} amount={{ value: 50, currency: 'USD' }} />}
                     onSubmitAnalytics={() => {}}
+                    type={'onlineBanking_PL'}
                 />
             </CoreProvider>
         );
@@ -151,6 +155,7 @@ describe('IssuerList', () => {
                     onChange={jest.fn()}
                     payButton={props => <PayButton {...props} amount={{ value: 50, currency: 'USD' }} />}
                     onSubmitAnalytics={() => {}}
+                    type={'onlineBanking_PL'}
                 />
             </CoreProvider>
         );
@@ -184,6 +189,7 @@ describe('Analytics', () => {
                     onChange={() => {}}
                     payButton={props => <PayButton {...props} amount={{ value: 50, currency: 'USD' }} />}
                     onSubmitAnalytics={onSubmitAnalytics}
+                    type={'onlineBanking_PL'}
                 />
             </CoreProvider>
         );
@@ -218,6 +224,7 @@ describe('Analytics', () => {
                     onChange={() => {}}
                     payButton={props => <PayButton {...props} amount={{ value: 50, currency: 'USD' }} />}
                     onSubmitAnalytics={onSubmitAnalytics}
+                    type={'onlineBanking_PL'}
                 />
             </CoreProvider>
         );

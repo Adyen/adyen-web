@@ -8,7 +8,7 @@ import type { BaseElementProps, IBaseElement } from './types';
 import type { PaymentData } from '../../../types/global-types';
 import { AnalyticsInitialEvent } from '../../../core/Analytics/types';
 import { off, on } from '../../../utils/listenerUtils';
-import { AnalyticsEvent } from '../../../core/Analytics/AnalyticsEvent';
+import { AbstractAnalyticsEvent } from '../../../core/Analytics/events/AbstractAnalyticsEvent';
 
 /**
  * Verify if the first parameter is instance of Core.
@@ -75,7 +75,7 @@ abstract class BaseElement<P extends BaseElementProps> implements IBaseElement {
     }
 
     /* eslint-disable-next-line */
-    protected submitAnalytics(analyticsObj?: AnalyticsEvent) {
+    protected submitAnalytics(analyticsObj?: AbstractAnalyticsEvent) {
         return null;
     }
 
