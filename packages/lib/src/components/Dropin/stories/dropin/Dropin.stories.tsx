@@ -5,14 +5,13 @@ import { ComponentContainer } from '../../../../../storybook/components/Componen
 import { DropinConfiguration } from '../../types';
 import { Checkout } from '../../../../../storybook/components/Checkout';
 import { getComponentConfigFromUrl } from '../../../../../storybook/utils/get-configuration-from-url';
-import { StoredPaymentMethod } from '../../../../types/global-types';
 import DropinComponent from '../../Dropin';
 import './customization.scss';
 
 type DropinStory = StoryConfiguration<DropinConfiguration>;
 
 const meta: MetaConfiguration<DropinConfiguration> = {
-    title: 'Dropin/Default',
+    title: 'Dropin/Dropin Component',
     argTypes: {
         componentConfiguration: {
             control: 'object'
@@ -41,7 +40,7 @@ const meta: MetaConfiguration<DropinConfiguration> = {
     }
 };
 
-export const Auto: DropinStory = {
+export const Default: DropinStory = {
     render: ({ componentConfiguration, ...checkoutConfig }: PaymentMethodStoryProps<DropinConfiguration>) => {
         // Register all Components
         const { Dropin, ...Components } = components;
@@ -69,32 +68,6 @@ export const StyleCustomization: DropinStory = {
                     {checkout => <ComponentContainer element={new DropinComponent(checkout, componentConfiguration)} />}
                 </Checkout>
             </div>
-        );
-    }
-};
-
-export const OnlySavedACH: DropinStory = {
-    render: ({ componentConfiguration, ...checkoutConfig }: PaymentMethodStoryProps<DropinConfiguration>) => {
-        // Register all Components
-        const { Dropin, ...Components } = components;
-        const Classes = Object.keys(Components).map(key => Components[key]);
-        AdyenCheckout.register(...Classes);
-
-        return (
-            <Checkout checkoutConfig={checkoutConfig}>
-                {checkout => (
-                    <ComponentContainer
-                        element={
-                            new DropinComponent(checkout, {
-                                ...componentConfiguration,
-                                showPaymentMethods: false,
-                                filterStoredPaymentMethods: (storedPaymentMethods: StoredPaymentMethod[]) =>
-                                    storedPaymentMethods.filter(pm => pm.type === 'ach')
-                            })
-                        }
-                    />
-                )}
-            </Checkout>
         );
     }
 };

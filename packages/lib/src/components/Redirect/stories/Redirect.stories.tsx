@@ -11,7 +11,13 @@ const meta: MetaConfiguration<RedirectConfiguration> = {
     title: 'Components/Redirect',
     render: ({ componentConfiguration, ...checkoutConfig }: PaymentMethodStoryProps<RedirectConfiguration>) => (
         <Checkout checkoutConfig={checkoutConfig}>
-            {checkout => <ComponentContainer element={new RedirectElement(checkout, componentConfiguration)} />}
+            {checkout => {
+                if (!checkout.paymentMethodsResponse.paymentMethods.some(pm => pm.type === componentConfiguration.type)) {
+                    return <div>Payment method with type: `{componentConfiguration.type}` is not available</div>;
+                }
+
+                return <ComponentContainer element={new RedirectElement(checkout, componentConfiguration)} />;
+            }}
         </Checkout>
     )
 };
