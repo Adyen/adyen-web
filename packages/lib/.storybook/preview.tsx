@@ -49,7 +49,6 @@ const preview: Preview = {
     parameters: {
         options: {
             storySort: {
-                includeNames: true,
                 order: [
                     'Welcome',
                     'Dropin',
