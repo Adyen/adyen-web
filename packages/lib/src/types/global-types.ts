@@ -189,9 +189,9 @@ export interface PaymentMethodGroup {
     type: string;
 }
 
-export interface ProcessedResponse {
+export interface ProcessedPaymentStatusResponse {
     type: string;
-    props?: object;
+    props?: Record<string, any>;
 }
 
 /**
@@ -355,6 +355,10 @@ export type RawPaymentResponse = PaymentResponseData &
         [key: string]: any;
     };
 
+export type RawPaymentStatusResponse = Pick<RawPaymentResponse, 'resultCode' | 'type'> & {
+    payload?: string | null;
+};
+
 /**
  * onActionHandled is called for all actions:
  *  - qrcode
@@ -399,14 +403,3 @@ export type DecodeObject = {
     error?: string;
     data?: string;
 };
-
-interface PaymentStatusObjectProps {
-    payload?: string | null;
-    resultCode: string;
-    type: string;
-}
-
-export interface PaymentStatusObject {
-    type: string;
-    props: PaymentStatusObjectProps;
-}

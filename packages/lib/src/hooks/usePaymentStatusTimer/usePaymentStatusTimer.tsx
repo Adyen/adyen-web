@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'preact/hooks';
 import checkPaymentStatus from '../../core/Services/payment-status';
-import processResponse from '../../core/ProcessResponse';
+import { processPaymentStatusResponse } from '../../core/ProcessResponse/PaymentStatus';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { CountdownTime } from '../../components/internal/Countdown/types';
 import { PaymentStatusTimerActions, PaymentStatusTimerState, UsePaymentStatusTimerProps } from './types';
@@ -9,7 +9,7 @@ import {
     DEFAULT_PAYMENT_STATUS_TIMER_THROTTLE_INTERVAL_MS,
     DEFAULT_PAYMENT_STATUS_TIMER_THROTTLE_TIME_MS
 } from './constants';
-import { PaymentStatusObject } from '../../types';
+import { AdditionalDetailsData, ProcessedPaymentStatusResponse } from '../../types';
 
 export function usePaymentStatusTimer(props: UsePaymentStatusTimerProps): { state: PaymentStatusTimerState; actions: PaymentStatusTimerActions } {
     const [completed, setCompleted] = useState(false);
@@ -30,36 +30,36 @@ export function usePaymentStatusTimer(props: UsePaymentStatusTimerProps): { stat
         props.onError(new AdyenCheckoutError('ERROR', 'Payment Expired'));
     };
 
-    const onComplete = (status: PaymentStatusObject): void => {
+    const onComplete = (status: ProcessedPaymentStatusResponse): void => {
         setCompleted(true);
         setLoading(false);
 
         if (status.props.payload) {
-            const state = {
+            const additionalDetailsData: AdditionalDetailsData = {
                 data: {
                     details: { payload: status.props.payload },
                     paymentData: props.paymentData
                 }
             };
-            props.onComplete(state);
+            props.onComplete(additionalDetailsData);
         } else {
             setExpired(true);
             props.onError(new AdyenCheckoutError('ERROR', 'successful result, but no payload in response'));
         }
     };
 
-    const onError = (status: PaymentStatusObject): void => {
+    const onError = (status: ProcessedPaymentStatusResponse): void => {
         setExpired(true);
         setLoading(false);
 
         if (status.props.payload) {
-            const state = {
+            const additionalDetailsData: AdditionalDetailsData = {
                 data: {
                     details: { payload: status.props.payload },
                     paymentData: props.paymentData
                 }
             };
-            props.onComplete(state);
+            props.onComplete(additionalDetailsData);
         } else {
             const error = new AdyenCheckoutError('ERROR', 'error result with no payload in response');
             props.onError(error);
@@ -77,12 +77,15 @@ export function usePaymentStatusTimer(props: UsePaymentStatusTimerProps): { stat
         }
 
         return pollStatusFunction()
-            .then(processResponse)
-            .catch(response => ({
-                type: 'network-error',
-                props: response
-            }))
-            .then((status: PaymentStatusObject) => {
+            .then(processPaymentStatusResponse)
+            .catch(
+                (error: unknown) =>
+                    ({
+                        type: 'network-error',
+                        props: error
+                    }) as ProcessedPaymentStatusResponse
+            )
+            .then((status: ProcessedPaymentStatusResponse) => {
                 switch (status.type) {
                     case 'success':
                         onComplete(status);

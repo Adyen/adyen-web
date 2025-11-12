@@ -1,13 +1,5 @@
 import { CountdownTime } from '../../components/internal/Countdown/types';
-import { AdyenCheckoutError, RawPaymentResponse } from '../../types';
-
-export interface PaymentCompeteStatus {
-    data: {
-        details: { payload: string };
-        paymentData?: string;
-    };
-}
-
+import { AdditionalDetailsData, AdyenCheckoutError, RawPaymentResponse, RawPaymentStatusResponse } from '../../types';
 export interface PaymentStatusTimerState {
     completed: boolean;
     expired: boolean;
@@ -29,8 +21,8 @@ export interface UsePaymentStatusTimerProps {
     throttleTime?: number;
     throttleInterval?: number;
     onError: (error: AdyenCheckoutError) => void;
-    onComplete: (status: PaymentCompeteStatus) => void;
-    pollStatus?: () => Promise<RawPaymentResponse>;
+    onComplete: (status: AdditionalDetailsData) => void;
+    pollStatus?: () => Promise<RawPaymentResponse | RawPaymentStatusResponse>;
     onActionHandled?: (payload: { componentType: string; actionDescription: string }) => void;
     type: string;
 }
