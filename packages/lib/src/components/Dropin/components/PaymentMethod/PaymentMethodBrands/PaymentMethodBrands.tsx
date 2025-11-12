@@ -4,8 +4,8 @@ import PaymentMethodIcon from '../PaymentMethodIcon';
 import { getFullBrandName } from '../../../../Card/components/CardInput/utils';
 import { useCoreContext } from '../../../../../core/Context/CoreProvider';
 
-const prepareVisibleBrands = (allowedBrands: Array<BrandConfiguration>) => {
-    const visibleBrands = allowedBrands.length <= 4 ? allowedBrands : allowedBrands.slice(0, 3);
+const prepareVisibleBrands = (allowedBrands: Array<BrandConfiguration>, showAllBrands: boolean) => {
+    const visibleBrands = showAllBrands || allowedBrands.length <= 4 ? allowedBrands : allowedBrands.slice(0, 3);
     return {
         visibleBrands,
         leftBrandsAmount: allowedBrands.length - visibleBrands.length
@@ -18,6 +18,7 @@ interface PaymentMethodBrandsProps {
     isPaymentMethodSelected: boolean;
     keepBrandsVisible?: boolean;
     showOtherInsteadOfNumber?: boolean;
+    showAllBrands?: boolean;
 }
 
 const PaymentMethodBrands = ({
@@ -25,7 +26,8 @@ const PaymentMethodBrands = ({
     excludedUIBrands = [],
     isPaymentMethodSelected,
     keepBrandsVisible = false,
-    showOtherInsteadOfNumber = false
+    showOtherInsteadOfNumber = false,
+    showAllBrands = false
 }: PaymentMethodBrandsProps) => {
     const { i18n } = useCoreContext();
 
@@ -34,7 +36,7 @@ const PaymentMethodBrands = ({
     }
 
     const allowedBrands = brands.filter(brand => !excludedUIBrands?.includes(brand.name));
-    const { visibleBrands, leftBrandsAmount } = prepareVisibleBrands(allowedBrands);
+    const { visibleBrands, leftBrandsAmount } = prepareVisibleBrands(allowedBrands, showAllBrands);
 
     return (
         <span className="adyen-checkout__payment-method__brands">
