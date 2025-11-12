@@ -5,6 +5,7 @@
     "minimumReleaseAge": "21 days",
     "internalChecksFilter": "strict",
     "rebaseWhen": "behind-base-branch",
+    "prConcurrentLimit": 5,
     "packageRules": [
         {
             "matchPackageNames": ["node", "@adyen/**"],
