@@ -12,8 +12,6 @@ import { AnalyticsErrorEvent, ErrorEventCode, ErrorEventType } from '../../core/
  * behaves like the /details endpoint but doesn't require the same credentials
  */
 export default function callSubmit3DS2Fingerprint({ data }): void {
-    console.log('callSubmit3DS2Fingerprint', data);
-
     httpPost<ThreeDS2FingerprintResponse>(
         {
             path: `v1/submitThreeDS2Fingerprint?token=${this.props.clientKey}`,

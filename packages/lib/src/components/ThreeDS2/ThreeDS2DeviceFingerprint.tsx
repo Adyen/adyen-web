@@ -26,8 +26,6 @@ class ThreeDS2DeviceFingerprint extends UIElement<ThreeDS2DeviceFingerprintConfi
     }
 
     protected onActionHandled = (rtnObj: ActionHandledReturnObject) => {
-        console.log('ThreeDS2DeviceFingerprint', this.props);
-
         const event = new AnalyticsLogEvent({
             component: this.type,
             type: LogEventType.threeDS2,
