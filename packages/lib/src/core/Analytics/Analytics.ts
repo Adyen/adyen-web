@@ -1,6 +1,6 @@
 import CollectId from '../Services/analytics/collect-id';
 import EventsQueue, { EventsQueueModule } from './EventsQueue';
-import { AnalyticsEventCategory, AnalyticsInitialEvent, AnalyticsObject, AnalyticsProps } from './types';
+import { AnalyticsEventCategory, AnalyticsInitialEvent, AnalyticsProps } from './types';
 import { ANALYTIC_LEVEL, ANALYTICS_INFO_TIMER_INTERVAL, ANALYTICS_PATH, ANALYTICS_EVENT } from './constants';
 import { debounce } from '../../utils/debounce';
 import { AnalyticsModule } from '../../types/global-types';
@@ -49,9 +49,9 @@ const Analytics = ({ locale, clientKey, analytics, analyticsContext }: Analytics
         return Promise.resolve(null);
     };
 
-    const addAnalyticsEvent = (eventCat: AnalyticsEventCategory, obj: AnalyticsObject) => {
+    const addAnalyticsEvent = (eventCat: AnalyticsEventCategory, event: AnalyticsEvent) => {
         const arrayName = eventCat === ANALYTICS_EVENT.info ? eventCat : `${eventCat}s`;
-        eventsQueue.add(`${arrayName}`, obj);
+        eventsQueue.add(`${arrayName}`, event);
 
         /**
          * The logic is:

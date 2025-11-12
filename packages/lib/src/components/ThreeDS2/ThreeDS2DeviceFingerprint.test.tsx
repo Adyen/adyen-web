@@ -3,6 +3,7 @@ import { Analytics3DS2Errors, ANALYTICS_ERROR_TYPE } from '../../core/Analytics/
 import { THREEDS2_FINGERPRINT_ERROR } from './constants';
 import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 import { render } from '@testing-library/preact';
+import { FingerprintResolveData } from './types';
 
 describe('ThreeDS2DeviceFingerprint', () => {
     describe('Analytics', () => {
@@ -44,35 +45,44 @@ describe('ThreeDS2DeviceFingerprint', () => {
         });
     });
 
-    test('ThreeDS2DeviceFingerprint - when onComplete is called handleAdditionalDetails should then be called ', () => {
-        const spy = jest.spyOn(fingerprint, 'handleAdditionalDetails');
+    describe('Additional details callbacks priority', () => {
+        test('should call default additional details flow if "onComplete" is not present', () => {
+            const core = setupCoreMock();
 
-        fingerprint.onComplete({ foo: 'bar' });
+            const fingerprintComponent = new ThreeDS2DeviceFingerprint(core, {
+                token: 'xxx',
+                onError: () => {},
+                showSpinner: null
+            });
 
-        expect(spy).toHaveBeenCalledWith({ foo: 'bar' });
-    });
+            // @ts-ignore - spying internal method
+            const spy = jest.spyOn(fingerprintComponent, 'handleAdditionalDetails');
+            const fingerprintResolveData: FingerprintResolveData = { data: { paymentData: 'xxx' } };
 
-    test('ThreeDS2DeviceFingerprint - when onComplete is called the passed onComplete function should then be called', () => {
-        const onComplete = jest.fn();
+            fingerprintComponent.onComplete(fingerprintResolveData);
 
-        const nuFingerprint = new ThreeDS2DeviceFingerprint(global.core, {
-            onActionHandled: () => {},
-            modules: {
-                analytics: analyticsModule
-            },
-            onError: () => {},
-            showSpinner: null,
-            onComplete
+            expect(spy).toHaveBeenCalledWith(fingerprintResolveData);
         });
 
-        // @ts-ignore - spied on function does exist
-        const spy = jest.spyOn(nuFingerprint, 'handleAdditionalDetails');
+        test('should call "onComplete" if available', () => {
+            const onComplete = jest.fn();
+            const core = setupCoreMock();
 
-        // @ts-ignore - we don't care about the type
-        nuFingerprint.onComplete({ foo: 'bar' });
+            const fingerprintComponent = new ThreeDS2DeviceFingerprint(core, {
+                token: 'xxx',
+                onError: () => {},
+                showSpinner: null,
+                onComplete
+            });
 
-        expect(onComplete).toHaveBeenCalledWith({ foo: 'bar' }, nuFingerprint);
+            // @ts-ignore - spying internal method
+            const spy = jest.spyOn(fingerprintComponent, 'handleAdditionalDetails');
+            const fingerprintResolveData: FingerprintResolveData = { data: { paymentData: 'xxx' } };
 
-        expect(spy).not.toHaveBeenCalled();
+            fingerprintComponent.onComplete(fingerprintResolveData);
+
+            expect(onComplete).toHaveBeenCalledWith(fingerprintResolveData, fingerprintComponent);
+            expect(spy).not.toHaveBeenCalled();
+        });
     });
 });

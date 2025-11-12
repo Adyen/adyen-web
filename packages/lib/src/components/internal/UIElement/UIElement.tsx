@@ -84,26 +84,26 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
      * @param configSetByMerchant
      * @private
      */
-    private createBeforeRenderHook(props: P): void {
+    private createBeforeRenderHook(configSetByMerchant: P): void {
         const originalRender = this.render;
 
         this.render = (...args: any[]) => {
-            this.beforeRender(props);
+            this.beforeRender(configSetByMerchant);
             return originalRender.apply(this, args);
         };
     }
 
-    protected beforeRender(props?: P): void {
+    protected beforeRender(configSetByMerchant?: P): void {
         // We don't send 'rendered' events when rendering actions
-        if (props?.originalAction) {
+        if (configSetByMerchant?.originalAction) {
             return;
         }
 
         const event = new AnalyticsInfoEvent({
             type: InfoEventType.rendered,
             component: this.type,
-            configData: { ...props, showPayButton: this.props.showPayButton },
-            ...(props?.oneClick && { isStoredPaymentMethod: true })
+            configData: { ...configSetByMerchant, showPayButton: this.props.showPayButton },
+            ...(configSetByMerchant?.oneClick && { isStoredPaymentMethod: true })
         });
 
         this.analytics.sendAnalytics(event);
@@ -151,6 +151,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
      *  Get the payment method from the paymentMethodsResponse
      *
      * @param type - The type of the payment method to get. (This prop is passed by Drop-in OR Standalone components containing the property 'type' as part of their configuration)
+     * @param paymentMethodId - Unique internal payment method ID
      */
     protected getPaymentMethodFromPaymentMethodsResponse(type?: string, paymentMethodId?: string): RawPaymentMethod {
         if (paymentMethodId) return this.core.paymentMethodsResponse.findById(paymentMethodId);
@@ -235,19 +236,9 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         }
     }
 
-    /** Work out what the component's "type" is:
-     * - first check for a dedicated "analyticsType" (currently only applies to custom-cards)
-     * - otherwise, distinguish cards from non-cards: cards will use their static type property, everything else will use props.type
-     */
     private getComponent({ component }: AnalyticsEvent): string {
         if (component) {
             return component;
-        }
-        if (this.constructor['analyticsType']) {
-            return this.constructor['analyticsType'];
-        }
-        if (this.constructor['type'] === 'scheme' || this.constructor['type'] === 'bcmc') {
-            return this.constructor['type'];
         }
         return this.type;
     }
@@ -300,14 +291,13 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     }
 
     private async submitUsingAdvancedFlow(): Promise<CheckoutAdvancedFlowResponse> {
-        return new Promise<CheckoutAdvancedFlowResponse>((resolve, reject) => {
-            // Call analytics endpoint
-            const event = new AnalyticsLogEvent({
-                type: ANALYTICS_SUBMIT_STR,
-                message: 'Shopper clicked pay'
-            });
-            this.submitAnalytics(event);
+        const event = new AnalyticsLogEvent({
+            type: ANALYTICS_SUBMIT_STR,
+            message: 'Shopper clicked pay'
+        });
+        this.submitAnalytics(event);
 
+        return new Promise<CheckoutAdvancedFlowResponse>((resolve, reject) => {
             this.props.onSubmit(
                 {
                     data: this.data,

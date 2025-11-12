@@ -22,7 +22,7 @@ class ThreeDS2Challenge extends UIElement<ThreeDS2ChallengeConfiguration> {
         type: THREEDS2_CHALLENGE
     };
 
-    protected beforeRender() {
+    protected override beforeRender() {
         /* Do not send rendered events for ThreeDS2Challenge */
     }
 

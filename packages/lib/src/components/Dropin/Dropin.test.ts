@@ -280,7 +280,6 @@ describe('Dropin', () => {
     describe('Analytics', () => {
         test('should send the "render" event with drop-in config data', () => {
             const srPanel = mock<SRPanel>();
-            // srPanel.props.moveFocus = false;
 
             const core = setupCoreMock();
 
@@ -295,7 +294,7 @@ describe('Dropin', () => {
                     type: ANALYTICS_RENDERED_STR,
                     component: 'dropin',
                     configData: {
-                        instantPaymentTypes: '["googlepay"]',
+                        instantPaymentTypes: 'googlepay',
                         showPayButton: true
                     }
                 })

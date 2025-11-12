@@ -1,23 +1,24 @@
 import EventsQueue from './EventsQueue';
 import { ANALYTICS_PATH } from './constants';
+import { AnalyticsInfoEvent } from './AnalyticsInfoEvent';
 
-const task1 = { foo: 'bar', timestamp: '1234', component: 'scheme', id: '678' };
+const event = new AnalyticsInfoEvent({ type: 'rendered', component: 'scheme' });
 
 describe('CAEventsQueue', () => {
     const queue = EventsQueue({ analyticsContext: 'https://mydomain.com', clientKey: 'fsdjkh', analyticsPath: ANALYTICS_PATH });
 
     test('adds log to the queue', () => {
-        queue.add('logs', task1);
+        queue.add('logs', event);
         expect(queue.getQueue().logs.length).toBe(1);
     });
 
     test('adds event to the queue', () => {
-        queue.add('info', task1);
+        queue.add('info', event);
         expect(queue.getQueue().info.length).toBe(1);
     });
 
     test('adds error to the queue', () => {
-        queue.add('errors', task1);
+        queue.add('errors', event);
         expect(queue.getQueue().errors.length).toBe(1);
     });
 
