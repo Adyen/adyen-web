@@ -213,7 +213,7 @@ describe('GooglePay', () => {
                 });
             });
 
-            new GooglePay(core, {
+            const gpay = new GooglePay(core, {
                 configuration: { merchantId: 'merchant-id', gatewayMerchantId: 'gateway-id' },
                 i18n: global.i18n,
                 onSubmit: onSubmitMock
@@ -240,6 +240,8 @@ describe('GooglePay', () => {
             });
             expect(state.data.deliveryAddress).toBeUndefined();
             expect(state.data.billingAddress).toBeUndefined();
+
+            expect(onSubmitMock.mock.calls[0][1]).toBe(gpay);
         });
 
         test('should pass error to GooglePay if payment failed', async () => {

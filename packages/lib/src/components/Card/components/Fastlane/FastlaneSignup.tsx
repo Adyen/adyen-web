@@ -13,7 +13,7 @@ import mobileNumberFormatter from './utils/mobile-number-formatter';
 import type { FastlaneSignupConfiguration } from '../../../PayPalFastlane/types';
 
 import './FastlaneSignup.scss';
-import { AnalyticsInfoEvent, InfoEventType } from '../../../../core/Analytics/events/AnalyticsInfoEvent';
+import { AnalyticsInfoEvent, InfoEventType, UiTarget } from '../../../../core/Analytics/events/AnalyticsInfoEvent';
 import { AbstractAnalyticsEvent } from '../../../../core/Analytics/events/AbstractAnalyticsEvent';
 
 type FastlaneSignupProps = FastlaneSignupConfiguration & {
@@ -63,7 +63,7 @@ const FastlaneSignup = ({
         const event = new AnalyticsInfoEvent({
             component: type,
             type: InfoEventType.clicked,
-            target: 'fastlane_signup_consent_toggle',
+            target: UiTarget.fastlaneSignupConsentToggle,
             configData: {
                 isToggleOn: newValue
             }

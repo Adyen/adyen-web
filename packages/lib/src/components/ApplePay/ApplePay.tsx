@@ -18,7 +18,7 @@ import { detectInIframe } from '../../utils/detectInIframe';
 import type { ApplePayConfiguration, ApplePayElementData, ApplePayPaymentOrderDetails, ApplePaySessionRequest } from './types';
 import type { ICore } from '../../core/types';
 import type { PaymentResponseData, RawPaymentResponse } from '../../types/global-types';
-import { AnalyticsInfoEvent, InfoEventType } from '../../core/Analytics/events/AnalyticsInfoEvent';
+import { AnalyticsInfoEvent, InfoEventType, UiTarget } from '../../core/Analytics/events/AnalyticsInfoEvent';
 
 const LATEST_APPLE_PAY_VERSION = 14;
 
@@ -110,7 +110,7 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
 
     public override submit = (): void => {
         if (this.props.isInstantPayment) {
-            const event = new AnalyticsInfoEvent({ component: this.type, type: InfoEventType.selected, target: 'instant_payment_button' });
+            const event = new AnalyticsInfoEvent({ component: this.type, type: InfoEventType.selected, target: UiTarget.instantPaymentButton });
             this.submitAnalytics(event);
         }
         void this.startSession();

@@ -20,10 +20,6 @@ export const ANALYTICS_EVENT = {
 
 export const ANALYTICS_QR_CODE_DOWNLOAD = 'qr_download_button';
 
-export const ANALYTICS_FEATURED_ISSUER = 'featured_issuer';
-export const ANALYTICS_LIST = 'list';
-export const ANALYTICS_LIST_SEARCH = 'list_search';
-
 /**
  * Function to map errorCodes based on translation keys to the codes expected by the analytics endpoint
  */

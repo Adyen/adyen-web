@@ -5,7 +5,7 @@ import { mapErrorCodesForAnalytics } from '../utils';
 type AnalyticsInfoEventProps = {
     type: InfoEventType;
     component: string;
-    target?: string;
+    target?: UiTarget;
     issuer?: string;
     isExpress?: boolean;
     expressPage?: string;
@@ -16,6 +16,18 @@ type AnalyticsInfoEventProps = {
     configData?: Record<string, any>;
     cdnUrl?: string;
 };
+
+export enum UiTarget {
+    instantPaymentButton = 'instant_payment_button',
+    dualBrandButton = 'dual_brand_button',
+    fastlaneSignupConsentToggle = 'fastlane_signup_consent_toggle',
+    otherPaymentMethodButton = 'otherpaymentmethod_button',
+    featuredIssuer = 'featured_issuer',
+    list = 'list',
+    listSearch = 'list_search',
+    qrDownloadButton = 'qr_download_button',
+    cardNumber = 'card_number'
+}
 
 export enum InfoEventType {
     /** When a UI element is clicked */
@@ -65,7 +77,7 @@ export class AnalyticsInfoEvent extends AbstractAnalyticsEvent {
      * @private
      */
     private readonly configData?: Record<string, string | boolean>;
-    private readonly target: string;
+    private readonly target?: UiTarget;
     private readonly issuer?: string;
     private readonly isExpress?: boolean;
     private readonly expressPage?: string;
@@ -84,7 +96,6 @@ export class AnalyticsInfoEvent extends AbstractAnalyticsEvent {
 
         this.type = props.type;
 
-        if (props.target !== undefined) this.target = props.target;
         if (props.target !== undefined) this.target = props.target;
         if (props.issuer !== undefined) this.issuer = props.issuer;
         if (props.isStoredPaymentMethod !== undefined) this.isStoredPaymentMethod = props.isStoredPaymentMethod;

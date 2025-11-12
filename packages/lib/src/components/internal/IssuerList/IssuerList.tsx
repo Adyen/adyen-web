@@ -16,9 +16,9 @@ import { setFocusOnField } from '../../../utils/setFocus';
 import DisclaimerMessage from '../DisclaimerMessage';
 import Select from '../FormFields/Select';
 import { SelectTargetObject } from '../FormFields/Select/types';
-import { ANALYTICS_FEATURED_ISSUER, ANALYTICS_LIST, ANALYTICS_LIST_SEARCH, ANALYTICS_SEARCH_DEBOUNCE_TIME } from '../../../core/Analytics/constants';
+import { ANALYTICS_SEARCH_DEBOUNCE_TIME } from '../../../core/Analytics/constants';
 import { debounce } from '../../../utils/debounce';
-import { AnalyticsInfoEvent, InfoEventType } from '../../../core/Analytics/events/AnalyticsInfoEvent';
+import { AnalyticsInfoEvent, InfoEventType, UiTarget } from '../../../core/Analytics/events/AnalyticsInfoEvent';
 
 const payButtonLabel = ({ issuer, items }, i18n): string => {
     const issuerName = items.find(i => i.id === issuer)?.name;
@@ -72,7 +72,7 @@ function IssuerList({
 
     const handleInputChange = useCallback(
         (type: IssuerListInputTypes) => (event: h.JSX.TargetedKeyboardEvent<HTMLInputElement>) => {
-            const target = type === IssuerListInputTypes.Dropdown ? ANALYTICS_LIST : ANALYTICS_FEATURED_ISSUER;
+            const target = type === IssuerListInputTypes.Dropdown ? UiTarget.list : UiTarget.featuredIssuer;
             const issuerObj = items.find(issuer => issuer.id === (event.target as SelectTargetObject).value);
 
             const analyticsEvent = new AnalyticsInfoEvent({
@@ -95,7 +95,7 @@ function IssuerList({
                 const event = new AnalyticsInfoEvent({
                     component: props.type,
                     type: InfoEventType.displayed,
-                    target: ANALYTICS_LIST
+                    target: UiTarget.list
                 });
                 props.onSubmitAnalytics(event);
             }
@@ -106,7 +106,7 @@ function IssuerList({
     const debounceSearchAnalytics = useRef(debounce(props.onSubmitAnalytics, ANALYTICS_SEARCH_DEBOUNCE_TIME));
 
     const handleSearch = useCallback(() => {
-        debounceSearchAnalytics.current({ type: InfoEventType.input, target: ANALYTICS_LIST_SEARCH });
+        debounceSearchAnalytics.current({ type: InfoEventType.input, target: UiTarget.listSearch });
     }, []);
 
     useEffect(() => {

@@ -2,7 +2,7 @@ import Analytics from './Analytics';
 import collectId from '../Services/analytics/collect-id';
 import wait from '../../utils/wait';
 import { DEFAULT_DEBOUNCE_TIME_MS } from '../../utils/debounce';
-import { AnalyticsInfoEvent, InfoEventType } from './events/AnalyticsInfoEvent';
+import { AnalyticsInfoEvent, InfoEventType, UiTarget } from './events/AnalyticsInfoEvent';
 import { AnalyticsErrorEvent, ErrorEventType } from './events/AnalyticsErrorEvent';
 import { AnalyticsLogEvent, LogEventType } from './events/AnalyticsLogEvent';
 import { AnalyticsProps } from './types';
@@ -101,7 +101,7 @@ describe('Analytics', () => {
             const event = new AnalyticsInfoEvent({
                 component: 'scheme',
                 type: InfoEventType.validationError,
-                target: 'card_number',
+                target: UiTarget.cardNumber,
                 validationErrorCode: 'cc.num.901',
                 validationErrorMessage: 'error-msg-incorrectly-filled-pan'
             });

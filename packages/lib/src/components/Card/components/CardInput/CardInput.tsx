@@ -32,9 +32,7 @@ import { fieldTypeToSnakeCase } from '../../../internal/SecuredFields/utils';
 import { getErrorMessageFromCode } from '../../../../core/Errors/utils';
 import { SF_ErrorCodes } from '../../../../core/Errors/constants';
 import { usePrevious } from '../../../../utils/hookUtils';
-import { AnalyticsInfoEvent, InfoEventType } from '../../../../core/Analytics/events/AnalyticsInfoEvent';
-
-const DUAL_BRAND_BUTTON = 'dual_brand_button';
+import { AnalyticsInfoEvent, InfoEventType, UiTarget } from '../../../../core/Analytics/events/AnalyticsInfoEvent';
 
 const CardInput = (props: CardInputProps) => {
     const sfp = useRef(null);
@@ -455,7 +453,7 @@ const CardInput = (props: CardInputProps) => {
             const event = new AnalyticsInfoEvent({
                 component: props.type,
                 type: InfoEventType.displayed,
-                target: DUAL_BRAND_BUTTON,
+                target: UiTarget.dualBrandButton,
                 brand,
                 configData: { dualBrands }
             });
@@ -474,7 +472,7 @@ const CardInput = (props: CardInputProps) => {
             const event = new AnalyticsInfoEvent({
                 component: props.type,
                 type: InfoEventType.selected,
-                target: DUAL_BRAND_BUTTON,
+                target: UiTarget.dualBrandButton,
                 brand: selectedBrandValue
             });
 

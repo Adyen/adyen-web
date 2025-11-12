@@ -4,8 +4,7 @@ import { h } from 'preact';
 import IssuerList from './IssuerList';
 import PayButton from '../PayButton';
 import { CoreProvider } from '../../../core/Context/CoreProvider';
-import { ANALYTICS_FEATURED_ISSUER, ANALYTICS_LIST } from '../../../core/Analytics/constants';
-import { InfoEventType } from '../../../core/Analytics/events/AnalyticsInfoEvent';
+import { InfoEventType, UiTarget } from '../../../core/Analytics/events/AnalyticsInfoEvent';
 
 /**
  * DON'T USE THIS FILE
@@ -202,7 +201,7 @@ describe('Analytics', () => {
         expect(onSubmitAnalytics).toHaveBeenCalledWith(
             expect.objectContaining({
                 type: InfoEventType.selected,
-                target: ANALYTICS_FEATURED_ISSUER,
+                target: UiTarget.featuredIssuer,
                 issuer: 'Issuer 3'
             })
         );
@@ -237,7 +236,7 @@ describe('Analytics', () => {
         expect(onSubmitAnalytics).toHaveBeenCalledWith(
             expect.objectContaining({
                 type: InfoEventType.selected,
-                target: ANALYTICS_LIST,
+                target: UiTarget.list,
                 issuer: 'Issuer 2'
             })
         );
