@@ -1,18 +1,18 @@
 import { Fragment, h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 import { PayByBankPix } from '../../..';
-import { MetaConfiguration, PaymentMethodStoryProps } from '../../../../../storybook/types';
-import { AdyenCheckout, OnChangeData, UIElement } from '../../../../types';
+import { MetaConfiguration, PaymentMethodStoryProps } from '../../../../storybook/types';
+import { AdyenCheckout, OnChangeData, UIElement } from '../../../types';
 import { DropinConfiguration } from '../../types';
-import { handleError, handleFinalState } from '../../../../../storybook/helpers/checkout-handlers';
+import { handleError, handleFinalState } from '../../../../storybook/helpers/checkout-handlers';
 import DropinComponent from '../../Dropin';
-import { getSearchParameter } from '../../../../../storybook/utils/get-query-parameters';
-import { Checkout } from '../../../../../storybook/components/Checkout';
-import { ComponentContainer } from '../../../../../storybook/components/ComponentContainer';
-import { mockEnrollmentPayload } from '../../../PayByBankPix/stories/mocks';
+import { getSearchParameter } from '../../../../storybook/utils/get-query-parameters';
+import { Checkout } from '../../../../storybook/components/Checkout';
+import { ComponentContainer } from '../../../../storybook/components/ComponentContainer';
+import { mockEnrollmentPayload } from '../../PayByBankPix/stories/mocks';
 
 const meta: MetaConfiguration<DropinConfiguration> = {
-    title: 'Components/Dropin/PayByBankPix',
+    title: 'Components/PayByBankPix/Dropin',
     argTypes: {
         componentConfiguration: {
             control: 'object'
@@ -91,7 +91,7 @@ export const CreateEnrollment = {
         showPayButton: true,
         sessionData: {
             ...mockEnrollmentPayload,
-            returnUrl: `${globalThis.location.origin}/iframe.html?args=&globals=&id=components-dropin-paybybankpix--create-enrollment&viewMode=story`
+            returnUrl: `${globalThis.location.origin}/iframe.html?args=&globals=&id=components-paybybankpix-dropin--create-enrollment&viewMode=story`
         },
         redirectResult: getSearchParameter('redirectResult'),
         sessionId: getSearchParameter('sessionId'),
@@ -121,7 +121,7 @@ export const PayWithEnrolledDevice = {
         showPayButton: true,
         sessionData: {
             ...mockEnrollmentPayload,
-            returnUrl: `${globalThis.location.origin}/iframe.html?args=&globals=&id=components-dropin-paybybankpix--create-enrollment&viewMode=story`
+            returnUrl: `${globalThis.location.origin}/iframe.html?args=&globals=&id=components-paybybankpix-dropin--create-enrollment&viewMode=story`
         },
         componentConfiguration: {
             showRemovePaymentMethodButton: false,

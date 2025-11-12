@@ -8,7 +8,7 @@ import { StoryConfiguration } from '../../../../storybook/types';
 import type { UIElementProps } from '../UIElement/types';
 
 const meta: Meta = {
-    title: 'Internals/Address',
+    title: 'Internal Elements/Address',
     component: Address,
     argTypes: {
         size: {

@@ -3,7 +3,7 @@ import { Meta, StoryObj } from '@storybook/preact';
 import { Timeline } from './Timeline';
 
 const meta: Meta = {
-    title: 'Internals/Timeline',
+    title: 'Internal Elements/Timeline',
     component: Timeline
 };
 
