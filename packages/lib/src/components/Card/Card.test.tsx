@@ -4,6 +4,10 @@ import { render, screen, waitFor } from '@testing-library/preact';
 import { CoreProvider } from '../../core/Context/CoreProvider';
 import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 import PaymentMethods from '../../core/ProcessResponse/PaymentMethods';
+import { ANALYTICS_FOCUS_STR, ANALYTICS_UNFOCUS_STR } from '../../core/Analytics/constants';
+import { InfoEventType } from '../../core/Analytics/AnalyticsInfoEvent';
+import { CardFocusData } from '../internal/SecuredFields/lib/types';
+import { mock } from 'jest-mock-extended';
 
 describe('Card', () => {
     describe('formatProps', function () {
@@ -317,6 +321,114 @@ describe('Card', () => {
             const card = new CardElement(global.core, { ...rawStoredCardData });
             expect(card.props).not.toBe(undefined);
             expect(card.props.storedPaymentMethodId).toBe(undefined);
+        });
+    });
+
+    describe('Analytics', () => {
+        test('should send "rendered" event when the component is rendered', () => {
+            const core = setupCoreMock();
+            const card = new CardElement(core, {
+                i18n: global.i18n,
+                modules: { resources: global.resources, srPanel: global.srPanel }
+            });
+
+            render(card.render());
+
+            expect(core.modules.analytics.sendAnalytics).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    type: InfoEventType.rendered,
+                    component: 'scheme',
+                    configData: {
+                        showPayButton: true
+                    },
+                    id: expect.any(String),
+                    timestamp: expect.any(String)
+                })
+            );
+        });
+
+        test('should send "rendered" event flagging as stored payment method when stored card is rendered', () => {
+            const core = setupCoreMock();
+            const card = new CardElement(core, {
+                i18n: global.i18n,
+                oneClick: true,
+                brand: 'visa',
+                modules: { resources: global.resources, srPanel: global.srPanel }
+            });
+
+            render(card.render());
+
+            expect(core.modules.analytics.sendAnalytics).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    type: InfoEventType.rendered,
+                    isStoredPaymentMethod: true,
+                    brand: 'visa',
+                    component: 'scheme',
+                    configData: {
+                        brand: 'visa',
+                        showPayButton: true
+                    },
+                    id: expect.any(String),
+                    timestamp: expect.any(String)
+                })
+            );
+        });
+
+        test('should send "focus" event when the onFocus is called', () => {
+            const core = setupCoreMock();
+            const card = new CardElement(core);
+
+            const cardFocus = mock<CardFocusData>({
+                action: 'focus',
+                fieldType: 'encryptedCardNumber',
+                type: 'card',
+                currentFocusObject: 'encryptedCardNumber'
+            });
+
+            // @ts-ignore  The only way to test the focus event on unit test level is by calling the private method
+            card.onFocus({
+                fieldType: 'encryptedCardNumber',
+                event: cardFocus
+            });
+
+            expect(core.modules.analytics.sendAnalytics).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    component: 'scheme',
+                    type: ANALYTICS_FOCUS_STR,
+                    target: 'card_number',
+                    id: expect.any(String),
+                    timestamp: expect.any(String)
+                })
+            );
+        });
+
+        test('should send "unfocus" event when the onBlur is called', () => {
+            const core = setupCoreMock();
+            const card = new CardElement(core);
+
+            const cardFocus = mock<CardFocusData>({
+                action: 'focus',
+                focus: false,
+                fieldType: 'encryptedCardNumber',
+                type: 'card',
+                currentFocusObject: 'encryptedCardNumber'
+            });
+
+            // @ts-ignore  The only way to test the blur event on unit test level is by calling the private method
+            card.onBlur({
+                fieldType: 'encryptedCardNumber',
+                event: cardFocus
+            });
+
+            expect(core.modules.analytics.sendAnalytics).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    component: 'scheme',
+                    type: ANALYTICS_UNFOCUS_STR,
+                    target: 'card_number',
+                    id: expect.any(String),
+                    timestamp: expect.any(String)
+                })
+            );
         });
     });
 });

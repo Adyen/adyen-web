@@ -10,12 +10,7 @@ import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { DecodeObject } from '../../types/global-types';
 import { TxVariants } from '../tx-variants';
 import { sanitizeResponse, verifyPaymentDidNotFail } from '../internal/UIElement/utils';
-import {
-    ANALYTICS_EXPRESS_PAGES_ARRAY,
-    ANALYTICS_INSTANT_PAYMENT_BUTTON,
-    ANALYTICS_RENDERED_STR,
-    ANALYTICS_SELECTED_STR
-} from '../../core/Analytics/constants';
+import { ANALYTICS_INSTANT_PAYMENT_BUTTON, ANALYTICS_SELECTED_STR } from '../../core/Analytics/constants';
 import { resolveSupportedVersion } from './utils/resolve-supported-version';
 import { formatApplePayContactToAdyenAddressFormat } from './utils/format-applepay-contact-to-adyen-format';
 import { mapBrands } from './utils/map-adyen-brands-to-applepay-brands';
@@ -24,8 +19,7 @@ import { detectInIframe } from '../../utils/detectInIframe';
 import type { ApplePayConfiguration, ApplePayElementData, ApplePayPaymentOrderDetails, ApplePaySessionRequest } from './types';
 import type { ICore } from '../../core/types';
 import type { PaymentResponseData, RawPaymentResponse } from '../../types/global-types';
-import { AnalyticsEvent } from '../../core/Analytics/AnalyticsEvent';
-import { AnalyticsInfoEvent } from '../../core/Analytics/AnalyticsInfoEvent';
+import { AnalyticsInfoEvent, InfoEventType } from '../../core/Analytics/AnalyticsInfoEvent';
 
 const LATEST_APPLE_PAY_VERSION = 14;
 
@@ -103,22 +97,16 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
         };
     }
 
-    protected submitAnalytics(analyticsObj: AnalyticsEvent) {
-        // Analytics will need to know about this.props.isExpress & this.props.expressPage
-        if (analyticsObj instanceof AnalyticsInfoEvent && analyticsObj.type === ANALYTICS_RENDERED_STR) {
-            const { isExpress, expressPage } = this.props;
-            const hasExpressPage = expressPage && ANALYTICS_EXPRESS_PAGES_ARRAY.includes(expressPage);
+    protected override beforeRender(configSetByMerchant?: ApplePayConfiguration) {
+        const event = new AnalyticsInfoEvent({
+            type: InfoEventType.rendered,
+            component: this.type,
+            configData: { ...configSetByMerchant, showPayButton: this.props.showPayButton },
+            ...(configSetByMerchant?.isExpress && { isExpress: configSetByMerchant.isExpress }),
+            ...(configSetByMerchant?.expressPage && { expressPage: configSetByMerchant.expressPage })
+        });
 
-            if (typeof isExpress === 'boolean') {
-                analyticsObj.isExpress = isExpress;
-            }
-
-            if (isExpress === true && hasExpressPage) {
-                analyticsObj.expressPage = expressPage; // We only care about the expressPage value if isExpress is true
-            }
-        }
-
-        super.submitAnalytics(analyticsObj);
+        this.analytics.sendAnalytics(event);
     }
 
     public override submit = (): void => {

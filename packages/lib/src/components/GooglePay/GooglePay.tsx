@@ -57,6 +57,7 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
      * If the merchant creates a standalone Google Pay component, we need to verify if the payment method is available using both tx variants
      *
      * @param type
+     * @param paymentMethodId - Unique internal payment method ID
      * @returns
      */
     protected override getPaymentMethodFromPaymentMethodsResponse(type?: string, paymentMethodId?: string): RawPaymentMethod {
@@ -134,13 +135,18 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
         return DEFAULT_ALLOWED_CARD_NETWORKS;
     }
 
-    protected override beforeRender(configSetByMerchant: GooglePayConfiguration) {
+    protected override beforeRender(configSetByMerchant?: GooglePayConfiguration) {
+        // We don't send 'rendered' events when rendering actions
+        if (configSetByMerchant?.originalAction) {
+            return;
+        }
+
         const event = new AnalyticsInfoEvent({
             type: InfoEventType.rendered,
             component: this.type,
             configData: { ...configSetByMerchant, showPayButton: this.props.showPayButton },
-            ...(configSetByMerchant?.isExpress && { isExpress: this.props.isExpress }),
-            ...(configSetByMerchant?.expressPage && { expressPage: this.props.expressPage })
+            ...(configSetByMerchant?.isExpress && { isExpress: configSetByMerchant.isExpress }),
+            ...(configSetByMerchant?.expressPage && { expressPage: configSetByMerchant.expressPage })
         });
 
         this.analytics.sendAnalytics(event);

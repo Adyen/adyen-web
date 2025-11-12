@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import Giftcard from './Giftcard';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
+import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 
 const flushPromises = () => new Promise(process.nextTick);
 
@@ -22,6 +23,7 @@ describe('Giftcard Error Handling', () => {
 
     describe('Balance Check Error Messages', () => {
         test('should display "no-balance" error message when balance is zero', async () => {
+            const core = setupCoreMock();
             const onBalanceCheck = jest.fn(resolve => {
                 // Simulate successful balance check but with zero balance (triggers no-balance error)
                 resolve({
@@ -30,7 +32,7 @@ describe('Giftcard Error Handling', () => {
             });
 
             const onError = jest.fn();
-            const giftcard = new Giftcard(global.core, {
+            const giftcard = new Giftcard(core, {
                 ...baseProps,
                 onBalanceCheck,
                 onError
@@ -49,13 +51,14 @@ describe('Giftcard Error Handling', () => {
         });
 
         test('should display "card-error" error message when card does not exist', async () => {
+            const core = setupCoreMock();
             const onBalanceCheck = jest.fn(resolve => {
                 // Simulate successful balance check but with no balance property (triggers card-error)
                 resolve({});
             });
 
             const onError = jest.fn();
-            const giftcard = new Giftcard(global.core, {
+            const giftcard = new Giftcard(core, {
                 ...baseProps,
                 onBalanceCheck,
                 onError
@@ -74,6 +77,8 @@ describe('Giftcard Error Handling', () => {
         });
 
         test('should display "currency-error" error message when currencies do not match', async () => {
+            const core = setupCoreMock();
+
             const onBalanceCheck = jest.fn(resolve => {
                 // Simulate successful balance check but with different currency (triggers currency-error)
                 resolve({
@@ -82,7 +87,7 @@ describe('Giftcard Error Handling', () => {
             });
 
             const onError = jest.fn();
-            const giftcard = new Giftcard(global.core, {
+            const giftcard = new Giftcard(core, {
                 ...baseProps,
                 onBalanceCheck,
                 onError
@@ -101,13 +106,15 @@ describe('Giftcard Error Handling', () => {
         });
 
         test('should not display any message for unknown errors', async () => {
+            const core = setupCoreMock();
+
             const onBalanceCheck = jest.fn((resolve, reject) => {
                 // Simulate the balance check rejecting with an unknown error
                 reject(new Error('unknown-error'));
             });
 
             const onError = jest.fn();
-            const giftcard = new Giftcard(global.core, {
+            const giftcard = new Giftcard(core, {
                 ...baseProps,
                 onBalanceCheck,
                 onError
@@ -130,6 +137,8 @@ describe('Giftcard Error Handling', () => {
 
     describe('Error State Persistence', () => {
         test('error message should persist after handleError is called', async () => {
+            const core = setupCoreMock();
+
             const onBalanceCheck = jest.fn(resolve => {
                 // Resolve with zero balance to trigger no-balance error
                 resolve({
@@ -138,7 +147,7 @@ describe('Giftcard Error Handling', () => {
             });
 
             const onError = jest.fn();
-            const giftcard = new Giftcard(global.core, {
+            const giftcard = new Giftcard(core, {
                 ...baseProps,
                 onBalanceCheck,
                 onError
@@ -161,13 +170,15 @@ describe('Giftcard Error Handling', () => {
         });
 
         test('component should be in ready state after error while preserving error message', async () => {
+            const core = setupCoreMock();
+
             const onBalanceCheck = jest.fn(resolve => {
                 // Resolve with no balance property to trigger card-error
                 resolve({});
             });
 
             const onError = jest.fn();
-            const giftcard = new Giftcard(global.core, {
+            const giftcard = new Giftcard(core, {
                 ...baseProps,
                 onBalanceCheck,
                 onError
@@ -191,6 +202,8 @@ describe('Giftcard Error Handling', () => {
 
     describe('Session Flow Error Handling', () => {
         test('should handle session balance check errors correctly', async () => {
+            const core = setupCoreMock();
+
             const mockSession = {
                 checkBalance: jest.fn().mockResolvedValue({
                     balance: { value: 0, currency: 'EUR' }
@@ -198,7 +211,7 @@ describe('Giftcard Error Handling', () => {
             };
 
             const onError = jest.fn();
-            const giftcard = new Giftcard(global.core, {
+            const giftcard = new Giftcard(core, {
                 ...baseProps,
                 session: mockSession,
                 onError
@@ -219,6 +232,8 @@ describe('Giftcard Error Handling', () => {
 
     describe('Error Message Clearing', () => {
         test('error message should clear when balance check succeeds', async () => {
+            const core = setupCoreMock();
+
             let shouldFail = true;
             const onBalanceCheck = jest.fn(resolve => {
                 if (shouldFail) {
@@ -231,7 +246,7 @@ describe('Giftcard Error Handling', () => {
             });
 
             const onError = jest.fn();
-            const giftcard = new Giftcard(global.core, {
+            const giftcard = new Giftcard(core, {
                 ...baseProps,
                 onBalanceCheck,
                 onError

@@ -25,13 +25,6 @@ class RedirectElement extends UIElement<RedirectConfiguration> {
         };
     }
 
-    protected override beforeRender(props: RedirectConfiguration) {
-        /** Do not send 'rendered' event if redirecting */
-        if (!this.isRedirecting) {
-            super.beforeRender(props);
-        }
-    }
-
     private handleRedirectError = () => {
         const event = new AnalyticsErrorEvent({
             component: this.props.paymentMethodType,

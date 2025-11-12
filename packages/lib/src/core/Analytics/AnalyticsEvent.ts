@@ -2,8 +2,9 @@ import uuid from '../../utils/uuid';
 import { getUTCTimestamp } from './utils';
 
 export abstract class AnalyticsEvent {
-    public timestamp: string;
-    public id: string;
+    private readonly timestamp: string;
+    private readonly id: string;
+
     public component: string;
 
     public abstract getEventCategory(): string;

@@ -2,10 +2,9 @@ import { h } from 'preact';
 import { Meta } from '@storybook/preact-vite';
 import Address from './Address';
 import { ComponentContainer } from '../../../../storybook/components/ComponentContainer';
-import AddressElement from '../../Address/Address';
+import AddressElement, { AddressConfiguration } from '../../Address/Address';
 import { Checkout } from '../../../../storybook/components/Checkout';
 import { StoryConfiguration } from '../../../../storybook/types';
-import type { UIElementProps } from '../UIElement/types';
 
 const meta: Meta = {
     title: 'Internal Elements/Address',
@@ -21,7 +20,7 @@ const meta: Meta = {
     }
 };
 
-export const Default: StoryConfiguration<UIElementProps> = {
+export const Default: StoryConfiguration<AddressConfiguration> = {
     render: ({ componentConfiguration, ...checkoutConfig }) => (
         <Checkout checkoutConfig={checkoutConfig}>
             {checkout => <ComponentContainer element={new AddressElement(checkout, componentConfiguration)} />}
