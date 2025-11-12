@@ -195,14 +195,8 @@ export const CardWith_3DS2_CreateFromAction: CardStory = {
     }
 };
 
-export const StoredCard: CardStory = {
-    render: createStoredCardComponent,
-    args: {
-        componentConfiguration: {
-            _disableClickToPay: true,
-            hideCVC: false
-        }
-    }
+export const StandaloneStoredCard: CardStory = {
+    render: createStoredCardComponent
 };
 
 export default meta;

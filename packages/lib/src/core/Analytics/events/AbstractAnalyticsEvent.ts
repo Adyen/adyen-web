@@ -1,5 +1,4 @@
 import uuid from '../../../utils/uuid';
-import { getUTCTimestamp } from '../utils';
 
 export abstract class AbstractAnalyticsEvent {
     private readonly timestamp: string;
@@ -16,6 +15,6 @@ export abstract class AbstractAnalyticsEvent {
     protected constructor(component: string) {
         this.component = component;
         this.id = uuid();
-        this.timestamp = String(getUTCTimestamp());
+        this.timestamp = String(Date.now());
     }
 }
