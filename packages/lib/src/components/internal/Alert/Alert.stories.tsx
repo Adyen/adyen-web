@@ -6,7 +6,7 @@ import { CoreProvider } from '../../../core/Context/CoreProvider';
 import { Resources } from '../../../core/Context/Resources';
 
 const meta: Meta = {
-    title: 'Internals/Alert',
+    title: 'Internal Elements/Alert',
     component: Alert,
     argTypes: {
         type: {

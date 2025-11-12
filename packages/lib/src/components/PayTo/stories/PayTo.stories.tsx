@@ -1,11 +1,11 @@
 import { h } from 'preact';
 import { Meta, StoryObj } from '@storybook/preact';
-import { GlobalStoryProps, PaymentMethodStoryProps } from '../../../storybook/types';
-import { ComponentContainer } from '../../../storybook/components/ComponentContainer';
-import { Checkout } from '../../../storybook/components/Checkout';
-import PayTo from './PayTo';
+import { GlobalStoryProps, PaymentMethodStoryProps } from '../../../../storybook/types';
+import { ComponentContainer } from '../../../../storybook/components/ComponentContainer';
+import { Checkout } from '../../../../storybook/components/Checkout';
+import PayTo from '../PayTo';
 import { http, HttpResponse } from 'msw';
-import { MandateType, PayToConfiguration } from './types';
+import { MandateType, PayToConfiguration } from '../types';
 
 // extend the default story args so we can change mandate top level
 interface ExtendedStoryArgs extends PaymentMethodStoryProps<PayToConfiguration> {

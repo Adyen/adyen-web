@@ -17,7 +17,7 @@ const certKeyPath = process.env.CERT_KEY_PATH ?? path.resolve(__dirname, 'localh
 const isHttps = process.env.IS_HTTPS === 'true';
 
 const config: StorybookConfig = {
-    stories: ['../**/*.stories.@(js|jsx|ts|tsx)'],
+    stories: ['../**/*.docs.mdx', '../**/*.stories.@(js|jsx|ts|tsx)'],
 
     addons: [
         {
@@ -28,6 +28,9 @@ const config: StorybookConfig = {
         },
         {
             name: '@storybook/addon-a11y'
+        },
+        {
+            name: '@storybook/addon-docs'
         }
     ],
 
@@ -35,7 +38,6 @@ const config: StorybookConfig = {
         name: getAbsolutePath('@storybook/preact-vite'),
         options: {}
     },
-
     // public added for msw: https://github.com/mswjs/msw-storybook-addon?tab=readme-ov-file#start-storybook
     // '../storybook/public'
     staticDirs: ['../storybook/assets', '../storybook/public'],

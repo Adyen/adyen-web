@@ -1,13 +1,13 @@
 import { h } from 'preact';
-import { MetaConfiguration, PaymentMethodStoryProps } from '../../../../../storybook/types';
-import { DropinConfiguration } from '../../types';
-import { AdyenCheckout, components } from '../../../..';
-import { Checkout } from '../../../../../storybook/components/Checkout';
-import { ComponentContainer } from '../../../../../storybook/components/ComponentContainer';
-import DropinComponent from '../../Dropin';
+import { MetaConfiguration, PaymentMethodStoryProps } from '../../../../storybook/types';
+import { DropinConfiguration } from '../../Dropin/types';
+import { AdyenCheckout, components } from '../../..';
+import { Checkout } from '../../../../storybook/components/Checkout';
+import { ComponentContainer } from '../../../../storybook/components/ComponentContainer';
+import DropinComponent from '../../Dropin/Dropin';
 
 const meta: MetaConfiguration<DropinConfiguration> = {
-    title: 'Components/Dropin/PayTo',
+    title: 'Components/PayTo/Dropin',
     argTypes: {
         componentConfiguration: {
             control: 'object'
