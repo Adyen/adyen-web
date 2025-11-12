@@ -15,10 +15,6 @@
             "matchUpdateTypes": ["minor", "patch"],
             "groupName": "Minor and Patch Updates",
             "prConcurrentLimit": 1
-        },
-        {
-            "matchUpdateTypes": ["major"],
-            "prConcurrentLimit": 2
         }
     ]
 }
