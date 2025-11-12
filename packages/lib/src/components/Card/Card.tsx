@@ -18,14 +18,11 @@ import type { PayButtonFunctionProps, UIElementStatus } from '../internal/UIElem
 import UIElement from '../internal/UIElement';
 import PayButton from '../internal/PayButton';
 import type { ICore } from '../../core/types';
-import { ANALYTICS_FOCUS_STR, ANALYTICS_CONFIGURED_STR, ANALYTICS_UNFOCUS_STR, ANALYTICS_RENDERED_STR } from '../../core/Analytics/constants';
+import { ANALYTICS_FOCUS_STR, ANALYTICS_CONFIGURED_STR, ANALYTICS_UNFOCUS_STR } from '../../core/Analytics/constants';
 import { ALL_SECURED_FIELDS } from '../internal/SecuredFields/lib/constants';
-import { hasOwnProperty } from '../../utils/hasOwnProperty';
 import AdyenCheckoutError, { IMPLEMENTATION_ERROR } from '../../core/Errors/AdyenCheckoutError';
 import CardInputDefaultProps from './components/CardInput/defaultProps';
-import { getCardConfigData } from './components/CardInput/utils';
-import { AnalyticsEvent } from '../../core/Analytics/AnalyticsEvent';
-import { AnalyticsInfoEvent } from '../../core/Analytics/AnalyticsInfoEvent';
+import { AnalyticsInfoEvent, InfoEventType } from '../../core/Analytics/AnalyticsInfoEvent';
 
 export class CardElement extends UIElement<CardConfiguration> {
     public static type = TxVariants.scheme;
@@ -166,6 +163,25 @@ export class CardElement extends UIElement<CardConfiguration> {
         };
     }
 
+    protected override beforeRender(configSetByMerchant?: CardConfiguration): void {
+        // We don't send 'rendered' events when rendering actions
+        if (configSetByMerchant?.originalAction) {
+            return;
+        }
+
+        const event = new AnalyticsInfoEvent({
+            type: InfoEventType.rendered,
+            component: this.type,
+            configData: { ...configSetByMerchant, showPayButton: this.props.showPayButton },
+            ...(configSetByMerchant?.oneClick && {
+                isStoredPaymentMethod: true,
+                brand: configSetByMerchant.brand
+            })
+        });
+
+        this.analytics.sendAnalytics(event);
+    }
+
     updateStyles(stylesObj) {
         if (this.componentRef?.updateStyles) this.componentRef.updateStyles(stylesObj);
         return this;
@@ -201,27 +217,6 @@ export class CardElement extends UIElement<CardConfiguration> {
             const nuObj = reject('supportedBrandsRaw').from(obj);
             this.props.onBinLookup?.(nuObj);
         }
-    }
-
-    protected submitAnalytics(analyticsObj: AnalyticsEvent) {
-        const isInfoType = analyticsObj instanceof AnalyticsInfoEvent;
-
-        if ((isInfoType && analyticsObj.type === ANALYTICS_RENDERED_STR) || (isInfoType && analyticsObj.type === ANALYTICS_CONFIGURED_STR)) {
-            // Check if it's a storedCard
-            if (this.constructor['type'] === 'scheme') {
-                if (hasOwnProperty(this.props, 'supportedShopperInteractions')) {
-                    analyticsObj.isStoredPaymentMethod = true;
-                    analyticsObj.brand = this.props.brand;
-                }
-            }
-
-            // Add config data
-            if (isInfoType && analyticsObj.type === ANALYTICS_RENDERED_STR) {
-                analyticsObj.configData = getCardConfigData(this.props);
-            }
-        }
-
-        super.submitAnalytics(analyticsObj);
     }
 
     private onConfigSuccess = (obj: CardConfigSuccessData) => {
