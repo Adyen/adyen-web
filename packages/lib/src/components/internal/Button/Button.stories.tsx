@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { Meta, StoryObj } from '@storybook/preact';
+import { Meta, StoryObj } from '@storybook/preact-vite';
 import Button from './Button';
 import PayButton from '../PayButton/PayButton';
 import Language from '../../../language';

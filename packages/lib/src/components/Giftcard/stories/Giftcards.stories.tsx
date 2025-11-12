@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { Meta, StoryObj } from '@storybook/preact';
+import { Meta, StoryObj } from '@storybook/preact-vite';
 import { PaymentMethodStoryProps } from '../../../../storybook/types';
 import { GiftCardConfiguration } from '../types';
 import { GiftcardExample } from './GiftcardExample';

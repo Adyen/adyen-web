@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { Meta, StoryObj } from '@storybook/preact';
+import { Meta, StoryObj } from '@storybook/preact-vite';
 import { GlobalStoryProps, PaymentMethodStoryProps } from '../../../../storybook/types';
 import { ComponentContainer } from '../../../../storybook/components/ComponentContainer';
 import { Checkout } from '../../../../storybook/components/Checkout';
