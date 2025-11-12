@@ -38,6 +38,9 @@ const PaymentMethodBrands = ({
     const allowedBrands = brands.filter(brand => !excludedUIBrands?.includes(brand.name));
     const { visibleBrands, leftBrandsAmount } = prepareVisibleBrands(allowedBrands, showAllBrands);
 
+    // Force showOtherInsteadOfNumber to false if showAllBrands is given
+    showOtherInsteadOfNumber = showAllBrands ? false : showOtherInsteadOfNumber;
+
     return (
         <span className="adyen-checkout__payment-method__brands">
             {visibleBrands.map(brand => (
