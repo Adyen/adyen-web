@@ -1,51 +1,51 @@
 {
-  "name": "@adyen/adyen-web-main",
-  "private": true,
-  "keywords": [
-    "adyen",
-    "adyen-web",
-    "checkout",
-    "payment",
-    "payments",
-    "components"
-  ],
-  "workspaces": [
-    "packages/*"
-  ],
-  "scripts": {
-    "start": "concurrently --kill-others-on-fail \"yarn workspace @adyen/adyen-web start\"  \"yarn workspace @adyen/adyen-web-playground start\" --names \"lib,playground\"",
-    "start:storybook": "concurrently --kill-others-on-fail  \"yarn workspace @adyen/adyen-web-server start\"  \"yarn workspace @adyen/adyen-web start:storybook\" --names \"express-server,storybook\"",
-    "start:prod-storybook": "yarn workspace @adyen/adyen-web-server start:storybook",
-    "start:prod-storybook:e2e": "yarn build:storybook:e2e && yarn workspace @adyen/adyen-web-server start:storybook",
-    "build": "yarn workspace @adyen/adyen-web build",
-    "build:storybook": "yarn workspace @adyen/adyen-web build:storybook",
-    "build:storybook:e2e": "cross-env DISABLE_MSW=true yarn workspace @adyen/adyen-web build:storybook",
-    "format": "yarn workspace @adyen/adyen-web format",
-    "lint": "yarn workspace @adyen/adyen-web lint",
-    "test": "yarn workspace @adyen/adyen-web test",
-    "test:watch": "yarn workspace @adyen/adyen-web test:watch",
-    "test:coverage": "yarn workspace @adyen/adyen-web test:coverage",
-    "test:e2e": "yarn workspace @adyen/adyen-web-playwright test:headless",
-    "test:automated-a11y": "yarn workspace @adyen/adyen-web-playwright test:automated-a11y:headless",
-    "type-check": "yarn workspace @adyen/adyen-web type-check",
-    "prepare": "husky",
-    "changeset": "changeset",
-    "version": "changeset version && yarn install",
-    "validate:fix": "yarn workspaces foreach --all run validate:fix"
-  },
-  "devDependencies": {
-    "@adyen/adyen-web-server": "1.0.0",
-    "@changesets/cli": "2.29.7",
-    "@changesets/get-github-info": "0.6.0",
-    "concurrently": "9.2.1",
-    "cross-env": "10.1.0",
-    "husky": "9.1.7",
-    "lint-staged": "15.5.1",
-    "prettier": "3.6.2"
-  },
-  "resolutions": {
-    "tar-fs": "^3.0.9",
-    "cheerio": "1.0.0-rc.12"
-  },
-  "packageManager": "yarn@4.10.3"
+    "name": "@adyen/adyen-web-main",
+    "private": true,
+    "keywords": [
+        "adyen",
+        "adyen-web",
+        "checkout",
+        "payment",
+        "payments",
+        "components"
+    ],
+    "workspaces": [
+        "packages/*"
+    ],
+    "scripts": {
+        "start": "concurrently --kill-others-on-fail \"yarn workspace @adyen/adyen-web start\"  \"yarn workspace @adyen/adyen-web-playground start\" --names \"lib,playground\"",
+        "start:storybook": "concurrently --kill-others-on-fail  \"yarn workspace @adyen/adyen-web-server start\"  \"yarn workspace @adyen/adyen-web start:storybook\" --names \"express-server,storybook\"",
+        "start:prod-storybook": "yarn workspace @adyen/adyen-web-server start:storybook",
+        "start:prod-storybook:e2e": "yarn build:storybook:e2e && yarn workspace @adyen/adyen-web-server start:storybook",
+        "build": "yarn workspace @adyen/adyen-web build",
+        "build:storybook": "yarn workspace @adyen/adyen-web build:storybook",
+        "build:storybook:e2e": "cross-env DISABLE_MSW=true yarn workspace @adyen/adyen-web build:storybook",
+        "format": "yarn workspace @adyen/adyen-web format",
+        "lint": "yarn workspace @adyen/adyen-web lint",
+        "test": "yarn workspace @adyen/adyen-web test",
+        "test:watch": "yarn workspace @adyen/adyen-web test:watch",
+        "test:coverage": "yarn workspace @adyen/adyen-web test:coverage",
+        "test:e2e": "yarn workspace @adyen/adyen-web-playwright test:headless",
+        "test:automated-a11y": "yarn workspace @adyen/adyen-web-playwright test:automated-a11y:headless",
+        "type-check": "yarn workspace @adyen/adyen-web type-check",
+        "prepare": "husky",
+        "changeset": "changeset",
+        "version": "changeset version && yarn install",
+        "validate:fix": "yarn workspaces foreach --all run validate:fix"
+    },
+    "devDependencies": {
+        "@adyen/adyen-web-server": "1.0.0",
+        "@changesets/cli": "2.29.7",
+        "@changesets/get-github-info": "0.6.0",
+        "concurrently": "9.2.1",
+        "cross-env": "10.1.0",
+        "husky": "9.1.7",
+        "lint-staged": "15.5.1",
+        "prettier": "3.6.2"
+    },
+    "resolutions": {
+        "tar-fs": "^3.0.9",
+        "cheerio": "1.0.0-rc.12"
+    },
+    "packageManager": "yarn@4.10.3"
 }
