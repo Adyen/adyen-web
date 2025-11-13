@@ -79,7 +79,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@adyen/adyen-web@workspace:packages/lib"
   dependencies:
-    "@adyen/bento-design-tokens": "npm:1.10.0"
+    "@adyen/bento-design-tokens": "npm:1.68.2"
     "@eslint/js": "npm:9.35.0"
     "@preact/preset-vite": "npm:2.10.2"
     "@rollup/plugin-commonjs": "npm:28.0.6"
@@ -141,10 +141,10 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@adyen/bento-design-tokens@npm:1.10.0":
-  version: 1.10.0
-  resolution: "@adyen/bento-design-tokens@npm:1.10.0"
-  checksum: 10c0/0da79cf007965ceaddc1ebe7882ed9f56512f8d5b245f38fb162782b8673e7c3666cc53b1bb8897af4b0f7e0e238fabe0de6b6686587863c5b8ed7363c31a8a6
+"@adyen/bento-design-tokens@npm:1.68.2":
+  version: 1.68.2
+  resolution: "@adyen/bento-design-tokens@npm:1.68.2"
+  checksum: 10c0/14763a40e80ddfef07478827b810b0966be4ed4679305b9faf832e8c1e1053650fd6edb2df0789393d97d4e05d6b7d0a3ee5c205c4100e50ffc01e569eea8770
   languageName: node
   linkType: hard
 
