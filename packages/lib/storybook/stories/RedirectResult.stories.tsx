@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { Meta, StoryObj } from '@storybook/preact';
+import { Meta, StoryObj } from '@storybook/preact-vite';
 import { getSearchParameter } from '../utils/get-query-parameters';
 import { RedirectResultContainer } from './RedirectResultContainer';
 
