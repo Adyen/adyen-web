@@ -83,7 +83,7 @@ __metadata:
     "@eslint/js": "npm:9.35.0"
     "@preact/preset-vite": "npm:2.10.2"
     "@rollup/plugin-commonjs": "npm:28.0.6"
-    "@rollup/plugin-eslint": "npm:9.0.5"
+    "@rollup/plugin-eslint": "npm:9.1.0"
     "@rollup/plugin-json": "npm:6.1.0"
     "@rollup/plugin-node-resolve": "npm:16.0.3"
     "@rollup/plugin-replace": "npm:6.0.2"
@@ -2017,18 +2017,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rollup/plugin-eslint@npm:9.0.5":
-  version: 9.0.5
-  resolution: "@rollup/plugin-eslint@npm:9.0.5"
+"@rollup/plugin-eslint@npm:9.1.0":
+  version: 9.1.0
+  resolution: "@rollup/plugin-eslint@npm:9.1.0"
   dependencies:
     "@rollup/pluginutils": "npm:^5.0.1"
-    eslint: "npm:^8.24.0"
+    eslint: "npm:^8.57.1"
   peerDependencies:
     rollup: ^1.20.0||^2.0.0||^3.0.0||^4.0.0
   peerDependenciesMeta:
     rollup:
       optional: true
-  checksum: 10c0/c758c718d37c9a6249e5049a49cc21487f4c5c58c6ef02eea6d808ea5bf35419fdce03cc415c4d054e06d2f73d33d192f0fe5846c462e686a7f01636651cd71d
+  checksum: 10c0/3e049090721edb5c8afd4f08b9650da29d87d8578698457d0fbdb44fe93d8370022957d8bbb1762978737463ef36b154d3167d761ea24ef5f559d9f3361c3936
   languageName: node
   linkType: hard
 
@@ -6862,7 +6862,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint@npm:^8.24.0":
+"eslint@npm:^8.57.1":
   version: 8.57.1
   resolution: "eslint@npm:8.57.1"
   dependencies:
