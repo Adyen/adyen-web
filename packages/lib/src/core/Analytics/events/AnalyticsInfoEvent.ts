@@ -96,15 +96,15 @@ export class AnalyticsInfoEvent extends AbstractAnalyticsEvent {
 
         this.type = props.type;
 
-        if (props.target !== undefined) this.target = props.target;
-        if (props.issuer !== undefined) this.issuer = props.issuer;
+        if (props.target) this.target = props.target;
+        if (props.issuer) this.issuer = props.issuer;
         if (props.isStoredPaymentMethod !== undefined) this.isStoredPaymentMethod = props.isStoredPaymentMethod;
         if (props.isExpress !== undefined) this.isExpress = props.isExpress;
-        if (props.expressPage !== undefined) this.expressPage = props.expressPage;
-        if (props.brand !== undefined) this.brand = props.brand;
-        if (props.cdnUrl !== undefined) this.cdnUrl = props.cdnUrl;
-        if (props.validationErrorCode !== undefined) this.validationErrorCode = props.validationErrorCode;
-        if (props.validationErrorMessage !== undefined) this.validationErrorMessage = props.validationErrorMessage;
+        if (props.expressPage) this.expressPage = props.expressPage;
+        if (props.brand) this.brand = props.brand;
+        if (props.cdnUrl) this.cdnUrl = props.cdnUrl;
+        if (props.validationErrorCode) this.validationErrorCode = props.validationErrorCode;
+        if (props.validationErrorMessage) this.validationErrorMessage = props.validationErrorMessage;
 
         if (this.type === InfoEventType.rendered) {
             this.configData = this.createAnalyticsConfigData(props?.configData);

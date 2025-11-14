@@ -100,7 +100,7 @@ function IssuerList({
                 props.onSubmitAnalytics(event);
             }
         },
-        [props.type]
+        [props.type, props.onSubmitAnalytics]
     );
 
     const debounceSearchAnalytics = useRef(debounce(props.onSubmitAnalytics, ANALYTICS_SEARCH_DEBOUNCE_TIME));

@@ -11,6 +11,7 @@ import useImage from '../../../../core/Context/useImage';
 import './Enrollment.scss';
 import { LabelOnlyDisclaimerMessage } from '../../../internal/DisclaimerMessage/DisclaimerMessage';
 import { ComponentMethodsRef, UIElementStatus } from '../../../internal/UIElement/types';
+import { TxVariants } from '../../../tx-variants';
 
 const TERMS_CONDITIONS_URL = 'https://www.adyen.com/pt_BR/legal/termo-de-consentimento-br';
 
@@ -92,7 +93,7 @@ function Enrollment(props: EnrollmentProps) {
                         payButton={props.payButton}
                         showPayButton={true}
                         ref={issuerListRef}
-                        type={'paybybank_pix'}
+                        type={TxVariants.paybybank_pix}
                     ></IssuerList>
                     <span className="adyen-checkout-disclaimer__label">
                         <LabelOnlyDisclaimerMessage message={i18n.get('paybybankpix.issuerList.disclaimer')} urls={[TERMS_CONDITIONS_URL]} />

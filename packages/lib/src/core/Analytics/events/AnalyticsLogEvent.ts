@@ -47,8 +47,8 @@ export class AnalyticsLogEvent extends AbstractAnalyticsEvent {
         this.type = props.type;
         this.message = props.message;
 
-        if (props.subType !== undefined) this.subType = props.subType;
-        if (props.result !== undefined) this.result = props.result;
+        if (props.subType) this.subType = props.subType;
+        if (props.result) this.result = props.result;
     }
 
     public getEventCategory(): string {
@@ -56,19 +56,6 @@ export class AnalyticsLogEvent extends AbstractAnalyticsEvent {
     }
 
     public static getSubtypeFromActionType(type: PaymentAction['type']): LogEventSubtype {
-        switch (type) {
-            case 'redirect':
-                return LogEventSubtype.redirect;
-            case 'await':
-                return LogEventSubtype.await;
-            case 'threeDS2':
-                return LogEventSubtype.threeDS2;
-            case 'voucher':
-                return LogEventSubtype.voucher;
-            case 'qrCode':
-                return LogEventSubtype.qrCode;
-            case 'sdk':
-                return LogEventSubtype.sdk;
-        }
+        return LogEventSubtype[type];
     }
 }

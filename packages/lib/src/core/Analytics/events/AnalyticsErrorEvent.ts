@@ -64,7 +64,7 @@ export class AnalyticsErrorEvent extends AbstractAnalyticsEvent {
         this.errorType = props.errorType;
         this.code = props.code;
 
-        if (props.message !== undefined) this.message = props.message;
+        if (props.message) this.message = props.message;
     }
 
     public getEventCategory(): string {
