@@ -8,13 +8,18 @@
     "prConcurrentLimit": 5,
     "packageRules": [
         {
-            "matchPackageNames": ["node", "@adyen/**"],
-            "enabled": false
-        },
-        {
+            "matchDatasources": ["npm"],
             "matchUpdateTypes": ["minor", "patch"],
             "groupName": "Minor and Patch Updates",
             "prConcurrentLimit": 1
+        },
+        {
+            "matchPackageNames": ["@adyen/**"],
+            "enabled": false
+        },
+        {
+            "matchPackageNames": ["preact", "@swc/core"],
+            "groupName": null
         }
     ]
 }
