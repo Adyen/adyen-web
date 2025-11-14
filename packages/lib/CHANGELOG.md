@@ -1,5 +1,11 @@
 # @adyen/adyen-web
 
+## 6.26.0
+
+### Minor Changes
+
+- Fixed a typo in the `PayByBankUS` component, renaming the `showOtherInsteafOfNumber` prop to `showOtherInsteadOfNumber`. ([#3635](https://github.com/Adyen/adyen-web/pull/3635))
+
 ## 6.25.1
 
 ### Patch Changes
