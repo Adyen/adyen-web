@@ -10,11 +10,11 @@ import Fastlane from '../PayPalFastlane';
 import enUS from '../../../../server/translations/en-US.json';
 import getTranslations from '../../core/Services/get-translations';
 import { SRPanel } from '../../core/Errors/SRPanel';
-import { ANALYTICS_RENDERED_STR } from '../../core/Analytics/constants';
 
 import type { CoreConfiguration, ICore } from '../../core/types';
 import type { PaymentActionsType } from '../../types/global-types';
 import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
+import { InfoEventType } from '../../core/Analytics/events/AnalyticsInfoEvent';
 
 jest.mock('../../core/Services/get-translations');
 const mockedGetTranslations = getTranslations as jest.Mock;
@@ -291,7 +291,7 @@ describe('Dropin', () => {
 
             expect(core.modules.analytics.sendAnalytics).toHaveBeenCalledWith(
                 expect.objectContaining({
-                    type: ANALYTICS_RENDERED_STR,
+                    type: InfoEventType.rendered,
                     component: 'dropin',
                     configData: {
                         instantPaymentTypes: 'googlepay',

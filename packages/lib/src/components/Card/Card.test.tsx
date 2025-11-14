@@ -4,8 +4,7 @@ import { render, screen, waitFor } from '@testing-library/preact';
 import { CoreProvider } from '../../core/Context/CoreProvider';
 import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 import PaymentMethods from '../../core/ProcessResponse/PaymentMethods';
-import { ANALYTICS_FOCUS_STR, ANALYTICS_UNFOCUS_STR } from '../../core/Analytics/constants';
-import { InfoEventType } from '../../core/Analytics/AnalyticsInfoEvent';
+import { InfoEventType } from '../../core/Analytics/events/AnalyticsInfoEvent';
 import { CardFocusData } from '../internal/SecuredFields/lib/types';
 import { mock } from 'jest-mock-extended';
 
@@ -394,7 +393,7 @@ describe('Card', () => {
             expect(core.modules.analytics.sendAnalytics).toHaveBeenCalledWith(
                 expect.objectContaining({
                     component: 'scheme',
-                    type: ANALYTICS_FOCUS_STR,
+                    type: InfoEventType.focus,
                     target: 'card_number',
                     id: expect.any(String),
                     timestamp: expect.any(String)
@@ -423,7 +422,7 @@ describe('Card', () => {
             expect(core.modules.analytics.sendAnalytics).toHaveBeenCalledWith(
                 expect.objectContaining({
                     component: 'scheme',
-                    type: ANALYTICS_UNFOCUS_STR,
+                    type: InfoEventType.unfocus,
                     target: 'card_number',
                     id: expect.any(String),
                     timestamp: expect.any(String)

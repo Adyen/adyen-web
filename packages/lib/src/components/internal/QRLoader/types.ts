@@ -1,11 +1,13 @@
 import { ComponentChildren, h } from 'preact';
 import { ActionHandledReturnObject, PaymentAmount } from '../../../types/global-types';
 import Language from '../../../language/Language';
-import { AnalyticsEvent } from '../../../core/Analytics/AnalyticsEvent';
+import { AbstractAnalyticsEvent } from '../../../core/Analytics/events/AbstractAnalyticsEvent';
 import { CountdownTime } from '../Countdown/types';
 import { AdditionalDetailsData, AdyenCheckoutError } from '../../../types';
 
 export interface QRLoaderProps {
+    // Component type that is creating the action (e.g. wechatpayQR)
+    type: string;
     delay?: number;
     countdownTime?: number;
     onError?: (error: AdyenCheckoutError) => void;
@@ -13,7 +15,6 @@ export interface QRLoaderProps {
     throttleTime?: number;
     throttledInterval?: number;
     url?: string;
-    type?: string;
     paymentData?: string;
     clientKey?: string;
     loadingContext?: string;
@@ -32,7 +33,7 @@ export interface QRLoaderProps {
     instructions?: string | (() => h.JSX.Element);
     copyBtn?: boolean;
     onActionHandled?: (rtnObj: ActionHandledReturnObject) => void;
-    onSubmitAnalytics?: (aObj: AnalyticsEvent) => void;
+    onSubmitAnalytics?: (aObj: AbstractAnalyticsEvent) => void;
     children?: ComponentChildren;
 }
 

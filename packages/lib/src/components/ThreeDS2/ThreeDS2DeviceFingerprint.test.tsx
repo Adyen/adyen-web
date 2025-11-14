@@ -1,9 +1,9 @@
 import { ThreeDS2DeviceFingerprint } from './index';
-import { Analytics3DS2Errors, ANALYTICS_ERROR_TYPE } from '../../core/Analytics/constants';
 import { THREEDS2_FINGERPRINT_ERROR } from './constants';
 import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 import { render } from '@testing-library/preact';
 import { FingerprintResolveData } from './types';
+import { ErrorEventCode, ErrorEventType } from '../../core/Analytics/events/AnalyticsErrorEvent';
 
 describe('ThreeDS2DeviceFingerprint', () => {
     describe('Analytics', () => {
@@ -36,9 +36,9 @@ describe('ThreeDS2DeviceFingerprint', () => {
 
             expect(core.modules.analytics.sendAnalytics).toHaveBeenCalledWith({
                 component: fingerprintComponent.constructor['type'],
-                errorType: ANALYTICS_ERROR_TYPE.apiError,
+                errorType: ErrorEventType.apiError,
                 message: `${THREEDS2_FINGERPRINT_ERROR}: Missing 'paymentData' property from threeDS2 action`,
-                code: Analytics3DS2Errors.ACTION_IS_MISSING_PAYMENT_DATA,
+                code: ErrorEventCode.THREEDS2_ACTION_IS_MISSING_PAYMENT_DATA,
                 timestamp: expect.any(String),
                 id: expect.any(String)
             });

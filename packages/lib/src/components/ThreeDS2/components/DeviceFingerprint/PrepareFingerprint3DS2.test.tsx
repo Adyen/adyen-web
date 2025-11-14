@@ -2,7 +2,8 @@ import { mount } from 'enzyme';
 import { h } from 'preact';
 import PrepareFingerprint3DS2 from './PrepareFingerprint3DS2';
 import { THREEDS2_FINGERPRINT_ERROR, THREEDS2_FULL, TIMEOUT } from '../../constants';
-import { Analytics3DS2Errors, Analytics3DS2Events, ANALYTICS_ERROR_TYPE } from '../../../../core/Analytics/constants';
+import { LogEventSubtype } from '../../../../core/Analytics/events/AnalyticsLogEvent';
+import { ErrorEventCode, ErrorEventType } from '../../../../core/Analytics/events/AnalyticsErrorEvent';
 
 const fingerPrintToken = {
     threeDSMessageVersion: '2.1.0',
@@ -31,7 +32,7 @@ let wrapper: any;
 const onError: any = () => {};
 
 const baseAnalyticsError = {
-    errorType: ANALYTICS_ERROR_TYPE.apiError,
+    errorType: ErrorEventType.apiError,
     timestamp: expect.any(String),
     id: expect.any(String)
 };
@@ -39,9 +40,10 @@ const baseAnalyticsError = {
 let completeFunction: any;
 
 const completedAnalyticsObj = {
+    component: 'threeDS2Fingerprint',
     message: '3DS2 fingerprinting has completed',
     type: THREEDS2_FULL,
-    subType: Analytics3DS2Events.FINGERPRINT_COMPLETED,
+    subType: LogEventSubtype.fingerprintCompleted,
     timestamp: expect.any(String),
     id: expect.any(String)
 };
@@ -84,8 +86,9 @@ describe('ThreeDS2DeviceFingerprint - Happy flow', () => {
 
         expect(onSubmitAnalytics).toHaveBeenCalledWith({
             type: THREEDS2_FULL,
+            component: 'threeDS2Fingerprint',
             message: 'threeDSMethodData sent',
-            subType: Analytics3DS2Events.FINGERPRINT_DATA_SENT,
+            subType: LogEventSubtype.fingerprintDataSentWeb,
             timestamp: expect.any(String),
             id: expect.any(String)
         });
@@ -149,9 +152,10 @@ describe('ThreeDS2DeviceFingerprint - flow completes with errors that are consid
         setTimeout(() => {
             // analytics for error
             expect(onSubmitAnalytics).toHaveBeenCalledWith({
+                component: 'threeDS2Fingerprint',
                 message: 'threeDS2Fingerprint: timeout',
-                code: Analytics3DS2Errors.THREEDS2_TIMEOUT,
-                errorType: ANALYTICS_ERROR_TYPE.network,
+                code: ErrorEventCode.THREEDS2_TIMEOUT,
+                errorType: ErrorEventType.network,
                 timestamp: expect.any(String),
                 id: expect.any(String)
             });
@@ -187,7 +191,8 @@ describe('ThreeDS2DeviceFingerprint - unhappy flows', () => {
         // assert
         const analyticsError = {
             ...baseAnalyticsError,
-            code: Analytics3DS2Errors.ACTION_IS_MISSING_TOKEN,
+            component: 'threeDS2Fingerprint',
+            code: ErrorEventCode.THREEDS2_ACTION_IS_MISSING_TOKEN,
             message: '3DS2Fingerprint_Error: Missing "token" property from threeDS2 action'
         };
         expect(onSubmitAnalytics).toHaveBeenCalledWith(analyticsError);
@@ -212,7 +217,8 @@ describe('ThreeDS2DeviceFingerprint - unhappy flows', () => {
         // assert
         const analyticsError = {
             ...baseAnalyticsError,
-            code: Analytics3DS2Errors.TOKEN_DECODE_OR_PARSING_FAILED,
+            component: 'threeDS2Fingerprint',
+            code: ErrorEventCode.THREEDS2_TOKEN_DECODE_OR_PARSING_FAILED,
             message: `${THREEDS2_FINGERPRINT_ERROR}: not base64`
         };
         expect(onSubmitAnalytics).toHaveBeenCalledWith(analyticsError);
@@ -239,7 +245,8 @@ describe('ThreeDS2DeviceFingerprint - unhappy flows', () => {
         // assert
         const analyticsError = {
             ...baseAnalyticsError,
-            code: Analytics3DS2Errors.TOKEN_IS_MISSING_THREEDSMETHODURL,
+            component: 'threeDS2Fingerprint',
+            code: ErrorEventCode.THREEDS2_TOKEN_IS_MISSING_THREEDSMETHODURL,
             message: `${THREEDS2_FINGERPRINT_ERROR}: Decoded token is missing a valid threeDSMethodURL property`
         };
 
@@ -268,7 +275,8 @@ describe('ThreeDS2DeviceFingerprint - unhappy flows', () => {
         // assert
         const analyticsError = {
             ...baseAnalyticsError,
-            code: Analytics3DS2Errors.TOKEN_IS_MISSING_OTHER_PROPS,
+            component: 'threeDS2Fingerprint',
+            code: ErrorEventCode.THREEDS2_TOKEN_IS_MISSING_OTHER_PROPS,
             message: `${THREEDS2_FINGERPRINT_ERROR}: Decoded token is missing one or more of the following properties (threeDSMethodNotificationURL | postMessageDomain | threeDSServerTransID)`
         };
 
@@ -297,7 +305,8 @@ describe('ThreeDS2DeviceFingerprint - unhappy flows', () => {
         // assert
         const analyticsError = {
             ...baseAnalyticsError,
-            code: Analytics3DS2Errors.TOKEN_IS_MISSING_OTHER_PROPS,
+            component: 'threeDS2Fingerprint',
+            code: ErrorEventCode.THREEDS2_TOKEN_IS_MISSING_OTHER_PROPS,
             message: `${THREEDS2_FINGERPRINT_ERROR}: Decoded token is missing one or more of the following properties (threeDSMethodNotificationURL | postMessageDomain | threeDSServerTransID)`
         };
 
