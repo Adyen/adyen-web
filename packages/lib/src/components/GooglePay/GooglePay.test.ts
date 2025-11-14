@@ -2,11 +2,12 @@ import { render } from '@testing-library/preact';
 import GooglePay from './GooglePay';
 import GooglePayService from './GooglePayService';
 
-import { ANALYTICS_SELECTED_STR, NO_CHECKOUT_ATTEMPT_ID } from '../../core/Analytics/constants';
+import { NO_CHECKOUT_ATTEMPT_ID } from '../../core/Analytics/constants';
 import PaymentMethods from '../../core/ProcessResponse/PaymentMethods';
 import { mock } from 'jest-mock-extended';
 import { ICore } from '../../types';
 import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
+import { InfoEventType } from '../../core/Analytics/events/AnalyticsInfoEvent';
 
 jest.mock('./GooglePayService');
 
@@ -137,6 +138,7 @@ describe('GooglePay', () => {
 
     describe('submit()', () => {
         test('should make the payments call passing deliveryAddress and billingAddress', async () => {
+            const core = setupCoreMock();
             const onSubmitMock = jest.fn().mockImplementation((data, component, actions) => {
                 actions.resolve({
                     resultCode: 'Authorized'
@@ -144,10 +146,11 @@ describe('GooglePay', () => {
             });
             const onPaymentCompletedMock = jest.fn();
 
-            const gpay = new GooglePay(global.core, {
+            const gpay = new GooglePay(core, {
                 configuration: { merchantId: 'merchant-id', gatewayMerchantId: 'gateway-id' },
                 onSubmit: onSubmitMock,
-                onPaymentCompleted: onPaymentCompletedMock
+                onPaymentCompleted: onPaymentCompletedMock,
+                i18n: global.i18n
             });
 
             // @ts-ignore GooglePayService is mocked
@@ -203,14 +206,16 @@ describe('GooglePay', () => {
         });
 
         test('should not add deliveryAddress and billingAddress if they are not available', async () => {
+            const core = setupCoreMock();
             const onSubmitMock = jest.fn().mockImplementation((data, component, actions) => {
                 actions.resolve({
                     resultCode: 'Authorized'
                 });
             });
 
-            new GooglePay(global.core, {
+            const gpay = new GooglePay(core, {
                 configuration: { merchantId: 'merchant-id', gatewayMerchantId: 'gateway-id' },
+                i18n: global.i18n,
                 onSubmit: onSubmitMock
             });
 
@@ -235,9 +240,12 @@ describe('GooglePay', () => {
             });
             expect(state.data.deliveryAddress).toBeUndefined();
             expect(state.data.billingAddress).toBeUndefined();
+
+            expect(onSubmitMock.mock.calls[0][1]).toBe(gpay);
         });
 
         test('should pass error to GooglePay if payment failed', async () => {
+            const core = setupCoreMock();
             const onSubmitMock = jest.fn().mockImplementation((data, component, actions) => {
                 actions.resolve({
                     resultCode: 'Refused',
@@ -248,7 +256,7 @@ describe('GooglePay', () => {
             });
             const onPaymentFailedMock = jest.fn();
 
-            const gpay = new GooglePay(global.core, {
+            const gpay = new GooglePay(core, {
                 configuration: { merchantId: 'merchant-id', gatewayMerchantId: 'gateway-id' },
                 i18n: global.i18n,
                 onSubmit: onSubmitMock,
@@ -286,12 +294,13 @@ describe('GooglePay', () => {
         });
 
         test('should pass error to GooglePay when action.reject is called without parameters', async () => {
+            const core = setupCoreMock();
             const onSubmitMock = jest.fn().mockImplementation((data, component, actions) => {
                 actions.reject();
             });
             const onPaymentFailedMock = jest.fn();
 
-            const gpay = new GooglePay(global.core, {
+            const gpay = new GooglePay(core, {
                 configuration: { merchantId: 'merchant-id', gatewayMerchantId: 'gateway-id' },
                 i18n: global.i18n,
                 onSubmit: onSubmitMock,
@@ -589,7 +598,7 @@ describe('GooglePay', () => {
             expect(core.modules.analytics.sendAnalytics).toHaveBeenCalledWith(
                 expect.objectContaining({
                     component: 'googlepay',
-                    type: ANALYTICS_SELECTED_STR,
+                    type: InfoEventType.selected,
                     target: 'instant_payment_button'
                 })
             );

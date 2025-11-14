@@ -8,12 +8,11 @@ import collectBrowserInfo from '../../utils/browserInfo';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { TxVariants } from '../tx-variants';
 import { sanitizeResponse, verifyPaymentDidNotFail } from '../internal/UIElement/utils';
-import { ANALYTICS_INSTANT_PAYMENT_BUTTON, ANALYTICS_SELECTED_STR } from '../../core/Analytics/constants';
 
 import type { AddressData, BrowserInfo, RawPaymentMethod, PaymentResponseData, RawPaymentResponse } from '../../types/global-types';
 import type { GooglePayConfiguration } from './types';
 import type { ICore } from '../../core/types';
-import { AnalyticsInfoEvent, InfoEventType } from '../../core/Analytics/AnalyticsInfoEvent';
+import { AnalyticsInfoEvent, InfoEventType, UiTarget } from '../../core/Analytics/events/AnalyticsInfoEvent';
 import { mapGooglePayBrands } from './utils/map-adyen-brands-to-googlepay-brands';
 
 const DEFAULT_ALLOWED_CARD_NETWORKS: google.payments.api.CardNetwork[] = ['AMEX', 'DISCOVER', 'JCB', 'MASTERCARD', 'VISA'];
@@ -165,8 +164,9 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
     public override submit = () => {
         if (this.props.isInstantPayment) {
             const event = new AnalyticsInfoEvent({
-                type: ANALYTICS_SELECTED_STR,
-                target: ANALYTICS_INSTANT_PAYMENT_BUTTON
+                component: this.type,
+                type: InfoEventType.selected,
+                target: UiTarget.instantPaymentButton
             });
 
             this.submitAnalytics(event);

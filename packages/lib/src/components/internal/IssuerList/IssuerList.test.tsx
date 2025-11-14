@@ -4,7 +4,7 @@ import { h } from 'preact';
 import IssuerList from './IssuerList';
 import PayButton from '../PayButton';
 import { CoreProvider } from '../../../core/Context/CoreProvider';
-import { ANALYTICS_FEATURED_ISSUER, ANALYTICS_LIST, ANALYTICS_SELECTED_STR } from '../../../core/Analytics/constants';
+import { InfoEventType, UiTarget } from '../../../core/Analytics/events/AnalyticsInfoEvent';
 
 /**
  * DON'T USE THIS FILE
@@ -28,6 +28,7 @@ describe('IssuerList', () => {
                     onChange={jest.fn()}
                     payButton={props => <PayButton {...props} amount={{ value: 50, currency: 'USD' }} />}
                     onSubmitAnalytics={() => {}}
+                    type={'onlineBanking_PL'}
                 />
             </CoreProvider>
         );
@@ -55,6 +56,7 @@ describe('IssuerList', () => {
                     onChange={jest.fn()}
                     payButton={props => <PayButton {...props} amount={{ value: 50, currency: 'USD' }} />}
                     onSubmitAnalytics={() => {}}
+                    type={'onlineBanking_PL'}
                 />
             </CoreProvider>
         );
@@ -84,6 +86,7 @@ describe('IssuerList', () => {
                     onChange={onChangeCb}
                     payButton={props => <PayButton {...props} amount={{ value: 50, currency: 'USD' }} />}
                     onSubmitAnalytics={() => {}}
+                    type={'onlineBanking_PL'}
                 />
             </CoreProvider>
         );
@@ -123,6 +126,7 @@ describe('IssuerList', () => {
                     onChange={jest.fn()}
                     payButton={props => <PayButton {...props} amount={{ value: 50, currency: 'USD' }} />}
                     onSubmitAnalytics={() => {}}
+                    type={'onlineBanking_PL'}
                 />
             </CoreProvider>
         );
@@ -150,6 +154,7 @@ describe('IssuerList', () => {
                     onChange={jest.fn()}
                     payButton={props => <PayButton {...props} amount={{ value: 50, currency: 'USD' }} />}
                     onSubmitAnalytics={() => {}}
+                    type={'onlineBanking_PL'}
                 />
             </CoreProvider>
         );
@@ -183,6 +188,7 @@ describe('Analytics', () => {
                     onChange={() => {}}
                     payButton={props => <PayButton {...props} amount={{ value: 50, currency: 'USD' }} />}
                     onSubmitAnalytics={onSubmitAnalytics}
+                    type={'onlineBanking_PL'}
                 />
             </CoreProvider>
         );
@@ -194,8 +200,8 @@ describe('Analytics', () => {
         expect(onSubmitAnalytics).toHaveBeenCalledTimes(1);
         expect(onSubmitAnalytics).toHaveBeenCalledWith(
             expect.objectContaining({
-                type: ANALYTICS_SELECTED_STR,
-                target: ANALYTICS_FEATURED_ISSUER,
+                type: InfoEventType.selected,
+                target: UiTarget.featuredIssuer,
                 issuer: 'Issuer 3'
             })
         );
@@ -217,6 +223,7 @@ describe('Analytics', () => {
                     onChange={() => {}}
                     payButton={props => <PayButton {...props} amount={{ value: 50, currency: 'USD' }} />}
                     onSubmitAnalytics={onSubmitAnalytics}
+                    type={'onlineBanking_PL'}
                 />
             </CoreProvider>
         );
@@ -228,8 +235,8 @@ describe('Analytics', () => {
         expect(onSubmitAnalytics).toHaveBeenCalledTimes(1);
         expect(onSubmitAnalytics).toHaveBeenCalledWith(
             expect.objectContaining({
-                type: ANALYTICS_SELECTED_STR,
-                target: ANALYTICS_LIST,
+                type: InfoEventType.selected,
+                target: UiTarget.list,
                 issuer: 'Issuer 2'
             })
         );

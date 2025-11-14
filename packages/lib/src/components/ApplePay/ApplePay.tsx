@@ -10,7 +10,6 @@ import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { DecodeObject } from '../../types/global-types';
 import { TxVariants } from '../tx-variants';
 import { sanitizeResponse, verifyPaymentDidNotFail } from '../internal/UIElement/utils';
-import { ANALYTICS_INSTANT_PAYMENT_BUTTON, ANALYTICS_SELECTED_STR } from '../../core/Analytics/constants';
 import { resolveSupportedVersion } from './utils/resolve-supported-version';
 import { formatApplePayContactToAdyenAddressFormat } from './utils/format-applepay-contact-to-adyen-format';
 import { mapBrands } from './utils/map-adyen-brands-to-applepay-brands';
@@ -19,7 +18,7 @@ import { detectInIframe } from '../../utils/detectInIframe';
 import type { ApplePayConfiguration, ApplePayElementData, ApplePayPaymentOrderDetails, ApplePaySessionRequest } from './types';
 import type { ICore } from '../../core/types';
 import type { PaymentResponseData, RawPaymentResponse } from '../../types/global-types';
-import { AnalyticsInfoEvent, InfoEventType } from '../../core/Analytics/AnalyticsInfoEvent';
+import { AnalyticsInfoEvent, InfoEventType, UiTarget } from '../../core/Analytics/events/AnalyticsInfoEvent';
 
 const LATEST_APPLE_PAY_VERSION = 14;
 
@@ -110,12 +109,8 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
     }
 
     public override submit = (): void => {
-        // Analytics
         if (this.props.isInstantPayment) {
-            const event = new AnalyticsInfoEvent({
-                type: ANALYTICS_SELECTED_STR,
-                target: ANALYTICS_INSTANT_PAYMENT_BUTTON
-            });
+            const event = new AnalyticsInfoEvent({ component: this.type, type: InfoEventType.selected, target: UiTarget.instantPaymentButton });
             this.submitAnalytics(event);
         }
         void this.startSession();

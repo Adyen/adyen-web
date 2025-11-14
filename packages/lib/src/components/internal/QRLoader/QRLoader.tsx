@@ -10,8 +10,7 @@ import { useCoreContext } from '../../../core/Context/CoreProvider';
 import ContentSeparator from '../ContentSeparator';
 import { StatusObject } from '../Await/types';
 import useAutoFocus from '../../../utils/useAutoFocus';
-import { ANALYTICS_DOWNLOAD_STR, ANALYTICS_QR_CODE_DOWNLOAD } from '../../../core/Analytics/constants';
-import { AnalyticsInfoEvent } from '../../../core/Analytics/AnalyticsInfoEvent';
+import { AnalyticsInfoEvent, InfoEventType, UiTarget } from '../../../core/Analytics/events/AnalyticsInfoEvent';
 import { CountdownTime } from '../Countdown/types';
 import QRDetails from './components/QRDetails';
 import { QRLoaderDetailsProvider } from './QRLoaderDetailsProvider';
@@ -136,8 +135,9 @@ function QRLoader(props: QRLoaderProps) {
 
     const handleCopy = () => {
         const event = new AnalyticsInfoEvent({
-            type: ANALYTICS_DOWNLOAD_STR,
-            target: ANALYTICS_QR_CODE_DOWNLOAD
+            component: props.type,
+            type: InfoEventType.download,
+            target: UiTarget.qrDownloadButton
         });
         props.onSubmitAnalytics(event);
     };

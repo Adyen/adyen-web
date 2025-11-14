@@ -5,7 +5,6 @@ import { assertIsDropin, cleanupFinalResult, getRegulatoryDefaults, sanitizeResp
 import AdyenCheckoutError, { NETWORK_ERROR } from '../../../core/Errors/AdyenCheckoutError';
 import { hasOwnProperty } from '../../../utils/hasOwnProperty';
 import { Resources } from '../../../core/Context/Resources';
-import { ANALYTICS_ERROR_TYPE, ANALYTICS_SUBMIT_STR } from '../../../core/Analytics/constants';
 
 import { AnalyticsInitialEvent } from '../../../core/Analytics/types';
 import type { CoreConfiguration, ICore, AdditionalDetailsData } from '../../../core/types';
@@ -26,10 +25,10 @@ import type {
 import type { IDropin } from '../../Dropin/types';
 import type { NewableComponent } from '../../../core/core.registry';
 import CancelError from '../../../core/Errors/CancelError';
-import { AnalyticsEvent } from '../../../core/Analytics/AnalyticsEvent';
-import { AnalyticsLogEvent } from '../../../core/Analytics/AnalyticsLogEvent';
-import { AnalyticsErrorEvent } from '../../../core/Analytics/AnalyticsErrorEvent';
-import { AnalyticsInfoEvent, InfoEventType } from '../../../core/Analytics/AnalyticsInfoEvent';
+import { AbstractAnalyticsEvent } from '../../../core/Analytics/events/AbstractAnalyticsEvent';
+import { AnalyticsLogEvent, LogEventType } from '../../../core/Analytics/events/AnalyticsLogEvent';
+import { AnalyticsErrorEvent, ErrorEventType } from '../../../core/Analytics/events/AnalyticsErrorEvent';
+import { AnalyticsInfoEvent, InfoEventType } from '../../../core/Analytics/events/AnalyticsInfoEvent';
 
 import './UIElement.scss';
 import { SRPanel } from '../../../core/Errors/SRPanel';
@@ -218,29 +217,8 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         });
     }
 
-    /**
-     * A function for all UIElements, or BaseElement, to use to create an analytics action for when it's been:
-     *  - mounted,
-     *  - a PM has been selected
-     *  - onSubmit has been called (as a result of the pay button being pressed)
-     *
-     *  In some other cases e.g. 3DS2 components, this function is overridden to allow more specific analytics actions to be created
-     */
-
-    protected submitAnalytics(analyticsObj: AnalyticsEvent) {
-        try {
-            analyticsObj.component = this.getComponent(analyticsObj);
-            this.analytics.sendAnalytics(analyticsObj);
-        } catch (error) {
-            console.warn('Failed to submit the analytics event. Error:', error);
-        }
-    }
-
-    private getComponent({ component }: AnalyticsEvent): string {
-        if (component) {
-            return component;
-        }
-        return this.type;
+    protected override submitAnalytics(event: AbstractAnalyticsEvent) {
+        this.analytics.sendAnalytics(event);
     }
 
     public submit(): void {
@@ -292,7 +270,8 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
 
     private async submitUsingAdvancedFlow(): Promise<CheckoutAdvancedFlowResponse> {
         const event = new AnalyticsLogEvent({
-            type: ANALYTICS_SUBMIT_STR,
+            component: this.type,
+            type: LogEventType.submit,
             message: 'Shopper clicked pay'
         });
         this.submitAnalytics(event);
@@ -311,7 +290,8 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
 
     private async submitUsingSessionsFlow(data: PaymentData): Promise<CheckoutSessionPaymentResponse> {
         const event = new AnalyticsLogEvent({
-            type: ANALYTICS_SUBMIT_STR,
+            component: this.type,
+            type: LogEventType.submit,
             message: 'Shopper clicked pay'
         });
         this.submitAnalytics(event);
@@ -352,7 +332,8 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
 
         if (error.name === NETWORK_ERROR && error.options.code) {
             const event = new AnalyticsErrorEvent({
-                errorType: ANALYTICS_ERROR_TYPE.apiError,
+                component: this.type,
+                errorType: ErrorEventType.apiError,
                 code: error.options.code
             });
 

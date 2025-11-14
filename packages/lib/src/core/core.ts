@@ -12,7 +12,6 @@ import { SRPanel } from './Errors/SRPanel';
 import registry, { NewableComponent } from './core.registry';
 import { cleanupFinalResult, sanitizeResponse, verifyPaymentDidNotFail } from '../components/internal/UIElement/utils';
 import AdyenCheckoutError, { IMPLEMENTATION_ERROR } from './Errors/AdyenCheckoutError';
-import { ANALYTICS_ACTION_STR } from './Analytics/constants';
 import { THREEDS2_FULL } from '../components/ThreeDS2/constants';
 import { DEFAULT_LOCALE } from '../language/constants';
 import getTranslations from './Services/get-translations';
@@ -25,7 +24,7 @@ import type { PaymentAction, PaymentResponseData } from '../types/global-types';
 import type { CoreConfiguration, ICore, AdditionalDetailsData, CoreModules } from './types';
 import type { Translations } from '../language/types';
 import type { UIElementProps } from '../components/internal/UIElement/types';
-import { AnalyticsLogEvent } from './Analytics/AnalyticsLogEvent';
+import { AnalyticsLogEvent, LogEventType } from './Analytics/events/AnalyticsLogEvent';
 import CancelError from './Errors/CancelError';
 
 class Core implements ICore {
@@ -255,8 +254,8 @@ class Core implements ICore {
             const component = action.type === THREEDS2_FULL ? `${action.type}${action.subtype}` : action.paymentMethodType;
 
             const event = new AnalyticsLogEvent({
-                type: ANALYTICS_ACTION_STR,
-                subType: action.type,
+                type: LogEventType.action,
+                subType: AnalyticsLogEvent.getSubtypeFromActionType(action.type),
                 message: `${component} action was handled by the SDK`,
                 component
             });

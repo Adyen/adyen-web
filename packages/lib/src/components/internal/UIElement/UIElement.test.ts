@@ -5,8 +5,8 @@ import { UIElementProps } from './types';
 import { Resources } from '../../../core/Context/Resources';
 import { PaymentActionsType } from '../../../types/global-types';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
-import { ANALYTICS_ERROR_TYPE } from '../../../core/Analytics/constants';
 import { setupCoreMock } from '../../../../config/testMocks/setup-core-mock';
+import { ErrorEventType } from '../../../core/Analytics/events/AnalyticsErrorEvent';
 
 jest.mock('../../../core/Services/get-translations');
 
@@ -564,7 +564,7 @@ describe('UIElement', () => {
 
             expect(core.modules.analytics.sendAnalytics).toHaveBeenCalledWith({
                 code: errorCode,
-                errorType: ANALYTICS_ERROR_TYPE.apiError,
+                errorType: ErrorEventType.apiError,
                 timestamp: expect.any(String),
                 id: expect.any(String),
                 component: expect.any(String)
@@ -716,7 +716,7 @@ describe('UIElement', () => {
 
             expect(core.modules.analytics.sendAnalytics).toHaveBeenCalledWith({
                 code: errorCode,
-                errorType: ANALYTICS_ERROR_TYPE.apiError,
+                errorType: ErrorEventType.apiError,
                 timestamp: expect.any(String),
                 id: expect.any(String),
                 component: expect.any(String)

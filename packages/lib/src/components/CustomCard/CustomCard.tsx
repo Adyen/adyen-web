@@ -9,8 +9,7 @@ import { BrandObject } from '../Card/types';
 import { getCardImageUrl, fieldTypeToSnakeCase } from '../internal/SecuredFields/utils';
 import { TxVariants } from '../tx-variants';
 import { CustomCardConfiguration } from './types';
-import { ANALYTICS_FOCUS_STR, ANALYTICS_UNFOCUS_STR } from '../../core/Analytics/constants';
-import { AnalyticsInfoEvent } from '../../core/Analytics/AnalyticsInfoEvent';
+import { AnalyticsInfoEvent, InfoEventType } from '../../core/Analytics/events/AnalyticsInfoEvent';
 
 export class CustomCard extends UIElement<CustomCardConfiguration> {
     public static type = TxVariants.customCard;
@@ -97,7 +96,8 @@ export class CustomCard extends UIElement<CustomCardConfiguration> {
 
     private onFocus = (obj: CardFocusData) => {
         const event = new AnalyticsInfoEvent({
-            type: obj.focus === true ? ANALYTICS_FOCUS_STR : ANALYTICS_UNFOCUS_STR,
+            component: this.type,
+            type: obj.focus === true ? InfoEventType.focus : InfoEventType.unfocus,
             target: fieldTypeToSnakeCase(obj.fieldType)
         });
 

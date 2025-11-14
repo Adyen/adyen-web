@@ -1,8 +1,8 @@
 import { render } from '@testing-library/preact';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
-import { ANALYTICS_ERROR_TYPE } from '../../core/Analytics/constants';
 import ANCV from './ANCV';
 import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
+import { ErrorEventType } from '../../core/Analytics/events/AnalyticsErrorEvent';
 
 describe('ANCV', () => {
     describe('createOrder', () => {
@@ -32,7 +32,7 @@ describe('ANCV', () => {
             expect(core.modules.analytics.sendAnalytics).toHaveBeenCalledWith({
                 code,
                 component: 'ancv',
-                errorType: ANALYTICS_ERROR_TYPE.apiError,
+                errorType: ErrorEventType.apiError,
                 timestamp: expect.any(String),
                 id: expect.any(String)
             });
