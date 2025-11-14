@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { Meta, StoryObj } from '@storybook/preact';
+import { Meta, StoryObj } from '@storybook/preact-vite';
 import { useEffect, useRef } from 'preact/hooks';
 import { patchPaypalOrder } from '../../../../storybook/helpers/checkout-api-calls';
 import { createSessionsCheckout } from '../../../../storybook/helpers/create-sessions-checkout';

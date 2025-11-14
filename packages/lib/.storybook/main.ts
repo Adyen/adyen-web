@@ -19,25 +19,13 @@ const isHttps = process.env.IS_HTTPS === 'true';
 const config: StorybookConfig = {
     stories: ['../**/*.docs.mdx', '../**/*.stories.@(js|jsx|ts|tsx)'],
 
-    addons: [
-        {
-            name: '@storybook/addon-essentials',
-            options: {
-                docs: false
-            }
-        },
-        {
-            name: '@storybook/addon-a11y'
-        },
-        {
-            name: '@storybook/addon-docs'
-        }
-    ],
-
     framework: {
-        name: getAbsolutePath('@storybook/preact-vite'),
+        name: '@storybook/preact-vite',
         options: {}
     },
+
+    addons: ['@storybook/addon-a11y', '@storybook/addon-docs'],
+
     // public added for msw: https://github.com/mswjs/msw-storybook-addon?tab=readme-ov-file#start-storybook
     // '../storybook/public'
     staticDirs: ['../storybook/assets', '../storybook/public'],
@@ -119,11 +107,3 @@ const config: StorybookConfig = {
     }
 };
 export default config;
-
-/**
- * This function is used to resolve the absolute path of a package.
- * It is needed in projects that use Yarn PnP or are set up within a monorepo.
- */
-function getAbsolutePath(value: string): any {
-    return path.dirname(require.resolve(path.join(value, 'package.json')));
-}
