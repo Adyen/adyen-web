@@ -4,7 +4,6 @@ import Field from '../../../../internal/FormFields/Field';
 import { useCoreContext } from '../../../../../core/Context/CoreProvider';
 import { ExpirationDateProps } from './types';
 import DataSfSpan from './DataSfSpan';
-
 import {
     DATE_POLICY_HIDDEN,
     DATE_POLICY_OPTIONAL,
@@ -13,6 +12,8 @@ import {
 } from '../../../../internal/SecuredFields/lib/constants';
 import useImage from '../../../../../core/Context/useImage';
 import { alternativeLabelContent } from './FieldLabelAlternative';
+import Brand from '../../../../internal/Brand';
+import './ExpirationDate.scss';
 
 export default function ExpirationDate(props: ExpirationDateProps) {
     const {
@@ -39,10 +40,6 @@ export default function ExpirationDate(props: ExpirationDateProps) {
 
     const fieldLabel = expiryDatePolicy !== DATE_POLICY_OPTIONAL ? label : `${label} ${i18n.get('field.title.optional')}`;
 
-    const handleIconClick = () => {
-        onFocusField(ENCRYPTED_EXPIRY_DATE);
-    };
-
     const imageDescription = `${fieldLabel} ${contextualText}`;
 
     return (
@@ -63,6 +60,9 @@ export default function ExpirationDate(props: ExpirationDateProps) {
             renderAlternativeToLabel={alternativeLabelContent}
             showContextualElement={showContextualElement}
             contextualText={contextualText}
+            onInputContainerClick={() => {
+                onFocusField(ENCRYPTED_EXPIRY_DATE);
+            }}
         >
             <DataSfSpan
                 encryptedFieldType={ENCRYPTED_EXPIRY_DATE}
@@ -72,19 +72,16 @@ export default function ExpirationDate(props: ExpirationDateProps) {
                     'adyen-checkout__input--valid': isValid
                 })}
             />
-            <span
-                className={classNames('adyen-checkout__field__exp-date_hint_wrapper', {
-                    'adyen-checkout__field__exp-date_hint_wrapper--hidden': error || isValid
-                })}
-            >
-                {/*eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-noninteractive-element-interactions*/}
-                <img
-                    src={getImage({ imageFolder: 'components/' })('expiry_date_hint')}
-                    className="adyen-checkout__field__exp-date_hint"
-                    alt={imageDescription}
-                    onClick={handleIconClick}
-                />
-            </span>
+            <Brand
+                wrapperClassName={
+                    error || isValid
+                        ? classNames('adyen-checkout__field__exp-date_hint_wrapper', 'adyen-checkout__field__exp-date_hint_wrapper--hidden')
+                        : 'adyen-checkout__field__exp-date_hint_wrapper'
+                }
+                imgClassName={'adyen-checkout__field__exp-date_hint'}
+                alt={imageDescription}
+                url={getImage({ imageFolder: 'components/' })('expiry_date_hint')}
+            />
         </Field>
     );
 }

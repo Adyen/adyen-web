@@ -12,6 +12,7 @@ import {
 } from '../../../../internal/SecuredFields/lib/constants';
 import DataSfSpan from './DataSfSpan';
 import { alternativeLabelContent } from './FieldLabelAlternative';
+import './CVC.scss';
 
 export default function CVC(props: CVCProps) {
     const {
@@ -71,10 +72,11 @@ export default function CVC(props: CVCProps) {
             renderAlternativeToLabel={alternativeLabelContent}
             showContextualElement={showContextualElement}
             contextualText={contextualText}
+            onInputContainerClick={handleIconClick}
         >
             <DataSfSpan encryptedFieldType={ENCRYPTED_SECURITY_CODE} className={cvcClassnames} />
 
-            <CVCHint frontCVC={frontCVC} fieldLabel={imageDescription} onClick={handleIconClick} />
+            <CVCHint frontCVC={frontCVC} fieldLabel={imageDescription} />
         </Field>
     );
 }

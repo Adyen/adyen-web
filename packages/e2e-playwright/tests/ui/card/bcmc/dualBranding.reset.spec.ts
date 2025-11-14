@@ -19,8 +19,8 @@ test.describe('Testing Bancontact, with dual branded cards, how UI resets', () =
             let [firstBrand, secondBrand] = await bcmc.dualBrandIcons;
 
             // Correct order
-            expect(firstBrand).toHaveAttribute('data-value', 'bcmc');
-            expect(secondBrand).toHaveAttribute('data-value', 'maestro');
+            await expect(firstBrand).toHaveAttribute('alt', 'Bancontact card');
+            await expect(secondBrand).toHaveAttribute('alt', 'Maestro');
 
             await bcmc.deleteCardNumber();
 

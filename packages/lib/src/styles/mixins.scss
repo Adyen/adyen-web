@@ -198,3 +198,16 @@ $adyen-checkout-media-query-xl-min: 1280px;
         margin-bottom: 0;
     }
 }
+
+@mixin adyen-checkout-icon-shadow($width: null, $height: null) {
+    box-shadow: token(shadow-low);
+    border-radius: token(border-radius-s);
+
+    @if $width {
+        width: $width;
+    }
+
+    @if $height {
+        height: $height;
+    }
+}
