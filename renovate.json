@@ -1,12 +1,25 @@
 {
-  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:base",
-    ":disableDependencyDashboard"
-  ],
-  "labels": ["dependencies"],
-  "minimumReleaseAge": "21 days",
-  "prConcurrentLimit": 5,
-  "internalChecksFilter": "strict",
-  "updateNotScheduled": false
+    "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+    "extends": ["config:base", ":disableDependencyDashboard", "schedule:earlyMondays"],
+    "labels": ["dependencies"],
+    "minimumReleaseAge": "21 days",
+    "internalChecksFilter": "strict",
+    "rebaseWhen": "behind-base-branch",
+    "prConcurrentLimit": 5,
+    "packageRules": [
+        {
+            "matchDatasources": ["npm"],
+            "matchUpdateTypes": ["minor", "patch"],
+            "groupName": "Minor and Patch Updates",
+            "prConcurrentLimit": 1
+        },
+        {
+            "matchPackageNames": ["@adyen/**", "node"],
+            "enabled": false
+        },
+        {
+            "matchPackageNames": ["preact", "@swc/core"],
+            "groupName": null
+        }
+    ]
 }
