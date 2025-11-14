@@ -1,28 +1,27 @@
-import type { StorybookConfig } from '@storybook/preact-vite';
+import { fileURLToPath } from 'url';
+import { join } from 'path';
 import { mergeConfig } from 'vite';
-import * as path from 'path';
 import stylelint from 'vite-plugin-stylelint';
-import generateEnvironmentVariables from '../config/environment-variables';
-import { resolve } from 'node:path';
 import preact from '@preact/preset-vite';
+import generateEnvironmentVariables from '../config/environment-variables.js';
+import type { StorybookConfig } from '@storybook/preact-vite';
+
+const dirname = fileURLToPath(new URL('.', import.meta.url));
 
 /*
  * This is the build time configuration
  * Configurations here will be define during build step
  */
 
-const certPath = process.env.CERT_PATH ?? path.resolve(__dirname, 'localhost.pem');
-const certKeyPath = process.env.CERT_KEY_PATH ?? path.resolve(__dirname, 'localhost-key.pem');
+const certPath = process.env.CERT_PATH ?? join(dirname, 'localhost.pem');
+const certKeyPath = process.env.CERT_KEY_PATH ?? join(dirname, 'localhost-key.pem');
 
 const isHttps = process.env.IS_HTTPS === 'true';
 
 const config: StorybookConfig = {
     stories: ['../**/*.docs.mdx', '../**/*.stories.@(js|jsx|ts|tsx)'],
 
-    framework: {
-        name: '@storybook/preact-vite',
-        options: {}
-    },
+    framework: '@storybook/preact-vite',
 
     addons: ['@storybook/addon-a11y', '@storybook/addon-docs'],
 
@@ -37,12 +36,12 @@ const config: StorybookConfig = {
             // Mirror Rollup's CSS processing exactly
             css: {
                 // Use same PostCSS config file as Rollup
-                postcss: resolve(__dirname, '../postcss.config.cjs'),
+                postcss: join(dirname, '../postcss.config.cjs'),
 
                 // Mirror Rollup's SCSS settings
                 preprocessorOptions: {
                     scss: {
-                        includePaths: [resolve(__dirname, '../src')] // Same as Rollup
+                        includePaths: [join(dirname, '../src')] // Same as Rollup
                     }
                 },
 
@@ -72,7 +71,7 @@ const config: StorybookConfig = {
                         find: /^~(.*)$/,
                         replacement: '$1'
                     },
-                    { find: /^styles(.*)$/, replacement: resolve(__dirname, '../src/styles') }
+                    { find: /^styles(.*)$/, replacement: join(dirname, '../src/styles') }
                 ]
             },
 
