@@ -30,7 +30,8 @@ function Select({
     blurOnClose,
     onListToggle,
     allowIdOnButton = false,
-    required
+    required,
+    activeOnHover = true
 }: SelectProps) {
     const filterInputRef = useRef(null);
     const selectContainerRef = useRef(null);
@@ -92,7 +93,7 @@ function Select({
 
     const extractItemFromEvent = (e: Event): SelectItem => {
         const value = (e.currentTarget as HTMLInputElement).getAttribute('data-value');
-        return filteredItems.find(listItem => listItem.id == value);
+        return filteredItems.find(listItem => listItem.id == value) || ({} as SelectItem);
     };
 
     /**
@@ -124,6 +125,10 @@ function Select({
                 valueToEmit = { id: selectedValue };
             }
         }
+        
+        if(!activeOnHover) {
+            setActiveOption({} as SelectItem);
+        }
 
         if (valueToEmit && !valueToEmit.disabled) {
             onChange({ target: { value: valueToEmit.id, name: name } });
@@ -140,8 +145,10 @@ function Select({
      */
     const handleHover = (e: Event) => {
         e.preventDefault();
-        const item = extractItemFromEvent(e);
-        setActiveOption(item);
+        if (activeOnHover) {
+            const item = extractItemFromEvent(e);
+            setActiveOption(item);
+        }
     };
 
     /**
