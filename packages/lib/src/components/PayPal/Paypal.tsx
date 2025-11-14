@@ -13,9 +13,7 @@ import type { PaymentAction } from '../../types/global-types';
 import type { Intent, PayPalConfiguration } from './types';
 
 import './Paypal.scss';
-import { ANALYTICS_EXPRESS_PAGES_ARRAY, ANALYTICS_RENDERED_STR } from '../../core/Analytics/constants';
-import { AnalyticsInfoEvent } from '../../core/Analytics/AnalyticsInfoEvent';
-import { AnalyticsEvent } from '../../core/Analytics/AnalyticsEvent';
+import { AnalyticsInfoEvent, InfoEventType } from '../../core/Analytics/events/AnalyticsInfoEvent';
 
 class PaypalElement extends UIElement<PayPalConfiguration> {
     public static type = TxVariants.paypal;
@@ -55,22 +53,16 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
         };
     }
 
-    protected submitAnalytics(analyticsObj: AnalyticsEvent) {
-        // Analytics will need to know about this.props.isExpress & this.props.expressPage
-        if (analyticsObj instanceof AnalyticsInfoEvent && analyticsObj.type === ANALYTICS_RENDERED_STR) {
-            const { isExpress, expressPage } = this.props;
-            const hasExpressPage = expressPage && ANALYTICS_EXPRESS_PAGES_ARRAY.includes(expressPage);
+    protected override beforeRender(configSetByMerchant?: PayPalConfiguration) {
+        const event = new AnalyticsInfoEvent({
+            type: InfoEventType.rendered,
+            component: this.type,
+            configData: { ...configSetByMerchant, showPayButton: this.props.showPayButton },
+            ...(configSetByMerchant?.isExpress && { isExpress: configSetByMerchant.isExpress }),
+            ...(configSetByMerchant?.expressPage && { expressPage: configSetByMerchant.expressPage })
+        });
 
-            if (typeof isExpress === 'boolean') {
-                analyticsObj.isExpress = isExpress;
-            }
-
-            if (isExpress === true && hasExpressPage) {
-                analyticsObj.expressPage = expressPage; // We only care about the expressPage value if isExpress is true
-            }
-        }
-
-        super.submitAnalytics(analyticsObj);
+        this.analytics.sendAnalytics(event);
     }
 
     public submit = () => {

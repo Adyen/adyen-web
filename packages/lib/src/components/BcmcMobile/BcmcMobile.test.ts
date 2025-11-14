@@ -1,25 +1,29 @@
 import BcmcMobile from './BcmcMobile';
+import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 
 describe('BcmcMobile', () => {
-    describe('formatProps', () => {});
-
     describe('isValid', () => {
         test('should be always true', () => {
-            const bcmcMobile = new BcmcMobile(global.core);
+            const core = setupCoreMock();
+
+            const bcmcMobile = new BcmcMobile(core);
             expect(bcmcMobile.isValid).toBe(true);
         });
     });
 
     describe('get data', () => {
         test('always returns a type', () => {
-            const bcmcMobile = new BcmcMobile(global.core);
+            const core = setupCoreMock();
+
+            const bcmcMobile = new BcmcMobile(core);
             expect(bcmcMobile.data.paymentMethod.type).toBe('bcmc_mobile');
         });
     });
 
     describe('render', () => {
         test('does render something by default', () => {
-            const bcmcMobile = new BcmcMobile(global.core);
+            const core = setupCoreMock();
+            const bcmcMobile = new BcmcMobile(core);
             expect(bcmcMobile.render()).not.toBe(null);
         });
     });

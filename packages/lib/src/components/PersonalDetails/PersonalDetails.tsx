@@ -5,11 +5,22 @@ import { CoreProvider } from '../../core/Context/CoreProvider';
 import { TxVariants } from '../tx-variants';
 import FormInstruction from '../internal/FormInstruction';
 import { UIElementProps } from '../internal/UIElement/types';
+import { AnalyticsInfoEvent, InfoEventType } from '../../core/Analytics/events/AnalyticsInfoEvent';
 
 interface PersonalDetailsConfiguration extends UIElementProps {}
 
 export class PersonalDetailsElement extends UIElement<PersonalDetailsConfiguration> {
     public static type = TxVariants.personal_details;
+
+    protected override beforeRender(configSetByMerchant?: PersonalDetailsConfiguration): void {
+        const event = new AnalyticsInfoEvent({
+            type: InfoEventType.rendered,
+            component: this.type,
+            configData: configSetByMerchant
+        });
+
+        this.analytics.sendAnalytics(event);
+    }
 
     get data() {
         return this.state.data;

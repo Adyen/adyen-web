@@ -4,7 +4,7 @@ import { h } from 'preact';
 import IssuerList from './IssuerList';
 import PayButton from '../PayButton';
 import { CoreProvider } from '../../../core/Context/CoreProvider';
-import { ANALYTICS_FEATURED_ISSUER, ANALYTICS_LIST, ANALYTICS_SELECTED_STR } from '../../../core/Analytics/constants';
+import { InfoEventType, UiTarget } from '../../../core/Analytics/events/AnalyticsInfoEvent';
 
 /**
  * DON'T USE THIS FILE
@@ -28,6 +28,7 @@ describe('IssuerList', () => {
                     onChange={jest.fn()}
                     payButton={props => <PayButton {...props} amount={{ value: 50, currency: 'USD' }} />}
                     onSubmitAnalytics={() => {}}
+                    type={'onlineBanking_PL'}
                 />
             </CoreProvider>
         );
@@ -55,6 +56,7 @@ describe('IssuerList', () => {
                     onChange={jest.fn()}
                     payButton={props => <PayButton {...props} amount={{ value: 50, currency: 'USD' }} />}
                     onSubmitAnalytics={() => {}}
+                    type={'onlineBanking_PL'}
                 />
             </CoreProvider>
         );
@@ -84,6 +86,7 @@ describe('IssuerList', () => {
                     onChange={onChangeCb}
                     payButton={props => <PayButton {...props} amount={{ value: 50, currency: 'USD' }} />}
                     onSubmitAnalytics={() => {}}
+                    type={'onlineBanking_PL'}
                 />
             </CoreProvider>
         );
@@ -123,6 +126,7 @@ describe('IssuerList', () => {
                     onChange={jest.fn()}
                     payButton={props => <PayButton {...props} amount={{ value: 50, currency: 'USD' }} />}
                     onSubmitAnalytics={() => {}}
+                    type={'onlineBanking_PL'}
                 />
             </CoreProvider>
         );
@@ -150,6 +154,7 @@ describe('IssuerList', () => {
                     onChange={jest.fn()}
                     payButton={props => <PayButton {...props} amount={{ value: 50, currency: 'USD' }} />}
                     onSubmitAnalytics={() => {}}
+                    type={'onlineBanking_PL'}
                 />
             </CoreProvider>
         );
@@ -164,25 +169,15 @@ describe('IssuerList', () => {
     });
 });
 
-describe('IssuerList: calls that generate analytics should produce objects with the expected shapes ', () => {
-    let onSubmitAnalytics;
-    beforeEach(() => {
-        console.log = jest.fn(() => {});
-
-        onSubmitAnalytics = jest.fn(obj => {
-            console.log('### IssuerList.test::callbacks.onSubmitAnalytics:: obj', obj);
-        });
-    });
-
-    test('Clicking on a highlighted issuer button triggers call to onSubmitAnalytics with expected analytics object', async () => {
+describe('Analytics', () => {
+    test('should send "selected" event when shopper clicks on a highlighted issuer button', async () => {
         const items = [
             { name: 'Issuer 1', id: '1' },
             { name: 'Issuer 2', id: '2' },
             { name: 'Issuer 3', id: '3' }
         ];
         const highlightedIds = ['2', '3'];
-
-        expect(onSubmitAnalytics).toBeCalledTimes(0);
+        const onSubmitAnalytics = jest.fn();
 
         render(
             <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
@@ -193,6 +188,7 @@ describe('IssuerList: calls that generate analytics should produce objects with 
                     onChange={() => {}}
                     payButton={props => <PayButton {...props} amount={{ value: 50, currency: 'USD' }} />}
                     onSubmitAnalytics={onSubmitAnalytics}
+                    type={'onlineBanking_PL'}
                 />
             </CoreProvider>
         );
@@ -201,23 +197,23 @@ describe('IssuerList: calls that generate analytics should produce objects with 
         const issuer3Button = screen.getByRole('button', { name: 'Issuer 3' });
         await user.click(issuer3Button);
 
-        expect(onSubmitAnalytics).toHaveBeenCalledWith({
-            type: ANALYTICS_SELECTED_STR,
-            target: ANALYTICS_FEATURED_ISSUER,
-            issuer: 'Issuer 3',
-            timestamp: expect.any(String),
-            id: expect.any(String)
-        });
+        expect(onSubmitAnalytics).toHaveBeenCalledTimes(1);
+        expect(onSubmitAnalytics).toHaveBeenCalledWith(
+            expect.objectContaining({
+                type: InfoEventType.selected,
+                target: UiTarget.featuredIssuer,
+                issuer: 'Issuer 3'
+            })
+        );
     });
 
-    test('Clicking on a issuer in the dropdown triggers call to onSubmitAnalytics with expected analytics object', async () => {
+    test('should send "selected" event when shopper clicks on a issuer in the dropdown', async () => {
         const items = [
             { name: 'Issuer 1', id: '1' },
             { name: 'Issuer 2', id: '2' },
             { name: 'Issuer 3', id: '3' }
         ];
-
-        expect(onSubmitAnalytics).toBeCalledTimes(0);
+        const onSubmitAnalytics = jest.fn();
 
         render(
             <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
@@ -227,6 +223,7 @@ describe('IssuerList: calls that generate analytics should produce objects with 
                     onChange={() => {}}
                     payButton={props => <PayButton {...props} amount={{ value: 50, currency: 'USD' }} />}
                     onSubmitAnalytics={onSubmitAnalytics}
+                    type={'onlineBanking_PL'}
                 />
             </CoreProvider>
         );
@@ -235,12 +232,13 @@ describe('IssuerList: calls that generate analytics should produce objects with 
         const issuer2DropdownItem = screen.getByRole('option', { name: 'Issuer 2' });
         await user.click(issuer2DropdownItem);
 
-        expect(onSubmitAnalytics).toHaveBeenCalledWith({
-            type: ANALYTICS_SELECTED_STR,
-            target: ANALYTICS_LIST,
-            issuer: 'Issuer 2',
-            timestamp: expect.any(String),
-            id: expect.any(String)
-        });
+        expect(onSubmitAnalytics).toHaveBeenCalledTimes(1);
+        expect(onSubmitAnalytics).toHaveBeenCalledWith(
+            expect.objectContaining({
+                type: InfoEventType.selected,
+                target: UiTarget.list,
+                issuer: 'Issuer 2'
+            })
+        );
     });
 });

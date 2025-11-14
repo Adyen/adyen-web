@@ -34,8 +34,7 @@ const paymentMethodsResponse: PaymentMethodsResponse = {
             name: 'VISA',
             networkTxReference: '0591',
             supportedShopperInteractions: ['Ecommerce', 'ContAuth'],
-            type: 'scheme',
-            storedPaymentMethodId: '8415'
+            type: 'scheme'
         }
     ]
 };

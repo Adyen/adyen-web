@@ -26,6 +26,19 @@ class Fastlane extends UIElement<FastlaneConfiguration> {
         };
     }
 
+    /**
+     *
+     * Fastlane works differently than other payment methods: Merchant needs to pass to the payment method
+     * configuration the values received from PayPal SDK to perform the payment (tokenId, etc). There is no
+     * point in tracking these values, so we just omit them all in the analytics by calling the
+     * 'beforeRender' without the props
+     *
+     * @protected
+     */
+    protected override beforeRender() {
+        super.beforeRender();
+    }
+
     public override async isAvailable(): Promise<void> {
         const { tokenId, lastFour, brand, email } = this.props;
         if (tokenId && lastFour && brand && email) {

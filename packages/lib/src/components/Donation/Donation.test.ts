@@ -1,6 +1,7 @@
 import { render, screen, waitFor } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import DonationElement from './Donation';
+import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 
 const coreProp = { i18n: global.i18n, loadingContext: 'test', modules: { resources: global.resources } };
 const shared = {
@@ -29,8 +30,10 @@ describe('Donation element', () => {
         test('should call onDonate with the donation data', async () => {
             const user = userEvent.setup();
             const onDonate = jest.fn();
+            const core = setupCoreMock();
+
             // @ts-ignore not all callbacks are needed
-            const donationElement = new DonationElement(global.core, {
+            const donationElement = new DonationElement(core, {
                 ...roundupDonationProp,
                 onDonate
             });
@@ -41,10 +44,11 @@ describe('Donation element', () => {
         });
 
         test('should call onCancel with the donation data', async () => {
+            const core = setupCoreMock();
             const user = userEvent.setup();
             const onCancel = jest.fn();
             // @ts-ignore not all callbacks are needed
-            const donationElement = new DonationElement(global.core, {
+            const donationElement = new DonationElement(core, {
                 ...roundupDonationProp,
                 onCancel
             });
@@ -57,13 +61,14 @@ describe('Donation element', () => {
 
     describe('Fixed amounts donation', () => {
         test('should call onDonate with the donation data', async () => {
+            const core = setupCoreMock();
             const user = userEvent.setup();
             const onDonate = jest.fn();
             const {
                 donation: { currency, values: expectedValues }
             } = fixedAmountsDonationProp;
             // @ts-ignore not all callbacks are needed
-            const donationElement = new DonationElement(global.core, {
+            const donationElement = new DonationElement(core, {
                 ...fixedAmountsDonationProp,
                 onDonate
             });
@@ -80,12 +85,13 @@ describe('Donation element', () => {
 
         test('should call onCancel with the donation data', async () => {
             const user = userEvent.setup();
+            const core = setupCoreMock();
             const {
                 donation: { currency }
             } = fixedAmountsDonationProp;
             const onCancel = jest.fn();
             // @ts-ignore not all callbacks are needed
-            const donationElement = new DonationElement(global.core, {
+            const donationElement = new DonationElement(core, {
                 ...fixedAmountsDonationProp,
                 onCancel
             });

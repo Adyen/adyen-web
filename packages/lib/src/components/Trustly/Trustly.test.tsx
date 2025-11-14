@@ -1,9 +1,11 @@
 import { render, screen } from '@testing-library/preact';
 import Trustly from './Trustly';
+import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 
 describe('TrustlyElement', () => {
     test('should render payment description by default', async () => {
-        const trustly = new Trustly(global.core, {
+        const core = setupCoreMock();
+        const trustly = new Trustly(core, {
             i18n: global.i18n,
             loadingContext: 'test',
             modules: { resources: global.resources }
@@ -16,7 +18,8 @@ describe('TrustlyElement', () => {
     });
 
     test('should render redirect button by default', async () => {
-        const trustly = new Trustly(global.core, {
+        const core = setupCoreMock();
+        const trustly = new Trustly(core, {
             i18n: global.i18n,
             loadingContext: 'test',
             modules: { resources: global.resources }
@@ -27,7 +30,8 @@ describe('TrustlyElement', () => {
     });
 
     test('should not render pay button if showPayButton is false', () => {
-        const trustly = new Trustly(global.core, {
+        const core = setupCoreMock();
+        const trustly = new Trustly(core, {
             i18n: global.i18n,
             loadingContext: 'test',
             modules: { resources: global.resources },

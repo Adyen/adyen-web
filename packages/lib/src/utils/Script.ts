@@ -1,5 +1,5 @@
 import AdyenCheckoutError from '../core/Errors/AdyenCheckoutError';
-import { AnalyticsInfoEvent, InfoEventType } from '../core/Analytics/AnalyticsInfoEvent';
+import { AnalyticsInfoEvent, InfoEventType } from '../core/Analytics/events/AnalyticsInfoEvent';
 import { AnalyticsModule } from '../types/global-types';
 
 interface IScript {

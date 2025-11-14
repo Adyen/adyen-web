@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/preact';
 import BankTransfer from './BankTransfer';
+import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 
 const coreProps = {
     i18n: global.i18n,
@@ -44,7 +45,8 @@ describe('BankTransfer', () => {
 
     describe('render', () => {
         test('should render a redirect button by default', async () => {
-            const bankTransfer = new BankTransfer(global.core, { ...coreProps, type: 'bankTransfer_NL', name: 'SEPA Bank Transfer' });
+            const core = setupCoreMock();
+            const bankTransfer = new BankTransfer(core, { ...coreProps, type: 'bankTransfer_NL', name: 'SEPA Bank Transfer' });
             render(bankTransfer.render());
             expect(await screen.findByRole('button', { name: /Continue to SEPA Bank Transfer/i })).toBeInTheDocument();
         });
@@ -60,8 +62,9 @@ describe('BankTransfer', () => {
                 bic: 'ADYXNL2A',
                 reference: '6B8RP7'
             };
+            const core = setupCoreMock();
 
-            const bankTransfer = new BankTransfer(global.core, {
+            const bankTransfer = new BankTransfer(core, {
                 ...coreProps,
                 type: 'bankTransfer_NL',
                 name: 'SEPA Bank Transfer',
@@ -91,8 +94,9 @@ describe('BankTransfer', () => {
                 branchCode: '001-001',
                 reference: 'AU123REF'
             };
+            const core = setupCoreMock();
 
-            const bankTransfer = new BankTransfer(global.core, {
+            const bankTransfer = new BankTransfer(core, {
                 ...coreProps,
                 type: 'bankTransfer_AU',
                 name: 'Bank Transfer AU',
@@ -123,8 +127,9 @@ describe('BankTransfer', () => {
                 bankCode: 'HKBANK',
                 reference: 'HK456REF'
             };
+            const core = setupCoreMock();
 
-            const bankTransfer = new BankTransfer(global.core, {
+            const bankTransfer = new BankTransfer(core, {
                 ...coreProps,
                 type: 'bankTransfer_HK',
                 name: 'Bank Transfer HK',

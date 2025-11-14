@@ -16,17 +16,9 @@ import { setFocusOnField } from '../../../utils/setFocus';
 import DisclaimerMessage from '../DisclaimerMessage';
 import Select from '../FormFields/Select';
 import { SelectTargetObject } from '../FormFields/Select/types';
-import {
-    ANALYTICS_DISPLAYED_STR,
-    ANALYTICS_FEATURED_ISSUER,
-    ANALYTICS_INPUT_STR,
-    ANALYTICS_LIST,
-    ANALYTICS_LIST_SEARCH,
-    ANALYTICS_SEARCH_DEBOUNCE_TIME,
-    ANALYTICS_SELECTED_STR
-} from '../../../core/Analytics/constants';
+import { ANALYTICS_SEARCH_DEBOUNCE_TIME } from '../../../core/Analytics/constants';
 import { debounce } from '../../../utils/debounce';
-import { AnalyticsInfoEvent } from '../../../core/Analytics/AnalyticsInfoEvent';
+import { AnalyticsInfoEvent, InfoEventType, UiTarget } from '../../../core/Analytics/events/AnalyticsInfoEvent';
 
 const payButtonLabel = ({ issuer, items }, i18n): string => {
     const issuerName = items.find(i => i.id === issuer)?.name;
@@ -80,11 +72,12 @@ function IssuerList({
 
     const handleInputChange = useCallback(
         (type: IssuerListInputTypes) => (event: h.JSX.TargetedKeyboardEvent<HTMLInputElement>) => {
-            const target = type === IssuerListInputTypes.Dropdown ? ANALYTICS_LIST : ANALYTICS_FEATURED_ISSUER;
+            const target = type === IssuerListInputTypes.Dropdown ? UiTarget.list : UiTarget.featuredIssuer;
             const issuerObj = items.find(issuer => issuer.id === (event.target as SelectTargetObject).value);
 
             const analyticsEvent = new AnalyticsInfoEvent({
-                type: ANALYTICS_SELECTED_STR,
+                component: props.type,
+                type: InfoEventType.selected,
                 target,
                 issuer: issuerObj.name
             });
@@ -93,23 +86,27 @@ function IssuerList({
             setInputType(type);
             handleChangeFor('issuer')(event);
         },
-        [handleChangeFor]
+        [handleChangeFor, props.type]
     );
 
-    const handleListToggle = useCallback((isOpen: boolean) => {
-        if (isOpen) {
-            const event = new AnalyticsInfoEvent({
-                type: ANALYTICS_DISPLAYED_STR,
-                target: ANALYTICS_LIST
-            });
-            props.onSubmitAnalytics(event);
-        }
-    }, []);
+    const handleListToggle = useCallback(
+        (isOpen: boolean) => {
+            if (isOpen) {
+                const event = new AnalyticsInfoEvent({
+                    component: props.type,
+                    type: InfoEventType.displayed,
+                    target: UiTarget.list
+                });
+                props.onSubmitAnalytics(event);
+            }
+        },
+        [props.type, props.onSubmitAnalytics]
+    );
 
     const debounceSearchAnalytics = useRef(debounce(props.onSubmitAnalytics, ANALYTICS_SEARCH_DEBOUNCE_TIME));
 
     const handleSearch = useCallback(() => {
-        debounceSearchAnalytics.current({ type: ANALYTICS_INPUT_STR, target: ANALYTICS_LIST_SEARCH });
+        debounceSearchAnalytics.current({ type: InfoEventType.input, target: UiTarget.listSearch });
     }, []);
 
     useEffect(() => {

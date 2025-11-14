@@ -8,8 +8,9 @@ Check the checkboxes that are relevant for your pull request.
 - [ ] I have added unit tests to cover my changes.
 - [ ] I have added or updated Storybook stories where applicable.
 - [ ] I have tested the changes manually in the local environment.
+- [ ] I have checked that no PII data is being sent on analytics events
 - [ ] All E2E tests are passing, and I have added new tests if necessary.
-- [ ] All interfaces and types introduced or updated are strictly typed.
+- [ ] All interfaces and types introduced or updated are strictly typed. 
 
 ---
 

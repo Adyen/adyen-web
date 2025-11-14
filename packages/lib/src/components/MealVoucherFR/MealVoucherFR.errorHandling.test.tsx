@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import MealVoucherFR from './MealVoucherFR';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
+import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 
 const flushPromises = () => new Promise(process.nextTick);
 
@@ -22,6 +23,8 @@ describe('MealVoucherFR Error Handling', () => {
 
     describe('Inherited Error Handling from GiftCard', () => {
         test('should display "no-balance" error message when balance is zero', async () => {
+            const core = setupCoreMock();
+
             const onBalanceCheck = jest.fn(resolve => {
                 // Simulate successful balance check but with zero balance (triggers no-balance error)
                 resolve({
@@ -30,7 +33,7 @@ describe('MealVoucherFR Error Handling', () => {
             });
 
             const onError = jest.fn();
-            const mealVoucher = new MealVoucherFR(global.core, {
+            const mealVoucher = new MealVoucherFR(core, {
                 ...baseProps,
                 onBalanceCheck,
                 onError
@@ -49,13 +52,15 @@ describe('MealVoucherFR Error Handling', () => {
         });
 
         test('should display "card-error" error message when card does not exist', async () => {
+            const core = setupCoreMock();
+
             const onBalanceCheck = jest.fn(resolve => {
                 // Simulate successful balance check but with no balance property (triggers card-error)
                 resolve({});
             });
 
             const onError = jest.fn();
-            const mealVoucher = new MealVoucherFR(global.core, {
+            const mealVoucher = new MealVoucherFR(core, {
                 ...baseProps,
                 onBalanceCheck,
                 onError
@@ -74,6 +79,8 @@ describe('MealVoucherFR Error Handling', () => {
         });
 
         test('should display "currency-error" error message when currencies do not match', async () => {
+            const core = setupCoreMock();
+
             const onBalanceCheck = jest.fn(resolve => {
                 // Simulate successful balance check but with different currency (triggers currency-error)
                 resolve({
@@ -82,7 +89,7 @@ describe('MealVoucherFR Error Handling', () => {
             });
 
             const onError = jest.fn();
-            const mealVoucher = new MealVoucherFR(global.core, {
+            const mealVoucher = new MealVoucherFR(core, {
                 ...baseProps,
                 onBalanceCheck,
                 onError
@@ -103,6 +110,8 @@ describe('MealVoucherFR Error Handling', () => {
 
     describe('Error State Persistence for MealVoucher', () => {
         test('error message should persist after handleError is called', async () => {
+            const core = setupCoreMock();
+
             const onBalanceCheck = jest.fn(resolve => {
                 // Resolve with zero balance to trigger no-balance error
                 resolve({
@@ -111,7 +120,7 @@ describe('MealVoucherFR Error Handling', () => {
             });
 
             const onError = jest.fn();
-            const mealVoucher = new MealVoucherFR(global.core, {
+            const mealVoucher = new MealVoucherFR(core, {
                 ...baseProps,
                 onBalanceCheck,
                 onError
@@ -134,13 +143,15 @@ describe('MealVoucherFR Error Handling', () => {
         });
 
         test('component should be in ready state after error while preserving error message', async () => {
+            const core = setupCoreMock();
+
             const onBalanceCheck = jest.fn(resolve => {
                 // Resolve with no balance property to trigger card-error
                 resolve({});
             });
 
             const onError = jest.fn();
-            const mealVoucher = new MealVoucherFR(global.core, {
+            const mealVoucher = new MealVoucherFR(core, {
                 ...baseProps,
                 onBalanceCheck,
                 onError

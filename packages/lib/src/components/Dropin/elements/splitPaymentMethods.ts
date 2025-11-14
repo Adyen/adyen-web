@@ -1,6 +1,6 @@
 import PaymentMethods from '../../../core/ProcessResponse/PaymentMethods';
 import type { InstantPaymentTypes } from '../types';
-import type { PaymentMethod, StoredPaymentMethod } from '../../../types/global-types';
+import type { PaymentMethod, StoredPaymentMethod } from '../../../core/ProcessResponse/PaymentMethods/PaymentMethods';
 
 interface SplitPaymentMethods {
     fastlanePaymentMethod: PaymentMethod | undefined;

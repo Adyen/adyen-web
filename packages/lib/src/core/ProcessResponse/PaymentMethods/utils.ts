@@ -1,27 +1,46 @@
-import { PaymentMethod, PaymentMethodsResponse, StoredPaymentMethod } from '../../../types/global-types';
+import { RawPaymentMethod, PaymentMethodsResponse, RawStoredPaymentMethod } from '../../../types/global-types';
 import {
     filterAllowedPaymentMethods,
     filterEcomStoredPaymentMethods,
     filterRemovedPaymentMethods,
     filterSupportedStoredPaymentMethods
 } from './filters';
+import uuidv4 from '../../../utils/uuid';
+import type { PaymentMethod } from './PaymentMethods';
 
-const processStoredPaymentMethod = (pm): StoredPaymentMethod => ({
+const processStoredPaymentMethod = (pm): RawStoredPaymentMethod => ({
     ...pm,
     storedPaymentMethodId: pm.id,
     isStoredPaymentMethod: true
 });
 
-export const processPaymentMethods = (paymentMethods: PaymentMethod[], { allowPaymentMethods = [], removePaymentMethods = [] }): PaymentMethod[] => {
+/**
+ * Generate unique ID per payment method. Useful to fetch the correct payment method properties from the response
+ * @param paymentMethod
+ */
+function generatePaymentMethodId(paymentMethod: RawPaymentMethod): PaymentMethod {
+    return {
+        ...paymentMethod,
+        _id: uuidv4()
+    };
+}
+
+export const processPaymentMethods = (
+    paymentMethods: RawPaymentMethod[],
+    { allowPaymentMethods = [], removePaymentMethods = [] }
+): PaymentMethod[] => {
     if (!paymentMethods) return [];
 
-    return paymentMethods.filter(filterAllowedPaymentMethods, allowPaymentMethods).filter(filterRemovedPaymentMethods, removePaymentMethods);
+    return paymentMethods
+        .filter(filterAllowedPaymentMethods, allowPaymentMethods)
+        .filter(filterRemovedPaymentMethods, removePaymentMethods)
+        .map(generatePaymentMethodId);
 };
 
 export const processStoredPaymentMethods = (
-    storedPaymentMethods: StoredPaymentMethod[],
+    storedPaymentMethods: RawStoredPaymentMethod[],
     { allowPaymentMethods = [], removePaymentMethods = [] }
-): StoredPaymentMethod[] => {
+): RawStoredPaymentMethod[] => {
     if (!storedPaymentMethods) return [];
 
     return storedPaymentMethods

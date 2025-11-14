@@ -6,6 +6,7 @@ import { TxVariants } from '../tx-variants';
 import { httpGet, httpPost } from '../../core/Services/http';
 import { SRPanel } from '../../core/Errors/SRPanel';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
+import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 
 jest.mock('./services/PasskeyService');
 jest.mock('../../core/Services/http');
@@ -60,7 +61,9 @@ describe('PayByBankPix', () => {
     });
 
     test("should render a redirect button on the merchant's page", async () => {
-        const payByBankPixElement = new PayByBankPix(global.core, {
+        const core = setupCoreMock();
+
+        const payByBankPixElement = new PayByBankPix(core, {
             ...coreProps,
             _isAdyenHosted: false
         });
@@ -121,7 +124,9 @@ describe('PayByBankPix', () => {
         const onAdditionalDetailsMock = jest.fn();
 
         beforeEach(() => {
-            payByBankPixElement = new PayByBankPix(global.core, {
+            const core = setupCoreMock();
+
+            payByBankPixElement = new PayByBankPix(core, {
                 ...coreProps,
                 onChange: onChangeMock,
                 _isAdyenHosted: true,
@@ -177,18 +182,22 @@ describe('PayByBankPix', () => {
         });
 
         test('should render the Await for the await action', async () => {
-            payByBankPixElement = new PayByBankPix(global.core, {
+            const core = setupCoreMock();
+
+            payByBankPixElement = new PayByBankPix(core, {
                 ...coreProps,
-                modules: { ...coreProps.modules, srPanel: new SRPanel(global.core) },
                 _isAdyenHosted: true,
                 type: 'await'
             });
             render(payByBankPixElement.render());
+
             expect(await screen.findByText('Waiting for your confirmation...')).toBeInTheDocument();
         });
 
         test('should poll the correct endpoint during the Await process', async () => {
-            payByBankPixElement = new PayByBankPix(global.core, {
+            const core = setupCoreMock();
+
+            payByBankPixElement = new PayByBankPix(core, {
                 ...coreProps,
                 modules: { ...coreProps.modules, srPanel: new SRPanel(global.core) },
                 _isAdyenHosted: true,
@@ -207,6 +216,8 @@ describe('PayByBankPix', () => {
         });
 
         test('should call createCredentialForEnrollment of the passkeyService and authorizeEnrollment endpoint, when registrationOptions is available', async () => {
+            const core = setupCoreMock();
+
             httpGetMock.mockReset();
             httpGetMock = (httpGet as jest.Mock).mockImplementation(
                 jest.fn(() =>
@@ -216,7 +227,7 @@ describe('PayByBankPix', () => {
                     })
                 )
             );
-            payByBankPixElement = new PayByBankPix(global.core, {
+            payByBankPixElement = new PayByBankPix(core, {
                 ...coreProps,
                 modules: { ...coreProps.modules, srPanel: new SRPanel(global.core) },
                 _isAdyenHosted: true,
@@ -235,6 +246,8 @@ describe('PayByBankPix', () => {
         });
 
         test('should call onAdditionalDetails callback - for the advanced flow, when authorizeEnrollment returns redirectResult', async () => {
+            const core = setupCoreMock();
+
             httpGetMock.mockReset();
             httpPostMock.mockReset();
             httpGetMock = (httpGet as jest.Mock).mockImplementation(
@@ -253,7 +266,7 @@ describe('PayByBankPix', () => {
                     })
                 )
             );
-            payByBankPixElement = new PayByBankPix(global.core, {
+            payByBankPixElement = new PayByBankPix(core, {
                 ...coreProps,
                 modules: { ...coreProps.modules, srPanel: new SRPanel(global.core) },
                 onAdditionalDetails: onAdditionalDetailsMock,
@@ -285,7 +298,9 @@ describe('PayByBankPix', () => {
         const onSubmitMock = jest.fn();
 
         beforeEach(() => {
-            payByBankPixElement = new PayByBankPix(global.core, {
+            const core = setupCoreMock();
+
+            payByBankPixElement = new PayByBankPix(core, {
                 ...coreProps,
                 onChange: onChangeMock,
                 onSubmit: onSubmitMock,
@@ -340,7 +355,9 @@ describe('PayByBankPix', () => {
         });
 
         test('should render the Await for the await action', async () => {
-            payByBankPixElement = new PayByBankPix(global.core, {
+            const core = setupCoreMock();
+
+            payByBankPixElement = new PayByBankPix(core, {
                 ...coreProps,
                 modules: { ...coreProps.modules, srPanel: new SRPanel(global.core) },
                 onChange: onChangeMock,
@@ -355,7 +372,9 @@ describe('PayByBankPix', () => {
         });
 
         test('should poll the correct endpoint during the Await process', async () => {
-            payByBankPixElement = new PayByBankPix(global.core, {
+            const core = setupCoreMock();
+
+            payByBankPixElement = new PayByBankPix(core, {
                 ...coreProps,
                 modules: { ...coreProps.modules, srPanel: new SRPanel(global.core) },
                 onChange: onChangeMock,
@@ -386,7 +405,10 @@ describe('PayByBankPix', () => {
                     })
                 )
             );
-            payByBankPixElement = new PayByBankPix(global.core, {
+
+            const core = setupCoreMock();
+
+            payByBankPixElement = new PayByBankPix(core, {
                 ...coreProps,
                 modules: { ...coreProps.modules, srPanel: new SRPanel(global.core) },
                 onChange: onChangeMock,

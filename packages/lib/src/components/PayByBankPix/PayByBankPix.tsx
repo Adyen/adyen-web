@@ -222,7 +222,7 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
         if (!this.props._isAdyenHosted) {
             return (
                 <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
-                    <SRPanelProvider srPanel={this.props.modules.srPanel}>
+                    <SRPanelProvider srPanel={this.srPanel}>
                         <RedirectButton
                             showPayButton={this.props.showPayButton}
                             name={this.displayName}
@@ -241,7 +241,7 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
 
         return (
             <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
-                <SRPanelProvider srPanel={this.props.modules.srPanel}>
+                <SRPanelProvider srPanel={this.srPanel}>
                     {this.props.storedPaymentMethodId != null ? (
                         <StoredPayment
                             txVariant={PayByBankPixElement.type}
