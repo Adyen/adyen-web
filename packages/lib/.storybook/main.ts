@@ -13,8 +13,8 @@ const dirname = fileURLToPath(new URL('.', import.meta.url));
  * Configurations here will be define during build step
  */
 
-const certPath = process.env.CERT_PATH ?? join(__dirname, 'localhost.pem');
-const certKeyPath = process.env.CERT_KEY_PATH ?? join(__dirname, 'localhost-key.pem');
+const certPath = process.env.CERT_PATH ?? join(dirname, 'localhost.pem');
+const certKeyPath = process.env.CERT_KEY_PATH ?? join(dirname, 'localhost-key.pem');
 
 const isHttps = process.env.IS_HTTPS === 'true';
 
