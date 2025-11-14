@@ -14,7 +14,7 @@
             "prConcurrentLimit": 1
         },
         {
-            "matchPackageNames": ["@adyen/**"],
+            "matchPackageNames": ["@adyen/**", "node"],
             "enabled": false
         },
         {
