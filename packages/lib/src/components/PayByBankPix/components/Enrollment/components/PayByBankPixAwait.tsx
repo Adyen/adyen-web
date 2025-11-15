@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import AwaitLogoContainer, { IAwaitLogoContainer } from './AwaitLogoContainer';
-import Await from '../../../../internal/Await';
+import { Await } from '../../../../internal/Await';
 import './PayBankBankPixAwait.scss';
 import { AwaitComponentProps } from '../../../../internal/Await/types';
 

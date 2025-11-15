@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import UIElement from '../../internal/UIElement/UIElement';
-import QRLoader from '../../internal/QRLoader';
+import { QRLoader } from '../../internal/QRLoader';
 import { CoreProvider } from '../../../core/Context/CoreProvider';
 import RedirectButton from '../../internal/RedirectButton';
 import SRPanelProvider from '../../../core/Errors/SRPanelProvider';

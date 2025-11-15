@@ -3,7 +3,7 @@ import UIElement from '../internal/UIElement/UIElement';
 import MBWayInput from './components/MBWayInput';
 import { CoreProvider } from '../../core/Context/CoreProvider';
 import config from './components/MBWayAwait/config';
-import Await from '../../components/internal/Await';
+import { Await } from '../../components/internal/Await';
 import SRPanelProvider from '../../core/Errors/SRPanelProvider';
 import { TxVariants } from '../tx-variants';
 import { AwaitConfiguration } from '../internal/Await/types';

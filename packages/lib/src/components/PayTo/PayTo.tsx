@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import UIElement from '../internal/UIElement/UIElement';
 import { CoreProvider } from '../../core/Context/CoreProvider';
-import Await from '../../components/internal/Await';
+import { Await } from '../../components/internal/Await';
 import SRPanelProvider from '../../core/Errors/SRPanelProvider';
 import { TxVariants } from '../tx-variants';
 import { PayToIdentifierEnum } from './components/IdentifierSelector';
