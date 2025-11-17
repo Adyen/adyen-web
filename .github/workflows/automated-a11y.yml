@@ -75,7 +75,7 @@ jobs:
     
     - name: Archive test result artifacts
       if: always()
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         name: a11y-report-${{matrix.api-version}}-${{matrix.runner-browser}}-${{ github.sha }}
         path: packages/e2e-playwright/playwright-report
