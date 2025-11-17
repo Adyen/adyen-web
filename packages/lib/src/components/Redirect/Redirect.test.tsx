@@ -79,7 +79,7 @@ describe('Redirect error', () => {
     });
 
     afterAll(() => {
-        window.location = oldWindowLocation;
+        window.location = oldWindowLocation as string & Location;
     });
 
     test('should send an error event to the analytics module if beforeRedirect rejects', async () => {
