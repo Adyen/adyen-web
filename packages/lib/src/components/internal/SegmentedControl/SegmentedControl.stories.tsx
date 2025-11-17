@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { Meta, StoryObj } from '@storybook/preact';
+import { Meta, StoryObj } from '@storybook/preact-vite';
 import SegmentedControl, { SegmentedControlProps } from './SegmentedControl';
 import { useState } from 'preact/hooks';
 
