@@ -10,21 +10,20 @@ export class Automated extends Base {
         this.component = this.page.locator('#component-root');
     }
 
-    private isInternalStory() { 
+    private isInternalStory() {
         const storyUrl = this.page.url();
-        // Check if is 'internal' component story
-        return storyUrl && storyUrl.includes('internals-');
+        return storyUrl && storyUrl.includes('internal-elements-');
     }
 
     protected a11yComponentSelector() {
-        if(this.isInternalStory()){
-            return ('#storybook-root');
+        if (this.isInternalStory()) {
+            return '#storybook-root';
         }
         return '#component-root';
     }
 
     async isComponentVisible() {
-        if(this.isInternalStory()){
+        if (this.isInternalStory()) {
             // Becasue these don't have paybutton wait 3s - it was trial and error
             // another way of doing this is welcome
             return this.page.waitForTimeout(3000);

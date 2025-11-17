@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { Meta, StoryObj } from '@storybook/preact';
+import { Meta, StoryObj } from '@storybook/preact-vite';
 import Button from './Button';
 import PayButton from '../PayButton/PayButton';
 import Language from '../../../language';
@@ -13,7 +13,7 @@ import { resolveEnvironments } from '../../../core/Environment';
 import type { CoreConfiguration } from '../../../core/types';
 
 const meta: Meta<ButtonProps> = {
-    title: 'Internals/Button',
+    title: 'Internal Elements/Button',
     component: Button as any,
     argTypes: {
         status: {

@@ -61,7 +61,7 @@ describe('PaymentMethodBrands', () => {
             { name: 'maestro', icon: 'maestro.png' }
         ];
 
-        renderWrapper(<PaymentMethodBrands brands={brands} isPaymentMethodSelected={false} showOtherInsteafOfNumber={true} />);
+        renderWrapper(<PaymentMethodBrands brands={brands} isPaymentMethodSelected={false} showOtherInsteadOfNumber={true} />);
 
         screen.getByAltText('VISA');
         screen.getByAltText('MasterCard');

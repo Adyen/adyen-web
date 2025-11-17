@@ -1,11 +1,11 @@
 import { Fragment, h } from 'preact';
-import { Meta, StoryObj } from '@storybook/preact';
+import { Meta, StoryObj } from '@storybook/preact-vite';
 import { useRef } from 'preact/hooks';
 import { Tooltip } from './Tooltip';
 import { SingletonTooltipProvider, useTooltip } from './SingletonTooltipProvider';
 
 const meta: Meta = {
-    title: 'Internals/Tooltip',
+    title: 'Internal Elements/Tooltip',
     component: Tooltip,
     argTypes: {
         margin: {

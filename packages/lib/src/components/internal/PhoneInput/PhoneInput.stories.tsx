@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { Meta, StoryObj } from '@storybook/preact';
+import { Meta, StoryObj } from '@storybook/preact-vite';
 import PhoneInputForm from './PhoneInputForm';
 import { CoreProvider } from '../../../core/Context/CoreProvider';
 import Language from '../../../language';
@@ -55,7 +55,7 @@ const formatPrefixName = item => {
 };
 
 const meta: Meta = {
-    title: 'Internals/PhoneInput',
+    title: 'Internal Elements/PhoneInput',
     component: PhoneInputForm
 };
 

@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { Meta } from '@storybook/preact';
+import { Meta } from '@storybook/preact-vite';
 import Address from './Address';
 import { ComponentContainer } from '../../../../storybook/components/ComponentContainer';
 import AddressElement from '../../Address/Address';
@@ -8,7 +8,7 @@ import { StoryConfiguration } from '../../../../storybook/types';
 import type { UIElementProps } from '../UIElement/types';
 
 const meta: Meta = {
-    title: 'Internals/Address',
+    title: 'Internal Elements/Address',
     component: Address,
     argTypes: {
         size: {

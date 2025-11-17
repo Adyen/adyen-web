@@ -1,10 +1,10 @@
 import { h } from 'preact';
-import { Meta, StoryObj } from '@storybook/preact';
+import { Meta, StoryObj } from '@storybook/preact-vite';
 import Toggle from './Toggle';
 import { useState } from 'preact/hooks';
 
 const meta: Meta = {
-    title: 'Internals/Toggle',
+    title: 'Internal Elements/Toggle',
     component: Toggle
 };
 

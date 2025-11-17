@@ -1,12 +1,12 @@
 import { h } from 'preact';
-import { Meta, StoryObj } from '@storybook/preact';
+import { Meta, StoryObj } from '@storybook/preact-vite';
 import Alert from './Alert';
 import Language from '../../../language';
 import { CoreProvider } from '../../../core/Context/CoreProvider';
 import { Resources } from '../../../core/Context/Resources';
 
 const meta: Meta = {
-    title: 'Internals/Alert',
+    title: 'Internal Elements/Alert',
     component: Alert,
     argTypes: {
         type: {

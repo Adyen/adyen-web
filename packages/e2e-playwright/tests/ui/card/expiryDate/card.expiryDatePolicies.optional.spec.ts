@@ -15,7 +15,7 @@ const DATE_INVALID_ERROR = LANG['cc.dat.912'];
 const DATE_EMPTY_ERROR = LANG['cc.dat.910'];
 const CVC_ERROR = LANG['cc.cvc.920'];
 
-const urlNoAutoFocus = '/iframe.html?args=srConfig.moveFocus:!false&globals=&id=components-cards-card--default&viewMode=story';
+const urlNoAutoFocus = '/iframe.html?args=srConfig.moveFocus:!false&globals=&id=components-cards--default&viewMode=story';
 const url = getStoryUrl({ baseUrl: urlNoAutoFocus, componentConfig: { brands: ['mc', 'visa', 'amex', 'synchrony_plcc'] } });
 
 test.describe('Test how Card Component handles optional expiryDate policy', () => {

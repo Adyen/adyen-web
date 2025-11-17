@@ -1,9 +1,9 @@
 import { h } from 'preact';
-import { Meta, StoryObj } from '@storybook/preact';
+import { Meta, StoryObj } from '@storybook/preact-vite';
 import { Timeline } from './Timeline';
 
 const meta: Meta = {
-    title: 'Internals/Timeline',
+    title: 'Internal Elements/Timeline',
     component: Timeline
 };
 

@@ -1,40 +1,29 @@
-import type { StorybookConfig } from '@storybook/preact-vite';
+import { fileURLToPath } from 'url';
+import { join } from 'path';
 import { mergeConfig } from 'vite';
-import * as path from 'path';
 import stylelint from 'vite-plugin-stylelint';
-import generateEnvironmentVariables from '../config/environment-variables';
-import { resolve } from 'node:path';
 import preact from '@preact/preset-vite';
+import generateEnvironmentVariables from '../config/environment-variables.js';
+import type { StorybookConfig } from '@storybook/preact-vite';
+
+const dirname = fileURLToPath(new URL('.', import.meta.url));
 
 /*
  * This is the build time configuration
  * Configurations here will be define during build step
  */
 
-const certPath = process.env.CERT_PATH ?? path.resolve(__dirname, 'localhost.pem');
-const certKeyPath = process.env.CERT_KEY_PATH ?? path.resolve(__dirname, 'localhost-key.pem');
+const certPath = process.env.CERT_PATH ?? join(dirname, 'localhost.pem');
+const certKeyPath = process.env.CERT_KEY_PATH ?? join(dirname, 'localhost-key.pem');
 
 const isHttps = process.env.IS_HTTPS === 'true';
 
 const config: StorybookConfig = {
-    stories: ['../**/*.stories.@(js|jsx|ts|tsx)'],
+    stories: ['../**/*.docs.mdx', '../**/*.stories.@(js|jsx|ts|tsx)'],
 
-    addons: [
-        {
-            name: '@storybook/addon-essentials',
-            options: {
-                docs: false
-            }
-        },
-        {
-            name: '@storybook/addon-a11y'
-        }
-    ],
+    framework: '@storybook/preact-vite',
 
-    framework: {
-        name: getAbsolutePath('@storybook/preact-vite'),
-        options: {}
-    },
+    addons: ['@storybook/addon-a11y', '@storybook/addon-docs'],
 
     // public added for msw: https://github.com/mswjs/msw-storybook-addon?tab=readme-ov-file#start-storybook
     // '../storybook/public'
@@ -47,12 +36,12 @@ const config: StorybookConfig = {
             // Mirror Rollup's CSS processing exactly
             css: {
                 // Use same PostCSS config file as Rollup
-                postcss: resolve(__dirname, '../postcss.config.cjs'),
+                postcss: join(dirname, '../postcss.config.cjs'),
 
                 // Mirror Rollup's SCSS settings
                 preprocessorOptions: {
                     scss: {
-                        includePaths: [resolve(__dirname, '../src')] // Same as Rollup
+                        includePaths: [join(dirname, '../src')] // Same as Rollup
                     }
                 },
 
@@ -82,7 +71,7 @@ const config: StorybookConfig = {
                         find: /^~(.*)$/,
                         replacement: '$1'
                     },
-                    { find: /^styles(.*)$/, replacement: resolve(__dirname, '../src/styles') }
+                    { find: /^styles(.*)$/, replacement: join(dirname, '../src/styles') }
                 ]
             },
 
@@ -117,11 +106,3 @@ const config: StorybookConfig = {
     }
 };
 export default config;
-
-/**
- * This function is used to resolve the absolute path of a package.
- * It is needed in projects that use Yarn PnP or are set up within a monorepo.
- */
-function getAbsolutePath(value: string): any {
-    return path.dirname(require.resolve(path.join(value, 'package.json')));
-}

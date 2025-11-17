@@ -1,7 +1,8 @@
 import './main.css';
-import { Preview } from '@storybook/preact';
+import { Preview } from '@storybook/preact-vite';
 import { DEFAULT_COUNTRY_CODE, DEFAULT_SHOPPER_LOCALE, DEFAULT_AMOUNT_VALUE, SHOPPER_LOCALES } from '../storybook/config/commonConfig';
 import { initialize, mswLoader } from 'msw-storybook-addon';
+import { COUNTRY_CODES } from '../storybook/constants/countries';
 
 /*
  * The configurations in this file run on runtime
@@ -24,7 +25,8 @@ const preview: Preview = {
             control: 'boolean'
         },
         countryCode: {
-            control: 'text'
+            control: 'select',
+            options: Object.values(COUNTRY_CODES)
         },
         shopperLocale: {
             control: 'select',
@@ -46,11 +48,18 @@ const preview: Preview = {
     },
     parameters: {
         options: {
-          storySort: {
-            order: ['Components', ['Cards', ['Card', "*"], 'Dropin', 'Wallets', 'IssuerList','OpenInvoice', 'Partial Payments', 'Vouchers', '*'],'*'],
-          },
-        },
-      },
+            storySort: {
+                order: [
+                    'Welcome',
+                    'Dropin',
+                    'Components',
+                    ['Cards', ['Card', '*'], 'Wallets', 'IssuerList', 'OpenInvoice', 'Partial Payments', 'Vouchers', 'Redirect', '*'],
+                    'Internal Elements',
+                    '*'
+                ]
+            }
+        }
+    },
     ...loaders
 };
 
