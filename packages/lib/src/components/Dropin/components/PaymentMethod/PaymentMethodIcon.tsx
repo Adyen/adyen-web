@@ -20,7 +20,7 @@ const PaymentMethodIcon = ({ src, altDescription, type }: PaymentMethodIconProps
         ? 'adyen-checkout__payment-method__image__wrapper'
         : classNames('adyen-checkout__payment-method__image__wrapper', 'adyen-checkout__payment-method__image__wrapper--outline');
 
-    return <Brand wrapperClassName={classes} url={src} alt={altDescription} />;
+    return <Brand wrapperClassName={classes} imgClassName={'adyen-checkout__payment-method__image'} url={src} alt={altDescription} />;
 };
 
 export default PaymentMethodIcon;

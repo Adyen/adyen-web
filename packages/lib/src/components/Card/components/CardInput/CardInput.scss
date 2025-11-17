@@ -86,7 +86,7 @@
 }
 
 /* Hide card brand icon when cardNumber is in an error state */
-.adyen-checkout__field--cardNumber .adyen-checkout__input--error + .adyen-checkout__card__cardNumber__brandIcon {
+.adyen-checkout__field--cardNumber .adyen-checkout__input--error + .adyen-checkout-brand-wrapper {
     display: none;
 }
 
