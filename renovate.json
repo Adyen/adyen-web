@@ -22,7 +22,7 @@
             "enabled": false
         },
         {
-            "matchPackageNames": ["preact", "@swc/core"],
+            "matchPackageNames": ["preact", "@swc/core", "@playwright/test", "sass"],
             "groupName": null
         }
     ]
