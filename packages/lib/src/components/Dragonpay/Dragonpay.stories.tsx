@@ -4,6 +4,7 @@ import { ComponentContainer } from '../../../storybook/components/ComponentConta
 import { Checkout } from '../../../storybook/components/Checkout';
 import Dragonpay from './Dragonpay';
 import { DragonpayConfiguraton } from './types';
+import { TxVariants } from '../tx-variants';
 
 type DragonpayStory = StoryConfiguration<DragonpayConfiguraton>;
 
@@ -20,7 +21,10 @@ const render = ({ componentConfiguration, ...checkoutConfig }: PaymentMethodStor
 export const Default: DragonpayStory = {
     render,
     args: {
-        countryCode: 'PH'
+        countryCode: 'PH',
+        componentConfiguration: {
+            type: TxVariants.dragonpay_ebanking
+        }
     }
 };
 

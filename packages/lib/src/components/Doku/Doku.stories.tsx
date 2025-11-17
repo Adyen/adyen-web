@@ -4,6 +4,7 @@ import { ComponentContainer } from '../../../storybook/components/ComponentConta
 import { Checkout } from '../../../storybook/components/Checkout';
 import Doku from './Doku';
 import { VoucherConfiguration } from '../types';
+import { TxVariants } from '../tx-variants';
 
 type DokuStory = StoryConfiguration<VoucherConfiguration>;
 
@@ -18,7 +19,10 @@ const render = ({ componentConfiguration, ...checkoutConfig }: PaymentMethodStor
 export const Default: DokuStory = {
     render,
     args: {
-        countryCode: 'ID'
+        countryCode: 'ID',
+        componentConfiguration: {
+            type: TxVariants.doku_wallet
+        }
     }
 };
 
