@@ -12,9 +12,10 @@ interface BrandProps {
     showOnError?: boolean;
 }
 
-const Brand = ({ url, alt, wrapperClassName = '', imgClassName = '' }: BrandProps) => {
+const Brand = ({ url, alt, wrapperClassName = '', imgClassName = '', showOnError }: BrandProps) => {
     const [hasError, setHasError] = useState(false);
-    const classes = cx('adyen-checkout-brand-wrapper', wrapperClassName, { 'adyen-checkout-brand-wrapper--error': hasError });
+    const classesOnError = showOnError ? {} : { 'adyen-checkout-brand-wrapper--error': hasError };
+    const classes = cx('adyen-checkout-brand-wrapper', wrapperClassName, classesOnError);
 
     return (
         <span className={classes}>

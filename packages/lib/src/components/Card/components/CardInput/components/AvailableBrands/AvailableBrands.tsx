@@ -25,7 +25,13 @@ const AvailableBrands = ({ brands, activeBrand }: PaymentMethodBrandsProps) => {
             })}
         >
             {brands.map(({ name, icon }) => (
-                <Brand wrapperClassName={'adyen-checkout__card__brands__brand-wrapper'} key={name} url={icon} alt={getFullBrandName(name)}></Brand>
+                <Brand
+                    showOnError
+                    wrapperClassName={'adyen-checkout__card__brands__brand-wrapper'}
+                    key={name}
+                    url={icon}
+                    alt={getFullBrandName(name)}
+                ></Brand>
             ))}
         </span>
     );
