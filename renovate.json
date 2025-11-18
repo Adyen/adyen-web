@@ -14,7 +14,7 @@
             "groupName": "Minor and Patch Updates"
         },
         {
-            "matchPackageNames": ["@adyen/**", "node"],
+            "matchPackageNames": ["@adyen/**", "node", "cheerio"],
             "enabled": false
         },
         {
