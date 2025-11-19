@@ -1,0 +1,24 @@
+@import 'styles/variable-generator';
+
+.adyen-checkout__field--cardNumber {
+    .adyen-checkout__input-wrapper {
+        cursor: text;
+    }
+
+    .adyen-checkout-brand-wrapper {
+        border-radius: token(border-radius-s);
+        margin-right: token(spacer-060);
+    }
+
+    .adyen-checkout-card-input__icon {
+        margin-right: 0;
+    }
+}
+
+.adyen-checkout__card__dual-branding__icons {
+    display: flex;
+
+    .adyen-checkout__card__cardNumber__brandIcon {
+        opacity: 1;
+    }
+}

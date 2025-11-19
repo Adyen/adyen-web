@@ -14,6 +14,10 @@
     overflow: visible;
 }
 
+.adyen-checkout__input-icon--no-radio-icon {
+    @include index.adyen-checkout-icon-shadow;
+}
+
 .adyen-checkout__radio_group__label--no-radio:hover {
     border-color: token(color-label-primary);
     cursor: pointer;
@@ -29,8 +33,10 @@
 
 .adyen-checkout__radio_group--button {
     .adyen-checkout__radio_group__label--no-radio {
-        padding: token(spacer-060);
-        padding-left: calc(token(spacer-060) + token(spacer-090));
+        $padding: token(spacer-060);
+        $brand-width: token(spacer-090);
+
+        padding: $padding $padding $padding calc($padding + $brand-width);
         width: 100%;
         border: token(border-width-s) solid token(color-outline-primary);
         border-radius: token(border-radius-m);
