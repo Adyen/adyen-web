@@ -65,7 +65,7 @@ export default function RadioGroupExtended(props: RadioGroupExtendedProps) {
                                             'adyen-checkout-input__inline-validation--valid': value === item.id
                                         })}
                                     >
-                                        <Icon type={`${PREFIX}checkmark`} alt={i18n?.get('field.valid')} />
+                                        <Icon type={`${PREFIX}checkmark_black`} alt={i18n?.get('field.valid')} />
                                     </span>
                                 )}
                             </div>

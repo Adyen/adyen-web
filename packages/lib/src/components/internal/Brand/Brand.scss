@@ -1,0 +1,15 @@
+@use 'styles/index';
+
+.adyen-checkout-brand-wrapper {
+    @include index.adyen-checkout-icon-shadow;
+
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+
+    &--error {
+        display: none;
+    }
+}
