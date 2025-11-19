@@ -4,6 +4,7 @@ import { IssuerItem } from '../../../internal/IssuerList/types';
 import { OnChangeData } from '../../../../core/types';
 import { IPayByBankPixAwait } from './components/PayByBankPixAwait';
 import { AnalyticsEvent } from '../../../../core/Analytics/AnalyticsEvent';
+import { AdyenCheckoutError } from '../../../../types';
 
 interface BaseEnrollmentProps {
     type?: string;
@@ -14,7 +15,7 @@ interface BaseEnrollmentProps {
     /**
      * Trigger when the await times out, receives error state or the biometrics verification fails.
      */
-    onError?: (error) => void;
+    onError?: (error: AdyenCheckoutError) => void;
     onEnroll?: (registrationOptions: string) => void;
 }
 

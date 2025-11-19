@@ -1,121 +1,44 @@
-import { h } from 'preact';
-import { useState, useEffect } from 'preact/hooks';
 import classnames from 'classnames';
-import checkPaymentStatus from '../../../core/Services/payment-status';
-import processResponse from '../../../core/ProcessResponse';
-import Spinner from '../../internal/Spinner';
-import Countdown from '../Countdown';
-import Button from '../Button';
+import { h } from 'preact';
+import { useEffect } from 'preact/hooks';
 import { useCoreContext } from '../../../core/Context/CoreProvider';
-import { AwaitComponentProps, StatusObject } from './types';
-import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
+import {
+    usePaymentStatusTimer,
+    DEFAULT_PAYMENT_STATUS_TIMER_COUNTDOWN_TIME_MIN,
+    DEFAULT_PAYMENT_STATUS_TIMER_DELAY_MS,
+    DEFAULT_PAYMENT_STATUS_TIMER_THROTTLE_INTERVAL_MS,
+    DEFAULT_PAYMENT_STATUS_TIMER_THROTTLE_TIME_MS
+} from '../../../hooks/usePaymentStatusTimer';
+import Spinner from '../../internal/Spinner';
+import Button from '../Button';
 import ContentSeparator from '../ContentSeparator';
-import useImage from '../../../core/Context/useImage';
-import { CountdownTime } from '../Countdown/types';
+import Countdown from '../Countdown';
+import { AwaitFinalState } from './components/AwaitFinalState';
+import { AwaitComponentProps } from './types';
+import { redirectToApp } from '../../../utils/urls';
 import './Await.scss';
 
-function Await(props: AwaitComponentProps) {
+export function Await(props: AwaitComponentProps) {
     const { i18n, loadingContext } = useCoreContext();
-    const getImage = useImage();
-    const [completed, setCompleted] = useState(false);
-    const [expired, setExpired] = useState(false);
-    const [loading, setLoading] = useState(true);
-    const [hasCalledActionHandled, setHasCalledActionHandled] = useState(false);
-    const [delay, setDelay] = useState(props.delay);
-    const [percentage, setPercentage] = useState(100);
-    const [timePassed, setTimePassed] = useState(0);
-    const [hasAdjustedTime, setHasAdjustedTime] = useState(false);
-    const [storedTimeout, setStoredTimeout] = useState<NodeJS.Timeout | number | null>(null);
+
+    const { state: timerState, actions: timerActions } = usePaymentStatusTimer({
+        loadingContext,
+        paymentData: props.paymentData,
+        clientKey: props.clientKey,
+        delay: props.delay,
+        throttleTime: props.throttleTime,
+        throttleInterval: props.throttleInterval,
+        type: props.type,
+        onError: props.onError,
+        onComplete: props.onComplete,
+        pollStatus: props.pollStatus,
+        onActionHandled: props.onActionHandled
+    });
+
+    const { completed, expired, loading, percentage } = timerState;
+    const { onTick, onTimeUp } = timerActions;
+
     const { amount } = props;
-
-    const onTimeUp = (): void => {
-        setExpired(true);
-        clearTimeout(storedTimeout);
-        props.onError(new AdyenCheckoutError('ERROR', 'Payment Expired'));
-    };
-
-    const onTick = (time: CountdownTime): void => {
-        setPercentage(time.percentage);
-    };
-
-    const onComplete = (status: StatusObject): void => {
-        // Only make details call if we have a payload
-        if (status.props.payload) {
-            setCompleted(true);
-            const state = {
-                data: {
-                    details: { payload: status.props.payload },
-                    paymentData: props.paymentData
-                }
-            };
-            // Send success response to onAdditionalDetails
-            return props.onComplete(state);
-        }
-
-        // Show error state & call merchant defined error callback if we do not have a payload
-        setExpired(true);
-        props.onError(new AdyenCheckoutError('ERROR', 'successful result, but no payload in response'));
-    };
-
-    const onError = (status: StatusObject): void => {
-        setExpired(true);
-
-        // Only make details call if we have a payload
-        if (status.props.payload) {
-            const state = {
-                data: {
-                    details: { payload: status.props.payload },
-                    paymentData: props.paymentData
-                }
-            };
-            // Send error response to onAdditionalDetails
-            return props.onComplete(state);
-        }
-
-        // Call merchant defined error callback if we do not have a payload
-        props.onError(new AdyenCheckoutError('ERROR', 'error result with no payload in response'));
-    };
-
-    const checkStatus = async (): Promise<void> => {
-        const { paymentData, clientKey, throttleInterval, pollStatus } = props;
-
-        // If there's a custom pollStatus function, call it.
-        // Otherwise, call the default one.
-        const pollStatusFunction = pollStatus ?? (() => checkPaymentStatus(paymentData, clientKey, loadingContext, throttleInterval));
-
-        if (!hasCalledActionHandled) {
-            props.onActionHandled?.({ componentType: props.type, actionDescription: 'polling-started' });
-            setHasCalledActionHandled(true);
-        }
-
-        return pollStatusFunction()
-            .then(processResponse)
-            .catch(({ message, ...response }) => ({
-                type: 'network-error',
-                props: {
-                    ...(message && { message: i18n.get(message) }),
-                    ...response
-                }
-            }))
-            .then((status: StatusObject) => {
-                switch (status.type) {
-                    case 'success':
-                        onComplete(status);
-                        break;
-
-                    case 'error':
-                        onError(status);
-                        break;
-
-                    default:
-                        setLoading(false);
-                }
-            });
-    };
-
-    const redirectToApp = (url: string): void => {
-        window.location.assign(url);
-    };
 
     useEffect(() => {
         if (props.shouldRedirectAutomatically && props.url) {
@@ -123,56 +46,12 @@ function Await(props: AwaitComponentProps) {
         }
     }, [props.shouldRedirectAutomatically, props.url]);
 
-    useEffect(() => {
-        void checkStatus();
-        return (): void => {
-            clearTimeout(storedTimeout);
-        };
-    }, []);
-
-    useEffect(() => {
-        if (expired) return clearTimeout(storedTimeout);
-
-        if (completed) return clearTimeout(storedTimeout);
-
-        if (!loading) {
-            // Retry until getting a complete response from the server OR it times out
-            // Changes setTimeout time to new value (throttleInterval) after a certain amount of time (throttleTime) has passed
-            const statusInterval = async (): Promise<void> => {
-                await checkStatus();
-
-                const actualTimePassed = timePassed + delay;
-                // timePassed is the value that is the main "engine" that drives this useEffect/polling
-                setTimePassed(actualTimePassed);
-
-                if (actualTimePassed >= props.throttleTime && !hasAdjustedTime) {
-                    setDelay(props.throttleInterval);
-                    setHasAdjustedTime(true);
-                }
-            };
-
-            // Create (another) interval to poll for a result
-            setStoredTimeout(setTimeout(() => void statusInterval(), delay));
-        }
-    }, [loading, expired, completed, timePassed]);
-
-    const finalState = (image: string, message: string) => (
-        <div className="adyen-checkout__await adyen-checkout__await--result">
-            <img
-                className="adyen-checkout__await__icon adyen-checkout__await__icon--result"
-                src={getImage({ imageFolder: 'components/' })(image)}
-                alt={i18n.get(message)}
-            />
-            <p className="adyen-checkout__await__subtitle adyen-checkout__await__subtitle--result">{i18n.get(message)}</p>
-        </div>
-    );
-
     if (expired) {
-        return finalState('error', 'error.subtitle.payment');
+        return <AwaitFinalState image="error" message={i18n.get('error.subtitle.payment')} />;
     }
 
     if (completed) {
-        return finalState('success', 'creditCard.success');
+        return <AwaitFinalState image="success" message={i18n.get('creditCard.success')} />;
     }
 
     if (loading) {
@@ -244,15 +123,13 @@ function Await(props: AwaitComponentProps) {
 }
 
 Await.defaultProps = {
-    countdownTime: 15,
+    countdownTime: DEFAULT_PAYMENT_STATUS_TIMER_COUNTDOWN_TIME_MIN,
+    delay: DEFAULT_PAYMENT_STATUS_TIMER_DELAY_MS,
+    throttleTime: DEFAULT_PAYMENT_STATUS_TIMER_THROTTLE_TIME_MS,
+    throttleInterval: DEFAULT_PAYMENT_STATUS_TIMER_THROTTLE_INTERVAL_MS,
     onError: () => {},
     onComplete: () => {},
-    delay: 2000,
-    throttleTime: 60000,
-    throttleInterval: 10000,
     showCountdownTimer: true,
     classNameModifiers: [],
     url: null
 };
-
-export default Await;

@@ -1,17 +1,7 @@
 import { UIElementProps } from '../UIElement/types';
 import { ActionHandledReturnObject, PaymentAmount, RawPaymentResponse } from '../../../types/global-types';
 import { h } from 'preact';
-
-interface StatusObjectProps {
-    payload: string;
-    resultCode: string;
-    type: string;
-}
-
-export interface StatusObject {
-    type: string;
-    props: StatusObjectProps;
-}
+import { AdditionalDetailsData, AdyenCheckoutError, RawPaymentStatusResponse } from '../../../types';
 
 export interface AwaitComponentProps {
     type: string;
@@ -25,13 +15,13 @@ export interface AwaitComponentProps {
     url?: string;
     classNameModifiers?: string[];
     clientKey: string;
-    onError: (error) => void;
-    onComplete: (status) => void;
+    onError: (error: AdyenCheckoutError) => void;
+    onComplete: (status: AdditionalDetailsData) => void;
     brandLogo?: string;
     messageText?: string;
     awaitText: string;
     onActionHandled?: (rtnObj: ActionHandledReturnObject) => void;
-    pollStatus?: () => Promise<RawPaymentResponse>;
+    pollStatus?: () => Promise<RawPaymentResponse | RawPaymentStatusResponse>;
     instructions?: string | (() => h.JSX.Element);
     endSlot?: () => h.JSX.Element;
     amount?: PaymentAmount;
