@@ -3,7 +3,7 @@ import UIElement from '../internal/UIElement/UIElement';
 import ANCVInput from './components/ANCVInput';
 import { CoreProvider } from '../../core/Context/CoreProvider';
 import config from './components/ANCVAwait/config';
-import Await from '../../components/internal/Await';
+import { Await } from '../../components/internal/Await';
 import SRPanelProvider from '../../core/Errors/SRPanelProvider';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import PayButton from '../internal/PayButton';

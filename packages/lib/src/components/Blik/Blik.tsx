@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import UIElement from '../internal/UIElement/UIElement';
 import BlikInput from '../../components/Blik/components/BlikInput';
-import Await from '../internal/Await';
+import { Await } from '../internal/Await';
 import { CoreProvider } from '../../core/Context/CoreProvider';
 import config from './config';
 import RedirectButton from '../../components/internal/RedirectButton';

@@ -189,9 +189,9 @@ export interface PaymentMethodGroup {
     type: string;
 }
 
-export interface ProcessedResponse {
+export interface ProcessedPaymentStatusResponse {
     type: string;
-    props?: object;
+    props?: Record<string, any>;
 }
 
 /**
@@ -354,6 +354,10 @@ export type RawPaymentResponse = PaymentResponseData &
     CheckoutAdvancedFlowResponse & {
         [key: string]: any;
     };
+
+export type RawPaymentStatusResponse = Pick<RawPaymentResponse, 'resultCode' | 'type'> & {
+    payload?: string | null;
+};
 
 /**
  * onActionHandled is called for all actions:
