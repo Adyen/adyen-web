@@ -1,3 +1,4 @@
+import { RawPaymentStatusResponse } from '../../types';
 import { httpPost } from './http';
 
 /**
@@ -8,7 +9,7 @@ import { httpPost } from './http';
  * @param timeout - in milliseconds
  * @returns a promise containing the response of the call
  */
-export default function checkPaymentStatus(paymentData, clientKey, loadingContext, timeout) {
+export default function checkPaymentStatus(paymentData, clientKey, loadingContext, timeout): Promise<RawPaymentStatusResponse> {
     if (!paymentData || !clientKey) {
         throw new Error('Could not check the payment status');
     }
