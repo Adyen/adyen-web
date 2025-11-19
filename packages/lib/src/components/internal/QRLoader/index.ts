@@ -1,9 +1,8 @@
-import QRImage from './components/QRImage';
-import QRProgressbar from './components/QRProgressbar';
-import QRCountdown from './components/QRCountdown';
-import QRInstructions from './components/QRIntructions';
-import QRCodeCopyButton from './components/QRCodeCopyButton';
+export { QRLoader } from './QRLoader';
+export { QRImage } from './components/QRImage';
+export { QRProgressbar } from './components/QRProgressbar';
+export { QRCountdown } from './components/QRCountdown';
+export { QRInstructions } from './components/QRIntructions';
+export { QRCodeCopyButton } from './components/QRCodeCopyButton';
 
-export { default } from './QRLoader';
 export { useQRLoaderDetails, QRLoaderDetailsProvider } from './QRLoaderDetailsProvider';
-export { QRImage, QRProgressbar, QRCountdown, QRInstructions, QRCodeCopyButton };
