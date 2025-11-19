@@ -7,6 +7,10 @@ import type { PaymentMethodsConfiguration } from '../types';
 import type { ICore } from '../../../core/types';
 import type { PaymentMethod, StoredPaymentMethod } from '../../../core/ProcessResponse/PaymentMethods/PaymentMethods';
 
+function isStoredPaymentMethod(paymentMethod: PaymentMethod | StoredPaymentMethod): paymentMethod is StoredPaymentMethod {
+    return 'isStoredPaymentMethod' in paymentMethod && paymentMethod.isStoredPaymentMethod === true;
+}
+
 /**
  * Returns a filtered (available) list of component Elements
  *
@@ -24,8 +28,11 @@ const createElements = (
     const elements = optionallyFilterUpiSubTxVariants(paymentMethods)
         .filter(filterUnsupportedPaymentMethod)
         .map(paymentMethod => {
-            const isStoredPaymentMethod = 'isStoredPaymentMethod' in paymentMethod && paymentMethod.isStoredPaymentMethod;
-            const paymentMethodConfigFromDropin = getComponentConfiguration(paymentMethod.type, paymentMethodsConfiguration, isStoredPaymentMethod);
+            const paymentMethodConfigFromDropin = getComponentConfiguration(
+                paymentMethod.type,
+                paymentMethodsConfiguration,
+                isStoredPaymentMethod(paymentMethod)
+            );
 
             const PaymentMethodElement = core.getComponent(paymentMethod.type);
 
@@ -41,8 +48,9 @@ const createElements = (
             }
 
             const requiredPropsWhenUsingDropin = {
-                // @ts-ignore later
-                ...(isStoredPaymentMethod ? { storedPaymentMethodId: paymentMethod.storedPaymentMethodId } : { paymentMethodId: paymentMethod._id }),
+                ...(isStoredPaymentMethod(paymentMethod)
+                    ? { storedPaymentMethodId: paymentMethod.storedPaymentMethodId }
+                    : { paymentMethodId: paymentMethod._id }),
                 ...dropinProps
             };
 
