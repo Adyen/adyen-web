@@ -5,7 +5,7 @@ import { ARIA_CONTEXT_SUFFIX, ARIA_ERROR_SUFFIX } from '../../../core/Errors/con
 import Language from '../../../language';
 import './FormFields.scss';
 
-export interface InputBaseProps extends h.JSX.HTMLAttributes {
+export interface InputBaseProps extends h.JSX.HTMLAttributes<HTMLInputElement> {
     classNameModifiers?: string[];
     isInvalid?: boolean;
     isValid?: boolean;
