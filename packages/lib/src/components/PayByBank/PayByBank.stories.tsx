@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import { MetaConfiguration, PaymentMethodStoryProps, StoryConfiguration } from '../../../storybook/types';
-import { IssuerListConfiguration } from '../../types';
+import { IssuerListConfiguration } from '../types';
 import { ComponentContainer } from '../../../storybook/components/ComponentContainer';
 import { Checkout } from '../../../storybook/components/Checkout';
 import PayByBank from './PayByBank';
