@@ -5,6 +5,7 @@ import { setupServer } from 'msw/node';
 import getDataset from '../../core/Services/get-dataset';
 import PayTo from './PayTo';
 import { MandateType } from './types';
+import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 
 jest.mock('../../core/Services/get-dataset');
 (getDataset as jest.Mock).mockImplementation(
@@ -32,7 +33,9 @@ describe('PayTo', () => {
     });
 
     test('should render payment and show PayID page', async () => {
-        const payTo = new PayTo(global.core, {
+        const core = setupCoreMock();
+
+        const payTo = new PayTo(core, {
             i18n: global.i18n,
             mandate: MOCK_MANDATE,
             loadingContext: 'test',
@@ -48,7 +51,9 @@ describe('PayTo', () => {
     });
 
     test('should render continue button', async () => {
-        const payTo = new PayTo(global.core, {
+        const core = setupCoreMock();
+
+        const payTo = new PayTo(core, {
             onSubmit: onSubmitMock,
             mandate: MOCK_MANDATE,
             i18n: global.i18n,
@@ -69,7 +74,9 @@ describe('PayTo', () => {
     });
 
     test('should change to different identifier when selected', async () => {
-        const payTo = new PayTo(global.core, {
+        const core = setupCoreMock();
+
+        const payTo = new PayTo(core, {
             onSubmit: onSubmitMock,
             mandate: MOCK_MANDATE,
             i18n: global.i18n,
@@ -89,7 +96,9 @@ describe('PayTo', () => {
 
     describe('PayTo shopperIdentifier', () => {
         test('should send phoneNumber in shopperIdentifier', async () => {
-            const payTo = new PayTo(global.core, {
+            const core = setupCoreMock();
+
+            const payTo = new PayTo(core, {
                 onSubmit: onSubmitMock,
                 i18n: global.i18n,
                 loadingContext: 'test',
@@ -124,7 +133,9 @@ describe('PayTo', () => {
         });
 
         test('should send email in shopperIdentifier', async () => {
-            const payTo = new PayTo(global.core, {
+            const core = setupCoreMock();
+
+            const payTo = new PayTo(core, {
                 onSubmit: onSubmitMock,
                 i18n: global.i18n,
                 loadingContext: 'test',
@@ -162,7 +173,9 @@ describe('PayTo', () => {
         });
 
         test('should send ABN in shopperIdentifier', async () => {
-            const payTo = new PayTo(global.core, {
+            const core = setupCoreMock();
+
+            const payTo = new PayTo(core, {
                 onSubmit: onSubmitMock,
                 i18n: global.i18n,
                 loadingContext: 'test',
@@ -200,7 +213,9 @@ describe('PayTo', () => {
         });
 
         test('should send BSB in shopperIdentifier', async () => {
-            const payTo = new PayTo(global.core, {
+            const core = setupCoreMock();
+
+            const payTo = new PayTo(core, {
                 onSubmit: onSubmitMock,
                 i18n: global.i18n,
                 loadingContext: 'test',
@@ -254,7 +269,9 @@ describe('PayTo', () => {
         afterAll(() => server.close());
 
         test('should render await screen and transaction and mandate amount should be different', async () => {
-            const payTo = new PayTo(global.core, {
+            const core = setupCoreMock();
+
+            const payTo = new PayTo(core, {
                 ...global.commonCoreProps,
                 amount: {
                     value: '2000',
@@ -279,7 +296,9 @@ describe('PayTo', () => {
         });
 
         test('should render await screen and amount should say up to if amountRule is max', async () => {
-            const payTo = new PayTo(global.core, {
+            const core = setupCoreMock();
+
+            const payTo = new PayTo(core, {
                 ...global.commonCoreProps,
                 amount: {
                     value: '2000',
@@ -304,7 +323,9 @@ describe('PayTo', () => {
         });
 
         test('should render await screen and show correct frequency (Fortnightly)', async () => {
-            const payTo = new PayTo(global.core, {
+            const core = setupCoreMock();
+
+            const payTo = new PayTo(core, {
                 ...global.commonCoreProps,
                 amount: {
                     value: '2000',
@@ -323,7 +344,9 @@ describe('PayTo', () => {
         });
 
         test('should render await screen and show correct frequency (Yearly)', async () => {
-            const payTo = new PayTo(global.core, {
+            const core = setupCoreMock();
+
+            const payTo = new PayTo(core, {
                 ...global.commonCoreProps,
                 amount: {
                     value: '2000',
@@ -342,7 +365,9 @@ describe('PayTo', () => {
         });
 
         test('should render await screen and show correct frequency adhoc with count', async () => {
-            const payTo = new PayTo(global.core, {
+            const core = setupCoreMock();
+
+            const payTo = new PayTo(core, {
                 ...global.commonCoreProps,
                 amount: {
                     value: '2000',
@@ -361,7 +386,9 @@ describe('PayTo', () => {
         });
 
         test('should render await screen and show correct frequency adhoc without count', async () => {
-            const payTo = new PayTo(global.core, {
+            const core = setupCoreMock();
+
+            const payTo = new PayTo(core, {
                 ...global.commonCoreProps,
                 amount: {
                     value: '2000',
@@ -381,7 +408,9 @@ describe('PayTo', () => {
 
         // TODO waiting for feedback for what should be the result of this test case
         test.skip('should render await screen and show correct frequency daily without count', async () => {
-            const payTo = new PayTo(global.core, {
+            const core = setupCoreMock();
+
+            const payTo = new PayTo(core, {
                 ...global.commonCoreProps,
                 amount: {
                     value: '2000',
@@ -400,7 +429,9 @@ describe('PayTo', () => {
         });
 
         test('should render await screen and show the correct payee', async () => {
-            const payTo = new PayTo(global.core, {
+            const core = setupCoreMock();
+
+            const payTo = new PayTo(core, {
                 ...global.commonCoreProps,
                 amount: {
                     value: '2000',
@@ -421,7 +452,9 @@ describe('PayTo', () => {
 
     describe('PayTo stored', () => {
         test('should render pay button when stored', async () => {
-            const payTo = new PayTo(global.core, {
+            const core = setupCoreMock();
+
+            const payTo = new PayTo(core, {
                 i18n: global.i18n,
                 loadingContext: 'test',
                 modules: { resources: global.resources },
@@ -438,7 +471,9 @@ describe('PayTo', () => {
         });
 
         test('should send storedPaymentMethodId button when stored', async () => {
-            const payTo = new PayTo(global.core, {
+            const core = setupCoreMock();
+
+            const payTo = new PayTo(core, {
                 onSubmit: onSubmitMock,
                 i18n: global.i18n,
                 loadingContext: 'test',

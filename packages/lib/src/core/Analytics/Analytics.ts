@@ -1,11 +1,11 @@
 import CollectId from '../Services/analytics/collect-id';
 import EventsQueue, { EventsQueueModule } from './EventsQueue';
-import { AnalyticsEventCategory, AnalyticsInitialEvent, AnalyticsObject, AnalyticsProps } from './types';
+import { AnalyticsEventCategory, AnalyticsInitialEvent, AnalyticsProps } from './types';
 import { ANALYTIC_LEVEL, ANALYTICS_INFO_TIMER_INTERVAL, ANALYTICS_PATH, ANALYTICS_EVENT } from './constants';
 import { debounce } from '../../utils/debounce';
 import { AnalyticsModule } from '../../types/global-types';
 import { processAnalyticsData } from './utils';
-import { AnalyticsEvent } from './AnalyticsEvent';
+import { AbstractAnalyticsEvent } from './events/AbstractAnalyticsEvent';
 import Storage from '../../utils/Storage';
 import { CheckoutAttemptIdSession } from '../Services/analytics/types';
 
@@ -49,9 +49,9 @@ const Analytics = ({ locale, clientKey, analytics, analyticsContext }: Analytics
         return Promise.resolve(null);
     };
 
-    const addAnalyticsEvent = (eventCat: AnalyticsEventCategory, obj: AnalyticsObject) => {
+    const addAnalyticsEvent = (eventCat: AnalyticsEventCategory, event: AbstractAnalyticsEvent) => {
         const arrayName = eventCat === ANALYTICS_EVENT.info ? eventCat : `${eventCat}s`;
-        eventsQueue.add(`${arrayName}`, obj);
+        eventsQueue.add(`${arrayName}`, event);
 
         /**
          * The logic is:
@@ -128,7 +128,7 @@ const Analytics = ({ locale, clientKey, analytics, analyticsContext }: Analytics
             void sendAnalyticsEvents();
         },
 
-        sendAnalytics: (analyticsObj: AnalyticsEvent): boolean => {
+        sendAnalytics: (analyticsObj: AbstractAnalyticsEvent): boolean => {
             /** Only send subsequent analytics if the merchant has not disabled this functionality (i.e. set analytics.enabled = false) */
             if (level !== ANALYTIC_LEVEL.all) return false;
 

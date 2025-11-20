@@ -15,7 +15,7 @@ import {
 } from './types';
 
 import Analytics from '../../core/Analytics';
-import { AnalyticsInfoEvent, InfoEventType } from '../../core/Analytics/AnalyticsInfoEvent';
+import { AnalyticsInfoEvent, InfoEventType } from '../../core/Analytics/events/AnalyticsInfoEvent';
 import type { AnalyticsModule } from '../../types/global-types';
 
 class FastlaneSDK {

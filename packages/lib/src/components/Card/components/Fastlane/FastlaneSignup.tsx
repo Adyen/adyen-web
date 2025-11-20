@@ -13,13 +13,15 @@ import mobileNumberFormatter from './utils/mobile-number-formatter';
 import type { FastlaneSignupConfiguration } from '../../../PayPalFastlane/types';
 
 import './FastlaneSignup.scss';
-import { AnalyticsInfoEvent, InfoEventType } from '../../../../core/Analytics/AnalyticsInfoEvent';
-import { AnalyticsEvent } from '../../../../core/Analytics/AnalyticsEvent';
+import { AnalyticsInfoEvent, InfoEventType, UiTarget } from '../../../../core/Analytics/events/AnalyticsInfoEvent';
+import { AbstractAnalyticsEvent } from '../../../../core/Analytics/events/AbstractAnalyticsEvent';
 
 type FastlaneSignupProps = FastlaneSignupConfiguration & {
     currentDetectedBrand: string;
     onChange(state: any): void;
-    onSubmitAnalytics(event: AnalyticsEvent): void;
+    onSubmitAnalytics(event: AbstractAnalyticsEvent): void;
+    // Component type (e.g. scheme, bcmc)
+    type: string;
 };
 
 const SUPPORTED_BRANDS = ['mc', 'visa'];
@@ -34,7 +36,8 @@ const FastlaneSignup = ({
     currentDetectedBrand,
     telephoneNumber: telephoneNumberFromProps,
     onChange,
-    onSubmitAnalytics
+    onSubmitAnalytics,
+    type
 }: FastlaneSignupProps) => {
     const shouldDisplaySignup = useMemo(() => showConsent && SUPPORTED_BRANDS.includes(currentDetectedBrand), [showConsent, currentDetectedBrand]);
     const [hasConsentFormBeenShown, setHasConsentFormBeenShown] = useState<boolean>(shouldDisplaySignup);
@@ -58,14 +61,15 @@ const FastlaneSignup = ({
         setIsChecked(newValue);
 
         const event = new AnalyticsInfoEvent({
+            component: type,
             type: InfoEventType.clicked,
-            target: 'fastlane_signup_consent_toggle',
+            target: UiTarget.fastlaneSignupConsentToggle,
             configData: {
                 isToggleOn: newValue
             }
         });
         onSubmitAnalytics(event);
-    }, [isChecked, onSubmitAnalytics]);
+    }, [isChecked, onSubmitAnalytics, type]);
 
     /**
      * If the configuration is valid, the Component propagates fastlaneData to the Card component state
@@ -113,6 +117,7 @@ const FastlaneSignup = ({
         }
 
         const event = new AnalyticsInfoEvent({
+            component: type,
             type: InfoEventType.rendered,
             configData: {
                 isFastlaneSignupRendered: shouldDisplaySignup
@@ -120,7 +125,7 @@ const FastlaneSignup = ({
         });
 
         onSubmitAnalytics(event);
-    }, [shouldDisplaySignup, isFastlaneConfigurationValid, onSubmitAnalytics]);
+    }, [shouldDisplaySignup, isFastlaneConfigurationValid, onSubmitAnalytics, type]);
 
     if (!shouldDisplaySignup || !isFastlaneConfigurationValid) {
         return null;

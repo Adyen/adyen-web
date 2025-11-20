@@ -1,6 +1,4 @@
 import { h } from 'preact';
-import { AnalyticsInfoEvent } from '../../../core/Analytics/AnalyticsInfoEvent';
-import { ANALYTICS_DOWNLOAD_STR, ANALYTICS_QR_CODE_DOWNLOAD } from '../../../core/Analytics/constants';
 import { useCoreContext } from '../../../core/Context/CoreProvider';
 import {
     usePaymentStatusTimer,
@@ -12,6 +10,7 @@ import {
 import useAutoFocus from '../../../utils/useAutoFocus';
 import Button from '../Button';
 import ContentSeparator from '../ContentSeparator';
+import { AnalyticsInfoEvent, InfoEventType, UiTarget } from '../../../core/Analytics/events/AnalyticsInfoEvent';
 import { CountdownTime } from '../Countdown/types';
 import Spinner from '../Spinner';
 import { QRDetails } from './components/QRDetails';
@@ -48,8 +47,9 @@ export function QRLoader(props: QRLoaderProps) {
 
     const handleCopy = () => {
         const event = new AnalyticsInfoEvent({
-            type: ANALYTICS_DOWNLOAD_STR,
-            target: ANALYTICS_QR_CODE_DOWNLOAD
+            component: props.type,
+            type: InfoEventType.download,
+            target: UiTarget.qrDownloadButton
         });
         props.onSubmitAnalytics(event);
     };

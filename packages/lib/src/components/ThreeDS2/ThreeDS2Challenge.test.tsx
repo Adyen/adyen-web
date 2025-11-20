@@ -1,76 +1,80 @@
 import { ThreeDS2Challenge } from './index';
-import Analytics from '../../core/Analytics';
-import { ANALYTICS_ERROR_TYPE, Analytics3DS2Errors, ANALYTICS_RENDERED_STR } from '../../core/Analytics/constants';
 import { THREEDS2_CHALLENGE_ERROR } from './constants';
-import { AnalyticsInfoEvent } from '../../core/Analytics/AnalyticsInfoEvent';
+import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
+import { ChallengeResolveData } from './types';
+import { ErrorEventCode, ErrorEventType } from '../../core/Analytics/events/AnalyticsErrorEvent';
 
-const analyticsModule = Analytics({ analytics: {}, analyticsContext: '', locale: '', clientKey: '' });
+describe('ThreeDS2Challenge', () => {
+    describe('Analytics', () => {
+        test('should not send "rendered" events', () => {
+            const core = setupCoreMock();
 
-describe('ThreeDS2Challenge: calls that generate analytics should produce objects with the expected shapes ', () => {
-    let challenge;
-    beforeEach(() => {
-        console.log = jest.fn(() => {});
+            const threeDS2Challenge = new ThreeDS2Challenge(core, {
+                onError: () => {}
+            });
 
-        challenge = new ThreeDS2Challenge(global.core, {
-            onActionHandled: () => {},
-            modules: {
-                analytics: analyticsModule
-            },
-            onError: () => {}
+            threeDS2Challenge.render();
+
+            const wasCalledWithRenderedEvent = (core.modules.analytics.sendAnalytics as jest.Mock).mock.calls.some(
+                callArgs => callArgs[0].type === 'rendered'
+            );
+
+            expect(wasCalledWithRenderedEvent).toBe(false);
         });
 
-        analyticsModule.sendAnalytics = jest.fn(() => null);
+        test('should generate analytics error event if not initiated with paymentData', () => {
+            const core = setupCoreMock();
+
+            const threeDS2Challenge = new ThreeDS2Challenge(core, {
+                onError: () => {}
+            });
+
+            threeDS2Challenge.render();
+
+            expect(core.modules.analytics.sendAnalytics).toHaveBeenCalledWith({
+                component: 'threeDS2Challenge',
+                errorType: ErrorEventType.apiError,
+                message: `${THREEDS2_CHALLENGE_ERROR}: Missing 'paymentData' property from threeDS2 action`,
+                code: ErrorEventCode.THREEDS2_ACTION_IS_MISSING_PAYMENT_DATA,
+                timestamp: expect.any(String),
+                id: expect.any(String)
+            });
+        });
     });
 
-    test('A call to ThreeDS2Challenge.submitAnalytics with an object with type "rendered" should not lead to an analytics event', () => {
-        challenge.submitAnalytics(new AnalyticsInfoEvent({ type: ANALYTICS_RENDERED_STR }));
+    describe('Additional details callbacks priority', () => {
+        test('should call default additional details flow if "onComplete" is not present', () => {
+            const core = setupCoreMock();
 
-        expect(analyticsModule.sendAnalytics).not.toHaveBeenCalled();
-    });
+            const threeDS2Challenge = new ThreeDS2Challenge(core, {
+                onError: () => {}
+            });
 
-    test('ThreeDS2Challenge instantiated without paymentData should generate an analytics error', () => {
-        const view = challenge.render();
+            // @ts-ignore - spying internal method
+            const spy = jest.spyOn(threeDS2Challenge, 'handleAdditionalDetails');
+            const challengeResolveData: ChallengeResolveData = { data: { details: { foo: 'bar' } } };
 
-        expect(analyticsModule.sendAnalytics).toHaveBeenCalledWith({
-            component: challenge.constructor['type'],
-            errorType: ANALYTICS_ERROR_TYPE.apiError,
-            message: `${THREEDS2_CHALLENGE_ERROR}: Missing 'paymentData' property from threeDS2 action`,
-            code: Analytics3DS2Errors.ACTION_IS_MISSING_PAYMENT_DATA,
-            timestamp: expect.any(String),
-            id: expect.any(String)
+            threeDS2Challenge.onComplete(challengeResolveData);
+
+            expect(spy).toHaveBeenCalledWith(challengeResolveData);
         });
 
-        expect(view).toBe(null);
-    });
+        test('should call "onComplete" if available', () => {
+            const core = setupCoreMock();
+            const onComplete = jest.fn();
 
-    test('ThreeDS2Challenge - when onComplete is called handleAdditionalDetails should then be called ', () => {
-        const spy = jest.spyOn(challenge, 'handleAdditionalDetails');
+            const threeDS2Challenge = new ThreeDS2Challenge(core, {
+                onComplete
+            });
 
-        challenge.onComplete({ foo: 'bar' });
+            // @ts-ignore - spying internal method
+            const spy = jest.spyOn(threeDS2Challenge, 'handleAdditionalDetails');
+            const challengeResolveData: ChallengeResolveData = { data: { details: { foo: 'bar' } } };
 
-        expect(spy).toHaveBeenCalledWith({ foo: 'bar' });
-    });
+            threeDS2Challenge.onComplete(challengeResolveData);
 
-    test('ThreeDS2Challenge - when onComplete is called the passed onComplete function should then be called', () => {
-        const onComplete = jest.fn();
-
-        const nuChallenge = new ThreeDS2Challenge(global.core, {
-            onActionHandled: () => {},
-            modules: {
-                analytics: analyticsModule
-            },
-            onError: () => {},
-            onComplete
+            expect(onComplete).toHaveBeenCalledWith(challengeResolveData, threeDS2Challenge);
+            expect(spy).not.toHaveBeenCalled();
         });
-
-        // @ts-ignore - spied on function does exist
-        const spy = jest.spyOn(nuChallenge, 'handleAdditionalDetails');
-
-        // @ts-ignore - we don't care about the type
-        nuChallenge.onComplete({ foo: 'bar' });
-
-        expect(onComplete).toHaveBeenCalledWith({ foo: 'bar' }, nuChallenge);
-
-        expect(spy).not.toHaveBeenCalled();
     });
 });

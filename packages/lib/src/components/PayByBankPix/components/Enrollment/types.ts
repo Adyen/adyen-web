@@ -3,7 +3,7 @@ import { PayButtonFunctionProps } from '../../../internal/UIElement/types';
 import { IssuerItem } from '../../../internal/IssuerList/types';
 import { OnChangeData } from '../../../../core/types';
 import { IPayByBankPixAwait } from './components/PayByBankPixAwait';
-import { AnalyticsEvent } from '../../../../core/Analytics/AnalyticsEvent';
+import { AbstractAnalyticsEvent } from '../../../../core/Analytics/events/AbstractAnalyticsEvent';
 import { AdyenCheckoutError } from '../../../../types';
 
 interface BaseEnrollmentProps {
@@ -29,7 +29,7 @@ export interface IssuerListProps extends BaseEnrollmentProps {
     /**
      * @internal
      */
-    onSubmitAnalytics?: (aObj: AnalyticsEvent) => void;
+    onSubmitAnalytics?: (aObj: AbstractAnalyticsEvent) => void;
     onChange?(payload: OnChangeData): void;
 }
 

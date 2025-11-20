@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import Oxxo from './Oxxo';
+import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 
 test('should return expected data to perform the payment', () => {
     const oxxoElement = new Oxxo(global.core);
@@ -8,7 +9,9 @@ test('should return expected data to perform the payment', () => {
 });
 
 test('should show pay button by default', async () => {
-    const oxxoElement = new Oxxo(global.core, {
+    const core = setupCoreMock();
+
+    const oxxoElement = new Oxxo(core, {
         loadingContext: 'test',
         i18n: global.i18n,
         modules: { resources: global.resources }
@@ -20,8 +23,9 @@ test('should show pay button by default', async () => {
 
 test('should trigger submit when Pay button is pressed', async () => {
     const user = userEvent.setup();
+    const core = setupCoreMock();
 
-    const oxxoElement = new Oxxo(global.core, {
+    const oxxoElement = new Oxxo(core, {
         loadingContext: 'test',
         i18n: global.i18n,
         modules: { resources: global.resources }

@@ -2,6 +2,7 @@ import { render, screen, waitFor } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 
 import PreAuthorizedDebitCanada from './PreAuthorizedDebitCanada';
+import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 
 describe('PreAuthorizedDebitCanada', () => {
     let onSubmitMock;
@@ -16,11 +17,13 @@ describe('PreAuthorizedDebitCanada', () => {
 
     describe('Default component', () => {
         test('should submit the payment', async () => {
-            const preAuthorizedDebitCanada = new PreAuthorizedDebitCanada(global.core, {
+            const core = setupCoreMock();
+
+            const preAuthorizedDebitCanada = new PreAuthorizedDebitCanada(core, {
                 onSubmit: onSubmitMock,
                 i18n: global.i18n,
                 loadingContext: 'test',
-                modules: { resources: global.resources, analytics: global.analytics, srPanel: global.srPanel }
+                modules: { resources: global.resources, srPanel: global.srPanel }
             });
 
             render(preAuthorizedDebitCanada.render());
@@ -52,11 +55,13 @@ describe('PreAuthorizedDebitCanada', () => {
         });
 
         test('should show the info text about the settlement/authorization flow', async () => {
-            const preAuthorizedDebitCanada = new PreAuthorizedDebitCanada(global.core, {
+            const core = setupCoreMock();
+
+            const preAuthorizedDebitCanada = new PreAuthorizedDebitCanada(core, {
                 onSubmit: onSubmitMock,
                 i18n: global.i18n,
                 loadingContext: 'test',
-                modules: { resources: global.resources, analytics: global.analytics, srPanel: global.srPanel }
+                modules: { resources: global.resources, srPanel: global.srPanel }
             });
 
             render(preAuthorizedDebitCanada.render());
@@ -65,13 +70,15 @@ describe('PreAuthorizedDebitCanada', () => {
         });
 
         test('should submit the payment with the store consent given', async () => {
-            const preAuthorizedDebitCanada = new PreAuthorizedDebitCanada(global.core, {
+            const core = setupCoreMock();
+
+            const preAuthorizedDebitCanada = new PreAuthorizedDebitCanada(core, {
                 onSubmit: onSubmitMock,
                 onChange: onChangeMock,
                 enableStoreDetails: true,
                 i18n: global.i18n,
                 loadingContext: 'test',
-                modules: { resources: global.resources, analytics: global.analytics, srPanel: global.srPanel }
+                modules: { resources: global.resources, srPanel: global.srPanel }
             });
 
             render(preAuthorizedDebitCanada.render());
@@ -117,11 +124,13 @@ describe('PreAuthorizedDebitCanada', () => {
         });
 
         test('should show error if the account number is invalid (less than 7 digits)', async () => {
-            const preAuthorizedDebitCanada = new PreAuthorizedDebitCanada(global.core, {
+            const core = setupCoreMock();
+
+            const preAuthorizedDebitCanada = new PreAuthorizedDebitCanada(core, {
                 onSubmit: onSubmitMock,
                 i18n: global.i18n,
                 loadingContext: 'test',
-                modules: { resources: global.resources, analytics: global.analytics, srPanel: global.srPanel }
+                modules: { resources: global.resources, srPanel: global.srPanel }
             });
 
             render(preAuthorizedDebitCanada.render());
@@ -138,11 +147,13 @@ describe('PreAuthorizedDebitCanada', () => {
         });
 
         test('should show error if the "institution number" is invalid (not 3 digits)', async () => {
-            const preAuthorizedDebitCanada = new PreAuthorizedDebitCanada(global.core, {
+            const core = setupCoreMock();
+
+            const preAuthorizedDebitCanada = new PreAuthorizedDebitCanada(core, {
                 onSubmit: onSubmitMock,
                 i18n: global.i18n,
                 loadingContext: 'test',
-                modules: { resources: global.resources, analytics: global.analytics, srPanel: global.srPanel }
+                modules: { resources: global.resources, srPanel: global.srPanel }
             });
 
             render(preAuthorizedDebitCanada.render());
@@ -159,11 +170,13 @@ describe('PreAuthorizedDebitCanada', () => {
         });
 
         test('should show error if the "transit number" is invalid (not 5 digits)', async () => {
-            const preAuthorizedDebitCanada = new PreAuthorizedDebitCanada(global.core, {
+            const core = setupCoreMock();
+
+            const preAuthorizedDebitCanada = new PreAuthorizedDebitCanada(core, {
                 onSubmit: onSubmitMock,
                 i18n: global.i18n,
                 loadingContext: 'test',
-                modules: { resources: global.resources, analytics: global.analytics, srPanel: global.srPanel }
+                modules: { resources: global.resources, srPanel: global.srPanel }
             });
 
             render(preAuthorizedDebitCanada.render());
@@ -180,11 +193,13 @@ describe('PreAuthorizedDebitCanada', () => {
         });
 
         test('should show error if fields are empty when pay button is clicked', async () => {
-            const preAuthorizedDebitCanada = new PreAuthorizedDebitCanada(global.core, {
+            const core = setupCoreMock();
+
+            const preAuthorizedDebitCanada = new PreAuthorizedDebitCanada(core, {
                 onSubmit: onSubmitMock,
                 i18n: global.i18n,
                 loadingContext: 'test',
-                modules: { resources: global.resources, analytics: global.analytics, srPanel: global.srPanel }
+                modules: { resources: global.resources, srPanel: global.srPanel }
             });
 
             render(preAuthorizedDebitCanada.render());
@@ -201,11 +216,13 @@ describe('PreAuthorizedDebitCanada', () => {
 
     describe('Stored component', () => {
         test('should submit the payment', async () => {
-            const preAuthorizedDebitCanada = new PreAuthorizedDebitCanada(global.core, {
+            const core = setupCoreMock();
+
+            const preAuthorizedDebitCanada = new PreAuthorizedDebitCanada(core, {
                 onSubmit: onSubmitMock,
                 i18n: global.i18n,
                 loadingContext: 'test',
-                modules: { resources: global.resources, analytics: global.analytics, srPanel: global.srPanel },
+                modules: { resources: global.resources, srPanel: global.srPanel },
                 storedPaymentMethodId: 'PAYMENT-METHOD-ID'
             });
 
@@ -229,11 +246,13 @@ describe('PreAuthorizedDebitCanada', () => {
         });
 
         test('should show the info text about the settlement/authorization flow', async () => {
-            const preAuthorizedDebitCanada = new PreAuthorizedDebitCanada(global.core, {
+            const core = setupCoreMock();
+
+            const preAuthorizedDebitCanada = new PreAuthorizedDebitCanada(core, {
                 onSubmit: onSubmitMock,
                 i18n: global.i18n,
                 loadingContext: 'test',
-                modules: { resources: global.resources, analytics: global.analytics, srPanel: global.srPanel },
+                modules: { resources: global.resources, srPanel: global.srPanel },
                 storedPaymentMethodId: 'PAYMENT-METHOD-ID'
             });
 
@@ -243,11 +262,13 @@ describe('PreAuthorizedDebitCanada', () => {
         });
 
         test('should get the display name and additional info from the props', () => {
-            const preAuthorizedDebitCanada = new PreAuthorizedDebitCanada(global.core, {
+            const core = setupCoreMock();
+
+            const preAuthorizedDebitCanada = new PreAuthorizedDebitCanada(core, {
                 onSubmit: onSubmitMock,
                 i18n: global.i18n,
                 loadingContext: 'test',
-                modules: { resources: global.resources, analytics: global.analytics, srPanel: global.srPanel },
+                modules: { resources: global.resources, srPanel: global.srPanel },
                 storedPaymentMethodId: 'PAYMENT-METHOD-ID',
                 lastFour: '1234',
                 label: 'bank name'

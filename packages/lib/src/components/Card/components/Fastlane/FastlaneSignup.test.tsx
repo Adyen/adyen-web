@@ -25,7 +25,15 @@ test('should trigger onChange event if the consent UI is not allowed to be shown
 
     const onChangeMock = jest.fn();
 
-    customRender(<FastlaneSignup {...fastlaneConfiguration} onChange={onChangeMock} currentDetectedBrand="card" onSubmitAnalytics={jest.fn()} />);
+    customRender(
+        <FastlaneSignup
+            {...fastlaneConfiguration}
+            onChange={onChangeMock}
+            currentDetectedBrand="card"
+            onSubmitAnalytics={jest.fn()}
+            type={'scheme'}
+        />
+    );
 
     await waitFor(() => {
         expect(onChangeMock).toHaveBeenCalledTimes(1);
@@ -54,7 +62,9 @@ test('should send "consentShown:true" flag if the shopper saw the consent UI at 
 
     const onChangeMock = jest.fn();
 
-    customRender(<FastlaneSignup {...fastlaneConfiguration} onChange={onChangeMock} currentDetectedBrand="mc" onSubmitAnalytics={jest.fn()} />);
+    customRender(
+        <FastlaneSignup {...fastlaneConfiguration} onChange={onChangeMock} currentDetectedBrand="mc" onSubmitAnalytics={jest.fn()} type={'scheme'} />
+    );
 
     // Show the UI
     await user.click(screen.getByRole('switch'));
@@ -90,7 +100,15 @@ test('should return phone number formatted (without spaces and without prefix)',
 
     const onChangeMock = jest.fn();
 
-    customRender(<FastlaneSignup {...fastlaneConfiguration} onChange={onChangeMock} currentDetectedBrand="visa" onSubmitAnalytics={jest.fn()} />);
+    customRender(
+        <FastlaneSignup
+            {...fastlaneConfiguration}
+            onChange={onChangeMock}
+            currentDetectedBrand="visa"
+            onSubmitAnalytics={jest.fn()}
+            type={'scheme'}
+        />
+    );
 
     const input = screen.getByLabelText('Mobile number');
 
@@ -122,7 +140,15 @@ test('should display terms and privacy statement links', () => {
 
     const onChangeMock = jest.fn();
 
-    customRender(<FastlaneSignup {...fastlaneConfiguration} onChange={onChangeMock} currentDetectedBrand="visa" onSubmitAnalytics={jest.fn()} />);
+    customRender(
+        <FastlaneSignup
+            {...fastlaneConfiguration}
+            onChange={onChangeMock}
+            currentDetectedBrand="visa"
+            onSubmitAnalytics={jest.fn()}
+            type={'scheme'}
+        />
+    );
 
     expect(screen.getByRole('link', { name: 'terms' })).toHaveAttribute('href', 'https://fastlane.com/terms');
     expect(screen.getByRole('link', { name: 'privacy statement' })).toHaveAttribute('href', 'https://fastlane.com/privacy-policy');
@@ -142,7 +168,15 @@ test('should open Fastlane info dialog and close it', async () => {
 
     const onChangeMock = jest.fn();
 
-    customRender(<FastlaneSignup {...fastlaneConfiguration} onChange={onChangeMock} currentDetectedBrand="visa" onSubmitAnalytics={jest.fn()} />);
+    customRender(
+        <FastlaneSignup
+            {...fastlaneConfiguration}
+            onChange={onChangeMock}
+            currentDetectedBrand="visa"
+            onSubmitAnalytics={jest.fn()}
+            type={'scheme'}
+        />
+    );
 
     screen.getByRole('dialog', { hidden: true });
 
@@ -170,7 +204,13 @@ test('should not render the UI if there are missing configuration fields', () =>
     jest.spyOn(console, 'warn').mockImplementation(consoleMock);
 
     const { container } = customRender(
-        <FastlaneSignup {...fastlaneConfiguration} onChange={onChangeMock} currentDetectedBrand="visa" onSubmitAnalytics={jest.fn()} />
+        <FastlaneSignup
+            {...fastlaneConfiguration}
+            onChange={onChangeMock}
+            currentDetectedBrand="visa"
+            onSubmitAnalytics={jest.fn()}
+            type={'scheme'}
+        />
     );
 
     expect(consoleMock).toHaveBeenCalledTimes(1);
