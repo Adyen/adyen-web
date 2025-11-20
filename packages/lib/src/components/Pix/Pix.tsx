@@ -51,7 +51,7 @@ class PixElement extends QRLoaderContainer<PixConfiguration> {
                 <SRPanelProvider srPanel={this.props.modules.srPanel}>
                     <QRLoader
                         {...this.props}
-                        type={this.constructor['type']}
+                        type={this.type}
                         brandLogo={this.props.brandLogo || this.icon}
                         onComplete={this.onComplete}
                         onActionHandled={this.onActionHandled}

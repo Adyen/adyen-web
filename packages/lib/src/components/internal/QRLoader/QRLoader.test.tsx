@@ -15,6 +15,7 @@ const TIMEOUT_OFFSET = 200;
 const renderQRLoader = (props: Partial<QRLoaderProps> = {}) => {
     const srPanel = new SRPanel(global.core);
     const defaultProps: QRLoaderProps = {
+        type: 'pix',
         onComplete: jest.fn(),
         onError: jest.fn(),
         paymentData: 'initial-payment-data',

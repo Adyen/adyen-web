@@ -1,19 +1,22 @@
 import createElements from './createElements';
 import Card from '../../Card/Card';
 
-import type { PaymentMethod } from '../../../types/global-types';
 import type { ICore } from '../../../core/types';
 import type { _MockProxy } from 'jest-mock-extended/lib/Mock';
+import { PaymentMethod } from '../../../core/ProcessResponse/PaymentMethods/PaymentMethods';
+import uuidv4 from '../../../utils/uuid';
 
 describe('Drop-in: createElements', () => {
     test('should filter out non-supported payment methods before attempting to create the payment method components', async () => {
         const paymentMethods: PaymentMethod[] = [
             {
+                _id: uuidv4(),
                 type: 'scheme',
                 name: 'Cards',
                 brands: []
             },
             {
+                _id: uuidv4(),
                 type: 'clicktopay',
                 name: 'Click to Pay',
                 configuration: {
@@ -22,6 +25,7 @@ describe('Drop-in: createElements', () => {
                 }
             },
             {
+                _id: uuidv4(),
                 type: 'androidpay',
                 name: 'AndroidPay'
             }

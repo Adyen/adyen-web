@@ -1,12 +1,12 @@
 import { UIElement } from './UIElement';
-import { ICore } from '../../../core/types';
-import { any, mock, mockDeep } from 'jest-mock-extended';
+import { any, mock } from 'jest-mock-extended';
 import { AdyenCheckout, ThreeDS2Challenge, ThreeDS2DeviceFingerprint } from '../../../index';
 import { UIElementProps } from './types';
 import { Resources } from '../../../core/Context/Resources';
-import { AnalyticsModule, PaymentActionsType } from '../../../types/global-types';
+import { PaymentActionsType } from '../../../types/global-types';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
-import { ANALYTICS_ERROR_TYPE } from '../../../core/Analytics/constants';
+import { setupCoreMock } from '../../../../config/testMocks/setup-core-mock';
+import { ErrorEventType } from '../../../core/Analytics/events/AnalyticsErrorEvent';
 
 jest.mock('../../../core/Services/get-translations');
 
@@ -37,10 +37,8 @@ const submitMock = jest.fn();
 (global as any).HTMLFormElement.prototype.submit = () => submitMock;
 
 let core;
-let analytics;
 beforeEach(() => {
-    core = mockDeep<ICore>();
-    analytics = mockDeep<AnalyticsModule>();
+    core = setupCoreMock();
 });
 
 afterEach(() => {
@@ -151,8 +149,7 @@ describe('UIElement', () => {
             const checkout = await AdyenCheckout({
                 countryCode: 'US',
                 environment: 'test',
-                clientKey: 'test_123456',
-                analytics: { enabled: false }
+                clientKey: 'test_123456'
             });
 
             const element = new MyElement(checkout).mount('body');
@@ -232,7 +229,7 @@ describe('UIElement', () => {
         test('should trigger showValidation() and not call makePaymentsCall() if component is not valid', () => {
             const showValidation = jest.fn();
 
-            const element = new MyElement(core, { modules: { analytics } });
+            const element = new MyElement(core);
 
             // @ts-ignore Checking that internal method is not reached
             const makePaymentsCallSpy = jest.spyOn(element, 'makePaymentsCall');
@@ -264,7 +261,6 @@ describe('UIElement', () => {
             });
 
             const element = new MyElement(core, {
-                modules: { analytics },
                 onSubmit: onSubmitMock,
                 onPaymentCompleted: onPaymentCompletedMock
             });
@@ -295,7 +291,6 @@ describe('UIElement', () => {
             });
 
             const element = new MyElement(core, {
-                modules: { analytics },
                 onPaymentCompleted: onPaymentCompletedMock
             });
 
@@ -330,7 +325,6 @@ describe('UIElement', () => {
             });
 
             const element = new MyElement(core, {
-                modules: { analytics },
                 onSubmit: onSubmitMock,
                 onPaymentFailed: onPaymentFailedMock
             });
@@ -351,7 +345,6 @@ describe('UIElement', () => {
             jest.spyOn(MyElement.prototype, 'isValid', 'get').mockReturnValue(true);
 
             const element = new MyElement(core, {
-                modules: { analytics },
                 onSubmit: onSubmitMock,
                 onPaymentFailed: onPaymentFailedMock
             });
@@ -379,7 +372,6 @@ describe('UIElement', () => {
             jest.spyOn(MyElement.prototype, 'isValid', 'get').mockReturnValue(true);
 
             const element = new MyElement(core, {
-                modules: { analytics },
                 onSubmit: onSubmitMock
             });
 
@@ -426,7 +418,6 @@ describe('UIElement', () => {
             });
 
             const element = new MyElement(core, {
-                modules: { analytics },
                 onOrderUpdated: onOrderUpdatedMock
             });
 
@@ -476,7 +467,6 @@ describe('UIElement', () => {
             core.session = null;
 
             const element = new MyElement(core, {
-                modules: { analytics },
                 onSubmit: onSubmitMock,
                 onPaymentMethodsRequest: onPaymentMethodsRequestMock,
                 onOrderUpdated: onOrderUpdatedMock
@@ -539,7 +529,6 @@ describe('UIElement', () => {
             core.session = null;
 
             const element = new MyElement(core, {
-                modules: { analytics },
                 onSubmit: onSubmitMock,
                 onOrderUpdated: onOrderUpdatedMock,
                 onError: onErrorMock
@@ -566,22 +555,16 @@ describe('UIElement', () => {
             const txVariant = 'scheme';
 
             core.session.submitPayment.mockImplementation(() => Promise.reject(new AdyenCheckoutError('NETWORK_ERROR', '', { code: errorCode })));
-            const analytics = mock<AnalyticsModule>();
-            const mockedSendAnalytics = analytics.sendAnalytics as jest.Mock;
             jest.spyOn(MyElement.prototype, 'isValid', 'get').mockReturnValue(true);
 
-            const element = new MyElement(core, { type: txVariant, modules: { analytics } });
+            const element = new MyElement(core, { type: txVariant });
             element.submit();
+
             await new Promise(process.nextTick);
 
-            // expect(mockedSendAnalytics).toHaveBeenCalledWith(
-            //     txVariant,
-            //     { code: errorCode, errorType: ANALYTICS_ERROR_TYPE.apiError, type: ANALYTICS_EVENT.error },
-            //     undefined
-            // );
-            expect(mockedSendAnalytics).toHaveBeenCalledWith({
+            expect(core.modules.analytics.sendAnalytics).toHaveBeenCalledWith({
                 code: errorCode,
-                errorType: ANALYTICS_ERROR_TYPE.apiError,
+                errorType: ErrorEventType.apiError,
                 timestamp: expect.any(String),
                 id: expect.any(String),
                 component: expect.any(String)
@@ -727,15 +710,13 @@ describe('UIElement', () => {
 
             core.session.submitDetails.mockImplementation(() => Promise.reject(new AdyenCheckoutError('NETWORK_ERROR', '', { code: errorCode })));
 
-            const mockedSendAnalytics = analytics.sendAnalytics as jest.Mock;
-
-            const element = new MyElement(core, { type: txVariant, modules: { analytics } });
+            const element = new MyElement(core, { type: txVariant });
             element.handleAdditionalDetails({});
             await new Promise(process.nextTick);
 
-            expect(mockedSendAnalytics).toHaveBeenCalledWith({
+            expect(core.modules.analytics.sendAnalytics).toHaveBeenCalledWith({
                 code: errorCode,
-                errorType: ANALYTICS_ERROR_TYPE.apiError,
+                errorType: ErrorEventType.apiError,
                 timestamp: expect.any(String),
                 id: expect.any(String),
                 component: expect.any(String)

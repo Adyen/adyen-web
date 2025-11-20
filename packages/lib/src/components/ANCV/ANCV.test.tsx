@@ -1,34 +1,22 @@
 import { render } from '@testing-library/preact';
-import { mockDeep } from 'jest-mock-extended';
-import { AnalyticsModule } from '../../types/global-types';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
-import { ANALYTICS_ERROR_TYPE } from '../../core/Analytics/constants';
 import ANCV from './ANCV';
-
-const flushPromises = () => new Promise(process.nextTick);
+import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
+import { ErrorEventType } from '../../core/Analytics/events/AnalyticsErrorEvent';
 
 describe('ANCV', () => {
-    const resources = global.resources;
-    const i18n = global.i18n;
-
-    const baseProps = {
-        amount: { value: 1000, currency: 'EUR' },
-        i18n,
-        loadingContext: 'mock'
-    };
-
     describe('createOrder', () => {
         test('should send an error event to the analytics if the createOrder call fails for the session flow', async () => {
-            const code = 'mockErrorCode';
-            const analytics = mockDeep<AnalyticsModule>();
-            const mockedSendAnalytics = analytics.sendAnalytics as jest.Mock;
+            const core = setupCoreMock();
+            const i18n = global.i18n;
 
-            const ancv = new ANCV(global.core, {
-                ...baseProps,
-                modules: {
-                    resources,
-                    analytics
-                },
+            const code = 'mockErrorCode';
+
+            const ancv = new ANCV(core, {
+                amount: { value: 1000, currency: 'EUR' },
+                i18n,
+                loadingContext: 'mock',
+
                 onError: () => {},
                 // @ts-ignore test only
                 session: {
@@ -38,12 +26,13 @@ describe('ANCV', () => {
                 }
             });
             render(ancv.render());
+
             await ancv.createOrder();
-            await flushPromises();
-            expect(mockedSendAnalytics).toHaveBeenCalledWith({
+
+            expect(core.modules.analytics.sendAnalytics).toHaveBeenCalledWith({
                 code,
                 component: 'ancv',
-                errorType: ANALYTICS_ERROR_TYPE.apiError,
+                errorType: ErrorEventType.apiError,
                 timestamp: expect.any(String),
                 id: expect.any(String)
             });

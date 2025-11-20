@@ -5,12 +5,11 @@ import getOrderStatus from '../../../core/Services/order-status';
 import './DropinComponent.scss';
 import { sanitizeOrder } from '../../internal/UIElement/utils';
 import { PaymentAmount } from '../../../types/global-types';
-import { ANALYTICS_RENDERED_STR } from '../../../core/Analytics/constants';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 import Button from '../../internal/Button';
 import type { DropinComponentProps, DropinComponentState, DropinStatus, DropinStatusProps, onOrderCancelData } from '../types';
 import UIElement from '../../internal/UIElement';
-import { AnalyticsInfoEvent, InfoEventType } from '../../../core/Analytics/AnalyticsInfoEvent';
+import { AnalyticsInfoEvent, InfoEventType, UiTarget } from '../../../core/Analytics/events/AnalyticsInfoEvent';
 
 export class DropinComponent extends Component<DropinComponentProps, DropinComponentState> {
     public state: DropinComponentState = {
@@ -47,26 +46,11 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
                 });
 
                 this.setStatus('ready');
-
-                const event = new AnalyticsInfoEvent({
-                    type: ANALYTICS_RENDERED_STR,
-                    component: 'dropin',
-                    configData: this.analyticConfigData
-                });
-
-                this.props.modules?.analytics.sendAnalytics(event);
             }
         );
 
         this.onOrderCancel = this.getOnOrderCancel();
     };
-
-    get analyticConfigData() {
-        return {
-            openFirstStoredPaymentMethod: this.props.openFirstStoredPaymentMethod,
-            showStoredPaymentMethods: this.props.showStoredPaymentMethods
-        };
-    }
 
     public setStatus = (status: DropinStatus['type'], props: DropinStatusProps = {}) => {
         this.setState({ status: { type: status, props } });
@@ -103,15 +87,8 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
 
         this.setActivePaymentMethod(paymentMethod);
 
-        // onSelect event
         if ((activePaymentMethod && activePaymentMethod._id !== paymentMethod._id) || !activePaymentMethod) {
             this.props.onSelect?.(paymentMethod);
-
-            const event = new AnalyticsInfoEvent({
-                type: ANALYTICS_RENDERED_STR
-            });
-
-            paymentMethod.submitAnalytics(event);
         }
     };
 
@@ -137,7 +114,7 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
 
         const event = new AnalyticsInfoEvent({
             type: InfoEventType.clicked,
-            target: 'otherpaymentmethod_button',
+            target: UiTarget.otherPaymentMethodButton,
             component: 'dropin'
         });
 
@@ -187,7 +164,6 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
             storedPaymentElements,
             status,
             activePaymentMethod,
-            cachedPaymentMethods,
             showDefaultPaymentMethodList
         } = this.state;
 
@@ -217,7 +193,6 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
                                     isLoading={isLoading}
                                     paymentMethods={fastlanePaymentElement}
                                     activePaymentMethod={activePaymentMethod}
-                                    cachedPaymentMethods={cachedPaymentMethods}
                                     onSelect={this.handleOnSelectPaymentMethod}
                                     openFirstPaymentMethod
                                     showRadioButton={this.props.showRadioButton}
@@ -243,7 +218,6 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
                                 instantPaymentMethods={instantPaymentElements}
                                 storedPaymentMethods={storedPaymentElements}
                                 activePaymentMethod={activePaymentMethod}
-                                cachedPaymentMethods={cachedPaymentMethods}
                                 order={this.props.order}
                                 orderStatus={this.state.orderStatus}
                                 onOrderCancel={this.onOrderCancel}

@@ -3,6 +3,7 @@ import { render, screen, waitFor, within } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import { setupServer } from 'msw/node';
 import { http, HttpResponse } from 'msw';
+import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 
 const server = setupServer(
     http.get('https://checkoutshopper-live.adyen.com/checkoutshopper/datasets/countries/en-US.json', () => {
@@ -23,10 +24,11 @@ describe('AfterPay', () => {
         const user = userEvent.setup();
         const onSubmitMock = jest.fn();
         const onChangeMock = jest.fn();
+        const core = setupCoreMock();
 
-        const afterpay = new AfterPay(global.core, {
+        const afterpay = new AfterPay(core, {
             countryCode: 'NL',
-            modules: { analytics: global.analytics, resources: global.resources, srPanel: global.srPanel },
+            modules: { resources: global.resources, srPanel: global.srPanel },
             i18n: global.i18n,
             onSubmit: onSubmitMock,
             onChange: onChangeMock,
@@ -159,10 +161,11 @@ describe('AfterPay', () => {
         const user = userEvent.setup();
         const onSubmitMock = jest.fn();
         const onChangeMock = jest.fn();
+        const core = setupCoreMock();
 
-        const afterpay = new AfterPay(global.core, {
+        const afterpay = new AfterPay(core, {
             countryCode: 'NL',
-            modules: { analytics: global.analytics, resources: global.resources, srPanel: global.srPanel },
+            modules: { resources: global.resources, srPanel: global.srPanel },
             i18n: global.i18n,
             onSubmit: onSubmitMock,
             onChange: onChangeMock,
@@ -342,10 +345,11 @@ describe('AfterPay', () => {
     test('should not submit the payment if form is not valid nor consent checkbox is checked', async () => {
         const user = userEvent.setup();
         const onSubmitMock = jest.fn();
+        const core = setupCoreMock();
 
-        const afterpay = new AfterPay(global.core, {
+        const afterpay = new AfterPay(core, {
             countryCode: 'NL',
-            modules: { analytics: global.analytics, resources: global.resources, srPanel: global.srPanel },
+            modules: { resources: global.resources, srPanel: global.srPanel },
             i18n: global.i18n,
             onSubmit: onSubmitMock,
             loadingContext: 'https://checkoutshopper-live.adyen.com/checkoutshopper/'
