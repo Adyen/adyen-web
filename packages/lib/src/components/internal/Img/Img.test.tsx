@@ -5,24 +5,25 @@ import { ImgProps } from './types';
 
 describe('Image', () => {
     const renderImg = (props: ImgProps) => render(<Img {...props} />);
+    const alt = 'test image';
 
     test('renders a component', () => {
-        renderImg({ alt: 'test image' });
-        const image = screen.getByRole('img', { name: 'test image' });
+        renderImg({ alt });
+        const image = screen.getByRole('img', { name: alt });
         expect(image).toBeInTheDocument();
         expect(image).toHaveClass('adyen-checkout__image');
     });
 
     test('has passed className', () => {
-        renderImg({ alt: 'test image', className: 'abc123' });
-        expect(screen.getByRole('img')).toHaveClass('abc123');
+        renderImg({ alt, className: 'abc123' });
+        expect(screen.getByRole('img', { name: alt })).toHaveClass('abc123');
     });
 
     test('calls onError callback', () => {
         const onErrorMock = jest.fn();
-        renderImg({ alt: 'test image', src: 'invalid.jpg', onError: onErrorMock });
+        renderImg({ alt, src: 'invalid.jpg', onError: onErrorMock });
 
-        const image = screen.getByRole('img');
+        const image = screen.getByRole('img', { name: alt });
         fireEvent.error(image);
 
         expect(onErrorMock).toHaveBeenCalledTimes(1);
