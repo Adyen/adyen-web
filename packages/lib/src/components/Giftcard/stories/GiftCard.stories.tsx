@@ -8,7 +8,7 @@ import { http, HttpResponse } from 'msw';
 type GifcardStory = StoryObj<PaymentMethodStoryProps<GiftCardConfiguration>>;
 
 const meta: Meta<PaymentMethodStoryProps<GiftCardConfiguration>> = {
-    title: 'Components/Partial Payments/Givex(Giftcard)'
+    title: 'Components/Gift Cards'
 };
 
 // Base story args
