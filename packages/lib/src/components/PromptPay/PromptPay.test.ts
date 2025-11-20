@@ -1,4 +1,5 @@
 import PromptPay from './PromptPay';
+import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 
 describe('PromptPay', () => {
     describe('isValid', () => {
@@ -17,7 +18,8 @@ describe('PromptPay', () => {
 
     describe('render', () => {
         test('does render something by default', () => {
-            const promptPay = new PromptPay(global.core);
+            const core = setupCoreMock();
+            const promptPay = new PromptPay(core);
             expect(promptPay.render()).not.toBe(null);
         });
     });

@@ -11,13 +11,8 @@
     transition: all 0.3s ease-out;
 
     &__brand-wrapper {
-        box-shadow: token(shadow-low);
-        overflow: hidden;
-        display: inline-block;
         height: token(spacer-070);
         width: token(spacer-090);
-        position: relative;
-        border-radius: token(border-radius-s);
         margin: token(spacer-020) token(spacer-010);
     }
 }
@@ -30,9 +25,9 @@
 }
 
 .adyen-checkout__card__brands img {
-    margin: 0;
+    margin: token(spacer-020) token(spacer-010);
     padding: 0;
     display: block;
-    width: 100%;
-    height: auto;
+    width: token(spacer-090);
+    height: token(spacer-070);
 }

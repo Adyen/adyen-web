@@ -3,8 +3,6 @@ import { errorCodeMapping, ALLOWED_ANALYTICS_DATA } from './constants';
 import { digitsOnlyFormatter } from '../../utils/Formatters/formatters';
 import { ERROR_FIELD_REQUIRED, ERROR_INVALID_FORMAT_EXPECTS } from '../Errors/constants';
 
-export const getUTCTimestamp = () => Date.now();
-
 export const mapErrorCodesForAnalytics = (errorCode: string, target: string) => {
     // Some of the more generic error codes required combination with target to retrieve a specific code
     if (errorCode === ERROR_FIELD_REQUIRED || errorCode === ERROR_INVALID_FORMAT_EXPECTS) {

@@ -4,27 +4,31 @@ import { mock } from 'jest-mock-extended';
 import { Resources } from '../../core/Context/Resources';
 import checkPaymentStatus from '../../core/Services/payment-status';
 import { SRPanel } from '../../core/Errors/SRPanel';
+import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 
 jest.mock('../../core/Services/payment-status');
 
 describe('PayNow', () => {
     describe('isValid', () => {
         test('should be always true', () => {
-            const paynow = new PayNow(global.core);
+            const core = setupCoreMock();
+            const paynow = new PayNow(core);
             expect(paynow.isValid).toBe(true);
         });
     });
 
     describe('get data', () => {
         test('always returns a type', () => {
-            const paynow = new PayNow(global.core);
+            const core = setupCoreMock();
+            const paynow = new PayNow(core);
             expect(paynow.data.paymentMethod.type).toBe('paynow');
         });
     });
 
     describe('render', () => {
         test('does render something by default', () => {
-            const paynow = new PayNow(global.core);
+            const core = setupCoreMock();
+            const paynow = new PayNow(core);
             expect(paynow.render()).not.toBe(null);
         });
     });
@@ -51,7 +55,9 @@ describe('PayNow', () => {
             type: 'complete'
         });
 
-        const paynow = new PayNow(global.core, {
+        const core = setupCoreMock();
+
+        const paynow = new PayNow(core, {
             loadingContext: 'checkoutshopper.com/',
             modules: { resources, analytics: global.analytics, srPanel },
             i18n: global.i18n,
