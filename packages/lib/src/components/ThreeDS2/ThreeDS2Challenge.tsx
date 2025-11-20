@@ -21,7 +21,7 @@ class ThreeDS2Challenge extends UIElement<ThreeDS2ChallengeConfiguration> {
     };
 
     protected override beforeRender() {
-        /* Do not send rendered events for ThreeDS2Challenge */
+        /* Do not send rendered events for ThreeDS2Challenge - it will have the same timestamp as the "creq sent" event */
     }
 
     protected onActionHandled = (rtnObj: ActionHandledReturnObject) => {

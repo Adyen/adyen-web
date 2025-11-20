@@ -22,7 +22,7 @@ class ThreeDS2DeviceFingerprint extends UIElement<ThreeDS2DeviceFingerprintConfi
     private callSubmit3DS2Fingerprint = callSubmit3DS2Fingerprint.bind(this); // New 3DS2 flow
 
     protected override beforeRender() {
-        /* Do not send rendered events for ThreeDS2DeviceFingerprint */
+        /* Do not send rendered events for ThreeDS2DeviceFingerprint - it will have the same timestamp as the "threeDSMethodData sent" event */
     }
 
     protected onActionHandled = (rtnObj: ActionHandledReturnObject) => {

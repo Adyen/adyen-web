@@ -185,7 +185,7 @@ const fingerprintFlowPropsDropin = ['elementRef'];
  *  Must contain all props needed for the challenge stage since, in the new 3DS2 flow, the fingerprint component will be the "component" reference
  *  if the /submitThreeDS2Fingerprint response dictates we "handleAction" to create a challenge
  */
-const fingerprintFlowProps = ['createFromAction', 'onAdditionalDetails'];
+const fingerprintFlowProps = []; //['createFromAction', 'onAdditionalDetails'];
 
 /**
  * Add props specifically needed for the type of 3DS2 flow: fingerprint or challenge

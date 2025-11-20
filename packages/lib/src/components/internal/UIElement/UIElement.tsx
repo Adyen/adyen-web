@@ -132,6 +132,12 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
 
         const paymentMethodFromResponse = this.getPaymentMethodConfigFromResponse(componentProps);
 
+        console.log('\n### UIElement::buildElementProps:: globalCoreProps.onAdditionalDetails', globalCoreProps.onAdditionalDetails);
+        console.log(
+            '### UIElement::buildElementProps:: componentProps (props the action component is configured with).onAdditionalDetails',
+            componentProps.onAdditionalDetails
+        ); // those props the action component is configured with
+
         const finalProps = {
             showPayButton: true,
             ...globalCoreProps,
@@ -389,6 +395,10 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
             }
             throw new Error('handleAction::Invalid Action - the passed action object does not have a "type" property');
         }
+
+        console.log('\n### UIElement::handleAction:: this=', this);
+        console.log('### UIElement::handleAction:: this.elementRef.props.onAdditionalDetails', this.elementRef.props.onAdditionalDetails);
+        console.log('### UIElement::handleAction:: props', props);
 
         const paymentAction = this.core.createFromAction(action, {
             ...this.elementRef.props,
