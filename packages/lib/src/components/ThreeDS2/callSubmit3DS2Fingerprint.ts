@@ -81,8 +81,6 @@ export default function callSubmit3DS2Fingerprint({ data }): void {
              * TODO - check logs: do we ever *not* have an actionHandler?
              */
             if (!actionHandler) {
-                console.debug('Handled Error::callSubmit3DS2Fingerprint::FAILED:: no actionHandler');
-
                 event = new AnalyticsErrorEvent({
                     component: 'threeDS2Fingerprint',
                     code: ErrorEventCode.THREEDS2_NO_COMPONENT_FOR_ACTION,
