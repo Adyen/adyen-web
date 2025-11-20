@@ -119,6 +119,7 @@ class Script implements IScript {
             };
 
             const handleOnLoad = () => {
+                if (!this.script) return;
                 this.script.setAttribute('data-script-loaded', 'true');
                 cleanupListeners();
                 resolve();
