@@ -70,9 +70,11 @@ test('should pre selected available card', async () => {
     customRender(<CtPCards onDisplayCardComponent={jest.fn()} />, contextProps);
 
     expect(screen.getByRole('button', { name: 'Pay €20.00 with •••• 3456' })).toBeEnabled();
-    expect(screen.getByRole('button', { name: /Mastercard •••• 3456/i }).textContent).toBe('Mastercard •••• 3456 ');
 
-    await user.click(screen.getByRole('button', { name: /Mastercard •••• 3456/i }));
+    const selectButton = screen.getByRole('button', { name: 'Select a card to use.' });
+    expect(selectButton.textContent).toBe('Mastercard •••• 3456 ');
+
+    await user.click(selectButton);
     const options = screen.getAllByRole('option');
 
     expect(options[0].textContent).toBe('Visa •••• 8902 Expired');
@@ -177,9 +179,12 @@ test('should not be able to checkout with expired card (card list)', async () =>
     customRender(<CtPCards onDisplayCardComponent={jest.fn()} />, contextProps);
 
     expect(screen.getByRole('button', { name: 'Pay €20.00 with •••• 3456' })).toBeDisabled();
-    expect(screen.getByRole('button', { name: /Mastercard •••• 3456/i }).textContent).toBe('Mastercard •••• 3456 Expired');
 
-    await user.click(screen.getByRole('button', { name: /Mastercard •••• 3456/i }));
+    const selectButton = screen.getByRole('button', { name: 'Select a card to use.' });
+
+    expect(selectButton.textContent).toBe('Mastercard •••• 3456 Expired');
+
+    await user.click(selectButton);
     const options = screen.getAllByRole('option');
 
     expect(options[0].textContent).toBe('Mastercard •••• 3456 Expired');
@@ -252,7 +257,7 @@ test('should be able to checkout (card list)', async () => {
     expect(screen.getByRole('button', { name: 'Pay €20.00 with •••• 8902' })).toBeTruthy();
 
     // Shows available cards by clicking in the Select
-    await user.click(screen.getByRole('button', { name: /Visa •••• 8902/i }));
+    await user.click(screen.getByRole('button', { name: 'Select a card to use.' }));
     expect(screen.getAllByRole('option').length).toBe(2);
 
     // Selects Mastercard, then pay button label gets updated

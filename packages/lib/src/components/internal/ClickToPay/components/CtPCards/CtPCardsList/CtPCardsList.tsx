@@ -49,13 +49,20 @@ const CtPCardsList = ({ cardSelected, cards, errorMessage, onChangeCard }: CtPCa
     }, [data, onChangeCard]);
 
     return (
-        <Field name="clickToPayCards" errorMessage={errorMessage} readOnly={status === 'loading'}>
+        <Field
+            name="clickToPayCards"
+            className="adyen-checkout-ctp__cards-list-field"
+            errorMessage={errorMessage}
+            readOnly={status === 'loading'}
+            label={i18n.get('ctp.cards.subtitle')}
+        >
             <Select
                 items={items}
                 selectedValue={data['srcDigitalCardId']}
-                name={'cards'}
+                name={'clickToPayCards'}
                 filterable={false}
                 className={'adyen-checkout-ctp__cards-list-dropdown'}
+                allowIdOnButton={true}
                 readonly={status === 'loading'}
                 onChange={handleChangeFor('srcDigitalCardId')}
             />
