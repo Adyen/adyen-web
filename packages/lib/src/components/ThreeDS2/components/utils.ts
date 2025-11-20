@@ -2,7 +2,7 @@ import { CHALLENGE_WINDOW_SIZES, DEFAULT_CHALLENGE_WINDOW_SIZE } from '../consta
 import { getOrigin } from '../../../utils/getOrigin';
 import base64 from '../../../utils/base64';
 import { ChallengeData, ThreeDS2Token, FingerPrintData, ResultObject, FingerprintResolveData, ChallengeResolveData } from '../types';
-import { pick } from '../../../utils/commonUtils';
+// import { pick } from '../../../utils/commonUtils';
 import { DecodeObject } from '../../../types/global-types';
 import { ErrorObject } from '../../../core/Errors/types';
 
@@ -179,13 +179,13 @@ export const encodeBase64URL = (dataStr: string): string => {
     return base64url;
 };
 
-const fingerprintFlowPropsDropin = ['elementRef'];
+// const fingerprintFlowPropsDropin = ['elementRef'];
 
 /**
  *  Must contain all props needed for the challenge stage since, in the new 3DS2 flow, the fingerprint component will be the "component" reference
  *  if the /submitThreeDS2Fingerprint response dictates we "handleAction" to create a challenge
  */
-const fingerprintFlowProps = []; //['createFromAction', 'onAdditionalDetails'];
+// const fingerprintFlowProps = ['createFromAction', 'onAdditionalDetails'];
 
 /**
  * Add props specifically needed for the type of 3DS2 flow: fingerprint or challenge
@@ -196,11 +196,19 @@ const fingerprintFlowProps = []; //['createFromAction', 'onAdditionalDetails'];
 export const get3DS2FlowProps = (actionSubtype, props) => {
     if (actionSubtype === 'fingerprint') {
         // elementRef exists when the fingerprint component is created from the Dropin
-        const fingerprintProps = props.elementRef ? fingerprintFlowPropsDropin : fingerprintFlowProps;
-        const rtnObj = pick(fingerprintProps).from(props);
-        rtnObj.showSpinner = !props.isDropin;
-        rtnObj.statusType = 'loading';
-        return rtnObj;
+        // const fingerprintProps = props.elementRef ? fingerprintFlowPropsDropin : fingerprintFlowProps;
+        // const rtnObj = pick(fingerprintProps).from(props);
+
+        // rtnObj.showSpinner = !props.isDropin;
+        // rtnObj.statusType = 'loading';
+        // return rtnObj;
+
+        return {
+            showSpinner: !props.isDropin,
+            statusType: 'loading',
+            // elementRef exists when the fingerprint component is created from the Dropin
+            ...(props.elementRef && { elementRef: props.elementRef })
+        };
     }
 
     // Challenge
