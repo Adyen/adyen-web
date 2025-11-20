@@ -16,7 +16,7 @@ export default function Img(props: ImgProps) {
 
     const handleError = (e: JSX.TargetedEvent<HTMLImageElement, Event>) => {
         setLoaded(showOnError);
-        props?.onError(e);
+        props?.onError?.(e);
     };
 
     const classNames = cx(
