@@ -3,7 +3,7 @@ module.exports = {
     verbose: true,
     rootDir: '../',
     setupFilesAfterEnv: ['<rootDir>/config/setupTests.ts'],
-    transformIgnorePatterns: ['node_modules/(?!(preact|@testing-library)/)'],
+    transformIgnorePatterns: ['node_modules/(?!(preact|@testing-library|until-async)/)'],
     transform: {
         '^.+\\.(js|ts|tsx|mjs)$': 'ts-jest'
     },
