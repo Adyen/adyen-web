@@ -3,7 +3,6 @@ import UIElement from '../../internal/UIElement/UIElement';
 import IssuerList from '../../internal/IssuerList';
 import getIssuerImageUrl from '../../../utils/get-issuer-image';
 import { FALLBACK_CONTEXT } from '../../../core/config';
-import { CoreProvider } from '../../../core/Context/CoreProvider';
 import RedirectButton from '../../internal/RedirectButton';
 import SRPanelProvider from '../../../core/Errors/SRPanelProvider';
 import { IssuerListConfiguration, IssuerListData } from './types';
@@ -76,41 +75,37 @@ class IssuerListContainer extends UIElement<IssuerListConfiguration> {
         return [];
     }
 
-    render() {
-        return (
-            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
-                {this.props.issuers.length > 0 ? (
-                    <SRPanelProvider srPanel={this.props.modules.srPanel}>
-                        <IssuerList
-                            ref={ref => {
-                                this.componentRef = ref;
-                            }}
-                            items={this.props.issuers}
-                            highlightedIds={this.props.highlightedIssuers}
-                            {...this.props}
-                            {...this.state}
-                            showImage={this.props.showImage}
-                            type={this.constructor['type']}
-                            onChange={this.setState}
-                            onSubmit={this.submit}
-                            payButton={this.payButton}
-                            contextualText={this.props.i18n.get('issuerList.selectField.contextualText')}
-                            onSubmitAnalytics={this.submitAnalytics}
-                        />
-                    </SRPanelProvider>
-                ) : (
-                    <RedirectButton
-                        showPayButton={this.props.showPayButton}
-                        name={this.props.name}
-                        {...this.props}
-                        onSubmit={this.submit}
-                        payButton={this.payButton}
-                        ref={ref => {
-                            this.componentRef = ref;
-                        }}
-                    />
-                )}
-            </CoreProvider>
+    protected override componentToRender(): h.JSX.Element {
+        return this.props.issuers.length > 0 ? (
+            <SRPanelProvider srPanel={this.props.modules.srPanel}>
+                <IssuerList
+                    ref={ref => {
+                        this.componentRef = ref;
+                    }}
+                    items={this.props.issuers}
+                    highlightedIds={this.props.highlightedIssuers}
+                    {...this.props}
+                    {...this.state}
+                    showImage={this.props.showImage}
+                    type={this.constructor['type']}
+                    onChange={this.setState}
+                    onSubmit={this.submit}
+                    payButton={this.payButton}
+                    contextualText={this.props.i18n.get('issuerList.selectField.contextualText')}
+                    onSubmitAnalytics={this.submitAnalytics}
+                />
+            </SRPanelProvider>
+        ) : (
+            <RedirectButton
+                showPayButton={this.props.showPayButton}
+                name={this.props.name}
+                {...this.props}
+                onSubmit={this.submit}
+                payButton={this.payButton}
+                ref={ref => {
+                    this.componentRef = ref;
+                }}
+            />
         );
     }
 }

@@ -28,9 +28,6 @@ class MyElement extends UIElement<MyElementProps> {
     public handleAdditionalDetails(data) {
         super.handleAdditionalDetails(data);
     }
-    render() {
-        return '';
-    }
 }
 
 const submitMock = jest.fn();

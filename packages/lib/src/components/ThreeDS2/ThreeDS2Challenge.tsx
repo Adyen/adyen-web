@@ -7,7 +7,6 @@ import { hasOwnProperty } from '../../utils/hasOwnProperty';
 import { TxVariants } from '../tx-variants';
 import { ChallengeResolveData, LegacyChallengeResolveData, ThreeDS2ChallengeConfiguration } from './types';
 import AdyenCheckoutError, { API_ERROR } from '../../core/Errors/AdyenCheckoutError';
-import { CoreProvider } from '../../core/Context/CoreProvider';
 import { ActionHandledReturnObject } from '../../types/global-types';
 import { AnalyticsLogEvent, LogEventSubtype, LogEventType } from '../../core/Analytics/events/AnalyticsLogEvent';
 import { AnalyticsErrorEvent, ErrorEventCode, ErrorEventType } from '../../core/Analytics/events/AnalyticsErrorEvent';
@@ -53,7 +52,7 @@ class ThreeDS2Challenge extends UIElement<ThreeDS2ChallengeConfiguration> {
         this.unmount(); // re. fixing issue around back to back challenge calls
     }
 
-    render() {
+    protected override componentToRender(): h.JSX.Element {
         // existy used because threeds2InMDFlow will send empty string for paymentData and we should be allowed to proceed with this
         if (!existy(this.props.paymentData)) {
             /**
@@ -77,15 +76,13 @@ class ThreeDS2Challenge extends UIElement<ThreeDS2ChallengeConfiguration> {
         }
 
         return (
-            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
-                <PrepareChallenge
-                    {...this.props}
-                    onComplete={this.onComplete}
-                    onSubmitAnalytics={this.submitAnalytics}
-                    isMDFlow={this.props.paymentData.length < 15}
-                    onActionHandled={this.onActionHandled}
-                />
-            </CoreProvider>
+            <PrepareChallenge
+                {...this.props}
+                onComplete={this.onComplete}
+                onSubmitAnalytics={this.submitAnalytics}
+                isMDFlow={this.props.paymentData.length < 15}
+                onActionHandled={this.onActionHandled}
+            />
         );
     }
 }

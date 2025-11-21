@@ -2,7 +2,6 @@ import { h } from 'preact';
 import UIElement from '../internal/UIElement/UIElement';
 import PaypalComponent from './components/PaypalComponent';
 import defaultProps from './defaultProps';
-import { CoreProvider } from '../../core/Context/CoreProvider';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { ERRORS } from './constants';
 import { TxVariants } from '../tx-variants';
@@ -203,30 +202,28 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
         return this.props.onShippingOptionsChange(data, actions, this);
     }
 
-    render() {
+    protected override componentToRender(): h.JSX.Element {
         if (!this.props.showPayButton) return null;
 
         const { onShippingAddressChange, onShippingOptionsChange, ...rest } = this.props;
 
         return (
-            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources} analytics={this.analytics}>
-                <PaypalComponent
-                    ref={ref => {
-                        this.componentRef = ref;
-                    }}
-                    {...rest}
-                    {...(onShippingAddressChange && { onShippingAddressChange: this.handleOnShippingAddressChange })}
-                    {...(onShippingOptionsChange && { onShippingOptionsChange: this.handleOnShippingOptionsChange })}
-                    onCancel={() => this.handleError(new AdyenCheckoutError('CANCEL'))}
-                    onChange={this.setState}
-                    onApprove={this.handleOnApprove}
-                    onError={error => {
-                        this.handleError(new AdyenCheckoutError('ERROR', error.toString(), { cause: error }));
-                    }}
-                    onScriptLoadFailure={error => this.handleError(error)}
-                    onSubmit={this.handleSubmit}
-                />
-            </CoreProvider>
+            <PaypalComponent
+                ref={ref => {
+                    this.componentRef = ref;
+                }}
+                {...rest}
+                {...(onShippingAddressChange && { onShippingAddressChange: this.handleOnShippingAddressChange })}
+                {...(onShippingOptionsChange && { onShippingOptionsChange: this.handleOnShippingOptionsChange })}
+                onCancel={() => this.handleError(new AdyenCheckoutError('CANCEL'))}
+                onChange={this.setState}
+                onApprove={this.handleOnApprove}
+                onError={error => {
+                    this.handleError(new AdyenCheckoutError('ERROR', error.toString(), { cause: error }));
+                }}
+                onScriptLoadFailure={error => this.handleError(error)}
+                onSubmit={this.handleSubmit}
+            />
         );
     }
 }

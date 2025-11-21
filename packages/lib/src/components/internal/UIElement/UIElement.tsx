@@ -32,6 +32,7 @@ import { AnalyticsInfoEvent, InfoEventType } from '../../../core/Analytics/event
 
 import './UIElement.scss';
 import { SRPanel } from '../../../core/Errors/SRPanel';
+import { CoreProvider } from '../../../core/Context/CoreProvider';
 
 export abstract class UIElement<P extends UIElementProps = UIElementProps> extends BaseElement<P> {
     protected componentRef: any;
@@ -604,6 +605,18 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
                     amount: order ? order.remainingAmount : amount
                 });
             });
+    }
+
+    protected componentToRender(): h.JSX.Element {
+        return null;
+    }
+
+    public render() {
+        return (
+            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources} analytics={this.analytics}>
+                {this.componentToRender()}
+            </CoreProvider>
+        );
     }
 }
 
