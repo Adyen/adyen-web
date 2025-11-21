@@ -1,7 +1,6 @@
 import { h, RefObject } from 'preact';
 import UIElement from '../internal/UIElement/UIElement';
 import UPIComponent from './components/UPIComponent';
-import { CoreProvider } from '../../core/Context/CoreProvider';
 import { Await } from '../internal/Await';
 import { QRLoader } from '../internal/QRLoader';
 import { UPIConfiguration, UpiMode, UpiPaymentData, UpiType } from './types';
@@ -155,13 +154,9 @@ class UPI extends UIElement<UPIConfiguration> {
         }
     }
 
-    public render(): h.JSX.Element {
+    protected override componentToRender(): h.JSX.Element {
         const { type, url, paymentMethodType } = this.props;
-        return (
-            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
-                <SRPanelProvider srPanel={this.props.modules.srPanel}>{this.renderContent(type, url, paymentMethodType)}</SRPanelProvider>
-            </CoreProvider>
-        );
+        return <SRPanelProvider srPanel={this.props.modules.srPanel}>{this.renderContent(type, url, paymentMethodType)}</SRPanelProvider>;
     }
 }
 

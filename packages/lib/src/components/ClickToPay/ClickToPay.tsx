@@ -1,6 +1,5 @@
 import { h } from 'preact';
 import UIElement from '../internal/UIElement/UIElement';
-import { CoreProvider } from '../../core/Context/CoreProvider';
 import { ClickToPayConfiguration, ClickToPayPaymentData } from './types';
 import collectBrowserInfo from '../../utils/browserInfo';
 import { ClickToPayCheckoutPayload, IClickToPayService } from '../internal/ClickToPay/services/types';
@@ -104,22 +103,20 @@ export class ClickToPayElement extends UIElement<ClickToPayConfiguration> {
         this.submit();
     };
 
-    render() {
+    protected override componentToRender(): h.JSX.Element {
         return (
-            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
-                <ClickToPayProvider
-                    isStandaloneComponent={true}
-                    configuration={this.ctpConfiguration}
-                    amount={this.props.amount}
-                    clickToPayService={this.clickToPayService}
-                    setClickToPayRef={this.setComponentRef}
-                    onSetStatus={this.setElementStatus}
-                    onSubmit={this.handleClickToPaySubmit}
-                    onError={this.handleError}
-                >
-                    <ClickToPayComponent />
-                </ClickToPayProvider>
-            </CoreProvider>
+            <ClickToPayProvider
+                isStandaloneComponent={true}
+                configuration={this.ctpConfiguration}
+                amount={this.props.amount}
+                clickToPayService={this.clickToPayService}
+                setClickToPayRef={this.setComponentRef}
+                onSetStatus={this.setElementStatus}
+                onSubmit={this.handleClickToPaySubmit}
+                onError={this.handleError}
+            >
+                <ClickToPayComponent />
+            </ClickToPayProvider>
         );
     }
 }

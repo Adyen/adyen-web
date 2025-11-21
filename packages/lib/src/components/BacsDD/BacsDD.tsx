@@ -1,7 +1,6 @@
 import { h } from 'preact';
 import UIElement from '../internal/UIElement/UIElement';
 import BacsInput from './components/BacsInput';
-import { CoreProvider } from '../../core/Context/CoreProvider';
 import BacsResult from './components/BacsResult';
 import PayButton from '../internal/PayButton';
 import { TxVariants } from '../tx-variants';
@@ -31,33 +30,29 @@ class BacsElement extends UIElement<VoucherConfiguration> {
         return <PayButton amount={this.props.amount} onClick={this.submit} {...props} />;
     };
 
-    render() {
-        return (
-            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
-                {this.props.url ? (
-                    <BacsResult
-                        ref={ref => {
-                            this.componentRef = ref;
-                        }}
-                        icon={this.icon}
-                        url={this.props.url}
-                        paymentMethodType={this.props.paymentMethodType}
-                        onActionHandled={this.onActionHandled}
-                        // originalAction={this.props.originalAction}
-                    />
-                ) : (
-                    <BacsInput
-                        // @ts-ignore ref is internal from the Component
-                        ref={ref => {
-                            this.componentRef = ref;
-                        }}
-                        {...this.props}
-                        onChange={this.setState}
-                        payButton={this.payButton}
-                        onSubmit={this.submit}
-                    />
-                )}
-            </CoreProvider>
+    protected override componentToRender(): h.JSX.Element {
+        return this.props.url ? (
+            <BacsResult
+                ref={ref => {
+                    this.componentRef = ref;
+                }}
+                icon={this.icon}
+                url={this.props.url}
+                paymentMethodType={this.props.paymentMethodType}
+                onActionHandled={this.onActionHandled}
+                // originalAction={this.props.originalAction}
+            />
+        ) : (
+            <BacsInput
+                // @ts-ignore ref is internal from the Component
+                ref={ref => {
+                    this.componentRef = ref;
+                }}
+                {...this.props}
+                onChange={this.setState}
+                payButton={this.payButton}
+                onSubmit={this.submit}
+            />
         );
     }
 }

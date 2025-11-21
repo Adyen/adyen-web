@@ -1,7 +1,6 @@
 import { h } from 'preact';
 import UIElement from '../internal/UIElement/UIElement';
 import MBWayInput from './components/MBWayInput';
-import { CoreProvider } from '../../core/Context/CoreProvider';
 import config from './components/MBWayAwait/config';
 import { Await } from '../../components/internal/Await';
 import SRPanelProvider from '../../core/Errors/SRPanelProvider';
@@ -46,46 +45,42 @@ export class MBWayElement extends UIElement<AwaitConfiguration> {
         return this.props.name;
     }
 
-    render() {
+    protected override componentToRender(): h.JSX.Element {
         if (this.props.paymentData) {
             return (
-                <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
-                    <SRPanelProvider srPanel={this.props.modules.srPanel}>
-                        <Await
-                            clientKey={this.props.clientKey}
-                            paymentData={this.props.paymentData}
-                            onError={this.props.onError}
-                            onComplete={this.onComplete}
-                            brandLogo={this.icon}
-                            type={config.type}
-                            messageText={this.props.i18n.get(config.messageTextId)}
-                            awaitText={this.props.i18n.get(config.awaitTextId)}
-                            showCountdownTimer={config.showCountdownTimer}
-                            delay={config.STATUS_INTERVAL}
-                            countdownTime={config.COUNTDOWN_MINUTES}
-                            throttleTime={config.THROTTLE_TIME}
-                            throttleInterval={config.THROTTLE_INTERVAL}
-                            onActionHandled={this.onActionHandled}
-                        />
-                    </SRPanelProvider>
-                </CoreProvider>
+                <SRPanelProvider srPanel={this.props.modules.srPanel}>
+                    <Await
+                        clientKey={this.props.clientKey}
+                        paymentData={this.props.paymentData}
+                        onError={this.props.onError}
+                        onComplete={this.onComplete}
+                        brandLogo={this.icon}
+                        type={config.type}
+                        messageText={this.props.i18n.get(config.messageTextId)}
+                        awaitText={this.props.i18n.get(config.awaitTextId)}
+                        showCountdownTimer={config.showCountdownTimer}
+                        delay={config.STATUS_INTERVAL}
+                        countdownTime={config.COUNTDOWN_MINUTES}
+                        throttleTime={config.THROTTLE_TIME}
+                        throttleInterval={config.THROTTLE_INTERVAL}
+                        onActionHandled={this.onActionHandled}
+                    />
+                </SRPanelProvider>
             );
         }
 
         return (
-            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
-                <MBWayInput
-                    /* @ts-ignore ref handled internally by Component */
-                    ref={ref => {
-                        this.componentRef = ref;
-                    }}
-                    {...this.props}
-                    setComponentRef={this.setComponentRef}
-                    onChange={this.setState}
-                    onSubmit={this.submit}
-                    payButton={this.payButton}
-                />
-            </CoreProvider>
+            <MBWayInput
+                /* @ts-ignore ref handled internally by Component */
+                ref={ref => {
+                    this.componentRef = ref;
+                }}
+                {...this.props}
+                setComponentRef={this.setComponentRef}
+                onChange={this.setState}
+                onSubmit={this.submit}
+                payButton={this.payButton}
+            />
         );
     }
 }

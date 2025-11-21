@@ -1,5 +1,4 @@
-import { h } from 'preact';
-import { CoreProvider } from '../../core/Context/CoreProvider';
+import { Fragment, h } from 'preact';
 import RedirectElement from '../Redirect';
 import RedirectButton from '../internal/RedirectButton';
 import { TxVariants } from '../tx-variants';
@@ -12,9 +11,9 @@ class TrustlyElement extends RedirectElement {
         return this.props.name || this.constructor['type'];
     }
 
-    render() {
+    protected override componentToRender(): h.JSX.Element {
         return (
-            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
+            <Fragment>
                 <div className="adyen-checkout-trustly">
                     <p className="adyen-checkout-trustly__descriptor">{this.props.i18n.get('trustly.descriptor')}</p>
                     <ul className="adyen-checkout-trustly__description-list">
@@ -35,7 +34,7 @@ class TrustlyElement extends RedirectElement {
                         }}
                     />
                 )}
-            </CoreProvider>
+            </Fragment>
         );
     }
 }

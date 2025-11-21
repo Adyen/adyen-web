@@ -350,7 +350,7 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
         }
     }
 
-    render() {
+    public override render() {
         if (!this.props.showPayButton) {
             return null;
         }

@@ -2,7 +2,6 @@ import { h } from 'preact';
 import UIElement from '../internal/UIElement/UIElement';
 import EcontextInput from './components/EcontextInput';
 import EcontextVoucherResult from './components/EcontextVoucherResult';
-import { CoreProvider } from '../../core/Context/CoreProvider';
 import { TxVariants } from '../tx-variants';
 import { EcontextConfiguration } from './types';
 
@@ -39,28 +38,24 @@ export class EcontextElement extends UIElement<EcontextConfiguration> {
         };
     }
 
-    render() {
-        return (
-            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
-                {this.props.reference ? (
-                    <EcontextVoucherResult
-                        ref={ref => {
-                            this.componentRef = ref;
-                        }}
-                        {...this.props}
-                        onActionHandled={this.onActionHandled}
-                    />
-                ) : (
-                    <EcontextInput
-                        setComponentRef={this.setComponentRef}
-                        {...this.props}
-                        showPayButton={this.props.showPayButton}
-                        onChange={this.setState}
-                        onSubmit={this.submit}
-                        payButton={this.payButton}
-                    />
-                )}
-            </CoreProvider>
+    protected override componentToRender(): h.JSX.Element {
+        return this.props.reference ? (
+            <EcontextVoucherResult
+                ref={ref => {
+                    this.componentRef = ref;
+                }}
+                {...this.props}
+                onActionHandled={this.onActionHandled}
+            />
+        ) : (
+            <EcontextInput
+                setComponentRef={this.setComponentRef}
+                {...this.props}
+                showPayButton={this.props.showPayButton}
+                onChange={this.setState}
+                onSubmit={this.submit}
+                payButton={this.payButton}
+            />
         );
     }
 }

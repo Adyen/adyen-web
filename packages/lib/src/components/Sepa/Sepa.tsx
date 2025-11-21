@@ -1,7 +1,6 @@
-import { h } from 'preact';
+import { Fragment, h } from 'preact';
 import UIElement from '../internal/UIElement/UIElement';
 import IbanInput from '../internal/IbanInput';
-import { CoreProvider } from '../../core/Context/CoreProvider';
 import { SepaElementData, SepaConfiguration } from './types';
 import { TxVariants } from '../tx-variants';
 import FormInstruction from '../internal/FormInstruction';
@@ -45,9 +44,9 @@ class SepaElement extends UIElement<SepaConfiguration> {
         return !!this.state.isValid;
     }
 
-    render() {
+    protected override componentToRender(): h.JSX.Element {
         return (
-            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
+            <Fragment>
                 <FormInstruction />
 
                 {/* @ts-ignore TODO: add props */}
@@ -60,7 +59,7 @@ class SepaElement extends UIElement<SepaConfiguration> {
                     // onSubmit={this.submit}
                     payButton={this.payButton}
                 />
-            </CoreProvider>
+            </Fragment>
         );
     }
 }

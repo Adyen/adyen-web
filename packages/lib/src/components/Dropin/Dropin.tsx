@@ -2,7 +2,6 @@ import { h } from 'preact';
 import UIElement from '../internal/UIElement/UIElement';
 import defaultProps from './defaultProps';
 import DropinComponent from '../../components/Dropin/components/DropinComponent';
-import { CoreProvider } from '../../core/Context/CoreProvider';
 import { createElements, createStoredElements } from './elements';
 import createInstantPaymentElements from './elements/createInstantPaymentElements';
 import { hasOwnProperty } from '../../utils/hasOwnProperty';
@@ -209,21 +208,19 @@ class DropinElement extends UIElement<DropinConfiguration> implements IDropin {
         this.activePaymentMethod?.onEnterKeyPressed(activeElement, pmComponent);
     }
 
-    render() {
+    protected override componentToRender(): h.JSX.Element {
         return (
-            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
-                <SRPanelProvider srPanel={this.props.modules.srPanel}>
-                    <DropinComponent
-                        {...this.props}
-                        core={this.core}
-                        elementRef={this.elementRef}
-                        onCreateElements={this.handleCreate}
-                        ref={dropinRef => {
-                            this.dropinRef = dropinRef;
-                        }}
-                    />
-                </SRPanelProvider>
-            </CoreProvider>
+            <SRPanelProvider srPanel={this.props.modules.srPanel}>
+                <DropinComponent
+                    {...this.props}
+                    core={this.core}
+                    elementRef={this.elementRef}
+                    onCreateElements={this.handleCreate}
+                    ref={dropinRef => {
+                        this.dropinRef = dropinRef;
+                    }}
+                />
+            </SRPanelProvider>
         );
     }
 }

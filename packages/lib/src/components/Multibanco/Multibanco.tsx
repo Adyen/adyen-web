@@ -1,7 +1,6 @@
 import { h } from 'preact';
 import UIElement from '../internal/UIElement/UIElement';
 import MultibancoVoucherResult from './components/MultibancoVoucherResult';
-import { CoreProvider } from '../../core/Context/CoreProvider';
 import RedirectButton from '../internal/RedirectButton';
 import { TxVariants } from '../tx-variants';
 import { VoucherConfiguration } from '../internal/Voucher/types';
@@ -35,29 +34,23 @@ export class MultibancoElement extends UIElement<VoucherConfiguration> {
         this.componentRef = ref;
     };
 
-    render() {
+    protected override componentToRender(): h.JSX.Element {
         if (this.props.reference) {
-            return (
-                <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
-                    <MultibancoVoucherResult ref={this.handleRef} {...this.props} onActionHandled={this.onActionHandled} />
-                </CoreProvider>
-            );
+            return <MultibancoVoucherResult ref={this.handleRef} {...this.props} onActionHandled={this.onActionHandled} />;
         }
 
         if (this.props.showPayButton) {
             return (
-                <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
-                    <RedirectButton
-                        showPayButton={this.props.showPayButton}
-                        name={this.displayName}
-                        amount={this.props.amount}
-                        payButton={this.payButton}
-                        onSubmit={this.submit}
-                        ref={ref => {
-                            this.componentRef = ref;
-                        }}
-                    />
-                </CoreProvider>
+                <RedirectButton
+                    showPayButton={this.props.showPayButton}
+                    name={this.displayName}
+                    amount={this.props.amount}
+                    payButton={this.payButton}
+                    onSubmit={this.submit}
+                    ref={ref => {
+                        this.componentRef = ref;
+                    }}
+                />
             );
         }
 

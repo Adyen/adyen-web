@@ -1,6 +1,5 @@
 import { h } from 'preact';
 import UIElement from '../internal/UIElement/UIElement';
-import { CoreProvider } from '../../core/Context/CoreProvider';
 import RedirectButton from '../internal/RedirectButton';
 import { TxVariants } from '../tx-variants';
 import AchComponent from './components/AchComponent';
@@ -58,35 +57,31 @@ export class AchElement extends UIElement<AchConfiguration> {
         return this.props.storedPaymentMethodId ? this.props.i18n.get('ach.savedBankAccount') : '';
     }
 
-    render() {
-        return (
-            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
-                {this.props.storedPaymentMethodId ? (
-                    <RedirectButton
-                        showPayButton={this.props.showPayButton}
-                        name={this.displayName}
-                        amount={this.props.amount}
-                        payButton={this.payButton}
-                        onSubmit={this.submit}
-                        ref={ref => {
-                            this.componentRef = ref;
-                        }}
-                    />
-                ) : (
-                    <SRPanelProvider srPanel={this.props.modules.srPanel}>
-                        <AchComponent
-                            onChange={this.setState}
-                            payButton={this.payButton}
-                            showPayButton={this.props.showPayButton}
-                            hasHolderName={this.props.hasHolderName}
-                            placeholders={this.props.placeholders}
-                            data={this.props.data}
-                            setComponentRef={this.setComponentRef}
-                            enableStoreDetails={this.props.enableStoreDetails}
-                        />
-                    </SRPanelProvider>
-                )}
-            </CoreProvider>
+    protected override componentToRender(): h.JSX.Element {
+        return this.props.storedPaymentMethodId ? (
+            <RedirectButton
+                showPayButton={this.props.showPayButton}
+                name={this.displayName}
+                amount={this.props.amount}
+                payButton={this.payButton}
+                onSubmit={this.submit}
+                ref={ref => {
+                    this.componentRef = ref;
+                }}
+            />
+        ) : (
+            <SRPanelProvider srPanel={this.props.modules.srPanel}>
+                <AchComponent
+                    onChange={this.setState}
+                    payButton={this.payButton}
+                    showPayButton={this.props.showPayButton}
+                    hasHolderName={this.props.hasHolderName}
+                    placeholders={this.props.placeholders}
+                    data={this.props.data}
+                    setComponentRef={this.setComponentRef}
+                    enableStoreDetails={this.props.enableStoreDetails}
+                />
+            </SRPanelProvider>
         );
     }
 }

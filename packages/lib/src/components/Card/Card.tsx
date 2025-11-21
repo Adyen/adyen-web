@@ -1,6 +1,5 @@
 import { h } from 'preact';
 import CardInput from './components/CardInput';
-import { CoreProvider } from '../../core/Context/CoreProvider';
 import collectBrowserInfo from '../../utils/browserInfo';
 import { BinLookupResponse, CardElementData, CardConfiguration } from './types';
 import triggerBinLookUp from '../internal/SecuredFields/binLookup/triggerBinLookUp';
@@ -355,24 +354,22 @@ export class CardElement extends UIElement<CardConfiguration> {
         );
     }
 
-    render() {
+    protected override componentToRender(): h.JSX.Element {
         return (
-            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
-                <SRPanelProvider srPanel={this.props.modules.srPanel}>
-                    <ClickToPayWrapper
-                        amount={this.props.amount}
-                        configuration={this.props.clickToPayConfiguration}
-                        clickToPayService={this.clickToPayService}
-                        isStandaloneComponent={false}
-                        setClickToPayRef={this.setClickToPayRef}
-                        onSetStatus={this.setElementStatus}
-                        onSubmit={this.handleClickToPaySubmit}
-                        onError={this.handleError}
-                    >
-                        {isCardPrimaryInput => this.renderCardInput(isCardPrimaryInput)}
-                    </ClickToPayWrapper>
-                </SRPanelProvider>
-            </CoreProvider>
+            <SRPanelProvider srPanel={this.props.modules.srPanel}>
+                <ClickToPayWrapper
+                    amount={this.props.amount}
+                    configuration={this.props.clickToPayConfiguration}
+                    clickToPayService={this.clickToPayService}
+                    isStandaloneComponent={false}
+                    setClickToPayRef={this.setClickToPayRef}
+                    onSetStatus={this.setElementStatus}
+                    onSubmit={this.handleClickToPaySubmit}
+                    onError={this.handleError}
+                >
+                    {isCardPrimaryInput => this.renderCardInput(isCardPrimaryInput)}
+                </ClickToPayWrapper>
+            </SRPanelProvider>
         );
     }
 }

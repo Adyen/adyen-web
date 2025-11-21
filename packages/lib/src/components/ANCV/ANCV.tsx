@@ -1,7 +1,6 @@
 import { h } from 'preact';
 import UIElement from '../internal/UIElement/UIElement';
 import ANCVInput from './components/ANCVInput';
-import { CoreProvider } from '../../core/Context/CoreProvider';
 import config from './components/ANCVAwait/config';
 import { Await } from '../../components/internal/Await';
 import SRPanelProvider from '../../core/Errors/SRPanelProvider';
@@ -90,43 +89,39 @@ export class ANCVElement extends UIElement<ANCVConfiguration> {
         return this.props.name;
     }
 
-    render() {
+    protected override componentToRender(): h.JSX.Element {
         if (this.props.paymentData) {
             return (
-                <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
-                    <SRPanelProvider srPanel={this.props.modules.srPanel}>
-                        <Await
-                            clientKey={this.props.clientKey}
-                            paymentData={this.props.paymentData}
-                            onError={this.props.onError}
-                            onComplete={this.onComplete}
-                            brandLogo={this.icon}
-                            type={this.constructor['type']}
-                            messageText={this.props.i18n.get('ancv.confirmPayment')}
-                            awaitText={this.props.i18n.get('await.waitForConfirmation')}
-                            showCountdownTimer={config.showCountdownTimer}
-                            throttleTime={config.THROTTLE_TIME}
-                            throttleInterval={config.THROTTLE_INTERVAL}
-                            onActionHandled={this.onActionHandled}
-                        />
-                    </SRPanelProvider>
-                </CoreProvider>
+                <SRPanelProvider srPanel={this.props.modules.srPanel}>
+                    <Await
+                        clientKey={this.props.clientKey}
+                        paymentData={this.props.paymentData}
+                        onError={this.props.onError}
+                        onComplete={this.onComplete}
+                        brandLogo={this.icon}
+                        type={this.constructor['type']}
+                        messageText={this.props.i18n.get('ancv.confirmPayment')}
+                        awaitText={this.props.i18n.get('await.waitForConfirmation')}
+                        showCountdownTimer={config.showCountdownTimer}
+                        throttleTime={config.THROTTLE_TIME}
+                        throttleInterval={config.THROTTLE_INTERVAL}
+                        onActionHandled={this.onActionHandled}
+                    />
+                </SRPanelProvider>
             );
         }
 
         return (
-            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
-                <ANCVInput
-                    ref={ref => {
-                        this.componentRef = ref;
-                    }}
-                    {...this.props}
-                    onSubmit={this.submit}
-                    onChange={this.setState}
-                    payButton={this.payButton}
-                    showPayButton={this.props.showPayButton}
-                />
-            </CoreProvider>
+            <ANCVInput
+                ref={ref => {
+                    this.componentRef = ref;
+                }}
+                {...this.props}
+                onSubmit={this.submit}
+                onChange={this.setState}
+                payButton={this.payButton}
+                showPayButton={this.props.showPayButton}
+            />
         );
     }
 }

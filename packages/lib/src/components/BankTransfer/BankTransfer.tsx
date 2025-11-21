@@ -1,6 +1,5 @@
-import { h } from 'preact';
+import { Fragment, h } from 'preact';
 import UIElement from '../internal/UIElement/UIElement';
-import { CoreProvider } from '../../core/Context/CoreProvider';
 import RedirectButton from '../internal/RedirectButton';
 import { BankTransferConfiguration, BankTransferState } from './types';
 import BankTransferResult from './components/BankTransferResult';
@@ -71,17 +70,13 @@ export class BankTransferElement extends UIElement<BankTransferConfiguration> {
         };
     }
 
-    render() {
+    protected override componentToRender(): h.JSX.Element {
         if (this.props.reference) {
-            return (
-                <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
-                    <BankTransferResult {...this.props} onActionHandled={this.onActionHandled} />
-                </CoreProvider>
-            );
+            return <BankTransferResult {...this.props} onActionHandled={this.onActionHandled} />;
         }
 
         return (
-            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
+            <Fragment>
                 {this.props.showEmailAddress && <BankTransferInput setComponentRef={this.setComponentRef} {...this.props} onChange={this.setState} />}
                 <RedirectButton
                     {...this.props}
@@ -90,7 +85,7 @@ export class BankTransferElement extends UIElement<BankTransferConfiguration> {
                     onSubmit={this.submit}
                     payButton={this.payButton}
                 />
-            </CoreProvider>
+            </Fragment>
         );
     }
 }

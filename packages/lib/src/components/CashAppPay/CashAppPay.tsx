@@ -1,6 +1,5 @@
 import { h } from 'preact';
 import UIElement from '../internal/UIElement/UIElement';
-import { CoreProvider } from '../../core/Context/CoreProvider';
 import { CashAppComponent } from './components/CashAppComponent';
 import CashAppService from './services/CashAppService';
 import { CashAppSdkLoader } from './services/CashAppSdkLoader';
@@ -145,36 +144,32 @@ export class CashAppPay extends UIElement<CashAppPayConfiguration> {
         super.submit();
     };
 
-    render() {
-        return (
-            <CoreProvider i18n={this.props.i18n} resources={this.resources} loadingContext={this.props.loadingContext}>
-                {this.props.storedPaymentMethodId ? (
-                    <RedirectButton
-                        showPayButton={this.props.showPayButton}
-                        label={payAmountLabel(this.props.i18n, this.props.amount)}
-                        icon={this.resources?.getImage({ imageFolder: 'components/' })(`${PREFIX}lock`)}
-                        name={this.displayName}
-                        amount={this.props.amount}
-                        payButton={this.payButton}
-                        onSubmit={this.submit}
-                        ref={ref => {
-                            this.componentRef = ref;
-                        }}
-                    />
-                ) : (
-                    <CashAppComponent
-                        ref={ref => {
-                            this.componentRef = ref;
-                        }}
-                        enableStoreDetails={this.props.enableStoreDetails}
-                        cashAppService={this.cashAppService}
-                        onChangeStoreDetails={this.handleOnChangeStoreDetails}
-                        onError={this.handleError}
-                        onClick={this.submit}
-                        onAuthorize={this.handleAuthorize}
-                    />
-                )}
-            </CoreProvider>
+    protected override componentToRender(): h.JSX.Element {
+        return this.props.storedPaymentMethodId ? (
+            <RedirectButton
+                showPayButton={this.props.showPayButton}
+                label={payAmountLabel(this.props.i18n, this.props.amount)}
+                icon={this.resources?.getImage({ imageFolder: 'components/' })(`${PREFIX}lock`)}
+                name={this.displayName}
+                amount={this.props.amount}
+                payButton={this.payButton}
+                onSubmit={this.submit}
+                ref={ref => {
+                    this.componentRef = ref;
+                }}
+            />
+        ) : (
+            <CashAppComponent
+                ref={ref => {
+                    this.componentRef = ref;
+                }}
+                enableStoreDetails={this.props.enableStoreDetails}
+                cashAppService={this.cashAppService}
+                onChangeStoreDetails={this.handleOnChangeStoreDetails}
+                onError={this.handleError}
+                onClick={this.submit}
+                onAuthorize={this.handleAuthorize}
+            />
         );
     }
 }

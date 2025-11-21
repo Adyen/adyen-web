@@ -17,10 +17,6 @@ class MyElement extends UIElement {
     get isValid() {
         return !!this.state.isValid;
     }
-
-    render() {
-        return '';
-    }
 }
 
 let onPaymentCompleted;

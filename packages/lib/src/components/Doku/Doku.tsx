@@ -2,7 +2,6 @@ import { h } from 'preact';
 import UIElement from '../internal/UIElement/UIElement';
 import DokuInput from './components/DokuInput';
 import DokuVoucherResult from './components/DokuVoucherResult';
-import { CoreProvider } from '../../core/Context/CoreProvider';
 import { TxVariants } from '../tx-variants';
 import { VoucherConfiguration } from '../internal/Voucher/types';
 
@@ -40,27 +39,23 @@ export class DokuElement extends UIElement<VoucherConfiguration> {
         };
     }
 
-    render() {
-        return (
-            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
-                {this.props.reference ? (
-                    <DokuVoucherResult
-                        ref={ref => {
-                            this.componentRef = ref;
-                        }}
-                        {...this.props}
-                        onActionHandled={this.onActionHandled}
-                    />
-                ) : (
-                    <DokuInput
-                        setComponentRef={this.setComponentRef}
-                        {...this.props}
-                        onChange={this.setState}
-                        onSubmit={this.submit}
-                        payButton={this.payButton}
-                    />
-                )}
-            </CoreProvider>
+    protected override componentToRender(): h.JSX.Element {
+        return this.props.reference ? (
+            <DokuVoucherResult
+                ref={ref => {
+                    this.componentRef = ref;
+                }}
+                {...this.props}
+                onActionHandled={this.onActionHandled}
+            />
+        ) : (
+            <DokuInput
+                setComponentRef={this.setComponentRef}
+                {...this.props}
+                onChange={this.setState}
+                onSubmit={this.submit}
+                payButton={this.payButton}
+            />
         );
     }
 }
