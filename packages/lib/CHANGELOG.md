@@ -1,5 +1,21 @@
 # @adyen/adyen-web
 
+## 6.26.0
+
+### Minor Changes
+
+- Analytics - Sending configData for payment methods ([#3647](https://github.com/Adyen/adyen-web/pull/3647))
+
+- Fixed a typo in the `PayByBankUS` component, renaming the `showOtherInsteafOfNumber` prop to `showOtherInsteadOfNumber`. ([#3635](https://github.com/Adyen/adyen-web/pull/3635))
+
+- Improve await and qr loader component by moving timer logic to a shared hook ([#3638](https://github.com/Adyen/adyen-web/pull/3638))
+
+### Patch Changes
+
+- Added box shadow to all brand icons and used the black checkmark for the valid fields. ([#3640](https://github.com/Adyen/adyen-web/pull/3640))
+
+-   - Improved Click to Pay for users with screen readers by fixing labels and removing duplicate text. ([#3663](https://github.com/Adyen/adyen-web/pull/3663))
+
 ## 6.25.1
 
 ### Patch Changes
