@@ -1,6 +1,7 @@
 import { unformatDate } from '../FormFields/InputDate/utils';
+import { PersonalDetailsSchema } from '../../../types/global-types';
 
-export const getFormattedData = data => {
+export const getFormattedData = (data: PersonalDetailsSchema) => {
     const { firstName, lastName, dateOfBirth, shopperEmail, telephoneNumber } = data;
 
     return {
