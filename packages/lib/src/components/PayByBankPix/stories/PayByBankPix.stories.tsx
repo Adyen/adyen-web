@@ -86,7 +86,7 @@ export const HostedPageEnrollment: PixBiometricStory = {
             ? {
                   handlers: [
                       http.post(
-                          'https://checkoutshopper-test.adyen.com/checkoutshopper/utility/v1/pixpaybybank/redirect-result?clientKey=test_L6HTEOAXQBCZJHKNU4NLN6EI7IE6VRRW',
+                          `https://checkoutshopper-test.adyen.com/checkoutshopper/utility/v1/pixpaybybank/redirect-result?clientKey=${process.env.CLIENT_KEY}`,
                           () => {
                               return HttpResponse.json(mockPostEnrollmentResponse);
                           }
@@ -95,7 +95,7 @@ export const HostedPageEnrollment: PixBiometricStory = {
                           return HttpResponse.json(mockPaymentsResponseEnrollment);
                       }),
                       http.get(
-                          'https://checkoutshopper-test.adyen.com/checkoutshopper/utility/v1/pixpaybybank/registration-options/enrollment123?clientKey=test_L6HTEOAXQBCZJHKNU4NLN6EI7IE6VRRW',
+                          `https://checkoutshopper-test.adyen.com/checkoutshopper/utility/v1/pixpaybybank/registration-options/enrollment123?clientKey=${process.env.CLIENT_KEY}`,
                           () => {
                               return HttpResponse.json(
                                   getSearchParameter('pollStatus') === 'pending'
@@ -147,7 +147,7 @@ export const HostedPagePayment: PixBiometricStory = {
         msw: {
             handlers: [
                 http.post(
-                    'https://checkoutshopper-test.adyen.com/checkoutshopper/utility/v1/pixpaybybank/redirect-result?clientKey=test_L6HTEOAXQBCZJHKNU4NLN6EI7IE6VRRW',
+                    `https://checkoutshopper-test.adyen.com/checkoutshopper/utility/v1/pixpaybybank/redirect-result?clientKey=${process.env.CLIENT_KEY}`,
                     () => {
                         return HttpResponse.json(mockPostEnrollmentResponse);
                     }
@@ -156,7 +156,7 @@ export const HostedPagePayment: PixBiometricStory = {
                     return HttpResponse.json(mockPaymentsResponsePayment);
                 }),
                 http.get(
-                    'https://checkoutshopper-test.adyen.com/checkoutshopper/utility/v1/pixpaybybank/authorization-options?initiationId=initiation123&enrollmentId=enrollment123&clientKey=test_L6HTEOAXQBCZJHKNU4NLN6EI7IE6VRRW',
+                    `https://checkoutshopper-test.adyen.com/checkoutshopper/utility/v1/pixpaybybank/authorization-options?initiationId=initiation123&enrollmentId=enrollment123&clientKey=${process.env.CLIENT_KEY}`,
                     () => {
                         return HttpResponse.json(
                             getSearchParameter('pollStatus') === 'pending' ? mockPendingStatusSimulateHostedPage : mockReceivedStatusPayment
