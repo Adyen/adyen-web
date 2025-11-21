@@ -1,7 +1,7 @@
 import { FieldsetVisibility, PersonalDetailsSchema } from '../../../types/global-types';
 import { ValidatorRules } from '../../../utils/Validator/types';
 
-type PersonalDetailsPlaceholders = Omit<PersonalDetailsSchema, 'gender'>;
+type PersonalDetailsPlaceholders = PersonalDetailsSchema;
 
 export interface PersonalDetailsProps {
     label?: string;
@@ -21,7 +21,6 @@ export interface PersonalDetailsProps {
 export interface PersonalDetailsStateError {
     firstName?: boolean;
     lastName?: boolean;
-    gender?: boolean;
     dateOfBirth?: string | boolean;
     shopperEmail?: boolean;
     telephoneNumber?: string | boolean;
@@ -30,7 +29,6 @@ export interface PersonalDetailsStateError {
 export interface PersonalDetailsStateValid {
     firstName?: boolean;
     lastName?: boolean;
-    gender?: boolean;
     dateOfBirth?: boolean;
     shopperEmail?: boolean;
     telephoneNumber?: boolean;

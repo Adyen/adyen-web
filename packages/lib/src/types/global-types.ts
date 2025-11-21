@@ -216,7 +216,6 @@ export type AddressData = {
 export interface PersonalDetailsSchema {
     firstName?: string;
     lastName?: string;
-    gender?: string;
     dateOfBirth?: string;
     shopperEmail?: string;
     telephoneNumber?: string;

@@ -31,8 +31,7 @@ export class AdvancedFlowApiService {
             channel: 'Web',
             shopperName: {
                 firstName: 'Jonny',
-                lastName: 'Jansen',
-                gender: 'MALE'
+                lastName: 'Jansen'
             },
             shopperReference: DEFAULT_SHOPPER_REFERENCE,
             telephoneNumber: '0612345678',
