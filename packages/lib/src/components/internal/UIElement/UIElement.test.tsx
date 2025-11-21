@@ -1,3 +1,4 @@
+import { h } from 'preact';
 import { UIElement } from './UIElement';
 import { any, mock } from 'jest-mock-extended';
 import { AdyenCheckout, ThreeDS2Challenge, ThreeDS2DeviceFingerprint } from '../../../index';
@@ -27,6 +28,9 @@ class MyElement extends UIElement<MyElementProps> {
     }
     public handleAdditionalDetails(data) {
         super.handleAdditionalDetails(data);
+    }
+    protected override componentToRender() {
+        return <div>myelement</div>;
     }
 }
 
@@ -718,6 +722,15 @@ describe('UIElement', () => {
                 id: expect.any(String),
                 component: expect.any(String)
             });
+        });
+    });
+
+    describe('render()', () => {
+        test('should return the result of render method', () => {
+            const element = new MyElement(core);
+            const { props } = element.render();
+            expect(props.children.type).toEqual('div');
+            expect(props.children.props.children).toEqual('myelement');
         });
     });
 });
