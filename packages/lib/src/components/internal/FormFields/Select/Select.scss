@@ -4,7 +4,7 @@
     flex-direction: row-reverse;
     justify-content: flex-end;
 
-    > img {
+    >img {
         margin-left: 0;
         margin-right: token(spacer-060);
     }
@@ -64,6 +64,7 @@
 }
 
 .adyen-checkout__dropdown__button--readonly {
+
     &,
     &--active,
     &:hover,
@@ -175,6 +176,14 @@
 
 .adyen-checkout__dropdown__element.adyen-checkout__dropdown__element--active {
     background: rgb(230 233 235 / 60%);
+    /*box-shadow:
+        inset 0 0 0 token(focus-ring-spacer) token(color-background-primary),
+        inset 0 0 0 token(focus-ring-outline) token(focus-ring-color);*/
+    outline: solid token(color-outline-primary-active) token(border-width-s);
+}
+
+.adyen-checkout__dropdown__element:hover {
+    background: rgb(230 233 235 / 60%);
 }
 
 .adyen-checkout__dropdown__element.adyen-checkout__dropdown__element--selected {
@@ -185,6 +194,24 @@
 .adyen-checkout__dropdown__element.adyen-checkout__dropdown__element--selected:focus,
 .adyen-checkout__dropdown__element.adyen-checkout__dropdown__element--selected:active {
     background: rgb(0 102 255 / 15%);
+}
+
+// Focus style variants for Storybook demonstration
+.adyen-checkout__dropdown--box-shadow-focus {
+    .adyen-checkout__dropdown__element.adyen-checkout__dropdown__element--active {
+        background: rgb(230 233 235 / 60%);
+        box-shadow:
+            inset 0 0 0 token(focus-ring-spacer) token(color-background-primary),
+            inset 0 0 0 token(focus-ring-outline) token(focus-ring-color);
+        outline: 0;
+    }
+}
+
+.adyen-checkout__dropdown--outline-focus {
+    .adyen-checkout__dropdown__element.adyen-checkout__dropdown__element--active {
+        background: rgb(230 233 235 / 60%);
+        outline: solid token(color-outline-primary-active) token(border-width-s);
+    }
 }
 
 .adyen-checkout__dropdown__element--disabled {
@@ -214,6 +241,6 @@
     max-height: 18px;
 }
 
-.adyen-checkout__dropdown + .adyen-checkout-input__inline-validation {
+.adyen-checkout__dropdown+.adyen-checkout-input__inline-validation {
     right: token(spacer-100);
 }
