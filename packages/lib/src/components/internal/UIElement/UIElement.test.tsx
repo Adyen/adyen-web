@@ -732,5 +732,14 @@ describe('UIElement', () => {
             expect(props.children.type).toEqual('div');
             expect(props.children.props.children).toEqual('myelement');
         });
+
+        test('should throw an error when componentToRender is not implemented', () => {
+            class ElementWithoutComponentToRender extends UIElement<MyElementProps> {
+                public static type = 'type';
+            }
+
+            const element = new ElementWithoutComponentToRender(core);
+            expect(() => element.render()).toThrow('Payment method cannot be rendered as `componentToRender` method is not implemented');
+        });
     });
 });

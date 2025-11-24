@@ -48,6 +48,10 @@ class ThreeDS2DeviceFingerprint extends UIElement<ThreeDS2DeviceFingerprintConfi
         this.unmount(); // re. fixing issue around back to back fingerprinting calls
     }
 
+    protected componentToRender(): h.JSX.Element {
+        return null;
+    }
+
     public override render() {
         /**
          * In the regular components (aka "native") flow we can't proceed because something has gone wrong with the payment if paymentData is missing from the threeDS2 action.

@@ -607,8 +607,8 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
             });
     }
 
-    protected componentToRender(): h.JSX.Element {
-        return null;
+    protected componentToRender(): h.JSX.Element | Error {
+        throw new Error('Payment method cannot be rendered as `componentToRender` method is not implemented');
     }
 
     public render() {

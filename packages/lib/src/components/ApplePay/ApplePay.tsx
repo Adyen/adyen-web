@@ -350,6 +350,10 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
         }
     }
 
+    protected componentToRender(): h.JSX.Element {
+        return null;
+    }
+
     public override render() {
         if (!this.props.showPayButton) {
             return null;
