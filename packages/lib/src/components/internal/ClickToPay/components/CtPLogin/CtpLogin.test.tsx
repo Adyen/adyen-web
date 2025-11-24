@@ -77,7 +77,7 @@ test('should display not found if the email is not registered', async () => {
     contextProps.isCtpPrimaryPaymentMethod = true;
     contextProps.setIsCtpPrimaryPaymentMethod.mockImplementation(() => {});
     contextProps.verifyIfShopperIsEnrolled.mockResolvedValue({ isEnrolled: false });
-    contextProps.startIdentityValidation.mockImplementation();
+    contextProps.startIdentityValidation.mockImplementation(() => Promise.resolve());
     contextProps.schemes = ['mc', 'visa'];
 
     customRender(<CtPLogin />, contextProps);
@@ -102,7 +102,7 @@ test('should start the identity validation if the user is enrolled', async () =>
     contextProps.isCtpPrimaryPaymentMethod = true;
     contextProps.setIsCtpPrimaryPaymentMethod.mockImplementation(() => {});
     contextProps.verifyIfShopperIsEnrolled.mockResolvedValue({ isEnrolled: true });
-    contextProps.startIdentityValidation.mockImplementation();
+    contextProps.startIdentityValidation.mockImplementation(() => Promise.resolve());
     contextProps.schemes = ['mc', 'visa'];
 
     customRender(<CtPLogin />, contextProps);
