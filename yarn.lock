@@ -116,7 +116,7 @@ __metadata:
     jest: "npm:29.7.0"
     jest-environment-jsdom: "npm:29.7.0"
     jest-fixed-jsdom: "npm:^0.0.10"
-    jest-mock-extended: "npm:3.0.7"
+    jest-mock-extended: "npm:4.0.0"
     msw: "npm:2.11.6"
     msw-storybook-addon: "npm:2.0.6"
     postcss: "npm:8.5.6"
@@ -9078,15 +9078,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jest-mock-extended@npm:3.0.7":
-  version: 3.0.7
-  resolution: "jest-mock-extended@npm:3.0.7"
+"jest-mock-extended@npm:4.0.0":
+  version: 4.0.0
+  resolution: "jest-mock-extended@npm:4.0.0"
   dependencies:
-    ts-essentials: "npm:^10.0.0"
+    ts-essentials: "npm:^10.0.2"
   peerDependencies:
-    jest: ^24.0.0 || ^25.0.0 || ^26.0.0 || ^27.0.0 || ^28.0.0 || ^29.0.0
+    "@jest/globals": ^28.0.0 || ^29.0.0 || ^30.0.0
+    jest: ^24.0.0 || ^25.0.0 || ^26.0.0 || ^27.0.0 || ^28.0.0 || ^29.0.0 || ^30.0.0
     typescript: ^3.0.0 || ^4.0.0 || ^5.0.0
-  checksum: 10c0/17d2e816eae8e95933817102987ba9f700890c4b1223495012bca2ec76644cd203336843a4c381a662e03bde0b637767ad8e2c13b490e9a5eaeb87d211994647
+  checksum: 10c0/ba51e8e49dba995a54bd9c45aa4d27e6b64a6199289c92292a286117d3f8a733fe480fc56b6d356505696fc79af193625892f5022ea69243525e706515a93249
   languageName: node
   linkType: hard
 
@@ -14348,7 +14349,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ts-essentials@npm:^10.0.0":
+"ts-essentials@npm:^10.0.2":
   version: 10.1.1
   resolution: "ts-essentials@npm:10.1.1"
   peerDependencies:
