@@ -8,6 +8,7 @@ import { PaymentActionsType } from '../../../types/global-types';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 import { setupCoreMock } from '../../../../config/testMocks/setup-core-mock';
 import { ErrorEventType } from '../../../core/Analytics/events/AnalyticsErrorEvent';
+import { render, screen } from '@testing-library/preact';
 
 jest.mock('../../../core/Services/get-translations');
 
@@ -78,7 +79,11 @@ describe('UIElement', () => {
 
     describe('isValid()', () => {
         test('should be false by default', () => {
-            class PristineUiElement extends UIElement {}
+            class PristineUiElement extends UIElement {
+                protected override componentToRender() {
+                    return <div>test</div>;
+                }
+            }
             const element = new PristineUiElement(core);
             expect(element.isValid).toBe(false);
         });
@@ -143,7 +148,7 @@ describe('UIElement', () => {
                 authorisationToken: 'BQABAQCmFNEdaCE3rcbbB...',
                 paymentMethodType: 'scheme',
                 subtype: 'fingerprint',
-                token: 'eyJ0aHJlZURTTWV0aG9kTm90aWZpY2F0aW9uVVJMIjoiaHR0cHM6XC9cL2NoZWNrb3V0c2hvcHBlci10ZXN0LmFkeWVuLmNvbVwvY2hlY2tvdXRzaG9wcGVyXC90aHJlZURTTWV0aG9kTm90aWZpY2F0aW9uLnNodG1sP29yaWdpbktleT1wdWIudjIuODExNTY1ODcwNTcxMzk0MC5hSFIwY0hNNkx5OXdhSEF0TnpFdGMybHRiMjR1YzJWaGJXeGxjM010WTJobFkydHZkWFF1WTI5dC50VnJIV3B4UktWVTVPMENiNUg5TVFlUnJKdmZRQ1lnbXR6VTY1WFhzZ2NvIiwidGhyZWVEU01ldGhvZFVybCI6Imh0dHBzOlwvXC9wYWwtdGVzdC5hZHllbi5jb21cL3RocmVlZHMyc2ltdWxhdG9yXC9hY3NcL3N0YXJ0TWV0aG9kLnNodG1sIiwidGhyZWVEU1NlcnZlclRyYW5zSUQiOiI5MzI2ZjNiOS00MTc3LTQ4ZTktYmM2Mi1kOTliYzVkZDA2Y2IifQ==',
+                token: 'eyJ0aHJlZURTTWV0aG9kTm90a...',
                 type: 'threeDS2' as PaymentActionsType
             };
 
@@ -728,18 +733,8 @@ describe('UIElement', () => {
     describe('render()', () => {
         test('should return the result of render method', () => {
             const element = new MyElement(core);
-            const { props } = element.render();
-            expect(props.children.type).toEqual('div');
-            expect(props.children.props.children).toEqual('myelement');
-        });
-
-        test('should throw an error when componentToRender is not implemented', () => {
-            class ElementWithoutComponentToRender extends UIElement<MyElementProps> {
-                public static type = 'type';
-            }
-
-            const element = new ElementWithoutComponentToRender(core);
-            expect(() => element.render()).toThrow('Payment method cannot be rendered as `componentToRender` method is not implemented');
+            render(element.render());
+            expect(screen.getAllByText('myelement')[0]).toBeInTheDocument();
         });
     });
 });

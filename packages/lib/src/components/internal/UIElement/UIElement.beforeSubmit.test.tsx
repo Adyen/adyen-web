@@ -17,6 +17,10 @@ class MyElement extends UIElement {
     get isValid() {
         return !!this.state.isValid;
     }
+
+    protected override componentToRender() {
+        return <div></div>;
+    }
 }
 
 let onPaymentCompleted;

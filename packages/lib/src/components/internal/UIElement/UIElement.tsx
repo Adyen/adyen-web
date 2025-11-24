@@ -1,4 +1,5 @@
 import { h } from 'preact';
+import { useContext } from 'preact/hooks';
 import BaseElement from '../BaseElement/BaseElement';
 import PayButton from '../PayButton';
 import { assertIsDropin, cleanupFinalResult, getRegulatoryDefaults, sanitizeResponse, verifyPaymentDidNotFail } from './utils';
@@ -32,7 +33,7 @@ import { AnalyticsInfoEvent, InfoEventType } from '../../../core/Analytics/event
 
 import './UIElement.scss';
 import { SRPanel } from '../../../core/Errors/SRPanel';
-import { CoreProvider } from '../../../core/Context/CoreProvider';
+import { CoreContext, CoreProvider } from '../../../core/Context/CoreProvider';
 
 export abstract class UIElement<P extends UIElementProps = UIElementProps> extends BaseElement<P> {
     protected componentRef: any;
@@ -607,16 +608,24 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
             });
     }
 
-    protected componentToRender(): h.JSX.Element | Error {
-        throw new Error('Payment method cannot be rendered as `componentToRender` method is not implemented');
-    }
+    protected abstract componentToRender(): h.JSX.Element;
 
-    public render() {
-        return (
-            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources} analytics={this.analytics}>
-                {this.componentToRender()}
-            </CoreProvider>
-        );
+    render() {
+        const ComponentToRender = () => {
+            const coreContext = useContext(CoreContext);
+
+            if (coreContext) {
+                return this.componentToRender();
+            }
+
+            return (
+                <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources} analytics={this.analytics}>
+                    {this.componentToRender()}
+                </CoreProvider>
+            );
+        };
+
+        return <ComponentToRender />;
     }
 }
 
