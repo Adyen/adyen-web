@@ -63,7 +63,7 @@ test('should pre selected available card', async () => {
 
     const contextProps = mock<ClickToPayProviderProps>();
     contextProps.onSetStatus.mockReturnValue();
-    contextProps.setClickToPayRef.mockImplementation();
+    contextProps.setClickToPayRef.mockImplementation(() => {});
     contextProps.amount = { value: 2000, currency: 'EUR' };
     contextProps.clickToPayService = ctpService;
 
@@ -113,7 +113,7 @@ test('should not be able to checkout with expired card (single card)', async () 
 
     const contextProps = mock<ClickToPayProviderProps>();
     contextProps.onSetStatus.mockReturnValue();
-    contextProps.setClickToPayRef.mockImplementation();
+    contextProps.setClickToPayRef.mockImplementation(() => {});
     contextProps.amount = { value: 2000, currency: 'EUR' };
     contextProps.clickToPayService = ctpService;
 
@@ -172,7 +172,7 @@ test('should not be able to checkout with expired card (card list)', async () =>
 
     const contextProps = mock<ClickToPayProviderProps>();
     contextProps.onSetStatus.mockReturnValue();
-    contextProps.setClickToPayRef.mockImplementation();
+    contextProps.setClickToPayRef.mockImplementation(() => {});
     contextProps.amount = { value: 2000, currency: 'EUR' };
     contextProps.clickToPayService = ctpService;
 
@@ -247,8 +247,8 @@ test('should be able to checkout (card list)', async () => {
     ];
 
     contextProps.onSetStatus.mockReturnValue();
-    contextProps.onSubmit.mockImplementation();
-    contextProps.setClickToPayRef.mockImplementation();
+    contextProps.onSubmit.mockImplementation(() => {});
+    contextProps.setClickToPayRef.mockImplementation(() => {});
     contextProps.amount = { value: 2000, currency: 'EUR' };
     contextProps.clickToPayService = ctpService;
 
@@ -299,9 +299,9 @@ test('should be able to checkout (single card)', async () => {
 
     const contextProps = mock<ClickToPayProviderProps>();
     contextProps.onSetStatus.mockReturnValue();
-    contextProps.onSubmit.mockImplementation();
+    contextProps.onSubmit.mockImplementation(() => {});
     contextProps.amount = { value: 2000, currency: 'EUR' };
-    contextProps.setClickToPayRef.mockImplementation();
+    contextProps.setClickToPayRef.mockImplementation(() => {});
     contextProps.clickToPayService = ctpService;
 
     customRender(<CtPCards onDisplayCardComponent={jest.fn()} />, contextProps);
@@ -323,7 +323,7 @@ test('should display empty card list UI if there is no card available', () => {
 
     const contextProps = mock<ClickToPayProviderProps>();
     contextProps.clickToPayService = ctpService;
-    contextProps.setClickToPayRef.mockImplementation();
+    contextProps.setClickToPayRef.mockImplementation(() => {});
 
     customRender(<CtPCards onDisplayCardComponent={jest.fn()} />, contextProps);
 });
