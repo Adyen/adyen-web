@@ -4,7 +4,7 @@ import { IClickToPayService, IdentityLookupParams } from './types';
 import { SrcInitParams } from './sdks/types';
 import { CardBackendConfiguration } from '../../../Card/types';
 import { ClickToPayProps, ClickToPayScheme } from '../types';
-import type { AnalyticsModule } from '../../../../types/global-types';
+import type { IAnalytics } from '../../../../core/Analytics/Analytics';
 
 /**
  * Creates the Click to Pay service in case the required configuration is provided
@@ -13,7 +13,7 @@ export default function createClickToPayService(
     configuration: CardBackendConfiguration,
     clickToPayConfiguration: ClickToPayProps | undefined,
     environment: string,
-    analytics: AnalyticsModule
+    analytics: IAnalytics
 ): IClickToPayService | null {
     const schemesConfig = createSchemesInitConfiguration(configuration);
 

@@ -8,7 +8,7 @@ import {
     SrciIdentityLookupResponse,
     SrcInitParams
 } from './types';
-import { AnalyticsModule } from '../../../../../types/global-types';
+import type { IAnalytics } from '../../../../../core/Analytics/Analytics';
 
 const IdentityTypeMap = {
     email: 'EMAIL_ADDRESS',
@@ -18,7 +18,7 @@ const IdentityTypeMap = {
 class MastercardSdk extends AbstractSrcInitiator {
     public readonly schemeName = 'mc';
 
-    constructor(environment: string, customSdkConfig: CustomSdkConfiguration, analytics: AnalyticsModule) {
+    constructor(environment: string, customSdkConfig: CustomSdkConfiguration, analytics: IAnalytics) {
         super(environment.toLowerCase().includes('live') ? MC_SDK_PROD : MC_SDK_TEST, customSdkConfig, analytics);
     }
 

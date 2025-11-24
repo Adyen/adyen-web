@@ -1,7 +1,6 @@
 import { httpPost } from '../http';
-import collectId, { FAILURE_MSG } from './collect-id';
+import collectId, { CollectIdProps, FAILURE_MSG } from './collect-id';
 import { ANALYTICS_PATH } from '../../Analytics/constants';
-import type { CollectIdProps } from './types';
 
 jest.mock('../http');
 jest.mock('../../config', () => {

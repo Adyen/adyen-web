@@ -9,7 +9,7 @@ import { ClickToPayCheckoutPayload, IClickToPayService } from '../internal/Click
 import { CtpState } from '../internal/ClickToPay/services/ClickToPayService';
 import { Resources } from '../../core/Context/Resources';
 import ShopperCard from '../internal/ClickToPay/models/ShopperCard';
-import { AnalyticsModule } from '../../types/global-types';
+import type { IAnalytics } from '../../core/Analytics/Analytics';
 
 jest.mock('../internal/ClickToPay/services/create-clicktopay-service');
 
@@ -27,7 +27,7 @@ test('should initialize ClickToPayService when creating the element', () => {
         shopperEmail: 'shopper@example.com'
     };
 
-    const mockAnalytics = mock<AnalyticsModule>();
+    const mockAnalytics = mock<IAnalytics>();
     global.core.modules.analytics = mockAnalytics;
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars

@@ -2,7 +2,7 @@ import Paypal from './Paypal';
 import { render, screen } from '@testing-library/preact';
 import { NO_CHECKOUT_ATTEMPT_ID } from '../../core/Analytics/constants';
 import { mock } from 'jest-mock-extended';
-import { AnalyticsModule } from '../../types/global-types';
+import type { IAnalytics } from '../../core/Analytics/Analytics';
 
 describe('Paypal', () => {
     test('Returns a data object', () => {
@@ -50,7 +50,7 @@ describe('Paypal', () => {
     });
 
     test('should pass the required callbacks to the Component', async () => {
-        global.core.modules.analytics = mock<AnalyticsModule>();
+        global.core.modules.analytics = mock<IAnalytics>();
         const paypal = new Paypal(global.core);
         render(paypal.render());
 

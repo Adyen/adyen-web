@@ -1,10 +1,40 @@
 import { HttpOptions, httpPost } from '../http';
-import type { CollectIdEvent, CollectIdProps, TelemetryEvent } from './types';
 import AdyenCheckoutError from '../../Errors/AdyenCheckoutError';
 import { LIBRARY_BUNDLE_TYPE, LIBRARY_VERSION } from '../../config';
+import type { ApplicationInfo } from '../../Analytics/types';
 
 export const FAILURE_MSG =
     'WARNING: Failed to retrieve "checkoutAttemptId". Consequently, analytics will not be available for this payment. The payment process, however, will not be affected.';
+
+export interface CollectIdProps {
+    analyticsContext: string;
+    clientKey: string;
+    locale: string;
+    analyticsPath: string;
+}
+
+export interface AttemptIdPayload {
+    checkoutStage: 'precheckout' | 'checkout';
+    level: 'initial' | 'all';
+    sessionId?: string;
+    checkoutAttemptId?: string;
+    applicationInfo?: ApplicationInfo;
+}
+
+interface CheckoutAttemptIdRequest {
+    version: string;
+    channel: 'Web';
+    platform: 'Web';
+    locale: string;
+    checkoutStage: 'precheckout' | 'checkout';
+    referrer: string;
+    screenWidth: number;
+    buildType: string;
+    level: 'initial' | 'all';
+    sessionId?: string;
+    checkoutAttemptId?: string;
+    applicationInfo?: ApplicationInfo;
+}
 
 /**
  * Send an event to Adyen with some basic telemetry info and receive a checkoutAttemptId in response
@@ -21,13 +51,13 @@ const collectId = ({ analyticsContext, clientKey, locale, analyticsPath }: Colle
         errorMessage: FAILURE_MSG
     };
 
-    return (event: CollectIdEvent): Promise<string> => {
+    return (event: AttemptIdPayload): Promise<string> => {
         // Prevents multiple standalone components on the same page from making multiple calls to collect a checkoutAttemptId
         if (memoizedPromise !== null) {
             return memoizedPromise;
         }
 
-        const telemetryEvent: TelemetryEvent = {
+        const telemetryEvent: CheckoutAttemptIdRequest = {
             version: LIBRARY_VERSION,
             buildType: LIBRARY_BUNDLE_TYPE,
             channel: 'Web',

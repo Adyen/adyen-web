@@ -16,7 +16,7 @@ import {
 
 import Analytics from '../../core/Analytics';
 import { AnalyticsInfoEvent, InfoEventType } from '../../core/Analytics/events/AnalyticsInfoEvent';
-import type { AnalyticsModule } from '../../types/global-types';
+import type { IAnalytics } from '../../core/Analytics/Analytics';
 
 class FastlaneSDK {
     private readonly clientKey: string;
@@ -24,7 +24,7 @@ class FastlaneSDK {
     private readonly fastlaneLocale: string;
     private readonly forceConsentDetails: boolean;
 
-    private readonly analytics: AnalyticsModule;
+    private readonly analytics: IAnalytics;
 
     private fastlaneSdk?: FastlaneWindowInstance;
     private latestShopperDetails?: { email: string; customerId: string };
@@ -44,11 +44,11 @@ class FastlaneSDK {
         this.forceConsentDetails = configuration.forceConsentDetails || false;
         this.fastlaneLocale = convertAdyenLocaleToFastlaneLocale(configuration.locale || 'en-US');
 
-        this.analytics = Analytics({
-            analytics: configuration.analytics,
+        this.analytics = new Analytics({
             locale: configuration.locale || 'en-US',
             analyticsContext: analyticsUrl,
-            clientKey: this.clientKey
+            clientKey: this.clientKey,
+            enabled: configuration.analytics?.enabled
         });
 
         document.addEventListener('visibilitychange', this.handlePageVisibilityChanges);

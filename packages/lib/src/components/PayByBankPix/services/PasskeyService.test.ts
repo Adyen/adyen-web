@@ -4,7 +4,7 @@ import AdyenCheckoutError, { SDK_ERROR } from '../../../core/Errors/AdyenCheckou
 import { mock, mockDeep } from 'jest-mock-extended';
 import { IAdyenPasskey, PasskeyErrorTypes } from './types';
 import base64 from '../../../utils/base64';
-import { AnalyticsModule } from '../../../types/global-types';
+import type { IAnalytics } from '../../../core/Analytics/Analytics';
 
 jest.mock('./PasskeySdkLoader');
 beforeAll(() => {
@@ -17,7 +17,7 @@ beforeAll(() => {
 describe('PasskeyService', () => {
     const mockPasskeySdk = mockDeep<IAdyenPasskey>();
     const mockPasskeyServiceConfig = { environment: 'test', deviceId: 'test-device-id' };
-    const mockAnalytics = mock<AnalyticsModule>();
+    const mockAnalytics = mock<IAnalytics>();
 
     let passkeyService: PasskeyService;
 

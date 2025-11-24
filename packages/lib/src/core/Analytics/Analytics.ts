@@ -1,144 +1,135 @@
-import CollectId from '../Services/analytics/collect-id';
+import CollectId, { AttemptIdPayload } from '../Services/analytics/collect-id';
 import EventsQueue, { EventsQueueModule } from './EventsQueue';
-import { AnalyticsEventCategory, AnalyticsInitialEvent, AnalyticsProps } from './types';
-import { ANALYTIC_LEVEL, ANALYTICS_INFO_TIMER_INTERVAL, ANALYTICS_PATH, ANALYTICS_EVENT } from './constants';
+import { ANALYTICS_PATH } from './constants';
 import { debounce } from '../../utils/debounce';
-import { AnalyticsModule } from '../../types/global-types';
 import { processAnalyticsData } from './utils';
 import { AbstractAnalyticsEvent } from './events/AbstractAnalyticsEvent';
 import Storage from '../../utils/Storage';
-import { CheckoutAttemptIdSession } from '../Services/analytics/types';
-
-let capturedCheckoutAttemptId: string | null = null;
-let sendEventsTimerId = null;
+import type { CheckoutAttemptIdSessionStorage } from '../Services/analytics/types';
+import type { AnalyticsOptions } from './types';
 
 /**
  * If the checkout attempt ID was stored more than fifteen minutes ago, then we should request a new ID.
  * More here: COWEB-1099
  */
-function isSessionCreatedUnderFifteenMinutes(session: CheckoutAttemptIdSession): boolean {
+function isSessionCreatedUnderFifteenMinutes(session: CheckoutAttemptIdSessionStorage): boolean {
     const FIFTEEN_MINUTES_IN_MS = 15 * 60 * 1000;
     if (!session?.timestamp) return false;
     const fifteenMinutesAgo = Date.now() - FIFTEEN_MINUTES_IN_MS;
     return session.timestamp > fifteenMinutesAgo;
 }
 
-const Analytics = ({ locale, clientKey, analytics, analyticsContext }: AnalyticsProps): AnalyticsModule => {
-    const defaultProps = {
-        enabled: true
-    };
+const ANALYTICS_INFO_TIMER_INTERVAL = process.env.NODE_ENV === 'development' ? 5000 : 10000;
 
-    const props = { ...defaultProps, ...analytics };
+export interface AnalyticsProps {
+    locale: string;
+    clientKey: string;
+    analyticsContext: string;
+    enabled?: boolean;
+    analyticsData?: AnalyticsOptions['analyticsData'];
+}
 
-    const level = props.enabled ? ANALYTIC_LEVEL.all : ANALYTIC_LEVEL.initial;
+export interface IAnalytics {
+    setUp({ sessionId, checkoutStage }: { sessionId?: string; checkoutStage?: 'precheckout' | 'checkout' }): Promise<void>;
+    flush(): void;
+    sendAnalytics(event: AbstractAnalyticsEvent): void;
+    getEventsQueue(): EventsQueueModule;
+}
 
-    const collectId = CollectId({
-        analyticsContext,
-        clientKey,
-        locale,
-        analyticsPath: ANALYTICS_PATH
-    });
+class Analytics implements IAnalytics {
+    private readonly enabled: boolean = true;
+    private readonly analyticsData?: AnalyticsOptions['analyticsData'];
 
-    const storage = new Storage<CheckoutAttemptIdSession>('checkout-attempt-id', 'sessionStorage');
-    const eventsQueue: EventsQueueModule = EventsQueue({ analyticsContext, clientKey, analyticsPath: ANALYTICS_PATH });
+    private readonly eventsQueue: EventsQueueModule;
+    private readonly storage = new Storage<CheckoutAttemptIdSessionStorage>('checkout-attempt-id', 'sessionStorage');
+    private readonly collectId: (attemptIdPayload: AttemptIdPayload) => Promise<string>;
+    private readonly debouncedSendEventsFunction: () => void;
 
-    const sendAnalyticsEvents = () => {
-        if (capturedCheckoutAttemptId) {
-            return eventsQueue.run(capturedCheckoutAttemptId);
+    private sendEventsTimeoutId: NodeJS.Timeout;
+    private capturedCheckoutAttemptId?: string;
+
+    constructor({ locale, clientKey, analyticsContext, enabled, analyticsData }: AnalyticsProps) {
+        this.collectId = CollectId({
+            analyticsContext,
+            clientKey,
+            locale,
+            analyticsPath: ANALYTICS_PATH
+        });
+        this.eventsQueue = EventsQueue({ analyticsContext, clientKey, analyticsPath: ANALYTICS_PATH });
+        this.debouncedSendEventsFunction = debounce(this.sendEvents.bind(this));
+
+        if (enabled !== undefined) this.enabled = enabled;
+        if (analyticsData) this.analyticsData = analyticsData;
+    }
+
+    public async setUp({ sessionId, checkoutStage }: { sessionId?: string; checkoutStage?: 'precheckout' | 'checkout' } = {}): Promise<void> {
+        try {
+            const checkoutAttemptIdSession = this.storage.get();
+            const isSessionReusable = isSessionCreatedUnderFifteenMinutes(checkoutAttemptIdSession);
+
+            const { applicationInfo, checkoutAttemptId: checkoutAttemptIdFromPayByLink } = processAnalyticsData(this.analyticsData);
+
+            const availableCheckoutAttemptId: string | undefined = isSessionReusable ? checkoutAttemptIdSession.id : checkoutAttemptIdFromPayByLink;
+
+            const attemptIdPayload: AttemptIdPayload = {
+                checkoutStage: checkoutStage || 'checkout',
+                level: this.enabled ? 'all' : 'initial',
+                ...(applicationInfo && { applicationInfo }),
+                ...(sessionId && { sessionId }),
+                ...(availableCheckoutAttemptId && { checkoutAttemptId: availableCheckoutAttemptId })
+            };
+
+            this.capturedCheckoutAttemptId = await this.collectId(attemptIdPayload);
+
+            this.storage.set({
+                id: this.capturedCheckoutAttemptId,
+                timestamp: isSessionReusable ? checkoutAttemptIdSession.timestamp : Date.now()
+            });
+        } catch (error: unknown) {
+            console.warn(error);
         }
-        return Promise.resolve(null);
-    };
+    }
 
-    const addAnalyticsEvent = (eventCat: AnalyticsEventCategory, event: AbstractAnalyticsEvent) => {
-        const arrayName = eventCat === ANALYTICS_EVENT.info ? eventCat : `${eventCat}s`;
-        eventsQueue.add(`${arrayName}`, event);
+    public sendAnalytics(event: AbstractAnalyticsEvent): void {
+        if (!this.enabled) {
+            return;
+        }
+        this.addEventToQueue(event);
+    }
 
-        /**
-         * The logic is:
-         *  - info events are stored until a log or error comes along,
-         *  but, if after a set time, no other analytics event (log or error) has come along then we send the info events anyway
-         */
-        if (eventCat === ANALYTICS_EVENT.info) {
-            clearTimeout(sendEventsTimerId);
-            sendEventsTimerId = setTimeout(() => void sendAnalyticsEvents(), ANALYTICS_INFO_TIMER_INTERVAL);
+    public flush(): void {
+        this.sendEvents();
+    }
+
+    public getEventsQueue(): EventsQueueModule {
+        return this.eventsQueue;
+    }
+
+    /**
+     * Info events don't have high priority, therefore  we add a delay in order to dispatch a batch of events
+     * Log/Error events are sent almost immediately. There is a debounce mechanism in place but the delay is very minimal
+     *
+     * @param event
+     * @private
+     */
+    private addEventToQueue(event: AbstractAnalyticsEvent): void {
+        this.eventsQueue.add(event);
+
+        if (event.getEventCategory() === 'info') {
+            clearTimeout(this.sendEventsTimeoutId);
+            this.sendEventsTimeoutId = setTimeout(() => this.debouncedSendEventsFunction(), ANALYTICS_INFO_TIMER_INTERVAL);
+            return;
         }
 
-        /**
-         * The logic is:
-         *  - errors and logs get sent straightaway
-         *  ...but... tests with the 3DS2 process show that many logs can happen almost at the same time (or you can have an error followed immediately by a log),
-         *  so instead of making several sequential api calls we see if we can "batch" them using debounce
-         */
-        if (eventCat === ANALYTICS_EVENT.log || eventCat === ANALYTICS_EVENT.error) {
-            clearTimeout(sendEventsTimerId); // clear any timer that might be about to dispatch the info events array
+        clearTimeout(this.sendEventsTimeoutId);
+        this.debouncedSendEventsFunction();
+    }
 
-            debounce(sendAnalyticsEvents)();
+    private sendEvents(): void {
+        if (this.capturedCheckoutAttemptId) {
+            void this.eventsQueue.run(this.capturedCheckoutAttemptId);
         }
-    };
-
-    return {
-        /**
-         * Make "setup" call, to pass data to analytics endpoint and receive a checkoutAttemptId in return
-         *
-         * N.B. This call is always made regardless of whether the merchant has disabled analytics
-         */
-        setUp: async (setupProps?: AnalyticsInitialEvent): Promise<void> => {
-            try {
-                const defaultProps: Partial<AnalyticsInitialEvent> = { checkoutStage: 'checkout' };
-                const finalSetupProps = { ...defaultProps, ...setupProps };
-
-                const checkoutAttemptIdSession = storage.get();
-                const isSessionReusable = isSessionCreatedUnderFifteenMinutes(checkoutAttemptIdSession);
-
-                const { payload } = props;
-
-                const analyticsData = processAnalyticsData(props.analyticsData);
-
-                const availableCheckoutAttemptId: string | undefined = isSessionReusable
-                    ? checkoutAttemptIdSession.id
-                    : analyticsData?.checkoutAttemptId;
-
-                const collectIdPayload = {
-                    ...finalSetupProps,
-                    ...payload,
-                    ...analyticsData,
-                    ...(availableCheckoutAttemptId && { checkoutAttemptId: availableCheckoutAttemptId }),
-                    level
-                };
-
-                capturedCheckoutAttemptId = await collectId(collectIdPayload);
-
-                storage.set({
-                    id: capturedCheckoutAttemptId,
-                    timestamp: isSessionReusable ? checkoutAttemptIdSession.timestamp : Date.now()
-                });
-            } catch (error: unknown) {
-                console.warn(error);
-            }
-        },
-
-        getCheckoutAttemptId: (): string => capturedCheckoutAttemptId,
-
-        // Expose getter for testing purposes
-        getEventsQueue: () => eventsQueue,
-
-        getEnabled: () => props.enabled,
-
-        flush: () => {
-            void sendAnalyticsEvents();
-        },
-
-        sendAnalytics: (analyticsObj: AbstractAnalyticsEvent): boolean => {
-            /** Only send subsequent analytics if the merchant has not disabled this functionality (i.e. set analytics.enabled = false) */
-            if (level !== ANALYTIC_LEVEL.all) return false;
-
-            const eventCategory: AnalyticsEventCategory = analyticsObj.getEventCategory();
-
-            addAnalyticsEvent(eventCategory, analyticsObj);
-
-            return true;
-        }
-    } as AnalyticsModule;
-};
+    }
+}
 
 export default Analytics;

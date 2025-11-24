@@ -6,13 +6,11 @@ import AdyenCheckoutError, { NETWORK_ERROR } from '../../../core/Errors/AdyenChe
 import { hasOwnProperty } from '../../../utils/hasOwnProperty';
 import { Resources } from '../../../core/Context/Resources';
 
-import { AnalyticsInitialEvent } from '../../../core/Analytics/types';
 import type { CoreConfiguration, ICore, AdditionalDetailsData } from '../../../core/types';
 import type { ComponentMethodsRef, PayButtonFunctionProps, UIElementProps, UIElementStatus } from './types';
 import type { CheckoutSessionDetailsResponse, CheckoutSessionPaymentResponse } from '../../../core/CheckoutSession/types';
 import type {
     ActionHandledReturnObject,
-    AnalyticsModule,
     CheckoutAdvancedFlowResponse,
     Order,
     PaymentAction,
@@ -32,6 +30,7 @@ import { AnalyticsInfoEvent, InfoEventType } from '../../../core/Analytics/event
 
 import './UIElement.scss';
 import { SRPanel } from '../../../core/Errors/SRPanel';
+import type { IAnalytics } from '../../../core/Analytics/Analytics';
 
 export abstract class UIElement<P extends UIElementProps = UIElementProps> extends BaseElement<P> {
     protected componentRef: any;
@@ -108,7 +107,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         this.analytics.sendAnalytics(event);
     }
 
-    get analytics(): AnalyticsModule {
+    get analytics(): IAnalytics {
         return this.core.modules.analytics;
     }
 
@@ -205,16 +204,6 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
             },
             this.elementRef
         );
-    }
-
-    // Only called once, for UIElements (including Dropin), as they are being mounted
-    protected setUpAnalytics(setUpAnalyticsObj: AnalyticsInitialEvent) {
-        const sessionId = this.props.session?.id;
-
-        return this.props.modules.analytics.setUp({
-            ...setUpAnalyticsObj,
-            ...(sessionId && { sessionId })
-        });
     }
 
     protected override submitAnalytics(event: AbstractAnalyticsEvent) {
