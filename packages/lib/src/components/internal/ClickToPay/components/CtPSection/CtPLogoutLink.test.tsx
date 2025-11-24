@@ -33,7 +33,7 @@ test('should render i18n message of ctp.logout.notYourCards if there are multipl
     const contextProps = mock<IClickToPayContext>();
     contextProps.ctpState = CtpState.Ready;
     contextProps.cards = [mock<ShopperCard>(), mock<ShopperCard>(), mock<ShopperCard>()];
-    contextProps.logoutShopper.mockImplementation();
+    contextProps.logoutShopper.mockImplementation(() => Promise.resolve());
 
     customRender(<CtPLogoutLink />, contextProps);
     expect(await screen.findByRole('button', { name: 'Not your cards?' })).toBeTruthy();
@@ -48,7 +48,7 @@ test('should render i18n message of ctp.logout.notYourCard if there is only one 
     const contextProps = mock<IClickToPayContext>();
     contextProps.ctpState = CtpState.Ready;
     contextProps.cards = [mock<ShopperCard>()];
-    contextProps.logoutShopper.mockImplementation();
+    contextProps.logoutShopper.mockImplementation(() => Promise.resolve());
 
     customRender(<CtPLogoutLink />, contextProps);
     expect(await screen.findByRole('button', { name: 'Not your card?' })).toBeTruthy();
@@ -63,7 +63,7 @@ test('should render i18n message of ctp.logout.notYourProfile if there is no car
     const contextProps = mock<IClickToPayContext>();
     contextProps.ctpState = CtpState.Ready;
     contextProps.cards = [];
-    contextProps.logoutShopper.mockImplementation();
+    contextProps.logoutShopper.mockImplementation(() => Promise.resolve());
 
     customRender(<CtPLogoutLink />, contextProps);
     expect(await screen.findByRole('button', { name: 'Not your profile?' })).toBeTruthy();
@@ -77,7 +77,7 @@ test('should render i18n message of ctp.logout.notYou if the shopper is going th
 
     const contextProps = mock<IClickToPayContext>();
     contextProps.ctpState = CtpState.OneTimePassword;
-    contextProps.logoutShopper.mockImplementation();
+    contextProps.logoutShopper.mockImplementation(() => Promise.resolve());
 
     customRender(<CtPLogoutLink />, contextProps);
     expect(await screen.findByRole('button', { name: 'Not you?' })).toBeTruthy();
