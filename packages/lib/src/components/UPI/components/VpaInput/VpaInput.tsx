@@ -6,6 +6,7 @@ import InputText from '../../../internal/FormFields/InputText';
 import { useCoreContext } from '../../../../core/Context/CoreProvider';
 import useForm from '../../../../utils/useForm';
 import Field from '../../../internal/FormFields/Field';
+import { getErrorMessage } from '../../../../utils/getErrorMessage';
 
 export type OnChangeProps = { data: VpaInputDataState; valid; errors; isValid: boolean };
 
@@ -50,7 +51,7 @@ const VpaInput = (props: VpaInputProps): h.JSX.Element => {
     return (
         <Field
             label={i18n.get('upi.collect.field.label')}
-            errorMessage={!!errors.virtualPaymentAddress}
+            errorMessage={getErrorMessage(i18n, errors.virtualPaymentAddress, i18n.get('upi.collect.field.label'), false)}
             classNameModifiers={['vpa']}
             name="virtualPaymentAddress"
         >
