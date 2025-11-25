@@ -62,4 +62,4 @@ const useCoreContext = (): ContextValue => {
     return context;
 };
 
-export { CoreProvider, useCoreContext, CoreContext, CoreProviderProps };
+export { CoreProvider, useCoreContext };
