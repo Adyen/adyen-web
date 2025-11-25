@@ -15,13 +15,13 @@
             "groupName": "Minor and Patch Updates"
         },
         {
-            "matchPackageNames": ["@adyen/**", "node", "cheerio"],
+            "matchPackageNames": ["@adyen/**", "cheerio"],
             "enabled": false
         },
         {
-            "description": "Disable node-version updates in GitHub Workflows",
-            "matchFileNames": [".github/workflows/**"],
+            "description": "Disable node-version updates",
             "matchDatasources": ["node-version"],
+            "matchPackageNames": ["actions/node-versions"],
             "enabled": false
         },
         {
