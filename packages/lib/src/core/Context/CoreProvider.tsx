@@ -1,4 +1,4 @@
-import { h, toChildArray, createContext } from 'preact';
+import { h, toChildArray, createContext, Fragment } from 'preact';
 import { useContext, useEffect } from 'preact/hooks';
 import { Resources } from './Resources';
 import Language from '../../language';
@@ -24,6 +24,8 @@ type ContextValue = {
 const CoreContext = createContext<ContextValue | undefined>(undefined);
 
 const CoreProvider = ({ i18n, loadingContext, resources, analytics, children }: CoreProviderProps) => {
+    const coreContext = useContext(CoreContext);
+
     useEffect(() => {
         if (!i18n || !loadingContext || !resources) {
             console.warn(
@@ -31,6 +33,10 @@ const CoreProvider = ({ i18n, loadingContext, resources, analytics, children }: 
             );
         }
     }, [i18n, loadingContext, resources]);
+
+    if (coreContext) {
+        return <Fragment>{toChildArray(children)}</Fragment>;
+    }
 
     return (
         <CoreContext.Provider
