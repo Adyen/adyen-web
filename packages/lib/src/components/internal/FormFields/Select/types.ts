@@ -41,6 +41,7 @@ export interface SelectProps {
     blurOnClose?: boolean;
     onListToggle?: (isOpen: boolean) => void;
     allowIdOnButton?: boolean;
+    activeOnHover?: boolean;
 }
 
 export interface SelectButtonProps {
