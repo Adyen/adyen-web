@@ -67,7 +67,7 @@ describe('CashAppPay', () => {
         render(cashAppPayElement.render());
 
         expect(CashAppService).toHaveBeenCalledTimes(1);
-        expect(await screen.findByTestId('spinner')).toBeInTheDocument();
+        expect(await screen.findByTestId('spinner')).toBeTruthy();
     });
 
     test('should create customer request and then begin CashApp flow when submit is triggered', async () => {
