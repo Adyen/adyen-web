@@ -5,20 +5,20 @@ import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 
 describe('Oxxo', () => {
     test('should return expected data to perform the payment', () => {
-        const oxxoElement = new Oxxo(global.core);
-        expect(oxxoElement.formatData()).toEqual({ paymentMethod: { type: 'oxxo' } });
+        const oxxo = new Oxxo(global.core);
+        expect(oxxo.formatData()).toEqual({ paymentMethod: { type: 'oxxo' } });
     });
 
     test('should show pay button by default', async () => {
         const core = setupCoreMock();
 
-        const oxxoElement = new Oxxo(core, {
+        const oxxo = new Oxxo(core, {
             loadingContext: 'test',
             i18n: global.i18n,
             modules: { resources: global.resources }
         });
 
-        render(oxxoElement.render());
+        render(oxxo.render());
         expect(await screen.findByRole('button', { name: 'Continue to Oxxo' })).toBeTruthy();
     });
 
