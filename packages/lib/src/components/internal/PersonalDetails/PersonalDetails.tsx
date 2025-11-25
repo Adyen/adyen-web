@@ -12,7 +12,6 @@ import { getFormattedData } from './utils';
 import useForm from '../../../utils/useForm';
 import './PersonalDetails.scss';
 import InputText from '../FormFields/InputText';
-import RadioGroup from '../FormFields/RadioGroup';
 import InputDate from '../FormFields/InputDate';
 import InputEmail from '../FormFields/InputEmail';
 import InputTelephone from '../FormFields/InputTelephone';
@@ -20,7 +19,7 @@ import { getErrorMessage } from '../../../utils/getErrorMessage';
 import { ComponentMethodsRef } from '../UIElement/types';
 import { HandleChangeForModeType } from '../../../utils/useForm/types';
 
-export const PERSONAL_DETAILS_SCHEMA = ['firstName', 'lastName', 'gender', 'dateOfBirth', 'shopperEmail', 'telephoneNumber'];
+export const PERSONAL_DETAILS_SCHEMA = ['firstName', 'lastName', 'dateOfBirth', 'shopperEmail', 'telephoneNumber'];
 
 export default function PersonalDetails(props: PersonalDetailsProps) {
     const { label = '', namePrefix, placeholders, requiredFields, visibility } = props;
@@ -106,28 +105,6 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
                             onBlur={eventHandler('blur')}
                             placeholder={placeholders.lastName}
                             spellCheck={false}
-                            required={true}
-                        />
-                    </Field>
-                )}
-
-                {requiredFields.includes('gender') && (
-                    <Field
-                        errorMessage={getErrorMessage(i18n, errors.gender)}
-                        classNameModifiers={['gender']}
-                        name={'gender'}
-                        useLabelElement={false}
-                    >
-                        <RadioGroup
-                            name={generateFieldName('gender')}
-                            value={data.gender}
-                            items={[
-                                { id: 'MALE', name: 'male' },
-                                { id: 'FEMALE', name: 'female' }
-                            ]}
-                            classNameModifiers={['gender']}
-                            onInput={eventHandler('input')}
-                            onChange={eventHandler('blur')}
                             required={true}
                         />
                     </Field>
