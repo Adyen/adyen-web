@@ -39,7 +39,6 @@ describe('AfterPay', () => {
 
         const firstNameInput = await screen.findByLabelText('First name');
         const lastNameInput = await screen.findByLabelText('Last name');
-        const maleRadioInput = await screen.findByLabelText('Male');
         const dateOfBirthInput = await screen.findByLabelText('Date of birth');
         const emailAddressInput = await screen.findByLabelText('Email address');
         const telephoneNumberInput = await screen.findByLabelText('Telephone number');
@@ -52,11 +51,10 @@ describe('AfterPay', () => {
         // Personal details
         await user.type(firstNameInput, 'Jose');
         await user.type(lastNameInput, 'Fernandez');
-        await user.click(maleRadioInput);
         await waitFor(() => {
             expect(onChangeMock).toHaveBeenLastCalledWith(
                 expect.objectContaining({
-                    data: expect.objectContaining({ shopperName: { firstName: 'Jose', lastName: 'Fernandez', gender: 'MALE' } })
+                    data: expect.objectContaining({ shopperName: { firstName: 'Jose', lastName: 'Fernandez' } })
                 }),
                 expect.anything()
             );
@@ -146,7 +144,7 @@ describe('AfterPay', () => {
                         },
                         paymentMethod: { checkoutAttemptId: 'fetch-checkoutAttemptId-failed', type: 'afterpay_default' },
                         shopperEmail: 'jose@adyen.com',
-                        shopperName: { firstName: 'Jose', gender: 'MALE', lastName: 'Fernandez' },
+                        shopperName: { firstName: 'Jose', lastName: 'Fernandez' },
                         telephoneNumber: '612345678'
                     },
                     isValid: true
@@ -176,7 +174,6 @@ describe('AfterPay', () => {
 
         const firstNameInput = await screen.findByLabelText('First name');
         const lastNameInput = await screen.findByLabelText('Last name');
-        const maleRadioInput = await screen.findByLabelText('Male');
         const dateOfBirthInput = await screen.findByLabelText('Date of birth');
         const emailAddressInput = await screen.findByLabelText('Email address');
         const telephoneNumberInput = await screen.findByLabelText('Telephone number');
@@ -189,11 +186,10 @@ describe('AfterPay', () => {
         // Personal details
         await user.type(firstNameInput, 'Jose');
         await user.type(lastNameInput, 'Fernandez');
-        await user.click(maleRadioInput);
         await waitFor(() => {
             expect(onChangeMock).toHaveBeenLastCalledWith(
                 expect.objectContaining({
-                    data: expect.objectContaining({ shopperName: { firstName: 'Jose', lastName: 'Fernandez', gender: 'MALE' } })
+                    data: expect.objectContaining({ shopperName: { firstName: 'Jose', lastName: 'Fernandez' } })
                 }),
                 expect.anything()
             );
@@ -331,7 +327,7 @@ describe('AfterPay', () => {
                         },
                         paymentMethod: { checkoutAttemptId: 'fetch-checkoutAttemptId-failed', type: 'afterpay_default' },
                         shopperEmail: 'jose@adyen.com',
-                        shopperName: { firstName: 'Jose', gender: 'MALE', lastName: 'Fernandez' },
+                        shopperName: { firstName: 'Jose', lastName: 'Fernandez' },
                         telephoneNumber: '612345678'
                     },
                     isValid: true
@@ -367,7 +363,6 @@ describe('AfterPay', () => {
 
         expect(screen.getByText('Enter your first name')).toBeInTheDocument();
         expect(screen.getByText('Enter your last name')).toBeInTheDocument();
-        expect(screen.getByText('Select your gender')).toBeInTheDocument();
         expect(screen.getByText('Enter the date of birth')).toBeInTheDocument();
         expect(screen.getByText('Enter the email address')).toBeInTheDocument();
         expect(screen.getByText('Enter the telephone number')).toBeInTheDocument();
