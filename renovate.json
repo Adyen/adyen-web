@@ -1,12 +1,13 @@
 {
     "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-    "extends": ["config:base", ":disableDependencyDashboard"],
+    "extends": ["config:recommended", ":disableDependencyDashboard"],
     "labels": ["dependencies"],
     "minimumReleaseAge": "21 days",
     "internalChecksFilter": "strict",
     "rebaseWhen": "behind-base-branch",
     "prConcurrentLimit": 5,
     "updateNotScheduled": false,
+    "ignorePaths": ["packages/playground/**"],
     "packageRules": [
         {
             "matchDatasources": ["npm"],
@@ -14,11 +15,13 @@
             "groupName": "Minor and Patch Updates"
         },
         {
-            "matchPackageNames": ["@adyen/**", "node", "cheerio"],
+            "matchPackageNames": ["@adyen/**", "cheerio"],
             "enabled": false
         },
         {
+            "description": "Disable node-version updates",
             "matchDatasources": ["node-version"],
+            "matchPackageNames": ["actions/node-versions"],
             "enabled": false
         },
         {
