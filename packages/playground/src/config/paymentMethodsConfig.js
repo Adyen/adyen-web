@@ -4,8 +4,7 @@ const paymentMethodsConfig = {
     ...commonConfiguration,
     shopperName: {
         firstName: 'Jan',
-        lastName: 'Jansen',
-        gender: 'MALE'
+        lastName: 'Jansen'
     },
     telephoneNumber: '0612345678',
     shopperEmail: 'test@adyen.com',

@@ -11,11 +11,6 @@ export const personalDetailsValidationRules: ValidatorRules = {
         errorMessage: ERROR_FIELD_REQUIRED,
         modes: ['blur']
     },
-    gender: {
-        validate: value => value && value.length > 0,
-        errorMessage: 'gender.notselected',
-        modes: ['blur']
-    },
     firstName: {
         validate: value => (isEmpty(value) ? null : true), // valid, if there are chars other than spaces,
         errorMessage: 'firstName.invalid',

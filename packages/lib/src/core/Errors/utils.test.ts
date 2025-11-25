@@ -14,11 +14,6 @@ describe('Tests for Errors/utils', () => {
                 isValid: null,
                 errorMessage: 'firstName.invalid'
             },
-            gender: {
-                shouldValidate: true,
-                isValid: null,
-                errorMessage: 'gender.notselected'
-            },
             lastName: {
                 shouldValidate: true,
                 isValid: null,
@@ -84,11 +79,6 @@ describe('Tests for Errors/utils', () => {
                 errorCode: 'lastName.invalid'
             },
             {
-                field: 'gender',
-                errorMessage: i18n.get('gender.notselected'),
-                errorCode: 'gender.notselected'
-            },
-            {
                 field: 'dateOfBirth',
                 errorMessage: `${REQUIRED_FIELD}${i18n.get('dateOfBirth')}`,
                 errorCode: 'field.error.required'
@@ -128,7 +118,6 @@ describe('Tests for Errors/utils', () => {
         const LAYOUT = [
             'firstName',
             'lastName',
-            'gender',
             'dateOfBirth',
             'shopperEmail',
             'telephoneNumber',
