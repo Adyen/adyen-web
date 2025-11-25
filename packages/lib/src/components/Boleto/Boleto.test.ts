@@ -207,7 +207,7 @@ describe('Boleto', () => {
         );
     });
 
-    test('should show reference when reference is provided', async () => {
+    test('should show reference when reference is provided', () => {
         const core = setupCoreMock();
 
         const boleto = new Boleto(core, {
@@ -219,6 +219,6 @@ describe('Boleto', () => {
 
         render(boleto.render());
 
-        expect(await screen.findByText('test-reference')).toBeInTheDocument();
+        expect(screen.getByText('test-reference')).toBeInTheDocument();
     });
 });
