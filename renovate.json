@@ -7,6 +7,7 @@
     "rebaseWhen": "behind-base-branch",
     "prConcurrentLimit": 5,
     "updateNotScheduled": false,
+    "ignorePaths": ["packages/playground/**"],
     "packageRules": [
         {
             "matchDatasources": ["npm"],
@@ -18,6 +19,8 @@
             "enabled": false
         },
         {
+            "description": "Disable node-version updates in GitHub Workflows",
+            "matchFileNames": [".github/workflows/**"],
             "matchDatasources": ["node-version"],
             "enabled": false
         },
