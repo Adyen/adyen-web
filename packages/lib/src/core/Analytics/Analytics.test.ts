@@ -1,12 +1,11 @@
-import Analytics from './Analytics';
+import Analytics, { AnalyticsProps } from './Analytics';
 import collectId from '../Services/analytics/collect-id';
 import wait from '../../utils/wait';
 import { DEFAULT_DEBOUNCE_TIME_MS } from '../../utils/debounce';
 import { AnalyticsInfoEvent, InfoEventType, UiTarget } from './events/AnalyticsInfoEvent';
 import { AnalyticsErrorEvent, ErrorEventType } from './events/AnalyticsErrorEvent';
 import { AnalyticsLogEvent, LogEventType } from './events/AnalyticsLogEvent';
-import { AnalyticsProps } from './types';
-import { CheckoutAttemptIdSession } from '../Services/analytics/types';
+import { CheckoutAttemptIdSessionStorage } from '../Services/analytics/types';
 import Storage from '../../utils/Storage';
 
 jest.mock('../Services/analytics/collect-id');
@@ -15,15 +14,15 @@ const mockedCollectId = collectId as jest.Mock;
 const flushPromises = () => new Promise(process.nextTick);
 const MOCKED_ATTEMPT_ID = 'xxxx-yyyy-zzzz';
 
+const DEFAULT_ANALYTICS_PROPS: AnalyticsProps = {
+    locale: 'en-US',
+    clientKey: 'test_client_key',
+    analyticsContext: 'https://checkoutanalytics-test.adyen.com/checkoutanalytics/'
+};
+
 describe('Analytics', () => {
     let collectIdPromiseMock = jest.fn(() => Promise.resolve(MOCKED_ATTEMPT_ID));
-    const storage = new Storage<CheckoutAttemptIdSession>('checkout-attempt-id', 'sessionStorage');
-
-    const DEFAULT_ANALYTICS_PROPS: AnalyticsProps = {
-        locale: 'en-US',
-        clientKey: 'test_client_key',
-        analyticsContext: 'https://checkoutanalytics-test.adyen.com/checkoutanalytics/'
-    };
+    const storage = new Storage<CheckoutAttemptIdSessionStorage>('checkout-attempt-id', 'sessionStorage');
 
     function setupMocks({ rejectCollectIdPromise }: { rejectCollectIdPromise?: boolean } = {}) {
         collectIdPromiseMock = jest.fn(() => (rejectCollectIdPromise ? Promise.reject() : Promise.resolve(MOCKED_ATTEMPT_ID)));
@@ -37,21 +36,9 @@ describe('Analytics', () => {
         storage.clear();
     });
 
-    describe('constructor()', () => {
-        test('should create it with default props', () => {
-            const analytics = Analytics(DEFAULT_ANALYTICS_PROPS);
-
-            expect(analytics.getCheckoutAttemptId).not.toBe(null);
-            expect(analytics.getEnabled).not.toBe(null);
-            expect(analytics.getEnabled()).toBe(true);
-            expect(analytics.sendAnalytics).not.toBe(null);
-            expect(collectIdPromiseMock).toHaveLength(0);
-        });
-    });
-
     describe('sendAnalytics()', () => {
         test('should send "error" event without the delay', async () => {
-            const analytics = Analytics(DEFAULT_ANALYTICS_PROPS);
+            const analytics = new Analytics(DEFAULT_ANALYTICS_PROPS);
             await analytics.setUp();
             await flushPromises();
 
@@ -72,7 +59,7 @@ describe('Analytics', () => {
         });
 
         test('should send "log" event without delay', async () => {
-            const analytics = Analytics(DEFAULT_ANALYTICS_PROPS);
+            const analytics = new Analytics(DEFAULT_ANALYTICS_PROPS);
             await analytics.setUp();
             await flushPromises();
 
@@ -92,7 +79,7 @@ describe('Analytics', () => {
         });
 
         test('should send "info" event with 10 seconds delay', async () => {
-            const analytics = Analytics(DEFAULT_ANALYTICS_PROPS);
+            const analytics = new Analytics(DEFAULT_ANALYTICS_PROPS);
             await analytics.setUp();
             await flushPromises();
 
@@ -116,7 +103,7 @@ describe('Analytics', () => {
             expect(analytics.getEventsQueue().getQueue().info.length).toBe(1);
 
             // 10 seconds pass and the event is sent
-            jest.advanceTimersByTime(5000);
+            jest.advanceTimersByTime(5500);
             expect(analytics.getEventsQueue().getQueue().info.length).toBe(0);
 
             jest.clearAllTimers();
@@ -124,7 +111,7 @@ describe('Analytics', () => {
         });
 
         test('should not add events to the queue if analytics is disabled', async () => {
-            const analytics = Analytics({ ...DEFAULT_ANALYTICS_PROPS, analytics: { enabled: false } });
+            const analytics = new Analytics({ ...DEFAULT_ANALYTICS_PROPS, enabled: false });
             await analytics.setUp();
             await flushPromises();
 
@@ -143,7 +130,7 @@ describe('Analytics', () => {
 
     describe('setUp()', () => {
         test('should make the setup call using level:all by default', async () => {
-            const analytics = Analytics(DEFAULT_ANALYTICS_PROPS);
+            const analytics = new Analytics(DEFAULT_ANALYTICS_PROPS);
             await analytics.setUp();
 
             expect(mockedCollectId).toHaveBeenCalledWith({
@@ -156,24 +143,24 @@ describe('Analytics', () => {
         });
 
         test('should make the setup call using level:info if analytics is disabled', async () => {
-            const analytics = Analytics({ ...DEFAULT_ANALYTICS_PROPS, analytics: { enabled: false } });
+            const analytics = new Analytics({ ...DEFAULT_ANALYTICS_PROPS, enabled: false });
             await analytics.setUp();
 
             expect(collectIdPromiseMock).toHaveBeenCalledWith({ level: 'initial', checkoutStage: 'checkout' });
         });
 
         test('should be able to pass checkoutState:precheckout during the setup call', async () => {
-            const analytics = Analytics({ ...DEFAULT_ANALYTICS_PROPS, analytics: { enabled: false } });
+            const analytics = new Analytics({ ...DEFAULT_ANALYTICS_PROPS, enabled: false });
             await analytics.setUp({ checkoutStage: 'precheckout' });
 
             expect(collectIdPromiseMock).toHaveBeenCalledWith({ level: 'initial', checkoutStage: 'precheckout' });
         });
 
         test('should save the attempt ID in the session storage', async () => {
-            let attemptId: CheckoutAttemptIdSession | null = storage.get();
+            let attemptId: CheckoutAttemptIdSessionStorage | null = storage.get();
             expect(attemptId).toBeNull();
 
-            const analytics = Analytics(DEFAULT_ANALYTICS_PROPS);
+            const analytics = new Analytics(DEFAULT_ANALYTICS_PROPS);
             await analytics.setUp();
             await flushPromises();
 
@@ -186,7 +173,7 @@ describe('Analytics', () => {
         test('should reuse the attempt ID available in the session storage if it is not expired', async () => {
             storage.set({ id: MOCKED_ATTEMPT_ID, timestamp: Date.now() });
 
-            const analytics = Analytics(DEFAULT_ANALYTICS_PROPS);
+            const analytics = new Analytics(DEFAULT_ANALYTICS_PROPS);
             await analytics.setUp();
 
             expect(collectIdPromiseMock).toHaveBeenCalledWith({
@@ -202,7 +189,7 @@ describe('Analytics', () => {
             const MOCKED_EXPIRED_ATTEMPT_ID = 'yyyy-xxxx-zzzz';
             storage.set({ id: MOCKED_EXPIRED_ATTEMPT_ID, timestamp: expiredTimestamp });
 
-            const analytics = Analytics(DEFAULT_ANALYTICS_PROPS);
+            const analytics = new Analytics(DEFAULT_ANALYTICS_PROPS);
             await analytics.setUp();
             await flushPromises();
 
@@ -218,9 +205,9 @@ describe('Analytics', () => {
 
         test('should use attempt ID if it is passed as part of the Analytics configuration (PBL use-case)', async () => {
             const PAYBYLINK_ATTEMPT_ID = 'aaaaa-bbbb-cccc';
-            const analytics = Analytics({
+            const analytics = new Analytics({
                 ...DEFAULT_ANALYTICS_PROPS,
-                analytics: { analyticsData: { checkoutAttemptId: PAYBYLINK_ATTEMPT_ID } }
+                analyticsData: { checkoutAttemptId: PAYBYLINK_ATTEMPT_ID }
             });
             await analytics.setUp();
 
@@ -235,7 +222,7 @@ describe('Analytics', () => {
             setupMocks({ rejectCollectIdPromise: true });
             const warnSpy = jest.spyOn(console, 'warn');
 
-            const analytics = Analytics(DEFAULT_ANALYTICS_PROPS);
+            const analytics = new Analytics(DEFAULT_ANALYTICS_PROPS);
             await expect(analytics.setUp()).resolves.not.toThrow();
             await flushPromises();
 
@@ -258,12 +245,10 @@ describe('Analytics', () => {
                 }
             };
 
-            const analytics = Analytics({
+            const analytics = new Analytics({
                 ...DEFAULT_ANALYTICS_PROPS,
-                analytics: {
-                    analyticsData: {
-                        applicationInfo
-                    }
+                analyticsData: {
+                    applicationInfo
                 }
             });
 

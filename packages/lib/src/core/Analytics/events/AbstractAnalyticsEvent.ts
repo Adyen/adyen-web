@@ -10,7 +10,7 @@ export abstract class AbstractAnalyticsEvent {
      */
     private readonly component: string;
 
-    public abstract getEventCategory(): string;
+    public abstract getEventCategory(): 'info' | 'log' | 'error';
 
     protected constructor(component: string) {
         this.component = component;

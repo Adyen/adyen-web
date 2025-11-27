@@ -1,6 +1,6 @@
 import AdyenCheckoutError from '../core/Errors/AdyenCheckoutError';
 import { AnalyticsInfoEvent, InfoEventType } from '../core/Analytics/events/AnalyticsInfoEvent';
-import { AnalyticsModule } from '../types/global-types';
+import type { IAnalytics } from '../core/Analytics/Analytics';
 
 interface IScript {
     load(): Promise<void>;
@@ -10,7 +10,7 @@ interface IScript {
 interface IScriptProps {
     src: string;
     component: string;
-    analytics: AnalyticsModule;
+    analytics: IAnalytics;
     node?: string;
     attributes?: Partial<HTMLScriptElement>;
     dataAttributes?: Record<string, string | undefined>;
@@ -28,7 +28,7 @@ class Script implements IScript {
     private readonly node: string;
     private readonly attributes: Partial<HTMLScriptElement>;
     private readonly dataAttributes: Record<string, string | undefined>;
-    private readonly analytics: AnalyticsModule;
+    private readonly analytics: IAnalytics;
     private readonly baseUrl: string;
 
     private script: HTMLScriptElement;

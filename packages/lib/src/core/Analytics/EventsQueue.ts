@@ -1,22 +1,27 @@
 import { HttpOptions, httpPost } from '../Services/http';
-import { AnalyticsObject, EventQueueProps } from './types';
 import { AbstractAnalyticsEvent } from './events/AbstractAnalyticsEvent';
 
 interface CAActions {
     channel: 'Web';
     platform: 'Web';
-    info: AnalyticsObject[];
-    errors: AnalyticsObject[];
-    logs: AnalyticsObject[];
+    info: AbstractAnalyticsEvent[];
+    errors: AbstractAnalyticsEvent[];
+    logs: AbstractAnalyticsEvent[];
 }
 
 export interface EventsQueueModule {
-    add: (t: string, event: AbstractAnalyticsEvent) => void;
+    add: (event: AbstractAnalyticsEvent) => void;
     run: (id: string) => Promise<any>;
     getQueue: () => CAActions;
 }
 
-const EventsQueue = ({ analyticsContext, clientKey, analyticsPath }: EventQueueProps): EventsQueueModule => {
+interface EventsQueueProps {
+    analyticsContext: string;
+    clientKey: string;
+    analyticsPath: string;
+}
+
+const EventsQueue = ({ analyticsContext, clientKey, analyticsPath }: EventsQueueProps): EventsQueueModule => {
     const caActions: CAActions = {
         channel: 'Web',
         platform: 'Web',
@@ -48,8 +53,12 @@ const EventsQueue = ({ analyticsContext, clientKey, analyticsPath }: EventQueueP
     };
 
     return {
-        add: (type, actionObj) => {
-            caActions[type].push(actionObj);
+        add: (event: AbstractAnalyticsEvent) => {
+            const category = event.getEventCategory();
+
+            if (category === 'info') caActions.info.push(event);
+            if (category === 'error') caActions.errors.push(event);
+            if (category === 'log') caActions.logs.push(event);
         },
 
         run: (checkoutAttemptId: string) => {
