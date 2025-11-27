@@ -108,6 +108,7 @@ class Core implements ICore {
         await this.initializeCore();
         this.validateCoreConfiguration();
         await this.createCoreModules();
+        this.requestAnalyticsAttemptId();
         return this;
     }
 
@@ -374,11 +375,12 @@ class Core implements ICore {
 
         this.modules = Object.freeze({
             risk: new RiskModule(this, { ...this.options, loadingContext: this.loadingContext }),
-            analytics: Analytics({
+            analytics: new Analytics({
                 analyticsContext: this.analyticsContext,
                 clientKey: this.options.clientKey,
                 locale: this.options.locale,
-                analytics: this.options.analytics
+                enabled: this.options.analytics?.enabled,
+                analyticsData: this.options.analytics?.analyticsData
             }),
             resources: new Resources(this.cdnImagesUrl),
             i18n: new Language({
@@ -387,6 +389,12 @@ class Core implements ICore {
                 customTranslations: this.options.translations
             }),
             srPanel: new SRPanel(this, { ...this.options.srConfig })
+        });
+    }
+
+    private requestAnalyticsAttemptId() {
+        void this.modules.analytics.setUp({
+            ...(this.session?.id && { sessionId: this.session.id })
         });
     }
 }

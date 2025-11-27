@@ -3,14 +3,14 @@ import { resolveEnvironment } from './utils';
 import Script from '../../utils/Script';
 import config from './config';
 import type { GooglePayConfiguration } from './types';
-import { AnalyticsModule } from '../../types/global-types';
+import type { IAnalytics } from '../../core/Analytics/Analytics';
 
 class GooglePayService {
-    private readonly analytics: AnalyticsModule;
+    private readonly analytics: IAnalytics;
 
     public readonly paymentsClient: Promise<google.payments.api.PaymentsClient>;
 
-    constructor(environment: string, analytics: AnalyticsModule, paymentDataCallbacks: google.payments.api.PaymentDataCallbacks) {
+    constructor(environment: string, analytics: IAnalytics, paymentDataCallbacks: google.payments.api.PaymentDataCallbacks) {
         const googlePayEnvironment = resolveEnvironment(environment);
 
         this.analytics = analytics;

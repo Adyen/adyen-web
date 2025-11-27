@@ -6,7 +6,6 @@ import { NO_CHECKOUT_ATTEMPT_ID } from '../../../core/Analytics/constants';
 import type { ICore } from '../../../core/types';
 import type { BaseElementProps, IBaseElement } from './types';
 import type { PaymentData } from '../../../types/global-types';
-import { AnalyticsInitialEvent } from '../../../core/Analytics/types';
 import { off, on } from '../../../utils/listenerUtils';
 import { AbstractAnalyticsEvent } from '../../../core/Analytics/events/AbstractAnalyticsEvent';
 
@@ -70,11 +69,6 @@ abstract class BaseElement<P extends BaseElementProps> implements IBaseElement {
     }
 
     /* eslint-disable-next-line */
-    protected setUpAnalytics(setUpAnalyticsObj: AnalyticsInitialEvent) {
-        return null;
-    }
-
-    /* eslint-disable-next-line */
     protected submitAnalytics(analyticsObj?: AbstractAnalyticsEvent) {
         return null;
     }
@@ -135,8 +129,6 @@ abstract class BaseElement<P extends BaseElementProps> implements IBaseElement {
             throw new Error('Component could not mount. Root node was not found.');
         }
 
-        const setupAnalytics = !this._node;
-
         if (this._node) {
             this.unmount(); // new, if this._node exists then we are "remounting" so we first need to unmount if it's not already been done
         }
@@ -149,17 +141,6 @@ abstract class BaseElement<P extends BaseElementProps> implements IBaseElement {
         this._component = this.render();
 
         render(this._component, node);
-
-        // Set up analytics (once, since this._node is currently undefined) now that we have mounted and rendered
-        if (setupAnalytics) {
-            if (this.props.modules && this.props.modules.analytics) {
-                this.setUpAnalytics({
-                    containerWidth: node && node.offsetWidth,
-                    component: this.constructor['type'],
-                    flavor: !this.props.isDropin ? 'components' : 'dropin'
-                });
-            }
-        }
 
         return this;
     }

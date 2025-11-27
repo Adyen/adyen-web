@@ -1,10 +1,10 @@
 import Script from './Script';
 import AdyenCheckoutError from '../core/Errors/AdyenCheckoutError';
 import { mock } from 'jest-mock-extended';
-import { AnalyticsModule } from '../types/global-types';
+import type { IAnalytics } from '../core/Analytics/Analytics';
 
 const SCRIPT_SRC = 'https://example.com/script.js';
-const mockAnalytics = mock<AnalyticsModule>();
+const mockAnalytics = mock<IAnalytics>();
 
 describe('Script', () => {
     beforeEach(() => {

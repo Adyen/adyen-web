@@ -8,17 +8,7 @@ import {
 
 export const ANALYTICS_PATH = 'v3/analytics';
 
-export const ANALYTICS_INFO_TIMER_INTERVAL = process.env.NODE_ENV === 'development' ? 5000 : 10000;
-
 export const ANALYTICS_SEARCH_DEBOUNCE_TIME = 3000;
-
-export const ANALYTICS_EVENT = {
-    log: 'log',
-    error: 'error',
-    info: 'info'
-};
-
-export const ANALYTICS_QR_CODE_DOWNLOAD = 'qr_download_button';
 
 /**
  * Function to map errorCodes based on translation keys to the codes expected by the analytics endpoint
@@ -40,11 +30,4 @@ export const errorCodeMapping: Record<string, string> = {
     //
 };
 
-export const ALLOWED_ANALYTICS_DATA = ['applicationInfo', 'checkoutAttemptId'];
-
 export const NO_CHECKOUT_ATTEMPT_ID = 'fetch-checkoutAttemptId-failed';
-
-export const ANALYTIC_LEVEL = {
-    all: 'all',
-    initial: 'initial'
-};

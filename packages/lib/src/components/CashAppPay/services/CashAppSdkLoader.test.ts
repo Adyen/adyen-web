@@ -3,9 +3,9 @@ import Script from '../../../utils/Script';
 import { CASHAPPPAY_PROD_SDK, CASHAPPPAY_SANDBOX_SDK } from './config';
 import { ICashAppWindowObject } from './types';
 import { mock } from 'jest-mock-extended';
-import { AnalyticsModule } from '../../../types/global-types';
+import type { IAnalytics } from '../../../core/Analytics/Analytics';
 
-const mockAnalytics = mock<AnalyticsModule>();
+const mockAnalytics = mock<IAnalytics>();
 
 const mockLoad = jest.fn().mockImplementation(() => {
     const mockCashAppWindowObj = mock<ICashAppWindowObject>();

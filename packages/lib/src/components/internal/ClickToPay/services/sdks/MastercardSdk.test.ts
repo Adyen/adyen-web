@@ -2,7 +2,7 @@ import MastercardSdk from './MastercardSdk';
 import Script from '../../../../../utils/Script';
 import { MC_SDK_PROD, MC_SDK_TEST } from './config';
 import { mock } from 'jest-mock-extended';
-import { AnalyticsModule } from '../../../../../types/global-types';
+import { IAnalytics } from '../../../../../core/Analytics/Analytics';
 
 const mockScriptLoaded = jest.fn().mockImplementation(() => {
     window.SRCSDK_MASTERCARD = {
@@ -44,7 +44,7 @@ const mockScriptLoaded = jest.fn().mockImplementation(() => {
     };
 });
 
-const mockAnalytics = mock<AnalyticsModule>();
+const mockAnalytics = mock<IAnalytics>();
 const mockScriptRemoved = jest.fn();
 
 jest.mock('../../../../../utils/Script', () => {
