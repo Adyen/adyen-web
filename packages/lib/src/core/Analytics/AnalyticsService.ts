@@ -67,8 +67,9 @@ class AnalyticsService implements IAnalyticsService {
             return Promise.reject('sendEvents() - checkoutAttemptId is required');
         }
 
+        // No events to be sent
         if (!payload.info.length && !payload.errors.length && !payload.logs.length) {
-            return Promise.reject('sendEvents() - no events to send');
+            return Promise.resolve();
         }
 
         const httpOptions: HttpOptions = {

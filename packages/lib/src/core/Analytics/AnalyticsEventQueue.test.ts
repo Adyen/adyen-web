@@ -11,7 +11,7 @@ describe('AnalyticsEventQueue', () => {
     });
 
     describe('add()', () => {
-        it('should add info events to the info queue', () => {
+        test('should add info events to the info queue', () => {
             const infoEvent = new AnalyticsInfoEvent({
                 type: InfoEventType.rendered,
                 component: 'card'
@@ -25,7 +25,7 @@ describe('AnalyticsEventQueue', () => {
             expect(queue.logEvents).toHaveLength(0);
         });
 
-        it('should add error events to the errors queue', () => {
+        test('should add error events to the errors queue', () => {
             const errorEvent = new AnalyticsErrorEvent({
                 component: 'card',
                 errorType: ErrorEventType.network,
@@ -40,7 +40,7 @@ describe('AnalyticsEventQueue', () => {
             expect(queue.logEvents).toHaveLength(0);
         });
 
-        it('should add log events to the logs queue', () => {
+        test('should add log events to the logs queue', () => {
             const logEvent = new AnalyticsLogEvent({
                 type: LogEventType.submit,
                 component: 'card',
@@ -55,7 +55,7 @@ describe('AnalyticsEventQueue', () => {
             expect(queue.errorEvents).toHaveLength(0);
         });
 
-        it('should add multiple events of the same type', () => {
+        test('should add multiple events of the same type', () => {
             const infoEvent1 = new AnalyticsInfoEvent({
                 type: InfoEventType.rendered,
                 component: 'card'
@@ -73,7 +73,7 @@ describe('AnalyticsEventQueue', () => {
             expect(queue.infoEvents[1]).toBe(infoEvent2);
         });
 
-        it('should add events of different types to their respective queues', () => {
+        test('should add events of different types to their respective queues', () => {
             const infoEvent = new AnalyticsInfoEvent({
                 type: InfoEventType.rendered,
                 component: 'card'
@@ -100,7 +100,7 @@ describe('AnalyticsEventQueue', () => {
     });
 
     describe('clear()', () => {
-        it('should clear all queues', () => {
+        test('should clear all queues', () => {
             const infoEvent = new AnalyticsInfoEvent({
                 type: InfoEventType.rendered,
                 component: 'card'
@@ -127,7 +127,7 @@ describe('AnalyticsEventQueue', () => {
             expect(queue.logEvents).toHaveLength(0);
         });
 
-        it('should allow adding events after clearing', () => {
+        test('should allow adding events after clearing', () => {
             const infoEvent1 = new AnalyticsInfoEvent({
                 type: InfoEventType.rendered,
                 component: 'card'
@@ -148,13 +148,13 @@ describe('AnalyticsEventQueue', () => {
     });
 
     describe('getters', () => {
-        it('should return empty arrays when no events have been added', () => {
+        test('should return empty arrays when no events have been added', () => {
             expect(queue.infoEvents).toEqual([]);
             expect(queue.errorEvents).toEqual([]);
             expect(queue.logEvents).toEqual([]);
         });
 
-        it('should return the same array reference on multiple calls', () => {
+        test('should return the same array reference on multiple calls', () => {
             const infoEvents1 = queue.infoEvents;
             const infoEvents2 = queue.infoEvents;
 

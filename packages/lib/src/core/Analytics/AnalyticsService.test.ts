@@ -33,7 +33,7 @@ describe('AnalyticsService', () => {
             level: 'initial' as const
         };
 
-        it('should return checkoutAttemptId on successful request', async () => {
+        test('should return checkoutAttemptId on successful request', async () => {
             const expectedAttemptId = 'test-checkout-attempt-id';
             mockHttpPost.mockResolvedValueOnce({ checkoutAttemptId: expectedAttemptId });
 
@@ -49,7 +49,7 @@ describe('AnalyticsService', () => {
             );
         });
 
-        it('should throw AdyenCheckoutError on network failure', async () => {
+        test('should throw AdyenCheckoutError on network failure', async () => {
             mockHttpPost.mockRejectedValueOnce(new Error('Network error'));
 
             await expect(service.requestCheckoutAttemptId(payload)).rejects.toThrow(AdyenCheckoutError);
@@ -68,7 +68,7 @@ describe('AnalyticsService', () => {
             logs: []
         });
 
-        it('should send events successfully', async () => {
+        test('should send events successfully', async () => {
             mockHttpPost.mockResolvedValueOnce({});
             const payload = createPayload();
 
@@ -83,21 +83,21 @@ describe('AnalyticsService', () => {
             );
         });
 
-        it('should reject when checkoutAttemptId is missing', async () => {
+        test('should reject when checkoutAttemptId is missing', async () => {
             const payload = createPayload();
 
             await expect(service.sendEvents(payload, '')).rejects.toBe('sendEvents() - checkoutAttemptId is required');
             expect(mockHttpPost).not.toHaveBeenCalled();
         });
 
-        it('should reject when there are no events to send', async () => {
+        test('should resolve when there are no events to send', async () => {
             const payload = createPayload(false);
 
-            await expect(service.sendEvents(payload, checkoutAttemptId)).rejects.toBe('sendEvents() - no events to send');
+            await expect(service.sendEvents(payload, checkoutAttemptId)).resolves.toBe(undefined);
             expect(mockHttpPost).not.toHaveBeenCalled();
         });
 
-        it('should throw AdyenCheckoutError on network failure', async () => {
+        test('should throw AdyenCheckoutError on network failure', async () => {
             mockHttpPost.mockRejectedValueOnce(new Error('Network error'));
             const payload = createPayload();
 
@@ -108,7 +108,7 @@ describe('AnalyticsService', () => {
     describe('reportIntegrationFlavor()', () => {
         const checkoutAttemptId = 'test-checkout-attempt-id';
 
-        it('should report dropin flavor successfully', async () => {
+        test('should report dropin flavor successfully', async () => {
             mockHttpPost.mockResolvedValueOnce({});
 
             await service.reportIntegrationFlavor('dropin', checkoutAttemptId);
@@ -125,7 +125,7 @@ describe('AnalyticsService', () => {
             );
         });
 
-        it('should report components flavor successfully', async () => {
+        test('should report components flavor successfully', async () => {
             mockHttpPost.mockResolvedValueOnce({});
 
             await service.reportIntegrationFlavor('components', checkoutAttemptId);
@@ -142,14 +142,14 @@ describe('AnalyticsService', () => {
             );
         });
 
-        it('should reject when checkoutAttemptId is missing', async () => {
+        test('should reject when checkoutAttemptId is missing', async () => {
             await expect(service.reportIntegrationFlavor('dropin', '')).rejects.toBe(
                 'reportIntegrationFlavor() - flavor or checkoutAttemptId is required'
             );
             expect(mockHttpPost).not.toHaveBeenCalled();
         });
 
-        it('should throw AdyenCheckoutError on network failure', async () => {
+        test('should throw AdyenCheckoutError on network failure', async () => {
             mockHttpPost.mockRejectedValueOnce(new Error('Network error'));
 
             await expect(service.reportIntegrationFlavor('dropin', checkoutAttemptId)).rejects.toThrow(AdyenCheckoutError);

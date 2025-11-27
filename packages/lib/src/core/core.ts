@@ -402,11 +402,8 @@ class Core implements ICore {
                 locale: this.options.locale,
                 ...(this.session?.id && { sessionId: this.session.id })
             });
-        } catch (error) {
-            // Silently fail - analytics is not critical for core functionality
-            if (process.env.NODE_ENV === 'development') {
-                console.warn('Failed to set up analytics:', error);
-            }
+        } catch (error: unknown) {
+            console.warn('Core - Failed to set up analytics:', error);
         }
     }
 }
