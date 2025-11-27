@@ -17,6 +17,8 @@ import {
 import Analytics from '../../core/Analytics';
 import { AnalyticsInfoEvent, InfoEventType } from '../../core/Analytics/events/AnalyticsInfoEvent';
 import type { IAnalytics } from '../../core/Analytics/Analytics';
+import { AnalyticsEventQueue } from '../../core/Analytics/AnalyticsEventQueue';
+import { AnalyticsService } from '../../core/Analytics/AnalyticsService';
 
 class FastlaneSDK {
     private readonly clientKey: string;
@@ -45,9 +47,11 @@ class FastlaneSDK {
         this.fastlaneLocale = convertAdyenLocaleToFastlaneLocale(configuration.locale || 'en-US');
 
         this.analytics = new Analytics({
-            locale: configuration.locale || 'en-US',
-            analyticsContext: analyticsUrl,
-            clientKey: this.clientKey,
+            eventQueue: new AnalyticsEventQueue(),
+            service: new AnalyticsService({
+                analyticsContext: analyticsUrl,
+                clientKey: this.clientKey
+            }),
             enabled: configuration.analytics?.enabled
         });
 

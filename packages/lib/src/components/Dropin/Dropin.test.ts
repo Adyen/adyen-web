@@ -302,6 +302,14 @@ describe('Dropin', () => {
 
             jest.restoreAllMocks();
         });
+
+        test('should report "dropin" flavor when created', () => {
+            const core = setupCoreMock();
+
+            new Dropin(core, {});
+
+            expect(core.modules.analytics.sendFlavor).toHaveBeenCalledWith('dropin');
+        });
     });
 
     describe('Dropin with Fastlane', () => {
