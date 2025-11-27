@@ -305,10 +305,8 @@ describe('Dropin', () => {
 
         test('should report "dropin" flavor when created', () => {
             const core = setupCoreMock();
-
-            new Dropin(core, {});
-
-            expect(core.modules.analytics.sendFlavor).toHaveBeenCalledWith('dropin');
+            const dropin = new Dropin(core, {});
+            expect(dropin.core.modules.analytics.sendFlavor).toHaveBeenCalledWith('dropin');
         });
     });
 

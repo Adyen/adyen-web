@@ -397,14 +397,10 @@ class Core implements ICore {
     }
 
     private async requestAnalyticsAttemptId(): Promise<void> {
-        try {
-            await this.modules.analytics.setUp({
-                locale: this.options.locale,
-                ...(this.session?.id && { sessionId: this.session.id })
-            });
-        } catch (error: unknown) {
-            console.warn('Core - Failed to set up analytics:', error);
-        }
+        await this.modules.analytics.setUp({
+            locale: this.options.locale,
+            ...(this.session?.id && { sessionId: this.session.id })
+        });
     }
 }
 

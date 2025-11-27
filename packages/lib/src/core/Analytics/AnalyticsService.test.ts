@@ -86,7 +86,7 @@ describe('AnalyticsService', () => {
         test('should reject when checkoutAttemptId is missing', async () => {
             const payload = createPayload();
 
-            await expect(service.sendEvents(payload, '')).rejects.toBe('sendEvents() - checkoutAttemptId is required');
+            await expect(service.sendEvents(payload, '')).rejects.toBeInstanceOf(AdyenCheckoutError);
             expect(mockHttpPost).not.toHaveBeenCalled();
         });
 
@@ -143,9 +143,7 @@ describe('AnalyticsService', () => {
         });
 
         test('should reject when checkoutAttemptId is missing', async () => {
-            await expect(service.reportIntegrationFlavor('dropin', '')).rejects.toBe(
-                'reportIntegrationFlavor() - flavor or checkoutAttemptId is required'
-            );
+            await expect(service.reportIntegrationFlavor('dropin', '')).rejects.toBeInstanceOf(AdyenCheckoutError);
             expect(mockHttpPost).not.toHaveBeenCalled();
         });
 

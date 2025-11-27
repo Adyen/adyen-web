@@ -58,13 +58,13 @@ class AnalyticsService implements IAnalyticsService {
             const { checkoutAttemptId } = await httpPost<{ checkoutAttemptId: string }>(httpOptions, payload);
             return checkoutAttemptId;
         } catch (error: unknown) {
-            throw new AdyenCheckoutError('NETWORK_ERROR', 'requestCheckoutAttemptId() - failed to get checkout attempt ID');
+            throw new AdyenCheckoutError('NETWORK_ERROR', 'requestCheckoutAttemptId() - failed to get checkout attempt ID', { cause: error });
         }
     }
 
     public async sendEvents(payload: AnalyticsEventPayload, checkoutAttemptId: string): Promise<void> {
         if (!checkoutAttemptId) {
-            return Promise.reject('sendEvents() - checkoutAttemptId is required');
+            throw new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'sendEvents() - checkoutAttemptId is required');
         }
 
         // No events to be sent
@@ -80,13 +80,13 @@ class AnalyticsService implements IAnalyticsService {
         try {
             await httpPost(httpOptions, payload);
         } catch (error: unknown) {
-            throw new AdyenCheckoutError('NETWORK_ERROR', 'sendEvents() - failed to send events');
+            throw new AdyenCheckoutError('NETWORK_ERROR', 'sendEvents() - failed to send events', { cause: error });
         }
     }
 
     public async reportIntegrationFlavor(flavor: 'dropin' | 'components', checkoutAttemptId: string): Promise<void> {
         if (!flavor || !checkoutAttemptId) {
-            return Promise.reject('reportIntegrationFlavor() - flavor or checkoutAttemptId is required');
+            throw new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'reportIntegrationFlavor() - flavor or checkoutAttemptId is required');
         }
 
         const httpOptions: HttpOptions = {
@@ -102,7 +102,7 @@ class AnalyticsService implements IAnalyticsService {
         try {
             await httpPost(httpOptions, payload);
         } catch (error: unknown) {
-            throw new AdyenCheckoutError('NETWORK_ERROR', 'reportIntegrationFlavor() - failed to send flavor');
+            throw new AdyenCheckoutError('NETWORK_ERROR', 'reportIntegrationFlavor() - failed to send flavor', { cause: error });
         }
     }
 }
