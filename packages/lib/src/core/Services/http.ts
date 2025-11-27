@@ -66,9 +66,13 @@ export function http<T>(options: HttpOptions, data?: any): Promise<T> {
     return (
         fetch(url, request)
             .then(async response => {
-                const data = await response.json();
+                // Handle empty responses (e.g., 204 No Content)
+                if (response.status === 204) {
+                    return;
+                }
 
                 if (response.ok) {
+                    const data = await response.json();
                     return data;
                 }
 
