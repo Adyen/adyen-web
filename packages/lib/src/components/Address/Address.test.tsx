@@ -6,7 +6,7 @@ describe('Address standalone component', () => {
     test('should send rendered analytics event', () => {
         const core = setupCoreMock();
 
-        const address = new AddressElement(core, { i18n: global.i18n, onChange: jest.fn() });
+        const address = new AddressElement(core, { i18n: global.i18n, onChange: jest.fn(), modules: { srPanel: core.modules.srPanel } });
         render(address.render());
 
         expect(core.modules.analytics.sendAnalytics).toHaveBeenCalledWith({

@@ -733,13 +733,13 @@ describe('UIElement', () => {
 
     describe('render()', () => {
         test('should return the result of render method', () => {
-            const element = new MyElement(core);
+            const element = new MyElement(core, { modules: { srPanel: core.modules.srPanel } });
             render(element.render());
             expect(screen.getAllByText('myelement')[0]).toBeInTheDocument();
         });
 
         test('should send analytics event in before render hook', () => {
-            const element = new MyElement(core);
+            const element = new MyElement(core, { modules: { srPanel: core.modules.srPanel } });
             render(element.render());
 
             expect(core.modules.analytics.sendAnalytics).toHaveBeenCalledWith(

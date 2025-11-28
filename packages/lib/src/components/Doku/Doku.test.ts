@@ -9,7 +9,7 @@ describe('Doku', () => {
         const doku = new Doku(core, {
             loadingContext: 'test',
             i18n: global.i18n,
-            modules: { resources: global.resources }
+            modules: { resources: global.resources, srPanel: core.modules.srPanel }
         });
 
         render(doku.render());
@@ -27,7 +27,7 @@ describe('Doku', () => {
         const doku = new Doku(core, {
             loadingContext: 'test',
             i18n: global.i18n,
-            modules: { resources: global.resources },
+            modules: { resources: global.resources, srPanel: core.modules.srPanel },
             showPayButton: false
         });
 

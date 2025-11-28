@@ -15,7 +15,7 @@ describe('Oxxo', () => {
         const oxxo = new Oxxo(core, {
             loadingContext: 'test',
             i18n: global.i18n,
-            modules: { resources: global.resources }
+            modules: { resources: global.resources, srPanel: core.modules.srPanel }
         });
 
         render(oxxo.render());
@@ -29,7 +29,7 @@ describe('Oxxo', () => {
         const oxxo = new Oxxo(core, {
             loadingContext: 'test',
             i18n: global.i18n,
-            modules: { resources: global.resources }
+            modules: { resources: global.resources, srPanel: core.modules.srPanel }
         });
         oxxo.submit = jest.fn();
 
@@ -45,7 +45,7 @@ describe('Oxxo', () => {
         const oxxo = new Oxxo(core, {
             loadingContext: 'test',
             i18n: global.i18n,
-            modules: { resources: global.resources },
+            modules: { resources: global.resources, srPanel: core.modules.srPanel },
             reference: 'test-reference'
         });
 

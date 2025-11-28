@@ -5,21 +5,21 @@ import { NO_CHECKOUT_ATTEMPT_ID } from '../../core/Analytics/constants';
 import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 
 test('should return only payment type if personalDetails is not required', () => {
-    const pixElement = new Pix(global.core);
-    expect(pixElement.data).toEqual({ clientStateDataIndicator: true, paymentMethod: { type: 'pix', checkoutAttemptId: NO_CHECKOUT_ATTEMPT_ID } });
+    const pix = new Pix(global.core);
+    expect(pix.data).toEqual({ clientStateDataIndicator: true, paymentMethod: { type: 'pix', checkoutAttemptId: NO_CHECKOUT_ATTEMPT_ID } });
 });
 
 test('should show personal details form if enabled', async () => {
     const core = setupCoreMock();
     const i18n = global.i18n;
 
-    const pixElement = new Pix(core, {
+    const pix = new Pix(core, {
         personalDetailsRequired: true,
         i18n,
         loadingContext: 'ggg',
-        modules: { resources: global.resources }
+        modules: { resources: global.resources, srPanel: core.modules.srPanel }
     });
-    render(pixElement.render());
+    render(pix.render());
 
     expect(await screen.findByLabelText('First name')).toBeTruthy();
     expect(await screen.findByLabelText('Last name')).toBeTruthy();
@@ -29,8 +29,8 @@ test('should show personal details form if enabled', async () => {
 test('should show pay button by default', async () => {
     const core = setupCoreMock();
     const i18n = global.i18n;
-    const pixElement = new Pix(core, { i18n, loadingContext: 'ggg', modules: { resources: global.resources } });
-    render(pixElement.render());
+    const pix = new Pix(core, { i18n, loadingContext: 'ggg', modules: { resources: global.resources, srPanel: core.modules.srPanel } });
+    render(pix.render());
 
     expect(await screen.findByRole('button', { name: 'Continue to pix' })).toBeTruthy();
 });
@@ -40,13 +40,13 @@ test('should validate Brazil SSN', async () => {
     const i18n = global.i18n;
     const core = setupCoreMock();
 
-    const pixElement = new Pix(core, {
+    const pix = new Pix(core, {
         personalDetailsRequired: true,
         i18n,
         loadingContext: 'ggg',
-        modules: { resources: global.resources }
+        modules: { resources: global.resources, srPanel: core.modules.srPanel }
     });
-    render(pixElement.render());
+    render(pix.render());
 
     const firstNameInput = await screen.findByLabelText('First name');
     const lastNameInput = await screen.findByLabelText('Last name');
@@ -56,7 +56,7 @@ test('should validate Brazil SSN', async () => {
     await user.type(lastNameInput, 'Fernandez');
     await user.type(ssnInput, '18839203');
 
-    pixElement.submit();
+    pix.submit();
 
     await waitFor(() => expect(ssnInput).toBeInvalid());
 
@@ -71,10 +71,10 @@ test('should trigger submit when Pay button is pressed', async () => {
     const i18n = global.i18n;
     const core = setupCoreMock();
 
-    const pixElement = new Pix(core, { i18n, loadingContext: 'ggg', modules: { resources: global.resources } });
-    pixElement.submit = jest.fn();
-    render(pixElement.render());
+    const pix = new Pix(core, { i18n, loadingContext: 'ggg', modules: { resources: global.resources, srPanel: core.modules.srPanel } });
+    pix.submit = jest.fn();
+    render(pix.render());
 
     await user.click(await screen.findByRole('button', { name: 'Continue to pix' }));
-    expect(pixElement.submit).toHaveBeenCalledTimes(1);
+    expect(pix.submit).toHaveBeenCalledTimes(1);
 });

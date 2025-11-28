@@ -54,7 +54,11 @@ describe('Sepa', () => {
 describe('render', () => {
     test('should render IbanInput by default', async () => {
         const core = setupCoreMock();
-        const sepa = new Sepa(core, { i18n: global.i18n, loadingContext: 'test', modules: { resources: global.resources } });
+        const sepa = new Sepa(core, {
+            i18n: global.i18n,
+            loadingContext: 'test',
+            modules: { resources: global.resources, srPanel: core.modules.srPanel }
+        });
         render(sepa.render());
         expect(await screen.findByText('Holder Name')).toBeTruthy();
         expect(await screen.findByText('Account Number (IBAN)')).toBeTruthy();
@@ -62,7 +66,11 @@ describe('render', () => {
 
     test('should render FormInstruction by default', async () => {
         const core = setupCoreMock();
-        const sepa = new Sepa(core, { i18n: global.i18n, loadingContext: 'test', modules: { resources: global.resources } });
+        const sepa = new Sepa(core, {
+            i18n: global.i18n,
+            loadingContext: 'test',
+            modules: { resources: global.resources, srPanel: core.modules.srPanel }
+        });
         render(sepa.render());
         expect(await screen.findByText(/All fields are required unless marked otherwise./i)).toBeTruthy();
     });
