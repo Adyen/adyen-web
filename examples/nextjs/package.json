@@ -21,7 +21,7 @@
         "@types/node": "^20",
         "@types/react": "^18",
         "@types/react-dom": "^18",
-        "cross-env": "^7.0.3",
+        "cross-env": "^10.0.0",
         "eslint": "^8",
         "eslint-config-next": "14.0.3",
         "prettier": "^3.2.5",
