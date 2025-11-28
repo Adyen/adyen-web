@@ -23,7 +23,8 @@ describe('ANCV', () => {
                     createOrder: () => {
                         return Promise.reject(new AdyenCheckoutError('NETWORK_ERROR', '', { code }));
                     }
-                }
+                },
+                modules: { srPanel: core.modules.srPanel }
             });
             render(ancv.render());
 

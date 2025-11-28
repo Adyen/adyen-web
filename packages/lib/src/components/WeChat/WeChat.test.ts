@@ -21,7 +21,7 @@ describe('WeChat', () => {
     describe('render', () => {
         test('does render something by default', () => {
             const core = setupCoreMock();
-            const wechat = new WeChat(core);
+            const wechat = new WeChat(core, { modules: { srPanel: core.modules.srPanel } });
             expect(wechat.render()).not.toBe(null);
         });
     });

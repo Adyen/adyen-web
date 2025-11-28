@@ -23,7 +23,7 @@ describe('BcmcMobile', () => {
     describe('render', () => {
         test('does render something by default', () => {
             const core = setupCoreMock();
-            const bcmcMobile = new BcmcMobile(core);
+            const bcmcMobile = new BcmcMobile(core, { modules: { srPanel: core.modules.srPanel } });
             expect(bcmcMobile.render()).not.toBe(null);
         });
     });

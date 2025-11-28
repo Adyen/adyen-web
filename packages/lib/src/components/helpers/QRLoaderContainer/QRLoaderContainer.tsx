@@ -2,7 +2,6 @@ import { h } from 'preact';
 import UIElement from '../../internal/UIElement/UIElement';
 import { QRLoader } from '../../internal/QRLoader';
 import RedirectButton from '../../internal/RedirectButton';
-import SRPanelProvider from '../../../core/Errors/SRPanelProvider';
 import { QRLoaderConfiguration } from './types';
 
 class QRLoaderContainer<T extends QRLoaderConfiguration = QRLoaderConfiguration> extends UIElement<T> {
@@ -30,20 +29,18 @@ class QRLoaderContainer<T extends QRLoaderConfiguration = QRLoaderConfiguration>
     // Makes possible to extend the final QR code step
     public renderQRCode() {
         return (
-            <SRPanelProvider srPanel={this.props.modules.srPanel}>
-                <QRLoader
-                    {...this.props}
-                    delay={this.props.delay}
-                    countdownTime={this.props.countdownTime}
-                    instructions={this.props.instructions}
-                    type={this.constructor['type']}
-                    brandLogo={this.props.brandLogo || this.icon}
-                    onComplete={this.onComplete}
-                    onActionHandled={this.onActionHandled}
-                    brandName={this.displayName}
-                    onSubmitAnalytics={this.submitAnalytics}
-                />
-            </SRPanelProvider>
+            <QRLoader
+                {...this.props}
+                delay={this.props.delay}
+                countdownTime={this.props.countdownTime}
+                instructions={this.props.instructions}
+                type={this.constructor['type']}
+                brandLogo={this.props.brandLogo || this.icon}
+                onComplete={this.onComplete}
+                onActionHandled={this.onActionHandled}
+                brandName={this.displayName}
+                onSubmitAnalytics={this.submitAnalytics}
+            />
         );
     }
 

@@ -6,15 +6,15 @@ import { mock } from 'jest-mock-extended';
 import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 
 describe('KlarnaPayments', () => {
+    const core = setupCoreMock();
+
     const coreProps = {
         name: 'Klarna',
         i18n: global.i18n,
         loadingContext: 'test',
-        modules: { resources: global.resources }
+        modules: { resources: global.resources, srPanel: core.modules.srPanel }
     };
     const renderKlarna = props => {
-        const core = setupCoreMock();
-
         const KlarnaPaymentsEle = new KlarnaPayments(core, {
             ...coreProps,
             ...props
@@ -89,7 +89,8 @@ describe('KlarnaPayments', () => {
                         resultCode: 'Pending',
                         action: widgetAction
                     });
-                }
+                },
+                modules: { srPanel: core.modules.srPanel }
             });
             const spy = jest.spyOn(klarna, 'updateWithAction');
 
@@ -116,7 +117,8 @@ describe('KlarnaPayments', () => {
                         resultCode: 'Pending',
                         action
                     });
-                }
+                },
+                modules: { srPanel: core.modules.srPanel }
             });
             const spy = jest.spyOn(klarna, 'updateWithAction');
 

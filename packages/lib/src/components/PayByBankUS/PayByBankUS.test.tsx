@@ -18,7 +18,7 @@ describe('PayByBank US', () => {
         const pbb = new PayByBankUS(core, {
             i18n: global.i18n,
             loadingContext: 'test',
-            modules: { resources: global.resources }
+            modules: { resources: global.resources, srPanel: core.modules.srPanel }
         });
 
         render(pbb.render());
@@ -33,7 +33,7 @@ describe('PayByBank US', () => {
             onSubmit: onSubmitMock,
             i18n: global.i18n,
             loadingContext: 'test',
-            modules: { resources: global.resources }
+            modules: { resources: global.resources, srPanel: core.modules.srPanel }
         });
 
         render(pbb.render());
@@ -52,7 +52,7 @@ describe('PayByBank US', () => {
             onSubmit: onSubmitMock,
             i18n: global.i18n,
             loadingContext: 'test',
-            modules: { resources: global.resources },
+            modules: { resources: global.resources, srPanel: core.modules.srPanel },
             showPayButton: false
         });
 
@@ -71,7 +71,7 @@ describe('PayByBank US', () => {
             storedPaymentMethodId: 'MOCK_ID',
             i18n: global.i18n,
             loadingContext: 'test',
-            modules: { resources: global.resources }
+            modules: { resources: global.resources, srPanel: core.modules.srPanel }
         });
 
         render(pbb.render());
@@ -86,7 +86,7 @@ describe('PayByBank US', () => {
             storedPaymentMethodId: 'MOCK_ID',
             i18n: global.i18n,
             loadingContext: 'test',
-            modules: { resources: global.resources }
+            modules: { resources: global.resources, srPanel: core.modules.srPanel }
         });
 
         render(pbb.render());
@@ -101,7 +101,7 @@ describe('PayByBank US', () => {
             label: 'Label mock',
             i18n: global.i18n,
             loadingContext: 'test',
-            modules: { resources: global.resources }
+            modules: { resources: global.resources, srPanel: core.modules.srPanel }
         });
 
         expect(pbb.displayName).toBe('Label mock');

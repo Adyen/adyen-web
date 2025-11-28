@@ -11,7 +11,8 @@ describe('ThreeDS2Challenge', () => {
             const core = setupCoreMock();
 
             const threeDS2Challenge = new ThreeDS2Challenge(core, {
-                onError: () => {}
+                onError: () => {},
+                modules: { analytics: core.modules.analytics, srPanel: core.modules.srPanel }
             });
 
             threeDS2Challenge.render();
@@ -27,7 +28,8 @@ describe('ThreeDS2Challenge', () => {
             const core = setupCoreMock();
 
             const threeDS2Challenge = new ThreeDS2Challenge(core, {
-                onError: () => {}
+                onError: () => {},
+                modules: { analytics: core.modules.analytics, srPanel: core.modules.srPanel }
             });
 
             render(threeDS2Challenge.render());

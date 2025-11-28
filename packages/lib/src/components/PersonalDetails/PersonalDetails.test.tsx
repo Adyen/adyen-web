@@ -9,7 +9,7 @@ describe('PersonalDetails', () => {
         const personalDetails = new PersonalDetails(core, {
             i18n: global.i18n,
             loadingContext: 'test',
-            modules: { resources: global.resources }
+            modules: { resources: global.resources, srPanel: core.modules.srPanel }
         });
         render(personalDetails.render());
 

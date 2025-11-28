@@ -28,7 +28,7 @@ describe('PayNow', () => {
     describe('render', () => {
         test('does render something by default', () => {
             const core = setupCoreMock();
-            const paynow = new PayNow(core);
+            const paynow = new PayNow(core, { modules: { srPanel: core.modules.srPanel } });
             expect(paynow.render()).not.toBe(null);
         });
     });

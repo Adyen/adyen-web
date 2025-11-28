@@ -8,7 +8,7 @@ describe('TrustlyElement', () => {
         const trustly = new Trustly(core, {
             i18n: global.i18n,
             loadingContext: 'test',
-            modules: { resources: global.resources }
+            modules: { resources: global.resources, srPanel: core.modules.srPanel }
         });
 
         render(trustly.render());
@@ -22,7 +22,7 @@ describe('TrustlyElement', () => {
         const trustly = new Trustly(core, {
             i18n: global.i18n,
             loadingContext: 'test',
-            modules: { resources: global.resources }
+            modules: { resources: global.resources, srPanel: core.modules.srPanel }
         });
 
         render(trustly.render());
@@ -34,7 +34,7 @@ describe('TrustlyElement', () => {
         const trustly = new Trustly(core, {
             i18n: global.i18n,
             loadingContext: 'test',
-            modules: { resources: global.resources },
+            modules: { resources: global.resources, srPanel: core.modules.srPanel },
             showPayButton: false
         });
 

@@ -5,7 +5,6 @@ import { cleanCPFCNPJ } from '../internal/SocialSecurityNumberBrazil/utils';
 import { PixElementData, PixConfiguration } from './types';
 import { TxVariants } from '../tx-variants';
 import { QRLoader } from '../internal/QRLoader';
-import SRPanelProvider from '../../core/Errors/SRPanelProvider';
 import PixQRDetails from './components/PixQRDetails';
 import './Pix.scss';
 
@@ -46,19 +45,17 @@ class PixElement extends QRLoaderContainer<PixConfiguration> {
 
     renderQRCode() {
         return (
-            <SRPanelProvider srPanel={this.props.modules.srPanel}>
-                <QRLoader
-                    {...this.props}
-                    type={this.type}
-                    brandLogo={this.props.brandLogo || this.icon}
-                    onComplete={this.onComplete}
-                    onActionHandled={this.onActionHandled}
-                    brandName={this.displayName}
-                    onSubmitAnalytics={this.submitAnalytics}
-                >
-                    <PixQRDetails />
-                </QRLoader>
-            </SRPanelProvider>
+            <QRLoader
+                {...this.props}
+                type={this.type}
+                brandLogo={this.props.brandLogo || this.icon}
+                onComplete={this.onComplete}
+                onActionHandled={this.onActionHandled}
+                brandName={this.displayName}
+                onSubmitAnalytics={this.submitAnalytics}
+            >
+                <PixQRDetails />
+            </QRLoader>
         );
     }
 

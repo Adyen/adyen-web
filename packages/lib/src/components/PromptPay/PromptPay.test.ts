@@ -19,7 +19,7 @@ describe('PromptPay', () => {
     describe('render', () => {
         test('does render something by default', () => {
             const core = setupCoreMock();
-            const promptPay = new PromptPay(core);
+            const promptPay = new PromptPay(core, { modules: { srPanel: core.modules.srPanel } });
             expect(promptPay.render()).not.toBe(null);
         });
     });
