@@ -1,4 +1,4 @@
-import { AbstractAnalyticsEvent } from './AbstractAnalyticsEvent';
+import { AbstractAnalyticsEvent, AnalyticsEventCategory } from './AbstractAnalyticsEvent';
 import { mapErrorCodesForAnalytics } from '../utils';
 
 type AnalyticsInfoEventProps = {
@@ -173,7 +173,7 @@ export class AnalyticsInfoEvent extends AbstractAnalyticsEvent {
         }
     }
 
-    public getEventCategory(): 'info' {
-        return 'info';
+    public getEventCategory(): AnalyticsEventCategory {
+        return AnalyticsEventCategory.info;
     }
 }

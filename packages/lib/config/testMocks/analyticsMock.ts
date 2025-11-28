@@ -1,7 +1,6 @@
 global.analytics = {
-    sendAnalytics: () => null,
     setUp: () => Promise.resolve(),
-    getCheckoutAttemptId: () => null,
-    getEventsQueue: () => null,
-    getEnabled: () => null
+    sendFlavor: () => Promise.resolve(),
+    sendAnalytics: () => null,
+    flush: () => null
 };

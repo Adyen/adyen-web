@@ -8,6 +8,7 @@ import ThreeDS2DeviceFingerprint from '../components/ThreeDS2/ThreeDS2DeviceFing
 import ThreeDS2Challenge from '../components/ThreeDS2/ThreeDS2Challenge';
 import Redirect from '../components/Redirect';
 import { PaymentActionsType } from '../types/global-types';
+import Analytics from './Analytics';
 
 jest.mock('./Services/get-translations');
 jest.mock('./CheckoutSession');
@@ -34,7 +35,17 @@ const setupSessionSpy = jest.spyOn(Session.prototype, 'setupSession').mockImplem
     return Promise.resolve(sessionSetupResponseMock);
 });
 
+let analyticsSetupSpy;
+
 describe('Core', () => {
+    beforeEach(() => {
+        analyticsSetupSpy = jest.spyOn(Analytics.prototype, 'setUp').mockResolvedValue();
+    });
+
+    afterEach(() => {
+        analyticsSetupSpy.mockRestore();
+    });
+
     describe('Setting locale', () => {
         test('should default locale to en-US', async () => {
             const checkout = new AdyenCheckout({ countryCode: 'US', environment: 'test', clientKey: 'test_123456' });
@@ -68,6 +79,46 @@ describe('Core', () => {
 
             await checkout.initialize();
             expect(setupSessionSpy).toHaveBeenCalledWith(expect.objectContaining({ session: { id: 'session-id', sessionData: 'session-data' } }));
+        });
+
+        test('should call analytics setUp when initialized', async () => {
+            const checkout = new AdyenCheckout({
+                countryCode: 'US',
+                environment: 'test',
+                clientKey: 'test_123456'
+            });
+
+            await checkout.initialize();
+
+            expect(analyticsSetupSpy).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    locale: 'en-US'
+                })
+            );
+        });
+
+        test('should call analytics setUp with sessionId when using sessions flow', async () => {
+            const checkout = new AdyenCheckout({
+                countryCode: 'US',
+                environment: 'test',
+                clientKey: 'test_123456',
+                session: { id: 'session-id', sessionData: 'session-data' }
+            });
+
+            // Mock the id getter on the session instance
+            Object.defineProperty(checkout.session, 'id', {
+                get: () => 'session-id',
+                configurable: true
+            });
+
+            await checkout.initialize();
+
+            expect(analyticsSetupSpy).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    locale: 'en-US',
+                    sessionId: 'session-id'
+                })
+            );
         });
     });
 
@@ -391,7 +442,7 @@ describe('Core', () => {
         const mockOnError = jest.fn();
         const mockAfterAdditionalDetails = jest.fn();
 
-        it('calls onPaymentCompleted for the successful payment', async () => {
+        test('calls onPaymentCompleted for the successful payment', async () => {
             const submitDetailsRes = { resultCode: 'Authorised', sessionData: 'dummySessionData' };
             // @ts-ignore: testing purpose
             jest.spyOn(Session.prototype, 'submitDetails').mockImplementation(() => {
@@ -409,13 +460,12 @@ describe('Core', () => {
             });
             await core.initialize();
             core.submitDetails(details);
-
             const flushPromises = () => new Promise(process.nextTick);
             await flushPromises();
             expect(mockOnPaymentCompleted).toHaveBeenCalledWith(submitDetailsRes);
         });
 
-        it('calls afterAdditionalDetails if there is an action from the response that needs to be exposed', async () => {
+        test('calls afterAdditionalDetails if there is an action from the response that needs to be exposed', async () => {
             const submitDetailsRes = {
                 resultCode: 'RedirectShopper',
                 sessionData: 'dummySessionData',
@@ -440,6 +490,7 @@ describe('Core', () => {
                 onError: mockOnError,
                 afterAdditionalDetails: mockAfterAdditionalDetails
             });
+
             await core.initialize();
             core.modules = global.commonCoreProps.modules;
             core.submitDetails(details);

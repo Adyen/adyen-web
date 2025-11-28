@@ -1,4 +1,4 @@
-import { AbstractAnalyticsEvent } from './AbstractAnalyticsEvent';
+import { AbstractAnalyticsEvent, AnalyticsEventCategory } from './AbstractAnalyticsEvent';
 
 type AnalyticsErrorEventProps = {
     component: string;
@@ -66,7 +66,7 @@ export class AnalyticsErrorEvent extends AbstractAnalyticsEvent {
         if (props.message) this.message = props.message;
     }
 
-    public getEventCategory(): 'error' {
-        return 'error';
+    public getEventCategory(): AnalyticsEventCategory {
+        return AnalyticsEventCategory.error;
     }
 }

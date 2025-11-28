@@ -723,4 +723,11 @@ describe('UIElement', () => {
             });
         });
     });
+
+    describe('Analytics', () => {
+        test('should report "components" flavor when created', () => {
+            const element = new MyElement(core, {});
+            expect(element.core.modules.analytics.sendFlavor).toHaveBeenCalledWith('components');
+        });
+    });
 });
