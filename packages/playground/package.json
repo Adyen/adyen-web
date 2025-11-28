@@ -40,6 +40,6 @@
         "whatwg-fetch": "^3.6.2"
     },
     "dependencies": {
-        "@adyen/adyen-web": "6.25.1"
+        "@adyen/adyen-web": "6.26.0"
     }
 }
