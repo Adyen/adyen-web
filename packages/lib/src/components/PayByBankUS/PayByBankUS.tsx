@@ -1,5 +1,4 @@
 import { Fragment, h } from 'preact';
-import { CoreProvider } from '../../core/Context/CoreProvider';
 import RedirectElement from '../Redirect';
 import RedirectButton from '../internal/RedirectButton';
 import { TxVariants } from '../tx-variants';
@@ -59,45 +58,37 @@ export default class PayByBankUS extends RedirectElement {
         ];
     }
 
-    render() {
-        return (
-            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
-                {this.props.storedPaymentMethodId ? (
-                    this.props.showPayButton && (
-                        <PayButton
-                            {...this.props}
-                            classNameModifiers={['standalone']}
-                            amount={this.props.amount}
-                            label={payAmountLabel(this.props.i18n, this.props.amount)}
-                            onClick={this.submit}
-                        />
-                    )
-                ) : (
-                    <Fragment>
-                        <div className="adyen-checkout-paybybank_AIS_DD">
-                            <p className="adyen-checkout-paybybank_AIS_DD__description-header">
-                                {this.props.i18n.get('payByBankAISDD.disclaimer.header')}
-                            </p>
-                            <p className="adyen-checkout-paybybank_AIS_DD__description-body">
-                                {this.props.i18n.get('payByBankAISDD.disclaimer.body')}
-                            </p>
-                        </div>
+    protected override componentToRender(): h.JSX.Element {
+        return this.props.storedPaymentMethodId ? (
+            this.props.showPayButton && (
+                <PayButton
+                    {...this.props}
+                    classNameModifiers={['standalone']}
+                    amount={this.props.amount}
+                    label={payAmountLabel(this.props.i18n, this.props.amount)}
+                    onClick={this.submit}
+                />
+            )
+        ) : (
+            <Fragment>
+                <div className="adyen-checkout-paybybank_AIS_DD">
+                    <p className="adyen-checkout-paybybank_AIS_DD__description-header">{this.props.i18n.get('payByBankAISDD.disclaimer.header')}</p>
+                    <p className="adyen-checkout-paybybank_AIS_DD__description-body">{this.props.i18n.get('payByBankAISDD.disclaimer.body')}</p>
+                </div>
 
-                        {this.props.showPayButton && (
-                            <RedirectButton
-                                {...this.props}
-                                showPayButton={this.props.showPayButton}
-                                name={this.displayName}
-                                onSubmit={this.submit}
-                                payButton={this.payButton}
-                                ref={ref => {
-                                    this.componentRef = ref;
-                                }}
-                            />
-                        )}
-                    </Fragment>
+                {this.props.showPayButton && (
+                    <RedirectButton
+                        {...this.props}
+                        showPayButton={this.props.showPayButton}
+                        name={this.displayName}
+                        onSubmit={this.submit}
+                        payButton={this.payButton}
+                        ref={ref => {
+                            this.componentRef = ref;
+                        }}
+                    />
                 )}
-            </CoreProvider>
+            </Fragment>
         );
     }
 }

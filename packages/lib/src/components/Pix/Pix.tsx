@@ -1,6 +1,5 @@
 import { h } from 'preact';
 import QRLoaderContainer from '../helpers/QRLoaderContainer/QRLoaderContainer';
-import { CoreProvider } from '../../core/Context/CoreProvider';
 import PixInput from './components/PixInput';
 import { cleanCPFCNPJ } from '../internal/SocialSecurityNumberBrazil/utils';
 import { PixElementData, PixConfiguration } from './types';
@@ -47,43 +46,39 @@ class PixElement extends QRLoaderContainer<PixConfiguration> {
 
     renderQRCode() {
         return (
-            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
-                <SRPanelProvider srPanel={this.props.modules.srPanel}>
-                    <QRLoader
-                        {...this.props}
-                        type={this.type}
-                        brandLogo={this.props.brandLogo || this.icon}
-                        onComplete={this.onComplete}
-                        onActionHandled={this.onActionHandled}
-                        brandName={this.displayName}
-                        onSubmitAnalytics={this.submitAnalytics}
-                    >
-                        <PixQRDetails />
-                    </QRLoader>
-                </SRPanelProvider>
-            </CoreProvider>
+            <SRPanelProvider srPanel={this.props.modules.srPanel}>
+                <QRLoader
+                    {...this.props}
+                    type={this.type}
+                    brandLogo={this.props.brandLogo || this.icon}
+                    onComplete={this.onComplete}
+                    onActionHandled={this.onActionHandled}
+                    brandName={this.displayName}
+                    onSubmitAnalytics={this.submitAnalytics}
+                >
+                    <PixQRDetails />
+                </QRLoader>
+            </SRPanelProvider>
         );
     }
 
-    render() {
+    protected override componentToRender(): h.JSX.Element {
         if (this.props.paymentData) {
             return this.renderQRCode();
         }
 
         return (
-            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
-                <PixInput
-                    ref={ref => {
-                        this.componentRef = ref;
-                    }}
-                    {...this.props}
-                    showPayButton={this.props.showPayButton}
-                    personalDetailsRequired={this.props.personalDetailsRequired}
-                    name={this.displayName}
-                    onChange={this.setState}
-                    payButton={this.payButton}
-                />
-            </CoreProvider>
+            <PixInput
+                ref={ref => {
+                    this.componentRef = ref;
+                }}
+                {...this.props}
+                showPayButton={this.props.showPayButton}
+                personalDetailsRequired={this.props.personalDetailsRequired}
+                name={this.displayName}
+                onChange={this.setState}
+                payButton={this.payButton}
+            />
         );
     }
 }

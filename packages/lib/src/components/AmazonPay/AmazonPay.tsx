@@ -1,6 +1,5 @@
 import { h } from 'preact';
 import UIElement from '../internal/UIElement/UIElement';
-import { CoreProvider } from '../../core/Context/CoreProvider';
 import collectBrowserInfo from '../../utils/browserInfo';
 import AmazonPayComponent from './components/AmazonPayComponent';
 import { AmazonPayElementData, AmazonPayConfiguration, CheckoutDetailsRequest } from './types';
@@ -103,20 +102,18 @@ export class AmazonPayElement extends UIElement<AmazonPayConfiguration> {
         this.makePaymentsCall().then(sanitizeResponse).then(verifyPaymentDidNotFail).then(this.handleResponse).catch(this.handleFailedResult);
     }
 
-    render() {
+    protected override componentToRender(): h.JSX.Element {
         return (
-            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources} analytics={this.analytics}>
-                <AmazonPayComponent
-                    ref={ref => {
-                        this.componentRef = ref;
-                    }}
-                    showPayButton={this.props.showPayButton}
-                    onClick={this.props.onClick}
-                    onError={this.props.onError}
-                    onSignOut={this.props.onSignOut}
-                    {...this.props}
-                />
-            </CoreProvider>
+            <AmazonPayComponent
+                ref={ref => {
+                    this.componentRef = ref;
+                }}
+                showPayButton={this.props.showPayButton}
+                onClick={this.props.onClick}
+                onError={this.props.onError}
+                onSignOut={this.props.onSignOut}
+                {...this.props}
+            />
         );
     }
 }

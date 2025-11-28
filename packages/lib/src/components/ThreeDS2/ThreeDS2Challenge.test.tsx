@@ -1,3 +1,4 @@
+import { render } from '@testing-library/preact';
 import { ThreeDS2Challenge } from './index';
 import { THREEDS2_CHALLENGE_ERROR } from './constants';
 import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
@@ -29,7 +30,7 @@ describe('ThreeDS2Challenge', () => {
                 onError: () => {}
             });
 
-            threeDS2Challenge.render();
+            render(threeDS2Challenge.render());
 
             expect(core.modules.analytics.sendAnalytics).toHaveBeenCalledWith({
                 component: 'threeDS2Challenge',

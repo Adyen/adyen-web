@@ -27,6 +27,9 @@ stats.html
 # VSCode
 .vscode
 
+# Windsurf
+.windsurf
+
 # VIM
 *.swp
 *.swo
