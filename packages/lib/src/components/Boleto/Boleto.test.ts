@@ -104,7 +104,7 @@ describe('Boleto', () => {
         const onSubmitMock = jest.fn();
 
         const boleto = new Boleto(core, {
-            modules: { resources: global.resources },
+            modules: { resources: global.resources, srPanel: core.modules.srPanel },
             i18n: global.i18n,
             onSubmit: onSubmitMock,
             loadingContext: 'https://checkoutshopper-live.adyen.com/checkoutshopper/'

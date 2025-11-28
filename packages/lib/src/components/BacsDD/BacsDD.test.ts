@@ -10,7 +10,7 @@ describe('Bacs Direct Debit', () => {
         const core = setupCoreMock();
 
         const bacs = new BacsDD(core, {
-            modules: { resources: global.resources },
+            modules: { resources: global.resources, srPanel: core.modules.srPanel },
             i18n: global.i18n,
             onSubmit: onSubmitMock,
             loadingContext: 'https://checkoutshopper-live.adyen.com/checkoutshopper/'
@@ -67,7 +67,7 @@ describe('Bacs Direct Debit', () => {
         const onSubmitMock = jest.fn();
 
         const bacs = new BacsDD(core, {
-            modules: { resources: global.resources },
+            modules: { resources: global.resources, srPanel: core.modules.srPanel },
             i18n: global.i18n,
             onSubmit: onSubmitMock,
             loadingContext: 'https://checkoutshopper-live.adyen.com/checkoutshopper/'

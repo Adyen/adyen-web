@@ -184,10 +184,15 @@ describe('UIElement', () => {
                 countryCode: 'US',
                 environment: 'test',
                 clientKey: 'test_123456',
-                analytics: { enabled: false }
+                analytics: { enabled: false },
+                srConfig: {
+                    enabled: false
+                }
             });
 
-            const element = new MyElement(checkout, { challengeWindowSize: '02' }).mount('body');
+            const element = new MyElement(checkout, {
+                challengeWindowSize: '02'
+            }).mount('body');
 
             const actionComponent = element.handleAction(challengeAction);
             expect(actionComponent instanceof ThreeDS2Challenge).toEqual(true);
@@ -210,7 +215,7 @@ describe('UIElement', () => {
                 resultCode: 'IdentifyShopper'
             };
 
-            const element = new MyElement(core).mount('body');
+            const element = new MyElement(core, { modules: { srPanel: core.modules.srPanel } }).mount('body');
 
             expect(() => {
                 // @ts-ignore tslint is not applicable here as merchant can potentially pass wrong object
@@ -223,7 +228,7 @@ describe('UIElement', () => {
                 paymentMethodType: 'scheme'
             };
 
-            const element = new MyElement(core).mount('body');
+            const element = new MyElement(core, { modules: { srPanel: core.modules.srPanel } }).mount('body');
 
             expect(() => {
                 // @ts-ignore tslint is not applicable here as merchant can potentially pass wrong object
