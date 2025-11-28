@@ -1,9 +1,8 @@
 import { h } from 'preact';
 import { useEffect, useRef, useState, useCallback } from 'preact/hooks';
 import Script from '../../../../utils/Script';
-import { KLARNA_WIDGET_URL } from '../../constants';
+import { KLARNA_WIDGET_URL, KLARNA_REFUSED_RESULT_CODE } from '../../constants';
 import type { KlarnaWidgetAuthorizeResponse, KlarnaWidgetProps } from '../../types';
-
 import './KlarnaWidget.scss';
 import useAnalytics from '../../../../core/Analytics/useAnalytics';
 
@@ -17,7 +16,7 @@ export function KlarnaWidget({ sdkData, paymentMethodType, widgetInitializationT
         props.onComplete({
             data: {
                 paymentData: props.paymentData,
-                details: {}
+                details: { resultCode: KLARNA_REFUSED_RESULT_CODE }
             }
         });
     }, [props.paymentData, props.onComplete]);
