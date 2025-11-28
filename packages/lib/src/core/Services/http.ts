@@ -34,7 +34,7 @@ function isAdyenApiErrorResponse(data: any): data is AdyenApiErrorResponse {
     return data && data.errorCode && data.errorType && data.message && data.status;
 }
 
-export function http<T>(options: HttpOptions, data?: any): Promise<T> {
+export function http<T>(options: HttpOptions, payload?: any): Promise<T> {
     const {
         headers = [],
         errorLevel = 'warn',
@@ -58,7 +58,7 @@ export function http<T>(options: HttpOptions, data?: any): Promise<T> {
         redirect: 'follow',
         referrerPolicy: 'no-referrer-when-downgrade',
         ...(AbortSignal?.timeout && { signal: AbortSignal?.timeout(timeout) }),
-        ...(data && { body: JSON.stringify(data) })
+        ...(payload && { body: JSON.stringify(payload) })
     };
 
     const url = `${loadingContext}${path}`;
@@ -71,8 +71,9 @@ export function http<T>(options: HttpOptions, data?: any): Promise<T> {
                     return;
                 }
 
+                const data = await response.json();
+
                 if (response.ok) {
-                    const data = await response.json();
                     return data;
                 }
 
