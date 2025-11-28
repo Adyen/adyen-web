@@ -33,6 +33,7 @@ import type { ComponentMethodsRef, PayButtonFunctionProps, UIElementProps, UIEle
 import { CoreProvider } from '../../../core/Context/CoreProvider';
 import { SRPanel } from '../../../core/Errors/SRPanel';
 import './UIElement.scss';
+import SRPanelProvider from '../../../core/Errors/SRPanelProvider';
 
 export abstract class UIElement<P extends UIElementProps = UIElementProps> extends BaseElement<P> {
     protected componentRef: any;
@@ -612,7 +613,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     render() {
         return (
             <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources} analytics={this.analytics}>
-                {this.componentToRender()}
+                <SRPanelProvider srPanel={this.props.modules.srPanel}>{this.componentToRender()}</SRPanelProvider>
             </CoreProvider>
         );
     }

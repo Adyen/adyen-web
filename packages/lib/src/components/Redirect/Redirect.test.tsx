@@ -83,16 +83,16 @@ describe('Redirect error', () => {
     });
 
     test('should send an error event to the analytics module if beforeRedirect rejects', async () => {
+        const core = setupCoreMock();
         const props: RedirectConfiguration = {
             url: 'test',
             method: 'POST',
             paymentMethodType: 'ideal',
             beforeRedirect: (_, reject) => {
                 return reject();
-            }
+            },
+            modules: { srPanel: core.modules.srPanel }
         };
-
-        const core = setupCoreMock();
 
         const redirectElement = new RedirectElement(core, props);
         render(redirectElement.render());
@@ -120,7 +120,8 @@ describe('Redirect error', () => {
         const props: RedirectConfiguration = {
             url: 'test',
             method: 'GET',
-            paymentMethodType: 'ideal'
+            paymentMethodType: 'ideal',
+            modules: { srPanel: core.modules.srPanel }
         };
 
         const redirectElement = new RedirectElement(core, props);

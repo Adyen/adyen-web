@@ -48,7 +48,11 @@ class ThreeDS2DeviceFingerprint extends UIElement<ThreeDS2DeviceFingerprintConfi
         this.unmount(); // re. fixing issue around back to back fingerprinting calls
     }
 
-    protected override componentToRender(): h.JSX.Element {
+    public override componentToRender() {
+        return null;
+    }
+
+    public override render() {
         /**
          * In the regular components (aka "native") flow we can't proceed because something has gone wrong with the payment if paymentData is missing from the threeDS2 action.
          * In the MDFlow the paymentData is always present (albeit an empty string, which is why we use 'existy' since we should be allowed to proceed with this)

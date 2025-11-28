@@ -4,7 +4,6 @@ import BlikInput from '../../components/Blik/components/BlikInput';
 import { Await } from '../internal/Await';
 import config from './config';
 import RedirectButton from '../../components/internal/RedirectButton';
-import SRPanelProvider from '../../core/Errors/SRPanelProvider';
 import { TxVariants } from '../tx-variants';
 import { AwaitConfiguration } from '../internal/Await/types';
 
@@ -60,24 +59,22 @@ class BlikElement extends UIElement<AwaitConfiguration> {
     protected override componentToRender(): h.JSX.Element {
         if (this.props.paymentData) {
             return (
-                <SRPanelProvider srPanel={this.props.modules.srPanel}>
-                    <Await
-                        clientKey={this.props.clientKey}
-                        paymentData={this.props.paymentData}
-                        onError={this.handleError}
-                        onComplete={this.onComplete}
-                        brandLogo={this.icon}
-                        type={config.type}
-                        messageText={this.props.i18n.get(config.messageTextId)}
-                        awaitText={this.props.i18n.get(config.awaitTextId)}
-                        showCountdownTimer={config.showCountdownTimer}
-                        delay={config.STATUS_INTERVAL}
-                        countdownTime={config.COUNTDOWN_MINUTES}
-                        throttleTime={config.THROTTLE_TIME}
-                        throttleInterval={config.THROTTLE_INTERVAL}
-                        onActionHandled={this.onActionHandled}
-                    />
-                </SRPanelProvider>
+                <Await
+                    clientKey={this.props.clientKey}
+                    paymentData={this.props.paymentData}
+                    onError={this.handleError}
+                    onComplete={this.onComplete}
+                    brandLogo={this.icon}
+                    type={config.type}
+                    messageText={this.props.i18n.get(config.messageTextId)}
+                    awaitText={this.props.i18n.get(config.awaitTextId)}
+                    showCountdownTimer={config.showCountdownTimer}
+                    delay={config.STATUS_INTERVAL}
+                    countdownTime={config.COUNTDOWN_MINUTES}
+                    throttleTime={config.THROTTLE_TIME}
+                    throttleInterval={config.THROTTLE_INTERVAL}
+                    onActionHandled={this.onActionHandled}
+                />
             );
         }
 
