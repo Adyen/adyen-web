@@ -206,4 +206,19 @@ describe('Boleto', () => {
             expect.anything()
         );
     });
+
+    test('should show reference when reference is provided', () => {
+        const core = setupCoreMock();
+
+        const boleto = new Boleto(core, {
+            modules: { resources: global.resources },
+            i18n: global.i18n,
+            loadingContext: 'https://checkoutshopper-live.adyen.com/checkoutshopper/',
+            reference: 'test-reference'
+        });
+
+        render(boleto.render());
+
+        expect(screen.getByText('test-reference')).toBeInTheDocument();
+    });
 });

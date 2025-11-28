@@ -18,8 +18,8 @@ class MyElement extends UIElement {
         return !!this.state.isValid;
     }
 
-    render() {
-        return '';
+    protected override componentToRender() {
+        return <div></div>;
     }
 }
 

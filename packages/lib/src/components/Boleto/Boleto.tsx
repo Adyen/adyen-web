@@ -3,7 +3,6 @@ import UIElement from '../internal/UIElement/UIElement';
 import BoletoInput from './components/BoletoInput';
 import { cleanCPFCNPJ } from '../internal/SocialSecurityNumberBrazil/utils';
 import BoletoVoucherResult from './components/BoletoVoucherResult';
-import { CoreProvider } from '../../core/Context/CoreProvider';
 import { TxVariants } from '../tx-variants';
 
 import type { BoletoConfiguration } from './types';
@@ -44,21 +43,17 @@ export class BoletoElement extends UIElement<BoletoConfiguration> {
         this.componentRef = ref;
     };
 
-    render() {
-        return (
-            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
-                {this.props.reference ? (
-                    <BoletoVoucherResult ref={this.handleRef} icon={this.icon} {...this.props} onActionHandled={this.onActionHandled} />
-                ) : (
-                    <BoletoInput
-                        setComponentRef={this.handleRef}
-                        {...this.props}
-                        onChange={this.setState}
-                        onSubmit={this.submit}
-                        payButton={this.payButton}
-                    />
-                )}
-            </CoreProvider>
+    protected override componentToRender(): h.JSX.Element {
+        return this.props.reference ? (
+            <BoletoVoucherResult ref={this.handleRef} icon={this.icon} {...this.props} onActionHandled={this.onActionHandled} />
+        ) : (
+            <BoletoInput
+                setComponentRef={this.handleRef}
+                {...this.props}
+                onChange={this.setState}
+                onSubmit={this.submit}
+                payButton={this.payButton}
+            />
         );
     }
 }

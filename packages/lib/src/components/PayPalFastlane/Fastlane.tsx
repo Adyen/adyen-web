@@ -1,6 +1,5 @@
 import { h } from 'preact';
 import UIElement from '../internal/UIElement';
-import { CoreProvider } from '../../core/Context/CoreProvider';
 import { TxVariants } from '../tx-variants';
 import FastlaneComponent from './components/FastlaneComponent';
 import type { FastlaneConfiguration } from './types';
@@ -66,17 +65,15 @@ class Fastlane extends UIElement<FastlaneConfiguration> {
         return brands.map(brand => ({ icon: this.props.modules.resources.getImage()(brand), name: brand }));
     }
 
-    render() {
+    protected override componentToRender(): h.JSX.Element {
         return (
-            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
-                <FastlaneComponent
-                    lastFour={this.props.lastFour}
-                    brand={this.props.brand}
-                    payButton={this.payButton}
-                    setComponentRef={this.setComponentRef}
-                    showPayButton={this.props.showPayButton}
-                />
-            </CoreProvider>
+            <FastlaneComponent
+                lastFour={this.props.lastFour}
+                brand={this.props.brand}
+                payButton={this.payButton}
+                setComponentRef={this.setComponentRef}
+                showPayButton={this.props.showPayButton}
+            />
         );
     }
 }

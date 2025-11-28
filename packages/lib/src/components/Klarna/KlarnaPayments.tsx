@@ -1,6 +1,5 @@
 import { h } from 'preact';
 import UIElement from '../internal/UIElement/UIElement';
-import { CoreProvider } from '../../core/Context/CoreProvider';
 import PayButton from '../internal/PayButton';
 import { KlarnaContainer } from './components/KlarnaContainer/KlarnaContainer';
 import { TxVariants } from '../tx-variants';
@@ -69,22 +68,20 @@ class KlarnaPayments extends UIElement<KlarnaConfiguration> {
         this.handleAdditionalDetails(details);
     }
 
-    render() {
+    protected override componentToRender(): h.JSX.Element {
         return (
-            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources} analytics={this.analytics}>
-                <KlarnaContainer
-                    {...this.props}
-                    setComponentRef={this.setComponentRef}
-                    displayName={this.displayName}
-                    onComplete={this.onComplete}
-                    onError={this.props.onError}
-                    payButton={this.payButton}
-                    onLoaded={this.onLoaded}
-                    showPayButton={this.props.showPayButton}
-                    onActionHandled={this.onActionHandled}
-                    type={this.props.type}
-                />
-            </CoreProvider>
+            <KlarnaContainer
+                {...this.props}
+                setComponentRef={this.setComponentRef}
+                displayName={this.displayName}
+                onComplete={this.onComplete}
+                onError={this.props.onError}
+                payButton={this.payButton}
+                onLoaded={this.onLoaded}
+                showPayButton={this.props.showPayButton}
+                onActionHandled={this.onActionHandled}
+                type={this.props.type}
+            />
         );
     }
 }
