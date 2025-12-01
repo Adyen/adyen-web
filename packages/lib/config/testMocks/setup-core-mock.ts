@@ -19,7 +19,7 @@ function setupCoreMock({ mockSessions = true, paymentMethods = null }: SetupCore
     const analytics = mock<AnalyticsModule>();
     const resources = mock<Resources>();
     const i18n = new Language({ locale: 'en-US', translations: enUS });
-    const srPanel = new SRPanel(global.core, {
+    const srPanel = new SRPanel(core, {
         moveFocus: true,
         enabled: false
     });

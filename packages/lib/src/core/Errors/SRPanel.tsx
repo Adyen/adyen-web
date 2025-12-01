@@ -1,9 +1,9 @@
 import { h } from 'preact';
-import './SRPanel.scss';
 import { AriaAttributes, SRPanelProps } from './types';
 import BaseElement from '../../components/internal/BaseElement/BaseElement';
 import { SRMessages, SRMessagesRef } from './SRMessages';
 import type { ICore } from '../types';
+import './SRPanel.scss';
 
 /**
  * A panel meant to hold messages that will be read out by ScreenReaders on an aria-live="polite" basis

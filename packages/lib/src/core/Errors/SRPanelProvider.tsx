@@ -1,4 +1,4 @@
-import { h, ComponentChildren, Fragment } from 'preact';
+import { h, ComponentChildren } from 'preact';
 import { SRPanelContext } from './SRPanelContext';
 import { useCoreContext } from '../Context/CoreProvider';
 import { partial } from '../../components/internal/SecuredFields/lib/utilities/commonUtils';
@@ -6,7 +6,6 @@ import { setSRMessagesFromErrors } from './utils';
 import { SRPanel } from './SRPanel';
 import { SetSRMessagesReturnObject } from './types';
 import { StringObject } from '../../components/internal/Address/types';
-import { useContext } from 'preact/hooks';
 
 type SRPanelProviderProps = {
     srPanel: SRPanel;
@@ -43,12 +42,6 @@ const SRPanelProvider = ({ srPanel, children }: SRPanelProviderProps) => {
     const clearSRPanel = () => {
         srPanel.setMessages(null);
     };
-
-    const srPanelContext = useContext(SRPanelContext);
-
-    if (srPanelContext) {
-        return <Fragment>{children}</Fragment>;
-    }
 
     const shouldMoveFocusSR = srPanel.moveFocus;
 
