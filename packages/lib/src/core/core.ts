@@ -26,6 +26,8 @@ import type { Translations } from '../language/types';
 import type { UIElementProps } from '../components/internal/UIElement/types';
 import { AnalyticsLogEvent, LogEventType } from './Analytics/events/AnalyticsLogEvent';
 import CancelError from './Errors/CancelError';
+import { AnalyticsService } from './Analytics/AnalyticsService';
+import { AnalyticsEventQueue } from './Analytics/AnalyticsEventQueue';
 
 class Core implements ICore {
     public session?: Session;
@@ -108,7 +110,7 @@ class Core implements ICore {
         await this.initializeCore();
         this.validateCoreConfiguration();
         await this.createCoreModules();
-        this.requestAnalyticsAttemptId();
+        await this.requestAnalyticsAttemptId();
         return this;
     }
 
@@ -376,9 +378,11 @@ class Core implements ICore {
         this.modules = Object.freeze({
             risk: new RiskModule(this, { ...this.options, loadingContext: this.loadingContext }),
             analytics: new Analytics({
-                analyticsContext: this.analyticsContext,
-                clientKey: this.options.clientKey,
-                locale: this.options.locale,
+                eventQueue: new AnalyticsEventQueue(),
+                service: new AnalyticsService({
+                    analyticsContext: this.analyticsContext,
+                    clientKey: this.options.clientKey
+                }),
                 enabled: this.options.analytics?.enabled,
                 analyticsData: this.options.analytics?.analyticsData
             }),
@@ -392,8 +396,9 @@ class Core implements ICore {
         });
     }
 
-    private requestAnalyticsAttemptId() {
-        void this.modules.analytics.setUp({
+    private async requestAnalyticsAttemptId(): Promise<void> {
+        await this.modules.analytics.setUp({
+            locale: this.options.locale,
             ...(this.session?.id && { sessionId: this.session.id })
         });
     }

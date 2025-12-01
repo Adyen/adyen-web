@@ -74,6 +74,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         this.onActionHandled = this.onActionHandled.bind(this);
 
         this.createBeforeRenderHook(props);
+        this.reportIntegrationFlavor();
     }
 
     /**
@@ -106,6 +107,10 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         });
 
         this.analytics.sendAnalytics(event);
+    }
+
+    protected reportIntegrationFlavor(): void {
+        void this.analytics.sendFlavor('components');
     }
 
     get analytics(): IAnalytics {

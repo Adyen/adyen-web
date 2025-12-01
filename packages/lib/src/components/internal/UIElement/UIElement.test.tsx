@@ -731,6 +731,7 @@ describe('UIElement', () => {
         });
     });
 
+<<<<<<< HEAD:packages/lib/src/components/internal/UIElement/UIElement.test.tsx
     describe('render()', () => {
         test('should return the result of render method', () => {
             const element = new MyElement(core);
@@ -751,6 +752,12 @@ describe('UIElement', () => {
                     })
                 })
             );
+=======
+    describe('Analytics', () => {
+        test('should report "components" flavor when created', () => {
+            const element = new MyElement(core, {});
+            expect(element.core.modules.analytics.sendFlavor).toHaveBeenCalledWith('components');
+>>>>>>> c6083e8ff... Analytics - Adding AnalyticsService to perform async tasks (#3689):packages/lib/src/components/internal/UIElement/UIElement.test.ts
         });
     });
 });
