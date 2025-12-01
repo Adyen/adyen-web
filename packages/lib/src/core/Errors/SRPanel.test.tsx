@@ -1,41 +1,51 @@
+import { screen, waitFor, within } from '@testing-library/preact';
+import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 import { SRPanel } from './SRPanel';
-import { screen, waitFor } from '@testing-library/preact';
-import { mock } from 'jest-mock-extended';
-import { ICore } from '../types';
 
-const core = mock<ICore>();
+const core = setupCoreMock();
 
-describe('SRPanel disabled', () => {
-    new SRPanel(core, { enabled: false });
+describe('SRPanel', () => {
+    describe('disabled', () => {
+        test('enabled method returns false', () => {
+            const srPanel = new SRPanel(core, { enabled: false });
+            expect(srPanel.enabled).toBe(false);
+        });
 
-    test('Does not render the SRPanel in the DOM', () => {
-        // Expect panel to not be present
-        expect(screen.queryByTestId('ariaLiveSRPanel')).toBeNull();
+        test('Does not render the SRPanel in the DOM', () => {
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            const _ = new SRPanel(core, { enabled: false });
+            expect(screen.queryByTestId('ariaLiveSRPanel')).not.toBeInTheDocument();
+        });
     });
-});
 
-describe('SRPanel in use', () => {
-    test('Renders the SRPanel in the DOM, adds & clears messages in the panel', async () => {
-        const srPanel = new SRPanel(core);
+    describe('enabled', () => {
+        test('enabled method returns true', () => {
+            const srPanel = new SRPanel(core);
+            expect(srPanel.enabled).toBe(true);
+        });
 
-        // Expect panel present - but empty
-        expect(screen.getByTestId('ariaLiveSRPanel')).toBeTruthy();
-        await waitFor(() => expect(screen.queryByTestId('message1')).toBeNull());
+        test('renders the SRPanel in the DOM, adds & clears messages in the panel', async () => {
+            const srPanel = new SRPanel(core);
 
-        // Set messages
-        srPanel.setMessages(['message1', 'message2']);
+            expect(screen.getByTestId('ariaLiveSRPanel')).toBeInTheDocument();
 
-        expect(await screen.findByTestId('message1')).toBeTruthy(); // find* queries use waitFor under the hood
-        expect(await screen.findByTestId('message2')).toBeTruthy();
+            const panel = screen.getByTestId('ariaLiveSRPanel');
 
-        // expect(await screen.findByTestId('message3')).toBeTruthy(); // KEEP: example of assertion that should fail (triggering log of available DOM)
+            expect(panel).toHaveRole('log');
 
-        await screen.findByTestId('message1'); // existence
-        await waitFor(() => expect(screen.queryByTestId('message3')).toBeNull()); // non-existence
+            // eslint-disable-next-line testing-library/no-node-access
+            expect(panel.getElementsByClassName('adyen-checkout-sr-panel__msg').length).toBe(0);
 
-        // Clear messages
-        srPanel.setMessages(null);
+            srPanel.setMessages(['message1', 'message2']);
 
-        await waitFor(() => expect(screen.queryByTestId('message1')).toBeNull());
+            await waitFor(() => expect(within(panel).getByText('message1')).toBeInTheDocument());
+
+            expect(within(panel).getByText('message2')).toBeInTheDocument();
+
+            srPanel.setMessages(null);
+
+            // eslint-disable-next-line testing-library/no-node-access
+            await waitFor(() => expect(panel.getElementsByClassName('adyen-checkout-sr-panel__msg').length).toBe(0));
+        });
     });
 });
