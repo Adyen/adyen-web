@@ -67,7 +67,7 @@ const CtPResendOtpLink = ({ onError, onResendCode, disabled }: CtPResendOtpLinkP
 
     if (showConfirmation) {
         return (
-            <div className="adyen-checkout-ctp__otp-resend-code--confirmation">
+            <div role="alert" className="adyen-checkout-ctp__otp-resend-code--confirmation">
                 {i18n.get('ctp.otp.codeResent')}
                 <Icon type={`${PREFIX}checkmark_black`} height={14} width={14} />
             </div>
@@ -76,7 +76,7 @@ const CtPResendOtpLink = ({ onError, onResendCode, disabled }: CtPResendOtpLinkP
 
     if (counter > 0) {
         return (
-            <div className="adyen-checkout-ctp__otp-resend-code--disabled">
+            <div role="timer" className="adyen-checkout-ctp__otp-resend-code--disabled">
                 {i18n.get('ctp.otp.resendCode')} -{' '}
                 <span className="adyen-checkout-ctp__otp-resend-code-counter"> {counter > 0 && `${counter}s`} </span>
             </div>

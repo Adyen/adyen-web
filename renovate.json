@@ -27,6 +27,13 @@
         {
             "matchPackageNames": ["preact", "@swc/core", "@playwright/test", "sass"],
             "groupName": null
+        },
+        {
+            "description": "Group example folder dependencies monthly on the first day of the month",
+            "groupName": "Examples Dependencies",
+            "matchFileNames": ["examples/**"],
+            "matchUpdateTypes": ["major", "minor", "patch"],
+            "schedule": ["* 0-3 1 * *"]
         }
     ]
 }
