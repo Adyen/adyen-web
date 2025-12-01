@@ -11,10 +11,19 @@ describe('SRPanel', () => {
             expect(srPanel.enabled).toBe(false);
         });
 
-        test('Does not render the SRPanel in the DOM', () => {
+        test('does not render the SRPanel in the DOM', () => {
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const _ = new SRPanel(core, { enabled: false });
             expect(screen.queryByTestId('ariaLiveSRPanel')).not.toBeInTheDocument();
+        });
+
+        test('does not render messages in the DOM', async () => {
+             
+            const srPanel = new SRPanel(core, { enabled: false });
+
+            srPanel.setMessages(['message1', 'message2']);
+
+            await waitFor(() => expect(screen.queryByText('message1')).not.toBeInTheDocument());
         });
     });
 
