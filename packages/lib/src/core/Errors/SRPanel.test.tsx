@@ -17,8 +17,12 @@ describe('SRPanel', () => {
             expect(screen.queryByTestId('ariaLiveSRPanel')).not.toBeInTheDocument();
         });
 
+        test('render method returns null', () => {
+            const srPanel = new SRPanel(core, { enabled: false });
+            expect(srPanel.render()).toBe(null);
+        });
+
         test('does not render messages in the DOM', async () => {
-             
             const srPanel = new SRPanel(core, { enabled: false });
 
             srPanel.setMessages(['message1', 'message2']);
@@ -55,6 +59,54 @@ describe('SRPanel', () => {
 
             // eslint-disable-next-line testing-library/no-node-access
             await waitFor(() => expect(panel.getElementsByClassName('adyen-checkout-sr-panel__msg').length).toBe(0));
+        });
+
+        test('renders visible SRPanel', () => {
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            const _ = new SRPanel(core, { showPanel: true });
+
+            const panel = screen.getByTestId('ariaLiveSRPanel');
+            expect(panel).toHaveClass('adyen-checkout-sr-panel');
+        });
+
+        test('renders screen reader only SRPanel', () => {
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            const _ = new SRPanel(core, { showPanel: false });
+
+            const panel = screen.getByTestId('ariaLiveSRPanel');
+            expect(panel).toHaveClass('adyen-checkout-sr-panel--sr-only');
+        });
+
+        test('sets aria properties', () => {
+            const srPanel = new SRPanel(core);
+
+            srPanel.setAriaProps({
+                'aria-live': 'assertive',
+                'aria-atomic': 'true'
+            });
+
+            const panel = screen.getByTestId('ariaLiveSRPanel');
+            expect(panel).toHaveAttribute('aria-live', 'assertive');
+            expect(panel).toHaveAttribute('aria-atomic', 'true');
+        });
+
+        test('logs error if panel is not found', () => {
+            const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+
+            const srPanel = new SRPanel(core);
+
+            const panel = screen.getByTestId('ariaLiveSRPanel');
+
+            panel.remove();
+
+            srPanel.setAriaProps({
+                'aria-live': 'assertive',
+                'aria-atomic': 'true'
+            });
+
+            expect(consoleErrorSpy).toHaveBeenCalledWith('SRPanel: Failed to set aria props because no panel was found');
+
+            consoleErrorSpy.mockRestore();
         });
     });
 });
