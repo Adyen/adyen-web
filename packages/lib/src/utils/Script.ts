@@ -34,6 +34,26 @@ class Script implements IScript {
     private script: HTMLScriptElement;
     private loadPromise: Promise<void> | null = null;
     private rejectLoadPromise: (reason?: any) => void | null = null;
+    private resolveLoadScript: (() => void) | null = null;
+    private rejectLoadScript: ((reason?: any) => void) | null = null;
+
+    private handleOnLoad = () => {
+        this.script.setAttribute('data-script-loaded', 'true');
+        this.cleanupListeners();
+        this.resolveLoadScript?.();
+    };
+
+    private handleOnError = (errorEvent: ErrorEvent) => {
+        this.cleanupListeners();
+        const error = new AdyenCheckoutError(
+            'SCRIPT_ERROR',
+            `Unable to load script ${this.src}.${errorEvent?.message && `Message: ${errorEvent.message}`}`,
+            {
+                cause: errorEvent?.error || errorEvent
+            }
+        );
+        this.rejectLoadScript?.(error);
+    };
 
     public static readonly RETRY_DELAY = 1000;
     public static readonly MAX_NUMBER_OF_RETRIES = 3;
@@ -99,8 +119,22 @@ class Script implements IScript {
     };
 
     private removeScript() {
+        this.cleanupListeners();
         this.script?.parentNode?.removeChild(this.script);
         this.script = null;
+    }
+
+    private cleanupListeners() {
+        if (!this.script) return;
+        this.script.removeEventListener('load', this.handleOnLoad);
+        this.script.removeEventListener('error', this.handleOnError);
+    }
+
+    private attachListeners() {
+        if (!this.script) return;
+        this.cleanupListeners();
+        this.script.addEventListener('load', this.handleOnLoad);
+        this.script.addEventListener('error', this.handleOnError);
     }
 
     private loadScript(): Promise<void> {
@@ -112,45 +146,21 @@ class Script implements IScript {
                 return;
             }
 
-            const cleanupListeners = () => {
-                if (!this.script) return;
-                this.script.removeEventListener('load', handleOnLoad);
-                this.script.removeEventListener('error', handleOnError);
-            };
-
-            const handleOnLoad = () => {
-                if (!this.script) return;
-                this.script.setAttribute('data-script-loaded', 'true');
-                cleanupListeners();
-                resolve();
-            };
-
-            const handleOnError = (errorEvent: ErrorEvent) => {
-                cleanupListeners();
-                reject(
-                    new AdyenCheckoutError(
-                        'SCRIPT_ERROR',
-                        `Unable to load script ${this.src}.${errorEvent?.message && `Message: ${errorEvent.message}`}`,
-                        {
-                            cause: errorEvent?.error || errorEvent
-                        }
-                    )
-                );
-            };
+            this.resolveLoadScript = resolve;
+            this.rejectLoadScript = reject;
 
             this.script = scriptContainer.querySelector(`script[src="${this.src}"]`);
 
             // Script element exists in the browser and is already loaded
             if (this.script?.getAttribute('data-script-loaded')) {
-                resolve();
+                this.resolveLoadScript();
                 return;
             }
 
             // Script element exists in the browser, but it is not loaded yet
             // Use-case:  Multiple PayPal standalone components being loaded in different parts of the screen.
             if (this.script) {
-                this.script.addEventListener('load', handleOnLoad);
-                this.script.addEventListener('error', handleOnError);
+                this.attachListeners();
                 return;
             }
 
@@ -163,8 +173,7 @@ class Script implements IScript {
             this.script.src = this.src;
             this.script.async = true;
 
-            this.script.addEventListener('load', handleOnLoad);
-            this.script.addEventListener('error', handleOnError);
+            this.attachListeners();
 
             scriptContainer.appendChild(this.script);
         });
