@@ -6,7 +6,7 @@ import { setupCoreMock } from '../../../../config/testMocks/setup-core-mock';
 
 describe('IssuerListContainer: Multiple instances focus behavior', () => {
     test('Pressing Continue button on second IssuerListContainer should focus on that specific IssuerList input', async () => {
-        const core = setupCoreMock({});
+        const core = setupCoreMock();
 
         const items = [
             { name: 'Issuer 1', id: '1' },
