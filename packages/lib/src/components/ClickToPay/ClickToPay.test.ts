@@ -129,7 +129,7 @@ describe('Click to Pay: ENTER keypress should perform an action only within the 
         const element = new ClickToPayElement(core, {
             onSubmit: onSubmitMock,
             loadingContext: 'checkoutshopper.com/',
-            modules: { resources, analytics: core.modules.analytics, srPanel: core.modules.srPanel },
+            modules: { resources, analytics: core.modules.analytics },
             i18n: core.modules.i18n
         });
         render(element.mount('body'));
@@ -168,7 +168,7 @@ describe('Click to Pay: ENTER keypress should perform an action only within the 
         const element = new ClickToPayElement(core, {
             onSubmit: onSubmitMock,
             loadingContext: 'checkoutshopper.com/',
-            modules: { resources, analytics: core.modules.analytics, srPanel: core.modules.srPanel },
+            modules: { resources, analytics: core.modules.analytics },
             i18n: core.modules.i18n
         });
         render(element.mount('body'));
@@ -233,7 +233,7 @@ describe('Click to Pay: ENTER keypress should perform an action only within the 
         const element = new ClickToPayElement(core, {
             onSubmit: onSubmitMock,
             loadingContext: 'checkoutshopper.com/',
-            modules: { resources, analytics: core.modules.analytics, srPanel: core.modules.srPanel },
+            modules: { resources, analytics: core.modules.analytics },
             i18n: core.modules.i18n
         });
         render(element.mount('body'));

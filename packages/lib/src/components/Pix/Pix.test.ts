@@ -17,7 +17,7 @@ test('should show personal details form if enabled', async () => {
         personalDetailsRequired: true,
         i18n,
         loadingContext: 'ggg',
-        modules: { resources: global.resources, srPanel: core.modules.srPanel }
+        modules: { resources: global.resources }
     });
     render(pix.render());
 
@@ -29,7 +29,7 @@ test('should show personal details form if enabled', async () => {
 test('should show pay button by default', async () => {
     const core = setupCoreMock();
     const i18n = global.i18n;
-    const pix = new Pix(core, { i18n, loadingContext: 'ggg', modules: { resources: global.resources, srPanel: core.modules.srPanel } });
+    const pix = new Pix(core, { i18n, loadingContext: 'ggg', modules: { resources: global.resources } });
     render(pix.render());
 
     expect(await screen.findByRole('button', { name: 'Continue to pix' })).toBeTruthy();
@@ -44,7 +44,7 @@ test('should validate Brazil SSN', async () => {
         personalDetailsRequired: true,
         i18n,
         loadingContext: 'ggg',
-        modules: { resources: global.resources, srPanel: core.modules.srPanel }
+        modules: { resources: global.resources }
     });
     render(pix.render());
 
@@ -71,7 +71,7 @@ test('should trigger submit when Pay button is pressed', async () => {
     const i18n = global.i18n;
     const core = setupCoreMock();
 
-    const pix = new Pix(core, { i18n, loadingContext: 'ggg', modules: { resources: global.resources, srPanel: core.modules.srPanel } });
+    const pix = new Pix(core, { i18n, loadingContext: 'ggg', modules: { resources: global.resources } });
     pix.submit = jest.fn();
     render(pix.render());
 

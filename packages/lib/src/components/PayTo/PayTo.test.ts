@@ -39,7 +39,7 @@ describe('PayTo', () => {
             i18n: global.i18n,
             mandate: MOCK_MANDATE,
             loadingContext: 'test',
-            modules: { resources: global.resources, srPanel: core.modules.srPanel }
+            modules: { resources: global.resources }
         });
 
         render(payTo.render());
@@ -58,7 +58,7 @@ describe('PayTo', () => {
             mandate: MOCK_MANDATE,
             i18n: global.i18n,
             loadingContext: 'test',
-            modules: { resources: global.resources, srPanel: core.modules.srPanel }
+            modules: { resources: global.resources }
         });
 
         render(payTo.render());
@@ -81,7 +81,7 @@ describe('PayTo', () => {
             mandate: MOCK_MANDATE,
             i18n: global.i18n,
             loadingContext: 'test',
-            modules: { resources: global.resources, srPanel: core.modules.srPanel },
+            modules: { resources: global.resources },
             showPayButton: false
         });
 
@@ -102,7 +102,7 @@ describe('PayTo', () => {
                 onSubmit: onSubmitMock,
                 i18n: global.i18n,
                 loadingContext: 'test',
-                modules: { resources: global.resources, srPanel: core.modules.srPanel }
+                modules: { resources: global.resources }
             });
 
             render(payTo.render());
@@ -139,7 +139,7 @@ describe('PayTo', () => {
                 onSubmit: onSubmitMock,
                 i18n: global.i18n,
                 loadingContext: 'test',
-                modules: { resources: global.resources, srPanel: core.modules.srPanel }
+                modules: { resources: global.resources }
             });
 
             render(payTo.render());
@@ -179,7 +179,7 @@ describe('PayTo', () => {
                 onSubmit: onSubmitMock,
                 i18n: global.i18n,
                 loadingContext: 'test',
-                modules: { resources: global.resources, srPanel: core.modules.srPanel }
+                modules: { resources: global.resources }
             });
 
             render(payTo.render());
@@ -219,7 +219,7 @@ describe('PayTo', () => {
                 onSubmit: onSubmitMock,
                 i18n: global.i18n,
                 loadingContext: 'test',
-                modules: { resources: global.resources, srPanel: core.modules.srPanel }
+                modules: { resources: global.resources }
             });
 
             render(payTo.render());
@@ -457,7 +457,7 @@ describe('PayTo', () => {
             const payTo = new PayTo(core, {
                 i18n: global.i18n,
                 loadingContext: 'test',
-                modules: { resources: global.resources, srPanel: core.modules.srPanel },
+                modules: { resources: global.resources },
                 storedPaymentMethodId: 'mock'
             });
 
@@ -477,7 +477,7 @@ describe('PayTo', () => {
                 onSubmit: onSubmitMock,
                 i18n: global.i18n,
                 loadingContext: 'test',
-                modules: { resources: global.resources, srPanel: core.modules.srPanel },
+                modules: { resources: global.resources },
                 storedPaymentMethodId: 'mock'
             });
 

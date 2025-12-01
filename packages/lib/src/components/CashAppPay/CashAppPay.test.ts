@@ -62,7 +62,7 @@ describe('CashAppPay', () => {
         const cashAppPayElement = new CashAppPay(core, {
             i18n: global.i18n,
             loadingContext: 'test',
-            modules: { resources: global.resources, srPanel: core.modules.srPanel }
+            modules: { resources: global.resources }
         });
         render(cashAppPayElement.render());
 
@@ -78,7 +78,7 @@ describe('CashAppPay', () => {
             onClick,
             i18n: global.i18n,
             loadingContext: 'test',
-            modules: { resources: global.resources, srPanel: core.modules.srPanel }
+            modules: { resources: global.resources }
         });
         render(cashAppPayElement.render());
 

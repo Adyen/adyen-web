@@ -1,8 +1,7 @@
 import { render, screen, waitFor } from '@testing-library/preact';
 import KlarnaPayments from './KlarnaPayments';
 import Dropin from '../Dropin';
-import { AnalyticsModule, PaymentAction } from '../../types/global-types';
-import { mock } from 'jest-mock-extended';
+import { PaymentAction } from '../../types/global-types';
 import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 
 describe('KlarnaPayments', () => {
@@ -12,7 +11,7 @@ describe('KlarnaPayments', () => {
         name: 'Klarna',
         i18n: global.i18n,
         loadingContext: 'test',
-        modules: { resources: global.resources, srPanel: core.modules.srPanel }
+        modules: { resources: global.resources }
     };
     const renderKlarna = props => {
         const KlarnaPaymentsEle = new KlarnaPayments(core, {
@@ -80,8 +79,9 @@ describe('KlarnaPayments', () => {
                 }
             };
 
-            global.core.modules.analytics = mock<AnalyticsModule>();
-            const klarna = new KlarnaPayments(global.core, {
+            const core = setupCoreMock();
+
+            const klarna = new KlarnaPayments(core, {
                 ...coreProps,
                 type: 'klarna_paynow',
                 onSubmit(state, component, actions) {
@@ -89,8 +89,7 @@ describe('KlarnaPayments', () => {
                         resultCode: 'Pending',
                         action: widgetAction
                     });
-                },
-                modules: { srPanel: core.modules.srPanel }
+                }
             });
             const spy = jest.spyOn(klarna, 'updateWithAction');
 
@@ -108,8 +107,8 @@ describe('KlarnaPayments', () => {
                 method: 'GET'
             };
 
-            global.core.modules.analytics = mock<AnalyticsModule>();
-            const klarna = new KlarnaPayments(global.core, {
+            const core = setupCoreMock();
+            const klarna = new KlarnaPayments(core, {
                 ...coreProps,
                 type: 'klarna_paynow',
                 onSubmit(state, component, actions) {
@@ -117,8 +116,7 @@ describe('KlarnaPayments', () => {
                         resultCode: 'Pending',
                         action
                     });
-                },
-                modules: { srPanel: core.modules.srPanel }
+                }
             });
             const spy = jest.spyOn(klarna, 'updateWithAction');
 

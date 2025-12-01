@@ -12,7 +12,7 @@ describe('ThreeDS2Challenge', () => {
 
             const threeDS2Challenge = new ThreeDS2Challenge(core, {
                 onError: () => {},
-                modules: { analytics: core.modules.analytics, srPanel: core.modules.srPanel }
+                modules: { analytics: core.modules.analytics }
             });
 
             threeDS2Challenge.render();
@@ -29,7 +29,7 @@ describe('ThreeDS2Challenge', () => {
 
             const threeDS2Challenge = new ThreeDS2Challenge(core, {
                 onError: () => {},
-                modules: { analytics: core.modules.analytics, srPanel: core.modules.srPanel }
+                modules: { analytics: core.modules.analytics }
             });
 
             render(threeDS2Challenge.render());

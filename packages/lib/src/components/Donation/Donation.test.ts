@@ -4,7 +4,7 @@ import DonationElement from './Donation';
 import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 
 const core = setupCoreMock();
-const coreProp = { i18n: global.i18n, loadingContext: 'test', modules: { resources: global.resources, srPanel: core.modules.srPanel } };
+const coreProp = { i18n: global.i18n, loadingContext: 'test', modules: { resources: global.resources } };
 const shared = {
     commercialTxAmount: 1000,
     termsAndConditionsUrl: 'https://www.adyen.com',

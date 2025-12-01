@@ -24,7 +24,7 @@ describe('DuitNow', () => {
         test('does render something by default', () => {
             const core = setupCoreMock();
 
-            const duitNow = new DuitNow(core, { modules: { srPanel: core.modules.srPanel } });
+            const duitNow = new DuitNow(core);
             expect(duitNow.render()).not.toBe(null);
         });
     });

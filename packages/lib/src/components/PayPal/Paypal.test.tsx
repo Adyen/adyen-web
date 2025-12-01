@@ -51,7 +51,7 @@ describe('Paypal', () => {
     });
 
     test('should pass the required callbacks to the Component', async () => {
-        const paypal = new Paypal(core, { modules: { srPanel: core.modules.srPanel } });
+        const paypal = new Paypal(core);
         render(paypal.render());
 
         await screen.findByTestId('paypal-loader');

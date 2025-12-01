@@ -27,8 +27,7 @@ describe('Multibanco', () => {
     describe('render()', () => {
         test('should show the redirect button', () => {
             const multibanco = new MultibancoElement(core, {
-                i18n: global.i18n,
-                modules: { srPanel: core.modules.srPanel }
+                i18n: global.i18n
             });
             render(multibanco.render());
 
@@ -38,8 +37,7 @@ describe('Multibanco', () => {
         test('should not show the redirect button if showPayButton is false', () => {
             const multibanco = new MultibancoElement(core, {
                 i18n: global.i18n,
-                showPayButton: false,
-                modules: { srPanel: core.modules.srPanel }
+                showPayButton: false
             });
             render(multibanco.render());
 
@@ -49,7 +47,7 @@ describe('Multibanco', () => {
         test('should show reference when available', () => {
             const multibanco = new MultibancoElement(core, {
                 i18n: global.i18n,
-                modules: { resources: global.resources, srPanel: core.modules.srPanel },
+                modules: { resources: global.resources },
                 reference: '123456789'
             });
             render(multibanco.render());

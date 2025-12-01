@@ -563,8 +563,7 @@ describe('GooglePay', () => {
                 configuration: { merchantId: 'merchant-id', gatewayMerchantId: 'gateway-id' },
                 showPayButton: false,
                 isExpress: true,
-                expressPage: 'cart',
-                modules: { srPanel: core.modules.srPanel }
+                expressPage: 'cart'
             });
 
             render(googlepay.render());

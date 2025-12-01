@@ -96,8 +96,7 @@ describe('ApplePay', () => {
             const core = setupCoreMock();
 
             const applepay = new ApplePay(core, {
-                showPayButton: false,
-                modules: { srPanel: core.modules.srPanel }
+                showPayButton: false
             });
             render(applepay.render());
             expect(screen.queryByTestId('apple-pay-button')).not.toBeInTheDocument();
@@ -106,7 +105,7 @@ describe('ApplePay', () => {
         test('should render apple-pay-button by default', () => {
             const core = setupCoreMock();
 
-            const applepay = new ApplePay(core, { modules: { srPanel: core.modules.srPanel } });
+            const applepay = new ApplePay(core);
             render(applepay.render());
             expect(screen.getByTestId('apple-pay-button')).toBeInTheDocument();
         });

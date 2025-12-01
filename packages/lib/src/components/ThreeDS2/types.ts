@@ -4,14 +4,13 @@ import Language from '../../language';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { UIElementProps } from '../internal/UIElement/types';
 import { ErrorEventCode } from '../../core/Analytics/events/AnalyticsErrorEvent';
-import { SRPanel } from '../../core/Errors/SRPanel';
 
 interface ThreeDS2Configuration extends UIElementProps {
     dataKey?: string;
     environment?: string;
     isMDFlow?: boolean;
     loadingContext?: string;
-    modules?: { analytics: AnalyticsModule; srPanel: SRPanel };
+    modules?: { analytics: AnalyticsModule };
     notificationURL?: string;
     onActionHandled?: (rtnObj: ActionHandledReturnObject) => void;
     onError?: (error: AdyenCheckoutError, element?: UIElement) => void;

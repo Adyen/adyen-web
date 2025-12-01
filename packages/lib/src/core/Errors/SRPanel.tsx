@@ -79,6 +79,8 @@ export class SRPanel extends BaseElement<SRPanelProps> {
     }
 
     public setAriaProps(ariaAttributes: AriaAttributes): void {
+        if (!this.props.enabled) return;
+
         const firstPanel = document.querySelector('[class^="adyen-checkout-sr-panel"]');
         for (const [key, value] of Object.entries(ariaAttributes)) {
             firstPanel.setAttribute(key, value);

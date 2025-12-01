@@ -30,7 +30,7 @@ describe('Boleto', () => {
         const onSubmitMock = jest.fn();
 
         const boleto = new Boleto(core, {
-            modules: { resources: global.resources, srPanel: core.modules.srPanel },
+            modules: { resources: global.resources },
             i18n: global.i18n,
             onChange: onChangeMock,
             onSubmit: onSubmitMock,
@@ -104,7 +104,7 @@ describe('Boleto', () => {
         const onSubmitMock = jest.fn();
 
         const boleto = new Boleto(core, {
-            modules: { resources: global.resources, srPanel: core.modules.srPanel },
+            modules: { resources: global.resources },
             i18n: global.i18n,
             onSubmit: onSubmitMock,
             loadingContext: 'https://checkoutshopper-live.adyen.com/checkoutshopper/'
@@ -135,7 +135,7 @@ describe('Boleto', () => {
         const onSubmitMock = jest.fn();
 
         const boleto = new Boleto(core, {
-            modules: { resources: global.resources, srPanel: core.modules.srPanel },
+            modules: { resources: global.resources },
             i18n: global.i18n,
             onChange: onChangeMock,
             onSubmit: onSubmitMock,
@@ -211,7 +211,7 @@ describe('Boleto', () => {
         const core = setupCoreMock();
 
         const boleto = new Boleto(core, {
-            modules: { resources: global.resources, srPanel: core.modules.srPanel },
+            modules: { resources: global.resources },
             i18n: global.i18n,
             loadingContext: 'https://checkoutshopper-live.adyen.com/checkoutshopper/',
             reference: 'test-reference'

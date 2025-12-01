@@ -90,8 +90,7 @@ describe('Redirect error', () => {
             paymentMethodType: 'ideal',
             beforeRedirect: (_, reject) => {
                 return reject();
-            },
-            modules: { srPanel: core.modules.srPanel }
+            }
         };
 
         const redirectElement = new RedirectElement(core, props);
@@ -120,8 +119,7 @@ describe('Redirect error', () => {
         const props: RedirectConfiguration = {
             url: 'test',
             method: 'GET',
-            paymentMethodType: 'ideal',
-            modules: { srPanel: core.modules.srPanel }
+            paymentMethodType: 'ideal'
         };
 
         const redirectElement = new RedirectElement(core, props);

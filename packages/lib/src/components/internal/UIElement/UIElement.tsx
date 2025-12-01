@@ -613,7 +613,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     render() {
         return (
             <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources} analytics={this.analytics}>
-                <SRPanelProvider srPanel={this.props.modules.srPanel}>{this.componentToRender()}</SRPanelProvider>
+                <SRPanelProvider srPanel={this.srPanel}>{this.componentToRender()}</SRPanelProvider>
             </CoreProvider>
         );
     }

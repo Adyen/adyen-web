@@ -17,7 +17,7 @@ test('should show the pay button by default', async () => {
         name: 'Pay By Bank',
         i18n: global.i18n,
         loadingContext: 'test',
-        modules: { resources: global.resources, srPanel: core.modules.srPanel }
+        modules: { resources: global.resources }
     });
     render(payByBank.render());
     expect(await screen.findByRole('button', { name: 'Continue to Pay By Bank' })).toBeTruthy();
@@ -31,7 +31,7 @@ test('should hide pay button if property is set to false', () => {
         showPayButton: false,
         i18n: global.i18n,
         loadingContext: 'test',
-        modules: { resources: global.resources, srPanel: core.modules.srPanel }
+        modules: { resources: global.resources }
     });
     render(payByBank.render());
     expect(screen.queryByRole('button', { name: 'Continue to Pay By Bank' })).toBeFalsy();
@@ -45,7 +45,7 @@ test('should trigger submit when Pay button is pressed', async () => {
         name: 'Pay By Bank',
         i18n: global.i18n,
         loadingContext: 'test',
-        modules: { resources: global.resources, srPanel: core.modules.srPanel }
+        modules: { resources: global.resources }
     });
     payByBank.submit = jest.fn();
     render(payByBank.render());

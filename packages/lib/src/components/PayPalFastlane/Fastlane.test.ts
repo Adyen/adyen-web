@@ -89,7 +89,7 @@ describe('Fastlane', () => {
         resources.getImage.mockReturnValue((icon: string) => `https://checkout-adyen.com/${icon}`);
 
         const fastlane = new Fastlane(core, {
-            modules: { resources, srPanel: core.modules.srPanel },
+            modules: { resources },
             i18n: global.i18n,
             tokenId: 'token-id',
             lastFour: '1111',

@@ -1,9 +1,8 @@
 import PayNow from './PayNow';
-import { render, screen, within } from '@testing-library/preact';
+import { render, screen, waitFor } from '@testing-library/preact';
 import { mock } from 'jest-mock-extended';
 import { Resources } from '../../core/Context/Resources';
 import checkPaymentStatus from '../../core/Services/payment-status';
-import { SRPanel } from '../../core/Errors/SRPanel';
 import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 
 jest.mock('../../core/Services/payment-status');
@@ -28,7 +27,7 @@ describe('PayNow', () => {
     describe('render', () => {
         test('does render something by default', () => {
             const core = setupCoreMock();
-            const paynow = new PayNow(core, { modules: { srPanel: core.modules.srPanel } });
+            const paynow = new PayNow(core);
             expect(paynow.render()).not.toBe(null);
         });
     });
@@ -44,7 +43,6 @@ describe('PayNow', () => {
 
         jest.useFakeTimers();
 
-        const srPanel = mock<SRPanel>();
         const resources = mock<Resources>();
         resources.getImage.mockReturnValue((icon: string) => `https://checkout-adyen.com/${icon}`);
 
@@ -59,27 +57,24 @@ describe('PayNow', () => {
 
         const paynow = new PayNow(core, {
             loadingContext: 'checkoutshopper.com/',
-            modules: { resources, analytics: global.analytics, srPanel },
+            modules: { resources, analytics: global.analytics },
             i18n: global.i18n,
             paymentData: 'Ab02b4c0!BQABAgBH1f8hqfFxOvbfK..',
-            qrCodeImage: '',
             paymentMethodType: 'paynow',
             qrCodeData: '00020126580009SG...'
         });
 
-        render(paynow.mount('body'));
+        render(paynow.render());
 
-        // Triggers the execution of the setTimeout that makes the /status API request
-        jest.runAllTimers();
+        await waitFor(() => {
+            expect(screen.getByText('Scan the QR code using the PayNow app to complete the payment')).toBeInTheDocument();
+        });
 
-        await screen.findAllByText(/Scan the QR code using the PayNow app to complete the payment/);
-
-        const div = within(screen.queryByTestId('paynow-introduction'));
-        div.getByText(/Take a screenshot of the QR code./);
-        div.getByText(/Open the PayNow bank or payment app./);
-        div.getByText(/Select the option to scan a QR code./);
-        div.getByText(/Choose the option to upload a QR and select the screenshot./);
-        div.getByText(/Complete the transaction./);
+        expect(screen.getByText('Take a screenshot of the QR code.')).toBeInTheDocument();
+        expect(screen.getByText('Open the PayNow bank or payment app.')).toBeInTheDocument();
+        expect(screen.getByText('Select the option to scan a QR code.')).toBeInTheDocument();
+        expect(screen.getByText('Choose the option to upload a QR and select the screenshot.')).toBeInTheDocument();
+        expect(screen.getByText('Complete the transaction.')).toBeInTheDocument();
 
         jest.resetAllMocks();
     });
