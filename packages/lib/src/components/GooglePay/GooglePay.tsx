@@ -316,7 +316,7 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
         return this.props.icon ?? this.resources.getImage()('googlepay');
     }
 
-    render() {
+    protected override componentToRender(): h.JSX.Element {
         if (this.props.showPayButton) {
             return (
                 <GooglePayButton

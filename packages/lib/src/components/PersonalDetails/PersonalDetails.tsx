@@ -1,7 +1,6 @@
-import { h } from 'preact';
+import { Fragment, h } from 'preact';
 import UIElement from '../internal/UIElement/UIElement';
 import PersonalDetails from '../internal/PersonalDetails';
-import { CoreProvider } from '../../core/Context/CoreProvider';
 import { TxVariants } from '../tx-variants';
 import FormInstruction from '../internal/FormInstruction';
 import { UIElementProps } from '../internal/UIElement/types';
@@ -30,9 +29,9 @@ export class PersonalDetailsElement extends UIElement<PersonalDetailsConfigurati
         return !!this.state.isValid;
     }
 
-    render() {
+    protected override componentToRender(): h.JSX.Element {
         return (
-            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
+            <Fragment>
                 <FormInstruction />
                 <PersonalDetails
                     setComponentRef={this.setComponentRef}
@@ -40,7 +39,7 @@ export class PersonalDetailsElement extends UIElement<PersonalDetailsConfigurati
                     onChange={this.setState}
                     {...(process.env.NODE_ENV !== 'production' && { payButton: this.payButton })}
                 />
-            </CoreProvider>
+            </Fragment>
         );
     }
 }

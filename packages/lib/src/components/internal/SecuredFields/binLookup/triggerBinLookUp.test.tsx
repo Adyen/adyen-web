@@ -1,3 +1,4 @@
+import { h } from 'preact';
 import triggerBinLookUp from './triggerBinLookUp';
 import { httpPost } from '../../../../core/Services/http';
 import UIElement from '../../UIElement';
@@ -14,6 +15,9 @@ class MockUIElement extends UIElement {
     public processBinLookupResponse = mockProcessBinLookupResponse;
     public onBinLookup = mockOnBinLookup;
     public handleUnsupportedCard = mockHandleUnsupportedCard;
+    protected override componentToRender() {
+        return <div></div>;
+    }
 }
 
 const clientKey = 'test';
