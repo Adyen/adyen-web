@@ -6,7 +6,7 @@ import { CoreProvider } from '../../../../core/Context/CoreProvider';
 
 describe('Select', () => {
     const user = userEvent.setup();
-    const getWrapper = (props: any) =>
+    const renderSelect = (props: any) =>
         render(
             <CoreProvider loadingContext={'test'} i18n={global.i18n} resources={global.resources}>
                 <Select {...props} name={'mockSelect'} />
@@ -26,7 +26,7 @@ describe('Select', () => {
 
         expect(onChangeCb).toBeCalledTimes(0);
 
-        getWrapper({
+        renderSelect({
             items: items,
             filterable: false,
             selected: value,
@@ -68,7 +68,7 @@ describe('Select', () => {
 
         expect(onChangeCb).toBeCalledTimes(0);
 
-        getWrapper({
+        renderSelect({
             items: items,
             filterable: true,
             selected: value,
@@ -94,5 +94,98 @@ describe('Select', () => {
         await user.keyboard('[ArrowUp][Space]');
         // Should NOT trigger on space
         expect(onChangeCb).toBeCalledTimes(2);
+    });
+
+    test('Focus should not open dropdown but click should open it', async () => {
+        const items = [
+            { name: 'Option 1', id: '1' },
+            { name: 'Option 2', id: '2' }
+        ];
+
+        renderSelect({
+            items: items,
+            filterable: true,
+            selectedValue: '',
+            onChange: jest.fn()
+        });
+
+        const combobox = screen.getByRole('combobox');
+        
+        // Focus should not open the dropdown
+        combobox.focus();
+        
+        // Debug visibility
+        const option1 = screen.getByText('Option 1');
+        const option2 = screen.getByText('Option 2');
+        
+        // Elements should be hidden (offsetParent is null and getBoundingClientRect is all zeros)
+        expect(option1.offsetParent).toBeNull();
+        expect(option2.offsetParent).toBeNull();
+        
+        // Click should open the dropdown
+        await user.click(combobox);
+        expect(screen.getByText('Option 1')).toBeVisible();
+        expect(screen.getByText('Option 2')).toBeVisible();
+    });
+
+    test('Focus should not open dropdown for non-filterable select but click should open it', async () => {
+        const items = [
+            { name: 'Option 1', id: '1' },
+            { name: 'Option 2', id: '2' }
+        ];
+
+        renderSelect({
+            items: items,
+            filterable: false,
+            selectedValue: '',
+            onChange: jest.fn()
+        });
+
+        const button = screen.getByRole('button');
+        
+        // Focus should not open the dropdown
+        button.focus();
+        
+        // Debug visibility
+        const option1 = screen.getByText('Option 1');
+        const option2 = screen.getByText('Option 2');
+        
+        // Elements should be hidden (offsetParent is null and getBoundingClientRect is all zeros)
+        expect(option1.offsetParent).toBeNull();
+        expect(option2.offsetParent).toBeNull();
+        
+        // Click should open the dropdown
+        await user.click(button);
+        expect(screen.getByText('Option 1')).toBeVisible();
+        expect(screen.getByText('Option 2')).toBeVisible();
+    });
+
+    test('Typing should open dropdown for filterable select', async () => {
+        const items = [
+            { name: 'Apple', id: '1' },
+            { name: 'Banana', id: '2' },
+            { name: 'Cherry', id: '3' }
+        ];
+
+        renderSelect({
+            items: items,
+            filterable: true,
+            selectedValue: '',
+            onChange: jest.fn()
+        });
+
+        const combobox = screen.getByRole('combobox');
+        
+        // Initially dropdown should be closed
+        const apple = screen.getByText('Apple');
+        const banana = screen.getByText('Banana');
+        
+        // Elements should be hidden (offsetParent is null and getBoundingClientRect is all zeros)
+        expect(apple.offsetParent).toBeNull();
+        expect(banana.offsetParent).toBeNull();
+        
+        // Typing should open the dropdown
+        await user.type(combobox, 'A');
+        expect(screen.getByText('Apple')).toBeVisible();
     });
 });

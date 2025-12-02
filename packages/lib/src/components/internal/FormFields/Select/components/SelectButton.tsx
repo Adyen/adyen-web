@@ -12,7 +12,7 @@ function SelectButtonElement({ filterable, toggleButtonRef, ...props }) {
         return <div {...strippedProps} ref={toggleButtonRef} />;
     }
 
-    return <button id={props.id} aria-describedby={props.ariaDescribedBy} type={'button'} {...props} ref={toggleButtonRef} />;
+    return <button id={props.id} aria-expanded={props.showList} aria-disabled={props.readonly} aria-describedby={props.ariaDescribedBy} type={'button'} {...props} ref={toggleButtonRef} />;
 }
 
 function SelectButton(props: Readonly<SelectButtonProps>) {
@@ -45,7 +45,6 @@ function SelectButton(props: Readonly<SelectButtonProps>) {
     // 3. Otherwise we just toggle the list
     const onClickHandler = readonly ? null : props.filterable ? setFocus : props.toggleList;
 
-    const onFocusHandler = readonly ? null : props.onFocus;
 
     // check COWEB-1301 [Investigate] Drop-in Accessibility - ADA Compliance questions
     const currentSelectedItemId = active.id ? `listItem-${active.id}` : '';
@@ -94,12 +93,12 @@ function SelectButton(props: Readonly<SelectButtonProps>) {
                         autoComplete="off"
                         className="adyen-checkout__filter-input"
                         onInput={props.onInput}
-                        onFocus={onFocusHandler}
                         ref={props.filterInputRef}
                         role="combobox"
                         aria-activedescendant={currentSelectedItemId}
                         type="text"
                         readOnly={props.readonly}
+                        aria-disabled={props.readonly}
                         id={props.id}
                         aria-describedby={props.ariaDescribedBy}
                         required={required}
