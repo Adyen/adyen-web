@@ -151,3 +151,10 @@ export interface ErrorCodeObject {
     errorCode: string | ErrorEventCode;
     message: string;
 }
+
+export type ThreeDS2FlowPropsReturnObject = {
+    statusType: 'loading' | 'custom';
+    showSpinner?: boolean;
+    elementRef?: UIElement;
+    i18n?: Language;
+};
