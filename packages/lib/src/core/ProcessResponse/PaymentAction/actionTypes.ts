@@ -12,7 +12,8 @@ const createComponent = (core: ICore, registry: IRegistry, componentType, props)
         throw Error(`Action Element of type ${componentType} not found in the registry`);
     }
 
-    return new Element(core, { ...props, id: `${componentType}-${uuid()}` });
+    const element = new Element(core, { ...props, id: `${componentType}-${uuid()}` });
+    return element;
 };
 
 const getActionHandler = statusType => {

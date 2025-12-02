@@ -1,144 +1,175 @@
-import CollectId from '../Services/analytics/collect-id';
-import EventsQueue, { EventsQueueModule } from './EventsQueue';
-import { AnalyticsEventCategory, AnalyticsInitialEvent, AnalyticsProps } from './types';
-import { ANALYTIC_LEVEL, ANALYTICS_INFO_TIMER_INTERVAL, ANALYTICS_PATH, ANALYTICS_EVENT } from './constants';
 import { debounce } from '../../utils/debounce';
-import { AnalyticsModule } from '../../types/global-types';
 import { processAnalyticsData } from './utils';
-import { AbstractAnalyticsEvent } from './events/AbstractAnalyticsEvent';
+import { AbstractAnalyticsEvent, AnalyticsEventCategory } from './events/AbstractAnalyticsEvent';
 import Storage from '../../utils/Storage';
-import { CheckoutAttemptIdSession } from '../Services/analytics/types';
+import { LIBRARY_BUNDLE_TYPE, LIBRARY_VERSION } from '../config';
+import { AnalyticsEventQueue } from './AnalyticsEventQueue';
+import type { AnalyticsOptions } from './types';
+import type { AnalyticsEventPayload, IAnalyticsService, RequestAttemptIdPayload } from './AnalyticsService';
 
-let capturedCheckoutAttemptId: string | null = null;
-let sendEventsTimerId = null;
+export interface AnalyticsProps {
+    service: IAnalyticsService;
+    eventQueue: AnalyticsEventQueue;
+    enabled?: boolean;
+    analyticsData?: AnalyticsOptions['analyticsData'];
+}
+
+export interface IAnalytics {
+    setUp({ sessionId, checkoutStage, locale }: { sessionId?: string; checkoutStage?: 'precheckout' | 'checkout'; locale?: string }): Promise<void>;
+    sendFlavor(flavor: 'dropin' | 'components'): Promise<void>;
+    sendAnalytics(event: AbstractAnalyticsEvent): void;
+    flush(): void;
+}
+
+export interface CheckoutAttemptIdSessionStorage {
+    id: string;
+    timestamp: number;
+}
 
 /**
  * If the checkout attempt ID was stored more than fifteen minutes ago, then we should request a new ID.
  * More here: COWEB-1099
  */
-function isSessionCreatedUnderFifteenMinutes(session: CheckoutAttemptIdSession): boolean {
+function isSessionCreatedUnderFifteenMinutes(session: CheckoutAttemptIdSessionStorage): boolean {
     const FIFTEEN_MINUTES_IN_MS = 15 * 60 * 1000;
     if (!session?.timestamp) return false;
     const fifteenMinutesAgo = Date.now() - FIFTEEN_MINUTES_IN_MS;
     return session.timestamp > fifteenMinutesAgo;
 }
 
-const Analytics = ({ locale, clientKey, analytics, analyticsContext }: AnalyticsProps): AnalyticsModule => {
-    const defaultProps = {
-        enabled: true
-    };
+const ANALYTICS_INFO_DEBOUNCE_DELAY = process.env.NODE_ENV === 'development' ? 5_000 : 10_000;
+const ANALYTICS_ERROR_AND_LOGS_DEBOUNCE_DELAY = 5_000;
 
-    const props = { ...defaultProps, ...analytics };
+class Analytics implements IAnalytics {
+    private readonly analyticsData?: AnalyticsOptions['analyticsData'];
+    private readonly service: IAnalyticsService;
+    private readonly eventsQueue: AnalyticsEventQueue;
+    private readonly storage = new Storage<CheckoutAttemptIdSessionStorage>('checkout-attempt-id', 'sessionStorage');
+    private readonly debouncedSendInfoEvents: () => void;
+    private readonly debouncedSendEvents: () => void;
 
-    const level = props.enabled ? ANALYTIC_LEVEL.all : ANALYTIC_LEVEL.initial;
+    private enabled: boolean = true;
+    private capturedCheckoutAttemptId?: string;
+    private isFlavorReported = false;
 
-    const collectId = CollectId({
-        analyticsContext,
-        clientKey,
-        locale,
-        analyticsPath: ANALYTICS_PATH
-    });
+    constructor({ service, eventQueue, enabled, analyticsData }: AnalyticsProps) {
+        this.service = service;
+        this.eventsQueue = eventQueue;
 
-    const storage = new Storage<CheckoutAttemptIdSession>('checkout-attempt-id', 'sessionStorage');
-    const eventsQueue: EventsQueueModule = EventsQueue({ analyticsContext, clientKey, analyticsPath: ANALYTICS_PATH });
+        this.debouncedSendInfoEvents = debounce(this.sendEvents.bind(this), ANALYTICS_INFO_DEBOUNCE_DELAY);
+        this.debouncedSendEvents = debounce(this.sendEvents.bind(this), ANALYTICS_ERROR_AND_LOGS_DEBOUNCE_DELAY);
 
-    const sendAnalyticsEvents = () => {
-        if (capturedCheckoutAttemptId) {
-            return eventsQueue.run(capturedCheckoutAttemptId);
+        if (enabled !== undefined) this.enabled = enabled;
+        if (analyticsData) this.analyticsData = analyticsData;
+    }
+
+    public async setUp({
+        sessionId,
+        checkoutStage,
+        locale
+    }: { sessionId?: string; locale?: string; checkoutStage?: 'precheckout' | 'checkout' } = {}): Promise<void> {
+        try {
+            const checkoutAttemptIdSession = this.storage.get();
+            const isSessionReusable = isSessionCreatedUnderFifteenMinutes(checkoutAttemptIdSession);
+
+            const { applicationInfo, checkoutAttemptId: checkoutAttemptIdFromPayByLink } = processAnalyticsData(this.analyticsData);
+
+            const availableCheckoutAttemptId: string | undefined = isSessionReusable ? checkoutAttemptIdSession.id : checkoutAttemptIdFromPayByLink;
+
+            const payload: RequestAttemptIdPayload = {
+                version: LIBRARY_VERSION,
+                buildType: LIBRARY_BUNDLE_TYPE,
+                channel: 'Web',
+                platform: 'Web',
+                locale,
+                referrer: window.location.href,
+                screenWidth: window.screen.width,
+                checkoutStage: checkoutStage || 'checkout',
+                level: this.enabled ? 'all' : 'initial',
+                ...(applicationInfo && { applicationInfo }),
+                ...(sessionId && { sessionId }),
+                ...(availableCheckoutAttemptId && { checkoutAttemptId: availableCheckoutAttemptId })
+            };
+
+            this.capturedCheckoutAttemptId = await this.service.requestCheckoutAttemptId(payload);
+
+            this.storage.set({
+                id: this.capturedCheckoutAttemptId,
+                timestamp: isSessionReusable ? checkoutAttemptIdSession.timestamp : Date.now()
+            });
+        } catch (error: unknown) {
+            this.enabled = false;
+            console.warn('Analytics: Error setting up', error);
         }
-        return Promise.resolve(null);
-    };
+    }
 
-    const addAnalyticsEvent = (eventCat: AnalyticsEventCategory, event: AbstractAnalyticsEvent) => {
-        const arrayName = eventCat === ANALYTICS_EVENT.info ? eventCat : `${eventCat}s`;
-        eventsQueue.add(`${arrayName}`, event);
-
-        /**
-         * The logic is:
-         *  - info events are stored until a log or error comes along,
-         *  but, if after a set time, no other analytics event (log or error) has come along then we send the info events anyway
-         */
-        if (eventCat === ANALYTICS_EVENT.info) {
-            clearTimeout(sendEventsTimerId);
-            sendEventsTimerId = setTimeout(() => void sendAnalyticsEvents(), ANALYTICS_INFO_TIMER_INTERVAL);
+    public sendAnalytics(event: AbstractAnalyticsEvent): void {
+        if (!this.enabled) {
+            return;
         }
 
-        /**
-         * The logic is:
-         *  - errors and logs get sent straightaway
-         *  ...but... tests with the 3DS2 process show that many logs can happen almost at the same time (or you can have an error followed immediately by a log),
-         *  so instead of making several sequential api calls we see if we can "batch" them using debounce
-         */
-        if (eventCat === ANALYTICS_EVENT.log || eventCat === ANALYTICS_EVENT.error) {
-            clearTimeout(sendEventsTimerId); // clear any timer that might be about to dispatch the info events array
-
-            debounce(sendAnalyticsEvents)();
+        try {
+            this.addEventToQueue(event);
+        } catch (error: unknown) {
+            console.warn('Analytics: Error adding event to queue', error);
         }
-    };
+    }
 
-    return {
-        /**
-         * Make "setup" call, to pass data to analytics endpoint and receive a checkoutAttemptId in return
-         *
-         * N.B. This call is always made regardless of whether the merchant has disabled analytics
-         */
-        setUp: async (setupProps?: AnalyticsInitialEvent): Promise<void> => {
-            try {
-                const defaultProps: Partial<AnalyticsInitialEvent> = { checkoutStage: 'checkout' };
-                const finalSetupProps = { ...defaultProps, ...setupProps };
+    public async sendFlavor(flavor: 'dropin' | 'components'): Promise<void> {
+        if (!this.capturedCheckoutAttemptId) return;
+        if (this.isFlavorReported) return;
 
-                const checkoutAttemptIdSession = storage.get();
-                const isSessionReusable = isSessionCreatedUnderFifteenMinutes(checkoutAttemptIdSession);
+        this.isFlavorReported = true;
 
-                const { payload } = props;
-
-                const analyticsData = processAnalyticsData(props.analyticsData);
-
-                const availableCheckoutAttemptId: string | undefined = isSessionReusable
-                    ? checkoutAttemptIdSession.id
-                    : analyticsData?.checkoutAttemptId;
-
-                const collectIdPayload = {
-                    ...finalSetupProps,
-                    ...payload,
-                    ...analyticsData,
-                    ...(availableCheckoutAttemptId && { checkoutAttemptId: availableCheckoutAttemptId }),
-                    level
-                };
-
-                capturedCheckoutAttemptId = await collectId(collectIdPayload);
-
-                storage.set({
-                    id: capturedCheckoutAttemptId,
-                    timestamp: isSessionReusable ? checkoutAttemptIdSession.timestamp : Date.now()
-                });
-            } catch (error: unknown) {
-                console.warn(error);
-            }
-        },
-
-        getCheckoutAttemptId: (): string => capturedCheckoutAttemptId,
-
-        // Expose getter for testing purposes
-        getEventsQueue: () => eventsQueue,
-
-        getEnabled: () => props.enabled,
-
-        flush: () => {
-            void sendAnalyticsEvents();
-        },
-
-        sendAnalytics: (analyticsObj: AbstractAnalyticsEvent): boolean => {
-            /** Only send subsequent analytics if the merchant has not disabled this functionality (i.e. set analytics.enabled = false) */
-            if (level !== ANALYTIC_LEVEL.all) return false;
-
-            const eventCategory: AnalyticsEventCategory = analyticsObj.getEventCategory();
-
-            addAnalyticsEvent(eventCategory, analyticsObj);
-
-            return true;
+        try {
+            await this.service.reportIntegrationFlavor(flavor, this.capturedCheckoutAttemptId);
+        } catch (error) {
+            console.warn('Analytics: Error reporting flavor', error);
         }
-    } as AnalyticsModule;
-};
+    }
+
+    public flush(): void {
+        void this.sendEvents();
+    }
+
+    /**
+     * Info events don't have high priority, therefore  we add a delay in order to dispatch a batch of events
+     * Log/Error events are sent almost immediately. There is a debounce mechanism in place but the delay is very minimal
+     *
+     * @param event
+     * @private
+     */
+    private addEventToQueue(event: AbstractAnalyticsEvent): void {
+        this.eventsQueue.add(event);
+
+        if (event.getEventCategory() === AnalyticsEventCategory.info) {
+            this.debouncedSendInfoEvents();
+        } else {
+            this.debouncedSendEvents();
+        }
+    }
+
+    private async sendEvents(): Promise<void> {
+        if (!this.capturedCheckoutAttemptId || !this.enabled) {
+            return;
+        }
+
+        const payload: AnalyticsEventPayload = {
+            channel: 'Web',
+            platform: 'Web',
+            info: this.eventsQueue.infoEvents,
+            errors: this.eventsQueue.errorEvents,
+            logs: this.eventsQueue.logEvents
+        };
+
+        this.eventsQueue.clear();
+
+        try {
+            await this.service.sendEvents(payload, this.capturedCheckoutAttemptId);
+        } catch (error) {
+            console.warn('Analytics: Error sending events', error);
+        }
+    }
+}
 
 export default Analytics;

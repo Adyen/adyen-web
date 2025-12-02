@@ -4,20 +4,20 @@ import type { CoreConfiguration } from '../../../core/types';
 import { CDN_ENVIRONMENTS } from '../../../core/Environment/constants';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 import Script from '../../../utils/Script';
-import { AnalyticsModule } from '../../../types/global-types';
+import { IAnalytics } from '../../../core/Analytics/Analytics';
 
 export interface IPasskeySdkLoader {
-    load(environment: CoreConfiguration['environment'], analytics: AnalyticsModule): Promise<IAdyenPasskey>;
+    load(environment: CoreConfiguration['environment'], analytics: IAnalytics): Promise<IAdyenPasskey>;
 }
 
 class PasskeySdkLoader implements IPasskeySdkLoader {
     private static readonly PASSKEY_SDK_URL = 'js/adyenpasskey/1.1.0/adyen-passkey.js';
     private AdyenPasskey: IAdyenPasskey;
 
-    private readonly analytics: AnalyticsModule;
+    private readonly analytics: IAnalytics;
     private readonly environment: string;
 
-    constructor({ analytics, environment }: { analytics: AnalyticsModule; environment: string }) {
+    constructor({ analytics, environment }: { analytics: IAnalytics; environment: string }) {
         this.analytics = analytics;
         this.environment = environment;
     }

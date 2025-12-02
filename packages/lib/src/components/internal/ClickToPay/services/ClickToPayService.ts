@@ -19,7 +19,7 @@ import AdyenCheckoutError from '../../../../core/Errors/AdyenCheckoutError';
 import { isFulfilled, isRejected } from '../../../../utils/promise-util';
 import TimeoutError from '../errors/TimeoutError';
 import { executeWithTimeout } from './execute-with-timeout';
-import type { AnalyticsModule } from '../../../../types/global-types';
+import type { IAnalytics } from '../../../../core/Analytics/Analytics';
 
 export enum CtpState {
     Idle = 'Idle',
@@ -36,7 +36,7 @@ class ClickToPayService implements IClickToPayService {
     private readonly schemesConfig: SchemesConfiguration;
     private readonly shopperIdentity?: IdentityLookupParams;
     private readonly environment: string;
-    private readonly analytics: AnalyticsModule;
+    private readonly analytics: IAnalytics;
 
     private readonly onTimeout?: (error: TimeoutError) => void;
 
@@ -62,7 +62,7 @@ class ClickToPayService implements IClickToPayService {
         schemesConfig: SchemesConfiguration,
         sdkLoader: ISrcSdkLoader,
         environment: string,
-        analytics: AnalyticsModule,
+        analytics: IAnalytics,
         shopperIdentity?: IdentityLookupParams,
         onTimeout?: (error: TimeoutError) => void
     ) {
