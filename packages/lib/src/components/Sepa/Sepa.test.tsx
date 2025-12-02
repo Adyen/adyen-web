@@ -27,24 +27,28 @@ describe('Sepa', () => {
 
     describe('isValid', () => {
         test('Returns true if the state isValid', () => {
-            const sepa = mockStateChange(new Sepa(global.core, { loadingContext: 'test', modules: { resources: global.resources } }));
+            const core = setupCoreMock();
+            const sepa = mockStateChange(new Sepa(core, { loadingContext: 'test', modules: { resources: global.resources } }));
             expect(sepa.isValid).toBe(true);
         });
 
         test('Returns false if the state is not valid ', () => {
-            const sepa = mockInvalidStateChange(new Sepa(global.core, { loadingContext: 'test', modules: { resources: global.resources } }));
+            const core = setupCoreMock();
+            const sepa = mockInvalidStateChange(new Sepa(core, { loadingContext: 'test', modules: { resources: global.resources } }));
             expect(sepa.isValid).toBe(false);
         });
     });
 
     describe('get data', () => {
         test('always returns a type', () => {
-            const sepa = mockStateChange(new Sepa(global.core, { loadingContext: 'test', modules: { resources: global.resources } }));
+            const core = setupCoreMock();
+            const sepa = mockStateChange(new Sepa(core, { loadingContext: 'test', modules: { resources: global.resources } }));
             expect(sepa.data.paymentMethod.type).toBe('sepadirectdebit');
         });
 
         test('returns necessary data from state', () => {
-            const sepa = mockStateChange(new Sepa(global.core, { loadingContext: 'test', modules: { resources: global.resources } }));
+            const core = setupCoreMock();
+            const sepa = mockStateChange(new Sepa(core, { loadingContext: 'test', modules: { resources: global.resources } }));
             expect(sepa.data.paymentMethod.iban).toBe('NL13TEST0123456789');
             expect(sepa.data.paymentMethod.ownerName).toBe('A. Klaassen');
         });

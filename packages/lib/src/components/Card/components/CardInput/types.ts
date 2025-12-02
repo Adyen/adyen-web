@@ -30,9 +30,9 @@ import { DisclaimerMsgObject } from '../../../internal/DisclaimerMessage/Disclai
 import { OnAddressLookupType, OnAddressSelectedType } from '../../../internal/Address/components/AddressSearch';
 import { ComponentMethodsRef } from '../../../internal/UIElement/types';
 import { AddressData, PaymentAmount } from '../../../../types/global-types';
-import { AnalyticsModule } from '../../../../types/global-types';
 import type { FastlaneSignupConfiguration } from '../../../PayPalFastlane/types';
 import { AbstractAnalyticsEvent } from '../../../../core/Analytics/events/AbstractAnalyticsEvent';
+import { IAnalytics } from '../../../../core/Analytics/Analytics';
 
 export interface CardInputValidState {
     holderName?: boolean;
@@ -106,7 +106,7 @@ export interface CardInputProps {
     minimumExpiryDate?: string;
     modules?: {
         srPanel: SRPanel;
-        analytics: AnalyticsModule;
+        analytics: IAnalytics;
         risk: RiskElement;
         resources: Resources;
     };

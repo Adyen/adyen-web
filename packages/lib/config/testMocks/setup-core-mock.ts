@@ -1,12 +1,12 @@
 import { mock } from 'jest-mock-extended';
 import { ICore } from '../../src/core/types';
 import PaymentMethods from '../../src/core/ProcessResponse/PaymentMethods';
-import { AnalyticsModule } from '../../src/types/global-types';
 import { Resources } from '../../src/core/Context/Resources';
 import Language from '../../src/language';
 import CheckoutSession from '../../src/core/CheckoutSession';
 import { SRPanel } from '../../src/core/Errors/SRPanel';
 import enUS from '../../../server/translations/en-US.json';
+import type { IAnalytics } from '../../src/core/Analytics/Analytics';
 
 interface SetupCoreMockProps {
     mockSessions?: boolean;
@@ -16,7 +16,7 @@ interface SetupCoreMockProps {
 function setupCoreMock({ mockSessions = true, paymentMethods = null }: SetupCoreMockProps = {}): ICore {
     const core = mock<ICore>({});
 
-    const analytics = mock<AnalyticsModule>();
+    const analytics = mock<IAnalytics>();
     const resources = mock<Resources>();
     const i18n = new Language({ locale: 'en-US', translations: enUS });
     const srPanel = new SRPanel(core, {

@@ -1,9 +1,6 @@
 import { ADDRESS_SCHEMA } from '../components/internal/Address/constants';
 import actionTypes from '../core/ProcessResponse/PaymentAction/actionTypes';
-import { AnalyticsInitialEvent } from '../core/Analytics/types';
-import { EventsQueueModule } from '../core/Analytics/EventsQueue';
 import { CardFocusData } from '../components/internal/SecuredFields/lib/types';
-import { AbstractAnalyticsEvent } from '../core/Analytics/events/AbstractAnalyticsEvent';
 
 export type PaymentActionsType = keyof typeof actionTypes;
 
@@ -377,15 +374,6 @@ export interface ActionHandledReturnObject {
     componentType: string;
     actionDescription: ActionDescriptionType;
     originalAction?: PaymentAction;
-}
-
-export interface AnalyticsModule {
-    setUp: (setupProps?: AnalyticsInitialEvent) => Promise<void>;
-    flush(): void;
-    getCheckoutAttemptId: () => string;
-    getEventsQueue: () => EventsQueueModule;
-    getEnabled: () => boolean;
-    sendAnalytics: (analyticsObj: AbstractAnalyticsEvent) => boolean;
 }
 
 export type ComponentFocusObject = {

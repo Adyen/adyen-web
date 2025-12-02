@@ -1,17 +1,17 @@
 import { CASHAPPPAY_PROD_SDK, CASHAPPPAY_SANDBOX_SDK } from './config';
 import Script from '../../../utils/Script';
 import { ICashAppWindowObject } from './types';
-import { AnalyticsModule } from '../../../types/global-types';
+import type { IAnalytics } from '../../../core/Analytics/Analytics';
 
 export interface ICashAppSdkLoader {
     load(environment: string): Promise<ICashAppWindowObject>;
 }
 
 class CashAppSdkLoader implements ICashAppSdkLoader {
-    private readonly analytics: AnalyticsModule;
+    private readonly analytics: IAnalytics;
     private readonly environment: string;
 
-    constructor({ analytics, environment }: { analytics: AnalyticsModule; environment: string }) {
+    constructor({ analytics, environment }: { analytics: IAnalytics; environment: string }) {
         this.analytics = analytics;
         this.environment = environment;
     }

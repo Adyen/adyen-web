@@ -37,6 +37,10 @@ class DropinElement extends UIElement<DropinConfiguration> implements IDropin {
         this.paymentMethodsConfiguration = this.props.paymentMethodsConfiguration || {};
     }
 
+    protected override reportIntegrationFlavor(): void {
+        void this.analytics.sendFlavor('dropin');
+    }
+
     protected override storeElementRefOnCore() {
         this.core.storeElementReference(this);
     }

@@ -742,7 +742,9 @@ describe('UIElement', () => {
             render(element.render());
             expect(screen.getAllByText('myelement')[0]).toBeInTheDocument();
         });
+    });
 
+    describe('Analytics', () => {
         test('should send analytics event in before render hook', () => {
             const element = new MyElement(core);
             render(element.render());
@@ -756,6 +758,11 @@ describe('UIElement', () => {
                     })
                 })
             );
+        });
+
+        test('should report "components" flavor when created', () => {
+            const element = new MyElement(core, {});
+            expect(element.core.modules.analytics.sendFlavor).toHaveBeenCalledWith('components');
         });
     });
 });

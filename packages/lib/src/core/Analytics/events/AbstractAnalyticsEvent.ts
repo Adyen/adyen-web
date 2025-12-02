@@ -1,5 +1,11 @@
 import uuid from '../../../utils/uuid';
 
+export enum AnalyticsEventCategory {
+    info = 'info',
+    error = 'error',
+    log = 'log'
+}
+
 export abstract class AbstractAnalyticsEvent {
     private readonly timestamp: string;
     private readonly id: string;
@@ -10,7 +16,7 @@ export abstract class AbstractAnalyticsEvent {
      */
     private readonly component: string;
 
-    public abstract getEventCategory(): string;
+    public abstract getEventCategory(): AnalyticsEventCategory;
 
     protected constructor(component: string) {
         this.component = component;

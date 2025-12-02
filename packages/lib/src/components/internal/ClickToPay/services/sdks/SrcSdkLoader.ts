@@ -4,7 +4,7 @@ import MastercardSdk from './MastercardSdk';
 import { CustomSdkConfiguration } from './types';
 import AdyenCheckoutError from '../../../../../core/Errors/AdyenCheckoutError';
 import { isFulfilled, isRejected } from '../../../../../utils/promise-util';
-import { AnalyticsModule } from '../../../../../types/global-types';
+import type { IAnalytics } from '../../../../../core/Analytics/Analytics';
 
 const sdkMap: Record<string, typeof VisaSdk | typeof MastercardSdk | null> = {
     visa: VisaSdk,
@@ -12,18 +12,13 @@ const sdkMap: Record<string, typeof VisaSdk | typeof MastercardSdk | null> = {
     default: null
 };
 
-const getSchemeSdk = (
-    scheme: string,
-    environment: string,
-    customConfig: CustomSdkConfiguration,
-    analytics: AnalyticsModule
-): ISrcInitiator | null => {
+const getSchemeSdk = (scheme: string, environment: string, customConfig: CustomSdkConfiguration, analytics: IAnalytics): ISrcInitiator | null => {
     const SchemeSdkClass = sdkMap[scheme] || sdkMap.default;
     return SchemeSdkClass ? new SchemeSdkClass(environment, customConfig, analytics) : null;
 };
 
 export interface ISrcSdkLoader {
-    load(environment: string, analytics: AnalyticsModule): Promise<ISrcInitiator[]>;
+    load(environment: string, analytics: IAnalytics): Promise<ISrcInitiator[]>;
     schemes: string[];
 }
 
@@ -37,7 +32,7 @@ class SrcSdkLoader implements ISrcSdkLoader {
         this.customSdkConfiguration = { dpaLocale, dpaPresentationName };
     }
 
-    public async load(environment: string, analytics: AnalyticsModule): Promise<ISrcInitiator[]> {
+    public async load(environment: string, analytics: IAnalytics): Promise<ISrcInitiator[]> {
         if (!this.schemes || this.schemes.length === 0) {
             throw new AdyenCheckoutError('ERROR', 'ClickToPay -> SrcSdkLoader: There are no schemes set to be loaded');
         }

@@ -3,7 +3,7 @@ import Script from '../../../../../utils/Script';
 import { VISA_SDK_PROD, VISA_SDK_TEST } from './config';
 import { VisaError } from './SrciError';
 import { mock } from 'jest-mock-extended';
-import { AnalyticsModule } from '../../../../../types/global-types';
+import type { IAnalytics } from '../../../../../core/Analytics/Analytics';
 
 const mockScriptLoaded = jest.fn().mockImplementation(() => {
     window.vAdapters = {
@@ -14,7 +14,7 @@ const mockScriptLoaded = jest.fn().mockImplementation(() => {
         }))
     };
 });
-const mockAnalytics = mock<AnalyticsModule>();
+const mockAnalytics = mock<IAnalytics>();
 const mockScriptRemoved = jest.fn();
 
 jest.mock('../../../../../utils/Script', () => {

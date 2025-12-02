@@ -10,14 +10,12 @@ import { AbstractAnalyticsEvent } from '../../../core/Analytics/events/AbstractA
 import { AnalyticsErrorEvent, ErrorEventType } from '../../../core/Analytics/events/AnalyticsErrorEvent';
 import { AnalyticsInfoEvent, InfoEventType } from '../../../core/Analytics/events/AnalyticsInfoEvent';
 import { AnalyticsLogEvent, LogEventType } from '../../../core/Analytics/events/AnalyticsLogEvent';
-import { AnalyticsInitialEvent } from '../../../core/Analytics/types';
 import type { CheckoutSessionDetailsResponse, CheckoutSessionPaymentResponse } from '../../../core/CheckoutSession/types';
 import type { NewableComponent } from '../../../core/core.registry';
 import CancelError from '../../../core/Errors/CancelError';
 import type { AdditionalDetailsData, CoreConfiguration, ICore } from '../../../core/types';
 import type {
     ActionHandledReturnObject,
-    AnalyticsModule,
     CheckoutAdvancedFlowResponse,
     Order,
     PaymentAction,
@@ -29,6 +27,7 @@ import type {
 } from '../../../types/global-types';
 import type { IDropin } from '../../Dropin/types';
 import type { ComponentMethodsRef, PayButtonFunctionProps, UIElementProps, UIElementStatus } from './types';
+import type { IAnalytics } from '../../../core/Analytics/Analytics';
 
 import { CoreProvider } from '../../../core/Context/CoreProvider';
 import { SRPanel } from '../../../core/Errors/SRPanel';
@@ -76,6 +75,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         this.onActionHandled = this.onActionHandled.bind(this);
 
         this.createBeforeRenderHook(props);
+        this.reportIntegrationFlavor();
     }
 
     /**
@@ -110,7 +110,11 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         this.analytics.sendAnalytics(event);
     }
 
-    get analytics(): AnalyticsModule {
+    protected reportIntegrationFlavor(): void {
+        void this.analytics.sendFlavor('components');
+    }
+
+    get analytics(): IAnalytics {
         return this.core.modules.analytics;
     }
 
@@ -207,16 +211,6 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
             },
             this.elementRef
         );
-    }
-
-    // Only called once, for UIElements (including Dropin), as they are being mounted
-    protected setUpAnalytics(setUpAnalyticsObj: AnalyticsInitialEvent) {
-        const sessionId = this.props.session?.id;
-
-        return this.props.modules.analytics.setUp({
-            ...setUpAnalyticsObj,
-            ...(sessionId && { sessionId })
-        });
     }
 
     protected override submitAnalytics(event: AbstractAnalyticsEvent) {

@@ -4,8 +4,6 @@ import GooglePayService from './GooglePayService';
 
 import { NO_CHECKOUT_ATTEMPT_ID } from '../../core/Analytics/constants';
 import PaymentMethods from '../../core/ProcessResponse/PaymentMethods';
-import { mock } from 'jest-mock-extended';
-import { ICore } from '../../types';
 import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 import { InfoEventType } from '../../core/Analytics/events/AnalyticsInfoEvent';
 
@@ -60,11 +58,12 @@ beforeEach(() => {
 describe('GooglePay', () => {
     describe('Supporting "paywithgoogle" type as standalone Component', () => {
         test('should load the configuration from payment methods response', () => {
-            const core = mock<ICore>({});
-            core.paymentMethodsResponse = new PaymentMethods({
-                paymentMethods: [
-                    { name: 'Google Pay', type: 'paywithgoogle', configuration: { merchantId: 'merchant-id', gatewayMerchantId: 'gateway-id' } }
-                ]
+            const core = setupCoreMock({
+                paymentMethods: new PaymentMethods({
+                    paymentMethods: [
+                        { name: 'Google Pay', type: 'paywithgoogle', configuration: { merchantId: 'merchant-id', gatewayMerchantId: 'gateway-id' } }
+                    ]
+                })
             });
 
             const googlepay = new GooglePay(core);
