@@ -1,6 +1,6 @@
 import { get3DS2FlowProps } from '../../../components/ThreeDS2/components/utils';
 import uuid from '../../../utils/uuid';
-import UIElement from '../../../components/internal/UIElement';
+import type { UIElement } from '../../../types';
 import type { PaymentAction } from '../../../types/global-types';
 import type { IRegistry } from '../../core.registry';
 import type { ICore } from '../../types';
@@ -16,7 +16,7 @@ const createComponent = (core: ICore, registry: IRegistry, componentType, props)
 };
 
 const getActionHandler = statusType => {
-    return (core: ICore, registry: IRegistry, action: PaymentAction, props) => {
+    return (core: ICore, registry: IRegistry, action: PaymentAction, props): UIElement => {
         const config = {
             ...props,
             ...action,
@@ -30,7 +30,7 @@ const getActionHandler = statusType => {
 };
 
 const actionTypes = {
-    redirect: (core: ICore, registry, action: PaymentAction, props) => {
+    redirect: (core: ICore, registry, action: PaymentAction, props): UIElement => {
         const config = {
             ...props,
             ...action,
@@ -41,7 +41,7 @@ const actionTypes = {
         return createComponent(core, registry, 'redirect', config);
     },
 
-    threeDS2: (core: ICore, registry, action: PaymentAction, props) => {
+    threeDS2: (core: ICore, registry, action: PaymentAction, props): UIElement => {
         const componentType = action.subtype === 'fingerprint' ? 'threeDS2DeviceFingerprint' : 'threeDS2Challenge';
 
         /**
