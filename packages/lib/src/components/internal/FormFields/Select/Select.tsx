@@ -195,13 +195,19 @@ function Select({
     };
 
     /**
-     * Updates the state with the current text filter value
+     * Updates the state with the current text filter value and opens the dropdown
      * @param e - KeyboardEvent
      */
     const handleTextFilter = (e: KeyboardEvent) => {
         const value: string = (e.target as HTMLInputElement).value;
         setInputText(value);
         setTextFilter(value);
+        
+        // Open the dropdown when user starts typing
+        if (!showList) {
+            openList();
+        }
+        
         if (onInput) {
             onInput(value);
         }
@@ -278,7 +284,6 @@ function Select({
                 isInvalid={isInvalid}
                 isValid={isValid}
                 onButtonKeyDown={handleButtonKeyDown}
-                onFocus={openList}
                 onInput={handleTextFilter}
                 placeholder={placeholder}
                 readonly={readonly}

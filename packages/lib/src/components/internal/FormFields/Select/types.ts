@@ -52,7 +52,7 @@ export interface SelectButtonProps {
     isInvalid: boolean;
     isValid?: boolean;
     onButtonKeyDown: (e: KeyboardEvent) => void;
-    onFocus: (e: Event) => void;
+    onFocus?: (e: Event) => void;
     onInput: (e: Event) => void;
     placeholder: string;
     readonly: boolean;
