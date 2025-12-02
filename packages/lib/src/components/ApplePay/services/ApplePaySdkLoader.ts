@@ -1,14 +1,14 @@
 import Script from '../../../utils/Script';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
-import { AnalyticsModule } from '../../../types/global-types';
+import { IAnalytics } from '../../../core/Analytics/Analytics';
 
 export const APPLE_PAY_SDK_URL = 'https://applepay.cdn-apple.com/jsapi/1.latest/apple-pay-sdk.js';
 
 class ApplePaySdkLoader {
     private sdkLoadingPromise: Promise<void>;
-    private readonly analytics: AnalyticsModule;
+    private readonly analytics: IAnalytics;
 
-    constructor({ analytics }: { analytics: AnalyticsModule }) {
+    constructor({ analytics }: { analytics: IAnalytics }) {
         this.analytics = analytics;
     }
 

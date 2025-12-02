@@ -26,6 +26,8 @@ import type { Translations } from '../language/types';
 import type { UIElementProps } from '../components/internal/UIElement/types';
 import { AnalyticsLogEvent, LogEventType } from './Analytics/events/AnalyticsLogEvent';
 import CancelError from './Errors/CancelError';
+import { AnalyticsService } from './Analytics/AnalyticsService';
+import { AnalyticsEventQueue } from './Analytics/AnalyticsEventQueue';
 
 class Core implements ICore {
     public session?: Session;
@@ -108,6 +110,7 @@ class Core implements ICore {
         await this.initializeCore();
         this.validateCoreConfiguration();
         await this.createCoreModules();
+        await this.requestAnalyticsAttemptId();
         return this;
     }
 
@@ -374,11 +377,14 @@ class Core implements ICore {
 
         this.modules = Object.freeze({
             risk: new RiskModule(this, { ...this.options, loadingContext: this.loadingContext }),
-            analytics: Analytics({
-                analyticsContext: this.analyticsContext,
-                clientKey: this.options.clientKey,
-                locale: this.options.locale,
-                analytics: this.options.analytics
+            analytics: new Analytics({
+                eventQueue: new AnalyticsEventQueue(),
+                service: new AnalyticsService({
+                    analyticsContext: this.analyticsContext,
+                    clientKey: this.options.clientKey
+                }),
+                enabled: this.options.analytics?.enabled,
+                analyticsData: this.options.analytics?.analyticsData
             }),
             resources: new Resources(this.cdnImagesUrl),
             i18n: new Language({
@@ -387,6 +393,13 @@ class Core implements ICore {
                 customTranslations: this.options.translations
             }),
             srPanel: new SRPanel(this, { ...this.options.srConfig })
+        });
+    }
+
+    private async requestAnalyticsAttemptId(): Promise<void> {
+        await this.modules.analytics.setUp({
+            locale: this.options.locale,
+            ...(this.session?.id && { sessionId: this.session.id })
         });
     }
 }

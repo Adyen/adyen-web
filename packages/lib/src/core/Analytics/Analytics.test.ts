@@ -1,289 +1,385 @@
 import Analytics from './Analytics';
-import collectId from '../Services/analytics/collect-id';
-import wait from '../../utils/wait';
-import { DEFAULT_DEBOUNCE_TIME_MS } from '../../utils/debounce';
-import { AnalyticsInfoEvent, InfoEventType, UiTarget } from './events/AnalyticsInfoEvent';
+import { AnalyticsEventQueue } from './AnalyticsEventQueue';
+import { AnalyticsInfoEvent, InfoEventType } from './events/AnalyticsInfoEvent';
 import { AnalyticsErrorEvent, ErrorEventType } from './events/AnalyticsErrorEvent';
 import { AnalyticsLogEvent, LogEventType } from './events/AnalyticsLogEvent';
-import { AnalyticsProps } from './types';
-import { CheckoutAttemptIdSession } from '../Services/analytics/types';
 import Storage from '../../utils/Storage';
+import type { IAnalyticsService } from './AnalyticsService';
 
-jest.mock('../Services/analytics/collect-id');
+jest.mock('../../utils/Storage');
 
-const mockedCollectId = collectId as jest.Mock;
-const flushPromises = () => new Promise(process.nextTick);
-const MOCKED_ATTEMPT_ID = 'xxxx-yyyy-zzzz';
+const MockedStorage = Storage as jest.MockedClass<typeof Storage>;
+
+const createMockService = (): jest.Mocked<IAnalyticsService> => ({
+    requestCheckoutAttemptId: jest.fn(),
+    sendEvents: jest.fn(),
+    reportIntegrationFlavor: jest.fn()
+});
+
+const MOCK_CHECKOUT_ATTEMPT_ID = 'test-checkout-attempt-id';
 
 describe('Analytics', () => {
-    let collectIdPromiseMock = jest.fn(() => Promise.resolve(MOCKED_ATTEMPT_ID));
-    const storage = new Storage<CheckoutAttemptIdSession>('checkout-attempt-id', 'sessionStorage');
-
-    const DEFAULT_ANALYTICS_PROPS: AnalyticsProps = {
-        locale: 'en-US',
-        clientKey: 'test_client_key',
-        analyticsContext: 'https://checkoutanalytics-test.adyen.com/checkoutanalytics/'
-    };
-
-    function setupMocks({ rejectCollectIdPromise }: { rejectCollectIdPromise?: boolean } = {}) {
-        collectIdPromiseMock = jest.fn(() => (rejectCollectIdPromise ? Promise.reject() : Promise.resolve(MOCKED_ATTEMPT_ID)));
-        mockedCollectId.mockReset();
-        mockedCollectId.mockImplementation(() => collectIdPromiseMock);
-        collectIdPromiseMock.mockClear();
-    }
+    let mockService: jest.Mocked<IAnalyticsService>;
+    let eventQueue: AnalyticsEventQueue;
+    let mockStorageInstance: { get: jest.Mock; set: jest.Mock; clear: jest.Mock };
 
     beforeEach(() => {
-        setupMocks();
-        storage.clear();
+        jest.clearAllMocks();
+        jest.useFakeTimers();
+
+        mockService = createMockService();
+        mockService.requestCheckoutAttemptId.mockResolvedValue(MOCK_CHECKOUT_ATTEMPT_ID);
+
+        eventQueue = new AnalyticsEventQueue();
+
+        mockStorageInstance = {
+            get: jest.fn().mockReturnValue(null),
+            set: jest.fn(),
+            clear: jest.fn()
+        };
+        MockedStorage.mockImplementation(() => mockStorageInstance as any);
     });
 
-    describe('constructor()', () => {
-        test('should create it with default props', () => {
-            const analytics = Analytics(DEFAULT_ANALYTICS_PROPS);
-
-            expect(analytics.getCheckoutAttemptId).not.toBe(null);
-            expect(analytics.getEnabled).not.toBe(null);
-            expect(analytics.getEnabled()).toBe(true);
-            expect(analytics.sendAnalytics).not.toBe(null);
-            expect(collectIdPromiseMock).toHaveLength(0);
-        });
-    });
-
-    describe('sendAnalytics()', () => {
-        test('should send "error" event without the delay', async () => {
-            const analytics = Analytics(DEFAULT_ANALYTICS_PROPS);
-            await analytics.setUp();
-            await flushPromises();
-
-            expect(collectIdPromiseMock).toHaveBeenCalled();
-
-            const errorEvent = new AnalyticsErrorEvent({
-                component: 'threeDS2Fingerprint',
-                code: 'web_704',
-                errorType: ErrorEventType.apiError,
-                message: 'threeDS2Fingerprint Missing paymentData property from threeDS2 action'
-            });
-
-            analytics.sendAnalytics(errorEvent);
-            expect(analytics.getEventsQueue().getQueue().errors.length).toBe(1);
-
-            await wait(DEFAULT_DEBOUNCE_TIME_MS);
-            expect(analytics.getEventsQueue().getQueue().errors.length).toBe(0);
-        });
-
-        test('should send "log" event without delay', async () => {
-            const analytics = Analytics(DEFAULT_ANALYTICS_PROPS);
-            await analytics.setUp();
-            await flushPromises();
-
-            expect(collectIdPromiseMock).toHaveBeenCalled();
-
-            const event = new AnalyticsLogEvent({
-                component: 'scheme',
-                type: LogEventType.submit,
-                message: 'shopper clicked pay'
-            });
-
-            analytics.sendAnalytics(event);
-            expect(analytics.getEventsQueue().getQueue().logs.length).toBe(1);
-
-            await wait(DEFAULT_DEBOUNCE_TIME_MS);
-            expect(analytics.getEventsQueue().getQueue().logs.length).toBe(0);
-        });
-
-        test('should send "info" event with 10 seconds delay', async () => {
-            const analytics = Analytics(DEFAULT_ANALYTICS_PROPS);
-            await analytics.setUp();
-            await flushPromises();
-
-            expect(collectIdPromiseMock).toHaveBeenCalled();
-
-            const event = new AnalyticsInfoEvent({
-                component: 'scheme',
-                type: InfoEventType.validationError,
-                target: UiTarget.cardNumber,
-                validationErrorCode: 'cc.num.901',
-                validationErrorMessage: 'error-msg-incorrectly-filled-pan'
-            });
-
-            jest.useFakeTimers();
-
-            analytics.sendAnalytics(event);
-            expect(analytics.getEventsQueue().getQueue().info.length).toBe(1);
-
-            // 5 seconds pass and the event still there
-            jest.advanceTimersByTime(5000);
-            expect(analytics.getEventsQueue().getQueue().info.length).toBe(1);
-
-            // 10 seconds pass and the event is sent
-            jest.advanceTimersByTime(5000);
-            expect(analytics.getEventsQueue().getQueue().info.length).toBe(0);
-
-            jest.clearAllTimers();
-            jest.useRealTimers();
-        });
-
-        test('should not add events to the queue if analytics is disabled', async () => {
-            const analytics = Analytics({ ...DEFAULT_ANALYTICS_PROPS, analytics: { enabled: false } });
-            await analytics.setUp();
-            await flushPromises();
-
-            expect(collectIdPromiseMock).toHaveBeenCalled();
-
-            const event = new AnalyticsLogEvent({
-                component: 'scheme',
-                type: LogEventType.submit,
-                message: 'shopper clicked pay'
-            });
-
-            analytics.sendAnalytics(event);
-            expect(analytics.getEventsQueue().getQueue().logs.length).toBe(0);
-        });
+    afterEach(() => {
+        jest.useRealTimers();
     });
 
     describe('setUp()', () => {
-        test('should make the setup call using level:all by default', async () => {
-            const analytics = Analytics(DEFAULT_ANALYTICS_PROPS);
-            await analytics.setUp();
+        it('should request a checkout attempt ID from the service', async () => {
+            const analytics = new Analytics({ service: mockService, eventQueue });
 
-            expect(mockedCollectId).toHaveBeenCalledWith({
-                analyticsContext: 'https://checkoutanalytics-test.adyen.com/checkoutanalytics/',
-                analyticsPath: 'v3/analytics',
-                clientKey: 'test_client_key',
-                locale: 'en-US'
+            await analytics.setUp({ locale: 'en-US' });
+
+            expect(mockService.requestCheckoutAttemptId).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    channel: 'Web',
+                    platform: 'Web',
+                    locale: 'en-US',
+                    checkoutStage: 'checkout',
+                    level: 'all'
+                })
+            );
+        });
+
+        it('should use level "initial" when analytics is disabled', async () => {
+            const analytics = new Analytics({ service: mockService, eventQueue, enabled: false });
+
+            await analytics.setUp({ locale: 'en-US' });
+
+            expect(mockService.requestCheckoutAttemptId).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    level: 'initial'
+                })
+            );
+        });
+
+        it('should pass sessionId when provided', async () => {
+            const analytics = new Analytics({ service: mockService, eventQueue });
+
+            await analytics.setUp({ sessionId: 'test-session-id', locale: 'en-US' });
+
+            expect(mockService.requestCheckoutAttemptId).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    sessionId: 'test-session-id'
+                })
+            );
+        });
+
+        it('should pass checkoutStage when provided', async () => {
+            const analytics = new Analytics({ service: mockService, eventQueue });
+
+            await analytics.setUp({ checkoutStage: 'precheckout', locale: 'en-US' });
+
+            expect(mockService.requestCheckoutAttemptId).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    checkoutStage: 'precheckout'
+                })
+            );
+        });
+
+        it('should store the checkout attempt ID in session storage', async () => {
+            const analytics = new Analytics({ service: mockService, eventQueue });
+
+            await analytics.setUp({ locale: 'en-US' });
+
+            expect(mockStorageInstance.set).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    id: MOCK_CHECKOUT_ATTEMPT_ID
+                })
+            );
+        });
+
+        it('should reuse checkout attempt ID from session storage if not expired', async () => {
+            const recentTimestamp = Date.now() - 5 * 60 * 1000; // 5 minutes ago
+            mockStorageInstance.get.mockReturnValue({ id: 'stored-attempt-id', timestamp: recentTimestamp });
+
+            const analytics = new Analytics({ service: mockService, eventQueue });
+
+            await analytics.setUp({ locale: 'en-US' });
+
+            expect(mockService.requestCheckoutAttemptId).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    checkoutAttemptId: 'stored-attempt-id'
+                })
+            );
+        });
+
+        it('should not reuse checkout attempt ID from session storage if expired (>15 minutes)', async () => {
+            const expiredTimestamp = Date.now() - 16 * 60 * 1000; // 16 minutes ago
+            mockStorageInstance.get.mockReturnValue({ id: 'expired-attempt-id', timestamp: expiredTimestamp });
+
+            const analytics = new Analytics({ service: mockService, eventQueue });
+
+            await analytics.setUp({ locale: 'en-US' });
+
+            expect(mockService.requestCheckoutAttemptId).toHaveBeenCalledWith(
+                expect.not.objectContaining({
+                    checkoutAttemptId: 'expired-attempt-id'
+                })
+            );
+        });
+
+        it('should use checkoutAttemptId from analyticsData (PayByLink use-case)', async () => {
+            const analytics = new Analytics({
+                service: mockService,
+                eventQueue,
+                analyticsData: { checkoutAttemptId: 'pbl-attempt-id' }
             });
-            expect(collectIdPromiseMock).toHaveBeenCalledWith({ level: 'all', checkoutStage: 'checkout' });
+
+            await analytics.setUp({ locale: 'en-US' });
+
+            expect(mockService.requestCheckoutAttemptId).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    checkoutAttemptId: 'pbl-attempt-id'
+                })
+            );
         });
 
-        test('should make the setup call using level:info if analytics is disabled', async () => {
-            const analytics = Analytics({ ...DEFAULT_ANALYTICS_PROPS, analytics: { enabled: false } });
-            await analytics.setUp();
+        it('should pass applicationInfo from analyticsData (Plugins use-case)', async () => {
+            const applicationInfo = {
+                merchantApplication: { name: 'test-app', version: '1.0.0' },
+                externalPlatform: { name: 'test-platform', version: '2.0.0', integrator: 'test-integrator' }
+            };
 
-            expect(collectIdPromiseMock).toHaveBeenCalledWith({ level: 'initial', checkoutStage: 'checkout' });
-        });
-
-        test('should be able to pass checkoutState:precheckout during the setup call', async () => {
-            const analytics = Analytics({ ...DEFAULT_ANALYTICS_PROPS, analytics: { enabled: false } });
-            await analytics.setUp({ checkoutStage: 'precheckout' });
-
-            expect(collectIdPromiseMock).toHaveBeenCalledWith({ level: 'initial', checkoutStage: 'precheckout' });
-        });
-
-        test('should save the attempt ID in the session storage', async () => {
-            let attemptId: CheckoutAttemptIdSession | null = storage.get();
-            expect(attemptId).toBeNull();
-
-            const analytics = Analytics(DEFAULT_ANALYTICS_PROPS);
-            await analytics.setUp();
-            await flushPromises();
-
-            expect(collectIdPromiseMock).toHaveBeenCalledWith({ level: 'all', checkoutStage: 'checkout' });
-
-            attemptId = storage.get();
-            expect(attemptId.id).toBe(MOCKED_ATTEMPT_ID);
-        });
-
-        test('should reuse the attempt ID available in the session storage if it is not expired', async () => {
-            storage.set({ id: MOCKED_ATTEMPT_ID, timestamp: Date.now() });
-
-            const analytics = Analytics(DEFAULT_ANALYTICS_PROPS);
-            await analytics.setUp();
-
-            expect(collectIdPromiseMock).toHaveBeenCalledWith({
-                level: 'all',
-                checkoutStage: 'checkout',
-                checkoutAttemptId: MOCKED_ATTEMPT_ID
-            });
-        });
-
-        test('should request a new attempt ID if the one available in the session storage is expired', async () => {
-            const fifteenMinutesInMs = 15 * 60 * 1000;
-            const expiredTimestamp = Date.now() - fifteenMinutesInMs - 1; // 1ms over the limit
-            const MOCKED_EXPIRED_ATTEMPT_ID = 'yyyy-xxxx-zzzz';
-            storage.set({ id: MOCKED_EXPIRED_ATTEMPT_ID, timestamp: expiredTimestamp });
-
-            const analytics = Analytics(DEFAULT_ANALYTICS_PROPS);
-            await analytics.setUp();
-            await flushPromises();
-
-            expect(collectIdPromiseMock).toHaveBeenCalledWith({
-                level: 'all',
-                checkoutStage: 'checkout'
+            const analytics = new Analytics({
+                service: mockService,
+                eventQueue,
+                analyticsData: { applicationInfo }
             });
 
-            const newSession = storage.get();
-            expect(newSession.id).toBe(MOCKED_ATTEMPT_ID);
-            expect(newSession.timestamp).toBeGreaterThan(expiredTimestamp);
+            await analytics.setUp({ locale: 'en-US' });
+
+            expect(mockService.requestCheckoutAttemptId).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    applicationInfo
+                })
+            );
         });
 
-        test('should use attempt ID if it is passed as part of the Analytics configuration (PBL use-case)', async () => {
-            const PAYBYLINK_ATTEMPT_ID = 'aaaaa-bbbb-cccc';
-            const analytics = Analytics({
-                ...DEFAULT_ANALYTICS_PROPS,
-                analytics: { analyticsData: { checkoutAttemptId: PAYBYLINK_ATTEMPT_ID } }
-            });
-            await analytics.setUp();
+        it('should disable analytics and warn on setup failure', async () => {
+            const warnSpy = jest.spyOn(console, 'warn').mockImplementation();
+            mockService.requestCheckoutAttemptId.mockRejectedValue(new Error('Network error'));
 
-            expect(collectIdPromiseMock).toHaveBeenCalledWith({
-                level: 'all',
-                checkoutStage: 'checkout',
-                checkoutAttemptId: PAYBYLINK_ATTEMPT_ID
-            });
-        });
+            const analytics = new Analytics({ service: mockService, eventQueue });
 
-        test('should not throw an exception if the attempt ID request fails', async () => {
-            setupMocks({ rejectCollectIdPromise: true });
-            const warnSpy = jest.spyOn(console, 'warn');
-
-            const analytics = Analytics(DEFAULT_ANALYTICS_PROPS);
-            await expect(analytics.setUp()).resolves.not.toThrow();
-            await flushPromises();
-
-            expect(collectIdPromiseMock).toHaveBeenCalledWith({ checkoutStage: 'checkout', level: 'all' });
+            await analytics.setUp({ locale: 'en-US' });
 
             expect(warnSpy).toHaveBeenCalled();
             warnSpy.mockRestore();
         });
+    });
 
-        test('should pass "applicationInfo" to the setup if available (Plugins use-case)', async () => {
-            const applicationInfo = {
-                merchantApplication: {
-                    name: 'merchant_application_name',
-                    version: 'version'
-                },
-                externalPlatform: {
-                    name: 'external_platform_name',
-                    version: 'external_platform_version',
-                    integrator: 'getSystemIntegratorName'
-                }
-            };
+    describe('sendAnalytics()', () => {
+        it('should add info events to the queue', async () => {
+            const analytics = new Analytics({ service: mockService, eventQueue });
+            await analytics.setUp({ locale: 'en-US' });
 
-            const analytics = Analytics({
-                ...DEFAULT_ANALYTICS_PROPS,
-                analytics: {
-                    analyticsData: {
-                        applicationInfo
-                    }
-                }
+            const infoEvent = new AnalyticsInfoEvent({ type: InfoEventType.rendered, component: 'card' });
+            analytics.sendAnalytics(infoEvent);
+
+            expect(eventQueue.infoEvents).toHaveLength(1);
+        });
+
+        it('should add error events to the queue', async () => {
+            const analytics = new Analytics({ service: mockService, eventQueue });
+            await analytics.setUp({ locale: 'en-US' });
+
+            const errorEvent = new AnalyticsErrorEvent({
+                component: 'card',
+                errorType: ErrorEventType.network,
+                code: '500'
             });
+            analytics.sendAnalytics(errorEvent);
 
-            await analytics.setUp();
+            expect(eventQueue.errorEvents).toHaveLength(1);
+        });
 
-            expect(collectIdPromiseMock).toHaveBeenCalledWith({
-                applicationInfo: {
-                    externalPlatform: {
-                        integrator: 'getSystemIntegratorName',
-                        name: 'external_platform_name',
-                        version: 'external_platform_version'
-                    },
-                    merchantApplication: {
-                        name: 'merchant_application_name',
-                        version: 'version'
-                    }
-                },
-                level: 'all',
-                checkoutStage: 'checkout'
+        it('should add log events to the queue', async () => {
+            const analytics = new Analytics({ service: mockService, eventQueue });
+            await analytics.setUp({ locale: 'en-US' });
+
+            const logEvent = new AnalyticsLogEvent({
+                type: LogEventType.submit,
+                component: 'card',
+                message: 'Payment submitted'
             });
+            analytics.sendAnalytics(logEvent);
+
+            expect(eventQueue.logEvents).toHaveLength(1);
+        });
+
+        it('should not add events to the queue when analytics is disabled', async () => {
+            const analytics = new Analytics({ service: mockService, eventQueue, enabled: false });
+            await analytics.setUp({ locale: 'en-US' });
+
+            const infoEvent = new AnalyticsInfoEvent({ type: InfoEventType.rendered, component: 'card' });
+            analytics.sendAnalytics(infoEvent);
+
+            expect(eventQueue.infoEvents).toHaveLength(0);
+        });
+
+        it('should send info events after debounce delay', async () => {
+            const analytics = new Analytics({ service: mockService, eventQueue });
+            await analytics.setUp({ locale: 'en-US' });
+
+            const infoEvent = new AnalyticsInfoEvent({ type: InfoEventType.rendered, component: 'card' });
+            analytics.sendAnalytics(infoEvent);
+
+            expect(mockService.sendEvents).not.toHaveBeenCalled();
+
+            jest.advanceTimersByTime(10_000);
+
+            expect(mockService.sendEvents).toHaveBeenCalled();
+        });
+
+        it('should send error/log events after shorter debounce delay', async () => {
+            const analytics = new Analytics({ service: mockService, eventQueue });
+            await analytics.setUp({ locale: 'en-US' });
+
+            const errorEvent = new AnalyticsErrorEvent({
+                component: 'card',
+                errorType: ErrorEventType.network,
+                code: '500'
+            });
+            analytics.sendAnalytics(errorEvent);
+
+            expect(mockService.sendEvents).not.toHaveBeenCalled();
+
+            jest.advanceTimersByTime(5_000);
+
+            expect(mockService.sendEvents).toHaveBeenCalled();
+        });
+
+        it('should clear the queue after sending events', async () => {
+            const analytics = new Analytics({ service: mockService, eventQueue });
+            await analytics.setUp({ locale: 'en-US' });
+
+            const infoEvent = new AnalyticsInfoEvent({ type: InfoEventType.rendered, component: 'card' });
+            analytics.sendAnalytics(infoEvent);
+
+            jest.advanceTimersByTime(10_000);
+
+            expect(eventQueue.infoEvents).toHaveLength(0);
+        });
+    });
+
+    describe('sendFlavor()', () => {
+        it('should report dropin flavor', async () => {
+            const analytics = new Analytics({ service: mockService, eventQueue });
+            await analytics.setUp({ locale: 'en-US' });
+
+            await analytics.sendFlavor('dropin');
+
+            expect(mockService.reportIntegrationFlavor).toHaveBeenCalledWith('dropin', MOCK_CHECKOUT_ATTEMPT_ID);
+        });
+
+        it('should report components flavor', async () => {
+            const analytics = new Analytics({ service: mockService, eventQueue });
+            await analytics.setUp({ locale: 'en-US' });
+
+            await analytics.sendFlavor('components');
+
+            expect(mockService.reportIntegrationFlavor).toHaveBeenCalledWith('components', MOCK_CHECKOUT_ATTEMPT_ID);
+        });
+
+        it('should only report flavor once', async () => {
+            const analytics = new Analytics({ service: mockService, eventQueue });
+            await analytics.setUp({ locale: 'en-US' });
+
+            await analytics.sendFlavor('dropin');
+            await analytics.sendFlavor('dropin');
+
+            expect(mockService.reportIntegrationFlavor).toHaveBeenCalledTimes(1);
+        });
+
+        it('should report flavor when analytics is disabled', async () => {
+            const analytics = new Analytics({ service: mockService, eventQueue, enabled: false });
+            await analytics.setUp({ locale: 'en-US' });
+
+            await analytics.sendFlavor('dropin');
+
+            expect(mockService.reportIntegrationFlavor).toHaveBeenCalled();
+        });
+
+        it('should not report flavor when checkoutAttemptId is not available', async () => {
+            mockService.requestCheckoutAttemptId.mockRejectedValue(new Error('Network error'));
+            jest.spyOn(console, 'warn').mockImplementation();
+
+            const analytics = new Analytics({ service: mockService, eventQueue });
+            await analytics.setUp({ locale: 'en-US' });
+
+            await analytics.sendFlavor('dropin');
+
+            expect(mockService.reportIntegrationFlavor).not.toHaveBeenCalled();
+        });
+
+        it('should warn on flavor report failure', async () => {
+            const warnSpy = jest.spyOn(console, 'warn').mockImplementation();
+            mockService.reportIntegrationFlavor.mockRejectedValue(new Error('Network error'));
+
+            const analytics = new Analytics({ service: mockService, eventQueue });
+            await analytics.setUp({ locale: 'en-US' });
+
+            await analytics.sendFlavor('dropin');
+
+            expect(warnSpy).toHaveBeenCalled();
+            warnSpy.mockRestore();
+        });
+    });
+
+    describe('flush()', () => {
+        it('should immediately send all queued events', async () => {
+            const analytics = new Analytics({ service: mockService, eventQueue });
+            await analytics.setUp({ locale: 'en-US' });
+
+            const infoEvent = new AnalyticsInfoEvent({ type: InfoEventType.rendered, component: 'card' });
+            analytics.sendAnalytics(infoEvent);
+
+            analytics.flush();
+
+            expect(mockService.sendEvents).toHaveBeenCalled();
+            expect(eventQueue.infoEvents).toHaveLength(0);
+        });
+
+        it('should not send events when analytics is disabled', async () => {
+            const analytics = new Analytics({ service: mockService, eventQueue, enabled: false });
+            await analytics.setUp({ locale: 'en-US' });
+
+            analytics.flush();
+
+            expect(mockService.sendEvents).not.toHaveBeenCalled();
+        });
+
+        it('should not send events when checkoutAttemptId is not available', async () => {
+            mockService.requestCheckoutAttemptId.mockRejectedValue(new Error('Network error'));
+            jest.spyOn(console, 'warn').mockImplementation();
+
+            const analytics = new Analytics({ service: mockService, eventQueue });
+            await analytics.setUp({ locale: 'en-US' });
+
+            analytics.flush();
+
+            expect(mockService.sendEvents).not.toHaveBeenCalled();
         });
     });
 });

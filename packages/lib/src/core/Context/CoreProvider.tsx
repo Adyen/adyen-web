@@ -4,21 +4,21 @@ import { Resources } from './Resources';
 import Language from '../../language';
 
 import type { ComponentChildren } from 'preact';
-import type { AnalyticsModule } from '../../types/global-types';
+import type { IAnalytics } from '../Analytics/Analytics';
 
 interface CoreProviderProps {
     loadingContext: string;
     i18n: Language;
     resources: Resources;
     children: ComponentChildren;
-    analytics?: AnalyticsModule;
+    analytics?: IAnalytics;
 }
 
 type ContextValue = {
     i18n: Language;
     loadingContext: string;
     resources: Resources;
-    analytics: AnalyticsModule;
+    analytics: IAnalytics;
 };
 
 const CoreContext = createContext<ContextValue | undefined>(undefined);
