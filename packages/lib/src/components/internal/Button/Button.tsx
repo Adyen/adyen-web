@@ -118,6 +118,9 @@ class Button extends Component<ButtonProps, ButtonState> {
 
         return (
             <Fragment>
+                <div role="status" aria-live="polite" className="adyen-checkout__button__text--sr-only">
+                    {i18n.get(this.buttonStatusSRLabel(status))}
+                </div>
                 <button
                     ref={buttonRef}
                     className={buttonClasses}
@@ -136,9 +139,6 @@ class Button extends Component<ButtonProps, ButtonState> {
                     {buttonText}
                     {status !== 'loading' && status !== 'redirect' && this.props.children}
                 </button>
-                <div role="status" aria-live="polite" className="adyen-checkout__button__text--sr-only">
-                    {i18n.get(this.buttonStatusSRLabel(status))}
-                </div>
             </Fragment>
         );
     }
