@@ -1,4 +1,4 @@
-import { Component, h, Fragment } from 'preact';
+import { Component, h } from 'preact';
 import classNames from 'classnames';
 import Spinner from '../Spinner';
 import { useCoreContext } from '../../../core/Context/CoreProvider';
@@ -28,15 +28,6 @@ class Button extends Component<ButtonProps, ButtonState> {
         setTimeout(() => {
             this.setState({ completed: false });
         }, delay);
-    };
-
-    private readonly buttonStatusSRLabel = (status: string): string => {
-        const srLabels: Record<string, string> = {
-            loading: 'loading',
-            redirect: 'payButton.redirecting'
-        };
-
-        return srLabels[status] || '';
     };
 
     render() {
@@ -90,10 +81,11 @@ class Button extends Component<ButtonProps, ButtonState> {
             loading: (
                 <span className="adyen-checkout__button__content">
                     <Spinner size="medium" inline />
+                    <span className={'adyen-checkout__button__text--sr-only'}>{i18n.get('loading')}</span>
                 </span>
             ),
             redirect: (
-                <span aria-hidden="true" className="adyen-checkout__button__content">
+                <span className="adyen-checkout__button__content">
                     <Spinner size="medium" inline />
                     {i18n.get('payButton.redirecting')}
                 </span>
@@ -117,29 +109,24 @@ class Button extends Component<ButtonProps, ButtonState> {
         }
 
         return (
-            <Fragment>
-                <button
-                    ref={buttonRef}
-                    className={buttonClasses}
-                    type="button"
-                    disabled={disabled}
-                    onClick={this.onClick}
-                    aria-label={ariaLabel}
-                    aria-describedby={ariaDescribedBy}
-                    onMouseEnter={onMouseEnter}
-                    onMouseLeave={onMouseLeave}
-                    onKeyDown={onKeyDown}
-                    onFocus={onFocus}
-                    onBlur={onBlur}
-                    onKeyPress={onKeyPress}
-                >
-                    {buttonText}
-                    {status !== 'loading' && status !== 'redirect' && this.props.children}
-                </button>
-                <div role="status" aria-live="polite" className="adyen-checkout__button__text--sr-only">
-                    {i18n.get(this.buttonStatusSRLabel(status))}
-                </div>
-            </Fragment>
+            <button
+                ref={buttonRef}
+                className={buttonClasses}
+                type="button"
+                disabled={disabled}
+                onClick={this.onClick}
+                aria-label={ariaLabel}
+                aria-describedby={ariaDescribedBy}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
+                onKeyDown={onKeyDown}
+                onFocus={onFocus}
+                onBlur={onBlur}
+                onKeyPress={onKeyPress}
+            >
+                {buttonText}
+                {status !== 'loading' && status !== 'redirect' && this.props.children}
+            </button>
         );
     }
 }
