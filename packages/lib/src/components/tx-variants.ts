@@ -106,6 +106,7 @@ export enum TxVariants {
     billdesk_wallet = 'billdesk_wallet',
     dotpay = 'dotpay',
     eps = 'eps',
+    iris = 'iris',
     molpay_ebanking_fpx_MY = 'molpay_ebanking_fpx_MY',
     molpay_ebanking_TH = 'molpay_ebanking_TH',
     molpay_ebanking_VN = 'molpay_ebanking_VN',
