@@ -15,8 +15,8 @@ const getWrapper = (props: ButtonProps) => {
 describe('Button', () => {
     test('Renders a button by default', () => {
         const wrapper = getWrapper({ label: 'label' });
-        expect(wrapper.text()).toContain('label');
-        expect(wrapper.getDOMNode().nodeName).toBe('BUTTON');
+        expect(wrapper.find('button').text()).toContain('label');
+        expect(wrapper.find('button').getDOMNode().nodeName).toBe('BUTTON');
     });
 
     test('Renders a link if href is present', () => {
@@ -44,7 +44,7 @@ describe('Button', () => {
     test('Uses label when a status is not defined', () => {
         const onClick = jest.fn();
         const wrapper = getWrapper({ onClick, label: 'label', status: 'ready' });
-        expect(wrapper.text()).toContain('label');
+        expect(wrapper.find('button').text()).toContain('label');
     });
 
     test('Uses a custom label when a status is defined', () => {
