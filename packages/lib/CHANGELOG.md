@@ -42,9 +42,7 @@
 
 - Added box shadow to all brand icons and used the black checkmark for the valid fields. ([#3640](https://github.com/Adyen/adyen-web/pull/3640))
 
-- Fixed aria-live announcement at Button component to announce loading and redirect states to screen readers for improved accessibility. ([#3696](https://github.com/Adyen/adyen-web/pull/3696))
-
--   - Improved Click to Pay for users with screen readers by fixing labels and removing duplicate text. ([#3663](https://github.com/Adyen/adyen-web/pull/3663))
+- Improved Click to Pay for users with screen readers by fixing labels and removing duplicate text. ([#3663](https://github.com/Adyen/adyen-web/pull/3663))
 
 ## 6.25.1
 

@@ -88,7 +88,7 @@ class Button extends Component<ButtonProps, ButtonState> {
 
         const buttonStates = {
             loading: (
-                <span className="adyen-checkout__button__content">
+                <span aria-hidden="true" className="adyen-checkout__button__content">
                     <Spinner size="medium" inline />
                 </span>
             ),
@@ -118,6 +118,9 @@ class Button extends Component<ButtonProps, ButtonState> {
 
         return (
             <Fragment>
+                <span role="status" aria-live="polite" className="adyen-checkout__button__text--sr-only">
+                    {i18n.get(this.buttonStatusSRLabel(status))}
+                </span>
                 <button
                     ref={buttonRef}
                     className={buttonClasses}
@@ -136,9 +139,6 @@ class Button extends Component<ButtonProps, ButtonState> {
                     {buttonText}
                     {status !== 'loading' && status !== 'redirect' && this.props.children}
                 </button>
-                <div role="status" aria-live="polite" className="adyen-checkout__button__text--sr-only">
-                    {i18n.get(this.buttonStatusSRLabel(status))}
-                </div>
             </Fragment>
         );
     }
