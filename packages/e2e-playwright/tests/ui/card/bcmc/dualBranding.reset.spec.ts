@@ -20,17 +20,9 @@ test.describe('Testing Bancontact, with dual branded cards, how UI resets', () =
 
             expect(brands).toHaveLength(2);
 
-            expect(
-                brands.some(async brand => {
-                    (await brand.getAttribute('alt')) === 'Bancontact card';
-                })
-            ).toBeTruthy();
-
-            expect(
-                brands.some(async brand => {
-                    (await brand.getAttribute('alt')) === 'Maestro';
-                })
-            ).toBeTruthy();
+            const brandAlts = await Promise.all(brands.map(brand => brand.getAttribute('alt')));
+            expect(brandAlts).toHaveLength(2);
+            expect(brandAlts).toEqual(expect.arrayContaining(['Bancontact card', 'Maestro']));
 
             await bcmc.deleteCardNumber();
 
