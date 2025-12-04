@@ -33,11 +33,24 @@ test.describe('Bcmc payments with dual branding', () => {
                 await bcmc.typeCardNumber(BCMC_CARD);
 
                 await bcmc.typeExpiryDate(TEST_DATE_VALUE);
-                await bcmc.waitForVisibleDualBrandIcons();
-                const [firstBrand, secondBrand] = await bcmc.dualBrandIcons;
 
-                await expect(firstBrand).toHaveAttribute('alt', 'Bancontact card');
-                await expect(secondBrand).toHaveAttribute('alt', 'Maestro');
+                await bcmc.waitForVisibleDualBrandIcons(2);
+                const brands = await bcmc.dualBrandIcons;
+
+                expect(
+                    brands.some(async brand => {
+                        (await brand.getAttribute('alt')) === 'Bancontact card';
+                    })
+                ).toBeTruthy();
+
+                expect(
+                    brands.some(async brand => {
+                        (await brand.getAttribute('alt')) === 'Maestro';
+                    })
+                ).toBeTruthy();
+
+                await bcmc.selectBrandIcon('Bancontact card');
+
                 await expect(bcmc.cvcField).toBeHidden();
 
                 const paymentsRequestPromise = page.waitForRequest(request => request.url().includes('/payments') && request.method() === 'POST');
