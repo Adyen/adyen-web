@@ -3,16 +3,18 @@ import { PAYMENT_RESULT, REGULAR_TEST_CARD, TEST_CVC_VALUE, TEST_DATE_VALUE } fr
 import { URL_MAP } from '../../../fixtures/URL_MAP';
 import { Giftcard } from '../../../models/giftcard';
 import { Card } from '../../../models/card';
+import { SCREENSHOT_CONFIG } from '../../utils/constants';
 
 test.describe('Giftcard - Payment flow', () => {
     test('#1 Should fill in gift card fields and complete the payment', async ({ page }) => {
         const giftcard = new Giftcard(page);
         await giftcard.gotoWithAmount(undefined, { amount: '4000' });
-
+        
+        await expect(giftcard.rootElement).toHaveScreenshot('giftcard-empty.png', SCREENSHOT_CONFIG);
         await giftcard.fillGiftcardNumber('6036280000000000000');
         await giftcard.fillPin('123');
         await giftcard.redeem();
-
+        
         await giftcard.clickPayButton();
 
         await expect(giftcard.paymentResult).toContainText(PAYMENT_RESULT.authorised);
