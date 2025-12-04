@@ -47,6 +47,7 @@ export { default as BillDeskOnline } from './BillDesk/BillDeskOnline';
 export { default as BillDeskWallet } from './BillDesk/BillDeskWallet';
 export { default as Dotpay } from './Dotpay'; // add other tx variants
 export { default as EPS } from './EPS';
+export { default as Iris } from './Iris';
 export { default as MolPayEBankingMY } from './MolPayEBanking/MolPayEBankingMY';
 export { default as MolPayEBankingTH } from './MolPayEBanking/MolPayEBankingTH';
 export { default as MolPayEBankingVN } from './MolPayEBanking/MolPayEBankingVN';
