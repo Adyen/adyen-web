@@ -32,8 +32,6 @@ test.describe('Testing Bancontact, with dual branded cards, how UI resets', () =
                 })
             ).toBeTruthy();
 
-            await bcmc.selectBrandIcon('Bancontact card');
-
             await bcmc.deleteCardNumber();
 
             // Now only a single brand
