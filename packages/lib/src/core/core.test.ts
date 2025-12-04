@@ -8,6 +8,7 @@ import ThreeDS2DeviceFingerprint from '../components/ThreeDS2/ThreeDS2DeviceFing
 import ThreeDS2Challenge from '../components/ThreeDS2/ThreeDS2Challenge';
 import Redirect from '../components/Redirect';
 import { PaymentActionsType } from '../types/global-types';
+import Analytics from './Analytics';
 
 jest.mock('./Services/get-translations');
 jest.mock('./CheckoutSession');
@@ -34,7 +35,17 @@ const setupSessionSpy = jest.spyOn(Session.prototype, 'setupSession').mockImplem
     return Promise.resolve(sessionSetupResponseMock);
 });
 
+let analyticsSetupSpy;
+
 describe('Core', () => {
+    beforeEach(() => {
+        analyticsSetupSpy = jest.spyOn(Analytics.prototype, 'setUp').mockResolvedValue();
+    });
+
+    afterEach(() => {
+        analyticsSetupSpy.mockRestore();
+    });
+
     describe('Setting locale', () => {
         test('should default locale to en-US', async () => {
             const checkout = new AdyenCheckout({ countryCode: 'US', environment: 'test', clientKey: 'test_123456' });
@@ -68,6 +79,46 @@ describe('Core', () => {
 
             await checkout.initialize();
             expect(setupSessionSpy).toHaveBeenCalledWith(expect.objectContaining({ session: { id: 'session-id', sessionData: 'session-data' } }));
+        });
+
+        test('should call analytics setUp when initialized', async () => {
+            const checkout = new AdyenCheckout({
+                countryCode: 'US',
+                environment: 'test',
+                clientKey: 'test_123456'
+            });
+
+            await checkout.initialize();
+
+            expect(analyticsSetupSpy).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    locale: 'en-US'
+                })
+            );
+        });
+
+        test('should call analytics setUp with sessionId when using sessions flow', async () => {
+            const checkout = new AdyenCheckout({
+                countryCode: 'US',
+                environment: 'test',
+                clientKey: 'test_123456',
+                session: { id: 'session-id', sessionData: 'session-data' }
+            });
+
+            // Mock the id getter on the session instance
+            Object.defineProperty(checkout.session, 'id', {
+                get: () => 'session-id',
+                configurable: true
+            });
+
+            await checkout.initialize();
+
+            expect(analyticsSetupSpy).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    locale: 'en-US',
+                    sessionId: 'session-id'
+                })
+            );
         });
     });
 
@@ -124,7 +175,7 @@ describe('Core', () => {
                 paymentData: 'Ab02b4c0!BQABAgCUeRP+3La4...',
                 paymentMethodType: 'scheme',
                 subtype: 'fingerprint',
-                token: 'eyJ0aHJlZURTTWV0aG9kTm90aWZpY2F0aW9uVVJMIjoiaHR0cHM6XC9cL2NoZWNrb3V0c2hvcHBlci10ZXN0LmFkeWVuLmNvbVwvY2hlY2tvdXRzaG9wcGVyXC90aHJlZURTTWV0aG9kTm90aWZpY2F0aW9uLnNodG1sP29yaWdpbktleT1wdWIudjIuODExNTY1ODcwNTcxMzk0MC5hSFIwY0hNNkx5OXdhSEF0TnpFdGMybHRiMjR1YzJWaGJXeGxjM010WTJobFkydHZkWFF1WTI5dC50VnJIV3B4UktWVTVPMENiNUg5TVFlUnJKdmZRQ1lnbXR6VTY1WFhzZ2NvIiwidGhyZWVEU01ldGhvZFVybCI6Imh0dHBzOlwvXC9wYWwtdGVzdC5hZHllbi5jb21cL3RocmVlZHMyc2ltdWxhdG9yXC9hY3NcL3N0YXJ0TWV0aG9kLnNodG1sIiwidGhyZWVEU1NlcnZlclRyYW5zSUQiOiI5MzI2ZjNiOS00MTc3LTQ4ZTktYmM2Mi1kOTliYzVkZDA2Y2IifQ==',
+                token: 'xxx',
                 type: 'threeDS2' as PaymentActionsType
             };
 
@@ -149,7 +200,7 @@ describe('Core', () => {
             const challengeAction = {
                 paymentData: 'Ab02b4c0!BQABAgCUeRP+3La4...',
                 subtype: 'challenge',
-                token: 'eyJhY3NSZWZlcmVuY2VOdW1iZXIiOiJBRFlFTi1BQ1MtU0lNVUxBVE9SIiwiYWNzVHJhbnNJRCI6Ijg0MzZjYThkLThkN2EtNGFjYy05NmYyLTE0ZjU0MjgyNzczZiIsImFjc1VSTCI6Imh0dHBzOlwvXC9wYWwtdGVzdC5hZHllbi5jb21cL3RocmVlZHMyc2ltdWxhdG9yXC9hY3NcL2NoYWxsZW5nZS5zaHRtbCIsIm1lc3NhZ2VWZXJzaW9uIjoiMi4xLjAiLCJ0aHJlZURTTm90aWZpY2F0aW9uVVJMIjoiaHR0cHM6XC9cL2NoZWNrb3V0c2hvcHBlci10ZXN0LmFkeWVuLmNvbVwvY2hlY2tvdXRzaG9wcGVyXC8zZG5vdGlmLnNodG1sP29yaWdpbktleT1wdWIudjIuODExNTY1ODcwNTcxMzk0MC5hSFIwY0hNNkx5OWphR1ZqYTI5MWRITm9iM0J3WlhJdGRHVnpkQzVoWkhsbGJpNWpiMjAuVGFKalVLN3VrUFdTUzJEX3l2ZDY4TFRLN2dRN2ozRXFOM05nS1JWQW84OCIsInRocmVlRFNTZXJ2ZXJUcmFuc0lEIjoiZTU0NDNjZTYtNTE3Mi00MmM1LThjY2MtYmRjMGE1MmNkZjViIn0=',
+                token: 'xxx',
                 type: 'threeDS2' as PaymentActionsType,
                 paymentMethodType: 'scheme'
             };
@@ -391,7 +442,7 @@ describe('Core', () => {
         const mockOnError = jest.fn();
         const mockAfterAdditionalDetails = jest.fn();
 
-        it('calls onPaymentCompleted for the successful payment', async () => {
+        test('calls onPaymentCompleted for the successful payment', async () => {
             const submitDetailsRes = { resultCode: 'Authorised', sessionData: 'dummySessionData' };
             // @ts-ignore: testing purpose
             jest.spyOn(Session.prototype, 'submitDetails').mockImplementation(() => {
@@ -409,13 +460,12 @@ describe('Core', () => {
             });
             await core.initialize();
             core.submitDetails(details);
-
             const flushPromises = () => new Promise(process.nextTick);
             await flushPromises();
             expect(mockOnPaymentCompleted).toHaveBeenCalledWith(submitDetailsRes);
         });
 
-        it('calls afterAdditionalDetails if there is an action from the response that needs to be exposed', async () => {
+        test('calls afterAdditionalDetails if there is an action from the response that needs to be exposed', async () => {
             const submitDetailsRes = {
                 resultCode: 'RedirectShopper',
                 sessionData: 'dummySessionData',
@@ -440,6 +490,7 @@ describe('Core', () => {
                 onError: mockOnError,
                 afterAdditionalDetails: mockAfterAdditionalDetails
             });
+
             await core.initialize();
             core.modules = global.commonCoreProps.modules;
             core.submitDetails(details);

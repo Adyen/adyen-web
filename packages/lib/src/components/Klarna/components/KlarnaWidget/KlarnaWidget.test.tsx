@@ -7,8 +7,8 @@ import { KLARNA_WIDGET_URL } from '../../constants';
 import { KlarnaWidgetAuthorizeResponse, type KlarnaWidgetProps } from '../../types';
 import { CoreProvider } from '../../../../core/Context/CoreProvider';
 import { mock } from 'jest-mock-extended';
-import { AnalyticsModule } from '../../../../types/global-types';
 import { PayButtonFunctionProps } from '../../../internal/UIElement/types';
+import type { IAnalytics } from '../../../../core/Analytics/Analytics';
 
 jest.mock('../../../../utils/Script', () => {
     return jest.fn().mockImplementation(() => {
@@ -19,7 +19,7 @@ const mockScriptLoaded = jest.fn().mockImplementation(() => {
     window.klarnaAsyncCallback();
 });
 
-const mockAnalytics = mock<AnalyticsModule>();
+const mockAnalytics = mock<IAnalytics>();
 
 const customRender = (props: KlarnaWidgetProps) => {
     return render(

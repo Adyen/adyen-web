@@ -39,7 +39,6 @@ describe('PersonalDetails', () => {
         const data = {
             firstName: 'John',
             lastName: 'Smith',
-            gender: 'MALE',
             dateOfBirth: '1990-01-01',
             telephoneNumber: '0610001122',
             shopperEmail: 'shopper@email.com'
@@ -51,7 +50,6 @@ describe('PersonalDetails', () => {
         expect(screen.getByLabelText(/last name/i)).toHaveValue(data.lastName);
         expect(screen.getByLabelText(/telephone number/i)).toHaveValue(data.telephoneNumber);
         expect(screen.getByLabelText(/email address/i)).toHaveValue(data.shopperEmail);
-        expect(screen.getByRole('radio', { name: 'Male' })).toBeChecked();
         expect(screen.getByLabelText(/date of birth/i)).toHaveValue(data.dateOfBirth);
     });
 
@@ -59,7 +57,6 @@ describe('PersonalDetails', () => {
         const data = {
             firstName: 'John',
             lastName: 'Smith',
-            gender: 'MALE',
             dateOfBirth: '1990-01-01',
             telephoneNumber: '0610001122',
             shopperEmail: 'shopper@email.com'
@@ -78,7 +75,6 @@ describe('PersonalDetails', () => {
         // Assert that the data is correctly transformed (e.g., firstName/lastName moved into shopperName)
         expect(formattedData.shopperName.firstName).toBe(data.firstName);
         expect(formattedData.shopperName.lastName).toBe(data.lastName);
-        expect(formattedData.shopperName.gender).toBe(data.gender);
         expect(formattedData.dateOfBirth).toBe(data.dateOfBirth);
         expect(formattedData.telephoneNumber).toBe(data.telephoneNumber);
         expect(formattedData.shopperEmail).toBe(data.shopperEmail);
@@ -86,6 +82,5 @@ describe('PersonalDetails', () => {
         // Assert that the original top-level keys are no longer present
         expect(formattedData.firstName).toBeUndefined();
         expect(formattedData.lastName).toBeUndefined();
-        expect(formattedData.gender).toBeUndefined();
     });
 });

@@ -3,10 +3,10 @@ import { render, screen } from '@testing-library/preact';
 import PaypalComponent from './PaypalComponent';
 import { mock } from 'jest-mock-extended';
 import { PayPalComponentProps } from './types';
-import { AnalyticsModule } from '../../../types/global-types';
 import { CoreProvider } from '../../../core/Context/CoreProvider';
+import type { IAnalytics } from '../../../core/Analytics/Analytics';
 
-const mockAnalytics = mock<AnalyticsModule>();
+const mockAnalytics = mock<IAnalytics>();
 
 const customRender = (props: PayPalComponentProps) =>
     render(

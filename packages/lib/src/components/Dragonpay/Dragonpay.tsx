@@ -2,7 +2,6 @@ import { h } from 'preact';
 import UIElement from '../internal/UIElement/UIElement';
 import DragonpayInput from './components/DragonpayInput';
 import DragonpayVoucherResult from './components/DragonpayVoucherResult';
-import { CoreProvider } from '../../core/Context/CoreProvider';
 import { DragonpayConfiguraton } from './types';
 import { TxVariants } from '../tx-variants';
 
@@ -43,32 +42,28 @@ export class DragonpayElement extends UIElement<DragonpayConfiguraton> {
         };
     }
 
-    render() {
-        return (
-            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
-                {this.props.reference ? (
-                    <DragonpayVoucherResult
-                        ref={ref => {
-                            this.componentRef = ref;
-                        }}
-                        icon={this.icon}
-                        {...this.props}
-                        onActionHandled={this.onActionHandled}
-                    />
-                ) : (
-                    <DragonpayInput
-                        ref={ref => {
-                            this.componentRef = ref;
-                        }}
-                        items={this.props.issuers}
-                        {...this.props}
-                        showPayButton={this.props.showPayButton}
-                        onChange={this.setState}
-                        onSubmit={this.submit}
-                        payButton={this.payButton}
-                    />
-                )}
-            </CoreProvider>
+    protected override componentToRender(): h.JSX.Element {
+        return this.props.reference ? (
+            <DragonpayVoucherResult
+                ref={ref => {
+                    this.componentRef = ref;
+                }}
+                icon={this.icon}
+                {...this.props}
+                onActionHandled={this.onActionHandled}
+            />
+        ) : (
+            <DragonpayInput
+                ref={ref => {
+                    this.componentRef = ref;
+                }}
+                items={this.props.issuers}
+                {...this.props}
+                showPayButton={this.props.showPayButton}
+                onChange={this.setState}
+                onSubmit={this.submit}
+                payButton={this.payButton}
+            />
         );
     }
 }

@@ -1,6 +1,6 @@
 import type { CoreConfiguration } from '../../core/types';
 import type { UIElementProps } from '../internal/UIElement/types';
-import { AnalyticsOptions } from '../../core/Analytics/types';
+import type { AnalyticsOptions } from '../../core/Analytics/types';
 
 /**
  * PayPal Fastlane Reference:

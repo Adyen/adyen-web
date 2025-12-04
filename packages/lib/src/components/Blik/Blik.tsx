@@ -2,7 +2,6 @@ import { h } from 'preact';
 import UIElement from '../internal/UIElement/UIElement';
 import BlikInput from '../../components/Blik/components/BlikInput';
 import { Await } from '../internal/Await';
-import { CoreProvider } from '../../core/Context/CoreProvider';
 import config from './config';
 import RedirectButton from '../../components/internal/RedirectButton';
 import SRPanelProvider from '../../core/Errors/SRPanelProvider';
@@ -58,58 +57,52 @@ class BlikElement extends UIElement<AwaitConfiguration> {
      *  this.props.onComplete (which is called from this.onComplete) equates to the merchant defined onAdditionalDetails callback
      *  (the initial /payments response defines an "await" action, actionTypes.ts translates this to "onComplete: props.onAdditionalDetails")
      */
-    render() {
+    protected override componentToRender(): h.JSX.Element {
         if (this.props.paymentData) {
             return (
-                <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
-                    <SRPanelProvider srPanel={this.props.modules.srPanel}>
-                        <Await
-                            clientKey={this.props.clientKey}
-                            paymentData={this.props.paymentData}
-                            onError={this.handleError}
-                            onComplete={this.onComplete}
-                            brandLogo={this.icon}
-                            type={config.type}
-                            messageText={this.props.i18n.get(config.messageTextId)}
-                            awaitText={this.props.i18n.get(config.awaitTextId)}
-                            showCountdownTimer={config.showCountdownTimer}
-                            delay={config.STATUS_INTERVAL}
-                            countdownTime={config.COUNTDOWN_MINUTES}
-                            throttleTime={config.THROTTLE_TIME}
-                            throttleInterval={config.THROTTLE_INTERVAL}
-                            onActionHandled={this.onActionHandled}
-                        />
-                    </SRPanelProvider>
-                </CoreProvider>
+                <SRPanelProvider srPanel={this.props.modules.srPanel}>
+                    <Await
+                        clientKey={this.props.clientKey}
+                        paymentData={this.props.paymentData}
+                        onError={this.handleError}
+                        onComplete={this.onComplete}
+                        brandLogo={this.icon}
+                        type={config.type}
+                        messageText={this.props.i18n.get(config.messageTextId)}
+                        awaitText={this.props.i18n.get(config.awaitTextId)}
+                        showCountdownTimer={config.showCountdownTimer}
+                        delay={config.STATUS_INTERVAL}
+                        countdownTime={config.COUNTDOWN_MINUTES}
+                        throttleTime={config.THROTTLE_TIME}
+                        throttleInterval={config.THROTTLE_INTERVAL}
+                        onActionHandled={this.onActionHandled}
+                    />
+                </SRPanelProvider>
             );
         }
 
-        return (
-            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
-                {this.props.storedPaymentMethodId ? (
-                    <RedirectButton
-                        showPayButton={this.props.showPayButton}
-                        name={this.displayName}
-                        amount={this.props.amount}
-                        payButton={this.payButton}
-                        onSubmit={this.submit}
-                        ref={ref => {
-                            this.componentRef = ref;
-                        }}
-                    />
-                ) : (
-                    <BlikInput
-                        // @ts-ignore Ref is used by preact component
-                        ref={ref => {
-                            this.componentRef = ref;
-                        }}
-                        {...this.props}
-                        onChange={this.setState}
-                        onSubmit={this.submit}
-                        payButton={this.payButton}
-                    />
-                )}
-            </CoreProvider>
+        return this.props.storedPaymentMethodId ? (
+            <RedirectButton
+                showPayButton={this.props.showPayButton}
+                name={this.displayName}
+                amount={this.props.amount}
+                payButton={this.payButton}
+                onSubmit={this.submit}
+                ref={ref => {
+                    this.componentRef = ref;
+                }}
+            />
+        ) : (
+            <BlikInput
+                // @ts-ignore Ref is used by preact component
+                ref={ref => {
+                    this.componentRef = ref;
+                }}
+                {...this.props}
+                onChange={this.setState}
+                onSubmit={this.submit}
+                payButton={this.payButton}
+            />
         );
     }
 }

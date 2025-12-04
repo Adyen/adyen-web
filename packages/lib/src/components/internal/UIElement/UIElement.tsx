@@ -1,37 +1,37 @@
 import { h } from 'preact';
+import { Resources } from '../../../core/Context/Resources';
+import AdyenCheckoutError, { NETWORK_ERROR } from '../../../core/Errors/AdyenCheckoutError';
+import { hasOwnProperty } from '../../../utils/hasOwnProperty';
 import BaseElement from '../BaseElement/BaseElement';
 import PayButton from '../PayButton';
 import { assertIsDropin, cleanupFinalResult, getRegulatoryDefaults, sanitizeResponse, verifyPaymentDidNotFail } from './utils';
-import AdyenCheckoutError, { NETWORK_ERROR } from '../../../core/Errors/AdyenCheckoutError';
-import { hasOwnProperty } from '../../../utils/hasOwnProperty';
-import { Resources } from '../../../core/Context/Resources';
 
-import { AnalyticsInitialEvent } from '../../../core/Analytics/types';
-import type { CoreConfiguration, ICore, AdditionalDetailsData } from '../../../core/types';
-import type { ComponentMethodsRef, PayButtonFunctionProps, UIElementProps, UIElementStatus } from './types';
+import { AbstractAnalyticsEvent } from '../../../core/Analytics/events/AbstractAnalyticsEvent';
+import { AnalyticsErrorEvent, ErrorEventType } from '../../../core/Analytics/events/AnalyticsErrorEvent';
+import { AnalyticsInfoEvent, InfoEventType } from '../../../core/Analytics/events/AnalyticsInfoEvent';
+import { AnalyticsLogEvent, LogEventType } from '../../../core/Analytics/events/AnalyticsLogEvent';
 import type { CheckoutSessionDetailsResponse, CheckoutSessionPaymentResponse } from '../../../core/CheckoutSession/types';
+import type { NewableComponent } from '../../../core/core.registry';
+import CancelError from '../../../core/Errors/CancelError';
+import type { AdditionalDetailsData, CoreConfiguration, ICore } from '../../../core/types';
 import type {
     ActionHandledReturnObject,
-    AnalyticsModule,
     CheckoutAdvancedFlowResponse,
     Order,
     PaymentAction,
     PaymentAmount,
     PaymentData,
-    RawPaymentMethod,
     PaymentMethodsResponse,
-    PaymentResponseData
+    PaymentResponseData,
+    RawPaymentMethod
 } from '../../../types/global-types';
 import type { IDropin } from '../../Dropin/types';
-import type { NewableComponent } from '../../../core/core.registry';
-import CancelError from '../../../core/Errors/CancelError';
-import { AbstractAnalyticsEvent } from '../../../core/Analytics/events/AbstractAnalyticsEvent';
-import { AnalyticsLogEvent, LogEventType } from '../../../core/Analytics/events/AnalyticsLogEvent';
-import { AnalyticsErrorEvent, ErrorEventType } from '../../../core/Analytics/events/AnalyticsErrorEvent';
-import { AnalyticsInfoEvent, InfoEventType } from '../../../core/Analytics/events/AnalyticsInfoEvent';
+import type { ComponentMethodsRef, PayButtonFunctionProps, UIElementProps, UIElementStatus } from './types';
+import type { IAnalytics } from '../../../core/Analytics/Analytics';
 
-import './UIElement.scss';
+import { CoreProvider } from '../../../core/Context/CoreProvider';
 import { SRPanel } from '../../../core/Errors/SRPanel';
+import './UIElement.scss';
 
 export abstract class UIElement<P extends UIElementProps = UIElementProps> extends BaseElement<P> {
     protected componentRef: any;
@@ -74,6 +74,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         this.onActionHandled = this.onActionHandled.bind(this);
 
         this.createBeforeRenderHook(props);
+        this.reportIntegrationFlavor();
     }
 
     /**
@@ -108,7 +109,11 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         this.analytics.sendAnalytics(event);
     }
 
-    get analytics(): AnalyticsModule {
+    protected reportIntegrationFlavor(): void {
+        void this.analytics.sendFlavor('components');
+    }
+
+    get analytics(): IAnalytics {
         return this.core.modules.analytics;
     }
 
@@ -211,16 +216,6 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
             },
             this.elementRef
         );
-    }
-
-    // Only called once, for UIElements (including Dropin), as they are being mounted
-    protected setUpAnalytics(setUpAnalyticsObj: AnalyticsInitialEvent) {
-        const sessionId = this.props.session?.id;
-
-        return this.props.modules.analytics.setUp({
-            ...setUpAnalyticsObj,
-            ...(sessionId && { sessionId })
-        });
     }
 
     protected override submitAnalytics(event: AbstractAnalyticsEvent) {
@@ -614,6 +609,16 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
                     amount: order ? order.remainingAmount : amount
                 });
             });
+    }
+
+    protected abstract componentToRender(): h.JSX.Element;
+
+    render() {
+        return (
+            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources} analytics={this.analytics}>
+                {this.componentToRender()}
+            </CoreProvider>
+        );
     }
 }
 

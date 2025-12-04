@@ -14,8 +14,7 @@ import type {
     SessionsResponse,
     ResultCode,
     PaymentData,
-    AddressData,
-    AnalyticsModule
+    AddressData
 } from '../types/global-types';
 import type { AnalyticsOptions } from './Analytics/types';
 import RiskModule, { RiskModuleOptions } from './RiskModule/RiskModule';
@@ -26,6 +25,7 @@ import type { onOrderCancelType } from '../components/Dropin/types';
 import { Resources } from './Context/Resources';
 import Language from '../language';
 import { SRPanel } from './Errors/SRPanel';
+import { IAnalytics } from './Analytics/Analytics';
 
 export interface ICore {
     initialize(): Promise<ICore>;
@@ -45,7 +45,7 @@ export interface ICore {
 
 export type CoreModules = Readonly<{
     risk: RiskModule;
-    analytics: AnalyticsModule;
+    analytics: IAnalytics;
     resources: Resources;
     i18n: Language;
     srPanel: SRPanel;

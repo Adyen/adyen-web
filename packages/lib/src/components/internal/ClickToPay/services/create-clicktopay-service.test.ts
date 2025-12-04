@@ -3,10 +3,10 @@ import { CtpState } from './ClickToPayService';
 import { IClickToPayService } from './types';
 import { CardBackendConfiguration } from '../../../Card/types';
 import { mock } from 'jest-mock-extended';
-import { AnalyticsModule } from '../../../../types/global-types';
+import type { IAnalytics } from '../../../../core/Analytics/Analytics';
 
 const ENVIRONMENT = 'test';
-const mockAnalytics = mock<AnalyticsModule>();
+const mockAnalytics = mock<IAnalytics>();
 
 test('should not create the service if card `configuration` property is not provided', () => {
     let service: IClickToPayService,

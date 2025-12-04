@@ -1,3 +1,4 @@
+import { h } from 'preact';
 import { UIElement } from './UIElement';
 import { any, mock } from 'jest-mock-extended';
 import { AdyenCheckout, ThreeDS2Challenge, ThreeDS2DeviceFingerprint } from '../../../index';
@@ -7,6 +8,8 @@ import { PaymentActionsType } from '../../../types/global-types';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 import { setupCoreMock } from '../../../../config/testMocks/setup-core-mock';
 import { ErrorEventType } from '../../../core/Analytics/events/AnalyticsErrorEvent';
+import { InfoEventType } from '../../../core/Analytics/events/AnalyticsInfoEvent';
+import { render, screen } from '@testing-library/preact';
 
 jest.mock('../../../core/Services/get-translations');
 
@@ -28,8 +31,8 @@ class MyElement extends UIElement<MyElementProps> {
     public handleAdditionalDetails(data) {
         super.handleAdditionalDetails(data);
     }
-    render() {
-        return '';
+    protected override componentToRender() {
+        return <div>myelement</div>;
     }
 }
 
@@ -77,7 +80,11 @@ describe('UIElement', () => {
 
     describe('isValid()', () => {
         test('should be false by default', () => {
-            class PristineUiElement extends UIElement {}
+            class PristineUiElement extends UIElement {
+                protected override componentToRender() {
+                    return <div>test</div>;
+                }
+            }
             const element = new PristineUiElement(core);
             expect(element.isValid).toBe(false);
         });
@@ -142,7 +149,7 @@ describe('UIElement', () => {
                 authorisationToken: 'BQABAQCmFNEdaCE3rcbbB...',
                 paymentMethodType: 'scheme',
                 subtype: 'fingerprint',
-                token: 'eyJ0aHJlZURTTWV0aG9kTm90aWZpY2F0aW9uVVJMIjoiaHR0cHM6XC9cL2NoZWNrb3V0c2hvcHBlci10ZXN0LmFkeWVuLmNvbVwvY2hlY2tvdXRzaG9wcGVyXC90aHJlZURTTWV0aG9kTm90aWZpY2F0aW9uLnNodG1sP29yaWdpbktleT1wdWIudjIuODExNTY1ODcwNTcxMzk0MC5hSFIwY0hNNkx5OXdhSEF0TnpFdGMybHRiMjR1YzJWaGJXeGxjM010WTJobFkydHZkWFF1WTI5dC50VnJIV3B4UktWVTVPMENiNUg5TVFlUnJKdmZRQ1lnbXR6VTY1WFhzZ2NvIiwidGhyZWVEU01ldGhvZFVybCI6Imh0dHBzOlwvXC9wYWwtdGVzdC5hZHllbi5jb21cL3RocmVlZHMyc2ltdWxhdG9yXC9hY3NcL3N0YXJ0TWV0aG9kLnNodG1sIiwidGhyZWVEU1NlcnZlclRyYW5zSUQiOiI5MzI2ZjNiOS00MTc3LTQ4ZTktYmM2Mi1kOTliYzVkZDA2Y2IifQ==',
+                token: 'eyJ0aHJlZURTTWV0aG9kTm90a...',
                 type: 'threeDS2' as PaymentActionsType
             };
 
@@ -168,7 +175,7 @@ describe('UIElement', () => {
                 paymentData: 'Ab02b4c0!BQABAgCUeRP+3La4...',
                 authorisationToken: 'BQABAQCmFNEdaCE3rcbbB...',
                 subtype: 'challenge',
-                token: 'eyJhY3NSZWZlcmVuY2VOdW1iZXIiOiJBRFlFTi1BQ1MtU0lNVUxBVE9SIiwiYWNzVHJhbnNJRCI6Ijg0MzZjYThkLThkN2EtNGFjYy05NmYyLTE0ZjU0MjgyNzczZiIsImFjc1VSTCI6Imh0dHBzOlwvXC9wYWwtdGVzdC5hZHllbi5jb21cL3RocmVlZHMyc2ltdWxhdG9yXC9hY3NcL2NoYWxsZW5nZS5zaHRtbCIsIm1lc3NhZ2VWZXJzaW9uIjoiMi4xLjAiLCJ0aHJlZURTTm90aWZpY2F0aW9uVVJMIjoiaHR0cHM6XC9cL2NoZWNrb3V0c2hvcHBlci10ZXN0LmFkeWVuLmNvbVwvY2hlY2tvdXRzaG9wcGVyXC8zZG5vdGlmLnNodG1sP29yaWdpbktleT1wdWIudjIuODExNTY1ODcwNTcxMzk0MC5hSFIwY0hNNkx5OWphR1ZqYTI5MWRITm9iM0J3WlhJdGRHVnpkQzVoWkhsbGJpNWpiMjAuVGFKalVLN3VrUFdTUzJEX3l2ZDY4TFRLN2dRN2ozRXFOM05nS1JWQW84OCIsInRocmVlRFNTZXJ2ZXJUcmFuc0lEIjoiZTU0NDNjZTYtNTE3Mi00MmM1LThjY2MtYmRjMGE1MmNkZjViIn0=',
+                token: 'xxx',
                 paymentMethodType: 'scheme',
                 type: 'threeDS2' as PaymentActionsType
             };
@@ -196,7 +203,7 @@ describe('UIElement', () => {
                     paymentData: 'Ab02b4c0!BQABAgCUeRP+3La4...',
                     authorisationToken: 'BQABAQCmFNEdaCE3rcbbB...',
                     subtype: 'challenge',
-                    token: 'eyJhY3NSZWZlcmVuY2VOdW1iZXIiOiJBRFlFTi1BQ1MtU0lNVUxBVE9SIiwiYWNzVHJhbnNJRCI6Ijg0MzZjYThkLThkN2EtNGFjYy05NmYyLTE0ZjU0MjgyNzczZiIsImFjc1VSTCI6Imh0dHBzOlwvXC9wYWwtdGVzdC5hZHllbi5jb21cL3RocmVlZHMyc2ltdWxhdG9yXC9hY3NcL2NoYWxsZW5nZS5zaHRtbCIsIm1lc3NhZ2VWZXJzaW9uIjoiMi4xLjAiLCJ0aHJlZURTTm90aWZpY2F0aW9uVVJMIjoiaHR0cHM6XC9cL2NoZWNrb3V0c2hvcHBlci10ZXN0LmFkeWVuLmNvbVwvY2hlY2tvdXRzaG9wcGVyXC8zZG5vdGlmLnNodG1sP29yaWdpbktleT1wdWIudjIuODExNTY1ODcwNTcxMzk0MC5hSFIwY0hNNkx5OWphR1ZqYTI5MWRITm9iM0J3WlhJdGRHVnpkQzVoWkhsbGJpNWpiMjAuVGFKalVLN3VrUFdTUzJEX3l2ZDY4TFRLN2dRN2ozRXFOM05nS1JWQW84OCIsInRocmVlRFNTZXJ2ZXJUcmFuc0lEIjoiZTU0NDNjZTYtNTE3Mi00MmM1LThjY2MtYmRjMGE1MmNkZjViIn0=',
+                    token: 'xxx',
                     paymentMethodType: 'scheme',
                     type: 'threeDS2' as PaymentActionsType
                 },
@@ -721,6 +728,36 @@ describe('UIElement', () => {
                 id: expect.any(String),
                 component: expect.any(String)
             });
+        });
+    });
+
+    describe('render()', () => {
+        test('should return the result of render method', () => {
+            const element = new MyElement(core);
+            render(element.render());
+            expect(screen.getAllByText('myelement')[0]).toBeInTheDocument();
+        });
+    });
+
+    describe('Analytics', () => {
+        test('should send analytics event in before render hook', () => {
+            const element = new MyElement(core);
+            render(element.render());
+
+            expect(core.modules.analytics.sendAnalytics).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    type: InfoEventType.rendered,
+                    component: 'super_pay',
+                    configData: expect.objectContaining({
+                        showPayButton: expect.any(Boolean)
+                    })
+                })
+            );
+        });
+
+        test('should report "components" flavor when created', () => {
+            const element = new MyElement(core, {});
+            expect(element.core.modules.analytics.sendFlavor).toHaveBeenCalledWith('components');
         });
     });
 });

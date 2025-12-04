@@ -1,6 +1,5 @@
 import { h } from 'preact';
 import UIElement from '../internal/UIElement/UIElement';
-import { CoreProvider } from '../../core/Context/CoreProvider';
 import RedirectShopper from './components/RedirectShopper';
 import RedirectButton from '../internal/RedirectButton';
 import { TxVariants } from '../tx-variants';
@@ -45,7 +44,7 @@ class RedirectElement extends UIElement<RedirectConfiguration> {
         return collectBrowserInfo();
     }
 
-    render() {
+    protected override componentToRender(): h.JSX.Element {
         if (this.isRedirecting) {
             return (
                 <RedirectShopper
@@ -59,18 +58,16 @@ class RedirectElement extends UIElement<RedirectConfiguration> {
 
         if (this.props.showPayButton) {
             return (
-                <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
-                    <RedirectButton
-                        {...this.props}
-                        showPayButton={this.props.showPayButton}
-                        name={this.displayName}
-                        onSubmit={this.submit}
-                        payButton={this.payButton}
-                        ref={ref => {
-                            this.componentRef = ref;
-                        }}
-                    />
-                </CoreProvider>
+                <RedirectButton
+                    {...this.props}
+                    showPayButton={this.props.showPayButton}
+                    name={this.displayName}
+                    onSubmit={this.submit}
+                    payButton={this.payButton}
+                    ref={ref => {
+                        this.componentRef = ref;
+                    }}
+                />
             );
         }
 

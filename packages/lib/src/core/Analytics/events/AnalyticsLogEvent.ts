@@ -1,5 +1,4 @@
-import { AbstractAnalyticsEvent } from './AbstractAnalyticsEvent';
-import { ANALYTICS_EVENT } from '../constants';
+import { AbstractAnalyticsEvent, AnalyticsEventCategory } from './AbstractAnalyticsEvent';
 import type { PaymentAction } from '../../../types/global-types';
 
 type AnalyticsLogEventProps = {
@@ -51,8 +50,8 @@ export class AnalyticsLogEvent extends AbstractAnalyticsEvent {
         if (props.result) this.result = props.result;
     }
 
-    public getEventCategory(): string {
-        return ANALYTICS_EVENT.log;
+    public getEventCategory(): AnalyticsEventCategory {
+        return AnalyticsEventCategory.log;
     }
 
     public static getSubtypeFromActionType(type: PaymentAction['type']): LogEventSubtype {

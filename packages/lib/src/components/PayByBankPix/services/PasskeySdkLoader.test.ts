@@ -2,7 +2,7 @@ import { PasskeySdkLoader } from './PasskeySdkLoader';
 import { getUrlFromMap } from '../../../core/Environment/Environment';
 import Script from '../../../utils/Script';
 import { mock } from 'jest-mock-extended';
-import { AnalyticsModule } from '../../../types/global-types';
+import type { IAnalytics } from '../../../core/Analytics/Analytics';
 
 jest.mock('../../../core/Environment/Environment', () => ({
     getUrlFromMap: jest.fn()
@@ -18,7 +18,7 @@ describe('PasskeySdkLoader', () => {
     const mockEnvironment = 'test';
     const mockCdnUrl = 'https://cdn.example.com/';
     const mockAdyenPasskey = { default: { someMethod: jest.fn() } };
-    const mockAnalytics = mock<AnalyticsModule>();
+    const mockAnalytics = mock<IAnalytics>();
 
     let loader: PasskeySdkLoader;
 

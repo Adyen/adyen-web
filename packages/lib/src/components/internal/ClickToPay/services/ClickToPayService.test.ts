@@ -8,9 +8,9 @@ import { SrciCheckoutResponse, SrciIdentityLookupResponse, SrcProfile } from './
 import SrciError from './sdks/SrciError';
 import ShopperCard from '../models/ShopperCard';
 import TimeoutError from '../errors/TimeoutError';
-import { AnalyticsModule } from '../../../../types/global-types';
+import type { IAnalytics } from '../../../../core/Analytics/Analytics';
 
-const mockAnalytics = mock<AnalyticsModule>();
+const mockAnalytics = mock<IAnalytics>();
 
 describe('Timeout handling', () => {
     test('should report timeout to Visa SDK passing srciDpaId since correlationId is unavailable', async () => {
