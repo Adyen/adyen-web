@@ -73,3 +73,12 @@ export const PAYMENT_RESULT = {
     success: 'Payment Successful',
     fail: 'An unknown error occurred'
 };
+
+export const SCREENSHOT_CONFIG = {
+    maxDiffPixels: 1000,
+    maxDiffPixelRatio: 0.03,
+    threshold: 0.2,
+    animations: 'disabled',
+    stylePath: undefined, 
+    scale: 'device' as const
+} as const;
