@@ -47,5 +47,5 @@
         "tar-fs": "^3.0.9",
         "cheerio": "1.0.0-rc.12"
     },
-    "packageManager": "yarn@4.10.3"
+    "packageManager": "yarn@4.11.0"
 }
