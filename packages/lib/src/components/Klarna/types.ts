@@ -1,5 +1,5 @@
 import { type ComponentMethodsRef, UIElementProps } from '../internal/UIElement/types';
-import { PaymentAction } from '../../types/global-types';
+import { PaymentAction, ResultCode } from '../../types/global-types';
 import { AdditionalDetailsData } from '../../core/types';
 
 declare global {
@@ -72,6 +72,7 @@ export interface KlarnaAdditionalDetailsData extends AdditionalDetailsData {
         paymentData: string;
         details: {
             authorization_token?: string;
+            resultCode?: ResultCode;
         };
     };
 }
