@@ -33,6 +33,12 @@ type DonationRequest = {
     merchantAccount: string;
 };
 
+type PatchSessionRequest = {
+    sessionData: string;
+    amount: { value: number; currency: string };
+    payable: boolean;
+};
+
 export const getPaymentMethods = async (configuration?: any): Promise<PaymentMethodsResponse> =>
     await httpPost('paymentMethods', { ...paymentMethodsConfig, ...configuration });
 
@@ -111,3 +117,22 @@ export const cancelOrder = async (order: Order): Promise<{ resultCode: string; p
 export const getDonationCampaigns = async (request: { currency: string }): Promise<DonationResponse> => await httpPost('donationCampaigns', request);
 
 export const createDonation = async (request: DonationRequest): Promise<any> => await httpPost('donations', request);
+
+export const patchCheckoutSession = async (sessionId: string, payload: PatchSessionRequest): Promise<any> => {
+    const { host, protocol } = window.location;
+
+    const response = await fetch(`${protocol}//${host}/api/sessions/${sessionId}`, {
+        method: 'POST',
+        headers: {
+            Accept: 'application/json, text/plain, */*',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+    });
+
+    if (!response.ok) {
+        throw Error('Patch failed');
+    }
+
+    return response.json();
+};
