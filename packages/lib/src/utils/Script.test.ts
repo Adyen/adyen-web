@@ -191,4 +191,21 @@ describe('Script', () => {
         await expect(loadPromise).rejects.toThrow(new AdyenCheckoutError('CANCEL', 'Script loading cancelled.'));
         expect(document.body.querySelector(`script[src="${SCRIPT_SRC}"]`)).toBeNull();
     });
+
+    test('should ignore late load events after remove() was already called', async () => {
+        const scriptElement = document.createElement('script');
+        jest.spyOn(document, 'createElement').mockImplementation(() => scriptElement);
+
+        const script = new Script({ src: SCRIPT_SRC, component: 'example-sdk', analytics: mockAnalytics });
+        const loadPromise = script.load();
+
+        script.remove();
+
+        await expect(loadPromise).rejects.toThrow(new AdyenCheckoutError('CANCEL', 'Script loading cancelled.'));
+
+        expect(() => {
+            const loadEvent = new Event('load');
+            scriptElement.dispatchEvent(loadEvent);
+        }).not.toThrow();
+    });
 });
