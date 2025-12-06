@@ -1,9 +1,9 @@
 import { h } from 'preact';
-import './SRPanel.scss';
 import { AriaAttributes, SRPanelProps } from './types';
 import BaseElement from '../../components/internal/BaseElement/BaseElement';
 import { SRMessages, SRMessagesRef } from './SRMessages';
 import type { ICore } from '../types';
+import './SRPanel.scss';
 
 /**
  * A panel meant to hold messages that will be read out by ScreenReaders on an aria-live="polite" basis
@@ -79,7 +79,15 @@ export class SRPanel extends BaseElement<SRPanelProps> {
     }
 
     public setAriaProps(ariaAttributes: AriaAttributes): void {
+        if (!this.props.enabled) return;
+
         const firstPanel = document.querySelector('[class^="adyen-checkout-sr-panel"]');
+
+        if (!firstPanel) {
+            console.error('SRPanel: Failed to set aria props because no panel was found');
+            return;
+        }
+
         for (const [key, value] of Object.entries(ariaAttributes)) {
             firstPanel.setAttribute(key, value);
         }

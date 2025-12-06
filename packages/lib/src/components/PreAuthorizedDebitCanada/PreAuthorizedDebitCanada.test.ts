@@ -23,7 +23,7 @@ describe('PreAuthorizedDebitCanada', () => {
                 onSubmit: onSubmitMock,
                 i18n: global.i18n,
                 loadingContext: 'test',
-                modules: { resources: global.resources, srPanel: global.srPanel }
+                modules: { resources: global.resources }
             });
 
             render(preAuthorizedDebitCanada.render());
@@ -61,7 +61,7 @@ describe('PreAuthorizedDebitCanada', () => {
                 onSubmit: onSubmitMock,
                 i18n: global.i18n,
                 loadingContext: 'test',
-                modules: { resources: global.resources, srPanel: global.srPanel }
+                modules: { resources: global.resources }
             });
 
             render(preAuthorizedDebitCanada.render());
@@ -78,7 +78,7 @@ describe('PreAuthorizedDebitCanada', () => {
                 enableStoreDetails: true,
                 i18n: global.i18n,
                 loadingContext: 'test',
-                modules: { resources: global.resources, srPanel: global.srPanel }
+                modules: { resources: global.resources }
             });
 
             render(preAuthorizedDebitCanada.render());
@@ -130,7 +130,7 @@ describe('PreAuthorizedDebitCanada', () => {
                 onSubmit: onSubmitMock,
                 i18n: global.i18n,
                 loadingContext: 'test',
-                modules: { resources: global.resources, srPanel: global.srPanel }
+                modules: { resources: global.resources }
             });
 
             render(preAuthorizedDebitCanada.render());
@@ -153,7 +153,7 @@ describe('PreAuthorizedDebitCanada', () => {
                 onSubmit: onSubmitMock,
                 i18n: global.i18n,
                 loadingContext: 'test',
-                modules: { resources: global.resources, srPanel: global.srPanel }
+                modules: { resources: global.resources }
             });
 
             render(preAuthorizedDebitCanada.render());
@@ -176,7 +176,7 @@ describe('PreAuthorizedDebitCanada', () => {
                 onSubmit: onSubmitMock,
                 i18n: global.i18n,
                 loadingContext: 'test',
-                modules: { resources: global.resources, srPanel: global.srPanel }
+                modules: { resources: global.resources }
             });
 
             render(preAuthorizedDebitCanada.render());
@@ -199,7 +199,7 @@ describe('PreAuthorizedDebitCanada', () => {
                 onSubmit: onSubmitMock,
                 i18n: global.i18n,
                 loadingContext: 'test',
-                modules: { resources: global.resources, srPanel: global.srPanel }
+                modules: { resources: global.resources }
             });
 
             render(preAuthorizedDebitCanada.render());
@@ -222,7 +222,7 @@ describe('PreAuthorizedDebitCanada', () => {
                 onSubmit: onSubmitMock,
                 i18n: global.i18n,
                 loadingContext: 'test',
-                modules: { resources: global.resources, srPanel: global.srPanel },
+                modules: { resources: global.resources },
                 storedPaymentMethodId: 'PAYMENT-METHOD-ID'
             });
 
@@ -252,7 +252,7 @@ describe('PreAuthorizedDebitCanada', () => {
                 onSubmit: onSubmitMock,
                 i18n: global.i18n,
                 loadingContext: 'test',
-                modules: { resources: global.resources, srPanel: global.srPanel },
+                modules: { resources: global.resources },
                 storedPaymentMethodId: 'PAYMENT-METHOD-ID'
             });
 
@@ -268,7 +268,7 @@ describe('PreAuthorizedDebitCanada', () => {
                 onSubmit: onSubmitMock,
                 i18n: global.i18n,
                 loadingContext: 'test',
-                modules: { resources: global.resources, srPanel: global.srPanel },
+                modules: { resources: global.resources },
                 storedPaymentMethodId: 'PAYMENT-METHOD-ID',
                 lastFour: '1234',
                 label: 'bank name'

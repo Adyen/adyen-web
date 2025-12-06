@@ -28,7 +28,7 @@ describe('AfterPay', () => {
 
         const afterpay = new AfterPay(core, {
             countryCode: 'NL',
-            modules: { resources: global.resources, srPanel: global.srPanel },
+            modules: { resources: global.resources },
             i18n: global.i18n,
             onSubmit: onSubmitMock,
             onChange: onChangeMock,
@@ -163,7 +163,7 @@ describe('AfterPay', () => {
 
         const afterpay = new AfterPay(core, {
             countryCode: 'NL',
-            modules: { resources: global.resources, srPanel: global.srPanel },
+            modules: { resources: global.resources },
             i18n: global.i18n,
             onSubmit: onSubmitMock,
             onChange: onChangeMock,
@@ -345,7 +345,7 @@ describe('AfterPay', () => {
 
         const afterpay = new AfterPay(core, {
             countryCode: 'NL',
-            modules: { resources: global.resources, srPanel: global.srPanel },
+            modules: { resources: global.resources },
             i18n: global.i18n,
             onSubmit: onSubmitMock,
             loadingContext: 'https://checkoutshopper-live.adyen.com/checkoutshopper/'

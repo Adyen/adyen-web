@@ -2,7 +2,6 @@ import { render, screen, waitFor } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import UPI from './UPI';
 import isMobile from '../../utils/isMobile';
-import { SRPanel } from '../../core/Errors/SRPanel';
 import { TxVariants } from '../tx-variants';
 import { Resources } from '../../core/Context/Resources';
 import { getIntentOption, getQrOption, getVpaOption } from './constants';
@@ -22,7 +21,7 @@ describe('UPI', () => {
     const props = {
         i18n: global.i18n,
         loadingContext: 'test',
-        modules: { srPanel: new SRPanel(global.core), resources: new Resources('test') }
+        modules: { resources: new Resources('test') }
     };
 
     afterEach(() => {

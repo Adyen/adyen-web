@@ -2,11 +2,11 @@ import { render, screen, waitFor } from '@testing-library/preact';
 import KlarnaPayments from './KlarnaPayments';
 import Dropin from '../Dropin';
 import { PaymentAction } from '../../types/global-types';
-import { mock } from 'jest-mock-extended';
 import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
-import type { IAnalytics } from '../../core/Analytics/Analytics';
 
 describe('KlarnaPayments', () => {
+    const core = setupCoreMock();
+
     const coreProps = {
         name: 'Klarna',
         i18n: global.i18n,
@@ -14,8 +14,6 @@ describe('KlarnaPayments', () => {
         modules: { resources: global.resources }
     };
     const renderKlarna = props => {
-        const core = setupCoreMock();
-
         const KlarnaPaymentsEle = new KlarnaPayments(core, {
             ...coreProps,
             ...props
@@ -81,8 +79,9 @@ describe('KlarnaPayments', () => {
                 }
             };
 
-            global.core.modules.analytics = mock<IAnalytics>();
-            const klarna = new KlarnaPayments(global.core, {
+            const core = setupCoreMock();
+
+            const klarna = new KlarnaPayments(core, {
                 ...coreProps,
                 type: 'klarna_paynow',
                 onSubmit(state, component, actions) {
@@ -108,8 +107,8 @@ describe('KlarnaPayments', () => {
                 method: 'GET'
             };
 
-            global.core.modules.analytics = mock<IAnalytics>();
-            const klarna = new KlarnaPayments(global.core, {
+            const core = setupCoreMock();
+            const klarna = new KlarnaPayments(core, {
                 ...coreProps,
                 type: 'klarna_paynow',
                 onSubmit(state, component, actions) {

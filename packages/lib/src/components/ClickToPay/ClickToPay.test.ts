@@ -9,9 +9,11 @@ import { ClickToPayCheckoutPayload, IClickToPayService } from '../internal/Click
 import { CtpState } from '../internal/ClickToPay/services/ClickToPayService';
 import { Resources } from '../../core/Context/Resources';
 import ShopperCard from '../internal/ClickToPay/models/ShopperCard';
-import type { IAnalytics } from '../../core/Analytics/Analytics';
+import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 
 jest.mock('../internal/ClickToPay/services/create-clicktopay-service');
+
+const core = setupCoreMock();
 
 test('should initialize ClickToPayService when creating the element', () => {
     const mockCtpService = mock<IClickToPayService>();
@@ -27,13 +29,10 @@ test('should initialize ClickToPayService when creating the element', () => {
         shopperEmail: 'shopper@example.com'
     };
 
-    const mockAnalytics = mock<IAnalytics>();
-    global.core.modules.analytics = mockAnalytics;
-
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const element = new ClickToPayElement(global.core, { environment: 'test', configuration, ...ctpConfiguration });
+    const element = new ClickToPayElement(core, { environment: 'test', configuration, ...ctpConfiguration });
 
-    expect(createClickToPayService).toHaveBeenCalledWith(configuration, ctpConfiguration, 'test', mockAnalytics);
+    expect(createClickToPayService).toHaveBeenCalledWith(configuration, ctpConfiguration, 'test', core.modules.analytics);
     expect(mockCtpService.initialize).toHaveBeenCalledTimes(1);
 });
 
@@ -44,7 +43,7 @@ test('should formatData() to click to pay /payment request format', () => {
         srcScheme: 'mc'
     };
 
-    const element = new ClickToPayElement(global.core);
+    const element = new ClickToPayElement(core);
     element.setState({ data: paymentDataReceivedFromScheme });
 
     const data = element.formatData();
@@ -64,13 +63,9 @@ test('should formatData() to click to pay /payment request format', () => {
 });
 
 test('should get shopperEmail from session if available', () => {
-    global.core.options = {
-        session: {
-            shopperEmail: 'shopper@example.com'
-        }
-    };
+    const modifiedCore = { ...core, options: { ...core.options, session: { ...core.options.session, shopperEmail: 'shopper@example.com' } } };
 
-    const element = new ClickToPayElement(global.core);
+    const element = new ClickToPayElement(modifiedCore);
 
     expect(element.props.shopperEmail).toBe('shopper@example.com');
 });
@@ -85,7 +80,7 @@ test('should resolve isAvailable if shopper account is found', async () => {
         get: jest.fn(() => true)
     });
 
-    const element = new ClickToPayElement(global.core);
+    const element = new ClickToPayElement(core);
 
     await expect(element.isAvailable()).resolves.not.toThrow();
 });
@@ -104,7 +99,7 @@ test('should reject isAvailable if shopper account is not found', async () => {
         get: jest.fn(() => false)
     });
 
-    const element = new ClickToPayElement(global.core);
+    const element = new ClickToPayElement(core);
 
     await expect(element.isAvailable()).rejects.toBeFalsy();
 });
@@ -131,11 +126,11 @@ describe('Click to Pay: ENTER keypress should perform an action only within the 
 
         const onSubmitMock = jest.fn();
 
-        const element = new ClickToPayElement(global.core, {
+        const element = new ClickToPayElement(core, {
             onSubmit: onSubmitMock,
             loadingContext: 'checkoutshopper.com/',
-            modules: { resources, analytics: global.analytics },
-            i18n: global.i18n
+            modules: { resources },
+            i18n: core.modules.i18n
         });
         render(element.mount('body'));
 
@@ -170,11 +165,11 @@ describe('Click to Pay: ENTER keypress should perform an action only within the 
 
         const onSubmitMock = jest.fn();
 
-        const element = new ClickToPayElement(global.core, {
+        const element = new ClickToPayElement(core, {
             onSubmit: onSubmitMock,
             loadingContext: 'checkoutshopper.com/',
-            modules: { resources, analytics: global.analytics },
-            i18n: global.i18n
+            modules: { resources },
+            i18n: core.modules.i18n
         });
         render(element.mount('body'));
 
@@ -235,11 +230,11 @@ describe('Click to Pay: ENTER keypress should perform an action only within the 
 
         const onSubmitMock = jest.fn();
 
-        const element = new ClickToPayElement(global.core, {
+        const element = new ClickToPayElement(core, {
             onSubmit: onSubmitMock,
             loadingContext: 'checkoutshopper.com/',
-            modules: { resources, analytics: global.analytics },
-            i18n: global.i18n
+            modules: { resources },
+            i18n: core.modules.i18n
         });
         render(element.mount('body'));
 
