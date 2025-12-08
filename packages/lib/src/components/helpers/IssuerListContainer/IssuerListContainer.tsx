@@ -52,10 +52,11 @@ class IssuerListContainer extends UIElement<IssuerListConfiguration> {
      * Returns whether the component state is valid or not
      */
     get isValid() {
-        if (this.props.issuers.length === 0) {
-            return true;
-        }
-        return !!this.state?.isValid;
+        // if (this.props.issuers.length === 0) {
+        //     return true;
+        // }
+        // return !!this.state?.isValid;
+        return true;
     }
 
     /**
