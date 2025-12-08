@@ -11,7 +11,6 @@ import createClickToPayService from '../internal/ClickToPay/services/create-clic
 import { ClickToPayCheckoutPayload, IClickToPayService } from '../internal/ClickToPay/services/types';
 import ClickToPayWrapper from './components/ClickToPayWrapper';
 import { ComponentFocusObject } from '../../types/global-types';
-import SRPanelProvider from '../../core/Errors/SRPanelProvider';
 import { TxVariants } from '../tx-variants';
 import type { PayButtonFunctionProps, UIElementStatus } from '../internal/UIElement/types';
 import UIElement from '../internal/UIElement';
@@ -356,20 +355,18 @@ export class CardElement extends UIElement<CardConfiguration> {
 
     protected override componentToRender(): h.JSX.Element {
         return (
-            <SRPanelProvider srPanel={this.props.modules.srPanel}>
-                <ClickToPayWrapper
-                    amount={this.props.amount}
-                    configuration={this.props.clickToPayConfiguration}
-                    clickToPayService={this.clickToPayService}
-                    isStandaloneComponent={false}
-                    setClickToPayRef={this.setClickToPayRef}
-                    onSetStatus={this.setElementStatus}
-                    onSubmit={this.handleClickToPaySubmit}
-                    onError={this.handleError}
-                >
-                    {isCardPrimaryInput => this.renderCardInput(isCardPrimaryInput)}
-                </ClickToPayWrapper>
-            </SRPanelProvider>
+            <ClickToPayWrapper
+                amount={this.props.amount}
+                configuration={this.props.clickToPayConfiguration}
+                clickToPayService={this.clickToPayService}
+                isStandaloneComponent={false}
+                setClickToPayRef={this.setClickToPayRef}
+                onSetStatus={this.setElementStatus}
+                onSubmit={this.handleClickToPaySubmit}
+                onError={this.handleError}
+            >
+                {isCardPrimaryInput => this.renderCardInput(isCardPrimaryInput)}
+            </ClickToPayWrapper>
         );
     }
 }
