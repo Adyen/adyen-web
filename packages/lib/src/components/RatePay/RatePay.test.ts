@@ -32,7 +32,7 @@ describe('RatePay Direct Debit', () => {
 
         const ratepay = new RatePay(core, {
             countryCode: 'DE',
-            modules: { analytics: global.analytics, resources: global.resources, srPanel: global.srPanel },
+            modules: { analytics: global.analytics, resources: global.resources },
             i18n: global.i18n,
             onSubmit: onSubmitMock,
             onChange: onChangeMock,
@@ -154,7 +154,7 @@ describe('RatePay Direct Debit', () => {
 
         const ratepay = new RatePay(core, {
             countryCode: 'DE',
-            modules: { analytics: global.analytics, resources: global.resources, srPanel: global.srPanel },
+            modules: { analytics: global.analytics, resources: global.resources },
             i18n: global.i18n,
             onSubmit: onSubmitMock,
             onChange: onChangeMock,
@@ -322,7 +322,7 @@ describe('RatePay Direct Debit', () => {
 
         const ratepay = new RatePay(core, {
             countryCode: 'DE',
-            modules: { analytics: global.analytics, resources: global.resources, srPanel: global.srPanel },
+            modules: { analytics: global.analytics, resources: global.resources },
             i18n: global.i18n,
             onSubmit: onSubmitMock,
             loadingContext: 'https://checkoutshopper-live.adyen.com/checkoutshopper/'

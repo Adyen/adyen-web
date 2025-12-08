@@ -4,7 +4,6 @@ import UPIComponent from './components/UPIComponent';
 import { Await } from '../internal/Await';
 import { QRLoader } from '../internal/QRLoader';
 import { UPIConfiguration, UpiMode, UpiPaymentData, UpiType } from './types';
-import SRPanelProvider from '../../core/Errors/SRPanelProvider';
 import { TxVariants } from '../tx-variants';
 import isMobile from '../../utils/isMobile';
 import type { ICore } from '../../core/types';
@@ -96,7 +95,9 @@ class UPI extends UIElement<UPIConfiguration> {
         this.selectedMode = mode;
     };
 
-    private renderContent(type: string, url: string, paymentMethodType: string): h.JSX.Element {
+    protected override componentToRender(): h.JSX.Element {
+        const { type, url, paymentMethodType } = this.props;
+
         const isAutoPay = !!this.props.mandate;
 
         switch (type) {
@@ -152,11 +153,6 @@ class UPI extends UIElement<UPIConfiguration> {
                     />
                 );
         }
-    }
-
-    protected override componentToRender(): h.JSX.Element {
-        const { type, url, paymentMethodType } = this.props;
-        return <SRPanelProvider srPanel={this.props.modules.srPanel}>{this.renderContent(type, url, paymentMethodType)}</SRPanelProvider>;
     }
 }
 

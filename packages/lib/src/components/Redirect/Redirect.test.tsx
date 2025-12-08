@@ -83,6 +83,7 @@ describe('Redirect error', () => {
     });
 
     test('should send an error event to the analytics module if beforeRedirect rejects', async () => {
+        const core = setupCoreMock();
         const props: RedirectConfiguration = {
             url: 'test',
             method: 'POST',
@@ -91,8 +92,6 @@ describe('Redirect error', () => {
                 return reject();
             }
         };
-
-        const core = setupCoreMock();
 
         const redirectElement = new RedirectElement(core, props);
         render(redirectElement.render());

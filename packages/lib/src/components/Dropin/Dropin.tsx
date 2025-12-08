@@ -5,7 +5,6 @@ import DropinComponent from '../../components/Dropin/components/DropinComponent'
 import { createElements, createStoredElements } from './elements';
 import createInstantPaymentElements from './elements/createInstantPaymentElements';
 import { hasOwnProperty } from '../../utils/hasOwnProperty';
-import SRPanelProvider from '../../core/Errors/SRPanelProvider';
 import splitPaymentMethods from './elements/splitPaymentMethods';
 import { TxVariants } from '../tx-variants';
 
@@ -214,17 +213,15 @@ class DropinElement extends UIElement<DropinConfiguration> implements IDropin {
 
     protected override componentToRender(): h.JSX.Element {
         return (
-            <SRPanelProvider srPanel={this.props.modules.srPanel}>
-                <DropinComponent
-                    {...this.props}
-                    core={this.core}
-                    elementRef={this.elementRef}
-                    onCreateElements={this.handleCreate}
-                    ref={dropinRef => {
-                        this.dropinRef = dropinRef;
-                    }}
-                />
-            </SRPanelProvider>
+            <DropinComponent
+                {...this.props}
+                core={this.core}
+                elementRef={this.elementRef}
+                onCreateElements={this.handleCreate}
+                ref={dropinRef => {
+                    this.dropinRef = dropinRef;
+                }}
+            />
         );
     }
 }

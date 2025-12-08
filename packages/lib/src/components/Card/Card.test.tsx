@@ -328,7 +328,7 @@ describe('Card', () => {
             const core = setupCoreMock();
             const card = new CardElement(core, {
                 i18n: global.i18n,
-                modules: { resources: global.resources, srPanel: global.srPanel }
+                modules: { resources: global.resources }
             });
 
             render(card.render());
@@ -352,7 +352,7 @@ describe('Card', () => {
                 i18n: global.i18n,
                 oneClick: true,
                 brand: 'visa',
-                modules: { resources: global.resources, srPanel: global.srPanel }
+                modules: { resources: global.resources }
             });
 
             render(card.render());

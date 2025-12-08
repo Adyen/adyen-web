@@ -100,7 +100,6 @@ const CtPOneTimePasswordInput = (props: CtPOneTimePasswordInputProps): h.JSX.Ele
         props.onChange({ data, valid, errors, isValid });
     }, [data, valid, errors]);
 
-
     const getOtpErrorMessage = useCallback(() => {
         if (!isOtpFielDirty) return null;
 
@@ -109,12 +108,7 @@ const CtPOneTimePasswordInput = (props: CtPOneTimePasswordInputProps): h.JSX.Ele
 
     return (
         <div className={'adyen-checkout-ctp__otp-field-wrapper'}>
-            <Field
-                name="oneTimePassword"
-                label={i18n.get('ctp.otp.fieldLabel')}
-                errorMessage={getOtpErrorMessage()}
-                classNameModifiers={['otp']}
-            >
+            <Field name="oneTimePassword" label={i18n.get('ctp.otp.fieldLabel')} errorMessage={getOtpErrorMessage()} classNameModifiers={['otp']}>
                 <InputText
                     name={'otp'}
                     autocorrect={'off'}
