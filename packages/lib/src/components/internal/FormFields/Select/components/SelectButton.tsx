@@ -64,10 +64,7 @@ function SelectButton(props: Readonly<SelectButtonProps>) {
             onClick={onClickHandler}
             onKeyDown={!readonly ? props.onButtonKeyDown : null}
             toggleButtonRef={props.toggleButtonRef}
-            // Only for some dropdowns e.g. the one found in installments when it is just in the form of a single dropdown, do we want to add an id that links to a label's for attr
-            // If we allow an id to be added to the buttons in CtPCardsList, for example, unit tests start failing because it seems a button with an id no longer has a name property that can be used
-            // as a qualifier in findByRole
-            {...(props.allowIdOnButton && props.id && { id: props.id })}
+            id={props.id}
         >
             {!props.filterable ? (
                 <Fragment>

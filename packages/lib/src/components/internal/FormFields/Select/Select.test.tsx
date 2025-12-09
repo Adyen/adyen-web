@@ -188,4 +188,44 @@ describe('Select', () => {
         await user.type(combobox, 'A');
         expect(screen.getByText('Apple')).toBeVisible();
     });
+
+    test('ARIA live region announces no options found message', async () => {
+        const user = userEvent.setup();
+        
+        renderSelect({
+            items: [{ name: 'Apple', id: '1' }],
+            filterable: true,
+            selectedValue: '',
+            onChange: jest.fn()
+        });
+
+        const combobox = screen.getByRole('combobox');
+        
+        // Type something that won't match any items
+        await user.type(combobox, 'xyz');
+        
+        // Check that the live region is present and contains the no options message
+        const liveRegion = screen.getByRole('status');
+        expect(liveRegion).toBeInTheDocument();
+        expect(liveRegion).toHaveTextContent('No options found');
+        expect(liveRegion).toHaveAttribute('aria-live', 'polite');
+    });
+
+    test('ARIA live region is empty when options are available', async () => {
+        renderSelect({
+            items: [{ name: 'Apple', id: '1' }],
+            filterable: true,
+            selectedValue: '',
+            onChange: jest.fn()
+        });
+
+        const combobox = screen.getByRole('combobox');
+
+        await user.type(combobox, 'App'); // search for Apple
+
+        // Live region should be present but empty when there are options
+        const liveRegion = screen.getByRole('status');
+        expect(liveRegion).toBeInTheDocument();
+        expect(liveRegion).toBeEmptyDOMElement();
+    });
 });
