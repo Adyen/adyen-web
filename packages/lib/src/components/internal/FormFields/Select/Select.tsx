@@ -30,8 +30,7 @@ function Select({
     blurOnClose,
     onListToggle,
     allowIdOnButton = false,
-    required,
-    activeOnHover = true
+    required
 }: SelectProps) {
     const filterInputRef = useRef(null);
     const selectContainerRef = useRef(null);
@@ -41,7 +40,7 @@ function Select({
     const [showList, setShowList] = useState<boolean>(false);
     const selectListId: string = useMemo(() => `select-${uuid()}`, []);
 
-    const active: SelectItem = items.find(i => i.id === selectedValue) || ({} as SelectItem);
+    const active: SelectItem = items.find(i => i.id === selectedValue);
 
     const [inputText, setInputText] = useState<string>();
 
@@ -125,10 +124,6 @@ function Select({
                 valueToEmit = { id: selectedValue };
             }
         }
-        
-        if(!activeOnHover) {
-            setActiveOption({} as SelectItem);
-        }
 
         if (valueToEmit && !valueToEmit.disabled) {
             onChange({ target: { value: valueToEmit.id, name: name } });
@@ -145,10 +140,8 @@ function Select({
      */
     const handleHover = (e: Event) => {
         e.preventDefault();
-        if (activeOnHover) {
-            const item = extractItemFromEvent(e);
-            setActiveOption(item);
-        }
+        const item = extractItemFromEvent(e);
+        setActiveOption(item);
     };
 
     /**
