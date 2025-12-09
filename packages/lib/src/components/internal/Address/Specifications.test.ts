@@ -1,4 +1,5 @@
 import Specifications from './Specifications';
+import { PARTIAL_ADDRESS_SCHEMA } from './constants';
 
 describe('Specifications', () => {
     const addressSpecificationsMock = {
@@ -63,5 +64,41 @@ describe('Specifications', () => {
     test('getFlatSchemaForCountry', () => {
         expect(specifications.getAddressSchemaForCountryFlat('CA')).toStrictEqual(['country', 'postalCode', 'city']);
         expect(specifications.getAddressSchemaForCountryFlat('PT')).toStrictEqual(['country', 'city', 'postalCode']);
+    });
+});
+
+describe('Partial Address Schema Specifications', () => {
+    const partialSpecifications = new Specifications(PARTIAL_ADDRESS_SCHEMA);
+
+    test('should use zipCode label for US postal code in partial mode', () => {
+        expect(partialSpecifications.getKeyForField('postalCode', 'US')).toBe('zipCode');
+    });
+
+    test('should use default postalCode label for GB in partial mode', () => {
+        expect(partialSpecifications.getKeyForField('postalCode', 'GB')).toBe('postalCode');
+    });
+
+    test('should use default postalCode label for CA in partial mode', () => {
+        expect(partialSpecifications.getKeyForField('postalCode', 'CA')).toBe('postalCode');
+    });
+
+    test('should use default postalCode label for AU in partial mode', () => {
+        expect(partialSpecifications.getKeyForField('postalCode', 'AU')).toBe('postalCode');
+    });
+
+    test('should use default postalCode label for BR in partial mode', () => {
+        expect(partialSpecifications.getKeyForField('postalCode', 'BR')).toBe('postalCode');
+    });
+
+    test('should use default postalCode label for unspecified countries in partial mode', () => {
+        expect(partialSpecifications.getKeyForField('postalCode', 'FR')).toBe('postalCode');
+        expect(partialSpecifications.getKeyForField('postalCode', 'DE')).toBe('postalCode');
+        expect(partialSpecifications.getKeyForField('postalCode', 'NL')).toBe('postalCode');
+    });
+
+    test('partial schema should only contain postalCode field', () => {
+        expect(partialSpecifications.getAddressSchemaForCountryFlat('US')).toStrictEqual(['postalCode']);
+        expect(partialSpecifications.getAddressSchemaForCountryFlat('GB')).toStrictEqual(['postalCode']);
+        expect(partialSpecifications.getAddressSchemaForCountryFlat('FR')).toStrictEqual(['postalCode']);
     });
 });
