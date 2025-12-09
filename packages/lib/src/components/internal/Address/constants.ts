@@ -66,31 +66,12 @@ export const ADDRESS_SPECIFICATIONS: AddressSpecifications = {
     }
 };
 
-export const PARTIAL_ADDRESS_SCHEMA: AddressSpecifications = {
-    AU: {
-        labels: ADDRESS_SPECIFICATIONS.AU.labels,
+export const PARTIAL_ADDRESS_SCHEMA: AddressSpecifications = Object.keys(ADDRESS_SPECIFICATIONS).reduce((acc, countryCode) => {
+    acc[countryCode] = {
+        labels: ADDRESS_SPECIFICATIONS[countryCode].labels,
         schema: [POSTAL_CODE]
-    },
-    BR: {
-        labels: ADDRESS_SPECIFICATIONS.BR.labels,
-        schema: [POSTAL_CODE]
-    },
-    CA: {
-        labels: ADDRESS_SPECIFICATIONS.CA.labels,
-        schema: [POSTAL_CODE]
-    },
-    GB: {
-        labels: ADDRESS_SPECIFICATIONS.GB.labels,
-        schema: [POSTAL_CODE]
-    },
-    US: {
-        labels: ADDRESS_SPECIFICATIONS.US.labels,
-        schema: [POSTAL_CODE]
-    },
-    default: {
-        labels: ADDRESS_SPECIFICATIONS.default.labels,
-        schema: [POSTAL_CODE]
-    }
-};
+    };
+    return acc;
+}, {} as AddressSpecifications);
 
 export const COUNTRIES_WITH_CUSTOM_SPECIFICATION = Object.keys(ADDRESS_SPECIFICATIONS);
