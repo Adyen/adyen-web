@@ -37,13 +37,13 @@ class Script implements IScript {
     private resolveLoadScript: (() => void) | null = null;
     private rejectLoadScript: ((reason?: any) => void) | null = null;
 
-    private handleOnLoad = () => {
-        this.script.setAttribute('data-script-loaded', 'true');
+    private readonly handleOnLoad = () => {
+        this.script?.setAttribute('data-script-loaded', 'true');
         this.cleanupListeners();
         this.resolveLoadScript?.();
     };
 
-    private handleOnError = (errorEvent: ErrorEvent) => {
+    private readonly handleOnError = (errorEvent: ErrorEvent) => {
         this.cleanupListeners();
         const error = new AdyenCheckoutError(
             'SCRIPT_ERROR',
