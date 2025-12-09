@@ -3,6 +3,7 @@ import { render, screen, waitFor, within } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import { setupServer } from 'msw/node';
 import { http, HttpResponse } from 'msw';
+import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 
 const server = setupServer(
     http.get('https://checkoutshopper-live.adyen.com/checkoutshopper/datasets/countries/en-US.json', () => {
@@ -27,10 +28,11 @@ describe('RatePay Direct Debit', () => {
         const user = userEvent.setup();
         const onSubmitMock = jest.fn();
         const onChangeMock = jest.fn();
+        const core = setupCoreMock();
 
-        const ratepay = new RatePay(global.core, {
+        const ratepay = new RatePay(core, {
             countryCode: 'DE',
-            modules: { analytics: global.analytics, resources: global.resources, srPanel: global.srPanel },
+            modules: { analytics: global.analytics, resources: global.resources },
             i18n: global.i18n,
             onSubmit: onSubmitMock,
             onChange: onChangeMock,
@@ -41,7 +43,6 @@ describe('RatePay Direct Debit', () => {
 
         const firstNameInput = await screen.findByLabelText('First name');
         const lastNameInput = await screen.findByLabelText('Last name');
-        const maleRadioInput = await screen.findByLabelText('Male');
         const dateOfBirthInput = await screen.findByLabelText('Date of birth');
         const emailAddressInput = await screen.findByLabelText('Email address');
         const telephoneNumberInput = await screen.findByLabelText('Telephone number');
@@ -54,11 +55,10 @@ describe('RatePay Direct Debit', () => {
         // Personal details
         await user.type(firstNameInput, 'Jose');
         await user.type(lastNameInput, 'Fernandez');
-        await user.click(maleRadioInput);
         await waitFor(() => {
             expect(onChangeMock).toHaveBeenLastCalledWith(
                 expect.objectContaining({
-                    data: expect.objectContaining({ shopperName: { firstName: 'Jose', lastName: 'Fernandez', gender: 'MALE' } })
+                    data: expect.objectContaining({ shopperName: { firstName: 'Jose', lastName: 'Fernandez' } })
                 }),
                 expect.anything()
             );
@@ -135,7 +135,7 @@ describe('RatePay Direct Debit', () => {
                         dateOfBirth: '1990-01-01',
                         paymentMethod: { checkoutAttemptId: 'fetch-checkoutAttemptId-failed', type: 'ratepay' },
                         shopperEmail: 'jose@adyen.com',
-                        shopperName: { firstName: 'Jose', gender: 'MALE', lastName: 'Fernandez' },
+                        shopperName: { firstName: 'Jose', lastName: 'Fernandez' },
                         telephoneNumber: '612345678'
                     },
                     isValid: true
@@ -150,10 +150,11 @@ describe('RatePay Direct Debit', () => {
         const user = userEvent.setup();
         const onSubmitMock = jest.fn();
         const onChangeMock = jest.fn();
+        const core = setupCoreMock();
 
-        const ratepay = new RatePay(global.core, {
+        const ratepay = new RatePay(core, {
             countryCode: 'DE',
-            modules: { analytics: global.analytics, resources: global.resources, srPanel: global.srPanel },
+            modules: { analytics: global.analytics, resources: global.resources },
             i18n: global.i18n,
             onSubmit: onSubmitMock,
             onChange: onChangeMock,
@@ -164,7 +165,6 @@ describe('RatePay Direct Debit', () => {
 
         const firstNameInput = await screen.findByLabelText('First name');
         const lastNameInput = await screen.findByLabelText('Last name');
-        const maleRadioInput = await screen.findByLabelText('Male');
         const dateOfBirthInput = await screen.findByLabelText('Date of birth');
         const emailAddressInput = await screen.findByLabelText('Email address');
         const telephoneNumberInput = await screen.findByLabelText('Telephone number');
@@ -177,11 +177,10 @@ describe('RatePay Direct Debit', () => {
         // Personal details
         await user.type(firstNameInput, 'Jose');
         await user.type(lastNameInput, 'Fernandez');
-        await user.click(maleRadioInput);
         await waitFor(() => {
             expect(onChangeMock).toHaveBeenLastCalledWith(
                 expect.objectContaining({
-                    data: expect.objectContaining({ shopperName: { firstName: 'Jose', lastName: 'Fernandez', gender: 'MALE' } })
+                    data: expect.objectContaining({ shopperName: { firstName: 'Jose', lastName: 'Fernandez' } })
                 }),
                 expect.anything()
             );
@@ -305,7 +304,7 @@ describe('RatePay Direct Debit', () => {
                         },
                         paymentMethod: { checkoutAttemptId: 'fetch-checkoutAttemptId-failed', type: 'ratepay' },
                         shopperEmail: 'jose@adyen.com',
-                        shopperName: { firstName: 'Jose', gender: 'MALE', lastName: 'Fernandez' },
+                        shopperName: { firstName: 'Jose', lastName: 'Fernandez' },
                         telephoneNumber: '612345678'
                     },
                     isValid: true
@@ -319,10 +318,11 @@ describe('RatePay Direct Debit', () => {
     test('should not submit the payment if form is not valid', async () => {
         const user = userEvent.setup();
         const onSubmitMock = jest.fn();
+        const core = setupCoreMock();
 
-        const ratepay = new RatePay(global.core, {
+        const ratepay = new RatePay(core, {
             countryCode: 'DE',
-            modules: { analytics: global.analytics, resources: global.resources, srPanel: global.srPanel },
+            modules: { analytics: global.analytics, resources: global.resources },
             i18n: global.i18n,
             onSubmit: onSubmitMock,
             loadingContext: 'https://checkoutshopper-live.adyen.com/checkoutshopper/'
@@ -337,7 +337,6 @@ describe('RatePay Direct Debit', () => {
 
         expect(screen.getByText('Enter your first name')).toBeInTheDocument();
         expect(screen.getByText('Enter your last name')).toBeInTheDocument();
-        expect(screen.getByText('Select your gender')).toBeInTheDocument();
         expect(screen.getByText('Enter the date of birth')).toBeInTheDocument();
         expect(screen.getByText('Enter the email address')).toBeInTheDocument();
         expect(screen.getByText('Enter the telephone number')).toBeInTheDocument();

@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import { render, waitFor, screen } from '@testing-library/preact';
-import QRLoader from './QRLoader';
+import { QRLoader } from './QRLoader';
 import checkPaymentStatus from '../../../core/Services/payment-status';
 import { CoreProvider } from '../../../core/Context/CoreProvider';
 import { SRPanel } from '../../../core/Errors/SRPanel';
@@ -15,6 +15,7 @@ const TIMEOUT_OFFSET = 200;
 const renderQRLoader = (props: Partial<QRLoaderProps> = {}) => {
     const srPanel = new SRPanel(global.core);
     const defaultProps: QRLoaderProps = {
+        type: 'pix',
         onComplete: jest.fn(),
         onError: jest.fn(),
         paymentData: 'initial-payment-data',

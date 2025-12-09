@@ -106,7 +106,6 @@ const CtPCards = ({ onDisplayCardComponent }: CtPCardsProps) => {
             {displayCardCheckoutView && (
                 <Fragment>
                     <CtPSection.Title>{i18n.get('ctp.cards.title')}</CtPSection.Title>
-                    <CtPSection.Text>{i18n.get('ctp.cards.subtitle')}</CtPSection.Text>
                     {cards.length === 0 && <div className="adyen-checkout-ctp__empty-cards">{i18n.get('ctp.emptyProfile.message')}</div>}
                     {cards.length === 1 && <CtPSingleCard card={cards[0]} errorMessage={getErrorLabel(errorCode, i18n)} />}
                     {cards.length > 1 && (

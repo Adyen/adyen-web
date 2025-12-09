@@ -2,7 +2,7 @@ import ApplePaySdkLoader, { APPLE_PAY_SDK_URL } from './ApplePaySdkLoader';
 import Script from '../../../utils/Script';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 import { mock } from 'jest-mock-extended';
-import { AnalyticsModule } from '../../../types/global-types';
+import type { IAnalytics } from '../../../core/Analytics/Analytics';
 
 jest.mock('../../../utils/Script');
 
@@ -12,7 +12,7 @@ const mockLoad = jest.fn().mockImplementation(() => {
     return Promise.resolve(true);
 });
 
-const mockAnalytics = mock<AnalyticsModule>();
+const mockAnalytics = mock<IAnalytics>();
 
 describe('ApplePaySdkLoader', () => {
     let loader;

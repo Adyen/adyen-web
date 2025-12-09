@@ -19,9 +19,9 @@ describe('Dropin - splitPaymentMethods', () => {
         );
 
         expect(paymentMethods).toHaveLength(1);
-        expect(paymentMethods[0]).toStrictEqual({ type: 'alipay', name: 'AliPay' });
+        expect(paymentMethods[0]).toMatchObject({ type: 'alipay', name: 'AliPay', _id: expect.any(String) });
         expect(instantPaymentMethods).toHaveLength(1);
-        expect(instantPaymentMethods[0]).toStrictEqual({ name: 'Google Pay', type: 'paywithgoogle' });
+        expect(instantPaymentMethods[0]).toMatchObject({ name: 'Google Pay', type: 'paywithgoogle', _id: expect.any(String) });
         expect(fastlanePaymentMethod).toBeUndefined();
         expect(storedPaymentMethods).toHaveLength(0);
     });
@@ -44,11 +44,11 @@ describe('Dropin - splitPaymentMethods', () => {
         );
 
         expect(paymentMethods).toHaveLength(2);
-        expect(paymentMethods[0]).toStrictEqual({ type: 'alipay', name: 'AliPay' });
-        expect(paymentMethods[1]).toStrictEqual({ type: 'kakaopay', name: 'KakaoPay' });
+        expect(paymentMethods[0]).toMatchObject({ type: 'alipay', name: 'AliPay', _id: expect.any(String) });
+        expect(paymentMethods[1]).toMatchObject({ type: 'kakaopay', name: 'KakaoPay', _id: expect.any(String) });
         expect(instantPaymentMethods).toHaveLength(1);
-        expect(instantPaymentMethods[0]).toStrictEqual({ name: 'ApplePay', type: 'applepay' });
-        expect(fastlanePaymentMethod).toStrictEqual({ name: 'Fastlane', type: 'fastlane', brands: ['visa'] });
+        expect(instantPaymentMethods[0]).toMatchObject({ name: 'ApplePay', type: 'applepay', _id: expect.any(String) });
+        expect(fastlanePaymentMethod).toMatchObject({ name: 'Fastlane', type: 'fastlane', brands: ['visa'], _id: expect.any(String) });
         expect(storedPaymentMethods).toHaveLength(0);
     });
 });

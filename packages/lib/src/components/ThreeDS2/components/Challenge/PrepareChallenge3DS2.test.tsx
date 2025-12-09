@@ -3,7 +3,8 @@ import { h } from 'preact';
 import PrepareChallenge3DS2 from './PrepareChallenge3DS2';
 import { CoreProvider } from '../../../../core/Context/CoreProvider';
 import { THREEDS2_FULL, TIMEOUT } from '../../constants';
-import { Analytics3DS2Errors, Analytics3DS2Events, ANALYTICS_ERROR_TYPE } from '../../../../core/Analytics/constants';
+import { LogEventSubtype } from '../../../../core/Analytics/events/AnalyticsLogEvent';
+import { ErrorEventCode, ErrorEventType } from '../../../../core/Analytics/events/AnalyticsErrorEvent';
 
 const challengeToken = {
     acsReferenceNumber: 'ADYEN-ACS-SIMULATOR',
@@ -32,7 +33,7 @@ let onError: any;
 let errorMessage: string;
 
 const baseAnalyticsError = {
-    errorType: ANALYTICS_ERROR_TYPE.apiError,
+    errorType: ErrorEventType.apiError,
     timestamp: expect.any(String),
     id: expect.any(String)
 };
@@ -87,7 +88,7 @@ describe('PrepareChallenge3DS2 - Happy flow', () => {
         expect(onSubmitAnalytics).toHaveBeenCalledWith({
             type: THREEDS2_FULL,
             message: 'creq sent',
-            subType: Analytics3DS2Events.CHALLENGE_DATA_SENT,
+            subType: LogEventSubtype.challengeDataSentWeb,
             timestamp: expect.any(String),
             id: expect.any(String)
         });
@@ -115,7 +116,7 @@ describe('PrepareChallenge3DS2 - Happy flow', () => {
             expect(onSubmitAnalytics).toHaveBeenCalledWith({
                 type: THREEDS2_FULL,
                 message: '3DS2 challenge has completed',
-                subType: Analytics3DS2Events.CHALLENGE_COMPLETED,
+                subType: LogEventSubtype.challengeCompleted,
                 result: 'success',
                 timestamp: expect.any(String),
                 id: expect.any(String)
@@ -158,8 +159,8 @@ describe('PrepareChallenge3DS2 - flow completes with errors that are considered 
             // analytics for error
             expect(onSubmitAnalytics).toHaveBeenCalledWith({
                 message: 'threeDS2Challenge: timeout',
-                code: Analytics3DS2Errors.THREEDS2_TIMEOUT,
-                errorType: ANALYTICS_ERROR_TYPE.network,
+                code: ErrorEventCode.THREEDS2_TIMEOUT,
+                errorType: ErrorEventType.network,
                 timestamp: expect.any(String),
                 id: expect.any(String)
             });
@@ -168,7 +169,7 @@ describe('PrepareChallenge3DS2 - flow completes with errors that are considered 
             expect(onSubmitAnalytics).toHaveBeenCalledWith({
                 type: THREEDS2_FULL,
                 message: '3DS2 challenge has completed',
-                subType: Analytics3DS2Events.CHALLENGE_COMPLETED,
+                subType: LogEventSubtype.challengeCompleted,
                 result: TIMEOUT,
                 timestamp: expect.any(String),
                 id: expect.any(String)
@@ -202,8 +203,8 @@ describe('PrepareChallenge3DS2 - flow completes with errors that are considered 
             // analytics for error
             expect(onSubmitAnalytics).toHaveBeenCalledWith({
                 message: 'threeDS2Challenge: no transStatus could be retrieved',
-                code: Analytics3DS2Errors.NO_TRANSSTATUS,
-                errorType: ANALYTICS_ERROR_TYPE.apiError,
+                code: ErrorEventCode.THREEDS2_NO_TRANSSTATUS,
+                errorType: ErrorEventType.apiError,
                 timestamp: expect.any(String),
                 id: expect.any(String)
             });
@@ -212,7 +213,7 @@ describe('PrepareChallenge3DS2 - flow completes with errors that are considered 
             expect(onSubmitAnalytics).toHaveBeenCalledWith({
                 type: THREEDS2_FULL,
                 message: '3DS2 challenge has completed',
-                subType: Analytics3DS2Events.CHALLENGE_COMPLETED,
+                subType: LogEventSubtype.challengeCompleted,
                 result: 'noTransStatus',
                 timestamp: expect.any(String),
                 id: expect.any(String)
@@ -246,11 +247,11 @@ describe('PrepareChallenge3DS2 - unhappy flows', () => {
         mountPrepareChallenge(propsMock);
 
         // assert
-        expect(errorMessage).toBe(`${Analytics3DS2Errors.ACTION_IS_MISSING_TOKEN}: Data parsing error`);
+        expect(errorMessage).toBe(`${ErrorEventCode.THREEDS2_ACTION_IS_MISSING_TOKEN}: Data parsing error`);
 
         const analyticsError = {
             ...baseAnalyticsError,
-            code: Analytics3DS2Errors.ACTION_IS_MISSING_TOKEN,
+            code: ErrorEventCode.THREEDS2_ACTION_IS_MISSING_TOKEN,
             message: '3DS2Challenge_Error: Missing "token" property from threeDS2 action'
         };
         expect(onSubmitAnalytics).toHaveBeenCalledWith(analyticsError);
@@ -269,11 +270,11 @@ describe('PrepareChallenge3DS2 - unhappy flows', () => {
         mountPrepareChallenge(propsMock);
 
         // assert
-        expect(errorMessage).toBe(`${Analytics3DS2Errors.TOKEN_DECODE_OR_PARSING_FAILED}: Data parsing error`);
+        expect(errorMessage).toBe(`${ErrorEventCode.THREEDS2_TOKEN_DECODE_OR_PARSING_FAILED}: Data parsing error`);
 
         const analyticsError = {
             ...baseAnalyticsError,
-            code: Analytics3DS2Errors.TOKEN_DECODE_OR_PARSING_FAILED,
+            code: ErrorEventCode.THREEDS2_TOKEN_DECODE_OR_PARSING_FAILED,
             message: '3DS2Challenge_Error: not base64'
         };
         expect(onSubmitAnalytics).toHaveBeenCalledWith(analyticsError);
@@ -294,11 +295,11 @@ describe('PrepareChallenge3DS2 - unhappy flows', () => {
         mountPrepareChallenge(propsMock);
 
         // assert
-        expect(errorMessage).toBe(`${Analytics3DS2Errors.TOKEN_IS_MISSING_ACSURL}: Data parsing error`);
+        expect(errorMessage).toBe(`${ErrorEventCode.THREEDS2_TOKEN_IS_MISSING_ACSURL}: Data parsing error`);
 
         const analyticsError = {
             ...baseAnalyticsError,
-            code: Analytics3DS2Errors.TOKEN_IS_MISSING_ACSURL,
+            code: ErrorEventCode.THREEDS2_TOKEN_IS_MISSING_ACSURL,
             message: '3DS2Challenge_Error: Decoded token is missing a valid acsURL property'
         };
         expect(onSubmitAnalytics).toHaveBeenCalledWith(analyticsError);
@@ -319,11 +320,11 @@ describe('PrepareChallenge3DS2 - unhappy flows', () => {
         mountPrepareChallenge(propsMock);
 
         // assert
-        expect(errorMessage).toBe(`${Analytics3DS2Errors.TOKEN_IS_MISSING_OTHER_PROPS}: Data parsing error`);
+        expect(errorMessage).toBe(`${ErrorEventCode.THREEDS2_TOKEN_IS_MISSING_OTHER_PROPS}: Data parsing error`);
 
         const analyticsError = {
             ...baseAnalyticsError,
-            code: Analytics3DS2Errors.TOKEN_IS_MISSING_OTHER_PROPS,
+            code: ErrorEventCode.THREEDS2_TOKEN_IS_MISSING_OTHER_PROPS,
             message:
                 '3DS2Challenge_Error: Decoded token is missing one or more of the following properties (acsTransID | messageVersion | threeDSServerTransID)'
         };
@@ -345,11 +346,11 @@ describe('PrepareChallenge3DS2 - unhappy flows', () => {
         mountPrepareChallenge(propsMock);
 
         // assert
-        expect(errorMessage).toBe(`${Analytics3DS2Errors.TOKEN_IS_MISSING_OTHER_PROPS}: Data parsing error`);
+        expect(errorMessage).toBe(`${ErrorEventCode.THREEDS2_TOKEN_IS_MISSING_OTHER_PROPS}: Data parsing error`);
 
         const analyticsError = {
             ...baseAnalyticsError,
-            code: Analytics3DS2Errors.TOKEN_IS_MISSING_OTHER_PROPS,
+            code: ErrorEventCode.THREEDS2_TOKEN_IS_MISSING_OTHER_PROPS,
             message:
                 '3DS2Challenge_Error: Decoded token is missing one or more of the following properties (acsTransID | messageVersion | threeDSServerTransID)'
         };
@@ -371,11 +372,11 @@ describe('PrepareChallenge3DS2 - unhappy flows', () => {
         mountPrepareChallenge(propsMock);
 
         // assert
-        expect(errorMessage).toBe(`${Analytics3DS2Errors.TOKEN_IS_MISSING_OTHER_PROPS}: Data parsing error`);
+        expect(errorMessage).toBe(`${ErrorEventCode.THREEDS2_TOKEN_IS_MISSING_OTHER_PROPS}: Data parsing error`);
 
         const analyticsError = {
             ...baseAnalyticsError,
-            code: Analytics3DS2Errors.TOKEN_IS_MISSING_OTHER_PROPS,
+            code: ErrorEventCode.THREEDS2_TOKEN_IS_MISSING_OTHER_PROPS,
             message:
                 '3DS2Challenge_Error: Decoded token is missing one or more of the following properties (acsTransID | messageVersion | threeDSServerTransID)'
         };

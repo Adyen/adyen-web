@@ -1,36 +1,38 @@
 import { h } from 'preact';
+import { Resources } from '../../../core/Context/Resources';
+import AdyenCheckoutError, { NETWORK_ERROR } from '../../../core/Errors/AdyenCheckoutError';
+import { hasOwnProperty } from '../../../utils/hasOwnProperty';
 import BaseElement from '../BaseElement/BaseElement';
 import PayButton from '../PayButton';
 import { assertIsDropin, cleanupFinalResult, getRegulatoryDefaults, sanitizeResponse, verifyPaymentDidNotFail } from './utils';
-import AdyenCheckoutError, { NETWORK_ERROR } from '../../../core/Errors/AdyenCheckoutError';
-import { hasOwnProperty } from '../../../utils/hasOwnProperty';
-import { Resources } from '../../../core/Context/Resources';
-import { ANALYTICS_ERROR_TYPE, ANALYTICS_SUBMIT_STR } from '../../../core/Analytics/constants';
 
-import { AnalyticsInitialEvent } from '../../../core/Analytics/types';
-import type { CoreConfiguration, ICore, AdditionalDetailsData } from '../../../core/types';
-import type { ComponentMethodsRef, PayButtonFunctionProps, UIElementProps, UIElementStatus } from './types';
+import { AbstractAnalyticsEvent } from '../../../core/Analytics/events/AbstractAnalyticsEvent';
+import { AnalyticsErrorEvent, ErrorEventType } from '../../../core/Analytics/events/AnalyticsErrorEvent';
+import { AnalyticsInfoEvent, InfoEventType } from '../../../core/Analytics/events/AnalyticsInfoEvent';
+import { AnalyticsLogEvent, LogEventType } from '../../../core/Analytics/events/AnalyticsLogEvent';
 import type { CheckoutSessionDetailsResponse, CheckoutSessionPaymentResponse } from '../../../core/CheckoutSession/types';
+import type { NewableComponent } from '../../../core/core.registry';
+import CancelError from '../../../core/Errors/CancelError';
+import type { AdditionalDetailsData, CoreConfiguration, ICore } from '../../../core/types';
 import type {
     ActionHandledReturnObject,
-    AnalyticsModule,
     CheckoutAdvancedFlowResponse,
     Order,
     PaymentAction,
     PaymentAmount,
     PaymentData,
-    PaymentMethod,
     PaymentMethodsResponse,
-    PaymentResponseData
+    PaymentResponseData,
+    RawPaymentMethod
 } from '../../../types/global-types';
 import type { IDropin } from '../../Dropin/types';
-import type { NewableComponent } from '../../../core/core.registry';
-import CancelError from '../../../core/Errors/CancelError';
+import type { ComponentMethodsRef, PayButtonFunctionProps, UIElementProps, UIElementStatus } from './types';
+import type { IAnalytics } from '../../../core/Analytics/Analytics';
 
+import { CoreProvider } from '../../../core/Context/CoreProvider';
+import { SRPanel } from '../../../core/Errors/SRPanel';
 import './UIElement.scss';
-import { AnalyticsEvent } from '../../../core/Analytics/AnalyticsEvent';
-import { AnalyticsLogEvent } from '../../../core/Analytics/AnalyticsLogEvent';
-import { AnalyticsErrorEvent } from '../../../core/Analytics/AnalyticsErrorEvent';
+import SRPanelProvider from '../../../core/Errors/SRPanelProvider';
 
 export abstract class UIElement<P extends UIElementProps = UIElementProps> extends BaseElement<P> {
     protected componentRef: any;
@@ -71,17 +73,64 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
 
         this.onEnterKeyPressed = this.onEnterKeyPressed.bind(this);
         this.onActionHandled = this.onActionHandled.bind(this);
+
+        this.createBeforeRenderHook(props);
+        this.reportIntegrationFlavor();
     }
 
-    get analytics(): AnalyticsModule {
+    /**
+     * Creates a hook tied to render() method. This hook is called every time render() is invoked.
+     * Currently useful for Analytics
+     *
+     * @param configSetByMerchant
+     * @private
+     */
+    private createBeforeRenderHook(configSetByMerchant: P): void {
+        const originalRender = this.render;
+
+        this.render = (...args: any[]) => {
+            this.beforeRender(configSetByMerchant);
+            return originalRender.apply(this, args);
+        };
+    }
+
+    protected beforeRender(configSetByMerchant?: P): void {
+        // We don't send 'rendered' events when rendering actions
+        if (configSetByMerchant?.originalAction) {
+            return;
+        }
+
+        const event = new AnalyticsInfoEvent({
+            type: InfoEventType.rendered,
+            component: this.type,
+            configData: { ...configSetByMerchant, showPayButton: this.props.showPayButton },
+            ...(configSetByMerchant?.oneClick && { isStoredPaymentMethod: true })
+        });
+
+        this.analytics.sendAnalytics(event);
+    }
+
+    protected reportIntegrationFlavor(): void {
+        void this.analytics.sendFlavor('components');
+    }
+
+    get analytics(): IAnalytics {
         return this.core.modules.analytics;
+    }
+
+    get srPanel(): SRPanel {
+        return this.core.modules.srPanel;
+    }
+
+    private getPaymentMethodConfigFromResponse(componentProps: P) {
+        if (componentProps?.storedPaymentMethodId) return this.getStoredPaymentMethodDetails(componentProps.storedPaymentMethodId);
+        return this.getPaymentMethodFromPaymentMethodsResponse(componentProps?.type, componentProps?.paymentMethodId);
     }
 
     protected override buildElementProps(componentProps?: P) {
         const globalCoreProps = this.core.getCorePropsForComponent();
-        const isStoredPaymentMethod = !!componentProps?.isStoredPaymentMethod;
 
-        const paymentMethodFromResponse = isStoredPaymentMethod ? {} : this.getPaymentMethodFromPaymentMethodsResponse(componentProps?.type);
+        const paymentMethodFromResponse = this.getPaymentMethodConfigFromResponse(componentProps);
 
         const finalProps = {
             showPayButton: true,
@@ -90,21 +139,27 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
             ...componentProps
         };
 
-        const isDropin = assertIsDropin(this as unknown as IDropin);
+        const isDropinInstance = assertIsDropin(this as unknown as IDropin);
 
         this.props = this.formatProps({
             ...this.constructor['defaultProps'], // component defaults
-            ...getRegulatoryDefaults(this.core.options.countryCode, isDropin), // regulatory defaults
+            ...getRegulatoryDefaults(this.core.options.countryCode, isDropinInstance), // regulatory defaults
             ...finalProps // the rest (inc. merchant defined config)
         });
+    }
+
+    protected getStoredPaymentMethodDetails(storedPaymentMethodId: string) {
+        return this.core.paymentMethodsResponse.findStoredPaymentMethod(storedPaymentMethodId);
     }
 
     /**
      *  Get the payment method from the paymentMethodsResponse
      *
      * @param type - The type of the payment method to get. (This prop is passed by Drop-in OR Standalone components containing the property 'type' as part of their configuration)
+     * @param paymentMethodId - Unique internal payment method ID
      */
-    protected getPaymentMethodFromPaymentMethodsResponse(type?: string): PaymentMethod {
+    protected getPaymentMethodFromPaymentMethodsResponse(type?: string, paymentMethodId?: string): RawPaymentMethod {
+        if (paymentMethodId) return this.core.paymentMethodsResponse.findById(paymentMethodId);
         return this.core.paymentMethodsResponse?.find(type || this.constructor['type']);
     }
 
@@ -158,50 +213,8 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         );
     }
 
-    // Only called once, for UIElements (including Dropin), as they are being mounted
-    protected setUpAnalytics(setUpAnalyticsObj: AnalyticsInitialEvent) {
-        const sessionId = this.props.session?.id;
-
-        return this.props.modules.analytics.setUp({
-            ...setUpAnalyticsObj,
-            ...(sessionId && { sessionId })
-        });
-    }
-
-    /**
-     * A function for all UIElements, or BaseElement, to use to create an analytics action for when it's been:
-     *  - mounted,
-     *  - a PM has been selected
-     *  - onSubmit has been called (as a result of the pay button being pressed)
-     *
-     *  In some other cases e.g. 3DS2 components, this function is overridden to allow more specific analytics actions to be created
-     */
-
-    protected submitAnalytics(analyticsObj: AnalyticsEvent) {
-        try {
-            analyticsObj.component = this.getComponent(analyticsObj);
-
-            this.props.modules.analytics.sendAnalytics(analyticsObj);
-        } catch (error) {
-            console.warn('Failed to submit the analytics event. Error:', error);
-        }
-    }
-
-    /** Work out what the component's "type" is:
-     * - first check for a dedicated "analyticsType" (currently only applies to custom-cards)
-     * - otherwise, distinguish cards from non-cards: cards will use their static type property, everything else will use props.type
-     */
-    private getComponent({ component }: AnalyticsEvent): string {
-        if (component) {
-            return component;
-        }
-        if (this.constructor['analyticsType']) {
-            return this.constructor['analyticsType'];
-        }
-        if (this.constructor['type'] === 'scheme' || this.constructor['type'] === 'bcmc') {
-            return this.constructor['type'];
-        }
-        return this.type;
+    protected override submitAnalytics(event: AbstractAnalyticsEvent) {
+        this.analytics.sendAnalytics(event);
     }
 
     public submit(): void {
@@ -252,14 +265,14 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     }
 
     private async submitUsingAdvancedFlow(): Promise<CheckoutAdvancedFlowResponse> {
-        return new Promise<CheckoutAdvancedFlowResponse>((resolve, reject) => {
-            // Call analytics endpoint
-            const event = new AnalyticsLogEvent({
-                type: ANALYTICS_SUBMIT_STR,
-                message: 'Shopper clicked pay'
-            });
-            this.submitAnalytics(event);
+        const event = new AnalyticsLogEvent({
+            component: this.type,
+            type: LogEventType.submit,
+            message: 'Shopper clicked pay'
+        });
+        this.submitAnalytics(event);
 
+        return new Promise<CheckoutAdvancedFlowResponse>((resolve, reject) => {
             this.props.onSubmit(
                 {
                     data: this.data,
@@ -273,7 +286,8 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
 
     private async submitUsingSessionsFlow(data: PaymentData): Promise<CheckoutSessionPaymentResponse> {
         const event = new AnalyticsLogEvent({
-            type: ANALYTICS_SUBMIT_STR,
+            component: this.type,
+            type: LogEventType.submit,
             message: 'Shopper clicked pay'
         });
         this.submitAnalytics(event);
@@ -314,7 +328,8 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
 
         if (error.name === NETWORK_ERROR && error.options.code) {
             const event = new AnalyticsErrorEvent({
-                errorType: ANALYTICS_ERROR_TYPE.apiError,
+                component: this.type,
+                errorType: ErrorEventType.apiError,
                 code: error.options.code
             });
 
@@ -585,6 +600,16 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
                     amount: order ? order.remainingAmount : amount
                 });
             });
+    }
+
+    protected abstract componentToRender(): h.JSX.Element;
+
+    render() {
+        return (
+            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources} analytics={this.analytics}>
+                <SRPanelProvider srPanel={this.srPanel}>{this.componentToRender()}</SRPanelProvider>
+            </CoreProvider>
+        );
     }
 }
 

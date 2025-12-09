@@ -3,8 +3,8 @@ import { render, waitFor, screen } from '@testing-library/preact';
 import { h } from 'preact';
 import RedirectShopper from './components/RedirectShopper';
 import RedirectElement from './Redirect';
-import Analytics from '../../core/Analytics';
 import { RedirectConfiguration } from './types';
+import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 
 jest.mock('../../utils/detectInIframeInSameOrigin', () => {
     return jest.fn().mockImplementation(() => {
@@ -79,29 +79,28 @@ describe('Redirect error', () => {
     });
 
     afterAll(() => {
-        window.location = oldWindowLocation;
+        window.location = oldWindowLocation as string & Location;
     });
 
     test('should send an error event to the analytics module if beforeRedirect rejects', async () => {
-        const analytics = Analytics({ analytics: {}, analyticsContext: '', locale: '', clientKey: '' });
-        analytics.sendAnalytics = jest.fn(() => true);
+        const core = setupCoreMock();
         const props: RedirectConfiguration = {
             url: 'test',
             method: 'POST',
             paymentMethodType: 'ideal',
-            modules: { analytics },
             beforeRedirect: (_, reject) => {
                 return reject();
             }
         };
 
-        const redirectElement = new RedirectElement(global.core, props);
+        const redirectElement = new RedirectElement(core, props);
         render(redirectElement.render());
+
         await waitFor(() => {
             expect(screen.getByTestId('redirect-shopper-form')).toBeInTheDocument();
         });
 
-        expect(analytics.sendAnalytics).toHaveBeenCalledWith({
+        expect(core.modules.analytics.sendAnalytics).toHaveBeenCalledWith({
             code: '600',
             component: 'ideal',
             errorType: 'Redirect',
@@ -115,26 +114,29 @@ describe('Redirect error', () => {
             throw new Error('Mock error');
         });
 
-        const analytics = Analytics({ analytics: {}, analyticsContext: '', locale: '', clientKey: '' });
-        analytics.sendAnalytics = jest.fn(() => true);
+        const core = setupCoreMock();
+
         const props: RedirectConfiguration = {
             url: 'test',
             method: 'GET',
-            paymentMethodType: 'ideal',
-            modules: { analytics }
+            paymentMethodType: 'ideal'
         };
 
-        const redirectElement = new RedirectElement(global.core, props);
+        const redirectElement = new RedirectElement(core, props);
         render(redirectElement.render());
 
         await waitFor(() => {
-            expect(analytics.sendAnalytics).toHaveBeenCalledWith({
+            expect(core.modules.analytics.sendAnalytics).toHaveBeenCalledTimes(1);
+        });
+
+        expect(core.modules.analytics.sendAnalytics).toHaveBeenCalledWith(
+            expect.objectContaining({
                 code: '600',
                 component: 'ideal',
                 errorType: 'Redirect',
                 timestamp: expect.any(String),
                 id: expect.any(String)
-            });
-        });
+            })
+        );
     });
 });

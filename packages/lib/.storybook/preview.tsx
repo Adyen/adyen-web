@@ -1,5 +1,5 @@
 import './main.css';
-import { Preview } from '@storybook/preact';
+import { Preview } from '@storybook/preact-vite';
 import { DEFAULT_COUNTRY_CODE, DEFAULT_SHOPPER_LOCALE, DEFAULT_AMOUNT_VALUE, SHOPPER_LOCALES } from '../storybook/config/commonConfig';
 import { initialize, mswLoader } from 'msw-storybook-addon';
 import { COUNTRY_CODES } from '../storybook/constants/countries';
@@ -53,7 +53,7 @@ const preview: Preview = {
                     'Welcome',
                     'Dropin',
                     'Components',
-                    ['Cards', ['Card', '*'], 'Wallets', 'IssuerList', 'OpenInvoice', 'Partial Payments', 'Vouchers', 'Redirect', '*'],
+                    ['Cards', ['Card', '*'], 'Wallets', 'IssuerList', 'OpenInvoice', 'Vouchers', 'Gift Cards', 'Redirect', '*'],
                     'Internal Elements',
                     '*'
                 ]

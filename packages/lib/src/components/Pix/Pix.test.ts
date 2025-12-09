@@ -2,21 +2,24 @@ import Pix from './Pix';
 import { render, screen, waitFor } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import { NO_CHECKOUT_ATTEMPT_ID } from '../../core/Analytics/constants';
+import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 
 test('should return only payment type if personalDetails is not required', () => {
-    const pixElement = new Pix(global.core);
-    expect(pixElement.data).toEqual({ clientStateDataIndicator: true, paymentMethod: { type: 'pix', checkoutAttemptId: NO_CHECKOUT_ATTEMPT_ID } });
+    const pix = new Pix(global.core);
+    expect(pix.data).toEqual({ clientStateDataIndicator: true, paymentMethod: { type: 'pix', checkoutAttemptId: NO_CHECKOUT_ATTEMPT_ID } });
 });
 
 test('should show personal details form if enabled', async () => {
+    const core = setupCoreMock();
     const i18n = global.i18n;
-    const pixElement = new Pix(global.core, {
+
+    const pix = new Pix(core, {
         personalDetailsRequired: true,
         i18n,
         loadingContext: 'ggg',
         modules: { resources: global.resources }
     });
-    render(pixElement.render());
+    render(pix.render());
 
     expect(await screen.findByLabelText('First name')).toBeTruthy();
     expect(await screen.findByLabelText('Last name')).toBeTruthy();
@@ -24,9 +27,10 @@ test('should show personal details form if enabled', async () => {
 });
 
 test('should show pay button by default', async () => {
+    const core = setupCoreMock();
     const i18n = global.i18n;
-    const pixElement = new Pix(global.core, { i18n, loadingContext: 'ggg', modules: { resources: global.resources } });
-    render(pixElement.render());
+    const pix = new Pix(core, { i18n, loadingContext: 'ggg', modules: { resources: global.resources } });
+    render(pix.render());
 
     expect(await screen.findByRole('button', { name: 'Continue to pix' })).toBeTruthy();
 });
@@ -34,13 +38,15 @@ test('should show pay button by default', async () => {
 test('should validate Brazil SSN', async () => {
     const user = userEvent.setup();
     const i18n = global.i18n;
-    const pixElement = new Pix(global.core, {
+    const core = setupCoreMock();
+
+    const pix = new Pix(core, {
         personalDetailsRequired: true,
         i18n,
         loadingContext: 'ggg',
         modules: { resources: global.resources }
     });
-    render(pixElement.render());
+    render(pix.render());
 
     const firstNameInput = await screen.findByLabelText('First name');
     const lastNameInput = await screen.findByLabelText('Last name');
@@ -50,7 +56,7 @@ test('should validate Brazil SSN', async () => {
     await user.type(lastNameInput, 'Fernandez');
     await user.type(ssnInput, '18839203');
 
-    pixElement.submit();
+    pix.submit();
 
     await waitFor(() => expect(ssnInput).toBeInvalid());
 
@@ -63,10 +69,12 @@ test('should validate Brazil SSN', async () => {
 test('should trigger submit when Pay button is pressed', async () => {
     const user = userEvent.setup();
     const i18n = global.i18n;
-    const pixElement = new Pix(global.core, { i18n, loadingContext: 'ggg', modules: { resources: global.resources } });
-    pixElement.submit = jest.fn();
-    render(pixElement.render());
+    const core = setupCoreMock();
+
+    const pix = new Pix(core, { i18n, loadingContext: 'ggg', modules: { resources: global.resources } });
+    pix.submit = jest.fn();
+    render(pix.render());
 
     await user.click(await screen.findByRole('button', { name: 'Continue to pix' }));
-    expect(pixElement.submit).toHaveBeenCalledTimes(1);
+    expect(pix.submit).toHaveBeenCalledTimes(1);
 });

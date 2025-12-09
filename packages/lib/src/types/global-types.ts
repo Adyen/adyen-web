@@ -1,9 +1,6 @@
 import { ADDRESS_SCHEMA } from '../components/internal/Address/constants';
 import actionTypes from '../core/ProcessResponse/PaymentAction/actionTypes';
-import { AnalyticsInitialEvent } from '../core/Analytics/types';
-import { EventsQueueModule } from '../core/Analytics/EventsQueue';
 import { CardFocusData } from '../components/internal/SecuredFields/lib/types';
-import { AnalyticsEvent } from '../core/Analytics/AnalyticsEvent';
 
 export type PaymentActionsType = keyof typeof actionTypes;
 
@@ -86,7 +83,10 @@ type Issuer = {
     disabled?: boolean;
 };
 
-export interface PaymentMethod {
+/**
+ * Raw payment method object returned in the /paymentMethods response.
+ */
+export interface RawPaymentMethod {
     /**
      * The unique payment method code.
      */
@@ -136,14 +136,17 @@ export interface PaymentMethodsResponse {
     /**
      * Detailed list of payment methods required to generate payment forms.
      */
-    paymentMethods?: PaymentMethod[];
+    paymentMethods?: RawPaymentMethod[];
     /**
      * List of all stored payment methods.
      */
-    storedPaymentMethods?: StoredPaymentMethod[];
+    storedPaymentMethods?: RawStoredPaymentMethod[];
 }
 
-export interface StoredPaymentMethod extends PaymentMethod {
+/**
+ * Raw stored payment method object returned in the /paymentMethods response.
+ */
+export interface RawStoredPaymentMethod extends RawPaymentMethod {
     id: string;
     name: string;
     supportedShopperInteractions: string[];
@@ -157,16 +160,6 @@ export interface StoredPaymentMethod extends PaymentMethod {
     shopperEmail?: string;
     /** The shopper’s issuer account label */
     label?: string;
-    /**
-     * A unique identifier of this stored payment method. Mapped from 'storedPaymentMethod.id'
-     * @internal
-     */
-    storedPaymentMethodId?: string;
-    /**
-     * Internal flag
-     * @internal
-     */
-    isStoredPaymentMethod?: boolean;
 }
 
 /**
@@ -189,9 +182,9 @@ export interface PaymentMethodGroup {
     type: string;
 }
 
-export interface ProcessedResponse {
+export interface ProcessedPaymentStatusResponse {
     type: string;
-    props?: object;
+    props?: Record<string, any>;
 }
 
 /**
@@ -220,7 +213,6 @@ export type AddressData = {
 export interface PersonalDetailsSchema {
     firstName?: string;
     lastName?: string;
-    gender?: string;
     dateOfBirth?: string;
     shopperEmail?: string;
     telephoneNumber?: string;
@@ -355,6 +347,10 @@ export type RawPaymentResponse = PaymentResponseData &
         [key: string]: any;
     };
 
+export type RawPaymentStatusResponse = Pick<RawPaymentResponse, 'resultCode' | 'type'> & {
+    payload?: string | null;
+};
+
 /**
  * onActionHandled is called for all actions:
  *  - qrcode
@@ -378,15 +374,6 @@ export interface ActionHandledReturnObject {
     componentType: string;
     actionDescription: ActionDescriptionType;
     originalAction?: PaymentAction;
-}
-
-export interface AnalyticsModule {
-    setUp: (setupProps?: AnalyticsInitialEvent) => Promise<void>;
-    flush(): void;
-    getCheckoutAttemptId: () => string;
-    getEventsQueue: () => EventsQueueModule;
-    getEnabled: () => boolean;
-    sendAnalytics: (analyticsObj: AnalyticsEvent) => boolean;
 }
 
 export type ComponentFocusObject = {

@@ -2,15 +2,12 @@ import { ComponentChild, h, render } from 'preact';
 import getProp from '../../../utils/getProp';
 import uuid from '../../../utils/uuid';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
-import { ANALYTICS_RENDERED_STR, NO_CHECKOUT_ATTEMPT_ID } from '../../../core/Analytics/constants';
-
+import { NO_CHECKOUT_ATTEMPT_ID } from '../../../core/Analytics/constants';
 import type { ICore } from '../../../core/types';
 import type { BaseElementProps, IBaseElement } from './types';
 import type { PaymentData } from '../../../types/global-types';
-import { AnalyticsInitialEvent } from '../../../core/Analytics/types';
 import { off, on } from '../../../utils/listenerUtils';
-import { AnalyticsInfoEvent } from '../../../core/Analytics/AnalyticsInfoEvent';
-import { AnalyticsEvent } from '../../../core/Analytics/AnalyticsEvent';
+import { AbstractAnalyticsEvent } from '../../../core/Analytics/events/AbstractAnalyticsEvent';
 
 /**
  * Verify if the first parameter is instance of Core.
@@ -72,12 +69,7 @@ abstract class BaseElement<P extends BaseElementProps> implements IBaseElement {
     }
 
     /* eslint-disable-next-line */
-    protected setUpAnalytics(setUpAnalyticsObj: AnalyticsInitialEvent) {
-        return null;
-    }
-
-    /* eslint-disable-next-line */
-    protected submitAnalytics(analyticsObj?: AnalyticsEvent) {
+    protected submitAnalytics(analyticsObj?: AbstractAnalyticsEvent) {
         return null;
     }
 
@@ -137,8 +129,6 @@ abstract class BaseElement<P extends BaseElementProps> implements IBaseElement {
             throw new Error('Component could not mount. Root node was not found.');
         }
 
-        const setupAnalytics = !this._node;
-
         if (this._node) {
             this.unmount(); // new, if this._node exists then we are "remounting" so we first need to unmount if it's not already been done
         }
@@ -151,25 +141,6 @@ abstract class BaseElement<P extends BaseElementProps> implements IBaseElement {
         this._component = this.render();
 
         render(this._component, node);
-
-        // Set up analytics (once, since this._node is currently undefined) now that we have mounted and rendered
-        if (setupAnalytics) {
-            if (this.props.modules && this.props.modules.analytics) {
-                this.setUpAnalytics({
-                    containerWidth: node && node.offsetWidth,
-                    component: !this.props.isDropin ? (this.constructor['analyticsType'] ?? this.constructor['type']) : 'dropin',
-                    flavor: !this.props.isDropin ? 'components' : 'dropin'
-                }).then(() => {
-                    // Once the initial analytics set up call has been made...
-                    // ...create an analytics event  declaring that the component has been rendered
-                    // (The dropin will do this itself from DropinComponent once the PM list has rendered)
-                    if (!this.props.isDropin) {
-                        const event = new AnalyticsInfoEvent({ type: ANALYTICS_RENDERED_STR });
-                        this.submitAnalytics(event);
-                    }
-                });
-            }
-        }
 
         return this;
     }

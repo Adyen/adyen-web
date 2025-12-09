@@ -1,7 +1,9 @@
 import { render, screen, waitFor } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import DonationElement from './Donation';
+import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 
+const core = setupCoreMock();
 const coreProp = { i18n: global.i18n, loadingContext: 'test', modules: { resources: global.resources } };
 const shared = {
     commercialTxAmount: 1000,
@@ -29,8 +31,9 @@ describe('Donation element', () => {
         test('should call onDonate with the donation data', async () => {
             const user = userEvent.setup();
             const onDonate = jest.fn();
+
             // @ts-ignore not all callbacks are needed
-            const donationElement = new DonationElement(global.core, {
+            const donationElement = new DonationElement(core, {
                 ...roundupDonationProp,
                 onDonate
             });
@@ -44,7 +47,7 @@ describe('Donation element', () => {
             const user = userEvent.setup();
             const onCancel = jest.fn();
             // @ts-ignore not all callbacks are needed
-            const donationElement = new DonationElement(global.core, {
+            const donationElement = new DonationElement(core, {
                 ...roundupDonationProp,
                 onCancel
             });
@@ -63,7 +66,7 @@ describe('Donation element', () => {
                 donation: { currency, values: expectedValues }
             } = fixedAmountsDonationProp;
             // @ts-ignore not all callbacks are needed
-            const donationElement = new DonationElement(global.core, {
+            const donationElement = new DonationElement(core, {
                 ...fixedAmountsDonationProp,
                 onDonate
             });
@@ -85,7 +88,7 @@ describe('Donation element', () => {
             } = fixedAmountsDonationProp;
             const onCancel = jest.fn();
             // @ts-ignore not all callbacks are needed
-            const donationElement = new DonationElement(global.core, {
+            const donationElement = new DonationElement(core, {
                 ...fixedAmountsDonationProp,
                 onCancel
             });

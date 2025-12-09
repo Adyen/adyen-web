@@ -6,13 +6,10 @@ import { existy } from '../../utils/commonUtils';
 import { TxVariants } from '../tx-variants';
 import { FingerprintResolveData, LegacyFingerprintResolveData, ThreeDS2DeviceFingerprintConfiguration } from './types';
 import AdyenCheckoutError, { API_ERROR } from '../../core/Errors/AdyenCheckoutError';
-import { ANALYTICS_ERROR_TYPE, Analytics3DS2Errors, ANALYTICS_RENDERED_STR, Analytics3DS2Events } from '../../core/Analytics/constants';
-import { THREEDS2_FINGERPRINT, THREEDS2_FINGERPRINT_ERROR, THREEDS2_FULL } from './constants';
+import { THREEDS2_FINGERPRINT, THREEDS2_FINGERPRINT_ERROR } from './constants';
 import { ActionHandledReturnObject } from '../../types/global-types';
-import { AnalyticsLogEvent } from '../../core/Analytics/AnalyticsLogEvent';
-import { AnalyticsEvent } from '../../core/Analytics/AnalyticsEvent';
-import { AnalyticsInfoEvent } from '../../core/Analytics/AnalyticsInfoEvent';
-import { AnalyticsErrorEvent } from '../../core/Analytics/AnalyticsErrorEvent';
+import { AnalyticsLogEvent, LogEventSubtype, LogEventType } from '../../core/Analytics/events/AnalyticsLogEvent';
+import { AnalyticsErrorEvent, ErrorEventCode, ErrorEventType } from '../../core/Analytics/events/AnalyticsErrorEvent';
 
 class ThreeDS2DeviceFingerprint extends UIElement<ThreeDS2DeviceFingerprintConfiguration> {
     public static type = TxVariants.threeDS2Fingerprint;
@@ -24,17 +21,16 @@ class ThreeDS2DeviceFingerprint extends UIElement<ThreeDS2DeviceFingerprintConfi
 
     private callSubmit3DS2Fingerprint = callSubmit3DS2Fingerprint.bind(this); // New 3DS2 flow
 
-    protected submitAnalytics = (aObj: AnalyticsEvent) => {
-        if (aObj instanceof AnalyticsInfoEvent && aObj.type === ANALYTICS_RENDERED_STR) return; // suppress the rendered event (it will have the same timestamp as the "threeDSMethodData sent" event)
-
-        super.submitAnalytics(aObj);
-    };
+    protected override beforeRender() {
+        /* Do not send rendered events for ThreeDS2DeviceFingerprint */
+    }
 
     protected onActionHandled = (rtnObj: ActionHandledReturnObject) => {
         const event = new AnalyticsLogEvent({
-            type: THREEDS2_FULL,
-            message: rtnObj.actionDescription,
-            subType: Analytics3DS2Events.FINGERPRINT_IFRAME_LOADED
+            component: this.type,
+            type: LogEventType.threeDS2,
+            subType: LogEventSubtype.fingerprintIframeLoaded,
+            message: rtnObj.actionDescription
         });
 
         this.submitAnalytics(event);
@@ -52,7 +48,7 @@ class ThreeDS2DeviceFingerprint extends UIElement<ThreeDS2DeviceFingerprintConfi
         this.unmount(); // re. fixing issue around back to back fingerprinting calls
     }
 
-    render() {
+    protected override componentToRender(): h.JSX.Element {
         /**
          * In the regular components (aka "native") flow we can't proceed because something has gone wrong with the payment if paymentData is missing from the threeDS2 action.
          * In the MDFlow the paymentData is always present (albeit an empty string, which is why we use 'existy' since we should be allowed to proceed with this)
@@ -62,8 +58,9 @@ class ThreeDS2DeviceFingerprint extends UIElement<ThreeDS2DeviceFingerprintConfi
 
             // TODO - check logs to see if this *ever* happens
             const event = new AnalyticsErrorEvent({
-                code: Analytics3DS2Errors.ACTION_IS_MISSING_PAYMENT_DATA,
-                errorType: ANALYTICS_ERROR_TYPE.apiError,
+                component: this.type,
+                code: ErrorEventCode.THREEDS2_ACTION_IS_MISSING_PAYMENT_DATA,
+                errorType: ErrorEventType.apiError,
                 message: `${THREEDS2_FINGERPRINT_ERROR}: Missing 'paymentData' property from threeDS2 action`
             });
 

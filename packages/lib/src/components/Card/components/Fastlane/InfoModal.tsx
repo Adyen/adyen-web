@@ -68,7 +68,7 @@ const InfoModal = ({ isOpen, onClose, focusAfterClose }: InfoModalProps) => {
                             variant="link"
                             ariaLabel={i18n.get('card.fastlane.a11y.closeDialog')}
                             label={
-                                <Img height="10" width="10" src={getImage({ imageFolder: 'components/' })('cross_black')} ariaHidden={true} alt="" />
+                                <Img height="10" width="10" src={getImage({ imageFolder: 'components/' })('cross_black')} aria-hidden={true} alt="" />
                             }
                         />
                     </div>

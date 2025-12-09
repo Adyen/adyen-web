@@ -1,6 +1,6 @@
 import { Component, h } from 'preact';
 import classNames from 'classnames';
-import PaymentMethodDetails from '../PaymentMethodDetails';
+import { PaymentMethodDetails } from '../PaymentMethodDetails';
 import PaymentMethodIcon from '../PaymentMethodIcon';
 import DisableOneClickConfirmation from '../DisableOneClickConfirmation';
 import './PaymentMethodItem.scss';
@@ -15,7 +15,6 @@ import { getFullBrandName } from '../../../../Card/components/CardInput/utils';
 export interface PaymentMethodItemProps {
     paymentMethod: UIElement;
     isSelected?: boolean;
-    isLoaded?: boolean;
     isLoading?: boolean;
     isDisablingPaymentMethod: boolean;
     showRemovePaymentMethodButton: boolean;
@@ -55,7 +54,7 @@ class PaymentMethodItem extends Component<PaymentMethodItemProps> {
     };
 
     // @ts-ignore need to refine the type for paymentMethod
-    render({ paymentMethod, isSelected, isDisablingPaymentMethod, isLoaded, isLoading, standalone, showRadioButton }) {
+    render({ paymentMethod, isSelected, isDisablingPaymentMethod, isLoading, standalone, showRadioButton }) {
         const { i18n } = useCoreContext();
 
         if (!paymentMethod) {
@@ -143,7 +142,7 @@ class PaymentMethodItem extends Component<PaymentMethodItemProps> {
                             />
                         )}
 
-                        <PaymentMethodDetails paymentMethodComponent={paymentMethod.render()} isLoaded={isLoaded} />
+                        <PaymentMethodDetails paymentMethodComponent={paymentMethod} isSelected={isSelected} />
                     </div>
                 </div>
             </div>

@@ -1,9 +1,7 @@
 import { h } from 'preact';
-import { CoreProvider } from '../../core/Context/CoreProvider';
 import { PayByBankPixData, PayByBankPixConfiguration } from './types';
 import { TxVariants } from '../tx-variants';
 import UIElement from '../internal/UIElement';
-import SRPanelProvider from '../../core/Errors/SRPanelProvider';
 import RedirectButton from '../internal/RedirectButton';
 import AdyenCheckoutError, { ERROR } from '../../core/Errors/AdyenCheckoutError';
 import { PasskeyService } from './services/PasskeyService';
@@ -217,63 +215,53 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
         }
     };
 
-    render() {
+    protected override componentToRender(): h.JSX.Element {
         // Always render the redirect button on the merchant's page
         if (!this.props._isAdyenHosted) {
             return (
-                <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
-                    <SRPanelProvider srPanel={this.props.modules.srPanel}>
-                        <RedirectButton
-                            showPayButton={this.props.showPayButton}
-                            name={this.displayName}
-                            label={this.props.i18n.get('paybybankpix.redirectBtn.label')}
-                            amount={this.props.amount}
-                            payButton={this.payButton}
-                            onSubmit={this.submit}
-                            ref={ref => {
-                                this.componentRef = ref;
-                            }}
-                        />
-                    </SRPanelProvider>
-                </CoreProvider>
+                <RedirectButton
+                    showPayButton={this.props.showPayButton}
+                    name={this.displayName}
+                    label={this.props.i18n.get('paybybankpix.redirectBtn.label')}
+                    amount={this.props.amount}
+                    payButton={this.payButton}
+                    onSubmit={this.submit}
+                    ref={ref => {
+                        this.componentRef = ref;
+                    }}
+                />
             );
         }
 
-        return (
-            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
-                <SRPanelProvider srPanel={this.props.modules.srPanel}>
-                    {this.props.storedPaymentMethodId != null ? (
-                        <StoredPayment
-                            txVariant={PayByBankPixElement.type}
-                            type={this.props.type}
-                            clientKey={this.props.clientKey}
-                            amount={this.props.amount}
-                            enrollmentId={this.props.paymentMethodData?.enrollmentId}
-                            initiationId={this.props.paymentMethodData?.initiationId}
-                            setComponentRef={this.setComponentRef}
-                            onPay={this.payWithStoredPayment}
-                            onAuthorize={this.authorizePayment}
-                        />
-                    ) : (
-                        <Enrollment
-                            onError={this.handleError}
-                            txVariant={PayByBankPixElement.type}
-                            // Await
-                            type={this.props.type}
-                            clientKey={this.props.clientKey}
-                            enrollmentId={this.props.paymentMethodData?.enrollmentId}
-                            countdownTime={this.props.countdownTime}
-                            onEnroll={this.authorizeEnrollment}
-                            // Issuer List
-                            issuers={this.props.issuers}
-                            payButton={this.payButton}
-                            onChange={this.onIssuerSelected}
-                            onSubmitAnalytics={this.submitAnalytics}
-                            setComponentRef={this.setComponentRef}
-                        />
-                    )}
-                </SRPanelProvider>
-            </CoreProvider>
+        return this.props.storedPaymentMethodId != null ? (
+            <StoredPayment
+                txVariant={PayByBankPixElement.type}
+                type={this.props.type}
+                clientKey={this.props.clientKey}
+                amount={this.props.amount}
+                enrollmentId={this.props.paymentMethodData?.enrollmentId}
+                initiationId={this.props.paymentMethodData?.initiationId}
+                setComponentRef={this.setComponentRef}
+                onPay={this.payWithStoredPayment}
+                onAuthorize={this.authorizePayment}
+            />
+        ) : (
+            <Enrollment
+                onError={this.handleError}
+                txVariant={PayByBankPixElement.type}
+                // Await
+                type={this.props.type}
+                clientKey={this.props.clientKey}
+                enrollmentId={this.props.paymentMethodData?.enrollmentId}
+                countdownTime={this.props.countdownTime}
+                onEnroll={this.authorizeEnrollment}
+                // Issuer List
+                issuers={this.props.issuers}
+                payButton={this.payButton}
+                onChange={this.onIssuerSelected}
+                onSubmitAnalytics={this.submitAnalytics}
+                setComponentRef={this.setComponentRef}
+            />
         );
     }
 }

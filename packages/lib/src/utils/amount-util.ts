@@ -1,4 +1,3 @@
-import CURRENCY_CODES from './constants/currency-codes';
 import CURRENCY_DECIMALS from './constants/currency-decimals';
 import { currencyMinorUnitsConfig } from './constants/currency-minor-units';
 
@@ -8,18 +7,6 @@ import { currencyMinorUnitsConfig } from './constants/currency-minor-units';
  * Get divider amount
  */
 export const getDivider = (currencyCode: string): number => CURRENCY_DECIMALS[currencyCode] || 100;
-
-/**
- * @internal
- * @param currencyCode -
- * Returns whether a CURRENCY CODE is valid
- */
-export const isValidCurrencyCode = (currencyCode: string): boolean => !!CURRENCY_CODES[currencyCode];
-
-/**
- * @internal
- */
-export const getCurrencyCode = (currencyCode: string): string => (isValidCurrencyCode(currencyCode) ? CURRENCY_CODES[currencyCode] : false);
 
 /**
  * @internal
@@ -50,22 +37,5 @@ export const getLocalisedAmount = (amount: number, locale: string, currencyCode:
         return decimalAmount.toLocaleString(formattedLocale, localeOptions);
     } catch (e) {
         return stringAmount;
-    }
-};
-
-/**
- * @internal
- */
-export const getLocalisedPercentage = (percent = 0, locale: string): string => {
-    const decimalPercent = percent / 100 / 100;
-    const localeOptions: Intl.NumberFormatOptions = {
-        style: 'percent',
-        maximumFractionDigits: 2
-    };
-
-    try {
-        return decimalPercent.toLocaleString(locale, localeOptions);
-    } catch (e) {
-        return null;
     }
 };

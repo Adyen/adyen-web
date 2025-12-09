@@ -3,6 +3,7 @@ import { render, screen, waitFor } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import { http, HttpResponse } from 'msw';
 import { setupServer } from 'msw/node';
+import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 
 const server = setupServer(
     http.get('https://checkoutshopper-live.adyen.com/checkoutshopper/datasets/countries/en-US.json', () => {
@@ -23,12 +24,13 @@ afterAll(() => server.close());
 describe('Boleto', () => {
     test('should make a Boleto payment', async () => {
         const user = userEvent.setup();
+        const core = setupCoreMock();
 
         const onChangeMock = jest.fn();
         const onSubmitMock = jest.fn();
 
-        const boleto = new Boleto(global.core, {
-            modules: { analytics: global.analytics, resources: global.resources },
+        const boleto = new Boleto(core, {
+            modules: { resources: global.resources },
             i18n: global.i18n,
             onChange: onChangeMock,
             onSubmit: onSubmitMock,
@@ -97,11 +99,12 @@ describe('Boleto', () => {
 
     test('should not submit a Boleto payment if the form in not valid', async () => {
         const user = userEvent.setup();
+        const core = setupCoreMock();
 
         const onSubmitMock = jest.fn();
 
-        const boleto = new Boleto(global.core, {
-            modules: { analytics: global.analytics, resources: global.resources },
+        const boleto = new Boleto(core, {
+            modules: { resources: global.resources },
             i18n: global.i18n,
             onSubmit: onSubmitMock,
             loadingContext: 'https://checkoutshopper-live.adyen.com/checkoutshopper/'
@@ -126,12 +129,13 @@ describe('Boleto', () => {
 
     test('should allow shoppers to send a copy to their email and make a Boleto payment', async () => {
         const user = userEvent.setup();
+        const core = setupCoreMock();
 
         const onChangeMock = jest.fn();
         const onSubmitMock = jest.fn();
 
-        const boleto = new Boleto(global.core, {
-            modules: { analytics: global.analytics, resources: global.resources },
+        const boleto = new Boleto(core, {
+            modules: { resources: global.resources },
             i18n: global.i18n,
             onChange: onChangeMock,
             onSubmit: onSubmitMock,
@@ -201,5 +205,20 @@ describe('Boleto', () => {
             expect.anything(),
             expect.anything()
         );
+    });
+
+    test('should show reference when reference is provided', () => {
+        const core = setupCoreMock();
+
+        const boleto = new Boleto(core, {
+            modules: { resources: global.resources },
+            i18n: global.i18n,
+            loadingContext: 'https://checkoutshopper-live.adyen.com/checkoutshopper/',
+            reference: 'test-reference'
+        });
+
+        render(boleto.render());
+
+        expect(screen.getByText('test-reference')).toBeInTheDocument();
     });
 });

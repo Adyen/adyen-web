@@ -1,6 +1,5 @@
-import { h } from 'preact';
+import { Fragment, h } from 'preact';
 import UIElement from '../internal/UIElement/UIElement';
-import { CoreProvider } from '../../core/Context/CoreProvider';
 import DonationComponent from './components/DonationComponent';
 import { TxVariants } from '../tx-variants';
 import type { ICore } from '../../core/types';
@@ -46,12 +45,12 @@ class DonationElement extends UIElement<DonationConfiguration> {
         this.componentRef = ref;
     };
 
-    render() {
+    protected override componentToRender(): h.JSX.Element {
         return (
-            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
+            <Fragment>
                 {/*@ts-ignore ref*/}
                 <DonationComponent {...this.props} ref={this.handleRef} onChange={this.setState} onDonate={this.donate} />
-            </CoreProvider>
+            </Fragment>
         );
     }
 }

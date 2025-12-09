@@ -2,6 +2,7 @@ import { render, screen, waitFor } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 
 import Ach from './Ach';
+import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 
 describe('ACH', () => {
     let onSubmitMock;
@@ -14,11 +15,13 @@ describe('ACH', () => {
 
     describe('Default component', () => {
         test('should submit the payment', async () => {
-            const ach = new Ach(global.core, {
+            const core = setupCoreMock();
+
+            const ach = new Ach(core, {
                 onSubmit: onSubmitMock,
                 i18n: global.i18n,
                 loadingContext: 'test',
-                modules: { resources: global.resources, analytics: global.analytics, srPanel: global.srPanel }
+                modules: { resources: global.resources, analytics: global.analytics }
             });
 
             render(ach.render());
@@ -54,12 +57,14 @@ describe('ACH', () => {
         });
 
         test('should submit the payment with the store consent given', async () => {
-            const ach = new Ach(global.core, {
+            const core = setupCoreMock();
+
+            const ach = new Ach(core, {
                 onSubmit: onSubmitMock,
                 enableStoreDetails: true,
                 i18n: global.i18n,
                 loadingContext: 'test',
-                modules: { resources: global.resources, analytics: global.analytics, srPanel: global.srPanel }
+                modules: { resources: global.resources, analytics: global.analytics }
             });
 
             render(ach.render());
@@ -102,11 +107,13 @@ describe('ACH', () => {
         });
 
         test('should not submit the payment if the account number does not match', async () => {
-            const ach = new Ach(global.core, {
+            const core = setupCoreMock();
+
+            const ach = new Ach(core, {
                 onSubmit: onSubmitMock,
                 i18n: global.i18n,
                 loadingContext: 'test',
-                modules: { resources: global.resources, analytics: global.analytics, srPanel: global.srPanel }
+                modules: { resources: global.resources, analytics: global.analytics }
             });
 
             render(ach.render());
@@ -125,11 +132,13 @@ describe('ACH', () => {
         });
 
         test('should not submit the payment if the account number is invalid', async () => {
-            const ach = new Ach(global.core, {
+            const core = setupCoreMock();
+
+            const ach = new Ach(core, {
                 onSubmit: onSubmitMock,
                 i18n: global.i18n,
                 loadingContext: 'test',
-                modules: { resources: global.resources, analytics: global.analytics, srPanel: global.srPanel }
+                modules: { resources: global.resources, analytics: global.analytics }
             });
 
             render(ach.render());
@@ -148,11 +157,13 @@ describe('ACH', () => {
         });
 
         test('should show error if routing number is invalid (not 9 numbers)', async () => {
-            const ach = new Ach(global.core, {
+            const core = setupCoreMock();
+
+            const ach = new Ach(core, {
                 onSubmit: onSubmitMock,
                 i18n: global.i18n,
                 loadingContext: 'test',
-                modules: { resources: global.resources, analytics: global.analytics, srPanel: global.srPanel }
+                modules: { resources: global.resources, analytics: global.analytics }
             });
 
             render(ach.render());
@@ -179,12 +190,14 @@ describe('ACH', () => {
         });
 
         test('should hide the holder name if configuration is set to hide it', async () => {
-            const ach = new Ach(global.core, {
+            const core = setupCoreMock();
+
+            const ach = new Ach(core, {
                 onSubmit: onSubmitMock,
                 hasHolderName: false,
                 i18n: global.i18n,
                 loadingContext: 'test',
-                modules: { resources: global.resources, analytics: global.analytics, srPanel: global.srPanel }
+                modules: { resources: global.resources, analytics: global.analytics }
             });
 
             render(ach.render());
@@ -220,14 +233,15 @@ describe('ACH', () => {
         });
 
         test('should use the correct values in the account type selector', async () => {
+            const core = setupCoreMock();
             const onChangeMock = jest.fn();
 
-            const ach = new Ach(global.core, {
+            const ach = new Ach(core, {
                 onChange: onChangeMock,
                 hasHolderName: false,
                 i18n: global.i18n,
                 loadingContext: 'test',
-                modules: { resources: global.resources, analytics: global.analytics, srPanel: global.srPanel }
+                modules: { resources: global.resources, analytics: global.analytics }
             });
 
             render(ach.render());
@@ -282,11 +296,13 @@ describe('ACH', () => {
         });
 
         test('should prefill the account holder name', () => {
-            const ach = new Ach(global.core, {
+            const core = setupCoreMock();
+
+            const ach = new Ach(core, {
                 data: { ownerName: 'John doe' },
                 i18n: global.i18n,
                 loadingContext: 'test',
-                modules: { resources: global.resources, analytics: global.analytics, srPanel: global.srPanel }
+                modules: { resources: global.resources, analytics: global.analytics }
             });
 
             render(ach.render());
@@ -297,11 +313,13 @@ describe('ACH', () => {
 
     describe('Stored component', () => {
         test('should submit the payment', async () => {
-            const ach = new Ach(global.core, {
+            const core = setupCoreMock();
+
+            const ach = new Ach(core, {
                 onSubmit: onSubmitMock,
                 i18n: global.i18n,
                 loadingContext: 'test',
-                modules: { resources: global.resources, analytics: global.analytics, srPanel: global.srPanel },
+                modules: { resources: global.resources, analytics: global.analytics },
                 storedPaymentMethodId: 'PAYMENT-METHOD-ID',
                 bankAccountNumber: '123123'
             });

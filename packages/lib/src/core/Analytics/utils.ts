@@ -1,9 +1,7 @@
-import { AnalyticsData } from './types';
-import { errorCodeMapping, ALLOWED_ANALYTICS_DATA } from './constants';
+import { errorCodeMapping } from './constants';
 import { digitsOnlyFormatter } from '../../utils/Formatters/formatters';
 import { ERROR_FIELD_REQUIRED, ERROR_INVALID_FORMAT_EXPECTS } from '../Errors/constants';
-
-export const getUTCTimestamp = () => Date.now();
+import type { AnalyticsOptions } from './types';
 
 export const mapErrorCodesForAnalytics = (errorCode: string, target: string) => {
     // Some of the more generic error codes required combination with target to retrieve a specific code
@@ -22,7 +20,9 @@ export const mapErrorCodesForAnalytics = (errorCode: string, target: string) => 
     return errCode;
 };
 
-export const processAnalyticsData = (analyticsData?: AnalyticsData): AnalyticsData => {
+export const processAnalyticsData = (analyticsData?: AnalyticsOptions['analyticsData']): AnalyticsOptions['analyticsData'] => {
+    const ALLOWED_ANALYTICS_DATA = ['applicationInfo', 'checkoutAttemptId'];
+
     if (!analyticsData) return {};
 
     return Object.keys(analyticsData).reduce((acc, prop) => {

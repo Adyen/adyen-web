@@ -1,6 +1,5 @@
 import { h, Fragment } from 'preact';
 import UIElement from '../internal/UIElement/UIElement';
-import { CoreProvider } from '../../core/Context/CoreProvider';
 import { TxVariants } from '../tx-variants';
 import PreAuthorizedDebitCanadaComponent from './components/PreAuthorizedDebitCanadaComponent';
 import { SettlementInfo } from './components/SettlementInfo';
@@ -63,37 +62,33 @@ export class PreAuthorizedDebitCanada extends UIElement<PreAuthorizedDebitCanada
         return this.props.storedPaymentMethodId ? this.props.label : '';
     }
 
-    render() {
-        return (
-            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
-                {this.props.storedPaymentMethodId ? (
-                    <Fragment>
-                        <SettlementInfo />
-                        <RedirectButton
-                            showPayButton={this.props.showPayButton}
-                            icon={this.resources?.getImage({ imageFolder: 'components/' })(`bento_lock`)}
-                            label={payAmountLabel(this.props.i18n, this.props.amount)}
-                            name={this.displayName}
-                            amount={this.props.amount}
-                            payButton={this.payButton}
-                            onSubmit={this.submit}
-                            ref={ref => {
-                                this.componentRef = ref;
-                            }}
-                        />
-                    </Fragment>
-                ) : (
-                    <PreAuthorizedDebitCanadaComponent
-                        onChange={this.setState}
-                        payButton={this.payButton}
-                        showPayButton={this.props.showPayButton}
-                        placeholders={this.props.placeholders}
-                        setComponentRef={this.setComponentRef}
-                        showContextualElement={this.props.showContextualElement}
-                        enableStoreDetails={this.props.enableStoreDetails}
-                    />
-                )}
-            </CoreProvider>
+    protected override componentToRender(): h.JSX.Element {
+        return this.props.storedPaymentMethodId ? (
+            <Fragment>
+                <SettlementInfo />
+                <RedirectButton
+                    showPayButton={this.props.showPayButton}
+                    icon={this.resources?.getImage({ imageFolder: 'components/' })(`bento_lock`)}
+                    label={payAmountLabel(this.props.i18n, this.props.amount)}
+                    name={this.displayName}
+                    amount={this.props.amount}
+                    payButton={this.payButton}
+                    onSubmit={this.submit}
+                    ref={ref => {
+                        this.componentRef = ref;
+                    }}
+                />
+            </Fragment>
+        ) : (
+            <PreAuthorizedDebitCanadaComponent
+                onChange={this.setState}
+                payButton={this.payButton}
+                showPayButton={this.props.showPayButton}
+                placeholders={this.props.placeholders}
+                setComponentRef={this.setComponentRef}
+                showContextualElement={this.props.showContextualElement}
+                enableStoreDetails={this.props.enableStoreDetails}
+            />
         );
     }
 }

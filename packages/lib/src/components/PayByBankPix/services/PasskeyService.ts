@@ -10,18 +10,19 @@ import {
     NavigatorCredentialRetrievalError
 } from './types';
 import AdyenCheckoutError, { SDK_ERROR } from '../../../core/Errors/AdyenCheckoutError';
-import { AnalyticsModule, DecodeObject } from '../../../types/global-types';
+import { DecodeObject } from '../../../types/global-types';
 import base64 from '../../../utils/base64';
+import type { IAnalytics } from '../../../core/Analytics/Analytics';
 
 export class PasskeyService implements IPasskeyService {
     private readonly passkeyServiceConfig: PasskeyServiceConfig;
-    private readonly analytics: AnalyticsModule;
+    private readonly analytics: IAnalytics;
 
     private passkeySdk: IAdyenPasskey;
     private riskSignals: RiskSignalsEnrollment | RiskSignalsAuthentication;
     private initialized: Promise<void>;
 
-    constructor(configuration: PasskeyServiceConfig, analytics: AnalyticsModule) {
+    constructor(configuration: PasskeyServiceConfig, analytics: IAnalytics) {
         this.analytics = analytics;
         this.passkeyServiceConfig = configuration;
     }

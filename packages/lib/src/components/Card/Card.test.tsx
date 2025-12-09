@@ -2,15 +2,27 @@ import { h } from 'preact';
 import { CardElement } from './Card';
 import { render, screen, waitFor } from '@testing-library/preact';
 import { CoreProvider } from '../../core/Context/CoreProvider';
+import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
+import PaymentMethods from '../../core/ProcessResponse/PaymentMethods';
+import { InfoEventType } from '../../core/Analytics/events/AnalyticsInfoEvent';
+import { CardFocusData } from '../internal/SecuredFields/lib/types';
+import { mock } from 'jest-mock-extended';
 
 describe('Card', () => {
     describe('formatProps', function () {
         test('should not require a billingAddress if it is a stored card', () => {
-            const card = new CardElement(global.core, {
+            const core = setupCoreMock({
+                paymentMethods: new PaymentMethods({
+                    storedPaymentMethods: [{ name: 'Card', type: 'scheme', id: 'test', supportedShopperInteractions: ['Ecommerce'] }]
+                })
+            });
+
+            const card = new CardElement(core, {
                 billingAddressRequired: true,
                 storedPaymentMethodId: 'test',
                 supportedShopperInteractions: ['Ecommerce']
             });
+
             expect(card.props.billingAddressRequired).toBe(false);
             expect(card.props.type).toEqual('scheme');
         });
@@ -166,46 +178,60 @@ describe('Card', () => {
         const storedCardProps = { supportedShopperInteractions: ['Ecommerce'], storedPaymentMethodId: 'xxx' };
 
         test('should echo back holderName if is a stored card', () => {
-            const card = new CardElement(global.core, { ...props, ...storedCardProps, holderName: 'Test Holder' });
+            const core = setupCoreMock();
+
+            const card = new CardElement(core, { ...props, ...storedCardProps, holderName: 'Test Holder' });
             render(card.render());
 
             expect(card.formatData().paymentMethod.holderName).toContain('Test Holder');
         });
 
         test('should NOT echo back holderName from data if is a stored card', () => {
-            const card = new CardElement(global.core, { ...props, ...storedCardProps, data: { holderName: 'Test Holder' } });
+            const core = setupCoreMock();
+
+            const card = new CardElement(core, { ...props, ...storedCardProps, data: { holderName: 'Test Holder' } });
             render(card.render());
 
             expect(card.formatData().paymentMethod.holderName).toContain('');
         });
 
         test('if no holderName specificed and is stored card, holder name should be empty string', () => {
-            const card = new CardElement(global.core, { ...props, ...storedCardProps });
+            const core = setupCoreMock();
+
+            const card = new CardElement(core, { ...props, ...storedCardProps });
 
             expect(card.formatData().paymentMethod.holderName).toContain('');
         });
 
         test('if no holderName specificed and is not stored card, holder name should be empty string', () => {
-            const card = new CardElement(global.core, { ...props, ...storedCardProps });
+            const core = setupCoreMock();
+
+            const card = new CardElement(core, { ...props, ...storedCardProps });
 
             expect(card.formatData().paymentMethod.holderName).toContain('');
         });
 
         test('should NOT echo back holderName if is not a stored card', () => {
-            const card = new CardElement(global.core, { ...props, holderName: 'Test Holder' });
+            const core = setupCoreMock();
+
+            const card = new CardElement(core, { ...props, holderName: 'Test Holder' });
             render(card.render());
             expect(card.formatData().paymentMethod.holderName).toContain('');
         });
 
         test('should set holderName if passed via data', async () => {
-            const card = new CardElement(global.core, { ...props, hasHolderName: true, data: { holderName: 'Test Holder' } });
+            const core = setupCoreMock();
+
+            const card = new CardElement(core, { ...props, hasHolderName: true, data: { holderName: 'Test Holder' } });
             render(card.render());
             // we need to wait here for the screen to render / hook to trigger
             await waitFor(() => expect(card.formatData().paymentMethod.holderName).toContain('Test Holder'));
         });
 
         test('should have empty holderName by default', async () => {
-            const card = new CardElement(global.core, { ...props });
+            const core = setupCoreMock();
+
+            const card = new CardElement(core, { ...props });
             render(card.render());
             // we need to wait here for the screen to render / hook to trigger
             await waitFor(() => expect(card.formatData().paymentMethod.holderName).toContain(''));
@@ -294,6 +320,114 @@ describe('Card', () => {
             const card = new CardElement(global.core, { ...rawStoredCardData });
             expect(card.props).not.toBe(undefined);
             expect(card.props.storedPaymentMethodId).toBe(undefined);
+        });
+    });
+
+    describe('Analytics', () => {
+        test('should send "rendered" event when the component is rendered', () => {
+            const core = setupCoreMock();
+            const card = new CardElement(core, {
+                i18n: global.i18n,
+                modules: { resources: global.resources }
+            });
+
+            render(card.render());
+
+            expect(core.modules.analytics.sendAnalytics).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    type: InfoEventType.rendered,
+                    component: 'scheme',
+                    configData: {
+                        showPayButton: true
+                    },
+                    id: expect.any(String),
+                    timestamp: expect.any(String)
+                })
+            );
+        });
+
+        test('should send "rendered" event flagging as stored payment method when stored card is rendered', () => {
+            const core = setupCoreMock();
+            const card = new CardElement(core, {
+                i18n: global.i18n,
+                oneClick: true,
+                brand: 'visa',
+                modules: { resources: global.resources }
+            });
+
+            render(card.render());
+
+            expect(core.modules.analytics.sendAnalytics).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    type: InfoEventType.rendered,
+                    isStoredPaymentMethod: true,
+                    brand: 'visa',
+                    component: 'scheme',
+                    configData: {
+                        brand: 'visa',
+                        showPayButton: true
+                    },
+                    id: expect.any(String),
+                    timestamp: expect.any(String)
+                })
+            );
+        });
+
+        test('should send "focus" event when the onFocus is called', () => {
+            const core = setupCoreMock();
+            const card = new CardElement(core);
+
+            const cardFocus = mock<CardFocusData>({
+                action: 'focus',
+                fieldType: 'encryptedCardNumber',
+                type: 'card',
+                currentFocusObject: 'encryptedCardNumber'
+            });
+
+            // @ts-ignore  The only way to test the focus event on unit test level is by calling the private method
+            card.onFocus({
+                fieldType: 'encryptedCardNumber',
+                event: cardFocus
+            });
+
+            expect(core.modules.analytics.sendAnalytics).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    component: 'scheme',
+                    type: InfoEventType.focus,
+                    target: 'card_number',
+                    id: expect.any(String),
+                    timestamp: expect.any(String)
+                })
+            );
+        });
+
+        test('should send "unfocus" event when the onBlur is called', () => {
+            const core = setupCoreMock();
+            const card = new CardElement(core);
+
+            const cardFocus = mock<CardFocusData>({
+                action: 'focus',
+                focus: false,
+                fieldType: 'encryptedCardNumber',
+                type: 'card',
+                currentFocusObject: 'encryptedCardNumber'
+            });
+
+            // @ts-ignore  The only way to test the blur event on unit test level is by calling the private method
+            card.onBlur({
+                fieldType: 'encryptedCardNumber',
+                event: cardFocus
+            });
+
+            expect(core.modules.analytics.sendAnalytics).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    component: 'scheme',
+                    type: InfoEventType.unfocus,
+                    target: 'card_number',
+                    id: expect.any(String),
+                    timestamp: expect.any(String)
+                })
+            );
         });
     });
 });

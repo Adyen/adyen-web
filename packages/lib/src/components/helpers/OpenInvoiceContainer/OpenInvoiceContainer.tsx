@@ -1,8 +1,6 @@
 import { h } from 'preact';
 import UIElement from '../../internal/UIElement/UIElement';
 import OpenInvoice from '../../internal/OpenInvoice';
-import { CoreProvider } from '../../../core/Context/CoreProvider';
-import SRPanelProvider from '../../../core/Errors/SRPanelProvider';
 import { OpenInvoiceConfiguration } from './types';
 
 export default class OpenInvoiceContainer extends UIElement<OpenInvoiceConfiguration> {
@@ -77,20 +75,16 @@ export default class OpenInvoiceContainer extends UIElement<OpenInvoiceConfigura
         };
     }
 
-    render() {
+    protected override componentToRender(): h.JSX.Element {
         return (
-            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
-                <SRPanelProvider srPanel={this.props.modules.srPanel}>
-                    <OpenInvoice
-                        setComponentRef={this.setComponentRef}
-                        {...this.props}
-                        {...this.state}
-                        onChange={this.setState}
-                        onSubmit={this.submit}
-                        payButton={this.payButton}
-                    />
-                </SRPanelProvider>
-            </CoreProvider>
+            <OpenInvoice
+                setComponentRef={this.setComponentRef}
+                {...this.props}
+                {...this.state}
+                onChange={this.setState}
+                onSubmit={this.submit}
+                payButton={this.payButton}
+            />
         );
     }
 }

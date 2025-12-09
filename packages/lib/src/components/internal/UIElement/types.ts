@@ -27,7 +27,10 @@ type CoreCallbacks = Pick<
 
 export type StatusFromAction = 'redirect' | 'loading' | 'custom';
 
-export type UIElementProps = BaseElementProps &
+export type UIElementProps = {
+    paymentMethodId?: string;
+    storedPaymentMethodId?: string;
+} & BaseElementProps &
     CoreCallbacks & {
         environment?: string;
         session?: Session;

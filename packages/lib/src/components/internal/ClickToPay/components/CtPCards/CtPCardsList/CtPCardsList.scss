@@ -1,5 +1,19 @@
 @import 'styles/variable-generator';
 
+// Field label styling
+.adyen-checkout-ctp__cards-list-field {
+    .adyen-checkout__label {
+        margin-bottom: token(spacer-070);
+    }
+
+    .adyen-checkout__label__text {
+        font-size: token(text-body-font-size);
+        font-weight: token(text-body-font-weight);
+        line-height: token(text-caption-line-height);
+        color: token(color-label-tertiary);
+    }
+}
+
 .adyen-checkout-ctp__cards-list-dropdown {
     // Select Item customization
     .adyen-checkout__dropdown__element--disabled {

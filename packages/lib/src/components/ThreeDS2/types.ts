@@ -1,16 +1,17 @@
 import UIElement from '../internal/UIElement';
-import { ActionHandledReturnObject, AnalyticsModule } from '../../types/global-types';
+import { ActionHandledReturnObject } from '../../types/global-types';
 import Language from '../../language';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
-import { Analytics3DS2Errors } from '../../core/Analytics/constants';
 import { UIElementProps } from '../internal/UIElement/types';
+import { ErrorEventCode } from '../../core/Analytics/events/AnalyticsErrorEvent';
+import type { IAnalytics } from '../../core/Analytics/Analytics';
 
 interface ThreeDS2Configuration extends UIElementProps {
     dataKey?: string;
     environment?: string;
     isMDFlow?: boolean;
     loadingContext?: string;
-    modules?: { analytics: AnalyticsModule };
+    modules?: { analytics: IAnalytics };
     notificationURL?: string;
     onActionHandled?: (rtnObj: ActionHandledReturnObject) => void;
     onError?: (error: AdyenCheckoutError, element?: UIElement) => void;
@@ -147,6 +148,6 @@ export interface LegacyChallengeResolveData {
 }
 
 export interface ErrorCodeObject {
-    errorCode: string | Analytics3DS2Errors;
+    errorCode: string | ErrorEventCode;
     message: string;
 }

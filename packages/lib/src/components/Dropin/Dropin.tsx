@@ -2,12 +2,9 @@ import { h } from 'preact';
 import UIElement from '../internal/UIElement/UIElement';
 import defaultProps from './defaultProps';
 import DropinComponent from '../../components/Dropin/components/DropinComponent';
-import { CoreProvider } from '../../core/Context/CoreProvider';
-import { getCommonProps } from './components/utils';
 import { createElements, createStoredElements } from './elements';
 import createInstantPaymentElements from './elements/createInstantPaymentElements';
 import { hasOwnProperty } from '../../utils/hasOwnProperty';
-import SRPanelProvider from '../../core/Errors/SRPanelProvider';
 import splitPaymentMethods from './elements/splitPaymentMethods';
 import { TxVariants } from '../tx-variants';
 
@@ -40,13 +37,16 @@ class DropinElement extends UIElement<DropinConfiguration> implements IDropin {
         this.paymentMethodsConfiguration = this.props.paymentMethodsConfiguration || {};
     }
 
+    protected override reportIntegrationFlavor(): void {
+        void this.analytics.sendFlavor('dropin');
+    }
+
     protected override storeElementRefOnCore() {
         this.core.storeElementReference(this);
     }
 
     formatProps(props) {
         return {
-            type: 'dropin', // for analytics
             ...super.formatProps(props),
             instantPaymentTypes: Array.from<InstantPaymentTypes>(new Set(props.instantPaymentTypes)).filter(value =>
                 SUPPORTED_INSTANT_PAYMENTS.includes(value)
@@ -123,20 +123,23 @@ class DropinElement extends UIElement<DropinConfiguration> implements IDropin {
             instantPaymentTypes
         );
 
-        const commonProps = getCommonProps({ ...this.props, elementRef: this.elementRef });
+        const dropinProps = {
+            elementRef: this.elementRef,
+            isDropin: true
+        };
 
-        const elements = showPaymentMethods ? createElements(paymentMethods, paymentMethodsConfiguration, commonProps, this.core) : [];
-        const instantPaymentElements = createInstantPaymentElements(instantPaymentMethods, paymentMethodsConfiguration, commonProps, this.core);
+        const elements = showPaymentMethods ? createElements(paymentMethods, paymentMethodsConfiguration, dropinProps, this.core) : [];
+        const instantPaymentElements = createInstantPaymentElements(instantPaymentMethods, paymentMethodsConfiguration, dropinProps, this.core);
         const storedElements = showStoredPaymentMethods
             ? createStoredElements(
                   this.props.filterStoredPaymentMethods?.(storedPaymentMethods) ?? storedPaymentMethods,
                   paymentMethodsConfiguration,
-                  commonProps,
+                  dropinProps,
                   this.core
               )
             : [];
         const fastlanePaymentElement = fastlanePaymentMethod
-            ? createElements([fastlanePaymentMethod], paymentMethodsConfiguration, commonProps, this.core)
+            ? createElements([fastlanePaymentMethod], paymentMethodsConfiguration, dropinProps, this.core)
             : [];
 
         return [storedElements, elements, instantPaymentElements, fastlanePaymentElement];
@@ -208,21 +211,17 @@ class DropinElement extends UIElement<DropinConfiguration> implements IDropin {
         this.activePaymentMethod?.onEnterKeyPressed(activeElement, pmComponent);
     }
 
-    render() {
+    protected override componentToRender(): h.JSX.Element {
         return (
-            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
-                <SRPanelProvider srPanel={this.props.modules.srPanel}>
-                    <DropinComponent
-                        {...this.props}
-                        core={this.core}
-                        elementRef={this.elementRef}
-                        onCreateElements={this.handleCreate}
-                        ref={dropinRef => {
-                            this.dropinRef = dropinRef;
-                        }}
-                    />
-                </SRPanelProvider>
-            </CoreProvider>
+            <DropinComponent
+                {...this.props}
+                core={this.core}
+                elementRef={this.elementRef}
+                onCreateElements={this.handleCreate}
+                ref={dropinRef => {
+                    this.dropinRef = dropinRef;
+                }}
+            />
         );
     }
 }

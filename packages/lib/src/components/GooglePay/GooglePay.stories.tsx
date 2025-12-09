@@ -16,7 +16,16 @@ export const Default: GooglePayStory = {
         <Checkout checkoutConfig={checkoutConfig}>
             {checkout => <ComponentContainer element={new GooglePay(checkout, componentConfiguration)} />}
         </Checkout>
-    )
+    ),
+
+    args: {
+        componentConfiguration: {
+            buttonColor: 'black',
+            buttonType: 'buy',
+            buttonSizeMode: 'fill',
+            buttonRadius: 0
+        }
+    }
 };
 
 export default meta;

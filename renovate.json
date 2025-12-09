@@ -1,12 +1,39 @@
 {
-  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:base",
-    ":disableDependencyDashboard"
-  ],
-  "labels": ["dependencies"],
-  "minimumReleaseAge": "21 days",
-  "prConcurrentLimit": 5,
-  "internalChecksFilter": "strict",
-  "updateNotScheduled": false
+    "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+    "extends": ["config:recommended", ":disableDependencyDashboard"],
+    "labels": ["dependencies"],
+    "minimumReleaseAge": "21 days",
+    "internalChecksFilter": "strict",
+    "rebaseWhen": "behind-base-branch",
+    "prConcurrentLimit": 5,
+    "updateNotScheduled": false,
+    "ignorePaths": ["packages/playground/**"],
+    "packageRules": [
+        {
+            "matchDatasources": ["npm"],
+            "matchUpdateTypes": ["minor", "patch"],
+            "groupName": "Minor and Patch Updates"
+        },
+        {
+            "matchPackageNames": ["@adyen/**", "cheerio"],
+            "enabled": false
+        },
+        {
+            "description": "Disable node-version updates",
+            "matchDatasources": ["node-version"],
+            "matchPackageNames": ["actions/node-versions"],
+            "enabled": false
+        },
+        {
+            "matchPackageNames": ["preact", "@swc/core", "@playwright/test", "sass"],
+            "groupName": null
+        },
+        {
+            "description": "Group example folder dependencies monthly on the first day of the month",
+            "groupName": "Examples Dependencies",
+            "matchFileNames": ["examples/**"],
+            "matchUpdateTypes": ["major", "minor", "patch"],
+            "schedule": ["* 0-3 1 * *"]
+        }
+    ]
 }

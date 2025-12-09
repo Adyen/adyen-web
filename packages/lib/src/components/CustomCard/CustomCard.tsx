@@ -1,7 +1,6 @@
 import { h } from 'preact';
 import UIElement from '../internal/UIElement';
 import CustomCardInput from './CustomCardInput';
-import { CoreProvider } from '../../core/Context/CoreProvider';
 import collectBrowserInfo from '../../utils/browserInfo';
 import triggerBinLookUp from '../internal/SecuredFields/binLookup/triggerBinLookUp';
 import { CardBinLookupData, CardFocusData } from '../internal/SecuredFields/lib/types';
@@ -9,13 +8,10 @@ import { BrandObject } from '../Card/types';
 import { getCardImageUrl, fieldTypeToSnakeCase } from '../internal/SecuredFields/utils';
 import { TxVariants } from '../tx-variants';
 import { CustomCardConfiguration } from './types';
-import { ANALYTICS_FOCUS_STR, ANALYTICS_UNFOCUS_STR } from '../../core/Analytics/constants';
-import { AnalyticsInfoEvent } from '../../core/Analytics/AnalyticsInfoEvent';
+import { AnalyticsInfoEvent, InfoEventType } from '../../core/Analytics/events/AnalyticsInfoEvent';
 
 export class CustomCard extends UIElement<CustomCardConfiguration> {
     public static type = TxVariants.customCard;
-
-    public static analyticsType = 'custom-scheme';
 
     protected static defaultProps = {
         onBinLookup: () => {},
@@ -99,7 +95,8 @@ export class CustomCard extends UIElement<CustomCardConfiguration> {
 
     private onFocus = (obj: CardFocusData) => {
         const event = new AnalyticsInfoEvent({
-            type: obj.focus === true ? ANALYTICS_FOCUS_STR : ANALYTICS_UNFOCUS_STR,
+            component: this.type,
+            type: obj.focus === true ? InfoEventType.focus : InfoEventType.unfocus,
             target: fieldTypeToSnakeCase(obj.fieldType)
         });
 
@@ -113,25 +110,23 @@ export class CustomCard extends UIElement<CustomCardConfiguration> {
         this.props.onEnterKeyPressed?.(activeElement, component);
     };
 
-    render() {
+    protected override componentToRender(): h.JSX.Element {
         return (
-            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
-                <CustomCardInput
-                    ref={ref => {
-                        this.componentRef = ref;
-                    }}
-                    {...this.props}
-                    {...this.state}
-                    handleKeyPress={this.handleKeyPress}
-                    rootNode={this._node}
-                    onChange={this.setState}
-                    onBinValue={this.onBinValue}
-                    implementationType={'custom'}
-                    resources={this.resources}
-                    brand={this.brand}
-                    onFocus={this.onFocus}
-                />
-            </CoreProvider>
+            <CustomCardInput
+                ref={ref => {
+                    this.componentRef = ref;
+                }}
+                {...this.props}
+                {...this.state}
+                handleKeyPress={this.handleKeyPress}
+                rootNode={this._node}
+                onChange={this.setState}
+                onBinValue={this.onBinValue}
+                implementationType={'custom'}
+                resources={this.resources}
+                brand={this.brand}
+                onFocus={this.onFocus}
+            />
         );
     }
 }

@@ -1,9 +1,7 @@
 import { h } from 'preact';
 import UIElement from '../../internal/UIElement/UIElement';
-import QRLoader from '../../internal/QRLoader';
-import { CoreProvider } from '../../../core/Context/CoreProvider';
+import { QRLoader } from '../../internal/QRLoader';
 import RedirectButton from '../../internal/RedirectButton';
-import SRPanelProvider from '../../../core/Errors/SRPanelProvider';
 import { QRLoaderConfiguration } from './types';
 
 class QRLoaderContainer<T extends QRLoaderConfiguration = QRLoaderConfiguration> extends UIElement<T> {
@@ -31,43 +29,37 @@ class QRLoaderContainer<T extends QRLoaderConfiguration = QRLoaderConfiguration>
     // Makes possible to extend the final QR code step
     public renderQRCode() {
         return (
-            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
-                <SRPanelProvider srPanel={this.props.modules.srPanel}>
-                    <QRLoader
-                        {...this.props}
-                        delay={this.props.delay}
-                        countdownTime={this.props.countdownTime}
-                        instructions={this.props.instructions}
-                        type={this.constructor['type']}
-                        brandLogo={this.props.brandLogo || this.icon}
-                        onComplete={this.onComplete}
-                        onActionHandled={this.onActionHandled}
-                        brandName={this.displayName}
-                        onSubmitAnalytics={this.submitAnalytics}
-                    />
-                </SRPanelProvider>
-            </CoreProvider>
+            <QRLoader
+                {...this.props}
+                delay={this.props.delay}
+                countdownTime={this.props.countdownTime}
+                instructions={this.props.instructions}
+                type={this.constructor['type']}
+                brandLogo={this.props.brandLogo || this.icon}
+                onComplete={this.onComplete}
+                onActionHandled={this.onActionHandled}
+                brandName={this.displayName}
+                onSubmitAnalytics={this.submitAnalytics}
+            />
         );
     }
 
-    render() {
+    protected override componentToRender(): h.JSX.Element {
         if (this.props.paymentData) {
             return this.renderQRCode();
         }
 
         if (this.props.showPayButton) {
             return (
-                <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
-                    <RedirectButton
-                        showPayButton={this.props.showPayButton}
-                        name={this.displayName}
-                        onSubmit={this.submit}
-                        payButton={this.payButton}
-                        ref={ref => {
-                            this.componentRef = ref;
-                        }}
-                    />
-                </CoreProvider>
+                <RedirectButton
+                    showPayButton={this.props.showPayButton}
+                    name={this.displayName}
+                    onSubmit={this.submit}
+                    payButton={this.payButton}
+                    ref={ref => {
+                        this.componentRef = ref;
+                    }}
+                />
             );
         }
 

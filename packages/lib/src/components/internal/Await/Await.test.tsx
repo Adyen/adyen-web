@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import checkPaymentStatus from '../../../core/Services/payment-status';
-import Await from './Await';
+import { Await } from './Await';
 import { fireEvent, render, screen, waitFor } from '@testing-library/preact';
 import { CoreProvider } from '../../../core/Context/CoreProvider';
 import { AwaitComponentProps } from './types';
