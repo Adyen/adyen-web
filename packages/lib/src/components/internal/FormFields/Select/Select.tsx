@@ -40,7 +40,7 @@ function Select({
     const [showList, setShowList] = useState<boolean>(false);
     const selectListId: string = useMemo(() => `select-${uuid()}`, []);
 
-    const active: SelectItem = items.find(i => i.id === selectedValue);
+    const active: SelectItem = items.find(i => i.id === selectedValue) || ({} as SelectItem);
 
     const [inputText, setInputText] = useState<string>();
 
@@ -92,7 +92,7 @@ function Select({
 
     const extractItemFromEvent = (e: Event): SelectItem => {
         const value = (e.currentTarget as HTMLInputElement).getAttribute('data-value');
-        return filteredItems.find(listItem => listItem.id == value) || ({} as SelectItem);
+        return filteredItems.find(listItem => listItem.id == value);
     };
 
     /**
