@@ -6,13 +6,14 @@ import { App, UpiMode } from '../../types';
 import useImage from '../../../../core/Context/useImage';
 import { A11Y } from '../../constants';
 import './UPIComponent.scss';
-import SegmentedControl from '../../../internal/SegmentedControl';
+import { SegmentedControl } from '../../../internal/SegmentedControl';
 import UPIIntentAppList from '../UPIIntentAppList';
 import { useCoreContext } from '../../../../core/Context/CoreProvider';
 import Alert from '../../../internal/Alert';
 import { SegmentedControlOption } from '../../../internal/SegmentedControl/SegmentedControl';
 import UPIMandate, { Mandate } from '../UPIMandate/UPIMandate';
 import type { PaymentAmount } from '../../../../types/global-types';
+import { SegmentedControlRegion } from '../../../internal/SegmentedControl/SegmentedControlRegion';
 
 type UpiData = { app?: App; virtualPaymentAddress?: string };
 
@@ -125,7 +126,7 @@ export default function UPIComponent({
             />
 
             {mode === 'intent' && (
-                <div id={A11Y.AreaId.INTENT} aria-labelledby={A11Y.ButtonId.INTENT} className="adyen-checkout-upi-area-intent" role="region">
+                <SegmentedControlRegion id={A11Y.AreaId.INTENT} ariaLabelledBy={A11Y.ButtonId.INTENT} className="adyen-checkout-upi-area-intent">
                     <span className="adyen-checkout-upi-instruction-label">{i18n.get('upi.intent.instruction')}</span>
                     {status === 'error' && <Alert icon={'cross'}>{i18n.get('upi.error.noAppSelected')}</Alert>}
                     <UPIIntentAppList disabled={status === 'loading'} apps={apps} selectedAppId={selectedApp?.id} onAppSelect={handleAppSelect} />
@@ -135,10 +136,10 @@ export default function UPIComponent({
                             label: i18n.get('continue'),
                             status
                         })}
-                </div>
+                </SegmentedControlRegion>
             )}
             {mode === 'vpa' && (
-                <div id={A11Y.AreaId.VPA} aria-labelledby={A11Y.ButtonId.VPA} className="adyen-checkout-upi-area-vpa" role="region">
+                <SegmentedControlRegion id={A11Y.AreaId.VPA} ariaLabelledBy={A11Y.ButtonId.VPA} className="adyen-checkout-upi-area-vpa">
                     <span className="adyen-checkout-upi-instruction-label">{i18n.get('upi.collect.instruction')}</span>
                     <VpaInput disabled={status === 'loading'} onChange={onChange} onSetInputHandlers={onSetVpaInputHandlers} />
                     {mandateComponent}
@@ -147,10 +148,10 @@ export default function UPIComponent({
                             label: i18n.get('continue'),
                             status
                         })}
-                </div>
+                </SegmentedControlRegion>
             )}
             {mode === 'qrCode' && (
-                <div id={A11Y.AreaId.QR} aria-labelledby={A11Y.ButtonId.QR} className="adyen-checkout-upi-area-qr-code" role="region">
+                <SegmentedControlRegion id={A11Y.AreaId.QR} ariaLabelledBy={A11Y.ButtonId.QR} className="adyen-checkout-upi-area-qr-code">
                     <span className="adyen-checkout-upi-instruction-label">{i18n.get('upi.qrCode.instruction')}</span>
                     {mandateComponent}
                     {showPayButton &&
@@ -159,7 +160,7 @@ export default function UPIComponent({
                             icon: getImage({ imageFolder: 'components/' })('qr'),
                             status
                         })}
-                </div>
+                </SegmentedControlRegion>
             )}
         </Fragment>
     );

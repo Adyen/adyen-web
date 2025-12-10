@@ -2,7 +2,7 @@ import { h } from 'preact';
 import { useState } from 'preact/hooks';
 import { render, screen, waitFor } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
-import SegmentedControl, { SegmentedControlOptions } from './SegmentedControl';
+import { SegmentedControl, SegmentedControlOptions } from './SegmentedControl';
 
 const DEFAULT_OPTIONS: SegmentedControlOptions<string> = [
     {
