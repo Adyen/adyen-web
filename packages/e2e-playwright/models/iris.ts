@@ -20,17 +20,17 @@ class Iris extends IssuerList {
     constructor(page: Page, rootElementSelector: string = '.adyen-checkout__issuer-list') {
         super(page, rootElementSelector);
 
-        // Segmented control
-        this.segmentedControlGroup = this.rootElement.locator('.adyen-checkout__segmented-control');
+        // Segmented control (outside of .adyen-checkout__issuer-list, so use page-level locator)
+        this.segmentedControlGroup = page.locator('.adyen-checkout__segmented-control');
         this.qrCodeModeButton = this.segmentedControlGroup.getByRole('button', { name: 'QR Code' });
         this.bankListModeButton = this.segmentedControlGroup.getByRole('button', { name: 'Bank List' });
 
-        // QR Code mode
-        this.generateQrCodeButton = this.rootElement.getByRole('button', { name: 'Generate QR code' });
-        this.qrCodeImage = this.rootElement.locator('.adyen-checkout__qr-code img, .adyen-checkout__qr-code canvas');
+        // QR Code mode (QR elements are in a separate panel, not inside .adyen-checkout__issuer-list)
+        this.generateQrCodeButton = page.getByRole('button', { name: 'Generate QR code' });
+        this.qrCodeImage = page.locator('.adyen-checkout__qr-code img, .adyen-checkout__qr-code canvas');
 
         // Status
-        this.successMessage = this.rootElement.locator('.adyen-checkout__status--success');
+        this.successMessage = page.locator('.adyen-checkout__status--success');
     }
 
     async switchToQrCodeMode() {
