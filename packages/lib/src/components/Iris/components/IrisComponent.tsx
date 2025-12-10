@@ -19,7 +19,7 @@ interface IrisComponentProps {
     setComponentRef: (ref: ComponentMethodsRef) => void;
 }
 
-export default function IrisComponent(props: IrisComponentProps) {
+export default function IrisComponent(props: Readonly<IrisComponentProps>) {
     const { i18n } = useCoreContext();
     const getImage = useImage();
 
@@ -54,9 +54,9 @@ export default function IrisComponent(props: IrisComponentProps) {
         <div>
             <SegmentedControl onChange={handleModeChange} selectedValue={mode} disabled={status === 'loading'} options={segmentedControlOptions} />
             <SegmentedControlRegion
-                key={selectedSegmentedControlOption?.id}
-                id={selectedSegmentedControlOption?.id}
-                ariaLabelledBy={selectedSegmentedControlOption?.controls}
+                key={selectedSegmentedControlOption?.controls}
+                id={selectedSegmentedControlOption?.controls}
+                ariaLabelledBy={selectedSegmentedControlOption?.id}
             >
                 {mode === IrisMode.BANK_LIST ? (
                     props.renderIssuerList()
