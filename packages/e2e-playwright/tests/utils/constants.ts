@@ -82,3 +82,17 @@ export const SHOPPER_DATA = {
         JP: '7012341234'
     }
 };
+// Issuer List Mocks
+export const ONLINE_BANKING_PL_ISSUERS = [
+    { id: '154', name: 'BLIK' },
+    { id: '141', name: 'e-transfer Pocztowy24' }
+];
+
+export const IRIS_ISSUERS = [
+    { id: 'PIRBGRAA', name: 'Piraeus Bank' },
+    { id: 'ERBKGRAA', name: 'Eurobank' },
+    { id: 'ETHNGRAA', name: 'National Bank of Greece' },
+    { id: 'CRBAGRAA', name: 'Alpha Bank' },
+    { id: 'PRXBGRAA', name: 'Viva' },
+    { id: 'ATTIGRAA', name: 'CrediaBank' }
+];
