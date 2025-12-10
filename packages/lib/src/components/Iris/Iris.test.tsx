@@ -1,7 +1,5 @@
-import { h } from 'preact';
 import { render, screen, waitFor } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
-import { SRPanel } from '../../core/Errors/SRPanel';
 import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 import Iris from './Iris';
 
@@ -34,9 +32,9 @@ describe('Iris', () => {
 
             const iris = new Iris(core, {
                 issuers: defaultIssuers,
-                i18n: global.i18n,
+                i18n: core.modules.i18n,
                 loadingContext: 'test',
-                modules: { resources: global.resources, srPanel: new SRPanel(global.core) }
+                modules: { resources: core.modules.resources }
             });
 
             render(iris.render());
@@ -52,9 +50,9 @@ describe('Iris', () => {
 
             const iris = new Iris(core, {
                 issuers: defaultIssuers,
-                i18n: global.i18n,
+                i18n: core.modules.i18n,
                 loadingContext: 'test',
-                modules: { resources: global.resources, srPanel: new SRPanel(global.core) }
+                modules: { resources: core.modules.resources }
             });
 
             render(iris.render());
@@ -77,9 +75,9 @@ describe('Iris', () => {
                     issuers: defaultIssuers,
                     showPayButton: true,
                     onSubmit: onSubmitMock,
-                    i18n: global.i18n,
+                    i18n: core.modules.i18n,
                     loadingContext: 'test',
-                    modules: { resources: global.resources, srPanel: new SRPanel(global.core) }
+                    modules: { resources: core.modules.resources }
                 });
 
                 render(iris.render());
@@ -101,9 +99,9 @@ describe('Iris', () => {
                     issuers: defaultIssuers,
                     showPayButton: true,
                     onSubmit: onSubmitMock,
-                    i18n: global.i18n,
+                    i18n: core.modules.i18n,
                     loadingContext: 'test',
-                    modules: { resources: global.resources, srPanel: new SRPanel(global.core) }
+                    modules: { resources: core.modules.resources }
                 });
 
                 render(iris.render());
@@ -140,9 +138,9 @@ describe('Iris', () => {
 
                 const iris = new Iris(core, {
                     issuers: defaultIssuers,
-                    i18n: global.i18n,
+                    i18n: core.modules.i18n,
                     loadingContext: 'test',
-                    modules: { resources: global.resources, srPanel: new SRPanel(global.core) }
+                    modules: { resources: core.modules.resources }
                 });
 
                 render(iris.render());
@@ -162,9 +160,9 @@ describe('Iris', () => {
                     issuers: defaultIssuers,
                     showPayButton: true,
                     onSubmit: onSubmitMock,
-                    i18n: global.i18n,
+                    i18n: core.modules.i18n,
                     loadingContext: 'test',
-                    modules: { resources: global.resources, srPanel: new SRPanel(global.core) }
+                    modules: { resources: core.modules.resources }
                 });
 
                 render(iris.render());
@@ -192,9 +190,9 @@ describe('Iris', () => {
                     issuers: defaultIssuers,
                     showPayButton: true,
                     onSubmit: onSubmitMock,
-                    i18n: global.i18n,
+                    i18n: core.modules.i18n,
                     loadingContext: 'test',
-                    modules: { resources: global.resources, srPanel: new SRPanel(global.core) }
+                    modules: { resources: core.modules.resources }
                 });
 
                 render(iris.render());
