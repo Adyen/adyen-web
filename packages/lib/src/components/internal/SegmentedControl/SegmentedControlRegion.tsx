@@ -9,8 +9,8 @@ export interface SegmentedControlRegionProps {
 
 export const SegmentedControlRegion = ({ id, ariaLabelledBy, className, children }: SegmentedControlRegionProps) => {
     return (
-        <section id={id} aria-labelledby={ariaLabelledBy} className={className}>
+        <div id={id} aria-labelledby={ariaLabelledBy} className={className} role="region">
             {children}
-        </section>
+        </div>
     );
 };
