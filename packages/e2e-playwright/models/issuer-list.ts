@@ -41,12 +41,21 @@ class IssuerList extends Base {
         await option.click();
     }
 
+    async selectIssuer(issuerName: string) {
+        const option = this.selectorList.getByRole('option', { name: issuerName });
+        await option.click();
+    }
+
     async selectHighlightedIssuer(issuerName: string) {
         await this.highlightedIssuerButtonGroup.getByRole('button', { name: issuerName }).click();
     }
 
     async typeOnSelectorField(filter: string) {
         await this.selectorCombobox.type(filter, { delay: USER_TYPE_DELAY });
+    }
+
+    async submitPayment() {
+        await this.payButton.click();
     }
 }
 

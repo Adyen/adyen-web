@@ -34,6 +34,7 @@ export const URL_MAP = {
     ancv: '/iframe.html?args=useSessions:!true&globals=&id=components-ancv--default&viewMode=story',
     /* Issuer list */
     onlineBankingPL: '/iframe.html?args=&globals=&id=components-issuerlist-onlinebankingpl--default&viewMode=story',
+    iris: '/iframe.html?args=&globals=&id=components-issuerlist-iris--default&viewMode=story',
     /* Open invoice */
     riverty: '/iframe.html?globals=&args=&id=components-riverty--default&viewMode=story',
     /* Redirect */
