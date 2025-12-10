@@ -41,9 +41,9 @@ describe('Iris', () => {
 
             render(iris.render());
 
-            const qrCodeButton = await screen.findByRole('button', { name: /QR Code/i });
+            const qrCodeButton = await screen.findByRole('button', { name: 'QR Code' });
             expect(qrCodeButton).toHaveAttribute('aria-expanded', 'true');
-            expect(await screen.findByRole('button', { name: /Generate QR Code/i })).toBeInTheDocument();
+            expect(await screen.findByRole('button', { name: /Generate QR code/i })).toBeInTheDocument();
         });
 
         test('should pre-select "Bank List" mode on Mobile', async () => {
@@ -59,9 +59,9 @@ describe('Iris', () => {
 
             render(iris.render());
 
-            const bankListButton = await screen.findByRole('button', { name: /Bank List/i });
+            const bankListButton = await screen.findByRole('button', { name: 'Bank List' });
             expect(bankListButton).toHaveAttribute('aria-expanded', 'true');
-            expect(screen.queryByRole('button', { name: /Generate QR Code/i })).not.toBeInTheDocument();
+            expect(screen.queryByRole('button', { name: /Generate QR code/i })).not.toBeInTheDocument();
         });
     });
 
@@ -169,7 +169,7 @@ describe('Iris', () => {
 
                 render(iris.render());
 
-                const generateQrButton = await screen.findByRole('button', { name: /Generate QR Code/i });
+                const generateQrButton = await screen.findByRole('button', { name: /Generate QR code/i });
                 await user.click(generateQrButton);
 
                 await waitFor(() => {
@@ -203,9 +203,14 @@ describe('Iris', () => {
                 await user.click(issuerOption);
 
                 // Switch to QR Code mode
-                const qrCodeButton = await screen.findByRole('button', { name: /QR Code/i });
+                const qrCodeButton = await screen.findByRole('button', { name: 'QR Code' });
                 await user.click(qrCodeButton);
-                const generateQrButton = await screen.findByRole('button', { name: /Generate QR Code/i });
+
+                await waitFor(() => {
+                    expect(screen.getByRole('button', { name: /Generate QR code/i })).toBeInTheDocument();
+                });
+
+                const generateQrButton = await screen.findByRole('button', { name: /Generate QR code/i });
                 await user.click(generateQrButton);
 
                 await waitFor(() => {
