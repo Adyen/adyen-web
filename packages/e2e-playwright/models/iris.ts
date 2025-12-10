@@ -22,11 +22,11 @@ class Iris extends IssuerList {
 
         // Segmented control
         this.segmentedControlGroup = this.rootElement.locator('.adyen-checkout__segmented-control');
-        this.qrCodeModeButton = this.segmentedControlGroup.getByRole('button', { name: /QR Code/i });
-        this.bankListModeButton = this.segmentedControlGroup.getByRole('button', { name: /Bank List/i });
+        this.qrCodeModeButton = this.segmentedControlGroup.getByRole('button', { name: 'QR Code' });
+        this.bankListModeButton = this.segmentedControlGroup.getByRole('button', { name: 'Bank List' });
 
         // QR Code mode
-        this.generateQrCodeButton = this.rootElement.getByRole('button', { name: /Generate QR Code/i });
+        this.generateQrCodeButton = this.rootElement.getByRole('button', { name: 'Generate QR code' });
         this.qrCodeImage = this.rootElement.locator('.adyen-checkout__qr-code img, .adyen-checkout__qr-code canvas');
 
         // Status
