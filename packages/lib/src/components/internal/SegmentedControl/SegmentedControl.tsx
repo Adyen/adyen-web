@@ -38,7 +38,7 @@ export interface SegmentedControlProps<T> {
  * @param onChange
  * @constructor
  */
-function SegmentedControl<T>({ classNameModifiers = [], selectedValue, disabled = false, options, onChange }: SegmentedControlProps<T>) {
+export const SegmentedControl = <T,>({ classNameModifiers = [], selectedValue, disabled = false, options, onChange }: SegmentedControlProps<T>) => {
     if (!options || options.length === 0) {
         return null;
     }
@@ -70,6 +70,4 @@ function SegmentedControl<T>({ classNameModifiers = [], selectedValue, disabled 
             ))}
         </div>
     );
-}
-
-export default SegmentedControl;
+};

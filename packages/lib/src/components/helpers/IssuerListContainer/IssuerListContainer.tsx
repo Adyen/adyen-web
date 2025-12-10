@@ -7,7 +7,7 @@ import RedirectButton from '../../internal/RedirectButton';
 import { IssuerListConfiguration, IssuerListData } from './types';
 import type { ICore } from '../../../core/types';
 
-class IssuerListContainer extends UIElement<IssuerListConfiguration> {
+class IssuerListContainer<TProps extends IssuerListConfiguration = IssuerListConfiguration, TData = IssuerListData> extends UIElement<TProps> {
     protected static defaultProps = {
         showImage: true,
         issuers: [],
@@ -16,7 +16,7 @@ class IssuerListContainer extends UIElement<IssuerListConfiguration> {
         showPaymentMethodItemImages: false
     };
 
-    constructor(checkout: ICore, props?: IssuerListConfiguration) {
+    constructor(checkout: ICore, props?: TProps) {
         super(checkout, props);
 
         const getImage = props => this.resources.getImage(props);
@@ -39,24 +39,23 @@ class IssuerListContainer extends UIElement<IssuerListConfiguration> {
     /**
      * Formats the component data output
      */
-    formatData(): IssuerListData {
+    formatData(): TData {
         return {
             paymentMethod: {
                 type: this.type,
                 issuer: this.state?.data?.issuer
             }
-        };
+        } as TData;
     }
 
     /**
      * Returns whether the component state is valid or not
      */
     get isValid() {
-        // if (this.props.issuers.length === 0) {
-        //     return true;
-        // }
-        // return !!this.state?.isValid;
-        return true;
+        if (this.props.issuers.length === 0) {
+            return true;
+        }
+        return !!this.state?.isValid;
     }
 
     /**
