@@ -1,4 +1,4 @@
-import { Fragment, h } from 'preact';
+import { h } from 'preact';
 import { ICore } from '../../types';
 import isMobile from '../../utils/isMobile';
 import IssuerListContainer from '../helpers/IssuerListContainer/IssuerListContainer';
