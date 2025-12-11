@@ -50,6 +50,12 @@ export default function IrisComponent(props: Readonly<IrisComponentProps>) {
         props.setComponentRef(irisRef.current);
     }, [props.setComponentRef, irisRef.current]);
 
+    useEffect(() => {
+        if (props.issuers.length === 0) {
+            handleModeChange(IrisMode.QR_CODE);
+        }
+    }, [props.issuers]);
+
     if (props.issuers.length === 0) {
         return <IrisGenerateQRCode showPayButton={props.showPayButton} payButton={props.payButton} status={status} />;
     }
