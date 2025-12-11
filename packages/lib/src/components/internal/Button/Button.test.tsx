@@ -15,8 +15,8 @@ const getWrapper = (props: ButtonProps) => {
 describe('Button', () => {
     test('Renders a button by default', () => {
         const wrapper = getWrapper({ label: 'label' });
-        expect(wrapper.text()).toContain('label');
-        expect(wrapper.getDOMNode().nodeName).toBe('BUTTON');
+        expect(wrapper.find('button').text()).toContain('label');
+        expect(wrapper.find('button').getDOMNode().nodeName).toBe('BUTTON');
     });
 
     test('Renders a link if href is present', () => {
@@ -44,7 +44,7 @@ describe('Button', () => {
     test('Uses label when a status is not defined', () => {
         const onClick = jest.fn();
         const wrapper = getWrapper({ onClick, label: 'label', status: 'ready' });
-        expect(wrapper.text()).toContain('label');
+        expect(wrapper.find('button').text()).toContain('label');
     });
 
     test('Uses a custom label when a status is defined', () => {
@@ -71,5 +71,33 @@ describe('Button', () => {
     test('Renders ghost button', () => {
         const wrapper = getWrapper({ variant: 'ghost' });
         expect(wrapper.find('.adyen-checkout__button--ghost').length).toBe(1);
+    });
+
+    test('Renders aria-live status region with loading text', () => {
+        const wrapper = getWrapper({ label: 'Pay', status: 'loading' });
+        const statusRegion = wrapper.find('[role="status"]');
+
+        expect(statusRegion.length).toBe(1);
+        expect(statusRegion.hasClass('adyen-checkout__button__text--sr-only')).toBe(true);
+        expect(statusRegion.prop('aria-live')).toBe('polite');
+        expect(statusRegion.text()).toContain('Loading');
+    });
+
+    test('Renders aria-live status region with redirecting text', () => {
+        const wrapper = getWrapper({ label: 'Pay', status: 'redirect' });
+        const statusRegion = wrapper.find('[role="status"]');
+
+        expect(statusRegion.length).toBe(1);
+        expect(statusRegion.hasClass('adyen-checkout__button__text--sr-only')).toBe(true);
+        expect(statusRegion.prop('aria-live')).toBe('polite');
+        expect(statusRegion.text()).toContain('Redirecting');
+    });
+
+    test('Aria-live status region is empty for default status', () => {
+        const wrapper = getWrapper({ label: 'Pay', status: 'default' });
+        const statusRegion = wrapper.find('[role="status"]');
+
+        expect(statusRegion.length).toBe(1);
+        expect(statusRegion.text()).toBe('');
     });
 });
