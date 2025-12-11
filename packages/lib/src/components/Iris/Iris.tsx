@@ -73,7 +73,7 @@ export class Iris extends IssuerListContainer<IrisConfiguration, IrisData> {
                     onError={this.props.onError}
                     onComplete={this.onComplete}
                     introduction={IrisQrCodeInstructions}
-                    copyBtn
+                    copyBtn={false}
                 />
             );
         }
