@@ -1,13 +1,13 @@
 import { h } from 'preact';
 import { MetaConfiguration, StoryConfiguration } from '../../../storybook/types';
 import { ComponentContainer } from '../../../storybook/components/ComponentContainer';
-import { IssuerListConfiguration } from '../helpers/IssuerListContainer/types';
 import { Checkout } from '../../../storybook/components/Checkout';
 import Iris from './Iris';
+import { IrisConfiguration } from '../types';
 
-type IrisStory = StoryConfiguration<IssuerListConfiguration>;
+type IrisStory = StoryConfiguration<IrisConfiguration>;
 
-const meta: MetaConfiguration<IssuerListConfiguration> = {
+const meta: MetaConfiguration<IrisConfiguration> = {
     title: 'Components/IssuerList/Iris'
 };
 
