@@ -1,27 +1,29 @@
-import { Fragment, h } from 'preact';
+import { h } from 'preact';
 import { PayButtonProps } from '../../internal/PayButton/PayButton';
 import { IrisMode } from '../types';
 import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
-import { getIrisSegmentedControlOptions } from '../constants';
+import { getIrisSegmentedControlOptions, IRIS_ALLY_LABELS } from '../constants';
 import { useCoreContext } from '../../../core/Context/CoreProvider';
 import { SegmentedControl } from '../../internal/SegmentedControl';
 import { SegmentedControlRegion } from '../../internal/SegmentedControl/SegmentedControlRegion';
-import useImage from '../../../core/Context/useImage';
 import { ComponentMethodsRef, UIElementStatus } from '../../types';
 import isMobile from '../../../utils/isMobile';
+import { IssuerItem } from '../../internal/IssuerList/types';
+import IrisGenerateQRCode from './IrisGenerateQRCode';
+import styles from './IrisComponent.module.scss';
 
 interface IrisComponentProps {
     defaultMode: IrisMode;
+    showPayButton?: boolean;
+    issuers: IssuerItem[];
+    issuerListUI: h.JSX.Element;
     onUpdateMode: (mode: IrisMode) => void;
-    renderIssuerList: () => h.JSX.Element;
-    showPayButton: boolean;
     payButton: (props: Partial<PayButtonProps>) => h.JSX.Element;
     setComponentRef: (ref: ComponentMethodsRef) => void;
 }
 
 export default function IrisComponent(props: Readonly<IrisComponentProps>) {
     const { i18n } = useCoreContext();
-    const getImage = useImage();
 
     const [mode, setMode] = useState<IrisMode>(props.defaultMode);
     const [status, setStatus] = useState<UIElementStatus>('ready');
@@ -48,30 +50,27 @@ export default function IrisComponent(props: Readonly<IrisComponentProps>) {
         props.setComponentRef(irisRef.current);
     }, [props.setComponentRef, irisRef.current]);
 
-    const selectedSegmentedControlOption = segmentedControlOptions.find(option => option.value === mode);
+    if (props.issuers.length === 0) {
+        return <IrisGenerateQRCode showPayButton={props.showPayButton} payButton={props.payButton} status={status} />;
+    }
 
     return (
         <div>
             <SegmentedControl onChange={handleModeChange} selectedValue={mode} disabled={status === 'loading'} options={segmentedControlOptions} />
-            <SegmentedControlRegion
-                key={selectedSegmentedControlOption?.controls}
-                id={selectedSegmentedControlOption?.controls}
-                ariaLabelledBy={selectedSegmentedControlOption?.id}
-            >
-                {mode === IrisMode.BANK_LIST ? (
-                    props.renderIssuerList()
-                ) : (
-                    <Fragment>
-                        <p>{i18n.get('After generating the QR code you can use your preferred banking app to complete the payment.')}</p>
-                        {props.showPayButton &&
-                            props.payButton({
-                                label: i18n.get('generateQRCode'),
-                                icon: getImage({ imageFolder: 'components/' })('qr'),
-                                status
-                            })}
-                    </Fragment>
-                )}
-            </SegmentedControlRegion>
+            {mode === IrisMode.BANK_LIST && (
+                <SegmentedControlRegion
+                    id={IRIS_ALLY_LABELS.AreaId.BANK_LIST}
+                    ariaLabelledBy={IRIS_ALLY_LABELS.ButtonId.BANK_LIST}
+                    className={styles.list}
+                >
+                    {props.issuerListUI}
+                </SegmentedControlRegion>
+            )}
+            {mode === IrisMode.QR_CODE && (
+                <SegmentedControlRegion id={IRIS_ALLY_LABELS.AreaId.QR_CODE} ariaLabelledBy={IRIS_ALLY_LABELS.ButtonId.QR_CODE}>
+                    <IrisGenerateQRCode showPayButton={props.showPayButton} payButton={props.payButton} status={status} />
+                </SegmentedControlRegion>
+            )}
         </div>
     );
 }

@@ -18,6 +18,7 @@ export * from './Dropin/types';
 export * from './Econtext/types';
 export * from './Giftcard/types';
 export * from './GooglePay/types';
+export * from './Iris/types';
 export * from './Klarna/types';
 export * from './Multibanco/types';
 export * from './Oxxo/types';
