@@ -1,4 +1,4 @@
-import { h } from 'preact';
+import { Fragment, h } from 'preact';
 import { ICore } from '../../types';
 import isMobile from '../../utils/isMobile';
 import IssuerListContainer from '../helpers/IssuerListContainer/IssuerListContainer';
@@ -83,9 +83,10 @@ export class Iris extends IssuerListContainer<IrisConfiguration, IrisData> {
                 setComponentRef={this.setComponentRef}
                 defaultMode={this.mode}
                 onUpdateMode={mode => this.onUpdateMode(mode)}
-                renderIssuerList={() => this.renderIssuerList()}
+                issuerListUI={this.renderIssuerList()}
                 showPayButton={this.props.showPayButton}
                 payButton={this.payButton}
+                issuers={this.props.issuers}
             />
         );
     }
