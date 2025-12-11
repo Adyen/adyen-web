@@ -40,7 +40,6 @@ export interface SelectProps {
     clearOnSelect?: boolean;
     blurOnClose?: boolean;
     onListToggle?: (isOpen: boolean) => void;
-    allowIdOnButton?: boolean;
 }
 
 export interface SelectButtonProps {
@@ -52,7 +51,7 @@ export interface SelectButtonProps {
     isInvalid: boolean;
     isValid?: boolean;
     onButtonKeyDown: (e: KeyboardEvent) => void;
-    onFocus: (e: Event) => void;
+    onFocus?: (e: Event) => void;
     onInput: (e: Event) => void;
     placeholder: string;
     readonly: boolean;
@@ -64,7 +63,6 @@ export interface SelectButtonProps {
     id?: string;
     ariaDescribedBy: string;
     disabled: boolean;
-    allowIdOnButton?: boolean;
 }
 
 export interface SelectListProps {
