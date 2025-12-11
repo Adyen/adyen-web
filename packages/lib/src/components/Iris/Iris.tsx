@@ -69,10 +69,12 @@ export class Iris extends IssuerListContainer<IrisConfiguration, IrisData> {
                     qrCodeData={this.props.qrCodeData ? encodeURIComponent(this.props.qrCodeData) : null}
                     countdownTime={this.props.countdownTime}
                     paymentData={this.props.paymentData}
+                    amount={this.props.amount}
                     onActionHandled={this.onActionHandled}
                     onError={this.props.onError}
                     onComplete={this.onComplete}
                     introduction={IrisQrCodeInstructions}
+                    showAmount
                     copyBtn={false}
                 />
             );
