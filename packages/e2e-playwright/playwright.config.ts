@@ -56,14 +56,20 @@ const config: PlaywrightTestConfig = {
         {
             name: 'chromium',
             use: {
-                ...devices['Desktop Chrome']
+                ...devices['Desktop Chrome'],
+                // Force consistent font rendering for visual tests
+                deviceScaleFactor: 1,
+                hasTouch: false,
             }
         },
 
         {
             name: 'firefox',
             use: {
-                ...devices['Desktop Firefox']
+                ...devices['Desktop Firefox'],
+                // Force consistent font rendering for visual tests
+                deviceScaleFactor: 1,
+                hasTouch: false,
             }
         },
 
@@ -72,7 +78,10 @@ const config: PlaywrightTestConfig = {
             use: {
                 ...devices['Desktop Safari'],
                 // Speed up tests for webkit by only recording videos on first retry
-                video: 'on-first-retry'
+                video: 'on-first-retry',
+                // Force consistent font rendering for visual tests
+                deviceScaleFactor: 1,
+                hasTouch: false,
             }
         }
     ],
