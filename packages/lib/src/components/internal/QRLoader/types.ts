@@ -13,7 +13,11 @@ export interface QRLoaderProps {
     onError?: (error: AdyenCheckoutError) => void;
     onComplete?: (status: AdditionalDetailsData) => void;
     throttleTime?: number;
+    /**
+     * @deprecated Use `throttleInterval` instead
+     */
     throttledInterval?: number;
+    throttleInterval?: number;
     url?: string;
     paymentData?: string;
     clientKey?: string;
