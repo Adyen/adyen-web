@@ -183,7 +183,7 @@ describe('Iris', () => {
             test('should NOT include issuer in payload when switching from Bank List to QR Code mode', async () => {
                 const user = userEvent.setup();
                 const onSubmitMock = jest.fn();
-                isMobileMock.mockReturnValue(true); // Start in Bank List mode
+                isMobileMock.mockReturnValue(true);
                 const core = setupCoreMock();
 
                 const iris = new Iris(core, {
@@ -220,6 +220,50 @@ describe('Iris', () => {
                 expect(submitCall.data.paymentMethod).not.toHaveProperty('issuer');
                 expect(submitCall.data.paymentMethod.type).toBe('iris');
             });
+        });
+    });
+
+    describe('Empty Issuer List', () => {
+        test('should render QR code mode without segment control and submit without issuer when issuerList is empty', async () => {
+            const user = userEvent.setup();
+            const onSubmitMock = jest.fn();
+            const core = setupCoreMock();
+
+            const iris = new Iris(core, {
+                issuers: [],
+                showPayButton: true,
+                onSubmit: onSubmitMock,
+                i18n: core.modules.i18n,
+                loadingContext: 'test',
+                modules: { resources: core.modules.resources }
+            });
+
+            render(iris.render());
+
+            // Should show the Generate QR code button
+            const generateQrButton = await screen.findByRole('button', { name: /Generate QR code/i });
+            expect(generateQrButton).toBeInTheDocument();
+
+            // Should NOT show the segment control buttons or issuer list
+            expect(screen.queryByRole('button', { name: 'QR Code' })).not.toBeInTheDocument();
+            expect(screen.queryByRole('button', { name: 'Bank List' })).not.toBeInTheDocument();
+            expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+
+            // Component should be valid without issuer selection
+            await waitFor(() => {
+                expect(iris.isValid).toBe(true);
+            });
+
+            await user.click(generateQrButton);
+
+            await waitFor(() => {
+                expect(onSubmitMock).toHaveBeenCalled();
+            });
+
+            // Verify payload has no issuer
+            const submitCall = onSubmitMock.mock.calls[0][0];
+            expect(submitCall.data.paymentMethod).not.toHaveProperty('issuer');
+            expect(submitCall.data.paymentMethod.type).toBe('iris');
         });
     });
 });
