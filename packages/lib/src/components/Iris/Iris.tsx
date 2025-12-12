@@ -70,6 +70,9 @@ export class Iris extends IssuerListContainer<IrisConfiguration, IrisData> {
                     countdownTime={this.props.countdownTime}
                     paymentData={this.props.paymentData}
                     amount={this.props.amount}
+                    delay={this.props.delay}
+                    throttleInterval={this.props.throttleInterval}
+                    throttleTime={this.props.throttleTime}
                     onActionHandled={this.onActionHandled}
                     onError={this.props.onError}
                     onComplete={this.onComplete}
