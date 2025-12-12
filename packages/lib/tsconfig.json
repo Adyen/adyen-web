@@ -37,6 +37,6 @@
 
         "types": ["@testing-library/jest-dom", "applepayjs", "googlepay", "node"]
     },
-    "include": ["./src/**/*", "./storybook/**/*", "./src/types/custom.d.ts"],
-    "exclude": ["node_modules", "./dist/**", "**/*_*/**"]
+    "include": ["./src/**/*", "./storybook/**/*"],
+    "exclude": ["node_modules", "./dist/**", "**/*.scss", "**/*_*/**"]
 }
