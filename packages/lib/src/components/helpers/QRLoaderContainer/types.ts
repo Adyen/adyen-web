@@ -12,6 +12,16 @@ export interface QRLoaderConfiguration extends UIElementProps {
      */
     countdownTime?: number;
 
+    /**
+     * Number of milliseconds that the component will switch to throttled mode
+     */
+    throttleTime?: number;
+
+    /**
+     * Number of milliseconds that the component will wait in between status calls when in throttled mode
+     */
+    throttleInterval?: number;
+
     type?: string;
     brandLogo?: string;
     buttonLabel?: string;

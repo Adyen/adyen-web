@@ -31,7 +31,7 @@ export function QRLoader(props: QRLoaderProps) {
         clientKey: props.clientKey,
         delay: props.delay,
         throttleTime: props.throttleTime,
-        throttleInterval: props.throttledInterval,
+        throttleInterval: props.throttleInterval || props.throttledInterval,
         type: props.type,
         onError: props.onError,
         onComplete: props.onComplete,
