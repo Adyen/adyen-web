@@ -15,13 +15,13 @@ export const IRIS_ALLY_LABELS = {
 
 export const getIrisSegmentedControlOptions = (i18n: Language): SegmentedControlOption<IrisMode>[] => [
     {
-        label: i18n.get('QR Code'),
+        label: i18n.get('qrCode'),
         value: IrisMode.QR_CODE,
         id: IRIS_ALLY_LABELS.ButtonId.QR_CODE,
         controls: IRIS_ALLY_LABELS.AreaId.QR_CODE
     },
     {
-        label: i18n.get('Bank List'),
+        label: i18n.get('bankList'),
         value: IrisMode.BANK_LIST,
         id: IRIS_ALLY_LABELS.ButtonId.BANK_LIST,
         controls: IRIS_ALLY_LABELS.AreaId.BANK_LIST
