@@ -9,9 +9,9 @@ export const IrisQrCodeInstructions = () => {
         <TimelineWrapper>
             <Timeline
                 instructions={[
-                    i18n.get('Open your preferred banking app'),
-                    i18n.get('Scan the QR code with your banking app'),
-                    i18n.get('Complete the payment in the app and wait for the confirmation here.')
+                    i18n.get('iris.instructions.payment.step1'),
+                    i18n.get('iris.instructions.payment.step2'),
+                    i18n.get('iris.instructions.payment.step3')
                 ]}
             />
         </TimelineWrapper>
