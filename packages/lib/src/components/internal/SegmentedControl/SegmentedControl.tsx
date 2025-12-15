@@ -59,9 +59,8 @@ function SegmentedControl<T>({ classNameModifiers = [], selectedValue, disabled 
                     key={value}
                     onClick={(event: MouseEvent) => onChange(value, event)}
                     /**
-                     * TODO: Clean the onKeyPress and onKeyDown handlers when we have a different solution for handling on click in the BaseElement class
-                     * We need this specifically for handling ENTER keypresses from the keyboard
-                     * because the UIElement class has an on keypress handler which can trigger a components submit function
+                     * TODO: The onKeyPress and onKeyDown handlers are a workaround and should be removed after refactoring the event handling in `UIElement`.
+                     * They are necessary to stop propagation of keyboard events (like 'Enter') and prevent the `UIElement`'s generic `onKeyPress` handler from incorrectly submitting the component.
                      */
                     onKeyPress={stopPropagationForActionKeys}
                     onKeyDown={stopPropagationForActionKeys}
