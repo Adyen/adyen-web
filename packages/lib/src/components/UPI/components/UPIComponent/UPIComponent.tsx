@@ -6,14 +6,13 @@ import { App, UpiMode } from '../../types';
 import useImage from '../../../../core/Context/useImage';
 import { A11Y } from '../../constants';
 import './UPIComponent.scss';
-import { SegmentedControl } from '../../../internal/SegmentedControl';
+import { SegmentedControl, SegmentedControlRegion } from '../../../internal/SegmentedControl';
 import UPIIntentAppList from '../UPIIntentAppList';
 import { useCoreContext } from '../../../../core/Context/CoreProvider';
 import Alert from '../../../internal/Alert';
 import { SegmentedControlOption } from '../../../internal/SegmentedControl/SegmentedControl';
 import UPIMandate, { Mandate } from '../UPIMandate/UPIMandate';
 import type { PaymentAmount } from '../../../../types/global-types';
-import { SegmentedControlRegion } from '../../../internal/SegmentedControl/SegmentedControlRegion';
 
 type UpiData = { app?: App; virtualPaymentAddress?: string };
 
