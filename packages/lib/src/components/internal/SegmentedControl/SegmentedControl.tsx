@@ -1,6 +1,7 @@
 import { h } from 'preact';
 import cx from 'classnames';
 import './SegmentedControl.scss';
+import { stopPropagationForActionKeys } from '../Button/stopPropagationForActionKeys';
 
 export interface SegmentedControlOption<T> {
     label: string;
@@ -57,6 +58,8 @@ function SegmentedControl<T>({ classNameModifiers = [], selectedValue, disabled 
                     disabled={disabled}
                     key={value}
                     onClick={(event: MouseEvent) => onChange(value, event)}
+                    onKeyPress={stopPropagationForActionKeys}
+                    onKeyDown={stopPropagationForActionKeys}
                     className={cx('adyen-checkout__segmented-control-segment', {
                         'adyen-checkout__segmented-control-segment--selected': selectedValue === value
                     })}
