@@ -5,7 +5,7 @@ import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 import { NO_CHECKOUT_ATTEMPT_ID } from '../../../core/Analytics/constants';
 import type { ICore } from '../../../core/types';
 import type { BaseElementProps, IBaseElement } from './types';
-import type { PaymentData } from '../../../types/global-types';
+import type { PaymentAmount, PaymentData } from '../../../types/global-types';
 import { off, on } from '../../../utils/listenerUtils';
 import { AbstractAnalyticsEvent } from '../../../core/Analytics/events/AbstractAnalyticsEvent';
 

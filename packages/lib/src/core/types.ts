@@ -30,7 +30,7 @@ import { IAnalytics } from './Analytics/Analytics';
 export interface ICore {
     initialize(): Promise<ICore>;
     register(...items: NewableComponent[]): void;
-    update(options: CoreConfiguration): Promise<ICore>;
+    update(props: Partial<CoreConfiguration>, options?: { shouldRecreateDomElements?: boolean }): Promise<ICore>;
     remove(component): ICore;
     submitDetails(details: AdditionalDetailsData['data']): void;
     getCorePropsForComponent(): any;

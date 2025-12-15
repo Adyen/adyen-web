@@ -28,6 +28,7 @@ import { AnalyticsLogEvent, LogEventType } from './Analytics/events/AnalyticsLog
 import CancelError from './Errors/CancelError';
 import { AnalyticsService } from './Analytics/AnalyticsService';
 import { AnalyticsEventQueue } from './Analytics/AnalyticsEventQueue';
+import { isAmountValid } from '../utils/amount-util';
 
 class Core implements ICore {
     public session?: Session;
@@ -73,6 +74,7 @@ class Core implements ICore {
         assertConfigurationPropertiesAreValid(props);
 
         this.createFromAction = this.createFromAction.bind(this);
+        this.update = this.update.bind(this);
 
         this.setOptions({ ...defaultProps, ...props });
 
@@ -278,24 +280,39 @@ class Core implements ICore {
     /**
      * Updates global configurations, resets the internal state and remounts each element.
      *
-     * @param options - props to update
+     * @param props - props to update
+     * @param options -
      * @returns this - the element instance
      */
-    public update = (options: Partial<CoreConfiguration> = {}): Promise<this> => {
-        this.setOptions(options);
+    public update(props: Partial<CoreConfiguration> = {}, options?: { shouldRecreateDomElements?: boolean }): Promise<this> {
+        const { shouldRecreateDomElements } = options; // default true
 
-        return this.initialize().then(() => {
-            this.components.forEach(component => {
-                // We update only with the new options that have been received
-                const newProps: Partial<UIElementProps> = {
-                    ...options,
-                    ...(this.session && { session: this.session })
-                };
-                component.update(newProps);
+        if (shouldRecreateDomElements) {
+            return this.initialize().then(() => {
+                this.components.forEach(component => {
+                    // We update only with the new options that have been received
+                    const newProps: Partial<UIElementProps> = {
+                        ...props,
+                        ...(this.session && { session: this.session })
+                    };
+                    component.update(newProps);
+                });
+                return this;
             });
-            return this;
-        });
-    };
+        }
+
+        const { amount } = props;
+
+        if (isAmountValid(amount)) {
+            this.setOptions({ amount });
+
+            // If Dropin, we need to iterate over all elements and update the amount
+            // If Components, we need to iterate over the list and update the amount
+            this.components.forEach(component => {
+                component.updateAmount(amount);
+            });
+        }
+    }
 
     /**
      * Remove the reference of a component
