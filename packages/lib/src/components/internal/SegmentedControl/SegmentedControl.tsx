@@ -58,6 +58,11 @@ function SegmentedControl<T>({ classNameModifiers = [], selectedValue, disabled 
                     disabled={disabled}
                     key={value}
                     onClick={(event: MouseEvent) => onChange(value, event)}
+                    /**
+                     * TODO: Clean the onKeyPress and onKeyDown handlers when we have a different solution for handling on click in the BaseElement class
+                     * We need this specifically for handling ENTER keypresses from the keyboard
+                     * because the UIElement class has an on keypress handler which can trigger a components submit function
+                     */
                     onKeyPress={stopPropagationForActionKeys}
                     onKeyDown={stopPropagationForActionKeys}
                     className={cx('adyen-checkout__segmented-control-segment', {
