@@ -9,7 +9,7 @@ import splitPaymentMethods from './elements/splitPaymentMethods';
 import { TxVariants } from '../tx-variants';
 
 import type { DropinConfiguration, InstantPaymentTypes, PaymentMethodsConfiguration } from './types';
-import type { PaymentAction, PaymentResponseData } from '../../types/global-types';
+import type { PaymentAction, PaymentAmount, PaymentResponseData } from '../../types/global-types';
 import type { ICore } from '../../core/types';
 import type { IDropin } from './types';
 
@@ -28,10 +28,16 @@ class DropinElement extends UIElement<DropinConfiguration> implements IDropin {
      */
     public componentFromAction?: UIElement;
 
+    /**
+     * Reference to all payment method elements being rendered by Drop-in
+     */
+    public paymentMethodElements: UIElement[] = [];
+
     constructor(checkout: ICore, props?: DropinConfiguration) {
         super(checkout, props);
         this.submit = this.submit.bind(this);
         this.handleAction = this.handleAction.bind(this);
+        this.handleElementsCreated = this.handleElementsCreated.bind(this);
 
         this.props.paymentMethodComponents.forEach(PaymentMethod => this.core.register(PaymentMethod));
         this.paymentMethodsConfiguration = this.props.paymentMethodsConfiguration || {};
@@ -110,6 +116,26 @@ class DropinElement extends UIElement<DropinConfiguration> implements IDropin {
         }
 
         this.activePaymentMethod.submit();
+    }
+
+    public override updateAmount(amount: PaymentAmount): void {
+        // update drop-in props
+        this.props = { ...this.props, amount };
+
+        // might not be neeeed if we have a single contex?
+
+        this.paymentMethodElements?.forEach(element => {
+            element.updateAmount(amount);
+        });
+    }
+
+    /**
+     * Assign all elements created in the Component to the paymentMethodElements property
+     * @param elements
+     */
+    private handleElementsCreated(elements: UIElement[]) {
+        if (!elements || elements.length === 0) this.paymentMethodElements = [];
+        this.paymentMethodElements = elements;
     }
 
     /**
@@ -218,6 +244,7 @@ class DropinElement extends UIElement<DropinConfiguration> implements IDropin {
                 core={this.core}
                 elementRef={this.elementRef}
                 onCreateElements={this.handleCreate}
+                onElementsCreated={this.handleElementsCreated}
                 ref={dropinRef => {
                     this.dropinRef = dropinRef;
                 }}

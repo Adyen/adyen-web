@@ -44,8 +44,9 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
                     fastlanePaymentElement,
                     showDefaultPaymentMethodList: fastlanePaymentElement.length === 0
                 });
-
                 this.setStatus('ready');
+
+                this.props.onElementsCreated([...instantPaymentElements, ...storedPaymentElements, ...elements, ...fastlanePaymentElement]);
             }
         );
 

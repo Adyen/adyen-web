@@ -1,3 +1,4 @@
+import { PaymentAmount } from '../types';
 import CURRENCY_DECIMALS from './constants/currency-decimals';
 import { currencyMinorUnitsConfig } from './constants/currency-minor-units';
 
@@ -38,4 +39,14 @@ export const getLocalisedAmount = (amount: number, locale: string, currencyCode:
     } catch (e) {
         return stringAmount;
     }
+};
+
+/**
+ * TODO: Maybe create a model for Amount ?
+ *
+ * @param amount
+ * @returns
+ */
+export const isAmountValid = (amount: PaymentAmount): boolean => {
+    return amount.value !== undefined && amount.currency !== undefined;
 };

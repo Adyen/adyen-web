@@ -1,4 +1,4 @@
-import { h } from 'preact';
+import { createRef, h, RefObject } from 'preact';
 import { Resources } from '../../../core/Context/Resources';
 import AdyenCheckoutError, { NETWORK_ERROR } from '../../../core/Errors/AdyenCheckoutError';
 import { hasOwnProperty } from '../../../utils/hasOwnProperty';
@@ -33,6 +33,7 @@ import { CoreProvider } from '../../../core/Context/CoreProvider';
 import { SRPanel } from '../../../core/Errors/SRPanel';
 import './UIElement.scss';
 import SRPanelProvider from '../../../core/Errors/SRPanelProvider';
+import { AmountProvider, AmountProviderRef } from '../../../core/Context/AmountProvider';
 
 export abstract class UIElement<P extends UIElementProps = UIElementProps> extends BaseElement<P> {
     protected componentRef: any;
@@ -42,6 +43,11 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     public elementRef: UIElement;
 
     public static type = undefined;
+
+    /**
+     * Reference to the methods exposed by the AmountProvider context
+     */
+    private amountProviderRef: RefObject<AmountProviderRef> = createRef();
 
     /**
      * Defines all txVariants that the Component supports (in case it support multiple ones besides the 'type' one)
@@ -181,6 +187,11 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     public showValidation(): this {
         if (this.componentRef && this.componentRef.showValidation) this.componentRef.showValidation();
         return this;
+    }
+
+    public updateAmount(amount: PaymentAmount): void {
+        this.props = { ...this.props, amount };
+        this.amountProviderRef.current?.update(amount);
     }
 
     /**
@@ -607,7 +618,11 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     render() {
         return (
             <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources} analytics={this.analytics}>
-                <SRPanelProvider srPanel={this.srPanel}>{this.componentToRender()}</SRPanelProvider>
+                <SRPanelProvider srPanel={this.srPanel}>
+                    <AmountProvider amount={this.props.amount} ref={this.amountProviderRef}>
+                        {this.componentToRender()}
+                    </AmountProvider>
+                </SRPanelProvider>
             </CoreProvider>
         );
     }
