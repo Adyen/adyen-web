@@ -39,6 +39,7 @@ const getKlarnaActionImp = (res: Partial<KlarnaWidgetAuthorizeResponse> = {}) =>
 
 describe('KlarnaWidget', () => {
     const onLoaded = jest.fn();
+    const onComplete = jest.fn();
     const onError = jest.fn();
     const paymentData = 'test';
     const paymentMethodType = 'klarna';
@@ -51,7 +52,7 @@ describe('KlarnaWidget', () => {
     const props = {
         onLoaded,
         onError,
-        onComplete: jest.fn(),
+        onComplete,
         paymentData,
         paymentMethodType,
         sdkData,
