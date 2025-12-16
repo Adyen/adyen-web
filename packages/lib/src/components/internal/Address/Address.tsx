@@ -52,6 +52,13 @@ export default function Address(props: AddressProps) {
         formatters: addressFormatters
     });
 
+    // In partial address mode, country is not in the form schema but we need it for regionalized labels.
+    // Store the merchant's country config once at mount, then use it if form data doesn't have country.
+    const initialCountryRef = useRef<string | undefined>((props.data as AddressData)?.country);
+    const effectiveCountry = data.country || initialCountryRef.current;
+    const dataWithCountry = useMemo(() => ({ ...data, country: effectiveCountry }), [data, effectiveCountry]);
+
+
     const setSearchData = useCallback(
         (selectedAddress: AddressData) => {
             const propsKeysToProcess = ADDRESS_SCHEMA;
@@ -145,6 +152,11 @@ export default function Address(props: AddressProps) {
             return acc;
         }, {});
 
+        // In partial address mode, ensure country is included in output for regionalized labels/validation.
+        if (!(processedData as AddressData).country && initialCountryRef.current) {
+            (processedData as AddressData).country = initialCountryRef.current;
+        }
+
         props.onChange({ data: processedData, valid, errors, isValid });
     }, [data, valid, errors, isValid]);
 
@@ -159,7 +171,7 @@ export default function Address(props: AddressProps) {
                 key={fieldName}
                 allowedCountries={props.allowedCountries}
                 classNameModifiers={[...classNameModifiers, fieldName]}
-                data={data}
+                data={dataWithCountry}
                 errors={errors}
                 valid={valid}
                 fieldName={fieldName}
@@ -167,7 +179,7 @@ export default function Address(props: AddressProps) {
                 onBlur={handleChangeFor(fieldName, 'blur')}
                 onDropdownChange={handleChangeFor(fieldName, 'blur')}
                 specifications={specifications}
-                maxLength={getMaxLengthByFieldAndCountry(countrySpecificFormatters, fieldName, data.country, true)}
+                maxLength={getMaxLengthByFieldAndCountry(countrySpecificFormatters, fieldName, effectiveCountry, true)}
                 trimOnBlur={true}
                 disabled={!enabledFields.includes(fieldName)}
                 onFieldFocusAnalytics={props.onFieldFocusAnalytics}
