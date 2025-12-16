@@ -20,6 +20,7 @@ import type {
     Order,
     PaymentAction,
     PaymentAmount,
+    PaymentAmountExtended,
     PaymentData,
     PaymentMethodsResponse,
     PaymentResponseData,
@@ -34,6 +35,7 @@ import { SRPanel } from '../../../core/Errors/SRPanel';
 import './UIElement.scss';
 import SRPanelProvider from '../../../core/Errors/SRPanelProvider';
 import { AmountProvider, AmountProviderRef } from '../../../core/Context/AmountProvider';
+import { isAmountValid } from '../../../utils/amount-util';
 
 export abstract class UIElement<P extends UIElementProps = UIElementProps> extends BaseElement<P> {
     protected componentRef: any;
@@ -47,7 +49,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     /**
      * Reference to the methods exposed by the AmountProvider context
      */
-    private amountProviderRef: RefObject<AmountProviderRef> = createRef();
+    protected amountProviderRef: RefObject<AmountProviderRef> = createRef();
 
     /**
      * Defines all txVariants that the Component supports (in case it support multiple ones besides the 'type' one)
@@ -71,6 +73,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         this.makePaymentsCall = this.makePaymentsCall.bind(this);
         this.makeAdditionalDetailsCall = this.makeAdditionalDetailsCall.bind(this);
         this.submitUsingSessionsFlow = this.submitUsingSessionsFlow.bind(this);
+        this.updateAmount = this.updateAmount.bind(this);
 
         this.elementRef = (props && props.elementRef) || this;
         this.resources = this.props.modules ? this.props.modules.resources : undefined;
@@ -189,9 +192,21 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         return this;
     }
 
-    public updateAmount(amount: PaymentAmount): void {
-        this.props = { ...this.props, amount };
-        this.amountProviderRef.current?.update(amount);
+    /**
+     * Updates the amount in the props and propagates it to the AmountProvider.
+     * This allows children components to access the updated amount via context.
+     *
+     * @param amount - Primary payment amount object
+     * @param secondaryAmount - Optional secondary amount for display purposes (e.g., converted currency)
+     * @internal
+     */
+    public updateAmount(amount: PaymentAmountExtended, secondaryAmount?: PaymentAmountExtended): void {
+        this.props = {
+            ...this.props,
+            ...(amount && { amount }),
+            ...(secondaryAmount && { secondaryAmount })
+        };
+        this.amountProviderRef.current?.update(amount, secondaryAmount);
     }
 
     /**
@@ -619,7 +634,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         return (
             <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources} analytics={this.analytics}>
                 <SRPanelProvider srPanel={this.srPanel}>
-                    <AmountProvider amount={this.props.amount} ref={this.amountProviderRef}>
+                    <AmountProvider amount={this.props.amount} providerRef={this.amountProviderRef}>
                         {this.componentToRender()}
                     </AmountProvider>
                 </SRPanelProvider>

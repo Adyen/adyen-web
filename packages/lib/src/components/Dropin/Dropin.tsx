@@ -9,9 +9,10 @@ import splitPaymentMethods from './elements/splitPaymentMethods';
 import { TxVariants } from '../tx-variants';
 
 import type { DropinConfiguration, InstantPaymentTypes, PaymentMethodsConfiguration } from './types';
-import type { PaymentAction, PaymentAmount, PaymentResponseData } from '../../types/global-types';
+import type { PaymentAction, PaymentAmount, PaymentAmountExtended, PaymentResponseData } from '../../types/global-types';
 import type { ICore } from '../../core/types';
 import type { IDropin } from './types';
+import { isAmountValid } from '../../utils/amount-util';
 
 const SUPPORTED_INSTANT_PAYMENTS = ['paywithgoogle', 'googlepay', 'applepay'];
 
@@ -118,14 +119,26 @@ class DropinElement extends UIElement<DropinConfiguration> implements IDropin {
         this.activePaymentMethod.submit();
     }
 
-    public override updateAmount(amount: PaymentAmount): void {
-        // update drop-in props
-        this.props = { ...this.props, amount };
+    /**
+     * Updates the amount in the props and propagates it to the AmountProvider. That way the children components can use the updated amount.
+     *
+     * This method **overrides** the parent one to specifically propagate the changes to all payment method elements.
+     *
+     * @param amount - Primary payment amount object
+     * @param secondaryAmount - Optional secondary amount for display purposes (e.g., converted currency)
+     * @internal
+     */
+    public override updateAmount(amount: PaymentAmountExtended, secondaryAmount?: PaymentAmountExtended): void {
+        this.props = {
+            ...this.props,
+            ...(amount && { amount }),
+            ...(secondaryAmount && { secondaryAmount })
+        };
 
-        // might not be neeeed if we have a single contex?
+        this.amountProviderRef.current?.update(amount, secondaryAmount);
 
-        this.paymentMethodElements?.forEach(element => {
-            element.updateAmount(amount);
+        this.paymentMethodElements.forEach(element => {
+            element.updateAmount(amount, secondaryAmount);
         });
     }
 
