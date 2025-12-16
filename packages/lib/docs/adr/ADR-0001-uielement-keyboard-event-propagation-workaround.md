@@ -18,7 +18,7 @@ The `handleKeyPress` method exists to support the [`onEnterKeyPressed`](https://
 
 - **Option 1:** Stop event propagation at the button level (current workaround)
 - **Option 2:** Refactor `UIElement.handleKeyPress` to check event target context
-- **Option 3:** Remove global `handleKeyPress` and implement per-component submission triggers
+- **Option 3:** Remove the global `handleKeyPress` handler and implement per-component submission triggers
 
 ## Decision Outcome
 
