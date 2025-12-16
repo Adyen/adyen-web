@@ -1,38 +1,67 @@
-import { ComponentChildren, createContext, Fragment, h, Ref, RefObject, toChildArray } from 'preact';
-import { PaymentAmount } from '../../types';
-import { useContext, useImperativeHandle, useState } from 'preact/hooks';
+import { h, createContext, Fragment } from 'preact';
+import { useContext, useEffect, useImperativeHandle, useMemo, useState } from 'preact/hooks';
+import type { ComponentChildren, RefObject } from 'preact';
+import type { PaymentAmountExtended } from '../../types';
 
 interface AmountProviderProps {
-    amount: PaymentAmount;
-    ref: RefObject<AmountProviderRef>;
+    amount: PaymentAmountExtended;
+    secondaryAmount?: PaymentAmountExtended;
+    providerRef: RefObject<AmountProviderRef>;
     children: ComponentChildren;
 }
 
 export interface AmountProviderRef {
-    update: (newAmount: PaymentAmount) => void;
+    update(newAmount: PaymentAmountExtended, newSecondaryAmount?: PaymentAmountExtended): void;
 }
 
-type ContextValue = {
-    amount: PaymentAmount;
+const AmountContext = createContext<
+    | {
+          amount: PaymentAmountExtended;
+          secondaryAmount?: PaymentAmountExtended;
+      }
+    | undefined
+>(undefined);
+
+const useAmount = (): PaymentAmountExtended => {
+    const context = useContext(AmountContext);
+    if (!context) {
+        throw new Error('useAmount must be used within an AmountProvider');
+    }
+    return context.amount;
 };
 
-const AmountContext = createContext<ContextValue | undefined>(undefined);
-
-const AmountProvider = ({ amount, ref, children }: AmountProviderProps) => {
+const useSecondaryAmount = (): PaymentAmountExtended => {
     const context = useContext(AmountContext);
-    const [updatedAmount, setUpdatedAmount] = useState<PaymentAmount>(amount);
+    if (!context) {
+        throw new Error('useAmount must be used within an AmountProvider');
+    }
+    return context.secondaryAmount;
+};
 
-    useImperativeHandle(ref, () => ({
-        update: (newAmount: PaymentAmount) => {
+const AmountProvider = ({ amount, secondaryAmount, providerRef, children }: AmountProviderProps) => {
+    const context = useContext(AmountContext);
+
+    const [updatedAmount, setUpdatedAmount] = useState<PaymentAmountExtended>(amount);
+    const [updatedSecondaryAmount, setUpdatedSecondaryAmount] = useState<PaymentAmountExtended>(secondaryAmount);
+
+    useEffect(() => {
+        setUpdatedAmount(amount);
+    }, [amount]);
+
+    useImperativeHandle(providerRef, () => ({
+        update: (newAmount: PaymentAmountExtended, newSecondaryAmount?: PaymentAmountExtended) => {
             setUpdatedAmount(newAmount);
+            setUpdatedSecondaryAmount(newSecondaryAmount);
         }
     }));
 
+    const contextValue = useMemo(() => ({ amount: updatedAmount, secondaryAmount: updatedSecondaryAmount }), [updatedAmount, updatedSecondaryAmount]);
+
     if (context) {
-        return <Fragment>{toChildArray(children)}</Fragment>;
+        return <Fragment>{children}</Fragment>;
     }
 
-    return <AmountContext.Provider value={{ amount: updatedAmount }}>{toChildArray(children)}</AmountContext.Provider>;
+    return <AmountContext.Provider value={contextValue}>{children}</AmountContext.Provider>;
 };
 
-export { AmountProvider };
+export { AmountProvider, useAmount, useSecondaryAmount };
