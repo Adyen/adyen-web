@@ -35,7 +35,6 @@ import { SRPanel } from '../../../core/Errors/SRPanel';
 import './UIElement.scss';
 import SRPanelProvider from '../../../core/Errors/SRPanelProvider';
 import { AmountProvider, AmountProviderRef } from '../../../core/Context/AmountProvider';
-import { isAmountValid } from '../../../utils/amount-util';
 
 export abstract class UIElement<P extends UIElementProps = UIElementProps> extends BaseElement<P> {
     protected componentRef: any;
