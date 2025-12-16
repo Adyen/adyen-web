@@ -3,8 +3,8 @@ import Button from '../Button';
 import { useCoreContext } from '../../../core/Context/CoreProvider';
 import { ButtonProps } from '../Button/types';
 import { payAmountLabel, secondaryAmountLabel } from './utils';
-import { PaymentAmountExtended } from '../../../types/global-types';
 import SecondaryButtonLabel from './components/SecondaryButtonLabel';
+import { useAmount, useSecondaryAmount } from '../../../core/Context/AmountProvider';
 
 export interface PayButtonProps extends ButtonProps {
     /**
@@ -12,15 +12,15 @@ export interface PayButtonProps extends ButtonProps {
      */
     classNameModifiers?: string[];
     label?: string;
-    amount?: PaymentAmountExtended;
-    secondaryAmount?: PaymentAmountExtended;
     status?: string;
     disabled?: boolean;
     icon?: string;
     onClick?: (e: h.JSX.TargetedMouseEvent<HTMLButtonElement>) => void;
 }
 
-const PayButton = ({ amount, secondaryAmount, classNameModifiers = [], label, ...props }: PayButtonProps) => {
+const PayButton = ({ classNameModifiers = [], label, ...props }: PayButtonProps) => {
+    const amount = useAmount();
+    const secondaryAmount = useSecondaryAmount();
     const { i18n } = useCoreContext();
     const isZeroAuth = amount && {}.hasOwnProperty.call(amount, 'value') && amount.value === 0;
     const defaultLabel = isZeroAuth ? i18n.get('confirmPreauthorization') : payAmountLabel(i18n, amount);

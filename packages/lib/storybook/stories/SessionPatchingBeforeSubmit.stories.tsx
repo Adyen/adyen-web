@@ -7,6 +7,7 @@ import { StoryConfiguration } from '../types';
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { AdyenCheckout, components, Core } from '../../src';
 import DropinComponent from '../../src/components/Dropin/Dropin';
+import CardComponent from '../../src/components/Card/Card';
 
 // Register all Components
 const { Dropin, ...Components } = components;
@@ -118,6 +119,8 @@ function Checkout({ sessionId, sessionData, countryCode, amountValue }) {
 
         const dropin = new DropinComponent(checkout);
         dropin.mount('#dropin-container');
+
+        console.log('component', dropin);
     };
 
     useEffect(() => {
@@ -130,9 +133,10 @@ function Checkout({ sessionId, sessionData, countryCode, amountValue }) {
         // If core exists, and amount changes, we perform an amount update
         if (checkoutRef.current) {
             const amount = {
-                value: amountValue,
+                value: Number(amountValue),
                 currency: 'EUR'
             };
+
             checkoutRef.current.update({ amount }, { shouldRecreateDomElements: false });
         }
     }, [amountValue]);

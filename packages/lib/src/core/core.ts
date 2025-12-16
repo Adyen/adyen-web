@@ -20,7 +20,7 @@ import { formatCustomTranslations, formatLocale } from '../language/utils';
 import { resolveEnvironments } from './Environment';
 import { LIBRARY_BUNDLE_TYPE, LIBRARY_VERSION } from './config';
 
-import type { PaymentAction, PaymentResponseData } from '../types/global-types';
+import type { PaymentAction, PaymentAmountExtended, PaymentResponseData } from '../types/global-types';
 import type { CoreConfiguration, ICore, AdditionalDetailsData, CoreModules } from './types';
 import type { Translations } from '../language/types';
 import type { UIElementProps } from '../components/internal/UIElement/types';
@@ -301,17 +301,32 @@ class Core implements ICore {
             });
         }
 
-        const { amount } = props;
+        const { amount, secondaryAmount } = props;
 
-        if (isAmountValid(amount)) {
-            this.setOptions({ amount });
-
-            // If Dropin, we need to iterate over all elements and update the amount
-            // If Components, we need to iterate over the list and update the amount
-            this.components.forEach(component => {
-                component.updateAmount(amount);
-            });
+        if (amount || secondaryAmount) {
+            this.triggerAmountUpdate(amount, secondaryAmount);
         }
+    }
+
+    private triggerAmountUpdate(amount: PaymentAmountExtended, secondaryAmount?: PaymentAmountExtended): void {
+        if (!isAmountValid(amount)) {
+            console.warn('Core update(): Update canceled. Invalid amount object');
+            return;
+        }
+
+        if (secondaryAmount && !isAmountValid(secondaryAmount)) {
+            console.warn('Core update(): Update canceled. Invalid secondary amount object');
+            return;
+        }
+
+        this.setOptions({
+            amount,
+            ...(secondaryAmount && { secondaryAmount })
+        });
+
+        this.components.forEach(component => {
+            component.updateAmount(amount, secondaryAmount);
+        });
     }
 
     /**
