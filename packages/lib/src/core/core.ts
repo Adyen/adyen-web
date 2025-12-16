@@ -308,6 +308,13 @@ class Core implements ICore {
         }
     }
 
+    /**
+     * Validates and propagates amount updates to all mounted components.
+     *
+     * @param amount - Primary payment amount object (required)
+     * @param secondaryAmount - Optional secondary amount for display purposes (e.g., converted currency)
+     * @internal
+     */
     private triggerAmountUpdate(amount: PaymentAmountExtended, secondaryAmount?: PaymentAmountExtended): void {
         if (!isAmountValid(amount)) {
             console.warn('Core update(): Update canceled. Invalid amount object');
