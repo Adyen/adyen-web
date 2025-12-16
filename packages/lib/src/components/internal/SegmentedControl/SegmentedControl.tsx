@@ -58,7 +58,7 @@ function SegmentedControl<T>({ classNameModifiers = [], selectedValue, disabled 
                     disabled={disabled}
                     key={value}
                     onClick={(event: MouseEvent) => onChange(value, event)}
-                    // Workaround: See ADR-2341 (docs/adr/ADR-2341-uielement-keyboard-event-propagation-workaround.md)
+                    // Workaround: See ADR-2341
                     onKeyPress={stopPropagationForActionKeys}
                     onKeyDown={stopPropagationForActionKeys}
                     className={cx('adyen-checkout__segmented-control-segment', {

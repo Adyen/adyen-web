@@ -35,7 +35,7 @@ const CopyButton = (props: CopyButtonProps) => {
             {...props}
             variant="action"
             onClick={onClick}
-            // Workaround: See ADR-2341 (docs/adr/ADR-2341-uielement-keyboard-event-propagation-workaround.md)
+            // Workaround: See ADR-2341
             onKeyPress={stopPropagationForActionKeys}
             onKeyDown={stopPropagationForActionKeys}
             icon={props.icon ?? getImage({ imageFolder: 'components/' })(`${PREFIX}copy`)}
