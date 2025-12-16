@@ -6,7 +6,7 @@ The `UIElement` class has a global `handleKeyPress` handler that triggers form s
 
 ### Background: Merchant Integration via `onEnterKeyPressed`
 
-The `handleKeyPress` method exists to support the [`onEnterKeyPressed`](src/components/internal/UIElement/UIElement.tsx) callback (lines 479-490), which merchants can use to customize Enter key behavior. Any changes to `handleKeyPress` must ensure backwards compatibility with the `onEnterKeyPressed` API. Breaking this contract would require a **major version release (v7)**.
+The `handleKeyPress` method exists to support the [`onEnterKeyPressed`](https://github.com/Adyen/adyen-web/blob/main/packages/lib/src/components/internal/UIElement/UIElement.tsx#L479-L490) callback, which merchants can use to customize Enter key behavior. Any changes to `handleKeyPress` must ensure backwards compatibility with the `onEnterKeyPressed` API. Breaking this contract would require a **major version release (v7)**.
 
 ## Decision Drivers
 
@@ -42,13 +42,13 @@ Chosen option: **"Option 1 - Stop event propagation at the button level"**
 
 ### Option 1: Stop event propagation at button level
 
-Uses [`stopPropagationForActionKeys`](src/components/internal/Button/stopPropagationForActionKeys.ts) utility to intercept Enter/Space keypresses.
+Uses [`stopPropagationForActionKeys`](https://github.com/Adyen/adyen-web/blob/main/packages/lib/src/components/internal/Button/stopPropagationForActionKeys.ts) utility to intercept Enter/Space keypresses.
 
 **Affected files:**
 
-- [`src/components/internal/SegmentedControl/SegmentedControl.tsx`](src/components/internal/SegmentedControl/SegmentedControl.tsx) (lines 61-66)
-- [`src/components/internal/Button/CopyButton.tsx`](src/components/internal/Button/CopyButton.tsx) (lines 38-40)
-- [`src/components/Klarna/components/KlarnaWidget/KlarnaWidget.tsx`](src/components/Klarna/components/KlarnaWidget/KlarnaWidget.tsx) (lines 84-95)
+- [`SegmentedControl.tsx`](https://github.com/Adyen/adyen-web/blob/main/packages/lib/src/components/internal/SegmentedControl/SegmentedControl.tsx#L61-L66)
+- [`CopyButton.tsx`](https://github.com/Adyen/adyen-web/blob/main/packages/lib/src/components/internal/Button/CopyButton.tsx#L38-L40)
+- [`KlarnaWidget.tsx`](https://github.com/Adyen/adyen-web/blob/main/packages/lib/src/components/Klarna/components/KlarnaWidget/KlarnaWidget.tsx#L84-L95)
 
 * **Pros:**
     - Minimal code change per component
@@ -61,7 +61,7 @@ Uses [`stopPropagationForActionKeys`](src/components/internal/Button/stopPropaga
 
 ### Option 2: Refactor UIElement.handleKeyPress to check target context
 
-Modify [`UIElement.handleKeyPress`](src/components/internal/UIElement/UIElement.tsx) (lines 471-477) to inspect `e.target` and skip submission for non-input interactive elements.
+Modify [`UIElement.handleKeyPress`](https://github.com/Adyen/adyen-web/blob/main/packages/lib/src/components/internal/UIElement/UIElement.tsx#L471-L477) to inspect `e.target` and skip submission for non-input interactive elements.
 
 - **Pros:**
     - Centralized fix—no changes needed in child components
