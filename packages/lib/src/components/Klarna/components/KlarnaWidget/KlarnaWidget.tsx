@@ -81,7 +81,7 @@ export function KlarnaWidget({ sdkData, paymentMethodType, widgetInitializationT
         }
     }, [sdkData.payment_method_category, props.onComplete, props.onError]);
 
-    // Workaround: See ADR-2341
+    // Workaround: See ADR-0001-uielement-keyboard-event-propagation-workaround
     const handleKeyDown = (e: h.JSX.TargetedKeyboardEvent<HTMLButtonElement>) => {
         if (e.key === 'Enter' || e.code === 'Enter') {
             e.preventDefault();

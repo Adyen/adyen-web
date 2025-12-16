@@ -1,10 +1,12 @@
 # UIElement Keyboard Event Propagation Workaround
 
-[ADR-2341](https://youtrack.is.adyen.com/issue/ADR-2341/UIElement-Keyboard-Event-Propagation-Workaround)
-
 ## Context and Problem Statement
 
 The `UIElement` class has a global `handleKeyPress` handler that triggers form submission on Enter key press. This conflicts with interactive buttons (e.g., `SegmentedControl`, `CopyButton`, Klarna's authorize button) that need their own Enter/Space key behavior without triggering payment submission. How do we prevent unintended form submissions while allowing buttons to handle their own keyboard events?
+
+### Background: Merchant Integration via `onEnterKeyPressed`
+
+The `handleKeyPress` method exists to support the [`onEnterKeyPressed`](src/components/internal/UIElement/UIElement.tsx) callback (lines 479-490), which merchants can use to customize Enter key behavior. Any changes to `handleKeyPress` must ensure backwards compatibility with the `onEnterKeyPressed` API. Breaking this contract would require a **major version release (v7)**.
 
 ## Decision Drivers
 
@@ -83,5 +85,5 @@ Remove global keypress handling from `UIElement` and let each component explicit
 ## Advice and Concerns
 
 - When adding new interactive buttons or controls, apply `onKeyPress={stopPropagationForActionKeys}` and `onKeyDown={stopPropagationForActionKeys}` to prevent unintended form submission.
-- A future refactor of `UIElement.handleKeyPress` (Option 2) should be considered to eliminate this workaround pattern.
+- A future refactor of `UIElement.handleKeyPress` (Options 2 or 3) should be deferred to **v7** since it would break the `onEnterKeyPressed` merchant API.
 - Monitor for accessibility regressions—ensure Enter/Space still activates buttons correctly after stopping propagation.
