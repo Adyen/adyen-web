@@ -12,7 +12,6 @@ import type { DropinConfiguration, InstantPaymentTypes, PaymentMethodsConfigurat
 import type { PaymentAction, PaymentAmount, PaymentAmountExtended, PaymentResponseData } from '../../types/global-types';
 import type { ICore } from '../../core/types';
 import type { IDropin } from './types';
-import { isAmountValid } from '../../utils/amount-util';
 
 const SUPPORTED_INSTANT_PAYMENTS = ['paywithgoogle', 'googlepay', 'applepay'];
 
