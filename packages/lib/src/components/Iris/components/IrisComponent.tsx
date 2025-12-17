@@ -66,7 +66,7 @@ export default function IrisComponent(props: Readonly<IrisComponentProps>) {
                 <SegmentedControlRegion
                     id={IRIS_ALLY_LABELS.AreaId.BANK_LIST}
                     ariaLabelledBy={IRIS_ALLY_LABELS.ButtonId.BANK_LIST}
-                    className={styles.issuerListContainer}
+                    className={styles.list}
                 >
                     {props.issuerListUI}
                 </SegmentedControlRegion>
