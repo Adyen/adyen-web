@@ -22,12 +22,12 @@ class Iris extends IssuerList {
 
         // Segmented control (outside of .adyen-checkout__issuer-list, so use page-level locator)
         this.segmentedControlGroup = page.locator('.adyen-checkout__segmented-control');
-        this.qrCodeModeButton = this.segmentedControlGroup.getByRole('button', { name: 'QR Code' });
-        this.bankListModeButton = this.segmentedControlGroup.getByRole('button', { name: 'Bank List' });
+        this.qrCodeModeButton = this.segmentedControlGroup.getByRole('button', { name: 'QR code' });
+        this.bankListModeButton = this.segmentedControlGroup.getByRole('button', { name: 'Bank list' });
 
         // QR Code mode (QR elements are in a separate panel, not inside .adyen-checkout__issuer-list)
         this.generateQrCodeButton = page.getByRole('button', { name: 'Generate QR code' });
-        this.qrCodeImage = page.locator('.adyen-checkout__qr-code img, .adyen-checkout__qr-code canvas');
+        this.qrCodeImage = page.getByAltText('Scan QR code');
 
         // Status
         this.successMessage = page.locator('.adyen-checkout__status--success');
@@ -65,6 +65,11 @@ class Iris extends IssuerList {
 
     async waitForSegmentedControl() {
         await this.segmentedControlGroup.waitFor({ state: 'visible' });
+    }
+
+    override async pay() {
+        // IRIS uses "Continue" button instead of "Pay"
+        await this.page.getByRole('button', { name: /Continue/i }).click();
     }
 }
 
