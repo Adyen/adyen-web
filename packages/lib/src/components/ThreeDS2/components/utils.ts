@@ -10,9 +10,10 @@ import type {
     ChallengeResolveData,
     ThreeDS2FlowPropsReturnObject
 } from '../types';
-// import { pick } from '../../../utils/commonUtils';
 import type { DecodeObject } from '../../../types/global-types';
 import type { ErrorObject } from '../../../core/Errors/types';
+import type { UIElement } from '../../../types';
+import Language from '../../../language';
 
 /**
  * Check if we have been passed an ErrorObject because either base64 decoding or JSON.parse failed
@@ -193,7 +194,10 @@ export const encodeBase64URL = (dataStr: string): string => {
  * @param actionSubtype - 3DS2 flow type: fingerprint or challenge
  * @param props - object from which to extract particular properties
  */
-export const get3DS2FlowProps = (actionSubtype, props): ThreeDS2FlowPropsReturnObject => {
+export const get3DS2FlowProps = (
+    actionSubtype: string,
+    props: { isDropin?: boolean; elementRef?: UIElement; i18n?: Language }
+): ThreeDS2FlowPropsReturnObject => {
     if (actionSubtype === 'fingerprint') {
         return {
             showSpinner: !props.isDropin,
