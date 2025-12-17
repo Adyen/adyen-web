@@ -184,10 +184,15 @@ describe('UIElement', () => {
                 countryCode: 'US',
                 environment: 'test',
                 clientKey: 'test_123456',
-                analytics: { enabled: false }
+                analytics: { enabled: false },
+                srConfig: {
+                    enabled: false
+                }
             });
 
-            const element = new MyElement(checkout, { challengeWindowSize: '02' }).mount('body');
+            const element = new MyElement(checkout, {
+                challengeWindowSize: '02'
+            }).mount('body');
 
             const actionComponent = element.handleAction(challengeAction);
             expect(actionComponent instanceof ThreeDS2Challenge).toEqual(true);

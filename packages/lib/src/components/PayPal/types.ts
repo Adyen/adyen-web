@@ -9,11 +9,11 @@ export interface PayPalConfiguration extends UIElementProps {
      */
     configuration?: {
         /**
-         * @see {@link https://developer.paypal.com/sdk/js/configuration/#link-merchantid}
+         * @see {@link https://developer.paypal.com/sdk/js/configuration/#merchant-id}
          */
         merchantId: string;
         /**
-         * @see {@link https://developer.paypal.com/sdk/js/configuration/#link-intent}
+         * @see {@link https://developer.paypal.com/sdk/js/configuration/#intent}
          */
         intent?: Intent;
     };
@@ -67,7 +67,7 @@ export interface PayPalConfiguration extends UIElementProps {
 
     /**
      * While the buyer is on the PayPal site, you can update their shopping cart to reflect the shipping address they chose on PayPal
-     * @see {@link https://developer.paypal.com/sdk/js/reference/#onshippingaddresschange}
+     * @see {@link https://developer.paypal.com/sdk/js/reference/#on-shipping-address-change}
      *
      * @param data - PayPal data object
      * @param actions - Used to reject the address change in case the address is invalid
@@ -77,7 +77,7 @@ export interface PayPalConfiguration extends UIElementProps {
 
     /**
      * This callback is triggered any time the user selects a new shipping option.
-     * @see {@link https://developer.paypal.com/sdk/js/reference/#onshippingoptionschange}
+     * @see {@link https://developer.paypal.com/sdk/js/reference/#on-shipping-options-change}
      *
      * @param data - An PayPal object containing the payer’s selected shipping option
      * @param actions - Used to indicates to PayPal that you will not support the shipping method selected by the buyer
@@ -94,7 +94,7 @@ export interface PayPalConfiguration extends UIElementProps {
     /**
      * Customize your buttons using the style option.
      *
-     * @see {@link https://developer.paypal.com/sdk/js/reference/#link-style}
+     * @see {@link https://developer.paypal.com/sdk/js/reference/#style}
      * @default style.height 48px
      */
     style?: {
@@ -109,19 +109,19 @@ export interface PayPalConfiguration extends UIElementProps {
 
     /**
      * Called when the button first renders. You can use it for validations on your page if you are unable to do so prior to rendering.
-     * @see {@link https://developer.paypal.com/sdk/js/reference/#link-oninitonclick}
+     * @see {@link https://developer.paypal.com/sdk/js/reference/#oninitonclick}
      */
     onInit?: (data?: any, actions?: any) => void;
 
     /**
-     * @see {@link https://developer.paypal.com/sdk/js/reference/#link-oninitonclick}
+     * @see {@link https://developer.paypal.com/sdk/js/reference/#oninitonclick}
      */
     onClick?: () => void;
 
     /**
      * The commit status of the transaction. Determines whether to show a Pay Now or Continue button in the Checkout flow.
      *
-     * @see {@link https://developer.paypal.com/sdk/js/configuration/#link-commit}
+     * @see {@link https://developer.paypal.com/sdk/js/configuration/#commit}
      * @default true
      */
     commit?: boolean;
@@ -129,7 +129,7 @@ export interface PayPalConfiguration extends UIElementProps {
     /**
      * Whether the payment information in the transaction will be saved. Save your customers' payment information for billing agreements, subscriptions, or recurring payments.
      *
-     * @see {@link https://developer.paypal.com/sdk/js/configuration/#link-vault}
+     * @see {@link https://developer.paypal.com/sdk/js/configuration/#vault}
      * @default false
      */
     vault?: boolean;
@@ -137,7 +137,7 @@ export interface PayPalConfiguration extends UIElementProps {
     /**
      * The locale renders components. By default PayPal detects the correct locale for the buyer based on their geolocation and browser preferences.
      *
-     * @see {@link https://developer.paypal.com/sdk/js/configuration/#link-locale}
+     * @see {@link https://developer.paypal.com/sdk/js/configuration/#locale}
      * @default undefined
      */
     locale?: string;
@@ -146,7 +146,7 @@ export interface PayPalConfiguration extends UIElementProps {
      * Determines whether the funds are captured immediately on checkout or if the buyer authorizes the funds to be captured later.
      * If set, it will override the intent passed inside the 'configuration' object
      *
-     * @see {@link https://developer.paypal.com/sdk/js/configuration/#link-intent}
+     * @see {@link https://developer.paypal.com/sdk/js/configuration/#intent}
      * @default undefined
      */
     intent?: Intent;
@@ -154,7 +154,7 @@ export interface PayPalConfiguration extends UIElementProps {
     /**
      * Pass a Content Security Policy single-use token if you use them on your site
      *
-     * @see {@link https://developer.paypal.com/sdk/js/configuration/#link-datacspnonce}
+     * @see {@link https://developer.paypal.com/sdk/js/configuration/#data-csp-nonce}
      * @default undefined
      */
     cspNonce?: string;
@@ -162,14 +162,14 @@ export interface PayPalConfiguration extends UIElementProps {
     /*
      * Set to true to force the UI to load PayPal Messages Component
      *
-     * @see {@link https://developer.paypal.com/sdk/js/configuration/#link-components}
+     * @see {@link https://developer.paypal.com/sdk/js/configuration/#components}
      * @default false
      */
     enableMessages?: boolean;
 
     /**
      * Set to true to enable debug mode. Defaults to false.
-     * @see {@link https://developer.paypal.com/sdk/js/configuration/#link-debug}
+     * @see {@link https://developer.paypal.com/sdk/js/configuration/#debug}
      * @default undefined
      */
     debug?: boolean;
@@ -178,7 +178,7 @@ export interface PayPalConfiguration extends UIElementProps {
      * A two-letter ISO 3166 country code which will be passed to the PayPal SDK as the buyer-country.
      * Note: The buyer country is only used in the sandbox. Don't pass this query parameter in production.
      *
-     * @see {@link https://developer.paypal.com/sdk/js/configuration/#link-buyercountry}
+     * @see {@link https://developer.paypal.com/sdk/js/configuration/#buyer-country}
      * @default undefined
      */
     countryCode?: string;

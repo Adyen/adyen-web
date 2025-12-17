@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event';
 import DonationElement from './Donation';
 import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 
+const core = setupCoreMock();
 const coreProp = { i18n: global.i18n, loadingContext: 'test', modules: { resources: global.resources } };
 const shared = {
     commercialTxAmount: 1000,
@@ -30,7 +31,6 @@ describe('Donation element', () => {
         test('should call onDonate with the donation data', async () => {
             const user = userEvent.setup();
             const onDonate = jest.fn();
-            const core = setupCoreMock();
 
             // @ts-ignore not all callbacks are needed
             const donationElement = new DonationElement(core, {
@@ -44,7 +44,6 @@ describe('Donation element', () => {
         });
 
         test('should call onCancel with the donation data', async () => {
-            const core = setupCoreMock();
             const user = userEvent.setup();
             const onCancel = jest.fn();
             // @ts-ignore not all callbacks are needed
@@ -61,7 +60,6 @@ describe('Donation element', () => {
 
     describe('Fixed amounts donation', () => {
         test('should call onDonate with the donation data', async () => {
-            const core = setupCoreMock();
             const user = userEvent.setup();
             const onDonate = jest.fn();
             const {
@@ -85,7 +83,6 @@ describe('Donation element', () => {
 
         test('should call onCancel with the donation data', async () => {
             const user = userEvent.setup();
-            const core = setupCoreMock();
             const {
                 donation: { currency }
             } = fixedAmountsDonationProp;

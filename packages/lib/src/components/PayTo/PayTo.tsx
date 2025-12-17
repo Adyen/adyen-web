@@ -1,7 +1,6 @@
 import { Fragment, h } from 'preact';
 import UIElement from '../internal/UIElement/UIElement';
 import { Await } from '../../components/internal/Await';
-import SRPanelProvider from '../../core/Errors/SRPanelProvider';
 import { TxVariants } from '../tx-variants';
 import { PayToIdentifierEnum } from './components/IdentifierSelector';
 import PayToComponent from './components/PayToComponent';
@@ -127,30 +126,28 @@ export class PayToElement extends UIElement<PayToConfiguration> {
         // Await
         if (this.props.paymentData) {
             return (
-                <SRPanelProvider srPanel={this.props.modules.srPanel}>
-                    <Await
-                        amount={this.props.amount}
-                        showAmount={true}
-                        instructions={PayToInstructions}
-                        clientKey={this.props.clientKey}
-                        paymentData={this.props.paymentData}
-                        onError={this.props.onError}
-                        onComplete={this.onComplete}
-                        brandLogo={this.icon}
-                        type={this.constructor['type']}
-                        messageText={this.props.i18n.get('payto.confirmPayment')}
-                        awaitText={this.props.i18n.get('payto.await.waitForConfirmation')}
-                        showCountdownTimer={config.showCountdownTimer}
-                        throttleTime={config.THROTTLE_TIME}
-                        throttleInterval={config.THROTTLE_INTERVAL}
-                        onActionHandled={this.onActionHandled}
-                        endSlot={() =>
-                            !!this.props.mandate && (
-                                <MandateSummary mandate={this.props.mandate} payee={this.props.payee} currencyCode={this.props.amount.currency} />
-                            )
-                        }
-                    />
-                </SRPanelProvider>
+                <Await
+                    amount={this.props.amount}
+                    showAmount={true}
+                    instructions={PayToInstructions}
+                    clientKey={this.props.clientKey}
+                    paymentData={this.props.paymentData}
+                    onError={this.props.onError}
+                    onComplete={this.onComplete}
+                    brandLogo={this.icon}
+                    type={this.constructor['type']}
+                    messageText={this.props.i18n.get('payto.confirmPayment')}
+                    awaitText={this.props.i18n.get('payto.await.waitForConfirmation')}
+                    showCountdownTimer={config.showCountdownTimer}
+                    throttleTime={config.THROTTLE_TIME}
+                    throttleInterval={config.THROTTLE_INTERVAL}
+                    onActionHandled={this.onActionHandled}
+                    endSlot={() =>
+                        !!this.props.mandate && (
+                            <MandateSummary mandate={this.props.mandate} payee={this.props.payee} currencyCode={this.props.amount.currency} />
+                        )
+                    }
+                />
             );
         }
         // Input
