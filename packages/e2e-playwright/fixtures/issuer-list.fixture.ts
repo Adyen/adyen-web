@@ -34,6 +34,7 @@ const test = base.extend<Fixture>({
                 }
             })
         );
+        await irisPage.waitForSegmentedControl();
         await use(irisPage);
     }
 });
