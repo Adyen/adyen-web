@@ -39,7 +39,7 @@ describe('Iris', () => {
 
             render(iris.render());
 
-            const qrCodeButton = await screen.findByRole('button', { name: 'QR Code' });
+            const qrCodeButton = await screen.findByRole('button', { name: 'QR code' });
             expect(qrCodeButton).toHaveAttribute('aria-expanded', 'true');
             expect(await screen.findByRole('button', { name: /Generate QR code/i })).toBeInTheDocument();
         });
@@ -57,7 +57,7 @@ describe('Iris', () => {
 
             render(iris.render());
 
-            const bankListButton = await screen.findByRole('button', { name: 'Bank List' });
+            const bankListButton = await screen.findByRole('button', { name: 'Bank list' });
             expect(bankListButton).toHaveAttribute('aria-expanded', 'true');
             expect(screen.queryByRole('button', { name: /Generate QR code/i })).not.toBeInTheDocument();
         });
@@ -201,7 +201,7 @@ describe('Iris', () => {
                 await user.click(issuerOption);
 
                 // Switch to QR Code mode
-                const qrCodeButton = await screen.findByRole('button', { name: 'QR Code' });
+                const qrCodeButton = await screen.findByRole('button', { name: 'QR code' });
                 await user.click(qrCodeButton);
 
                 await waitFor(() => {
@@ -245,8 +245,8 @@ describe('Iris', () => {
             expect(generateQrButton).toBeInTheDocument();
 
             // Should NOT show the segment control buttons or issuer list
-            expect(screen.queryByRole('button', { name: 'QR Code' })).not.toBeInTheDocument();
-            expect(screen.queryByRole('button', { name: 'Bank List' })).not.toBeInTheDocument();
+            expect(screen.queryByRole('button', { name: 'QR code' })).not.toBeInTheDocument();
+            expect(screen.queryByRole('button', { name: 'Bank list' })).not.toBeInTheDocument();
             expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
 
             // Component should be valid without issuer selection
