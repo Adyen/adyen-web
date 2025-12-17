@@ -3,6 +3,19 @@ import { test, expect } from '../../../fixtures/issuer-list.fixture';
 test.describe('IRIS Payment Method', () => {
     test.describe('Bank List Flow', () => {
         test('should select issuer from the list, make payment, and return redirect action', async ({ page, iris }) => {
+            let capturedResponseBody: any;
+
+            // Intercept to capture the actual backend response
+            await page.route('**/payments', async route => {
+                const response = await route.fetch();
+                capturedResponseBody = await response.json();
+                
+                expect(capturedResponseBody).toHaveProperty('action');
+                expect(capturedResponseBody.action.type).toBe('redirect');
+
+                // Fulfill with the actual response (component will receive it)
+                await route.fulfill({ response });
+            });
 
             await iris.switchToBankListMode();
             expect(await iris.isBankListModeSelected()).toBe(true);
@@ -13,13 +26,7 @@ test.describe('IRIS Payment Method', () => {
             // Select an issuer from the dropdown (opens the listbox)
             await iris.selectIssuerOnSelectorDropdown('Piraeus Bank');
 
-            // Store initial URL to verify redirect happens
-            const initialUrl = page.url();
-
-            await iris.submitPayment();
-
-            // Verify redirect by waiting for URL change (response body may not be available after redirect)
-            await page.waitForURL(url => url.toString() !== initialUrl, { timeout: 3000 });
+            await iris.pay();
         });
     });
 
@@ -31,7 +38,6 @@ test.describe('IRIS Payment Method', () => {
 
             const responsePromise = page.waitForResponse(response => response.url().includes('/payments') && response.status() === 200);
             await iris.generateQrCode();
-            
             
             // Wait for the payment response with qrCode action
             const response = await responsePromise;
