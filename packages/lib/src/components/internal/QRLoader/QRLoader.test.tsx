@@ -129,24 +129,24 @@ describe('QRLoader', () => {
         await waitFor(() => expect(checkPaymentStatus).toHaveBeenCalledTimes(3), { timeout: delay * 2 + TIMEOUT_OFFSET });
     });
 
-    test('should use throttledInterval after throttleTime has passed', async () => {
+    test('should use throttleInterval after throttleTime has passed', async () => {
         const pendingResponse = { resultCode: 'pending' };
         (checkPaymentStatus as jest.Mock).mockResolvedValue(pendingResponse);
         jest.spyOn(global, 'setTimeout');
         const delay = 1000;
-        const throttledInterval = 2000;
+        const throttleInterval = 2000;
 
         renderQRLoader({
             delay,
             throttleTime: 0,
-            throttledInterval
+            throttleInterval
         });
 
         // Polling should start immediately on render
         expect(checkPaymentStatus).toHaveBeenCalledTimes(1);
 
         await waitFor(() => expect(checkPaymentStatus).toHaveBeenCalledTimes(2), { timeout: delay + TIMEOUT_OFFSET });
-        await waitFor(() => expect(checkPaymentStatus).toHaveBeenCalledTimes(3), { timeout: throttledInterval + TIMEOUT_OFFSET });
-        expect(setTimeout).toHaveBeenCalledWith(expect.any(Function), throttledInterval);
+        await waitFor(() => expect(checkPaymentStatus).toHaveBeenCalledTimes(3), { timeout: throttleInterval + TIMEOUT_OFFSET });
+        expect(setTimeout).toHaveBeenCalledWith(expect.any(Function), throttleInterval);
     });
 });
