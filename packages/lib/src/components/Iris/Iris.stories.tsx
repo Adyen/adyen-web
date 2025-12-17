@@ -16,7 +16,8 @@ export const Default: IrisStory = {
         <Checkout checkoutConfig={checkoutConfig}>{checkout => <ComponentContainer element={new Iris(checkout, componentConfiguration)} />}</Checkout>
     ),
     args: {
-        countryCode: 'GR'
+        countryCode: 'GR',
+        amount: 1001
     }
 };
 
