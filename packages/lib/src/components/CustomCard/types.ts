@@ -14,6 +14,7 @@ import {
 } from '../internal/SecuredFields/lib/types';
 import Language from '../../language';
 import type { CoreConfiguration } from '../../core/types';
+import type { ChallengeWindowSize } from '../ThreeDS2/types';
 
 type CoreCallbacks = Pick<
     CoreConfiguration,
@@ -65,7 +66,7 @@ export type CustomCardConfiguration = CoreCallbacks & {
      *
      * - merchant set config option
      */
-    challengeWindowSize?: '01' | '02' | '03' | '04' | '05';
+    challengeWindowSize?: ChallengeWindowSize;
 
     /**
      * Turn on the procedure to force the arrow keys on an iOS soft keyboard to always be disabled
