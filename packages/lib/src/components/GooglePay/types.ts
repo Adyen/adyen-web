@@ -1,5 +1,6 @@
 import type { AddressData } from '../../types';
 import type { UIElementProps } from '../internal/UIElement/types';
+import type { ChallengeWindowSize } from '../../types';
 
 export interface GooglePayConfiguration extends UIElementProps {
     type?: 'googlepay' | 'paywithgoogle';
@@ -32,7 +33,7 @@ export interface GooglePayConfiguration extends UIElementProps {
      *
      * @defaultValue '02'
      */
-    challengeWindowSize?: '01' | '02' | '03' | '04' | '05';
+    challengeWindowSize?: ChallengeWindowSize;
 
     /**
      * @see https://developers.google.com/pay/api/web/reference/request-objects#IsReadyToPayRequest

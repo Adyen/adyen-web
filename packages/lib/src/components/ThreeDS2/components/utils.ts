@@ -187,14 +187,6 @@ export const encodeBase64URL = (dataStr: string): string => {
     return base64url;
 };
 
-// const fingerprintFlowPropsDropin = ['elementRef'];
-
-/**
- *  Must contain all props needed for the challenge stage since, in the new 3DS2 flow, the fingerprint component will be the "component" reference
- *  if the /submitThreeDS2Fingerprint response dictates we "handleAction" to create a challenge
- */
-// const fingerprintFlowProps = ['createFromAction', 'onAdditionalDetails'];
-
 /**
  * Add props specifically needed for the type of 3DS2 flow: fingerprint or challenge
  *
@@ -203,14 +195,6 @@ export const encodeBase64URL = (dataStr: string): string => {
  */
 export const get3DS2FlowProps = (actionSubtype, props): ThreeDS2FlowPropsReturnObject => {
     if (actionSubtype === 'fingerprint') {
-        // elementRef exists when the fingerprint component is created from the Dropin
-        // const fingerprintProps = props.elementRef ? fingerprintFlowPropsDropin : fingerprintFlowProps;
-        // const rtnObj = pick(fingerprintProps).from(props);
-
-        // rtnObj.showSpinner = !props.isDropin;
-        // rtnObj.statusType = 'loading';
-        // return rtnObj;
-
         return {
             showSpinner: !props.isDropin,
             statusType: 'loading',
