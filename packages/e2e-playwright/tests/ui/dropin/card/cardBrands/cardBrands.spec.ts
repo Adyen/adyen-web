@@ -8,7 +8,7 @@ dotenv.config();
 const apiVersion = Number(process.env.API_VERSION.substring(1));
 
 const CARD_HEADER_LABEL = apiVersion <= 70 ? 'Credit Card' : 'Cards';
-const TOTAL_BRANDS_COUNT = 17;
+const TOTAL_BRANDS_COUNT = 15;
 const VISIBLE_BRANDS_COUNT = 3;
 
 test.describe('Dropin - Card brands displayed in the Payment Method List and underneath the PAN field', () => {

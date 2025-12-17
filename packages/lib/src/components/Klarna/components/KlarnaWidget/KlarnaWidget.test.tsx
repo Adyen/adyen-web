@@ -51,8 +51,8 @@ describe('KlarnaWidget', () => {
     );
     const props = {
         onLoaded,
-        onComplete,
         onError,
+        onComplete,
         paymentData,
         paymentMethodType,
         sdkData,
@@ -105,7 +105,8 @@ describe('KlarnaWidget', () => {
 
         test('should call props onComplete if Klarna pre-authorization failed', () => {
             klarnaObj.Payments.load = getKlarnaActionImp({ show_form: false });
-            customRender(props);
+            const onComplete = jest.fn();
+            customRender({ ...props, onComplete });
             expect(onComplete).toHaveBeenCalledWith({
                 data: {
                     paymentData,
@@ -121,7 +122,8 @@ describe('KlarnaWidget', () => {
             const authRes = { approved: true, show_form: true, authorization_token: 'abc' };
             klarnaObj.Payments.load = getKlarnaActionImp({ show_form: true });
             klarnaObj.Payments.authorize = getKlarnaActionImp(authRes);
-            customRender(props);
+            const onComplete = jest.fn();
+            customRender({ ...props, onComplete });
             await user.click(await screen.findByTestId(/pay-with-klarna/i));
             expect(onComplete).toHaveBeenCalledWith({
                 data: {
@@ -138,7 +140,8 @@ describe('KlarnaWidget', () => {
             const authRes = { approved: true, show_form: true, authorization_token: 'abc' };
             klarnaObj.Payments.load = getKlarnaActionImp({ show_form: true });
             klarnaObj.Payments.authorize = getKlarnaActionImp(authRes);
-            customRender(props);
+            const onComplete = jest.fn();
+            customRender({ ...props, onComplete });
 
             const payButton = await screen.findByTestId(/pay-with-klarna/i);
             payButton.focus();
@@ -159,11 +162,12 @@ describe('KlarnaWidget', () => {
             const authRes = { approved: true, show_form: true, authorization_token: 'abc' };
             klarnaObj.Payments.load = getKlarnaActionImp({ show_form: true });
             klarnaObj.Payments.authorize = getKlarnaActionImp(authRes);
-            customRender(props);
+            const onComplete = jest.fn();
+            customRender({ ...props, onComplete });
 
             const payButton = await screen.findByTestId(/pay-with-klarna/i);
             payButton.focus();
-            await user.keyboard('{Space}');
+            await user.keyboard(' ');
 
             expect(onComplete).toHaveBeenCalledWith({
                 data: {
@@ -173,6 +177,7 @@ describe('KlarnaWidget', () => {
                     }
                 }
             });
+            expect(onComplete).toHaveBeenCalledTimes(1);
         });
 
         test('should call the onError if the payment is not authorized temporarily', async () => {
@@ -189,7 +194,8 @@ describe('KlarnaWidget', () => {
             const user = userEvent.setup();
             klarnaObj.Payments.load = getKlarnaActionImp({ show_form: true });
             klarnaObj.Payments.authorize = getKlarnaActionImp({ show_form: false });
-            customRender(props);
+            const onComplete = jest.fn();
+            customRender({ ...props, onComplete });
             await user.click(await screen.findByTestId(/pay-with-klarna/i));
             expect(onComplete).toHaveBeenCalledWith({
                 data: {
