@@ -1,7 +1,6 @@
 import { IssuerListConfiguration, QRLoaderConfiguration } from '../types';
 
-export type IrisConfiguration = IssuerListConfiguration &
-    Pick<QRLoaderConfiguration, 'countdownTime' | 'qrCodeData' | 'paymentData' | 'delay' | 'throttleInterval' | 'throttleTime'>;
+export type IrisConfiguration = IssuerListConfiguration & Pick<QRLoaderConfiguration, 'countdownTime' | 'qrCodeData' | 'paymentData' | 'delay'>;
 
 export interface IrisData {
     paymentMethod: {
