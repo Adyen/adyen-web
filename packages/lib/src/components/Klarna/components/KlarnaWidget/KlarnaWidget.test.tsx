@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import { KlarnaWidget } from './KlarnaWidget';
 import Script from '../../../../utils/Script';
-import { KLARNA_WIDGET_URL } from '../../constants';
+import { KLARNA_WIDGET_URL, KLARNA_REFUSED_RESULT_CODE } from '../../constants';
 import { KlarnaWidgetAuthorizeResponse, type KlarnaWidgetProps } from '../../types';
 import { CoreProvider } from '../../../../core/Context/CoreProvider';
 import { mock } from 'jest-mock-extended';
@@ -110,7 +110,7 @@ describe('KlarnaWidget', () => {
             expect(onComplete).toHaveBeenCalledWith({
                 data: {
                     paymentData,
-                    details: {}
+                    details: { resultCode: KLARNA_REFUSED_RESULT_CODE }
                 }
             });
         });
@@ -200,7 +200,7 @@ describe('KlarnaWidget', () => {
             expect(onComplete).toHaveBeenCalledWith({
                 data: {
                     paymentData,
-                    details: {}
+                    details: { resultCode: KLARNA_REFUSED_RESULT_CODE }
                 }
             });
         });
