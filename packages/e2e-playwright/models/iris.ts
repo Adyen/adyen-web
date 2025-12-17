@@ -66,11 +66,6 @@ class Iris extends IssuerList {
     async waitForSegmentedControl() {
         await this.segmentedControlGroup.waitFor({ state: 'visible' });
     }
-
-    override async pay() {
-        // IRIS uses "Continue" button instead of "Pay"
-        await this.page.getByRole('button', { name: /Continue/i }).click();
-    }
 }
 
 export { Iris };

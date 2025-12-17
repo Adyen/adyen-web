@@ -10,6 +10,7 @@ class IssuerList extends Base {
 
     readonly selectorList: Locator;
     readonly selectorCombobox: Locator;
+    override readonly payButton: Locator;
     readonly highlightedIssuerButtonGroup: Locator;
 
     constructor(
@@ -22,6 +23,7 @@ class IssuerList extends Base {
 
         this.selectorList = this.rootElement.getByRole('listbox');
         this.selectorCombobox = this.rootElement.getByRole('combobox');
+        this.payButton = this.rootElement.getByRole('button', { name: /Continue/i });
         this.highlightedIssuerButtonGroup = this.rootElement.getByRole('group');
     }
 
@@ -50,10 +52,6 @@ class IssuerList extends Base {
 
     async typeOnSelectorField(filter: string) {
         await this.selectorCombobox.type(filter, { delay: USER_TYPE_DELAY });
-    }
-
-    async submitPayment() {
-        await this.pay();
     }
 }
 

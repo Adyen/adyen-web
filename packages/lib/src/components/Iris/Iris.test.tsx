@@ -25,245 +25,223 @@ describe('Iris', () => {
         isMobileMock.mockReturnValue(false); // Default to desktop
     });
 
-    describe('Default Mode Selection', () => {
-        test('should pre-select "QR Code" mode on Desktop', async () => {
-            isMobileMock.mockReturnValue(false);
-            const core = setupCoreMock();
+    test('should pre-select "QR Code" mode on Desktop', async () => {
+        isMobileMock.mockReturnValue(false);
+        const core = setupCoreMock();
 
-            const iris = new Iris(core, {
-                issuers: defaultIssuers,
-                i18n: core.modules.i18n,
-                loadingContext: 'test',
-                modules: { resources: core.modules.resources }
-            });
-
-            render(iris.render());
-
-            const qrCodeButton = await screen.findByRole('button', { name: 'QR code' });
-            expect(qrCodeButton).toHaveAttribute('aria-expanded', 'true');
-            expect(await screen.findByRole('button', { name: /Generate QR code/i })).toBeInTheDocument();
+        const iris = new Iris(core, {
+            issuers: defaultIssuers,
+            i18n: core.modules.i18n,
+            loadingContext: 'test',
+            modules: { resources: core.modules.resources }
         });
 
-        test('should pre-select "Bank List" mode on Mobile', async () => {
-            isMobileMock.mockReturnValue(true);
-            const core = setupCoreMock();
+        render(iris.render());
 
-            const iris = new Iris(core, {
-                issuers: defaultIssuers,
-                i18n: core.modules.i18n,
-                loadingContext: 'test',
-                modules: { resources: core.modules.resources }
-            });
+        const qrCodeButton = await screen.findByRole('button', { name: 'QR code' });
+        expect(qrCodeButton).toHaveAttribute('aria-expanded', 'true');
+        expect(await screen.findByRole('button', { name: /Generate QR code/i })).toBeInTheDocument();
+    });
 
-            render(iris.render());
+    test('should pre-select "Bank List" mode on Mobile', async () => {
+        isMobileMock.mockReturnValue(true);
+        const core = setupCoreMock();
 
-            const bankListButton = await screen.findByRole('button', { name: 'Bank list' });
-            expect(bankListButton).toHaveAttribute('aria-expanded', 'true');
-            expect(screen.queryByRole('button', { name: /Generate QR code/i })).not.toBeInTheDocument();
+        const iris = new Iris(core, {
+            issuers: defaultIssuers,
+            i18n: core.modules.i18n,
+            loadingContext: 'test',
+            modules: { resources: core.modules.resources }
+        });
+
+        render(iris.render());
+
+        const bankListButton = await screen.findByRole('button', { name: 'Bank list' });
+        expect(bankListButton).toHaveAttribute('aria-expanded', 'true');
+        expect(screen.queryByRole('button', { name: /Generate QR code/i })).not.toBeInTheDocument();
+    });
+    test('should trigger validation error if issuer is not selected', async () => {
+        const user = userEvent.setup();
+        const onSubmitMock = jest.fn();
+        isMobileMock.mockReturnValue(true); // Start in Bank List mode
+        const core = setupCoreMock();
+        const iris = new Iris(core, {
+            issuers: defaultIssuers,
+            showPayButton: true,
+            onSubmit: onSubmitMock,
+            i18n: core.modules.i18n,
+            loadingContext: 'test',
+            modules: { resources: core.modules.resources }
+        });
+        render(iris.render());
+        const payButton = await screen.findByRole('button', { name: /Continue/i });
+        await user.click(payButton);
+        // onSubmit should NOT be called when invalid
+        expect(onSubmitMock).not.toHaveBeenCalled();
+    });
+    test('should call Payments API with correct payload including issuer', async () => {
+        const user = userEvent.setup();
+        const onSubmitMock = jest.fn();
+        isMobileMock.mockReturnValue(true); // Start in Bank List mode
+        const core = setupCoreMock();
+        const iris = new Iris(core, {
+            issuers: defaultIssuers,
+            showPayButton: true,
+            onSubmit: onSubmitMock,
+            i18n: core.modules.i18n,
+            loadingContext: 'test',
+            modules: { resources: core.modules.resources }
+        });
+        render(iris.render());
+        const issuerOption = await screen.findByRole('option', { name: /Piraeus Bank/i });
+        await user.click(issuerOption);
+        // Submit the form
+        const payButton = await screen.findByRole('button', { name: /Continue/i });
+        await user.click(payButton);
+        await waitFor(() => {
+            expect(onSubmitMock).toHaveBeenCalled();
+        });
+        expect(onSubmitMock).toHaveBeenCalledWith(
+            expect.objectContaining({
+                data: expect.objectContaining({
+                    paymentMethod: expect.objectContaining({
+                        type: 'iris',
+                        issuer: 'PIRBGRAA'
+                    })
+                })
+            }),
+            expect.anything(),
+            expect.anything()
+        );
+    });
+
+    test('should NOT trigger issuer validation in QR Code mode', async () => {
+        const core = setupCoreMock();
+
+        const iris = new Iris(core, {
+            issuers: defaultIssuers,
+            i18n: core.modules.i18n,
+            loadingContext: 'test',
+            modules: { resources: core.modules.resources }
+        });
+
+        render(iris.render());
+
+        // In QR Code mode (default on desktop), component should be valid without issuer selection
+        await waitFor(() => {
+            expect(iris.isValid).toBe(true);
         });
     });
 
-    describe('Making Payment', () => {
-        describe('Issuer List Payment', () => {
-            test('should trigger validation error if issuer is not selected', async () => {
-                const user = userEvent.setup();
-                const onSubmitMock = jest.fn();
-                isMobileMock.mockReturnValue(true); // Start in Bank List mode
-                const core = setupCoreMock();
+    test('should call Payments API with correct payload without issuer', async () => {
+        const user = userEvent.setup();
+        const onSubmitMock = jest.fn();
+        const core = setupCoreMock();
 
-                const iris = new Iris(core, {
-                    issuers: defaultIssuers,
-                    showPayButton: true,
-                    onSubmit: onSubmitMock,
-                    i18n: core.modules.i18n,
-                    loadingContext: 'test',
-                    modules: { resources: core.modules.resources }
-                });
-
-                render(iris.render());
-
-                const payButton = await screen.findByRole('button', { name: /Continue/i });
-                await user.click(payButton);
-
-                // onSubmit should NOT be called when invalid
-                expect(onSubmitMock).not.toHaveBeenCalled();
-            });
-
-            test('should call Payments API with correct payload including issuer', async () => {
-                const user = userEvent.setup();
-                const onSubmitMock = jest.fn();
-                isMobileMock.mockReturnValue(true); // Start in Bank List mode
-                const core = setupCoreMock();
-
-                const iris = new Iris(core, {
-                    issuers: defaultIssuers,
-                    showPayButton: true,
-                    onSubmit: onSubmitMock,
-                    i18n: core.modules.i18n,
-                    loadingContext: 'test',
-                    modules: { resources: core.modules.resources }
-                });
-
-                render(iris.render());
-
-                const issuerOption = await screen.findByRole('option', { name: /Piraeus Bank/i });
-                await user.click(issuerOption);
-
-                // Submit the form
-                const payButton = await screen.findByRole('button', { name: /Continue/i });
-                await user.click(payButton);
-
-                await waitFor(() => {
-                    expect(onSubmitMock).toHaveBeenCalled();
-                });
-
-                expect(onSubmitMock).toHaveBeenCalledWith(
-                    expect.objectContaining({
-                        data: expect.objectContaining({
-                            paymentMethod: expect.objectContaining({
-                                type: 'iris',
-                                issuer: 'PIRBGRAA'
-                            })
-                        })
-                    }),
-                    expect.anything(),
-                    expect.anything()
-                );
-            });
+        const iris = new Iris(core, {
+            issuers: defaultIssuers,
+            showPayButton: true,
+            onSubmit: onSubmitMock,
+            i18n: core.modules.i18n,
+            loadingContext: 'test',
+            modules: { resources: core.modules.resources }
         });
 
-        describe('QR Code Payment', () => {
-            test('should NOT trigger issuer validation in QR Code mode', async () => {
-                const core = setupCoreMock();
+        render(iris.render());
 
-                const iris = new Iris(core, {
-                    issuers: defaultIssuers,
-                    i18n: core.modules.i18n,
-                    loadingContext: 'test',
-                    modules: { resources: core.modules.resources }
-                });
+        const generateQrButton = await screen.findByRole('button', { name: /Generate QR code/i });
+        await user.click(generateQrButton);
 
-                render(iris.render());
-
-                // In QR Code mode (default on desktop), component should be valid without issuer selection
-                await waitFor(() => {
-                    expect(iris.isValid).toBe(true);
-                });
-            });
-
-            test('should call Payments API with correct payload without issuer', async () => {
-                const user = userEvent.setup();
-                const onSubmitMock = jest.fn();
-                const core = setupCoreMock();
-
-                const iris = new Iris(core, {
-                    issuers: defaultIssuers,
-                    showPayButton: true,
-                    onSubmit: onSubmitMock,
-                    i18n: core.modules.i18n,
-                    loadingContext: 'test',
-                    modules: { resources: core.modules.resources }
-                });
-
-                render(iris.render());
-
-                const generateQrButton = await screen.findByRole('button', { name: /Generate QR code/i });
-                await user.click(generateQrButton);
-
-                await waitFor(() => {
-                    expect(onSubmitMock).toHaveBeenCalled();
-                });
-
-                // Verify issuer is NOT in the payload
-                const submitCall = onSubmitMock.mock.calls[0][0];
-                expect(submitCall.data.paymentMethod).not.toHaveProperty('issuer');
-                expect(submitCall.data.paymentMethod.type).toBe('iris');
-            });
-
-            test('should NOT include issuer in payload when switching from Bank List to QR Code mode', async () => {
-                const user = userEvent.setup();
-                const onSubmitMock = jest.fn();
-                isMobileMock.mockReturnValue(true);
-                const core = setupCoreMock();
-
-                const iris = new Iris(core, {
-                    issuers: defaultIssuers,
-                    showPayButton: true,
-                    onSubmit: onSubmitMock,
-                    i18n: core.modules.i18n,
-                    loadingContext: 'test',
-                    modules: { resources: core.modules.resources }
-                });
-
-                render(iris.render());
-
-                const issuerOption = await screen.findByRole('option', { name: /Piraeus Bank/i });
-                await user.click(issuerOption);
-
-                // Switch to QR Code mode
-                const qrCodeButton = await screen.findByRole('button', { name: 'QR code' });
-                await user.click(qrCodeButton);
-
-                await waitFor(() => {
-                    expect(screen.getByRole('button', { name: /Generate QR code/i })).toBeInTheDocument();
-                });
-
-                const generateQrButton = await screen.findByRole('button', { name: /Generate QR code/i });
-                await user.click(generateQrButton);
-
-                await waitFor(() => {
-                    expect(onSubmitMock).toHaveBeenCalled();
-                });
-
-                // Verify issuer is NOT in the payload even though it was previously selected
-                const submitCall = onSubmitMock.mock.calls[0][0];
-                expect(submitCall.data.paymentMethod).not.toHaveProperty('issuer');
-                expect(submitCall.data.paymentMethod.type).toBe('iris');
-            });
+        await waitFor(() => {
+            expect(onSubmitMock).toHaveBeenCalled();
         });
+
+        // Verify issuer is NOT in the payload
+        const submitCall = onSubmitMock.mock.calls[0][0];
+        expect(submitCall.data.paymentMethod).not.toHaveProperty('issuer');
+        expect(submitCall.data.paymentMethod.type).toBe('iris');
     });
 
-    describe('Empty Issuer List', () => {
-        test('should render QR code mode without segment control and submit without issuer when issuerList is empty', async () => {
-            const user = userEvent.setup();
-            const onSubmitMock = jest.fn();
-            const core = setupCoreMock();
+    test('should NOT include issuer in payload when switching from Bank List to QR Code mode', async () => {
+        const user = userEvent.setup();
+        const onSubmitMock = jest.fn();
+        isMobileMock.mockReturnValue(true);
+        const core = setupCoreMock();
 
-            const iris = new Iris(core, {
-                issuers: [],
-                showPayButton: true,
-                onSubmit: onSubmitMock,
-                i18n: core.modules.i18n,
-                loadingContext: 'test',
-                modules: { resources: core.modules.resources }
-            });
-
-            render(iris.render());
-
-            // Should show the Generate QR code button
-            const generateQrButton = await screen.findByRole('button', { name: /Generate QR code/i });
-            expect(generateQrButton).toBeInTheDocument();
-
-            // Should NOT show the segment control buttons or issuer list
-            expect(screen.queryByRole('button', { name: 'QR code' })).not.toBeInTheDocument();
-            expect(screen.queryByRole('button', { name: 'Bank list' })).not.toBeInTheDocument();
-            expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
-
-            // Component should be valid without issuer selection
-            await waitFor(() => {
-                expect(iris.isValid).toBe(true);
-            });
-
-            await user.click(generateQrButton);
-
-            await waitFor(() => {
-                expect(onSubmitMock).toHaveBeenCalled();
-            });
-
-            // Verify payload has no issuer
-            const submitCall = onSubmitMock.mock.calls[0][0];
-            expect(submitCall.data.paymentMethod).not.toHaveProperty('issuer');
-            expect(submitCall.data.paymentMethod.type).toBe('iris');
+        const iris = new Iris(core, {
+            issuers: defaultIssuers,
+            showPayButton: true,
+            onSubmit: onSubmitMock,
+            i18n: core.modules.i18n,
+            loadingContext: 'test',
+            modules: { resources: core.modules.resources }
         });
+
+        render(iris.render());
+
+        const issuerOption = await screen.findByRole('option', { name: /Piraeus Bank/i });
+        await user.click(issuerOption);
+
+        // Switch to QR Code mode
+        const qrCodeButton = await screen.findByRole('button', { name: 'QR code' });
+        await user.click(qrCodeButton);
+
+        await waitFor(() => {
+            expect(screen.getByRole('button', { name: /Generate QR code/i })).toBeInTheDocument();
+        });
+
+        const generateQrButton = await screen.findByRole('button', { name: /Generate QR code/i });
+        await user.click(generateQrButton);
+
+        await waitFor(() => {
+            expect(onSubmitMock).toHaveBeenCalled();
+        });
+
+        // Verify issuer is NOT in the payload even though it was previously selected
+        const submitCall = onSubmitMock.mock.calls[0][0];
+        expect(submitCall.data.paymentMethod).not.toHaveProperty('issuer');
+        expect(submitCall.data.paymentMethod.type).toBe('iris');
+    });
+
+    test('should render QR code mode without segment control and submit without issuer when issuerList is empty', async () => {
+        const user = userEvent.setup();
+        const onSubmitMock = jest.fn();
+        const core = setupCoreMock();
+
+        const iris = new Iris(core, {
+            issuers: [],
+            showPayButton: true,
+            onSubmit: onSubmitMock,
+            i18n: core.modules.i18n,
+            loadingContext: 'test',
+            modules: { resources: core.modules.resources }
+        });
+
+        render(iris.render());
+
+        // Should show the Generate QR code button
+        const generateQrButton = await screen.findByRole('button', { name: /Generate QR code/i });
+        expect(generateQrButton).toBeInTheDocument();
+
+        // Should NOT show the segment control buttons or issuer list
+        expect(screen.queryByRole('button', { name: 'QR code' })).not.toBeInTheDocument();
+        expect(screen.queryByRole('button', { name: 'Bank list' })).not.toBeInTheDocument();
+        expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+
+        // Component should be valid without issuer selection
+        await waitFor(() => {
+            expect(iris.isValid).toBe(true);
+        });
+
+        await user.click(generateQrButton);
+
+        await waitFor(() => {
+            expect(onSubmitMock).toHaveBeenCalled();
+        });
+
+        // Verify payload has no issuer
+        const submitCall = onSubmitMock.mock.calls[0][0];
+        expect(submitCall.data.paymentMethod).not.toHaveProperty('issuer');
+        expect(submitCall.data.paymentMethod.type).toBe('iris');
     });
 });
