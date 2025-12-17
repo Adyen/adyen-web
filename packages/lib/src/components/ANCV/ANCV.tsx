@@ -3,7 +3,6 @@ import UIElement from '../internal/UIElement/UIElement';
 import ANCVInput from './components/ANCVInput';
 import config from './components/ANCVAwait/config';
 import { Await } from '../../components/internal/Await';
-import SRPanelProvider from '../../core/Errors/SRPanelProvider';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import PayButton from '../internal/PayButton';
 import { ANCVConfiguration } from './types';
@@ -92,22 +91,20 @@ export class ANCVElement extends UIElement<ANCVConfiguration> {
     protected override componentToRender(): h.JSX.Element {
         if (this.props.paymentData) {
             return (
-                <SRPanelProvider srPanel={this.props.modules.srPanel}>
-                    <Await
-                        clientKey={this.props.clientKey}
-                        paymentData={this.props.paymentData}
-                        onError={this.props.onError}
-                        onComplete={this.onComplete}
-                        brandLogo={this.icon}
-                        type={this.constructor['type']}
-                        messageText={this.props.i18n.get('ancv.confirmPayment')}
-                        awaitText={this.props.i18n.get('await.waitForConfirmation')}
-                        showCountdownTimer={config.showCountdownTimer}
-                        throttleTime={config.THROTTLE_TIME}
-                        throttleInterval={config.THROTTLE_INTERVAL}
-                        onActionHandled={this.onActionHandled}
-                    />
-                </SRPanelProvider>
+                <Await
+                    clientKey={this.props.clientKey}
+                    paymentData={this.props.paymentData}
+                    onError={this.props.onError}
+                    onComplete={this.onComplete}
+                    brandLogo={this.icon}
+                    type={this.constructor['type']}
+                    messageText={this.props.i18n.get('ancv.confirmPayment')}
+                    awaitText={this.props.i18n.get('await.waitForConfirmation')}
+                    showCountdownTimer={config.showCountdownTimer}
+                    throttleTime={config.THROTTLE_TIME}
+                    throttleInterval={config.THROTTLE_INTERVAL}
+                    onActionHandled={this.onActionHandled}
+                />
             );
         }
 

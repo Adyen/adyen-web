@@ -4,7 +4,7 @@
     flex-direction: row-reverse;
     justify-content: flex-end;
 
-    > img {
+    >img {
         margin-left: 0;
         margin-right: token(spacer-060);
     }
@@ -175,6 +175,12 @@
 
 .adyen-checkout__dropdown__element.adyen-checkout__dropdown__element--active {
     background: rgb(230 233 235 / 60%);
+    border-radius: token(border-radius-m);
+    box-shadow: inset 0 0 0 token(border-width-s) token(color-outline-primary-active);
+}
+
+.adyen-checkout__dropdown__element:hover {
+    background: rgb(230 233 235 / 60%);
 }
 
 .adyen-checkout__dropdown__element.adyen-checkout__dropdown__element--selected {
@@ -214,6 +220,6 @@
     max-height: 18px;
 }
 
-.adyen-checkout__dropdown + .adyen-checkout-input__inline-validation {
+.adyen-checkout__dropdown+.adyen-checkout-input__inline-validation {
     right: token(spacer-100);
 }

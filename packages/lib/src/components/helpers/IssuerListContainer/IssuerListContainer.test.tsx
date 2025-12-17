@@ -20,7 +20,7 @@ describe('IssuerListContainer: Multiple instances focus behavior', () => {
             showPayButton: true,
             i18n: global.i18n,
             loadingContext: 'test',
-            modules: { resources: global.resources, srPanel: global.srPanel }
+            modules: { resources: global.resources }
         });
 
         const issuerListContainer2 = new IssuerListContainer(core, {
@@ -28,7 +28,7 @@ describe('IssuerListContainer: Multiple instances focus behavior', () => {
             showPayButton: true,
             i18n: global.i18n,
             loadingContext: 'test',
-            modules: { resources: global.resources, srPanel: global.srPanel }
+            modules: { resources: global.resources }
         });
 
         render(

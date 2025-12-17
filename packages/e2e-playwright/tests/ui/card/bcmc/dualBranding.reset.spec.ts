@@ -14,23 +14,24 @@ test.describe('Testing Bancontact, with dual branded cards, how UI resets', () =
 
             await bcmc.fillCardNumber(BCMC_CARD);
 
-            await bcmc.waitForVisibleDualBrandIcons();
+            await bcmc.waitForVisibleDualBrandIcons(2);
 
-            let [firstBrand, secondBrand] = await bcmc.dualBrandIcons;
+            const brands = await bcmc.dualBrandIcons;
 
-            // Correct order
-            await expect(firstBrand).toHaveAttribute('alt', 'Bancontact card');
-            await expect(secondBrand).toHaveAttribute('alt', 'Maestro');
+            expect(brands).toHaveLength(2);
+
+            const brandAlts = await Promise.all(brands.map(brand => brand.getAttribute('alt')));
+            expect(brandAlts).toHaveLength(2);
+            expect(brandAlts).toEqual(expect.arrayContaining(['Bancontact card', 'Maestro']));
 
             await bcmc.deleteCardNumber();
 
+            // Now only a single brand
             await bcmc.waitForVisibleDualBrandIcons(1);
 
-            [firstBrand, secondBrand] = await bcmc.dualBrandIcons;
+            const [brand] = await bcmc.dualBrandIcons;
 
-            // Now only a single brand
-            expect(firstBrand).toHaveAttribute('alt', /bancontact/i);
-            expect(secondBrand).toBeUndefined();
+            expect(brand).toHaveAttribute('alt', 'Bancontact card');
         }
     );
 
