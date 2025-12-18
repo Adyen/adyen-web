@@ -20,6 +20,7 @@ export type GlobalStoryProps = AdyenCheckoutProps &
         useSessions: boolean;
         redirectResult?: string;
         sessionId?: string;
+        'srConfig.showPanel'?: boolean;
     };
 
 export interface PaymentMethodStoryProps<T> extends GlobalStoryProps {

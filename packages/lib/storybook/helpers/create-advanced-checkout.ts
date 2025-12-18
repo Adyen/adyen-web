@@ -12,6 +12,7 @@ import type { AdyenCheckoutProps, ShopperDetails } from '../types';
 async function createAdvancedFlowCheckout(
     checkoutProps: Omit<AdyenCheckoutProps, 'srConfig'> & {
         srConfig?: { showPanel: boolean; moveFocus: boolean };
+        'srConfig.showPanel'?: boolean;
     },
     shopperDetails?: ShopperDetails
 ): Promise<Checkout> {
@@ -24,8 +25,15 @@ async function createAdvancedFlowCheckout(
         paymentMethodsOverride,
         paymentsOptions,
         srConfig = { showPanel: false, moveFocus: true },
+        'srConfig.showPanel': showPanelOverride,
         ...restCheckoutProps
     } = checkoutProps;
+
+    // Merge srConfig with the global control override
+    const finalSrConfig = {
+        ...srConfig,
+        ...(showPanelOverride !== undefined && { showPanel: showPanelOverride })
+    };
 
     const paymentAmount = {
         currency: getCurrency(countryCode),
@@ -148,7 +156,7 @@ async function createAdvancedFlowCheckout(
         },
 
         _environmentUrls: STORYBOOK_ENVIRONMENT_URLS,
-        srConfig,
+        srConfig: finalSrConfig,
         ...restCheckoutProps
     });
 
