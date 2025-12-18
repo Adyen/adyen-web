@@ -20,6 +20,7 @@
         padding: 0;
         margin: -1px;
         overflow: hidden;
+        // stylelint-disable-next-line property-no-deprecated
         clip: rect(0 0 0 0); /* fallback for older browsers */
         clip-path: inset(50%);
         white-space: nowrap;
