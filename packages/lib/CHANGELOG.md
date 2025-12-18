@@ -1,5 +1,13 @@
 # @adyen/adyen-web
 
+## 6.27.1
+
+### Patch Changes
+
+- Fixed details object for Klarna Widget refused purchases ([#3690](https://github.com/Adyen/adyen-web/pull/3690))
+
+- Fixed: onKeyDown enter press event for SegmentedControl component ([#3715](https://github.com/Adyen/adyen-web/pull/3715))
+
 ## 6.27.0
 
 ### Minor Changes
