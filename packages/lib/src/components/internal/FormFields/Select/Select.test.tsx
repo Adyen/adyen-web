@@ -47,10 +47,10 @@ describe('Select', () => {
         expect(onChangeCb).toBeCalledTimes(1);
         expect(onChangeCb.mock.calls[0][0]).toStrictEqual(callbackData);
 
-        // Test new option is displayed
-        screen.getByRole('button').focus();
-
-        // Test keyboard interaction
+        // Test keyboard interaction - focus the button first with user event
+        const button = screen.getByRole('button');
+        await user.click(button); // Open dropdown
+        
         await user.keyboard('[ArrowDown][Enter]');
         expect(onChangeCb).toBeCalledTimes(2);
 
@@ -89,10 +89,10 @@ describe('Select', () => {
         expect(onChangeCb).toBeCalledTimes(1);
         expect(onChangeCb.mock.calls[0][0]).toStrictEqual(callbackData);
 
-        // Test new option is displayed
-        screen.getByRole('combobox').focus();
-
-        // Test keyboard interaction
+        // Test keyboard interaction - focus the combobox first with user event
+        const combobox = screen.getByRole('combobox');
+        await user.click(combobox); // Open dropdown
+        
         await user.keyboard('[ArrowDown][Enter]');
         expect(onChangeCb).toBeCalledTimes(2);
 
@@ -117,7 +117,7 @@ describe('Select', () => {
         const combobox = screen.getByRole('combobox');
         
         // Focus should not open the dropdown
-        combobox.focus();
+        await user.tab(); // Focus the combobox using tab navigation
         
         // Debug visibility
         const option1 = screen.getByText('Option 1');
@@ -149,7 +149,7 @@ describe('Select', () => {
         const button = screen.getByRole('button');
         
         // Focus should not open the dropdown
-        button.focus();
+        await user.tab(); // Focus the button using tab navigation
         
         // Debug visibility
         const option1 = screen.getByText('Option 1');
