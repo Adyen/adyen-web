@@ -1,4 +1,4 @@
-@import 'styles/variable-generator';
+@use 'styles/variable-generator';
 
 .adyen-checkout__bankTransfer__introduction {
     font-size: token(text-body-font-size);

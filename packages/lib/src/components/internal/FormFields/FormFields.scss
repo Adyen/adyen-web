@@ -1,5 +1,5 @@
 @use 'styles/index';
-@import 'styles/variable-generator';
+@use 'styles/variable-generator';
 
 // Workaround to remove autofill background and text color, works on most browsers except for Chrome mobile
 .adyen-checkout__filter-input:-webkit-autofill,

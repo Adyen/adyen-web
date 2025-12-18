@@ -1,4 +1,4 @@
-@import 'styles/variable-generator';
+@use 'styles/variable-generator';
 
 .adyen-checkout__input-icon {
     border-radius: token(border-radius-s);
@@ -14,5 +14,3 @@
 .adyen-checkout__input-icon--no-radio-icon {
     margin-left: calc(token(spacer-090) * -1);
 }
-
-

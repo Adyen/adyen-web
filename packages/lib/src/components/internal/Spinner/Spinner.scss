@@ -1,5 +1,5 @@
 @use 'styles/index';
-@import 'styles/variable-generator';
+@use 'styles/variable-generator';
 
 $loading-indicator-large-width: token(spacer-120);
 $loading-indicator-large-height: token(spacer-120);

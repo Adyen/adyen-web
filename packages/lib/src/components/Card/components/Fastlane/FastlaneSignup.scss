@@ -1,5 +1,5 @@
 @use 'styles/mixins';
-@import 'styles/variable-generator';
+@use 'styles/variable-generator';
 
 .adyen-checkout-card__fastlane {
     background: token(color-background-primary);

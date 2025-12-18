@@ -1,5 +1,5 @@
 @use 'styles/index';
-@import 'styles/variable-generator';
+@use 'styles/variable-generator';
 
 .adyen-checkout__voucher-result--paybybank_pix {
     background-color: token(color-background-primary);
@@ -34,7 +34,7 @@
     }
 }
 
-.adyen-checkout-await-logo-open-finance{
+.adyen-checkout-await-logo-open-finance {
     width: 8em;
     height: auto;
 }

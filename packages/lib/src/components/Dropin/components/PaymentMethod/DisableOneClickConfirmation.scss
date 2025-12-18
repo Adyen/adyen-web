@@ -1,4 +1,5 @@
-@import 'styles/variable-generator';
+@use 'sass:color';
+@use 'styles/variable-generator' as *;
 
 $color-alert: token(color-background-critical-strong, false);
 
@@ -14,8 +15,8 @@ $color-alert: token(color-background-critical-strong, false);
     background: token(color-background-critical-strong);
     font-size: token(text-body-font-size);
     color: token(color-label-on-color);
-    border-right: 1px solid darken($color-alert, 2%);
-    border-left: 1px solid darken($color-alert, 2%);
+    border-right: 1px solid color.adjust($color-alert, $lightness: -2%);
+    border-left: 1px solid color.adjust($color-alert, $lightness: -2%);
     overflow: hidden;
     opacity: 0;
     margin: 0 -17px;
@@ -63,12 +64,12 @@ $color-alert: token(color-background-critical-strong, false);
     &:hover,
     &:hover:focus {
         box-shadow: none;
-        background: darken($color-alert, 5%);
+        background: color.adjust($color-alert, $lightness: -5%);
     }
 
     &:active,
     &:hover:active {
-        background: darken($color-alert, 10%);
+        background: color.adjust($color-alert, $lightness: -10%);
         box-shadow: none;
     }
 }

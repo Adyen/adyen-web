@@ -1,4 +1,4 @@
-@import 'styles/variable-generator';
+@use 'styles/variable-generator';
 
 .adyen-checkout-form-instruction {
     line-height: token(text-caption-line-height);
@@ -8,7 +8,7 @@
     margin-top: 0;
     margin-bottom: token(spacer-070);
 
-    [dir="rtl"] & {
+    [dir='rtl'] & {
         padding-right: 0;
     }
 }

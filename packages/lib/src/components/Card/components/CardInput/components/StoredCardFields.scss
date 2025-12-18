@@ -1,4 +1,4 @@
-@import 'styles/variable-generator';
+@use 'styles/variable-generator';
 
 .adyen-checkout__card__exp-date__input--oneclick {
     line-height: token(text-title-line-height);

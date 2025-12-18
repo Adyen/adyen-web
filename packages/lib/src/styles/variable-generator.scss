@@ -1,15 +1,16 @@
-@import '~@adyen/bento-design-tokens/dist/scss-map/bento/aliases';
-@import '~@adyen/bento-design-tokens/dist/scss-map/bento/definitions';
-@import '~@adyen/bento-design-tokens/dist/scss-map/bento/components';
-@import 'overrides';
+@use 'sass:map';
+@use '~@adyen/bento-design-tokens/dist/scss-map/bento/aliases' as *;
+@use '~@adyen/bento-design-tokens/dist/scss-map/bento/definitions' as *;
+@use '~@adyen/bento-design-tokens/dist/scss-map/bento/components' as *;
+@use 'overrides' as *;
 
 // simple re-mapping
-$color: map-merge(
+$color: map.merge(
     $color,
     (
         // this color has been remapped for a11y reasons
-        color-label-critical: map-get($color, color-label-on-background-critical-weak),
-        color-label-tertiary: map-get($color, color-label-secondary),
+        color-label-critical: map.get($color, color-label-on-background-critical-weak),
+        color-label-tertiary: map.get($color, color-label-secondary),
         // label tertiary doesn't have enough contrast
     )
 );
@@ -19,7 +20,7 @@ $color: map-merge(
 
     @each $map in $maps {
         @each $name, $value in $map {
-            $adyen-output-map: map-merge($adyen-output-map, (#{$name}: var(--adyen-sdk-#{$name}, #{$value})));
+            $adyen-output-map: map.merge($adyen-output-map, (#{$name}: var(--adyen-sdk-#{$name}, #{$value})));
         }
     }
 
@@ -45,7 +46,7 @@ $color: map-merge(
             $text-overrides
         );
     } @else {
-        $adyen-tokens-map: map-merge(
+        $adyen-tokens-map: map.merge(
             $color,
             $text,
             $focus-ring,
@@ -61,5 +62,5 @@ $color: map-merge(
         );
     }
 
-    @return map-get($adyen-tokens-map, '#{$token}');
+    @return map.get($adyen-tokens-map, '#{$token}');
 }

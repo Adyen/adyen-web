@@ -1,6 +1,6 @@
 @use 'styles/mixins';
 @use 'styles/index';
-@import 'styles/variable-generator';
+@use 'styles/variable-generator';
 
 @mixin input-wrapper-inactive {
     background: token(color-background-disabled);

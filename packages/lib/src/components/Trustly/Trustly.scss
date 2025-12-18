@@ -1,4 +1,4 @@
-@import 'styles/variable-generator';
+@use 'styles/variable-generator';
 
 .adyen-checkout-trustly {
     margin-bottom: token(spacer-070);

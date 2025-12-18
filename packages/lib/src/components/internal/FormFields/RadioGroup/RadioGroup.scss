@@ -1,4 +1,4 @@
-@import 'styles/variable-generator';
+@use 'styles/variable-generator';
 
 .adyen-checkout__radio_group + .adyen-checkout-input__inline-validation {
     display: none;
@@ -10,7 +10,7 @@
 }
 
 .adyen-checkout__radio_group__label {
-    margin:0;
+    margin: 0;
     padding-bottom: 0;
     padding-left: token(spacer-090);
     position: relative;
@@ -27,7 +27,7 @@
 }
 
 .adyen-checkout__radio_group__label::before {
-    content: "";
+    content: '';
     position: absolute;
     background-color: token(color-background-primary);
     border: token(border-width-s) solid token(color-outline-tertiary);
@@ -36,7 +36,9 @@
     width: token(spacer-070);
     left: 0;
     top: token(spacer-010);
-    transition: border-color 0.2s ease-out, box-shadow 0.2s ease-out;
+    transition:
+        border-color 0.2s ease-out,
+        box-shadow 0.2s ease-out;
 }
 
 .adyen-checkout__radio_group__label:hover::before {
@@ -45,7 +47,7 @@
 }
 
 .adyen-checkout__radio_group__label::after {
-    content: "";
+    content: '';
     display: block;
     position: absolute;
     margin: 0 auto;
@@ -90,7 +92,6 @@
 .adyen-checkout__radio_group__label.adyen-checkout__radio_group__label--invalid::before {
     border: token(border-width-s) solid token(color-outline-critical);
 }
-
 
 .adyen-checkout__radio_group--button {
     display: flex;

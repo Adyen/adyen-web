@@ -1,4 +1,4 @@
-@import 'variable-generator';
+@use 'variable-generator' as *;
 
 @mixin box-sizing-setter($include-children: false, $value: border-box) {
     &,

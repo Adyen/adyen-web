@@ -1,5 +1,5 @@
 @use 'styles/mixins';
-@import 'styles/variable-generator';
+@use 'styles/variable-generator';
 
 .adyen-checkout_upi-mode-selection-text {
     font-weight: token(text-caption-font-weight);

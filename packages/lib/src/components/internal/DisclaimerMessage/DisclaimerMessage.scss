@@ -1,4 +1,4 @@
-@import 'styles/variable-generator';
+@use 'styles/variable-generator';
 
 .adyen-checkout-disclaimer__label {
     margin-top: token(spacer-070);
@@ -9,8 +9,7 @@
     font-size: token(text-caption-font-size);
     font-weight: normal;
 
-
-    [dir="rtl"] & {
+    [dir='rtl'] & {
         padding-right: 0;
     }
 }

@@ -1,6 +1,6 @@
 @use 'styles/index';
 @use 'styles/mixins';
-@import 'styles/variable-generator';
+@use 'styles/variable-generator';
 
 .adyen-checkout__qr-loader {
     background: token(color-background-primary);

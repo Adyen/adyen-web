@@ -1,5 +1,5 @@
 @use 'styles/index';
-@import 'styles/variable-generator';
+@use 'styles/variable-generator';
 
 .adyen-checkout__dropin {
     display: flex;
@@ -10,7 +10,6 @@
 .adyen-checkout__button--dropin-show-paymentmethods {
     align-self: start;
 }
-
 
 .adyen-checkout-payment-methods-container {
     display: flex;
@@ -37,7 +36,6 @@
         pointer-events: none;
     }
 }
-
 
 .adyen-checkout__instant-payment-methods-list {
     $instant-pm-gap: token(spacer-070);
@@ -85,7 +83,7 @@
     grid-template-rows: 1fr;
     visibility: visible;
 
-    .adyen-checkout__payment-method__details{
+    .adyen-checkout__payment-method__details {
         overflow: visible;
     }
 }
