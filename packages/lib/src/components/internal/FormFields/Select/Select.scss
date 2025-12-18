@@ -4,7 +4,7 @@
     flex-direction: row-reverse;
     justify-content: flex-end;
 
-    >img {
+    > img {
         margin-left: 0;
         margin-right: token(spacer-060);
     }
@@ -32,7 +32,9 @@
     height: token(spacer-110);
     line-height: token(text-body-line-height);
     user-select: none;
-    transition: border 0.2s ease-out, box-shadow 0.2s ease-out;
+    transition:
+        border 0.2s ease-out,
+        box-shadow 0.2s ease-out;
 
     [dir='rtl'] & {
         padding: 7px token(spacer-060) 7px token(spacer-090);
@@ -155,13 +157,16 @@
     padding: token(spacer-040);
     line-height: token(text-body-line-height);
     border: token(border-width-s) solid transparent;
+    // stylelint-disable-next-line declaration-property-value-keyword-no-deprecated
     word-break: break-word;
     hyphens: auto;
     cursor: pointer;
     font-size: token(text-body-font-size);
     outline: 0;
     user-select: none;
-    transition: background 0.2s ease-out, border-color 0.2s ease-out;
+    transition:
+        background 0.2s ease-out,
+        border-color 0.2s ease-out;
 
     .adyen-checkout__icon {
         position: absolute;
@@ -220,6 +225,6 @@
     max-height: 18px;
 }
 
-.adyen-checkout__dropdown+.adyen-checkout-input__inline-validation {
+.adyen-checkout__dropdown + .adyen-checkout-input__inline-validation {
     right: token(spacer-100);
 }
