@@ -10,6 +10,7 @@ import type { AdyenCheckoutProps, ShopperDetails } from '../types';
 async function createSessionsCheckout(
     checkoutProps: Omit<AdyenCheckoutProps, 'srConfig'> & {
         srConfig?: { showPanel: boolean; moveFocus: boolean };
+        'srConfig.showPanel'?: boolean;
     },
     shopperDetails?: ShopperDetails
 ): Promise<Checkout> {
@@ -20,8 +21,15 @@ async function createSessionsCheckout(
         amount,
         sessionData,
         srConfig = { showPanel: false, moveFocus: true },
+        'srConfig.showPanel': showPanelOverride,
         ...restCheckoutProps
     } = checkoutProps;
+
+    // Merge srConfig with the global control override
+    const finalSrConfig = {
+        ...srConfig,
+        ...(showPanelOverride !== undefined && { showPanel: showPanelOverride })
+    };
 
     const session = await createSession({
         amount: {
@@ -64,7 +72,7 @@ async function createSessionsCheckout(
         },
 
         _environmentUrls: STORYBOOK_ENVIRONMENT_URLS,
-        srConfig,
+        srConfig: finalSrConfig,
         ...restCheckoutProps
     });
 }
