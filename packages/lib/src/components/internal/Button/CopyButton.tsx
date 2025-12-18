@@ -35,7 +35,7 @@ const CopyButton = (props: CopyButtonProps) => {
             {...props}
             variant="action"
             onClick={onClick}
-            // It's ok to have both, browsers will fire only one click event for enter key pressed.
+            // Workaround: See ADR-0001-uielement-keyboard-event-propagation-workaround
             onKeyPress={stopPropagationForActionKeys}
             onKeyDown={stopPropagationForActionKeys}
             icon={props.icon ?? getImage({ imageFolder: 'components/' })(`${PREFIX}copy`)}
