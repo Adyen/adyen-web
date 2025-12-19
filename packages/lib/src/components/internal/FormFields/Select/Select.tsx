@@ -10,7 +10,6 @@ import './Select.scss';
 import { ARIA_CONTEXT_SUFFIX, ARIA_ERROR_SUFFIX } from '../../../../core/Errors/constants';
 import { simulateFocusScroll } from '../utils';
 import { useCoreContext } from '../../../../core/Context/CoreProvider';
-import useSRPanelContext from '../../../../core/Errors/useSRPanelContext';
 
 function Select({
     items = [],
@@ -34,13 +33,13 @@ function Select({
     required
 }: SelectProps) {
     const { i18n } = useCoreContext();
-    const { setSRMessagesFromStrings, clearSRPanel } = useSRPanelContext();
     const filterInputRef = useRef(null);
     const selectContainerRef = useRef(null);
     const toggleButtonRef = useRef(null);
     const selectListRef = useRef(null);
     const [textFilter, setTextFilter] = useState<string>(null);
     const [showList, setShowList] = useState<boolean>(false);
+    const [statusMessage, setStatusMessage] = useState<string>(null);
     const selectListId: string = useMemo(() => `select-${uuid()}`, []);
 
     const active: SelectItem = items.find(i => i.id === selectedValue) || ({} as SelectItem);
@@ -277,11 +276,11 @@ function Select({
      */
     useEffect(() => {
         if (showList && filteredItems.length === 0) {
-            setSRMessagesFromStrings?.(i18n.get('select.noOptionsFound'));
+            setStatusMessage(i18n.get('select.noOptionsFound'));
         } else {
-            clearSRPanel?.();
+            setStatusMessage(null);
         }
-    }, [showList, filteredItems.length, i18n, setSRMessagesFromStrings, clearSRPanel]);
+    }, [showList, filteredItems.length, i18n]);
 
     return (
         <div
@@ -319,6 +318,18 @@ function Select({
                 selectListRef={selectListRef}
                 showList={showList}
             />
+            <div
+                role="status"
+                aria-live="polite"
+                // aria-relevant seems to be needed here make make sure a second time we get 
+                // "No options found" we still announce the status message.
+                // What happens otherwise is that just the first status message is announced
+                // tested on VoiceOver on Chrome
+                aria-relevant="all"
+                className="adyen-checkout-sr-panel--sr-only"
+            > 
+                {statusMessage} 
+            </div>
         </div>
     );
 }

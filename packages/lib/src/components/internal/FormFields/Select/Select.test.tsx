@@ -3,18 +3,13 @@ import { render, screen } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import Select from './Select';
 import { CoreProvider } from '../../../../core/Context/CoreProvider';
-import SRPanelProvider from '../../../../core/Errors/SRPanelProvider';
-import { SRPanel } from '../../../../core/Errors/SRPanel';
 
 describe('Select', () => {
     const user = userEvent.setup();
-    const srPanel = new SRPanel(global.core);
     const renderSelect = (props: any) =>
         render(
             <CoreProvider loadingContext={'test'} i18n={global.i18n} resources={global.resources}>
-                <SRPanelProvider srPanel={srPanel}>
-                    <Select {...props} name={'mockSelect'} />
-                </SRPanelProvider>
+                <Select {...props} name={'mockSelect'} />
             </CoreProvider>
         );
 
@@ -194,9 +189,7 @@ describe('Select', () => {
         expect(screen.getByText('Apple')).toBeVisible();
     });
 
-    test('SRPanel announces no options found message', async () => {
-        const setSRMessagesSpy = jest.spyOn(srPanel, 'setMessages');
-        
+    test('ARIA live region announces no options found message', async () => {
         renderSelect({
             items: [{ name: 'Apple', id: '1' }],
             filterable: true,
@@ -209,15 +202,14 @@ describe('Select', () => {
         // Type something that won't match any items
         await user.type(combobox, 'xyz');
         
-        // Check that SRPanel.setMessages was called with the no options message
-        expect(setSRMessagesSpy).toHaveBeenCalledWith('No options found');
-        
-        setSRMessagesSpy.mockRestore();
+        // Check that the live region is present and contains the no options message
+        const liveRegion = screen.getByRole('status');
+        expect(liveRegion).toBeInTheDocument();
+        expect(liveRegion).toHaveTextContent('No options found');
+        expect(liveRegion).toHaveAttribute('aria-live', 'polite');
     });
 
-    test('SRPanel is cleared when options are available', async () => {
-        const setSRMessagesSpy = jest.spyOn(srPanel, 'setMessages');
-        
+    test('ARIA live region is empty when options are available', async () => {
         renderSelect({
             items: [{ name: 'Apple', id: '1' }],
             filterable: true,
@@ -229,9 +221,9 @@ describe('Select', () => {
 
         await user.type(combobox, 'App'); // search for Apple
 
-        // SRPanel should be cleared (called with null) when there are options
-        expect(setSRMessagesSpy).toHaveBeenCalledWith(null);
-        
-        setSRMessagesSpy.mockRestore();
+        // Live region should be present but empty when there are options
+        const liveRegion = screen.getByRole('status');
+        expect(liveRegion).toBeInTheDocument();
+        expect(liveRegion).toBeEmptyDOMElement();
     });
 });
