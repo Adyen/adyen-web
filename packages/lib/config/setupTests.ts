@@ -12,4 +12,14 @@ import 'whatwg-fetch';
 import './testMocks/srPanelMock';
 import './testMocks/commonCorePropsMock';
 
+// Polyfill Web Streams API for MSW v2.x compatibility
+// https://github.com/mswjs/msw/issues/1916
+import { ReadableStream, WritableStream, TransformStream } from 'node:stream/web';
+
+Object.assign(global, {
+    ReadableStream,
+    WritableStream,
+    TransformStream,
+});
+
 configure({ adapter: new Adapter() });
