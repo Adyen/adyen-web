@@ -30,6 +30,15 @@ class Button extends Component<ButtonProps, ButtonState> {
         }, delay);
     };
 
+    private readonly buttonStatusSRLabel = (status: string): string => {
+        const srLabels: Record<string, string> = {
+            loading: 'loading',
+            redirect: 'payButton.redirecting'
+        };
+
+        return srLabels[status] || '';
+    };
+
     render() {
         const {
             classNameModifiers = [],
@@ -79,13 +88,12 @@ class Button extends Component<ButtonProps, ButtonState> {
 
         const buttonStates = {
             loading: (
-                <span className="adyen-checkout__button__content">
+                <span aria-hidden="true" className="adyen-checkout__button__content">
                     <Spinner size="medium" inline />
-                    <span className={'adyen-checkout__button__text--sr-only'}>{i18n.get('loading')}</span>
                 </span>
             ),
             redirect: (
-                <span className="adyen-checkout__button__content">
+                <span aria-hidden="true" className="adyen-checkout__button__content">
                     <Spinner size="medium" inline />
                     {i18n.get('payButton.redirecting')}
                 </span>
@@ -126,6 +134,9 @@ class Button extends Component<ButtonProps, ButtonState> {
             >
                 {buttonText}
                 {status !== 'loading' && status !== 'redirect' && this.props.children}
+                <span role="status" aria-live="polite" className="adyen-checkout__button__text--sr-only">
+                    {i18n.get(this.buttonStatusSRLabel(status))}
+                </span>
             </button>
         );
     }
