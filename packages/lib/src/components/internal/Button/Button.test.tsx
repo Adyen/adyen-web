@@ -16,7 +16,7 @@ describe('Button', () => {
     test('Renders a button by default', () => {
         const wrapper = getWrapper({ label: 'label' });
         expect(wrapper.text()).toContain('label');
-        expect(wrapper.getDOMNode().nodeName).toBe('BUTTON');
+        expect(wrapper.find('button').length).toBe(1);
     });
 
     test('Renders a link if href is present', () => {
