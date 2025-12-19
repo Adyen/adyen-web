@@ -1,4 +1,3 @@
-import { getUTCTimestamp } from '../core/Analytics/utils';
 import base64 from './base64';
 
 export interface SdkDataObject {
@@ -21,7 +20,7 @@ export interface SdkDataObject {
 export function createSdkData(checkoutAttemptId: string, clientData: string): string {
     const sdkDataObject: SdkDataObject = {
         schemaVersion: '1.0',
-        createdAt: getUTCTimestamp(),
+        createdAt: Date.now(),
         analytics: {
             checkoutAttemptId
         },

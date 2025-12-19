@@ -96,17 +96,20 @@ abstract class BaseElement<P extends BaseElementProps> implements IBaseElement {
         const order = this.state.order || this.props.order;
         const componentData = this.formatData();
 
+        // Create sdkData when both analytics and risk data are available
+        const sdkData = checkoutAttemptId && clientDataUnencoded ? createSdkData(checkoutAttemptId, clientDataUnencoded) : undefined;
+
         if (componentData.paymentMethod && checkoutAttemptId) {
             componentData.paymentMethod.checkoutAttemptId = checkoutAttemptId;
         }
 
-        // Create sdkData when both analytics and risk data are available
-        const sdkData = checkoutAttemptId && clientDataUnencoded ? createSdkData(checkoutAttemptId, clientDataUnencoded) : undefined;
+        if (componentData.paymentMethod && sdkData) {
+            componentData.paymentMethod.sdkData = sdkData;
+        }
 
         return {
             ...(clientData && { riskData: { clientData } }),
             ...(order && { order: { orderData: order.orderData, pspReference: order.pspReference } }),
-            ...(sdkData && { sdkData }),
             ...componentData,
             clientStateDataIndicator: true
         };
