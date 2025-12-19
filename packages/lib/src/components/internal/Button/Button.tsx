@@ -1,4 +1,4 @@
-import { Component, h, Fragment } from 'preact';
+import { Component, h } from 'preact';
 import classNames from 'classnames';
 import Spinner from '../Spinner';
 import { useCoreContext } from '../../../core/Context/CoreProvider';
@@ -117,29 +117,27 @@ class Button extends Component<ButtonProps, ButtonState> {
         }
 
         return (
-            <Fragment>
+            <button
+                ref={buttonRef}
+                className={buttonClasses}
+                type="button"
+                disabled={disabled}
+                onClick={this.onClick}
+                aria-label={ariaLabel}
+                aria-describedby={ariaDescribedBy}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
+                onKeyDown={onKeyDown}
+                onFocus={onFocus}
+                onBlur={onBlur}
+                onKeyPress={onKeyPress}
+            >
+                {buttonText}
+                {status !== 'loading' && status !== 'redirect' && this.props.children}
                 <span role="status" aria-live="polite" className="adyen-checkout__button__text--sr-only">
                     {i18n.get(this.buttonStatusSRLabel(status))}
                 </span>
-                <button
-                    ref={buttonRef}
-                    className={buttonClasses}
-                    type="button"
-                    disabled={disabled}
-                    onClick={this.onClick}
-                    aria-label={ariaLabel}
-                    aria-describedby={ariaDescribedBy}
-                    onMouseEnter={onMouseEnter}
-                    onMouseLeave={onMouseLeave}
-                    onKeyDown={onKeyDown}
-                    onFocus={onFocus}
-                    onBlur={onBlur}
-                    onKeyPress={onKeyPress}
-                >
-                    {buttonText}
-                    {status !== 'loading' && status !== 'redirect' && this.props.children}
-                </button>
-            </Fragment>
+            </button>
         );
     }
 }
