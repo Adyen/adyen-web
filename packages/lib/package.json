@@ -126,7 +126,7 @@
         "rollup-plugin-swc3": "0.12.1",
         "sass": "1.77.8",
         "size-limit": "11.2.0",
-        "storybook": "10.0.7",
+        "storybook": "10.1.10",
         "stylelint": "16.25.0",
         "stylelint-config-standard-scss": "16.0.0",
         "ts-jest": "29.4.5",
