@@ -1,4 +1,5 @@
 import Specifications from './Specifications';
+import { PARTIAL_ADDRESS_SCHEMA } from './constants';
 
 describe('Specifications', () => {
     const addressSpecificationsMock = {
@@ -64,4 +65,26 @@ describe('Specifications', () => {
         expect(specifications.getAddressSchemaForCountryFlat('CA')).toStrictEqual(['country', 'postalCode', 'city']);
         expect(specifications.getAddressSchemaForCountryFlat('PT')).toStrictEqual(['country', 'city', 'postalCode']);
     });
+});
+
+describe('Partial Address Schema Specifications', () => {
+    const partialSpecifications = new Specifications(PARTIAL_ADDRESS_SCHEMA);
+
+    test('should use zipCode label for US postal code in partial mode', () => {
+        expect(partialSpecifications.getKeyForField('postalCode', 'US')).toBe('zipCode');
+    });
+
+    test.each(['GB', 'CA', 'AU', 'BR', 'FR', 'DE', 'NL'])(
+        'should use default postalCode label for %s in partial mode',
+        countryCode => {
+            expect(partialSpecifications.getKeyForField('postalCode', countryCode)).toBe('postalCode');
+        }
+    );
+
+    test.each(['US', 'GB', 'FR'])(
+        'partial schema for %s should only contain postalCode field',
+        countryCode => {
+            expect(partialSpecifications.getAddressSchemaForCountryFlat(countryCode)).toStrictEqual(['postalCode']);
+        }
+    );
 });
