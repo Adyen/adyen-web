@@ -175,7 +175,9 @@ $adyen-checkout-media-query-xl-min: 1280px;
 
 @mixin a11y-visually-hidden {
     border: 0;
-    clip: rect(0 0 0 0);
+    // stylelint-disable-next-line property-no-deprecated
+    clip: rect(0 0 0 0); /* fallback for older browsers */
+    clip-path: inset(50%);
     width: 1px;
     height: 1px;
     overflow: hidden;

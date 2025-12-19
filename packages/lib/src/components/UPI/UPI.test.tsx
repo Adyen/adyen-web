@@ -9,7 +9,7 @@ import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 
 jest.mock('../../utils/isMobile');
 const isMobileMock = isMobile as jest.Mock;
-
+const onCompleteMock = jest.fn();
 jest.mock('./constants', () => ({
     ...jest.requireActual('./constants'),
     getIntentOption: jest.fn(() => ({ label: 'UPI app', value: 'intent' })),
@@ -21,7 +21,8 @@ describe('UPI', () => {
     const props = {
         i18n: global.i18n,
         loadingContext: 'test',
-        modules: { resources: new Resources('test') }
+        modules: { resources: new Resources('test') },
+        onComplete: onCompleteMock
     };
 
     afterEach(() => {
@@ -287,6 +288,61 @@ describe('UPI', () => {
             render(upi.render());
             // Check for segmented control group
             expect(await screen.findByRole('group')).toBeInTheDocument();
+        });
+        test('should have a segment controlled naviable by keyboard and selected with enter', async () => {
+            const core = setupCoreMock();
+            const user = userEvent.setup();
+
+            const upi = new UPI(core, props);
+            render(upi.render());
+
+            const segmentedControl = await screen.findByRole('group');
+            // Check for segmented control group
+            expect(segmentedControl).toBeInTheDocument();
+
+            (await screen.findByRole('button', { name: 'QR code' })).focus();
+            expect(await screen.findByRole('button', { name: /Generate QR code/i })).toBeInTheDocument();
+
+            // check if onComplete was not called
+            await user.keyboard('{Enter}');
+            expect(onCompleteMock).not.toHaveBeenCalled();
+
+            await user.tab();
+            await user.keyboard('{Enter}');
+
+            // check if upi id is visible
+            expect(await screen.findByText('Enter your UPI ID')).toBeInTheDocument();
+
+            // check if generate qr code is not visible
+            expect( screen.queryByRole('button', { name: /Generate QR code/i })).not.toBeInTheDocument();
+        });
+
+        test('should have a segment controlled naviable by keyboard and selected with space', async () => {
+            const core = setupCoreMock();
+            const user = userEvent.setup();
+
+            const upi = new UPI(core, props);
+            render(upi.render());
+
+            const segmentedControl = await screen.findByRole('group');
+            // Check for segmented control group
+            expect(segmentedControl).toBeInTheDocument();
+
+            (await screen.findByRole('button', { name: 'QR code' })).focus();
+            expect(await screen.findByRole('button', { name: /Generate QR code/i })).toBeInTheDocument();
+
+            // check if onComplete was not called
+            await user.keyboard(' ');
+            expect(onCompleteMock).not.toHaveBeenCalled();
+
+            await user.tab();
+
+            // check if upi id is visible
+            await user.keyboard(' ');
+            expect(await screen.findByText('Enter your UPI ID')).toBeInTheDocument();
+
+            // check if generate qr code is not visible
+            expect( screen.queryByRole('button', { name: /Generate QR code/i })).not.toBeInTheDocument();
         });
     });
 });

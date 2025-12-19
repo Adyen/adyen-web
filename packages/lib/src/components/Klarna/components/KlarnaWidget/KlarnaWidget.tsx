@@ -1,9 +1,8 @@
 import { h } from 'preact';
 import { useEffect, useRef, useState, useCallback } from 'preact/hooks';
 import Script from '../../../../utils/Script';
-import { KLARNA_WIDGET_URL } from '../../constants';
+import { KLARNA_WIDGET_URL, KLARNA_REFUSED_RESULT_CODE } from '../../constants';
 import type { KlarnaWidgetAuthorizeResponse, KlarnaWidgetProps } from '../../types';
-
 import './KlarnaWidget.scss';
 import useAnalytics from '../../../../core/Analytics/useAnalytics';
 
@@ -17,7 +16,7 @@ export function KlarnaWidget({ sdkData, paymentMethodType, widgetInitializationT
         props.onComplete({
             data: {
                 paymentData: props.paymentData,
-                details: {}
+                details: { resultCode: KLARNA_REFUSED_RESULT_CODE }
             }
         });
     }, [props.paymentData, props.onComplete]);
@@ -81,12 +80,7 @@ export function KlarnaWidget({ sdkData, paymentMethodType, widgetInitializationT
         }
     }, [sdkData.payment_method_category, props.onComplete, props.onError]);
 
-    /**
-     * TODO: Clean this up when we have a different solution for handling on click in the BaseElement class
-     * We need this specifically for handling ENTER keypresses from the keyboard
-     * because the UIElement class has an on keypress handler which can trigger a components submit function
-     * ENTER key press on this button should not trigger this behaviour since the Klarna script has already been loaded
-     */
+    // Workaround: See ADR-0001-uielement-keyboard-event-propagation-workaround
     const handleKeyDown = (e: h.JSX.TargetedKeyboardEvent<HTMLButtonElement>) => {
         if (e.key === 'Enter' || e.code === 'Enter') {
             e.preventDefault();

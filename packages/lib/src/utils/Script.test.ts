@@ -187,8 +187,68 @@ describe('Script', () => {
 
         script.remove();
 
-        // A promise deve ser rejeitada com o erro de cancelamento
         await expect(loadPromise).rejects.toThrow(new AdyenCheckoutError('CANCEL', 'Script loading cancelled.'));
         expect(document.body.querySelector(`script[src="${SCRIPT_SRC}"]`)).toBeNull();
+    });
+
+    test('should ignore late load events after remove() was already called', async () => {
+        const scriptElement = document.createElement('script');
+        jest.spyOn(document, 'createElement').mockImplementation(() => scriptElement);
+
+        const script = new Script({ src: SCRIPT_SRC, component: 'example-sdk', analytics: mockAnalytics });
+        const loadPromise = script.load();
+
+        script.remove();
+
+        await expect(loadPromise).rejects.toThrow(new AdyenCheckoutError('CANCEL', 'Script loading cancelled.'));
+
+        expect(() => {
+            const loadEvent = new Event('load');
+            scriptElement.dispatchEvent(loadEvent);
+        }).not.toThrow();
+    });
+
+    test('should properly cleanup listeners after successful load', async () => {
+        const scriptElement = document.createElement('script');
+        jest.spyOn(document, 'createElement').mockImplementation(() => scriptElement);
+        const removeListenerSpy = jest.spyOn(scriptElement, 'removeEventListener');
+
+        const script = new Script({ src: SCRIPT_SRC, component: 'example-sdk', analytics: mockAnalytics });
+        const loadPromise = script.load();
+
+        scriptElement.dispatchEvent(new Event('load'));
+        await loadPromise;
+
+        expect(removeListenerSpy).toHaveBeenCalledWith('load', expect.any(Function));
+        expect(removeListenerSpy).toHaveBeenCalledWith('error', expect.any(Function));
+    });
+
+    test('should handle race condition where remove() is called before handleOnLoad executes', async () => {
+        const scriptElement = document.createElement('script');
+        jest.spyOn(document, 'createElement').mockImplementation(() => scriptElement);
+
+        let capturedLoadHandler: (() => void) | null = null;
+
+        // Capture the load event handler
+        const addEventListenerSpy = jest.spyOn(scriptElement, 'addEventListener').mockImplementation((event, handler) => {
+            if (event === 'load' && typeof handler === 'function') {
+                capturedLoadHandler = handler as () => void;
+            }
+        });
+
+        const script = new Script({ src: SCRIPT_SRC, component: 'example-sdk', analytics: mockAnalytics });
+        const loadPromise = script.load();
+
+        expect(capturedLoadHandler).not.toBeNull();
+
+        // Simulate race condition: remove() is called before handleOnLoad executes
+        script.remove();
+
+        await expect(loadPromise).rejects.toThrow(new AdyenCheckoutError('CANCEL', 'Script loading cancelled.'));
+        expect(() => {
+            capturedLoadHandler?.();
+        }).not.toThrow();
+
+        addEventListenerSpy.mockRestore();
     });
 });

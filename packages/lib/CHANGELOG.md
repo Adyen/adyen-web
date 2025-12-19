@@ -1,5 +1,25 @@
 # @adyen/adyen-web
 
+## 6.27.1
+
+### Patch Changes
+
+- Fixed details object for Klarna Widget refused purchases ([#3690](https://github.com/Adyen/adyen-web/pull/3690))
+
+- Fixed: onKeyDown enter press event for SegmentedControl component ([#3715](https://github.com/Adyen/adyen-web/pull/3715))
+
+## 6.27.0
+
+### Minor Changes
+
+- Improved: Move SRPanelProvider to UIElement to remove multiple imports ([#3694](https://github.com/Adyen/adyen-web/pull/3694))
+
+### Patch Changes
+
+- Improvement: Adds focus border to active item on all select elements ([#3646](https://github.com/Adyen/adyen-web/pull/3646))
+
+- Fixed a runtime error that occurred when an external script finished loading after the component had already been unmounted. ([#3709](https://github.com/Adyen/adyen-web/pull/3709))
+
 ## 6.26.0
 
 ### Minor Changes
