@@ -20,7 +20,7 @@ export class Iris extends IssuerListContainer<IrisConfiguration, IrisData> {
         this.mode = isMobile() ? IrisMode.BANK_LIST : IrisMode.QR_CODE;
     }
 
-    private onUpdateMode = (mode: IrisMode, sendAnalytics = false): void => {
+    private readonly onUpdateMode = (mode: IrisMode, sendAnalytics = false): void => {
         this.mode = mode;
 
         if (sendAnalytics) {
