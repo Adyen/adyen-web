@@ -160,6 +160,7 @@
     width: 100%;
     font-weight: bold;
     user-select: all;
+    // stylelint-disable-next-line declaration-property-value-keyword-no-deprecated
     word-break: break-word;
     line-height: 1.2;
 }

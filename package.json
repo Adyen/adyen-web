@@ -35,17 +35,17 @@
     },
     "devDependencies": {
         "@adyen/adyen-web-server": "1.0.0",
-        "@changesets/cli": "2.29.7",
-        "@changesets/get-github-info": "0.6.0",
+        "@changesets/cli": "2.29.8",
+        "@changesets/get-github-info": "0.7.0",
         "concurrently": "9.2.1",
         "cross-env": "10.1.0",
         "husky": "9.1.7",
-        "lint-staged": "16.2.6",
-        "prettier": "3.6.2"
+        "lint-staged": "16.2.7",
+        "prettier": "3.7.1"
     },
     "resolutions": {
         "tar-fs": "^3.0.9",
         "cheerio": "1.0.0-rc.12"
     },
-    "packageManager": "yarn@4.10.3"
+    "packageManager": "yarn@4.12.0"
 }
