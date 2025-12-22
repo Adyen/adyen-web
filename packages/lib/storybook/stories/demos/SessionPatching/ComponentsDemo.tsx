@@ -48,7 +48,7 @@ const ComponentsDemo = ({ amount, countryCode, shopperLocale }) => {
 
     useEffect(() => {
         if (!session) {
-            requestSession();
+            void requestSession();
         }
     }, [session]);
 
@@ -59,7 +59,13 @@ const ComponentsDemo = ({ amount, countryCode, shopperLocale }) => {
     return (
         <Fragment>
             <AmountUpdate onUpdateAmount={(newAmount: string) => setAmount(Number(newAmount))} />
-            <Checkout sessionId={session.id} sessionData={session.sessionData} countryCode={countryCode} amountValue={updatedAmount} onPatchSession={patchSession}/>
+            <Checkout
+                sessionId={session.id}
+                sessionData={session.sessionData}
+                countryCode={countryCode}
+                amountValue={updatedAmount}
+                onPatchSession={patchSession}
+            />
         </Fragment>
     );
 };
@@ -72,7 +78,7 @@ function Checkout({ sessionId, sessionData, countryCode, amountValue, onPatchSes
     // Keep the ref updated with the latest onPatchSession function
     useEffect(() => {
         onPatchSessionRef.current = onPatchSession;
-    }, [onPatchSession]); 
+    }, [onPatchSession]);
 
     const createDropin = async () => {
         const checkout = await AdyenCheckout({
@@ -84,24 +90,24 @@ function Checkout({ sessionId, sessionData, countryCode, amountValue, onPatchSes
                 id: sessionId
             },
 
-            beforeSubmit: async (data, component, actions) => {
+            beforeSubmit: async (data, _component, actions) => {
                 const updatedSessionData = await onPatchSessionRef.current();
                 actions.resolve({ ...data, sessionData: updatedSessionData });
             },
 
-            onPaymentCompleted(result, element) {
+            onPaymentCompleted: (result, element) => {
                 console.log('onPaymentCompleted', result, element);
                 setFinalStatus('success');
             },
 
-            onPaymentFailed(result, element) {
+            onPaymentFailed: (result, element) => {
                 console.log('onPaymentFailed', result, element);
                 setFinalStatus('failed');
             },
 
-            onError: (error, component) => {
+            onError: (error, _component) => {
                 if (error.name === 'CANCEL') return;
-                
+
                 alert('onError');
                 console.log(error);
             },
@@ -121,7 +127,7 @@ function Checkout({ sessionId, sessionData, countryCode, amountValue, onPatchSes
 
     useEffect(() => {
         if (!checkoutRef.current) {
-            createDropin();
+            void createDropin();
         }
     }, []);
 
@@ -134,14 +140,23 @@ function Checkout({ sessionId, sessionData, countryCode, amountValue, onPatchSes
             };
 
             const core = checkoutRef.current;
-            core.update({ amount }, { shouldRecreateDomElements: false });
+            void core.update({ amount }, { shouldRecreateDomElements: false });
         }
     }, [amountValue, countryCode]);
 
     if (finalStatus) {
         const isSuccess = finalStatus === 'success';
         return (
-            <div style={{ marginTop: '20px', padding: '40px', border: `1px solid ${isSuccess ? '#00a650' : '#d93025'}`, borderRadius: '8px', backgroundColor: isSuccess ? '#e6f4ea' : '#fce8e6', textAlign: 'center' }}>
+            <div
+                style={{
+                    marginTop: '20px',
+                    padding: '40px',
+                    border: `1px solid ${isSuccess ? '#00a650' : '#d93025'}`,
+                    borderRadius: '8px',
+                    backgroundColor: isSuccess ? '#e6f4ea' : '#fce8e6',
+                    textAlign: 'center'
+                }}
+            >
                 <div style={{ fontSize: '24px', fontWeight: 'bold', color: isSuccess ? '#00a650' : '#d93025', marginBottom: '8px' }}>
                     {isSuccess ? 'Payment Successful' : 'Payment Failed'}
                 </div>
@@ -175,5 +190,4 @@ function Checkout({ sessionId, sessionData, countryCode, amountValue, onPatchSes
     );
 }
 
-
-export { ComponentsDemo }
+export { ComponentsDemo };
