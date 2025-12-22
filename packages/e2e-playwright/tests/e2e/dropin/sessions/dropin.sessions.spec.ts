@@ -3,6 +3,7 @@ import { test, expect } from '../../../../fixtures/dropin.fixture';
 import { PAYMENT_RESULT, REGULAR_TEST_CARD, TEST_CVC_VALUE, TEST_DATE_VALUE } from '../../../utils/constants';
 import { URL_MAP } from '../../../../fixtures/URL_MAP';
 import { Card } from '../../../../models/card';
+import { SCREENSHOT_CONFIG } from '../../../utils/constants';
 
 dotenv.config();
 const apiVersion = Number(process.env.API_VERSION.substring(1));
@@ -12,8 +13,10 @@ test('#1 Should succeed in making a payment', async ({ dropinWithSession, page }
     const { paymentMethodDetailsLocator } = await dropinWithSession.selectNonStoredPaymentMethod('scheme');
 
     const card = new Card(page, paymentMethodDetailsLocator);
-
+    
     await card.isComponentVisible();
+    await expect(card.rootElement).toHaveScreenshot('dropin-empty-credit-card.png', SCREENSHOT_CONFIG);
+    
     await card.typeCardNumber(REGULAR_TEST_CARD);
     await card.typeExpiryDate(TEST_DATE_VALUE);
     await card.typeCvc(TEST_CVC_VALUE);
