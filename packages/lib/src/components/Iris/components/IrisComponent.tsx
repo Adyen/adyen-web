@@ -16,7 +16,7 @@ interface IrisComponentProps {
     showPayButton?: boolean;
     issuers: IssuerItem[];
     issuerListUI: h.JSX.Element;
-    onUpdateMode: (mode: IrisMode) => void;
+    onUpdateMode: (mode: IrisMode, sendAnalytics?: boolean) => void;
     payButton: (props: Partial<PayButtonProps>) => h.JSX.Element;
     setComponentRef: (ref: ComponentMethodsRef) => void;
 }
@@ -28,9 +28,9 @@ export default function IrisComponent(props: Readonly<IrisComponentProps>) {
     const [status, setStatus] = useState<UIElementStatus>('ready');
     const segmentedControlOptions = useMemo(() => getIrisSegmentedControlOptions(i18n, props.defaultMode), [i18n, props.defaultMode]);
 
-    const handleModeChange = (mode: IrisMode) => {
+    const handleModeChange = (mode: IrisMode, sendAnalytics = false) => {
         setMode(mode);
-        props.onUpdateMode(mode);
+        props.onUpdateMode(mode, sendAnalytics);
     };
 
     const irisRef = useRef<ComponentMethodsRef>({
@@ -53,7 +53,12 @@ export default function IrisComponent(props: Readonly<IrisComponentProps>) {
 
     return (
         <div>
-            <SegmentedControl onChange={handleModeChange} selectedValue={mode} disabled={status === 'loading'} options={segmentedControlOptions} />
+            <SegmentedControl
+                onChange={mode => handleModeChange(mode, true)}
+                selectedValue={mode}
+                disabled={status === 'loading'}
+                options={segmentedControlOptions}
+            />
             {mode === IrisMode.BANK_LIST && (
                 <SegmentedControlRegion
                     id={IRIS_ALLY_LABELS.AreaId.BANK_LIST}
