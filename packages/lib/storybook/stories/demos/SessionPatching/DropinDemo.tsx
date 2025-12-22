@@ -23,7 +23,7 @@ const DropinDemo = ({ amount, countryCode, shopperLocale }) => {
                 value: Number(updatedAmount)
             },
             shopperLocale,
-            allowedPaymentMethods: ['scheme', 'applepay', 'googlepay', 'paypal', 'ach'],
+            allowedPaymentMethods: ['scheme', 'googlepay', 'ach'],
             countryCode,
             reference: 'SESSION-PATCHING',
             shopperReference: 'poc-session-patching-shopper',
@@ -50,7 +50,7 @@ const DropinDemo = ({ amount, countryCode, shopperLocale }) => {
 
     useEffect(() => {
         if (!session) {
-            requestSession();
+            void requestSession();
         }
     }, [session]);
 
@@ -61,7 +61,13 @@ const DropinDemo = ({ amount, countryCode, shopperLocale }) => {
     return (
         <Fragment>
             <AmountUpdate onUpdateAmount={(newAmount: string) => setAmount(Number(newAmount))} />
-            <Checkout sessionId={session.id} sessionData={session.sessionData} countryCode={countryCode} amountValue={updatedAmount} onPatchSession={patchSession}/>
+            <Checkout
+                sessionId={session.id}
+                sessionData={session.sessionData}
+                countryCode={countryCode}
+                amountValue={updatedAmount}
+                onPatchSession={patchSession}
+            />
         </Fragment>
     );
 };
@@ -73,7 +79,7 @@ function Checkout({ sessionId, sessionData, countryCode, amountValue, onPatchSes
     // Keep the ref updated with the latest onPatchSession function
     useEffect(() => {
         onPatchSessionRef.current = onPatchSession;
-    }, [onPatchSession]); 
+    }, [onPatchSession]);
 
     const createDropin = async () => {
         const checkout = await AdyenCheckout({
@@ -85,22 +91,22 @@ function Checkout({ sessionId, sessionData, countryCode, amountValue, onPatchSes
                 id: sessionId
             },
 
-            beforeSubmit: async (data, component, actions) => {
+            beforeSubmit: async (data, _component, actions) => {
                 const updatedSessionData = await onPatchSessionRef.current();
                 actions.resolve({ ...data, sessionData: updatedSessionData });
             },
 
-            onPaymentCompleted(result, element) {
+            onPaymentCompleted: (result, element) => {
                 console.log('onPaymentCompleted', result, element);
             },
 
-            onPaymentFailed(result, element) {
+            onPaymentFailed: (result, element) => {
                 console.log('onPaymentFailed', result, element);
             },
 
-            onError: (error, component) => {
+            onError: (error, _component) => {
                 if (error.name === 'CANCEL') return;
-                
+
                 alert('onError');
                 console.log(error);
             },
@@ -115,7 +121,7 @@ function Checkout({ sessionId, sessionData, countryCode, amountValue, onPatchSes
 
     useEffect(() => {
         if (!checkoutRef.current) {
-            createDropin();
+            void createDropin();
         }
     }, []);
 
@@ -128,7 +134,7 @@ function Checkout({ sessionId, sessionData, countryCode, amountValue, onPatchSes
             };
 
             const core = checkoutRef.current;
-            core.update({ amount }, { shouldRecreateDomElements: false });
+            void core.update({ amount }, { shouldRecreateDomElements: false });
         }
     }, [amountValue, countryCode]);
 
@@ -144,5 +150,4 @@ function Checkout({ sessionId, sessionData, countryCode, amountValue, onPatchSes
     );
 }
 
-
-export { DropinDemo }
+export { DropinDemo };

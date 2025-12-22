@@ -9,7 +9,7 @@ import splitPaymentMethods from './elements/splitPaymentMethods';
 import { TxVariants } from '../tx-variants';
 
 import type { DropinConfiguration, InstantPaymentTypes, PaymentMethodsConfiguration } from './types';
-import type { PaymentAction, PaymentAmount, PaymentAmountExtended, PaymentResponseData } from '../../types/global-types';
+import type { PaymentAction, PaymentAmountExtended, PaymentResponseData } from '../../types/global-types';
 import type { ICore } from '../../core/types';
 import type { IDropin } from './types';
 

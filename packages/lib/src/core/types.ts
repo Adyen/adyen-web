@@ -222,7 +222,7 @@ export interface CoreConfiguration {
      * @param component
      * @param actions
      */
-    beforeSubmit?(state: PaymentData, component: UIElement, actions: BeforeSubmitActions): void;
+    beforeSubmit?(state: PaymentData, component: UIElement, actions: BeforeSubmitActions): Promise<void>;
 
     /**
      * Called when the payment succeeds.
