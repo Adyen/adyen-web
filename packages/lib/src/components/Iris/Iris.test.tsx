@@ -2,6 +2,8 @@ import { render, screen, waitFor } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 import Iris from './Iris';
+import { IrisMode } from './types';
+import { InfoEventType, UiTarget } from '../../core/Analytics/events/AnalyticsInfoEvent';
 
 // Mock the isMobile utility
 jest.mock('../../utils/isMobile', () => jest.fn());
@@ -20,22 +22,29 @@ describe('Iris', () => {
         { id: 'ATTIGRAA', name: 'CrediaBank' }
     ];
 
-    beforeEach(() => {
-        jest.clearAllMocks();
-        isMobileMock.mockReturnValue(false); // Default to desktop
-    });
+    let core: ReturnType<typeof setupCoreMock>;
+    let user: ReturnType<typeof userEvent.setup>;
+    let onSubmitMock: jest.Mock;
 
-    test('should pre-select "QR Code" mode on Desktop', async () => {
-        isMobileMock.mockReturnValue(false);
-        const core = setupCoreMock();
-
-        const iris = new Iris(core, {
+    const createIris = (props = {}) =>
+        new Iris(core, {
             issuers: defaultIssuers,
             i18n: core.modules.i18n,
             loadingContext: 'test',
-            modules: { resources: core.modules.resources }
+            modules: { resources: core.modules.resources },
+            ...props
         });
 
+    beforeEach(() => {
+        jest.clearAllMocks();
+        isMobileMock.mockReturnValue(false); // Default to desktop
+        core = setupCoreMock();
+        user = userEvent.setup();
+        onSubmitMock = jest.fn();
+    });
+
+    test('should pre-select "QR Code" mode on Desktop', async () => {
+        const iris = createIris();
         render(iris.render());
 
         const qrCodeButton = await screen.findByRole('button', { name: 'QR code' });
@@ -45,53 +54,28 @@ describe('Iris', () => {
 
     test('should pre-select "Bank List" mode on Mobile', async () => {
         isMobileMock.mockReturnValue(true);
-        const core = setupCoreMock();
-
-        const iris = new Iris(core, {
-            issuers: defaultIssuers,
-            i18n: core.modules.i18n,
-            loadingContext: 'test',
-            modules: { resources: core.modules.resources }
-        });
-
+        const iris = createIris();
         render(iris.render());
 
         const bankListButton = await screen.findByRole('button', { name: 'Bank list' });
         expect(bankListButton).toHaveAttribute('aria-expanded', 'true');
         expect(screen.queryByRole('button', { name: /Generate QR code/i })).not.toBeInTheDocument();
     });
+
     test('should trigger validation error if issuer is not selected', async () => {
-        const user = userEvent.setup();
-        const onSubmitMock = jest.fn();
         isMobileMock.mockReturnValue(true); // Start in Bank List mode
-        const core = setupCoreMock();
-        const iris = new Iris(core, {
-            issuers: defaultIssuers,
-            showPayButton: true,
-            onSubmit: onSubmitMock,
-            i18n: core.modules.i18n,
-            loadingContext: 'test',
-            modules: { resources: core.modules.resources }
-        });
+        const iris = createIris({ showPayButton: true, onSubmit: onSubmitMock });
         render(iris.render());
+
         const payButton = await screen.findByRole('button', { name: /Continue/i });
         await user.click(payButton);
         // onSubmit should NOT be called when invalid
         expect(onSubmitMock).not.toHaveBeenCalled();
     });
+
     test('should call Payments API with correct payload including issuer', async () => {
-        const user = userEvent.setup();
-        const onSubmitMock = jest.fn();
         isMobileMock.mockReturnValue(true); // Start in Bank List mode
-        const core = setupCoreMock();
-        const iris = new Iris(core, {
-            issuers: defaultIssuers,
-            showPayButton: true,
-            onSubmit: onSubmitMock,
-            i18n: core.modules.i18n,
-            loadingContext: 'test',
-            modules: { resources: core.modules.resources }
-        });
+        const iris = createIris({ showPayButton: true, onSubmit: onSubmitMock });
         render(iris.render());
         const issuerOption = await screen.findByRole('option', { name: /Piraeus Bank/i });
         await user.click(issuerOption);
@@ -116,15 +100,7 @@ describe('Iris', () => {
     });
 
     test('should NOT trigger issuer validation in QR Code mode', async () => {
-        const core = setupCoreMock();
-
-        const iris = new Iris(core, {
-            issuers: defaultIssuers,
-            i18n: core.modules.i18n,
-            loadingContext: 'test',
-            modules: { resources: core.modules.resources }
-        });
-
+        const iris = createIris();
         render(iris.render());
 
         // In QR Code mode (default on desktop), component should be valid without issuer selection
@@ -134,19 +110,7 @@ describe('Iris', () => {
     });
 
     test('should call Payments API with correct payload without issuer', async () => {
-        const user = userEvent.setup();
-        const onSubmitMock = jest.fn();
-        const core = setupCoreMock();
-
-        const iris = new Iris(core, {
-            issuers: defaultIssuers,
-            showPayButton: true,
-            onSubmit: onSubmitMock,
-            i18n: core.modules.i18n,
-            loadingContext: 'test',
-            modules: { resources: core.modules.resources }
-        });
-
+        const iris = createIris({ showPayButton: true, onSubmit: onSubmitMock });
         render(iris.render());
 
         const generateQrButton = await screen.findByRole('button', { name: /Generate QR code/i });
@@ -163,20 +127,8 @@ describe('Iris', () => {
     });
 
     test('should NOT include issuer in payload when switching from Bank List to QR Code mode', async () => {
-        const user = userEvent.setup();
-        const onSubmitMock = jest.fn();
         isMobileMock.mockReturnValue(true);
-        const core = setupCoreMock();
-
-        const iris = new Iris(core, {
-            issuers: defaultIssuers,
-            showPayButton: true,
-            onSubmit: onSubmitMock,
-            i18n: core.modules.i18n,
-            loadingContext: 'test',
-            modules: { resources: core.modules.resources }
-        });
-
+        const iris = createIris({ showPayButton: true, onSubmit: onSubmitMock });
         render(iris.render());
 
         const issuerOption = await screen.findByRole('option', { name: /Piraeus Bank/i });
@@ -204,19 +156,7 @@ describe('Iris', () => {
     });
 
     test('should render QR code mode without segment control and submit without issuer when issuerList is empty', async () => {
-        const user = userEvent.setup();
-        const onSubmitMock = jest.fn();
-        const core = setupCoreMock();
-
-        const iris = new Iris(core, {
-            issuers: [],
-            showPayButton: true,
-            onSubmit: onSubmitMock,
-            i18n: core.modules.i18n,
-            loadingContext: 'test',
-            modules: { resources: core.modules.resources }
-        });
-
+        const iris = createIris({ issuers: [], showPayButton: true, onSubmit: onSubmitMock });
         render(iris.render());
 
         // Should show the Generate QR code button
@@ -243,5 +183,69 @@ describe('Iris', () => {
         const submitCall = onSubmitMock.mock.calls[0][0];
         expect(submitCall.data.paymentMethod).not.toHaveProperty('issuer');
         expect(submitCall.data.paymentMethod.type).toBe('iris');
+    });
+
+    describe('Analytics', () => {
+        test('should send analytics info event when clicking on Bank list segmented control option', async () => {
+            const iris = createIris();
+            render(iris.render());
+
+            // Verify QR code is initially selected
+            const qrCodeButton = await screen.findByRole('button', { name: 'QR code' });
+            expect(qrCodeButton).toHaveAttribute('aria-expanded', 'true');
+
+            // Click on Bank list
+            const bankListButton = await screen.findByRole('button', { name: 'Bank list' });
+            await user.click(bankListButton);
+
+            expect(core.modules.analytics.sendAnalytics).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    type: InfoEventType.clicked,
+                    target: UiTarget.segmentedControl,
+                    component: 'iris',
+                    configData: { selectedMode: IrisMode.BANK_LIST }
+                })
+            );
+        });
+
+        test('should send analytics info event when clicking on QR code segmented control option', async () => {
+            isMobileMock.mockReturnValue(true); // Start in Bank List mode
+            const iris = createIris();
+            render(iris.render());
+
+            // Verify Bank list is initially selected
+            const bankListButton = await screen.findByRole('button', { name: 'Bank list' });
+            expect(bankListButton).toHaveAttribute('aria-expanded', 'true');
+
+            // Click on QR code
+            const qrCodeButton = await screen.findByRole('button', { name: 'QR code' });
+            await user.click(qrCodeButton);
+
+            expect(core.modules.analytics.sendAnalytics).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    type: InfoEventType.clicked,
+                    target: UiTarget.segmentedControl,
+                    component: 'iris',
+                    configData: { selectedMode: IrisMode.QR_CODE }
+                })
+            );
+        });
+
+        test('should not send segmented control analytics event when issuer list is empty', async () => {
+            const iris = createIris({ issuers: [] });
+            render(iris.render());
+
+            // Should show Generate QR code button directly (no segmented control)
+            expect(await screen.findByRole('button', { name: /Generate QR code/i })).toBeInTheDocument();
+            expect(screen.queryByRole('button', { name: 'QR code' })).not.toBeInTheDocument();
+            expect(screen.queryByRole('button', { name: 'Bank list' })).not.toBeInTheDocument();
+
+            // No segmented control click events should be sent (only rendered event)
+            expect(core.modules.analytics.sendAnalytics).not.toHaveBeenCalledWith(
+                expect.objectContaining({
+                    target: UiTarget.segmentedControl
+                })
+            );
+        });
     });
 });

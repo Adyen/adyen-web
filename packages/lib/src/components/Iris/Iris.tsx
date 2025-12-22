@@ -8,6 +8,7 @@ import IrisComponent from './components/IrisComponent';
 import { IrisQrCodeInstructions } from './components/IrisQrCodeInstructions';
 import { IrisConfiguration, IrisData, IrisMode } from './types';
 import { DEFAULT_IRIS_COUNTDOWN_TIME } from './constants';
+import { AnalyticsInfoEvent, InfoEventType, UiTarget } from '../../core/Analytics/events/AnalyticsInfoEvent';
 
 export class Iris extends IssuerListContainer<IrisConfiguration, IrisData> {
     public static readonly type = TxVariants.iris;
@@ -19,9 +20,20 @@ export class Iris extends IssuerListContainer<IrisConfiguration, IrisData> {
         this.mode = isMobile() ? IrisMode.BANK_LIST : IrisMode.QR_CODE;
     }
 
-    private onUpdateMode(mode: IrisMode) {
+    private onUpdateMode = (mode: IrisMode, sendAnalytics = false): void => {
         this.mode = mode;
-    }
+
+        if (sendAnalytics) {
+            const event = new AnalyticsInfoEvent({
+                type: InfoEventType.clicked,
+                target: UiTarget.segmentedControl,
+                component: TxVariants.iris,
+                configData: { selectedMode: mode }
+            });
+
+            this.submitAnalytics(event);
+        }
+    };
 
     private renderIssuerList(): h.JSX.Element {
         return super.componentToRender();
@@ -85,7 +97,7 @@ export class Iris extends IssuerListContainer<IrisConfiguration, IrisData> {
             <IrisComponent
                 setComponentRef={this.setComponentRef}
                 defaultMode={this.mode}
-                onUpdateMode={mode => this.onUpdateMode(mode)}
+                onUpdateMode={this.onUpdateMode}
                 issuerListUI={this.renderIssuerList()}
                 showPayButton={this.props.showPayButton}
                 payButton={this.payButton}
