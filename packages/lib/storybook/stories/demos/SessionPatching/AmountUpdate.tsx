@@ -11,7 +11,7 @@ function AmountUpdate({ onUpdateAmount }) {
         setMessage('');
     };
 
-    const handleDispatchRequest = async () => {
+    const handleDispatchRequest = () => {
         if (amount === '' || isNaN(parseFloat(amount))) {
             setMessage('⚠️ Please enter a valid number for the amount.');
             return;

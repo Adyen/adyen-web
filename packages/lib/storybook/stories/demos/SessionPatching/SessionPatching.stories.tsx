@@ -14,6 +14,9 @@ export const WithDropin: SessionPatchingStory = {
     render: checkoutConfig => {
         const { amount, countryCode, shopperLocale } = checkoutConfig;
         return <DropinDemo amount={amount} countryCode={countryCode} shopperLocale={shopperLocale} />;
+    },
+    parameters: {
+        controls: { exclude: ['useSessions', 'shopperLocale', 'amount', 'showPayButton'] }
     }
 };
 
@@ -21,6 +24,9 @@ export const WithComponents: SessionPatchingStory = {
     render: checkoutConfig => {
         const { amount, countryCode, shopperLocale } = checkoutConfig;
         return <ComponentsDemo amount={amount} countryCode={countryCode} shopperLocale={shopperLocale} />;
+    },
+    parameters: {
+        controls: { exclude: ['useSessions', 'shopperLocale', 'amount', 'showPayButton'] }
     }
 };
 

@@ -85,7 +85,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         this.createBeforeRenderHook(props);
         this.reportIntegrationFlavor();
     }
- 
+
     /**
      * Creates a hook tied to render() method. This hook is called every time render() is invoked.
      * Currently useful for Analytics
@@ -270,12 +270,12 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
 
         if (this.core.session) {
             const beforeSubmitEvent: Promise<PaymentData> = this.props.beforeSubmit
-                ? new Promise((resolve, reject) =>
-                      this.props.beforeSubmit(this.data, this.elementRef, {
+                ? new Promise((resolve, reject) => {
+                      void this.props.beforeSubmit(this.data, this.elementRef, {
                           resolve,
                           reject: () => reject(new CancelError('beforeSubmitRejected'))
-                      })
-                  )
+                      });
+                  })
                 : Promise.resolve(this.data);
 
             return beforeSubmitEvent.then(this.submitUsingSessionsFlow);
@@ -575,7 +575,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
      * Get the payButton component for the current element
      */
     protected payButton = (props: PayButtonFunctionProps) => {
-        return <PayButton {...props} amount={this.props.amount} secondaryAmount={this.props.secondaryAmount} onClick={this.submit} />;
+        return <PayButton {...props} onClick={this.submit} />;
     };
 
     /**
