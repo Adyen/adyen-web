@@ -2,11 +2,11 @@ import { h } from 'preact';
 import { PayButtonProps } from '../../internal/PayButton/PayButton';
 import { IrisMode } from '../types';
 import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
-import { getIrisSegmentedControlOptions, IRIS_ALLY_LABELS } from '../constants';
+import { IRIS_ALLY_LABELS } from '../constants';
+import { getIrisSegmentedControlOptions } from '../utils';
 import { useCoreContext } from '../../../core/Context/CoreProvider';
 import { SegmentedControl, SegmentedControlRegion } from '../../internal/SegmentedControl';
 import { ComponentMethodsRef, UIElementStatus } from '../../types';
-import isMobile from '../../../utils/isMobile';
 import { IssuerItem } from '../../internal/IssuerList/types';
 import IrisGenerateQRCode from './IrisGenerateQRCode';
 import styles from './IrisComponent.module.scss';
@@ -26,15 +26,7 @@ export default function IrisComponent(props: Readonly<IrisComponentProps>) {
 
     const [mode, setMode] = useState<IrisMode>(props.defaultMode);
     const [status, setStatus] = useState<UIElementStatus>('ready');
-    const segmentedControlOptions = useMemo(() => {
-        const options = getIrisSegmentedControlOptions(i18n);
-
-        if (isMobile()) {
-            return options.reverse();
-        }
-
-        return options;
-    }, [i18n]);
+    const segmentedControlOptions = useMemo(() => getIrisSegmentedControlOptions(i18n, props.defaultMode), [i18n, props.defaultMode]);
 
     const handleModeChange = (mode: IrisMode) => {
         setMode(mode);
@@ -50,12 +42,12 @@ export default function IrisComponent(props: Readonly<IrisComponentProps>) {
     }, [props.setComponentRef, irisRef.current]);
 
     useEffect(() => {
-        if (props.issuers.length === 0) {
+        if (!props.issuers.length) {
             handleModeChange(IrisMode.QR_CODE);
         }
     }, [props.issuers]);
 
-    if (props.issuers.length === 0) {
+    if (!props.issuers.length) {
         return <IrisGenerateQRCode showPayButton={props.showPayButton} payButton={props.payButton} status={status} />;
     }
 
@@ -66,7 +58,7 @@ export default function IrisComponent(props: Readonly<IrisComponentProps>) {
                 <SegmentedControlRegion
                     id={IRIS_ALLY_LABELS.AreaId.BANK_LIST}
                     ariaLabelledBy={IRIS_ALLY_LABELS.ButtonId.BANK_LIST}
-                    className={styles.list}
+                    className={styles.bankList}
                 >
                     {props.issuerListUI}
                 </SegmentedControlRegion>
