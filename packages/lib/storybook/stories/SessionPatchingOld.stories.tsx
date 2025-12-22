@@ -7,7 +7,6 @@ import { StoryConfiguration } from '../types';
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { AdyenCheckout, components, Core } from '../../src';
 import DropinComponent from '../../src/components/Dropin/Dropin';
-import CardComponent from '../../src/components/Card/Card';
 
 // Register all Components
 const { Dropin, ...Components } = components;
@@ -17,7 +16,7 @@ AdyenCheckout.register(...Classes);
 type SessionPatchingStory = StoryConfiguration<{}>;
 
 const meta: Meta<SessionPatchingStory> = {
-    title: 'Demos/SessionPatchingBeforeSubmit'
+    title: 'Demos/SessionPatchingOld'
 };
 
 export const Default: SessionPatchingStory = {
@@ -29,14 +28,13 @@ export const Default: SessionPatchingStory = {
 
 const Demo = ({ amount, countryCode, shopperLocale }) => {
     const [session, setSession] = useState<{ id: string; sessionData: string }>(null);
-    const [updatedAmount, setAmount] = useState(amount);
     const [isSessionPatched, setIsSessionPatched] = useState(false);
 
     const requestSession = async () => {
         const session = await createSession({
             amount: {
                 currency: getCurrency(countryCode),
-                value: Number(updatedAmount)
+                value: Number(amount)
             },
             shopperLocale,
             countryCode,
@@ -75,14 +73,18 @@ const Demo = ({ amount, countryCode, shopperLocale }) => {
 
     return (
         <Fragment>
-            <CheckoutSessionOverview sessionId={session.id} sessionData={session.sessionData} />
-            <AmountUpdate onUpdateAmount={(newAmount: string) => setAmount(newAmount)} />
-            <Checkout sessionId={session.id} sessionData={session.sessionData} countryCode={countryCode} amountValue={updatedAmount} />
+            <AmountInputDispatch
+                disabledPatch={isSessionPatched}
+                sessionId={session.id}
+                sessionData={session.sessionData}
+                onSessionPatch={patchSession}
+            />
+            <Checkout sessionId={session.id} sessionData={session.sessionData} countryCode={countryCode} />
         </Fragment>
     );
 };
 
-function Checkout({ sessionId, sessionData, countryCode, amountValue }) {
+function Checkout({ sessionId, sessionData, countryCode }) {
     const checkoutRef = useRef<Core>(null);
 
     const createDropin = async () => {
@@ -119,55 +121,29 @@ function Checkout({ sessionId, sessionData, countryCode, amountValue }) {
 
         const dropin = new DropinComponent(checkout);
         dropin.mount('#dropin-container');
-
-        console.log('component', dropin);
     };
 
     useEffect(() => {
-        if (!checkoutRef.current) {
-            createDropin();
-        }
-    }, []);
+        createDropin();
+    }, [sessionData]);
 
+    // If sessionData changes and checkout is already created, update it
     useEffect(() => {
-        // If core exists, and amount changes, we perform an amount update
         if (checkoutRef.current) {
-            const amount = {
-                value: Number(amountValue),
-                currency: 'EUR'
-            };
-
-            checkoutRef.current.update({ amount }, { shouldRecreateDomElements: false });
+            // TODO
         }
-    }, [amountValue]);
+    }, [sessionData, checkoutRef.current]);
 
     return (
         <div style={{ marginTop: '20px', padding: '20px', border: '1px solid #007bff', borderRadius: '8px', backgroundColor: '#f8f9fa' }}>
+            <h3>Dropin</h3>
             <div style={{ margin: 'auto', maxWidth: '600px' }} id="dropin-container"></div>
         </div>
     );
 }
 
-function CheckoutSessionOverview({ sessionId, sessionData }) {
-    return (
-        <div style={{ marginBottom: '10px', padding: '10px', border: '1px solid #007bff', borderRadius: '8px', backgroundColor: '#f8f9fa' }}>
-            <div style={{ padding: '10px', backgroundColor: '#e9ecef', borderRadius: '4px', border: '1px solid #ced4da' }}>
-                <p style={{ margin: '0 0 5px 0', fontSize: '14px' }}>
-                    Current Session ID:
-                    <code style={{ backgroundColor: '#fff', padding: '2px 4px', borderRadius: '3px' }}>{sessionId || 'N/A'}</code>
-                </p>
-                <p style={{ margin: 0, fontSize: '14px' }}>
-                    Session Data (Last 50 Chars):
-                    <code style={{ backgroundColor: '#fff', padding: '2px 4px', borderRadius: '3px', wordBreak: 'break-all' }}>
-                        ...${sessionData.slice(-50)}
-                    </code>
-                </p>
-            </div>
-        </div>
-    );
-}
-
-function AmountUpdate({ onUpdateAmount }) {
+function AmountInputDispatch({ disabledPatch, sessionId, sessionData, onSessionPatch }) {
+    const [loading, setLoading] = useState(false);
     const [amount, setAmount] = useState('');
     const [message, setMessage] = useState('');
 
@@ -183,18 +159,44 @@ function AmountUpdate({ onUpdateAmount }) {
             return;
         }
 
-        onUpdateAmount(amount);
-        setMessage('✅ Success!');
-        setAmount('');
+        setLoading(true);
+        setMessage('Updating session...');
+
+        try {
+            await onSessionPatch(amount);
+            setMessage(`✅ Success!`);
+            setLoading(false);
+        } catch (error) {
+            setMessage('❌ Error: The network request failed. Please try again.');
+            setLoading(false);
+            console.error('Error patching session:', error);
+        }
     };
 
     return (
-        <div style={{ padding: '10px', border: '1px solid #007bff', borderRadius: '8px', backgroundColor: '#f8f9fa', display: 'flex' }}>
+        <div style={{ padding: '20px', border: '1px solid #007bff', borderRadius: '8px', backgroundColor: '#f8f9fa' }}>
+            <div style={{ marginBottom: '20px', padding: '10px', backgroundColor: '#e9ecef', borderRadius: '4px', border: '1px solid #ced4da' }}>
+                <p style={{ margin: '0 0 5px 0', fontSize: '14px' }}>
+                    Current Session ID:
+                    <code style={{ backgroundColor: '#fff', padding: '2px 4px', borderRadius: '3px' }}>{sessionId || 'N/A'}</code>
+                </p>
+                <p style={{ margin: 0, fontSize: '14px' }}>
+                    Session Data (Last 50 Chars):
+                    <code style={{ backgroundColor: '#fff', padding: '2px 4px', borderRadius: '3px', wordBreak: 'break-all' }}>
+                        ...${sessionData.slice(-50)}
+                    </code>
+                </p>
+            </div>
+
+            <hr style={{ borderColor: '#ced4da' }} />
+
+            <h3>New Amount</h3>
             <input
                 type="text"
                 value={amount}
                 onChange={handleAmountChange}
                 placeholder="Enter new amount"
+                disabled={loading || disabledPatch}
                 style={{
                     padding: '10px',
                     marginRight: '10px',
@@ -204,32 +206,33 @@ function AmountUpdate({ onUpdateAmount }) {
                 }}
             />
 
-            <button
-                onClick={handleDispatchRequest}
-                style={{
-                    padding: '10px 15px',
-                    borderRadius: '4px',
-                    border: 'none',
-                    backgroundColor: '#007bff',
-                    color: 'white',
-                    cursor: 'pointer'
-                }}
-            >
-                Update amount
-            </button>
+            {!disabledPatch && (
+                <button
+                    onClick={handleDispatchRequest}
+                    disabled={loading}
+                    style={{
+                        padding: '10px 15px',
+                        borderRadius: '4px',
+                        border: 'none',
+                        backgroundColor: loading ? '#6c757d' : '#007bff',
+                        color: 'white',
+                        cursor: loading ? 'not-allowed' : 'pointer'
+                    }}
+                >
+                    {loading ? 'Sending Request...' : 'Update amount'}
+                </button>
+            )}
 
             {message && (
-                <div
+                <p
                     style={{
-                        marginTop: 'auto',
-                        marginBottom: 'auto',
-                        marginLeft: '20px',
+                        marginTop: '10px',
                         fontWeight: 'bold',
                         color: message.startsWith('✅') ? 'green' : message.startsWith('❌') ? 'red' : 'orange'
                     }}
                 >
                     {message}
-                </div>
+                </p>
             )}
         </div>
     );

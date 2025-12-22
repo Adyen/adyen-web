@@ -85,7 +85,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         this.createBeforeRenderHook(props);
         this.reportIntegrationFlavor();
     }
-
+ 
     /**
      * Creates a hook tied to render() method. This hook is called every time render() is invoked.
      * Currently useful for Analytics
