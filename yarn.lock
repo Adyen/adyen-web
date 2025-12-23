@@ -120,7 +120,7 @@ __metadata:
     msw: "npm:2.12.3"
     msw-storybook-addon: "npm:2.0.6"
     postcss: "npm:8.5.6"
-    preact: "npm:10.22.1"
+    preact: "npm:10.28.0"
     rollup: "npm:4.53.3"
     rollup-plugin-dts: "npm:6.3.0"
     rollup-plugin-postcss: "npm:4.0.2"
@@ -11987,10 +11987,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"preact@npm:10.22.1":
-  version: 10.22.1
-  resolution: "preact@npm:10.22.1"
-  checksum: 10c0/9163b97d6fc0ce6b945ed77695d00c4fa07e317d0723e7b9d10c748153d30596abab8b26861ae45591e47bff25515da91406ce7f1c9e66cd9cac7e7f6c927930
+"preact@npm:10.28.0":
+  version: 10.28.0
+  resolution: "preact@npm:10.28.0"
+  checksum: 10c0/039c5077ccce61d6a781d5f63df24c5c7205270abe52464708852b8e8d7fc926cdd07fc4a116af282e5a1e41b62e8a4065a5999e0e2db521faad6a1c033a8b1c
   languageName: node
   linkType: hard
 
