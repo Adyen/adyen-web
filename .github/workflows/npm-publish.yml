@@ -8,7 +8,7 @@ jobs:
   publish-npm:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
       # Setup .npmrc file to publish to npm
       - uses: actions/setup-node@v6
