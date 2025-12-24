@@ -1,4 +1,4 @@
-import { PaymentAmountExtended } from '../types';
+import { PaymentAmount } from '../types';
 import CURRENCY_DECIMALS from './constants/currency-decimals';
 import { currencyMinorUnitsConfig } from './constants/currency-minor-units';
 
@@ -48,7 +48,7 @@ export const getLocalisedAmount = (amount: number, locale: string, currencyCode:
  * @returns True if the amount has a valid numeric value, non-empty currency string,
  *          and optionally a valid currencyDisplay string
  */
-export const isAmountValid = (amount: PaymentAmountExtended): boolean => {
+export const isAmountValid = (amount: PaymentAmount): boolean => {
     if (!amount || typeof amount !== 'object') {
         return false;
     }

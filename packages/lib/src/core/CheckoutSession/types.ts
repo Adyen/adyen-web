@@ -18,7 +18,7 @@ export type CheckoutSessionSetupResponse = {
     id: string;
     sessionData: string;
     countryCode?: string;
-    amount: PaymentAmount;
+    amount: Omit<PaymentAmount, 'currencyDisplay'>;
     expiresAt: string;
     paymentMethods: any;
     returnUrl: string;

@@ -2,7 +2,7 @@ import { h } from 'preact';
 import Session from '../../../core/CheckoutSession';
 import Language from '../../../language';
 import UIElement from './UIElement';
-import type { PaymentAction, PaymentAmount, PaymentAmountExtended } from '../../../types/global-types';
+import type { PaymentAction, PaymentAmount } from '../../../types/global-types';
 import type { BaseElementProps } from '../BaseElement/types';
 import type { PayButtonProps } from '../PayButton/PayButton';
 import type { CoreConfiguration } from '../../../core/types';
@@ -68,7 +68,7 @@ export type UIElementProps = {
         name?: string;
         icon?: string;
         amount?: PaymentAmount;
-        secondaryAmount?: PaymentAmountExtended;
+        secondaryAmount?: PaymentAmount;
 
         /**
          * Show/Hide pay button
