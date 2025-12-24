@@ -8,14 +8,22 @@ dotenv.config({ path: path.resolve('../../', '.env') });
 
 const playgroundBaseUrl = `${protocol}://localhost:3020`;
 
+export const SCREENSHOT_CONFIG = {
+    maxDiffPixels: 1000,
+    maxDiffPixelRatio: 0.03,
+    threshold: 0.2,
+    animations: 'disabled',
+    scale: 'device'
+};
+
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
 const config: PlaywrightTestConfig = {
     testDir: './tests/',
     testMatch: '**/*.spec.ts',
-    // Exclude the automated-a11y tests which run in a separate pipeline
-    testIgnore: ['**/automated-a11y/**'],
+    // Exclude the automated tests which run in a separate pipeline
+    testIgnore: ['**/automated/**'],
     /* Maximum time one test can run for. */
     timeout: 60 * 1000,
     expect: {
@@ -23,7 +31,8 @@ const config: PlaywrightTestConfig = {
          * Maximum time expect() should wait for the condition to be met.
          * For example in `await expect(locator).toHaveText();`
          */
-        timeout: 10000
+        timeout: 30_000,
+        ...SCREENSHOT_CONFIG
     },
     /* Run tests in files in parallel */
     fullyParallel: true,
@@ -37,10 +46,12 @@ const config: PlaywrightTestConfig = {
     /* Reporter to use. See https://playwright.dev/docs/test-reporters */
     reporter: [['html', { open: 'never' }], ['list']],
 
+    snapshotPathTemplate: '{testDir}/__screenshots__/{platform}/{projectName}/{arg}{ext}',
+
     /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
     use: {
         /* Maximum time each action such as `click()` can take. Defaults to 0 (no limit). */
-        actionTimeout: 30000,
+        actionTimeout: 30_000,
         /* Base URL to use in actions like `await page.goto('/')`. */
         baseURL: playgroundBaseUrl,
 
@@ -83,7 +94,7 @@ const config: PlaywrightTestConfig = {
     /* Run your local dev server before starting the tests */
     webServer: [
         {
-            command: 'npm run build:storybook:e2e && npm run start:prod-storybook',
+            command: 'npm run build:storybook && npm run start:prod-storybook',
             cwd: '../..',
             port: 3020,
             reuseExistingServer: !process.env.CI,

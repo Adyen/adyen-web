@@ -3,7 +3,7 @@ import { useEffect, useState } from 'preact/hooks';
 import { createCheckout } from '../helpers/create-checkout';
 import Spinner from '../../src/components/internal/Spinner';
 
-import { Fragment, type ComponentChildren } from 'preact';
+import { type ComponentChildren } from 'preact';
 import type { GlobalStoryProps, ShopperDetails } from '../types';
 import type { ICore } from '../../src/core/types';
 
@@ -29,9 +29,15 @@ export const Checkout: React.FC<ICheckout> = ({ children, checkoutConfig, shoppe
     }, [checkoutConfig]);
 
     return (
-        <Fragment>
+        <div data-testid="checkout-component">
             {errorMessage && <div>{errorMessage}</div>}
-            {adyenCheckout ? children(adyenCheckout) : <Spinner />}
-        </Fragment>
+            {adyenCheckout ? (
+                children(adyenCheckout)
+            ) : (
+                <div data-testid="checkout-component-spinner">
+                    <Spinner />
+                </div>
+            )}
+        </div>
     );
 };

@@ -25,7 +25,7 @@ const CVC_LABEL_OPTIONAL = LANG['creditCard.securityCode.label.optional'];
 test.describe('Bcmc payments with dual branding', () => {
     test.describe('Bancontact (BCMC) / Maestro brands', () => {
         test.describe('Selecting the Bancontact brand', () => {
-            test('#1a should submit the bcmc payment', async ({ bcmc, page }) => {
+            test('#1a should submit the bcmc payment', { tag: '@screenshot' }, async ({ bcmc, page }) => {
                 await bcmc.goto(URL_MAP.bcmc);
 
                 await bcmc.isComponentVisible();
@@ -40,6 +40,8 @@ test.describe('Bcmc payments with dual branding', () => {
                 const brandAlts = await Promise.all(brands.map(brand => brand.getAttribute('alt')));
                 expect(brandAlts).toHaveLength(2);
                 expect(brandAlts).toEqual(expect.arrayContaining(['Bancontact card', 'Maestro']));
+
+                await expect(bcmc.rootElement).toHaveScreenshot('bcmc-dual-brand-card-with-brand-selector.png');
 
                 const bcmcBtn = bcmc.selectDualBrandUIItem(/bancontact/i, false);
                 await bcmcBtn.click();

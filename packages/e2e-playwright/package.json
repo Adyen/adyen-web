@@ -1,23 +1,27 @@
 {
-  "name": "@adyen/adyen-web-playwright",
-  "private": true,
-  "version": "1.0.0",
-  "repository": "github:Adyen/adyen-web",
-  "license": "MIT",
-  "scripts": {
-    "test:headless": "npx playwright test",
-    "test:headed": "npx playwright test --headed",
-    "test:ui-mode": "npx playwright test --ui",
-    "test:automated-a11y:headless": "npx playwright test --config=automated-a11y.config.ts",
-    "test:automated-a11y:headed": "npx playwright test --config=automated-a11y.config.ts --headed",
-    "test:automated-a11y:ui-mode": "npx playwright test --config=automated-a11y.config.ts --ui"
-  },
-  "devDependencies": {
-    "@adyen/adyen-web-server": "1.0.0",
-    "@axe-core/playwright": "^4.10.1",
-    "@playwright/test": "1.50.0",
-    "dotenv": "17.2.3",
-    "ts-loader": "9.5.4",
-    "typescript": "5.9.3"
-  }
+    "name": "@adyen/adyen-web-playwright",
+    "private": true,
+    "version": "1.0.0",
+    "repository": "github:Adyen/adyen-web",
+    "license": "MIT",
+    "scripts": {
+        "test:headless": "npx playwright test",
+        "test:headed": "npx playwright test --headed",
+        "test:ui": "npx playwright test --ui",
+        "test:update-screenshots": "npx playwright test --update-snapshots --grep @screenshot",
+        "test:automated-a11y:headless": "npx playwright test --config=automated-ally.playwright.config.ts",
+        "test:automated-a11y:headed": "npx playwright test --config=automated-ally.playwright.config.ts --headed",
+        "test:automated-a11y:ui": "npx playwright test --config=automated-ally.playwright.config.ts --ui",
+        "test:automated-visual:headless": "npx playwright test --config=automated-visual.playwright.config.ts",
+        "test:automated-visual:ui": "npx playwright test --config=automated-visual.playwright.config.ts --ui",
+        "test:automated-visual:update-screenshots": "npx playwright test --config=automated-visual.playwright.config.ts --update-snapshots"
+    },
+    "devDependencies": {
+        "@adyen/adyen-web-server": "1.0.0",
+        "@axe-core/playwright": "^4.10.1",
+        "@playwright/test": "1.50.0",
+        "dotenv": "17.2.3",
+        "ts-loader": "9.5.4",
+        "typescript": "5.9.3"
+    }
 }

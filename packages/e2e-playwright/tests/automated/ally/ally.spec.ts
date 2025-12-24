@@ -1,6 +1,6 @@
-import { test, expect } from '../../fixtures/base-fixture';
+import { test, expect } from '../../../fixtures/base-fixture';
 import fs from 'node:fs';
-import { Automated } from '../../models/automated';
+import { Automated } from '../../../models/automated';
 
 // Config
 // This is relative to playwright root: adyen-web/lib/e2e-playwright/

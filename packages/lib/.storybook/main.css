@@ -1,8 +1,8 @@
+@import 'https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap';
+
 html,
 body {
-    font: 1rem/1.21 -apple-system,
-    BlinkMacSystemFont,
-    sans-serif;
+    font: 1rem/1.21 Inter, sans-serif;
     font-weight: 400;
     background-color: #fbfbfb;
 }
