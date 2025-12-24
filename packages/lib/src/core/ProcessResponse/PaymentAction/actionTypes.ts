@@ -1,9 +1,11 @@
 import { get3DS2FlowProps } from '../../../components/ThreeDS2/components/utils';
 import uuid from '../../../utils/uuid';
-import UIElement from '../../../components/internal/UIElement';
+import type { StatusFromAction, UIElement } from '../../../types';
 import type { PaymentAction } from '../../../types/global-types';
 import type { IRegistry } from '../../core.registry';
 import type { ICore } from '../../types';
+import type { ThreeDS2ConfigProps } from '../../../types';
+import type { ActionHandlerConfig } from './types';
 
 const createComponent = (core: ICore, registry: IRegistry, componentType, props): UIElement => {
     const Element = registry.getComponent(componentType);
@@ -16,9 +18,9 @@ const createComponent = (core: ICore, registry: IRegistry, componentType, props)
     return element;
 };
 
-const getActionHandler = statusType => {
-    return (core: ICore, registry: IRegistry, action: PaymentAction, props) => {
-        const config = {
+const getActionHandler = (statusType: StatusFromAction) => {
+    return (core: ICore, registry: IRegistry, action: PaymentAction, props: any): UIElement => {
+        const config: ActionHandlerConfig<typeof props> = {
             ...props,
             ...action,
             onError: props.onError,
@@ -31,7 +33,7 @@ const getActionHandler = statusType => {
 };
 
 const actionTypes = {
-    redirect: (core: ICore, registry, action: PaymentAction, props) => {
+    redirect: (core: ICore, registry, action: PaymentAction, props): UIElement => {
         const config = {
             ...props,
             ...action,
@@ -42,7 +44,7 @@ const actionTypes = {
         return createComponent(core, registry, 'redirect', config);
     },
 
-    threeDS2: (core: ICore, registry, action: PaymentAction, props) => {
+    threeDS2: (core: ICore, registry, action: PaymentAction, props): UIElement => {
         const componentType = action.subtype === 'fingerprint' ? 'threeDS2DeviceFingerprint' : 'threeDS2Challenge';
 
         /**
@@ -51,9 +53,9 @@ const actionTypes = {
          */
         const paymentData = action.subtype === 'fingerprint' || props.isMDFlow ? action.paymentData : action.authorisationToken;
 
-        const config = {
+        const config: ThreeDS2ConfigProps = {
             // Props common to both flows
-            core: core,
+            core,
             token: action.token,
             paymentData,
             onActionHandled: props.onActionHandled,
