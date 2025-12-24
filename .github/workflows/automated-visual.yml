@@ -8,7 +8,7 @@ on:
   #   - cron: '0 2 * * 1-5' # Runs at 2 AM UTC Monday-Friday
 
 jobs:
-  automated-a11y:
+  automated-visual:
     timeout-minutes: 60
     runs-on: ubuntu-latest
     strategy:
@@ -70,7 +70,7 @@ jobs:
       if: steps.playwright-cache.outputs.cache-hit != 'true' || matrix.runner-browser == 'webkit'
       run: npx playwright install --with-deps ${{ matrix.runner-browser }}
 
-    - name: Run Automated Accessibility Tests
+    - name: Run Automated Visual Tests
       run: yarn test:automated-visual --project=${{ matrix.runner-browser }}
     
     - name: Archive test result artifacts
