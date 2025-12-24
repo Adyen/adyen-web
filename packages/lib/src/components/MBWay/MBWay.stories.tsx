@@ -1,4 +1,5 @@
 import { h } from 'preact';
+import { http, HttpResponse } from 'msw';
 import { MetaConfiguration, PaymentMethodStoryProps, StoryConfiguration } from '../../../storybook/types';
 import { ComponentContainer } from '../../../storybook/components/ComponentContainer';
 import { Checkout } from '../../../storybook/components/Checkout';
@@ -20,6 +21,41 @@ export const Default: MBWayStory = {
     args: {
         countryCode: 'PT'
     }
+};
+
+const createMBWayMockHandlers = () => [
+    http.post('https://checkoutshopper-test.adyen.com/checkoutshopper/services/PaymentInitiation/v1/status', () => {
+        return HttpResponse.json({
+            payload: '',
+            resultCode: 'pending',
+            type: 'pending'
+        });
+    })
+];
+
+export const AwaitScreen: MBWayStory = {
+    args: {
+        countryCode: 'PT'
+    },
+    parameters: {
+        msw: {
+            handlers: createMBWayMockHandlers()
+        }
+    },
+    render: ({ componentConfiguration, ...checkoutConfig }) => (
+        <Checkout checkoutConfig={checkoutConfig}>
+            {checkout => (
+                <ComponentContainer
+                    element={
+                        new MBWay(checkout, {
+                            paymentData: 'Ab02b4c0....J86s=',
+                            ...componentConfiguration
+                        })
+                    }
+                />
+            )}
+        </Checkout>
+    )
 };
 
 export default meta;
