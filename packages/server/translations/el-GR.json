@@ -433,5 +433,11 @@
     "upi.mandate.upTo": "έως %{amount}",
     "upi.mandate.frequency.monthly": "/μήνα",
     "upi.mandate.frequency.weekly": "/εβδομάδα",
-    "upi.mandate.frequency.adhoc": " όπως παρουσιάστηκε"
+    "upi.mandate.frequency.adhoc": " όπως παρουσιάστηκε",
+    "qrCode": "Κωδικός QR",
+    "bankList": "Κατάλογος τραπεζών",
+    "iris.instructions.generateQrCode": "Αφού δημιουργήσετε τον κωδικό QR, μπορείτε να χρησιμοποιήσετε την προτιμώμενη τραπεζική εφαρμογή για να ολοκληρώσετε την πληρωμή.",
+    "iris.instructions.payment.step1": "Ανοίξτε την προτιμώμενη τραπεζική εφαρμογή σας.",
+    "iris.instructions.payment.step2": "Σαρώστε τον κωδικό QR με την τραπεζική εφαρμογή σας.",
+    "iris.instructions.payment.step3": "Ολοκληρώστε την πληρωμή στην εφαρμογή και περιμένετε την επιβεβαίωση εδώ."
 }
