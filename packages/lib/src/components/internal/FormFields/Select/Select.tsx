@@ -9,6 +9,7 @@ import { SelectItem, SelectProps } from './types';
 import './Select.scss';
 import { ARIA_CONTEXT_SUFFIX, ARIA_ERROR_SUFFIX } from '../../../../core/Errors/constants';
 import { simulateFocusScroll } from '../utils';
+import { useCoreContext } from '../../../../core/Context/CoreProvider';
 
 function Select({
     items = [],
@@ -29,15 +30,16 @@ function Select({
     clearOnSelect,
     blurOnClose,
     onListToggle,
-    allowIdOnButton = false,
     required
 }: SelectProps) {
+    const { i18n } = useCoreContext();
     const filterInputRef = useRef(null);
     const selectContainerRef = useRef(null);
     const toggleButtonRef = useRef(null);
     const selectListRef = useRef(null);
     const [textFilter, setTextFilter] = useState<string>(null);
     const [showList, setShowList] = useState<boolean>(false);
+    const [statusMessage, setStatusMessage] = useState<string>(null);
     const selectListId: string = useMemo(() => `select-${uuid()}`, []);
 
     const active: SelectItem = items.find(i => i.id === selectedValue) || ({} as SelectItem);
@@ -195,13 +197,19 @@ function Select({
     };
 
     /**
-     * Updates the state with the current text filter value
+     * Updates the state with the current text filter value and opens the dropdown
      * @param e - KeyboardEvent
      */
     const handleTextFilter = (e: KeyboardEvent) => {
         const value: string = (e.target as HTMLInputElement).value;
         setInputText(value);
         setTextFilter(value);
+        
+        // Open the dropdown when user starts typing
+        if (!showList) {
+            openList();
+        }
+        
         if (onInput) {
             onInput(value);
         }
@@ -263,6 +271,17 @@ function Select({
         };
     }, [selectContainerRef]);
 
+    /**
+     * Update status message for screen readers when no options are found
+     */
+    useEffect(() => {
+        if (showList && filteredItems.length === 0) {
+            setStatusMessage(i18n.get('select.noOptionsFound'));
+        } else {
+            setStatusMessage(null);
+        }
+    }, [showList, filteredItems.length, i18n]);
+
     return (
         <div
             className={cx(['adyen-checkout__dropdown', className, ...classNameModifiers.map(m => `adyen-checkout__dropdown--${m}`)])}
@@ -278,7 +297,6 @@ function Select({
                 isInvalid={isInvalid}
                 isValid={isValid}
                 onButtonKeyDown={handleButtonKeyDown}
-                onFocus={openList}
                 onInput={handleTextFilter}
                 placeholder={placeholder}
                 readonly={readonly}
@@ -288,7 +306,6 @@ function Select({
                 toggleList={toggleList}
                 disabled={disabled}
                 ariaDescribedBy={ariaDescribedBy}
-                allowIdOnButton={allowIdOnButton}
                 required={required}
             />
             <SelectList
@@ -301,6 +318,18 @@ function Select({
                 selectListRef={selectListRef}
                 showList={showList}
             />
+            <div
+                role="status"
+                aria-live="polite"
+                // aria-relevant seems to be needed here make make sure a second time we get 
+                // "No options found" we still announce the status message.
+                // What happens otherwise is that just the first status message is announced
+                // tested on VoiceOver on Chrome
+                aria-relevant="all"
+                className="adyen-checkout-sr-panel--sr-only"
+            > 
+                {statusMessage} 
+            </div>
         </div>
     );
 }

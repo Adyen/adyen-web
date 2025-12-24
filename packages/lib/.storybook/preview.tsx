@@ -37,6 +37,9 @@ const preview: Preview = {
         },
         showPayButton: {
             control: 'boolean'
+        },
+        'srConfig.showPanel': {
+            control: 'boolean'
         }
     },
     args: {
@@ -44,7 +47,8 @@ const preview: Preview = {
         countryCode: DEFAULT_COUNTRY_CODE,
         shopperLocale: DEFAULT_SHOPPER_LOCALE,
         amount: DEFAULT_AMOUNT_VALUE,
-        showPayButton: true
+        showPayButton: true,
+        'srConfig.showPanel': false
     },
     parameters: {
         options: {

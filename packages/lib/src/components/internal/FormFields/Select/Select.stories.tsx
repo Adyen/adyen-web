@@ -23,7 +23,6 @@ const meta: Meta<SelectProps> = {
         disableTextFilter: { control: 'boolean' },
         clearOnSelect: { control: 'boolean' },
         blurOnClose: { control: 'boolean' },
-        allowIdOnButton: { control: 'boolean' },
         placeholder: { control: 'text' },
         name: { control: 'text' },
         uniqueId: { control: 'text' },
@@ -129,7 +128,6 @@ export const Default: StoryObj<SelectProps> = {
         disableTextFilter: false,
         clearOnSelect: false,
         blurOnClose: false,
-        allowIdOnButton: false,
         className: '',
         classNameModifiers: [],
         name: 'select-demo'
