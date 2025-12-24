@@ -20,7 +20,6 @@ import type {
     Order,
     PaymentAction,
     PaymentAmount,
-    PaymentAmountExtended,
     PaymentData,
     PaymentMethodsResponse,
     PaymentResponseData,
@@ -199,7 +198,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
      * @param secondaryAmount - Optional secondary amount for display purposes (e.g., converted currency)
      * @internal
      */
-    public updateAmount(amount: PaymentAmountExtended, secondaryAmount?: PaymentAmountExtended): void {
+    public updateAmount(amount: PaymentAmount, secondaryAmount?: PaymentAmount): void {
         this.props = {
             ...this.props,
             ...(amount && { amount }),

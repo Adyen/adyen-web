@@ -20,7 +20,7 @@ import { formatCustomTranslations, formatLocale } from '../language/utils';
 import { resolveEnvironments } from './Environment';
 import { LIBRARY_BUNDLE_TYPE, LIBRARY_VERSION } from './config';
 
-import type { PaymentAction, PaymentAmountExtended, PaymentResponseData } from '../types/global-types';
+import type { PaymentAction, PaymentAmount, PaymentResponseData } from '../types/global-types';
 import type { CoreConfiguration, ICore, AdditionalDetailsData, CoreModules } from './types';
 import type { Translations } from '../language/types';
 import type { UIElementProps } from '../components/internal/UIElement/types';
@@ -315,7 +315,7 @@ class Core implements ICore {
      * @param secondaryAmount - Optional secondary amount for display purposes (e.g., converted currency)
      * @internal
      */
-    private triggerAmountUpdate(amount: PaymentAmountExtended, secondaryAmount?: PaymentAmountExtended): void {
+    private triggerAmountUpdate(amount: PaymentAmount, secondaryAmount?: PaymentAmount): void {
         if (!isAmountValid(amount)) {
             console.warn('Core update(): Update canceled. Invalid amount object');
             return;

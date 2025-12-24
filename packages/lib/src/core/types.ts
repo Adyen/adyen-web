@@ -4,7 +4,6 @@ import AdyenCheckoutError from './Errors/AdyenCheckoutError';
 import UIElement from '../components/internal/UIElement';
 import type { CustomTranslations } from '../language/types';
 import type {
-    PaymentAmountExtended,
     Order,
     PaymentAction,
     PaymentMethodsResponse,
@@ -14,7 +13,8 @@ import type {
     SessionsResponse,
     ResultCode,
     PaymentData,
-    AddressData
+    AddressData,
+    PaymentAmount
 } from '../types/global-types';
 import type { AnalyticsOptions } from './Analytics/types';
 import RiskModule, { RiskModuleOptions } from './RiskModule/RiskModule';
@@ -153,12 +153,12 @@ export interface CoreConfiguration {
     /**
      * Amount of the payment
      */
-    amount?: PaymentAmountExtended;
+    amount?: PaymentAmount;
 
     /**
      * Secondary amount of the payment - alternative currency & value converted according to rate
      */
-    secondaryAmount?: PaymentAmountExtended;
+    secondaryAmount?: PaymentAmount;
 
     /**
      * The shopper's country code. A valid value is an ISO two-character country code (e.g. 'NL').

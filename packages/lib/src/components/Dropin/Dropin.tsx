@@ -9,7 +9,7 @@ import splitPaymentMethods from './elements/splitPaymentMethods';
 import { TxVariants } from '../tx-variants';
 
 import type { DropinConfiguration, InstantPaymentTypes, PaymentMethodsConfiguration } from './types';
-import type { PaymentAction, PaymentAmountExtended, PaymentResponseData } from '../../types/global-types';
+import type { PaymentAction, PaymentAmount, PaymentResponseData } from '../../types/global-types';
 import type { ICore } from '../../core/types';
 import type { IDropin } from './types';
 
@@ -127,7 +127,7 @@ class DropinElement extends UIElement<DropinConfiguration> implements IDropin {
      * @param secondaryAmount - Optional secondary amount for display purposes (e.g., converted currency)
      * @internal
      */
-    public override updateAmount(amount: PaymentAmountExtended, secondaryAmount?: PaymentAmountExtended): void {
+    public override updateAmount(amount: PaymentAmount, secondaryAmount?: PaymentAmount): void {
         this.props = {
             ...this.props,
             ...(amount && { amount }),
