@@ -8,6 +8,7 @@ import { GiftCardConfiguration } from '../types';
 import { PaymentMethodStoryProps } from '../../../../storybook/types';
 import Checkout from '../../../core/core';
 import { UIElement } from '../../../types';
+import Spinner from '../../internal/Spinner';
 
 interface GiftcardExampleProps {
     contextArgs: PaymentMethodStoryProps<GiftCardConfiguration>;
@@ -88,7 +89,13 @@ export const GiftcardExample = ({ contextArgs, renderCard = true }: GiftcardExam
             ) : (
                 <div>
                     <div>Remaining amount: {remainingAmount}</div>
-                    <div ref={container} id="component-root" className="component-wrapper" />
+                    {element ? (
+                        <div ref={container} id="component-root" className="component-wrapper" data-testid="checkout-component" />
+                    ) : (
+                        <div data-testid="checkout-component-spinner">
+                            <Spinner />
+                        </div>
+                    )}
                 </div>
             )}
         </div>

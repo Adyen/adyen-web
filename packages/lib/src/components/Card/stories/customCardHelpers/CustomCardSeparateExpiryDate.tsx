@@ -5,6 +5,7 @@ import { createSessionsCheckout } from '../../../../../storybook/helpers/create-
 import CustomCard from '../../../CustomCard/CustomCard';
 import { setUpUtils, createPayButton } from './customCard.utils';
 import './customCard.style.scss';
+import Spinner from '../../../internal/Spinner';
 
 export const CustomCardSeparateExpiryDate = ({ contextArgs }) => {
     const container = useRef(null);
@@ -52,10 +53,9 @@ export const CustomCardSeparateExpiryDate = ({ contextArgs }) => {
 
     return (
         <Fragment>
-            {errorMessage ? (
-                <div>{errorMessage}</div>
-            ) : (
-                <div id={'topLevelHolder'}>
+            {errorMessage && <p>{errorMessage}</p>}
+            {element ? (
+                <div id={'topLevelHolder'} data-testid="checkout-component">
                     <div
                         ref={container}
                         id="component-root"
@@ -103,6 +103,10 @@ export const CustomCardSeparateExpiryDate = ({ contextArgs }) => {
                             </div>
                         </div>
                     </div>
+                </div>
+            ) : (
+                <div data-testid="checkout-component-spinner">
+                    <Spinner />
                 </div>
             )}
         </Fragment>
