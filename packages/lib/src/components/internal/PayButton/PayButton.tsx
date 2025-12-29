@@ -19,11 +19,11 @@ export interface PayButtonProps extends ButtonProps {
 }
 
 const PayButton = ({ classNameModifiers = [], label, ...props }: PayButtonProps) => {
-    const amount = useAmount();
-    const secondaryAmount = useSecondaryAmount();
+    const { amount, isZeroAuth, isAmountValid } = useAmount();
+    const { secondaryAmount } = useSecondaryAmount();
     const { i18n } = useCoreContext();
-    const isZeroAuth = amount && {}.hasOwnProperty.call(amount, 'value') && amount.value === 0;
-    const defaultLabel = isZeroAuth ? i18n.get('confirmPreauthorization') : payAmountLabel(i18n, amount);
+
+    const buttonLabel = label || (isZeroAuth ? i18n.get('confirmPreauthorization') : payAmountLabel(i18n, amount));
 
     /**
      * Show the secondaryLabel if:
@@ -32,18 +32,13 @@ const PayButton = ({ classNameModifiers = [], label, ...props }: PayButtonProps)
      *  - we do have an amount object (merchant might not be passing this in order to not show the amount on the button), and
      *  - we have a secondaryAmount object with some properties
      */
-    const hasValidAmount = amount && typeof amount.value === 'number' && !!amount.currency;
-    const hasSecondaryAmount = secondaryAmount && Object.keys(secondaryAmount).length > 0;
+    const shouldShowSecondaryLabel = !isZeroAuth && !label && isAmountValid && secondaryAmount;
+    const secondaryLabel = shouldShowSecondaryLabel ? secondaryAmountLabel(i18n, secondaryAmount) : null;
 
-    const secondaryLabel = !isZeroAuth && !label && hasValidAmount && hasSecondaryAmount ? secondaryAmountLabel(i18n, secondaryAmount) : null;
+    const isDisabled = props.disabled || props.status === 'loading';
 
     return (
-        <Button
-            {...props}
-            disabled={props.disabled || props.status === 'loading'}
-            classNameModifiers={[...classNameModifiers, 'pay']}
-            label={label || defaultLabel}
-        >
+        <Button {...props} disabled={isDisabled} classNameModifiers={[...classNameModifiers, 'pay']} label={buttonLabel}>
             {secondaryLabel && <SecondaryButtonLabel label={secondaryLabel} />}
         </Button>
     );
