@@ -41,7 +41,6 @@ export class CashAppPay extends UIElement<CashAppPayConfiguration> {
             storePaymentMethod: this.props.storePaymentMethod,
             useCashAppButtonUi: this.props.showPayButton,
             environment: this.props.environment,
-            amount: this.props.amount,
             redirectURL: this.props.redirectURL,
             clientId: this.props.configuration?.clientId,
             scopeId: this.props.configuration?.scopeId,
@@ -115,7 +114,7 @@ export class CashAppPay extends UIElement<CashAppPayConfiguration> {
                 throw Error('onClick rejected');
             })
             .then(() => {
-                return this.cashAppService.createCustomerRequest();
+                return this.cashAppService.createCustomerRequest(this.props.amount);
             })
             .then(() => {
                 this.cashAppService.begin();

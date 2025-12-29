@@ -21,7 +21,7 @@ const ComponentsDemo = ({ amount, countryCode, shopperLocale }) => {
                 value: Number(updatedAmount)
             },
             shopperLocale,
-            allowedPaymentMethods: ['scheme', 'applepay', 'googlepay', 'paypal', 'ach'],
+            allowedPaymentMethods: ['scheme', 'applepay', 'googlepay', 'paypal', 'ach', 'cashapp'],
             countryCode,
             reference: 'SESSION-PATCHING',
             shopperReference: 'poc-session-patching-shopper',

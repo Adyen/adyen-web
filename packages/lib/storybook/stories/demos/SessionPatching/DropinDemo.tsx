@@ -23,7 +23,7 @@ const DropinDemo = ({ amount, countryCode, shopperLocale }) => {
                 value: Number(updatedAmount)
             },
             shopperLocale,
-            allowedPaymentMethods: ['scheme', 'googlepay', 'ach'],
+            allowedPaymentMethods: ['scheme', 'googlepay', 'ach', 'cashapp'],
             countryCode,
             reference: 'SESSION-PATCHING',
             shopperReference: 'poc-session-patching-shopper',
