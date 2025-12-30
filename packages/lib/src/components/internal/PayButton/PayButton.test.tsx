@@ -89,6 +89,36 @@ describe('PayButton', () => {
         expect(button).not.toHaveTextContent(PAY_BTN_DIVIDER);
     });
 
+    test('should render a pay button with a custom amount', () => {
+        const amountProviderProps = {
+            amount: { currency: 'USD', value: 1000 }
+        };
+
+        const payButtonProps = {
+            customAmount: { currency: 'USD', value: 500 }
+        };
+
+        renderPayButton({ payButtonProps, amountProviderProps });
+
+        expect(screen.getByRole('button', { name: 'Pay $5.00' })).toBeInTheDocument();
+    });
+
+    test('should prefer explicit label over custom amount', () => {
+        const amountProviderProps = {
+            amount: { currency: 'USD', value: 1000 }
+        };
+
+        const payButtonProps = {
+            label: 'Redirect to',
+            customAmount: { currency: 'USD', value: 500 }
+        };
+
+        renderPayButton({ payButtonProps, amountProviderProps });
+
+        const button = screen.getByRole('button', { name: 'Redirect to' });
+        expect(button).not.toHaveTextContent('$5.00');
+    });
+
     test('should render a zero-auth pay button', () => {
         const amountProviderProps = {
             amount: { currency: 'USD', value: 0 }

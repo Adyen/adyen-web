@@ -4,7 +4,7 @@ import { TxVariants } from '../tx-variants';
 import PreAuthorizedDebitCanadaComponent from './components/PreAuthorizedDebitCanadaComponent';
 import { SettlementInfo } from './components/SettlementInfo';
 import RedirectButton from '../internal/RedirectButton';
-import { payAmountLabel } from '../internal/PayButton';
+import { payAmountLabel } from '../internal/PayButton/utils';
 
 import type { PreAuthorizedDebitCanadaConfiguration } from './types';
 

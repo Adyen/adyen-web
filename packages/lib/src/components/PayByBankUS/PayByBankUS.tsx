@@ -4,8 +4,8 @@ import RedirectButton from '../internal/RedirectButton';
 import { TxVariants } from '../tx-variants';
 import './PayByBankUS.scss';
 import getIssuerImageUrl from '../../utils/get-issuer-image';
-import PayButton, { payAmountLabel } from '../internal/PayButton';
-
+import PayButton from '../internal/PayButton';
+import { payAmountLabel } from '../internal/PayButton/utils';
 export default class PayByBankUS extends RedirectElement {
     public static type = TxVariants.paybybank_AIS_DD;
 

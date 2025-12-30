@@ -46,7 +46,7 @@ function GiftcardResult({ amount, balance, transactionLimit, status, makePayment
 
             {showPayButton &&
                 payButton({
-                    amount: transactionAmount,
+                    customAmount: transactionAmount,
                     status: status,
                     onClick: makePayment
                 })}

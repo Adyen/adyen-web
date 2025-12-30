@@ -7,7 +7,7 @@ import { CashAppPayElementData, CashAppPayConfiguration, CashAppPayEventData } f
 import { ICashAppService } from './services/types';
 import defaultProps from './defaultProps';
 import RedirectButton from '../internal/RedirectButton';
-import { payAmountLabel } from '../internal/PayButton';
+import { payAmountLabel } from '../internal/PayButton/utils';
 import { TxVariants } from '../tx-variants';
 import type { ICore } from '../../core/types';
 import { PREFIX } from '../internal/Icon/constants';
