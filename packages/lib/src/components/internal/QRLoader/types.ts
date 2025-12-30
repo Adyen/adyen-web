@@ -1,5 +1,5 @@
 import { ComponentChildren, h } from 'preact';
-import { ActionHandledReturnObject, PaymentAmount } from '../../../types/global-types';
+import { ActionHandledReturnObject } from '../../../types/global-types';
 import Language from '../../../language/Language';
 import { AbstractAnalyticsEvent } from '../../../core/Analytics/events/AbstractAnalyticsEvent';
 import { CountdownTime } from '../Countdown/types';

@@ -150,7 +150,6 @@ export class CashAppPay extends UIElement<CashAppPayConfiguration> {
                 label={payAmountLabel(this.props.i18n, this.props.amount)}
                 icon={this.resources?.getImage({ imageFolder: 'components/' })(`${PREFIX}lock`)}
                 name={this.displayName}
-                amount={this.props.amount}
                 payButton={this.payButton}
                 onSubmit={this.submit}
                 ref={ref => {

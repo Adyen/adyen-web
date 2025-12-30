@@ -71,7 +71,6 @@ export class PreAuthorizedDebitCanada extends UIElement<PreAuthorizedDebitCanada
                     icon={this.resources?.getImage({ imageFolder: 'components/' })(`bento_lock`)}
                     label={payAmountLabel(this.props.i18n, this.props.amount)}
                     name={this.displayName}
-                    amount={this.props.amount}
                     payButton={this.payButton}
                     onSubmit={this.submit}
                     ref={ref => {
