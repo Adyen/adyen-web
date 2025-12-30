@@ -3,12 +3,13 @@ import { CtpState } from '../services/ClickToPayService';
 import { ClickToPayCheckoutPayload, IClickToPayService } from '../services/types';
 import ShopperCard from '../models/ShopperCard';
 import { ClickToPayProps } from '../types';
-import { PaymentAmount } from '../../../../types/global-types';
 import AdyenCheckoutError from '../../../../core/Errors/AdyenCheckoutError';
 import { UIElementStatus } from '../../UIElement/types';
 
-export interface IClickToPayContext
-    extends Pick<IClickToPayService, 'checkout' | 'startIdentityValidation' | 'finishIdentityValidation' | 'verifyIfShopperIsEnrolled'> {
+export interface IClickToPayContext extends Pick<
+    IClickToPayService,
+    'checkout' | 'startIdentityValidation' | 'finishIdentityValidation' | 'verifyIfShopperIsEnrolled'
+> {
     isStandaloneComponent: boolean;
     isCtpPrimaryPaymentMethod: boolean;
     isStoringCookies: boolean;
@@ -20,7 +21,6 @@ export interface IClickToPayContext
     schemes: string[];
     otpMaskedContact: string;
     otpNetwork: string;
-    amount: PaymentAmount;
     configuration: ClickToPayProps;
     status: UIElementStatus;
     onSubmit(payload: ClickToPayCheckoutPayload): void;
@@ -35,7 +35,6 @@ const ClickToPayContext = createContext<IClickToPayContext>({
     onSetStatus: null,
     onError: null,
     onReady: null,
-    amount: null,
     configuration: null,
     isStandaloneComponent: null,
     isCtpPrimaryPaymentMethod: null,

@@ -349,7 +349,6 @@ export class CardElement extends UIElement<CardConfiguration> {
     protected override componentToRender(): h.JSX.Element {
         return (
             <ClickToPayWrapper
-                amount={this.props.amount}
                 configuration={this.props.clickToPayConfiguration}
                 clickToPayService={this.clickToPayService}
                 isStandaloneComponent={false}
