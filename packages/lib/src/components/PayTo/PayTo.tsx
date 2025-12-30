@@ -7,7 +7,8 @@ import PayToComponent from './components/PayToComponent';
 import { PayToInstructions } from './components/PayToInstructions';
 import MandateSummary from './components/MandateSummary';
 import { PayToConfiguration, PayToData } from './types';
-import PayButton, { payAmountLabel } from '../internal/PayButton';
+import PayButton from '../internal/PayButton';
+import { payAmountLabel } from '../internal/PayButton/utils';
 
 /*
 Await Config (previously in its own file)

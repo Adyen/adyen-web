@@ -1,5 +1,6 @@
 import RedirectElement from '../Redirect';
-import PayButton, { payAmountLabel } from '../internal/PayButton';
+import PayButton from '../internal/PayButton';
+import { payAmountLabel } from '../internal/PayButton/utils';
 import { h } from 'preact';
 import { TxVariants } from '../tx-variants';
 import { PayButtonProps } from '../internal/PayButton/PayButton';
