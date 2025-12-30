@@ -24,7 +24,6 @@ export interface AwaitComponentProps {
     pollStatus?: () => Promise<RawPaymentResponse | RawPaymentStatusResponse>;
     instructions?: string | (() => h.JSX.Element);
     endSlot?: () => h.JSX.Element;
-    amount?: PaymentAmount;
     showAmount?: boolean;
 }
 
