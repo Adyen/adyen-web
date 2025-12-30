@@ -281,13 +281,18 @@ class Core implements ICore {
      * Updates global configurations, resets the internal state and remounts each element.
      *
      * @param props - props to update
-     * @param options -
-     * @returns this - the element instance
+     * @param options - Can be used to avoid remounting the elements
+     * @returns this - the Core instance
      */
-    public update(props: Partial<CoreConfiguration> = {}, options?: { shouldRecreateDomElements?: boolean }): Promise<this> {
-        const { shouldRecreateDomElements } = options; // default true
+    public update(
+        props: Partial<CoreConfiguration> = {},
+        options: { shouldRecreateDomElements?: boolean } = { shouldRecreateDomElements: true }
+    ): Promise<this> {
+        const { shouldRecreateDomElements } = options;
 
         if (shouldRecreateDomElements) {
+            this.setOptions(props);
+
             return this.initialize().then(() => {
                 this.components.forEach(component => {
                     // We update only with the new options that have been received
