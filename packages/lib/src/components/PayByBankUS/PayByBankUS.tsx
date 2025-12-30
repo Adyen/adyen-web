@@ -64,7 +64,6 @@ export default class PayByBankUS extends RedirectElement {
                 <PayButton
                     {...this.props}
                     classNameModifiers={['standalone']}
-                    amount={this.props.amount}
                     label={payAmountLabel(this.props.i18n, this.props.amount)}
                     onClick={this.submit}
                 />

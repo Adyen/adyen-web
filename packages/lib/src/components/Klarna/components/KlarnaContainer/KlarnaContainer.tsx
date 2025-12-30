@@ -1,9 +1,10 @@
 import { h } from 'preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { KlarnaWidget } from '../KlarnaWidget/KlarnaWidget';
-import type { ComponentMethodsRef, PayButtonFunctionProps, UIElementStatus } from '../../../internal/UIElement/types';
+import type { ComponentMethodsRef, UIElementStatus } from '../../../internal/UIElement/types';
 import type { ActionHandledReturnObject } from '../../../../types/global-types';
 import type { AdyenCheckoutError, KlarnaAction, KlarnaAdditionalDetailsData, KlarnaComponentRef } from '../../../../types';
+import { PayButtonProps } from '../../../internal/PayButton/PayButton';
 
 interface KlarnaContainerProps {
     setComponentRef: (ref: ComponentMethodsRef) => void;
@@ -12,7 +13,7 @@ interface KlarnaContainerProps {
     type: string;
     onComplete(state: KlarnaAdditionalDetailsData): void;
     onError(error: AdyenCheckoutError): void;
-    payButton(props?: PayButtonFunctionProps): h.JSX.Element;
+    payButton(props: PayButtonProps): h.JSX.Element;
     onLoaded(): void;
     onActionHandled(actionHandled: ActionHandledReturnObject): void;
 }

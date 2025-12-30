@@ -12,7 +12,7 @@ import { ClickToPayCheckoutPayload, IClickToPayService } from '../internal/Click
 import ClickToPayWrapper from './components/ClickToPayWrapper';
 import { ComponentFocusObject } from '../../types/global-types';
 import { TxVariants } from '../tx-variants';
-import type { PayButtonFunctionProps, UIElementStatus } from '../internal/UIElement/types';
+import type { UIElementStatus } from '../internal/UIElement/types';
 import UIElement from '../internal/UIElement';
 import PayButton from '../internal/PayButton';
 import type { ICore } from '../../core/types';
@@ -20,6 +20,7 @@ import { ALL_SECURED_FIELDS } from '../internal/SecuredFields/lib/constants';
 import AdyenCheckoutError, { IMPLEMENTATION_ERROR } from '../../core/Errors/AdyenCheckoutError';
 import CardInputDefaultProps from './components/CardInput/defaultProps';
 import { AnalyticsInfoEvent, InfoEventType } from '../../core/Analytics/events/AnalyticsInfoEvent';
+import { PayButtonProps } from '../internal/PayButton/PayButton';
 
 export class CardElement extends UIElement<CardConfiguration> {
     public static type = TxVariants.scheme;
@@ -315,18 +316,10 @@ export class CardElement extends UIElement<CardConfiguration> {
         return collectBrowserInfo();
     }
 
-    protected override payButton = (props: PayButtonFunctionProps) => {
+    protected override payButton = (props: PayButtonProps): h.JSX.Element => {
         const isZeroAuth = this.props.amount?.value === 0;
         const isStoredCard = this.props.storedPaymentMethodId?.length > 0;
-        return (
-            <PayButton
-                {...props}
-                amount={this.props.amount}
-                secondaryAmount={this.props.secondaryAmount}
-                label={isZeroAuth && !isStoredCard ? this.props.i18n.get('payButton.saveDetails') : ''}
-                onClick={this.submit}
-            />
-        );
+        return <PayButton {...props} label={isZeroAuth && !isStoredCard ? this.props.i18n.get('payButton.saveDetails') : ''} onClick={this.submit} />;
     };
 
     private renderCardInput(isCardPrimaryInput = true): h.JSX.Element {

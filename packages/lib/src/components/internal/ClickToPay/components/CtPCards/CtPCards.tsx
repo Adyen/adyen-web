@@ -119,7 +119,6 @@ const CtPCards = ({ onDisplayCardComponent }: CtPCardsProps) => {
 
                     <PayButton
                         disabled={isEveryCardExpired}
-                        amount={amount}
                         label={getPayButtonLabel(i18n, amount, checkoutCard)}
                         status={status}
                         variant={isCtpPrimaryPaymentMethod ? 'primary' : 'secondary'}

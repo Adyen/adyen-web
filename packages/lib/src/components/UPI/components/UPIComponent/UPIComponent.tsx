@@ -1,6 +1,6 @@
 import { Fragment, h, RefObject } from 'preact';
 import { useCallback, useEffect, useState } from 'preact/hooks';
-import { PayButtonFunctionProps, UIElementStatus } from '../../../types';
+import { UIElementStatus } from '../../../types';
 import VpaInput, { VpaInputHandlers } from '../VpaInput/VpaInput';
 import { App, UpiMode } from '../../types';
 import useImage from '../../../../core/Context/useImage';
@@ -13,6 +13,7 @@ import Alert from '../../../internal/Alert';
 import { SegmentedControlOption } from '../../../internal/SegmentedControl/SegmentedControl';
 import UPIMandate, { Mandate } from '../UPIMandate/UPIMandate';
 import type { PaymentAmount } from '../../../../types/global-types';
+import { PayButtonProps } from '../../../internal/PayButton/PayButton';
 
 type UpiData = { app?: App; virtualPaymentAddress?: string };
 
@@ -25,13 +26,9 @@ interface UPIComponentProps {
     segmentedControlOptions?: Array<SegmentedControlOption<UpiMode>>;
     mandate?: Mandate;
     amount?: PaymentAmount;
-
     ref?(ref: RefObject<typeof UPIComponent>): void;
-
-    payButton?(props: PayButtonFunctionProps): h.JSX.Element;
-
+    payButton(props: PayButtonProps): h.JSX.Element;
     onChange({ data, valid, errors, isValid }: OnChangeProps): void;
-
     onUpdateMode?(mode: UpiMode): void;
 }
 

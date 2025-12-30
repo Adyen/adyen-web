@@ -2,6 +2,8 @@ import { SUPPORTED_LOCALES_EU, SUPPORTED_LOCALES_US } from './config';
 import { UIElementProps } from '../internal/UIElement/types';
 import { BrowserInfo, CheckoutAdvancedFlowResponse, PaymentAmount } from '../../types/global-types';
 import { AmazonPayElement } from './AmazonPay';
+import { h } from 'preact';
+import { PayButtonProps } from '../internal/PayButton/PayButton';
 
 declare global {
     interface Window {
@@ -60,7 +62,7 @@ export interface AmazonPayConfiguration extends UIElementProps {
             reject: () => void;
         }
     ): void;
-    payButton?: any;
+    payButton?: (props: PayButtonProps) => h.JSX.Element;
     placement?: Placement;
     productType?: ProductType;
     recurringMetadata?: RecurringMetadata;

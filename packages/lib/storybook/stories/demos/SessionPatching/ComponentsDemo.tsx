@@ -91,8 +91,13 @@ function Checkout({ sessionId, sessionData, countryCode, amountValue, onPatchSes
             },
 
             beforeSubmit: async (data, _component, actions) => {
-                const updatedSessionData = await onPatchSessionRef.current();
-                actions.resolve({ ...data, sessionData: updatedSessionData });
+                try {
+                    const updatedSessionData = await onPatchSessionRef.current();
+                    actions.resolve({ ...data, sessionData: updatedSessionData });
+                } catch (error) {
+                    alert('beforeSubmit error');
+                    actions.reject();
+                }
             },
 
             onPaymentCompleted: (result, element) => {

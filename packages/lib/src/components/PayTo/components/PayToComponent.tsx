@@ -22,7 +22,7 @@ export interface PayToComponentProps {
     setComponentRef: (ref: ComponentMethodsRef) => void;
     data: PayToData;
     placeholders: PayToPlaceholdersType;
-    payButton: (props: Partial<PayButtonProps>) => h.JSX.Element;
+    payButton: (props: PayButtonProps) => h.JSX.Element;
 }
 
 export default function PayToComponent(props: PayToComponentProps) {

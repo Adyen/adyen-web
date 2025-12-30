@@ -1,6 +1,8 @@
 import { type ComponentMethodsRef, UIElementProps } from '../internal/UIElement/types';
 import { PaymentAction, ResultCode } from '../../types/global-types';
 import { AdditionalDetailsData } from '../../core/types';
+import type { h } from 'preact';
+import type { PayButtonProps } from '../internal/PayButton/PayButton';
 
 declare global {
     interface Window {
@@ -33,7 +35,7 @@ interface KlarnaPaymentsShared {
 
 export interface KlarnaWidgetProps extends KlarnaPaymentsShared {
     /** @internal */
-    payButton: (options) => any;
+    payButton: (props: PayButtonProps) => h.JSX.Element;
     /** @internal */
     onLoaded: () => void;
 
