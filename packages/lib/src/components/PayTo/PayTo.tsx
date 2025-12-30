@@ -115,7 +115,6 @@ export class PayToElement extends UIElement<PayToConfiguration> {
                         <PayButton
                             {...this.props}
                             classNameModifiers={['standalone']}
-                            amount={this.props.amount}
                             label={payAmountLabel(this.props.i18n, this.props.amount)}
                             onClick={this.submit}
                         />
@@ -127,7 +126,6 @@ export class PayToElement extends UIElement<PayToConfiguration> {
         if (this.props.paymentData) {
             return (
                 <Await
-                    amount={this.props.amount}
                     showAmount={true}
                     instructions={PayToInstructions}
                     clientKey={this.props.clientKey}

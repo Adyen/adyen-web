@@ -33,6 +33,8 @@ import { AddressData, PaymentAmount } from '../../../../types/global-types';
 import type { FastlaneSignupConfiguration } from '../../../PayPalFastlane/types';
 import { AbstractAnalyticsEvent } from '../../../../core/Analytics/events/AbstractAnalyticsEvent';
 import { IAnalytics } from '../../../../core/Analytics/Analytics';
+import { PayButtonProps } from '../../../internal/PayButton/PayButton';
+import { h } from 'preact';
 
 export interface CardInputValidState {
     holderName?: boolean;
@@ -128,7 +130,7 @@ export interface CardInputProps {
     onAddressLookup?: OnAddressLookupType;
     onAddressSelected?: OnAddressSelectedType;
     addressSearchDebounceMs?: number;
-    payButton?: (obj) => {};
+    payButton?: (props: PayButtonProps) => h.JSX.Element;
     placeholders?: CardPlaceholders;
     positionHolderNameOnTop?: boolean;
     resources: Resources;

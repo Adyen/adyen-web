@@ -9,19 +9,17 @@ import { GiftCardFields } from './GiftcardFields';
 import { GiftcardFieldsProps, Placeholders } from './types';
 import { useSRPanelForGiftcardErrors } from './useSRPanelForGiftcardErrors';
 import { GiftCardBalanceCheckErrorType } from '../types';
+import { PayButtonProps } from '../../internal/PayButton/PayButton';
 
 interface GiftcardComponentProps {
     onChange: (state) => void;
     onFocus: (event) => void;
     onBlur: (event) => void;
-
     makeBalanceCheck: (event) => void;
     makePayment: (event) => void;
-
     amount?: PaymentAmount;
     showPayButton: boolean;
-    payButton: (config) => any;
-
+    payButton: (props: PayButtonProps) => h.JSX.Element;
     pinRequired: boolean;
     expiryDateRequired?: boolean;
     fieldsLayoutComponent: FunctionComponent<GiftcardFieldsProps>;

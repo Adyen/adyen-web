@@ -12,14 +12,17 @@ interface GiftcardResultProps {
     makePayment: () => void;
     makeBalanceCheck: () => void;
     showPayButton: boolean;
-    payButton(props?: PayButtonProps): h.JSX.Element;
+    payButton(props: PayButtonProps): h.JSX.Element;
 }
 
 function GiftcardResult({ amount, balance, transactionLimit, status, makePayment, showPayButton, payButton }: GiftcardResultProps) {
     const { i18n } = useCoreContext();
+
     // Calculate the transaction amount based on balance and transaction limit
     const transactionAmount = amount.value > transactionLimit?.value ? transactionLimit : amount;
     const remainingBalance = balance?.value - transactionAmount?.value;
+
+    console.log('Rendered GiftcardResult');
 
     return (
         <div className="adyen-checkout__giftcard-result">
