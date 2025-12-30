@@ -19,6 +19,7 @@ import { QRLoaderDetailsProvider } from './QRLoaderDetailsProvider';
 import { QRLoaderProps } from './types';
 import { redirectToApp } from '../../../utils/urls';
 import './QRLoader.scss';
+import { useAmount } from '../../../core/Context/AmountProvider';
 
 const QRCODE_URL = 'utility/v1/barcode.png?type=qrCode&data=';
 
@@ -41,7 +42,8 @@ export function QRLoader(props: QRLoaderProps) {
     const { completed, expired, loading, percentage } = timerState;
     const { onTick, onTimeUp } = timerActions;
 
-    const { amount, showAmount, url, brandLogo, brandName, countdownTime, type, onActionHandled } = props;
+    const { showAmount, url, brandLogo, brandName, countdownTime, type, onActionHandled } = props;
+    const { amount } = useAmount();
 
     const qrCodeImage = props.qrCodeData ? `${loadingContext}${QRCODE_URL}${props.qrCodeData}&clientKey=${props.clientKey}` : props.qrCodeImage;
 

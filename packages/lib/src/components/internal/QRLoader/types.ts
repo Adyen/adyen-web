@@ -20,7 +20,6 @@ export interface QRLoaderProps {
     loadingContext?: string;
     qrCodeData?: string;
     qrCodeImage?: string;
-    amount?: PaymentAmount;
     showAmount?: boolean;
     i18n?: Language;
     classNameModifiers?: string[];
