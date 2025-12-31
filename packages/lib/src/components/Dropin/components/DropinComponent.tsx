@@ -4,12 +4,13 @@ import Status from './status';
 import getOrderStatus from '../../../core/Services/order-status';
 import './DropinComponent.scss';
 import { sanitizeOrder } from '../../internal/UIElement/utils';
-import { PaymentAmount } from '../../../types/global-types';
+import type { PaymentAmount } from '../../../types/global-types';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 import Button from '../../internal/Button';
 import type { DropinComponentProps, DropinComponentState, DropinStatus, DropinStatusProps, onOrderCancelData } from '../types';
 import UIElement from '../../internal/UIElement';
 import { AnalyticsInfoEvent, InfoEventType, UiTarget } from '../../../core/Analytics/events/AnalyticsInfoEvent';
+import { DropinSuccessState } from './DropinSuccessState';
 
 export class DropinComponent extends Component<DropinComponentProps, DropinComponentState> {
     public state: DropinComponentState = {
@@ -174,7 +175,7 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
 
         switch (status.type) {
             case 'success':
-                return <Status.Success message={this.props?.amount?.value === 0 ? 'resultMessages.preauthorized' : status.props?.message} />;
+                return <DropinSuccessState message={status.props?.message} />;
 
             case 'error':
                 return <Status.Error message={status.props?.message} />;
