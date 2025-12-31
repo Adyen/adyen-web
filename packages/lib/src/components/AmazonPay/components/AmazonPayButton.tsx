@@ -4,13 +4,15 @@ import { getAmazonSignature } from '../services';
 import { getAmazonPaySettings, getPayloadJSON } from '../utils';
 import { AmazonPayButtonProps, CheckoutSessionConfig, PayloadJSON } from '../types';
 import { useCoreContext } from '../../../core/Context/CoreProvider';
+import { useAmount } from '../../../core/Context/AmountProvider';
 
 export default function AmazonPayButton(props: AmazonPayButtonProps) {
+    const { amount } = useAmount();
     const { loadingContext } = useCoreContext();
     const { amazonRef, configuration = {} } = props;
     const [signature, setSignature] = useState<string>(null);
     const payloadJSON: PayloadJSON = getPayloadJSON(props);
-    const settings = getAmazonPaySettings(props);
+    const settings = getAmazonPaySettings(props, amount);
 
     const handleOnClick = () => {
         // eslint-disable-next-line @typescript-eslint/no-misused-promises

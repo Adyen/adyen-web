@@ -7,7 +7,6 @@ import type {
     DualBrandSelectElement,
     CardPlaceholders
 } from '../../types';
-import { InstallmentOptions } from './components/types';
 import { ValidationResult } from '../../../internal/PersonalDetails/types';
 import {
     CardAllValidData,
@@ -35,6 +34,7 @@ import { AbstractAnalyticsEvent } from '../../../../core/Analytics/events/Abstra
 import { IAnalytics } from '../../../../core/Analytics/Analytics';
 import { PayButtonProps } from '../../../internal/PayButton/PayButton';
 import { h } from 'preact';
+import { InstallmentOptions } from './components/Installments/Installments';
 
 export interface CardInputValidState {
     holderName?: boolean;

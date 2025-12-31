@@ -1,4 +1,4 @@
-import { InstallmentOptions } from '../../components/Card/components/CardInput/components/types';
+import { InstallmentOptions } from '../../components/Card/components/CardInput/components/Installments/Installments';
 import { BrowserInfo, Order, PaymentAction, PaymentAmount, ResultCode } from '../../types/global-types';
 
 export type CheckoutSession = {

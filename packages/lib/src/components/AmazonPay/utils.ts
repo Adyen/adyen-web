@@ -25,12 +25,12 @@ export function getAmazonPayUrl(region: Region): string {
  * @param props -
  * @returns the AmazonPay button settings
  */
-export function getAmazonPaySettings(props: AmazonPayButtonProps): AmazonPayButtonSettings {
+export function getAmazonPaySettings(props: AmazonPayButtonProps, amount?: PaymentAmount): AmazonPayButtonSettings {
     return {
         ...(props.buttonColor && { buttonColor: props.buttonColor }),
         ...(props.design && { design: getDesignCode(props.design) }),
         checkoutLanguage: getCheckoutLocale(props.locale, props.configuration.region),
-        ledgerCurrency: LEDGER_CURRENCIES_PER_REGION[props.configuration.region] || props.currency || (props.amount?.currency as Currency),
+        ledgerCurrency: LEDGER_CURRENCIES_PER_REGION[props.configuration.region] || props.currency || (amount?.currency as Currency),
         merchantId: props.configuration.merchantId,
         productType: props.productType,
         placement: props.placement,

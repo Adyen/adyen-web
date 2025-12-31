@@ -1,4 +1,4 @@
-import { h } from 'preact';
+import { createRef, h } from 'preact';
 import { render, screen, waitFor } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import SRPanelProvider from '../../../../core/Errors/SRPanelProvider';
@@ -8,11 +8,14 @@ import { CoreProvider } from '../../../../core/Context/CoreProvider';
 import { App, UpiMode } from '../../types';
 import { SegmentedControlOption } from '../../../internal/SegmentedControl/SegmentedControl';
 import { A11Y } from '../../constants';
+import { AmountProvider } from '../../../../core/Context/AmountProvider';
 
 const customRender = (ui: h.JSX.Element) => {
     return render(
         <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
-            <SRPanelProvider srPanel={new SRPanel(global.core)}>{ui}</SRPanelProvider>
+            <AmountProvider providerRef={createRef()}>
+                <SRPanelProvider srPanel={new SRPanel(global.core)}>{ui}</SRPanelProvider>
+            </AmountProvider>
         </CoreProvider>
     );
 };

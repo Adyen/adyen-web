@@ -121,7 +121,18 @@ function Checkout({ sessionId, sessionData, countryCode, amountValue, onPatchSes
         });
         checkoutRef.current = checkout;
 
-        const card = new CardComponent(checkout);
+        const card = new CardComponent(checkout, {
+            showInstallmentAmounts: true,
+            installmentOptions: {
+                mc: {
+                    values: [1, 2, 3]
+                },
+                visa: {
+                    values: [1, 2, 3, 4],
+                    plans: ['regular', 'revolving']
+                }
+            }
+        });
         const googlepay = new GooglePayComponent(checkout);
         const ach = new AchComponent(checkout);
 

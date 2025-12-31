@@ -115,7 +115,22 @@ function Checkout({ sessionId, sessionData, countryCode, amountValue, onPatchSes
         });
         checkoutRef.current = checkout;
 
-        const dropin = new DropinComponent(checkout);
+        const dropin = new DropinComponent(checkout, {
+            paymentMethodsConfiguration: {
+                card: {
+                    showInstallmentAmounts: true,
+                    installmentOptions: {
+                        mc: {
+                            values: [1, 2, 3]
+                        },
+                        visa: {
+                            values: [1, 2, 3, 4],
+                            plans: ['regular', 'revolving']
+                        }
+                    }
+                }
+            }
+        });
         dropin.mount('#dropin-container');
     };
 

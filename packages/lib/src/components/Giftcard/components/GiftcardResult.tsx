@@ -3,9 +3,9 @@ import './GiftcardResult.scss';
 import { useCoreContext } from '../../../core/Context/CoreProvider';
 import { PaymentAmount } from '../../../types/global-types';
 import { PayButtonProps } from '../../internal/PayButton/PayButton';
+import { useAmount } from '../../../core/Context/AmountProvider';
 
 interface GiftcardResultProps {
-    amount: PaymentAmount;
     balance: PaymentAmount;
     transactionLimit: PaymentAmount;
     status: string;
@@ -15,8 +15,9 @@ interface GiftcardResultProps {
     payButton(props: PayButtonProps): h.JSX.Element;
 }
 
-function GiftcardResult({ amount, balance, transactionLimit, status, makePayment, showPayButton, payButton }: GiftcardResultProps) {
+function GiftcardResult({ balance, transactionLimit, status, makePayment, showPayButton, payButton }: GiftcardResultProps) {
     const { i18n } = useCoreContext();
+    const { amount } = useAmount();
 
     // Calculate the transaction amount based on balance and transaction limit
     const transactionAmount = amount.value > transactionLimit?.value ? transactionLimit : amount;
