@@ -11,12 +11,12 @@ import {
 } from '../internal/SecuredFields/lib/types';
 import { CVCPolicyType, DatePolicyType, CardAllValidData } from '../internal/SecuredFields/lib/types';
 import { ClickToPayProps } from '../internal/ClickToPay/types';
-import { InstallmentOptions } from './components/CardInput/components/types';
 import { DisclaimerMsgObject } from '../internal/DisclaimerMessage/DisclaimerMessage';
 import { UIElementProps } from '../internal/UIElement/types';
 import type { OnAddressLookupType, OnAddressSelectedType } from '../internal/Address/components/AddressSearch';
 import type { FastlaneSignupConfiguration } from '../PayPalFastlane/types';
 import type { ChallengeWindowSize } from '../ThreeDS2/types';
+import { InstallmentOptions } from './components/CardInput/components/Installments/Installments';
 
 type PlaceholderKeys =
     | 'holderName'

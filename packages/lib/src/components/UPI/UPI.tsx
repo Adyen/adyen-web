@@ -147,7 +147,6 @@ class UPI extends UIElement<UPIConfiguration> {
                         segmentedControlOptions={this.props.segmentedControlOptions}
                         defaultMode={this.props.defaultMode}
                         showPayButton={this.props.showPayButton}
-                        amount={this.props.amount}
                         mandate={this.props.mandate}
                     />
                 );

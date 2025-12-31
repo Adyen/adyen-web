@@ -1,10 +1,11 @@
-import { h } from 'preact';
+import { createRef, h } from 'preact';
 import { mount } from 'enzyme';
 import CardInput from './CardInput';
 import { CardInputDataState, CardInputValidState } from './types';
 import { render, screen, fireEvent } from '@testing-library/preact';
 import { CardFieldsWrapper } from './components/CardFieldsWrapper';
 import { CoreProvider } from '../../../../core/Context/CoreProvider';
+import { AmountProvider } from '../../../../core/Context/AmountProvider';
 
 jest.mock('../../../internal/SecuredFields/lib/CSF');
 
@@ -34,7 +35,7 @@ const cardInputRequiredProps = {
 const getWrapper = ui => {
     return mount(
         <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
-            {ui}
+            <AmountProvider providerRef={createRef()}>{ui}</AmountProvider>
         </CoreProvider>
     );
 };

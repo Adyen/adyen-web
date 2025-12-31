@@ -161,7 +161,6 @@ class Giftcard extends Component<GiftcardComponentProps> {
         if (transactionAmount && hasEnoughBalance) {
             return (
                 <GiftcardResult
-                    amount={this.props.amount}
                     balance={balance}
                     transactionLimit={transactionLimit}
                     makePayment={props.makePayment}

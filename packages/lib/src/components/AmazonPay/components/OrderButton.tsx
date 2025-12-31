@@ -3,12 +3,15 @@ import { useCoreContext } from '../../../core/Context/CoreProvider';
 import Button from '../../internal/Button';
 import { updateAmazonCheckoutSession } from '../services';
 import { OrderButtonProps, UpdateAmazonCheckoutSessionRequest } from '../types';
+import { useAmount } from '../../../core/Context/AmountProvider';
 
 export default function OrderButton(props: OrderButtonProps) {
     const { i18n, loadingContext } = useCoreContext();
+    const { amount } = useAmount();
 
     this.createOrder = () => {
-        const { amazonCheckoutSessionId, amount, clientKey, chargePermissionType, publicKeyId, region, recurringMetadata, returnUrl } = props;
+        const { amazonCheckoutSessionId, clientKey, chargePermissionType, publicKeyId, region, recurringMetadata, returnUrl } = props;
+
         const request: UpdateAmazonCheckoutSessionRequest = {
             amount,
             chargePermissionType,

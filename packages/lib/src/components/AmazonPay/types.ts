@@ -99,7 +99,6 @@ export interface AmazonPayComponentProps extends AmazonPayConfiguration {
 }
 
 export interface AmazonPayButtonProps {
-    amount?: PaymentAmount;
     amazonRef: any;
     buttonColor?: ButtonColor;
     cancelUrl?: string;
@@ -138,7 +137,6 @@ export interface ChangeActionOptions {
 
 export interface OrderButtonProps {
     amazonCheckoutSessionId: string;
-    amount: PaymentAmount;
     clientKey: string;
     chargePermissionType?: ChargePermissionType;
     onError: (error, component) => void;
