@@ -11,7 +11,6 @@ const playgroundBaseUrl = `${protocol}://localhost:3020`;
 export const SCREENSHOT_CONFIG = {
     maxDiffPixels: 1000,
     maxDiffPixelRatio: 0.03,
-    threshold: 0.2,
     animations: 'disabled',
     scale: 'device'
 };

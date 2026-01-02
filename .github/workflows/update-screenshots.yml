@@ -1,10 +1,12 @@
-on: issue_comment
+on: 
+  issue_comment:
+    types: [created]
 
 jobs:
   pr_commented:
     # This job only runs for pull request comments
     name: PR comment
-    if: ${{ github.event.issue.pull_request }} && ${{ github.event.comment.body == '/screenshots' }}
+    if: contains(github.event.comment.html_url, '/pull/') && contains(github.event.comment.body, '/screenshots')
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
