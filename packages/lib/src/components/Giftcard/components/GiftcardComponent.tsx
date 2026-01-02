@@ -3,13 +3,13 @@ import SecuredFieldsProvider from '../../internal/SecuredFields/SFP/SecuredField
 import Alert from '../../internal/Alert';
 import GiftcardResult from './GiftcardResult';
 import { useCoreContext } from '../../../core/Context/CoreProvider';
-import { PaymentAmount } from '../../../types/global-types';
 import { GIFT_CARD } from '../../internal/SecuredFields/lib/constants';
 import { GiftCardFields } from './GiftcardFields';
 import { GiftcardFieldsProps, Placeholders } from './types';
 import { useSRPanelForGiftcardErrors } from './useSRPanelForGiftcardErrors';
 import { GiftCardBalanceCheckErrorType } from '../types';
 import { PayButtonProps } from '../../internal/PayButton/PayButton';
+import { useAmount } from '../../../core/Context/AmountProvider';
 
 interface GiftcardComponentProps {
     onChange: (state) => void;
@@ -17,7 +17,6 @@ interface GiftcardComponentProps {
     onBlur: (event) => void;
     makeBalanceCheck: (event) => void;
     makePayment: (event) => void;
-    amount?: PaymentAmount;
     showPayButton: boolean;
     payButton: (props: PayButtonProps) => h.JSX.Element;
     pinRequired: boolean;
@@ -147,6 +146,7 @@ class Giftcard extends Component<GiftcardComponentProps> {
 
     render(props, { focusedElement, balance, transactionLimit, isValidating, transformedErrors }) {
         const { i18n } = useCoreContext();
+        const { amount } = useAmount();
 
         // Handle SRPanel errors in render with transformed error objects
         useSRPanelForGiftcardErrors({
@@ -156,7 +156,7 @@ class Giftcard extends Component<GiftcardComponentProps> {
         });
 
         const transactionAmount = transactionLimit?.value < balance?.value ? transactionLimit : balance;
-        const hasEnoughBalance = transactionAmount?.value >= this.props.amount?.value;
+        const hasEnoughBalance = transactionAmount?.value >= amount?.value;
 
         if (transactionAmount && hasEnoughBalance) {
             return (

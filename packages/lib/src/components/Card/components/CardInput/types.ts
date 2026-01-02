@@ -28,7 +28,7 @@ import RiskElement from '../../../../core/RiskModule';
 import { DisclaimerMsgObject } from '../../../internal/DisclaimerMessage/DisclaimerMessage';
 import { OnAddressLookupType, OnAddressSelectedType } from '../../../internal/Address/components/AddressSearch';
 import { ComponentMethodsRef } from '../../../internal/UIElement/types';
-import { AddressData, PaymentAmount } from '../../../../types/global-types';
+import { AddressData } from '../../../../types/global-types';
 import type { FastlaneSignupConfiguration } from '../../../PayPalFastlane/types';
 import { AbstractAnalyticsEvent } from '../../../../core/Analytics/events/AbstractAnalyticsEvent';
 import { IAnalytics } from '../../../../core/Analytics/Analytics';
@@ -71,7 +71,6 @@ export interface CardInputDataState {
  * - either in the comp itself or are passed on to its children
  */
 export interface CardInputProps {
-    amount?: PaymentAmount;
     isPayButtonPrimaryVariant?: boolean;
     autoFocus?: boolean;
     billingAddressAllowedCountries?: string[];

@@ -1,10 +1,11 @@
 /** @tsx h */
-import { h } from 'preact';
+import { createRef, h } from 'preact';
 import { mount } from 'enzyme';
 import BacsInput from './BacsInput';
 import { BacsInputProps } from './types';
 import { mock } from 'jest-mock-extended';
 import { CoreProvider } from '../../../core/Context/CoreProvider';
+import { AmountProvider } from '../../../core/Context/AmountProvider';
 
 const defaultProps = {
     onChange: () => {},
@@ -14,7 +15,9 @@ const bacsPropsMock = mock<BacsInputProps>();
 const getWrapper = (props = {}) =>
     mount(
         <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
-            <BacsInput {...defaultProps} {...props} {...bacsPropsMock} />{' '}
+            <AmountProvider amount={{ currency: 'EUR', value: 1234 }} providerRef={createRef()}>
+                <BacsInput {...defaultProps} {...props} {...bacsPropsMock} />{' '}
+            </AmountProvider>
         </CoreProvider>
     );
 
