@@ -112,8 +112,7 @@ export const mapFieldKey = (key: string, i18n: Language, countrySpecificLabels: 
 
 export const extractPropsForCardFields = (props: CardInputProps) => {
     return {
-        // Extract props for CardFieldsWrapper & StoredCardFieldsWrapper(just needs amount, hasCVC, installmentOptions)
-        amount: props.amount,
+        // Extract props for CardFieldsWrapper & StoredCardFieldsWrapper(just needs hasCVC, installmentOptions)
         billingAddressRequired: props.billingAddressRequired,
         billingAddressRequiredFields: props.billingAddressRequiredFields,
         billingAddressAllowedCountries: props.billingAddressAllowedCountries,

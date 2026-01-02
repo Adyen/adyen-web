@@ -11,7 +11,7 @@ export default function AmazonPayButton(props: AmazonPayButtonProps) {
     const { loadingContext } = useCoreContext();
     const { amazonRef, configuration = {} } = props;
     const [signature, setSignature] = useState<string>(null);
-    const payloadJSON: PayloadJSON = getPayloadJSON(props);
+    const payloadJSON: PayloadJSON = getPayloadJSON(props, amount);
     const settings = getAmazonPaySettings(props, amount);
 
     const handleOnClick = () => {
