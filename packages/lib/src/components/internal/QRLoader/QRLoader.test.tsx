@@ -1,4 +1,4 @@
-import { h } from 'preact';
+import { createRef, h } from 'preact';
 import { render, waitFor, screen } from '@testing-library/preact';
 import { QRLoader } from './QRLoader';
 import checkPaymentStatus from '../../../core/Services/payment-status';
@@ -7,12 +7,19 @@ import { SRPanel } from '../../../core/Errors/SRPanel';
 import SRPanelProvider from '../../../core/Errors/SRPanelProvider';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 import type { QRLoaderProps } from './types';
+import { AmountProvider, AmountProviderProps } from '../../../core/Context/AmountProvider';
 
 jest.mock('../../../core/Services/payment-status');
 
 const TIMEOUT_OFFSET = 200;
 
-const renderQRLoader = (props: Partial<QRLoaderProps> = {}) => {
+const renderQRLoader = ({
+    qrLoaderProps,
+    amountProviderProps
+}: {
+    qrLoaderProps: Partial<QRLoaderProps>;
+    amountProviderProps?: Partial<AmountProviderProps>;
+}) => {
     const srPanel = new SRPanel(global.core);
     const defaultProps: QRLoaderProps = {
         type: 'pix',
@@ -24,12 +31,14 @@ const renderQRLoader = (props: Partial<QRLoaderProps> = {}) => {
         clientKey: 'test_key'
     };
 
-    const mergedProps = { ...defaultProps, ...props };
+    const mergedProps = { ...defaultProps, ...qrLoaderProps };
 
     render(
         <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
             <SRPanelProvider srPanel={srPanel}>
-                <QRLoader {...mergedProps} />
+                <AmountProvider {...amountProviderProps} providerRef={createRef()}>
+                    <QRLoader {...mergedProps} />
+                </AmountProvider>
             </SRPanelProvider>
         </CoreProvider>
     );
@@ -65,7 +74,7 @@ describe('QRLoader', () => {
             }
         };
 
-        const { onCompleteMock, onErrorMock } = renderQRLoader({ delay, paymentData });
+        const { onCompleteMock, onErrorMock } = renderQRLoader({ qrLoaderProps: { delay, paymentData } });
 
         // Polling should start immediately on render
         expect(checkPaymentStatus).toHaveBeenCalledTimes(1);
@@ -88,7 +97,7 @@ describe('QRLoader', () => {
         jest.spyOn(global, 'setTimeout');
         const delay = 200;
 
-        const { onCompleteMock, onErrorMock } = renderQRLoader({ delay });
+        const { onCompleteMock, onErrorMock } = renderQRLoader({ qrLoaderProps: { delay } });
 
         // Polling should start immediately on render
         expect(checkPaymentStatus).toHaveBeenCalledTimes(1);
@@ -113,7 +122,7 @@ describe('QRLoader', () => {
         (checkPaymentStatus as jest.Mock).mockResolvedValue(pendingResponse);
         const delay = 1000;
 
-        const { onCompleteMock, onErrorMock } = renderQRLoader({ delay });
+        const { onCompleteMock, onErrorMock } = renderQRLoader({ qrLoaderProps: { delay } });
 
         // Polling should start immediately on render
         expect(checkPaymentStatus).toHaveBeenCalledTimes(1);
@@ -137,9 +146,11 @@ describe('QRLoader', () => {
         const throttledInterval = 2000;
 
         renderQRLoader({
-            delay,
-            throttleTime: 0,
-            throttledInterval
+            qrLoaderProps: {
+                delay,
+                throttleTime: 0,
+                throttledInterval
+            }
         });
 
         // Polling should start immediately on render

@@ -1,4 +1,4 @@
-import { h } from 'preact';
+import { createRef, h } from 'preact';
 import { Meta, StoryObj } from '@storybook/preact-vite';
 import Button from './Button';
 import PayButton from '../PayButton/PayButton';
@@ -11,6 +11,7 @@ import { CopyButton, CopyButtonProps } from './CopyButton';
 import { Resources } from '../../../core/Context/Resources';
 import { resolveEnvironments } from '../../../core/Environment';
 import type { CoreConfiguration } from '../../../core/types';
+import { AmountProvider, AmountProviderProps } from '../../../core/Context/AmountProvider';
 
 const meta: Meta<ButtonProps> = {
     title: 'Internal Elements/Button',
@@ -99,11 +100,15 @@ export const CopyIconOnlyButton: StoryObj<CopyIconButtonProps> = {
     }
 };
 
-export const PaymentButton: StoryObj<PayButtonProps> = {
+export const PaymentButton: StoryObj<PayButtonProps & AmountProviderProps> = {
     render: args => {
+        const { amount, secondaryAmount, ...rest } = args;
+
         return (
             <CoreProvider {...coreProps}>
-                <PayButton {...args} onClick={() => console.log('Pay button clicked')} />
+                <AmountProvider amount={amount} secondaryAmount={secondaryAmount} providerRef={createRef()}>
+                    <PayButton {...rest} onClick={() => console.log('Pay button clicked')} />
+                </AmountProvider>
             </CoreProvider>
         );
     },

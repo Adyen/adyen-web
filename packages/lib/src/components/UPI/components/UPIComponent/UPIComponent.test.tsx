@@ -1,4 +1,4 @@
-import { h } from 'preact';
+import { createRef, h } from 'preact';
 import { render, screen, waitFor } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import SRPanelProvider from '../../../../core/Errors/SRPanelProvider';
@@ -8,11 +8,14 @@ import { CoreProvider } from '../../../../core/Context/CoreProvider';
 import { App, UpiMode } from '../../types';
 import { SegmentedControlOption } from '../../../internal/SegmentedControl/SegmentedControl';
 import { A11Y } from '../../constants';
+import { AmountProvider } from '../../../../core/Context/AmountProvider';
 
 const customRender = (ui: h.JSX.Element) => {
     return render(
         <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
-            <SRPanelProvider srPanel={new SRPanel(global.core)}>{ui}</SRPanelProvider>
+            <AmountProvider providerRef={createRef()}>
+                <SRPanelProvider srPanel={new SRPanel(global.core)}>{ui}</SRPanelProvider>
+            </AmountProvider>
         </CoreProvider>
     );
 };
@@ -29,7 +32,15 @@ describe('UPIComponent', () => {
         ];
 
         test('should render the options provided in props', async () => {
-            customRender(<UPIComponent defaultMode={'intent'} onChange={jest.fn()} showPayButton={false} segmentedControlOptions={mockOptions} />);
+            customRender(
+                <UPIComponent
+                    defaultMode={'intent'}
+                    onChange={jest.fn()}
+                    showPayButton={false}
+                    segmentedControlOptions={mockOptions}
+                    payButton={() => <button className="pay-button" />}
+                />
+            );
 
             expect(await screen.findByRole('button', { name: /UPI App/i })).toBeInTheDocument();
             expect(await screen.findByRole('button', { name: /QR Code/i })).toBeInTheDocument();
@@ -46,6 +57,7 @@ describe('UPIComponent', () => {
                     onUpdateMode={onUpdateModeMock}
                     showPayButton={false}
                     segmentedControlOptions={mockOptions}
+                    payButton={() => <button className="pay-button" />}
                 />
             );
 
@@ -59,7 +71,15 @@ describe('UPIComponent', () => {
             const onChangeMock = jest.fn();
             const user = userEvent.setup();
 
-            customRender(<UPIComponent defaultMode={'intent'} onChange={onChangeMock} showPayButton={false} segmentedControlOptions={mockOptions} />);
+            customRender(
+                <UPIComponent
+                    defaultMode={'intent'}
+                    onChange={onChangeMock}
+                    showPayButton={false}
+                    segmentedControlOptions={mockOptions}
+                    payButton={() => <button className="pay-button" />}
+                />
+            );
 
             expect(onChangeMock).toHaveBeenCalledTimes(1);
 
@@ -77,7 +97,15 @@ describe('UPIComponent', () => {
         const gpayApp: App = { id: 'gpay', name: 'Google Pay' };
 
         test('should show a list of apps from the given app list', async () => {
-            customRender(<UPIComponent apps={[gpayApp]} defaultMode={'intent'} onChange={jest.fn()} showPayButton={false} />);
+            customRender(
+                <UPIComponent
+                    apps={[gpayApp]}
+                    defaultMode={'intent'}
+                    onChange={jest.fn()}
+                    showPayButton={false}
+                    payButton={() => <button className="pay-button" />}
+                />
+            );
 
             expect(await screen.findByRole('radiogroup')).toBeInTheDocument();
             expect(await screen.findByRole('radio', { name: /google pay/i })).toBeInTheDocument();
@@ -115,7 +143,15 @@ describe('UPIComponent', () => {
             const onChangeMock = jest.fn();
             const user = userEvent.setup();
 
-            customRender(<UPIComponent apps={[gpayApp]} defaultMode={'intent'} showPayButton={false} onChange={onChangeMock} />);
+            customRender(
+                <UPIComponent
+                    apps={[gpayApp]}
+                    defaultMode={'intent'}
+                    showPayButton={false}
+                    onChange={onChangeMock}
+                    payButton={() => <button className="pay-button" />}
+                />
+            );
 
             expect(onChangeMock).toHaveBeenCalledWith({
                 data: {},
@@ -145,7 +181,9 @@ describe('UPIComponent', () => {
             const onChangeMock = jest.fn();
             const user = userEvent.setup();
 
-            customRender(<UPIComponent defaultMode={'vpa'} onChange={onChangeMock} showPayButton={false} />);
+            customRender(
+                <UPIComponent defaultMode={'vpa'} onChange={onChangeMock} showPayButton={false} payButton={() => <button className="pay-button" />} />
+            );
 
             const vpaInput = screen.getByTestId('input-virtual-payment-address');
             await user.click(vpaInput);
@@ -163,7 +201,9 @@ describe('UPIComponent', () => {
             const onChangeMock = jest.fn();
             const user = userEvent.setup();
 
-            customRender(<UPIComponent defaultMode={'vpa'} onChange={onChangeMock} showPayButton={false} />);
+            customRender(
+                <UPIComponent defaultMode={'vpa'} onChange={onChangeMock} showPayButton={false} payButton={() => <button className="pay-button" />} />
+            );
 
             const vpaInput = screen.getByTestId('input-virtual-payment-address');
             await user.type(vpaInput, 'test@test');

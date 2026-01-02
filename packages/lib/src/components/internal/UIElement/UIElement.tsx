@@ -1,4 +1,4 @@
-import { h } from 'preact';
+import { createRef, h, RefObject } from 'preact';
 import { Resources } from '../../../core/Context/Resources';
 import AdyenCheckoutError, { NETWORK_ERROR } from '../../../core/Errors/AdyenCheckoutError';
 import { hasOwnProperty } from '../../../utils/hasOwnProperty';
@@ -26,13 +26,15 @@ import type {
     RawPaymentMethod
 } from '../../../types/global-types';
 import type { IDropin } from '../../Dropin/types';
-import type { ComponentMethodsRef, PayButtonFunctionProps, UIElementProps, UIElementStatus } from './types';
+import type { ComponentMethodsRef, UIElementProps, UIElementStatus } from './types';
 import type { IAnalytics } from '../../../core/Analytics/Analytics';
 
 import { CoreProvider } from '../../../core/Context/CoreProvider';
 import { SRPanel } from '../../../core/Errors/SRPanel';
 import './UIElement.scss';
 import SRPanelProvider from '../../../core/Errors/SRPanelProvider';
+import { AmountProvider, AmountProviderRef } from '../../../core/Context/AmountProvider';
+import { PayButtonProps } from '../PayButton/PayButton';
 
 export abstract class UIElement<P extends UIElementProps = UIElementProps> extends BaseElement<P> {
     protected componentRef: any;
@@ -42,6 +44,11 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     public elementRef: UIElement;
 
     public static type = undefined;
+
+    /**
+     * Reference to the methods exposed by the AmountProvider context
+     */
+    protected amountProviderRef: RefObject<AmountProviderRef> = createRef();
 
     /**
      * Defines all txVariants that the Component supports (in case it support multiple ones besides the 'type' one)
@@ -65,6 +72,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         this.makePaymentsCall = this.makePaymentsCall.bind(this);
         this.makeAdditionalDetailsCall = this.makeAdditionalDetailsCall.bind(this);
         this.submitUsingSessionsFlow = this.submitUsingSessionsFlow.bind(this);
+        this.updateAmount = this.updateAmount.bind(this);
 
         this.elementRef = (props && props.elementRef) || this;
         this.resources = this.props.modules ? this.props.modules.resources : undefined;
@@ -184,6 +192,23 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     }
 
     /**
+     * Updates the amount in the props and propagates it to the AmountProvider.
+     * This allows children components to access the updated amount via context.
+     *
+     * @param amount - Primary payment amount object
+     * @param secondaryAmount - Optional secondary amount for display purposes (e.g., converted currency)
+     * @internal
+     */
+    public updateAmount(amount: PaymentAmount, secondaryAmount?: PaymentAmount): void {
+        this.props = {
+            ...this.props,
+            ...(amount && { amount }),
+            ...(secondaryAmount && { secondaryAmount })
+        };
+        this.amountProviderRef.current?.update(amount, secondaryAmount);
+    }
+
+    /**
      * elementRef is a ref to the subclass that extends UIElement e.g. Card.tsx
      */
     public setElementStatus(status: UIElementStatus, props?: any): this {
@@ -245,12 +270,12 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
 
         if (this.core.session) {
             const beforeSubmitEvent: Promise<PaymentData> = this.props.beforeSubmit
-                ? new Promise((resolve, reject) =>
-                      this.props.beforeSubmit(this.data, this.elementRef, {
+                ? new Promise((resolve, reject) => {
+                      void this.props.beforeSubmit(this.data, this.elementRef, {
                           resolve,
                           reject: () => reject(new CancelError('beforeSubmitRejected'))
-                      })
-                  )
+                      });
+                  })
                 : Promise.resolve(this.data);
 
             return beforeSubmitEvent.then(this.submitUsingSessionsFlow);
@@ -549,8 +574,8 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     /**
      * Get the payButton component for the current element
      */
-    protected payButton = (props: PayButtonFunctionProps) => {
-        return <PayButton {...props} amount={this.props.amount} secondaryAmount={this.props.secondaryAmount} onClick={this.submit} />;
+    protected payButton = (props: PayButtonProps) => {
+        return <PayButton {...props} onClick={this.submit} />;
     };
 
     /**
@@ -607,7 +632,11 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     render() {
         return (
             <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources} analytics={this.analytics}>
-                <SRPanelProvider srPanel={this.srPanel}>{this.componentToRender()}</SRPanelProvider>
+                <SRPanelProvider srPanel={this.srPanel}>
+                    <AmountProvider amount={this.props.amount} secondaryAmount={this.props.secondaryAmount} providerRef={this.amountProviderRef}>
+                        {this.componentToRender()}
+                    </AmountProvider>
+                </SRPanelProvider>
             </CoreProvider>
         );
     }

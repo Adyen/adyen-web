@@ -7,7 +7,8 @@ import PayToComponent from './components/PayToComponent';
 import { PayToInstructions } from './components/PayToInstructions';
 import MandateSummary from './components/MandateSummary';
 import { PayToConfiguration, PayToData } from './types';
-import PayButton, { payAmountLabel } from '../internal/PayButton';
+import PayButton from '../internal/PayButton';
+import { payAmountLabel } from '../internal/PayButton/utils';
 
 /*
 Await Config (previously in its own file)
@@ -115,7 +116,6 @@ export class PayToElement extends UIElement<PayToConfiguration> {
                         <PayButton
                             {...this.props}
                             classNameModifiers={['standalone']}
-                            amount={this.props.amount}
                             label={payAmountLabel(this.props.i18n, this.props.amount)}
                             onClick={this.submit}
                         />
@@ -127,7 +127,6 @@ export class PayToElement extends UIElement<PayToConfiguration> {
         if (this.props.paymentData) {
             return (
                 <Await
-                    amount={this.props.amount}
                     showAmount={true}
                     instructions={PayToInstructions}
                     clientKey={this.props.clientKey}

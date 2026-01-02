@@ -7,7 +7,7 @@ import { CashAppPayElementData, CashAppPayConfiguration, CashAppPayEventData } f
 import { ICashAppService } from './services/types';
 import defaultProps from './defaultProps';
 import RedirectButton from '../internal/RedirectButton';
-import { payAmountLabel } from '../internal/PayButton';
+import { payAmountLabel } from '../internal/PayButton/utils';
 import { TxVariants } from '../tx-variants';
 import type { ICore } from '../../core/types';
 import { PREFIX } from '../internal/Icon/constants';
@@ -41,7 +41,6 @@ export class CashAppPay extends UIElement<CashAppPayConfiguration> {
             storePaymentMethod: this.props.storePaymentMethod,
             useCashAppButtonUi: this.props.showPayButton,
             environment: this.props.environment,
-            amount: this.props.amount,
             redirectURL: this.props.redirectURL,
             clientId: this.props.configuration?.clientId,
             scopeId: this.props.configuration?.scopeId,
@@ -115,7 +114,7 @@ export class CashAppPay extends UIElement<CashAppPayConfiguration> {
                 throw Error('onClick rejected');
             })
             .then(() => {
-                return this.cashAppService.createCustomerRequest();
+                return this.cashAppService.createCustomerRequest(this.props.amount);
             })
             .then(() => {
                 this.cashAppService.begin();
@@ -151,7 +150,6 @@ export class CashAppPay extends UIElement<CashAppPayConfiguration> {
                 label={payAmountLabel(this.props.i18n, this.props.amount)}
                 icon={this.resources?.getImage({ imageFolder: 'components/' })(`${PREFIX}lock`)}
                 name={this.displayName}
-                amount={this.props.amount}
                 payButton={this.payButton}
                 onSubmit={this.submit}
                 ref={ref => {

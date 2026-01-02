@@ -1,6 +1,8 @@
 import { ActionHandledReturnObject, PaymentAmount } from '../../types/global-types';
 import Language from '../../language/Language';
 import { UIElementProps } from '../internal/UIElement/types';
+import { h } from 'preact';
+import { PayButtonProps } from '../internal/PayButton/PayButton';
 
 export interface DragonpayInputIssuerItem {
     id: string;
@@ -33,7 +35,7 @@ export interface DragonpayInputProps {
     onChange: (state) => void;
     onSubmit?: (state, component) => void;
     showPayButton: boolean;
-    payButton: any;
+    payButton: (props: PayButtonProps) => h.JSX.Element;
     ref?: any;
 }
 

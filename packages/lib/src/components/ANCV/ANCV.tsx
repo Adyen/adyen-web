@@ -7,6 +7,7 @@ import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import PayButton from '../internal/PayButton';
 import { ANCVConfiguration } from './types';
 import { sanitizeResponse, verifyPaymentDidNotFail } from '../internal/UIElement/utils';
+import { PayButtonProps } from '../internal/PayButton/PayButton';
 
 export class ANCVElement extends UIElement<ANCVConfiguration> {
     public static type = 'ancv';
@@ -76,7 +77,7 @@ export class ANCVElement extends UIElement<ANCVConfiguration> {
     }
 
     // Reimplement payButton similar to GiftCard to allow to set onClick
-    public payButton = props => {
+    protected override payButton = (props: PayButtonProps): h.JSX.Element => {
         return <PayButton {...props} />;
     };
 
