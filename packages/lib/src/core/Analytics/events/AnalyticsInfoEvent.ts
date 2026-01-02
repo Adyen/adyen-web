@@ -25,7 +25,8 @@ export enum UiTarget {
     list = 'list',
     listSearch = 'list_search',
     qrDownloadButton = 'qr_download_button',
-    cardNumber = 'card_number'
+    cardNumber = 'card_number',
+    segmentedControl = 'segmented_control'
 }
 
 export enum InfoEventType {
@@ -104,10 +105,7 @@ export class AnalyticsInfoEvent extends AbstractAnalyticsEvent {
         if (props.cdnUrl) this.cdnUrl = props.cdnUrl;
         if (props.validationErrorCode) this.validationErrorCode = props.validationErrorCode;
         if (props.validationErrorMessage) this.validationErrorMessage = props.validationErrorMessage;
-
-        if (this.type === InfoEventType.rendered) {
-            this.configData = this.createAnalyticsConfigData(props?.configData);
-        }
+        if (props.configData) this.configData = this.createAnalyticsConfigData(props.configData);
 
         // Some of the more generic validation error codes required combination with target to retrieve a specific code
         if (this.type === InfoEventType.validationError) {

@@ -1,23 +1,17 @@
 import { ComponentChildren, h } from 'preact';
-import { ActionHandledReturnObject, PaymentAmount } from '../../../types/global-types';
+import { PaymentAmount } from '../../../types/global-types';
 import Language from '../../../language/Language';
 import { AbstractAnalyticsEvent } from '../../../core/Analytics/events/AbstractAnalyticsEvent';
 import { CountdownTime } from '../Countdown/types';
-import { AdditionalDetailsData, AdyenCheckoutError } from '../../../types';
+import { UsePaymentStatusTimerProps } from '../../../hooks/usePaymentStatusTimer/types';
 
-export interface QRLoaderProps {
-    // Component type that is creating the action (e.g. wechatpayQR)
-    type: string;
-    delay?: number;
+export type QRLoaderProps = Pick<
+    UsePaymentStatusTimerProps,
+    'loadingContext' | 'paymentData' | 'clientKey' | 'delay' | 'throttleTime' | 'type' | 'onError' | 'onComplete' | 'onActionHandled'
+> & {
     countdownTime?: number;
-    onError?: (error: AdyenCheckoutError) => void;
-    onComplete?: (status: AdditionalDetailsData) => void;
-    throttleTime?: number;
     throttledInterval?: number;
     url?: string;
-    paymentData?: string;
-    clientKey?: string;
-    loadingContext?: string;
     qrCodeData?: string;
     qrCodeImage?: string;
     amount?: PaymentAmount;
@@ -32,10 +26,9 @@ export interface QRLoaderProps {
     introduction?: string | (() => h.JSX.Element);
     instructions?: string | (() => h.JSX.Element);
     copyBtn?: boolean;
-    onActionHandled?: (rtnObj: ActionHandledReturnObject) => void;
     onSubmitAnalytics?: (aObj: AbstractAnalyticsEvent) => void;
     children?: ComponentChildren;
-}
+};
 
 export interface QRCountdownProps {
     countdownTime: number;

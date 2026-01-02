@@ -22,7 +22,7 @@ import './QRLoader.scss';
 
 const QRCODE_URL = 'utility/v1/barcode.png?type=qrCode&data=';
 
-export function QRLoader(props: QRLoaderProps) {
+export function QRLoader(props: Readonly<QRLoaderProps>) {
     const { i18n, loadingContext } = useCoreContext();
 
     const { state: timerState, actions: timerActions } = usePaymentStatusTimer({
