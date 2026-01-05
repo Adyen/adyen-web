@@ -62,7 +62,6 @@ const CtPCardsList = ({ cardSelected, cards, errorMessage, onChangeCard }: CtPCa
                 name={'clickToPayCards'}
                 filterable={false}
                 className={'adyen-checkout-ctp__cards-list-dropdown'}
-                allowIdOnButton={true}
                 readonly={status === 'loading'}
                 onChange={handleChangeFor('srcDigitalCardId')}
             />
