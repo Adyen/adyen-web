@@ -216,6 +216,22 @@ describe('Iris', () => {
             );
         });
 
+        test('should not send analytics info event with default mode of segmented control if no issuers are available', () => {
+            const iris = createIris({
+                issuers: []
+            });
+            render(iris.render());
+
+            expect(core.modules.analytics.sendAnalytics).not.toHaveBeenCalledWith(
+                expect.objectContaining({
+                    type: InfoEventType.displayed,
+                    target: UiTarget.segmentedControl,
+                    component: 'iris',
+                    selectedValue: IrisMode.BANK_LIST
+                })
+            );
+        });
+
         test('should send analytics info event when clicking on Bank list segmented control option', async () => {
             const iris = createIris();
             render(iris.render());
