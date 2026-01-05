@@ -16,7 +16,7 @@ interface IrisComponentProps {
     showPayButton?: boolean;
     issuers: IssuerItem[];
     issuerListUI: h.JSX.Element;
-    onUpdateMode: (mode: IrisMode, sendAnalytics?: boolean) => void;
+    onUpdateMode: (mode: IrisMode) => void;
     payButton: (props: Partial<PayButtonProps>) => h.JSX.Element;
     setComponentRef: (ref: ComponentMethodsRef) => void;
 }
@@ -28,9 +28,9 @@ export default function IrisComponent(props: Readonly<IrisComponentProps>) {
     const [status, setStatus] = useState<UIElementStatus>('ready');
     const segmentedControlOptions = useMemo(() => getIrisSegmentedControlOptions(i18n, props.defaultMode), [i18n, props.defaultMode]);
 
-    const handleModeChange = (mode: IrisMode, sendAnalytics = false) => {
+    const handleModeChange = (mode: IrisMode) => {
         setMode(mode);
-        props.onUpdateMode(mode, sendAnalytics);
+        props.onUpdateMode(mode);
     };
 
     const irisRef = useRef<ComponentMethodsRef>({
@@ -54,7 +54,7 @@ export default function IrisComponent(props: Readonly<IrisComponentProps>) {
     return (
         <div>
             <SegmentedControl
-                onChange={mode => handleModeChange(mode, true)}
+                onChange={mode => handleModeChange(mode)}
                 selectedValue={mode}
                 disabled={status === 'loading'}
                 options={segmentedControlOptions}
