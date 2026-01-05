@@ -14,6 +14,7 @@ type AnalyticsInfoEventProps = {
     validationErrorMessage?: string;
     configData?: Record<string, any>;
     cdnUrl?: string;
+    selectedValue?: string;
 };
 
 export enum UiTarget {
@@ -83,6 +84,7 @@ export class AnalyticsInfoEvent extends AbstractAnalyticsEvent {
     private readonly expressPage?: string;
     private readonly isStoredPaymentMethod?: boolean;
     private readonly brand?: string;
+    private readonly selectedValue?: string;
     private readonly validationErrorCode?: string;
     private readonly validationErrorMessage?: string;
 
@@ -103,6 +105,7 @@ export class AnalyticsInfoEvent extends AbstractAnalyticsEvent {
         if (props.expressPage) this.expressPage = props.expressPage;
         if (props.brand) this.brand = props.brand;
         if (props.cdnUrl) this.cdnUrl = props.cdnUrl;
+        if (props.selectedValue) this.selectedValue = props.selectedValue;
         if (props.validationErrorCode) this.validationErrorCode = props.validationErrorCode;
         if (props.validationErrorMessage) this.validationErrorMessage = props.validationErrorMessage;
         if (props.configData) this.configData = this.createAnalyticsConfigData(props.configData);

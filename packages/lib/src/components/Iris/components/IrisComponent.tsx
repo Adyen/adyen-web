@@ -10,19 +10,23 @@ import { ComponentMethodsRef, UIElementStatus } from '../../types';
 import { IssuerItem } from '../../internal/IssuerList/types';
 import IrisGenerateQRCode from './IrisGenerateQRCode';
 import styles from './IrisComponent.module.scss';
+import { AnalyticsInfoEvent, InfoEventType, UiTarget } from '../../../core/Analytics/events/AnalyticsInfoEvent';
+import { TxVariants } from '../../tx-variants';
+import useAnalytics from '../../../core/Analytics/useAnalytics';
 
 interface IrisComponentProps {
     defaultMode: IrisMode;
     showPayButton?: boolean;
     issuers: IssuerItem[];
     issuerListUI: h.JSX.Element;
-    onUpdateMode: (mode: IrisMode, sendAnalytics?: boolean) => void;
+    onUpdateMode: (mode: IrisMode) => void;
     payButton: (props: Partial<PayButtonProps>) => h.JSX.Element;
     setComponentRef: (ref: ComponentMethodsRef) => void;
 }
 
 export default function IrisComponent(props: Readonly<IrisComponentProps>) {
     const { i18n } = useCoreContext();
+    const { analytics } = useAnalytics();
 
     const [mode, setMode] = useState<IrisMode>(props.defaultMode);
     const [status, setStatus] = useState<UIElementStatus>('ready');
@@ -30,7 +34,16 @@ export default function IrisComponent(props: Readonly<IrisComponentProps>) {
 
     const handleModeChange = (mode: IrisMode, sendAnalytics = false) => {
         setMode(mode);
-        props.onUpdateMode(mode, sendAnalytics);
+        props.onUpdateMode(mode);
+        if (sendAnalytics) {
+            const event = new AnalyticsInfoEvent({
+                type: InfoEventType.selected,
+                target: UiTarget.segmentedControl,
+                component: TxVariants.iris,
+                selectedValue: mode
+            });
+            analytics.sendAnalytics(event);
+        }
     };
 
     const irisRef = useRef<ComponentMethodsRef>({
@@ -40,6 +53,16 @@ export default function IrisComponent(props: Readonly<IrisComponentProps>) {
     useEffect(() => {
         props.setComponentRef(irisRef.current);
     }, [props.setComponentRef, irisRef.current]);
+
+    useEffect(() => {
+        const event = new AnalyticsInfoEvent({
+            type: InfoEventType.displayed,
+            target: UiTarget.segmentedControl,
+            component: TxVariants.iris,
+            selectedValue: props.defaultMode
+        });
+        analytics.sendAnalytics(event);
+    }, []);
 
     useEffect(() => {
         if (!props.issuers.length) {

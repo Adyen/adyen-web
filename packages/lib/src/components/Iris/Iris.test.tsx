@@ -186,6 +186,36 @@ describe('Iris', () => {
     });
 
     describe('Analytics', () => {
+        test('should send analytics info event with default mode of segmented control on Mobile', () => {
+            isMobileMock.mockReturnValue(true);
+            const iris = createIris();
+            render(iris.render());
+
+            expect(core.modules.analytics.sendAnalytics).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    type: InfoEventType.displayed,
+                    target: UiTarget.segmentedControl,
+                    component: 'iris',
+                    selectedValue: IrisMode.BANK_LIST
+                })
+            );
+        });
+
+        test('should send analytics info event with default mode of segmented control on Desktop', () => {
+            isMobileMock.mockReturnValue(false);
+            const iris = createIris();
+            render(iris.render());
+
+            expect(core.modules.analytics.sendAnalytics).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    type: InfoEventType.displayed,
+                    target: UiTarget.segmentedControl,
+                    component: 'iris',
+                    selectedValue: IrisMode.QR_CODE
+                })
+            );
+        });
+
         test('should send analytics info event when clicking on Bank list segmented control option', async () => {
             const iris = createIris();
             render(iris.render());
@@ -200,10 +230,10 @@ describe('Iris', () => {
 
             expect(core.modules.analytics.sendAnalytics).toHaveBeenCalledWith(
                 expect.objectContaining({
-                    type: InfoEventType.clicked,
+                    type: InfoEventType.selected,
                     target: UiTarget.segmentedControl,
                     component: 'iris',
-                    configData: { selectedMode: IrisMode.BANK_LIST }
+                    selectedValue: IrisMode.BANK_LIST
                 })
             );
         });
@@ -223,10 +253,10 @@ describe('Iris', () => {
 
             expect(core.modules.analytics.sendAnalytics).toHaveBeenCalledWith(
                 expect.objectContaining({
-                    type: InfoEventType.clicked,
+                    type: InfoEventType.selected,
                     target: UiTarget.segmentedControl,
                     component: 'iris',
-                    configData: { selectedMode: IrisMode.QR_CODE }
+                    selectedValue: IrisMode.QR_CODE
                 })
             );
         });
@@ -236,13 +266,14 @@ describe('Iris', () => {
             render(iris.render());
 
             // Should show Generate QR code button directly (no segmented control)
-            expect(await screen.findByRole('button', { name: /Generate QR code/i })).toBeInTheDocument();
+            expect(await screen.findByRole('button', { name: 'Generate QR code' })).toBeInTheDocument();
             expect(screen.queryByRole('button', { name: 'QR code' })).not.toBeInTheDocument();
             expect(screen.queryByRole('button', { name: 'Bank list' })).not.toBeInTheDocument();
 
             // No segmented control click events should be sent (only rendered event)
             expect(core.modules.analytics.sendAnalytics).not.toHaveBeenCalledWith(
                 expect.objectContaining({
+                    type: InfoEventType.selected,
                     target: UiTarget.segmentedControl
                 })
             );
