@@ -135,7 +135,6 @@ function Installments(props: InstallmentsProps) {
                     name={'installments'}
                     readonly={readOnly}
                     disabled={readOnly}
-                    allowIdOnButton={true}
                 />
             </Field>
         </div>
