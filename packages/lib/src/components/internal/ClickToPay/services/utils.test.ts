@@ -3,6 +3,9 @@ import { SrcProfileWithScheme } from './types';
 import ShopperCard from '../models/ShopperCard';
 
 test('should place expired cards at the end of the list, placing the most recent ones on top', () => {
+    const NEXT_YEAR: string = (new Date().getFullYear() + 1).toString();
+    const EXPIRED_YEAR: string = '2020';
+
     const cardsFromSrcSystem: SrcProfileWithScheme[] = [
         {
             scheme: 'visa',
@@ -17,7 +20,7 @@ test('should place expired cards at the end of the list, placing the most recent
                             dateOfCardLastUsed: '2019-09-28T08:10:02.312Z',
                             paymentCardDescriptor: 'visa',
                             panExpirationMonth: '12',
-                            panExpirationYear: '2020',
+                            panExpirationYear: EXPIRED_YEAR,
                             digitalCardData: {
                                 descriptorName: 'Visa',
                                 artUri: 'https://image.com/visa',
@@ -32,7 +35,7 @@ test('should place expired cards at the end of the list, placing the most recent
                             dateOfCardLastUsed: '2022-09-28T08:10:02.312Z',
                             paymentCardDescriptor: 'visa',
                             panExpirationMonth: '12',
-                            panExpirationYear: '2025',
+                            panExpirationYear: NEXT_YEAR,
                             digitalCardData: {
                                 descriptorName: 'Visa',
                                 artUri: 'https://image.com/visa',
@@ -57,7 +60,7 @@ test('should place expired cards at the end of the list, placing the most recent
                             dateOfCardLastUsed: '2019-12-25T20:20:02.942Z',
                             paymentCardDescriptor: 'mc',
                             panExpirationMonth: '12',
-                            panExpirationYear: '2020',
+                            panExpirationYear: EXPIRED_YEAR,
                             digitalCardData: {
                                 descriptorName: 'Mastercard',
                                 artUri: 'https://image.com/mc',
@@ -82,7 +85,7 @@ test('should place expired cards at the end of the list, placing the most recent
             descriptorName: 'Visa',
             isExpired: false,
             panExpirationMonth: '12',
-            panExpirationYear: '2025',
+            panExpirationYear: NEXT_YEAR,
             panLastFour: '8902',
             scheme: 'visa',
             srcCorrelationId: '123456',
@@ -97,7 +100,7 @@ test('should place expired cards at the end of the list, placing the most recent
             descriptorName: 'Mastercard',
             isExpired: true,
             panExpirationMonth: '12',
-            panExpirationYear: '2020',
+            panExpirationYear: EXPIRED_YEAR,
             panLastFour: '4302',
             scheme: 'mc',
             srcCorrelationId: '1a2b3c',
@@ -112,7 +115,7 @@ test('should place expired cards at the end of the list, placing the most recent
             descriptorName: 'Visa',
             isExpired: true,
             panExpirationMonth: '12',
-            panExpirationYear: '2020',
+            panExpirationYear: EXPIRED_YEAR,
             panLastFour: '8902',
             scheme: 'visa',
             srcCorrelationId: '123456',
