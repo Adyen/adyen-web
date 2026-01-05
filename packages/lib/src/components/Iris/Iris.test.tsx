@@ -2,6 +2,8 @@ import { render, screen, waitFor } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 import Iris from './Iris';
+import { IrisMode } from './types';
+import { InfoEventType, UiTarget } from '../../core/Analytics/events/AnalyticsInfoEvent';
 
 // Mock the isMobile utility
 jest.mock('../../utils/isMobile', () => jest.fn());
@@ -181,5 +183,69 @@ describe('Iris', () => {
         const submitCall = onSubmitMock.mock.calls[0][0];
         expect(submitCall.data.paymentMethod).not.toHaveProperty('issuer');
         expect(submitCall.data.paymentMethod.type).toBe('iris');
+    });
+
+    describe('Analytics', () => {
+        test('should send analytics info event when clicking on Bank list segmented control option', async () => {
+            const iris = createIris();
+            render(iris.render());
+
+            // Verify QR code is initially selected
+            const qrCodeButton = await screen.findByRole('button', { name: 'QR code' });
+            expect(qrCodeButton).toHaveAttribute('aria-expanded', 'true');
+
+            // Click on Bank list
+            const bankListButton = await screen.findByRole('button', { name: 'Bank list' });
+            await user.click(bankListButton);
+
+            expect(core.modules.analytics.sendAnalytics).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    type: InfoEventType.clicked,
+                    target: UiTarget.segmentedControl,
+                    component: 'iris',
+                    configData: { selectedMode: IrisMode.BANK_LIST }
+                })
+            );
+        });
+
+        test('should send analytics info event when clicking on QR code segmented control option', async () => {
+            isMobileMock.mockReturnValue(true); // Start in Bank List mode
+            const iris = createIris();
+            render(iris.render());
+
+            // Verify Bank list is initially selected
+            const bankListButton = await screen.findByRole('button', { name: 'Bank list' });
+            expect(bankListButton).toHaveAttribute('aria-expanded', 'true');
+
+            // Click on QR code
+            const qrCodeButton = await screen.findByRole('button', { name: 'QR code' });
+            await user.click(qrCodeButton);
+
+            expect(core.modules.analytics.sendAnalytics).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    type: InfoEventType.clicked,
+                    target: UiTarget.segmentedControl,
+                    component: 'iris',
+                    configData: { selectedMode: IrisMode.QR_CODE }
+                })
+            );
+        });
+
+        test('should not send segmented control analytics event when issuer list is empty', async () => {
+            const iris = createIris({ issuers: [] });
+            render(iris.render());
+
+            // Should show Generate QR code button directly (no segmented control)
+            expect(await screen.findByRole('button', { name: /Generate QR code/i })).toBeInTheDocument();
+            expect(screen.queryByRole('button', { name: 'QR code' })).not.toBeInTheDocument();
+            expect(screen.queryByRole('button', { name: 'Bank list' })).not.toBeInTheDocument();
+
+            // No segmented control click events should be sent (only rendered event)
+            expect(core.modules.analytics.sendAnalytics).not.toHaveBeenCalledWith(
+                expect.objectContaining({
+                    target: UiTarget.segmentedControl
+                })
+            );
+        });
     });
 });
