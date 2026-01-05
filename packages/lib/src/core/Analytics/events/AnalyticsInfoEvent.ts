@@ -25,8 +25,7 @@ export enum UiTarget {
     list = 'list',
     listSearch = 'list_search',
     qrDownloadButton = 'qr_download_button',
-    cardNumber = 'card_number',
-    segmentedControl = 'segmented_control'
+    cardNumber = 'card_number'
 }
 
 export enum InfoEventType {
