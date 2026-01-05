@@ -54,8 +54,8 @@ export default function Address(props: AddressProps) {
 
     // In partial address mode, country is not in the form schema but we need it for regionalized labels.
     // Store the merchant's country config once at mount, then use it if form data doesn't have country.
-    const initialCountryRef = useRef<string | undefined>((props.data as AddressData)?.country || props.countryCode);
-    const effectiveCountry = data.country || initialCountryRef.current;
+    const initialCountryRef = useRef<string | undefined>((props.data as AddressData)?.country);
+    const effectiveCountry = (data.country || initialCountryRef.current)?.toUpperCase();
     const dataWithCountry = useMemo(() => ({ ...data, country: effectiveCountry }), [data, effectiveCountry]);
 
     const setSearchData = useCallback(

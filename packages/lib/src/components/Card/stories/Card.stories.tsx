@@ -97,7 +97,12 @@ export const WithPartialAVS: CardStory = {
         componentConfiguration: {
             _disableClickToPay: true,
             billingAddressRequired: true,
-            billingAddressMode: 'partial'
+            billingAddressMode: 'partial',
+            data: {
+                billingAddress: {
+                    country: 'US'
+                }
+            }
         }
     }
 };
