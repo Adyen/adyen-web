@@ -1,13 +1,13 @@
 import { get3DS2FlowProps } from '../../../components/ThreeDS2/components/utils';
 import uuid from '../../../utils/uuid';
-import type { StatusFromAction, UIElement } from '../../../types';
+import type { StatusFromAction, ThreeDS2ActionProps, UIElement, UIElementProps } from '../../../types';
 import type { PaymentAction } from '../../../types/global-types';
 import type { IRegistry } from '../../core.registry';
 import type { ICore } from '../../types';
 import type { ThreeDS2ConfigProps } from '../../../types';
 import type { ActionHandlerConfig } from './types';
 
-const createComponent = (core: ICore, registry: IRegistry, componentType, props): UIElement => {
+const createComponent = (core: ICore, registry: IRegistry, componentType: string, props: ActionHandlerConfig | ThreeDS2ConfigProps): UIElement => {
     const Element = registry.getComponent(componentType);
 
     if (!Element) {
@@ -19,8 +19,8 @@ const createComponent = (core: ICore, registry: IRegistry, componentType, props)
 };
 
 const getActionHandler = (statusType: StatusFromAction) => {
-    return (core: ICore, registry: IRegistry, action: PaymentAction, props: any): UIElement => {
-        const config: ActionHandlerConfig<typeof props> = {
+    return (core: ICore, registry: IRegistry, action: PaymentAction, props: UIElementProps): UIElement => {
+        const config: ActionHandlerConfig = {
             ...props,
             ...action,
             onError: props.onError,
@@ -33,8 +33,8 @@ const getActionHandler = (statusType: StatusFromAction) => {
 };
 
 const actionTypes = {
-    redirect: (core: ICore, registry, action: PaymentAction, props): UIElement => {
-        const config = {
+    redirect: (core: ICore, registry, action: PaymentAction, props: UIElementProps): UIElement => {
+        const config: ActionHandlerConfig = {
             ...props,
             ...action,
             statusType: 'redirect',
@@ -44,7 +44,7 @@ const actionTypes = {
         return createComponent(core, registry, 'redirect', config);
     },
 
-    threeDS2: (core: ICore, registry, action: PaymentAction, props): UIElement => {
+    threeDS2: (core: ICore, registry, action: PaymentAction, props: ThreeDS2ActionProps): UIElement => {
         const componentType = action.subtype === 'fingerprint' ? 'threeDS2DeviceFingerprint' : 'threeDS2Challenge';
 
         /**

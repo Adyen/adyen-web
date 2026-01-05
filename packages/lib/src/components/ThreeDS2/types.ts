@@ -1,12 +1,13 @@
 import UIElement from '../internal/UIElement';
-import { ActionHandledReturnObject } from '../../types/global-types';
+import type { ActionHandledReturnObject } from '../../types/global-types';
 import Language from '../../language';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
-import { StatusFromAction, UIElementProps } from '../internal/UIElement/types';
+import type { StatusFromAction, UIElementProps } from '../internal/UIElement/types';
 import { ErrorEventCode } from '../../core/Analytics/events/AnalyticsErrorEvent';
 import type { IAnalytics } from '../../core/Analytics/Analytics';
-import { AdditionalDetailsActions, AdditionalDetailsData, ICore } from '../../core/types';
+import type { AdditionalDetailsActions, AdditionalDetailsData, ICore } from '../../core/types';
 import type { Resources } from '../../core/Context/Resources';
+import type { CardConfiguration } from '../Card/types';
 
 /**
  * Defines the size of the challenge Component
@@ -169,7 +170,7 @@ export interface ErrorCodeObject {
     message: string;
 }
 
-export type ThreeDS2FlowPropsReturnObject = {
+export type ThreeDS2FlowProps = {
     statusType: StatusFromAction;
     showSpinner?: boolean;
     elementRef?: UIElement;
@@ -202,3 +203,5 @@ export type ThreeDS2ConfigProps = {
     readonly elementRef?: UIElement;
     readonly i18n?: Language;
 };
+
+export type ThreeDS2ActionProps = CardConfiguration & Pick<ThreeDS2ConfigProps, 'isMDFlow'>;
