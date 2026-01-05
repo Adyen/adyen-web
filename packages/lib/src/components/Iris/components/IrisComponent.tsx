@@ -32,6 +32,8 @@ export default function IrisComponent(props: Readonly<IrisComponentProps>) {
     const [status, setStatus] = useState<UIElementStatus>('ready');
     const segmentedControlOptions = useMemo(() => getIrisSegmentedControlOptions(i18n, props.defaultMode), [i18n, props.defaultMode]);
 
+    const issuersAvailable = props.issuers.length > 0;
+
     const handleModeChange = (mode: IrisMode, sendAnalytics = false) => {
         setMode(mode);
         props.onUpdateMode(mode);
@@ -55,22 +57,24 @@ export default function IrisComponent(props: Readonly<IrisComponentProps>) {
     }, [props.setComponentRef, irisRef.current]);
 
     useEffect(() => {
-        const event = new AnalyticsInfoEvent({
-            type: InfoEventType.displayed,
-            target: UiTarget.segmentedControl,
-            component: TxVariants.iris,
-            selectedValue: props.defaultMode
-        });
-        analytics.sendAnalytics(event);
+        if (issuersAvailable) {
+            const event = new AnalyticsInfoEvent({
+                type: InfoEventType.displayed,
+                target: UiTarget.segmentedControl,
+                component: TxVariants.iris,
+                selectedValue: props.defaultMode
+            });
+            analytics.sendAnalytics(event);
+        }
     }, []);
 
     useEffect(() => {
-        if (!props.issuers.length) {
+        if (!issuersAvailable) {
             handleModeChange(IrisMode.QR_CODE);
         }
-    }, [props.issuers]);
+    }, [issuersAvailable]);
 
-    if (!props.issuers.length) {
+    if (!issuersAvailable) {
         return <IrisGenerateQRCode showPayButton={props.showPayButton} payButton={props.payButton} status={status} />;
     }
 
