@@ -23,8 +23,6 @@ function GiftcardResult({ balance, transactionLimit, status, makePayment, showPa
     const transactionAmount = amount.value > transactionLimit?.value ? transactionLimit : amount;
     const remainingBalance = balance?.value - transactionAmount?.value;
 
-    console.log('Rendered GiftcardResult');
-
     return (
         <div className="adyen-checkout__giftcard-result">
             <ul className="adyen-checkout__giftcard-result__balance">

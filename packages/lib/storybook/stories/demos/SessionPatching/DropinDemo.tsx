@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from 'preact/hooks';
 import { AdyenCheckout, components, Core } from '../../../../src';
 import DropinComponent from '../../../../src/components/Dropin/Dropin';
 import { AmountUpdate } from './AmountUpdate';
+import { PaymentAmount } from '../../../../src/types';
 
 // Register all Components
 const { Dropin, ...Components } = components;
@@ -34,13 +35,10 @@ const DropinDemo = ({ amount, countryCode, shopperLocale }) => {
         setSession({ id: session.id, sessionData: session.sessionData });
     };
 
-    const patchSession = async (): Promise<string> => {
+    const patchSession = async (amount: PaymentAmount): Promise<string> => {
         const response = await patchCheckoutSession(session.id, {
             sessionData: session.sessionData,
-            amount: {
-                currency: getCurrency(countryCode),
-                value: Number(updatedAmount)
-            },
+            amount,
             payable: true
         });
 
@@ -74,12 +72,6 @@ const DropinDemo = ({ amount, countryCode, shopperLocale }) => {
 
 function Checkout({ sessionId, sessionData, countryCode, amountValue, onPatchSession }) {
     const checkoutRef = useRef<Core>(null);
-    const onPatchSessionRef = useRef(onPatchSession);
-
-    // Keep the ref updated with the latest onPatchSession function
-    useEffect(() => {
-        onPatchSessionRef.current = onPatchSession;
-    }, [onPatchSession]);
 
     const createDropin = async () => {
         const checkout = await AdyenCheckout({
@@ -91,9 +83,16 @@ function Checkout({ sessionId, sessionData, countryCode, amountValue, onPatchSes
                 id: sessionId
             },
 
-            beforeSubmit: async (data, _component, actions) => {
-                const updatedSessionData = await onPatchSessionRef.current();
-                actions.resolve({ ...data, sessionData: updatedSessionData });
+            beforeSubmit: async (data, component, actions) => {
+                try {
+                    const finalAmount = component.props.amount;
+                    const updatedSessionData = await onPatchSession(finalAmount);
+
+                    actions.resolve({ ...data, sessionData: updatedSessionData });
+                } catch (error) {
+                    alert('beforeSubmit error');
+                    actions.reject();
+                }
             },
 
             onPaymentCompleted: (result, element) => {
