@@ -211,8 +211,6 @@
     "bankTransfer.accountNumber": "Kontonummer",
     "bankTransfer.sortCode": "Clearingnummer",
     "bankTransfer.routingNumber": "Clearingnummer",
-    "bankTransfer.branchCode": "Filialkod",
-    "bankTransfer.bankCode": "Bankkod",
     "bankTransfer.introduction": "Tryck på Fortsätt för att skapa en ny betalning via banköverföring. Du kan använda informationen på följande skärm för att slutföra denna betalning.",
     "bankTransfer.instructions": "Tack för ditt köp! Använd följande information för att slutföra din betalning.",
     "bankTransfer.shopperEmail.contextualText": "En kopia av betalningsuppgifterna skickas till din e-postadress så att du kan slutföra betalningen senare.",
@@ -433,5 +431,11 @@
     "upi.mandate.upTo": "upp till %{amount}",
     "upi.mandate.frequency.monthly": "/månad",
     "upi.mandate.frequency.weekly": "/vecka",
-    "upi.mandate.frequency.adhoc": " som presenterat"
+    "upi.mandate.frequency.adhoc": " som presenterat",
+    "bankList": "Banklista",
+    "qrCode": "QR-kod",
+    "iris.instructions.generateQrCode": "När du har genererat QR-koden kan du använda din föredragna bankapp för att slutföra betalningen.",
+    "iris.instructions.payment.step1": "Öppna den bankapp du föredrar.",
+    "iris.instructions.payment.step2": "Skanna QR-koden med din bankapp.",
+    "iris.instructions.payment.step3": "Slutför betalningen i appen och vänta på bekräftelsen här."
 }

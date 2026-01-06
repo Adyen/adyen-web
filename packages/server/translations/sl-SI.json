@@ -211,8 +211,6 @@
     "bankTransfer.accountNumber": "Številka računa",
     "bankTransfer.sortCode": "Številka banke",
     "bankTransfer.routingNumber": "Številka za usmerjanje",
-    "bankTransfer.branchCode": "Šifra poslovalnice",
-    "bankTransfer.bankCode": "Šifra banke",
     "bankTransfer.introduction": "Pritisnite »Nadaljuj« za ustvarjanje novega plačila z bančnim nakazilom. Za dokončanje tega plačila lahko uporabite podatke na naslednjem zaslonu.",
     "bankTransfer.instructions": "Zahvaljujemo se vam za nakup. Za dokončanje plačila uporabite naslednji kupon.",
     "bankTransfer.shopperEmail.contextualText": "Kopija podatkov o plačilu bo poslana na vaš e-poštni naslov, tako da boste lahko plačilo dokončali pozneje.",
@@ -433,5 +431,11 @@
     "upi.mandate.upTo": "do zneska %{amount}",
     "upi.mandate.frequency.monthly": "/mesec",
     "upi.mandate.frequency.weekly": "/teden",
-    "upi.mandate.frequency.adhoc": " kot je predstavljeno"
+    "upi.mandate.frequency.adhoc": " kot je predstavljeno",
+    "bankList": "Seznam bank",
+    "qrCode": "Koda QR",
+    "iris.instructions.generateQrCode": "Ko ustvarite kodo QR, lahko za dokončanje plačila uporabite želeno bančno aplikacijo.",
+    "iris.instructions.payment.step1": "Odprite želeno bančno aplikacijo.",
+    "iris.instructions.payment.step2": "Optično preberite kodo QR z vašo bančno aplikacijo.",
+    "iris.instructions.payment.step3": "Plačilo dokončajte v aplikaciji in tukaj počakajte na potrditev."
 }

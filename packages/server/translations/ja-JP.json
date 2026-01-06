@@ -211,8 +211,6 @@
     "bankTransfer.accountNumber": "口座番号",
     "bankTransfer.sortCode": "ソートコード",
     "bankTransfer.routingNumber": "ルーティング番号",
-    "bankTransfer.branchCode": "支店コード",
-    "bankTransfer.bankCode": "銀行コード",
     "bankTransfer.introduction": "「続行」を押して、新しい銀行振込によるお支払の作成を続行します。次の画面の詳細を使用して、このお支払いを確定できます。",
     "bankTransfer.instructions": "お買い上げありがとうございます。以下の情報を使用して、お支払いを完了してください。",
     "bankTransfer.shopperEmail.contextualText": "支払明細のコピーがメールで送信されますので、後でお支払いを完了することができます。",
@@ -433,5 +431,11 @@
     "upi.mandate.upTo": "最大%{amount}",
     "upi.mandate.frequency.monthly": "/月",
     "upi.mandate.frequency.weekly": "/週",
-    "upi.mandate.frequency.adhoc": " 提示のとおり"
+    "upi.mandate.frequency.adhoc": " 提示のとおり",
+    "bankList": "銀行リスト",
+    "qrCode": "QRコード",
+    "iris.instructions.generateQrCode": "QRコードを生成した後、お好みの銀行アプリを使用して支払を完了できます。",
+    "iris.instructions.payment.step1": "お好みの銀行アプリを開いてください。",
+    "iris.instructions.payment.step2": "銀行のアプリでQRコードをスキャンしてください。",
+    "iris.instructions.payment.step3": "アプリ内で決済を完了し、こちらで確認をお待ちください。"
 }

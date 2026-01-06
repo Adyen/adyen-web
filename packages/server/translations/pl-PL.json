@@ -211,8 +211,6 @@
     "bankTransfer.accountNumber": "Numer rachunku",
     "bankTransfer.sortCode": "Numer rozliczeniowy SORT",
     "bankTransfer.routingNumber": "Numer rozliczeniowy",
-    "bankTransfer.branchCode": "Kod oddziału",
-    "bankTransfer.bankCode": "Kod bankowy",
     "bankTransfer.introduction": "Naciśnij „Kontynuuj”, aby utworzyć nową płatność przelewem bankowym. Możesz użyć szczegółów na następnym ekranie, aby sfinalizować tę płatność.",
     "bankTransfer.instructions": "Dziękujemy za zakup. Dokończ płatność przy użyciu poniższych informacji.",
     "bankTransfer.shopperEmail.contextualText": "Kopię szczegółów płatności wyślemy na Twój adres e-mail, dzięki czemu dokończysz płatność później.",
@@ -433,5 +431,11 @@
     "upi.mandate.upTo": "do %{amount}",
     "upi.mandate.frequency.monthly": "/miesiąc",
     "upi.mandate.frequency.weekly": "/tydzień",
-    "upi.mandate.frequency.adhoc": " jak przedstawiono"
+    "upi.mandate.frequency.adhoc": " jak przedstawiono",
+    "bankList": "Lista banków",
+    "qrCode": "Kod QR",
+    "iris.instructions.generateQrCode": "Po wygenerowaniu kodu QR możesz użyć preferowanej aplikacji bankowej, aby dokończyć płatność.",
+    "iris.instructions.payment.step1": "Otwórz preferowaną aplikację bankową.",
+    "iris.instructions.payment.step2": "Zeskanuj kod QR za pomocą aplikacji bankowej.",
+    "iris.instructions.payment.step3": "Dokończ płatność w aplikacji i poczekaj tutaj na potwierdzenie."
 }

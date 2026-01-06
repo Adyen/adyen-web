@@ -211,8 +211,6 @@
     "bankTransfer.accountNumber": "Rekeningnummer",
     "bankTransfer.sortCode": "Bankcode",
     "bankTransfer.routingNumber": "Routingnummer",
-    "bankTransfer.branchCode": "Vestigingscode",
-    "bankTransfer.bankCode": "Bankcode",
     "bankTransfer.introduction": "Druk op 'Doorgaan' om een nieuwe overschrijving aan te maken. U kunt de gegevens in het volgende scherm gebruiken om deze betaling af te ronden.",
     "bankTransfer.instructions": "Bedankt voor uw aankoop. Gebruik de volgende informatie om uw betaling te voltooien.",
     "bankTransfer.shopperEmail.contextualText": "Een kopie van de transactiedetails wordt naar uw e-mailadres gestuurd, zodat u de betaling later kunt afronden.",
@@ -433,5 +431,11 @@
     "upi.mandate.upTo": "tot %{bedrag}",
     "upi.mandate.frequency.monthly": "per maand",
     "upi.mandate.frequency.weekly": "per week",
-    "upi.mandate.frequency.adhoc": " op verzoek"
+    "upi.mandate.frequency.adhoc": " op verzoek",
+    "bankList": "Lijst met banken",
+    "qrCode": "QR-code",
+    "iris.instructions.generateQrCode": "Na het genereren van de QR-code kunt u de betaling via uw gewenste bankapp voltooien.",
+    "iris.instructions.payment.step1": "Open uw favoriete bankapp.",
+    "iris.instructions.payment.step2": "Scan de QR-code met uw bankapp.",
+    "iris.instructions.payment.step3": "Voltooi de betaling in de app en wacht hier op de bevestiging."
 }

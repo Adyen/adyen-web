@@ -211,8 +211,6 @@
     "bankTransfer.accountNumber": "Számlaszám",
     "bankTransfer.sortCode": "Banki azonosító",
     "bankTransfer.routingNumber": "Azonosító kód",
-    "bankTransfer.branchCode": "Bankfiókkód",
-    "bankTransfer.bankCode": "Bankkód",
     "bankTransfer.introduction": "Nyomja meg a „Folytatás” gombot, hogy elindítson egy új banki átutalásos fizetést. A fizetés véglegesítéséhez felhasználhatja a következő képernyőn megjelenő adatokat.",
     "bankTransfer.instructions": "Köszönjük a vásárlást! Kérjük, a fizetéshez használja a következő információt.",
     "bankTransfer.shopperEmail.contextualText": "A fizetési adatok másolatát elküldjük az e-mail-címére, így a fizetést később is végrehajthatja.",
@@ -433,5 +431,11 @@
     "upi.mandate.upTo": "legfeljebb %{amount}",
     "upi.mandate.frequency.monthly": "/hó",
     "upi.mandate.frequency.weekly": "/hét",
-    "upi.mandate.frequency.adhoc": " benyújtáskor"
+    "upi.mandate.frequency.adhoc": " benyújtáskor",
+    "bankList": "Banklista",
+    "qrCode": "QR-kód",
+    "iris.instructions.generateQrCode": "A QR-kód létrehozása után a fizetés befejezéséhez használhatja a kívánt banki alkalmazást.",
+    "iris.instructions.payment.step1": "Nyissa meg a kívánt banki alkalmazást.",
+    "iris.instructions.payment.step2": "Olvassa be a QR-kódot a banki alkalmazással.",
+    "iris.instructions.payment.step3": "Hajtsa végre a fizetést az alkalmazásban, és várja meg itt a visszaigazolást."
 }

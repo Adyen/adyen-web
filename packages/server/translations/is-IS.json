@@ -211,8 +211,6 @@
     "bankTransfer.accountNumber": "Reikningsnúmer",
     "bankTransfer.sortCode": "Röðunarkóði",
     "bankTransfer.routingNumber": "Bankanúmer",
-    "bankTransfer.branchCode": "Útibúskóði",
-    "bankTransfer.bankCode": "Bankakóði",
     "bankTransfer.introduction": "Ýttu á „Áfram“ til að búa til nýja greiðslu. Þú getur notað upplýsingarnar á eftirfylgjandi skjá til að ganga frá þessari greiðslu.",
     "bankTransfer.instructions": "Þakka þér fyrir kaupin, notaðu eftirfarandi upplýsingar til að ljúka greiðslunni.",
     "bankTransfer.shopperEmail.contextualText": "Afrit af greiðsluupplýsingunum verður sent á netfangið þitt svo þú getir gengið frá greiðslunni seinna.",
@@ -433,5 +431,11 @@
     "upi.mandate.upTo": "allt að %{amount}",
     "upi.mandate.frequency.monthly": "/mánuði",
     "upi.mandate.frequency.weekly": "/viku",
-    "upi.mandate.frequency.adhoc": " eins og þetta er framsett"
+    "upi.mandate.frequency.adhoc": " eins og þetta er framsett",
+    "bankList": "Bankalisti",
+    "qrCode": "QR-kóði",
+    "iris.instructions.generateQrCode": "Þegar þú hefur búið QR-kóðann til geturðu notað bankaforrit til að ljúka greiðslunni.",
+    "iris.instructions.payment.step1": "Opnaðu bankaforrit.",
+    "iris.instructions.payment.step2": "Skannaðu QR-kóðann með bankaforritinu.",
+    "iris.instructions.payment.step3": "Ljúktu greiðslunni í forritinu og bíddu eftir staðfestingu hér."
 }

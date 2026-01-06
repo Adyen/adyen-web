@@ -211,8 +211,6 @@
     "bankTransfer.accountNumber": "Číslo účtu",
     "bankTransfer.sortCode": "Variabilný symbol",
     "bankTransfer.routingNumber": "Smerovacie číslo",
-    "bankTransfer.branchCode": "Kód pobočky",
-    "bankTransfer.bankCode": "Kód banky",
     "bankTransfer.introduction": "Stlačte „Pokračovať“ na vytvorenie novej platby bankovým prevodom. Túto platbu môžete dokončiť pomocou informácií na nasledujúcej obrazovke.",
     "bankTransfer.instructions": "Ďakujeme vám za nákup. Na dokončenie platby použite nasledujúce informácie.",
     "bankTransfer.shopperEmail.contextualText": "Kópia údajov k platbe bude odoslaná na váš e-mail, aby ste mohli platbu dokončiť neskôr.",
@@ -343,7 +341,7 @@
     "creditCard.password.label": "Prvé 2 číslice hesla karty",
     "giftcard.cardNumber.label": "Číslo karty",
     "giftcard.expiryDate.label": "Koniec platnosti",
-    "giftcard.securityCode.label": "Kód PIN",
+    "giftcard.securityCode.label": "PIN",
     "ach.bankAccountNumber.label": "Číslo účtu",
     "ach.bankLocationId.label": "Smerovacie číslo ABA",
     "dragonpayVoucher.selectField.contextualText.nonBank": "Vyberte si poskytovateľa",
@@ -433,5 +431,11 @@
     "upi.mandate.upTo": "maximálne %{amount}",
     "upi.mandate.frequency.monthly": "/mesiac",
     "upi.mandate.frequency.weekly": "/týždeň",
-    "upi.mandate.frequency.adhoc": " ako je prezentované"
+    "upi.mandate.frequency.adhoc": " ako je prezentované",
+    "bankList": "Zoznam bánk",
+    "qrCode": "QR kód",
+    "iris.instructions.generateQrCode": "Po vygenerovaní kódu QR môžete na dokončenie platby použiť preferovanú bankovú aplikáciu.",
+    "iris.instructions.payment.step1": "Otvorte svoju preferovanú bankovú aplikáciu.",
+    "iris.instructions.payment.step2": "Naskenujte kód QR pomocou svojej bankovej aplikácie.",
+    "iris.instructions.payment.step3": "Dokončite platbu v aplikácii a počkajte na potvrdenie tu."
 }

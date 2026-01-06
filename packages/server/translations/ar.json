@@ -211,8 +211,6 @@
     "bankTransfer.accountNumber": "رقم الحساب",
     "bankTransfer.sortCode": "رمز تعريف البنك",
     "bankTransfer.routingNumber": "رقم التوجيه",
-    "bankTransfer.branchCode": "رمز الفرع",
-    "bankTransfer.bankCode": "رمز البنك",
     "bankTransfer.introduction": "اضغط على متابعة؛ لإنشاء مدفوعات تحويل بنكية جديدة. يمكنك استخدام البيانات الواردة في الشاشة التالية لإتمام عملية الدفع.",
     "bankTransfer.instructions": "شكرًا لك على شرائك، يرجى استخدام المعلومات التالية لإتمام عملية الدفع.",
     "bankTransfer.shopperEmail.contextualText": "ستصلك تفاصيل الدفع عبر البريد الإلكتروني لتتمكن من إكمال عملية الدفع في وقت لاحق.",
@@ -433,5 +431,11 @@
     "upi.mandate.upTo": "ما يصل إلى %{amount}",
     "upi.mandate.frequency.monthly": "/شهر",
     "upi.mandate.frequency.weekly": "/أسبوع",
-    "upi.mandate.frequency.adhoc": " كما هو موضح"
+    "upi.mandate.frequency.adhoc": " كما هو موضح",
+    "bankList": "قائمة البنوك",
+    "qrCode": "رمز الاستجابة السريعة",
+    "iris.instructions.generateQrCode": "بعد إنشاء رمز الاستجابة السريعة، يمكنك استخدام تطبيق الخدمات البنكية الذي تفضله لإتمام الدفع.",
+    "iris.instructions.payment.step1": "افتح تطبيق الخدمات البنكية المفضل لديك.",
+    "iris.instructions.payment.step2": "امسح رمز الاستجابة السريعة باستخدام تطبيقك البنكي.",
+    "iris.instructions.payment.step3": "أكمل الدفع في التطبيق وانتظر التأكيد هنا."
 }

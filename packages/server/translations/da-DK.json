@@ -211,8 +211,6 @@
     "bankTransfer.accountNumber": "Kontonummer",
     "bankTransfer.sortCode": "Registreringsnummer",
     "bankTransfer.routingNumber": "Registreringsnummer",
-    "bankTransfer.branchCode": "Filialkode",
-    "bankTransfer.bankCode": "Bankkode",
     "bankTransfer.introduction": "Tryk på Fortsæt for at oprette en ny betalingsoverførsel via bank. Du kan bruge oplysningerne på den følgende skærm til at afslutte betalingen.",
     "bankTransfer.instructions": "Tak for dit køb. Brug følgende oplysninger til at gennemføre din betaling.",
     "bankTransfer.shopperEmail.contextualText": "En kopi af betalingsoplysningerne sendes til din e-mail, så du kan gennemføre betalingen senere.",
@@ -433,5 +431,11 @@
     "upi.mandate.upTo": "op til %{amount}",
     "upi.mandate.frequency.monthly": "/md.",
     "upi.mandate.frequency.weekly": "/uge",
-    "upi.mandate.frequency.adhoc": " som vist"
+    "upi.mandate.frequency.adhoc": " som vist",
+    "bankList": "Bankliste",
+    "qrCode": "QR-kode",
+    "iris.instructions.generateQrCode": "Når du har genereret QR-koden, kan du bruge din foretrukne bankapp til at gennemføre betalingen.",
+    "iris.instructions.payment.step1": "Åbn din appen fra din bank.",
+    "iris.instructions.payment.step2": "Scan QR-koden med bankappen.",
+    "iris.instructions.payment.step3": "Gennemfør betalingen i appen, og vent på bekræftelsen her."
 }

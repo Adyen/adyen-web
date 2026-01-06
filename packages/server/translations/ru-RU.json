@@ -209,8 +209,6 @@
     "bankTransfer.accountNumber": "Номер счета",
     "bankTransfer.sortCode": "Код банка",
     "bankTransfer.routingNumber": "Код банка",
-    "bankTransfer.branchCode": "Код отделения",
-    "bankTransfer.bankCode": "Код банка",
     "bankTransfer.introduction": "Чтобы создать новый банковский перевод, нажмите «Продолжить». Для окончательного оформления платежа используйте сведения на следующем экране.",
     "bankTransfer.instructions": "Благодарим за покупку. Для завершения оплаты используйте следующие сведения.",
     "bankTransfer.shopperEmail.contextualText": "Копия платежных данных будет отправлена на вашу электронную почту, чтобы вы могли завершить оплату позже.",
@@ -431,5 +429,11 @@
     "upi.mandate.upTo": "до %{amount}",
     "upi.mandate.frequency.monthly": "/месяц",
     "upi.mandate.frequency.weekly": "/неделю",
-    "upi.mandate.frequency.adhoc": " как представлено"
+    "upi.mandate.frequency.adhoc": " как представлено",
+    "bankList": "Список банков",
+    "qrCode": "QR-код",
+    "iris.instructions.generateQrCode": "После создания QR-кода для завершения платежа можно использовать предпочитаемое банковское приложение.",
+    "iris.instructions.payment.step1": "Откройте предпочитаемое банковское приложение.",
+    "iris.instructions.payment.step2": "Отсканируйте QR-код с помощью банковского приложения.",
+    "iris.instructions.payment.step3": "Завершите оплату в приложении и дождитесь подтверждения здесь."
 }
