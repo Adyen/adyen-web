@@ -192,7 +192,7 @@ export interface CardConfiguration extends UIElementProps {
      * Funding source field populated when 'splitCardFundingSources' is used
      * @internal
      */
-    fundingSource?: 'debit' | 'credit';
+    fundingSource?: 'debit' | 'credit' | 'prepaid';
 
     /**
      *  Decides whether the CVC (Security Code) component will even be rendered.
@@ -480,7 +480,7 @@ interface CardPaymentMethodData {
     type: string;
     brand?: string;
     storedPaymentMethodId?: string;
-    fundingSource?: 'debit' | 'credit';
+    fundingSource?: 'debit' | 'credit' | 'prepaid';
     holderName?: string;
     encryptedCardNumber?: string;
     encryptedExpiryMonth?: string;

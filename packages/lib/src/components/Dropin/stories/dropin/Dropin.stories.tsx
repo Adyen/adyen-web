@@ -41,6 +41,21 @@ const meta: MetaConfiguration<DropinConfiguration> = {
 };
 
 export const Default: DropinStory = {
+    args: {
+        countryCode: 'BR',
+
+        sessionData: {
+            splitCardFundingSources: true,
+
+            installmentOptions: {
+                card: {
+                    values: [2, 3, 5],
+                    plans: ['regular']
+                }
+            }
+        }
+    },
+
     render: ({ componentConfiguration, ...checkoutConfig }: PaymentMethodStoryProps<DropinConfiguration>) => {
         // Register all Components
         const { Dropin, ...Components } = components;

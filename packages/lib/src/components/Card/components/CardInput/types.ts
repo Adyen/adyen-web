@@ -91,7 +91,7 @@ export interface CardInputProps {
     expiryYear?: string;
     fastlaneConfiguration?: FastlaneSignupConfiguration;
     forceCompat?: boolean;
-    fundingSource?: 'debit' | 'credit';
+    fundingSource?: 'debit' | 'credit' | 'prepaid';
     hasCVC?: boolean;
     hasHolderName?: boolean;
     holderName?: string;
