@@ -108,7 +108,9 @@ export class AnalyticsInfoEvent extends AbstractAnalyticsEvent {
         if (props.selectedValue) this.selectedValue = props.selectedValue;
         if (props.validationErrorCode) this.validationErrorCode = props.validationErrorCode;
         if (props.validationErrorMessage) this.validationErrorMessage = props.validationErrorMessage;
-        if (props.configData) this.configData = this.createAnalyticsConfigData(props.configData);
+        if (this.type === InfoEventType.rendered) {
+            this.configData = this.createAnalyticsConfigData(props?.configData);
+        }
 
         // Some of the more generic validation error codes required combination with target to retrieve a specific code
         if (this.type === InfoEventType.validationError) {
