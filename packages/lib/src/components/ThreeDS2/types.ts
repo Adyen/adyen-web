@@ -1,10 +1,28 @@
 import UIElement from '../internal/UIElement';
-import { ActionHandledReturnObject } from '../../types/global-types';
+import type { ActionHandledReturnObject } from '../../types/global-types';
 import Language from '../../language';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
-import { UIElementProps } from '../internal/UIElement/types';
+import type { StatusFromAction, UIElementProps } from '../internal/UIElement/types';
 import { ErrorEventCode } from '../../core/Analytics/events/AnalyticsErrorEvent';
 import type { IAnalytics } from '../../core/Analytics/Analytics';
+import type { AdditionalDetailsActions, AdditionalDetailsData, ICore } from '../../core/types';
+import type { Resources } from '../../core/Context/Resources';
+import type { CardConfiguration } from '../Card/types';
+
+/**
+ * Defines the size of the challenge Component
+ *
+ * 01: [250px, 400px]
+ * 02: [390px, 400px]
+ * 03: [500px, 600px]
+ * 04: [600px, 400px]
+ * 05: [100%, 100%]
+ *
+ * @defaultValue '02'
+ *
+ * - merchant set config option
+ */
+export type ChallengeWindowSize = '01' | '02' | '03' | '04' | '05';
 
 interface ThreeDS2Configuration extends UIElementProps {
     dataKey?: string;
@@ -18,7 +36,7 @@ interface ThreeDS2Configuration extends UIElementProps {
     paymentData?: string;
     token?: string;
     type?: string;
-    challengeWindowSize?: '01' | '02' | '03' | '04' | '05';
+    challengeWindowSize?: ChallengeWindowSize;
 }
 
 export interface ThreeDS2DeviceFingerprintConfiguration extends ThreeDS2Configuration {
@@ -151,3 +169,39 @@ export interface ErrorCodeObject {
     errorCode: string | ErrorEventCode;
     message: string;
 }
+
+export type ThreeDS2FlowProps = {
+    statusType: StatusFromAction;
+    showSpinner?: boolean;
+    elementRef?: UIElement;
+    i18n?: Language;
+};
+
+export type ThreeDS2ConfigProps = {
+    // Props common to both flows
+    readonly core: ICore;
+    readonly token: string;
+    readonly paymentData: string;
+    readonly onActionHandled?: (rtnObj: ActionHandledReturnObject) => void;
+    readonly onComplete?: (state: LegacyChallengeResolveData | ChallengeResolveData, component: UIElement) => void;
+    readonly onAdditionalDetails?: (state: AdditionalDetailsData, component: UIElement, actions: AdditionalDetailsActions) => void;
+    readonly onError?: (error: AdyenCheckoutError, element?: UIElement) => void;
+    readonly isDropin?: boolean;
+    readonly loadingContext?: string;
+    readonly clientKey: string;
+    readonly paymentMethodType: string;
+    readonly challengeWindowSize?: ChallengeWindowSize;
+    readonly isMDFlow?: boolean;
+    readonly modules?: {
+        readonly analytics?: IAnalytics;
+        readonly resources?: Resources;
+    };
+
+    // Props unique to a particular flow
+    readonly showSpinner?: boolean;
+    readonly statusType?: StatusFromAction;
+    readonly elementRef?: UIElement;
+    readonly i18n?: Language;
+};
+
+export type ThreeDS2ActionProps = CardConfiguration & Pick<ThreeDS2ConfigProps, 'isMDFlow'>;

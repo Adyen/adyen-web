@@ -16,6 +16,7 @@ import { DisclaimerMsgObject } from '../internal/DisclaimerMessage/DisclaimerMes
 import { UIElementProps } from '../internal/UIElement/types';
 import type { OnAddressLookupType, OnAddressSelectedType } from '../internal/Address/components/AddressSearch';
 import type { FastlaneSignupConfiguration } from '../PayPalFastlane/types';
+import type { ChallengeWindowSize } from '../ThreeDS2/types';
 
 type PlaceholderKeys =
     | 'holderName'
@@ -100,7 +101,7 @@ export interface CardConfiguration extends UIElementProps {
      *
      * - merchant set config option
      */
-    challengeWindowSize?: '01' | '02' | '03' | '04' | '05';
+    challengeWindowSize?: ChallengeWindowSize;
 
     /**
      * Configuration for Click to Pay
