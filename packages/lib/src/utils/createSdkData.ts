@@ -7,7 +7,7 @@ export interface SdkDataObject {
         checkoutAttemptId: string;
     };
     riskData: {
-        clientData: object;
+        clientData: Record<string, any>;
     };
 }
 
@@ -17,9 +17,9 @@ export interface SdkDataObject {
  * @param clientData - The client data from risk module
  * @returns Base64 encoded JSON string of the SDK data object
  */
-export function createSdkData(checkoutAttemptId: string, clientData: object): string {
+export function createSdkData(checkoutAttemptId: string, clientData: Record<string, any>): string {
     const sdkDataObject: SdkDataObject = {
-        schemaVersion: '1.0',
+        schemaVersion: '1',
         createdAt: Date.now(),
         analytics: {
             checkoutAttemptId

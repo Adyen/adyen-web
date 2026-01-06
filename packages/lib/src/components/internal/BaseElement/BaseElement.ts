@@ -91,7 +91,7 @@ abstract class BaseElement<P extends BaseElementProps> implements IBaseElement {
         // first one used for the clientData field in the payment request
         const clientData = getProp(this.props, 'modules.risk.data');
         // second one used for the sdkData field in the payment request
-        const clientDataUnencoded = getProp(this.props, 'modules.risk.dataUnencoded') as object | false;
+        const clientDataUnencoded = getProp(this.props, 'modules.risk.dataUnencoded') as Record<string, any> | null;
         const checkoutAttemptId = getProp(this.props, 'modules.analytics.getCheckoutAttemptId')?.() ?? NO_CHECKOUT_ATTEMPT_ID; // NOTE: we never expect to see this "failed" value, but, just in case...
         const order = this.state.order || this.props.order;
         const componentData = this.formatData();
