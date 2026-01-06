@@ -211,6 +211,8 @@
     "bankTransfer.accountNumber": "Kontonumber",
     "bankTransfer.sortCode": "Sortimiskood",
     "bankTransfer.routingNumber": "Suunamise number",
+    "bankTransfer.branchCode": "Tunnuskood",
+    "bankTransfer.bankCode": "Pangakood",
     "bankTransfer.introduction": "Uue pangaülekandega makse loomiseks vajutage nuppu „Jätka”. Selle makse lõpuleviimiseks saate kasutada järgmisel kuval olevaid andmeid.",
     "bankTransfer.instructions": "Täname ostu eest. Kasutage makse lõpuleviimiseks järgmist teavet.",
     "bankTransfer.shopperEmail.contextualText": "Makseandmete koopia saadetakse teie e-posti aadressile, et saaksite makse hiljem lõpule viia.",

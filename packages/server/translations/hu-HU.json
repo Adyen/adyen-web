@@ -211,6 +211,8 @@
     "bankTransfer.accountNumber": "Számlaszám",
     "bankTransfer.sortCode": "Banki azonosító",
     "bankTransfer.routingNumber": "Azonosító kód",
+    "bankTransfer.branchCode": "Bankfiókkód",
+    "bankTransfer.bankCode": "Bankkód",
     "bankTransfer.introduction": "Nyomja meg a „Folytatás” gombot, hogy elindítson egy új banki átutalásos fizetést. A fizetés véglegesítéséhez felhasználhatja a következő képernyőn megjelenő adatokat.",
     "bankTransfer.instructions": "Köszönjük a vásárlást! Kérjük, a fizetéshez használja a következő információt.",
     "bankTransfer.shopperEmail.contextualText": "A fizetési adatok másolatát elküldjük az e-mail-címére, így a fizetést később is végrehajthatja.",

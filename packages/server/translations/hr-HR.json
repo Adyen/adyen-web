@@ -211,6 +211,8 @@
     "bankTransfer.accountNumber": "Broj računa",
     "bankTransfer.sortCode": "Identifikacijski kôd banke (UK)",
     "bankTransfer.routingNumber": "Identifikacijski broj",
+    "bankTransfer.branchCode": "Šifra podružnice",
+    "bankTransfer.bankCode": "Šifra banke",
     "bankTransfer.introduction": "Pritisnite „Nastavi” da biste kreirali novu uplatu putem bankovne transakcije. Za dovršavanje ovog plaćanja možete se koristiti podacima na sljedećem zaslonu.",
     "bankTransfer.instructions": "Zahvaljujemo na kupnji, upotrijebite sljedeće podatke za dovršetak plaćanja.",
     "bankTransfer.shopperEmail.contextualText": "Kopija podataka o plaćanju bit će poslana na vašu e-adresu kako biste kasnije mogli dovršiti plaćanje.",

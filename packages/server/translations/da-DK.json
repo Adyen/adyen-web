@@ -211,6 +211,8 @@
     "bankTransfer.accountNumber": "Kontonummer",
     "bankTransfer.sortCode": "Registreringsnummer",
     "bankTransfer.routingNumber": "Registreringsnummer",
+    "bankTransfer.branchCode": "Filialkode",
+    "bankTransfer.bankCode": "Bankkode",
     "bankTransfer.introduction": "Tryk på Fortsæt for at oprette en ny betalingsoverførsel via bank. Du kan bruge oplysningerne på den følgende skærm til at afslutte betalingen.",
     "bankTransfer.instructions": "Tak for dit køb. Brug følgende oplysninger til at gennemføre din betaling.",
     "bankTransfer.shopperEmail.contextualText": "En kopi af betalingsoplysningerne sendes til din e-mail, så du kan gennemføre betalingen senere.",

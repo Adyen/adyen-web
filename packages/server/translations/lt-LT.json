@@ -211,6 +211,8 @@
     "bankTransfer.accountNumber": "Sąskaitos numeris",
     "bankTransfer.sortCode": "Rūšiavimo kodas",
     "bankTransfer.routingNumber": "Maršruto numeris",
+    "bankTransfer.branchCode": "Filialo kodas",
+    "bankTransfer.bankCode": "Banko kodas",
     "bankTransfer.introduction": "Paspauskite „Tęsti“, kad sukurtumėte naują mokėjimą banko pavedimu. Norėdami užbaigti šį mokėjimą, galite naudoti šiame ekrane pateiktus duomenis.",
     "bankTransfer.instructions": "Dėkojame, kad pirkote, norėdami užbaigti mokėjimą, naudokite šią informaciją.",
     "bankTransfer.shopperEmail.contextualText": "Mokėjimo duomenų kopija bus išsiųsta jums el. paštu, kad galėtumėte užbaigti mokėjimą vėliau.",

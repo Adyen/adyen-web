@@ -211,6 +211,8 @@
     "bankTransfer.accountNumber": "Kontonummer",
     "bankTransfer.sortCode": "Clearingnummer",
     "bankTransfer.routingNumber": "Clearingnummer",
+    "bankTransfer.branchCode": "Filialkod",
+    "bankTransfer.bankCode": "Bankkod",
     "bankTransfer.introduction": "Tryck på Fortsätt för att skapa en ny betalning via banköverföring. Du kan använda informationen på följande skärm för att slutföra denna betalning.",
     "bankTransfer.instructions": "Tack för ditt köp! Använd följande information för att slutföra din betalning.",
     "bankTransfer.shopperEmail.contextualText": "En kopia av betalningsuppgifterna skickas till din e-postadress så att du kan slutföra betalningen senare.",

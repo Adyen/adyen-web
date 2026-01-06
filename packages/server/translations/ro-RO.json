@@ -211,6 +211,8 @@
     "bankTransfer.accountNumber": "Număr de cont",
     "bankTransfer.sortCode": "Cod de identificare bancară",
     "bankTransfer.routingNumber": "Număr de direcționare",
+    "bankTransfer.branchCode": "Codul sucursalei",
+    "bankTransfer.bankCode": "Codul bancar",
     "bankTransfer.introduction": "Apăsați „Continuați” pentru a crea o nouă plată prin transfer bancar. Puteți utiliza detaliile din ecranul următor pentru a finaliza această plată.",
     "bankTransfer.instructions": "Vă mulțumim pentru cumpărături, vă rugăm să utilizați următoarele informații pentru a vă finaliza plata.",
     "bankTransfer.shopperEmail.contextualText": "O copie a detaliilor de plată va fi trimisă la adresa dvs. de e-mail, astfel încât să puteți finaliza plata mai târziu.",

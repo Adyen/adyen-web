@@ -211,6 +211,8 @@
     "bankTransfer.accountNumber": "Número de compte",
     "bankTransfer.sortCode": "Codi d'ordenació",
     "bankTransfer.routingNumber": "Número d'encaminament",
+    "bankTransfer.branchCode": "Codi de sucursal",
+    "bankTransfer.bankCode": "Codi de banc",
     "bankTransfer.introduction": "Premeu «Continua» per crear un nou pagament per transferència bancària. Podeu utilitzar els detalls de la pantalla següent per acabar aquest pagament.",
     "bankTransfer.instructions": "Gràcies per la vostra compra. Us preguem que utilitzeu la informació següent per completar el pagament.",
     "bankTransfer.shopperEmail.contextualText": "S'enviarà una còpia de la informació de pagament al vostre correu electrònic perquè pugueu completar el pagament més tard.",

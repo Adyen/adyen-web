@@ -211,6 +211,8 @@
     "bankTransfer.accountNumber": "Rekeningnummer",
     "bankTransfer.sortCode": "Bankcode",
     "bankTransfer.routingNumber": "Routingnummer",
+    "bankTransfer.branchCode": "Vestigingscode",
+    "bankTransfer.bankCode": "Bankcode",
     "bankTransfer.introduction": "Druk op 'Doorgaan' om een nieuwe overschrijving aan te maken. U kunt de gegevens in het volgende scherm gebruiken om deze betaling af te ronden.",
     "bankTransfer.instructions": "Bedankt voor uw aankoop. Gebruik de volgende informatie om uw betaling te voltooien.",
     "bankTransfer.shopperEmail.contextualText": "Een kopie van de transactiedetails wordt naar uw e-mailadres gestuurd, zodat u de betaling later kunt afronden.",

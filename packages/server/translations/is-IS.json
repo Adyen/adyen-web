@@ -211,6 +211,8 @@
     "bankTransfer.accountNumber": "Reikningsnúmer",
     "bankTransfer.sortCode": "Röðunarkóði",
     "bankTransfer.routingNumber": "Bankanúmer",
+    "bankTransfer.branchCode": "Útibúskóði",
+    "bankTransfer.bankCode": "Bankakóði",
     "bankTransfer.introduction": "Ýttu á „Áfram“ til að búa til nýja greiðslu. Þú getur notað upplýsingarnar á eftirfylgjandi skjá til að ganga frá þessari greiðslu.",
     "bankTransfer.instructions": "Þakka þér fyrir kaupin, notaðu eftirfarandi upplýsingar til að ljúka greiðslunni.",
     "bankTransfer.shopperEmail.contextualText": "Afrit af greiðsluupplýsingunum verður sent á netfangið þitt svo þú getir gengið frá greiðslunni seinna.",

@@ -211,6 +211,8 @@
     "bankTransfer.accountNumber": "Konta numurs",
     "bankTransfer.sortCode": "Kārtošanas kods",
     "bankTransfer.routingNumber": "Maršrutēšanas numurs",
+    "bankTransfer.branchCode": "Filiāles kods",
+    "bankTransfer.bankCode": "Bankas kods",
     "bankTransfer.introduction": "Nospiediet “Turpināt”, lai izveidotu jaunu bankas pārskaitījuma maksājumu. Lai pabeigtu šo maksājumu, varat izmantot šajā ekrānā norādīto informāciju.",
     "bankTransfer.instructions": "Paldies par pirkumu. Lūdzu, izmantojiet tālāk norādīto informāciju, lai pabeigtu maksājumu.",
     "bankTransfer.shopperEmail.contextualText": "Maksājuma informācijas kopija tiks nosūtīta uz jūsu e-pastu, lai jūs maksājumu varētu pabeigt vēlāk.",

@@ -209,6 +209,8 @@
     "bankTransfer.accountNumber": "Номер счета",
     "bankTransfer.sortCode": "Код банка",
     "bankTransfer.routingNumber": "Код банка",
+    "bankTransfer.branchCode": "Код отделения",
+    "bankTransfer.bankCode": "Код банка",
     "bankTransfer.introduction": "Чтобы создать новый банковский перевод, нажмите «Продолжить». Для окончательного оформления платежа используйте сведения на следующем экране.",
     "bankTransfer.instructions": "Благодарим за покупку. Для завершения оплаты используйте следующие сведения.",
     "bankTransfer.shopperEmail.contextualText": "Копия платежных данных будет отправлена на вашу электронную почту, чтобы вы могли завершить оплату позже.",

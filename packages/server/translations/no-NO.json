@@ -211,6 +211,8 @@
     "bankTransfer.accountNumber": "Kontonummer",
     "bankTransfer.sortCode": "Sorteringskode",
     "bankTransfer.routingNumber": "Routing-nummer",
+    "bankTransfer.branchCode": "Avdelingskode",
+    "bankTransfer.bankCode": "Bankkode",
     "bankTransfer.introduction": "Trykk på «Fortsett» for å opprette en ny betaling via bankoverføring. Du kan bruke detaljene i det følgende skjermbildet til å fullføre betalingen.",
     "bankTransfer.instructions": "Takk for kjøpet. Vennligst benytt den følgende informasjonen til å fullføre betalingen.",
     "bankTransfer.shopperEmail.contextualText": "En kopi av betalingsdetaljene blir sendt til deg på e-post, slik at du kan fullføre betalingen senere.",
