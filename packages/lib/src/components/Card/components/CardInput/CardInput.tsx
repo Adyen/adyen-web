@@ -131,7 +131,7 @@ const CardInput = (props: CardInputProps) => {
         rules: cardInputValidationRules
     });
 
-    const hasInstallments = !!Object.keys(props.installmentOptions).length && props.fundingSource !== 'debit';
+    const hasInstallments = !!Object.keys(props.installmentOptions).length && (!props.fundingSource || props.fundingSource === 'credit');
     const showAmountsInInstallments = props.showInstallmentAmounts ?? true;
 
     const cardCountryCode: string = issuingCountryCode ?? props.countryCode;
