@@ -33,7 +33,7 @@ jobs:
 
       # Upload UMD and translations
       - run: cp packages/server/translations/ packages/lib/dist/umd -r
-      - uses: actions/upload-artifact@v5
+      - uses: actions/upload-artifact@v6
         with:
           name: umd-and-translations
           path: packages/lib/dist/umd
