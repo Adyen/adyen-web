@@ -26,7 +26,9 @@ import { Resources } from './Context/Resources';
 import Language from '../language';
 import { SRPanel } from './Errors/SRPanel';
 import { IAnalytics } from './Analytics/Analytics';
+import type { CheckoutSession } from './CheckoutSession/types';
 
+export { CheckoutSession };
 export interface ICore {
     initialize(): Promise<ICore>;
     register(...items: NewableComponent[]): void;

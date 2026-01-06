@@ -9,7 +9,7 @@ import { AmountUpdate } from './AmountUpdate';
 import CardComponent from '../../../../src/components/Card/Card';
 import GooglePayComponent from '../../../../src/components/GooglePay/GooglePay';
 import AchComponent from '../../../../src/components/Ach/Ach';
-import { PaymentAmount } from '../../../../src/types';
+import type { CheckoutSession, PaymentAmount } from '../../../../src/types';
 
 const ComponentsDemo = ({ amount, countryCode, shopperLocale }) => {
     const [session, setSession] = useState<{ id: string; sessionData: string }>(null);
@@ -33,7 +33,7 @@ const ComponentsDemo = ({ amount, countryCode, shopperLocale }) => {
         setSession({ id: session.id, sessionData: session.sessionData });
     };
 
-    const patchSession = async (amount: PaymentAmount): Promise<string> => {
+    const patchSession = async (amount: PaymentAmount, session: CheckoutSession): Promise<string> => {
         const response = await patchCheckoutSession(session.id, {
             sessionData: session.sessionData,
             amount,
@@ -68,11 +68,19 @@ const ComponentsDemo = ({ amount, countryCode, shopperLocale }) => {
     );
 };
 
-function Checkout({ sessionId, sessionData, countryCode, amountValue, onPatchSession }) {
+interface CheckoutProps {
+    sessionId: string;
+    sessionData: string;
+    countryCode: string;
+    amountValue: number;
+    onPatchSession: (amount: PaymentAmount, session: CheckoutSession) => Promise<string>;
+}
+
+function Checkout({ sessionId, sessionData, countryCode, amountValue, onPatchSession }: CheckoutProps) {
     const checkoutRef = useRef<Core>(null);
     const [finalStatus, setFinalStatus] = useState<'success' | 'failed' | null>(null);
 
-    const createDropin = async () => {
+    const createComponents = async () => {
         const checkout = await AdyenCheckout({
             clientKey: process.env.CLIENT_KEY,
             environment: process.env.CLIENT_ENV as any,
@@ -84,10 +92,12 @@ function Checkout({ sessionId, sessionData, countryCode, amountValue, onPatchSes
 
             beforeSubmit: async (data, component, actions) => {
                 try {
-                    const finalAmount = component.props.amount;
-                    const updatedSessionData = await onPatchSession(finalAmount);
+                    const { session } = component.core.session;
+                    const { amount } = component.props;
 
-                    actions.resolve({ ...data, sessionData: updatedSessionData });
+                    const sessionData = await onPatchSession(amount, session);
+
+                    actions.resolve({ ...data, sessionData });
                 } catch (error) {
                     alert('beforeSubmit error');
                     actions.reject();
@@ -137,7 +147,7 @@ function Checkout({ sessionId, sessionData, countryCode, amountValue, onPatchSes
 
     useEffect(() => {
         if (!checkoutRef.current) {
-            void createDropin();
+            void createComponents();
         }
     }, []);
 
