@@ -37,7 +37,7 @@ export const GIFTCARD_PIN = '73737';
 export const INVALID_TEST_DATE_VALUE = '0390';
 export const TEST_DATE_VALUE = '03/30';
 export const TEST_CVC_VALUE = '737';
-export const TEST_POSTCODE = '1234';
+export const TEST_POSTCODE = '60607'; // adyen chicago office postcode
 
 export const BIN_LOOKUP_URL = `https://checkoutshopper-test.adyen.com/checkoutshopper/${BIN_LOOKUP_VERSION}/bin/binLookup?token=${process.env.CLIENT_KEY}`;
 
