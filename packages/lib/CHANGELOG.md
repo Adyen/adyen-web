@@ -4,10 +4,7 @@
 
 ### Minor Changes
 
-- Improved: Select component accessibility: ([#3698](https://github.com/Adyen/adyen-web/pull/3698))
-- Fixed focus behavior to prevent auto-expansion on keyboard focus
-- Added aria-disabled attribute for readonly state
-- Added aria-expanded attribute for expanded state
+- Improved Select component accessibility by preventing auto-expansion on keyboard focus and adding aria-disabled and aria-expanded attributes ([#3698](https://github.com/Adyen/adyen-web/pull/3698))
 
 ### Patch Changes
 
