@@ -284,12 +284,7 @@ class Core implements ICore {
      * @param options - Can be used to avoid remounting the elements
      * @returns this - the Core instance
      */
-    public update(
-        props: Partial<CoreConfiguration> = {},
-        options: { shouldRecreateDomElements?: boolean } = { shouldRecreateDomElements: true }
-    ): Promise<this> {
-        const { shouldRecreateDomElements } = options;
-
+    public update(props: Partial<CoreConfiguration> = {}, { shouldRecreateDomElements = true } = {}): Promise<this> {
         if (shouldRecreateDomElements) {
             this.setOptions(props);
 
