@@ -49,6 +49,7 @@ describe('Bacs Direct Debit', () => {
                         bankLocationId: '560036',
                         checkoutAttemptId: 'fetch-checkoutAttemptId-failed',
                         holderName: 'David Archer',
+                        sdkData: expect.any(String),
                         type: 'directdebit_GB'
                     },
                     shopperEmail: 'jon@adyen.com',
@@ -167,6 +168,7 @@ describe('Bacs Direct Debit', () => {
                         bankLocationId: '895302',
                         checkoutAttemptId: 'fetch-checkoutAttemptId-failed',
                         holderName: 'Jonny R.',
+                        sdkData: expect.any(String),
                         type: 'directdebit_GB'
                     },
                     shopperEmail: 'jonnyr@adyen.com',
