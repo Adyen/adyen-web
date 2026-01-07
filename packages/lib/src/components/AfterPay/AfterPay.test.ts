@@ -142,7 +142,7 @@ describe('AfterPay', () => {
                             stateOrProvince: 'N/A',
                             street: 'Simon Carmilgestraat'
                         },
-                        paymentMethod: { checkoutAttemptId: 'fetch-checkoutAttemptId-failed', type: 'afterpay_default' },
+                        paymentMethod: { checkoutAttemptId: 'fetch-checkoutAttemptId-failed', sdkData: expect.any(String), type: 'afterpay_default' },
                         shopperEmail: 'jose@adyen.com',
                         shopperName: { firstName: 'Jose', lastName: 'Fernandez' },
                         telephoneNumber: '612345678'
@@ -325,7 +325,7 @@ describe('AfterPay', () => {
                             stateOrProvince: 'N/A',
                             street: 'Kinkerstraat'
                         },
-                        paymentMethod: { checkoutAttemptId: 'fetch-checkoutAttemptId-failed', type: 'afterpay_default' },
+                        paymentMethod: { checkoutAttemptId: 'fetch-checkoutAttemptId-failed', sdkData: expect.any(String), type: 'afterpay_default' },
                         shopperEmail: 'jose@adyen.com',
                         shopperName: { firstName: 'Jose', lastName: 'Fernandez' },
                         telephoneNumber: '612345678'

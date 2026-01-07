@@ -166,6 +166,7 @@ describe('GooglePay', () => {
                 checkoutAttemptId: NO_CHECKOUT_ATTEMPT_ID,
                 googlePayCardNetwork: 'VISA',
                 googlePayToken: 'google-pay-token',
+                sdkData: expect.any(String),
                 type: 'googlepay'
             });
             expect(state.data.deliveryAddress).toStrictEqual({
@@ -235,6 +236,7 @@ describe('GooglePay', () => {
                 checkoutAttemptId: NO_CHECKOUT_ATTEMPT_ID,
                 googlePayCardNetwork: 'VISA',
                 googlePayToken: 'google-pay-token',
+                sdkData: expect.any(String),
                 type: 'googlepay'
             });
             expect(state.data.deliveryAddress).toBeUndefined();

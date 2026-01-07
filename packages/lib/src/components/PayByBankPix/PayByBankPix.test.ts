@@ -168,6 +168,7 @@ describe('PayByBankPix', () => {
                                     screenDimensions: { height: 100, width: 100 },
                                     userTimeZoneOffset: -60
                                 },
+                                sdkData: expect.any(String),
                                 type: 'paybybank_pix'
                             },
                             storePaymentMethod: true
@@ -344,7 +345,8 @@ describe('PayByBankPix', () => {
                                 osVersion: 'xxx',
                                 screenDimensions: { height: 100, width: 100 },
                                 userTimeZoneOffset: -60
-                            }
+                            },
+                            sdkData: expect.any(String)
                         }
                     },
                     isValid: true
