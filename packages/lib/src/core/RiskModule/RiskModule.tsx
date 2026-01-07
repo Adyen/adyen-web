@@ -89,14 +89,6 @@ export default class RiskElement extends BaseElement<RiskModuleProps> {
         return false;
     }
 
-    get dataUnencoded(): Record<string, any> | null {
-        if (this.isValid) {
-            return { version: RISK_DATA_VERSION, ...this.state.data };
-        }
-
-        return null;
-    }
-
     public get enabled() {
         return this.props.risk.enabled;
     }
