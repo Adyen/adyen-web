@@ -23,12 +23,33 @@ export interface EcontextInputSchema {
 export interface EcontextConfiguration extends UIElementProps {
     personalDetailsRequired?: boolean;
     data?: PersonalDetailsSchema;
-    reference?: string;
-    totalAmount?: PaymentAmount;
-    expiresAt?: string;
-    paymentMethodType?: string;
-    maskedTelephoneNumber?: string;
     instructionsUrl?: string;
+    /**
+     * @internal
+     */
+    reference?: string;
+    /**
+     * @internal
+     */
+    totalAmount?: PaymentAmount;
+    /**
+     * @internal
+     */
+    expiresAt?: string;
+    /**
+     * @internal
+     */
+    paymentMethodType?: string;
+    /**
+     * @internal
+     */
+    maskedTelephoneNumber?: string;
+    /**
+     * @internal
+     */
     alternativeReference?: string;
+    /**
+     * @internal
+     */
     collectionInstitutionNumber?: string;
 }
