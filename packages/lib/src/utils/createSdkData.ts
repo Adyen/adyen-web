@@ -1,13 +1,13 @@
 import base64 from './base64';
 
 export interface SdkDataObject {
-    schemaVersion: string;
+    schemaVersion: number;
     createdAt: number;
     analytics: {
         checkoutAttemptId: string;
     };
     riskData: {
-        clientData: Record<string, any>;
+        clientData: string;
     };
 }
 
@@ -17,16 +17,14 @@ export interface SdkDataObject {
  * @param clientData - The client data from risk module
  * @returns Base64 encoded JSON string of the SDK data object
  */
-export function createSdkData(checkoutAttemptId: string, clientData: Record<string, any>): string {
+export function createSdkData(checkoutAttemptId: string, clientData: string | null): string {
     const sdkDataObject: SdkDataObject = {
-        schemaVersion: '1',
+        schemaVersion: 1,
         createdAt: Date.now(),
         analytics: {
             checkoutAttemptId
         },
-        riskData: {
-            clientData
-        }
+        ...(clientData && { riskData: { clientData } }),
     };
 
     return base64.encode(JSON.stringify(sdkDataObject));
