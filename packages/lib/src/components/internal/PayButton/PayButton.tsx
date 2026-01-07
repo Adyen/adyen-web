@@ -6,6 +6,7 @@ import { createButtonLabel, createSecondaryLabel } from './utils';
 import SecondaryButtonLabel from './components/SecondaryButtonLabel';
 import { useAmount, useSecondaryAmount } from '../../../core/Context/AmountProvider';
 import type { PaymentAmount } from '../../../types';
+import { isAmountValid } from '../../../utils/amount-util';
 
 export interface PayButtonProps extends ButtonProps {
     /**
@@ -26,12 +27,12 @@ export interface PayButtonProps extends ButtonProps {
 }
 
 const PayButton = ({ customAmount, classNameModifiers = [], label, ...props }: PayButtonProps) => {
-    const { amount, isZeroAuth, isAmountValid } = useAmount();
+    const { amount, isZeroAuth } = useAmount();
     const { secondaryAmount } = useSecondaryAmount();
     const { i18n } = useCoreContext();
 
     const buttonLabel = createButtonLabel(i18n, label, amount, isZeroAuth, customAmount);
-    const secondaryAmountLabel = createSecondaryLabel(i18n, secondaryAmount, isAmountValid, isZeroAuth, label);
+    const secondaryAmountLabel = createSecondaryLabel(i18n, secondaryAmount, isAmountValid(amount), isZeroAuth, label);
 
     const isDisabled = props.disabled || props.status === 'loading';
 

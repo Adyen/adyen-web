@@ -53,7 +53,7 @@ export const isAmountValid = (amount: PaymentAmount): boolean => {
         return false;
     }
 
-    const hasValidValue = typeof amount.value === 'number' && !isNaN(amount.value);
+    const hasValidValue = typeof amount.value === 'number' && !Number.isNaN(amount.value);
     const hasValidCurrency = typeof amount.currency === 'string' && amount.currency.length > 0;
     const hasValidCurrencyDisplay = amount.currencyDisplay === undefined || typeof amount.currencyDisplay === 'string';
 

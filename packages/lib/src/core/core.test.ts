@@ -361,6 +361,99 @@ describe('Core', () => {
     });
 
     describe('update()', () => {
+        describe('Amount update', () => {
+            test('should update the amount for multiple components', async () => {
+                const initialAmount = { currency: 'USD', value: 5000 };
+
+                const checkout = new AdyenCheckout({
+                    amount: initialAmount,
+                    countryCode: 'US',
+                    environment: 'test',
+                    clientKey: 'test_123456',
+                    analytics: { enabled: false }
+                });
+                await checkout.initialize();
+
+                const component1 = new Redirect(checkout);
+                const component2 = new Redirect(checkout);
+
+                expect(checkout.options.amount).toEqual(initialAmount);
+                expect(component1.props.amount).toEqual(initialAmount);
+                expect(component2.props.amount).toEqual(initialAmount);
+
+                const spy1 = jest.spyOn(component1, 'updateAmount');
+                const spy2 = jest.spyOn(component2, 'updateAmount');
+
+                const newAmount = { currency: 'EUR', value: 1000 };
+
+                await checkout.update({ amount: newAmount }, { shouldRecreateDomElements: false });
+
+                expect(spy1).toHaveBeenCalledWith(newAmount, undefined);
+                expect(spy2).toHaveBeenCalledWith(newAmount, undefined);
+
+                expect(checkout.options.amount).toEqual(newAmount);
+                expect(component1.props.amount).toEqual(newAmount);
+                expect(component2.props.amount).toEqual(newAmount);
+            });
+
+            test('should not update the amount if it is invalid', async () => {
+                console.warn = jest.fn();
+
+                const initialAmount = { currency: 'USD', value: 5000 };
+                const checkout = new AdyenCheckout({
+                    amount: initialAmount,
+                    countryCode: 'US',
+                    environment: 'test',
+                    clientKey: 'test_123456',
+                    analytics: { enabled: false }
+                });
+                await checkout.initialize();
+
+                const component = new Redirect(checkout);
+                const spy = jest.spyOn(component, 'updateAmount');
+
+                const newAmount = { currency: '', value: 100 };
+
+                await checkout.update({ amount: newAmount }, { shouldRecreateDomElements: false });
+
+                expect(spy).not.toHaveBeenCalled();
+
+                expect(checkout.options.amount).toEqual(initialAmount);
+                expect(component.props.amount).toEqual(initialAmount);
+
+                expect(console.warn).toHaveBeenCalledWith('Core update(): Update canceled. Invalid amount object');
+            });
+
+            test('should not update the secondary amount if it is invalid', async () => {
+                console.warn = jest.fn();
+
+                const initialAmount = { currency: 'USD', value: 5000 };
+                const checkout = new AdyenCheckout({
+                    amount: initialAmount,
+                    countryCode: 'US',
+                    environment: 'test',
+                    clientKey: 'test_123456',
+                    analytics: { enabled: false }
+                });
+                await checkout.initialize();
+
+                const component = new Redirect(checkout);
+                const spy = jest.spyOn(component, 'updateAmount');
+
+                const newAmount = { currency: 'USD', value: 100 };
+                const secondaryAmount = { currency: '', value: 100 };
+
+                await checkout.update({ amount: newAmount, secondaryAmount }, { shouldRecreateDomElements: false });
+
+                expect(spy).not.toHaveBeenCalled();
+
+                expect(checkout.options.secondaryAmount).toBeUndefined();
+                expect(component.props.secondaryAmount).toBeUndefined();
+
+                expect(console.warn).toHaveBeenCalledWith('Core update(): Update canceled. Invalid secondary amount object');
+            });
+        });
+
         test('should update all components under main instance', async () => {
             const checkout = new AdyenCheckout({
                 countryCode: 'US',

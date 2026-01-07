@@ -440,4 +440,30 @@ describe('Dropin', () => {
             expect(onEnterKeyPressedMock).toHaveBeenCalledTimes(1);
         });
     });
+
+    describe('updateAmount()', () => {
+        test('should update amount and propagate it to all payment method elements', async () => {
+            const initialAmount = { value: 2999, currency: 'USD ' };
+            const config = getAdyenCheckoutConfiguration({ amount: initialAmount });
+
+            const checkout = await createAdyenCheckout(config);
+            const dropin = new Dropin(checkout);
+            render(dropin.render());
+
+            await waitFor(() => expect(screen.getByRole('button', { name: 'Continue to AliPay' })).toBeVisible());
+
+            expect(dropin.props.amount).toEqual(initialAmount);
+            dropin.paymentMethodElements.forEach(element => {
+                expect(element.props.amount).toEqual(initialAmount);
+            });
+
+            const newAmount = { value: 5000, currency: 'USD' };
+            dropin.updateAmount(newAmount);
+
+            expect(dropin.props.amount).toEqual(newAmount);
+            dropin.paymentMethodElements.forEach(element => {
+                expect(element.props.amount).toEqual(newAmount);
+            });
+        });
+    });
 });
