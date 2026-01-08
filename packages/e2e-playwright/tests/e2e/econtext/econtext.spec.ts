@@ -17,29 +17,17 @@ const test = base.extend<Fixture>({
 test.describe('Econtext ATM', () => {
     test('should make an Econtext ATM payment', async ({ econtext }) => {
         await econtext.goto(URL_MAP.econtextAtm);
-
-        await econtext.firstNameInput.fill(SHOPPER_DATA.firstName);
-        await econtext.lastNameInput.fill(SHOPPER_DATA.lastName);
-        await econtext.emailInput.fill(SHOPPER_DATA.email);
-        await econtext.telephoneInput.fill(SHOPPER_DATA.telephoneNumber);
-
+        await econtext.fillShopperData()
         await econtext.pay();
-
         await expect(econtext.voucherResult).toBeVisible();
     });
 });
 
 test.describe('Econtext Seven Eleven', () => {
-    test('should redirect for an Econtext Seven Eleven payment', async ({ econtext, page }) => {
+    test('should redirect for an Econtext Seven Eleven payment', async ({ econtext }) => {
         await econtext.goto(URL_MAP.econtextSevenEleven);
-
-        await econtext.firstNameInput.fill(SHOPPER_DATA.firstName);
-        await econtext.lastNameInput.fill(SHOPPER_DATA.lastName);
-        await econtext.emailInput.fill(SHOPPER_DATA.email);
-        await econtext.telephoneInput.fill(SHOPPER_DATA.telephoneNumber);
-
+        await econtext.fillShopperData()
         await econtext.pay();
-
-        await page.waitForURL(url => !url.href.includes(URL_MAP.econtextSevenEleven));
+        await econtext.page.waitForURL(url => !url.href.includes(URL_MAP.econtextSevenEleven));
     });
 });

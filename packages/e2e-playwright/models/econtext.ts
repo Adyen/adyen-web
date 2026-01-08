@@ -1,5 +1,6 @@
 import { Base } from './base';
 import { Page, Locator } from '@playwright/test';
+import { SHOPPER_DATA } from '../tests/utils/constants';
 
 class Econtext extends Base {
     readonly rootElement: Locator;
@@ -33,6 +34,13 @@ class Econtext extends Base {
 
     async isComponentVisible() {
         await this.rootElement.waitFor({ state: 'visible' });
+    }
+
+    async fillShopperData() {
+        await this.firstNameInput.fill(SHOPPER_DATA.firstName);
+        await this.lastNameInput.fill(SHOPPER_DATA.lastName);
+        await this.emailInput.fill(SHOPPER_DATA.email);
+        await this.telephoneInput.fill(SHOPPER_DATA.telephoneNumber.JP);
     }
 }
 

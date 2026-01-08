@@ -75,8 +75,10 @@ export const PAYMENT_RESULT = {
 };
 
 export const SHOPPER_DATA = {
-    firstName: 'Taro',
-    lastName: 'Yamada',
+    firstName: 'Shopper',
+    lastName: 'Test',
     email: 'test@adyen.com',
-    telephoneNumber: '0312345678'
+    telephoneNumber: {
+        JP: '0312345678'
+    }
 };
