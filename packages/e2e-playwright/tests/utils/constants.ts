@@ -73,3 +73,10 @@ export const PAYMENT_RESULT = {
     success: 'Payment Successful',
     fail: 'An unknown error occurred'
 };
+
+export const SHOPPER_DATA = {
+    firstName: 'Taro',
+    lastName: 'Yamada',
+    email: 'test@adyen.com',
+    telephoneNumber: '0312345678'
+};
