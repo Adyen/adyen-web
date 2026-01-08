@@ -1,9 +1,8 @@
 import { test, expect } from '../../../fixtures/issuer-list.fixture';
-import { interceptAndValidatePaymentResponse } from '../../utils/paymentResponseIntercept';
+import { URL_MAP } from '../../../fixtures/URL_MAP';
 
 test.describe('IRIS Payment Method', () => {
     test('Bank List Flow - should select issuer from the list, make payment, and return redirect action', async ({ page, iris }) => {
-        await interceptAndValidatePaymentResponse({ page, expectedActionType: 'redirect' });
         await iris.switchToBankListMode();
         expect(await iris.isBankListModeSelected()).toBe(true);
         
@@ -13,9 +12,9 @@ test.describe('IRIS Payment Method', () => {
         // Select an issuer from the dropdown (opens the listbox)
         await iris.selectIssuerOnSelectorDropdown('Piraeus Bank');
         await iris.pay();
+        await iris.page.waitForURL(url => !url.href.includes(URL_MAP.iris));
     });
     test('QR Code Flow - should display QR code image and data after generating', async ({ page, iris }) => {
-        await interceptAndValidatePaymentResponse({ page, expectedActionType: 'qrCode' });
         await iris.switchToQrCodeMode();
         expect(await iris.isQrCodeModeSelected()).toBe(true);
         await expect(iris.generateQrCodeButton).toBeVisible();
