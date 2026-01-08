@@ -1,5 +1,19 @@
 # @adyen/adyen-web
 
+## 6.28.0
+
+### Minor Changes
+
+- Improved Select component accessibility by preventing auto-expansion on keyboard focus and adding aria-disabled and aria-expanded attributes ([#3698](https://github.com/Adyen/adyen-web/pull/3698))
+
+### Patch Changes
+
+- Fixed: Partial billing address mode to display regionalized postal code labels (US shows "Zip code", others show "Postal code") ([#3746](https://github.com/Adyen/adyen-web/pull/3746))
+
+- Fixed: Aria-live announcement at Button component to announce loading and redirect states to screen readers for improved accessibility. ([#3703](https://github.com/Adyen/adyen-web/pull/3703))
+
+- Fixed: Stop manually adding props to the 3DS2 component. (This was legacy code, from v5) ([#3719](https://github.com/Adyen/adyen-web/pull/3719))
+
 ## 6.27.1
 
 ### Patch Changes

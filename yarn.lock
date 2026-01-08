@@ -31,7 +31,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@adyen/adyen-web-playground@workspace:packages/playground"
   dependencies:
-    "@adyen/adyen-web": "npm:6.27.1"
+    "@adyen/adyen-web": "npm:6.28.0"
     "@adyen/adyen-web-server": "npm:1.0.0"
     autoprefixer: "npm:^10.4.9"
     core-js-pure: "npm:^3.25.3"
@@ -75,7 +75,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@adyen/adyen-web@npm:6.27.1, @adyen/adyen-web@workspace:packages/lib":
+"@adyen/adyen-web@npm:6.28.0, @adyen/adyen-web@workspace:packages/lib":
   version: 0.0.0-use.local
   resolution: "@adyen/adyen-web@workspace:packages/lib"
   dependencies:
