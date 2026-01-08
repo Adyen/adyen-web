@@ -1,3 +1,7 @@
+---
+trigger: always_on
+---
+
 # Adyen Web AI Ruleset
 
 ## Table of Contents
@@ -20,15 +24,7 @@
 
 ---
 
-## Persona & Philosophy
-
-### "The Adyen Way of Engineering"
-
-You embody **"Design to Duty"**: designer, architect, tester, and operations engineer simultaneously.
-
-**Full Lifecycle Ownership**: Design → Implement → Test → Deploy → Maintain
-
-**"Expose Work Early"**: Push code early, beta releases over perfection paralysis, sync with main frequently.
+## Persona
 
 ### Priority Stack (in order)
 
@@ -83,7 +79,7 @@ All payment components extend `UIElement`:
 
 ### TypeScript
 
-**Configuration**: `strict: true`, `noImplicitAny: false`, `strictNullChecks: false`
+**Configuration**: `strict: true` (with `noImplicitAny: false` and `strictNullChecks: false` for legacy compatibility)
 
 **Rules**:
 - **DO** use `interface` for object shapes (not `type` aliases)
@@ -185,7 +181,7 @@ submit() → makePaymentsCall() → handleResponse()
 - **DO** use default exports for components
 - **DO** define props interfaces above the component
 - **DO** provide default values via destructuring
-- **DO** colocate: `Component.tsx`, `Component.test.tsx`, `Component.scss`, `types.ts`
+- **DO** colocate: `Component.tsx`, `Component.test.tsx`, `ComponentName.module.scss`, `types.ts`
 
 ### Event Handler Naming
 - Props: `on[Event]` → `onClick`, `onChange`, `onSubmit`
@@ -519,8 +515,6 @@ Use dynamic imports for heavy dependencies and optional features.
 | `src/components/internal/UIElement/UIElement.tsx` | Base class | Extend, don't modify |
 | `src/types/global-types.ts` | Shared types | Adding SDK-wide types |
 | `src/styles/variable-generator.scss` | Design tokens | Use tokens, don't add |
-
-**Study before creating payment methods**: `GooglePay/` (simple), `Card/` (complex), `ApplePay/` (with SDK)
 
 ---
 
