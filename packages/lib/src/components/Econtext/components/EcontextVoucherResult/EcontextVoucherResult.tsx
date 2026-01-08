@@ -17,9 +17,9 @@ const EcontextVoucherResult = (props: EcontextVoucherResultProps) => {
     const voucherDetails = hasAlternativeReference
         ? [
               { label: i18n.get('voucher.collectionInstitutionNumber'), value: collectionInstitutionNumber },
-              { label: i18n.get('Customer number'), value: reference },
-              { label: i18n.get('Confirmation number'), value: alternativeReference },
-              { label: i18n.get('voucher.expirationDate'), value: i18n.date(expiresAt) }
+              { label: i18n.get('econtext.customerNumber'), value: reference },
+              { label: i18n.get('econtext.confirmationNumber'), value: alternativeReference },
+              { label: i18n.get('econtext.useBefore'), value: i18n.date(expiresAt) }
           ]
         : [
               { label: i18n.get('voucher.collectionInstitutionNumber'), value: collectionInstitutionNumber },
@@ -31,7 +31,7 @@ const EcontextVoucherResult = (props: EcontextVoucherResultProps) => {
         <Voucher
             {...extractCommonPropsForVoucher({ props, i18n, introKey: 'voucher.introduction.econtext', getImage: getImage() })}
             instructionsUrl={instructionsUrl}
-            paymentReferenceLabel={hasAlternativeReference ? i18n.get('Payment information') : undefined}
+            paymentReferenceLabel={hasAlternativeReference ? i18n.get('econtext.paymentInformation') : undefined}
             voucherDetails={voucherDetails}
             copyBtn={!hasAlternativeReference}
             showReferenceValue={!hasAlternativeReference}

@@ -170,6 +170,7 @@ describe('Econtext', () => {
             await expectVoucherDetailValue('Collection Institution Number', '58091');
             await expectVoucherDetailValue('Customer number', '1234567890');
             await expectVoucherDetailValue('Confirmation number', 'ALT123456');
+            // todo check that the fields that should not be shown are not shown
         });
 
         test('should not show masked telephone number when alternative reference is present', async () => {
