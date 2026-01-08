@@ -11,79 +11,43 @@ const requiredPropsFromUiElement = {
 
 const core = setupCoreMock();
 
+const renderEcontextInput = (props = {}) => {
+    return render(
+        <CoreProvider i18n={core.modules.i18n} loadingContext="test" resources={core.modules.resources}>
+            <EcontextInput
+                {...requiredPropsFromUiElement}
+                onChange={jest.fn()}
+                onSubmit={jest.fn()}
+                payButton={() => <button>Continue purchase</button>}
+                {...props}
+            />
+        </CoreProvider>
+    );
+};
+
 describe('Econtext: EcontextInput', () => {
     test('renders PersonalDetails form by default', () => {
-        render(
-            <CoreProvider i18n={core.modules.i18n} loadingContext="test" resources={core.modules.resources}>
-                <EcontextInput
-                    {...requiredPropsFromUiElement}
-                    onChange={jest.fn()}
-                    onSubmit={jest.fn()}
-                    payButton={() => <button>Continue purchase</button>}
-                />
-            </CoreProvider>
-        );
+        renderEcontextInput();
         expect(screen.getByLabelText('First name')).toBeInTheDocument();
     });
 
     test('hide PersonalDetails form if prop personalDetailsRequired is set to false', () => {
-        render(
-            <CoreProvider i18n={core.modules.i18n} loadingContext="test" resources={core.modules.resources}>
-                <EcontextInput
-                    {...requiredPropsFromUiElement}
-                    personalDetailsRequired={false}
-                    onChange={jest.fn()}
-                    onSubmit={jest.fn()}
-                    payButton={() => <button>Continue purchase</button>}
-                />
-            </CoreProvider>
-        );
+        renderEcontextInput({ personalDetailsRequired: false });
         expect(screen.queryByLabelText('First name')).not.toBeInTheDocument();
     });
 
     test('hide PayButton if showPayButton is set to false', () => {
-        render(
-            <CoreProvider i18n={core.modules.i18n} loadingContext="test" resources={core.modules.resources}>
-                <EcontextInput
-                    {...requiredPropsFromUiElement}
-                    personalDetailsRequired={false}
-                    onChange={jest.fn()}
-                    onSubmit={jest.fn()}
-                    showPayButton={false}
-                    payButton={() => <button>Continue purchase</button>}
-                />
-            </CoreProvider>
-        );
+        renderEcontextInput({ personalDetailsRequired: false, showPayButton: false });
         expect(screen.queryByRole('button', { name: 'Continue purchase' })).not.toBeInTheDocument();
     });
 
     test('hide form instruction if personalDetailsRequired sets to false', () => {
-        render(
-            <CoreProvider i18n={core.modules.i18n} loadingContext="test" resources={core.modules.resources}>
-                <EcontextInput
-                    {...requiredPropsFromUiElement}
-                    personalDetailsRequired={false}
-                    onChange={jest.fn()}
-                    onSubmit={jest.fn()}
-                    payButton={() => <button>Continue purchase</button>}
-                />
-            </CoreProvider>
-        );
+        renderEcontextInput({ personalDetailsRequired: false });
         expect(screen.queryByText('All fields are required unless marked otherwise.')).not.toBeInTheDocument();
     });
 
     test('show form instruction if personalDetailsRequired is set to true', () => {
-        render(
-            <CoreProvider i18n={core.modules.i18n} loadingContext="test" resources={core.modules.resources}>
-                <EcontextInput
-                    {...requiredPropsFromUiElement}
-                    personalDetailsRequired
-                    onChange={jest.fn()}
-                    onSubmit={jest.fn()}
-                    payButton={() => <button>Continue purchase</button>}
-                />
-            </CoreProvider>
-        );
+        renderEcontextInput({ personalDetailsRequired: true });
         expect(screen.getByText('All fields are required unless marked otherwise.')).toBeInTheDocument();
     });
 });
