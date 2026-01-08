@@ -11,8 +11,11 @@ test.describe('IRIS Payment Method', () => {
         
         // Select an issuer from the dropdown (opens the listbox)
         await iris.selectIssuerOnSelectorDropdown('Piraeus Bank');
+        
         await iris.pay();
         await iris.page.waitForURL(url => !url.href.includes(URL_MAP.iris));
+
+        await expect(iris.page.url()).not.toContain(URL_MAP.iris); 
     });
     test('QR Code Flow - should display QR code image and data after generating', async ({ page, iris }) => {
         await iris.switchToQrCodeMode();
