@@ -79,6 +79,6 @@ export const SHOPPER_DATA = {
     lastName: 'Test',
     email: 'test@adyen.com',
     telephoneNumber: {
-        JP: '0312345678'
+        JP: '7012341234'
     }
 };
