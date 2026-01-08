@@ -18,6 +18,7 @@ function setupCoreMock({ mockSessions = true, paymentMethods = null }: SetupCore
 
     const analytics = mock<IAnalytics>();
     const resources = mock<Resources>();
+    resources.getImage.mockImplementation(() => () => 'MOCK');
     const i18n = new Language({ locale: 'en-US', translations: enUS });
     const srPanel = new SRPanel(core, {
         moveFocus: true,

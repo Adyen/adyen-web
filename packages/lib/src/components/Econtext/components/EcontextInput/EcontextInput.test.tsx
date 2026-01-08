@@ -5,7 +5,8 @@ import { CoreProvider } from '../../../../core/Context/CoreProvider';
 import { setupCoreMock } from '../../../../../config/testMocks/setup-core-mock';
 
 const requiredPropsFromUiElement = {
-    showPayButton: false
+    showPayButton: false,
+    setComponentRef: jest.fn()
 };
 
 const core = setupCoreMock();
@@ -18,7 +19,6 @@ describe('Econtext: EcontextInput', () => {
                     {...requiredPropsFromUiElement}
                     onChange={jest.fn()}
                     onSubmit={jest.fn()}
-                    setComponentRef={jest.fn()}
                     payButton={() => <button className="pay-button" />}
                 />
             </CoreProvider>
@@ -34,7 +34,6 @@ describe('Econtext: EcontextInput', () => {
                     personalDetailsRequired={false}
                     onChange={jest.fn()}
                     onSubmit={jest.fn()}
-                    setComponentRef={jest.fn()}
                     payButton={() => <button className="pay-button" />}
                 />
             </CoreProvider>
@@ -51,7 +50,6 @@ describe('Econtext: EcontextInput', () => {
                     onChange={jest.fn()}
                     onSubmit={jest.fn()}
                     showPayButton={false}
-                    setComponentRef={jest.fn()}
                     payButton={() => <button className="pay-button" />}
                 />
             </CoreProvider>
@@ -67,7 +65,6 @@ describe('Econtext: EcontextInput', () => {
                     personalDetailsRequired={false}
                     onChange={jest.fn()}
                     onSubmit={jest.fn()}
-                    setComponentRef={jest.fn()}
                     payButton={() => <button className="pay-button" />}
                 />
             </CoreProvider>
@@ -83,7 +80,6 @@ describe('Econtext: EcontextInput', () => {
                     personalDetailsRequired
                     onChange={jest.fn()}
                     onSubmit={jest.fn()}
-                    setComponentRef={jest.fn()}
                     payButton={() => <button className="pay-button" />}
                 />
             </CoreProvider>
