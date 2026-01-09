@@ -10,7 +10,7 @@ import { COUNTRY_CODES } from '../storybook/constants/countries';
  */
 
 // we expect this to be formatted as a string in main.tsx
-const disableMsw = 'true';
+const disableMsw = process.env.DISABLE_MSW === 'true';
 
 let loaders = {};
 
