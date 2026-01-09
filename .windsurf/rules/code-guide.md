@@ -419,6 +419,42 @@ Jest 29 + `@testing-library/preact` + `@testing-library/jest-dom`
 
 ---
 
+## E2E Testing (Playwright)
+### Framework
+Playwright + `@axe-core/playwright` for accessibility testing
+### File Organization
+| Directory | Purpose |
+|-----------|---------|
+| `packages/e2e-playwright/models/` | Page Object Model classes |
+| `packages/e2e-playwright/tests/e2e/[component]/` | Test specs grouped by component |
+| `packages/e2e-playwright/tests/utils/constants.ts`| Shared test data |
+| `packages/e2e-playwright/fixtures/` | Custom fixtures and URL mappings |
+
+### Locator Priority (Accessibility-First)
+- getByRole with regex — ALWAYS prefer: getByRole('textbox', { name: /first name/i })
+- getByLabel — For form inputs with labels
+- getByText — For static text content
+- locator() with CSS — Only for component containers: .adyen-checkout__[component]
+
+### Rules:
+- **DO** Every payment component should have a corresponding model class extending 
+- **DO** Store reusable test data in tests/utils/constants.ts:
+- **DO** use case-insensitive regex: { name: /confirm purchase/i }
+- **DO** scope locators to rootElement when possible
+- **DO** use readonly for locator properties
+- **DO** extend Base class for all page objects
+- **DO** use custom fixtures for component instantiation
+- **DO** group tests by component in describe blocks
+- **DO** use descriptive test names: "should complete payment flow"
+- **DO** reuse constants from tests/utils/constants.ts
+- **DO** implement isComponentVisible() for each component
+- **DO** use fillShopperData() helper for form population
+- **DO NOT** hardcode test data in specs
+- **DO NOT** use arbitrary waits — use waitFor conditions
+- **DO NOT** use getByTestId unless absolutely necessary
+
+---
+
 ## Build & Development
 
 ### Commands
