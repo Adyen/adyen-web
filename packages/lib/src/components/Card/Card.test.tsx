@@ -430,4 +430,24 @@ describe('Card', () => {
             );
         });
     });
+
+    describe('Click to Pay with fundingSource', () => {
+        test('should not initialize Click to Pay service if fundingSource is prepaid', () => {
+            const core = setupCoreMock();
+            const card = new CardElement(core, { fundingSource: 'prepaid' });
+            expect(card['clickToPayService']).toBeUndefined();
+        });
+
+        test('should initialize Click to Pay service if fundingSource is credit', () => {
+            const core = setupCoreMock();
+            const card = new CardElement(core, { fundingSource: 'credit' });
+            expect(card['clickToPayService']).toBeDefined();
+        });
+
+        test('should initialize Click to Pay service if fundingSource is undefined', () => {
+            const core = setupCoreMock();
+            const card = new CardElement(core, {});
+            expect(card['clickToPayService']).toBeDefined();
+        });
+    });
 });
