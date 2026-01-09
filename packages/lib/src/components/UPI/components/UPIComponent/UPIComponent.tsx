@@ -1,6 +1,6 @@
 import { Fragment, h, RefObject } from 'preact';
 import { useCallback, useEffect, useState } from 'preact/hooks';
-import { PayButtonFunctionProps, UIElementStatus } from '../../../types';
+import { UIElementStatus } from '../../../types';
 import VpaInput, { VpaInputHandlers } from '../VpaInput/VpaInput';
 import { App, UpiMode } from '../../types';
 import useImage from '../../../../core/Context/useImage';
@@ -12,7 +12,8 @@ import { useCoreContext } from '../../../../core/Context/CoreProvider';
 import Alert from '../../../internal/Alert';
 import { SegmentedControlOption } from '../../../internal/SegmentedControl/SegmentedControl';
 import UPIMandate, { Mandate } from '../UPIMandate/UPIMandate';
-import type { PaymentAmount } from '../../../../types/global-types';
+import { PayButtonProps } from '../../../internal/PayButton/PayButton';
+import { useAmount } from '../../../../core/Context/AmountProvider';
 
 type UpiData = { app?: App; virtualPaymentAddress?: string };
 
@@ -24,14 +25,9 @@ interface UPIComponentProps {
     apps?: Array<App>;
     segmentedControlOptions?: Array<SegmentedControlOption<UpiMode>>;
     mandate?: Mandate;
-    amount?: PaymentAmount;
-
     ref?(ref: RefObject<typeof UPIComponent>): void;
-
-    payButton?(props: PayButtonFunctionProps): h.JSX.Element;
-
+    payButton(props: PayButtonProps): h.JSX.Element;
     onChange({ data, valid, errors, isValid }: OnChangeProps): void;
-
     onUpdateMode?(mode: UpiMode): void;
 }
 
@@ -41,7 +37,6 @@ export default function UPIComponent({
     payButton,
     showPayButton,
     mandate,
-    amount,
     onUpdateMode = () => {},
     apps = [],
     segmentedControlOptions = []
@@ -50,6 +45,7 @@ export default function UPIComponent({
     const getImage = useImage();
     const [status, setStatus] = useState<UIElementStatus>('ready');
     const [mode, setMode] = useState<UpiMode>(defaultMode);
+    const { amount } = useAmount();
     const [vpaInputHandlers, setVpaInputHandlers] = useState<VpaInputHandlers>(null);
     const [selectedApp, setSelectedApp] = useState<App>(null);
     const [isValid, setIsValid] = useState<boolean>(defaultMode === 'qrCode');

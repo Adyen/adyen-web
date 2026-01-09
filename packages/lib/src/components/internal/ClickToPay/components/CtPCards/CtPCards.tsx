@@ -18,6 +18,7 @@ import { PaymentAmount } from '../../../../../types/global-types';
 import './CtPCards.scss';
 import AdyenCheckoutError from '../../../../../core/Errors/AdyenCheckoutError';
 import { PREFIX } from '../../../Icon/constants';
+import { useAmount } from '../../../../../core/Context/AmountProvider';
 
 type CtPCardsProps = {
     onDisplayCardComponent?(): void;
@@ -43,11 +44,12 @@ function getPayButtonLabel(i18n: Language, amount: PaymentAmount, checkoutCard?:
 const CtPCards = ({ onDisplayCardComponent }: CtPCardsProps) => {
     const { i18n } = useCoreContext();
     const getImage = useImage();
-    const { amount, cards, checkout, isCtpPrimaryPaymentMethod, status, onSubmit, onSetStatus, onError } = useClickToPayContext();
+    const { cards, checkout, isCtpPrimaryPaymentMethod, status, onSubmit, onSetStatus, onError } = useClickToPayContext();
     const [checkoutCard, setCheckoutCard] = useState<ShopperCard | undefined>(cards.find(card => !card.isExpired) || cards[0]);
     const [errorCode, setErrorCode] = useState<string>(null);
     const isEveryCardExpired = cards.every(card => card.isExpired);
     const [isShopperCheckingOutWithCtp, setIsShopperCheckingOutWithCtp] = useState<boolean>(false);
+    const { amount } = useAmount();
 
     useEffect(() => {
         if (cards.length === 0 || isEveryCardExpired) {
@@ -119,7 +121,6 @@ const CtPCards = ({ onDisplayCardComponent }: CtPCardsProps) => {
 
                     <PayButton
                         disabled={isEveryCardExpired}
-                        amount={amount}
                         label={getPayButtonLabel(i18n, amount, checkoutCard)}
                         status={status}
                         variant={isCtpPrimaryPaymentMethod ? 'primary' : 'secondary'}

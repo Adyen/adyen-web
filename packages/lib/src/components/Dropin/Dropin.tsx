@@ -9,7 +9,7 @@ import splitPaymentMethods from './elements/splitPaymentMethods';
 import { TxVariants } from '../tx-variants';
 
 import type { DropinConfiguration, InstantPaymentTypes, PaymentMethodsConfiguration } from './types';
-import type { PaymentAction, PaymentResponseData } from '../../types/global-types';
+import type { PaymentAction, PaymentAmount, PaymentResponseData } from '../../types/global-types';
 import type { ICore } from '../../core/types';
 import type { IDropin } from './types';
 
@@ -28,10 +28,16 @@ class DropinElement extends UIElement<DropinConfiguration> implements IDropin {
      */
     public componentFromAction?: UIElement;
 
+    /**
+     * Reference to all payment method elements being rendered by Drop-in
+     */
+    public paymentMethodElements: UIElement[] = [];
+
     constructor(checkout: ICore, props?: DropinConfiguration) {
         super(checkout, props);
         this.submit = this.submit.bind(this);
         this.handleAction = this.handleAction.bind(this);
+        this.handleElementsCreated = this.handleElementsCreated.bind(this);
 
         this.props.paymentMethodComponents.forEach(PaymentMethod => this.core.register(PaymentMethod));
         this.paymentMethodsConfiguration = this.props.paymentMethodsConfiguration || {};
@@ -110,6 +116,38 @@ class DropinElement extends UIElement<DropinConfiguration> implements IDropin {
         }
 
         this.activePaymentMethod.submit();
+    }
+
+    /**
+     * Updates the amount in the props and propagates it to the AmountProvider. That way the children components can use the updated amount.
+     *
+     * This method **overrides** the parent one to specifically propagate the changes to all payment method elements.
+     *
+     * @param amount - Primary payment amount object
+     * @param secondaryAmount - Optional secondary amount for display purposes (e.g., converted currency)
+     * @internal
+     */
+    public override updateAmount(amount: PaymentAmount, secondaryAmount?: PaymentAmount): void {
+        this.props = {
+            ...this.props,
+            ...(amount && { amount }),
+            ...(secondaryAmount && { secondaryAmount })
+        };
+
+        this.amountProviderRef.current?.update(amount, secondaryAmount);
+
+        this.paymentMethodElements.forEach(element => {
+            element.updateAmount(amount, secondaryAmount);
+        });
+    }
+
+    /**
+     * Assign all elements created in the Component to the paymentMethodElements property
+     * @param elements
+     */
+    private handleElementsCreated(elements: UIElement[]) {
+        if (!elements || elements.length === 0) this.paymentMethodElements = [];
+        this.paymentMethodElements = elements;
     }
 
     /**
@@ -218,6 +256,7 @@ class DropinElement extends UIElement<DropinConfiguration> implements IDropin {
                 core={this.core}
                 elementRef={this.elementRef}
                 onCreateElements={this.handleCreate}
+                onElementsCreated={this.handleElementsCreated}
                 ref={dropinRef => {
                     this.dropinRef = dropinRef;
                 }}

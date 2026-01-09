@@ -25,12 +25,12 @@ export function getAmazonPayUrl(region: Region): string {
  * @param props -
  * @returns the AmazonPay button settings
  */
-export function getAmazonPaySettings(props: AmazonPayButtonProps): AmazonPayButtonSettings {
+export function getAmazonPaySettings(props: AmazonPayButtonProps, amount?: PaymentAmount): AmazonPayButtonSettings {
     return {
         ...(props.buttonColor && { buttonColor: props.buttonColor }),
         ...(props.design && { design: getDesignCode(props.design) }),
         checkoutLanguage: getCheckoutLocale(props.locale, props.configuration.region),
-        ledgerCurrency: LEDGER_CURRENCIES_PER_REGION[props.configuration.region] || props.currency || (props.amount?.currency as Currency),
+        ledgerCurrency: LEDGER_CURRENCIES_PER_REGION[props.configuration.region] || props.currency || (amount?.currency as Currency),
         merchantId: props.configuration.merchantId,
         productType: props.productType,
         placement: props.placement,
@@ -99,13 +99,13 @@ export function getChargeAmount(amount: PaymentAmount): ChargeAmount {
  * @param props -
  * @returns PayloadJSON
  */
-export function getPayloadJSON(props): PayloadJSON {
+export function getPayloadJSON(props, amount: PaymentAmount): PayloadJSON {
     const { addressDetails, cancelUrl, checkoutMode, deliverySpecifications, returnUrl, merchantMetadata, chargePermissionType, recurringMetadata } =
         props;
 
     const { storeId } = props.configuration;
     const isPayNow = checkoutMode === 'ProcessOrder';
-    const amount = isPayNow ? getChargeAmount(props.amount) : null;
+    const finalAmount = isPayNow ? getChargeAmount(amount) : null;
 
     return {
         storeId,
@@ -117,10 +117,10 @@ export function getPayloadJSON(props): PayloadJSON {
         },
         ...(isPayNow && {
             paymentDetails: {
-                chargeAmount: amount,
+                chargeAmount: finalAmount,
                 paymentIntent: 'Confirm',
-                presentmentCurrency: amount.currencyCode,
-                totalOrderAmount: amount
+                presentmentCurrency: finalAmount.currencyCode,
+                totalOrderAmount: finalAmount
             }
         }),
         ...(recurringMetadata && { recurringMetadata }),
