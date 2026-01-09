@@ -50,6 +50,17 @@ trigger: always_on
 | `src/utils/` | Pure functions | ZERO side effects. No DOM, no API calls, no state mutations. |
 | `src/language/` | Translation system | Add keys to `packages/server/translations/[locale].json`. |
 
+### Components Directory
+
+**Rules**: 
+- **DO**: treat every component folder as a self-contained unit containing `index.ts`, `[Name].tsx`, and `[Name].test.tsx`.
+- **DO**: Every component folder must have an `index.ts`.
+- **DO**: External files should **only** import from the `index.ts` of the folder, never the `.tsx` file directly.
+- **DO**: extract component-specific helper logic into `utils.ts` or `validate.ts` *inside* the component's own folder.
+- **DO NOT** import directly from a `.tsx` file; external files must only import from the folder's `index.ts`.
+- **DO NOT** use `export *` in `index.ts` to ensure clear APIs and better tree-shaking.
+- **DO NOT** allow sub-component logic (tests, utils, styles) to live outside its specific nested folder.
+
 ### Architectural Hierarchy
 
 All payment components extend `UIElement`:
@@ -140,7 +151,6 @@ When maintaining existing components using global SCSS:
 **Rules**:
 - **DO** group imports with blank lines between categories
 - **DO** use `import type` for type-only imports
-- **DO NOT** use relative imports traversing more than 2 levels up
 
 ---
 
@@ -177,8 +187,11 @@ submit() → makePaymentsCall() → handleResponse()
 
 ## Coding Standards
 
+### Export Strategy
+- **UIElements (Classes):** **DO** use `default export`. These are the main entry points for payment methods.
+- **Preact Components (Functional):** **DO** use `named exports`.
+
 ### Component Structure
-- **DO** use default exports for components
 - **DO** define props interfaces above the component
 - **DO** provide default values via destructuring
 - **DO** colocate: `Component.tsx`, `Component.test.tsx`, `ComponentName.module.scss`, `types.ts`
@@ -221,8 +234,10 @@ submit() → makePaymentsCall() → handleResponse()
 
 ### Localization
 - **DO** use `i18n.get('key')` for all user-facing strings
+- **DO** pass the **result** of `i18n.get('key')` to child components as a prop (e.g., `label={i18n.get('pay.button')}`).
 - **DO** use descriptive keys: `card.number.label` not `cardNumber`
 - **DO NOT** hardcode English strings
+- **DO NOT** pass translation keys (strings) for the child to translate internally.
 
 ### JSDoc
 - **DO** document public methods with `@param`, `@returns`, `@throws`
