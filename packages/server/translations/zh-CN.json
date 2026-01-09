@@ -433,5 +433,11 @@
     "upi.mandate.upTo": "最高 %{amount}",
     "upi.mandate.frequency.monthly": "/月",
     "upi.mandate.frequency.weekly": "/周",
-    "upi.mandate.frequency.adhoc": " 如所展示"
+    "upi.mandate.frequency.adhoc": " 如所展示",
+    "bankList": "银行列表",
+    "qrCode": "二维码",
+    "iris.instructions.generateQrCode": "生成二维码后，您可以使用您首选的银行应用完成付款。",
+    "iris.instructions.payment.step1": "打开您首选的银行应用。",
+    "iris.instructions.payment.step2": "使用您的银行应用扫描二维码。",
+    "iris.instructions.payment.step3": "在应用内完成支付，并在此处等待确认。"
 }
