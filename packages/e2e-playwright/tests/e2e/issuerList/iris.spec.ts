@@ -1,5 +1,4 @@
 import { test, expect } from '../../../fixtures/issuer-list.fixture';
-import { URL_MAP } from '../../../fixtures/URL_MAP';
 
 test.describe('IRIS Payment Method', () => {
     test('Bank List Flow - should select issuer from the list, make payment, and return redirect action', async ({ page, iris }) => {
@@ -13,9 +12,8 @@ test.describe('IRIS Payment Method', () => {
         await iris.selectIssuerOnSelectorDropdown('Piraeus Bank');
         
         await iris.pay();
-        await iris.page.waitForURL(url => !url.href.includes(URL_MAP.iris));
 
-        await expect(iris.page.url()).not.toContain(URL_MAP.iris); 
+        await expect(iris.page).toHaveTitle(/Adyen Payment Simulator/, { timeout: 5000 }); 
     });
     test('QR Code Flow - should display QR code image and data after generating', async ({ page, iris }) => {
         await iris.switchToQrCodeMode();
