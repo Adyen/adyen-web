@@ -644,6 +644,7 @@ describe('ApplePay', () => {
                 paymentMethod: {
                     applePayToken: 'InBheW1lbnQtZGF0YSI=',
                     checkoutAttemptId: NO_CHECKOUT_ATTEMPT_ID,
+                    sdkData: expect.any(String),
                     type: 'applepay'
                 }
             });

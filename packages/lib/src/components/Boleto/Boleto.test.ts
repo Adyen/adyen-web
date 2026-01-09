@@ -74,7 +74,8 @@ describe('Boleto', () => {
                 data: {
                     paymentMethod: {
                         type: 'boletobancario',
-                        checkoutAttemptId: 'fetch-checkoutAttemptId-failed'
+                        checkoutAttemptId: 'fetch-checkoutAttemptId-failed',
+                        sdkData: expect.any(String)
                     },
                     billingAddress: {
                         city: 'Sao Paulo',
@@ -183,7 +184,8 @@ describe('Boleto', () => {
                 data: {
                     paymentMethod: {
                         type: 'boletobancario',
-                        checkoutAttemptId: 'fetch-checkoutAttemptId-failed'
+                        checkoutAttemptId: 'fetch-checkoutAttemptId-failed',
+                        sdkData: expect.any(String)
                     },
                     billingAddress: {
                         city: 'Sao Paulo',

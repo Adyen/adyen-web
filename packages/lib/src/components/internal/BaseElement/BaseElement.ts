@@ -8,6 +8,7 @@ import type { BaseElementProps, IBaseElement } from './types';
 import type { PaymentData } from '../../../types/global-types';
 import { off, on } from '../../../utils/listenerUtils';
 import { AbstractAnalyticsEvent } from '../../../core/Analytics/events/AbstractAnalyticsEvent';
+import { createSdkData } from '../../../utils/createSdkData';
 
 /**
  * Verify if the first parameter is instance of Core.
@@ -87,13 +88,20 @@ abstract class BaseElement<P extends BaseElementProps> implements IBaseElement {
      * Note: this does not ensure validity, check isValid first
      */
     public get data(): PaymentData {
+        // first one used for the clientData field in the payment request
         const clientData = getProp(this.props, 'modules.risk.data');
         const checkoutAttemptId = getProp(this.props, 'modules.analytics.getCheckoutAttemptId')?.() ?? NO_CHECKOUT_ATTEMPT_ID; // NOTE: we never expect to see this "failed" value, but, just in case...
         const order = this.state.order || this.props.order;
         const componentData = this.formatData();
 
+        const sdkData = createSdkData(checkoutAttemptId, clientData);
+
         if (componentData.paymentMethod && checkoutAttemptId) {
             componentData.paymentMethod.checkoutAttemptId = checkoutAttemptId;
+        }
+
+        if (componentData.paymentMethod && sdkData) {
+            componentData.paymentMethod.sdkData = sdkData;
         }
 
         return {
