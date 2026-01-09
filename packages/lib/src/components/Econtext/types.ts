@@ -23,6 +23,9 @@ export interface EcontextInputSchema {
 export interface EcontextConfiguration extends UIElementProps {
     personalDetailsRequired?: boolean;
     data?: PersonalDetailsSchema;
+    /**
+     * @internal
+     */
     instructionsUrl?: string;
     /**
      * @internal
