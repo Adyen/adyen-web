@@ -54,7 +54,7 @@ export default function IrisComponent(props: Readonly<IrisComponentProps>) {
 
     useEffect(() => {
         props.setComponentRef(irisRef.current);
-    }, [props.setComponentRef, irisRef.current]);
+    }, [props.setComponentRef]);
 
     useEffect(() => {
         if (issuersAvailable) {
