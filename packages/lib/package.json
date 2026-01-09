@@ -1,6 +1,6 @@
 {
     "name": "@adyen/adyen-web",
-    "version": "6.27.1",
+    "version": "6.28.0",
     "license": "MIT",
     "homepage": "https://docs.adyen.com/checkout",
     "type": "module",
@@ -124,7 +124,7 @@
         "rollup-plugin-postcss": "4.0.2",
         "rollup-plugin-stylelint": "1.0.0",
         "rollup-plugin-swc3": "0.12.1",
-        "sass": "1.77.8",
+        "sass": "1.97.0",
         "size-limit": "11.2.0",
         "storybook": "10.1.10",
         "stylelint": "16.26.1",

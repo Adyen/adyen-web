@@ -45,5 +45,11 @@ export const URL_MAP = {
      * Vouchers
      */
     boleto: '/iframe.html?globals=&id=components-vouchers-boleto--default&viewMode=story',
-    bacsDirectDebit: '/iframe.html?globals=&args=&id=components-vouchers-bacsdirectdebit--default&viewMode=story'
+    bacsDirectDebit: '/iframe.html?globals=&args=&id=components-vouchers-bacsdirectdebit--default&viewMode=story',
+
+    /**
+     * Econtext
+     */
+    econtextAtm: '/iframe.html?globals=&args=componentConfiguration.type:econtext_atm&id=components-econtext--default&viewMode=story',
+    econtextSevenEleven: '/iframe.html?globals=&args=componentConfiguration.type:econtext_seven_eleven&id=components-econtext--default&viewMode=story'
 };
