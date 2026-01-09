@@ -17,28 +17,35 @@ const expectVoucherDetailValue = async (label: string, expectedValue: string) =>
 describe('Econtext', () => {
     const core = setupCoreMock();
 
+    const onSubmitMock = jest.fn();
+
     const props = {
         i18n: core.modules.i18n,
         loadingContext: 'test',
+        onSubmit: onSubmitMock,
         modules: { resources: core.modules.resources }
     };
+
+    beforeEach(() => {
+        jest.clearAllMocks();
+    });
 
     describe('Rendered fields', () => {
         test('should render personal details form fields by default', async () => {
             const econtext = new Econtext(core, props);
             render(econtext.render());
 
-            expect(await screen.findByLabelText(/First name/i)).toBeInTheDocument();
-            expect(await screen.findByLabelText(/Last name/i)).toBeInTheDocument();
-            expect(await screen.findByLabelText(/Telephone number/i)).toBeInTheDocument();
-            expect(await screen.findByLabelText(/Email address/i)).toBeInTheDocument();
+            expect(await screen.findByLabelText('First name')).toBeInTheDocument();
+            expect(await screen.findByLabelText('Last name')).toBeInTheDocument();
+            expect(await screen.findByLabelText('Telephone number')).toBeInTheDocument();
+            expect(await screen.findByLabelText('Email address')).toBeInTheDocument();
         });
 
         test('should render FormInstruction by default', async () => {
             const econtext = new Econtext(core, props);
             render(econtext.render());
 
-            expect(await screen.findByText(/All fields are required unless marked otherwise./i)).toBeInTheDocument();
+            expect(await screen.findByText('All fields are required unless marked otherwise.')).toBeInTheDocument();
         });
 
         test('should not render personal details form if personalDetailsRequired is false', () => {
@@ -133,6 +140,28 @@ describe('Econtext', () => {
 
             expect(econtext.isValid).toBe(true);
         });
+
+        test('should call onSubmit when form is valid and pay button is clicked', async () => {
+            const econtext = new Econtext(core, { ...props, showPayButton: true });
+            render(econtext.render());
+
+            const user = userEvent.setup();
+
+            const firstNameInput = await screen.findByLabelText('First name');
+            const lastNameInput = await screen.findByLabelText('Last name');
+            const telephoneInput = await screen.findByLabelText('Telephone number');
+            const emailInput = await screen.findByLabelText('Email address');
+
+            await user.type(firstNameInput, 'John');
+            await user.type(lastNameInput, 'Doe');
+            await user.type(telephoneInput, '09012345678');
+            await user.type(emailInput, 'john.doe@example.com');
+
+            const payButton = await screen.findByRole('button', { name: 'Confirm purchase' });
+            await user.click(payButton);
+
+            expect(onSubmitMock).toHaveBeenCalledTimes(1);
+        });
     });
 
     describe('Voucher result without alternative reference', () => {
@@ -148,9 +177,14 @@ describe('Econtext', () => {
             render(econtext.render());
 
             await expectVoucherDetailValue('Collection Institution Number', '58091');
+            await expectVoucherDetailValue('Expiration Date', '12/31/2024, 11:59 PM');
             await expectVoucherDetailValue('Phone Number', '090****5678');
 
             expect(screen.getByText('1234567890')).toBeInTheDocument();
+
+            expect(screen.queryByText('Customer number')).not.toBeInTheDocument();
+            expect(screen.queryByText('Confirmation number')).not.toBeInTheDocument();
+            expect(screen.queryByText('Use before')).not.toBeInTheDocument();
         });
     });
 
@@ -170,10 +204,10 @@ describe('Econtext', () => {
             await expectVoucherDetailValue('Collection Institution Number', '58091');
             await expectVoucherDetailValue('Customer number', '1234567890');
             await expectVoucherDetailValue('Confirmation number', 'ALT123456');
-            // todo check that the fields that should not be shown are not shown
+            await expectVoucherDetailValue('Use before', '12/31/2024');
         });
 
-        test('should not show masked telephone number when alternative reference is present', async () => {
+        test('should not show masked telephone number and expiration date when alternative reference is present', () => {
             const econtext = new Econtext(core, {
                 ...props,
                 reference: '1234567890',
@@ -185,8 +219,9 @@ describe('Econtext', () => {
             });
             render(econtext.render());
 
-            await screen.findByText('ALT123456');
+            expect(screen.queryByText('Phone Number')).not.toBeInTheDocument();
             expect(screen.queryByText('090****5678')).not.toBeInTheDocument();
+            expect(screen.queryByText('Expiration Date')).not.toBeInTheDocument();
         });
     });
 });
