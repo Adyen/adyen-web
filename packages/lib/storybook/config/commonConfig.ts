@@ -4,7 +4,7 @@ export const DEFAULT_SHOPPER_LOCALE = 'en-US';
 export const DEFAULT_COUNTRY_CODE = 'US';
 export const DEFAULT_AMOUNT_VALUE = 25900;
 export const SHOPPER_REFERENCE = 'newshoppert';
-export const RETURN_URL = `${protocol}//${host}/?path=/story/helpers-redirectresult--redirect-result`;
+export const RETURN_URL = `${protocol}//${host}/iframe.html?globals=&id=helpers-redirectresult--redirect-result&viewMode=story`;
 export const SHOPPER_LOCALES = [
     'ar',
     'bg-BG',

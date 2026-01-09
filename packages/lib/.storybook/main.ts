@@ -75,7 +75,12 @@ const config: StorybookConfig = {
                 ]
             },
 
-            plugins: [preact(), stylelint({ emitErrorAsWarning: true })],
+            plugins: [
+                preact({
+                    devtoolsInProd: true
+                }),
+                stylelint({ emitErrorAsWarning: true })
+            ],
 
             server: {
                 ...(isHttps && {

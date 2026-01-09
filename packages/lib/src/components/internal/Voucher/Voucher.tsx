@@ -2,14 +2,15 @@ import { h } from 'preact';
 import classNames from 'classnames';
 import Button from '../Button';
 import { useCoreContext } from '../../../core/Context/CoreProvider';
-import './Voucher.scss';
 import { VoucherProps } from './types';
 import useImage from '../../../core/Context/useImage';
 import { PREFIX } from '../Icon/constants';
 import DetailsTable from '../DetailsTable';
 import { CopyButton } from '../Button/CopyButton';
+import './Voucher.scss';
 
-export default function Voucher({ voucherDetails = [], className = '', ...props }: VoucherProps) {
+export default function Voucher(props: Readonly<VoucherProps>) {
+    const { voucherDetails = [], className = '', showReferenceValue = true } = props;
     const { i18n } = useCoreContext();
     const getImage = useImage();
 
@@ -19,13 +20,13 @@ export default function Voucher({ voucherDetails = [], className = '', ...props 
         <div className={classNames('adyen-checkout__voucher-result', `adyen-checkout__voucher-result--${props.paymentMethodType}`, className)}>
             <div className="adyen-checkout__voucher-result__top">
                 <div className="adyen-checkout__voucher-result__image">
-                    {!!props.imageUrl && (
+                    {Boolean(props.imageUrl) && (
                         <span className="adyen-checkout__voucher-result__image__wrapper">
                             <img alt={props.paymentMethodType} className="adyen-checkout__voucher-result__image__brand" src={props.imageUrl} />
                         </span>
                     )}
 
-                    {!!props.issuerImageUrl && (
+                    {Boolean(props.issuerImageUrl) && (
                         <span className="adyen-checkout__voucher-result__image__wrapper">
                             <img alt={props.paymentMethodType} className="adyen-checkout__voucher-result__image__issuer" src={props.issuerImageUrl} />
                         </span>
@@ -63,7 +64,9 @@ export default function Voucher({ voucherDetails = [], className = '', ...props 
                 <div className="adyen-checkout__voucher-result__separator">
                     <div className="adyen-checkout__voucher-result__separator__inner" />
                     <div className="adyen-checkout__voucher-result__code__label">
-                        <span className="adyen-checkout__voucher-result__code__label__text">{i18n.get('voucher.paymentReferenceLabel')}</span>
+                        <span className="adyen-checkout__voucher-result__code__label__text">
+                            {props.paymentReferenceLabel ?? i18n.get('voucher.paymentReferenceLabel')}
+                        </span>
                     </div>
                 </div>
             )}
@@ -78,19 +81,19 @@ export default function Voucher({ voucherDetails = [], className = '', ...props 
                                 src={props.barcode}
                             />
                         )}
-                        <span>{props.reference}</span>
+                        {showReferenceValue && <span>{props.reference}</span>}
                     </div>
                 )}
 
-                {(!!props.downloadUrl || !!props.copyBtn) && (
+                {(Boolean(props.downloadUrl) || Boolean(props.copyBtn)) && (
                     <ul className="adyen-checkout__voucher-result__actions">
-                        {!!props.copyBtn && (
+                        {Boolean(props.copyBtn) && (
                             <li className="adyen-checkout__voucher-result__actions__item">
                                 <CopyButton inline text={props.reference} />
                             </li>
                         )}
 
-                        {!!props.downloadUrl && (
+                        {Boolean(props.downloadUrl) && (
                             <li className="adyen-checkout__voucher-result__actions__item">
                                 <Button
                                     inline

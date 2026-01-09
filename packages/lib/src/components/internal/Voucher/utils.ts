@@ -1,6 +1,19 @@
-import { CommonVoucherProps } from './types';
+import { GetImageFnType } from '../../../core/Context/Resources';
+import Language from '../../../language';
+import { PaymentAmount } from '../../../types';
+import { CommonVoucherProps, VoucherConfiguration } from './types';
 
-export const extractCommonPropsForVoucher = ({ props, i18n, introKey, getImage }): CommonVoucherProps => {
+export const extractCommonPropsForVoucher = ({
+    props,
+    i18n,
+    introKey,
+    getImage
+}: {
+    props: VoucherConfiguration & { totalAmount?: PaymentAmount };
+    i18n: Language;
+    introKey: string;
+    getImage: GetImageFnType;
+}): CommonVoucherProps => {
     const { paymentMethodType, onActionHandled, totalAmount, reference } = props;
 
     return {

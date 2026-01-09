@@ -50,6 +50,6 @@ export const URL_MAP = {
     /**
      * Econtext
      */
-    econtextAtm: '/iframe.html?globals=&args=componentConfiguration.type:econtext_atm&id=components-econtext--default&viewMode=story',
-    econtextSevenEleven: '/iframe.html?globals=&args=componentConfiguration.type:econtext_seven_eleven&id=components-econtext--default&viewMode=story'
+    econtextAtm: '/iframe.html?globals=&args=&id=components-econtext--econtext-atm&viewMode=story',
+    econtextSevenEleven: '/iframe.html?globals=&args=&id=components-econtext--econtext-seven-eleven&viewMode=story'
 };

@@ -433,5 +433,9 @@
     "upi.mandate.upTo": "up to %{amount}",
     "upi.mandate.frequency.monthly": "/month",
     "upi.mandate.frequency.weekly": "/week",
-    "upi.mandate.frequency.adhoc": " as presented"
+    "upi.mandate.frequency.adhoc": " as presented",
+    "econtext.customerNumber": "Customer number",
+    "econtext.confirmationNumber": "Confirmation number",
+    "econtext.useBefore": "Use before",
+    "econtext.paymentInformation": "Payment information"
 }
