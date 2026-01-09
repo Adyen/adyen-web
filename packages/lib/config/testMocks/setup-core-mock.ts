@@ -7,6 +7,7 @@ import CheckoutSession from '../../src/core/CheckoutSession';
 import { SRPanel } from '../../src/core/Errors/SRPanel';
 import enUS from '../../../server/translations/en-US.json';
 import type { IAnalytics } from '../../src/core/Analytics/Analytics';
+import { setupResourceMock } from './resourcesMock';
 
 interface SetupCoreMockProps {
     mockSessions?: boolean;
@@ -17,8 +18,7 @@ function setupCoreMock({ mockSessions = true, paymentMethods = null }: SetupCore
     const core = mock<ICore>({});
 
     const analytics = mock<IAnalytics>();
-    const resources = mock<Resources>();
-    resources.getImage.mockImplementation(() => () => 'MOCK');
+    const resources = setupResourceMock();
     const i18n = new Language({ locale: 'en-US', translations: enUS });
     const srPanel = new SRPanel(core, {
         moveFocus: true,

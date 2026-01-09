@@ -3,6 +3,35 @@ import userEvent from '@testing-library/user-event';
 import Econtext from './Econtext';
 import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 
+const shopperData = {
+    firstName: 'John',
+    lastName: 'Doe',
+    telephoneNumber: '09012345678',
+    email: 'john.doe@example.com'
+};
+
+const getFormFields = async () => ({
+    firstNameInput: await screen.findByLabelText('First name'),
+    lastNameInput: await screen.findByLabelText('Last name'),
+    telephoneInput: await screen.findByLabelText('Telephone number'),
+    emailInput: await screen.findByLabelText('Email address')
+});
+
+const queryFormFields = () => ({
+    firstNameInput: screen.queryByLabelText('First name'),
+    lastNameInput: screen.queryByLabelText('Last name'),
+    telephoneInput: screen.queryByLabelText('Telephone number'),
+    emailInput: screen.queryByLabelText('Email address')
+});
+
+const fillForm = async (user: ReturnType<typeof userEvent.setup>) => {
+    const { firstNameInput, lastNameInput, telephoneInput, emailInput } = await getFormFields();
+    await user.type(firstNameInput, shopperData.firstName);
+    await user.type(lastNameInput, shopperData.lastName);
+    await user.type(telephoneInput, shopperData.telephoneNumber);
+    await user.type(emailInput, shopperData.email);
+};
+
 const getVoucherDetailValue = async (label: string) => {
     const labelElement = await screen.findByText(label);
     // eslint-disable-next-line testing-library/no-node-access
@@ -35,10 +64,11 @@ describe('Econtext', () => {
             const econtext = new Econtext(core, props);
             render(econtext.render());
 
-            expect(await screen.findByLabelText('First name')).toBeInTheDocument();
-            expect(await screen.findByLabelText('Last name')).toBeInTheDocument();
-            expect(await screen.findByLabelText('Telephone number')).toBeInTheDocument();
-            expect(await screen.findByLabelText('Email address')).toBeInTheDocument();
+            const { firstNameInput, lastNameInput, telephoneInput, emailInput } = await getFormFields();
+            expect(firstNameInput).toBeInTheDocument();
+            expect(lastNameInput).toBeInTheDocument();
+            expect(telephoneInput).toBeInTheDocument();
+            expect(emailInput).toBeInTheDocument();
         });
 
         test('should render FormInstruction by default', async () => {
@@ -52,10 +82,11 @@ describe('Econtext', () => {
             const econtext = new Econtext(core, { ...props, personalDetailsRequired: false });
             render(econtext.render());
 
-            expect(screen.queryByLabelText('First name')).not.toBeInTheDocument();
-            expect(screen.queryByLabelText('Last name')).not.toBeInTheDocument();
-            expect(screen.queryByLabelText('Telephone number')).not.toBeInTheDocument();
-            expect(screen.queryByLabelText('Email address')).not.toBeInTheDocument();
+            const { firstNameInput, lastNameInput, telephoneInput, emailInput } = queryFormFields();
+            expect(firstNameInput).not.toBeInTheDocument();
+            expect(lastNameInput).not.toBeInTheDocument();
+            expect(telephoneInput).not.toBeInTheDocument();
+            expect(emailInput).not.toBeInTheDocument();
         });
     });
 
@@ -90,16 +121,7 @@ describe('Econtext', () => {
             render(econtext.render());
 
             const user = userEvent.setup();
-
-            const firstNameInput = await screen.findByLabelText('First name');
-            const lastNameInput = await screen.findByLabelText('Last name');
-            const telephoneInput = await screen.findByLabelText('Telephone number');
-            const emailInput = await screen.findByLabelText('Email address');
-
-            await user.type(firstNameInput, 'John');
-            await user.type(lastNameInput, 'Doe');
-            await user.type(telephoneInput, '09012345678');
-            await user.type(emailInput, 'john.doe@example.com');
+            await fillForm(user);
             await user.tab();
 
             await waitFor(() => {
@@ -112,24 +134,15 @@ describe('Econtext', () => {
             render(econtext.render());
 
             const user = userEvent.setup();
-
-            const firstNameInput = await screen.findByLabelText('First name');
-            const lastNameInput = await screen.findByLabelText('Last name');
-            const telephoneInput = await screen.findByLabelText('Telephone number');
-            const emailInput = await screen.findByLabelText('Email address');
-
-            await user.type(firstNameInput, 'John');
-            await user.type(lastNameInput, 'Doe');
-            await user.type(telephoneInput, '09012345678');
-            await user.type(emailInput, 'john.doe@example.com');
+            await fillForm(user);
             await user.tab();
 
             await waitFor(() => {
                 expect(econtext.data).toMatchObject({
                     paymentMethod: { type: 'econtext' },
-                    shopperName: { firstName: 'John', lastName: 'Doe' },
-                    telephoneNumber: '09012345678',
-                    shopperEmail: 'john.doe@example.com'
+                    shopperName: { firstName: shopperData.firstName, lastName: shopperData.lastName },
+                    telephoneNumber: shopperData.telephoneNumber,
+                    shopperEmail: shopperData.email
                 });
             });
         });
@@ -146,16 +159,7 @@ describe('Econtext', () => {
             render(econtext.render());
 
             const user = userEvent.setup();
-
-            const firstNameInput = await screen.findByLabelText('First name');
-            const lastNameInput = await screen.findByLabelText('Last name');
-            const telephoneInput = await screen.findByLabelText('Telephone number');
-            const emailInput = await screen.findByLabelText('Email address');
-
-            await user.type(firstNameInput, 'John');
-            await user.type(lastNameInput, 'Doe');
-            await user.type(telephoneInput, '09012345678');
-            await user.type(emailInput, 'john.doe@example.com');
+            await fillForm(user);
 
             const payButton = await screen.findByRole('button', { name: 'Confirm purchase' });
             await user.click(payButton);

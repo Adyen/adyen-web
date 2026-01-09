@@ -85,7 +85,7 @@ export default function Voucher(props: Readonly<VoucherProps>) {
                     </div>
                 )}
 
-                {(!!props.downloadUrl || !!props.copyBtn) && (
+                {(Boolean(props.downloadUrl) || Boolean(props.copyBtn)) && (
                     <ul className="adyen-checkout__voucher-result__actions">
                         {Boolean(props.copyBtn) && (
                             <li className="adyen-checkout__voucher-result__actions__item">
