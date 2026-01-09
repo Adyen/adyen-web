@@ -29,5 +29,6 @@ test.describe('Econtext Seven Eleven', () => {
         await econtext.fillShopperData()
         await econtext.pay();
         await econtext.page.waitForURL(url => !url.href.includes(URL_MAP.econtextSevenEleven));
+        await expect(econtext.page).not.toHaveURL(URL_MAP.econtextSevenEleven, { timeout: 5000 }); 
     });
 });
