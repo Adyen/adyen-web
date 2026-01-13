@@ -41,21 +41,6 @@ const meta: MetaConfiguration<DropinConfiguration> = {
 };
 
 export const Default: DropinStory = {
-    args: {
-        countryCode: 'BR',
-
-        sessionData: {
-            splitCardFundingSources: true,
-
-            installmentOptions: {
-                card: {
-                    values: [2, 3, 5],
-                    plans: ['regular']
-                }
-            }
-        }
-    },
-
     render: ({ componentConfiguration, ...checkoutConfig }: PaymentMethodStoryProps<DropinConfiguration>) => {
         // Register all Components
         const { Dropin, ...Components } = components;
@@ -86,5 +71,36 @@ export const StyleCustomization: DropinStory = {
         );
     }
 };
+
+export const SplitFundingBrazil = {
+    args: {
+        countryCode: 'BR',
+
+        sessionData: {
+            splitCardFundingSources: true,
+
+            installmentOptions: {
+                card: {
+                    values: [2, 3, 5],
+                    plans: ['regular']
+                }
+            }
+        }
+    },
+    render: ({ componentConfiguration, ...checkoutConfig }: PaymentMethodStoryProps<DropinConfiguration>) => {
+        // Register all Components
+        const { Dropin, ...Components } = components;
+        const Classes = Object.keys(Components).map(key => Components[key]);
+        AdyenCheckout.register(...Classes);
+
+        return (
+            <div className={'dropin-customization'}>
+                <Checkout checkoutConfig={checkoutConfig}>
+                    {checkout => <ComponentContainer element={new DropinComponent(checkout, componentConfiguration)} />}
+                </Checkout>
+            </div>
+        );
+    }
+}
 
 export default meta;
