@@ -143,7 +143,7 @@ describe('RatePay Direct Debit', () => {
                             stateOrProvince: 'N/A',
                             street: 'Lichtenberger Str'
                         },
-                        paymentMethod: { checkoutAttemptId: 'fetch-checkoutAttemptId-failed', type: 'ratepay_directdebit' },
+                        paymentMethod: { checkoutAttemptId: 'fetch-checkoutAttemptId-failed', sdkData: expect.any(String), type: 'ratepay_directdebit' },
                         shopperEmail: 'jose@adyen.com',
                         shopperName: { firstName: 'Jose', lastName: 'Fernandez' },
                         telephoneNumber: '612345678'
@@ -331,7 +331,7 @@ describe('RatePay Direct Debit', () => {
                             stateOrProvince: 'N/A',
                             street: 'Carmilgestraat'
                         },
-                        paymentMethod: { checkoutAttemptId: 'fetch-checkoutAttemptId-failed', type: 'ratepay_directdebit' },
+                        paymentMethod: { checkoutAttemptId: 'fetch-checkoutAttemptId-failed', sdkData: expect.any(String), type: 'ratepay_directdebit' },
                         shopperEmail: 'jose@adyen.com',
                         shopperName: { firstName: 'Jose', lastName: 'Fernandez' },
                         telephoneNumber: '612345678'
