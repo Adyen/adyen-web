@@ -1,21 +1,21 @@
-@import 'styles/variable-generator';
+@use 'styles/variable-generator';
 
 .adyen-checkout-paybybank_AIS_DD {
-    margin-bottom: token(spacer-070);
+    margin-bottom: variable-generator.token(spacer-070);
 
     &__description-header {
-        margin: token(spacer-000) token(spacer-000) token(spacer-020);
-        font-size: token(text-subtitle-font-size);
-        font-weight: token(text-body-stronger-font-weight);
-        color: token(color-label-primary);
+        margin: variable-generator.token(spacer-000) variable-generator.token(spacer-000) variable-generator.token(spacer-020);
+        font-size: variable-generator.token(text-subtitle-font-size);
+        font-weight: variable-generator.token(text-body-stronger-font-weight);
+        color: variable-generator.token(color-label-primary);
     }
 
     &__description-body {
-        font-weight: token(text-body-font-weight);
+        font-weight: variable-generator.token(text-body-font-weight);
         list-style-type: disc;
-        color: token(color-label-secondary);
+        color: variable-generator.token(color-label-secondary);
         margin: 0;
-        font-size: token(text-body-font-size);
+        font-size: variable-generator.token(text-body-font-size);
         line-height: 1.5;
     }
 }

@@ -1,4 +1,4 @@
-@import 'styles/variable-generator';
+@use 'styles/variable-generator';
 
 .adyen-checkout__button-group {
     background: transparent;
@@ -8,13 +8,13 @@
     .adyen-checkout__button {
         background: transparent;
         border: 0;
-        box-shadow: inset 0 0 0 1px token(color-outline-primary);
-        color: token(color-label-primary);
-        font-size: token(text-body-font-size);
+        box-shadow: inset 0 0 0 1px variable-generator.token(color-outline-primary);
+        color: variable-generator.token(color-label-primary);
+        font-size: variable-generator.token(text-body-font-size);
         font-weight: normal;
-        line-height: token(spacer-110);
-        margin-right: token(spacer-040);
-        height: token(spacer-110);
+        line-height: variable-generator.token(spacer-110);
+        margin-right: variable-generator.token(spacer-040);
+        height: variable-generator.token(spacer-110);
         padding: 0;
         text-align: center;
 
@@ -24,12 +24,12 @@
 
         &:hover {
             background: transparent;
-            box-shadow: inset 0 0 0 token(spacer-010) token(color-outline-primary-hover);
+            box-shadow: inset 0 0 0 variable-generator.token(spacer-010) variable-generator.token(color-outline-primary-hover);
         }
 
         &:active {
-            background: token(color-background-secondary);
-            box-shadow: inset 0 0 0 token(spacer-010) token(color-outline-tertiary);
+            background: variable-generator.token(color-background-secondary);
+            box-shadow: inset 0 0 0 variable-generator.token(spacer-010) variable-generator.token(color-outline-tertiary);
         }
 
         &--disabled {
@@ -46,11 +46,11 @@
             &:hover,
             &:active,
             &:active:hover {
-                background: token(color-background-secondary);
-                box-shadow: inset 0 0 0 1px token(color-label-primary);
-                color: token(color-label-primary);
-                font-weight: token(text-body-stronger-font-weight);
-                height: token(spacer-110);
+                background: variable-generator.token(color-background-secondary);
+                box-shadow: inset 0 0 0 1px variable-generator.token(color-label-primary);
+                color: variable-generator.token(color-label-primary);
+                font-weight: variable-generator.token(text-body-stronger-font-weight);
+                height: variable-generator.token(spacer-110);
                 transition: none;
             }
         }

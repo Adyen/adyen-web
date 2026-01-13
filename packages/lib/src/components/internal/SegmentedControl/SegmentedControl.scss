@@ -1,45 +1,45 @@
-@import 'styles/variable-generator';
+@use 'styles/variable-generator';
 
 .adyen-checkout__segmented-control {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(token(spacer-140), 1fr));
-    gap: token(spacer-020);
-    padding: token(spacer-030);
-    background: token(color-background-tertiary);
-    border-radius: token(border-radius-l);
+    grid-template-columns: repeat(auto-fit, minmax(variable-generator.token(spacer-140), 1fr));
+    gap: variable-generator.token(spacer-020);
+    padding: variable-generator.token(spacer-030);
+    background: variable-generator.token(color-background-tertiary);
+    border-radius: variable-generator.token(border-radius-l);
 
     &--disabled {
         pointer-events: none;
 
         > .adyen-checkout__segmented-control-segment {
-            color: token(color-label-disabled);
+            color: variable-generator.token(color-label-disabled);
         }
     }
 }
 
 .adyen-checkout__segmented-control-segment {
     cursor: pointer;
-    padding: token(spacer-040) token(spacer-060);
-    color: token(color-label-primary);
+    padding: variable-generator.token(spacer-040) variable-generator.token(spacer-060);
+    color: variable-generator.token(color-label-primary);
     text-align: center;
-    font-weight: token(text-body-stronger-font-weight);
-    font-size: token(text-body-font-size);
-    border-radius: token(border-radius-m);
+    font-weight: variable-generator.token(text-body-stronger-font-weight);
+    font-size: variable-generator.token(text-body-font-size);
+    border-radius: variable-generator.token(border-radius-m);
     border: 0;
     background: transparent;
     transition: background 0.3s ease-out;
 
     &:not(&--selected):hover {
-        background-color: token(color-background-secondary);
+        background-color: variable-generator.token(color-background-secondary);
     }
 
     &:active {
-        background-color: token(color-background-secondary);
+        background-color: variable-generator.token(color-background-secondary);
     }
 
     &--selected {
-        background: token(color-background-primary);
-        color: token(color-label-primary);
-        box-shadow: token(shadow-low);
+        background: variable-generator.token(color-background-primary);
+        color: variable-generator.token(color-label-primary);
+        box-shadow: variable-generator.token(shadow-low);
     }
 }

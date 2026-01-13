@@ -1,21 +1,21 @@
-@import 'styles/variable-generator';
+@use 'styles/variable-generator';
 
 $expand-btn: '.adyen-checkout-expand-button--upi-app-item';
 
-@mixin set-checkmark-color($color: token(color-label-primary)) {
+@mixin set-checkmark-color($color: variable-generator.token(color-label-primary)) {
     border-bottom: 1.5px solid $color;
     border-right: 1.5px solid $color;
 }
 
 .adyen-checkout-upi-app-item {
-    background: token(color-background-primary);
+    background: variable-generator.token(color-background-primary);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: token(spacer-070);
-    padding: token(spacer-050) token(spacer-070);
-    border: token(border-width-s) solid token(color-outline-primary);
-    border-radius: token(border-radius-m);
+    gap: variable-generator.token(spacer-070);
+    padding: variable-generator.token(spacer-050) variable-generator.token(spacer-070);
+    border: variable-generator.token(border-width-s) solid variable-generator.token(color-outline-primary);
+    border-radius: variable-generator.token(border-radius-m);
     cursor: pointer;
     width: 100%;
     transition:
@@ -27,17 +27,17 @@ $expand-btn: '.adyen-checkout-expand-button--upi-app-item';
 
     &__label {
         cursor: pointer;
-        font-size: token(text-body-font-size);
+        font-size: variable-generator.token(text-body-font-size);
     }
 
     &:hover:not(&--selected) {
-        border-color: token(color-outline-primary-hover);
+        border-color: variable-generator.token(color-outline-primary-hover);
     }
 
     &--selected {
         cursor: default;
-        border-color: token(color-outline-primary-active);
-        box-shadow: 0 0 0 0.5px token(color-outline-primary-active);
+        border-color: variable-generator.token(color-outline-primary-active);
+        box-shadow: 0 0 0 0.5px variable-generator.token(color-outline-primary-active);
 
         #{$expand-btn} {
             cursor: default;
@@ -56,7 +56,7 @@ $expand-btn: '.adyen-checkout-expand-button--upi-app-item';
         @include set-checkmark-color;
 
         transform: rotate(45deg);
-        height: token(spacer-060);
-        width: token(spacer-030);
+        height: variable-generator.token(spacer-060);
+        width: variable-generator.token(spacer-030);
     }
 }

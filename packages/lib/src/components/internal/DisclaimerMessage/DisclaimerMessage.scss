@@ -1,12 +1,12 @@
-@import 'styles/variable-generator';
+@use 'styles/variable-generator';
 
 .adyen-checkout-disclaimer__label {
-    margin-top: token(spacer-070);
+    margin-top: variable-generator.token(spacer-070);
     padding-left: 0;
     display: inline-block;
-    line-height: token(text-caption-line-height);
-    color: token(color-label-secondary);
-    font-size: token(text-caption-font-size);
+    line-height: variable-generator.token(text-caption-line-height);
+    color: variable-generator.token(color-label-secondary);
+    font-size: variable-generator.token(text-caption-font-size);
     font-weight: normal;
 
 

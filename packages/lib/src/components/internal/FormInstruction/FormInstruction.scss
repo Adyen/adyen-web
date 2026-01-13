@@ -1,12 +1,12 @@
-@import 'styles/variable-generator';
+@use 'styles/variable-generator';
 
 .adyen-checkout-form-instruction {
-    line-height: token(text-caption-line-height);
-    color: token(color-label-primary);
-    font-size: token(text-caption-font-size);
-    font-weight: token(text-body-font-weight);
+    line-height: variable-generator.token(text-caption-line-height);
+    color: variable-generator.token(color-label-primary);
+    font-size: variable-generator.token(text-caption-font-size);
+    font-weight: variable-generator.token(text-body-font-weight);
     margin-top: 0;
-    margin-bottom: token(spacer-070);
+    margin-bottom: variable-generator.token(spacer-070);
 
     [dir="rtl"] & {
         padding-right: 0;

@@ -1,28 +1,28 @@
 @use 'styles/mixins';
-@import 'styles/variable-generator';
+@use 'styles/variable-generator';
 
 .adyen-checkout-card__fastlane {
-    background: token(color-background-primary);
-    border: token(border-width-s) solid token(color-outline-primary);
-    border-radius: token(border-radius-m);
-    padding: token(spacer-060) token(spacer-070);
-    margin-top: token(spacer-070);
+    background: variable-generator.token(color-background-primary);
+    border: variable-generator.token(border-width-s) solid variable-generator.token(color-outline-primary);
+    border-radius: variable-generator.token(border-radius-m);
+    padding: variable-generator.token(spacer-060) variable-generator.token(spacer-070);
+    margin-top: variable-generator.token(spacer-070);
     align-items: center;
 
     [dir='rtl'] & {
-        padding: token(spacer-060) token(spacer-070);
+        padding: variable-generator.token(spacer-060) variable-generator.token(spacer-070);
     }
 
     &-consent-toggle {
         display: flex;
 
         &--active {
-            margin-bottom: token(spacer-070);
+            margin-bottom: variable-generator.token(spacer-070);
         }
     }
 
     &-consent-text {
-        margin-bottom: token(spacer-070);
+        margin-bottom: variable-generator.token(spacer-070);
 
         @include mixins.adyen-checkout-text-caption;
     }
@@ -35,7 +35,7 @@
 
 .adyen-checkout__button.adyen-checkout__button--fastlane-info-modal {
     vertical-align: bottom;
-    margin-left: token(spacer-020);
+    margin-left: variable-generator.token(spacer-020);
     width: 20px;
     height: 20px;
     line-height: 0;

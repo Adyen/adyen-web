@@ -1,4 +1,4 @@
-@import 'styles/variable-generator';
+@use 'styles/variable-generator';
 
 .adyen-checkout__button--section-logout-button {
     margin-left: auto;
@@ -6,5 +6,5 @@
 
 .adyen-checkout__button--section-logout-button--disabled {
     pointer-events: none;
-    color: token(color-label-disabled);
+    color: variable-generator.token(color-label-disabled);
 }

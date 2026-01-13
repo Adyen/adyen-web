@@ -1,4 +1,4 @@
-@import 'styles/variable-generator';
+@use 'styles/variable-generator';
 
 .adyen-checkout__field--cardNumber {
     .adyen-checkout__input-wrapper {
@@ -6,8 +6,8 @@
     }
 
     .adyen-checkout-brand-wrapper {
-        border-radius: token(border-radius-s);
-        margin-right: token(spacer-060);
+        border-radius: variable-generator.token(border-radius-s);
+        margin-right: variable-generator.token(spacer-060);
     }
 
     .adyen-checkout-card-input__icon {
