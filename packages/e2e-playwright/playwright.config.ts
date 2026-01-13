@@ -8,12 +8,14 @@ dotenv.config({ path: path.resolve('../../', '.env') });
 
 const playgroundBaseUrl = `${protocol}://localhost:3020`;
 
+const snapshotPathTemplate = '{testDir}/__screenshots__/{platform}/{projectName}/{arg}{ext}';
+
 export const SCREENSHOT_CONFIG = {
-    maxDiffPixels: 1000,
-    maxDiffPixelRatio: 0.03,
+    maxDiffPixels: 300,
+    maxDiffPixelRatio: 0.02,
     animations: 'disabled',
     scale: 'device'
-};
+} as const;
 
 /**
  * See https://playwright.dev/docs/test-configuration.
@@ -31,7 +33,9 @@ const config: PlaywrightTestConfig = {
          * For example in `await expect(locator).toHaveText();`
          */
         timeout: 30_000,
-        ...SCREENSHOT_CONFIG
+        toHaveScreenshot: {
+            ...SCREENSHOT_CONFIG
+        }
     },
     /* Run tests in files in parallel */
     fullyParallel: true,
@@ -45,7 +49,7 @@ const config: PlaywrightTestConfig = {
     /* Reporter to use. See https://playwright.dev/docs/test-reporters */
     reporter: [['html', { open: 'never' }], ['list']],
 
-    snapshotPathTemplate: '{testDir}/__screenshots__/{platform}/{projectName}/{arg}{ext}',
+    snapshotPathTemplate,
 
     /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
     use: {
