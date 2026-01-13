@@ -433,5 +433,15 @@
     "upi.mandate.upTo": "op til %{amount}",
     "upi.mandate.frequency.monthly": "/md.",
     "upi.mandate.frequency.weekly": "/uge",
-    "upi.mandate.frequency.adhoc": " som vist"
+    "upi.mandate.frequency.adhoc": " som vist",
+    "bankList": "Bankliste",
+    "qrCode": "QR-kode",
+    "iris.instructions.generateQrCode": "Når du har genereret QR-koden, kan du bruge din foretrukne bankapp til at gennemføre betalingen.",
+    "iris.instructions.payment.step1": "Åbn din appen fra din bank.",
+    "iris.instructions.payment.step2": "Scan QR-koden med bankappen.",
+    "iris.instructions.payment.step3": "Gennemfør betalingen i appen, og vent på bekræftelsen her.",
+    "econtext.customerNumber": "Kundenummer",
+    "econtext.confirmationNumber": "Bekræftelsesnummer",
+    "econtext.useBefore": "Brug før",
+    "econtext.paymentInformation": "Betalingsoplysninger"
 }

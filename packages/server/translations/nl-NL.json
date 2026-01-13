@@ -433,5 +433,15 @@
     "upi.mandate.upTo": "tot %{bedrag}",
     "upi.mandate.frequency.monthly": "per maand",
     "upi.mandate.frequency.weekly": "per week",
-    "upi.mandate.frequency.adhoc": " op verzoek"
+    "upi.mandate.frequency.adhoc": " op verzoek",
+    "bankList": "Lijst met banken",
+    "qrCode": "QR-code",
+    "iris.instructions.generateQrCode": "Na het genereren van de QR-code kunt u de betaling via uw gewenste bankapp voltooien.",
+    "iris.instructions.payment.step1": "Open uw favoriete bankapp.",
+    "iris.instructions.payment.step2": "Scan de QR-code met uw bankapp.",
+    "iris.instructions.payment.step3": "Voltooi de betaling in de app en wacht hier op de bevestiging.",
+    "econtext.customerNumber": "Klantnummer",
+    "econtext.confirmationNumber": "Bevestigingsnummer",
+    "econtext.useBefore": "Gebruiken voor",
+    "econtext.paymentInformation": "Betalingsgegevens"
 }

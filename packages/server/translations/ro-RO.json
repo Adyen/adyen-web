@@ -433,5 +433,15 @@
     "upi.mandate.upTo": "până la %{amount}",
     "upi.mandate.frequency.monthly": "/lună",
     "upi.mandate.frequency.weekly": "/săptămână",
-    "upi.mandate.frequency.adhoc": " astfel cum este prezentat"
+    "upi.mandate.frequency.adhoc": " astfel cum este prezentat",
+    "bankList": "Lista băncilor",
+    "qrCode": "Cod QR",
+    "iris.instructions.generateQrCode": "După generarea codului QR, puteți utiliza aplicația bancară preferată pentru a finaliza plata.",
+    "iris.instructions.payment.step1": "Deschideți aplicația bancară preferată.",
+    "iris.instructions.payment.step2": "Scanați codul QR cu aplicația dumneavoastră bancară.",
+    "iris.instructions.payment.step3": "Finalizați plata din aplicație și așteptați confirmarea aici.",
+    "econtext.customerNumber": "Numărul clientului",
+    "econtext.confirmationNumber": "Numărul de confirmare",
+    "econtext.useBefore": "Utilizați înainte de",
+    "econtext.paymentInformation": "Informații de plată"
 }
