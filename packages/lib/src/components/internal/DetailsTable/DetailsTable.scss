@@ -1,5 +1,5 @@
 @use 'styles/index';
-@import 'styles/variable-generator';
+@use 'styles/variable-generator';
 
 .adyen-checkout__details-table {
     list-style: none;
@@ -10,10 +10,10 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        font-size: token(text-body-font-size);
-        color: token(color-label-primary);
-        padding: token(spacer-070) token(spacer-090);
-        border-top: 1px solid token(color-separator-primary);
+        font-size: variable-generator.token(text-body-font-size);
+        color: variable-generator.token(color-label-primary);
+        padding: variable-generator.token(spacer-070) variable-generator.token(spacer-090);
+        border-top: 1px solid variable-generator.token(color-separator-primary);
         // stylelint-disable-next-line declaration-property-value-keyword-no-deprecated
         word-break: break-word;
     }
@@ -34,7 +34,7 @@
 
         display: flex;
         align-items: center;
-        gap: token(spacer-070);
+        gap: variable-generator.token(spacer-070);
         max-width: 50%;
         text-align: right;
     }

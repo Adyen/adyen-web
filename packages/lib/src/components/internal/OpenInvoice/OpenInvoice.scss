@@ -1,5 +1,5 @@
 @use 'styles/index';
-@import 'styles/variable-generator';
+@use 'styles/variable-generator';
 
 .adyen-checkout__field--separateDeliveryAddress {
     .adyen-checkout__input-wrapper {
@@ -8,16 +8,16 @@
 }
 
 .adyen-checkout__open-invoice .adyen-checkout__fieldset--personalDetails {
-    padding-bottom: token(spacer-040);
+    padding-bottom: variable-generator.token(spacer-040);
 }
 
 .adyen-checkout__open-invoice .adyen-checkout__fieldset--billingAddress {
-    padding-bottom: token(spacer-040);
+    padding-bottom: variable-generator.token(spacer-040);
 }
 
 .adyen-checkout__open-invoice .adyen-checkout__fieldset--deliveryAddress {
-    margin-top: token(spacer-090);
-    padding-bottom: token(spacer-040);
+    margin-top: variable-generator.token(spacer-090);
+    padding-bottom: variable-generator.token(spacer-040);
 }
 
 .adyen-checkout__open-invoice .adyen-checkout__input--separateDeliveryAddress {
@@ -25,7 +25,7 @@
 }
 
 .adyen-checkout__open-invoice .adyen-checkout__field--consentCheckbox {
-    margin-top: token(spacer-070);
+    margin-top: variable-generator.token(spacer-070);
 }
 
 .adyen-checkout__open-invoice{

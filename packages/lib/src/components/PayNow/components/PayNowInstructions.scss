@@ -1,10 +1,10 @@
-@import 'styles/variable-generator';
+@use 'styles/variable-generator';
 
 .adyen-checkout-paynow__instructions {
-  font-size: token(text-body-font-size);
-  font-weight: token(text-body-font-weight);
-  line-height: token(text-body-line-height);
-  color: token(color-label-primary);
+  font-size: variable-generator.token(text-body-font-size);
+  font-weight: variable-generator.token(text-body-font-weight);
+  line-height: variable-generator.token(text-body-line-height);
+  color: variable-generator.token(color-label-primary);
   text-align: center;
 }
 

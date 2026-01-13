@@ -1,14 +1,14 @@
-@import 'styles/variable-generator';
+@use 'styles/variable-generator';
 
 .adyen-checkout-await-logo-container {
     display: flex;
-    gap: token(spacer-070);
+    gap: variable-generator.token(spacer-070);
     flex-direction: column;
     align-items: center;
     width: fit-content;
-    padding: token(spacer-070) token(spacer-090);
-    border-radius: token(border-radius-m);
-    background: token(color-background-secondary);
+    padding: variable-generator.token(spacer-070) variable-generator.token(spacer-090);
+    border-radius: variable-generator.token(border-radius-m);
+    background: variable-generator.token(color-background-secondary);
 }
 
 /* When there's only one child inside, remove the background */

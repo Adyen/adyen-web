@@ -1,8 +1,8 @@
-@import 'styles/variable-generator';
+@use 'styles/variable-generator';
 
 .adyen-checkout__card__exp-date__input--oneclick {
-    line-height: token(text-title-line-height);
-    font-weight: token(text-body-font-weight);
+    line-height: variable-generator.token(text-title-line-height);
+    font-weight: variable-generator.token(text-body-font-weight);
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;

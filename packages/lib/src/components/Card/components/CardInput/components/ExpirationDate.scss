@@ -1,4 +1,4 @@
-@import 'styles/variable-generator';
+@use 'styles/variable-generator';
 
 .adyen-checkout__field.adyen-checkout__card__exp-date__input--hidden {
     display: none;
@@ -19,10 +19,10 @@
         position: absolute;
         right: 0;
         transition: opacity 0.1s linear;
-        margin-right: token(spacer-060);
+        margin-right: variable-generator.token(spacer-060);
         width: 27px;
         height: 18px;
-        border-radius: token(border-radius-s);
+        border-radius: variable-generator.token(border-radius-s);
 
         &.adyen-checkout__field__exp-date_hint_wrapper--hidden {
             opacity: 0;

@@ -1,4 +1,4 @@
-@import 'styles/variable-generator';
+@use 'styles/variable-generator';
 
 .adyen-checkout__ctp-modal {
     &-header-image {
@@ -8,25 +8,25 @@
 
     &-title {
         font-weight: 700;
-        font-size: token(text-title-m-font-size);
-        line-height: token(spacer-090);
+        font-size: variable-generator.token(text-title-m-font-size);
+        line-height: variable-generator.token(spacer-090);
         padding: 0;
-        margin: 0 0 token(spacer-060);
+        margin: 0 0 variable-generator.token(spacer-060);
     }
 
     &-text {
-        font-weight: token(text-body-font-weight);
-        font-size: token(text-body-font-size);
-        line-height: token(text-caption-line-height);
-        margin-bottom: token(spacer-070);
+        font-weight: variable-generator.token(text-body-font-weight);
+        font-size: variable-generator.token(text-body-font-size);
+        line-height: variable-generator.token(text-caption-line-height);
+        margin-bottom: variable-generator.token(spacer-070);
     }
 
     &-benefits {
         margin-left: 0;
-        padding-left: token(spacer-080);
+        padding-left: variable-generator.token(spacer-080);
 
         & li {
-            margin-bottom: token(spacer-070);
+            margin-bottom: variable-generator.token(spacer-070);
             list-style: disc;
         }
     }
@@ -40,5 +40,5 @@
 // Classname modifier that align brands inside CTP modal
 .adyen_checkout-ctp__brand-wrapper--popup {
     justify-content: center;
-    margin-bottom: token(spacer-090);
+    margin-bottom: variable-generator.token(spacer-090);
 }

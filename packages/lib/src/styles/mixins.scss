@@ -1,4 +1,4 @@
-@import 'variable-generator';
+@use 'variable-generator';
 
 @mixin box-sizing-setter($include-children: false, $value: border-box) {
     &,
@@ -35,7 +35,7 @@
 }
 
 @mixin b-focus-ring {
-    @include b-outer-ring-generator(token(focus-ring-color));
+    @include b-outer-ring-generator(variable-generator.token(focus-ring-color));
 }
 
 $adyen-checkout-media-query-s-min: 480px;
@@ -88,7 +88,7 @@ $adyen-checkout-media-query-xl-min: 1280px;
 @mixin adyen-checkout-link {
     --text-decoration: none;
 
-    color: token(color-label-highlight);
+    color: variable-generator.token(color-label-highlight);
     text-decoration: var(--text-decoration);
 
     @include b-link-reset;
@@ -101,7 +101,7 @@ $adyen-checkout-media-query-xl-min: 1280px;
     &:focus-visible {
         @include b-focus-ring;
 
-        border-radius: token(border-radius-xs);
+        border-radius: variable-generator.token(border-radius-xs);
     }
 }
 
@@ -119,48 +119,48 @@ $adyen-checkout-media-query-xl-min: 1280px;
 }
 
 @mixin adyen-checkout-text-subtitle {
-    font-size: token(text-subtitle-font-size);
-    font-weight: token(text-subtitle-stronger-font-weight);
-    line-height: token(text-subtitle-line-height);
+    font-size: variable-generator.token(text-subtitle-font-size);
+    font-weight: variable-generator.token(text-subtitle-stronger-font-weight);
+    line-height: variable-generator.token(text-subtitle-line-height);
 }
 
 @mixin adyen-checkout-text-title {
-    font-size: token(text-title-font-size);
-    font-weight: token(text-title-font-weight);
-    line-height: token(text-title-line-height);
+    font-size: variable-generator.token(text-title-font-size);
+    font-weight: variable-generator.token(text-title-font-weight);
+    line-height: variable-generator.token(text-title-line-height);
 }
 
 @mixin adyen-checkout-text-title-l {
-    font-size: token(text-title-l-font-size);
-    font-weight: token(text-title-l-font-weight);
-    line-height: token(text-title-l-line-height);
+    font-size: variable-generator.token(text-title-l-font-size);
+    font-weight: variable-generator.token(text-title-l-font-weight);
+    line-height: variable-generator.token(text-title-l-line-height);
 }
 
 @mixin adyen-checkout-text-body {
-    font-size: token(text-body-font-size);
-    font-weight: token(text-body-font-weight);
-    line-height: token(text-body-line-height);
+    font-size: variable-generator.token(text-body-font-size);
+    font-weight: variable-generator.token(text-body-font-weight);
+    line-height: variable-generator.token(text-body-line-height);
 }
 
 @mixin adyen-checkout-text-body-strongest {
-    font-size: token(text-body-font-size);
-    line-height: token(text-body-line-height);
-    font-weight: token(text-body-strongest-font-weight);
+    font-size: variable-generator.token(text-body-font-size);
+    line-height: variable-generator.token(text-body-line-height);
+    font-weight: variable-generator.token(text-body-strongest-font-weight);
 }
 
 @mixin adyen-checkout-text-caption {
-    font-size: token(text-caption-font-size);
-    font-weight: token(text-caption-font-weight);
-    line-height: token(text-caption-line-height);
+    font-size: variable-generator.token(text-caption-font-size);
+    font-weight: variable-generator.token(text-caption-font-weight);
+    line-height: variable-generator.token(text-caption-line-height);
 }
 
 @mixin adyen-checkout-text-caption-stronger {
     @include adyen-checkout-text-caption;
 
-    font-weight: token(text-caption-stronger-font-weight);
+    font-weight: variable-generator.token(text-caption-stronger-font-weight);
 }
 
-@mixin set-spinner-color($background-color: token(color-background-inverse-primary), $color: token(color-outline-primary-active)) {
+@mixin set-spinner-color($background-color: variable-generator.token(color-background-inverse-primary), $color: variable-generator.token(color-outline-primary-active)) {
     &::before {
         border-color: $background-color;
         border-top-color: transparent;
@@ -194,7 +194,7 @@ $adyen-checkout-media-query-xl-min: 1280px;
     display: flex;
     flex-wrap: wrap;
     width: 100%;
-    gap: token(spacer-070);
+    gap: variable-generator.token(spacer-070);
 
     > .adyen-checkout__field {
         margin-bottom: 0;
@@ -202,8 +202,8 @@ $adyen-checkout-media-query-xl-min: 1280px;
 }
 
 @mixin adyen-checkout-icon-shadow($width: null, $height: null) {
-    box-shadow: token(shadow-low);
-    border-radius: token(border-radius-s);
+    box-shadow: variable-generator.token(shadow-low);
+    border-radius: variable-generator.token(border-radius-s);
 
     @if $width {
         width: $width;

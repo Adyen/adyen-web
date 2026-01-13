@@ -1,5 +1,5 @@
-@import 'styles/variable-generator';
+@use 'styles/variable-generator';
 
 .adyen-checkout__paywithgoogle {
-    height: token(spacer-120);
+    height: variable-generator.token(spacer-120);
 }

@@ -1,12 +1,12 @@
-@import 'styles/variable-generator';
+@use 'styles/variable-generator';
 
 .adyen-checkout__store-details {
     display: flex;
     align-items: center;
-    background: token(color-background-primary);
-    gap: token(spacer-060);
-    padding: token(spacer-060) token(spacer-070);
-    margin-top: token(spacer-070);
-    border: token(border-width-s) solid token(color-outline-primary);
-    border-radius: token(border-radius-m);
+    background: variable-generator.token(color-background-primary);
+    gap: variable-generator.token(spacer-060);
+    padding: variable-generator.token(spacer-060) variable-generator.token(spacer-070);
+    margin-top: variable-generator.token(spacer-070);
+    border: variable-generator.token(border-width-s) solid variable-generator.token(color-outline-primary);
+    border-radius: variable-generator.token(border-radius-m);
 }

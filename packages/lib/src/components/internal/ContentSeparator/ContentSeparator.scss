@@ -1,29 +1,29 @@
-@import 'styles/variable-generator';
+@use 'styles/variable-generator';
 
 .adyen-checkout__content-separator {
-    margin-top: token(spacer-070);
-    margin-bottom: token(spacer-070);
+    margin-top: variable-generator.token(spacer-070);
+    margin-bottom: variable-generator.token(spacer-070);
     display: flex;
     justify-content: center;
     align-items: center;
-    color: token(color-label-primary);
+    color: variable-generator.token(color-label-primary);
     white-space: nowrap;
     text-transform: capitalize;
-    font-size: token(text-body-font-size);
-    line-height: token(text-caption-line-height);
+    font-size: variable-generator.token(text-body-font-size);
+    line-height: variable-generator.token(text-caption-line-height);
 
     &::after,
     &::before {
         content: '';
         flex: 1;
-        border-bottom: 1px solid token(color-separator-primary);
+        border-bottom: 1px solid variable-generator.token(color-separator-primary);
     }
 
     &::after {
-        margin-left: token(spacer-080);
+        margin-left: variable-generator.token(spacer-080);
     }
 
     &::before {
-        margin-right: token(spacer-080);
+        margin-right: variable-generator.token(spacer-080);
     }
 }
