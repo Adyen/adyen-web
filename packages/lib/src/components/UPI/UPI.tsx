@@ -3,11 +3,10 @@ import UIElement from '../internal/UIElement/UIElement';
 import UPIComponent from './components/UPIComponent';
 import { Await } from '../internal/Await';
 import { QRLoader } from '../internal/QRLoader';
-import { UPIConfiguration, UpiMode, UpiPaymentData, UpiType } from './types';
+import { UPIConfiguration, UpiPaymentData, UpiType } from './types';
 import { TxVariants } from '../tx-variants';
 import isMobile from '../../utils/isMobile';
 import type { ICore } from '../../core/types';
-import { getIntentOption, getQrOption, getVpaOption } from './constants';
 
 /**
  * For mobile:
@@ -23,45 +22,28 @@ import { getIntentOption, getQrOption, getVpaOption } from './constants';
 
 class UPI extends UIElement<UPIConfiguration> {
     public static type = TxVariants.upi;
-    public static txVariants = [TxVariants.upi, TxVariants.upi_qr, TxVariants.upi_collect, TxVariants.upi_intent];
-
-    private selectedMode: UpiMode;
+    public static txVariants = [TxVariants.upi, TxVariants.upi_qr, TxVariants.upi_intent];
 
     constructor(checkout: ICore, props: UPIConfiguration) {
         super(checkout, props);
-        this.selectedMode = this.props.defaultMode;
     }
 
     formatProps(props: UPIConfiguration): UPIConfiguration {
-        if (!isMobile()) {
-            return {
-                ...super.formatProps(props),
-                defaultMode: ['qrCode', 'vpa'].includes(props?.defaultMode) ? props.defaultMode : 'qrCode',
-                apps: [], // For desktop, ignore the apps
-                segmentedControlOptions: [getQrOption(props.i18n), getVpaOption(props.i18n)]
-            };
-        }
-
-        const { i18n, apps = [] } = props;
+        const { apps = [] } = props;
         const hasIntentApps = apps.length > 0;
-        if (hasIntentApps) {
+        if (isMobile() && hasIntentApps) {
             // Mobile with UPI apps
-            const allowedModes: UpiMode[] = ['intent', 'vpa'];
-            const defaultMode = allowedModes.includes(props.defaultMode) ? props.defaultMode : 'intent';
             return {
                 ...super.formatProps(props),
-                defaultMode,
-                apps,
-                segmentedControlOptions: [getIntentOption(i18n), getVpaOption(i18n)]
+                defaultMode: 'intent',
+                apps
             };
         }
 
-        // Mobile, but no UPI apps
         return {
             ...super.formatProps(props),
-            defaultMode: 'vpa', // Only VPA is possible
-            apps: [],
-            segmentedControlOptions: []
+            defaultMode: 'qrCode',
+            apps: []
         };
     }
 
@@ -70,30 +52,22 @@ class UPI extends UIElement<UPIConfiguration> {
     }
 
     public formatData(): UpiPaymentData {
-        const { virtualPaymentAddress, app } = this.state.data || {};
+        const { app } = this.state.data || {};
 
         return {
             paymentMethod: {
                 type: this.paymentType,
-                ...(this.paymentType === TxVariants.upi_collect && virtualPaymentAddress && { virtualPaymentAddress }),
                 ...(this.paymentType === TxVariants.upi_intent && app?.id && { appId: app.id })
             }
         };
     }
 
     get paymentType(): UpiType {
-        if (this.selectedMode === 'qrCode') {
+        if (this.props.defaultMode === 'qrCode') {
             return TxVariants.upi_qr;
-        }
-        if (this.selectedMode === 'vpa') {
-            return TxVariants.upi_collect;
         }
         return TxVariants.upi_intent;
     }
-
-    private onUpdateMode = (mode: UpiMode): void => {
-        this.selectedMode = mode;
-    };
 
     protected override componentToRender(): h.JSX.Element {
         const { type, url, paymentMethodType } = this.props;
@@ -143,9 +117,7 @@ class UPI extends UIElement<UPIConfiguration> {
                         }}
                         payButton={this.payButton}
                         onChange={this.setState}
-                        onUpdateMode={this.onUpdateMode}
                         apps={this.props.apps}
-                        segmentedControlOptions={this.props.segmentedControlOptions}
                         defaultMode={this.props.defaultMode}
                         showPayButton={this.props.showPayButton}
                         amount={this.props.amount}
