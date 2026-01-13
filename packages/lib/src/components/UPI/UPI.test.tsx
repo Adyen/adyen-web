@@ -4,18 +4,13 @@ import UPI from './UPI';
 import isMobile from '../../utils/isMobile';
 import { TxVariants } from '../tx-variants';
 import { Resources } from '../../core/Context/Resources';
-import { getIntentOption, getQrOption } from './constants';
+import { UPI_MODE } from './constants';
 import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 
 jest.mock('../../utils/isMobile');
 const isMobileMock = isMobile as jest.Mock;
 const onCompleteMock = jest.fn();
 const onSubmitMock = jest.fn();
-jest.mock('./constants', () => ({
-    ...jest.requireActual('./constants'),
-    getIntentOption: jest.fn(() => ({ label: 'UPI app', value: 'intent' })),
-    getQrOption: jest.fn(() => ({ label: 'QR code', value: 'qrCode' }))
-}));
 
 describe('UPI', () => {
     const props = {
@@ -28,8 +23,6 @@ describe('UPI', () => {
 
     afterEach(() => {
         isMobileMock.mockReset();
-        (getIntentOption as jest.Mock).mockClear();
-        (getQrOption as jest.Mock).mockClear();
     });
 
     describe('formatProps', () => {
@@ -45,7 +38,7 @@ describe('UPI', () => {
 
                 expect(formattedProps).toMatchObject({
                     apps: [gpayApp],
-                    defaultMode: 'intent'
+                    defaultMode: UPI_MODE.INTENT
                 });
             });
 
@@ -71,7 +64,7 @@ describe('UPI', () => {
 
                 expect(formattedProps).toMatchObject({
                     apps: [],
-                    defaultMode: 'qrCode'
+                    defaultMode: UPI_MODE.QR_CODE
                 });
             });
         });

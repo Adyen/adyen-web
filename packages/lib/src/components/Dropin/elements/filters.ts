@@ -32,6 +32,6 @@ export const optionallyFilterUpiSubTxVariants = (paymentMethods: Array<PaymentMe
     if (!hasUpiParent) return paymentMethods;
 
     // If we get the 'upi' parent, we remove upi sub tx_variant components
-    const UPI_SUB_TX_VARIANTS = ['upi_qr', 'upi_collect', 'upi_intent'];
+    const UPI_SUB_TX_VARIANTS = ['upi_qr', 'upi_intent'];
     return paymentMethods.filter(pm => !UPI_SUB_TX_VARIANTS.includes(pm?.type));
 };

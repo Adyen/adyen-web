@@ -1,6 +1,9 @@
-import { SegmentedControlOption } from '../internal/SegmentedControl/SegmentedControl';
 import { UpiMode } from './types';
-import Language from '../../language';
+
+export const UPI_MODE = {
+    QR_CODE: 'qrCode' as UpiMode,
+    INTENT: 'intent' as UpiMode
+} as const;
 
 export const A11Y = {
     ButtonId: {
@@ -12,17 +15,3 @@ export const A11Y = {
         INTENT: 'upi-area-intent'
     }
 };
-
-export const getIntentOption = (i18n: Language): SegmentedControlOption<UpiMode> => ({
-    label: i18n.get('upi.mode.payByAnyUpi'),
-    value: 'intent',
-    id: A11Y.ButtonId.INTENT,
-    controls: A11Y.AreaId.INTENT
-});
-
-export const getQrOption = (i18n: Language): SegmentedControlOption<UpiMode> => ({
-    label: i18n.get('upi.mode.qrCode'),
-    value: 'qrCode',
-    id: A11Y.ButtonId.QR,
-    controls: A11Y.AreaId.QR
-});

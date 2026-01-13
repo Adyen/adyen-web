@@ -74,12 +74,12 @@ describe('Elements filters', () => {
                 optionallyFilterUpiSubTxVariants([
                     { type: 'scheme', name: 'Card', _id: 'card-id' },
                     { type: 'upi_intent', name: 'UPI Intent', _id: 'upi-intent-id' },
-                    { type: 'upi_collect', name: 'UPI Collect', _id: 'upi-collect-id' }
+                    { type: 'upi_qr', name: 'UPI QR', _id: 'upi-qr-id' }
                 ])
             ).toEqual([
                 { type: 'scheme', name: 'Card', _id: 'card-id' },
                 { type: 'upi_intent', name: 'UPI Intent', _id: 'upi-intent-id' },
-                { type: 'upi_collect', name: 'UPI Collect', _id: 'upi-collect-id' }
+                { type: 'upi_qr', name: 'UPI QR', _id: 'upi-qr-id' }
             ]);
         });
     });

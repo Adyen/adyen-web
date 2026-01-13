@@ -6,18 +6,16 @@ import { QRLoader } from '../internal/QRLoader';
 import { UPIConfiguration, UpiPaymentData, UpiType } from './types';
 import { TxVariants } from '../tx-variants';
 import isMobile from '../../utils/isMobile';
+import { UPI_MODE } from './constants';
 import type { ICore } from '../../core/types';
 
 /**
  * For mobile:
- * We should show upi_collect and upi_intent depending on if `apps` are returned in /paymentMethods response.
- * If there is no apps, hide segmented controls.
- * The upi_collect should always be on the second tab.
- * Never show QR code.
+ * We should show upi_intent depending on if `apps` are returned in /paymentMethods response.
  *
  * For non-mobile:
  * We should never show the upi_intent (ignore `apps` in /paymentMethods response)
- * The upi_qr should be on the first tab and the upi_collect should be on second tab
+ * Show upi_qr as default
  */
 
 class UPI extends UIElement<UPIConfiguration> {
@@ -35,14 +33,14 @@ class UPI extends UIElement<UPIConfiguration> {
             // Mobile with UPI apps
             return {
                 ...super.formatProps(props),
-                defaultMode: 'intent',
+                defaultMode: UPI_MODE.INTENT,
                 apps
             };
         }
 
         return {
             ...super.formatProps(props),
-            defaultMode: 'qrCode',
+            defaultMode: UPI_MODE.QR_CODE,
             apps: []
         };
     }
@@ -63,7 +61,7 @@ class UPI extends UIElement<UPIConfiguration> {
     }
 
     get paymentType(): UpiType {
-        if (this.props.defaultMode === 'qrCode') {
+        if (this.props.defaultMode === UPI_MODE.QR_CODE) {
             return TxVariants.upi_qr;
         }
         return TxVariants.upi_intent;

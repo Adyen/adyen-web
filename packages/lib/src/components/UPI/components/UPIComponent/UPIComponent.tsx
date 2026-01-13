@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from 'preact/hooks';
 import { PayButtonFunctionProps, UIElementStatus } from '../../../types';
 import { App, UpiMode } from '../../types';
 import useImage from '../../../../core/Context/useImage';
-import { A11Y } from '../../constants';
+import { A11Y, UPI_MODE } from '../../constants';
 import './UPIComponent.scss';
 import { SegmentedControlRegion } from '../../../internal/SegmentedControl';
 import UPIIntentAppList from '../UPIIntentAppList';
@@ -12,7 +12,7 @@ import Alert from '../../../internal/Alert';
 import UPIMandate, { Mandate } from '../UPIMandate/UPIMandate';
 import type { PaymentAmount } from '../../../../types/global-types';
 
-type UpiData = { app?: App; virtualPaymentAddress?: string };
+type UpiData = { app?: App };
 
 type OnChangeProps = { data: UpiData; valid?: { [key: string]: boolean }; errors?: { [key: string]: any }; isValid: boolean };
 
@@ -43,7 +43,7 @@ export default function UPIComponent({
     const getImage = useImage();
     const [status, setStatus] = useState<UIElementStatus>('ready');
     const [selectedApp, setSelectedApp] = useState<App>(null);
-    const [isValid, setIsValid] = useState<boolean>(defaultMode === 'qrCode');
+    const [isValid, setIsValid] = useState<boolean>(defaultMode === UPI_MODE.QR_CODE);
     const mandateComponent = mandate && <UPIMandate mandate={mandate} amount={amount} />;
 
     this.setStatus = (status: UIElementStatus) => {
@@ -51,7 +51,7 @@ export default function UPIComponent({
     };
 
     this.showValidation = () => {
-        if (defaultMode === 'intent') {
+        if (defaultMode === UPI_MODE.INTENT) {
             validateIntentApp();
         }
     };
@@ -78,7 +78,7 @@ export default function UPIComponent({
     }, [selectedApp]);
 
     useEffect(() => {
-        if (defaultMode !== 'qrCode') {
+        if (defaultMode !== UPI_MODE.QR_CODE) {
             onChange({
                 data: { ...(selectedApp && { app: selectedApp }) },
                 isValid
@@ -93,7 +93,7 @@ export default function UPIComponent({
 
     return (
         <Fragment>
-            {defaultMode === 'intent' && (
+            {defaultMode === UPI_MODE.INTENT && (
                  <SegmentedControlRegion id={A11Y.AreaId.INTENT} ariaLabelledBy={A11Y.ButtonId.INTENT} className="adyen-checkout-upi-area-intent">
                     <span className="adyen-checkout-upi-instruction-label">{i18n.get('upi.intent.instruction')}</span>
                     {status === 'error' && <Alert icon={'cross'}>{i18n.get('upi.error.noAppSelected')}</Alert>}
@@ -106,7 +106,7 @@ export default function UPIComponent({
                         })}
                 </SegmentedControlRegion>
             )}
-            {defaultMode === 'qrCode' && (
+            {defaultMode === UPI_MODE.QR_CODE && (
                 <SegmentedControlRegion id={A11Y.AreaId.QR} ariaLabelledBy={A11Y.ButtonId.QR} className="adyen-checkout-upi-area-qr-code">
                     <span className="adyen-checkout-upi-instruction-label">{i18n.get('upi.qrCode.instruction')}</span>
                     {mandateComponent}
