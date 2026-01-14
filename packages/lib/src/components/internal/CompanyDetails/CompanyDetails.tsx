@@ -79,7 +79,7 @@ export default function CompanyDetails(props: CompanyDetailsProps) {
                         classNameModifiers={['name']}
                         onInput={inputEventHandler('input')}
                         onBlur={eventHandler('blur')}
-                        spellCheck={false}
+                        spellcheck={false}
                     />
                 </Field>
             )}
@@ -98,7 +98,7 @@ export default function CompanyDetails(props: CompanyDetailsProps) {
                         classNameModifiers={['registrationNumber']}
                         onInput={inputEventHandler('input')}
                         onBlur={eventHandler('blur')}
-                        spellCheck={false}
+                        spellcheck={false}
                     />
                 </Field>
             )}
