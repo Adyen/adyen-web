@@ -78,17 +78,17 @@ export default function UPIComponent({
     }, [selectedApp]);
 
     useEffect(() => {
-        if (defaultMode !== UPI_MODE.QR_CODE) {
-            onChange({
-                data: { ...(selectedApp && { app: selectedApp }) },
-                isValid
-            });
-        } else {
+        if (defaultMode === UPI_MODE.QR_CODE) {
             /**
              * When selecting QR code defaultMode, we need to clear the state data and trigger the 'onChange'.
              */
             onChange({ data: {}, valid: {}, errors: {}, isValid: true });
+            return;
         }
+        onChange({
+            data: { ...(selectedApp && { app: selectedApp }) },
+            isValid
+        });
     }, [selectedApp, isValid, defaultMode, onChange]);
 
     return (
