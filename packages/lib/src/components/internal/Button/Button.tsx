@@ -110,7 +110,7 @@ class Button extends Component<ButtonProps, ButtonState> {
 
         if (href) {
             return (
-                <a className={buttonClasses} href={href} disabled={disabled} target={this.props.target} rel={this.props.rel}>
+                <a className={buttonClasses} href={href} target={this.props.target} rel={this.props.rel}>
                     {buttonText}
                 </a>
             );
