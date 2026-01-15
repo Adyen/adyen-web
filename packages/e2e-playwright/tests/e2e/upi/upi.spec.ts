@@ -17,6 +17,9 @@ test.describe('UPI - QR Code Flow (Desktop)', () => {
     test('should complete payment with QR code generation', async ({ upiPage, page }) => {
         await upiPage.goto(URL_MAP.upi);
 
+        await expect(upiPage.intentArea).not.toBeVisible();
+        await expect(upiPage.appList).not.toBeVisible();
+
         await upiPage.pay({ name: /generate qr code/i });
 
         await upiPage.isQrCodeVisible();

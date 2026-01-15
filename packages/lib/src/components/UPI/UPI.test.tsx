@@ -47,7 +47,8 @@ describe('UPI', () => {
                 const formattedProps = upi.formatProps({ ...props, apps: [] });
 
                 expect(formattedProps).toMatchObject({
-                    apps: []
+                    apps: [],
+                    defaultMode: UPI_MODE.QR_CODE
                 });
             });
         });

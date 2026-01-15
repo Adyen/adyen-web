@@ -7,7 +7,6 @@ import { UPIConfiguration, UpiPaymentData, UpiType } from './types';
 import { TxVariants } from '../tx-variants';
 import isMobile from '../../utils/isMobile';
 import { UPI_MODE } from './constants';
-import type { ICore } from '../../core/types';
 
 /**
  * For mobile:
@@ -21,10 +20,6 @@ import type { ICore } from '../../core/types';
 class UPI extends UIElement<UPIConfiguration> {
     public static type = TxVariants.upi;
     public static readonly txVariants = [TxVariants.upi, TxVariants.upi_qr, TxVariants.upi_intent];
-
-    constructor(checkout: ICore, props: UPIConfiguration) {
-        super(checkout, props);
-    }
 
     formatProps(props: UPIConfiguration): UPIConfiguration {
         const { apps = [] } = props;
