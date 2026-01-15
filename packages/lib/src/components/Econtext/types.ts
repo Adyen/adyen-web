@@ -8,7 +8,7 @@ export interface EcontextVoucherResultProps {
     paymentMethodType?: string;
     maskedTelephoneNumber?: string;
     instructionsUrl?: string;
-    ref?: any;
+    alternativeReference?: string;
     collectionInstitutionNumber?: string;
     onActionHandled?: (rtnObj: ActionHandledReturnObject) => void;
 }
@@ -21,7 +21,38 @@ export interface EcontextInputSchema {
 }
 
 export interface EcontextConfiguration extends UIElementProps {
-    reference?: string;
     personalDetailsRequired?: boolean;
     data?: PersonalDetailsSchema;
+    /**
+     * @internal
+     */
+    instructionsUrl?: string;
+    /**
+     * @internal
+     */
+    reference?: string;
+    /**
+     * @internal
+     */
+    totalAmount?: PaymentAmount;
+    /**
+     * @internal
+     */
+    expiresAt?: string;
+    /**
+     * @internal
+     */
+    paymentMethodType?: string;
+    /**
+     * @internal
+     */
+    maskedTelephoneNumber?: string;
+    /**
+     * @internal
+     */
+    alternativeReference?: string;
+    /**
+     * @internal
+     */
+    collectionInstitutionNumber?: string;
 }

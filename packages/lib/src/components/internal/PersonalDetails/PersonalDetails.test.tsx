@@ -3,11 +3,16 @@ import { render, screen, waitFor } from '@testing-library/preact';
 import PersonalDetails from './PersonalDetails';
 import { CoreProvider } from '../../../core/Context/CoreProvider';
 import { PersonalDetailsProps } from './types';
+import { setupCoreMock } from '../../../../config/testMocks/setup-core-mock';
 
 const renderPersonalDetails = (props: Partial<PersonalDetailsProps>) => {
+    const { setComponentRef = jest.fn() } = props;
+
+    const core = setupCoreMock();
+
     return render(
-        <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
-            <PersonalDetails {...props} />
+        <CoreProvider i18n={core.modules.i18n} loadingContext="test" resources={core.modules.resources}>
+            <PersonalDetails {...props} setComponentRef={setComponentRef} />
         </CoreProvider>
     );
 };

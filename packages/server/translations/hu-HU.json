@@ -433,5 +433,15 @@
     "upi.mandate.upTo": "legfeljebb %{amount}",
     "upi.mandate.frequency.monthly": "/hó",
     "upi.mandate.frequency.weekly": "/hét",
-    "upi.mandate.frequency.adhoc": " benyújtáskor"
+    "upi.mandate.frequency.adhoc": " benyújtáskor",
+    "bankList": "Banklista",
+    "qrCode": "QR-kód",
+    "iris.instructions.generateQrCode": "A QR-kód létrehozása után a fizetés befejezéséhez használhatja a kívánt banki alkalmazást.",
+    "iris.instructions.payment.step1": "Nyissa meg a kívánt banki alkalmazást.",
+    "iris.instructions.payment.step2": "Olvassa be a QR-kódot a banki alkalmazással.",
+    "iris.instructions.payment.step3": "Hajtsa végre a fizetést az alkalmazásban, és várja meg itt a visszaigazolást.",
+    "econtext.customerNumber": "Ügyfélszám",
+    "econtext.confirmationNumber": "Megerősítés száma",
+    "econtext.useBefore": "Eddig használható:",
+    "econtext.paymentInformation": "Fizetési adatok"
 }

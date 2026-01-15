@@ -433,5 +433,15 @@
     "upi.mandate.upTo": "do zneska %{amount}",
     "upi.mandate.frequency.monthly": "/mesec",
     "upi.mandate.frequency.weekly": "/teden",
-    "upi.mandate.frequency.adhoc": " kot je predstavljeno"
+    "upi.mandate.frequency.adhoc": " kot je predstavljeno",
+    "bankList": "Seznam bank",
+    "qrCode": "Koda QR",
+    "iris.instructions.generateQrCode": "Ko ustvarite kodo QR, lahko za dokončanje plačila uporabite želeno bančno aplikacijo.",
+    "iris.instructions.payment.step1": "Odprite želeno bančno aplikacijo.",
+    "iris.instructions.payment.step2": "Optično preberite kodo QR z vašo bančno aplikacijo.",
+    "iris.instructions.payment.step3": "Plačilo dokončajte v aplikaciji in tukaj počakajte na potrditev.",
+    "econtext.customerNumber": "Številka stranke",
+    "econtext.confirmationNumber": "Številka potrditve",
+    "econtext.useBefore": "Uporabite pred",
+    "econtext.paymentInformation": "Podatki za plačilo"
 }

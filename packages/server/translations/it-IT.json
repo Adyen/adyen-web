@@ -339,7 +339,7 @@
     "creditCard.securityCode.contextualText.4digits": "4 cifre sulla parte anteriore della carta",
     "creditCard.expiryMonth.label": "Mese di scadenza",
     "creditCard.expiryYear.label": "Anno di scadenza",
-    "creditCard.pin.label": "Pin",
+    "creditCard.pin.label": "PIN",
     "creditCard.password.label": "Prime 2 cifre della password della carta",
     "giftcard.cardNumber.label": "Numero carta",
     "giftcard.expiryDate.label": "Data di scadenza",
@@ -433,5 +433,15 @@
     "upi.mandate.upTo": "fino a %{amount}",
     "upi.mandate.frequency.monthly": "/mese",
     "upi.mandate.frequency.weekly": "/settimana",
-    "upi.mandate.frequency.adhoc": " come presentato"
+    "upi.mandate.frequency.adhoc": " come presentato",
+    "bankList": "Elenco delle banche",
+    "qrCode": "Codice QR",
+    "iris.instructions.generateQrCode": "Dopo aver generato il codice QR, puoi utilizzare l'app di servizi bancari preferita per completare il pagamento.",
+    "iris.instructions.payment.step1": "Apri l'app di servizi bancari preferita.",
+    "iris.instructions.payment.step2": "Scansiona il codice QR con l'app di servizi bancari.",
+    "iris.instructions.payment.step3": "Completa il pagamento dall'app e attendi la conferma qui.",
+    "econtext.customerNumber": "Numero cliente",
+    "econtext.confirmationNumber": "Numero di conferma",
+    "econtext.useBefore": "Utilizzare prima di",
+    "econtext.paymentInformation": "Informazioni di pagamento"
 }

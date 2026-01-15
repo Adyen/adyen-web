@@ -433,5 +433,15 @@
     "upi.mandate.upTo": "do %{amount}",
     "upi.mandate.frequency.monthly": "/miesiąc",
     "upi.mandate.frequency.weekly": "/tydzień",
-    "upi.mandate.frequency.adhoc": " jak przedstawiono"
+    "upi.mandate.frequency.adhoc": " jak przedstawiono",
+    "bankList": "Lista banków",
+    "qrCode": "Kod QR",
+    "iris.instructions.generateQrCode": "Po wygenerowaniu kodu QR możesz użyć preferowanej aplikacji bankowej, aby dokończyć płatność.",
+    "iris.instructions.payment.step1": "Otwórz preferowaną aplikację bankową.",
+    "iris.instructions.payment.step2": "Zeskanuj kod QR za pomocą aplikacji bankowej.",
+    "iris.instructions.payment.step3": "Dokończ płatność w aplikacji i poczekaj tutaj na potwierdzenie.",
+    "econtext.customerNumber": "Numer klienta",
+    "econtext.confirmationNumber": "Numer potwierdzenia",
+    "econtext.useBefore": "Użyć przed",
+    "econtext.paymentInformation": "Informacje o płatnościach"
 }

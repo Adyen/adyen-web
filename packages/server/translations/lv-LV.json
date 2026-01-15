@@ -433,5 +433,15 @@
     "upi.mandate.upTo": "līdz %{summa}",
     "upi.mandate.frequency.monthly": "/mēnesī",
     "upi.mandate.frequency.weekly": "/nedēļā",
-    "upi.mandate.frequency.adhoc": " kā uzrādīts"
+    "upi.mandate.frequency.adhoc": " kā uzrādīts",
+    "bankList": "Banku saraksts",
+    "qrCode": "QR kods",
+    "iris.instructions.generateQrCode": "Pēc kvadrātkoda ģenerēšanas varat izmantot vēlamo bankas lietotni, lai pabeigtu maksājumu.",
+    "iris.instructions.payment.step1": "Atveriet savu iecienītāko bankas lietotni.",
+    "iris.instructions.payment.step2": "Noskenējiet kvadrātkodu, izmantojot savu bankas lietotni.",
+    "iris.instructions.payment.step3": "Pabeidziet maksājumu lietotnē un gaidiet apstiprinājumu šeit.",
+    "econtext.customerNumber": "Klienta numurs",
+    "econtext.confirmationNumber": "Apstiprinājuma numurs",
+    "econtext.useBefore": "Izmantot pirms",
+    "econtext.paymentInformation": "Maksājuma informācija"
 }

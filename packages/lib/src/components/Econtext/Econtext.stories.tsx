@@ -16,12 +16,42 @@ const render = ({ componentConfiguration, ...checkoutConfig }: PaymentMethodStor
     <Checkout checkoutConfig={checkoutConfig}>{checkout => <ComponentContainer element={new Econtext(checkout, componentConfiguration)} />}</Checkout>
 );
 
-export const Default: EcontextStory = {
+export const EcontextSevenEleven: EcontextStory = {
     render,
     args: {
         countryCode: 'JP',
         componentConfiguration: {
             type: TxVariants.econtext_seven_eleven
+        }
+    }
+};
+
+export const EcontextATM: EcontextStory = {
+    render,
+    args: {
+        countryCode: 'JP',
+        componentConfiguration: {
+            type: TxVariants.econtext_atm
+        }
+    }
+};
+
+export const EcontextOnline: EcontextStory = {
+    render,
+    args: {
+        countryCode: 'JP',
+        componentConfiguration: {
+            type: TxVariants.econtext_online
+        }
+    }
+};
+
+export const EcontextStores: EcontextStory = {
+    render,
+    args: {
+        countryCode: 'JP',
+        componentConfiguration: {
+            type: TxVariants.econtext_stores
         }
     }
 };
