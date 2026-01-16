@@ -24,7 +24,7 @@ class UPI extends UIElement<UPIConfiguration> {
     private mode: UpiMode;
     constructor(checkout: ICore, props: UPIConfiguration) {
         super(checkout, props);
-        // NOSONAR
+        // @ts-ignore: Accessing deprecated prop to provide migration warning
         const { defaultMode: deprecatedDefaultMode } = props;
         if (deprecatedDefaultMode) {
             console.warn('[Adyen Checkout] UPI configuration property "defaultMode" is deprecated and will be removed in a future version.');
