@@ -24,6 +24,7 @@ class UPI extends UIElement<UPIConfiguration> {
     constructor(checkout: ICore, props: UPIConfiguration) {
         super(checkout, props);
         if (props.defaultMode) {
+            // NOSONAR
             console.warn('[Adyen Checkout] UPI configuration property "defaultMode" is deprecated and will be removed in a future version.');
         }
     }
@@ -64,6 +65,7 @@ class UPI extends UIElement<UPIConfiguration> {
 
     get paymentType(): UpiType {
         if (this.props.defaultMode === UPI_MODE.QR_CODE) {
+            // NOSONAR
             return TxVariants.upi_qr;
         }
         return TxVariants.upi_intent;
@@ -118,7 +120,7 @@ class UPI extends UIElement<UPIConfiguration> {
                         payButton={this.payButton}
                         onChange={this.setState}
                         apps={this.props.apps}
-                        defaultMode={this.props.defaultMode}
+                        defaultMode={this.props.defaultMode /* NOSONAR */}
                         showPayButton={this.props.showPayButton}
                         amount={this.props.amount}
                         mandate={this.props.mandate}
