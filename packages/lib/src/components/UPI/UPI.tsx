@@ -121,7 +121,7 @@ class UPI extends UIElement<UPIConfiguration> {
                         payButton={this.payButton}
                         onChange={this.setState}
                         apps={this.props.apps}
-                        defaultMode={this.mode}
+                        mode={this.mode}
                         showPayButton={this.props.showPayButton}
                         amount={this.props.amount}
                         mandate={this.props.mandate}

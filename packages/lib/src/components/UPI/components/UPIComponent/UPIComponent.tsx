@@ -17,7 +17,7 @@ type UpiData = { app?: App };
 type OnChangeProps = { data: UpiData; valid?: { [key: string]: boolean }; errors?: { [key: string]: any }; isValid: boolean };
 
 interface UPIComponentProps {
-    defaultMode: UpiMode;
+    mode: UpiMode;
     showPayButton: boolean;
     apps?: Array<App>;
     mandate?: Mandate;
@@ -31,7 +31,7 @@ interface UPIComponentProps {
 }
 
 export default function UPIComponent({
-    defaultMode,
+    mode,
     onChange,
     payButton,
     showPayButton,
@@ -43,7 +43,7 @@ export default function UPIComponent({
     const getImage = useImage();
     const [status, setStatus] = useState<UIElementStatus>('ready');
     const [selectedApp, setSelectedApp] = useState<App>(null);
-    const [isValid, setIsValid] = useState<boolean>(defaultMode === UPI_MODE.QR_CODE);
+    const [isValid, setIsValid] = useState<boolean>(mode === UPI_MODE.QR_CODE);
     const mandateComponent = mandate && <UPIMandate mandate={mandate} amount={amount} />;
 
     this.setStatus = (status: UIElementStatus) => {
@@ -51,7 +51,7 @@ export default function UPIComponent({
     };
 
     this.showValidation = () => {
-        if (defaultMode === UPI_MODE.INTENT) {
+        if (mode === UPI_MODE.INTENT) {
             validateIntentApp();
         }
     };
@@ -78,9 +78,9 @@ export default function UPIComponent({
     }, [selectedApp]);
 
     useEffect(() => {
-        if (defaultMode === UPI_MODE.QR_CODE) {
+        if (mode === UPI_MODE.QR_CODE) {
             /**
-             * When selecting QR code defaultMode, we need to clear the state data and trigger the 'onChange'.
+             * When selecting QR code mode, we need to clear the state data and trigger the 'onChange'.
              */
             onChange({ data: {}, valid: {}, errors: {}, isValid: true });
             return;
@@ -89,11 +89,11 @@ export default function UPIComponent({
             data: { ...(selectedApp && { app: selectedApp }) },
             isValid
         });
-    }, [selectedApp, isValid, defaultMode, onChange]);
+    }, [selectedApp, isValid, mode, onChange]);
 
     return (
         <Fragment>
-            {defaultMode === UPI_MODE.INTENT && (
+            {mode === UPI_MODE.INTENT && (
                  <SegmentedControlRegion id={A11Y.AreaId.INTENT} ariaLabelledBy={A11Y.ButtonId.INTENT} className="adyen-checkout-upi-area-intent">
                     <span className="adyen-checkout-upi-instruction-label">{i18n.get('upi.intent.instruction')}</span>
                     {status === 'error' && <Alert icon={'cross'}>{i18n.get('upi.error.noAppSelected')}</Alert>}
@@ -106,7 +106,7 @@ export default function UPIComponent({
                         })}
                 </SegmentedControlRegion>
             )}
-            {defaultMode === UPI_MODE.QR_CODE && (
+            {mode === UPI_MODE.QR_CODE && (
                 <SegmentedControlRegion id={A11Y.AreaId.QR} ariaLabelledBy={A11Y.ButtonId.QR} className="adyen-checkout-upi-area-qr-code">
                     <span className="adyen-checkout-upi-instruction-label">{i18n.get('upi.qrCode.instruction')}</span>
                     {mandateComponent}

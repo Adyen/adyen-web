@@ -25,7 +25,7 @@ describe('UPIComponent', () => {
         const gpayApp: App = { id: 'gpay', name: 'Google Pay' };
 
         test('should show a list of apps from the given app list', async () => {
-            customRender(<UPIComponent apps={[gpayApp]} defaultMode={UPI_MODE.INTENT} onChange={jest.fn()} showPayButton={false} />);
+            customRender(<UPIComponent apps={[gpayApp]} mode={UPI_MODE.INTENT} onChange={jest.fn()} showPayButton={false} />);
 
             expect(await screen.findByRole('radiogroup')).toBeInTheDocument();
             expect(await screen.findByRole('radio', { name: /google pay/i })).toBeInTheDocument();
@@ -35,7 +35,7 @@ describe('UPIComponent', () => {
             customRender(
                 <UPIComponent
                     apps={[gpayApp]}
-                    defaultMode={UPI_MODE.INTENT}
+                    mode={UPI_MODE.INTENT}
                     onChange={jest.fn()}
                     showPayButton={true}
                     payButton={() => <button>Pay</button>}
@@ -49,7 +49,7 @@ describe('UPIComponent', () => {
             const user = userEvent.setup();
 
             customRender(
-                <UPIComponent apps={[gpayApp]} defaultMode={UPI_MODE.INTENT} onChange={jest.fn()} showPayButton={true} payButton={payButtonMock} />
+                <UPIComponent apps={[gpayApp]} mode={UPI_MODE.INTENT} onChange={jest.fn()} showPayButton={true} payButton={payButtonMock} />
             );
 
             expect(payButtonMock).toHaveBeenLastCalledWith(expect.objectContaining({ status: 'ready' }));
@@ -63,7 +63,7 @@ describe('UPIComponent', () => {
             const onChangeMock = jest.fn();
             const user = userEvent.setup();
 
-            customRender(<UPIComponent apps={[gpayApp]} defaultMode={UPI_MODE.INTENT} showPayButton={false} onChange={onChangeMock} />);
+            customRender(<UPIComponent apps={[gpayApp]} mode={UPI_MODE.INTENT} showPayButton={false} onChange={onChangeMock} />);
 
             expect(onChangeMock).toHaveBeenCalledWith({
                 data: {},
