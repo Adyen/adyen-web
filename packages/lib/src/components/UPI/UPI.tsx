@@ -7,6 +7,7 @@ import { UPIConfiguration, UpiPaymentData, UpiType } from './types';
 import { TxVariants } from '../tx-variants';
 import isMobile from '../../utils/isMobile';
 import { UPI_MODE } from './constants';
+import { ICore } from '../../types';
 
 /**
  * For mobile:
@@ -20,6 +21,12 @@ import { UPI_MODE } from './constants';
 class UPI extends UIElement<UPIConfiguration> {
     public static type = TxVariants.upi;
     public static readonly txVariants = [TxVariants.upi, TxVariants.upi_qr, TxVariants.upi_intent];
+    constructor(checkout: ICore, props: UPIConfiguration) {
+        super(checkout, props);
+        if (props.defaultMode) {
+            console.warn('[Adyen Checkout] UPI configuration property "defaultMode" is deprecated and will be removed in a future version.');
+        }
+    }
 
     formatProps(props: UPIConfiguration): UPIConfiguration {
         const { apps = [] } = props;

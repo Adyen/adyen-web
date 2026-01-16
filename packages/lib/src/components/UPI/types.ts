@@ -16,7 +16,8 @@ export type UpiPaymentData = {
 };
 
 export interface UPIConfiguration extends UIElementProps {
-    defaultMode?: UpiMode; /** @deprecated after upi_collect (vpa) deprecation  */
+    /** @deprecated UPI configuration property "defaultMode" is deprecated and will be removed in a future version. */
+    defaultMode?: UpiMode;
     // upi autopay
     mandate?: Mandate;
     // upi_intent
