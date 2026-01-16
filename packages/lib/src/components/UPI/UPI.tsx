@@ -3,7 +3,7 @@ import UIElement from '../internal/UIElement/UIElement';
 import UPIComponent from './components/UPIComponent';
 import { Await } from '../internal/Await';
 import { QRLoader } from '../internal/QRLoader';
-import { UPIConfiguration, UpiPaymentData, UpiType } from './types';
+import { UPIConfiguration, UpiMode, UpiPaymentData, UpiType } from './types';
 import { TxVariants } from '../tx-variants';
 import isMobile from '../../utils/isMobile';
 import { UPI_MODE } from './constants';
@@ -21,12 +21,15 @@ import { ICore } from '../../types';
 class UPI extends UIElement<UPIConfiguration> {
     public static type = TxVariants.upi;
     public static readonly txVariants = [TxVariants.upi, TxVariants.upi_qr, TxVariants.upi_intent];
+    private mode: UpiMode;
     constructor(checkout: ICore, props: UPIConfiguration) {
         super(checkout, props);
-        if (props.defaultMode) {
-            // NOSONAR
+        // NOSONAR
+        const { defaultMode: deprecatedDefaultMode } = props;
+        if (deprecatedDefaultMode) {
             console.warn('[Adyen Checkout] UPI configuration property "defaultMode" is deprecated and will be removed in a future version.');
         }
+        this.mode = isMobile() ? UPI_MODE.INTENT : UPI_MODE.QR_CODE;
     }
 
     formatProps(props: UPIConfiguration): UPIConfiguration {
@@ -36,14 +39,13 @@ class UPI extends UIElement<UPIConfiguration> {
             // Mobile with UPI apps
             return {
                 ...super.formatProps(props),
-                defaultMode: UPI_MODE.INTENT,
                 apps
             };
         }
 
+        this.mode = UPI_MODE.QR_CODE;
         return {
             ...super.formatProps(props),
-            defaultMode: UPI_MODE.QR_CODE,
             apps: []
         };
     }
@@ -64,8 +66,7 @@ class UPI extends UIElement<UPIConfiguration> {
     }
 
     get paymentType(): UpiType {
-        if (this.props.defaultMode === UPI_MODE.QR_CODE) {
-            // NOSONAR
+        if (this.mode === UPI_MODE.QR_CODE) {
             return TxVariants.upi_qr;
         }
         return TxVariants.upi_intent;
@@ -120,7 +121,7 @@ class UPI extends UIElement<UPIConfiguration> {
                         payButton={this.payButton}
                         onChange={this.setState}
                         apps={this.props.apps}
-                        defaultMode={this.props.defaultMode /* NOSONAR */}
+                        defaultMode={this.mode}
                         showPayButton={this.props.showPayButton}
                         amount={this.props.amount}
                         mandate={this.props.mandate}

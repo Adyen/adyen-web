@@ -4,7 +4,6 @@ import UPI from './UPI';
 import isMobile from '../../utils/isMobile';
 import { TxVariants } from '../tx-variants';
 import { Resources } from '../../core/Context/Resources';
-import { UPI_MODE } from './constants';
 import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 
 jest.mock('../../utils/isMobile');
@@ -37,8 +36,7 @@ describe('UPI', () => {
                 const formattedProps = upi.formatProps({ ...props, apps: [gpayApp] });
 
                 expect(formattedProps).toMatchObject({
-                    apps: [gpayApp],
-                    defaultMode: UPI_MODE.INTENT
+                    apps: [gpayApp]
                 });
             });
 
@@ -47,8 +45,7 @@ describe('UPI', () => {
                 const formattedProps = upi.formatProps({ ...props, apps: [] });
 
                 expect(formattedProps).toMatchObject({
-                    apps: [],
-                    defaultMode: UPI_MODE.QR_CODE
+                    apps: []
                 });
             });
         });
@@ -64,8 +61,7 @@ describe('UPI', () => {
                 const formattedProps = upi.formatProps({ ...props, apps: [gpayApp] });
 
                 expect(formattedProps).toMatchObject({
-                    apps: [],
-                    defaultMode: UPI_MODE.QR_CODE
+                    apps: []
                 });
             });
         });
