@@ -112,6 +112,7 @@ export function QRLoader(props: Readonly<QRLoaderProps>) {
             </p>
 
             <QRLoaderDetailsProvider
+                type={type}
                 qrCodeImage={qrCodeImage}
                 qrCodeData={props.qrCodeData}
                 percentage={percentage}

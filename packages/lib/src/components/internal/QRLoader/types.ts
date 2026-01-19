@@ -38,6 +38,7 @@ export interface QRCountdownProps {
 }
 
 export interface QRImageProps {
+    type: string;
     src: string;
     onLoad: () => void;
 }
