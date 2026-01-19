@@ -97,7 +97,7 @@ const config: PlaywrightTestConfig = {
     /* Run your local dev server before starting the tests */
     webServer: [
         {
-            command: 'yarn run build:storybook:e2e && yarn run start:prod-storybook',
+            command: 'npm run build:storybook:e2e && npm run start:prod-storybook',
             cwd: '../..',
             port: 3020,
             reuseExistingServer: !process.env.CI,
