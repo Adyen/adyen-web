@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - fix/sonar-config-refactoring
   pull_request:
     types: [opened, synchronize, reopened]
 
