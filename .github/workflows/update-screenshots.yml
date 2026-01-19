@@ -76,9 +76,13 @@ jobs:
       run: |
         git config --local user.email "github-actions[bot]@users.noreply.github.com"
         git config --local user.name "github-actions[bot]"
-        git add -A
-        git diff --staged --quiet || git commit -m "chore: update visual test screenshots [skip ci]"
-        git push
+        git add packages/e2e-playwright/tests/
+        if ! git diff --staged --quiet; then
+          git commit -m "chore: update visual test screenshots [skip ci]"
+          git push
+        else
+          echo "No screenshot changes to commit"
+        fi
 
     - name: Remove screenshot label
       uses: actions/github-script@v7
