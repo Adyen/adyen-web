@@ -9,6 +9,7 @@
         "test:headed": "npx playwright test --headed",
         "test:ui": "npx playwright test --ui",
         "test:update-screenshots": "npx playwright test --update-snapshots --grep @screenshot",
+        "test:update-screenshots:ui": "npx playwright test --update-snapshots --grep @screenshot --ui",
         "test:automated-a11y:headless": "npx playwright test --config=automated-ally.playwright.config.ts",
         "test:automated-a11y:headed": "npx playwright test --config=automated-ally.playwright.config.ts --headed",
         "test:automated-a11y:ui": "npx playwright test --config=automated-ally.playwright.config.ts --ui",

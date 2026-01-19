@@ -8,7 +8,7 @@ dotenv.config({ path: path.resolve('../../', '.env') });
 
 const playgroundBaseUrl = `${protocol}://localhost:3020`;
 
-const snapshotPathTemplate = '{testDir}/__screenshots__/{platform}/{projectName}/{arg}{ext}';
+const snapshotPathTemplate = '{testDir}/{testFileDir}/__screenshots__/{platform}/{projectName}/{arg}{ext}';
 
 export const SCREENSHOT_CONFIG = {
     maxDiffPixels: 1000,
