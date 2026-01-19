@@ -29,7 +29,9 @@ class PaymentMethods {
         checkPaymentMethodsResponse(response);
 
         this.paymentMethods = response ? processPaymentMethods(response.paymentMethods, options) : [];
-        this.storedPaymentMethods = response ? processStoredPaymentMethods(response.storedPaymentMethods, options) : [];
+        this.storedPaymentMethods = response
+            ? processStoredPaymentMethods(response.storedPaymentMethods, options, response.paymentMethods || [])
+            : [];
     }
 
     private mapCreatedComponentType(pmType: string): string {

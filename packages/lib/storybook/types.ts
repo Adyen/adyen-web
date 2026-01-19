@@ -44,6 +44,8 @@ export type AdyenCheckoutProps = {
     amount: number;
     sessionData?: PaymentMethodsResponse & {
         mandate?: Partial<MandateType>;
+        splitCardFundingSources?: boolean;
+        installmentOptions?: Record<string, { values: number[]; plans?: string[] }>;
     };
     allowedPaymentTypes?: string[];
     paymentMethodsOverride?: PaymentMethodsResponse;

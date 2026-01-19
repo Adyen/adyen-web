@@ -6,13 +6,39 @@ import {
     filterSupportedStoredPaymentMethods
 } from './filters';
 import uuidv4 from '../../../utils/uuid';
-import type { PaymentMethod } from './PaymentMethods';
+import type { PaymentMethod, StoredPaymentMethod } from './PaymentMethods';
 
-const processStoredPaymentMethod = (pm): RawStoredPaymentMethod => ({
-    ...pm,
-    storedPaymentMethodId: pm.id,
-    isStoredPaymentMethod: true
-});
+/**
+ * Finds the fundingSource for a stored payment method by matching its brand
+ * against the available payment methods.
+ */
+function getFundingSourceForStoredCard(
+    storedPaymentMethod: RawStoredPaymentMethod,
+    paymentMethods: RawPaymentMethod[]
+): RawPaymentMethod['fundingSource'] {
+    if (storedPaymentMethod.type !== 'scheme') {
+        return undefined;
+    }
+
+    const storedBrand = storedPaymentMethod.brand;
+    if (!storedBrand) {
+        return undefined;
+    }
+
+    const matchingPaymentMethod = paymentMethods.find(pm => pm.type === 'scheme' && pm.brands?.includes(storedBrand));
+
+    return matchingPaymentMethod?.fundingSource;
+}
+
+const processStoredPaymentMethod = (storedPM: RawStoredPaymentMethod, paymentMethods: RawPaymentMethod[]): StoredPaymentMethod => {
+    const fundingSource = getFundingSourceForStoredCard(storedPM, paymentMethods);
+    return {
+        ...storedPM,
+        storedPaymentMethodId: storedPM.id,
+        isStoredPaymentMethod: true,
+        ...(fundingSource && { fundingSource })
+    };
+};
 
 /**
  * Generate unique ID per payment method. Useful to fetch the correct payment method properties from the response
@@ -39,8 +65,9 @@ export const processPaymentMethods = (
 
 export const processStoredPaymentMethods = (
     storedPaymentMethods: RawStoredPaymentMethod[],
-    { allowPaymentMethods = [], removePaymentMethods = [] }
-): RawStoredPaymentMethod[] => {
+    { allowPaymentMethods = [], removePaymentMethods = [] },
+    paymentMethods: RawPaymentMethod[] = []
+): StoredPaymentMethod[] => {
     if (!storedPaymentMethods) return [];
 
     return storedPaymentMethods
@@ -48,7 +75,7 @@ export const processStoredPaymentMethods = (
         .filter(filterAllowedPaymentMethods, allowPaymentMethods)
         .filter(filterRemovedPaymentMethods, removePaymentMethods)
         .filter(filterEcomStoredPaymentMethods) // Only accept Ecommerce shopper interactions
-        .map(processStoredPaymentMethod);
+        .map(storedPM => processStoredPaymentMethod(storedPM, paymentMethods));
 };
 
 export const checkPaymentMethodsResponse = (paymentMethodsResponse: PaymentMethodsResponse) => {
