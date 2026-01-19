@@ -4,8 +4,10 @@ import { createAdvancedFlowCheckout } from '../../../../../storybook/helpers/cre
 import { createSessionsCheckout } from '../../../../../storybook/helpers/create-sessions-checkout';
 import CustomCard from '../../../CustomCard/CustomCard';
 import { setUpUtils, createPayButton } from './customCard.utils';
-import './customCard.style.scss';
 import Spinner from '../../../internal/Spinner';
+import { setLogosActive } from './customCard.config';
+import { CardConfigSuccessData } from '../../../../types';
+import './customCard.style.scss';
 
 export const CustomCardSeparateExpiryDate = ({ contextArgs }) => {
     const container = useRef(null);
@@ -14,8 +16,11 @@ export const CustomCardSeparateExpiryDate = ({ contextArgs }) => {
     const [errorMessage, setErrorMessage] = useState(null);
     const [configSuccess, setConfigSuccess] = useState(false);
 
-    const onConfigSuccess = () => {
+    const onConfigSuccess = (pCallbackObj: CardConfigSuccessData) => {
         setConfigSuccess(true);
+        setLogosActive(pCallbackObj.rootNode);
+        // @ts-expect-error - style property does not exist on HTMLElement
+        pCallbackObj.rootNode.querySelector('.pm-image-dual').style.display = 'none';
         globalThis.customCard.setFocusOn('encryptedCardNumber');
     };
 
@@ -77,6 +82,10 @@ export const CustomCardSeparateExpiryDate = ({ contextArgs }) => {
                                 src="https://checkoutshopper-test.adyen.com/checkoutshopper/images/logos/nocard.svg"
                                 alt="card"
                             />
+                        </span>
+                        <span className="pm-image-dual">
+                            <img className="pm-image-dual-1" width="40" alt="" />
+                            <img className="pm-image-dual-2" width="40" alt="" />
                         </span>
                         <div className="pm-form-label pm-form-label-pan">
                             <span className="pm-form-label__text">Card number:</span>

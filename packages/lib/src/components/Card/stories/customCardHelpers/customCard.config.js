@@ -10,7 +10,7 @@ function setAttributes(el, attrs) {
     }
 }
 
-function setLogosActive(rootNode, mode) {
+export function setLogosActive(rootNode, mode) {
     const imageHolder = rootNode.querySelector('.pm-image');
     const dualBrandingImageHolder = rootNode.querySelector('.pm-image-dual');
 

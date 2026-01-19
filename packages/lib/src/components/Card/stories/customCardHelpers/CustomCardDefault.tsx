@@ -5,6 +5,8 @@ import { createSessionsCheckout } from '../../../../../storybook/helpers/create-
 import CustomCard from '../../../CustomCard/CustomCard';
 import { setUpUtils, createPayButton } from './customCard.utils';
 import Spinner from '../../../internal/Spinner';
+import { CardConfigSuccessData } from '../../../../types';
+import { setLogosActive } from './customCard.config';
 import './customCard.style.scss';
 
 export const CustomCardDefault = ({ contextArgs }) => {
@@ -14,8 +16,11 @@ export const CustomCardDefault = ({ contextArgs }) => {
     const [errorMessage, setErrorMessage] = useState(null);
     const [configSuccess, setConfigSuccess] = useState(false);
 
-    const onConfigSuccess = () => {
+    const onConfigSuccess = (pCallbackObj: CardConfigSuccessData) => {
         setConfigSuccess(true);
+        setLogosActive(pCallbackObj.rootNode);
+        // @ts-expect-error - style property does not exist on HTMLElement
+        pCallbackObj.rootNode.querySelector('.pm-image-dual').style.display = 'none';
         globalThis.customCard.setFocusOn('encryptedCardNumber');
     };
 
@@ -82,6 +87,10 @@ export const CustomCardDefault = ({ contextArgs }) => {
                                 src="https://checkoutshopper-test.adyen.com/checkoutshopper/images/logos/nocard.svg"
                                 alt=""
                             />
+                        </span>
+                        <span className="pm-image-dual">
+                            <img className="pm-image-dual-1" width="40" alt="" />
+                            <img className="pm-image-dual-2" width="40" alt="" />
                         </span>
                         <div className="pm-form-label pm-form-label-pan">
                             <span className="pm-form-label__text">Card number</span>
