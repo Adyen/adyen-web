@@ -10,7 +10,7 @@ class IssuerList extends Base {
 
     readonly selectorList: Locator;
     readonly selectorCombobox: Locator;
-    readonly payButton: Locator;
+    override readonly payButton: Locator;
     readonly highlightedIssuerButtonGroup: Locator;
 
     constructor(
@@ -38,6 +38,11 @@ class IssuerList extends Base {
     async selectIssuerOnSelectorDropdown(issuerName: string) {
         await this.clickOnSelector();
         const option = this.selectorList.getByRole('option').getByText(issuerName, { exact: true });
+        await option.click();
+    }
+
+    async selectIssuer(issuerName: string) {
+        const option = this.selectorList.getByRole('option', { name: issuerName });
         await option.click();
     }
 

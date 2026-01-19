@@ -92,6 +92,7 @@ const ComponentsNameMap = {
     [TxVariants.billdesk_wallet]: 'BillDeskWallet',
     [TxVariants.dotpay]: 'Dotpay',
     [TxVariants.eps]: 'Eps',
+    [TxVariants.iris]: 'Iris',
     [TxVariants.molpay_ebanking_fpx_MY]: 'MolPayEBankingMY',
     [TxVariants.molpay_ebanking_TH]: 'MolPayEBankingTH',
     [TxVariants.molpay_ebanking_VN]: 'MolPayEBankingVN',
