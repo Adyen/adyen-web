@@ -5,7 +5,79 @@ on:
     types: [labeled]
 
 jobs:
-  update-screenshots:
+  update-automated-visual-screenshots:
+    if: github.event.label.name == 'screenshot'
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    env:
+      CHECKOUT_API_KEY: ${{secrets.ADYEN_CHECKOUT_API_KEY}}
+      MERCHANT_ACCOUNT: ${{secrets.ADYEN_CHECKOUT_MERCHANT_ACCOUNT}}
+      CLIENT_KEY: ${{secrets.ADYEN_CHECKOUT_CLIENT_KEY}}
+      CLIENT_ENV: test
+      TESTING_ENVIRONMENT: https://checkout-test.adyen.com/checkout/v71
+      API_VERSION: v71
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v6
+      with:
+        ref: ${{ github.event.pull_request.head.ref }}
+        token: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Setup Node
+      uses: actions/setup-node@v6
+      with:
+        node-version: 22.18.0
+        package-manager-cache: false
+
+    - name: Cache node modules
+      id: node-modules-cache
+      uses: actions/cache@v4
+      env:
+        cache-name: node-modules-v1
+      with:
+        path: node_modules
+        key: ${{ runner.os }}-cache-${{ env.cache-name }}-node-22.18.0-yarn-${{ hashFiles('**/yarn.lock') }}
+
+    - name: Enable Corepack
+      run: corepack enable
+
+    - name: Install Project Dependencies
+      if: steps.node-modules-cache.outputs.cache-hit != 'true'
+      run: yarn install --immutable
+
+    - name: Extract Playwright version
+      id: playwright-version
+      run: echo "PLAYWRIGHT_VERSION=$(jq -r '.devDependencies["@playwright/test"]' packages/e2e-playwright/package.json)" >> $GITHUB_ENV
+
+    - name: Cache Playwright
+      id: playwright-cache
+      uses: actions/cache@v4
+      env:
+        cache-name: playwright-v1
+      with:
+        path: ~/.cache/ms-playwright
+        key: ${{ runner.os }}-cache-${{ env.cache-name }}-node-22.18.0-playwright-${{ env.PLAYWRIGHT_VERSION }}-browser-chromium
+
+    - name: Install Playwright Dependencies
+      if: steps.playwright-cache.outputs.cache-hit != 'true'
+      run: npx playwright install --with-deps chromium
+
+    - name: Update automated visual tests screenshots
+      run: yarn test:automated-visual:update-screenshots --project=chromium
+
+    - name: Commit updated screenshots
+      run: |
+        git config --local user.email "github-actions[bot]@users.noreply.github.com"
+        git config --local user.name "github-actions[bot]"
+        git add packages/e2e-playwright/tests/
+        if ! git diff --staged --quiet; then
+          git commit -m "chore: update automated visual test screenshots [skip ci]"
+          git push
+        else
+          echo "No screenshot changes to commit"
+        fi
+
+  update-e2e-screenshots:
     if: github.event.label.name == 'screenshot'
     timeout-minutes: 60
     runs-on: ubuntu-latest
@@ -13,8 +85,8 @@ jobs:
       fail-fast: false
       matrix:
         node-version: [22.18.0]
-        api-version: ["v71"]
-        runner-browser: ["chromium"]
+        api-version: ["v69", "v70", "v71"]
+        runner-browser: ["chromium", "firefox", "webkit"]
     env:
       CHECKOUT_API_KEY: ${{secrets.ADYEN_CHECKOUT_API_KEY}}
       MERCHANT_ACCOUNT: ${{secrets.ADYEN_CHECKOUT_MERCHANT_ACCOUNT}}
@@ -69,8 +141,8 @@ jobs:
       if: steps.playwright-cache.outputs.cache-hit != 'true' || matrix.runner-browser == 'webkit'
       run: npx playwright install --with-deps ${{ matrix.runner-browser }}
 
-    - name: Update Screenshots
-      run: yarn test:automated-visual:update-screenshots --project=${{ matrix.runner-browser }}
+    - name: Update screenshots
+      run: yarn test:e2e:update-screenshots --project=${{ matrix.runner-browser }}
 
     - name: Commit updated screenshots
       run: |
@@ -78,12 +150,17 @@ jobs:
         git config --local user.name "github-actions[bot]"
         git add packages/e2e-playwright/tests/
         if ! git diff --staged --quiet; then
-          git commit -m "chore: update visual test screenshots [skip ci]"
+          git commit -m "chore: update e2e screenshots [skip ci]"
           git push
         else
           echo "No screenshot changes to commit"
         fi
 
+  remove-screenshot-label:
+    if: always() && github.event.label.name == 'screenshot'
+    needs: [update-automated-visual-screenshots, update-e2e-screenshots]
+    runs-on: ubuntu-latest
+    steps:
     - name: Remove screenshot label
       uses: actions/github-script@v7
       with:
