@@ -41,7 +41,8 @@ const config: StorybookConfig = {
                 // Mirror Rollup's SCSS settings
                 preprocessorOptions: {
                     scss: {
-                        includePaths: [join(dirname, '../src')] // Same as Rollup
+                        // Ensure @use 'styles/...' resolves
+                        loadPaths: [join(dirname, '../src')]
                     }
                 },
 
@@ -71,7 +72,10 @@ const config: StorybookConfig = {
                         find: /^~(.*)$/,
                         replacement: '$1'
                     },
-                    { find: /^styles(.*)$/, replacement: join(dirname, '../src/styles') }
+                    {
+                        find: /^styles\/(.*)$/,
+                        replacement: `${join(dirname, '../src/styles')}/$1`
+                    }
                 ]
             },
 
