@@ -120,7 +120,7 @@ export interface RawPaymentMethod {
     /**
      * The funding source of the payment method.
      */
-    fundingSource?: 'debit' | 'credit';
+    fundingSource?: 'debit' | 'credit' | 'prepaid';
 
     /**
      * The group where this payment method belongs to.
