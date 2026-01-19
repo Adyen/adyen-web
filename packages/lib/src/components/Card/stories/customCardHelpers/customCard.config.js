@@ -49,45 +49,6 @@ export const styles = {
     }
 };
 
-export function onConfigSuccess(pCallbackObj) {
-    /**
-     * Set the UI to it's starting state
-     */
-    document.querySelector('.card-input__spinner__holder').style.display = 'none';
-
-    pCallbackObj.rootNode.style.display = 'block';
-
-    pCallbackObj.rootNode.querySelector('.pm-image-dual').style.display = 'none';
-
-    setLogosActive(pCallbackObj.rootNode);
-
-    /**
-     * Set focus on first element
-     */
-    setTimeout(() => {
-        // Allow time for screen to redraw after spinner is hidden
-        globalThis.customCard.setFocusOn('encryptedCardNumber');
-    }, 100);
-
-    // globalThis.customCard.updateStyles({
-    //     base: {
-    //         color: '#000'
-    //         //            fontSize: '18px',
-    //         //            lineHeight: '18px'
-    //     },
-    //     error: {
-    //         color: 'orange'
-    //     },
-    //     validated: {
-    //         color: 'blue',
-    //         fontWeight: 'bold'
-    //     },
-    //     placeholder: {
-    //         color: 'green'
-    //     }
-    // });
-}
-
 export function setCCErrors(pCallbackObj) {
     if (!pCallbackObj.rootNode) return;
 

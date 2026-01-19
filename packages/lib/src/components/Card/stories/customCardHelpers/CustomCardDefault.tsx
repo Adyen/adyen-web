@@ -4,14 +4,20 @@ import { createAdvancedFlowCheckout } from '../../../../../storybook/helpers/cre
 import { createSessionsCheckout } from '../../../../../storybook/helpers/create-sessions-checkout';
 import CustomCard from '../../../CustomCard/CustomCard';
 import { setUpUtils, createPayButton } from './customCard.utils';
-import './customCard.style.scss';
 import Spinner from '../../../internal/Spinner';
+import './customCard.style.scss';
 
 export const CustomCardDefault = ({ contextArgs }) => {
     const container = useRef(null);
     const checkout = useRef(null);
     const [element, setElement] = useState(null);
     const [errorMessage, setErrorMessage] = useState(null);
+    const [configSuccess, setConfigSuccess] = useState(false);
+
+    const onConfigSuccess = () => {
+        setConfigSuccess(true);
+        globalThis.customCard.setFocusOn('encryptedCardNumber');
+    };
 
     const createCheckout = async () => {
         const { useSessions, showPayButton = false, countryCode, shopperLocale, amount } = contextArgs;
@@ -25,7 +31,7 @@ export const CustomCardDefault = ({ contextArgs }) => {
                   amount
               });
 
-        const customCard = new CustomCard(checkout.current, { ...contextArgs.componentConfiguration });
+        const customCard = new CustomCard(checkout.current, { ...contextArgs.componentConfiguration, onConfigSuccess });
 
         setElement(customCard);
 
@@ -59,15 +65,16 @@ export const CustomCardDefault = ({ contextArgs }) => {
     return (
         <Fragment>
             {errorMessage && <p>{errorMessage}</p>}
-            {element ? (
-                <div id="topLevelHolder" data-testid="checkout-component">
-                    <div
-                        ref={container}
-                        id="component-root"
-                        className="component-wrapper secured-fields"
-                        // @ts-ignore just hiding for better UX experience
-                        style={'display:none;'}
-                    >
+            <div id="topLevelHolder" data-testid="checkout-component">
+                <div
+                    ref={container}
+                    id="component-root"
+                    className="component-wrapper secured-fields"
+                    style={{
+                        display: configSuccess ? 'block' : 'none'
+                    }}
+                >
+                    <Fragment>
                         <span className="pm-image">
                             <img
                                 className="pm-image-1"
@@ -75,10 +82,6 @@ export const CustomCardDefault = ({ contextArgs }) => {
                                 src="https://checkoutshopper-test.adyen.com/checkoutshopper/images/logos/nocard.svg"
                                 alt=""
                             />
-                        </span>
-                        <span className="pm-image-dual">
-                            <img className="pm-image-dual-1" width="40" alt="" />
-                            <img className="pm-image-dual-2" width="40" alt="" />
                         </span>
                         <div className="pm-form-label pm-form-label-pan">
                             <span className="pm-form-label__text">Card number</span>
@@ -95,20 +98,14 @@ export const CustomCardDefault = ({ contextArgs }) => {
                             <span className="pm-input-field" data-cse="encryptedSecurityCode"></span>
                             <span className="pm-form-label__error-text">CVC Error text</span>
                         </div>
-                    </div>
-                    <div className="card-input__spinner__holder">
-                        <div className="card-input__spinner card-input__spinner--active">
-                            <div className="adyen-checkout__spinner__wrapper ">
-                                <div className="adyen-checkout__spinner adyen-checkout__spinner--large"></div>
-                            </div>
-                        </div>
-                    </div>
+                    </Fragment>
                 </div>
-            ) : (
-                <div data-testid="checkout-component-spinner">
-                    <Spinner />
-                </div>
-            )}
+                {!configSuccess && (
+                    <div data-testid="checkout-component-spinner">
+                        <Spinner />
+                    </div>
+                )}
+            </div>
         </Fragment>
     );
 };
