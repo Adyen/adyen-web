@@ -11,8 +11,8 @@ const playgroundBaseUrl = `${protocol}://localhost:3020`;
 const snapshotPathTemplate = '{testDir}/__screenshots__/{platform}/{projectName}/{arg}{ext}';
 
 export const SCREENSHOT_CONFIG = {
-    // maxDiffPixels: 300,
-    maxDiffPixelRatio: 0.02,
+    maxDiffPixels: 1000,
+    maxDiffPixelRatio: 0.01,
     animations: 'disabled',
     scale: 'device'
 } as const;
@@ -97,7 +97,7 @@ const config: PlaywrightTestConfig = {
     /* Run your local dev server before starting the tests */
     webServer: [
         {
-            command: 'npm run build:storybook && npm run start:prod-storybook',
+            command: 'yarn run build:storybook:e2e && yarn run start:prod-storybook',
             cwd: '../..',
             port: 3020,
             reuseExistingServer: !process.env.CI,

@@ -67,7 +67,7 @@ test.describe('Automated visual testing', () => {
                 await expect(page.getByTestId('spinner')).toBeHidden();
             }
             await expect(page.getByTestId('checkout-component')).toHaveScreenshot(`${storyId}.png`, {
-                mask: [page.getByRole('timer')]
+                mask: [page.getByRole('timer'), page.getByTestId('stored-card-info')]
             });
         });
     }

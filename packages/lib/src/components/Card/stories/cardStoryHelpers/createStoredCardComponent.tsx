@@ -23,22 +23,22 @@ export const createStoredCardComponent = (args: PaymentMethodStoryProps<CardConf
 
                 return (
                     <Fragment>
-                        <div className={'stored-card-info'}>
+                        <div className="stored-card-info" data-testid="stored-card-info">
                             <p>
                                 <i>Stored card info:</i>
                             </p>
-                            <div className={'info-container'}>
+                            <div className="info-container">
                                 <div>
                                     <div>Brand:</div>
-                                    <img src={card.icon} alt={'stored-card-brand-icon'} />
+                                    <img src={card.icon} alt="stored-card-brand-icon" />
                                 </div>
-                                <div className={'info-extra-item'}>
+                                <div className="info-extra-item">
                                     <div>Last four digits:</div>
-                                    <div className={'info-item-with-top-margin'}>{storedCard.lastFour}</div>
+                                    <div className="info-item-with-top-margin">{storedCard.lastFour}</div>
                                 </div>
-                                <div className={'info-extra-item'}>
+                                <div className="info-extra-item">
                                     <div>Holder name:</div>
-                                    <div className={'info-item-with-top-margin'}>{storedCard.holderName}</div>
+                                    <div className="info-item-with-top-margin">{storedCard.holderName}</div>
                                 </div>
                             </div>
                         </div>

@@ -18,6 +18,7 @@
         "start:prod-storybook": "yarn workspace @adyen/adyen-web-server start:storybook",
         "build": "yarn workspace @adyen/adyen-web build",
         "build:storybook": "yarn workspace @adyen/adyen-web build:storybook",
+        "build:storybook:e2e": "cross-env DISABLE_MSW=true yarn workspace @adyen/adyen-web build:storybook",
         "format": "yarn workspace @adyen/adyen-web format",
         "lint": "yarn workspace @adyen/adyen-web lint",
         "test": "yarn workspace @adyen/adyen-web test",
