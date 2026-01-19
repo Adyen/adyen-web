@@ -80,7 +80,7 @@ export default function PersonalDetails(props: Readonly<PersonalDetailsProps>) {
                         onInput={eventHandler('input')}
                         onBlur={eventHandler('blur')}
                         placeholder={placeholders.firstName}
-                        spellCheck={false}
+                        spellcheck={false}
                         required={true}
                     />
                 </Field>
@@ -101,7 +101,7 @@ export default function PersonalDetails(props: Readonly<PersonalDetailsProps>) {
                         onInput={eventHandler('input')}
                         onBlur={eventHandler('blur')}
                         placeholder={placeholders.lastName}
-                        spellCheck={false}
+                        spellcheck={false}
                         required={true}
                     />
                 </Field>
