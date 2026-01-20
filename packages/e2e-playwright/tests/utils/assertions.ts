@@ -87,6 +87,7 @@ export const toHaveScreenshot = (
     }
 ): Promise<void> => {
     if (!isLinux || (browserName !== 'chromium' && !isCI)) {
+        console.log('Skipping screenshot assertion', { os: os.platform(), browserName, isCI });
         return;
     }
 

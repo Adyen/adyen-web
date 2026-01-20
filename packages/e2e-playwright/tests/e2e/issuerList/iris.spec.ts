@@ -38,7 +38,7 @@ test.describe('IRIS Payment Method', () => {
         await iris.waitForQrCode();
         await expect(iris.qrCodeImage).toBeVisible();
 
-        await toHaveScreenshot(iris.qrCodeImage, browserName, 'iris-qr-code-generated.png', {
+        await toHaveScreenshot(iris.qrCodeContainer, browserName, 'iris-qr-code-generated.png', {
             mask: [page.getByRole('timer'), page.getByTestId('iris-qr-image')]
         });
     });
