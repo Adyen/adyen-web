@@ -180,6 +180,7 @@ export class GiftcardElement extends UIElement<GiftCardConfiguration> {
                 makeBalanceCheck={() => this.onBalanceCheck()}
                 makePayment={() => this.makeSubmitCall()}
                 payButton={this.payButton}
+                onSubmitAnalytics={this.submitAnalytics}
             />
         );
     }

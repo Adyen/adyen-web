@@ -493,11 +493,13 @@ const CardInput = (props: CardInputProps) => {
                 styles={{ ...props.styles }}
                 koreanAuthenticationRequired={props.configuration.koreanAuthenticationRequired}
                 hasKoreanFields={!!(props.configuration.koreanAuthenticationRequired && props.countryCode === 'kr')}
+                onSubmitAnalytics={props.onSubmitAnalytics}
                 onChange={handleSecuredFieldsChange}
                 onBrand={onBrand}
                 onFocus={handleFocus}
                 onStateUpdate={handleSFPStateUpdate}
                 type={props.brand}
+                componentType={props.type}
                 disableIOSArrowKeys={props.disableIOSArrowKeys ? handleTouchstartIOS : null}
                 render={({ setRootNode, setFocusOn }, sfpState) => (
                     <div

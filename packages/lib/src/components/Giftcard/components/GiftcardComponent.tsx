@@ -9,6 +9,7 @@ import { GiftCardFields } from './GiftcardFields';
 import { GiftcardFieldsProps, Placeholders } from './types';
 import { useSRPanelForGiftcardErrors } from './useSRPanelForGiftcardErrors';
 import { GiftCardBalanceCheckErrorType } from '../types';
+import type { AbstractAnalyticsEvent } from '../../../core/Analytics/events/AbstractAnalyticsEvent';
 
 interface GiftcardComponentProps {
     onChange: (state) => void;
@@ -27,6 +28,7 @@ interface GiftcardComponentProps {
     fieldsLayoutComponent: FunctionComponent<GiftcardFieldsProps>;
     placeholders?: Placeholders;
     handleKeyPress?: (o: KeyboardEvent) => void;
+    onSubmitAnalytics?: (event: AbstractAnalyticsEvent) => void;
 }
 
 class Giftcard extends Component<GiftcardComponentProps> {
@@ -198,7 +200,9 @@ class Giftcard extends Component<GiftcardComponentProps> {
                     }}
                     onChange={this.onChange}
                     onFocus={this.handleFocus}
+                    onSubmitAnalytics={props.onSubmitAnalytics}
                     type={GIFT_CARD}
+                    componentType={props.type}
                     render={({ setRootNode, setFocusOn }, sfpState) =>
                         this.props.fieldsLayoutComponent({
                             i18n: i18n,
