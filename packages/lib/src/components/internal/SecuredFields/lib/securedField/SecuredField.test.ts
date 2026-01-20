@@ -8,6 +8,7 @@ import { CVC_POLICY_REQUIRED, DATE_POLICY_REQUIRED, ENCRYPTED_PWD_FIELD, GIFT_CA
 import { Placeholders as GiftcardPlaceholders } from '../../../../Giftcard/components/types';
 import * as logger from '../utilities/logger';
 import { CardPlaceholders } from '../../../../Card/types';
+import { ErrorEventCode, ErrorEventType } from '../../../../../core/Analytics/events/AnalyticsErrorEvent';
 
 const ENCRYPTED_CARD_NUMBER = 'encryptedCardNumber';
 const ENCRYPTED_EXPIRY_DATE = 'encryptedExpiryDate';
@@ -73,10 +74,12 @@ const setupObj = {
     maskSecurityCode: false,
     disableIOSArrowKeys: false,
     placeholders: cardPlaceholders,
-    exposeExpiryDate: false
+    exposeExpiryDate: false,
+    submitAnalytics: null,
+    componentType: 'scheme'
 };
 
-describe('SecuredField generates console.error', () => {
+describe('SecuredField generates console.error and analytics event...', () => {
     let errorMsg: string;
 
     beforeEach(() => {
@@ -85,10 +88,20 @@ describe('SecuredField generates console.error', () => {
         console.error = logger.error = jest.fn(msg => {
             errorMsg = msg;
         });
+        setupObj.submitAnalytics = jest.fn(() => {});
     });
-    test("because it doesn't have an actual iframe", () => {
+    test("...because it doesn't have an actual iframe", () => {
         new SecuredField(setupObj, global.i18n);
         expect(errorMsg.includes('Trying to initialise a securedField iframe, but the iframe.contentWindow is undefined')).toEqual(true);
+
+        expect(setupObj.submitAnalytics).toHaveBeenCalledWith({
+            timestamp: expect.any(String),
+            id: expect.any(String),
+            component: 'scheme',
+            errorType: ErrorEventType.implementation,
+            code: ErrorEventCode.SECURED_FIELDS_IFRAME_CONTENT_WINDOW_NOT_FOUND,
+            message: 'Trying to initialise an iframe for encryptedCardNumber, but the iframe.contentWindow is undefined'
+        });
     });
 });
 
