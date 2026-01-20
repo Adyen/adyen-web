@@ -87,6 +87,40 @@ jobs:
           echo "No screenshot changes to commit"
         fi
 
+    - name: Archive test result artifacts
+      id: upload-artifact
+      if: always()
+      uses: actions/upload-artifact@v6
+      with:
+        name: playwright-report-${{matrix.api-version}}-${{matrix.runner-browser}}-${{ github.sha }}
+        path: packages/e2e-playwright/playwright-report
+        retention-days: 5
+
+    - name: Find existing comment
+      if: failure() && github.event_name == 'pull_request'
+      uses: peter-evans/find-comment@v3
+      id: find-comment
+      with:
+        issue-number: ${{ github.event.pull_request.number }}
+        comment-author: 'github-actions[bot]'
+        body-includes: "E2E Test Report (${{ matrix.api-version }} / ${{ matrix.runner-browser }})"
+
+    - name: Post artifact URL comment
+      if: failure() && github.event_name == 'pull_request'
+      uses: peter-evans/create-or-update-comment@v4
+      with:
+        comment-id: ${{ steps.find-comment.outputs.comment-id }}
+        issue-number: ${{ github.event.pull_request.number }}
+        edit-mode: replace
+        body: | 
+          ## Update Automated Visual Test Screenshots Report (${{ matrix.api-version }} / ${{ matrix.runner-browser }})
+
+          :x: **Update automated visual test screenshots failed** for API version `${{ matrix.api-version }}` on `${{ matrix.runner-browser }}`
+
+          **[View Playwright Report](${{ steps.upload-artifact.outputs.artifact-url }})**
+
+          <sub>Commit: ${{ github.sha }}</sub>
+
   update-e2e-screenshots:
     if: github.event.label.name == 'screenshot'
     needs: [update-automated-visual-screenshots]
@@ -169,6 +203,40 @@ jobs:
         else
           echo "No screenshot changes to commit"
         fi
+
+    - name: Archive test result artifacts
+      id: upload-artifact
+      if: always()
+      uses: actions/upload-artifact@v6
+      with:
+        name: playwright-report-${{matrix.api-version}}-${{matrix.runner-browser}}-${{ github.sha }}
+        path: packages/e2e-playwright/playwright-report
+        retention-days: 5
+
+    - name: Find existing comment
+      if: failure() && github.event_name == 'pull_request'
+      uses: peter-evans/find-comment@v3
+      id: find-comment
+      with:
+        issue-number: ${{ github.event.pull_request.number }}
+        comment-author: 'github-actions[bot]'
+        body-includes: "E2E Test Report (${{ matrix.api-version }} / ${{ matrix.runner-browser }})"
+
+    - name: Post artifact URL comment
+      if: failure() && github.event_name == 'pull_request'
+      uses: peter-evans/create-or-update-comment@v4
+      with:
+        comment-id: ${{ steps.find-comment.outputs.comment-id }}
+        issue-number: ${{ github.event.pull_request.number }}
+        edit-mode: replace
+        body: | 
+          ## Update E2E Test Screenshots Report (${{ matrix.api-version }} / ${{ matrix.runner-browser }})
+
+          :x: **Update e2e test screenshots failed** for API version `${{ matrix.api-version }}` on `${{ matrix.runner-browser }}`
+
+          **[View Playwright Report](${{ steps.upload-artifact.outputs.artifact-url }})**
+
+          <sub>Commit: ${{ github.sha }}</sub>
 
   remove-screenshot-label:
     if: always() && github.event.label.name == 'screenshot'
