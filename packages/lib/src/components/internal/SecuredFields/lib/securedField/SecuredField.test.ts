@@ -76,6 +76,22 @@ const setupObj = {
     exposeExpiryDate: false
 };
 
+describe('SecuredField generates console.error', () => {
+    let errorMsg: string;
+
+    beforeEach(() => {
+        errorMsg = '';
+        // @ts-ignore - allow assignment, it's only a test!
+        console.error = logger.error = jest.fn(msg => {
+            errorMsg = msg;
+        });
+    });
+    test("because it doesn't have an actual iframe", () => {
+        new SecuredField(setupObj, global.i18n);
+        expect(errorMsg.includes('Trying to initialise a securedField iframe, but the iframe.contentWindow is undefined')).toEqual(true);
+    });
+});
+
 /**
  * AriaConfig
  */
