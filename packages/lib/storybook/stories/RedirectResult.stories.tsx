@@ -11,7 +11,8 @@ type RedirectResultProps = {
 type RedirectStory = StoryObj<RedirectResultProps>;
 
 const meta: Meta<RedirectResultProps> = {
-    title: 'Helpers/RedirectResult'
+    title: 'Helpers/RedirectResult',
+    tags: ['no-automated-visual-test']
 };
 
 export default meta;

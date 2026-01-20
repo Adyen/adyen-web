@@ -1,7 +1,6 @@
 import { test, expect } from '../../../fixtures/base-fixture';
 import fs from 'node:fs';
 import { toHaveScreenshot } from '../../utils/assertions';
-
 // Config
 // This is relative to playwright root: adyen-web/lib/e2e-playwright/
 const STORYBOOK_INDEX_PATH = '../lib/storybook-static/index.json';
@@ -27,22 +26,7 @@ const index = JSON.parse(rawData) as StorybookIndex;
 const allEntries = Object.values(index.entries);
 
 // Filter out non-story entries, docs, and explicitly excluded stories
-const storyIds = allEntries
-    .filter(
-        entry =>
-            entry.type === 'story' &&
-            !entry.id.includes('dropin') &&
-            !entry.id.includes('internal') &&
-            !entry.id.includes('applepay') &&
-            !entry.id.includes('amazonpay') &&
-            !entry.id.includes('paybybankpix') &&
-            !entry.id.includes('clicktopay') &&
-            !entry.id.includes('paypal--express') &&
-            !entry.id.includes('fastlane--lookup') &&
-            !entry.id.includes('components-cards--card-with-3-ds-2-create-from-action') &&
-            !entry.id.includes('helpers')
-    )
-    .map(entry => entry.id); // Extract the IDs
+const storyIds = allEntries.filter(entry => entry.type === 'story' && !entry.tags.includes('no-automated-visual-test')).map(entry => entry.id); // Extract the IDs
 
 const getTestTitle = (storyId: string) => {
     return `Visual Test: ${storyId.replace(/[^a-zA-Z0-9_.-]/g, '_')}`;

@@ -23,6 +23,10 @@ const config: StorybookConfig = {
 
     framework: '@storybook/preact-vite',
 
+    tags: {
+        'no-automated-visual-test': {}
+    },
+
     addons: ['@storybook/addon-a11y', '@storybook/addon-docs'],
 
     // public added for msw: https://github.com/mswjs/msw-storybook-addon?tab=readme-ov-file#start-storybook

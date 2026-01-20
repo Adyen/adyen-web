@@ -8,6 +8,7 @@ import DropinComponent from '../../Dropin/Dropin';
 
 const meta: MetaConfiguration<DropinConfiguration> = {
     title: 'Components/PayTo/Dropin',
+    tags: ['no-automated-visual-test'],
     argTypes: {
         componentConfiguration: {
             control: 'object'
