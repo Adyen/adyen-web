@@ -1,5 +1,17 @@
 # @adyen/adyen-web
 
+## 6.29.0
+
+### Minor Changes
+
+- Improvement: Remove installments and CtP from Brazilian meal vouchers ([#3750](https://github.com/Adyen/adyen-web/pull/3750))
+
+- New: Add IRIS payment method component ([#3708](https://github.com/Adyen/adyen-web/pull/3708))
+
+- New: Added support for alternativeReference field to Econtext voucher result ([#3749](https://github.com/Adyen/adyen-web/pull/3749))
+
+- Feature: add support for sdkData API field ([#3511](https://github.com/Adyen/adyen-web/pull/3511))
+
 ## 6.28.0
 
 ### Minor Changes
