@@ -124,10 +124,12 @@ class SecuredField extends AbstractSecuredField {
 
         if (iframe) {
             if (!iframe.contentWindow) {
-                // Warn the dev
-                console.error(
-                    'ERROR: Trying to initialise a securedField iframe, but the iframe.contentWindow is undefined. Are you sure the element into which the Card component is being mounted already exists in the DOM *before* the Card component is mounted?'
-                );
+                if (process.env.NODE_ENV !== 'test') {
+                    // Warn the dev
+                    console.error(
+                        'ERROR: Trying to initialise a securedField iframe, but the iframe.contentWindow is undefined. Are you sure the element into which the Card component is being mounted already exists in the DOM *before* the Card component is mounted?'
+                    );
+                }
                 // Log the error
                 const event = new AnalyticsErrorEvent({
                     component: this.componentType,
