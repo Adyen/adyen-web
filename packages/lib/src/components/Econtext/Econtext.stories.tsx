@@ -48,7 +48,7 @@ export const EcontextATMVoucherScreen: EcontextStory = {
                             alternativeReference: 'testalternativereference',
                             instructionsUrl: 'https://example.com/instructions',
                             collectionInstitutionNumber: '123456789',
-                            expiresAt: '2025-12-25T00:00:00.000Z',
+                            expiresAt: '2025-12-25T14:00:00.000Z',
                             ...componentConfiguration
                         })
                     }
