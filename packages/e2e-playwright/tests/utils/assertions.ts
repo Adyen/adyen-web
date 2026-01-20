@@ -6,7 +6,7 @@ const isLinux = os.platform() === 'linux';
 
 export const toHaveScreenshot = (
     locator: Locator,
-    browserName: string,
+    browserName: 'chromium' | 'firefox' | 'webkit',
     name: string | ReadonlyArray<string>,
     options?: {
         /**
