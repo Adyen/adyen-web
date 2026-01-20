@@ -1,5 +1,6 @@
 import { test, expect } from '../../../fixtures/base-fixture';
 import fs from 'node:fs';
+import { toHaveScreenshot } from '../../utils/assertions';
 
 // Config
 // This is relative to playwright root: adyen-web/lib/e2e-playwright/
@@ -56,7 +57,7 @@ test.describe('Automated visual testing', () => {
     for (const storyId of storyIds) {
         const testTitle = getTestTitle(storyId);
 
-        test(testTitle, async ({ page }) => {
+        test(testTitle, async ({ page, browserName }) => {
             const storyUrl = getStoryUrl(storyId);
 
             // Create tests model
@@ -66,7 +67,7 @@ test.describe('Automated visual testing', () => {
             if (!storyId.includes('await')) {
                 await expect(page.getByTestId('spinner')).toBeHidden();
             }
-            await expect(page.getByTestId('checkout-component')).toHaveScreenshot(`${storyId}.png`, {
+            await toHaveScreenshot(page.getByTestId('checkout-component'), browserName, `${storyId}.png`, {
                 mask: [page.getByRole('timer'), page.getByTestId('stored-card-info')]
             });
         });

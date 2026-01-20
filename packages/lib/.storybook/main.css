@@ -2,8 +2,13 @@
 
 html,
 body {
-    font: 1rem/1.21 Inter, sans-serif;
+    font-family: Inter, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
     font-weight: 400;
+    text-rendering: optimizelegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
     background-color: #fbfbfb;
 }
 
