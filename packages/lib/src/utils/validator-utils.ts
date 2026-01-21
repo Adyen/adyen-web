@@ -22,7 +22,17 @@ export const isEmpty = input => !!(input == null || /^[\s]*$/.test(input));
 export const isString = input => typeof input === 'string' || input instanceof String;
 export const hasText = input => isString(input) && !isEmpty(input);
 
-export const SPECIAL_CHARS = '?\\+_=!@#$%^&*(){}~<>\\[\\]\\\\'; // N.B. difficulty escaping \ (takes 3 backslashes!)
+// Block emojis and control/format characters, allow everything else
+let INVALID_CHARS_REGEX: RegExp;
+try {
+    INVALID_CHARS_REGEX = new RegExp('[\\p{Extended_Pictographic}\\p{Cc}\\p{Cf}]', 'gu');
+} catch {
+    // Fallback for browsers without Unicode property escapes - just block control chars
+    // eslint-disable-next-line no-control-regex
+    INVALID_CHARS_REGEX = /[\u0000-\u001F\u007F-\u009F]/g;
+}
+
+export { INVALID_CHARS_REGEX };
 
 // Generates a regEx ideal for use in a String.replace call for use in a formatter
 // e.g. getFormattingRegEx('^\\d', 'g') will generate: /[^\d]/g which is a regEx to match anything that is not a digit
@@ -34,8 +44,7 @@ export const getValidatingRegEx = (specChars: string, exclude: boolean) => new R
 export const CHARACTER_PATTERNS: { [key: string]: RegExp } = {
     digitsHyphen: /^[\d-]+$/,
     noHtml: /^[^<>&]+$/,
-    alphaNum: /^\d[a-zA-Z0-9]{6,11}$/,
-    noSpecialChars: getValidatingRegEx(SPECIAL_CHARS, true)
+    alphaNum: /^\d[a-zA-Z0-9]{6,11}$/
 };
 
 export const exactLength = (input: string, length: number) => {
@@ -45,10 +54,10 @@ export const exactLength = (input: string, length: number) => {
     return input.length === length;
 };
 
-export const validateForSpecialChars = name => {
-    const hasNoLength = !name.length;
-    // RegEx .test, if run against empty string, will return false
-    return CHARACTER_PATTERNS.noSpecialChars.test(name) || hasNoLength;
+export const validateForInvalidChars = (name: string): boolean => {
+    if (!name.length) return true;
+    // Returns true if no invalid characters found
+    return !INVALID_CHARS_REGEX.test(name);
 };
 
 // Trim start and never allow more than 1 space on the end
