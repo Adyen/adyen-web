@@ -1,6 +1,6 @@
 import { CountryFormatRules, FormatRules } from '../../../utils/Validator/types';
 import { Formatter } from '../../../utils/useForm/types';
-import { getFormattingRegEx, SPECIAL_CHARS, trimValWithOneSpace } from '../../../utils/validator-utils';
+import { getFormattingRegEx, INVALID_CHARS_REGEX, trimValWithOneSpace } from '../../../utils/validator-utils';
 
 const createFormatByDigits = (digits: number): Formatter => {
     const format = new Array(digits).fill('9').join('');
@@ -12,8 +12,7 @@ const createFormatByDigits = (digits: number): Formatter => {
     };
 };
 
-const specialCharsRegEx = getFormattingRegEx(SPECIAL_CHARS);
-const formattingFn = val => trimValWithOneSpace(val).replace(specialCharsRegEx, '');
+const formattingFn = val => trimValWithOneSpace(val).replace(INVALID_CHARS_REGEX, '');
 
 export const addressFormatters: FormatRules = {
     postalCode: {
@@ -110,8 +109,8 @@ export const countrySpecificFormatters: CountryFormatRules = {
     },
     GB: {
         postalCode: {
-            // Disallow special chars & set to maxlength
-            formatterFn: val => val.replace(getFormattingRegEx(SPECIAL_CHARS), '').substring(0, 8),
+            // Disallow invalid chars & set to maxlength
+            formatterFn: val => val.replace(INVALID_CHARS_REGEX, '').substring(0, 8),
             format: 'AA99 9AA or A99 9AA or A9 9AA',
             maxlength: 8
         }
