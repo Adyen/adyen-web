@@ -1,5 +1,3 @@
-const fs = require('fs');
-const path = require('path');
 const { execSync } = require('child_process');
 
 /**
@@ -10,6 +8,10 @@ module.exports = {
     factory: () => ({
         hooks: {
             afterAllInstalled() {
+                if (process.env.CI) {
+                    return;
+                }
+                
                 console.warn('[husky-setup] Installing husky hooks...');
                 execSync('npx husky', { stdio: 'inherit' });
                 console.warn('[husky-setup] Husky installed');
