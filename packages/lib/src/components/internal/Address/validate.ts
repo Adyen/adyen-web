@@ -1,7 +1,7 @@
 import { ValidatorRules, ValidatorRule } from '../../../utils/Validator/types';
 import { countrySpecificFormatters } from './validate.formats';
-import { ERROR_FIELD_REQUIRED, ERROR_INVALID_FORMAT_EXPECTS } from '../../../core/Errors/constants';
-import { isEmpty } from '../../../utils/validator-utils';
+import { ERROR_FIELD_REQUIRED, ERROR_INVALID_FORMAT_EXPECTS, ERROR_INVALID_CHARACTERS } from '../../../core/Errors/constants';
+import { isEmpty, hasInvalidChars } from '../../../utils/validator-utils';
 
 const createPatternByDigits = (digits: number) => {
     return {
@@ -103,17 +103,48 @@ export const getAddressValidationRules = (specifications): ValidatorRules => {
             },
             errorMessage: ERROR_FIELD_REQUIRED
         },
-        houseNumberOrName: {
-            validate: (value, context) => {
-                const selectedCountry = context.state?.data?.country;
-                const isOptional = selectedCountry && specifications.countryHasOptionalField(selectedCountry, 'houseNumberOrName');
-                return isOptional || (isEmpty(value) ? null : true);
+        street: [
+            {
+                modes: ['blur'],
+                validate: value => (isEmpty(value) ? null : true),
+                errorMessage: ERROR_FIELD_REQUIRED
             },
-            modes: ['blur'],
-            errorMessage: ERROR_FIELD_REQUIRED
-        },
+            {
+                modes: ['blur'],
+                validate: value => hasInvalidChars(value),
+                errorMessage: ERROR_INVALID_CHARACTERS
+            }
+        ],
+        houseNumberOrName: [
+            {
+                validate: (value, context) => {
+                    const selectedCountry = context.state?.data?.country;
+                    const isOptional = selectedCountry && specifications.countryHasOptionalField(selectedCountry, 'houseNumberOrName');
+                    return isOptional || (isEmpty(value) ? null : true);
+                },
+                modes: ['blur'],
+                errorMessage: ERROR_FIELD_REQUIRED
+            },
+            {
+                modes: ['blur'],
+                validate: value => hasInvalidChars(value),
+                errorMessage: ERROR_INVALID_CHARACTERS
+            }
+        ],
+        city: [
+            {
+                modes: ['blur'],
+                validate: value => (isEmpty(value) ? null : true),
+                errorMessage: ERROR_FIELD_REQUIRED
+            },
+            {
+                modes: ['blur'],
+                validate: value => hasInvalidChars(value),
+                errorMessage: ERROR_INVALID_CHARACTERS
+            }
+        ],
         default: {
-            validate: value => (isEmpty(value) ? null : true), // true, if there are chars other than spaces
+            validate: value => (isEmpty(value) ? null : true),
             modes: ['blur'],
             errorMessage: ERROR_FIELD_REQUIRED
         }
