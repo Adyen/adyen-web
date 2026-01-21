@@ -26,7 +26,7 @@ const UPIIntentAppList = ({ apps, selectedAppId, disabled, onAppSelect = () => {
             })}
             role="radiogroup"
             aria-label={i18n.get('paymentMethodsList.aria.label')}
-            required
+            aria-required="true"
         >
             {apps.map(app => {
                 const key = `adyen-checkout-upi-app-item-${app.id}`;
