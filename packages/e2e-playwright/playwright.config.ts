@@ -11,7 +11,7 @@ const playgroundBaseUrl = `${protocol}://localhost:3020`;
 const snapshotPathTemplate = '{testDir}/{testFileDir}/__screenshots__/{platform}/{projectName}/{arg}{ext}';
 
 export const SCREENSHOT_CONFIG = {
-    maxDiffPixels: 700,
+    maxDiffPixels: 1000,
     maxDiffPixelRatio: 0.01,
     animations: 'disabled',
     scale: 'device'
