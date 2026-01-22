@@ -158,7 +158,6 @@ const ComponentsNameMap = {
     [TxVariants.payto]: 'PayTo',
     [TxVariants.upi]: 'UPI', // also QR
     [TxVariants.upi_qr]: 'UPI', // also QR
-    [TxVariants.upi_collect]: 'UPI', // also QR
     [TxVariants.upi_intent]: 'UPI',
     /** Await */
 

@@ -43,6 +43,11 @@ export const URL_MAP = {
     giftcard_with_giftcard: '/iframe.html?args=&globals=&id=components-gift-cards--with-giftcard&viewMode=story',
 
     /**
+     * UPI
+     */
+    upi: '/iframe.html?globals=&id=components-upi--default&viewMode=story',
+    
+    /**
      * Vouchers
      */
     boleto: '/iframe.html?globals=&id=components-vouchers-boleto--default&viewMode=story',
