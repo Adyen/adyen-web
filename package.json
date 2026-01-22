@@ -30,7 +30,6 @@
         "test:automated-visual": "yarn workspace @adyen/adyen-web-playwright test:automated-visual:headless",
         "test:automated-visual:update-screenshots": "yarn workspace @adyen/adyen-web-playwright test:automated-visual:update-screenshots",
         "type-check": "yarn workspace @adyen/adyen-web type-check",
-        "prepare": "husky",
         "changeset": "changeset",
         "version": "changeset version && yarn install",
         "validate:fix": "yarn workspaces foreach --all run validate:fix"
