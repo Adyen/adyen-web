@@ -61,7 +61,7 @@ jobs:
         git config --local user.name "github-actions[bot]"
         git add packages/e2e-playwright/tests/
         if ! git diff --staged --quiet; then
-          git commit -m "chore: update screenshots"
+          git commit -m "chore: update screenshots [skip ci]"
           git push
         else
           echo "No screenshot changes to commit"
