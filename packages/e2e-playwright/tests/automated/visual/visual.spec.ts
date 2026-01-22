@@ -1,24 +1,10 @@
 import { test, expect } from '../../../fixtures/base-fixture';
 import fs from 'node:fs';
 import { toHaveScreenshot } from '../../utils/assertions';
-// Config
+import { StorybookIndex } from '../types';
+
 // This is relative to playwright root: adyen-web/lib/e2e-playwright/
 const STORYBOOK_INDEX_PATH = '../lib/storybook-static/index.json';
-
-// types
-interface StorybookIndex {
-    v: number;
-    entries: {
-        [id: string]: {
-            id: string;
-            title: string;
-            name: string;
-            importPath: string;
-            type: 'story' | 'docs';
-            tags: string[];
-        };
-    };
-}
 
 const rawData = fs.readFileSync(STORYBOOK_INDEX_PATH, { encoding: 'utf-8' });
 const index = JSON.parse(rawData) as StorybookIndex;
@@ -44,7 +30,6 @@ test.describe('Automated visual testing', () => {
         test(testTitle, async ({ page, browserName }) => {
             const storyUrl = getStoryUrl(storyId);
 
-            // Create tests model
             await page.goto(storyUrl);
             await expect(page.getByTestId('checkout-component-spinner')).toBeVisible();
             await expect(page.getByTestId('checkout-component-spinner')).toBeHidden();
