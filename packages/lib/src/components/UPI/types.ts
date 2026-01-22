@@ -1,23 +1,22 @@
 import { UIElementProps } from '../internal/UIElement/types';
 import { TxVariants } from '../tx-variants';
-import { SegmentedControlOption } from '../internal/SegmentedControl/SegmentedControl';
 import { Mandate } from './components/UPIMandate/UPIMandate';
 
-export type UpiType = TxVariants.upi_qr | TxVariants.upi_intent | TxVariants.upi_collect;
+export type UpiType = TxVariants.upi_qr | TxVariants.upi_intent;
 
-export type UpiMode = 'vpa' | 'qrCode' | 'intent';
+export type UpiMode = 'qrCode' | 'intent';
 
 export type App = { id: string; name: string; type?: UpiType };
 
 export type UpiPaymentData = {
     paymentMethod: {
         type: UpiType;
-        virtualPaymentAddress?: string;
         appId?: string;
     };
 };
 
 export interface UPIConfiguration extends UIElementProps {
+    /** @deprecated UPI configuration property "defaultMode" is deprecated and will be removed in a future version. */
     defaultMode?: UpiMode;
     // upi autopay
     mandate?: Mandate;
@@ -31,7 +30,6 @@ export interface UPIConfiguration extends UIElementProps {
     /**
      * @internal
      */
-    segmentedControlOptions?: Array<SegmentedControlOption<UpiMode>>;
     // Await
     paymentData?: string;
     // QR code

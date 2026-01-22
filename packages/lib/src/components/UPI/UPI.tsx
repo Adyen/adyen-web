@@ -6,62 +6,47 @@ import { QRLoader } from '../internal/QRLoader';
 import { UPIConfiguration, UpiMode, UpiPaymentData, UpiType } from './types';
 import { TxVariants } from '../tx-variants';
 import isMobile from '../../utils/isMobile';
-import type { ICore } from '../../core/types';
-import { getIntentOption, getQrOption, getVpaOption } from './constants';
+import { UPI_MODE } from './constants';
+import { ICore } from '../../types';
 
 /**
  * For mobile:
- * We should show upi_collect and upi_intent depending on if `apps` are returned in /paymentMethods response.
- * If there is no apps, hide segmented controls.
- * The upi_collect should always be on the second tab.
- * Never show QR code.
+ * We should show upi_intent depending on if `apps` are returned in /paymentMethods response.
  *
  * For non-mobile:
  * We should never show the upi_intent (ignore `apps` in /paymentMethods response)
- * The upi_qr should be on the first tab and the upi_collect should be on second tab
+ * Show upi_qr as default
  */
 
 class UPI extends UIElement<UPIConfiguration> {
     public static type = TxVariants.upi;
-    public static txVariants = [TxVariants.upi, TxVariants.upi_qr, TxVariants.upi_collect, TxVariants.upi_intent];
-
-    private selectedMode: UpiMode;
-
+    public static readonly txVariants = [TxVariants.upi, TxVariants.upi_qr, TxVariants.upi_intent];
+    private mode: UpiMode;
     constructor(checkout: ICore, props: UPIConfiguration) {
         super(checkout, props);
-        this.selectedMode = this.props.defaultMode;
+        // @ts-ignore: Accessing deprecated prop to provide migration warning
+        const { defaultMode: deprecatedDefaultMode } = props;
+        if (deprecatedDefaultMode) {
+            console.warn('[Adyen Checkout] UPI configuration property "defaultMode" is deprecated and will be removed in a future version.');
+        }
+        this.mode = isMobile() ? UPI_MODE.INTENT : UPI_MODE.QR_CODE;
     }
 
     formatProps(props: UPIConfiguration): UPIConfiguration {
-        if (!isMobile()) {
-            return {
-                ...super.formatProps(props),
-                defaultMode: ['qrCode', 'vpa'].includes(props?.defaultMode) ? props.defaultMode : 'qrCode',
-                apps: [], // For desktop, ignore the apps
-                segmentedControlOptions: [getQrOption(props.i18n), getVpaOption(props.i18n)]
-            };
-        }
-
-        const { i18n, apps = [] } = props;
+        const { apps = [] } = props;
         const hasIntentApps = apps.length > 0;
-        if (hasIntentApps) {
+        if (isMobile() && hasIntentApps) {
             // Mobile with UPI apps
-            const allowedModes: UpiMode[] = ['intent', 'vpa'];
-            const defaultMode = allowedModes.includes(props.defaultMode) ? props.defaultMode : 'intent';
             return {
                 ...super.formatProps(props),
-                defaultMode,
-                apps,
-                segmentedControlOptions: [getIntentOption(i18n), getVpaOption(i18n)]
+                apps
             };
         }
 
-        // Mobile, but no UPI apps
+        this.mode = UPI_MODE.QR_CODE;
         return {
             ...super.formatProps(props),
-            defaultMode: 'vpa', // Only VPA is possible
-            apps: [],
-            segmentedControlOptions: []
+            apps: []
         };
     }
 
@@ -70,30 +55,22 @@ class UPI extends UIElement<UPIConfiguration> {
     }
 
     public formatData(): UpiPaymentData {
-        const { virtualPaymentAddress, app } = this.state.data || {};
+        const { app } = this.state.data || {};
 
         return {
             paymentMethod: {
                 type: this.paymentType,
-                ...(this.paymentType === TxVariants.upi_collect && virtualPaymentAddress && { virtualPaymentAddress }),
                 ...(this.paymentType === TxVariants.upi_intent && app?.id && { appId: app.id })
             }
         };
     }
 
     get paymentType(): UpiType {
-        if (this.selectedMode === 'qrCode') {
+        if (this.mode === UPI_MODE.QR_CODE) {
             return TxVariants.upi_qr;
-        }
-        if (this.selectedMode === 'vpa') {
-            return TxVariants.upi_collect;
         }
         return TxVariants.upi_intent;
     }
-
-    private onUpdateMode = (mode: UpiMode): void => {
-        this.selectedMode = mode;
-    };
 
     protected override componentToRender(): h.JSX.Element {
         const { type, url, paymentMethodType } = this.props;
@@ -143,10 +120,8 @@ class UPI extends UIElement<UPIConfiguration> {
                         }}
                         payButton={this.payButton}
                         onChange={this.setState}
-                        onUpdateMode={this.onUpdateMode}
                         apps={this.props.apps}
-                        segmentedControlOptions={this.props.segmentedControlOptions}
-                        defaultMode={this.props.defaultMode}
+                        mode={this.mode}
                         showPayButton={this.props.showPayButton}
                         amount={this.props.amount}
                         mandate={this.props.mandate}
