@@ -58,8 +58,8 @@ export const QRCodeScreen: PixStory = {
                 <ComponentContainer
                     element={
                         new Pix(checkout, {
-                            paymentData: 'Ab02b4c0....J86s=',
-                            qrCodeData: 'testqrcode',
+                            paymentData: 'Ab05e7c0....J86s=',
+                            qrCodeData: 'exampleQrcodeData',
                             ...componentConfiguration
                         })
                     }

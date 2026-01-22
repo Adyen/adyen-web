@@ -77,6 +77,8 @@ jobs:
         retention-days: 5
 
     - name: Remove screenshot label
+      if: always()
+      id: remove-screenshot-label
       uses: actions/github-script@v7
       with:
         script: |
