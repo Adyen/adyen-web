@@ -1,7 +1,7 @@
 import { ValidatorRules, ValidatorRule } from '../../../utils/Validator/types';
 import { countrySpecificFormatters } from './validate.formats';
 import { ERROR_FIELD_REQUIRED, ERROR_INVALID_FORMAT_EXPECTS, ERROR_INVALID_CHARACTERS } from '../../../core/Errors/constants';
-import { isEmpty, hasInvalidChars } from '../../../utils/validator-utils';
+import { isEmpty, validateForSpecialChars } from '../../../utils/validator-utils';
 
 const createPatternByDigits = (digits: number) => {
     return {
@@ -93,6 +93,18 @@ export const getPartialAddressValidationRules = (country: string): ValidatorRule
     return validationRules;
 };
 
+const ruleIsEmpty: ValidatorRule = {
+    modes: ['blur'],
+    validate: value => (isEmpty(value) ? null : true),
+    errorMessage: ERROR_FIELD_REQUIRED
+};
+
+const ruleValidateForSpecialChars: ValidatorRule = {
+    modes: ['blur'],
+    validate: value => validateForSpecialChars(value),
+    errorMessage: ERROR_INVALID_CHARACTERS
+};
+
 export const getAddressValidationRules = (specifications): ValidatorRules => {
     const addressValidationRules: ValidatorRules = {
         postalCode: {
@@ -104,16 +116,8 @@ export const getAddressValidationRules = (specifications): ValidatorRules => {
             errorMessage: ERROR_FIELD_REQUIRED
         },
         street: [
-            {
-                modes: ['blur'],
-                validate: value => (isEmpty(value) ? null : true),
-                errorMessage: ERROR_FIELD_REQUIRED
-            },
-            {
-                modes: ['blur'],
-                validate: value => hasInvalidChars(value),
-                errorMessage: ERROR_INVALID_CHARACTERS
-            }
+            ruleIsEmpty,
+            ruleValidateForSpecialChars
         ],
         houseNumberOrName: [
             {
@@ -125,29 +129,13 @@ export const getAddressValidationRules = (specifications): ValidatorRules => {
                 modes: ['blur'],
                 errorMessage: ERROR_FIELD_REQUIRED
             },
-            {
-                modes: ['blur'],
-                validate: value => hasInvalidChars(value),
-                errorMessage: ERROR_INVALID_CHARACTERS
-            }
+            ruleValidateForSpecialChars
         ],
         city: [
-            {
-                modes: ['blur'],
-                validate: value => (isEmpty(value) ? null : true),
-                errorMessage: ERROR_FIELD_REQUIRED
-            },
-            {
-                modes: ['blur'],
-                validate: value => hasInvalidChars(value),
-                errorMessage: ERROR_INVALID_CHARACTERS
-            }
+            ruleIsEmpty,
+            ruleValidateForSpecialChars
         ],
-        default: {
-            validate: value => (isEmpty(value) ? null : true),
-            modes: ['blur'],
-            errorMessage: ERROR_FIELD_REQUIRED
-        }
+        default: ruleIsEmpty
     };
     return addressValidationRules;
 };
