@@ -68,7 +68,7 @@
 }
 
 .adyen-checkout__radio_group__input:checked + .adyen-checkout__radio_group__label::before {
-    background-color: token(color-label-primary);
+    background-color: variable-generator.token(color-label-primary);
     border: 0;
     transition: all 0.2s ease-out;
 }
