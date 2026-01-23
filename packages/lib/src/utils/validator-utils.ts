@@ -47,7 +47,7 @@ export const exactLength = (input: string, length: number) => {
     return input.length === length;
 };
 
-export const hasInvalidChars = (text: string): boolean => {
+export const validateForSpecialChars = (text: string): boolean => {
     if (!text.length) return true;
     // Reset lastIndex for global regex before testing
     INVALID_CHARS_REGEX.lastIndex = 0;
