@@ -1,25 +1,5 @@
 @use 'styles/variable-generator';
 
-.adyen-checkout__giftcard-result__header {
-    align-items: center;
-    display: flex;
-    flex-wrap: nowrap;
-    font-size: variable-generator.token(text-title-font-size);
-    font-weight: variable-generator.token(text-body-font-weight);
-    justify-content: space-between;
-    position: relative;
-    width: 100%;
-}
-
-.adyen-checkout__giftcard-result__header__title {
-    display: flex;
-    align-items: center;
-}
-
-.adyen-checkout__giftcard-result__name {
-    margin-left: variable-generator.token(spacer-040);
-}
-
 .adyen-checkout__giftcard-result__balance {
     padding: 0;
     list-style: none;
