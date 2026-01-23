@@ -1,5 +1,5 @@
 @use 'styles/index';
-@import 'styles/variable-generator';
+@use 'styles/variable-generator';
 
 .adyen-checkout-ctp__section {
     position: relative;
@@ -7,8 +7,8 @@
     box-shadow:
         0 6px 12px rgb(0 17 44 / 8%),
         0 2px 4px rgb(0 17 44 / 4%);
-    border-radius: token(spacer-060);
-    padding: token(spacer-070);
+    border-radius: variable-generator.token(spacer-060);
+    padding: variable-generator.token(spacer-070);
 
     &-brand {
         display: flex;
@@ -22,7 +22,7 @@
     }
 
     .adyen-checkout__fieldset {
-        margin-bottom: token(spacer-090);
+        margin-bottom: variable-generator.token(spacer-090);
     }
 }
 
@@ -31,15 +31,15 @@
     align-items: center;
 
     &-title {
-        font-size: token(text-body-font-size);
-        font-weight: token(text-title-font-weight);
+        font-size: variable-generator.token(text-body-font-size);
+        font-weight: variable-generator.token(text-title-font-weight);
         line-height: 22px;
         padding: 0;
         margin: 0;
         width: auto;
 
         @include index.media-s-and-up {
-            font-size: token(text-title-font-size);
+            font-size: variable-generator.token(text-title-font-size);
         }
     }
 
@@ -49,15 +49,15 @@
 }
 
 .adyen-checkout-ctp__section-text {
-    font-size: token(text-body-font-size);
-    font-weight: token(text-body-font-weight);
-    line-height: token(text-caption-line-height);
-    color: token(color-label-tertiary);
-    margin: 0 0 token(spacer-070);
+    font-size: variable-generator.token(text-body-font-size);
+    font-weight: variable-generator.token(text-body-font-weight);
+    line-height: variable-generator.token(text-caption-line-height);
+    color: variable-generator.token(color-label-tertiary);
+    margin: 0 0 variable-generator.token(spacer-070);
 }
 
 .adyen-checkout-ctp__separator {
-    color: token(color-label-primary);
-    font-size: token(text-body-font-size);
-    font-weight: token(text-body-font-weight);
+    color: variable-generator.token(color-label-primary);
+    font-size: variable-generator.token(text-body-font-size);
+    font-weight: variable-generator.token(text-body-font-weight);
 }

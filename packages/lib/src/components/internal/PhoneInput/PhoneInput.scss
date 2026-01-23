@@ -1,10 +1,10 @@
-@import 'styles/variable-generator';
+@use 'styles/variable-generator';
 
 .adyen-checkout__fieldset--phone-input {
     direction: ltr;
 
     .adyen-checkout__fieldset__fields {
-        gap: token(spacer-070);
+        gap: variable-generator.token(spacer-070);
 
         > .adyen-checkout__field {
             margin-bottom: 0;

@@ -1,8 +1,8 @@
 @use 'styles/mixins';
-@import 'styles/variable-generator';
+@use 'styles/variable-generator';
 
 .instruction {
     @include mixins.adyen-checkout-text-caption;
 
-    color: token(color-label-secondary);
+    color: variable-generator.token(color-label-secondary);
 }

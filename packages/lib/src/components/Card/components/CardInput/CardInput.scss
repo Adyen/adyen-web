@@ -1,5 +1,5 @@
 @use 'styles/index';
-@import 'styles/variable-generator';
+@use 'styles/variable-generator';
 
 .adyen-checkout-card-input {
     &__wrapper {
@@ -7,10 +7,10 @@
     }
 
     &__icon {
-        border-radius: token(border-radius-s);
+        border-radius: variable-generator.token(border-radius-s);
         height: 18px;
         width: 27px;
-        margin-right: token(spacer-060);
+        margin-right: variable-generator.token(spacer-060);
     }
 
     &__form {
@@ -62,7 +62,7 @@
 }
 
 .adyen-checkout__card__cardNumber__input {
-    padding-left: token(spacer-060);
+    padding-left: variable-generator.token(spacer-060);
 }
 
 .adyen-checkout__card__holderName {
@@ -74,7 +74,7 @@
 .adyen-checkout__card__socialSecurityNumber,
 .adyen-checkout__installments,
 .adyen-checkout__card-input .adyen-checkout__fieldset--billingAddress {
-    margin-top: token(spacer-070);
+    margin-top: variable-generator.token(spacer-070);
 }
 
 .adyen-checkout__card-input.adyen-checkout__card-input--loading {
@@ -82,7 +82,7 @@
 }
 
 .adyen-checkout__card__holderName:first-child {
-    margin: 0 0 token(spacer-060);
+    margin: 0 0 variable-generator.token(spacer-060);
 }
 
 /* Hide card brand icon when cardNumber is in an error state */
@@ -135,7 +135,7 @@
     width: 27px;
     display: flex;
     align-items: center;
-    margin-right: token(spacer-060);
+    margin-right: variable-generator.token(spacer-060);
 
     // Card Flip animation
     transition: transform 0.3s cubic-bezier(0.455, 0.03, 0.515, 0.955);
@@ -181,19 +181,19 @@
     }
 
     .adyen-checkout__radio_group__input-wrapper {
-        margin-top: token(spacer-080);
+        margin-top: variable-generator.token(spacer-080);
     }
 
     .adyen-checkout__field--revolving-plan-installments {
         position: relative;
         top: 52px;
         width: 30%;
-        margin-left: token(spacer-070);
+        margin-left: variable-generator.token(spacer-070);
     }
 }
 
 .adyen-checkout__card-input .adyen-checkout__fieldset--dual-brand-switcher {
-    margin-top: token(spacer-070);
+    margin-top: variable-generator.token(spacer-070);
 
     .adyen-checkout__fieldset__title {
         padding-bottom: 0;

@@ -1,17 +1,17 @@
 @use 'styles/index';
-@import 'styles/variable-generator';
+@use 'styles/variable-generator';
 
 .adyen-checkout__button {
-    background: token(color-background-always-dark);
+    background: variable-generator.token(color-background-always-dark);
     border: 0;
-    border-radius: token(border-radius-m);
-    color: token(color-label-on-color);
+    border-radius: variable-generator.token(border-radius-m);
+    color: variable-generator.token(color-label-on-color);
     cursor: pointer;
-    font-size: token(text-title-font-size);
-    font-weight: token(text-body-stronger-font-weight);
-    height: token(spacer-120);
+    font-size: variable-generator.token(text-title-font-size);
+    font-weight: variable-generator.token(text-body-stronger-font-weight);
+    height: variable-generator.token(spacer-120);
     margin: 0;
-    padding: token(spacer-060) token(spacer-000);
+    padding: variable-generator.token(spacer-060) variable-generator.token(spacer-000);
     text-decoration: none;
     transition:
         background 0.3s ease-out,
@@ -20,17 +20,17 @@
 
     &:focus-visible {
         box-shadow:
-            0 0 0 token(focus-ring-spacer) token(color-background-primary),
-            0 0 0 token(focus-ring-outline) token(focus-ring-color);
+            0 0 0 variable-generator.token(focus-ring-spacer) variable-generator.token(color-background-primary),
+            0 0 0 variable-generator.token(focus-ring-outline) variable-generator.token(focus-ring-color);
         outline: 0;
     }
 
     &:hover {
-        background: token(color-background-inverse-primary-hover);
+        background: variable-generator.token(color-background-inverse-primary-hover);
     }
 
     &:active {
-        background: token(color-background-always-dark-active);
+        background: variable-generator.token(color-background-always-dark-active);
     }
 
     &:disabled {
@@ -44,16 +44,16 @@
     }
 
     &.adyen-checkout__button--loading {
-        background: token(color-label-disabled);
+        background: variable-generator.token(color-label-disabled);
         box-shadow: none;
         pointer-events: none;
         user-select: none;
     }
 
     &.adyen-checkout__button--pay {
-        margin-top: token(spacer-070);
+        margin-top: variable-generator.token(spacer-070);
         display: flex;
-        gap: token(spacer-020);
+        gap: variable-generator.token(spacer-020);
         justify-content: center;
         align-items: center;
 
@@ -70,52 +70,52 @@
         display: block;
         width: auto;
         height: auto;
-        padding: token(spacer-050) token(spacer-040);
+        padding: variable-generator.token(spacer-050) variable-generator.token(spacer-040);
         font-size: 0.81em;
     }
 
     &.adyen-checkout__button--ghost {
         background: none;
         border: 0;
-        color: token(color-label-primary);
+        color: variable-generator.token(color-label-primary);
 
         .adyen-checkout__spinner {
             @include index.set-spinner-color;
         }
 
         &:hover {
-            background: token(color-background-secondary-hover);
+            background: variable-generator.token(color-background-secondary-hover);
         }
 
         &:active {
-            background: token(color-background-secondary-active);
+            background: variable-generator.token(color-background-secondary-active);
             box-shadow: none;
         }
     }
 
     &.adyen-checkout__button--secondary {
-        padding: token(spacer-050) token(spacer-060);
-        background: token(color-background-primary);
-        border: token(border-width-s) solid token(color-label-primary);
-        color: token(color-label-primary);
+        padding: variable-generator.token(spacer-050) variable-generator.token(spacer-060);
+        background: variable-generator.token(color-background-primary);
+        border: variable-generator.token(border-width-s) solid variable-generator.token(color-label-primary);
+        color: variable-generator.token(color-label-primary);
 
         .adyen-checkout__spinner {
             @include index.set-spinner-color;
         }
 
         &:hover {
-            background: token(color-background-secondary);
+            background: variable-generator.token(color-background-secondary);
         }
 
         &:hover:not(:focus-visible) {
             box-shadow:
-                0 token(spacer-010) token(spacer-020) rgb(27 42 60 / 20%),
-                0 token(spacer-020) 5px rgb(27 42 60 / 14%);
+                0 variable-generator.token(spacer-010) variable-generator.token(spacer-020) rgb(27 42 60 / 20%),
+                0 variable-generator.token(spacer-020) 5px rgb(27 42 60 / 14%);
         }
 
         &:active,
         &:active:hover {
-            background: token(color-background-secondary);
+            background: variable-generator.token(color-background-secondary);
             box-shadow: none;
         }
 
@@ -124,8 +124,8 @@
             &:hover {
                 box-shadow: none;
                 cursor: not-allowed;
-                border-color: token(color-outline-disabled);
-                background-color: token(color-background-secondary);
+                border-color: variable-generator.token(color-outline-disabled);
+                background-color: variable-generator.token(color-background-secondary);
                 opacity: 0.5;
                 user-select: all;
             }
@@ -133,30 +133,30 @@
     }
 
     &.adyen-checkout__button--action {
-        padding: token(spacer-050) token(spacer-060);
-        background: token(color-background-always-dark);
-        border: token(border-width-s) solid transparent;
-        color: token(color-label-on-color);
+        padding: variable-generator.token(spacer-050) variable-generator.token(spacer-060);
+        background: variable-generator.token(color-background-always-dark);
+        border: variable-generator.token(border-width-s) solid transparent;
+        color: variable-generator.token(color-label-on-color);
 
         &:hover {
-            background: token(color-background-inverse-primary-hover);
+            background: variable-generator.token(color-background-inverse-primary-hover);
         }
 
         &:active,
         &:active:hover {
-            background: token(color-background-always-dark-active);
+            background: variable-generator.token(color-background-always-dark-active);
             box-shadow: none;
         }
     }
 
     &.adyen-checkout__button--link {
         background: transparent;
-        border: token(border-width-s) solid transparent;
-        color: token(color-label-highlight);
+        border: variable-generator.token(border-width-s) solid transparent;
+        color: variable-generator.token(color-label-highlight);
         text-decoration: none;
-        font-weight: token(text-body-font-weight);
-        border-radius: token(border-radius-s);
-        padding: token(spacer-010);
+        font-weight: variable-generator.token(text-body-font-weight);
+        border-radius: variable-generator.token(border-radius-s);
+        padding: variable-generator.token(spacer-010);
 
         &:hover {
             background: transparent;
@@ -169,8 +169,8 @@
         &:hover,
         &:active,
         &:active:hover {
-            background: token(color-label-success);
-            color: token(color-label-on-color);
+            background: variable-generator.token(color-label-success);
+            color: variable-generator.token(color-label-on-color);
         }
 
         .adyen-checkout__button__icon {
@@ -186,11 +186,11 @@
     }
 
     &__icon {
-        margin-right: token(spacer-040);
+        margin-right: variable-generator.token(spacer-040);
 
         [dir='rtl'] & {
             margin-right: 0;
-            margin-left: token(spacer-040);
+            margin-left: variable-generator.token(spacer-040);
         }
     }
 
@@ -207,7 +207,7 @@
     }
 
     .adyen-checkout__spinner {
-        @include index.set-spinner-color(token(color-label-on-color), token(color-label-on-color));
+        @include index.set-spinner-color(variable-generator.token(color-label-on-color), variable-generator.token(color-label-on-color));
     }
 
     // icon only
@@ -216,19 +216,19 @@
         align-items: center;
         width: auto;
         height: auto;
-        padding: token(button-icon-only-padding);
+        padding: variable-generator.token(button-icon-only-padding);
         background: transparent;
-        color: token(button-tertiary-color);
-        border-radius: token(border-radius-m);
-        box-shadow: token(button-tertiary-box-shadow);
+        color: variable-generator.token(button-tertiary-color);
+        border-radius: variable-generator.token(border-radius-m);
+        box-shadow: variable-generator.token(button-tertiary-box-shadow);
 
         &:hover {
-            background-color: token(color-background-secondary-hover);
+            background-color: variable-generator.token(color-background-secondary-hover);
         }
 
         &:active {
-            color: token(button-tertiary-active-color);
-            background-color: token(button-tertiary-active-background-color);
+            color: variable-generator.token(button-tertiary-active-color);
+            background-color: variable-generator.token(button-tertiary-active-background-color);
         }
 
         &:focus {
@@ -237,8 +237,8 @@
 
         &:focus-visible {
             box-shadow:
-                0 0 0 token(focus-ring-spacer) token(color-background-primary),
-                0 0 0 token(focus-ring-outline) token(focus-ring-color);
+                0 0 0 variable-generator.token(focus-ring-spacer) variable-generator.token(color-background-primary),
+                0 0 0 variable-generator.token(focus-ring-outline) variable-generator.token(focus-ring-color);
             outline: 0;
         }
 

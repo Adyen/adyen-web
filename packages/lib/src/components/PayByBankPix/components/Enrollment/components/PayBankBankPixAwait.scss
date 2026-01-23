@@ -1,5 +1,5 @@
 @use 'styles/index';
-@import 'styles/variable-generator';
+@use 'styles/variable-generator';
 
 .adyen-checkout-pay-by-bank-pix-await {
     display: flex;
@@ -18,17 +18,17 @@
     }
 
     .adyen-checkout__await__indicator-holder {
-        margin-top: token(spacer-090);
+        margin-top: variable-generator.token(spacer-090);
     }
 
     .adyen-checkout__await__countdown {
-        color: token(color-label-primary);
+        color: variable-generator.token(color-label-primary);
     }
 
     .adyen-checkout__await__end-slot {
         @include index.adyen-checkout-text-caption;
 
-        margin-top: token(spacer-090);
-        color: token(color-label-tertiary);
+        margin-top: variable-generator.token(spacer-090);
+        color: variable-generator.token(color-label-tertiary);
     }
 }

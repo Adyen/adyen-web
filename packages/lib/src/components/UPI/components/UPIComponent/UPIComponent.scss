@@ -1,20 +1,19 @@
 @use 'styles/mixins';
-@import 'styles/variable-generator';
-
+@use 'styles/variable-generator';
 
 .adyen-checkout-upi-area-intent {
     .adyen-checkout__button--pay {
-        margin-top: token(spacer-070);
+        margin-top: variable-generator.token(spacer-070);
     }
 
     .adyen-checkout__alert-message--info {
-        margin-top: token(spacer-070);
+        margin-top: variable-generator.token(spacer-070);
     }
 }
 
 .adyen-checkout-upi-area-qr-code {
     .adyen-checkout__button--pay {
-        margin-top: token(spacer-000);
+        margin-top: variable-generator.token(spacer-000);
     }
 }
 
@@ -22,7 +21,7 @@
     @include mixins.adyen-checkout-text-caption;
 
     display: flex;
-    color: token(color-label-secondary);
-    margin-top: token(spacer-000);
-    margin-bottom: token(spacer-070);
+    color: variable-generator.token(color-label-secondary);
+    margin-top: variable-generator.token(spacer-000);
+    margin-bottom: variable-generator.token(spacer-070);
 }

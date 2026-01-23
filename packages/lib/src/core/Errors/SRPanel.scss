@@ -1,8 +1,8 @@
 @use 'styles/index';
-@import 'styles/variable-generator';
+@use 'styles/variable-generator';
 
 .adyen-checkout-sr-panel {
-    margin-bottom: token(spacer-080);
+    margin-bottom: variable-generator.token(spacer-080);
     font-size: 0.75em;
 }
 
