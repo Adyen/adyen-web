@@ -1,3 +1,5 @@
+import { hasOwnProperty } from './hasOwnProperty';
+
 /**
  * returns the indicated property of an object, if it exists.
  *
@@ -11,11 +13,14 @@
  *   getProp({}, 'x'); //=> undefined
  * ```
  */
-const getProp = (object: any, path: string): any => {
+function getProp(object: unknown, path: string): unknown {
     const splitPath = path.split('.');
-    const reducer = (xs, x) => (xs && xs[x] ? xs[x] : undefined);
 
-    return splitPath.reduce(reducer, object);
-};
-
+    return splitPath.reduce<unknown>((xs, key) => {
+        if (xs === null || xs === undefined) return undefined;
+        if (typeof xs !== 'object') return undefined;
+        const record = xs as Record<string, unknown>;
+        return hasOwnProperty(record, key) ? record[key] : undefined;
+    }, object);
+}
 export default getProp;

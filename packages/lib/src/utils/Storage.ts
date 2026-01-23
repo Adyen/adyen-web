@@ -1,27 +1,31 @@
 class NonPersistentStorage {
-    private storage;
+    private storage: Record<string, string>;
 
     constructor() {
         this.storage = {};
     }
 
-    get length() {
+    public get length(): number {
         return Object.keys(this.storage).length;
     }
 
-    key(index) {
-        return Object.keys(this.storage)[index];
+    public key(index: number): string | null {
+        return Object.keys(this.storage)[index] ?? null;
     }
-    getItem(keyName) {
+
+    public getItem(keyName: string): string | null {
         return this.storage[keyName] || null;
     }
-    setItem(keyName, keyValue) {
-        return (this.storage[keyName] = keyValue);
+
+    public setItem(keyName: string, keyValue: string): void {
+        this.storage[keyName] = keyValue;
     }
-    removeItem(keyName) {
+
+    public removeItem(keyName: string): void {
         delete this.storage[keyName];
     }
-    clear() {
+
+    public clear(): void {
         this.storage = {};
     }
 }
@@ -43,31 +47,32 @@ class Storage<T> {
         this.key = this.prefix + key;
     }
 
-    public get(): T {
+    public get(): T | null {
         try {
-            return JSON.parse(this.storage.getItem(this.key));
+            const item = this.storage.getItem(this.key);
+            return item ? JSON.parse(item) : null;
         } catch (err) {
             return null;
         }
     }
 
-    public set(value: T) {
+    public set(value: T): void {
         this.storage.setItem(this.key, JSON.stringify(value));
     }
 
-    public remove() {
+    public remove(): void {
         this.storage.removeItem(this.key);
     }
 
-    public clear() {
+    public clear(): void {
         this.storage.clear();
     }
 
-    public keyByIndex(index) {
+    public keyByIndex(index: number): string | null {
         return this.storage.key(index);
     }
 
-    get length() {
+    public get length(): number {
         return this.storage.length;
     }
 }

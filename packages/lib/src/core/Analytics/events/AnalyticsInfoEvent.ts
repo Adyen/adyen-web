@@ -152,7 +152,7 @@ export class AnalyticsInfoEvent extends AbstractAnalyticsEvent {
         if (!config) return {};
 
         const MAX_STRING_LENGTH = 128;
-        const result = {};
+        const result: Record<string, string> = {};
 
         try {
             for (const [key, value] of Object.entries(config)) {
