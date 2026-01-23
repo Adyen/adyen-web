@@ -9,7 +9,8 @@ import type { ClickToPayConfiguration } from './types';
 type ClickToPayStory = StoryConfiguration<ClickToPayConfiguration>;
 
 const meta: MetaConfiguration<ClickToPayConfiguration> = {
-    title: 'Components/ClickToPay'
+    title: 'Components/ClickToPay',
+    tags: ['no-automated-visual-test']
 };
 
 export const StandaloneComponent: ClickToPayStory = {

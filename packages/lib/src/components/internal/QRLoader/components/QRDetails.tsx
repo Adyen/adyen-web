@@ -7,12 +7,12 @@ import { QRCodeCopyButton } from './QRCodeCopyButton';
 import { useQRLoaderDetails } from '../QRLoaderDetailsProvider';
 
 export const QRDetails = () => {
-    const { qrCodeData, qrCodeImage, percentage, timeToPay, copyBtn, instructions, onTick, countdownTime, onQRCodeLoad, onTimeUp, handleCopy } =
+    const { type, qrCodeData, qrCodeImage, percentage, timeToPay, copyBtn, instructions, onTick, countdownTime, onQRCodeLoad, onTimeUp, handleCopy } =
         useQRLoaderDetails();
 
     return (
         <Fragment>
-            <QRImage src={qrCodeImage} onLoad={onQRCodeLoad} />
+            <QRImage type={type} src={qrCodeImage} onLoad={onQRCodeLoad} />
 
             <QRProgressbar percentage={percentage} />
 

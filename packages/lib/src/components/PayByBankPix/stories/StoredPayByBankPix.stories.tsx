@@ -13,6 +13,7 @@ import { mockEnrollmentPayload } from '../../PayByBankPix/stories/mocks';
 
 const meta: MetaConfiguration<DropinConfiguration> = {
     title: 'Components/PayByBankPix/Dropin',
+    tags: ['no-automated-visual-test'],
     argTypes: {
         componentConfiguration: {
             control: 'object'

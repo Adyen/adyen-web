@@ -8,6 +8,7 @@ import { AdyenCheckout } from '../../../../core/AdyenCheckout';
 import { PaymentMethodStoryProps } from '../../../../../storybook/types';
 import { CardConfiguration } from '../../types';
 import './card3DS2CreateFromAction.scss';
+import Spinner from '../../../internal/Spinner';
 
 export const CardWith3DS2CreateFromAction = (contextArgs: PaymentMethodStoryProps<CardConfiguration>) => {
     const { componentConfiguration, ...checkoutConfig } = contextArgs;
@@ -114,11 +115,10 @@ export const CardWith3DS2CreateFromAction = (contextArgs: PaymentMethodStoryProp
 
     return (
         <Fragment>
-            {errorMessage ? (
-                <div>{errorMessage}</div>
-            ) : (
+            {errorMessage && <p>{errorMessage}</p>}
+            {element ? (
                 <div>
-                    <div ref={container} id="component-root" className="component-wrapper" />
+                    <div ref={container} id="component-root" className="component-wrapper" data-testid="checkout-component" />
                     <div id={'threeDSField'} className={'threeds2-field'}></div>
                     <div className="info">
                         <h2>3DS2 Test card numbers:</h2>
@@ -159,6 +159,10 @@ export const CardWith3DS2CreateFromAction = (contextArgs: PaymentMethodStoryProp
                             </a>
                         </p>
                     </div>
+                </div>
+            ) : (
+                <div data-testid="checkout-component-spinner">
+                    <Spinner />
                 </div>
             )}
         </Fragment>

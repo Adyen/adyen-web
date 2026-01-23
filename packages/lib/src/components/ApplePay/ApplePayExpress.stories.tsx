@@ -14,7 +14,8 @@ const SHOPPER_LOCALE = 'en-US';
 const INITIAL_AMOUNT = 10000;
 
 const meta: MetaConfiguration<ApplePayConfiguration> = {
-    title: 'Components/Wallets/ApplePay'
+    title: 'Components/Wallets/ApplePay',
+    tags: ['no-automated-visual-test']
 };
 
 /**

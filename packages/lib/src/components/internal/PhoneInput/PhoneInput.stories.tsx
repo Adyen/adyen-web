@@ -56,6 +56,7 @@ const formatPrefixName = item => {
 
 const meta: Meta = {
     title: 'Internal Elements/PhoneInput',
+    tags: ['no-automated-visual-test'],
     component: PhoneInputForm
 };
 

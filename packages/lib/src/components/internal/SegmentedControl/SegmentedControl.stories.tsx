@@ -11,6 +11,7 @@ const options = [
 
 const meta: Meta = {
     title: 'Internal Elements/SegmentedControl',
+    tags: ['no-automated-visual-test'],
     component: SegmentedControl,
     argTypes: {
         selectedValue: {

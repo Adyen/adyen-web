@@ -1,6 +1,7 @@
-import { test, expect } from '../../fixtures/base-fixture';
+import { test, expect } from '../../../fixtures/base-fixture';
 import fs from 'node:fs';
-import { Automated } from '../../models/automated';
+import { Automated } from '../../../models/automated';
+import { StorybookIndex } from '../types';
 
 // Config
 // This is relative to playwright root: adyen-web/lib/e2e-playwright/
@@ -29,21 +30,6 @@ const KNOWN_A11Y_VIOLATIONS = {
     'components-issuerlist-onlinebankingpl--default': ['link-in-text-block'], // TODO - the link style needs fixing
     'components-issuerlist-onlinebankingsk--default': ['link-in-text-block'] // TODO - the link style needs fixing
 };
-
-// types
-interface StorybookIndex {
-    v: number;
-    entries: {
-        [id: string]: {
-            id: string;
-            title: string;
-            name: string;
-            importPath: string;
-            type: 'story' | 'docs';
-            tags: string[];
-        };
-    };
-}
 
 let storyIds: string[] = [];
 

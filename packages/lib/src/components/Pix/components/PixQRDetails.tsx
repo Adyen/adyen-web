@@ -3,6 +3,7 @@ import { QRImage, QRProgressbar, QRCountdown, QRCodeCopyButton, useQRLoaderDetai
 import { useCoreContext } from '../../../core/Context/CoreProvider';
 import Field from '../../internal/FormFields/Field';
 import InputText from '../../internal/FormFields/InputText';
+import { TxVariants } from '../../tx-variants';
 
 const PixQRDetails = () => {
     const { i18n } = useCoreContext();
@@ -10,7 +11,7 @@ const PixQRDetails = () => {
 
     return (
         <div className="adyen-checkout__qr-loader--pix__qr_details">
-            <QRImage src={qrCodeImage} onLoad={onQRCodeLoad} />
+            <QRImage type={TxVariants.pix} src={qrCodeImage} onLoad={onQRCodeLoad} />
             <div className="adyen-checkout__qr-loader--pix__qr_details__timer">
                 <QRProgressbar percentage={percentage} />
                 <QRCountdown countdownTime={countdownTime} timeToPay={timeToPay} onTick={onTick} onCompleted={onTimeUp} />

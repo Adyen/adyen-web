@@ -36,6 +36,31 @@ export const EcontextATM: EcontextStory = {
     }
 };
 
+export const EcontextATMVoucherScreen: EcontextStory = {
+    render: ({ componentConfiguration, ...checkoutConfig }) => (
+        <Checkout checkoutConfig={checkoutConfig}>
+            {checkout => (
+                <ComponentContainer
+                    element={
+                        new Econtext(checkout, {
+                            paymentMethodType: TxVariants.econtext_atm,
+                            reference: 'testreference',
+                            alternativeReference: 'testalternativereference',
+                            instructionsUrl: 'https://example.com/instructions',
+                            collectionInstitutionNumber: '123456789',
+                            expiresAt: '2025-12-25T14:00:00.000Z',
+                            ...componentConfiguration
+                        })
+                    }
+                />
+            )}
+        </Checkout>
+    ),
+    args: {
+        countryCode: 'JP'
+    }
+};
+
 export const EcontextOnline: EcontextStory = {
     render,
     args: {
