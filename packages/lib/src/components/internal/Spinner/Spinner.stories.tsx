@@ -4,6 +4,7 @@ import Spinner from './Spinner';
 
 const meta: Meta = {
     title: 'Internal Elements/Spinner',
+    tags: ['no-automated-visual-test'],
     component: Spinner,
     argTypes: {
         size: {

@@ -10,6 +10,7 @@ import { PaymentMethodStoryProps } from '../../../../storybook/types';
 import { createDonation, getDonationCampaigns, makeDetailsCall, makePayment } from '../../../../storybook/helpers/checkout-api-calls';
 import { handleError, handleFinalState } from '../../../../storybook/helpers/checkout-handlers';
 import { ComponentContainer } from '../../../../storybook/components/ComponentContainer';
+import Spinner from '../../internal/Spinner';
 
 export interface DonationIntegrationExampleProps {
     contextArgs: PaymentMethodStoryProps<DonationConfiguration> & { redirectResult: string };
@@ -188,5 +189,16 @@ export const DonationCardIntegrationExample = ({ countryCode, amount, redirectRe
         setElement(donationElement);
     };
 
-    return <ComponentContainer element={element} />;
+    if (!element)
+        return (
+            <div data-testid="checkout-component-spinner">
+                <Spinner />
+            </div>
+        );
+
+    return (
+        <div data-testid="checkout-component">
+            <ComponentContainer element={element} />
+        </div>
+    );
 };

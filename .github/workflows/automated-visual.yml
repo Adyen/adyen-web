@@ -1,0 +1,83 @@
+name: Automated Visual Tests
+
+on:
+  pull_request:
+  workflow_dispatch:
+  # Optional: Add schedule if you want these tests to run on a regular basis
+  # schedule:
+  #   - cron: '0 2 * * 1-5' # Runs at 2 AM UTC Monday-Friday
+
+jobs:
+  automated-visual:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: [22.18.0]
+        api-version: ["v71"]
+        runner-browser: ["chromium"]
+    env:
+      CHECKOUT_API_KEY: ${{secrets.ADYEN_CHECKOUT_API_KEY}}
+      MERCHANT_ACCOUNT: ${{secrets.ADYEN_CHECKOUT_MERCHANT_ACCOUNT}}
+      CLIENT_KEY: ${{secrets.ADYEN_CHECKOUT_CLIENT_KEY}}
+      CLIENT_ENV: test
+      TESTING_ENVIRONMENT: https://checkout-test.adyen.com/checkout/${{matrix.api-version}}
+      API_VERSION: ${{matrix.api-version}}
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v6
+    
+    - name: Setup Node
+      uses: actions/setup-node@v6
+      with:
+        node-version: ${{ matrix.node-version }}
+        package-manager-cache: false
+
+    - name: Cache node modules
+      id: node-modules-cache
+      uses: actions/cache@v4
+      env:
+        cache-name: node-modules-v1
+      with:
+        path: node_modules
+        key: ${{ runner.os }}-cache-${{ env.cache-name }}-node-${{ matrix.node-version }}-yarn-${{ hashFiles('**/yarn.lock') }}
+
+    - name: Enable Corepack
+      run: corepack enable
+
+    - name: Install Project Dependencies
+      if: steps.node-modules-cache.outputs.cache-hit != 'true'
+      run: yarn install --immutable
+
+    - name: Extract Playwright version
+      id: playwright-version
+      run: echo "PLAYWRIGHT_VERSION=$(jq -r '.devDependencies["@playwright/test"]' packages/e2e-playwright/package.json)" >> $GITHUB_ENV
+
+    - name: Cache Playwright
+      # Using a cache for the webkit binary files causes this error on subsequent runs
+      # /home/runner/.cache/ms-playwright/webkit-2123/minibrowser-wpe/bin/MiniBrowser: error while loading shared libraries: libwoff2dec.so.1.0.2: cannot open shared object file: No such file or directory
+      if: matrix.runner-browser != 'webkit'
+      id: playwright-cache
+      uses: actions/cache@v4
+      env:
+        cache-name: playwright-v1
+      with:
+        path: ~/.cache/ms-playwright
+        key: ${{ runner.os }}-cache-${{ env.cache-name }}-node-${{ matrix.node-version }}-playwright-${{ env.PLAYWRIGHT_VERSION }}-browser-${{ matrix.runner-browser }}
+
+    - name: Install Playwright Dependencies
+      if: steps.playwright-cache.outputs.cache-hit != 'true' || matrix.runner-browser == 'webkit'
+      run: npx playwright install --with-deps ${{ matrix.runner-browser }}
+
+    - name: Run Automated Visual Tests
+      run: yarn test:automated-visual --project=${{ matrix.runner-browser }}
+    
+    - name: Archive test result artifacts
+      id: upload-artifact
+      if: always()
+      uses: actions/upload-artifact@v5
+      with:
+        name: visual-report-${{matrix.api-version}}-${{matrix.runner-browser}}-${{ github.sha }}
+        path: packages/e2e-playwright/playwright-report
+        retention-days: 5

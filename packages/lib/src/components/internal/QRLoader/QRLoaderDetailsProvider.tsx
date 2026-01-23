@@ -4,6 +4,7 @@ import { useContext } from 'preact/hooks';
 import { CountdownTime } from '../Countdown/types';
 
 interface QRLoaderDetailsProviderProps {
+    type: string;
     qrCodeImage: string;
     qrCodeData: string;
     countdownTime: number;

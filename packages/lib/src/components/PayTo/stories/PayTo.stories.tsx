@@ -17,7 +17,7 @@ type PayToStory = StoryObj<ExtendedStoryArgs>;
 const MANDATE_EXAMPLE: MandateType = {
     amount: '100000', // [Mandatory] for PayTo - Mandate Amount field
     amountRule: 'max', // [Mandatory] for PayTo - Needs to be Localised
-    endsAt: '2027-12-31', // [Mandatory] for PayTo - Date format
+    endsAt: '2027-12-31T14:00:00.000Z', // [Mandatory] for PayTo - Date format
     frequency: 'monthly', // [Mandatory] for PayTo - Needs to be Localised
     remarks: 'This is a test description that informs the user about any additional information', // [Mandatory] for PayTo - Needs to be Localised as "Description"
     count: '10' // [Optional] will be returned only if the merchant sends it

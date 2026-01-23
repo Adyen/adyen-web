@@ -14,6 +14,7 @@ import type { CoreConfiguration } from '../../../core/types';
 
 const meta: Meta<ButtonProps> = {
     title: 'Internal Elements/Button',
+    tags: ['no-automated-visual-test'],
     component: Button as any,
     argTypes: {
         status: {

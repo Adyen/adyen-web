@@ -11,6 +11,7 @@ class Iris extends IssuerList {
     readonly segmentedControlGroup: Locator;
 
     // QR Code mode elements
+    private _generateQrCodeContainer: Locator | null = null;
     readonly generateQrCodeButton: Locator;
     readonly qrCodeImage: Locator;
 
@@ -31,6 +32,14 @@ class Iris extends IssuerList {
 
         // Status
         this.successMessage = page.locator('.adyen-checkout__status--success');
+    }
+
+    get generateQrCodeContainer(): Locator {
+        return this.page.getByTestId('iris-generate-qr-code');
+    }
+
+    get qrCodeContainer(): Locator {
+        return this.page.getByTestId('iris-qr-loader');
     }
 
     async switchToQrCodeMode() {

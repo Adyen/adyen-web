@@ -1,4 +1,5 @@
 import { h } from 'preact';
+import { http, HttpResponse } from 'msw';
 import { MetaConfiguration, PaymentMethodStoryProps, StoryConfiguration } from '../../../storybook/types';
 import { PixConfiguration } from './types';
 import { ComponentContainer } from '../../../storybook/components/ComponentContainer';
@@ -30,6 +31,42 @@ export const WithPersonalDetails: PixStory = {
             personalDetailsRequired: true
         }
     }
+};
+
+const createPixMockHandlers = () => [
+    http.post('https://checkoutshopper-test.adyen.com/checkoutshopper/services/PaymentInitiation/v1/status', () => {
+        return HttpResponse.json({
+            payload: '',
+            resultCode: 'pending',
+            type: 'pending'
+        });
+    })
+];
+
+export const QRCodeScreen: PixStory = {
+    args: {
+        countryCode: 'BR'
+    },
+    parameters: {
+        msw: {
+            handlers: createPixMockHandlers()
+        }
+    },
+    render: ({ componentConfiguration, ...checkoutConfig }) => (
+        <Checkout checkoutConfig={checkoutConfig}>
+            {checkout => (
+                <ComponentContainer
+                    element={
+                        new Pix(checkout, {
+                            paymentData: 'Ab05e7c0....J86s=',
+                            qrCodeData: 'exampleQrcodeData',
+                            ...componentConfiguration
+                        })
+                    }
+                />
+            )}
+        </Checkout>
+    )
 };
 
 export default meta;

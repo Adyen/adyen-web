@@ -1,6 +1,7 @@
 import Language from '../../../../../language/Language';
 import { BrandStorageObject, SecuredFields } from '../types';
 import { Placeholders } from '../../SFP/types';
+import type { AbstractAnalyticsEvent } from '../../../../../core/Analytics/events/AbstractAnalyticsEvent';
 
 /**
  * Exposed functions that can be called on the CSF instance
@@ -60,6 +61,7 @@ export interface CSFConfigObject extends CSFCommonProps {
  */
 export interface CSFSetupObject extends CSFCommonProps {
     type: string;
+    componentType?: string;
     clientKey: string;
     rootNode: string | HTMLElement; // TODO - when is this a string?
     callbacks?: object;
@@ -72,6 +74,7 @@ export interface CSFSetupObject extends CSFCommonProps {
     maskSecurityCode: boolean;
     exposeExpiryDate: boolean;
     shouldDisableIOSArrowKeys: boolean;
+    onSubmitAnalytics?: (event: AbstractAnalyticsEvent) => void;
 }
 
 export interface CSFCallbacksConfig {

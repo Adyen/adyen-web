@@ -4,11 +4,13 @@ import {
     RtnType_callbackFn,
     RtnType_noParamVoidFn,
     RtnType_postMessageListener,
-    SecuredFieldCommonProps
+    SecuredFieldCommonProps,
+    SecuredFieldSetupObject
 } from '../types';
 
 abstract class AbstractSecuredField {
     public sfConfig: SecuredFieldCommonProps; // could be protected but needs to be public for tests to run
+    protected componentType: string;
     protected loadingContext: string;
     protected holderEl: HTMLElement;
     protected iframeRef: HTMLElement;
@@ -24,6 +26,7 @@ abstract class AbstractSecuredField {
     protected _expiryDatePolicy: DatePolicyType;
     protected _iframeOnLoadListener: RtnType_noParamVoidFn;
     protected _postMessageListener: RtnType_postMessageListener;
+    protected submitAnalytics: SecuredFieldSetupObject['submitAnalytics'];
     // Callback fns assigned via public functions
     protected onIframeLoadedCallback: RtnType_noParamVoidFn;
     protected onConfigCallback: RtnType_callbackFn;

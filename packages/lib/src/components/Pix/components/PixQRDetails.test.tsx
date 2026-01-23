@@ -19,6 +19,7 @@ const renderPixQRDetails = () => {
         <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
             <SRPanelProvider srPanel={new SRPanel(global.core)}>
                 <QRLoaderDetailsProvider
+                    type="pix"
                     qrCodeImage={QR_CODE_IMAGE_URL}
                     qrCodeData={QR_CODE_DATA}
                     percentage={100}

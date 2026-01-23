@@ -7,7 +7,8 @@ import { AmazonPayExample } from './AmazonPayExample';
 type AmazonPayStory = StoryConfiguration<AmazonPayConfiguration>;
 
 const meta: MetaConfiguration<ApplePayConfiguration> = {
-    title: 'Components/Wallets/AmazonPay'
+    title: 'Components/Wallets/AmazonPay',
+    tags: ['no-automated-visual-test']
 };
 
 export const Default: AmazonPayStory = {

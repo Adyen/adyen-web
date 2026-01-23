@@ -25,6 +25,7 @@ import Language from '../../../../../language/Language';
 import { hasOwnProperty } from '../../../../../utils/hasOwnProperty';
 import { Placeholders } from '../../SFP/types';
 import './SecuredField.scss';
+import { AnalyticsErrorEvent, ErrorEventCode, ErrorEventType } from '../../../../../core/Analytics/events/AnalyticsErrorEvent';
 
 const logPostMsg = false;
 const doLog = false;
@@ -63,6 +64,8 @@ class SecuredField extends AbstractSecuredField {
          */
         this.loadingContext = pSetupObj.loadingContext;
         this.holderEl = pSetupObj.holderEl;
+        this.submitAnalytics = pSetupObj.submitAnalytics;
+        this.componentType = pSetupObj.componentType;
 
         /**
          * Initiate other values on 'this' through setters
@@ -120,6 +123,22 @@ class SecuredField extends AbstractSecuredField {
         const iframe: HTMLIFrameElement = selectOne(this.holderEl, '.js-iframe');
 
         if (iframe) {
+            if (!iframe.contentWindow) {
+                // Warn the dev
+                console.error(
+                    'ERROR: Trying to initialise a securedField iframe, but the iframe.contentWindow is undefined. Are you sure the element into which the Card component is being mounted already exists in the DOM *before* the Card component is mounted?'
+                );
+                // Log the error
+                const event = new AnalyticsErrorEvent({
+                    component: this.componentType,
+                    code: ErrorEventCode.SECURED_FIELDS_IFRAME_CONTENT_WINDOW_NOT_FOUND,
+                    errorType: ErrorEventType.implementation,
+                    message: `Trying to initialise an iframe for ${this.sfConfig.fieldType}, but the iframe.contentWindow is undefined`
+                });
+
+                this.submitAnalytics?.(event);
+            }
+
             this.iframeContentWindow = iframe.contentWindow;
 
             // Create reference to bound fn (see getters/setters for binding)

@@ -96,3 +96,7 @@ export const IRIS_ISSUERS = [
     { id: 'PRXBGRAA', name: 'Viva' },
     { id: 'ATTIGRAA', name: 'CrediaBank' }
 ];
+
+export const TAGS = {
+    SCREENSHOT: '@screenshot'
+} as const;
