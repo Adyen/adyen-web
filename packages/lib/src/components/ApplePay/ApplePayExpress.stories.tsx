@@ -189,7 +189,7 @@ export const Express: ApplePayStory = {
 
             onShippingContactSelected: async (resolve, reject, event) => {
                 const { countryCode } = event.shippingContact;
-                let update: Partial<ApplePayJS.ApplePayShippingContactUpdate> = {};
+                let update: ApplePayJS.ApplePayShippingContactUpdate;
 
                 if (countryCode === 'BR') {
                     update = {
