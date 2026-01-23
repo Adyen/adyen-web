@@ -23,6 +23,7 @@ import AdyenCheckoutError from '../../../../core/Errors/AdyenCheckoutError';
 import { SFStateErrorObj } from '../../../Card/components/CardInput/types';
 import { getErrorMessageFromCode } from '../../../../core/Errors/utils';
 import { SF_ErrorCodes } from '../../../../core/Errors/constants';
+import { TxVariants } from '../../../tx-variants';
 
 /**
  * SecuredFieldsProvider:
@@ -122,9 +123,14 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
         this.numDateFields = fields.filter(f => f.match(/Expiry/)).length;
 
         if (fields.length) {
-            this.destroy(); // TODO test if this solves the React double render problem.
+            this.destroy();
             this.initializeCSF(this.rootNode);
         } else {
+            if (this.props.componentType === TxVariants.customCard) {
+                console.debug(
+                    'You are trying to create a CustomCard component but the element into which you are trying to mount the CustomCard component does not contain any elements with a "data-cse" attribute e.g. <div data-cse="encryptedCardNumber"></div>'
+                );
+            }
             this.handleOnNoDataRequired();
         }
     }
@@ -152,6 +158,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
         const csfSetupObj: CSFSetupObject = {
             rootNode: root,
             type: this.props.type,
+            componentType: this.props.componentType,
             clientKey: this.props.clientKey,
             cardGroupTypes: this.props.brands,
             autoFocus: this.props.autoFocus,
@@ -163,6 +170,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
                 sfStyles: this.props.styles
             },
             i18n: this.props.i18n,
+            onSubmitAnalytics: this.props.onSubmitAnalytics,
             callbacks: {
                 onLoad: this.handleOnLoad,
                 onConfigSuccess: this.handleOnConfigSuccess,

@@ -219,7 +219,9 @@ export function setupSecuredField(pItem: HTMLElement, cvcPolicy?: CVCPolicyType,
             disableIOSArrowKeys: this.props.shouldDisableIOSArrowKeys,
             implementationType: this.props.implementationType,
             showContextualElement: this.props.showContextualElement,
-            placeholders: this.props.placeholders
+            placeholders: this.props.placeholders,
+            submitAnalytics: this.props.onSubmitAnalytics,
+            componentType: this.props.componentType
         };
 
         const sf: SecuredField = new SecuredField(sfInitObj, this.props.i18n)

@@ -9,6 +9,7 @@ import { StylesObject } from '../../internal/SecuredFields/lib/types';
 import { Resources } from '../../../core/Context/Resources';
 import { SFError } from '../../Card/components/CardInput/types';
 import { ValidationError } from '../types';
+import type { AbstractAnalyticsEvent } from '../../../core/Analytics/events/AbstractAnalyticsEvent';
 
 interface SecuredFieldsProps {
     autoFocus?: boolean;
@@ -32,6 +33,7 @@ interface SecuredFieldsProps {
     onBrand?: () => {};
     onConfigSuccess?: () => {};
     onChange: (data) => void;
+    onSubmitAnalytics?: (event: AbstractAnalyticsEvent) => void;
     handleKeyPress?: (obj: KeyboardEvent) => void;
     onError?: () => {};
     onFieldValid?: () => {};
@@ -149,7 +151,9 @@ function CustomCardInput(props: SecuredFieldsProps) {
             ref={sfp}
             {...extractPropsForSFP(props)}
             type={props.brand}
+            componentType={props.type}
             onChange={handleSecuredFieldsChange}
+            onSubmitAnalytics={props.onSubmitAnalytics}
             render={() => null}
         />
     );

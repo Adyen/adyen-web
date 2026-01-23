@@ -31,7 +31,7 @@ import { OnAddressLookupType, OnAddressSelectedType } from '../../../internal/Ad
 import { ComponentMethodsRef } from '../../../internal/UIElement/types';
 import { AddressData, PaymentAmount } from '../../../../types/global-types';
 import type { FastlaneSignupConfiguration } from '../../../PayPalFastlane/types';
-import { AbstractAnalyticsEvent } from '../../../../core/Analytics/events/AbstractAnalyticsEvent';
+import type { AbstractAnalyticsEvent } from '../../../../core/Analytics/events/AbstractAnalyticsEvent';
 import { IAnalytics } from '../../../../core/Analytics/Analytics';
 
 export interface CardInputValidState {
