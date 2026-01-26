@@ -22,7 +22,7 @@ export const getDecimalAmount = (amount: number | string, currencyCode: string):
 /**
  * @internal
  */
-export const getLocalisedAmount = (amount: number, locale: string, currencyCode: keyof typeof CURRENCY_DECIMALS, options = {}): string => {
+export const getLocalisedAmount = (amount: number, locale: string, currencyCode: string, options = {}): string => {
     const stringAmount = amount.toString(); // Changing amount to string to avoid 0-value from returning false
 
     const decimalAmount = getDecimalAmount(stringAmount, currencyCode);
