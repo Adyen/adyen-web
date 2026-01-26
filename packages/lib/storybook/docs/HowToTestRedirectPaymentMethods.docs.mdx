@@ -1,0 +1,19 @@
+{/* HowToTestRedirectPaymentMethods.docs.mdx */}
+
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Welcome/How To Test Redirect Payment Methods" />
+
+### Redirect Payment Methods
+
+Many payment methods use a redirect flow where the customer is redirected to the payment provider's page. You can test these using the [Redirect](/story/components-redirect--default) component story:
+
+1. Navigate to **Components → Redirect** in the Storybook navigation
+2. In the Controls panel, modify the following parameters:
+   - **countryCode**: Set the appropriate country code (e.g., 'NL' for Netherlands, 'HK' for Hong Kong)
+   - **componentConfiguration.type**: Set the payment method type (tx_variant) (e.g., 'ideal', 'alipay_hk')
+
+The Redirect component will automatically handle the specific payment method flow based on the type you specify. This allows you to test any redirect-based payment method without needing a dedicated component for each one.
+
+For a complete list of available payment method types, refer to the [Adyen Documentation](https://docs.adyen.com/payment-methods).
+
