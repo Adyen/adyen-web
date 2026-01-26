@@ -1,12 +1,12 @@
 export const URL_MAP = {
     /* Drop-in */
-    dropinWithSession: '/iframe.html?args=&globals=&id=dropin-dropin-component--default&viewMode=story',
-    dropinWithAdvanced: '/iframe.html?globals=&args=useSessions:!false&id=dropin-dropin-component--default&viewMode=story',
+    dropinWithSession: '/iframe.html?args=&globals=&id=drop-in-drop-in-component--default&viewMode=story',
+    dropinWithAdvanced: '/iframe.html?globals=&args=useSessions:!false&id=drop-in-drop-in-component--default&viewMode=story',
     dropinSessions_zeroAuthCard_success:
-        '/iframe.html?globals=&args=amount:0;sessionData.recurringProcessingModel:CardOnFile;sessionData.storePaymentMethodMode:askForConsent&id=dropin-dropin-component--default&viewMode=story',
+        '/iframe.html?globals=&args=amount:0;sessionData.recurringProcessingModel:CardOnFile;sessionData.storePaymentMethodMode:askForConsent&id=drop-in-drop-in-component--default&viewMode=story',
     dropinSessions_zeroAuthCard_fail:
-        '/iframe.html?globals=&args=amount:0;sessionData.recurringProcessingModel:CardOnFile;sessionData.storePaymentMethodMode:askForConsent;sessionData.enableOneClick:!true&id=dropin-dropin-component--default&viewMode=story',
-    dropinWithSession_BCMC_noStoredPms: '/iframe.html?args=countryCode:BE&globals=&id=dropin-dropin-component--default&viewMode=story',
+        '/iframe.html?globals=&args=amount:0;sessionData.recurringProcessingModel:CardOnFile;sessionData.storePaymentMethodMode:askForConsent;sessionData.enableOneClick:!true&id=drop-in-drop-in-component--default&viewMode=story',
+    dropinWithSession_BCMC_noStoredPms: '/iframe.html?args=countryCode:BE&globals=&id=drop-in-drop-in-component--default&viewMode=story',
 
     /**
      * Card
@@ -46,7 +46,7 @@ export const URL_MAP = {
      * UPI
      */
     upi: '/iframe.html?globals=&id=components-upi--default&viewMode=story',
-    
+
     /**
      * Vouchers
      */
