@@ -55,7 +55,7 @@ const preview: Preview = {
             storySort: {
                 order: [
                     'Welcome',
-                    'Dropin',
+                    'Drop-in',
                     'Components',
                     ['Cards', ['Card', '*'], 'Wallets', 'IssuerList', 'OpenInvoice', 'Vouchers', 'Gift Cards', 'Redirect', '*'],
                     'Internal Elements',
