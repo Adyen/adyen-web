@@ -27,6 +27,32 @@ export const Default: ApplePayStory = {
     }
 };
 
+export const CouponCodes: ApplePayStory = {
+    render: ({ componentConfiguration, ...checkoutConfig }) => (
+        <Checkout checkoutConfig={checkoutConfig}>
+            {checkout => <ComponentContainer element={new ApplePay(checkout, componentConfiguration)} />}
+        </Checkout>
+    ),
+    args: {
+        componentConfiguration: {
+            buttonColor: 'white-outline',
+            // Setting to Modal here because Storybook will run the Component within an iframe, which means the ApplePay code would be displayed as a new window by default
+            renderApplePayCodeAs: 'modal',
+            couponCode: 'TESTCOUPONCODE',
+            supportsCouponCode: true,
+            onCouponCodeChange: (resolve, reject, event) => {
+                console.log('onCouponCodeChange', event);
+                resolve({
+                    newTotal: {
+                        label: 'Total',
+                        amount: '200'
+                    }
+                });
+            }
+        }
+    }
+};
+
 export const WithCustomPayButton: ApplePayStory = {
     render: ({ componentConfiguration, ...checkoutConfig }) => (
         <Checkout checkoutConfig={checkoutConfig}>

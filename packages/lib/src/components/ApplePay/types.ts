@@ -37,6 +37,16 @@ export type ApplePayButtonType =
 export type ApplePayButtonStyle = 'black' | 'white' | 'white-outline';
 
 export interface ApplePayConfiguration extends UIElementProps {
+    couponCode?: ApplePayJS.ApplePayPaymentRequest['couponCode'];
+
+    supportsCouponCode?: ApplePayJS.ApplePayPaymentRequest['supportsCouponCode'];
+
+    onCouponCodeChange?: (
+        resolve: (update: ApplePayJS.ApplePayCouponCodeUpdate) => void,
+        reject: () => void,
+        event: ApplePayJS.ApplePayCouponCodeChangedEvent
+    ) => void;
+
     /**
      * Enables the ApplePay Express Flow & also used for analytics
      * @defaultValue false
