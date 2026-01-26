@@ -2,7 +2,7 @@ import { render, screen, waitFor } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 
 import Ach from './Ach';
-import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
+import { setupCoreMock, TEST_CHECKOUT_ATTEMPT_ID, TEST_RISK_DATA } from '../../../config/testMocks/setup-core-mock';
 
 describe('ACH', () => {
     let onSubmitMock;
@@ -45,10 +45,13 @@ describe('ACH', () => {
                             bankAccountNumber: '1234567890',
                             bankAccountType: 'checking',
                             bankLocationId: '121000358',
-                            checkoutAttemptId: 'fetch-checkoutAttemptId-failed',
+                            checkoutAttemptId: TEST_CHECKOUT_ATTEMPT_ID,
                             ownerName: 'John Doe',
                             type: 'ach'
-                        })
+                        }),
+                        riskData: {
+                            clientData: TEST_RISK_DATA
+                        }
                     })
                 }),
                 expect.anything(),
@@ -94,10 +97,13 @@ describe('ACH', () => {
                             bankAccountNumber: '1234567890',
                             bankAccountType: 'checking',
                             bankLocationId: '121000358',
-                            checkoutAttemptId: 'fetch-checkoutAttemptId-failed',
+                            checkoutAttemptId: TEST_CHECKOUT_ATTEMPT_ID,
                             ownerName: 'John Doe',
                             type: 'ach'
                         }),
+                        riskData: {
+                            clientData: TEST_RISK_DATA
+                        },
                         storePaymentMethod: true
                     })
                 }),
@@ -222,9 +228,12 @@ describe('ACH', () => {
                             bankAccountNumber: '1234567890',
                             bankAccountType: 'checking',
                             bankLocationId: '121000358',
-                            checkoutAttemptId: 'fetch-checkoutAttemptId-failed',
+                            checkoutAttemptId: TEST_CHECKOUT_ATTEMPT_ID,
                             type: 'ach'
-                        })
+                        }),
+                        riskData: {
+                            clientData: TEST_RISK_DATA
+                        }
                     })
                 }),
                 expect.anything(),

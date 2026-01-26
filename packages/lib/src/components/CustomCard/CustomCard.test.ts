@@ -1,10 +1,14 @@
+import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
+import { ICore } from '../../types';
 import CustomCard from './CustomCard';
 
 describe('CustomCard', () => {
     let customCard;
+    let core: ICore;
 
     beforeEach(() => {
-        customCard = new CustomCard(global.core);
+        core = setupCoreMock();
+        customCard = new CustomCard(core);
     });
 
     describe('get data', () => {
