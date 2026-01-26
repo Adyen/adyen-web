@@ -3,9 +3,9 @@ import ApplePay from './ApplePay';
 import ApplePayService from './services/ApplePayService';
 import ApplePaySdkLoader from './services/ApplePaySdkLoader';
 import { mock } from 'jest-mock-extended';
-import { NO_CHECKOUT_ATTEMPT_ID } from '../../core/Analytics/constants';
 import { render, screen } from '@testing-library/preact';
-import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
+import { setupCoreMock, TEST_CHECKOUT_ATTEMPT_ID, TEST_RISK_DATA } from '../../../config/testMocks/setup-core-mock';
+import { ICore } from '../../types';
 
 jest.mock('../../core/Services/http');
 jest.mock('./services/ApplePayService');
@@ -14,8 +14,10 @@ jest.mock('./services/ApplePaySdkLoader');
 const mockedHttpPost = httpPost as jest.Mock;
 
 let mockApplePaySession;
+let core: ICore;
 
 beforeEach(() => {
+    core = setupCoreMock();
     const mockApplePaySdkLoaderLoadFunction = jest.fn().mockImplementation(() => {
         mockApplePaySession = mock<ApplePaySession>({
             // @ts-ignore The following methods are not recognized as static members
@@ -73,7 +75,7 @@ describe('ApplePay', () => {
             });
 
             const onApplePayCodeCloseMock = jest.fn();
-            new ApplePay(global.core, {
+            new ApplePay(core, {
                 onApplePayCodeClose: onApplePayCodeCloseMock
             });
 
@@ -93,8 +95,6 @@ describe('ApplePay', () => {
 
     describe('showPayButton', () => {
         test('should not render anything if showPayButton is false', () => {
-            const core = setupCoreMock();
-
             const applepay = new ApplePay(core, {
                 showPayButton: false
             });
@@ -103,8 +103,6 @@ describe('ApplePay', () => {
         });
 
         test('should render apple-pay-button by default', () => {
-            const core = setupCoreMock();
-
             const applepay = new ApplePay(core);
             render(applepay.render());
             expect(screen.getByTestId('apple-pay-button')).toBeInTheDocument();
@@ -120,7 +118,7 @@ describe('ApplePay', () => {
                 }
             });
 
-            const applepay = new ApplePay(global.core);
+            const applepay = new ApplePay(core);
             await expect(applepay.isAvailable()).resolves.toBeUndefined();
             expect(ApplePaySession.canMakePayments).toHaveBeenCalledTimes(1);
         });
@@ -133,7 +131,7 @@ describe('ApplePay', () => {
                 }
             });
 
-            const applepay = new ApplePay(global.core);
+            const applepay = new ApplePay(core);
             await expect(applepay.isAvailable()).rejects.toThrow('Trying to start an Apple Pay session from an insecure document');
         });
 
@@ -145,7 +143,7 @@ describe('ApplePay', () => {
                 }
             });
 
-            const applepay = new ApplePay(global.core);
+            const applepay = new ApplePay(core);
             await new Promise(process.nextTick);
 
             mockApplePaySession.canMakePayments = jest.fn().mockReturnValue(false);
@@ -161,7 +159,7 @@ describe('ApplePay', () => {
                 }
             });
 
-            const applepay = new ApplePay(global.core);
+            const applepay = new ApplePay(core);
             await new Promise(process.nextTick);
 
             applepay['sdkLoader'].isSdkLoaded = jest.fn().mockRejectedValue(undefined);
@@ -172,7 +170,7 @@ describe('ApplePay', () => {
 
     describe('applePayCapabilities()', () => {
         test('should call the applePayCapabilities() API with the merchant config', async () => {
-            const applepay = new ApplePay(global.core, {
+            const applepay = new ApplePay(core, {
                 configuration: configurationMock
             });
 
@@ -182,7 +180,7 @@ describe('ApplePay', () => {
         });
 
         test('should throw error if applePayCapabilities() fails', async () => {
-            const applepay = new ApplePay(global.core, {
+            const applepay = new ApplePay(core, {
                 configuration: configurationMock
             });
             mockApplePaySession.applePayCapabilities = jest.fn().mockRejectedValue({});
@@ -197,7 +195,7 @@ describe('ApplePay', () => {
                 data: 'eyJ0b2tlbiI6ImFwcGxlLXBheS1zZXNzaW9uIn0=' // translates to: {"token":"apple-pay-session"}
             });
 
-            const applepay = new ApplePay(global.core, {
+            const applepay = new ApplePay(core, {
                 configuration: configurationMock,
                 amount: { currency: 'EUR', value: 2000 }
             });
@@ -226,7 +224,7 @@ describe('ApplePay', () => {
                 configurable: true
             });
 
-            const applepay = new ApplePay(global.core, {
+            const applepay = new ApplePay(core, {
                 configuration: configurationMock,
                 amount: { currency: 'EUR', value: 2000 }
             });
@@ -252,7 +250,7 @@ describe('ApplePay', () => {
         });
 
         test('should use custom domainName if set in the component configuration', () => {
-            const applepay = new ApplePay(global.core, {
+            const applepay = new ApplePay(core, {
                 configuration: configurationMock,
                 domainName: 'https://pay.example.com',
                 amount: { currency: 'EUR', value: 2000 }
@@ -275,7 +273,7 @@ describe('ApplePay', () => {
         test('should reject if the session request fails', async () => {
             mockedHttpPost.mockRejectedValue({});
 
-            const applepay = new ApplePay(global.core, {
+            const applepay = new ApplePay(core, {
                 configuration: configurationMock,
                 amount: { currency: 'EUR', value: 2000 }
             });
@@ -301,22 +299,21 @@ describe('ApplePay', () => {
 
     describe('isExpress flag', () => {
         test('should add subtype: express when isExpress is configured', () => {
-            const applepay = new ApplePay(global.core, { isExpress: true });
+            const applepay = new ApplePay(core, { isExpress: true });
             expect(applepay.data.paymentMethod).toHaveProperty('subtype', 'express');
         });
         test('should not add subtype: express when isExpress is omitted', () => {
-            const applepay = new ApplePay(global.core);
+            const applepay = new ApplePay(core);
             expect(applepay.data.paymentMethod).not.toHaveProperty('subtype', 'express');
         });
 
         test('should throw error when express callbacks are passed but isExpress flag is not set', () => {
-            expect(() => new ApplePay(global.core, { onShippingContactSelected: jest.fn() })).toThrow();
+            expect(() => new ApplePay(core, { onShippingContactSelected: jest.fn() })).toThrow();
         });
     });
 
     describe('submit()', () => {
         test('should forward apple pay error (if available) to ApplePay if payment fails', async () => {
-            const core = setupCoreMock();
             const onPaymentFailedMock = jest.fn();
             const error = mock<ApplePayJS.ApplePayError>();
             const event = mock<ApplePayJS.ApplePayPaymentAuthorizedEvent>({
@@ -373,7 +370,7 @@ describe('ApplePay', () => {
                 }
             });
 
-            const applepay = new ApplePay(global.core, {
+            const applepay = new ApplePay(core, {
                 modules: { analytics: global.analytics },
                 configuration: configurationMock,
                 amount: { currency: 'EUR', value: 2000 },
@@ -426,7 +423,7 @@ describe('ApplePay', () => {
                 resolve(orderDetails);
             });
 
-            const applepay = new ApplePay(global.core, {
+            const applepay = new ApplePay(core, {
                 configuration: configurationMock,
                 amount: { currency: 'EUR', value: 2000 },
                 onOrderTrackingRequest: onOrderTrackingRequestMock,
@@ -477,7 +474,7 @@ describe('ApplePay', () => {
                 resolve();
             });
 
-            const applepay = new ApplePay(global.core, {
+            const applepay = new ApplePay(core, {
                 configuration: configurationMock,
                 amount: { currency: 'EUR', value: 2000 },
                 onOrderTrackingRequest: onOrderTrackingRequestMock,
@@ -522,7 +519,7 @@ describe('ApplePay', () => {
                 reject();
             });
 
-            const applepay = new ApplePay(global.core, {
+            const applepay = new ApplePay(core, {
                 configuration: configurationMock,
                 amount: { currency: 'EUR', value: 2000 },
                 onOrderTrackingRequest: onOrderTrackingRequestMock,
@@ -599,7 +596,7 @@ describe('ApplePay', () => {
                 actions.reject();
             });
 
-            const applepay = new ApplePay(global.core, {
+            const applepay = new ApplePay(core, {
                 configuration: configurationMock,
                 amount: { currency: 'EUR', value: 2000 },
                 onAuthorized: onAuthorizedMock,
@@ -643,9 +640,12 @@ describe('ApplePay', () => {
                 },
                 paymentMethod: {
                     applePayToken: 'InBheW1lbnQtZGF0YSI=',
-                    checkoutAttemptId: NO_CHECKOUT_ATTEMPT_ID,
+                    checkoutAttemptId: TEST_CHECKOUT_ATTEMPT_ID,
                     sdkData: expect.any(String),
                     type: 'applepay'
+                },
+                riskData: {
+                    clientData: TEST_RISK_DATA
                 }
             });
 
@@ -682,7 +682,7 @@ describe('ApplePay', () => {
 
     describe('formatProps', () => {
         test('accepts an amount in a regular format', () => {
-            const applepay = new ApplePay(global.core, {
+            const applepay = new ApplePay(core, {
                 amount: { currency: 'EUR', value: 2000 }
             });
             expect(applepay.props.amount.value).toEqual(2000);
@@ -690,18 +690,18 @@ describe('ApplePay', () => {
         });
 
         test('accepts an amount with default values', () => {
-            const applepay = new ApplePay(global.core);
+            const applepay = new ApplePay(core);
             expect(applepay.props.amount.value).toEqual(0);
             expect(applepay.props.amount.currency).toEqual('USD');
         });
 
         test('uses merchantName if no totalPriceLabel was defined', () => {
-            const applepay = new ApplePay(global.core, { configuration: { merchantName: 'Test' } });
+            const applepay = new ApplePay(core, { configuration: { merchantName: 'Test' } });
             expect(applepay.props.totalPriceLabel).toEqual('Test');
         });
 
         test('can set totalPriceLabel', () => {
-            const applepay = new ApplePay(global.core, {
+            const applepay = new ApplePay(core, {
                 configuration: { merchantName: 'Test' },
                 totalPriceLabel: 'Total'
             });
@@ -711,7 +711,7 @@ describe('ApplePay', () => {
 
     describe('get data', () => {
         test('always returns a type', () => {
-            const applepay = new ApplePay(global.core);
+            const applepay = new ApplePay(core);
             expect(applepay.data).toMatchObject({ paymentMethod: { type: 'applepay' } });
         });
     });

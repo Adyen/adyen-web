@@ -1,7 +1,6 @@
 import Paypal from './Paypal';
 import { render, screen } from '@testing-library/preact';
-import { NO_CHECKOUT_ATTEMPT_ID } from '../../core/Analytics/constants';
-import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
+import { setupCoreMock, TEST_CHECKOUT_ATTEMPT_ID, TEST_RISK_DATA } from '../../../config/testMocks/setup-core-mock';
 
 const core = setupCoreMock();
 
@@ -10,7 +9,14 @@ describe('Paypal', () => {
         const paypal = new Paypal(core);
         expect(paypal.data).toEqual({
             clientStateDataIndicator: true,
-            paymentMethod: { subtype: 'sdk', type: 'paypal', userAction: 'pay', checkoutAttemptId: NO_CHECKOUT_ATTEMPT_ID, sdkData: expect.any(String) }
+            paymentMethod: {
+                subtype: 'sdk',
+                type: 'paypal',
+                userAction: 'pay',
+                checkoutAttemptId: TEST_CHECKOUT_ATTEMPT_ID,
+                sdkData: expect.any(String)
+            },
+            riskData: { clientData: TEST_RISK_DATA }
         });
     });
 
@@ -18,7 +24,14 @@ describe('Paypal', () => {
         const paypal = new Paypal(core, { isExpress: true });
         expect(paypal.data).toEqual({
             clientStateDataIndicator: true,
-            paymentMethod: { subtype: 'express', type: 'paypal', userAction: 'pay', checkoutAttemptId: NO_CHECKOUT_ATTEMPT_ID, sdkData: expect.any(String) }
+            paymentMethod: {
+                subtype: 'express',
+                type: 'paypal',
+                userAction: 'pay',
+                checkoutAttemptId: TEST_CHECKOUT_ATTEMPT_ID,
+                sdkData: expect.any(String)
+            },
+            riskData: { clientData: TEST_RISK_DATA }
         });
     });
 
@@ -26,7 +39,14 @@ describe('Paypal', () => {
         const paypal = new Paypal(core);
         expect(paypal.data).toEqual({
             clientStateDataIndicator: true,
-            paymentMethod: { subtype: 'sdk', type: 'paypal', userAction: 'pay', checkoutAttemptId: NO_CHECKOUT_ATTEMPT_ID, sdkData: expect.any(String) }
+            paymentMethod: {
+                subtype: 'sdk',
+                type: 'paypal',
+                userAction: 'pay',
+                checkoutAttemptId: TEST_CHECKOUT_ATTEMPT_ID,
+                sdkData: expect.any(String)
+            },
+            riskData: { clientData: TEST_RISK_DATA }
         });
     });
 
@@ -34,7 +54,14 @@ describe('Paypal', () => {
         const paypal = new Paypal(core, { isExpress: true, userAction: 'continue' });
         expect(paypal.data).toEqual({
             clientStateDataIndicator: true,
-            paymentMethod: { subtype: 'express', type: 'paypal', userAction: 'continue', checkoutAttemptId: NO_CHECKOUT_ATTEMPT_ID, sdkData: expect.any(String) }
+            paymentMethod: {
+                subtype: 'express',
+                type: 'paypal',
+                userAction: 'continue',
+                checkoutAttemptId: TEST_CHECKOUT_ATTEMPT_ID,
+                sdkData: expect.any(String)
+            },
+            riskData: { clientData: TEST_RISK_DATA }
         });
     });
 

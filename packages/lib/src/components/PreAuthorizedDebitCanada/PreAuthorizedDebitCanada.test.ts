@@ -2,7 +2,7 @@ import { render, screen, waitFor } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 
 import PreAuthorizedDebitCanada from './PreAuthorizedDebitCanada';
-import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
+import { setupCoreMock, TEST_CHECKOUT_ATTEMPT_ID, TEST_RISK_DATA } from '../../../config/testMocks/setup-core-mock';
 
 describe('PreAuthorizedDebitCanada', () => {
     let onSubmitMock;
@@ -44,9 +44,10 @@ describe('PreAuthorizedDebitCanada', () => {
                             bankAccountNumber: '1234567',
                             bankCode: '123',
                             bankLocationId: '12345',
-                            checkoutAttemptId: 'fetch-checkoutAttemptId-failed',
+                            checkoutAttemptId: TEST_CHECKOUT_ATTEMPT_ID,
                             type: 'eft_directdebit_CA'
-                        })
+                        }),
+                        riskData: { clientData: TEST_RISK_DATA }
                     })
                 }),
                 expect.anything(),
@@ -112,9 +113,10 @@ describe('PreAuthorizedDebitCanada', () => {
                             bankAccountNumber: '1234567',
                             bankCode: '123',
                             bankLocationId: '12345',
-                            checkoutAttemptId: 'fetch-checkoutAttemptId-failed',
+                            checkoutAttemptId: TEST_CHECKOUT_ATTEMPT_ID,
                             type: 'eft_directdebit_CA'
                         }),
+                        riskData: { clientData: TEST_RISK_DATA },
                         storePaymentMethod: true
                     })
                 }),

@@ -15,6 +15,7 @@ export interface AnalyticsProps {
 }
 
 export interface IAnalytics {
+    checkoutAttemptId?: string;
     setUp({ sessionId, checkoutStage, locale }: { sessionId?: string; checkoutStage?: 'precheckout' | 'checkout'; locale?: string }): Promise<void>;
     sendFlavor(flavor: 'dropin' | 'components'): Promise<void>;
     sendAnalytics(event: AbstractAnalyticsEvent): void;
@@ -61,6 +62,10 @@ class Analytics implements IAnalytics {
 
         if (enabled !== undefined) this.enabled = enabled;
         if (analyticsData) this.analyticsData = analyticsData;
+    }
+
+    public get checkoutAttemptId(): string {
+        return this.capturedCheckoutAttemptId;
     }
 
     public async setUp({

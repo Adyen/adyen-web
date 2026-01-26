@@ -1,5 +1,4 @@
 import { ComponentChild, h, render } from 'preact';
-import getProp from '../../../utils/getProp';
 import uuid from '../../../utils/uuid';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 import { NO_CHECKOUT_ATTEMPT_ID } from '../../../core/Analytics/constants';
@@ -88,11 +87,11 @@ abstract class BaseElement<P extends BaseElementProps> implements IBaseElement {
      * Note: this does not ensure validity, check isValid first
      */
     public get data(): PaymentData {
-        // first one used for the clientData field in the payment request
-        const clientData = getProp(this.props, 'modules.risk.data');
-        const checkoutAttemptId = getProp(this.props, 'modules.analytics.getCheckoutAttemptId')?.() ?? NO_CHECKOUT_ATTEMPT_ID; // NOTE: we never expect to see this "failed" value, but, just in case...
         const order = this.state.order || this.props.order;
         const componentData = this.formatData();
+
+        const clientData = this.core.modules.risk.data;
+        const checkoutAttemptId = this.core.modules.analytics.checkoutAttemptId ?? NO_CHECKOUT_ATTEMPT_ID;
 
         const sdkData = createSdkData(checkoutAttemptId, clientData);
 

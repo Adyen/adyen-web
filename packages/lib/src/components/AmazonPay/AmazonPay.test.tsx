@@ -3,6 +3,7 @@ import defaultProps from './defaultProps';
 import { httpPost } from '../../core/Services/http';
 import { mock } from 'jest-mock-extended';
 import { AmazonPayConfiguration } from './types';
+import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 
 jest.mock('../../core/Services/http');
 
@@ -13,9 +14,11 @@ const declineFlowMock = {
 const spyFetch = (httpPost as jest.Mock).mockImplementation(jest.fn(() => Promise.resolve(declineFlowMock)));
 
 describe('AmazonPay', () => {
+    const core = setupCoreMock();
+
     const amazonProps = mock<AmazonPayConfiguration>();
     const getElement = (props = {}) =>
-        new AmazonPay(global.core, {
+        new AmazonPay(core, {
             ...defaultProps,
             ...props,
             ...amazonProps
