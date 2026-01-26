@@ -11,7 +11,7 @@ import './customization.scss';
 type DropinStory = StoryConfiguration<DropinConfiguration>;
 
 const meta: MetaConfiguration<DropinConfiguration> = {
-    title: 'Dropin/Dropin Component',
+    title: 'Drop-in/Drop-in Component',
     tags: ['no-automated-visual-test'],
     argTypes: {
         componentConfiguration: {
