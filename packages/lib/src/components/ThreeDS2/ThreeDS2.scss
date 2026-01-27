@@ -1,4 +1,3 @@
-.adyen-checkout__threeds2__challenge-container,
 .adyen-checkout__threeds2__challenge {
     background-color: transparent;
     display: block;
@@ -7,9 +6,7 @@
     width: 100%;
     min-height: 400px;
     height: inherit;
-}
 
-.adyen-checkout__threeds2__challenge {
     &--01 {
         width: 250px;
         height: 400px;

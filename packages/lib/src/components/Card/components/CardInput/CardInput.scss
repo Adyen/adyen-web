@@ -52,11 +52,6 @@
     }
 }
 
-/* TODO: When is this class is this ever set? */
-.adyen-checkout__card-input__form {
-    transition: opacity 0.25s ease-out;
-}
-
 .adyen-checkout__card__cardNumber {
     max-width: 400px;
 }
@@ -94,10 +89,6 @@
 .adyen-checkout__field--cardNumber
     .adyen-checkout__input--valid:not(.adyen-checkout__card__cardNumber__input--noBrand)
     + .adyen-checkout-input__inline-validation--valid {
-    display: none;
-}
-
-.adyen-checkout__field--cardNumber .adyen-checkout-card-input__icon--hidden {
     display: none;
 }
 
