@@ -5,6 +5,7 @@ export interface ApplePayServiceOptions {
     onValidateMerchant: (resolve, reject, url) => void;
     onError: (error?: unknown) => void;
     onCancel?: (event: ApplePayJS.Event) => void;
+    onCouponCodeChange?: (resolve, reject, event: ApplePayJS.ApplePayCouponCodeChangedEvent) => void;
     onPaymentMethodSelected?: (resolve, reject, event: ApplePayJS.ApplePayPaymentMethodSelectedEvent) => void;
     onShippingMethodSelected?: (resolve, reject, event: ApplePayJS.ApplePayShippingMethodSelectedEvent) => void;
     onShippingContactSelected?: (resolve, reject, event: ApplePayJS.ApplePayShippingContactSelectedEvent) => void;
@@ -49,6 +50,12 @@ class ApplePayService {
         if (typeof options.onShippingMethodSelected === 'function') {
             this.session.onshippingmethodselected = event => {
                 void this.onshippingmethodselected(event, options.onShippingMethodSelected);
+            };
+        }
+
+        if (typeof options.onCouponCodeChange === 'function') {
+            this.session.oncouponcodechanged = event => {
+                void this.oncouponcodechange(event, options.onCouponCodeChange);
             };
         }
     }
@@ -151,6 +158,16 @@ class ApplePayService {
             })
             .catch((shippingMethodUpdate: ApplePayJS.ApplePayShippingMethodUpdate) => {
                 this.session.completeShippingMethodSelection(shippingMethodUpdate);
+            });
+    }
+
+    oncouponcodechange(event: ApplePayJS.ApplePayCouponCodeChangedEvent, onCouponCodeChange) {
+        return new Promise((resolve, reject) => onCouponCodeChange(resolve, reject, event))
+            .then((couponCodeUpdate: ApplePayJS.ApplePayCouponCodeUpdate) => {
+                this.session.completeCouponCodeChange(couponCodeUpdate);
+            })
+            .catch((couponCodeUpdate: ApplePayJS.ApplePayCouponCodeUpdate) => {
+                this.session.completeCouponCodeChange(couponCodeUpdate);
             });
     }
 
