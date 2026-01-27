@@ -86,6 +86,8 @@ export function initiatePaymentRequest({ configuration, ...props }: GooglePayCon
                     assuranceDetailsRequired: props.assuranceDetailsRequired,
                     allowPrepaidCards: props.allowPrepaidCards,
                     allowCreditCards: props.allowCreditCards,
+                    allowedIssuerCountryCodes: props.allowedIssuerCountryCodes,
+                    blockedIssuerCountryCodes: props.blockedIssuerCountryCodes,
                     billingAddressRequired: props.billingAddressRequired,
                     billingAddressParameters: props.billingAddressParameters
                 }
