@@ -17,10 +17,10 @@ export const getMaxLengthByFieldAndCountry = (
 };
 
 // Not null or undefined or only spaces
-export const isEmpty = input => !!(input == null || /^[\s]*$/.test(input));
+export const isEmpty = (input: string) => !!(input == null || /^[\s]*$/.test(input));
 
-export const isString = input => typeof input === 'string' || input instanceof String;
-export const hasText = input => isString(input) && !isEmpty(input);
+export const isString = (input: unknown) => typeof input === 'string' || input instanceof String;
+export const hasText = (input: string) => isString(input) && !isEmpty(input);
 
 export const SPECIAL_CHARS = '?\\+_=!@#$%^&*(){}~<>\\[\\]\\\\'; // N.B. difficulty escaping \ (takes 3 backslashes!)
 
@@ -45,7 +45,7 @@ export const exactLength = (input: string, length: number) => {
     return input.length === length;
 };
 
-export const validateForSpecialChars = name => {
+export const validateForSpecialChars = (name: string) => {
     const hasNoLength = !name.length;
     // RegEx .test, if run against empty string, will return false
     return CHARACTER_PATTERNS.noSpecialChars.test(name) || hasNoLength;

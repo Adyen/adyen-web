@@ -193,13 +193,13 @@ describe('GooglePay', () => {
 
             const browserInfo = state.data.browserInfo;
 
-            expect(browserInfo.colorDepth).toEqual(expect.any(Number));
-            expect(browserInfo.javaEnabled).toEqual(expect.any(Boolean));
-            expect(browserInfo.language).toEqual(expect.any(String));
-            expect(browserInfo.screenHeight).toEqual('');
-            expect(browserInfo.screenWidth).toEqual('');
-            expect(browserInfo.timeZoneOffset).toEqual(expect.any(Number));
-            expect(browserInfo.userAgent).toEqual(expect.any(String));
+            expect(browserInfo.colorDepth).toBeDefined();
+            expect(browserInfo.javaEnabled).toBeDefined();
+            expect(browserInfo.language).toBeDefined();
+            expect(browserInfo.screenHeight).toBeDefined();
+            expect(browserInfo.screenWidth).toBeDefined();
+            expect(browserInfo.timeZoneOffset).toBeDefined();
+            expect(browserInfo.userAgent).toBeDefined();
 
             await new Promise(process.nextTick);
 

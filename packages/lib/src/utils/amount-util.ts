@@ -6,7 +6,10 @@ import { currencyMinorUnitsConfig } from './constants/currency-minor-units';
  * @param currencyCode -
  * Get divider amount
  */
-export const getDivider = (currencyCode: string): number => CURRENCY_DECIMALS[currencyCode] || 100;
+export const getDivider = (currencyCode: string): number => {
+    const divider = CURRENCY_DECIMALS[currencyCode as keyof typeof CURRENCY_DECIMALS];
+    return divider || 100;
+};
 
 /**
  * @internal
@@ -26,7 +29,8 @@ export const getLocalisedAmount = (amount: number, locale: string, currencyCode:
     const formattedLocale = locale.replace('_', '-');
 
     const modifiedOptions = currencyMinorUnitsConfig[currencyCode] ? { ...options, ...currencyMinorUnitsConfig[currencyCode] } : options;
-    const localeOptions = {
+
+    const localeOptions: Intl.NumberFormatOptions = {
         style: 'currency',
         currency: currencyCode,
         currencyDisplay: 'symbol',

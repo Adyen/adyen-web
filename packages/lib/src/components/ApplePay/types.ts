@@ -163,8 +163,14 @@ export interface ApplePayConfiguration extends UIElementProps {
      */
     applicationData?: string;
 
-    // Events
-    onClick?: (resolve, reject) => void;
+    /**
+     *	Called when the shopper clicks the Apple Pay button
+
+     * @param resolve - Must be called if the button should be displayed
+     * @param reject - Must be called if the button should not be displayed
+     * @returns
+     */
+    onClick?: (resolve: () => void, reject: () => void) => void;
 
     /**
      * A callback function the Apple Pay SDK calls when the Apple Pay code modal or window closes.
@@ -201,31 +207,57 @@ export interface ApplePayConfiguration extends UIElementProps {
      */
     onOrderTrackingRequest?: (resolve: (orderDetails: ApplePayPaymentOrderDetails) => void, reject: () => void) => void;
 
-    onValidateMerchant?: (resolve, reject, validationURL: string) => void;
+    /**
+     * An event handler the system calls when it displays the payment sheet
+     *
+     * {@link https://developer.apple.com/documentation/applepayontheweb/applepaysession/onvalidatemerchant}
+     * @param resolve - Must be called with an opaque message session object
+     * @param reject - Must be called if something failed during the merchant validation
+     * @param validationURL - The URL your server must use to validate itself and obtain a merchant session object.
+     */
+    onValidateMerchant?: (resolve: (merchantSession: any) => void, reject: (error?: string) => void, validationURL: string) => Promise<void>;
 
     /**
-     * {@link https://developer.apple.com/documentation/apple_pay_on_the_web/applepaysession/1778013-onpaymentmethodselected}
-     * @param resolve(ApplePayPaymentMethodUpdate update) Completes the selection of a payment method with an update.
-     * @param reject() Completes the selection of a payment method with no update.
-     * @param event The event parameter contains the paymentMethod attribute.
+     * An event handler to call when the user selects a new payment method.
+     *
+     * {@link https://developer.apple.com/documentation/applepayontheweb/applepaysession/onpaymentmethodselected}
+     * @param resolve - Completes the selection of a payment method with an update.
+     * @param reject - Completes the selection of a payment method with no update.
+     * @param event - The event parameter contains the paymentMethod attribute.
      */
-    onPaymentMethodSelected?: (resolve, reject, event: ApplePayJS.ApplePayPaymentMethodSelectedEvent) => void;
+    onPaymentMethodSelected?: (
+        resolve: (paymentMethodUpdate: ApplePayJS.ApplePayPaymentMethodUpdate) => void,
+        reject: (paymentMethodUpdate: ApplePayJS.ApplePayPaymentMethodUpdate) => void,
+        event: ApplePayJS.ApplePayPaymentMethodSelectedEvent
+    ) => void;
 
     /**
-     * {@link https://developer.apple.com/documentation/apple_pay_on_the_web/applepaysession/1778009-onshippingcontactselected}
-     * @param resolve(ApplePayShippingContactUpdate update) Completes the selection of a shipping contact with an update.
-     * @param reject() Completes the selection of a shipping contact with no update.
-     * @param event The event parameter contains the shippingContact attribute.
+     * An event handler to call when the user selects a shipping contact in the payment sheet.
+     *
+     * {@link https://developer.apple.com/documentation/applepayontheweb/applepaysession/onshippingcontactselected}
+     * @param resolve - Completes the selection of a shipping contact with an update.
+     * @param reject - Completes the selection of a shipping contact with no update.
+     * @param event - The event parameter contains the shippingContact attribute.
      */
-    onShippingContactSelected?: (resolve, reject, event: ApplePayJS.ApplePayShippingContactSelectedEvent) => void;
+    onShippingContactSelected?: (
+        resolve: (shippingContactUpdate: ApplePayJS.ApplePayShippingContactUpdate) => void,
+        reject: (shippingContactUpdate: ApplePayJS.ApplePayShippingContactUpdate) => void,
+        event: ApplePayJS.ApplePayShippingContactSelectedEvent
+    ) => void;
 
     /**
-     * {@link https://developer.apple.com/documentation/apple_pay_on_the_web/applepaysession/1778028-onshippingmethodselected}
-     * @param resolve(ApplePayShippingMethodUpdate update) Completes the selection of a shipping method with an update.
-     * @param reject() Completes the selection of a shipping method with no update.
-     * @param event The event parameter contains the shippingMethod attribute.
+     * Completes the selection of a shipping method with an update.
+     *
+     * {@link https://developer.apple.com/documentation/applepayontheweb/applepaysession/completeshippingmethodselection}
+     * @param resolve - Completes the selection of a shipping method with an update.
+     * @param reject - Completes the selection of a shipping method with no update.
+     * @param event - The event parameter contains the shippingMethod attribute.
      */
-    onShippingMethodSelected?: (resolve, reject, event: ApplePayJS.ApplePayShippingMethodSelectedEvent) => void;
+    onShippingMethodSelected?: (
+        resolve: (shippingMethodUpdate: ApplePayJS.ApplePayShippingMethodUpdate) => void,
+        reject: (shippingMethodUpdate: ApplePayJS.ApplePayShippingMethodUpdate) => void,
+        event: ApplePayJS.ApplePayShippingMethodSelectedEvent
+    ) => void;
 
     buttonColor?: ApplePayButtonStyle;
     buttonType?: ApplePayButtonType;

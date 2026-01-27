@@ -401,7 +401,7 @@ const CardInput = (props: CardInputProps) => {
                 const event = new AnalyticsInfoEvent({
                     component: props.type,
                     type: InfoEventType.validationError,
-                    target: fieldTypeToSnakeCase(errorItem.field),
+                    target: fieldTypeToSnakeCase(errorItem.field) as UiTarget,
                     validationErrorCode: errorItem.errorCode,
                     validationErrorMessage: getErrorMessageFromCode(errorItem.errorCode, SF_ErrorCodes)
                 });
