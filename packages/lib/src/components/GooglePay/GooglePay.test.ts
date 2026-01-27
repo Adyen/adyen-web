@@ -2,10 +2,10 @@ import { render } from '@testing-library/preact';
 import GooglePay from './GooglePay';
 import GooglePayService from './GooglePayService';
 
-import { NO_CHECKOUT_ATTEMPT_ID } from '../../core/Analytics/constants';
 import PaymentMethods from '../../core/ProcessResponse/PaymentMethods';
-import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
+import { setupCoreMock, TEST_CHECKOUT_ATTEMPT_ID } from '../../../config/testMocks/setup-core-mock';
 import { InfoEventType } from '../../core/Analytics/events/AnalyticsInfoEvent';
+import { ICore } from '../../types';
 
 jest.mock('./GooglePayService');
 
@@ -110,15 +110,20 @@ describe('GooglePay', () => {
     });
 
     describe('isExpress flag', () => {
+        let core: ICore;
+        beforeEach(() => {
+            core = setupCoreMock();
+        });
+
         test('should add subtype: express when isExpress is configured', () => {
-            const googlepay = new GooglePay(global.core, {
+            const googlepay = new GooglePay(core, {
                 configuration: { merchantId: 'merchant-id', gatewayMerchantId: 'gateway-id' },
                 isExpress: true
             });
             expect(googlepay.data.paymentMethod).toHaveProperty('subtype', 'express');
         });
         test('should not add subtype: express when isExpress is omitted', () => {
-            const googlepay = new GooglePay(global.core, {
+            const googlepay = new GooglePay(core, {
                 configuration: { merchantId: 'merchant-id', gatewayMerchantId: 'gateway-id' }
             });
             expect(googlepay.data.paymentMethod).not.toHaveProperty('subtype', 'express');
@@ -127,7 +132,7 @@ describe('GooglePay', () => {
         test('should throw error when express callbacks are passed but isExpress flag is not set', () => {
             expect(
                 () =>
-                    new GooglePay(global.core, {
+                    new GooglePay(core, {
                         configuration: { merchantId: 'merchant-id', gatewayMerchantId: 'gateway-id' },
                         paymentDataCallbacks: { onPaymentDataChanged: jest.fn() }
                     })
@@ -163,7 +168,7 @@ describe('GooglePay', () => {
 
             expect(state.data.origin).toBe('http://localhost');
             expect(state.data.paymentMethod).toStrictEqual({
-                checkoutAttemptId: NO_CHECKOUT_ATTEMPT_ID,
+                checkoutAttemptId: TEST_CHECKOUT_ATTEMPT_ID,
                 googlePayCardNetwork: 'VISA',
                 googlePayToken: 'google-pay-token',
                 sdkData: expect.any(String),
@@ -233,7 +238,7 @@ describe('GooglePay', () => {
 
             expect(state.data.origin).toBe('http://localhost');
             expect(state.data.paymentMethod).toStrictEqual({
-                checkoutAttemptId: NO_CHECKOUT_ATTEMPT_ID,
+                checkoutAttemptId: TEST_CHECKOUT_ATTEMPT_ID,
                 googlePayCardNetwork: 'VISA',
                 googlePayToken: 'google-pay-token',
                 sdkData: expect.any(String),

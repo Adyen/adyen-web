@@ -1,5 +1,7 @@
 import { h } from 'preact';
 import UIElement from './UIElement';
+import { ICore } from '../../../types';
+import { setupCoreMock } from '../../../../config/testMocks/setup-core-mock';
 
 class MyElement extends UIElement {
     public static type = 'myComp';
@@ -25,10 +27,12 @@ class MyElement extends UIElement {
 
 let onPaymentCompleted;
 let onPaymentFailed;
+let core: ICore;
 
 beforeEach(() => {
     onPaymentCompleted = jest.fn();
     onPaymentFailed = jest.fn();
+    core = setupCoreMock();
 });
 
 describe('Testing beforeSubmit', () => {
@@ -37,7 +41,7 @@ describe('Testing beforeSubmit', () => {
             actions.resolve(data);
         });
 
-        const myElement = new MyElement(global.core, {
+        const myElement = new MyElement(core, {
             amount: { value: 0, currency: 'USD' },
             // @ts-ignore it's just a test
             session: { configuration: {} },
@@ -80,7 +84,7 @@ describe('Testing beforeSubmit', () => {
             actions.reject();
         });
 
-        const myElement = new MyElement(global.core, {
+        const myElement = new MyElement(core, {
             amount: { value: 0, currency: 'USD' },
             // @ts-ignore it's just a test
             session: { configuration: {} },

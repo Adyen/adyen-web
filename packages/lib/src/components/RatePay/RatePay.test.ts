@@ -3,7 +3,7 @@ import { render, screen, waitFor, within } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import { setupServer } from 'msw/node';
 import { http, HttpResponse } from 'msw';
-import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
+import { setupCoreMock, TEST_CHECKOUT_ATTEMPT_ID, TEST_RISK_DATA } from '../../../config/testMocks/setup-core-mock';
 
 const server = setupServer(
     http.get('https://checkoutshopper-live.adyen.com/checkoutshopper/datasets/countries/en-US.json', () => {
@@ -133,7 +133,10 @@ describe('RatePay Direct Debit', () => {
                         },
                         clientStateDataIndicator: true,
                         dateOfBirth: '1990-01-01',
-                        paymentMethod: { checkoutAttemptId: 'fetch-checkoutAttemptId-failed', sdkData: expect.any(String), type: 'ratepay' },
+                        paymentMethod: { checkoutAttemptId: TEST_CHECKOUT_ATTEMPT_ID, sdkData: expect.any(String), type: 'ratepay' },
+                        riskData: {
+                            clientData: TEST_RISK_DATA
+                        },
                         shopperEmail: 'jose@adyen.com',
                         shopperName: { firstName: 'Jose', lastName: 'Fernandez' },
                         telephoneNumber: '612345678'
@@ -302,7 +305,10 @@ describe('RatePay Direct Debit', () => {
                             stateOrProvince: 'N/A',
                             street: 'Carmilgestraat'
                         },
-                        paymentMethod: { checkoutAttemptId: 'fetch-checkoutAttemptId-failed', sdkData: expect.any(String), type: 'ratepay' },
+                        paymentMethod: { checkoutAttemptId: TEST_CHECKOUT_ATTEMPT_ID, sdkData: expect.any(String), type: 'ratepay' },
+                        riskData: {
+                            clientData: TEST_RISK_DATA
+                        },
                         shopperEmail: 'jose@adyen.com',
                         shopperName: { firstName: 'Jose', lastName: 'Fernandez' },
                         telephoneNumber: '612345678'

@@ -1,15 +1,20 @@
 import BaseElement from './BaseElement';
 import { BaseElementProps } from './types';
-import { mock } from 'jest-mock-extended';
-import { ICore } from '../../../core/types';
+import { setupCoreMock, TEST_CHECKOUT_ATTEMPT_ID, TEST_RISK_DATA } from '../../../../config/testMocks/setup-core-mock';
+import base64 from '../../../utils/base64';
+import { ICore } from '../../../types';
 
-class MyElement extends BaseElement<BaseElementProps> {}
+class MyElement extends BaseElement<BaseElementProps> {
+    public override formatData() {
+        return { paymentMethod: { type: 'my-element' } };
+    }
+}
 
 describe('BaseElement', () => {
-    let core;
+    let core: ICore;
 
     beforeAll(() => {
-        core = mock<ICore>();
+        core = setupCoreMock();
     });
 
     describe('formatProps', () => {
@@ -21,26 +26,48 @@ describe('BaseElement', () => {
         });
     });
 
-    describe('formatData', () => {
-        test('should return an empty object by default', () => {
-            const baseElement = new MyElement(core);
+    describe('get data()', () => {
+        test('should call formatData to get the specific component output', () => {
+            const myElement = new MyElement(core);
             // @ts-ignore Testing internal method
-            expect(baseElement.formatData()).toEqual({});
-        });
-    });
+            const spy = jest.spyOn(myElement, 'formatData');
 
-    describe('get data', () => {
-        test('returns an empty object by default', () => {
-            const baseElement = new MyElement(core);
-            expect(baseElement.data).toEqual({ clientStateDataIndicator: true });
-        });
-
-        test('calls formatData to get the specific component output', () => {
-            const baseElement = new MyElement(core);
-            // @ts-ignore Testing internal method
-            const spy = jest.spyOn(baseElement, 'formatData');
-            expect(baseElement.data).toEqual({ clientStateDataIndicator: true });
+            expect(myElement.data).toEqual({
+                clientStateDataIndicator: true,
+                riskData: { clientData: TEST_RISK_DATA },
+                paymentMethod: {
+                    checkoutAttemptId: TEST_CHECKOUT_ATTEMPT_ID,
+                    sdkData: expect.any(String),
+                    type: 'my-element'
+                }
+            });
             expect(spy).toHaveBeenCalled();
+        });
+
+        test('should contain the checkoutAttemptId inside the encoded sdkData', () => {
+            const myElement = new MyElement(core);
+
+            const sdkData = myElement.data.paymentMethod.sdkData;
+            const decodedSdkData = JSON.parse(base64.decode(sdkData).data);
+
+            expect(decodedSdkData.analytics.checkoutAttemptId).toEqual(TEST_CHECKOUT_ATTEMPT_ID);
+        });
+
+        test('should not add sdkData nor attempt ID if there is no "paymentMethod" field', () => {
+            class Element extends BaseElement<BaseElementProps> {}
+
+            const myElement = new Element(core);
+            expect(myElement.data).toEqual({ clientStateDataIndicator: true, riskData: { clientData: TEST_RISK_DATA } });
+        });
+
+        test('should not add risk data to sdkData if it is not available', () => {
+            const core = setupCoreMock();
+            const myElement = new MyElement(core);
+
+            const sdkData = myElement.data.paymentMethod.sdkData;
+            const decodedSdkData = JSON.parse(base64.decode(sdkData).data);
+
+            expect(decodedSdkData.clientData).toBeUndefined();
         });
     });
 

@@ -3,7 +3,7 @@ import { render, screen, waitFor, within } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import { setupServer } from 'msw/node';
 import { http, HttpResponse } from 'msw';
-import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
+import { setupCoreMock, TEST_CHECKOUT_ATTEMPT_ID, TEST_RISK_DATA } from '../../../config/testMocks/setup-core-mock';
 
 const server = setupServer(
     http.get('https://checkoutshopper-live.adyen.com/checkoutshopper/datasets/countries/en-US.json', () => {
@@ -142,7 +142,10 @@ describe('AfterPay', () => {
                             stateOrProvince: 'N/A',
                             street: 'Simon Carmilgestraat'
                         },
-                        paymentMethod: { checkoutAttemptId: 'fetch-checkoutAttemptId-failed', sdkData: expect.any(String), type: 'afterpay_default' },
+                        paymentMethod: { checkoutAttemptId: TEST_CHECKOUT_ATTEMPT_ID, sdkData: expect.any(String), type: 'afterpay_default' },
+                        riskData: {
+                            clientData: TEST_RISK_DATA
+                        },
                         shopperEmail: 'jose@adyen.com',
                         shopperName: { firstName: 'Jose', lastName: 'Fernandez' },
                         telephoneNumber: '612345678'
@@ -325,7 +328,10 @@ describe('AfterPay', () => {
                             stateOrProvince: 'N/A',
                             street: 'Kinkerstraat'
                         },
-                        paymentMethod: { checkoutAttemptId: 'fetch-checkoutAttemptId-failed', sdkData: expect.any(String), type: 'afterpay_default' },
+                        paymentMethod: { checkoutAttemptId: TEST_CHECKOUT_ATTEMPT_ID, sdkData: expect.any(String), type: 'afterpay_default' },
+                        riskData: {
+                            clientData: TEST_RISK_DATA
+                        },
                         shopperEmail: 'jose@adyen.com',
                         shopperName: { firstName: 'Jose', lastName: 'Fernandez' },
                         telephoneNumber: '612345678'

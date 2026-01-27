@@ -8,16 +8,24 @@ import { SRPanel } from '../../src/core/Errors/SRPanel';
 import enUS from '../../../server/translations/en-US.json';
 import type { IAnalytics } from '../../src/core/Analytics/Analytics';
 import { setupResourceMock } from './resourcesMock';
+import RiskModule from '../../src/core/RiskModule';
 
 interface SetupCoreMockProps {
     mockSessions?: boolean;
     paymentMethods?: PaymentMethods;
+    analyticsMock?: IAnalytics;
+    riskMock?: RiskModule;
 }
 
-function setupCoreMock({ mockSessions = true, paymentMethods = null }: SetupCoreMockProps = {}): ICore {
+export const TEST_CHECKOUT_ATTEMPT_ID = 'test-checkout-attempt-id';
+export const TEST_RISK_DATA = 'test-risk-data';
+
+function setupCoreMock({ mockSessions = true, paymentMethods = null, analyticsMock = null, riskMock = null }: SetupCoreMockProps = {}): ICore {
     const core = mock<ICore>({});
 
-    const analytics = mock<IAnalytics>();
+    const analytics = analyticsMock || mock<IAnalytics>({ checkoutAttemptId: TEST_CHECKOUT_ATTEMPT_ID });
+    const risk = riskMock || mock<RiskModule>({ data: TEST_RISK_DATA });
+
     const resources = setupResourceMock();
     const i18n = new Language({ locale: 'en-US', translations: enUS });
     const srPanel = new SRPanel(core, {
@@ -33,6 +41,7 @@ function setupCoreMock({ mockSessions = true, paymentMethods = null }: SetupCore
 
     // @ts-ignore Disable TS check because the 'modules' is read-only.
     core.modules = {
+        risk,
         analytics,
         resources,
         i18n,

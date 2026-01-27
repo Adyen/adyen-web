@@ -3,7 +3,7 @@ import { render, screen, waitFor } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import { http, HttpResponse } from 'msw';
 import { setupServer } from 'msw/node';
-import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
+import { setupCoreMock, TEST_CHECKOUT_ATTEMPT_ID, TEST_RISK_DATA } from '../../../config/testMocks/setup-core-mock';
 
 const server = setupServer(
     http.get('https://checkoutshopper-live.adyen.com/checkoutshopper/datasets/countries/en-US.json', () => {
@@ -74,8 +74,11 @@ describe('Boleto', () => {
                 data: {
                     paymentMethod: {
                         type: 'boletobancario',
-                        checkoutAttemptId: 'fetch-checkoutAttemptId-failed',
+                        checkoutAttemptId: TEST_CHECKOUT_ATTEMPT_ID,
                         sdkData: expect.any(String)
+                    },
+                    riskData: {
+                        clientData: TEST_RISK_DATA
                     },
                     billingAddress: {
                         city: 'Sao Paulo',
@@ -184,8 +187,11 @@ describe('Boleto', () => {
                 data: {
                     paymentMethod: {
                         type: 'boletobancario',
-                        checkoutAttemptId: 'fetch-checkoutAttemptId-failed',
+                        checkoutAttemptId: TEST_CHECKOUT_ATTEMPT_ID,
                         sdkData: expect.any(String)
+                    },
+                    riskData: {
+                        clientData: TEST_RISK_DATA
                     },
                     billingAddress: {
                         city: 'Sao Paulo',
