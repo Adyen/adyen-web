@@ -4,6 +4,7 @@ import {
     BCMC_DUAL_BRANDED_MC,
     BCMC_DUAL_BRANDED_VISA,
     PAYMENT_RESULT,
+    TAGS,
     TEST_CVC_VALUE,
     TEST_DATE_VALUE,
     THREEDS2_CHALLENGE_PASSWORD
@@ -24,7 +25,7 @@ import { toHaveScreenshot } from '../../../utils/assertions';
 const CVC_LABEL_OPTIONAL = LANG['creditCard.securityCode.label.optional'];
 
 test.describe('Bcmc payments with dual branding', () => {
-    test.describe('Bancontact (BCMC) / Maestro brands', () => {
+    test.describe('Bancontact (BCMC) / Maestro brands', { tag: [TAGS.SCREENSHOT] }, () => {
         test.describe('Selecting the Bancontact brand', () => {
             test('#1a should submit the bcmc payment', async ({ bcmc, page, browserName }) => {
                 await bcmc.goto(URL_MAP.bcmc);
