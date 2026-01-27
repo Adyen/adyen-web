@@ -164,10 +164,6 @@
     height: 100%;
 }
 
-.adyen-checkout__payment-method__image__wrapper--disabled {
-    opacity: 0.25;
-}
-
 .adyen-checkout__payment-method:hover:not(.adyen-checkout__payment-method--selected) .adyen-checkout__payment-method__radio {
     box-shadow: 0 0 0 variable-generator.token(spacer-010) variable-generator.token(color-outline-primary-hover);
     cursor: pointer;
