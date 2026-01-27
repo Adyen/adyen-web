@@ -6,7 +6,13 @@ describe('Paypal', () => {
         const paypal = new Paypal({});
         expect(paypal.data).toEqual({
             clientStateDataIndicator: true,
-            paymentMethod: { subtype: 'sdk', type: 'paypal', userAction: 'pay', checkoutAttemptId: NO_CHECKOUT_ATTEMPT_ID }
+            paymentMethod: {
+                subtype: 'sdk',
+                type: 'paypal',
+                userAction: 'pay',
+                checkoutAttemptId: NO_CHECKOUT_ATTEMPT_ID,
+                sdkData: expect.any(String)
+            }
         });
     });
 
@@ -14,7 +20,13 @@ describe('Paypal', () => {
         const paypal = new Paypal({ isExpress: true });
         expect(paypal.data).toEqual({
             clientStateDataIndicator: true,
-            paymentMethod: { subtype: 'express', type: 'paypal', userAction: 'pay', checkoutAttemptId: NO_CHECKOUT_ATTEMPT_ID }
+            paymentMethod: {
+                subtype: 'express',
+                type: 'paypal',
+                userAction: 'pay',
+                checkoutAttemptId: NO_CHECKOUT_ATTEMPT_ID,
+                sdkData: expect.any(String)
+            }
         });
     });
 
@@ -22,7 +34,13 @@ describe('Paypal', () => {
         const paypal = new Paypal({});
         expect(paypal.data).toEqual({
             clientStateDataIndicator: true,
-            paymentMethod: { subtype: 'sdk', type: 'paypal', userAction: 'pay', checkoutAttemptId: NO_CHECKOUT_ATTEMPT_ID }
+            paymentMethod: {
+                subtype: 'sdk',
+                type: 'paypal',
+                userAction: 'pay',
+                checkoutAttemptId: NO_CHECKOUT_ATTEMPT_ID,
+                sdkData: expect.any(String)
+            }
         });
     });
 
@@ -30,7 +48,13 @@ describe('Paypal', () => {
         const paypal = new Paypal({ isExpress: true, userAction: 'continue' });
         expect(paypal.data).toEqual({
             clientStateDataIndicator: true,
-            paymentMethod: { subtype: 'express', type: 'paypal', userAction: 'continue', checkoutAttemptId: NO_CHECKOUT_ATTEMPT_ID }
+            paymentMethod: {
+                subtype: 'express',
+                type: 'paypal',
+                userAction: 'continue',
+                checkoutAttemptId: NO_CHECKOUT_ATTEMPT_ID,
+                sdkData: expect.any(String)
+            }
         });
     });
 

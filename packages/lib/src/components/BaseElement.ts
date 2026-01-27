@@ -8,6 +8,7 @@ import { RiskData } from '../core/RiskModule/RiskModule';
 import { Resources } from '../core/Context/Resources';
 import { AnalyticsInitialEvent, SendAnalyticsObject } from '../core/Analytics/types';
 import { ANALYTICS_RENDERED_STR, NO_CHECKOUT_ATTEMPT_ID } from '../core/Analytics/constants';
+import { createSdkData } from '../utils/createSdkData';
 
 class BaseElement<P extends BaseElementProps> {
     public readonly _id = `${this.constructor['type']}-${uuid()}`;
@@ -72,8 +73,15 @@ class BaseElement<P extends BaseElementProps> {
         const order = this.state.order || this.props.order;
 
         const componentData = this.formatData();
+
+        const sdkData = createSdkData(checkoutAttemptId, clientData);
+
         if (componentData.paymentMethod && checkoutAttemptId) {
             componentData.paymentMethod.checkoutAttemptId = checkoutAttemptId;
+        }
+
+        if (componentData.paymentMethod && sdkData) {
+            componentData.paymentMethod.sdkData = sdkData;
         }
 
         // Workaround, to be fixed properly
