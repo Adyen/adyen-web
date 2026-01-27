@@ -18,6 +18,7 @@ export default function IrisGenerateQRCode(props: Readonly<IrisGenerateQRCodePro
     return (
         <div data-testid="iris-generate-qr-code">
             <p className={styles.instruction}>{i18n.get('iris.instructions.generateQrCode')}</p>
+            <span>New text on IRIS UI</span>
             {props.showPayButton &&
                 props.payButton({
                     label: i18n.get('generateQRCode'),
