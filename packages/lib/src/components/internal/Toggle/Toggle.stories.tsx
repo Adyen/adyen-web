@@ -5,6 +5,7 @@ import { useState } from 'preact/hooks';
 
 const meta: Meta = {
     title: 'Internal Elements/Toggle',
+    tags: ['no-automated-visual-test'],
     component: Toggle
 };
 

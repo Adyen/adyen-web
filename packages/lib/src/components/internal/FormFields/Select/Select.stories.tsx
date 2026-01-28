@@ -12,7 +12,8 @@ import { SelectProps, SelectItem, SelectTargetObject } from './types';
 
 const meta: Meta<SelectProps> = {
     title: 'Internal Elements/Select',
-    component: Select as any,
+    tags: ['no-automated-visual-test'],
+    component: Select,
     argTypes: {
         filterable: { control: 'boolean' },
         readonly: { control: 'boolean' },
@@ -51,20 +52,20 @@ const sampleItems: SelectItem[] = [
 ];
 
 const itemsWithIcons: SelectItem[] = [
-    { 
-        id: 'visa', 
-        name: 'Visa', 
-        icon: 'https://checkoutshopper-test.cdn.adyen.com/checkoutshopper/images/logos/visa.svg' 
+    {
+        id: 'visa',
+        name: 'Visa',
+        icon: 'https://checkoutshopper-test.cdn.adyen.com/checkoutshopper/images/logos/visa.svg'
     },
-    { 
-        id: 'mastercard', 
-        name: 'Mastercard', 
-        icon: 'https://checkoutshopper-test.cdn.adyen.com/checkoutshopper/images/logos/mc.svg' 
+    {
+        id: 'mastercard',
+        name: 'Mastercard',
+        icon: 'https://checkoutshopper-test.cdn.adyen.com/checkoutshopper/images/logos/mc.svg'
     },
-    { 
-        id: 'amex', 
-        name: 'American Express', 
-        icon: 'https://checkoutshopper-test.cdn.adyen.com/checkoutshopper/images/logos/amex.svg' 
+    {
+        id: 'amex',
+        name: 'American Express',
+        icon: 'https://checkoutshopper-test.cdn.adyen.com/checkoutshopper/images/logos/amex.svg'
     }
 ];
 
@@ -90,7 +91,7 @@ const countryItems: SelectItem[] = [
 export const Default: StoryObj<SelectProps> = {
     render: args => {
         const [selectedValue, setSelectedValue] = useState<string | number>('');
-        
+
         return (
             <CoreProvider {...coreProps}>
                 <div style={{ width: '300px', padding: '20px' }}>
@@ -100,10 +101,10 @@ export const Default: StoryObj<SelectProps> = {
                         isValid={args.isValid}
                         errorMessage={args.isInvalid ? 'Please select a valid option' : ''}
                     >
-                        <Select 
-                            {...args} 
+                        <Select
+                            {...args}
                             selectedValue={selectedValue}
-                            onChange={(e) => {
+                            onChange={e => {
                                 setSelectedValue((e.target as SelectTargetObject).value);
                                 console.log('Selected:', (e.target as SelectTargetObject).value);
                             }}
@@ -137,18 +138,15 @@ export const Default: StoryObj<SelectProps> = {
 export const WithIcons: StoryObj<SelectProps> = {
     render: args => {
         const [selectedValue, setSelectedValue] = useState<string | number>('');
-        
+
         return (
             <CoreProvider {...coreProps}>
                 <div style={{ width: '300px', padding: '20px' }}>
-                    <Field
-                        name="payment-method"
-                        label="Payment Method"
-                    >
-                        <Select 
-                            {...args} 
+                    <Field name="payment-method" label="Payment Method">
+                        <Select
+                            {...args}
                             selectedValue={selectedValue}
-                            onChange={(e) => {
+                            onChange={e => {
                                 setSelectedValue((e.target as SelectTargetObject).value);
                                 console.log('Selected:', (e.target as SelectTargetObject).value);
                             }}
@@ -176,18 +174,15 @@ export const WithIcons: StoryObj<SelectProps> = {
 export const WithSecondaryText: StoryObj<SelectProps> = {
     render: args => {
         const [selectedValue, setSelectedValue] = useState<string | number>('');
-        
+
         return (
             <CoreProvider {...coreProps}>
                 <div style={{ width: '300px', padding: '20px' }}>
-                    <Field
-                        name="account-select"
-                        label="Select Account"
-                    >
-                        <Select 
-                            {...args} 
+                    <Field name="account-select" label="Select Account">
+                        <Select
+                            {...args}
                             selectedValue={selectedValue}
-                            onChange={(e) => {
+                            onChange={e => {
                                 setSelectedValue((e.target as SelectTargetObject).value);
                                 console.log('Selected:', (e.target as SelectTargetObject).value);
                             }}
@@ -215,7 +210,7 @@ export const WithSecondaryText: StoryObj<SelectProps> = {
 export const NonFilterable: StoryObj<SelectProps> = {
     render: args => {
         const [selectedValue, setSelectedValue] = useState<string | number>('option2');
-        
+
         return (
             <CoreProvider {...coreProps}>
                 <div style={{ width: '300px', padding: '20px' }}>
@@ -225,10 +220,10 @@ export const NonFilterable: StoryObj<SelectProps> = {
                         isValid={args.isValid}
                         errorMessage={args.isInvalid ? 'Please select a valid option' : ''}
                     >
-                        <Select 
-                            {...args} 
+                        <Select
+                            {...args}
                             selectedValue={selectedValue}
-                            onChange={(e) => {
+                            onChange={e => {
                                 setSelectedValue((e.target as SelectTargetObject).value);
                                 console.log('Selected:', (e.target as SelectTargetObject).value);
                             }}
@@ -258,22 +253,19 @@ export const NonFilterable: StoryObj<SelectProps> = {
 export const FilterableWithManyOptions: StoryObj<SelectProps> = {
     render: args => {
         const [selectedValue, setSelectedValue] = useState<string | number>('');
-        
+
         return (
             <CoreProvider {...coreProps}>
                 <div style={{ width: '300px', padding: '20px' }}>
-                    <Field
-                        name="country-select"
-                        label="Country"
-                    >
-                        <Select 
-                            {...args} 
+                    <Field name="country-select" label="Country">
+                        <Select
+                            {...args}
                             selectedValue={selectedValue}
-                            onChange={(e) => {
+                            onChange={e => {
                                 setSelectedValue((e.target as SelectTargetObject).value);
                                 console.log('Selected:', (e.target as SelectTargetObject).value);
                             }}
-                            onInput={(value) => {
+                            onInput={value => {
                                 console.log('Filter input:', value);
                             }}
                         />
@@ -303,65 +295,49 @@ export const FilterableWithManyOptions: StoryObj<SelectProps> = {
 export const ValidationStates: StoryObj<SelectProps> = {
     render: args => {
         const [selectedValue, setSelectedValue] = useState<string | number>('');
-        
+
         return (
             <CoreProvider {...coreProps}>
                 <div style={{ display: 'flex', gap: '20px', padding: '20px', flexWrap: 'wrap' }}>
                     <div style={{ width: '200px' }}>
-                        <Field
-                            name="valid-select"
-                            label="Valid State"
-                            isValid={true}
-                        >
-                            <Select 
+                        <Field name="valid-select" label="Valid State" isValid={true}>
+                            <Select
                                 {...args}
                                 isValid={true}
                                 isInvalid={false}
                                 selectedValue={selectedValue}
-                                onChange={(e) => setSelectedValue((e.target as SelectTargetObject).value)}
+                                onChange={e => setSelectedValue((e.target as SelectTargetObject).value)}
                             />
                         </Field>
                     </div>
                     <div style={{ width: '200px' }}>
-                        <Field
-                            name="invalid-select"
-                            label="Invalid State"
-                            isValid={false}
-                            errorMessage="Please select a valid option"
-                        >
-                            <Select 
+                        <Field name="invalid-select" label="Invalid State" isValid={false} errorMessage="Please select a valid option">
+                            <Select
                                 {...args}
                                 isValid={false}
                                 isInvalid={true}
                                 selectedValue={selectedValue}
-                                onChange={(e) => setSelectedValue((e.target as SelectTargetObject).value)}
+                                onChange={e => setSelectedValue((e.target as SelectTargetObject).value)}
                             />
                         </Field>
                     </div>
                     <div style={{ width: '200px' }}>
-                        <Field
-                            name="disabled-select"
-                            label="Disabled"
-                        >
-                            <Select 
+                        <Field name="disabled-select" label="Disabled">
+                            <Select
                                 {...args}
                                 disabled={true}
                                 selectedValue="option1"
-                                onChange={(e) => setSelectedValue((e.target as SelectTargetObject).value)}
+                                onChange={e => setSelectedValue((e.target as SelectTargetObject).value)}
                             />
                         </Field>
                     </div>
                     <div style={{ width: '200px' }}>
-                        <Field
-                            name="readonly-select"
-                            label="Readonly"
-                            readOnly={true}
-                        >
-                            <Select 
+                        <Field name="readonly-select" label="Readonly" readOnly={true}>
+                            <Select
                                 {...args}
                                 readonly={true}
                                 selectedValue="option2"
-                                onChange={(e) => setSelectedValue((e.target as SelectTargetObject).value)}
+                                onChange={e => setSelectedValue((e.target as SelectTargetObject).value)}
                             />
                         </Field>
                     </div>

@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import SegmentedControl from '../../internal/SegmentedControl';
+import { SegmentedControl } from '../../internal/SegmentedControl';
 import { useMemo, useState } from 'preact/hooks';
 import { SegmentedControlOptions } from '../../internal/SegmentedControl/SegmentedControl';
 import PayIDInput from './PayIDInput';

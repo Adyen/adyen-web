@@ -1,25 +1,25 @@
 @use 'styles/mixins';
 @use 'styles/index';
-@import 'styles/variable-generator';
+@use 'styles/variable-generator';
 
 @mixin input-wrapper-inactive {
-    background: token(color-background-disabled);
+    background: variable-generator.token(color-background-disabled);
     border-color: transparent;
 }
 
 .adyen-checkout__field {
     display: block;
-    margin-bottom: token(spacer-070);
+    margin-bottom: variable-generator.token(spacer-070);
     width: 100%;
 
     &-static-value {
-        background-color: token(color-background-primary-hover);
-        border-radius: token(border-radius-s);
-        color: token(color-background-inverse-primary);
+        background-color: variable-generator.token(color-background-primary-hover);
+        border-radius: variable-generator.token(border-radius-s);
+        color: variable-generator.token(color-background-inverse-primary);
         display: flex;
         height: 28px;
-        padding: token(spacer-020) token(spacer-030);
-        margin-left: token(spacer-020);
+        padding: variable-generator.token(spacer-020) variable-generator.token(spacer-030);
+        margin-left: variable-generator.token(spacer-020);
 
         @include mixins.adyen-checkout-text-body;
     }
@@ -87,7 +87,7 @@
         }
     }
 
-    $deduct-width: token(spacer-040);
+    $deduct-width: variable-generator.token(spacer-040);
 
     &--col-20 {
         @include index.media-s-and-up {
@@ -136,9 +136,9 @@
     position: relative;
     display: flex;
     align-items: center;
-    background: token(color-background-primary);
-    border: token(border-width-s) solid token(color-outline-primary);
-    border-radius: token(border-radius-m);
+    background: variable-generator.token(color-background-primary);
+    border: variable-generator.token(border-width-s) solid variable-generator.token(color-outline-primary);
+    border-radius: variable-generator.token(border-radius-m);
 
     & div,
     input,
@@ -156,12 +156,12 @@
     &:active:hover,
     &:focus-within,
     &:focus-within:hover {
-        box-shadow: 0 0 0 0.5px token(color-outline-primary-active);
-        border-color: token(color-outline-primary-active);
+        box-shadow: 0 0 0 0.5px variable-generator.token(color-outline-primary-active);
+        border-color: variable-generator.token(color-outline-primary-active);
     }
 
     &:hover {
-        border-color: token(color-outline-tertiary);
+        border-color: variable-generator.token(color-outline-tertiary);
     }
 }
 
@@ -173,7 +173,7 @@
 
 .adyen-checkout__field--error {
     > :not(.adyen-checkout__label--focused) + .adyen-checkout__input-wrapper:not(:focus-within, :active) {
-        border-color: token(color-outline-critical);
+        border-color: variable-generator.token(color-outline-critical);
     }
 }
 
@@ -183,8 +183,8 @@
 }
 
 .adyen-checkout__label--focused + .adyen-checkout__input-wrapper {
-    box-shadow: 0 0 0 0.5px token(color-outline-primary-active);
-    border-color: token(color-outline-primary-active);
+    box-shadow: 0 0 0 0.5px variable-generator.token(color-outline-primary-active);
+    border-color: variable-generator.token(color-outline-primary-active);
 }
 
 .adyen-checkout__label--disabled + .adyen-checkout__input-wrapper {
@@ -193,11 +193,11 @@
 
 .adyen-checkout__helper-text {
     display: block;
-    color: token(color-label-primary);
-    font-weight: token(text-body-font-weight);
-    line-height: token(text-caption-line-height);
-    font-size: token(text-caption-font-size);
-    margin-bottom: token(spacer-020);
+    color: variable-generator.token(color-label-primary);
+    font-weight: variable-generator.token(text-body-font-weight);
+    line-height: variable-generator.token(text-caption-line-height);
+    font-size: variable-generator.token(text-caption-font-size);
+    margin-bottom: variable-generator.token(spacer-020);
 }
 
 .adyen-checkout__label-adornment--end {
@@ -208,11 +208,11 @@
 
 .adyen-checkout__label__text {
     display: block;
-    font-size: token(text-body-font-size);
-    margin-bottom: token(spacer-020);
-    color: token(color-label-primary);
-    font-weight: token(text-body-font-weight);
-    line-height: token(text-body-line-height);
+    font-size: variable-generator.token(text-body-font-size);
+    margin-bottom: variable-generator.token(spacer-020);
+    color: variable-generator.token(color-label-primary);
+    font-weight: variable-generator.token(text-body-font-weight);
+    line-height: variable-generator.token(text-body-line-height);
     transition: color 0.1s ease-out;
     text-overflow: ellipsis;
     overflow: hidden;
@@ -220,21 +220,21 @@
 }
 
 .adyen-checkout__label__text--error {
-    color: token(color-label-critical);
+    color: variable-generator.token(color-label-critical);
 }
 
 .adyen-checkout__label--focused .adyen-checkout__label__text {
-    color: token(color-label-primary);
+    color: variable-generator.token(color-label-primary);
 }
 
 %contextual-text {
     display: flex;
-    font-weight: token(text-body-font-weight);
-    margin-top: token(spacer-020);
-    font-size: token(text-caption-font-size);
-    line-height: token(text-caption-line-height);
+    font-weight: variable-generator.token(text-body-font-weight);
+    margin-top: variable-generator.token(spacer-020);
+    font-size: variable-generator.token(text-caption-font-size);
+    line-height: variable-generator.token(text-caption-line-height);
     align-items: center;
-    color: token(color-label-primary);
+    color: variable-generator.token(color-label-primary);
     opacity: 1;
     transition:
         margin 200ms ease-out,
@@ -247,7 +247,7 @@
     &--error {
         @extend %contextual-text;
 
-        color: token(color-label-critical);
+        color: variable-generator.token(color-label-critical);
     }
 }
 

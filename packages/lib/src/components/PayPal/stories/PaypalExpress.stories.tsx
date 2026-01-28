@@ -8,7 +8,8 @@ import { getDeliveryMethods, getSelectedDeliveryMethodAmount } from './paypal-st
 import { PayPal } from '../../..';
 
 const meta: Meta = {
-    title: 'Components/Wallets/Paypal'
+    title: 'Components/Wallets/Paypal',
+    tags: ['no-automated-visual-test']
 };
 export default meta;
 

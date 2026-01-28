@@ -1,16 +1,16 @@
-@import 'styles/variable-generator';
+@use 'styles/variable-generator';
 
 .adyen-checkout-fastlane__card-brand--wrapper {
   position: relative;
   display: flex;
-  width: token(spacer-110);
+  width: variable-generator.token(spacer-110);
   height: 26px;
   justify-content: center;
   align-items: center;
-  border-radius: token(border-radius-s);
+  border-radius: variable-generator.token(border-radius-s);
   overflow: hidden;
-  box-shadow: token(shadow-low);
-  margin-right: token(spacer-060);
+  box-shadow: variable-generator.token(shadow-low);
+  margin-right: variable-generator.token(spacer-060);
 }
 
 
@@ -20,15 +20,15 @@
 }
 
 .adyen-checkout-fastlane__card-number {
-  line-height: token(text-body-line-height);
-  font-size: token(text-body-font-size);
-  font-weight: token(text-body-stronger-font-weight);
+  line-height: variable-generator.token(text-body-line-height);
+  font-size: variable-generator.token(text-body-font-size);
+  font-weight: variable-generator.token(text-body-stronger-font-weight);
 }
 
 .adyen-checkout-fastlane__brand {
   display: flex;
   justify-content: center;
-  margin-top: token(spacer-070);
+  margin-top: variable-generator.token(spacer-070);
 }
 
 .adyen-checkout-fastlane__brand img {

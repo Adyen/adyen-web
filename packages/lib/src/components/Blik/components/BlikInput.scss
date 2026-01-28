@@ -1,9 +1,9 @@
-@import 'styles/variable-generator';
+@use 'styles/variable-generator';
 
 .adyen-checkout__blik__helper {
-    font-size: token(text-subtitle-font-size);
+    font-size: variable-generator.token(text-subtitle-font-size);
     font-weight: normal;
-    color: token(color-label-primary);
-    margin: 0 0 token(spacer-070);
+    color: variable-generator.token(color-label-primary);
+    margin: 0 0 variable-generator.token(spacer-070);
     padding: 0;
 }

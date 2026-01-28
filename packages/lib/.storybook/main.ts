@@ -23,6 +23,10 @@ const config: StorybookConfig = {
 
     framework: '@storybook/preact-vite',
 
+    tags: {
+        'no-automated-visual-test': {}
+    },
+
     addons: ['@storybook/addon-a11y', '@storybook/addon-docs'],
 
     // public added for msw: https://github.com/mswjs/msw-storybook-addon?tab=readme-ov-file#start-storybook
@@ -41,7 +45,8 @@ const config: StorybookConfig = {
                 // Mirror Rollup's SCSS settings
                 preprocessorOptions: {
                     scss: {
-                        includePaths: [join(dirname, '../src')] // Same as Rollup
+                        // Ensure @use 'styles/...' resolves
+                        loadPaths: [join(dirname, '../src')]
                     }
                 },
 
@@ -71,11 +76,19 @@ const config: StorybookConfig = {
                         find: /^~(.*)$/,
                         replacement: '$1'
                     },
-                    { find: /^styles(.*)$/, replacement: join(dirname, '../src/styles') }
+                    {
+                        find: /^styles\/(.*)$/,
+                        replacement: `${join(dirname, '../src/styles')}/$1`
+                    }
                 ]
             },
 
-            plugins: [preact(), stylelint({ emitErrorAsWarning: true })],
+            plugins: [
+                preact({
+                    devtoolsInProd: true
+                }),
+                stylelint({ emitErrorAsWarning: true })
+            ],
 
             server: {
                 ...(isHttps && {

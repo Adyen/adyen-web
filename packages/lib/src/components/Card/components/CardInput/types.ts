@@ -30,7 +30,7 @@ import { OnAddressLookupType, OnAddressSelectedType } from '../../../internal/Ad
 import { ComponentMethodsRef } from '../../../internal/UIElement/types';
 import { AddressData } from '../../../../types/global-types';
 import type { FastlaneSignupConfiguration } from '../../../PayPalFastlane/types';
-import { AbstractAnalyticsEvent } from '../../../../core/Analytics/events/AbstractAnalyticsEvent';
+import type { AbstractAnalyticsEvent } from '../../../../core/Analytics/events/AbstractAnalyticsEvent';
 import { IAnalytics } from '../../../../core/Analytics/Analytics';
 import { PayButtonProps } from '../../../internal/PayButton/PayButton';
 import { h } from 'preact';
@@ -92,7 +92,7 @@ export interface CardInputProps {
     expiryYear?: string;
     fastlaneConfiguration?: FastlaneSignupConfiguration;
     forceCompat?: boolean;
-    fundingSource?: 'debit' | 'credit';
+    fundingSource?: 'debit' | 'credit' | 'prepaid';
     hasCVC?: boolean;
     hasHolderName?: boolean;
     holderName?: string;

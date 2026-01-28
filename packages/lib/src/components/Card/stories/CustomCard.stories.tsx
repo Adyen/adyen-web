@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import { CustomCardStoryConfiguration, MetaConfiguration } from '../../../../storybook/types';
 import { CustomCardConfiguration } from '../../CustomCard/types';
-import { styles, setFocus, onBrand, onConfigSuccess, onBinLookup, onChange, setCCErrors } from './customCardHelpers/customCard.config';
+import { styles, setFocus, onBrand, onBinLookup, onChange, setCCErrors } from './customCardHelpers/customCard.config';
 import { CustomCardSeparateExpiryDate } from './customCardHelpers/CustomCardSeparateExpiryDate';
 import { CustomCardDefault } from './customCardHelpers/CustomCardDefault';
 
@@ -17,7 +17,6 @@ export const Default: customCardStory = {
         componentConfiguration: {
             brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro', 'cartebancaire', 'synchrony_plcc'],
             styles,
-            onConfigSuccess,
             onBrand,
             // onBinValue: cbObj => {
             //     if (cbObj.encryptedBin) {
@@ -42,7 +41,6 @@ export const Variant: customCardStory = {
         componentConfiguration: {
             brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro', 'cartebancaire', 'synchrony_plcc'],
             styles,
-            onConfigSuccess,
             onBrand,
             // onBinValue: cbObj => {
             //     if (cbObj.encryptedBin) {

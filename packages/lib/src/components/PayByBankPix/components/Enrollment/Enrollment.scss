@@ -1,16 +1,16 @@
 @use 'styles/index';
-@import 'styles/variable-generator';
+@use 'styles/variable-generator';
 
 .adyen-checkout-pix-enrollment-issuer-list {
     display: flex;
     flex-direction: column;
-    gap: token(spacer-070);
+    gap: variable-generator.token(spacer-070);
 
     .adyen-checkout-disclaimer__label {
         @include index.adyen-checkout-text-caption;
 
         display: inline-block;
-        color: token(color-label-secondary);
+        color: variable-generator.token(color-label-secondary);
         margin: 0;
     }
 }

@@ -28,6 +28,7 @@ export const Default: ACHStory = {
 };
 
 export const WithDropin: ACHStory = {
+    tags: ['no-automated-visual-test'],
     render: ({ componentConfiguration, ...checkoutConfig }) => {
         AdyenCheckout.register(Ach);
 

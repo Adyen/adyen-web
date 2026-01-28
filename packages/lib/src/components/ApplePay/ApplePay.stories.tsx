@@ -8,7 +8,8 @@ import { Checkout } from '../../../storybook/components/Checkout';
 type ApplePayStory = StoryConfiguration<ApplePayConfiguration>;
 
 const meta: MetaConfiguration<ApplePayConfiguration> = {
-    title: 'Components/Wallets/ApplePay'
+    title: 'Components/Wallets/ApplePay',
+    tags: ['no-automated-visual-test']
 };
 
 export const Default: ApplePayStory = {

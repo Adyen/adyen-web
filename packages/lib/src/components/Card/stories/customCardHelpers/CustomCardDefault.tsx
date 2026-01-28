@@ -4,6 +4,9 @@ import { createAdvancedFlowCheckout } from '../../../../../storybook/helpers/cre
 import { createSessionsCheckout } from '../../../../../storybook/helpers/create-sessions-checkout';
 import CustomCard from '../../../CustomCard/CustomCard';
 import { setUpUtils, createPayButton } from './customCard.utils';
+import Spinner from '../../../internal/Spinner';
+import { CardConfigSuccessData } from '../../../../types';
+import { setLogosActive } from './customCard.config';
 import './customCard.style.scss';
 
 export const CustomCardDefault = ({ contextArgs }) => {
@@ -11,6 +14,15 @@ export const CustomCardDefault = ({ contextArgs }) => {
     const checkout = useRef(null);
     const [element, setElement] = useState(null);
     const [errorMessage, setErrorMessage] = useState(null);
+    const [configSuccess, setConfigSuccess] = useState(false);
+
+    const onConfigSuccess = (pCallbackObj: CardConfigSuccessData) => {
+        setConfigSuccess(true);
+        setLogosActive(pCallbackObj.rootNode);
+        // @ts-expect-error - style property does not exist on HTMLElement
+        pCallbackObj.rootNode.querySelector('.pm-image-dual').style.display = 'none';
+        globalThis.customCard.setFocusOn('encryptedCardNumber');
+    };
 
     const createCheckout = async () => {
         const { useSessions, showPayButton = false, countryCode, shopperLocale, amount } = contextArgs;
@@ -24,7 +36,7 @@ export const CustomCardDefault = ({ contextArgs }) => {
                   amount
               });
 
-        const customCard = new CustomCard(checkout.current, { ...contextArgs.componentConfiguration });
+        const customCard = new CustomCard(checkout.current, { ...contextArgs.componentConfiguration, onConfigSuccess });
 
         setElement(customCard);
 
@@ -57,17 +69,17 @@ export const CustomCardDefault = ({ contextArgs }) => {
 
     return (
         <Fragment>
-            {errorMessage ? (
-                <div>{errorMessage}</div>
-            ) : (
-                <div id={'topLevelHolder'}>
-                    <div
-                        ref={container}
-                        id="component-root"
-                        className="component-wrapper secured-fields"
-                        // @ts-ignore just hiding for better UX experience
-                        style={'display:none;'}
-                    >
+            {errorMessage && <p>{errorMessage}</p>}
+            <div id="topLevelHolder" data-testid="checkout-component">
+                <div
+                    ref={container}
+                    id="component-root"
+                    className="component-wrapper secured-fields"
+                    style={{
+                        display: configSuccess ? 'block' : 'none'
+                    }}
+                >
+                    <Fragment>
                         <span className="pm-image">
                             <img
                                 className="pm-image-1"
@@ -95,16 +107,14 @@ export const CustomCardDefault = ({ contextArgs }) => {
                             <span className="pm-input-field" data-cse="encryptedSecurityCode"></span>
                             <span className="pm-form-label__error-text">CVC Error text</span>
                         </div>
-                    </div>
-                    <div className="card-input__spinner__holder">
-                        <div className="card-input__spinner card-input__spinner--active">
-                            <div className="adyen-checkout__spinner__wrapper ">
-                                <div className="adyen-checkout__spinner adyen-checkout__spinner--large"></div>
-                            </div>
-                        </div>
-                    </div>
+                    </Fragment>
                 </div>
-            )}
+                {!configSuccess && (
+                    <div data-testid="checkout-component-spinner">
+                        <Spinner />
+                    </div>
+                )}
+            </div>
         </Fragment>
     );
 };

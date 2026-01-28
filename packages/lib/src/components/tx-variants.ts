@@ -106,6 +106,7 @@ export enum TxVariants {
     billdesk_wallet = 'billdesk_wallet',
     dotpay = 'dotpay',
     eps = 'eps',
+    iris = 'iris',
     molpay_ebanking_fpx_MY = 'molpay_ebanking_fpx_MY',
     molpay_ebanking_TH = 'molpay_ebanking_TH',
     molpay_ebanking_VN = 'molpay_ebanking_VN',
@@ -173,7 +174,6 @@ export enum TxVariants {
     payto = 'payto',
     upi = 'upi', // also QR
     upi_qr = 'upi_qr', // also QR
-    upi_collect = 'upi_collect', // also QR
     upi_intent = 'upi_intent', // also QR
     /** Await */
 

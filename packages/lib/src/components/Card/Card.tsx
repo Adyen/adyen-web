@@ -35,7 +35,7 @@ export class CardElement extends UIElement<CardConfiguration> {
     constructor(checkout: ICore, props?: CardConfiguration) {
         super(checkout, props);
 
-        if (props && !props._disableClickToPay) {
+        if (props && !props._disableClickToPay && this.props.fundingSource !== 'prepaid') {
             this.clickToPayService = createClickToPayService(
                 this.props.configuration,
                 this.props.clickToPayConfiguration,

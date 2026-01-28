@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import { Meta, StoryObj } from '@storybook/preact-vite';
-import SegmentedControl, { SegmentedControlProps } from './SegmentedControl';
+import { SegmentedControl, SegmentedControlProps } from './SegmentedControl';
 import { useState } from 'preact/hooks';
 
 const options = [
@@ -11,6 +11,7 @@ const options = [
 
 const meta: Meta = {
     title: 'Internal Elements/SegmentedControl',
+    tags: ['no-automated-visual-test'],
     component: SegmentedControl,
     argTypes: {
         selectedValue: {

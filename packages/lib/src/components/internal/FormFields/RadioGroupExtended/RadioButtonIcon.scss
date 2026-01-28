@@ -1,10 +1,10 @@
-@import 'styles/variable-generator';
+@use 'styles/variable-generator';
 
 .adyen-checkout__input-icon {
-    border-radius: token(border-radius-s);
+    border-radius: variable-generator.token(border-radius-s);
     height: 18px;
     width: 27px;
-    margin-right: token(spacer-060);
+    margin-right: variable-generator.token(spacer-060);
 }
 
 .adyen-checkout__input-icon--hidden {
@@ -12,7 +12,7 @@
 }
 
 .adyen-checkout__input-icon--no-radio-icon {
-    margin-left: calc(token(spacer-090) * -1);
+    margin-left: calc(variable-generator.token(spacer-090) * -1);
 }
 
 

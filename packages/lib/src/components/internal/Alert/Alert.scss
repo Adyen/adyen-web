@@ -1,36 +1,36 @@
 @use 'styles/mixins';
-@import 'styles/variable-generator';
+@use 'styles/variable-generator';
 
 .adyen-checkout__alert-message {
     display: flex;
     align-items: center;
-    border: token(border-width-s) solid token(color-outline-secondary);
-    border-radius: token(border-radius-m);
-    margin: 0 0 token(spacer-070);
+    border: variable-generator.token(border-width-s) solid variable-generator.token(color-outline-secondary);
+    border-radius: variable-generator.token(border-radius-m);
+    margin: 0 0 variable-generator.token(spacer-070);
     text-align: left;
-    padding: token(spacer-070);
+    padding: variable-generator.token(spacer-070);
 
     @include mixins.adyen-checkout-text-body;
 }
 
 .adyen-checkout__alert-message--error {
-    background: token(alert-critical-background-color);
+    background: variable-generator.token(alert-critical-background-color);
 }
 
 .adyen-checkout__alert-message--warning {
-    background: token(alert-warning-background-color);
+    background: variable-generator.token(alert-warning-background-color);
 }
 
 .adyen-checkout__alert-message--info {
-    background: token(alert-highlight-background-color);
+    background: variable-generator.token(alert-highlight-background-color);
 }
 
 .adyen-checkout__alert-message--success {
-    background: token(alert-success-background-color);
+    background: variable-generator.token(alert-success-background-color);
 }
 
 .adyen-checkout__alert-message__icon {
     width: 14px;
     height: 14px;
-    margin-right: token(spacer-040);
+    margin-right: variable-generator.token(spacer-040);
 }

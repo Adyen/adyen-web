@@ -1,16 +1,16 @@
 @use 'styles/index';
-@import 'styles/variable-generator';
+@use 'styles/variable-generator';
 
-$loading-indicator-large-width: token(spacer-120);
-$loading-indicator-large-height: token(spacer-120);
-$loading-indicator-large-border-width: token(spacer-020);
+$loading-indicator-large-width: variable-generator.token(spacer-120);
+$loading-indicator-large-height: variable-generator.token(spacer-120);
+$loading-indicator-large-border-width: variable-generator.token(spacer-020);
 $loading-indicator-medium-width: 28px;
 $loading-indicator-medium-height: 28px;
-$loading-indicator-small-width: token(spacer-070);
-$loading-indicator-small-height: token(spacer-070);
-$loading-indicator-small-border-width: token(spacer-010);
-$loading-indicator-width: token(spacer-090);
-$loading-indicator-height: token(spacer-090);
+$loading-indicator-small-width: variable-generator.token(spacer-070);
+$loading-indicator-small-height: variable-generator.token(spacer-070);
+$loading-indicator-small-border-width: variable-generator.token(spacer-010);
+$loading-indicator-width: variable-generator.token(spacer-090);
+$loading-indicator-height: variable-generator.token(spacer-090);
 
 .adyen-checkout__spinner__wrapper {
     height: 100%;
@@ -22,11 +22,11 @@ $loading-indicator-height: token(spacer-090);
 .adyen-checkout__spinner__wrapper--inline {
     height: auto;
     display: inline-block;
-    margin-right: token(spacer-040);
+    margin-right: variable-generator.token(spacer-040);
 
     [dir='rtl'] & {
         margin-right: 0;
-        margin-left: token(spacer-040);
+        margin-left: variable-generator.token(spacer-040);
     }
 }
 
@@ -38,7 +38,7 @@ $loading-indicator-height: token(spacer-090);
     &::before,
     &::after {
         animation: rotate 1s cubic-bezier(0.785, 0.135, 0.15, 0.86) infinite;
-        border: token(border-width-l) solid transparent;
+        border: variable-generator.token(border-width-l) solid transparent;
         border-radius: 50%;
         box-sizing: border-box;
         content: '';

@@ -8,6 +8,7 @@ import { InfoEventType } from '../../core/Analytics/events/AnalyticsInfoEvent';
 import { CardFocusData } from '../internal/SecuredFields/lib/types';
 import { mock } from 'jest-mock-extended';
 import { AmountProvider } from '../../core/Context/AmountProvider';
+import { ICore } from '../../types';
 
 describe('Card', () => {
     describe('formatProps', function () {
@@ -72,27 +73,33 @@ describe('Card', () => {
     });
 
     describe('get data', () => {
+        let core: ICore;
+
+        beforeEach(() => {
+            core = setupCoreMock();
+        });
+
         test('always returns a type', () => {
-            const card = new CardElement(global.core);
+            const card = new CardElement(core);
             card.setState({ data: { card: '123' }, isValid: true });
             expect(card.data.paymentMethod.type).toBe('scheme');
         });
 
         test('always returns a state', () => {
-            const card = new CardElement(global.core);
+            const card = new CardElement(core);
             card.setState({ data: { card: '123' }, isValid: true });
             expect(card.data.paymentMethod.card).toBe('123');
         });
 
         test('should return storePaymentMethod if enableStoreDetails is enabled', () => {
-            const card = new CardElement(global.core, { enableStoreDetails: true });
+            const card = new CardElement(core, { enableStoreDetails: true });
             expect(card.props.showStoreDetailsCheckbox).toEqual(true);
             card.setState({ storePaymentMethod: true });
             expect(card.data.storePaymentMethod).toBe(true);
         });
 
         test('should not return storePaymentMethod if enableStoreDetails is disabled', () => {
-            const card = new CardElement(global.core, { enableStoreDetails: false });
+            const card = new CardElement(core, { enableStoreDetails: false });
             expect(card.props.showStoreDetailsCheckbox).toEqual(false);
             card.setState({ storePaymentMethod: true });
             expect(card.data.storePaymentMethod).not.toBeDefined();
@@ -100,16 +107,14 @@ describe('Card', () => {
 
         test('should only return storePaymentMethod:true for regular card, zero auth payments, *if* the conditions are right', () => {
             // Manual flow
-            expect(new CardElement(global.core, { amount: { value: 0, currency: 'USD' }, enableStoreDetails: true }).data.storePaymentMethod).toBe(
-                true
-            );
-            expect(new CardElement(global.core, { amount: { value: 0, currency: 'USD' }, enableStoreDetails: false }).data.storePaymentMethod).toBe(
+            expect(new CardElement(core, { amount: { value: 0, currency: 'USD' }, enableStoreDetails: true }).data.storePaymentMethod).toBe(true);
+            expect(new CardElement(core, { amount: { value: 0, currency: 'USD' }, enableStoreDetails: false }).data.storePaymentMethod).toBe(
                 undefined
             );
-            expect(new CardElement(global.core, { amount: { value: 0, currency: 'USD' } }).data.storePaymentMethod).toBe(undefined);
+            expect(new CardElement(core, { amount: { value: 0, currency: 'USD' } }).data.storePaymentMethod).toBe(undefined);
 
             // Session flow - session configuration should override merchant configuration
-            let cardElement = new CardElement(global.core, {
+            let cardElement = new CardElement(core, {
                 amount: { value: 0, currency: 'USD' },
                 enableStoreDetails: false,
                 // @ts-ignore it's just a test
@@ -117,7 +122,7 @@ describe('Card', () => {
             });
             expect(cardElement.data.storePaymentMethod).toBe(true);
 
-            cardElement = new CardElement(global.core, {
+            cardElement = new CardElement(core, {
                 amount: { value: 0, currency: 'USD' },
                 enableStoreDetails: true,
                 // @ts-ignore it's just a test
@@ -127,7 +132,7 @@ describe('Card', () => {
         });
 
         test('should return storePaymentMethod based on the checkbox value, for regular card, non-zero auth payments', () => {
-            const card = new CardElement(global.core, { amount: { value: 10, currency: 'USD' }, enableStoreDetails: true });
+            const card = new CardElement(core, { amount: { value: 10, currency: 'USD' }, enableStoreDetails: true });
             card.setState({ storePaymentMethod: true });
             expect(card.data.storePaymentMethod).toBe(true);
             card.setState({ storePaymentMethod: false });
@@ -136,7 +141,7 @@ describe('Card', () => {
 
         test('should not return storePaymentMethod for stored card, non-zero auth payments', () => {
             expect(
-                new CardElement(global.core, {
+                new CardElement(core, {
                     amount: { value: 10, currency: 'USD' },
                     storedPaymentMethodId: 'xxx',
                     supportedShopperInteractions: ['Ecommerce'],
@@ -144,7 +149,7 @@ describe('Card', () => {
                 }).data.storePaymentMethod
             ).not.toBeDefined();
             expect(
-                new CardElement(global.core, {
+                new CardElement(core, {
                     amount: { value: 10, currency: 'USD' },
                     storedPaymentMethodId: 'xxx',
                     supportedShopperInteractions: ['Ecommerce'],
@@ -155,7 +160,7 @@ describe('Card', () => {
 
         test('should not return storePaymentMethod for stored card, zero auth payments', () => {
             expect(
-                new CardElement(global.core, {
+                new CardElement(core, {
                     amount: { value: 0, currency: 'USD' },
                     storedPaymentMethodId: 'xxx',
                     supportedShopperInteractions: ['Ecommerce'],
@@ -163,7 +168,7 @@ describe('Card', () => {
                 }).data.storePaymentMethod
             ).not.toBeDefined();
             expect(
-                new CardElement(global.core, {
+                new CardElement(core, {
                     amount: { value: 0, currency: 'USD' },
                     storedPaymentMethodId: 'xxx',
                     supportedShopperInteractions: ['Ecommerce'],
@@ -243,13 +248,18 @@ describe('Card', () => {
     });
 
     describe('isValid', () => {
+        let core: ICore;
+        beforeEach(() => {
+            core = setupCoreMock();
+        });
+
         test('returns false if there is no state', () => {
-            const card = new CardElement(global.core);
+            const card = new CardElement(core);
             expect(card.isValid).toBe(false);
         });
 
         test('returns true if the state is valid', () => {
-            const card = new CardElement(global.core);
+            const card = new CardElement(core);
             card.setState({ data: { card: '123' }, isValid: true });
             expect(card.isValid).toBe(true);
         });
@@ -432,6 +442,26 @@ describe('Card', () => {
                     timestamp: expect.any(String)
                 })
             );
+        });
+    });
+
+    describe('Click to Pay with fundingSource', () => {
+        test('should not initialize Click to Pay service if fundingSource is prepaid', () => {
+            const core = setupCoreMock();
+            const card = new CardElement(core, { fundingSource: 'prepaid' });
+            expect(card['clickToPayService']).toBeUndefined();
+        });
+
+        test('should initialize Click to Pay service if fundingSource is credit', () => {
+            const core = setupCoreMock();
+            const card = new CardElement(core, { fundingSource: 'credit' });
+            expect(card['clickToPayService']).toBeDefined();
+        });
+
+        test('should initialize Click to Pay service if fundingSource is undefined', () => {
+            const core = setupCoreMock();
+            const card = new CardElement(core, {});
+            expect(card['clickToPayService']).toBeDefined();
         });
     });
 });

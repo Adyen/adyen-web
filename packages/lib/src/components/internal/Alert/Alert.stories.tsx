@@ -7,6 +7,7 @@ import { Resources } from '../../../core/Context/Resources';
 
 const meta: Meta = {
     title: 'Internal Elements/Alert',
+    tags: ['no-automated-visual-test'],
     component: Alert,
     argTypes: {
         type: {

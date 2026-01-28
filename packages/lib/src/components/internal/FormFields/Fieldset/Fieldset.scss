@@ -1,9 +1,9 @@
 @use 'styles/index';
-@import 'styles/variable-generator';
+@use 'styles/variable-generator';
 
 .adyen-checkout__fieldset {
     display: block;
-    padding-bottom: token(spacer-040);
+    padding-bottom: variable-generator.token(spacer-040);
     width: 100%;
     margin-inline-start: 0;
     margin-inline-end: 0;
@@ -15,11 +15,11 @@
     padding-inline-end: 0;
 
     &__description {
-        font-weight: token(text-body-font-weight);
+        font-weight: variable-generator.token(text-body-font-weight);
         list-style-type: disc;
-        color: token(color-label-secondary);
+        color: variable-generator.token(color-label-secondary);
         margin: 0;
-        font-size: token(text-body-font-size);
+        font-size: variable-generator.token(text-body-font-size);
         line-height: 1.5;
     }
 }
@@ -29,17 +29,17 @@
 }
 
 .adyen-checkout__fieldset + .adyen-checkout__fieldset {
-    margin-top: token(spacer-070);
+    margin-top: variable-generator.token(spacer-070);
 }
 
 .adyen-checkout__fieldset__title {
     @include index.adyen-checkout-text-subtitle;
 
-    color: token(color-label-primary);
-    font-weight: token(text-subtitle-font-weight);
+    color: variable-generator.token(color-label-primary);
+    font-weight: variable-generator.token(text-subtitle-font-weight);
     display: block;
     margin: 0;
-    padding: 0 0 token(spacer-060);
+    padding: 0 0 variable-generator.token(spacer-060);
 
     &:has(+ .adyen-checkout__fieldset__description) {
         padding: 0;
@@ -51,8 +51,8 @@
 }
 
 .adyen-checkout__fieldset--readonly .adyen-checkout__fieldset__fields {
-    color: token(color-label-primary);
-    font-size: token(text-body-font-size);
-    line-height: token(text-caption-line-height);
+    color: variable-generator.token(color-label-primary);
+    font-size: variable-generator.token(text-body-font-size);
+    line-height: variable-generator.token(text-caption-line-height);
     margin: 0;
 }

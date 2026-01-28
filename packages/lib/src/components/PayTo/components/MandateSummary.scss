@@ -1,9 +1,9 @@
-@import 'styles/variable-generator';
+@use 'styles/variable-generator';
 
 .adyen-checkout__await--payto {
   .adyen-checkout__details-table {
-    margin-top: token(spacer-070);
-    padding-top: token(spacer-060);
+    margin-top: variable-generator.token(spacer-070);
+    padding-top: variable-generator.token(spacer-060);
   }
 
   .adyen-checkout__details-table__item:first-child {

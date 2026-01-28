@@ -1,12 +1,12 @@
 export const URL_MAP = {
     /* Drop-in */
-    dropinWithSession: '/iframe.html?args=&globals=&id=dropin-dropin-component--default&viewMode=story',
-    dropinWithAdvanced: '/iframe.html?globals=&args=useSessions:!false&id=dropin-dropin-component--default&viewMode=story',
+    dropinWithSession: '/iframe.html?args=&globals=&id=drop-in-drop-in-component--default&viewMode=story',
+    dropinWithAdvanced: '/iframe.html?globals=&args=useSessions:!false&id=drop-in-drop-in-component--default&viewMode=story',
     dropinSessions_zeroAuthCard_success:
-        '/iframe.html?globals=&args=amount:0;sessionData.recurringProcessingModel:CardOnFile;sessionData.storePaymentMethodMode:askForConsent&id=dropin-dropin-component--default&viewMode=story',
+        '/iframe.html?globals=&args=amount:0;sessionData.recurringProcessingModel:CardOnFile;sessionData.storePaymentMethodMode:askForConsent&id=drop-in-drop-in-component--default&viewMode=story',
     dropinSessions_zeroAuthCard_fail:
-        '/iframe.html?globals=&args=amount:0;sessionData.recurringProcessingModel:CardOnFile;sessionData.storePaymentMethodMode:askForConsent;sessionData.enableOneClick:!true&id=dropin-dropin-component--default&viewMode=story',
-    dropinWithSession_BCMC_noStoredPms: '/iframe.html?args=countryCode:BE&globals=&id=dropin-dropin-component--default&viewMode=story',
+        '/iframe.html?globals=&args=amount:0;sessionData.recurringProcessingModel:CardOnFile;sessionData.storePaymentMethodMode:askForConsent;sessionData.enableOneClick:!true&id=drop-in-drop-in-component--default&viewMode=story',
+    dropinWithSession_BCMC_noStoredPms: '/iframe.html?args=countryCode:BE&globals=&id=drop-in-drop-in-component--default&viewMode=story',
 
     /**
      * Card
@@ -34,12 +34,18 @@ export const URL_MAP = {
     ancv: '/iframe.html?args=useSessions:!true&globals=&id=components-ancv--default&viewMode=story',
     /* Issuer list */
     onlineBankingPL: '/iframe.html?args=&globals=&id=components-issuerlist-onlinebankingpl--default&viewMode=story',
+    iris: '/iframe.html?args=&globals=&id=components-issuerlist-iris--default&viewMode=story',
     /* Open invoice */
     riverty: '/iframe.html?globals=&args=&id=components-riverty--default&viewMode=story',
     /* Redirect */
     ideal: '/iframe.html?globals=&id=components-redirect--ideal&viewMode=story',
     giftcard_with_card: '/iframe.html?args=&globals=&id=components-gift-cards--default&viewMode=story',
     giftcard_with_giftcard: '/iframe.html?args=&globals=&id=components-gift-cards--with-giftcard&viewMode=story',
+
+    /**
+     * UPI
+     */
+    upi: '/iframe.html?globals=&id=components-upi--default&viewMode=story',
 
     /**
      * Vouchers
@@ -50,6 +56,6 @@ export const URL_MAP = {
     /**
      * Econtext
      */
-    econtextAtm: '/iframe.html?globals=&args=componentConfiguration.type:econtext_atm&id=components-econtext--default&viewMode=story',
-    econtextSevenEleven: '/iframe.html?globals=&args=componentConfiguration.type:econtext_seven_eleven&id=components-econtext--default&viewMode=story'
+    econtextAtm: '/iframe.html?globals=&args=&id=components-econtext--econtext-atm&viewMode=story',
+    econtextSevenEleven: '/iframe.html?globals=&args=&id=components-econtext--econtext-seven-eleven&viewMode=story'
 };

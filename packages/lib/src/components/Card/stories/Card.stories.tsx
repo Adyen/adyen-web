@@ -199,8 +199,8 @@ export const CardWith_3DS2_Redirect: CardStory = {
 };
 
 export const CardWith_3DS2_CreateFromAction: CardStory = {
+    tags: ['no-automated-visual-test'],
     render: args => <CardWith3DS2CreateFromAction {...args} />,
-
     args: {
         componentConfiguration: {
             _disableClickToPay: true

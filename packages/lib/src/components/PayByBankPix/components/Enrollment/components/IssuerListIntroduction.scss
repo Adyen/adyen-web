@@ -1,10 +1,10 @@
 @use 'styles/index';
-@import 'styles/variable-generator';
+@use 'styles/variable-generator';
 
 .adyen-checkout-issuer-list-introduction-logo-container {
     text-align: center;
-    border-radius: token(border-radius-m);
-    padding: token(spacer-070) token(spacer-070) 0;
+    border-radius: variable-generator.token(border-radius-m);
+    padding: variable-generator.token(spacer-070) variable-generator.token(spacer-070) 0;
 
     &__title {
         @include index.adyen-checkout-text-caption-stronger;

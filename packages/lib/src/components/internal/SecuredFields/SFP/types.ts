@@ -5,17 +5,19 @@ import Language from '../../../../language';
 import { Resources } from '../../../../core/Context/Resources';
 import { TouchStartEventObj } from '../../../Card/components/CardInput/components/types';
 import { Placeholders as GiftcardPlaceholders } from '../../../Giftcard/components/types';
+import type { AbstractAnalyticsEvent } from '../../../../core/Analytics/events/AbstractAnalyticsEvent';
 
 export type Placeholders = CardPlaceholders | GiftcardPlaceholders;
 
 /**
- * Should be the only props that can be sent to SFP (from CardInput, SecuredFieldsInput, AchInput, GiftcardComponent)
+ * Should be the only props that can be sent to SFP (from CardInput, SecuredFieldsInput, GiftcardComponent)
  */
 export interface SFPProps {
     autoFocus?: boolean;
     brands?: string[];
     brandsConfiguration?: CardBrandsConfiguration;
     clientKey: string;
+    componentType: string;
     countryCode?: string;
     forceCompat?: boolean;
     hasKoreanFields?: boolean;
@@ -39,6 +41,7 @@ export interface SFPProps {
     onFocus?: () => {};
     onLoad?: () => {};
     onStateUpdate: (obj: SFPState) => void;
+    onSubmitAnalytics: (event: AbstractAnalyticsEvent) => void;
     handleKeyPress?: (obj: KeyboardEvent) => void;
     rootNode: HTMLElement; // Specific to SecuredFieldsInput
     showWarnings?: boolean;

@@ -38,7 +38,16 @@ export const convertJsonToESM = () => json({ namedExports: false, compact: true,
 
 export const compileCSS = ({ extract = 'adyen.css' } = {}) =>
     postcss({
-        use: { sass: { includePaths: [pathResolve(__dirname, '../src')] } },
+        use: {
+            sass: {
+                includePaths: [pathResolve(__dirname, '../src')],
+                /**
+                 * rollup-plugin-postcss does not support modern dart syntax. Therefore we silence the deprecation warning.
+                 * For reference: https://github.com/egoist/rollup-plugin-postcss/issues/463
+                 */
+                silenceDeprecations: ['legacy-js-api']
+            }
+        },
         config: {
             path: 'postcss.config.cjs'
         },

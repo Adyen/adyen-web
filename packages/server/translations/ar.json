@@ -433,5 +433,15 @@
     "upi.mandate.upTo": "ما يصل إلى %{amount}",
     "upi.mandate.frequency.monthly": "/شهر",
     "upi.mandate.frequency.weekly": "/أسبوع",
-    "upi.mandate.frequency.adhoc": " كما هو موضح"
+    "upi.mandate.frequency.adhoc": " كما هو موضح",
+    "bankList": "قائمة البنوك",
+    "qrCode": "رمز الاستجابة السريعة",
+    "iris.instructions.generateQrCode": "بعد إنشاء رمز الاستجابة السريعة، يمكنك استخدام تطبيق الخدمات البنكية الذي تفضله لإتمام الدفع.",
+    "iris.instructions.payment.step1": "افتح تطبيق الخدمات البنكية المفضل لديك.",
+    "iris.instructions.payment.step2": "امسح رمز الاستجابة السريعة باستخدام تطبيقك البنكي.",
+    "iris.instructions.payment.step3": "أكمل الدفع في التطبيق وانتظر التأكيد هنا.",
+    "econtext.customerNumber": "رقم العميل",
+    "econtext.confirmationNumber": "رقم التأكيد",
+    "econtext.useBefore": "استخدم قبل",
+    "econtext.paymentInformation": "معلومات الدفع"
 }

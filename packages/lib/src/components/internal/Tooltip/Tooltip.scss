@@ -1,15 +1,15 @@
-@import 'styles/variable-generator';
+@use 'styles/variable-generator';
 
 .adyen-checkout-tooltip {
     display: inline-block;
     position: absolute;
-    background: token(tooltip-background-color);
-    color: token(tooltip-color);
-    padding: token(tooltip-padding);
-    font-size: token(text-body-font-size);
-    border-radius: token(tooltip-border-radius);
+    background: variable-generator.token(tooltip-background-color);
+    color: variable-generator.token(tooltip-color);
+    padding: variable-generator.token(tooltip-padding);
+    font-size: variable-generator.token(text-body-font-size);
+    border-radius: variable-generator.token(tooltip-border-radius);
     white-space: nowrap;
-    z-index: token(tooltip-z-index);
+    z-index: variable-generator.token(tooltip-z-index);
     user-select: none;
     pointer-events: none;
 
@@ -39,7 +39,7 @@
         left: 50%;
         transform: translateX(-50%);
         border-width: 6px 6px 0;
-        border-color: token(tooltip-background-color) transparent transparent;
+        border-color: variable-generator.token(tooltip-background-color) transparent transparent;
     }
 
     &.adyen-checkout-tooltip-arrow--bottom {
@@ -47,6 +47,6 @@
         left: 50%;
         transform: translateX(-50%);
         border-width: 0 6px 6px;
-        border-color: transparent transparent token(tooltip-background-color);
+        border-color: transparent transparent variable-generator.token(tooltip-background-color);
     }
 }

@@ -1,7 +1,7 @@
 import BacsDD from './BacsDD';
 import { render, screen, within } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
-import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
+import { setupCoreMock, TEST_CHECKOUT_ATTEMPT_ID, TEST_RISK_DATA } from '../../../config/testMocks/setup-core-mock';
 
 describe('Bacs Direct Debit', () => {
     test('should make a Bacs Direct Debit payment', async () => {
@@ -47,9 +47,13 @@ describe('Bacs Direct Debit', () => {
                     paymentMethod: {
                         bankAccountNumber: '40308669',
                         bankLocationId: '560036',
-                        checkoutAttemptId: 'fetch-checkoutAttemptId-failed',
+                        checkoutAttemptId: TEST_CHECKOUT_ATTEMPT_ID,
                         holderName: 'David Archer',
+                        sdkData: expect.any(String),
                         type: 'directdebit_GB'
+                    },
+                    riskData: {
+                        clientData: TEST_RISK_DATA
                     },
                     shopperEmail: 'jon@adyen.com',
                     clientStateDataIndicator: true
@@ -165,9 +169,13 @@ describe('Bacs Direct Debit', () => {
                     paymentMethod: {
                         bankAccountNumber: '89345768',
                         bankLocationId: '895302',
-                        checkoutAttemptId: 'fetch-checkoutAttemptId-failed',
+                        checkoutAttemptId: TEST_CHECKOUT_ATTEMPT_ID,
                         holderName: 'Jonny R.',
+                        sdkData: expect.any(String),
                         type: 'directdebit_GB'
+                    },
+                    riskData: {
+                        clientData: TEST_RISK_DATA
                     },
                     shopperEmail: 'jonnyr@adyen.com',
                     clientStateDataIndicator: true

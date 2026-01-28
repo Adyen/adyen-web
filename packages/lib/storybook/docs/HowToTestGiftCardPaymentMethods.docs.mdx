@@ -1,0 +1,19 @@
+{/* HowToTestGiftCardPaymentMethods.docs.mdx */}
+
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Welcome/How To Test GiftCard Payment Methods" />
+
+# How To Test GiftCard Payment Methods
+
+If you're looking for a specific gift card component, you can test various gift card types using our generic [Giftcard](/story/components-giftcard--default) component story:
+
+1. Navigate to **Components → Giftcard** in the Storybook navigation
+2. In the Controls panel, modify the following parameters:
+   - **countryCode**: Set the appropriate country code if needed
+   - **componentConfiguration.brand**: Set the gift card brand (e.g., 'givex', 'svs')
+
+The Giftcard component will automatically handle the specific gift card flow based on the type you specify. This allows you to test any supported gift card without needing a dedicated component for each brand.
+
+For a complete list of available payment method types, refer to the [Adyen Documentation](https://docs.adyen.com/payment-methods).
+

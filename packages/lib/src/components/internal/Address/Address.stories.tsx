@@ -8,6 +8,7 @@ import { StoryConfiguration } from '../../../../storybook/types';
 
 const meta: Meta = {
     title: 'Internal Elements/Address',
+    tags: ['no-automated-visual-test'],
     component: Address,
     argTypes: {
         size: {

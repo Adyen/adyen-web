@@ -9,7 +9,7 @@ type AnalyticsErrorEventProps = {
 
 export enum ErrorEventType {
     network = 'Network',
-    implementation = 'ImplementationError',
+    implementation = 'Implementation',
     internal = 'Internal',
     apiError = 'ApiError',
     sdkError = 'SdkError',
@@ -20,6 +20,8 @@ export enum ErrorEventType {
 }
 
 export enum ErrorEventCode {
+    /** Trying to initialise a securedField iframe, but the iframe.contentWindow is undefined (meaning the containing element is not in the DOM */
+    SECURED_FIELDS_IFRAME_CONTENT_WINDOW_NOT_FOUND = '500',
     REDIRECT = '600',
     /**  Missing 'paymentData' property from threeDS2 action */
     THREEDS2_ACTION_IS_MISSING_PAYMENT_DATA = '700',

@@ -16,12 +16,67 @@ const render = ({ componentConfiguration, ...checkoutConfig }: PaymentMethodStor
     <Checkout checkoutConfig={checkoutConfig}>{checkout => <ComponentContainer element={new Econtext(checkout, componentConfiguration)} />}</Checkout>
 );
 
-export const Default: EcontextStory = {
+export const EcontextSevenEleven: EcontextStory = {
     render,
     args: {
         countryCode: 'JP',
         componentConfiguration: {
             type: TxVariants.econtext_seven_eleven
+        }
+    }
+};
+
+export const EcontextATM: EcontextStory = {
+    render,
+    args: {
+        countryCode: 'JP',
+        componentConfiguration: {
+            type: TxVariants.econtext_atm
+        }
+    }
+};
+
+export const EcontextATMVoucherScreen: EcontextStory = {
+    render: ({ componentConfiguration, ...checkoutConfig }) => (
+        <Checkout checkoutConfig={checkoutConfig}>
+            {checkout => (
+                <ComponentContainer
+                    element={
+                        new Econtext(checkout, {
+                            paymentMethodType: TxVariants.econtext_atm,
+                            reference: 'testreference',
+                            alternativeReference: 'testalternativereference',
+                            instructionsUrl: 'https://example.com/instructions',
+                            collectionInstitutionNumber: '123456789',
+                            expiresAt: '2025-12-25T14:00:00.000Z',
+                            ...componentConfiguration
+                        })
+                    }
+                />
+            )}
+        </Checkout>
+    ),
+    args: {
+        countryCode: 'JP'
+    }
+};
+
+export const EcontextOnline: EcontextStory = {
+    render,
+    args: {
+        countryCode: 'JP',
+        componentConfiguration: {
+            type: TxVariants.econtext_online
+        }
+    }
+};
+
+export const EcontextStores: EcontextStory = {
+    render,
+    args: {
+        countryCode: 'JP',
+        componentConfiguration: {
+            type: TxVariants.econtext_stores
         }
     }
 };

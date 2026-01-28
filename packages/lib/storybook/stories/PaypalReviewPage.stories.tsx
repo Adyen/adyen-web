@@ -1,11 +1,11 @@
-
 import { h } from 'preact';
 import { Meta } from '@storybook/preact-vite';
 import { useState } from 'preact/hooks';
 import { makeDetailsCall } from '../helpers/checkout-api-calls';
 
 const meta: Meta = {
-    title: 'Helpers/PaypalReviewPage'
+    title: 'Helpers/PaypalReviewPage',
+    tags: ['no-automated-visual-test']
 };
 export default meta;
 

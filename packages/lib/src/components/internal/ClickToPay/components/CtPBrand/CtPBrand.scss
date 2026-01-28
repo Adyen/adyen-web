@@ -1,4 +1,4 @@
-@import 'styles/variable-generator';
+@use 'styles/variable-generator';
 
 .adyen_checkout-ctp__brand {
     &-wrapper {
@@ -8,18 +8,18 @@
     }
 
     &-logo {
-        width: token(spacer-090);
-        margin-right: token(spacer-030);
+        width: variable-generator.token(spacer-090);
+        margin-right: variable-generator.token(spacer-030);
     }
 
     &-pipe {
         height: 15px;
-        margin-right: token(spacer-030);
+        margin-right: variable-generator.token(spacer-030);
     }
 
     &-scheme {
         object-fit: none;
-        margin-right: token(spacer-030);
+        margin-right: variable-generator.token(spacer-030);
 
         &-mc {
             width: 27px;

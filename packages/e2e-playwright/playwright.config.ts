@@ -8,14 +8,23 @@ dotenv.config({ path: path.resolve('../../', '.env') });
 
 const playgroundBaseUrl = `${protocol}://localhost:3020`;
 
+const snapshotPathTemplate = '{testDir}/{testFileDir}/__screenshots__/{platform}/{projectName}/{arg}{ext}';
+
+export const SCREENSHOT_CONFIG = {
+    maxDiffPixels: 1000,
+    maxDiffPixelRatio: 0.01,
+    animations: 'disabled',
+    scale: 'device'
+} as const;
+
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
 const config: PlaywrightTestConfig = {
     testDir: './tests/',
     testMatch: '**/*.spec.ts',
-    // Exclude the automated-a11y tests which run in a separate pipeline
-    testIgnore: ['**/automated-a11y/**'],
+    // Exclude the automated tests which run in a separate pipeline
+    testIgnore: ['**/automated/**'],
     /* Maximum time one test can run for. */
     timeout: 60 * 1000,
     expect: {
@@ -23,7 +32,10 @@ const config: PlaywrightTestConfig = {
          * Maximum time expect() should wait for the condition to be met.
          * For example in `await expect(locator).toHaveText();`
          */
-        timeout: 10000
+        timeout: 30_000,
+        toHaveScreenshot: {
+            ...SCREENSHOT_CONFIG
+        }
     },
     /* Run tests in files in parallel */
     fullyParallel: true,
@@ -37,10 +49,12 @@ const config: PlaywrightTestConfig = {
     /* Reporter to use. See https://playwright.dev/docs/test-reporters */
     reporter: [['html', { open: 'never' }], ['list']],
 
+    snapshotPathTemplate,
+
     /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
     use: {
         /* Maximum time each action such as `click()` can take. Defaults to 0 (no limit). */
-        actionTimeout: 30000,
+        actionTimeout: 30_000,
         /* Base URL to use in actions like `await page.goto('/')`. */
         baseURL: playgroundBaseUrl,
 
@@ -70,9 +84,7 @@ const config: PlaywrightTestConfig = {
         {
             name: 'webkit',
             use: {
-                ...devices['Desktop Safari'],
-                // Speed up tests for webkit by only recording videos on first retry
-                video: 'on-first-retry'
+                ...devices['Desktop Safari']
             }
         }
     ],

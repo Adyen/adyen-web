@@ -15,6 +15,7 @@ import {
 } from './constants';
 import { SF_ErrorCodes } from '../../../../core/Errors/constants';
 import { Placeholders } from '../SFP/types';
+import type { AbstractAnalyticsEvent } from '../../../../core/Analytics/events/AbstractAnalyticsEvent';
 
 declare global {
     interface Window {
@@ -319,6 +320,8 @@ export interface SecuredFieldSetupObject extends SecuredFieldCommonProps {
     iframeSrc: string;
     showContextualElement?: boolean;
     placeholders: Placeholders;
+    submitAnalytics?: (event: AbstractAnalyticsEvent) => void;
+    componentType?: string;
 }
 
 interface ContextualTexts {

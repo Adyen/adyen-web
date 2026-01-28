@@ -1,6 +1,7 @@
-@import 'styles/variable-generator';
+@use "sass:color";
+@use 'styles/variable-generator';
 
-$color-alert: token(color-background-critical-strong, false);
+$color-alert: variable-generator.token(color-background-critical-strong, false);
 
 .adyen-checkout__payment-method__disable-confirmation {
     $component-root: &;
@@ -8,14 +9,14 @@ $color-alert: token(color-background-critical-strong, false);
     display: grid;
     grid-template-rows: 0fr;
     transition:
-        grid-template-rows token(animation-duration-moderate) token(animation-easing-linear),
-        opacity token(animation-duration-moderate) token(animation-easing-standard),
-        margin-bottom token(animation-duration-fast) token(animation-easing-linear);
-    background: token(color-background-critical-strong);
-    font-size: token(text-body-font-size);
-    color: token(color-label-on-color);
-    border-right: 1px solid darken($color-alert, 2%);
-    border-left: 1px solid darken($color-alert, 2%);
+        grid-template-rows variable-generator.token(animation-duration-moderate) variable-generator.token(animation-easing-linear),
+        opacity variable-generator.token(animation-duration-moderate) variable-generator.token(animation-easing-standard),
+        margin-bottom variable-generator.token(animation-duration-fast) variable-generator.token(animation-easing-linear);
+    background: variable-generator.token(color-background-critical-strong);
+    font-size: variable-generator.token(text-body-font-size);
+    color: variable-generator.token(color-label-on-color);
+    border-right: 1px solid color.adjust($color-alert, $lightness: -2%);
+    border-left: 1px solid color.adjust($color-alert, $lightness: -2%);
     overflow: hidden;
     opacity: 0;
     margin: 0 -17px;
@@ -23,8 +24,8 @@ $color-alert: token(color-background-critical-strong, false);
     &__content {
         min-height: 0;
         transition:
-            visibility token(animation-duration-moderate) token(animation-easing-linear),
-            padding token(animation-duration-fast) token(animation-easing-linear);
+            visibility variable-generator.token(animation-duration-moderate) variable-generator.token(animation-easing-linear),
+            padding variable-generator.token(animation-duration-fast) variable-generator.token(animation-easing-linear);
         visibility: hidden;
         display: flex;
         align-items: center;
@@ -34,11 +35,11 @@ $color-alert: token(color-background-critical-strong, false);
     &--open {
         grid-template-rows: 1fr;
         opacity: 1;
-        margin-bottom: token(spacer-070);
+        margin-bottom: variable-generator.token(spacer-070);
 
         #{$component-root}__content {
             visibility: visible;
-            padding: token(spacer-040) token(spacer-070);
+            padding: variable-generator.token(spacer-040) variable-generator.token(spacer-070);
         }
     }
 }
@@ -48,34 +49,34 @@ $color-alert: token(color-background-critical-strong, false);
 }
 
 .adyen-checkout__payment-method__disable-confirmation__button {
-    font-size: token(text-body-font-size);
-    background: token(color-background-critical-strong);
-    border: token(border-width-s) solid transparent;
-    border-radius: token(border-radius-m);
-    color: token(color-label-on-color);
+    font-size: variable-generator.token(text-body-font-size);
+    background: variable-generator.token(color-background-critical-strong);
+    border: variable-generator.token(border-width-s) solid transparent;
+    border-radius: variable-generator.token(border-radius-m);
+    color: variable-generator.token(color-label-on-color);
     cursor: pointer;
     display: block;
     height: auto;
-    margin: 0 0 0 token(spacer-040);
-    padding: token(spacer-040);
+    margin: 0 0 0 variable-generator.token(spacer-040);
+    padding: variable-generator.token(spacer-040);
     width: auto;
 
     &:hover,
     &:hover:focus {
         box-shadow: none;
-        background: darken($color-alert, 5%);
+        background: color.adjust($color-alert, $lightness: -5%);
     }
 
     &:active,
     &:hover:active {
-        background: darken($color-alert, 10%);
+        background: color.adjust($color-alert, $lightness: -10%);
         box-shadow: none;
     }
 }
 
 .adyen-checkout__payment-method__disable-confirmation__button--remove,
 .adyen-checkout__payment-method__disable-confirmation__button--remove:disabled {
-    border-color: token(color-label-on-color);
+    border-color: variable-generator.token(color-label-on-color);
 }
 
 .adyen-checkout__payment-method__disable-confirmation__button--cancel,

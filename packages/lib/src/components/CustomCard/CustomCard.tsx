@@ -126,6 +126,7 @@ export class CustomCard extends UIElement<CustomCardConfiguration> {
                 resources={this.resources}
                 brand={this.brand}
                 onFocus={this.onFocus}
+                onSubmitAnalytics={this.submitAnalytics}
             />
         );
     }

@@ -74,6 +74,7 @@ jobs:
       run: yarn test:e2e --project=${{ matrix.runner-browser }}
 
     - name: Archive test result artifacts
+      id: upload-artifact
       if: always()
       uses: actions/upload-artifact@v6
       with:

@@ -25,7 +25,8 @@ import { getSearchParameter } from '../../../../storybook/utils/get-query-parame
 type PixBiometricStory = StoryConfiguration<PayByBankPixConfiguration>;
 
 const meta: MetaConfiguration<PayByBankPixConfiguration> = {
-    title: 'Components/PayByBankPix'
+    title: 'Components/PayByBankPix',
+    tags: ['no-automated-visual-test']
 };
 
 const useMsw = false;

@@ -294,6 +294,10 @@ describe('CardInput > Installments', () => {
         const wrapper = getWrapper(<CardInput {...cardInputRequiredProps} fundingSource={'debit'} installmentOptions={installments} />);
         expect(wrapper.find(CardFieldsWrapper).prop('hasInstallments')).toBe(false);
     });
+    test('should not display installments if fundingSource is prepaid', () => {
+        const wrapper = getWrapper(<CardInput {...cardInputRequiredProps} fundingSource={'prepaid'} installmentOptions={installments} />);
+        expect(wrapper.find(CardFieldsWrapper).prop('hasInstallments')).toBe(false);
+    });
     test('should display installments if fundingSource is credit', () => {
         const wrapper = getWrapper(<CardInput {...cardInputRequiredProps} fundingSource={'credit'} installmentOptions={installments} />);
         expect(wrapper.find(CardFieldsWrapper).prop('hasInstallments')).toBe(true);

@@ -31,6 +31,7 @@ import Multibanco from './Multibanco';
 import Dotpay from './Dotpay';
 import Eps from './EPS';
 import Giftcard from './Giftcard';
+import Iris from './Iris';
 import Vipps from './Vipps';
 import { PayuCashcard, PayuNetBanking } from './PayU';
 import RatePay from './RatePay';
@@ -178,6 +179,7 @@ export const ComponentsMap = {
     [TxVariants.billdesk_wallet]: BillDeskWallet,
     [TxVariants.dotpay]: Dotpay,
     [TxVariants.eps]: Eps,
+    [TxVariants.iris]: Iris,
     [TxVariants.molpay_ebanking_fpx_MY]: MolPayEBankingMY,
     [TxVariants.molpay_ebanking_TH]: MolPayEBankingTH,
     [TxVariants.molpay_ebanking_VN]: MolPayEBankingVN,
@@ -243,7 +245,6 @@ export const ComponentsMap = {
     [TxVariants.payto]: PayTo,
     [TxVariants.upi]: UPI, // also QR
     [TxVariants.upi_qr]: UPI, // also QR
-    [TxVariants.upi_collect]: UPI, // also QR
     [TxVariants.upi_intent]: UPI,
     /** Await */
 

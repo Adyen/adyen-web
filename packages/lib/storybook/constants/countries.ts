@@ -10,6 +10,7 @@ export enum COUNTRY_CODES {
     Finland = 'FI',
     France = 'FR',
     Germany = 'DE',
+    Greece = 'GR',
     HongKong = 'HK',
     India = 'IN',
     Indonesia = 'ID',

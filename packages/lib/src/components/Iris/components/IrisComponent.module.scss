@@ -1,0 +1,6 @@
+@use 'styles/mixins';
+@use 'styles/variable-generator';
+
+.bankList {
+    padding-top: variable-generator.token(spacer-070);
+}

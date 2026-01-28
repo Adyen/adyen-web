@@ -1,15 +1,15 @@
-@import 'styles/variable-generator';
+@use 'styles/variable-generator';
 
 .adyen-checkout__threeds2-challenge-error {
     .adyen-checkout__status__icon {
         display: block;
-        margin: token(spacer-130) auto token(spacer-100);
+        margin: variable-generator.token(spacer-130) auto variable-generator.token(spacer-100);
     }
 
     .adyen-checkout__status__text {
-        color: token(color-label-critical);
-        margin-bottom: token(spacer-130);
+        color: variable-generator.token(color-label-critical);
+        margin-bottom: variable-generator.token(spacer-130);
         text-align: center;
-        font-size: token(text-title-font-size);
+        font-size: variable-generator.token(text-title-font-size);
     }
 }

@@ -1,12 +1,18 @@
 import Pix from './Pix';
 import { render, screen, waitFor } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
-import { NO_CHECKOUT_ATTEMPT_ID } from '../../core/Analytics/constants';
-import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
+import { setupCoreMock, TEST_CHECKOUT_ATTEMPT_ID, TEST_RISK_DATA } from '../../../config/testMocks/setup-core-mock';
 
 test('should return only payment type if personalDetails is not required', () => {
-    const pix = new Pix(global.core);
-    expect(pix.data).toEqual({ clientStateDataIndicator: true, paymentMethod: { type: 'pix', checkoutAttemptId: NO_CHECKOUT_ATTEMPT_ID } });
+    const core = setupCoreMock();
+    const pix = new Pix(core);
+    expect(pix.data).toEqual({
+        clientStateDataIndicator: true,
+        paymentMethod: { type: 'pix', checkoutAttemptId: TEST_CHECKOUT_ATTEMPT_ID, sdkData: expect.any(String) },
+        riskData: {
+            clientData: TEST_RISK_DATA
+        }
+    });
 });
 
 test('should show personal details form if enabled', async () => {

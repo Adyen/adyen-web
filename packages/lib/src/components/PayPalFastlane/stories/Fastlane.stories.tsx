@@ -12,7 +12,8 @@ import { Checkout } from '../../../../storybook/components/Checkout';
 type FastlaneStory = StoryConfiguration<{}>;
 
 const meta: MetaConfiguration<FastlaneStory> = {
-    title: 'Components/Wallets/Fastlane'
+    title: 'Components/Wallets/Fastlane',
+    tags: ['no-automated-visual-test']
 };
 
 export const Lookup: FastlaneStory = {

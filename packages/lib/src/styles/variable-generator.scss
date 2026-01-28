@@ -1,15 +1,16 @@
-@import '~@adyen/bento-design-tokens/dist/scss-map/bento/aliases';
-@import '~@adyen/bento-design-tokens/dist/scss-map/bento/definitions';
-@import '~@adyen/bento-design-tokens/dist/scss-map/bento/components';
-@import 'overrides';
+@use 'sass:map';
+@use '~@adyen/bento-design-tokens/dist/scss-map/bento/aliases';
+@use '~@adyen/bento-design-tokens/dist/scss-map/bento/definitions';
+@use '~@adyen/bento-design-tokens/dist/scss-map/bento/components';
+@use 'overrides';
 
 // simple re-mapping
-$color: map-merge(
-    $color,
+aliases.$color: map.merge(
+    aliases.$color,
     (
         // this color has been remapped for a11y reasons
-        color-label-critical: map-get($color, color-label-on-background-critical-weak),
-        color-label-tertiary: map-get($color, color-label-secondary),
+        color-label-critical: map.get(aliases.$color, color-label-on-background-critical-weak),
+        color-label-tertiary: map.get(aliases.$color, color-label-secondary),
         // label tertiary doesn't have enough contrast
     )
 );
@@ -19,7 +20,7 @@ $color: map-merge(
 
     @each $map in $maps {
         @each $name, $value in $map {
-            $adyen-output-map: map-merge($adyen-output-map, (#{$name}: var(--adyen-sdk-#{$name}, #{$value})));
+            $adyen-output-map: map.merge($adyen-output-map, (#{$name}: var(--adyen-sdk-#{$name}, #{$value})));
         }
     }
 
@@ -31,35 +32,35 @@ $color: map-merge(
 
     @if $generate-css-var {
         $adyen-tokens-map: adyen-sdk-generate-css-variables(
-            $color,
-            $text,
-            $focus-ring,
-            $border,
-            $spacer,
-            $shadow,
-            $animation,
-            $toggle,
-            $button,
-            $tooltip,
-            $alert,
-            $text-overrides
+            aliases.$color,
+            aliases.$text,
+            aliases.$focus-ring,
+            definitions.$border,
+            definitions.$spacer,
+            definitions.$shadow,
+            definitions.$animation,
+            components.$toggle,
+            components.$button,
+            components.$tooltip,
+            components.$alert,
+            overrides.$text-overrides
         );
     } @else {
-        $adyen-tokens-map: map-merge(
-            $color,
-            $text,
-            $focus-ring,
-            $border,
-            $spacer,
-            $shadow,
-            $animation,
-            $toggle,
-            $button,
-            $tooltip,
-            $alert,
-            $text-overrides
+        $adyen-tokens-map: map.merge(
+            aliases.$color,
+            aliases.$text,
+            aliases.$focus-ring,
+            definitions.$border,
+            definitions.$spacer,
+            definitions.$shadow,
+            definitions.$animation,
+            components.$toggle,
+            components.$button,
+            components.$tooltip,
+            components.$alert,
+            overrides.$text-overrides
         );
     }
 
-    @return map-get($adyen-tokens-map, '#{$token}');
+    @return map.get($adyen-tokens-map, '#{$token}');
 }

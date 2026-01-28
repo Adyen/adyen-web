@@ -1,32 +1,32 @@
-@import 'styles/variable-generator';
+@use 'styles/variable-generator';
 
 .adyen-checkout-ctp__card-list-single-card {
-    border-radius: token(spacer-030);
-    background-color: token(color-background-secondary);
-    height: token(spacer-110);
-    padding: token(spacer-060);
-    margin-top: token(spacer-070);
+    border-radius: variable-generator.token(spacer-030);
+    background-color: variable-generator.token(color-background-secondary);
+    height: variable-generator.token(spacer-110);
+    padding: variable-generator.token(spacer-060);
+    margin-top: variable-generator.token(spacer-070);
     display: flex;
     align-items: center;
-    font-size: token(text-body-font-size);
-    font-weight: token(text-body-font-weight);
-    line-height: token(text-caption-line-height);
+    font-size: variable-generator.token(text-body-font-size);
+    font-weight: variable-generator.token(text-body-font-weight);
+    line-height: variable-generator.token(text-caption-line-height);
 
     &-expired {
         text-decoration: line-through;
-        color: token(color-label-tertiary);
+        color: variable-generator.token(color-label-tertiary);
     }
 }
 
 .adyen-checkout-ctp__expired-label {
-    color: token(color-label-tertiary);
-    font-weight: token(text-body-stronger-font-weight);
+    color: variable-generator.token(color-label-tertiary);
+    font-weight: variable-generator.token(text-body-stronger-font-weight);
     line-height: 17px;
     margin-left: auto;
 }
 
 .adyen-checkout-ctp__card-image {
     border-radius: 3px;
-    margin-right: token(spacer-040);
+    margin-right: variable-generator.token(spacer-040);
     height: 24px;
 }

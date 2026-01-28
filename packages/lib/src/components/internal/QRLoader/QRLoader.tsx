@@ -23,7 +23,7 @@ import { useAmount } from '../../../core/Context/AmountProvider';
 
 const QRCODE_URL = 'utility/v1/barcode.png?type=qrCode&data=';
 
-export function QRLoader(props: QRLoaderProps) {
+export function QRLoader(props: Readonly<QRLoaderProps>) {
     const { i18n, loadingContext } = useCoreContext();
 
     const { state: timerState, actions: timerActions } = usePaymentStatusTimer({
@@ -89,7 +89,7 @@ export function QRLoader(props: QRLoaderProps) {
     const classnames = props.classNameModifiers.map(m => `adyen-checkout__qr-loader--${m}`);
 
     return (
-        <div className={`adyen-checkout__qr-loader adyen-checkout__qr-loader--${type} ${classnames.join(' ')}`}>
+        <div className={`adyen-checkout__qr-loader adyen-checkout__qr-loader--${type} ${classnames.join(' ')}`} data-testid={`${type}-qr-loader`}>
             {brandLogo && (
                 <div className="adyen-checkout__qr-loader__brand-logo-wrapper">
                     <img src={brandLogo} alt={brandName} className="adyen-checkout__qr-loader__brand-logo" />
@@ -114,6 +114,7 @@ export function QRLoader(props: QRLoaderProps) {
             </p>
 
             <QRLoaderDetailsProvider
+                type={type}
                 qrCodeImage={qrCodeImage}
                 qrCodeData={props.qrCodeData}
                 percentage={percentage}

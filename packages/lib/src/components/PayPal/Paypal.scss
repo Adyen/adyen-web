@@ -1,4 +1,4 @@
-@import 'styles/variable-generator';
+@use 'styles/variable-generator';
 
 .adyen-checkout__paypal {
     &__buttons {
@@ -8,7 +8,7 @@
 
     &__button {
         display: flex;
-        margin-bottom: token(spacer-070);
+        margin-bottom: variable-generator.token(spacer-070);
 
         &:empty {
             display: none;
@@ -17,15 +17,15 @@
 
     &__status {
         &--pending {
-            margin: token(spacer-070) 0;
+            margin: variable-generator.token(spacer-070) 0;
         }
 
         &--processing {
             align-items: center;
             display: flex;
-            font-size: token(text-body-font-size);
+            font-size: variable-generator.token(text-body-font-size);
             justify-content: center;
-            padding: token(spacer-090) 0;
+            padding: variable-generator.token(spacer-090) 0;
         }
     }
 }
@@ -38,11 +38,11 @@
 .adyen-checkout__payment-method {
     .adyen-checkout__paypal__status {
         &--pending {
-            margin: token(spacer-070) 0 38px;
+            margin: variable-generator.token(spacer-070) 0 38px;
         }
 
         &--processing {
-            padding: token(spacer-080) 0 65px;
+            padding: variable-generator.token(spacer-080) 0 65px;
         }
     }
 }

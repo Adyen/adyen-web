@@ -15,6 +15,7 @@ import { AmountProvider, AmountProviderProps } from '../../../core/Context/Amoun
 
 const meta: Meta<ButtonProps> = {
     title: 'Internal Elements/Button',
+    tags: ['no-automated-visual-test'],
     component: Button as any,
     argTypes: {
         status: {

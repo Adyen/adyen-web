@@ -6,7 +6,7 @@ import { TxVariants } from '../tx-variants';
 import { httpGet, httpPost } from '../../core/Services/http';
 import { SRPanel } from '../../core/Errors/SRPanel';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
-import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
+import { setupCoreMock, TEST_CHECKOUT_ATTEMPT_ID, TEST_RISK_DATA } from '../../../config/testMocks/setup-core-mock';
 
 jest.mock('./services/PasskeyService');
 jest.mock('../../core/Services/http');
@@ -159,7 +159,7 @@ describe('PayByBankPix', () => {
                         data: {
                             clientStateDataIndicator: true,
                             paymentMethod: {
-                                checkoutAttemptId: 'fetch-checkoutAttemptId-failed',
+                                checkoutAttemptId: TEST_CHECKOUT_ATTEMPT_ID,
                                 deviceId: 'mock-device',
                                 issuer: '123',
                                 riskSignals: {
@@ -168,7 +168,11 @@ describe('PayByBankPix', () => {
                                     screenDimensions: { height: 100, width: 100 },
                                     userTimeZoneOffset: -60
                                 },
+                                sdkData: expect.any(String),
                                 type: 'paybybank_pix'
+                            },
+                            riskData: {
+                                clientData: TEST_RISK_DATA
                             },
                             storePaymentMethod: true
                         },
@@ -335,7 +339,7 @@ describe('PayByBankPix', () => {
                     data: {
                         clientStateDataIndicator: true,
                         paymentMethod: {
-                            checkoutAttemptId: 'fetch-checkoutAttemptId-failed',
+                            checkoutAttemptId: TEST_CHECKOUT_ATTEMPT_ID,
                             storedPaymentMethodId: 'mock-stored-payment-method-id',
                             type: 'paybybank_pix',
                             deviceId: 'mock-device',
@@ -344,7 +348,11 @@ describe('PayByBankPix', () => {
                                 osVersion: 'xxx',
                                 screenDimensions: { height: 100, width: 100 },
                                 userTimeZoneOffset: -60
-                            }
+                            },
+                            sdkData: expect.any(String)
+                        },
+                        riskData: {
+                            clientData: TEST_RISK_DATA
                         }
                     },
                     isValid: true
