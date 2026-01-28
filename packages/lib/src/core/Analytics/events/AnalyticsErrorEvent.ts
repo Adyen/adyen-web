@@ -22,7 +22,20 @@ export enum ErrorEventType {
 export enum ErrorEventCode {
     /** Trying to initialise a securedField iframe, but the iframe.contentWindow is undefined (meaning the containing element is not in the DOM */
     SECURED_FIELDS_IFRAME_CONTENT_WINDOW_NOT_FOUND = '500',
+    /** */
     REDIRECT = '600',
+    /**
+     * Key not present in served securedFields asset
+     */
+    SECURED_FIELDS_KEY_NOT_FOUND = '608',
+    /**
+     * Encryption key generation failed in securedField
+     */
+    SECURED_FIELDS_ENCRYPTION_KEY_GEN_FAILED = '609',
+    /**
+     * Encryption failed in securedField
+     */
+    SECURED_FIELDS_ENCRYPTION_ERROR = '610',
     /**  Missing 'paymentData' property from threeDS2 action */
     THREEDS2_ACTION_IS_MISSING_PAYMENT_DATA = '700',
     /** Missing 'token' property from threeDS2 action */
