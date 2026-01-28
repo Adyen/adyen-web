@@ -306,6 +306,8 @@ class Core implements ICore {
         if (amount || secondaryAmount) {
             this.triggerAmountUpdate(amount, secondaryAmount);
         }
+
+        return Promise.resolve(this);
     }
 
     /**
