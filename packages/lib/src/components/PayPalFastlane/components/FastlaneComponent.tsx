@@ -4,16 +4,17 @@ import FastlaneCardBrandIcon from './FaslaneCardBrandIcon';
 import { PREFIX } from '../../internal/Icon/constants';
 import useImage from '../../../core/Context/useImage';
 import Img from '../../internal/Img';
-import type { ComponentMethodsRef, PayButtonFunctionProps, UIElementStatus } from '../../internal/UIElement/types';
+import type { ComponentMethodsRef, UIElementStatus } from '../../internal/UIElement/types';
 
 import './Fastlane.scss';
+import { PayButtonProps } from '../../internal/PayButton/PayButton';
 
 interface FastlaneComponentProps {
     lastFour: string;
     brand: string;
     showPayButton: boolean;
     setComponentRef(ref: ComponentMethodsRef): void;
-    payButton(props?: PayButtonFunctionProps): h.JSX.Element;
+    payButton(props: PayButtonProps): h.JSX.Element;
 }
 
 const FastlaneComponent = ({ lastFour, brand, payButton, setComponentRef, showPayButton }: FastlaneComponentProps) => {

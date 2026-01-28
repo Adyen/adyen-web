@@ -10,10 +10,11 @@ import useForm from '../../../../utils/useForm';
 import { BrazilPersonalDetail } from '../../../internal/SocialSecurityNumberBrazil/BrazilPersonalDetail';
 import FormInstruction from '../../../internal/FormInstruction';
 import { ComponentMethodsRef } from '../../../internal/UIElement/types';
+import type { PayButtonProps } from '../../../internal/PayButton/PayButton';
 
 interface BoletoInputProps {
     onChange(data: any): void;
-    // TODO
+    payButton: (props: PayButtonProps) => h.JSX.Element;
     [key: string]: any;
 }
 

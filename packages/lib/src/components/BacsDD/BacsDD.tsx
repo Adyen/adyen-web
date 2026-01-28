@@ -6,6 +6,7 @@ import PayButton from '../internal/PayButton';
 import { TxVariants } from '../tx-variants';
 import { VoucherConfiguration } from '../internal/Voucher/types';
 import { BacsElementData } from './types';
+import { PayButtonProps } from '../internal/PayButton/PayButton';
 
 class BacsElement extends UIElement<VoucherConfiguration> {
     public static type = TxVariants.directdebit_GB;
@@ -26,8 +27,8 @@ class BacsElement extends UIElement<VoucherConfiguration> {
         return !!this.state.isValid;
     }
 
-    public payButton = props => {
-        return <PayButton amount={this.props.amount} onClick={this.submit} {...props} />;
+    protected override payButton = (props: PayButtonProps) => {
+        return <PayButton onClick={this.submit} {...props} />;
     };
 
     protected override componentToRender(): h.JSX.Element {

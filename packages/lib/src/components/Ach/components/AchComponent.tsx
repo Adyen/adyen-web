@@ -42,7 +42,7 @@ interface AchComponentProps {
         isValid: boolean;
         storePaymentMethod: boolean;
     }): void;
-    payButton: (props: Partial<PayButtonProps>) => h.JSX.Element;
+    payButton: (props: PayButtonProps) => h.JSX.Element;
     setComponentRef: (ref: ComponentMethodsRef) => void;
     hasHolderName: boolean;
     showPayButton: boolean;

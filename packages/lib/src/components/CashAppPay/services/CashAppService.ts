@@ -1,6 +1,7 @@
 import { ICashAppSdkLoader } from './CashAppSdkLoader';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 import { CashAppPayEvents, CashAppServiceConfig, ICashAppSDK, ICashAppService } from './types';
+import { PaymentAmount } from '../../../types';
 
 export default class CashAppService implements ICashAppService {
     private readonly sdkLoader: ICashAppSdkLoader;
@@ -22,12 +23,11 @@ export default class CashAppService implements ICashAppService {
         }
     }
 
-    get hasOneTimePayment() {
-        const { amount } = this.configuration;
+    private isOneTimePayment(amount: PaymentAmount): boolean {
         return amount?.value > 0;
     }
 
-    get hasOnFilePayment() {
+    private isOnFilePayment(): boolean {
         return this.configuration.storePaymentMethod;
     }
 
@@ -71,21 +71,21 @@ export default class CashAppService implements ICashAppService {
         };
     }
 
-    public async createCustomerRequest(): Promise<void> {
+    public async createCustomerRequest(amount: PaymentAmount): Promise<void> {
         try {
-            const { referenceId, amount, scopeId, redirectURL = window.location.href } = this.configuration;
+            const { referenceId, scopeId, redirectURL = window.location.href } = this.configuration;
 
             const customerRequest = {
                 referenceId,
                 redirectURL,
                 actions: {
-                    ...(this.hasOneTimePayment && {
+                    ...(this.isOneTimePayment(amount) && {
                         payment: {
                             amount,
                             scopeId
                         }
                     }),
-                    ...(this.hasOnFilePayment && {
+                    ...(this.isOnFilePayment() && {
                         onFile: {
                             scopeId
                         }

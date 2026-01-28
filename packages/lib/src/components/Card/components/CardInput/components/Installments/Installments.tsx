@@ -2,11 +2,12 @@ import { h } from 'preact';
 import { useState, useEffect } from 'preact/hooks';
 import Field from '../../../../../internal/FormFields/Field';
 import { useCoreContext } from '../../../../../../core/Context/CoreProvider';
-import { InstallmentsItem, InstallmentsProps } from '../types';
+import { InstallmentsItem } from '../types';
 import Fieldset from '../../../../../internal/FormFields/Fieldset/Fieldset';
 import RadioGroup from '../../../../../internal/FormFields/RadioGroup';
 import Select from '../../../../../internal/FormFields/Select';
 import { alternativeLabelContent } from '../FieldLabelAlternative';
+import { useAmount } from '../../../../../../core/Context/AmountProvider';
 import './Installments.scss';
 
 export interface InstallmentsObj {
@@ -14,12 +15,27 @@ export interface InstallmentsObj {
     plan?: 'revolving';
 }
 
+export interface InstallmentOptions {
+    [key: string]: {
+        values: number[];
+        plans?: string[];
+        preselectedValue?: number;
+    };
+}
+export interface InstallmentsProps {
+    brand?: string;
+    onChange?: (installmentObject: object) => void;
+    installmentOptions: InstallmentOptions;
+    type?: string;
+}
+
 /**
  * Installments generic dropdown
  */
 function Installments(props: InstallmentsProps) {
     const { i18n } = useCoreContext();
-    const { amount, brand, onChange, type } = props;
+    const { amount } = useAmount();
+    const { brand, onChange, type } = props;
     const installmentOptions = props.installmentOptions[brand] || props.installmentOptions.card;
     const readOnly = installmentOptions?.values?.length === 1;
     const [installmentAmount, setInstallmentAmount] = useState(installmentOptions?.preselectedValue || installmentOptions?.values[0]);
@@ -143,7 +159,6 @@ function Installments(props: InstallmentsProps) {
 
 Installments.defaultProps = {
     brand: '',
-    amount: {},
     onChange: () => {}
 };
 
