@@ -1,6 +1,5 @@
 import { h } from 'preact';
 import UIElement from '../internal/UIElement/UIElement';
-import PaypalComponent from './components/PaypalComponent';
 import defaultProps from './defaultProps';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { ERRORS } from './constants';
@@ -13,6 +12,8 @@ import type { Intent, PayPalConfiguration } from './types';
 
 import './Paypal.scss';
 import { AnalyticsInfoEvent, InfoEventType } from '../../core/Analytics/events/AnalyticsInfoEvent';
+import { PayPalService } from './PayPalService';
+import { PayPalSdkLoader } from './PayPalSdkLoader';
 
 class PaypalElement extends UIElement<PayPalConfiguration> {
     public static type = TxVariants.paypal;
@@ -23,6 +24,8 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
     private resolve = null;
     private reject = null;
 
+    private readonly paypalService: PayPalService;
+
     protected static defaultProps = defaultProps;
 
     constructor(checkout: ICore, props?: PayPalConfiguration) {
@@ -30,6 +33,33 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleOnShippingAddressChange = this.handleOnShippingAddressChange.bind(this);
         this.handleOnShippingOptionsChange = this.handleOnShippingOptionsChange.bind(this);
+
+        const sdkLoader = new PayPalSdkLoader({ analytics: this.analytics });
+
+        this.paypalService = new PayPalService({
+            loadingContext: this.props.loadingContext,
+            clientKey: this.props.clientKey,
+            sdkLoader
+        });
+
+        void this.paypalService.initialize();
+    }
+
+    public override async isAvailable(): Promise<void> {
+        console.log('# isAvailable being executed');
+
+        await this.paypalService.isPayPalSdkReady();
+
+        const paymentMethods = await this.paypalService.sdkInstance.findEligibleMethods({
+            currencyCode: this.props.amount.currency
+        });
+
+        if (!paymentMethods.isEligible('paypal')) {
+            return Promise.reject();
+        }
+
+        console.log('# isAvailable finished');
+        return Promise.resolve();
     }
 
     formatProps(props: PayPalConfiguration): PayPalConfiguration {
@@ -208,22 +238,9 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
         const { onShippingAddressChange, onShippingOptionsChange, ...rest } = this.props;
 
         return (
-            <PaypalComponent
-                ref={ref => {
-                    this.componentRef = ref;
-                }}
-                {...rest}
-                {...(onShippingAddressChange && { onShippingAddressChange: this.handleOnShippingAddressChange })}
-                {...(onShippingOptionsChange && { onShippingOptionsChange: this.handleOnShippingOptionsChange })}
-                onCancel={() => this.handleError(new AdyenCheckoutError('CANCEL'))}
-                onChange={this.setState}
-                onApprove={this.handleOnApprove}
-                onError={error => {
-                    this.handleError(new AdyenCheckoutError('ERROR', error.toString(), { cause: error }));
-                }}
-                onScriptLoadFailure={error => this.handleError(error)}
-                onSubmit={this.handleSubmit}
-            />
+            <div>
+                <paypal-button id="paypal-button" type="pay"></paypal-button>
+            </div>
         );
     }
 }

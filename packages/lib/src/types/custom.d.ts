@@ -11,6 +11,10 @@ declare module 'preact' {
                 locale: string;
                 onclick(): void;
             };
+            'paypal-button': {
+                id?: string;
+                type?: string;
+            };
         }
     }
 }
