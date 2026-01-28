@@ -2,6 +2,9 @@ import { createShopperCardsList } from './utils';
 import { SrcProfileWithScheme } from './types';
 import ShopperCard from '../models/ShopperCard';
 
+// Helper to get current year + 1 for future expiration dates
+const getNextYear = () => (new Date().getFullYear() + 1).toString();
+
 test('should place expired cards at the end of the list, placing the most recent ones on top', () => {
     const cardsFromSrcSystem: SrcProfileWithScheme[] = [
         {
@@ -32,7 +35,7 @@ test('should place expired cards at the end of the list, placing the most recent
                             dateOfCardLastUsed: '2022-09-28T08:10:02.312Z',
                             paymentCardDescriptor: 'visa',
                             panExpirationMonth: '12',
-                            panExpirationYear: '2025',
+                            panExpirationYear: getNextYear(),
                             digitalCardData: {
                                 descriptorName: 'Visa',
                                 artUri: 'https://image.com/visa',
@@ -82,7 +85,7 @@ test('should place expired cards at the end of the list, placing the most recent
             descriptorName: 'Visa',
             isExpired: false,
             panExpirationMonth: '12',
-            panExpirationYear: '2025',
+            panExpirationYear: getNextYear(),
             panLastFour: '8902',
             scheme: 'visa',
             srcCorrelationId: '123456',
@@ -178,7 +181,7 @@ test('should sort available cards placing most recent ones on top of the list', 
                             dateOfCardLastUsed: '2022-08-25T20:20:02.942Z',
                             paymentCardDescriptor: 'mc',
                             panExpirationMonth: '03',
-                            panExpirationYear: '2030',
+                            panExpirationYear: getNextYear(),
                             digitalCardData: {
                                 descriptorName: 'Mastercard',
                                 artUri: 'https://image.com/mc',
@@ -202,7 +205,7 @@ test('should sort available cards placing most recent ones on top of the list', 
             descriptorName: 'Mastercard',
             isExpired: false,
             panExpirationMonth: '03',
-            panExpirationYear: '2030',
+            panExpirationYear: getNextYear(),
             panLastFour: '4302',
             scheme: 'mc',
             srcCorrelationId: '1a2b3c',
@@ -258,7 +261,7 @@ test('should place unused cards after the used cards, sorted by dateOfCardCreate
                             dateOfCardLastUsed: undefined,
                             paymentCardDescriptor: 'visa',
                             panExpirationMonth: '12',
-                            panExpirationYear: '2030',
+                            panExpirationYear: getNextYear(),
                             digitalCardData: {
                                 descriptorName: 'Visa',
                                 artUri: 'https://image.com/visa',
@@ -273,7 +276,7 @@ test('should place unused cards after the used cards, sorted by dateOfCardCreate
                             dateOfCardLastUsed: undefined,
                             paymentCardDescriptor: 'visa',
                             panExpirationMonth: '12',
-                            panExpirationYear: '2030',
+                            panExpirationYear: getNextYear(),
                             digitalCardData: {
                                 descriptorName: 'Visa',
                                 artUri: 'https://image.com/visa',
@@ -298,7 +301,7 @@ test('should place unused cards after the used cards, sorted by dateOfCardCreate
                             dateOfCardLastUsed: '2019-12-25T20:20:02.942Z',
                             paymentCardDescriptor: 'mc',
                             panExpirationMonth: '12',
-                            panExpirationYear: '2030',
+                            panExpirationYear: getNextYear(),
                             digitalCardData: {
                                 descriptorName: 'Mastercard',
                                 artUri: 'https://image.com/mc',
@@ -323,7 +326,7 @@ test('should place unused cards after the used cards, sorted by dateOfCardCreate
             descriptorName: 'Mastercard',
             isExpired: false,
             panExpirationMonth: '12',
-            panExpirationYear: '2030',
+            panExpirationYear: getNextYear(),
             panLastFour: '4302',
             scheme: 'mc',
             srcCorrelationId: '1a2b3c',
@@ -338,7 +341,7 @@ test('should place unused cards after the used cards, sorted by dateOfCardCreate
             descriptorName: 'Visa',
             isExpired: false,
             panExpirationMonth: '12',
-            panExpirationYear: '2030',
+            panExpirationYear: getNextYear(),
             panLastFour: '5535',
             scheme: 'visa',
             srcCorrelationId: '123456',
@@ -353,7 +356,7 @@ test('should place unused cards after the used cards, sorted by dateOfCardCreate
             descriptorName: 'Visa',
             isExpired: false,
             panExpirationMonth: '12',
-            panExpirationYear: '2030',
+            panExpirationYear: getNextYear(),
             panLastFour: '8902',
             scheme: 'visa',
             srcCorrelationId: '123456',

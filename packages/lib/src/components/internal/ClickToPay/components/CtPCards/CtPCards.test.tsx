@@ -7,6 +7,9 @@ import CtPCards from './CtPCards';
 import ShopperCard from '../../models/ShopperCard';
 import { MastercardCheckout, VisaCheckout } from '../../services/types';
 
+// Helper to get current year + 1 for future expiration dates
+const getNextYear = () => (new Date().getFullYear() + 1).toString();
+
 const customRender = (children: ComponentChildren, providerProps: IClickToPayContext) => {
     return render(
         // eslint-disable-next-line react/no-children-prop
@@ -46,7 +49,7 @@ test('should pre selected available card', async () => {
                 dateOfCardLastUsed: '2022-02-16T08:10:02.312Z',
                 paymentCardDescriptor: 'mc',
                 panExpirationMonth: '12',
-                panExpirationYear: '2025',
+                panExpirationYear: getNextYear(),
                 digitalCardData: {
                     descriptorName: 'Mastercard',
                     artUri: 'http://image.com/mc',
@@ -189,7 +192,7 @@ test('should be able to checkout (card list)', async () => {
                 dateOfCardLastUsed: '2022-09-28T08:10:02.312Z',
                 paymentCardDescriptor: 'visa',
                 panExpirationMonth: '12',
-                panExpirationYear: '2025',
+                panExpirationYear: getNextYear(),
                 digitalCardData: {
                     descriptorName: 'Visa',
                     artUri: 'http://image.com/visa',
@@ -207,7 +210,7 @@ test('should be able to checkout (card list)', async () => {
                 dateOfCardLastUsed: '2022-09-16T08:10:02.312Z',
                 paymentCardDescriptor: 'mc',
                 panExpirationMonth: '08',
-                panExpirationYear: '2025',
+                panExpirationYear: getNextYear(),
                 digitalCardData: {
                     descriptorName: 'Mastercard',
                     artUri: 'http://image.com/mc',
@@ -254,7 +257,7 @@ test('should be able to checkout (single card)', async () => {
                 dateOfCardLastUsed: '2022-09-16T08:10:02.312Z',
                 paymentCardDescriptor: 'visa',
                 panExpirationMonth: '12',
-                panExpirationYear: '2025',
+                panExpirationYear: getNextYear(),
                 digitalCardData: {
                     descriptorName: 'Visa',
                     artUri: 'http://image.com',
