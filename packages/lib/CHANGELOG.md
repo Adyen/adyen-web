@@ -1,5 +1,11 @@
 # @adyen/adyen-web
 
+## 5.72.0
+
+### Minor Changes
+
+-   Feature: add support for sdkData API field ([#3784](https://github.com/Adyen/adyen-web/pull/3784))
+
 ## 5.71.5
 
 ### Patch Changes
