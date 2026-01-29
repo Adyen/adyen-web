@@ -21,8 +21,9 @@ import type { AdditionalDetailsData } from '../types';
 import collectBrowserInfo from '../../utils/browserInfo';
 
 class Session {
-    private readonly session: CheckoutSession;
     private readonly storage: Storage<CheckoutSession>;
+
+    public readonly session: CheckoutSession;
     public readonly clientKey: string;
     public readonly loadingContext: string;
     public configuration: SessionConfiguration;

@@ -15,6 +15,7 @@ import InputEmail from '../../internal/FormFields/InputEmail';
 import FormInstruction from '../../internal/FormInstruction';
 import { getErrorMessage } from '../../../utils/getErrorMessage';
 import { PREFIX } from '../../internal/Icon/constants';
+import { useAmount } from '../../../core/Context/AmountProvider';
 
 const ENTER_STATE = 'enter-data';
 const CONFIRM_STATE = 'confirm-data';
@@ -22,6 +23,7 @@ const CONFIRM_STATE = 'confirm-data';
 function BacsInput(props: BacsInputProps) {
     const { i18n } = useCoreContext();
     const getImage = useImage();
+    const { amount } = useAmount();
 
     const { handleChangeFor, triggerValidation, data, valid, errors, isValid } = useForm<BacsDataState>({
         schema: ['holderName', 'bankAccountNumber', 'bankLocationId', 'shopperEmail', 'amountConsentCheckbox', 'accountConsentCheckbox'],
@@ -220,7 +222,7 @@ function BacsInput(props: BacsInputProps) {
                         status === ENTER_STATE
                             ? i18n.get('continue')
                             : `${i18n.get('bacs.confirm')} ${
-                                  !!props.amount?.value && !!props.amount?.currency ? i18n.amount(props.amount.value, props.amount.currency) : ''
+                                  !!amount?.value && !!amount?.currency ? i18n.amount(amount.value, amount.currency) : ''
                               }`,
                     icon: getImage({ imageFolder: 'components/' })(`${PREFIX}lock`),
                     onClick: handlePayButton

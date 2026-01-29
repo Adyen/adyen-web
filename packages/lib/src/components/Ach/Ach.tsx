@@ -61,7 +61,6 @@ export class AchElement extends UIElement<AchConfiguration> {
             <RedirectButton
                 showPayButton={this.props.showPayButton}
                 name={this.displayName}
-                amount={this.props.amount}
                 payButton={this.payButton}
                 onSubmit={this.submit}
                 ref={ref => {

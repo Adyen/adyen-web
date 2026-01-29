@@ -1,7 +1,9 @@
 import RedirectElement from '../Redirect';
-import PayButton, { payAmountLabel } from '../internal/PayButton';
+import PayButton from '../internal/PayButton';
+import { payAmountLabel } from '../internal/PayButton/utils';
 import { h } from 'preact';
 import { TxVariants } from '../tx-variants';
+import { PayButtonProps } from '../internal/PayButton/PayButton';
 
 class TwintElement extends RedirectElement {
     public static type = TxVariants.twint;
@@ -28,7 +30,7 @@ class TwintElement extends RedirectElement {
      * Overrides RedirectElement default payButton behaviour to use label
      * @param props - props
      */
-    public payButton = props => {
+    protected override payButton = (props: PayButtonProps): h.JSX.Element => {
         return <PayButton {...props} label={this.payButtonLabel()} onClick={this.submit} />;
     };
 }
