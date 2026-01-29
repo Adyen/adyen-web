@@ -14,6 +14,7 @@ import './Paypal.scss';
 import { AnalyticsInfoEvent, InfoEventType } from '../../core/Analytics/events/AnalyticsInfoEvent';
 import { PayPalService } from './PayPalService';
 import { PayPalSdkLoader } from './PayPalSdkLoader';
+import { PayPalComponentV6 } from './components/PayPalComponentV6';
 
 class PaypalElement extends UIElement<PayPalConfiguration> {
     public static type = TxVariants.paypal;
@@ -191,7 +192,10 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
 
     handleResolve(token: string) {
         if (!this.resolve) return this.handleError(new AdyenCheckoutError('ERROR', ERRORS.WRONG_INSTANCE));
-        this.resolve(token);
+
+        const obj = { orderId: token };
+
+        this.resolve(obj);
     }
 
     handleReject(errorMessage: string) {
@@ -237,11 +241,7 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
 
         const { onShippingAddressChange, onShippingOptionsChange, ...rest } = this.props;
 
-        return (
-            <div>
-                <paypal-button id="paypal-button" type="pay"></paypal-button>
-            </div>
-        );
+        return <PayPalComponentV6 onSubmit={this.handleSubmit} onAdditionalDetails={this.handleOnApprove} paypalService={this.paypalService} />;
     }
 }
 
