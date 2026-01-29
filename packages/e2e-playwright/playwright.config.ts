@@ -100,7 +100,7 @@ const config: PlaywrightTestConfig = {
             cwd: '../..',
             url: storybookLocalHostUrl,
             reuseExistingServer: !process.env.CI,
-            timeout: 120_000
+            timeout: 180_000
         }
     ]
 };
