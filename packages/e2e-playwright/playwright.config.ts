@@ -6,12 +6,13 @@ import { protocol } from './environment-variables';
 
 dotenv.config({ path: path.resolve('../../', '.env') });
 
-const storybookLocalHostUrl = `${protocol}://localhost:3020`;
+const storybookPort = 3020;
+const storybookLocalHostUrl = `${protocol}://localhost:${storybookPort}`;
 
 const snapshotPathTemplate = '{testDir}/{testFileDir}/__screenshots__/{platform}/{projectName}/{arg}{ext}';
 
 export const SCREENSHOT_CONFIG = {
-    maxDiffPixels: 1000,
+    maxDiffPixels: 1_000,
     maxDiffPixelRatio: 0.01,
     animations: 'disabled',
     scale: 'device'
@@ -99,7 +100,7 @@ const config: PlaywrightTestConfig = {
             cwd: '../..',
             url: storybookLocalHostUrl,
             reuseExistingServer: !process.env.CI,
-            timeout: 120 * 1000
+            timeout: 120_000
         }
     ]
 };
