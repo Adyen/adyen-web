@@ -15,6 +15,7 @@ import { AnalyticsInfoEvent, InfoEventType } from '../../core/Analytics/events/A
 import { PayPalService } from './PayPalService';
 import { PayPalSdkLoader } from './PayPalSdkLoader';
 import { PayPalComponentV6 } from './components/PayPalComponentV6';
+import PaypalComponent from './components/PaypalComponent';
 
 class PaypalElement extends UIElement<PayPalConfiguration> {
     public static type = TxVariants.paypal;
@@ -35,31 +36,37 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
         this.handleOnShippingAddressChange = this.handleOnShippingAddressChange.bind(this);
         this.handleOnShippingOptionsChange = this.handleOnShippingOptionsChange.bind(this);
 
-        const sdkLoader = new PayPalSdkLoader({ analytics: this.analytics });
+        if (this.props.useV6) {
+            const sdkLoader = new PayPalSdkLoader({ analytics: this.analytics });
 
-        this.paypalService = new PayPalService({
-            loadingContext: this.props.loadingContext,
-            clientKey: this.props.clientKey,
-            sdkLoader
-        });
+            this.paypalService = new PayPalService({
+                loadingContext: this.props.loadingContext,
+                clientKey: this.props.clientKey,
+                sdkLoader
+            });
 
-        void this.paypalService.initialize();
+            void this.paypalService.initialize();
+        }
     }
 
     public override async isAvailable(): Promise<void> {
-        console.log('# isAvailable being executed');
+        if (this.props.useV6) {
+            console.log('# isAvailable started');
 
-        await this.paypalService.isPayPalSdkReady();
+            await this.paypalService.isPayPalSdkReady();
 
-        const paymentMethods = await this.paypalService.sdkInstance.findEligibleMethods({
-            currencyCode: this.props.amount.currency
-        });
+            const paymentMethods = await this.paypalService.sdkInstance.findEligibleMethods({
+                currencyCode: this.props.amount.currency
+            });
 
-        if (!paymentMethods.isEligible('paypal')) {
-            return Promise.reject();
+            if (!paymentMethods.isEligible('paypal')) {
+                return Promise.reject();
+            }
+
+            console.log('# isAvailable finished');
+            return Promise.resolve();
         }
 
-        console.log('# isAvailable finished');
         return Promise.resolve();
     }
 
@@ -136,7 +143,9 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
 
         if (action.sdkData && action.sdkData.token) {
             this.onActionHandled({ componentType: this.type, actionDescription: 'sdk-loaded', originalAction: action });
-            this.handleResolve(action.sdkData.token);
+
+            if (this.props.useV6) this.handleResolveV6(action.sdkData.token);
+            else this.handleResolve(action.sdkData.token);
         } else {
             this.handleReject(ERRORS.NO_TOKEN_PROVIDED);
         }
@@ -153,6 +162,21 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
     get isValid() {
         return true;
     }
+
+    private handleOnApproveV6 = (data: any): Promise<void> => {
+        const { onAuthorized } = this.props;
+        const state = { data: { details: data, paymentData: this.paymentData } };
+
+        if (!onAuthorized) {
+            this.handleAdditionalDetails(state);
+            return;
+        }
+
+        /**
+         * TODO: Request profile details from backend if onAuthorized is defined
+         */
+        this.handleError(new AdyenCheckoutError('ERROR', 'Something went wrong while parsing PayPal Order'));
+    };
 
     private handleOnApprove = (data: any, actions: any): Promise<void> | void => {
         const { onAuthorized } = this.props;
@@ -192,9 +216,12 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
 
     handleResolve(token: string) {
         if (!this.resolve) return this.handleError(new AdyenCheckoutError('ERROR', ERRORS.WRONG_INSTANCE));
+        this.resolve(token);
+    }
 
+    handleResolveV6(token: string) {
+        if (!this.resolve) return this.handleError(new AdyenCheckoutError('ERROR', ERRORS.WRONG_INSTANCE));
         const obj = { orderId: token };
-
         this.resolve(obj);
     }
 
@@ -241,7 +268,28 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
 
         const { onShippingAddressChange, onShippingOptionsChange, ...rest } = this.props;
 
-        return <PayPalComponentV6 onSubmit={this.handleSubmit} onAdditionalDetails={this.handleOnApprove} paypalService={this.paypalService} />;
+        if (this.props.useV6) {
+            return <PayPalComponentV6 onSubmit={this.handleSubmit} onAdditionalDetails={this.handleOnApproveV6} paypalService={this.paypalService} />;
+        }
+
+        return (
+            <PaypalComponent
+                ref={ref => {
+                    this.componentRef = ref;
+                }}
+                {...rest}
+                {...(onShippingAddressChange && { onShippingAddressChange: this.handleOnShippingAddressChange })}
+                {...(onShippingOptionsChange && { onShippingOptionsChange: this.handleOnShippingOptionsChange })}
+                onCancel={() => this.handleError(new AdyenCheckoutError('CANCEL'))}
+                onChange={this.setState}
+                onApprove={this.handleOnApprove}
+                onError={error => {
+                    this.handleError(new AdyenCheckoutError('ERROR', error.toString(), { cause: error }));
+                }}
+                onScriptLoadFailure={error => this.handleError(error)}
+                onSubmit={this.handleSubmit}
+            />
+        );
     }
 }
 

@@ -1,6 +1,7 @@
 import { PayPalConfiguration } from './types';
 
 const defaultProps: Partial<PayPalConfiguration> = {
+    useV6: false,
     isExpress: false,
     userAction: 'pay',
     commit: true,
