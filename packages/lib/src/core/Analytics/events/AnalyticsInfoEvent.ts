@@ -26,8 +26,12 @@ export enum UiTarget {
     list = 'list',
     listSearch = 'list_search',
     qrDownloadButton = 'qr_download_button',
+    segmentedControl = 'segmented_control',
     cardNumber = 'card_number',
-    segmentedControl = 'segmented_control'
+    expiryDate = 'expiry_date',
+    expiryMonth = 'expiry_month',
+    expiryYear = 'expiry_year',
+    securityCode = 'security_code'
 }
 
 export enum InfoEventType {
@@ -152,7 +156,7 @@ export class AnalyticsInfoEvent extends AbstractAnalyticsEvent {
         if (!config) return {};
 
         const MAX_STRING_LENGTH = 128;
-        const result = {};
+        const result: Record<string, string> = {};
 
         try {
             for (const [key, value] of Object.entries(config)) {

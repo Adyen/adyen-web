@@ -20,7 +20,7 @@ export const getCardImageUrl = (brand, resources: Resources) => {
  * Used by Card.tsx & SecuredFields.tsx
  * @param fieldType -
  */
-export const fieldTypeToSnakeCase = (fieldType: string) => {
+export const fieldTypeToSnakeCase = (fieldType: string): string => {
     let str = camelCaseToSnakeCase(fieldType);
     // SFs need their fieldType mapped to what the endpoint expects
     if (ALL_SECURED_FIELDS.includes(fieldType)) {

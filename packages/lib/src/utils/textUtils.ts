@@ -1,4 +1,4 @@
-export const camelCaseToSnakeCase = camelCaseString => {
+export const camelCaseToSnakeCase = (camelCaseString: string): string => {
     return camelCaseString.replace(/([a-z])([A-Z])/g, '$1_$2').toLowerCase();
 };
 
