@@ -4,8 +4,7 @@ import { AddressData, PaymentAmount } from '../../../../types';
 import { InstallmentOptions } from './components/types';
 import { ValidationResult } from '../../../internal/PersonalDetails/types';
 import { CVCPolicyType, DatePolicyType, CbObjOnError, StylesObject } from '../../../internal/SecuredFields/lib/types';
-import Specifications from '../../../internal/Address/Specifications';
-import { AddressSchema } from '../../../internal/Address/types';
+import { AddressSchema, AddressSpecifications } from '../../../internal/Address/types';
 import { Resources } from '../../../../core/Context/Resources';
 import { SRPanel } from '../../../../core/Errors/SRPanel';
 import RiskElement from '../../../../core/RiskModule';
@@ -122,7 +121,7 @@ export interface CardInputProps {
     showPayButton?: boolean;
     showStoreDetailsCheckbox?: boolean;
     showWarnings?: boolean;
-    specifications?: Specifications;
+    specifications?: AddressSpecifications;
     storedPaymentMethodId?: string;
     styles?: StylesObject;
     trimTrailingSeparator?: boolean;
