@@ -386,7 +386,7 @@ describe('Core', () => {
 
                 const newAmount = { currency: 'EUR', value: 1000 };
 
-                await checkout.update({ amount: newAmount }, { shouldRecreateDomElements: false });
+                await checkout.update({ amount: newAmount }, { shouldReinitializeCheckout: false });
 
                 expect(spy1).toHaveBeenCalledWith(newAmount, undefined);
                 expect(spy2).toHaveBeenCalledWith(newAmount, undefined);
@@ -414,7 +414,7 @@ describe('Core', () => {
 
                 const newAmount = { currency: '', value: 100 };
 
-                await checkout.update({ amount: newAmount }, { shouldRecreateDomElements: false });
+                await checkout.update({ amount: newAmount }, { shouldReinitializeCheckout: false });
 
                 expect(spy).not.toHaveBeenCalled();
 
@@ -443,7 +443,7 @@ describe('Core', () => {
                 const newAmount = { currency: 'USD', value: 100 };
                 const secondaryAmount = { currency: '', value: 100 };
 
-                await checkout.update({ amount: newAmount, secondaryAmount }, { shouldRecreateDomElements: false });
+                await checkout.update({ amount: newAmount, secondaryAmount }, { shouldReinitializeCheckout: false });
 
                 expect(spy).not.toHaveBeenCalled();
 

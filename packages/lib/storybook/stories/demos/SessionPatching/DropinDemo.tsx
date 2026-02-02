@@ -143,7 +143,7 @@ function Checkout({ sessionId, sessionData, countryCode, amountValue, onPatchSes
             };
 
             const core = checkoutRef.current;
-            void core.update({ amount }, { shouldRecreateDomElements: false });
+            void core.update({ amount }, { shouldReinitializeCheckout: false });
         }
     }, [amountValue, countryCode]);
 
