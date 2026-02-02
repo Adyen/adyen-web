@@ -15,6 +15,10 @@ declare module 'preact' {
                 id?: string;
                 type?: string;
             };
+            'venmo-button': {
+                id?: string;
+                type?: string;
+            };
         }
     }
 }

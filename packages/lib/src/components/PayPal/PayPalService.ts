@@ -1,7 +1,28 @@
 import requestFastlaneToken from '../PayPalFastlane/services/request-fastlane-token';
 import { PayPalSdkLoader } from './PayPalSdkLoader';
 
+interface PayPalServiceConfig {
+    loadingContext: string;
+    clientKey: string;
+    sdkLoader: PayPalSdkLoader;
+}
+
 class PayPalService {
+    private static instances: Map<string, PayPalService> = new Map();
+
+    private static createKey(loadingContext: string, clientKey: string): string {
+        return `${loadingContext}:${clientKey}`;
+    }
+
+    public static getInstance(config: PayPalServiceConfig): PayPalService {
+        const key = PayPalService.createKey(config.loadingContext, config.clientKey);
+
+        if (!PayPalService.instances.has(key)) {
+            PayPalService.instances.set(key, new PayPalService(config));
+        }
+        return PayPalService.instances.get(key);
+    }
+
     private readonly sdkLoader: PayPalSdkLoader;
     private readonly loadingContext: string;
     private readonly clientKey: string;
@@ -9,7 +30,7 @@ class PayPalService {
     private loadingPromise: Promise<void>;
     public sdkInstance: any;
 
-    constructor({ loadingContext, clientKey, sdkLoader }: { loadingContext: string; clientKey: string; sdkLoader: PayPalSdkLoader }) {
+    private constructor({ loadingContext, clientKey, sdkLoader }: PayPalServiceConfig) {
         this.sdkLoader = sdkLoader;
         this.loadingContext = loadingContext;
         this.clientKey = clientKey;
@@ -21,6 +42,10 @@ class PayPalService {
     }
 
     public async initialize(): Promise<void> {
+        if (this.loadingPromise) {
+            return this.loadingPromise;
+        }
+
         const isSdkLoaderLoadedPromise = this.sdkLoader.isSdkLoaded();
         const tokenDataPromise = requestFastlaneToken(this.loadingContext, this.clientKey);
 
@@ -56,4 +81,4 @@ class PayPalService {
     }
 }
 
-export { PayPalService };
+export { PayPalService, type PayPalServiceConfig };
