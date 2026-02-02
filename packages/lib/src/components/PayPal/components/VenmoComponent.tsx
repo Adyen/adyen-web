@@ -12,7 +12,7 @@ export const VenmoComponent = ({ paypalService, onSubmit, onAdditionalDetails }:
     const [paymentSession, setPaymentSession] = useState();
 
     useEffect(() => {
-        const paypalPaymentSession = paypalService.sdkInstance.createVenmoOneTimePaymentSession({
+        const venmoPaymentSession = paypalService.sdkInstance.createVenmoOneTimePaymentSession({
             // Called when user approves a payment
             onApprove(data) {
                 console.log('Payment approved');
@@ -34,7 +34,7 @@ export const VenmoComponent = ({ paypalService, onSubmit, onAdditionalDetails }:
             }
         });
 
-        setPaymentSession(paypalPaymentSession);
+        setPaymentSession(venmoPaymentSession);
     }, [onAdditionalDetails]);
 
     const onClick = useCallback(async () => {
@@ -43,5 +43,5 @@ export const VenmoComponent = ({ paypalService, onSubmit, onAdditionalDetails }:
         await paymentSession.start({ presentationMode: 'auto' }, onSubmit());
     }, [paymentSession]);
 
-    return <venmo-button onclick={onClick} id="venmo-button" type="pay"></venmo-button>;
+    return <venmo-button onclick={onClick} id="venmo-blue" type="pay"></venmo-button>;
 };

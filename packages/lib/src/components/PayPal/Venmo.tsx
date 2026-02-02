@@ -129,7 +129,8 @@ class VenmoElement extends UIElement<PayPalConfiguration> {
     };
 
     public updateWithAction = (action: PaymentAction) => {
-        if (action.paymentMethodType !== this.type) throw new Error('Invalid Action');
+        console.log({ action });
+        if (action.paymentMethodType !== this.type && action.paymentMethodType !== 'paypal') throw new Error('Invalid Action');
 
         if (action.paymentData) {
             this.paymentData = action.paymentData;
