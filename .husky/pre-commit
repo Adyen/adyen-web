@@ -1,10 +1,14 @@
 # helper if you are running repo inside a container
-if which vagrant; then
-  vagrant ssh -- -t <<HEREDOC
-  cd workspace/adyen-web;
-  echo "head -n -1 ~/.bashrc > temp.txt ; mv temp.txt ~/.bashrc && yarn run validate:fix;" >> ~/.bashrc;
-  /bin/bash -i
-HEREDOC
-else
+if which yarn; then
   yarn run validate:fix
+else
+  if which vagrant; then
+    vagrant ssh -- -t <<HEREDOC
+    cd workspace/adyen-web;
+    echo "head -n -1 ~/.bashrc > temp.txt ; mv temp.txt ~/.bashrc && yarn run validate:fix;" >> ~/.bashrc;
+    /bin/bash -i
+HEREDOC
+  else
+    echo "vagrant not found, skipping validate:fix"
+  fi
 fi
