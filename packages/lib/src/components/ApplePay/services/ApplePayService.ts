@@ -1,13 +1,13 @@
-import { ApplePayPaymentAuthorizationResult } from '../types';
+import { ApplePayConfiguration, ApplePayPaymentAuthorizationResult } from '../types';
 
 export interface ApplePayServiceOptions {
     version: number;
-    onValidateMerchant: (resolve, reject, url) => void;
     onError: (error?: unknown) => void;
     onCancel?: (event: ApplePayJS.Event) => void;
-    onPaymentMethodSelected?: (resolve, reject, event: ApplePayJS.ApplePayPaymentMethodSelectedEvent) => void;
-    onShippingMethodSelected?: (resolve, reject, event: ApplePayJS.ApplePayShippingMethodSelectedEvent) => void;
-    onShippingContactSelected?: (resolve, reject, event: ApplePayJS.ApplePayShippingContactSelectedEvent) => void;
+    onValidateMerchant: ApplePayConfiguration['onValidateMerchant'];
+    onPaymentMethodSelected?: ApplePayConfiguration['onPaymentMethodSelected'];
+    onShippingMethodSelected?: ApplePayConfiguration['onShippingMethodSelected'];
+    onShippingContactSelected?: ApplePayConfiguration['onShippingContactSelected'];
     onPaymentAuthorized: (
         resolve: (result: ApplePayPaymentAuthorizationResult) => void,
         reject: (result: ApplePayPaymentAuthorizationResult) => void,
@@ -69,8 +69,10 @@ class ApplePayService {
      * @param onValidateMerchant - A promise implemented by the merchant that will resolve with the merchantSession
      * @see {@link https://developer.apple.com/documentation/apple_pay_on_the_web/apple_pay_js_api/providing_merchant_validation}
      */
-    onvalidatemerchant(event: ApplePayJS.ApplePayValidateMerchantEvent, onValidateMerchant) {
-        return new Promise((resolve, reject) => onValidateMerchant(resolve, reject, event.validationURL))
+    onvalidatemerchant(event: ApplePayJS.ApplePayValidateMerchantEvent, onValidateMerchant: ApplePayConfiguration['onValidateMerchant']) {
+        return new Promise((resolve, reject) => {
+            void onValidateMerchant(resolve, reject, event.validationURL);
+        })
             .then(response => {
                 this.session.completeMerchantValidation(response);
             })
@@ -110,7 +112,10 @@ class ApplePayService {
      * @param onPaymentMethodSelected - A promise that will complete the payment when resolved. Use this promise to process the payment.
      * @see {@link https://developer.apple.com/documentation/apple_pay_on_the_web/applepaysession/1778013-onpaymentmethodselected}
      */
-    onpaymentmethodselected(event: ApplePayJS.ApplePayPaymentMethodSelectedEvent, onPaymentMethodSelected) {
+    onpaymentmethodselected(
+        event: ApplePayJS.ApplePayPaymentMethodSelectedEvent,
+        onPaymentMethodSelected: ApplePayServiceOptions['onPaymentMethodSelected']
+    ) {
         return new Promise((resolve, reject) => onPaymentMethodSelected(resolve, reject, event))
             .then((paymentMethodUpdate: ApplePayJS.ApplePayPaymentMethodUpdate) => {
                 this.session.completePaymentMethodSelection(paymentMethodUpdate);
@@ -127,7 +132,10 @@ class ApplePayService {
      * @param onShippingContactSelected - A promise that will complete the selection of a shipping contact with an update.
      * @see {@link https://developer.apple.com/documentation/apple_pay_on_the_web/applepaysession/1778009-onshippingcontactselected}
      */
-    onshippingcontactselected(event: ApplePayJS.ApplePayShippingContactSelectedEvent, onShippingContactSelected) {
+    onshippingcontactselected(
+        event: ApplePayJS.ApplePayShippingContactSelectedEvent,
+        onShippingContactSelected: ApplePayConfiguration['onShippingContactSelected']
+    ) {
         return new Promise((resolve, reject) => onShippingContactSelected(resolve, reject, event))
             .then((shippingContactUpdate: ApplePayJS.ApplePayShippingContactUpdate) => {
                 this.session.completeShippingContactSelection(shippingContactUpdate);
@@ -144,7 +152,10 @@ class ApplePayService {
      * @param onShippingMethodSelected - A promise that will complete the selection of a shipping method with an update.
      * @see {@link https://developer.apple.com/documentation/apple_pay_on_the_web/applepaysession/1778009-onshippingcontactselected}
      */
-    onshippingmethodselected(event: ApplePayJS.ApplePayShippingMethodSelectedEvent, onShippingMethodSelected) {
+    onshippingmethodselected(
+        event: ApplePayJS.ApplePayShippingMethodSelectedEvent,
+        onShippingMethodSelected: ApplePayConfiguration['onShippingMethodSelected']
+    ) {
         return new Promise((resolve, reject) => onShippingMethodSelected(resolve, reject, event))
             .then((shippingMethodUpdate: ApplePayJS.ApplePayShippingMethodUpdate) => {
                 this.session.completeShippingMethodSelection(shippingMethodUpdate);
@@ -161,7 +172,7 @@ class ApplePayService {
      * @param onCancel -
      * @see {@link https://developer.apple.com/documentation/apple_pay_on_the_web/applepaysession/1778029-oncancel}
      */
-    oncancel(event: ApplePayJS.Event, onCancel): void {
+    oncancel(event: ApplePayJS.Event, onCancel: (event: ApplePayJS.Event) => void): void {
         onCancel(event);
     }
 }

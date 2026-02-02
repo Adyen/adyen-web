@@ -1,7 +1,7 @@
-export const isValidHttpUrl = (string, allowHttp = false) => {
-    let url;
+export const isValidHttpUrl = (httpUrl: string, allowHttp = false) => {
+    let url: URL;
     try {
-        url = new URL(string);
+        url = new URL(httpUrl);
     } catch (_) {
         return false;
     }
