@@ -6,23 +6,13 @@ import { StorybookIndex } from '../types';
 // This is relative to playwright root: adyen-web/lib/e2e-playwright/
 const STORYBOOK_INDEX_PATH = '../lib/storybook-static/index.json';
 
-const EXCLUDED_STORIES: string[] = [
-    /**
-     * Demos
-     */
-    'demos-sessionpatching--with-dropin',
-    'demos-sessionpatching--with-components'
-];
-
 const rawData = fs.readFileSync(STORYBOOK_INDEX_PATH, { encoding: 'utf-8' });
 const index = JSON.parse(rawData) as StorybookIndex;
 
 const allEntries = Object.values(index.entries);
 
 // Filter out non-story entries, docs, and explicitly excluded stories
-const storyIds = allEntries
-    .filter(entry => entry.type === 'story' && !entry.tags.includes('no-automated-visual-test') && !EXCLUDED_STORIES.includes(entry.id))
-    .map(entry => entry.id); // Extract the IDs
+const storyIds = allEntries.filter(entry => entry.type === 'story' && !entry.tags.includes('no-automated-visual-test')).map(entry => entry.id); // Extract the IDs
 
 const getTestTitle = (storyId: string) => {
     return `Visual Test: ${storyId.replace(/[^a-zA-Z0-9_.-]/g, '_')}`;

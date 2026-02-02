@@ -7,7 +7,8 @@ import type { StoryConfiguration } from '../../../types';
 type SessionPatchingStory = StoryConfiguration<{}>;
 
 const meta: Meta<SessionPatchingStory> = {
-    title: 'Demos/SessionPatching'
+    title: 'Demos/SessionPatching',
+    tags: ['no-automated-visual-test']
 };
 
 export const WithDropin: SessionPatchingStory = {
