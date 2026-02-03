@@ -15,6 +15,14 @@ declare module 'preact' {
                 id?: string;
                 type?: string;
             };
+            'paypal-pay-later-button': {
+                id?: string;
+                type?: string;
+            };
+            'paypal-credit-button': {
+                id?: string;
+                type?: string;
+            };
             'venmo-button': {
                 id?: string;
                 type?: string;

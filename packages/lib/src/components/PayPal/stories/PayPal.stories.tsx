@@ -45,3 +45,38 @@ export const Default: Story = {
         }
     }
 };
+
+export const MultiplePayPalButtons: Story = {
+    render: ({ componentConfiguration, ...checkoutConfig }) => {
+        return (
+            <Fragment>
+                <div>Pay {(checkoutConfig.amount * 2) / 100}</div>
+                <Checkout
+                    checkoutConfig={{
+                        ...checkoutConfig,
+                        amount: checkoutConfig.amount * 2
+                    }}
+                >
+                    {checkout => <ComponentContainer element={new Paypal(checkout, { ...componentConfiguration, useV6: true })} />}
+                </Checkout>
+                <div
+                    style={{
+                        marginTop: 24
+                    }}
+                >
+                    Pay {checkoutConfig.amount / 100}
+                </div>
+                <Checkout checkoutConfig={checkoutConfig}>
+                    {checkout => <ComponentContainer element={new Paypal(checkout, { ...componentConfiguration, useV6: true })} />}
+                </Checkout>
+            </Fragment>
+        );
+    },
+    args: {
+        componentConfiguration: {
+            blockPayPalCreditButton: false,
+            blockPayPalPayLaterButton: false,
+            blockPayPalVenmoButton: false
+        }
+    }
+};

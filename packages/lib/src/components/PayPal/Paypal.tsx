@@ -56,7 +56,14 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
             await this.paypalService.isPayPalSdkReady();
 
             const paymentMethods = await this.paypalService.sdkInstance.findEligibleMethods({
-                currencyCode: this.props.amount.currency
+                currencyCode: this.props.amount.currency,
+                countryCode: this.props.countryCode
+            });
+
+            console.log({
+                paypal: paymentMethods.isEligible('paypal'),
+                paylater: paymentMethods.isEligible('paylater'),
+                credit: paymentMethods.isEligible('credit')
             });
 
             if (!paymentMethods.isEligible('paypal')) {
@@ -269,7 +276,15 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
         const { onShippingAddressChange, onShippingOptionsChange, ...rest } = this.props;
 
         if (this.props.useV6) {
-            return <PayPalComponentV6 onSubmit={this.handleSubmit} onAdditionalDetails={this.handleOnApproveV6} paypalService={this.paypalService} />;
+            return (
+                <PayPalComponentV6
+                    onSubmit={this.handleSubmit}
+                    onAdditionalDetails={this.handleOnApproveV6}
+                    paypalService={this.paypalService}
+                    currencyCode={this.props.amount.currency}
+                    countryCode={this.props.countryCode}
+                />
+            );
         }
 
         return (
