@@ -1,5 +1,4 @@
 import { ComponentChildren, h } from 'preact';
-import { PaymentAmount } from '../../../types/global-types';
 import Language from '../../../language/Language';
 import { AbstractAnalyticsEvent } from '../../../core/Analytics/events/AbstractAnalyticsEvent';
 import { CountdownTime } from '../Countdown/types';
@@ -14,7 +13,6 @@ export type QRLoaderProps = Pick<
     url?: string;
     qrCodeData?: string;
     qrCodeImage?: string;
-    amount?: PaymentAmount;
     showAmount?: boolean;
     i18n?: Language;
     classNameModifiers?: string[];

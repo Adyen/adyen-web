@@ -2,52 +2,45 @@ import { h } from 'preact';
 import Button from '../Button';
 import { useCoreContext } from '../../../core/Context/CoreProvider';
 import { ButtonProps } from '../Button/types';
-import { payAmountLabel, secondaryAmountLabel } from './utils';
-import { PaymentAmountExtended } from '../../../types/global-types';
+import { createButtonLabel, createSecondaryLabel } from './utils';
 import SecondaryButtonLabel from './components/SecondaryButtonLabel';
+import { useAmount, useSecondaryAmount } from '../../../core/Context/AmountProvider';
+import type { PaymentAmount } from '../../../types';
+import { isAmountValid } from '../../../utils/amount-util';
 
 export interface PayButtonProps extends ButtonProps {
     /**
      * Class name modifiers will be used as: `adyen-checkout__image--${modifier}`
      */
     classNameModifiers?: string[];
+    /**
+     * Custom amount that can be passed to the button.
+     * This is useful when the amount is not available in the amount provider, such as Giftcard scenario where
+     * we need to display the remaining amount
+     */
+    customAmount?: PaymentAmount;
     label?: string;
-    amount?: PaymentAmountExtended;
-    secondaryAmount?: PaymentAmountExtended;
     status?: string;
     disabled?: boolean;
     icon?: string;
     onClick?: (e: h.JSX.TargetedMouseEvent<HTMLButtonElement>) => void;
 }
 
-const PayButton = ({ amount, secondaryAmount, classNameModifiers = [], label, ...props }: PayButtonProps) => {
+const PayButton = ({ customAmount, classNameModifiers = [], label, ...props }: PayButtonProps) => {
+    const { amount, isZeroAuth } = useAmount();
+    const { secondaryAmount } = useSecondaryAmount();
     const { i18n } = useCoreContext();
-    const isZeroAuth = amount && {}.hasOwnProperty.call(amount, 'value') && amount.value === 0;
-    const defaultLabel = isZeroAuth ? i18n.get('confirmPreauthorization') : payAmountLabel(i18n, amount);
 
-    /**
-     * Show the secondaryLabel if:
-     *  - it's not zero auth, and
-     *  - we don't have a predefined label (i.e. redirect, qrcode, await based comps...), and
-     *  - we do have an amount object (merchant might not be passing this in order to not show the amount on the button), and
-     *  - we have a secondaryAmount object with some properties
-     */
-    const hasValidAmount = amount && typeof amount.value === 'number' && !!amount.currency;
-    const hasSecondaryAmount = secondaryAmount && Object.keys(secondaryAmount).length > 0;
+    const buttonLabel = createButtonLabel(i18n, label, amount, isZeroAuth, customAmount);
+    const secondaryAmountLabel = createSecondaryLabel(i18n, secondaryAmount, isAmountValid(amount), isZeroAuth, label);
 
-    const secondaryLabel = !isZeroAuth && !label && hasValidAmount && hasSecondaryAmount ? secondaryAmountLabel(i18n, secondaryAmount) : null;
+    const isDisabled = props.disabled || props.status === 'loading';
 
     return (
-        <Button
-            {...props}
-            disabled={props.disabled || props.status === 'loading'}
-            classNameModifiers={[...classNameModifiers, 'pay']}
-            label={label || defaultLabel}
-        >
-            {secondaryLabel && <SecondaryButtonLabel label={secondaryLabel} />}
+        <Button {...props} disabled={isDisabled} classNameModifiers={[...classNameModifiers, 'pay']} label={buttonLabel}>
+            {secondaryAmountLabel && <SecondaryButtonLabel label={secondaryAmountLabel} />}
         </Button>
     );
 };
 
 export default PayButton;
-export { payAmountLabel };

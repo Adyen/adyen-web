@@ -3,6 +3,9 @@ import { ICashAppSdkLoader } from './CashAppSdkLoader';
 import { mock } from 'jest-mock-extended';
 import { CashAppPayEvents, CashAppServiceConfig, ICashAppSDK, ICashAppWindowObject } from './types';
 
+const TEST_AMOUNT = { value: 1000, currency: 'USD' };
+const TEST_ZERO_AMOUNT = { value: 0, currency: 'USD' };
+
 const configuration: CashAppServiceConfig = {
     useCashAppButtonUi: true,
     storePaymentMethod: false,
@@ -10,8 +13,7 @@ const configuration: CashAppServiceConfig = {
     redirectURL: window.location.href,
     environment: 'test',
     clientId: 'xxxx',
-    scopeId: 'zzzz',
-    amount: { value: 1000, currency: 'USD' }
+    scopeId: 'zzzz'
 };
 
 test('should initialize the CashAppPay SDK', async () => {
@@ -58,14 +60,14 @@ test('should create a customer request with one time action', async () => {
 
     const service = new CashAppService(sdkLoader, configuration);
     await service.initialize();
-    await service.createCustomerRequest();
+    await service.createCustomerRequest(TEST_AMOUNT);
 
     expect(cashAppSdk.customerRequest).toBeCalledWith({
         referenceId: configuration.referenceId,
         redirectURL: configuration.redirectURL,
         actions: {
             payment: {
-                amount: configuration.amount,
+                amount: TEST_AMOUNT,
                 scopeId: configuration.scopeId
             }
         }
@@ -80,10 +82,10 @@ test('should create a customer request with on file action', async () => {
     sdkLoader.load.mockResolvedValue(cashAppWindowObject);
     cashAppWindowObject.pay.mockResolvedValue(cashAppSdk);
 
-    const service = new CashAppService(sdkLoader, { ...configuration, amount: { value: 0, currency: 'USD' }, storePaymentMethod: true });
+    const service = new CashAppService(sdkLoader, { ...configuration, storePaymentMethod: true });
 
     await service.initialize();
-    await service.createCustomerRequest();
+    await service.createCustomerRequest(TEST_ZERO_AMOUNT);
 
     expect(cashAppSdk.customerRequest).toBeCalledWith({
         referenceId: configuration.referenceId,
@@ -107,14 +109,14 @@ test('should create a customer request with on file AND one time actions', async
     const service = new CashAppService(sdkLoader, { ...configuration, storePaymentMethod: true });
 
     await service.initialize();
-    await service.createCustomerRequest();
+    await service.createCustomerRequest(TEST_AMOUNT);
 
     expect(cashAppSdk.customerRequest).toBeCalledWith({
         referenceId: configuration.referenceId,
         redirectURL: configuration.redirectURL,
         actions: {
             payment: {
-                amount: configuration.amount,
+                amount: TEST_AMOUNT,
                 scopeId: configuration.scopeId
             },
             onFile: {
@@ -137,14 +139,14 @@ test('should be able to enable/disable on file action (Scenario: user tick/untic
     await service.initialize();
 
     service.setStorePaymentMethod(true);
-    await service.createCustomerRequest();
+    await service.createCustomerRequest(TEST_AMOUNT);
 
     expect(cashAppSdk.customerRequest).toBeCalledWith({
         referenceId: configuration.referenceId,
         redirectURL: configuration.redirectURL,
         actions: {
             payment: {
-                amount: configuration.amount,
+                amount: TEST_AMOUNT,
                 scopeId: configuration.scopeId
             },
             onFile: {

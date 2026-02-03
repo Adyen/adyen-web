@@ -68,7 +68,6 @@ export default function AmazonPayComponent(props: AmazonPayComponentProps) {
                 {props.showOrderButton && (
                     <OrderButton
                         amazonCheckoutSessionId={props.amazonCheckoutSessionId}
-                        amount={props.amount}
                         chargePermissionType={props.chargePermissionType}
                         recurringMetadata={props.recurringMetadata}
                         clientKey={props.clientKey}

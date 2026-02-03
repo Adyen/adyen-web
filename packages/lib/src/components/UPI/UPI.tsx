@@ -109,7 +109,6 @@ class UPI extends UIElement<UPIConfiguration> {
                         awaitText={this.props.i18n.get('await.waitForConfirmation')}
                         onComplete={this.onComplete}
                         brandLogo={this.icon}
-                        amount={this.props.amount}
                     />
                 );
             default:
@@ -123,7 +122,6 @@ class UPI extends UIElement<UPIConfiguration> {
                         apps={this.props.apps}
                         mode={this.mode}
                         showPayButton={this.props.showPayButton}
-                        amount={this.props.amount}
                         mandate={this.props.mandate}
                     />
                 );

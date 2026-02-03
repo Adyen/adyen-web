@@ -93,7 +93,8 @@ const config = tseslint.config(
                 {
                     ignoreRestSiblings: true,
                     vars: 'local',
-                    varsIgnorePattern: '^h$'
+                    varsIgnorePattern: '^h$',
+                    argsIgnorePattern: '^_'
                 }
             ],
             '@typescript-eslint/no-empty-function': [

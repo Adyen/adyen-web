@@ -20,7 +20,7 @@ import { formatCustomTranslations, formatLocale } from '../language/utils';
 import { resolveEnvironments } from './Environment';
 import { LIBRARY_BUNDLE_TYPE, LIBRARY_VERSION } from './config';
 
-import type { PaymentAction, PaymentResponseData } from '../types/global-types';
+import type { PaymentAction, PaymentAmount, PaymentResponseData } from '../types/global-types';
 import type { CoreConfiguration, ICore, AdditionalDetailsData, CoreModules } from './types';
 import type { Translations } from '../language/types';
 import type { UIElementProps } from '../components/internal/UIElement/types';
@@ -28,6 +28,7 @@ import { AnalyticsLogEvent, LogEventType } from './Analytics/events/AnalyticsLog
 import CancelError from './Errors/CancelError';
 import { AnalyticsService } from './Analytics/AnalyticsService';
 import { AnalyticsEventQueue } from './Analytics/AnalyticsEventQueue';
+import { isAmountValid } from '../utils/amount-util';
 
 class Core implements ICore {
     public session?: Session;
@@ -73,6 +74,7 @@ class Core implements ICore {
         assertConfigurationPropertiesAreValid(props);
 
         this.createFromAction = this.createFromAction.bind(this);
+        this.update = this.update.bind(this);
 
         this.setOptions({ ...defaultProps, ...props });
 
@@ -278,24 +280,63 @@ class Core implements ICore {
     /**
      * Updates global configurations, resets the internal state and remounts each element.
      *
-     * @param options - props to update
-     * @returns this - the element instance
+     * @param props - props to update
+     * @param options - Can be used to avoid remounting the elements
+     * @returns this - the Core instance
      */
-    public update = (options: Partial<CoreConfiguration> = {}): Promise<this> => {
-        this.setOptions(options);
+    public update(props: Partial<CoreConfiguration> = {}, { shouldReinitializeCheckout = true } = {}): Promise<this> {
+        if (shouldReinitializeCheckout) {
+            this.setOptions(props);
 
-        return this.initialize().then(() => {
-            this.components.forEach(component => {
-                // We update only with the new options that have been received
-                const newProps: Partial<UIElementProps> = {
-                    ...options,
-                    ...(this.session && { session: this.session })
-                };
-                component.update(newProps);
+            return this.initialize().then(() => {
+                this.components.forEach(component => {
+                    // We update only with the new options that have been received
+                    const newProps: Partial<UIElementProps> = {
+                        ...props,
+                        ...(this.session && { session: this.session })
+                    };
+                    component.update(newProps);
+                });
+                return this;
             });
-            return this;
+        }
+
+        const { amount, secondaryAmount } = props;
+
+        if (amount || secondaryAmount) {
+            this.triggerAmountUpdate(amount, secondaryAmount);
+        }
+
+        return Promise.resolve(this);
+    }
+
+    /**
+     * Validates and propagates amount updates to all mounted components.
+     *
+     * @param amount - Primary payment amount object (required)
+     * @param secondaryAmount - Optional secondary amount for display purposes (e.g., converted currency)
+     * @internal
+     */
+    private triggerAmountUpdate(amount: PaymentAmount, secondaryAmount?: PaymentAmount): void {
+        if (!isAmountValid(amount)) {
+            console.warn('Core update(): Update canceled. Invalid amount object');
+            return;
+        }
+
+        if (secondaryAmount && !isAmountValid(secondaryAmount)) {
+            console.warn('Core update(): Update canceled. Invalid secondary amount object');
+            return;
+        }
+
+        this.setOptions({
+            amount,
+            ...(secondaryAmount && { secondaryAmount })
         });
-    };
+
+        this.components.forEach(component => {
+            component.updateAmount(amount, secondaryAmount);
+        });
+    }
 
     /**
      * Remove the reference of a component

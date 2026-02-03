@@ -53,7 +53,6 @@ export const CardFieldsWrapper = ({
     onAddressSelected,
     addressSearchDebounceMs,
     // For this comp (props passed through from CardInput)
-    amount,
     billingAddressRequired,
     billingAddressRequiredFields,
     billingAddressAllowedCountries,
@@ -177,7 +176,6 @@ export const CardFieldsWrapper = ({
 
             {hasInstallments && (
                 <Installments
-                    amount={amount}
                     brand={sfpState.brand}
                     installmentOptions={installmentOptions}
                     onChange={handleInstallments}

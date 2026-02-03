@@ -2,12 +2,10 @@ import { h } from 'preact';
 import Session from '../../../core/CheckoutSession';
 import Language from '../../../language';
 import UIElement from './UIElement';
-import type { PaymentAction, PaymentAmount, PaymentAmountExtended } from '../../../types/global-types';
+import type { PaymentAction, PaymentAmount } from '../../../types/global-types';
 import type { BaseElementProps } from '../BaseElement/types';
-import type { PayButtonProps } from '../PayButton/PayButton';
 import type { CoreConfiguration } from '../../../core/types';
-
-export type PayButtonFunctionProps = Omit<PayButtonProps, 'amount'>;
+import { PayButtonProps } from '../PayButton/PayButton';
 
 type CoreCallbacks = Pick<
     CoreConfiguration,
@@ -68,7 +66,7 @@ export type UIElementProps = {
         name?: string;
         icon?: string;
         amount?: PaymentAmount;
-        secondaryAmount?: PaymentAmountExtended;
+        secondaryAmount?: PaymentAmount;
 
         /**
          * Show/Hide pay button
@@ -77,7 +75,7 @@ export type UIElementProps = {
         showPayButton?: boolean;
 
         /** @internal */
-        payButton?: (options: PayButtonFunctionProps) => h.JSX.Element;
+        payButton?: (options: PayButtonProps) => h.JSX.Element;
 
         /** @internal */
         loadingContext?: string;
