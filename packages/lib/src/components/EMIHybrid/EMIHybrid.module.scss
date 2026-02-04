@@ -1,0 +1,32 @@
+@import 'styles/variable-generator';
+
+.emiHybridComponent {
+    display: flex;
+    flex-direction: column;
+    gap: token(spacer-120);
+}
+
+.header {
+    display: flex;
+    flex-direction: column;
+    gap: token(spacer-070);
+}
+
+.title {
+    font-size: token(font-size-200);
+    font-weight: token(font-weight-medium);
+    color: token(color-label-primary);
+}
+
+.description {
+    font-size: token(font-size-100);
+    color: token(color-label-secondary);
+}
+
+.childSlot {
+    min-height: 100px;
+}
+
+.payButtonWrapper {
+    margin-top: token(spacer-120);
+}

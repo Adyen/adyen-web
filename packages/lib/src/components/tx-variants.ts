@@ -186,6 +186,7 @@ export enum TxVariants {
     /** Giftcard */
 
     /** EMI */
-    emi = 'emi'
+    emi = 'emi',
+    emi_hybrid = 'emi_hybrid'
     /** EMI */
 }
