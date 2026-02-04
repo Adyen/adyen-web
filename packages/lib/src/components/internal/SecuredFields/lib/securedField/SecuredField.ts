@@ -286,17 +286,18 @@ class SecuredField extends AbstractSecuredField {
                 this.onKeyPressedCallback(feedbackObj);
                 break;
 
-            case 'encryptionError':
+            case 'encryptionError': {
                 console.log('### SecuredField::postMessageListenerFn::encryptionError:: feedbackObj ', feedbackObj);
-                // const event = new AnalyticsErrorEvent({
-                //     component: this.componentType,
-                //     code: feedbackObj.code,
-                //     errorType: ErrorEventType.sdkError,
-                //     message: `${feedbackObj.error}. Field= ${this.sfConfig.fieldType}`
-                // });
-                //
-                // this.submitAnalytics?.(event);
+                const event = new AnalyticsErrorEvent({
+                    component: this.componentType,
+                    code: feedbackObj.code,
+                    errorType: ErrorEventType.internal,
+                    message: `${feedbackObj.error}. Field= ${this.sfConfig.fieldType}`
+                });
+
+                this.submitAnalytics?.(event);
                 break;
+            }
 
             /**
              * Validate, because action =
