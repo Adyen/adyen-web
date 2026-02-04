@@ -12,8 +12,19 @@ const meta: MetaConfiguration<EMIConfiguration> = {
 };
 
 export const Default: EMIStory = {
+    args: {
+        countryCode: 'IN'
+    },
+
     render: ({ componentConfiguration, ...checkoutConfig }) => (
-        <Checkout checkoutConfig={checkoutConfig}>{checkout => <ComponentContainer element={new EMI(checkout, componentConfiguration)} />}</Checkout>
+        <Checkout
+            checkoutConfig={{
+                ...checkoutConfig,
+                showPayButton: true
+            }}
+        >
+            {checkout => <ComponentContainer element={new EMI(checkout, componentConfiguration)} />}
+        </Checkout>
     )
 };
 

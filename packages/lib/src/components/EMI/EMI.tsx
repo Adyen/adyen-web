@@ -18,18 +18,20 @@ export class EMI extends UIElement<EMIConfiguration> {
 
         this.activeFundingSource = EMIFundingSource.CARD;
 
+        const cardElement = new CardElement(checkout, {
+            ...props?.fundingSourceConfiguration?.card,
+            showPayButton: false
+        });
+
+        const upiElement = new UPIElement(checkout, {
+            ...props?.fundingSourceConfiguration?.upi,
+            defaultMode: 'qrCode',
+            showPayButton: false
+        });
+
         this.fundingSourceUIElements = {
-            [EMIFundingSource.CARD]: new CardElement(checkout, {
-                elementRef: this.elementRef,
-                ...props?.fundingSourceConfiguration?.card,
-                isDropin: props.isDropin
-            }),
-            [EMIFundingSource.UPI]: new UPIElement(checkout, {
-                elementRef: this.elementRef,
-                ...props?.fundingSourceConfiguration?.upi,
-                defaultMode: 'qrCode',
-                isDropin: props.isDropin
-            })
+            [EMIFundingSource.CARD]: cardElement,
+            [EMIFundingSource.UPI]: upiElement
         };
     }
 
@@ -45,15 +47,29 @@ export class EMI extends UIElement<EMIConfiguration> {
         return this.fundingSourceUIElements.upi as UPIElement;
     }
 
+    get isValid(): boolean {
+        return this.fundingSourceUIElements[this.activeFundingSource].isValid;
+    }
+
     // @ts-ignore
     formatData() {
         return {
             ...this.fundingSourceUIElements[this.activeFundingSource].formatData()
+            // paymentMethod: {
+            //     type: this.type
+            // }
         };
     }
 
-    get isValid() {
-        return this.fundingSourceUIElements[this.activeFundingSource].isValid;
+    public override submit(): void {
+        const activeElement = this.fundingSourceUIElements[this.activeFundingSource];
+
+        if (!this.isValid) {
+            activeElement.showValidation();
+            return;
+        }
+
+        super.submit();
     }
 
     protected override componentToRender(): h.JSX.Element {
@@ -62,6 +78,8 @@ export class EMI extends UIElement<EMIConfiguration> {
                 defaultActiveFundingSource={this.activeFundingSource}
                 fundingSourceUIElements={this.fundingSourceUIElements}
                 onSetActiveFundingSource={this.setActiveFundingSource.bind(this)}
+                showPayButton={this.props.showPayButton}
+                payButton={this.payButton.bind(this)}
             />
         );
     }
