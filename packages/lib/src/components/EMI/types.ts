@@ -12,3 +12,9 @@ export enum EMIFundingSource {
     CARD = TxVariants.card,
     UPI = TxVariants.upi
 }
+
+export interface EMIOfferFormData {
+    provider: string;
+    discount: string;
+    plan: string;
+}
