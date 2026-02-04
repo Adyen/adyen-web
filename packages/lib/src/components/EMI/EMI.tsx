@@ -43,8 +43,8 @@ export class EMI extends UIElement<EMIConfiguration> {
         this.activeFundingSource = fundingSource;
     }
 
-    private setOfferFormState(data: EMIOfferFormData) {
-        this.setState({ offerFormData: data });
+    private setOfferFormState(data: EMIOfferFormData, isValid: boolean) {
+        this.setState({ offerFormData: data, offerFormValid: isValid });
     }
 
     get card(): CardElement {
@@ -56,9 +56,7 @@ export class EMI extends UIElement<EMIConfiguration> {
     }
 
     get isValid(): boolean {
-        const offerFormData = this.state.offerFormData as EMIOfferFormData;
-        const isOfferFormValid = !!offerFormData?.provider && !!offerFormData?.discount && !!offerFormData?.plan;
-        return isOfferFormValid && this.fundingSourceUIElements[this.activeFundingSource].isValid;
+        return !!this.state.offerFormValid && this.fundingSourceUIElements[this.activeFundingSource].isValid;
     }
 
     // @ts-ignore
@@ -72,7 +70,11 @@ export class EMI extends UIElement<EMIConfiguration> {
 
     public override showValidation(): this {
         super.showValidation();
-        this.fundingSourceUIElements[this.activeFundingSource].showValidation();
+        // Only trigger funding source validation if offer form is valid
+        // This ensures focus stays on the offer form fields when they have errors
+        if (this.state.offerFormValid) {
+            this.fundingSourceUIElements[this.activeFundingSource].showValidation();
+        }
         return this;
     }
 

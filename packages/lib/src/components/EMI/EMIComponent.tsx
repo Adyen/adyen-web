@@ -36,7 +36,7 @@ interface EMIComponentProps {
     defaultActiveFundingSource: EMIFundingSource;
     fundingSourceUIElements: Record<EMIFundingSource, CardElement | UPIElement>;
     onSetActiveFundingSource: (fundingSource: EMIFundingSource) => void;
-    onSetOfferFormState: (data: EMIOfferFormData) => void;
+    onSetOfferFormState: (data: EMIOfferFormData, isValid: boolean) => void;
     setComponentRef: (ref: ComponentMethodsRef) => void;
     showPayButton: boolean;
     payButton: (props: PayButtonFunctionProps) => h.JSX.Element;
@@ -57,13 +57,19 @@ export const EMIComponent = ({
     const [status, setStatus] = useState<UIElementStatus>('ready');
     const [activeFundingSource, setActiveFundingSource] = useState<EMIFundingSource>(defaultActiveFundingSource);
 
-    const { handleChangeFor, triggerValidation, data, errors } = useForm<EMIOfferFormData>({
+    const formContainerRef = useRef<HTMLDivElement>(null);
+
+    const { handleChangeFor, triggerValidation, isValid, data, errors } = useForm<EMIOfferFormData>({
         schema,
         rules: validationRules
     });
 
+    const showValidation = () => {
+        triggerValidation();
+    };
+
     const componentRef = useRef<ComponentMethodsRef>({
-        showValidation: triggerValidation,
+        showValidation,
         setStatus
     });
 
@@ -72,8 +78,8 @@ export const EMIComponent = ({
     }, [setComponentRef]);
 
     useEffect(() => {
-        onSetOfferFormState(data as EMIOfferFormData);
-    }, [data]);
+        onSetOfferFormState(data as EMIOfferFormData, isValid);
+    }, [data, isValid]);
 
     const handleFundingSourceChange = (fundingSource: EMIFundingSource) => {
         setActiveFundingSource(fundingSource);
@@ -82,7 +88,9 @@ export const EMIComponent = ({
 
     return (
         <div>
-            <EMIOfferForm provider={data.provider} discount={data.discount} plan={data.plan} onFieldChange={handleChangeFor} errors={errors} />
+            <div ref={formContainerRef}>
+                <EMIOfferForm provider={data.provider} discount={data.discount} plan={data.plan} onFieldChange={handleChangeFor} errors={errors} />
+            </div>
             <SegmentedControl
                 onChange={source => handleFundingSourceChange(source)}
                 selectedValue={activeFundingSource}
