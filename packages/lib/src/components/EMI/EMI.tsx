@@ -23,7 +23,11 @@ export class EMI extends UIElement<EMIConfiguration> {
         const cardElement = new CardElement(checkout, {
             ...props?.fundingSourceConfiguration?.card,
             elementRef: this.elementRef,
-            showPayButton: false
+            showPayButton: false,
+            onBinValue: (binData: any) => {
+                console.log('Custom onBinValue function in EMI component:', { binData });
+                this.props.fundingSourceConfiguration?.card?.onBinValue?.(binData);
+            }
         });
 
         const upiElement = new UPIElement(checkout, {
@@ -61,7 +65,6 @@ export class EMI extends UIElement<EMIConfiguration> {
 
     // @ts-ignore
     formatData() {
-        console.log('emi formatData');
         return {
             ...this.fundingSourceUIElements[this.activeFundingSource].formatData(),
             emiOfferForm: this.state.offerFormData
@@ -70,11 +73,7 @@ export class EMI extends UIElement<EMIConfiguration> {
 
     public override showValidation(): this {
         super.showValidation();
-        // Only trigger funding source validation if offer form is valid
-        // This ensures focus stays on the offer form fields when they have errors
-        if (this.state.offerFormValid) {
-            this.fundingSourceUIElements[this.activeFundingSource].showValidation();
-        }
+        this.fundingSourceUIElements[this.activeFundingSource].showValidation();
         return this;
     }
 

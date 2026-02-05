@@ -8,7 +8,8 @@ import { EMIConfiguration } from './types';
 type EMIStory = StoryConfiguration<EMIConfiguration>;
 
 const meta: MetaConfiguration<EMIConfiguration> = {
-    title: 'Components/EMI'
+    title: 'Components/EMI',
+    tags: ['no-automated-visual-test']
 };
 
 export const Default: EMIStory = {
@@ -23,7 +24,22 @@ export const Default: EMIStory = {
                 showPayButton: true
             }}
         >
-            {checkout => <ComponentContainer element={new EMI(checkout, componentConfiguration)} />}
+            {checkout => {
+                const emi = new EMI(checkout, {
+                    ...componentConfiguration,
+                    fundingSourceConfiguration: {
+                        card: {
+                            onBinValue: (binData: any) => {
+                                console.log('Merchant onBinValue prop:', binData);
+                            }
+                        }
+                    }
+                });
+
+                window.emi = emi;
+
+                return <ComponentContainer element={emi} />;
+            }}
         </Checkout>
     )
 };
