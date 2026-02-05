@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import { useState, useEffect, useRef } from 'preact/hooks';
-import { EMIFundingSource, EMIOfferFormData } from './types';
+import { EMIFundingSource, EMIOfferFormData, EMIOffersData } from './types';
 import CardElement from '../Card';
 import UPIElement from '../UPI';
 import { SegmentedControl } from '../internal/SegmentedControl';
@@ -40,6 +40,10 @@ interface EMIComponentProps {
     setComponentRef: (ref: ComponentMethodsRef) => void;
     showPayButton: boolean;
     payButton: (props: PayButtonFunctionProps) => h.JSX.Element;
+    offersData?: EMIOffersData;
+    cardBrand?: string;
+    amount?: number;
+    currency?: string;
 }
 
 export const EMIComponent = ({
@@ -49,7 +53,11 @@ export const EMIComponent = ({
     onSetOfferFormState,
     setComponentRef,
     showPayButton,
-    payButton
+    payButton,
+    offersData,
+    cardBrand,
+    amount,
+    currency
 }: Readonly<EMIComponentProps>) => {
     const { i18n } = useCoreContext();
     const getImage = useImage();
@@ -89,7 +97,21 @@ export const EMIComponent = ({
     return (
         <div>
             <div ref={formContainerRef}>
-                <EMIOfferForm provider={data.provider} discount={data.discount} plan={data.plan} onFieldChange={handleChangeFor} errors={errors} />
+                <EMIOfferForm
+                    provider={data.provider}
+                    discount={data.discount}
+                    plan={data.plan}
+                    onFieldChange={handleChangeFor}
+                    errors={errors}
+                    providers={offersData?.providers}
+                    discounts={offersData?.discounts}
+                    plans={offersData?.plans}
+                    rawOffers={offersData?.rawOffers}
+                    rawDetails={offersData?.rawDetails}
+                    cardBrand={cardBrand}
+                    amount={amount}
+                    currency={currency}
+                />
             </div>
             <SegmentedControl
                 onChange={source => handleFundingSourceChange(source)}

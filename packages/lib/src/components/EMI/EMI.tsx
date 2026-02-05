@@ -7,6 +7,7 @@ import UPIElement from '../UPI';
 import { EMIComponent } from './EMIComponent';
 
 import type { UIElementStatus } from '../internal/UIElement/types';
+import type { BinLookupResponse } from '../Card/types';
 
 export class EMI extends UIElement<EMIConfiguration> {
     public static readonly type = TxVariants.emi;
@@ -24,10 +25,7 @@ export class EMI extends UIElement<EMIConfiguration> {
             ...props?.fundingSourceConfiguration?.card,
             elementRef: this.elementRef,
             showPayButton: false,
-            onBinValue: (binData: any) => {
-                console.log('Custom onBinValue function in EMI component:', { binData });
-                this.props.fundingSourceConfiguration?.card?.onBinValue?.(binData);
-            }
+            onBinLookup: this.handleBinLookup.bind(this)
         });
 
         const upiElement = new UPIElement(checkout, {
@@ -41,6 +39,11 @@ export class EMI extends UIElement<EMIConfiguration> {
             [EMIFundingSource.CARD]: cardElement,
             [EMIFundingSource.UPI]: upiElement
         };
+    }
+
+    private handleBinLookup(binLookupResponse: BinLookupResponse) {
+        const detectedBrand = binLookupResponse?.supportedBrands?.[0]?.brand;
+        this.setState({ cardBrand: detectedBrand });
     }
 
     private setActiveFundingSource(fundingSource: EMIFundingSource) {
@@ -93,6 +96,10 @@ export class EMI extends UIElement<EMIConfiguration> {
                 setComponentRef={this.setComponentRef}
                 showPayButton={this.props.showPayButton}
                 payButton={this.payButton.bind(this)}
+                offersData={this.props.offersData}
+                cardBrand={this.state.cardBrand}
+                amount={this.props.amount?.value}
+                currency={this.props.amount?.currency}
             />
         );
     }

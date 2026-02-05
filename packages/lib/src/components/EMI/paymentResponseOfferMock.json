@@ -1,0 +1,102 @@
+{
+      "name": "EMI (Equated Monthly Installments)",
+      "type": "emi",
+      "offers": [
+        {
+          "id": "NC_HDFC_VISA_01",
+          "type": "noCostEmi",
+          "bank": "HDFC",
+          "brand": "visa",
+          "tag": "No Cost EMI",
+          "description": "Interest subvented by merchant on 3 & 6 month tenures",
+          "minAmount": {
+            "value": 500000,
+            "currency": "INR"
+          },
+          "applicableTenures": [
+            3,
+            6
+          ]
+        },
+        {
+          "id": "DISCOUNT_ICICI_02",
+          "type": "instantDiscount",
+          "bank": "ICICI",
+          "tag": "Flat ₹1000 Off",
+          "description": "Instant discount on ICICI Credit Cards",
+          "discountAmount": {
+            "value": 100000,
+            "currency": "INR"
+          },
+          "minAmount": {
+            "value": 1000000,
+            "currency": "INR"
+          }
+        },
+        {
+          "id": "CASHBACK_UPI_03",
+          "type": "cashback",
+          "tag": "₹50 UPI Cashback",
+          "description": "Cashback credited to bank account within 48 hours",
+          "brand": "gpay",
+          "fixedAmount": {
+            "value": 5000,
+            "currency": "INR"
+          }
+        }
+      ],
+      "details": [
+        {
+          "key": "emiType",
+          "type": "selection",
+          "items": [
+            {
+              "id": "emi_scheme",
+              "name": "Card EMI",
+              "brands": [
+                "visa",
+                "mc",
+                "rupay"
+              ],
+              "configuration": {
+                "installmentOptions": {
+                  "visa": {
+                    "values": [
+                      3,
+                      6,
+                      9,
+                      12,
+                      18,
+                      24
+                    ]
+                  },
+                  "mc": {
+                    "values": [
+                      3,
+                      6,
+                      9,
+                      12
+                    ]
+                  },
+                  "rupay": {
+                    "values": [
+                      3,
+                      6
+                    ]
+                  }
+                }
+              }
+            },
+            {
+              "id": "emi_upi",
+              "name": "UPI Autopay",
+              "brands": [
+                "gpay",
+                "phonepe",
+                "paytm"
+              ]
+            }
+          ]
+        }
+      ]
+    }
