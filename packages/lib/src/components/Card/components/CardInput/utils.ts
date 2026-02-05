@@ -13,7 +13,7 @@ import {
 } from './layouts';
 import { AddressSpecifications, StringObject } from '../../../internal/Address/types';
 import { PARTIAL_ADDRESS_SCHEMA } from '../../../internal/Address/constants';
-import { InstallmentsObj } from './components/Installments/Installments';
+import { InstallmentsState } from './components/Installments/Installments';
 import { SFPProps } from '../../../internal/SecuredFields/SFP/types';
 import { BRAND_READABLE_NAME_MAP } from '../../../internal/SecuredFields/lib/constants';
 import useImage, { UseImageHookType } from '../../../../core/Context/useImage';
@@ -33,7 +33,7 @@ export const getCardImageUrl = (brand: string, getImage: UseImageHookType): stri
  * Verifies that installment object is valid to send to the Backend.
  * Valid means that it has 'revolving' plan set, or the number of installments is bigger than one
  */
-export const hasValidInstallmentsObject = (installments?: InstallmentsObj) => {
+export const hasValidInstallmentsObject = (installments?: InstallmentsState) => {
     return installments?.plan === 'revolving' || installments?.value > 1;
 };
 
