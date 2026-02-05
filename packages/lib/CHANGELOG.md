@@ -1,5 +1,11 @@
 # @adyen/adyen-web
 
+## 6.31.0
+
+### Minor Changes
+
+- New: Allowing amount updates without re-initializing Drop-in/Components ([#3741](https://github.com/Adyen/adyen-web/pull/3741))
+
 ## 6.30.0
 
 ### Minor Changes
