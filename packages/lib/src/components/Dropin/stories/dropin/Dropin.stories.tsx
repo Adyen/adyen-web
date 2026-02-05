@@ -35,6 +35,12 @@ const meta: MetaConfiguration<DropinConfiguration> = {
                 googlepay: {
                     buttonType: 'plain',
                     challengeWindowSize: '05'
+                },
+                paypal: {
+                    useV6: true
+                },
+                venmo: {
+                    useV6: true
                 }
             }
         }

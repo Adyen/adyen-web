@@ -130,7 +130,25 @@ class Core implements ICore {
                         countryCode: this.options.countryCode || countryCode
                     });
 
-                    this.createPaymentMethodsList(paymentMethods);
+                    let mockedPaymentMethods = paymentMethods;
+
+                    // mock vemno payment method
+                    const paypal = paymentMethods.paymentMethods.find(pm => pm.type === 'paypal');
+                    if (paypal) {
+                        mockedPaymentMethods = {
+                            ...mockedPaymentMethods,
+                            paymentMethods: [
+                                ...mockedPaymentMethods.paymentMethods,
+                                {
+                                    ...paypal,
+                                    name: 'Venmo',
+                                    type: 'venmo'
+                                }
+                            ]
+                        };
+                    }
+
+                    this.createPaymentMethodsList(mockedPaymentMethods);
 
                     return this;
                 })
