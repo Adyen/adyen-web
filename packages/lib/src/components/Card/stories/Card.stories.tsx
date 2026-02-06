@@ -130,7 +130,7 @@ export const WithInstallments: CardStory = {
                 },
                 visa: {
                     values: [1, 2, 3, 4],
-                    plans: ['regular', 'revolving']
+                    plans: ['regular', 'revolving', 'bonus']
                 }
             }
         }

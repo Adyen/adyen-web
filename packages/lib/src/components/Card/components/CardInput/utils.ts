@@ -30,11 +30,13 @@ export const getCardImageUrl = (brand: string, getImage: UseImageHookType): stri
 };
 
 /**
- * Verifies that installment object is valid to send to the Backend.
- * Valid means that it has 'revolving' plan set, or the number of installments is bigger than one
+ * 'installments' should be added to the payload if it has plan as revolving or bonus
+ * or value greater than 1.
+ *
+ * More about it here: COWEB-1070
  */
-export const hasValidInstallmentsObject = (installments?: InstallmentsState) => {
-    return installments?.plan === 'revolving' || installments?.value > 1;
+export const shouldIncludeInstallmentsInPaymentData = (installment?: InstallmentsState): boolean => {
+    return ['revolving', 'bonus'].includes(installment?.plan) || installment?.value > 1;
 };
 
 export const getLayout = ({

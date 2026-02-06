@@ -11,14 +11,16 @@ import { useAmount } from '../../../../../../core/Context/AmountProvider';
 
 import './Installments.scss';
 
+export type InstallmentPlan = 'revolving' | 'bonus' | 'regular';
+
 export interface InstallmentsState {
-    value: number;
-    plan?: 'revolving' | 'bonus';
+    value: number | null;
+    plan?: InstallmentPlan;
 }
 
 export interface InstallmentOption {
     values: number[];
-    plans?: string[];
+    plans?: InstallmentPlan[];
     preselectedValue?: number;
 }
 
@@ -27,14 +29,12 @@ export interface InstallmentOptions {
 }
 export interface InstallmentsProps {
     brand?: string;
-    onChange?: (installmentObject: object) => void;
+    onChange?: (installmentObject: InstallmentsState) => void;
     installmentOptions: InstallmentOptions;
     type?: string;
 }
 
-function createRadioGroupItems(installmentOption?: InstallmentOption, hasRadioButtonUI?: boolean): { id: string; name: string }[] {
-    console.log('createRadioGroupItems executed');
-
+function createRadioGroupItems(hasRadioButtonUI: boolean, plans?: InstallmentPlan[]): { id: string; name: string }[] {
     if (!hasRadioButtonUI) {
         return [];
     }
@@ -42,8 +42,8 @@ function createRadioGroupItems(installmentOption?: InstallmentOption, hasRadioBu
     return [
         { id: 'onetime', name: 'installments.oneTime' },
         { id: 'installments', name: 'installments.installments' },
-        ...(installmentOption?.plans?.includes('revolving') ? [{ id: 'revolving', name: 'installments.revolving' }] : []),
-        ...(installmentOption?.plans?.includes('bonus') ? [{ id: 'bonus', name: 'installments.bonus' }] : [])
+        ...(plans?.includes('revolving') ? [{ id: 'revolving', name: 'installments.revolving' }] : []),
+        ...(plans?.includes('bonus') ? [{ id: 'bonus', name: 'installments.bonus' }] : [])
     ];
 }
 
@@ -57,7 +57,7 @@ function Installments(props: Readonly<InstallmentsProps>) {
     const [radioBtnValue, setRadioBtnValue] = useState('onetime');
 
     const hasRadioButtonUI = installmentOptions?.plans?.includes('revolving') || installmentOptions?.plans?.includes('bonus');
-    const radioGroupItems = useMemo(() => createRadioGroupItems(installmentOptions, hasRadioButtonUI), [installmentOptions, hasRadioButtonUI]);
+    const radioGroupItems = useMemo(() => createRadioGroupItems(hasRadioButtonUI, installmentOptions?.plans), [hasRadioButtonUI, installmentOptions]);
 
     const onSelectInstallment = e => {
         const selectedInstallments = e.target.value;
@@ -105,10 +105,8 @@ function Installments(props: Readonly<InstallmentsProps>) {
             ...(hasRadioButtonUI && radioBtnValue === 'bonus' && { value: 1, plan: 'bonus' })
         };
 
-        console.log('installments state', state);
-
         onChange(installmentOptions ? state : { value: null });
-    }, [installmentAmount, installmentOptions, radioBtnValue]);
+    }, [onChange, hasRadioButtonUI, installmentAmount, installmentOptions, radioBtnValue]);
 
     if (!installmentOptions) return null;
     if (amount.value === 0) return null;

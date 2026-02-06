@@ -184,6 +184,7 @@ describe('Installments', () => {
             expect(screen.getByRole('radio', { name: 'One time payment' })).toBeVisible();
             expect(screen.getByRole('radio', { name: 'Installments payment' })).toBeVisible();
             expect(screen.getByRole('radio', { name: 'Revolving payment' })).toBeVisible();
+            expect(screen.queryByRole('radio', { name: 'Bonus payment' })).toBeNull();
         });
 
         test('should show installments options when shopper selects "installments payment"', async () => {
@@ -196,6 +197,38 @@ describe('Installments', () => {
         test('should not render radio buttons when no plans are available for the brand', () => {
             renderInstallments({ installmentsProps: { brand: 'mc', installmentOptions } });
             expect(screen.queryByRole('radiogroup')).not.toBeInTheDocument();
+        });
+    });
+
+    describe('Bonus payment', () => {
+        test('should render radio button for installments and for bonus', () => {
+            const installmentOptions: InstallmentOptions = {
+                visa: {
+                    values: [1, 2, 3, 4],
+                    plans: ['regular', 'bonus']
+                }
+            };
+            renderInstallments({ installmentsProps: { brand: 'visa', installmentOptions } });
+
+            expect(screen.getByRole('radio', { name: 'One time payment' })).toBeVisible();
+            expect(screen.getByRole('radio', { name: 'Installments payment' })).toBeVisible();
+            expect(screen.getByRole('radio', { name: 'Bonus payment' })).toBeVisible();
+            expect(screen.queryByRole('radio', { name: 'Revolving payment' })).toBeNull();
+        });
+
+        test('should render radio button for installments, for revolving and for bonus', () => {
+            const installmentOptions: InstallmentOptions = {
+                visa: {
+                    values: [1, 2, 3, 4],
+                    plans: ['regular', 'bonus', 'revolving']
+                }
+            };
+            renderInstallments({ installmentsProps: { brand: 'visa', installmentOptions } });
+
+            expect(screen.getByRole('radio', { name: 'One time payment' })).toBeVisible();
+            expect(screen.getByRole('radio', { name: 'Installments payment' })).toBeVisible();
+            expect(screen.getByRole('radio', { name: 'Revolving payment' })).toBeVisible();
+            expect(screen.getByRole('radio', { name: 'Bonus payment' })).toBeVisible();
         });
     });
 });
