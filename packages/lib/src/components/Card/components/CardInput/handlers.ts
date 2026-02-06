@@ -2,6 +2,28 @@ import { ENCRYPTED_CARD_NUMBER, CREDIT_CARD_SF_FIELDS } from '../../../internal/
 import { selectOne } from '../../../internal/SecuredFields/lib/utilities/dom';
 import { CardFocusData } from '../../../internal/SecuredFields/lib/types';
 
+function handleScrollToError(fieldToFocus) {
+    // const adyenContainer = document.getElementById('card-container'); // a.dyen-checkout__card-input
+
+    console.log('### handlers::handleScrollToError::fieldToFocus ', fieldToFocus);
+
+    const label = document.querySelector(`[data-id="${fieldToFocus}"]`);
+    const adyenContainer = label.parentElement;
+
+    if (adyenContainer) {
+        const offset = 100; // Leave some breathing room at the top
+        const bodyRect = document.body.getBoundingClientRect().top;
+        const elementRect = adyenContainer.getBoundingClientRect().top;
+        const elementPosition = elementRect - bodyRect;
+        const offsetPosition = elementPosition - offset;
+
+        window.scrollTo({
+            top: offsetPosition,
+            behavior: 'smooth'
+        });
+    }
+}
+
 /**
  * Helper for CardInput - gets a field name and sets focus on it
  */
@@ -12,6 +34,9 @@ export const setFocusOnFirstField = (isValidating, sfp, fieldToFocus) => {
             setFocusOnNonSF(fieldToFocus, sfp);
         } else {
             // Is a securedField - so it has its own focus procedures
+            // sfp.current.setFocusOn(fieldToFocus);
+
+            handleScrollToError(fieldToFocus);
             sfp.current.setFocusOn(fieldToFocus);
         }
     }
