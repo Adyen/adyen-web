@@ -42,16 +42,6 @@ async function createSessionsCheckout(
         returnUrl: RETURN_URL,
         shopperReference: SHOPPER_REFERENCE,
         shopperEmail: 'shopper.ctp1@adyen.com',
-        installmentOptions: {
-            visa: {
-                plans: ['regular', 'bonus'],
-                values: [1, 2, 3]
-            },
-            mc: {
-                plans: ['regular', 'bonus', 'revolving'],
-                values: [1, 2, 3]
-            }
-        },
         ...(shopperDetails && { ...shopperDetails }),
         ...sessionData
     });
