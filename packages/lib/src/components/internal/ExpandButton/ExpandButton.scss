@@ -1,13 +1,7 @@
 @use 'styles/variable-generator';
 
 .adyen-checkout__payment-method__header__title {
-    max-height: 38px;
-    display: flex;
-    gap: variable-generator.token(spacer-060);
-    align-items: center;
-    flex-shrink: 0;
-    margin-right: variable-generator.token(spacer-070);
-    max-width: 100%;
+    display: contents;
 
     // reset button styles
     border: none;
@@ -18,11 +12,6 @@
     font-size: 1em;
     font-weight: variable-generator.token(text-body-stronger-font-weight);
 
-    [dir='rtl'] & {
-        margin-right: variable-generator.token(spacer-000);
-        margin-left: variable-generator.token(spacer-070);
-    }
-
     &--standalone {
         cursor: default;
     }
@@ -30,20 +19,17 @@
 
 /*  Payment Method Radio Button */
 .adyen-checkout__payment-method__radio {
+    grid-column: 1;
+    grid-row: 1;
+    margin-right: variable-generator.token(spacer-060);
     background-color: variable-generator.token(color-background-primary);
     border: variable-generator.token(border-width-s) solid variable-generator.token(color-outline-secondary);
     border-radius: 50%;
     height: variable-generator.token(spacer-070);
     width: variable-generator.token(spacer-070);
-    left: variable-generator.token(spacer-070);
     transition:
         border-color 0.2s ease-out,
         box-shadow 0.2s ease-out;
-
-    [dir='rtl'] & {
-        right: variable-generator.token(spacer-070);
-        left: auto;
-    }
 }
 
 .adyen-checkout__payment-method__radio::after {

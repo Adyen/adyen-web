@@ -16,6 +16,8 @@
     }
 
     &__name_wrapper {
+        grid-column: 3;
+        grid-row: 1 / span -1;
         display: flex;
         gap: variable-generator.token(spacer-020);
         min-width: variable-generator.token(spacer-120);
