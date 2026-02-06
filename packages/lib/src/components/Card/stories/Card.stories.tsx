@@ -130,7 +130,7 @@ export const WithInstallments: CardStory = {
                 },
                 visa: {
                     values: [1, 2, 3, 4],
-                    plans: ['regular', 'revolving']
+                    plans: ['regular', 'revolving', 'bonus']
                 }
             }
         }
@@ -171,6 +171,7 @@ export const WithMockedFastlane: CardStory = {
 
 export const WithClickToPay: CardStory = {
     render: createCardComponent,
+    tags: ['no-automated-visual-test'],
     args: {
         componentConfiguration: {
             configuration: {

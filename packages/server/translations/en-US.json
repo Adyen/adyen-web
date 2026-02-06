@@ -19,6 +19,7 @@
     "installments.oneTime": "One time payment",
     "installments.installments": "Installments payment",
     "installments.revolving": "Revolving payment",
+    "installments.bonus": "Bonus payment",
     "sepaDirectDebit.ibanField.invalid": "Invalid account number",
     "sepa.ownerName": "Holder Name",
     "sepa.ibanNumber": "Account Number (IBAN)",

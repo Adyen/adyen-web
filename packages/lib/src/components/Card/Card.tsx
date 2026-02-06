@@ -6,7 +6,7 @@ import triggerBinLookUp from '../internal/SecuredFields/binLookup/triggerBinLook
 import { CardBinLookupData, CardConfigSuccessData, CardFocusData } from '../internal/SecuredFields/lib/types';
 import { fieldTypeToSnakeCase } from '../internal/SecuredFields/utils';
 import { reject } from '../../utils/commonUtils';
-import { hasValidInstallmentsObject } from './components/CardInput/utils';
+import { shouldIncludeInstallmentsInPaymentData } from './components/CardInput/utils';
 import createClickToPayService from '../internal/ClickToPay/services/create-clicktopay-service';
 import { ClickToPayCheckoutPayload, IClickToPayService } from '../internal/ClickToPay/services/types';
 import ClickToPayWrapper from './components/ClickToPayWrapper';
@@ -155,7 +155,7 @@ export class CardElement extends UIElement<CardConfiguration> {
             ...(this.state.billingAddress && { billingAddress: this.state.billingAddress }),
             ...(this.state.socialSecurityNumber && { socialSecurityNumber: this.state.socialSecurityNumber }),
             ...this.storePaymentMethodPayload,
-            ...(hasValidInstallmentsObject(this.state.installments) && { installments: this.state.installments }),
+            ...(shouldIncludeInstallmentsInPaymentData(this.state.installments) && { installments: this.state.installments }),
             browserInfo: this.browserInfo,
             origin: !!window && window.location.origin
         };
