@@ -6,7 +6,7 @@ import { protocol } from './environment-variables';
 
 dotenv.config({ path: path.resolve('../../', '.env') });
 
-export const WEB_SERVER_TIMEOUT = 180_000;
+export const WEB_SERVER_TIMEOUT_MS = 180_000;
 
 export const STORYBOOK_PORT = 3020;
 export const STORYBOOK_URL = `${protocol}://localhost:${STORYBOOK_PORT}`;
@@ -102,7 +102,7 @@ const config: PlaywrightTestConfig = {
             cwd: '../..',
             port: STORYBOOK_PORT,
             reuseExistingServer: !process.env.CI,
-            timeout: WEB_SERVER_TIMEOUT
+            timeout: WEB_SERVER_TIMEOUT_MS
         }
     ]
 };

@@ -1,5 +1,5 @@
 import type { PlaywrightTestConfig } from '@playwright/test';
-import defaultConfig, { WEB_SERVER_TIMEOUT, STORYBOOK_PORT } from './playwright.config';
+import defaultConfig, { WEB_SERVER_TIMEOUT_MS, STORYBOOK_PORT } from './playwright.config';
 
 /**
  * Configuration specific for automated tests
@@ -16,7 +16,7 @@ const config: PlaywrightTestConfig = {
             cwd: '../..',
             port: STORYBOOK_PORT,
             reuseExistingServer: !process.env.CI,
-            timeout: WEB_SERVER_TIMEOUT
+            timeout: WEB_SERVER_TIMEOUT_MS
         }
     ]
 };
