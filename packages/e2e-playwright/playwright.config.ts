@@ -98,7 +98,7 @@ const config: PlaywrightTestConfig = {
         {
             command: 'npm run build:storybook:e2e && npm run start:prod-storybook',
             cwd: '../..',
-            url: storybookLocalHostUrl,
+            port: storybookPort,
             reuseExistingServer: !process.env.CI,
             timeout: 180_000
         }
