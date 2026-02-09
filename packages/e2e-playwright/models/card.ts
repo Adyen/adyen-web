@@ -15,6 +15,7 @@ const CVC_IFRAME_LABEL = LANG['creditCard.securityCode.label'];
 
 const INSTALLMENTS_PAYMENTS = LANG['installments.installments'];
 const REVOLVING_PAYMENT = LANG['installments.revolving'];
+const BONUS_PAYMENT = LANG['installments.bonus'];
 
 const EXPIRY_DATE_ICON_ALT_TEXT = `${LANG['creditCard.expiryDate.label']} ${LANG['creditCard.expiryDate.contextualText']}`;
 
@@ -48,6 +49,7 @@ class Card extends Base {
 
     readonly installmentsPaymentLabel: Locator;
     readonly revolvingPaymentLabel: Locator;
+    readonly bonusPaymentLabel: Locator;
     readonly installmentsDropdown: Locator;
     readonly selectorList: Locator;
     readonly threeDs2Challenge: ThreeDs2Challenge;
@@ -119,6 +121,7 @@ class Card extends Base {
          */
         this.installmentsPaymentLabel = this.rootElement.getByText(INSTALLMENTS_PAYMENTS);
         this.revolvingPaymentLabel = this.rootElement.getByText(REVOLVING_PAYMENT);
+        this.bonusPaymentLabel = this.rootElement.getByText(BONUS_PAYMENT);
         this.installmentsDropdown = this.rootElement.locator('.adyen-checkout__dropdown__button');
         this.selectorList = this.rootElement.getByRole('listbox');
 

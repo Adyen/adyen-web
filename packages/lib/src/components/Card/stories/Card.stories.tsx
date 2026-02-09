@@ -171,7 +171,6 @@ export const WithMockedFastlane: CardStory = {
 
 export const WithClickToPay: CardStory = {
     render: createCardComponent,
-    tags: ['no-automated-visual-test'],
     args: {
         componentConfiguration: {
             configuration: {
