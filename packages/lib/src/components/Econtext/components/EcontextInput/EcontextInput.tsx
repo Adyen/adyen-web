@@ -1,4 +1,4 @@
-import { Fragment, h, VNode } from 'preact';
+import { Fragment, h } from 'preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
 import PersonalDetails from '../../../internal/PersonalDetails/PersonalDetails';
 import { useCoreContext } from '../../../../core/Context/CoreProvider';
@@ -6,6 +6,7 @@ import { econtextValidationRules } from '../../validate';
 import { PersonalDetailsSchema } from '../../../../types/global-types';
 import FormInstruction from '../../../internal/FormInstruction';
 import { ComponentMethodsRef } from '../../../internal/UIElement/types';
+import { PayButtonProps } from '../../../internal/PayButton/PayButton';
 import './EcontextInput.scss';
 
 interface EcontextInputProps {
@@ -13,7 +14,7 @@ interface EcontextInputProps {
     personalDetailsRequired?: boolean;
     data?: PersonalDetailsSchema;
     showPayButton: boolean;
-    payButton(config: any): VNode;
+    payButton: (props: PayButtonProps) => h.JSX.Element;
     onChange?(data: any): void;
     onSubmit?(state: any, component: any): void;
 }

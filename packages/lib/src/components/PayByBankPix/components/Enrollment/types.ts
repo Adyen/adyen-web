@@ -1,16 +1,16 @@
 import { h } from 'preact';
-import { PayButtonFunctionProps } from '../../../internal/UIElement/types';
 import { IssuerItem } from '../../../internal/IssuerList/types';
 import { OnChangeData } from '../../../../core/types';
 import { IPayByBankPixAwait } from './components/PayByBankPixAwait';
 import { AbstractAnalyticsEvent } from '../../../../core/Analytics/events/AbstractAnalyticsEvent';
 import { AdyenCheckoutError } from '../../../../types';
+import { PayButtonProps } from '../../../internal/PayButton/PayButton';
 
 interface BaseEnrollmentProps {
     type?: string;
     txVariant: string;
     registrationOptions?: string;
-    payButton(props: PayButtonFunctionProps): h.JSX.Element;
+    payButton(props: PayButtonProps): h.JSX.Element;
     setComponentRef?: (ref) => void;
     /**
      * Trigger when the await times out, receives error state or the biometrics verification fails.

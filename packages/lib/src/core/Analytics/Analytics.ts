@@ -31,7 +31,7 @@ export interface CheckoutAttemptIdSessionStorage {
  * If the checkout attempt ID was stored more than fifteen minutes ago, then we should request a new ID.
  * More here: COWEB-1099
  */
-function isSessionCreatedUnderFifteenMinutes(session: CheckoutAttemptIdSessionStorage): boolean {
+function isSessionCreatedUnderFifteenMinutes(session: CheckoutAttemptIdSessionStorage | null): boolean {
     const FIFTEEN_MINUTES_IN_MS = 15 * 60 * 1000;
     if (!session?.timestamp) return false;
     const fifteenMinutesAgo = Date.now() - FIFTEEN_MINUTES_IN_MS;

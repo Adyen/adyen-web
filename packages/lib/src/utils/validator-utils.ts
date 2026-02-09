@@ -17,10 +17,10 @@ export const getMaxLengthByFieldAndCountry = (
 };
 
 // Not null or undefined or only spaces
-export const isEmpty = input => !!(input == null || /^[\s]*$/.test(input));
+export const isEmpty = (input: string) => !!(input == null || /^[\s]*$/.test(input));
 
-export const isString = input => typeof input === 'string' || input instanceof String;
-export const hasText = input => isString(input) && !isEmpty(input);
+export const isString = (input: unknown) => typeof input === 'string' || input instanceof String;
+export const hasText = (input: string) => isString(input) && !isEmpty(input);
 
 // Block emojis and control/format characters, allow everything else
 let INVALID_CHARS_REGEX: RegExp;

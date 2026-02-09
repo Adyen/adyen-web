@@ -1,4 +1,4 @@
-import { InstallmentOptions } from '../../components/Card/components/CardInput/components/types';
+import { InstallmentOptions } from '../../components/Card/components/CardInput/components/Installments/Installments';
 import { BrowserInfo, Order, PaymentAction, PaymentAmount, ResultCode } from '../../types/global-types';
 
 export type CheckoutSession = {
@@ -18,7 +18,7 @@ export type CheckoutSessionSetupResponse = {
     id: string;
     sessionData: string;
     countryCode?: string;
-    amount: PaymentAmount;
+    amount: Omit<PaymentAmount, 'currencyDisplay'>;
     expiresAt: string;
     paymentMethods: any;
     returnUrl: string;

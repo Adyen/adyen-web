@@ -38,7 +38,7 @@ interface PreAuthorizedDebitCanadaComponentProps {
         isValid: boolean;
         storePaymentMethod: boolean;
     }): void;
-    payButton: (props: Partial<PayButtonProps>) => h.JSX.Element;
+    payButton: (props: PayButtonProps) => h.JSX.Element;
     setComponentRef: (ref: ComponentMethodsRef) => void;
     showPayButton: boolean;
     enableStoreDetails: boolean;

@@ -24,7 +24,7 @@ export function createSdkData(checkoutAttemptId: string, clientData: string | nu
         analytics: {
             checkoutAttemptId
         },
-        ...(clientData && { riskData: { clientData } }),
+        ...(clientData && { riskData: { clientData } })
     };
 
     return base64.encode(JSON.stringify(sdkDataObject));

@@ -1,5 +1,19 @@
 # @adyen/adyen-web
 
+## 6.30.0
+
+### Minor Changes
+
+- Improved: remove usused css classses ([#3776](https://github.com/Adyen/adyen-web/pull/3776))
+
+- Fix: Removed UPI Collect support to comply with NPCI regulations, updating default flows to QR code for desktop and Intent for mobile. ([#3777](https://github.com/Adyen/adyen-web/pull/3777))
+
+### Patch Changes
+
+- Fixed: Detect when the containing element for a component that relies on securedFields, is not in the DOM. This means the iframe can never configure since, in order for the window.postMessage to be sent, the iframe has to be in the DOM ([#3768](https://github.com/Adyen/adyen-web/pull/3768))
+
+- Fix: Getting checkout attempt ID directly from Analytics module ([#3781](https://github.com/Adyen/adyen-web/pull/3781))
+
 ## 6.29.0
 
 ### Minor Changes

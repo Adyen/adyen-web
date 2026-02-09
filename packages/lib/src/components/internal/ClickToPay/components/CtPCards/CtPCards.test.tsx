@@ -1,4 +1,4 @@
-import { ComponentChildren, h } from 'preact';
+import { ComponentChildren, createRef, h } from 'preact';
 import { mock } from 'jest-mock-extended';
 import { render, screen, waitFor } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
@@ -7,11 +7,17 @@ import ShopperCard from '../../models/ShopperCard';
 import { IClickToPayService, MastercardCheckout, VisaCheckout } from '../../services/types';
 import { CoreProvider } from '../../../../../core/Context/CoreProvider';
 import ClickToPayProvider, { ClickToPayProviderProps } from '../../context/ClickToPayProvider';
+import { AmountProvider } from '../../../../../core/Context/AmountProvider';
+import { PaymentAmount } from '../../../../../types';
+
+const AMOUNT: PaymentAmount = { value: 2000, currency: 'EUR' };
 
 const customRender = (children: ComponentChildren, providerProps?: ClickToPayProviderProps) => {
     return render(
         <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
-            <ClickToPayProvider {...providerProps}>{children}</ClickToPayProvider>
+            <AmountProvider amount={AMOUNT} providerRef={createRef()}>
+                <ClickToPayProvider {...providerProps}>{children}</ClickToPayProvider>
+            </AmountProvider>
         </CoreProvider>
     );
 };
@@ -64,7 +70,6 @@ test('should pre selected available card', async () => {
     const contextProps = mock<ClickToPayProviderProps>();
     contextProps.onSetStatus.mockReturnValue();
     contextProps.setClickToPayRef.mockImplementation(() => {});
-    contextProps.amount = { value: 2000, currency: 'EUR' };
     contextProps.clickToPayService = ctpService;
 
     customRender(<CtPCards onDisplayCardComponent={jest.fn()} />, contextProps);
@@ -114,7 +119,6 @@ test('should not be able to checkout with expired card (single card)', async () 
     const contextProps = mock<ClickToPayProviderProps>();
     contextProps.onSetStatus.mockReturnValue();
     contextProps.setClickToPayRef.mockImplementation(() => {});
-    contextProps.amount = { value: 2000, currency: 'EUR' };
     contextProps.clickToPayService = ctpService;
 
     customRender(<CtPCards onDisplayCardComponent={jest.fn()} />, contextProps);
@@ -173,7 +177,6 @@ test('should not be able to checkout with expired card (card list)', async () =>
     const contextProps = mock<ClickToPayProviderProps>();
     contextProps.onSetStatus.mockReturnValue();
     contextProps.setClickToPayRef.mockImplementation(() => {});
-    contextProps.amount = { value: 2000, currency: 'EUR' };
     contextProps.clickToPayService = ctpService;
 
     customRender(<CtPCards onDisplayCardComponent={jest.fn()} />, contextProps);
@@ -249,7 +252,6 @@ test('should be able to checkout (card list)', async () => {
     contextProps.onSetStatus.mockReturnValue();
     contextProps.onSubmit.mockImplementation(() => {});
     contextProps.setClickToPayRef.mockImplementation(() => {});
-    contextProps.amount = { value: 2000, currency: 'EUR' };
     contextProps.clickToPayService = ctpService;
 
     customRender(<CtPCards onDisplayCardComponent={jest.fn()} />, contextProps);
@@ -300,7 +302,6 @@ test('should be able to checkout (single card)', async () => {
     const contextProps = mock<ClickToPayProviderProps>();
     contextProps.onSetStatus.mockReturnValue();
     contextProps.onSubmit.mockImplementation(() => {});
-    contextProps.amount = { value: 2000, currency: 'EUR' };
     contextProps.setClickToPayRef.mockImplementation(() => {});
     contextProps.clickToPayService = ctpService;
 

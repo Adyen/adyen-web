@@ -17,7 +17,6 @@ export const StoredCardFieldsWrapper = ({
     showAmountsInInstallments,
     showContextualElement,
     // props passed through from CardInput:
-    amount,
     hasCVC,
     installmentOptions,
     lastFour,
@@ -44,7 +43,6 @@ export const StoredCardFieldsWrapper = ({
 
             {hasInstallments && (
                 <Installments
-                    amount={amount}
                     brand={sfpState.brand}
                     installmentOptions={installmentOptions}
                     onChange={handleInstallments}

@@ -1,7 +1,7 @@
 import { h, Fragment } from 'preact';
 import { useCoreContext } from '../../../core/Context/CoreProvider';
 import { useState } from 'preact/hooks';
-import { PaymentAmount } from '../../../types';
+import { useAmount } from '../../../core/Context/AmountProvider';
 
 // TODO this should ideally be remove but we need let prop propagate down
 //  probably not worth changing this behaviour now
@@ -10,15 +10,15 @@ export interface RedirectButtonProps {
     icon?: string;
     payButton: Function;
     onSubmit: Function;
-    amount?: PaymentAmount;
     name: string;
     showPayButton: boolean;
     ref?: any;
 }
 
-function RedirectButton({ label = null, icon = null, payButton, onSubmit, amount = null, name, showPayButton, ...props }: RedirectButtonProps) {
+function RedirectButton({ label = null, icon = null, payButton, onSubmit, name, showPayButton, ...props }: RedirectButtonProps) {
     const { i18n } = useCoreContext();
     const [status, setStatus] = useState('ready');
+    const { amount } = useAmount();
 
     this.setStatus = newStatus => {
         setStatus(newStatus);

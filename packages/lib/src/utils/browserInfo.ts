@@ -1,5 +1,4 @@
-import getProp from './getProp';
-import { BrowserInfo } from '../types/global-types';
+import type { BrowserInfo } from '../types/global-types';
 
 /**
  * Collects available frontend browser info and store it in the properties dictated by the EMVCo spec
@@ -13,21 +12,22 @@ import { BrowserInfo } from '../types/global-types';
  * @returns An object containing the retrieved browser properties
  */
 export default function collectBrowserInfo(): BrowserInfo {
-    const colorDepth = getProp(window, 'screen.colorDepth') || '';
-    const javaEnabled = false;
-    const screenHeight = getProp(window, 'screen.height') || ''; // TODO: Shall we set this to null instead?
-    const screenWidth = getProp(window, 'screen.width') || ''; // TODO: Shall we set this to null instead?
-    const userAgent = getProp(window, 'navigator.userAgent') || '';
+    if (typeof window === 'undefined') {
+        return;
+    }
+    const colorDepth = window.screen.colorDepth;
+    const screenHeight = window.screen.height;
+    const screenWidth = window.screen.width;
+    const userAgent = window.navigator.userAgent;
 
-    const language = getProp(window, 'navigator.language') || 'en';
-    const d = new Date();
-    const timeZoneOffset = d.getTimezoneOffset();
+    const language = window.navigator.language || 'en';
+    const timeZoneOffset = new Date().getTimezoneOffset();
 
     return {
         acceptHeader: '*/*',
+        javaEnabled: false,
         colorDepth,
         language,
-        javaEnabled,
         screenHeight,
         screenWidth,
         userAgent,
