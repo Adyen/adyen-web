@@ -1,4 +1,13 @@
-import { h, RefCallback, InputHTMLAttributes } from 'preact';
+import {
+    h,
+    RefCallback,
+    InputHTMLAttributes,
+    GenericEventHandler,
+    TargetedInputEvent,
+    TargetedKeyboardEvent,
+    TargetedFocusEvent,
+    TargetedEvent
+} from 'preact';
 import { useCallback } from 'preact/hooks';
 import classNames from 'classnames';
 import { ARIA_CONTEXT_SUFFIX, ARIA_ERROR_SUFFIX } from '../../../core/Errors/constants';
@@ -21,14 +30,14 @@ export interface InputBaseProps extends InputHTMLAttributes {
     trimOnBlur?: boolean;
     i18n?: Language;
     label?: string;
-    onBlurHandler?: h.JSX.GenericEventHandler<HTMLInputElement>;
-    onFocusHandler?: h.JSX.GenericEventHandler<HTMLInputElement>;
+    onBlurHandler?: GenericEventHandler<HTMLInputElement>;
+    onFocusHandler?: GenericEventHandler<HTMLInputElement>;
     maxlength?: number | null;
     addContextualElement?: boolean;
     type?: string;
 }
 
-export default function InputBase({ setRef, ...props }: InputBaseProps) {
+export default function InputBase({ setRef, ...props }: Readonly<InputBaseProps>) {
     const { autoCorrect, classNameModifiers, isInvalid, isValid, readonly = null, spellcheck, type, uniqueId, disabled } = props;
     const className = props.className;
 
@@ -41,7 +50,7 @@ export default function InputBase({ setRef, ...props }: InputBaseProps) {
     }
 
     const handleInput = useCallback(
-        (event: h.JSX.TargetedInputEvent<HTMLInputElement>) => {
+        (event: TargetedInputEvent<HTMLInputElement>) => {
             props.onInput(event);
         },
         [props.onInput]
@@ -55,7 +64,7 @@ export default function InputBase({ setRef, ...props }: InputBaseProps) {
      *  https://developer.mozilla.org/en-US/docs/Web/API/Element/keypress_event
      */
     const handleKeyPress = useCallback(
-        (event: h.JSX.TargetedKeyboardEvent<HTMLInputElement>) => {
+        (event: TargetedKeyboardEvent<HTMLInputElement>) => {
             if (props?.onKeyPress) props.onKeyPress(event);
         },
         [props?.onKeyPress]
@@ -68,14 +77,14 @@ export default function InputBase({ setRef, ...props }: InputBaseProps) {
      * Exception: ENTER keypress triggers 'onKeyPress' AND 'onKeyUp'
      */
     const handleKeyUp = useCallback(
-        (event: h.JSX.TargetedKeyboardEvent<HTMLInputElement>) => {
+        (event: TargetedKeyboardEvent<HTMLInputElement>) => {
             if (props?.onKeyUp) props.onKeyUp(event);
         },
         [props?.onKeyUp]
     );
 
     const handleBlur = useCallback(
-        (event: h.JSX.TargetedFocusEvent<HTMLInputElement>) => {
+        (event: TargetedFocusEvent<HTMLInputElement>) => {
             props?.onBlurHandler?.(event); // From Field component
 
             if (props.trimOnBlur) {
@@ -88,7 +97,7 @@ export default function InputBase({ setRef, ...props }: InputBaseProps) {
     );
 
     const handleFocus = useCallback(
-        (event: h.JSX.TargetedEvent<HTMLInputElement>) => {
+        (event: TargetedEvent<HTMLInputElement>) => {
             props?.onFocusHandler?.(event); // From Field component
         },
         [props.onFocusHandler]

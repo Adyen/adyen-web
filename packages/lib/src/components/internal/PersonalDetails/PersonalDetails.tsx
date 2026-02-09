@@ -1,4 +1,4 @@
-import { h } from 'preact';
+import { GenericEventHandler, h } from 'preact';
 import { useEffect, useMemo, useRef } from 'preact/hooks';
 import Fieldset from '../FormFields/Fieldset';
 import Field from '../FormFields/Field';
@@ -45,7 +45,7 @@ export default function PersonalDetails(props: Readonly<PersonalDetailsProps>) {
     }, [props.setComponentRef]);
 
     const eventHandler =
-        (mode: HandleChangeForModeType): h.JSX.GenericEventHandler<EventTarget> =>
+        (mode: HandleChangeForModeType): GenericEventHandler<EventTarget> =>
         (e: Event): void => {
             const { name } = e.target as HTMLInputElement;
             const key = name.split(`${namePrefix}.`).pop();
