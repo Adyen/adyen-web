@@ -130,4 +130,25 @@ export const PaymentButton: StoryObj<PayButtonProps & AmountProviderProps> = {
     }
 };
 
+export const AnchorTagButton: StoryObj<ButtonProps> = {
+    render: args => {
+        return (
+            <CoreProvider {...coreProps}>
+                <Button {...args} />
+            </CoreProvider>
+        );
+    },
+    parameters: {
+        controls: { include: ['disabled', 'inline', 'ariaLabel', 'href', 'target', 'label', 'variant'] }
+    },
+    args: {
+        disabled: false,
+        inline: true,
+        href: 'https://www.adyen.com',
+        label: 'Go to Adyen',
+        variant: 'primary',
+        target: '_blank'
+    }
+};
+
 export default meta;
