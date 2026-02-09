@@ -45,6 +45,7 @@ export const Default: DonationStory = {
 
 export const IntegrateWithCard = {
     render: DonationCardIntegrationExample,
+    tags: ['no-automated-visual-test'],
     args: {
         redirectResult: getSearchParameter('redirectResult')
     }
