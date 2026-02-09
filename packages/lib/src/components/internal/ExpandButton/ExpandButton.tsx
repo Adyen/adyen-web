@@ -10,6 +10,7 @@ interface ExpandButton {
     showRadioButton?: boolean;
     classNameModifiers?: string[];
     standalone?: boolean;
+    required?: boolean;
 }
 
 function ExpandButton({
