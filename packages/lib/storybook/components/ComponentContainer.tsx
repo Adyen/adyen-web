@@ -31,12 +31,14 @@ export const ComponentContainer = ({ element }: IContainer) => {
             if (container.current) {
                 element.mount(container.current);
             }
-}
+        }
 
         return () => {
             element.unmount();
         };
     }, [element]);
 
-    return <Fragment>{errorMessage ? <div>{errorMessage}</div> : <div ref={container} id="component-root" className="component-wrapper" />}</Fragment>;
+    return (
+        <Fragment>{errorMessage ? <div>{errorMessage}</div> : <div ref={container} id="component-root" className="component-wrapper" />}</Fragment>
+    );
 };

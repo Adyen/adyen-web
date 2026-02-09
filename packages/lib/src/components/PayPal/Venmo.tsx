@@ -13,12 +13,11 @@ import type { Intent, PayPalConfiguration } from './types';
 import { AnalyticsInfoEvent, InfoEventType } from '../../core/Analytics/events/AnalyticsInfoEvent';
 import { PayPalService } from './PayPalService';
 import { PayPalSdkLoader } from './PayPalSdkLoader';
-import { PayPalComponentV6 } from './components/PayPalComponentV6';
-import PaypalComponent from './components/PaypalComponent';
+import { VenmoComponent } from './components/VenmoComponent';
 import './Paypal.scss';
 
-class PaypalElement extends UIElement<PayPalConfiguration> {
-    public static type = TxVariants.paypal;
+class VenmoElement extends UIElement<PayPalConfiguration> {
+    public static type = TxVariants.venmo;
     public static subtype = 'sdk';
 
     public paymentData: string = null;
@@ -36,44 +35,32 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
         this.handleOnShippingAddressChange = this.handleOnShippingAddressChange.bind(this);
         this.handleOnShippingOptionsChange = this.handleOnShippingOptionsChange.bind(this);
 
-        if (this.props.useV6) {
-            const sdkLoader = new PayPalSdkLoader({ analytics: this.analytics });
+        const sdkLoader = new PayPalSdkLoader({ analytics: this.analytics });
 
-            this.paypalService = PayPalService.getInstance({
-                loadingContext: this.props.loadingContext,
-                clientKey: this.props.clientKey,
-                sdkLoader
-            });
+        this.paypalService = PayPalService.getInstance({
+            loadingContext: this.props.loadingContext,
+            clientKey: this.props.clientKey,
+            sdkLoader
+        });
 
-            void this.paypalService.initialize();
-        }
+        void this.paypalService.initialize();
     }
 
     public override async isAvailable(): Promise<void> {
-        if (this.props.useV6) {
-            console.log('# isAvailable started');
+        console.log('# isAvailable started');
 
-            await this.paypalService.isPayPalSdkReady();
+        await this.paypalService.isPayPalSdkReady();
 
-            const paymentMethods = await this.paypalService.sdkInstance.findEligibleMethods({
-                currencyCode: this.props.amount.currency,
-                countryCode: this.props.countryCode
-            });
+        const paymentMethods = await this.paypalService.sdkInstance.findEligibleMethods({
+            currencyCode: this.props.amount.currency,
+            countryCode: this.props.countryCode
+        });
 
-            console.log({
-                paypal: paymentMethods.isEligible('paypal'),
-                paylater: paymentMethods.isEligible('paylater'),
-                credit: paymentMethods.isEligible('credit')
-            });
-
-            if (!paymentMethods.isEligible('paypal')) {
-                return Promise.reject();
-            }
-
-            console.log('# isAvailable finished');
-            return Promise.resolve();
+        if (!paymentMethods.isEligible('venmo')) {
+            return Promise.reject();
         }
 
+        console.log('# isAvailable finished');
         return Promise.resolve();
     }
 
@@ -130,9 +117,9 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
 
         return {
             paymentMethod: {
-                type: PaypalElement.type,
+                type: VenmoElement.type,
                 userAction,
-                subtype: isExpress ? 'express' : PaypalElement.subtype
+                subtype: isExpress ? 'express' : VenmoElement.subtype
             }
         };
     }
@@ -142,7 +129,8 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
     };
 
     public updateWithAction = (action: PaymentAction) => {
-        if (action.paymentMethodType !== this.type) throw new Error('Invalid Action');
+        console.log({ action });
+        if (action.paymentMethodType !== this.type && action.paymentMethodType !== 'paypal') throw new Error('Invalid Action');
 
         if (action.paymentData) {
             this.paymentData = action.paymentData;
@@ -170,7 +158,7 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
         return true;
     }
 
-    private handleOnApproveV6 = (data: any): Promise<void> => {
+    private handleOnApprove = (data: any): Promise<void> => {
         const { onAuthorized } = this.props;
         const state = { data: { details: data, paymentData: this.paymentData } };
 
@@ -183,42 +171,6 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
          * TODO: Request profile details from backend if onAuthorized is defined
          */
         this.handleError(new AdyenCheckoutError('ERROR', 'Something went wrong while parsing PayPal Order'));
-    };
-
-    private handleOnApprove = (data: any, actions: any): Promise<void> | void => {
-        const { onAuthorized } = this.props;
-        const state = { data: { details: data, paymentData: this.paymentData } };
-
-        if (!onAuthorized) {
-            this.handleAdditionalDetails(state);
-            return;
-        }
-
-        return actions.order
-            .get()
-            .then((paypalOrder: any) => {
-                const billingAddress = formatPaypalOrderContactToAdyenFormat(paypalOrder?.payer);
-                const deliveryAddress = formatPaypalOrderContactToAdyenFormat(paypalOrder?.purchase_units?.[0].shipping, true);
-
-                this.setState({
-                    authorizedEvent: paypalOrder,
-                    ...(billingAddress && { billingAddress }),
-                    ...(deliveryAddress && { deliveryAddress })
-                });
-
-                return new Promise<void>((resolve, reject) =>
-                    onAuthorized(
-                        {
-                            authorizedEvent: paypalOrder,
-                            ...(billingAddress && { billingAddress }),
-                            ...(deliveryAddress && { deliveryAddress })
-                        },
-                        { resolve, reject }
-                    )
-                );
-            })
-            .then(() => this.handleAdditionalDetails(state))
-            .catch(error => this.handleError(new AdyenCheckoutError('ERROR', 'Something went wrong while parsing PayPal Order', { cause: error })));
     };
 
     handleResolve(token: string) {
@@ -275,37 +227,8 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
 
         const { onShippingAddressChange, onShippingOptionsChange, ...rest } = this.props;
 
-        if (this.props.useV6) {
-            return (
-                <PayPalComponentV6
-                    onSubmit={this.handleSubmit}
-                    onAdditionalDetails={this.handleOnApproveV6}
-                    paypalService={this.paypalService}
-                    currencyCode={this.props.amount.currency}
-                    countryCode={this.props.countryCode}
-                />
-            );
-        }
-
-        return (
-            <PaypalComponent
-                ref={ref => {
-                    this.componentRef = ref;
-                }}
-                {...rest}
-                {...(onShippingAddressChange && { onShippingAddressChange: this.handleOnShippingAddressChange })}
-                {...(onShippingOptionsChange && { onShippingOptionsChange: this.handleOnShippingOptionsChange })}
-                onCancel={() => this.handleError(new AdyenCheckoutError('CANCEL'))}
-                onChange={this.setState}
-                onApprove={this.handleOnApprove}
-                onError={error => {
-                    this.handleError(new AdyenCheckoutError('ERROR', error.toString(), { cause: error }));
-                }}
-                onScriptLoadFailure={error => this.handleError(error)}
-                onSubmit={this.handleSubmit}
-            />
-        );
+        return <VenmoComponent onSubmit={this.handleSubmit} onAdditionalDetails={this.handleOnApprove} paypalService={this.paypalService} />;
     }
 }
 
-export default PaypalElement;
+export default VenmoElement;
