@@ -110,7 +110,18 @@ class Button extends Component<ButtonProps, ButtonState> {
 
         if (href) {
             return (
-                <a className={buttonClasses} href={href} target={this.props.target} rel={this.props.rel} aria-disabled={disabled}>
+                <a
+                    className={buttonClasses}
+                    href={href}
+                    target={this.props.target}
+                    rel={this.props.rel}
+                    aria-disabled={disabled}
+                    onClick={(e: TargetedMouseEvent<HTMLAnchorElement>) => {
+                        if (disabled) {
+                            e.preventDefault();
+                        }
+                    }}
+                >
                     {buttonText}
                 </a>
             );
