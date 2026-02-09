@@ -1,5 +1,5 @@
 import type { PlaywrightTestConfig } from '@playwright/test';
-import defaultConfig from './playwright.config';
+import defaultConfig, { WEB_SERVER_TIMEOUT, STORYBOOK_PORT } from './playwright.config';
 
 /**
  * Configuration specific for automated tests
@@ -14,9 +14,9 @@ const config: PlaywrightTestConfig = {
         {
             command: 'yarn run build:storybook && yarn run start:prod-storybook',
             cwd: '../..',
-            port: 3020,
+            port: STORYBOOK_PORT,
             reuseExistingServer: !process.env.CI,
-            timeout: 120 * 1000
+            timeout: WEB_SERVER_TIMEOUT
         }
     ]
 };

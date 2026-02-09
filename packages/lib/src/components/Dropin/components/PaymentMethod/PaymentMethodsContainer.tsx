@@ -53,7 +53,6 @@ function PaymentMethodsContainer({
                 className={paymentMethodListClassnames}
                 role={standalone ? undefined : 'radiogroup'}
                 aria-label={standalone ? undefined : i18n.get('paymentMethodsList.aria.label')}
-                aria-required="true"
             >
                 {paymentMethods.map((paymentMethod, index, paymentMethodsCollection) => {
                     const isSelected = activePaymentMethod && activePaymentMethod._id === paymentMethod._id;
