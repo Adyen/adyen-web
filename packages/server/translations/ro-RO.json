@@ -19,6 +19,7 @@
     "installments.oneTime": "Plată unică",
     "installments.installments": "Plată în rate",
     "installments.revolving": "Plată recurentă",
+    "installments.bonus": "Plata bonusului",
     "sepaDirectDebit.ibanField.invalid": "Numărul de cont este incorect",
     "sepa.ownerName": "Nume posesor",
     "sepa.ibanNumber": "Număr cont (IBAN)",

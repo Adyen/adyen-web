@@ -19,6 +19,7 @@
     "installments.oneTime": "Enkratno plačilo",
     "installments.installments": "Obročno plačilo",
     "installments.revolving": "Revolving plačilo",
+    "installments.bonus": "Izplačilo bonusa",
     "sepaDirectDebit.ibanField.invalid": "Neveljavna številka računa",
     "sepa.ownerName": "Ime imetnika",
     "sepa.ibanNumber": "Številka računa (IBAN)",

@@ -19,6 +19,7 @@
     "installments.oneTime": "الدفع مرة واحدة",
     "installments.installments": "الدفع على أقساط",
     "installments.revolving": "الدفع الدوري",
+    "installments.bonus": "دفع المكافأة",
     "sepaDirectDebit.ibanField.invalid": "رقم حساب غير صحيح",
     "sepa.ownerName": "صاحب الحساب",
     "sepa.ibanNumber": "رقم الحساب (IBAN)",
