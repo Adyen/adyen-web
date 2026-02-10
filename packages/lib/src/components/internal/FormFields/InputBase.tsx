@@ -1,11 +1,20 @@
-import { h, RefCallback } from 'preact';
+import {
+    h,
+    RefCallback,
+    InputHTMLAttributes,
+    GenericEventHandler,
+    TargetedInputEvent,
+    TargetedKeyboardEvent,
+    TargetedFocusEvent,
+    TargetedEvent
+} from 'preact';
 import { useCallback } from 'preact/hooks';
 import classNames from 'classnames';
 import { ARIA_CONTEXT_SUFFIX, ARIA_ERROR_SUFFIX } from '../../../core/Errors/constants';
 import Language from '../../../language';
 import './FormFields.scss';
 
-export interface InputBaseProps extends h.JSX.HTMLAttributes<HTMLInputElement> {
+export interface InputBaseProps extends InputHTMLAttributes {
     classNameModifiers?: string[];
     isInvalid?: boolean;
     isValid?: boolean;
@@ -21,15 +30,15 @@ export interface InputBaseProps extends h.JSX.HTMLAttributes<HTMLInputElement> {
     trimOnBlur?: boolean;
     i18n?: Language;
     label?: string;
-    onBlurHandler?: h.JSX.GenericEventHandler<HTMLInputElement>;
-    onFocusHandler?: h.JSX.GenericEventHandler<HTMLInputElement>;
+    onBlurHandler?: GenericEventHandler<HTMLInputElement>;
+    onFocusHandler?: GenericEventHandler<HTMLInputElement>;
     maxlength?: number | null;
     addContextualElement?: boolean;
     type?: string;
 }
 
-export default function InputBase({ setRef, ...props }: InputBaseProps) {
-    const { autoCorrect, classNameModifiers, isInvalid, isValid, readonly = null, spellCheck, type, uniqueId, disabled } = props;
+export default function InputBase({ setRef, ...props }: Readonly<InputBaseProps>) {
+    const { autoCorrect, classNameModifiers, isInvalid, isValid, readonly = null, spellcheck, type, uniqueId, disabled } = props;
     const className = props.className;
 
     /**
@@ -41,7 +50,7 @@ export default function InputBase({ setRef, ...props }: InputBaseProps) {
     }
 
     const handleInput = useCallback(
-        (event: h.JSX.TargetedInputEvent<HTMLInputElement>) => {
+        (event: TargetedInputEvent<HTMLInputElement>) => {
             props.onInput(event);
         },
         [props.onInput]
@@ -55,7 +64,7 @@ export default function InputBase({ setRef, ...props }: InputBaseProps) {
      *  https://developer.mozilla.org/en-US/docs/Web/API/Element/keypress_event
      */
     const handleKeyPress = useCallback(
-        (event: h.JSX.TargetedKeyboardEvent<HTMLInputElement>) => {
+        (event: TargetedKeyboardEvent<HTMLInputElement>) => {
             if (props?.onKeyPress) props.onKeyPress(event);
         },
         [props?.onKeyPress]
@@ -68,14 +77,14 @@ export default function InputBase({ setRef, ...props }: InputBaseProps) {
      * Exception: ENTER keypress triggers 'onKeyPress' AND 'onKeyUp'
      */
     const handleKeyUp = useCallback(
-        (event: h.JSX.TargetedKeyboardEvent<HTMLInputElement>) => {
+        (event: TargetedKeyboardEvent<HTMLInputElement>) => {
             if (props?.onKeyUp) props.onKeyUp(event);
         },
         [props?.onKeyUp]
     );
 
     const handleBlur = useCallback(
-        (event: h.JSX.TargetedFocusEvent<HTMLInputElement>) => {
+        (event: TargetedFocusEvent<HTMLInputElement>) => {
             props?.onBlurHandler?.(event); // From Field component
 
             if (props.trimOnBlur) {
@@ -88,7 +97,7 @@ export default function InputBase({ setRef, ...props }: InputBaseProps) {
     );
 
     const handleFocus = useCallback(
-        (event: h.JSX.TargetedEvent<HTMLInputElement>) => {
+        (event: TargetedEvent<HTMLInputElement>) => {
             props?.onFocusHandler?.(event); // From Field component
         },
         [props.onFocusHandler]
@@ -106,17 +115,18 @@ export default function InputBase({ setRef, ...props }: InputBaseProps) {
     );
 
     // Don't spread classNameModifiers etc to input element (it ends up as an attribute on the element itself)
-    const { classNameModifiers: cnm, uniqueId: uid, isInvalid: iiv, isValid: iv, addContextualElement: ace, ...newProps } = props;
+    const { classNameModifiers: cnm, uniqueId: uid, isInvalid: iiv, isValid: iv, addContextualElement: ace, ...restProps } = props;
 
     return (
         <input
             id={uniqueId}
-            {...newProps}
-            aria-required={newProps.required}
+            {...restProps}
+            aria-required={restProps.required}
             type={type}
             className={inputClassNames}
             readOnly={readonly}
-            spellCheck={spellCheck}
+            // eslint-disable-next-line react/no-unknown-property -- Preact uses lowercase 'spellcheck'
+            spellcheck={spellcheck}
             autoCorrect={autoCorrect}
             aria-describedby={`${uniqueId}${isInvalid ? ARIA_ERROR_SUFFIX : ARIA_CONTEXT_SUFFIX}`}
             aria-invalid={isInvalid}

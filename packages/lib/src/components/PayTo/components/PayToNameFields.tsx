@@ -38,7 +38,7 @@ export default function PayToNameFields({ i18n, errors, data, handleChangeFor, p
                     onInput={handleChangeFor('firstName', 'input')}
                     onBlur={handleChangeFor('firstName', 'input')}
                     placeholder={placeholders?.firstName}
-                    spellCheck={false}
+                    spellcheck={false}
                     required={true}
                 />
             </Field>
@@ -56,7 +56,7 @@ export default function PayToNameFields({ i18n, errors, data, handleChangeFor, p
                     onInput={handleChangeFor('lastName', 'input')}
                     onBlur={handleChangeFor('lastName', 'blur')}
                     placeholder={placeholders?.lastName}
-                    spellCheck={false}
+                    spellcheck={false}
                     required={true}
                 />
             </Field>

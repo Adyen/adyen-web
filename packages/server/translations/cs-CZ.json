@@ -19,6 +19,7 @@
     "installments.oneTime": "Jednorázová platba",
     "installments.installments": "Platba na splátky",
     "installments.revolving": "Opakující se platba",
+    "installments.bonus": "Bonusová platba",
     "sepaDirectDebit.ibanField.invalid": "Neplatné číslo účtu",
     "sepa.ownerName": "Jméno držitele účtu",
     "sepa.ibanNumber": "Číslo účtu (IBAN)",

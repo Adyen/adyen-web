@@ -19,6 +19,7 @@
     "installments.oneTime": "Vienkartinis mokėjimas",
     "installments.installments": "Mokėjimas įmokomis",
     "installments.revolving": "Atnaujinamasis mokėjimas",
+    "installments.bonus": "Premijos išmokėjimas",
     "sepaDirectDebit.ibanField.invalid": "Netinkamas sąskaitos numeris",
     "sepa.ownerName": "Turėtojo vardas ir pavardė",
     "sepa.ibanNumber": "Sąskaitos numeris (IBAN)",
