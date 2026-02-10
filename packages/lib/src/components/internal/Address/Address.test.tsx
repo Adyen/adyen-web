@@ -4,7 +4,7 @@ import getDataset from '../../../core/Services/get-dataset';
 import { AddressSpecifications } from './types';
 import { AddressData } from '../../../types';
 import { FALLBACK_VALUE } from './constants';
-import { render, screen } from '@testing-library/preact';
+import { render, screen, waitFor } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import { CoreProvider } from '../../../core/Context/CoreProvider';
 import { countrySpecificFormatters } from './validate.formats';
@@ -257,16 +257,18 @@ describe('Address', () => {
                     onChange={onChangeMock}
                 />
             );
-            const countryDropdown = await screen.findByRole('combobox', { name: /country/i });
+            const countryDropdown = await screen.findByRole('combobox', { name: 'Country/Region' });
             // Valid on init
             const lastOnChangeCall = onChangeMock.mock.calls.pop();
             expect(lastOnChangeCall[0].isValid).toBe(true);
 
             await user.click(countryDropdown);
+            const oldCountry = 'United States';
             const newCountry = 'Canada';
-            await user.type(countryDropdown, `${newCountry}[Enter]`);
-            const errorMsg = await screen.findByText(/Invalid format. Expected format: A9A 9A9 or A9A9A9/);
-            expect(errorMsg).toBeInTheDocument();
+            await user.type(countryDropdown, `${'[Backspace]'.repeat(oldCountry.length)}${newCountry}[Enter]`);
+            await waitFor(() => {
+                expect(screen.getByText('Invalid format. Expected format: A9A 9A9 or A9A9A9')).toBeInTheDocument();
+            });
         });
 
         test('should show error when remove focus from postal code with invalid value', async () => {
@@ -278,11 +280,12 @@ describe('Address', () => {
             };
             const onChangeMock = jest.fn();
             customRender(<Address countryCode={countryCode} data={data} allowedCountries={allowedCountries} onChange={onChangeMock} />);
-            const postCode = await screen.findByRole('textbox', { name: /Zip code/ });
+            const postCode = screen.getByLabelText('Zip code');
             await user.type(postCode, '1');
             await user.tab();
-            const errorMsg = await screen.findByText(/Invalid format. Expected format: 99999 or 99999-9999/);
-            expect(errorMsg).toBeInTheDocument();
+            await waitFor(() => {
+                expect(screen.getByText('Invalid format. Expected format: 99999 or 99999-9999')).toBeInTheDocument();
+            });
         });
 
         describe.each`

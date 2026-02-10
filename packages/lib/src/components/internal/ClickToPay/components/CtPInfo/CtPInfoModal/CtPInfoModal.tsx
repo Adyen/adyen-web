@@ -51,7 +51,7 @@ const CtPInfoModal = ({ isOpen, onClose, focusAfterClose }: CtPInfoModalProps) =
                             {i18n.get('ctp.infoPopup.subtitle')}
                         </p>
 
-                        <ul className="adyen-checkout__ctp-modal-text adyen-checkout__ctp-modal-benefits" type="disc">
+                        <ul className="adyen-checkout__ctp-modal-text adyen-checkout__ctp-modal-benefits">
                             <li>{i18n.get('ctp.infoPopup.benefit1')}</li>
                             <li>{i18n.get('ctp.infoPopup.benefit2')}</li>
                             <li>{i18n.get('ctp.infoPopup.benefit3')}</li>

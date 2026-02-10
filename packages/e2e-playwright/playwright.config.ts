@@ -6,8 +6,10 @@ import { protocol } from './environment-variables';
 
 dotenv.config({ path: path.resolve('../../', '.env') });
 
-const storybookPort = 3020;
-const storybookLocalHostUrl = `${protocol}://localhost:${storybookPort}`;
+export const WEB_SERVER_TIMEOUT_MS = 180_000;
+
+export const STORYBOOK_PORT = 3020;
+export const STORYBOOK_URL = `${protocol}://localhost:${STORYBOOK_PORT}`;
 
 const snapshotPathTemplate = '{testDir}/{testFileDir}/__screenshots__/{platform}/{projectName}/{arg}{ext}';
 
@@ -57,7 +59,7 @@ const config: PlaywrightTestConfig = {
         /* Maximum time each action such as `click()` can take. Defaults to 0 (no limit). */
         actionTimeout: 30_000,
         /* Base URL to use in actions like `await page.goto('/')`. */
-        baseURL: storybookLocalHostUrl,
+        baseURL: STORYBOOK_URL,
 
         /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
         trace: 'on-first-retry',
@@ -98,9 +100,9 @@ const config: PlaywrightTestConfig = {
         {
             command: 'npm run build:storybook:e2e && npm run start:prod-storybook',
             cwd: '../..',
-            port: storybookPort,
+            port: STORYBOOK_PORT,
             reuseExistingServer: !process.env.CI,
-            timeout: 180_000
+            timeout: WEB_SERVER_TIMEOUT_MS
         }
     ]
 };

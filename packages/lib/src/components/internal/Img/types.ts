@@ -1,6 +1,6 @@
-import { h } from 'preact';
+import { h, ImgHTMLAttributes } from 'preact';
 
-export interface ImgProps extends h.JSX.HTMLAttributes<HTMLImageElement> {
+export interface ImgProps extends ImgHTMLAttributes {
     backgroundUrl?: string;
     className?: string;
     /**
