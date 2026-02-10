@@ -19,6 +19,7 @@
     "installments.oneTime": "Еднократно плащане",
     "installments.installments": "Разсрочено плащане",
     "installments.revolving": "Револвиращо плащане",
+    "installments.bonus": "Плащане на бонус",
     "sepaDirectDebit.ibanField.invalid": "Невалиден номер на сметка",
     "sepa.ownerName": "Име на притежателя",
     "sepa.ibanNumber": "Номер на сметката (IBAN)",

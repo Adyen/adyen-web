@@ -19,6 +19,7 @@
     "installments.oneTime": "Pago único",
     "installments.installments": "Pago fraccionado",
     "installments.revolving": "Pago rotativo",
+    "installments.bonus": "Pago de bonificación",
     "sepaDirectDebit.ibanField.invalid": "Número de cuenta no válido",
     "sepa.ownerName": "Nombre del titular de cuenta",
     "sepa.ibanNumber": "Número de cuenta (IBAN)",

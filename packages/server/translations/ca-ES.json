@@ -19,6 +19,7 @@
     "installments.oneTime": "Pagament únic",
     "installments.installments": "Pagament fraccionat",
     "installments.revolving": "Pagament rotatiu",
+    "installments.bonus": "Pagament de bonificació",
     "sepaDirectDebit.ibanField.invalid": "El número de compte no és vàlid",
     "sepa.ownerName": "Nom del titular",
     "sepa.ibanNumber": "Número de compte (IBAN)",

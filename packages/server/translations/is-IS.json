@@ -19,6 +19,7 @@
     "installments.oneTime": "Eingreiðsla",
     "installments.installments": "Greiðsla með afborgunum",
     "installments.revolving": "Veltigreiðsla",
+    "installments.bonus": "Bónusgreiðsla",
     "sepaDirectDebit.ibanField.invalid": "Ógilt reikningsnúmer",
     "sepa.ownerName": "Nafn reikningshafa",
     "sepa.ibanNumber": "Reikningsnúmer (IBAN)",

@@ -19,6 +19,7 @@
     "installments.oneTime": "Engångsbetalning",
     "installments.installments": "Delbetalningar",
     "installments.revolving": "Uppdelad betalning",
+    "installments.bonus": "Bonusbetalning",
     "sepaDirectDebit.ibanField.invalid": "Ogiltigt kontonummer",
     "sepa.ownerName": "Känt av kontoinnehavaren",
     "sepa.ibanNumber": "Kontonummer (IBAN)",

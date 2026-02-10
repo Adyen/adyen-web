@@ -19,6 +19,7 @@
     "installments.oneTime": "Одноразовый платеж",
     "installments.installments": "Рассрочка",
     "installments.revolving": "Повторяющаяся оплата",
+    "installments.bonus": "Бонусный платеж",
     "sepaDirectDebit.ibanField.invalid": "Недействительный номер счета",
     "sepa.ownerName": "Имя владельца",
     "sepa.ibanNumber": "Номер счета (IBAN)",
