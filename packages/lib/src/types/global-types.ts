@@ -187,19 +187,22 @@ export interface ProcessedPaymentStatusResponse {
     props?: Record<string, any>;
 }
 
-/**
- * {@link https://docs.adyen.com/api-explorer/#/PaymentSetupAndVerificationService/v52/payments__reqParam_amount API Explorer /payments amount}
- */
 export interface PaymentAmount {
-    value: number;
-    currency: string;
-}
-
-export interface PaymentAmountExtended extends PaymentAmount {
     /**
-     * Adds currencyDisplay prop - as a way for the merchant to influence the final display of the amount on the pay button.
-     * Defaults to 'symbol'.
-     * see: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat/NumberFormat#currencydisplay
+     * The payment amount in minor units for the specified `currency`.
+     */
+    value: number;
+    /**
+     * The 3-letter ISO 4217 currency code.
+     */
+    currency: string;
+    /**
+     * Influences how the currency is displayed on the pay button.
+     *
+     * This maps to `Intl.NumberFormat`'s `currencyDisplay` option (for example, `"symbol"`, `"code"`, `"name"`, `"narrowSymbol"`).
+     *
+     * @default 'symbol'
+     * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat/NumberFormat#currencydisplay
      */
     currencyDisplay?: string;
 }

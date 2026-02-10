@@ -36,6 +36,9 @@ test.describe('Automated visual testing', () => {
             if (!storyId.includes('await')) {
                 await expect(page.getByTestId('spinner')).toBeHidden();
             }
+            if (storyId.includes('click-to-pay')) {
+                await expect(page.locator('.adyen-checkout-ctp__card-animation')).toBeHidden();
+            }
             await toHaveScreenshot(page.getByTestId('checkout-component'), browserName, `${storyId}.png`, {
                 mask: [page.getByRole('timer'), page.getByTestId('stored-card-info')]
             });

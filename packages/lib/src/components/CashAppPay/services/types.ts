@@ -1,4 +1,4 @@
-import { PaymentAmount } from '../../../types/global-types';
+import { PaymentAmount } from '../../../types';
 
 export interface ICashAppWindowObject {
     pay({ clientId }: { clientId: string }): Promise<ICashAppSDK>;
@@ -28,7 +28,7 @@ export interface ICashAppService {
     setStorePaymentMethod(store: boolean): void;
     renderButton(target: HTMLElement): Promise<void>;
     restart(): Promise<void>;
-    createCustomerRequest(): Promise<void>;
+    createCustomerRequest(amount: PaymentAmount): Promise<void>;
     subscribeToEvent(eventType: CashAppPayEvents, callback: Function): Function;
 }
 
@@ -38,7 +38,6 @@ export type CashAppServiceConfig = {
     environment: string;
     clientId: string;
     scopeId: string;
-    amount: PaymentAmount;
     referenceId?: string;
     redirectURL?: string;
     button?: {

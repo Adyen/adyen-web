@@ -1,3 +1,4 @@
+import { PaymentAmount } from '../types';
 import CURRENCY_DECIMALS from './constants/currency-decimals';
 import { currencyMinorUnitsConfig } from './constants/currency-minor-units';
 
@@ -42,4 +43,23 @@ export const getLocalisedAmount = (amount: number, locale: string, currencyCode:
     } catch (e) {
         return stringAmount;
     }
+};
+
+/**
+ * Validates a payment amount object.
+ *
+ * @param amount - The payment amount object to validate
+ * @returns True if the amount has a valid numeric value, non-empty currency string,
+ *          and optionally a valid currencyDisplay string
+ */
+export const isAmountValid = (amount: PaymentAmount): boolean => {
+    if (!amount || typeof amount !== 'object') {
+        return false;
+    }
+
+    const hasValidValue = typeof amount.value === 'number' && !Number.isNaN(amount.value);
+    const hasValidCurrency = typeof amount.currency === 'string' && amount.currency.length > 0;
+    const hasValidCurrencyDisplay = amount.currencyDisplay === undefined || typeof amount.currencyDisplay === 'string';
+
+    return hasValidValue && hasValidCurrency && hasValidCurrencyDisplay;
 };

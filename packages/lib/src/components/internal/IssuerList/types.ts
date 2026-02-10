@@ -7,7 +7,7 @@ export interface IssuerListProps {
     // Component type (e.g. onlineBanking)
     type: string;
     showPayButton: boolean;
-    payButton(props: Partial<PayButtonProps>): ComponentChildren;
+    payButton(props: PayButtonProps): ComponentChildren;
     onChange(payload: any): void;
     highlightedIds?: string[];
     placeholder?: string;

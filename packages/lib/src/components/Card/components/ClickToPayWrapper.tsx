@@ -3,7 +3,6 @@ import ClickToPayHolder from './ClickToPayHolder';
 import { h } from 'preact';
 
 const ClickToPayWrapper = ({
-    amount,
     configuration,
     clickToPayService,
     setClickToPayRef,
@@ -17,7 +16,6 @@ const ClickToPayWrapper = ({
         <ClickToPayProvider
             isStandaloneComponent={isStandaloneComponent}
             configuration={configuration}
-            amount={amount}
             clickToPayService={clickToPayService}
             setClickToPayRef={setClickToPayRef}
             onSetStatus={onSetStatus}

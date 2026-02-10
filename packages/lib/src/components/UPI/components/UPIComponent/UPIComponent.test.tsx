@@ -1,4 +1,4 @@
-import { h } from 'preact';
+import { createRef, h } from 'preact';
 import { render, screen, waitFor } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import SRPanelProvider from '../../../../core/Errors/SRPanelProvider';
@@ -6,12 +6,15 @@ import { SRPanel } from '../../../../core/Errors/SRPanel';
 import UPIComponent from './UPIComponent';
 import { CoreProvider } from '../../../../core/Context/CoreProvider';
 import { App } from '../../types';
+import { AmountProvider } from '../../../../core/Context/AmountProvider';
 import { UPI_MODE } from '../../constants';
 
 const customRender = (ui: h.JSX.Element) => {
     return render(
         <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
-            <SRPanelProvider srPanel={new SRPanel(global.core)}>{ui}</SRPanelProvider>
+            <AmountProvider providerRef={createRef()}>
+                <SRPanelProvider srPanel={new SRPanel(global.core)}>{ui}</SRPanelProvider>
+            </AmountProvider>
         </CoreProvider>
     );
 };
@@ -25,7 +28,15 @@ describe('UPIComponent', () => {
         const gpayApp: App = { id: 'gpay', name: 'Google Pay' };
 
         test('should show a list of apps from the given app list', async () => {
-            customRender(<UPIComponent apps={[gpayApp]} mode={UPI_MODE.INTENT} onChange={jest.fn()} showPayButton={false} />);
+            customRender(
+                <UPIComponent
+                    apps={[gpayApp]}
+                    mode={UPI_MODE.INTENT}
+                    onChange={jest.fn()}
+                    showPayButton={false}
+                    payButton={() => <button className="pay-button" />}
+                />
+            );
 
             expect(await screen.findByRole('radiogroup')).toBeInTheDocument();
             expect(await screen.findByRole('radio', { name: /google pay/i })).toBeInTheDocument();
@@ -63,7 +74,15 @@ describe('UPIComponent', () => {
             const onChangeMock = jest.fn();
             const user = userEvent.setup();
 
-            customRender(<UPIComponent apps={[gpayApp]} mode={UPI_MODE.INTENT} showPayButton={false} onChange={onChangeMock} />);
+            customRender(
+                <UPIComponent
+                    apps={[gpayApp]}
+                    mode={UPI_MODE.INTENT}
+                    showPayButton={false}
+                    onChange={onChangeMock}
+                    payButton={() => <button className="pay-button" />}
+                />
+            );
 
             expect(onChangeMock).toHaveBeenCalledWith({
                 data: {},
