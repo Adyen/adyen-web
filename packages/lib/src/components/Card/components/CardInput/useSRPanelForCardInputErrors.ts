@@ -5,10 +5,10 @@ import { handlePartialAddressMode, lookupBlurBasedErrors, mapFieldKey } from './
 import { usePrevious } from '../../../../utils/hookUtils';
 import { SetSRMessagesReturnObject, SortedErrorObject } from '../../../../core/Errors/types';
 import { ERROR_ACTION_BLUR_SCENARIO, ERROR_ACTION_FOCUS_FIELD } from '../../../../core/Errors/constants';
-// import { setFocusOnFirstField } from './handlers';
+import { setFocusOnFirstField } from './handlers';
 import { getArrayDifferences } from '../../../../utils/arrayUtils';
 
-const useSRPanelForCardInputErrors = ({ errors, props, isValidating, retrieveLayout, specifications, billingAddress, sfp, setFieldToFocus }) => {
+const useSRPanelForCardInputErrors = ({ errors, props, isValidating, retrieveLayout, specifications, billingAddress, sfp }) => {
     // Extract fns from context
     const { setSRMessagesFromObjects, setSRMessagesFromStrings, clearSRPanel, shouldMoveFocusSR } = useSRPanelContext();
 
@@ -54,9 +54,9 @@ const useSRPanelForCardInputErrors = ({ errors, props, isValidating, retrieveLay
                 // A call to focus the first field in error will always follow the call to validate the whole form
                 case ERROR_ACTION_FOCUS_FIELD:
                     if (shouldMoveFocusSR) {
-                        // setFocusOnFirstField(isValidating.current, sfp, srPanelResp?.fieldToFocus);
-                        setFieldToFocus(srPanelResp?.fieldToFocus);
+                        setFocusOnFirstField(isValidating.current, sfp, srPanelResp?.fieldToFocus);
                     }
+
                     // Remove 'showValidation' mode - allowing time for collation of all the fields in error whilst it is 'showValidation' mode (some errors come in a second render pass)
                     setTimeout(() => {
                         isValidating.current = false;

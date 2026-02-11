@@ -15,7 +15,7 @@ import { handlePartialAddressMode, extractPropsForCardFields, extractPropsForSFP
 import Specifications from '../../../internal/Address/Specifications';
 import { StoredCardFieldsWrapper } from './components/StoredCardFieldsWrapper';
 import { CardFieldsWrapper } from './components/CardFieldsWrapper';
-import { getAddressHandler, getAutoJumpHandler, getFocusHandler, setFocusOnFirstField } from './handlers';
+import { getAddressHandler, getAutoJumpHandler, getFocusHandler } from './handlers';
 import { InstallmentsObj } from './components/Installments/Installments';
 import { TouchStartEventObj } from './components/types';
 import classNames from 'classnames';
@@ -377,12 +377,6 @@ const CardInput = (props: CardInputProps) => {
         });
     }, [formData, formValid, formErrors]);
 
-    const setFieldToFocus = (fieldToFocus: string) => {
-        console.log('### CardInput::fieldToFocus:: ', fieldToFocus);
-        console.log('### CardInput::setFieldToFocus:: layout = ', retrieveLayout());
-        setFocusOnFirstField(isValidating.current, sfp, fieldToFocus);
-    };
-
     // Use the custom hook to set (or clear) errors in the SRPanel
     const {
         sortedErrorList: currentErrorsSortedByLayout,
@@ -395,12 +389,8 @@ const CardInput = (props: CardInputProps) => {
         retrieveLayout,
         specifications,
         billingAddress,
-        sfp,
-        setFieldToFocus
+        sfp
     });
-
-    // console.log('### CardInput::fieldToFocus:: ', fieldToFocus.current);
-    // fieldToFocus.current = null;
 
     // Analytics: ValidationErrors
     useEffect(() => {
