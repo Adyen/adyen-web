@@ -1,4 +1,6 @@
 import { selectOne } from '../components/internal/SecuredFields/lib/utilities/dom';
+import { handleScrollTo } from './handleScrollTo';
+import ua from '../components/internal/SecuredFields/lib/CSF/utils/userAgent';
 
 /**
  * Generic function to set focus on named element
@@ -23,10 +25,20 @@ export const setFocusOnField = (holder: Element | string, fieldToFocus: string, 
             pdHolder,
             `${focusContextSelector}.adyen-checkout__field--${fieldToFocus} .adyen-checkout__filter-input`
         );
+
+        if (ua.__IS_IOS) {
+            handleScrollTo(field);
+        }
+
         field?.focus();
     } else {
         // Set focus on input
         const field: HTMLElement = selectOne(pdHolder, `${focusContextSelector} [name="${fieldToFocus}"]`);
+
+        if (ua.__IS_IOS) {
+            handleScrollTo(field);
+        }
+
         field?.focus();
     }
 };

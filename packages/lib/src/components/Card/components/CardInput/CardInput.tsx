@@ -35,7 +35,7 @@ import { usePrevious } from '../../../../utils/hookUtils';
 import { AnalyticsInfoEvent, InfoEventType, UiTarget } from '../../../../core/Analytics/events/AnalyticsInfoEvent';
 
 const CardInput = (props: CardInputProps) => {
-    const sfp = useRef(null);
+    const sfp = useRef<SecuredFieldsProvider>(null);
     const isValidating = useRef(false);
     const getImage = useImage();
 
