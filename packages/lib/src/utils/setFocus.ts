@@ -13,6 +13,8 @@ export const setFocusOnField = (holder: Element | string, fieldToFocus: string, 
     // If holder is already a DOM element, use it directly; otherwise query for it
     const pdHolder = holder instanceof Element ? holder : selectOne(document, holder);
 
+    let field: HTMLElement;
+
     // Identify if we're dealing with a dropdown
     if (
         fieldToFocus === 'country' ||
@@ -21,25 +23,16 @@ export const setFocusOnField = (holder: Element | string, fieldToFocus: string, 
         fieldToFocus === 'selectedAccountType'
     ) {
         // Set focus on dropdown
-        const field: HTMLElement = selectOne(
-            pdHolder,
-            `${focusContextSelector}.adyen-checkout__field--${fieldToFocus} .adyen-checkout__filter-input`
-        );
-
-        // Fix for iOS scrolling issues: can't programmatically set focus on an element on iOS, so we scroll to it instead, so at least it is in view
-        if (ua.__IS_IOS) {
-            handleScrollTo(field);
-        }
-
-        field?.focus();
+        field = selectOne(pdHolder, `${focusContextSelector}.adyen-checkout__field--${fieldToFocus} .adyen-checkout__filter-input`);
     } else {
         // Set focus on input
-        const field: HTMLElement = selectOne(pdHolder, `${focusContextSelector} [name="${fieldToFocus}"]`);
-
-        if (ua.__IS_IOS) {
-            handleScrollTo(field);
-        }
-
-        field?.focus();
+        field = selectOne(pdHolder, `${focusContextSelector} [name="${fieldToFocus}"]`);
     }
+
+    // Fix for iOS scrolling issues: can't programmatically set focus on an element on iOS, so we scroll to it instead, so at least it is in view
+    if (ua.__IS_IOS) {
+        handleScrollTo(field);
+    }
+
+    field?.focus();
 };

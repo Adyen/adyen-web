@@ -12,10 +12,11 @@ import type { Dispatch, MutableRef, StateUpdater } from 'preact/hooks';
  */
 export const setFocusOnFirstField = (isValidating: boolean, sfp: SecuredFieldsProviderRef, fieldToFocus: string) => {
     if (isValidating) {
-        // Fix for iOS scrolling issues: can't programmatically set focus on an element on iOS, so we scroll to it instead, so at least it is in view
+        // Fix for iOS scrolling issues: can't programmatically set focus on a cross-origin element on iOS, so we scroll to it's label instead, so at least the element is in view
         if (ua.__IS_IOS) {
-            const labelText: HTMLElement = document.querySelector(`[data-id="${fieldToFocus}"]`);
-            handleScrollTo(labelText);
+            const rootNode = sfp.current.getRootNode?.();
+            const elementToScrollTo: HTMLElement = rootNode?.querySelector(`[data-id="${fieldToFocus}"]`);
+            handleScrollTo(elementToScrollTo);
         }
 
         // If not a cardInput related securedField - find field and set focus on it

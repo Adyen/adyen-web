@@ -86,10 +86,11 @@ const useSRPanelForGiftcardErrors = ({ errors, isValidating, setIsValidating, sf
                 case ERROR_ACTION_FOCUS_FIELD:
                     // When a field needs to be focused due to validation error
                     if (shouldMoveFocusSR && isValidating) {
-                        // Fix for iOS scrolling issues: can't programmatically set focus on an element on iOS, so we scroll to it instead, so at least it is in view
+                        // Fix for iOS scrolling issues: can't programmatically set focus on a cross-origin element on iOS, so we scroll to it's label instead, so at least the element is in view
                         if (ua.__IS_IOS) {
-                            const labelText: HTMLElement = document.querySelector(`[data-id="${srPanelResp?.fieldToFocus}"]`);
-                            handleScrollTo(labelText);
+                            const rootNode = sfp?.getRootNode();
+                            const elementToScrollTo: HTMLElement = rootNode?.querySelector(`[data-id="${srPanelResp?.fieldToFocus}"]`);
+                            handleScrollTo(elementToScrollTo);
                         }
 
                         sfp?.setFocusOn(srPanelResp?.fieldToFocus);
