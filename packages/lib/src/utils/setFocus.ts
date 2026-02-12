@@ -1,5 +1,5 @@
 import { selectOne } from '../components/internal/SecuredFields/lib/utilities/dom';
-import { handleScrollTo } from './handleScrollTo';
+import { windowScrollTo } from './windowScrollTo';
 import ua from '../components/internal/SecuredFields/lib/CSF/utils/userAgent';
 
 /**
@@ -31,7 +31,7 @@ export const setFocusOnField = (holder: Element | string, fieldToFocus: string, 
 
     // Fix for iOS scrolling issues: can't programmatically set focus on an element on iOS, so we scroll to it instead, so at least it is in view
     if (ua.__IS_IOS) {
-        handleScrollTo(field);
+        windowScrollTo(field);
     }
 
     field?.focus();

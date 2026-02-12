@@ -1,6 +1,6 @@
 const SCROLL_OFFSET_TOP = 100; // Leave some breathing room at the top
 
-export const handleScrollTo = (container: HTMLElement) => {
+export const windowScrollTo = (container: HTMLElement) => {
     if (container) {
         const bodyRect = document.body.getBoundingClientRect().top;
         const elementRect = container.getBoundingClientRect().top;

@@ -7,7 +7,7 @@ import { getArrayDifferences } from '../../../utils/arrayUtils';
 import { SetSRMessagesReturnFn } from '../../../core/Errors/SRPanelProvider';
 import SecuredFieldsProvider from '../../internal/SecuredFields/SFP/SecuredFieldsProvider';
 import ua from '../../internal/SecuredFields/lib/CSF/utils/userAgent';
-import { handleScrollTo } from '../../../utils/handleScrollTo';
+import { windowScrollTo } from '../../../utils/windowScrollTo';
 
 /**
  * Interface for transformed error objects returned from mapErrorsToValidationRuleResult
@@ -90,7 +90,7 @@ const useSRPanelForGiftcardErrors = ({ errors, isValidating, setIsValidating, sf
                         if (ua.__IS_IOS) {
                             const rootNode = sfp?.getRootNode();
                             const elementToScrollTo: HTMLElement = rootNode?.querySelector(`[data-id="${srPanelResp?.fieldToFocus}"]`);
-                            handleScrollTo(elementToScrollTo);
+                            windowScrollTo(elementToScrollTo);
                         }
 
                         sfp?.setFocusOn(srPanelResp?.fieldToFocus);

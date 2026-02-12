@@ -2,7 +2,7 @@ import { ENCRYPTED_CARD_NUMBER, CREDIT_CARD_SF_FIELDS } from '../../../internal/
 import { selectOne } from '../../../internal/SecuredFields/lib/utilities/dom';
 import { CardFocusData } from '../../../internal/SecuredFields/lib/types';
 import ua from '../../../internal/SecuredFields/lib/CSF/utils/userAgent';
-import { handleScrollTo } from '../../../../utils/handleScrollTo';
+import { windowScrollTo } from '../../../../utils/windowScrollTo';
 import type { SecuredFieldsProviderRef } from '../../../internal/SecuredFields/SFP/types';
 import { CardSetFormData, CardSetFormValid, CardSetFormErrors, OnFieldFocus } from './types';
 import type { Dispatch, MutableRef, StateUpdater } from 'preact/hooks';
@@ -16,7 +16,7 @@ export const setFocusOnFirstField = (isValidating: boolean, sfp: SecuredFieldsPr
         if (ua.__IS_IOS) {
             const rootNode = sfp.current.getRootNode?.();
             const elementToScrollTo: HTMLElement = rootNode?.querySelector(`[data-id="${fieldToFocus}"]`);
-            handleScrollTo(elementToScrollTo);
+            windowScrollTo(elementToScrollTo);
         }
 
         // If not a cardInput related securedField - find field and set focus on it
