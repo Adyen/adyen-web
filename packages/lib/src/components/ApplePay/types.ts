@@ -37,16 +37,6 @@ export type ApplePayButtonType =
 export type ApplePayButtonStyle = 'black' | 'white' | 'white-outline';
 
 export interface ApplePayConfiguration extends UIElementProps {
-    couponCode?: ApplePayJS.ApplePayPaymentRequest['couponCode'];
-
-    supportsCouponCode?: ApplePayJS.ApplePayPaymentRequest['supportsCouponCode'];
-
-    onCouponCodeChange?: (
-        resolve: (update: ApplePayJS.ApplePayCouponCodeUpdate) => void,
-        reject: () => void,
-        event: ApplePayJS.ApplePayCouponCodeChangedEvent
-    ) => void;
-
     /**
      * Enables the ApplePay Express Flow & also used for analytics
      * @defaultValue false
@@ -61,13 +51,13 @@ export interface ApplePayConfiguration extends UIElementProps {
     /**
      * The Apple Pay version number your website supports.
      * @default highest supported version by the shopper device
-     * @see {@link https://developer.apple.com/documentation/apple_pay_on_the_web/apple_pay_on_the_web_version_history Apple Pay on the Web Version History}
+     * @see {@link https://developer.apple.com/documentation/applepayontheweb/apple-pay-on-the-web-version-history Apple Pay on the Web Version History}
      */
     version?: number;
 
     /**
      * Part of the 'ApplePayLineItem' object, which sets the label of the payment request
-     * @see {@link https://developer.apple.com/documentation/apple_pay_on_the_web/applepaylineitem ApplePayLineItem docs}
+     * @see {@link https://developer.apple.com/documentation/applepayontheweb/applepaylineitem ApplePayLineItem docs}
      */
     totalPriceLabel?: string;
 
@@ -133,7 +123,7 @@ export interface ApplePayConfiguration extends UIElementProps {
 
     /**
      * ApplePayRecurringPaymentRequest - Represents a request to set up a recurring payment, typically a subscription.
-     * {@link https://developer.apple.com/documentation/apple_pay_on_the_web/applepayrecurringpaymentrequest}
+     * {@link https://developer.apple.com/documentation/applepayontheweb/applepayrecurringpaymentrequest}
      */
     recurringPaymentRequest?: ApplePayJS.ApplePayRecurringPaymentRequest;
 
@@ -211,7 +201,7 @@ export interface ApplePayConfiguration extends UIElementProps {
      * Collect the order tracking details if available.
      * This callback is invoked when a successfull payment is resolved
      *
-     * {@link https://developer.apple.com/documentation/apple_pay_on_the_web/applepaypaymentorderdetails}
+     * {@link https://developer.apple.com/documentation/applepayontheweb/applepaypaymentorderdetails}
      * @param resolve - Must be called with the orderDetails fields
      * @param reject - Must be called if something failed during the order creation. Calling 'reject' won't cancel the payment flow
      */
@@ -267,6 +257,32 @@ export interface ApplePayConfiguration extends UIElementProps {
         resolve: (shippingMethodUpdate: ApplePayJS.ApplePayShippingMethodUpdate) => void,
         reject: (shippingMethodUpdate: ApplePayJS.ApplePayShippingMethodUpdate) => void,
         event: ApplePayJS.ApplePayShippingMethodSelectedEvent
+    ) => void;
+
+    /**
+     * The initial coupon code for the payment request.
+     * @see {@link https://developer.apple.com/documentation/applepayontheweb/applepaypaymentrequest/couponcode couponCode docs}
+     */
+    couponCode?: ApplePayJS.ApplePayPaymentRequest['couponCode'];
+
+    /**
+     * A Boolean value that determines whether the payment sheet displays the coupon code field.
+     * @see {@link https://developer.apple.com/documentation/applepayontheweb/applepaypaymentrequest/supportscouponcode supportsCouponCode docs}
+     */
+    supportsCouponCode?: ApplePayJS.ApplePayPaymentRequest['supportsCouponCode'];
+
+    /**
+     * An event handler called by the system when the user enters or updates a coupon code.
+     *
+     * {@link https://developer.apple.com/documentation/applepayontheweb/applepaysession/oncouponcodechanged}
+     * @param resolve - Completes the change of a coupon code with an update.
+     * @param reject - Completes the change of a coupon code with no update.
+     * @param event - The event parameter contains the couponCode attribute.
+     */
+    onCouponCodeChange?: (
+        resolve: (update: ApplePayJS.ApplePayCouponCodeUpdate) => void,
+        reject: () => void,
+        event: ApplePayJS.ApplePayCouponCodeChangedEvent
     ) => void;
 
     buttonColor?: ApplePayButtonStyle;
