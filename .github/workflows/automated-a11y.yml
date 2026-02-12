@@ -14,7 +14,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: [22.18.0]
+        node-version: [24.13.0]
         api-version: ["v71"] # Using only latest API version for a11y tests
         runner-browser: ["chromium"] # Often a11y tests only need to run on one browser
     env:

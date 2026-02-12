@@ -14,7 +14,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: [22.18.0]
+        node-version: [24.13.0]
         api-version: ["v71"]
         runner-browser: ["chromium"]
     env:
