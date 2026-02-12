@@ -1,6 +1,7 @@
 import { test, expect } from '../../../../fixtures/card.fixture';
 import { pressKeyboardToNextItem } from '../../../utils/keyboard';
-import { REGULAR_TEST_CARD, TAGS, TEST_CVC_VALUE, TEST_DATE_VALUE, VISA_CARD } from '../../../utils/constants';
+import { paymentSuccessfulMock } from '../../../../mocks/payments/payments.mock';
+import { PAYMENT_RESULT, REGULAR_TEST_CARD, TAGS, TEST_CVC_VALUE, TEST_DATE_VALUE, VISA_CARD } from '../../../utils/constants';
 import { getStoryUrl } from '../../../utils/getStoryUrl';
 import { URL_MAP } from '../../../../fixtures/URL_MAP';
 import { toHaveScreenshot } from '../../../utils/assertions';
@@ -164,5 +165,35 @@ test.describe('Cards (Installments)', () => {
         await expect(card.bonusPaymentLabel).toBeVisible();
 
         await toHaveScreenshot(card.rootElement, browserName, 'card-installments-with-bonus-option.png');
+    });
+
+    test('#8 should be able to click on pay button when selecting an installment option [Bugfix: COSDK-1019]', async ({ card, page }) => {
+        await paymentSuccessfulMock(page);
+
+        await card.goto(url);
+
+        await card.typeCardNumber(REGULAR_TEST_CARD);
+        await card.typeExpiryDate(TEST_DATE_VALUE);
+        await card.typeCvc(TEST_CVC_VALUE);
+
+        // Select option
+        await card.installmentsPaymentLabel.click();
+        await card.installmentsDropdown.click();
+        await pressKeyboardToNextItem(page);
+        await pressKeyboardToNextItem(page);
+
+        const listItem = await card.selectListItem('2');
+        await listItem.click();
+
+        // Headless test seems to need time for UI interaction to register on state
+        await page.waitForTimeout(500);
+
+        // Inspect card.data
+        const paymentDataInstallments: any = await page.evaluate('window.component.data.installments');
+        expect(paymentDataInstallments.value).toEqual(2);
+
+        await card.pay();
+
+        await expect(card.paymentResult).toContainText(PAYMENT_RESULT.authorised);
     });
 });
