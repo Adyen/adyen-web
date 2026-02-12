@@ -63,7 +63,7 @@ class ApplePayService {
     /**
      * Begins the merchant validation process.
      * When this method is called, the payment sheet is presented and the merchant validation process is initiated.
-     * @see {@link https://developer.apple.com/documentation/apple_pay_on_the_web/applepaysession/1778001-begin}
+     * @see {@link https://developer.apple.com/documentation/applepayontheweb/applepaysession/1778001-begin}
      */
     begin() {
         return this.session.begin();
@@ -74,7 +74,7 @@ class ApplePayService {
      * Use this attribute to request and return a merchant session.
      * @param event - An ApplePayValidateMerchantEvent object (contains validationURL)
      * @param onValidateMerchant - A promise implemented by the merchant that will resolve with the merchantSession
-     * @see {@link https://developer.apple.com/documentation/apple_pay_on_the_web/apple_pay_js_api/providing_merchant_validation}
+     * @see {@link https://developer.apple.com/documentation/applepayontheweb/apple_pay_js_api/providing_merchant_validation}
      */
     onvalidatemerchant(event: ApplePayJS.ApplePayValidateMerchantEvent, onValidateMerchant: ApplePayConfiguration['onValidateMerchant']) {
         return new Promise((resolve, reject) => {
@@ -96,7 +96,7 @@ class ApplePayService {
      *
      * @param event - The event parameter contains the payment (ApplePayPayment) attribute.
      * @param onPaymentAuthorized - A promise that will complete the payment when resolved. Use this promise to process the payment.
-     * @see {@link https://developer.apple.com/documentation/apple_pay_on_the_web/applepaysession/1778020-onpaymentauthorized}
+     * @see {@link https://developer.apple.com/documentation/applepayontheweb/applepaysession/1778020-onpaymentauthorized}
      */
     onpaymentauthorized(
         event: ApplePayJS.ApplePayPaymentAuthorizedEvent,
@@ -117,7 +117,7 @@ class ApplePayService {
      *
      * @param event - The event parameter contains the payment (ApplePayPayment) attribute.
      * @param onPaymentMethodSelected - A promise that will complete the payment when resolved. Use this promise to process the payment.
-     * @see {@link https://developer.apple.com/documentation/apple_pay_on_the_web/applepaysession/1778013-onpaymentmethodselected}
+     * @see {@link https://developer.apple.com/documentation/applepayontheweb/applepaysession/1778013-onpaymentmethodselected}
      */
     onpaymentmethodselected(
         event: ApplePayJS.ApplePayPaymentMethodSelectedEvent,
@@ -137,7 +137,7 @@ class ApplePayService {
      * The onpaymentmethodselected function must resolve before the 30 second timeout
      * @param event - The event parameter contains the shippingContact attribute.
      * @param onShippingContactSelected - A promise that will complete the selection of a shipping contact with an update.
-     * @see {@link https://developer.apple.com/documentation/apple_pay_on_the_web/applepaysession/1778009-onshippingcontactselected}
+     * @see {@link https://developer.apple.com/documentation/applepayontheweb/applepaysession/1778009-onshippingcontactselected}
      */
     onshippingcontactselected(
         event: ApplePayJS.ApplePayShippingContactSelectedEvent,
@@ -157,7 +157,7 @@ class ApplePayService {
      * The onpaymentmethodselected function must resolve before the 30 second timeout
      * @param event - The event parameter contains the shippingMethod attribute.
      * @param onShippingMethodSelected - A promise that will complete the selection of a shipping method with an update.
-     * @see {@link https://developer.apple.com/documentation/apple_pay_on_the_web/applepaysession/1778009-onshippingcontactselected}
+     * @see {@link https://developer.apple.com/documentation/applepayontheweb/applepaysession/1778009-onshippingcontactselected}
      */
     onshippingmethodselected(
         event: ApplePayJS.ApplePayShippingMethodSelectedEvent,
@@ -187,7 +187,7 @@ class ApplePayService {
      * This function can be called even after an onpaymentauthorized event has been dispatched.
      * @param event -
      * @param onCancel -
-     * @see {@link https://developer.apple.com/documentation/apple_pay_on_the_web/applepaysession/1778029-oncancel}
+     * @see {@link https://developer.apple.com/documentation/applepayontheweb/applepaysession/1778029-oncancel}
      */
     oncancel(event: ApplePayJS.Event, onCancel: (event: ApplePayJS.Event) => void): void {
         onCancel(event);

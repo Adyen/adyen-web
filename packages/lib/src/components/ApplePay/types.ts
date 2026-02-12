@@ -281,7 +281,7 @@ export interface ApplePayConfiguration extends UIElementProps {
      */
     onCouponCodeChange?: (
         resolve: (update: ApplePayJS.ApplePayCouponCodeUpdate) => void,
-        reject: () => void,
+        reject: (update: ApplePayJS.ApplePayCouponCodeUpdate) => void,
         event: ApplePayJS.ApplePayCouponCodeChangedEvent
     ) => void;
 

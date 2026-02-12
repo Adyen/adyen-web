@@ -127,7 +127,7 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
      * not mean there are no cards available, it means the status cannot be determined and as such defaulting
      * and upstreaming should still be considered.
      *
-     * {@link https://developer.apple.com/documentation/apple_pay_on_the_web/applepaysession/4440085-applepaycapabilities}
+     * {@link https://developer.apple.com/documentation/applepayontheweb/applepaysession/4440085-applepaycapabilities}
      * @param merchantIdentifier
      */
     public async applePayCapabilities(merchantIdentifier?: string): Promise<ApplePayJS.PaymentCredentialStatusResponse> {

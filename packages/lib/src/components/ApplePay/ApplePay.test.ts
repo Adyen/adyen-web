@@ -822,7 +822,7 @@ describe('ApplePay', () => {
                 amount: { currency: 'EUR', value: 2000 },
                 supportsCouponCode: true,
                 onCouponCodeChange: (_resolve, reject, _event) => {
-                    reject();
+                    reject({ newTotal: { label: 'Total', amount: '20.00' } });
                 }
             });
 

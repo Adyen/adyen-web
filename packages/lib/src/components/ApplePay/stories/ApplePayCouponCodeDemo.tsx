@@ -20,6 +20,7 @@ interface ApplePayCouponCodeDemoProps {
 
 const ApplePayCouponCodeDemo = ({ amount, countryCode, shopperLocale }: ApplePayCouponCodeDemoProps) => {
     const [session, setSession] = useState<{ id: string; sessionData: string }>(null);
+    const currentAmountRef = useRef(amount);
     const [currentAmount, setCurrentAmount] = useState(amount);
     const checkoutRef = useRef<Core>(null);
 
@@ -114,7 +115,6 @@ const ApplePayCouponCodeDemo = ({ amount, countryCode, shopperLocale }: ApplePay
 
         return new ApplePay(checkout, {
             buttonColor: 'black',
-            // Setting to Modal here because Storybook will run the Component within an iframe, which means the ApplePay code would be displayed as a new window by default
             renderApplePayCodeAs: 'modal',
             couponCode: '',
             supportsCouponCode: true,
@@ -122,7 +122,9 @@ const ApplePayCouponCodeDemo = ({ amount, countryCode, shopperLocale }: ApplePay
                 const couponCode = event.couponCode;
 
                 if (couponCode !== VALID_COUPON) {
-                    reject();
+                    reject({
+                        newTotal: { label: 'Total', amount: String(amount / 100), type: 'final' }
+                    });
                     return;
                 }
 
@@ -132,6 +134,7 @@ const ApplePayCouponCodeDemo = ({ amount, countryCode, shopperLocale }: ApplePay
 
                 void patchSessionAmount(newAmount, checkoutSession)
                     .then(() => {
+                        currentAmountRef.current = discountedValue;
                         setCurrentAmount(discountedValue);
 
                         void checkoutRef.current.update(
@@ -152,7 +155,9 @@ const ApplePayCouponCodeDemo = ({ amount, countryCode, shopperLocale }: ApplePay
                     })
                     .catch(error => {
                         console.error('Coupon code session patch error', error);
-                        reject();
+                        reject({
+                            newTotal: { label: 'Total', amount: String(amount / 100), type: 'final' }
+                        });
                     });
             }
         });
