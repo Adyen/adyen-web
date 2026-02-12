@@ -197,10 +197,6 @@ function ApplePayCheckout({ session, createApplePay }: Readonly<ApplePayCheckout
         void createApplePay().then(setApplePay);
     }, [session]);
 
-    if (!applePay) {
-        return <div>Loading ApplePay...</div>;
-    }
-
     return <ComponentContainer element={applePay} />;
 }
 
