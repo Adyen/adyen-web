@@ -19,6 +19,7 @@
     "installments.oneTime": "Kertamaksu",
     "installments.installments": "Erämaksu",
     "installments.revolving": "Toistuva maksu",
+    "installments.bonus": "Bonusmaksu",
     "sepaDirectDebit.ibanField.invalid": "Väärä tilinumero",
     "sepa.ownerName": "Haltijan nimi",
     "sepa.ibanNumber": "Tilinumero (IBAN)",

@@ -19,6 +19,7 @@
     "installments.oneTime": "Egyösszegű fizetés",
     "installments.installments": "Részletfizetés",
     "installments.revolving": "Többösszegű fizetés",
+    "installments.bonus": "Bónusz fizetés",
     "sepaDirectDebit.ibanField.invalid": "Érvénytelen számlaszám",
     "sepa.ownerName": "Számlatulajdonos neve",
     "sepa.ibanNumber": "Számlaszám (IBAN)",

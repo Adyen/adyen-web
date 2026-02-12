@@ -9,7 +9,7 @@ import { AnalyticsInfoEvent, InfoEventType } from '../../core/Analytics/events/A
 interface PersonalDetailsConfiguration extends UIElementProps {}
 
 export class PersonalDetailsElement extends UIElement<PersonalDetailsConfiguration> {
-    public static type = TxVariants.personal_details;
+    public static readonly type = TxVariants.personal_details;
 
     protected override beforeRender(configSetByMerchant?: PersonalDetailsConfiguration): void {
         const event = new AnalyticsInfoEvent({

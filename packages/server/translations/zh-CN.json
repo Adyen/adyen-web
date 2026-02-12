@@ -19,6 +19,7 @@
     "installments.oneTime": "全款支付",
     "installments.installments": "分期支付",
     "installments.revolving": "循环支付",
+    "installments.bonus": "奖金支付",
     "sepaDirectDebit.ibanField.invalid": "无效的账号",
     "sepa.ownerName": "持卡人姓名",
     "sepa.ibanNumber": "账号 (IBAN)",

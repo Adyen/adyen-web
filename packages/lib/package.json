@@ -1,6 +1,6 @@
 {
     "name": "@adyen/adyen-web",
-    "version": "6.30.0",
+    "version": "6.31.0",
     "license": "MIT",
     "homepage": "https://docs.adyen.com/checkout",
     "type": "module",
@@ -141,7 +141,7 @@
         "@types/applepayjs": "14.0.9",
         "@types/googlepay": "0.7.10",
         "classnames": "2.5.1",
-        "preact": "10.22.1"
+        "preact": "10.28.2"
     },
     "msw": {
         "workerDirectory": [

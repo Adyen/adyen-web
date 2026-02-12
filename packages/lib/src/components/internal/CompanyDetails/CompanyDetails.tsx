@@ -1,4 +1,4 @@
-import { h } from 'preact';
+import { h, FocusEventHandler, InputEventHandler } from 'preact';
 import { useEffect, useRef } from 'preact/hooks';
 import Fieldset from '../FormFields/Fieldset';
 import Field from '../FormFields/Field';
@@ -14,7 +14,7 @@ import { HandleChangeForModeType } from '../../../utils/useForm/types';
 
 export const COMPANY_DETAILS_SCHEMA = ['name', 'registrationNumber'];
 
-export default function CompanyDetails(props: CompanyDetailsProps) {
+export default function CompanyDetails(props: Readonly<CompanyDetailsProps>) {
     const { label = '', namePrefix, requiredFields, visibility } = props;
     const { i18n } = useCoreContext();
     const { handleChangeFor, triggerValidation, data, valid, errors, isValid } = useForm<CompanyDetailsSchema>({
@@ -38,7 +38,7 @@ export default function CompanyDetails(props: CompanyDetailsProps) {
     const generateFieldName = (name: string): string => `${namePrefix ? `${namePrefix}.` : ''}${name}`;
 
     const eventHandler =
-        (mode: HandleChangeForModeType): h.JSX.FocusEventHandler<HTMLInputElement> =>
+        (mode: HandleChangeForModeType): FocusEventHandler<HTMLInputElement> =>
         (e): void => {
             const { name } = e.target as HTMLInputElement;
             const key = name.split(`${namePrefix}.`).pop();
@@ -47,7 +47,7 @@ export default function CompanyDetails(props: CompanyDetailsProps) {
         };
 
     const inputEventHandler =
-        (mode: HandleChangeForModeType): h.JSX.InputEventHandler<HTMLInputElement> =>
+        (mode: HandleChangeForModeType): InputEventHandler<HTMLInputElement> =>
         (e): void => {
             const { name } = e.target as HTMLInputElement;
             const key = name.split(`${namePrefix}.`).pop();
@@ -79,7 +79,7 @@ export default function CompanyDetails(props: CompanyDetailsProps) {
                         classNameModifiers={['name']}
                         onInput={inputEventHandler('input')}
                         onBlur={eventHandler('blur')}
-                        spellCheck={false}
+                        spellcheck={false}
                     />
                 </Field>
             )}
@@ -98,7 +98,7 @@ export default function CompanyDetails(props: CompanyDetailsProps) {
                         classNameModifiers={['registrationNumber']}
                         onInput={inputEventHandler('input')}
                         onBlur={eventHandler('blur')}
-                        spellCheck={false}
+                        spellcheck={false}
                     />
                 </Field>
             )}

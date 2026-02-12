@@ -19,6 +19,7 @@
     "installments.oneTime": "Eenmalige betaling",
     "installments.installments": "Betaling termijnen",
     "installments.revolving": "Terugkerende betaling",
+    "installments.bonus": "Bonusbetaling",
     "sepaDirectDebit.ibanField.invalid": "Ongeldig rekeningnummer",
     "sepa.ownerName": "Ten name van",
     "sepa.ibanNumber": "Rekeningnummer (IBAN)",
