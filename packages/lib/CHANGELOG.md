@@ -6,13 +6,13 @@
 
 - Improved: Upgrade Preact version to 10.28.2 ([#3762](https://github.com/Adyen/adyen-web/pull/3762))
 
-- Improvement: Added support for Bonus installments ([#3797](https://github.com/Adyen/adyen-web/pull/3797))
+- Improved: Added support for Bonus installments (JP) ([#3797](https://github.com/Adyen/adyen-web/pull/3797))
 
 - New: Allowing amount updates without re-initializing Drop-in/Components ([#3741](https://github.com/Adyen/adyen-web/pull/3741))
 
 ### Patch Changes
 
-- Fix: Card installments dropdown does not block the pay button ([#3800](https://github.com/Adyen/adyen-web/pull/3800))
+- Fixed: Card installments dropdown does not block the pay button ([#3800](https://github.com/Adyen/adyen-web/pull/3800))
 
 ## 6.30.0
 
