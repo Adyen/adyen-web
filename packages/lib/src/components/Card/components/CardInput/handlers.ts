@@ -12,7 +12,6 @@ import type { Dispatch, MutableRef, StateUpdater } from 'preact/hooks';
  */
 export const setFocusOnFirstField = (isValidating: boolean, sfp: SecuredFieldsProviderRef, fieldToFocus: string) => {
     if (isValidating) {
-        console.log('### handlers::setFocusOnFirstField:: count = 2');
         // Fix for iOS scrolling issues: can't programmatically set focus on an element on iOS, so we scroll to it instead, so at least it is in view
         if (ua.__IS_IOS) {
             const labelText: HTMLElement = document.querySelector(`[data-id="${fieldToFocus}"]`);

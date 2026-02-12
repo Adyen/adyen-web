@@ -6,6 +6,8 @@ import { ERROR_ACTION_BLUR_SCENARIO, ERROR_ACTION_FOCUS_FIELD } from '../../../c
 import { getArrayDifferences } from '../../../utils/arrayUtils';
 import { SetSRMessagesReturnFn } from '../../../core/Errors/SRPanelProvider';
 import SecuredFieldsProvider from '../../internal/SecuredFields/SFP/SecuredFieldsProvider';
+import ua from '../../internal/SecuredFields/lib/CSF/utils/userAgent';
+import { handleScrollTo } from '../../../utils/handleScrollTo';
 
 /**
  * Interface for transformed error objects returned from mapErrorsToValidationRuleResult
@@ -31,6 +33,7 @@ interface TransformedErrorsObj {
 interface UseSRPanelForGiftcardErrorsProps {
     errors: TransformedErrorsObj;
     isValidating: boolean;
+    resetIsValidating: () => void;
     sfp: SecuredFieldsProvider;
 }
 
@@ -48,7 +51,7 @@ interface SortedErrorObject {
  * This hook manages both visual and screen reader error announcements for the gift card component,
  * handling both blur-based validation errors and form-wide validation errors.
  */
-const useSRPanelForGiftcardErrors = ({ errors, isValidating, sfp }: UseSRPanelForGiftcardErrorsProps) => {
+const useSRPanelForGiftcardErrors = ({ errors, isValidating, resetIsValidating, sfp }: UseSRPanelForGiftcardErrorsProps) => {
     // Track sorted list of errors for comparison with previous state
     const [sortedErrorList, setSortedErrorList] = useState<SortedErrorObject[]>(null);
     // Track previous error list for detecting changes
@@ -82,14 +85,20 @@ const useSRPanelForGiftcardErrors = ({ errors, isValidating, sfp }: UseSRPanelFo
             switch (srPanelResp?.action) {
                 case ERROR_ACTION_FOCUS_FIELD:
                     // When a field needs to be focused due to validation error
-                    if (shouldMoveFocusSR) {
+                    if (shouldMoveFocusSR && isValidating === true) {
+                        // Fix for iOS scrolling issues: can't programmatically set focus on an element on iOS, so we scroll to it instead, so at least it is in view
+                        if (ua.__IS_IOS) {
+                            const labelText: HTMLElement = document.querySelector(`[data-id="${srPanelResp?.fieldToFocus}"]`);
+                            handleScrollTo(labelText);
+                        }
+
                         sfp?.setFocusOn(srPanelResp?.fieldToFocus);
                     }
                     // Remove 'showValidation' mode - allowing time for collation of all the fields in error whilst it is 'showValidation' mode (some errors come in a second render pass)
                     setTimeout(() => {
-                        if (typeof isValidating === 'boolean') {
-                            isValidating = false;
-                        }
+                        // Need to reset this on the *state* of the Giftcard component (which is where isValidating comes from),
+                        // - otherwise it remains true and any subsequent click, *anywhere* in the UI, will trigger a second "focus field" event
+                        resetIsValidating();
                     }, 300);
                     break;
 
