@@ -15,6 +15,7 @@ import {
     CardBrandData,
     CardConfigSuccessData,
     CardFieldValidData,
+    CardFocusData,
     CardLoadData,
     CVCPolicyType,
     DatePolicyType
@@ -35,6 +36,7 @@ import { IAnalytics } from '../../../../core/Analytics/Analytics';
 import { PayButtonProps } from '../../../internal/PayButton/PayButton';
 import { h } from 'preact';
 import { InstallmentOptions } from './components/Installments/Installments';
+import type { Form } from '../../../../utils/useForm/types';
 
 export interface CardInputValidState {
     holderName?: boolean;
@@ -207,3 +209,9 @@ export enum AddressModeOptions {
     partial = 'partial',
     none = 'none'
 }
+
+export type CardSetFormData = Form<CardInputDataState>['setData'];
+export type CardSetFormValid = Form<CardInputDataState>['setValid'];
+export type CardSetFormErrors = Form<CardInputDataState>['setErrors'];
+
+export type OnFieldFocus = (who: string, e: Event | CardFocusData) => void;

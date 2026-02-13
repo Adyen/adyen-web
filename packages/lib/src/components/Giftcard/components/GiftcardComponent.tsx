@@ -146,6 +146,10 @@ class Giftcard extends Component<GiftcardComponentProps> {
         this.sfp?.showValidation();
     };
 
+    public setIsValidating = (val: boolean) => {
+        this.setState({ isValidating: val });
+    };
+
     render(props, { focusedElement, balance, transactionLimit, isValidating, transformedErrors }) {
         const { i18n } = useCoreContext();
         const { amount } = useAmount();
@@ -154,6 +158,7 @@ class Giftcard extends Component<GiftcardComponentProps> {
         useSRPanelForGiftcardErrors({
             errors: transformedErrors,
             isValidating,
+            setIsValidating: this.setIsValidating,
             sfp: this.sfp
         });
 
