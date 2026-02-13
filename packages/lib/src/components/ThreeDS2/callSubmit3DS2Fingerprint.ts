@@ -41,7 +41,7 @@ export default function callSubmit3DS2Fingerprint({ data }): void {
                     event = new AnalyticsErrorEvent({
                         component: 'threeDS2Fingerprint',
                         code: ErrorEventCode.THREEDS2_NO_DETAILS_FOR_FRICTIONLESS_OR_REFUSED,
-                        errorType: ErrorEventType.apiError,
+                        errorType: ErrorEventType.threeDS2,
                         message: `${THREEDS2_FINGERPRINT_SUBMIT}: no details object in a response indicating either a "frictionless" flow, or a "refused" response`
                     });
 
@@ -65,7 +65,7 @@ export default function callSubmit3DS2Fingerprint({ data }): void {
                 event = new AnalyticsErrorEvent({
                     component: 'threeDS2Fingerprint',
                     code: ErrorEventCode.THREEDS2_NO_ACTION_FOR_CHALLENGE,
-                    errorType: ErrorEventType.apiError,
+                    errorType: ErrorEventType.threeDS2,
                     message: `${THREEDS2_FINGERPRINT_SUBMIT}: no action object in a response indicating a "challenge" flow`
                 });
                 this.submitAnalytics(event);
@@ -86,7 +86,7 @@ export default function callSubmit3DS2Fingerprint({ data }): void {
                 event = new AnalyticsErrorEvent({
                     component: 'threeDS2Fingerprint',
                     code: ErrorEventCode.THREEDS2_NO_COMPONENT_FOR_ACTION,
-                    errorType: ErrorEventType.sdkError,
+                    errorType: ErrorEventType.threeDS2,
                     message: `${THREEDS2_FINGERPRINT_SUBMIT}: no component defined to handle the action response`
                 });
 

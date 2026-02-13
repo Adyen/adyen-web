@@ -287,7 +287,6 @@ class SecuredField extends AbstractSecuredField {
                 break;
 
             case 'encryptionError': {
-                console.log('### SecuredField::postMessageListenerFn::encryptionError:: feedbackObj ', feedbackObj);
                 const event = new AnalyticsErrorEvent({
                     component: this.componentType,
                     code: feedbackObj.code,
