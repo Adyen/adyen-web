@@ -21,7 +21,7 @@ export const setFocusOnFirstField = (isValidating: boolean, sfp: SecuredFieldsPr
 
         // If not a cardInput related securedField - find field and set focus on it
         if (!CREDIT_CARD_SF_FIELDS.includes(fieldToFocus)) {
-            setFocusOnNonSF(fieldToFocus, sfp);
+            setFocusOnNonSF(fieldToFocus, sfp, ua.__IS_IOS);
         } else {
             // Is a securedField - so it has its own focus procedures
             sfp.current.setFocusOn(fieldToFocus);
@@ -72,7 +72,7 @@ export const getAutoJumpHandler = (isAutoJumping: MutableRef<boolean>, sfp: Secu
                     } else {
                         // If it isn't an SF - shift focus to it (we're currently not concerned with whether the field is optional)
 
-                        setFocusOnNonSF(field, sfp);
+                        setFocusOnNonSF(field, sfp, false);
                         break;
                     }
                 }
@@ -83,7 +83,7 @@ export const getAutoJumpHandler = (isAutoJumping: MutableRef<boolean>, sfp: Secu
     };
 };
 
-const setFocusOnNonSF = (fieldName: string, sfp: SecuredFieldsProviderRef) => {
+const setFocusOnNonSF = (fieldName: string, sfp: SecuredFieldsProviderRef, shouldPreventScroll: boolean) => {
     // We have an exception with the kcp taxNumber where the name of the field ('kcpTaxNumberOrDOB') doesn't match
     // the value by which the field is referred to internally ('taxNumber')
     if (fieldName === 'taxNumber') fieldName = 'kcpTaxNumberOrDOB';
@@ -93,10 +93,10 @@ const setFocusOnNonSF = (fieldName: string, sfp: SecuredFieldsProviderRef) => {
     if (fieldName === 'country' || fieldName === 'stateOrProvince') {
         // Set focus on dropdown
         const field: HTMLElement = selectOne(rootNode, `.adyen-checkout__field--${fieldName} .adyen-checkout__filter-input`);
-        field?.focus();
+        field?.focus({ preventScroll: shouldPreventScroll }); // Don't even attempt to allow the focus call to trigger a scroll on iOS
     } else {
         // Set focus on input
         const field: HTMLElement = selectOne(rootNode, `[name="${fieldName}"]`);
-        field?.focus();
+        field?.focus({ preventScroll: shouldPreventScroll }); // Don't even attempt to allow the focus call to trigger a scroll on iOS
     }
 };
