@@ -41,8 +41,6 @@ export interface SecuredFields {
     encryptedExpiryYear?: SecuredField;
     encryptedSecurityCode?: SecuredField;
     encryptedPassword?: SecuredField;
-    encryptedBankAccountNumber?: SecuredField; // TODO can be removed now ACH doesn't use SF
-    encryptedBankLocationId?: SecuredField; // TODO can be removed now ACH doesn't use SF
 }
 
 export interface BrandStorageObject {

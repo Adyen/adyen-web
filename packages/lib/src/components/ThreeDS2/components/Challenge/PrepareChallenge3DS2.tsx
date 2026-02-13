@@ -220,11 +220,6 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                 result = 'noTransStatus';
             }
 
-            if (result === 'cancelled') {
-                // TODO - propagate to merchant?
-                // console.log('### PrepareChallenge3DS2:::: user cancelled the challenge');
-            }
-
             /** Create log object - the process is completed, one way or another */
 
             event = new AnalyticsLogEvent({
