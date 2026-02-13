@@ -32,7 +32,7 @@ let wrapper: any;
 const onError: any = () => {};
 
 const baseAnalyticsError = {
-    errorType: ErrorEventType.apiError,
+    errorType: ErrorEventType.threeDS2,
     timestamp: expect.any(String),
     id: expect.any(String)
 };
@@ -155,7 +155,7 @@ describe('ThreeDS2DeviceFingerprint - flow completes with errors that are consid
                 component: 'threeDS2Fingerprint',
                 message: 'threeDS2Fingerprint: timeout',
                 code: ErrorEventCode.THREEDS2_TIMEOUT,
-                errorType: ErrorEventType.network,
+                errorType: ErrorEventType.threeDS2,
                 timestamp: expect.any(String),
                 id: expect.any(String)
             });
