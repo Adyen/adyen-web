@@ -34,5 +34,5 @@ export const setFocusOnField = (holder: Element | string, fieldToFocus: string, 
         windowScrollTo(field);
     }
 
-    field?.focus();
+    field?.focus({ preventScroll: ua.__IS_IOS }); // Don't even attempt to allow the focus call to trigger a scroll on iOS
 };
