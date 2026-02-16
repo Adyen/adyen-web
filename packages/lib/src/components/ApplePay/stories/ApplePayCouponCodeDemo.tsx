@@ -181,7 +181,7 @@ const ApplePayCouponCodeDemo = ({ amount, countryCode, shopperLocale }: ApplePay
     };
 
     useEffect(() => {
-        applePayRef.current.update({
+        applePayRef.current?.update({
             couponCode
         });
     }, [couponCode]);
