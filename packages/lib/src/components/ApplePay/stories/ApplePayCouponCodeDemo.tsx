@@ -22,7 +22,9 @@ const ApplePayCouponCodeDemo = ({ amount, countryCode, shopperLocale }: ApplePay
     const [session, setSession] = useState<{ id: string; sessionData: string }>(null);
     const currentAmountRef = useRef(amount);
     const [currentAmount, setCurrentAmount] = useState(amount);
+    const [couponCode, setCouponCode] = useState('');
     const checkoutRef = useRef<Core>(null);
+    const applePayRef = useRef<ApplePay>(null);
 
     const requestSession = async () => {
         const response = await createSession({
@@ -113,15 +115,15 @@ const ApplePayCouponCodeDemo = ({ amount, countryCode, shopperLocale }: ApplePay
 
         checkoutRef.current = checkout;
 
-        return new ApplePay(checkout, {
+        applePayRef.current = new ApplePay(checkout, {
             buttonColor: 'black',
             renderApplePayCodeAs: 'modal',
-            couponCode: '',
+            couponCode,
             supportsCouponCode: true,
             onCouponCodeChange: (resolve, reject, event) => {
-                const couponCode = event.couponCode;
+                const newCouponCode = event.couponCode;
 
-                if (couponCode !== VALID_COUPON) {
+                if (newCouponCode !== VALID_COUPON) {
                     currentAmountRef.current = amount;
                     setCurrentAmount(amount);
                     reject({
@@ -138,6 +140,8 @@ const ApplePayCouponCodeDemo = ({ amount, countryCode, shopperLocale }: ApplePay
                     .then(() => {
                         currentAmountRef.current = discountedValue;
                         setCurrentAmount(discountedValue);
+
+                        setCouponCode(newCouponCode);
 
                         void checkoutRef.current.update(
                             {
@@ -163,7 +167,15 @@ const ApplePayCouponCodeDemo = ({ amount, countryCode, shopperLocale }: ApplePay
                     });
             }
         });
+
+        return applePayRef.current;
     };
+
+    useEffect(() => {
+        applePayRef.current.update({
+            couponCode
+        });
+    }, [couponCode]);
 
     if (!session) {
         return <div>Loading...</div>;
