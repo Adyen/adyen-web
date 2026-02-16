@@ -20,6 +20,7 @@ interface ApplePayCouponCodeDemoProps {
 
 const ApplePayCouponCodeDemo = ({ amount, countryCode, shopperLocale }: ApplePayCouponCodeDemoProps) => {
     const [session, setSession] = useState<{ id: string; sessionData: string }>(null);
+    const sessionRef = useRef<{ id: string; sessionData: string }>(null);
     const currentAmountRef = useRef(amount);
     const [currentAmount, setCurrentAmount] = useState(amount);
     const [couponCode, setCouponCode] = useState('');
@@ -40,28 +41,31 @@ const ApplePayCouponCodeDemo = ({ amount, countryCode, shopperLocale }: ApplePay
             payable: false
         });
 
-        setSession({ id: response.id, sessionData: response.sessionData });
+        sessionRef.current = { id: response.id, sessionData: response.sessionData };
+        setSession(sessionRef.current);
     };
 
-    const patchSessionAmount = async (newAmount: PaymentAmount, checkoutSession: CheckoutSession): Promise<string> => {
-        const response = await patchCheckoutSession(checkoutSession.id, {
-            sessionData: checkoutSession.sessionData,
+    const patchSessionAmount = async (newAmount: PaymentAmount, currentSession: CheckoutSession): Promise<string> => {
+        const response = await patchCheckoutSession(currentSession.id, {
+            sessionData: currentSession.sessionData,
             amount: newAmount,
             payable: false
         });
 
-        setSession({ id: checkoutSession.id, sessionData: response.sessionData });
+        sessionRef.current = { id: response.id, sessionData: response.sessionData };
+        setSession(sessionRef.current);
         return response.sessionData;
     };
 
-    const patchSessionPayable = async (paymentAmount: PaymentAmount, checkoutSession: CheckoutSession): Promise<string> => {
-        const response = await patchCheckoutSession(checkoutSession.id, {
-            sessionData: checkoutSession.sessionData,
+    const patchSessionPayable = async (paymentAmount: PaymentAmount, currentSession: CheckoutSession): Promise<string> => {
+        const response = await patchCheckoutSession(currentSession.id, {
+            sessionData: currentSession.sessionData,
             amount: paymentAmount,
             payable: true
         });
 
-        setSession({ id: checkoutSession.id, sessionData: response.sessionData });
+        sessionRef.current = { id: response.id, sessionData: response.sessionData };
+        setSession(sessionRef.current);
         return response.sessionData;
     };
 
@@ -85,10 +89,9 @@ const ApplePayCouponCodeDemo = ({ amount, countryCode, shopperLocale }: ApplePay
 
             beforeSubmit: async (data, component, actions) => {
                 try {
-                    const { session: checkoutSession } = component.core.session;
                     const { amount: paymentAmount } = component.props;
 
-                    const sessionData = await patchSessionPayable(paymentAmount, checkoutSession);
+                    const sessionData = await patchSessionPayable(paymentAmount, sessionRef.current);
 
                     actions.resolve({ ...data, sessionData });
                 } catch (error) {
@@ -132,9 +135,8 @@ const ApplePayCouponCodeDemo = ({ amount, countryCode, shopperLocale }: ApplePay
 
                 const discountedValue = Math.round(amount * (1 - DISCOUNT_PERCENTAGE / 100));
                 const newAmount = { value: discountedValue, currency };
-                const { session: checkoutSession } = checkoutRef.current.session;
 
-                void patchSessionAmount(newAmount, checkoutSession)
+                void patchSessionAmount(newAmount, sessionRef.current)
                     .then(() => {
                         currentAmountRef.current = discountedValue;
                         setCurrentAmount(discountedValue);
