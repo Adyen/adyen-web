@@ -41,8 +41,6 @@ export interface SecuredFields {
     encryptedExpiryYear?: SecuredField;
     encryptedSecurityCode?: SecuredField;
     encryptedPassword?: SecuredField;
-    encryptedBankAccountNumber?: SecuredField;
-    encryptedBankLocationId?: SecuredField;
 }
 
 export interface BrandStorageObject {
