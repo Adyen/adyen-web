@@ -52,7 +52,7 @@ const ApplePayCouponCodeDemo = ({ amount, countryCode, shopperLocale }: ApplePay
             payable: false
         });
 
-        sessionRef.current = { id: response.id, sessionData: response.sessionData };
+        sessionRef.current = { id: currentSession.id, sessionData: response.sessionData };
         setSession(sessionRef.current);
         return response.sessionData;
     };
@@ -64,7 +64,7 @@ const ApplePayCouponCodeDemo = ({ amount, countryCode, shopperLocale }: ApplePay
             payable: true
         });
 
-        sessionRef.current = { id: response.id, sessionData: response.sessionData };
+        sessionRef.current = { id: currentSession.id, sessionData: response.sessionData };
         setSession(sessionRef.current);
         return response.sessionData;
     };
