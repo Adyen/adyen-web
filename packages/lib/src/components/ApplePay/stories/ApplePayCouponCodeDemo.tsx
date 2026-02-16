@@ -124,10 +124,8 @@ const ApplePayCouponCodeDemo = ({ amount, countryCode, shopperLocale }: ApplePay
                 const newCouponCode = event.couponCode;
 
                 if (newCouponCode !== VALID_COUPON) {
-                    currentAmountRef.current = amount;
-                    setCurrentAmount(amount);
                     reject({
-                        newTotal: { label: 'Total', amount: String(amount / 100), type: 'final' }
+                        newTotal: { label: 'Total', amount: String(currentAmountRef.current / 100), type: 'final' }
                     });
                     return;
                 }
