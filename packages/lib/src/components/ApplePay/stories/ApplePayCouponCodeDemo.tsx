@@ -124,47 +124,56 @@ const ApplePayCouponCodeDemo = ({ amount, countryCode, shopperLocale }: ApplePay
             couponCode,
             supportsCouponCode: true,
             onCouponCodeChange: (resolve, reject, event) => {
-                const newCouponCode = event.couponCode;
+                const newCouponCode = (event.couponCode ?? '').trim();
 
-                if (newCouponCode !== VALID_COUPON) {
+                if (newCouponCode === VALID_COUPON) {
+                    const discountedValue = Math.round(amount * (1 - DISCOUNT_PERCENTAGE / 100));
+                    const newAmount = { value: discountedValue, currency };
+
+                    void patchSessionAmount(newAmount, sessionRef.current)
+                        .then(() => {
+                            currentAmountRef.current = discountedValue;
+                            setCurrentAmount(discountedValue);
+                            setCouponCode(newCouponCode);
+
+                            void checkoutRef.current.update({ amount: newAmount }, { shouldReinitializeCheckout: false });
+
+                            resolve({
+                                newTotal: { label: 'Total', amount: String(discountedValue / 100) }
+                            });
+                        })
+                        .catch(error => {
+                            console.error('Coupon code session patch error', error);
+                            reject({
+                                newTotal: { label: 'Total', amount: String(currentAmountRef.current / 100), type: 'final' }
+                            });
+                        });
+                } else if (newCouponCode === '') {
+                    const originalAmount = { value: amount, currency };
+
+                    void patchSessionAmount(originalAmount, sessionRef.current)
+                        .then(() => {
+                            currentAmountRef.current = amount;
+                            setCurrentAmount(amount);
+                            setCouponCode('');
+
+                            void checkoutRef.current.update({ amount: originalAmount }, { shouldReinitializeCheckout: false });
+
+                            resolve({
+                                newTotal: { label: 'Total', amount: String(amount / 100) }
+                            });
+                        })
+                        .catch(error => {
+                            console.error('Coupon code removal session patch error', error);
+                            reject({
+                                newTotal: { label: 'Total', amount: String(currentAmountRef.current / 100), type: 'final' }
+                            });
+                        });
+                } else {
                     reject({
                         newTotal: { label: 'Total', amount: String(currentAmountRef.current / 100), type: 'final' }
                     });
-                    return;
                 }
-
-                const discountedValue = Math.round(amount * (1 - DISCOUNT_PERCENTAGE / 100));
-                const newAmount = { value: discountedValue, currency };
-
-                void patchSessionAmount(newAmount, sessionRef.current)
-                    .then(() => {
-                        currentAmountRef.current = discountedValue;
-                        setCurrentAmount(discountedValue);
-
-                        setCouponCode(newCouponCode);
-
-                        void checkoutRef.current.update(
-                            {
-                                amount: newAmount
-                            },
-                            {
-                                shouldReinitializeCheckout: false
-                            }
-                        );
-
-                        resolve({
-                            newTotal: {
-                                label: 'Total',
-                                amount: String(discountedValue / 100)
-                            }
-                        });
-                    })
-                    .catch(error => {
-                        console.error('Coupon code session patch error', error);
-                        reject({
-                            newTotal: { label: 'Total', amount: String(amount / 100), type: 'final' }
-                        });
-                    });
             }
         });
 
