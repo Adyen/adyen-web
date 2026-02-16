@@ -491,6 +491,42 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         }
 
         this.handleSuccessResult(response);
+
+        if (response.askDonation === true) {
+            console.log('### UIElement::handleResponse:: askDonation', response.askDonation);
+            this.callSessionsDonationCampaigns();
+        }
+    }
+
+    private callSessionsDonationCampaigns() {
+        // const event = new AnalyticsLogEvent({
+        //     component: this.type,
+        //     type: LogEventType.donationCampaign, // TODO will need a new type... donationCampaign?
+        //     message: 'Seesions flow: calling donationCampaigns endpoint'
+        // });
+        // this.submitAnalytics(event);
+
+        this.makeSessionDonationCampaignsCall()
+            .then(resp => {
+                console.log('### UIElement::makeSessionDonationCampaignsCall:: response', resp);
+            })
+            .catch((error: unknown) => {
+                console.log('### UIElement::makeSessionDonationCampaignsCall:: error', error);
+            });
+    }
+
+    private async makeSessionDonationCampaignsCall() {
+        try {
+            return await this.core.session.donationCampaigns();
+        } catch (error: unknown) {
+            if (error instanceof AdyenCheckoutError) {
+                this.handleError(error);
+            } else {
+                this.handleError(new AdyenCheckoutError('ERROR', 'Error when making /donationCampaigns call', { cause: error }));
+            }
+
+            return Promise.reject(error);
+        }
     }
 
     protected handleKeyPress(e: h.JSX.TargetedKeyboardEvent<HTMLInputElement> | KeyboardEvent) {

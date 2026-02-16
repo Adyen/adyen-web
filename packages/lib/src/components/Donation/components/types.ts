@@ -39,3 +39,10 @@ export interface DonationComponentProps extends CampaignContentProps {
     onCancel?: (payload: DonationPayload) => void;
     onChange?: (payload: DonationPayload) => void;
 }
+
+export interface DonationCampaign extends CampaignContentProps {
+    id: string;
+    campaignName: string;
+    donation: Donation;
+    termsAndConditionsUrl?: string;
+}
