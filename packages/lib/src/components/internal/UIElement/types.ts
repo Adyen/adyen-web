@@ -111,7 +111,7 @@ export type UIElementProps = {
         originalAction?: PaymentAction;
     };
 
-export type UIElementStatus = 'ready' | 'loading' | 'error' | 'success';
+export type UIElementStatus = 'ready' | 'loading' | 'error' | 'success' | 'donation';
 
 // An interface for the members exposed by a component to its parent UIElement
 export interface ComponentMethodsRef {

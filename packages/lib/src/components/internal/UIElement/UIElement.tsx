@@ -37,10 +37,16 @@ import { AmountProvider, AmountProviderRef } from '../../../core/Context/AmountP
 import { PayButtonProps } from '../PayButton/PayButton';
 
 export abstract class UIElement<P extends UIElementProps = UIElementProps> extends BaseElement<P> {
+    /**
+     * componentRef is a ref to the primary component inside the subclass that extends UIElement e.g. CardInput.tsx (which sits inside Card.tsx)
+     */
     protected componentRef: any;
 
     protected resources: Resources;
 
+    /**
+     * elementRef is a ref to the subclass that extends UIElement e.g. Card.tsx or Dropin.tsx
+     */
     public elementRef: UIElement;
 
     public static type = undefined;
@@ -73,6 +79,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         this.makeAdditionalDetailsCall = this.makeAdditionalDetailsCall.bind(this);
         this.submitUsingSessionsFlow = this.submitUsingSessionsFlow.bind(this);
         this.updateAmount = this.updateAmount.bind(this);
+        this.handleDonation = this.handleDonation.bind(this);
 
         this.elementRef = (props && props.elementRef) || this;
         this.resources = this.props.modules ? this.props.modules.resources : undefined;
@@ -209,7 +216,9 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     }
 
     /**
-     * elementRef is a ref to the subclass that extends UIElement e.g. Card.tsx
+     * Set status using elementRef, which:
+     * - If Drop-in, will set status for Dropin component, and then it will propagate the new status for the active payment method component
+     * - If Component, it will set its own status
      */
     public setElementStatus(status: UIElementStatus, props?: any): this {
         this.elementRef?.setStatus(status, props);
@@ -442,6 +451,44 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         });
     };
 
+    protected handleDonation(donationCampaignProps) {
+        console.log('### UIElement::handleDonation:: donationCampaignProps', donationCampaignProps);
+
+        // donationCampaignProps (from server response) overlapping with what a DonationComponent requires:
+        // donation
+        // nonprofitName
+        // causeName
+        // nonprofitDescription
+        // nonprofitUrl
+        // logoUrl
+        // bannerUrl
+        // termsAndConditionsUrl
+
+        const { id, campaignName, ...restDonationCampaignProps } = donationCampaignProps;
+
+        const donationComponentProps = {
+            onCancel(data) {
+                console.log('### Donation::onCancel:: data', data);
+            },
+            onDonate: (state, component) => {
+                console.log('### Donation::onDonate:: state, component', state, component);
+                setTimeout(() => component.setStatus('success'), 1000);
+            },
+            ...restDonationCampaignProps
+        };
+
+        // TODO - decide if we want to differentiate between the implementation for a Dropin and a Component.
+        //  Will they both be done via a setStatus call? In which case we could just use: this.setElementStatus('donation', donationComponentProps);
+        //  Or will the implementation for a component be different? In which case we need this if-clause
+        if (assertIsDropin(this.elementRef)) {
+            console.log('### UIElement::handleDonation:: is dropin');
+            console.log('### UIElement::handleDonation:: this.core', this.core);
+
+            this.elementRef.setStatus('donation', donationComponentProps);
+            // this.elementRef.setStatus('donation', { checkout: this.core,donationComponentProps });
+        }
+    }
+
     /**
      * Handles when the payment fails. The payment fails when:
      * - adv flow: the merchant rejects the payment due to a critical error
@@ -499,6 +546,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     }
 
     private callSessionsDonationCampaigns() {
+        // TODO add analytics
         // const event = new AnalyticsLogEvent({
         //     component: this.type,
         //     type: LogEventType.donationCampaign, // TODO will need a new type... donationCampaign?
@@ -507,8 +555,44 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         // this.submitAnalytics(event);
 
         this.makeSessionDonationCampaignsCall()
-            .then(resp => {
-                console.log('### UIElement::makeSessionDonationCampaignsCall:: response', resp);
+            .then(response => {
+                console.log('### UIElement::makeSessionDonationCampaignsCall:: response', response);
+
+                if (response?.donationCampaigns?.length) {
+                    console.log('### UIElement::makeSessionDonationCampaignsCall:: HAVE Campaigns');
+                } else {
+                    console.log('### UIElement:::: this.core', this.core);
+
+                    const mockResp = [
+                        {
+                            id: 'DONATION_CAMPAIGN_ID', // Don't overlap with DonationComponentProps
+                            campaignName: 'DONATION_CAMPAIGN_NAME', // Don't overlap with DonationComponentProps
+                            donation: {
+                                currency: 'EUR',
+                                type: 'fixedAmounts',
+                                values: [100, 200, 300]
+                            },
+                            nonprofitName: 'Test Charity',
+                            causeName: 'Earthquake Turkey & Syria',
+                            nonprofitDescription:
+                                'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+                            nonprofitUrl: 'https://example.org',
+                            logoUrl: '/logo.png',
+                            bannerUrl: '/banner.png',
+                            termsAndConditionsUrl: 'https://www.adyen.com'
+                        }
+                    ];
+
+                    return Promise.resolve(mockResp[0]);
+                }
+            })
+            .then(donationCampaignProps => {
+                console.log('### UIElement::makeSessionDonationCampaignsCall:: donationCampaignProps', donationCampaignProps);
+
+                // Allow time for success message to show
+                setTimeout(() => {
+                    this.handleDonation(donationCampaignProps);
+                }, 2000);
             })
             .catch((error: unknown) => {
                 console.log('### UIElement::makeSessionDonationCampaignsCall:: error', error);

@@ -11,6 +11,8 @@ import type { DropinComponentProps, DropinComponentState, DropinStatus, DropinSt
 import UIElement from '../../internal/UIElement';
 import { AnalyticsInfoEvent, InfoEventType, UiTarget } from '../../../core/Analytics/events/AnalyticsInfoEvent';
 import { DropinSuccessState } from './DropinSuccessState';
+import Donation from '../../Donation';
+import type { DonationConfiguration } from '../../Donation/types';
 
 export class DropinComponent extends Component<DropinComponentProps, DropinComponentState> {
     public state: DropinComponentState = {
@@ -182,6 +184,9 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
 
             case 'custom':
                 return status.props?.component?.render();
+
+            case 'donation':
+                return new Donation(this.props.core, status.props as DonationConfiguration).render();
 
             default:
                 return (
