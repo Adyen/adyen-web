@@ -35,6 +35,7 @@ import './UIElement.scss';
 import SRPanelProvider from '../../../core/Errors/SRPanelProvider';
 import { AmountProvider, AmountProviderRef } from '../../../core/Context/AmountProvider';
 import { PayButtonProps } from '../PayButton/PayButton';
+import { TxVariants } from '../../tx-variants';
 
 export abstract class UIElement<P extends UIElementProps = UIElementProps> extends BaseElement<P> {
     /**
@@ -485,6 +486,14 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
             console.log('### UIElement::handleDonation:: this.core', this.core);
 
             this.elementRef.setStatus('donation', { configProps: donationComponentProps });
+        } else {
+            this.unmount();
+
+            const DonationClass = this.core.getComponent(TxVariants.donation);
+            if (!DonationClass) {
+                throw new Error('Donation component is not registered');
+            }
+            new DonationClass(this.core, donationComponentProps).mount(this._node);
         }
     }
 
