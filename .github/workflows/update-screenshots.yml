@@ -27,7 +27,7 @@ jobs:
     - name: Setup Node
       uses: actions/setup-node@v6
       with:
-        node-version: 24.13.0
+        node-version: 24
         package-manager-cache: false
 
     - name: Cache node modules
@@ -37,7 +37,7 @@ jobs:
         cache-name: node-modules-v1
       with:
         path: node_modules
-        key: ${{ runner.os }}-cache-${{ env.cache-name }}-node-24.13.0-yarn-${{ hashFiles('**/yarn.lock') }}
+        key: ${{ runner.os }}-cache-${{ env.cache-name }}-yarn-${{ hashFiles('**/yarn.lock') }}
 
     - name: Enable Corepack
       run: corepack enable
