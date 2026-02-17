@@ -11,19 +11,15 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [24.13.0]
-
     steps:
     - uses: actions/checkout@v6
       with:
         fetch-depth: 0
 
-    - name: Use Node.js ${{ matrix.node-version }}
+    - name: Use Node.js 24.13.0
       uses: actions/setup-node@v6
       with:
-        node-version: ${{ matrix.node-version }}
+        node-version: 24.13.0
         package-manager-cache: false
 
     - name: Cache node modules
@@ -33,7 +29,7 @@ jobs:
         cache-name: node-modules-v1
       with:
         path: node_modules
-        key: ${{ runner.os }}-cache-${{ env.cache-name }}-node-${{ matrix.node-version }}-yarn-${{ hashFiles('**/yarn.lock') }}
+        key: ${{ runner.os }}-cache-${{ env.cache-name }}-yarn-${{ hashFiles('**/yarn.lock') }}
 
     - name: Enable Corepack
       run: corepack enable
