@@ -484,8 +484,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
             console.log('### UIElement::handleDonation:: is dropin');
             console.log('### UIElement::handleDonation:: this.core', this.core);
 
-            this.elementRef.setStatus('donation', donationComponentProps);
-            // this.elementRef.setStatus('donation', { checkout: this.core,donationComponentProps });
+            this.elementRef.setStatus('donation', { configProps: donationComponentProps });
         }
     }
 
