@@ -14,6 +14,7 @@ export const ERROR_ACTION_FOCUS_FIELD = 'focusField';
 export const ERROR_ACTION_BLUR_SCENARIO = 'notValidating:blurScenario';
 export const ERROR_FIELD_REQUIRED = 'field.error.required';
 export const ERROR_FIELD_INVALID = 'field.error.invalid';
+export const ERROR_INVALID_CHARACTERS = 'field.error.invalidCharacters';
 
 export const ERROR_INVALID_FORMAT_EXPECTS = 'invalid.format.expects';
 export const CREDITCARD_HOLDER_NAME_INVALID = 'creditCard.holderName.invalid';
