@@ -1,5 +1,13 @@
 # @adyen/adyen-web
 
+## 6.31.1
+
+### Patch Changes
+
+- Aligning 3DS2 analytics errors with mobile sdks. Catch and propagate securedField encryption and key generation errors ([#3804](https://github.com/Adyen/adyen-web/pull/3804))
+
+- Fixed: issue in iOS where programmatic focus was not causing the affected field to scroll into view ([#3802](https://github.com/Adyen/adyen-web/pull/3802))
+
 ## 6.31.0
 
 ### Minor Changes
