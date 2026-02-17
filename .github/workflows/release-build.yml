@@ -4,8 +4,8 @@
 name: Build UMD and Translations
 
 on:
+  pull_request:
   workflow_dispatch:
-  workflow_call:
 
 jobs:
   build-umd-and-translations:
@@ -35,5 +35,5 @@ jobs:
       - run: cp packages/server/translations/ packages/lib/dist/umd -r
       - uses: actions/upload-artifact@v6
         with:
-          name: umd-and-translations
+          name: adyen-web-poc-6.31.0-poc_cdn
           path: packages/lib/dist/umd
