@@ -1,5 +1,8 @@
 import Language from '../../../language';
 import { DonationAmount } from './types';
+import { ICore } from '../../../core/types';
+import { DonationConfiguration } from '../types';
+import Donation from '../Donation';
 
 interface RoundupAmount {
     maxRoundupAmount: number;
@@ -15,3 +18,11 @@ const getRoundupAmountLabel = (i18n: Language, { maxRoundupAmount, commercialTxA
     getAmountLabel(i18n, { value: getRoundupAmount(maxRoundupAmount, commercialTxAmount), currency });
 
 export { getAmountLabel, getRoundupAmount, getRoundupAmountLabel };
+
+export function getDonationComponent(txVariant: string, core: ICore, configProps: DonationConfiguration) {
+    const DonationClass = core.getComponent(txVariant) as typeof Donation | undefined;
+    if (!DonationClass) {
+        return null;
+    }
+    return new DonationClass(core, configProps);
+}

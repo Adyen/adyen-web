@@ -44,6 +44,7 @@ import { TxVariants } from '../../tx-variants';
 import type { DonationConfiguration } from '../../Donation/types';
 import type { DonationCampaign } from '../../Donation/components/types';
 import { Donation } from '../../index';
+import { getDonationComponent } from '../../Donation/components/utils';
 
 export abstract class UIElement<P extends UIElementProps = UIElementProps> extends BaseElement<P> {
     /**
@@ -495,21 +496,22 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         if (assertIsDropin(this.elementRef)) {
             this.elementRef.setStatus('donation', { configProps: donationComponentProps });
 
-            // this.elementRef.unmount();
+            // alt. to Dropin.setStatus
             //
-            // const DonationClass: NewableComponent = this.core.getComponent(TxVariants.donation);
-            // if (!DonationClass) {
+            // this.elementRef.unmount();
+            // const donationComponent: DonationElement = getDonationComponent(TxVariants.donation, this.core, donationComponentProps);
+            // if (!donationComponent) {
             //     throw new Error('Donation component is not registered');
             // }
-            // new DonationClass(this.core, donationComponentProps).mount(this.elementRef._node);
+            // donationComponent.mount(this.elementRef._node);
         } else {
             this.unmount();
 
-            const DonationClass = this.core.getComponent(TxVariants.donation) as typeof Donation | undefined;
-            if (!DonationClass) {
-                throw new Error('Donation component is not registered');
+            const donationComponent: Donation = getDonationComponent(TxVariants.donation, this.core, donationComponentProps);
+            if (!donationComponent) {
+                throw new Error('Donation component is not registered and so cannot be rendered');
             }
-            new DonationClass(this.core, donationComponentProps).mount(this._node);
+            donationComponent.mount(this._node);
         }
     }
 
