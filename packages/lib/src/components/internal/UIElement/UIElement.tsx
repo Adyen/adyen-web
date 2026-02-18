@@ -479,6 +479,14 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         //  Or will the implementation for a component be different? In which case we need this if-clause
         if (assertIsDropin(this.elementRef)) {
             this.elementRef.setStatus('donation', { configProps: donationComponentProps });
+
+            // this.elementRef.unmount();
+            //
+            // const DonationClass: NewableComponent = this.core.getComponent(TxVariants.donation);
+            // if (!DonationClass) {
+            //     throw new Error('Donation component is not registered');
+            // }
+            // new DonationClass(this.core, donationComponentProps).mount(this.elementRef._node);
         } else {
             this.unmount();
 

@@ -12,6 +12,7 @@ import UIElement from '../../internal/UIElement';
 import { AnalyticsInfoEvent, InfoEventType, UiTarget } from '../../../core/Analytics/events/AnalyticsInfoEvent';
 import { DropinSuccessState } from './DropinSuccessState';
 import { TxVariants } from '../../tx-variants';
+import type { NewableComponent } from '../../../core/core.registry';
 
 export class DropinComponent extends Component<DropinComponentProps, DropinComponentState> {
     public state: DropinComponentState = {
@@ -186,7 +187,7 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
 
             case 'donation': {
                 // return new Donation(this.props.core, status.props.configProps).render();
-                const DonationClass = this.props.core.getComponent(TxVariants.donation);
+                const DonationClass: NewableComponent = this.props.core.getComponent(TxVariants.donation);
                 if (!DonationClass) {
                     return <Status.Error message="Donation component is not registered" />;
                 }
