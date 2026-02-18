@@ -12,6 +12,7 @@ import { AnalyticsInfoEvent, InfoEventType } from '../../../core/Analytics/event
 import { AnalyticsLogEvent, LogEventType } from '../../../core/Analytics/events/AnalyticsLogEvent';
 import type {
     CheckoutSessionDetailsResponse,
+    CheckoutSessionDonationCampaignsResponse,
     CheckoutSessionDonationsRequestData,
     CheckoutSessionDonationsResponse,
     CheckoutSessionPaymentResponse
@@ -42,9 +43,9 @@ import { AmountProvider, AmountProviderRef } from '../../../core/Context/AmountP
 import { PayButtonProps } from '../PayButton/PayButton';
 import { TxVariants } from '../../tx-variants';
 import type { DonationConfiguration } from '../../Donation/types';
-import type { DonationCampaign } from '../../Donation/components/types';
-import { Donation } from '../../index';
-import { getDonationComponent } from '../../Donation/components/utils';
+import type { DonationCampaign, DonationPayload } from '../../Donation/components/types';
+import type { Donation } from '../../index';
+import { getDonationComponent, normalizeDonationCampaign } from '../../Donation/components/utils';
 
 export abstract class UIElement<P extends UIElementProps = UIElementProps> extends BaseElement<P> {
     /**
@@ -476,16 +477,14 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
             onCancel(data) {
                 console.log('### Donation::onCancel:: data', data);
             },
-            onDonate: (state, component) => {
+            onDonate: (state: DonationPayload, component: Donation) => {
                 const donationRequestData: CheckoutSessionDonationsRequestData = {
                     amount: state.data.amount,
                     donationCampaignId: id,
                     donationType: donationType
                 };
 
-                this.callSessionsDonations(donationRequestData);
-
-                setTimeout(() => component.setStatus('success'), 1000);
+                this.callSessionsDonations(donationRequestData, component);
             },
             ...restDonationCampaignProps
         };
@@ -581,17 +580,18 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         // this.submitAnalytics(event);
 
         this.makeSessionDonationCampaignsCall()
-            .then(response => {
+            .then((response: CheckoutSessionDonationCampaignsResponse) => {
                 console.log('### UIElement::makeSessionDonationCampaignsCall:: response', response);
 
                 if (response?.donationCampaigns?.length) {
                     console.log('### UIElement::makeSessionDonationCampaignsCall:: HAVE Campaigns');
-                    return response.donationCampaigns[0];
+                    return normalizeDonationCampaign(response.donationCampaigns[0]);
                 } else {
+                    // TODO - remove mock AND handle this gracefully if no campaigns are returned
                     const mockResp: DonationCampaign[] = [
                         {
-                            id: 'DONATION_CAMPAIGN_ID', // Don't overlap with DonationComponentProps
-                            campaignName: 'DONATION_CAMPAIGN_NAME', // Don't overlap with DonationComponentProps
+                            id: 'DONATION_CAMPAIGN_ID',
+                            campaignName: 'DONATION_CAMPAIGN_NAME',
                             donation: {
                                 currency: 'EUR',
                                 type: 'fixedAmounts',
@@ -622,7 +622,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
             });
     }
 
-    private async makeSessionDonationCampaignsCall() {
+    private async makeSessionDonationCampaignsCall(): Promise<CheckoutSessionDonationCampaignsResponse> {
         try {
             return await this.core.session.donationCampaigns();
         } catch (error: unknown) {
@@ -636,7 +636,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         }
     }
 
-    private callSessionsDonations(donationRequestData: CheckoutSessionDonationsRequestData) {
+    private callSessionsDonations(donationRequestData: CheckoutSessionDonationsRequestData, component: Donation) {
         // TODO add analytics
         // const event = new AnalyticsLogEvent({
         //     component: this.type,
@@ -646,8 +646,13 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         // this.submitAnalytics(event);
 
         this.makeSessionDonationsCall(donationRequestData)
-            .then(response => {
+            .then((response: CheckoutSessionDonationsResponse) => {
                 console.log('### UIElement::makeSessionDonationsCall:: response', response);
+                if (response.resultCode === 'Authorised') {
+                    component.setStatus('success');
+                } else {
+                    component.setStatus('error');
+                }
             })
             .catch((error: unknown) => {
                 console.log('### UIElement::makeSessionDonationsCall:: error', error);

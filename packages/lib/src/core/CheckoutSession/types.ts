@@ -64,8 +64,8 @@ export type CheckoutSessionDonationCampaignsResponse = {
     donationCampaigns: DonationCampaign[];
 };
 
-// TODO - confirm type
 export type CheckoutSessionDonationsResponse = {
+    resultCode: ResultCode;
     sessionData: string;
 };
 
