@@ -119,9 +119,7 @@ class Session {
     /**
      * Call donationCampaigns endpoint
      */
-    // donationCampaigns(data: DonationCampaignData['data']): Promise<CheckoutSessionDonationCampaignsResponse> {
     donationCampaigns(): Promise<CheckoutSessionDonationCampaignsResponse> {
-        // return donationCampaigns(data, this).then(response => {
         return donationCampaigns(this).then(response => {
             if (response.sessionData) {
                 this.updateSessionData(response.sessionData);

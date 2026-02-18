@@ -5,12 +5,10 @@ import { CheckoutSessionDonationCampaignsResponse } from '../../CheckoutSession/
 
 /**
  */
-// function donationCampaigns(details, session: Session): Promise<CheckoutSessionDonationCampaignsResponse> {
 function donationCampaigns(session: Session): Promise<CheckoutSessionDonationCampaignsResponse> {
     const path = `${API_VERSION}/sessions/${session.id}/donationCampaigns?clientKey=${session.clientKey}`;
     const data = {
         ...(session.data && { sessionData: session.data })
-        // ...details
     };
 
     return httpPost({ loadingContext: session.loadingContext, path, errorLevel: 'fatal', errorCode: API_ERROR_CODE.submitPaymentDetails }, data);
