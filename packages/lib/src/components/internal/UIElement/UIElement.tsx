@@ -10,7 +10,12 @@ import { AbstractAnalyticsEvent } from '../../../core/Analytics/events/AbstractA
 import { AnalyticsErrorEvent, ErrorEventType } from '../../../core/Analytics/events/AnalyticsErrorEvent';
 import { AnalyticsInfoEvent, InfoEventType } from '../../../core/Analytics/events/AnalyticsInfoEvent';
 import { AnalyticsLogEvent, LogEventType } from '../../../core/Analytics/events/AnalyticsLogEvent';
-import type { CheckoutSessionDetailsResponse, CheckoutSessionPaymentResponse } from '../../../core/CheckoutSession/types';
+import type {
+    CheckoutSessionDetailsResponse,
+    CheckoutSessionDonationsRequestData,
+    CheckoutSessionDonationsResponse,
+    CheckoutSessionPaymentResponse
+} from '../../../core/CheckoutSession/types';
 import type { NewableComponent } from '../../../core/core.registry';
 import CancelError from '../../../core/Errors/CancelError';
 import type { AdditionalDetailsData, CoreConfiguration, ICore } from '../../../core/types';
@@ -463,12 +468,21 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
 
         const { id, campaignName, ...restDonationCampaignProps } = donationCampaign;
 
+        const donationType = restDonationCampaignProps.donation.type;
+
         const donationComponentProps: DonationConfiguration = {
             onCancel(data) {
                 console.log('### Donation::onCancel:: data', data);
             },
             onDonate: (state, component) => {
-                console.log('### Donation::onDonate:: state, component', state, component);
+                const donationRequestData: CheckoutSessionDonationsRequestData = {
+                    amount: state.data.amount,
+                    donationCampaignId: id,
+                    donationType: donationType
+                };
+
+                this.callSessionsDonations(donationRequestData);
+
                 setTimeout(() => component.setStatus('success'), 1000);
             },
             ...restDonationCampaignProps
@@ -559,7 +573,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         // const event = new AnalyticsLogEvent({
         //     component: this.type,
         //     type: LogEventType.donationCampaign, // TODO will need a new type... donationCampaign?
-        //     message: 'Seesions flow: calling donationCampaigns endpoint'
+        //     message: 'Sessions flow: calling donationCampaigns endpoint'
         // });
         // this.submitAnalytics(event);
 
@@ -613,6 +627,38 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
                 this.handleError(error);
             } else {
                 this.handleError(new AdyenCheckoutError('ERROR', 'Error when making /donationCampaigns call', { cause: error }));
+            }
+
+            return Promise.reject(error);
+        }
+    }
+
+    private callSessionsDonations(donationRequestData: CheckoutSessionDonationsRequestData) {
+        // TODO add analytics
+        // const event = new AnalyticsLogEvent({
+        //     component: this.type,
+        //     type: LogEventType.donationFromSessions, // TODO will need a new type... donationFromSessions?
+        //     message: 'Sessions flow: calling donations endpoint'
+        // });
+        // this.submitAnalytics(event);
+
+        this.makeSessionDonationsCall(donationRequestData)
+            .then(response => {
+                console.log('### UIElement::makeSessionDonationsCall:: response', response);
+            })
+            .catch((error: unknown) => {
+                console.log('### UIElement::makeSessionDonationsCall:: error', error);
+            });
+    }
+
+    private async makeSessionDonationsCall(donationRequestData: CheckoutSessionDonationsRequestData): Promise<CheckoutSessionDonationsResponse> {
+        try {
+            return await this.core.session.donations(donationRequestData);
+        } catch (error: unknown) {
+            if (error instanceof AdyenCheckoutError) {
+                this.handleError(error);
+            } else {
+                this.handleError(new AdyenCheckoutError('ERROR', 'Error when making /donations call', { cause: error }));
             }
 
             return Promise.reject(error);
