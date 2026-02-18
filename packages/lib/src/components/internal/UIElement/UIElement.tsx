@@ -43,6 +43,7 @@ import { PayButtonProps } from '../PayButton/PayButton';
 import { TxVariants } from '../../tx-variants';
 import type { DonationConfiguration } from '../../Donation/types';
 import type { DonationCampaign } from '../../Donation/components/types';
+import { Donation } from '../../index';
 
 export abstract class UIElement<P extends UIElementProps = UIElementProps> extends BaseElement<P> {
     /**
@@ -504,7 +505,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         } else {
             this.unmount();
 
-            const DonationClass: NewableComponent = this.core.getComponent(TxVariants.donation);
+            const DonationClass = this.core.getComponent(TxVariants.donation) as typeof Donation | undefined;
             if (!DonationClass) {
                 throw new Error('Donation component is not registered');
             }
