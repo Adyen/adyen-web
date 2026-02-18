@@ -48,3 +48,8 @@ export interface DonationCampaign extends CampaignContentProps {
     donation: Donation;
     termsAndConditionsUrl?: string;
 }
+
+export interface SessionsDonationCampaign extends Omit<DonationCampaign, 'donation'> {
+    donation?: DonationCampaign['donation'];
+    sessionsDonation?: DonationCampaign['donation'];
+}
