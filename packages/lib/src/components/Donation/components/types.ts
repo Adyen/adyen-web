@@ -31,7 +31,7 @@ export interface DonationComponentProps extends CampaignContentProps {
     /**
      * The original transaction amount.
      */
-    commercialTxAmount: number;
+    commercialTxAmount?: number;
     termsAndConditionsUrl?: string;
     causeName?: string;
     showCancelButton?: boolean;

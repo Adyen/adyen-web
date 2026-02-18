@@ -36,6 +36,8 @@ import SRPanelProvider from '../../../core/Errors/SRPanelProvider';
 import { AmountProvider, AmountProviderRef } from '../../../core/Context/AmountProvider';
 import { PayButtonProps } from '../PayButton/PayButton';
 import { TxVariants } from '../../tx-variants';
+import type { DonationConfiguration } from '../../Donation/types';
+import type { DonationCampaign } from '../../Donation/components/types';
 
 export abstract class UIElement<P extends UIElementProps = UIElementProps> extends BaseElement<P> {
     /**
@@ -452,22 +454,16 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         });
     };
 
-    protected handleDonation(donationCampaignProps) {
-        console.log('### UIElement::handleDonation:: donationCampaignProps', donationCampaignProps);
+    /**
+     * Takes the donationCampaign from the /donationCampaigns call, extracts the relevant props,
+     * and combines them with the props required to initialise a DonationComponent
+     */
+    protected handleDonation(donationCampaign: DonationCampaign) {
+        console.log('### UIElement::handleDonation:: donationCampaign', donationCampaign);
 
-        // donationCampaignProps (from server response) overlapping with what a DonationComponent requires:
-        // donation
-        // nonprofitName
-        // causeName
-        // nonprofitDescription
-        // nonprofitUrl
-        // logoUrl
-        // bannerUrl
-        // termsAndConditionsUrl
+        const { id, campaignName, ...restDonationCampaignProps } = donationCampaign;
 
-        const { id, campaignName, ...restDonationCampaignProps } = donationCampaignProps;
-
-        const donationComponentProps = {
+        const donationComponentProps: DonationConfiguration = {
             onCancel(data) {
                 console.log('### Donation::onCancel:: data', data);
             },
@@ -482,14 +478,11 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         //  Will they both be done via a setStatus call? In which case we could just use: this.setElementStatus('donation', donationComponentProps);
         //  Or will the implementation for a component be different? In which case we need this if-clause
         if (assertIsDropin(this.elementRef)) {
-            console.log('### UIElement::handleDonation:: is dropin');
-            console.log('### UIElement::handleDonation:: this.core', this.core);
-
             this.elementRef.setStatus('donation', { configProps: donationComponentProps });
         } else {
             this.unmount();
 
-            const DonationClass = this.core.getComponent(TxVariants.donation);
+            const DonationClass: NewableComponent = this.core.getComponent(TxVariants.donation);
             if (!DonationClass) {
                 throw new Error('Donation component is not registered');
             }
@@ -547,8 +540,8 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
 
         this.handleSuccessResult(response);
 
-        if (response.askDonation === true) {
-            console.log('### UIElement::handleResponse:: askDonation', response.askDonation);
+        /** If the response mandates it - start the flow to present a Donation Component */
+        if (this.core.session && response.askDonation === true) {
             this.callSessionsDonationCampaigns();
         }
     }
@@ -568,10 +561,9 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
 
                 if (response?.donationCampaigns?.length) {
                     console.log('### UIElement::makeSessionDonationCampaignsCall:: HAVE Campaigns');
+                    return response.donationCampaigns[0];
                 } else {
-                    console.log('### UIElement:::: this.core', this.core);
-
-                    const mockResp = [
+                    const mockResp: DonationCampaign[] = [
                         {
                             id: 'DONATION_CAMPAIGN_ID', // Don't overlap with DonationComponentProps
                             campaignName: 'DONATION_CAMPAIGN_NAME', // Don't overlap with DonationComponentProps
@@ -591,15 +583,13 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
                         }
                     ];
 
-                    return Promise.resolve(mockResp[0]);
+                    return mockResp[0];
                 }
             })
-            .then(donationCampaignProps => {
-                console.log('### UIElement::makeSessionDonationCampaignsCall:: donationCampaignProps', donationCampaignProps);
-
-                // Allow time for success message to show
+            .then((donationCampaign: DonationCampaign) => {
+                // Allow time for success message to show - TODO need to decide how best to handle this
                 setTimeout(() => {
-                    this.handleDonation(donationCampaignProps);
+                    this.handleDonation(donationCampaign);
                 }, 2000);
             })
             .catch((error: unknown) => {
