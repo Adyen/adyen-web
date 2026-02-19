@@ -42,11 +42,12 @@ import SRPanelProvider from '../../../core/Errors/SRPanelProvider';
 import { AmountProvider, AmountProviderRef } from '../../../core/Context/AmountProvider';
 import { PayButtonProps } from '../PayButton/PayButton';
 import { TxVariants } from '../../tx-variants';
-import type { DonationConfiguration } from '../../Donation/types';
-import type { DonationCampaign, DonationPayload } from '../../Donation/components/types';
 import type { Donation } from '../../index';
-import { getDonationComponent, normalizeDonationCampaign } from '../../Donation/components/utils';
 import { DonationCampaignProvider } from '../../Donation/DonationCampaignProvider';
+import type { DonationCampaign, DonationConfiguration } from '../../Donation/types';
+import { normalizeDonationCampaign } from '../../Donation/utils';
+import { getDonationComponent } from '../../Donation/components/utils';
+import type { DonationPayload } from '../../Donation/components/types';
 
 export abstract class UIElement<P extends UIElementProps = UIElementProps> extends BaseElement<P> {
     /**

@@ -1,8 +1,8 @@
 import Language from '../../../language';
-import { DonationAmount, type DonationCampaign, SessionsDonationCampaign } from './types';
-import { ICore } from '../../../core/types';
-import { DonationConfiguration } from '../types';
-import Donation from '../Donation';
+import type { DonationAmount } from './types';
+import type { DonationConfiguration } from '../types';
+import type { ICore } from '../../../core/types';
+import type DonationElement from '../Donation';
 
 interface RoundupAmount {
     maxRoundupAmount: number;
@@ -20,31 +20,9 @@ const getRoundupAmountLabel = (i18n: Language, { maxRoundupAmount, commercialTxA
 export { getAmountLabel, getRoundupAmount, getRoundupAmountLabel };
 
 export function getDonationComponent(txVariant: string, core: ICore, configProps: DonationConfiguration) {
-    const DonationClass = core.getComponent(txVariant) as typeof Donation | undefined;
+    const DonationClass = core.getComponent(txVariant) as typeof DonationElement | undefined;
     if (!DonationClass) {
         return null;
     }
     return new DonationClass(core, configProps);
-}
-
-/**
- * A DonationCampaign returned from the /sessions/donationCampaigns endpoint has a "sessionsDonation" property rather than the usual "donation property".
- * This function normalizes the DonationCampaign to always have a donation property.
- */
-export function normalizeDonationCampaign(rawDonationCampaign: unknown): DonationCampaign {
-    if (!rawDonationCampaign || typeof rawDonationCampaign !== 'object') {
-        throw new Error('Donation campaign is missing');
-    }
-
-    const campaign = rawDonationCampaign as SessionsDonationCampaign;
-    const donation = campaign.donation ?? campaign.sessionsDonation;
-
-    if (!donation) {
-        throw new Error('Donation campaign is missing donation details');
-    }
-
-    return {
-        ...campaign,
-        donation
-    };
 }

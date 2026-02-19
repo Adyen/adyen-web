@@ -1,6 +1,6 @@
-import { CampaignContentProps } from './CampaignContent';
+import type { CampaignContentProps } from './CampaignContent';
 
-type Donation = RoundupDonation | FixedAmountsDonation;
+export type Donation = RoundupDonation | FixedAmountsDonation;
 
 export type Status = 'ready' | 'error' | 'loading' | 'success';
 
@@ -40,17 +40,4 @@ export interface DonationComponentProps extends CampaignContentProps {
     onDonate: (payload: DonationPayload) => void;
     onCancel?: (payload: DonationPayload) => void;
     onChange?: (payload: DonationPayload) => void;
-}
-
-// TODO - move up a level to top level types file
-export interface DonationCampaign extends CampaignContentProps {
-    id: string;
-    campaignName: string;
-    donation: Donation;
-    termsAndConditionsUrl?: string;
-}
-
-export interface SessionsDonationCampaign extends Omit<DonationCampaign, 'donation'> {
-    donation?: DonationCampaign['donation'];
-    sessionsDonation?: DonationCampaign['donation'];
 }

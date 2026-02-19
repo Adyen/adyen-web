@@ -1,6 +1,7 @@
-import type { DonationCampaign, DonationPayload } from './components/types';
+import type { DonationCampaign, DonationConfiguration } from './types';
+import type { DonationPayload } from './components/types';
+import type DonationElement from './Donation';
 import type { ICore } from '../../core/types';
-import type { Donation, DonationConfiguration } from '../../types';
 import type { CheckoutSessionDonationsRequestData, CheckoutSessionDonationsResponse } from '../../core/CheckoutSession/types';
 import { getDonationComponent } from './components/utils';
 import { TxVariants } from '../tx-variants';
@@ -33,7 +34,7 @@ export const DonationCampaignProvider = ({
 
             unmountFn();
         },
-        onDonate: (state: DonationPayload, component: Donation) => {
+        onDonate: (state: DonationPayload, component: DonationElement) => {
             const donationRequestData: CheckoutSessionDonationsRequestData = {
                 amount: state.data.amount,
                 donationCampaignId: id,
@@ -47,7 +48,7 @@ export const DonationCampaignProvider = ({
 
     unmountFn();
 
-    const donationComponent: Donation = getDonationComponent(TxVariants.donation, core, donationComponentProps);
+    const donationComponent: DonationElement = getDonationComponent(TxVariants.donation, core, donationComponentProps);
     if (!donationComponent) {
         return false;
     }
@@ -59,7 +60,7 @@ export const DonationCampaignProvider = ({
 
 const callSessionsDonations = (
     donationRequestData: CheckoutSessionDonationsRequestData,
-    component: Donation,
+    component: DonationElement,
     core: ICore,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     originalComponentType: string
