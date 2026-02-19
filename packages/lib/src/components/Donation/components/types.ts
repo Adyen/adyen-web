@@ -42,6 +42,7 @@ export interface DonationComponentProps extends CampaignContentProps {
     onChange?: (payload: DonationPayload) => void;
 }
 
+// TODO - move up a level to top level types file
 export interface DonationCampaign extends CampaignContentProps {
     id: string;
     campaignName: string;

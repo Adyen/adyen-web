@@ -46,6 +46,7 @@ import type { DonationConfiguration } from '../../Donation/types';
 import type { DonationCampaign, DonationPayload } from '../../Donation/components/types';
 import type { Donation } from '../../index';
 import { getDonationComponent, normalizeDonationCampaign } from '../../Donation/components/utils';
+import { DonationCampaignProvider } from '../../Donation/DonationCampaignProvider';
 
 export abstract class UIElement<P extends UIElementProps = UIElementProps> extends BaseElement<P> {
     /**
@@ -468,6 +469,25 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
      */
     protected handleDonation(donationCampaign: DonationCampaign) {
         console.log('### UIElement::handleDonation:: donationCampaign', donationCampaign);
+
+        const isDropin = assertIsDropin(this.elementRef);
+
+        DonationCampaignProvider({
+            donationCampaign,
+            core: this.core,
+            isDropin,
+            dropinElementRef: this.elementRef, // Perhaps not needed if we don't choose to render via a dropin status change
+            unmountFn: () => {
+                if (isDropin) {
+                    this.elementRef.unmount();
+                } else {
+                    this.unmount();
+                }
+            },
+            rootNode: isDropin ? this.elementRef._node : this._node
+        });
+
+        return;
 
         const { id, campaignName, ...restDonationCampaignProps } = donationCampaign;
 
