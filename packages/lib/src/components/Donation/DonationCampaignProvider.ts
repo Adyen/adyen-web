@@ -1,8 +1,7 @@
 import type { DonationCampaign, DonationPayload } from './components/types';
 import type { ICore } from '../../core/types';
-import { type Donation, type DonationConfiguration } from '../../types';
+import type { Donation, DonationConfiguration } from '../../types';
 import type { CheckoutSessionDonationsRequestData, CheckoutSessionDonationsResponse } from '../../core/CheckoutSession/types';
-import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { getDonationComponent } from './components/utils';
 import { TxVariants } from '../tx-variants';
 // import { AnalyticsLogEvent, LogEventType } from '../../core/Analytics/events/AnalyticsLogEvent';
@@ -26,11 +25,13 @@ export const DonationCampaignProvider = ({
 
     const donationType = restDonationCampaignProps.donation.type;
 
-    console.log('### DonationCampaignProvider::rootNode', rootNode);
-
     const donationComponentProps: DonationConfiguration = {
         onCancel(data) {
             console.log('### Donation::onCancel:: data', data);
+
+            // TODO add analytics - data shows whether shopper chose an amount, and, since they're here, that they then didn't proceed
+
+            unmountFn();
         },
         onDonate: (state: DonationPayload, component: Donation) => {
             const donationRequestData: CheckoutSessionDonationsRequestData = {
@@ -93,11 +94,7 @@ const makeSessionDonationsCall = async (
     try {
         return await core.session.donations(donationRequestData);
     } catch (error: unknown) {
-        if (error instanceof AdyenCheckoutError) {
-            // TODO - analytics?
-        } else {
-            // TODO - analytics?
-        }
+        // TODO - analytics?
 
         return Promise.reject(error);
     }
