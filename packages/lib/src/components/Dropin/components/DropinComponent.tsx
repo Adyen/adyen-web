@@ -183,14 +183,6 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
             case 'custom':
                 return status.props?.component?.render();
 
-            // case 'donation': {
-            //     const donationComponent: Donation = getDonationComponent(TxVariants.donation, this.props.core, status.props.configProps);
-            //     if (!donationComponent) {
-            //         return <Status.Error message="Donation component is not registered" />;
-            //     }
-            //     return donationComponent.render();
-            // }
-
             default:
                 return (
                     <div className={`adyen-checkout__dropin adyen-checkout__dropin--${status.type}`}>
