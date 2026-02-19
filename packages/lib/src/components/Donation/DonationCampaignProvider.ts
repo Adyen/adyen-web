@@ -5,6 +5,7 @@ import type { ICore } from '../../core/types';
 import type { CheckoutSessionDonationsRequestData, CheckoutSessionDonationsResponse } from '../../core/CheckoutSession/types';
 import { getDonationComponent } from './components/utils';
 import { TxVariants } from '../tx-variants';
+import { normalizeDonationCampaign } from './utils';
 // import { AnalyticsLogEvent, LogEventType } from '../../core/Analytics/events/AnalyticsLogEvent';
 
 interface DonationCampaignProviderProps {
@@ -22,15 +23,17 @@ export const DonationCampaignProvider = ({
     unmountFn,
     rootNode
 }: DonationCampaignProviderProps): boolean => {
-    const { id, campaignName, ...restDonationCampaignProps } = donationCampaign;
+    // Needed atm while the issue around the /donationCampaigns endpoint returning "sessionsDonation" c.f. the expected "donation" is resolved
+    const normalisedDonationCampaign = normalizeDonationCampaign(donationCampaign);
+
+    const { id, campaignName, ...restDonationCampaignProps } = normalisedDonationCampaign;
 
     const donationType = restDonationCampaignProps.donation.type;
 
     const donationComponentProps: DonationConfiguration = {
         onCancel(data) {
             console.log('### Donation::onCancel:: data', data);
-
-            // TODO add analytics - data shows whether shopper chose an amount, and, since they're here, that they then didn't proceed
+            // TODO add analytics? - data shows whether shopper chose an amount, and, since they're here, that they then didn't proceed
 
             unmountFn();
         },
@@ -46,10 +49,13 @@ export const DonationCampaignProvider = ({
         ...restDonationCampaignProps
     };
 
+    // Unmount the current component
     unmountFn();
 
+    // Retrieve and mount the Donation component
     const donationComponent: DonationElement = getDonationComponent(TxVariants.donation, core, donationComponentProps);
     if (!donationComponent) {
+        console.warn('Donation Component is not available');
         return false;
     }
 

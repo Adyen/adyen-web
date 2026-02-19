@@ -45,7 +45,6 @@ import { TxVariants } from '../../tx-variants';
 import type { Donation } from '../../index';
 import { DonationCampaignProvider } from '../../Donation/DonationCampaignProvider';
 import type { DonationCampaign, DonationConfiguration } from '../../Donation/types';
-import { normalizeDonationCampaign } from '../../Donation/utils';
 import { getDonationComponent } from '../../Donation/components/utils';
 import type { DonationPayload } from '../../Donation/components/types';
 
@@ -601,41 +600,46 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
                 console.log('### UIElement::makeSessionDonationCampaignsCall:: response', response);
 
                 if (response?.donationCampaigns?.length) {
-                    console.log('### UIElement::makeSessionDonationCampaignsCall:: HAVE Campaigns');
-                    return normalizeDonationCampaign(response.donationCampaigns[0]);
+                    // Choose which campaign to return - currently just pick the first one
+                    return response.donationCampaigns[0];
                 } else {
                     // TODO - remove mock AND handle this gracefully if no campaigns are returned
-                    const mockResp: DonationCampaign[] = [
-                        {
-                            id: 'DONATION_CAMPAIGN_ID',
-                            campaignName: 'DONATION_CAMPAIGN_NAME',
-                            donation: {
-                                currency: 'EUR',
-                                type: 'fixedAmounts',
-                                values: [100, 200, 300]
-                            },
-                            nonprofitName: 'Test Charity',
-                            causeName: 'Earthquake Turkey & Syria',
-                            nonprofitDescription:
-                                'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-                            nonprofitUrl: 'https://example.org',
-                            logoUrl: '/logo.png',
-                            bannerUrl: '/banner.png',
-                            termsAndConditionsUrl: 'https://www.adyen.com'
-                        }
-                    ];
+                    // const mockResp: DonationCampaign[] = [
+                    //     {
+                    //         id: 'DONATION_CAMPAIGN_ID',
+                    //         campaignName: 'DONATION_CAMPAIGN_NAME',
+                    //         donation: {
+                    //             currency: 'EUR',
+                    //             type: 'fixedAmounts',
+                    //             values: [100, 200, 300]
+                    //         },
+                    //         nonprofitName: 'Test Charity',
+                    //         causeName: 'Earthquake Turkey & Syria',
+                    //         nonprofitDescription:
+                    //             'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+                    //         nonprofitUrl: 'https://example.org',
+                    //         logoUrl: '/logo.png',
+                    //         bannerUrl: '/banner.png',
+                    //         termsAndConditionsUrl: 'https://www.adyen.com'
+                    //     }
+                    // ];
+                    //
+                    // return mockResp[0];
 
-                    return mockResp[0];
+                    // Do nothing - TODO maybe analytics?
+                    return null;
                 }
             })
             .then((donationCampaign: DonationCampaign) => {
-                // Allow time for success message to show - TODO need to decide how best to handle this
-                setTimeout(() => {
-                    this.handleDonation(donationCampaign);
-                }, 2000);
+                if (donationCampaign) {
+                    // Allow time for success message to show - TODO need to decide how best to handle this
+                    setTimeout(() => {
+                        this.handleDonation(donationCampaign);
+                    }, 2000);
+                }
             })
             .catch((error: unknown) => {
-                console.log('### UIElement::makeSessionDonationCampaignsCall:: error', error);
+                console.debug('UIElement::makeSessionDonationCampaignsCall:: error', error);
             });
     }
 

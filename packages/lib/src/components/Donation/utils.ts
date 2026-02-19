@@ -3,7 +3,7 @@ import type { Donation } from './components/types';
 
 /**
  * A DonationCampaign returned from the /sessions/donationCampaigns endpoint has a "sessionsDonation" property rather than the usual "donation property".
- * This function normalizes the DonationCampaign to always have a donation property.
+ * This function normalizes the DonationCampaign to always have a donation property, allowing the existing types to be used.
  */
 export function normalizeDonationCampaign(rawDonationCampaign: unknown): DonationCampaign {
     if (!rawDonationCampaign || typeof rawDonationCampaign !== 'object') {
