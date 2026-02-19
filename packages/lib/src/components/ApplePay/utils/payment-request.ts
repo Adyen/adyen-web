@@ -44,7 +44,10 @@ export const preparePaymentRequest = (
         billingContact: props.billingContact,
         shippingContact: props.shippingContact,
 
-        applicationData: props.applicationData
+        applicationData: props.applicationData,
+
+        couponCode: props.couponCode,
+        supportsCouponCode: props.supportsCouponCode
     };
 };
 
