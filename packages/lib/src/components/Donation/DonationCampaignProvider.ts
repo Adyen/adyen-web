@@ -5,15 +5,23 @@ import type { CheckoutSessionDonationsRequestData, CheckoutSessionDonationsRespo
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { getDonationComponent } from './components/utils';
 import { TxVariants } from '../tx-variants';
+// import { AnalyticsLogEvent, LogEventType } from '../../core/Analytics/events/AnalyticsLogEvent';
 
 interface DonationCampaignProviderProps {
     donationCampaign: DonationCampaign;
     core: ICore;
+    originalComponentType: string;
     unmountFn: () => void;
     rootNode: HTMLElement;
 }
 
-export const DonationCampaignProvider = ({ donationCampaign, core, unmountFn, rootNode }: DonationCampaignProviderProps): boolean => {
+export const DonationCampaignProvider = ({
+    donationCampaign,
+    core,
+    originalComponentType,
+    unmountFn,
+    rootNode
+}: DonationCampaignProviderProps): boolean => {
     const { id, campaignName, ...restDonationCampaignProps } = donationCampaign;
 
     const donationType = restDonationCampaignProps.donation.type;
@@ -31,7 +39,7 @@ export const DonationCampaignProvider = ({ donationCampaign, core, unmountFn, ro
                 donationType: donationType
             };
 
-            callSessionsDonations(donationRequestData, component, core);
+            callSessionsDonations(donationRequestData, component, core, originalComponentType);
         },
         ...restDonationCampaignProps
     };
@@ -48,14 +56,21 @@ export const DonationCampaignProvider = ({ donationCampaign, core, unmountFn, ro
     return true;
 };
 
-const callSessionsDonations = (donationRequestData: CheckoutSessionDonationsRequestData, component: Donation, core: ICore) => {
+const callSessionsDonations = (
+    donationRequestData: CheckoutSessionDonationsRequestData,
+    component: Donation,
+    core: ICore,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    originalComponentType: string
+) => {
     // TODO add analytics
     // const event = new AnalyticsLogEvent({
-    //     component: this.type,
+    //     component: originalComponentType,
+    //     // @ts-ignore
     //     type: LogEventType.donationFromSessions, // TODO will need a new type... donationFromSessions?
     //     message: 'Sessions flow: calling donations endpoint'
     // });
-    // this.submitAnalytics(event);
+    // core.modules.analytics.sendAnalytics(event);
 
     makeSessionDonationsCall(donationRequestData, core)
         .then((response: CheckoutSessionDonationsResponse) => {

@@ -475,6 +475,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         DonationCampaignProvider({
             donationCampaign,
             core: this.core,
+            originalComponentType: this.type,
             unmountFn: () => {
                 const elementRef = isDropin ? this.elementRef : this;
                 elementRef.unmount();
