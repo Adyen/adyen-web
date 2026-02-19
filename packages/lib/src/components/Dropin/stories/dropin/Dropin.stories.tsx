@@ -35,6 +35,15 @@ const meta: MetaConfiguration<DropinConfiguration> = {
                 googlepay: {
                     buttonType: 'plain',
                     challengeWindowSize: '05'
+                },
+                upi: {
+                    defaultMode: 'qrCode'
+                },
+                card: {
+                    _disableClickToPay: true,
+                    billingAddressRequired: true,
+                    billingAddressRequiredFields: ['street', 'houseNumberOrName', 'city', 'stateOrProvince', 'country'],
+                    billingAddressAllowedCountries: ['US', 'CA', 'GB', 'NL', 'AE', 'BR']
                 }
             }
         }
@@ -42,6 +51,10 @@ const meta: MetaConfiguration<DropinConfiguration> = {
 };
 
 export const Default: DropinStory = {
+    args: {
+        countryCode: 'AE'
+    },
+
     render: ({ componentConfiguration, ...checkoutConfig }: PaymentMethodStoryProps<DropinConfiguration>) => {
         // Register all Components
         const { Dropin, ...Components } = components;

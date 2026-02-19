@@ -97,17 +97,25 @@ export const WithPartialAVS: CardStory = {
         componentConfiguration: {
             _disableClickToPay: true,
             billingAddressRequired: true,
-            billingAddressMode: 'partial',
-            data: {
-                billingAddress: {
-                    country: 'US'
-                }
-            }
+            billingAddressRequiredFields: ['street', 'houseNumberOrName', 'city', 'stateOrProvince', 'country'],
+            billingAddressAllowedCountries: ['US', 'CA', 'GB', 'NL', 'AE', 'BR']
         }
     }
 };
 
-export const WithAVSAddressLookup: CardStory = {
+export const WithAVSOptionalZipCode: CardStory = {
+    render: createCardComponent,
+    args: {
+        componentConfiguration: {
+            _disableClickToPay: true,
+            billingAddressRequired: true,
+            billingAddressRequiredFields: ['street', 'houseNumberOrName', 'city', 'stateOrProvince', 'country'],
+            billingAddressAllowedCountries: ['US', 'CA', 'GB', 'NL', 'AE', 'BR']
+        }
+    }
+};
+
+export const WithAVSAddressLook: CardStory = {
     render: createCardComponent,
     args: {
         componentConfiguration: {
