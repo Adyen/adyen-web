@@ -475,14 +475,9 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         DonationCampaignProvider({
             donationCampaign,
             core: this.core,
-            isDropin,
-            dropinElementRef: this.elementRef, // Perhaps not needed if we don't choose to render via a dropin status change
             unmountFn: () => {
-                if (isDropin) {
-                    this.elementRef.unmount();
-                } else {
-                    this.unmount();
-                }
+                const elementRef = isDropin ? this.elementRef : this;
+                elementRef.unmount();
             },
             rootNode: isDropin ? this.elementRef._node : this._node
         });
