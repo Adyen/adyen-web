@@ -1,5 +1,5 @@
-export function mapBrands(brands) {
-    const brandMapping = {
+export function mapBrands(brands: string[]) {
+    const brandMapping: Record<string, string> = {
         mc: 'masterCard',
         amex: 'amex',
         visa: 'visa',

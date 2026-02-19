@@ -1,4 +1,4 @@
-import { Component, h } from 'preact';
+import { Component, h, TargetedMouseEvent } from 'preact';
 import classNames from 'classnames';
 import Spinner from '../Spinner';
 import { useCoreContext } from '../../../core/Context/CoreProvider';
@@ -6,7 +6,7 @@ import { ButtonProps, ButtonState } from './types';
 import './Button.scss';
 
 class Button extends Component<ButtonProps, ButtonState> {
-    public static defaultProps = {
+    public static readonly defaultProps = {
         status: 'default',
         variant: 'primary',
         disabled: false,
@@ -15,7 +15,7 @@ class Button extends Component<ButtonProps, ButtonState> {
         target: '_self'
     };
 
-    public onClick = (e: h.JSX.TargetedMouseEvent<HTMLButtonElement>) => {
+    public onClick = (e: TargetedMouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
 
         if (!this.props.disabled) {
@@ -78,7 +78,7 @@ class Button extends Component<ButtonProps, ButtonState> {
 
         const modifiers = [
             ...classNameModifiers,
-            ...(variant !== 'primary' ? [variant] : []),
+            ...(variant === 'primary' ? [] : [variant]),
             ...(inline ? ['inline'] : []),
             ...(completed ? ['completed'] : []),
             ...(status === 'loading' || status === 'redirect' ? ['loading'] : [])
@@ -110,7 +110,18 @@ class Button extends Component<ButtonProps, ButtonState> {
 
         if (href) {
             return (
-                <a className={buttonClasses} href={href} disabled={disabled} target={this.props.target} rel={this.props.rel}>
+                <a
+                    className={buttonClasses}
+                    href={href}
+                    target={this.props.target}
+                    rel={this.props.rel}
+                    aria-disabled={disabled}
+                    onClick={(e: TargetedMouseEvent<HTMLAnchorElement>) => {
+                        if (disabled) {
+                            e.preventDefault();
+                        }
+                    }}
+                >
                     {buttonText}
                 </a>
             );

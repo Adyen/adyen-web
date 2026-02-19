@@ -26,7 +26,7 @@ describe('IssuerList', () => {
                     items={items}
                     showPayButton={false}
                     onChange={jest.fn()}
-                    payButton={props => <PayButton {...props} amount={{ value: 50, currency: 'USD' }} />}
+                    payButton={props => <PayButton {...props} />}
                     onSubmitAnalytics={() => {}}
                     type={'onlineBanking_PL'}
                 />
@@ -54,7 +54,7 @@ describe('IssuerList', () => {
                     highlightedIds={highlightedIds}
                     showPayButton={false}
                     onChange={jest.fn()}
-                    payButton={props => <PayButton {...props} amount={{ value: 50, currency: 'USD' }} />}
+                    payButton={props => <PayButton {...props} />}
                     onSubmitAnalytics={() => {}}
                     type={'onlineBanking_PL'}
                 />
@@ -84,7 +84,7 @@ describe('IssuerList', () => {
                     highlightedIds={highlightedIds}
                     showPayButton={false}
                     onChange={onChangeCb}
-                    payButton={props => <PayButton {...props} amount={{ value: 50, currency: 'USD' }} />}
+                    payButton={props => <PayButton {...props} />}
                     onSubmitAnalytics={() => {}}
                     type={'onlineBanking_PL'}
                 />
@@ -124,7 +124,7 @@ describe('IssuerList', () => {
                     highlightedIds={highlightedIds}
                     showPayButton={false}
                     onChange={jest.fn()}
-                    payButton={props => <PayButton {...props} amount={{ value: 50, currency: 'USD' }} />}
+                    payButton={props => <PayButton {...props} />}
                     onSubmitAnalytics={() => {}}
                     type={'onlineBanking_PL'}
                 />
@@ -152,7 +152,7 @@ describe('IssuerList', () => {
                     highlightedIds={highlightedIds}
                     showPayButton={false}
                     onChange={jest.fn()}
-                    payButton={props => <PayButton {...props} amount={{ value: 50, currency: 'USD' }} />}
+                    payButton={props => <PayButton {...props} />}
                     onSubmitAnalytics={() => {}}
                     type={'onlineBanking_PL'}
                 />
@@ -186,7 +186,7 @@ describe('Analytics', () => {
                     highlightedIds={highlightedIds}
                     showPayButton={false}
                     onChange={() => {}}
-                    payButton={props => <PayButton {...props} amount={{ value: 50, currency: 'USD' }} />}
+                    payButton={props => <PayButton {...props} />}
                     onSubmitAnalytics={onSubmitAnalytics}
                     type={'onlineBanking_PL'}
                 />
@@ -221,7 +221,7 @@ describe('Analytics', () => {
                     items={items}
                     showPayButton={false}
                     onChange={() => {}}
-                    payButton={props => <PayButton {...props} amount={{ value: 50, currency: 'USD' }} />}
+                    payButton={props => <PayButton {...props} />}
                     onSubmitAnalytics={onSubmitAnalytics}
                     type={'onlineBanking_PL'}
                 />

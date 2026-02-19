@@ -13,7 +13,7 @@ import {
 } from './layouts';
 import { AddressSpecifications, StringObject } from '../../../internal/Address/types';
 import { PARTIAL_ADDRESS_SCHEMA } from '../../../internal/Address/constants';
-import { InstallmentsObj } from './components/Installments/Installments';
+import { InstallmentsState } from './components/Installments/Installments';
 import { SFPProps } from '../../../internal/SecuredFields/SFP/types';
 import { BRAND_READABLE_NAME_MAP } from '../../../internal/SecuredFields/lib/constants';
 import useImage, { UseImageHookType } from '../../../../core/Context/useImage';
@@ -30,11 +30,13 @@ export const getCardImageUrl = (brand: string, getImage: UseImageHookType): stri
 };
 
 /**
- * Verifies that installment object is valid to send to the Backend.
- * Valid means that it has 'revolving' plan set, or the number of installments is bigger than one
+ * 'installments' should be added to the payload if it has plan as revolving or bonus
+ * or value greater than 1.
+ *
+ * More about it here: COWEB-1070
  */
-export const hasValidInstallmentsObject = (installments?: InstallmentsObj) => {
-    return installments?.plan === 'revolving' || installments?.value > 1;
+export const shouldIncludeInstallmentsInPaymentData = (installment?: InstallmentsState): boolean => {
+    return ['revolving', 'bonus'].includes(installment?.plan) || installment?.value > 1;
 };
 
 export const getLayout = ({
@@ -112,8 +114,7 @@ export const mapFieldKey = (key: string, i18n: Language, countrySpecificLabels: 
 
 export const extractPropsForCardFields = (props: CardInputProps) => {
     return {
-        // Extract props for CardFieldsWrapper & StoredCardFieldsWrapper(just needs amount, hasCVC, installmentOptions)
-        amount: props.amount,
+        // Extract props for CardFieldsWrapper & StoredCardFieldsWrapper(just needs hasCVC, installmentOptions)
         billingAddressRequired: props.billingAddressRequired,
         billingAddressRequiredFields: props.billingAddressRequiredFields,
         billingAddressAllowedCountries: props.billingAddressAllowedCountries,

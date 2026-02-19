@@ -22,11 +22,27 @@ export enum ErrorEventType {
 export enum ErrorEventCode {
     /** Trying to initialise a securedField iframe, but the iframe.contentWindow is undefined (meaning the containing element is not in the DOM */
     SECURED_FIELDS_IFRAME_CONTENT_WINDOW_NOT_FOUND = '500',
+    /** */
     REDIRECT = '600',
+    /**
+     * Key not present in served securedFields asset
+     */
+    SECURED_FIELDS_KEY_NOT_FOUND = '608',
+    /**
+     * Encryption key generation failed in securedField
+     */
+    SECURED_FIELDS_ENCRYPTION_KEY_GEN_FAILED = '609',
+    /**
+     * Encryption failed in securedField
+     */
+    SECURED_FIELDS_ENCRYPTION_ERROR = '610',
+
     /**  Missing 'paymentData' property from threeDS2 action */
     THREEDS2_ACTION_IS_MISSING_PAYMENT_DATA = '700',
+
     /** Missing 'token' property from threeDS2 action */
     THREEDS2_ACTION_IS_MISSING_TOKEN = '701',
+
     /** Decoded token is missing a valid threeDSMethodURL property */
     THREEDS2_TOKEN_IS_MISSING_THREEDSMETHODURL = '702',
     /**
@@ -35,20 +51,28 @@ export enum ErrorEventCode {
      *  challenge: (acsTransID | messageVersion | threeDSServerTransID)
      */
     THREEDS2_TOKEN_IS_MISSING_OTHER_PROPS = '703',
+
     /** Token decoding or parsing has failed. ('not base64', 'malformed URI sequence' or 'Could not JSON parse token') */
     THREEDS2_TOKEN_DECODE_OR_PARSING_FAILED = '704',
+
     /** 3DS2 process has timed out */
-    THREEDS2_TIMEOUT = '705',
+    THREEDS2_TIMEOUT = '710',
+
     /** Decoded token is missing a valid acsURL property */
     THREEDS2_TOKEN_IS_MISSING_ACSURL = '800',
+
     /** Challenge has resulted in an error (no transStatus could be retrieved by the backend) */
     THREEDS2_NO_TRANSSTATUS = '801',
+
     /** callSubmit3DS2Fingerprint has received a response indicating either a "frictionless" flow, or a "refused" response, but without a details object */
     THREEDS2_NO_DETAILS_FOR_FRICTIONLESS_OR_REFUSED = '802',
+
     /** callSubmit3DS2Fingerprint cannot find a component to handle the action response */
     THREEDS2_NO_COMPONENT_FOR_ACTION = '803',
+
     /** callSubmit3DS2Fingerprint has received a response indicating a "challenge" but without an action object */
     THREEDS2_NO_ACTION_FOR_CHALLENGE = '804',
+
     /** The challenge process has happened, an object has been returned, parsed & accepted as legit, but the result prop on that object is either missing or doesn't have a transStatus prop */
     THREEDS2_CHALLENGE_RESOLVED_WITHOUT_RESULT_PROP = '805'
 }

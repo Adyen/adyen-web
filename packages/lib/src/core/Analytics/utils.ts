@@ -21,12 +21,20 @@ export const mapErrorCodesForAnalytics = (errorCode: string, target: string) => 
 };
 
 export const processAnalyticsData = (analyticsData?: AnalyticsOptions['analyticsData']): AnalyticsOptions['analyticsData'] => {
-    const ALLOWED_ANALYTICS_DATA = ['applicationInfo', 'checkoutAttemptId'];
+    const ALLOWED_ANALYTICS_DATA: Array<keyof AnalyticsOptions['analyticsData']> = ['applicationInfo', 'checkoutAttemptId'];
 
     if (!analyticsData) return {};
 
-    return Object.keys(analyticsData).reduce((acc, prop) => {
-        if (ALLOWED_ANALYTICS_DATA.includes(prop)) acc[prop] = analyticsData[prop];
+    return ALLOWED_ANALYTICS_DATA.reduce<AnalyticsOptions['analyticsData']>((acc, prop) => {
+        if (prop === 'applicationInfo') {
+            if (analyticsData.applicationInfo !== undefined) acc.applicationInfo = analyticsData.applicationInfo;
+            return acc;
+        }
+
+        if (prop === 'checkoutAttemptId') {
+            if (analyticsData.checkoutAttemptId !== undefined) acc.checkoutAttemptId = analyticsData.checkoutAttemptId;
+        }
+
         return acc;
     }, {});
 };

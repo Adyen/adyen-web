@@ -33,7 +33,7 @@ let onError: any;
 let errorMessage: string;
 
 const baseAnalyticsError = {
-    errorType: ErrorEventType.apiError,
+    errorType: ErrorEventType.threeDS2,
     timestamp: expect.any(String),
     id: expect.any(String)
 };
@@ -160,7 +160,7 @@ describe('PrepareChallenge3DS2 - flow completes with errors that are considered 
             expect(onSubmitAnalytics).toHaveBeenCalledWith({
                 message: 'threeDS2Challenge: timeout',
                 code: ErrorEventCode.THREEDS2_TIMEOUT,
-                errorType: ErrorEventType.network,
+                errorType: ErrorEventType.threeDS2,
                 timestamp: expect.any(String),
                 id: expect.any(String)
             });
@@ -204,7 +204,7 @@ describe('PrepareChallenge3DS2 - flow completes with errors that are considered 
             expect(onSubmitAnalytics).toHaveBeenCalledWith({
                 message: 'threeDS2Challenge: no transStatus could be retrieved',
                 code: ErrorEventCode.THREEDS2_NO_TRANSSTATUS,
-                errorType: ErrorEventType.apiError,
+                errorType: ErrorEventType.threeDS2,
                 timestamp: expect.any(String),
                 id: expect.any(String)
             });

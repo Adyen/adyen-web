@@ -258,7 +258,7 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
             }
         });
 
-        return new Promise((resolve, reject) => this.props.onClick(resolve, reject))
+        return new Promise<void>((resolve, reject) => this.props.onClick(resolve, reject))
             .then(() => {
                 session.begin();
             })
@@ -323,7 +323,7 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
             });
     }
 
-    private async validateMerchant(resolve, reject) {
+    private async validateMerchant(resolve: (merchantSession: any) => void, reject: (error: string) => void) {
         const { hostname } = window.location;
         const { clientKey, configuration, loadingContext, initiative, domainName } = this.props;
         const { merchantName, merchantId } = configuration;

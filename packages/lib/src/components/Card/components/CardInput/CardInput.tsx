@@ -16,7 +16,7 @@ import Specifications from '../../../internal/Address/Specifications';
 import { StoredCardFieldsWrapper } from './components/StoredCardFieldsWrapper';
 import { CardFieldsWrapper } from './components/CardFieldsWrapper';
 import { getAddressHandler, getAutoJumpHandler, getFocusHandler } from './handlers';
-import { InstallmentsObj } from './components/Installments/Installments';
+import { InstallmentsState } from './components/Installments/Installments';
 import { TouchStartEventObj } from './components/types';
 import classNames from 'classnames';
 import { getPartialAddressValidationRules } from '../../../internal/Address/validate';
@@ -35,7 +35,7 @@ import { usePrevious } from '../../../../utils/hookUtils';
 import { AnalyticsInfoEvent, InfoEventType, UiTarget } from '../../../../core/Analytics/events/AnalyticsInfoEvent';
 
 const CardInput = (props: CardInputProps) => {
-    const sfp = useRef(null);
+    const sfp = useRef<SecuredFieldsProvider>(null);
     const isValidating = useRef(false);
     const getImage = useImage();
 
@@ -90,7 +90,7 @@ const CardInput = (props: CardInputProps) => {
     const [billingAddress, setBillingAddress] = useState<AddressData>(showBillingAddress ? props.data.billingAddress : null);
     const [showSocialSecurityNumber, setShowSocialSecurityNumber] = useState(false);
     const [socialSecurityNumber, setSocialSecurityNumber] = useState('');
-    const [installments, setInstallments] = useState<InstallmentsObj>({ value: null });
+    const [installments, setInstallments] = useState<InstallmentsState>({ value: null });
 
     // re. Disable arrows for iOS: The name of the element calling for other elements to be disabled
     // - either a securedField type (like 'encryptedCardNumber') when call is coming from SF
@@ -401,7 +401,7 @@ const CardInput = (props: CardInputProps) => {
                 const event = new AnalyticsInfoEvent({
                     component: props.type,
                     type: InfoEventType.validationError,
-                    target: fieldTypeToSnakeCase(errorItem.field),
+                    target: fieldTypeToSnakeCase(errorItem.field) as UiTarget,
                     validationErrorCode: errorItem.errorCode,
                     validationErrorMessage: getErrorMessageFromCode(errorItem.errorCode, SF_ErrorCodes)
                 });

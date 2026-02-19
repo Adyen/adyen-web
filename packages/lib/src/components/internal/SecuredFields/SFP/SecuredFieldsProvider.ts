@@ -294,6 +294,10 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
         if (this.csf) this.csf.destroy();
     }
 
+    public getRootNode(): HTMLElement {
+        return this.rootNode;
+    }
+
     public showValidation(): void {
         const { numDateFields, state }: SecuredFieldsProvider = this;
 

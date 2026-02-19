@@ -19,6 +19,7 @@
     "installments.oneTime": "一次性付款",
     "installments.installments": "分期付款",
     "installments.revolving": "延期付款",
+    "installments.bonus": "獎金付款",
     "sepaDirectDebit.ibanField.invalid": "帳戶號碼無效",
     "sepa.ownerName": "持有人名稱",
     "sepa.ibanNumber": "帳戶號碼 (IBAN)",

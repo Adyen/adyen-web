@@ -19,6 +19,7 @@
     "installments.oneTime": "Pagamento una tantum",
     "installments.installments": "Pagamento rateale",
     "installments.revolving": "Pagamento ricorrente",
+    "installments.bonus": "Pagamento del bonus",
     "sepaDirectDebit.ibanField.invalid": "Numero di conto non valido",
     "sepa.ownerName": "Nome Intestatario Conto",
     "sepa.ibanNumber": "Numero di conto (IBAN)",

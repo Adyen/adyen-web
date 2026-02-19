@@ -3,7 +3,7 @@ import Field from '../../internal/FormFields/Field';
 import { h } from 'preact';
 import { useCallback, useMemo } from 'preact/hooks';
 import { useCoreContext } from '../../../core/Context/CoreProvider';
-import { SelectItem } from '../../internal/FormFields/Select/types';
+import { SelectItem, SelectTargetObject } from '../../internal/FormFields/Select/types';
 
 const SELECTOR_OPTIONS = [
     { id: 'personal.checking', nameKey: 'ach.bankAccount.option.personal-checking' },
@@ -32,8 +32,8 @@ const AccountTypeSelector = ({ onSelect, selectedAccountType, errorMessage, plac
     );
 
     const onChange = useCallback(
-        event => {
-            const value = event.target.value;
+        (event: { target: SelectTargetObject }) => {
+            const value = event.target.value as string;
             onSelect(value);
         },
         [onSelect]

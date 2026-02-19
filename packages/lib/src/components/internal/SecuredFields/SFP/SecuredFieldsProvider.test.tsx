@@ -143,6 +143,25 @@ describe('<SecuredFieldsProvider /> rendering', () => {
         );
         expect(wrapper.instance().numDateFields).toBe(2);
     });
+
+    it('should return the rootNode when the getter is called', () => {
+        nodeHolder.innerHTML = mockNode;
+        wrapper = shallow(
+            <SecuredFieldsProvider
+                ref={handleSecuredFieldsRef}
+                rootNode={nodeHolder}
+                styles={styles}
+                render={renderFn}
+                onError={onError}
+                i18n={global.i18n}
+                configuration={{}}
+            />
+        );
+
+        wrapper.instance().csf = mockCSF;
+
+        expect(wrapper.instance().getRootNode()).toEqual(nodeHolder);
+    });
 });
 
 /**

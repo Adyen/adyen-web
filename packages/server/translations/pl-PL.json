@@ -19,6 +19,7 @@
     "installments.oneTime": "Płatność jednorazowa",
     "installments.installments": "Płatność ratalna",
     "installments.revolving": "Płatność odnawialna",
+    "installments.bonus": "Płatność bonusowa",
     "sepaDirectDebit.ibanField.invalid": "Nieprawidłowy numer rachunku",
     "sepa.ownerName": "Imię i nazwisko posiadacza karty",
     "sepa.ibanNumber": "Numer rachunku (IBAN)",

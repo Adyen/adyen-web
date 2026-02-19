@@ -14,7 +14,6 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: [22.18.0]
         api-version: ["v71"]
         runner-browser: ["chromium"]
     env:
@@ -31,7 +30,7 @@ jobs:
     - name: Setup Node
       uses: actions/setup-node@v6
       with:
-        node-version: ${{ matrix.node-version }}
+        node-version: 24
         package-manager-cache: false
 
     - name: Cache node modules
@@ -41,7 +40,7 @@ jobs:
         cache-name: node-modules-v1
       with:
         path: node_modules
-        key: ${{ runner.os }}-cache-${{ env.cache-name }}-node-${{ matrix.node-version }}-yarn-${{ hashFiles('**/yarn.lock') }}
+        key: ${{ runner.os }}-cache-${{ env.cache-name }}-yarn-${{ hashFiles('**/yarn.lock') }}
 
     - name: Enable Corepack
       run: corepack enable
@@ -64,7 +63,7 @@ jobs:
         cache-name: playwright-v1
       with:
         path: ~/.cache/ms-playwright
-        key: ${{ runner.os }}-cache-${{ env.cache-name }}-node-${{ matrix.node-version }}-playwright-${{ env.PLAYWRIGHT_VERSION }}-browser-${{ matrix.runner-browser }}
+        key: ${{ runner.os }}-cache-${{ env.cache-name }}-playwright-${{ env.PLAYWRIGHT_VERSION }}-browser-${{ matrix.runner-browser }}
 
     - name: Install Playwright Dependencies
       if: steps.playwright-cache.outputs.cache-hit != 'true' || matrix.runner-browser == 'webkit'

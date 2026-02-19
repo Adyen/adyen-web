@@ -65,7 +65,7 @@ export default function DragonpayInput(props: DragonpayInputProps) {
                     autoCorrect={'off'}
                     value={data.shopperEmail}
                     className={'adyen-checkout__input--large'}
-                    spellCheck={false}
+                    spellcheck={false}
                     onInput={handleChangeFor('shopperEmail', 'input')}
                     onBlur={handleChangeFor('shopperEmail', 'blur')}
                 />

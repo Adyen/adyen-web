@@ -1,4 +1,3 @@
-import { PaymentAmount } from '../../../../../types/global-types';
 import { BrandConfiguration, CardBrandsConfiguration } from '../../../types';
 import { ComponentChildren } from 'preact';
 import { CVCPolicyType, DatePolicyType } from '../../../../internal/SecuredFields/lib/types';
@@ -87,22 +86,6 @@ export interface ExpirationDateProps {
     expiryDatePolicy?: DatePolicyType;
     showContextualElement?: boolean;
     contextualText?: string;
-}
-
-export interface InstallmentsProps {
-    amount?: PaymentAmount;
-    brand?: string;
-    onChange?: (installmentObject: object) => void;
-    installmentOptions: InstallmentOptions;
-    type?: string;
-}
-
-export interface InstallmentOptions {
-    [key: string]: {
-        values: number[];
-        plans?: string[];
-        preselectedValue?: number;
-    };
 }
 
 export interface InstallmentsItem {

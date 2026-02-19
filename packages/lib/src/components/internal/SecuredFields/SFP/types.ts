@@ -6,6 +6,7 @@ import { Resources } from '../../../../core/Context/Resources';
 import { TouchStartEventObj } from '../../../Card/components/CardInput/components/types';
 import { Placeholders as GiftcardPlaceholders } from '../../../Giftcard/components/types';
 import type { AbstractAnalyticsEvent } from '../../../../core/Analytics/events/AbstractAnalyticsEvent';
+import type SecuredFieldsProvider from './SecuredFieldsProvider';
 
 export type Placeholders = CardPlaceholders | GiftcardPlaceholders;
 
@@ -94,3 +95,5 @@ export interface OnChangeEventDetails {
     event: string;
     fieldType?: string;
 }
+
+export type SecuredFieldsProviderRef = { current: SecuredFieldsProvider };

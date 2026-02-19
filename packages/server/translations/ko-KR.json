@@ -19,6 +19,7 @@
     "installments.oneTime": "일시불 결제",
     "installments.installments": "할부 결제",
     "installments.revolving": "리볼빙 결제",
+    "installments.bonus": "보너스 지급",
     "sepaDirectDebit.ibanField.invalid": "유효하지 않은 계좌 번호",
     "sepa.ownerName": "소유자 이름",
     "sepa.ibanNumber": "계좌 번호(IBAN)",

@@ -1,4 +1,4 @@
-import { AnalyticsService } from './AnalyticsService';
+import { AnalyticsEventPayload, AnalyticsService } from './AnalyticsService';
 import { httpPost } from '../Services/http';
 import AdyenCheckoutError from '../Errors/AdyenCheckoutError';
 import { AnalyticsInfoEvent, InfoEventType } from './events/AnalyticsInfoEvent';
@@ -60,7 +60,7 @@ describe('AnalyticsService', () => {
     describe('sendEvents()', () => {
         const checkoutAttemptId = 'test-checkout-attempt-id';
 
-        const createPayload = (hasEvents = true) => ({
+        const createPayload = (hasEvents = true): AnalyticsEventPayload => ({
             channel: 'Web' as const,
             platform: 'Web' as const,
             info: hasEvents ? [new AnalyticsInfoEvent({ type: InfoEventType.rendered, component: 'card' })] : [],

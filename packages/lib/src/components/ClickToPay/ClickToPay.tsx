@@ -108,7 +108,6 @@ export class ClickToPayElement extends UIElement<ClickToPayConfiguration> {
             <ClickToPayProvider
                 isStandaloneComponent={true}
                 configuration={this.ctpConfiguration}
-                amount={this.props.amount}
                 clickToPayService={this.clickToPayService}
                 setClickToPayRef={this.setComponentRef}
                 onSetStatus={this.setElementStatus}

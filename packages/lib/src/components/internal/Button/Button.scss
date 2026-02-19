@@ -33,7 +33,8 @@
         background: variable-generator.token(color-background-always-dark-active);
     }
 
-    &:disabled {
+    &:disabled,
+    &[aria-disabled='true'] {
         &,
         &:hover {
             box-shadow: none;

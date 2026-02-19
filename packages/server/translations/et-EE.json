@@ -19,6 +19,7 @@
     "installments.oneTime": "Ühekordne makse",
     "installments.installments": "Osamakse",
     "installments.revolving": "Vaba tagasimakse",
+    "installments.bonus": "Boonusmakse",
     "sepaDirectDebit.ibanField.invalid": "Vale kontonumber",
     "sepa.ownerName": "Omaniku nimi",
     "sepa.ibanNumber": "Kontonumber (IBAN)",

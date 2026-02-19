@@ -60,7 +60,7 @@ class ThreeDS2DeviceFingerprint extends UIElement<ThreeDS2DeviceFingerprintConfi
             const event = new AnalyticsErrorEvent({
                 component: this.type,
                 code: ErrorEventCode.THREEDS2_ACTION_IS_MISSING_PAYMENT_DATA,
-                errorType: ErrorEventType.apiError,
+                errorType: ErrorEventType.threeDS2,
                 message: `${THREEDS2_FINGERPRINT_ERROR}: Missing 'paymentData' property from threeDS2 action`
             });
 

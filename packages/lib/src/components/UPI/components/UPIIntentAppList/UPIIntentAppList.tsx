@@ -3,8 +3,8 @@ import classNames from 'classnames';
 import { App } from '../../types';
 import UPIIntentAppItem from './UPIIntentAppItem';
 import useImage from '../../../../core/Context/useImage';
-import './UPIIntentAppList.scss';
 import { useCoreContext } from '../../../../core/Context/CoreProvider';
+import './UPIIntentAppList.scss';
 
 interface UPIIntentAppListProps {
     apps: Array<App>;
@@ -26,7 +26,6 @@ const UPIIntentAppList = ({ apps, selectedAppId, disabled, onAppSelect = () => {
             })}
             role="radiogroup"
             aria-label={i18n.get('paymentMethodsList.aria.label')}
-            required
         >
             {apps.map(app => {
                 const key = `adyen-checkout-upi-app-item-${app.id}`;

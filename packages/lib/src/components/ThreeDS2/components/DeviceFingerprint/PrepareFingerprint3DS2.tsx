@@ -162,7 +162,7 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
             if (finalResObject.errorCode) {
                 const errorTypeAndCode = {
                     code: finalResObject.errorCode === TIMEOUT ? ErrorEventCode.THREEDS2_TIMEOUT : finalResObject.errorCode,
-                    errorType: finalResObject.errorCode === TIMEOUT ? ErrorEventType.network : ErrorEventType.apiError
+                    errorType: ErrorEventType.threeDS2
                 };
 
                 /**

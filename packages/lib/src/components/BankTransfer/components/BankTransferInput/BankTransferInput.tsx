@@ -52,7 +52,7 @@ function BankTransferInput(props: Readonly<BankTransferInputProps>) {
                     <InputEmail
                         name={'shopperEmail'}
                         autoCorrect={'off'}
-                        spellCheck={false}
+                        spellcheck={false}
                         required={false}
                         value={data.shopperEmail}
                         onInput={handleChangeFor('shopperEmail', 'input')}

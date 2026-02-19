@@ -19,6 +19,7 @@
     "installments.oneTime": "Vienreizējs maksājums",
     "installments.installments": "Samaksa pa daļām",
     "installments.revolving": "Atkārtots maksājums",
+    "installments.bonus": "Bonusa maksājums",
     "sepaDirectDebit.ibanField.invalid": "Nederīgs konta numurs",
     "sepa.ownerName": "Īpašnieka vārds",
     "sepa.ibanNumber": "Konta numurs (IBAN)",

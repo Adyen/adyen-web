@@ -88,7 +88,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                 const event = new AnalyticsErrorEvent({
                     component: this.props.type,
                     code: ErrorEventCode.THREEDS2_TOKEN_IS_MISSING_ACSURL,
-                    errorType: ErrorEventType.apiError,
+                    errorType: ErrorEventType.threeDS2,
                     message: `${THREEDS2_CHALLENGE_ERROR}: Decoded token is missing a valid acsURL property`
                 });
                 this.props.onSubmitAnalytics(event);
@@ -113,7 +113,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                 const event = new AnalyticsErrorEvent({
                     component: this.props.type,
                     code: ErrorEventCode.THREEDS2_TOKEN_IS_MISSING_OTHER_PROPS,
-                    errorType: ErrorEventType.apiError,
+                    errorType: ErrorEventType.threeDS2,
                     message: `${THREEDS2_CHALLENGE_ERROR}: Decoded token is missing one or more of the following properties (acsTransID | messageVersion | threeDSServerTransID)`
                 });
                 this.props.onSubmitAnalytics(event);
@@ -151,7 +151,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
             const event = new AnalyticsErrorEvent({
                 component: this.props.type,
                 code: errorCode,
-                errorType: ErrorEventType.apiError,
+                errorType: ErrorEventType.threeDS2,
                 message: `${THREEDS2_CHALLENGE_ERROR}: ${errorMsg}` // can be: 'Missing "token" property from threeDS2 action', 'not base64', 'malformed URI sequence' or 'Could not JSON parse token'
             });
 
@@ -185,7 +185,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
             if (finalResObject.errorCode) {
                 const errorTypeAndCode = {
                     code: finalResObject.errorCode === 'timeout' ? ErrorEventCode.THREEDS2_TIMEOUT : ErrorEventCode.THREEDS2_NO_TRANSSTATUS,
-                    errorType: finalResObject.errorCode === 'timeout' ? ErrorEventType.network : ErrorEventType.apiError
+                    errorType: ErrorEventType.threeDS2
                 };
 
                 // Challenge process has timed out,
@@ -313,7 +313,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                             const event = new AnalyticsErrorEvent({
                                 component: this.props.type,
                                 code: ErrorEventCode.THREEDS2_CHALLENGE_RESOLVED_WITHOUT_RESULT_PROP,
-                                errorType: ErrorEventType.apiError,
+                                errorType: ErrorEventType.threeDS2,
                                 message: `${THREEDS2_CHALLENGE_ERROR}: challenge resolved without a "result" object`
                             });
 

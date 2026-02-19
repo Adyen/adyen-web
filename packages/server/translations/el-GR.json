@@ -19,6 +19,7 @@
     "installments.oneTime": "Εφάπαξ πληρωμή",
     "installments.installments": "Πληρωμή με δόσεις",
     "installments.revolving": "Ανακυκλούμενη πληρωμή",
+    "installments.bonus": "Πληρωμή μπόνους",
     "sepaDirectDebit.ibanField.invalid": "Μη έγκυρος αριθμός λογαριασμού",
     "sepa.ownerName": "Όνομα κατόχου",
     "sepa.ibanNumber": "Αριθμός λογαριασμού (IBAN)",

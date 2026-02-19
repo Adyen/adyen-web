@@ -15,7 +15,12 @@ const EXCLUDED_STORIES: string[] = [
     'components-paybybankpix--merchant-page', // demo pages for pix
     'components-paybybankpix--hosted-page-enrollment',
     'components-paybybankpix--hosted-page-payment',
-    'components-paybybankpix--simulate-issuer-page'
+    'components-paybybankpix--simulate-issuer-page',
+    /**
+     * Demos
+     */
+    'demos-sessionpatching--with-dropin',
+    'demos-sessionpatching--with-components'
 ];
 
 // These are the list of violations that are know for each expose component

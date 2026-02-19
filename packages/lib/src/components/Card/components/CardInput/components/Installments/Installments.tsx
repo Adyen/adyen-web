@@ -1,33 +1,63 @@
 import { h } from 'preact';
-import { useState, useEffect } from 'preact/hooks';
+import { useState, useEffect, useMemo } from 'preact/hooks';
 import Field from '../../../../../internal/FormFields/Field';
 import { useCoreContext } from '../../../../../../core/Context/CoreProvider';
-import { InstallmentsItem, InstallmentsProps } from '../types';
+import { InstallmentsItem } from '../types';
 import Fieldset from '../../../../../internal/FormFields/Fieldset/Fieldset';
 import RadioGroup from '../../../../../internal/FormFields/RadioGroup';
 import Select from '../../../../../internal/FormFields/Select';
 import { alternativeLabelContent } from '../FieldLabelAlternative';
+import { useAmount } from '../../../../../../core/Context/AmountProvider';
+
 import './Installments.scss';
 
-export interface InstallmentsObj {
-    value: number;
-    plan?: 'revolving';
+export type InstallmentPlan = 'revolving' | 'bonus' | 'regular';
+
+export interface InstallmentsState {
+    value: number | null;
+    plan?: InstallmentPlan;
 }
 
-/**
- * Installments generic dropdown
- */
-function Installments(props: InstallmentsProps) {
+export interface InstallmentOption {
+    values: number[];
+    plans?: InstallmentPlan[];
+    preselectedValue?: number;
+}
+
+export interface InstallmentOptions {
+    [key: string]: InstallmentOption;
+}
+export interface InstallmentsProps {
+    brand?: string;
+    onChange?: (installmentObject: InstallmentsState) => void;
+    installmentOptions: InstallmentOptions;
+    type?: string;
+}
+
+function createRadioGroupItems(hasRadioButtonUI: boolean, plans?: InstallmentPlan[]): { id: string; name: string }[] {
+    if (!hasRadioButtonUI) {
+        return [];
+    }
+
+    return [
+        { id: 'onetime', name: 'installments.oneTime' },
+        { id: 'installments', name: 'installments.installments' },
+        ...(plans?.includes('revolving') ? [{ id: 'revolving', name: 'installments.revolving' }] : []),
+        ...(plans?.includes('bonus') ? [{ id: 'bonus', name: 'installments.bonus' }] : [])
+    ];
+}
+
+function Installments(props: Readonly<InstallmentsProps>) {
     const { i18n } = useCoreContext();
-    const { amount, brand, onChange, type } = props;
+    const { amount } = useAmount();
+    const { brand, onChange, type } = props;
     const installmentOptions = props.installmentOptions[brand] || props.installmentOptions.card;
     const readOnly = installmentOptions?.values?.length === 1;
     const [installmentAmount, setInstallmentAmount] = useState(installmentOptions?.preselectedValue || installmentOptions?.values[0]);
     const [radioBtnValue, setRadioBtnValue] = useState('onetime');
 
-    // hasRadioButtonUI determines if we have 3 radio buttons in the UI ('onetime', 'installments' and 'revolving')
-    const hasRadioButtonUI = installmentOptions?.plans?.includes('revolving');
-    const getPartialAmount = (divider: number): string => i18n.amount(amount.value / divider, amount.currency);
+    const hasRadioButtonUI = installmentOptions?.plans?.includes('revolving') || installmentOptions?.plans?.includes('bonus');
+    const radioGroupItems = useMemo(() => createRadioGroupItems(hasRadioButtonUI, installmentOptions?.plans), [hasRadioButtonUI, installmentOptions]);
 
     const onSelectInstallment = e => {
         const selectedInstallments = e.target.value;
@@ -44,6 +74,8 @@ function Installments(props: InstallmentsProps) {
         let translationObj;
 
         if (type === 'amount') {
+            const getPartialAmount = (divider: number): string => i18n.amount(amount.value / divider, amount.currency);
+
             translationKey = 'installmentOption';
             translationObj = { count: value, values: { times: value, partialValue: getPartialAmount(value) } };
         } else {
@@ -66,19 +98,19 @@ function Installments(props: InstallmentsProps) {
     }, [brand]);
 
     useEffect(() => {
-        const stateObj: InstallmentsObj = {
-            value: installmentAmount, // No radio button interface or "installments" radio button selected
-            ...(hasRadioButtonUI && radioBtnValue === 'revolving' && { plan: radioBtnValue, value: 1 }),
-            ...(hasRadioButtonUI && radioBtnValue === 'onetime' && { value: 1 })
+        const state: InstallmentsState = {
+            value: installmentAmount,
+            ...(hasRadioButtonUI && radioBtnValue === 'onetime' && { value: 1 }),
+            ...(hasRadioButtonUI && radioBtnValue === 'revolving' && { value: 1, plan: 'revolving' }),
+            ...(hasRadioButtonUI && radioBtnValue === 'bonus' && { value: 1, plan: 'bonus' })
         };
 
-        onChange(installmentOptions ? stateObj : { value: null });
-    }, [installmentAmount, installmentOptions, radioBtnValue]);
+        onChange(installmentOptions ? state : { value: null });
+    }, [onChange, hasRadioButtonUI, installmentAmount, installmentOptions, radioBtnValue]);
 
     if (!installmentOptions) return null;
     if (amount.value === 0) return null;
 
-    // Alternate interface for installments with the possibility of a "revolving" plan
     if (hasRadioButtonUI) {
         return (
             <div className="adyen-checkout__installments adyen-checkout__installments--revolving-plan">
@@ -91,16 +123,7 @@ function Installments(props: InstallmentsProps) {
                     renderAlternativeToLabel={alternativeLabelContent}
                 >
                     <Fieldset classNameModifiers={['revolving-plan']} label={''}>
-                        <RadioGroup
-                            items={[
-                                { id: 'onetime', name: 'installments.oneTime' },
-                                { id: 'installments', name: 'installments.installments' },
-                                { id: 'revolving', name: 'installments.revolving' }
-                            ]}
-                            onChange={onRadioSelect}
-                            value={radioBtnValue}
-                            ariaLabel={i18n.get('installments')}
-                        />
+                        <RadioGroup items={radioGroupItems} onChange={onRadioSelect} value={radioBtnValue} ariaLabel={i18n.get('installments')} />
 
                         <Field
                             className={radioBtnValue !== 'installments' ? 'revolving-plan-installments__disabled' : 'revolving-plan-installments'}
@@ -143,7 +166,6 @@ function Installments(props: InstallmentsProps) {
 
 Installments.defaultProps = {
     brand: '',
-    amount: {},
     onChange: () => {}
 };
 

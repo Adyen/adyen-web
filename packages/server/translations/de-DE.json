@@ -19,6 +19,7 @@
     "installments.oneTime": "Einmalige Zahlung",
     "installments.installments": "Ratenzahlung",
     "installments.revolving": "Ratenzahlung",
+    "installments.bonus": "Bonuszahlung",
     "sepaDirectDebit.ibanField.invalid": "Ungültige Kontonummer",
     "sepa.ownerName": "Name des Kontoinhabers",
     "sepa.ibanNumber": "Kontonummer (IBAN)",
