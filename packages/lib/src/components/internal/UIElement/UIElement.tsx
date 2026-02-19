@@ -13,8 +13,6 @@ import { AnalyticsLogEvent, LogEventType } from '../../../core/Analytics/events/
 import type {
     CheckoutSessionDetailsResponse,
     CheckoutSessionDonationCampaignsResponse,
-    // CheckoutSessionDonationsRequestData,
-    // CheckoutSessionDonationsResponse,
     CheckoutSessionPaymentResponse
 } from '../../../core/CheckoutSession/types';
 import type { NewableComponent } from '../../../core/core.registry';

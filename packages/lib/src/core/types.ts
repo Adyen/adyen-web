@@ -78,12 +78,6 @@ export type AdditionalDetailsData = {
     };
 };
 
-export type DonationCampaignData = {
-    data: {
-        sessionData?: string;
-    };
-};
-
 export type AdditionalDetailsActions = {
     resolve: (response: CheckoutAdvancedFlowResponse) => void;
     reject: () => void;

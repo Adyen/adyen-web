@@ -23,7 +23,6 @@ import {
 import cancelOrder from '../Services/sessions/cancel-order';
 import { onOrderCancelData } from '../../components/Dropin/types';
 import type { AdditionalDetailsData } from '../types';
-// import type { AdditionalDetailsData, DonationCampaignData } from '../types';
 import collectBrowserInfo from '../../utils/browserInfo';
 
 class Session {
