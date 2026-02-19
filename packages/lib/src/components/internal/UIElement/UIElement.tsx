@@ -13,8 +13,8 @@ import { AnalyticsLogEvent, LogEventType } from '../../../core/Analytics/events/
 import type {
     CheckoutSessionDetailsResponse,
     CheckoutSessionDonationCampaignsResponse,
-    CheckoutSessionDonationsRequestData,
-    CheckoutSessionDonationsResponse,
+    // CheckoutSessionDonationsRequestData,
+    // CheckoutSessionDonationsResponse,
     CheckoutSessionPaymentResponse
 } from '../../../core/CheckoutSession/types';
 import type { NewableComponent } from '../../../core/core.registry';
@@ -41,12 +41,8 @@ import './UIElement.scss';
 import SRPanelProvider from '../../../core/Errors/SRPanelProvider';
 import { AmountProvider, AmountProviderRef } from '../../../core/Context/AmountProvider';
 import { PayButtonProps } from '../PayButton/PayButton';
-import { TxVariants } from '../../tx-variants';
-import type { Donation } from '../../index';
 import { DonationCampaignProvider } from '../../Donation/DonationCampaignProvider';
-import type { DonationCampaign, DonationConfiguration } from '../../Donation/types';
-import { getDonationComponent } from '../../Donation/components/utils';
-import type { DonationPayload } from '../../Donation/components/types';
+import type { DonationCampaign } from '../../Donation/types';
 
 export abstract class UIElement<P extends UIElementProps = UIElementProps> extends BaseElement<P> {
     /**
@@ -482,52 +478,6 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
             },
             rootNode: isDropin ? this.elementRef._node : this._node
         });
-
-        return;
-
-        const { id, campaignName, ...restDonationCampaignProps } = donationCampaign;
-
-        const donationType = restDonationCampaignProps.donation.type;
-
-        const donationComponentProps: DonationConfiguration = {
-            onCancel(data) {
-                console.log('### Donation::onCancel:: data', data);
-            },
-            onDonate: (state: DonationPayload, component: Donation) => {
-                const donationRequestData: CheckoutSessionDonationsRequestData = {
-                    amount: state.data.amount,
-                    donationCampaignId: id,
-                    donationType: donationType
-                };
-
-                this.callSessionsDonations(donationRequestData, component);
-            },
-            ...restDonationCampaignProps
-        };
-
-        // TODO - decide if we want to differentiate between the implementation for a Dropin and a Component.
-        //  Will they both be done via a setStatus call? In which case we could just use: this.setElementStatus('donation', donationComponentProps);
-        //  Or will the implementation for a component be different? In which case we need this if-clause
-        if (assertIsDropin(this.elementRef)) {
-            this.elementRef.setStatus('donation', { configProps: donationComponentProps });
-
-            // alt. to Dropin.setStatus
-            //
-            // this.elementRef.unmount();
-            // const donationComponent: DonationElement = getDonationComponent(TxVariants.donation, this.core, donationComponentProps);
-            // if (!donationComponent) {
-            //     throw new Error('Donation component is not registered');
-            // }
-            // donationComponent.mount(this.elementRef._node);
-        } else {
-            this.unmount();
-
-            const donationComponent: Donation = getDonationComponent(TxVariants.donation, this.core, donationComponentProps);
-            if (!donationComponent) {
-                throw new Error('Donation component is not registered and so cannot be rendered');
-            }
-            donationComponent.mount(this._node);
-        }
     }
 
     /**
@@ -651,43 +601,6 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
                 this.handleError(error);
             } else {
                 this.handleError(new AdyenCheckoutError('ERROR', 'Error when making /donationCampaigns call', { cause: error }));
-            }
-
-            return Promise.reject(error);
-        }
-    }
-
-    private callSessionsDonations(donationRequestData: CheckoutSessionDonationsRequestData, component: Donation) {
-        // TODO add analytics
-        // const event = new AnalyticsLogEvent({
-        //     component: this.type,
-        //     type: LogEventType.donationFromSessions, // TODO will need a new type... donationFromSessions?
-        //     message: 'Sessions flow: calling donations endpoint'
-        // });
-        // this.submitAnalytics(event);
-
-        this.makeSessionDonationsCall(donationRequestData)
-            .then((response: CheckoutSessionDonationsResponse) => {
-                console.log('### UIElement::makeSessionDonationsCall:: response', response);
-                if (response.resultCode === 'Authorised') {
-                    component.setStatus('success');
-                } else {
-                    component.setStatus('error');
-                }
-            })
-            .catch((error: unknown) => {
-                console.log('### UIElement::makeSessionDonationsCall:: error', error);
-            });
-    }
-
-    private async makeSessionDonationsCall(donationRequestData: CheckoutSessionDonationsRequestData): Promise<CheckoutSessionDonationsResponse> {
-        try {
-            return await this.core.session.donations(donationRequestData);
-        } catch (error: unknown) {
-            if (error instanceof AdyenCheckoutError) {
-                this.handleError(error);
-            } else {
-                this.handleError(new AdyenCheckoutError('ERROR', 'Error when making /donations call', { cause: error }));
             }
 
             return Promise.reject(error);
