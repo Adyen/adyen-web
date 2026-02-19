@@ -10,7 +10,13 @@ import { AbstractAnalyticsEvent } from '../../../core/Analytics/events/AbstractA
 import { AnalyticsErrorEvent, ErrorEventType } from '../../../core/Analytics/events/AnalyticsErrorEvent';
 import { AnalyticsInfoEvent, InfoEventType } from '../../../core/Analytics/events/AnalyticsInfoEvent';
 import { AnalyticsLogEvent, LogEventType } from '../../../core/Analytics/events/AnalyticsLogEvent';
-import type { CheckoutSessionDetailsResponse, CheckoutSessionPaymentResponse } from '../../../core/CheckoutSession/types';
+import type {
+    CheckoutSessionDetailsResponse,
+    CheckoutSessionDonationCampaignsResponse,
+    CheckoutSessionDonationsRequestData,
+    CheckoutSessionDonationsResponse,
+    CheckoutSessionPaymentResponse
+} from '../../../core/CheckoutSession/types';
 import type { NewableComponent } from '../../../core/core.registry';
 import CancelError from '../../../core/Errors/CancelError';
 import type { AdditionalDetailsData, CoreConfiguration, ICore } from '../../../core/types';
@@ -35,12 +41,23 @@ import './UIElement.scss';
 import SRPanelProvider from '../../../core/Errors/SRPanelProvider';
 import { AmountProvider, AmountProviderRef } from '../../../core/Context/AmountProvider';
 import { PayButtonProps } from '../PayButton/PayButton';
+import { TxVariants } from '../../tx-variants';
+import type { DonationConfiguration } from '../../Donation/types';
+import type { DonationCampaign, DonationPayload } from '../../Donation/components/types';
+import type { Donation } from '../../index';
+import { getDonationComponent, normalizeDonationCampaign } from '../../Donation/components/utils';
 
 export abstract class UIElement<P extends UIElementProps = UIElementProps> extends BaseElement<P> {
+    /**
+     * componentRef is a ref to the primary component inside the subclass that extends UIElement e.g. CardInput.tsx (which sits inside Card.tsx)
+     */
     protected componentRef: any;
 
     protected resources: Resources;
 
+    /**
+     * elementRef is a ref to the subclass that extends UIElement e.g. Card.tsx or Dropin.tsx
+     */
     public elementRef: UIElement;
 
     public static type = undefined;
@@ -73,6 +90,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         this.makeAdditionalDetailsCall = this.makeAdditionalDetailsCall.bind(this);
         this.submitUsingSessionsFlow = this.submitUsingSessionsFlow.bind(this);
         this.updateAmount = this.updateAmount.bind(this);
+        this.handleDonation = this.handleDonation.bind(this);
 
         this.elementRef = (props && props.elementRef) || this;
         this.resources = this.props.modules ? this.props.modules.resources : undefined;
@@ -209,7 +227,9 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     }
 
     /**
-     * elementRef is a ref to the subclass that extends UIElement e.g. Card.tsx
+     * Set status using elementRef, which:
+     * - If Drop-in, will set status for Dropin component, and then it will propagate the new status for the active payment method component
+     * - If Component, it will set its own status
      */
     public setElementStatus(status: UIElementStatus, props?: any): this {
         this.elementRef?.setStatus(status, props);
@@ -443,6 +463,58 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     };
 
     /**
+     * Takes the donationCampaign from the /donationCampaigns call, extracts the relevant props,
+     * and combines them with the props required to initialise a DonationComponent
+     */
+    protected handleDonation(donationCampaign: DonationCampaign) {
+        console.log('### UIElement::handleDonation:: donationCampaign', donationCampaign);
+
+        const { id, campaignName, ...restDonationCampaignProps } = donationCampaign;
+
+        const donationType = restDonationCampaignProps.donation.type;
+
+        const donationComponentProps: DonationConfiguration = {
+            onCancel(data) {
+                console.log('### Donation::onCancel:: data', data);
+            },
+            onDonate: (state: DonationPayload, component: Donation) => {
+                const donationRequestData: CheckoutSessionDonationsRequestData = {
+                    amount: state.data.amount,
+                    donationCampaignId: id,
+                    donationType: donationType
+                };
+
+                this.callSessionsDonations(donationRequestData, component);
+            },
+            ...restDonationCampaignProps
+        };
+
+        // TODO - decide if we want to differentiate between the implementation for a Dropin and a Component.
+        //  Will they both be done via a setStatus call? In which case we could just use: this.setElementStatus('donation', donationComponentProps);
+        //  Or will the implementation for a component be different? In which case we need this if-clause
+        if (assertIsDropin(this.elementRef)) {
+            this.elementRef.setStatus('donation', { configProps: donationComponentProps });
+
+            // alt. to Dropin.setStatus
+            //
+            // this.elementRef.unmount();
+            // const donationComponent: DonationElement = getDonationComponent(TxVariants.donation, this.core, donationComponentProps);
+            // if (!donationComponent) {
+            //     throw new Error('Donation component is not registered');
+            // }
+            // donationComponent.mount(this.elementRef._node);
+        } else {
+            this.unmount();
+
+            const donationComponent: Donation = getDonationComponent(TxVariants.donation, this.core, donationComponentProps);
+            if (!donationComponent) {
+                throw new Error('Donation component is not registered and so cannot be rendered');
+            }
+            donationComponent.mount(this._node);
+        }
+    }
+
+    /**
      * Handles when the payment fails. The payment fails when:
      * - adv flow: the merchant rejects the payment due to a critical error
      * - adv flow: the merchant resolves the payment with a failed resultCode
@@ -491,6 +563,114 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         }
 
         this.handleSuccessResult(response);
+
+        /** If the response mandates it - start the flow to present a Donation Component */
+        if (this.core.session && response.askDonation === true) {
+            this.callSessionsDonationCampaigns();
+        }
+    }
+
+    private callSessionsDonationCampaigns() {
+        // TODO add analytics
+        // const event = new AnalyticsLogEvent({
+        //     component: this.type,
+        //     type: LogEventType.donationCampaign, // TODO will need a new type... donationCampaign?
+        //     message: 'Sessions flow: calling donationCampaigns endpoint'
+        // });
+        // this.submitAnalytics(event);
+
+        this.makeSessionsDonationCampaignsCall()
+            .then((response: CheckoutSessionDonationCampaignsResponse) => {
+                console.log('### UIElement::makeSessionDonationCampaignsCall:: response', response);
+
+                if (response?.donationCampaigns?.length) {
+                    console.log('### UIElement::makeSessionDonationCampaignsCall:: HAVE Campaigns');
+                    return normalizeDonationCampaign(response.donationCampaigns[0]);
+                } else {
+                    // TODO - remove mock AND handle this gracefully if no campaigns are returned
+                    const mockResp: DonationCampaign[] = [
+                        {
+                            id: 'DONATION_CAMPAIGN_ID',
+                            campaignName: 'DONATION_CAMPAIGN_NAME',
+                            donation: {
+                                currency: 'EUR',
+                                type: 'fixedAmounts',
+                                values: [100, 200, 300]
+                            },
+                            nonprofitName: 'Test Charity',
+                            causeName: 'Earthquake Turkey & Syria',
+                            nonprofitDescription:
+                                'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+                            nonprofitUrl: 'https://example.org',
+                            logoUrl: '/logo.png',
+                            bannerUrl: '/banner.png',
+                            termsAndConditionsUrl: 'https://www.adyen.com'
+                        }
+                    ];
+
+                    return mockResp[0];
+                }
+            })
+            .then((donationCampaign: DonationCampaign) => {
+                // Allow time for success message to show - TODO need to decide how best to handle this
+                setTimeout(() => {
+                    this.handleDonation(donationCampaign);
+                }, 2000);
+            })
+            .catch((error: unknown) => {
+                console.log('### UIElement::makeSessionDonationCampaignsCall:: error', error);
+            });
+    }
+
+    private async makeSessionsDonationCampaignsCall(): Promise<CheckoutSessionDonationCampaignsResponse> {
+        try {
+            return await this.core.session.donationCampaigns();
+        } catch (error: unknown) {
+            if (error instanceof AdyenCheckoutError) {
+                this.handleError(error);
+            } else {
+                this.handleError(new AdyenCheckoutError('ERROR', 'Error when making /donationCampaigns call', { cause: error }));
+            }
+
+            return Promise.reject(error);
+        }
+    }
+
+    private callSessionsDonations(donationRequestData: CheckoutSessionDonationsRequestData, component: Donation) {
+        // TODO add analytics
+        // const event = new AnalyticsLogEvent({
+        //     component: this.type,
+        //     type: LogEventType.donationFromSessions, // TODO will need a new type... donationFromSessions?
+        //     message: 'Sessions flow: calling donations endpoint'
+        // });
+        // this.submitAnalytics(event);
+
+        this.makeSessionDonationsCall(donationRequestData)
+            .then((response: CheckoutSessionDonationsResponse) => {
+                console.log('### UIElement::makeSessionDonationsCall:: response', response);
+                if (response.resultCode === 'Authorised') {
+                    component.setStatus('success');
+                } else {
+                    component.setStatus('error');
+                }
+            })
+            .catch((error: unknown) => {
+                console.log('### UIElement::makeSessionDonationsCall:: error', error);
+            });
+    }
+
+    private async makeSessionDonationsCall(donationRequestData: CheckoutSessionDonationsRequestData): Promise<CheckoutSessionDonationsResponse> {
+        try {
+            return await this.core.session.donations(donationRequestData);
+        } catch (error: unknown) {
+            if (error instanceof AdyenCheckoutError) {
+                this.handleError(error);
+            } else {
+                this.handleError(new AdyenCheckoutError('ERROR', 'Error when making /donations call', { cause: error }));
+            }
+
+            return Promise.reject(error);
+        }
     }
 
     protected handleKeyPress(e: h.JSX.TargetedKeyboardEvent<HTMLInputElement> | KeyboardEvent) {

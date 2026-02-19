@@ -4,6 +4,8 @@ type Donation = RoundupDonation | FixedAmountsDonation;
 
 export type Status = 'ready' | 'error' | 'loading' | 'success';
 
+export type DonationType = 'roundup' | 'fixedAmounts';
+
 export interface RoundupDonation {
     type: 'roundup';
     currency: string;
@@ -31,11 +33,23 @@ export interface DonationComponentProps extends CampaignContentProps {
     /**
      * The original transaction amount.
      */
-    commercialTxAmount: number;
+    commercialTxAmount?: number;
     termsAndConditionsUrl?: string;
     causeName?: string;
     showCancelButton?: boolean;
     onDonate: (payload: DonationPayload) => void;
     onCancel?: (payload: DonationPayload) => void;
     onChange?: (payload: DonationPayload) => void;
+}
+
+export interface DonationCampaign extends CampaignContentProps {
+    id: string;
+    campaignName: string;
+    donation: Donation;
+    termsAndConditionsUrl?: string;
+}
+
+export interface SessionsDonationCampaign extends Omit<DonationCampaign, 'donation'> {
+    donation?: DonationCampaign['donation'];
+    sessionsDonation?: DonationCampaign['donation'];
 }
