@@ -579,7 +579,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         // });
         // this.submitAnalytics(event);
 
-        this.makeSessionDonationCampaignsCall()
+        this.makeSessionsDonationCampaignsCall()
             .then((response: CheckoutSessionDonationCampaignsResponse) => {
                 console.log('### UIElement::makeSessionDonationCampaignsCall:: response', response);
 
@@ -622,7 +622,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
             });
     }
 
-    private async makeSessionDonationCampaignsCall(): Promise<CheckoutSessionDonationCampaignsResponse> {
+    private async makeSessionsDonationCampaignsCall(): Promise<CheckoutSessionDonationCampaignsResponse> {
         try {
             return await this.core.session.donationCampaigns();
         } catch (error: unknown) {
