@@ -36,6 +36,9 @@ import SRPanelProvider from '../../../core/Errors/SRPanelProvider';
 import { AmountProvider, AmountProviderRef } from '../../../core/Context/AmountProvider';
 import { PayButtonProps } from '../PayButton/PayButton';
 import { DonationCampaignProvider } from '../../Donation/DonationCampaignProvider';
+import DonationCampaignProvider2 from '../../Donation/DonationCampaignProvider2';
+import { TxVariants } from '../../tx-variants';
+import { getDonationCampaignProvider } from '../../Donation/components/utils';
 
 export abstract class UIElement<P extends UIElementProps = UIElementProps> extends BaseElement<P> {
     /**
@@ -521,7 +524,30 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
 
         /** If the response mandates it - start the flow to present a Donation Component */
         if (this.core.session && response.askDonation === true) {
-            this.handleSessionsDonationCampaigns();
+            // this.handleSessionsDonationCampaigns();
+            // return;
+
+            const isDropin = assertIsDropin(this.elementRef);
+            const unmountFn = () => {
+                const elementRef = isDropin ? this.elementRef : this;
+                elementRef.unmount();
+            };
+
+            const rootNode: HTMLElement = isDropin ? this.elementRef._node : this._node;
+            console.log('### UIElement::handleResponse:: rootNode', rootNode);
+
+            const DonationCampaignProvider: DonationCampaignProvider2 = getDonationCampaignProvider(TxVariants.donationCampaign, this.core, {
+                originalComponentType: this.type,
+                unmountFn,
+                rootNode
+            });
+
+            if (!DonationCampaignProvider) {
+                throw new Error('Donation component is not registered and so cannot be rendered');
+            }
+
+            // Don't mount yet - or any "payment success" UI will be removed
+            // DonationCampaignProvider.mount(rootNode);
         }
     }
 

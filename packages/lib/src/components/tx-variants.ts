@@ -29,6 +29,7 @@ export enum TxVariants {
     bankTransfer_SK = 'bankTransfer_SK',
     bankTransfer_US = 'bankTransfer_US',
     donation = 'donation',
+    donationCampaign = 'donationCampaign',
     personal_details = 'personal_details',
     dropin = 'dropin',
     /** internal */
