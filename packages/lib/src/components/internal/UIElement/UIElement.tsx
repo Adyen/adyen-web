@@ -36,7 +36,7 @@ import SRPanelProvider from '../../../core/Errors/SRPanelProvider';
 import { AmountProvider, AmountProviderRef } from '../../../core/Context/AmountProvider';
 import { PayButtonProps } from '../PayButton/PayButton';
 // import { DonationCampaignProvider } from '../../Donation/DonationCampaignProvider';
-import type DonationCampaignProvider2 from '../../Donation/DonationCampaignProvider2';
+import type DonationCampaignProvider from '../../Donation/DonationCampaignProvider';
 import { TxVariants } from '../../tx-variants';
 import { getDonationCampaignProvider } from '../../Donation/utils';
 
@@ -456,22 +456,6 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     };
 
     protected handleSessionsDonationCampaigns() {
-        console.log('### UIElement::handleSessionsDonationCampaigns:: ');
-
-        // Approach one: DonationCampaignProvider as function
-        // const isDropin = assertIsDropin(this.elementRef);
-        //
-        // DonationCampaignProvider({
-        //     core: this.core,
-        //     originalComponentType: this.type,
-        //     unmountFn: () => {
-        //         const elementRef = isDropin ? this.elementRef : this;
-        //         elementRef.unmount();
-        //     },
-        //     rootNode: isDropin ? this.elementRef._node : this._node
-        // });
-
-        // Approach 2: DonationCampaignProvider as UIElement
         const rootNode: HTMLElement = assertIsDropin(this.elementRef) ? this.elementRef._node : this._node;
 
         /**
@@ -479,7 +463,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
          * but don't mount it yet or any "payment success" UI will be removed.
          * The component will mount itself when it knows it has a donation campaign to display.
          */
-        const DonationCampaignProvider: DonationCampaignProvider2 = getDonationCampaignProvider(TxVariants.donationCampaign, this.core, {
+        const DonationCampaignProvider: DonationCampaignProvider = getDonationCampaignProvider(TxVariants.donationCampaign, this.core, {
             originalComponentType: this.type,
             rootNode
         });

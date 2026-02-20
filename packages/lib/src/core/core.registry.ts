@@ -4,8 +4,7 @@ import ThreeDS2DeviceFingerprint from '../components/ThreeDS2/ThreeDS2DeviceFing
 import Redirect from '../components/Redirect';
 import { TxVariants } from '../components/tx-variants';
 import type { ICore } from './types';
-import Donation from '../components/Donation/Donation';
-import DonationCampaignProvider2 from '../components/Donation/DonationCampaignProvider2';
+import DonationCampaignProvider from '../components/Donation/DonationCampaignProvider';
 
 function assertClassHasType(Class: any): Class is typeof UIElement {
     const hasValidType = typeof Class.type === 'string' && !!Class.type;
@@ -23,8 +22,7 @@ const defaultComponents = {
     [TxVariants.redirect]: Redirect,
     [TxVariants.threeDS2Challenge]: ThreeDS2Challenge,
     [TxVariants.threeDS2DeviceFingerprint]: ThreeDS2DeviceFingerprint,
-    [TxVariants.donation]: Donation, // only needed with original DonationCampaignProvider approach
-    [TxVariants.donationCampaign]: DonationCampaignProvider2
+    [TxVariants.donationCampaign]: DonationCampaignProvider
 };
 
 class Registry implements IRegistry {

@@ -1,7 +1,7 @@
 import type { DonationCampaign, SessionsDonationCampaign } from './types';
 import type { Donation } from './components/types';
 import type { ICore } from '../../core/types';
-import DonationCampaignProvider, { DonationCampaignProviderProps } from './DonationCampaignProvider2';
+import DonationCampaignProvider, { DonationCampaignProviderProps } from './DonationCampaignProvider';
 
 /**
  * A DonationCampaign returned from the /sessions/donationCampaigns endpoint has a "sessionsDonation" property rather than the usual "donation property".
