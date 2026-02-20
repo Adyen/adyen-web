@@ -94,7 +94,7 @@
         "@storybook/addon-a11y": "10.1.11",
         "@storybook/addon-docs": "10.1.11",
         "@storybook/preact-vite": "10.1.11",
-        "@swc/core": "1.15.8",
+        "@swc/core": "1.15.11",
         "@testing-library/jest-dom": "6.9.1",
         "@testing-library/preact": "3.2.4",
         "@testing-library/preact-hooks": "1.1.0",
