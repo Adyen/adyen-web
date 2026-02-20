@@ -25,6 +25,8 @@ class DonationCampaignProvider extends UIElement<DonationCampaignProviderProps> 
     private originalComponentType: string;
     private rootNode: HTMLElement;
 
+    private holderRef: HTMLElement;
+
     private donationComponent: DonationElement | null = null;
 
     constructor(checkout: ICore, props?: DonationCampaignProviderProps) {
@@ -66,7 +68,7 @@ class DonationCampaignProvider extends UIElement<DonationCampaignProviderProps> 
                 if (donationCampaign) {
                     // Allow time for any success message to show - TODO need to decide how best to handle this
                     setTimeout(() => {
-                        /** Now we know we have a donation campaign we can mount this "holder' component */
+                        /** Now we know we have a donation campaign we can mount this "holder" component into the UI */
                         this.mount(this.rootNode);
 
                         /** And then we can handle the actual Donation component */
@@ -79,16 +81,6 @@ class DonationCampaignProvider extends UIElement<DonationCampaignProviderProps> 
             });
     }
 
-    private async makeSessionsDonationCampaignsCall(): Promise<CheckoutSessionDonationCampaignsResponse> {
-        try {
-            return await this.core.session.donationCampaigns();
-        } catch (error: unknown) {
-            // TODO - analytics?
-
-            return Promise.reject(error);
-        }
-    }
-
     private handleDonationCampaign(donationCampaign: DonationCampaign) {
         const normalisedDonationCampaign = normalizeDonationCampaign(donationCampaign);
 
@@ -96,12 +88,12 @@ class DonationCampaignProvider extends UIElement<DonationCampaignProviderProps> 
 
         const donationType = restDonationCampaignProps.donation.type;
 
-        console.log('### DonationCampaignProvider2::handleDonationCampaign:: this', this);
-
         const donationComponentProps: DonationConfiguration = {
             onCancel: data => {
                 console.log('### Donation::onCancel:: data', data);
                 // TODO add analytics? - data shows whether shopper chose an amount, and, since they're here, that they then didn't proceed
+
+                // TODO - call a onDonationCancel callback?
 
                 this.unmount();
             },
@@ -117,10 +109,7 @@ class DonationCampaignProvider extends UIElement<DonationCampaignProviderProps> 
             ...restDonationCampaignProps
         };
 
-        this.donationComponent = new Donation(this.core, donationComponentProps);
-        console.log('### DonationCampaignProvider2::handleDonationCampaign::this.donationComponent ', this.donationComponent);
-
-        this.donationComponent.mount(this.componentRef);
+        this.donationComponent = new Donation(this.core, donationComponentProps).mount(this.holderRef);
     }
 
     private callSessionsDonations(donationRequestData: CheckoutSessionDonationsRequestData, component: DonationElement) {
@@ -141,10 +130,22 @@ class DonationCampaignProvider extends UIElement<DonationCampaignProviderProps> 
                 } else {
                     component.setStatus('error');
                 }
+
+                // TODO - call a onDonationComplete callback?
             })
             .catch((error: unknown) => {
                 console.log('### DonationCampaignProvider2::makeSessionsDonationsCall:: error', error);
             });
+    }
+
+    private async makeSessionsDonationCampaignsCall(): Promise<CheckoutSessionDonationCampaignsResponse> {
+        try {
+            return await this.core.session.donationCampaigns();
+        } catch (error: unknown) {
+            // TODO - analytics?
+
+            return Promise.reject(error);
+        }
     }
 
     private async makeSessionDonationsCall(donationRequestData: CheckoutSessionDonationsRequestData): Promise<CheckoutSessionDonationsResponse> {
@@ -158,12 +159,11 @@ class DonationCampaignProvider extends UIElement<DonationCampaignProviderProps> 
     }
 
     protected override componentToRender(): h.JSX.Element {
-        console.log('### DonationCampaignProvider2::componentToRender:: ');
         return (
             <div
                 id={'donationCampaignProvider'}
                 ref={ref => {
-                    this.componentRef = ref;
+                    this.holderRef = ref;
                 }}
             />
         );

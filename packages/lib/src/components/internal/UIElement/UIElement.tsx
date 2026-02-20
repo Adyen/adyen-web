@@ -83,7 +83,6 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         this.makeAdditionalDetailsCall = this.makeAdditionalDetailsCall.bind(this);
         this.submitUsingSessionsFlow = this.submitUsingSessionsFlow.bind(this);
         this.updateAmount = this.updateAmount.bind(this);
-        // this.handleDonation = this.handleDonation.bind(this);
         this.handleSessionsDonationCampaigns = this.handleSessionsDonationCampaigns.bind(this);
 
         this.elementRef = (props && props.elementRef) || this;
@@ -474,10 +473,10 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
 
         // Approach 2: DonationCampaignProvider as UIElement
         const rootNode: HTMLElement = assertIsDropin(this.elementRef) ? this.elementRef._node : this._node;
-        console.log('### UIElement::handleResponse:: rootNode', rootNode);
 
         /**
-         * Create the DonationCampaignProvider instance, but don't mount it yet or any "payment success" UI will be removed.
+         * Create the DonationCampaignProvider instance (via registry to avoid circular dependencies),
+         * but don't mount it yet or any "payment success" UI will be removed.
          * The component will mount itself when it knows it has a donation campaign to display.
          */
         const DonationCampaignProvider: DonationCampaignProvider2 = getDonationCampaignProvider(TxVariants.donationCampaign, this.core, {
