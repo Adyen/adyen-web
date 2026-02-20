@@ -1,8 +1,10 @@
-import { CampaignContentProps } from './CampaignContent';
+import type { CampaignContentProps } from './CampaignContent';
 
-type Donation = RoundupDonation | FixedAmountsDonation;
+export type Donation = RoundupDonation | FixedAmountsDonation;
 
 export type Status = 'ready' | 'error' | 'loading' | 'success';
+
+export type DonationType = 'roundup' | 'fixedAmounts';
 
 export interface RoundupDonation {
     type: 'roundup';
@@ -31,7 +33,7 @@ export interface DonationComponentProps extends CampaignContentProps {
     /**
      * The original transaction amount.
      */
-    commercialTxAmount: number;
+    commercialTxAmount?: number;
     termsAndConditionsUrl?: string;
     causeName?: string;
     showCancelButton?: boolean;
