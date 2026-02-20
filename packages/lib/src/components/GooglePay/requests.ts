@@ -51,11 +51,11 @@ export function getTransactionInfo({
     const formattedPrice = String(getDecimalAmount(amount.value, amount.currency));
 
     return {
+        ...props.transactionInfo,
         countryCode,
         currencyCode: amount.currency,
         totalPrice: formattedPrice,
-        totalPriceStatus: totalPriceStatus,
-        ...props.transactionInfo
+        totalPriceStatus: totalPriceStatus
     };
 }
 
