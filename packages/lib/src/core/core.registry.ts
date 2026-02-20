@@ -23,7 +23,7 @@ const defaultComponents = {
     [TxVariants.redirect]: Redirect,
     [TxVariants.threeDS2Challenge]: ThreeDS2Challenge,
     [TxVariants.threeDS2DeviceFingerprint]: ThreeDS2DeviceFingerprint,
-    [TxVariants.donation]: Donation,
+    [TxVariants.donation]: Donation, // only needed with original DonationCampaignProvider approach
     [TxVariants.donationCampaign]: DonationCampaignProvider2
 };
 

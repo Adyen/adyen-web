@@ -35,10 +35,10 @@ import './UIElement.scss';
 import SRPanelProvider from '../../../core/Errors/SRPanelProvider';
 import { AmountProvider, AmountProviderRef } from '../../../core/Context/AmountProvider';
 import { PayButtonProps } from '../PayButton/PayButton';
-import { DonationCampaignProvider } from '../../Donation/DonationCampaignProvider';
-import DonationCampaignProvider2 from '../../Donation/DonationCampaignProvider2';
+// import { DonationCampaignProvider } from '../../Donation/DonationCampaignProvider';
+import type DonationCampaignProvider2 from '../../Donation/DonationCampaignProvider2';
 import { TxVariants } from '../../tx-variants';
-import { getDonationCampaignProvider } from '../../Donation/components/utils';
+import { getDonationCampaignProvider } from '../../Donation/utils';
 
 export abstract class UIElement<P extends UIElementProps = UIElementProps> extends BaseElement<P> {
     /**
@@ -459,17 +459,36 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     protected handleSessionsDonationCampaigns() {
         console.log('### UIElement::handleSessionsDonationCampaigns:: ');
 
-        const isDropin = assertIsDropin(this.elementRef);
+        // Approach one: DonationCampaignProvider as function
+        // const isDropin = assertIsDropin(this.elementRef);
+        //
+        // DonationCampaignProvider({
+        //     core: this.core,
+        //     originalComponentType: this.type,
+        //     unmountFn: () => {
+        //         const elementRef = isDropin ? this.elementRef : this;
+        //         elementRef.unmount();
+        //     },
+        //     rootNode: isDropin ? this.elementRef._node : this._node
+        // });
 
-        DonationCampaignProvider({
-            core: this.core,
+        // Approach 2: DonationCampaignProvider as UIElement
+        const rootNode: HTMLElement = assertIsDropin(this.elementRef) ? this.elementRef._node : this._node;
+        console.log('### UIElement::handleResponse:: rootNode', rootNode);
+
+        /**
+         * Create the DonationCampaignProvider instance, but don't mount it yet or any "payment success" UI will be removed.
+         * The component will mount itself when it knows it has a donation campaign to display.
+         */
+        const DonationCampaignProvider: DonationCampaignProvider2 = getDonationCampaignProvider(TxVariants.donationCampaign, this.core, {
             originalComponentType: this.type,
-            unmountFn: () => {
-                const elementRef = isDropin ? this.elementRef : this;
-                elementRef.unmount();
-            },
-            rootNode: isDropin ? this.elementRef._node : this._node
+            rootNode
         });
+
+        // Fail quietly
+        if (!DonationCampaignProvider) {
+            console.warn('DonationCampaignProvider component is not registered and so cannot be rendered');
+        }
     }
 
     /**
@@ -524,30 +543,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
 
         /** If the response mandates it - start the flow to present a Donation Component */
         if (this.core.session && response.askDonation === true) {
-            // this.handleSessionsDonationCampaigns();
-            // return;
-
-            const isDropin = assertIsDropin(this.elementRef);
-            const unmountFn = () => {
-                const elementRef = isDropin ? this.elementRef : this;
-                elementRef.unmount();
-            };
-
-            const rootNode: HTMLElement = isDropin ? this.elementRef._node : this._node;
-            console.log('### UIElement::handleResponse:: rootNode', rootNode);
-
-            const DonationCampaignProvider: DonationCampaignProvider2 = getDonationCampaignProvider(TxVariants.donationCampaign, this.core, {
-                originalComponentType: this.type,
-                unmountFn,
-                rootNode
-            });
-
-            if (!DonationCampaignProvider) {
-                throw new Error('Donation component is not registered and so cannot be rendered');
-            }
-
-            // Don't mount yet - or any "payment success" UI will be removed
-            // DonationCampaignProvider.mount(rootNode);
+            this.handleSessionsDonationCampaigns();
         }
     }
 

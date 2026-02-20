@@ -16,7 +16,6 @@ import Donation from './Donation';
 
 export interface DonationCampaignProviderProps extends UIElementProps {
     originalComponentType: string;
-    unmountFn: () => void;
     rootNode: HTMLElement;
 }
 
@@ -24,7 +23,6 @@ class DonationCampaignProvider extends UIElement<DonationCampaignProviderProps> 
     public static type = 'donationCampaignProvider';
 
     private originalComponentType: string;
-    private unmountFn: () => void;
     private rootNode: HTMLElement;
 
     private donationComponent: DonationElement | null = null;
@@ -33,10 +31,7 @@ class DonationCampaignProvider extends UIElement<DonationCampaignProviderProps> 
         super(checkout, props);
 
         this.originalComponentType = props?.originalComponentType;
-        this.unmountFn = props?.unmountFn;
         this.rootNode = props?.rootNode;
-
-        // this.unmount = this.unmount.bind(this);
 
         this.callSessionsDonationCampaigns();
     }
@@ -71,13 +66,12 @@ class DonationCampaignProvider extends UIElement<DonationCampaignProviderProps> 
                 if (donationCampaign) {
                     // Allow time for any success message to show - TODO need to decide how best to handle this
                     setTimeout(() => {
+                        /** Now we know we have a donation campaign we can mount this "holder' component */
                         this.mount(this.rootNode);
-                        // this.handleDonationCampaign(donationCampaign);
-                    }, 2000);
-                    setTimeout(() => {
-                        // this.mount(this.rootNode);
+
+                        /** And then we can handle the actual Donation component */
                         this.handleDonationCampaign(donationCampaign);
-                    }, 4000);
+                    }, 2000);
                 }
             })
             .catch((error: unknown) => {
@@ -109,8 +103,6 @@ class DonationCampaignProvider extends UIElement<DonationCampaignProviderProps> 
                 console.log('### Donation::onCancel:: data', data);
                 // TODO add analytics? - data shows whether shopper chose an amount, and, since they're here, that they then didn't proceed
 
-                console.log('### DonationCampaignProvider2::onCancel:: this', this);
-                // this.unmountFn();
                 this.unmount();
             },
             onDonate: (state: DonationPayload, component: DonationElement) => {
@@ -125,21 +117,8 @@ class DonationCampaignProvider extends UIElement<DonationCampaignProviderProps> 
             ...restDonationCampaignProps
         };
 
-        // Unmount the previous component
-        // this.unmountFn();
-
-        // Retrieve and mount the Donation component
-        // const donationComponent: DonationElement = getDonationComponent(TxVariants.donation, this.core, donationComponentProps);
-        // if (!donationComponent) {
-        //     console.warn('Donation Component is not available');
-        //     return false;
-        // }
-
-        const donationComponent: Donation = new Donation(this.core, donationComponentProps);
-        console.log('### DonationCampaignProvider2::handleDonationCampaign::donationComponent ', donationComponent);
-        this.donationComponent = donationComponent;
-
-        // this.mount(this.rootNode);
+        this.donationComponent = new Donation(this.core, donationComponentProps);
+        console.log('### DonationCampaignProvider2::handleDonationCampaign::this.donationComponent ', this.donationComponent);
 
         this.donationComponent.mount(this.componentRef);
     }
@@ -179,10 +158,7 @@ class DonationCampaignProvider extends UIElement<DonationCampaignProviderProps> 
     }
 
     protected override componentToRender(): h.JSX.Element {
-        // if (this.donationComponent) {
         console.log('### DonationCampaignProvider2::componentToRender:: ');
-        // return this.donationComponent.render();
-        // }
         return (
             <div
                 id={'donationCampaignProvider'}
@@ -192,15 +168,6 @@ class DonationCampaignProvider extends UIElement<DonationCampaignProviderProps> 
             />
         );
     }
-
-    // public render() {
-    //     //     if (this.donationComponent) {
-    //     console.log('### DonationCampaignProvider2::render:: ');
-    //     //         // return this.donationComponent.render();
-    //     return this.componentToRender();
-    //     //     }
-    //     //     return <div id={'doncamppro'}></div>;
-    // }
 }
 
 export default DonationCampaignProvider;
