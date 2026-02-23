@@ -14,7 +14,10 @@ const googlePayConfig = {
         // ...
         totalPrice: 12.34, // <-- value sent to google 
     },
-    amount: 1234 // <-- value is ignored
+    amount: {
+        value: 1234, // <-- value is ignored
+        currency: "USD"
+    }
 }
 
 const component = new GooglePay(adyenCheckout, googlePayConfig);```
