@@ -75,6 +75,51 @@ describe('Google Pay Requests', () => {
             // eslint-disable-next-line no-prototype-builtins
             expect(paymentRequest.merchantInfo.hasOwnProperty('merchantOrigin')).toBe(false);
         });
+
+        test('should pass allowedIssuerCountryCodes correctly', () => {
+            const paymentRequest = initiatePaymentRequest(
+                {
+                    ...defaultProps,
+                    allowedIssuerCountryCodes: ['US', 'CA']
+                },
+                'US'
+            );
+
+            expect(paymentRequest.allowedPaymentMethods[0].parameters.allowedIssuerCountryCodes).toEqual(['US', 'CA']);
+        });
+
+        test('should pass blockedIssuerCountryCodes correctly', () => {
+            const paymentRequest = initiatePaymentRequest(
+                {
+                    ...defaultProps,
+                    blockedIssuerCountryCodes: ['CN', 'RU']
+                },
+                'US'
+            );
+
+            expect(paymentRequest.allowedPaymentMethods[0].parameters.blockedIssuerCountryCodes).toEqual(['CN', 'RU']);
+        });
+
+        test('should not include issuer country codes when not provided', () => {
+            const paymentRequest = initiatePaymentRequest(defaultProps, 'US');
+
+            expect(paymentRequest.allowedPaymentMethods[0].parameters.allowedIssuerCountryCodes).toBeUndefined();
+            expect(paymentRequest.allowedPaymentMethods[0].parameters.blockedIssuerCountryCodes).toBeUndefined();
+        });
+
+        test('should pass both allowed and blocked issuer country codes', () => {
+            const paymentRequest = initiatePaymentRequest(
+                {
+                    ...defaultProps,
+                    allowedIssuerCountryCodes: ['US', 'CA', 'GB'],
+                    blockedIssuerCountryCodes: ['CN']
+                },
+                'US'
+            );
+
+            expect(paymentRequest.allowedPaymentMethods[0].parameters.allowedIssuerCountryCodes).toEqual(['US', 'CA', 'GB']);
+            expect(paymentRequest.allowedPaymentMethods[0].parameters.blockedIssuerCountryCodes).toEqual(['CN']);
+        });
     });
 
     describe('isReadyToPayRequest', () => {
