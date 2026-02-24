@@ -15,6 +15,7 @@ export const SHOPPER_LOCALES = [
     'el-GR',
     'en-US',
     'es-ES',
+    'es-US',
     'et-EE',
     'fi-FI',
     'fr-FR',

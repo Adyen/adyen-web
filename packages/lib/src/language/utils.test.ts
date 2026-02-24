@@ -5,6 +5,7 @@ describe('formatLocale()', () => {
     test('should not do anything if the locale is already formatted', () => {
         expect(formatLocale('en-US')).toBe('en-US');
         expect(formatLocale('es-ES')).toBe('es-ES');
+        expect(formatLocale('es-US')).toBe('es-US');
         expect(formatLocale('ar')).toBe('ar');
     });
 
