@@ -1,12 +1,3 @@
-declare global {
-    interface Window {
-        SRCSDK_MASTERCARD?: object;
-        vAdapters: {
-            VisaSRCI?: object;
-        };
-    }
-}
-
 /**
  * Type that represent the object which contains the customizable properties of the SDK initialization
  */
