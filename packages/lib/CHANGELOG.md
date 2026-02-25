@@ -1,5 +1,11 @@
 # @adyen/adyen-web
 
+## 6.32.0
+
+### Minor Changes
+
+- New: Add support for allowedIssuerCountryCodes and blockedIssuerCountryCodes props on GooglePay ([#3806](https://github.com/Adyen/adyen-web/pull/3806))
+
 ## 6.31.1
 
 ### Patch Changes
