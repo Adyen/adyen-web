@@ -5,7 +5,6 @@ import type { ICore } from '../../core/types';
 
 import UIElement from '../internal/UIElement/UIElement';
 import { ComponentsMap } from '../components-map';
-import type { DonationConfiguration } from '../Donation/types';
 
 /**
  * Available components
@@ -166,7 +165,6 @@ export interface DropinStatus {
 export interface DropinStatusProps {
     component?: UIElement;
     message?: string;
-    configProps?: DonationConfiguration;
 }
 
 export interface DropinComponentState {
