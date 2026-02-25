@@ -53,9 +53,9 @@ export function getTransactionInfo({
     return {
         countryCode,
         currencyCode: amount.currency,
-        totalPrice: formattedPrice,
         totalPriceStatus: totalPriceStatus,
-        ...props.transactionInfo
+        ...props.transactionInfo,
+        totalPrice: formattedPrice
     };
 }
 
