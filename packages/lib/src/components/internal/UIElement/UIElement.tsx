@@ -35,10 +35,10 @@ import './UIElement.scss';
 import SRPanelProvider from '../../../core/Errors/SRPanelProvider';
 import { AmountProvider, AmountProviderRef } from '../../../core/Context/AmountProvider';
 import { PayButtonProps } from '../PayButton/PayButton';
-// import { DonationCampaignProvider } from '../../Donation/DonationCampaignProvider';
-import type DonationCampaignProvider from '../../Donation/DonationCampaignProvider';
-import { TxVariants } from '../../tx-variants';
-import { getDonationCampaignProvider } from '../../Donation/utils';
+import DonationCampaignProvider from '../../Donation/DonationCampaignProvider2';
+// import type DonationCampaignProvider from '../../Donation/DonationCampaignProvider';
+// import { TxVariants } from '../../tx-variants';
+// import { getDonationCampaignProvider } from '../../Donation/utils';
 
 export abstract class UIElement<P extends UIElementProps = UIElementProps> extends BaseElement<P> {
     /**
@@ -463,15 +463,25 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
          * but don't mount it yet or any "payment success" UI will be removed.
          * The component will mount itself when it knows it has a donation campaign to display.
          */
-        const DonationCampaignProvider: DonationCampaignProvider = getDonationCampaignProvider(TxVariants.donationCampaign, this.core, {
-            originalComponentType: this.type,
-            rootNode
-        });
+        // const DonationCampaignProvider: DonationCampaignProvider = getDonationCampaignProvider(TxVariants.donationCampaign, this.core, {
+        //     originalComponentType: this.type,
+        //     rootNode
+        // });
+        //
+        // // Fail quietly
+        // if (!DonationCampaignProvider) {
+        //     console.warn('DonationCampaignProvider component is not registered and so cannot be rendered');
+        // }
 
-        // Fail quietly
-        if (!DonationCampaignProvider) {
-            console.warn('DonationCampaignProvider component is not registered and so cannot be rendered');
-        }
+        /**
+         * Create the DonationCampaignProvider instance
+         * The instance will mount a Donation component into rootNode, when it knows it has a donation campaign to display.
+         */
+        new DonationCampaignProvider({
+            originalComponentType: this.type,
+            rootNode,
+            checkout: this.core
+        });
     }
 
     /**
