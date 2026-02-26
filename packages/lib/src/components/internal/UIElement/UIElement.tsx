@@ -35,12 +35,22 @@ import './UIElement.scss';
 import SRPanelProvider from '../../../core/Errors/SRPanelProvider';
 import { AmountProvider, AmountProviderRef } from '../../../core/Context/AmountProvider';
 import { PayButtonProps } from '../PayButton/PayButton';
+// import { DonationCampaignProvider } from '../../Donation/DonationCampaignProvider';
+import type DonationCampaignProvider from '../../Donation/DonationCampaignProvider';
+import { TxVariants } from '../../tx-variants';
+import { getDonationCampaignProvider } from '../../Donation/utils';
 
 export abstract class UIElement<P extends UIElementProps = UIElementProps> extends BaseElement<P> {
+    /**
+     * componentRef is a ref to the primary component inside the subclass that extends UIElement e.g. CardInput.tsx (which sits inside Card.tsx)
+     */
     protected componentRef: any;
 
     protected resources: Resources;
 
+    /**
+     * elementRef is a ref to the subclass that extends UIElement e.g. Card.tsx or Dropin.tsx
+     */
     public elementRef: UIElement;
 
     public static type = undefined;
@@ -73,6 +83,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         this.makeAdditionalDetailsCall = this.makeAdditionalDetailsCall.bind(this);
         this.submitUsingSessionsFlow = this.submitUsingSessionsFlow.bind(this);
         this.updateAmount = this.updateAmount.bind(this);
+        this.handleSessionsDonationCampaigns = this.handleSessionsDonationCampaigns.bind(this);
 
         this.elementRef = (props && props.elementRef) || this;
         this.resources = this.props.modules ? this.props.modules.resources : undefined;
@@ -209,7 +220,9 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     }
 
     /**
-     * elementRef is a ref to the subclass that extends UIElement e.g. Card.tsx
+     * Set status using elementRef, which:
+     * - If Drop-in, will set status for Dropin component, and then it will propagate the new status for the active payment method component
+     * - If Component, it will set its own status
      */
     public setElementStatus(status: UIElementStatus, props?: any): this {
         this.elementRef?.setStatus(status, props);
@@ -442,6 +455,25 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         });
     };
 
+    protected handleSessionsDonationCampaigns() {
+        const rootNode: HTMLElement = assertIsDropin(this.elementRef) ? this.elementRef._node : this._node;
+
+        /**
+         * Create the DonationCampaignProvider instance (via registry to avoid circular dependencies),
+         * but don't mount it yet or any "payment success" UI will be removed.
+         * The component will mount itself when it knows it has a donation campaign to display.
+         */
+        const DonationCampaignProvider: DonationCampaignProvider = getDonationCampaignProvider(TxVariants.donationCampaign, this.core, {
+            originalComponentType: this.type,
+            rootNode
+        });
+
+        // Fail quietly
+        if (!DonationCampaignProvider) {
+            console.warn('DonationCampaignProvider component is not registered and so cannot be rendered');
+        }
+    }
+
     /**
      * Handles when the payment fails. The payment fails when:
      * - adv flow: the merchant rejects the payment due to a critical error
@@ -491,6 +523,11 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         }
 
         this.handleSuccessResult(response);
+
+        /** If the response mandates it - start the flow to present a Donation Component */
+        if (this.core.session && response.askDonation === true) {
+            this.handleSessionsDonationCampaigns();
+        }
     }
 
     protected handleKeyPress(e: h.JSX.TargetedKeyboardEvent<HTMLInputElement> | KeyboardEvent) {

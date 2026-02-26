@@ -1,5 +1,7 @@
-import { InstallmentOptions } from '../../components/Card/components/CardInput/components/Installments/Installments';
-import { BrowserInfo, Order, PaymentAction, PaymentAmount, ResultCode } from '../../types/global-types';
+import type { InstallmentOptions } from '../../components/Card/components/CardInput/components/Installments/Installments';
+import type { BrowserInfo, Order, PaymentAction, PaymentAmount, ResultCode } from '../../types/global-types';
+import type { DonationCampaign } from '../../components/Donation/types';
+import type { DonationType } from '../../components/Donation/components/types';
 
 export type CheckoutSession = {
     id: string;
@@ -56,6 +58,22 @@ export type CheckoutSessionOrdersResponse = {
     sessionData: string;
     orderData: string;
     pspReference: string;
+};
+
+export type CheckoutSessionDonationCampaignsResponse = {
+    sessionData: string;
+    donationCampaigns: DonationCampaign[];
+};
+
+export type CheckoutSessionDonationsResponse = {
+    resultCode: ResultCode;
+    sessionData: string;
+};
+
+export type CheckoutSessionDonationsRequestData = {
+    donationCampaignId: string;
+    donationType: DonationType;
+    amount: PaymentAmount;
 };
 
 export type SetupSessionOptions = {

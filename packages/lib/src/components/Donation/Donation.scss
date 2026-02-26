@@ -1,7 +1,19 @@
 @use 'styles/index';
 @use 'styles/variable-generator';
 
+@keyframes adyen-checkout-donation-fade-in {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
 .adyen-checkout__adyen-giving {
+    animation: adyen-checkout-donation-fade-in 250ms ease-out;
+
     .adyen-checkout__status__icon {
         display: block;
         margin: variable-generator.token(spacer-130) auto variable-generator.token(spacer-100);
