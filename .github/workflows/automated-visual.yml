@@ -35,7 +35,7 @@ jobs:
 
     - name: Cache node modules
       id: node-modules-cache
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       env:
         cache-name: node-modules-v1
       with:
@@ -58,7 +58,7 @@ jobs:
       # /home/runner/.cache/ms-playwright/webkit-2123/minibrowser-wpe/bin/MiniBrowser: error while loading shared libraries: libwoff2dec.so.1.0.2: cannot open shared object file: No such file or directory
       if: matrix.runner-browser != 'webkit'
       id: playwright-cache
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       env:
         cache-name: playwright-v1
       with:
@@ -75,7 +75,7 @@ jobs:
     - name: Archive test result artifacts
       id: upload-artifact
       if: always()
-      uses: actions/upload-artifact@v5
+      uses: actions/upload-artifact@v6
       with:
         name: visual-report-${{matrix.api-version}}-${{matrix.runner-browser}}-${{ github.sha }}
         path: packages/e2e-playwright/playwright-report
