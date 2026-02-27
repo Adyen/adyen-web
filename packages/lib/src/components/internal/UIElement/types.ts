@@ -65,6 +65,7 @@ export type UIElementProps = {
         type?: string;
         name?: string;
         icon?: string;
+        fundingSource?: string;
         amount?: PaymentAmount;
         secondaryAmount?: PaymentAmount;
 

@@ -132,7 +132,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
 
     private getPaymentMethodConfigFromResponse(componentProps: P) {
         if (componentProps?.storedPaymentMethodId) return this.getStoredPaymentMethodDetails(componentProps.storedPaymentMethodId);
-        return this.getPaymentMethodFromPaymentMethodsResponse(componentProps?.type, componentProps?.paymentMethodId);
+        return this.getPaymentMethodFromPaymentMethodsResponse(componentProps?.type, componentProps?.paymentMethodId, componentProps?.fundingSource);
     }
 
     protected override buildElementProps(componentProps?: P) {
@@ -165,10 +165,11 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
      *
      * @param type - The type of the payment method to get. (This prop is passed by Drop-in OR Standalone components containing the property 'type' as part of their configuration)
      * @param paymentMethodId - Unique internal payment method ID
+     * @param fundingSource - Optional funding source of the payment method
      */
-    protected getPaymentMethodFromPaymentMethodsResponse(type?: string, paymentMethodId?: string): RawPaymentMethod {
+    protected getPaymentMethodFromPaymentMethodsResponse(type?: string, paymentMethodId?: string, fundingSource?: string): RawPaymentMethod {
         if (paymentMethodId) return this.core.paymentMethodsResponse.findById(paymentMethodId);
-        return this.core.paymentMethodsResponse?.find(type || this.constructor['type']);
+        return this.core.paymentMethodsResponse?.find(type || this.constructor['type'], fundingSource);
     }
 
     protected storeElementRefOnCore(props?: P) {
