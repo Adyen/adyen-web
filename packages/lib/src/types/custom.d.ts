@@ -38,5 +38,11 @@ declare global {
         };
 
         AdyenPasskey: { default: IAdyenPasskey };
+
+        SRCSDK_MASTERCARD?: object;
+
+        vAdapters: {
+            VisaSRCI?: object;
+        };
     }
 }

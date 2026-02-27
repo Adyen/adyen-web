@@ -32,7 +32,7 @@ jobs:
 
     - name: Cache node modules
       id: node-modules-cache
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       env:
         cache-name: node-modules-v1
       with:
@@ -79,7 +79,7 @@ jobs:
     - name: Remove screenshot label
       if: always()
       id: remove-screenshot-label
-      uses: actions/github-script@v7
+      uses: actions/github-script@v8
       with:
         script: |
           await github.rest.issues.removeLabel({
