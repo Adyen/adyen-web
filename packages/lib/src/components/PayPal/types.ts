@@ -4,6 +4,12 @@ import PaypalElement from './Paypal';
 
 export interface PayPalConfiguration extends UIElementProps {
     /**
+     * Set to true to use the new PayPal V6 component
+     * @default false
+     */
+    useV6?: boolean;
+
+    /**
      * Configuration returned by the backend
      * @internal
      */
