@@ -292,7 +292,7 @@ describe('Address', () => {
             countryCode | raw                | expected
             ${'US'}     | ${'1234599999999'} | ${'12345'}
             ${'BR'}     | ${'12345678999'}   | ${'12345678'}
-            ${'GB'}     | ${'AA99&9AA'}      | ${'AA999AA'}
+            ${'GB'}     | ${'AA99😀9AA'}     | ${'AA999AA'}
             ${'PL'}     | ${'99-99999999'}   | ${'99-999'}
             ${'PT'}     | ${'1234AAAA567'}   | ${'1234567'}
         `('Format post code for specific countries', ({ countryCode, raw, expected }) => {
