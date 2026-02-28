@@ -182,6 +182,11 @@ export enum TxVariants {
     mealVoucher_FR = 'mealVoucher_FR',
     mealVoucher_FR_natixis = 'mealVoucher_FR_natixis',
     mealVoucher_FR_sodexo = 'mealVoucher_FR_sodexo',
-    mealVoucher_FR_groupeup = 'mealVoucher_FR_groupeup'
+    mealVoucher_FR_groupeup = 'mealVoucher_FR_groupeup',
     /** Giftcard */
+
+    /** EMI */
+    emi = 'emi',
+    emi_hybrid = 'emi_hybrid'
+    /** EMI */
 }
