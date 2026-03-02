@@ -79,7 +79,7 @@ class IbanInput extends Component<IbanInputProps, IbanInputState> {
         }
     }
 
-    public static defaultProps = {
+    public static readonly defaultProps = {
         onChange: () => {},
         countryCode: null,
         holderName: true,

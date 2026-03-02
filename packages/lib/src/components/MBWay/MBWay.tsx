@@ -7,7 +7,7 @@ import { TxVariants } from '../tx-variants';
 import { AwaitConfiguration } from '../internal/Await/types';
 
 export class MBWayElement extends UIElement<AwaitConfiguration> {
-    public static type = TxVariants.mbway;
+    public static readonly type = TxVariants.mbway;
 
     formatProps(props) {
         const { data = {}, placeholders = {} } = props;

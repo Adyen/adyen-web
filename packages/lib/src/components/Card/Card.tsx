@@ -23,7 +23,7 @@ import { PayButtonProps } from '../internal/PayButton/PayButton';
 import { AnalyticsInfoEvent, InfoEventType, UiTarget } from '../../core/Analytics/events/AnalyticsInfoEvent';
 
 export class CardElement extends UIElement<CardConfiguration> {
-    public static type = TxVariants.scheme;
+    public static readonly type: TxVariants = TxVariants.scheme;
 
     private readonly clickToPayService: IClickToPayService | null;
 
@@ -47,7 +47,7 @@ export class CardElement extends UIElement<CardConfiguration> {
         }
     }
 
-    protected static defaultProps = {
+    protected static readonly defaultProps = {
         showFormInstruction: true,
         _disableClickToPay: false,
         doBinLookup: true,

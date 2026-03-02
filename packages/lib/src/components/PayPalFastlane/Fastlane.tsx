@@ -7,7 +7,7 @@ import type { FastlaneConfiguration } from './types';
 class Fastlane extends UIElement<FastlaneConfiguration> {
     public static readonly type = TxVariants.fastlane;
 
-    protected static defaultProps = {
+    protected static readonly defaultProps = {
         keepBrandsVisible: true
     };
 

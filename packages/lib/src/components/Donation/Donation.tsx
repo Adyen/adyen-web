@@ -6,14 +6,14 @@ import type { ICore } from '../../core/types';
 import type { DonationConfiguration } from './types';
 
 class DonationElement extends UIElement<DonationConfiguration> {
-    public static type = TxVariants.donation;
+    public static readonly type = TxVariants.donation;
 
     constructor(checkout: ICore, props?: DonationConfiguration) {
         super(checkout, props);
         this.donate = this.donate.bind(this);
     }
 
-    public static defaultProps = {
+    public static readonly defaultProps = {
         onCancel: () => {},
         onDonate: () => {}
     };

@@ -19,7 +19,7 @@ import { ICore } from '../../types';
  */
 
 class UPI extends UIElement<UPIConfiguration> {
-    public static type = TxVariants.upi;
+    public static readonly type = TxVariants.upi;
     public static readonly txVariants = [TxVariants.upi, TxVariants.upi_qr, TxVariants.upi_intent];
     private mode: UpiMode;
     constructor(checkout: ICore, props: UPIConfiguration) {

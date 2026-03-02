@@ -41,7 +41,7 @@ class Giftcard extends Component<GiftcardComponentProps> {
         transformedErrors: {}
     };
 
-    public static defaultProps = {
+    public static readonly defaultProps = {
         pinRequired: true,
         expiryDateRequired: false,
         onChange: () => {},

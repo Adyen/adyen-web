@@ -11,9 +11,9 @@ import { AbstractAnalyticsEvent } from '../../../../core/Analytics/events/Abstra
 import { AnalyticsErrorEvent, ErrorEventCode, ErrorEventType } from '../../../../core/Analytics/events/AnalyticsErrorEvent';
 
 class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, PrepareFingerprint3DS2State> {
-    public static type = 'scheme';
+    public static readonly type = 'scheme';
 
-    public static defaultProps = {
+    public static readonly defaultProps = {
         onComplete: () => {},
         onError: () => {},
         paymentData: '',

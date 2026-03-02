@@ -17,7 +17,7 @@ import { AnalyticsErrorEvent, ErrorEventCode, ErrorEventType } from '../../../..
 import { AbstractAnalyticsEvent } from '../../../../core/Analytics/events/AbstractAnalyticsEvent';
 
 class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareChallenge3DS2State> {
-    public static defaultProps = {
+    public static readonly defaultProps = {
         onComplete: () => {},
         onError: () => {},
         isMDFlow: false

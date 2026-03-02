@@ -4,7 +4,7 @@ import { TxVariants } from '../tx-variants';
 import type { OpenInvoiceConfiguration } from '../types';
 
 export default class Atome extends OpenInvoiceContainer {
-    public static type = TxVariants.atome;
+    public static readonly type = TxVariants.atome;
 
     formatProps(props: OpenInvoiceConfiguration) {
         return {

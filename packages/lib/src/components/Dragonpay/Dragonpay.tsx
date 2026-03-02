@@ -6,9 +6,9 @@ import { DragonpayConfiguraton } from './types';
 import { TxVariants } from '../tx-variants';
 
 export class DragonpayElement extends UIElement<DragonpayConfiguraton> {
-    public static type = TxVariants.dragonpay;
+    public static readonly type = TxVariants.dragonpay;
 
-    public static txVariants = [
+    public static readonly txVariants = [
         TxVariants.dragonpay,
         TxVariants.dragonpay_ebanking,
         TxVariants.dragonpay_otc_banking,

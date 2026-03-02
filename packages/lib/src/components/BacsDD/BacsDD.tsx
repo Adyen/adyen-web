@@ -9,7 +9,7 @@ import { BacsElementData } from './types';
 import { PayButtonProps } from '../internal/PayButton/PayButton';
 
 class BacsElement extends UIElement<VoucherConfiguration> {
-    public static type = TxVariants.directdebit_GB;
+    public static readonly type = TxVariants.directdebit_GB;
 
     formatData(): BacsElementData {
         return {

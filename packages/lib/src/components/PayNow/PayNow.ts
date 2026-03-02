@@ -5,7 +5,7 @@ import { PayNowIntroduction } from './components/PayNowIntroduction';
 import { PayNowInstructions } from './components/PayNowInstructions';
 
 class PayNowElement extends QRLoaderContainer {
-    public static type = TxVariants.paynow;
+    public static readonly type = TxVariants.paynow;
 
     formatProps(props) {
         return {

@@ -15,15 +15,15 @@ import './Paypal.scss';
 import { AnalyticsInfoEvent, InfoEventType } from '../../core/Analytics/events/AnalyticsInfoEvent';
 
 class PaypalElement extends UIElement<PayPalConfiguration> {
-    public static type = TxVariants.paypal;
-    public static subtype = 'sdk';
+    public static readonly type = TxVariants.paypal;
+    public static readonly subtype = 'sdk';
 
     public paymentData: string = null;
 
     private resolve = null;
     private reject = null;
 
-    protected static defaultProps = defaultProps;
+    protected static readonly defaultProps = defaultProps;
 
     constructor(checkout: ICore, props?: PayPalConfiguration) {
         super(checkout, props);
