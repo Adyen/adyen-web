@@ -90,8 +90,6 @@ export interface SFPValid {
     encryptedSecurityCode?: boolean;
     encryptedPassword?: boolean;
     encryptedPin?: boolean;
-    encryptedBankAccountNumber?: boolean;
-    encryptedBankLocationId?: boolean;
 }
 
 export interface OnChangeEventDetails {

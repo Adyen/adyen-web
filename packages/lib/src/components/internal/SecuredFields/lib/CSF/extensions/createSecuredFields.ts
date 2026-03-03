@@ -179,10 +179,6 @@ export function setupSecuredField(pItem: HTMLElement, cvcPolicy?: CVCPolicyType,
          *  encryptedExpiryYear
          *  encryptedSecurityCode
          *  encryptedPassword
-         *  encryptedPin???
-         *  encryptedBankAccountNumber
-         *  encryptedBankLocationId
-         *  encryptedIBAN
          */
         const fieldType: string = getAttribute(pItem, this.encryptedAttrName);
 
