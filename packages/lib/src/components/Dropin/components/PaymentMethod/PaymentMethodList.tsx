@@ -56,7 +56,7 @@ const PaymentMethodList = ({
         const firstNonStoredPayment = paymentMethods?.[0];
 
         if (firstStoredPayment || firstNonStoredPayment) {
-            const shouldOpenFirstStored = openFirstStoredPaymentMethod && firstStoredPayment.props?.oneClick === true;
+            const shouldOpenFirstStored = openFirstStoredPaymentMethod && firstStoredPayment?.props?.oneClick === true;
             if (shouldOpenFirstStored) {
                 onSelect(firstStoredPayment);
                 return;

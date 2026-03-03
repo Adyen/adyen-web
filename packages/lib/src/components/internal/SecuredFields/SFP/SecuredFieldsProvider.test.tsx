@@ -122,9 +122,9 @@ describe('<SecuredFieldsProvider /> rendering', () => {
     it('should create an error object for each visible secured field, pass the object to the props.onError fn & set state.errors', () => {
         sfp.showValidation();
 
-        expect(sfp.state.errors.encryptedCardNumber).not.toBe(false);
-        expect(sfp.state.errors.encryptedExpiryDate).not.toBe(false);
-        expect(sfp.state.errors.encryptedSecurityCode).not.toBe(false);
+        expect(sfp.state.errors.encryptedCardNumber).not.toBe(null);
+        expect(sfp.state.errors.encryptedExpiryDate).not.toBe(null);
+        expect(sfp.state.errors.encryptedSecurityCode).not.toBe(null);
     });
 
     it('should call the passed render function', () => {
@@ -199,7 +199,7 @@ describe('<SecuredFieldsProvider /> handling an unsupported card', () => {
     });
 
     it('should see that the cleared "unsupported card" error has reset state on the SecuredFieldsProvider', () => {
-        expect(wrapper.instance().state.errors.encryptedCardNumber).toBe(false);
+        expect(wrapper.instance().state.errors.encryptedCardNumber).toBe(null);
     });
 
     it('should clear the previously generated "unsupported card" error & then a regular error is handled correctly', () => {
