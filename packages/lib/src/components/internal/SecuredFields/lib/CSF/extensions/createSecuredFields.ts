@@ -7,7 +7,6 @@ import {
     DATA_INFO,
     DATA_UID,
     SF_CONFIG_TIMEOUT,
-    ALL_SECURED_FIELDS,
     ENCRYPTED_EXPIRY_MONTH
 } from '../../constants';
 import { existy } from '../../../../../../utils/commonUtils';

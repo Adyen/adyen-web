@@ -16,7 +16,6 @@ import type { UIElementStatus } from '../internal/UIElement/types';
 import UIElement from '../internal/UIElement';
 import PayButton from '../internal/PayButton';
 import type { ICore } from '../../core/types';
-import { ALL_SECURED_FIELDS } from '../internal/SecuredFields/lib/constants';
 import AdyenCheckoutError, { IMPLEMENTATION_ERROR } from '../../core/Errors/AdyenCheckoutError';
 import CardInputDefaultProps from './components/CardInput/defaultProps';
 import { PayButtonProps } from '../internal/PayButton/PayButton';

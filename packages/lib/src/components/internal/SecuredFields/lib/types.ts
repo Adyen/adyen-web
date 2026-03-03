@@ -25,18 +25,7 @@ declare global {
     }
 }
 
-export type SFFieldType =
-    | 'encryptedCardNumber'
-    | 'encryptedExpiryDate'
-    | 'encryptedExpiryMonth'
-    | 'encryptedExpiryYear'
-    | 'encryptedSecurityCode'
-    | 'encryptedPassword'
-    | 'encryptedBankAccountNumber'
-    | 'encryptedBankLocationId';
-
-// TODO rename this to SFFieldType and remove above type
-export type SFField = (typeof ALL_SECURED_FIELDS)[number];
+export type SFFieldType = (typeof ALL_SECURED_FIELDS)[number];
 
 export interface SecuredFields {
     encryptedCardNumber?: SecuredField;

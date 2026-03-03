@@ -1,4 +1,4 @@
-import { ENCRYPTED_CARD_NUMBER, CREDIT_CARD_SF_FIELDS } from '../../../internal/SecuredFields/lib/constants';
+import { ENCRYPTED_CARD_NUMBER } from '../../../internal/SecuredFields/lib/constants';
 import { selectOne } from '../../../internal/SecuredFields/lib/utilities/dom';
 import { CardFocusData } from '../../../internal/SecuredFields/lib/types';
 import ua from '../../../internal/SecuredFields/lib/CSF/utils/userAgent';
