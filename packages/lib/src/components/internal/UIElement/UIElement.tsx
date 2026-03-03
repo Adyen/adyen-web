@@ -35,10 +35,7 @@ import './UIElement.scss';
 import SRPanelProvider from '../../../core/Errors/SRPanelProvider';
 import { AmountProvider, AmountProviderRef } from '../../../core/Context/AmountProvider';
 import { PayButtonProps } from '../PayButton/PayButton';
-import DonationCampaignProvider from '../../Donation/DonationCampaignProvider2';
-// import type DonationCampaignProvider from '../../Donation/DonationCampaignProvider';
-// import { TxVariants } from '../../tx-variants';
-// import { getDonationCampaignProvider } from '../../Donation/utils';
+import DonationCampaignProvider from '../../Donation/DonationCampaignProvider';
 
 export abstract class UIElement<P extends UIElementProps = UIElementProps> extends BaseElement<P> {
     /**
@@ -457,21 +454,6 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
 
     protected handleSessionsDonationCampaigns() {
         const rootNode: HTMLElement = assertIsDropin(this.elementRef) ? this.elementRef._node : this._node;
-
-        /**
-         * Create the DonationCampaignProvider instance (via registry to avoid circular dependencies),
-         * but don't mount it yet or any "payment success" UI will be removed.
-         * The component will mount itself when it knows it has a donation campaign to display.
-         */
-        // const DonationCampaignProvider: DonationCampaignProvider = getDonationCampaignProvider(TxVariants.donationCampaign, this.core, {
-        //     originalComponentType: this.type,
-        //     rootNode
-        // });
-        //
-        // // Fail quietly
-        // if (!DonationCampaignProvider) {
-        //     console.warn('DonationCampaignProvider component is not registered and so cannot be rendered');
-        // }
 
         /**
          * Create the DonationCampaignProvider instance

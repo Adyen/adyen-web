@@ -1,5 +1,3 @@
-import UIElement from '../internal/UIElement';
-import { h } from 'preact';
 import type { ICore } from '../../core/types';
 import type { UIElementProps } from '../internal/UIElement/types';
 import type { DonationCampaign, DonationConfiguration } from './types';
@@ -11,34 +9,33 @@ import type {
 } from '../../core/CheckoutSession/types';
 import { normalizeDonationCampaign } from './utils';
 import Donation from './Donation';
+import { getDonationComponent } from './components/utils';
+import { TxVariants } from '../tx-variants';
 // import { AnalyticsLogEvent, LogEventType } from '../../core/Analytics/events/AnalyticsLogEvent';
 
 export interface DonationCampaignProviderProps extends UIElementProps {
     originalComponentType: string;
     rootNode: HTMLElement;
+    checkout: ICore;
 }
 
-class DonationCampaignProvider extends UIElement<DonationCampaignProviderProps> {
+class DonationCampaignProvider {
     public static type = 'donationCampaignProvider';
 
     private originalComponentType: string;
     private rootNode: HTMLElement;
-
-    private holderRef: HTMLElement;
+    private checkout: ICore;
 
     private donationComponent: Donation;
 
-    constructor(checkout: ICore, props?: DonationCampaignProviderProps) {
-        super(checkout, props);
-
+    constructor(props?: DonationCampaignProviderProps) {
         this.originalComponentType = props?.originalComponentType;
         this.rootNode = props?.rootNode;
+        this.checkout = props?.checkout;
+
+        console.log('### DonationCampaignProvider::constructor:: this.rootNode', this.rootNode);
 
         this.callSessionsDonationCampaigns();
-    }
-
-    protected override beforeRender() {
-        /* Do not send rendered analytics event for his "holder" component - we are more concerned with hearing that the Donation component has rendered */
     }
 
     private callSessionsDonationCampaigns() {
@@ -49,7 +46,7 @@ class DonationCampaignProvider extends UIElement<DonationCampaignProviderProps> 
         //     type: LogEventType.donationCampaign, // TODO will need a new type... donationCampaign?
         //     message: 'Sessions flow: calling donationCampaigns endpoint'
         // });
-        // this.submitAnalytics(event);
+        // this.checkout.modules.analytics.sendAnalytics(event);
 
         this.makeSessionsDonationCampaignsCall()
             .then((response: CheckoutSessionDonationCampaignsResponse) => {
@@ -67,9 +64,6 @@ class DonationCampaignProvider extends UIElement<DonationCampaignProviderProps> 
                 if (donationCampaign) {
                     // Allow time for any success message to show - TODO need to decide how best to handle this
                     setTimeout(() => {
-                        /** Now we know we have a donation campaign we can mount this "holder" component into the UI */
-                        this.mount(this.rootNode);
-
                         /** And then we can handle the actual Donation component */
                         this.handleDonationCampaign(donationCampaign);
                     }, 2000);
@@ -94,7 +88,7 @@ class DonationCampaignProvider extends UIElement<DonationCampaignProviderProps> 
 
                 // TODO - call a onDonationCancel callback?
 
-                this.unmount();
+                this.donationComponent.unmount();
             },
             onDonate: (state: DonationPayload, component: Donation) => {
                 const donationRequestData: CheckoutSessionDonationsRequestData = {
@@ -108,7 +102,20 @@ class DonationCampaignProvider extends UIElement<DonationCampaignProviderProps> 
             ...restDonationCampaignProps
         };
 
-        this.donationComponent = new Donation(this.core, donationComponentProps).mount(this.holderRef);
+        /**
+         * Create the DonationComponent instance (via registry to avoid circular dependencies)
+         */
+        this.donationComponent = getDonationComponent(TxVariants.donation, this.checkout, {
+            ...donationComponentProps
+        });
+
+        // Fail quietly
+        if (!this.donationComponent) {
+            console.warn('The Donation component is not registered and so cannot be rendered');
+            return;
+        }
+
+        this.donationComponent.mount(this.rootNode);
     }
 
     private callSessionsDonations(donationRequestData: CheckoutSessionDonationsRequestData, component: Donation) {
@@ -119,7 +126,7 @@ class DonationCampaignProvider extends UIElement<DonationCampaignProviderProps> 
         //     type: LogEventType.donationFromSessions, // TODO will need a new type... donationFromSessions?
         //     message: 'Sessions flow: calling donations endpoint'
         // });
-        // this.submitAnalytics(event);
+        // this.checkout.modules.analytics.sendAnalytics(event);
 
         this.makeSessionDonationsCall(donationRequestData)
             .then((response: CheckoutSessionDonationsResponse) => {
@@ -139,7 +146,7 @@ class DonationCampaignProvider extends UIElement<DonationCampaignProviderProps> 
 
     private async makeSessionsDonationCampaignsCall(): Promise<CheckoutSessionDonationCampaignsResponse> {
         try {
-            return await this.core.session.donationCampaigns();
+            return await this.checkout.session.donationCampaigns();
         } catch (error: unknown) {
             // TODO - analytics?
 
@@ -149,23 +156,12 @@ class DonationCampaignProvider extends UIElement<DonationCampaignProviderProps> 
 
     private async makeSessionDonationsCall(donationRequestData: CheckoutSessionDonationsRequestData): Promise<CheckoutSessionDonationsResponse> {
         try {
-            return await this.core.session.donations(donationRequestData);
+            return await this.checkout.session.donations(donationRequestData);
         } catch (error: unknown) {
             // TODO - analytics?
 
             return Promise.reject(error);
         }
-    }
-
-    protected override componentToRender(): h.JSX.Element {
-        return (
-            <div
-                id={'donationCampaignProvider'}
-                ref={ref => {
-                    this.holderRef = ref;
-                }}
-            />
-        );
     }
 }
 
