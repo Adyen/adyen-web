@@ -12,7 +12,7 @@ function donations(details: CheckoutSessionDonationsRequestData, session: Sessio
         ...details
     };
 
-    return httpPost({ loadingContext: session.loadingContext, path, errorLevel: 'fatal', errorCode: API_ERROR_CODE.submitPaymentDetails }, data);
+    return httpPost({ loadingContext: session.loadingContext, path, errorLevel: 'fatal', errorCode: API_ERROR_CODE.donations }, data);
 }
 
 export default donations;

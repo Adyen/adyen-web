@@ -33,8 +33,6 @@ class DonationCampaignProvider {
         this.rootNode = props?.rootNode;
         this.checkout = props?.checkout;
 
-        console.log('### DonationCampaignProvider::constructor:: this.rootNode', this.rootNode);
-
         this.callSessionsDonationCampaigns();
     }
 
@@ -50,8 +48,6 @@ class DonationCampaignProvider {
 
         this.makeSessionsDonationCampaignsCall()
             .then((response: CheckoutSessionDonationCampaignsResponse) => {
-                console.log('### DonationCampaignProvider::makeSessionDonationCampaignsCall:: response', response);
-
                 if (response?.donationCampaigns?.length) {
                     // Choose which campaign to return - currently just pick the first one
                     return response.donationCampaigns[0];
@@ -82,8 +78,9 @@ class DonationCampaignProvider {
         const donationType = restDonationCampaignProps.donation.type;
 
         const donationComponentProps: DonationConfiguration = {
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             onCancel: data => {
-                console.log('### Donation::onCancel:: data', data);
+                // console.log('### Donation::onCancel:: data', data);
                 // TODO add analytics? - data shows whether shopper chose an amount, and, since they're here, that they then didn't proceed
 
                 // TODO - call a onDonationCancel callback?
@@ -130,7 +127,6 @@ class DonationCampaignProvider {
 
         this.makeSessionDonationsCall(donationRequestData)
             .then((response: CheckoutSessionDonationsResponse) => {
-                console.log('### DonationCampaignProvider::makeSessionsDonationsCall:: response', response);
                 if (response.resultCode === 'Authorised') {
                     component.setStatus('success');
                 } else {
@@ -139,8 +135,9 @@ class DonationCampaignProvider {
 
                 // TODO - call a onDonationComplete callback?
             })
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             .catch((error: unknown) => {
-                console.log('### DonationCampaignProvider::makeSessionsDonationsCall:: error', error);
+                component.setStatus('error');
             });
     }
 

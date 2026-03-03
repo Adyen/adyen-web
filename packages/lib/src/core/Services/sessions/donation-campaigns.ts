@@ -11,7 +11,7 @@ function donationCampaigns(session: Session): Promise<CheckoutSessionDonationCam
         ...(session.data && { sessionData: session.data })
     };
 
-    return httpPost({ loadingContext: session.loadingContext, path, errorLevel: 'fatal', errorCode: API_ERROR_CODE.submitPaymentDetails }, data);
+    return httpPost({ loadingContext: session.loadingContext, path, errorLevel: 'fatal', errorCode: API_ERROR_CODE.donationCampaigns }, data);
 }
 
 export default donationCampaigns;
