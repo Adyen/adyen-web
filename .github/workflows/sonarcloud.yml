@@ -1,27 +1,22 @@
-name: SonarQube analysis (SonarCloud)
-
-# use SonarCloud action has been deprecated and now we should use SonarCube action
-# Old https://github.com/SonarSource/sonarcloud-github-action?tab=readme-ov-file
-# New https://github.com/marketplace/actions/official-sonarqube-scan
-
 on:
   push:
+    branches: [ "main", "v5" ]
   pull_request:
-  merge_group:
+    branches: [ "main" ]
   workflow_dispatch:
 
 permissions:
-  pull-requests: read # allows SonarCloud to decorate PRs with analysis results
+  pull-requests: read
 
 jobs:
   Analysis:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Analyze with SonarCube
+      - name: Analyze with SonarCloud
 
         # You can pin the exact commit or the version.
         # uses: SonarSource/sonarcloud-github-action@v2.2.0
-        uses: SonarSource/sonarqube-scan-action@v7
+        uses: SonarSource/sonarcloud-github-action@4006f663ecaf1f8093e8e4abb9227f6041f52216
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}   # Generate a token on Sonarcloud.io, add it to the secrets of this repo with the name SONAR_TOKEN (Settings > Secrets > Actions > add new repository secret)
