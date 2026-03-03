@@ -2,6 +2,7 @@ name: Automated Accessibility Tests
 
 on:
   pull_request:
+  merge_group:
   workflow_dispatch:
   # Optional: Add schedule if you want these tests to run on a regular basis
   # schedule:
