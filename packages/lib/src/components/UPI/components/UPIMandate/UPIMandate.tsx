@@ -7,11 +7,11 @@ import type { PaymentAmount } from '../../../../types/global-types';
 export type Mandate = { amount: string; frequency: 'monthly' | 'weekly' | 'adhoc'; amountRule: 'max' | 'exact' };
 
 export interface UPIMandateProps {
-    readonly mandate: Mandate;
-    readonly amount?: PaymentAmount;
+    mandate: Mandate;
+    amount?: PaymentAmount;
 }
 
-const UPIMandate = ({ mandate, amount }: UPIMandateProps): h.JSX.Element => {
+const UPIMandate = ({ mandate, amount }: Readonly<UPIMandateProps>): h.JSX.Element => {
     const { i18n } = useCoreContext();
 
     const mandateContent = useMemo((): h.JSX.Element => {

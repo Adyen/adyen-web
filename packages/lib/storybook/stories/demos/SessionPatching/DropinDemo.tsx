@@ -71,14 +71,14 @@ const DropinDemo = ({ amount, countryCode, shopperLocale }) => {
 };
 
 interface CheckoutProps {
-    readonly sessionId: string;
-    readonly sessionData: string;
-    readonly countryCode: string;
-    readonly amountValue: number;
-    readonly onPatchSession: (amount: PaymentAmount, session: CheckoutSession) => Promise<string>;
+    sessionId: string;
+    sessionData: string;
+    countryCode: string;
+    amountValue: number;
+    onPatchSession: (amount: PaymentAmount, session: CheckoutSession) => Promise<string>;
 }
 
-function Checkout({ sessionId, sessionData, countryCode, amountValue, onPatchSession }: CheckoutProps) {
+function Checkout({ sessionId, sessionData, countryCode, amountValue, onPatchSession }: Readonly<CheckoutProps>) {
     const checkoutRef = useRef<Core>(null);
 
     const createDropin = async () => {

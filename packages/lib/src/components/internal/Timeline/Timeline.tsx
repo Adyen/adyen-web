@@ -2,10 +2,10 @@ import { h } from 'preact';
 import './Timeline.scss';
 
 interface Timeline {
-    readonly instructions: string[];
+    instructions: string[];
 }
 
-const Timeline = ({ instructions }: Timeline) => {
+const Timeline = ({ instructions }: Readonly<Timeline>) => {
     if (!instructions || instructions.length === 0) {
         return null;
     }

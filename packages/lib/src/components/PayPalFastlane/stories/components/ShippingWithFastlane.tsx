@@ -6,12 +6,12 @@ import FastlaneSDK from '../../FastlaneSDK';
 import type { FastlaneShipping } from '../../types';
 
 interface ShippingWithFastlaneProps {
-    readonly fastlaneSdk: FastlaneSDK;
-    readonly address: FastlaneShipping;
-    readonly onCheckoutClick: (shippingAddress?: any) => void;
+    fastlaneSdk: FastlaneSDK;
+    address: FastlaneShipping;
+    onCheckoutClick: (shippingAddress?: any) => void;
 }
 
-export const ShippingWithFastlane = ({ fastlaneSdk, address, onCheckoutClick }: ShippingWithFastlaneProps) => {
+export const ShippingWithFastlane = ({ fastlaneSdk, address, onCheckoutClick }: Readonly<ShippingWithFastlaneProps>) => {
     const [addressSummary, setAddressSummary] = useState<string>(getAddressSummary(address));
     const [shippingAddress, setShippingAddress] = useState<FastlaneShipping>(address);
 

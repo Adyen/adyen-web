@@ -6,13 +6,13 @@ import ExpandButton from '../../../../internal/ExpandButton';
 import './UPIIntentAppItem.scss';
 
 interface UPIIntentAppItemProps {
-    readonly app: App;
-    readonly imgSrc: string;
-    readonly isSelected: boolean;
-    readonly onSelect?: Function;
+    app: App;
+    imgSrc: string;
+    isSelected: boolean;
+    onSelect?: Function;
 }
 
-const UPIIntentAppItem = ({ app, imgSrc, isSelected, onSelect = () => {} }: UPIIntentAppItemProps): h.JSX.Element => {
+const UPIIntentAppItem = ({ app, imgSrc, isSelected, onSelect = () => {} }: Readonly<UPIIntentAppItemProps>): h.JSX.Element => {
     const buttonId = `adyen-checkout-upi-app-item-button-${app.id}`;
     const containerId = `adyen-checkout-upi-app-${app.id}`;
     const handleAppSelected = (app: App) => {

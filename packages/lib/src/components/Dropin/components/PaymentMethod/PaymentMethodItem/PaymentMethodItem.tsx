@@ -13,19 +13,19 @@ import ExpandButton from '../../../../internal/ExpandButton';
 import { getFullBrandName } from '../../../../Card/components/CardInput/utils';
 
 export interface PaymentMethodItemProps {
-    readonly paymentMethod: UIElement;
-    readonly isSelected?: boolean;
-    readonly isLoading?: boolean;
-    readonly isDisablingPaymentMethod: boolean;
-    readonly showRemovePaymentMethodButton: boolean;
-    readonly onDisableStoredPaymentMethod: (paymentMethod) => void;
-    readonly onSelect: (paymentMethod: UIElement) => void;
-    readonly standalone: boolean;
-    readonly className?: string;
-    readonly showRadioButton?: boolean;
+    paymentMethod: UIElement;
+    isSelected?: boolean;
+    isLoading?: boolean;
+    isDisablingPaymentMethod: boolean;
+    showRemovePaymentMethodButton: boolean;
+    onDisableStoredPaymentMethod: (paymentMethod) => void;
+    onSelect: (paymentMethod: UIElement) => void;
+    standalone: boolean;
+    className?: string;
+    showRadioButton?: boolean;
 }
 
-class PaymentMethodItem extends Component<PaymentMethodItemProps> {
+class PaymentMethodItem extends Component<Readonly<PaymentMethodItemProps>> {
     public static readonly defaultProps = {
         paymentMethod: null,
         isSelected: false,

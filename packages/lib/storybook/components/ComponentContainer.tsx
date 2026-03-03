@@ -4,10 +4,10 @@ import UIElement from '../../src/components/internal/UIElement';
 import { addToWindow } from '../utils/add-to-window';
 
 interface IContainer {
-    readonly element: UIElement;
+    element: UIElement;
 }
 
-export const ComponentContainer = ({ element }: IContainer) => {
+export const ComponentContainer = ({ element }: Readonly<IContainer>) => {
     const container = useRef(null);
     const [errorMessage, setErrorMessage] = useState(null);
 

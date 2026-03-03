@@ -27,11 +27,11 @@ jest.mock('./handlers', () => ({
 }));
 
 interface HarnessProps {
-    readonly errors: any;
-    readonly isValidatingRef?: { current: boolean };
+    errors: any;
+    isValidatingRef?: { current: boolean };
 }
 
-const Harness = ({ errors, isValidatingRef }: HarnessProps) => {
+const Harness = ({ errors, isValidatingRef }: Readonly<HarnessProps>) => {
     const internalRef = useRef(true);
     const isValidating = isValidatingRef ?? internalRef;
 

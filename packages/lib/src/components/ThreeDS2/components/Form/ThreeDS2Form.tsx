@@ -2,15 +2,15 @@ import { Component, h } from 'preact';
 import classNames from 'classnames';
 
 interface ThreeDS2FormProps {
-    readonly name: string;
-    readonly action: string;
-    readonly target: string;
-    readonly inputName: string;
-    readonly inputValue: string;
-    readonly onFormSubmit: (msg: string) => void;
+    name: string;
+    action: string;
+    target: string;
+    inputName: string;
+    inputValue: string;
+    onFormSubmit: (msg: string) => void;
 }
 
-export default class ThreeDS2Form extends Component<ThreeDS2FormProps> {
+export default class ThreeDS2Form extends Component<Readonly<ThreeDS2FormProps>> {
     protected formEl;
 
     componentDidMount() {

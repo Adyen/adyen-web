@@ -11,11 +11,11 @@ import { UIElement } from '../../../types';
 import Spinner from '../../internal/Spinner';
 
 interface GiftcardExampleProps {
-    readonly contextArgs: PaymentMethodStoryProps<GiftCardConfiguration>;
-    readonly renderCard?: boolean; // Add a new prop to control which component to render
+    contextArgs: PaymentMethodStoryProps<GiftCardConfiguration>;
+    renderCard?: boolean; // Add a new prop to control which component to render
 }
 
-export const GiftcardExample = ({ contextArgs, renderCard = true }: GiftcardExampleProps) => {
+export const GiftcardExample = ({ contextArgs, renderCard = true }: Readonly<GiftcardExampleProps>) => {
     const container = useRef(null);
     const checkout = useRef<Checkout | null>(null);
     const [element, setElement] = useState<UIElement | null>(null);

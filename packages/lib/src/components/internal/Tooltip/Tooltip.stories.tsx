@@ -15,7 +15,7 @@ const meta: Meta = {
     }
 };
 
-const TooltipConsumer = ({ anchorRef, margin }: { readonly anchorRef: any; readonly margin: number }) => {
+const TooltipConsumer = ({ anchorRef, margin }: Readonly<{ anchorRef: any; margin: number }>) => {
     const { id: tooltipId, showTooltip, hideTooltip } = useTooltip();
 
     return (

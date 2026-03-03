@@ -3,10 +3,10 @@ import { useAmount } from '../../../core/Context/AmountProvider';
 import Status from './status';
 
 interface Props {
-    readonly message?: string;
+    message?: string;
 }
 
-const DropinSuccessState = ({ message }: Props) => {
+const DropinSuccessState = ({ message }: Readonly<Props>) => {
     const { amount } = useAmount();
     return <Status.Success message={amount?.value === 0 ? 'resultMessages.preauthorized' : message} />;
 };

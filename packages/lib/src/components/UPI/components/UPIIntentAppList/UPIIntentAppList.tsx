@@ -7,13 +7,13 @@ import { useCoreContext } from '../../../../core/Context/CoreProvider';
 import './UPIIntentAppList.scss';
 
 interface UPIIntentAppListProps {
-    readonly apps: Array<App>;
-    readonly selectedAppId?: string;
-    readonly disabled?: boolean;
-    readonly onAppSelect?: (app: App) => void;
+    apps: Array<App>;
+    selectedAppId?: string;
+    disabled?: boolean;
+    onAppSelect?: (app: App) => void;
 }
 
-const UPIIntentAppList = ({ apps, selectedAppId, disabled, onAppSelect = () => {} }: UPIIntentAppListProps): h.JSX.Element => {
+const UPIIntentAppList = ({ apps, selectedAppId, disabled, onAppSelect = () => {} }: Readonly<UPIIntentAppListProps>): h.JSX.Element => {
     const { i18n } = useCoreContext();
     const getImage = useImage();
 

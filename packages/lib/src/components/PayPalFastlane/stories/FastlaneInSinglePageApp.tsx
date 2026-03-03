@@ -13,10 +13,10 @@ import { GuestShopperForm } from './components/GuestShopperForm';
 import type { FastlanePaymentMethodConfiguration } from '../types';
 
 interface Props {
-    readonly checkoutConfig: GlobalStoryProps;
+    checkoutConfig: GlobalStoryProps;
 }
 
-export const FastlaneInSinglePageApp = ({ checkoutConfig }: Props) => {
+export const FastlaneInSinglePageApp = ({ checkoutConfig }: Readonly<Props>) => {
     const [componentConfig, setComponentConfig] = useState<FastlanePaymentMethodConfiguration>(null);
 
     const handleOnCheckoutStep = config => {

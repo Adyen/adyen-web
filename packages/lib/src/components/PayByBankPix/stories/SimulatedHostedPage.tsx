@@ -15,10 +15,10 @@ import { handleError, handleFinalState } from '../../../../storybook/helpers/che
 import { ComponentContainer } from '../../../../storybook/components/ComponentContainer';
 
 interface ISimulatedHostedPage extends PaymentMethodStoryProps<PayByBankPixConfiguration> {
-    readonly sessionId?: string;
+    sessionId?: string;
 }
 
-export const SimulatedHostedPage = ({ redirectResult, sessionId, componentConfiguration, ...checkoutConfig }: ISimulatedHostedPage) => {
+export const SimulatedHostedPage = ({ redirectResult, sessionId, componentConfiguration, ...checkoutConfig }: Readonly<ISimulatedHostedPage>) => {
     const [uiElement, setUiElement] = useState<UIElement>();
 
     const handleSubmit = async (state, _, actions) => {

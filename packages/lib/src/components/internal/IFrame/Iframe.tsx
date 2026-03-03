@@ -3,20 +3,20 @@ import classNames from 'classnames';
 import './Iframe.scss';
 
 interface IframeProps {
-    readonly width?: string;
-    readonly height?: string;
-    readonly minWidth?: string;
-    readonly minHeight?: string;
-    readonly border?: string;
-    readonly src?: string;
-    readonly allow?: string;
-    readonly name?: string;
-    readonly title?: string;
-    readonly classNameModifiers?: string[];
-    readonly callback?: (contentWindow) => void;
+    width?: string;
+    height?: string;
+    minWidth?: string;
+    minHeight?: string;
+    border?: string;
+    src?: string;
+    allow?: string;
+    name?: string;
+    title?: string;
+    classNameModifiers?: string[];
+    callback?: (contentWindow) => void;
 }
 
-class Iframe extends Component<IframeProps> {
+class Iframe extends Component<Readonly<IframeProps>> {
     public static readonly defaultProps = {
         width: '0',
         height: '0',

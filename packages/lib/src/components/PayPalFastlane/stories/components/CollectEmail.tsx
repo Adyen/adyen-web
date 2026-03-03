@@ -5,12 +5,12 @@ import FastlaneSDK from '../../FastlaneSDK';
 import type { FastlaneAuthenticatedCustomerResult } from '../../types';
 
 interface CollectEmailProps {
-    readonly fastlaneSdk: FastlaneSDK;
-    readonly onFastlaneLookup: (authResult: FastlaneAuthenticatedCustomerResult) => void;
-    readonly onEditEmail: () => void;
+    fastlaneSdk: FastlaneSDK;
+    onFastlaneLookup: (authResult: FastlaneAuthenticatedCustomerResult) => void;
+    onEditEmail: () => void;
 }
 
-export const CollectEmail = ({ fastlaneSdk, onFastlaneLookup, onEditEmail }: CollectEmailProps) => {
+export const CollectEmail = ({ fastlaneSdk, onFastlaneLookup, onEditEmail }: Readonly<CollectEmailProps>) => {
     const [email, setEmail] = useState<string>(null);
     const [viewOnly, setViewOnly] = useState<boolean>(false);
 

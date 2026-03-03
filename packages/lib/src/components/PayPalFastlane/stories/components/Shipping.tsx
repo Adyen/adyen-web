@@ -2,10 +2,10 @@ import { h } from 'preact';
 import { useState } from 'preact/hooks';
 
 interface ShippingProps {
-    readonly onCheckoutClick: (shippingAddress?: any) => void;
+    onCheckoutClick: (shippingAddress?: any) => void;
 }
 
-export const Shipping = ({ onCheckoutClick }: ShippingProps) => {
+export const Shipping = ({ onCheckoutClick }: Readonly<ShippingProps>) => {
     const [isShippingRequired, setIsShippingRequired] = useState(true);
     const [formData, setFormData] = useState({
         givenName: '',

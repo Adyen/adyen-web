@@ -8,14 +8,14 @@ import { GenericError } from '../../../core/Errors/types';
 import InputText from '../FormFields/InputText';
 
 interface IbanInputProps {
-    readonly holderName?: boolean;
-    readonly placeholders?: Omit<IbanData, 'countryCode'>;
-    readonly countryCode?: string;
-    readonly showPayButton?: boolean;
-    readonly payButton?: any;
-    readonly onChange: (data) => void;
-    readonly label: string;
-    readonly data: IbanData;
+    holderName?: boolean;
+    placeholders?: Omit<IbanData, 'countryCode'>;
+    countryCode?: string;
+    showPayButton?: boolean;
+    payButton?: any;
+    onChange: (data) => void;
+    label: string;
+    data: IbanData;
 }
 
 interface IbanData {
@@ -45,7 +45,7 @@ const ibanErrorObj: GenericError = {
     error: 'sepaDirectDebit.ibanField.invalid'
 };
 
-class IbanInput extends Component<IbanInputProps, IbanInputState> {
+class IbanInput extends Component<Readonly<IbanInputProps>, IbanInputState> {
     private ibanNumber: HTMLInputElement;
 
     constructor(props) {

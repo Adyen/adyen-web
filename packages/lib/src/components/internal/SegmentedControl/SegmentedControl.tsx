@@ -14,11 +14,11 @@ export interface SegmentedControlOption<T> {
 export type SegmentedControlOptions<T> = Array<SegmentedControlOption<T>>;
 
 export interface SegmentedControlProps<T> {
-    readonly classNameModifiers?: string[];
-    readonly selectedValue: T;
-    readonly disabled?: boolean;
-    readonly options: SegmentedControlOptions<T>;
-    readonly onChange: (value: T, event: MouseEvent) => void;
+    classNameModifiers?: string[];
+    selectedValue: T;
+    disabled?: boolean;
+    options: SegmentedControlOptions<T>;
+    onChange: (value: T, event: MouseEvent) => void;
 }
 
 /**
@@ -39,7 +39,13 @@ export interface SegmentedControlProps<T> {
  * @param onChange
  * @constructor
  */
-export const SegmentedControl = <T,>({ classNameModifiers = [], selectedValue, disabled = false, options, onChange }: SegmentedControlProps<T>) => {
+export const SegmentedControl = <T,>({
+    classNameModifiers = [],
+    selectedValue,
+    disabled = false,
+    options,
+    onChange
+}: Readonly<SegmentedControlProps<T>>) => {
     if (!options || options.length === 0) {
         return null;
     }
