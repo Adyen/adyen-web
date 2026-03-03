@@ -97,7 +97,7 @@ export const getErrorReducer = (numDateFields, state) => (acc, field) => {
  */
 export const getErrorObject = (fieldType: string, rootNode: HTMLElement, state: SFPState) => {
     // Get existing error OR field is empty in which case get field specific msg OR use default
-    const error = state.errors?.[fieldType] || EMPTY_FIELD_ERROR_MESSAGES[fieldType];
+    const error: string | undefined = state.errors?.[fieldType] || EMPTY_FIELD_ERROR_MESSAGES[fieldType];
 
     return {
         rootNode,

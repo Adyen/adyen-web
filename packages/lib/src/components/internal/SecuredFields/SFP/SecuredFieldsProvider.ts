@@ -347,7 +347,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
         // (Scenario: from an unsupportedCard state the shopper has pasted another number long enough to trigger a /binLookup)
         if (this.state.detectedUnsupportedBrands) {
             this.setState(prevState => ({
-                errors: { ...prevState.errors, [ENCRYPTED_CARD_NUMBER]: false },
+                errors: { ...prevState.errors, [ENCRYPTED_CARD_NUMBER]: '' },
                 detectedUnsupportedBrands: null
             }));
 
