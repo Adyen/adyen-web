@@ -491,6 +491,11 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
 
         cleanupFinalResult(result);
         this.props.onPaymentCompleted?.(result, this.elementRef);
+
+        /** If the response mandates it - start the flow to present a Donation Component */
+        if (this.core.session && result.askDonation === true) {
+            this.handleSessionsDonationCampaigns();
+        }
     };
 
     /**
@@ -515,11 +520,6 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         }
 
         this.handleSuccessResult(response);
-
-        /** If the response mandates it - start the flow to present a Donation Component */
-        if (this.core.session && response.askDonation === true) {
-            this.handleSessionsDonationCampaigns();
-        }
     }
 
     protected handleKeyPress(e: h.JSX.TargetedKeyboardEvent<HTMLInputElement> | KeyboardEvent) {
