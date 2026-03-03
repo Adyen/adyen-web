@@ -7,10 +7,10 @@ import { useCoreContext } from '../../../../core/Context/CoreProvider';
 import './UPIIntentAppList.scss';
 
 interface UPIIntentAppListProps {
-    apps: Array<App>;
-    selectedAppId?: string;
-    disabled?: boolean;
-    onAppSelect?: (app: App) => void;
+    readonly apps: Array<App>;
+    readonly selectedAppId?: string;
+    readonly disabled?: boolean;
+    readonly onAppSelect?: (app: App) => void;
 }
 
 const UPIIntentAppList = ({ apps, selectedAppId, disabled, onAppSelect = () => {} }: UPIIntentAppListProps): h.JSX.Element => {

@@ -5,7 +5,14 @@ import { h } from 'preact';
 import { GiftcardFieldProps } from './types';
 import { alternativeLabelContent } from '../../Card/components/CardInput/components/FieldLabelAlternative';
 
-export const GiftcardNumberField = ({ i18n, classNameModifiers, sfpState, getCardErrorMessage, focusedElement, setFocusOn }: GiftcardFieldProps) => {
+export const GiftcardNumberField = ({
+    i18n,
+    classNameModifiers,
+    sfpState,
+    getCardErrorMessage,
+    focusedElement,
+    setFocusOn
+}: Readonly<GiftcardFieldProps>) => {
     return (
         <Field
             label={i18n.get('giftcard.cardNumber.label')}

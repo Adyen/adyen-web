@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import useImage from '../../../../core/Context/useImage';
 
-export const AwaitFinalState = ({ image, message }: { image: string; message: string }) => {
+export const AwaitFinalState = ({ image, message }: { readonly image: string; readonly message: string }) => {
     const getImage = useImage();
 
     return (

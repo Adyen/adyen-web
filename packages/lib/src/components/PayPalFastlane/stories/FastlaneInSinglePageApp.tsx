@@ -13,7 +13,7 @@ import { GuestShopperForm } from './components/GuestShopperForm';
 import type { FastlanePaymentMethodConfiguration } from '../types';
 
 interface Props {
-    checkoutConfig: GlobalStoryProps;
+    readonly checkoutConfig: GlobalStoryProps;
 }
 
 export const FastlaneInSinglePageApp = ({ checkoutConfig }: Props) => {

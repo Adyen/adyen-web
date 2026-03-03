@@ -8,14 +8,14 @@ import { GenericError } from '../../../core/Errors/types';
 import InputText from '../FormFields/InputText';
 
 interface IbanInputProps {
-    holderName?: boolean;
-    placeholders?: Omit<IbanData, 'countryCode'>;
-    countryCode?: string;
-    showPayButton?: boolean;
-    payButton?: any;
-    onChange: (data) => void;
-    label: string;
-    data: IbanData;
+    readonly holderName?: boolean;
+    readonly placeholders?: Omit<IbanData, 'countryCode'>;
+    readonly countryCode?: string;
+    readonly showPayButton?: boolean;
+    readonly payButton?: any;
+    readonly onChange: (data) => void;
+    readonly label: string;
+    readonly data: IbanData;
 }
 
 interface IbanData {

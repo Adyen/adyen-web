@@ -12,7 +12,7 @@ interface AlertProps {
     type?: (typeof ALERT_TYPES)[number];
 }
 
-export default function Alert({ children, classNames = [], type = 'error', icon }: AlertProps) {
+export default function Alert({ children, classNames = [], type = 'error', icon }: Readonly<AlertProps>) {
     const role = type === 'error' || type === 'warning' ? 'alert' : 'status';
 
     return (

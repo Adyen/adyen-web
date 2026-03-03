@@ -6,9 +6,9 @@ import FastlaneSDK from '../../FastlaneSDK';
 import type { FastlaneShipping } from '../../types';
 
 interface ShippingWithFastlaneProps {
-    fastlaneSdk: FastlaneSDK;
-    address: FastlaneShipping;
-    onCheckoutClick: (shippingAddress?: any) => void;
+    readonly fastlaneSdk: FastlaneSDK;
+    readonly address: FastlaneShipping;
+    readonly onCheckoutClick: (shippingAddress?: any) => void;
 }
 
 export const ShippingWithFastlane = ({ fastlaneSdk, address, onCheckoutClick }: ShippingWithFastlaneProps) => {

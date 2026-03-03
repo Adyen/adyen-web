@@ -7,7 +7,7 @@ import { createSessionsCheckout } from '../../../../storybook/helpers/create-ses
 import { createAdvancedFlowCheckout } from '../../../../storybook/helpers/create-advanced-checkout';
 
 interface AmazonPayExampleProps {
-    contextArgs: PaymentMethodStoryProps<AmazonPayConfiguration>;
+    readonly contextArgs: PaymentMethodStoryProps<AmazonPayConfiguration>;
 }
 
 export const AmazonPayExample = ({ contextArgs }: AmazonPayExampleProps) => {

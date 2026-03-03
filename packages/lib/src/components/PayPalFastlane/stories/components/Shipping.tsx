@@ -2,7 +2,7 @@ import { h } from 'preact';
 import { useState } from 'preact/hooks';
 
 interface ShippingProps {
-    onCheckoutClick: (shippingAddress?: any) => void;
+    readonly onCheckoutClick: (shippingAddress?: any) => void;
 }
 
 export const Shipping = ({ onCheckoutClick }: ShippingProps) => {

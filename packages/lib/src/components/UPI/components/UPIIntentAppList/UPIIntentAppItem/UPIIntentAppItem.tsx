@@ -6,10 +6,10 @@ import ExpandButton from '../../../../internal/ExpandButton';
 import './UPIIntentAppItem.scss';
 
 interface UPIIntentAppItemProps {
-    app: App;
-    imgSrc: string;
-    isSelected: boolean;
-    onSelect?: Function;
+    readonly app: App;
+    readonly imgSrc: string;
+    readonly isSelected: boolean;
+    readonly onSelect?: Function;
 }
 
 const UPIIntentAppItem = ({ app, imgSrc, isSelected, onSelect = () => {} }: UPIIntentAppItemProps): h.JSX.Element => {

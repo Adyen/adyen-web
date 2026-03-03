@@ -2,7 +2,7 @@ import { h } from 'preact';
 import classNames from 'classnames';
 import { CVCHintProps } from './types';
 
-export default function CVCHint({ frontCVC = false, fieldLabel }: CVCHintProps) {
+export default function CVCHint({ frontCVC = false, fieldLabel }: Readonly<CVCHintProps>) {
     const hintClassnames = classNames({
         'adyen-checkout__card__cvc__hint__wrapper': true,
         'adyen-checkout__field__cvc--front-hint': !!frontCVC,

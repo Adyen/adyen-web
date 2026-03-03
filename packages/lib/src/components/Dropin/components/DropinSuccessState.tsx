@@ -3,7 +3,7 @@ import { useAmount } from '../../../core/Context/AmountProvider';
 import Status from './status';
 
 interface Props {
-    message?: string;
+    readonly message?: string;
 }
 
 const DropinSuccessState = ({ message }: Props) => {

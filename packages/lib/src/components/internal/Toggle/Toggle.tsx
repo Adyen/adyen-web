@@ -15,7 +15,16 @@ interface ToggleProps {
     onChange?(checked: boolean): void;
 }
 
-const Toggle = ({ label, labelPosition = 'after', ariaLabel, description, checked, disabled = false, readonly = false, onChange }: ToggleProps) => {
+const Toggle = ({
+    label,
+    labelPosition = 'after',
+    ariaLabel,
+    description,
+    checked,
+    disabled = false,
+    readonly = false,
+    onChange
+}: Readonly<ToggleProps>) => {
     const descriptionId = useMemo(() => (description ? `toggle-description-${uuid()}` : null), [description]);
     const computedAriaLabel = useMemo(() => {
         if (ariaLabel) return ariaLabel;

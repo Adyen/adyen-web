@@ -10,7 +10,7 @@ import './Field.scss';
 import { PREFIX } from '../../Icon/constants';
 import uuid from '../../../../utils/uuid';
 
-const Field: FunctionalComponent<FieldProps> = props => {
+const Field: FunctionalComponent<Readonly<FieldProps>> = props => {
     const {
         children,
         className,

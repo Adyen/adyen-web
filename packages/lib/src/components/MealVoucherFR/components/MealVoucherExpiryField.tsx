@@ -5,7 +5,7 @@ import { h } from 'preact';
 import { GiftcardFieldProps } from '../../Giftcard/components/types';
 import { alternativeLabelContent } from '../../Card/components/CardInput/components/FieldLabelAlternative';
 
-export const MealVoucherExpiryField = ({ i18n, sfpState, focusedElement, setFocusOn }: GiftcardFieldProps) => {
+export const MealVoucherExpiryField = ({ i18n, sfpState, focusedElement, setFocusOn }: Readonly<GiftcardFieldProps>) => {
     return (
         <Field
             label={i18n.get('giftcard.expiryDate.label')}

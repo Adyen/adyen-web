@@ -7,7 +7,7 @@ import { VoucherDetail } from '../../../internal/Voucher/types';
 import useImage from '../../../../core/Context/useImage';
 import { extractCommonPropsForVoucher } from '../../../internal/Voucher/utils';
 
-export default function DragonpayVoucherResult(props: DragonpayVoucherResultProps) {
+export default function DragonpayVoucherResult(props: Readonly<DragonpayVoucherResultProps>) {
     const { surcharge, expiresAt, alternativeReference, instructionsUrl, icon, issuer, paymentMethodType } = props;
     const { i18n } = useCoreContext();
     const getImage = useImage();

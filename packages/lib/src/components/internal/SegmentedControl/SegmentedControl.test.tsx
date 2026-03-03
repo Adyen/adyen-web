@@ -24,7 +24,7 @@ const getOption2 = () => screen.getByRole('button', { name: DEFAULT_OPTIONS[1].l
 const findOption1 = () => screen.findByRole('button', { name: DEFAULT_OPTIONS[0].label });
 const findOption2 = () => screen.findByRole('button', { name: DEFAULT_OPTIONS[1].label });
 
-const Component = ({ options }: { options: SegmentedControlOptions<string> }) => {
+const Component = ({ options }: { readonly options: SegmentedControlOptions<string> }) => {
     const defaultOption = options[0].value;
     const [selectedOption, setSelectedOption] = useState<string>(defaultOption);
 

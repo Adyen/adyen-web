@@ -29,7 +29,7 @@ export default function CardFields({
     showBrandIcon,
     valid,
     showContextualElement
-}: CardFieldsProps) {
+}: Readonly<CardFieldsProps>) {
     const { i18n } = useCoreContext();
 
     const getError = (errors, fieldType) => {

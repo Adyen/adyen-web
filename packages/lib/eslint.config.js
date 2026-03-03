@@ -103,7 +103,8 @@ const config = tseslint.config(
                 }
             ],
             'react/react-in-jsx-scope': 'off',
-            'react/prop-types': 'off'
+            'react/prop-types': 'off',
+            'react/prefer-read-only-props': 'error'
         }
     },
     {

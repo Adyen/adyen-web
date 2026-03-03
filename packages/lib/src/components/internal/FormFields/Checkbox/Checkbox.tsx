@@ -19,7 +19,7 @@ interface CheckboxProps {
     disabled?: boolean;
 }
 
-export default function Checkbox({ classNameModifiers = [], label, isInvalid, onChange, disabled = false, ...props }: CheckboxProps) {
+export default function Checkbox({ classNameModifiers = [], label, isInvalid, onChange, disabled = false, ...props }: Readonly<CheckboxProps>) {
     // Strip some values from props. We need to reference them but don't want to set them as attributes.
     const { uniqueId: uid, showErrorElement, showContextualElement, ...newProps } = props;
 

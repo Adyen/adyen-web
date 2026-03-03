@@ -2,7 +2,7 @@ import { h } from 'preact';
 import useImage from '../../../../core/Context/useImage';
 import { useA11yReporter } from '../../../../core/Errors/useA11yReporter';
 
-export const QRFinalState = ({ image, message }: { image: string; message: string }) => {
+export const QRFinalState = ({ image, message }: { readonly image: string; readonly message: string }) => {
     const getImage = useImage();
 
     useA11yReporter(message);

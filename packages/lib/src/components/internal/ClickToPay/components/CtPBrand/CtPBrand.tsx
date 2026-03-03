@@ -10,7 +10,7 @@ type CtPBrandProps = {
     classNameModifiers?: string[];
 };
 
-const CtPBrand = ({ classNameModifiers = [] }: CtPBrandProps) => {
+const CtPBrand = ({ classNameModifiers = [] }: Readonly<CtPBrandProps>) => {
     const getImage = useImage();
     const { schemes } = useClickToPayContext();
 

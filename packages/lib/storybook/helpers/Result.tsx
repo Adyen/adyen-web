@@ -1,8 +1,8 @@
 import { h } from 'preact';
 
 interface IResult {
-    resultCode?: string;
-    resultMessage?: string;
+    readonly resultCode?: string;
+    readonly resultMessage?: string;
 }
 
 export const Result = ({ resultCode, resultMessage }: IResult) => {

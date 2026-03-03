@@ -12,7 +12,7 @@ type OrderPaymentMethodsProps = {
     brandLogoConfiguration: any;
 };
 
-export const OrderPaymentMethods = ({ order, orderStatus, onOrderCancel, brandLogoConfiguration }: OrderPaymentMethodsProps) => {
+export const OrderPaymentMethods = ({ order, orderStatus, onOrderCancel, brandLogoConfiguration }: Readonly<OrderPaymentMethodsProps>) => {
     const { i18n } = useCoreContext();
     const getImage = useImage();
 

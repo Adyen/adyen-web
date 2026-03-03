@@ -9,7 +9,7 @@ interface RoundupProps {
     onDonateButtonClicked: () => void;
 }
 
-export default function Roundup(props: RoundupProps) {
+export default function Roundup(props: Readonly<RoundupProps>) {
     const { status, donationAmount, originalPaymentAmount, onDonateButtonClicked } = props;
     const { i18n } = useCoreContext();
 

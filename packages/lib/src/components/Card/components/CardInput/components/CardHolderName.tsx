@@ -16,7 +16,7 @@ export default function CardHolderName({
     disabled,
     onFieldFocusAnalytics,
     onFieldBlurAnalytics
-}: CardHolderNameProps) {
+}: Readonly<CardHolderNameProps>) {
     const { i18n } = useCoreContext();
 
     return (

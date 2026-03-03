@@ -21,7 +21,7 @@ export interface BankTransferResultProps {
     onActionHandled?: (actionHandledObj: ActionHandledReturnObject) => void;
 }
 
-export default function BankTransferResult(props: BankTransferResultProps) {
+export default function BankTransferResult(props: Readonly<BankTransferResultProps>) {
     const { i18n } = useCoreContext();
     const getImage = useImage();
 

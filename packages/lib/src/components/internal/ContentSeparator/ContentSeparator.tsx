@@ -8,7 +8,7 @@ interface ContentSeparatorProps {
     classNames?: string[];
 }
 
-function ContentSeparator({ label = 'qrCodeOrApp', classNames = [] }: ContentSeparatorProps) {
+function ContentSeparator({ label = 'qrCodeOrApp', classNames = [] }: Readonly<ContentSeparatorProps>) {
     const { i18n } = useCoreContext();
     return <div className={classnames('adyen-checkout__content-separator', ...classNames)}>{i18n.get(label)}</div>;
 }

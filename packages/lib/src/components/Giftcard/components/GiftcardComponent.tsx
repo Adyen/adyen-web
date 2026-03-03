@@ -13,19 +13,19 @@ import { useAmount } from '../../../core/Context/AmountProvider';
 import type { AbstractAnalyticsEvent } from '../../../core/Analytics/events/AbstractAnalyticsEvent';
 
 interface GiftcardComponentProps {
-    onChange: (state) => void;
-    onFocus: (event) => void;
-    onBlur: (event) => void;
-    makeBalanceCheck: (event) => void;
-    makePayment: (event) => void;
-    showPayButton: boolean;
-    payButton: (props: PayButtonProps) => h.JSX.Element;
-    pinRequired: boolean;
-    expiryDateRequired?: boolean;
-    fieldsLayoutComponent: FunctionComponent<GiftcardFieldsProps>;
-    placeholders?: Placeholders;
-    handleKeyPress?: (o: KeyboardEvent) => void;
-    onSubmitAnalytics?: (event: AbstractAnalyticsEvent) => void;
+    readonly onChange: (state) => void;
+    readonly onFocus: (event) => void;
+    readonly onBlur: (event) => void;
+    readonly makeBalanceCheck: (event) => void;
+    readonly makePayment: (event) => void;
+    readonly showPayButton: boolean;
+    readonly payButton: (props: PayButtonProps) => h.JSX.Element;
+    readonly pinRequired: boolean;
+    readonly expiryDateRequired?: boolean;
+    readonly fieldsLayoutComponent: FunctionComponent<GiftcardFieldsProps>;
+    readonly placeholders?: Placeholders;
+    readonly handleKeyPress?: (o: KeyboardEvent) => void;
+    readonly onSubmitAnalytics?: (event: AbstractAnalyticsEvent) => void;
 }
 
 class Giftcard extends Component<GiftcardComponentProps> {

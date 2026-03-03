@@ -7,7 +7,7 @@ import PhoneInputForm from '../../../internal/PhoneInput';
 import LoadingWrapper from '../../../internal/LoadingWrapper';
 import usePhonePrefixes from '../../../internal/PhoneInput/usePhonePrefixes';
 
-function MBWayInput(props: MBWayInputProps) {
+function MBWayInput(props: Readonly<MBWayInputProps>) {
     const { i18n, loadingContext } = useCoreContext();
 
     const { allowedCountries = [] } = props;

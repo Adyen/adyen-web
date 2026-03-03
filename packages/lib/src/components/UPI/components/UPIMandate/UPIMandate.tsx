@@ -7,8 +7,8 @@ import type { PaymentAmount } from '../../../../types/global-types';
 export type Mandate = { amount: string; frequency: 'monthly' | 'weekly' | 'adhoc'; amountRule: 'max' | 'exact' };
 
 export interface UPIMandateProps {
-    mandate: Mandate;
-    amount?: PaymentAmount;
+    readonly mandate: Mandate;
+    readonly amount?: PaymentAmount;
 }
 
 const UPIMandate = ({ mandate, amount }: UPIMandateProps): h.JSX.Element => {

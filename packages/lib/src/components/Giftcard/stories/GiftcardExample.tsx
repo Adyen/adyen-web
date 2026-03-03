@@ -11,8 +11,8 @@ import { UIElement } from '../../../types';
 import Spinner from '../../internal/Spinner';
 
 interface GiftcardExampleProps {
-    contextArgs: PaymentMethodStoryProps<GiftCardConfiguration>;
-    renderCard?: boolean; // Add a new prop to control which component to render
+    readonly contextArgs: PaymentMethodStoryProps<GiftCardConfiguration>;
+    readonly renderCard?: boolean; // Add a new prop to control which component to render
 }
 
 export const GiftcardExample = ({ contextArgs, renderCard = true }: GiftcardExampleProps) => {

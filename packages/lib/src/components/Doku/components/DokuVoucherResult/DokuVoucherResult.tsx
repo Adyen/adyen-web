@@ -6,7 +6,7 @@ import { DokuVoucherResultProps } from '../../types';
 import useImage from '../../../../core/Context/useImage';
 import { extractCommonPropsForVoucher } from '../../../internal/Voucher/utils';
 
-const DokuVoucherResult = (props: DokuVoucherResultProps) => {
+const DokuVoucherResult = (props: Readonly<DokuVoucherResultProps>) => {
     const { expiresAt, instructionsUrl, shopperName, merchantName } = props;
     const { i18n } = useCoreContext();
     const getImage = useImage();

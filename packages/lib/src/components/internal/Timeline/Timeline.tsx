@@ -2,7 +2,7 @@ import { h } from 'preact';
 import './Timeline.scss';
 
 interface Timeline {
-    instructions: string[];
+    readonly instructions: string[];
 }
 
 const Timeline = ({ instructions }: Timeline) => {

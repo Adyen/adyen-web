@@ -3,14 +3,14 @@ import detectInIframeInSameOrigin from '../../../../utils/detectInIframeInSameOr
 import { ActionHandledReturnObject } from '../../../../types/global-types';
 
 interface RedirectShopperProps {
-    beforeRedirect: (resolve, reject, url) => Promise<void>;
-    url: string;
-    method: 'GET' | 'POST';
-    data?: any;
-    redirectFromTopWhenInIframe?: boolean;
-    paymentMethodType?: string;
-    onActionHandled?: (rtnObj: ActionHandledReturnObject) => void;
-    onRedirectError?: () => void;
+    readonly beforeRedirect: (resolve, reject, url) => Promise<void>;
+    readonly url: string;
+    readonly method: 'GET' | 'POST';
+    readonly data?: any;
+    readonly redirectFromTopWhenInIframe?: boolean;
+    readonly paymentMethodType?: string;
+    readonly onActionHandled?: (rtnObj: ActionHandledReturnObject) => void;
+    readonly onRedirectError?: () => void;
 }
 
 class RedirectShopper extends Component<RedirectShopperProps> {

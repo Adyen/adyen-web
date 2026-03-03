@@ -15,7 +15,7 @@ import { handleError, handleFinalState } from '../../../../storybook/helpers/che
 import { ComponentContainer } from '../../../../storybook/components/ComponentContainer';
 
 interface ISimulatedHostedPage extends PaymentMethodStoryProps<PayByBankPixConfiguration> {
-    sessionId?: string;
+    readonly sessionId?: string;
 }
 
 export const SimulatedHostedPage = ({ redirectResult, sessionId, componentConfiguration, ...checkoutConfig }: ISimulatedHostedPage) => {

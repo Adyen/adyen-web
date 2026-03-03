@@ -31,7 +31,7 @@ export type CtPOneTimePasswordInputHandlers = {
     validateInput(): void;
 };
 
-const CtPOneTimePasswordInput = (props: CtPOneTimePasswordInputProps): h.JSX.Element => {
+const CtPOneTimePasswordInput = (props: Readonly<CtPOneTimePasswordInputProps>): h.JSX.Element => {
     const { i18n } = useCoreContext();
     const {
         configuration: { disableOtpAutoFocus }

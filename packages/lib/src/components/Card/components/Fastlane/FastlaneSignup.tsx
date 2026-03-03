@@ -38,7 +38,7 @@ const FastlaneSignup = ({
     onChange,
     onSubmitAnalytics,
     type
-}: FastlaneSignupProps) => {
+}: Readonly<FastlaneSignupProps>) => {
     const shouldDisplaySignup = useMemo(() => showConsent && SUPPORTED_BRANDS.includes(currentDetectedBrand), [showConsent, currentDetectedBrand]);
     const [hasConsentFormBeenShown, setHasConsentFormBeenShown] = useState<boolean>(shouldDisplaySignup);
     const [isChecked, setIsChecked] = useState<boolean>(defaultToggleState);
