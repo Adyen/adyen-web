@@ -9,8 +9,8 @@ import {
     ENCRYPTED_EXPIRY_YEAR,
     ENCRYPTED_SECURITY_CODE
 } from '../lib/constants';
-import getProp from '../../../../utils/getProp';
 import { EMPTY_FIELD_ERROR_MESSAGES } from '../../../../core/Errors/constants';
+import type { SFPState } from './types';
 
 /**
  * Make an array of encrypted field names based on the value of the 'data-cse' attribute of elements in the rootNode
@@ -95,9 +95,10 @@ export const getErrorReducer = (numDateFields, state) => (acc, field) => {
 /**
  * Create an object suitable for sending to our handleOnError function
  */
-export const getErrorObject = (fieldType, rootNode, state) => {
+export const getErrorObject = (fieldType: string, rootNode: HTMLElement, state: SFPState) => {
     // Get existing error OR field is empty in which case get field specific msg OR use default
-    const error = getProp(state, `errors.${fieldType}`) || EMPTY_FIELD_ERROR_MESSAGES[fieldType];
+    const error = state.errors?.[fieldType] || EMPTY_FIELD_ERROR_MESSAGES[fieldType];
+
     return {
         rootNode,
         fieldType,

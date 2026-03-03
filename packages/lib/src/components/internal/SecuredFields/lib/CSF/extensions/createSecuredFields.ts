@@ -17,6 +17,7 @@ import SecuredField from '../../securedField/SecuredField';
 import { CardObject, CardBrandData, SFFeedbackObj, CardLoadData, CVCPolicyType, DatePolicyType } from '../../types';
 import AdyenCheckoutError from '../../../../../../core/Errors/AdyenCheckoutError';
 import type { SFKeyPressObj } from '../../types';
+import { isSecuredField } from '../../../utils';
 
 /**
  * Bound to the instance of CSF
@@ -33,7 +34,7 @@ export function createSecuredFields(): number {
             // TODO send analytics about separate date fields
         }
 
-        const isValidType = ALL_SECURED_FIELDS.includes(fieldType);
+        const isValidType = isSecuredField(fieldType);
         if (!isValidType) {
             console.warn(
                 `WARNING: '${fieldType}' is not a valid type for the '${this.encryptedAttrName}' attribute. A SecuredField will not be created for this element.`

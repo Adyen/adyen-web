@@ -1,6 +1,7 @@
 import { BrandObject } from '../../../Card/types';
 import SecuredField from './securedField/SecuredField';
 import {
+    ALL_SECURED_FIELDS,
     ENCRYPTED_CARD_NUMBER,
     ENCRYPTED_EXPIRY_DATE,
     ENCRYPTED_EXPIRY_MONTH,
@@ -33,6 +34,9 @@ export type SFFieldType =
     | 'encryptedPassword'
     | 'encryptedBankAccountNumber'
     | 'encryptedBankLocationId';
+
+// TODO rename this to SFFieldType and remove above type
+export type SFField = (typeof ALL_SECURED_FIELDS)[number];
 
 export interface SecuredFields {
     encryptedCardNumber?: SecuredField;
