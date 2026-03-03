@@ -196,8 +196,6 @@ const CardInput = (props: CardInputProps) => {
     const mapSfpErrorsToCardInputErrors = (sfpErrors: SFPState['errors']): Partial<CardInputErrorState> => {
         if (!sfpErrors) return {};
 
-        console.log('### CardInput::mapSfpErrorsToCardInputErrors:: sfpErrors', sfpErrors);
-
         return {
             encryptedCardNumber: !!sfpErrors.encryptedCardNumber,
             encryptedExpiryDate: !!sfpErrors.encryptedExpiryDate,
