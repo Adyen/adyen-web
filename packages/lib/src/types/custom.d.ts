@@ -11,6 +11,22 @@ declare module 'preact' {
                 locale: string;
                 onclick(): void;
             };
+            'paypal-button': {
+                id?: string;
+                type?: string;
+            };
+            'paypal-pay-later-button': {
+                id?: string;
+                type?: string;
+            };
+            'paypal-credit-button': {
+                id?: string;
+                type?: string;
+            };
+            'venmo-button': {
+                id?: string;
+                type?: string;
+            };
         }
     }
 }
