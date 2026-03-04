@@ -22,9 +22,12 @@ export interface DonationCampaignProviderProps extends UIElementProps {
 class DonationCampaignProvider {
     public static type = 'donationCampaignProvider';
 
-    private originalComponentType: string;
     private rootNode: HTMLElement;
-    private checkout: ICore;
+    private readonly originalComponentType: string;
+    private readonly checkout: ICore;
+
+    private readonly autoStartTimer: ReturnType<typeof setTimeout>;
+    private readonly autoStartTimerMS = 3000;
 
     private donationComponent: Donation;
 
@@ -33,6 +36,38 @@ class DonationCampaignProvider {
         this.rootNode = props?.rootNode;
         this.checkout = props?.checkout;
 
+        // Allow time for any success message to show
+        this.autoStartTimer = setTimeout(() => {
+            this.init();
+        }, this.autoStartTimerMS);
+    }
+
+    /**
+     * Exposed method for the merchant to get the root node - which is where the Donation component will be mounted, by default
+     */
+    public getRootNode(): HTMLElement {
+        return this.rootNode;
+    }
+
+    /**
+     * Exposed method for the merchant to halt the auto start timer. meaning it will then be up to them to call start() to begin the process
+     */
+    public haltAutoStart() {
+        clearTimeout(this.autoStartTimer);
+    }
+
+    /**
+     * Exposed method for the merchant to start the DonationCampaignProvider, with an option to specify a different root node
+     * @param rootNode - The root node to mount the Donation component into
+     */
+    public start(rootNode: HTMLElement = this.rootNode) {
+        this.rootNode = rootNode;
+        // Clear the timeout in case the merchant hasn't halted it, otherwise we could end up with a double call to the /donationCampaigns endpoint
+        this.haltAutoStart();
+        this.init();
+    }
+
+    private init() {
         this.callSessionsDonationCampaigns();
     }
 
@@ -58,11 +93,7 @@ class DonationCampaignProvider {
             })
             .then((donationCampaign: DonationCampaign) => {
                 if (donationCampaign) {
-                    // Allow time for any success message to show - TODO need to decide how best to handle this
-                    setTimeout(() => {
-                        /** And then we can handle the actual Donation component */
-                        this.handleDonationCampaign(donationCampaign);
-                    }, 2000);
+                    this.handleDonationCampaign(donationCampaign);
                 }
             })
             .catch((error: unknown) => {

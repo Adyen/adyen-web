@@ -80,7 +80,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         this.makeAdditionalDetailsCall = this.makeAdditionalDetailsCall.bind(this);
         this.submitUsingSessionsFlow = this.submitUsingSessionsFlow.bind(this);
         this.updateAmount = this.updateAmount.bind(this);
-        this.handleSessionsDonationCampaigns = this.handleSessionsDonationCampaigns.bind(this);
+        this.createSessionsDonationCampaignProvider = this.createSessionsDonationCampaignProvider.bind(this);
 
         this.elementRef = (props && props.elementRef) || this;
         this.resources = this.props.modules ? this.props.modules.resources : undefined;
@@ -452,18 +452,20 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         });
     };
 
-    protected handleSessionsDonationCampaigns() {
+    protected createSessionsDonationCampaignProvider() {
         const rootNode: HTMLElement = assertIsDropin(this.elementRef) ? this.elementRef._node : this._node;
 
         /**
          * Create the DonationCampaignProvider instance
          * The instance will mount a Donation component into rootNode, when it knows it has a donation campaign to display.
          */
-        new DonationCampaignProvider({
+        const dcp = new DonationCampaignProvider({
             originalComponentType: this.type,
             rootNode,
             checkout: this.core
         });
+
+        return dcp;
     }
 
     /**
@@ -490,12 +492,14 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         }
 
         cleanupFinalResult(result);
-        this.props.onPaymentCompleted?.(result, this.elementRef);
 
-        /** If the response mandates it - start the flow to present a Donation Component */
-        if (this.core.session && result.askDonation === true) {
-            this.handleSessionsDonationCampaigns();
-        }
+        /** If we are using sessions (and haven't moved into a hybrid flow); and the response mandates it - create a DonationCampaignProvider instance */
+        const isHybridFlow = this.core.session && (this.props.onSubmit || this.props.onAdditionalDetails);
+
+        const dcp: DonationCampaignProvider | null =
+            this.core.session && !isHybridFlow && result.askDonation === true ? this.createSessionsDonationCampaignProvider() : null;
+
+        this.props.onPaymentCompleted?.(result, this.elementRef, dcp);
     };
 
     /**
