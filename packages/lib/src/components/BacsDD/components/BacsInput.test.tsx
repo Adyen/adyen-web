@@ -1,6 +1,6 @@
 /** @tsx h */
 import { createRef, h } from 'preact';
-import { mount } from 'enzyme';
+import { render, screen, act } from '@testing-library/preact';
 import BacsInput from './BacsInput';
 import { BacsInputProps } from './types';
 import { mock } from 'jest-mock-extended';
@@ -12,62 +12,72 @@ const defaultProps = {
     onSubmit: () => {}
 };
 const bacsPropsMock = mock<BacsInputProps>();
-const getWrapper = (props = {}) =>
-    mount(
+
+const renderBacsInput = (props = {}) => {
+    const bacsRef = createRef();
+    const view = render(
         <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
             <AmountProvider amount={{ currency: 'EUR', value: 1234 }} providerRef={createRef()}>
-                <BacsInput {...defaultProps} {...props} {...bacsPropsMock} />{' '}
+                {/* @ts-ignore ref is internal from the Component */}
+                <BacsInput ref={bacsRef} {...defaultProps} {...props} {...bacsPropsMock} />
             </AmountProvider>
         </CoreProvider>
     );
+    return { ...view, bacsRef };
+};
 
 describe('BacsInput', () => {
     test('Should display expected fields for opening (enter-data) state', () => {
-        const wrapper = getWrapper({});
+        const { container } = renderBacsInput({});
 
+        /* eslint-disable testing-library/no-node-access, testing-library/no-container */
         // Main holder
-        expect(wrapper.find('.adyen-checkout__bacs')).toHaveLength(1);
+        expect(container.querySelector('.adyen-checkout__bacs')).toBeTruthy();
 
         // Name (active)
-        expect(wrapper.find('div.adyen-checkout__bacs--holder-name')).toHaveLength(1);
-        expect(wrapper.find('div.adyen-checkout__bacs--holder-name.adyen-checkout__field--inactive')).toHaveLength(0);
+        expect(container.querySelector('.adyen-checkout__bacs--holder-name')).toBeTruthy();
+        expect(container.querySelector('.adyen-checkout__bacs--holder-name.adyen-checkout__field--inactive')).toBeNull();
 
         // Holder for account & location + account & location fields
-        expect(wrapper.find('.adyen-checkout__bacs .adyen-checkout__bacs__num-id')).toHaveLength(1);
-        expect(wrapper.find('div.adyen-checkout__bacs--bank-account-number')).toHaveLength(1);
-        expect(wrapper.find('div.adyen-checkout__bacs--bank-location-id')).toHaveLength(1);
+        expect(container.querySelector('.adyen-checkout__bacs .adyen-checkout__bacs__num-id')).toBeTruthy();
+        expect(container.querySelector('.adyen-checkout__bacs--bank-account-number')).toBeTruthy();
+        expect(container.querySelector('.adyen-checkout__bacs--bank-location-id')).toBeTruthy();
 
         // Email
-        expect(wrapper.find('div.adyen-checkout__bacs--shopper-email')).toHaveLength(1);
+        expect(container.querySelector('.adyen-checkout__bacs--shopper-email')).toBeTruthy();
+        /* eslint-enable testing-library/no-node-access, testing-library/no-container */
 
         // Consent checkboxes
-        expect(wrapper.find('ConsentCheckbox')).toHaveLength(2);
+        expect(screen.getAllByRole('checkbox')).toHaveLength(2);
     });
 
     test('Should display expected fields for second (confirm-data) state', () => {
-        const wrapper = getWrapper({});
+        const { container, bacsRef } = renderBacsInput({});
 
-        wrapper.find('BacsInput').instance().setStatus('confirm-data');
-        wrapper.update();
+        void act(() => {
+            bacsRef.current.setStatus('confirm-data');
+        });
 
-        // Main holder (with additional 'confim' class)
-        expect(wrapper.find('.adyen-checkout__bacs.adyen-checkout__bacs--confirm')).toHaveLength(1);
+        /* eslint-disable testing-library/no-node-access, testing-library/no-container */
+        // Main holder (with additional 'confirm' class)
+        expect(container.querySelector('.adyen-checkout__bacs.adyen-checkout__bacs--confirm')).toBeTruthy();
 
         // Edit button
-        expect(wrapper.find('.adyen-checkout__bacs .adyen-checkout__bacs--edit')).toHaveLength(1);
+        expect(container.querySelector('.adyen-checkout__bacs .adyen-checkout__bacs--edit')).toBeTruthy();
 
         // Name (inactive)
-        expect(wrapper.find('div.adyen-checkout__bacs--holder-name.adyen-checkout__field--inactive')).toHaveLength(1);
+        expect(container.querySelector('.adyen-checkout__bacs--holder-name.adyen-checkout__field--inactive')).toBeTruthy();
 
         // Holder for account & location + inactive account & location fields
-        expect(wrapper.find('.adyen-checkout__bacs .adyen-checkout__bacs__num-id')).toHaveLength(1);
-        expect(wrapper.find('div.adyen-checkout__bacs--bank-account-number.adyen-checkout__field--inactive')).toHaveLength(1);
-        expect(wrapper.find('div.adyen-checkout__bacs--bank-location-id.adyen-checkout__field--inactive')).toHaveLength(1);
+        expect(container.querySelector('.adyen-checkout__bacs .adyen-checkout__bacs__num-id')).toBeTruthy();
+        expect(container.querySelector('.adyen-checkout__bacs--bank-account-number.adyen-checkout__field--inactive')).toBeTruthy();
+        expect(container.querySelector('.adyen-checkout__bacs--bank-location-id.adyen-checkout__field--inactive')).toBeTruthy();
 
         // Email (inactive)
-        expect(wrapper.find('div.adyen-checkout__bacs--shopper-email.adyen-checkout__field--inactive')).toHaveLength(1);
+        expect(container.querySelector('.adyen-checkout__bacs--shopper-email.adyen-checkout__field--inactive')).toBeTruthy();
+        /* eslint-enable testing-library/no-node-access, testing-library/no-container */
 
         // No consent checkboxes
-        expect(wrapper.find('ConsentCheckbox')).toHaveLength(0);
+        expect(screen.queryAllByRole('checkbox')).toHaveLength(0);
     });
 });
