@@ -59,27 +59,33 @@ jobs:
             echo "::notice::Strict tsc errors decreased to $ERROR_COUNT — consider updating TSC_STRICT_BASELINE"
           fi
 
+      - name: Build comment body
+        if: always()
+        id: build-comment
+        run: |
+          if [ "${{ steps.tsc-strict.outcome }}" = "success" ]; then
+            STATUS="✅ Pass"
+          else
+            STATUS="⚠️ Regression"
+          fi
+
+          ERROR_COUNT="${{ steps.tsc-strict.outputs.error_count }}"
+          ERROR_COUNT="${ERROR_COUNT:-N/A}"
+
+          {
+            echo 'body<<EOF'
+            echo '## Strict TypeScript Scan Results'
+            echo ''
+            echo '| Check | Status |'
+            echo '|-------|--------|'
+            echo "| Typescript *noImplicitAny* (${ERROR_COUNT} errors, baseline: ${TSC_STRICT_BASELINE}) | ${STATUS} |"
+            echo 'EOF'
+          } >> "$GITHUB_OUTPUT"
+
       - name: Post scan summary
         if: always()
-        uses: actions/github-script@v7
+        uses: peter-evans/create-or-update-comment@v4
         with:
-          script: |
-            const tscPassed = '${{ steps.tsc-strict.outcome }}' === 'success';
-            const tscErrors = '${{ steps.tsc-strict.outputs.error_count }}' || 'N/A';
-            const baseline = '${{ env.TSC_STRICT_BASELINE }}';
-
-            const body = [
-              '## Strict TypeScript Scan Results',
-              '',
-              '| Check | Status |',
-              '|-------|--------|',
-              `| Typescript *noImplicitAny* (${tscErrors} errors, baseline: ${baseline}) | ${tscPassed ? '✅ Pass' : '⚠️ Regression'} |`,
-              '',
-            ].join('\n');
-
-            await github.rest.issues.createComment({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: context.issue.number,
-              body
-            });
+          issue-number: ${{ github.event.pull_request.number }}
+          comment-tag: strict-typescript-scan
+          body: ${{ steps.build-comment.outputs.body }}
