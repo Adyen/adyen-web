@@ -13,7 +13,7 @@ jobs:
     env:
       # Current noImplicitAny error count from ts-errors.log.
       # Decrease this number each time strict errors are fixed.
-      TSC_STRICT_BASELINE: 2103
+      TSC_STRICT_BASELINE: 2101
 
     steps:
       - uses: actions/checkout@v6
@@ -73,7 +73,7 @@ jobs:
               '',
               '| Check | Status |',
               '|-------|--------|',
-              `| tsc noImplicitAny (${tscErrors} errors, baseline: ${baseline}) | ${tscPassed ? '✅ Pass' : '⚠️ Regression'} |`,
+              `| Typescript *noImplicitAny* (${tscErrors} errors, baseline: ${baseline}) | ${tscPassed ? '✅ Pass' : '⚠️ Regression'} |`,
               '',
             ].join('\n');
 
