@@ -244,8 +244,6 @@
     "giftcard.encryptedCardNumber.aria.iframeTitle": "Card number",
     "giftcard.encryptedSecurityCode.aria.iframeTitle": "Pin",
     "giftcardTransactionLimit": "Max. %{amount} allowed per transaction on this gift card",
-    "ach.encryptedBankAccountNumber.aria.iframeTitle": "Iframe for bank account number",
-    "ach.encryptedBankLocationId.aria.iframeTitle": "Iframe for bank routing number",
     "pix.instructions": "Use your banking app to scan the QR code or copy the PIX code below to complete your payment.",
     "pix.code.label": "PIX code",
     "pix.code.copy.label": "Copy PIX code",
