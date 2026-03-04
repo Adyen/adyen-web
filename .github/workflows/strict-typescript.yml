@@ -82,10 +82,20 @@ jobs:
             echo 'EOF'
           } >> "$GITHUB_OUTPUT"
 
-      - name: Post scan summary
+      - name: Find comment
         if: always()
-        uses: peter-evans/create-or-update-comment@v4
+        uses: peter-evans/find-comment@v3
+        id: fc
         with:
           issue-number: ${{ github.event.pull_request.number }}
-          comment-tag: strict-typescript-scan
+          comment-author: 'github-actions[bot]'
+          body-includes: Strict TypeScript Scan Results
+
+      - name: Post scan summary
+        if: always()
+        uses: peter-evans/create-or-update-comment@v5
+        with:
+          comment-id: ${{ steps.fc.outputs.comment-id }}
+          issue-number: ${{ github.event.pull_request.number }}
           body: ${{ steps.build-comment.outputs.body }}
+          edit-mode: replace
