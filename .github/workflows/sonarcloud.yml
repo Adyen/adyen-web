@@ -1,10 +1,12 @@
-name: Unit Tests
+name: SonarCloud
 
 on:
-  workflow_call:
+  push:
+    branches:
+      - main
 
 jobs:
-  unit-tests:
+  sonarcloud:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v6
@@ -33,11 +35,11 @@ jobs:
       if: steps.node-modules-cache.outputs.cache-hit != 'true'
       run: yarn install --immutable
 
-    - name: Lint files
-      run: yarn lint
-
-    - name: Type check files
-      run: yarn type-check
-
     - name: Generate test coverage
       run: yarn test:coverage
+
+    - name: SonarCloud Scan
+      uses: SonarSource/sonarcloud-github-action@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

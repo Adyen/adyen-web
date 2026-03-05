@@ -1,0 +1,40 @@
+name: Verify Job Results
+description: Checks that every job in the results map succeeded. Fails with a summary of which jobs failed.
+
+inputs:
+  results:
+    description: >
+      JSON object mapping job names to their results.
+      Only include jobs that must succeed.
+      Example: '{ "unit-tests": "success", "e2e": "failure" }'
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Verify jobs
+      shell: bash
+      run: |
+        results='${{ inputs.results }}'
+
+        failed=""
+        echo "## Job Verification Summary"
+        echo ""
+
+        for job in $(echo "$results" | jq -r 'keys[]'); do
+          result=$(echo "$results" | jq -r --arg job "$job" '.[$job]')
+          if [[ "$result" == "success" ]]; then
+            echo "✅ $job: $result"
+          else
+            echo "❌ $job: $result"
+            failed="true"
+          fi
+        done
+
+        echo ""
+        if [[ "$failed" == "true" ]]; then
+          echo "::error::Some required jobs did not succeed"
+          exit 1
+        else
+          echo "All required jobs passed"
+        fi
