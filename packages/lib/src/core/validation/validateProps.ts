@@ -34,7 +34,7 @@ function configureErrorMap(): void {
  * @internal
  */
 function validateProps(schema: z.ZodMiniType, props: Record<string, unknown>, componentName: string): void {
-    if (process.env.NODE_ENV !== 'development') return;
+    // if (process.env.NODE_ENV !== 'development') return;
 
     configureErrorMap();
 
