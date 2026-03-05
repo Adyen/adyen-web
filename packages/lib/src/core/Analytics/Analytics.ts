@@ -3,6 +3,7 @@ import { processAnalyticsData } from './utils';
 import { AbstractAnalyticsEvent, AnalyticsEventCategory } from './events/AbstractAnalyticsEvent';
 import Storage from '../../utils/Storage';
 import { LIBRARY_BUNDLE_TYPE, LIBRARY_VERSION } from '../config';
+import { DEFAULT_DEBOUNCE_TIME_MS } from '../../utils/debounce';
 import { AnalyticsEventQueue } from './AnalyticsEventQueue';
 import type { AnalyticsOptions } from './types';
 import type { AnalyticsEventPayload, IAnalyticsService, RequestAttemptIdPayload } from './AnalyticsService';
@@ -39,7 +40,7 @@ function isSessionCreatedUnderFifteenMinutes(session: CheckoutAttemptIdSessionSt
 }
 
 const ANALYTICS_INFO_DEBOUNCE_DELAY = process.env.NODE_ENV === 'development' ? 5_000 : 10_000;
-const ANALYTICS_ERROR_AND_LOGS_DEBOUNCE_DELAY = 300;
+const ANALYTICS_ERROR_AND_LOGS_DEBOUNCE_DELAY = DEFAULT_DEBOUNCE_TIME_MS;
 
 class Analytics implements IAnalytics {
     private readonly analyticsData?: AnalyticsOptions['analyticsData'];
