@@ -11,7 +11,7 @@ function configureErrorMap(): void {
     z.config({
         customError: (issue: any) => {
             if (issue.code === 'invalid_type') {
-                return `expected ${issue.expected}, received ${issue.input === null ? 'null' : typeof issue.input}`;
+                return `expected ${issue.expected}, received ${issue.received}`;
             }
             if (issue.code === 'unrecognized_keys') {
                 return `unknown property "${issue.keys.join('", "')}"`;
