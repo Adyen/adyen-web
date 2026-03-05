@@ -4,9 +4,9 @@ import RedirectButton from '../internal/RedirectButton';
 import { TxVariants } from '../tx-variants';
 
 class GiropayElement extends RedirectElement {
-    public static type = TxVariants.giropay;
+    public static override readonly type: TxVariants = TxVariants.giropay;
 
-    get displayName() {
+    public override get displayName() {
         return this.props.name || this.constructor['type'];
     }
 

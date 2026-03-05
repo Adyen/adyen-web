@@ -15,7 +15,7 @@ export class EcontextElement extends UIElement<EcontextConfiguration> {
         TxVariants.econtext_stores
     ];
 
-    protected static defaultProps = {
+    protected static readonly defaultProps = {
         personalDetailsRequired: true
     };
 

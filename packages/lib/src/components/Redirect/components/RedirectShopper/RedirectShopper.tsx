@@ -15,7 +15,7 @@ interface RedirectShopperProps {
 
 class RedirectShopper extends Component<RedirectShopperProps> {
     private postForm;
-    public static defaultProps = {
+    public static readonly defaultProps = {
         beforeRedirect: resolve => resolve(),
         onRedirectError: () => {},
         method: 'GET'

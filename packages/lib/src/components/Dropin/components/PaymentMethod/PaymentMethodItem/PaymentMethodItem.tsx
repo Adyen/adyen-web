@@ -26,7 +26,7 @@ export interface PaymentMethodItemProps {
 }
 
 class PaymentMethodItem extends Component<PaymentMethodItemProps> {
-    public static defaultProps = {
+    public static readonly defaultProps = {
         paymentMethod: null,
         isSelected: false,
         isLoaded: false,

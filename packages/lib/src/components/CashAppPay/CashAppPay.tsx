@@ -13,11 +13,11 @@ import type { ICore } from '../../core/types';
 import { PREFIX } from '../internal/Icon/constants';
 
 export class CashAppPay extends UIElement<CashAppPayConfiguration> {
-    public static type = TxVariants.cashapp;
+    public static readonly type = TxVariants.cashapp;
 
     private readonly cashAppService: ICashAppService | undefined;
 
-    protected static defaultProps = defaultProps;
+    protected static readonly defaultProps = defaultProps;
 
     constructor(checkout: ICore, props?: CashAppPayConfiguration) {
         super(checkout, props);

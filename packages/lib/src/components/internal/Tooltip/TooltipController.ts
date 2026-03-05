@@ -10,7 +10,7 @@ export class TooltipController {
     private static timeoutId: ReturnType<typeof setTimeout> | null = null;
     private static registered = false;
     private static updateGlobalTooltip: setTooltipState = () => {};
-    private static eventTarget = new EventTarget();
+    private static readonly eventTarget = new EventTarget();
 
     public static registerTooltipHandler(fn: setTooltipState): void {
         this.updateGlobalTooltip = fn;

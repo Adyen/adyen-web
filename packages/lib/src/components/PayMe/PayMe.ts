@@ -3,9 +3,9 @@ import { PayMeInstructions } from './components/PayMeInstructions';
 import { PayMeIntroduction } from './components/PayMeIntroduction';
 
 class PayMeElement extends QRLoaderContainer {
-    public static type = 'payme';
-    private static defaultCountdown = 10; // min
-    private static defaultDelay = 2000; // ms
+    public static readonly type = 'payme';
+    private static readonly defaultCountdown = 10; // min
+    private static readonly defaultDelay = 2000; // ms
 
     formatProps(props) {
         return {

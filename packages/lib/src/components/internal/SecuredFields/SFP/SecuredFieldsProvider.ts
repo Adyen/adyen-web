@@ -100,7 +100,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
         this.destroy = this.destroy.bind(this);
     }
 
-    public static defaultProps = defaultProps;
+    public static readonly defaultProps = defaultProps;
 
     public componentDidMount(): void {
         // When SFP instantiated through SecuredFieldsInput c.f. CardInput

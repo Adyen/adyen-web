@@ -21,8 +21,8 @@ interface RiskModuleProps extends BaseElementProps {
 export type RiskData = string | boolean;
 
 export default class RiskElement extends BaseElement<RiskModuleProps> {
-    public static type = 'risk';
-    public static defaultProps = {
+    public static readonly type = 'risk';
+    public static readonly defaultProps = {
         risk: {
             enabled: true,
             onComplete: () => {},

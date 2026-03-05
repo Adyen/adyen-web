@@ -17,7 +17,7 @@ interface IframeProps {
 }
 
 class Iframe extends Component<IframeProps> {
-    public static defaultProps = {
+    public static readonly defaultProps = {
         width: '0',
         height: '0',
         minWidth: '0',

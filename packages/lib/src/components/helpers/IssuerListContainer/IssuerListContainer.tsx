@@ -8,7 +8,7 @@ import { IssuerListConfiguration, IssuerListData } from './types';
 import type { ICore } from '../../../core/types';
 
 class IssuerListContainer<TProps extends IssuerListConfiguration = IssuerListConfiguration, TData = IssuerListData> extends UIElement<TProps> {
-    protected static defaultProps = {
+    protected static readonly defaultProps = {
         showImage: true,
         issuers: [],
         highlightedIssuers: [],
