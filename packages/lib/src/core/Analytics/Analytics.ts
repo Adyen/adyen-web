@@ -39,7 +39,7 @@ function isSessionCreatedUnderFifteenMinutes(session: CheckoutAttemptIdSessionSt
 }
 
 const ANALYTICS_INFO_DEBOUNCE_DELAY = process.env.NODE_ENV === 'development' ? 5_000 : 10_000;
-const ANALYTICS_ERROR_AND_LOGS_DEBOUNCE_DELAY = 5_000;
+const ANALYTICS_ERROR_AND_LOGS_DEBOUNCE_DELAY = 300;
 
 class Analytics implements IAnalytics {
     private readonly analyticsData?: AnalyticsOptions['analyticsData'];
