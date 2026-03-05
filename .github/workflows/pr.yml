@@ -260,22 +260,24 @@ jobs:
         path: packages/e2e-playwright/playwright-report
         retention-days: 5
 
-  # Gateway check for PRs — only unit-tests and e2e must pass
+  # Gateway check for PRs — visual tests and e2e must pass
+  # - 
+  # WHY: It's done this way since some e2e tests might be flaky.
+  # This allows the PR author to choose and try to merge a PR if they believe the tests are going to pass in the merge queue.
   verify-pr:
     if: always()
-    needs: [unit-tests, e2e]
+    needs: [unit-tests, e2e, automated-a11y, automated-visual]
     runs-on: ubuntu-latest
     steps:
-      - name: Check required job results
-        run: |
-          if [[ "${{ needs.unit-tests.result }}" != "success" ]]; then
-            echo "unit-tests failed with result: ${{ needs.unit-tests.result }}"
-            exit 1
-          fi
-          if [[ "${{ needs.e2e.result }}" != "success" ]]; then
-            echo "e2e failed with result: ${{ needs.e2e.result }}"
-            exit 1
-          fi
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/verify-jobs
+        with:
+          required: |
+            {
+              "unit-tests": "${{ needs.unit-tests.result }}",
+              "automated-a11y": "${{ needs.automated-a11y.result }}",
+              "automated-visual": "${{ needs.automated-visual.result }}"
+            }
 
   # Stricter gateway check for merge queue — all jobs must pass
   verify-merge-queue:
@@ -283,22 +285,13 @@ jobs:
     needs: [unit-tests, e2e, automated-a11y, automated-visual]
     runs-on: ubuntu-latest
     steps:
-      - name: Check all job results
-        run: |
-          failed=""
-          for job in unit-tests e2e automated-a11y automated-visual; do
-            result=""
-            case $job in
-              unit-tests) result="${{ needs.unit-tests.result }}" ;;
-              e2e) result="${{ needs.e2e.result }}" ;;
-              automated-a11y) result="${{ needs.automated-a11y.result }}" ;;
-              automated-visual) result="${{ needs.automated-visual.result }}" ;;
-            esac
-            if [[ "$result" != "success" ]]; then
-              echo "$job failed with result: $result"
-              failed="true"
-            fi
-          done
-          if [[ "$failed" == "true" ]]; then
-            exit 1
-          fi
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/verify-jobs
+        with:
+          required: |
+            {
+              "unit-tests": "${{ needs.unit-tests.result }}",
+              "e2e": "${{ needs.e2e.result }}",
+              "automated-a11y": "${{ needs.automated-a11y.result }}",
+              "automated-visual": "${{ needs.automated-visual.result }}"
+            }

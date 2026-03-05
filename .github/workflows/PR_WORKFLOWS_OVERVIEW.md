@@ -17,10 +17,12 @@ The main CI workflow for pull requests and merge queue is **`pr.yml`** (name: `P
 
 ### Gateway Jobs
 
-| Job | Runs on | Needs | Description |
+| Job | Runs on | Required jobs | Description |
 |-----|---------|-------|-------------|
-| `verify-pr` | always | `unit-tests`, `e2e` | Passes only if unit-tests and e2e succeed. This is the single required check for PRs. |
-| `verify-merge-queue` | `merge_group` only | `unit-tests`, `e2e`, `automated-a11y`, `automated-visual` | Passes only if **all** jobs succeed. Only runs in merge queue context. |
+| `verify-pr` | always | `unit-tests`, `automated-a11y`, `automated-visual` | Passes only if unit-tests, a11y, and visual tests succeed. **E2E is optional on PR** (see rationale below). |
+| `verify-merge-queue` | `merge_group` only | `unit-tests`, `e2e`, `automated-a11y`, `automated-visual` | Passes only if **all** jobs succeed. Enforces stricter requirements in the merge queue. |
+
+**Rationale for E2E on PR**: Some E2E tests may be flaky. By making E2E optional on PR, the PR author can attempt to merge if they believe the tests will pass in the merge queue. The merge queue enforces that E2E must pass before merging to main.
 
 ### Branch protection configuration
 
@@ -29,9 +31,9 @@ Set these as **required status checks** in branch protection rules:
 - `PR / verify-merge-queue`
 
 **How it works**:
-- On a **PR**: `verify-pr` runs and gates merging (unit-tests + e2e must pass). `verify-merge-queue` is skipped (not a `merge_group` event) so it doesn't block.
-- On **merge queue**: both run. `verify-merge-queue` enforces that all jobs (including a11y and visual) must pass.
-- Non-required jobs (a11y, visual) still show ❌/✅ on the PR for visibility but don't block merging.
+- On a **PR**: `verify-pr` runs and gates merging (unit-tests, a11y, visual must pass; e2e is informational). `verify-merge-queue` is skipped (not a `merge_group` event) so it doesn't block.
+- On **merge queue**: both run. `verify-merge-queue` enforces that **all** jobs (including e2e) must pass before merging to main.
+- E2E results still show ❌/✅ on the PR for visibility but don't block merging.
 
 ## Other PR-triggered Workflows (standalone)
 
