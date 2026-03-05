@@ -2,6 +2,4 @@
 '@adyen/adyen-web': patch
 ---
 
-- Fixed: this is an invalid changeset message
-
-- Fixed: this is a multiline message
+- Fixed: this is a correct message this t3ktoiwiotuw0othoiwhtowhtohoh hwhwtohwothoithohtohiwhtohwtoihwothoihoithoh howihtoihwitohowthoh
