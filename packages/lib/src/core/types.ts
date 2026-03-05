@@ -26,7 +26,7 @@ import { Resources } from './Context/Resources';
 import Language from '../language';
 import { SRPanel } from './Errors/SRPanel';
 import { IAnalytics } from './Analytics/Analytics';
-import type DonationCampaignProvider from '../components/Donation/DonationCampaignProvider';
+import type DonationCampaignProvider from '../components/Donation/DonationCampaignProvider2';
 
 export { CheckoutSession } from './CheckoutSession/types';
 export interface ICore {
@@ -51,6 +51,7 @@ export type CoreModules = Readonly<{
     resources: Resources;
     i18n: Language;
     srPanel: SRPanel;
+    donationCampaignProvider: DonationCampaignProvider;
 }>;
 
 export type PaymentCompletedData = SessionsResponse | { resultCode: ResultCode; donationToken?: string };

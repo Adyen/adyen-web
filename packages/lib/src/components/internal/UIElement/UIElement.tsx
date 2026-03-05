@@ -35,7 +35,7 @@ import './UIElement.scss';
 import SRPanelProvider from '../../../core/Errors/SRPanelProvider';
 import { AmountProvider, AmountProviderRef } from '../../../core/Context/AmountProvider';
 import { PayButtonProps } from '../PayButton/PayButton';
-import DonationCampaignProvider from '../../Donation/DonationCampaignProvider';
+import type DonationCampaignProvider from '../../Donation/DonationCampaignProvider2';
 
 export abstract class UIElement<P extends UIElementProps = UIElementProps> extends BaseElement<P> {
     /**
@@ -136,6 +136,10 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
 
     get srPanel(): SRPanel {
         return this.core.modules.srPanel;
+    }
+
+    get donationCampaignProvider(): DonationCampaignProvider {
+        return this.core.modules.donationCampaignProvider;
     }
 
     private getPaymentMethodConfigFromResponse(componentProps: P) {
@@ -452,20 +456,19 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         });
     };
 
+    // TODO - if we stick with dcp as a module then we should rename this function to setupSessionsDonationCampaignProvider
     protected createSessionsDonationCampaignProvider() {
         const rootNode: HTMLElement = assertIsDropin(this.elementRef) ? this.elementRef._node : this._node;
 
         /**
-         * Create the DonationCampaignProvider instance
-         * The instance will mount a Donation component into rootNode, when it knows it has a donation campaign to display.
+         * Give the DonationCampaignProvider module the things it needs to start: somewhere to mount & the componentType (for the analytics)
+         * And then start the inbuilt timer
          */
-        const dcp = new DonationCampaignProvider({
-            originalComponentType: this.type,
-            rootNode,
-            checkout: this.core
-        });
+        this.donationCampaignProvider.rootNode = rootNode;
+        this.donationCampaignProvider.componentType = this.type;
+        this.donationCampaignProvider.beginCountdown();
 
-        return dcp;
+        return this.donationCampaignProvider;
     }
 
     /**
