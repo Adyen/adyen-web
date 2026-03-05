@@ -31,6 +31,7 @@ import type { IAnalytics } from '../../../core/Analytics/Analytics';
 
 import { CoreProvider } from '../../../core/Context/CoreProvider';
 import { SRPanel } from '../../../core/Errors/SRPanel';
+import { validateUIElementProps } from '../../../core/validation';
 import './UIElement.scss';
 import SRPanelProvider from '../../../core/Errors/SRPanelProvider';
 import { AmountProvider, AmountProviderRef } from '../../../core/Context/AmountProvider';
@@ -57,6 +58,8 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
 
     constructor(checkout: ICore, props?: P) {
         super(checkout, props);
+
+        validateUIElementProps((props || {}) as unknown as Record<string, unknown>);
 
         this.core.register(this.constructor as NewableComponent);
 

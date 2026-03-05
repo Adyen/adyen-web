@@ -52,7 +52,6 @@ async function createSessionsCheckout(
         countryCode,
         session,
         showPayButton,
-
         beforeSubmit: (data, component, actions) => {
             actions.resolve(data);
         },

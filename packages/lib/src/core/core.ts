@@ -4,7 +4,8 @@ import RiskModule from './RiskModule';
 import PaymentMethods from './ProcessResponse/PaymentMethods';
 import getComponentForAction from './ProcessResponse/PaymentAction';
 import Analytics from './Analytics';
-import { assertConfigurationPropertiesAreValid, processGlobalOptions } from './utils';
+import { processGlobalOptions } from './utils';
+import { validateCoreConfiguration } from './validation';
 import Session from './CheckoutSession';
 import { hasOwnProperty } from '../utils/hasOwnProperty';
 import { Resources } from './Context/Resources';
@@ -71,7 +72,7 @@ class Core implements ICore {
     }
 
     constructor(props: CoreConfiguration) {
-        assertConfigurationPropertiesAreValid(props);
+        validateCoreConfiguration(props as unknown as Record<string, unknown>);
 
         this.createFromAction = this.createFromAction.bind(this);
         this.update = this.update.bind(this);
