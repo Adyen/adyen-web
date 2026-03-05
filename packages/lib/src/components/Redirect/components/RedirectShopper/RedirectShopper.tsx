@@ -13,7 +13,7 @@ interface RedirectShopperProps {
     onRedirectError?: () => void;
 }
 
-class RedirectShopper extends Component<RedirectShopperProps> {
+class RedirectShopper extends Component<Readonly<RedirectShopperProps>> {
     private postForm;
     public static readonly defaultProps = {
         beforeRedirect: resolve => resolve(),

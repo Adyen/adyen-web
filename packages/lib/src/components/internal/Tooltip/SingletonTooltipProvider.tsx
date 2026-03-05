@@ -12,7 +12,7 @@ type TooltipContextValue = {
 
 const TooltipContext = createContext<TooltipContextValue | null>(null);
 
-const SingletonTooltipProvider = ({ children }: { children?: ComponentChildren }) => {
+const SingletonTooltipProvider = ({ children }: Readonly<{ children?: ComponentChildren }>) => {
     const [tooltipProps, setTooltipProps] = useState<TooltipProps | null>(null);
     const tooltipId = useRef(TooltipController.tooltipId);
     /**

@@ -9,7 +9,7 @@ import { ENCRYPTED_CARD_NUMBER } from '../../../../internal/SecuredFields/lib/co
 import { alternativeLabelContent } from './FieldLabelAlternative';
 import './CardNumber.scss';
 
-export default function CardNumber(props: CardNumberProps) {
+export default function CardNumber(props: Readonly<CardNumberProps>) {
     const { i18n } = useCoreContext();
     const { error = '', isValid = false, onFocusField = () => {}, dualBrandingElements } = props;
 

@@ -34,7 +34,7 @@ import { SF_ErrorCodes } from '../../../../core/Errors/constants';
 import { usePrevious } from '../../../../utils/hookUtils';
 import { AnalyticsInfoEvent, InfoEventType, UiTarget } from '../../../../core/Analytics/events/AnalyticsInfoEvent';
 
-const CardInput = (props: CardInputProps) => {
+const CardInput = (props: Readonly<CardInputProps>) => {
     const sfp = useRef<SecuredFieldsProvider>(null);
     const isValidating = useRef(false);
     const getImage = useImage();

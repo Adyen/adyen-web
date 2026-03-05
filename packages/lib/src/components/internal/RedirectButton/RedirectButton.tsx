@@ -15,7 +15,7 @@ export interface RedirectButtonProps {
     ref?: any;
 }
 
-function RedirectButton({ label = null, icon = null, payButton, onSubmit, name, showPayButton, ...props }: RedirectButtonProps) {
+function RedirectButton({ label = null, icon = null, payButton, onSubmit, name, showPayButton, ...props }: Readonly<RedirectButtonProps>) {
     const { i18n } = useCoreContext();
     const [status, setStatus] = useState('ready');
     const { amount } = useAmount();

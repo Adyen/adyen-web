@@ -16,7 +16,7 @@ interface CtPResendOtpLinkProps {
     disabled: boolean;
 }
 
-const CtPResendOtpLink = ({ onError, onResendCode, disabled }: CtPResendOtpLinkProps): h.JSX.Element => {
+const CtPResendOtpLink = ({ onError, onResendCode, disabled }: Readonly<CtPResendOtpLinkProps>): h.JSX.Element => {
     const [counter, setCounter] = useState<number>(null);
     const [showConfirmation, setShowConfirmation] = useState<boolean>(false);
     const { i18n } = useCoreContext();

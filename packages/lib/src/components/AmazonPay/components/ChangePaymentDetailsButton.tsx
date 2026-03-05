@@ -3,7 +3,7 @@ import { useEffect } from 'preact/hooks';
 import { useCoreContext } from '../../../core/Context/CoreProvider';
 import { ChangeActionOptions, ChangePaymentDetailsButtonProps } from '../types';
 
-export default function ChangePaymentDetailsButton(props: ChangePaymentDetailsButtonProps) {
+export default function ChangePaymentDetailsButton(props: Readonly<ChangePaymentDetailsButtonProps>) {
     const { i18n } = useCoreContext();
     const { amazonRef, amazonCheckoutSessionId } = props;
 

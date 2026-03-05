@@ -20,7 +20,7 @@ interface AccountTypeSelectorProps {
     placeholder?: string;
 }
 
-const AccountTypeSelector = ({ onSelect, selectedAccountType, errorMessage, placeholder, disabled }: AccountTypeSelectorProps) => {
+const AccountTypeSelector = ({ onSelect, selectedAccountType, errorMessage, placeholder, disabled }: Readonly<AccountTypeSelectorProps>) => {
     const { i18n } = useCoreContext();
     const options: SelectItem[] = useMemo(
         () =>

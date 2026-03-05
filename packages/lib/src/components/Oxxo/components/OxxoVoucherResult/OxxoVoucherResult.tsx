@@ -8,7 +8,7 @@ import './OxxoVoucherResult.scss';
 import useImage from '../../../../core/Context/useImage';
 import { extractCommonPropsForVoucher } from '../../../internal/Voucher/utils';
 
-const OxxoVoucherResult = (props: OxxoVoucherResultProps) => {
+const OxxoVoucherResult = (props: Readonly<OxxoVoucherResultProps>) => {
     const { i18n, loadingContext } = useCoreContext();
     const getImage = useImage();
     const { alternativeReference, reference, expiresAt, merchantReference, downloadUrl } = props;

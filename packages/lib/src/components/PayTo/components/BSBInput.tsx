@@ -32,7 +32,7 @@ export interface BSBInputProps {
 
 const BASE_SCHEMA = ['bankAccountNumber', 'bsb', 'firstName', 'lastName'];
 
-export default function BSBInput({ setComponentRef, defaultData, placeholders, onChange, setStatus, id }: BSBInputProps) {
+export default function BSBInput({ setComponentRef, defaultData, placeholders, onChange, setStatus, id }: Readonly<BSBInputProps>) {
     const { i18n } = useCoreContext();
 
     const form = useForm<BSBFormData>({

@@ -49,7 +49,7 @@ function IssuerList({
     contextualText,
     selectFieldLabel,
     ...props
-}: IssuerListProps) {
+}: Readonly<IssuerListProps>) {
     const { i18n } = useCoreContext();
     const { handleChangeFor, triggerValidation, data, valid, errors, isValid } = useForm({
         schema,

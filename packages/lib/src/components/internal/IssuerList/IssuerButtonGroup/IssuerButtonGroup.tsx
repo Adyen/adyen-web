@@ -11,7 +11,7 @@ interface IssuerButtonGroupProps {
     onChange: (event: UIEvent) => void;
 }
 
-const IssuerButtonGroup = ({ items = [], selectedIssuerId, onChange }: IssuerButtonGroupProps) => {
+const IssuerButtonGroup = ({ items = [], selectedIssuerId, onChange }: Readonly<IssuerButtonGroupProps>) => {
     const { i18n } = useCoreContext();
 
     const handleClick = useCallback(

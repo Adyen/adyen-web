@@ -7,7 +7,7 @@ interface InputDateProps extends InputBaseProps {
     onInput?: (e) => void;
 }
 
-export default function InputDate(props: InputDateProps) {
+export default function InputDate(props: Readonly<InputDateProps>) {
     const isDateInputSupported = useMemo(checkDateInputSupport, []);
 
     const handleInput = e => {

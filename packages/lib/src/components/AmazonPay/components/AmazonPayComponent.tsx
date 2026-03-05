@@ -10,7 +10,7 @@ import SignOutButton from './SignOutButton';
 import Script from '../../../utils/Script';
 import useAnalytics from '../../../core/Analytics/useAnalytics';
 
-export default function AmazonPayComponent(props: AmazonPayComponentProps) {
+export default function AmazonPayComponent(props: Readonly<AmazonPayComponentProps>) {
     const [status, setStatus] = useState('pending');
     const amazonPayButtonRef = useRef(null);
     const orderButtonRef = useRef(null);
