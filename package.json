@@ -45,8 +45,7 @@
         "prettier": "3.8.1"
     },
     "resolutions": {
-        "tar-fs": "^3.0.9",
-        "cheerio": "1.0.0-rc.12"
+        "tar-fs": "^3.0.9"
     },
     "packageManager": "yarn@4.12.0"
 }
