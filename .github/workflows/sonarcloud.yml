@@ -1,23 +1,19 @@
-name: Unit tests and Sonarcloud
+name: SonarCloud
 
 on:
   push:
     branches:
       - main
-  pull_request:
-    types: [opened, synchronize, reopened]
-  merge_group:
 
 jobs:
-  build:
+  sonarcloud:
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v6
       with:
         fetch-depth: 0
 
-    - name: Use Node.js 24
+    - name: Setup Node
       uses: actions/setup-node@v6
       with:
         node-version: 24
@@ -38,12 +34,6 @@ jobs:
     - name: Install Project Dependencies
       if: steps.node-modules-cache.outputs.cache-hit != 'true'
       run: yarn install --immutable
-
-    - name: Lint files
-      run: yarn lint
-
-    - name: Type check files
-      run: yarn type-check
 
     - name: Generate test coverage
       run: yarn test:coverage
