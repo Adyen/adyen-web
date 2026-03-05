@@ -1,31 +1,26 @@
-import { shallow } from 'enzyme';
 import { h } from 'preact';
+import { render, screen } from '@testing-library/preact';
 import ThreeDS2Form from './ThreeDS2Form';
 
 const submitMock = jest.fn();
 (global as any).HTMLFormElement.prototype.submit = () => submitMock;
 
 const propsMock = {
-    name: '',
+    name: 'testForm',
     action: '',
     target: '',
-    inputName: '',
+    inputName: 'testInput',
     inputValue: ''
 };
 
-let wrapper;
-
-beforeEach(() => {
-    // @ts-ignore Component is proper JSX
-    wrapper = shallow(<ThreeDS2Form {...propsMock} onFormSubmit={() => {}} />);
-});
-
 describe('<ThreeDS2Form /> rendering', () => {
-    it('should render one input field', () => {
-        expect(wrapper.find('input')).toHaveLength(1);
+    test('should render one input field', () => {
+        render(<ThreeDS2Form {...propsMock} onFormSubmit={() => {}} />);
+        expect(screen.getByRole('textbox', { hidden: true })).toBeInTheDocument();
     });
 
-    it('should render one <Form>', () => {
-        expect(wrapper.find('form')).toHaveLength(1);
+    test('should render one form', () => {
+        render(<ThreeDS2Form {...propsMock} onFormSubmit={() => {}} />);
+        expect(screen.getByRole('form', { hidden: true })).toBeInTheDocument();
     });
 });

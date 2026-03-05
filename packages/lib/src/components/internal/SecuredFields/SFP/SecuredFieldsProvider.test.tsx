@@ -301,3 +301,36 @@ describe('<SecuredFieldsProvider /> handling an binLookup response', () => {
         }
     );
 });
+
+describe('<SecuredFieldsProvider /> handling an Enter key pressed event', () => {
+    test('should handle a key pressed event and since it is from the Enter key call the handleKeyPress function passed as a prop', () => {
+        let keyPressObj: any;
+
+        const handleKeyPress = jest.fn(obj => {
+            keyPressObj = obj;
+        });
+
+        renderSFP({ handleKeyPress });
+
+        sfp.handleKeyPressed({
+            action: 'enterKeyPressed',
+            fieldType: 'encryptedCardNumber'
+        });
+
+        expect(handleKeyPress).toHaveBeenCalled();
+        expect(keyPressObj).toBeInstanceOf(KeyboardEvent);
+    });
+
+    test('should handle a key pressed event and since it is not from the Enter key should not call the handleKeyPress function', () => {
+        const handleKeyPress = jest.fn(() => {});
+
+        renderSFP({ handleKeyPress });
+
+        sfp.handleKeyPressed({
+            action: 'shiftKeyPressed',
+            fieldType: 'encryptedCardNumber'
+        });
+
+        expect(handleKeyPress).not.toHaveBeenCalled();
+    });
+});
