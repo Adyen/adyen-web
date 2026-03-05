@@ -21,3 +21,7 @@
         display: block;
     }
 }
+
+.adyen-checkout__loading-input__form {
+  transition: opacity 0.25s ease-out;
+}

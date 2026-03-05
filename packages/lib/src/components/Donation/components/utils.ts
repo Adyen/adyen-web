@@ -1,5 +1,5 @@
 import Language from '../../../language';
-import { DonationAmount } from './types';
+import type { DonationAmount } from './types';
 
 interface RoundupAmount {
     maxRoundupAmount: number;
