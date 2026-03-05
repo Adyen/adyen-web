@@ -12,12 +12,12 @@ import Donation from './Donation';
 class DonationCampaignProvider {
     public static type = 'donationCampaignProvider';
 
-    private _rootNode: HTMLElement | string;
+    private _rootNode: HTMLElement | string = null;
     private _originalComponentType: string = DonationCampaignProvider.type;
 
     private readonly core: ICore;
 
-    private autoStartTimer: ReturnType<typeof setTimeout>;
+    private autoStartTimer: ReturnType<typeof setTimeout> = null;
     private readonly autoStartTimerMS = 3000;
 
     private donationComponent: Donation;

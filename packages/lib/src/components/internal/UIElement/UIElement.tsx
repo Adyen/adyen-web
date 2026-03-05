@@ -80,7 +80,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         this.makeAdditionalDetailsCall = this.makeAdditionalDetailsCall.bind(this);
         this.submitUsingSessionsFlow = this.submitUsingSessionsFlow.bind(this);
         this.updateAmount = this.updateAmount.bind(this);
-        this.createSessionsDonationCampaignProvider = this.createSessionsDonationCampaignProvider.bind(this);
+        this.setupSessionsDonationCampaignProvider = this.setupSessionsDonationCampaignProvider.bind(this);
 
         this.elementRef = (props && props.elementRef) || this;
         this.resources = this.props.modules ? this.props.modules.resources : undefined;
@@ -456,8 +456,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         });
     };
 
-    // TODO - if we stick with dcp as a module then we should rename this function to setupSessionsDonationCampaignProvider
-    protected createSessionsDonationCampaignProvider() {
+    protected setupSessionsDonationCampaignProvider() {
         const rootNode: HTMLElement = assertIsDropin(this.elementRef) ? this.elementRef._node : this._node;
 
         /**
@@ -500,7 +499,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         const isHybridFlow = this.core.session && (this.props.onSubmit || this.props.onAdditionalDetails);
 
         const dcp: DonationCampaignProvider | null =
-            this.core.session && !isHybridFlow && result.askDonation === true ? this.createSessionsDonationCampaignProvider() : null;
+            this.core.session && !isHybridFlow && result.askDonation === true ? this.setupSessionsDonationCampaignProvider() : null;
 
         this.props.onPaymentCompleted?.(result, this.elementRef, dcp);
     };
