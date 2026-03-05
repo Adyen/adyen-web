@@ -36,6 +36,8 @@ import SRPanelProvider from '../../../core/Errors/SRPanelProvider';
 import { AmountProvider, AmountProviderRef } from '../../../core/Context/AmountProvider';
 import { PayButtonProps } from '../PayButton/PayButton';
 import type DonationCampaignProvider from '../../Donation/DonationCampaignProvider';
+import type { DonationCampaignProviderAPI } from '../../Donation/types';
+import { toDonationCampaignProviderAPI } from '../../Donation/utils';
 
 export abstract class UIElement<P extends UIElementProps = UIElementProps> extends BaseElement<P> {
     /**
@@ -460,14 +462,14 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         const rootNode: HTMLElement = assertIsDropin(this.elementRef) ? this.elementRef._node : this._node;
 
         /**
-         * Give the DonationCampaignProvider module the things it needs to start: somewhere to mount & the componentType (for the analytics)
-         * And then start the inbuilt timer
+         * Give the DonationCampaignProvider module the things it needs to start:
+         *  somewhere to mount, the amount of the payment (in case we have a "roundup"-type campaign, & the componentType (for the analytics)
+         *  (And then start the inbuilt timer)
          */
-        this.donationCampaignProvider.rootNode = rootNode;
-        this.donationCampaignProvider.componentType = this.type;
-        this.donationCampaignProvider.beginCountdown();
+        this.donationCampaignProvider.setupAndStart({ rootNode, componentType: this.type, commercialTxAmount: this.props.amount.value });
 
-        return this.donationCampaignProvider;
+        // Return an object with the API we want to expose to merchants
+        return toDonationCampaignProviderAPI(this.donationCampaignProvider);
     }
 
     /**
@@ -498,7 +500,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         /** If we are using sessions (and haven't moved into a hybrid flow); and the response mandates it - create a DonationCampaignProvider instance */
         const isHybridFlow = this.core.session && (this.props.onSubmit || this.props.onAdditionalDetails);
 
-        const dcp: DonationCampaignProvider | null =
+        const dcp: DonationCampaignProviderAPI | null =
             this.core.session && !isHybridFlow && result.askDonation === true ? this.setupSessionsDonationCampaignProvider() : null;
 
         this.props.onPaymentCompleted?.(result, this.elementRef, dcp);

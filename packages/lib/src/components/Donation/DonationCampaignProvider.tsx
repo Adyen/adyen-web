@@ -9,20 +9,27 @@ import type {
 import { normalizeDonationCampaign } from './utils';
 import Donation from './Donation';
 
+type DonationCampaignProviderSetup = {
+    rootNode: HTMLElement;
+    componentType: string;
+    commercialTxAmount: number;
+};
+
 class DonationCampaignProvider {
     public static type = 'donationCampaignProvider';
 
-    private _rootNode: HTMLElement | string = null;
-    private _originalComponentType: string = DonationCampaignProvider.type;
-
     private readonly core: ICore;
+
+    private _rootNode: HTMLElement | string = null;
+
+    private originalComponentType: string = DonationCampaignProvider.type;
+    private commercialTxAmount: number = 0;
 
     private autoStartTimer: ReturnType<typeof setTimeout> = null;
     private readonly autoStartTimerMS = 3000;
 
     private donationComponent: Donation;
 
-    // TODO - if set up as a module, there will probably only be one parameter, checkout, so we can change the signature (it doesn't need to be a props object)
     constructor(checkout: ICore) {
         this.core = checkout;
     }
@@ -39,16 +46,33 @@ class DonationCampaignProvider {
     }
 
     /**
-     * @internal
+     * Exposed method for the merchant to halt the auto start timer. meaning it will then be up to them to call start() to begin the process
      */
-    public set componentType(type: string) {
-        this._originalComponentType = type;
+    public haltAutoStart() {
+        clearTimeout(this.autoStartTimer);
+    }
+
+    /**
+     * Exposed method for the merchant to manually begin the process
+     */
+    public start() {
+        // Clear the timeout in case the merchant hasn't halted it, otherwise we could end up with a double call to the /donationCampaigns endpoint
+        this.haltAutoStart();
+        this.init();
     }
 
     /**
      * @internal
      */
-    public beginCountdown() {
+    public setupAndStart({ rootNode, componentType, commercialTxAmount }: DonationCampaignProviderSetup) {
+        this.rootNode = rootNode;
+        this.originalComponentType = componentType;
+        this.commercialTxAmount = commercialTxAmount;
+
+        this.beginCountdown();
+    }
+
+    private beginCountdown() {
         if (this.autoStartTimer) {
             clearTimeout(this.autoStartTimer);
         }
@@ -56,19 +80,6 @@ class DonationCampaignProvider {
         this.autoStartTimer = setTimeout(() => {
             this.init();
         }, this.autoStartTimerMS);
-    }
-
-    /**
-     * Exposed method for the merchant to halt the auto start timer. meaning it will then be up to them to call start() to begin the process
-     */
-    public haltAutoStart() {
-        clearTimeout(this.autoStartTimer);
-    }
-
-    public start() {
-        // Clear the timeout in case the merchant hasn't halted it, otherwise we could end up with a double call to the /donationCampaigns endpoint
-        this.haltAutoStart();
-        this.init();
     }
 
     private init() {
@@ -131,6 +142,7 @@ class DonationCampaignProvider {
 
                 this.callSessionsDonations(donationRequestData, component);
             },
+            commercialTxAmount: this.commercialTxAmount,
             ...restDonationCampaignProps
         };
 

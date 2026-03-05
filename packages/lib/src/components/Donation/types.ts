@@ -20,3 +20,11 @@ export interface SessionsDonationCampaign extends Omit<DonationCampaign, 'donati
     donation?: DonationCampaign['donation'];
     sessionsDonation?: DonationCampaign['donation'];
 }
+
+export interface DonationCampaignProviderAPI {
+    get rootNode(): HTMLElement | string;
+    set rootNode(node: HTMLElement | string);
+
+    haltAutoStart(): void;
+    start(): void;
+}

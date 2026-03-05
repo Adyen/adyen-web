@@ -27,6 +27,7 @@ import Language from '../language';
 import { SRPanel } from './Errors/SRPanel';
 import { IAnalytics } from './Analytics/Analytics';
 import type DonationCampaignProvider from '../components/Donation/DonationCampaignProvider';
+import type { DonationCampaignProviderAPI } from '../components/Donation/types';
 
 export { CheckoutSession } from './CheckoutSession/types';
 export interface ICore {
@@ -236,7 +237,7 @@ export interface CoreConfiguration {
      * @param component
      * @param dcp - Donation Campaign Provider instance (only present when donation is enabled / available and merchant us using /sessions)
      */
-    onPaymentCompleted?(data: PaymentCompletedData, component?: UIElement, dcp?: DonationCampaignProvider): void;
+    onPaymentCompleted?(data: PaymentCompletedData, component?: UIElement, dcp?: DonationCampaignProviderAPI): void;
 
     /**
      * Called when the payment fails.

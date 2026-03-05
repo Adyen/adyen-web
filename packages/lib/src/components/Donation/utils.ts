@@ -1,5 +1,7 @@
 import type { DonationCampaign, SessionsDonationCampaign } from './types';
 import type { Donation } from './components/types';
+import type DonationCampaignProvider from './DonationCampaignProvider';
+import type { DonationCampaignProviderAPI } from './types';
 
 /**
  * A DonationCampaign returned from the /sessions/donationCampaigns endpoint has a "sessionsDonation" property rather than the usual "donation property".
@@ -22,3 +24,22 @@ export function normalizeDonationCampaign(rawDonationCampaign: unknown): Donatio
         donation
     };
 }
+
+/**
+ * Explicitly expose which methods can be used by the merchant
+ * @param provider
+ */
+export const toDonationCampaignProviderAPI = (provider: DonationCampaignProvider): DonationCampaignProviderAPI => ({
+    get rootNode() {
+        return provider.rootNode;
+    },
+    set rootNode(node: HTMLElement | string) {
+        provider.rootNode = node;
+    },
+    haltAutoStart() {
+        provider.haltAutoStart();
+    },
+    start() {
+        provider.start();
+    }
+});
