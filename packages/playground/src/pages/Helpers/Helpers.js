@@ -48,7 +48,6 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
 
     // Also works - using the new donationCampaignProvider module
     // window.checkout.modules.donationCampaignProvider.rootNode = '.new-donation-fixed-amounts-field';
-    // window.checkout.modules.donationCampaignProvider.componentType = 'schemey';
     // window.checkout.modules.donationCampaignProvider.handleDonationCampaign({
     //     onDonate: (state, component) => {
     //         console.log({ state, component });

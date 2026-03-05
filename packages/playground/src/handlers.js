@@ -9,15 +9,12 @@ export function handleChange(state, component) {
     console.groupEnd();
 }
 
-export function handleOnPaymentCompleted(result, element) {
-    alert(`onPaymentCompleted - ${result?.resultCode}`);
+export function handleOnPaymentCompleted(result, element, dcp) {
+    // alert(`onPaymentCompleted - ${result?.resultCode}`);
     console.log('onPaymentCompleted', result, element);
 
     if (dcp) {
         dcp.haltAutoStart();
-
-        // console.log('### handlers::handleOnPaymentCompleted:: dcp rootNode', dcp.getRootNode());
-        // dcp.start('.playground-nav');
 
         console.log('### handlers::handleOnPaymentCompleted:: dcp rootNode', dcp.rootNode);
         dcp.rootNode = '.playground-nav';
