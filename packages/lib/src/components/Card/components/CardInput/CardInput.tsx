@@ -193,6 +193,17 @@ const CardInput = (props: CardInputProps) => {
 
     const doPanAutoJump = getAutoJumpHandler(isAutoJumping, sfp, retrieveLayout());
 
+    const mapSfpErrorsToCardInputErrors = (sfpErrors: SFPState['errors']): Partial<CardInputErrorState> => {
+        if (!sfpErrors) return {};
+
+        return {
+            encryptedCardNumber: !!sfpErrors.encryptedCardNumber,
+            encryptedExpiryDate: !!sfpErrors.encryptedExpiryDate,
+            encryptedSecurityCode: !!sfpErrors.encryptedSecurityCode,
+            encryptedPassword: !!sfpErrors.encryptedPassword
+        };
+    };
+
     const handleSecuredFieldsChange = (sfState: SFPState, eventDetails?: OnChangeEventDetails): void => {
         /**
          * Handling auto complete value for holderName (but only if the component is using a holderName field)
@@ -229,7 +240,7 @@ const CardInput = (props: CardInputProps) => {
          * Process SFP state
          */
         setData({ ...data, ...sfState.data });
-        setErrors({ ...errors, ...sfState.errors });
+        setErrors({ ...errors, ...mapSfpErrorsToCardInputErrors(sfState.errors) });
         setValid({ ...valid, ...sfState.valid });
 
         setIsSfpValid(sfState.isSfpValid);

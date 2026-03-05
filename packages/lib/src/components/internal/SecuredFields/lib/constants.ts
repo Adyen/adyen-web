@@ -29,8 +29,7 @@ export const CREDIT_CARD_SF_FIELDS = [
     ENCRYPTED_EXPIRY_YEAR,
     ENCRYPTED_SECURITY_CODE,
     ENCRYPTED_PWD_FIELD
-    // ENCRYPTED_PIN_FIELD,// probably redundant - it was an alt. name for KCP's encryptedPassword. But maybe has a role to play if we ever encrypt ibans.
-];
+] as const;
 
 /** A list of all the data-cse attributes that relate to securedFields (as found in card, giftcard) */
 export const ALL_SECURED_FIELDS = CREDIT_CARD_SF_FIELDS;

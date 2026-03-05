@@ -1,5 +1,4 @@
 import { Fragment, h } from 'preact';
-import getProp from '../../../../utils/getProp';
 import UIElement from '../../../internal/UIElement/UIElement';
 import { Order, OrderStatus } from '../../../../types/global-types';
 import OrderPaymentMethods from './OrderPaymentMethods';
@@ -57,7 +56,7 @@ const PaymentMethodList = ({
         const firstNonStoredPayment = paymentMethods?.[0];
 
         if (firstStoredPayment || firstNonStoredPayment) {
-            const shouldOpenFirstStored = openFirstStoredPaymentMethod && getProp(firstStoredPayment, 'props.oneClick') === true;
+            const shouldOpenFirstStored = openFirstStoredPaymentMethod && firstStoredPayment?.props?.oneClick === true;
             if (shouldOpenFirstStored) {
                 onSelect(firstStoredPayment);
                 return;
