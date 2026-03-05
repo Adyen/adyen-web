@@ -5,7 +5,7 @@ import { updateAmazonCheckoutSession } from '../services';
 import { OrderButtonProps, UpdateAmazonCheckoutSessionRequest } from '../types';
 import { useAmount } from '../../../core/Context/AmountProvider';
 
-export default function OrderButton(props: OrderButtonProps) {
+export default function OrderButton(props: Readonly<OrderButtonProps>) {
     const { i18n, loadingContext } = useCoreContext();
     const { amount } = useAmount();
 

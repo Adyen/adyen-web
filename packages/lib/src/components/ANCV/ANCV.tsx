@@ -10,7 +10,7 @@ import { sanitizeResponse, verifyPaymentDidNotFail } from '../internal/UIElement
 import { PayButtonProps } from '../internal/PayButton/PayButton';
 
 export class ANCVElement extends UIElement<ANCVConfiguration> {
-    public static type = 'ancv';
+    public static readonly type = 'ancv';
 
     /**
      * Formats the component data output

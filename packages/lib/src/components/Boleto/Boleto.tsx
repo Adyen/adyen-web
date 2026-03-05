@@ -8,9 +8,9 @@ import { TxVariants } from '../tx-variants';
 import type { BoletoConfiguration } from './types';
 
 export class BoletoElement extends UIElement<BoletoConfiguration> {
-    public static type = TxVariants.boletobancario;
+    public static readonly type = TxVariants.boletobancario;
 
-    public static txVariants = [
+    public static readonly txVariants = [
         TxVariants.boletobancario,
         TxVariants.boletobancario_itau,
         TxVariants.boletobancario_santander,

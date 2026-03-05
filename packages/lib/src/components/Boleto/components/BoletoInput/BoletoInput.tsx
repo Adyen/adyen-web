@@ -18,7 +18,7 @@ interface BoletoInputProps {
     [key: string]: any;
 }
 
-function BoletoInput(props: BoletoInputProps) {
+function BoletoInput(props: Readonly<BoletoInputProps>) {
     const { i18n } = useCoreContext();
     const addressRef = useRef(null);
     const setAddressRef = ref => {

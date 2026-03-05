@@ -42,7 +42,7 @@ const FASTLANE_BENEFITS = [
     }
 ];
 
-const InfoModal = ({ isOpen, onClose, focusAfterClose }: InfoModalProps) => {
+const InfoModal = ({ isOpen, onClose, focusAfterClose }: Readonly<InfoModalProps>) => {
     const { i18n } = useCoreContext();
     const focusFirstElement = useRef<HTMLParagraphElement>();
     const getImage = useImage();

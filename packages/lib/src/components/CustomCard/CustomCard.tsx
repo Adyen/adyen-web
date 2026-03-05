@@ -11,9 +11,9 @@ import { CustomCardConfiguration } from './types';
 import { AnalyticsInfoEvent, InfoEventType, UiTarget } from '../../core/Analytics/events/AnalyticsInfoEvent';
 
 export class CustomCard extends UIElement<CustomCardConfiguration> {
-    public static type = TxVariants.customCard;
+    public static readonly type = TxVariants.customCard;
 
-    protected static defaultProps = {
+    protected static readonly defaultProps = {
         onBinLookup: () => {},
         brandsConfiguration: {}
     };

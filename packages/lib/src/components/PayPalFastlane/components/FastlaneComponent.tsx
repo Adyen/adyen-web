@@ -17,7 +17,7 @@ interface FastlaneComponentProps {
     payButton(props: PayButtonProps): h.JSX.Element;
 }
 
-const FastlaneComponent = ({ lastFour, brand, payButton, setComponentRef, showPayButton }: FastlaneComponentProps) => {
+const FastlaneComponent = ({ lastFour, brand, payButton, setComponentRef, showPayButton }: Readonly<FastlaneComponentProps>) => {
     const getImage = useImage();
     const [status, setStatus] = useState<UIElementStatus>('ready');
     const fastlaneRef = useRef({

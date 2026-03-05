@@ -15,7 +15,7 @@ import { TxVariants } from '../../../tx-variants';
 
 const TERMS_CONDITIONS_URL = 'https://www.adyen.com/pt_BR/legal/termo-de-consentimento-br';
 
-function Enrollment(props: EnrollmentProps) {
+function Enrollment(props: Readonly<EnrollmentProps>) {
     const { i18n, loadingContext } = useCoreContext();
     const getImage = useImage();
     const issuerListRef = useRef<ComponentMethodsRef>(null);

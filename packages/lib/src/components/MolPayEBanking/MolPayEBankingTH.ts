@@ -2,7 +2,7 @@ import IssuerListContainer from '../helpers/IssuerListContainer/IssuerListContai
 import { TxVariants } from '../tx-variants';
 
 class MolPayEBankingTHElement extends IssuerListContainer {
-    public static type = TxVariants.molpay_ebanking_TH;
+    public static readonly type = TxVariants.molpay_ebanking_TH;
 }
 
 export default MolPayEBankingTHElement;

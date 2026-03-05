@@ -25,7 +25,7 @@ export function CashAppComponent({
     onChangeStoreDetails,
     onAuthorize,
     onError
-}: CashAppComponentProps): h.JSX.Element {
+}: Readonly<CashAppComponentProps>): h.JSX.Element {
     const cashAppRef = useRef<HTMLDivElement>(null);
     const [status, setStatus] = useState<UIElementStatus>('loading');
     const subscriptions = useRef<Function[]>([]);

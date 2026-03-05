@@ -5,7 +5,7 @@ import { RadioGroupProps } from './types';
 import { getUniqueId } from '../../../../utils/idGenerator';
 import { useCoreContext } from '../../../../core/Context/CoreProvider';
 
-export default function RadioGroup(props: RadioGroupProps) {
+export default function RadioGroup(props: Readonly<RadioGroupProps>) {
     const { items, name, onChange, value, isInvalid, uniqueId, ariaLabel, style = 'classic' } = props;
 
     const { i18n } = useCoreContext();

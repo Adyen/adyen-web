@@ -4,7 +4,7 @@ import { TxVariants } from '../tx-variants';
 import type { OpenInvoiceConfiguration } from '../types';
 
 export default class Affirm extends OpenInvoiceContainer {
-    public static type = TxVariants.affirm;
+    public static readonly type = TxVariants.affirm;
 
     formatProps(props: OpenInvoiceConfiguration) {
         return {

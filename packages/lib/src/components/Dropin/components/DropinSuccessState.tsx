@@ -6,7 +6,7 @@ interface Props {
     message?: string;
 }
 
-const DropinSuccessState = ({ message }: Props) => {
+const DropinSuccessState = ({ message }: Readonly<Props>) => {
     const { amount } = useAmount();
     return <Status.Success message={amount?.value === 0 ? 'resultMessages.preauthorized' : message} />;
 };

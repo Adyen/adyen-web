@@ -15,7 +15,7 @@ interface BlikElementData {
 }
 
 class BlikElement extends UIElement<AwaitConfiguration> {
-    public static type = TxVariants.blik;
+    public static readonly type = TxVariants.blik;
 
     formatData(): BlikElementData {
         const recurringPayment = !!this.props.storedPaymentMethodId;

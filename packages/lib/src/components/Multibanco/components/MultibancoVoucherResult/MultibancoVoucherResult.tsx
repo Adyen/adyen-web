@@ -7,7 +7,7 @@ import { VoucherDetail } from '../../../internal/Voucher/types';
 import useImage from '../../../../core/Context/useImage';
 import { extractCommonPropsForVoucher } from '../../../internal/Voucher/utils';
 
-const MultibancoVoucherResult = (props: MultibancoVoucherResultProps) => {
+const MultibancoVoucherResult = (props: Readonly<MultibancoVoucherResultProps>) => {
     const { i18n } = useCoreContext();
     const getImage = useImage();
     const { entity, expiresAt, merchantReference, downloadUrl } = props;

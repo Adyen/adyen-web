@@ -26,7 +26,7 @@ export interface PayButtonProps extends ButtonProps {
     onClick?: (e: h.JSX.TargetedMouseEvent<HTMLButtonElement>) => void;
 }
 
-const PayButton = ({ customAmount, classNameModifiers = [], label, ...props }: PayButtonProps) => {
+const PayButton = ({ customAmount, classNameModifiers = [], label, ...props }: Readonly<PayButtonProps>) => {
     const { amount, isZeroAuth } = useAmount();
     const { secondaryAmount } = useSecondaryAmount();
     const { i18n } = useCoreContext();

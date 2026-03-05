@@ -14,7 +14,7 @@ import { isSrciError } from '../../services/utils';
 type CtPOneTimePasswordProps = {
     onDisplayCardComponent?(): void;
 };
-const CtPOneTimePassword = ({ onDisplayCardComponent }: CtPOneTimePasswordProps): h.JSX.Element => {
+const CtPOneTimePassword = ({ onDisplayCardComponent }: Readonly<CtPOneTimePasswordProps>): h.JSX.Element => {
     const { i18n } = useCoreContext();
     const { finishIdentityValidation, otpMaskedContact, otpNetwork, isCtpPrimaryPaymentMethod } = useClickToPayContext();
     const [otp, setOtp] = useState<string>(null);

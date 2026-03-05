@@ -1,0 +1,45 @@
+name: SonarCloud
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  sonarcloud:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v6
+      with:
+        fetch-depth: 0
+
+    - name: Setup Node
+      uses: actions/setup-node@v6
+      with:
+        node-version: 24
+        package-manager-cache: false
+
+    - name: Cache node modules
+      id: node-modules-cache
+      uses: actions/cache@v5
+      env:
+        cache-name: node-modules-v1
+      with:
+        path: node_modules
+        key: ${{ runner.os }}-cache-${{ env.cache-name }}-yarn-${{ hashFiles('**/yarn.lock') }}
+
+    - name: Enable Corepack
+      run: corepack enable
+
+    - name: Install Project Dependencies
+      if: steps.node-modules-cache.outputs.cache-hit != 'true'
+      run: yarn install --immutable
+
+    - name: Generate test coverage
+      run: yarn test:coverage
+
+    - name: SonarCloud Scan
+      uses: SonarSource/sonarcloud-github-action@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

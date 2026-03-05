@@ -49,7 +49,7 @@ const getAccountIdentifier = (state: PayToData) => {
 export class PayToElement extends UIElement<PayToConfiguration> {
     public static readonly type = TxVariants.payto;
 
-    protected static defaultProps = {
+    protected static readonly defaultProps = {
         placeholders: {}
     };
 

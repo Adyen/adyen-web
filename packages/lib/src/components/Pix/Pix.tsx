@@ -9,9 +9,9 @@ import PixQRDetails from './components/PixQRDetails';
 import './Pix.scss';
 
 class PixElement extends QRLoaderContainer<PixConfiguration> {
-    public static type = TxVariants.pix;
+    public static readonly type = TxVariants.pix;
 
-    public static defaultProps = {
+    public static readonly defaultProps = {
         personalDetailsRequired: false,
         countdownTime: 15,
         delay: 2000,

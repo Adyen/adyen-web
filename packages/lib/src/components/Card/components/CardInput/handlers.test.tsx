@@ -4,7 +4,7 @@ import { getAddressHandler, getAutoJumpHandler, getFocusHandler, setFocusOnFirst
 import ua from '../../../internal/SecuredFields/lib/CSF/utils/userAgent';
 
 jest.mock('../../../internal/SecuredFields/lib/constants', () => ({
-    CREDIT_CARD_SF_FIELDS: ['encryptedCardNumber', 'encryptedExpiryDate', 'encryptedSecurityCode'],
+    ALL_SECURED_FIELDS: ['encryptedCardNumber', 'encryptedExpiryDate', 'encryptedSecurityCode'],
     ENCRYPTED_CARD_NUMBER: 'encryptedCardNumber'
 }));
 

@@ -6,7 +6,7 @@ import { AmazonPayButtonProps, CheckoutSessionConfig, PayloadJSON } from '../typ
 import { useCoreContext } from '../../../core/Context/CoreProvider';
 import { useAmount } from '../../../core/Context/AmountProvider';
 
-export default function AmazonPayButton(props: AmazonPayButtonProps) {
+export default function AmazonPayButton(props: Readonly<AmazonPayButtonProps>) {
     const { amount } = useAmount();
     const { loadingContext } = useCoreContext();
     const { amazonRef, configuration = {} } = props;

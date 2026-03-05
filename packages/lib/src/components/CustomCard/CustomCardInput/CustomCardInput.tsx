@@ -55,7 +55,7 @@ const defaultProps = {
     onValidationError: () => {}
 };
 
-function CustomCardInput(props: SecuredFieldsProps) {
+function CustomCardInput(props: Readonly<SecuredFieldsProps>) {
     const sfp = useRef(null);
 
     const [errors, setErrors] = useState({});
