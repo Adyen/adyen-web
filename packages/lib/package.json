@@ -141,7 +141,9 @@
         "@types/applepayjs": "14.0.9",
         "@types/googlepay": "0.7.10",
         "classnames": "2.5.1",
-        "preact": "10.28.3"
+        "preact": "10.28.3",
+        "valibot": "^1.2.0",
+        "zod": "^4.3.6"
     },
     "msw": {
         "workerDirectory": [
