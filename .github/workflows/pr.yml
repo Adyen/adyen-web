@@ -19,8 +19,8 @@ jobs:
     uses: ./.github/workflows/automated-a11y.yml
     secrets: inherit
 
-  visual-tests:
-    uses: ./.github/workflows/visual-tests.yml
+  automated-visual:
+    uses: ./.github/workflows/automated-visual.yml
     secrets: inherit
 
   # Gateway check for PRs — unit-tests, a11y, and visual must pass
