@@ -9,9 +9,9 @@ function configureErrorMap(): void {
     errorMapConfigured = true;
 
     z.config({
-        customError: (issue: any) => {
+        customError: issue => {
             if (issue.code === 'invalid_type') {
-                return `expected ${issue.expected}, received ${issue.received}`;
+                return `expected ${issue.expected}, received ${issue.input === null ? 'null' : typeof issue.input}`;
             }
             if (issue.code === 'unrecognized_keys') {
                 return `unknown property "${issue.keys.join('", "')}"`;
