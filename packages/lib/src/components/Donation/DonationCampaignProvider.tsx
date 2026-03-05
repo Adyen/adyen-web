@@ -46,7 +46,7 @@ class DonationCampaignProvider {
     }
 
     /**
-     * Exposed method for the merchant to halt the auto start timer. meaning it will then be up to them to call start() to begin the process
+     * Exposed method for the merchant to halt the auto start timer - meaning it will then be up to them to call start() to begin the process
      */
     public haltAutoStart() {
         clearTimeout(this.autoStartTimer);
