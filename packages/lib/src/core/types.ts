@@ -26,7 +26,7 @@ import { Resources } from './Context/Resources';
 import Language from '../language';
 import { SRPanel } from './Errors/SRPanel';
 import { IAnalytics } from './Analytics/Analytics';
-import type DonationCampaignProvider from '../components/Donation/DonationCampaignProvider2';
+import type DonationCampaignProvider from '../components/Donation/DonationCampaignProvider';
 
 export { CheckoutSession } from './CheckoutSession/types';
 export interface ICore {

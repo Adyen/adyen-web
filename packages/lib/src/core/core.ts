@@ -29,7 +29,7 @@ import CancelError from './Errors/CancelError';
 import { AnalyticsService } from './Analytics/AnalyticsService';
 import { AnalyticsEventQueue } from './Analytics/AnalyticsEventQueue';
 import { isAmountValid } from '../utils/amount-util';
-import DonationCampaignProvider from '../components/Donation/DonationCampaignProvider2';
+import DonationCampaignProvider from '../components/Donation/DonationCampaignProvider';
 
 class Core implements ICore {
     public session?: Session;

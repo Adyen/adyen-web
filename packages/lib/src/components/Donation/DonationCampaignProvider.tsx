@@ -1,5 +1,4 @@
 import type { ICore } from '../../core/types';
-import type { UIElementProps } from '../internal/UIElement/types';
 import type { DonationCampaign, DonationConfiguration } from './types';
 import type { DonationPayload } from './components/types';
 import type {
@@ -9,44 +8,54 @@ import type {
 } from '../../core/CheckoutSession/types';
 import { normalizeDonationCampaign } from './utils';
 import Donation from './Donation';
-import { getDonationComponent } from './components/utils';
-import { TxVariants } from '../tx-variants';
-// import { AnalyticsLogEvent, LogEventType } from '../../core/Analytics/events/AnalyticsLogEvent';
-
-export interface DonationCampaignProviderProps extends UIElementProps {
-    originalComponentType: string;
-    rootNode: HTMLElement;
-    checkout: ICore;
-}
 
 class DonationCampaignProvider {
     public static type = 'donationCampaignProvider';
 
-    private rootNode: HTMLElement;
-    private readonly originalComponentType: string;
-    private readonly checkout: ICore;
+    private _rootNode: HTMLElement | string;
+    private _originalComponentType: string = DonationCampaignProvider.type;
 
-    private readonly autoStartTimer: ReturnType<typeof setTimeout>;
+    private readonly core: ICore;
+
+    private autoStartTimer: ReturnType<typeof setTimeout>;
     private readonly autoStartTimerMS = 3000;
 
     private donationComponent: Donation;
 
-    constructor(props?: DonationCampaignProviderProps) {
-        this.originalComponentType = props?.originalComponentType;
-        this.rootNode = props?.rootNode;
-        this.checkout = props?.checkout;
-
-        // Allow time for any success message to show
-        this.autoStartTimer = setTimeout(() => {
-            this.init();
-        }, this.autoStartTimerMS);
+    // TODO - if set up as a module, there will probably only be one parameter, checkout, so we can change the signature (it doesn't need to be a props object)
+    constructor(checkout: ICore) {
+        this.core = checkout;
     }
 
     /**
-     * Exposed method for the merchant to get the root node - which is where the Donation component will be mounted, by default
+     * Exposed methods for the merchant to get/set the root node - which is where the Donation component will be mounted
      */
-    public getRootNode(): HTMLElement {
-        return this.rootNode;
+    public get rootNode(): HTMLElement | string {
+        return this._rootNode;
+    }
+
+    public set rootNode(node: HTMLElement | string) {
+        this._rootNode = node;
+    }
+
+    /**
+     * @internal
+     */
+    public set componentType(type: string) {
+        this._originalComponentType = type;
+    }
+
+    /**
+     * @internal
+     */
+    public beginCountdown() {
+        if (this.autoStartTimer) {
+            clearTimeout(this.autoStartTimer);
+        }
+
+        this.autoStartTimer = setTimeout(() => {
+            this.init();
+        }, this.autoStartTimerMS);
     }
 
     /**
@@ -56,12 +65,7 @@ class DonationCampaignProvider {
         clearTimeout(this.autoStartTimer);
     }
 
-    /**
-     * Exposed method for the merchant to start the DonationCampaignProvider, with an option to specify a different root node
-     * @param rootNode - The root node to mount the Donation component into
-     */
-    public start(rootNode: HTMLElement = this.rootNode) {
-        this.rootNode = rootNode;
+    public start() {
         // Clear the timeout in case the merchant hasn't halted it, otherwise we could end up with a double call to the /donationCampaigns endpoint
         this.haltAutoStart();
         this.init();
@@ -74,12 +78,12 @@ class DonationCampaignProvider {
     private callSessionsDonationCampaigns() {
         // TODO add analytics
         // const event = new AnalyticsLogEvent({
-        //     component: this.originalComponentType,
+        //     component: this._originalComponentType,
         //     // @ts-ignore
         //     type: LogEventType.donationCampaign, // TODO will need a new type... donationCampaign?
         //     message: 'Sessions flow: calling donationCampaigns endpoint'
         // });
-        // this.checkout.modules.analytics.sendAnalytics(event);
+        // this.core.modules.analytics.sendAnalytics(event);
 
         this.makeSessionsDonationCampaignsCall()
             .then((response: CheckoutSessionDonationCampaignsResponse) => {
@@ -130,18 +134,9 @@ class DonationCampaignProvider {
             ...restDonationCampaignProps
         };
 
-        /**
-         * Create the DonationComponent instance (via registry to avoid circular dependencies)
-         */
-        this.donationComponent = getDonationComponent(TxVariants.donation, this.checkout, {
+        this.donationComponent = new Donation(this.core, {
             ...donationComponentProps
         });
-
-        // Fail quietly
-        if (!this.donationComponent) {
-            console.warn('The Donation component is not registered and so cannot be rendered');
-            return;
-        }
 
         this.donationComponent.mount(this.rootNode);
     }
@@ -149,12 +144,12 @@ class DonationCampaignProvider {
     private callSessionsDonations(donationRequestData: CheckoutSessionDonationsRequestData, component: Donation) {
         // TODO add analytics
         // const event = new AnalyticsLogEvent({
-        //     component: originalComponentType,
+        //     component: this._originalComponentType,
         //     // @ts-ignore
         //     type: LogEventType.donationFromSessions, // TODO will need a new type... donationFromSessions?
         //     message: 'Sessions flow: calling donations endpoint'
         // });
-        // this.checkout.modules.analytics.sendAnalytics(event);
+        // this.core.modules.analytics.sendAnalytics(event);
 
         this.makeSessionDonationsCall(donationRequestData)
             .then((response: CheckoutSessionDonationsResponse) => {
@@ -174,7 +169,7 @@ class DonationCampaignProvider {
 
     private async makeSessionsDonationCampaignsCall(): Promise<CheckoutSessionDonationCampaignsResponse> {
         try {
-            return await this.checkout.session.donationCampaigns();
+            return await this.core.session.donationCampaigns();
         } catch (error: unknown) {
             // TODO - analytics?
 
@@ -184,7 +179,7 @@ class DonationCampaignProvider {
 
     private async makeSessionDonationsCall(donationRequestData: CheckoutSessionDonationsRequestData): Promise<CheckoutSessionDonationsResponse> {
         try {
-            return await this.checkout.session.donations(donationRequestData);
+            return await this.core.session.donations(donationRequestData);
         } catch (error: unknown) {
             // TODO - analytics?
 

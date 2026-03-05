@@ -35,7 +35,7 @@ import './UIElement.scss';
 import SRPanelProvider from '../../../core/Errors/SRPanelProvider';
 import { AmountProvider, AmountProviderRef } from '../../../core/Context/AmountProvider';
 import { PayButtonProps } from '../PayButton/PayButton';
-import type DonationCampaignProvider from '../../Donation/DonationCampaignProvider2';
+import type DonationCampaignProvider from '../../Donation/DonationCampaignProvider';
 
 export abstract class UIElement<P extends UIElementProps = UIElementProps> extends BaseElement<P> {
     /**
