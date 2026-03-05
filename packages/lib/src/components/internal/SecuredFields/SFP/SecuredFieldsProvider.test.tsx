@@ -115,18 +115,18 @@ describe('<SecuredFieldsProvider /> rendering', () => {
         expect(sfp.state.status).toBe('ready');
     });
 
-    it("should create a valid object in the SecuredFieldsProvider's state with initial properties set to false", () => {
+    test("should create a valid object in the SecuredFieldsProvider's state with initial properties set to false", () => {
         expect(sfp.state.valid).toHaveProperty('encryptedCardNumber', false);
         expect(sfp.state.valid).toHaveProperty('encryptedExpiryMonth', false);
         expect(sfp.state.valid).toHaveProperty('encryptedExpiryYear', false);
         expect(sfp.state.valid).toHaveProperty('encryptedSecurityCode', false);
     });
 
-    it('should initialize an instance of adyen-secured-fields', () => {
+    test('should initialize an instance of adyen-secured-fields', () => {
         expect(sfp.csf).toBeDefined();
     });
 
-    it('should create an error object for each visible secured field, pass the object to the props.onError fn & set state.errors', async () => {
+    test('should create an error object for each visible secured field, pass the object to the props.onError fn & set state.errors', async () => {
         await act(() => {
             sfp.showValidation();
         });
@@ -136,22 +136,22 @@ describe('<SecuredFieldsProvider /> rendering', () => {
         expect(sfp.state.errors.encryptedSecurityCode).not.toBe(null);
     });
 
-    it('should call the passed render function', () => {
+    test('should call the passed render function', () => {
         expect(renderFn).toHaveBeenCalled();
     });
 
-    it('should register the presence of a date field element within the passed rootNode', () => {
+    test('should register the presence of a date field element within the passed rootNode', () => {
         expect(sfp.numDateFields).toBe(1);
     });
 
-    it('should register the presence of 2 date field elements within the passed rootNode', () => {
+    test('should register the presence of 2 date field elements within the passed rootNode', () => {
         nodeHolder.innerHTML = mockNodeTwoDateFields;
 
         renderSFP({ render: () => null });
         expect(sfp.numDateFields).toBe(2);
     });
 
-    it('should return the rootNode when the getter is called', () => {
+    test('should return the rootNode when the getter is called', () => {
         nodeHolder.innerHTML = mockNode;
         renderSFP();
 
@@ -165,7 +165,7 @@ describe('<SecuredFieldsProvider /> rendering', () => {
  * Unsupported cards (including related errors)
  */
 describe('<SecuredFieldsProvider /> handling an unsupported card', () => {
-    it('should generate an "unsupported card" error that propagates to the onError callback', async () => {
+    test('should generate an "unsupported card" error that propagates to the onError callback', async () => {
         nodeHolder.innerHTML = mockNode;
         unsupportedCardErrObj.error = SF_ErrorCodes.ERROR_MSG_UNSUPPORTED_CARD_ENTERED;
         renderSFP();
@@ -178,12 +178,12 @@ describe('<SecuredFieldsProvider /> handling an unsupported card', () => {
         expect(result).toBe(true);
     });
 
-    it('should see that the "unsupported card" error has set state on the SecuredFieldsProvider', () => {
+    test('should see that the "unsupported card" error has set state on the SecuredFieldsProvider', () => {
         expect(sfp.state.detectedUnsupportedBrands.length).toEqual(1);
         expect(sfp.state.errors.encryptedCardNumber).toEqual(SF_ErrorCodes.ERROR_MSG_UNSUPPORTED_CARD_ENTERED);
     });
 
-    it('should clear the previously generated "unsupported card" error & propagate to the onError callback', async () => {
+    test('should clear the previously generated "unsupported card" error & propagate to the onError callback', async () => {
         unsupportedCardErrObj.error = null;
 
         let result;
@@ -193,11 +193,11 @@ describe('<SecuredFieldsProvider /> handling an unsupported card', () => {
         expect(result).toBe(false);
     });
 
-    it('should see that the cleared "unsupported card" error has reset state on the SecuredFieldsProvider', () => {
+    test('should see that the cleared "unsupported card" error has reset state on the SecuredFieldsProvider', () => {
         expect(sfp.state.errors.encryptedCardNumber).toBe(false);
     });
 
-    it('should clear the previously generated "unsupported card" error & then a regular error is handled correctly', async () => {
+    test('should clear the previously generated "unsupported card" error & then a regular error is handled correctly', async () => {
         unsupportedCardErrObj.error = null;
 
         await act(() => {
@@ -213,7 +213,7 @@ describe('<SecuredFieldsProvider /> handling an unsupported card', () => {
         expect(sfp.state.errors.encryptedCardNumber).toEqual(SF_ErrorCodes.ERROR_MSG_INCOMPLETE_FIELD);
     });
 
-    it('should re-generate an "unsupported card" error and then a handleOnFieldValid call should be ignored', async () => {
+    test('should re-generate an "unsupported card" error and then a handleOnFieldValid call should be ignored', async () => {
         // @ts-ignore - it's a test!
         unsupportedCardErrObj.error = 'Unsupported card';
         unsupportedCardErrObj.detectedBrands = ['cartebancaire'];
@@ -231,7 +231,7 @@ describe('<SecuredFieldsProvider /> handling an unsupported card', () => {
         expect(sfp.state.valid.encryptedCardNumber).toBe(false);
     });
 
-    it('should see that the previously generated "unsupported card" error will cause a handleOnAllValid call to be ignored', async () => {
+    test('should see that the previously generated "unsupported card" error will cause a handleOnAllValid call to be ignored', async () => {
         let result;
         await act(() => {
             result = sfp.handleOnAllValid({ allValid: true });
@@ -240,7 +240,7 @@ describe('<SecuredFieldsProvider /> handling an unsupported card', () => {
         expect(sfp.state.isSfpValid).toBe(false);
     });
 
-    it('should clear the previously generated "unsupported card" error & then a handleOnFieldValid call is handled correctly', async () => {
+    test('should clear the previously generated "unsupported card" error & then a handleOnFieldValid call is handled correctly', async () => {
         unsupportedCardErrObj.error = null;
 
         // Clear the error by mocking a drop in the number of digits in the PAN to below a /binLookup threshold
@@ -262,7 +262,7 @@ describe('<SecuredFieldsProvider /> handling an unsupported card', () => {
         expect(sfp.state.valid.encryptedCardNumber).toBe(true);
     });
 
-    it('should see that because we have cleared the "unsupported card" error that a handleOnAllValid call is handled correctly', async () => {
+    test('should see that because we have cleared the "unsupported card" error that a handleOnAllValid call is handled correctly', async () => {
         let result;
         await act(() => {
             result = sfp.handleOnAllValid({ allValid: true });
@@ -274,7 +274,7 @@ describe('<SecuredFieldsProvider /> handling an unsupported card', () => {
 });
 
 describe('<SecuredFieldsProvider /> handling an binLookup response', () => {
-    it(
+    test(
         'should receive a populated binLookup object and set the issuingCountryCode' +
             'then receive a "reset" object and reset the issuingCountryCode',
         async () => {
