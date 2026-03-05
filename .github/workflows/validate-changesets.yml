@@ -1,0 +1,71 @@
+name: Validate Changesets
+
+on:
+  pull_request:
+    paths:
+      - '.changeset/*.md'
+
+jobs:
+  validate:
+    name: Validate Changeset Files
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get changed changeset files
+        id: changed-files
+        run: |
+          FILES=$(git diff --name-only --diff-filter=AM origin/${{ github.base_ref }}...HEAD -- '.changeset/*.md' | grep -v 'README.md' || true)
+          echo "files<<EOF" >> "$GITHUB_OUTPUT"
+          echo "$FILES" >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
+
+      - name: Validate changeset descriptions
+        run: |
+          EXIT_CODE=0
+          FILES="${{ steps.changed-files.outputs.files }}"
+
+          if [ -z "$FILES" ]; then
+            echo "No changeset files to validate."
+            exit 0
+          fi
+
+          while IFS= read -r file; do
+            [ -z "$file" ] && continue
+
+            echo "Validating: $file"
+
+            # Extract the description: everything after the closing frontmatter '---'
+            DESCRIPTION=$(awk 'BEGIN{found=0; count=0} /^---$/{count++; if(count==2){found=1; next}} found{print}' "$file")
+
+            # Strip leading/trailing blank lines and get non-empty lines
+            LINES=$(echo "$DESCRIPTION" | sed '/^[[:space:]]*$/d')
+            LINE_COUNT=$(echo "$LINES" | grep -c '.' || true)
+
+            if [ "$LINE_COUNT" -eq 0 ]; then
+              echo "::error file=$file::Empty description. Must contain exactly one line starting with 'Improved:', 'New:', or 'Fixed:'."
+              EXIT_CODE=1
+              continue
+            fi
+
+            if [ "$LINE_COUNT" -gt 1 ]; then
+              echo "::error file=$file::Multiple lines detected. Description must be exactly one single line."
+              EXIT_CODE=1
+              continue
+            fi
+
+            LINE=$(echo "$LINES" | head -1)
+
+            if ! echo "$LINE" | grep -qE '^(Improved:|New:|Fixed:)'; then
+              echo "::error file=$file::Invalid prefix. Line must start with 'Improved:', 'New:', or 'Fixed:'. Got: '$LINE'"
+              EXIT_CODE=1
+              continue
+            fi
+
+            echo "  ✓ Valid"
+          done <<< "$FILES"
+
+          exit $EXIT_CODE
