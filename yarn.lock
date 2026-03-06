@@ -128,7 +128,7 @@ __metadata:
     rollup-plugin-swc3: "npm:0.12.1"
     sass: "npm:1.97.3"
     size-limit: "npm:12.0.0"
-    storybook: "npm:10.2.6"
+    storybook: "npm:10.2.10"
     stylelint: "npm:16.26.1"
     stylelint-config-standard-scss: "npm:16.0.0"
     ts-jest: "npm:29.4.6"
@@ -14106,9 +14106,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"storybook@npm:10.2.6":
-  version: 10.2.6
-  resolution: "storybook@npm:10.2.6"
+"storybook@npm:10.2.10":
+  version: 10.2.10
+  resolution: "storybook@npm:10.2.10"
   dependencies:
     "@storybook/global": "npm:^5.0.0"
     "@storybook/icons": "npm:^2.0.1"
@@ -14129,7 +14129,7 @@ __metadata:
       optional: true
   bin:
     storybook: ./dist/bin/dispatcher.js
-  checksum: 10c0/4b3651d58e9c0933cfaa546bc4bf3bbbec64ef5f4acec6ea92708e536bd39bd3978aa531ce41adb5898a0364717fb537fe03fb651439005972665d130c4e3842
+  checksum: 10c0/ef7e8d937ef65247b5e752f8fbf0e75c1d3e5d7d6af1b012cf6103d4e2563bf116deffe632e4904e6057d41a6f7c92448ce2adb945a1e6a52b334c0470c999b2
   languageName: node
   linkType: hard
 
