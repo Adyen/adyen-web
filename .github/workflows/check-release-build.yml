@@ -34,3 +34,10 @@ jobs:
     needs: check-commit-message
     if: needs.check-commit-message.outputs.trigger_release == 'true'
     uses: ./.github/workflows/release-build.yml
+
+  trigger-gh-release:
+    needs: check-commit-message
+    if: needs.check-commit-message.outputs.trigger_release == 'true'
+    uses: ./.github/workflows/gh-release.yml
+    permissions:
+      contents: write
