@@ -10,21 +10,38 @@ jobs:
     # Non-blocking: this job is informational only and will never prevent merging.
     continue-on-error: true
 
-    env:
-      # Current noImplicitAny error count from ts-errors.log.
-      # Decrease this number each time strict errors are fixed.
-      TSC_STRICT_BASELINE: 2103
-
     steps:
-      - uses: actions/checkout@v6
-        with:
-          fetch-depth: 1
-
       - name: Use Node.js 24
         uses: actions/setup-node@v6
         with:
           node-version: 24
           package-manager-cache: false
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      # ── Get baseline from master ──
+      - name: Checkout master
+        uses: actions/checkout@v6
+        with:
+          ref: master
+          fetch-depth: 1
+
+      - name: Install dependencies (master)
+        run: yarn install --immutable
+
+      - name: Get strict error baseline from master
+        id: baseline
+        run: |
+          BASELINE=$(yarn validate:strict 2>&1 | grep -c "error TS" || true)
+          echo "count=$BASELINE" >> "$GITHUB_OUTPUT"
+          echo "Master branch strict tsc errors: $BASELINE"
+
+      # ── Check PR branch ──
+      - uses: actions/checkout@v6
+        with:
+          clean: false
+          fetch-depth: 1
 
       - name: Cache node modules
         id: node-modules-cache
@@ -35,9 +52,6 @@ jobs:
           path: node_modules
           key: ${{ runner.os }}-cache-${{ env.cache-name }}-yarn-${{ hashFiles('**/yarn.lock') }}
 
-      - name: Enable Corepack
-        run: corepack enable
-
       - name: Install Project Dependencies
         if: steps.node-modules-cache.outputs.cache-hit != 'true'
         run: yarn install --immutable
@@ -46,6 +60,7 @@ jobs:
         id: tsc-strict
         continue-on-error: true
         run: |
+          TSC_STRICT_BASELINE=${{ steps.baseline.outputs.count }}
           ERROR_COUNT=$(yarn validate:strict 2>&1 | grep -c "error TS" || true)
           echo "error_count=$ERROR_COUNT" >> "$GITHUB_OUTPUT"
           echo "Current strict tsc errors: $ERROR_COUNT (baseline: $TSC_STRICT_BASELINE)"
@@ -56,13 +71,14 @@ jobs:
           fi
 
           if [ "$ERROR_COUNT" -lt "$TSC_STRICT_BASELINE" ]; then
-            echo "::notice::Strict tsc errors decreased to $ERROR_COUNT — consider updating TSC_STRICT_BASELINE"
+            echo "::notice::Strict tsc errors decreased from $TSC_STRICT_BASELINE to $ERROR_COUNT"
           fi
 
       - name: Build comment body
         if: always()
         id: build-comment
         run: |
+          TSC_STRICT_BASELINE=${{ steps.baseline.outputs.count }}
           if [ "${{ steps.tsc-strict.outcome }}" = "success" ]; then
             STATUS="✅ Pass"
           else
