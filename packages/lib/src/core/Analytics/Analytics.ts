@@ -1,9 +1,8 @@
-import { debounce } from '../../utils/debounce';
+import { debounce, DEFAULT_DEBOUNCE_TIME_MS } from '../../utils/debounce';
 import { processAnalyticsData } from './utils';
 import { AbstractAnalyticsEvent, AnalyticsEventCategory } from './events/AbstractAnalyticsEvent';
 import Storage from '../../utils/Storage';
 import { LIBRARY_BUNDLE_TYPE, LIBRARY_VERSION } from '../config';
-import { DEFAULT_DEBOUNCE_TIME_MS } from '../../utils/debounce';
 import { AnalyticsEventQueue } from './AnalyticsEventQueue';
 import type { AnalyticsOptions } from './types';
 import type { AnalyticsEventPayload, IAnalyticsService, RequestAttemptIdPayload } from './AnalyticsService';
