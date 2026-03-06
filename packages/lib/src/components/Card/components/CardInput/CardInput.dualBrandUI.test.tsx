@@ -63,14 +63,12 @@ describe('CardNumber and the dual branding UI', () => {
         const { container } = renderCardInput(<CardInput {...cardInputRequiredProps} />);
 
         /* eslint-disable testing-library/no-node-access, testing-library/no-container */
-        // Expected card fields
         expect(container.querySelector('[data-cse="encryptedCardNumber"]')).toBeTruthy();
         expect(container.querySelector('[data-cse="encryptedExpiryDate"]')).toBeTruthy();
         expect(container.querySelector('[data-cse="encryptedSecurityCode"]')).toBeTruthy();
-
-        // No dual branding UI
-        expect(container.querySelector('.adyen-checkout__fieldset--dual-brand-switcher')).toBeNull();
         /* eslint-enable testing-library/no-node-access, testing-library/no-container */
+
+        expect(screen.queryByText('Card Brand')).not.toBeInTheDocument();
     });
 
     test('Renders a CardInput with dual branding UI radio button elements', async () => {
