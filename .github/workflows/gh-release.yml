@@ -40,25 +40,24 @@ jobs:
             count == 1 { print }
           ' "$CHANGELOG")
 
+          # Convert markdown links to bare URLs: ([#123](url)) → (url)
+          BODY=$(echo "$BODY" | sed -E 's/\(\[#[0-9]+\]\(([^)]+)\)\)/(\1)/g')
+
           # Categorize items into New, Improvements, Bug fixes
           NEW=""
           IMPROVED=""
           FIXED=""
 
           while IFS= read -r line; do
-            # Match list items starting with "- "
             case "$line" in
               -\ New:*)
-                item="${line#- New: }"
-                NEW="${NEW}- ${item}"$'\n'
+                NEW="${NEW}${line}"$'\n\n'
                 ;;
               -\ Improved:*)
-                item="${line#- Improved: }"
-                IMPROVED="${IMPROVED}- ${item}"$'\n'
+                IMPROVED="${IMPROVED}${line}"$'\n\n'
                 ;;
               -\ Fixed:*)
-                item="${line#- Fixed: }"
-                FIXED="${FIXED}- ${item}"$'\n'
+                FIXED="${FIXED}${line}"$'\n\n'
                 ;;
             esac
           done <<< "$BODY"
@@ -67,15 +66,15 @@ jobs:
           RELEASE_BODY=""
 
           if [ -n "$NEW" ]; then
-            RELEASE_BODY="${RELEASE_BODY}### New"$'\n\n'"${NEW}"$'\n'
+            RELEASE_BODY="${RELEASE_BODY}## New"$'\n\n'"${NEW}"
           fi
 
           if [ -n "$IMPROVED" ]; then
-            RELEASE_BODY="${RELEASE_BODY}### Improvements"$'\n\n'"${IMPROVED}"$'\n'
+            RELEASE_BODY="${RELEASE_BODY}## Improvements"$'\n\n'"${IMPROVED}"
           fi
 
           if [ -n "$FIXED" ]; then
-            RELEASE_BODY="${RELEASE_BODY}### Bug fixes"$'\n\n'"${FIXED}"$'\n'
+            RELEASE_BODY="${RELEASE_BODY}## Bug fixes"$'\n\n'"${FIXED}"
           fi
 
           # If no categorized items found, fall back to the raw body
