@@ -19,7 +19,7 @@ function StoredPayment({
     clientKey,
     onAuthorize,
     onError
-}: PaymentProps) {
+}: Readonly<PaymentProps>) {
     const { i18n, loadingContext } = useCoreContext();
     const getImage = useImage();
     const [status, setStatus] = useState('ready');

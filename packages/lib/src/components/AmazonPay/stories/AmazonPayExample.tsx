@@ -10,7 +10,7 @@ interface AmazonPayExampleProps {
     contextArgs: PaymentMethodStoryProps<AmazonPayConfiguration>;
 }
 
-export const AmazonPayExample = ({ contextArgs }: AmazonPayExampleProps) => {
+export const AmazonPayExample = ({ contextArgs }: Readonly<AmazonPayExampleProps>) => {
     const container = useRef(null);
     const checkout = useRef(null);
     const [element, setElement] = useState(null);

@@ -8,7 +8,15 @@ import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 import type { PayPalComponentProps } from './types';
 import useAnalytics from '../../../core/Analytics/useAnalytics';
 
-export default function PaypalComponent({ onApprove, onCancel, onChange, onError, onSubmit, onScriptLoadFailure, ...props }: PayPalComponentProps) {
+export default function PaypalComponent({
+    onApprove,
+    onCancel,
+    onChange,
+    onError,
+    onSubmit,
+    onScriptLoadFailure,
+    ...props
+}: Readonly<PayPalComponentProps>) {
     const [status, setStatus] = useState('pending');
     const { analytics } = useAnalytics();
 

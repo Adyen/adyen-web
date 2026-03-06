@@ -18,7 +18,7 @@ interface ISimulatedHostedPage extends PaymentMethodStoryProps<PayByBankPixConfi
     sessionId?: string;
 }
 
-export const SimulatedHostedPage = ({ redirectResult, sessionId, componentConfiguration, ...checkoutConfig }: ISimulatedHostedPage) => {
+export const SimulatedHostedPage = ({ redirectResult, sessionId, componentConfiguration, ...checkoutConfig }: Readonly<ISimulatedHostedPage>) => {
     const [uiElement, setUiElement] = useState<UIElement>();
 
     const handleSubmit = async (state, _, actions) => {

@@ -15,7 +15,7 @@ import { alternativeLabelContent } from './FieldLabelAlternative';
 import Brand from '../../../../internal/Brand';
 import './ExpirationDate.scss';
 
-export default function ExpirationDate(props: ExpirationDateProps) {
+export default function ExpirationDate(props: Readonly<ExpirationDateProps>) {
     const {
         label,
         focused,

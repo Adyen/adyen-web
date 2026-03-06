@@ -4,7 +4,7 @@ import { BrandIconProps } from './types';
 import useImage from '../../../../../core/Context/useImage';
 import Brand from '../../../../internal/Brand';
 
-export default function BrandIcon({ brand, brandsConfiguration = {} }: BrandIconProps) {
+export default function BrandIcon({ brand, brandsConfiguration = {} }: Readonly<BrandIconProps>) {
     const getImage = useImage();
     const imageName = brand === 'card' ? 'nocard' : brand;
     const imageUrl = brandsConfiguration[brand]?.icon ?? getCardImageUrl(imageName, getImage);

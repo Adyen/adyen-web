@@ -1,12 +1,7 @@
 name: Automated Accessibility Tests
 
 on:
-  pull_request:
-  merge_group:
-  workflow_dispatch:
-  # Optional: Add schedule if you want these tests to run on a regular basis
-  # schedule:
-  #   - cron: '0 2 * * 1-5' # Runs at 2 AM UTC Monday-Friday
+  workflow_call:
 
 jobs:
   automated-a11y:
@@ -15,8 +10,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        api-version: ["v71"] # Using only latest API version for a11y tests
-        runner-browser: ["chromium"] # Often a11y tests only need to run on one browser
+        api-version: ["v71"]
+        runner-browser: ["chromium"]
     env:
       CHECKOUT_API_KEY: ${{secrets.ADYEN_CHECKOUT_API_KEY}}
       MERCHANT_ACCOUNT: ${{secrets.ADYEN_CHECKOUT_MERCHANT_ACCOUNT}}
@@ -27,7 +22,7 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v6
-    
+
     - name: Setup Node
       uses: actions/setup-node@v6
       with:
@@ -72,7 +67,7 @@ jobs:
 
     - name: Run Automated Accessibility Tests
       run: yarn test:automated-a11y --project=${{ matrix.runner-browser }}
-    
+
     - name: Archive test result artifacts
       id: upload-artifact
       if: always()

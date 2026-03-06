@@ -8,7 +8,7 @@ interface LoadingWrapperProps {
     children?: ComponentChildren;
 }
 
-const LoadingWrapper = ({ children, status }: LoadingWrapperProps) => {
+const LoadingWrapper = ({ children, status }: Readonly<LoadingWrapperProps>) => {
     const wrapperClass = classNames('adyen-checkout__loading-input__form', 'loading-input__form', {
         'loading-input__form--loading': status === 'loading'
     });

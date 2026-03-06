@@ -18,7 +18,7 @@ const formatCountries = (countries: Array<CountryFieldItem>, allowedCountries: s
     return allowedCountries.length ? countries.filter(applyFilter).map(applyMapper) : countries.map(applyMapper);
 };
 
-export default function CountryField(props: CountryFieldProps) {
+export default function CountryField(props: Readonly<CountryFieldProps>) {
     const { allowedCountries = [], classNameModifiers = [], errorMessage, onDropdownChange, value, required } = props;
     const { i18n, loadingContext } = useCoreContext();
     const [countries, setCountries] = useState<CountryFieldItem[]>([]);

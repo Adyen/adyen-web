@@ -3,7 +3,7 @@ import { GiftcardNumberField } from './GiftcardNumberField';
 import { GiftcardPinField } from './GiftcardPinField';
 import { GiftcardFieldsProps } from './types';
 
-export const GiftCardFields = (props: GiftcardFieldsProps) => {
+export const GiftCardFields = (props: Readonly<GiftcardFieldsProps>) => {
     const { setRootNode, pinRequired } = props;
     return (
         <div ref={setRootNode} className="adyen-checkout__field-wrapper">

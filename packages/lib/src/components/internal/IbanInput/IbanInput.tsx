@@ -45,7 +45,7 @@ const ibanErrorObj: GenericError = {
     error: 'sepaDirectDebit.ibanField.invalid'
 };
 
-class IbanInput extends Component<IbanInputProps, IbanInputState> {
+class IbanInput extends Component<Readonly<IbanInputProps>, IbanInputState> {
     private ibanNumber: HTMLInputElement;
 
     constructor(props) {

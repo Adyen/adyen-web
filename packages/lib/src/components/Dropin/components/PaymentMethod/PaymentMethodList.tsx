@@ -33,7 +33,7 @@ const PaymentMethodList = ({
     onOrderCancel,
     onSelect = () => {},
     ...rest
-}: PaymentMethodListProps) => {
+}: Readonly<PaymentMethodListProps>) => {
     const { i18n } = useCoreContext();
     const brandLogoConfiguration = useBrandLogoConfiguration(paymentMethods);
     const hasInstantPaymentMethods = instantPaymentMethods?.length > 0;

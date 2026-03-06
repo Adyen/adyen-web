@@ -3,7 +3,7 @@ import Fieldset from '../../FormFields/Fieldset';
 import { ReadOnlyAddressProps } from '../types';
 import { FALLBACK_VALUE } from '../constants';
 
-const ReadOnlyAddress = ({ data, label }: ReadOnlyAddressProps) => {
+const ReadOnlyAddress = ({ data, label }: Readonly<ReadOnlyAddressProps>) => {
     const { street, houseNumberOrName, city, postalCode, stateOrProvince, country } = data;
 
     return (

@@ -60,7 +60,7 @@ function AchComponent({
     hasHolderName,
     setComponentRef,
     enableStoreDetails
-}: AchComponentProps) {
+}: Readonly<AchComponentProps>) {
     const getImage = useImage();
     const schema = useMemo(
         () => ['selectedAccountType', 'routingNumber', 'accountNumber', 'accountNumberVerification', ...(hasHolderName ? ['ownerName'] : [])],

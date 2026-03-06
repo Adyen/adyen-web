@@ -21,7 +21,7 @@ export default function PaypalButtons({
     paypalRef,
     style,
     ...props
-}: PayPalButtonsProps) {
+}: Readonly<PayPalButtonsProps>) {
     const { i18n } = useCoreContext();
     const isTokenize = props.configuration?.intent === 'tokenize';
     const paypalButtonRef = useRef<HTMLDivElement>(null);

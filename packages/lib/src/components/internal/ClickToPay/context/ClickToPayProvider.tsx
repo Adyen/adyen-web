@@ -32,7 +32,7 @@ const ClickToPayProvider = ({
     onSubmit,
     onSetStatus,
     onError
-}: ClickToPayProviderProps) => {
+}: Readonly<ClickToPayProviderProps>) => {
     const [ctpService] = useState<IClickToPayService | null>(clickToPayService);
     const [ctpState, setCtpState] = useState<CtpState>(clickToPayService?.state || CtpState.NotAvailable);
     const [isCtpPrimaryPaymentMethod, setIsCtpPrimaryPaymentMethod] = useState<boolean>(true);

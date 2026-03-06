@@ -19,7 +19,7 @@ import { redirectToApp } from '../../../utils/urls';
 import './Await.scss';
 import { useAmount } from '../../../core/Context/AmountProvider';
 
-export function Await(props: AwaitComponentProps) {
+export function Await(props: Readonly<AwaitComponentProps>) {
     const { i18n, loadingContext } = useCoreContext();
 
     const { state: timerState, actions: timerActions } = usePaymentStatusTimer({

@@ -1,21 +1,16 @@
-name: E2E for Checkout Components
+name: E2E Tests
 
 on:
-  pull_request:
-  merge_group:
-  workflow_dispatch:
+  workflow_call:
 
 jobs:
-  build-then-e2e:
+  e2e-tests:
     timeout-minutes: 120
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         api-version: ["v69", "v70", "v71"]
-        # node-version: [16.x, 18.x, 19.x]
-        # Currently 18 and 19 are not supported, still keeping it
-        # as a reminder for compatibility check
         runner-browser: ["chromium", "firefox", "webkit"]
     env:
       CHECKOUT_API_KEY: ${{secrets.ADYEN_CHECKOUT_API_KEY}}
@@ -55,8 +50,6 @@ jobs:
       run: echo "PLAYWRIGHT_VERSION=$(jq -r '.devDependencies["@playwright/test"]' packages/e2e-playwright/package.json)" >> $GITHUB_ENV
 
     - name: Cache Playwright
-      # Using a cache for the webkit binary files causes this error on subsequent runs
-      # /home/runner/.cache/ms-playwright/webkit-2123/minibrowser-wpe/bin/MiniBrowser: error while loading shared libraries: libwoff2dec.so.1.0.2: cannot open shared object file: No such file or directory
       if: matrix.runner-browser != 'webkit'
       id: playwright-cache
       uses: actions/cache@v5

@@ -23,7 +23,7 @@ interface SetSRMessagesReturnFnProps {
 
 export type SetSRMessagesReturnFn = (props: SetSRMessagesReturnFnProps) => SetSRMessagesReturnObject;
 
-const SRPanelProvider = ({ srPanel, children }: SRPanelProviderProps) => {
+const SRPanelProvider = ({ srPanel, children }: Readonly<SRPanelProviderProps>) => {
     const { i18n } = useCoreContext();
 
     // Helper fns
