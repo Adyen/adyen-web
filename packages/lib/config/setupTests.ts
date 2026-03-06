@@ -1,7 +1,5 @@
-import { configure } from 'enzyme';
 import '@testing-library/jest-dom/jest-globals';
 import '@testing-library/jest-dom';
-import Adapter from 'enzyme-adapter-preact-pure';
 import './testMocks/matchMedia';
 import './testMocks/i18nMock';
 import './testMocks/resourcesMock';
@@ -19,7 +17,5 @@ import { ReadableStream, WritableStream, TransformStream } from 'node:stream/web
 Object.assign(global, {
     ReadableStream,
     WritableStream,
-    TransformStream,
+    TransformStream
 });
-
-configure({ adapter: new Adapter() });

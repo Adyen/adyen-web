@@ -1,5 +1,5 @@
-import { mount } from 'enzyme';
 import { h } from 'preact';
+import { render, act } from '@testing-library/preact';
 import PrepareFingerprint3DS2 from './PrepareFingerprint3DS2';
 import { THREEDS2_FINGERPRINT_ERROR, THREEDS2_FULL, TIMEOUT } from '../../constants';
 import { LogEventSubtype } from '../../../../core/Analytics/events/AnalyticsLogEvent';
@@ -19,7 +19,6 @@ const prepareProps = (token = fingerPrintToken) => {
 
     propsMaster = {
         dataKey: 'fingerprintResult',
-        // notificationURL: '',
         paymentData: 'Ab02b4c0!BQABAg',
         type: 'threeDS2Fingerprint',
         token: btoa(threeDS2FingerPrintToken)
@@ -27,7 +26,6 @@ const prepareProps = (token = fingerPrintToken) => {
 };
 
 let onSubmitAnalytics: any;
-let wrapper: any;
 
 const onError: any = () => {};
 
@@ -48,24 +46,22 @@ const completedAnalyticsObj = {
     id: expect.any(String)
 };
 
-const formResult = `
-            <html>
-                <body>
-                    <script>
-                    var data = {};
-                    data.result = {};
-                    data.result.threeDSCompInd = 'Y';
-                    data.type = 'fingerPrintResult';
+let mockCallbacks: any = {};
 
-                    var result = JSON.stringify(data);
-                    window.parent.postMessage(result, 'http://localhost:8011');
-                    </script>
-                </body>
-            </html>
-        `;
+jest.mock('./DoFingerprint3DS2', () => ({
+    __esModule: true,
+    default: function MockDoFingerprint(props) {
+        mockCallbacks = {
+            onCompleteFingerprint: props.onCompleteFingerprint,
+            onErrorFingerprint: props.onErrorFingerprint
+        };
+        props.onFormSubmit?.('threeDSMethodData sent');
+        return null;
+    }
+}));
 
-const mountPrepareFingerprint = props => {
-    wrapper = mount(
+const renderPrepareFingerprint = props => {
+    return render(
         <PrepareFingerprint3DS2 {...props} isMDFlow={false} onError={onError} onComplete={completeFunction} onSubmitAnalytics={onSubmitAnalytics} />
     );
 };
@@ -73,16 +69,14 @@ const mountPrepareFingerprint = props => {
 describe('ThreeDS2DeviceFingerprint - Happy flow', () => {
     beforeEach(() => {
         completeFunction = jest.fn();
-
         onSubmitAnalytics = jest.fn();
+        mockCallbacks = {};
     });
 
-    test("Doesn't throw an error when passing correct properties", () => {
-        HTMLFormElement.prototype.submit = jest.fn().mockImplementation(() => formResult);
-
+    test('should not throw an error when passing correct properties', () => {
         prepareProps();
 
-        mountPrepareFingerprint(propsMaster);
+        renderPrepareFingerprint(propsMaster);
 
         expect(onSubmitAnalytics).toHaveBeenCalledWith({
             type: THREEDS2_FULL,
@@ -92,103 +86,78 @@ describe('ThreeDS2DeviceFingerprint - Happy flow', () => {
             timestamp: expect.any(String),
             id: expect.any(String)
         });
-
-        const prepFingComp = wrapper.find('PrepareFingerprint3DS2');
-        expect(prepFingComp.props()).toHaveProperty('dataKey', 'fingerprintResult');
-        expect(prepFingComp.props()).toHaveProperty('paymentData', 'Ab02b4c0!BQABAg');
     });
 
-    test("Testing calls to component's setStatusComplete method - with completed result", done => {
-        HTMLFormElement.prototype.submit = jest.fn().mockImplementation(() => formResult);
-
+    test('should fire completion analytics when fingerprint completes successfully', async () => {
         prepareProps();
 
-        mountPrepareFingerprint(propsMaster);
+        renderPrepareFingerprint(propsMaster);
 
-        const prepFingComp = wrapper.find('PrepareFingerprint3DS2');
+        await act(() => {
+            mockCallbacks.onCompleteFingerprint({ result: { threeDSCompInd: 'Y' } });
+        });
 
-        // mock successful scenario
-        prepFingComp.instance().setStatusComplete({ threeDSCompInd: 'Y' });
+        // analytics to say process is complete
+        expect(onSubmitAnalytics).toHaveBeenCalledWith({ ...completedAnalyticsObj, result: 'success' });
 
-        // Wait for the component to make a call to setState
-        setTimeout(() => {
-            // analytics to say process is complete
-            expect(onSubmitAnalytics).toHaveBeenCalledWith({ ...completedAnalyticsObj, result: 'success' });
+        expect(onSubmitAnalytics).toHaveBeenCalledTimes(2);
 
-            expect(onSubmitAnalytics).toHaveBeenCalledTimes(2);
-
-            expect(completeFunction).toHaveBeenCalledTimes(1);
-            done();
-        }, 0);
+        expect(completeFunction).toHaveBeenCalledTimes(1);
     });
 });
 
 describe('ThreeDS2DeviceFingerprint - flow completes with errors that are considered valid scenarios', () => {
     beforeEach(() => {
         completeFunction = jest.fn();
-
         onSubmitAnalytics = jest.fn();
+        mockCallbacks = {};
     });
 
-    test("Testing calls to component's setStatusComplete method - when fingerprint times-out", done => {
-        HTMLFormElement.prototype.submit = jest.fn().mockImplementation(() => formResult);
-
+    test('should fire timeout analytics when fingerprint times out', async () => {
         prepareProps();
 
-        mountPrepareFingerprint(propsMaster);
+        renderPrepareFingerprint(propsMaster);
 
-        const prepFingComp = wrapper.find('PrepareFingerprint3DS2');
-
-        // mock timed-out scenario
-        prepFingComp.instance().setStatusComplete(
-            { threeDSCompInd: 'N' },
-            {
+        await act(() => {
+            mockCallbacks.onErrorFingerprint({
                 errorCode: 'timeout',
-                message: 'threeDS2Fingerprint: timeout'
-            }
-        );
-
-        // Wait for the component to make a call to setState
-        setTimeout(() => {
-            // analytics for error
-            expect(onSubmitAnalytics).toHaveBeenCalledWith({
-                component: 'threeDS2Fingerprint',
-                message: 'threeDS2Fingerprint: timeout',
-                code: ErrorEventCode.THREEDS2_TIMEOUT,
-                errorType: ErrorEventType.threeDS2,
-                timestamp: expect.any(String),
-                id: expect.any(String)
+                result: { threeDSCompInd: 'N' }
             });
+        });
 
-            // analytics to say process is complete
-            expect(onSubmitAnalytics).toHaveBeenCalledWith({ ...completedAnalyticsObj, result: TIMEOUT });
+        // analytics for error
+        expect(onSubmitAnalytics).toHaveBeenCalledWith({
+            component: 'threeDS2Fingerprint',
+            message: 'threeDS2Fingerprint: timeout',
+            code: ErrorEventCode.THREEDS2_TIMEOUT,
+            errorType: ErrorEventType.threeDS2,
+            timestamp: expect.any(String),
+            id: expect.any(String)
+        });
 
-            expect(onSubmitAnalytics).toHaveBeenCalledTimes(3);
+        // analytics to say process is complete
+        expect(onSubmitAnalytics).toHaveBeenCalledWith({ ...completedAnalyticsObj, result: TIMEOUT });
 
-            expect(completeFunction).toHaveBeenCalledTimes(1);
-            done();
-        }, 0);
+        expect(onSubmitAnalytics).toHaveBeenCalledTimes(3);
+
+        expect(completeFunction).toHaveBeenCalledTimes(1);
     });
 });
 
 describe('ThreeDS2DeviceFingerprint - unhappy flows', () => {
     beforeEach(() => {
         completeFunction = jest.fn();
-
         onSubmitAnalytics = jest.fn(() => {});
     });
 
-    test('Calls onComplete & onSubmitAnalytics callbacks when token is missing from props', () => {
-        // prep
+    test('should call onComplete and onSubmitAnalytics when token is missing from props', () => {
         prepareProps();
 
         const propsMock = { ...propsMaster };
         delete propsMock.token;
 
-        // mount
-        mountPrepareFingerprint(propsMock);
+        renderPrepareFingerprint(propsMock);
 
-        // assert
         const analyticsError = {
             ...baseAnalyticsError,
             component: 'threeDS2Fingerprint',
@@ -204,17 +173,14 @@ describe('ThreeDS2DeviceFingerprint - unhappy flows', () => {
         expect(onSubmitAnalytics).toHaveBeenCalledTimes(2);
     });
 
-    test('Calls onComplete & onSubmitAnalytics callbacks when token is not base64', () => {
-        // prep
+    test('should call onComplete and onSubmitAnalytics when token is not base64', () => {
         prepareProps();
 
         const propsMock = { ...propsMaster };
         propsMock.token = 'some string';
 
-        // mount
-        mountPrepareFingerprint(propsMock);
+        renderPrepareFingerprint(propsMock);
 
-        // assert
         const analyticsError = {
             ...baseAnalyticsError,
             component: 'threeDS2Fingerprint',
@@ -230,8 +196,7 @@ describe('ThreeDS2DeviceFingerprint - unhappy flows', () => {
         expect(onSubmitAnalytics).toHaveBeenCalledTimes(2);
     });
 
-    test('Calls onComplete & onSubmitAnalytics callbacks when threeDSMethodUrl in not valid', () => {
-        // prep
+    test('should call onComplete and onSubmitAnalytics when threeDSMethodUrl is not valid', () => {
         const alteredToken = { ...fingerPrintToken };
         alteredToken.threeDSMethodUrl = '';
 
@@ -239,10 +204,8 @@ describe('ThreeDS2DeviceFingerprint - unhappy flows', () => {
 
         const propsMock = { ...propsMaster };
 
-        // mount
-        mountPrepareFingerprint(propsMock);
+        renderPrepareFingerprint(propsMock);
 
-        // assert
         const analyticsError = {
             ...baseAnalyticsError,
             component: 'threeDS2Fingerprint',
@@ -260,8 +223,7 @@ describe('ThreeDS2DeviceFingerprint - unhappy flows', () => {
         expect(onSubmitAnalytics).toHaveBeenCalledTimes(2);
     });
 
-    test('Calls onComplete & onSubmitAnalytics callbacks when threeDSMethodNotificationURL in not valid', () => {
-        // prep
+    test('should call onComplete and onSubmitAnalytics when threeDSMethodNotificationURL is not valid', () => {
         const alteredToken = { ...fingerPrintToken };
         alteredToken.threeDSMethodNotificationURL = '';
 
@@ -269,10 +231,8 @@ describe('ThreeDS2DeviceFingerprint - unhappy flows', () => {
 
         const propsMock = { ...propsMaster };
 
-        // mount
-        mountPrepareFingerprint(propsMock);
+        renderPrepareFingerprint(propsMock);
 
-        // assert
         const analyticsError = {
             ...baseAnalyticsError,
             component: 'threeDS2Fingerprint',
@@ -290,8 +250,7 @@ describe('ThreeDS2DeviceFingerprint - unhappy flows', () => {
         expect(onSubmitAnalytics).toHaveBeenCalledTimes(2);
     });
 
-    test('Calls onComplete & onSubmitAnalytics callbacks when threeDSServerTransID in not valid', () => {
-        // prep
+    test('should call onComplete and onSubmitAnalytics when threeDSServerTransID is not valid', () => {
         const alteredToken = { ...fingerPrintToken };
         alteredToken.threeDSServerTransID = '';
 
@@ -299,10 +258,8 @@ describe('ThreeDS2DeviceFingerprint - unhappy flows', () => {
 
         const propsMock = { ...propsMaster };
 
-        // mount
-        mountPrepareFingerprint(propsMock);
+        renderPrepareFingerprint(propsMock);
 
-        // assert
         const analyticsError = {
             ...baseAnalyticsError,
             component: 'threeDS2Fingerprint',

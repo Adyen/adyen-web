@@ -1,11 +1,12 @@
 import { h } from 'preact';
-import { mount } from 'enzyme';
+import { render, screen } from '@testing-library/preact';
+import userEvent from '@testing-library/user-event';
 import Button from './Button';
 import { CoreProvider } from '../../../core/Context/CoreProvider';
 import { ButtonProps } from './types';
 
-const getWrapper = (props: ButtonProps) => {
-    return mount(
+const renderButton = (props: ButtonProps) => {
+    return render(
         <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
             <Button {...props} />
         </CoreProvider>
@@ -14,90 +15,93 @@ const getWrapper = (props: ButtonProps) => {
 
 describe('Button', () => {
     test('Renders a button by default', () => {
-        const wrapper = getWrapper({ label: 'label' });
-        expect(wrapper.text()).toContain('label');
-        expect(wrapper.find('button').length).toBe(1);
+        renderButton({ label: 'label' });
+        expect(screen.getByRole('button', { name: /label/i })).toBeTruthy();
     });
 
     test('Renders a link if href is present', () => {
-        const wrapper = getWrapper({ label: 'label', href: 'http://adyen.com' });
-        expect(wrapper.text()).toContain('label');
-        expect(wrapper.getDOMNode().nodeName).toBe('A');
+        renderButton({ label: 'label', href: 'http://adyen.com' });
+        expect(screen.getByRole('link', { name: /label/i })).toBeTruthy();
     });
 
-    test('Calls onClick', () => {
+    test('Calls onClick', async () => {
+        const user = userEvent.setup();
         const onClick = jest.fn();
-        const wrapper = getWrapper({ onClick });
+        renderButton({ onClick });
 
-        wrapper.find('button').simulate('click');
-        expect(onClick.mock.calls.length).toBe(1);
+        await user.click(screen.getByRole('button'));
+        expect(onClick).toHaveBeenCalledTimes(1);
     });
 
-    test('Prevents onClick if disabled', () => {
+    test('Prevents onClick if disabled', async () => {
+        const user = userEvent.setup();
         const onClick = jest.fn();
-        const wrapper = getWrapper({ onClick, disabled: true });
+        renderButton({ onClick, disabled: true });
 
-        wrapper.find('button').simulate('click');
-        expect(onClick.mock.calls.length).toBe(0);
+        await user.click(screen.getByRole('button'));
+        expect(onClick).not.toHaveBeenCalled();
     });
 
     test('Uses label when a status is not defined', () => {
-        const onClick = jest.fn();
-        const wrapper = getWrapper({ onClick, label: 'label', status: 'ready' });
-        expect(wrapper.text()).toContain('label');
+        renderButton({ label: 'label', status: 'ready' });
+        expect(screen.getByRole('button', { name: /label/i })).toBeTruthy();
     });
 
     test('Uses a custom label when a status is defined', () => {
-        const wrapper = getWrapper({ label: 'label', status: 'loading' });
-        expect(wrapper.find('.adyen-checkout__spinner').length > 0).toBe(true);
+        renderButton({ label: 'label', status: 'loading' });
+        const button = screen.getByRole('button');
+        /* eslint-disable testing-library/no-node-access */
+        expect(button.querySelector('.adyen-checkout__spinner')).toBeTruthy();
+        /* eslint-enable testing-library/no-node-access */
     });
 
     test('Renders primary button as default', () => {
-        const wrapper = getWrapper({});
-        expect(wrapper.find('.adyen-checkout__button').length).toBe(1);
-        expect(wrapper.find('.adyen-checkout__button--primary').length).toBe(0);
+        renderButton({});
+        const button = screen.getByRole('button');
+        expect(button.className).toContain('adyen-checkout__button');
+        expect(button.className).not.toContain('adyen-checkout__button--primary');
     });
 
     test('Renders secondary button', () => {
-        const wrapper = getWrapper({ variant: 'secondary' });
-        expect(wrapper.find('.adyen-checkout__button--secondary').length).toBe(1);
+        renderButton({ variant: 'secondary' });
+        expect(screen.getByRole('button').className).toContain('adyen-checkout__button--secondary');
     });
 
     test('Renders action button', () => {
-        const wrapper = getWrapper({ variant: 'action' });
-        expect(wrapper.find('.adyen-checkout__button--action').length).toBe(1);
+        renderButton({ variant: 'action' });
+        expect(screen.getByRole('button').className).toContain('adyen-checkout__button--action');
     });
 
     test('Renders ghost button', () => {
-        const wrapper = getWrapper({ variant: 'ghost' });
-        expect(wrapper.find('.adyen-checkout__button--ghost').length).toBe(1);
+        renderButton({ variant: 'ghost' });
+        expect(screen.getByRole('button').className).toContain('adyen-checkout__button--ghost');
     });
 
     test('Renders aria-live status region with loading text', () => {
-        const wrapper = getWrapper({ label: 'Pay', status: 'loading' });
-        const statusRegion = wrapper.find('[role="status"]');
+        renderButton({ label: 'Pay', status: 'loading' });
+        const statusRegion = screen.getByRole('status');
 
-        expect(statusRegion.length).toBe(1);
-        expect(statusRegion.hasClass('adyen-checkout__button__text--sr-only')).toBe(true);
-        expect(statusRegion.prop('aria-live')).toBe('polite');
-        expect(statusRegion.text()).toContain('Loading');
+        expect(statusRegion).toBeTruthy();
+        expect(statusRegion.className).toContain('adyen-checkout__button__text--sr-only');
+        expect(statusRegion.getAttribute('aria-live')).toBe('polite');
+        expect(statusRegion.textContent).toContain('Loading');
     });
 
     test('Renders aria-live status region with redirecting text', () => {
-        const wrapper = getWrapper({ label: 'Pay', status: 'redirect' });
-        const statusRegion = wrapper.find('[role="status"]');
+        renderButton({ label: 'Pay', status: 'redirect' });
+        const statusRegion = screen.getByRole('status');
 
-        expect(statusRegion.length).toBe(1);
-        expect(statusRegion.hasClass('adyen-checkout__button__text--sr-only')).toBe(true);
-        expect(statusRegion.prop('aria-live')).toBe('polite');
-        expect(statusRegion.text()).toContain('Redirecting');
+        expect(statusRegion).toBeTruthy();
+        expect(statusRegion.className).toContain('adyen-checkout__button__text--sr-only');
+        expect(statusRegion.getAttribute('aria-live')).toBe('polite');
+        expect(statusRegion.textContent).toContain('Redirecting');
     });
 
     test('Aria-live status region is empty for default status', () => {
-        const wrapper = getWrapper({ label: 'Pay', status: 'default' });
-        const statusRegion = wrapper.find('[role="status"]');
+        renderButton({ label: 'Pay', status: 'default' });
+        const statusRegion = screen.getByRole('status');
 
-        expect(statusRegion.length).toBe(1);
-        expect(statusRegion.text()).toBe('');
+        expect(statusRegion).toBeTruthy();
+        expect(statusRegion.textContent).toBe('');
     });
 });

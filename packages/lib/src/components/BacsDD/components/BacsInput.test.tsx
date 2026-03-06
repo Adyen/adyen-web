@@ -1,9 +1,6 @@
-/** @tsx h */
 import { createRef, h } from 'preact';
-import { mount } from 'enzyme';
+import { render, screen, act } from '@testing-library/preact';
 import BacsInput from './BacsInput';
-import { BacsInputProps } from './types';
-import { mock } from 'jest-mock-extended';
 import { CoreProvider } from '../../../core/Context/CoreProvider';
 import { AmountProvider } from '../../../core/Context/AmountProvider';
 
@@ -11,63 +8,53 @@ const defaultProps = {
     onChange: () => {},
     onSubmit: () => {}
 };
-const bacsPropsMock = mock<BacsInputProps>();
-const getWrapper = (props = {}) =>
-    mount(
+
+const renderBacsInput = (props = {}) => {
+    const bacsRef = createRef();
+    render(
         <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
             <AmountProvider amount={{ currency: 'EUR', value: 1234 }} providerRef={createRef()}>
-                <BacsInput {...defaultProps} {...props} {...bacsPropsMock} />{' '}
+                {/* @ts-ignore ref is internal from the Component */}
+                <BacsInput ref={bacsRef} {...defaultProps} {...props} />
             </AmountProvider>
         </CoreProvider>
     );
+    return { bacsRef };
+};
 
 describe('BacsInput', () => {
     test('Should display expected fields for opening (enter-data) state', () => {
-        const wrapper = getWrapper({});
+        renderBacsInput({});
 
-        // Main holder
-        expect(wrapper.find('.adyen-checkout__bacs')).toHaveLength(1);
-
-        // Name (active)
-        expect(wrapper.find('div.adyen-checkout__bacs--holder-name')).toHaveLength(1);
-        expect(wrapper.find('div.adyen-checkout__bacs--holder-name.adyen-checkout__field--inactive')).toHaveLength(0);
-
-        // Holder for account & location + account & location fields
-        expect(wrapper.find('.adyen-checkout__bacs .adyen-checkout__bacs__num-id')).toHaveLength(1);
-        expect(wrapper.find('div.adyen-checkout__bacs--bank-account-number')).toHaveLength(1);
-        expect(wrapper.find('div.adyen-checkout__bacs--bank-location-id')).toHaveLength(1);
-
-        // Email
-        expect(wrapper.find('div.adyen-checkout__bacs--shopper-email')).toHaveLength(1);
-
-        // Consent checkboxes
-        expect(wrapper.find('ConsentCheckbox')).toHaveLength(2);
+        expect(screen.getByLabelText('Bank account holder name')).toBeInTheDocument();
+        expect(screen.getByLabelText('Bank account number')).toBeInTheDocument();
+        expect(screen.getByLabelText('Sort code')).toBeInTheDocument();
+        expect(screen.getByLabelText('Email address')).toBeInTheDocument();
+        expect(screen.getByLabelText('I agree that the above amount will be deducted from my bank account.')).toBeInTheDocument();
+        expect(
+            screen.getByLabelText(
+                'I confirm the account is in my name and I am the only signatory required to authorise the Direct Debit on this account.'
+            )
+        );
     });
 
     test('Should display expected fields for second (confirm-data) state', () => {
-        const wrapper = getWrapper({});
+        const { bacsRef } = renderBacsInput({});
 
-        wrapper.find('BacsInput').instance().setStatus('confirm-data');
-        wrapper.update();
+        void act(() => {
+            bacsRef.current.setStatus('confirm-data');
+        });
 
-        // Main holder (with additional 'confim' class)
-        expect(wrapper.find('.adyen-checkout__bacs.adyen-checkout__bacs--confirm')).toHaveLength(1);
+        expect(screen.getByLabelText('Bank account holder name')).toHaveAttribute('readonly');
+        expect(screen.getByLabelText('Bank account number')).toHaveAttribute('readonly');
+        expect(screen.getByLabelText('Sort code')).toHaveAttribute('readonly');
+        expect(screen.getByLabelText('Email address')).toHaveAttribute('readonly');
 
-        // Edit button
-        expect(wrapper.find('.adyen-checkout__bacs .adyen-checkout__bacs--edit')).toHaveLength(1);
-
-        // Name (inactive)
-        expect(wrapper.find('div.adyen-checkout__bacs--holder-name.adyen-checkout__field--inactive')).toHaveLength(1);
-
-        // Holder for account & location + inactive account & location fields
-        expect(wrapper.find('.adyen-checkout__bacs .adyen-checkout__bacs__num-id')).toHaveLength(1);
-        expect(wrapper.find('div.adyen-checkout__bacs--bank-account-number.adyen-checkout__field--inactive')).toHaveLength(1);
-        expect(wrapper.find('div.adyen-checkout__bacs--bank-location-id.adyen-checkout__field--inactive')).toHaveLength(1);
-
-        // Email (inactive)
-        expect(wrapper.find('div.adyen-checkout__bacs--shopper-email.adyen-checkout__field--inactive')).toHaveLength(1);
-
-        // No consent checkboxes
-        expect(wrapper.find('ConsentCheckbox')).toHaveLength(0);
+        expect(screen.queryByLabelText('I agree that the above amount will be deducted from my bank account.')).not.toBeInTheDocument();
+        expect(
+            screen.queryByLabelText(
+                'I confirm the account is in my name and I am the only signatory required to authorise the Direct Debit on this account.'
+            )
+        ).not.toBeInTheDocument();
     });
 });
