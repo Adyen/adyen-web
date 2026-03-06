@@ -2,10 +2,11 @@ export default function createIframe({ src, title = 'iframe element', policy = '
     const iframeEl = document.createElement('iframe');
     iframeEl.setAttribute('src', src);
     iframeEl.classList.add('js-iframe');
-    // For a11y some merchants want to be able to remove the title element on the iframe - seeing the info it carries as extraneous for the screenreader
-    if (title === '' || title.trim().length === 0 || title === 'none') {
-        iframeEl.setAttribute('role', 'presentation');
-    } else {
+
+    // Following a11y advice from LevelAccess, we always set the iframe to be role=presentation
+    iframeEl.setAttribute('role', 'presentation');
+
+    if (title !== '' && title.trim().length > 0) {
         iframeEl.setAttribute('title', title);
     }
 
