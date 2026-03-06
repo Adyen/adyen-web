@@ -12,7 +12,7 @@ interface LinkProps {
     children?: ComponentChildren;
 }
 
-const Link = ({ to, children }: LinkProps) => {
+const Link = ({ to, children }: Readonly<LinkProps>) => {
     return (
         <a className="adyen-checkout-link" href={to} target="_blank" rel="noopener noreferrer">
             {children}

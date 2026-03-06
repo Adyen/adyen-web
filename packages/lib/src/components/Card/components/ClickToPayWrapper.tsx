@@ -11,7 +11,7 @@ const ClickToPayWrapper = ({
     onError,
     isStandaloneComponent,
     ...props
-}: ClickToPayProviderProps) => {
+}: Readonly<ClickToPayProviderProps>) => {
     return (
         <ClickToPayProvider
             isStandaloneComponent={isStandaloneComponent}

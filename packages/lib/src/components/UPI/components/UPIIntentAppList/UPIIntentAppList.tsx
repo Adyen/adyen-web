@@ -13,7 +13,7 @@ interface UPIIntentAppListProps {
     onAppSelect?: (app: App) => void;
 }
 
-const UPIIntentAppList = ({ apps, selectedAppId, disabled, onAppSelect = () => {} }: UPIIntentAppListProps): h.JSX.Element => {
+const UPIIntentAppList = ({ apps, selectedAppId, disabled, onAppSelect = () => {} }: Readonly<UPIIntentAppListProps>): h.JSX.Element => {
     const { i18n } = useCoreContext();
     const getImage = useImage();
 

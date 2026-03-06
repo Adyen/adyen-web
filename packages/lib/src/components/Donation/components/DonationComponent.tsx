@@ -12,7 +12,7 @@ import FixedAmounts from './FixedAmounts';
 import Roundup from './Roundup';
 import { getAmountLabel, getRoundupAmount, getRoundupAmountLabel } from './utils';
 
-export default function DonationComponent(props: DonationComponentProps) {
+export default function DonationComponent(props: Readonly<DonationComponentProps>) {
     const { donation, commercialTxAmount, onCancel, onDonate, showCancelButton = true, termsAndConditionsUrl } = props;
     const { i18n } = useCoreContext();
     const getImage = useImage();

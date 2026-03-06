@@ -18,9 +18,9 @@ import { mapGooglePayBrands } from './utils/map-adyen-brands-to-googlepay-brands
 const DEFAULT_ALLOWED_CARD_NETWORKS: google.payments.api.CardNetwork[] = ['AMEX', 'DISCOVER', 'JCB', 'MASTERCARD', 'VISA'];
 
 class GooglePay extends UIElement<GooglePayConfiguration> {
-    public static type = TxVariants.googlepay;
-    public static txVariants = [TxVariants.googlepay, TxVariants.paywithgoogle];
-    public static defaultProps = defaultProps;
+    public static readonly type = TxVariants.googlepay;
+    public static readonly txVariants = [TxVariants.googlepay, TxVariants.paywithgoogle];
+    public static readonly defaultProps = defaultProps;
 
     protected readonly googlePay;
 

@@ -1,6 +1,7 @@
 import { BrandObject } from '../../../Card/types';
 import SecuredField from './securedField/SecuredField';
 import {
+    ALL_SECURED_FIELDS,
     ENCRYPTED_CARD_NUMBER,
     ENCRYPTED_EXPIRY_DATE,
     ENCRYPTED_EXPIRY_MONTH,
@@ -24,15 +25,7 @@ declare global {
     }
 }
 
-export type SFFieldType =
-    | 'encryptedCardNumber'
-    | 'encryptedExpiryDate'
-    | 'encryptedExpiryMonth'
-    | 'encryptedExpiryYear'
-    | 'encryptedSecurityCode'
-    | 'encryptedPassword'
-    | 'encryptedBankAccountNumber'
-    | 'encryptedBankLocationId';
+export type SFFieldType = (typeof ALL_SECURED_FIELDS)[number];
 
 export interface SecuredFields {
     encryptedCardNumber?: SecuredField;

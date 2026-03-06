@@ -1,23 +1,17 @@
-name: Unit tests and Sonarcloud
+name: Unit Tests
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    types: [opened, synchronize, reopened]
-  merge_group:
+  workflow_call:
 
 jobs:
-  build:
+  unit-tests:
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v6
       with:
         fetch-depth: 0
 
-    - name: Use Node.js 24
+    - name: Setup Node
       uses: actions/setup-node@v6
       with:
         node-version: 24
@@ -47,9 +41,3 @@ jobs:
 
     - name: Generate test coverage
       run: yarn test:coverage
-
-    - name: SonarCloud Scan
-      uses: SonarSource/sonarcloud-github-action@master
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

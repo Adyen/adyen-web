@@ -12,9 +12,9 @@ import { AnalyticsLogEvent, LogEventSubtype, LogEventType } from '../../core/Ana
 import { AnalyticsErrorEvent, ErrorEventCode, ErrorEventType } from '../../core/Analytics/events/AnalyticsErrorEvent';
 
 class ThreeDS2DeviceFingerprint extends UIElement<ThreeDS2DeviceFingerprintConfiguration> {
-    public static type = TxVariants.threeDS2Fingerprint;
+    public static readonly type = TxVariants.threeDS2Fingerprint;
 
-    public static defaultProps = {
+    public static readonly defaultProps = {
         dataKey: 'fingerprintResult',
         type: THREEDS2_FINGERPRINT
     };

@@ -21,7 +21,7 @@ export interface PayToNameFieldsProps {
     };
 }
 
-export default function PayToNameFields({ i18n, errors, data, handleChangeFor, placeholders }: PayToNameFieldsProps) {
+export default function PayToNameFields({ i18n, errors, data, handleChangeFor, placeholders }: Readonly<PayToNameFieldsProps>) {
     return (
         <Fragment>
             <Field

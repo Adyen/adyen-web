@@ -16,9 +16,9 @@ import type { IDropin } from './types';
 const SUPPORTED_INSTANT_PAYMENTS = ['paywithgoogle', 'googlepay', 'applepay'];
 
 class DropinElement extends UIElement<DropinConfiguration> implements IDropin {
-    public static type = TxVariants.dropin;
+    public static readonly type = TxVariants.dropin;
 
-    protected static defaultProps = defaultProps;
+    protected static readonly defaultProps = defaultProps;
 
     public dropinRef = null;
 

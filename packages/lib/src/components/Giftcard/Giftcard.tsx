@@ -9,11 +9,11 @@ import { TxVariants } from '../tx-variants';
 import { PayButtonProps } from '../internal/PayButton/PayButton';
 
 export class GiftcardElement extends UIElement<GiftCardConfiguration> {
-    public static type = TxVariants.giftcard;
+    public static readonly type: TxVariants = TxVariants.giftcard;
 
     protected componentRef: GiftcardComponent | undefined;
 
-    protected static defaultProps = {
+    protected static readonly defaultProps = {
         brandsConfiguration: {}
     };
 

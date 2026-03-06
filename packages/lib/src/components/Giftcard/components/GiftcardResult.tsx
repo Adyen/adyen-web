@@ -15,7 +15,7 @@ interface GiftcardResultProps {
     payButton(props: PayButtonProps): h.JSX.Element;
 }
 
-function GiftcardResult({ balance, transactionLimit, status, makePayment, showPayButton, payButton }: GiftcardResultProps) {
+function GiftcardResult({ balance, transactionLimit, status, makePayment, showPayButton, payButton }: Readonly<GiftcardResultProps>) {
     const { i18n } = useCoreContext();
     const { amount } = useAmount();
 

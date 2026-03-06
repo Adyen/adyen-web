@@ -31,7 +31,7 @@ interface HarnessProps {
     isValidatingRef?: { current: boolean };
 }
 
-const Harness = ({ errors, isValidatingRef }: HarnessProps) => {
+const Harness = ({ errors, isValidatingRef }: Readonly<HarnessProps>) => {
     const internalRef = useRef(true);
     const isValidating = isValidatingRef ?? internalRef;
 

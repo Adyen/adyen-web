@@ -6,7 +6,7 @@ interface TimelineWrapperProps {
     className?: string;
 }
 
-const TimelineWrapper = ({ children, className }: TimelineWrapperProps) => {
+const TimelineWrapper = ({ children, className }: Readonly<TimelineWrapperProps>) => {
     return <div className={`adyen-checkout-timeline-wrapper ${className}`}>{children}</div>;
 };
 

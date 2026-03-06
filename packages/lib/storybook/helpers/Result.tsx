@@ -5,7 +5,7 @@ interface IResult {
     resultMessage?: string;
 }
 
-export const Result = ({ resultCode, resultMessage }: IResult) => {
+export const Result = ({ resultCode, resultMessage }: Readonly<IResult>) => {
     const isAuthorized = resultCode === 'Authorised' || resultCode === 'Received';
     const imgSrc = isAuthorized
         ? 'https://checkoutshopper-test.adyen.com/checkoutshopper/images/components/success.gif'

@@ -41,7 +41,7 @@ const useSecondaryAmount = (): { secondaryAmount: PaymentAmount | undefined } =>
     return { secondaryAmount: context.secondaryAmount };
 };
 
-const AmountProvider = ({ amount, secondaryAmount, providerRef, children }: AmountProviderProps) => {
+const AmountProvider = ({ amount, secondaryAmount, providerRef, children }: Readonly<AmountProviderProps>) => {
     const context = useContext(AmountContext);
 
     const [updatedAmount, setUpdatedAmount] = useState<PaymentAmount>(amount);

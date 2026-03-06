@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import { RadioButtonIconProps } from './types';
 import './RadioButtonIcon.scss';
 
-const RadioButtonIcon = ({ dataValue, imageURL, altName, showRadioIcon }: RadioButtonIconProps) => {
+const RadioButtonIcon = ({ dataValue, imageURL, altName, showRadioIcon }: Readonly<RadioButtonIconProps>) => {
     const [hasLoaded, setHasLoaded] = useState(false);
 
     const handleError = () => {

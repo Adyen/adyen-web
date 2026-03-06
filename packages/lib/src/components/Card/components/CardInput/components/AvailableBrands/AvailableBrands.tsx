@@ -12,7 +12,7 @@ interface PaymentMethodBrandsProps {
     activeBrand: string;
 }
 
-const AvailableBrands = ({ brands, activeBrand }: PaymentMethodBrandsProps) => {
+const AvailableBrands = ({ brands, activeBrand }: Readonly<PaymentMethodBrandsProps>) => {
     if (!brands?.length) {
         return null;
     }

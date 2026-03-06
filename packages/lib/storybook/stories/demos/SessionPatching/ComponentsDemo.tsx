@@ -76,7 +76,7 @@ interface CheckoutProps {
     onPatchSession: (amount: PaymentAmount, session: CheckoutSession) => Promise<string>;
 }
 
-function Checkout({ sessionId, sessionData, countryCode, amountValue, onPatchSession }: CheckoutProps) {
+function Checkout({ sessionId, sessionData, countryCode, amountValue, onPatchSession }: Readonly<CheckoutProps>) {
     const checkoutRef = useRef<Core>(null);
     const [finalStatus, setFinalStatus] = useState<'success' | 'failed' | null>(null);
 

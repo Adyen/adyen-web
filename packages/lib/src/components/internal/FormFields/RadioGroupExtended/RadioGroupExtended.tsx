@@ -9,7 +9,7 @@ import { PREFIX } from '../../Icon/constants';
 import './RadioGroupExtended.scss';
 import '../RadioGroup/RadioGroup.scss';
 
-export default function RadioGroupExtended(props: RadioGroupExtendedProps) {
+export default function RadioGroupExtended(props: Readonly<RadioGroupExtendedProps>) {
     const { items, name, onChange, value, isInvalid, uniqueId, ariaLabel, showRadioIcon = false, showSelectedTick = false, style = 'button' } = props;
 
     const { i18n } = useCoreContext();

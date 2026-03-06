@@ -28,7 +28,7 @@ interface GiftcardComponentProps {
     onSubmitAnalytics?: (event: AbstractAnalyticsEvent) => void;
 }
 
-class Giftcard extends Component<GiftcardComponentProps> {
+class Giftcard extends Component<Readonly<GiftcardComponentProps>> {
     public state = {
         status: 'ready',
         data: {},
@@ -41,7 +41,7 @@ class Giftcard extends Component<GiftcardComponentProps> {
         transformedErrors: {}
     };
 
-    public static defaultProps = {
+    public static readonly defaultProps = {
         pinRequired: true,
         expiryDateRequired: false,
         onChange: () => {},

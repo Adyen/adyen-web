@@ -11,7 +11,7 @@ function mapFastlaneCardBrandToAdyenBrand(brand: string) {
     return brand === 'mastercard' ? 'mc' : brand;
 }
 
-const FastlaneCardBrandIcon = ({ brand }: FastlaneCardBrandIconProps) => {
+const FastlaneCardBrandIcon = ({ brand }: Readonly<FastlaneCardBrandIconProps>) => {
     const getImage = useImage();
     const mappedBrand = mapFastlaneCardBrandToAdyenBrand(brand);
 

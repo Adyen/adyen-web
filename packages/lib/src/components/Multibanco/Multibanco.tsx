@@ -6,7 +6,7 @@ import { TxVariants } from '../tx-variants';
 import { VoucherConfiguration } from '../internal/Voucher/types';
 
 export class MultibancoElement extends UIElement<VoucherConfiguration> {
-    public static type = TxVariants.multibanco;
+    public static readonly type = TxVariants.multibanco;
 
     get isValid() {
         return true;

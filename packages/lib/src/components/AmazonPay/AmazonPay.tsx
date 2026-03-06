@@ -11,9 +11,9 @@ import { sanitizeResponse, verifyPaymentDidNotFail } from '../internal/UIElement
 import { AnalyticsInfoEvent, InfoEventType } from '../../core/Analytics/events/AnalyticsInfoEvent';
 
 export class AmazonPayElement extends UIElement<AmazonPayConfiguration> {
-    public static type = TxVariants.amazonpay;
+    public static readonly type = TxVariants.amazonpay;
 
-    protected static defaultProps = defaultProps;
+    protected static readonly defaultProps = defaultProps;
 
     formatProps(props) {
         return {

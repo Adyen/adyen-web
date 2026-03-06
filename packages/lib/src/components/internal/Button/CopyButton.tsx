@@ -17,7 +17,7 @@ export interface CopyButtonProps extends Omit<ButtonProps, 'variant' | 'onClickC
     onClick?: (e: h.JSX.TargetedMouseEvent<HTMLButtonElement>) => void;
 }
 
-const CopyButton = (props: CopyButtonProps) => {
+const CopyButton = (props: Readonly<CopyButtonProps>) => {
     const { i18n } = useCoreContext();
     const getImage = useImage();
 

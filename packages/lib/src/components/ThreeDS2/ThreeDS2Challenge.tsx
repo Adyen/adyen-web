@@ -12,9 +12,9 @@ import { AnalyticsLogEvent, LogEventSubtype, LogEventType } from '../../core/Ana
 import { AnalyticsErrorEvent, ErrorEventCode, ErrorEventType } from '../../core/Analytics/events/AnalyticsErrorEvent';
 
 class ThreeDS2Challenge extends UIElement<ThreeDS2ChallengeConfiguration> {
-    public static type = TxVariants.threeDS2Challenge;
+    public static readonly type = TxVariants.threeDS2Challenge;
 
-    public static defaultProps = {
+    public static readonly defaultProps = {
         dataKey: 'threeDSResult',
         size: DEFAULT_CHALLENGE_WINDOW_SIZE,
         type: THREEDS2_CHALLENGE

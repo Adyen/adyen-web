@@ -3,7 +3,7 @@ import collectBrowserInfo from '../../utils/browserInfo';
 import { TxVariants } from '../tx-variants';
 
 class OnlineBankingINElement extends IssuerListContainer {
-    public static type = TxVariants.onlinebanking_IN;
+    public static readonly type = TxVariants.onlinebanking_IN;
 
     formatProps(props) {
         return {

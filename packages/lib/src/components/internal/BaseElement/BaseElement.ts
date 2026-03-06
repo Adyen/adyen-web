@@ -30,7 +30,7 @@ abstract class BaseElement<P extends BaseElementProps> implements IBaseElement {
 
     protected _node: HTMLElement = null;
 
-    protected static defaultProps = {};
+    protected static readonly defaultProps = {};
 
     constructor(checkout: ICore, props?: P) {
         const isCoreInstance = assertIsCoreInstance(checkout);

@@ -26,7 +26,7 @@ const PaymentMethodBrands = ({
     isPaymentMethodSelected,
     keepBrandsVisible = false,
     showOtherInsteadOfNumber = false
-}: PaymentMethodBrandsProps) => {
+}: Readonly<PaymentMethodBrandsProps>) => {
     const { i18n } = useCoreContext();
 
     if (isPaymentMethodSelected && !keepBrandsVisible) {

@@ -11,9 +11,9 @@ import './SRPanel.scss';
  * For testing purposes can be made visible
  */
 export class SRPanel extends BaseElement<SRPanelProps> {
-    public static type = 'srPanel';
+    public static readonly type = 'srPanel';
 
-    public static defaultProps: Partial<SRPanelProps> = {
+    public static readonly defaultProps: Partial<SRPanelProps> = {
         enabled: true,
         node: 'body',
         showPanel: false,
