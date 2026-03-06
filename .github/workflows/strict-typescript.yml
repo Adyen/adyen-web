@@ -24,7 +24,7 @@ jobs:
       - name: Checkout master
         uses: actions/checkout@v6
         with:
-          ref: master
+          ref: main
           fetch-depth: 1
 
       - name: Install dependencies (master)
