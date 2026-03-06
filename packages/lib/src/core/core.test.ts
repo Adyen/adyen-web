@@ -38,15 +38,15 @@ const setupSessionSpy = jest.spyOn(Session.prototype, 'setupSession').mockImplem
 let analyticsSetupSpy;
 
 let multipleInstanceWarnMsg = '';
-jest.spyOn(console, 'warn').mockImplementation(() => {
-    multipleInstanceWarnMsg = 'Too many instances of checkout';
+jest.spyOn(console, 'warn').mockImplementation(message => {
+    multipleInstanceWarnMsg = message;
 });
 
 describe('Core', () => {
     beforeEach(() => {
         analyticsSetupSpy = jest.spyOn(Analytics.prototype, 'setUp').mockResolvedValue();
-
-        // console.varn = jest.fn(() => {});
+        AdyenCheckout.metadata.numberOfInitialisedCheckouts = 0;
+        multipleInstanceWarnMsg = '';
     });
 
     afterEach(() => {
@@ -71,9 +71,17 @@ describe('Core', () => {
                 clientKey: 'test_123456'
             });
 
+            new AdyenCheckout({
+                countryCode: 'US',
+                environment: 'test',
+                clientKey: 'test_123456'
+            });
+
             expect(AdyenCheckout.metadata.numberOfInitialisedCheckouts).toBe(2);
 
-            expect(multipleInstanceWarnMsg).toBe('Too many instances of checkout');
+            expect(multipleInstanceWarnMsg).toBe(
+                'Multiple initialisations of the Adyen Checkout library detected. This is not recommended and may lead to unexpected behavior.'
+            );
         });
 
         test('should do the setup call with the correct session data for the session flow', async () => {
