@@ -37,38 +37,51 @@ const setupSessionSpy = jest.spyOn(Session.prototype, 'setupSession').mockImplem
 
 let analyticsSetupSpy;
 
+let multipleInstanceWarnMsg = '';
+jest.spyOn(console, 'warn').mockImplementation(() => {
+    multipleInstanceWarnMsg = 'Too many instances of checkout';
+});
+
 describe('Core', () => {
     beforeEach(() => {
         analyticsSetupSpy = jest.spyOn(Analytics.prototype, 'setUp').mockResolvedValue();
+
+        // console.varn = jest.fn(() => {});
     });
 
     afterEach(() => {
         analyticsSetupSpy.mockRestore();
     });
 
-    describe('Setting locale', () => {
-        test('should default locale to en-US', async () => {
-            const checkout = new AdyenCheckout({ countryCode: 'US', environment: 'test', clientKey: 'test_123456' });
-            await checkout.initialize();
-            expect(checkout.options.locale).toBe('en-US');
-            expect(checkout.modules.i18n.locale).toBe('en-US');
-        });
-
-        test('should set a custom locale', async () => {
-            const checkout = new AdyenCheckout({
+    describe('initialize', () => {
+        test('should count the number of checkout instances', () => {
+            new AdyenCheckout({
                 countryCode: 'US',
                 environment: 'test',
-                clientKey: 'test_123456',
-                locale: 'es-ES'
+                clientKey: 'test_123456'
             });
-            await checkout.initialize();
 
-            expect(checkout.options.locale).toBe('es-ES');
-            expect(checkout.modules.i18n.locale).toBe('es-ES');
+            expect(AdyenCheckout.metadata.numberOfInitialisedCheckouts).toBe(1);
         });
-    });
 
-    describe('initialize', () => {
+        test('should warn that too many checkout instances exist', () => {
+            new AdyenCheckout({
+                countryCode: 'US',
+                environment: 'test',
+                clientKey: 'test_123456'
+            });
+
+            expect(AdyenCheckout.metadata.numberOfInitialisedCheckouts).toBe(2);
+
+            new AdyenCheckout({
+                countryCode: 'US',
+                environment: 'test',
+                clientKey: 'test_123456'
+            });
+
+            expect(multipleInstanceWarnMsg).toBe('Too many instances of checkout');
+        });
+
         test('should do the setup call with the correct session data for the session flow', async () => {
             const checkout = new AdyenCheckout({
                 countryCode: 'US',
@@ -119,6 +132,28 @@ describe('Core', () => {
                     sessionId: 'session-id'
                 })
             );
+        });
+    });
+
+    describe('Setting locale', () => {
+        test('should default locale to en-US', async () => {
+            const checkout = new AdyenCheckout({ countryCode: 'US', environment: 'test', clientKey: 'test_123456' });
+            await checkout.initialize();
+            expect(checkout.options.locale).toBe('en-US');
+            expect(checkout.modules.i18n.locale).toBe('en-US');
+        });
+
+        test('should set a custom locale', async () => {
+            const checkout = new AdyenCheckout({
+                countryCode: 'US',
+                environment: 'test',
+                clientKey: 'test_123456',
+                locale: 'es-ES'
+            });
+            await checkout.initialize();
+
+            expect(checkout.options.locale).toBe('es-ES');
+            expect(checkout.modules.i18n.locale).toBe('es-ES');
         });
     });
 
