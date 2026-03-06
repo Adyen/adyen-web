@@ -62,6 +62,9 @@ jobs:
               -\ Fixed:*)
                 FIXED="${FIXED}${line}"$'\n\n'
                 ;;
+              -\ *)
+                IMPROVED="${IMPROVED}${line}"$'\n\n'
+                ;;
             esac
           done <<< "$BODY"
 
