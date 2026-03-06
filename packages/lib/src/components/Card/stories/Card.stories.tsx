@@ -4,6 +4,7 @@ import { CardConfiguration } from '../types';
 import { searchFunctionExample } from '../../../../../playground/src/utils';
 import { CardWith3DS2Redirect } from './cardStoryHelpers/CardWith3DS2Redirect';
 import { createStoredCardComponent } from './cardStoryHelpers/createStoredCardComponent';
+import { SplitFundingSourceCards } from './cardStoryHelpers/SplitFundingSourceCards';
 import { createCardComponent } from './cardStoryHelpers/createCardComponent';
 import { getComponentConfigFromUrl } from '../../../../storybook/utils/get-configuration-from-url';
 import { CardWith3DS2CreateFromAction } from './cardStoryHelpers/CardWith3DS2CreateFromAction';
@@ -251,6 +252,36 @@ export const CardWith_3DS2_own_onAdditionalDetails: CardStory = {
 
 export const StandaloneStoredCard: CardStory = {
     render: createStoredCardComponent
+};
+
+/**
+ * Split funding source test
+ * This story exists to test the split funding source behavior when the merchant has enabled split card funding sources
+ * It renders 3 different Card components to test the behavior across multiple instances
+ */
+export const SplitFundingSourceTest: CardStory = {
+    render: SplitFundingSourceCards,
+    args: {
+        countryCode: 'BR',
+        componentConfiguration: {
+            _disableClickToPay: true,
+
+            clickToPayConfiguration: {
+                shopperEmail: 'levelaccess.ctp@adyen.com',
+                merchantDisplayName: 'Adyen Merchant Name'
+            }
+        },
+        sessionData: {
+            splitCardFundingSources: true,
+            shopperEmail: 'levelaccess.ctp@adyen.com',
+            installmentOptions: {
+                card: {
+                    values: [2, 3, 5],
+                    plans: ['regular']
+                }
+            }
+        }
+    }
 };
 
 export default meta;

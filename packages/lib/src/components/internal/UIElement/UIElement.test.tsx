@@ -7,6 +7,7 @@ import { Resources } from '../../../core/Context/Resources';
 import { PaymentActionsType } from '../../../types/global-types';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 import { setupCoreMock } from '../../../../config/testMocks/setup-core-mock';
+import PaymentMethods from '../../../core/ProcessResponse/PaymentMethods';
 import { ErrorEventType } from '../../../core/Analytics/events/AnalyticsErrorEvent';
 import { InfoEventType } from '../../../core/Analytics/events/AnalyticsInfoEvent';
 import { render, screen } from '@testing-library/preact';
@@ -139,6 +140,44 @@ describe('UIElement', () => {
 
             const element = new MyElement(core, { name: 'SuperbPay' });
             expect(element.displayName).toEqual('SuperbPay');
+        });
+    });
+
+    describe('getPaymentMethodFromPaymentMethodsResponse() with fundingSource', () => {
+        let splitCore;
+
+        beforeEach(() => {
+            splitCore = setupCoreMock({
+                paymentMethods: new PaymentMethods({
+                    paymentMethods: [
+                        { name: 'Credit Card', type: 'scheme', fundingSource: 'credit' },
+                        { name: 'Debit Card', type: 'scheme', fundingSource: 'debit' }
+                    ]
+                })
+            });
+        });
+
+        test('should load configuration from the payment method matching the given fundingSource', () => {
+            const element = new MyElement(splitCore, { type: 'card', fundingSource: 'credit' });
+            expect(element.props.name).toBe('Credit Card');
+            expect(element.props.fundingSource).toBe('credit');
+        });
+
+        test('should load configuration from the debit payment method when fundingSource is debit', () => {
+            const element = new MyElement(splitCore, { type: 'card', fundingSource: 'debit' });
+            expect(element.props.name).toBe('Debit Card');
+            expect(element.props.fundingSource).toBe('debit');
+        });
+
+        test('should fall back to the first matching type when fundingSource has no match', () => {
+            const element = new MyElement(splitCore, { type: 'card', fundingSource: 'prepaid' });
+            expect(element.props.name).toBe('Credit Card');
+            expect(element.props.fundingSource).toBe('prepaid');
+        });
+
+        test('should load the first matching type when no fundingSource is provided', () => {
+            const element = new MyElement(splitCore, { type: 'card' });
+            expect(element.props.name).toBe('Credit Card');
         });
     });
 
