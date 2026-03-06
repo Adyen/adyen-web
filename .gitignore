@@ -43,4 +43,4 @@ cert
 .netlify
 
 # Windsurf
-.windsurf/workflows
+.windsurf/workflows/
