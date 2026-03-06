@@ -2,7 +2,6 @@ name: PR
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened]
   merge_group:
   workflow_dispatch:
 
@@ -28,7 +27,7 @@ jobs:
   # This allows the PR author to attempt merge if they believe tests will pass in the merge queue.
   verify-pr:
     if: always()
-    needs: [unit-tests, e2e-tests, automated-a11y, visual-tests]
+    needs: [unit-tests, e2e-tests, automated-a11y, automated-visual]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -38,13 +37,13 @@ jobs:
             {
               "unit-tests": "${{ needs.unit-tests.result }}",
               "automated-a11y": "${{ needs.automated-a11y.result }}",
-              "visual-tests": "${{ needs.visual-tests.result }}"
+              "automated-visual": "${{ needs.automated-visual.result }}"
             }
 
   # Stricter gateway check for merge queue — all jobs must pass
   verify-merge-queue:
     if: always() && github.event_name == 'merge_group'
-    needs: [unit-tests, e2e-tests, automated-a11y, visual-tests]
+    needs: [unit-tests, e2e-tests, automated-a11y, automated-visual]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -55,5 +54,5 @@ jobs:
               "unit-tests": "${{ needs.unit-tests.result }}",
               "e2e-tests": "${{ needs.e2e-tests.result }}",
               "automated-a11y": "${{ needs.automated-a11y.result }}",
-              "visual-tests": "${{ needs.visual-tests.result }}"
+              "automated-visual": "${{ needs.automated-visual.result }}"
             }
