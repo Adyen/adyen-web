@@ -32,7 +32,8 @@
         "type-check": "yarn workspace @adyen/adyen-web type-check",
         "changeset": "changeset",
         "version": "changeset version && yarn install",
-        "validate:fix": "yarn workspaces foreach --all run validate:fix"
+        "validate:fix": "yarn workspaces foreach --all run validate:fix",
+        "validate:strict": "yarn workspace @adyen/adyen-web validate:strict"
     },
     "devDependencies": {
         "@adyen/adyen-web-server": "1.0.0",
