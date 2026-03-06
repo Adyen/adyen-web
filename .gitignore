@@ -41,3 +41,6 @@ cert
 
 # Local Netlify folder
 .netlify
+
+# Windsurf
+.windsurf/workflows/
