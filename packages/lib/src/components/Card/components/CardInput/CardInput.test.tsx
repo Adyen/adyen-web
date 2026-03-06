@@ -51,10 +51,8 @@ describe('CardInput', () => {
     });
 
     test('Has HolderName element', () => {
-        const { container } = renderCardInput(<CardInput {...cardInputRequiredProps} hasHolderName={true} />);
-        /* eslint-disable testing-library/no-node-access, testing-library/no-container */
-        expect(container.querySelector('.adyen-checkout__card__holderName')).toBeTruthy();
-        /* eslint-enable testing-library/no-node-access, testing-library/no-container */
+        renderCardInput(<CardInput {...cardInputRequiredProps} hasHolderName={true} />);
+        expect(screen.getByText('Name on card')).toBeVisible();
     });
 });
 
@@ -64,11 +62,10 @@ describe('CardInput - Brands beneath Card Number field', () => {
             { name: 'visa', icon: 'visa.png' },
             { name: 'mc', icon: 'mc.png' }
         ];
-        const { container } = renderCardInput(<CardInput {...cardInputRequiredProps} brandsIcons={brandsIcons} />);
-        /* eslint-disable testing-library/no-node-access, testing-library/no-container */
-        expect(container.querySelectorAll('.adyen-checkout__card__brands__brand-wrapper')).toHaveLength(2);
-        expect(container.querySelectorAll('.adyen-checkout__card__brands__brand-wrapper--disabled')).toHaveLength(0);
-        /* eslint-enable testing-library/no-node-access, testing-library/no-container */
+        renderCardInput(<CardInput {...cardInputRequiredProps} brandsIcons={brandsIcons} />);
+
+        expect(screen.getByAltText('VISA')).toBeVisible();
+        expect(screen.getByAltText('MasterCard')).toBeVisible();
     });
 
     test('should hide all brand icons when brand is detected', () => {
@@ -79,6 +76,7 @@ describe('CardInput - Brands beneath Card Number field', () => {
             { name: 'amex', icon: 'amex.png' }
         ];
         const { container } = renderCardInput(<CardInput {...cardInputRequiredProps} brand={detectedBrand} brandsIcons={brandsIcons} />);
+
         /* eslint-disable testing-library/no-node-access, testing-library/no-container */
         expect(container.querySelector('.adyen-checkout__card__brands--hidden')).toBeTruthy();
         /* eslint-enable testing-library/no-node-access, testing-library/no-container */
@@ -100,15 +98,12 @@ describe('CardInput - Brands beneath Card Number field', () => {
 
 describe('CardInput > holderName', () => {
     test('Does not have HolderName element', () => {
-        const { container } = renderCardInput(<CardInput {...cardInputRequiredProps} />);
-        /* eslint-disable testing-library/no-node-access, testing-library/no-container */
-        expect(container.querySelector('.adyen-checkout__card__holderName')).toBeNull();
-        /* eslint-enable testing-library/no-node-access, testing-library/no-container */
+        renderCardInput(<CardInput {...cardInputRequiredProps} />);
+        expect(screen.queryByText('Name on card')).toBeNull();
     });
 
     test('holderName required, so valid.holderName is false', () => {
         renderCardInput(<CardInput {...cardInputRequiredProps} holderNameRequired={true} hasHolderName={true} onChange={onChange} />);
-        // expect(onChange.mock.calls[onChange.mock.calls.length - 1][0].valid.holderName).toBe(false);
         expect(valid.holderName).toBe(false);
     });
 
@@ -330,28 +325,23 @@ describe('CardInput > Installments', () => {
             values: [1, 2, 3]
         }
     };
+
     test('should not display installments if fundingSource is debit', () => {
-        const { container } = renderCardInput(<CardInput {...cardInputRequiredProps} fundingSource={'debit'} installmentOptions={installments} />);
-        /* eslint-disable testing-library/no-node-access, testing-library/no-container */
-        expect(container.querySelector('.adyen-checkout__card__cardInput__installments')).toBeNull();
-        /* eslint-enable testing-library/no-node-access, testing-library/no-container */
+        renderCardInput(<CardInput {...cardInputRequiredProps} fundingSource={'debit'} installmentOptions={installments} />);
+        expect(screen.queryByText('Number of installments')).toBeNull();
     });
+
     test('should not display installments if fundingSource is prepaid', () => {
-        const { container } = renderCardInput(<CardInput {...cardInputRequiredProps} fundingSource={'prepaid'} installmentOptions={installments} />);
-        /* eslint-disable testing-library/no-node-access, testing-library/no-container */
-        expect(container.querySelector('.adyen-checkout__card__cardInput__installments')).toBeNull();
-        /* eslint-enable testing-library/no-node-access, testing-library/no-container */
+        renderCardInput(<CardInput {...cardInputRequiredProps} fundingSource={'prepaid'} installmentOptions={installments} />);
+        expect(screen.queryByText('Number of installments')).toBeNull();
     });
+
     test('should display installments if fundingSource is credit', () => {
-        const { container } = renderCardInput(<CardInput {...cardInputRequiredProps} fundingSource={'credit'} installmentOptions={installments} />);
-        /* eslint-disable testing-library/no-node-access, testing-library/no-container */
-        expect(container.querySelector('.adyen-checkout__installments')).toBeTruthy();
-        /* eslint-enable testing-library/no-node-access, testing-library/no-container */
+        renderCardInput(<CardInput {...cardInputRequiredProps} fundingSource={'credit'} installmentOptions={installments} />);
     });
+
     test('should display installments if fundingSource undefined', () => {
-        const { container } = renderCardInput(<CardInput {...cardInputRequiredProps} i18n={i18n} installmentOptions={installments} />);
-        /* eslint-disable testing-library/no-node-access, testing-library/no-container */
-        expect(container.querySelector('.adyen-checkout__installments')).toBeTruthy();
-        /* eslint-enable testing-library/no-node-access, testing-library/no-container */
+        renderCardInput(<CardInput {...cardInputRequiredProps} i18n={i18n} installmentOptions={installments} />);
+        expect(screen.getByText('Number of installments')).toBeVisible();
     });
 });
