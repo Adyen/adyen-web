@@ -1,0 +1,114 @@
+name: GitHub Release
+
+on:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  create-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Parse CHANGELOG and prepare release
+        id: changelog
+        run: |
+          CHANGELOG="packages/lib/CHANGELOG.md"
+
+          # Extract the latest version number (first ## heading)
+          VERSION=$(awk '/^## [0-9]/{print $2; exit}' "$CHANGELOG")
+
+          if [ -z "$VERSION" ]; then
+            echo "::error::Could not extract version from CHANGELOG.md"
+            exit 1
+          fi
+
+          TAG_PREFIX="v"
+
+          SUFFIX="-alpha"
+
+          echo "version=${VERSION}${SUFFIX}" >> "$GITHUB_OUTPUT"
+          echo "tag=${TAG_PREFIX}${VERSION}${SUFFIX}" >> "$GITHUB_OUTPUT"
+
+          # Extract the body for the latest version (between first and second ## heading)
+          BODY=$(awk '
+            /^## [0-9]/ { count++; if (count == 2) exit; next }
+            count == 1 { print }
+          ' "$CHANGELOG")
+
+          # Convert markdown links to bare URLs: ([#123](url)) → (url)
+          BODY=$(echo "$BODY" | sed -E 's/\(\[#[0-9]+\]\(([^)]+)\)\)/(\1)/g')
+
+          # Categorize items into New, Improvements, Bug fixes
+          NEW=""
+          IMPROVED=""
+          FIXED=""
+
+          while IFS= read -r line; do
+            case "$line" in
+              -\ New:*)
+                NEW="${NEW}${line}"$'\n\n'
+                ;;
+              -\ Improved:*)
+                IMPROVED="${IMPROVED}${line}"$'\n\n'
+                ;;
+              -\ Fixed:*)
+                FIXED="${FIXED}${line}"$'\n\n'
+                ;;
+              -\ *)
+                IMPROVED="${IMPROVED}${line}"$'\n\n'
+                ;;
+            esac
+          done <<< "$BODY"
+
+          # Build the release body
+          RELEASE_BODY=""
+
+          if [ -n "$NEW" ]; then
+            RELEASE_BODY="${RELEASE_BODY}## New"$'\n\n'"${NEW}"
+          fi
+
+          if [ -n "$IMPROVED" ]; then
+            RELEASE_BODY="${RELEASE_BODY}## Improvements"$'\n\n'"${IMPROVED}"
+          fi
+
+          if [ -n "$FIXED" ]; then
+            RELEASE_BODY="${RELEASE_BODY}## Bug fixes"$'\n\n'"${FIXED}"
+          fi
+
+          # If no categorized items found, fall back to the raw body
+          if [ -z "$RELEASE_BODY" ]; then
+            RELEASE_BODY="$BODY"
+          fi
+
+          # Write body to a temp file to avoid shell escaping issues
+          echo "$RELEASE_BODY" > /tmp/release-body.md
+
+          echo "Release version: $VERSION"
+          echo "Release tag: v$VERSION"
+          echo "---"
+          cat /tmp/release-body.md
+
+      - name: Create Git tag
+        run: |
+          TAG="${{ steps.changelog.outputs.tag }}"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag "$TAG"
+          git push origin "$TAG"
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "${{ steps.changelog.outputs.tag }}" \
+            --title "${{ steps.changelog.outputs.version }}" \
+            --notes-file /tmp/release-body.md \
+            --prerelease
