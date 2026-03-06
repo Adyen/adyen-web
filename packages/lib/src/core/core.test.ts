@@ -64,7 +64,7 @@ describe('Core', () => {
             expect(AdyenCheckout.metadata.numberOfInitialisedCheckouts).toBe(1);
         });
 
-        test('should warn that too many checkout instances exist', () => {
+        test('Creating a second instance of Checkout should warn that too many checkout instances exist', () => {
             new AdyenCheckout({
                 countryCode: 'US',
                 environment: 'test',
@@ -72,12 +72,6 @@ describe('Core', () => {
             });
 
             expect(AdyenCheckout.metadata.numberOfInitialisedCheckouts).toBe(2);
-
-            new AdyenCheckout({
-                countryCode: 'US',
-                environment: 'test',
-                clientKey: 'test_123456'
-            });
 
             expect(multipleInstanceWarnMsg).toBe('Too many instances of checkout');
         });
