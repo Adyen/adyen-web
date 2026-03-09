@@ -94,7 +94,7 @@ jobs:
             echo ''
             echo '| Check | Status |'
             echo '|-------|--------|'
-            echo "| Typescript *noImplicitAny* (${ERROR_COUNT} errors, baseline: ${TSC_STRICT_BASELINE}) | ${STATUS} |"
+            echo "| Typescript strict rules (${ERROR_COUNT} errors, baseline: ${TSC_STRICT_BASELINE}) | ${STATUS} |"
             echo ''
             echo "_Last updated: $(date -u '+%Y-%m-%d %H:%M:%S UTC')_"
             echo 'EOF'
