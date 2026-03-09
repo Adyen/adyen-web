@@ -338,6 +338,18 @@ export interface CoreConfiguration {
     onOrderUpdated?(data: { order: Order }): void;
 
     /**
+     * Optional callback when the (seesions) donation is completed (or cancelled)
+     * @param didDonate - a boolean staing whether a donation was made (true) or whether the shopper cancelled the donation (false)
+     */
+    onDonationCompleted?(didDonate: boolean): void;
+
+    /**
+     * Optional callback when the (sessions) donation fails
+     * @param reason - the reason why the donation failed (could be an error message; or a string, stating for example, that the donation payment was refused)
+     */
+    onDonationFailed?(reason: unknown): void;
+
+    /**
      * @internal
      */
     loadingContext?: string;

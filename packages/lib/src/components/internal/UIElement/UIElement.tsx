@@ -466,7 +466,16 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
          *  somewhere to mount, the amount of the payment (in case we have a "roundup"-type campaign, & the componentType (for the analytics)
          *  (And then start the inbuilt timer)
          */
-        this.donationCampaignProvider.setupAndStart({ rootNode, componentType: this.type, commercialTxAmount: this.props.amount.value });
+
+        const { amount, onDonationCompleted, onDonationFailed } = this.props;
+
+        this.donationCampaignProvider.setupAndStart({
+            rootNode,
+            componentType: this.type,
+            commercialTxAmount: amount.value,
+            onDonationCompleted,
+            onDonationFailed
+        });
 
         // Return an object with the API we want to expose to merchants
         return toDonationCampaignProviderAPI(this.donationCampaignProvider);

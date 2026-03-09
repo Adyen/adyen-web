@@ -36,7 +36,9 @@ export const GENERIC_OPTIONS = [
     'onOrderCancel',
     'onOrderRequest',
     'onOrderUpdated',
-    'onPaymentMethodsRequest'
+    'onPaymentMethodsRequest',
+    'onDonationCompleted',
+    'onDonationFailed'
 ];
 
 export const DEFAULT_HTTP_TIMEOUT = 60000;

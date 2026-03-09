@@ -14,6 +14,8 @@ type DonationCampaignProviderSetup = {
     rootNode: HTMLElement;
     componentType: string;
     commercialTxAmount: number;
+    onDonationCompleted: (didDonate: boolean) => void;
+    onDonationFailed: (reason: unknown) => void;
 };
 
 class DonationCampaignProvider {
@@ -25,6 +27,8 @@ class DonationCampaignProvider {
 
     private originalComponentType: string = DonationCampaignProvider.type;
     private commercialTxAmount: number = 0;
+    private onDonationCompleted: DonationCampaignProviderSetup['onDonationCompleted'];
+    private onDonationFailed: DonationCampaignProviderSetup['onDonationFailed'];
 
     private autoStartTimer: ReturnType<typeof setTimeout> = null;
     private readonly autoStartTimerMS = 3000;
@@ -65,10 +69,12 @@ class DonationCampaignProvider {
     /**
      * @internal
      */
-    public setupAndStart({ rootNode, componentType, commercialTxAmount }: DonationCampaignProviderSetup) {
+    public setupAndStart({ rootNode, componentType, commercialTxAmount, onDonationCompleted, onDonationFailed }: DonationCampaignProviderSetup) {
         this.rootNode = rootNode;
         this.originalComponentType = componentType;
         this.commercialTxAmount = commercialTxAmount;
+        this.onDonationCompleted = onDonationCompleted;
+        this.onDonationFailed = onDonationFailed;
 
         this.beginCountdown();
     }
@@ -138,7 +144,8 @@ class DonationCampaignProvider {
                 });
                 this.core.modules.analytics.sendAnalytics(event);
 
-                // TODO Call onDonationCompleted callback
+                // Call merchant defined onDonationCompleted callback
+                this.onDonationCompleted(false);
 
                 this.donationComponent.unmount();
             },
@@ -178,17 +185,18 @@ class DonationCampaignProvider {
                 if (response.resultCode === 'Authorised') {
                     component.setStatus('success');
 
-                    // TODO Call onDonationCompleted callback
+                    this.onDonationCompleted(true);
                 } else {
                     component.setStatus('error');
 
-                    // TODO Call onDonationFailed callback
+                    // Call merchant defined onDonationFailed callback
+                    this.onDonationFailed(response.resultCode);
                 }
             })
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+             
             .catch((error: unknown) => {
                 component.setStatus('error');
-                // TODO Call onDonationFailed callback
+                this.onDonationFailed(error);
             });
     }
 
@@ -196,7 +204,7 @@ class DonationCampaignProvider {
         try {
             return await this.core.session.donationCampaigns();
         } catch (error: unknown) {
-            // TODO - analytics?
+            // TODO - analytics, or will this be picked up as part of the sessions endpoint httpPost handling?
 
             return Promise.reject(error);
         }
@@ -206,7 +214,7 @@ class DonationCampaignProvider {
         try {
             return await this.core.session.donations(donationRequestData);
         } catch (error: unknown) {
-            // TODO - analytics?
+            // TODO - analytics, or will this be picked up as part of the sessions endpoint httpPost handling?
 
             return Promise.reject(error);
         }

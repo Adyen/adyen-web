@@ -21,6 +21,8 @@ type CoreCallbacks = Pick<
     | 'onActionHandled'
     | 'onError'
     | 'onEnterKeyPressed'
+    | 'onDonationCompleted'
+    | 'onDonationFailed'
 >;
 
 export type StatusFromAction = 'redirect' | 'loading' | 'custom';
