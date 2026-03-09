@@ -172,7 +172,7 @@ class ApplePayService {
             });
     }
 
-    oncouponcodechange(event: ApplePayJS.ApplePayCouponCodeChangedEvent, onCouponCodeChange) {
+    oncouponcodechange(event: ApplePayJS.ApplePayCouponCodeChangedEvent, onCouponCodeChange: ApplePayConfiguration['onCouponCodeChange']) {
         return new Promise((resolve, reject) => onCouponCodeChange(resolve, reject, event))
             .then((couponCodeUpdate: ApplePayJS.ApplePayCouponCodeUpdate) => {
                 this.session.completeCouponCodeChange(couponCodeUpdate);

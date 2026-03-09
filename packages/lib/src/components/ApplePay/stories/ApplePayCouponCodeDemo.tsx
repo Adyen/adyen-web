@@ -24,6 +24,7 @@ const ApplePayCouponCodeDemo = ({ amount, countryCode, shopperLocale }: Readonly
     const currentAmountRef = useRef(amount);
     const [currentAmount, setCurrentAmount] = useState(amount);
     const [couponCode, setCouponCode] = useState('');
+    const couponCodeRef = useRef('');
     const checkoutRef = useRef<Core>(null);
     const applePayRef = useRef<ApplePay>(null);
 
@@ -45,22 +46,10 @@ const ApplePayCouponCodeDemo = ({ amount, countryCode, shopperLocale }: Readonly
         setSession(sessionRef.current);
     };
 
-    const patchSessionAmount = async (newAmount: PaymentAmount, currentSession: CheckoutSession): Promise<string> => {
+    const patchSessionAndMakePayable = async (newAmount: PaymentAmount, currentSession: CheckoutSession): Promise<string> => {
         const response = await patchCheckoutSession(currentSession.id, {
             sessionData: currentSession.sessionData,
             amount: newAmount,
-            payable: false
-        });
-
-        sessionRef.current = { id: currentSession.id, sessionData: response.sessionData };
-        setSession(sessionRef.current);
-        return response.sessionData;
-    };
-
-    const patchSessionPayable = async (paymentAmount: PaymentAmount, currentSession: CheckoutSession): Promise<string> => {
-        const response = await patchCheckoutSession(currentSession.id, {
-            sessionData: currentSession.sessionData,
-            amount: paymentAmount,
             payable: true
         });
 
@@ -87,11 +76,14 @@ const ApplePayCouponCodeDemo = ({ amount, countryCode, shopperLocale }: Readonly
                 id: session.id
             },
 
-            beforeSubmit: async (data, component, actions) => {
+            beforeSubmit: async (data, _component, actions) => {
                 try {
-                    const { amount: paymentAmount } = component.props;
+                    const finalAmount =
+                        couponCodeRef.current === VALID_COUPON
+                            ? { value: Math.round(amount * (1 - DISCOUNT_PERCENTAGE / 100)), currency }
+                            : { value: amount, currency };
 
-                    const sessionData = await patchSessionPayable(paymentAmount, sessionRef.current);
+                    const sessionData = await patchSessionAndMakePayable(finalAmount, sessionRef.current);
 
                     actions.resolve({ ...data, sessionData });
                 } catch (error) {
@@ -128,47 +120,24 @@ const ApplePayCouponCodeDemo = ({ amount, countryCode, shopperLocale }: Readonly
 
                 if (newCouponCode === VALID_COUPON) {
                     const discountedValue = Math.round(amount * (1 - DISCOUNT_PERCENTAGE / 100));
-                    const newAmount = { value: discountedValue, currency };
 
-                    void patchSessionAmount(newAmount, sessionRef.current)
-                        .then(() => {
-                            currentAmountRef.current = discountedValue;
-                            setCurrentAmount(discountedValue);
-                            setCouponCode(newCouponCode);
+                    currentAmountRef.current = discountedValue;
+                    setCurrentAmount(discountedValue);
+                    setCouponCode(newCouponCode);
+                    couponCodeRef.current = newCouponCode;
 
-                            void checkoutRef.current.update({ amount: newAmount }, { shouldReinitializeCheckout: false });
-
-                            resolve({
-                                newTotal: { label: 'Total', amount: String(discountedValue / 100) }
-                            });
-                        })
-                        .catch(error => {
-                            console.error('Coupon code session patch error', error);
-                            reject({
-                                newTotal: { label: 'Total', amount: String(currentAmountRef.current / 100), type: 'final' }
-                            });
-                        });
+                    resolve({
+                        newTotal: { label: 'Total', amount: String(discountedValue / 100) }
+                    });
                 } else if (newCouponCode === '') {
-                    const originalAmount = { value: amount, currency };
+                    currentAmountRef.current = amount;
+                    setCurrentAmount(amount);
+                    setCouponCode('');
+                    couponCodeRef.current = '';
 
-                    void patchSessionAmount(originalAmount, sessionRef.current)
-                        .then(() => {
-                            currentAmountRef.current = amount;
-                            setCurrentAmount(amount);
-                            setCouponCode('');
-
-                            void checkoutRef.current.update({ amount: originalAmount }, { shouldReinitializeCheckout: false });
-
-                            resolve({
-                                newTotal: { label: 'Total', amount: String(amount / 100) }
-                            });
-                        })
-                        .catch(error => {
-                            console.error('Coupon code removal session patch error', error);
-                            reject({
-                                newTotal: { label: 'Total', amount: String(currentAmountRef.current / 100), type: 'final' }
-                            });
-                        });
+                    resolve({
+                        newTotal: { label: 'Total', amount: String(amount / 100) }
+                    });
                 } else {
                     reject({
                         newTotal: { label: 'Total', amount: String(currentAmountRef.current / 100), type: 'final' }
