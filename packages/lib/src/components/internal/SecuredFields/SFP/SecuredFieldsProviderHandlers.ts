@@ -107,7 +107,7 @@ function handleOnFieldValid(fieldObj: CardFieldValidData): boolean {
          *  or has switched from valid/encrypted state to being in error (digit edited to one that puts the field in error) - so keep any error that
          *  might just have been set
          */
-        errors: { ...prevState.errors, [fieldObj.fieldType]: prevState.errors[fieldObj.fieldType] ?? false }
+        errors: { ...prevState.errors, [fieldObj.fieldType]: prevState.errors[fieldObj.fieldType] ?? null }
     });
 
     this.setState(setValidFieldState, () => {
@@ -188,7 +188,7 @@ function handleOnError(cbObj: CardErrorData, hasUnsupportedCard: boolean = null)
 
     this.setState(
         prevState => ({
-            errors: { ...prevState.errors, [cbObj.fieldType]: errorCode || false },
+            errors: { ...prevState.errors, [cbObj.fieldType]: errorCode || null },
             // If dealing with an unsupported card ensure these card number related fields are reset re. pasting a full, unsupported card straight in
             ...(hasUnsupportedCard && { data: { ...prevState.data, [ENCRYPTED_CARD_NUMBER]: undefined } }),
             ...(hasUnsupportedCard && { valid: { ...prevState.valid, [ENCRYPTED_CARD_NUMBER]: false } }),

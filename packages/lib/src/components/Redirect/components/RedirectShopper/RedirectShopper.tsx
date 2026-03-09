@@ -13,9 +13,9 @@ interface RedirectShopperProps {
     onRedirectError?: () => void;
 }
 
-class RedirectShopper extends Component<RedirectShopperProps> {
+class RedirectShopper extends Component<Readonly<RedirectShopperProps>> {
     private postForm;
-    public static defaultProps = {
+    public static readonly defaultProps = {
         beforeRedirect: resolve => resolve(),
         onRedirectError: () => {},
         method: 'GET'

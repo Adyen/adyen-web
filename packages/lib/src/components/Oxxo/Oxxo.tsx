@@ -5,9 +5,9 @@ import { TxVariants } from '../tx-variants';
 import { VoucherConfiguration } from '../internal/Voucher/types';
 
 export class OxxoElement extends UIElement<VoucherConfiguration> {
-    public static type = TxVariants.oxxo;
+    public static readonly type = TxVariants.oxxo;
 
-    protected static defaultProps = {
+    protected static readonly defaultProps = {
         name: 'Oxxo'
     };
 

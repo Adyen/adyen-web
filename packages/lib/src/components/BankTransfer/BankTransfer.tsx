@@ -7,8 +7,8 @@ import BankTransferInput from './components/BankTransferInput';
 import { TxVariants } from '../tx-variants';
 
 export class BankTransferElement extends UIElement<BankTransferConfiguration> {
-    public static type = TxVariants.bankTransfer_IBAN;
-    public static txVariants = [
+    public static readonly type = TxVariants.bankTransfer_IBAN;
+    public static readonly txVariants = [
         TxVariants.bankTransfer_IBAN,
         TxVariants.bankTransfer_BE,
         TxVariants.bankTransfer_NL,
@@ -38,7 +38,7 @@ export class BankTransferElement extends UIElement<BankTransferConfiguration> {
         TxVariants.bankTransfer_US
     ];
 
-    public static defaultProps = {
+    public static readonly defaultProps = {
         showEmailAddress: true,
         showContextualElement: true,
         data: { shopperEmail: '' }

@@ -49,7 +49,7 @@ class Core implements ICore {
         bundleType: LIBRARY_BUNDLE_TYPE
     };
 
-    public static registry = registry;
+    public static readonly registry = registry;
 
     public static setBundleType(type: string): void {
         Core.metadata.bundleType = type;

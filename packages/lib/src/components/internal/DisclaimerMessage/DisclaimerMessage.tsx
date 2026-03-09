@@ -23,7 +23,7 @@ interface InternalDisclaimerMsgObject {
  *  String inside the '%#' token pair will be rendered as an anchor element.
  */
 
-export default function DisclaimerMessage({ message, urls = [] }: InternalDisclaimerMsgObject) {
+export default function DisclaimerMessage({ message, urls = [] }: Readonly<InternalDisclaimerMsgObject>) {
     return (
         <span className="adyen-checkout-disclaimer__label">
             <LabelOnlyDisclaimerMessage message={message} urls={urls} />
@@ -31,7 +31,7 @@ export default function DisclaimerMessage({ message, urls = [] }: InternalDiscla
     );
 }
 
-export function LabelOnlyDisclaimerMessage({ message, urls }: InternalDisclaimerMsgObject) {
+export function LabelOnlyDisclaimerMessage({ message, urls }: Readonly<InternalDisclaimerMsgObject>) {
     const messageIsStr = typeof message === 'string';
     const validUrls = urls.every(url => typeof url === 'string' && isValidHttpUrl(url));
     if (!messageIsStr || !validUrls) return null;

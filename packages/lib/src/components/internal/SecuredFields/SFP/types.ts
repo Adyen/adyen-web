@@ -5,6 +5,7 @@ import Language from '../../../../language';
 import { Resources } from '../../../../core/Context/Resources';
 import { TouchStartEventObj } from '../../../Card/components/CardInput/components/types';
 import { Placeholders as GiftcardPlaceholders } from '../../../Giftcard/components/types';
+import type { SFFieldType } from '../lib/types';
 import type { AbstractAnalyticsEvent } from '../../../../core/Analytics/events/AbstractAnalyticsEvent';
 import type SecuredFieldsProvider from './SecuredFieldsProvider';
 
@@ -58,10 +59,12 @@ export interface SFPProps {
     showContextualElement?: boolean;
 }
 
+export type SFPErrorMap = Partial<Record<SFFieldType, string>>;
+
 export interface SFPState {
     status?: string;
     brand?: string;
-    errors?: object;
+    errors?: SFPErrorMap;
     valid: SFPValid;
     data: object;
     cvcPolicy?: CVCPolicyType;
@@ -87,8 +90,6 @@ export interface SFPValid {
     encryptedSecurityCode?: boolean;
     encryptedPassword?: boolean;
     encryptedPin?: boolean;
-    encryptedBankAccountNumber?: boolean;
-    encryptedBankLocationId?: boolean;
 }
 
 export interface OnChangeEventDetails {

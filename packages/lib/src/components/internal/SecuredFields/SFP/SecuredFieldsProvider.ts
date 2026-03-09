@@ -100,7 +100,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
         this.destroy = this.destroy.bind(this);
     }
 
-    public static defaultProps = defaultProps;
+    public static readonly defaultProps = defaultProps;
 
     public componentDidMount(): void {
         // When SFP instantiated through SecuredFieldsInput c.f. CardInput
@@ -228,7 +228,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
             const setRemovedFieldState = prevState => ({
                 data: { ...prevState.data, [ENCRYPTED_PWD_FIELD]: undefined },
                 valid: { ...prevState.valid, [ENCRYPTED_PWD_FIELD]: false },
-                errors: { ...prevState.errors, [ENCRYPTED_PWD_FIELD]: false },
+                errors: { ...prevState.errors, [ENCRYPTED_PWD_FIELD]: null },
                 hasKoreanFields: false
             });
 
@@ -347,7 +347,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
         // (Scenario: from an unsupportedCard state the shopper has pasted another number long enough to trigger a /binLookup)
         if (this.state.detectedUnsupportedBrands) {
             this.setState(prevState => ({
-                errors: { ...prevState.errors, [ENCRYPTED_CARD_NUMBER]: false },
+                errors: { ...prevState.errors, [ENCRYPTED_CARD_NUMBER]: null },
                 detectedUnsupportedBrands: null
             }));
 

@@ -24,7 +24,7 @@ class CardWithKCP extends Card {
     }
 
     get passwordInput() {
-        const passwordIframe = this.rootElement.frameLocator('[title="Iframe for password"]');
+        const passwordIframe = this.rootElement.frameLocator('[title="Password"]');
         return passwordIframe.locator('input[aria-label="First 2 digits of card password"]');
     }
 

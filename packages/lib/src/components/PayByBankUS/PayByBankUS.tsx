@@ -7,7 +7,7 @@ import getIssuerImageUrl from '../../utils/get-issuer-image';
 import PayButton from '../internal/PayButton';
 import { payAmountLabel } from '../internal/PayButton/utils';
 export default class PayByBankUS extends RedirectElement {
-    public static type = TxVariants.paybybank_AIS_DD;
+    public static override readonly type: TxVariants = TxVariants.paybybank_AIS_DD;
 
     protected formatProps(props) {
         return {

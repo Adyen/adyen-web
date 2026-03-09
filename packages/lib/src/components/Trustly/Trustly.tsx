@@ -5,9 +5,9 @@ import { TxVariants } from '../tx-variants';
 import './Trustly.scss';
 
 class TrustlyElement extends RedirectElement {
-    public static type = TxVariants.trustly;
+    public static override readonly type: TxVariants = TxVariants.trustly;
 
-    get displayName() {
+    override get displayName() {
         return this.props.name || this.constructor['type'];
     }
 

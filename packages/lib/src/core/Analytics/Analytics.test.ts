@@ -5,6 +5,7 @@ import { AnalyticsErrorEvent, ErrorEventType } from './events/AnalyticsErrorEven
 import { AnalyticsLogEvent, LogEventType } from './events/AnalyticsLogEvent';
 import Storage from '../../utils/Storage';
 import type { IAnalyticsService } from './AnalyticsService';
+import { DEFAULT_DEBOUNCE_TIME_MS } from '../../utils/debounce';
 
 jest.mock('../../utils/Storage');
 
@@ -265,7 +266,7 @@ describe('Analytics', () => {
 
             expect(mockService.sendEvents).not.toHaveBeenCalled();
 
-            jest.advanceTimersByTime(5_000);
+            jest.advanceTimersByTime(DEFAULT_DEBOUNCE_TIME_MS);
 
             expect(mockService.sendEvents).toHaveBeenCalled();
         });

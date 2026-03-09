@@ -52,7 +52,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
      */
     public elementRef: UIElement;
 
-    public static type = undefined;
+    public static readonly type = undefined;
 
     /**
      * Reference to the methods exposed by the AmountProvider context
@@ -62,7 +62,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     /**
      * Defines all txVariants that the Component supports (in case it support multiple ones besides the 'type' one)
      */
-    public static txVariants: string[] = [];
+    public static readonly txVariants: string[] = [];
 
     constructor(checkout: ICore, props?: P) {
         super(checkout, props);

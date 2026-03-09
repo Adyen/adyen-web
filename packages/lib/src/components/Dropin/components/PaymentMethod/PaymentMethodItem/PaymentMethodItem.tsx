@@ -25,8 +25,8 @@ export interface PaymentMethodItemProps {
     showRadioButton?: boolean;
 }
 
-class PaymentMethodItem extends Component<PaymentMethodItemProps> {
-    public static defaultProps = {
+class PaymentMethodItem extends Component<Readonly<PaymentMethodItemProps>> {
+    public static readonly defaultProps = {
         paymentMethod: null,
         isSelected: false,
         isLoaded: false,

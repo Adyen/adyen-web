@@ -11,7 +11,7 @@ interface IconProps {
     width?: number;
 }
 
-const Icon = ({ type, className = '', alt = '', height, width }: IconProps) => {
+const Icon = ({ type, className = '', alt = '', height, width }: Readonly<IconProps>) => {
     const getImage = useImage();
     const iconUrl = getImage({ imageFolder: 'components/' })?.(type);
 

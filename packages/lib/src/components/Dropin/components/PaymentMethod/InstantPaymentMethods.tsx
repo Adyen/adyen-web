@@ -8,7 +8,7 @@ interface InstantPaymentMethodsProps {
     onSelect: (paymentMethod: UIElement) => void;
 }
 
-const InstantPaymentMethods = memo(({ paymentMethods, onSelect }: InstantPaymentMethodsProps) => {
+const InstantPaymentMethods = memo(({ paymentMethods, onSelect }: Readonly<InstantPaymentMethodsProps>) => {
     return (
         <ul className="adyen-checkout__instant-payment-methods-list">
             {paymentMethods.map(pm => (

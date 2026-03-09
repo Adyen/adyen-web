@@ -1,0 +1,119 @@
+name: Strict TypeScript Scan
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  strict-scan:
+    runs-on: ubuntu-latest
+    # Non-blocking: this job is informational only and will never prevent merging.
+    continue-on-error: true
+
+    steps:
+      - name: Use Node.js 24
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          package-manager-cache: false
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      # ── Get baseline from master ──
+      - name: Checkout master
+        uses: actions/checkout@v6
+        with:
+          ref: main
+          fetch-depth: 1
+
+      - name: Install dependencies (master)
+        run: yarn install --immutable
+
+      - name: Get strict error baseline from master
+        id: baseline
+        run: |
+          BASELINE=$(yarn validate:strict 2>&1 | grep -c "error TS" || true)
+          echo "count=$BASELINE" >> "$GITHUB_OUTPUT"
+          echo "Master branch strict tsc errors: $BASELINE"
+
+      # ── Check PR branch ──
+      - uses: actions/checkout@v6
+        with:
+          clean: false
+          fetch-depth: 1
+
+      - name: Cache node modules
+        id: node-modules-cache
+        uses: actions/cache@v5
+        env:
+          cache-name: node-modules-v1
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-cache-${{ env.cache-name }}-yarn-${{ hashFiles('**/yarn.lock') }}
+
+      - name: Install Project Dependencies
+        if: steps.node-modules-cache.outputs.cache-hit != 'true'
+        run: yarn install --immutable
+
+      - name: Strict type check
+        id: tsc-strict
+        continue-on-error: true
+        run: |
+          TSC_STRICT_BASELINE=${{ steps.baseline.outputs.count }}
+          ERROR_COUNT=$(yarn validate:strict 2>&1 | grep -c "error TS" || true)
+          echo "error_count=$ERROR_COUNT" >> "$GITHUB_OUTPUT"
+          echo "Current strict tsc errors: $ERROR_COUNT (baseline: $TSC_STRICT_BASELINE)"
+
+          if [ "$ERROR_COUNT" -gt "$TSC_STRICT_BASELINE" ]; then
+            echo "::warning::Strict tsc errors INCREASED from $TSC_STRICT_BASELINE to $ERROR_COUNT"
+            exit 1
+          fi
+
+          if [ "$ERROR_COUNT" -lt "$TSC_STRICT_BASELINE" ]; then
+            echo "::notice::Strict tsc errors decreased from $TSC_STRICT_BASELINE to $ERROR_COUNT"
+          fi
+
+      - name: Build comment body
+        if: always()
+        id: build-comment
+        run: |
+          TSC_STRICT_BASELINE=${{ steps.baseline.outputs.count }}
+          if [ "${{ steps.tsc-strict.outcome }}" = "success" ]; then
+            STATUS="✅ Pass"
+          else
+            STATUS="⚠️ Regression"
+          fi
+
+          ERROR_COUNT="${{ steps.tsc-strict.outputs.error_count }}"
+          ERROR_COUNT="${ERROR_COUNT:-N/A}"
+
+          {
+            echo 'body<<EOF'
+            echo '## Strict TypeScript Scan Results'
+            echo ''
+            echo '| Check | Status |'
+            echo '|-------|--------|'
+            echo "| Typescript *noImplicitAny* (${ERROR_COUNT} errors, baseline: ${TSC_STRICT_BASELINE}) | ${STATUS} |"
+            echo ''
+            echo "_Last updated: $(date -u '+%Y-%m-%d %H:%M:%S UTC')_"
+            echo 'EOF'
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Find comment
+        if: always()
+        uses: peter-evans/find-comment@v3
+        id: fc
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          comment-author: 'github-actions[bot]'
+          body-includes: Strict TypeScript Scan Results
+
+      - name: Post scan summary
+        if: always()
+        uses: peter-evans/create-or-update-comment@v5
+        with:
+          comment-id: ${{ steps.fc.outputs.comment-id }}
+          issue-number: ${{ github.event.pull_request.number }}
+          body: ${{ steps.build-comment.outputs.body }}
+          edit-mode: replace

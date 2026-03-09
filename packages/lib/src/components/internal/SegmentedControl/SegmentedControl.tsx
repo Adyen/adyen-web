@@ -4,11 +4,11 @@ import './SegmentedControl.scss';
 import { stopPropagationForActionKeys } from '../Button/stopPropagationForActionKeys';
 
 export interface SegmentedControlOption<T> {
-    label: string;
-    value: T;
-    id: string;
-    controls: string;
-    htmlProps?: {};
+    readonly label: string;
+    readonly value: T;
+    readonly id: string;
+    readonly controls: string;
+    readonly htmlProps?: {};
 }
 
 export type SegmentedControlOptions<T> = Array<SegmentedControlOption<T>>;
@@ -18,7 +18,7 @@ export interface SegmentedControlProps<T> {
     selectedValue: T;
     disabled?: boolean;
     options: SegmentedControlOptions<T>;
-    onChange(value: T, event: MouseEvent): void;
+    onChange: (value: T, event: MouseEvent) => void;
 }
 
 /**
@@ -39,7 +39,13 @@ export interface SegmentedControlProps<T> {
  * @param onChange
  * @constructor
  */
-export const SegmentedControl = <T,>({ classNameModifiers = [], selectedValue, disabled = false, options, onChange }: SegmentedControlProps<T>) => {
+export const SegmentedControl = <T,>({
+    classNameModifiers = [],
+    selectedValue,
+    disabled = false,
+    options,
+    onChange
+}: Readonly<SegmentedControlProps<T>>) => {
     if (!options || options.length === 0) {
         return null;
     }

@@ -6,8 +6,8 @@ import { TxVariants } from '../tx-variants';
 import { VoucherConfiguration } from '../internal/Voucher/types';
 
 export class DokuElement extends UIElement<VoucherConfiguration> {
-    public static type = TxVariants.doku;
-    public static txVariants = [
+    public static readonly type = TxVariants.doku;
+    public static readonly txVariants = [
         TxVariants.doku,
         TxVariants.doku_alfamart,
         TxVariants.doku_permata_lite_atm,

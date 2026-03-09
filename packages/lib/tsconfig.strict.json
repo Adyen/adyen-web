@@ -1,0 +1,14 @@
+{
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+        "noImplicitAny": true,
+        "strict": true,
+        "strictNullChecks": false,
+        "strictFunctionTypes": false,
+        "strictPropertyInitialization": false,
+        "strictBindCallApply": false,
+        "noImplicitThis": false,
+        "alwaysStrict": false,
+        "noEmit": true
+    }
+}

@@ -7,7 +7,7 @@ export interface SRMessagesRef {
     setMessages?: (who: string[]) => void;
 }
 
-export function SRMessages({ setComponentRef }: SRMessagesProps) {
+export function SRMessages({ setComponentRef }: Readonly<SRMessagesProps>) {
     const messagesRef = useRef<SRMessagesRef>({});
     // Just call once to create the object by which we expose the members expected by the parent comp
     if (!Object.keys(messagesRef.current).length) {

@@ -19,7 +19,7 @@ interface BaseEnrollmentProps {
     onEnroll?: (registrationOptions: string) => void;
 }
 
-export interface AwaitProps extends Partial<IPayByBankPixAwait>, BaseEnrollmentProps {
+export interface AwaitProps extends Partial<IPayByBankPixAwait>, IssuerListProps {
     type: 'await';
     enrollmentId: string;
 }

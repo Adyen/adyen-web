@@ -11,7 +11,7 @@ import useImage from '../../../../core/Context/useImage';
 import { validationRules } from '../../../../utils/Validator/defaultRules';
 import { getErrorMessage } from '../../../../utils/getErrorMessage';
 
-export default function DragonpayInput(props: DragonpayInputProps) {
+export default function DragonpayInput(props: Readonly<DragonpayInputProps>) {
     const { i18n } = useCoreContext();
     const getImage = useImage();
     const isIssuerRequired = () => {

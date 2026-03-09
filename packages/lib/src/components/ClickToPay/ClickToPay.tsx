@@ -13,7 +13,7 @@ import { TxVariants } from '../tx-variants';
 import type { ICore } from '../../core/types';
 
 export class ClickToPayElement extends UIElement<ClickToPayConfiguration> {
-    public static type = TxVariants.clicktopay;
+    public static readonly type = TxVariants.clicktopay;
 
     private readonly clickToPayService: IClickToPayService | null;
     private readonly ctpConfiguration: ClickToPayProps;

@@ -41,7 +41,7 @@ function getPayButtonLabel(i18n: Language, amount: PaymentAmount, checkoutCard?:
     return null;
 }
 
-const CtPCards = ({ onDisplayCardComponent }: CtPCardsProps) => {
+const CtPCards = ({ onDisplayCardComponent }: Readonly<CtPCardsProps>) => {
     const { i18n } = useCoreContext();
     const getImage = useImage();
     const { cards, checkout, isCtpPrimaryPaymentMethod, status, onSubmit, onSetStatus, onError } = useClickToPayContext();

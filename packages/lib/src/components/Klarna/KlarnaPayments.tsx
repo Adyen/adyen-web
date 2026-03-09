@@ -8,12 +8,12 @@ import type { ICore } from '../../core/types';
 import { PayButtonProps } from '../internal/PayButton/PayButton';
 
 class KlarnaPayments extends UIElement<KlarnaConfiguration> {
-    public static type = TxVariants.klarna;
-    public static txVariants = [TxVariants.klarna, TxVariants.klarna_account, TxVariants.klarna_paynow, TxVariants.klarna_b2b];
+    public static readonly type = TxVariants.klarna;
+    public static readonly txVariants = [TxVariants.klarna, TxVariants.klarna_account, TxVariants.klarna_paynow, TxVariants.klarna_b2b];
 
     public componentRef: KlarnaComponentRef;
 
-    protected static defaultProps = {
+    protected static readonly defaultProps = {
         useKlarnaWidget: false
     };
 
