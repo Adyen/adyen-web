@@ -18,7 +18,7 @@ interface ApplePayCouponCodeDemoProps {
     shopperLocale: string;
 }
 
-const ApplePayCouponCodeDemo = ({ amount, countryCode, shopperLocale }: ApplePayCouponCodeDemoProps) => {
+const ApplePayCouponCodeDemo = ({ amount, countryCode, shopperLocale }: Readonly<ApplePayCouponCodeDemoProps>) => {
     const [session, setSession] = useState<{ id: string; sessionData: string }>(null);
     const sessionRef = useRef<{ id: string; sessionData: string }>(null);
     const currentAmountRef = useRef(amount);
