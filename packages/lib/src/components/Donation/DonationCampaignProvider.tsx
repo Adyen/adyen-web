@@ -8,6 +8,7 @@ import type {
 } from '../../core/CheckoutSession/types';
 import { normalizeDonationCampaign } from './utils';
 import Donation from './Donation';
+import { AnalyticsLogEvent, LogEventType } from '../../core/Analytics/events/AnalyticsLogEvent';
 
 type DonationCampaignProviderSetup = {
     rootNode: HTMLElement;
@@ -127,13 +128,31 @@ class DonationCampaignProvider {
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             onCancel: data => {
                 // console.log('### Donation::onCancel:: data', data);
-                // TODO add analytics? - data shows whether shopper chose an amount, and, since they're here, that they then didn't proceed
 
-                // TODO - call a onDonationCancel callback?
+                // Do analytics
+                const event = new AnalyticsLogEvent({
+                    component: this.originalComponentType,
+                    // @ts-ignore this type will exist
+                    type: LogEventType.donation, // TODO will need a new type... donation, donationFromSessions?
+                    message: 'Sessions flow: opting to not make donation' // TODO - would we pass the amount? 'data' param shows whether shopper chose an amount,
+                });
+                this.core.modules.analytics.sendAnalytics(event);
+
+                // TODO Call onDonationCompleted callback
 
                 this.donationComponent.unmount();
             },
             onDonate: (state: DonationPayload, component: Donation) => {
+                // Do analytics
+                const event = new AnalyticsLogEvent({
+                    component: this.originalComponentType,
+                    // @ts-ignore this type will exist
+                    type: LogEventType.donation, // TODO will need a new type... donation, donationFromSessions?
+                    message: 'Sessions flow: making donation' // TODO - would we pass the amount?
+                });
+                this.core.modules.analytics.sendAnalytics(event);
+
+                // Make the request
                 const donationRequestData: CheckoutSessionDonationsRequestData = {
                     amount: state.data.amount,
                     donationCampaignId: id,
@@ -154,28 +173,22 @@ class DonationCampaignProvider {
     }
 
     private callSessionsDonations(donationRequestData: CheckoutSessionDonationsRequestData, component: Donation) {
-        // TODO add analytics
-        // const event = new AnalyticsLogEvent({
-        //     component: this._originalComponentType,
-        //     // @ts-ignore
-        //     type: LogEventType.donationFromSessions, // TODO will need a new type... donationFromSessions?
-        //     message: 'Sessions flow: calling donations endpoint'
-        // });
-        // this.core.modules.analytics.sendAnalytics(event);
-
         this.makeSessionDonationsCall(donationRequestData)
             .then((response: CheckoutSessionDonationsResponse) => {
                 if (response.resultCode === 'Authorised') {
                     component.setStatus('success');
+
+                    // TODO Call onDonationCompleted callback
                 } else {
                     component.setStatus('error');
-                }
 
-                // TODO - call a onDonationComplete callback?
+                    // TODO Call onDonationFailed callback
+                }
             })
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             .catch((error: unknown) => {
                 component.setStatus('error');
+                // TODO Call onDonationFailed callback
             });
     }
 
