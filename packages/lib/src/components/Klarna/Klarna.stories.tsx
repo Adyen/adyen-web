@@ -4,6 +4,7 @@ import { ComponentContainer } from '../../../storybook/components/ComponentConta
 import { KlarnaConfiguration } from './types';
 import Klarna from './KlarnaPayments';
 import { Checkout } from '../../../storybook/components/Checkout';
+import { COUNTRY_CODES } from '../../../storybook/constants/countries';
 
 type KlarnaStory = StoryConfiguration<KlarnaConfiguration>;
 
@@ -19,7 +20,7 @@ export const Widget: KlarnaStory = {
     ),
 
     args: {
-        countryCode: 'NL',
+        countryCode: COUNTRY_CODES.Netherlands,
         componentConfiguration: { useKlarnaWidget: true }
     }
 };
@@ -32,7 +33,7 @@ export const B2b: KlarnaStory = {
     ),
 
     args: {
-        countryCode: 'NL',
+        countryCode: COUNTRY_CODES.Sweden,
         componentConfiguration: {}
     }
 };
