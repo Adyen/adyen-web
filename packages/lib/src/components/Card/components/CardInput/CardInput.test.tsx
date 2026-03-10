@@ -35,7 +35,9 @@ const cardInputRequiredProps = {
 const getWrapper = ui => {
     return mount(
         <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
-            <AmountProvider providerRef={createRef()}>{ui}</AmountProvider>
+            <AmountProvider amount={{ value: 10, currency: 'EUR' }} providerRef={createRef()}>
+                {ui}
+            </AmountProvider>
         </CoreProvider>
     );
 };
@@ -104,14 +106,16 @@ describe('CardInput > holderName', () => {
         const placeholder = { holderName: 'Joe' };
         render(
             <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
-                <CardInput
-                    {...cardInputRequiredProps}
-                    holderNameRequired={true}
-                    hasHolderName={true}
-                    onChange={onChange}
-                    i18n={i18n}
-                    placeholders={placeholder}
-                />
+                <AmountProvider providerRef={createRef()}>
+                    <CardInput
+                        {...cardInputRequiredProps}
+                        holderNameRequired={true}
+                        hasHolderName={true}
+                        onChange={onChange}
+                        i18n={i18n}
+                        placeholders={placeholder}
+                    />
+                </AmountProvider>
             </CoreProvider>
         );
         expect(valid.holderName).toBe(false);
@@ -146,7 +150,9 @@ describe('CardInput > holderName', () => {
     test('does not show the holder name first by default', () => {
         render(
             <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
-                <CardInput {...cardInputRequiredProps} hasHolderName={true} />
+                <AmountProvider providerRef={createRef()}>
+                    <CardInput {...cardInputRequiredProps} hasHolderName={true} />
+                </AmountProvider>
             </CoreProvider>
         );
 
@@ -182,7 +188,9 @@ describe('CardInput > holderName', () => {
 
         render(
             <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
-                <CardInput {...cardInputRequiredProps} hasHolderName={true} positionHolderNameOnTop={true} />
+                <AmountProvider providerRef={createRef()}>
+                    <CardInput {...cardInputRequiredProps} hasHolderName={true} positionHolderNameOnTop={true} />
+                </AmountProvider>
             </CoreProvider>
         );
 
