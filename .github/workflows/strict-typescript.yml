@@ -33,9 +33,17 @@ jobs:
       - name: Get strict error baseline from master
         id: baseline
         run: |
-          BASELINE=$(yarn validate:strict 2>&1 | grep -c "error TS" || true)
-          echo "count=$BASELINE" >> "$GITHUB_OUTPUT"
-          echo "Master branch strict tsc errors: $BASELINE"
+          OUTPUT=$(yarn validate:strict 2>&1 || true)
+          TOTAL=$(echo "$OUTPUT" | grep -c "error TS" || true)
+          ERRORS=$(echo "$OUTPUT" | grep -oE "error TS[0-9]+" || true)
+          if [ -n "$ERRORS" ]; then
+            CODES_JSON=$(echo "$ERRORS" | sed 's/error //' | sort | uniq -c | sort -rn | awk 'BEGIN{printf "{"} NR>1{printf ","} {printf "\"%s\":%d",$2,$1} END{printf "}"}')
+          else
+            CODES_JSON='{}'
+          fi
+          echo "count=$TOTAL" >> "$GITHUB_OUTPUT"
+          echo "codes=$CODES_JSON" >> "$GITHUB_OUTPUT"
+          echo "Master baseline — total: $TOTAL, codes: $CODES_JSON"
 
       # ── Check PR branch ──
       - uses: actions/checkout@v6
@@ -61,8 +69,16 @@ jobs:
         continue-on-error: true
         run: |
           TSC_STRICT_BASELINE=${{ steps.baseline.outputs.count }}
-          ERROR_COUNT=$(yarn validate:strict 2>&1 | grep -c "error TS" || true)
+          OUTPUT=$(yarn validate:strict 2>&1 || true)
+          ERROR_COUNT=$(echo "$OUTPUT" | grep -c "error TS" || true)
+          ERRORS=$(echo "$OUTPUT" | grep -oE "error TS[0-9]+" || true)
+          if [ -n "$ERRORS" ]; then
+            CODES_JSON=$(echo "$ERRORS" | sed 's/error //' | sort | uniq -c | sort -rn | awk 'BEGIN{printf "{"} NR>1{printf ","} {printf "\"%s\":%d",$2,$1} END{printf "}"}')
+          else
+            CODES_JSON='{}'
+          fi
           echo "error_count=$ERROR_COUNT" >> "$GITHUB_OUTPUT"
+          echo "codes=$CODES_JSON" >> "$GITHUB_OUTPUT"
           echo "Current strict tsc errors: $ERROR_COUNT (baseline: $TSC_STRICT_BASELINE)"
 
           if [ "$ERROR_COUNT" -gt "$TSC_STRICT_BASELINE" ]; then
@@ -78,23 +94,49 @@ jobs:
         if: always()
         id: build-comment
         run: |
-          TSC_STRICT_BASELINE=${{ steps.baseline.outputs.count }}
+          B_TOTAL=${{ steps.baseline.outputs.count }}
+          B_CODES='${{ steps.baseline.outputs.codes }}'
+          [ -z "$B_CODES" ] && B_CODES='{}'
+          PR_TOTAL="${{ steps.tsc-strict.outputs.error_count }}"
+          PR_TOTAL="${PR_TOTAL:-N/A}"
+          PR_CODES='${{ steps.tsc-strict.outputs.codes }}'
+          [ -z "$PR_CODES" ] && PR_CODES='{}'
+
           if [ "${{ steps.tsc-strict.outcome }}" = "success" ]; then
-            STATUS="✅ Pass"
+            OVERALL_STATUS="✅ Pass"
           else
-            STATUS="⚠️ Regression"
+            OVERALL_STATUS="⚠️ Regression"
           fi
 
-          ERROR_COUNT="${{ steps.tsc-strict.outputs.error_count }}"
-          ERROR_COUNT="${ERROR_COUNT:-N/A}"
+          # Generate per-code table rows with jq (sorted by PR count desc)
+          TABLE_ROWS=$(jq -r -n \
+            --argjson baseline "$B_CODES" \
+            --argjson pr "$PR_CODES" '
+            (($baseline | keys) + ($pr | keys)) | unique |
+            map({ code: ., b: ($baseline[.] // 0), p: ($pr[.] // 0) }) |
+            sort_by(-.p, -.b) | .[] |
+            (if .p > .b then "⚠️ +\(.p - .b)"
+             elif .p < .b then "✅ \(.p - .b)"
+             else "✅ 0" end) as $delta |
+            "| `\(.code)` | \(.p) | \(.b) | \($delta) |"
+          ')
+
+          NUM_CODES=$(jq -n --argjson b "$B_CODES" --argjson p "$PR_CODES" '(($b | keys) + ($p | keys)) | unique | length')
 
           {
             echo 'body<<EOF'
             echo '## Strict TypeScript Scan Results'
             echo ''
-            echo '| Check | Status |'
-            echo '|-------|--------|'
-            echo "| Typescript strict rules (${ERROR_COUNT} errors, baseline: ${TSC_STRICT_BASELINE}) | ${STATUS} |"
+            echo "**Total: ${PR_TOTAL} errors (baseline: ${B_TOTAL}) | ${OVERALL_STATUS}**"
+            echo ''
+            echo '<details>'
+            echo "<summary>Per-code breakdown (${NUM_CODES} codes)</summary>"
+            echo ''
+            echo '| Error Code | PR | Baseline | Delta |'
+            echo '|------------|-----|----------|-------|'
+            echo "$TABLE_ROWS"
+            echo ''
+            echo '</details>'
             echo ''
             echo "_Last updated: $(date -u '+%Y-%m-%d %H:%M:%S UTC')_"
             echo 'EOF'
