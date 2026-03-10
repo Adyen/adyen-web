@@ -256,8 +256,14 @@ export const StandaloneStoredCard: CardStory = {
 
 /**
  * Split funding source test
- * This story exists to test the split funding source behavior when the merchant has enabled split card funding sources
- * It renders 3 different Card components to test the behavior across multiple instances
+ * This story exists to test the split funding source behavior when the merchant has enabled split card funding sources.
+ * It renders 3 different Card components to test the behavior across multiple instances.
+ *
+ * The clickToPayConfiguration, shopperEmail and installmentOptions are intentionally included to verify
+ * side-effect behavior per funding source:
+ * - Credit: Should render CtP and installments
+ * - Debit: Should render CtP, but NOT installments
+ * - Prepaid: Should NOT render CtP or installments
  */
 export const SplitFundingSourceTest: CardStory = {
     render: SplitFundingSourceCards,
@@ -265,7 +271,6 @@ export const SplitFundingSourceTest: CardStory = {
         countryCode: 'BR',
         componentConfiguration: {
             _disableClickToPay: true,
-
             clickToPayConfiguration: {
                 shopperEmail: 'levelaccess.ctp@adyen.com',
                 merchantDisplayName: 'Adyen Merchant Name'

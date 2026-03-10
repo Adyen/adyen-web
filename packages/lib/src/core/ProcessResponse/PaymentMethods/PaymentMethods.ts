@@ -43,17 +43,19 @@ class PaymentMethods {
         return Boolean(this.paymentMethods.find(pm => pm.type === this.mapCreatedComponentType(paymentMethod)));
     }
 
-    find(paymentMethod: string, fundingSource?: string): PaymentMethod {
-        // HACK: For card components, we need to match the fundingSource as well
-        // This is because when we set splitCardFundingSources: true, we get multiple card payment methods
-        // with the same type but different fundingSource values
-        if (fundingSource) {
-            const found = this.paymentMethods.find(
-                pm => pm.type === this.mapCreatedComponentType(paymentMethod) && pm.fundingSource === fundingSource
-            );
-            if (found) return found;
-        }
+    find(paymentMethod: string): PaymentMethod {
         return this.paymentMethods.find(pm => pm.type === this.mapCreatedComponentType(paymentMethod));
+    }
+
+    /**
+     * Finds a payment method matching both type and funding source.
+     * Used when `splitCardFundingSources` is enabled, which results in multiple payment methods
+     * of the same type but with different fundingSource values (e.g. credit, debit, prepaid).
+     * Falls back to the first match by type if no funding source match is found.
+     */
+    findByFundingSource(paymentMethod: string, fundingSource: string): PaymentMethod {
+        const mappedType = this.mapCreatedComponentType(paymentMethod);
+        return this.paymentMethods.find(pm => pm.type === mappedType && pm.fundingSource === fundingSource) || this.find(paymentMethod);
     }
 
     findById(paymentMethodId: string): PaymentMethod {

@@ -10,7 +10,7 @@ import { shouldIncludeInstallmentsInPaymentData } from './components/CardInput/u
 import createClickToPayService from '../internal/ClickToPay/services/create-clicktopay-service';
 import { ClickToPayCheckoutPayload, IClickToPayService } from '../internal/ClickToPay/services/types';
 import ClickToPayWrapper from './components/ClickToPayWrapper';
-import { ComponentFocusObject } from '../../types/global-types';
+import { ComponentFocusObject, RawPaymentMethod } from '../../types/global-types';
 import { TxVariants } from '../tx-variants';
 import type { UIElementStatus } from '../internal/UIElement/types';
 import UIElement from '../internal/UIElement';
@@ -68,6 +68,18 @@ export class CardElement extends UIElement<CardConfiguration> {
     private setClickToPayRef = ref => {
         this.clickToPayRef = ref;
     };
+
+    protected override getPaymentMethodFromPaymentMethodsResponse(type?: string, paymentMethodId?: string): RawPaymentMethod {
+        if (paymentMethodId) {
+            return this.core.paymentMethodsResponse.findById(paymentMethodId);
+        }
+
+        if (this.props.fundingSource) {
+            return this.core.paymentMethodsResponse?.findByFundingSource(type, this.props.fundingSource);
+        }
+
+        return this.core.paymentMethodsResponse?.find(type);
+    }
 
     formatProps(props: CardConfiguration): CardConfiguration {
         // The value from a session should be used, before falling back to the merchant configuration
