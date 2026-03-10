@@ -38,10 +38,11 @@ describe('BacsInput', () => {
         );
     });
 
-    test('Should display expected fields for second (confirm-data) state', () => {
+    test('Should display expected fields for second (confirm-data) state', async () => {
         const { bacsRef } = renderBacsInput({});
 
-        void act(() => {
+        // eslint-disable-next-line @typescript-eslint/require-await
+        await act(async () => {
             bacsRef.current.setStatus('confirm-data');
         });
 
