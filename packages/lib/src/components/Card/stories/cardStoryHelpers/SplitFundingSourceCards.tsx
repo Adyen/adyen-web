@@ -5,7 +5,7 @@ import { Checkout } from '../../../../../storybook/components/Checkout';
 import Card from '../../Card';
 import { ComponentContainer } from '../../../../../storybook/components/ComponentContainer';
 
-const ConfigDescription = ({ config }: { config: CardConfiguration }) => {
+const ConfigDescription = ({ config }: { readonly config: CardConfiguration }) => {
     const fundingSource = config.fundingSource || 'Not specified';
     const brands = config.brands ? config.brands.join(', ') : 'Not specified';
 
