@@ -118,7 +118,7 @@ jobs:
             (if .p > .b then "⚠️ +\(.p - .b)"
              elif .p < .b then "✅ \(.p - .b)"
              else "✅ 0" end) as $delta |
-            "| `\(.code)` | \(.p) | \(.b) | \($delta) |"
+            "| [`\(.code)`](https://typescript.tv/errors/\(.code)/) | \(.p) | \(.b) | \($delta) |"
           ')
 
           NUM_CODES=$(jq -n --argjson b "$B_CODES" --argjson p "$PR_CODES" '(($b | keys) + ($p | keys)) | unique | length')
