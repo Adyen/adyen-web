@@ -1,7 +1,8 @@
-import { h } from 'preact';
+import { createRef, h } from 'preact';
 import { mount } from 'enzyme';
 import CardInput from './CardInput';
 import { CoreProvider } from '../../../../core/Context/CoreProvider';
+import { AmountProvider } from '../../../../core/Context/AmountProvider';
 
 jest.mock('../../../internal/SecuredFields/lib/CSF');
 
@@ -49,9 +50,10 @@ const dualBrandResp = {
 
 const getWrapper = ui => {
     return mount(
-        // @ts-ignore
         <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
-            {ui}
+            <AmountProvider amount={{ value: 10, currency: 'EUR' }} providerRef={createRef()}>
+                {ui}
+            </AmountProvider>
         </CoreProvider>
     );
 };
@@ -69,7 +71,7 @@ describe('CardNumber and the dual branding UI', () => {
         expect(wrapper.find('.adyen-checkout__fieldset--dual-brand-switcher')).toHaveLength(0);
     });
 
-    test('Renders a CardInput with dual branding UI radio button elements', async () => {
+    test('Renders a CardInput with dual branding UI radio button elements', () => {
         const wrapper = getWrapper(<CardInput {...cardInputRequiredProps} />);
 
         cardInputRef.processBinLookupResponse(dualBrandResp, false);
@@ -103,7 +105,7 @@ describe('CardNumber and the dual branding UI', () => {
         expect(els.at(1).text().includes('Carte Bancaire')).toBe(true);
     });
 
-    test('Dual branding UI is not hidden when the card number is in error', async () => {
+    test('Dual branding UI is not hidden when the card number is in error', () => {
         const wrapper = getWrapper(<CardInput {...cardInputRequiredProps} />);
 
         cardInputRef.processBinLookupResponse(dualBrandResp, false);
