@@ -38,34 +38,16 @@ async function createCheckoutWithGooglePay(environment: CoreConfiguration['envir
 }
 
 describe('GooglePay environment resolution', () => {
-    test('should resolve to PRODUCTION for "live" environment', async () => {
-        await createCheckoutWithGooglePay('live');
+    test.each([
+        { env: 'live', expected: 'PRODUCTION', description: 'for "live" environment' },
+        { env: 'test', expected: 'TEST', description: 'for "test" environment' },
+        { env: 'live-au', expected: 'PRODUCTION', description: 'for regional live environments (e.g. "live-au")' },
+        { env: 'live-uk', expected: 'PRODUCTION', description: 'for unrecognized environment strings' },
+        { env: 'TEST', expected: 'TEST', description: 'for case-insensitive environment values' }
+    ])('should resolve to $expected $description', async ({ env, expected }) => {
+        await createCheckoutWithGooglePay(env as CoreConfiguration['environment']);
 
-        expect(getGooglePaymentsClientSpy).toHaveBeenCalledWith(expect.objectContaining({ environment: 'PRODUCTION' }));
-    });
-
-    test('should resolve to TEST for "test" environment', async () => {
-        await createCheckoutWithGooglePay('test');
-
-        expect(getGooglePaymentsClientSpy).toHaveBeenCalledWith(expect.objectContaining({ environment: 'TEST' }));
-    });
-
-    test('should resolve to PRODUCTION for regional live environments (e.g. "live-au")', async () => {
-        await createCheckoutWithGooglePay('live-au');
-
-        expect(getGooglePaymentsClientSpy).toHaveBeenCalledWith(expect.objectContaining({ environment: 'PRODUCTION' }));
-    });
-
-    test('should resolve to PRODUCTION for unrecognized environment strings', async () => {
-        await createCheckoutWithGooglePay('live-uk' as CoreConfiguration['environment']);
-
-        expect(getGooglePaymentsClientSpy).toHaveBeenCalledWith(expect.objectContaining({ environment: 'PRODUCTION' }));
-    });
-
-    test('should handle environment values case-insensitively', async () => {
-        await createCheckoutWithGooglePay('TEST' as CoreConfiguration['environment']);
-
-        expect(getGooglePaymentsClientSpy).toHaveBeenCalledWith(expect.objectContaining({ environment: 'TEST' }));
+        expect(getGooglePaymentsClientSpy).toHaveBeenCalledWith(expect.objectContaining({ environment: expected }));
     });
 
     test('should resolve to PRODUCTION when using custom API environment URLs with a live environment', async () => {

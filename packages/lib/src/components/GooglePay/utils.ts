@@ -4,8 +4,7 @@ import { AddressData } from '../../types/global-types';
  * Use same logic as Environment.ts where fallback is live (production)
  */
 export function resolveEnvironment(env = 'PRODUCTION'): google.payments.api.Environment {
-    const environment = env.toLowerCase();
-    switch (environment) {
+    switch (env) {
         case 'beta':
         case 'test':
             return 'TEST';
