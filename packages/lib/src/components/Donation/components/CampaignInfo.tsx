@@ -8,7 +8,7 @@ export interface CampaignInfoProps {
     bannerUrl?: string;
 }
 
-export default function CampaignInfo({ logoUrl = '', nonprofitName = '', causeName = '', bannerUrl = '' }: CampaignInfoProps) {
+export default function CampaignInfo({ logoUrl = '', nonprofitName = '', causeName = '', bannerUrl = '' }: Readonly<CampaignInfoProps>) {
     const backgroundImage = `url(${bannerUrl})`;
 
     return (

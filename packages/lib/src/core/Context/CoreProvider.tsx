@@ -23,7 +23,7 @@ type ContextValue = {
 
 const CoreContext = createContext<ContextValue | undefined>(undefined);
 
-const CoreProvider = ({ i18n, loadingContext, resources, analytics, children }: CoreProviderProps) => {
+const CoreProvider = ({ i18n, loadingContext, resources, analytics, children }: Readonly<CoreProviderProps>) => {
     const coreContext = useContext(CoreContext);
 
     useEffect(() => {

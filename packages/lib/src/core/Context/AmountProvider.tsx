@@ -21,7 +21,7 @@ export interface AmountProviderRef {
 
 const AmountContext = createContext<AmountContextValue | undefined>(undefined);
 
-const useAmount = (): { amount: PaymentAmount | undefined; isZeroAuth: boolean } => {
+const useAmount = (): { amount?: PaymentAmount; isZeroAuth: boolean } => {
     const context = useContext(AmountContext);
     if (!context) {
         throw new Error('useAmount must be used within an AmountProvider');
@@ -41,7 +41,7 @@ const useSecondaryAmount = (): { secondaryAmount: PaymentAmount | undefined } =>
     return { secondaryAmount: context.secondaryAmount };
 };
 
-const AmountProvider = ({ amount, secondaryAmount, providerRef, children }: AmountProviderProps) => {
+const AmountProvider = ({ amount, secondaryAmount, providerRef, children }: Readonly<AmountProviderProps>) => {
     const context = useContext(AmountContext);
 
     const [updatedAmount, setUpdatedAmount] = useState<PaymentAmount>(amount);

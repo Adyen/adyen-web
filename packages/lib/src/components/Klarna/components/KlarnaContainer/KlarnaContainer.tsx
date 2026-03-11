@@ -18,7 +18,7 @@ interface KlarnaContainerProps {
     onActionHandled(actionHandled: ActionHandledReturnObject): void;
 }
 
-export function KlarnaContainer({ setComponentRef, ...props }: KlarnaContainerProps) {
+export function KlarnaContainer({ setComponentRef, ...props }: Readonly<KlarnaContainerProps>) {
     const [widgetInitializationTime, setWidgetInitializationTime] = useState<number>(null);
     const [action, setAction] = useState<KlarnaAction>();
     const [status, setStatus] = useState('ready');

@@ -6,9 +6,9 @@ import { TxVariants } from '../tx-variants';
 import { PayButtonProps } from '../internal/PayButton/PayButton';
 
 class TwintElement extends RedirectElement {
-    public static type = TxVariants.twint;
+    public static override readonly type: TxVariants = TxVariants.twint;
 
-    public static defaultProps = {
+    public static readonly defaultProps = {
         type: TwintElement.type,
         name: 'Twint'
     };

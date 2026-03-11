@@ -48,7 +48,7 @@ class Core implements ICore {
         bundleType: LIBRARY_BUNDLE_TYPE
     };
 
-    public static registry = registry;
+    public static readonly registry = registry;
 
     public static setBundleType(type: string): void {
         Core.metadata.bundleType = type;
@@ -359,7 +359,9 @@ class Core implements ICore {
         this.options = {
             ...this.options,
             ...options,
-            locale: options?.locale || this.options?.locale
+            locale: options?.locale || this.options?.locale,
+            // Make environment lowercase to ensure consistency
+            environment: String.prototype.toLowerCase.apply(options?.environment || this.options?.environment)
         };
     };
 

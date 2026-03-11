@@ -15,7 +15,7 @@ export interface CopyIconButtonProps extends ButtonProps {
     text: string;
 }
 
-const CopyIconButton = (props: CopyIconButtonProps) => {
+const CopyIconButton = (props: Readonly<CopyIconButtonProps>) => {
     const { i18n } = useCoreContext();
     const anchorRef = useRef<HTMLButtonElement>(null);
     const { showTooltip, hideTooltip } = useTooltip();
@@ -71,7 +71,7 @@ const CopyIconButton = (props: CopyIconButtonProps) => {
     );
 };
 
-const withTooltip = (props: CopyIconButtonProps) => {
+const withTooltip = (props: Readonly<CopyIconButtonProps>) => {
     return (
         <SingletonTooltipProvider>
             <CopyIconButton {...props} />

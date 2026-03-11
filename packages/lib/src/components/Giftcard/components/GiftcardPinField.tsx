@@ -12,7 +12,7 @@ export const GiftcardPinField = ({
     focusedElement,
     setFocusOn,
     label = i18n.get('creditCard.pin.label')
-}: GiftcardFieldProps) => {
+}: Readonly<GiftcardFieldProps>) => {
     return (
         <Field
             label={label}

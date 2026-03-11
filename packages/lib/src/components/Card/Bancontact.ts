@@ -5,13 +5,13 @@ import { TxVariants } from '../tx-variants';
 import type { ICore } from '../../core/types';
 
 class BancontactElement extends CardElement {
-    public static type = TxVariants.bcmc;
+    public static override readonly type: TxVariants = TxVariants.bcmc;
 
     constructor(checkout: ICore, props?: CardConfiguration) {
         super(checkout, props);
     }
 
-    protected static defaultProps = {
+    protected static readonly defaultProps = {
         ...CardElement.defaultProps,
         brands: ['bcmc', 'maestro', 'visa']
     };

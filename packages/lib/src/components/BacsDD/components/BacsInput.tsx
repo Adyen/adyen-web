@@ -20,7 +20,7 @@ import { useAmount } from '../../../core/Context/AmountProvider';
 const ENTER_STATE = 'enter-data';
 const CONFIRM_STATE = 'confirm-data';
 
-function BacsInput(props: BacsInputProps) {
+function BacsInput(props: Readonly<BacsInputProps>) {
     const { i18n } = useCoreContext();
     const getImage = useImage();
     const { amount } = useAmount();

@@ -21,7 +21,7 @@ type CtPInfoModalProps = {
     focusAfterClose: HTMLElement;
 };
 
-const CtPInfoModal = ({ isOpen, onClose, focusAfterClose }: CtPInfoModalProps) => {
+const CtPInfoModal = ({ isOpen, onClose, focusAfterClose }: Readonly<CtPInfoModalProps>) => {
     const focusFirstElement = useRef<HTMLParagraphElement>();
     const { i18n } = useCoreContext();
     const getImage = useImage();

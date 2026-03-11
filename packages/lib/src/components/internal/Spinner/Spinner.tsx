@@ -17,7 +17,7 @@ interface SpinnerProps {
  * Default Loading Spinner
  * @param props -
  */
-const Spinner = ({ inline = false, size = 'large' }: SpinnerProps) => (
+const Spinner = ({ inline = false, size = 'large' }: Readonly<SpinnerProps>) => (
     <div data-testid="spinner" className={`adyen-checkout__spinner__wrapper ${inline ? 'adyen-checkout__spinner__wrapper--inline' : ''}`}>
         <div className={`adyen-checkout__spinner adyen-checkout__spinner--${size}`} />
     </div>

@@ -10,7 +10,7 @@ const calculateStartAndEndTime = (minutesFromNow: number) => {
     return { startTime: new Date(nowTime), endTime: new Date(nowTime + secondsFromNow) };
 };
 
-function Countdown({ minutesFromNow, onTick = () => {}, onCompleted = () => {} }: CountdownProps) {
+function Countdown({ minutesFromNow, onTick = () => {}, onCompleted = () => {} }: Readonly<CountdownProps>) {
     const startAndEndTime = useRef(calculateStartAndEndTime(minutesFromNow));
     const { startTime, endTime } = startAndEndTime.current;
     const [time, setTime] = useState<CountdownTime>({

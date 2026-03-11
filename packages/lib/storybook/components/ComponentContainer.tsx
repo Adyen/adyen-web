@@ -8,7 +8,7 @@ interface IContainer {
     id?: string;
 }
 
-export const ComponentContainer = ({ element, id = 'component-root' }: IContainer) => {
+export const ComponentContainer = ({ element, id = 'component-root' }: Readonly<IContainer>) => {
     const container = useRef(null);
     const [errorMessage, setErrorMessage] = useState(null);
 

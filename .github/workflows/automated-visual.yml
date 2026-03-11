@@ -1,14 +1,10 @@
 name: Automated Visual Tests
 
 on:
-  pull_request:
-  workflow_dispatch:
-  # Optional: Add schedule if you want these tests to run on a regular basis
-  # schedule:
-  #   - cron: '0 2 * * 1-5' # Runs at 2 AM UTC Monday-Friday
+  workflow_call:
 
 jobs:
-  automated-visual:
+  visual-tests:
     timeout-minutes: 60
     runs-on: ubuntu-latest
     strategy:
@@ -26,7 +22,7 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v6
-    
+
     - name: Setup Node
       uses: actions/setup-node@v6
       with:
@@ -69,9 +65,9 @@ jobs:
       if: steps.playwright-cache.outputs.cache-hit != 'true' || matrix.runner-browser == 'webkit'
       run: npx playwright install --with-deps ${{ matrix.runner-browser }}
 
-    - name: Run Automated Visual Tests
+    - name: Run Visual Tests
       run: yarn test:automated-visual --project=${{ matrix.runner-browser }}
-    
+
     - name: Archive test result artifacts
       id: upload-artifact
       if: always()

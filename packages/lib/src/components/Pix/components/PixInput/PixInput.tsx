@@ -7,7 +7,7 @@ import useForm from '../../../../utils/useForm';
 import { BrazilPersonalDetail } from '../../../internal/SocialSecurityNumberBrazil/BrazilPersonalDetail';
 import { PixInputDataState, PixInputProps } from './types';
 
-function PixInput({ name, data: dataProps, personalDetailsRequired, showPayButton, onChange, payButton }: PixInputProps) {
+function PixInput({ name, data: dataProps, personalDetailsRequired, showPayButton, onChange, payButton }: Readonly<PixInputProps>) {
     const { i18n } = useCoreContext();
     const formSchema = ['firstName', 'lastName', 'socialSecurityNumber'];
 

@@ -9,7 +9,7 @@ import { payAmountLabel } from '../internal/PayButton/utils';
 import type { PreAuthorizedDebitCanadaConfiguration } from './types';
 
 export class PreAuthorizedDebitCanada extends UIElement<PreAuthorizedDebitCanadaConfiguration> {
-    public static type = TxVariants.eft_directdebit_CA;
+    public static readonly type = TxVariants.eft_directdebit_CA;
 
     public override formatData() {
         const recurringPayment = !!this.props.storedPaymentMethodId;

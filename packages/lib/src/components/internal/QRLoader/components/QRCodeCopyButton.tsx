@@ -8,6 +8,6 @@ interface QRCodeCopyButtonProps {
     handleCopy?: (e: h.JSX.TargetedMouseEvent<HTMLButtonElement>) => void;
 }
 
-export const QRCodeCopyButton = ({ text, copyLabel, copiedLabel, handleCopy }: QRCodeCopyButtonProps) => {
+export const QRCodeCopyButton = ({ text, copyLabel, copiedLabel, handleCopy }: Readonly<QRCodeCopyButtonProps>) => {
     return <CopyButton onClick={handleCopy} text={text} label={copyLabel} copiedLabel={copiedLabel} />;
 };

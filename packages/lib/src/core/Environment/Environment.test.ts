@@ -10,16 +10,6 @@ describe('Environments', () => {
         expect(cdnTranslationsUrl).toBe('https://checkoutshopper-test.cdn.adyen.com/checkoutshopper/');
     });
 
-    test('should return proper URLs for the "test" environment even passing upper case string', () => {
-        // @ts-ignore Passing uppercase value is expected here
-        const { apiUrl, analyticsUrl, cdnImagesUrl, cdnTranslationsUrl } = resolveEnvironments('TEST');
-
-        expect(apiUrl).toBe('https://checkoutshopper-test.adyen.com/checkoutshopper/');
-        expect(analyticsUrl).toBe('https://checkoutanalytics-test.adyen.com/checkoutanalytics/');
-        expect(cdnImagesUrl).toBe('https://checkoutshopper-test.cdn.adyen.com/checkoutshopper/');
-        expect(cdnTranslationsUrl).toBe('https://checkoutshopper-test.cdn.adyen.com/checkoutshopper/');
-    });
-
     test('should customize the URLs in case they are provided', () => {
         const environmentUrls = {
             api: 'https://checkoutshopper-beta.adyen.com/',

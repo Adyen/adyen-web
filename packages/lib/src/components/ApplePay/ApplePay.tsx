@@ -23,9 +23,9 @@ import { AnalyticsInfoEvent, InfoEventType, UiTarget } from '../../core/Analytic
 const LATEST_APPLE_PAY_VERSION = 14;
 
 class ApplePayElement extends UIElement<ApplePayConfiguration> {
-    public static type = TxVariants.applepay;
+    public static readonly type = TxVariants.applepay;
 
-    protected static defaultProps = defaultProps;
+    protected static readonly defaultProps = defaultProps;
 
     private sdkLoader: ApplePaySdkLoader;
     private applePayVersionNumber: number = undefined;

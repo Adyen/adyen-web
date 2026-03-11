@@ -7,8 +7,8 @@ import { TxVariants } from '../tx-variants';
 import type { OpenInvoiceConfiguration } from '../types';
 
 export default class AfterPay extends OpenInvoiceContainer {
-    public static type = TxVariants.afterpay_default;
-    public static txVariants = [TxVariants.afterpay_default, TxVariants.afterpay];
+    public static readonly type = TxVariants.afterpay_default;
+    public static readonly txVariants = [TxVariants.afterpay_default, TxVariants.afterpay];
 
     formatProps(props: OpenInvoiceConfiguration) {
         return {
