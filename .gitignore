@@ -44,3 +44,8 @@ cert
 
 # Windsurf
 .windsurf/workflows/
+
+
+# AI agents
+.claude
+.factory
