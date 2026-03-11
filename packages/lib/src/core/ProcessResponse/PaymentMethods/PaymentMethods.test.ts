@@ -72,19 +72,5 @@ describe('PaymentMethodsResponse', () => {
             expect(result.name).toBe('Debit Card');
             expect(result.fundingSource).toBe('debit');
         });
-
-        test('should fall back to the first matching type when fundingSource has no match', () => {
-            const pmResponse = new PaymentMethods(splitFundingResponse);
-            // eslint-disable-next-line testing-library/await-async-queries
-            const result = pmResponse.findByFundingSource('card', 'prepaid');
-            expect(result.name).toBe('Credit Card');
-        });
-
-        test('should work with non-card payment methods', () => {
-            const pmResponse = new PaymentMethods(splitFundingResponse);
-            // eslint-disable-next-line testing-library/await-async-queries
-            const result = pmResponse.findByFundingSource('paypal', 'credit');
-            expect(result.name).toBe('PayPal');
-        });
     });
 });

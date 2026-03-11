@@ -130,7 +130,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         return this.core.modules.srPanel;
     }
 
-    private getPaymentMethodConfigFromResponse(componentProps: P) {
+    protected getPaymentMethodConfigFromResponse(componentProps: P) {
         if (componentProps?.storedPaymentMethodId) return this.getStoredPaymentMethodDetails(componentProps.storedPaymentMethodId);
         return this.getPaymentMethodFromPaymentMethodsResponse(componentProps?.type, componentProps?.paymentMethodId);
     }

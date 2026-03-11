@@ -10,7 +10,7 @@ import { shouldIncludeInstallmentsInPaymentData } from './components/CardInput/u
 import createClickToPayService from '../internal/ClickToPay/services/create-clicktopay-service';
 import { ClickToPayCheckoutPayload, IClickToPayService } from '../internal/ClickToPay/services/types';
 import ClickToPayWrapper from './components/ClickToPayWrapper';
-import { ComponentFocusObject, RawPaymentMethod } from '../../types/global-types';
+import { ComponentFocusObject } from '../../types/global-types';
 import { TxVariants } from '../tx-variants';
 import type { UIElementStatus } from '../internal/UIElement/types';
 import UIElement from '../internal/UIElement';
@@ -69,16 +69,14 @@ export class CardElement extends UIElement<CardConfiguration> {
         this.clickToPayRef = ref;
     };
 
-    protected override getPaymentMethodFromPaymentMethodsResponse(type?: string, paymentMethodId?: string): RawPaymentMethod {
-        if (paymentMethodId) {
-            return this.core.paymentMethodsResponse.findById(paymentMethodId);
+    // This is the most self contained way of handling funding source matching
+    // Alternatives would be to override getPaymentMethodConfigFromResponse and change it's signature
+    protected override getPaymentMethodConfigFromResponse(componentProps: CardConfiguration) {
+        if (componentProps?.fundingSource) {
+            return this.core.paymentMethodsResponse?.findByFundingSource(componentProps.type, componentProps.fundingSource);
         }
 
-        if (this.props.fundingSource) {
-            return this.core.paymentMethodsResponse?.findByFundingSource(type, this.props.fundingSource);
-        }
-
-        return this.core.paymentMethodsResponse?.find(type);
+        return super.getPaymentMethodConfigFromResponse(componentProps);
     }
 
     formatProps(props: CardConfiguration): CardConfiguration {
