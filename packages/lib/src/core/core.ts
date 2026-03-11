@@ -45,13 +45,18 @@ class Core implements ICore {
 
     public static readonly metadata = {
         version: LIBRARY_VERSION,
-        bundleType: LIBRARY_BUNDLE_TYPE
+        bundleType: LIBRARY_BUNDLE_TYPE,
+        numberOfInitialisedCheckouts: 0
     };
 
     public static readonly registry = registry;
 
     public static setBundleType(type: string): void {
         Core.metadata.bundleType = type;
+    }
+
+    public static increaseInitialisationCount(): void {
+        Core.metadata.numberOfInitialisedCheckouts += 1;
     }
 
     public static register(...items: NewableComponent[]) {
@@ -100,6 +105,13 @@ class Core implements ICore {
         if (clientKeyType === 'pub.') {
             console.debug(
                 `The value you are passing as your "clientKey" looks like an originKey (${this.options.clientKey?.substring(0, 12)}..). Although this is supported it is not the recommended way to integrate. To generate a clientKey, see the documentation (https://docs.adyen.com/development-resources/client-side-authentication/migrate-from-origin-key-to-client-key/) for more details.`
+            );
+        }
+
+        Core.increaseInitialisationCount();
+        if (Core.metadata.numberOfInitialisedCheckouts > 1) {
+            console.warn(
+                'Multiple initialisations of the Adyen Checkout library detected. This is not recommended and may lead to unexpected behavior.'
             );
         }
 
