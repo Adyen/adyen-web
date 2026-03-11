@@ -33,17 +33,17 @@ export const SplitFundingSourceCards = (args: PaymentMethodStoryProps<CardConfig
                         <div>
                             <h3>Card Component 1 (Credit)</h3>
                             <ConfigDescription config={card1.props} />
-                            <ComponentContainer element={card1} />
+                            <ComponentContainer element={card1} id="component-root" />
                         </div>
                         <div>
                             <h3>Card Component 2 (Debit)</h3>
                             <ConfigDescription config={card2.props} />
-                            <ComponentContainer element={card2} />
+                            <ComponentContainer element={card2} id="component-root-debit" />
                         </div>
                         <div>
                             <h3>Card Component 3 (Prepaid)</h3>
                             <ConfigDescription config={card3.props} />
-                            <ComponentContainer element={card3} />
+                            <ComponentContainer element={card3} id="component-root-prepaid" />
                         </div>
                     </div>
                 );
