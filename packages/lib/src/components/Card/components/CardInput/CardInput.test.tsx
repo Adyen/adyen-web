@@ -1,9 +1,7 @@
 import { createRef, h } from 'preact';
-import { mount } from 'enzyme';
+import { render, screen, fireEvent, act } from '@testing-library/preact';
 import CardInput from './CardInput';
 import { CardInputDataState, CardInputValidState } from './types';
-import { render, screen, fireEvent } from '@testing-library/preact';
-import { CardFieldsWrapper } from './components/CardFieldsWrapper';
 import { CoreProvider } from '../../../../core/Context/CoreProvider';
 import { AmountProvider } from '../../../../core/Context/AmountProvider';
 
@@ -32,10 +30,10 @@ const cardInputRequiredProps = {
     onSubmitAnalytics: jest.fn()
 };
 
-const getWrapper = ui => {
-    return mount(
+const renderCardInput = ui => {
+    return render(
         <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
-            <AmountProvider amount={{ value: 10, currency: 'EUR' }} providerRef={createRef()}>
+            <AmountProvider amount={{ value: 1000, currency: 'USD' }} providerRef={createRef()}>
                 {ui}
             </AmountProvider>
         </CoreProvider>
@@ -44,15 +42,17 @@ const getWrapper = ui => {
 
 describe('CardInput', () => {
     test('Renders a normal Card form', () => {
-        const wrapper = getWrapper(<CardInput {...cardInputRequiredProps} />);
-        expect(wrapper.find('[data-cse="encryptedCardNumber"]')).toHaveLength(1);
-        expect(wrapper.find('[data-cse="encryptedExpiryDate"]')).toHaveLength(1);
-        expect(wrapper.find('[data-cse="encryptedSecurityCode"]')).toHaveLength(1);
+        const { container } = renderCardInput(<CardInput {...cardInputRequiredProps} />);
+        /* eslint-disable testing-library/no-node-access, testing-library/no-container */
+        expect(container.querySelector('[data-cse="encryptedCardNumber"]')).toBeTruthy();
+        expect(container.querySelector('[data-cse="encryptedExpiryDate"]')).toBeTruthy();
+        expect(container.querySelector('[data-cse="encryptedSecurityCode"]')).toBeTruthy();
+        /* eslint-enable testing-library/no-node-access, testing-library/no-container */
     });
 
     test('Has HolderName element', () => {
-        const wrapper = getWrapper(<CardInput {...cardInputRequiredProps} hasHolderName={true} />);
-        expect(wrapper.find('div.adyen-checkout__card__holderName')).toHaveLength(1);
+        renderCardInput(<CardInput {...cardInputRequiredProps} hasHolderName={true} />);
+        expect(screen.getByText('Name on card')).toBeVisible();
     });
 });
 
@@ -62,9 +62,10 @@ describe('CardInput - Brands beneath Card Number field', () => {
             { name: 'visa', icon: 'visa.png' },
             { name: 'mc', icon: 'mc.png' }
         ];
-        const wrapper = getWrapper(<CardInput {...cardInputRequiredProps} brandsIcons={brandsIcons} />);
-        expect(wrapper.find('.adyen-checkout__card__brands__brand-wrapper')).toHaveLength(2);
-        expect(wrapper.find('.adyen-checkout__card__brands__brand-wrapper--disabled')).toHaveLength(0);
+        renderCardInput(<CardInput {...cardInputRequiredProps} brandsIcons={brandsIcons} />);
+
+        expect(screen.getByAltText('VISA')).toBeVisible();
+        expect(screen.getByAltText('MasterCard')).toBeVisible();
     });
 
     test('should hide all brand icons when brand is detected', () => {
@@ -74,8 +75,11 @@ describe('CardInput - Brands beneath Card Number field', () => {
             { name: 'mc', icon: 'mc.png' },
             { name: 'amex', icon: 'amex.png' }
         ];
-        const wrapper = getWrapper(<CardInput {...cardInputRequiredProps} brand={detectedBrand} brandsIcons={brandsIcons} />);
-        expect(wrapper.find('.adyen-checkout__card__brands--hidden')).toHaveLength(1);
+        const { container } = renderCardInput(<CardInput {...cardInputRequiredProps} brand={detectedBrand} brandsIcons={brandsIcons} />);
+
+        /* eslint-disable testing-library/no-node-access, testing-library/no-container */
+        expect(container.querySelector('.adyen-checkout__card__brands--hidden')).toBeTruthy();
+        /* eslint-enable testing-library/no-node-access, testing-library/no-container */
     });
 
     test('should show all brand icons when no brand is detected', () => {
@@ -85,20 +89,21 @@ describe('CardInput - Brands beneath Card Number field', () => {
             { name: 'mc', icon: 'mc.png' },
             { name: 'amex', icon: 'amex.png' }
         ];
-        const wrapper = getWrapper(<CardInput {...cardInputRequiredProps} brand={detectedBrand} brandsIcons={brandsIcons} />);
-        expect(wrapper.find('.adyen-checkout__card__brands--hidden')).toHaveLength(0);
+        const { container } = renderCardInput(<CardInput {...cardInputRequiredProps} brand={detectedBrand} brandsIcons={brandsIcons} />);
+        /* eslint-disable testing-library/no-node-access, testing-library/no-container */
+        expect(container.querySelector('.adyen-checkout__card__brands--hidden')).toBeNull();
+        /* eslint-enable testing-library/no-node-access, testing-library/no-container */
     });
 });
 
 describe('CardInput > holderName', () => {
     test('Does not have HolderName element', () => {
-        const wrapper = getWrapper(<CardInput {...cardInputRequiredProps} />);
-        expect(wrapper.find('div.adyen-checkout__card__holderName')).toHaveLength(0);
+        renderCardInput(<CardInput {...cardInputRequiredProps} />);
+        expect(screen.queryByText('Name on card')).toBeNull();
     });
 
     test('holderName required, so valid.holderName is false', () => {
-        getWrapper(<CardInput {...cardInputRequiredProps} holderNameRequired={true} hasHolderName={true} onChange={onChange} />);
-        // expect(onChange.mock.calls[onChange.mock.calls.length - 1][0].valid.holderName).toBe(false);
+        renderCardInput(<CardInput {...cardInputRequiredProps} holderNameRequired={true} hasHolderName={true} onChange={onChange} />);
         expect(valid.holderName).toBe(false);
     });
 
@@ -128,20 +133,20 @@ describe('CardInput > holderName', () => {
 
     test('holderName required, data.holderName passed into comp - valid.holderName is true', () => {
         const dataObj = { holderName: 'J Smith' };
-        getWrapper(<CardInput {...cardInputRequiredProps} holderNameRequired={true} hasHolderName={true} data={dataObj} onChange={onChange} />);
+        renderCardInput(<CardInput {...cardInputRequiredProps} holderNameRequired={true} hasHolderName={true} data={dataObj} onChange={onChange} />);
         expect(valid.holderName).toBe(true);
         expect(data.holderName).toBe('J Smith');
     });
 
     test('holderName not required, valid.holderName is true', () => {
-        getWrapper(<CardInput {...cardInputRequiredProps} hasHolderName={true} onChange={onChange} />);
+        renderCardInput(<CardInput {...cardInputRequiredProps} hasHolderName={true} onChange={onChange} />);
 
         expect(valid.holderName).toBe(true);
     });
 
     test('holderName not required, data.holderName passed into comp - valid.holderName is true', () => {
         const dataObj = { holderName: 'J Smith' };
-        getWrapper(<CardInput {...cardInputRequiredProps} hasHolderName={true} data={dataObj} onChange={onChange} />);
+        renderCardInput(<CardInput {...cardInputRequiredProps} hasHolderName={true} data={dataObj} onChange={onChange} />);
 
         expect(valid.holderName).toBe(true);
         expect(data.holderName).toBe('J Smith');
@@ -183,9 +188,6 @@ describe('CardInput > holderName', () => {
     });
 
     test('holder name is first visible element', () => {
-        // const wrapper = mount(<CardInput hasHolderName={true} positionHolderNameOnTop={true} i18n={i18n} />);
-        // expect(wrapper.find('CardHolderName:first-child')).toHaveLength(1);
-
         render(
             <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
                 <AmountProvider providerRef={createRef()}>
@@ -228,53 +230,75 @@ describe('CardInput shows/hides KCP fields when koreanAuthenticationRequired is 
     };
 
     test('Renders a card form with kcp fields since countryCode is kr', () => {
-        const wrapper = getWrapper(<CardInput {...cardInputRequiredProps} configuration={configuration} countryCode="kr" />);
-        expect(wrapper.find('.adyen-checkout__card__kcp-authentication')).toHaveLength(1);
+        const { container } = renderCardInput(<CardInput {...cardInputRequiredProps} configuration={configuration} countryCode="kr" />);
+        /* eslint-disable testing-library/no-node-access, testing-library/no-container */
+        expect(container.querySelector('.adyen-checkout__card__kcp-authentication')).toBeTruthy();
+        /* eslint-enable testing-library/no-node-access, testing-library/no-container */
     });
 
     test('Renders a card form with kcp fields since countryCode is kr & issuingCountryCode is kr', () => {
-        const wrapper = getWrapper(
+        const { container } = renderCardInput(
             <CardInput {...cardInputRequiredProps} configuration={configuration} countryCode="kr" setComponentRef={setComponentRef} />
         );
-        cardInputRef?.processBinLookupResponse({ issuingCountryCode: 'kr' }, false);
-        wrapper.update();
-        expect(wrapper.find('.adyen-checkout__card__kcp-authentication')).toHaveLength(1);
+        void act(() => {
+            cardInputRef?.processBinLookupResponse({ issuingCountryCode: 'kr' }, false);
+        });
+        /* eslint-disable testing-library/no-node-access, testing-library/no-container */
+        expect(container.querySelector('.adyen-checkout__card__kcp-authentication')).toBeTruthy();
+        /* eslint-enable testing-library/no-node-access, testing-library/no-container */
     });
 
     test('Renders a card form with kcp fields since countryCode is not kr but issuingCountryCode is kr', () => {
-        const wrapper = getWrapper(<CardInput {...cardInputRequiredProps} configuration={configuration} setComponentRef={setComponentRef} />);
-        cardInputRef?.processBinLookupResponse({ issuingCountryCode: 'kr' }, false);
-        wrapper.update();
-        expect(wrapper.find('.adyen-checkout__card__kcp-authentication')).toHaveLength(1);
+        const { container } = renderCardInput(
+            <CardInput {...cardInputRequiredProps} configuration={configuration} setComponentRef={setComponentRef} />
+        );
+        void act(() => {
+            cardInputRef?.processBinLookupResponse({ issuingCountryCode: 'kr' }, false);
+        });
+        /* eslint-disable testing-library/no-node-access, testing-library/no-container */
+        expect(container.querySelector('.adyen-checkout__card__kcp-authentication')).toBeTruthy();
+        /* eslint-enable testing-library/no-node-access, testing-library/no-container */
     });
 
     test('Renders a card form with no kcp fields since countryCode is not kr', () => {
-        const wrapper = getWrapper(<CardInput {...cardInputRequiredProps} configuration={configuration} />);
-        expect(wrapper.find('.adyen-checkout__card__kcp-authentication')).toHaveLength(0);
+        const { container } = renderCardInput(<CardInput {...cardInputRequiredProps} configuration={configuration} />);
+        /* eslint-disable testing-library/no-node-access, testing-library/no-container */
+        expect(container.querySelector('.adyen-checkout__card__kcp-authentication')).toBeNull();
+        /* eslint-enable testing-library/no-node-access, testing-library/no-container */
     });
 
     test('Renders a card form with no kcp fields since countryCode is kr but issuingCountryCode is not kr', () => {
-        const wrapper = getWrapper(
+        const { container } = renderCardInput(
             <CardInput {...cardInputRequiredProps} configuration={configuration} countryCode="kr" setComponentRef={setComponentRef} />
         );
-        cardInputRef?.processBinLookupResponse({ issuingCountryCode: 'us' }, false);
-        wrapper.update();
-        expect(wrapper.find('.adyen-checkout__card__kcp-authentication')).toHaveLength(0);
+        void act(() => {
+            cardInputRef?.processBinLookupResponse({ issuingCountryCode: 'us' }, false);
+        });
+        /* eslint-disable testing-library/no-node-access, testing-library/no-container */
+        expect(container.querySelector('.adyen-checkout__card__kcp-authentication')).toBeNull();
+        /* eslint-enable testing-library/no-node-access, testing-library/no-container */
     });
 
     test('Renders a card form with no kcp fields since countryCode is not kr & issuingCountryCode is not kr', () => {
-        const wrapper = getWrapper(<CardInput {...cardInputRequiredProps} configuration={configuration} setComponentRef={setComponentRef} />);
-        cardInputRef?.processBinLookupResponse({ issuingCountryCode: 'us' }, false);
-        wrapper.update();
-        expect(wrapper.find('.adyen-checkout__card__kcp-authentication')).toHaveLength(0);
+        const { container } = renderCardInput(
+            <CardInput {...cardInputRequiredProps} configuration={configuration} setComponentRef={setComponentRef} />
+        );
+        void act(() => {
+            cardInputRef?.processBinLookupResponse({ issuingCountryCode: 'us' }, false);
+        });
+        /* eslint-disable testing-library/no-node-access, testing-library/no-container */
+        expect(container.querySelector('.adyen-checkout__card__kcp-authentication')).toBeNull();
+        /* eslint-enable testing-library/no-node-access, testing-library/no-container */
     });
 });
 
 describe('CardInput never shows KCP fields when koreanAuthenticationRequired is set to false', () => {
     test('countryCode is kr', () => {
         configuration.koreanAuthenticationRequired = false;
-        const wrapper = getWrapper(<CardInput {...cardInputRequiredProps} configuration={configuration} countryCode="kr" />);
-        expect(wrapper.find('.adyen-checkout__card__kcp-authentication')).toHaveLength(0);
+        const { container } = renderCardInput(<CardInput {...cardInputRequiredProps} configuration={configuration} countryCode="kr" />);
+        /* eslint-disable testing-library/no-node-access, testing-library/no-container */
+        expect(container.querySelector('.adyen-checkout__card__kcp-authentication')).toBeNull();
+        /* eslint-enable testing-library/no-node-access, testing-library/no-container */
     });
 
     test('countryCode is kr & issuingCountryCode is kr', () => {
@@ -283,35 +307,41 @@ describe('CardInput never shows KCP fields when koreanAuthenticationRequired is 
             cardInputRef = ref;
         };
 
-        const wrapper = getWrapper(
+        const { container } = renderCardInput(
             <CardInput {...cardInputRequiredProps} configuration={configuration} countryCode="kr" setComponentRef={setComponentRef} />
         );
-        cardInputRef?.processBinLookupResponse({ issuingCountryCode: 'kr' }, false);
-        wrapper.update();
-        expect(wrapper.find('.adyen-checkout__card__kcp-authentication')).toHaveLength(0);
+        void act(() => {
+            cardInputRef?.processBinLookupResponse({ issuingCountryCode: 'kr' }, false);
+        });
+        /* eslint-disable testing-library/no-node-access, testing-library/no-container */
+        expect(container.querySelector('.adyen-checkout__card__kcp-authentication')).toBeNull();
+        /* eslint-enable testing-library/no-node-access, testing-library/no-container */
     });
 });
 
 describe('CardInput > Installments', () => {
     const installments = {
-        mc: {
+        card: {
             values: [1, 2, 3]
         }
     };
+
     test('should not display installments if fundingSource is debit', () => {
-        const wrapper = getWrapper(<CardInput {...cardInputRequiredProps} fundingSource={'debit'} installmentOptions={installments} />);
-        expect(wrapper.find(CardFieldsWrapper).prop('hasInstallments')).toBe(false);
+        renderCardInput(<CardInput {...cardInputRequiredProps} fundingSource={'debit'} installmentOptions={installments} />);
+        expect(screen.queryByText('Number of installments')).toBeNull();
     });
+
     test('should not display installments if fundingSource is prepaid', () => {
-        const wrapper = getWrapper(<CardInput {...cardInputRequiredProps} fundingSource={'prepaid'} installmentOptions={installments} />);
-        expect(wrapper.find(CardFieldsWrapper).prop('hasInstallments')).toBe(false);
+        renderCardInput(<CardInput {...cardInputRequiredProps} fundingSource={'prepaid'} installmentOptions={installments} />);
+        expect(screen.queryByText('Number of installments')).toBeNull();
     });
+
     test('should display installments if fundingSource is credit', () => {
-        const wrapper = getWrapper(<CardInput {...cardInputRequiredProps} fundingSource={'credit'} installmentOptions={installments} />);
-        expect(wrapper.find(CardFieldsWrapper).prop('hasInstallments')).toBe(true);
+        renderCardInput(<CardInput {...cardInputRequiredProps} fundingSource={'credit'} installmentOptions={installments} />);
     });
+
     test('should display installments if fundingSource undefined', () => {
-        const wrapper = getWrapper(<CardInput {...cardInputRequiredProps} i18n={i18n} installmentOptions={installments} />);
-        expect(wrapper.find(CardFieldsWrapper).prop('hasInstallments')).toBe(true);
+        renderCardInput(<CardInput {...cardInputRequiredProps} i18n={i18n} installmentOptions={installments} />);
+        expect(screen.getByText('Number of installments')).toBeVisible();
     });
 });

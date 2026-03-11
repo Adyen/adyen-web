@@ -1,10 +1,21 @@
-import { mount } from 'enzyme';
 import { h } from 'preact';
+import { render, screen, waitFor } from '@testing-library/preact';
 import FieldContainer from './FieldContainer';
 import Specifications from '../Specifications';
+import getDataset from '../../../../core/Services/get-dataset';
 import { mock } from 'jest-mock-extended';
 import { FieldContainerProps } from '../types';
 import { CoreProvider } from '../../../../core/Context/CoreProvider';
+
+jest.mock('../../../../core/Services/get-dataset');
+(getDataset as jest.Mock).mockImplementation(
+    jest.fn(() =>
+        Promise.resolve([
+            { id: 'AL', name: 'Alabama' },
+            { id: 'AK', name: 'Alaska' }
+        ])
+    )
+);
 
 const propsMock = {
     errors: {},
@@ -14,8 +25,8 @@ const propsMock = {
 };
 
 const mockedProps = mock<FieldContainerProps>();
-const getWrapper = (props = {}) => {
-    return mount(
+const renderFieldContainer = (props = {}) => {
+    return render(
         <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
             <FieldContainer {...propsMock} {...props} {...mockedProps} />
         </CoreProvider>
@@ -23,18 +34,28 @@ const getWrapper = (props = {}) => {
 };
 
 describe('FieldContainer', () => {
-    test('renders the StateField', () => {
-        const wrapper = getWrapper({ fieldName: 'stateOrProvince' });
-        expect(wrapper.find('StateField')).toHaveLength(1);
+    test('renders the StateField', async () => {
+        renderFieldContainer({ fieldName: 'stateOrProvince', data: { country: 'US' } });
+
+        await waitFor(() => {
+            expect(getDataset).toHaveBeenCalled();
+        });
+
+        expect(screen.getByText(/State/i)).toBeTruthy();
     });
 
-    test('renders the CountryField', () => {
-        const wrapper = getWrapper({ fieldName: 'country' });
-        expect(wrapper.find('CountryField')).toHaveLength(1);
+    test('renders the CountryField', async () => {
+        renderFieldContainer({ fieldName: 'country' });
+
+        await waitFor(() => {
+            expect(getDataset).toHaveBeenCalled();
+        });
+
+        expect(screen.getByText(/Country/i)).toBeTruthy();
     });
 
     test('renders text fields for the other fields', () => {
-        const wrapper = getWrapper({ fieldName: 'street' });
-        expect(wrapper.find('InputText[name="street"]')).toHaveLength(1);
+        renderFieldContainer({ fieldName: 'street' });
+        expect(screen.getByRole('textbox')).toBeTruthy();
     });
 });

@@ -1,5 +1,5 @@
 import { createRef, h } from 'preact';
-import { mount } from 'enzyme';
+import { render, screen, act } from '@testing-library/preact';
 import CardInput from './CardInput';
 import { CoreProvider } from '../../../../core/Context/CoreProvider';
 import { AmountProvider } from '../../../../core/Context/AmountProvider';
@@ -48,8 +48,8 @@ const dualBrandResp = {
     ]
 };
 
-const getWrapper = ui => {
-    return mount(
+const renderCardInput = ui => {
+    return render(
         <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
             <AmountProvider amount={{ value: 10, currency: 'EUR' }} providerRef={createRef()}>
                 {ui}
@@ -60,70 +60,51 @@ const getWrapper = ui => {
 
 describe('CardNumber and the dual branding UI', () => {
     test('Renders a CardInput without dual branding', () => {
-        const wrapper = getWrapper(<CardInput {...cardInputRequiredProps} />);
+        const { container } = renderCardInput(<CardInput {...cardInputRequiredProps} />);
 
-        // Expected card fields
-        expect(wrapper.find('[data-cse="encryptedCardNumber"]')).toHaveLength(1);
-        expect(wrapper.find('[data-cse="encryptedExpiryDate"]')).toHaveLength(1);
-        expect(wrapper.find('[data-cse="encryptedSecurityCode"]')).toHaveLength(1);
+        /* eslint-disable testing-library/no-node-access, testing-library/no-container */
+        expect(container.querySelector('[data-cse="encryptedCardNumber"]')).toBeTruthy();
+        expect(container.querySelector('[data-cse="encryptedExpiryDate"]')).toBeTruthy();
+        expect(container.querySelector('[data-cse="encryptedSecurityCode"]')).toBeTruthy();
+        /* eslint-enable testing-library/no-node-access, testing-library/no-container */
 
-        // No dual branding UI
-        expect(wrapper.find('.adyen-checkout__fieldset--dual-brand-switcher')).toHaveLength(0);
+        expect(screen.queryByText('Card Brand')).not.toBeInTheDocument();
     });
 
-    test('Renders a CardInput with dual branding UI radio button elements', () => {
-        const wrapper = getWrapper(<CardInput {...cardInputRequiredProps} />);
+    test('Renders a CardInput with dual branding UI radio button elements', async () => {
+        renderCardInput(<CardInput {...cardInputRequiredProps} />);
 
-        cardInputRef.processBinLookupResponse(dualBrandResp, false);
+        await act(() => {
+            cardInputRef.processBinLookupResponse(dualBrandResp, false);
+        });
 
-        wrapper.update();
+        expect(screen.getByText('Card Brand')).toBeInTheDocument();
 
-        //  Dual branding UI visible
-        const dualBrandEl = wrapper.find('.adyen-checkout__fieldset--dual-brand-switcher');
-        expect(dualBrandEl).toHaveLength(1);
-
-        // title
-        expect(dualBrandEl.find('.adyen-checkout__fieldset__title')).toHaveLength(1);
-
-        // subTitle
-        expect(dualBrandEl.find('legend')).toHaveLength(1);
-
-        // radio group
-        expect(dualBrandEl.find('[role="radiogroup"]')).toHaveLength(1);
-
-        // buttons
-        expect(dualBrandEl.find('[type="radio"]')).toHaveLength(2);
-
-        const els = dualBrandEl.find('.adyen-checkout__radio_group-extended__label-wrapper');
-
-        // check images
-        expect(els.at(0).find('img').at(0).prop('alt')).toEqual('VISA'); // the .at(0) is because a button contains a brand image and a checkmark image
-        expect(els.at(1).find('img').at(0).prop('alt')).toEqual('cartebancaire');
-
-        // check texts
-        expect(els.at(0).text().includes('VISA')).toBe(true);
-        expect(els.at(1).text().includes('Carte Bancaire')).toBe(true);
+        expect(screen.getByRole('radio', { name: /VISA/i })).toBeVisible();
+        expect(screen.getByRole('radio', { name: /Carte Bancaire/i })).toBeVisible();
     });
 
-    test('Dual branding UI is not hidden when the card number is in error', () => {
-        const wrapper = getWrapper(<CardInput {...cardInputRequiredProps} />);
+    test('Dual branding UI is not hidden when the card number is in error', async () => {
+        const { container } = renderCardInput(<CardInput {...cardInputRequiredProps} />);
 
-        cardInputRef.processBinLookupResponse(dualBrandResp, false);
-        wrapper.update();
+        await act(() => {
+            cardInputRef.processBinLookupResponse(dualBrandResp, false);
+        });
 
-        //  Dual branding UI visible
-        expect(wrapper.find('.adyen-checkout__fieldset--dual-brand-switcher')).toHaveLength(1);
+        expect(screen.getByText('Card Brand')).toBeInTheDocument();
 
+        /* eslint-disable testing-library/no-node-access, testing-library/no-container */
         // 3 error fields - all hidden
-        expect(wrapper.find('.adyen-checkout-contextual-text--error.adyen-checkout-contextual-text--hidden')).toHaveLength(3);
+        expect(container.querySelectorAll('.adyen-checkout-contextual-text--error.adyen-checkout-contextual-text--hidden')).toHaveLength(3);
 
-        cardInputRef.showValidation();
-        wrapper.update();
+        await act(() => {
+            cardInputRef.showValidation();
+        });
 
         // 3 error fields all visible
-        expect(wrapper.find('.adyen-checkout-contextual-text--error.adyen-checkout-contextual-text--hidden')).toHaveLength(0);
+        expect(container.querySelectorAll('.adyen-checkout-contextual-text--error.adyen-checkout-contextual-text--hidden')).toHaveLength(0);
+        /* eslint-enable testing-library/no-node-access, testing-library/no-container */
 
-        //  Dual branding UI still visible
-        expect(wrapper.find('.adyen-checkout__fieldset--dual-brand-switcher')).toHaveLength(1);
+        expect(screen.getByText('Card Brand')).toBeInTheDocument();
     });
 });

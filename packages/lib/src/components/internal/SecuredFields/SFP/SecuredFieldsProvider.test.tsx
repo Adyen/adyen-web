@@ -1,5 +1,5 @@
-import { shallow } from 'enzyme';
-import { h } from 'preact';
+import { h, createRef } from 'preact';
+import { render, act } from '@testing-library/preact/pure';
 import SecuredFieldsProvider from './SecuredFieldsProvider';
 import { SF_ErrorCodes } from '../../../../core/Errors/constants';
 
@@ -7,15 +7,11 @@ jest.mock('../lib/CSF', () => {
     return () => true;
 });
 
-let wrapper;
 let sfp;
+let sfpRef;
 
 const onError = jest.fn(() => {});
-const renderFn = jest.fn(() => {});
-
-const handleSecuredFieldsRef = ref => {
-    sfp = ref;
-};
+const renderFn = jest.fn(() => null);
 
 const mockNode = `
     <label>
@@ -86,26 +82,37 @@ const mockCSF = {
     brandsFromBinLookup
 };
 
-wrapper = shallow(
-    <SecuredFieldsProvider
-        ref={handleSecuredFieldsRef}
-        rootNode={nodeHolder}
-        styles={styles}
-        render={renderFn}
-        onError={onError}
-        i18n={global.i18n}
-        configuration={{}}
-    />
-);
+function renderSFP(extraProps = {}) {
+    sfpRef = createRef();
+    render(
+        <SecuredFieldsProvider
+            ref={sfpRef}
+            rootNode={nodeHolder}
+            styles={styles}
+            render={renderFn}
+            onError={onError}
+            i18n={global.i18n}
+            configuration={{}}
+            {...extraProps}
+        />
+    );
+    sfp = sfpRef.current;
+    return sfp;
+}
 
 /**
  * Rendering
  */
 describe('<SecuredFieldsProvider /> rendering', () => {
-    test('Loading state', () => {
-        expect(wrapper.instance().state.status).toBe('loading');
-        wrapper.instance().handleOnConfigSuccess();
-        expect(wrapper.instance().state.status).toBe('ready');
+    test('Loading state', async () => {
+        nodeHolder.innerHTML = mockNode;
+        renderSFP();
+
+        expect(sfp.state.status).toBe('loading');
+        await act(() => {
+            sfp.handleOnConfigSuccess();
+        });
+        expect(sfp.state.status).toBe('ready');
     });
 
     it("should create a valid object in the SecuredFieldsProvider's state with initial properties set to false", () => {
@@ -119,8 +126,10 @@ describe('<SecuredFieldsProvider /> rendering', () => {
         expect(sfp.csf).toBeDefined();
     });
 
-    it('should create an error object for each visible secured field, pass the object to the props.onError fn & set state.errors', () => {
-        sfp.showValidation();
+    it('should create an error object for each visible secured field, pass the object to the props.onError fn & set state.errors', async () => {
+        await act(() => {
+            sfp.showValidation();
+        });
 
         expect(sfp.state.errors.encryptedCardNumber).not.toBe(null);
         expect(sfp.state.errors.encryptedExpiryDate).not.toBe(null);
@@ -132,35 +141,23 @@ describe('<SecuredFieldsProvider /> rendering', () => {
     });
 
     it('should register the presence of a date field element within the passed rootNode', () => {
-        expect(wrapper.instance().numDateFields).toBe(1);
+        expect(sfp.numDateFields).toBe(1);
     });
 
     it('should register the presence of 2 date field elements within the passed rootNode', () => {
         nodeHolder.innerHTML = mockNodeTwoDateFields;
 
-        wrapper = shallow(
-            <SecuredFieldsProvider ref={handleSecuredFieldsRef} rootNode={nodeHolder} render={() => null} onError={onError} configuration={{}} />
-        );
-        expect(wrapper.instance().numDateFields).toBe(2);
+        renderSFP({ render: () => null });
+        expect(sfp.numDateFields).toBe(2);
     });
 
     it('should return the rootNode when the getter is called', () => {
         nodeHolder.innerHTML = mockNode;
-        wrapper = shallow(
-            <SecuredFieldsProvider
-                ref={handleSecuredFieldsRef}
-                rootNode={nodeHolder}
-                styles={styles}
-                render={renderFn}
-                onError={onError}
-                i18n={global.i18n}
-                configuration={{}}
-            />
-        );
+        renderSFP();
 
-        wrapper.instance().csf = mockCSF;
+        sfp.csf = mockCSF;
 
-        expect(wrapper.instance().getRootNode()).toEqual(nodeHolder);
+        expect(sfp.getRootNode()).toEqual(nodeHolder);
     });
 });
 
@@ -168,89 +165,111 @@ describe('<SecuredFieldsProvider /> rendering', () => {
  * Unsupported cards (including related errors)
  */
 describe('<SecuredFieldsProvider /> handling an unsupported card', () => {
-    it('should generate an "unsupported card" error that propagates to the onError callback', () => {
+    it('should generate an "unsupported card" error that propagates to the onError callback', async () => {
         nodeHolder.innerHTML = mockNode;
-        wrapper = shallow(
-            <SecuredFieldsProvider
-                ref={handleSecuredFieldsRef}
-                rootNode={nodeHolder}
-                styles={styles}
-                render={renderFn}
-                onError={onError}
-                i18n={global.i18n}
-                configuration={{}}
-            />
-        );
+        unsupportedCardErrObj.error = SF_ErrorCodes.ERROR_MSG_UNSUPPORTED_CARD_ENTERED;
+        renderSFP();
+        sfp.csf = mockCSF;
 
-        wrapper.instance().csf = mockCSF;
-
-        expect(wrapper.instance().handleUnsupportedCard(unsupportedCardErrObj)).toBe(true);
+        let result;
+        await act(() => {
+            result = sfp.handleUnsupportedCard(unsupportedCardErrObj);
+        });
+        expect(result).toBe(true);
     });
 
     it('should see that the "unsupported card" error has set state on the SecuredFieldsProvider', () => {
-        expect(wrapper.instance().state.detectedUnsupportedBrands.length).toEqual(1);
-        expect(wrapper.instance().state.errors.encryptedCardNumber).toEqual(SF_ErrorCodes.ERROR_MSG_UNSUPPORTED_CARD_ENTERED);
+        expect(sfp.state.detectedUnsupportedBrands.length).toEqual(1);
+        expect(sfp.state.errors.encryptedCardNumber).toEqual(SF_ErrorCodes.ERROR_MSG_UNSUPPORTED_CARD_ENTERED);
     });
 
-    it('should clear the previously generated "unsupported card" error & propagate to the onError callback', () => {
+    it('should clear the previously generated "unsupported card" error & propagate to the onError callback', async () => {
         unsupportedCardErrObj.error = null;
 
-        expect(wrapper.instance().handleUnsupportedCard(unsupportedCardErrObj)).toBe(false);
+        let result;
+        await act(() => {
+            result = sfp.handleUnsupportedCard(unsupportedCardErrObj);
+        });
+        expect(result).toBe(false);
     });
 
     it('should see that the cleared "unsupported card" error has reset state on the SecuredFieldsProvider', () => {
-        expect(wrapper.instance().state.errors.encryptedCardNumber).toBe(null);
+        expect(sfp.state.errors.encryptedCardNumber).toBe(null);
     });
 
-    it('should clear the previously generated "unsupported card" error & then a regular error is handled correctly', () => {
+    it('should clear the previously generated "unsupported card" error & then a regular error is handled correctly', async () => {
         unsupportedCardErrObj.error = null;
 
-        wrapper.instance().handleUnsupportedCard(unsupportedCardErrObj);
+        await act(() => {
+            sfp.handleUnsupportedCard(unsupportedCardErrObj);
+        });
 
-        expect(wrapper.instance().handleOnError(regularErrObj)).toBe(true);
+        let result;
+        await act(() => {
+            result = sfp.handleOnError(regularErrObj);
+        });
+        expect(result).toBe(true);
 
-        expect(wrapper.instance().state.errors.encryptedCardNumber).toEqual(SF_ErrorCodes.ERROR_MSG_INCOMPLETE_FIELD);
+        expect(sfp.state.errors.encryptedCardNumber).toEqual(SF_ErrorCodes.ERROR_MSG_INCOMPLETE_FIELD);
     });
 
-    it('should re-generate an "unsupported card" error and then a handleOnFieldValid call should be ignored', () => {
+    it('should re-generate an "unsupported card" error and then a handleOnFieldValid call should be ignored', async () => {
         // @ts-ignore - it's a test!
         unsupportedCardErrObj.error = 'Unsupported card';
         unsupportedCardErrObj.detectedBrands = ['cartebancaire'];
 
-        wrapper.instance().handleUnsupportedCard(unsupportedCardErrObj);
-        expect(wrapper.instance().state.detectedUnsupportedBrands.length).toEqual(1);
+        await act(() => {
+            sfp.handleUnsupportedCard(unsupportedCardErrObj);
+        });
+        expect(sfp.state.detectedUnsupportedBrands.length).toEqual(1);
 
-        expect(wrapper.instance().handleOnFieldValid({ fieldType: 'encryptedCardNumber' })).toBe(false);
-        expect(wrapper.instance().state.valid.encryptedCardNumber).toBe(false);
+        let result;
+        await act(() => {
+            result = sfp.handleOnFieldValid({ fieldType: 'encryptedCardNumber' });
+        });
+        expect(result).toBe(false);
+        expect(sfp.state.valid.encryptedCardNumber).toBe(false);
     });
 
-    it('should see that the previously generated "unsupported card" error will cause a handleOnAllValid call to be ignored', () => {
-        expect(wrapper.instance().handleOnAllValid({ allValid: true })).toBe(false);
-        expect(wrapper.instance().state.isSfpValid).toBe(false);
+    it('should see that the previously generated "unsupported card" error will cause a handleOnAllValid call to be ignored', async () => {
+        let result;
+        await act(() => {
+            result = sfp.handleOnAllValid({ allValid: true });
+        });
+        expect(result).toBe(false);
+        expect(sfp.state.isSfpValid).toBe(false);
     });
 
-    it('should clear the previously generated "unsupported card" error & then a handleOnFieldValid call is handled correctly', () => {
+    it('should clear the previously generated "unsupported card" error & then a handleOnFieldValid call is handled correctly', async () => {
         unsupportedCardErrObj.error = null;
 
         // Clear the error by mocking a drop in the number of digits in the PAN to below a /binLookup threshold
-        // wrapper.instance().processBinLookupResponse(null, true);
+        // sfp.processBinLookupResponse(null, true);
 
         // Clear the error by mocking a successful /binLookup response
-        wrapper.instance().processBinLookupResponse(mockBinLookupObj);
+        await act(() => {
+            sfp.processBinLookupResponse(mockBinLookupObj);
+        });
 
-        expect(wrapper.instance().state.detectedUnsupportedBrands).toBe(null);
+        expect(sfp.state.detectedUnsupportedBrands).toBe(null);
 
-        expect(
-            wrapper.instance().handleOnFieldValid({ fieldType: 'encryptedCardNumber', encryptedFieldName: 'encryptedCardNumber', valid: true })
-        ).toBe(true);
+        let result;
+        await act(() => {
+            result = sfp.handleOnFieldValid({ fieldType: 'encryptedCardNumber', encryptedFieldName: 'encryptedCardNumber', valid: true });
+        });
+        expect(result).toBe(true);
 
-        expect(wrapper.instance().state.valid.encryptedCardNumber).toBe(true);
+        expect(sfp.state.valid.encryptedCardNumber).toBe(true);
     });
 
-    it('should see that because we have cleared the "unsupported card" error that a handleOnAllValid call is handled correctly', () => {
-        expect(wrapper.instance().handleOnAllValid({ allValid: true })).toBe(true);
+    it('should see that because we have cleared the "unsupported card" error that a handleOnAllValid call is handled correctly', async () => {
+        let result;
+        await act(() => {
+            result = sfp.handleOnAllValid({ allValid: true });
+        });
+        expect(result).toBe(true);
 
-        expect(wrapper.instance().state.isSfpValid).toBe(true);
+        expect(sfp.state.isSfpValid).toBe(true);
     });
 });
 
@@ -258,34 +277,27 @@ describe('<SecuredFieldsProvider /> handling an binLookup response', () => {
     it(
         'should receive a populated binLookup object and set the issuingCountryCode' +
             'then receive a "reset" object and reset the issuingCountryCode',
-        () => {
+        async () => {
             nodeHolder.innerHTML = mockNode;
-            wrapper = shallow(
-                <SecuredFieldsProvider
-                    ref={handleSecuredFieldsRef}
-                    rootNode={nodeHolder}
-                    styles={styles}
-                    render={renderFn}
-                    onError={onError}
-                    i18n={global.i18n}
-                    configuration={{}}
-                />
-            );
-
-            const sfp = wrapper.instance();
+            brandsFromBinLookup.mockClear();
+            renderSFP();
 
             sfp.csf = mockCSF;
 
-            sfp.processBinLookupResponse(mockBinLookupObj);
+            await act(() => {
+                sfp.processBinLookupResponse(mockBinLookupObj);
+            });
 
             expect(sfp.issuingCountryCode).toEqual('us');
-            expect(brandsFromBinLookup).toHaveBeenCalledTimes(2);
+            expect(brandsFromBinLookup).toHaveBeenCalledTimes(1);
 
             // reset
-            sfp.processBinLookupResponse(null);
+            await act(() => {
+                sfp.processBinLookupResponse(null);
+            });
 
             expect(sfp.issuingCountryCode).toBe(undefined);
-            expect(brandsFromBinLookup).toHaveBeenCalledTimes(3);
+            expect(brandsFromBinLookup).toHaveBeenCalledTimes(2);
         }
     );
 });
