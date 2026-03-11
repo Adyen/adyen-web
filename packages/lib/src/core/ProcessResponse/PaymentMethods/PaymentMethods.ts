@@ -55,7 +55,7 @@ class PaymentMethods {
      */
     findByFundingSource(paymentMethod: string, fundingSource: string): PaymentMethod {
         const mappedType = this.mapCreatedComponentType(paymentMethod);
-        return this.paymentMethods.find(pm => pm.type === mappedType && pm.fundingSource === fundingSource) || this.find(paymentMethod);
+        return this.paymentMethods.find(pm => pm.type === mappedType && pm.fundingSource === fundingSource);
     }
 
     findById(paymentMethodId: string): PaymentMethod {
