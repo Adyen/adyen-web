@@ -1,7 +1,7 @@
 {
     "payButton": "Kaufen",
     "payButton.redirecting": "Umleiten…",
-    "payButton.with": "%{value} mit %{maskedData} kaufen",
+    "payButton.with": "%{value} mit %{maskedData} zahlen",
     "payButton.saveDetails": "Angaben speichern",
     "close": "Schließen",
     "storeDetails": "Für zukünftige Zahlvorgänge speichern",
