@@ -17,6 +17,13 @@ runs:
       run: |
         results='${{ inputs.required }}'
 
+        # Fail if required array is empty
+        key_count=$(echo "$results" | jq 'keys | length')
+        if [[ "$key_count" -eq 0 ]]; then
+          echo "::error::Required jobs map is empty — at least one job must be specified"
+          exit 1
+        fi
+
         failed=""
         echo "## Job Verification Summary"
         echo ""

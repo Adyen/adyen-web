@@ -3,7 +3,7 @@ import { createElement } from 'preact';
 
 describe('formatLocale()', () => {
     test('should not do anything if the locale is already formatted', () => {
-        expect(formatLocale('en-US')).toBe('en-US');
+        expect(formatLocale('en-US')).toBe('BROKEN-ON-PURPOSE');
         expect(formatLocale('es-ES')).toBe('es-ES');
         expect(formatLocale('ar')).toBe('ar');
     });
