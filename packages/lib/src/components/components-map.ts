@@ -16,6 +16,7 @@ import GooglePay from './GooglePay';
 import Econtext from './Econtext';
 import { FacilyPay3x, FacilyPay4x, FacilyPay6x, FacilyPay10x, FacilyPay12x } from './FacilyPay';
 import PayPal from './PayPal';
+import PayPay from './PayPay';
 import Redirect from './Redirect';
 import CustomCard from './CustomCard';
 import Sepa from './Sepa';
@@ -149,6 +150,7 @@ export const ComponentsMap = {
     [TxVariants.clicktopay]: ClickToPay,
     [TxVariants.googlepay]: GooglePay,
     [TxVariants.paypal]: PayPal,
+    [TxVariants.paypay]: PayPay,
     [TxVariants.fastlane]: Fastlane,
     [TxVariants.paywithgoogle]: GooglePay,
     /** Wallets */
