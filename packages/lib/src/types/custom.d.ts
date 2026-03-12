@@ -2,6 +2,8 @@ import { FastlaneWindowInstance, FastlaneOptions } from '../components/PayPalFas
 import { ApplePayButtonStyle, ApplePayButtonType, ApplePayWebConfiguration } from '../components/ApplePay/types';
 import { IAdyenPasskey } from '../components/PayByBankPix/services/types';
 
+import type { PayPayInitOptions } from '../components/PayPay/types';
+
 declare module 'preact' {
     namespace JSX {
         interface IntrinsicElements {
@@ -43,6 +45,13 @@ declare global {
 
         vAdapters: {
             VisaSRCI?: object;
+        };
+
+        /**
+         * PayPay SDK
+         */
+        pp: {
+            init(options: PayPayInitOptions): void;
         };
     }
 }
