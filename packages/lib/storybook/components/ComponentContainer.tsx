@@ -5,9 +5,10 @@ import { addToWindow } from '../utils/add-to-window';
 
 interface IContainer {
     element: UIElement;
+    id?: string;
 }
 
-export const ComponentContainer = ({ element }: Readonly<IContainer>) => {
+export const ComponentContainer = ({ element, id = 'component-root' }: Readonly<IContainer>) => {
     const container = useRef(null);
     const [errorMessage, setErrorMessage] = useState(null);
 
@@ -38,7 +39,5 @@ export const ComponentContainer = ({ element }: Readonly<IContainer>) => {
         };
     }, [element]);
 
-    return (
-        <Fragment>{errorMessage ? <div>{errorMessage}</div> : <div ref={container} id="component-root" className="component-wrapper" />}</Fragment>
-    );
+    return <Fragment>{errorMessage ? <div>{errorMessage}</div> : <div ref={container} id={id} className="component-wrapper" />}</Fragment>;
 };
