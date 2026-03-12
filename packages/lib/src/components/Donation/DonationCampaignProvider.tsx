@@ -8,7 +8,7 @@ import type {
 } from '../../core/CheckoutSession/types';
 import { normalizeDonationCampaign } from './utils';
 import Donation from './Donation';
-import { AnalyticsLogEvent, LogEventType } from '../../core/Analytics/events/AnalyticsLogEvent';
+import { AnalyticsLogEvent, LogEventSubtype, LogEventType } from '../../core/Analytics/events/AnalyticsLogEvent';
 
 type DonationCampaignProviderSetup = {
     rootNode: HTMLElement;
@@ -94,14 +94,14 @@ class DonationCampaignProvider {
     }
 
     private callSessionsDonationCampaigns() {
-        // TODO add analytics
-        // const event = new AnalyticsLogEvent({
-        //     component: this._originalComponentType,
-        //     // @ts-ignore
-        //     type: LogEventType.donationCampaign, // TODO will need a new type... donationCampaign?
-        //     message: 'Sessions flow: calling donationCampaigns endpoint'
-        // });
-        // this.core.modules.analytics.sendAnalytics(event);
+        // Send analytics
+        const event = new AnalyticsLogEvent({
+            component: this.originalComponentType,
+            type: LogEventType.apiRequest,
+            subType: LogEventSubtype.donationCampaigns,
+            message: 'Sessions flow: calling donationCampaigns endpoint'
+        });
+        this.core.modules.analytics.sendAnalytics(event);
 
         this.makeSessionsDonationCampaignsCall()
             .then((response: CheckoutSessionDonationCampaignsResponse) => {
@@ -133,29 +133,29 @@ class DonationCampaignProvider {
         const donationComponentProps: DonationConfiguration = {
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             onCancel: data => {
-                // console.log('### Donation::onCancel:: data', data);
+                // console.log('### Donation::onCancel:: data', data); //  'data' param shows whether shopper chose an amount,
 
-                // Do analytics
+                // Send analytics
                 const event = new AnalyticsLogEvent({
                     component: this.originalComponentType,
-                    // @ts-ignore this type will exist
-                    type: LogEventType.donation, // TODO will need a new type... donation, donationFromSessions?
-                    message: 'Sessions flow: opting to not make donation' // TODO - would we pass the amount? 'data' param shows whether shopper chose an amount,
+                    type: LogEventType.closed,
+                    subType: LogEventSubtype.donation,
+                    message: 'Sessions flow: opting to not make donation'
                 });
                 this.core.modules.analytics.sendAnalytics(event);
 
                 // Call merchant defined onDonationCompleted callback
-                this.onDonationCompleted(false);
+                this.onDonationCompleted?.(false);
 
                 this.donationComponent.unmount();
             },
             onDonate: (state: DonationPayload, component: Donation) => {
-                // Do analytics
+                // Send analytics
                 const event = new AnalyticsLogEvent({
                     component: this.originalComponentType,
-                    // @ts-ignore this type will exist
-                    type: LogEventType.donation, // TODO will need a new type... donation, donationFromSessions?
-                    message: 'Sessions flow: making donation' // TODO - would we pass the amount?
+                    type: LogEventType.submit,
+                    subType: LogEventSubtype.donation,
+                    message: 'Sessions flow: making donation'
                 });
                 this.core.modules.analytics.sendAnalytics(event);
 
@@ -185,18 +185,18 @@ class DonationCampaignProvider {
                 if (response.resultCode === 'Authorised') {
                     component.setStatus('success');
 
-                    this.onDonationCompleted(true);
+                    this.onDonationCompleted?.(true);
                 } else {
                     component.setStatus('error');
 
                     // Call merchant defined onDonationFailed callback
-                    this.onDonationFailed(response.resultCode);
+                    this.onDonationFailed?.(response.resultCode);
                 }
             })
-             
+
             .catch((error: unknown) => {
                 component.setStatus('error');
-                this.onDonationFailed(error);
+                this.onDonationFailed?.(error);
             });
     }
 
