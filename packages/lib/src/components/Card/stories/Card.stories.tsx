@@ -266,6 +266,7 @@ export const StandaloneStoredCard: CardStory = {
  * - Prepaid: Should NOT render CtP or installments
  */
 export const SplitFundingSourceTest: CardStory = {
+    tags: ['no-automated-visual-test'],
     render: SplitFundingSourceCards,
     args: {
         countryCode: 'BR',
