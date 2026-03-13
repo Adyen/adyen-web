@@ -1,5 +1,25 @@
 # @adyen/adyen-web
 
+## 6.32.0
+
+### Minor Changes
+
+- New: Add support for allowedIssuerCountryCodes and blockedIssuerCountryCodes props on GooglePay ([#3806](https://github.com/Adyen/adyen-web/pull/3806))
+
+- Fixed: Add support for split funding source card components on sessions ([#3828](https://github.com/Adyen/adyen-web/pull/3828))
+
+### Patch Changes
+
+- Fixed: restored the debounce time for analytics error and log events back to 300ms ([#3845](https://github.com/Adyen/adyen-web/pull/3845))
+
+- Fixed: An a11y issue around the title of the securedField's iframe (it was getting read twice) ([#3837](https://github.com/Adyen/adyen-web/pull/3837))
+
+- Fixed: default GooglePay environment to PRODUCTION instead of TEST for unrecognized environment strings ([#3853](https://github.com/Adyen/adyen-web/pull/3853))
+
+- Fixed: removes getProp util in favour of more type-safe direct property access ([#3835](https://github.com/Adyen/adyen-web/pull/3835))
+
+- Fixed: Do not show Installments component if amount is unavailable ([#3858](https://github.com/Adyen/adyen-web/pull/3858))
+
 ## 6.31.1
 
 ### Patch Changes

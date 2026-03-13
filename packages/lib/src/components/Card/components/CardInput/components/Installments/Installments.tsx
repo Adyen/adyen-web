@@ -109,7 +109,7 @@ function Installments(props: Readonly<InstallmentsProps>) {
     }, [onChange, hasRadioButtonUI, installmentAmount, installmentOptions, radioBtnValue]);
 
     if (!installmentOptions) return null;
-    if (amount.value === 0) return null;
+    if (!amount || amount.value === 0) return null;
 
     if (hasRadioButtonUI) {
         return (

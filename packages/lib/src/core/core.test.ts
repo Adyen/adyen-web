@@ -9,6 +9,7 @@ import ThreeDS2Challenge from '../components/ThreeDS2/ThreeDS2Challenge';
 import Redirect from '../components/Redirect';
 import { PaymentActionsType } from '../types/global-types';
 import Analytics from './Analytics';
+import type { CoreConfiguration } from './types';
 
 jest.mock('./Services/get-translations');
 jest.mock('./CheckoutSession');
@@ -65,6 +66,34 @@ describe('Core', () => {
 
             expect(checkout.options.locale).toBe('es-ES');
             expect(checkout.modules.i18n.locale).toBe('es-ES');
+        });
+    });
+
+    describe('Setting environment', () => {
+        test('should lowercase the environment value', async () => {
+            const checkout = new AdyenCheckout({
+                countryCode: 'US',
+                environment: 'TEST' as CoreConfiguration['environment'],
+                clientKey: 'test_123456'
+            });
+            await checkout.initialize();
+            expect(checkout.options.environment).toBe('test');
+        });
+
+        test('should lowercase mixed-case environment values', async () => {
+            const checkout = new AdyenCheckout({
+                countryCode: 'US',
+                environment: 'Live-AU' as CoreConfiguration['environment'],
+                clientKey: 'live_123456'
+            });
+            await checkout.initialize();
+            expect(checkout.options.environment).toBe('live-au');
+        });
+
+        test('should keep already lowercase environment values unchanged', async () => {
+            const checkout = new AdyenCheckout({ countryCode: 'US', environment: 'test', clientKey: 'test_123456' });
+            await checkout.initialize();
+            expect(checkout.options.environment).toBe('test');
         });
     });
 

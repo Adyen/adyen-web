@@ -13,12 +13,13 @@ import {
 } from './layouts';
 import { AddressSpecifications, StringObject } from '../../../internal/Address/types';
 import { PARTIAL_ADDRESS_SCHEMA } from '../../../internal/Address/constants';
-import { InstallmentsState } from './components/Installments/Installments';
+import type { InstallmentOptions, InstallmentsState } from './components/Installments/Installments';
 import { SFPProps } from '../../../internal/SecuredFields/SFP/types';
 import { BRAND_READABLE_NAME_MAP } from '../../../internal/SecuredFields/lib/constants';
 import useImage, { UseImageHookType } from '../../../../core/Context/useImage';
 import { SF_ErrorCodes } from '../../../../core/Errors/constants';
 import { BrandObject, CardBrandsConfiguration, DualBrandSelectElement } from '../../types';
+import { PaymentAmount } from '../../../../types';
 
 export const getCardImageUrl = (brand: string, getImage: UseImageHookType): string => {
     const imageOptions = {
@@ -220,3 +221,32 @@ export const mustHandleDualBrandingAccordingToEURegulations = (
     returnedDualBrandingObjects: DualBrandSelectElement[] | BrandObject[],
     key: string
 ) => returnedDualBrandingObjects.some(item => EU_BrandArray.includes(item[key]));
+
+/**
+ * Determines whether the Installments component should be rendered.
+ *
+ * Installments Component is displayed when:
+ * - installmentOptions is provided and not empty
+ * - amount is provided and not zero
+ * - fundingSource is not provided or is 'credit'
+ *
+ * @param params.installmentOptions - The installment configuration options
+ * @param params.fundingSource - The card funding source (e.g. 'credit', 'debit')
+ * @param params.amount - The payment amount
+ * @returns Whether the Installments component should be rendered
+ */
+export const shouldShowInstallmentsComponent = ({
+    installmentOptions,
+    fundingSource,
+    amount
+}: {
+    installmentOptions?: InstallmentOptions;
+    fundingSource?: string;
+    amount?: PaymentAmount;
+}): boolean => {
+    if (!installmentOptions || Object.keys(installmentOptions).length === 0) return false;
+    if (!amount || amount.value === 0) return false;
+    if (fundingSource && fundingSource !== 'credit') return false;
+
+    return true;
+};
