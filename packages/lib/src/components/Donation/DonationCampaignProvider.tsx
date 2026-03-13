@@ -129,33 +129,13 @@ class DonationCampaignProvider {
 
         const donationComponentProps: DonationConfiguration = {
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            onCancel: data => {
-                // console.log('### Donation::onCancel:: data', data); //  'data' param shows whether shopper chose an amount,
-
-                // Send analytics
-                const event = new AnalyticsLogEvent({
-                    component: DonationCampaignProvider.type,
-                    type: LogEventType.closed,
-                    subType: LogEventSubtype.donation,
-                    message: 'Sessions flow: opting to not make donation'
-                });
-                this.core.modules.analytics.sendAnalytics(event);
-
+            onCancel: (state: DonationPayload) => {
                 // Call merchant defined onDonationCompleted callback
                 this.onDonationCompleted?.(false);
 
                 this.donationComponent.unmount();
             },
             onDonate: (state: DonationPayload, component: Donation) => {
-                // Send analytics
-                const event = new AnalyticsLogEvent({
-                    component: DonationCampaignProvider.type,
-                    type: LogEventType.submit,
-                    subType: LogEventSubtype.donation,
-                    message: 'Sessions flow: making donation'
-                });
-                this.core.modules.analytics.sendAnalytics(event);
-
                 // Make the request
                 const donationRequestData: CheckoutSessionDonationsRequestData = {
                     amount: state.data.amount,
