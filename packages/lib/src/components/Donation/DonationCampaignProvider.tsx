@@ -12,7 +12,6 @@ import { AnalyticsLogEvent, LogEventSubtype, LogEventType } from '../../core/Ana
 
 type DonationCampaignProviderSetup = {
     rootNode: HTMLElement;
-    componentType: string;
     commercialTxAmount: number;
     onDonationCompleted: (didDonate: boolean) => void;
     onDonationFailed: (reason: unknown) => void;
@@ -25,7 +24,6 @@ class DonationCampaignProvider {
 
     private _rootNode: HTMLElement | string = null;
 
-    private originalComponentType: string = DonationCampaignProvider.type;
     private commercialTxAmount: number = 0;
     private onDonationCompleted: DonationCampaignProviderSetup['onDonationCompleted'];
     private onDonationFailed: DonationCampaignProviderSetup['onDonationFailed'];
@@ -69,9 +67,8 @@ class DonationCampaignProvider {
     /**
      * @internal
      */
-    public setupAndStart({ rootNode, componentType, commercialTxAmount, onDonationCompleted, onDonationFailed }: DonationCampaignProviderSetup) {
+    public setupAndStart({ rootNode, commercialTxAmount, onDonationCompleted, onDonationFailed }: DonationCampaignProviderSetup) {
         this.rootNode = rootNode;
-        this.originalComponentType = componentType;
         this.commercialTxAmount = commercialTxAmount;
         this.onDonationCompleted = onDonationCompleted;
         this.onDonationFailed = onDonationFailed;
@@ -96,7 +93,7 @@ class DonationCampaignProvider {
     private callSessionsDonationCampaigns() {
         // Send analytics
         const event = new AnalyticsLogEvent({
-            component: this.originalComponentType,
+            component: DonationCampaignProvider.type,
             type: LogEventType.apiRequest,
             subType: LogEventSubtype.donationCampaigns,
             message: 'Sessions flow: calling donationCampaigns endpoint'
@@ -137,7 +134,7 @@ class DonationCampaignProvider {
 
                 // Send analytics
                 const event = new AnalyticsLogEvent({
-                    component: this.originalComponentType,
+                    component: DonationCampaignProvider.type,
                     type: LogEventType.closed,
                     subType: LogEventSubtype.donation,
                     message: 'Sessions flow: opting to not make donation'
@@ -152,7 +149,7 @@ class DonationCampaignProvider {
             onDonate: (state: DonationPayload, component: Donation) => {
                 // Send analytics
                 const event = new AnalyticsLogEvent({
-                    component: this.originalComponentType,
+                    component: DonationCampaignProvider.type,
                     type: LogEventType.submit,
                     subType: LogEventSubtype.donation,
                     message: 'Sessions flow: making donation'

@@ -471,7 +471,6 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
 
         this.donationCampaignProvider.setupAndStart({
             rootNode,
-            componentType: this.type,
             commercialTxAmount: amount.value,
             onDonationCompleted,
             onDonationFailed
