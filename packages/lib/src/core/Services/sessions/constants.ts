@@ -5,5 +5,7 @@ export const API_ERROR_CODE = {
     makePayments: '620',
     submitPaymentDetails: '621',
     submitThreeDS2Fingerprint: '622',
-    createOrder: '623'
+    createOrder: '624',
+    donationCampaigns: '627',
+    donations: '628'
 };

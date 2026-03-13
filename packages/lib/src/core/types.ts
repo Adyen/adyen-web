@@ -26,6 +26,8 @@ import { Resources } from './Context/Resources';
 import Language from '../language';
 import { SRPanel } from './Errors/SRPanel';
 import { IAnalytics } from './Analytics/Analytics';
+import type DonationCampaignProvider from '../components/Donation/DonationCampaignProvider';
+import type { DonationCampaignProviderAPI } from '../components/Donation/types';
 
 export { CheckoutSession } from './CheckoutSession/types';
 export interface ICore {
@@ -50,6 +52,7 @@ export type CoreModules = Readonly<{
     resources: Resources;
     i18n: Language;
     srPanel: SRPanel;
+    donationCampaignProvider: DonationCampaignProvider;
 }>;
 
 export type PaymentCompletedData = SessionsResponse | { resultCode: ResultCode; donationToken?: string };
@@ -232,8 +235,9 @@ export interface CoreConfiguration {
      *
      * @param data
      * @param component
+     * @param dcp - Donation Campaign Provider instance (only present when donation is enabled / available and merchant us using /sessions)
      */
-    onPaymentCompleted?(data: PaymentCompletedData, component?: UIElement): void;
+    onPaymentCompleted?(data: PaymentCompletedData, component?: UIElement, dcp?: DonationCampaignProviderAPI): void;
 
     /**
      * Called when the payment fails.
@@ -332,6 +336,18 @@ export interface CoreConfiguration {
      * https://docs.adyen.com/payment-methods/gift-cards/web-component?tab=config-sessions_1
      */
     onOrderUpdated?(data: { order: Order }): void;
+
+    /**
+     * Optional callback when the (seesions) donation is completed (or cancelled)
+     * @param didDonate - a boolean staing whether a donation was made (true) or whether the shopper cancelled the donation (false)
+     */
+    onDonationCompleted?(didDonate: boolean): void;
+
+    /**
+     * Optional callback when the (sessions) donation fails
+     * @param reason - the reason why the donation failed (could be an error message; or a string, stating for example, that the donation payment was refused)
+     */
+    onDonationFailed?(reason: unknown): void;
 
     /**
      * @internal

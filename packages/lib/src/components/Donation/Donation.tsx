@@ -4,6 +4,9 @@ import DonationComponent from './components/DonationComponent';
 import { TxVariants } from '../tx-variants';
 import type { ICore } from '../../core/types';
 import type { DonationConfiguration } from './types';
+import { AnalyticsLogEvent, LogEventSubtype, LogEventType } from '../../core/Analytics/events/AnalyticsLogEvent';
+import { DonationPayload } from './components/types';
+import { AnalyticsInfoEvent, InfoEventType, UiTarget } from '../../core/Analytics/events/AnalyticsInfoEvent';
 
 class DonationElement extends UIElement<DonationConfiguration> {
     public static readonly type = TxVariants.donation;
@@ -11,6 +14,8 @@ class DonationElement extends UIElement<DonationConfiguration> {
     constructor(checkout: ICore, props?: DonationConfiguration) {
         super(checkout, props);
         this.donate = this.donate.bind(this);
+        this.cancel = this.cancel.bind(this);
+        this.amountSelected = this.amountSelected.bind(this);
     }
 
     public static readonly defaultProps = {
@@ -37,8 +42,44 @@ class DonationElement extends UIElement<DonationConfiguration> {
     }
 
     donate() {
+        // Send analytics
+        const event = new AnalyticsLogEvent({
+            component: DonationElement.type,
+            type: LogEventType.submit,
+            subType: LogEventSubtype.donation,
+            message: 'Making donation'
+        });
+        this.core.modules.analytics.sendAnalytics(event);
+
+        // Call callback
         const { data, isValid } = this;
         this.props.onDonate({ data, isValid }, this);
+    }
+
+    cancel() {
+        // Send analytics
+        const event = new AnalyticsLogEvent({
+            component: DonationElement.type,
+            type: LogEventType.closed,
+            subType: LogEventSubtype.donation,
+            message: 'Opting to not make donation'
+        });
+        this.core.modules.analytics.sendAnalytics(event);
+
+        // Call callback
+        const { data, isValid } = this;
+        this.props.onCancel({ data, isValid });
+    }
+
+    amountSelected(state: DonationPayload) {
+        // Send analytics
+        const event = new AnalyticsInfoEvent({
+            component: DonationElement.type,
+            type: InfoEventType.selected,
+            selectedValue: JSON.stringify(state.data),
+            target: UiTarget.donationAmountButton
+        });
+        this.core.modules.analytics.sendAnalytics(event);
     }
 
     public handleRef = ref => {
@@ -48,8 +89,15 @@ class DonationElement extends UIElement<DonationConfiguration> {
     protected override componentToRender(): h.JSX.Element {
         return (
             <Fragment>
-                {/*@ts-ignore ref*/}
-                <DonationComponent {...this.props} ref={this.handleRef} onChange={this.setState} onDonate={this.donate} />
+                <DonationComponent
+                    {...this.props}
+                    /*@ts-ignore ref*/
+                    ref={this.handleRef}
+                    onChange={this.setState}
+                    onDonate={this.donate}
+                    onCancel={this.cancel}
+                    onAmountSelected={this.amountSelected}
+                />
             </Fragment>
         );
     }

@@ -35,12 +35,21 @@ import './UIElement.scss';
 import SRPanelProvider from '../../../core/Errors/SRPanelProvider';
 import { AmountProvider, AmountProviderRef } from '../../../core/Context/AmountProvider';
 import { PayButtonProps } from '../PayButton/PayButton';
+import type DonationCampaignProvider from '../../Donation/DonationCampaignProvider';
+import type { DonationCampaignProviderAPI } from '../../Donation/types';
+import { toDonationCampaignProviderAPI } from '../../Donation/utils';
 
 export abstract class UIElement<P extends UIElementProps = UIElementProps> extends BaseElement<P> {
+    /**
+     * componentRef is a ref to the primary component inside the subclass that extends UIElement e.g. CardInput.tsx (which sits inside Card.tsx)
+     */
     protected componentRef: any;
 
     protected resources: Resources;
 
+    /**
+     * elementRef is a ref to the subclass that extends UIElement e.g. Card.tsx or Dropin.tsx
+     */
     public elementRef: UIElement;
 
     public static readonly type = undefined;
@@ -73,6 +82,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         this.makeAdditionalDetailsCall = this.makeAdditionalDetailsCall.bind(this);
         this.submitUsingSessionsFlow = this.submitUsingSessionsFlow.bind(this);
         this.updateAmount = this.updateAmount.bind(this);
+        this.setupSessionsDonationCampaignProvider = this.setupSessionsDonationCampaignProvider.bind(this);
 
         this.elementRef = (props && props.elementRef) || this;
         this.resources = this.props.modules ? this.props.modules.resources : undefined;
@@ -128,6 +138,10 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
 
     get srPanel(): SRPanel {
         return this.core.modules.srPanel;
+    }
+
+    get donationCampaignProvider(): DonationCampaignProvider {
+        return this.core.modules.donationCampaignProvider;
     }
 
     protected getPaymentMethodConfigFromResponse(componentProps: P) {
@@ -209,7 +223,9 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     }
 
     /**
-     * elementRef is a ref to the subclass that extends UIElement e.g. Card.tsx
+     * Set status using elementRef, which:
+     * - If Drop-in, will set status for Dropin component, and then it will propagate the new status for the active payment method component
+     * - If Component, it will set its own status
      */
     public setElementStatus(status: UIElementStatus, props?: any): this {
         this.elementRef?.setStatus(status, props);
@@ -442,6 +458,28 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         });
     };
 
+    protected setupSessionsDonationCampaignProvider() {
+        const rootNode: HTMLElement = assertIsDropin(this.elementRef) ? this.elementRef._node : this._node;
+
+        /**
+         * Give the DonationCampaignProvider module the things it needs to start:
+         *  somewhere to mount, the amount of the payment (in case we have a "roundup"-type campaign, & the componentType (for the analytics)
+         *  (And then start the inbuilt timer)
+         */
+
+        const { amount, onDonationCompleted, onDonationFailed } = this.props;
+
+        this.donationCampaignProvider.setupAndStart({
+            rootNode,
+            commercialTxAmount: amount.value,
+            onDonationCompleted,
+            onDonationFailed
+        });
+
+        // Return an object with the API we want to expose to merchants
+        return toDonationCampaignProviderAPI(this.donationCampaignProvider);
+    }
+
     /**
      * Handles when the payment fails. The payment fails when:
      * - adv flow: the merchant rejects the payment due to a critical error
@@ -466,7 +504,14 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         }
 
         cleanupFinalResult(result);
-        this.props.onPaymentCompleted?.(result, this.elementRef);
+
+        /** If we are using sessions (and haven't moved into a hybrid flow); and the response mandates it - create a DonationCampaignProvider instance */
+        const isHybridFlow = this.core.session && (this.props.onSubmit || this.props.onAdditionalDetails);
+
+        const dcp: DonationCampaignProviderAPI | null =
+            this.core.session && !isHybridFlow && result.askDonation === true ? this.setupSessionsDonationCampaignProvider() : null;
+
+        this.props.onPaymentCompleted?.(result, this.elementRef, dcp);
     };
 
     /**
