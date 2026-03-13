@@ -1,4 +1,5 @@
 @use 'styles/variable-generator';
+@use 'styles/mixins';
 
 .adyen-checkout__payment-method {
     position: relative;
@@ -51,9 +52,10 @@
 .adyen-checkout__payment-method__header {
     align-items: center;
     color: variable-generator.token(color-label-primary);
-    display: flex;
-    flex-wrap: nowrap;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: auto auto 1fr auto;
+    grid-template-rows: auto auto;
+    column-gap: 0;
     font-weight: variable-generator.token(text-body-font-weight);
     font-size: variable-generator.token(text-title-font-size);
     padding: variable-generator.token(spacer-070);
@@ -87,9 +89,6 @@
     cursor: default;
 }
 
-.adyen-checkout__payment-method--selected .adyen-checkout__payment-method__header {
-    flex-wrap: wrap;
-}
 
 .adyen-checkout__payment-method__details {
     padding: variable-generator.token(spacer-000) variable-generator.token(spacer-070);
@@ -111,6 +110,12 @@
     overflow: hidden;
 }
 
+.adyen-checkout__payment-method__header > .adyen-checkout__payment-method__header__title > .adyen-checkout__payment-method__image__wrapper {
+    grid-column: 2;
+    grid-row: 1 / -1; // to wrap the icon
+    margin-right: variable-generator.token(spacer-060);
+}
+
 .adyen-checkout__payment-method__image {
     display: block;
     border-radius: var(--adyen-checkout-border-radius-s);
@@ -121,27 +126,27 @@
 }
 
 .adyen-checkout__payment-method__brands {
+    grid-column: 4;
+    grid-row: 1;
     display: flex;
     align-items: center;
     gap: variable-generator.token(spacer-020);
     flex-wrap: wrap;
     margin: variable-generator.token(spacer-020) variable-generator.token(spacer-000);
     height: variable-generator.token(spacer-090);
-    flex-basis: auto;
-    flex-shrink: 1;
-    text-align: right;
     overflow: hidden;
+
+    @include mixins.media-s-and-down {
+        grid-column: 3 / -1;
+        grid-row: 2;
+        height: auto;
+        overflow: visible;
+    }
 
     & .adyen-checkout__payment-method__brand-number {
         color: variable-generator.token(color-label-secondary);
         font-size: variable-generator.token(text-body-font-size);
     }
-}
-
-.adyen-checkout__payment-method--selected .adyen-checkout__payment-method__brands {
-    text-align: left;
-    overflow: visible;
-    height: auto;
 }
 
 .adyen-checkout__payment-method__brands .adyen-checkout__payment-method__image__wrapper {
