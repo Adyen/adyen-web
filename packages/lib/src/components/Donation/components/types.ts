@@ -40,4 +40,5 @@ export interface DonationComponentProps extends CampaignContentProps {
     onDonate: (payload: DonationPayload) => void;
     onCancel?: (payload: DonationPayload) => void;
     onChange?: (payload: DonationPayload) => void;
+    onAmountSelected?: (payload: DonationPayload) => void;
 }

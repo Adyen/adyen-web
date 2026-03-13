@@ -5,6 +5,8 @@ import { TxVariants } from '../tx-variants';
 import type { ICore } from '../../core/types';
 import type { DonationConfiguration } from './types';
 import { AnalyticsLogEvent, LogEventSubtype, LogEventType } from '../../core/Analytics/events/AnalyticsLogEvent';
+import { DonationPayload } from './components/types';
+import { AnalyticsInfoEvent, InfoEventType, UiTarget } from '../../core/Analytics/events/AnalyticsInfoEvent';
 
 class DonationElement extends UIElement<DonationConfiguration> {
     public static readonly type = TxVariants.donation;
@@ -13,6 +15,7 @@ class DonationElement extends UIElement<DonationConfiguration> {
         super(checkout, props);
         this.donate = this.donate.bind(this);
         this.cancel = this.cancel.bind(this);
+        this.amountSelected = this.amountSelected.bind(this);
     }
 
     public static readonly defaultProps = {
@@ -48,6 +51,7 @@ class DonationElement extends UIElement<DonationConfiguration> {
         });
         this.core.modules.analytics.sendAnalytics(event);
 
+        // Call callback
         const { data, isValid } = this;
         this.props.onDonate({ data, isValid }, this);
     }
@@ -62,8 +66,20 @@ class DonationElement extends UIElement<DonationConfiguration> {
         });
         this.core.modules.analytics.sendAnalytics(event);
 
+        // Call callback
         const { data, isValid } = this;
         this.props.onCancel({ data, isValid });
+    }
+
+    amountSelected(state: DonationPayload) {
+        // Send analytics
+        const event = new AnalyticsInfoEvent({
+            component: DonationElement.type,
+            type: InfoEventType.selected,
+            selectedValue: JSON.stringify(state.data),
+            target: UiTarget.donationAmountButton
+        });
+        this.core.modules.analytics.sendAnalytics(event);
     }
 
     public handleRef = ref => {
@@ -73,8 +89,15 @@ class DonationElement extends UIElement<DonationConfiguration> {
     protected override componentToRender(): h.JSX.Element {
         return (
             <Fragment>
-                {/*@ts-ignore ref*/}
-                <DonationComponent {...this.props} ref={this.handleRef} onChange={this.setState} onDonate={this.donate} onCancel={this.cancel} />
+                <DonationComponent
+                    {...this.props}
+                    /*@ts-ignore ref*/
+                    ref={this.handleRef}
+                    onChange={this.setState}
+                    onDonate={this.donate}
+                    onCancel={this.cancel}
+                    onAmountSelected={this.amountSelected}
+                />
             </Fragment>
         );
     }
