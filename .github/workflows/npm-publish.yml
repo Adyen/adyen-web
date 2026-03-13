@@ -1,7 +1,7 @@
 name: Publish Package
 
 on:
-  workflow_dispatch:
+  workflow_call:
 
 jobs:
   publish-npm:
