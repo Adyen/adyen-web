@@ -6,7 +6,6 @@ import type {
     CheckoutSessionDonationsRequestData,
     CheckoutSessionDonationsResponse
 } from '../../core/CheckoutSession/types';
-import { normalizeDonationCampaign } from './utils';
 import Donation from './Donation';
 import { AnalyticsLogEvent, LogEventSubtype, LogEventType } from '../../core/Analytics/events/AnalyticsLogEvent';
 
@@ -121,9 +120,7 @@ class DonationCampaignProvider {
     }
 
     private handleDonationCampaign(donationCampaign: DonationCampaign) {
-        const normalisedDonationCampaign = normalizeDonationCampaign(donationCampaign);
-
-        const { id, campaignName, ...restDonationCampaignProps } = normalisedDonationCampaign;
+        const { id, campaignName, ...restDonationCampaignProps } = donationCampaign;
 
         const donationType = restDonationCampaignProps.donation.type;
 

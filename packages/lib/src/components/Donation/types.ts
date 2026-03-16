@@ -16,11 +16,6 @@ export interface DonationCampaign extends CampaignContentProps {
     termsAndConditionsUrl?: string;
 }
 
-export interface SessionsDonationCampaign extends Omit<DonationCampaign, 'donation'> {
-    donation?: DonationCampaign['donation'];
-    sessionsDonation?: DonationCampaign['donation'];
-}
-
 export interface DonationCampaignProviderAPI {
     get rootNode(): HTMLElement | string;
     set rootNode(node: HTMLElement | string);
