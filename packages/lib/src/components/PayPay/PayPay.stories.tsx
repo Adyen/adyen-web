@@ -18,7 +18,12 @@ const render = ({ componentConfiguration, ...checkoutConfig }: PaymentMethodStor
 export const Default: PayPayStory = {
     render,
     args: {
-        countryCode: 'JP'
+        countryCode: 'JP',
+        componentConfiguration: {
+            configuration: {
+                clientId: 'a_SqDZ4LRmPV'
+            }
+        }
     }
 };
 

@@ -8,7 +8,7 @@ export interface PayPayConfiguration extends UIElementProps {
 
 export type PayPayInitOptions = {
     clientId: string;
-    environment: 'sandbox' | 'production';
+    env: 'sandbox' | 'production';
     success: (res: unknown) => void;
     fail: (res: unknown) => void;
 };

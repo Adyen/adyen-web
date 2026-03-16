@@ -1,4 +1,5 @@
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
+import { PayPayInitOptions } from '../types';
 import PayPaySdkLoader from './PayPaySdkLoader';
 
 class PayPayService {
@@ -17,20 +18,22 @@ class PayPayService {
             await this.sdkLoader.load();
 
             return new Promise<unknown>((resolve, reject) => {
-                const environment = this.environment.includes('live') ? 'production' : 'sandbox';
+                const env = this.environment.includes('live') ? 'production' : 'sandbox';
 
-                window.pp.init({
+                const options: PayPayInitOptions = {
                     clientId: this.clientId,
-                    environment,
+                    env,
                     success(res) {
                         console.log('PayPay success', res);
-                        resolve(res);
                     },
                     fail(res) {
                         console.log('PayPay fail', res);
-                        reject(res);
                     }
-                });
+                };
+
+                console.log('PayPay init options:', options);
+                console.log('PayPay init invoked');
+                window.pp.init(options);
             });
         } catch {
             throw new AdyenCheckoutError('ERROR', 'PayPay SDK is not loaded. Call loadSdk() first.');

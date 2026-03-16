@@ -90,7 +90,7 @@ export function handleError(error, component) {
     if (error.type === 'card') {
         console.log('### Card::onError:: obj=', error);
     } else {
-        console.error(error.name, error.message, error.stack, component);
+        // console.error(error.name, error.message, error.stack, component);
     }
 }
 

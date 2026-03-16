@@ -45,6 +45,7 @@ export const getPaymentMethods = async (configuration?: any): Promise<PaymentMet
 export const makePayment = async (stateData: any, paymentData: any, shopperDetails?: ShopperDetails): Promise<RawPaymentResponse> => {
     const paymentRequest = { ...paymentsConfig, ...stateData, ...paymentData, ...shopperDetails };
     if (paymentRequest.order) delete paymentRequest.amount; // why?
+
     return await httpPost('payments', paymentRequest);
 };
 
