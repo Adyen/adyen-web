@@ -1,0 +1,18 @@
+name: Release and Publish
+
+on:
+  workflow_dispatch:
+
+jobs:
+  gh-release:
+    uses: ./.github/workflows/gh-release.yml
+    permissions:
+      contents: write
+
+  npm-publish:
+    needs: gh-release
+    uses: ./.github/workflows/npm-publish.yml
+    permissions:
+      contents: read
+      actions: read
+      id-token: write
