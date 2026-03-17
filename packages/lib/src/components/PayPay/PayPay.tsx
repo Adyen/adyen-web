@@ -1,12 +1,13 @@
 import { h } from 'preact';
 import UIElement from '../internal/UIElement/UIElement';
-import PayPaySdkLoader from './services/PayPaySdkLoader';
 import { TxVariants } from '../tx-variants';
-import Button from '../internal/Button';
+import PayPaySdkLoader from './services/PayPaySdkLoader';
 import PayPayService from './services/PayPayService';
+import PayPayComponent from './components/PayPayComponent';
 
 import type { PayPayConfiguration } from './types';
 import type { ICore } from '../../core/types';
+import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 
 class PayPayElement extends UIElement<PayPayConfiguration> {
     public static readonly type = TxVariants.paypay;
@@ -18,8 +19,8 @@ class PayPayElement extends UIElement<PayPayConfiguration> {
         }
     };
 
-    private sdkLoader: PayPaySdkLoader;
-    private paypayService: PayPayService;
+    private readonly sdkLoader: PayPaySdkLoader;
+    private readonly paypayService: PayPayService;
 
     constructor(checkout: ICore, props?: PayPayConfiguration) {
         super(checkout, props);
@@ -27,15 +28,11 @@ class PayPayElement extends UIElement<PayPayConfiguration> {
         this.submit = this.submit.bind(this);
 
         this.sdkLoader = new PayPaySdkLoader({ analytics: this.analytics });
+        void this.sdkLoader.load();
 
         this.paypayService = new PayPayService({
             clientId: this.props.configuration.clientId,
-            environment: this.props.environment,
-            sdkLoader: this.sdkLoader
-        });
-
-        void this.paypayService.initialize().catch(error => {
-            this.handleError(error);
+            environment: this.props.environment
         });
     }
 
@@ -52,7 +49,12 @@ class PayPayElement extends UIElement<PayPayConfiguration> {
     }
 
     public override async isAvailable(): Promise<void> {
-        return Promise.resolve();
+        try {
+            await this.sdkLoader.isSdkLoaded();
+            return Promise.resolve();
+        } catch (error: unknown) {
+            return Promise.reject(new AdyenCheckoutError('ERROR', 'PayPay SDK failed to load', { cause: error }));
+        }
     }
 
     public override submit = (): void => {
@@ -64,7 +66,7 @@ class PayPayElement extends UIElement<PayPayConfiguration> {
             return null;
         }
 
-        return <Button label={'PayPay'} />;
+        return <PayPayComponent service={this.paypayService} />;
     }
 }
 

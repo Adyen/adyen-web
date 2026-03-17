@@ -12,3 +12,14 @@ export type PayPayInitOptions = {
     success: (res: unknown) => void;
     fail: (res: unknown) => void;
 };
+
+export type PayPayAuthStatusOptions = {
+    success: (res: unknown) => void;
+    fail: (res: unknown) => void;
+};
+
+export type PayPayRenderButtonLoginOptions = {
+    containerId: string;
+    locale: 'ja' | 'en';
+    postLoginRedirectUrl?: string;
+};

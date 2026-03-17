@@ -1,44 +1,46 @@
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 import { PayPayInitOptions } from '../types';
-import PayPaySdkLoader from './PayPaySdkLoader';
 
 class PayPayService {
-    private readonly sdkLoader: PayPaySdkLoader;
     private readonly clientId: string;
     private readonly environment: string;
 
-    constructor({ clientId, environment, sdkLoader }: { clientId: string; environment: string; sdkLoader: PayPaySdkLoader }) {
-        this.sdkLoader = sdkLoader;
+    constructor({ clientId, environment }: { clientId: string; environment: string }) {
         this.clientId = clientId;
         this.environment = environment;
     }
 
-    public async initialize(): Promise<unknown> {
+    public initialize = ({ containerId }: { containerId: string }): void => {
         try {
-            await this.sdkLoader.load();
+            const env = this.environment.includes('live') ? 'production' : 'sandbox';
 
-            return new Promise<unknown>((resolve, reject) => {
-                const env = this.environment.includes('live') ? 'production' : 'sandbox';
+            const options: PayPayInitOptions = {
+                clientId: this.clientId,
+                env,
+                success: res => {
+                    console.log('PayPay success', res);
+                },
+                fail: res => {
+                    console.log('PayPay fail', res);
+                    this.renderLoginButton({ containerId });
+                }
+            };
 
-                const options: PayPayInitOptions = {
-                    clientId: this.clientId,
-                    env,
-                    success(res) {
-                        console.log('PayPay success', res);
-                    },
-                    fail(res) {
-                        console.log('PayPay fail', res);
-                    }
-                };
-
-                console.log('PayPay init options:', options);
-                console.log('PayPay init invoked');
-                window.pp.init(options);
-            });
-        } catch {
-            throw new AdyenCheckoutError('ERROR', 'PayPay SDK is not loaded. Call loadSdk() first.');
+            console.log('PayPay init options:', options);
+            console.log('PayPay init invoked');
+            window.pp.init(options);
+        } catch (error: unknown) {
+            throw new AdyenCheckoutError('ERROR', 'PayPay SDK init() failed', { cause: error });
         }
-    }
+    };
+
+    public renderLoginButton = ({ containerId }: { containerId: string }) => {
+        window.pp.renderButton({
+            containerId: containerId,
+            locale: 'en'
+            // postLoginRedirectUrl
+        });
+    };
 }
 
 export default PayPayService;
