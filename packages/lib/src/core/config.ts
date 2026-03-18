@@ -20,6 +20,7 @@ export const GENERIC_OPTIONS = [
     'clientKey',
     'showPayButton',
     'redirectFromTopWhenInIframe',
+    'donation',
 
     // Events
     'onPaymentCompleted',
@@ -36,9 +37,7 @@ export const GENERIC_OPTIONS = [
     'onOrderCancel',
     'onOrderRequest',
     'onOrderUpdated',
-    'onPaymentMethodsRequest',
-    'onDonationCompleted',
-    'onDonationFailed'
+    'onPaymentMethodsRequest'
 ];
 
 export const DEFAULT_HTTP_TIMEOUT = 60000;

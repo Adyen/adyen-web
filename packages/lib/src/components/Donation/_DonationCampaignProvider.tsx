@@ -143,7 +143,7 @@ class DonationCampaignProvider {
                 this.callSessionsDonations(donationRequestData, component);
             },
             commercialTxAmount: this.commercialTxAmount,
-            ...restDonationCampaignProps
+            ...(restDonationCampaignProps as DonationConfiguration)
         };
 
         this.donationComponent = new Donation(this.core, {

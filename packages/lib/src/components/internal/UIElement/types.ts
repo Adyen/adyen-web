@@ -21,8 +21,7 @@ type CoreCallbacks = Pick<
     | 'onActionHandled'
     | 'onError'
     | 'onEnterKeyPressed'
-    | 'onDonationCompleted'
-    | 'onDonationFailed'
+    | 'donation'
 >;
 
 export type StatusFromAction = 'redirect' | 'loading' | 'custom';
@@ -113,7 +112,7 @@ export type UIElementProps = {
         originalAction?: PaymentAction;
     };
 
-export type UIElementStatus = 'ready' | 'loading' | 'error' | 'success' | 'donation';
+export type UIElementStatus = 'ready' | 'loading' | 'error' | 'success';
 
 // An interface for the members exposed by a component to its parent UIElement
 export interface ComponentMethodsRef {

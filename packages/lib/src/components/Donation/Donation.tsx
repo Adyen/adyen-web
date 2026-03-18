@@ -3,19 +3,38 @@ import UIElement from '../internal/UIElement/UIElement';
 import DonationComponent from './components/DonationComponent';
 import { TxVariants } from '../tx-variants';
 import type { ICore } from '../../core/types';
-import type { DonationConfiguration } from './types';
+import type { DonationConfiguration, DonationProps, DonationServiceProps } from './types';
 import { AnalyticsLogEvent, LogEventSubtype, LogEventType } from '../../core/Analytics/events/AnalyticsLogEvent';
 import { DonationPayload } from './components/types';
 import { AnalyticsInfoEvent, InfoEventType, UiTarget } from '../../core/Analytics/events/AnalyticsInfoEvent';
+import DonationCampaignService from './DonationCampaignService';
 
 class DonationElement extends UIElement<DonationConfiguration> {
     public static readonly type = TxVariants.donation;
 
-    constructor(checkout: ICore, props?: DonationConfiguration) {
-        super(checkout, props);
+    private _donationCampaignService: DonationCampaignService;
+
+    constructor(checkout: ICore, props: DonationProps) {
+        const isServiceMode = DonationElement.isServiceMode(props);
+        const initialConfig = isServiceMode ? undefined : props;
+
+        super(checkout, initialConfig);
+
         this.donate = this.donate.bind(this);
         this.cancel = this.cancel.bind(this);
         this.amountSelected = this.amountSelected.bind(this);
+
+        if (checkout.session && isServiceMode) {
+            console.log('### Donation::constructor:: SERVICE mode!');
+            this._donationCampaignService = new DonationCampaignService(checkout, this, props.options);
+        }
+    }
+
+    /**
+     * Type guard to determine if props are for service mode.
+     */
+    private static isServiceMode(props: DonationProps): props is DonationServiceProps {
+        return 'mode' in props && props.mode === 'service';
     }
 
     public static readonly defaultProps = {
@@ -39,6 +58,11 @@ class DonationElement extends UIElement<DonationConfiguration> {
 
     setState(newState) {
         this.state = { ...this.state, ...newState };
+    }
+
+    // Setter for when DonationCampaignService has retrieved a Donation campaign
+    setProps(newProps: DonationConfiguration) {
+        this.props = { ...this.props, ...newProps };
     }
 
     donate() {

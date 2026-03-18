@@ -35,9 +35,8 @@ import './UIElement.scss';
 import SRPanelProvider from '../../../core/Errors/SRPanelProvider';
 import { AmountProvider, AmountProviderRef } from '../../../core/Context/AmountProvider';
 import { PayButtonProps } from '../PayButton/PayButton';
-import type DonationCampaignProvider from '../../Donation/DonationCampaignProvider';
-import type { DonationCampaignProviderAPI } from '../../Donation/types';
-import { toDonationCampaignProviderAPI } from '../../Donation/utils';
+import { getDonationComponent } from '../../Donation/components/utils';
+import { TxVariants } from '../../tx-variants';
 
 export abstract class UIElement<P extends UIElementProps = UIElementProps> extends BaseElement<P> {
     /**
@@ -82,7 +81,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         this.makeAdditionalDetailsCall = this.makeAdditionalDetailsCall.bind(this);
         this.submitUsingSessionsFlow = this.submitUsingSessionsFlow.bind(this);
         this.updateAmount = this.updateAmount.bind(this);
-        this.setupSessionsDonationCampaignProvider = this.setupSessionsDonationCampaignProvider.bind(this);
+        this.setupSessionsDonation = this.setupSessionsDonation.bind(this);
 
         this.elementRef = (props && props.elementRef) || this;
         this.resources = this.props.modules ? this.props.modules.resources : undefined;
@@ -138,10 +137,6 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
 
     get srPanel(): SRPanel {
         return this.core.modules.srPanel;
-    }
-
-    get donationCampaignProvider(): DonationCampaignProvider {
-        return this.core.modules.donationCampaignProvider;
     }
 
     protected getPaymentMethodConfigFromResponse(componentProps: P) {
@@ -458,26 +453,26 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         });
     };
 
-    protected setupSessionsDonationCampaignProvider() {
-        const rootNode: HTMLElement = assertIsDropin(this.elementRef) ? this.elementRef._node : this._node;
+    protected setupSessionsDonation() {
+        const { amount, donation } = this.props;
 
-        /**
-         * Give the DonationCampaignProvider module the things it needs to start:
-         *  somewhere to mount, the amount of the payment (in case we have a "roundup"-type campaign, & the componentType (for the analytics)
-         *  (And then start the inbuilt timer)
-         */
+        // If merchant hasn't disabled autoStart (either explicitly or by not creating a donation object), make the donation component
+        if (!donation || donation.autoStart !== false) {
+            console.log('### UIElement::setupSessionsDonation:: make Donation comp');
 
-        const { amount, onDonationCompleted, onDonationFailed } = this.props;
+            const rootNode: HTMLElement = assertIsDropin(this.elementRef) ? this.elementRef._node : this._node;
 
-        this.donationCampaignProvider.setupAndStart({
-            rootNode,
-            commercialTxAmount: amount.value,
-            onDonationCompleted,
-            onDonationFailed
-        });
-
-        // Return an object with the API we want to expose to merchants
-        return toDonationCampaignProviderAPI(this.donationCampaignProvider);
+            const DonationComponentRef = getDonationComponent(TxVariants.donation, this.core);
+            if (DonationComponentRef) {
+                new DonationComponentRef(this.core, {
+                    mode: 'service',
+                    options: {
+                        rootNode,
+                        commercialTxAmount: amount.value
+                    }
+                });
+            }
+        }
     }
 
     /**
@@ -505,13 +500,14 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
 
         cleanupFinalResult(result);
 
-        /** If we are using sessions (and haven't moved into a hybrid flow); and the response mandates it - create a DonationCampaignProvider instance */
+        /** If we are using sessions (and haven't moved into a hybrid flow); and the response mandates it - create a Donation instance */
         const isHybridFlow = this.core.session && (this.props.onSubmit || this.props.onAdditionalDetails);
 
-        const dcp: DonationCampaignProviderAPI | null =
-            this.core.session && !isHybridFlow && result.askDonation === true ? this.setupSessionsDonationCampaignProvider() : null;
+        if (this.core.session && !isHybridFlow && result.askDonation === true) {
+            this.setupSessionsDonation();
+        }
 
-        this.props.onPaymentCompleted?.(result, this.elementRef, dcp);
+        this.props.onPaymentCompleted?.(result, this.elementRef);
     };
 
     /**
