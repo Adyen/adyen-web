@@ -15,7 +15,8 @@ class PayPayElement extends UIElement<PayPayConfiguration> {
     protected static readonly defaultProps: PayPayConfiguration = {
         type: PayPayElement.type,
         configuration: {
-            clientId: ''
+            clientId: '',
+            merchantId: ''
         }
     };
 
@@ -32,6 +33,7 @@ class PayPayElement extends UIElement<PayPayConfiguration> {
 
         this.paypayService = new PayPayService({
             clientId: this.props.configuration.clientId,
+            merchantId: this.props.configuration.merchantId,
             environment: this.props.environment
         });
     }

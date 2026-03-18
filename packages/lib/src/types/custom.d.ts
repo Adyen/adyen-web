@@ -2,7 +2,12 @@ import { FastlaneWindowInstance, FastlaneOptions } from '../components/PayPalFas
 import { ApplePayButtonStyle, ApplePayButtonType, ApplePayWebConfiguration } from '../components/ApplePay/types';
 import { IAdyenPasskey } from '../components/PayByBankPix/services/types';
 
-import type { PayPayInitOptions, PayPayAuthStatusOptions, PayPayRenderButtonLoginOptions } from '../components/PayPay/types';
+import type {
+    PayPayInitOptions,
+    PayPayAuthStatusOptions,
+    PayPayRenderButtonLoginOptions,
+    PayPayRenderButtonPaymentOptions
+} from '../components/PayPay/types';
 
 declare module 'preact' {
     namespace JSX {
@@ -53,7 +58,7 @@ declare global {
         pp: {
             init(options: PayPayInitOptions): void;
             getAuthStatus(options: PayPayAuthStatusOptions): void;
-            renderButton(options: PayPayRenderButtonLoginOptions): void;
+            renderButton(options: PayPayRenderButtonLoginOptions | PayPayRenderButtonPaymentOptions): void;
         };
     }
 }

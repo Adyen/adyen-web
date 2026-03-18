@@ -21,7 +21,8 @@ export const Default: PayPayStory = {
         countryCode: 'JP',
         componentConfiguration: {
             configuration: {
-                clientId: 'a_SqDZ4LRmPV'
+                clientId: 'a_SqDZ4LRmPV',
+                merchantId: '990268679139375293'
             }
         }
     }
