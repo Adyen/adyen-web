@@ -129,11 +129,12 @@ class DonationCampaignService {
             ...(restDonationCampaignProps as DonationConfiguration)
         };
 
-        // this.donationComponent = new Donation(this.core, {
-        //     ...donationComponentProps
-        // });
-
-        // TODO - pass donationComponentProps to the Donation comp, somehow
+        if (donationType === 'roundup' && !this.commercialTxAmount) {
+            console.error(
+                'DonationCampaignService:: The donation type is "roundup" and the commercialTxAmount is not set.\nIt will not be possible to mount a Donation component'
+            );
+            return;
+        }
 
         this.donationComponent.setProps(donationComponentProps);
 
