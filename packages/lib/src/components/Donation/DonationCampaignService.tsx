@@ -23,11 +23,11 @@ class DonationCampaignService {
 
     private readonly core: ICore;
 
-    private _rootNode: HTMLElement | string = null;
+    private readonly rootNode: HTMLElement | string = null;
 
-    private commercialTxAmount: number = 0;
-    private onDonationCompleted: DonationCampaignProviderSetup['onDonationCompleted'];
-    private onDonationFailed: DonationCampaignProviderSetup['onDonationFailed'];
+    private readonly commercialTxAmount: number = 0;
+    private readonly onDonationCompleted: DonationCampaignProviderSetup['onDonationCompleted'];
+    private readonly onDonationFailed: DonationCampaignProviderSetup['onDonationFailed'];
 
     private autoStartTimer: ReturnType<typeof setTimeout> = null;
     private readonly autoStartTimerMS = 3000;
@@ -37,7 +37,7 @@ class DonationCampaignService {
     constructor(checkout: ICore, donationComp: Donation, dcpProps?: DonationCampaignOptions) {
         DonationCampaignService.instanceCount++;
 
-        // If the merchant has set autoStart to true, and then tries to display the Donation component in a different container,
+        // If the merchant has not explicitly set autoStart to false, and then tries to display the Donation component in a different container,
         // we need to warn them otherwise, without this check, 2 calls to the /donationCampaigns endpoint will be made - since UIElement
         // will automatically mount the Donation component in the component's rootNode.
         if (DonationCampaignService.instanceCount > 1) {
@@ -52,50 +52,11 @@ class DonationCampaignService {
 
         this.donationComponent = donationComp;
 
-        this._rootNode = dcpProps.rootNode;
+        this.rootNode = dcpProps.rootNode;
         this.commercialTxAmount = dcpProps.commercialTxAmount;
 
         this.beginCountdown(checkout.options.donation?.delay || this.autoStartTimerMS);
     }
-
-    /**
-     * Exposed methods for the merchant to get/set the root node - which is where the Donation component will be mounted
-     */
-    // public get rootNode(): HTMLElement | string {
-    //     return this._rootNode;
-    // }
-    //
-    // public set rootNode(node: HTMLElement | string) {
-    //     this._rootNode = node;
-    // }
-
-    /**
-     * Exposed method for the merchant to halt the auto start timer - meaning it will then be up to them to call start() to begin the process
-     */
-    // public haltAutoStart() {
-    //     clearTimeout(this.autoStartTimer);
-    // }
-
-    /**
-     * Exposed method for the merchant to manually begin the process
-     */
-    // public start() {
-    //     // Clear the timeout in case the merchant hasn't halted it, otherwise we could end up with a double call to the /donationCampaigns endpoint
-    //     this.haltAutoStart();
-    //     this.init();
-    // }
-
-    /**
-     * @internal
-     */
-    // public setupAndStart({ rootNode, commercialTxAmount, onDonationCompleted, onDonationFailed }: DonationCampaignProviderSetup) {
-    //     this.rootNode = rootNode;
-    //     this.commercialTxAmount = commercialTxAmount;
-    //     this.onDonationCompleted = onDonationCompleted;
-    //     this.onDonationFailed = onDonationFailed;
-    //
-    //     this.beginCountdown();
-    // }
 
     private beginCountdown(delay: number) {
         if (this.autoStartTimer) {
@@ -104,7 +65,6 @@ class DonationCampaignService {
 
         this.autoStartTimer = setTimeout(() => {
             this.init();
-            console.log('### DonationCampaignService::beginCountdown::  call init');
         }, delay);
     }
 
@@ -134,7 +94,6 @@ class DonationCampaignService {
             })
             .then((donationCampaign: DonationCampaign) => {
                 if (donationCampaign) {
-                    console.log('### DonationCampaignService:::: HAS donationCampaign');
                     this.handleDonationCampaign(donationCampaign);
                 }
             })
@@ -178,7 +137,7 @@ class DonationCampaignService {
 
         this.donationComponent.setProps(donationComponentProps);
 
-        this.donationComponent.mount(this._rootNode);
+        this.donationComponent.mount(this.rootNode);
     }
 
     private callSessionsDonations(donationRequestData: CheckoutSessionDonationsRequestData, component: Donation) {

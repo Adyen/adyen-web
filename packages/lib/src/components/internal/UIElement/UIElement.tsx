@@ -458,18 +458,13 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
 
         // If merchant hasn't disabled autoStart (either explicitly or by not creating a donation object), make the donation component
         if (!donation || donation.autoStart !== false) {
-            console.log('### UIElement::setupSessionsDonation:: make Donation comp');
-
             const rootNode: HTMLElement = assertIsDropin(this.elementRef) ? this.elementRef._node : this._node;
 
             const DonationComponentRef = getDonationComponent(TxVariants.donation, this.core);
             if (DonationComponentRef) {
                 new DonationComponentRef(this.core, {
-                    mode: 'service',
-                    options: {
-                        rootNode,
-                        commercialTxAmount: amount.value
-                    }
+                    rootNode,
+                    commercialTxAmount: amount.value
                 });
             }
         }

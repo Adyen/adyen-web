@@ -3,7 +3,7 @@ import UIElement from '../internal/UIElement/UIElement';
 import DonationComponent from './components/DonationComponent';
 import { TxVariants } from '../tx-variants';
 import type { ICore } from '../../core/types';
-import type { DonationConfiguration, DonationProps, DonationServiceProps } from './types';
+import type { DonationCampaignOptions, DonationConfiguration, DonationProps } from './types';
 import { AnalyticsLogEvent, LogEventSubtype, LogEventType } from '../../core/Analytics/events/AnalyticsLogEvent';
 import { DonationPayload } from './components/types';
 import { AnalyticsInfoEvent, InfoEventType, UiTarget } from '../../core/Analytics/events/AnalyticsInfoEvent';
@@ -25,16 +25,15 @@ class DonationElement extends UIElement<DonationConfiguration> {
         this.amountSelected = this.amountSelected.bind(this);
 
         if (checkout.session && isServiceMode) {
-            console.log('### Donation::constructor:: SERVICE mode!');
-            this._donationCampaignService = new DonationCampaignService(checkout, this, props.options);
+            this._donationCampaignService = new DonationCampaignService(checkout, this, props);
         }
     }
 
     /**
      * Type guard to determine if props are for service mode.
      */
-    private static isServiceMode(props: DonationProps): props is DonationServiceProps {
-        return 'mode' in props && props.mode === 'service';
+    private static isServiceMode(props: DonationProps): props is DonationCampaignOptions {
+        return 'rootNode' in props;
     }
 
     public static readonly defaultProps = {

@@ -1,4 +1,5 @@
 import { makePayment, makeDetailsCall } from './services';
+import { Donation } from '@adyen/adyen-web';
 
 export function handleChange(state, component) {
     console.group(`onChange - ${state.data.paymentMethod.type}`);
@@ -9,17 +10,14 @@ export function handleChange(state, component) {
     console.groupEnd();
 }
 
-export function handleOnPaymentCompleted(result, element, dcp) {
+export function handleOnPaymentCompleted(result, element, checkout) {
     // alert(`onPaymentCompleted - ${result?.resultCode}`);
-    console.log('onPaymentCompleted', result, element);
 
-    if (dcp) {
-        dcp.haltAutoStart();
-
-        console.log('### handlers::handleOnPaymentCompleted:: dcp rootNode', dcp.rootNode);
-        dcp.rootNode = '.playground-nav';
-
-        dcp.start();
+    if (result.askDonation === true) {
+        const dc = new Donation(checkout, {
+            rootNode: '.playground-nav',
+            commercialTxAmount: element.props.amount.value
+        });
     }
 }
 

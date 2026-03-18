@@ -16,20 +16,12 @@ export interface DonationCampaign extends CampaignContentProps {
     termsAndConditionsUrl?: string;
 }
 
-export interface DonationCampaignProviderAPI {
-    get rootNode(): HTMLElement | string;
-    set rootNode(node: HTMLElement | string);
-
-    haltAutoStart(): void;
-    start(): void;
-}
-
 export interface DonationOptions {
     autoStart: boolean;
     delay: number;
     /**
      * Optional callback when the (sessions) donation is completed (or cancelled)
-     * @param didDonate - a boolean staing whether a donation was made (true) or whether the shopper cancelled the donation (false)
+     * @param didDonate - a boolean stating whether a donation was made (true) or whether the shopper cancelled the donation (false)
      */
     onSuccess?: (didDonate: boolean) => void;
     /**
@@ -45,17 +37,8 @@ export interface DonationCampaignOptions {
 }
 
 /**
- * Props for service mode - component will fetch campaign data via DonationCampaignService.
- * Discriminated by the presence of `mode: 'service'`.
- */
-export interface DonationServiceProps {
-    mode: 'service';
-    options: DonationCampaignOptions;
-}
-
-/**
  * Union type for Donation component instantiation.
  * - DonationConfiguration: Direct mode (backward compatible) - campaign data already available
- * - DonationServiceProps: Service mode - component fetches campaign data
+ * - DonationCampaignOptions: Service mode - component fetches campaign data
  */
-export type DonationProps = DonationConfiguration | DonationServiceProps;
+export type DonationProps = DonationConfiguration | DonationCampaignOptions;
