@@ -79,6 +79,7 @@
     "address.errors.incomplete": "Pentru a continua, introduceți o adresă",
     "address.enterManually": "Introduceți adresa manual",
     "state": "Stat",
+    "payAmountFormat": "Plătiți %@",
     "field.title.optional": "(opțional)",
     "issuerList.selectField.contextualText": "Selectați banca pentru a continua",
     "issuerList.selectField.label": "Selectarea băncii",

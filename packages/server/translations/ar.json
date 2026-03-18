@@ -79,6 +79,7 @@
     "address.errors.incomplete": "أدخل عنوانًا للمتابعة",
     "address.enterManually": "أدخل العنوان يدويًا",
     "state": "الولاية",
+    "payAmountFormat": "دفع %@",
     "field.title.optional": "(اختياري)",
     "issuerList.selectField.contextualText": "حدد البنك الذي تتعامل معه للمتابعة",
     "issuerList.selectField.label": "اختيار البنك",

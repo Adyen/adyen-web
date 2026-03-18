@@ -79,6 +79,7 @@
     "address.errors.incomplete": "Lai turpinātu, ievadiet adresi",
     "address.enterManually": "Ievadiet adresi manuāli",
     "state": "Valsts",
+    "payAmountFormat": "Maksāt %@",
     "field.title.optional": "(pēc izvēles)",
     "issuerList.selectField.contextualText": "Lai turpinātu, atlasiet savu banku",
     "issuerList.selectField.label": "Bankas atlase",

@@ -79,6 +79,7 @@
     "address.errors.incomplete": "Inserisci un indirizzo per continuare",
     "address.enterManually": "Inserisci l'indirizzo manualmente",
     "state": "Stato",
+    "payAmountFormat": "Paga %@",
     "field.title.optional": "(facoltativo)",
     "issuerList.selectField.contextualText": "Per continuare, seleziona la tua banca",
     "issuerList.selectField.label": "Selezione della banca",

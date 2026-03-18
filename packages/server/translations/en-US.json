@@ -79,6 +79,7 @@
     "address.errors.incomplete": "Enter an address to continue",
     "address.enterManually": "Enter address manually",
     "state": "State",
+    "payAmountFormat": "Pay %@",
     "field.title.optional": "(optional)",
     "issuerList.selectField.contextualText": "Select your bank to continue",
     "issuerList.selectField.label": "Bank selection",

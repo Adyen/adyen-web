@@ -79,6 +79,7 @@
     "address.errors.incomplete": "続行するには、住所を入力してください",
     "address.enterManually": "住所を手動で入力してください",
     "state": "都道府県",
+    "payAmountFormat": "%@のお支払い",
     "field.title.optional": "（任意）",
     "issuerList.selectField.contextualText": "続行するには銀行を選択してください",
     "issuerList.selectField.label": "銀行選択",

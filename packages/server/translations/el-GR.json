@@ -79,6 +79,7 @@
     "address.errors.incomplete": "Εισαγάγετε μια διεύθυνση για να συνεχίσετε",
     "address.enterManually": "Εισαγάγετε τη διεύθυνση μη αυτόματα",
     "state": "Πολιτεία",
+    "payAmountFormat": "Πληρωμή %@",
     "field.title.optional": "(προαιρετικό)",
     "issuerList.selectField.contextualText": "Επιλέξτε την τράπεζά σας για να συνεχίσετε",
     "issuerList.selectField.label": "Επιλογή τράπεζας",
