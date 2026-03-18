@@ -13,6 +13,7 @@ describe('ApplePaySession', () => {
             completePaymentMethodSelection: jest.fn(),
             completeShippingContactSelection: jest.fn(),
             completeShippingMethodSelection: jest.fn(),
+            completeCouponCodeChange: jest.fn(),
             supportsVersion: jest.fn().mockImplementation(v => v <= 5),
             canMakePayments: jest.fn().mockResolvedValue(true),
             onvalidatemerchant: undefined,
@@ -20,7 +21,8 @@ describe('ApplePaySession', () => {
             oncancel: jest.fn(),
             onpaymentmethodselected: jest.fn(),
             onshippingcontactselected: jest.fn(),
-            onshippingmethodselected: jest.fn()
+            onshippingmethodselected: jest.fn(),
+            oncouponcodechanged: jest.fn()
         })) as unknown as ApplePaySession;
     });
 
@@ -249,6 +251,44 @@ describe('ApplePaySession', () => {
             await new Promise(process.nextTick);
 
             expect(service['session'].completeShippingMethodSelection).toHaveBeenCalledWith(shippingMethodUpdateMock);
+        });
+    });
+
+    describe('oncouponcodechange()', () => {
+        test('should call "onCouponCodeChange" and once the change is resolved it calls "completeCouponCodeChange"', async () => {
+            const paymentRequest = mock<ApplePayJS.ApplePayPaymentRequest>();
+            const couponCodeUpdateMock = mock<ApplePayJS.ApplePayCouponCodeUpdate>();
+            const options = mock<ApplePayServiceOptions>({
+                onCouponCodeChange: jest.fn().mockImplementation(resolve => {
+                    resolve(couponCodeUpdateMock);
+                })
+            });
+            const event = mock<ApplePayJS.ApplePayCouponCodeChangedEvent>();
+
+            const service = new ApplePayService(paymentRequest, options);
+            service['session'].oncouponcodechanged(event);
+
+            await new Promise(process.nextTick);
+
+            expect(service['session'].completeCouponCodeChange).toHaveBeenCalledWith(couponCodeUpdateMock);
+        });
+
+        test('should call "onCouponCodeChange" and if the change is refused it calls "completeCouponCodeChange"', async () => {
+            const paymentRequest = mock<ApplePayJS.ApplePayPaymentRequest>();
+            const couponCodeUpdateMock = mock<ApplePayJS.ApplePayCouponCodeUpdate>();
+            const options = mock<ApplePayServiceOptions>({
+                onCouponCodeChange: jest.fn().mockImplementation((resolve, reject) => {
+                    reject(couponCodeUpdateMock);
+                })
+            });
+            const event = mock<ApplePayJS.ApplePayCouponCodeChangedEvent>();
+
+            const service = new ApplePayService(paymentRequest, options);
+            service['session'].oncouponcodechanged(event);
+
+            await new Promise(process.nextTick);
+
+            expect(service['session'].completeCouponCodeChange).toHaveBeenCalledWith(couponCodeUpdateMock);
         });
     });
 });
