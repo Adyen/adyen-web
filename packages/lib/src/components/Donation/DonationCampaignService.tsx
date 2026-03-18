@@ -19,6 +19,8 @@ type DonationCampaignProviderSetup = {
 class DonationCampaignService {
     public static type = 'donationCampaignService';
 
+    private static instanceCount: number = 0;
+
     private readonly core: ICore;
 
     private _rootNode: HTMLElement | string = null;
@@ -33,6 +35,16 @@ class DonationCampaignService {
     private donationComponent: Donation;
 
     constructor(checkout: ICore, donationComp: Donation, dcpProps?: DonationCampaignOptions) {
+        DonationCampaignService.instanceCount++;
+
+        // If the merchant has set autoStart to true, and then tries to display the Donation component in a different container,
+        // we need to warn them otherwise, without this check, 2 calls to the /donationCampaigns endpoint will be made - since UIElement
+        // will automatically mount the Donation component in the component's rootNode.
+        if (DonationCampaignService.instanceCount > 1) {
+            console.warn('You need to set donation.autoStart to false if you wish to display the Donation component in a different container');
+            return;
+        }
+
         this.core = checkout;
 
         this.onDonationCompleted = checkout.options.donation?.onSuccess;

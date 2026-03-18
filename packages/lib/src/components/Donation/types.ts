@@ -5,7 +5,7 @@ import type { CampaignContentProps } from './components/CampaignContent';
 
 export type DonationConfiguration = UIElementProps &
     Omit<DonationComponentProps, 'onDonate' | 'onCancel'> & {
-        onDonate(data: DonationPayload, component: DonationElement): void; // TODO original onDoante can have a 2nd, component, arg
+        onDonate(data: DonationPayload, component: DonationElement): void;
         onCancel(data: DonationPayload): void;
     };
 
