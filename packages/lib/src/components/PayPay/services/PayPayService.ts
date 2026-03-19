@@ -28,7 +28,7 @@ class PayPayService {
                 },
                 fail: res => {
                     console.log('PayPay fail', res);
-                    this.getAuthStatus();
+                    this.renderButton();
                 }
             };
 
@@ -39,29 +39,7 @@ class PayPayService {
         }
     };
 
-    public getAuthStatus = () => {
-        window.pp.getAuthStatus({
-            success: () => {
-                // connected
-                console.log('PayPay getAuthStatus success');
-            },
-            fail: response => {
-                // pass 'code' object to paypay backend to get login url
-                console.log('PayPay getAuthStatus fail', response);
-                this.renderLoginButton();
-            }
-        });
-    };
-
-    public renderLoginButton = () => {
-        window.pp.renderButton({
-            containerId: this.containerId,
-            locale: 'en',
-            postLoginRedirectUrl: 'https://google.com'
-        });
-    };
-
-    public renderPaymentButton = () => {
+    public renderButton = () => {
         window.pp.renderButton({
             containerId: this.containerId,
             locale: 'en',

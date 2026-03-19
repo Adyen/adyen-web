@@ -28,14 +28,17 @@ export type PayPayRenderButtonLoginOptions = {
 export type PayPayRenderButtonPaymentOptions = {
     containerId: string;
     locale: 'ja' | 'en';
-    autoInvoke: boolean;
+    buttonSize?: 'lg' | 'sm';
+    theme?: 'light' | 'dark' | 'red';
+    isShortText?: boolean;
+    autoInvoke?: boolean;
     orderInfo: {
         merchantPaymentId: string;
+        merchantAlias: string;
         amount: {
             amount: number;
             currency: string;
         };
-        merchantAlias: string;
         productType: 'DEFAULT';
         requestedAt: number;
     };
