@@ -40,17 +40,16 @@ class DonationElement extends UIElement<DonationConfiguration> {
     }
 
     /**
-     * Type guard to determine if props are for service mode.
+     * Type guard to determine if props are for "service" mode.
+     *
+     * The "service" mode is used in the /sessions flow:
+     * - if the /payments response mandates it, we consult the /sessions/donationCampaigns endpoint on behalf of the merchant, and mount any found Donation Campaigns.
+     *
+     * The opposite of this mode is the "direct" mode, used in the Advanced flow:
+     * - the merchant makes their own call to the /donationCampaigns endpoint and provides the Donation Campaign directly to the component.
      */
     private static isServiceMode(props: DonationProps): props is DonationCampaignOptions {
         return 'rootNode' in props;
-    }
-
-    /**
-     * Type guard to determine if props are for direct mode.
-     */
-    private static isDirectMode(props: DonationProps): props is DonationConfiguration {
-        return 'donation' in props && 'commercialTxAmount' in props;
     }
 
     public static readonly defaultProps = {
