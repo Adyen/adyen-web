@@ -45,6 +45,18 @@ describe('Google Pay Requests', () => {
             expect(transactionInfo.totalPrice).toBe('1234');
             expect(transactionInfo.displayItems).toHaveLength(1);
         });
+
+        test('should override transactionInfo.totalPrice with formatted amount', () => {
+            const transactionInfo = getTransactionInfo({
+                amount: { value: 1234, currency: 'USD' },
+                transactionInfo: {
+                    totalPrice: '99.99'
+                }
+            });
+
+            expect(transactionInfo.totalPrice).toBe('12.34');
+            expect(transactionInfo.currencyCode).toBe('USD');
+        });
     });
 
     describe('initiatePaymentRequest', () => {
