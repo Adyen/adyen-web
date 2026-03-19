@@ -32,16 +32,24 @@ class DonationCampaignService {
         // we need to warn them otherwise, without this check, 2 calls to the /donationCampaigns endpoint will be made - since UIElement
         // will automatically mount the Donation component in the component's rootNode.
         if (DonationCampaignService.instanceCount > 1) {
-            console.error(
+            throw new Error(
                 'DonationCampaignService:: You need to set donation.autoStart to false if you wish to display the Donation component in a different container'
             );
-            return null;
         }
 
         this.core = checkout;
 
-        this.onDonationCompleted = checkout.options.donation?.onSuccess;
-        this.onDonationFailed = checkout.options.donation?.onError;
+        this.onDonationCompleted = (didDonate: boolean) => {
+            // Reset the count now the process has finished
+            DonationCampaignService.instanceCount = 0;
+
+            // Call the merchant defined handler
+            checkout.options.donation?.onSuccess(didDonate);
+        };
+        this.onDonationFailed = (reason: unknown) => {
+            DonationCampaignService.instanceCount = 0;
+            checkout.options.donation?.onError(reason);
+        };
 
         this.rootNode = dcpProps.rootNode;
         this.commercialTxAmount = dcpProps.commercialTxAmount;
@@ -83,7 +91,6 @@ class DonationCampaignService {
                 return null;
             })
             .catch((error: unknown) => {
-                console.debug('DonationCampaignService::makeSessionDonationCampaignsCall:: error', error);
                 throw error;
             });
     }
@@ -114,12 +121,11 @@ class DonationCampaignService {
         };
 
         if (donationType === 'roundup' && !this.commercialTxAmount) {
-            // Fail quietly - but alert the merchant // TODO - analytics?
-            console.error(
-                'DonationCampaignService:: The donation type is "roundup" and the commercialTxAmount is not set.\nIt will not be possible to mount a Donation component'
-            );
             // This will be handled gracefully by the Donation component via the catch in callSessionsDonationCampaigns
-            throw new Error('The donation type is "roundup" and the commercialTxAmount is not set');
+            // TODO - analytics?
+            throw new Error(
+                'The donation type is "roundup" and the commercialTxAmount is not set.\nIt will not be possible to mount a Donation component.'
+            );
         }
 
         return donationComponentProps;

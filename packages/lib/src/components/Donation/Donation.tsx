@@ -27,15 +27,20 @@ class DonationElement extends UIElement<DonationConfiguration> {
         this.isInServiceMode = isServiceMode;
 
         if (checkout.session && isServiceMode) {
-            new DonationCampaignService(checkout, props)
-                .initialise()
-                .then((response: DonationConfiguration) => {
-                    this.props = { ...this.props, ...response };
-                    this.mount(props.rootNode);
-                })
-                .catch((error: unknown) => {
-                    console.debug('Donation::init using DonationCampaignService:: error', error);
-                });
+            try {
+                new DonationCampaignService(checkout, props)
+                    .initialise()
+                    .then((response: DonationConfiguration) => {
+                        this.props = { ...this.props, ...response };
+                        this.mount(props.rootNode);
+                    })
+                    .catch((error: unknown) => {
+                        console.error('Donation::DonationCampaignService::initialise error', error);
+                    });
+            } catch (error: unknown) {
+                // Silently handle duplicate instance errors - the automatic donation flow will proceed
+                console.error('Donation::DonationCampaignService instantiation error', error);
+            }
         }
     }
 
