@@ -9,13 +9,6 @@ import type {
 import Donation from './Donation';
 import { AnalyticsLogEvent, LogEventSubtype, LogEventType } from '../../core/Analytics/events/AnalyticsLogEvent';
 
-type DonationCampaignProviderSetup = {
-    rootNode: HTMLElement;
-    commercialTxAmount: number;
-    onDonationCompleted: (didDonate: boolean) => void;
-    onDonationFailed: (reason: unknown) => void;
-};
-
 class DonationCampaignService {
     public static type = 'donationCampaignService';
 
@@ -26,11 +19,12 @@ class DonationCampaignService {
     private readonly rootNode: HTMLElement | string = null;
 
     private readonly commercialTxAmount: number = 0;
-    private readonly onDonationCompleted: DonationCampaignProviderSetup['onDonationCompleted'];
-    private readonly onDonationFailed: DonationCampaignProviderSetup['onDonationFailed'];
+    private readonly onDonationCompleted: (didDonate: boolean) => void;
+    private readonly onDonationFailed: (reason: unknown) => void;
 
     private autoStartTimer: ReturnType<typeof setTimeout> = null;
     private readonly autoStartTimerMS = 3000;
+    private readonly delayMS: number;
 
     private donationComponent: Donation;
 
@@ -55,24 +49,17 @@ class DonationCampaignService {
         this.rootNode = dcpProps.rootNode;
         this.commercialTxAmount = dcpProps.commercialTxAmount;
 
-        this.beginCountdown(checkout.options.donation?.delay || this.autoStartTimerMS);
+        this.delayMS = checkout.options.donation?.delay != null ? checkout.options.donation.delay : this.autoStartTimerMS;
+
+        return this;
     }
 
-    private beginCountdown(delay: number) {
-        if (this.autoStartTimer) {
-            clearTimeout(this.autoStartTimer);
-        }
-
-        this.autoStartTimer = setTimeout(() => {
-            this.init();
-        }, delay);
+    public async initialise(): Promise<DonationConfiguration | null> {
+        await new Promise(resolve => setTimeout(resolve, this.delayMS));
+        return this.callSessionsDonationCampaigns();
     }
 
-    private init() {
-        this.callSessionsDonationCampaigns();
-    }
-
-    private callSessionsDonationCampaigns() {
+    private callSessionsDonationCampaigns(): Promise<DonationConfiguration | null> {
         // Send analytics
         const event = new AnalyticsLogEvent({
             component: DonationCampaignService.type,
@@ -82,7 +69,7 @@ class DonationCampaignService {
         });
         this.core.modules.analytics.sendAnalytics(event);
 
-        this.makeSessionsDonationCampaignsCall()
+        return this.makeSessionsDonationCampaignsCall()
             .then((response: CheckoutSessionDonationCampaignsResponse) => {
                 if (response?.donationCampaigns?.length) {
                     // Choose which campaign to return - currently just pick the first one
@@ -94,15 +81,17 @@ class DonationCampaignService {
             })
             .then((donationCampaign: DonationCampaign) => {
                 if (donationCampaign) {
-                    this.handleDonationCampaign(donationCampaign);
+                    return this.handleDonationCampaign(donationCampaign);
                 }
+                return null;
             })
             .catch((error: unknown) => {
-                console.debug('DonationCampaignProvider::makeSessionDonationCampaignsCall:: error', error);
+                console.debug('DonationCampaignService::makeSessionDonationCampaignsCall:: error', error);
+                throw error;
             });
     }
 
-    private handleDonationCampaign(donationCampaign: DonationCampaign) {
+    private handleDonationCampaign(donationCampaign: DonationCampaign): DonationConfiguration {
         const { id, campaignName, ...restDonationCampaignProps } = donationCampaign;
 
         const donationType = restDonationCampaignProps.donation.type;
@@ -130,15 +119,15 @@ class DonationCampaignService {
         };
 
         if (donationType === 'roundup' && !this.commercialTxAmount) {
+            // Fail quietly - but alert the merchant // TODO - analytics?
             console.error(
                 'DonationCampaignService:: The donation type is "roundup" and the commercialTxAmount is not set.\nIt will not be possible to mount a Donation component'
             );
-            return;
+            // This will be handled gracefully by the Donation component via the catch in callSessionsDonationCampaigns
+            throw new Error('The donation type is "roundup" and the commercialTxAmount is not set');
         }
 
-        this.donationComponent.setProps(donationComponentProps);
-
-        this.donationComponent.mount(this.rootNode);
+        return donationComponentProps;
     }
 
     private callSessionsDonations(donationRequestData: CheckoutSessionDonationsRequestData, component: Donation) {

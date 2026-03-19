@@ -3,7 +3,7 @@ import UIElement from '../internal/UIElement/UIElement';
 import DonationComponent from './components/DonationComponent';
 import { TxVariants } from '../tx-variants';
 import type { ICore } from '../../core/types';
-import type { DonationCampaignOptions, DonationConfiguration, DonationProps } from './types';
+import { DonationCampaignOptions, DonationConfiguration, DonationProps } from './types';
 import { AnalyticsLogEvent, LogEventSubtype, LogEventType } from '../../core/Analytics/events/AnalyticsLogEvent';
 import { DonationPayload } from './components/types';
 import { AnalyticsInfoEvent, InfoEventType, UiTarget } from '../../core/Analytics/events/AnalyticsInfoEvent';
@@ -11,8 +11,6 @@ import DonationCampaignService from './DonationCampaignService';
 
 class DonationElement extends UIElement<DonationConfiguration> {
     public static readonly type = TxVariants.donation;
-
-    private _donationCampaignService: DonationCampaignService;
 
     constructor(checkout: ICore, props: DonationProps) {
         const isServiceMode = DonationElement.isServiceMode(props);
@@ -25,7 +23,16 @@ class DonationElement extends UIElement<DonationConfiguration> {
         this.amountSelected = this.amountSelected.bind(this);
 
         if (checkout.session && isServiceMode) {
-            this._donationCampaignService = new DonationCampaignService(checkout, this, props);
+            new DonationCampaignService(checkout, this, props)
+                .initialise()
+                .then((response: DonationConfiguration) => {
+                    this.props = { ...this.props, ...response };
+                    this.mount(props.rootNode);
+                })
+
+                .catch((error: unknown) => {
+                    console.debug('Donation::init using DonationCampaignService:: error', error);
+                });
         }
     }
 
@@ -35,6 +42,13 @@ class DonationElement extends UIElement<DonationConfiguration> {
     private static isServiceMode(props: DonationProps): props is DonationCampaignOptions {
         return 'rootNode' in props;
     }
+
+    /**
+     * Type guard to determine if props are for direct mode.
+     */
+    // private static isDirectMode(props: DonationProps): props is DonationConfiguration {
+    //     return 'donation' in props && 'commercialTxAmount' in props;
+    // }
 
     public static readonly defaultProps = {
         onCancel: () => {},
@@ -57,11 +71,6 @@ class DonationElement extends UIElement<DonationConfiguration> {
 
     setState(newState) {
         this.state = { ...this.state, ...newState };
-    }
-
-    // Setter for when DonationCampaignService has retrieved a Donation campaign
-    setProps(newProps: DonationConfiguration) {
-        this.props = { ...this.props, ...newProps };
     }
 
     donate() {
