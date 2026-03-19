@@ -1,5 +1,13 @@
 # @adyen/adyen-web
 
+## 6.32.1
+
+### Patch Changes
+
+- Fixed: Reported issue with PayButtonProps.onClick type ([#3864](https://github.com/Adyen/adyen-web/pull/3864))
+
+- Fixed: Update german label for compliance reasons zahlen -> kaufen ([#3873](https://github.com/Adyen/adyen-web/pull/3873))
+
 ## 6.32.0
 
 ### Minor Changes
