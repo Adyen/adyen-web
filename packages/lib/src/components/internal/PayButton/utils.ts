@@ -7,8 +7,9 @@ const amountLabel = (i18n, amount: PaymentAmount) =>
     !!amount?.value && !!amount?.currency ? i18n.amount(amount.value, amount.currency, { currencyDisplay: amount.currencyDisplay || 'symbol' }) : '';
 
 const payAmountLabel = (i18n: Language, amount: PaymentAmount) => {
-    if (!!amount?.value && !!amount?.currency) {
-        return i18n.get('payAmountFormat').replace('%@', amountLabel(i18n, amount));
+    const amountLabelValue = amountLabel(i18n, amount);
+    if (amountLabelValue) {
+        return i18n.get('payAmountFormat').replace('%@', amountLabelValue);
     }
 
     return i18n.get('payButton');
