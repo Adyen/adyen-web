@@ -6,7 +6,7 @@ export const PAY_BTN_DIVIDER = '/ ';
 const amountLabel = (i18n, amount: PaymentAmount) =>
     !!amount?.value && !!amount?.currency ? i18n.amount(amount.value, amount.currency, { currencyDisplay: amount.currencyDisplay || 'symbol' }) : '';
 
-const payAmountLabel = (i18n: Language, amount: PaymentAmount) => `${i18n.get('payButton')} ${amountLabel(i18n, amount)}`;
+const payAmountLabel = (i18n: Language, amount: PaymentAmount) => `${i18n.get(!!amount?.value ? 'payAmountFormat' : 'payButton')} ${amountLabel(i18n, amount)}`;
 
 const formatSecondaryAmountLabel = (i18n: Language, secondaryAmount: PaymentAmount) => {
     const convertedSecondaryAmount =
