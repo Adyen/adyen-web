@@ -3,17 +3,20 @@ import { render, screen } from '@testing-library/preact';
 import PayButton, { PayButtonProps } from './PayButton';
 import { PAY_BTN_DIVIDER } from './utils';
 import { CoreProvider } from '../../../core/Context/CoreProvider';
+import Language from '../../../language';
 import { AmountProvider, AmountProviderProps } from '../../../core/Context/AmountProvider';
 
 const renderPayButton = ({
     payButtonProps = {},
-    amountProviderProps = {}
+    amountProviderProps = {},
+    i18n = global.i18n
 }: {
     payButtonProps?: Partial<PayButtonProps>;
     amountProviderProps?: Partial<AmountProviderProps>;
+    i18n?: Language;
 } = {}) => {
     return render(
-        <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+        <CoreProvider i18n={i18n} loadingContext="test" resources={global.resources}>
             <AmountProvider amount={amountProviderProps.amount} secondaryAmount={amountProviderProps.secondaryAmount} providerRef={createRef()}>
                 <PayButton {...payButtonProps} />
             </AmountProvider>
@@ -137,5 +140,54 @@ describe('PayButton', () => {
 
         const button = screen.getByRole('button', { name: 'Confirm preauthorization' });
         expect(button).not.toHaveTextContent(PAY_BTN_DIVIDER);
+    });
+});
+
+describe('PayButton - localized labels', () => {
+    const deI18n = new Language({
+        locale: 'de-DE',
+        translations: {
+            payButton: 'Kaufen',
+            payAmountFormat: 'Kaufen für %@'
+        }
+    });
+
+    const nlI18n = new Language({
+        locale: 'nl-NL',
+        translations: {
+            payButton: 'Betaal',
+            payAmountFormat: '%@ betalen'
+        }
+    });
+
+    describe('de-DE', () => {
+        test('should render formatted amount label using payAmountFormat', () => {
+            renderPayButton({ amountProviderProps: { amount: { currency: 'EUR', value: 1000 } }, i18n: deI18n });
+
+            const button = screen.getByRole('button');
+            expect(button).toHaveTextContent('Kaufen für');
+            expect(button).toHaveTextContent('10,00');
+        });
+
+        test('should fall back to payButton label when amount is null', () => {
+            renderPayButton({ amountProviderProps: { amount: null }, i18n: deI18n });
+
+            expect(screen.getByRole('button', { name: 'Kaufen' })).toBeInTheDocument();
+        });
+    });
+
+    describe('nl-NL', () => {
+        test('should render formatted amount with reversed token position', () => {
+            renderPayButton({ amountProviderProps: { amount: { currency: 'EUR', value: 1000 } }, i18n: nlI18n });
+
+            const button = screen.getByRole('button');
+            expect(button).toHaveTextContent(/.*€.*betalen/);
+        });
+
+        test('should fall back to payButton label when amount is null', () => {
+            renderPayButton({ amountProviderProps: { amount: null }, i18n: nlI18n });
+
+            expect(screen.getByRole('button', { name: 'Betaal' })).toBeInTheDocument();
+        });
     });
 });

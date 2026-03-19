@@ -43,7 +43,8 @@ const coreProps = {
             payButton: 'Pay',
             'button.copy': 'Copy',
             'button.copied': 'Copied!',
-            confirmPreauthorization: 'Confirm preauthorization'
+            confirmPreauthorization: 'Confirm preauthorization',
+            payAmountFormat: 'Pay %@'
         }
     }),
     resources: new Resources(resolveEnvironments(process.env.CLIENT_ENV as CoreConfiguration['environment']).cdnImagesUrl)
@@ -127,6 +128,46 @@ export const PaymentButton: StoryObj<PayButtonProps & AmountProviderProps> = {
         inline: false,
         variant: 'primary',
         icon: 'https://checkoutshopper-test.cdn.adyen.com/checkoutshopper/images/components/bento_lock.svg'
+    }
+};
+
+const nlNLCoreProps = {
+    loadingContext: process.env.CLIENT_ENV,
+    i18n: new Language({
+        locale: 'nl-NL',
+        translations: {
+            payButton: 'Betaal',
+            payAmountFormat: '%@ betalen'
+        }
+    }),
+    resources: new Resources(resolveEnvironments(process.env.CLIENT_ENV as CoreConfiguration['environment']).cdnImagesUrl)
+};
+
+export const PaymentButtonNl: StoryObj<PayButtonProps & AmountProviderProps> = {
+    render: args => {
+        const { amount, secondaryAmount, ...rest } = args;
+
+        return (
+            <CoreProvider {...nlNLCoreProps}>
+                <AmountProvider amount={amount} secondaryAmount={secondaryAmount} providerRef={createRef()}>
+                    <PayButton {...rest} onClick={() => console.log('Pay button clicked')} />
+                </AmountProvider>
+            </CoreProvider>
+        );
+    },
+    parameters: {
+        controls: { exclude: ['useSessions', 'countryCode', 'shopperLocale', 'showPayButton'] }
+    },
+    argTypes: {
+        amount: { control: 'object' },
+        secondaryAmount: { control: 'object' }
+    },
+    args: {
+        amount: { value: 1000, currency: 'EUR' },
+        secondaryAmount: { value: 1200, currency: 'USD' },
+        disabled: false,
+        inline: false,
+        variant: 'primary'
     }
 };
 
