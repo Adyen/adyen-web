@@ -79,6 +79,7 @@
     "address.errors.incomplete": "Jätkamiseks sisestage aadress",
     "address.enterManually": "Sisestage aadress käsitsi",
     "state": "Osariik",
+    "payAmountFormat": "Maksa %@",
     "field.title.optional": "(valikuline)",
     "issuerList.selectField.contextualText": "Valige jätkamiseks oma pank",
     "issuerList.selectField.label": "Panga valimine",

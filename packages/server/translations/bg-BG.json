@@ -79,6 +79,7 @@
     "address.errors.incomplete": "Въведете адрес, за да продължите",
     "address.enterManually": "Въведете адреса ръчно",
     "state": "Държава",
+    "payAmountFormat": "Платете %@",
     "field.title.optional": "(незадължително)",
     "issuerList.selectField.contextualText": "Изберете вашата банка, за да продължите",
     "issuerList.selectField.label": "Избор на банка",

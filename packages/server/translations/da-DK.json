@@ -79,6 +79,7 @@
     "address.errors.incomplete": "Indtast en adresse for at fortsætte",
     "address.enterManually": "Indtast adresse manuelt",
     "state": "Stat",
+    "payAmountFormat": "Betal %@",
     "field.title.optional": "(valgfrit)",
     "issuerList.selectField.contextualText": "Vælg din bank for at fortsætte",
     "issuerList.selectField.label": "Bankvalg",

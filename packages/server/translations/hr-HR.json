@@ -79,6 +79,7 @@
     "address.errors.incomplete": "Unesite adresu za nastavak",
     "address.enterManually": "Ručno unesite adresu",
     "state": "Savezna država",
+    "payAmountFormat": "Platiti %@",
     "field.title.optional": "(neobavezno)",
     "issuerList.selectField.contextualText": "Da biste nastavili, odaberite svoju banku",
     "issuerList.selectField.label": "Odabir banke",

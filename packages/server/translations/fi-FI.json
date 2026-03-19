@@ -79,6 +79,7 @@
     "address.errors.incomplete": "Syötä osoite jatkaaksesi",
     "address.enterManually": "Syötä osoite manuaalisesti",
     "state": "Osavaltio",
+    "payAmountFormat": "Maksa %@",
     "field.title.optional": "(valinnainen)",
     "issuerList.selectField.contextualText": "Valitse pankki jatkaaksesi",
     "issuerList.selectField.label": "Pankin valinta",
