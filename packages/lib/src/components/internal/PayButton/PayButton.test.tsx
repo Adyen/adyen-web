@@ -1,9 +1,11 @@
 import { createRef, h } from 'preact';
 import { render, screen } from '@testing-library/preact';
+import userEvent from '@testing-library/user-event';
 import PayButton, { PayButtonProps } from './PayButton';
 import { PAY_BTN_DIVIDER } from './utils';
 import { CoreProvider } from '../../../core/Context/CoreProvider';
 import { AmountProvider, AmountProviderProps } from '../../../core/Context/AmountProvider';
+import { ButtonProps } from '../Button/types';
 
 const renderPayButton = ({
     payButtonProps = {},
@@ -137,5 +139,42 @@ describe('PayButton', () => {
 
         const button = screen.getByRole('button', { name: 'Confirm preauthorization' });
         expect(button).not.toHaveTextContent(PAY_BTN_DIVIDER);
+    });
+
+    test('should call onClick handler with event and callbacks matching ButtonProps signature', async () => {
+        const user = userEvent.setup();
+        const handleClick = jest.fn<ReturnType<ButtonProps['onClick']>, Parameters<ButtonProps['onClick']>>();
+
+        const payButtonProps: Partial<PayButtonProps> = {
+            onClick: handleClick
+        };
+
+        renderPayButton({ payButtonProps });
+
+        const button = screen.getByRole('button', { name: 'Pay' });
+        await user.click(button);
+
+        expect(handleClick).toHaveBeenCalledTimes(1);
+        expect(handleClick).toHaveBeenCalledWith(
+            expect.objectContaining({ type: 'click' }),
+            expect.objectContaining({ complete: expect.any(Function) })
+        );
+    });
+
+    test('should not call onClick handler when button is disabled', async () => {
+        const user = userEvent.setup();
+        const handleClick = jest.fn<ReturnType<ButtonProps['onClick']>, Parameters<ButtonProps['onClick']>>();
+
+        const payButtonProps: Partial<PayButtonProps> = {
+            onClick: handleClick,
+            disabled: true
+        };
+
+        renderPayButton({ payButtonProps });
+
+        const button = screen.getByRole('button', { name: 'Pay' });
+        await user.click(button);
+
+        expect(handleClick).not.toHaveBeenCalled();
     });
 });
