@@ -1,6 +1,7 @@
 import { getTranslation } from './utils';
 import { getLocalisedAmount } from '../utils/amount-util';
 import AdyenCheckoutError from '../core/Errors/AdyenCheckoutError';
+import enUS from '../../../server/translations/en-US.json';
 import type { CustomTranslations, LanguageOptions, Translations } from './types';
 
 export class Language {
@@ -36,6 +37,7 @@ export class Language {
         this.timeAndDateFormatter = Intl.DateTimeFormat(this.locale, this.timeAndDateFormatOptions);
 
         this.translations = {
+            ...enUS,
             ...translations,
             ...(!!this.customTranslations[this.locale] && this.customTranslations[this.locale])
         };
