@@ -2,7 +2,7 @@ name: Verify Job Results
 description: Checks that every job in the results map succeeded. Fails with a summary of which jobs failed.
 
 inputs:
-  results:
+  required:
     description: >
       JSON object mapping job names to their results.
       Only include jobs that must succeed.
@@ -15,7 +15,14 @@ runs:
     - name: Verify jobs
       shell: bash
       run: |
-        results='${{ inputs.results }}'
+        results='${{ inputs.required }}'
+
+        # Fail if required array is empty
+        key_count=$(echo "$results" | jq 'keys | length')
+        if [[ "$key_count" -eq 0 ]]; then
+          echo "::error::Required jobs map is empty — at least one job must be specified"
+          exit 1
+        fi
 
         failed=""
         echo "## Job Verification Summary"
