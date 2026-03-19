@@ -12,6 +12,8 @@ import DonationCampaignService from './DonationCampaignService';
 class DonationElement extends UIElement<DonationConfiguration> {
     public static readonly type = TxVariants.donation;
 
+    private readonly isInServiceMode: boolean = false;
+
     constructor(checkout: ICore, props: DonationProps) {
         const isServiceMode = DonationElement.isServiceMode(props);
         const initialConfig = isServiceMode ? undefined : props;
@@ -22,14 +24,15 @@ class DonationElement extends UIElement<DonationConfiguration> {
         this.cancel = this.cancel.bind(this);
         this.amountSelected = this.amountSelected.bind(this);
 
+        this.isInServiceMode = isServiceMode;
+
         if (checkout.session && isServiceMode) {
-            new DonationCampaignService(checkout, this, props)
+            new DonationCampaignService(checkout, props)
                 .initialise()
                 .then((response: DonationConfiguration) => {
                     this.props = { ...this.props, ...response };
                     this.mount(props.rootNode);
                 })
-
                 .catch((error: unknown) => {
                     console.debug('Donation::init using DonationCampaignService:: error', error);
                 });
@@ -46,9 +49,9 @@ class DonationElement extends UIElement<DonationConfiguration> {
     /**
      * Type guard to determine if props are for direct mode.
      */
-    // private static isDirectMode(props: DonationProps): props is DonationConfiguration {
-    //     return 'donation' in props && 'commercialTxAmount' in props;
-    // }
+    private static isDirectMode(props: DonationProps): props is DonationConfiguration {
+        return 'donation' in props && 'commercialTxAmount' in props;
+    }
 
     public static readonly defaultProps = {
         onCancel: () => {},
@@ -100,6 +103,12 @@ class DonationElement extends UIElement<DonationConfiguration> {
 
         // Call callback
         const { data, isValid } = this;
+
+        // If running in service mode, unmount the component
+        if (this.isInServiceMode) {
+            this.unmount();
+        }
+
         this.props.onCancel({ data, isValid });
     }
 

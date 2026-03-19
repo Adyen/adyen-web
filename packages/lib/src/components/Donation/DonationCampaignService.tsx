@@ -22,29 +22,26 @@ class DonationCampaignService {
     private readonly onDonationCompleted: (didDonate: boolean) => void;
     private readonly onDonationFailed: (reason: unknown) => void;
 
-    private autoStartTimer: ReturnType<typeof setTimeout> = null;
     private readonly autoStartTimerMS = 3000;
     private readonly delayMS: number;
 
-    private donationComponent: Donation;
-
-    constructor(checkout: ICore, donationComp: Donation, dcpProps?: DonationCampaignOptions) {
+    constructor(checkout: ICore, dcpProps?: DonationCampaignOptions) {
         DonationCampaignService.instanceCount++;
 
         // If the merchant has not explicitly set autoStart to false, and then tries to display the Donation component in a different container,
         // we need to warn them otherwise, without this check, 2 calls to the /donationCampaigns endpoint will be made - since UIElement
         // will automatically mount the Donation component in the component's rootNode.
         if (DonationCampaignService.instanceCount > 1) {
-            console.warn('You need to set donation.autoStart to false if you wish to display the Donation component in a different container');
-            return;
+            console.error(
+                'DonationCampaignService:: You need to set donation.autoStart to false if you wish to display the Donation component in a different container'
+            );
+            return null;
         }
 
         this.core = checkout;
 
         this.onDonationCompleted = checkout.options.donation?.onSuccess;
         this.onDonationFailed = checkout.options.donation?.onError;
-
-        this.donationComponent = donationComp;
 
         this.rootNode = dcpProps.rootNode;
         this.commercialTxAmount = dcpProps.commercialTxAmount;
@@ -101,8 +98,6 @@ class DonationCampaignService {
             onCancel: (state: DonationPayload) => {
                 // Call merchant defined onDonationCompleted callback
                 this.onDonationCompleted?.(false);
-
-                this.donationComponent.unmount();
             },
             onDonate: (state: DonationPayload, component: Donation) => {
                 // Make the request
