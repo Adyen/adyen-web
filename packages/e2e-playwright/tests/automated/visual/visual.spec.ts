@@ -12,7 +12,7 @@ const index = JSON.parse(rawData) as StorybookIndex;
 const allEntries = Object.values(index.entries);
 
 // Filter out non-story entries, docs, and explicitly excluded stories
-const storyIds = allEntries.filter(entry => entry.type === 'story' && !entry.tags.includes('no-automated-visual-test')).map(entry => entry.id); // Extract the IDs
+const storyIds = allEntries.filter(entry => entry.type === 'story' && !entry.tags.includes('no-automated-visual-test')).map(entry => entry.id);
 
 const getTestTitle = (storyId: string) => {
     return `Visual Test: ${storyId.replace(/[^a-zA-Z0-9_.-]/g, '_')}`;
@@ -26,20 +26,28 @@ test.describe('Automated visual testing', () => {
     // Dynamically generate tests for each story
     for (const storyId of storyIds) {
         const testTitle = getTestTitle(storyId);
+        const isInternalElements = storyId.includes('internal-elements');
 
         test(testTitle, async ({ page, browserName }) => {
             const storyUrl = getStoryUrl(storyId);
 
             await page.goto(storyUrl);
-            await expect(page.getByTestId('checkout-component-spinner')).toBeVisible();
-            await expect(page.getByTestId('checkout-component-spinner')).toBeHidden();
-            if (!storyId.includes('await')) {
-                await expect(page.getByTestId('spinner')).toBeHidden();
+
+            if (isInternalElements) {
+                await page.locator('#storybook-root').waitFor({ state: 'visible' });
+            } else {
+                await expect(page.getByTestId('checkout-component-spinner')).toBeVisible();
+                await expect(page.getByTestId('checkout-component-spinner')).toBeHidden();
+                if (!storyId.includes('await')) {
+                    await expect(page.getByTestId('spinner')).toBeHidden();
+                }
+                if (storyId.includes('click-to-pay')) {
+                    await expect(page.locator('.adyen-checkout-ctp__card-animation')).toBeHidden();
+                }
             }
-            if (storyId.includes('click-to-pay')) {
-                await expect(page.locator('.adyen-checkout-ctp__card-animation')).toBeHidden();
-            }
-            await toHaveScreenshot(page.getByTestId('checkout-component'), browserName, `${storyId}.png`, {
+
+            const screenshotTarget = isInternalElements ? page.locator('#storybook-root') : page.getByTestId('checkout-component');
+            await toHaveScreenshot(screenshotTarget, browserName, `${storyId}.png`, {
                 mask: [page.getByRole('timer'), page.getByTestId('stored-card-info')]
             });
         });
