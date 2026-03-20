@@ -14,7 +14,8 @@ export enum LogEventType {
     submit = 'submit',
     redirect = 'redirect',
     threeDS2 = 'threeDS2',
-    closed = 'closed'
+    closed = 'closed',
+    apiRequest = 'apiRequest'
 }
 
 export enum LogEventSubtype {
@@ -30,7 +31,9 @@ export enum LogEventSubtype {
     await = 'awat',
     qrCode = 'qrCode',
     bankTransfer = 'bankTransfer',
-    sdk = 'sdk'
+    sdk = 'sdk',
+    donation = 'donation',
+    donationCampaigns = 'donationCampaigns'
 }
 
 export class AnalyticsLogEvent extends AbstractAnalyticsEvent {

@@ -3,6 +3,7 @@ import ThreeDS2Challenge from '../components/ThreeDS2/ThreeDS2Challenge';
 import ThreeDS2DeviceFingerprint from '../components/ThreeDS2/ThreeDS2DeviceFingerprint';
 import Redirect from '../components/Redirect';
 import { TxVariants } from '../components/tx-variants';
+import Donation from '../components/Donation/Donation';
 import type { ICore } from './types';
 
 function assertClassHasType(Class: any): Class is typeof UIElement {
@@ -20,7 +21,8 @@ export interface IRegistry {
 const defaultComponents = {
     [TxVariants.redirect]: Redirect,
     [TxVariants.threeDS2Challenge]: ThreeDS2Challenge,
-    [TxVariants.threeDS2DeviceFingerprint]: ThreeDS2DeviceFingerprint
+    [TxVariants.threeDS2DeviceFingerprint]: ThreeDS2DeviceFingerprint,
+    [TxVariants.donation]: Donation
 };
 
 class Registry implements IRegistry {

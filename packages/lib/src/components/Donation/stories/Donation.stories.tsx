@@ -14,6 +14,7 @@ const componentConfiguration: DonationConfiguration = {
     nonprofitUrl: 'https://example.org',
     nonprofitDescription:
         'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    //@ts-ignore type is correct
     donation: {
         type: 'fixedAmounts',
         currency: 'EUR',

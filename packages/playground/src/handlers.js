@@ -1,4 +1,5 @@
 import { makePayment, makeDetailsCall } from './services';
+import { Donation } from '@adyen/adyen-web';
 
 export function handleChange(state, component) {
     console.group(`onChange - ${state.data.paymentMethod.type}`);
@@ -9,9 +10,15 @@ export function handleChange(state, component) {
     console.groupEnd();
 }
 
-export function handleOnPaymentCompleted(result, element) {
-    alert(`onPaymentCompleted - ${result?.resultCode}`);
-    console.log('onPaymentCompleted', result, element);
+export function handleOnPaymentCompleted(result, element, checkout) {
+    // alert(`onPaymentCompleted - ${result?.resultCode}`);
+
+    if (result.askDonation === true) {
+        const dc = new Donation(checkout, {
+            rootNode: '.playground-nav',
+            commercialTxAmount: element.props.amount.value
+        });
+    }
 }
 
 export function handleOnPaymentFailed(result, element) {

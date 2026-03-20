@@ -1,5 +1,7 @@
 import makePayment from '../Services/sessions/make-payment';
 import submitDetails from '../Services/sessions/submit-details';
+import donationCampaigns from '../Services/sessions/donation-campaigns';
+import donations from '../Services/sessions/donations';
 import setupSession from '../Services/sessions/setup-session';
 import checkBalance from '../Services/sessions/check-balance';
 import Storage from '../../utils/Storage';
@@ -9,6 +11,9 @@ import {
     CheckoutSession,
     CheckoutSessionBalanceResponse,
     CheckoutSessionDetailsResponse,
+    CheckoutSessionDonationCampaignsResponse,
+    CheckoutSessionDonationsRequestData,
+    CheckoutSessionDonationsResponse,
     CheckoutSessionOrdersResponse,
     CheckoutSessionPaymentResponse,
     CheckoutSessionSetupResponse,
@@ -102,6 +107,32 @@ class Session {
      */
     submitDetails(data: AdditionalDetailsData['data']): Promise<CheckoutSessionDetailsResponse> {
         return submitDetails(data, this).then(response => {
+            if (response.sessionData) {
+                this.updateSessionData(response.sessionData);
+            }
+
+            return response;
+        });
+    }
+
+    /**
+     * Call donationCampaigns endpoint
+     */
+    donationCampaigns(): Promise<CheckoutSessionDonationCampaignsResponse> {
+        return donationCampaigns(this).then(response => {
+            if (response.sessionData) {
+                this.updateSessionData(response.sessionData);
+            }
+
+            return response;
+        });
+    }
+
+    /**
+     * Call donations endpoint
+     */
+    donations(data: CheckoutSessionDonationsRequestData): Promise<CheckoutSessionDonationsResponse> {
+        return donations(data, this).then(response => {
             if (response.sessionData) {
                 this.updateSessionData(response.sessionData);
             }

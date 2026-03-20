@@ -33,6 +33,8 @@ export default function DonationComponent(props: Readonly<DonationComponentProps
         const value = parseInt(target.value, 10);
         setIsValid(true);
         setAmount((amount: DonationAmount) => ({ ...amount, value }));
+
+        this.props.onAmountSelected({ data: { ...amount, value } });
     };
 
     const handleDonate = () => {

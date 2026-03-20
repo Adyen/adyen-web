@@ -35,12 +35,20 @@ import './UIElement.scss';
 import SRPanelProvider from '../../../core/Errors/SRPanelProvider';
 import { AmountProvider, AmountProviderRef } from '../../../core/Context/AmountProvider';
 import { PayButtonProps } from '../PayButton/PayButton';
+import { getDonationComponent } from '../../Donation/components/utils';
+import { TxVariants } from '../../tx-variants';
 
 export abstract class UIElement<P extends UIElementProps = UIElementProps> extends BaseElement<P> {
+    /**
+     * componentRef is a ref to the primary component inside the subclass that extends UIElement e.g. CardInput.tsx (which sits inside Card.tsx)
+     */
     protected componentRef: any;
 
     protected resources: Resources;
 
+    /**
+     * elementRef is a ref to the subclass that extends UIElement e.g. Card.tsx or Dropin.tsx
+     */
     public elementRef: UIElement;
 
     public static readonly type = undefined;
@@ -73,6 +81,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         this.makeAdditionalDetailsCall = this.makeAdditionalDetailsCall.bind(this);
         this.submitUsingSessionsFlow = this.submitUsingSessionsFlow.bind(this);
         this.updateAmount = this.updateAmount.bind(this);
+        this.setupSessionsDonation = this.setupSessionsDonation.bind(this);
 
         this.elementRef = (props && props.elementRef) || this;
         this.resources = this.props.modules ? this.props.modules.resources : undefined;
@@ -209,7 +218,9 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     }
 
     /**
-     * elementRef is a ref to the subclass that extends UIElement e.g. Card.tsx
+     * Set status using elementRef, which:
+     * - If Drop-in, will set status for Dropin component, and then it will propagate the new status for the active payment method component
+     * - If Component, it will set its own status
      */
     public setElementStatus(status: UIElementStatus, props?: any): this {
         this.elementRef?.setStatus(status, props);
@@ -442,6 +453,23 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         });
     };
 
+    protected setupSessionsDonation() {
+        const { amount, donation } = this.props;
+
+        // If merchant hasn't disabled autoStart (either explicitly or by not creating a donation object), make the donation component
+        if (!donation || donation.autoStart !== false) {
+            const rootNode: HTMLElement = assertIsDropin(this.elementRef) ? this.elementRef._node : this._node;
+
+            const DonationComponentRef = getDonationComponent(TxVariants.donation, this.core);
+            if (DonationComponentRef) {
+                new DonationComponentRef(this.core, {
+                    rootNode,
+                    commercialTxAmount: amount.value
+                });
+            }
+        }
+    }
+
     /**
      * Handles when the payment fails. The payment fails when:
      * - adv flow: the merchant rejects the payment due to a critical error
@@ -466,6 +494,14 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         }
 
         cleanupFinalResult(result);
+
+        /** If we are using sessions (and haven't moved into a hybrid flow); and the response mandates it - create a Donation instance */
+        const isHybridFlow = this.core.session && (this.props.onSubmit || this.props.onAdditionalDetails);
+
+        if (this.core.session && !isHybridFlow && result.askDonation === true) {
+            this.setupSessionsDonation();
+        }
+
         this.props.onPaymentCompleted?.(result, this.elementRef);
     };
 
