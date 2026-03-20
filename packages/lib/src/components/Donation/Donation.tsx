@@ -30,9 +30,12 @@ class DonationElement extends UIElement<DonationConfiguration> {
             try {
                 new DonationCampaignService(checkout, props)
                     .initialise()
-                    .then((response: DonationConfiguration) => {
-                        this.props = { ...this.props, ...response };
-                        this.mount(props.rootNode);
+                    .then((response: DonationConfiguration | null) => {
+                        if (response) {
+                            this.props = { ...this.props, ...response };
+                            this.mount(props.rootNode);
+                        }
+                        // If no campaigns found (response is null), don't mount - silently do nothing
                     })
                     .catch((error: unknown) => {
                         // Call merchant defined callback
@@ -55,7 +58,7 @@ class DonationElement extends UIElement<DonationConfiguration> {
      * - the merchant makes their own call to the /donationCampaigns endpoint and provides the Donation Campaign directly to the component.
      */
     private static isServiceMode(props: DonationProps): props is DonationCampaignOptions {
-        return 'rootNode' in props;
+        return 'rootNode' in props && !!props.rootNode;
     }
 
     public static readonly defaultProps = {
