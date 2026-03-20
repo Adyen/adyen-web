@@ -174,6 +174,14 @@ describe('PayButton - localized labels', () => {
 
             expect(screen.getByRole('button', { name: 'Kaufen' })).toBeInTheDocument();
         });
+        test('should render secondary amount after the label when format is label-first', () => {
+            const amountProviderProps = { amount: { currency: 'EUR', value: 1000 }, secondaryAmount: { currency: 'USD', value: 1200 } };
+            renderPayButton({ amountProviderProps, i18n: deI18n });
+
+            const button = screen.getByRole('button');
+            expect(button).toHaveTextContent(/Kaufen für.*€/);
+            expect(screen.getByText(/^\/ /)).toBeInTheDocument();
+        });
     });
 
     describe('nl-NL', () => {
@@ -184,10 +192,21 @@ describe('PayButton - localized labels', () => {
             expect(button).toHaveTextContent(/.*€.*betalen/);
         });
 
-        test('should fall back to payButton label when amount is null', () => {
+        test('should render secondary amount inline without a separate label when format is amount-first', () => {
+            const amountProviderProps = { amount: { currency: 'EUR', value: 1000 }, secondaryAmount: { currency: 'USD', value: 1200 } };
+            renderPayButton({ amountProviderProps, i18n: nlI18n });
+
+            const button = screen.getByRole('button');
+            expect(button).toHaveTextContent(/€.*\/.*\$.*betalen/);
+            expect(screen.queryByText(/^\/ /)).not.toBeInTheDocument();
+        });
+
+        test('should fall back to payButton label without amount formatting when amount is null', () => {
             renderPayButton({ amountProviderProps: { amount: null }, i18n: nlI18n });
 
-            expect(screen.getByRole('button', { name: 'Betaal' })).toBeInTheDocument();
+            const button = screen.getByRole('button', { name: 'Betaal' });
+            expect(button).toBeInTheDocument();
+            expect(button).not.toHaveTextContent('betalen');
         });
     });
 });

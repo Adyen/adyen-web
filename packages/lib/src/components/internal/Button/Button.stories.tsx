@@ -15,7 +15,6 @@ import { AmountProvider, AmountProviderProps } from '../../../core/Context/Amoun
 
 const meta: Meta<ButtonProps> = {
     title: 'Internal Elements/Button',
-    tags: ['no-automated-visual-test'],
     component: Button as any,
     argTypes: {
         status: {
@@ -165,6 +164,26 @@ export const PaymentButtonNl: StoryObj<PayButtonProps & AmountProviderProps> = {
     args: {
         amount: { value: 1000, currency: 'EUR' },
         secondaryAmount: { value: 1200, currency: 'USD' },
+        disabled: false,
+        inline: false,
+        variant: 'primary'
+    }
+};
+
+export const PaymentButtonNoAmount: StoryObj<PayButtonProps> = {
+    render: args => {
+        return (
+            <CoreProvider {...nlNLCoreProps}>
+                <AmountProvider amount={null} providerRef={createRef()}>
+                    <PayButton {...args} onClick={() => console.log('Pay button clicked')} />
+                </AmountProvider>
+            </CoreProvider>
+        );
+    },
+    parameters: {
+        controls: { exclude: ['useSessions', 'countryCode', 'shopperLocale', 'showPayButton', 'amount', 'secondaryAmount'] }
+    },
+    args: {
         disabled: false,
         inline: false,
         variant: 'primary'
