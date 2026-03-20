@@ -33,23 +33,15 @@ class DonationCampaignService {
         // will automatically mount the Donation component in the component's rootNode.
         if (DonationCampaignService.instanceCount > 1) {
             throw new Error(
-                'DonationCampaignService:: You need to set donation.autoStart to false if you wish to display the Donation component in a different container'
+                'DonationCampaignService:: You need to set donation.autoStart to false if you wish to display the Donation component in a different container.'
             );
         }
 
         this.core = checkout;
 
-        this.onDonationCompleted = (didDonate: boolean) => {
-            // Reset the count now the process has finished
-            DonationCampaignService.instanceCount = 0;
+        this.onDonationCompleted = checkout.options.donation?.onSuccess;
 
-            // Call the merchant defined handler
-            checkout.options.donation?.onSuccess(didDonate);
-        };
-        this.onDonationFailed = (reason: unknown) => {
-            DonationCampaignService.instanceCount = 0;
-            checkout.options.donation?.onError(reason);
-        };
+        this.onDonationFailed = checkout.options.donation?.onError;
 
         this.rootNode = dcpProps.rootNode;
         this.commercialTxAmount = dcpProps.commercialTxAmount;
@@ -80,7 +72,6 @@ class DonationCampaignService {
                     // Choose which campaign to return - currently just pick the first one
                     return response.donationCampaigns[0];
                 } else {
-                    // Do nothing - TODO maybe analytics?
                     return null;
                 }
             })
@@ -98,7 +89,14 @@ class DonationCampaignService {
     private handleDonationCampaign(donationCampaign: DonationCampaign): DonationConfiguration {
         const { id, campaignName, ...restDonationCampaignProps } = donationCampaign;
 
-        const donationType = restDonationCampaignProps.donation.type;
+        let donationType = restDonationCampaignProps.donation.type;
+
+        restDonationCampaignProps.donation = {
+            currency: 'EUR',
+            type: 'roundup',
+            maxRoundupAmount: 100
+        };
+        donationType = 'roundup';
 
         const donationComponentProps: DonationConfiguration = {
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -121,8 +119,8 @@ class DonationCampaignService {
         };
 
         if (donationType === 'roundup' && !this.commercialTxAmount) {
-            // This will be handled gracefully by the Donation component via the catch in callSessionsDonationCampaigns
             // TODO - analytics?
+            // This will be handled gracefully by the Donation component via the catch in callSessionsDonationCampaigns
             throw new Error(
                 'The donation type is "roundup" and the commercialTxAmount is not set.\nIt will not be possible to mount a Donation component.'
             );
@@ -156,8 +154,6 @@ class DonationCampaignService {
         try {
             return await this.core.session.donationCampaigns();
         } catch (error: unknown) {
-            // TODO - analytics, or will this be picked up as part of the sessions endpoint httpPost handling?
-
             return Promise.reject(error);
         }
     }
@@ -166,8 +162,6 @@ class DonationCampaignService {
         try {
             return await this.core.session.donations(donationRequestData);
         } catch (error: unknown) {
-            // TODO - analytics, or will this be picked up as part of the sessions endpoint httpPost handling?
-
             return Promise.reject(error);
         }
     }
