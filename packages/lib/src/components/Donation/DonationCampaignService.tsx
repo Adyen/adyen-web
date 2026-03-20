@@ -17,7 +17,7 @@ class DonationCampaignService {
     private readonly core: ICore;
 
     private readonly commercialTxAmount: number = 0;
-    private readonly onDonationCompleted: (didDonate: boolean) => void;
+    private readonly onDonationCompleted: (result: { didDonate: boolean }) => void;
     private readonly onDonationFailed: (reason: unknown) => void;
 
     private readonly autoStartTimerMS = 3000;
@@ -86,20 +86,13 @@ class DonationCampaignService {
     private handleDonationCampaign(donationCampaign: DonationCampaign): DonationConfiguration {
         const { id, campaignName, ...restDonationCampaignProps } = donationCampaign;
 
-        let donationType = restDonationCampaignProps.donation.type;
-
-        restDonationCampaignProps.donation = {
-            currency: 'EUR',
-            type: 'roundup',
-            maxRoundupAmount: 100
-        };
-        donationType = 'roundup';
+        const donationType = restDonationCampaignProps.donation.type;
 
         const donationComponentProps: DonationConfiguration = {
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             onCancel: (state: DonationPayload) => {
                 // Call merchant defined onDonationCompleted callback
-                this.onDonationCompleted?.(false);
+                this.onDonationCompleted?.({ didDonate: false });
             },
             onDonate: (state: DonationPayload, component: Donation) => {
                 // Make the request
@@ -132,7 +125,7 @@ class DonationCampaignService {
                 if (response.resultCode === 'Authorised') {
                     component.setStatus('success');
 
-                    this.onDonationCompleted?.(true);
+                    this.onDonationCompleted?.({ didDonate: true });
                 } else {
                     component.setStatus('error');
 
