@@ -131,7 +131,7 @@ export const PaymentButton: StoryObj<PayButtonProps & AmountProviderProps> = {
 };
 
 const nlNLCoreProps = {
-    loadingContext: process.env.CLIENT_ENV,
+    loadingContext: process.env.CLIENT_ENV ?? '',
     i18n: new Language({
         locale: 'nl-NL',
         translations: {
