@@ -8,6 +8,7 @@ import type { DonationComponentProps, FixedAmountsDonation, RoundupDonation } fr
 const onDonate = jest.fn();
 const onCancel = jest.fn();
 const onChange = jest.fn();
+const onAmountSelected = jest.fn();
 
 const fixedAmounts: FixedAmountsDonation = {
     type: 'fixedAmounts',
@@ -27,7 +28,8 @@ const renderComponent = (props: Partial<DonationComponentProps> = {}) => {
     const defaultProps: DonationComponentProps = {
         commercialTxAmount,
         onDonate,
-        donation: fixedAmounts
+        donation: fixedAmounts,
+        onAmountSelected
     };
 
     return render(
@@ -84,12 +86,13 @@ describe('DonationComponent', () => {
             expect(screen.getAllByRole('radio')).toHaveLength(3);
         });
 
-        test('Should return isValid true when an amount is selected', async () => {
+        test('Should return isValid true when an amount is selected and call onAmountSelected', async () => {
             renderComponent({ onChange });
             await userEvent.click(screen.getByLabelText('€0.50'));
             await waitFor(() => {
                 expect(onChange).toHaveBeenCalledWith(expect.objectContaining({ isValid: true }));
             });
+            expect(onAmountSelected).toHaveBeenCalledWith(expect.objectContaining({ data: { currency: 'EUR', value: 50 } }));
         });
 
         test('Should submit the right amount', async () => {
