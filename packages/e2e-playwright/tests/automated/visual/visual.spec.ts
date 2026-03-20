@@ -12,7 +12,7 @@ const index = JSON.parse(rawData) as StorybookIndex;
 const allEntries = Object.values(index.entries);
 
 // Filter out non-story entries, docs, and explicitly excluded stories
-const storyIds = allEntries.filter(entry => entry.type === 'story' && !entry.tags.includes('no-automated-visual-test')).map(entry => entry.id);  // Extract the IDs
+const storyIds = allEntries.filter(entry => entry.type === 'story' && !entry.tags.includes('no-automated-visual-test')).map(entry => entry.id); // Extract the IDs
 
 const getTestTitle = (storyId: string) => {
     return `Visual Test: ${storyId.replace(/[^a-zA-Z0-9_.-]/g, '_')}`;
