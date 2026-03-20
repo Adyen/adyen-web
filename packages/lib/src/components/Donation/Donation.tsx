@@ -35,7 +35,8 @@ class DonationElement extends UIElement<DonationConfiguration> {
                         this.mount(props.rootNode);
                     })
                     .catch((error: unknown) => {
-                        console.error('Donation::DonationCampaignService::initialise error', error);
+                        // Call merchant defined callback
+                        checkout.options.donation?.onError?.(error);
                     });
             } catch (error: unknown) {
                 // Silently handle duplicate instance errors - the automatic donation flow will proceed

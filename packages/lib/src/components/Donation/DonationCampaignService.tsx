@@ -16,8 +16,6 @@ class DonationCampaignService {
 
     private readonly core: ICore;
 
-    private readonly rootNode: HTMLElement | string = null;
-
     private readonly commercialTxAmount: number = 0;
     private readonly onDonationCompleted: (didDonate: boolean) => void;
     private readonly onDonationFailed: (reason: unknown) => void;
@@ -43,7 +41,6 @@ class DonationCampaignService {
 
         this.onDonationFailed = checkout.options.donation?.onError;
 
-        this.rootNode = dcpProps.rootNode;
         this.commercialTxAmount = dcpProps.commercialTxAmount;
 
         this.delayMS = checkout.options.donation?.delay != null ? checkout.options.donation.delay : this.autoStartTimerMS;
