@@ -174,7 +174,7 @@ export const PaymentButtonNoAmount: StoryObj<PayButtonProps> = {
     render: args => {
         return (
             <CoreProvider {...nlNLCoreProps}>
-                <AmountProvider amount={null} providerRef={createRef()}>
+                <AmountProvider amount={undefined} providerRef={createRef()}>
                     <PayButton {...args} onClick={() => console.log('Pay button clicked')} />
                 </AmountProvider>
             </CoreProvider>

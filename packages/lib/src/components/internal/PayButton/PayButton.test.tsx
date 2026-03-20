@@ -169,8 +169,8 @@ describe('PayButton - localized labels', () => {
             expect(button).toHaveTextContent('10,00');
         });
 
-        test('should fall back to payButton label when amount is null', () => {
-            renderPayButton({ amountProviderProps: { amount: null }, i18n: deI18n });
+        test('should fall back to payButton label when amount is not provided', () => {
+            renderPayButton({ amountProviderProps: { amount: undefined }, i18n: deI18n });
 
             expect(screen.getByRole('button', { name: 'Kaufen' })).toBeInTheDocument();
         });
@@ -202,7 +202,7 @@ describe('PayButton - localized labels', () => {
         });
 
         test('should fall back to payButton label without amount formatting when amount is null', () => {
-            renderPayButton({ amountProviderProps: { amount: null }, i18n: nlI18n });
+            renderPayButton({ amountProviderProps: { amount: undefined }, i18n: nlI18n });
 
             const button = screen.getByRole('button', { name: 'Betaal' });
             expect(button).toBeInTheDocument();
