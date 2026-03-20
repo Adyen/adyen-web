@@ -46,28 +46,6 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         }
     }).mount('.new-donation-fixed-amounts-field');
 
-    // Also works - using the new donationCampaignProvider module
-    // window.checkout.modules.donationCampaignProvider.rootNode = '.new-donation-fixed-amounts-field';
-    // window.checkout.modules.donationCampaignProvider.handleDonationCampaign({
-    //     onDonate: (state, component) => {
-    //         console.log({ state, component });
-    //         setTimeout(() => component.setStatus('success'), 1000);
-    //     },
-    //     donation: { type: 'fixedAmounts', currency: 'EUR', values: [50, 199, 300, 500, 1000] },
-    //     commercialTxAmount: 1000,
-    //     termsAndConditionsUrl: 'https://www.adyen.com',
-    //     bannerUrl: '/banner.png',
-    //     logoUrl: '/logo.png',
-    //     nonprofitDescription:
-    //         'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-    //     nonprofitName: 'Test Charity',
-    //     causeName: 'Earthquake Turkey & Syria',
-    //     nonprofitUrl: 'https://example.org',
-    //     onCancel(data) {
-    //         console.log(data);
-    //     }
-    // });
-
     window.new_donation_roundup = new Donation(window.checkout, {
         onDonate: (state, component) => {
             console.log({ state, component });
