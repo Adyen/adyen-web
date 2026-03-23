@@ -4,11 +4,12 @@ import { URL_MAP } from '../../../../fixtures/URL_MAP';
 import { Card } from '../../../../models/card';
 import { GiftCard } from '../../../../models/giftcard';
 import { toHaveScreenshot } from '../../../utils/assertions';
+import { TAGS } from '../../../utils/constants';
 
 dotenv.config();
 const apiVersion = Number(process.env.API_VERSION.substring(1));
 
-test.describe('Dropin - Sessions - GiftCards', () => {
+test.describe('Dropin - Sessions - GiftCards', { tag: [TAGS.SCREENSHOT] }, () => {
     test('Should show the correct updated amount after redeeming a gift card', async ({ dropinWithSession, page, browserName }) => {
         await dropinWithSession.goto(URL_MAP.dropinWithSession);
 
