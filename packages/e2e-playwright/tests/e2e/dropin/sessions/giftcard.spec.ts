@@ -59,6 +59,8 @@ test.describe('Dropin - Sessions - GiftCards', () => {
             await giftCard.fillPin('123');
             await giftCard.redeem();
 
+            await expect(page.locator('.adyen-checkout__order-remaining-amount')).toBeVisible();
+
             const { paymentMethodDetailsLocator: cardBeforeGiftCardRemoveLocator } = await dropinWithSession.selectNonStoredPaymentMethod('scheme');
             const cardBeforeGiftCardRemove = new Card(page, cardBeforeGiftCardRemoveLocator);
             await cardBeforeGiftCardRemove.isComponentVisible();
