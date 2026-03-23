@@ -14,15 +14,16 @@ const isAmountFirstFormat = (i18n: Language): boolean => {
 
 const payAmountLabel = (i18n: Language, amount: PaymentAmount, secondaryAmount?: PaymentAmount) => {
     const amountLabelValue = amountLabel(i18n, amount);
-    if (amountLabelValue) {
-        if (secondaryAmount && isAmountFirstFormat(i18n)) {
-            const secondaryAmountValue = formatSecondaryAmountLabel(i18n, secondaryAmount);
-            return i18n.get('payAmountFormat').replace('%@', `${amountLabelValue}${secondaryAmountValue}`);
-        }
-        return i18n.get('payAmountFormat').replace('%@', amountLabelValue);
+    if (!amountLabelValue) {
+        return i18n.get('payButton');
     }
 
-    return i18n.get('payButton');
+    if (secondaryAmount && isAmountFirstFormat(i18n)) {
+        const secondaryAmountValue = formatSecondaryAmountLabel(i18n, secondaryAmount);
+        return i18n.get('payAmountFormat').replace('%@', `${amountLabelValue}${secondaryAmountValue}`);
+    }
+
+    return i18n.get('payAmountFormat').replace('%@', amountLabelValue);
 };
 
 const formatSecondaryAmountLabel = (i18n: Language, secondaryAmount: PaymentAmount) => {
