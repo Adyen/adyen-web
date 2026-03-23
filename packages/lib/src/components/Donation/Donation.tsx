@@ -125,7 +125,7 @@ class DonationElement extends UIElement<DonationConfiguration> {
         const event = new AnalyticsInfoEvent({
             component: DonationElement.type,
             type: InfoEventType.selected,
-            selectedValue: JSON.stringify(state.data),
+            selectedValue: JSON.stringify(state.data.amount),
             target: UiTarget.donationAmountButton
         });
         this.core.modules.analytics.sendAnalytics(event);
