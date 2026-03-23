@@ -4,18 +4,21 @@ import userEvent from '@testing-library/user-event';
 import PayButton, { PayButtonProps } from './PayButton';
 import { PAY_BTN_DIVIDER } from './utils';
 import { CoreProvider } from '../../../core/Context/CoreProvider';
+import Language from '../../../language';
 import { AmountProvider, AmountProviderProps } from '../../../core/Context/AmountProvider';
 import { ButtonProps } from '../Button/types';
 
 const renderPayButton = ({
     payButtonProps = {},
-    amountProviderProps = {}
+    amountProviderProps = {},
+    i18n = global.i18n
 }: {
     payButtonProps?: Partial<PayButtonProps>;
     amountProviderProps?: Partial<AmountProviderProps>;
+    i18n?: Language;
 } = {}) => {
     return render(
-        <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+        <CoreProvider i18n={i18n} loadingContext="test" resources={global.resources}>
             <AmountProvider amount={amountProviderProps.amount} secondaryAmount={amountProviderProps.secondaryAmount} providerRef={createRef()}>
                 <PayButton {...payButtonProps} />
             </AmountProvider>
@@ -176,5 +179,73 @@ describe('PayButton', () => {
         await user.click(button);
 
         expect(handleClick).not.toHaveBeenCalled();
+    });
+});
+
+describe('PayButton - localized labels', () => {
+    const deI18n = new Language({
+        locale: 'de-DE',
+        translations: {
+            payButton: 'Kaufen',
+            payAmountFormat: 'Kaufen für %@'
+        }
+    });
+
+    const nlI18n = new Language({
+        locale: 'nl-NL',
+        translations: {
+            payButton: 'Betaal',
+            payAmountFormat: '%@ betalen'
+        }
+    });
+
+    describe('de-DE', () => {
+        test('should render formatted amount label using payAmountFormat', () => {
+            renderPayButton({ amountProviderProps: { amount: { currency: 'EUR', value: 1000 } }, i18n: deI18n });
+
+            const button = screen.getByRole('button');
+            expect(button).toHaveTextContent('Kaufen für');
+            expect(button).toHaveTextContent('10,00');
+        });
+
+        test('should fall back to payButton label when amount is not provided', () => {
+            renderPayButton({ amountProviderProps: { amount: undefined }, i18n: deI18n });
+
+            expect(screen.getByRole('button', { name: 'Kaufen' })).toBeInTheDocument();
+        });
+        test('should render secondary amount after the label when format is label-first', () => {
+            const amountProviderProps = { amount: { currency: 'EUR', value: 1000 }, secondaryAmount: { currency: 'USD', value: 1200 } };
+            renderPayButton({ amountProviderProps, i18n: deI18n });
+
+            const button = screen.getByRole('button');
+            expect(button).toHaveTextContent(/Kaufen für.*€/);
+            expect(screen.getByText(/^\/ /)).toBeInTheDocument();
+        });
+    });
+
+    describe('nl-NL', () => {
+        test('should render formatted amount with reversed token position', () => {
+            renderPayButton({ amountProviderProps: { amount: { currency: 'EUR', value: 1000 } }, i18n: nlI18n });
+
+            const button = screen.getByRole('button');
+            expect(button).toHaveTextContent(/.*€.*betalen/);
+        });
+
+        test('should render secondary amount inline without a separate label when format is amount-first', () => {
+            const amountProviderProps = { amount: { currency: 'EUR', value: 1000 }, secondaryAmount: { currency: 'USD', value: 1200 } };
+            renderPayButton({ amountProviderProps, i18n: nlI18n });
+
+            const button = screen.getByRole('button');
+            expect(button).toHaveTextContent(/€.*\/.*\$.*betalen/);
+            expect(screen.queryByText(/^\/ /)).not.toBeInTheDocument();
+        });
+
+        test('should fall back to payButton label without amount formatting when amount is null', () => {
+            renderPayButton({ amountProviderProps: { amount: undefined }, i18n: nlI18n });
+
+            const button = screen.getByRole('button', { name: 'Betaal' });
+            expect(button).toBeInTheDocument();
+            expect(button).not.toHaveTextContent('betalen');
+        });
     });
 });
