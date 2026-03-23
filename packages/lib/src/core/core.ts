@@ -293,10 +293,11 @@ class Core implements ICore {
             return this.initialize().then(() => {
                 this.components.forEach(component => {
                     // We update only with the new options that have been received
+                    const newAmount = amount ?? this.options.amount;
                     const newProps: Partial<UIElementProps> = {
                         ...props,
                         ...(this.session && { session: this.session }),
-                        ...(amount ? { amount } : { amount: this.options.amount })
+                        ...(newAmount && { amount: newAmount })
                     };
                     component.update(newProps);
                 });
