@@ -31,6 +31,11 @@ test.describe('Dropin - Sessions - GiftCards', () => {
             await giftCard.fillPin('123');
             await giftCard.redeem();
 
+            const redeemedGiftCards = page.locator('.adyen-checkout__order-payment-methods-list');
+            await toHaveScreenshot(redeemedGiftCards, browserName, 'redeemed-gift-cards.png');
+            const redeemedGiftCardInstruction = page.locator('adyen-checkout__order-remaining-amount');
+            await toHaveScreenshot(redeemedGiftCardInstruction, browserName, 'redeemed-gift-card-instruction.png');
+
             const { paymentMethodDetailsLocator: cardAfterGiftCardRedeemLocator } = await dropinWithSession.selectNonStoredPaymentMethod('scheme');
             const cardAfterGiftCardRedeem = new Card(page, cardAfterGiftCardRedeemLocator);
             await cardAfterGiftCardRedeem.isComponentVisible();
@@ -58,10 +63,6 @@ test.describe('Dropin - Sessions - GiftCards', () => {
             const cardBeforeGiftCardRemove = new Card(page, cardBeforeGiftCardRemoveLocator);
             await cardBeforeGiftCardRemove.isComponentVisible();
             await expect(cardBeforeGiftCardRemove.payButton).toContainText('Pay $209.00');
-
-            await toHaveScreenshot(cardBeforeGiftCardRemove.rootElement, browserName, 'amount-before-giftcard-removal.png');
-            const appliedGiftCardsElement = page.locator('.adyen-checkout__order-payment-methods-list');
-            await toHaveScreenshot(appliedGiftCardsElement, browserName, 'sessions-dropin-applied-gift-cards-before-removal.png');
 
             await page.getByRole('button', { name: 'Remove' }).click();
 
