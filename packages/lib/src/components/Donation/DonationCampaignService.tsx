@@ -9,6 +9,8 @@ import type {
 import Donation from './Donation';
 import { AnalyticsLogEvent, LogEventSubtype, LogEventType } from '../../core/Analytics/events/AnalyticsLogEvent';
 
+const DEFAULT_DONATION_AUTO_START_DELAY_MS = 3000;
+
 class DonationCampaignService {
     public static type = 'donationCampaignService';
 
@@ -20,10 +22,10 @@ class DonationCampaignService {
     private readonly onDonationCompleted: (result: { didDonate: boolean }) => void;
     private readonly onDonationFailed: (reason: unknown) => void;
 
-    private readonly autoStartTimerMS = 3000;
+    private readonly autoStartTimerMS = DEFAULT_DONATION_AUTO_START_DELAY_MS;
     private readonly delayMS: number;
 
-    constructor(checkout: ICore, dcpProps?: DonationCampaignOptions) {
+    constructor(checkout: ICore, donationCampaignProps: DonationCampaignOptions) {
         DonationCampaignService.instanceCount++;
 
         // If the merchant has not explicitly set autoStart to false, and then tries to display the Donation component in a different container,
@@ -41,11 +43,9 @@ class DonationCampaignService {
 
         this.onDonationFailed = checkout.options.donation?.onError;
 
-        this.commercialTxAmount = dcpProps.commercialTxAmount;
+        this.commercialTxAmount = donationCampaignProps.commercialTxAmount;
 
         this.delayMS = checkout.options.donation?.delay != null ? checkout.options.donation.delay : this.autoStartTimerMS;
-
-        return this;
     }
 
     public async initialise(): Promise<DonationConfiguration | null> {

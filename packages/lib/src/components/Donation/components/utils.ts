@@ -20,5 +20,5 @@ export { getAmountLabel, getRoundupAmount, getRoundupAmountLabel };
 
 export function getDonationComponent(txVariant: string, core: ICore) {
     const DonationClass = core.getComponent(txVariant) as typeof Donation | undefined;
-    return DonationClass ? DonationClass : null;
+    return DonationClass ?? null;
 }

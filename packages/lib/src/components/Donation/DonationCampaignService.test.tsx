@@ -44,7 +44,7 @@ const createMockDonationCampaign = (overrides?: Partial<DonationCampaign>): Dona
     ...overrides
 });
 
-const defaultDcpProps: DonationCampaignOptions = {
+const defaultDonationCampaignProps: DonationCampaignOptions = {
     rootNode: document.createElement('div'),
     commercialTxAmount: 1000
 };
@@ -65,17 +65,17 @@ describe('DonationCampaignService', () => {
     describe('constructor', () => {
         test('should create an instance with valid props', () => {
             const core = createMockCore();
-            const service = new DonationCampaignService(core, defaultDcpProps);
+            const service = new DonationCampaignService(core, defaultDonationCampaignProps);
 
             expect(service).toBeInstanceOf(DonationCampaignService);
         });
 
         test('should throw error when creating multiple instances without autoStart false', () => {
             const core = createMockCore();
-            new DonationCampaignService(core, defaultDcpProps);
+            new DonationCampaignService(core, defaultDonationCampaignProps);
 
             expect(() => {
-                new DonationCampaignService(core, defaultDcpProps);
+                new DonationCampaignService(core, defaultDonationCampaignProps);
             }).toThrow(
                 'DonationCampaignService:: You need to set donation.autoStart to false if you wish to display the Donation component in a different container.'
             );
@@ -98,7 +98,7 @@ describe('DonationCampaignService', () => {
             };
             (core.session.donationCampaigns as jest.Mock).mockResolvedValue(mockResponse);
 
-            const service = new DonationCampaignService(core, defaultDcpProps);
+            const service = new DonationCampaignService(core, defaultDonationCampaignProps);
             const initPromise = service.initialise();
 
             expect(core.session.donationCampaigns).not.toHaveBeenCalled();
@@ -120,7 +120,7 @@ describe('DonationCampaignService', () => {
             };
             (core.session.donationCampaigns as jest.Mock).mockResolvedValue(mockResponse);
 
-            const service = new DonationCampaignService(core, defaultDcpProps);
+            const service = new DonationCampaignService(core, defaultDonationCampaignProps);
             const resultPromise = service.initialise();
 
             jest.advanceTimersByTime(0);
@@ -131,7 +131,7 @@ describe('DonationCampaignService', () => {
             // Expect the additional properties that DonationCampaignService adds, to be set
             expect(result).toHaveProperty('onCancel');
             expect(result).toHaveProperty('onDonate');
-            expect(result).toHaveProperty('commercialTxAmount', defaultDcpProps.commercialTxAmount);
+            expect(result).toHaveProperty('commercialTxAmount', defaultDonationCampaignProps.commercialTxAmount);
         });
 
         test('should return null when no campaigns are available', async () => {
@@ -142,7 +142,7 @@ describe('DonationCampaignService', () => {
             };
             (core.session.donationCampaigns as jest.Mock).mockResolvedValue(mockResponse);
 
-            const service = new DonationCampaignService(core, defaultDcpProps);
+            const service = new DonationCampaignService(core, defaultDonationCampaignProps);
             const resultPromise = service.initialise();
 
             jest.advanceTimersByTime(0);
@@ -158,7 +158,7 @@ describe('DonationCampaignService', () => {
                 donationCampaigns: undefined
             });
 
-            const service = new DonationCampaignService(core, defaultDcpProps);
+            const service = new DonationCampaignService(core, defaultDonationCampaignProps);
             const resultPromise = service.initialise();
 
             jest.advanceTimersByTime(0);
@@ -175,7 +175,7 @@ describe('DonationCampaignService', () => {
             };
             (core.session.donationCampaigns as jest.Mock).mockResolvedValue(mockResponse);
 
-            const service = new DonationCampaignService(core, defaultDcpProps);
+            const service = new DonationCampaignService(core, defaultDonationCampaignProps);
             const resultPromise = service.initialise();
 
             jest.advanceTimersByTime(0);
@@ -189,7 +189,7 @@ describe('DonationCampaignService', () => {
             const error = new Error('Network error');
             (core.session.donationCampaigns as jest.Mock).mockRejectedValue(error);
 
-            const service = new DonationCampaignService(core, defaultDcpProps);
+            const service = new DonationCampaignService(core, defaultDonationCampaignProps);
             const resultPromise = service.initialise();
 
             jest.advanceTimersByTime(0);
@@ -215,12 +215,12 @@ describe('DonationCampaignService', () => {
             (core.session.donationCampaigns as jest.Mock).mockResolvedValue(mockResponse);
 
             // @ts-ignore - forcing commercialTxAmount to be undefined
-            const dcpPropsWithoutAmount: DonationCampaignOptions = {
+            const donationCampaignPropsWithoutAmount: DonationCampaignOptions = {
                 rootNode: document.createElement('div')
                 // commercialTxAmount: 0
             };
 
-            const service = new DonationCampaignService(core, dcpPropsWithoutAmount);
+            const service = new DonationCampaignService(core, donationCampaignPropsWithoutAmount);
             const resultPromise = service.initialise();
 
             jest.advanceTimersByTime(0);
@@ -243,12 +243,12 @@ describe('DonationCampaignService', () => {
             };
             (core.session.donationCampaigns as jest.Mock).mockResolvedValue(mockResponse);
 
-            const dcpPropsWithoutAmount: DonationCampaignOptions = {
+            const donationCampaignPropsWithoutAmount: DonationCampaignOptions = {
                 rootNode: document.createElement('div'),
                 commercialTxAmount: 0
             };
 
-            const service = new DonationCampaignService(core, dcpPropsWithoutAmount);
+            const service = new DonationCampaignService(core, donationCampaignPropsWithoutAmount);
             const resultPromise = service.initialise();
 
             jest.advanceTimersByTime(0);
@@ -276,7 +276,7 @@ describe('DonationCampaignService', () => {
             };
             (core.session.donationCampaigns as jest.Mock).mockResolvedValue(mockResponse);
 
-            const service = new DonationCampaignService(core, defaultDcpProps);
+            const service = new DonationCampaignService(core, defaultDonationCampaignProps);
             const resultPromise = service.initialise();
 
             jest.advanceTimersByTime(0);
@@ -304,7 +304,7 @@ describe('DonationCampaignService', () => {
             };
             (core.session.donationCampaigns as jest.Mock).mockResolvedValue(mockResponse);
 
-            const service = new DonationCampaignService(core, defaultDcpProps);
+            const service = new DonationCampaignService(core, defaultDonationCampaignProps);
             const resultPromise = service.initialise();
 
             jest.advanceTimersByTime(0);
@@ -341,7 +341,7 @@ describe('DonationCampaignService', () => {
             };
             (core.session.donationCampaigns as jest.Mock).mockResolvedValue(mockResponse);
 
-            const service = new DonationCampaignService(core, defaultDcpProps);
+            const service = new DonationCampaignService(core, defaultDonationCampaignProps);
             const resultPromise = service.initialise();
 
             jest.advanceTimersByTime(0);
@@ -379,11 +379,11 @@ describe('DonationCampaignService', () => {
             (core.session.donationCampaigns as jest.Mock).mockResolvedValue(mockResponse);
 
             // @ts-ignore - forcing commercialTxAmount to be undefined
-            const dcpPropsWithoutAmount: DonationCampaignOptions = {
+            const donationCampaignPropsWithoutAmount: DonationCampaignOptions = {
                 rootNode: document.createElement('div')
             };
 
-            const service = new DonationCampaignService(core, dcpPropsWithoutAmount);
+            const service = new DonationCampaignService(core, donationCampaignPropsWithoutAmount);
             const resultPromise = service.initialise();
 
             jest.advanceTimersByTime(0);
@@ -415,7 +415,7 @@ describe('DonationCampaignService', () => {
             };
             (core.session.donationCampaigns as jest.Mock).mockResolvedValue(mockResponse);
 
-            const service = new DonationCampaignService(core, defaultDcpProps);
+            const service = new DonationCampaignService(core, defaultDonationCampaignProps);
             const resultPromise = service.initialise();
 
             jest.advanceTimersByTime(0);
@@ -461,7 +461,7 @@ describe('DonationCampaignService', () => {
             };
             (core.session.donationCampaigns as jest.Mock).mockResolvedValue(mockResponse);
 
-            const service = new DonationCampaignService(core, defaultDcpProps);
+            const service = new DonationCampaignService(core, defaultDonationCampaignProps);
             const resultPromise = service.initialise();
 
             jest.advanceTimersByTime(0);
@@ -505,7 +505,7 @@ describe('DonationCampaignService', () => {
             };
             (core.session.donationCampaigns as jest.Mock).mockResolvedValue(mockResponse);
 
-            const service = new DonationCampaignService(core, defaultDcpProps);
+            const service = new DonationCampaignService(core, defaultDonationCampaignProps);
             const resultPromise = service.initialise();
 
             jest.advanceTimersByTime(0);
@@ -549,7 +549,7 @@ describe('DonationCampaignService', () => {
             };
             (core.session.donationCampaigns as jest.Mock).mockResolvedValue(mockResponse);
 
-            const service = new DonationCampaignService(core, defaultDcpProps);
+            const service = new DonationCampaignService(core, defaultDonationCampaignProps);
             const result = await service.initialise();
 
             const mockComponent = {
