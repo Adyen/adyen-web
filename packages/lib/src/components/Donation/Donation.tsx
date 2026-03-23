@@ -27,24 +27,7 @@ class DonationElement extends UIElement<DonationConfiguration> {
         this.isInServiceMode = isServiceMode;
 
         if (checkout.session && isServiceMode) {
-            try {
-                new DonationCampaignService(checkout, props)
-                    .initialise()
-                    .then((response: DonationConfiguration | null) => {
-                        if (response) {
-                            this.props = { ...this.props, ...response };
-                            this.mount(props.rootNode);
-                        }
-                        // If no campaigns found (response is null), don't mount - silently do nothing
-                    })
-                    .catch((error: unknown) => {
-                        // Call merchant defined callback
-                        checkout.options.donation?.onError?.(error);
-                    });
-            } catch (error: unknown) {
-                // Silently handle duplicate instance errors - the automatic donation flow will proceed
-                console.error('Donation::DonationCampaignService instantiation error', error);
-            }
+            this.initialiseServiceMode(checkout, props);
         }
     }
 
@@ -65,6 +48,27 @@ class DonationElement extends UIElement<DonationConfiguration> {
         onCancel: () => {},
         onDonate: () => {}
     };
+
+    private initialiseServiceMode(checkout: ICore, props: DonationCampaignOptions) {
+        try {
+            new DonationCampaignService(checkout, props)
+                .initialise()
+                .then((response: DonationConfiguration | null) => {
+                    if (response) {
+                        this.props = { ...this.props, ...response };
+                        this.mount(props.rootNode);
+                    }
+                    // If no campaigns found (response is null), don't mount - silently do nothing
+                })
+                .catch((error: unknown) => {
+                    // Call merchant defined callback
+                    checkout.options.donation?.onError?.(error);
+                });
+        } catch (error: unknown) {
+            // Silently handle duplicate instance errors - the automatic donation flow will proceed
+            console.error('Donation::DonationCampaignService instantiation error', error);
+        }
+    }
 
     /**
      * Returns the component payment data ready to submit to the Checkout API
