@@ -285,6 +285,8 @@ class Core implements ICore {
      * @returns this - the Core instance
      */
     public update(props: Partial<CoreConfiguration> = {}, { shouldReinitializeCheckout = true } = {}): Promise<this> {
+        const { amount } = props;
+
         if (shouldReinitializeCheckout) {
             this.setOptions(props);
 
@@ -293,7 +295,8 @@ class Core implements ICore {
                     // We update only with the new options that have been received
                     const newProps: Partial<UIElementProps> = {
                         ...props,
-                        ...(this.session && { session: this.session })
+                        ...(this.session && { session: this.session }),
+                        ...(amount ? { amount } : { amount: this.options.amount })
                     };
                     component.update(newProps);
                 });
@@ -301,7 +304,7 @@ class Core implements ICore {
             });
         }
 
-        const { amount, secondaryAmount } = props;
+        const { secondaryAmount } = props;
 
         if (amount || secondaryAmount) {
             this.triggerAmountUpdate(amount, secondaryAmount);
