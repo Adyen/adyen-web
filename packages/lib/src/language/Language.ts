@@ -1,44 +1,67 @@
-import { getTranslation } from './utils';
+import { formatCustomTranslations, getTranslation, parseLocale } from './utils';
 import { getLocalisedAmount } from '../utils/amount-util';
-import AdyenCheckoutError from '../core/Errors/AdyenCheckoutError';
+import { SUPPORTED_LOCALES } from './constants';
+
 import type { CustomTranslations, LanguageOptions, Translations } from './types';
+import type { ILanguageService } from './LanguageService';
+import AdyenCheckoutError from '../core/Errors/AdyenCheckoutError';
 
 export class Language {
     public readonly locale: string;
     public readonly languageCode: string;
+    private readonly service: ILanguageService;
 
-    private readonly translations: Translations;
     private readonly customTranslations: CustomTranslations;
+    private readonly supportedLocales: readonly string[];
+
+    private readonly onError: LanguageOptions['onError'];
+
+    private translations: Translations = {};
 
     public readonly timeFormatOptions: Intl.DateTimeFormatOptions = {
         hour: 'numeric',
         minute: 'numeric'
     };
+
     public readonly timeAndDateFormatOptions: Intl.DateTimeFormatOptions = {
         year: 'numeric',
         month: '2-digit',
         day: '2-digit',
         ...this.timeFormatOptions
     };
+
     public readonly timeAndDateFormatter: Intl.DateTimeFormat;
 
     constructor(props: LanguageOptions) {
-        const { locale, translations, customTranslations } = props;
+        const { locale, customTranslations, service, onError } = props;
 
-        if (!locale) {
-            throw new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'Language: "locale" property is not defined');
-        }
+        this.service = service;
+        this.onError = onError;
 
-        this.locale = locale;
+        this.customTranslations = formatCustomTranslations(customTranslations);
+        this.supportedLocales = this.createSupportedLocalesList(customTranslations);
+
+        this.locale = parseLocale(locale, this.supportedLocales);
         this.languageCode = this.locale.split('-')[0];
-        this.customTranslations = customTranslations || {};
 
         this.timeAndDateFormatter = Intl.DateTimeFormat(this.locale, this.timeAndDateFormatOptions);
+    }
 
-        this.translations = {
-            ...translations,
-            ...(!!this.customTranslations[this.locale] && this.customTranslations[this.locale])
-        };
+    public async requestTranslations(): Promise<void> {
+        try {
+            const translations = await this.service.fetchTranslations(this.locale);
+
+            this.translations = {
+                ...translations,
+                ...(!!this.customTranslations[this.locale] && this.customTranslations[this.locale])
+            };
+        } catch (error: unknown) {
+            if (error instanceof AdyenCheckoutError) {
+                this.onError?.(error);
+            } else {
+                this.onError?.(new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'Failed to fetch translations', { cause: error }));
+            }
+        }
     }
 
     /**
@@ -84,6 +107,21 @@ export class Language {
     public dateTime(date: string) {
         if (date === undefined) return '';
         return this.timeAndDateFormatter.format(new Date(date));
+    }
+
+    /**
+     * Creates a list of supported locales including the ones passed as custom translations
+     *
+     * @param customTranslations - Custom translations to include
+     * @returns Array of supported locales
+     */
+    private createSupportedLocalesList(customTranslations?: CustomTranslations): readonly string[] {
+        if (!customTranslations) {
+            return SUPPORTED_LOCALES;
+        }
+
+        const locales = new Set([...SUPPORTED_LOCALES, ...Object.keys(customTranslations)]);
+        return Array.from(locales);
     }
 }
 

@@ -64,7 +64,7 @@ async function createAdvancedFlowCheckout(
         amount: paymentAmount,
         countryCode,
         paymentMethodsResponse,
-        locale: shopperLocale,
+        locale: 'pt',
         showPayButton,
 
         onSubmit: async (state, component, actions) => {
