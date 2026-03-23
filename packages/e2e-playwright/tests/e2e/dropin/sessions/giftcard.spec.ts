@@ -33,7 +33,7 @@ test.describe('Dropin - Sessions - GiftCards', () => {
 
             const redeemedGiftCards = page.locator('.adyen-checkout__order-payment-methods-list');
             await toHaveScreenshot(redeemedGiftCards, browserName, 'redeemed-gift-cards.png');
-            const redeemedGiftCardInstruction = page.locator('adyen-checkout__order-remaining-amount');
+            const redeemedGiftCardInstruction = page.locator('.adyen-checkout__order-remaining-amount');
             await toHaveScreenshot(redeemedGiftCardInstruction, browserName, 'redeemed-gift-card-instruction.png');
 
             const { paymentMethodDetailsLocator: cardAfterGiftCardRedeemLocator } = await dropinWithSession.selectNonStoredPaymentMethod('scheme');
