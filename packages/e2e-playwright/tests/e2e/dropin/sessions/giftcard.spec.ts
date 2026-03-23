@@ -21,7 +21,7 @@ test.describe('Dropin - Sessions - GiftCards', () => {
             await cardBeforeGiftCardRedeem.isComponentVisible();
             await expect(cardBeforeGiftCardRedeem.payButton).toHaveText('Pay $259.00');
 
-            await toHaveScreenshot(cardBeforeGiftCardRedeem.rootElement, browserName, 'sessions-dropin-amount-before-giftcard-redeem');
+            await toHaveScreenshot(cardBeforeGiftCardRedeem.rootElement, browserName, 'amount-before-giftcard-redeemed.png');
 
             const { paymentMethodDetailsLocator: givexDetailsLocator } = await dropinWithSession.selectNonStoredPaymentMethod('giftcard');
             const giftCard = new GiftCard(page, givexDetailsLocator);
@@ -36,7 +36,7 @@ test.describe('Dropin - Sessions - GiftCards', () => {
             await cardAfterGiftCardRedeem.isComponentVisible();
             await expect(cardAfterGiftCardRedeem.payButton).toContainText('Pay $209.00');
 
-            await toHaveScreenshot(cardAfterGiftCardRedeem.rootElement, browserName, 'sessions-dropin-amount-after-giftcard-redeem.png');
+            await toHaveScreenshot(cardAfterGiftCardRedeem.rootElement, browserName, 'pay-amount-after-giftcard-redeemed.png');
         }
     );
 
@@ -59,7 +59,7 @@ test.describe('Dropin - Sessions - GiftCards', () => {
             await cardBeforeGiftCardRemove.isComponentVisible();
             await expect(cardBeforeGiftCardRemove.payButton).toContainText('Pay $209.00');
 
-            await toHaveScreenshot(cardBeforeGiftCardRemove.rootElement, browserName, 'sessions-dropin-amount-before-giftcard-removal.png');
+            await toHaveScreenshot(cardBeforeGiftCardRemove.rootElement, browserName, 'amount-before-giftcard-removal.png');
             const appliedGiftCardsElement = page.locator('.adyen-checkout__order-payment-methods-list');
             await toHaveScreenshot(appliedGiftCardsElement, browserName, 'sessions-dropin-applied-gift-cards-before-removal.png');
 
@@ -70,7 +70,7 @@ test.describe('Dropin - Sessions - GiftCards', () => {
             await cardAfterGiftCardRemove.isComponentVisible();
             await expect(cardAfterGiftCardRemove.payButton).toContainText('Pay $259.00');
 
-            await toHaveScreenshot(cardAfterGiftCardRemove.rootElement, browserName, 'sessions-dropin-amount-after-giftcard-removal.png');
+            await toHaveScreenshot(cardAfterGiftCardRemove.rootElement, browserName, 'amount-after-giftcard-removal.png');
         }
     );
 });
