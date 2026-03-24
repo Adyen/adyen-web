@@ -27,6 +27,9 @@ class DonationElement extends UIElement<DonationConfiguration> {
         this.isInServiceMode = isServiceMode;
 
         if (checkout.session && isServiceMode) {
+            // NOSONAR: Async operation in constructor is intentional - service mode requires
+            // fire-and-forget initialization that fetches campaigns and auto-mounts the component.
+            // This pattern is necessary to maintain backward compatibility with merchant integrations.
             void this.initialiseServiceMode(checkout, props);
         }
     }

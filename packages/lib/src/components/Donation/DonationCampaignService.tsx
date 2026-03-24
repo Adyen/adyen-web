@@ -135,19 +135,11 @@ class DonationCampaignService {
     }
 
     private async makeSessionsDonationCampaignsCall(): Promise<CheckoutSessionDonationCampaignsResponse> {
-        try {
-            return await this.core.session.donationCampaigns();
-        } catch (error: unknown) {
-            return Promise.reject(error);
-        }
+        return await this.core.session.donationCampaigns();
     }
 
     private async makeSessionDonationsCall(donationRequestData: CheckoutSessionDonationsRequestData): Promise<CheckoutSessionDonationsResponse> {
-        try {
-            return await this.core.session.donations(donationRequestData);
-        } catch (error: unknown) {
-            return Promise.reject(error);
-        }
+        return await this.core.session.donations(donationRequestData);
     }
 }
 
