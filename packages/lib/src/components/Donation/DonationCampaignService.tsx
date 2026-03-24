@@ -103,8 +103,7 @@ class DonationCampaignService {
         };
 
         if (donationType === 'roundup' && !this.commercialTxAmount) {
-            // TODO - analytics?
-            // This error will be handled gracefully by the Donation component
+            // This error will be handled gracefully by the Donation component. The question remains whether we want analytics on this?
             throw new Error(
                 'The donation type is "roundup" and the commercialTxAmount is not set.\nIt will not be possible to mount a Donation component.'
             );
