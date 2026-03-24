@@ -48,7 +48,7 @@ class DonationCampaignService {
         };
         this.onDonationFailed = (reason: unknown) => {
             DonationCampaignService.instanceCount = 0;
-            checkout.options.donation?.onError(reason);
+            checkout.options.donation?.onError?.(reason);
         };
 
         this.commercialTxAmount = donationCampaignProps.commercialTxAmount;
