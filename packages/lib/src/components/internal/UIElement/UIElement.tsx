@@ -456,8 +456,8 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     protected setupSessionsDonation() {
         const { amount, donation } = this.props;
 
-        // If merchant hasn't disabled autoStart (either explicitly or by not creating a donation object), make the donation component
-        if (!donation || donation.autoStart !== false) {
+        // If merchant hasn't explicitly disabled autoStart by setting it to false
+        if (donation?.autoStart !== false) {
             const rootNode: HTMLElement = assertIsDropin(this.elementRef) ? this.elementRef._node : this._node;
 
             const DonationComponentRef = getDonationComponent(TxVariants.donation, this.core);
@@ -497,8 +497,9 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
 
         /** If we are using sessions (and haven't moved into a hybrid flow); and the response mandates it - create a Donation instance */
         const isHybridFlow = this.core.session && (this.props.onSubmit || this.props.onAdditionalDetails);
+        const isUnalteredSessionFLow = this.core.session && !isHybridFlow;
 
-        if (this.core.session && !isHybridFlow && result.askDonation === true) {
+        if (isUnalteredSessionFLow && result.askDonation === true) {
             this.setupSessionsDonation();
         }
 
