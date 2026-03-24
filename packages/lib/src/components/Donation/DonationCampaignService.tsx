@@ -44,7 +44,7 @@ class DonationCampaignService {
             DonationCampaignService.instanceCount = 0;
 
             // Call the merchant defined handler
-            checkout.options.donation?.onSuccess(result);
+            checkout.options.donation?.onSuccess?.(result);
         };
         this.onDonationFailed = (reason: unknown) => {
             DonationCampaignService.instanceCount = 0;
