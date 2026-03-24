@@ -79,6 +79,7 @@
     "address.errors.incomplete": "Voer een adres in om verder te gaan",
     "address.enterManually": "Voer het adres handmatig in",
     "state": "Staat",
+    "payAmountFormat": "%@ betalen",
     "field.title.optional": "(optioneel)",
     "issuerList.selectField.contextualText": "Selecteer uw bank om door te gaan",
     "issuerList.selectField.label": "Bankselectie",

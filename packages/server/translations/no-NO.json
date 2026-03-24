@@ -79,6 +79,7 @@
     "address.errors.incomplete": "Skriv inn en adresse for å fortsette",
     "address.enterManually": "Skriv inn adressen manuelt",
     "state": "Delstat",
+    "payAmountFormat": "Betal %@",
     "field.title.optional": "(valgfritt)",
     "issuerList.selectField.contextualText": "Velg bank for å fortsette",
     "issuerList.selectField.label": "Valg av bank",

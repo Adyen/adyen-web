@@ -79,6 +79,7 @@
     "address.errors.incomplete": "輸入地址以繼續",
     "address.enterManually": "手動輸入地址",
     "state": "州",
+    "payAmountFormat": "支付 %@",
     "field.title.optional": "（選用）",
     "issuerList.selectField.contextualText": "選擇您的銀行以繼續",
     "issuerList.selectField.label": "銀行選擇",

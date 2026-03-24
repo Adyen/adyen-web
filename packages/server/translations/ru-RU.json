@@ -79,6 +79,7 @@
     "address.errors.incomplete": "Для продолжения укажите адрес",
     "address.enterManually": "Ввести адрес вручную",
     "state": "Штат",
+    "payAmountFormat": "Заплатить %@",
     "field.title.optional": "(необязательно)",
     "issuerList.selectField.contextualText": "Для продолжения выберите банк",
     "issuerList.selectField.label": "Выбор банка",

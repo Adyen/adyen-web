@@ -1,17 +1,14 @@
-import { createRef, h } from 'preact';
+import { h } from 'preact';
 import { Meta, StoryObj } from '@storybook/preact-vite';
 import Button from './Button';
-import PayButton from '../PayButton/PayButton';
 import Language from '../../../language';
 import { CoreProvider } from '../../../core/Context/CoreProvider';
 import { CopyIconButton, CopyIconButtonProps } from './CopyIconButton';
-import { PayButtonProps } from '../PayButton/PayButton';
 import { ButtonProps } from './types';
 import { CopyButton, CopyButtonProps } from './CopyButton';
 import { Resources } from '../../../core/Context/Resources';
 import { resolveEnvironments } from '../../../core/Environment';
 import type { CoreConfiguration } from '../../../core/types';
-import { AmountProvider, AmountProviderProps } from '../../../core/Context/AmountProvider';
 
 const meta: Meta<ButtonProps> = {
     title: 'Internal Elements/Button',
@@ -43,7 +40,8 @@ const coreProps = {
             payButton: 'Pay',
             'button.copy': 'Copy',
             'button.copied': 'Copied!',
-            confirmPreauthorization: 'Confirm preauthorization'
+            confirmPreauthorization: 'Confirm preauthorization',
+            payAmountFormat: 'Pay %@'
         }
     }),
     resources: new Resources(resolveEnvironments(process.env.CLIENT_ENV as CoreConfiguration['environment']).cdnImagesUrl)
@@ -98,35 +96,6 @@ export const CopyIconOnlyButton: StoryObj<CopyIconButtonProps> = {
     },
     args: {
         disabled: false
-    }
-};
-
-export const PaymentButton: StoryObj<PayButtonProps & AmountProviderProps> = {
-    render: args => {
-        const { amount, secondaryAmount, ...rest } = args;
-
-        return (
-            <CoreProvider {...coreProps}>
-                <AmountProvider amount={amount} secondaryAmount={secondaryAmount} providerRef={createRef()}>
-                    <PayButton {...rest} onClick={() => console.log('Pay button clicked')} />
-                </AmountProvider>
-            </CoreProvider>
-        );
-    },
-    parameters: {
-        controls: { exclude: ['useSessions', 'countryCode', 'shopperLocale', 'showPayButton'] }
-    },
-    argTypes: {
-        amount: { control: 'object' },
-        secondaryAmount: { control: 'object' }
-    },
-    args: {
-        amount: { value: 1000, currency: 'EUR' },
-        secondaryAmount: { value: 1200, currency: 'USD' },
-        disabled: false,
-        inline: false,
-        variant: 'primary',
-        icon: 'https://checkoutshopper-test.cdn.adyen.com/checkoutshopper/images/components/bento_lock.svg'
     }
 };
 
