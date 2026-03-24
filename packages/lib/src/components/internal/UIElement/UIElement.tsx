@@ -437,8 +437,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
 
         const updateCorePromise = this.core.session
             ? this.core.update({
-                  order,
-                  ...(order.remainingAmount && { amount: order.remainingAmount })
+                  order
               })
             : this.handleAdvanceFlowPaymentMethodsUpdate(order);
 

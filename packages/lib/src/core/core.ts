@@ -284,24 +284,17 @@ class Core implements ICore {
      * @param options - Can be used to avoid remounting the elements
      * @returns this - the Core instance
      */
-    public update(props: Partial<CoreConfiguration> = {}, { shouldReinitializeCheckout = true } = {}): Promise<this> {
-        const { amount } = props;
-
+    public update(props: Partial<Omit<CoreConfiguration, 'session'>> = {}, { shouldReinitializeCheckout = true } = {}): Promise<this> {
         if (shouldReinitializeCheckout) {
             this.setOptions(props);
 
             return this.initialize().then(() => {
                 this.components.forEach(component => {
-                    /**
-                     * If amount is provided, use it, otherwise use the amount set in the options from the setup call.
-                     * This takes care of the usecase where the the session amount would have been updated after removing a gift card
-                     */
-                    const newAmount = amount ?? this.options.amount;
                     // We update only with the new options that have been received
                     const newProps: Partial<UIElementProps> = {
-                        ...props,
+                        ...(props.order?.remainingAmount ? { amount: props.order.remainingAmount } : { amount: this.options.amount }),
                         ...(this.session && { session: this.session }),
-                        ...(newAmount && { amount: newAmount })
+                        ...props
                     };
                     component.update(newProps);
                 });
@@ -309,7 +302,7 @@ class Core implements ICore {
             });
         }
 
-        const { secondaryAmount } = props;
+        const { amount, secondaryAmount } = props;
 
         if (amount || secondaryAmount) {
             this.triggerAmountUpdate(amount, secondaryAmount);
