@@ -30,7 +30,9 @@ test.describe('Dropin - Sessions - GiftCards', () => {
             await giftCard.redeem();
 
             const redeemedGiftCards = page.locator('.adyen-checkout__order-payment-methods-list');
-            await toHaveScreenshot(redeemedGiftCards, browserName, 'redeemed-gift-cards.png');
+            await toHaveScreenshot(redeemedGiftCards, browserName, 'redeemed-gift-cards.png', {
+                mask: [page.getByTestId('brand-image-wrapper')]
+            });
             const redeemedGiftCardInstruction = page.locator('.adyen-checkout__order-remaining-amount');
             await toHaveScreenshot(redeemedGiftCardInstruction, browserName, 'redeemed-gift-card-instruction.png');
 
