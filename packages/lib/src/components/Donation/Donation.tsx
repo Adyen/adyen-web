@@ -7,7 +7,7 @@ import { DonationCampaignOptions, DonationConfiguration, DonationProps } from '.
 import { AnalyticsLogEvent, LogEventSubtype, LogEventType } from '../../core/Analytics/events/AnalyticsLogEvent';
 import { DonationPayload } from './components/types';
 import { AnalyticsInfoEvent, InfoEventType, UiTarget } from '../../core/Analytics/events/AnalyticsInfoEvent';
-import DonationCampaignService from './DonationCampaignService';
+import DonationCampaignService, { REPARENT_WITHOUT_AUTO_START_ERROR_MSG } from './DonationCampaignService';
 
 class DonationElement extends UIElement<DonationConfiguration> {
     public static readonly type = TxVariants.donation;
@@ -27,7 +27,7 @@ class DonationElement extends UIElement<DonationConfiguration> {
         this.isInServiceMode = isServiceMode;
 
         if (checkout.session && isServiceMode) {
-            this.initialiseServiceMode(checkout, props);
+            void this.initialiseServiceMode(checkout, props);
         }
     }
 
@@ -49,24 +49,23 @@ class DonationElement extends UIElement<DonationConfiguration> {
         onDonate: () => {}
     };
 
-    private initialiseServiceMode(checkout: ICore, props: DonationCampaignOptions) {
+    private async initialiseServiceMode(checkout: ICore, props: DonationCampaignOptions) {
         try {
-            new DonationCampaignService(checkout, props)
-                .initialise()
-                .then((response: DonationConfiguration | null) => {
-                    if (response) {
-                        this.props = { ...this.props, ...response };
-                        this.mount(props.rootNode);
-                    }
-                    // If no campaigns found (response is null), don't mount - silently do nothing
-                })
-                .catch((error: unknown) => {
-                    // Call merchant defined callback
-                    checkout.options.donation?.onError?.(error);
-                });
+            const donationCampaign = await new DonationCampaignService(checkout, props).initialise();
+            if (donationCampaign) {
+                this.props = { ...this.props, ...donationCampaign };
+                this.mount(props.rootNode);
+            }
+            // If no campaigns found (response is null), don't mount - silently do nothing
         } catch (error: unknown) {
-            // Silently handle duplicate instance errors - the automatic donation flow will proceed
-            console.error('Donation::DonationCampaignService instantiation error', error);
+            if (error['message'] === REPARENT_WITHOUT_AUTO_START_ERROR_MSG) {
+                // Silently handle duplicate instance errors - the automatic donation flow will proceed
+                console.error('Donation::DonationCampaignService instantiation error', error);
+            } else {
+                // Call merchant defined callback
+                // e.g. when the merchant wants to reparent the component and donation type = roundup but no commercialTxAmount has been set
+                checkout.options.donation?.onError?.(error);
+            }
         }
     }
 
