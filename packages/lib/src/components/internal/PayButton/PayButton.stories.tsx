@@ -21,15 +21,18 @@ const meta: MetaConfiguration<PayButtonStoryConfiguration> = {
 const render = ({ componentConfiguration, ...checkoutConfig }: PaymentMethodStoryProps<PayButtonStoryConfiguration>) => (
     <Checkout checkoutConfig={checkoutConfig}>
         {checkout => (
-            <CoreProvider loadingContext={checkout.options.loadingContext ?? ''} i18n={checkout.modules.i18n} resources={checkout.modules.resources}>
-                <AmountProvider
-                    amount={componentConfiguration?.paymentAmount}
-                    secondaryAmount={componentConfiguration?.secondaryAmount}
-                    providerRef={createRef()}
-                >
-                    <PayButton disabled={componentConfiguration?.disabled} onClick={() => console.log('Pay button clicked')} />
-                </AmountProvider>
-            </CoreProvider>
+            /* mimick componet container rendering for a11y tests compatibility */
+            <div id="component-root" className="component-wrapper">
+                <CoreProvider loadingContext={checkout.options.loadingContext ?? ''} i18n={checkout.modules.i18n} resources={checkout.modules.resources}>
+                    <AmountProvider
+                        amount={componentConfiguration?.paymentAmount}
+                        secondaryAmount={componentConfiguration?.secondaryAmount}
+                        providerRef={createRef()}
+                    >
+                        <PayButton disabled={componentConfiguration?.disabled} onClick={() => console.log('Pay button clicked')} />
+                    </AmountProvider>
+                </CoreProvider>
+            </div>
         )}
     </Checkout>
 );
