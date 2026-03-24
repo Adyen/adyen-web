@@ -92,7 +92,7 @@ describe('DonationComponent', () => {
             await waitFor(() => {
                 expect(onChange).toHaveBeenCalledWith(expect.objectContaining({ isValid: true }));
             });
-            expect(onAmountSelected).toHaveBeenCalledWith(expect.objectContaining({ data: { currency: 'EUR', value: 50 } }));
+            expect(onAmountSelected).toHaveBeenCalledWith(expect.objectContaining({ data: { amount: { currency: 'EUR', value: 50 } } }));
         });
 
         test('Should submit the right amount', async () => {
