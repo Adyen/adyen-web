@@ -292,8 +292,12 @@ class Core implements ICore {
 
             return this.initialize().then(() => {
                 this.components.forEach(component => {
-                    // We update only with the new options that have been received
+                    /**
+                     * If amount is provided, use it, otherwise use the amount set in the options from the setup call.
+                     * This takes care of the usecase where the the session amount would have been updated after removing a gift card
+                     */
                     const newAmount = amount ?? this.options.amount;
+                    // We update only with the new options that have been received
                     const newProps: Partial<UIElementProps> = {
                         ...props,
                         ...(this.session && { session: this.session }),
