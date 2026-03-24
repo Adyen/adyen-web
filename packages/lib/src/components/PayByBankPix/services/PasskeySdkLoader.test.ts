@@ -39,7 +39,7 @@ describe('PasskeySdkLoader', () => {
         expect(getUrlFromMap).toHaveBeenCalledWith(mockEnvironment, expect.anything());
         expect(Script).toHaveBeenCalledWith({
             component: 'paybybank_pix',
-            src: `${mockCdnUrl}js/adyenpasskey/1.1.0/adyen-passkey.js`,
+            src: `${mockCdnUrl}${PasskeySdkLoader.PASSKEY_SDK_URL}`,
             analytics: mockAnalytics
         });
 
