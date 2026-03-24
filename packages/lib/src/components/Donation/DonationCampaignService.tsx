@@ -15,7 +15,7 @@ export const REPARENT_WITHOUT_AUTO_START_ERROR_MSG =
     'DonationCampaignService:: You need to set donation.autoStart to false if you wish to display the Donation component in a different container.';
 
 class DonationCampaignService {
-    public static type = 'donationCampaignService';
+    public static readonly type = 'donationCampaignService';
 
     private static instanceCount: number = 0;
 
@@ -53,7 +53,7 @@ class DonationCampaignService {
 
         this.commercialTxAmount = donationCampaignProps.commercialTxAmount;
 
-        this.delayMS = checkout.options.donation?.delay != null ? checkout.options.donation.delay : DEFAULT_DONATION_AUTO_START_DELAY_MS;
+        this.delayMS = checkout.options.donation?.delay ?? DEFAULT_DONATION_AUTO_START_DELAY_MS;
     }
 
     public async initialise(): Promise<DonationConfiguration | null> {

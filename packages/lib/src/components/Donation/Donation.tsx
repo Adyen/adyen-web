@@ -1,4 +1,4 @@
-import { Fragment, h } from 'preact';
+import { h } from 'preact';
 import UIElement from '../internal/UIElement/UIElement';
 import DonationComponent from './components/DonationComponent';
 import { TxVariants } from '../tx-variants';
@@ -143,17 +143,15 @@ class DonationElement extends UIElement<DonationConfiguration> {
 
     protected override componentToRender(): h.JSX.Element {
         return (
-            <Fragment>
-                <DonationComponent
-                    {...this.props}
-                    /*@ts-ignore ref*/
-                    ref={this.handleRef}
-                    onChange={this.setState}
-                    onDonate={this.donate}
-                    onCancel={this.cancel}
-                    onAmountSelected={this.amountSelected}
-                />
-            </Fragment>
+            <DonationComponent
+                {...this.props}
+                /*@ts-ignore ref*/
+                ref={this.handleRef}
+                onChange={this.setState}
+                onDonate={this.donate}
+                onCancel={this.cancel}
+                onAmountSelected={this.amountSelected}
+            />
         );
     }
 }
