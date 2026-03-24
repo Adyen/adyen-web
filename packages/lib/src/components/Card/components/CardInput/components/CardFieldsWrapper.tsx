@@ -8,9 +8,7 @@ import Address from '../../../../internal/Address';
 import CardHolderName from './CardHolderName';
 import Installments from './Installments';
 import DisclaimerMessage from '../../../../internal/DisclaimerMessage';
-import RadioGroupExtended from '../../../../internal/FormFields/RadioGroupExtended';
-import { mapDualBrandButtons, mustHandleDualBrandingAccordingToEURegulations } from '../utils';
-import Fieldset from '../../../../internal/FormFields/Fieldset';
+import { mustHandleDualBrandingAccordingToEURegulations } from '../utils';
 import { useCoreContext } from '../../../../../core/Context/CoreProvider';
 import { DUAL_BRANDS_THAT_NEED_SELECTION_MECHANISM } from '../../../constants';
 
@@ -120,20 +118,6 @@ export const CardFieldsWrapper = ({
             />
 
             {hasHolderName && !positionHolderNameOnTop && cardHolderField}
-
-            {showDualBrandSelectElements && dualBrandSelectElements.length > 0 && dualBrandSelectElements && (
-                <Fieldset classNameModifiers={['dual-brand-switcher']} label={i18n.get('creditCard.dualBrand.title')}>
-                    <p className={'adyen-checkout-form-instruction'}>{i18n.get('creditCard.dualBrand.description')}</p>
-                    <RadioGroupExtended
-                        name={'dualBrandSwitcher'}
-                        value={selectedBrandValue} // Set which button is in a selected (checked) state
-                        items={mapDualBrandButtons(dualBrandSelectElements, brandsConfiguration)}
-                        onChange={extensions.handleDualBrandSelection}
-                        required={true}
-                        showSelectedTick={true}
-                    />
-                </Fieldset>
-            )}
 
             {showKCP && (
                 <KCPAuthentication
