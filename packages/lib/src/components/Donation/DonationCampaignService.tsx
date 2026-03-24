@@ -11,6 +11,9 @@ import { AnalyticsLogEvent, LogEventSubtype, LogEventType } from '../../core/Ana
 
 const DEFAULT_DONATION_AUTO_START_DELAY_MS = 3000;
 
+export const REPARENT_WITHOUT_AUTO_START_ERROR_MSG =
+    'DonationCampaignService:: You need to set donation.autoStart to false if you wish to display the Donation component in a different container.';
+
 class DonationCampaignService {
     public static type = 'donationCampaignService';
 
@@ -22,7 +25,6 @@ class DonationCampaignService {
     private readonly onDonationCompleted: (result: { didDonate: boolean }) => void;
     private readonly onDonationFailed: (reason: unknown) => void;
 
-    private readonly autoStartTimerMS = DEFAULT_DONATION_AUTO_START_DELAY_MS;
     private readonly delayMS: number;
 
     constructor(checkout: ICore, donationCampaignProps: DonationCampaignOptions) {
@@ -32,20 +34,26 @@ class DonationCampaignService {
         // we need to warn them otherwise, without this check, 2 calls to the /donationCampaigns endpoint will be made - since UIElement
         // will automatically mount the Donation component in the component's rootNode.
         if (DonationCampaignService.instanceCount > 1) {
-            throw new Error(
-                'DonationCampaignService:: You need to set donation.autoStart to false if you wish to display the Donation component in a different container.'
-            );
+            throw new Error(REPARENT_WITHOUT_AUTO_START_ERROR_MSG);
         }
 
         this.core = checkout;
 
-        this.onDonationCompleted = checkout.options.donation?.onSuccess;
+        this.onDonationCompleted = (result: { didDonate: boolean }) => {
+            // Reset the count now the process has finished
+            DonationCampaignService.instanceCount = 0;
 
-        this.onDonationFailed = checkout.options.donation?.onError;
+            // Call the merchant defined handler
+            checkout.options.donation?.onSuccess(result);
+        };
+        this.onDonationFailed = (reason: unknown) => {
+            DonationCampaignService.instanceCount = 0;
+            checkout.options.donation?.onError(reason);
+        };
 
         this.commercialTxAmount = donationCampaignProps.commercialTxAmount;
 
-        this.delayMS = checkout.options.donation?.delay != null ? checkout.options.donation.delay : this.autoStartTimerMS;
+        this.delayMS = checkout.options.donation?.delay != null ? checkout.options.donation.delay : DEFAULT_DONATION_AUTO_START_DELAY_MS;
     }
 
     public async initialise(): Promise<DonationConfiguration | null> {
@@ -53,7 +61,7 @@ class DonationCampaignService {
         return this.callSessionsDonationCampaigns();
     }
 
-    private callSessionsDonationCampaigns(): Promise<DonationConfiguration | null> {
+    private async callSessionsDonationCampaigns(): Promise<DonationConfiguration | null> {
         // Send analytics
         const event = new AnalyticsLogEvent({
             component: DonationCampaignService.type,
@@ -63,24 +71,9 @@ class DonationCampaignService {
         });
         this.core.modules.analytics.sendAnalytics(event);
 
-        return this.makeSessionsDonationCampaignsCall()
-            .then((response: CheckoutSessionDonationCampaignsResponse) => {
-                if (response?.donationCampaigns?.length) {
-                    // Choose which campaign to return - currently just pick the first one
-                    return response.donationCampaigns[0];
-                } else {
-                    return null;
-                }
-            })
-            .then((donationCampaign: DonationCampaign) => {
-                if (donationCampaign) {
-                    return this.handleDonationCampaign(donationCampaign);
-                }
-                return null;
-            })
-            .catch((error: unknown) => {
-                throw error;
-            });
+        const response: CheckoutSessionDonationCampaignsResponse = await this.makeSessionsDonationCampaignsCall();
+        const [donationCampaign] = response?.donationCampaigns || [];
+        return donationCampaign ? this.handleDonationCampaign(donationCampaign) : null;
     }
 
     private handleDonationCampaign(donationCampaign: DonationCampaign): DonationConfiguration {
@@ -89,6 +82,8 @@ class DonationCampaignService {
         const donationType = restDonationCampaignProps.donation.type;
 
         const donationComponentProps: DonationConfiguration = {
+            ...(restDonationCampaignProps as DonationConfiguration),
+
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             onCancel: (state: DonationPayload) => {
                 // Call merchant defined onDonationCompleted callback
@@ -104,13 +99,12 @@ class DonationCampaignService {
 
                 this.callSessionsDonations(donationRequestData, component);
             },
-            commercialTxAmount: this.commercialTxAmount,
-            ...(restDonationCampaignProps as DonationConfiguration)
+            commercialTxAmount: this.commercialTxAmount
         };
 
         if (donationType === 'roundup' && !this.commercialTxAmount) {
             // TODO - analytics?
-            // This will be handled gracefully by the Donation component via the catch in callSessionsDonationCampaigns
+            // This error will be handled gracefully by the Donation component
             throw new Error(
                 'The donation type is "roundup" and the commercialTxAmount is not set.\nIt will not be possible to mount a Donation component.'
             );
