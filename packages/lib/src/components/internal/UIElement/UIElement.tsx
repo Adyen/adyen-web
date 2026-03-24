@@ -462,11 +462,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
 
             const DonationComponentRef = getDonationComponent(TxVariants.donation, this.core);
             if (DonationComponentRef) {
-                // NOSONAR: Instantiation triggers internal async initialization (fire-and-forget pattern)
-                new DonationComponentRef(this.core, {
-                    rootNode,
-                    commercialTxAmount: amount.value
-                });
+                new DonationComponentRef(this.core, { rootNode, commercialTxAmount: amount.value }); // NOSONAR: Instantiation triggers internal async initialization (fire-and-forget pattern)
             }
         }
     }
