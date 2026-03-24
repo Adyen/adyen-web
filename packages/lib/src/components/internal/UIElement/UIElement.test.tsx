@@ -438,7 +438,7 @@ describe('UIElement', () => {
             await new Promise(process.nextTick);
 
             expect(core.update).toHaveBeenCalledTimes(1);
-            expect(core.update).toHaveBeenCalledWith({ order, amount: order.remainingAmount });
+            expect(core.update).toHaveBeenCalledWith({ order });
 
             expect(onOrderUpdatedMock).toHaveBeenCalledTimes(1);
             expect(onOrderUpdatedMock).toHaveBeenCalledWith({ order });
