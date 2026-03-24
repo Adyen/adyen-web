@@ -18,7 +18,7 @@ const Brand = ({ url, alt, wrapperClassName = '', imgClassName = '', showOnError
     const classes = cx('adyen-checkout-brand-wrapper', wrapperClassName, classesOnError);
 
     return (
-        <span className={classes}>
+        <span className={classes} data-testid="brand-image-wrapper">
             <Img className={imgClassName} src={url} alt={alt} onError={() => setHasError(true)} />
         </span>
     );
