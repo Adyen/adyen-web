@@ -6,7 +6,9 @@ import type { CheckoutSessionDonationCampaignsResponse, CheckoutSessionDonations
 import CheckoutSession from '../../core/CheckoutSession';
 import type { IAnalytics } from '../../core/Analytics/Analytics';
 
-const createMockCore = (): MockProxy<ICore> => {
+type MockCoreWithSession = MockProxy<ICore> & { session: MockProxy<CheckoutSession> };
+const createMockCore = (): MockCoreWithSession => {
+ return core:MockCoreWithSession;
     const core = mock<ICore>();
     const analytics = mock<IAnalytics>();
     const session = mock<CheckoutSession>();
