@@ -24,6 +24,9 @@ const meta: MetaConfiguration<DropinConfiguration> = {
         sessionData: {
             control: 'object',
             if: { arg: 'useSessions', truthy: true }
+        },
+        donation: {
+            control: 'object'
         }
     },
     args: {
@@ -107,6 +110,31 @@ export const SplitFundingBrazil = {
             }
         }
     },
+    render: ({ componentConfiguration, ...checkoutConfig }: PaymentMethodStoryProps<DropinConfiguration>) => {
+        // Register all Components
+        const { Dropin, ...Components } = components;
+        const Classes = Object.keys(Components).map(key => Components[key]);
+        AdyenCheckout.register(...Classes);
+
+        return (
+            <Checkout checkoutConfig={checkoutConfig}>
+                {checkout => <ComponentContainer element={new DropinComponent(checkout, componentConfiguration)} />}
+            </Checkout>
+        );
+    }
+};
+
+export const SessionsDonation: DropinStory = {
+    args: {
+        // donation: {
+        //     autoStart: true
+        //     // delay: 3000
+        // }
+        countryCode: 'NL',
+
+        donation: null
+    },
+
     render: ({ componentConfiguration, ...checkoutConfig }: PaymentMethodStoryProps<DropinConfiguration>) => {
         // Register all Components
         const { Dropin, ...Components } = components;

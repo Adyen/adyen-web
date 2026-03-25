@@ -1,4 +1,5 @@
 import { Dropin } from './dropin';
+import LANG from '../../server/translations/en-US.json';
 
 class DropinWithSession extends Dropin {
     async goto(url?: string) {
@@ -22,6 +23,22 @@ class DropinWithSession extends Dropin {
         );
 
         await this.isComponentVisible();
+    }
+
+    get donationComponent() {
+        return this.page.locator('.adyen-checkout__adyen-giving');
+    }
+
+    getDonationAmountButtonByIndex(index: number) {
+        return this.donationComponent.locator('.adyen-checkout__button').nth(index);
+    }
+
+    get donateButton() {
+        return this.donationComponent.getByRole('button', { name: LANG['donateButton'] });
+    }
+
+    get donationSuccess() {
+        return this.donationComponent.getByAltText(LANG['thanksForYourSupport']);
     }
 }
 
