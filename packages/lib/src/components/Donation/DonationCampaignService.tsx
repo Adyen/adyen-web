@@ -9,7 +9,7 @@ import type {
 import Donation from './Donation';
 import { AnalyticsLogEvent, LogEventSubtype, LogEventType } from '../../core/Analytics/events/AnalyticsLogEvent';
 
-const DEFAULT_DONATION_AUTO_START_DELAY_MS = 3000;
+export const DEFAULT_DONATION_AUTO_START_DELAY_MS = 3000;
 
 export const REPARENT_WITHOUT_AUTO_START_ERROR_MSG =
     'DonationCampaignService:: You need to set donation.autoStart to false if you wish to display the Donation component in a different container.';

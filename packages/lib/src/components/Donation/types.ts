@@ -17,8 +17,8 @@ export interface DonationCampaign extends CampaignContentProps {
 }
 
 export interface DonationOptions {
-    autoStart: boolean;
-    delay: number;
+    autoStart?: boolean;
+    delay?: number;
     /**
      * Optional callback when the (sessions) donation is completed (or cancelled)
      * @param didDonate - a boolean stating whether a donation was made (true) or whether the shopper cancelled the donation (false)

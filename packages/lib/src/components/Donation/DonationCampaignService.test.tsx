@@ -1,5 +1,5 @@
 import { mock, MockProxy } from 'jest-mock-extended';
-import DonationCampaignService from './DonationCampaignService';
+import DonationCampaignService, { DEFAULT_DONATION_AUTO_START_DELAY_MS } from './DonationCampaignService';
 import type { ICore } from '../../core/types';
 import type { DonationCampaign, DonationCampaignOptions } from './types';
 import type { CheckoutSessionDonationCampaignsResponse, CheckoutSessionDonationsResponse } from '../../core/CheckoutSession/types';
@@ -83,7 +83,35 @@ describe('DonationCampaignService', () => {
     });
 
     describe('initialise', () => {
-        test('should wait for delay before calling donationCampaigns endpoint', async () => {
+        test('should wait for default delay before calling donationCampaigns endpoint', async () => {
+            const core = createMockCore();
+            core.options = {
+                donation: {
+                    autoStart: true,
+                    delay: DEFAULT_DONATION_AUTO_START_DELAY_MS
+                }
+            };
+
+            const mockResponse: CheckoutSessionDonationCampaignsResponse = {
+                sessionData: 'test-session-data',
+                donationCampaigns: [createMockDonationCampaign()]
+            };
+            (core.session.donationCampaigns as jest.Mock).mockResolvedValue(mockResponse);
+
+            const service = new DonationCampaignService(core, defaultDonationCampaignProps);
+            const initPromise = service.initialise();
+
+            expect(core.session.donationCampaigns).not.toHaveBeenCalled();
+
+            jest.advanceTimersByTime(DEFAULT_DONATION_AUTO_START_DELAY_MS);
+            await Promise.resolve();
+
+            await initPromise;
+
+            expect(core.session.donationCampaigns).toHaveBeenCalled();
+        });
+
+        test('should wait for custom delay before calling donationCampaigns endpoint', async () => {
             const core = createMockCore();
             core.options = {
                 donation: {
