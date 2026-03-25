@@ -11,7 +11,7 @@ import { cardInputFormatters, cardInputValidationRules, getRuleByNameAndMode } f
 import CIExtensions from '../../../internal/SecuredFields/binLookup/extensions';
 import useForm from '../../../../utils/useForm';
 import { SortedErrorObject } from '../../../../core/Errors/types';
-import { handlePartialAddressMode, extractPropsForCardFields, extractPropsForSFP, getLayout } from './utils';
+import { handlePartialAddressMode, extractPropsForCardFields, extractPropsForSFP, getLayout, shouldShowInstallmentsComponent } from './utils';
 import Specifications from '../../../internal/Address/Specifications';
 import { StoredCardFieldsWrapper } from './components/StoredCardFieldsWrapper';
 import { CardFieldsWrapper } from './components/CardFieldsWrapper';
@@ -33,6 +33,7 @@ import { getErrorMessageFromCode } from '../../../../core/Errors/utils';
 import { SF_ErrorCodes } from '../../../../core/Errors/constants';
 import { usePrevious } from '../../../../utils/hookUtils';
 import { AnalyticsInfoEvent, InfoEventType, UiTarget } from '../../../../core/Analytics/events/AnalyticsInfoEvent';
+import { useAmount } from '../../../../core/Context/AmountProvider';
 
 const CardInput = (props: Readonly<CardInputProps>) => {
     const sfp = useRef<SecuredFieldsProvider>(null);
@@ -54,6 +55,8 @@ const CardInput = (props: Readonly<CardInputProps>) => {
     const isAutoJumping = useRef(false);
 
     const specifications = useMemo(() => new Specifications(props.specifications), [props.specifications]);
+
+    const { amount } = useAmount();
 
     // Store ref to sfp (useful for 'deep' debugging)
     cardInputRef.current.sfp = sfp;
@@ -131,7 +134,12 @@ const CardInput = (props: Readonly<CardInputProps>) => {
         rules: cardInputValidationRules
     });
 
-    const hasInstallments = !!Object.keys(props.installmentOptions).length && (!props.fundingSource || props.fundingSource === 'credit');
+    const hasInstallments = shouldShowInstallmentsComponent({
+        installmentOptions: props.installmentOptions,
+        fundingSource: props.fundingSource,
+        amount
+    });
+
     const showAmountsInInstallments = props.showInstallmentAmounts ?? true;
 
     const cardCountryCode: string = issuingCountryCode ?? props.countryCode;

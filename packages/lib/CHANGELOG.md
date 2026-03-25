@@ -1,5 +1,39 @@
 # @adyen/adyen-web
 
+## 6.32.1
+
+### Patch Changes
+
+- Fixed: Updated Passkey SDK version to 1.2.0 for PayByBankPix component ([#3879](https://github.com/Adyen/adyen-web/pull/3879))
+
+- Fixed: Display correct amount on PayButton after redeeming giftcard on Dropin with sessions ([#3880](https://github.com/Adyen/adyen-web/pull/3880))
+
+- Fixed: Reported issue with PayButtonProps.onClick type ([#3864](https://github.com/Adyen/adyen-web/pull/3864))
+
+- Fixed: Update german label for compliance reasons zahlen -> kaufen ([#3873](https://github.com/Adyen/adyen-web/pull/3873))
+
+- Fixed: Standardize payment button label with amount across SDKs for consistency ([#3875](https://github.com/Adyen/adyen-web/pull/3875))
+
+## 6.32.0
+
+### Minor Changes
+
+- New: Add support for allowedIssuerCountryCodes and blockedIssuerCountryCodes props on GooglePay ([#3806](https://github.com/Adyen/adyen-web/pull/3806))
+
+- Fixed: Add support for split funding source card components on sessions ([#3828](https://github.com/Adyen/adyen-web/pull/3828))
+
+### Patch Changes
+
+- Fixed: restored the debounce time for analytics error and log events back to 300ms ([#3845](https://github.com/Adyen/adyen-web/pull/3845))
+
+- Fixed: An a11y issue around the title of the securedField's iframe (it was getting read twice) ([#3837](https://github.com/Adyen/adyen-web/pull/3837))
+
+- Fixed: default GooglePay environment to PRODUCTION instead of TEST for unrecognized environment strings ([#3853](https://github.com/Adyen/adyen-web/pull/3853))
+
+- Fixed: removes getProp util in favour of more type-safe direct property access ([#3835](https://github.com/Adyen/adyen-web/pull/3835))
+
+- Fixed: Do not show Installments component if amount is unavailable ([#3858](https://github.com/Adyen/adyen-web/pull/3858))
+
 ## 6.31.1
 
 ### Patch Changes

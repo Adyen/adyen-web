@@ -284,7 +284,7 @@ class Core implements ICore {
      * @param options - Can be used to avoid remounting the elements
      * @returns this - the Core instance
      */
-    public update(props: Partial<CoreConfiguration> = {}, { shouldReinitializeCheckout = true } = {}): Promise<this> {
+    public update(props: Partial<Omit<CoreConfiguration, 'session'>> = {}, { shouldReinitializeCheckout = true } = {}): Promise<this> {
         if (shouldReinitializeCheckout) {
             this.setOptions(props);
 
@@ -292,8 +292,9 @@ class Core implements ICore {
                 this.components.forEach(component => {
                     // We update only with the new options that have been received
                     const newProps: Partial<UIElementProps> = {
-                        ...props,
-                        ...(this.session && { session: this.session })
+                        ...(props.order?.remainingAmount ? { amount: props.order.remainingAmount } : { amount: this.options.amount }),
+                        ...(this.session && { session: this.session }),
+                        ...props
                     };
                     component.update(newProps);
                 });
@@ -359,7 +360,9 @@ class Core implements ICore {
         this.options = {
             ...this.options,
             ...options,
-            locale: options?.locale || this.options?.locale
+            locale: options?.locale || this.options?.locale,
+            // Make environment lowercase to ensure consistency
+            environment: String.prototype.toLowerCase.apply(options?.environment || this.options?.environment)
         };
     };
 

@@ -68,6 +68,16 @@ export class CardElement extends UIElement<CardConfiguration> {
         this.clickToPayRef = ref;
     };
 
+    // This is the most self contained way of handling funding source matching
+    // Alternatives would be to override getPaymentMethodConfigFromResponse and change it's signature
+    protected override getPaymentMethodConfigFromResponse(componentProps: CardConfiguration) {
+        if (componentProps?.fundingSource) {
+            return this.core.paymentMethodsResponse?.findByFundingSource(componentProps.type, componentProps.fundingSource);
+        }
+
+        return super.getPaymentMethodConfigFromResponse(componentProps);
+    }
+
     formatProps(props: CardConfiguration): CardConfiguration {
         // The value from a session should be used, before falling back to the merchant configuration
         const enableStoreDetails = props.session?.configuration?.enableStoreDetails ?? props.enableStoreDetails;

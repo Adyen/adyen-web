@@ -1,8 +1,7 @@
 name: Publish Package
 
 on:
-  release:
-    types: [created]
+  workflow_call:
 
 jobs:
   publish-npm:

@@ -66,7 +66,7 @@ jobs:
       run: npx playwright install --with-deps ${{ matrix.runner-browser }}
 
     - name: Run Visual Tests
-      run: yarn test:visual-tests --project=${{ matrix.runner-browser }}
+      run: yarn test:automated-visual --project=${{ matrix.runner-browser }}
 
     - name: Archive test result artifacts
       id: upload-artifact

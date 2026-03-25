@@ -4,6 +4,8 @@ on:
   pull_request:
     paths:
       - '.changeset/*.md'
+      - 'packages/lib/src/**'
+      - 'packages/server/translations/**'
 
 jobs:
   validate:
@@ -14,6 +16,16 @@ jobs:
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
+
+      - name: Check changeset exists for library changes
+        run: |
+          LIB_CHANGES=$(git diff --name-only origin/${{ github.base_ref }}...HEAD -- 'packages/lib/src/' || true)
+          CHANGESETS=$(git diff --name-only --diff-filter=AM origin/${{ github.base_ref }}...HEAD -- '.changeset/*.md' | grep -v 'README.md' || true)
+
+          if [ -n "$LIB_CHANGES" ] && [ -z "$CHANGESETS" ]; then
+            echo "::error::Changes detected in packages/lib/src/ but no changeset found. Please add a changeset. If this change does not need a new version, create an empty changeset with 'yarn changeset:empty'."
+            exit 1
+          fi
 
       - name: Get changed changeset files
         id: changed-files
@@ -46,8 +58,7 @@ jobs:
             LINE_COUNT=$(echo "$LINES" | grep -c '.' || true)
 
             if [ "$LINE_COUNT" -eq 0 ]; then
-              echo "::error file=$file::Empty description. Must contain exactly one line starting with 'Improved:', 'New:', or 'Fixed:'."
-              EXIT_CODE=1
+              echo "  ✓ Valid (empty changeset)"
               continue
             fi
 

@@ -130,7 +130,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         return this.core.modules.srPanel;
     }
 
-    private getPaymentMethodConfigFromResponse(componentProps: P) {
+    protected getPaymentMethodConfigFromResponse(componentProps: P) {
         if (componentProps?.storedPaymentMethodId) return this.getStoredPaymentMethodDetails(componentProps.storedPaymentMethodId);
         return this.getPaymentMethodFromPaymentMethodsResponse(componentProps?.type, componentProps?.paymentMethodId);
     }
@@ -435,7 +435,11 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     protected handleOrder = (response: PaymentResponseData): void => {
         const { order } = response;
 
-        const updateCorePromise = this.core.session ? this.core.update({ order }) : this.handleAdvanceFlowPaymentMethodsUpdate(order);
+        const updateCorePromise = this.core.session
+            ? this.core.update({
+                  order
+              })
+            : this.handleAdvanceFlowPaymentMethodsUpdate(order);
 
         void updateCorePromise.then(() => {
             this.props.onOrderUpdated?.({ order });
