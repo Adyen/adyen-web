@@ -1,4 +1,5 @@
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
+import uuidv4 from '../../../utils/uuid';
 import { PayPayInitOptions } from '../types';
 
 class PayPayService {
@@ -25,6 +26,7 @@ class PayPayService {
                 env,
                 success: res => {
                     console.log('PayPay success', res);
+                    this.renderButton();
                 },
                 fail: res => {
                     console.log('PayPay fail', res);
@@ -45,12 +47,12 @@ class PayPayService {
             locale: 'en',
             autoInvoke: false,
             orderInfo: {
-                merchantPaymentId: this.merchantId,
+                merchantAlias: this.merchantId,
+                merchantPaymentId: uuidv4(),
                 amount: {
                     amount: 100,
                     currency: 'JPY'
                 },
-                merchantAlias: 'MERCHANT ALIAS',
                 productType: 'DEFAULT',
                 requestedAt: Date.now()
             },
