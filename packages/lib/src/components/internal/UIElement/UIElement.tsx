@@ -35,8 +35,8 @@ import './UIElement.scss';
 import SRPanelProvider from '../../../core/Errors/SRPanelProvider';
 import { AmountProvider, AmountProviderRef } from '../../../core/Context/AmountProvider';
 import { PayButtonProps } from '../PayButton/PayButton';
-import { getDonationComponent } from '../../Donation/components/utils';
 import { TxVariants } from '../../tx-variants';
+import Donation from '../../Donation/Donation';
 
 export abstract class UIElement<P extends UIElementProps = UIElementProps> extends BaseElement<P> {
     /**
@@ -460,10 +460,8 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         if (donation?.autoStart !== false) {
             const rootNode: HTMLElement = assertIsDropin(this.elementRef) ? this.elementRef._node : this._node;
 
-            const DonationComponentRef = getDonationComponent(TxVariants.donation, this.core);
-            if (DonationComponentRef) {
-                new DonationComponentRef(this.core, { rootNode, commercialTxAmount: amount.value }); // NOSONAR: Instantiation triggers internal async initialization (fire-and-forget pattern)
-            }
+            const DonationComponentRef = this.core.getComponent(TxVariants.donation) as typeof Donation;
+            new DonationComponentRef(this.core, { rootNode, commercialTxAmount: amount.value }); // NOSONAR: Instantiation triggers internal async initialization (fire-and-forget pattern)
         }
     }
 
@@ -492,11 +490,8 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
 
         cleanupFinalResult(result);
 
-        /** If we are using sessions (and haven't moved into a hybrid flow); and the response mandates it - create a Donation instance */
-        const isHybridFlow = this.core.session && (this.props.onSubmit || this.props.onAdditionalDetails);
-        const isUnalteredSessionFLow = this.core.session && !isHybridFlow;
-
-        if (isUnalteredSessionFLow && result.askDonation === true) {
+        /** If we are using sessions and the response mandates it - create a Donation instance */
+        if (this.core.session && result.askDonation === true) {
             this.setupSessionsDonation();
         }
 
