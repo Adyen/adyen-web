@@ -4,9 +4,7 @@ import { BCMC_CARD, BCMC_DUAL_BRANDED_VISA, UNKNOWN_VISA_CARD } from '../../../u
 
 test.describe('Testing Bancontact, with dual branded cards, how UI resets', () => {
     test(
-        '#1 Fill in dual branded card then ' +
-            'check that brands have been sorted to place Bcmc first then ' +
-            'ensure only bcmc logo shows after deleting digits',
+        '#1 should sort brands with Bcmc first and show only bcmc logo after deleting digits',
         async ({ bcmc }) => {
             await bcmc.goto(URL_MAP.bcmc);
 
@@ -36,9 +34,7 @@ test.describe('Testing Bancontact, with dual branded cards, how UI resets', () =
     );
 
     test(
-        '#2 Fill in dual branded card then ' +
-            'paste in number not recognised by binLookup (but that our local regEx will recognise as Visa)' +
-            'see that UI stays looking like a BCMC card i.e. bcmc logo remains showing',
+        '#2 should keep BCMC branding when pasting unrecognised Visa number over dual branded card',
         async ({ bcmc }) => {
             await bcmc.goto(URL_MAP.bcmc);
 
@@ -62,10 +58,7 @@ test.describe('Testing Bancontact, with dual branded cards, how UI resets', () =
     );
 
     test(
-        '#3 Fill in dual branded card then ' +
-            'select visa & see that cvc field shows then' +
-            'paste in number not recognised by binLookup (but that our local regEx will recognise as Visa) ' +
-            'see that UI stays looking like a BCMC card i.e. bcmc logo remains showing and cvc field is hidden again',
+        '#3 should reset to BCMC branding and hide CVC after pasting unrecognised number over visa-selected dual branded card',
         async ({ bcmc }) => {
             await bcmc.goto(URL_MAP.bcmc);
 
@@ -73,11 +66,10 @@ test.describe('Testing Bancontact, with dual branded cards, how UI resets', () =
 
             await bcmc.fillCardNumber(BCMC_DUAL_BRANDED_VISA);
 
-            await expect(bcmc.dualBrandingButtonsHolder).toBeVisible();
+            await expect(bcmc.isDualBrandSelectionVisible()).resolves.toBe(true);
 
             // Select visa
-            const visaBtn = await bcmc.selectDualBrandUIItem(/visa/i);
-            await visaBtn.click();
+            await bcmc.selectBrand(/visa/i);
 
             await expect(bcmc.cvcField).toBeVisible();
 
@@ -98,7 +90,7 @@ test.describe('Testing Bancontact, with dual branded cards, how UI resets', () =
     );
 
     test(
-        '#4 Fill in dual branded card then ' + 'select visa, then' + 'delete number and see that UI returns to looking like a BCMC card',
+        '#4 should reset to BCMC branding and hide CVC after deleting visa-selected dual branded card number',
         async ({ bcmc }) => {
             await bcmc.goto(URL_MAP.bcmc);
 
@@ -106,11 +98,10 @@ test.describe('Testing Bancontact, with dual branded cards, how UI resets', () =
 
             await bcmc.fillCardNumber(BCMC_DUAL_BRANDED_VISA);
 
-            await expect(bcmc.dualBrandingButtonsHolder).toBeVisible();
+            await expect(bcmc.isDualBrandSelectionVisible()).resolves.toBe(true);
 
             // Select visa
-            const visaBtn = await bcmc.selectDualBrandUIItem(/visa/i);
-            await visaBtn.click();
+            await bcmc.selectBrand(/visa/i);
 
             await bcmc.deleteCardNumber();
 
