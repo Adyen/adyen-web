@@ -41,8 +41,8 @@ test.describe('Bcmc payments with dual branding', () => {
                 expect(brandAlts).toHaveLength(2);
                 expect(brandAlts).toEqual(expect.arrayContaining(['Bancontact card', 'Maestro']));
 
-                const bcmcBtn = bcmc.selectDualBrandUIItem(/bancontact/i, false);
-                await bcmcBtn.click();
+                // Select Bancontact via behavior-driven API
+                await bcmc.selectBrand(/bancontact/i);
 
                 await expect(bcmc.cvcField).toBeHidden();
 
@@ -90,17 +90,10 @@ test.describe('Bcmc payments with dual branding', () => {
                 await bcmc.typeCardNumber(BCMC_CARD);
 
                 await bcmc.typeExpiryDate(TEST_DATE_VALUE);
-                await expect(bcmc.dualBrandingButtonsHolder).toBeVisible();
+                await expect(bcmc.isDualBrandSelectionVisible()).resolves.toBe(true);
 
                 // Select maestro
-
-                const maestroBtn = await bcmc.selectDualBrandUIItem(/maestro/i);
-                await maestroBtn.click();
-                // Due to brand sorting and priority being given to the Bcmc brand - cvc should remain hidden
-
-                // even tho' maestro has been selected
-                // await expect(bcmc.cvcField).toBeHidden();// old rule
-                // Seems to be the new rule TODO confirm this is intentional
+                await bcmc.selectBrand(/maestro/i);
 
                 await expect(bcmc.cvcLabelText).toHaveText(CVC_LABEL_OPTIONAL);
 
@@ -122,7 +115,7 @@ test.describe('Bcmc payments with dual branding', () => {
 
                 await bcmc.pay();
 
-                await expect(bcmc.expiryDateErrorElement).toHaveText(/Enter the (complete )?expiry date/); // For some reason webkit/safari sometimes gets the word "complete" in the error msg
+                await expect(bcmc.expiryDateErrorElement).toHaveText(/Enter the (complete )?expiry date/);
             });
 
             test('#2c should not submit the maestro payment with invalid maestro card number', async ({ bcmc }) => {
@@ -154,8 +147,7 @@ test.describe('Bcmc payments with dual branding', () => {
                 expect(secondIcon).toBeDefined();
 
                 // Select bcmc
-                const bcmcBtn = await bcmc.selectDualBrandUIItem(/bancontact/i, false);
-                await bcmcBtn.click();
+                await bcmc.selectBrand(/bancontact/i);
 
                 await bcmc.pay();
                 await bcmc.threeDs2Challenge.fillInPassword(THREEDS2_CHALLENGE_PASSWORD);
@@ -168,7 +160,7 @@ test.describe('Bcmc payments with dual branding', () => {
                 await bcmc.isComponentVisible();
                 await bcmc.typeCardNumber(BCMC_DUAL_BRANDED_VISA);
                 await bcmc.waitForVisibleDualBrandIcons();
-                await bcmc.selectBrandIcon('Bancontact card');
+                await bcmc.selectBrand(/bancontact/i);
                 await bcmc.pay();
 
                 await expect(bcmc.expiryDateErrorElement).toHaveText(/Enter the (complete )?expiry date/);
@@ -194,12 +186,10 @@ test.describe('Bcmc payments with dual branding', () => {
                 await bcmc.typeCardNumber(BCMC_DUAL_BRANDED_VISA);
 
                 await bcmc.typeExpiryDate(TEST_DATE_VALUE);
-                await expect(bcmc.dualBrandingButtonsHolder).toBeVisible();
+                await expect(bcmc.isDualBrandSelectionVisible()).resolves.toBe(true);
 
                 // Select visa
-
-                const visaBtn = await bcmc.selectDualBrandUIItem(/visa/i);
-                await visaBtn.click();
+                await bcmc.selectBrand(/visa/i);
                 await expect(bcmc.cvcField).toBeVisible();
 
                 await bcmc.fillCvc(TEST_CVC_VALUE);
@@ -225,11 +215,10 @@ test.describe('Bcmc payments with dual branding', () => {
                 await bcmc.typeCardNumber(BCMC_DUAL_BRANDED_VISA);
                 await bcmc.typeExpiryDate(TEST_DATE_VALUE);
 
-                await expect(bcmc.dualBrandingButtonsHolder).toBeVisible();
+                await expect(bcmc.isDualBrandSelectionVisible()).resolves.toBe(true);
 
                 // Select visa
-                const visaBtn = await bcmc.selectDualBrandUIItem(/visa/i);
-                await visaBtn.click();
+                await bcmc.selectBrand(/visa/i);
 
                 await expect(bcmc.cvcField).toBeVisible();
 
@@ -267,8 +256,7 @@ test.describe('Bcmc payments with dual branding', () => {
                 expect(secondIcon).toBeDefined();
 
                 // Select bcmc
-                const bcmcBtn = await bcmc.selectDualBrandUIItem(/bancontact/i, false);
-                await bcmcBtn.click();
+                await bcmc.selectBrand(/bancontact/i);
 
                 await bcmc.pay();
 
@@ -305,11 +293,10 @@ test.describe('Bcmc payments with dual branding', () => {
                 await bcmc.typeCardNumber(BCMC_DUAL_BRANDED_MC);
                 await bcmc.typeExpiryDate(TEST_DATE_VALUE);
 
-                await expect(bcmc.dualBrandingButtonsHolder).toBeVisible();
+                await expect(bcmc.isDualBrandSelectionVisible()).resolves.toBe(true);
 
                 // Select mc
-                const mcBtn = await bcmc.selectDualBrandUIItem(/mastercard/i, false);
-                await mcBtn.click();
+                await bcmc.selectBrand(/mastercard/i);
 
                 await expect(bcmc.cvcField).toBeVisible();
 
@@ -334,11 +321,10 @@ test.describe('Bcmc payments with dual branding', () => {
                 await bcmc.typeCardNumber(BCMC_DUAL_BRANDED_MC);
                 await bcmc.typeExpiryDate(TEST_DATE_VALUE);
 
-                await expect(bcmc.dualBrandingButtonsHolder).toBeVisible();
+                await expect(bcmc.isDualBrandSelectionVisible()).resolves.toBe(true);
 
                 // Select mc
-                const mcBtn = await bcmc.selectDualBrandUIItem(/mastercard/i, false);
-                await mcBtn.click();
+                await bcmc.selectBrand(/mastercard/i);
 
                 await expect(bcmc.cvcField).toBeVisible();
 
@@ -368,11 +354,10 @@ test.describe('Bcmc payments with dual branding', () => {
                 await bcmc.typeCardNumber(BCMC_DUAL_BRANDED_MC);
                 await bcmc.typeExpiryDate(TEST_DATE_VALUE);
 
-                await expect(bcmc.dualBrandingButtonsHolder).toBeVisible();
+                await expect(bcmc.isDualBrandSelectionVisible()).resolves.toBe(true);
 
                 // Select mc
-                const mcBtn = await bcmc.selectDualBrandUIItem(/mastercard/i, false);
-                await mcBtn.click();
+                await bcmc.selectBrand(/mastercard/i);
 
                 await expect(bcmc.cvcField).toBeVisible();
 
@@ -382,7 +367,7 @@ test.describe('Bcmc payments with dual branding', () => {
                 await bcmc.typeCardNumber(BCMC_DUAL_BRANDED_MC);
 
                 // Give chance for UI to render in order to set correct brand in state
-                await expect(bcmc.dualBrandingButtonsHolder).toBeVisible();
+                await expect(bcmc.isDualBrandSelectionVisible()).resolves.toBe(true);
 
                 const paymentsRequestPromise = page.waitForRequest(request => request.url().includes('/payments') && request.method() === 'POST');
                 await bcmc.pay();
