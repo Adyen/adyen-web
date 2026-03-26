@@ -9,6 +9,15 @@
     .adyen-checkout__alert-message--info {
         margin-top: variable-generator.token(spacer-070);
     }
+
+    .adyen-checkout__content-separator {
+        margin-top: variable-generator.token(spacer-070);
+        margin-bottom: variable-generator.token(spacer-070);
+    }
+
+    .adyen-checkout__field--upi-app-list {
+        margin-top: variable-generator.token(spacer-000);
+    }
 }
 
 .adyen-checkout-upi-area-qr-code {
