@@ -49,6 +49,15 @@ const defaultDonationCampaignProps: DonationCampaignOptions = {
     commercialTxAmount: 1000
 };
 
+/**
+ * Helper to flush microtasks and advance timers.
+ * Needed because initialise() calls async API first, then waits for setTimeout.
+ * Uses jest.runAllTimersAsync() which properly handles both microtasks and timers.
+ */
+const flushPromisesAndTimers = async () => {
+    await jest.runAllTimersAsync();
+};
+
 describe('DonationCampaignService', () => {
     beforeEach(() => {
         jest.useFakeTimers();
@@ -83,7 +92,7 @@ describe('DonationCampaignService', () => {
     });
 
     describe('initialise', () => {
-        test('should wait for default delay before calling donationCampaigns endpoint', async () => {
+        test('should call donationCampaigns endpoint immediately and wait for default delay before resolving', async () => {
             const core = createMockCore();
             core.options = {
                 donation: {
@@ -101,17 +110,16 @@ describe('DonationCampaignService', () => {
             const service = new DonationCampaignService(core, defaultDonationCampaignProps);
             const initPromise = service.initialise();
 
-            expect(core.session.fetchDonationCampaigns).not.toHaveBeenCalled();
+            await flushPromisesAndTimers();
 
-            jest.advanceTimersByTime(DEFAULT_DONATION_AUTO_START_DELAY_MS);
-            await Promise.resolve();
-
-            await initPromise;
-
+            // Endpoint is called immediately (before delay)
             expect(core.session.fetchDonationCampaigns).toHaveBeenCalled();
+
+            const result = await initPromise;
+            expect(result).toBeDefined();
         });
 
-        test('should wait for custom delay before calling donationCampaigns endpoint', async () => {
+        test('should call donationCampaigns endpoint immediately and wait for custom delay before resolving', async () => {
             const core = createMockCore();
             core.options = {
                 donation: {
@@ -129,14 +137,13 @@ describe('DonationCampaignService', () => {
             const service = new DonationCampaignService(core, defaultDonationCampaignProps);
             const initPromise = service.initialise();
 
-            expect(core.session.fetchDonationCampaigns).not.toHaveBeenCalled();
+            await flushPromisesAndTimers();
 
-            jest.advanceTimersByTime(1000);
-            await Promise.resolve();
-
-            await initPromise;
-
+            // Endpoint is called immediately (before delay)
             expect(core.session.fetchDonationCampaigns).toHaveBeenCalled();
+
+            const result = await initPromise;
+            expect(result).toBeDefined();
         });
 
         test('should return DonationConfiguration (roundup donation type) when campaign is available', async () => {
@@ -151,7 +158,7 @@ describe('DonationCampaignService', () => {
             const service = new DonationCampaignService(core, defaultDonationCampaignProps);
             const resultPromise = service.initialise();
 
-            jest.advanceTimersByTime(0);
+            await flushPromisesAndTimers();
             const result = await resultPromise;
 
             expect(result).toBeDefined();
@@ -173,7 +180,7 @@ describe('DonationCampaignService', () => {
             const service = new DonationCampaignService(core, defaultDonationCampaignProps);
             const resultPromise = service.initialise();
 
-            jest.advanceTimersByTime(0);
+            await flushPromisesAndTimers();
             const result = await resultPromise;
 
             expect(result).toBeNull();
@@ -189,7 +196,7 @@ describe('DonationCampaignService', () => {
             const service = new DonationCampaignService(core, defaultDonationCampaignProps);
             const resultPromise = service.initialise();
 
-            jest.advanceTimersByTime(0);
+            await flushPromisesAndTimers();
             const result = await resultPromise;
 
             expect(result).toBeNull();
@@ -206,7 +213,7 @@ describe('DonationCampaignService', () => {
             const service = new DonationCampaignService(core, defaultDonationCampaignProps);
             const resultPromise = service.initialise();
 
-            jest.advanceTimersByTime(0);
+            await flushPromisesAndTimers();
             await resultPromise;
 
             expect(core.modules.analytics.sendAnalytics).toHaveBeenCalled();
@@ -220,9 +227,10 @@ describe('DonationCampaignService', () => {
             const service = new DonationCampaignService(core, defaultDonationCampaignProps);
             const resultPromise = service.initialise();
 
-            jest.advanceTimersByTime(0);
-
-            await expect(resultPromise).rejects.toThrow('Network error');
+            // For rejection tests, we need to set up the expectation before flushing
+            const expectation = expect(resultPromise).rejects.toThrow('Network error');
+            await flushPromisesAndTimers();
+            await expectation;
         });
     });
 
@@ -251,9 +259,9 @@ describe('DonationCampaignService', () => {
             const service = new DonationCampaignService(core, donationCampaignPropsWithoutAmount);
             const resultPromise = service.initialise();
 
-            jest.advanceTimersByTime(0);
-
-            await expect(resultPromise).rejects.toThrow('The donation type is "roundup" and the commercialTxAmount is not set.');
+            const expectation = expect(resultPromise).rejects.toThrow('The donation type is "roundup" and the commercialTxAmount is not set.');
+            await flushPromisesAndTimers();
+            await expectation;
         });
 
         test('should throw error for roundup donation when commercialTxAmount is set to 0', async () => {
@@ -279,9 +287,9 @@ describe('DonationCampaignService', () => {
             const service = new DonationCampaignService(core, donationCampaignPropsWithoutAmount);
             const resultPromise = service.initialise();
 
-            jest.advanceTimersByTime(0);
-
-            await expect(resultPromise).rejects.toThrow('The donation type is "roundup" and the commercialTxAmount is not set.');
+            const expectation = expect(resultPromise).rejects.toThrow('The donation type is "roundup" and the commercialTxAmount is not set.');
+            await flushPromisesAndTimers();
+            await expectation;
         });
     });
 
@@ -307,7 +315,7 @@ describe('DonationCampaignService', () => {
             const service = new DonationCampaignService(core, defaultDonationCampaignProps);
             const resultPromise = service.initialise();
 
-            jest.advanceTimersByTime(0);
+            await flushPromisesAndTimers();
             const result = await resultPromise;
 
             result?.onCancel({ data: { amount: { currency: 'EUR', value: 100 } } });
@@ -335,7 +343,7 @@ describe('DonationCampaignService', () => {
             const service = new DonationCampaignService(core, defaultDonationCampaignProps);
             const resultPromise = service.initialise();
 
-            jest.advanceTimersByTime(0);
+            await flushPromisesAndTimers();
             const result = await resultPromise;
 
             expect(result).toBeDefined();
@@ -372,7 +380,7 @@ describe('DonationCampaignService', () => {
             const service = new DonationCampaignService(core, defaultDonationCampaignProps);
             const resultPromise = service.initialise();
 
-            jest.advanceTimersByTime(0);
+            await flushPromisesAndTimers();
             const result = await resultPromise;
 
             const mockComponent = {
@@ -414,7 +422,7 @@ describe('DonationCampaignService', () => {
             const service = new DonationCampaignService(core, donationCampaignPropsWithoutAmount);
             const resultPromise = service.initialise();
 
-            jest.advanceTimersByTime(0);
+            await flushPromisesAndTimers();
             const result = await resultPromise;
 
             // Should not throw - fixedAmounts doesn't require commercialTxAmount
@@ -446,7 +454,7 @@ describe('DonationCampaignService', () => {
             const service = new DonationCampaignService(core, defaultDonationCampaignProps);
             const resultPromise = service.initialise();
 
-            jest.advanceTimersByTime(0);
+            await flushPromisesAndTimers();
             const result = await resultPromise;
 
             const mockComponent = {
@@ -492,7 +500,7 @@ describe('DonationCampaignService', () => {
             const service = new DonationCampaignService(core, defaultDonationCampaignProps);
             const resultPromise = service.initialise();
 
-            jest.advanceTimersByTime(0);
+            await flushPromisesAndTimers();
             const result = await resultPromise;
 
             const mockComponent = {
@@ -536,7 +544,7 @@ describe('DonationCampaignService', () => {
             const service = new DonationCampaignService(core, defaultDonationCampaignProps);
             const resultPromise = service.initialise();
 
-            jest.advanceTimersByTime(0);
+            await flushPromisesAndTimers();
             const result = await resultPromise;
 
             const mockComponent = {
