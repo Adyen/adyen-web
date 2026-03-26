@@ -6,6 +6,8 @@ class UPI extends Base {
     readonly intentArea: Locator;
     readonly qrCodeImage: Locator;
     readonly mandateInfo: Locator;
+    readonly appDropdown: Locator;
+    readonly errorAlert: Locator;
 
     constructor(public readonly page: Page) {
         super(page);
@@ -14,10 +16,17 @@ class UPI extends Base {
         this.intentArea = this.page.locator('#upi-area-intent');
         this.qrCodeImage = this.page.getByAltText('Scan QR code');
         this.mandateInfo = this.page.locator('.adyen-checkout__alert-message--info');
+        this.appDropdown = this.page.locator('.adyen-checkout__upi-app-list__dropdown');
+        this.errorAlert = this.page.getByRole('alert');
     }
 
     async selectApp(appName: string | RegExp) {
         await this.page.getByRole('radio', { name: appName }).click();
+    }
+
+    async selectAppFromDropdown(appName: string | RegExp) {
+        await this.appDropdown.getByRole('button').click();
+        await this.page.getByRole('option', { name: appName }).click();
     }
 
     async isQrCodeVisible() {
