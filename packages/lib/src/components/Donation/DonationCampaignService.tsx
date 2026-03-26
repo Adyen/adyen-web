@@ -97,7 +97,7 @@ class DonationCampaignService {
                     donationType: donationType
                 };
 
-                this.callSessionsDonations(donationRequestData, component);
+                void this.callSessionsDonations(donationRequestData, component);
             },
             commercialTxAmount: this.commercialTxAmount
         };
@@ -112,25 +112,21 @@ class DonationCampaignService {
         return donationComponentProps;
     }
 
-    private callSessionsDonations(donationRequestData: CheckoutSessionDonationsRequestData, component: Donation) {
-        this.makeSessionDonationsCall(donationRequestData)
-            .then((response: CheckoutSessionDonationsResponse) => {
-                if (response.resultCode === 'Authorised') {
-                    component.setStatus('success');
+    private async callSessionsDonations(donationRequestData: CheckoutSessionDonationsRequestData, component: Donation): Promise<void> {
+        try {
+            const response: CheckoutSessionDonationsResponse = await this.makeSessionDonationsCall(donationRequestData);
 
-                    this.onDonationCompleted?.({ didDonate: true });
-                } else {
-                    component.setStatus('error');
-
-                    // Call merchant defined onDonationFailed callback
-                    this.onDonationFailed?.(response.resultCode);
-                }
-            })
-
-            .catch((error: unknown) => {
+            if (response.resultCode === 'Authorised') {
+                component.setStatus('success');
+                this.onDonationCompleted?.({ didDonate: true });
+            } else {
                 component.setStatus('error');
-                this.onDonationFailed?.(error);
-            });
+                this.onDonationFailed?.(response.resultCode);
+            }
+        } catch (error: unknown) {
+            component.setStatus('error');
+            this.onDonationFailed?.(error);
+        }
     }
 
     private async makeSessionsDonationCampaignsCall(): Promise<CheckoutSessionDonationCampaignsResponse> {
