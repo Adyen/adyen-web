@@ -10,11 +10,11 @@ export function handleChange(state, component) {
     console.groupEnd();
 }
 
-export function handleOnPaymentCompleted(result, element, checkout) {
+export function handleOnPaymentCompleted(result, element) {
     // alert(`onPaymentCompleted - ${result?.resultCode}`);
 
     if (result.askDonation === true) {
-        const dc = new Donation(checkout, {
+        new Donation(element.core, {
             rootNode: '.playground-nav',
             commercialTxAmount: element.props.amount.value
         });

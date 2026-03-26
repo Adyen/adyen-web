@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { AdyenCheckout, components } from '../../../..';
+import { AdyenCheckout, components, Donation } from '../../../..';
 import { MetaConfiguration, PaymentMethodStoryProps, StoryConfiguration } from '../../../../../storybook/types';
 import { ComponentContainer } from '../../../../../storybook/components/ComponentContainer';
 import { DropinConfiguration } from '../../types';
@@ -126,13 +126,47 @@ export const SplitFundingBrazil = {
 
 export const SessionsDonation: DropinStory = {
     args: {
-        // donation: {
-        //     autoStart: true
-        //     // delay: 3000
-        // }
         countryCode: 'NL',
 
-        donation: null
+        donation: {
+            autoStart: true,
+            delay: 3000,
+            onSuccess: obj => console.log('### Dropin_withSessionsDonation::onSuccess:: didDonate=', obj),
+            onError: obj => console.log('### Dropin_withSessionsDonation::onError:: obj', obj)
+        }
+    },
+
+    render: ({ componentConfiguration, ...checkoutConfig }: PaymentMethodStoryProps<DropinConfiguration>) => {
+        // Register all Components
+        const { Dropin, ...Components } = components;
+        const Classes = Object.keys(Components).map(key => Components[key]);
+        AdyenCheckout.register(...Classes);
+
+        return (
+            <Checkout checkoutConfig={checkoutConfig}>
+                {checkout => <ComponentContainer element={new DropinComponent(checkout, componentConfiguration)} />}
+            </Checkout>
+        );
+    }
+};
+
+export const SessionsDonationReparented: DropinStory = {
+    args: {
+        countryCode: 'NL',
+
+        donation: {
+            autoStart: false,
+            delay: 1000
+        },
+
+        onPaymentCompleted: (result, element) => {
+            if (result.askDonation === true) {
+                new Donation(element.core, {
+                    rootNode: 'body',
+                    commercialTxAmount: element.props.amount.value
+                });
+            }
+        }
     },
 
     render: ({ componentConfiguration, ...checkoutConfig }: PaymentMethodStoryProps<DropinConfiguration>) => {
