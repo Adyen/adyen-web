@@ -74,7 +74,7 @@ describe('CheckoutSession', () => {
             expect(session.data).toBe(successResponseMock.sessionData);
 
             // Then call donationCampaigns with the updated sessionData
-            await session.donationCampaigns();
+            await session.fetchDonationCampaigns();
             expect(httpPostMock).toHaveBeenNthCalledWith(
                 2,
                 {
@@ -110,7 +110,7 @@ describe('CheckoutSession', () => {
             expect(session.data).toBe(successResponseMock.sessionData);
 
             // Then call donations with the updated sessionData
-            await session.donations(donationsRequestData);
+            await session.makeDonation(donationsRequestData);
             expect(httpPostMock).toHaveBeenNthCalledWith(
                 2,
                 {

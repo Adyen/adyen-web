@@ -1,7 +1,7 @@
 import makePayment from '../Services/sessions/make-payment';
 import submitDetails from '../Services/sessions/submit-details';
-import donationCampaigns from '../Services/sessions/donation-campaigns';
-import donations from '../Services/sessions/donations';
+import fetchDonationCampaigns from '../Services/sessions/fetch-donation-campaigns';
+import makeDonation from '../Services/sessions/make-donation';
 import setupSession from '../Services/sessions/setup-session';
 import checkBalance from '../Services/sessions/check-balance';
 import Storage from '../../utils/Storage';
@@ -118,8 +118,8 @@ class Session {
     /**
      * Call donationCampaigns endpoint
      */
-    donationCampaigns(): Promise<CheckoutSessionDonationCampaignsResponse> {
-        return donationCampaigns(this).then(response => {
+    fetchDonationCampaigns(): Promise<CheckoutSessionDonationCampaignsResponse> {
+        return fetchDonationCampaigns(this).then(response => {
             if (response.sessionData) {
                 this.updateSessionData(response.sessionData);
             }
@@ -131,8 +131,8 @@ class Session {
     /**
      * Call donations endpoint
      */
-    donations(data: CheckoutSessionDonationsRequestData): Promise<CheckoutSessionDonationsResponse> {
-        return donations(data, this).then(response => {
+    makeDonation(data: CheckoutSessionDonationsRequestData): Promise<CheckoutSessionDonationsResponse> {
+        return makeDonation(data, this).then(response => {
             if (response.sessionData) {
                 this.updateSessionData(response.sessionData);
             }

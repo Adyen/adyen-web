@@ -5,7 +5,7 @@ import { CheckoutSessionDonationsRequestData, CheckoutSessionDonationsResponse }
 
 /**
  */
-function donations(details: CheckoutSessionDonationsRequestData, session: Session): Promise<CheckoutSessionDonationsResponse> {
+function makeDonation(details: CheckoutSessionDonationsRequestData, session: Session): Promise<CheckoutSessionDonationsResponse> {
     const path = `${API_VERSION}/sessions/${session.id}/donations?clientKey=${session.clientKey}`;
     const data = {
         ...(session.data && { sessionData: session.data }),
@@ -15,4 +15,4 @@ function donations(details: CheckoutSessionDonationsRequestData, session: Sessio
     return httpPost({ loadingContext: session.loadingContext, path, errorLevel: 'fatal', errorCode: API_ERROR_CODE.donations }, data);
 }
 
-export default donations;
+export default makeDonation;

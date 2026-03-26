@@ -134,11 +134,11 @@ class DonationCampaignService {
     }
 
     private async makeSessionsDonationCampaignsCall(): Promise<CheckoutSessionDonationCampaignsResponse> {
-        return await this.core.session.donationCampaigns();
+        return await this.core.session.fetchDonationCampaigns();
     }
 
     private async makeSessionDonationsCall(donationRequestData: CheckoutSessionDonationsRequestData): Promise<CheckoutSessionDonationsResponse> {
-        return await this.core.session.donations(donationRequestData);
+        return await this.core.session.makeDonation(donationRequestData);
     }
 }
 

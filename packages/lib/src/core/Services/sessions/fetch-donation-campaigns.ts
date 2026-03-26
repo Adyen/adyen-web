@@ -5,7 +5,7 @@ import { CheckoutSessionDonationCampaignsResponse } from '../../CheckoutSession/
 
 /**
  */
-function donationCampaigns(session: Session): Promise<CheckoutSessionDonationCampaignsResponse> {
+function fetchDonationCampaigns(session: Session): Promise<CheckoutSessionDonationCampaignsResponse> {
     const path = `${API_VERSION}/sessions/${session.id}/donationCampaigns?clientKey=${session.clientKey}`;
     const data = {
         ...(session.data && { sessionData: session.data })
@@ -14,4 +14,4 @@ function donationCampaigns(session: Session): Promise<CheckoutSessionDonationCam
     return httpPost({ loadingContext: session.loadingContext, path, errorLevel: 'fatal', errorCode: API_ERROR_CODE.donationCampaigns }, data);
 }
 
-export default donationCampaigns;
+export default fetchDonationCampaigns;

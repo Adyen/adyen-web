@@ -96,19 +96,19 @@ describe('DonationCampaignService', () => {
                 sessionData: 'test-session-data',
                 donationCampaigns: [createMockDonationCampaign()]
             };
-            (core.session.donationCampaigns as jest.Mock).mockResolvedValue(mockResponse);
+            (core.session.fetchDonationCampaigns as jest.Mock).mockResolvedValue(mockResponse);
 
             const service = new DonationCampaignService(core, defaultDonationCampaignProps);
             const initPromise = service.initialise();
 
-            expect(core.session.donationCampaigns).not.toHaveBeenCalled();
+            expect(core.session.fetchDonationCampaigns).not.toHaveBeenCalled();
 
             jest.advanceTimersByTime(DEFAULT_DONATION_AUTO_START_DELAY_MS);
             await Promise.resolve();
 
             await initPromise;
 
-            expect(core.session.donationCampaigns).toHaveBeenCalled();
+            expect(core.session.fetchDonationCampaigns).toHaveBeenCalled();
         });
 
         test('should wait for custom delay before calling donationCampaigns endpoint', async () => {
@@ -124,19 +124,19 @@ describe('DonationCampaignService', () => {
                 sessionData: 'test-session-data',
                 donationCampaigns: [createMockDonationCampaign()]
             };
-            (core.session.donationCampaigns as jest.Mock).mockResolvedValue(mockResponse);
+            (core.session.fetchDonationCampaigns as jest.Mock).mockResolvedValue(mockResponse);
 
             const service = new DonationCampaignService(core, defaultDonationCampaignProps);
             const initPromise = service.initialise();
 
-            expect(core.session.donationCampaigns).not.toHaveBeenCalled();
+            expect(core.session.fetchDonationCampaigns).not.toHaveBeenCalled();
 
             jest.advanceTimersByTime(1000);
             await Promise.resolve();
 
             await initPromise;
 
-            expect(core.session.donationCampaigns).toHaveBeenCalled();
+            expect(core.session.fetchDonationCampaigns).toHaveBeenCalled();
         });
 
         test('should return DonationConfiguration (roundup donation type) when campaign is available', async () => {
@@ -146,7 +146,7 @@ describe('DonationCampaignService', () => {
                 sessionData: 'test-session-data',
                 donationCampaigns: [mockCampaign]
             };
-            (core.session.donationCampaigns as jest.Mock).mockResolvedValue(mockResponse);
+            (core.session.fetchDonationCampaigns as jest.Mock).mockResolvedValue(mockResponse);
 
             const service = new DonationCampaignService(core, defaultDonationCampaignProps);
             const resultPromise = service.initialise();
@@ -168,7 +168,7 @@ describe('DonationCampaignService', () => {
                 sessionData: 'test-session-data',
                 donationCampaigns: []
             };
-            (core.session.donationCampaigns as jest.Mock).mockResolvedValue(mockResponse);
+            (core.session.fetchDonationCampaigns as jest.Mock).mockResolvedValue(mockResponse);
 
             const service = new DonationCampaignService(core, defaultDonationCampaignProps);
             const resultPromise = service.initialise();
@@ -181,7 +181,7 @@ describe('DonationCampaignService', () => {
 
         test('should return null when donationCampaigns response is undefined', async () => {
             const core = createMockCore();
-            (core.session.donationCampaigns as jest.Mock).mockResolvedValue({
+            (core.session.fetchDonationCampaigns as jest.Mock).mockResolvedValue({
                 sessionData: 'test-session-data',
                 donationCampaigns: undefined
             });
@@ -201,7 +201,7 @@ describe('DonationCampaignService', () => {
                 sessionData: 'test-session-data',
                 donationCampaigns: [createMockDonationCampaign()]
             };
-            (core.session.donationCampaigns as jest.Mock).mockResolvedValue(mockResponse);
+            (core.session.fetchDonationCampaigns as jest.Mock).mockResolvedValue(mockResponse);
 
             const service = new DonationCampaignService(core, defaultDonationCampaignProps);
             const resultPromise = service.initialise();
@@ -215,7 +215,7 @@ describe('DonationCampaignService', () => {
         test('should throw error when donationCampaigns call fails', async () => {
             const core = createMockCore();
             const error = new Error('Network error');
-            (core.session.donationCampaigns as jest.Mock).mockRejectedValue(error);
+            (core.session.fetchDonationCampaigns as jest.Mock).mockRejectedValue(error);
 
             const service = new DonationCampaignService(core, defaultDonationCampaignProps);
             const resultPromise = service.initialise();
@@ -240,7 +240,7 @@ describe('DonationCampaignService', () => {
                 sessionData: 'test-session-data',
                 donationCampaigns: [mockCampaign]
             };
-            (core.session.donationCampaigns as jest.Mock).mockResolvedValue(mockResponse);
+            (core.session.fetchDonationCampaigns as jest.Mock).mockResolvedValue(mockResponse);
 
             // @ts-ignore - forcing commercialTxAmount to be undefined
             const donationCampaignPropsWithoutAmount: DonationCampaignOptions = {
@@ -269,7 +269,7 @@ describe('DonationCampaignService', () => {
                 sessionData: 'test-session-data',
                 donationCampaigns: [mockCampaign]
             };
-            (core.session.donationCampaigns as jest.Mock).mockResolvedValue(mockResponse);
+            (core.session.fetchDonationCampaigns as jest.Mock).mockResolvedValue(mockResponse);
 
             const donationCampaignPropsWithoutAmount: DonationCampaignOptions = {
                 rootNode: document.createElement('div'),
@@ -302,7 +302,7 @@ describe('DonationCampaignService', () => {
                 sessionData: 'test-session-data',
                 donationCampaigns: [mockCampaign]
             };
-            (core.session.donationCampaigns as jest.Mock).mockResolvedValue(mockResponse);
+            (core.session.fetchDonationCampaigns as jest.Mock).mockResolvedValue(mockResponse);
 
             const service = new DonationCampaignService(core, defaultDonationCampaignProps);
             const resultPromise = service.initialise();
@@ -330,7 +330,7 @@ describe('DonationCampaignService', () => {
                 sessionData: 'test-session-data',
                 donationCampaigns: [mockCampaign]
             };
-            (core.session.donationCampaigns as jest.Mock).mockResolvedValue(mockResponse);
+            (core.session.fetchDonationCampaigns as jest.Mock).mockResolvedValue(mockResponse);
 
             const service = new DonationCampaignService(core, defaultDonationCampaignProps);
             const resultPromise = service.initialise();
@@ -354,7 +354,7 @@ describe('DonationCampaignService', () => {
                 resultCode: 'Authorised',
                 sessionData: 'test-session-data'
             };
-            (core.session.donations as jest.Mock).mockResolvedValue(mockDonationsResponse);
+            (core.session.makeDonation as jest.Mock).mockResolvedValue(mockDonationsResponse);
 
             const mockCampaign = createMockDonationCampaign({
                 donation: {
@@ -367,7 +367,7 @@ describe('DonationCampaignService', () => {
                 sessionData: 'test-session-data',
                 donationCampaigns: [mockCampaign]
             };
-            (core.session.donationCampaigns as jest.Mock).mockResolvedValue(mockResponse);
+            (core.session.fetchDonationCampaigns as jest.Mock).mockResolvedValue(mockResponse);
 
             const service = new DonationCampaignService(core, defaultDonationCampaignProps);
             const resultPromise = service.initialise();
@@ -384,7 +384,7 @@ describe('DonationCampaignService', () => {
 
             await Promise.resolve();
 
-            expect(core.session.donations).toHaveBeenCalledWith({
+            expect(core.session.makeDonation).toHaveBeenCalledWith({
                 amount: { currency: 'EUR', value: 200 },
                 donationCampaignId: 'campaign-123',
                 donationType: 'fixedAmounts'
@@ -404,7 +404,7 @@ describe('DonationCampaignService', () => {
                 sessionData: 'test-session-data',
                 donationCampaigns: [mockCampaign]
             };
-            (core.session.donationCampaigns as jest.Mock).mockResolvedValue(mockResponse);
+            (core.session.fetchDonationCampaigns as jest.Mock).mockResolvedValue(mockResponse);
 
             // @ts-ignore - forcing commercialTxAmount to be undefined
             const donationCampaignPropsWithoutAmount: DonationCampaignOptions = {
@@ -434,14 +434,14 @@ describe('DonationCampaignService', () => {
                 resultCode: 'Authorised',
                 sessionData: 'test-session-data'
             };
-            (core.session.donations as jest.Mock).mockResolvedValue(mockDonationsResponse);
+            (core.session.makeDonation as jest.Mock).mockResolvedValue(mockDonationsResponse);
 
             const mockCampaign = createMockDonationCampaign();
             const mockResponse: CheckoutSessionDonationCampaignsResponse = {
                 sessionData: 'test-session-data',
                 donationCampaigns: [mockCampaign]
             };
-            (core.session.donationCampaigns as jest.Mock).mockResolvedValue(mockResponse);
+            (core.session.fetchDonationCampaigns as jest.Mock).mockResolvedValue(mockResponse);
 
             const service = new DonationCampaignService(core, defaultDonationCampaignProps);
             const resultPromise = service.initialise();
@@ -458,7 +458,7 @@ describe('DonationCampaignService', () => {
 
             await Promise.resolve();
 
-            expect(core.session.donations).toHaveBeenCalledWith({
+            expect(core.session.makeDonation).toHaveBeenCalledWith({
                 amount: { currency: 'EUR', value: 100 },
                 donationCampaignId: 'campaign-123',
                 donationType: 'roundup'
@@ -480,14 +480,14 @@ describe('DonationCampaignService', () => {
                 resultCode: 'Authorised',
                 sessionData: 'test-session-data'
             };
-            (core.session.donations as jest.Mock).mockResolvedValue(mockDonationsResponse);
+            (core.session.makeDonation as jest.Mock).mockResolvedValue(mockDonationsResponse);
 
             const mockCampaign = createMockDonationCampaign();
             const mockResponse: CheckoutSessionDonationCampaignsResponse = {
                 sessionData: 'test-session-data',
                 donationCampaigns: [mockCampaign]
             };
-            (core.session.donationCampaigns as jest.Mock).mockResolvedValue(mockResponse);
+            (core.session.fetchDonationCampaigns as jest.Mock).mockResolvedValue(mockResponse);
 
             const service = new DonationCampaignService(core, defaultDonationCampaignProps);
             const resultPromise = service.initialise();
@@ -524,14 +524,14 @@ describe('DonationCampaignService', () => {
                 resultCode: 'Refused',
                 sessionData: 'test-session-data'
             };
-            (core.session.donations as jest.Mock).mockResolvedValue(mockDonationsResponse);
+            (core.session.makeDonation as jest.Mock).mockResolvedValue(mockDonationsResponse);
 
             const mockCampaign = createMockDonationCampaign();
             const mockResponse: CheckoutSessionDonationCampaignsResponse = {
                 sessionData: 'test-session-data',
                 donationCampaigns: [mockCampaign]
             };
-            (core.session.donationCampaigns as jest.Mock).mockResolvedValue(mockResponse);
+            (core.session.fetchDonationCampaigns as jest.Mock).mockResolvedValue(mockResponse);
 
             const service = new DonationCampaignService(core, defaultDonationCampaignProps);
             const resultPromise = service.initialise();
@@ -568,14 +568,14 @@ describe('DonationCampaignService', () => {
             };
 
             const error = new Error('Donation failed');
-            (core.session.donations as jest.Mock).mockRejectedValue(error);
+            (core.session.makeDonation as jest.Mock).mockRejectedValue(error);
 
             const mockCampaign = createMockDonationCampaign();
             const mockResponse: CheckoutSessionDonationCampaignsResponse = {
                 sessionData: 'test-session-data',
                 donationCampaigns: [mockCampaign]
             };
-            (core.session.donationCampaigns as jest.Mock).mockResolvedValue(mockResponse);
+            (core.session.fetchDonationCampaigns as jest.Mock).mockResolvedValue(mockResponse);
 
             const service = new DonationCampaignService(core, defaultDonationCampaignProps);
             const result = await service.initialise();
