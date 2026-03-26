@@ -22,6 +22,9 @@ test.describe('Card - Testing resetting after binLookup has given a dual brand r
             // Expect brand selection to be visible
             await expect(card.isDualBrandSelectionVisible()).resolves.toBe(true);
 
+            // Expect contextual label to be visible
+            await expect(card.isDualBrandContextualLabelVisible()).resolves.toBe(true);
+
             // Delete all digits
             await card.deleteCardNumber();
 
@@ -33,6 +36,9 @@ test.describe('Card - Testing resetting after binLookup has given a dual brand r
 
             // Expect brand selection to be hidden
             await expect(card.isDualBrandSelectionVisible()).resolves.toBe(false);
+
+            // Expect contextual label to be hidden
+            await expect(card.isDualBrandContextualLabelVisible()).resolves.toBe(false);
 
             // Check brand has not been set in paymentMethod data
             let cardData: any = await page.evaluate('window.component.data');
