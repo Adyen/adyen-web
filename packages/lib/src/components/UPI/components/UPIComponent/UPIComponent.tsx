@@ -1,9 +1,9 @@
 import { Fragment, h, RefObject } from 'preact';
-import { useCallback, useEffect, useState } from 'preact/hooks';
+import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
 import { UIElementStatus } from '../../../types';
 import { App, UpiMode } from '../../types';
 import useImage from '../../../../core/Context/useImage';
-import { A11Y, UPI_MODE } from '../../constants';
+import { A11Y, MAX_PRIMARY_APPS, UPI_MODE } from '../../constants';
 import './UPIComponent.scss';
 import { SegmentedControlRegion } from '../../../internal/SegmentedControl';
 import UPIIntentAppList from '../UPIIntentAppList';
@@ -12,6 +12,12 @@ import Alert from '../../../internal/Alert';
 import UPIMandate, { Mandate } from '../UPIMandate/UPIMandate';
 import { PayButtonProps } from '../../../internal/PayButton/PayButton';
 import { useAmount } from '../../../../core/Context/AmountProvider';
+import ContentSeparator from '../../../internal/ContentSeparator';
+import Field from '../../../internal/FormFields/Field';
+import Select from '../../../internal/FormFields/Select';
+import { SelectTargetObject } from '../../../internal/FormFields/Select/types';
+import { AnalyticsInfoEvent, InfoEventType, UiTarget } from '../../../../core/Analytics/events/AnalyticsInfoEvent';
+import { AbstractAnalyticsEvent } from '../../../../core/Analytics/events/AbstractAnalyticsEvent';
 
 type UpiData = { app?: App };
 
@@ -25,9 +31,18 @@ interface UPIComponentProps {
     ref?(ref: RefObject<typeof UPIComponent>): void;
     payButton(props: PayButtonProps): h.JSX.Element;
     onChange({ data, valid, errors, isValid }: OnChangeProps): void;
+    onSubmitAnalytics?(event: AbstractAnalyticsEvent): void;
 }
 
-export default function UPIComponent({ mode, onChange, payButton, showPayButton, mandate, apps = [] }: Readonly<UPIComponentProps>): h.JSX.Element {
+export default function UPIComponent({
+    mode,
+    onChange,
+    payButton,
+    showPayButton,
+    mandate,
+    apps = [],
+    onSubmitAnalytics
+}: Readonly<UPIComponentProps>): h.JSX.Element {
     const { i18n } = useCoreContext();
     const getImage = useImage();
     const [status, setStatus] = useState<UIElementStatus>('ready');
@@ -35,6 +50,11 @@ export default function UPIComponent({ mode, onChange, payButton, showPayButton,
     const { amount } = useAmount();
     const [isValid, setIsValid] = useState<boolean>(mode === UPI_MODE.QR_CODE);
     const mandateComponent = mandate && <UPIMandate mandate={mandate} amount={amount} />;
+
+    const primaryApps = useMemo(() => apps.slice(0, MAX_PRIMARY_APPS), [apps]);
+    const secondaryApps = useMemo(() => apps.slice(MAX_PRIMARY_APPS), [apps]);
+
+    const secondaryAppItems = useMemo(() => secondaryApps.map(app => ({ id: app.id, name: app.name })), [secondaryApps]);
 
     this.setStatus = (status: UIElementStatus) => {
         setStatus(status);
@@ -53,8 +73,38 @@ export default function UPIComponent({ mode, onChange, payButton, showPayButton,
             setSelectedApp(app);
             setIsValid(true);
             setStatus('ready');
+
+            onSubmitAnalytics?.(
+                new AnalyticsInfoEvent({
+                    component: 'upi_intent',
+                    type: InfoEventType.selected,
+                    target: UiTarget.list,
+                    issuer: app.name
+                })
+            );
         },
-        [selectedApp]
+        [selectedApp, onSubmitAnalytics]
+    );
+
+    const handleDropdownSelect = useCallback(
+        (event: { target: SelectTargetObject }) => {
+            const app = secondaryApps.find(a => a.id === event.target.value);
+            if (!app || app.id === selectedApp?.id) return;
+
+            setSelectedApp(app);
+            setIsValid(true);
+            setStatus('ready');
+
+            onSubmitAnalytics?.(
+                new AnalyticsInfoEvent({
+                    component: 'upi_intent',
+                    type: InfoEventType.selected,
+                    target: UiTarget.listSearch,
+                    issuer: app.name
+                })
+            );
+        },
+        [secondaryApps, selectedApp, onSubmitAnalytics]
     );
 
     const validateIntentApp = useCallback(() => {
@@ -81,13 +131,47 @@ export default function UPIComponent({ mode, onChange, payButton, showPayButton,
         });
     }, [selectedApp, isValid, mode, onChange]);
 
+    useEffect(() => {
+        if (mode === UPI_MODE.INTENT && primaryApps.length > 0) {
+            onSubmitAnalytics?.(
+                new AnalyticsInfoEvent({
+                    component: 'upi_intent',
+                    type: InfoEventType.displayed,
+                    target: UiTarget.list,
+                    issuerList: primaryApps.map(a => a.id)
+                })
+            );
+        }
+    }, []);
+
     return (
         <Fragment>
             {mode === UPI_MODE.INTENT && (
                 <SegmentedControlRegion id={A11Y.AreaId.INTENT} ariaLabelledBy={A11Y.ButtonId.INTENT} className="adyen-checkout-upi-area-intent">
                     <span className="adyen-checkout-upi-instruction-label">{i18n.get('upi.intent.instruction')}</span>
                     {status === 'error' && <Alert icon={'cross'}>{i18n.get('upi.error.noAppSelected')}</Alert>}
-                    <UPIIntentAppList disabled={status === 'loading'} apps={apps} selectedAppId={selectedApp?.id} onAppSelect={handleAppSelect} />
+                    <UPIIntentAppList
+                        disabled={status === 'loading'}
+                        apps={primaryApps}
+                        selectedAppId={selectedApp?.id}
+                        onAppSelect={handleAppSelect}
+                    />
+                    {secondaryApps.length > 0 && (
+                        <Fragment>
+                            <ContentSeparator label="issuerList.separatorText" />
+                            <Field label={i18n.get('upi.intent.apps.dropdown.label')} classNameModifiers={['upi-app-list']} name={'upi-app-list'}>
+                                <Select
+                                    items={secondaryAppItems}
+                                    selectedValue={secondaryApps.some(a => a.id === selectedApp?.id) ? selectedApp?.id : undefined}
+                                    placeholder={i18n.get('upi.intent.apps.dropdown.placeholder')}
+                                    name={'upi-app-list'}
+                                    className={'adyen-checkout__upi-app-list__dropdown'}
+                                    filterable={false}
+                                    onChange={handleDropdownSelect}
+                                />
+                            </Field>
+                        </Fragment>
+                    )}
                     {mandateComponent}
                     {showPayButton &&
                         payButton({
