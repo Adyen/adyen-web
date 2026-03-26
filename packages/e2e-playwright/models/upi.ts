@@ -16,7 +16,7 @@ class UPI extends Base {
         this.appList = this.page.getByRole('radiogroup');
         this.intentArea = this.page.locator('#upi-area-intent');
         this.qrCodeImage = this.page.getByAltText('Scan QR code');
-        this.appDropdown = this.page.locator('.adyen-checkout__upi-app-list__dropdown');
+        this.appDropdown = this.page.getByRole('button', { name: /UPI apps/i });
         this.errorAlert = this.page.getByRole('alert');
     }
 
@@ -25,8 +25,10 @@ class UPI extends Base {
     }
 
     async selectAppFromDropdown(appName: string | RegExp) {
-        await this.appDropdown.getByRole('button').click();
-        await this.page.getByRole('option', { name: appName }).click();
+        await this.appDropdown.click();
+        await this.page.getByRole('option', { name: appName })
+            .first()
+            .click();
     }
 
     async isQrCodeVisible() {
