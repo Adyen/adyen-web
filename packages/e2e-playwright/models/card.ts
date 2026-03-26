@@ -173,9 +173,9 @@ class Card extends Base {
      * Dual branding selection (behavior-driven API)
      */
 
-    /** Returns the dual brand selection container (accessible grouping) */
+    /** Returns the dual brand selection container (SegmentedControl group) */
     get dualBrandSelector(): Locator {
-        return this.cardNumberField.getByRole('radiogroup');
+        return this.cardNumberField.getByRole('group');
     }
 
     /** Returns true if dual brand selection is present and visible */
@@ -185,18 +185,18 @@ class Card extends Base {
 
     /** Select a brand by its accessible name (e.g., /visa/i, /bancontact/i) */
     async selectBrand(name: string | RegExp): Promise<void> {
-        await this.cardNumberField.getByRole('radio', { name }).click();
+        await this.dualBrandSelector.getByRole('button', { name }).click();
     }
 
     /** Check if a specific brand is currently selected */
     async isBrandSelected(name: string | RegExp): Promise<boolean> {
-        const radio = this.cardNumberField.getByRole('radio', { name });
-        return (await radio.getAttribute('aria-checked')) === 'true';
+        const button = this.dualBrandSelector.getByRole('button', { name });
+        return (await button.getAttribute('aria-expanded')) === 'true';
     }
 
     /** Get the number of available brand options */
     async getBrandOptionCount(): Promise<number> {
-        return this.cardNumberField.getByRole('radio').count();
+        return this.dualBrandSelector.getByRole('button').count();
     }
 
     /** Returns the contextual text element below the card number field */

@@ -49,19 +49,19 @@ describe('CardNumber and the (dual)branding icons that show in the PAN field', (
         expect(screen.getByText('error message')).toBeInTheDocument();
     });
 
-    test('should wrap brand images in interactive radio elements when isDualBrandSelectable is true', () => {
+    test('should wrap brand images in interactive button elements when isDualBrandSelectable is true', () => {
         renderCardNumber({ dualBrandingElements, isDualBrandSelectable: true, selectedBrandValue: 'visa' });
-        expect(screen.getByRole('radiogroup')).toBeInTheDocument();
-        const radios = screen.getAllByRole('radio');
-        expect(radios).toHaveLength(2);
-        expect(screen.getByRole('radio', { name: /visa/i })).toBeInTheDocument();
-        expect(screen.getByRole('radio', { name: /cartebancaire/i })).toBeInTheDocument();
+        expect(screen.getByRole('group')).toBeInTheDocument();
+        const buttons = screen.getAllByRole('button');
+        expect(buttons).toHaveLength(2);
+        expect(screen.getByRole('button', { name: /visa/i })).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: /cartebancaire/i })).toBeInTheDocument();
     });
 
-    test('should render display-only brand images without radio role when isDualBrandSelectable is false', () => {
+    test('should render display-only brand images without button role when isDualBrandSelectable is false', () => {
         renderCardNumber({ dualBrandingElements, isDualBrandSelectable: false });
-        expect(screen.queryByRole('radiogroup')).not.toBeInTheDocument();
-        expect(screen.queryAllByRole('radio')).toHaveLength(0);
+        expect(screen.queryByRole('group')).not.toBeInTheDocument();
+        expect(screen.queryAllByRole('button')).toHaveLength(0);
         // Images are still visible
         const images = screen.getAllByRole('img');
         expect(images).toHaveLength(2);
