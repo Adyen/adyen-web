@@ -149,6 +149,7 @@ export default function UPIComponent({
             {mode === UPI_MODE.INTENT && (
                 <SegmentedControlRegion id={A11Y.AreaId.INTENT} ariaLabelledBy={A11Y.ButtonId.INTENT} className="adyen-checkout-upi-area-intent">
                     <span className="adyen-checkout-upi-instruction-label">{i18n.get('upi.intent.instruction')}</span>
+                    <span className="adyen-checkout-upi-instruction-title">{i18n.get('upi.intent.apps.title')}</span>
                     {status === 'error' && <Alert icon={'cross'}>{i18n.get('upi.error.noAppSelected')}</Alert>}
                     <UPIIntentAppList
                         disabled={status === 'loading'}
@@ -158,7 +159,7 @@ export default function UPIComponent({
                     />
                     {lowPriorityApps.length > 0 && (
                         <Fragment>
-                            <ContentSeparator label="issuerList.separatorText" />
+                            <ContentSeparator classNames={['adyen-checkout-upi-instruction-separator']} label="issuerList.separatorText" />
                             <Field label={i18n.get('upi.intent.apps.dropdown.label')} classNameModifiers={['upi-app-list']} name={'upi-app-list'}>
                                 <Select
                                     items={lowPriorityAppItems}
