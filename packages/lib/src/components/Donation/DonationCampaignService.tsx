@@ -57,8 +57,10 @@ class DonationCampaignService {
     }
 
     public async initialise(): Promise<DonationConfiguration | null> {
-        const donationConfiguration = await this.callSessionsDonationCampaigns();
-        await new Promise(resolve => setTimeout(resolve, this.delayMS));
+        const [donationConfiguration] = await Promise.all([
+            this.callSessionsDonationCampaigns(),
+            new Promise(resolve => setTimeout(resolve, this.delayMS))
+        ]);
         return donationConfiguration;
     }
 

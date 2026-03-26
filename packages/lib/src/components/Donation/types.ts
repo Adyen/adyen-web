@@ -23,8 +23,7 @@ export interface DonationOptions {
      */
     autoStart?: boolean;
     /**
-     * Optional number representing the delay in milliseconds after which a call will be made, if mandated by the /payments response in the Sessions flow,
-     * to see if any Donation campaigns exist (which will lead to the showing of the Donation component).
+     * Optional number representing the delay in milliseconds before the Donation component is mounted (if mandated by the /payments response in the Sessions flow),
      * Defaults to 3000.
      */
     delay?: number;
