@@ -33,6 +33,7 @@ describe('UPIComponent', () => {
                     apps={[gpayApp]}
                     mode={UPI_MODE.INTENT}
                     onChange={jest.fn()}
+                    setComponentRef={jest.fn()}
                     showPayButton={false}
                     payButton={() => <button className="pay-button" />}
                 />
@@ -50,6 +51,7 @@ describe('UPIComponent', () => {
                     onChange={jest.fn()}
                     showPayButton={true}
                     payButton={() => <button>Pay</button>}
+                    setComponentRef={jest.fn()}
                 />
             );
             expect(await screen.findByRole('button', { name: 'Pay' })).toBeInTheDocument();
@@ -60,7 +62,14 @@ describe('UPIComponent', () => {
             const user = userEvent.setup();
 
             customRender(
-                <UPIComponent apps={[gpayApp]} mode={UPI_MODE.INTENT} onChange={jest.fn()} showPayButton={true} payButton={payButtonMock} />
+                <UPIComponent
+                    apps={[gpayApp]}
+                    mode={UPI_MODE.INTENT}
+                    onChange={jest.fn()}
+                    showPayButton={true}
+                    payButton={payButtonMock}
+                    setComponentRef={jest.fn()}
+                />
             );
 
             expect(payButtonMock).toHaveBeenLastCalledWith(expect.objectContaining({ status: 'ready' }));
@@ -81,6 +90,7 @@ describe('UPIComponent', () => {
                     showPayButton={false}
                     onChange={onChangeMock}
                     payButton={() => <button className="pay-button" />}
+                    setComponentRef={jest.fn()}
                 />
             );
 

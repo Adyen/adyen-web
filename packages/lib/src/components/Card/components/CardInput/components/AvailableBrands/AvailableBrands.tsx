@@ -1,9 +1,10 @@
 import { h } from 'preact';
-import classNames from 'classnames';
-import './AvailableBrands.scss';
+import cn from 'classnames';
+
 import { BrandConfiguration } from '../../../../types';
 import { getFullBrandName } from '../../utils';
-import Brand from '../../../../../internal/Brand';
+import { BrandIcons } from '../../../../../internal/BrandIcons/BrandIcons';
+import './AvailableBrands.scss';
 
 type AvailableBrands = Array<BrandConfiguration>;
 
@@ -18,22 +19,18 @@ const AvailableBrands = ({ brands, activeBrand }: Readonly<PaymentMethodBrandsPr
     }
 
     const isValidBrand = activeBrand !== 'card';
+
     return (
-        <span
-            className={classNames('adyen-checkout__card__brands', {
+        <BrandIcons
+            className={cn('adyen-checkout__card__brands', {
                 'adyen-checkout__card__brands--hidden': isValidBrand
             })}
-        >
-            {brands.map(({ name, icon }) => (
-                <Brand
-                    showOnError
-                    wrapperClassName={'adyen-checkout__card__brands__brand-wrapper'}
-                    key={name}
-                    url={icon}
-                    alt={getFullBrandName(name)}
-                ></Brand>
-            ))}
-        </span>
+            brandIcons={brands.map(brand => ({
+                src: brand.icon,
+                alt: getFullBrandName(brand.name)
+            }))}
+            showIconOnError
+        />
     );
 };
 

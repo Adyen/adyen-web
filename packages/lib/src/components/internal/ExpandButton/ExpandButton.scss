@@ -5,8 +5,7 @@
     display: flex;
     gap: variable-generator.token(spacer-060);
     align-items: center;
-    flex-shrink: 0;
-    margin-right: variable-generator.token(spacer-070);
+    flex: 1;
     max-width: 100%;
 
     // reset button styles

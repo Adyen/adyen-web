@@ -1,6 +1,6 @@
-import { Fragment, h, RefObject } from 'preact';
-import { useCallback, useEffect, useState } from 'preact/hooks';
-import { UIElementStatus } from '../../../types';
+import { Fragment, h } from 'preact';
+import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
+import { ComponentMethodsRef, UIElementStatus } from '../../../types';
 import { App, UpiMode } from '../../types';
 import useImage from '../../../../core/Context/useImage';
 import { A11Y, UPI_MODE } from '../../constants';
@@ -22,12 +22,20 @@ interface UPIComponentProps {
     showPayButton: boolean;
     apps?: Array<App>;
     mandate?: Mandate;
-    ref?(ref: RefObject<typeof UPIComponent>): void;
+    setComponentRef: (ref: ComponentMethodsRef) => void;
     payButton(props: PayButtonProps): h.JSX.Element;
     onChange({ data, valid, errors, isValid }: OnChangeProps): void;
 }
 
-export default function UPIComponent({ mode, onChange, payButton, showPayButton, mandate, apps = [] }: Readonly<UPIComponentProps>): h.JSX.Element {
+export default function UPIComponent({
+    mode,
+    onChange,
+    payButton,
+    setComponentRef,
+    showPayButton,
+    mandate,
+    apps = []
+}: Readonly<UPIComponentProps>): h.JSX.Element {
     const { i18n } = useCoreContext();
     const getImage = useImage();
     const [status, setStatus] = useState<UIElementStatus>('ready');
@@ -36,15 +44,18 @@ export default function UPIComponent({ mode, onChange, payButton, showPayButton,
     const [isValid, setIsValid] = useState<boolean>(mode === UPI_MODE.QR_CODE);
     const mandateComponent = mandate && <UPIMandate mandate={mandate} amount={amount} />;
 
-    this.setStatus = (status: UIElementStatus) => {
-        setStatus(status);
-    };
-
-    this.showValidation = () => {
-        if (mode === UPI_MODE.INTENT) {
-            validateIntentApp();
+    const upiRef = useRef<ComponentMethodsRef>({
+        setStatus: setStatus,
+        showValidation: () => {
+            if (mode === UPI_MODE.INTENT) {
+                validateIntentApp();
+            }
         }
-    };
+    });
+
+    useEffect(() => {
+        setComponentRef(upiRef.current);
+    }, [setComponentRef]);
 
     const handleAppSelect = useCallback(
         (app: App) => {
@@ -58,19 +69,19 @@ export default function UPIComponent({ mode, onChange, payButton, showPayButton,
     );
 
     const validateIntentApp = useCallback(() => {
-        if (!selectedApp) {
-            setStatus('error');
-            setIsValid(false);
-        } else {
+        if (selectedApp) {
             setStatus('ready');
             setIsValid(true);
+        } else {
+            setStatus('error');
+            setIsValid(false);
         }
     }, [selectedApp]);
 
     useEffect(() => {
         if (mode === UPI_MODE.QR_CODE) {
             /**
-             * When selecting QR code mode, we need to clear the state data and trigger the 'onChange'.
+             * When selecting QR code mode, we need to clear the state data and trigger 'onChange'.
              */
             onChange({ data: {}, valid: {}, errors: {}, isValid: true });
             return;
