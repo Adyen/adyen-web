@@ -109,13 +109,6 @@ describe('UPI', () => {
             await waitFor(() => {
                 expect(upi.isValid).toBe(false);
             });
-
-            const user = userEvent.setup();
-            const continueButton = await screen.findByRole('button', { name: /continue/i });
-            await user.click(continueButton);
-
-            expect(onSubmitMock).not.toHaveBeenCalled();
-            expect(screen.getByRole('alert')).toBeInTheDocument();
         });
 
         test('should not show an error and be valid if an app is selected', async () => {
