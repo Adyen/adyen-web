@@ -17,7 +17,16 @@ export interface DonationCampaign extends CampaignContentProps {
 }
 
 export interface DonationOptions {
+    /**
+     * Optional boolean to delay, or halt, the showing of the Donation component when in the Sessions flow.
+     * Defaults to true.
+     */
     autoStart?: boolean;
+    /**
+     * Optional number representing the delay in milliseconds after which a call will be made, if mandated by the /payments response in the Sessions flow,
+     * to see if any Donation campaigns exist (which will lead to the showing of the Donation component).
+     * Defaults to 3000.
+     */
     delay?: number;
     /**
      * Optional callback when the (sessions) donation is completed (or cancelled)
