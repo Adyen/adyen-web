@@ -15,6 +15,7 @@ type AnalyticsInfoEventProps = {
     configData?: Record<string, any>;
     cdnUrl?: string;
     selectedValue?: string;
+    issuerList?: string[];
 };
 
 export enum UiTarget {
@@ -91,6 +92,7 @@ export class AnalyticsInfoEvent extends AbstractAnalyticsEvent {
     private readonly selectedValue?: string;
     private readonly validationErrorCode?: string;
     private readonly validationErrorMessage?: string;
+    private readonly issuerList?: string[];
 
     /**
      *  Third party script URL's (e.g. Apple Pay)
@@ -112,6 +114,7 @@ export class AnalyticsInfoEvent extends AbstractAnalyticsEvent {
         if (props.selectedValue) this.selectedValue = props.selectedValue;
         if (props.validationErrorCode) this.validationErrorCode = props.validationErrorCode;
         if (props.validationErrorMessage) this.validationErrorMessage = props.validationErrorMessage;
+        if (props.issuerList) this.issuerList = props.issuerList;
         if (this.type === InfoEventType.rendered) {
             this.configData = this.createAnalyticsConfigData(props?.configData);
         }

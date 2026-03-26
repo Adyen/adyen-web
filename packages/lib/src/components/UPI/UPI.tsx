@@ -125,6 +125,7 @@ class UPI extends UIElement<UPIConfiguration> {
                         mode={this.mode}
                         showPayButton={this.props.showPayButton}
                         mandate={this.props.mandate}
+                        onSubmitAnalytics={this.submitAnalytics}
                     />
                 );
         }
