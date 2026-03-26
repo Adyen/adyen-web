@@ -1,4 +1,4 @@
-import { h } from 'preact';
+import { h, Fragment } from 'preact';
 import { AdyenCheckout, components, Donation } from '../../../..';
 import { MetaConfiguration, PaymentMethodStoryProps, StoryConfiguration } from '../../../../../storybook/types';
 import { ComponentContainer } from '../../../../../storybook/components/ComponentContainer';
@@ -156,13 +156,27 @@ export const SessionsDonationReparented: DropinStory = {
 
         donation: {
             autoStart: false,
-            delay: 1000
+            delay: 3000,
+            onSuccess: res => {
+                const fcDialog = document.getElementById('donation-dialog') as HTMLDialogElement;
+                const delay = res.didDonate ? 3000 : 0;
+                setTimeout(() => {
+                    fcDialog.close();
+                }, delay);
+            },
+            onError: obj => console.log('### Dropin_withSessionsDonation::onError:: obj', obj)
         },
 
         onPaymentCompleted: (result, element) => {
             if (result.askDonation === true) {
+                const fcDialog = document.getElementById('donation-dialog') as HTMLDialogElement;
+
+                setTimeout(() => {
+                    fcDialog.showModal();
+                }, 3000);
+
                 new Donation(element.core, {
-                    rootNode: 'body',
+                    rootNode: '#modalContent',
                     commercialTxAmount: element.props.amount.value
                 });
             }
@@ -176,9 +190,14 @@ export const SessionsDonationReparented: DropinStory = {
         AdyenCheckout.register(...Classes);
 
         return (
-            <Checkout checkoutConfig={checkoutConfig}>
-                {checkout => <ComponentContainer element={new DropinComponent(checkout, componentConfiguration)} />}
-            </Checkout>
+            <Fragment>
+                <Checkout checkoutConfig={checkoutConfig}>
+                    {checkout => <ComponentContainer element={new DropinComponent(checkout, componentConfiguration)} />}
+                </Checkout>
+                <dialog id="donation-dialog" className="modal">
+                    <div id={'modalContent'}></div>
+                </dialog>
+            </Fragment>
         );
     }
 };
