@@ -7,7 +7,7 @@ import UPIComponent from './UPIComponent';
 import { CoreProvider } from '../../../../core/Context/CoreProvider';
 import { App } from '../../types';
 import { AmountProvider } from '../../../../core/Context/AmountProvider';
-import { UPI_MODE } from '../../constants';
+import { MAX_PRIMARY_APPS, UPI_MODE } from '../../constants';
 import { InfoEventType, UiTarget } from '../../../../core/Analytics/events/AnalyticsInfoEvent';
 
 const customRender = (ui: h.JSX.Element) => {
@@ -27,11 +27,19 @@ describe('UPIComponent', () => {
 
     describe('Upi intent mode', () => {
         const gpayApp: App = { id: 'gpay', name: 'Google Pay' };
-        const phonepeApp: App = { id: 'phonepe', name: 'IphonePE' };
-        const bhimApp: App = { id: 'bhim', name: 'BHIM' };
-        const paytmApp: App = { id: 'paytm', name: 'Paytm' };
-        const amazonApp: App = { id: 'amazon', name: 'Amazon Pay' };
-        const whatsappApp: App = { id: 'whatsapp', name: 'WhatsApp' };
+
+        const allApps: App[] = [
+            gpayApp,
+            { id: 'phonepe', name: 'PhonePe' },
+            { id: 'bhim', name: 'BHIM' },
+            { id: 'paytm', name: 'Paytm' },
+            { id: 'amazon', name: 'Amazon Pay' },
+            { id: 'whatsapp', name: 'WhatsApp' }
+        ];
+
+        const priorityApps = allApps.slice(0, MAX_PRIMARY_APPS);
+        const appsExceedingMax = allApps.slice(0, MAX_PRIMARY_APPS + 2);
+        const lowPriorityApp = appsExceedingMax[MAX_PRIMARY_APPS];
 
         test('should show a list of apps from the given app list', async () => {
             customRender(
@@ -41,6 +49,7 @@ describe('UPIComponent', () => {
                     onChange={jest.fn()}
                     showPayButton={false}
                     payButton={() => <button className="pay-button" />}
+                    onSubmitAnalytics={jest.fn()}
                 />
             );
 
@@ -48,41 +57,40 @@ describe('UPIComponent', () => {
             expect(await screen.findByRole('radio', { name: /google pay/i })).toBeInTheDocument();
         });
 
-        test('should split apps into primary grid (max 4) and secondary dropdown when more than 4 apps', async () => {
-            const sixApps = [gpayApp, phonepeApp, bhimApp, paytmApp, amazonApp, whatsappApp];
+        test('should split apps into priority grid and low-priority dropdown when exceeding MAX_PRIMARY_APPS', async () => {
             customRender(
                 <UPIComponent
-                    apps={sixApps}
+                    apps={appsExceedingMax}
                     mode={UPI_MODE.INTENT}
                     onChange={jest.fn()}
                     showPayButton={false}
                     payButton={() => <button className="pay-button" />}
+                    onSubmitAnalytics={jest.fn()}
                 />
             );
 
             await screen.findByRole('radiogroup');
             const radios = screen.getAllByRole('radio');
-            expect(radios).toHaveLength(4);
+            expect(radios).toHaveLength(MAX_PRIMARY_APPS);
             expect(radios[0]).toHaveAccessibleName(/Google Pay/i);
-            expect(radios[3]).toHaveAccessibleName(/Paytm/i);
 
             expect(screen.getByRole('button', { name: /Choose preferred app/i })).toBeInTheDocument();
         });
 
-        test('should not show dropdown when 4 or fewer apps', async () => {
-            const fourApps = [gpayApp, phonepeApp, bhimApp, paytmApp];
+        test('should not show dropdown when apps count equals MAX_PRIMARY_APPS', async () => {
             customRender(
                 <UPIComponent
-                    apps={fourApps}
+                    apps={priorityApps}
                     mode={UPI_MODE.INTENT}
                     onChange={jest.fn()}
                     showPayButton={false}
                     payButton={() => <button className="pay-button" />}
+                    onSubmitAnalytics={jest.fn()}
                 />
             );
 
             const radios = await screen.findAllByRole('radio');
-            expect(radios).toHaveLength(4);
+            expect(radios).toHaveLength(MAX_PRIMARY_APPS);
             expect(screen.queryByRole('button', { name: /Choose preferred app/i })).not.toBeInTheDocument();
         });
 
@@ -94,6 +102,7 @@ describe('UPIComponent', () => {
                     onChange={jest.fn()}
                     showPayButton={true}
                     payButton={() => <button>Pay</button>}
+                    onSubmitAnalytics={jest.fn()}
                 />
             );
             expect(await screen.findByRole('button', { name: 'Pay' })).toBeInTheDocument();
@@ -104,7 +113,14 @@ describe('UPIComponent', () => {
             const user = userEvent.setup();
 
             customRender(
-                <UPIComponent apps={[gpayApp]} mode={UPI_MODE.INTENT} onChange={jest.fn()} showPayButton={true} payButton={payButtonMock} />
+                <UPIComponent
+                    apps={[gpayApp]}
+                    mode={UPI_MODE.INTENT}
+                    onChange={jest.fn()}
+                    showPayButton={true}
+                    payButton={payButtonMock}
+                    onSubmitAnalytics={jest.fn()}
+                />
             );
 
             expect(payButtonMock).toHaveBeenLastCalledWith(expect.objectContaining({ status: 'ready' }));
@@ -125,6 +141,7 @@ describe('UPIComponent', () => {
                     showPayButton={false}
                     onChange={onChangeMock}
                     payButton={() => <button className="pay-button" />}
+                    onSubmitAnalytics={jest.fn()}
                 />
             );
 
@@ -148,27 +165,27 @@ describe('UPIComponent', () => {
         test('should fire onChange with valid state after selecting from dropdown', async () => {
             const onChangeMock = jest.fn();
             const user = userEvent.setup();
-            const sixApps = [gpayApp, phonepeApp, bhimApp, paytmApp, amazonApp, whatsappApp];
 
             customRender(
                 <UPIComponent
-                    apps={sixApps}
+                    apps={appsExceedingMax}
                     mode={UPI_MODE.INTENT}
                     showPayButton={false}
                     onChange={onChangeMock}
                     payButton={() => <button className="pay-button" />}
+                    onSubmitAnalytics={jest.fn()}
                 />
             );
 
             const dropdownButton = screen.getByRole('button', { name: /Choose preferred app/i });
             await user.click(dropdownButton);
 
-            const amazonOption = await screen.findByRole('option', { name: /Amazon Pay/i });
-            await user.click(amazonOption);
+            const option = await screen.findByRole('option', { name: new RegExp(lowPriorityApp.name, 'i') });
+            await user.click(option);
 
             await waitFor(() => {
                 expect(onChangeMock).toHaveBeenLastCalledWith({
-                    data: { app: amazonApp },
+                    data: { app: lowPriorityApp },
                     isValid: true
                 });
             });
@@ -177,11 +194,10 @@ describe('UPIComponent', () => {
         test('should fire analytics events: displayed on mount and selected on grid/dropdown selection', async () => {
             const onSubmitAnalyticsMock = jest.fn();
             const user = userEvent.setup();
-            const sixApps = [gpayApp, phonepeApp, bhimApp, paytmApp, amazonApp, whatsappApp];
 
             customRender(
                 <UPIComponent
-                    apps={sixApps}
+                    apps={appsExceedingMax}
                     mode={UPI_MODE.INTENT}
                     onChange={jest.fn()}
                     showPayButton={false}
@@ -212,14 +228,14 @@ describe('UPIComponent', () => {
 
             const dropdownButton = screen.getByRole('button', { name: /Choose preferred app/i });
             await user.click(dropdownButton);
-            const amazonOption = await screen.findByRole('option', { name: /Amazon Pay/i });
-            await user.click(amazonOption);
+            const option = await screen.findByRole('option', { name: new RegExp(lowPriorityApp.name, 'i') });
+            await user.click(option);
 
             expect(onSubmitAnalyticsMock).toHaveBeenCalledWith(
                 expect.objectContaining({
                     type: InfoEventType.selected,
                     target: UiTarget.listSearch,
-                    issuer: 'Amazon Pay'
+                    issuer: lowPriorityApp.name
                 })
             );
         });

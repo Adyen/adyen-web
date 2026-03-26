@@ -31,7 +31,7 @@ interface UPIComponentProps {
     ref?(ref: RefObject<typeof UPIComponent>): void;
     payButton(props: PayButtonProps): h.JSX.Element;
     onChange({ data, valid, errors, isValid }: OnChangeProps): void;
-    onSubmitAnalytics?(event: AbstractAnalyticsEvent): void;
+    onSubmitAnalytics(event: AbstractAnalyticsEvent): void;
 }
 
 export default function UPIComponent({
@@ -51,10 +51,10 @@ export default function UPIComponent({
     const [isValid, setIsValid] = useState<boolean>(mode === UPI_MODE.QR_CODE);
     const mandateComponent = mandate && <UPIMandate mandate={mandate} amount={amount} />;
 
-    const primaryApps = useMemo(() => apps.slice(0, MAX_PRIMARY_APPS), [apps]);
-    const secondaryApps = useMemo(() => apps.slice(MAX_PRIMARY_APPS), [apps]);
+    const priorityApps = useMemo(() => apps.slice(0, MAX_PRIMARY_APPS), [apps]);
+    const lowPriorityApps = useMemo(() => apps.slice(MAX_PRIMARY_APPS), [apps]);
 
-    const secondaryAppItems = useMemo(() => secondaryApps.map(app => ({ id: app.id, name: app.name })), [secondaryApps]);
+    const lowPriorityAppItems = useMemo(() => lowPriorityApps.map(app => ({ id: app.id, name: app.name })), [lowPriorityApps]);
 
     this.setStatus = (status: UIElementStatus) => {
         setStatus(status);
@@ -74,7 +74,7 @@ export default function UPIComponent({
             setIsValid(true);
             setStatus('ready');
 
-            onSubmitAnalytics?.(
+            onSubmitAnalytics(
                 new AnalyticsInfoEvent({
                     component: 'upi_intent',
                     type: InfoEventType.selected,
@@ -88,14 +88,14 @@ export default function UPIComponent({
 
     const handleDropdownSelect = useCallback(
         (event: { target: SelectTargetObject }) => {
-            const app = secondaryApps.find(a => a.id === event.target.value);
+            const app = lowPriorityApps.find(a => a.id === event.target.value);
             if (!app || app.id === selectedApp?.id) return;
 
             setSelectedApp(app);
             setIsValid(true);
             setStatus('ready');
 
-            onSubmitAnalytics?.(
+            onSubmitAnalytics(
                 new AnalyticsInfoEvent({
                     component: 'upi_intent',
                     type: InfoEventType.selected,
@@ -104,7 +104,7 @@ export default function UPIComponent({
                 })
             );
         },
-        [secondaryApps, selectedApp, onSubmitAnalytics]
+        [lowPriorityApps, selectedApp, onSubmitAnalytics]
     );
 
     const validateIntentApp = useCallback(() => {
@@ -132,16 +132,16 @@ export default function UPIComponent({
     }, [selectedApp, isValid, mode, onChange]);
 
     useEffect(() => {
-        if (mode === UPI_MODE.INTENT && primaryApps.length > 0) {
-            onSubmitAnalytics?.(
-                new AnalyticsInfoEvent({
-                    component: 'upi_intent',
-                    type: InfoEventType.displayed,
-                    target: UiTarget.list,
-                    issuerList: primaryApps.map(a => a.id)
-                })
-            );
-        }
+        if (mode !== UPI_MODE.INTENT || priorityApps.length === 0) return;
+
+        onSubmitAnalytics(
+            new AnalyticsInfoEvent({
+                component: 'upi_intent',
+                type: InfoEventType.displayed,
+                target: UiTarget.list,
+                issuerList: priorityApps.map(a => a.id)
+            })
+        );
     }, []);
 
     return (
@@ -152,17 +152,17 @@ export default function UPIComponent({
                     {status === 'error' && <Alert icon={'cross'}>{i18n.get('upi.error.noAppSelected')}</Alert>}
                     <UPIIntentAppList
                         disabled={status === 'loading'}
-                        apps={primaryApps}
+                        apps={priorityApps}
                         selectedAppId={selectedApp?.id}
                         onAppSelect={handleAppSelect}
                     />
-                    {secondaryApps.length > 0 && (
+                    {lowPriorityApps.length > 0 && (
                         <Fragment>
                             <ContentSeparator label="issuerList.separatorText" />
                             <Field label={i18n.get('upi.intent.apps.dropdown.label')} classNameModifiers={['upi-app-list']} name={'upi-app-list'}>
                                 <Select
-                                    items={secondaryAppItems}
-                                    selectedValue={secondaryApps.some(a => a.id === selectedApp?.id) ? selectedApp?.id : undefined}
+                                    items={lowPriorityAppItems}
+                                    selectedValue={lowPriorityApps.some(a => a.id === selectedApp?.id) ? selectedApp?.id : undefined}
                                     placeholder={i18n.get('upi.intent.apps.dropdown.placeholder')}
                                     name={'upi-app-list'}
                                     className={'adyen-checkout__upi-app-list__dropdown'}
