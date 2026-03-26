@@ -3,6 +3,9 @@ import { PAYMENT_RESULT, REGULAR_TEST_CARD, TEST_CVC_VALUE, TEST_DATE_VALUE } fr
 import { URL_MAP } from '../../../../fixtures/URL_MAP';
 import { Card } from '../../../../models/card';
 
+import { donationCampaignsMock, donationsMock } from '../../../../mocks/sessions/donations/donations.mock';
+import { donationCampaignsFixedAmountsMockData, donationSuccessMockData } from '../../../../mocks/sessions/donations/donations.data';
+
 const DEFAULT_DONATION_AUTO_START_DELAY_MS = 3000;
 
 async function fillCard(card: Card) {
@@ -13,6 +16,9 @@ async function fillCard(card: Card) {
 }
 
 test('#1 Should succeed in making a payment and see the donation component', async ({ dropinWithSession, page }) => {
+    // Set up mock BEFORE navigating
+    await donationCampaignsMock(page, donationCampaignsFixedAmountsMockData);
+
     await dropinWithSession.goto(URL_MAP.dropinWithSession_donations);
     const { paymentMethodDetailsLocator } = await dropinWithSession.selectNonStoredPaymentMethod('scheme');
 
@@ -29,7 +35,11 @@ test('#1 Should succeed in making a payment and see the donation component', asy
     await expect(dropinWithSession.donationComponent).toBeVisible();
 });
 
-test('#2 Should succeed in making a payment, see the donation component, and make a donation', async ({ dropinWithSession, page }) => {
+test('#2 Should succeed in making a payment, see the donation component, and make a (fixedAmount) donation', async ({ dropinWithSession, page }) => {
+    // Set up mocks BEFORE navigating
+    await donationCampaignsMock(page, donationCampaignsFixedAmountsMockData);
+    await donationsMock(page, donationSuccessMockData);
+
     await dropinWithSession.goto(URL_MAP.dropinWithSession_donations_noDelay);
     const { paymentMethodDetailsLocator } = await dropinWithSession.selectNonStoredPaymentMethod('scheme');
 
