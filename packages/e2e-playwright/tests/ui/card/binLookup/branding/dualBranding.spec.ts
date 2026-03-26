@@ -1,7 +1,8 @@
 import { expect, test } from '../../../../../fixtures/card.fixture';
 import { getStoryUrl } from '../../../../utils/getStoryUrl';
 import { URL_MAP } from '../../../../../fixtures/URL_MAP';
-import { BCMC_DUAL_BRANDED_VISA, DUAL_BRANDED_CARD_EXCLUDED, DUAL_BRANDED_EFTPOS } from '../../../../utils/constants';
+import { BCMC_DUAL_BRANDED_VISA, DUAL_BRANDED_CARD_EXCLUDED, DUAL_BRANDED_EFTPOS, TAGS } from '../../../../utils/constants';
+import { toHaveScreenshot } from '../../../../utils/assertions';
 
 import LANG from '../../../../../../server/translations/en-US.json';
 import { binLookupMock } from '../../../../../mocks/binLookup/binLookup.mock';
@@ -14,7 +15,7 @@ const componentConfig = {
 };
 
 test.describe('Card - Dual branding UI after binLookup gives a dual brand result', () => {
-    test('#1 should show brand options with first selected by default for EU dual branded card', async ({ card, page }) => {
+    test('#1 should show brand options with first selected by default for EU dual branded card', { tag: [TAGS.SCREENSHOT] }, async ({ card, page, browserName }) => {
         await card.goto(getStoryUrl({ baseUrl: URL_MAP.card, componentConfig }));
 
         // Get a binLookup result
@@ -40,9 +41,12 @@ test.describe('Card - Dual branding UI after binLookup gives a dual brand result
 
         // Contextual label visible for EU co-badged card
         await expect(card.isDualBrandContextualLabelVisible()).resolves.toBe(true);
+
+        // Screenshot: EU dual brand selector with first brand selected
+        await toHaveScreenshot(card.cardNumberField, browserName, 'dual-brand-eu-default-selection.png');
     });
 
-    test('#2 should change CVC visibility when interacting with brand selection', async ({ card, page }) => {
+    test('#2 should change CVC visibility when interacting with brand selection', { tag: [TAGS.SCREENSHOT] }, async ({ card, page, browserName }) => {
         await binLookupMock(page, dualBrandedBcmcAndVisa);
 
         await card.goto(getStoryUrl({ baseUrl: URL_MAP.card, componentConfig }));
@@ -73,6 +77,9 @@ test.describe('Card - Dual branding UI after binLookup gives a dual brand result
 
         // Inline dual brand icons are still visible
         await expect(card.dualBrandingIconsHolder).toBeVisible();
+
+        // Screenshot: EU dual brand after switching to Bancontact
+        await toHaveScreenshot(card.cardNumberField, browserName, 'dual-brand-eu-after-brand-switch.png');
     });
 
     test('#3 should show brand selection and trigger error when PAN is incomplete', async ({
@@ -166,7 +173,8 @@ test.describe('Card - Dual branding UI after binLookup gives a dual brand result
 
     test(
         '#6 should show icons but no selection mechanism for non-EU dual brand',
-        async ({ card, page }) => {
+        { tag: [TAGS.SCREENSHOT] },
+        async ({ card, page, browserName }) => {
             const componentConfig = { brands: ['mc', 'visa', 'amex', 'maestro', 'bcmc', 'eftpos_australia'] };
 
             await card.goto(getStoryUrl({ baseUrl: URL_MAP.card, componentConfig }));
@@ -185,6 +193,9 @@ test.describe('Card - Dual branding UI after binLookup gives a dual brand result
 
             // No contextual label
             await expect(card.isDualBrandContextualLabelVisible()).resolves.toBe(false);
+
+            // Screenshot: Non-EU dual brand (display-only, no selection border)
+            await toHaveScreenshot(card.cardNumberField, browserName, 'dual-brand-non-eu-display-only.png');
         }
     );
 });

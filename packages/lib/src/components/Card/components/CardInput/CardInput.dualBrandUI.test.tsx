@@ -94,8 +94,8 @@ describe('CardNumber and the dual branding UI', () => {
         expect(container.querySelector('[data-cse="encryptedSecurityCode"]')).toBeTruthy();
         /* eslint-enable testing-library/no-node-access, testing-library/no-container */
 
-        expect(screen.queryAllByRole('radio')).toHaveLength(0);
-        expect(screen.queryByRole('radiogroup')).not.toBeInTheDocument();
+        expect(screen.queryAllByRole('button')).toHaveLength(0);
+        expect(screen.queryByRole('group')).not.toBeInTheDocument();
     });
 
     test('should show two selectable brand options with first selected by default and contextual label for EU dual brand', async () => {
@@ -106,13 +106,13 @@ describe('CardNumber and the dual branding UI', () => {
         });
 
         // Two brand options with accessible names
-        const radios = screen.getAllByRole('radio');
-        expect(radios).toHaveLength(2);
-        expect(screen.getByRole('radio', { name: /visa/i })).toBeVisible();
-        expect(screen.getByRole('radio', { name: /carte bancaire/i })).toBeVisible();
+        const buttons = screen.getAllByRole('button');
+        expect(buttons).toHaveLength(2);
+        expect(screen.getByRole('button', { name: /visa/i })).toBeVisible();
+        expect(screen.getByRole('button', { name: /carte bancaire/i })).toBeVisible();
 
         // First brand is selected by default
-        expect(radios[0]).toHaveAttribute('aria-checked', 'true');
+        expect(buttons[0]).toHaveAttribute('aria-expanded', 'true');
 
         // Contextual label visible
         expect(screen.getByText(/you can select the card brand/i)).toBeVisible();
@@ -130,8 +130,8 @@ describe('CardNumber and the dual branding UI', () => {
         expect(images.length).toBeGreaterThanOrEqual(2);
 
         // No interactive selection UI
-        expect(screen.queryAllByRole('radio')).toHaveLength(0);
-        expect(screen.queryByRole('radiogroup')).not.toBeInTheDocument();
+        expect(screen.queryAllByRole('button')).toHaveLength(0);
+        expect(screen.queryByRole('group')).not.toBeInTheDocument();
 
         // No contextual label
         expect(screen.queryByText(/you can select the card brand/i)).not.toBeInTheDocument();
@@ -145,14 +145,38 @@ describe('CardNumber and the dual branding UI', () => {
         });
 
         // Brand selection is visible before error
-        expect(screen.getAllByRole('radio')).toHaveLength(2);
+        expect(screen.getAllByRole('button')).toHaveLength(2);
 
         await act(() => {
             cardInputRef.showValidation();
         });
 
         // Error state shown — at least one error element is visible
-        expect(screen.queryAllByRole('radio')).toHaveLength(0);
+        expect(screen.queryAllByRole('button')).toHaveLength(0);
         expect(screen.queryByText(/you can select the card brand/i)).not.toBeInTheDocument();
+    });
+
+    test('should hide contextual label when other fields have errors while keeping brand selection visible', async () => {
+        renderCardInput(<CardInput {...cardInputRequiredProps} />);
+
+        await act(() => {
+            cardInputRef.processBinLookupResponse(euDualBrandResp, false);
+        });
+
+        // Brand selection and contextual label are visible
+        expect(screen.getAllByRole('button')).toHaveLength(2);
+        expect(screen.getByText(/you can select the card brand/i)).toBeVisible();
+
+        // Simulate expiry date / CVC validation errors (non-PAN errors)
+        await act(() => {
+            cardInputRef.setFocusOn('encryptedExpiryDate');
+            cardInputRef.showValidation();
+        });
+
+        // Contextual label should be hidden
+        expect(screen.queryByText(/you can select the card brand/i)).not.toBeInTheDocument();
+
+        // Brand selection buttons should still be visible
+        expect(screen.getAllByRole('button')).toHaveLength(2);
     });
 });
