@@ -480,9 +480,11 @@ cd packages/lib
 - **DO** test error states and edge cases
 - **DO** maintain strict test isolation. Every test must be independent and idempotent, ensuring that the execution of one test does not influence the outcome of another through shared memory or persistent state.
 - **DO** use `await act()` when triggering state updates via refs or callbacks
+- **DO** import constants from source code if available and derive test data from them, so tests stay in sync when constants change
 - **DO NOT** use `void act()` — always await the returned promise
 - **DO NOT** mock internal implementation (mock external APIs only)
 - **DO NOT** use `global.core` and `global.i18n` from test setup
+- **DO NOT** hardcode magic numbers that duplicate source constants — import and derive instead
 
 ### Coverage
 
@@ -550,9 +552,12 @@ await expect(locator).toHaveScreenshot('my-screenshot.png');
 - **DO** reuse constants from tests/utils/constants.ts
 - **DO** implement isComponentVisible() for each component
 - **DO** use fillShopperData() helper for form population
+- **DO** prefer `getByRole` with accessible name over CSS class locators in page object models
+- **DO** rely on real test environment API responses when available — avoid mocking `/paymentMethods` or similar endpoints unless testing a specific edge case not reproducible by the API
 - **DO NOT** hardcode test data in specs
 - **DO NOT** use arbitrary waits — use waitFor conditions
 - **DO NOT** use getByTestId unless absolutely necessary
+- **DO NOT** use CSS class selectors for interactive elements in E2E models — use role-based locators instead
 
 ---
 
