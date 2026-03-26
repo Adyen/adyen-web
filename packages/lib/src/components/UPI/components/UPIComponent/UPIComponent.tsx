@@ -3,12 +3,6 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'preact/hooks'
 import { ComponentMethodsRef, UIElementStatus } from '../../../types';
 import { App, UPIAppList, UpiMode } from '../../types';
 import useImage from '../../../../core/Context/useImage';
-import { A11Y, UPI_MODE } from '../../constants';
-import { Fragment, h, RefObject } from 'preact';
-import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
-import { UIElementStatus } from '../../../types';
-import { App, UpiMode } from '../../types';
-import useImage from '../../../../core/Context/useImage';
 import { A11Y, MAX_PRIMARY_APPS, UPI_MODE } from '../../constants';
 import './UPIComponent.scss';
 import { SegmentedControlRegion } from '../../../internal/SegmentedControl';
@@ -40,7 +34,7 @@ interface UPIComponentProps {
     setComponentRef: (ref: ComponentMethodsRef) => void;
     payButton(props: PayButtonProps): h.JSX.Element;
     onChange({ data, valid, errors, isValid }: OnChangeProps): void;
-    onSubmitAnalytics?(event: AbstractAnalyticsEvent): void;
+    onSubmitAnalytics(event: AbstractAnalyticsEvent): void;
 }
 
 export default function UPIComponent({
@@ -70,10 +64,10 @@ export default function UPIComponent({
         }
     });
 
-    const primaryApps = useMemo(() => appsList.slice(0, MAX_PRIMARY_APPS), [appsList]);
-    const secondaryApps = useMemo(() => appsList.slice(MAX_PRIMARY_APPS), [appsList]);
+    const priorityApps = useMemo(() => appsList.slice(0, MAX_PRIMARY_APPS), [appsList]);
+    const lowPriorityApps = useMemo(() => appsList.slice(MAX_PRIMARY_APPS), [appsList]);
 
-    const secondaryAppItems = useMemo(() => secondaryApps.map(app => ({ id: app.id, name: app.name })), [secondaryApps]);
+    const lowPriorityAppItems = useMemo(() => lowPriorityApps.map(app => ({ id: app.id, name: app.name })), [lowPriorityApps]);
 
     this.setStatus = (status: UIElementStatus) => {
         setStatus(status);
@@ -91,7 +85,7 @@ export default function UPIComponent({
             setIsValid(true);
             setStatus('ready');
 
-            onSubmitAnalytics?.(
+            onSubmitAnalytics(
                 new AnalyticsInfoEvent({
                     component: 'upi_intent',
                     type: InfoEventType.selected,
@@ -105,14 +99,14 @@ export default function UPIComponent({
 
     const handleDropdownSelect = useCallback(
         (event: { target: SelectTargetObject }) => {
-            const app = secondaryApps.find(a => a.id === event.target.value);
+            const app = lowPriorityApps.find(a => a.id === event.target.value);
             if (!app || app.id === selectedApp?.id) return;
 
             setSelectedApp(app);
             setIsValid(true);
             setStatus('ready');
 
-            onSubmitAnalytics?.(
+            onSubmitAnalytics(
                 new AnalyticsInfoEvent({
                     component: 'upi_intent',
                     type: InfoEventType.selected,
@@ -121,7 +115,7 @@ export default function UPIComponent({
                 })
             );
         },
-        [secondaryApps, selectedApp, onSubmitAnalytics]
+        [lowPriorityApps, selectedApp, onSubmitAnalytics]
     );
 
     const validateIntentApp = useCallback(() => {
@@ -158,16 +152,16 @@ export default function UPIComponent({
     }, [selectedApp, isValid, mode, onChange]);
 
     useEffect(() => {
-        if (mode === UPI_MODE.INTENT && primaryApps.length > 0) {
-            onSubmitAnalytics?.(
-                new AnalyticsInfoEvent({
-                    component: 'upi_intent',
-                    type: InfoEventType.displayed,
-                    target: UiTarget.list,
-                    issuerList: primaryApps.map(a => a.id)
-                })
-            );
-        }
+        if (mode !== UPI_MODE.INTENT || priorityApps.length === 0) return;
+
+        onSubmitAnalytics(
+            new AnalyticsInfoEvent({
+                component: 'upi_intent',
+                type: InfoEventType.displayed,
+                target: UiTarget.list,
+                issuerList: priorityApps.map(a => a.id)
+            })
+        );
     }, []);
 
     return (
@@ -178,17 +172,17 @@ export default function UPIComponent({
                     {status === 'error' && <Alert icon={'cross'}>{i18n.get('upi.error.noAppSelected')}</Alert>}
                     <UPIIntentAppList
                         disabled={status === 'loading'}
-                        appsList={primaryApps}
+                        appsList={priorityApps}
                         selectedAppId={selectedApp?.id}
                         onAppSelect={handleAppSelect}
                     />
-                    {secondaryApps.length > 0 && (
+                    {lowPriorityApps.length > 0 && (
                         <Fragment>
                             <ContentSeparator label="issuerList.separatorText" />
                             <Field label={i18n.get('upi.intent.apps.dropdown.label')} classNameModifiers={['upi-app-list']} name={'upi-app-list'}>
                                 <Select
-                                    items={secondaryAppItems}
-                                    selectedValue={secondaryApps.some(a => a.id === selectedApp?.id) ? selectedApp?.id : undefined}
+                                    items={lowPriorityAppItems}
+                                    selectedValue={lowPriorityApps.some(a => a.id === selectedApp?.id) ? selectedApp?.id : undefined}
                                     placeholder={i18n.get('upi.intent.apps.dropdown.placeholder')}
                                     name={'upi-app-list'}
                                     className={'adyen-checkout__upi-app-list__dropdown'}

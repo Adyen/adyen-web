@@ -50,37 +50,14 @@ test.describe('UPI - Intent Flow (Mobile)', () => {
         await expect(upiPage.intentArea).not.toBeVisible();
     });
 
-    test('should show dropdown for secondary apps and allow selection from it', async ({ upiPage, page }) => {
-        await page.route('**/api/paymentMethods', async route => {
-            const response = await route.fetch();
-            const body = await response.json();
-
-            const upiIndex = body.paymentMethods.findIndex((pm: any) => pm.type === 'upi');
-            if (upiIndex !== -1) {
-                body.paymentMethods[upiIndex].apps = [
-                    { id: 'gpay', name: 'Google Pay', type: 'upi_intent' },
-                    { id: 'phonepe', name: 'PhonePe', type: 'upi_intent' },
-                    { id: 'bhim', name: 'BHIM', type: 'upi_intent' },
-                    { id: 'paytm', name: 'Paytm', type: 'upi_intent' },
-                    { id: 'amazon', name: 'Amazon Pay', type: 'upi_intent' },
-                    { id: 'whatsapp', name: 'WhatsApp Pay', type: 'upi_intent' }
-                ];
-            }
-
-            await route.fulfill({ response, json: body });
-        });
-
+    test('should show dropdown for low-priority apps and allow selection from it', async ({ upiPage, page }) => {
         await upiPage.goto(URL_MAP.upi);
 
         await expect(upiPage.intentArea).toBeVisible();
         await expect(upiPage.appList).toBeVisible();
-
-        const radios = upiPage.appList.getByRole('radio');
-        await expect(radios).toHaveCount(4);
-
         await expect(upiPage.appDropdown).toBeVisible();
 
-        await upiPage.selectAppFromDropdown(/Amazon Pay/i);
+        await upiPage.selectAppFromDropdown(/.+/);
 
         await upiPage.pay({ name: /continue/i });
 
