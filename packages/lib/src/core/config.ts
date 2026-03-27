@@ -20,6 +20,7 @@ export const GENERIC_OPTIONS = [
     'clientKey',
     'showPayButton',
     'redirectFromTopWhenInIframe',
+    'donation',
 
     // Events
     'onPaymentCompleted',

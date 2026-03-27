@@ -1,5 +1,5 @@
-import { h } from 'preact';
-import { AdyenCheckout, components } from '../../../..';
+import { h, Fragment } from 'preact';
+import { AdyenCheckout, components, Donation } from '../../../..';
 import { MetaConfiguration, PaymentMethodStoryProps, StoryConfiguration } from '../../../../../storybook/types';
 import { ComponentContainer } from '../../../../../storybook/components/ComponentContainer';
 import { DropinConfiguration } from '../../types';
@@ -24,6 +24,9 @@ const meta: MetaConfiguration<DropinConfiguration> = {
         sessionData: {
             control: 'object',
             if: { arg: 'useSessions', truthy: true }
+        },
+        donation: {
+            control: 'object'
         }
     },
     args: {
@@ -117,6 +120,88 @@ export const SplitFundingBrazil = {
             <Checkout checkoutConfig={checkoutConfig}>
                 {checkout => <ComponentContainer element={new DropinComponent(checkout, componentConfiguration)} />}
             </Checkout>
+        );
+    }
+};
+
+export const SessionsDonation: DropinStory = {
+    args: {
+        countryCode: 'NL',
+
+        donation: {
+            autoStart: true,
+            delay: 3000,
+            onSuccess: obj => console.log('### Dropin_withSessionsDonation::onSuccess:: didDonate=', obj),
+            onError: obj => console.log('### Dropin_withSessionsDonation::onError:: obj', obj)
+        }
+    },
+
+    render: ({ componentConfiguration, ...checkoutConfig }: PaymentMethodStoryProps<DropinConfiguration>) => {
+        // Register all Components
+        const { Dropin, ...Components } = components;
+        const Classes = Object.keys(Components).map(key => Components[key]);
+        AdyenCheckout.register(...Classes);
+
+        return (
+            <Checkout checkoutConfig={checkoutConfig}>
+                {checkout => <ComponentContainer element={new DropinComponent(checkout, componentConfiguration)} />}
+            </Checkout>
+        );
+    }
+};
+
+export const SessionsDonationReparented: DropinStory = {
+    args: {
+        countryCode: 'NL',
+
+        donation: {
+            autoStart: false,
+            delay: 3000,
+            onSuccess: res => {
+                const fcDialog = document.getElementById('donation-dialog') as HTMLDialogElement;
+                const delay = res.didDonate ? 3000 : 0;
+                setTimeout(() => {
+                    fcDialog.close();
+                }, delay);
+            },
+            onError: obj => {
+                console.log('### Dropin_withSessionsDonation::onError:: obj', obj);
+                const fcDialog = document.getElementById('donation-dialog') as HTMLDialogElement;
+                fcDialog.close();
+            }
+        },
+
+        onPaymentCompleted: (result, element) => {
+            if (result.askDonation === true) {
+                const fcDialog = document.getElementById('donation-dialog') as HTMLDialogElement;
+
+                setTimeout(() => {
+                    fcDialog.showModal();
+                }, 3000);
+
+                new Donation(element.core, {
+                    rootNode: '#modalContent',
+                    commercialTxAmount: element.props.amount.value
+                });
+            }
+        }
+    },
+
+    render: ({ componentConfiguration, ...checkoutConfig }: PaymentMethodStoryProps<DropinConfiguration>) => {
+        // Register all Components
+        const { Dropin, ...Components } = components;
+        const Classes = Object.keys(Components).map(key => Components[key]);
+        AdyenCheckout.register(...Classes);
+
+        return (
+            <Fragment>
+                <Checkout checkoutConfig={checkoutConfig}>
+                    {checkout => <ComponentContainer element={new DropinComponent(checkout, componentConfiguration)} />}
+                </Checkout>
+                <dialog id="donation-dialog" className="modal">
+                    <div id={'modalContent'}></div>
+                </dialog>
+            </Fragment>
         );
     }
 };
