@@ -37,6 +37,7 @@ function setupCoreMock({ mockSessions = true, paymentMethods = null, analyticsMo
 
     if (mockSessions) {
         core.session = mock<CheckoutSession>();
+        core.session.sessionsDonationInitiated = false;
     }
 
     // @ts-ignore Disable TS check because the 'modules' is read-only.

@@ -1,7 +1,7 @@
 import { render, screen, waitFor } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import DonationElement from './Donation';
-import DonationCampaignService from './DonationCampaignService';
+import DonationCampaignService, { REPARENT_WITHOUT_AUTO_START_ERROR_MSG } from './DonationCampaignService';
 import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 import type { DonationCampaignOptions } from './types';
 
@@ -117,12 +117,6 @@ describe('Donation element', () => {
             rootNode: '#donation-container',
             commercialTxAmount: 1000
         };
-
-        beforeEach(() => {
-            // Reset the static instance count before each test
-            // @ts-ignore - accessing private static for testing
-            DonationCampaignService.instanceCount = 0;
-        });
 
         test('should enter service mode when props contain rootNode and session exists', () => {
             const coreWithSession = setupCoreMock({ mockSessions: true });
@@ -275,6 +269,57 @@ describe('Donation element', () => {
             });
 
             initialiseSpy.mockRestore();
+        });
+
+        test('should log error and not initialise when sessionsDonationInitiated is already true', async () => {
+            const coreWithSession = setupCoreMock({ mockSessions: true });
+            // @ts-ignore - set options
+            coreWithSession.options = { donation: { delay: 0 } };
+
+            // Simulate that a donation has already been initiated
+            coreWithSession.session.sessionsDonationInitiated = true;
+
+            const initialiseSpy = jest.spyOn(DonationCampaignService.prototype, 'initialise');
+            const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+
+            // @ts-ignore - not all props needed
+            new DonationElement(coreWithSession, serviceModeProps);
+
+            // Wait a tick for the async code path to execute
+            await new Promise(resolve => setTimeout(resolve, 10));
+
+            expect(initialiseSpy).not.toHaveBeenCalled();
+            expect(consoleErrorSpy).toHaveBeenCalledWith(REPARENT_WITHOUT_AUTO_START_ERROR_MSG);
+
+            initialiseSpy.mockRestore();
+            consoleErrorSpy.mockRestore();
+        });
+
+        test('should not allow second Donation instance to initialise when first is already in progress', async () => {
+            const coreWithSession = setupCoreMock({ mockSessions: true });
+            // @ts-ignore - set options
+            coreWithSession.options = { donation: { delay: 0 } };
+
+            const initialiseSpy = jest.spyOn(DonationCampaignService.prototype, 'initialise').mockResolvedValue(null);
+            const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+
+            // Create first Donation - this sets sessionsDonationInitiated = true
+            // @ts-ignore - not all props needed
+            new DonationElement(coreWithSession, serviceModeProps);
+
+            // Create second Donation with same session - should be blocked
+            // @ts-ignore - not all props needed
+            new DonationElement(coreWithSession, serviceModeProps);
+
+            // Wait for async code paths
+            await new Promise(resolve => setTimeout(resolve, 10));
+
+            // initialise should only be called once (by the first instance)
+            expect(initialiseSpy).toHaveBeenCalledTimes(1);
+            expect(consoleErrorSpy).toHaveBeenCalledWith(REPARENT_WITHOUT_AUTO_START_ERROR_MSG);
+
+            initialiseSpy.mockRestore();
+            consoleErrorSpy.mockRestore();
         });
     });
 });

@@ -61,9 +61,6 @@ const flushPromisesAndTimers = async () => {
 describe('DonationCampaignService', () => {
     beforeEach(() => {
         jest.useFakeTimers();
-        // Reset the static instance count before each test
-        // @ts-ignore - accessing private static for testing
-        DonationCampaignService.instanceCount = 0;
     });
 
     afterEach(() => {
@@ -77,17 +74,6 @@ describe('DonationCampaignService', () => {
             const service = new DonationCampaignService(core, defaultDonationCampaignProps);
 
             expect(service).toBeInstanceOf(DonationCampaignService);
-        });
-
-        test('should throw error when creating multiple instances without autoStart false', () => {
-            const core = createMockCore();
-            new DonationCampaignService(core, defaultDonationCampaignProps);
-
-            expect(() => {
-                new DonationCampaignService(core, defaultDonationCampaignProps);
-            }).toThrow(
-                'DonationCampaignService:: You need to set donation.autoStart to false if you wish to display the Donation component in a different container.'
-            );
         });
     });
 
@@ -608,12 +594,6 @@ describe('DonationCampaignService', () => {
 
             expect(mockComponent.setStatus).toHaveBeenCalledWith('error');
             expect(onError).toHaveBeenCalledWith(error);
-        });
-    });
-
-    describe('static type', () => {
-        test('should have correct static type', () => {
-            expect(DonationCampaignService.type).toBe('donationCampaignService');
         });
     });
 });

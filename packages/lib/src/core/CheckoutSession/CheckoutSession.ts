@@ -32,6 +32,7 @@ class Session {
     public readonly clientKey: string;
     public readonly loadingContext: string;
     public configuration: SessionConfiguration;
+    private _sessionsDonationInitiated: boolean;
 
     constructor(rawSession: Partial<CheckoutSession>, clientKey: string, loadingContext: string) {
         const session = sanitizeSession(rawSession) as CheckoutSession;
@@ -43,6 +44,8 @@ class Session {
         this.clientKey = clientKey;
         this.loadingContext = loadingContext;
         this.session = session;
+
+        this._sessionsDonationInitiated = false;
 
         if (!this.session.sessionData) {
             this.session = this.getStoredSession();
@@ -61,6 +64,14 @@ class Session {
 
     get data() {
         return this.session.sessionData;
+    }
+
+    set sessionsDonationInitiated(donationInitiated: boolean) {
+        this._sessionsDonationInitiated = donationInitiated;
+    }
+
+    get sessionsDonationInitiated() {
+        return this._sessionsDonationInitiated;
     }
 
     /**

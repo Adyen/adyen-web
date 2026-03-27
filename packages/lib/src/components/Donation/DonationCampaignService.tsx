@@ -12,44 +12,24 @@ import { AnalyticsLogEvent, LogEventSubtype, LogEventType } from '../../core/Ana
 export const DEFAULT_DONATION_AUTO_START_DELAY_MS = 3000;
 
 export const REPARENT_WITHOUT_AUTO_START_ERROR_MSG =
-    'DonationCampaignService:: You need to set donation.autoStart to false if you wish to display the Donation component in a different container.';
+    'Donation instantiation error:: You need to set donation.autoStart to false if you wish to display the Donation component in a different container.\nThe Donation component will be displayed in the default container.';
 
 class DonationCampaignService {
     public static readonly type = 'donationCampaignService';
 
-    private static instanceCount: number = 0;
-
     private readonly core: ICore;
 
     private readonly commercialTxAmount: number = 0;
-    private readonly onDonationCompleted: (result: { didDonate: boolean }) => void;
-    private readonly onDonationFailed: (reason: unknown) => void;
+    private readonly onDonationCompleted?: (result: { didDonate: boolean }) => void;
+    private readonly onDonationFailed?: (reason: unknown) => void;
 
     private readonly delayMS: number;
 
     constructor(checkout: ICore, donationCampaignProps: DonationCampaignOptions) {
-        DonationCampaignService.instanceCount++;
-
-        // If the merchant has not explicitly set autoStart to false, and then tries to display the Donation component in a different container,
-        // we need to warn them otherwise, without this check, 2 calls to the /donationCampaigns endpoint will be made - since UIElement
-        // will automatically mount the Donation component in the component's rootNode.
-        if (DonationCampaignService.instanceCount > 1) {
-            throw new Error(REPARENT_WITHOUT_AUTO_START_ERROR_MSG);
-        }
-
         this.core = checkout;
 
-        this.onDonationCompleted = (result: { didDonate: boolean }) => {
-            // Reset the count now the process has finished
-            DonationCampaignService.instanceCount = 0;
-
-            // Call the merchant defined handler
-            checkout.options.donation?.onSuccess(result);
-        };
-        this.onDonationFailed = (reason: unknown) => {
-            DonationCampaignService.instanceCount = 0;
-            checkout.options.donation?.onError(reason);
-        };
+        this.onDonationCompleted = checkout.options.donation?.onSuccess;
+        this.onDonationFailed = checkout.options.donation?.onError;
 
         this.commercialTxAmount = donationCampaignProps.commercialTxAmount;
 
@@ -90,7 +70,7 @@ class DonationCampaignService {
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             onCancel: (state: DonationPayload) => {
                 // Call merchant defined onDonationCompleted callback
-                this.onDonationCompleted({ didDonate: false });
+                this.onDonationCompleted?.({ didDonate: false });
             },
             onDonate: (state: DonationPayload, component: Donation) => {
                 // Make the request
@@ -121,14 +101,14 @@ class DonationCampaignService {
 
             if (response.resultCode === 'Authorised') {
                 component.setStatus('success');
-                this.onDonationCompleted({ didDonate: true });
+                this.onDonationCompleted?.({ didDonate: true });
             } else {
                 component.setStatus('error');
-                this.onDonationFailed(response.resultCode);
+                this.onDonationFailed?.(response.resultCode);
             }
         } catch (error: unknown) {
             component.setStatus('error');
-            this.onDonationFailed(error);
+            this.onDonationFailed?.(error);
         }
     }
 
