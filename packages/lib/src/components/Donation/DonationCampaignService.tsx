@@ -44,11 +44,11 @@ class DonationCampaignService {
             DonationCampaignService.instanceCount = 0;
 
             // Call the merchant defined handler
-            checkout.options.donation?.onSuccess?.(result);
+            checkout.options.donation?.onSuccess(result);
         };
         this.onDonationFailed = (reason: unknown) => {
             DonationCampaignService.instanceCount = 0;
-            checkout.options.donation?.onError?.(reason);
+            checkout.options.donation?.onError(reason);
         };
 
         this.commercialTxAmount = donationCampaignProps.commercialTxAmount;
@@ -90,7 +90,7 @@ class DonationCampaignService {
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             onCancel: (state: DonationPayload) => {
                 // Call merchant defined onDonationCompleted callback
-                this.onDonationCompleted?.({ didDonate: false });
+                this.onDonationCompleted({ didDonate: false });
             },
             onDonate: (state: DonationPayload, component: Donation) => {
                 // Make the request
@@ -121,14 +121,14 @@ class DonationCampaignService {
 
             if (response.resultCode === 'Authorised') {
                 component.setStatus('success');
-                this.onDonationCompleted?.({ didDonate: true });
+                this.onDonationCompleted({ didDonate: true });
             } else {
                 component.setStatus('error');
-                this.onDonationFailed?.(response.resultCode);
+                this.onDonationFailed(response.resultCode);
             }
         } catch (error: unknown) {
             component.setStatus('error');
-            this.onDonationFailed?.(error);
+            this.onDonationFailed(error);
         }
     }
 

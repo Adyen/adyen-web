@@ -164,7 +164,11 @@ export const SessionsDonationReparented: DropinStory = {
                     fcDialog.close();
                 }, delay);
             },
-            onError: obj => console.log('### Dropin_withSessionsDonation::onError:: obj', obj)
+            onError: obj => {
+                console.log('### Dropin_withSessionsDonation::onError:: obj', obj);
+                const fcDialog = document.getElementById('donation-dialog') as HTMLDialogElement;
+                fcDialog.close();
+            }
         },
 
         onPaymentCompleted: (result, element) => {

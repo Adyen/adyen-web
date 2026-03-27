@@ -97,7 +97,9 @@ describe('DonationCampaignService', () => {
             core.options = {
                 donation: {
                     autoStart: true,
-                    delay: DEFAULT_DONATION_AUTO_START_DELAY_MS
+                    delay: DEFAULT_DONATION_AUTO_START_DELAY_MS,
+                    onSuccess: jest.fn(),
+                    onError: jest.fn()
                 }
             };
 
@@ -124,7 +126,9 @@ describe('DonationCampaignService', () => {
             core.options = {
                 donation: {
                     autoStart: true,
-                    delay: 1000
+                    delay: 1000,
+                    onSuccess: jest.fn(),
+                    onError: jest.fn()
                 }
             };
 
@@ -301,6 +305,7 @@ describe('DonationCampaignService', () => {
                 donation: {
                     autoStart: true,
                     onSuccess,
+                    onError: jest.fn(),
                     delay: 0
                 }
             };
@@ -480,6 +485,7 @@ describe('DonationCampaignService', () => {
                 donation: {
                     autoStart: true,
                     onSuccess,
+                    onError: jest.fn(),
                     delay: 0
                 }
             };
@@ -524,6 +530,7 @@ describe('DonationCampaignService', () => {
                 donation: {
                     autoStart: true,
                     onError,
+                    onSuccess: jest.fn(),
                     delay: 0
                 }
             };
@@ -571,6 +578,7 @@ describe('DonationCampaignService', () => {
                 donation: {
                     autoStart: true,
                     onError,
+                    onSuccess: jest.fn(),
                     delay: 0
                 }
             };
