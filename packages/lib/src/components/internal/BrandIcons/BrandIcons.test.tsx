@@ -35,7 +35,7 @@ describe('BrandIcons', () => {
     test('should show default remaining brands count label', () => {
         render(<BrandIcons brandIcons={brandIcons} maxBrandsToShow={2} />);
 
-        expect(screen.getByText('+2')).toBeInTheDocument();
+        expect(screen.getByText('+ 2')).toBeInTheDocument();
     });
 
     test('should show custom remaining brands label', () => {
@@ -47,13 +47,13 @@ describe('BrandIcons', () => {
     test('should not show remaining label when all brands are visible', () => {
         render(<BrandIcons brandIcons={brandIcons} />);
 
-        expect(screen.queryByText(/^\+\d+$/)).not.toBeInTheDocument();
+        expect(screen.queryByText(/^\+ \d+$/)).not.toBeInTheDocument();
     });
 
     test('should not show remaining label when maxBrandsToShow equals brand count', () => {
         render(<BrandIcons brandIcons={brandIcons} maxBrandsToShow={4} />);
 
-        expect(screen.queryByText(/^\+\d+$/)).toBeNull();
+        expect(screen.queryByText(/^\+ \d+$/)).toBeNull();
     });
 
     test('should use renderBrandIcon when provided', () => {
@@ -81,7 +81,7 @@ describe('BrandIcons', () => {
         render(<BrandIcons brandIcons={[]} />);
 
         expect(screen.queryAllByRole('img')).toHaveLength(0);
-        expect(screen.queryByText(/^\+\d+$/)).toBeNull();
+        expect(screen.queryByText(/^\+ \d+$/)).toBeNull();
     });
 
     test('should pass showIconOnError to Brand components', () => {
