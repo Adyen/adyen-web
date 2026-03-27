@@ -254,12 +254,12 @@ describe('ApplePaySession', () => {
         });
     });
 
-    describe('oncouponcodechange()', () => {
-        test('should call "onCouponCodeChange" and once the change is resolved it calls "completeCouponCodeChange"', async () => {
+    describe('oncouponcodechanged()', () => {
+        test('should call "onCouponCodeChanged" and once the change is resolved it calls "completeCouponCodeChange"', async () => {
             const paymentRequest = mock<ApplePayJS.ApplePayPaymentRequest>();
             const couponCodeUpdateMock = mock<ApplePayJS.ApplePayCouponCodeUpdate>();
             const options = mock<ApplePayServiceOptions>({
-                onCouponCodeChange: jest.fn().mockImplementation(resolve => {
+                onCouponCodeChanged: jest.fn().mockImplementation(resolve => {
                     resolve(couponCodeUpdateMock);
                 })
             });
@@ -273,11 +273,11 @@ describe('ApplePaySession', () => {
             expect(service['session'].completeCouponCodeChange).toHaveBeenCalledWith(couponCodeUpdateMock);
         });
 
-        test('should call "onCouponCodeChange" and if the change is refused it calls "completeCouponCodeChange"', async () => {
+        test('should call "onCouponCodeChanged" and if the change is refused it calls "completeCouponCodeChange"', async () => {
             const paymentRequest = mock<ApplePayJS.ApplePayPaymentRequest>();
             const couponCodeUpdateMock = mock<ApplePayJS.ApplePayCouponCodeUpdate>();
             const options = mock<ApplePayServiceOptions>({
-                onCouponCodeChange: jest.fn().mockImplementation((resolve, reject) => {
+                onCouponCodeChanged: jest.fn().mockImplementation((resolve, reject) => {
                     reject(couponCodeUpdateMock);
                 })
             });

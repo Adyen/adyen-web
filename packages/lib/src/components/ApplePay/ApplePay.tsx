@@ -188,7 +188,7 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
     }
 
     private startSession() {
-        const { onValidateMerchant, onPaymentMethodSelected, onShippingMethodSelected, onShippingContactSelected, onCouponCodeChange } = this.props;
+        const { onValidateMerchant, onPaymentMethodSelected, onShippingMethodSelected, onShippingContactSelected, onCouponCodeChanged } = this.props;
 
         const paymentRequest = preparePaymentRequest({
             companyName: this.props.configuration.merchantName,
@@ -211,7 +211,7 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
             onPaymentMethodSelected,
             onShippingMethodSelected,
             onShippingContactSelected,
-            onCouponCodeChange,
+            onCouponCodeChanged,
             onValidateMerchant: onValidateMerchant || this.validateMerchant,
             onPaymentAuthorized: (resolve, reject, event) => {
                 const billingAddress = formatApplePayContactToAdyenAddressFormat(event.payment.billingContact);
