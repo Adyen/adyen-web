@@ -254,7 +254,7 @@ describe('ApplePaySession', () => {
         });
     });
 
-    describe('oncouponcodechange()', () => {
+    describe('oncouponcodechanged()', () => {
         test('should call "onCouponCodeChanged" and once the change is resolved it calls "completeCouponCodeChange"', async () => {
             const paymentRequest = mock<ApplePayJS.ApplePayPaymentRequest>();
             const couponCodeUpdateMock = mock<ApplePayJS.ApplePayCouponCodeUpdate>();

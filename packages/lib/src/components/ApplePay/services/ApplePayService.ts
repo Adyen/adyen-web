@@ -55,7 +55,7 @@ class ApplePayService {
 
         if (typeof options.onCouponCodeChanged === 'function') {
             this.session.oncouponcodechanged = event => {
-                void this.oncouponcodechange(event, options.onCouponCodeChanged);
+                void this.oncouponcodechanged(event, options.onCouponCodeChanged);
             };
         }
     }
@@ -172,7 +172,7 @@ class ApplePayService {
             });
     }
 
-    oncouponcodechange(event: ApplePayJS.ApplePayCouponCodeChangedEvent, onCouponCodeChanged: ApplePayConfiguration['onCouponCodeChanged']) {
+    oncouponcodechanged(event: ApplePayJS.ApplePayCouponCodeChangedEvent, onCouponCodeChanged: ApplePayConfiguration['onCouponCodeChanged']) {
         return new Promise((resolve, reject) => onCouponCodeChanged(resolve, reject, event))
             .then((couponCodeUpdate: ApplePayJS.ApplePayCouponCodeUpdate) => {
                 this.session.completeCouponCodeChange(couponCodeUpdate);
