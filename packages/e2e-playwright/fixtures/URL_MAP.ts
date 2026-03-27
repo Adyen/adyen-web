@@ -11,6 +11,10 @@ export const URL_MAP = {
     dropinWithSession_donations_noDelay: '/iframe.html?args=donation.delay:0&globals=&id=drop-in-drop-in-component--sessions-donation&viewMode=story',
     dropinWithSession_donations_autoStartFalse:
         '/iframe.html?args=donation.autoStart:!false;donation.delay:0&globals=&id=drop-in-drop-in-component--sessions-donation&viewMode=story',
+    dropinWithSession_donations_reparented:
+        '/iframe.html?args=donation.autoStart:!false;donation.delay:0&globals=&id=drop-in-drop-in-component--sessions-donation-reparented&viewMode=story',
+    dropinWithSession_donations_reparented_autoStartTrue:
+        '/iframe.html?args=donation.autoStart:!true;donation.delay:0&globals=&id=drop-in-drop-in-component--sessions-donation-reparented&viewMode=story',
 
     /**
      * Card

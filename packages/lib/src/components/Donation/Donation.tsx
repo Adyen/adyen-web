@@ -50,22 +50,23 @@ class DonationElement extends UIElement<DonationConfiguration> {
     };
 
     private async initialiseServiceMode(checkout: ICore, props: DonationCampaignOptions) {
-        if (!checkout.session.sessionsDonationInitiated) {
-            checkout.session.sessionsDonationInitiated = true;
-            try {
-                const donationCampaign = await new DonationCampaignService(checkout, props).initialise();
-                if (donationCampaign) {
-                    this.props = { ...this.props, ...donationCampaign };
-                    this.mount(props.rootNode);
-                }
-                // If no campaigns found (response is null), don't mount - silently do nothing
-            } catch (error: unknown) {
-                // Call merchant defined callback
-                // e.g. when the merchant wants to reparent the component and donation type = roundup but no commercialTxAmount has been set
-                checkout.options.donation?.onError?.(error);
-            }
-        } else {
+        if (checkout.session.sessionsDonationInitiated) {
             console.error(REPARENT_WITHOUT_AUTO_START_ERROR_MSG);
+            return;
+        }
+
+        checkout.session.sessionsDonationInitiated = true;
+        try {
+            const donationCampaign = await new DonationCampaignService(checkout, props).initialise();
+            if (donationCampaign) {
+                this.props = { ...this.props, ...donationCampaign };
+                this.mount(props.rootNode);
+            }
+            // If no campaigns found (response is null), don't mount - silently do nothing
+        } catch (error: unknown) {
+            // Call merchant defined callback
+            // e.g. when the merchant wants to reparent the component and donation type = roundup but no commercialTxAmount has been set
+            checkout.options.donation?.onError?.(error);
         }
     }
 

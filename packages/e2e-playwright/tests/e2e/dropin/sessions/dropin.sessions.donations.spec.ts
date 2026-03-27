@@ -69,3 +69,39 @@ test('#3 Should succeed in making a payment but not see the donation component b
 
     await expect(dropinWithSession.donationComponent).not.toBeVisible();
 });
+
+test('#4  Should succeed in making a payment, and see the donation component reparented into another container ', async ({
+    dropinWithSession,
+    page
+}) => {
+    await dropinWithSession.goto(URL_MAP.dropinWithSession_donations_reparented);
+    const { paymentMethodDetailsLocator } = await dropinWithSession.selectNonStoredPaymentMethod('scheme');
+
+    const card = new Card(page, paymentMethodDetailsLocator);
+
+    await fillCard(card);
+
+    await dropinWithSession.pay();
+
+    await expect(dropinWithSession.donationDialog).toBeVisible(); // parent
+    await expect(dropinWithSession.donationComponentReparented).toBeVisible();
+});
+
+test('#5 Should succeed in making a payment, and see the donation component remain in the default container because autoStart is true', async ({
+    dropinWithSession,
+    page
+}) => {
+    await dropinWithSession.goto(URL_MAP.dropinWithSession_donations_reparented_autoStartTrue);
+    const { paymentMethodDetailsLocator } = await dropinWithSession.selectNonStoredPaymentMethod('scheme');
+
+    const card = new Card(page, paymentMethodDetailsLocator);
+
+    await fillCard(card);
+
+    await dropinWithSession.pay();
+
+    await expect(dropinWithSession.donationDialog).toBeVisible(); // parent is still created by the story
+    await expect(dropinWithSession.donationComponentReparented).not.toBeVisible(); // but donation comp is *not* placed in the parent
+
+    await expect(dropinWithSession.donationComponent).toBeVisible();
+});

@@ -40,6 +40,14 @@ class DropinWithSession extends Dropin {
     get donationSuccess() {
         return this.donationComponent.getByAltText(LANG['thanksForYourSupport']);
     }
+
+    get donationDialog() {
+        return this.page.locator('#donation-dialog');
+    }
+
+    get donationComponentReparented() {
+        return this.donationDialog.locator('.adyen-checkout__adyen-giving');
+    }
 }
 
 export { DropinWithSession };
