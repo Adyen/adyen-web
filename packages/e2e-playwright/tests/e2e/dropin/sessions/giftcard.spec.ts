@@ -7,7 +7,6 @@ import { toHaveScreenshot } from '../../../utils/assertions';
 import { TAGS } from '../../../utils/constants';
 
 dotenv.config();
-const apiVersion = Number(process.env.API_VERSION.substring(1));
 
 test.describe('Dropin - Sessions - GiftCards', () => {
     test(
