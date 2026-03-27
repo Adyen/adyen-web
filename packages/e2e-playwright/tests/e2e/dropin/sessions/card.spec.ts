@@ -17,7 +17,7 @@ test.describe('Dropin - Sessions - Cards', () => {
 
         const { paymentMethodDetailsLocator } = await dropinWithSession.selectNonStoredPaymentMethod('scheme');
 
-        await toHaveScreenshot(paymentMethodDetailsLocator, browserName, 'expanded-card-payment-method-item.png');
+        await toHaveScreenshot(cardPaymentMethodHeader.rootElement, browserName, 'expanded-card-payment-method-item.png');
 
         const card = new Card(page, paymentMethodDetailsLocator);
 

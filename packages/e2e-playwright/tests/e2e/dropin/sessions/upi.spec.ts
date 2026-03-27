@@ -14,11 +14,11 @@ test.describe('Dropin - Sessions - UPI', () => {
 
             const upiPaymentMethodHeader = dropinWithSession.getPaymentMethodHeader('UPI');
 
-            await toHaveScreenshot(upiPaymentMethodHeader.rootElement, browserName, 'upi-payment-method-item-desktop.png');
+            await toHaveScreenshot(upiPaymentMethodHeader.rootElement, browserName, 'upi-payment-method-header-desktop.png');
 
-            const { paymentMethodDetailsLocator: upiMethodLocator } = await dropinWithSession.selectNonStoredPaymentMethod('upi');
+            await dropinWithSession.selectNonStoredPaymentMethod('upi');
 
-            await toHaveScreenshot(upiMethodLocator, browserName, 'upi-payment-method-item-desktop.png');
+            await toHaveScreenshot(upiPaymentMethodHeader.rootElement, browserName, 'expanded-upi-payment-method-header-desktop.png');
 
             const upi = new UPI(page);
 
@@ -39,13 +39,13 @@ test.describe('Dropin - Sessions - UPI', () => {
 
             const upiPaymentMethodHeader = dropinWithSession.getPaymentMethodHeader('UPI');
 
-            await toHaveScreenshot(upiPaymentMethodHeader.rootElement, browserName, 'upi-payment-method-item-mobile.png');
+            await toHaveScreenshot(upiPaymentMethodHeader.rootElement, browserName, 'upi-payment-method-header-desktop.png');
 
-            const { paymentMethodDetailsLocator: upiMethodLocator } = await dropinWithSession.selectNonStoredPaymentMethod('upi');
+            await dropinWithSession.selectNonStoredPaymentMethod('upi');
 
-            await toHaveScreenshot(upiMethodLocator, browserName, 'upi-payment-method-item-mobile.png');
+            await toHaveScreenshot(upiPaymentMethodHeader.rootElement, browserName, 'expanded-upi-payment-method-header-desktop.png');
 
-            const upi = new UPI(page, upiMethodLocator);
+            const upi = new UPI(page);
 
             await upi.selectApp(/google pay/i);
 
