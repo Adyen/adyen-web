@@ -17,11 +17,10 @@ test.describe('Dropin - Sessions - Cards', () => {
 
         const { paymentMethodDetailsLocator } = await dropinWithSession.selectNonStoredPaymentMethod('scheme');
 
-        await toHaveScreenshot(cardPaymentMethodHeader.rootElement, browserName, 'expanded-card-payment-method-item.png');
-
         const card = new Card(page, paymentMethodDetailsLocator);
-
         await card.isComponentVisible();
+
+        await toHaveScreenshot(cardPaymentMethodHeader.rootElement, browserName, 'expanded-card-payment-method-item.png');
 
         await card.typeCardNumber(REGULAR_TEST_CARD);
         await card.typeExpiryDate(TEST_DATE_VALUE);
