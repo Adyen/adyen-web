@@ -1,3 +1,5 @@
+export const API_VERSION = Number(process.env.API_VERSION.substring(1));
+
 export const BIN_LOOKUP_VERSION = 'v3';
 
 export const REGULAR_TEST_CARD = '5500000000000004';
@@ -100,3 +102,7 @@ export const IRIS_ISSUERS = [
 export const TAGS = {
     SCREENSHOT: '@screenshot'
 } as const;
+
+export const CARD_HEADER_LABEL = API_VERSION <= 70 ? 'Credit Card' : 'Cards';
+
+export const SMALL_MOBILE_VIEWPORT = { width: 375, height: 667 };

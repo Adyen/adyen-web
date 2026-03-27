@@ -3,11 +3,10 @@ import { test, expect } from '../../../../../fixtures/dropin.fixture';
 import { getStoryUrl } from '../../../../utils/getStoryUrl';
 import { URL_MAP } from '../../../../../fixtures/URL_MAP';
 import { Card } from '../../../../../models/card';
+import { CARD_HEADER_LABEL } from '../../../../utils/constants';
 
 dotenv.config();
-const apiVersion = Number(process.env.API_VERSION.substring(1));
 
-const CARD_HEADER_LABEL = apiVersion <= 70 ? 'Credit Card' : 'Cards';
 const TOTAL_BRANDS_COUNT = 15;
 const VISIBLE_BRANDS_COUNT = 3;
 

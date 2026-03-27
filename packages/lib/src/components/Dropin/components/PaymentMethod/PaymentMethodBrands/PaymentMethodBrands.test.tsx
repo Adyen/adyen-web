@@ -50,7 +50,7 @@ describe('PaymentMethodBrands', () => {
         screen.getByAltText('MasterCard');
         screen.getByAltText('American Express');
 
-        screen.getByText('+3');
+        screen.getByText('+ 3');
     });
 
     test('should render 4 brands AND `other` keyword', () => {

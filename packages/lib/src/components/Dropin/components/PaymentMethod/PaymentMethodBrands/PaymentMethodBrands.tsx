@@ -1,16 +1,13 @@
 import { h } from 'preact';
+import { useMemo } from 'preact/hooks';
+
 import { BrandConfiguration } from '../../../../Card/types';
 import PaymentMethodIcon from '../PaymentMethodIcon';
 import { getFullBrandName } from '../../../../Card/components/CardInput/utils';
 import { useCoreContext } from '../../../../../core/Context/CoreProvider';
+import { BrandIcons } from '../../../../internal/BrandIcons/BrandIcons';
 
-const prepareVisibleBrands = (allowedBrands: Array<BrandConfiguration>) => {
-    const visibleBrands = allowedBrands.length <= 4 ? allowedBrands : allowedBrands.slice(0, 3);
-    return {
-        visibleBrands,
-        leftBrandsAmount: allowedBrands.length - visibleBrands.length
-    };
-};
+const MAX_BRANDS_TO_SHOW = 4;
 
 interface PaymentMethodBrandsProps {
     brands: Array<BrandConfiguration>;
@@ -33,20 +30,22 @@ const PaymentMethodBrands = ({
         return null;
     }
 
-    const allowedBrands = brands.filter(brand => !excludedUIBrands?.includes(brand.name));
-    const { visibleBrands, leftBrandsAmount } = prepareVisibleBrands(allowedBrands);
+    const allowedBrands = useMemo(
+        () => brands.filter(brand => !excludedUIBrands?.includes(brand.name)).map(brand => ({ alt: getFullBrandName(brand.name), src: brand.icon })),
+        [brands, excludedUIBrands]
+    );
 
     return (
-        <span className="adyen-checkout__payment-method__brands">
-            {visibleBrands.map(brand => (
-                <PaymentMethodIcon key={brand.name} altDescription={getFullBrandName(brand.name)} type={brand.name} src={brand.icon} />
-            ))}
-            {showOtherInsteadOfNumber ? (
-                <span className="adyen-checkout__payment-method__brand-number">+ {i18n.get('paymentMethodBrand.other')}</span>
-            ) : (
-                leftBrandsAmount !== 0 && <span className="adyen-checkout__payment-method__brand-number">+{leftBrandsAmount}</span>
+        <BrandIcons
+            brandIcons={allowedBrands}
+            maxBrandsToShow={MAX_BRANDS_TO_SHOW}
+            remainingBrandsLabel={showOtherInsteadOfNumber ? `+ ${i18n.get('paymentMethodBrand.other')}` : undefined}
+            className="adyen-checkout__payment-method__brands"
+            remainingBrandsLabelClassName="adyen-checkout__payment-method__brand-number"
+            renderBrandIcon={brandIcon => (
+                <PaymentMethodIcon key={brandIcon.alt} altDescription={brandIcon.alt} type={brandIcon.alt} src={brandIcon.src} />
             )}
-        </span>
+        />
     );
 };
 

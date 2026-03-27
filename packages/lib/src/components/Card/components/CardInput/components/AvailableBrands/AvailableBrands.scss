@@ -1,20 +1,8 @@
 @use 'styles/variable-generator';
 
 .adyen-checkout__card__brands {
-    display: flex;
-    flex-basis: auto;
-    flex-shrink: 1;
-    flex-wrap: wrap;
-    min-height: variable-generator.token(spacer-090);
-    margin-top: -12px;
+    margin-top: variable-generator.token(spacer-000);
     margin-bottom: variable-generator.token(spacer-060);
-    transition: all 0.3s ease-out;
-
-    &__brand-wrapper {
-        height: variable-generator.token(spacer-070);
-        width: variable-generator.token(spacer-090);
-        margin: variable-generator.token(spacer-020) variable-generator.token(spacer-010);
-    }
 }
 
 .adyen-checkout__card__brands--hidden {
@@ -22,12 +10,4 @@
     max-height: 0;
     min-height: 0;
     margin: -8px 0 8px;
-}
-
-.adyen-checkout__card__brands img {
-    margin: variable-generator.token(spacer-020) variable-generator.token(spacer-010);
-    padding: 0;
-    display: block;
-    width: variable-generator.token(spacer-090);
-    height: variable-generator.token(spacer-070);
 }

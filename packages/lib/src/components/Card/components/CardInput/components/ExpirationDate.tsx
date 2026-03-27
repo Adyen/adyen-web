@@ -12,7 +12,7 @@ import {
 } from '../../../../internal/SecuredFields/lib/constants';
 import useImage from '../../../../../core/Context/useImage';
 import { alternativeLabelContent } from './FieldLabelAlternative';
-import Brand from '../../../../internal/Brand';
+import { BrandImage } from '../../../../internal/BrandImage';
 import './ExpirationDate.scss';
 
 export default function ExpirationDate(props: Readonly<ExpirationDateProps>) {
@@ -72,7 +72,7 @@ export default function ExpirationDate(props: Readonly<ExpirationDateProps>) {
                     'adyen-checkout__input--valid': isValid
                 })}
             />
-            <Brand
+            <BrandImage
                 wrapperClassName={
                     error || isValid
                         ? classNames('adyen-checkout__field__exp-date_hint_wrapper', 'adyen-checkout__field__exp-date_hint_wrapper--hidden')
@@ -80,7 +80,7 @@ export default function ExpirationDate(props: Readonly<ExpirationDateProps>) {
                 }
                 imgClassName={'adyen-checkout__field__exp-date_hint'}
                 alt={imageDescription}
-                url={getImage({ imageFolder: 'components/' })('expiry_date_hint')}
+                src={getImage({ imageFolder: 'components/' })('expiry_date_hint')}
             />
         </Field>
     );

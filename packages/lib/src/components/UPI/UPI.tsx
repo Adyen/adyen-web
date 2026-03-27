@@ -1,4 +1,4 @@
-import { h, RefObject } from 'preact';
+import { h } from 'preact';
 import UIElement from '../internal/UIElement/UIElement';
 import UPIComponent from './components/UPIComponent';
 import { Await } from '../internal/Await';
@@ -22,13 +22,13 @@ class UPI extends UIElement<UPIConfiguration> {
     public static readonly type = TxVariants.upi;
     public static readonly txVariants = [TxVariants.upi, TxVariants.upi_qr, TxVariants.upi_intent];
     private mode: UpiMode;
+
+    protected static readonly defaultProps = {
+        showPaymentMethodItemImages: true
+    };
+
     constructor(checkout: ICore, props: UPIConfiguration) {
         super(checkout, props);
-        // @ts-ignore: Accessing deprecated prop to provide migration warning
-        const { defaultMode: deprecatedDefaultMode } = props;
-        if (deprecatedDefaultMode) {
-            console.warn('[Adyen Checkout] UPI configuration property "defaultMode" is deprecated and will be removed in a future version.');
-        }
         this.mode = isMobile() ? UPI_MODE.INTENT : UPI_MODE.QR_CODE;
     }
 
@@ -36,7 +36,6 @@ class UPI extends UIElement<UPIConfiguration> {
         const { apps = [] } = props;
         const hasIntentApps = apps.length > 0;
         if (isMobile() && hasIntentApps) {
-            // Mobile with UPI apps
             return {
                 ...super.formatProps(props),
                 apps
@@ -72,14 +71,28 @@ class UPI extends UIElement<UPIConfiguration> {
         return TxVariants.upi_intent;
     }
 
+    get brands(): { icon: any; name: string }[] {
+        if (!this.props.showPaymentMethodItemImages) {
+            return [];
+        }
+
+        return this.props.apps.map(app => {
+            const imageName = `upi/${app.id.toLowerCase()}`;
+            const brandIcon = this.core.modules.resources?.getImage()(imageName);
+            return { icon: brandIcon, name: imageName };
+        });
+    }
+
     protected override componentToRender(): h.JSX.Element {
         const { type, url, paymentMethodType } = this.props;
 
         const isAutoPay = !!this.props.mandate;
 
+        let content: h.JSX.Element;
+
         switch (type) {
             case 'qrCode':
-                return (
+                content = (
                     <QRLoader
                         {...this.props}
                         qrCodeData={this.props.qrCodeData ? encodeURIComponent(this.props.qrCodeData) : null}
@@ -92,8 +105,9 @@ class UPI extends UIElement<UPIConfiguration> {
                         showAmount={!isAutoPay}
                     />
                 );
+                break;
             case 'await':
-                return (
+                content = (
                     <Await
                         url={url}
                         type={paymentMethodType}
@@ -111,12 +125,11 @@ class UPI extends UIElement<UPIConfiguration> {
                         brandLogo={this.icon}
                     />
                 );
+                break;
             default:
-                return (
+                content = (
                     <UPIComponent
-                        ref={(ref: RefObject<typeof UPIComponent>) => {
-                            this.componentRef = ref;
-                        }}
+                        setComponentRef={this.setComponentRef}
                         payButton={this.payButton}
                         onChange={this.setState}
                         apps={this.props.apps}
@@ -126,6 +139,8 @@ class UPI extends UIElement<UPIConfiguration> {
                     />
                 );
         }
+
+        return <div data-testid="upi-container">{content}</div>;
     }
 }
 
