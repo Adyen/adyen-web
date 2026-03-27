@@ -9,6 +9,15 @@
     .adyen-checkout__alert-message--info {
         margin-top: variable-generator.token(spacer-070);
     }
+
+    .adyen-checkout__content-separator {
+        margin-top: variable-generator.token(spacer-070);
+        margin-bottom: variable-generator.token(spacer-070);
+    }
+
+    .adyen-checkout__field--upi-app-list {
+        margin-top: variable-generator.token(spacer-000);
+    }
 }
 
 .adyen-checkout-upi-area-qr-code {
@@ -18,10 +27,24 @@
 }
 
 .adyen-checkout-upi-instruction-label {
-    @include mixins.adyen-checkout-text-caption;
-
     display: flex;
-    color: variable-generator.token(color-label-secondary);
+    font-size: variable-generator.token(text-body-font-size);
+    color: variable-generator.token(color-label-primary);
     margin-top: variable-generator.token(spacer-000);
     margin-bottom: variable-generator.token(spacer-070);
+}
+
+.adyen-checkout-upi-instruction-title {
+    display: flex;
+    font-size: variable-generator.token(text-subtitle-font-size);
+    font-weight: variable-generator.token(text-subtitle-stronger-font-weight);
+    color: variable-generator.token(color-label-primary);
+    margin-top: variable-generator.token(spacer-000);
+    margin-bottom: variable-generator.token(spacer-070);
+}
+
+
+.adyen-checkout-upi-instruction-separator {
+    color: variable-generator.token(color-label-secondary);
+    text-transform: none;
 }

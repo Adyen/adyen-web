@@ -33,14 +33,31 @@ test.describe('UPI - Intent Flow (Mobile)', () => {
         userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X) AppleWebKit/605.1.15'
     });
 
-    test('should complete payment with app selection and redirect', async ({ upiPage, page }) => {
+    test('should show error when clicking Continue without selecting an app, then complete after selection', async ({ upiPage, page }) => {
         await upiPage.goto(URL_MAP.upi);
 
         await expect(upiPage.intentArea).toBeVisible();
         await expect(upiPage.appList).toBeVisible();
 
+        await upiPage.pay({ name: /continue/i });
+        await expect(upiPage.errorAlert).toBeVisible();
+
         await upiPage.selectApp(/google pay/i);
-        
+
+        await upiPage.pay({ name: /continue/i });
+
+        await expect(upiPage.intentArea).not.toBeVisible();
+    });
+
+    test('should show dropdown for low-priority apps and allow selection from it', async ({ upiPage, page }) => {
+        await upiPage.goto(URL_MAP.upi);
+
+        await expect(upiPage.intentArea).toBeVisible();
+        await expect(upiPage.appList).toBeVisible();
+        await expect(upiPage.appDropdown).toBeVisible();
+
+        await upiPage.selectAppFromDropdown(/.+/);
+
         await upiPage.pay({ name: /continue/i });
 
         await expect(upiPage.intentArea).not.toBeVisible();

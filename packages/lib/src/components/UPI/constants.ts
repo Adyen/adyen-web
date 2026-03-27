@@ -5,6 +5,8 @@ export const UPI_MODE = {
     INTENT: 'intent' as UpiMode
 } as const;
 
+export const MAX_PRIMARY_APPS = 4;
+
 export const A11Y = {
     ButtonId: {
         QR: 'upi-button-qrCode',

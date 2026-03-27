@@ -31,7 +31,8 @@ describe('UPI', () => {
             });
 
             test('should configure for intent mode if apps are provided', () => {
-                const upi = new UPI(global.core, props);
+                const core = setupCoreMock();
+                const upi = new UPI(core, props);
                 const gpayApp = { id: 'gpay', name: 'Google Pay' };
                 const formattedProps = upi.formatProps({ ...props, apps: [gpayApp] });
 
@@ -41,7 +42,8 @@ describe('UPI', () => {
             });
 
             test('should configure for qrCode mode if no apps are provided', () => {
-                const upi = new UPI(global.core, props);
+                const core = setupCoreMock();
+                const upi = new UPI(core, props);
                 const formattedProps = upi.formatProps({ ...props, apps: [] });
 
                 expect(formattedProps).toMatchObject({
