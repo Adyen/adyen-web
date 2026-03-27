@@ -25,7 +25,7 @@ const renderCardNumber = (props = {}) => {
 const dualBrandingElements = [{ id: 'visa' }, { id: 'cartebancaire' }];
 
 describe('CardNumber and the (dual)branding icons that show in the PAN field', () => {
-    test('Renders a CardNumber field, with standard brand image, and no dual branding', () => {
+    test('should render with standard brand image and no dual branding', () => {
         renderCardNumber();
         expect(screen.getByTestId('encryptedCardNumber')).toBeInTheDocument();
         expect(screen.getByAltText('card')).toBeInTheDocument();
@@ -33,7 +33,7 @@ describe('CardNumber and the (dual)branding icons that show in the PAN field', (
         expect(images).toHaveLength(1);
     });
 
-    test('Renders a CardNumber field with inline dual branding icons', () => {
+    test('should render with inline dual branding icons', () => {
         renderCardNumber({ dualBrandingElements });
         const images = screen.getAllByRole('img');
         expect(images).toHaveLength(2);
@@ -41,11 +41,40 @@ describe('CardNumber and the (dual)branding icons that show in the PAN field', (
         expect(screen.getByAltText('cartebancaire')).toBeInTheDocument();
     });
 
-    test('Inline dual branding icons are hidden when the field is in error', () => {
+    test('should hide inline dual branding icons when the field is in error', () => {
         renderCardNumber({ error: 'error message', dualBrandingElements });
         const images = screen.getAllByRole('img');
         expect(images).toHaveLength(1);
         expect(screen.getByAltText('Error')).toBeInTheDocument();
         expect(screen.getByText('error message')).toBeInTheDocument();
+    });
+
+    test('should wrap brand images in interactive radio elements when isDualBrandSelectable is true', () => {
+        renderCardNumber({ dualBrandingElements, isDualBrandSelectable: true, selectedBrandValue: 'visa' });
+        expect(screen.getByRole('radiogroup')).toBeInTheDocument();
+        const radios = screen.getAllByRole('radio');
+        expect(radios).toHaveLength(2);
+        expect(screen.getByRole('radio', { name: /visa/i })).toBeInTheDocument();
+        expect(screen.getByRole('radio', { name: /cartebancaire/i })).toBeInTheDocument();
+    });
+
+    test('should render display-only brand images without radio role when isDualBrandSelectable is false', () => {
+        renderCardNumber({ dualBrandingElements, isDualBrandSelectable: false });
+        expect(screen.queryByRole('radiogroup')).not.toBeInTheDocument();
+        expect(screen.queryAllByRole('radio')).toHaveLength(0);
+        // Images are still visible
+        const images = screen.getAllByRole('img');
+        expect(images).toHaveLength(2);
+    });
+
+    test('should show contextual text when dual branding is selectable', () => {
+        renderCardNumber({
+            dualBrandingElements,
+            isDualBrandSelectable: true,
+            selectedBrandValue: 'visa',
+            showContextualElement: true,
+            contextualText: 'You can select the card brand you prefer to pay with. This is optional.'
+        });
+        expect(screen.getByText(/you can select the card brand/i)).toBeVisible();
     });
 });

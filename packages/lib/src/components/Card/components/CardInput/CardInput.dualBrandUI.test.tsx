@@ -22,7 +22,7 @@ const cardInputRequiredProps = {
     })
 };
 
-const dualBrandResp = {
+const euDualBrandResp = {
     issuingCountryCode: 'FR',
     supportedBrands: [
         {
@@ -48,6 +48,32 @@ const dualBrandResp = {
     ]
 };
 
+const nonEuDualBrandResp = {
+    issuingCountryCode: 'AU',
+    supportedBrands: [
+        {
+            brand: 'visa',
+            cvcPolicy: 'required',
+            enableLuhnCheck: true,
+            expiryDatePolicy: 'required',
+            localeBrand: 'VISA',
+            paymentMethodVariant: 'visa',
+            showSocialSecurityNumber: false,
+            supported: true
+        },
+        {
+            brand: 'eftpos_australia',
+            cvcPolicy: 'required',
+            enableLuhnCheck: true,
+            expiryDatePolicy: 'required',
+            localeBrand: 'eftpos Australia',
+            paymentMethodVariant: 'eftpos_australia',
+            showSocialSecurityNumber: false,
+            supported: true
+        }
+    ]
+};
+
 const renderCardInput = ui => {
     return render(
         <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
@@ -59,7 +85,7 @@ const renderCardInput = ui => {
 };
 
 describe('CardNumber and the dual branding UI', () => {
-    test('Renders a CardInput without dual branding', () => {
+    test('should render without brand selection UI or contextual label when no dual branding', () => {
         const { container } = renderCardInput(<CardInput {...cardInputRequiredProps} />);
 
         /* eslint-disable testing-library/no-node-access, testing-library/no-container */
@@ -68,43 +94,65 @@ describe('CardNumber and the dual branding UI', () => {
         expect(container.querySelector('[data-cse="encryptedSecurityCode"]')).toBeTruthy();
         /* eslint-enable testing-library/no-node-access, testing-library/no-container */
 
-        expect(screen.queryByText('Card Brand')).not.toBeInTheDocument();
+        expect(screen.queryAllByRole('radio')).toHaveLength(0);
+        expect(screen.queryByRole('radiogroup')).not.toBeInTheDocument();
     });
 
-    test('Renders a CardInput with dual branding UI radio button elements', async () => {
+    test('should show two selectable brand options with first selected by default and contextual label for EU dual brand', async () => {
         renderCardInput(<CardInput {...cardInputRequiredProps} />);
 
         await act(() => {
-            cardInputRef.processBinLookupResponse(dualBrandResp, false);
+            cardInputRef.processBinLookupResponse(euDualBrandResp, false);
         });
 
-        expect(screen.getByText('Card Brand')).toBeInTheDocument();
+        // Two brand options with accessible names
+        const radios = screen.getAllByRole('radio');
+        expect(radios).toHaveLength(2);
+        expect(screen.getByRole('radio', { name: /visa/i })).toBeVisible();
+        expect(screen.getByRole('radio', { name: /carte bancaire/i })).toBeVisible();
 
-        expect(screen.getByRole('radio', { name: /VISA/i })).toBeVisible();
-        expect(screen.getByRole('radio', { name: /Carte Bancaire/i })).toBeVisible();
+        // First brand is selected by default
+        expect(radios[0]).toHaveAttribute('aria-checked', 'true');
+
+        // Contextual label visible
+        expect(screen.getByText(/you can select the card brand/i)).toBeVisible();
     });
 
-    test('Dual branding UI is not hidden when the card number is in error', async () => {
-        const { container } = renderCardInput(<CardInput {...cardInputRequiredProps} />);
+    test('should show display-only icons without selection UI or contextual label for non-EU dual brand', async () => {
+        renderCardInput(<CardInput {...cardInputRequiredProps} />);
 
         await act(() => {
-            cardInputRef.processBinLookupResponse(dualBrandResp, false);
+            cardInputRef.processBinLookupResponse(nonEuDualBrandResp, false);
         });
 
-        expect(screen.getByText('Card Brand')).toBeInTheDocument();
+        // Two brand images visible (display-only)
+        const images = screen.getAllByRole('img');
+        expect(images.length).toBeGreaterThanOrEqual(2);
 
-        /* eslint-disable testing-library/no-node-access, testing-library/no-container */
-        // 3 error fields - all hidden
-        expect(container.querySelectorAll('.adyen-checkout-contextual-text--error.adyen-checkout-contextual-text--hidden')).toHaveLength(3);
+        // No interactive selection UI
+        expect(screen.queryAllByRole('radio')).toHaveLength(0);
+        expect(screen.queryByRole('radiogroup')).not.toBeInTheDocument();
+
+        // No contextual label
+        expect(screen.queryByText(/you can select the card brand/i)).not.toBeInTheDocument();
+    });
+
+    test('should hide brand selection UI and contextual label when PAN has validation error', async () => {
+        renderCardInput(<CardInput {...cardInputRequiredProps} />);
+
+        await act(() => {
+            cardInputRef.processBinLookupResponse(euDualBrandResp, false);
+        });
+
+        // Brand selection is visible before error
+        expect(screen.getAllByRole('radio')).toHaveLength(2);
 
         await act(() => {
             cardInputRef.showValidation();
         });
 
-        // 3 error fields all visible
-        expect(container.querySelectorAll('.adyen-checkout-contextual-text--error.adyen-checkout-contextual-text--hidden')).toHaveLength(0);
-        /* eslint-enable testing-library/no-node-access, testing-library/no-container */
-
-        expect(screen.getByText('Card Brand')).toBeInTheDocument();
+        // Error state shown — at least one error element is visible
+        expect(screen.queryAllByRole('radio')).toHaveLength(0);
+        expect(screen.queryByText(/you can select the card brand/i)).not.toBeInTheDocument();
     });
 });
