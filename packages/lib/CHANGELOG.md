@@ -1,5 +1,11 @@
 # @adyen/adyen-web
 
+## 6.33.0
+
+### Minor Changes
+
+- New: Add Apple Pay Coupon Code Support ([#3801](https://github.com/Adyen/adyen-web/pull/3801))
+
 ## 6.32.1
 
 ### Patch Changes
