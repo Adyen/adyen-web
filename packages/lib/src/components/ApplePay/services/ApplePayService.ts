@@ -5,7 +5,7 @@ export interface ApplePayServiceOptions {
     onError: (error?: unknown) => void;
     onCancel?: (event: ApplePayJS.Event) => void;
     onValidateMerchant: ApplePayConfiguration['onValidateMerchant'];
-    onCouponCodeChange?: ApplePayConfiguration['onCouponCodeChange'];
+    onCouponCodeChanged?: ApplePayConfiguration['onCouponCodeChanged'];
     onPaymentMethodSelected?: ApplePayConfiguration['onPaymentMethodSelected'];
     onShippingMethodSelected?: ApplePayConfiguration['onShippingMethodSelected'];
     onShippingContactSelected?: ApplePayConfiguration['onShippingContactSelected'];
@@ -53,9 +53,9 @@ class ApplePayService {
             };
         }
 
-        if (typeof options.onCouponCodeChange === 'function') {
+        if (typeof options.onCouponCodeChanged === 'function') {
             this.session.oncouponcodechanged = event => {
-                void this.oncouponcodechange(event, options.onCouponCodeChange);
+                void this.oncouponcodechange(event, options.onCouponCodeChanged);
             };
         }
     }
@@ -172,8 +172,8 @@ class ApplePayService {
             });
     }
 
-    oncouponcodechange(event: ApplePayJS.ApplePayCouponCodeChangedEvent, onCouponCodeChange: ApplePayConfiguration['onCouponCodeChange']) {
-        return new Promise((resolve, reject) => onCouponCodeChange(resolve, reject, event))
+    oncouponcodechange(event: ApplePayJS.ApplePayCouponCodeChangedEvent, onCouponCodeChanged: ApplePayConfiguration['onCouponCodeChanged']) {
+        return new Promise((resolve, reject) => onCouponCodeChanged(resolve, reject, event))
             .then((couponCodeUpdate: ApplePayJS.ApplePayCouponCodeUpdate) => {
                 this.session.completeCouponCodeChange(couponCodeUpdate);
             })
