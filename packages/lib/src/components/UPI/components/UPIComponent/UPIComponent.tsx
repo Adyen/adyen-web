@@ -1,9 +1,9 @@
 import { Fragment, h } from 'preact';
-import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'preact/hooks';
 import { ComponentMethodsRef, UIElementStatus } from '../../../types';
 import { App, UpiMode } from '../../types';
 import useImage from '../../../../core/Context/useImage';
-import { A11Y, UPI_MODE } from '../../constants';
+import { A11Y, MAX_UPI_BRANDS_TO_SHOW, UPI_MODE } from '../../constants';
 import { SegmentedControlRegion } from '../../../internal/SegmentedControl';
 import UPIIntentAppList from '../UPIIntentAppList';
 import { useCoreContext } from '../../../../core/Context/CoreProvider';
@@ -11,6 +11,9 @@ import Alert from '../../../internal/Alert';
 import UPIMandate, { Mandate } from '../UPIMandate/UPIMandate';
 import { PayButtonProps } from '../../../internal/PayButton/PayButton';
 import { useAmount } from '../../../../core/Context/AmountProvider';
+import { PaymentMethodBrand } from '../../../../types/global-types';
+import { BrandIcon } from '../../../internal/BrandIcons/types';
+import { BrandIcons } from '../../../internal/BrandIcons/BrandIcons';
 import './UPIComponent.scss';
 
 type UpiData = { app?: App };
@@ -25,6 +28,7 @@ interface UPIComponentProps {
     setComponentRef: (ref: ComponentMethodsRef) => void;
     payButton(props: PayButtonProps): h.JSX.Element;
     onChange({ data, valid, errors, isValid }: OnChangeProps): void;
+    brands: PaymentMethodBrand[];
 }
 
 export default function UPIComponent({
@@ -34,7 +38,8 @@ export default function UPIComponent({
     setComponentRef,
     showPayButton,
     mandate,
-    apps = []
+    apps = [],
+    brands
 }: Readonly<UPIComponentProps>): h.JSX.Element {
     const { i18n } = useCoreContext();
     const getImage = useImage();
@@ -78,6 +83,15 @@ export default function UPIComponent({
         }
     }, [selectedApp]);
 
+    const brandIcons: BrandIcon[] = useMemo(
+        () =>
+            brands.map(brand => ({
+                src: brand.icon,
+                alt: brand.name
+            })),
+        [brands]
+    );
+
     useEffect(() => {
         if (mode === UPI_MODE.QR_CODE) {
             /**
@@ -111,6 +125,12 @@ export default function UPIComponent({
                 <SegmentedControlRegion id={A11Y.AreaId.QR} ariaLabelledBy={A11Y.ButtonId.QR} className="adyen-checkout-upi-area-qr-code">
                     <span className="adyen-checkout-upi-instruction-label">{i18n.get('upi.qrCode.instruction')}</span>
                     {mandateComponent}
+                    <BrandIcons
+                        className="adyen-checkout-upi-brands"
+                        brandIcons={brandIcons}
+                        maxBrandsToShow={MAX_UPI_BRANDS_TO_SHOW}
+                        showIconOnError
+                    />
                     {showPayButton &&
                         payButton({
                             label: i18n.get('generateQRCode'),

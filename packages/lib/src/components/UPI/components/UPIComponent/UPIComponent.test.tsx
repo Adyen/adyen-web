@@ -36,6 +36,7 @@ describe('UPIComponent', () => {
                     setComponentRef={jest.fn()}
                     showPayButton={false}
                     payButton={() => <button className="pay-button" />}
+                    brands={[]}
                 />
             );
 
@@ -52,6 +53,7 @@ describe('UPIComponent', () => {
                     showPayButton={true}
                     payButton={() => <button>Pay</button>}
                     setComponentRef={jest.fn()}
+                    brands={[]}
                 />
             );
             expect(await screen.findByRole('button', { name: 'Pay' })).toBeInTheDocument();
@@ -69,6 +71,7 @@ describe('UPIComponent', () => {
                     showPayButton={true}
                     payButton={payButtonMock}
                     setComponentRef={jest.fn()}
+                    brands={[]}
                 />
             );
 
@@ -91,6 +94,7 @@ describe('UPIComponent', () => {
                     onChange={onChangeMock}
                     payButton={() => <button className="pay-button" />}
                     setComponentRef={jest.fn()}
+                    brands={[]}
                 />
             );
 

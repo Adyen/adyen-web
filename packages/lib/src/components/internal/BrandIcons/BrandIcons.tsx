@@ -17,6 +17,7 @@ export type BrandIconsProp = {
     brandImageWrapperClassName?: string;
     brandImageClassName?: string;
     showIconOnError?: boolean;
+    smallIcons?: boolean;
     renderBrandIcon?: (brandIcon: BrandIcon) => h.JSX.Element;
 };
 
@@ -29,6 +30,7 @@ export const BrandIcons = ({
     brandImageClassName,
     brandImageWrapperClassName,
     showIconOnError,
+    smallIcons,
     renderBrandIcon
 }: Readonly<BrandIconsProp>) => {
     const visibleBrands = useMemo(() => brandIcons.slice(0, maxBrandsToShow), [brandIcons, maxBrandsToShow]);
@@ -47,7 +49,7 @@ export const BrandIcons = ({
                         src={brandIcon.src}
                         alt={brandIcon.alt}
                         wrapperClassName={brandImageWrapperClassName}
-                        imgClassName={cn(styles.img, brandImageClassName)}
+                        imgClassName={cn(styles.img, { [styles.smallImg]: smallIcons }, brandImageClassName)}
                         showOnError={showIconOnError}
                     />
                 )

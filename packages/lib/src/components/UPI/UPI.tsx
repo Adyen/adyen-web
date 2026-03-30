@@ -23,6 +23,7 @@ class UPI extends UIElement<UPIConfiguration> {
     public static readonly type = TxVariants.upi;
     public static readonly txVariants = [TxVariants.upi, TxVariants.upi_qr, TxVariants.upi_intent];
     private mode: UpiMode;
+    public brands: PaymentMethodBrand[];
 
     protected static readonly defaultProps = {
         showPaymentMethodItemImages: true
@@ -34,8 +35,17 @@ class UPI extends UIElement<UPIConfiguration> {
     }
 
     formatProps(props: UPIConfiguration): UPIConfiguration {
-        const { apps = [] } = props;
+        const { apps = [], showPaymentMethodItemImages } = props;
         const hasIntentApps = apps.length > 0;
+
+        this.brands = showPaymentMethodItemImages
+            ? apps.map(app => {
+                  const imageName = `upi/${app.id.toLowerCase()}`;
+                  const brandIcon = this.core.modules.resources?.getImage()(imageName);
+                  return { icon: brandIcon, name: imageName };
+              })
+            : [];
+
         if (isMobile() && hasIntentApps) {
             return {
                 ...super.formatProps(props),
@@ -70,18 +80,6 @@ class UPI extends UIElement<UPIConfiguration> {
             return TxVariants.upi_qr;
         }
         return TxVariants.upi_intent;
-    }
-
-    get brands(): PaymentMethodBrand[] {
-        if (!this.props.showPaymentMethodItemImages) {
-            return [];
-        }
-
-        return this.props.apps.map(app => {
-            const imageName = `upi/${app.id.toLowerCase()}`;
-            const brandIcon = this.core.modules.resources?.getImage()(imageName);
-            return { icon: brandIcon, name: imageName };
-        });
     }
 
     protected override componentToRender(): h.JSX.Element {
@@ -137,6 +135,7 @@ class UPI extends UIElement<UPIConfiguration> {
                         mode={this.mode}
                         showPayButton={this.props.showPayButton}
                         mandate={this.props.mandate}
+                        brands={this.brands}
                     />
                 );
         }

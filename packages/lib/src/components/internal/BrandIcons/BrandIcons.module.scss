@@ -17,6 +17,11 @@
 .img {
     padding: 0;
     display: block;
+    width: variable-generator.token(spacer-110);
+    height: variable-generator.token(spacer-090);
+}
+
+.smallImg {
     width: variable-generator.token(spacer-090);
     height: variable-generator.token(spacer-070);
 }

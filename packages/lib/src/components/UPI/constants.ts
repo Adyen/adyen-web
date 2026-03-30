@@ -15,3 +15,5 @@ export const A11Y = {
         INTENT: 'upi-area-intent'
     }
 };
+
+export const MAX_UPI_BRANDS_TO_SHOW = 4;

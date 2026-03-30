@@ -36,6 +36,7 @@ const AvailableBrands = ({ brands, activeBrand }: Readonly<PaymentMethodBrandsPr
                 'adyen-checkout__card__brands--hidden': isValidBrand
             })}
             brandIcons={brandIcons}
+            smallIcons
             showIconOnError
         />
     );
