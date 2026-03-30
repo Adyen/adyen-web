@@ -6,8 +6,9 @@ import PaymentMethodIcon from '../PaymentMethodIcon';
 import { getFullBrandName } from '../../../../Card/components/CardInput/utils';
 import { useCoreContext } from '../../../../../core/Context/CoreProvider';
 import { BrandIcons } from '../../../../internal/BrandIcons/BrandIcons';
+import { BrandIcon } from '../../../../internal/BrandIcons/types';
 
-const MAX_BRANDS_TO_SHOW = 4;
+const getMaxBrandsToShow = (allowedBrands: BrandIcon[]) => (allowedBrands.length <= 4 ? undefined : 3);
 
 interface PaymentMethodBrandsProps {
     brands: Array<BrandConfiguration>;
@@ -38,7 +39,7 @@ const PaymentMethodBrands = ({
     return (
         <BrandIcons
             brandIcons={allowedBrands}
-            maxBrandsToShow={MAX_BRANDS_TO_SHOW}
+            maxBrandsToShow={getMaxBrandsToShow(allowedBrands)}
             remainingBrandsLabel={showOtherInsteadOfNumber ? `+ ${i18n.get('paymentMethodBrand.other')}` : undefined}
             className="adyen-checkout__payment-method__brands"
             remainingBrandsLabelClassName="adyen-checkout__payment-method__brand-number"
