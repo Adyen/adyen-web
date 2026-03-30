@@ -8,6 +8,7 @@ import { TxVariants } from '../tx-variants';
 import isMobile from '../../utils/isMobile';
 import { UPI_MODE } from './constants';
 import { ICore } from '../../types';
+import { PaymentMethodBrand } from '../../types/global-types';
 
 /**
  * For mobile:
@@ -71,7 +72,7 @@ class UPI extends UIElement<UPIConfiguration> {
         return TxVariants.upi_intent;
     }
 
-    get brands(): { icon: any; name: string }[] {
+    get brands(): PaymentMethodBrand[] {
         if (!this.props.showPaymentMethodItemImages) {
             return [];
         }

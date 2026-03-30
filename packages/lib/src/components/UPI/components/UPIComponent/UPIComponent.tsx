@@ -4,7 +4,6 @@ import { ComponentMethodsRef, UIElementStatus } from '../../../types';
 import { App, UpiMode } from '../../types';
 import useImage from '../../../../core/Context/useImage';
 import { A11Y, UPI_MODE } from '../../constants';
-import './UPIComponent.scss';
 import { SegmentedControlRegion } from '../../../internal/SegmentedControl';
 import UPIIntentAppList from '../UPIIntentAppList';
 import { useCoreContext } from '../../../../core/Context/CoreProvider';
@@ -12,6 +11,7 @@ import Alert from '../../../internal/Alert';
 import UPIMandate, { Mandate } from '../UPIMandate/UPIMandate';
 import { PayButtonProps } from '../../../internal/PayButton/PayButton';
 import { useAmount } from '../../../../core/Context/AmountProvider';
+import './UPIComponent.scss';
 
 type UpiData = { app?: App };
 

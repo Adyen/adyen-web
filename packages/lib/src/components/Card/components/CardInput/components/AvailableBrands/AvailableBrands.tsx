@@ -1,4 +1,5 @@
 import { h } from 'preact';
+import { useMemo } from 'preact/hooks';
 import cn from 'classnames';
 
 import { BrandConfiguration } from '../../../../types';
@@ -20,15 +21,21 @@ const AvailableBrands = ({ brands, activeBrand }: Readonly<PaymentMethodBrandsPr
 
     const isValidBrand = activeBrand !== 'card';
 
+    const brandIcons = useMemo(
+        () =>
+            brands.map(brand => ({
+                src: brand.icon,
+                alt: getFullBrandName(brand.name)
+            })),
+        [brands]
+    );
+
     return (
         <BrandIcons
             className={cn('adyen-checkout__card__brands', {
                 'adyen-checkout__card__brands--hidden': isValidBrand
             })}
-            brandIcons={brands.map(brand => ({
-                src: brand.icon,
-                alt: getFullBrandName(brand.name)
-            }))}
+            brandIcons={brandIcons}
             showIconOnError
         />
     );

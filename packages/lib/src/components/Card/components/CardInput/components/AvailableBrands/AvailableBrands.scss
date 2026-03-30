@@ -1,7 +1,7 @@
 @use 'styles/variable-generator';
 
 .adyen-checkout__card__brands {
-    margin-top: variable-generator.token(spacer-000);
+    margin-top: calc(-1 * variable-generator.token(spacer-040));
     margin-bottom: variable-generator.token(spacer-060);
 }
 
