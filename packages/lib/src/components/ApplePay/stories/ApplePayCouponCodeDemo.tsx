@@ -115,7 +115,7 @@ const ApplePayCouponCodeDemo = ({ amount, countryCode, shopperLocale }: Readonly
             renderApplePayCodeAs: 'modal',
             couponCode,
             supportsCouponCode: true,
-            onCouponCodeChange: (resolve, reject, event) => {
+            onCouponCodeChanged: (resolve, reject, event) => {
                 const newCouponCode = (event.couponCode ?? '').trim();
 
                 if (newCouponCode === VALID_COUPON) {

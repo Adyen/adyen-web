@@ -279,7 +279,7 @@ export interface ApplePayConfiguration extends UIElementProps {
      * @param reject - Completes the change of a coupon code with no update.
      * @param event - The event parameter contains the couponCode attribute.
      */
-    onCouponCodeChange?: (
+    onCouponCodeChanged?: (
         resolve: (update: ApplePayJS.ApplePayCouponCodeUpdate) => void,
         reject: (update: ApplePayJS.ApplePayCouponCodeUpdate) => void,
         event: ApplePayJS.ApplePayCouponCodeChangedEvent
