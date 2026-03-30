@@ -45,10 +45,10 @@ export const OrderPaymentMethods = ({ order, orderStatus, onOrderCancel, brandLo
                         </div>
                         <div className="adyen-checkout__order-payment-method__details">
                             <div className="adyen-checkout__order-payment-method__deducted-amount">
-                                <div className="adyen-checkout__order-payment-method__deducted-amount__label">{i18n.get('deductedBalance')}</div>
-                                <div className="adyen-checkout__order-payment-method__deducted-amount__value">
+                                <span className="adyen-checkout__order-payment-method__deducted-amount__label">{i18n.get('deductedBalance')}</span>
+                                <span className="adyen-checkout__order-payment-method__deducted-amount__value">
                                     {i18n.amount(orderPaymentMethod.amount.value, orderPaymentMethod.amount.currency)}
-                                </div>
+                                </span>
                             </div>
                         </div>
                     </li>
@@ -56,10 +56,10 @@ export const OrderPaymentMethods = ({ order, orderStatus, onOrderCancel, brandLo
             </ul>
 
             {orderStatus.remainingAmount && (
-                <div className="adyen-checkout__order-remaining-amount">
+                <p className="adyen-checkout__order-remaining-amount">
                     {i18n.get('partialPayment.warning')}{' '}
                     <strong>{i18n.amount(orderStatus.remainingAmount.value, orderStatus.remainingAmount.currency)}</strong>
-                </div>
+                </p>
             )}
         </div>
     );

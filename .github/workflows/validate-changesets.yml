@@ -5,6 +5,7 @@ on:
     paths:
       - '.changeset/*.md'
       - 'packages/lib/src/**'
+      - 'packages/server/translations/**'
 
 jobs:
   validate:

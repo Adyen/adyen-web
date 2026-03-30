@@ -79,6 +79,7 @@
     "address.errors.incomplete": "Sláðu inn heimilisfang til að halda áfram",
     "address.enterManually": "Slá inn heimilisfang handvirkt",
     "state": "Fylki",
+    "payAmountFormat": "Greiða %@",
     "field.title.optional": "(valfrjálst)",
     "issuerList.selectField.contextualText": "Veldu bankann þinn til að halda áfram",
     "issuerList.selectField.label": "Bankaval",

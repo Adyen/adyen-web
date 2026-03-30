@@ -79,6 +79,7 @@
     "address.errors.incomplete": "Chcete-li pokračovat, zadejte adresu",
     "address.enterManually": "Zadejte adresu ručně",
     "state": "Stát",
+    "payAmountFormat": "Zaplatit %@",
     "field.title.optional": "(nepovinné)",
     "issuerList.selectField.contextualText": "Chcete-li pokračovat, vyberte svou banku",
     "issuerList.selectField.label": "Výběr banky",

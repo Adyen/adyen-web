@@ -79,6 +79,7 @@
     "address.errors.incomplete": "Norėdami tęsti, įveskite adresą",
     "address.enterManually": "Įveskite adresą rankiniu būdu",
     "state": "Valstija",
+    "payAmountFormat": "Mokėti %@",
     "field.title.optional": "(neprivaloma)",
     "issuerList.selectField.contextualText": "Norėdami tęsti, pasirinkite savo banką",
     "issuerList.selectField.label": "Banko pasirinkimas",

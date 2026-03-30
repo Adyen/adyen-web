@@ -79,6 +79,7 @@
     "address.errors.incomplete": "Za nadaljevanje vnesite naslov",
     "address.enterManually": "Naslov vnesite ročno",
     "state": "Država",
+    "payAmountFormat": "Plačilo %@",
     "field.title.optional": "(izbirno)",
     "issuerList.selectField.contextualText": "Za nadaljevanje izberite svojo banko",
     "issuerList.selectField.label": "Izbira banke",

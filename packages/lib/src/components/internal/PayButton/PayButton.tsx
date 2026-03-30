@@ -23,7 +23,6 @@ export interface PayButtonProps extends ButtonProps {
     status?: string;
     disabled?: boolean;
     icon?: string;
-    onClick?: (e: h.JSX.TargetedMouseEvent<HTMLButtonElement>) => void;
 }
 
 const PayButton = ({ customAmount, classNameModifiers = [], label, ...props }: Readonly<PayButtonProps>) => {
@@ -31,7 +30,7 @@ const PayButton = ({ customAmount, classNameModifiers = [], label, ...props }: R
     const { secondaryAmount } = useSecondaryAmount();
     const { i18n } = useCoreContext();
 
-    const buttonLabel = createButtonLabel(i18n, label, amount, isZeroAuth, customAmount);
+    const buttonLabel = createButtonLabel(i18n, label, amount, isZeroAuth, customAmount, secondaryAmount);
     const secondaryAmountLabel = createSecondaryLabel(i18n, secondaryAmount, isAmountValid(amount), isZeroAuth, label);
 
     const isDisabled = props.disabled || props.status === 'loading';

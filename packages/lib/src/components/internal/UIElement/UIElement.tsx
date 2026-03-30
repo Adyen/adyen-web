@@ -446,7 +446,11 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     protected handleOrder = (response: PaymentResponseData): void => {
         const { order } = response;
 
-        const updateCorePromise = this.core.session ? this.core.update({ order }) : this.handleAdvanceFlowPaymentMethodsUpdate(order);
+        const updateCorePromise = this.core.session
+            ? this.core.update({
+                  order
+              })
+            : this.handleAdvanceFlowPaymentMethodsUpdate(order);
 
         void updateCorePromise.then(() => {
             this.props.onOrderUpdated?.({ order });

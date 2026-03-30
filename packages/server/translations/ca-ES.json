@@ -79,6 +79,7 @@
     "address.errors.incomplete": "Introduïu una adreça per continuar",
     "address.enterManually": "Introduïu l'adreça manualment",
     "state": "Estat",
+    "payAmountFormat": "Pagueu %@",
     "field.title.optional": "(opcional)",
     "issuerList.selectField.contextualText": "Seleccioneu el vostre banc per continuar",
     "issuerList.selectField.label": "Selecció de banc",
