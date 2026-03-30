@@ -18,7 +18,7 @@ const createMockCore = (): MockProxy<ICore> => {
     core.session = session;
     core.options = {
         donation: {
-            autoStart: true,
+            autoMount: true,
             onSuccess: jest.fn(),
             onError: jest.fn(),
             delay: 0
@@ -82,7 +82,7 @@ describe('DonationCampaignService', () => {
             const core = createMockCore();
             core.options = {
                 donation: {
-                    autoStart: true,
+                    autoMount: true,
                     delay: DEFAULT_DONATION_AUTO_START_DELAY_MS,
                     onSuccess: jest.fn(),
                     onError: jest.fn()
@@ -111,7 +111,7 @@ describe('DonationCampaignService', () => {
             const core = createMockCore();
             core.options = {
                 donation: {
-                    autoStart: true,
+                    autoMount: true,
                     delay: 1000,
                     onSuccess: jest.fn(),
                     onError: jest.fn()
@@ -289,7 +289,7 @@ describe('DonationCampaignService', () => {
             const onSuccess = jest.fn();
             core.options = {
                 donation: {
-                    autoStart: true,
+                    autoMount: true,
                     onSuccess,
                     onError: jest.fn(),
                     delay: 0
@@ -469,7 +469,7 @@ describe('DonationCampaignService', () => {
             const onSuccess = jest.fn();
             core.options = {
                 donation: {
-                    autoStart: true,
+                    autoMount: true,
                     onSuccess,
                     onError: jest.fn(),
                     delay: 0
@@ -514,7 +514,7 @@ describe('DonationCampaignService', () => {
             const onError = jest.fn();
             core.options = {
                 donation: {
-                    autoStart: true,
+                    autoMount: true,
                     onError,
                     onSuccess: jest.fn(),
                     delay: 0
@@ -562,7 +562,7 @@ describe('DonationCampaignService', () => {
             const onError = jest.fn();
             core.options = {
                 donation: {
-                    autoStart: true,
+                    autoMount: true,
                     onError,
                     onSuccess: jest.fn(),
                     delay: 0

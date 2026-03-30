@@ -12,7 +12,7 @@ import { AnalyticsLogEvent, LogEventSubtype, LogEventType } from '../../core/Ana
 export const DEFAULT_DONATION_AUTO_START_DELAY_MS = 3000;
 
 export const REPARENT_WITHOUT_AUTO_START_ERROR_MSG =
-    'Donation instantiation error:: You need to set donation.autoStart to false if you wish to display the Donation component in a different container.\nThe Donation component will be displayed in the default container.';
+    'Donation instantiation error:: You need to set donation.autoMount to false if you wish to display the Donation component in a different container.\nThe Donation component will be displayed in the default container.';
 
 class DonationCampaignService {
     public static readonly type = 'donationCampaignService';

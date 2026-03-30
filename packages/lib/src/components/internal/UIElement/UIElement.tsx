@@ -456,8 +456,8 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     protected setupSessionsDonation() {
         const { amount, donation } = this.props;
 
-        // If merchant hasn't explicitly disabled autoStart by setting it to false
-        if (donation?.autoStart !== false) {
+        // If merchant hasn't explicitly disabled autoMount by setting it to false
+        if (donation?.autoMount !== false) {
             const rootNode: HTMLElement = assertIsDropin(this.elementRef) ? this.elementRef._node : this._node;
 
             const DonationComponentRef = this.core.getComponent(TxVariants.donation) as typeof Donation;

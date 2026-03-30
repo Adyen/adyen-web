@@ -129,7 +129,7 @@ export const SessionsDonation: DropinStory = {
         countryCode: 'NL',
 
         donation: {
-            autoStart: true,
+            autoMount: true,
             delay: 3000,
             onSuccess: obj => console.log('### Dropin_withSessionsDonation::onSuccess:: didDonate=', obj),
             onError: obj => console.log('### Dropin_withSessionsDonation::onError:: obj', obj)
@@ -155,7 +155,7 @@ export const SessionsDonationReparented: DropinStory = {
         countryCode: 'NL',
 
         donation: {
-            autoStart: false,
+            autoMount: false,
             delay: 3000,
             onSuccess: res => {
                 const fcDialog = document.getElementById('donation-dialog') as HTMLDialogElement;

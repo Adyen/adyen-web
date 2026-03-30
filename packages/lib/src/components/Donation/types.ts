@@ -21,7 +21,7 @@ export interface DonationOptions {
      * Optional boolean to delay, or halt, the showing of the Donation component when in the Sessions flow.
      * Defaults to true.
      */
-    autoStart?: boolean;
+    autoMount?: boolean;
     /**
      * Optional number representing the delay in milliseconds before the Donation component is mounted (if mandated by the /payments response in the Sessions flow),
      * Defaults to 3000.

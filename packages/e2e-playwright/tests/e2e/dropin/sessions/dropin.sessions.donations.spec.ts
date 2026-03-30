@@ -57,8 +57,8 @@ test('#2 Should succeed in making a payment, see the donation component, and mak
     await expect(dropinWithSession.donationSuccess).toBeVisible();
 });
 
-test('#3 Should succeed in making a payment but not see the donation component because autoStart is false', async ({ dropinWithSession, page }) => {
-    await dropinWithSession.goto(URL_MAP.dropinWithSession_donations_autoStartFalse);
+test('#3 Should succeed in making a payment but not see the donation component because autoMount is false', async ({ dropinWithSession, page }) => {
+    await dropinWithSession.goto(URL_MAP.dropinWithSession_donations_autoMountFalse);
     const { paymentMethodDetailsLocator } = await dropinWithSession.selectNonStoredPaymentMethod('scheme');
 
     const card = new Card(page, paymentMethodDetailsLocator);
@@ -87,11 +87,11 @@ test('#4  Should succeed in making a payment, and see the donation component rep
     await expect(dropinWithSession.donationComponentReparented).toBeVisible();
 });
 
-test('#5 Should succeed in making a payment, and see the donation component remain in the default container because autoStart is true', async ({
+test('#5 Should succeed in making a payment, and see the donation component remain in the default container because autoMount is true', async ({
     dropinWithSession,
     page
 }) => {
-    await dropinWithSession.goto(URL_MAP.dropinWithSession_donations_reparented_autoStartTrue);
+    await dropinWithSession.goto(URL_MAP.dropinWithSession_donations_reparented_autoMountTrue);
     const { paymentMethodDetailsLocator } = await dropinWithSession.selectNonStoredPaymentMethod('scheme');
 
     const card = new Card(page, paymentMethodDetailsLocator);

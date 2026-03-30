@@ -9,12 +9,12 @@ export const URL_MAP = {
     dropinWithSession_BCMC_noStoredPms: '/iframe.html?args=countryCode:BE&globals=&id=drop-in-drop-in-component--default&viewMode=story',
     dropinWithSession_donations: '/iframe.html?args=&globals=&id=drop-in-drop-in-component--sessions-donation&viewMode=story',
     dropinWithSession_donations_noDelay: '/iframe.html?args=donation.delay:0&globals=&id=drop-in-drop-in-component--sessions-donation&viewMode=story',
-    dropinWithSession_donations_autoStartFalse:
-        '/iframe.html?args=donation.autoStart:!false;donation.delay:0&globals=&id=drop-in-drop-in-component--sessions-donation&viewMode=story',
+    dropinWithSession_donations_autoMountFalse:
+        '/iframe.html?args=donation.autoMount:!false;donation.delay:0&globals=&id=drop-in-drop-in-component--sessions-donation&viewMode=story',
     dropinWithSession_donations_reparented:
-        '/iframe.html?args=donation.autoStart:!false;donation.delay:0&globals=&id=drop-in-drop-in-component--sessions-donation-reparented&viewMode=story',
-    dropinWithSession_donations_reparented_autoStartTrue:
-        '/iframe.html?args=donation.autoStart:!true;donation.delay:0&globals=&id=drop-in-drop-in-component--sessions-donation-reparented&viewMode=story',
+        '/iframe.html?args=donation.autoMount:!false;donation.delay:0&globals=&id=drop-in-drop-in-component--sessions-donation-reparented&viewMode=story',
+    dropinWithSession_donations_reparented_autoMountTrue:
+        '/iframe.html?args=donation.autoMount:!true;donation.delay:0&globals=&id=drop-in-drop-in-component--sessions-donation-reparented&viewMode=story',
 
     /**
      * Card
