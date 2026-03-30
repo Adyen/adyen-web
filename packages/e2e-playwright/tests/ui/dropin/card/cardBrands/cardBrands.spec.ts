@@ -24,7 +24,7 @@ test.describe('Dropin - Card brands displayed in the Payment Method List and und
         expect(brands).toHaveLength(VISIBLE_BRANDS_COUNT);
 
         const remainingBrandsText = await header.getRemainingBrandsNumberText();
-        expect(remainingBrandsText).toBe(`+${TOTAL_BRANDS_COUNT - VISIBLE_BRANDS_COUNT}`);
+        expect(remainingBrandsText).toBe(`+ ${TOTAL_BRANDS_COUNT - VISIBLE_BRANDS_COUNT}`);
 
         const { paymentMethodDetailsLocator } = await dropinWithSession.selectNonStoredPaymentMethod('scheme');
 
