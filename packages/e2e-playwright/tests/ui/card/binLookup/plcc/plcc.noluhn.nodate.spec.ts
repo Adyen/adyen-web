@@ -40,7 +40,6 @@ test.describe('Testing binLookup endpoint for a response that should indicate a 
         expect(brandingIconSrc).toContain('nocard.svg');
 
         // Confirm date is required again
-        // await expect(card.expiryDateLabelText).toHaveText(DATE_LABEL);
         await expect(card.expiryDateField).toBeVisible();
 
         // PM is not valid
