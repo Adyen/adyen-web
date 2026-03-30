@@ -3,7 +3,7 @@ import { PAYMENT_RESULT, REGULAR_TEST_CARD, TEST_CVC_VALUE, TEST_DATE_VALUE } fr
 import { URL_MAP } from '../../../../fixtures/URL_MAP';
 import { Card } from '../../../../models/card';
 
-import { donationCampaignsMock, donationsMock } from '../../../../mocks/sessions/donations/donations.mock';
+import { donationCampaignsMock, donationCampaignsErrorMock, donationsMock } from '../../../../mocks/sessions/donations/donations.mock';
 import { donationCampaignsFixedAmountsMockData, donationSuccessMockData } from '../../../../mocks/sessions/donations/donations.data';
 
 const DEFAULT_DONATION_AUTO_START_DELAY_MS = 3000;
@@ -104,4 +104,27 @@ test('#5 Should succeed in making a payment, and see the donation component rema
     await expect(dropinWithSession.donationComponentReparented).not.toBeVisible(); // but donation comp is *not* placed in the parent
 
     await expect(dropinWithSession.donationComponent).toBeVisible();
+});
+
+test('#6 Should succeed in making a payment but not show donation component when /donationCampaigns returns 500 error', async ({
+    dropinWithSession,
+    page
+}) => {
+    // Set up error mock BEFORE navigating
+    await donationCampaignsErrorMock(page, 500);
+
+    await dropinWithSession.goto(URL_MAP.dropinWithSession_donations_noDelay);
+    const { paymentMethodDetailsLocator } = await dropinWithSession.selectNonStoredPaymentMethod('scheme');
+
+    const card = new Card(page, paymentMethodDetailsLocator);
+
+    await fillCard(card);
+
+    await dropinWithSession.pay();
+    await expect(dropinWithSession.paymentResult).toContainText(PAYMENT_RESULT.success);
+
+    await page.waitForTimeout(100); // allow small delay for the call to /donationCampaigns
+
+    // Donation component should not be visible due to the error
+    await expect(dropinWithSession.donationComponent).not.toBeVisible();
 });
