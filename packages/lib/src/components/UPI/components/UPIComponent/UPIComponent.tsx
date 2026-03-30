@@ -124,13 +124,13 @@ export default function UPIComponent({
             {mode === UPI_MODE.QR_CODE && (
                 <SegmentedControlRegion id={A11Y.AreaId.QR} ariaLabelledBy={A11Y.ButtonId.QR} className="adyen-checkout-upi-area-qr-code">
                     <span className="adyen-checkout-upi-instruction-label">{i18n.get('upi.qrCode.instruction')}</span>
-                    {mandateComponent}
                     <BrandIcons
                         className="adyen-checkout-upi-brands"
                         brandIcons={brandIcons}
                         maxBrandsToShow={MAX_UPI_BRANDS_TO_SHOW}
                         showIconOnError
                     />
+                    {mandateComponent}
                     {showPayButton &&
                         payButton({
                             label: i18n.get('generateQRCode'),
