@@ -1,37 +1,39 @@
-@import 'styles/variable-generator';
+@use 'styles/index';
+@use 'styles/variable-generator';
 
 .adyen-checkout__card__eu-dual-branding {
     display: flex;
-    gap: token(spacer-040);
-    background-color: token(color-background-secondary);
-    border-radius: token(border-radius-m);
-    padding: token(spacer-040);
+    gap: variable-generator.token(spacer-040);
+    background-color: variable-generator.token(color-background-tertiary);
+    border-radius: variable-generator.token(border-radius-m);
+    padding: variable-generator.token(spacer-040);
+    margin-right: variable-generator.token(spacer-060);
 }
 
 .adyen-checkout__card__eu-dual-branding__button {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: token(color-background-primary);
+    background-color: variable-generator.token(color-background-primary);
     border: none;
-    border-radius: token(border-radius-s);
-    padding: token(spacer-040);
+    border-radius: variable-generator.token(border-radius-s);
+    padding: variable-generator.token(spacer-040);
     cursor: pointer;
     transition: box-shadow 0.2s ease;
     height: 18px;
     width: 27px;
 
     &:hover {
-        box-shadow: 0 2px 4px rgb(0 0 0 / 10%);
+        box-shadow: 0 2px 4px rgb(0 0 0 / 30%);
     }
 
     &--selected {
-        box-shadow: 0 2px 8px rgb(0 0 0 / 20%);
+        box-shadow: 0 2px 4px rgb(0 0 0 / 50%);
     }
 }
 
 .adyen-checkout__card__eu-dual-branding__icon {
-    border-radius: token(border-radius-s);
+    border-radius: variable-generator.token(border-radius-s);
     height: 18px;
     width: 27px;
 }
