@@ -102,7 +102,7 @@ export default function UPIComponent({
     const handleDropdownSelect = useCallback(
         (event: { target: SelectTargetObject }) => {
             const app = lowPriorityApps.find(a => a.id === event.target.value);
-            selectApp(app, UiTarget.listDetected);
+            selectApp(app, UiTarget.listSearch);
         },
         [lowPriorityApps, selectApp]
     );
@@ -125,7 +125,7 @@ export default function UPIComponent({
     const debounceSearchAnalytics = useRef(debounce(onSubmitAnalytics, ANALYTICS_SEARCH_DEBOUNCE_TIME));
 
     const handleSearch = useCallback(() => {
-        debounceSearchAnalytics.current({ type: InfoEventType.input, target: UiTarget.listDetected });
+        debounceSearchAnalytics.current({ type: InfoEventType.input, target: UiTarget.listSearch });
     }, []);
 
     const validateIntentApp = useCallback(() => {
