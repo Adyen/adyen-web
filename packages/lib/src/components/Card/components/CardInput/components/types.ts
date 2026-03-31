@@ -12,12 +12,13 @@ export interface CardFieldsProps {
     brand?: string;
     brandsIcons?: Array<BrandConfiguration>;
     brandsConfiguration?: CardBrandsConfiguration;
-    dualBrandingChangeHandler?: DualBrandingChangeHandler;
-    dualBrandingElements?: DualBrandSelectElement[];
-    dualBrandingSelected?: string;
-    errors: SFPErrorMap;
-    focusedElement?: string;
-    hasCVC?: boolean;
+    dualBrandingChangeHandler?: any;
+    dualBrandingElements?: any;
+    selectedBrandValue?: string;
+    showDualBrandSelectElementsForEU?: boolean;
+    errors?: any;
+    focusedElement?: any;
+    hasCVC?: any;
     cvcPolicy?: CVCPolicyType;
     expiryDatePolicy?: DatePolicyType;
     onFocusField?: (field: string) => void;
@@ -42,9 +43,10 @@ export interface CardHolderNameProps {
 export interface CardNumberProps {
     brand: string;
     brandsConfiguration?: CardBrandsConfiguration;
-    dualBrandingChangeHandler?: DualBrandingChangeHandler;
-    dualBrandingElements?: DualBrandSelectElement[];
-    dualBrandingSelected?: string;
+    dualBrandingChangeHandler?: any;
+    dualBrandingElements?: any;
+    selectedBrandValue?: string;
+    showDualBrandSelectElementsForEU?: boolean;
     error: string;
     filled: boolean;
     focused: boolean;
