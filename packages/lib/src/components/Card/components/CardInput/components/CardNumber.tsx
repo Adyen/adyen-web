@@ -23,6 +23,10 @@ export default function CardNumber(props: Readonly<CardNumberProps>) {
         ? mustHandleDualBrandingAccordingToEURegulations(DUAL_BRANDS_THAT_NEED_SELECTION_MECHANISM, dualBrandingElements, 'id')
         : false;
 
+    // Unlike other fields we don't respect the 'showContextualElement' config prop (that the merchant can set to false)
+    // We always show the contextual text for EU dual branding
+    const contextualText = showDualBrandSelectElementsForEU ? i18n.get('creditCard.dualBrand.description') : null;
+
     return (
         <Field
             label={props.label}
@@ -40,6 +44,7 @@ export default function CardNumber(props: Readonly<CardNumberProps>) {
             useLabelElement={false}
             renderAlternativeToLabel={alternativeLabelContent}
             onInputContainerClick={handleIconClick}
+            contextualText={contextualText}
         >
             <DataSfSpan
                 encryptedFieldType={ENCRYPTED_CARD_NUMBER}
