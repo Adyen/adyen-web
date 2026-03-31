@@ -83,11 +83,9 @@ class UPI extends UIElement<UPIConfiguration> {
 
         const isAutoPay = !!this.props.mandate;
 
-        let content: h.JSX.Element;
-
         switch (type) {
             case 'qrCode':
-                content = (
+                return (
                     <QRLoader
                         {...this.props}
                         qrCodeData={this.props.qrCodeData ? encodeURIComponent(this.props.qrCodeData) : null}
@@ -100,9 +98,8 @@ class UPI extends UIElement<UPIConfiguration> {
                         showAmount={!isAutoPay}
                     />
                 );
-                break;
             case 'await':
-                content = (
+                return (
                     <Await
                         url={url}
                         type={paymentMethodType}
@@ -120,9 +117,8 @@ class UPI extends UIElement<UPIConfiguration> {
                         brandLogo={this.icon}
                     />
                 );
-                break;
             default:
-                content = (
+                return (
                     <UPIComponent
                         setComponentRef={this.setComponentRef}
                         payButton={this.payButton}
@@ -134,8 +130,6 @@ class UPI extends UIElement<UPIConfiguration> {
                     />
                 );
         }
-
-        return <div data-testid="upi-container">{content}</div>;
     }
 }
 
