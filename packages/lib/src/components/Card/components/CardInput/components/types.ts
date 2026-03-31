@@ -13,7 +13,8 @@ export interface CardFieldsProps {
     brandsConfiguration?: CardBrandsConfiguration;
     dualBrandingChangeHandler?: any;
     dualBrandingElements?: any;
-    dualBrandingSelected?: string;
+    selectedBrandValue?: string;
+    showDualBrandSelectElementsForEU?: boolean;
     errors?: any;
     focusedElement?: any;
     hasCVC?: any;
@@ -43,7 +44,8 @@ export interface CardNumberProps {
     brandsConfiguration?: CardBrandsConfiguration;
     dualBrandingChangeHandler?: any;
     dualBrandingElements?: any;
-    dualBrandingSelected?: string;
+    selectedBrandValue?: string;
+    showDualBrandSelectElementsForEU?: boolean;
     error: string;
     filled: boolean;
     focused: boolean;
