@@ -75,7 +75,6 @@
     }
 
     .adyen-checkout__payment-method__header__content {
-        align-items: start;
         max-height: fit-content;
 
         @media (min-width: #{$media-query-between-xs-and-s}) {
