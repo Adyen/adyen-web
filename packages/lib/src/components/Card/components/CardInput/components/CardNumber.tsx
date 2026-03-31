@@ -10,10 +10,11 @@ import { alternativeLabelContent } from './FieldLabelAlternative';
 import './CardNumber.scss';
 import { mustHandleDualBrandingAccordingToEURegulations } from '../utils';
 import { DUAL_BRANDS_THAT_NEED_SELECTION_MECHANISM } from '../../../constants';
+import EUDualBrandSelector from './EUDualBrandSelector';
 
 export default function CardNumber(props: Readonly<CardNumberProps>) {
     const { i18n } = useCoreContext();
-    const { error = '', isValid = false, onFocusField = () => {}, dualBrandingElements } = props;
+    const { error = '', isValid = false, onFocusField = () => {}, dualBrandingElements, dualBrandingChangeHandler, brandsConfiguration } = props;
 
     const handleIconClick = () => {
         onFocusField(ENCRYPTED_CARD_NUMBER);
@@ -63,14 +64,17 @@ export default function CardNumber(props: Readonly<CardNumberProps>) {
 
             {dualBrandingElements && !error && (
                 <div className={classNames(['adyen-checkout__card__dual-branding__icons'])}>
-                    {dualBrandingElements.map(element => {
-                        if (showDualBrandSelectElementsForEU) {
-                            console.log('### CardNumber:::: ADD new dual branding component!!');
-                            return null;
-                        } else {
+                    {showDualBrandSelectElementsForEU ? (
+                        <EUDualBrandSelector
+                            dualBrandingElements={dualBrandingElements}
+                            dualBrandingChangeHandler={dualBrandingChangeHandler}
+                            brandsConfiguration={brandsConfiguration}
+                        />
+                    ) : (
+                        dualBrandingElements.map(element => {
                             return <BrandIcon key={element.id} brand={element.id} brandsConfiguration={props.brandsConfiguration} />;
-                        }
-                    })}
+                        })
+                    )}
                 </div>
             )}
         </Field>
