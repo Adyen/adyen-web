@@ -32,7 +32,7 @@ test.describe('UPI - QR Code Flow (Desktop)', () => {
             await upiPage.isQrCodeVisible();
 
             await toHaveScreenshot(upiPage.qrCodeArea, browserName, 'upi-qr-code-generated.png', {
-                 mask: [ upiPage.page.getByRole('timer'), upiPage.qrCodeImage ]
+                mask: [upiPage.qrCodeImage, upiPage.qrCodeTimer]
             });
             await expect(upiPage.qrCodeImage).toBeVisible();
     });
