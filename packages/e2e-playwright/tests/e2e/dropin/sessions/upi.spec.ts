@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 import { test, expect } from '../../../../fixtures/dropin.fixture';
-import { SMALL_MOBILE_VIEWPORT, TAGS } from '../../../utils/constants';
+import { MOBILE_USER_AGENT, SMALL_MOBILE_VIEWPORT, TAGS } from '../../../utils/constants';
 import { URL_MAP } from '../../../../fixtures/URL_MAP';
 import { toHaveScreenshot } from '../../../utils/assertions';
 import { UPI } from '../../../../models/upi';
@@ -31,7 +31,7 @@ test.describe('Dropin - Sessions - UPI', () => {
     test.describe('Intent Flow (Mobile)', () => {
         test.use({
             viewport: SMALL_MOBILE_VIEWPORT,
-            userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X) AppleWebKit/605.1.15'
+            userAgent: MOBILE_USER_AGENT
         });
 
         test('should succeed in making a payment', { tag: [TAGS.SCREENSHOT] }, async ({ dropinWithSession, browserName, page }) => {

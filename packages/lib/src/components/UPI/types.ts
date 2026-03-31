@@ -6,7 +6,7 @@ export type UpiType = TxVariants.upi_qr | TxVariants.upi_intent;
 
 export type UpiMode = 'qrCode' | 'intent';
 
-export type App = { id: string; name: string; type?: UpiType };
+export type App = { id: string; name: string };
 
 export type UpiPaymentData = {
     paymentMethod: {
@@ -47,3 +47,8 @@ export interface UPIConfiguration extends UIElementProps {
      */
     showPaymentMethodItemImages?: boolean;
 }
+
+/**
+ * @internal
+ */
+export type UPIAppList = Array<{ id: string; name: string; icon: string }>;

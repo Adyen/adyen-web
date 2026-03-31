@@ -1,7 +1,7 @@
 import { test as base, expect } from '../../../fixtures/base-fixture';
 import { UPI } from '../../../models/upi';
 import { URL_MAP } from '../../../fixtures/URL_MAP';
-import { SMALL_MOBILE_VIEWPORT } from '../../utils/constants';
+import { MOBILE_USER_AGENT, SMALL_MOBILE_VIEWPORT } from '../../utils/constants';
 
 type Fixture = {
     upiPage: UPI;
@@ -31,7 +31,7 @@ test.describe('UPI - QR Code Flow (Desktop)', () => {
 test.describe('UPI - Intent Flow (Mobile)', () => {
     test.use({
         viewport: SMALL_MOBILE_VIEWPORT,
-        userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X) AppleWebKit/605.1.15'
+        userAgent: MOBILE_USER_AGENT
     });
 
     test('should complete payment with app selection and redirect', async ({ upiPage }) => {

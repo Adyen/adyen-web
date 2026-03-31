@@ -16,4 +16,4 @@ export const A11Y = {
     }
 };
 
-export const MAX_UPI_BRANDS_TO_SHOW = 4;
+export const UPI_COUNTDOWN_TIME = 5;

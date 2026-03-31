@@ -3,11 +3,10 @@ import UIElement from '../internal/UIElement/UIElement';
 import UPIComponent from './components/UPIComponent';
 import { Await } from '../internal/Await';
 import { QRLoader } from '../internal/QRLoader';
-import { UPIConfiguration, UpiMode, UpiPaymentData, UpiType } from './types';
+import { UPIAppList, UPIConfiguration, UpiMode, UpiPaymentData, UpiType } from './types';
 import { TxVariants } from '../tx-variants';
 import isMobile from '../../utils/isMobile';
-import { UPI_MODE } from './constants';
-import { ICore } from '../../types';
+import { UPI_COUNTDOWN_TIME, UPI_MODE } from './constants';
 import { PaymentMethodBrand } from '../../types/global-types';
 
 /**
@@ -23,40 +22,27 @@ class UPI extends UIElement<UPIConfiguration> {
     public static readonly type = TxVariants.upi;
     public static readonly txVariants = [TxVariants.upi, TxVariants.upi_qr, TxVariants.upi_intent];
     private mode: UpiMode;
-    public brands: PaymentMethodBrand[];
+    private appsList: UPIAppList;
 
     protected static readonly defaultProps = {
-        showPaymentMethodItemImages: true
+        showPaymentMethodItemImages: true,
+        countdownTime: UPI_COUNTDOWN_TIME
     };
 
-    constructor(checkout: ICore, props: UPIConfiguration) {
-        super(checkout, props);
-        this.mode = isMobile() ? UPI_MODE.INTENT : UPI_MODE.QR_CODE;
-    }
-
     formatProps(props: UPIConfiguration): UPIConfiguration {
-        const { apps = [], showPaymentMethodItemImages } = props;
+        const { apps = [] } = props;
         const hasIntentApps = apps.length > 0;
 
-        this.brands = showPaymentMethodItemImages
-            ? apps.map(app => {
-                  const imageName = `upi/${app.id.toLowerCase()}`;
-                  const brandIcon = this.core.modules.resources?.getImage()(imageName);
-                  return { icon: brandIcon, name: imageName };
-              })
-            : [];
+        this.mode = isMobile() && hasIntentApps ? UPI_MODE.INTENT : UPI_MODE.QR_CODE;
 
-        if (isMobile() && hasIntentApps) {
-            return {
-                ...super.formatProps(props),
-                apps
-            };
-        }
+        this.appsList = apps.map(app => {
+            const imageName = `upi/${app.id.toLowerCase()}`;
+            const brandIcon = this.core.modules.resources?.getImage()(imageName);
+            return { id: app.id, name: app.name, icon: brandIcon };
+        });
 
-        this.mode = UPI_MODE.QR_CODE;
         return {
-            ...super.formatProps(props),
-            apps: []
+            ...super.formatProps(props)
         };
     }
 
@@ -73,6 +59,16 @@ class UPI extends UIElement<UPIConfiguration> {
                 ...(this.paymentType === TxVariants.upi_intent && app?.id && { appId: app.id })
             }
         };
+    }
+
+    get brands(): PaymentMethodBrand[] {
+        const { showPaymentMethodItemImages } = this.props;
+
+        if (!showPaymentMethodItemImages) {
+            return [];
+        }
+
+        return this.appsList.map(app => ({ icon: app.icon, name: app.name }));
     }
 
     get paymentType(): UpiType {
@@ -99,7 +95,7 @@ class UPI extends UIElement<UPIConfiguration> {
                         brandLogo={this.props.brandLogo || this.icon}
                         onComplete={this.onComplete}
                         introduction={this.props.i18n.get('upi.qrCodeWaitingMessage')}
-                        countdownTime={this.props.countdownTime ?? 5}
+                        countdownTime={this.props.countdownTime}
                         onActionHandled={this.onActionHandled}
                         showAmount={!isAutoPay}
                     />
@@ -113,7 +109,7 @@ class UPI extends UIElement<UPIConfiguration> {
                         showCountdownTimer
                         shouldRedirectAutomatically
                         showAmount={!isAutoPay}
-                        countdownTime={this.props.countdownTime ?? 5}
+                        countdownTime={this.props.countdownTime}
                         clientKey={this.props.clientKey}
                         paymentData={this.props.paymentData}
                         onActionHandled={this.onActionHandled}
@@ -131,11 +127,10 @@ class UPI extends UIElement<UPIConfiguration> {
                         setComponentRef={this.setComponentRef}
                         payButton={this.payButton}
                         onChange={this.setState}
-                        apps={this.props.apps}
+                        appsList={this.appsList}
                         mode={this.mode}
                         showPayButton={this.props.showPayButton}
                         mandate={this.props.mandate}
-                        brands={this.brands}
                     />
                 );
         }
