@@ -7,6 +7,7 @@ class UPI extends Base {
     readonly qrCodeImage: Locator;
     readonly appDropdown: Locator;
     readonly errorAlert: Locator;
+    readonly qrCodeIntent: Locator;
 
     constructor(
         public readonly page: Page,
@@ -14,6 +15,7 @@ class UPI extends Base {
         super(page);
 
         this.appList = this.page.getByRole('radiogroup');
+        this.qrCodeIntent = this.page.locator('#upi-area-qr-code');
         this.intentArea = this.page.locator('#upi-area-intent');
         this.qrCodeImage = this.page.getByAltText('Scan QR code');
         this.appDropdown = this.page.getByRole('combobox', { name: /UPI apps/i });
