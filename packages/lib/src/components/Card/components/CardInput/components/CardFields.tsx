@@ -22,7 +22,6 @@ export default function CardFields({
     dualBrandingElements,
     selectedBrandValue,
     dualBrandingChangeHandler,
-    showDualBrandSelectElementsForEU,
     errors,
     focusedElement,
     hasCVC,
@@ -61,7 +60,6 @@ export default function CardFields({
                 dualBrandingElements={dualBrandingElements}
                 selectedBrandValue={selectedBrandValue}
                 dualBrandingChangeHandler={dualBrandingChangeHandler}
-                showDualBrandSelectElementsForEU={showDualBrandSelectElementsForEU}
             />
 
             <AvailableBrands activeBrand={brand} brands={allowedBrands} />

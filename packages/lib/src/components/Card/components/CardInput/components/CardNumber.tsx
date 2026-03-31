@@ -8,16 +8,20 @@ import DataSfSpan from './DataSfSpan';
 import { ENCRYPTED_CARD_NUMBER } from '../../../../internal/SecuredFields/lib/constants';
 import { alternativeLabelContent } from './FieldLabelAlternative';
 import './CardNumber.scss';
+import { mustHandleDualBrandingAccordingToEURegulations } from '../utils';
+import { DUAL_BRANDS_THAT_NEED_SELECTION_MECHANISM } from '../../../constants';
 
 export default function CardNumber(props: Readonly<CardNumberProps>) {
     const { i18n } = useCoreContext();
-    const { error = '', isValid = false, onFocusField = () => {}, dualBrandingElements, showDualBrandSelectElementsForEU } = props;
+    const { error = '', isValid = false, onFocusField = () => {}, dualBrandingElements } = props;
 
     const handleIconClick = () => {
         onFocusField(ENCRYPTED_CARD_NUMBER);
     };
 
-    console.log('### CardNumber::CardNumber:: showDualBrandSelectElementsForEU', showDualBrandSelectElementsForEU);
+    const showDualBrandSelectElementsForEU = dualBrandingElements
+        ? mustHandleDualBrandingAccordingToEURegulations(DUAL_BRANDS_THAT_NEED_SELECTION_MECHANISM, dualBrandingElements, 'id')
+        : false;
 
     return (
         <Field
