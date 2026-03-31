@@ -1,13 +1,13 @@
-import { h, RefObject } from 'preact';
+import { h } from 'preact';
 import UIElement from '../internal/UIElement/UIElement';
 import UPIComponent from './components/UPIComponent';
 import { Await } from '../internal/Await';
 import { QRLoader } from '../internal/QRLoader';
-import { UPIConfiguration, UpiMode, UpiPaymentData, UpiType } from './types';
+import { UPIAppList, UPIConfiguration, UpiMode, UpiPaymentData, UpiType } from './types';
 import { TxVariants } from '../tx-variants';
 import isMobile from '../../utils/isMobile';
-import { UPI_MODE } from './constants';
-import { ICore } from '../../types';
+import { UPI_COUNTDOWN_TIME, UPI_MODE } from './constants';
+import { PaymentMethodBrand } from '../../types/global-types';
 
 /**
  * For mobile:
@@ -22,31 +22,27 @@ class UPI extends UIElement<UPIConfiguration> {
     public static readonly type = TxVariants.upi;
     public static readonly txVariants = [TxVariants.upi, TxVariants.upi_qr, TxVariants.upi_intent];
     private mode: UpiMode;
-    constructor(checkout: ICore, props: UPIConfiguration) {
-        super(checkout, props);
-        // @ts-ignore: Accessing deprecated prop to provide migration warning
-        const { defaultMode: deprecatedDefaultMode } = props;
-        if (deprecatedDefaultMode) {
-            console.warn('[Adyen Checkout] UPI configuration property "defaultMode" is deprecated and will be removed in a future version.');
-        }
-        this.mode = isMobile() ? UPI_MODE.INTENT : UPI_MODE.QR_CODE;
-    }
+    private appsList: UPIAppList;
+
+    protected static readonly defaultProps = {
+        showPaymentMethodItemImages: true,
+        countdownTime: UPI_COUNTDOWN_TIME
+    };
 
     formatProps(props: UPIConfiguration): UPIConfiguration {
         const { apps = [] } = props;
         const hasIntentApps = apps.length > 0;
-        if (isMobile() && hasIntentApps) {
-            // Mobile with UPI apps
-            return {
-                ...super.formatProps(props),
-                apps
-            };
-        }
 
-        this.mode = UPI_MODE.QR_CODE;
+        this.mode = isMobile() && hasIntentApps ? UPI_MODE.INTENT : UPI_MODE.QR_CODE;
+
+        this.appsList = apps.map(app => {
+            const imageName = `upi/${app.id.toLowerCase()}`;
+            const brandIcon = this.core.modules.resources?.getImage()(imageName);
+            return { id: app.id, name: app.name, icon: brandIcon };
+        });
+
         return {
-            ...super.formatProps(props),
-            apps: []
+            ...super.formatProps(props)
         };
     }
 
@@ -63,6 +59,16 @@ class UPI extends UIElement<UPIConfiguration> {
                 ...(this.paymentType === TxVariants.upi_intent && app?.id && { appId: app.id })
             }
         };
+    }
+
+    get brands(): PaymentMethodBrand[] {
+        const { showPaymentMethodItemImages } = this.props;
+
+        if (!showPaymentMethodItemImages) {
+            return [];
+        }
+
+        return this.appsList.map(app => ({ icon: app.icon, name: app.name }));
     }
 
     get paymentType(): UpiType {
@@ -87,7 +93,7 @@ class UPI extends UIElement<UPIConfiguration> {
                         brandLogo={this.props.brandLogo || this.icon}
                         onComplete={this.onComplete}
                         introduction={this.props.i18n.get('upi.qrCodeWaitingMessage')}
-                        countdownTime={this.props.countdownTime ?? 5}
+                        countdownTime={this.props.countdownTime}
                         onActionHandled={this.onActionHandled}
                         showAmount={!isAutoPay}
                     />
@@ -100,7 +106,7 @@ class UPI extends UIElement<UPIConfiguration> {
                         showCountdownTimer
                         shouldRedirectAutomatically
                         showAmount={!isAutoPay}
-                        countdownTime={this.props.countdownTime ?? 5}
+                        countdownTime={this.props.countdownTime}
                         clientKey={this.props.clientKey}
                         paymentData={this.props.paymentData}
                         onActionHandled={this.onActionHandled}
@@ -114,12 +120,10 @@ class UPI extends UIElement<UPIConfiguration> {
             default:
                 return (
                     <UPIComponent
-                        ref={(ref: RefObject<typeof UPIComponent>) => {
-                            this.componentRef = ref;
-                        }}
+                        setComponentRef={this.setComponentRef}
                         payButton={this.payButton}
                         onChange={this.setState}
-                        apps={this.props.apps}
+                        appsList={this.appsList}
                         mode={this.mode}
                         showPayButton={this.props.showPayButton}
                         mandate={this.props.mandate}

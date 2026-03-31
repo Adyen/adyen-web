@@ -50,6 +50,8 @@ class Button extends Component<ButtonProps, ButtonState> {
             label,
             ariaLabel,
             ariaDescribedBy,
+            ariaExpanded,
+            ariaControls,
             status,
             variant,
             buttonRef,
@@ -136,6 +138,8 @@ class Button extends Component<ButtonProps, ButtonState> {
                 onClick={this.onClick}
                 aria-label={ariaLabel}
                 aria-describedby={ariaDescribedBy}
+                aria-expanded={ariaExpanded}
+                aria-controls={ariaControls}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 onKeyDown={onKeyDown}

@@ -9,10 +9,10 @@ interface UPIIntentAppItemProps {
     app: App;
     imgSrc: string;
     isSelected: boolean;
-    onSelect?: Function;
+    onSelect: (app: App) => void;
 }
 
-const UPIIntentAppItem = ({ app, imgSrc, isSelected, onSelect = () => {} }: Readonly<UPIIntentAppItemProps>): h.JSX.Element => {
+const UPIIntentAppItem = ({ app, imgSrc, isSelected, onSelect }: Readonly<UPIIntentAppItemProps>): h.JSX.Element => {
     const buttonId = `adyen-checkout-upi-app-item-button-${app.id}`;
     const containerId = `adyen-checkout-upi-app-${app.id}`;
     const handleAppSelected = (app: App) => {

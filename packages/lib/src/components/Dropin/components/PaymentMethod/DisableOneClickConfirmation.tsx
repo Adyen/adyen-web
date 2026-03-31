@@ -1,6 +1,8 @@
 import { h } from 'preact';
-import { useCoreContext } from '../../../../core/Context/CoreProvider';
 import classNames from 'classnames';
+
+import { useCoreContext } from '../../../../core/Context/CoreProvider';
+import { stopPropagationForActionKeys } from '../../../internal/Button/stopPropagationForActionKeys';
 import './DisableOneClickConfirmation.scss';
 
 const DisableOneClickConfirmation = ({ id, open, onDisable, onCancel }) => {
@@ -26,6 +28,8 @@ const DisableOneClickConfirmation = ({ id, open, onDisable, onCancel }) => {
                         )}
                         disabled={!open}
                         onClick={onDisable}
+                        onKeyPress={stopPropagationForActionKeys}
+                        onKeyDown={stopPropagationForActionKeys}
                     >
                         {i18n.get('storedPaymentMethod.disable.confirmButton')}
                     </button>
@@ -38,6 +42,8 @@ const DisableOneClickConfirmation = ({ id, open, onDisable, onCancel }) => {
                         )}
                         disabled={!open}
                         onClick={onCancel}
+                        onKeyPress={stopPropagationForActionKeys}
+                        onKeyDown={stopPropagationForActionKeys}
                     >
                         {i18n.get('storedPaymentMethod.disable.cancelButton')}
                     </button>

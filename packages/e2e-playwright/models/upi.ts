@@ -6,9 +6,7 @@ class UPI extends Base {
     readonly intentArea: Locator;
     readonly qrCodeImage: Locator;
 
-    constructor(
-        public readonly page: Page,
-    ) {
+    constructor(public readonly page: Page) {
         super(page);
 
         this.appList = this.page.getByRole('radiogroup');
