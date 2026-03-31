@@ -25,7 +25,6 @@ export enum UiTarget {
     otherPaymentMethodButton = 'otherpaymentmethod_button',
     featuredIssuer = 'featured_issuer',
     list = 'list',
-    listDetected = 'list_detected',
     listSearch = 'list_search',
     qrDownloadButton = 'qr_download_button',
     segmentedControl = 'segmented_control',

@@ -245,7 +245,7 @@ describe('UPIComponent', () => {
             expect(onSubmitAnalyticsMock).toHaveBeenCalledWith(
                 expect.objectContaining({
                     type: InfoEventType.selected,
-                    target: UiTarget.listDetected,
+                    target: UiTarget.listSearch,
                     issuer: lowPriorityApp.name
                 })
             );
