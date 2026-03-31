@@ -124,19 +124,17 @@ class PaymentMethodItem extends Component<Readonly<PaymentMethodItemProps>> {
                     </ExpandButton>
 
                     {showRemovePaymentMethodButton && (
-                        <div>
-                            <Button
-                                inline
-                                variant="link"
-                                onClick={this.toggleDisableConfirmation}
-                                onKeyPress={stopPropagationForActionKeys}
-                                onKeyDown={stopPropagationForActionKeys}
-                                ariaExpanded={this.state.showDisableStoredPaymentMethodConfirmation}
-                                ariaControls={disableConfirmationId}
-                            >
-                                {i18n.get('storedPaymentMethod.disable.button')}
-                            </Button>
-                        </div>
+                        <Button
+                            inline
+                            variant="link"
+                            onClick={this.toggleDisableConfirmation}
+                            onKeyPress={stopPropagationForActionKeys}
+                            onKeyDown={stopPropagationForActionKeys}
+                            ariaExpanded={this.state.showDisableStoredPaymentMethodConfirmation}
+                            ariaControls={disableConfirmationId}
+                        >
+                            {i18n.get('storedPaymentMethod.disable.button')}
+                        </Button>
                     )}
                 </div>
 
