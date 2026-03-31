@@ -121,20 +121,14 @@ export default function extensions(props, refs, states, hasPanLengthRef: Partial
          * Handler for clicks on the icons added in response to the /binLookup call
          * Inform SFP of the brand changes when these selections are made
          */
-        handleDualBrandSelection: (e: Event | string): void => {
-            let value: Event | string = e;
-            if (e instanceof Event) {
-                const target = e.target as HTMLLIElement;
-                value = target.getAttribute('data-value') || target.getAttribute('value');
-            }
-
+        handleDualBrandSelection: (brandValue: string): void => {
             // Check if we have a value and whether that value corresponds to a brandObject we can propagate
             // If either are false then abandon the process
             let brandObjArr: BrandObject[] = [];
-            if (value) {
+            if (brandValue) {
                 // Find the brandObject with the matching brand value and place into an array
                 brandObjArr = dualBrandSelectElements.reduce((acc, item) => {
-                    if (item.brandObject.brand === value) {
+                    if (item.brandObject.brand === brandValue) {
                         acc.push(item.brandObject);
                     }
                     return acc;
@@ -147,7 +141,7 @@ export default function extensions(props, refs, states, hasPanLengthRef: Partial
                 return; // no value passed
             }
 
-            setSelectedBrandValue(value);
+            setSelectedBrandValue(brandValue);
 
             // Pass brand object into SecuredFields
             sfp.current.processBinLookupResponse({
