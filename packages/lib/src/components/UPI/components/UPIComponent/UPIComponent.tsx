@@ -1,5 +1,5 @@
 import { Fragment, h, RefObject } from 'preact';
-import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'preact/hooks';
 import { UIElementStatus } from '../../../types';
 import { App, UpiMode } from '../../types';
 import useImage from '../../../../core/Context/useImage';
@@ -18,6 +18,8 @@ import Select from '../../../internal/FormFields/Select';
 import { SelectTargetObject } from '../../../internal/FormFields/Select/types';
 import { AnalyticsInfoEvent, InfoEventType, UiTarget } from '../../../../core/Analytics/events/AnalyticsInfoEvent';
 import { AbstractAnalyticsEvent } from '../../../../core/Analytics/events/AbstractAnalyticsEvent';
+import { ANALYTICS_SEARCH_DEBOUNCE_TIME } from '../../../../core/Analytics/constants';
+import { debounce } from '../../../../utils/debounce';
 
 type UpiData = { app?: App };
 
@@ -53,8 +55,11 @@ export default function UPIComponent({
 
     const priorityApps = useMemo(() => apps.slice(0, MAX_PRIMARY_APPS), [apps]);
     const lowPriorityApps = useMemo(() => apps.slice(MAX_PRIMARY_APPS), [apps]);
-
-    const lowPriorityAppItems = useMemo(() => lowPriorityApps.map(app => ({ id: app.id, name: app.name })), [lowPriorityApps]);
+    // Remove this when we recieve the apps from parent with icons
+    const lowPriorityAppItems = useMemo(
+        () => lowPriorityApps.map(app => ({ id: app.id, name: app.name, icon: getImage()(`upi/${app.id}`.toLowerCase()) })),
+        [lowPriorityApps, getImage]
+    );
 
     this.setStatus = (status: UIElementStatus) => {
         setStatus(status);
@@ -66,29 +71,8 @@ export default function UPIComponent({
         }
     };
 
-    const handleAppSelect = useCallback(
-        (app: App) => {
-            if (app?.id === selectedApp?.id) return;
-
-            setSelectedApp(app);
-            setIsValid(true);
-            setStatus('ready');
-
-            onSubmitAnalytics(
-                new AnalyticsInfoEvent({
-                    component: 'upi_intent',
-                    type: InfoEventType.selected,
-                    target: UiTarget.list,
-                    issuer: app.name
-                })
-            );
-        },
-        [selectedApp, onSubmitAnalytics]
-    );
-
-    const handleDropdownSelect = useCallback(
-        (event: { target: SelectTargetObject }) => {
-            const app = lowPriorityApps.find(a => a.id === event.target.value);
+    const selectApp = useCallback(
+        (app: App, target: UiTarget) => {
             if (!app || app.id === selectedApp?.id) return;
 
             setSelectedApp(app);
@@ -99,13 +83,44 @@ export default function UPIComponent({
                 new AnalyticsInfoEvent({
                     component: 'upi_intent',
                     type: InfoEventType.selected,
-                    target: UiTarget.listSearch,
+                    target,
                     issuer: app.name
                 })
             );
         },
-        [lowPriorityApps, selectedApp, onSubmitAnalytics]
+        [selectedApp, onSubmitAnalytics]
     );
+
+    const handleAppSelect = useCallback((app: App) => selectApp(app, UiTarget.list), [selectApp]);
+
+    const handleDropdownSelect = useCallback(
+        (event: { target: SelectTargetObject }) => {
+            const app = lowPriorityApps.find(a => a.id === event.target.value);
+            selectApp(app, UiTarget.listDetected);
+        },
+        [lowPriorityApps, selectApp]
+    );
+
+    const handleListToggle = useCallback(
+        (isOpen: boolean) => {
+            if (isOpen) {
+                onSubmitAnalytics(
+                    new AnalyticsInfoEvent({
+                        component: 'upi_intent',
+                        type: InfoEventType.displayed,
+                        target: UiTarget.list
+                    })
+                );
+            }
+        },
+        [onSubmitAnalytics]
+    );
+
+    const debounceSearchAnalytics = useRef(debounce(onSubmitAnalytics, ANALYTICS_SEARCH_DEBOUNCE_TIME));
+
+    const handleSearch = useCallback(() => {
+        debounceSearchAnalytics.current({ type: InfoEventType.input, target: UiTarget.listDetected });
+    }, []);
 
     const validateIntentApp = useCallback(() => {
         if (!selectedApp) {
@@ -168,6 +183,8 @@ export default function UPIComponent({
                                     name={'upi-app-list'}
                                     className={'adyen-checkout__upi-app-list__dropdown'}
                                     onChange={handleDropdownSelect}
+                                    onInput={handleSearch}
+                                    onListToggle={handleListToggle}
                                 />
                             </Field>
                         </Fragment>
