@@ -1,3 +1,4 @@
+import { Page } from '@playwright/test';
 import dotenv from 'dotenv';
 import { test, expect } from '../../../../fixtures/dropin.fixture';
 import {
@@ -17,20 +18,22 @@ import { toHaveScreenshot } from '../../../utils/assertions';
 
 dotenv.config();
 
+const SCREENSHOT_PAYMENT_NAME = CARD_HEADER_LABEL.toLowerCase().split(' ').join('-');
+
 test.describe('Dropin - Sessions - Cards', () => {
     test('#1 Should succeed in making a payment', { tag: [TAGS.SCREENSHOT] }, async ({ dropinWithSession, browserName, page }) => {
         await dropinWithSession.goto(URL_MAP.dropinWithSession);
 
         const cardPaymentMethodHeader = dropinWithSession.getPaymentMethodHeader(CARD_HEADER_LABEL);
 
-        await toHaveScreenshot(cardPaymentMethodHeader.rootElement, browserName, 'card-payment-method-item.png');
+        await toHaveScreenshot(cardPaymentMethodHeader.rootElement, browserName, `${SCREENSHOT_PAYMENT_NAME}-payment-method-item.png`);
 
         const { paymentMethodDetailsLocator } = await dropinWithSession.selectNonStoredPaymentMethod('scheme');
 
         const card = new Card(page, paymentMethodDetailsLocator);
         await card.isComponentVisible();
 
-        await toHaveScreenshot(cardPaymentMethodHeader.rootElement, browserName, 'expanded-card-payment-method-item.png');
+        await toHaveScreenshot(cardPaymentMethodHeader.rootElement, browserName, `expanded-${SCREENSHOT_PAYMENT_NAME}-payment-method-item.png`);
 
         await card.typeCardNumber(REGULAR_TEST_CARD);
         await card.typeExpiryDate(TEST_DATE_VALUE);
@@ -54,14 +57,18 @@ test.describe('Dropin - Sessions - Cards', () => {
 
             const cardPaymentMethodHeader = dropinWithSession.getPaymentMethodHeader(CARD_HEADER_LABEL);
 
-            await toHaveScreenshot(cardPaymentMethodHeader.rootElement, browserName, 'card-payment-method-item-mobile.png');
+            await toHaveScreenshot(cardPaymentMethodHeader.rootElement, browserName, `${SCREENSHOT_PAYMENT_NAME}-payment-method-item-mobile.png`);
 
             const { paymentMethodDetailsLocator } = await dropinWithSession.selectNonStoredPaymentMethod('scheme');
 
             const card = new Card(page, paymentMethodDetailsLocator);
             await card.isComponentVisible();
 
-            await toHaveScreenshot(cardPaymentMethodHeader.rootElement, browserName, 'expanded-card-payment-method-item-mobile.png');
+            await toHaveScreenshot(
+                cardPaymentMethodHeader.rootElement,
+                browserName,
+                `expanded-${SCREENSHOT_PAYMENT_NAME}-payment-method-item-mobile.png`
+            );
 
             await card.typeCardNumber(REGULAR_TEST_CARD);
             await card.typeExpiryDate(TEST_DATE_VALUE);
