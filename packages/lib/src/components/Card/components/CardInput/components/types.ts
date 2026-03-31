@@ -1,7 +1,9 @@
-import { BrandConfiguration, CardBrandsConfiguration, DualBrandingChangeHandler, DualBrandSelectElement } from '../../../types';
+import { BrandConfiguration, CardBrandsConfiguration, DualBrandSelectElement } from '../../../types';
 import { ComponentChildren } from 'preact';
 import { CVCPolicyType, DatePolicyType } from '../../../../internal/SecuredFields/lib/types';
 import { SFPErrorMap, SFPValid } from '../../../../internal/SecuredFields/SFP/types';
+
+export type DualBrandingChangeHandler = (brandValue: string) => void;
 
 export interface BrandIconProps {
     brand: string;
@@ -12,8 +14,8 @@ export interface CardFieldsProps {
     brand?: string;
     brandsIcons?: Array<BrandConfiguration>;
     brandsConfiguration?: CardBrandsConfiguration;
-    dualBrandingChangeHandler?: any;
-    dualBrandingElements?: any;
+    dualBrandingChangeHandler?: DualBrandingChangeHandler;
+    dualBrandingElements?: DualBrandSelectElement[];
     selectedBrandValue?: string;
     errors?: any;
     focusedElement?: any;
@@ -42,8 +44,8 @@ export interface CardHolderNameProps {
 export interface CardNumberProps {
     brand: string;
     brandsConfiguration?: CardBrandsConfiguration;
-    dualBrandingChangeHandler?: any;
-    dualBrandingElements?: any;
+    dualBrandingChangeHandler?: DualBrandingChangeHandler;
+    dualBrandingElements?: DualBrandSelectElement[];
     selectedBrandValue?: string;
     error: string;
     filled: boolean;
