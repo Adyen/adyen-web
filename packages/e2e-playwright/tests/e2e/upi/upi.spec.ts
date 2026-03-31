@@ -23,14 +23,14 @@ test.describe('UPI - QR Code Flow (Desktop)', () => {
 
             await expect(upiPage.intentArea).not.toBeVisible();
             await expect(upiPage.appList).not.toBeVisible();
-            await expect(upiPage.qrCodeIntent).toBeVisible();
+            await expect(upiPage.qrCodeArea).toBeVisible();
 
-            await toHaveScreenshot(upiPage.qrCodeIntent, browserName, 'upi-qr-code-initial.png');
+            await toHaveScreenshot(upiPage.qrCodeArea, browserName, 'upi-qr-code-initial.png');
             await upiPage.pay({ name: /generate qr code/i });
 
             await upiPage.isQrCodeVisible();
 
-            await toHaveScreenshot(upiPage.qrCodeIntent, browserName, 'upi-qr-code-generated.png', {
+            await toHaveScreenshot(upiPage.qrCodeArea, browserName, 'upi-qr-code-generated.png', {
                  mask: [ upiPage.page.getByRole('timer'), upiPage.qrCodeImage ]
             });
             await expect(upiPage.qrCodeImage).toBeVisible();
@@ -51,7 +51,7 @@ test.describe('UPI - Intent Flow (Mobile)', () => {
 
             await expect(upiPage.intentArea).toBeVisible();
             await expect(upiPage.appList).toBeVisible();
-            await expect(upiPage.qrCodeIntent).not.toBeVisible();
+            await expect(upiPage.qrCodeArea).not.toBeVisible();
 
             await upiPage.pay({ name: /continue/i });
             await expect(upiPage.errorAlert).toBeVisible();
