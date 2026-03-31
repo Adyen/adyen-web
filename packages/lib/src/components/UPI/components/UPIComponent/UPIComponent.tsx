@@ -22,6 +22,8 @@ import Select from '../../../internal/FormFields/Select';
 import { SelectTargetObject } from '../../../internal/FormFields/Select/types';
 import { AnalyticsInfoEvent, InfoEventType, UiTarget } from '../../../../core/Analytics/events/AnalyticsInfoEvent';
 import { AbstractAnalyticsEvent } from '../../../../core/Analytics/events/AbstractAnalyticsEvent';
+import { ANALYTICS_SEARCH_DEBOUNCE_TIME } from '../../../../core/Analytics/constants';
+import { debounce } from '../../../../utils/debounce';
 
 type UpiData = { app?: App };
 
@@ -67,8 +69,6 @@ export default function UPIComponent({
     const priorityApps = useMemo(() => appsList.slice(0, MAX_PRIMARY_APPS), [appsList]);
     const lowPriorityApps = useMemo(() => appsList.slice(MAX_PRIMARY_APPS), [appsList]);
 
-    const lowPriorityAppItems = useMemo(() => lowPriorityApps.map(app => ({ id: app.id, name: app.name })), [lowPriorityApps]);
-
     this.setStatus = (status: UIElementStatus) => {
         setStatus(status);
     };
@@ -77,29 +77,8 @@ export default function UPIComponent({
         setComponentRef(upiRef.current);
     }, [setComponentRef]);
 
-    const handleAppSelect = useCallback(
-        (app: App) => {
-            if (app?.id === selectedApp?.id) return;
-
-            setSelectedApp(app);
-            setIsValid(true);
-            setStatus('ready');
-
-            onSubmitAnalytics(
-                new AnalyticsInfoEvent({
-                    component: 'upi_intent',
-                    type: InfoEventType.selected,
-                    target: UiTarget.list,
-                    issuer: app.name
-                })
-            );
-        },
-        [selectedApp, onSubmitAnalytics]
-    );
-
-    const handleDropdownSelect = useCallback(
-        (event: { target: SelectTargetObject }) => {
-            const app = lowPriorityApps.find(a => a.id === event.target.value);
+    const selectApp = useCallback(
+        (app: App, target: UiTarget) => {
             if (!app || app.id === selectedApp?.id) return;
 
             setSelectedApp(app);
@@ -110,13 +89,44 @@ export default function UPIComponent({
                 new AnalyticsInfoEvent({
                     component: 'upi_intent',
                     type: InfoEventType.selected,
-                    target: UiTarget.listSearch,
+                    target,
                     issuer: app.name
                 })
             );
         },
-        [lowPriorityApps, selectedApp, onSubmitAnalytics]
+        [selectedApp, onSubmitAnalytics]
     );
+
+    const handleAppSelect = useCallback((app: App) => selectApp(app, UiTarget.list), [selectApp]);
+
+    const handleDropdownSelect = useCallback(
+        (event: { target: SelectTargetObject }) => {
+            const app = lowPriorityApps.find(a => a.id === event.target.value);
+            selectApp(app, UiTarget.listDetected);
+        },
+        [lowPriorityApps, selectApp]
+    );
+
+    const handleListToggle = useCallback(
+        (isOpen: boolean) => {
+            if (isOpen) {
+                onSubmitAnalytics(
+                    new AnalyticsInfoEvent({
+                        component: 'upi_intent',
+                        type: InfoEventType.displayed,
+                        target: UiTarget.list
+                    })
+                );
+            }
+        },
+        [onSubmitAnalytics]
+    );
+
+    const debounceSearchAnalytics = useRef(debounce(onSubmitAnalytics, ANALYTICS_SEARCH_DEBOUNCE_TIME));
+
+    const handleSearch = useCallback(() => {
+        debounceSearchAnalytics.current({ type: InfoEventType.input, target: UiTarget.listDetected });
+    }, []);
 
     const validateIntentApp = useCallback(() => {
         if (selectedApp) {
@@ -182,12 +192,14 @@ export default function UPIComponent({
                             <ContentSeparator classNames={['adyen-checkout-upi-instruction-separator']} label="issuerList.separatorText" />
                             <Field label={i18n.get('upi.intent.apps.dropdown.label')} classNameModifiers={['upi-app-list']} name={'upi-app-list'}>
                                 <Select
-                                    items={lowPriorityAppItems}
+                                    items={lowPriorityApps}
                                     selectedValue={lowPriorityApps.some(a => a.id === selectedApp?.id) ? selectedApp?.id : undefined}
                                     placeholder={i18n.get('upi.intent.apps.dropdown.placeholder')}
                                     name={'upi-app-list'}
                                     className={'adyen-checkout__upi-app-list__dropdown'}
                                     onChange={handleDropdownSelect}
+                                    onInput={handleSearch}
+                                    onListToggle={handleListToggle}
                                 />
                             </Field>
                         </Fragment>

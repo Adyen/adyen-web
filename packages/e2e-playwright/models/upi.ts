@@ -16,7 +16,7 @@ class UPI extends Base {
         this.intentArea = this.page.locator('#upi-area-intent');
         this.qrCodeImage = this.page.getByAltText('Scan QR code');
         this.mandateInfo = this.page.locator('.adyen-checkout__alert-message--info');
-        this.appDropdown = this.page.getByRole('button', { name: /UPI apps/i });
+        this.appDropdown = this.page.getByRole('combobox', { name: /UPI apps/i });
         this.errorAlert = this.page.getByRole('alert');
     }
 
