@@ -11,11 +11,13 @@ import './CardNumber.scss';
 
 export default function CardNumber(props: Readonly<CardNumberProps>) {
     const { i18n } = useCoreContext();
-    const { error = '', isValid = false, onFocusField = () => {}, dualBrandingElements } = props;
+    const { error = '', isValid = false, onFocusField = () => {}, dualBrandingElements, showDualBrandSelectElementsForEU } = props;
 
     const handleIconClick = () => {
         onFocusField(ENCRYPTED_CARD_NUMBER);
     };
+
+    console.log('### CardNumber::CardNumber:: showDualBrandSelectElementsForEU', showDualBrandSelectElementsForEU);
 
     return (
         <Field
@@ -52,9 +54,14 @@ export default function CardNumber(props: Readonly<CardNumberProps>) {
 
             {dualBrandingElements && !error && (
                 <div className={classNames(['adyen-checkout__card__dual-branding__icons'])}>
-                    {dualBrandingElements.map(element => (
-                        <BrandIcon key={element.id} brand={element.id} brandsConfiguration={props.brandsConfiguration} />
-                    ))}
+                    {dualBrandingElements.map(element => {
+                        if (showDualBrandSelectElementsForEU) {
+                            console.log('### CardNumber:::: ADD new dual branding component!!');
+                            return null;
+                        } else {
+                            return <BrandIcon key={element.id} brand={element.id} brandsConfiguration={props.brandsConfiguration} />;
+                        }
+                    })}
                 </div>
             )}
         </Field>

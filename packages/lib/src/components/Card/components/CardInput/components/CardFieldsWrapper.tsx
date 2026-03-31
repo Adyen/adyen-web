@@ -9,7 +9,7 @@ import CardHolderName from './CardHolderName';
 import Installments from './Installments';
 import DisclaimerMessage from '../../../../internal/DisclaimerMessage';
 import { mustHandleDualBrandingAccordingToEURegulations } from '../utils';
-import { useCoreContext } from '../../../../../core/Context/CoreProvider';
+// import { useCoreContext } from '../../../../../core/Context/CoreProvider';
 import { DUAL_BRANDS_THAT_NEED_SELECTION_MECHANISM } from '../../../constants';
 
 export const CardFieldsWrapper = ({
@@ -73,7 +73,7 @@ export const CardFieldsWrapper = ({
     onFieldFocusAnalytics,
     onFieldBlurAnalytics
 }) => {
-    const { i18n } = useCoreContext();
+    // const { i18n } = useCoreContext();
 
     const cardHolderField = (
         <CardHolderName
@@ -90,8 +90,8 @@ export const CardFieldsWrapper = ({
         />
     );
 
-    //  Only if the brands in DUAL_BRANDS_THAT_NEED_SELECTION_MECHANISM are present in the binLookup response should we handle dual branding based on EU regulations
-    const showDualBrandSelectElements = mustHandleDualBrandingAccordingToEURegulations(
+    // Only if the brands in DUAL_BRANDS_THAT_NEED_SELECTION_MECHANISM are present in the binLookup response should we handle dual branding based on EU regulations
+    const showDualBrandSelectElementsForEU = mustHandleDualBrandingAccordingToEURegulations(
         DUAL_BRANDS_THAT_NEED_SELECTION_MECHANISM,
         dualBrandSelectElements,
         'id'
@@ -115,6 +115,9 @@ export const CardFieldsWrapper = ({
                 errors={sfpState.errors}
                 valid={sfpState.valid}
                 dualBrandingElements={dualBrandSelectElements.length > 0 && dualBrandSelectElements}
+                dualBrandingChangeHandler={extensions.handleDualBrandSelection}
+                selectedBrandValue={selectedBrandValue}
+                showDualBrandSelectElementsForEU={showDualBrandSelectElementsForEU}
             />
 
             {hasHolderName && !positionHolderNameOnTop && cardHolderField}
