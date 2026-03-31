@@ -6,9 +6,7 @@ import PaymentMethodIcon from '../PaymentMethodIcon';
 import { getFullBrandName } from '../../../../Card/components/CardInput/utils';
 import { useCoreContext } from '../../../../../core/Context/CoreProvider';
 import { BrandIcons } from '../../../../internal/BrandIcons/BrandIcons';
-import { BrandIcon } from '../../../../internal/BrandIcons/types';
-
-const getMaxBrandsToShow = (allowedBrands: BrandIcon[]) => (allowedBrands.length <= 4 ? undefined : 3);
+import { getMaxBrandsToShow } from './utils';
 
 interface PaymentMethodBrandsProps {
     brands: Array<BrandConfiguration>;
