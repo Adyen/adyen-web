@@ -18,22 +18,28 @@ import { toHaveScreenshot } from '../../../utils/assertions';
 
 dotenv.config();
 
-const SCREENSHOT_PAYMENT_NAME = CARD_HEADER_LABEL.toLowerCase().split(' ').join('-');
-
 test.describe('Dropin - Sessions - Cards', () => {
     test('#1 Should succeed in making a payment', { tag: [TAGS.SCREENSHOT] }, async ({ dropinWithSession, browserName, page }) => {
         await dropinWithSession.goto(URL_MAP.dropinWithSession);
 
         const cardPaymentMethodHeader = dropinWithSession.getPaymentMethodHeader(CARD_HEADER_LABEL);
 
-        await toHaveScreenshot(cardPaymentMethodHeader.rootElement, browserName, `${SCREENSHOT_PAYMENT_NAME}-payment-method-item.png`);
+        if (API_VERSION >= 71) {
+            await toHaveScreenshot(cardPaymentMethodHeader.rootElement, browserName, 'card-payment-method-item.png');
+        } else {
+            console.log(`Skipping card-payment-method-item.png screenshot assertion because API version (v${API_VERSION}) is less than 71`);
+        }
 
         const { paymentMethodDetailsLocator } = await dropinWithSession.selectNonStoredPaymentMethod('scheme');
 
         const card = new Card(page, paymentMethodDetailsLocator);
         await card.isComponentVisible();
 
-        await toHaveScreenshot(cardPaymentMethodHeader.rootElement, browserName, `expanded-${SCREENSHOT_PAYMENT_NAME}-payment-method-item.png`);
+        if (API_VERSION >= 71) {
+            await toHaveScreenshot(cardPaymentMethodHeader.rootElement, browserName, 'expanded-card-payment-method-item.png');
+        } else {
+            console.log(`Skipping expanded-card-payment-method-item.png screenshot assertion because API version (v${API_VERSION}) is less than 71`);
+        }
 
         await card.typeCardNumber(REGULAR_TEST_CARD);
         await card.typeExpiryDate(TEST_DATE_VALUE);
@@ -57,18 +63,26 @@ test.describe('Dropin - Sessions - Cards', () => {
 
             const cardPaymentMethodHeader = dropinWithSession.getPaymentMethodHeader(CARD_HEADER_LABEL);
 
-            await toHaveScreenshot(cardPaymentMethodHeader.rootElement, browserName, `${SCREENSHOT_PAYMENT_NAME}-payment-method-item-mobile.png`);
+            if (API_VERSION >= 71) {
+                await toHaveScreenshot(cardPaymentMethodHeader.rootElement, browserName, 'card-payment-method-item-mobile.png');
+            } else {
+                console.log(
+                    `Skipping card-payment-method-item-mobile.png screenshot assertion because API version (v${API_VERSION}) is less than 71`
+                );
+            }
 
             const { paymentMethodDetailsLocator } = await dropinWithSession.selectNonStoredPaymentMethod('scheme');
 
             const card = new Card(page, paymentMethodDetailsLocator);
             await card.isComponentVisible();
 
-            await toHaveScreenshot(
-                cardPaymentMethodHeader.rootElement,
-                browserName,
-                `expanded-${SCREENSHOT_PAYMENT_NAME}-payment-method-item-mobile.png`
-            );
+            if (API_VERSION >= 71) {
+                await toHaveScreenshot(cardPaymentMethodHeader.rootElement, browserName, 'expanded-card-payment-method-item-mobile.png');
+            } else {
+                console.log(
+                    `Skipping expanded-card-payment-method-item-mobile.png screenshot assertion because API version (v${API_VERSION}) is less than 71`
+                );
+            }
 
             await card.typeCardNumber(REGULAR_TEST_CARD);
             await card.typeExpiryDate(TEST_DATE_VALUE);
