@@ -8,13 +8,13 @@ class UPI extends Base {
     readonly mandateInfo: Locator;
     readonly appDropdown: Locator;
     readonly errorAlert: Locator;
-    readonly qrCodeIntent: Locator;
+    readonly qrCodeArea: Locator;
 
     constructor(public readonly page: Page) {
         super(page);
 
         this.appList = this.page.getByRole('radiogroup');
-        this.qrCodeIntent = this.page.locator('#upi-area-qrCode');
+        this.qrCodeArea = this.page.locator('#upi-area-qrCode');
         this.intentArea = this.page.locator('#upi-area-intent');
         this.qrCodeImage = this.page.getByAltText('Scan QR code');
         this.mandateInfo = this.page.locator('.adyen-checkout__alert-message--info');
