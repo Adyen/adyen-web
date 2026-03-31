@@ -187,7 +187,6 @@ export default function UPIComponent({
                                     placeholder={i18n.get('upi.intent.apps.dropdown.placeholder')}
                                     name={'upi-app-list'}
                                     className={'adyen-checkout__upi-app-list__dropdown'}
-                                    filterable={false}
                                     onChange={handleDropdownSelect}
                                 />
                             </Field>
