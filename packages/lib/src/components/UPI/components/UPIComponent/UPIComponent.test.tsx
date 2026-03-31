@@ -79,7 +79,7 @@ describe('UPIComponent', () => {
             expect(radios).toHaveLength(MAX_PRIMARY_APPS);
             expect(radios[0]).toHaveAccessibleName(/Google Pay/i);
 
-            expect(screen.getByRole('button', { name: /UPI apps/i })).toBeInTheDocument();
+            expect(screen.getByRole('combobox', { name: /UPI apps/i })).toBeInTheDocument();
         });
 
         test('should not show dropdown when apps count equals MAX_PRIMARY_APPS', async () => {
@@ -97,7 +97,7 @@ describe('UPIComponent', () => {
 
             const radios = await screen.findAllByRole('radio');
             expect(radios).toHaveLength(MAX_PRIMARY_APPS);
-            expect(screen.queryByRole('button', { name: /UPI apps/i })).not.toBeInTheDocument();
+            expect(screen.queryByRole('combobox', { name: /UPI apps/i })).not.toBeInTheDocument();
         });
 
         test('should show a pay button if showPayButton is true', async () => {
@@ -187,8 +187,8 @@ describe('UPIComponent', () => {
                 />
             );
 
-            const dropdownButton = screen.getByRole('button', { name: /UPI apps/i });
-            await user.click(dropdownButton);
+            const dropdownCombobox = screen.getByRole('combobox', { name: /UPI apps/i });
+            await user.click(dropdownCombobox);
 
             const option = await screen.findByRole('option', { name: new RegExp(lowPriorityApp.name, 'i') });
             await user.click(option);
@@ -237,15 +237,15 @@ describe('UPIComponent', () => {
                 })
             );
 
-            const dropdownButton = screen.getByRole('button', { name: /UPI apps/i });
-            await user.click(dropdownButton);
+            const dropdownCombobox = screen.getByRole('combobox', { name: /UPI apps/i });
+            await user.click(dropdownCombobox);
             const option = await screen.findByRole('option', { name: new RegExp(lowPriorityApp.name, 'i') });
             await user.click(option);
 
             expect(onSubmitAnalyticsMock).toHaveBeenCalledWith(
                 expect.objectContaining({
                     type: InfoEventType.selected,
-                    target: UiTarget.listSearch,
+                    target: UiTarget.listDetected,
                     issuer: lowPriorityApp.name
                 })
             );

@@ -14,7 +14,7 @@ class UPI extends Base {
         this.appList = this.page.getByRole('radiogroup');
         this.intentArea = this.page.locator('#upi-area-intent');
         this.qrCodeImage = this.page.getByAltText('Scan QR code');
-        this.appDropdown = this.page.getByRole('button', { name: /UPI apps/i });
+        this.appDropdown = this.page.getByRole('combobox', { name: /UPI apps/i });
         this.errorAlert = this.page.getByRole('alert');
     }
 
