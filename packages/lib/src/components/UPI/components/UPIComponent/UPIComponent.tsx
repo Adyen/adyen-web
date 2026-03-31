@@ -96,7 +96,7 @@ export default function UPIComponent({
     const handleDropdownSelect = useCallback(
         (event: { target: SelectTargetObject }) => {
             const app = lowPriorityApps.find(a => a.id === event.target.value);
-            selectApp(app, UiTarget.listDetected);
+            selectApp(app, UiTarget.listSearch);
         },
         [lowPriorityApps, selectApp]
     );
@@ -119,7 +119,7 @@ export default function UPIComponent({
     const debounceSearchAnalytics = useRef(debounce(onSubmitAnalytics, ANALYTICS_SEARCH_DEBOUNCE_TIME));
 
     const handleSearch = useCallback(() => {
-        debounceSearchAnalytics.current({ type: InfoEventType.input, target: UiTarget.listDetected });
+        debounceSearchAnalytics.current({ type: InfoEventType.input, target: UiTarget.listSearch });
     }, []);
 
     const validateIntentApp = useCallback(() => {
@@ -199,7 +199,7 @@ export default function UPIComponent({
             )}
             {mode === UPI_MODE.QR_CODE && (
                 <SegmentedControlRegion id={A11Y.AreaId.QR} ariaLabelledBy={A11Y.ButtonId.QR} className="adyen-checkout-upi-area-qr-code">
-                    <span className="adyen-checkout-upi-instruction-label">{i18n.get('upi.qrCode.instruction')}</span>
+                    <span className="adyen-checkout-upi-instruction-label-caption">{i18n.get('upi.qrCode.instruction')}</span>
                     {mandateComponent}
                     {showPayButton &&
                         payButton({
