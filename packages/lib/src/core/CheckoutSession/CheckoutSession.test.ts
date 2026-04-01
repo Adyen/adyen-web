@@ -13,6 +13,9 @@ const successResponseMock = {
 const httpPostMock = (httpPost as jest.Mock).mockImplementation(jest.fn(() => Promise.resolve(successResponseMock)));
 
 describe('CheckoutSession', () => {
+    beforeEach(() => {
+        jest.clearAllMocks();
+    });
     describe('constructor', () => {
         test('should throw an error if there is no client key', () => {
             try {
@@ -53,6 +56,72 @@ describe('CheckoutSession', () => {
             expect(session.data).toBe(rawSessionMock.sessionData);
 
             await session.setupSession({});
+            expect(session.data).toBe(successResponseMock.sessionData);
+        });
+    });
+
+    describe('donationCampaigns', () => {
+        test('should create and set up a session and then call donationCampaigns endpoint', async () => {
+            const session = new CheckoutSession(rawSessionMock, clientKeyMock, 'test');
+
+            // First call setupSession
+            await session.setupSession({});
+            expect(httpPostMock).toHaveBeenNthCalledWith(
+                1,
+                { loadingContext: 'test', path: `v1/sessions/${rawSessionMock.id}/setup?clientKey=${clientKeyMock}`, errorLevel: 'fatal' },
+                { sessionData: rawSessionMock.sessionData, browserInfo: expect.anything() }
+            );
+            expect(session.data).toBe(successResponseMock.sessionData);
+
+            // Then call donationCampaigns with the updated sessionData
+            await session.fetchDonationCampaigns();
+            expect(httpPostMock).toHaveBeenNthCalledWith(
+                2,
+                {
+                    loadingContext: 'test',
+                    path: `v1/sessions/${rawSessionMock.id}/donationCampaigns?clientKey=${clientKeyMock}`,
+                    errorLevel: 'fatal',
+                    errorCode: '627'
+                },
+                { sessionData: successResponseMock.sessionData }
+            );
+
+            expect(session.data).toBe(successResponseMock.sessionData);
+        });
+    });
+
+    describe('donations', () => {
+        const donationsRequestData = {
+            donationCampaignId: 'campaign123',
+            donationType: 'roundup' as const,
+            amount: { value: 100, currency: 'EUR' }
+        };
+
+        test('should create and set up a session and then call donations endpoint', async () => {
+            const session = new CheckoutSession(rawSessionMock, clientKeyMock, 'test');
+
+            // First call setupSession
+            await session.setupSession({});
+            expect(httpPostMock).toHaveBeenNthCalledWith(
+                1,
+                { loadingContext: 'test', path: `v1/sessions/${rawSessionMock.id}/setup?clientKey=${clientKeyMock}`, errorLevel: 'fatal' },
+                { sessionData: rawSessionMock.sessionData, browserInfo: expect.anything() }
+            );
+            expect(session.data).toBe(successResponseMock.sessionData);
+
+            // Then call donations with the updated sessionData
+            await session.makeDonation(donationsRequestData);
+            expect(httpPostMock).toHaveBeenNthCalledWith(
+                2,
+                {
+                    loadingContext: 'test',
+                    path: `v1/sessions/${rawSessionMock.id}/donations?clientKey=${clientKeyMock}`,
+                    errorLevel: 'fatal',
+                    errorCode: '628'
+                },
+                { sessionData: successResponseMock.sessionData, ...donationsRequestData }
+            );
+
             expect(session.data).toBe(successResponseMock.sessionData);
         });
     });

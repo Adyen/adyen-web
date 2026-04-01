@@ -13,7 +13,7 @@ import Roundup from './Roundup';
 import { getAmountLabel, getRoundupAmount, getRoundupAmountLabel } from './utils';
 
 export default function DonationComponent(props: Readonly<DonationComponentProps>) {
-    const { donation, commercialTxAmount, onCancel, onDonate, showCancelButton = true, termsAndConditionsUrl } = props;
+    const { donation, commercialTxAmount, onAmountSelected, onCancel, onDonate, showCancelButton = true, termsAndConditionsUrl } = props;
     const { i18n } = useCoreContext();
     const getImage = useImage();
     const { currency, type } = donation;
@@ -33,6 +33,8 @@ export default function DonationComponent(props: Readonly<DonationComponentProps
         const value = parseInt(target.value, 10);
         setIsValid(true);
         setAmount((amount: DonationAmount) => ({ ...amount, value }));
+
+        onAmountSelected({ data: { amount: { ...amount, value } } });
     };
 
     const handleDonate = () => {
