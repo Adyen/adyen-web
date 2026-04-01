@@ -191,7 +191,7 @@ class Card extends Base {
     /** Check if a specific brand is currently selected */
     async isBrandSelected(name: string | RegExp): Promise<boolean> {
         const button = this.dualBrandSelector.getByRole('button', { name });
-        return (await button.getAttribute('aria-expanded')) === 'true';
+        return (await button.getAttribute('aria-pressed')) === 'true';
     }
 
     /** Get the number of available brand options */
