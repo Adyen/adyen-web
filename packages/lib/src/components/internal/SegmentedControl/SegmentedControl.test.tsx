@@ -19,10 +19,10 @@ const DEFAULT_OPTIONS: SegmentedControlOptions<string> = [
     }
 ];
 
-const getOption1 = () => screen.getByRole('button', { name: DEFAULT_OPTIONS[0].label as string });
-const getOption2 = () => screen.getByRole('button', { name: DEFAULT_OPTIONS[1].label as string });
-const findOption1 = () => screen.findByRole('button', { name: DEFAULT_OPTIONS[0].label as string });
-const findOption2 = () => screen.findByRole('button', { name: DEFAULT_OPTIONS[1].label as string });
+const getOption1 = () => screen.getByRole('button', { name: DEFAULT_OPTIONS[0].label });
+const getOption2 = () => screen.getByRole('button', { name: DEFAULT_OPTIONS[1].label });
+const findOption1 = () => screen.findByRole('button', { name: DEFAULT_OPTIONS[0].label });
+const findOption2 = () => screen.findByRole('button', { name: DEFAULT_OPTIONS[1].label });
 
 const Component = ({ options }: Readonly<{ options: SegmentedControlOptions<string> }>) => {
     const defaultOption = options[0].value;
