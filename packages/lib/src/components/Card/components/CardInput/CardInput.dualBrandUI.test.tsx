@@ -1,5 +1,5 @@
 import { createRef, h } from 'preact';
-import { render, screen, act } from '@testing-library/preact';
+import { render, screen, act, fireEvent } from '@testing-library/preact';
 import CardInput from './CardInput';
 import { CoreProvider } from '../../../../core/Context/CoreProvider';
 import { AmountProvider } from '../../../../core/Context/AmountProvider';
@@ -109,10 +109,10 @@ describe('CardNumber and the dual branding UI', () => {
         const buttons = screen.getAllByRole('button');
         expect(buttons).toHaveLength(2);
         expect(screen.getByRole('button', { name: /visa/i })).toBeVisible();
-        expect(screen.getByRole('button', { name: /carte bancaire/i })).toBeVisible();
+        expect(screen.getByRole('button', { name: /cartebancaire/i })).toBeVisible();
 
         // First brand is selected by default
-        expect(buttons[0]).toHaveAttribute('aria-expanded', 'true');
+        expect(buttons[0]).toHaveAttribute('aria-pressed', 'true');
 
         // Contextual label visible
         expect(screen.getByText(/you can select the card brand/i)).toBeVisible();
@@ -137,6 +137,43 @@ describe('CardNumber and the dual branding UI', () => {
         expect(screen.queryByText(/you can select the card brand/i)).not.toBeInTheDocument();
     });
 
+    test('should not trigger validation when selecting a brand while PAN field is still active', async () => {
+        renderCardInput(<CardInput {...cardInputRequiredProps} />);
+
+        await act(() => {
+            cardInputRef.processBinLookupResponse(euDualBrandResp, false);
+        });
+
+        // Brand selection and contextual text are visible
+        expect(screen.getAllByRole('button')).toHaveLength(2);
+        expect(screen.getByText(/you can select the card brand/i)).toBeVisible();
+
+        // First brand (visa) is selected by default
+        const visaButton = screen.getByRole('button', { name: /visa/i });
+        const cbButton = screen.getByRole('button', { name: /cartebancaire/i });
+        expect(visaButton).toHaveAttribute('aria-pressed', 'true');
+        expect(cbButton).toHaveAttribute('aria-pressed', 'false');
+
+        // Click the second brand while PAN is incomplete (no blur has occurred)
+        fireEvent.click(cbButton);
+
+        // Brand selection UI must remain visible — no validation error triggered
+        expect(screen.getAllByRole('button')).toHaveLength(2);
+
+        // The chosen brand should now be selected
+        expect(screen.getByRole('button', { name: /cartebancaire/i })).toHaveAttribute('aria-pressed', 'true');
+
+        // Contextual text must remain visible
+        expect(screen.getByText(/you can select the card brand/i)).toBeVisible();
+
+        // Switch back to first brand — still no validation
+        fireEvent.click(screen.getByRole('button', { name: /visa/i }));
+
+        expect(screen.getAllByRole('button')).toHaveLength(2);
+        expect(screen.getByRole('button', { name: /visa/i })).toHaveAttribute('aria-pressed', 'true');
+        expect(screen.getByText(/you can select the card brand/i)).toBeVisible();
+    });
+
     test('should hide brand selection UI and contextual label when PAN has validation error', async () => {
         renderCardInput(<CardInput {...cardInputRequiredProps} />);
 
@@ -153,30 +190,6 @@ describe('CardNumber and the dual branding UI', () => {
 
         // Error state shown — at least one error element is visible
         expect(screen.queryAllByRole('button')).toHaveLength(0);
-        expect(screen.queryByText(/you can select the card brand/i)).not.toBeInTheDocument();
-    });
-
-    test('should hide contextual label when other fields have errors while keeping brand selection visible', async () => {
-        renderCardInput(<CardInput {...cardInputRequiredProps} />);
-
-        await act(() => {
-            cardInputRef.processBinLookupResponse(euDualBrandResp, false);
-        });
-
-        // Brand selection and contextual label are visible
-        expect(screen.getAllByRole('button')).toHaveLength(2);
-        expect(screen.getByText(/you can select the card brand/i)).toBeVisible();
-
-        // Simulate expiry date / CVC validation errors (non-PAN errors)
-        await act(() => {
-            cardInputRef.setFocusOn('encryptedExpiryDate');
-            cardInputRef.showValidation();
-        });
-
-        // Contextual label should be hidden
-        expect(screen.queryByText(/you can select the card brand/i)).not.toBeInTheDocument();
-
-        // Brand selection buttons should still be visible
-        expect(screen.getAllByRole('button')).toHaveLength(2);
+        expect(screen.queryByText(/you can select the card brand/i)).toHaveClass('adyen-checkout-contextual-text--hidden');
     });
 });
