@@ -5,6 +5,10 @@ class UPI extends Base {
     readonly appList: Locator;
     readonly intentArea: Locator;
     readonly qrCodeImage: Locator;
+    readonly qrCodeTimer: Locator;
+    readonly appDropdown: Locator;
+    readonly errorAlert: Locator;
+    readonly qrCodeArea: Locator;
 
     constructor(
         public readonly page: Page,
@@ -12,12 +16,23 @@ class UPI extends Base {
         super(page);
 
         this.appList = this.page.getByRole('radiogroup');
+        this.qrCodeArea = this.page.locator('#upi-area-qrCode');
         this.intentArea = this.page.locator('#upi-area-intent');
         this.qrCodeImage = this.page.getByAltText('Scan QR code');
+        this.qrCodeTimer = this.page.getByRole('timer');
+        this.appDropdown = this.page.getByRole('combobox', { name: /UPI apps/i });
+        this.errorAlert = this.page.getByRole('alert');
     }
 
     async selectApp(appName: string | RegExp) {
         await this.page.getByRole('radio', { name: appName }).click();
+    }
+
+    async selectAppFromDropdown(appName: string | RegExp) {
+        await this.appDropdown.click();
+        await this.page.getByRole('option', { name: appName })
+            .first()
+            .click();
     }
 
     async isQrCodeVisible() {
