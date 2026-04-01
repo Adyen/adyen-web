@@ -66,6 +66,7 @@ test.describe('Testing Bancontact, with dual branded cards, how UI resets', () =
 
             await bcmc.fillCardNumber(BCMC_DUAL_BRANDED_VISA);
 
+            await bcmc.waitForVisibleDualBrandIcons(2);
             await expect(bcmc.isDualBrandSelectionVisible()).resolves.toBe(true);
 
             // Select visa
@@ -98,6 +99,7 @@ test.describe('Testing Bancontact, with dual branded cards, how UI resets', () =
 
             await bcmc.fillCardNumber(BCMC_DUAL_BRANDED_VISA);
 
+            await bcmc.waitForVisibleDualBrandIcons(2);
             await expect(bcmc.isDualBrandSelectionVisible()).resolves.toBe(true);
 
             // Select visa
