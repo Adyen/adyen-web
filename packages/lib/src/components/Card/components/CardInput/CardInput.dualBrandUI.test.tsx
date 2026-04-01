@@ -115,7 +115,7 @@ describe('CardNumber and the dual branding UI', () => {
         expect(buttons[0]).toHaveAttribute('aria-pressed', 'true');
 
         // Contextual label visible
-        expect(screen.getByText(/you can select the card brand/i)).toBeVisible();
+        expect(screen.getByText(/the card brand/i)).toBeVisible();
     });
 
     test('should show display-only icons without selection UI or contextual label for non-EU dual brand', async () => {
@@ -134,7 +134,7 @@ describe('CardNumber and the dual branding UI', () => {
         expect(screen.queryByRole('group')).not.toBeInTheDocument();
 
         // No contextual label
-        expect(screen.queryByText(/you can select the card brand/i)).not.toBeInTheDocument();
+        expect(screen.queryByText(/the card brand/i)).not.toBeInTheDocument();
     });
 
     test('should not trigger validation when selecting a brand while PAN field is still active', async () => {
@@ -146,7 +146,7 @@ describe('CardNumber and the dual branding UI', () => {
 
         // Brand selection and contextual text are visible
         expect(screen.getAllByRole('button')).toHaveLength(2);
-        expect(screen.getByText(/you can select the card brand/i)).toBeVisible();
+        expect(screen.getByText(/the card brand/i)).toBeVisible();
 
         // First brand (visa) is selected by default
         const visaButton = screen.getByRole('button', { name: /visa/i });
@@ -164,14 +164,14 @@ describe('CardNumber and the dual branding UI', () => {
         expect(screen.getByRole('button', { name: /cartebancaire/i })).toHaveAttribute('aria-pressed', 'true');
 
         // Contextual text must remain visible
-        expect(screen.getByText(/you can select the card brand/i)).toBeVisible();
+        expect(screen.getByText(/the card brand/i)).toBeVisible();
 
         // Switch back to first brand — still no validation
         fireEvent.click(screen.getByRole('button', { name: /visa/i }));
 
         expect(screen.getAllByRole('button')).toHaveLength(2);
         expect(screen.getByRole('button', { name: /visa/i })).toHaveAttribute('aria-pressed', 'true');
-        expect(screen.getByText(/you can select the card brand/i)).toBeVisible();
+        expect(screen.getByText(/the card brand/i)).toBeVisible();
     });
 
     test('should hide brand selection UI and contextual label when PAN has validation error', async () => {
@@ -190,6 +190,6 @@ describe('CardNumber and the dual branding UI', () => {
 
         // Error state shown — at least one error element is visible
         expect(screen.queryAllByRole('button')).toHaveLength(0);
-        expect(screen.queryByText(/you can select the card brand/i)).toHaveClass('adyen-checkout-contextual-text--hidden');
+        expect(screen.queryByText(/the card brand/i)).toHaveClass('adyen-checkout-contextual-text--hidden');
     });
 });

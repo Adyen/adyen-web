@@ -22,7 +22,18 @@ const renderCardNumber = (props = {}) => {
     );
 };
 
-const dualBrandingElements = [{ id: 'visa' }, { id: 'cartebancaire' }];
+const euDualBrandingElements = [
+    { id: 'visa', brandObject: { brand: 'visa', localeBrand: 'VISA', cvcPolicy: 'required', expiryDatePolicy: 'required', panLength: 16 } },
+    {
+        id: 'cartebancaire',
+        brandObject: { brand: 'cartebancaire', localeBrand: 'Carte Bancaire', cvcPolicy: 'required', expiryDatePolicy: 'required', panLength: 16 }
+    }
+];
+
+const nonEuDualBrandingElements = [
+    { id: 'visa', brandObject: { brand: 'visa', localeBrand: 'VISA', cvcPolicy: 'required', expiryDatePolicy: 'required', panLength: 16 } },
+    { id: 'mc', brandObject: { brand: 'mc', localeBrand: 'MasterCard', cvcPolicy: 'required', expiryDatePolicy: 'required', panLength: 16 } }
+];
 
 describe('CardNumber and the (dual)branding icons that show in the PAN field', () => {
     test('should render with standard brand image and no dual branding', () => {
@@ -33,48 +44,39 @@ describe('CardNumber and the (dual)branding icons that show in the PAN field', (
         expect(images).toHaveLength(1);
     });
 
-    test('should render with inline dual branding icons', () => {
-        renderCardNumber({ dualBrandingElements });
+    test('should render with inline dual branding icons for non-EU brands', () => {
+        renderCardNumber({ dualBrandingElements: nonEuDualBrandingElements });
         const images = screen.getAllByRole('img');
         expect(images).toHaveLength(2);
         expect(screen.getByAltText(BRAND_READABLE_NAME_MAP.visa)).toBeInTheDocument();
-        expect(screen.getByAltText('cartebancaire')).toBeInTheDocument();
+        expect(screen.getByAltText(BRAND_READABLE_NAME_MAP.mc)).toBeInTheDocument();
     });
 
     test('should hide inline dual branding icons when the field is in error', () => {
-        renderCardNumber({ error: 'error message', dualBrandingElements });
+        renderCardNumber({ error: 'error message', dualBrandingElements: euDualBrandingElements });
         const images = screen.getAllByRole('img');
         expect(images).toHaveLength(1);
         expect(screen.getByAltText('Error')).toBeInTheDocument();
         expect(screen.getByText('error message')).toBeInTheDocument();
     });
 
-    test('should wrap brand images in interactive button elements when isDualBrandSelectable is true', () => {
-        renderCardNumber({ dualBrandingElements, isDualBrandSelectable: true, selectedBrandValue: 'visa' });
-        expect(screen.getByRole('group')).toBeInTheDocument();
+    test('should render EU dual brand selector with buttons when brands require selection mechanism', () => {
+        renderCardNumber({ dualBrandingElements: euDualBrandingElements, dualBrandingChangeHandler: jest.fn(), brandsConfiguration: {} });
         const buttons = screen.getAllByRole('button');
         expect(buttons).toHaveLength(2);
         expect(screen.getByRole('button', { name: /visa/i })).toBeInTheDocument();
         expect(screen.getByRole('button', { name: /cartebancaire/i })).toBeInTheDocument();
     });
 
-    test('should render display-only brand images without button role when isDualBrandSelectable is false', () => {
-        renderCardNumber({ dualBrandingElements, isDualBrandSelectable: false });
-        expect(screen.queryByRole('group')).not.toBeInTheDocument();
+    test('should render display-only brand images without buttons for non-EU dual brands', () => {
+        renderCardNumber({ dualBrandingElements: nonEuDualBrandingElements });
         expect(screen.queryAllByRole('button')).toHaveLength(0);
-        // Images are still visible
         const images = screen.getAllByRole('img');
         expect(images).toHaveLength(2);
     });
 
-    test('should show contextual text when dual branding is selectable', () => {
-        renderCardNumber({
-            dualBrandingElements,
-            isDualBrandSelectable: true,
-            selectedBrandValue: 'visa',
-            showContextualElement: true,
-            contextualText: 'You can select the card brand you prefer to pay with. This is optional.'
-        });
-        expect(screen.getByText(/you can select the card brand/i)).toBeVisible();
+    test('should show contextual text when EU dual branding is active', () => {
+        renderCardNumber({ dualBrandingElements: euDualBrandingElements, dualBrandingChangeHandler: jest.fn(), brandsConfiguration: {} });
+        expect(screen.getByText(/select the card brand/i)).toBeVisible();
     });
 });
