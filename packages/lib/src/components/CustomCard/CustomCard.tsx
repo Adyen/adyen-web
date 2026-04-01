@@ -9,6 +9,10 @@ import { getCardImageUrl, fieldTypeToSnakeCase } from '../internal/SecuredFields
 import { TxVariants } from '../tx-variants';
 import { CustomCardConfiguration } from './types';
 import { AnalyticsInfoEvent, InfoEventType, UiTarget } from '../../core/Analytics/events/AnalyticsInfoEvent';
+import { DUAL_BRANDS_THAT_NEED_SELECTION_MECHANISM } from '../Card/constants';
+
+const EU_DUAL_BRANDED_SCENARIO = 'Dual Branded (EU): EU Law mandates that you must provide a brand selection mechanism';
+const NON_EU_DUAL_BRANDED_SCENARIO = 'Dual Branded (Non-EU): Display only. No selection mechanism required';
 
 export class CustomCard extends UIElement<CustomCardConfiguration> {
     public static readonly type = TxVariants.customCard;
@@ -78,6 +82,24 @@ export class CustomCard extends UIElement<CustomCardConfiguration> {
                 item.brandImageUrl = this.props.brandsConfiguration[item.brand]?.icon ?? getCardImageUrl(item.brand, this.resources);
                 return item;
             });
+
+            // Check for dual branded scenario and, if so, discern which type
+            let isDualBrandedScenario = false;
+            let isEUDualBrandedScenario = false;
+
+            if (obj.supportedBrandsRaw?.length > 1) {
+                isDualBrandedScenario = true;
+                isEUDualBrandedScenario = obj.detectedBrands.some(item =>
+                    (DUAL_BRANDS_THAT_NEED_SELECTION_MECHANISM as readonly string[]).includes(item)
+                );
+            }
+
+            // Set the dual branding type
+            nuObj.dualBrandingType = null;
+
+            if (isDualBrandedScenario) {
+                nuObj.dualBrandingType = isEUDualBrandedScenario ? EU_DUAL_BRANDED_SCENARIO : NON_EU_DUAL_BRANDED_SCENARIO;
+            }
         }
 
         this.props.onBinLookup(nuObj);
