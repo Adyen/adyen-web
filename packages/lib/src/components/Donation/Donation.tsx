@@ -135,16 +135,14 @@ class DonationElement extends UIElement<DonationConfiguration> {
         this.core.modules.analytics.sendAnalytics(event);
     }
 
-    public handleRef = ref => {
-        this.componentRef = ref;
-    };
-
     protected override componentToRender(): h.JSX.Element {
         return (
             <DonationComponent
                 {...this.props}
-                /*@ts-ignore ref*/
-                ref={this.handleRef}
+                // @ts-ignore ref is internal from the Component
+                ref={ref => {
+                    this.componentRef = ref;
+                }}
                 onChange={this.setState}
                 onDonate={this.donate}
                 onCancel={this.cancel}
