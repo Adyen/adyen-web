@@ -11,8 +11,8 @@ import { CustomCardConfiguration } from './types';
 import { AnalyticsInfoEvent, InfoEventType, UiTarget } from '../../core/Analytics/events/AnalyticsInfoEvent';
 import { DUAL_BRANDS_THAT_NEED_SELECTION_MECHANISM } from '../Card/constants';
 
-const EU_DUAL_BRANDED_SCENARIO = 'Dual Branded (EU): EU Law mandates that you must provide a brand selection mechanism';
-const NON_EU_DUAL_BRANDED_SCENARIO = 'Dual Branded (Non-EU): Display only. No selection mechanism required';
+const SELECTABLE_DUAL_BRANDED_SCENARIO = 'Dual Branded (Selectable): Regulation mandates that you must provide a brand selection mechanism';
+const DISPLAY_ONLY_DUAL_BRANDED_SCENARIO = 'Dual Branded (Display-only): No selection mechanism required';
 
 export class CustomCard extends UIElement<CustomCardConfiguration> {
     public static readonly type = TxVariants.customCard;
@@ -85,11 +85,11 @@ export class CustomCard extends UIElement<CustomCardConfiguration> {
 
             // Check for dual branded scenario and, if so, discern which type
             let isDualBrandedScenario = false;
-            let isEUDualBrandedScenario = false;
+            let isSelectableDualBrandedScenario = false;
 
             if (obj.supportedBrandsRaw?.length > 1) {
                 isDualBrandedScenario = true;
-                isEUDualBrandedScenario = obj.detectedBrands.some(item =>
+                isSelectableDualBrandedScenario = obj.detectedBrands.some(item =>
                     (DUAL_BRANDS_THAT_NEED_SELECTION_MECHANISM as readonly string[]).includes(item)
                 );
             }
@@ -98,7 +98,7 @@ export class CustomCard extends UIElement<CustomCardConfiguration> {
             nuObj.dualBrandingType = null;
 
             if (isDualBrandedScenario) {
-                nuObj.dualBrandingType = isEUDualBrandedScenario ? EU_DUAL_BRANDED_SCENARIO : NON_EU_DUAL_BRANDED_SCENARIO;
+                nuObj.dualBrandingType = isSelectableDualBrandedScenario ? SELECTABLE_DUAL_BRANDED_SCENARIO : DISPLAY_ONLY_DUAL_BRANDED_SCENARIO;
             }
         }
 

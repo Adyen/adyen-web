@@ -213,17 +213,17 @@ export const mapDualBrandButtons = (
 };
 
 /**
- *  Only if the brands in EU_BrandArray are present in the binLookup response should we handle dual branding based on EU regulations
+ *  Checks if any of the brands requiring a selection mechanism are present in the binLookup response.
  *
- * If the result from Array.some is true - then we are in a EU dual branding regulation scenario, i.e.
- * - Show the new dualBranding UI Buttons
+ * If the result from Array.some is true - then we are in a dual branding scenario that requires selection, i.e.
+ * - Show the dualBranding selector UI
  * - Preselect a card brand
  */
-export const mustHandleDualBrandingAccordingToEURegulations = (
-    EU_BrandArray: readonly string[],
+export const requiresDualBrandSelection = (
+    brandsRequiringSelection: readonly string[],
     returnedDualBrandingObjects: DualBrandSelectElement[] | BrandObject[],
     key: string
-) => returnedDualBrandingObjects.some(item => EU_BrandArray.includes(item[key]));
+) => returnedDualBrandingObjects.some(item => brandsRequiringSelection.includes(item[key]));
 
 /**
  * Determines whether the Installments component should be rendered.
