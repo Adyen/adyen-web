@@ -9,12 +9,13 @@ const toTwoLetterCode = locale => locale.toLowerCase().substring(0, 2);
 
 /**
  * Matches a string with one of the locales
- * @param locale -
- * @param supportedLocales -
-
+ *
+ * @param locale - The locale to match
+ * @param supportedLocales - Array of possible locales
+ *
  * @example
- * matchLocale('en-GB');
- * // 'en-US'
+ * matchLocale('en-GB', ['en-US', 'es-ES']);
+ * // returns 'en-US'
  */
 export function matchLocale(locale: string, supportedLocales: any): string {
     if (!locale || typeof locale !== 'string') return null;
@@ -22,12 +23,13 @@ export function matchLocale(locale: string, supportedLocales: any): string {
 }
 
 /**
- * Returns a locale with the proper format
- * @param localeParam -
+ * Returns a locale with the proper format.
+ *
+ * @param localeParam - Locale example: 'En_us' or 'en-US'
  *
  * @example
  * formatLocale('En_us');
- * // 'en-US'
+ * // returns 'en-US'
  */
 export function formatLocale(localeParam: string): string | null {
     const locale = localeParam.replace('_', '-');
@@ -61,7 +63,8 @@ export function parseLocale(locale: string, supportedLocales: readonly string[])
 
 /**
  * Makes sure that if custom translation is defined using not properly formatted locale keys, then it gets formatted correctly
- * Ex: Custom translation defined as { en_US: { ... }} will be adjusted to { 'en-US': { ... }}
+
+ * Custom translation defined as { en_US: { ... }} will be adjusted to { 'en-US': { ... }}
  */
 export function formatCustomTranslations(customTranslations: CustomTranslations = {}): CustomTranslations {
     return Object.keys(customTranslations).reduce((memo, customTranslationLocaleKey) => {

@@ -13,10 +13,8 @@ import registry, { NewableComponent } from './core.registry';
 import { cleanupFinalResult, sanitizeResponse, verifyPaymentDidNotFail } from '../components/internal/UIElement/utils';
 import AdyenCheckoutError, { IMPLEMENTATION_ERROR } from './Errors/AdyenCheckoutError';
 import { THREEDS2_FULL } from '../components/ThreeDS2/constants';
-import { DEFAULT_LOCALE } from '../language/constants';
 import getTranslations from './Services/get-translations';
 import { defaultProps } from './core.defaultProps';
-import { formatLocale } from '../language/utils';
 import { resolveEnvironments } from './Environment';
 import { LIBRARY_BUNDLE_TYPE, LIBRARY_VERSION } from './config';
 
@@ -112,8 +110,10 @@ class Core implements ICore {
     public async initialize(): Promise<this> {
         await this.initializeCore();
         this.validateCoreConfiguration();
-        await this.createCoreModules();
-        await this.requestAnalyticsAttemptId();
+        this.createCoreModules();
+
+        await Promise.allSettled([this.requestAnalyticsAttemptId(), this.requestTranslations()]);
+
         return this;
     }
 
@@ -409,15 +409,13 @@ class Core implements ICore {
         this.paymentMethodsResponse = new PaymentMethods(this.options.paymentMethodsResponse || paymentMethodsResponse, this.options);
     }
 
-    private async createCoreModules(): Promise<void> {
+    private createCoreModules(): void {
         if (this.modules) {
             if (process.env.NODE_ENV === 'development') {
                 console.warn('Core: Core modules are already created.');
             }
             return;
         }
-
-        // const translations = await this.fetchLocaleTranslations();
 
         this.modules = Object.freeze({
             risk: new RiskModule(this, { ...this.options, loadingContext: this.loadingContext }),
@@ -442,6 +440,17 @@ class Core implements ICore {
             }),
             srPanel: new SRPanel(this, { ...this.options.srConfig })
         });
+    }
+
+    /**
+     * Request translations to the CDN. If an error occurs, it will be logged to the console in development mode.
+     */
+    private async requestTranslations(): Promise<void> {
+        try {
+            await this.modules.i18n.requestTranslations();
+        } catch (error: unknown) {
+            console.warn('Core - requestTranslations(): Something went wrong.', error);
+        }
     }
 
     private async requestAnalyticsAttemptId(): Promise<void> {

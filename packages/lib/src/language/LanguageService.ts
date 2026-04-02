@@ -1,9 +1,12 @@
-import AdyenCheckoutError from '../core/Errors/AdyenCheckoutError';
 import { httpGet } from '../core/Services/http';
+import enUS from '../../../server/translations/en-US.json';
+
 import type { Translations } from './types';
+import { matchLocale } from './utils';
+import { CDN_SUPPORTED_LOCALES, DEFAULT_LOCALE } from './constants';
 
 export interface ILanguageService {
-    fetchTranslations(locale: string): Promise<any>;
+    fetchTranslationsFromCdn(locale: string): Promise<any>;
 }
 
 class LanguageService implements ILanguageService {
@@ -15,26 +18,41 @@ class LanguageService implements ILanguageService {
         this.sdkVersion = sdkVersion;
     }
 
-    public async fetchTranslations(locale: string): Promise<Translations> {
-        if (!locale) {
-            throw new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'fetchTranslations() - locale is required');
+    /**
+     * Fetches translations for the given locale.
+     * If locale is 'en-US', it returns the bundled 'en-US' translations. If the translation request fails, it returns 'en-US' as fallback
+     *
+     * @param locale - The locale to fetch translations for
+     * @returns The translations for the given locale
+     */
+    public async fetchTranslationsFromCdn(locale: string): Promise<Translations> {
+        const cdnLocale = this.matchLocaleWithCdnSupportedLocales(locale);
+
+        if (cdnLocale === 'en-US') {
+            return enUS as Translations;
         }
 
         try {
             return await httpGet<Translations>({
                 loadingContext: this.cdnUrl,
                 errorLevel: 'fatal',
-                errorMessage: `Translations: Failed to fetch translations for locale "${locale}"`,
-                path: `sdk/${this.sdkVersion}/translations/${locale}.json`
+                errorMessage: `Translations: Failed to fetch translations for locale "${cdnLocale}"`,
+                path: `sdk/${this.sdkVersion}/translations/${cdnLocale}.json`
             });
         } catch (error) {
-            return await httpGet<Translations>({
-                loadingContext: this.cdnUrl,
-                errorLevel: 'fatal',
-                errorMessage: `Translations: Couldn't fetch translation for locale "${locale}" nor the fallback translation "en-US"`,
-                path: `sdk/${this.sdkVersion}/translations/en-US.json`
-            });
+            console.warn(`LanguageService - fetchTranslationsFromCdn(): Failed to fetch locale "${cdnLocale}."`);
+            return enUS as Translations;
         }
+    }
+
+    /**
+     * Matches the given locale with the supported locales in the CDN. For example, if the merchant passes 'fr-CH', it will match 'fr-FR'.
+     *
+     * @param locale - The locale to match
+     * @returns The matched locale or the default locale
+     */
+    private matchLocaleWithCdnSupportedLocales(locale: string): string {
+        return matchLocale(locale, CDN_SUPPORTED_LOCALES) || DEFAULT_LOCALE;
     }
 }
 

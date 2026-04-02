@@ -1,10 +1,10 @@
 import { formatCustomTranslations, getTranslation, parseLocale } from './utils';
 import { getLocalisedAmount } from '../utils/amount-util';
-import { SUPPORTED_LOCALES } from './constants';
+import { CDN_SUPPORTED_LOCALES } from './constants';
+import enUS from '../../../server/translations/en-US.json';
 
 import type { CustomTranslations, LanguageOptions, Translations } from './types';
 import type { ILanguageService } from './LanguageService';
-import AdyenCheckoutError from '../core/Errors/AdyenCheckoutError';
 
 export class Language {
     public readonly locale: string;
@@ -12,9 +12,12 @@ export class Language {
     private readonly service: ILanguageService;
 
     private readonly customTranslations: CustomTranslations;
-    private readonly supportedLocales: readonly string[];
 
-    private readonly onError: LanguageOptions['onError'];
+    /**
+     * Supported locales list
+     * Includes all supported locales from the CDN and any custom locales defined in customTranslations
+     */
+    private readonly supportedLocales: readonly string[];
 
     private translations: Translations = {};
 
@@ -33,10 +36,9 @@ export class Language {
     public readonly timeAndDateFormatter: Intl.DateTimeFormat;
 
     constructor(props: LanguageOptions) {
-        const { locale, customTranslations, service, onError } = props;
+        const { locale, customTranslations, service } = props;
 
         this.service = service;
-        this.onError = onError;
 
         this.customTranslations = formatCustomTranslations(customTranslations);
         this.supportedLocales = this.createSupportedLocalesList(customTranslations);
@@ -48,20 +50,13 @@ export class Language {
     }
 
     public async requestTranslations(): Promise<void> {
-        try {
-            const translations = await this.service.fetchTranslations(this.locale);
+        const translations = await this.service.fetchTranslationsFromCdn(this.locale);
 
-            this.translations = {
-                ...translations,
-                ...(!!this.customTranslations[this.locale] && this.customTranslations[this.locale])
-            };
-        } catch (error: unknown) {
-            if (error instanceof AdyenCheckoutError) {
-                this.onError?.(error);
-            } else {
-                this.onError?.(new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'Failed to fetch translations', { cause: error }));
-            }
-        }
+        this.translations = {
+            ...enUS,
+            ...translations,
+            ...(!!this.customTranslations[this.locale] && this.customTranslations[this.locale])
+        };
     }
 
     /**
@@ -117,11 +112,11 @@ export class Language {
      */
     private createSupportedLocalesList(customTranslations?: CustomTranslations): readonly string[] {
         if (!customTranslations) {
-            return SUPPORTED_LOCALES;
+            return CDN_SUPPORTED_LOCALES;
         }
 
-        const locales = new Set([...SUPPORTED_LOCALES, ...Object.keys(customTranslations)]);
-        return Array.from(locales);
+        const locales = new Set([...CDN_SUPPORTED_LOCALES, ...Object.keys(customTranslations)]);
+        return Array.from(locales).sort();
     }
 }
 

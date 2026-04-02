@@ -1,4 +1,4 @@
-export const SUPPORTED_LOCALES = [
+export const CDN_SUPPORTED_LOCALES = [
     'ar',
     'bg-BG',
     'ca-ES',
