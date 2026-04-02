@@ -63,7 +63,12 @@ export default function CardNumber(props: Readonly<CardNumberProps>) {
             {props.showBrandIcon && !dualBrandingElements && <BrandIcon brandsConfiguration={props.brandsConfiguration} brand={props.brand} />}
 
             {dualBrandingElements && !error && (
-                <div className={classNames(['adyen-checkout__card__dual-branding__icons'])}>
+                <div
+                    className={classNames([
+                        'adyen-checkout__card__dual-branding__buttons',
+                        { 'adyen-checkout__card__dual-branding__buttons--active': isValid }
+                    ])}
+                >
                     {showDualBrandSelectElementsForEU ? (
                         <EUDualBrandSelector
                             dualBrandingElements={dualBrandingElements}
