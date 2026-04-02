@@ -1,7 +1,7 @@
 @use 'styles/index';
 @use 'styles/variable-generator';
 
-.adyen-checkout__card__eu-dual-branding {
+.adyen-checkout__card__dual-brand-selector {
     display: flex;
     gap: variable-generator.token(spacer-040);
     background-color: variable-generator.token(color-background-tertiary);
@@ -10,7 +10,7 @@
     margin-right: variable-generator.token(spacer-060);
 }
 
-.adyen-checkout__card__eu-dual-branding__button {
+.adyen-checkout__card__dual-brand-selector__button {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -32,7 +32,7 @@
     }
 }
 
-.adyen-checkout__card__eu-dual-branding__icon {
+.adyen-checkout__card__dual-brand-selector__icon {
     border-radius: variable-generator.token(border-radius-s);
     height: 18px;
     width: 27px;
