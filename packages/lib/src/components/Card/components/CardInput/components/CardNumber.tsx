@@ -8,9 +8,9 @@ import DataSfSpan from './DataSfSpan';
 import { ENCRYPTED_CARD_NUMBER } from '../../../../internal/SecuredFields/lib/constants';
 import { alternativeLabelContent } from './FieldLabelAlternative';
 import './CardNumber.scss';
-import { mustHandleDualBrandingAccordingToEURegulations } from '../utils';
+import { requiresDualBrandSelection } from '../utils';
 import { DUAL_BRANDS_THAT_NEED_SELECTION_MECHANISM } from '../../../constants';
-import EUDualBrandSelector from './EUDualBrandSelector';
+import DualBrandSelector from './DualBrandSelector';
 
 export default function CardNumber(props: Readonly<CardNumberProps>) {
     const { i18n } = useCoreContext();
@@ -20,13 +20,13 @@ export default function CardNumber(props: Readonly<CardNumberProps>) {
         onFocusField(ENCRYPTED_CARD_NUMBER);
     };
 
-    const showDualBrandSelectElementsForEU = dualBrandingElements
-        ? mustHandleDualBrandingAccordingToEURegulations(DUAL_BRANDS_THAT_NEED_SELECTION_MECHANISM, dualBrandingElements, 'id')
+    const showDualBrandSelector = dualBrandingElements
+        ? requiresDualBrandSelection(DUAL_BRANDS_THAT_NEED_SELECTION_MECHANISM, dualBrandingElements, 'id')
         : false;
 
     // Unlike other fields we don't respect the 'showContextualElement' config prop (that the merchant can set to false)
-    // We always show the contextual text for EU dual branding
-    const contextualText = showDualBrandSelectElementsForEU ? i18n.get('creditCard.dualBrand.description') : null;
+    // We always show the contextual text for dual branding that requires selection
+    const contextualText = showDualBrandSelector ? i18n.get('creditCard.dualBrand.description') : null;
 
     return (
         <Field
@@ -63,14 +63,9 @@ export default function CardNumber(props: Readonly<CardNumberProps>) {
             {props.showBrandIcon && !dualBrandingElements && <BrandIcon brandsConfiguration={props.brandsConfiguration} brand={props.brand} />}
 
             {dualBrandingElements && !error && (
-                <div
-                    className={classNames([
-                        'adyen-checkout__card__dual-branding__buttons',
-                        { 'adyen-checkout__card__dual-branding__buttons--active': isValid }
-                    ])}
-                >
-                    {showDualBrandSelectElementsForEU ? (
-                        <EUDualBrandSelector
+                <div className={classNames(['adyen-checkout__card__dual-branding__buttons'])}>
+                    {showDualBrandSelector ? (
+                        <DualBrandSelector
                             dualBrandingElements={dualBrandingElements}
                             dualBrandingChangeHandler={dualBrandingChangeHandler}
                             brandsConfiguration={brandsConfiguration}

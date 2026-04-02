@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import { render, screen, waitFor } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
-import EUDualBrandSelector from './EUDualBrandSelector';
+import DualBrandSelector from './DualBrandSelector';
 import { CoreProvider } from '../../../../../core/Context/CoreProvider';
 import { DualBrandSelectElement } from '../../../types';
 
@@ -36,7 +36,7 @@ const getButton1 = () => screen.getByRole('button', { name: /visa/i });
 const getButton2 = () => screen.getByRole('button', { name: /cartebancaire/i });
 const findButton2 = () => screen.findByRole('button', { name: /cartebancaire/i });
 
-const renderEUDualBrandSelector = (props = {}) => {
+const renderDualBrandSelector = (props = {}) => {
     const defaultProps = {
         dualBrandingElements: DEFAULT_DUAL_BRAND_ELEMENTS,
         dualBrandingChangeHandler: jest.fn(),
@@ -45,33 +45,33 @@ const renderEUDualBrandSelector = (props = {}) => {
 
     return render(
         <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
-            <EUDualBrandSelector {...defaultProps} {...props} />
+            <DualBrandSelector {...defaultProps} {...props} />
         </CoreProvider>
     );
 };
 
-describe('EUDualBrandSelector', () => {
+describe('DualBrandSelector', () => {
     test('should render dual brand buttons', () => {
-        renderEUDualBrandSelector();
+        renderDualBrandSelector();
         expect(getButton1()).toBeInTheDocument();
         expect(getButton2()).toBeInTheDocument();
     });
 
     test('should render brand images inside buttons', () => {
-        renderEUDualBrandSelector();
+        renderDualBrandSelector();
         const images = screen.getAllByRole('img');
         expect(images).toHaveLength(2);
     });
 
     test('should have the first brand selected by default', () => {
-        renderEUDualBrandSelector();
+        renderDualBrandSelector();
         expect(getButton1()).toHaveAttribute('aria-pressed', 'true');
         expect(getButton2()).toHaveAttribute('aria-pressed', 'false');
     });
 
     test('should switch between brands on click', async () => {
         const user = userEvent.setup();
-        renderEUDualBrandSelector();
+        renderDualBrandSelector();
 
         expect(getButton1()).toHaveAttribute('aria-pressed', 'true');
         expect(getButton2()).toHaveAttribute('aria-pressed', 'false');
@@ -88,7 +88,7 @@ describe('EUDualBrandSelector', () => {
     test('should call dualBrandingChangeHandler when a brand is clicked', async () => {
         const user = userEvent.setup();
         const dualBrandingChangeHandler = jest.fn();
-        renderEUDualBrandSelector({ dualBrandingChangeHandler });
+        renderDualBrandSelector({ dualBrandingChangeHandler });
 
         const button2 = await findButton2();
         await user.click(button2);

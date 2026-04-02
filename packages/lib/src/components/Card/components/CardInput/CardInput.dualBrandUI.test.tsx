@@ -22,7 +22,7 @@ const cardInputRequiredProps = {
     })
 };
 
-const euDualBrandResp = {
+const selectableDualBrandResp = {
     issuingCountryCode: 'FR',
     supportedBrands: [
         {
@@ -48,7 +48,7 @@ const euDualBrandResp = {
     ]
 };
 
-const nonEuDualBrandResp = {
+const displayOnlyDualBrandResp = {
     issuingCountryCode: 'AU',
     supportedBrands: [
         {
@@ -98,11 +98,11 @@ describe('CardNumber and the dual branding UI', () => {
         expect(screen.queryByRole('group')).not.toBeInTheDocument();
     });
 
-    test('should show two selectable brand options with first selected by default and contextual label for EU dual brand', async () => {
+    test('should show two selectable brand options with first selected by default and contextual label for selectable dual brand', async () => {
         renderCardInput(<CardInput {...cardInputRequiredProps} />);
 
         await act(() => {
-            cardInputRef.processBinLookupResponse(euDualBrandResp, false);
+            cardInputRef.processBinLookupResponse(selectableDualBrandResp, false);
         });
 
         // Two brand options with accessible names
@@ -118,11 +118,11 @@ describe('CardNumber and the dual branding UI', () => {
         expect(screen.getByText(/the card brand/i)).toBeVisible();
     });
 
-    test('should show display-only icons without selection UI or contextual label for non-EU dual brand', async () => {
+    test('should show display-only icons without selection UI or contextual label for non-selectable dual brand', async () => {
         renderCardInput(<CardInput {...cardInputRequiredProps} />);
 
         await act(() => {
-            cardInputRef.processBinLookupResponse(nonEuDualBrandResp, false);
+            cardInputRef.processBinLookupResponse(displayOnlyDualBrandResp, false);
         });
 
         // Two brand images visible (display-only)
@@ -141,7 +141,7 @@ describe('CardNumber and the dual branding UI', () => {
         renderCardInput(<CardInput {...cardInputRequiredProps} />);
 
         await act(() => {
-            cardInputRef.processBinLookupResponse(euDualBrandResp, false);
+            cardInputRef.processBinLookupResponse(selectableDualBrandResp, false);
         });
 
         // Brand selection and contextual text are visible
@@ -178,7 +178,7 @@ describe('CardNumber and the dual branding UI', () => {
         renderCardInput(<CardInput {...cardInputRequiredProps} />);
 
         await act(() => {
-            cardInputRef.processBinLookupResponse(euDualBrandResp, false);
+            cardInputRef.processBinLookupResponse(selectableDualBrandResp, false);
         });
 
         // Brand selection is visible before error

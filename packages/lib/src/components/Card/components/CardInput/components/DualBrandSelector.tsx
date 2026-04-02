@@ -4,21 +4,21 @@ import classNames from 'classnames';
 import { CardBrandsConfiguration, DualBrandSelectElement } from '../../../types';
 import { DualBrandingChangeHandler } from './types';
 import { mapDualBrandButtons } from '../utils';
-import './EUDualBrandSelector.scss';
+import './DualBrandSelector.scss';
 
-interface EUDualBrandSelectorProps {
+interface DualBrandSelectorProps {
     dualBrandingElements: DualBrandSelectElement[];
     dualBrandingChangeHandler: DualBrandingChangeHandler;
     brandsConfiguration: CardBrandsConfiguration;
 }
 
-export default function EUDualBrandSelector({
+export default function DualBrandSelector({
     dualBrandingElements,
     brandsConfiguration,
     dualBrandingChangeHandler
-}: Readonly<EUDualBrandSelectorProps>) {
-    const euDualBrandItems = mapDualBrandButtons(dualBrandingElements, brandsConfiguration);
-    const [selectedBrand, setSelectedBrand] = useState<string>(euDualBrandItems[0]?.id);
+}: Readonly<DualBrandSelectorProps>) {
+    const dualBrandItems = mapDualBrandButtons(dualBrandingElements, brandsConfiguration);
+    const [selectedBrand, setSelectedBrand] = useState<string>(dualBrandItems[0]?.id);
 
     const handleBrandClick = (brandId: string) => {
         setSelectedBrand(brandId);
@@ -26,19 +26,20 @@ export default function EUDualBrandSelector({
     };
     // add aria-label key with translations to group
     return (
-        <div className="adyen-checkout__card__eu-dual-branding" role="group" aria-label="Select card brand">
-            {euDualBrandItems.map(item => (
+        <div className="adyen-checkout__card__dual-brand-selector" role="group" aria-label="Select card brand">
+            {dualBrandItems.map(item => (
                 <button
                     key={item.id}
                     type="button"
-                    className={classNames('adyen-checkout__card__eu-dual-branding__button', {
-                        'adyen-checkout__card__eu-dual-branding__button--selected': selectedBrand === item.id
+                    className={classNames('adyen-checkout__card__dual-brand-selector__button', {
+                        'adyen-checkout__card__dual-brand-selector__button--selected': selectedBrand === item.id
                     })}
+                    onMouseDown={e => e.preventDefault()}
                     onClick={() => handleBrandClick(item.id)}
                     aria-label={item.altName}
                     aria-pressed={selectedBrand === item.id}
                 >
-                    <img src={item.imageURL} alt={item.altName} className="adyen-checkout__card__eu-dual-branding__icon" />
+                    <img src={item.imageURL} alt={item.altName} className="adyen-checkout__card__dual-brand-selector__icon" />
                 </button>
             ))}
         </div>
