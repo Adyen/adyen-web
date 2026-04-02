@@ -1,23 +1,173 @@
-import { formatCustomTranslations, formatLocale, getTranslation, interpolateElement } from './utils';
+import { formatCustomTranslations, formatLocale, getTranslation, interpolateElement, matchLocale, parseLocale } from './utils';
 import { createElement } from 'preact';
+import { DEFAULT_LOCALE } from './constants';
+
+describe('matchLocale()', () => {
+    const supportedLocales = ['en-US', 'es-ES', 'fr-FR', 'de-DE', 'nl-NL'];
+
+    test('should match locale with exact match in supported locales', () => {
+        expect(matchLocale('en-US', supportedLocales)).toBe('en-US');
+        expect(matchLocale('es-ES', supportedLocales)).toBe('es-ES');
+    });
+
+    test('should match locale with same language code but different country code', () => {
+        expect(matchLocale('en-GB', supportedLocales)).toBe('en-US');
+        expect(matchLocale('es-MX', supportedLocales)).toBe('es-ES');
+        expect(matchLocale('fr-CA', supportedLocales)).toBe('fr-FR');
+    });
+
+    test('should match locale case-insensitively', () => {
+        expect(matchLocale('EN-US', supportedLocales)).toBe('en-US');
+        expect(matchLocale('Es-ES', supportedLocales)).toBe('es-ES');
+    });
+
+    test('should return null when no match is found', () => {
+        expect(matchLocale('ja-JP', supportedLocales)).toBe(null);
+        expect(matchLocale('zh-CN', supportedLocales)).toBe(null);
+    });
+
+    test('should return null when locale is null', () => {
+        expect(matchLocale(null, supportedLocales)).toBe(null);
+    });
+
+    test('should return null when locale is undefined', () => {
+        expect(matchLocale(undefined, supportedLocales)).toBe(null);
+    });
+
+    test('should return null when locale is not a string', () => {
+        expect(matchLocale(123 as any, supportedLocales)).toBe(null);
+        expect(matchLocale({} as any, supportedLocales)).toBe(null);
+        expect(matchLocale([] as any, supportedLocales)).toBe(null);
+    });
+
+    test('should return null when locale is empty string', () => {
+        expect(matchLocale('', supportedLocales)).toBe(null);
+    });
+
+    test('should match first occurrence when multiple locales share language code', () => {
+        const localesWithDuplicates = ['en-US', 'en-GB', 'es-ES'];
+        expect(matchLocale('en-CA', localesWithDuplicates)).toBe('en-US');
+    });
+});
 
 describe('formatLocale()', () => {
-    test('should not do anything if the locale is already formatted', () => {
+    test('should return locale when already properly formatted', () => {
         expect(formatLocale('en-US')).toBe('en-US');
         expect(formatLocale('es-ES')).toBe('es-ES');
-        expect(formatLocale('ar')).toBe('ar');
+        expect(formatLocale('fr-FR')).toBe('fr-FR');
     });
 
-    test('should throw an error if locale is not properly formatted', () => {
-        expect(() => formatLocale('enUS')).toThrowError("Locale 'enUS' does not match the expected format");
+    test('should format locale with underscore separator', () => {
+        expect(formatLocale('en_US')).toBe('en-US');
+        expect(formatLocale('es_ES')).toBe('es-ES');
     });
 
-    test('should return a formatted locale when called with an underscored locale like en_US', () => {
-        expect(formatLocale('en_us')).toBe('en-US');
-    });
-
-    test('should return a formatted locale when called with a lowercase locale like en-us', () => {
+    test('should format locale with lowercase language and country codes', () => {
         expect(formatLocale('en-us')).toBe('en-US');
+        expect(formatLocale('es-es')).toBe('es-ES');
+    });
+
+    test('should format locale with uppercase language and country codes', () => {
+        expect(formatLocale('EN-US')).toBe('en-US');
+        expect(formatLocale('ES-ES')).toBe('es-ES');
+    });
+
+    test('should format locale with mixed case', () => {
+        expect(formatLocale('En-Us')).toBe('en-US');
+        expect(formatLocale('eS-eS')).toBe('es-ES');
+    });
+
+    test('should format locale with underscore and mixed case', () => {
+        expect(formatLocale('en_us')).toBe('en-US');
+        expect(formatLocale('En_Us')).toBe('en-US');
+        expect(formatLocale('EN_US')).toBe('en-US');
+    });
+
+    test('should return null when language code is missing', () => {
+        expect(formatLocale('-US')).toBe(null);
+        expect(formatLocale('_US')).toBe(null);
+    });
+
+    test('should return null when country code is missing', () => {
+        expect(formatLocale('en-')).toBe(null);
+        expect(formatLocale('en_')).toBe(null);
+    });
+
+    test('should return null when locale has invalid length', () => {
+        expect(formatLocale('e-US')).toBe(null);
+        expect(formatLocale('en-U')).toBe(null);
+        expect(formatLocale('eng-US')).toBe(null);
+        expect(formatLocale('en-USA')).toBe(null);
+    });
+
+    test('should return null when locale has no separator', () => {
+        expect(formatLocale('enUS')).toBe(null);
+        expect(formatLocale('esES')).toBe(null);
+    });
+
+    test('should return null when locale is empty string', () => {
+        expect(formatLocale('')).toBe(null);
+    });
+
+    test('should return null when locale has only language code', () => {
+        expect(formatLocale('en')).toBe(null);
+        expect(formatLocale('es')).toBe(null);
+    });
+});
+
+describe('parseLocale()', () => {
+    const supportedLocales = ['en-US', 'es-ES', 'fr-FR', 'de-DE', 'nl-NL'];
+
+    test('should return formatted locale when exact match exists', () => {
+        expect(parseLocale('en-US', supportedLocales)).toBe('en-US');
+        expect(parseLocale('es-ES', supportedLocales)).toBe('es-ES');
+    });
+
+    test('should format and return locale when match exists', () => {
+        expect(parseLocale('en_US', supportedLocales)).toBe('en-US');
+        expect(parseLocale('EN-us', supportedLocales)).toBe('en-US');
+    });
+
+    test('should match by language code when exact locale not supported', () => {
+        expect(parseLocale('en-GB', supportedLocales)).toBe('en-US');
+        expect(parseLocale('es-MX', supportedLocales)).toBe('es-ES');
+    });
+
+    test('should return DEFAULT_LOCALE when locale is null', () => {
+        expect(parseLocale(null, supportedLocales)).toBe(DEFAULT_LOCALE);
+    });
+
+    test('should return DEFAULT_LOCALE when locale is undefined', () => {
+        expect(parseLocale(undefined, supportedLocales)).toBe(DEFAULT_LOCALE);
+    });
+
+    test('should return DEFAULT_LOCALE when locale is empty string', () => {
+        expect(parseLocale('', supportedLocales)).toBe(DEFAULT_LOCALE);
+    });
+
+    test('should return DEFAULT_LOCALE when locale length is less than 1', () => {
+        expect(parseLocale('', supportedLocales)).toBe(DEFAULT_LOCALE);
+    });
+
+    test('should return DEFAULT_LOCALE when locale length is greater than 5', () => {
+        expect(parseLocale('en-US-extra', supportedLocales)).toBe(DEFAULT_LOCALE);
+        expect(parseLocale('toolong', supportedLocales)).toBe(DEFAULT_LOCALE);
+    });
+
+    test('should return DEFAULT_LOCALE when no match found', () => {
+        expect(parseLocale('ja-JP', supportedLocales)).toBe(DEFAULT_LOCALE);
+        expect(parseLocale('zh-CN', supportedLocales)).toBe(DEFAULT_LOCALE);
+    });
+
+    test('should return DEFAULT_LOCALE when locale cannot be formatted', () => {
+        expect(parseLocale('invalid', supportedLocales)).toBe(DEFAULT_LOCALE);
+        expect(parseLocale('en', supportedLocales)).toBe(DEFAULT_LOCALE);
+    });
+
+    test('should prioritize exact match over language code match', () => {
+        const localesWithVariants = ['en-US', 'en-GB'];
+        expect(parseLocale('en-GB', localesWithVariants)).toBe('en-GB');
+        expect(parseLocale('en-US', localesWithVariants)).toBe('en-US');
     });
 });
 
