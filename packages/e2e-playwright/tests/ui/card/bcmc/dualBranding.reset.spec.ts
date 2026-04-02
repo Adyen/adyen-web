@@ -12,24 +12,14 @@ test.describe('Testing Bancontact, with dual branded cards, how UI resets', () =
 
             await bcmc.fillCardNumber(BCMC_CARD);
 
-            await bcmc.waitForVisibleDualBrandIcons(2);
-
-            const brands = await bcmc.dualBrandIcons;
-
-            expect(brands).toHaveLength(2);
-
-            const brandAlts = await Promise.all(brands.map(brand => brand.getAttribute('alt')));
-            expect(brandAlts).toHaveLength(2);
-            expect(brandAlts).toEqual(expect.arrayContaining(['Bancontact card', 'Maestro']));
+            await expect(bcmc.isDualBrandSelectionVisible()).resolves.toBe(true);
+            await expect(bcmc.getBrandOptionCount()).resolves.toBe(2);
 
             await bcmc.deleteCardNumber();
 
             // Now only a single brand
-            await bcmc.waitForVisibleDualBrandIcons(1);
-
-            const [brand] = await bcmc.dualBrandIcons;
-
-            expect(brand).toHaveAttribute('alt', 'Bancontact card');
+            await expect(bcmc.isDualBrandSelectionVisible()).resolves.toBe(false);
+            await expect(bcmc.brandingIcon).toHaveAttribute('alt', 'Bancontact card');
         }
     );
 
@@ -42,18 +32,14 @@ test.describe('Testing Bancontact, with dual branded cards, how UI resets', () =
 
             await bcmc.typeCardNumber(BCMC_CARD);
 
-            await bcmc.waitForVisibleDualBrandIcons();
+            await expect(bcmc.isDualBrandSelectionVisible()).resolves.toBe(true);
 
             // "paste"
             await bcmc.fillCardNumber(UNKNOWN_VISA_CARD);
 
-            await bcmc.waitForVisibleDualBrandIcons(1);
-
-            const [firstBrand, secondBrand] = await bcmc.dualBrandIcons;
-
             // Remains a single brand
-            expect(firstBrand).toHaveAttribute('alt', /bancontact/i);
-            expect(secondBrand).toBeUndefined();
+            await expect(bcmc.isDualBrandSelectionVisible()).resolves.toBe(false);
+            await expect(bcmc.brandingIcon).toHaveAttribute('alt', /bancontact/i);
         }
     );
 
@@ -66,8 +52,8 @@ test.describe('Testing Bancontact, with dual branded cards, how UI resets', () =
 
             await bcmc.fillCardNumber(BCMC_DUAL_BRANDED_VISA);
 
-            await bcmc.waitForVisibleDualBrandIcons(2);
             await expect(bcmc.isDualBrandSelectionVisible()).resolves.toBe(true);
+            await expect(bcmc.getBrandOptionCount()).resolves.toBe(2);
 
             // Select visa
             await bcmc.selectBrand(/visa/i);
@@ -77,13 +63,9 @@ test.describe('Testing Bancontact, with dual branded cards, how UI resets', () =
             // "paste"
             await bcmc.fillCardNumber(UNKNOWN_VISA_CARD);
 
-            await bcmc.waitForVisibleDualBrandIcons(1);
-
-            const [firstBrand, secondBrand] = await bcmc.dualBrandIcons;
-
             // Returns to a Bcmc
-            expect(firstBrand).toHaveAttribute('alt', /bancontact/i);
-            expect(secondBrand).toBeUndefined();
+            await expect(bcmc.isDualBrandSelectionVisible()).resolves.toBe(false);
+            await expect(bcmc.brandingIcon).toHaveAttribute('alt', /bancontact/i);
 
             // with hidden cvc
             await expect(bcmc.cvcField).toBeHidden();
@@ -99,21 +81,17 @@ test.describe('Testing Bancontact, with dual branded cards, how UI resets', () =
 
             await bcmc.fillCardNumber(BCMC_DUAL_BRANDED_VISA);
 
-            await bcmc.waitForVisibleDualBrandIcons(2);
             await expect(bcmc.isDualBrandSelectionVisible()).resolves.toBe(true);
+            await expect(bcmc.getBrandOptionCount()).resolves.toBe(2);
 
             // Select visa
             await bcmc.selectBrand(/visa/i);
 
             await bcmc.deleteCardNumber();
 
-            await bcmc.waitForVisibleDualBrandIcons(1);
-
-            const [firstBrand, secondBrand] = await bcmc.dualBrandIcons;
-
             // Returns to a Bcmc
-            expect(firstBrand).toHaveAttribute('alt', /bancontact/i);
-            expect(secondBrand).toBeUndefined();
+            await expect(bcmc.isDualBrandSelectionVisible()).resolves.toBe(false);
+            await expect(bcmc.brandingIcon).toHaveAttribute('alt', /bancontact/i);
 
             // with hidden cvc
             await expect(bcmc.cvcField).toBeHidden();

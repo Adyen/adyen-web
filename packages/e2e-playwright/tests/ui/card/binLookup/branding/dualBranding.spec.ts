@@ -28,10 +28,6 @@ test.describe('Card - Dual branding UI after binLookup gives a dual brand result
         // Expect the brand selection UI to be visible (EU dual brand)
         await expect(card.dualBrandSelector).toBeVisible();
 
-        const [firstIcon, secondIcon] = await card.dualBrandIcons;
-        expect(firstIcon).toBeDefined();
-        expect(secondIcon).toBeDefined();
-
         // Brand selection is visible with 2 options
         await expect(card.isDualBrandSelectionVisible()).resolves.toBe(true);
         await expect(card.getBrandOptionCount()).resolves.toBe(2);
@@ -188,7 +184,7 @@ test.describe('Card - Dual branding UI after binLookup gives a dual brand result
             expect(cardData.paymentMethod.brand).toBe(undefined);
 
             // Expect dual brand icons not to be visible
-            await expect(card.dualBrandingIconsHolder).not.toBeVisible();
+            await expect(card.dualBrandSelector).not.toBeVisible();
 
             // No brand selection UI
             await expect(card.isDualBrandSelectionVisible()).resolves.toBe(false);
@@ -213,7 +209,7 @@ test.describe('Card - Dual branding UI after binLookup gives a dual brand result
             expect(cardData.paymentMethod.brand).toBe(undefined);
 
             // Expect dual brand icons *to* be visible (display-only)
-            await expect(card.dualBrandingIconsHolder).toBeVisible();
+            await expect(card.brandingIcon.first()).toBeVisible();
 
             // No interactive selection UI
             await expect(card.isDualBrandSelectionVisible()).resolves.toBe(false);
