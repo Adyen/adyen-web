@@ -69,6 +69,7 @@ export default function CardNumber(props: Readonly<CardNumberProps>) {
                             dualBrandingElements={dualBrandingElements}
                             dualBrandingChangeHandler={dualBrandingChangeHandler}
                             brandsConfiguration={brandsConfiguration}
+                            contextualText={contextualText}
                         />
                     ) : (
                         dualBrandingElements.map(element => {

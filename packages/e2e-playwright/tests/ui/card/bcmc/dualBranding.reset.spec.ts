@@ -73,7 +73,7 @@ test.describe('Testing Bancontact, with dual branded cards, how UI resets', () =
     );
 
     test(
-        '#4 should reset to BCMC branding and hide CVC after deleting visa-selected dual branded card number',
+        '#4 Fill in dual branded card then ' + 'select visa, then' + 'delete number and see that UI returns to looking like a BCMC card',
         async ({ bcmc }) => {
             await bcmc.goto(URL_MAP.bcmc);
 
@@ -86,7 +86,7 @@ test.describe('Testing Bancontact, with dual branded cards, how UI resets', () =
 
             // Select visa
             await bcmc.selectBrand(/visa/i);
-
+            await expect(bcmc.isBrandSelected(/visa/i)).resolves.toBe(true);
             await bcmc.deleteCardNumber();
 
             // Returns to a Bcmc
