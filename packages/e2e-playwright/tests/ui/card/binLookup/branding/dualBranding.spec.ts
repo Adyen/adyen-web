@@ -33,7 +33,7 @@ test.describe('Card - Dual branding UI after binLookup gives a dual brand result
         await expect(card.getBrandOptionCount()).resolves.toBe(2);
 
         // First brand is selected by default
-        await expect(card.isBrandSelected(/bcmc|bancontact|visa/i)).resolves.toBe(true);
+        await expect(card.isBrandSelected(/bcmc|bancontact/i)).resolves.toBe(true);
 
         // Contextual label visible for EU co-badged card
         await expect(card.isDualBrandContextualLabelVisible()).resolves.toBe(true);
