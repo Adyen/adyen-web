@@ -34,12 +34,8 @@ test.describe('Bcmc payments with dual branding', () => {
 
                 await bcmc.typeExpiryDate(TEST_DATE_VALUE);
 
-                await bcmc.waitForVisibleDualBrandIcons(2);
-                const brands = await bcmc.dualBrandIcons;
-
-                const brandAlts = await Promise.all(brands.map(brand => brand.getAttribute('alt')));
-                expect(brandAlts).toHaveLength(2);
-                expect(brandAlts).toEqual(expect.arrayContaining(['Bancontact card', 'Maestro']));
+                await expect(bcmc.isDualBrandSelectionVisible()).resolves.toBe(true);
+                await expect(bcmc.getBrandOptionCount()).resolves.toBe(2);
 
                 // Select Bancontact via behavior-driven API
                 await bcmc.selectBrand(/bancontact/i);
@@ -111,7 +107,7 @@ test.describe('Bcmc payments with dual branding', () => {
                 await bcmc.goto(URL_MAP.bcmc);
                 await bcmc.isComponentVisible();
                 await bcmc.typeCardNumber(BCMC_CARD);
-                await bcmc.waitForVisibleDualBrandIcons();
+                await expect(bcmc.isDualBrandSelectionVisible()).resolves.toBe(true);
 
                 await bcmc.pay();
 
@@ -139,12 +135,8 @@ test.describe('Bcmc payments with dual branding', () => {
 
                 await bcmc.typeCardNumber(BCMC_DUAL_BRANDED_VISA);
                 await bcmc.typeExpiryDate(TEST_DATE_VALUE);
-                await bcmc.waitForVisibleDualBrandIcons();
-
-                // 2 brand icons
-                const [firstIcon, secondIcon] = await bcmc.dualBrandIcons;
-                expect(firstIcon).toBeDefined();
-                expect(secondIcon).toBeDefined();
+                await expect(bcmc.isDualBrandSelectionVisible()).resolves.toBe(true);
+                await expect(bcmc.getBrandOptionCount()).resolves.toBe(2);
 
                 // Select bcmc
                 await bcmc.selectBrand(/bancontact/i);
@@ -159,7 +151,7 @@ test.describe('Bcmc payments with dual branding', () => {
                 await bcmc.goto(URL_MAP.bcmc);
                 await bcmc.isComponentVisible();
                 await bcmc.typeCardNumber(BCMC_DUAL_BRANDED_VISA);
-                await bcmc.waitForVisibleDualBrandIcons();
+                await expect(bcmc.isDualBrandSelectionVisible()).resolves.toBe(true);
                 await bcmc.selectBrand(/bancontact/i);
                 await bcmc.pay();
 
@@ -248,12 +240,8 @@ test.describe('Bcmc payments with dual branding', () => {
 
                 await bcmc.typeCardNumber(BCMC_DUAL_BRANDED_MC);
                 await bcmc.typeExpiryDate(TEST_DATE_VALUE);
-                await bcmc.waitForVisibleDualBrandIcons();
-
-                // 2 brand icons
-                const [firstIcon, secondIcon] = await bcmc.dualBrandIcons;
-                expect(firstIcon).toBeDefined();
-                expect(secondIcon).toBeDefined();
+                await expect(bcmc.isDualBrandSelectionVisible()).resolves.toBe(true);
+                await expect(bcmc.getBrandOptionCount()).resolves.toBe(2);
 
                 // Select bcmc
                 await bcmc.selectBrand(/bancontact/i);

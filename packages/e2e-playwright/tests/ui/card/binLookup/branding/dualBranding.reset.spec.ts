@@ -55,6 +55,8 @@ test.describe('Card - Testing resetting after binLookup has given a dual brand r
 
             await card.typeCardNumber(BCMC_DUAL_BRANDED_VISA);
 
+            await expect(card.isDualBrandSelectionVisible()).resolves.toBe(true);
+
             // Select visa
             await card.selectBrand(/visa/i);
 
