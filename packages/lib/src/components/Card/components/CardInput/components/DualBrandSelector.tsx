@@ -10,12 +10,14 @@ interface DualBrandSelectorProps {
     dualBrandingElements: DualBrandSelectElement[];
     dualBrandingChangeHandler: DualBrandingChangeHandler;
     brandsConfiguration: CardBrandsConfiguration;
+    contextualText: string;
 }
 
 export default function DualBrandSelector({
     dualBrandingElements,
     brandsConfiguration,
-    dualBrandingChangeHandler
+    dualBrandingChangeHandler,
+    contextualText
 }: Readonly<DualBrandSelectorProps>) {
     const dualBrandItems = mapDualBrandButtons(dualBrandingElements, brandsConfiguration);
     const [selectedBrand, setSelectedBrand] = useState<string>(dualBrandItems[0]?.id);
@@ -26,7 +28,7 @@ export default function DualBrandSelector({
     };
     // add aria-label key with translations to group
     return (
-        <div className="adyen-checkout__card__dual-brand-selector" role="group" aria-label="Select card brand">
+        <div className="adyen-checkout__card__dual-brand-selector" role="group" aria-label={contextualText}>
             {dualBrandItems.map(item => (
                 <button
                     key={item.id}
