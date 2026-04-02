@@ -1,7 +1,7 @@
 import { expect, test } from '../../../../../fixtures/card.fixture';
 import { getStoryUrl } from '../../../../utils/getStoryUrl';
 import { URL_MAP } from '../../../../../fixtures/URL_MAP';
-import { BCMC_DUAL_BRANDED_VISA, REGULAR_TEST_CARD } from '../../../../utils/constants';
+import { BCMC_CARD, BCMC_DUAL_BRANDED_VISA, REGULAR_TEST_CARD } from '../../../../utils/constants';
 
 import { binLookupMock } from '../../../../../mocks/binLookup/binLookup.mock';
 import { dualBrandedBcmcAndVisa } from '../../../../../mocks/binLookup/binLookup.data';
@@ -14,13 +14,16 @@ test.describe('Card - Testing resetting after binLookup has given a dual brand r
         async ({ card, page }) => {
             await card.goto(getStoryUrl({ baseUrl: URL_MAP.card, componentConfig }));
 
-            await card.typeCardNumber(BCMC_DUAL_BRANDED_VISA);
+            await card.typeCardNumber(BCMC_CARD);
 
-            // Expect dual brand icons to be visible
-            await expect(card.dualBrandingIconsHolder).toBeVisible();
+            // Expect brand selection to be visible (EU dual brand)
+            await expect(card.dualBrandSelector).toBeVisible();
 
             // Expect brand selection to be visible
             await expect(card.isDualBrandSelectionVisible()).resolves.toBe(true);
+
+            // Expect contextual label to be visible
+            await expect(card.isDualBrandContextualLabelVisible()).resolves.toBe(true);
 
             // Delete all digits
             await card.deleteCardNumber();
@@ -28,11 +31,14 @@ test.describe('Card - Testing resetting after binLookup has given a dual brand r
             // Type a shorter, non-dual-branded portion
             await card.typeCardNumber(BCMC_DUAL_BRANDED_VISA.substring(0, 6));
 
-            // Expect inline icons to be hidden
-            await expect(card.dualBrandingIconsHolder).not.toBeVisible();
+            // Expect brand selection to be hidden
+            await expect(card.dualBrandSelector).not.toBeVisible();
 
             // Expect brand selection to be hidden
             await expect(card.isDualBrandSelectionVisible()).resolves.toBe(false);
+
+            // Expect contextual label to be hidden
+            await expect(card.isDualBrandContextualLabelVisible()).resolves.toBe(false);
 
             // Check brand has not been set in paymentMethod data
             let cardData: any = await page.evaluate('window.component.data');
@@ -69,8 +75,8 @@ test.describe('Card - Testing resetting after binLookup has given a dual brand r
             // Type new (single brand) card number
             await card.typeCardNumber(REGULAR_TEST_CARD);
 
-            // Expect inline icons to be hidden
-            await expect(card.dualBrandingIconsHolder).not.toBeVisible();
+            // Expect brand selection to be hidden
+            await expect(card.dualBrandSelector).not.toBeVisible();
 
             // Expect brand selection to be hidden
             await expect(card.isDualBrandSelectionVisible()).resolves.toBe(false);
@@ -88,15 +94,15 @@ test.describe('Card - Testing resetting after binLookup has given a dual brand r
 
             await card.typeCardNumber(BCMC_DUAL_BRANDED_VISA);
 
-            await expect(card.dualBrandingIconsHolder).toBeVisible();
+            await expect(card.dualBrandSelector).toBeVisible();
             await expect(card.isDualBrandSelectionVisible()).resolves.toBe(true);
 
             // Delete all digits and retype
             await card.deleteCardNumber();
             await card.typeCardNumber(BCMC_DUAL_BRANDED_VISA);
 
-            // Expect dual brand icons to be visible
-            await expect(card.dualBrandingIconsHolder).toBeVisible();
+            // Expect brand selection to be visible
+            await expect(card.dualBrandSelector).toBeVisible();
 
             // Expect brand selection to be visible
             await expect(card.isDualBrandSelectionVisible()).resolves.toBe(true);

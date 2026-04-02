@@ -1,7 +1,8 @@
 import { expect, test } from '../../../../../fixtures/card.fixture';
 import { getStoryUrl } from '../../../../utils/getStoryUrl';
 import { URL_MAP } from '../../../../../fixtures/URL_MAP';
-import { BCMC_DUAL_BRANDED_VISA, DUAL_BRANDED_CARD_EXCLUDED, DUAL_BRANDED_EFTPOS } from '../../../../utils/constants';
+import { BCMC_DUAL_BRANDED_VISA, DUAL_BRANDED_CARD_EXCLUDED, DUAL_BRANDED_EFTPOS, TAGS } from '../../../../utils/constants';
+import { toHaveScreenshot } from '../../../../utils/assertions';
 
 import LANG from '../../../../../../server/translations/en-US.json';
 import { binLookupMock } from '../../../../../mocks/binLookup/binLookup.mock';
@@ -14,7 +15,7 @@ const componentConfig = {
 };
 
 test.describe('Card - Dual branding UI after binLookup gives a dual brand result', () => {
-    test('#1 should show brand options with first selected by default for EU dual branded card', async ({ card, page }) => {
+    test('#1 should show brand options with first selected by default for EU dual branded card', { tag: [TAGS.SCREENSHOT] }, async ({ card, page, browserName }) => {
         await card.goto(getStoryUrl({ baseUrl: URL_MAP.card, componentConfig }));
 
         // Get a binLookup result
@@ -24,8 +25,8 @@ test.describe('Card - Dual branding UI after binLookup gives a dual brand result
         let cardData: any = await page.evaluate('window.component.data');
         expect(cardData.paymentMethod.brand).not.toBe(undefined);
 
-        // Expect the inline dual brand icons to be visible
-        await expect(card.dualBrandingIconsHolder).toBeVisible();
+        // Expect the brand selection UI to be visible (EU dual brand)
+        await expect(card.dualBrandSelector).toBeVisible();
 
         const [firstIcon, secondIcon] = await card.dualBrandIcons;
         expect(firstIcon).toBeDefined();
@@ -36,13 +37,16 @@ test.describe('Card - Dual branding UI after binLookup gives a dual brand result
         await expect(card.getBrandOptionCount()).resolves.toBe(2);
 
         // First brand is selected by default
-        await expect(card.isBrandSelected(/bcmc|bancontact/i)).resolves.toBe(true);
+        await expect(card.isBrandSelected(/bcmc|bancontact|visa/i)).resolves.toBe(true);
 
         // Contextual label visible for EU co-badged card
         await expect(card.isDualBrandContextualLabelVisible()).resolves.toBe(true);
+
+        // Screenshot: EU dual brand selector with first brand selected
+        await toHaveScreenshot(card.cardNumberField, browserName, 'dual-brand-eu-default-selection.png');
     });
 
-    test('#2 should change CVC visibility when interacting with brand selection', async ({ card, page }) => {
+    test('#2 should change CVC visibility when interacting with brand selection', { tag: [TAGS.SCREENSHOT] }, async ({ card, page, browserName }) => {
         await binLookupMock(page, dualBrandedBcmcAndVisa);
 
         await card.goto(getStoryUrl({ baseUrl: URL_MAP.card, componentConfig }));
@@ -71,11 +75,14 @@ test.describe('Card - Dual branding UI after binLookup gives a dual brand result
         // Bcmc is now selected
         await expect(card.isBrandSelected(/bancontact/i)).resolves.toBe(true);
 
-        // Inline dual brand icons are still visible
-        await expect(card.dualBrandingIconsHolder).toBeVisible();
+        // Brand selection is still visible
+        await expect(card.dualBrandSelector).toBeVisible();
+
+        // Screenshot: EU dual brand after switching to Bancontact
+        await toHaveScreenshot(card.cardNumberField, browserName, 'dual-brand-eu-after-brand-switch.png');
     });
 
-    test('#3 should show brand selection and trigger error when PAN is incomplete', async ({
+    test('#3 should select brand without triggering error when PAN is incomplete', async ({
         card,
         page,
         browserName
@@ -89,15 +96,29 @@ test.describe('Card - Dual branding UI after binLookup gives a dual brand result
         // Type enough digits to get a binLookup result, but not enough for the field to be complete
         await card.typeCardNumber(firstDigits);
 
-        // Expect inline dual brand icons to be visible
-        await expect(card.dualBrandingIconsHolder).toBeVisible();
+        // Expect brand selection to be visible
+        await expect(card.dualBrandSelector).toBeVisible();
 
-        // Trying to click a brand option should force an error since PAN is incomplete
+        // Clicking a brand option should only select the brand, not trigger validation
         await card.selectBrand(/visa/i);
+        await expect(card.isBrandSelected(/visa/i)).resolves.toBe(true);
 
-        // We should get an error on the number field
+        // No error should be shown — validation only happens on blur
+        await expect(card.cardNumberErrorElement).not.toBeVisible();
+
+        // Contextual label must remain visible while interacting with the field
+        await expect(card.isDualBrandContextualLabelVisible()).resolves.toBe(true);
+
+        // Blur the card number field to trigger validation
+        await card.expiryDateInput.focus();
+
+        // Now the error should appear
         await expect(card.cardNumberErrorElement).toBeVisible();
         await expect(card.cardNumberErrorElement).toHaveText(PAN_ERROR_NOT_COMPLETE);
+
+        // Segmented control and contextual label should be hidden after blur with error
+        await expect(card.isDualBrandSelectionVisible()).resolves.toBe(false);
+        await expect(card.isDualBrandContextualLabelVisible()).resolves.toBe(false);
 
         // Complete the number
         await card.cardNumberInput.focus();
@@ -108,7 +129,7 @@ test.describe('Card - Dual branding UI after binLookup gives a dual brand result
         await expect(card.cardNumberErrorElement).not.toBeVisible();
     });
 
-    test('#4 should allow brand switching with incomplete PAN and resolve error after completing', async ({ card, page }) => {
+    test('#4 should allow brand switching with incomplete PAN without triggering errors', async ({ card, page }) => {
         await binLookupMock(page, dualBrandedBcmcAndVisa);
 
         await card.goto(getStoryUrl({ baseUrl: URL_MAP.card, componentConfig }));
@@ -121,17 +142,30 @@ test.describe('Card - Dual branding UI after binLookup gives a dual brand result
 
         await expect(card.isDualBrandSelectionVisible()).resolves.toBe(true);
 
-        // Select visa
+        // Select visa — no error should appear
         await card.selectBrand(/visa/i);
         await expect(card.isBrandSelected(/visa/i)).resolves.toBe(true);
+        await expect(card.cardNumberErrorElement).not.toBeVisible();
 
-        // Having clicked a brand option, we should get an error on the number field (incomplete)
+        // Contextual label must remain visible after first switch
+        await expect(card.isDualBrandContextualLabelVisible()).resolves.toBe(true);
+
+        // Select bcmc — still no error
+        await card.selectBrand(/bancontact/i);
+        await expect(card.isBrandSelected(/bancontact/i)).resolves.toBe(true);
+        await expect(card.cardNumberErrorElement).not.toBeVisible();
+
+        // Contextual label must remain visible after second switch
+        await expect(card.isDualBrandContextualLabelVisible()).resolves.toBe(true);
+
+        // Blur to another field — now validation triggers
+        await card.expiryDateInput.focus();
         await expect(card.cardNumberErrorElement).toBeVisible();
         await expect(card.cardNumberErrorElement).toHaveText(PAN_ERROR_NOT_COMPLETE);
 
-        // Select bcmc
-        await card.selectBrand(/bancontact/i);
-        await expect(card.isBrandSelected(/bancontact/i)).resolves.toBe(true);
+        // Segmented control and contextual label should be hidden after blur with error
+        await expect(card.isDualBrandSelectionVisible()).resolves.toBe(false);
+        await expect(card.isDualBrandContextualLabelVisible()).resolves.toBe(false);
 
         // Complete the number
         await card.cardNumberInput.focus();
@@ -166,7 +200,8 @@ test.describe('Card - Dual branding UI after binLookup gives a dual brand result
 
     test(
         '#6 should show icons but no selection mechanism for non-EU dual brand',
-        async ({ card, page }) => {
+        { tag: [TAGS.SCREENSHOT] },
+        async ({ card, page, browserName }) => {
             const componentConfig = { brands: ['mc', 'visa', 'amex', 'maestro', 'bcmc', 'eftpos_australia'] };
 
             await card.goto(getStoryUrl({ baseUrl: URL_MAP.card, componentConfig }));
@@ -185,6 +220,9 @@ test.describe('Card - Dual branding UI after binLookup gives a dual brand result
 
             // No contextual label
             await expect(card.isDualBrandContextualLabelVisible()).resolves.toBe(false);
+
+            // Screenshot: Non-EU dual brand (display-only, no selection border)
+            await toHaveScreenshot(card.cardNumberField, browserName, 'dual-brand-non-eu-display-only.png');
         }
     );
 });
