@@ -46,3 +46,15 @@
         }
     }
 }
+
+paypal-button {
+    --paypal-button-border-radius: 4px;
+    width: 100%;
+    height: 48px;
+}
+
+venmo-button {
+    --venmo-button-border-radius: 4px;
+    width: 100%;
+    height: 48px;
+}
