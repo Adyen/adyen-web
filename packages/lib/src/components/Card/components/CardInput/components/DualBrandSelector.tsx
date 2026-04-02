@@ -26,7 +26,7 @@ export default function DualBrandSelector({
         setSelectedBrand(brandId);
         dualBrandingChangeHandler(brandId);
     };
-    // add aria-label key with translations to group
+
     return (
         <div className="adyen-checkout__card__dual-brand-selector" role="group" aria-label={contextualText}>
             {dualBrandItems.map(item => (
