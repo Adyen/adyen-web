@@ -10,7 +10,7 @@ test.describe('Testing Bancontact, with dual branded cards, how UI resets', () =
 
             await bcmc.isComponentVisible();
 
-            await bcmc.fillCardNumber(BCMC_CARD);
+            await bcmc.typeCardNumber(BCMC_CARD);
 
             await expect(bcmc.isDualBrandSelectionVisible()).resolves.toBe(true);
             await expect(bcmc.getBrandOptionCount()).resolves.toBe(2);
@@ -35,6 +35,7 @@ test.describe('Testing Bancontact, with dual branded cards, how UI resets', () =
             await expect(bcmc.isDualBrandSelectionVisible()).resolves.toBe(true);
 
             // "paste"
+            await bcmc.deleteCardNumber();
             await bcmc.fillCardNumber(UNKNOWN_VISA_CARD);
 
             // Remains a single brand
@@ -50,7 +51,7 @@ test.describe('Testing Bancontact, with dual branded cards, how UI resets', () =
 
             await bcmc.isComponentVisible();
 
-            await bcmc.fillCardNumber(BCMC_DUAL_BRANDED_VISA);
+            await bcmc.typeCardNumber(BCMC_DUAL_BRANDED_VISA);
 
             await expect(bcmc.isDualBrandSelectionVisible()).resolves.toBe(true);
             await expect(bcmc.getBrandOptionCount()).resolves.toBe(2);
@@ -61,6 +62,7 @@ test.describe('Testing Bancontact, with dual branded cards, how UI resets', () =
             await expect(bcmc.cvcField).toBeVisible();
 
             // "paste"
+            await bcmc.deleteCardNumber();
             await bcmc.fillCardNumber(UNKNOWN_VISA_CARD);
 
             // Returns to a Bcmc
@@ -79,7 +81,7 @@ test.describe('Testing Bancontact, with dual branded cards, how UI resets', () =
 
             await bcmc.isComponentVisible();
 
-            await bcmc.fillCardNumber(BCMC_DUAL_BRANDED_VISA);
+            await bcmc.typeCardNumber(BCMC_DUAL_BRANDED_VISA);
 
             await expect(bcmc.isDualBrandSelectionVisible()).resolves.toBe(true);
             await expect(bcmc.getBrandOptionCount()).resolves.toBe(2);
