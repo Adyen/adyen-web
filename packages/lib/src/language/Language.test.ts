@@ -1,48 +1,128 @@
 import { Language } from './Language';
+import type { ILanguageService } from './LanguageService';
 
 describe('Language', () => {
-    test('should thrown an error if locale is not set', () => {
-        expect(() => new Language({ locale: null, translations: {} })).toThrowError('Language: "locale" property is not defined');
-    });
+    const mockService: ILanguageService = {
+        fetchTranslationsFromCdn: jest.fn().mockResolvedValue({})
+    };
 
-    test('should set up custom translation for a supported locale', () => {
-        const language = new Language({
-            locale: 'en-US',
-            translations: {
-                pay: 'Pay',
-                redirect: 'Redirect'
-            },
-            customTranslations: {
-                'en-US': {
-                    pay: 'Pay Now'
-                }
-            }
+    describe('Locale parsing', () => {
+        test('should use en-US when locale is en', () => {
+            const language = new Language({ locale: 'en', service: mockService });
+            expect(language.locale).toBe('en-US');
+            expect(language.languageCode).toBe('en');
         });
 
-        expect(language.get('pay')).toBe('Pay Now');
-        expect(language.get('redirect')).toBe('Redirect');
+        test('should use en-US when locale is en-GB', () => {
+            const language = new Language({ locale: 'en-GB', service: mockService });
+            expect(language.locale).toBe('en-US');
+            expect(language.languageCode).toBe('en');
+        });
+
+        test('should use en-US as default when locale is not recognized', () => {
+            const language = new Language({ locale: 'xx-XX', service: mockService });
+            expect(language.locale).toBe('en-US');
+            expect(language.languageCode).toBe('en');
+        });
+
+        test('should match with the closest locale when locale is not exact', () => {
+            const language = new Language({ locale: 'es-MX', service: mockService });
+            expect(language.locale).toBe('es-ES');
+            expect(language.languageCode).toBe('es');
+        });
+
+        test('should use arabic locale if set', () => {
+            const language = new Language({ locale: 'ar', service: mockService });
+            expect(language.locale).toBe('ar');
+            expect(language.languageCode).toBe('ar');
+        });
+
+        test('should use custom locale when custom translations are passed for that locale', () => {
+            const customTranslations = {
+                'ca-CA': {
+                    'creditCard.numberField.title': 'Card Title'
+                }
+            };
+            const language = new Language({ locale: 'ca-CA', service: mockService, customTranslations });
+            expect(language.locale).toBe('ca-CA');
+            expect(language.languageCode).toBe('ca');
+        });
+
+        test('should not use custom locale if there are no custom translations for that locale', () => {
+            const customTranslations = {
+                'ca-CA': {
+                    'creditCard.numberField.title': 'Card Title'
+                }
+            };
+            const language = new Language({ locale: 'fr-CA', service: mockService, customTranslations });
+            expect(language.locale).toBe('fr-FR');
+            expect(language.languageCode).toBe('fr');
+        });
     });
 
-    test('should set up a custom locale with custom translation', () => {
-        const customTranslations = {
-            'ca-CA': {
-                'creditCard.numberField.title': 'Card Title'
-            }
-        };
+    describe('Translations request', () => {
+        test('should request translations passing the expected locale', async () => {
+            const fetchSpy = jest.fn().mockResolvedValue({ testKey: 'Test Value' });
+            const service: ILanguageService = {
+                fetchTranslationsFromCdn: fetchSpy
+            };
 
-        const language = new Language({ locale: 'ca-CA', customTranslations, translations: {} });
+            const language = new Language({ locale: 'es-ES', service });
+            await language.requestTranslations();
 
-        expect(language.languageCode).toBe('ca');
-        expect(language.get('creditCard.numberField.title')).toBe('Card Title');
-    });
+            expect(fetchSpy).toHaveBeenCalledWith('es-ES');
+            expect(fetchSpy).toHaveBeenCalledTimes(1);
+        });
 
-    test('should return empty string if the locale translation is empty', () => {
-        const language = new Language({ locale: 'en-US', translations: { pay: '' } });
-        expect(language.get('pay')).toBe('');
-    });
+        test('should merge the fetched locale with the built-in english locale', async () => {
+            const fetchedTranslations = {
+                payButton: 'Pagar',
+                address: 'Endereço'
+            };
+            const service: ILanguageService = {
+                fetchTranslationsFromCdn: jest.fn().mockResolvedValue(fetchedTranslations)
+            };
 
-    test('should return translation key if value is not defined', () => {
-        const language = new Language({ locale: 'en-US', translations: {} });
-        expect(language.get('my-undefined-key')).toBe('my-undefined-key');
+            const language = new Language({ locale: 'pt-BR', service });
+            await language.requestTranslations();
+
+            expect(language.get('payButton')).toBe('Pagar');
+            expect(language.get('address')).toBe('Endereço');
+            expect(language.get('close')).toBe('Close');
+        });
+
+        test('should merge the fetched locale with the custom translations', async () => {
+            const fetchedTranslations = {
+                payButton: 'Pagar'
+            };
+            const customTranslations = {
+                'pt-BR': {
+                    payButton: 'Pagar agora',
+                    close: 'Fechar'
+                }
+            };
+            const service: ILanguageService = {
+                fetchTranslationsFromCdn: jest.fn().mockResolvedValue(fetchedTranslations)
+            };
+
+            const language = new Language({ locale: 'pt-BR', service, customTranslations });
+            await language.requestTranslations();
+
+            expect(language.get('payButton')).toBe('Pagar agora');
+            expect(language.get('close')).toBe('Fechar');
+            expect(language.get('address')).toBe('Address');
+        });
+
+        test('should use built-in english locale if the request fails', async () => {
+            const service: ILanguageService = {
+                fetchTranslationsFromCdn: jest.fn().mockRejectedValue(new Error('Network error'))
+            };
+
+            const language = new Language({ locale: 'pt-BR', service });
+            await language.requestTranslations();
+
+            expect(language.get('payButton')).toBe('Pay');
+            expect(language.get('close')).toBe('Close');
+        });
     });
 });

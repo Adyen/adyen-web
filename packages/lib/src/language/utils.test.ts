@@ -208,16 +208,6 @@ describe('getTranslation()', () => {
 });
 
 describe('formatCustomTranslations()', () => {
-    test('should throw an error if custom translation has invalid translation key', () => {
-        const customTranslations = {
-            enUS: {
-                customTranslation: 'customString'
-            }
-        };
-
-        expect(() => expect(formatCustomTranslations(customTranslations))).toThrowError('');
-    });
-
     test('should work when no custom translations are passed', () => {
         expect(formatCustomTranslations({})).toEqual({});
         expect(formatCustomTranslations(undefined)).toEqual({});

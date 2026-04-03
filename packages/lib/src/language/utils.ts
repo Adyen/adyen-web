@@ -17,7 +17,7 @@ const toTwoLetterCode = locale => locale.toLowerCase().substring(0, 2);
  * matchLocale('en-GB', ['en-US', 'es-ES']);
  * // returns 'en-US'
  */
-export function matchLocale(locale: string, supportedLocales: any): string {
+export function matchLocale(locale: string, supportedLocales: readonly string[]): string {
     if (!locale || typeof locale !== 'string') return null;
     return supportedLocales.find(supLoc => toTwoLetterCode(supLoc) === toTwoLetterCode(locale)) || null;
 }
@@ -33,7 +33,7 @@ export function matchLocale(locale: string, supportedLocales: any): string {
  */
 export function formatLocale(localeParam: string): string | null {
     const locale = localeParam.replace('_', '-');
-    const format = new RegExp('([a-z]{2})([-])([A-Z]{2})');
+    const format = new RegExp('^([a-z]{2})([-])([A-Z]{2})$');
 
     // If it's already formatted, return the locale
     if (format.test(locale)) return locale;

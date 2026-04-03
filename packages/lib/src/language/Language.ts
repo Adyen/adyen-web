@@ -19,7 +19,11 @@ export class Language {
      */
     private readonly supportedLocales: readonly string[];
 
-    private translations: Translations = {};
+    /**
+     * Translations object
+     * Contains all translations for the current locale, including English as fallback
+     */
+    private _translations: Translations = {};
 
     public readonly timeFormatOptions: Intl.DateTimeFormatOptions = {
         hour: 'numeric',
@@ -50,13 +54,26 @@ export class Language {
     }
 
     public async requestTranslations(): Promise<void> {
-        const translations = await this.service.fetchTranslationsFromCdn(this.locale);
+        try {
+            const translations = await this.service.fetchTranslationsFromCdn(this.locale);
 
-        this.translations = {
-            ...enUS,
-            ...translations,
-            ...(!!this.customTranslations[this.locale] && this.customTranslations[this.locale])
-        };
+            this._translations = {
+                ...enUS,
+                ...translations,
+                ...(!!this.customTranslations[this.locale] && this.customTranslations[this.locale])
+            };
+        } catch (error: unknown) {
+            console.error('Language - requestTranslations(): Failed to fetch translations', error);
+
+            this._translations = {
+                ...enUS,
+                ...(!!this.customTranslations[this.locale] && this.customTranslations[this.locale])
+            };
+        }
+    }
+
+    public get translations(): Readonly<Translations> {
+        return this._translations;
     }
 
     /**
@@ -66,7 +83,7 @@ export class Language {
      * @returns Translated string
      */
     public get(key: string, options?): string {
-        const translation = getTranslation(this.translations, key, options);
+        const translation = getTranslation(this._translations, key, options);
         if (translation !== null) {
             return translation;
         }

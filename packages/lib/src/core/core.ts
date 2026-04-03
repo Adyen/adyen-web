@@ -13,14 +13,12 @@ import registry, { NewableComponent } from './core.registry';
 import { cleanupFinalResult, sanitizeResponse, verifyPaymentDidNotFail } from '../components/internal/UIElement/utils';
 import AdyenCheckoutError, { IMPLEMENTATION_ERROR } from './Errors/AdyenCheckoutError';
 import { THREEDS2_FULL } from '../components/ThreeDS2/constants';
-import getTranslations from './Services/get-translations';
 import { defaultProps } from './core.defaultProps';
 import { resolveEnvironments } from './Environment';
 import { LIBRARY_BUNDLE_TYPE, LIBRARY_VERSION } from './config';
 
 import type { PaymentAction, PaymentAmount, PaymentResponseData } from '../types/global-types';
 import type { CoreConfiguration, ICore, AdditionalDetailsData, CoreModules } from './types';
-import type { Translations } from '../language/types';
 import type { UIElementProps } from '../components/internal/UIElement/types';
 import { AnalyticsLogEvent, LogEventType } from './Analytics/events/AnalyticsLogEvent';
 import CancelError from './Errors/CancelError';
@@ -111,7 +109,7 @@ class Core implements ICore {
         await this.initializeCore();
         this.validateCoreConfiguration();
         this.createCoreModules();
-
+        this.assignLocaleToCore();
         await Promise.allSettled([this.requestAnalyticsAttemptId(), this.requestTranslations()]);
 
         return this;
@@ -145,15 +143,6 @@ class Core implements ICore {
         return Promise.resolve(this);
     }
 
-    private async fetchLocaleTranslations(): Promise<Translations> {
-        try {
-            return await getTranslations(this.cdnTranslationsUrl, Core.metadata.version, this.options.locale);
-        } catch (error: unknown) {
-            if (error instanceof AdyenCheckoutError) this.options.onError?.(error);
-            else this.options.onError?.(new AdyenCheckoutError('ERROR', 'Failed to fetch translation', { cause: error }));
-        }
-    }
-
     private validateCoreConfiguration(): void {
         // @ts-ignore This property does not exist, although merchants might be using when migrating from v5 to v6
         if (this.options.paymentMethodsConfiguration) {
@@ -163,12 +152,6 @@ class Core implements ICore {
         if (!this.options.countryCode) {
             throw new AdyenCheckoutError(IMPLEMENTATION_ERROR, 'You must specify a countryCode when initializing checkout.');
         }
-
-        // if (!this.options.locale) {
-        //     this.setOptions({ locale: DEFAULT_LOCALE });
-        // }
-
-        // this.options.locale = formatLocale(this.options.locale);
     }
 
     /**
@@ -440,6 +423,13 @@ class Core implements ICore {
             }),
             srPanel: new SRPanel(this, { ...this.options.srConfig })
         });
+    }
+
+    /**
+     * Retrieve the parsed locale from the i18n module and assigns it to the core options.
+     */
+    private assignLocaleToCore(): void {
+        this.options.locale = this.modules.i18n.locale;
     }
 
     /**

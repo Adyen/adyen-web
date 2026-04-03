@@ -1,10 +1,8 @@
 import { httpGet } from '../core/Services/http';
 import enUS from '../../../server/translations/en-US.json';
-
-import type { Translations } from './types';
 import { matchLocale } from './utils';
 import { CDN_SUPPORTED_LOCALES, DEFAULT_LOCALE } from './constants';
-
+import type { Translations } from './types';
 export interface ILanguageService {
     fetchTranslationsFromCdn(locale: string): Promise<any>;
 }
@@ -25,7 +23,7 @@ class LanguageService implements ILanguageService {
      * @param locale - The locale to fetch translations for
      * @returns The translations for the given locale
      */
-    public async fetchTranslationsFromCdn(locale: string): Promise<Translations> {
+    public async fetchTranslationsFromCdn(locale: string): Promise<Readonly<Translations>> {
         const cdnLocale = this.matchLocaleWithCdnSupportedLocales(locale);
 
         if (cdnLocale === 'en-US') {
