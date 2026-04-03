@@ -4,8 +4,6 @@ import GooglePayService from './GooglePayService';
 import Analytics from '../../core/Analytics';
 import type { CoreConfiguration } from '../../core/types';
 
-jest.mock('../../core/Services/get-translations');
-
 let getGooglePaymentsClientSpy: jest.SpyInstance;
 let analyticsSetupSpy: jest.SpyInstance;
 

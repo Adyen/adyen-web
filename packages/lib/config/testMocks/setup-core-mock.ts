@@ -9,6 +9,7 @@ import enUS from '../../../server/translations/en-US.json';
 import type { IAnalytics } from '../../src/core/Analytics/Analytics';
 import { setupResourceMock } from './resourcesMock';
 import RiskModule from '../../src/core/RiskModule';
+import { ILanguageService } from '../../src/language/LanguageService';
 
 interface SetupCoreMockProps {
     mockSessions?: boolean;
@@ -27,7 +28,11 @@ function setupCoreMock({ mockSessions = true, paymentMethods = null, analyticsMo
     const risk = riskMock || mock<RiskModule>({ data: TEST_RISK_DATA });
 
     const resources = setupResourceMock();
-    const i18n = new Language({ locale: 'en-US', translations: enUS });
+
+    const mockedService = mock<ILanguageService>({});
+    const i18n = new Language({ locale: 'en-US', service: mockedService });
+    i18n['_translations'] = enUS;
+
     const srPanel = new SRPanel(core, {
         moveFocus: true,
         enabled: false

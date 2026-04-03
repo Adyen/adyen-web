@@ -1,44 +1,79 @@
-import { getTranslation } from './utils';
+import { formatCustomTranslations, getTranslation, parseLocale } from './utils';
 import { getLocalisedAmount } from '../utils/amount-util';
-import AdyenCheckoutError from '../core/Errors/AdyenCheckoutError';
+import { CDN_SUPPORTED_LOCALES } from './constants';
+import enUS from '../../../server/translations/en-US.json';
+
 import type { CustomTranslations, LanguageOptions, Translations } from './types';
+import type { ILanguageService } from './LanguageService';
 
 export class Language {
     public readonly locale: string;
     public readonly languageCode: string;
+    private readonly service: ILanguageService;
 
-    private readonly translations: Translations;
     private readonly customTranslations: CustomTranslations;
+
+    /**
+     * Supported locales list
+     * Includes all supported locales from the CDN and any custom locales defined in customTranslations
+     */
+    private readonly supportedLocales: readonly string[];
+
+    /**
+     * Translations object
+     * Contains all translations for the current locale, including English as fallback
+     */
+    private _translations: Translations = {};
 
     public readonly timeFormatOptions: Intl.DateTimeFormatOptions = {
         hour: 'numeric',
         minute: 'numeric'
     };
+
     public readonly timeAndDateFormatOptions: Intl.DateTimeFormatOptions = {
         year: 'numeric',
         month: '2-digit',
         day: '2-digit',
         ...this.timeFormatOptions
     };
+
     public readonly timeAndDateFormatter: Intl.DateTimeFormat;
 
     constructor(props: LanguageOptions) {
-        const { locale, translations, customTranslations } = props;
+        const { locale, customTranslations, service } = props;
 
-        if (!locale) {
-            throw new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'Language: "locale" property is not defined');
-        }
+        this.service = service;
 
-        this.locale = locale;
+        this.customTranslations = formatCustomTranslations(customTranslations);
+        this.supportedLocales = this.createSupportedLocalesList(customTranslations);
+
+        this.locale = parseLocale(locale, this.supportedLocales);
         this.languageCode = this.locale.split('-')[0];
-        this.customTranslations = customTranslations || {};
 
         this.timeAndDateFormatter = Intl.DateTimeFormat(this.locale, this.timeAndDateFormatOptions);
+    }
 
-        this.translations = {
-            ...translations,
-            ...(!!this.customTranslations[this.locale] && this.customTranslations[this.locale])
-        };
+    public async requestTranslations(): Promise<void> {
+        try {
+            const translations = await this.service.fetchTranslationsFromCdn(this.locale);
+
+            this._translations = {
+                ...enUS,
+                ...translations,
+                ...(!!this.customTranslations[this.locale] && this.customTranslations[this.locale])
+            };
+        } catch (error: unknown) {
+            console.error('Language - requestTranslations(): Failed to fetch translations', error);
+
+            this._translations = {
+                ...enUS,
+                ...(!!this.customTranslations[this.locale] && this.customTranslations[this.locale])
+            };
+        }
+    }
+
+    public get translations(): Readonly<Translations> {
+        return this._translations;
     }
 
     /**
@@ -48,7 +83,7 @@ export class Language {
      * @returns Translated string
      */
     public get(key: string, options?): string {
-        const translation = getTranslation(this.translations, key, options);
+        const translation = getTranslation(this._translations, key, options);
         if (translation !== null) {
             return translation;
         }
@@ -84,6 +119,21 @@ export class Language {
     public dateTime(date: string) {
         if (date === undefined) return '';
         return this.timeAndDateFormatter.format(new Date(date));
+    }
+
+    /**
+     * Creates a list of supported locales including the ones passed as custom translations
+     *
+     * @param customTranslations - Custom translations to include
+     * @returns Array of supported locales
+     */
+    private createSupportedLocalesList(customTranslations?: CustomTranslations): readonly string[] {
+        if (!customTranslations) {
+            return CDN_SUPPORTED_LOCALES;
+        }
+
+        const locales = new Set([...CDN_SUPPORTED_LOCALES, ...Object.keys(customTranslations)]);
+        return Array.from(locales).sort();
     }
 }
 

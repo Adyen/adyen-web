@@ -1,44 +1,70 @@
 import { h } from 'preact';
 import { CustomTranslations } from './types';
-import AdyenCheckoutError from '../core/Errors/AdyenCheckoutError';
+import { DEFAULT_LOCALE } from './constants';
 
 /**
- * Returns a locale with the proper format
+ * Convert to ISO 639-1
+ */
+const toTwoLetterCode = locale => locale.toLowerCase().substring(0, 2);
+
+/**
+ * Matches a string with one of the locales
+ *
+ * @param locale - The locale to match
+ * @param supportedLocales - Array of possible locales
  *
  * @example
- * formatLocale('En_us'); -> en-US
- * formatLocale('ar') -> ar
+ * matchLocale('en-GB', ['en-US', 'es-ES']);
+ * // returns 'en-US'
  */
-export function formatLocale(localeParam: string): string {
+export function matchLocale(locale: string, supportedLocales: readonly string[]): string {
+    if (!locale || typeof locale !== 'string') return null;
+    return supportedLocales.find(supLoc => toTwoLetterCode(supLoc) === toTwoLetterCode(locale)) || null;
+}
+
+/**
+ * Returns a locale with the proper format.
+ *
+ * @param localeParam - Locale example: 'En_us' or 'en-US'
+ *
+ * @example
+ * formatLocale('En_us');
+ * // returns 'en-US'
+ */
+export function formatLocale(localeParam: string): string | null {
     const locale = localeParam.replace('_', '-');
-    const format = new RegExp('([a-z]{2})([-])([A-Z]{2})');
+    const format = new RegExp('^([a-z]{2})([-])([A-Z]{2})$');
 
     // If it's already formatted, return the locale
-    if (format.test(locale)) {
-        return locale;
-    }
+    if (format.test(locale)) return locale;
 
-    // If no country code is defined (Ex: 'ar') , then returns 'ar'
+    // Split the string in two
     const [languageCode, countryCode] = locale.split('-');
-    if (languageCode.length !== 2) {
-        throw new AdyenCheckoutError('IMPLEMENTATION_ERROR', `Locale '${localeParam}' does not match the expected format`);
-    }
-    if (!countryCode) {
-        return languageCode.toLowerCase();
-    }
+
+    // If the locale or the country codes are missing, return null
+    if (!languageCode || !countryCode) return null;
 
     // Ensure correct format and join the strings back together
     const fullLocale = [languageCode.toLowerCase(), countryCode.toUpperCase()].join('-');
-    if (format.test(fullLocale)) {
-        return fullLocale;
-    } else {
-        throw new AdyenCheckoutError('IMPLEMENTATION_ERROR', `Locale '${localeParam}' does not match the expected format`);
-    }
+
+    return fullLocale.length === 5 ? fullLocale : null;
+}
+
+export function parseLocale(locale: string, supportedLocales: readonly string[]): string {
+    if (!locale || locale.length < 1 || locale.length > 5) return DEFAULT_LOCALE;
+
+    const formattedLocale = formatLocale(locale);
+    const hasMatch = supportedLocales.indexOf(formattedLocale) > -1;
+
+    if (hasMatch) return formattedLocale;
+
+    return matchLocale(formattedLocale || locale, supportedLocales) || DEFAULT_LOCALE;
 }
 
 /**
  * Makes sure that if custom translation is defined using not properly formatted locale keys, then it gets formatted correctly
- * Ex: Custom translation defined as { en_US: { ... }} will be adjusted to { 'en-US': { ... }}
+
+ * Custom translation defined as { en_US: { ... }} will be adjusted to { 'en-US': { ... }}
  */
 export function formatCustomTranslations(customTranslations: CustomTranslations = {}): CustomTranslations {
     return Object.keys(customTranslations).reduce((memo, customTranslationLocaleKey) => {

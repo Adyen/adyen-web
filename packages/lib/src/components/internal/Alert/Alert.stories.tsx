@@ -4,6 +4,8 @@ import Alert from './Alert';
 import Language from '../../../language';
 import { CoreProvider } from '../../../core/Context/CoreProvider';
 import { Resources } from '../../../core/Context/Resources';
+import { mock } from 'jest-mock-extended';
+import { ILanguageService } from '../../../language/LanguageService';
 
 const meta: Meta = {
     title: 'Internal Elements/Alert',
@@ -29,7 +31,7 @@ export const Default: StoryObj = {
                 i18n={
                     new Language({
                         locale: 'en-US',
-                        translations: {}
+                        service: mock<ILanguageService>({})
                     })
                 }
                 resources={new Resources('https://checkoutshopper-test.cdn.adyen.com/checkoutshopper/')}

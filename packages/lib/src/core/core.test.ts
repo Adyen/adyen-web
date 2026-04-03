@@ -11,7 +11,6 @@ import { PaymentActionsType } from '../types/global-types';
 import Analytics from './Analytics';
 import type { CoreConfiguration } from './types';
 
-jest.mock('./Services/get-translations');
 jest.mock('./CheckoutSession');
 
 const sessionSetupResponseMock: CheckoutSessionSetupResponse = {
@@ -51,6 +50,7 @@ describe('Core', () => {
         test('should default locale to en-US', async () => {
             const checkout = new AdyenCheckout({ countryCode: 'US', environment: 'test', clientKey: 'test_123456' });
             await checkout.initialize();
+
             expect(checkout.options.locale).toBe('en-US');
             expect(checkout.modules.i18n.locale).toBe('en-US');
         });
