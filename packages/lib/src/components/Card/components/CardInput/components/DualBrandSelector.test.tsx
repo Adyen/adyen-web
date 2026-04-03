@@ -41,7 +41,8 @@ const renderDualBrandSelector = (props = {}) => {
         dualBrandingElements: DEFAULT_DUAL_BRAND_ELEMENTS,
         dualBrandingChangeHandler: jest.fn(),
         brandsConfiguration: {},
-        contextualText: 'Select your card brand'
+        contextualText: 'Select your card brand',
+        selectedBrandValue: 'visa'
     };
 
     return render(

@@ -11,16 +11,18 @@ interface DualBrandSelectorProps {
     dualBrandingChangeHandler: DualBrandingChangeHandler;
     brandsConfiguration: CardBrandsConfiguration;
     contextualText: string;
+    selectedBrandValue: string;
 }
 
 export default function DualBrandSelector({
     dualBrandingElements,
     brandsConfiguration,
     dualBrandingChangeHandler,
-    contextualText
+    contextualText,
+    selectedBrandValue
 }: Readonly<DualBrandSelectorProps>) {
     const dualBrandItems = mapDualBrandButtons(dualBrandingElements, brandsConfiguration);
-    const [selectedBrand, setSelectedBrand] = useState<string>(dualBrandItems[0]?.id);
+    const [selectedBrand, setSelectedBrand] = useState<string>(selectedBrandValue);
 
     const handleBrandClick = (brandId: string) => {
         setSelectedBrand(brandId);
