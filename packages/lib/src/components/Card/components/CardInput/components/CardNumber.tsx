@@ -14,7 +14,15 @@ import DualBrandSelector from './DualBrandSelector';
 
 export default function CardNumber(props: Readonly<CardNumberProps>) {
     const { i18n } = useCoreContext();
-    const { error = '', isValid = false, onFocusField = () => {}, dualBrandingElements, dualBrandingChangeHandler, brandsConfiguration } = props;
+    const {
+        error = '',
+        isValid = false,
+        onFocusField = () => {},
+        dualBrandingElements,
+        dualBrandingChangeHandler,
+        brandsConfiguration,
+        selectedBrandValue
+    } = props;
 
     const handleIconClick = () => {
         onFocusField(ENCRYPTED_CARD_NUMBER);
@@ -70,6 +78,7 @@ export default function CardNumber(props: Readonly<CardNumberProps>) {
                             dualBrandingChangeHandler={dualBrandingChangeHandler}
                             brandsConfiguration={brandsConfiguration}
                             contextualText={contextualText}
+                            selectedBrandValue={selectedBrandValue}
                         />
                     ) : (
                         dualBrandingElements.map(element => {
