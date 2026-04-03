@@ -125,6 +125,7 @@ export interface CardBinLookupData {
     supportedBrandsRaw?: BrandObject[];
     rootNode?: HTMLElement;
     isReset?: boolean; // Used internally - not propagated to merchant callback
+    dualBrandingType?: string; // Whether dual brands can just be displayed or whether a selection mechanism is mandated under EU law
 }
 
 export interface CardBinValueData {

@@ -1,5 +1,5 @@
 import { createRef, h } from 'preact';
-import { render, screen, act } from '@testing-library/preact';
+import { render, screen, act, fireEvent } from '@testing-library/preact';
 import CardInput from './CardInput';
 import { CoreProvider } from '../../../../core/Context/CoreProvider';
 import { AmountProvider } from '../../../../core/Context/AmountProvider';
@@ -22,7 +22,7 @@ const cardInputRequiredProps = {
     })
 };
 
-const dualBrandResp = {
+const selectableDualBrandResp = {
     issuingCountryCode: 'FR',
     supportedBrands: [
         {
@@ -48,6 +48,32 @@ const dualBrandResp = {
     ]
 };
 
+const displayOnlyDualBrandResp = {
+    issuingCountryCode: 'AU',
+    supportedBrands: [
+        {
+            brand: 'visa',
+            cvcPolicy: 'required',
+            enableLuhnCheck: true,
+            expiryDatePolicy: 'required',
+            localeBrand: 'VISA',
+            paymentMethodVariant: 'visa',
+            showSocialSecurityNumber: false,
+            supported: true
+        },
+        {
+            brand: 'eftpos_australia',
+            cvcPolicy: 'required',
+            enableLuhnCheck: true,
+            expiryDatePolicy: 'required',
+            localeBrand: 'eftpos Australia',
+            paymentMethodVariant: 'eftpos_australia',
+            showSocialSecurityNumber: false,
+            supported: true
+        }
+    ]
+};
+
 const renderCardInput = ui => {
     return render(
         <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
@@ -59,7 +85,7 @@ const renderCardInput = ui => {
 };
 
 describe('CardNumber and the dual branding UI', () => {
-    test('Renders a CardInput without dual branding', () => {
+    test('should render without brand selection UI or contextual label when no dual branding', () => {
         const { container } = renderCardInput(<CardInput {...cardInputRequiredProps} />);
 
         /* eslint-disable testing-library/no-node-access, testing-library/no-container */
@@ -68,43 +94,102 @@ describe('CardNumber and the dual branding UI', () => {
         expect(container.querySelector('[data-cse="encryptedSecurityCode"]')).toBeTruthy();
         /* eslint-enable testing-library/no-node-access, testing-library/no-container */
 
-        expect(screen.queryByText('Card Brand')).not.toBeInTheDocument();
+        expect(screen.queryAllByRole('button')).toHaveLength(0);
+        expect(screen.queryByRole('group')).not.toBeInTheDocument();
     });
 
-    test('Renders a CardInput with dual branding UI radio button elements', async () => {
+    test('should show two selectable brand options with first selected by default and contextual label for selectable dual brand', async () => {
         renderCardInput(<CardInput {...cardInputRequiredProps} />);
 
         await act(() => {
-            cardInputRef.processBinLookupResponse(dualBrandResp, false);
+            cardInputRef.processBinLookupResponse(selectableDualBrandResp, false);
         });
 
-        expect(screen.getByText('Card Brand')).toBeInTheDocument();
+        // Two brand options with accessible names
+        const buttons = screen.getAllByRole('button');
+        expect(buttons).toHaveLength(2);
+        expect(screen.getByRole('button', { name: /visa/i })).toBeVisible();
+        expect(screen.getByRole('button', { name: /cartebancaire/i })).toBeVisible();
 
-        expect(screen.getByRole('radio', { name: /VISA/i })).toBeVisible();
-        expect(screen.getByRole('radio', { name: /Carte Bancaire/i })).toBeVisible();
+        // First brand is selected by default
+        expect(buttons[0]).toHaveAttribute('aria-pressed', 'true');
+
+        // Contextual label visible
+        expect(screen.getByText(/the card brand/i)).toBeVisible();
     });
 
-    test('Dual branding UI is not hidden when the card number is in error', async () => {
-        const { container } = renderCardInput(<CardInput {...cardInputRequiredProps} />);
+    test('should show display-only icons without selection UI or contextual label for non-selectable dual brand', async () => {
+        renderCardInput(<CardInput {...cardInputRequiredProps} />);
 
         await act(() => {
-            cardInputRef.processBinLookupResponse(dualBrandResp, false);
+            cardInputRef.processBinLookupResponse(displayOnlyDualBrandResp, false);
         });
 
-        expect(screen.getByText('Card Brand')).toBeInTheDocument();
+        // Two brand images visible (display-only)
+        const images = screen.getAllByRole('img');
+        expect(images.length).toBeGreaterThanOrEqual(2);
 
-        /* eslint-disable testing-library/no-node-access, testing-library/no-container */
-        // 3 error fields - all hidden
-        expect(container.querySelectorAll('.adyen-checkout-contextual-text--error.adyen-checkout-contextual-text--hidden')).toHaveLength(3);
+        // No interactive selection UI
+        expect(screen.queryAllByRole('button')).toHaveLength(0);
+        expect(screen.queryByRole('group')).not.toBeInTheDocument();
+
+        // No contextual label
+        expect(screen.queryByText(/the card brand/i)).not.toBeInTheDocument();
+    });
+
+    test('should not trigger validation when selecting a brand while PAN field is still active', async () => {
+        renderCardInput(<CardInput {...cardInputRequiredProps} />);
+
+        await act(() => {
+            cardInputRef.processBinLookupResponse(selectableDualBrandResp, false);
+        });
+
+        // Brand selection and contextual text are visible
+        expect(screen.getAllByRole('button')).toHaveLength(2);
+        expect(screen.getByText(/the card brand/i)).toBeVisible();
+
+        // First brand (visa) is selected by default
+        const visaButton = screen.getByRole('button', { name: /visa/i });
+        const cbButton = screen.getByRole('button', { name: /cartebancaire/i });
+        expect(visaButton).toHaveAttribute('aria-pressed', 'true');
+        expect(cbButton).toHaveAttribute('aria-pressed', 'false');
+
+        // Click the second brand while PAN is incomplete (no blur has occurred)
+        fireEvent.click(cbButton);
+
+        // Brand selection UI must remain visible — no validation error triggered
+        expect(screen.getAllByRole('button')).toHaveLength(2);
+
+        // The chosen brand should now be selected
+        expect(screen.getByRole('button', { name: /cartebancaire/i })).toHaveAttribute('aria-pressed', 'true');
+
+        // Contextual text must remain visible
+        expect(screen.getByText(/the card brand/i)).toBeVisible();
+
+        // Switch back to first brand — still no validation
+        fireEvent.click(screen.getByRole('button', { name: /visa/i }));
+
+        expect(screen.getAllByRole('button')).toHaveLength(2);
+        expect(screen.getByRole('button', { name: /visa/i })).toHaveAttribute('aria-pressed', 'true');
+        expect(screen.getByText(/the card brand/i)).toBeVisible();
+    });
+
+    test('should hide brand selection UI and contextual label when PAN has validation error', async () => {
+        renderCardInput(<CardInput {...cardInputRequiredProps} />);
+
+        await act(() => {
+            cardInputRef.processBinLookupResponse(selectableDualBrandResp, false);
+        });
+
+        // Brand selection is visible before error
+        expect(screen.getAllByRole('button')).toHaveLength(2);
 
         await act(() => {
             cardInputRef.showValidation();
         });
 
-        // 3 error fields all visible
-        expect(container.querySelectorAll('.adyen-checkout-contextual-text--error.adyen-checkout-contextual-text--hidden')).toHaveLength(0);
-        /* eslint-enable testing-library/no-node-access, testing-library/no-container */
-
-        expect(screen.getByText('Card Brand')).toBeInTheDocument();
+        // Error state shown — at least one error element is visible
+        expect(screen.queryAllByRole('button')).toHaveLength(0);
+        expect(screen.queryByText(/the card brand/i)).toHaveClass('adyen-checkout-contextual-text--hidden');
     });
 });

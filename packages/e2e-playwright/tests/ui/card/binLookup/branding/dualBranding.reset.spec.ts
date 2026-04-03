@@ -1,100 +1,113 @@
 import { expect, test } from '../../../../../fixtures/card.fixture';
 import { getStoryUrl } from '../../../../utils/getStoryUrl';
 import { URL_MAP } from '../../../../../fixtures/URL_MAP';
-import { BCMC_CARD, BCMC_DUAL_BRANDED_VISA, REGULAR_TEST_CARD, UNKNOWN_BIN_CARD_REGEX_VISA } from '../../../../utils/constants';
+import { BCMC_CARD, BCMC_DUAL_BRANDED_VISA, REGULAR_TEST_CARD } from '../../../../utils/constants';
 
-const componentConfig = {
-    brands: ['mc', 'visa', 'amex', 'maestro', 'bcmc']
-};
+import { binLookupMock } from '../../../../../mocks/binLookup/binLookup.mock';
+import { dualBrandedBcmcAndVisa } from '../../../../../mocks/binLookup/binLookup.data';
+
+const componentConfig = { brands: ['mc', 'visa', 'amex', 'maestro', 'bcmc'] };
 
 test.describe('Card - Testing resetting after binLookup has given a dual brand result', () => {
     test(
-        '#1 Fill in dual branded card then to see dual brand UI (icons & buttons) appear' +
-            'check that only generic logo shows after deleting digits, and there is no dual brand UI',
+        '#1 should reset dual branding when all digits are deleted',
         async ({ card, page }) => {
             await card.goto(getStoryUrl({ baseUrl: URL_MAP.card, componentConfig }));
 
-            await card.fillCardNumber(BCMC_CARD);
+            await card.typeCardNumber(BCMC_CARD);
 
-            // Dual brand icons holder visible
-            await expect(card.dualBrandingIconsHolder).toBeVisible();
+            // Expect brand selection to be visible (EU dual brand)
+            await expect(card.dualBrandSelector).toBeVisible();
 
-            // Expect dual brand buttons to be visible
-            await expect(card.dualBrandingButtonsHolder).toBeVisible();
+            // Expect brand selection to be visible
+            await expect(card.isDualBrandSelectionVisible()).resolves.toBe(true);
 
+            // Expect contextual label to be visible
+            await expect(card.isDualBrandContextualLabelVisible()).resolves.toBe(true);
+
+            // Delete all digits
             await card.deleteCardNumber();
 
-            // Expect card to have one, generic, icon in the PAN field
-            await card.waitForVisibleDualBrandIcons(1);
+            // Type a shorter, non-dual-branded portion
+            await card.typeCardNumber(BCMC_DUAL_BRANDED_VISA.substring(0, 6));
 
-            let [firstBrand, secondBrand] = await card.dualBrandIcons;
+            // Expect brand selection to be hidden
+            await expect(card.dualBrandSelector).not.toBeVisible();
 
-            // Now only a single, generic, brand
-            const brandingIconSrc = await firstBrand.getAttribute('src');
-            expect(brandingIconSrc).toContain('nocard.svg');
+            // Expect brand selection to be hidden
+            await expect(card.isDualBrandSelectionVisible()).resolves.toBe(false);
 
-            expect(secondBrand).toBeUndefined();
+            // Expect contextual label to be hidden
+            await expect(card.isDualBrandContextualLabelVisible()).resolves.toBe(false);
 
-            // Dual brand icon holder hidden
-            await expect(card.dualBrandingIconsHolder).not.toBeVisible();
-
-            // Expect dual brand buttons hidden
-            await expect(card.dualBrandingButtonsHolder).not.toBeVisible();
+            // Check brand has not been set in paymentMethod data
+            let cardData: any = await page.evaluate('window.component.data');
+            expect(cardData.paymentMethod.brand).toBe(undefined);
         }
     );
 
     test(
-        '#2 Fill in dual branded card, then' + ' make selections and see that brand is set, then' + ' delete digits and see that brand is reset',
+        '#2 should reset dual branding when switching to a single brand card',
         async ({ card, page }) => {
+            await binLookupMock(page, dualBrandedBcmcAndVisa);
+
             await card.goto(getStoryUrl({ baseUrl: URL_MAP.card, componentConfig }));
+
             await card.typeCardNumber(BCMC_DUAL_BRANDED_VISA);
+
+            await expect(card.isDualBrandSelectionVisible()).resolves.toBe(true);
 
             // Select visa
-            const visaBtn = card.selectDualBrandUIItem(/visa/i);
-            await visaBtn.click();
+            await card.selectBrand(/visa/i);
 
-            // Check brand has been set in paymentMethod data
-            await page.waitForFunction(() => window['component'].data.paymentMethod.brand === 'visa');
+            // Check visa brand has been set in paymentMethod data
+            let cardData: any = await page.evaluate('window.component.data');
+            expect(cardData.paymentMethod.brand).toEqual('visa');
 
             // Select bcmc
-            const bcmcBtn = card.selectDualBrandUIItem(/bancontact/i, false);
-            await bcmcBtn.click();
+            await card.selectBrand(/bancontact/i);
 
-            // Check brand has been set in paymentMethod data
-            await page.waitForFunction(() => window['component'].data.paymentMethod.brand === 'bcmc');
+            // Check bcmc brand has been set in paymentMethod data
+            cardData = await page.evaluate('window.component.data');
+            expect(cardData.paymentMethod.brand).toEqual('bcmc');
 
-            // Delete number
+            // Delete all digits
             await card.deleteCardNumber();
 
-            // Check brand has been reset in paymentMethod data
-            await page.waitForFunction(() => window['component'].data.paymentMethod.brand === undefined);
+            // Type new (single brand) card number
+            await card.typeCardNumber(REGULAR_TEST_CARD);
+
+            // Expect brand selection to be hidden
+            await expect(card.dualBrandSelector).not.toBeVisible();
+
+            // Expect brand selection to be hidden
+            await expect(card.isDualBrandSelectionVisible()).resolves.toBe(false);
+
+            // Check brand has not been set in paymentMethod data
+            cardData = await page.evaluate('window.component.data');
+            expect(cardData.paymentMethod.brand).toBe(undefined);
         }
     );
 
     test(
-        '#3 Fill in dual branded card, automatically sets brand in state, ' +
-            ' then replace it with an unrecognised card, see that state is reset, but that our regEx detects the brand & sets it in the UI',
-        async ({ card, page }) => {
+        '#3 should restore dual branding when same number is retyped after deletion',
+        async ({ card }) => {
             await card.goto(getStoryUrl({ baseUrl: URL_MAP.card, componentConfig }));
+
             await card.typeCardNumber(BCMC_DUAL_BRANDED_VISA);
 
-            // Check brand has been set, by default, in paymentMethod data
-            await page.waitForFunction(() => window['component'].data.paymentMethod.brand !== undefined);
+            await expect(card.dualBrandSelector).toBeVisible();
+            await expect(card.isDualBrandSelectionVisible()).resolves.toBe(true);
 
-            // Need this - it allows time for the UI to update when the icon changes
-            const responsePromise = page.waitForResponse(response => response.url().includes('/binLookup') && response.request().method() === 'POST');
+            // Delete all digits and retype
+            await card.deleteCardNumber();
+            await card.typeCardNumber(BCMC_DUAL_BRANDED_VISA);
 
-            // Paste in card unrecognised by /binLookuo but which our regEx recognises as Visa
-            await card.fillCardNumber(UNKNOWN_BIN_CARD_REGEX_VISA);
+            // Expect brand selection to be visible
+            await expect(card.dualBrandSelector).toBeVisible();
 
-            await responsePromise;
-
-            // Check brand has been reset in paymentMethod data
-            await page.waitForFunction(() => window['component'].data.paymentMethod.brand === undefined);
-
-            // Check regEx recognises brand
-            let brandingIconSrc = await card.brandingIcon.getAttribute('src');
-            expect(brandingIconSrc).toContain('visa.svg');
+            // Expect brand selection to be visible
+            await expect(card.isDualBrandSelectionVisible()).resolves.toBe(true);
         }
     );
 });
