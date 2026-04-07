@@ -84,3 +84,6 @@ export const SF_FIELDS_MAP = {
 
 /** time within which we expect to receive a "configured" message from a securedField iframe, once it has registered as having loaded */
 export const SF_CONFIG_TIMEOUT = 6000;
+
+export const BEST_GUESS_MODE = 'best-guess';
+export const BIN_LOOKUP_MODE = 'bin-lookup';
