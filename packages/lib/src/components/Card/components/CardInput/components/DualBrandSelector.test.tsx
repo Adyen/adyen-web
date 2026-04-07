@@ -98,4 +98,75 @@ describe('DualBrandSelector', () => {
         expect(dualBrandingChangeHandler).toHaveBeenCalledTimes(1);
         expect(dualBrandingChangeHandler).toHaveBeenCalledWith('cartebancaire');
     });
+
+    describe('Accessibility', () => {
+        test('should have role="group" with aria-label matching contextual text', () => {
+            const contextualText = 'Select the card brand you prefer to pay with. This is optional.';
+            renderDualBrandSelector({ contextualText });
+
+            const group = screen.getByRole('group', { name: contextualText });
+            expect(group).toBeInTheDocument();
+        });
+
+        test('should toggle brand selection with keyboard Space key', async () => {
+            const user = userEvent.setup();
+            renderDualBrandSelector();
+
+            const button2 = getButton2();
+            button2.focus();
+            await user.keyboard(' ');
+
+            await waitFor(() => {
+                expect(getButton2()).toHaveAttribute('aria-pressed', 'true');
+            });
+            expect(getButton1()).toHaveAttribute('aria-pressed', 'false');
+        });
+
+        test('should toggle brand selection with keyboard Enter key', async () => {
+            const user = userEvent.setup();
+            renderDualBrandSelector();
+
+            const button2 = getButton2();
+            button2.focus();
+            await user.keyboard('{Enter}');
+
+            await waitFor(() => {
+                expect(getButton2()).toHaveAttribute('aria-pressed', 'true');
+            });
+            expect(getButton1()).toHaveAttribute('aria-pressed', 'false');
+        });
+
+        test('should have both buttons in tab order', () => {
+            renderDualBrandSelector();
+
+            const button1 = getButton1();
+            const button2 = getButton2();
+
+            expect(button1).not.toHaveAttribute('tabindex', '-1');
+            expect(button2).not.toHaveAttribute('tabindex', '-1');
+        });
+
+        test('should have mutually exclusive aria-pressed state', async () => {
+            const user = userEvent.setup();
+            renderDualBrandSelector();
+
+            // Initially first is selected
+            expect(getButton1()).toHaveAttribute('aria-pressed', 'true');
+            expect(getButton2()).toHaveAttribute('aria-pressed', 'false');
+
+            // Select second
+            await user.click(getButton2());
+            await waitFor(() => {
+                expect(getButton2()).toHaveAttribute('aria-pressed', 'true');
+            });
+            expect(getButton1()).toHaveAttribute('aria-pressed', 'false');
+
+            // Select first again
+            await user.click(getButton1());
+            await waitFor(() => {
+                expect(getButton1()).toHaveAttribute('aria-pressed', 'true');
+            });
+            expect(getButton2()).toHaveAttribute('aria-pressed', 'false');
+        });
+    });
 });

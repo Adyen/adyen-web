@@ -87,6 +87,9 @@ export default function CardNumber(props: Readonly<CardNumberProps>) {
                     )}
                 </div>
             )}
+            <span className="adyen-checkout__card__dual-branding__sr-only" aria-live="polite">
+                {showDualBrandSelector ? contextualText : null}
+            </span>
         </Field>
     );
 }

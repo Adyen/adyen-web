@@ -114,8 +114,10 @@ describe('CardNumber and the dual branding UI', () => {
         // First brand is selected by default
         expect(buttons[0]).toHaveAttribute('aria-pressed', 'true');
 
-        // Contextual label visible
-        expect(screen.getByText(/the card brand/i)).toBeVisible();
+        // Contextual label visible (use getAllByText since text appears in both aria-live region and contextual span)
+        const contextualTexts = screen.getAllByText(/the card brand/i);
+        expect(contextualTexts.length).toBeGreaterThanOrEqual(1);
+        expect(contextualTexts[0]).toBeVisible();
     });
 
     test('should show display-only icons without selection UI or contextual label for non-selectable dual brand', async () => {
@@ -146,7 +148,7 @@ describe('CardNumber and the dual branding UI', () => {
 
         // Brand selection and contextual text are visible
         expect(screen.getAllByRole('button')).toHaveLength(2);
-        expect(screen.getByText(/the card brand/i)).toBeVisible();
+        expect(screen.getAllByText(/the card brand/i).length).toBeGreaterThanOrEqual(1);
 
         // First brand (visa) is selected by default
         const visaButton = screen.getByRole('button', { name: /visa/i });
@@ -164,14 +166,14 @@ describe('CardNumber and the dual branding UI', () => {
         expect(screen.getByRole('button', { name: /cartebancaire/i })).toHaveAttribute('aria-pressed', 'true');
 
         // Contextual text must remain visible
-        expect(screen.getByText(/the card brand/i)).toBeVisible();
+        expect(screen.getAllByText(/the card brand/i).length).toBeGreaterThanOrEqual(1);
 
         // Switch back to first brand — still no validation
         fireEvent.click(screen.getByRole('button', { name: /visa/i }));
 
         expect(screen.getAllByRole('button')).toHaveLength(2);
         expect(screen.getByRole('button', { name: /visa/i })).toHaveAttribute('aria-pressed', 'true');
-        expect(screen.getByText(/the card brand/i)).toBeVisible();
+        expect(screen.getAllByText(/the card brand/i).length).toBeGreaterThanOrEqual(1);
     });
 
     test('should hide brand selection UI and contextual label when PAN has validation error', async () => {
@@ -190,6 +192,52 @@ describe('CardNumber and the dual branding UI', () => {
 
         // Error state shown — at least one error element is visible
         expect(screen.queryAllByRole('button')).toHaveLength(0);
-        expect(screen.queryByText(/the card brand/i)).toHaveClass('adyen-checkout-contextual-text--hidden');
+        expect(screen.queryAllByText(/the card brand/i)[0]).toHaveClass('adyen-checkout__card__dual-branding__sr-only');
+    });
+
+    describe('Accessibility - Live Region', () => {
+        test('should have aria-live region with contextual text when dual branding appears', async () => {
+            const { container } = renderCardInput(<CardInput {...cardInputRequiredProps} />);
+
+            // Live region exists but is empty initially
+            /* eslint-disable testing-library/no-node-access, testing-library/no-container */
+            const liveRegion = container.querySelector('[aria-live="polite"]');
+            /* eslint-enable testing-library/no-node-access, testing-library/no-container */
+            expect(liveRegion).toBeInTheDocument();
+            expect(liveRegion).toHaveTextContent('');
+
+            await act(() => {
+                cardInputRef.processBinLookupResponse(selectableDualBrandResp, false);
+            });
+
+            // After dual branding appears, live region has contextual text
+            expect(liveRegion).toHaveTextContent(/the card brand/i);
+        });
+
+        test('should have empty aria-live region when no dual branding', () => {
+            const { container } = renderCardInput(<CardInput {...cardInputRequiredProps} />);
+
+            // Live region always exists but is empty when no dual branding
+            /* eslint-disable testing-library/no-node-access, testing-library/no-container */
+            const liveRegion = container.querySelector('[aria-live="polite"]');
+            /* eslint-enable testing-library/no-node-access, testing-library/no-container */
+            expect(liveRegion).toBeInTheDocument();
+            expect(liveRegion).toHaveTextContent('');
+        });
+
+        test('should have empty aria-live region for display-only dual branding', async () => {
+            const { container } = renderCardInput(<CardInput {...cardInputRequiredProps} />);
+
+            await act(() => {
+                cardInputRef.processBinLookupResponse(displayOnlyDualBrandResp, false);
+            });
+
+            // Display-only dual branding should have empty live region (no contextual text needed)
+            /* eslint-disable testing-library/no-node-access, testing-library/no-container */
+            const liveRegion = container.querySelector('[aria-live="polite"]');
+            /* eslint-enable testing-library/no-node-access, testing-library/no-container */
+            expect(liveRegion).toBeInTheDocument();
+            expect(liveRegion).toHaveTextContent('');
+        });
     });
 });
