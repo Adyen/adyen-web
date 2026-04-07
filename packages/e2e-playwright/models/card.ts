@@ -209,6 +209,27 @@ class Card extends Base {
         return this.dualBrandContextualLabel.isVisible();
     }
 
+    /**
+     * Accessibility helpers for dual branding
+     */
+
+    /** Returns the aria-live region inside the card number field */
+    get dualBrandLiveRegion(): Locator {
+        return this.cardNumberField.locator('[aria-live="polite"]');
+    }
+
+    /** Returns the text content of the aria-live region */
+    async getDualBrandAnnouncement(): Promise<string | null> {
+        const isVisible = await this.dualBrandLiveRegion.isVisible();
+        if (!isVisible) return null;
+        return this.dualBrandLiveRegion.textContent();
+    }
+
+    /** Returns the first brand button in the dual brand selector */
+    getBrandButton(name: string | RegExp): Locator {
+        return this.dualBrandSelector.getByRole('button', { name });
+    }
+
     /** end */
 
     async goto(url: string = URL_MAP.card) {
