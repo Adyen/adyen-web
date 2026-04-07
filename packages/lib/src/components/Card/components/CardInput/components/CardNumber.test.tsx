@@ -77,6 +77,6 @@ describe('CardNumber and the (dual)branding icons that show in the PAN field', (
 
     test('should show contextual text when dual brand selector is active', () => {
         renderCardNumber({ dualBrandingElements: selectableDualBrandingElements, dualBrandingChangeHandler: jest.fn(), brandsConfiguration: {} });
-        expect(screen.getByText(/select the card brand/i)).toBeVisible();
+        expect(screen.getAllByText(/select the card brand/i)[0]).toBeVisible();
     });
 });

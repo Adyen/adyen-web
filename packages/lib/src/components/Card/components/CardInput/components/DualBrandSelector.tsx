@@ -24,9 +24,16 @@ export default function DualBrandSelector({
     const dualBrandItems = mapDualBrandButtons(dualBrandingElements, brandsConfiguration);
     const [selectedBrand, setSelectedBrand] = useState<string>(selectedBrandValue);
 
-    const handleBrandClick = (brandId: string) => {
+    const handleBrandSelect = (brandId: string) => {
         setSelectedBrand(brandId);
         dualBrandingChangeHandler(brandId);
+    };
+
+    const handleKeyDown = (e: KeyboardEvent, brandId: string) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            handleBrandSelect(brandId);
+        }
     };
 
     return (
@@ -39,7 +46,8 @@ export default function DualBrandSelector({
                         'adyen-checkout__card__dual-brand-selector__button--selected': selectedBrand === item.id
                     })}
                     onMouseDown={e => e.preventDefault()}
-                    onClick={() => handleBrandClick(item.id)}
+                    onClick={() => handleBrandSelect(item.id)}
+                    onKeyDown={e => handleKeyDown(e, item.id)}
                     aria-label={item.altName}
                     aria-pressed={selectedBrand === item.id}
                 >
