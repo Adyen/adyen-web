@@ -54,7 +54,7 @@ class PayPayService {
                     currency: 'JPY'
                 },
                 productType: 'DEFAULT',
-                requestedAt: Date.now()
+                requestedAt: Math.floor(Date.now() / 1000)
             },
             callbacks: {
                 onPaymentSuccess: result => {
