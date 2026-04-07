@@ -14,12 +14,12 @@ describe('LanguageService', () => {
     const sdkVersion = '5.0.0';
 
     let service: LanguageService;
-    let consoleWarnSpy: jest.SpyInstance;
+    let consoleLogSpy: jest.SpyInstance;
 
     beforeEach(() => {
         service = new LanguageService({ cdnUrl, sdkVersion });
         jest.clearAllMocks();
-        consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+        consoleLogSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
     });
 
     afterEach(() => {
@@ -107,7 +107,7 @@ describe('LanguageService', () => {
                 const result = await service.fetchTranslationsFromCdn('fr-FR');
 
                 expect(result).toBe(enUS);
-                expect(consoleWarnSpy).toHaveBeenCalledWith('LanguageService - fetchTranslationsFromCdn(): Failed to fetch locale "fr-FR."');
+                expect(consoleLogSpy).toHaveBeenCalledWith('LanguageService - fetchTranslationsFromCdn(): Failed to fetch locale "fr-FR."');
             });
         });
 
