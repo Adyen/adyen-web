@@ -4,7 +4,7 @@ import { matchLocale } from './utils';
 import { CDN_SUPPORTED_LOCALES, DEFAULT_LOCALE } from './constants';
 import type { Translations } from './types';
 export interface ILanguageService {
-    fetchTranslationsFromCdn(locale: string): Promise<any>;
+    fetchTranslationsFromCdn(locale: string): Promise<Readonly<Translations>>;
 }
 
 class LanguageService implements ILanguageService {
@@ -38,7 +38,7 @@ class LanguageService implements ILanguageService {
                 path: `sdk/${this.sdkVersion}/translations/${cdnLocale}.json`
             });
         } catch (error) {
-            console.warn(`LanguageService - fetchTranslationsFromCdn(): Failed to fetch locale "${cdnLocale}."`);
+            console.log(`LanguageService - fetchTranslationsFromCdn(): Failed to fetch locale "${cdnLocale}."`);
             return enUS as Translations;
         }
     }

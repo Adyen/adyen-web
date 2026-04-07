@@ -38,8 +38,9 @@ const i18n = new Language({
     locale: 'en-US',
     service: mock<ILanguageService>({})
 });
-// @ts-ignore Assigining English dictionary to i18n instance
-i18n.translations = enUS;
+i18n['_translations'] = {
+    'select.noOptionsFound': 'No options found'
+};
 
 const coreProps = {
     loadingContext: process.env.CLIENT_ENV,

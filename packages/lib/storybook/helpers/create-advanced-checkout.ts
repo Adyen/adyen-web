@@ -62,18 +62,10 @@ async function createAdvancedFlowCheckout(
         // @ts-ignore CLIENT_ENV has valid value
         environment: process.env.CLIENT_ENV,
         amount: paymentAmount,
-        countryCode: 'NL',
+        countryCode,
         paymentMethodsResponse,
-        locale: 'nl-BE',
+        locale: shopperLocale,
         showPayButton,
-
-        translations: {
-            'nl-BE': {
-                payButton: 'Betalen',
-                payAmountFormat: '%@ BETALAN'
-            }
-        },
-
         onSubmit: async (state, component, actions) => {
             try {
                 const paymentData = {

@@ -1,6 +1,6 @@
 import { formatCustomTranslations, getTranslation, parseLocale } from './utils';
 import { getLocalisedAmount } from '../utils/amount-util';
-import { CDN_SUPPORTED_LOCALES } from './constants';
+import { CDN_SUPPORTED_LOCALES, DEFAULT_LOCALE } from './constants';
 import enUS from '../../../server/translations/en-US.json';
 
 import type { CustomTranslations, LanguageOptions, Translations } from './types';
@@ -47,7 +47,7 @@ export class Language {
         this.customTranslations = formatCustomTranslations(customTranslations);
         this.supportedLocales = this.createSupportedLocalesList(customTranslations);
 
-        this.locale = parseLocale(locale, this.supportedLocales);
+        this.locale = parseLocale(locale || DEFAULT_LOCALE, this.supportedLocales);
         this.languageCode = this.locale.split('-')[0];
 
         this.timeAndDateFormatter = Intl.DateTimeFormat(this.locale, this.timeAndDateFormatOptions);
@@ -133,7 +133,7 @@ export class Language {
         }
 
         const locales = new Set([...CDN_SUPPORTED_LOCALES, ...Object.keys(customTranslations)]);
-        return Array.from(locales).sort();
+        return Array.from(locales).sort((a, b) => a.localeCompare(b));
     }
 }
 

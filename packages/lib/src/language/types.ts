@@ -10,8 +10,8 @@ export type Translations = {
 };
 
 export interface LanguageOptions {
-    locale: string;
     service: ILanguageService;
+    locale?: string;
     customTranslations?: CustomTranslations;
     onError?: CoreConfiguration['onError'];
 }

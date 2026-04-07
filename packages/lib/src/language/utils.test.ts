@@ -27,10 +27,12 @@ describe('matchLocale()', () => {
     });
 
     test('should return null when locale is null', () => {
+        // @ts-ignore Testing edge case when string is null
         expect(matchLocale(null, supportedLocales)).toBe(null);
     });
 
     test('should return null when locale is undefined', () => {
+        // @ts-ignore Testing edge case when string is undefined
         expect(matchLocale(undefined, supportedLocales)).toBe(null);
     });
 
@@ -134,10 +136,12 @@ describe('parseLocale()', () => {
     });
 
     test('should return DEFAULT_LOCALE when locale is null', () => {
+        // @ts-ignore Testing edge case when string is null
         expect(parseLocale(null, supportedLocales)).toBe(DEFAULT_LOCALE);
     });
 
     test('should return DEFAULT_LOCALE when locale is undefined', () => {
+        // @ts-ignore Testing edge case when string is undefined
         expect(parseLocale(undefined, supportedLocales)).toBe(DEFAULT_LOCALE);
     });
 
@@ -242,7 +246,7 @@ describe('formatCustomTranslations()', () => {
 
 describe('interpolateElement()', () => {
     test('it should interpolate the element properly', () => {
-        const renderLink = translation => createElement('a', { href: 'example.com' }, [translation]);
+        const renderLink = (translation: string) => createElement('a', { href: 'example.com' }, [translation]);
         const result = interpolateElement('By clicking continue %#you%# agree with the %#term and conditions%#', [renderLink, renderLink]);
         expect(typeof result[0] === 'string');
         expect(result[1] === 'a');
@@ -251,7 +255,7 @@ describe('interpolateElement()', () => {
     });
 
     test('it should throw an error when wrong amount elements', () => {
-        const renderLink = translation => createElement('a', { href: 'example.com' }, [translation]);
+        const renderLink = (translation: string) => createElement('a', { href: 'example.com' }, [translation]);
         const resultFn = () => interpolateElement('By clicking continue %#you%# agree with the %#term and conditions%#', [renderLink]);
         expect(resultFn).toThrow(Error);
     });

@@ -5,7 +5,7 @@ import { DEFAULT_LOCALE } from './constants';
 /**
  * Convert to ISO 639-1
  */
-const toTwoLetterCode = locale => locale.toLowerCase().substring(0, 2);
+const toTwoLetterCode = (locale: string): string => locale.toLowerCase().substring(0, 2);
 
 /**
  * Matches a string with one of the locales
@@ -17,7 +17,7 @@ const toTwoLetterCode = locale => locale.toLowerCase().substring(0, 2);
  * matchLocale('en-GB', ['en-US', 'es-ES']);
  * // returns 'en-US'
  */
-export function matchLocale(locale: string, supportedLocales: readonly string[]): string {
+export function matchLocale(locale: string, supportedLocales: readonly string[]): string | null {
     if (!locale || typeof locale !== 'string') return null;
     return supportedLocales.find(supLoc => toTwoLetterCode(supLoc) === toTwoLetterCode(locale)) || null;
 }
@@ -33,7 +33,7 @@ export function matchLocale(locale: string, supportedLocales: readonly string[])
  */
 export function formatLocale(localeParam: string): string | null {
     const locale = localeParam.replace('_', '-');
-    const format = new RegExp('^([a-z]{2})([-])([A-Z]{2})$');
+    const format = /^([a-z]{2})(-)([A-Z]{2})$/;
 
     // If it's already formatted, return the locale
     if (format.test(locale)) return locale;
@@ -54,7 +54,7 @@ export function parseLocale(locale: string, supportedLocales: readonly string[])
     if (!locale || locale.length < 1 || locale.length > 5) return DEFAULT_LOCALE;
 
     const formattedLocale = formatLocale(locale);
-    const hasMatch = supportedLocales.indexOf(formattedLocale) > -1;
+    const hasMatch = formattedLocale && supportedLocales.includes(formattedLocale);
 
     if (hasMatch) return formattedLocale;
 
@@ -67,14 +67,15 @@ export function parseLocale(locale: string, supportedLocales: readonly string[])
  * Custom translation defined as { en_US: { ... }} will be adjusted to { 'en-US': { ... }}
  */
 export function formatCustomTranslations(customTranslations: CustomTranslations = {}): CustomTranslations {
-    return Object.keys(customTranslations).reduce((memo, customTranslationLocaleKey) => {
+    return Object.keys(customTranslations).reduce<CustomTranslations>((memo, customTranslationLocaleKey) => {
         const locale = formatLocale(customTranslationLocaleKey);
+        if (!locale) return memo;
         memo[locale] = customTranslations[customTranslationLocaleKey];
         return memo;
     }, {});
 }
 
-const replaceTranslationValues = (translation, values) => {
+const replaceTranslationValues = (translation: string, values: { [key: string]: string }) => {
     return translation.replace(/%{(\w+)}/g, (_, k) => values[k] || '');
 };
 

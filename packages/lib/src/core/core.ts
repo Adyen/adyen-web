@@ -40,7 +40,7 @@ class Core implements ICore {
 
     private components: UIElement[] = [];
 
-    public static readonly metadata = {
+    public static readonly metadata: { version: string; bundleType: string } = {
         version: LIBRARY_VERSION,
         bundleType: LIBRARY_BUNDLE_TYPE
     };
