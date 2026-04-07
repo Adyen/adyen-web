@@ -8,6 +8,7 @@ import { TxVariants } from '../tx-variants';
 import isMobile from '../../utils/isMobile';
 import { UPI_COUNTDOWN_TIME, UPI_MODE } from './constants';
 import { PaymentMethodBrand } from '../../types/global-types';
+import { ICore } from '../../types';
 
 /**
  * For mobile:
@@ -21,16 +22,17 @@ import { PaymentMethodBrand } from '../../types/global-types';
 class UPI extends UIElement<UPIConfiguration> {
     public static readonly type = TxVariants.upi;
     public static readonly txVariants = [TxVariants.upi, TxVariants.upi_qr, TxVariants.upi_intent];
-    private mode: UpiMode;
-    private appsList: UPIAppList;
+    private readonly mode: UpiMode;
+    private readonly appsList: UPIAppList;
 
     protected static readonly defaultProps = {
         showPaymentMethodItemImages: true,
         countdownTime: UPI_COUNTDOWN_TIME
     };
 
-    formatProps(props: UPIConfiguration): UPIConfiguration {
-        const { apps = [] } = props;
+    constructor(checkout: ICore, props: UPIConfiguration) {
+        super(checkout, props);
+        const { apps = [] } = this.props;
         const hasIntentApps = apps.length > 0;
 
         this.mode = isMobile() && hasIntentApps ? UPI_MODE.INTENT : UPI_MODE.QR_CODE;
@@ -40,10 +42,6 @@ class UPI extends UIElement<UPIConfiguration> {
             const brandIcon = this.core.modules.resources?.getImage()(imageName);
             return { id: app.id, name: app.name, icon: brandIcon };
         });
-
-        return {
-            ...super.formatProps(props)
-        };
     }
 
     public get isValid(): boolean {
