@@ -154,7 +154,7 @@ export default function UPIComponent({
                 component: 'upi_intent',
                 type: InfoEventType.displayed,
                 target: UiTarget.list,
-                issuerList: priorityApps.map(a => a.id)
+                presentedValues: priorityApps.map(a => a.id)
             })
         );
     }, []);
