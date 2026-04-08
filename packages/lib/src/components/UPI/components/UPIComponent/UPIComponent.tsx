@@ -108,7 +108,7 @@ export default function UPIComponent({
             {mode === UPI_MODE.INTENT && (
                 <SegmentedControlRegion id={A11Y.AreaId.INTENT} ariaLabelledBy={A11Y.ButtonId.INTENT} className="adyen-checkout-upi-area-intent">
                     <span className="adyen-checkout-upi-instruction-label">{i18n.get('upi.intent.instruction')}</span>
-                    {status === 'error' && <Alert icon={'cross'}>{i18n.get('upi.error.noAppSelected')}</Alert>}
+                    {status === 'error' && <Alert icon="cross">{i18n.get('upi.error.noAppSelected')}</Alert>}
                     <UPIIntentAppList
                         disabled={status === 'loading'}
                         appsList={appsList}
@@ -126,7 +126,7 @@ export default function UPIComponent({
             {mode === UPI_MODE.QR_CODE && (
                 <SegmentedControlRegion id={A11Y.AreaId.QR} ariaLabelledBy={A11Y.ButtonId.QR} className="adyen-checkout-upi-area-qr-code">
                     <span className="adyen-checkout-upi-instruction-label">{i18n.get('upi.qrCode.instruction')}</span>
-                    <BrandIcons className="adyen-checkout-upi-brands" brandIcons={brandIcons} showIconOnError />
+                    <BrandIcons className="adyen-checkout-upi-brands" brandIcons={brandIcons} showIconOnError containerType="grid" />
                     {mandateComponent}
                     {showPayButton &&
                         payButton({

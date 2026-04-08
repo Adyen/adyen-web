@@ -9,6 +9,15 @@
     margin: variable-generator.token(spacer-020) variable-generator.token(spacer-000);
 }
 
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(variable-generator.token(spacer-110), 1fr));
+}
+
+.smallImgGrid {
+    grid-template-columns: repeat(auto-fill, minmax(variable-generator.token(spacer-090), 1fr));
+}
+
 .remainingBrandsLabel {
     color: variable-generator.token(color-label-secondary);
     font-size: variable-generator.token(text-body-font-size);

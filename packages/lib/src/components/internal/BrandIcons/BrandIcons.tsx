@@ -13,6 +13,7 @@ export type BrandIconsProp = {
     maxBrandsToShow?: number;
     remainingBrandsLabel?: string;
     className?: string;
+    containerType?: 'flex' | 'grid';
     remainingBrandsLabelClassName?: string;
     brandImageWrapperClassName?: string;
     brandImageClassName?: string;
@@ -26,6 +27,7 @@ export const BrandIcons = ({
     maxBrandsToShow = brandIcons.length,
     remainingBrandsLabel,
     className,
+    containerType = 'flex',
     remainingBrandsLabelClassName,
     brandImageClassName,
     brandImageWrapperClassName,
@@ -39,7 +41,13 @@ export const BrandIcons = ({
     const hasRemainingBrands = Boolean(remainingBrandsLabel) || remainingBrands.length > 0;
 
     return (
-        <div className={cn(styles.container, className)}>
+        <div
+            className={cn(
+                styles.container,
+                { [styles.grid]: containerType === 'grid', [styles.smallImgGrid]: smallIcons && containerType === 'grid' },
+                className
+            )}
+        >
             {visibleBrands.map(brandIcon =>
                 renderBrandIcon ? (
                     renderBrandIcon(brandIcon)

@@ -38,6 +38,7 @@ const AvailableBrands = ({ brands, activeBrand }: Readonly<PaymentMethodBrandsPr
             brandIcons={brandIcons}
             smallIcons
             showIconOnError
+            containerType="grid"
         />
     );
 };
