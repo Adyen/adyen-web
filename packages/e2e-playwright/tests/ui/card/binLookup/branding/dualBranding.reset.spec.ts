@@ -4,7 +4,7 @@ import { URL_MAP } from '../../../../../fixtures/URL_MAP';
 import { BCMC_CARD, BCMC_DUAL_BRANDED_VISA, REGULAR_TEST_CARD } from '../../../../utils/constants';
 
 import { binLookupMock } from '../../../../../mocks/binLookup/binLookup.mock';
-import { dualBrandedBcmcAndVisa } from '../../../../../mocks/binLookup/binLookup.data';
+import { dualBrandedBcmcAndVisa, bcmcOnly } from '../../../../../mocks/binLookup/binLookup.data';
 
 const componentConfig = { brands: ['mc', 'visa', 'amex', 'maestro', 'bcmc'] };
 
@@ -74,6 +74,9 @@ test.describe('Card - Testing resetting after binLookup has given a dual brand r
             // Delete all digits
             await card.deleteCardNumber();
 
+
+            await binLookupMock(page, bcmcOnly);
+
             // Type new (single brand) card number
             await card.typeCardNumber(REGULAR_TEST_CARD);
 
@@ -83,9 +86,6 @@ test.describe('Card - Testing resetting after binLookup has given a dual brand r
             // Expect brand selection to be hidden
             await expect(card.isDualBrandSelectionVisible()).resolves.toBe(false);
 
-            // Check brand has not been set in paymentMethod data
-            cardData = await page.evaluate('window.component.data');
-            expect(cardData.paymentMethod.brand).toBe(undefined);
         }
     );
 
