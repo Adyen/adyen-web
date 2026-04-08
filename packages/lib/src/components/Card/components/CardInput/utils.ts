@@ -187,7 +187,7 @@ export function lookupBlurBasedErrors(errorCode) {
     ].includes(errorCode);
 }
 
-export function getFullBrandName(brand) {
+export function getFullBrandName(brand: string): string {
     return BRAND_READABLE_NAME_MAP[brand] ?? brand;
 }
 

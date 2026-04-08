@@ -56,7 +56,7 @@ export const DATA_UID = 'data-uid';
 
 export const BRAND_ICON_UI_EXCLUSION_LIST = ['accel', 'pulse', 'star', 'nyce'];
 
-export const BRAND_READABLE_NAME_MAP = {
+export const BRAND_READABLE_NAME_MAP: Record<string, string> = {
     visa: 'VISA',
     mc: 'MasterCard',
     amex: 'American Express',
