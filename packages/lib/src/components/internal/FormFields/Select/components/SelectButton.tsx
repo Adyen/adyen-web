@@ -42,7 +42,7 @@ function SelectButton(props: Readonly<SelectButtonProps>) {
     // displayInputText only used for the text input for the filter
     // display the "typed" filter text when showing the dropdown,
     // hide it and show the "selected" value when collapsed
-    const displayInputText = showList ? inputText : displayText;
+    const displayInputText = showList ? (inputText ?? '') : displayText;
 
     const setFocus = (e: Event) => {
         e.preventDefault();
