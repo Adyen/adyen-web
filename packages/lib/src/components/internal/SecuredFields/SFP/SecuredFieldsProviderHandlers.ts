@@ -24,7 +24,7 @@ import {
 } from '../lib/types';
 import { existy } from '../../../../utils/commonUtils';
 import AdyenCheckoutError from '../../../../core/Errors/AdyenCheckoutError';
-import { COUNTRIES_THAT_REQUIRE_SELECTION_MECHANISM, DUAL_BRAND_MAP } from '../../../Card/constants';
+import { DUAL_BRAND_SELECTION_MECHANISM_MAP } from '../../../Card/constants';
 import cardType from '../lib/CSF/utils/cardType';
 
 /**
@@ -136,19 +136,17 @@ function handleOnBrand(cardInfo: CardBrandData): void {
 
     /**
      * If not resetting back to an empty field,
-     * and if the brand is based on our regEx (mode = BEST_GUESS_MODE) rather than binLookup,
-     * and we're in a EU country that will require a dual-brand selection mechanism
-     * ... we favour the local brand
+     * and if the brand is based on our regEx (mode = BEST_GUESS_MODE), rather than binLookup,
+     * and we're in a country that requires a dual-brand selection mechanism
+     * ... we favour the local brand, if it is configured by the merchant
      */
     const brandIsNotResetting = cardInfo.brand !== 'card';
     const brandDerivedFromBestGuess = cardInfo.mode === BEST_GUESS_MODE;
-    const isCountryRequiringSelectionMechanism = COUNTRIES_THAT_REQUIRE_SELECTION_MECHANISM.includes(this.props.countryCode);
+    const forcedLocalBrand = DUAL_BRAND_SELECTION_MECHANISM_MAP[this.props.countryCode?.toLowerCase()];
+    const forcedLocalBrandIsConfigured = this.props.brands.includes(forcedLocalBrand);
 
-    if (brandIsNotResetting && brandDerivedFromBestGuess && isCountryRequiringSelectionMechanism) {
-        // Force brand to the local variant
-        const forcedLocalBrand = DUAL_BRAND_MAP[this.props.countryCode];
+    if (brandIsNotResetting && brandDerivedFromBestGuess && forcedLocalBrand && forcedLocalBrandIsConfigured) {
         const { cardType: brand, cvcPolicy, expiryDatePolicy } = cardType.getCardByBrand(forcedLocalBrand);
-
         cardInfoToUse = { ...cardInfo, brand, cvcPolicy, expiryDatePolicy };
     }
 
