@@ -18,7 +18,7 @@ import { SFPProps } from '../../../internal/SecuredFields/SFP/types';
 import { BRAND_READABLE_NAME_MAP } from '../../../internal/SecuredFields/lib/constants';
 import useImage, { UseImageHookType } from '../../../../core/Context/useImage';
 import { SF_ErrorCodes } from '../../../../core/Errors/constants';
-import { BrandObject, CardBrandsConfiguration, DualBrandSelectElement } from '../../types';
+import { BrandObject, CardBrandsConfiguration, DualBrandSelectElement, DualBrandButtons } from '../../types';
 import { PaymentAmount } from '../../../../types';
 
 export const getCardImageUrl = (brand: string, getImage: UseImageHookType): string => {
@@ -187,11 +187,14 @@ export function lookupBlurBasedErrors(errorCode) {
     ].includes(errorCode);
 }
 
-export function getFullBrandName(brand) {
+export function getFullBrandName(brand: string): string {
     return BRAND_READABLE_NAME_MAP[brand] ?? brand;
 }
 
-export const mapDualBrandButtons = (dualBrandSelectElements: DualBrandSelectElement[], brandsConfiguration: CardBrandsConfiguration): any => {
+export const mapDualBrandButtons = (
+    dualBrandSelectElements: DualBrandSelectElement[],
+    brandsConfiguration: CardBrandsConfiguration
+): DualBrandButtons[] => {
     return dualBrandSelectElements.map(item => {
         const brand = item.id;
         const getImage = useImage();

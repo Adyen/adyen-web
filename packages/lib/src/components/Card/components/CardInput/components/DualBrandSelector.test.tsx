@@ -4,6 +4,7 @@ import userEvent from '@testing-library/user-event';
 import DualBrandSelector from './DualBrandSelector';
 import { CoreProvider } from '../../../../../core/Context/CoreProvider';
 import { DualBrandSelectElement } from '../../../types';
+import { setupCoreMock } from '../../../../../../config/testMocks/setup-core-mock';
 
 const DEFAULT_DUAL_BRAND_ELEMENTS: DualBrandSelectElement[] = [
     {
@@ -45,8 +46,10 @@ const renderDualBrandSelector = (props = {}) => {
         selectedBrandValue: 'visa'
     };
 
+    const core = setupCoreMock();
+
     return render(
-        <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+        <CoreProvider i18n={core.modules.i18n} loadingContext="test" resources={core.modules.resources}>
             <DualBrandSelector {...defaultProps} {...props} />
         </CoreProvider>
     );

@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import { useState } from 'preact/hooks';
 import classNames from 'classnames';
-import { CardBrandsConfiguration, DualBrandSelectElement } from '../../../types';
+import { CardBrandsConfiguration, DualBrandSelectElement, DualBrandButtons } from '../../../types';
 import { DualBrandingChangeHandler } from './types';
 import { mapDualBrandButtons } from '../utils';
 import './DualBrandSelector.scss';
@@ -38,7 +38,7 @@ export default function DualBrandSelector({
 
     return (
         <div className="adyen-checkout__card__dual-brand-selector" role="group" aria-label={contextualText}>
-            {dualBrandItems.map(item => (
+            {dualBrandItems.map((item: DualBrandButtons) => (
                 <button
                     key={item.id}
                     type="button"
