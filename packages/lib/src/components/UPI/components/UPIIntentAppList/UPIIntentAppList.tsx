@@ -28,6 +28,7 @@ const UPIIntentAppList = ({ apps, selectedAppId, disabled, onAppSelect = () => {
             aria-label={i18n.get('paymentMethodsList.aria.label')}
         >
             {apps.map(app => {
+                // Remove this when we recieve the apps from parent with icons
                 const key = `adyen-checkout-upi-app-item-${app.id}`;
                 const isSelected = selectedAppId === app.id;
                 const imgName = `upi/${app.id}`;

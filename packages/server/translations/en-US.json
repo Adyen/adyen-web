@@ -12,7 +12,7 @@
     "creditCard.expiryDateField.year": "Year",
     "creditCard.storeDetailsButton": "Remember for next time",
     "creditCard.dualBrand.title": "Card Brand",
-    "creditCard.dualBrand.description": "Select the card brand you prefer to pay with. This is optional.",
+    "creditCard.dualBrand.description": "You can select the card brand you prefer to pay with. This is optional.",
     "installments": "Number of installments",
     "installmentOption": "%{times}x %{partialValue}",
     "installmentOptionMonths": "%{times} months",
@@ -443,5 +443,9 @@
     "econtext.customerNumber": "Customer number",
     "econtext.confirmationNumber": "Confirmation number",
     "econtext.useBefore": "Use before",
-    "econtext.paymentInformation": "Payment information"
+    "econtext.paymentInformation": "Payment information",
+    "issuerList.separatorText": "or choose from list",
+    "upi.intent.apps.title": "Options",
+    "upi.intent.apps.dropdown.label": "UPI apps",
+    "upi.intent.apps.dropdown.placeholder": "Choose preferred app"
 }
