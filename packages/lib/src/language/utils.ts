@@ -1,11 +1,19 @@
 import { h } from 'preact';
 import { CustomTranslations } from './types';
-import { DEFAULT_LOCALE } from './constants';
+import { DEFAULT_LOCALE, LOCALE_NAME_MAX_LENGTH, LOCALE_NAME_MIN_LENGTH } from './constants';
 
 /**
- * Convert to ISO 639-1
+ * @description Convert to ISO 639-1
  */
 const toTwoLetterCode = (locale: string): string => locale.toLowerCase().substring(0, 2);
+
+/**
+ * @description Checks if the locale length is valid
+ * @param locale - The locale to check
+ * @returns true if the locale length is valid, false otherwise
+ */
+const isLocaleLenghtValid = (locale: string): boolean =>
+    Boolean(locale) && locale.length >= LOCALE_NAME_MIN_LENGTH && locale.length <= LOCALE_NAME_MAX_LENGTH;
 
 /**
  * Matches a string with one of the locales
@@ -28,10 +36,10 @@ export function matchLocale(locale: string, supportedLocales: readonly string[])
  * @param localeParam - Locale example: 'En_us' or 'en-US'
  *
  * @example
- * formatLocale('En_us');
+ * formatLocaleToLanguageCountryLocale('En_us');
  * // returns 'en-US'
  */
-export function formatLocale(localeParam: string): string | null {
+export function formatLocaleToLanguageCountryLocale(localeParam: string): string | null {
     const locale = localeParam.replace('_', '-');
     const format = /^([a-z]{2})(-)([A-Z]{2})$/;
 
@@ -51,9 +59,9 @@ export function formatLocale(localeParam: string): string | null {
 }
 
 export function parseLocale(locale: string, supportedLocales: readonly string[]): string {
-    if (!locale || locale.length < 1 || locale.length > 5) return DEFAULT_LOCALE;
+    if (!isLocaleLenghtValid(locale)) return DEFAULT_LOCALE;
 
-    const formattedLocale = formatLocale(locale);
+    const formattedLocale = formatLocaleToLanguageCountryLocale(locale);
     const hasMatch = formattedLocale && supportedLocales.includes(formattedLocale);
 
     if (hasMatch) return formattedLocale;
@@ -62,20 +70,21 @@ export function parseLocale(locale: string, supportedLocales: readonly string[])
 }
 
 /**
- * Makes sure that if custom translation is defined using not properly formatted locale keys, then it gets formatted correctly
-
- * Custom translation defined as { en_US: { ... }} will be adjusted to { 'en-US': { ... }}
+ * @description Makes sure that if custom translation is defined using not properly formatted locale keys, then it gets formatted correctly
+ *
+ * @example { en_US: { ... }} will be adjusted to { 'en-US': { ... }} .  { ar: { ... }} is kept as is.
  */
 export function formatCustomTranslations(customTranslations: CustomTranslations = {}): CustomTranslations {
-    return Object.keys(customTranslations).reduce<CustomTranslations>((memo, customTranslationLocaleKey) => {
-        const locale = formatLocale(customTranslationLocaleKey);
-        if (!locale) return memo;
-        memo[locale] = customTranslations[customTranslationLocaleKey];
+    return Object.keys(customTranslations).reduce<CustomTranslations>((memo, localeKey) => {
+        if (!isLocaleLenghtValid(localeKey)) return memo;
+
+        const locale = formatLocaleToLanguageCountryLocale(localeKey) || toTwoLetterCode(localeKey);
+        memo[locale] = customTranslations[localeKey];
         return memo;
     }, {});
 }
 
-const replaceTranslationValues = (translation: string, values: { [key: string]: string }) => {
+const replaceTranslationValues = (translation: string, values: Record<string, string>) => {
     return translation.replace(/%{(\w+)}/g, (_, k) => values[k] || '');
 };
 

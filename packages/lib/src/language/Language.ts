@@ -45,7 +45,7 @@ export class Language {
         this.service = service;
 
         this.customTranslations = formatCustomTranslations(customTranslations);
-        this.supportedLocales = this.createSupportedLocalesList(customTranslations);
+        this.supportedLocales = this.createSupportedLocalesList(this.customTranslations);
 
         this.locale = parseLocale(locale || DEFAULT_LOCALE, this.supportedLocales);
         this.languageCode = this.locale.split('-')[0];
@@ -60,14 +60,14 @@ export class Language {
             this._translations = {
                 ...enUS,
                 ...translations,
-                ...(!!this.customTranslations[this.locale] && this.customTranslations[this.locale])
+                ...(Boolean(this.customTranslations[this.locale]) && this.customTranslations[this.locale])
             };
         } catch (error: unknown) {
-            console.error('Language - requestTranslations(): Failed to fetch translations', error);
+            console.warn('Language - requestTranslations(): Failed to fetch translations', error);
 
             this._translations = {
                 ...enUS,
-                ...(!!this.customTranslations[this.locale] && this.customTranslations[this.locale])
+                ...(Boolean(this.customTranslations[this.locale]) && this.customTranslations[this.locale])
             };
         }
     }

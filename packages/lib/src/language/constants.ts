@@ -34,3 +34,13 @@ export const CDN_SUPPORTED_LOCALES = [
 ] as const;
 
 export const DEFAULT_LOCALE = 'en-US';
+
+/**
+ * @description Minimum length is 2 according to BCP 47 standard (e.g. 'ar')
+ */
+export const LOCALE_NAME_MIN_LENGTH = 2;
+
+/**
+ * @description Maximum length is 5 because country/region codes can be a max of 5 characters according to BCP 47 standard (e.g. 'en-US')
+ */
+export const LOCALE_NAME_MAX_LENGTH = 5;

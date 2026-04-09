@@ -60,7 +60,7 @@ describe('Language', () => {
         });
     });
 
-    describe('Translations request', () => {
+    describe('Translations creation', () => {
         test('should request translations passing the expected locale', async () => {
             const fetchSpy = jest.fn().mockResolvedValue({ testKey: 'Test Value' });
             const service: ILanguageService = {
@@ -123,6 +123,49 @@ describe('Language', () => {
 
             expect(language.get('payButton')).toBe('Pay');
             expect(language.get('close')).toBe('Close');
+        });
+
+        test('should merge the fetched translations with custom translations even if the provided custom translation has the wrong case', async () => {
+            const fetchedTranslations = {
+                payButton: 'Betaal'
+            };
+
+            const customTranslations = {
+                'nl-ar': {
+                    payButton: 'BETAAL'
+                }
+            };
+
+            const service: ILanguageService = {
+                fetchTranslationsFromCdn: jest.fn().mockResolvedValue(fetchedTranslations)
+            };
+
+            const language = new Language({ locale: 'nl-AR', service, customTranslations });
+            await language.requestTranslations();
+
+            expect(language.get('payButton')).toBe('BETAAL');
+        });
+
+        test('should support custom translations for two letter code locales (e.g. "ar")', async () => {
+            const fetchedTranslations = {
+                payButton: 'دفع'
+            };
+
+            const customTranslations = {
+                ar: {
+                    payButton: 'Pay!'
+                }
+            };
+
+            const service: ILanguageService = {
+                fetchTranslationsFromCdn: jest.fn().mockResolvedValue(fetchedTranslations)
+            };
+
+            const language = new Language({ locale: 'ar', service, customTranslations });
+            await language.requestTranslations();
+
+            expect(language.locale).toBe('ar');
+            expect(language.get('payButton')).toBe('Pay!');
         });
     });
 });
