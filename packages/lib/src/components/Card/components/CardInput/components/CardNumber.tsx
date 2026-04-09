@@ -34,7 +34,7 @@ export default function CardNumber(props: Readonly<CardNumberProps>) {
 
     // Unlike other fields we don't respect the 'showContextualElement' config prop (that the merchant can set to false)
     // We always show the contextual text for dual branding that requires selection
-    const contextualText = showDualBrandSelector ? i18n.get('creditCard.dualBrand.description') : null;
+    const contextualText = showDualBrandSelector ? i18n.get('creditCard.dualBrand.description') : undefined;
 
     return (
         <Field
@@ -77,7 +77,6 @@ export default function CardNumber(props: Readonly<CardNumberProps>) {
                             dualBrandingElements={dualBrandingElements}
                             dualBrandingChangeHandler={dualBrandingChangeHandler}
                             brandsConfiguration={brandsConfiguration}
-                            contextualText={contextualText}
                             selectedBrandValue={selectedBrandValue}
                         />
                     ) : (
@@ -88,7 +87,7 @@ export default function CardNumber(props: Readonly<CardNumberProps>) {
                 </div>
             )}
             <span className="adyen-checkout__card__dual-branding__sr-only" aria-live="polite">
-                {showDualBrandSelector ? contextualText : null}
+                {contextualText}
             </span>
         </Field>
     );
