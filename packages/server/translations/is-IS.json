@@ -12,7 +12,7 @@
     "creditCard.expiryDateField.year": "Ár",
     "creditCard.storeDetailsButton": "Muna þetta til að nota næst",
     "creditCard.dualBrand.title": "Kortafyrirtæki",
-    "creditCard.dualBrand.description": "Veldu kortafyrirtæki kortsins sem þú vilt greiða með. Þetta er valfrjálst.",
+    "creditCard.dualBrand.description": "Þú getur valið kortafyrirtæki kortsins sem þú vilt greiða með. Þetta er valfrjálst.",
     "installments": "Fjöldi afborgana",
     "installmentOption": "%{times}x %{partialValue}",
     "installmentOptionMonths": "%{times} mánuðir",
