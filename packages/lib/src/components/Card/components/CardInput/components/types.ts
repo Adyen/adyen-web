@@ -6,16 +6,16 @@ export type DualBrandingChangeHandler = (brandValue: string) => void;
 
 export interface BrandIconProps {
     brand: string;
-    brandsConfiguration: CardBrandsConfiguration;
+    brandsConfiguration?: CardBrandsConfiguration;
 }
 
 export interface CardFieldsProps {
-    brand?: string;
+    brand: string;
     brandsIcons?: Array<BrandConfiguration>;
     brandsConfiguration?: CardBrandsConfiguration;
-    dualBrandingChangeHandler?: DualBrandingChangeHandler;
+    dualBrandingChangeHandler: DualBrandingChangeHandler;
     dualBrandingElements?: DualBrandSelectElement[];
-    selectedBrandValue?: string;
+    selectedBrandValue: string;
     errors?: any;
     focusedElement?: any;
     hasCVC?: any;
@@ -43,16 +43,16 @@ export interface CardHolderNameProps {
 export interface CardNumberProps {
     brand: string;
     brandsConfiguration?: CardBrandsConfiguration;
-    dualBrandingChangeHandler?: DualBrandingChangeHandler;
+    dualBrandingChangeHandler: DualBrandingChangeHandler;
     dualBrandingElements?: DualBrandSelectElement[];
-    selectedBrandValue?: string;
+    selectedBrandValue: string;
     error: string;
     filled: boolean;
     focused: boolean;
     isValid: boolean;
     label: string;
     onFocusField: (field: string) => void;
-    showBrandIcon: boolean;
+    showBrandIcon?: boolean;
 }
 
 export interface CVCProps {

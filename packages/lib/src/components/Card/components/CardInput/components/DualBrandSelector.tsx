@@ -5,12 +5,12 @@ import { CardBrandsConfiguration, DualBrandSelectElement, DualBrandButtons } fro
 import { DualBrandingChangeHandler } from './types';
 import { mapDualBrandButtons } from '../utils';
 import './DualBrandSelector.scss';
+import { useCoreContext } from '../../../../../core/Context/CoreProvider';
 
 interface DualBrandSelectorProps {
     dualBrandingElements: DualBrandSelectElement[];
     dualBrandingChangeHandler: DualBrandingChangeHandler;
-    brandsConfiguration: CardBrandsConfiguration;
-    contextualText: string;
+    brandsConfiguration?: CardBrandsConfiguration;
     selectedBrandValue: string;
 }
 
@@ -18,9 +18,9 @@ export default function DualBrandSelector({
     dualBrandingElements,
     brandsConfiguration,
     dualBrandingChangeHandler,
-    contextualText,
     selectedBrandValue
 }: Readonly<DualBrandSelectorProps>) {
+    const { i18n } = useCoreContext();
     const dualBrandItems = mapDualBrandButtons(dualBrandingElements, brandsConfiguration);
     const [selectedBrand, setSelectedBrand] = useState<string>(selectedBrandValue);
 
@@ -37,7 +37,7 @@ export default function DualBrandSelector({
     };
 
     return (
-        <div className="adyen-checkout__card__dual-brand-selector" role="group" aria-label={contextualText}>
+        <div className="adyen-checkout__card__dual-brand-selector" role="group" aria-label={i18n.get('creditCard.dualBrand.description')}>
             {dualBrandItems.map((item: DualBrandButtons) => (
                 <button
                     key={item.id}
