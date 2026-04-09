@@ -38,8 +38,7 @@ describe('UPIComponent', () => {
         ];
 
         const priorityApps = allApps.slice(0, MAX_PRIMARY_APPS);
-        const appsExceedingMax = allApps.slice(0, MAX_PRIMARY_APPS + 2);
-        const lowPriorityApp = appsExceedingMax[MAX_PRIMARY_APPS];
+        const lowPriorityApp = allApps[allApps.length - 1];
 
         test('should show a list of apps from the given app list', async () => {
             customRender(
@@ -60,7 +59,7 @@ describe('UPIComponent', () => {
         test('should split apps into priority grid and low-priority dropdown when exceeding MAX_PRIMARY_APPS', async () => {
             customRender(
                 <UPIComponent
-                    apps={appsExceedingMax}
+                    apps={allApps}
                     mode={UPI_MODE.INTENT}
                     onChange={jest.fn()}
                     showPayButton={false}
@@ -168,7 +167,7 @@ describe('UPIComponent', () => {
 
             customRender(
                 <UPIComponent
-                    apps={appsExceedingMax}
+                    apps={allApps}
                     mode={UPI_MODE.INTENT}
                     showPayButton={false}
                     onChange={onChangeMock}
@@ -197,7 +196,7 @@ describe('UPIComponent', () => {
 
             customRender(
                 <UPIComponent
-                    apps={appsExceedingMax}
+                    apps={allApps}
                     mode={UPI_MODE.INTENT}
                     onChange={jest.fn()}
                     showPayButton={false}
