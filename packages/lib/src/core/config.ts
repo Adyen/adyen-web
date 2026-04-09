@@ -69,3 +69,25 @@ export default {
     GENERIC_OPTIONS,
     DEFAULT_HTTP_TIMEOUT
 };
+
+/**
+ * @internal
+ */
+export enum CHANNEL {
+    WEB = 'web'
+}
+
+/**
+ * @internal
+ */
+export enum PLATFORM {
+    WEB = 'web'
+}
+
+/**
+ * @internal
+ */
+export enum PAYMENT_METHOD_BEHAVIOR {
+    NATIVE = 'nativeComponent',
+    GENERIC = 'genericComponent'
+}
