@@ -12,7 +12,7 @@
     "creditCard.expiryDateField.year": "Leto",
     "creditCard.storeDetailsButton": "Zapomni si za prihodnjič",
     "creditCard.dualBrand.title": "Znamka kartice",
-    "creditCard.dualBrand.description": "Izberete lahko znamko kartice, s katero želite plačati. To ni obvezno.",
+    "creditCard.dualBrand.description": "Izberete lahko znamko kartice, s katero želite plačAti. To ni obvezno.",
     "installments": "Število obrokov",
     "installmentOption": "%{times} × %{partialValue}",
     "installmentOptionMonths": "Št. mesecev: %{times}",
