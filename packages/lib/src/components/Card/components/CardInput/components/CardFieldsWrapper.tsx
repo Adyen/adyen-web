@@ -92,7 +92,7 @@ export const CardFieldsWrapper = ({
             <CardFields
                 showBrandIcon={showBrandIcon}
                 showContextualElement={showContextualElement}
-                brand={sfpState.brand}
+                brand={sfpState.brand ?? 'card'}
                 brandsIcons={brandsIcons}
                 brandsConfiguration={brandsConfiguration}
                 focusedElement={focusedElement}

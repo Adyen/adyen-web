@@ -16,6 +16,8 @@ const renderCardNumber = (props = {}) => {
                 showBrandIcon={true}
                 brand="card"
                 onFocusField={() => {}}
+                dualBrandingChangeHandler={() => {}}
+                selectedBrandValue=""
                 {...props}
             />
         </CoreProvider>

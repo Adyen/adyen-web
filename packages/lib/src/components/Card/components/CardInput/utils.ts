@@ -193,13 +193,13 @@ export function getFullBrandName(brand: string): string {
 
 export const mapDualBrandButtons = (
     dualBrandSelectElements: DualBrandSelectElement[],
-    brandsConfiguration: CardBrandsConfiguration
+    brandsConfiguration?: CardBrandsConfiguration
 ): DualBrandButtons[] => {
     return dualBrandSelectElements.map(item => {
         const brand = item.id;
         const getImage = useImage();
         const imageName = brand === 'card' ? 'nocard' : brand;
-        const imageURL = brandsConfiguration[brand]?.icon ?? getCardImageUrl(imageName, getImage);
+        const imageURL = brandsConfiguration?.[brand]?.icon ?? getCardImageUrl(imageName, getImage);
 
         // TODO - check below if we have to still generate altName through the mapping function or whether it just
         //  corresponds to item.brandObject.localeBrand
