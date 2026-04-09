@@ -119,6 +119,10 @@
         color: variable-generator.token(color-label-secondary) !important;
         cursor: not-allowed;
     }
+
+    &--placeholder {
+        color: variable-generator.token(color-label-secondary);
+    }
 }
 
 .adyen-checkout__dropdown__list {

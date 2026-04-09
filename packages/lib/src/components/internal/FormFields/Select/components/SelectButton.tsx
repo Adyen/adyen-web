@@ -97,7 +97,9 @@ function SelectButton(props: Readonly<SelectButtonProps>) {
                         aria-expanded={showList}
                         aria-owns={props.selectListId}
                         autoComplete="off"
-                        className="adyen-checkout__filter-input"
+                        className={classnames('adyen-checkout__filter-input', {
+                            'adyen-checkout__filter-input--placeholder': !showList && isShowingPlaceholder
+                        })}
                         onInput={props.onInput}
                         ref={props.filterInputRef}
                         role="combobox"
