@@ -2,7 +2,7 @@ import { debounce, DEFAULT_DEBOUNCE_TIME_MS } from '../../utils/debounce';
 import { processAnalyticsData } from './utils';
 import { AbstractAnalyticsEvent, AnalyticsEventCategory } from './events/AbstractAnalyticsEvent';
 import Storage from '../../utils/Storage';
-import { LIBRARY_BUNDLE_TYPE, LIBRARY_VERSION } from '../config';
+import { CHANNEL, LIBRARY_BUNDLE_TYPE, LIBRARY_VERSION, PLATFORM } from '../config';
 import { AnalyticsEventQueue } from './AnalyticsEventQueue';
 import type { AnalyticsOptions } from './types';
 import type { AnalyticsEventPayload, IAnalyticsService, RequestAttemptIdPayload } from './AnalyticsService';
@@ -84,8 +84,8 @@ class Analytics implements IAnalytics {
             const payload: RequestAttemptIdPayload = {
                 version: LIBRARY_VERSION,
                 buildType: LIBRARY_BUNDLE_TYPE,
-                channel: 'Web',
-                platform: 'Web',
+                channel: CHANNEL.WEB,
+                platform: PLATFORM.WEB,
                 locale,
                 referrer: window.location.href,
                 screenWidth: window.screen.width,
@@ -160,8 +160,8 @@ class Analytics implements IAnalytics {
         }
 
         const payload: AnalyticsEventPayload = {
-            channel: 'Web',
-            platform: 'Web',
+            channel: CHANNEL.WEB,
+            platform: PLATFORM.WEB,
             info: this.eventsQueue.infoEvents,
             errors: this.eventsQueue.errorEvents,
             logs: this.eventsQueue.logEvents
