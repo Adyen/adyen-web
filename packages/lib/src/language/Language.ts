@@ -54,22 +54,13 @@ export class Language {
     }
 
     public async requestTranslations(): Promise<void> {
-        try {
-            const translations = await this.service.fetchTranslationsFromCdn(this.locale);
+        const translations = await this.service.fetchTranslationsFromCdn(this.locale);
 
-            this._translations = {
-                ...enUS,
-                ...translations,
-                ...(Boolean(this.customTranslations[this.locale]) && this.customTranslations[this.locale])
-            };
-        } catch (error: unknown) {
-            console.warn('Language - requestTranslations(): Failed to fetch translations', error);
-
-            this._translations = {
-                ...enUS,
-                ...(Boolean(this.customTranslations[this.locale]) && this.customTranslations[this.locale])
-            };
-        }
+        this._translations = {
+            ...enUS,
+            ...translations,
+            ...(Boolean(this.customTranslations[this.locale]) && this.customTranslations[this.locale])
+        };
     }
 
     public get translations(): Readonly<Translations> {

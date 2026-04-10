@@ -38,7 +38,7 @@ class LanguageService implements ILanguageService {
                 path: `sdk/${this.sdkVersion}/translations/${cdnLocale}.json`
             });
         } catch (error) {
-            console.warn(`LanguageService - fetchTranslationsFromCdn(): Failed to fetch locale "${cdnLocale}."`);
+            console.warn(`LanguageService - fetchTranslationsFromCdn(): Failed to fetch locale "${cdnLocale}."`, error);
             return enUS as Translations;
         }
     }

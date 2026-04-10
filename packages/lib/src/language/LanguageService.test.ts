@@ -107,7 +107,10 @@ describe('LanguageService', () => {
                 const result = await service.fetchTranslationsFromCdn('fr-FR');
 
                 expect(result).toBe(enUS);
-                expect(consoleWarnSpy).toHaveBeenCalledWith('LanguageService - fetchTranslationsFromCdn(): Failed to fetch locale "fr-FR."');
+                expect(consoleWarnSpy).toHaveBeenCalledWith(
+                    'LanguageService - fetchTranslationsFromCdn(): Failed to fetch locale "fr-FR."',
+                    expect.any(Error)
+                );
             });
         });
 

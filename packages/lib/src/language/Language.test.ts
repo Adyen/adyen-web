@@ -113,18 +113,6 @@ describe('Language', () => {
             expect(language.get('address')).toBe('Address');
         });
 
-        test('should use built-in english locale if the request fails', async () => {
-            const service: ILanguageService = {
-                fetchTranslationsFromCdn: jest.fn().mockRejectedValue(new Error('Network error'))
-            };
-
-            const language = new Language({ locale: 'pt-BR', service });
-            await language.requestTranslations();
-
-            expect(language.get('payButton')).toBe('Pay');
-            expect(language.get('close')).toBe('Close');
-        });
-
         test('should merge the fetched translations with custom translations even if the provided custom translation has the wrong case', async () => {
             const fetchedTranslations = {
                 payButton: 'Betaal'
