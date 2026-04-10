@@ -43,8 +43,7 @@ test.describe('Dropin - Sessions - UPI', () => {
 
             await dropinWithSession.selectNonStoredPaymentMethod('upi');
 
-            // TODO: Re-enable this screenshot with this PR https://github.com/Adyen/adyen-web/pull/3885
-            // await toHaveScreenshot(upiPaymentMethodHeader.rootElement, browserName, 'expanded-upi-payment-method-header-mobile.png');
+            await toHaveScreenshot(upiPaymentMethodHeader.rootElement, browserName, 'expanded-upi-payment-method-header-mobile.png');
 
             const upi = new UPI(page);
 
