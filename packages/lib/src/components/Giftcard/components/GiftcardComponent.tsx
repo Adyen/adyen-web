@@ -11,8 +11,9 @@ import { GiftCardBalanceCheckErrorType } from '../types';
 import { PayButtonProps } from '../../internal/PayButton/PayButton';
 import { useAmount } from '../../../core/Context/AmountProvider';
 import type { AbstractAnalyticsEvent } from '../../../core/Analytics/events/AbstractAnalyticsEvent';
+import type { SFPProps } from '../../internal/SecuredFields/SFP/types';
 
-interface GiftcardComponentProps {
+interface GiftcardComponentProps extends Partial<Pick<SFPProps, 'clientKey' | 'loadingContext'>> {
     onChange: (state) => void;
     onFocus: (event) => void;
     onBlur: (event) => void;
@@ -197,6 +198,8 @@ class Giftcard extends Component<Readonly<GiftcardComponentProps>> {
 
                 <SecuredFieldsProvider
                     {...this.props}
+                    clientKey={this.props.clientKey}
+                    loadingContext={this.props.loadingContext}
                     ref={ref => {
                         this.sfp = ref;
                     }}

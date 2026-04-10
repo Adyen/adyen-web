@@ -138,7 +138,7 @@ export const extractPropsForCardFields = (props: CardInputProps) => {
     };
 };
 
-export const extractPropsForSFP = (props: CardInputProps) => {
+export const extractPropsForSFP = (props: CardInputProps): Pick<SFPProps, 'clientKey' | 'loadingContext'> & Partial<SFPProps> => {
     return {
         autoFocus: props.autoFocus,
         brands: props.brands,
@@ -169,7 +169,7 @@ export const extractPropsForSFP = (props: CardInputProps) => {
         showContextualElement: props.showContextualElement,
         showWarnings: props.showWarnings,
         trimTrailingSeparator: props.trimTrailingSeparator
-    } as SFPProps; // Can't set as return type on fn or it will complain about missing, mandatory, props
+    };
 };
 
 export const handlePartialAddressMode = (addressMode: AddressModeOptions): AddressSpecifications | null => {

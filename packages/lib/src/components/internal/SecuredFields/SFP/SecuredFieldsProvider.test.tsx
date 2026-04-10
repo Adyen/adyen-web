@@ -1,15 +1,37 @@
-import { h, createRef } from 'preact';
+import { h, createRef, RefObject } from 'preact';
 import { render, act } from '@testing-library/preact/pure';
 import SecuredFieldsProvider from './SecuredFieldsProvider';
 import { SF_ErrorCodes } from '../../../../core/Errors/constants';
 import { setupResourceMock } from '../../../../../config/testMocks/resourcesMock';
+import { CVC_POLICY_REQUIRED } from '../lib/constants';
 
 jest.mock('../lib/CSF', () => {
     return () => true;
 });
 
-let sfp;
-let sfpRef;
+/**
+ * Test helper type that exposes private members for testing purposes.
+ * This avoids making internal methods public while allowing tests to access them.
+ *
+ * Note: We use a mapped type to "unlock" private members rather than an intersection,
+ * because intersecting with properties that are private in the class causes TypeScript
+ * to reduce the type to 'never'.
+ */
+type TestableSecuredFieldsProvider = {
+    [K in keyof SecuredFieldsProvider]: SecuredFieldsProvider[K];
+} & {
+    csf: any;
+    numDateFields: number;
+    issuingCountryCode: string;
+    handleOnConfigSuccess: () => void;
+    handleOnError: (obj: any, hasUnsupportedCard?: boolean) => boolean;
+    handleOnFieldValid: (obj: any) => boolean;
+    handleOnAllValid: (obj: any) => boolean;
+    handleOnBrand: (obj: any) => void;
+};
+
+let sfp: TestableSecuredFieldsProvider | undefined;
+let sfpRef: RefObject<SecuredFieldsProvider>;
 
 const onError = jest.fn(() => {});
 const renderFn = jest.fn(() => null);
@@ -65,7 +87,7 @@ const mockBinLookupObj = {
     supportedBrands: [
         {
             brand: 'mc',
-            cvcPolicy: 'required',
+            cvcPolicy: CVC_POLICY_REQUIRED,
             enableLuhnCheck: true,
             showExpiryDate: true,
             supported: true
@@ -83,21 +105,29 @@ const mockCSF = {
     brandsFromBinLookup
 };
 
+const defaultProps = {
+    rootNode: nodeHolder,
+    styles,
+    render: renderFn,
+    onError,
+    i18n: global.i18n,
+    clientKey: 'test_client_key',
+    componentType: 'card',
+    loadingContext: 'https://checkoutshopper-test.adyen.com/',
+    onChange: jest.fn(),
+    onStateUpdate: jest.fn(),
+    onSubmitAnalytics: jest.fn(),
+    type: 'card',
+    resources: setupResourceMock(),
+    maskSecurityCode: false,
+    exposeExpiryDate: false,
+    disableIOSArrowKeys: null
+};
+
 function renderSFP(extraProps = {}) {
     sfpRef = createRef();
-    render(
-        <SecuredFieldsProvider
-            ref={sfpRef}
-            rootNode={nodeHolder}
-            styles={styles}
-            render={renderFn}
-            onError={onError}
-            i18n={global.i18n}
-            configuration={{}}
-            {...extraProps}
-        />
-    );
-    sfp = sfpRef.current;
+    render(<SecuredFieldsProvider ref={sfpRef} {...defaultProps} {...extraProps} />);
+    sfp = sfpRef.current as unknown as TestableSecuredFieldsProvider;
     return sfp;
 }
 
@@ -249,7 +279,7 @@ describe('<SecuredFieldsProvider /> handling an unsupported card', () => {
 
         // Clear the error by mocking a successful /binLookup response
         await act(() => {
-            sfp.processBinLookupResponse(mockBinLookupObj);
+            sfp.processBinLookupResponse(mockBinLookupObj, null);
         });
 
         expect(sfp.state.detectedUnsupportedBrands).toBe(null);
@@ -286,7 +316,7 @@ describe('<SecuredFieldsProvider /> handling an binLookup response', () => {
             sfp.csf = mockCSF;
 
             await act(() => {
-                sfp.processBinLookupResponse(mockBinLookupObj);
+                sfp.processBinLookupResponse(mockBinLookupObj, null);
             });
 
             expect(sfp.issuingCountryCode).toEqual('us');
@@ -294,7 +324,7 @@ describe('<SecuredFieldsProvider /> handling an binLookup response', () => {
 
             // reset
             await act(() => {
-                sfp.processBinLookupResponse(null);
+                sfp.processBinLookupResponse(null, null);
             });
 
             expect(sfp.issuingCountryCode).toBe(undefined);
