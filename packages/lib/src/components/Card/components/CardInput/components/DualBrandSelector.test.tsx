@@ -5,6 +5,7 @@ import DualBrandSelector from './DualBrandSelector';
 import { CoreProvider } from '../../../../../core/Context/CoreProvider';
 import { DualBrandSelectElement } from '../../../types';
 import { setupCoreMock } from '../../../../../../config/testMocks/setup-core-mock';
+import enUS from '../../../../../../../server/translations/en-US.json';
 
 const DEFAULT_DUAL_BRAND_ELEMENTS: DualBrandSelectElement[] = [
     {
@@ -104,7 +105,7 @@ describe('DualBrandSelector', () => {
 
     describe('Accessibility', () => {
         test('should have role="group" with aria-label matching contextual text', () => {
-            const contextualText = 'Select the card brand you prefer to pay with. This is optional.';
+            const contextualText = enUS['creditCard.dualBrand.description'];
             renderDualBrandSelector({ contextualText });
 
             const group = screen.getByRole('group', { name: contextualText });
