@@ -34,7 +34,7 @@ describe('PaymentMethodBrands', () => {
         expect(screen.queryByText(/\+/)).toBeNull();
     });
 
-    test('should render three brands AND number of left over brands', () => {
+    test('should render four brands AND number of left over brands', () => {
         const brands = [
             { name: 'visa', icon: 'visa.png' },
             { name: 'mc', icon: 'mc.png' },
@@ -50,7 +50,7 @@ describe('PaymentMethodBrands', () => {
         screen.getByAltText('MasterCard');
         screen.getByAltText('American Express');
 
-        screen.getByText('+3');
+        screen.getByText('+ 3');
     });
 
     test('should render 4 brands AND `other` keyword', () => {
