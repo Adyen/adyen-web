@@ -3,8 +3,6 @@ import { AdyenCheckout } from '../../core/AdyenCheckout';
 import Dropin from '../Dropin';
 import Blik from './Blik';
 
-jest.mock('../../core/Services/get-translations');
-
 describe('Blik', () => {
     const createDropin = async paymentMethodsResponse => {
         const checkout = await AdyenCheckout({

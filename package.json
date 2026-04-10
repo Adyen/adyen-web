@@ -35,7 +35,8 @@
         "changeset:empty": "changeset --empty",
         "version": "changeset version && yarn install",
         "validate:fix": "yarn workspaces foreach --all run validate:fix",
-        "validate:strict": "yarn workspace @adyen/adyen-web validate:strict"
+        "validate:strict": "yarn workspace @adyen/adyen-web validate:strict",
+        "validate:locales": "node scripts/validate-locales.js"
     },
     "devDependencies": {
         "@adyen/adyen-web-server": "1.0.0",
