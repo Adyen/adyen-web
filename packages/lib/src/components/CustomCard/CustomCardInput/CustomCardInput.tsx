@@ -16,11 +16,11 @@ interface SecuredFieldsProps {
     brand?: string;
     brands?: string[];
     brandsConfiguration?: CardBrandsConfiguration;
-    clientKey?: string;
+    clientKey: string;
     countryCode?: string;
     forceCompat?: boolean;
     i18n: Language;
-    implementationType?: string;
+    implementationType?: 'components' | 'custom';
     keypadFix?: boolean;
     loadingContext?: string;
     legacyInputMode?: boolean;
@@ -154,6 +154,8 @@ function CustomCardInput(props: Readonly<SecuredFieldsProps>) {
             componentType={props.type}
             onChange={handleSecuredFieldsChange}
             onSubmitAnalytics={props.onSubmitAnalytics}
+            exposeExpiryDate={false}
+            disableIOSArrowKeys={null}
             render={() => null}
         />
     );

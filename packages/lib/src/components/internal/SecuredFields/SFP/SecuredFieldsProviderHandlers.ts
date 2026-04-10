@@ -137,8 +137,7 @@ function handleOnBrand(cardInfo: CardBrandData): void {
     /**
      * If not resetting back to an empty field,
      * and if the brand is based on our regEx (mode = BEST_GUESS_MODE), rather than binLookup,
-     * and we're in a country that requires a dual-brand selection mechanism
-     * ... we favour the local brand, if it is configured by the merchant
+     * and we're in a country that requires a dual-brand selection mechanism...
      */
     const brandIsNotResetting = cardInfo.brand !== 'card';
     const brandDerivedFromBestGuess = cardInfo.mode === BEST_GUESS_MODE;
