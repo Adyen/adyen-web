@@ -2,6 +2,7 @@ import { h, createRef } from 'preact';
 import { render, act } from '@testing-library/preact/pure';
 import SecuredFieldsProvider from './SecuredFieldsProvider';
 import { SF_ErrorCodes } from '../../../../core/Errors/constants';
+import { setupResourceMock } from '../../../../../config/testMocks/resourcesMock';
 
 jest.mock('../lib/CSF', () => {
     return () => true;
@@ -85,6 +86,7 @@ const mockCSF = {
 function renderSFP(extraProps = {}) {
     sfpRef = createRef();
     render(
+        // @ts-ignore it's only a test
         <SecuredFieldsProvider
             ref={sfpRef}
             rootNode={nodeHolder}
@@ -92,7 +94,6 @@ function renderSFP(extraProps = {}) {
             render={renderFn}
             onError={onError}
             i18n={global.i18n}
-            configuration={{}}
             {...extraProps}
         />
     );
@@ -300,4 +301,199 @@ describe('<SecuredFieldsProvider /> handling an binLookup response', () => {
             expect(brandsFromBinLookup).toHaveBeenCalledTimes(2);
         }
     );
+});
+
+/**
+ * handleOnBrand - forcing local brand in countries requiring dual-brand selection mechanism
+ */
+describe('<SecuredFieldsProvider /> handleOnBrand with dual-brand selection mechanism', () => {
+    const createBrandData = (brand: string, mode: string) => ({
+        type: 'card',
+        rootNode: nodeHolder,
+        brand,
+        cvcPolicy: 'required',
+        expiryDatePolicy: 'required',
+        cvcText: 'Security code',
+        mode
+    });
+
+    beforeEach(() => {
+        nodeHolder.innerHTML = mockNode;
+    });
+
+    it('should force cartebancaire brand when countryCode is FR and brand derived from best-guess', async () => {
+        const onBrand = jest.fn();
+        renderSFP({
+            countryCode: 'fr',
+            brands: ['visa', 'mc', 'cartebancaire'],
+            brandsConfiguration: {},
+            resources: setupResourceMock(),
+            onBrand
+        });
+        sfp.csf = mockCSF;
+
+        await act(() => {
+            sfp.handleOnBrand(createBrandData('visa', 'best-guess'));
+        });
+
+        expect(onBrand).toHaveBeenCalledWith(
+            expect.objectContaining({
+                brand: 'cartebancaire'
+            })
+        );
+    });
+
+    it('should force bcmc brand when countryCode is BE and brand derived from best-guess', async () => {
+        const onBrand = jest.fn();
+        renderSFP({
+            countryCode: 'be',
+            brands: ['visa', 'mc', 'bcmc'],
+            brandsConfiguration: {},
+            resources: setupResourceMock(),
+            onBrand
+        });
+        sfp.csf = mockCSF;
+
+        await act(() => {
+            sfp.handleOnBrand(createBrandData('maestro', 'best-guess'));
+        });
+
+        expect(onBrand).toHaveBeenCalledWith(
+            expect.objectContaining({
+                brand: 'bcmc'
+            })
+        );
+    });
+
+    it('should force dankort brand when countryCode is DK and brand derived from best-guess', async () => {
+        const onBrand = jest.fn();
+        renderSFP({
+            countryCode: 'dk',
+            brands: ['visa', 'mc', 'dankort'],
+            brandsConfiguration: {},
+            resources: setupResourceMock(),
+            onBrand
+        });
+        sfp.csf = mockCSF;
+
+        await act(() => {
+            sfp.handleOnBrand(createBrandData('visa', 'best-guess'));
+        });
+
+        expect(onBrand).toHaveBeenCalledWith(
+            expect.objectContaining({
+                brand: 'dankort'
+            })
+        );
+    });
+
+    it('should NOT force local brand when brand derived from bin-lookup', async () => {
+        const onBrand = jest.fn();
+        renderSFP({
+            countryCode: 'fr',
+            brands: ['visa', 'mc', 'cartebancaire'],
+            brandsConfiguration: {},
+            resources: setupResourceMock(),
+            onBrand
+        });
+        sfp.csf = mockCSF;
+
+        await act(() => {
+            sfp.handleOnBrand(createBrandData('visa', 'bin-lookup'));
+        });
+
+        expect(onBrand).toHaveBeenCalledWith(
+            expect.objectContaining({
+                brand: 'visa'
+            })
+        );
+    });
+
+    it('should NOT force local brand when local brand is not configured by merchant', async () => {
+        const onBrand = jest.fn();
+        renderSFP({
+            countryCode: 'fr',
+            brands: ['visa', 'mc'], // cartebancaire not included
+            brandsConfiguration: {},
+            resources: setupResourceMock(),
+            onBrand
+        });
+        sfp.csf = mockCSF;
+
+        await act(() => {
+            sfp.handleOnBrand(createBrandData('visa', 'best-guess'));
+        });
+
+        expect(onBrand).toHaveBeenCalledWith(
+            expect.objectContaining({
+                brand: 'visa'
+            })
+        );
+    });
+
+    it('should NOT force local brand when countryCode is not in dual-brand selection map', async () => {
+        const onBrand = jest.fn();
+        renderSFP({
+            countryCode: 'us',
+            brands: ['visa', 'mc'],
+            brandsConfiguration: {},
+            resources: setupResourceMock(),
+            onBrand
+        });
+        sfp.csf = mockCSF;
+
+        await act(() => {
+            sfp.handleOnBrand(createBrandData('visa', 'best-guess'));
+        });
+
+        expect(onBrand).toHaveBeenCalledWith(
+            expect.objectContaining({
+                brand: 'visa'
+            })
+        );
+    });
+
+    it('should NOT force local brand when brand is resetting (brand = "card")', async () => {
+        const onBrand = jest.fn();
+        renderSFP({
+            countryCode: 'fr',
+            brands: ['visa', 'mc', 'cartebancaire'],
+            brandsConfiguration: {},
+            resources: setupResourceMock(),
+            onBrand
+        });
+        sfp.csf = mockCSF;
+
+        await act(() => {
+            sfp.handleOnBrand(createBrandData('card', 'best-guess'));
+        });
+
+        expect(onBrand).toHaveBeenCalledWith(
+            expect.objectContaining({
+                brand: 'card'
+            })
+        );
+    });
+
+    it('should handle uppercase countryCode', async () => {
+        const onBrand = jest.fn();
+        renderSFP({
+            countryCode: 'FR',
+            brands: ['visa', 'mc', 'cartebancaire'],
+            brandsConfiguration: {},
+            resources: setupResourceMock(),
+            onBrand
+        });
+        sfp.csf = mockCSF;
+
+        await act(() => {
+            sfp.handleOnBrand(createBrandData('visa', 'best-guess'));
+        });
+
+        expect(onBrand).toHaveBeenCalledWith(
+            expect.objectContaining({
+                brand: 'cartebancaire'
+            })
+        );
+    });
 });

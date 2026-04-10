@@ -12,7 +12,7 @@
     "creditCard.expiryDateField.year": "年",
     "creditCard.storeDetailsButton": "记住以便下次使用",
     "creditCard.dualBrand.title": "卡片品牌",
-    "creditCard.dualBrand.description": "请选择您偏好的支付卡片品牌。这是可选的。",
+    "creditCard.dualBrand.description": "您可以选择您偏好的支付卡片品牌。这是可选的。",
     "installments": "分期付款期数",
     "installmentOption": "%{times}x %{partialValue}",
     "installmentOptionMonths": "%{times} 个月",

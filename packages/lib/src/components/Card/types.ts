@@ -542,3 +542,10 @@ export interface DualBrandSelectElement {
     id: string;
     brandObject: BrandObject;
 }
+
+export interface DualBrandButtons {
+    id: string;
+    name: string;
+    imageURL: string;
+    altName: string;
+}

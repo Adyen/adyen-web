@@ -12,7 +12,7 @@
     "creditCard.expiryDateField.year": "年",
     "creditCard.storeDetailsButton": "次回のために保存します",
     "creditCard.dualBrand.title": "カードブランド",
-    "creditCard.dualBrand.description": "お支払いに使用するカードブランドをお選びください。これは任意です。",
+    "creditCard.dualBrand.description": "お支払いに使用するカードブランドを選択できます。これは任意です。",
     "installments": "分割回数",
     "installmentOption": "%{times}x %{partialValue}",
     "installmentOptionMonths": "%{times}か月",
