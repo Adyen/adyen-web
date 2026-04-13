@@ -5,15 +5,17 @@ import SRPanelProvider from '../../../../core/Errors/SRPanelProvider';
 import { SRPanel } from '../../../../core/Errors/SRPanel';
 import UPIComponent from './UPIComponent';
 import { CoreProvider } from '../../../../core/Context/CoreProvider';
-import { App } from '../../types';
 import { AmountProvider } from '../../../../core/Context/AmountProvider';
 import { UPI_MODE } from '../../constants';
+import { setupCoreMock } from '../../../../../config/testMocks/setup-core-mock';
 
 const customRender = (ui: h.JSX.Element) => {
+    const core = setupCoreMock();
+
     return render(
-        <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+        <CoreProvider i18n={core.modules.i18n} loadingContext="test" resources={core.modules.resources}>
             <AmountProvider providerRef={createRef()}>
-                <SRPanelProvider srPanel={new SRPanel(global.core)}>{ui}</SRPanelProvider>
+                <SRPanelProvider srPanel={new SRPanel(core)}>{ui}</SRPanelProvider>
             </AmountProvider>
         </CoreProvider>
     );
@@ -25,14 +27,15 @@ describe('UPIComponent', () => {
     });
 
     describe('Upi intent mode', () => {
-        const gpayApp: App = { id: 'gpay', name: 'Google Pay' };
+        const gpayApp = { id: 'gpay', name: 'Google Pay', icon: 'gpay.png' };
 
         test('should show a list of apps from the given app list', async () => {
             customRender(
                 <UPIComponent
-                    apps={[gpayApp]}
+                    appsList={[gpayApp]}
                     mode={UPI_MODE.INTENT}
                     onChange={jest.fn()}
+                    setComponentRef={jest.fn()}
                     showPayButton={false}
                     payButton={() => <button className="pay-button" />}
                 />
@@ -45,11 +48,12 @@ describe('UPIComponent', () => {
         test('should show a pay button if showPayButton is true', async () => {
             customRender(
                 <UPIComponent
-                    apps={[gpayApp]}
+                    appsList={[gpayApp]}
                     mode={UPI_MODE.INTENT}
                     onChange={jest.fn()}
                     showPayButton={true}
                     payButton={() => <button>Pay</button>}
+                    setComponentRef={jest.fn()}
                 />
             );
             expect(await screen.findByRole('button', { name: 'Pay' })).toBeInTheDocument();
@@ -60,7 +64,14 @@ describe('UPIComponent', () => {
             const user = userEvent.setup();
 
             customRender(
-                <UPIComponent apps={[gpayApp]} mode={UPI_MODE.INTENT} onChange={jest.fn()} showPayButton={true} payButton={payButtonMock} />
+                <UPIComponent
+                    appsList={[gpayApp]}
+                    mode={UPI_MODE.INTENT}
+                    onChange={jest.fn()}
+                    showPayButton={true}
+                    payButton={payButtonMock}
+                    setComponentRef={jest.fn()}
+                />
             );
 
             expect(payButtonMock).toHaveBeenLastCalledWith(expect.objectContaining({ status: 'ready' }));
@@ -76,11 +87,12 @@ describe('UPIComponent', () => {
 
             customRender(
                 <UPIComponent
-                    apps={[gpayApp]}
+                    appsList={[gpayApp]}
                     mode={UPI_MODE.INTENT}
                     showPayButton={false}
                     onChange={onChangeMock}
                     payButton={() => <button className="pay-button" />}
+                    setComponentRef={jest.fn()}
                 />
             );
 
@@ -96,7 +108,7 @@ describe('UPIComponent', () => {
                 expect(onChangeMock).toHaveBeenCalledTimes(2);
             });
             expect(onChangeMock).toHaveBeenLastCalledWith({
-                data: { app: gpayApp },
+                data: { app: { id: gpayApp.id, name: gpayApp.name } },
                 isValid: true
             });
         });
