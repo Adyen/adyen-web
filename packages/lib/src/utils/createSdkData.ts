@@ -1,12 +1,12 @@
 import base64 from './base64';
-import { LIBRARY_VERSION, CHANNEL, PLATFORM, PAYMENT_METHOD_BEHAVIOR } from '../core/config';
+import { LIBRARY_VERSION, CHANNEL, PLATFORM, Channel, Platform, PaymentMethodBehavior } from '../core/config';
 export interface SdkDataObject {
     schemaVersion: number;
     createdAt: number;
-    channel: CHANNEL;
-    platform: PLATFORM;
+    channel: Channel;
+    platform: Platform;
     sdkVersion: string;
-    paymentMethodBehavior: PAYMENT_METHOD_BEHAVIOR;
+    paymentMethodBehavior: PaymentMethodBehavior;
     analytics: {
         checkoutAttemptId: string;
     };
@@ -21,7 +21,7 @@ export interface SdkDataObject {
  * @param clientData - The client data from risk module
  * @returns Base64 encoded JSON string of the SDK data object
  */
-export function createSdkData(checkoutAttemptId: string, clientData: string | null, paymentMethodBehavior: PAYMENT_METHOD_BEHAVIOR): string {
+export function createSdkData(checkoutAttemptId: string, clientData: string | null, paymentMethodBehavior: PaymentMethodBehavior): string {
     const sdkDataObject: SdkDataObject = {
         schemaVersion: 1,
         createdAt: Date.now(),

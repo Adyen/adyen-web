@@ -74,16 +74,16 @@ export default {
  * @internal
  */
 export const CHANNEL = { WEB: 'web' } as const;
-export type CHANNEL = (typeof CHANNEL)[keyof typeof CHANNEL];
+export type Channel = (typeof CHANNEL)[keyof typeof CHANNEL];
 
 /**
  * @internal
  */
 export const PLATFORM = { WEB: 'web' } as const;
-export type PLATFORM = (typeof PLATFORM)[keyof typeof PLATFORM];
+export type Platform = (typeof PLATFORM)[keyof typeof PLATFORM];
 
 /**
  * @internal
  */
 export const PAYMENT_METHOD_BEHAVIOR = { NATIVE: 'nativeComponent', GENERIC: 'genericComponent' } as const;
-export type PAYMENT_METHOD_BEHAVIOR = (typeof PAYMENT_METHOD_BEHAVIOR)[keyof typeof PAYMENT_METHOD_BEHAVIOR];
+export type PaymentMethodBehavior = (typeof PAYMENT_METHOD_BEHAVIOR)[keyof typeof PAYMENT_METHOD_BEHAVIOR];
