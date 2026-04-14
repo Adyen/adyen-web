@@ -2,7 +2,7 @@ import { SingleBrandResetObject } from '../SFP/types';
 import { BrandObject } from '../../../Card/types';
 import createCardVariantSwitcher from './createCardVariantSwitcher';
 import { BRAND_ICON_UI_EXCLUSION_LIST } from '../lib/constants';
-import { mustHandleDualBrandingAccordingToEURegulations } from '../../../Card/components/CardInput/utils';
+import { requiresDualBrandSelection } from '../../../Card/components/CardInput/utils';
 import { DUAL_BRANDS_THAT_NEED_SELECTION_MECHANISM } from '../../../Card/constants';
 
 // Externally testable utils
@@ -70,12 +70,8 @@ export default function extensions(props, refs, states, hasPanLengthRef: Partial
                 if (supportedBrands.length > 1) {
                     // --
 
-                    //  Only if the brands in DUAL_BRANDS_THAT_NEED_SELECTION_MECHANISM are present in the binLookup response should we handle dual branding based on EU regulations
-                    const preselectBrand = mustHandleDualBrandingAccordingToEURegulations(
-                        DUAL_BRANDS_THAT_NEED_SELECTION_MECHANISM,
-                        supportedBrands,
-                        'brand'
-                    );
+                    //  Only if the brands in DUAL_BRANDS_THAT_NEED_SELECTION_MECHANISM are present in the binLookup response should we show the dual brand selector
+                    const preselectBrand = requiresDualBrandSelection(DUAL_BRANDS_THAT_NEED_SELECTION_MECHANISM, supportedBrands, 'brand');
 
                     const switcherObj = createCardVariantSwitcher(supportedBrands, preselectBrand);
 
@@ -121,20 +117,14 @@ export default function extensions(props, refs, states, hasPanLengthRef: Partial
          * Handler for clicks on the icons added in response to the /binLookup call
          * Inform SFP of the brand changes when these selections are made
          */
-        handleDualBrandSelection: (e: Event | string): void => {
-            let value: Event | string = e;
-            if (e instanceof Event) {
-                const target = e.target as HTMLLIElement;
-                value = target.getAttribute('data-value') || target.getAttribute('value');
-            }
-
+        handleDualBrandSelection: (brandValue: string): void => {
             // Check if we have a value and whether that value corresponds to a brandObject we can propagate
             // If either are false then abandon the process
             let brandObjArr: BrandObject[] = [];
-            if (value) {
+            if (brandValue) {
                 // Find the brandObject with the matching brand value and place into an array
                 brandObjArr = dualBrandSelectElements.reduce((acc, item) => {
-                    if (item.brandObject.brand === value) {
+                    if (item.brandObject.brand === brandValue) {
                         acc.push(item.brandObject);
                     }
                     return acc;
@@ -147,7 +137,7 @@ export default function extensions(props, refs, states, hasPanLengthRef: Partial
                 return; // no value passed
             }
 
-            setSelectedBrandValue(value);
+            setSelectedBrandValue(brandValue);
 
             // Pass brand object into SecuredFields
             sfp.current.processBinLookupResponse({

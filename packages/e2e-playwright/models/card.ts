@@ -170,23 +170,64 @@ class Card extends Base {
     /** end */
 
     /**
-     * Dual branding UI
+     * Dual branding selection (behavior-driven API)
      */
-    get dualBrandingButtonsHolder() {
-        return this.rootElement.locator('.adyen-checkout__fieldset--dual-brand-switcher');
+
+    /** Returns the dual brand selection container (SegmentedControl group) */
+    get dualBrandSelector(): Locator {
+        return this.cardNumberField.getByRole('group');
     }
 
-    get dualBrandingButtonElements() {
-        return this.dualBrandingButtonsHolder.locator('.adyen-checkout__radio_group__input-wrapper').all();
+    /** Returns true if dual brand selection is present and visible */
+    async isDualBrandSelectionVisible(): Promise<boolean> {
+        return this.dualBrandSelector.isVisible();
     }
 
-    getDualBrandButtonCheckmark(brandEl) {
-        return brandEl.locator('.adyen-checkout-input__inline-validation');
+    /** Select a brand by its accessible name (e.g., /visa/i, /bancontact/i) */
+    async selectBrand(name: string | RegExp): Promise<void> {
+        await this.dualBrandSelector.getByRole('button', { name }).click();
     }
 
-    // Identify a dual branding button by its label
-    selectDualBrandUIItem(text: string | RegExp, exact = true) {
-        return this.dualBrandingButtonsHolder.locator('.adyen-checkout__radio_group__input-wrapper').getByText(text, { exact });
+    /** Check if a specific brand is currently selected */
+    async isBrandSelected(name: string | RegExp): Promise<boolean> {
+        const button = this.dualBrandSelector.getByRole('button', { name });
+        return (await button.getAttribute('aria-pressed')) === 'true';
+    }
+
+    /** Get the number of available brand options */
+    async getBrandOptionCount(): Promise<number> {
+        return this.dualBrandSelector.getByRole('button').count();
+    }
+
+    /** Returns the contextual text element below the card number field */
+    get dualBrandContextualLabel(): Locator {
+        return this.cardNumberField.locator('.adyen-checkout-contextual-text');
+    }
+
+    /** Returns true if the contextual label is visible */
+    async isDualBrandContextualLabelVisible(): Promise<boolean> {
+        return this.dualBrandContextualLabel.isVisible();
+    }
+
+    /**
+     * Accessibility helpers for dual branding
+     */
+
+    /** Returns the aria-live region inside the card number field */
+    get dualBrandLiveRegion(): Locator {
+        return this.cardNumberField.locator('[aria-live="polite"]');
+    }
+
+    /** Returns the text content of the aria-live region */
+    async getDualBrandAnnouncement(): Promise<string | null> {
+        const isVisible = await this.dualBrandLiveRegion.isVisible();
+        if (!isVisible) return null;
+        return this.dualBrandLiveRegion.textContent();
+    }
+
+    /** Returns the first brand button in the dual brand selector */
+    getBrandButton(name: string | RegExp): Locator {
+        return this.dualBrandSelector.getByRole('button', { name });
     }
 
     /** end */

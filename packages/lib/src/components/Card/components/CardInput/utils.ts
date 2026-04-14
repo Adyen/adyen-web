@@ -18,7 +18,7 @@ import { SFPProps } from '../../../internal/SecuredFields/SFP/types';
 import { BRAND_READABLE_NAME_MAP } from '../../../internal/SecuredFields/lib/constants';
 import useImage, { UseImageHookType } from '../../../../core/Context/useImage';
 import { SF_ErrorCodes } from '../../../../core/Errors/constants';
-import { BrandObject, CardBrandsConfiguration, DualBrandSelectElement } from '../../types';
+import { BrandObject, CardBrandsConfiguration, DualBrandSelectElement, DualBrandButtons } from '../../types';
 import { PaymentAmount } from '../../../../types';
 
 export const getCardImageUrl = (brand: string, getImage: UseImageHookType): string => {
@@ -138,7 +138,7 @@ export const extractPropsForCardFields = (props: CardInputProps) => {
     };
 };
 
-export const extractPropsForSFP = (props: CardInputProps) => {
+export const extractPropsForSFP = (props: CardInputProps): Pick<SFPProps, 'clientKey' | 'loadingContext'> & Partial<SFPProps> => {
     return {
         autoFocus: props.autoFocus,
         brands: props.brands,
@@ -169,7 +169,7 @@ export const extractPropsForSFP = (props: CardInputProps) => {
         showContextualElement: props.showContextualElement,
         showWarnings: props.showWarnings,
         trimTrailingSeparator: props.trimTrailingSeparator
-    } as SFPProps; // Can't set as return type on fn or it will complain about missing, mandatory, props
+    };
 };
 
 export const handlePartialAddressMode = (addressMode: AddressModeOptions): AddressSpecifications | null => {
@@ -187,16 +187,19 @@ export function lookupBlurBasedErrors(errorCode) {
     ].includes(errorCode);
 }
 
-export function getFullBrandName(brand) {
+export function getFullBrandName(brand: string): string {
     return BRAND_READABLE_NAME_MAP[brand] ?? brand;
 }
 
-export const mapDualBrandButtons = (dualBrandSelectElements: DualBrandSelectElement[], brandsConfiguration: CardBrandsConfiguration): any => {
+export const mapDualBrandButtons = (
+    dualBrandSelectElements: DualBrandSelectElement[],
+    brandsConfiguration?: CardBrandsConfiguration
+): DualBrandButtons[] => {
     return dualBrandSelectElements.map(item => {
         const brand = item.id;
         const getImage = useImage();
         const imageName = brand === 'card' ? 'nocard' : brand;
-        const imageURL = brandsConfiguration[brand]?.icon ?? getCardImageUrl(imageName, getImage);
+        const imageURL = brandsConfiguration?.[brand]?.icon ?? getCardImageUrl(imageName, getImage);
 
         // TODO - check below if we have to still generate altName through the mapping function or whether it just
         //  corresponds to item.brandObject.localeBrand
@@ -210,17 +213,17 @@ export const mapDualBrandButtons = (dualBrandSelectElements: DualBrandSelectElem
 };
 
 /**
- *  Only if the brands in EU_BrandArray are present in the binLookup response should we handle dual branding based on EU regulations
+ *  Checks if any of the brands requiring a selection mechanism are present in the binLookup response.
  *
- * If the result from Array.some is true - then we are in a EU dual branding regulation scenario, i.e.
- * - Show the new dualBranding UI Buttons
+ * If the result from Array.some is true - then we are in a dual branding scenario that requires selection, i.e.
+ * - Show the dualBranding selector UI
  * - Preselect a card brand
  */
-export const mustHandleDualBrandingAccordingToEURegulations = (
-    EU_BrandArray: readonly string[],
+export const requiresDualBrandSelection = (
+    brandsRequiringSelection: readonly string[],
     returnedDualBrandingObjects: DualBrandSelectElement[] | BrandObject[],
     key: string
-) => returnedDualBrandingObjects.some(item => EU_BrandArray.includes(item[key]));
+) => returnedDualBrandingObjects.some(item => brandsRequiringSelection.includes(item[key]));
 
 /**
  * Determines whether the Installments component should be rendered.

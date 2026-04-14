@@ -520,7 +520,7 @@ const CardInput = (props: Readonly<CardInputProps>) => {
                 type={props.brand}
                 componentType={props.type}
                 disableIOSArrowKeys={props.disableIOSArrowKeys ? handleTouchstartIOS : null}
-                render={({ setRootNode, setFocusOn }, sfpState) => (
+                render={({ setRootNode, setFocusOn }, sfpState: SFPState) => (
                     <div
                         ref={setRootNode}
                         className={classNames({

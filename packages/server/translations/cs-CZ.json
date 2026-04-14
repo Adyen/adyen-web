@@ -12,7 +12,7 @@
     "creditCard.expiryDateField.year": "Rok",
     "creditCard.storeDetailsButton": "Zapamatovat si pro příště",
     "creditCard.dualBrand.title": "Značka karty",
-    "creditCard.dualBrand.description": "Vyberte značku karty, kterou preferujete pro platbu. Je to volitelné.",
+    "creditCard.dualBrand.description": "Můžete si vybrat značku karty, kterou chcete raději platit. Je to volitelné.",
     "installments": "Počet splátek",
     "installmentOption": "%{times}× %{partialValue}",
     "installmentOptionMonths": "%{times} měsíců",

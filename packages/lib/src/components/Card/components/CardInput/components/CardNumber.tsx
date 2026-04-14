@@ -8,14 +8,33 @@ import DataSfSpan from './DataSfSpan';
 import { ENCRYPTED_CARD_NUMBER } from '../../../../internal/SecuredFields/lib/constants';
 import { alternativeLabelContent } from './FieldLabelAlternative';
 import './CardNumber.scss';
+import { requiresDualBrandSelection } from '../utils';
+import { DUAL_BRANDS_THAT_NEED_SELECTION_MECHANISM } from '../../../constants';
+import DualBrandSelector from './DualBrandSelector';
 
 export default function CardNumber(props: Readonly<CardNumberProps>) {
     const { i18n } = useCoreContext();
-    const { error = '', isValid = false, onFocusField = () => {}, dualBrandingElements } = props;
+    const {
+        error = '',
+        isValid = false,
+        onFocusField = () => {},
+        dualBrandingElements,
+        dualBrandingChangeHandler,
+        brandsConfiguration,
+        selectedBrandValue
+    } = props;
 
     const handleIconClick = () => {
         onFocusField(ENCRYPTED_CARD_NUMBER);
     };
+
+    const showDualBrandSelector = dualBrandingElements
+        ? requiresDualBrandSelection(DUAL_BRANDS_THAT_NEED_SELECTION_MECHANISM, dualBrandingElements, 'id')
+        : false;
+
+    // Unlike other fields we don't respect the 'showContextualElement' config prop (that the merchant can set to false)
+    // We always show the contextual text for dual branding that requires selection
+    const contextualText = showDualBrandSelector ? i18n.get('creditCard.dualBrand.description') : undefined;
 
     return (
         <Field
@@ -34,6 +53,7 @@ export default function CardNumber(props: Readonly<CardNumberProps>) {
             useLabelElement={false}
             renderAlternativeToLabel={alternativeLabelContent}
             onInputContainerClick={handleIconClick}
+            contextualText={contextualText}
         >
             <DataSfSpan
                 encryptedFieldType={ENCRYPTED_CARD_NUMBER}
@@ -52,11 +72,23 @@ export default function CardNumber(props: Readonly<CardNumberProps>) {
 
             {dualBrandingElements && !error && (
                 <div className={classNames(['adyen-checkout__card__dual-branding__icons'])}>
-                    {dualBrandingElements.map(element => (
-                        <BrandIcon key={element.id} brand={element.id} brandsConfiguration={props.brandsConfiguration} />
-                    ))}
+                    {showDualBrandSelector ? (
+                        <DualBrandSelector
+                            dualBrandingElements={dualBrandingElements}
+                            dualBrandingChangeHandler={dualBrandingChangeHandler}
+                            brandsConfiguration={brandsConfiguration}
+                            selectedBrandValue={selectedBrandValue}
+                        />
+                    ) : (
+                        dualBrandingElements.map(element => {
+                            return <BrandIcon key={element.id} brand={element.id} brandsConfiguration={props.brandsConfiguration} />;
+                        })
+                    )}
                 </div>
             )}
+            <span className="adyen-checkout__card__dual-branding__sr-only" aria-live="polite">
+                {contextualText}
+            </span>
         </Field>
     );
 }

@@ -1,0 +1,39 @@
+@use 'styles/index';
+@use 'styles/variable-generator';
+
+.dualBrandSelector {
+    display: flex;
+    gap: variable-generator.token(spacer-040);
+    background-color: variable-generator.token(color-background-tertiary);
+    border-radius: variable-generator.token(border-radius-m);
+    padding: variable-generator.token(spacer-040);
+    margin-right: variable-generator.token(spacer-060);
+}
+
+.dualBrandSelectorButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: variable-generator.token(color-background-primary);
+    border: none;
+    border-radius: variable-generator.token(border-radius-s);
+    padding: variable-generator.token(spacer-040);
+    cursor: pointer;
+    transition: box-shadow 0.2s ease;
+    height: 18px;
+    width: 27px;
+
+    &:hover {
+        box-shadow: 0 2px 4px rgb(0 0 0 / 30%);
+    }
+
+    &Selected {
+        box-shadow: 0 2px 4px rgb(0 0 0 / 50%);
+    }
+}
+
+.dualBrandSelectorIcon {
+    border-radius: variable-generator.token(border-radius-s);
+    height: 18px;
+    width: 27px;
+}

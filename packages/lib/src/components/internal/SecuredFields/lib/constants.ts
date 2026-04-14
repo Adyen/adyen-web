@@ -56,7 +56,7 @@ export const DATA_UID = 'data-uid';
 
 export const BRAND_ICON_UI_EXCLUSION_LIST = ['accel', 'pulse', 'star', 'nyce'];
 
-export const BRAND_READABLE_NAME_MAP = {
+export const BRAND_READABLE_NAME_MAP: Record<string, string> = {
     visa: 'VISA',
     mc: 'MasterCard',
     amex: 'American Express',
@@ -84,3 +84,6 @@ export const SF_FIELDS_MAP = {
 
 /** time within which we expect to receive a "configured" message from a securedField iframe, once it has registered as having loaded */
 export const SF_CONFIG_TIMEOUT = 6000;
+
+export const BEST_GUESS_MODE = 'best-guess';
+export const BIN_LOOKUP_MODE = 'bin-lookup';
