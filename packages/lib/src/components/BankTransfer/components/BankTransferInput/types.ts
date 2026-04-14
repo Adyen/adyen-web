@@ -1,5 +1,6 @@
 import { BankTransferSchema } from '../../types';
 import { ValidationRuleResult } from '../../../../utils/Validator/ValidationRuleResult';
+import { ComponentMethodsRef } from '../../../internal/UIElement/types';
 
 type BankTransferInputData = {
     shopperEmail: string;
@@ -13,7 +14,7 @@ export interface BankTransferInputProps {
         isValid: boolean;
     }) => void;
     data?: BankTransferInputData;
-    setComponentRef: (ref: any) => void;
+    setComponentRef: (ref: ComponentMethodsRef) => void;
     showContextualElement?: boolean;
     contextualText?: string;
 }
