@@ -37,6 +37,7 @@
 .adyen-checkout-upi-brands {
     margin-bottom: variable-generator.token(spacer-070);
 }
+
 .adyen-checkout-upi-instruction-label-caption {
     @include mixins.adyen-checkout-text-caption;
 
