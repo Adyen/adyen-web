@@ -111,7 +111,7 @@ export class CashAppPay extends UIElement<CashAppPayConfiguration> {
         new Promise<void>((resolve, reject) => onClick({ resolve, reject }))
             .catch(() => {
                 onClickPromiseRejected = true;
-                throw Error('onClick rejected');
+                throw new Error('onClick rejected');
             })
             .then(() => {
                 return this.cashAppService.createCustomerRequest(this.props.amount);
