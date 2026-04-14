@@ -24,7 +24,7 @@ function createComponent(
     checkout: ICore,
     options?: PaymentMethodOptions<TxVariants.redirect>
 ): InstanceType<PaymentMethods['redirect']>;
-function createComponent(paymentType: any, checkout: ICore, options?: any): any {
+function createComponent(paymentType: unknown, checkout: ICore, options?: Record<string, unknown>): unknown {
     if (typeof paymentType !== 'string' || !paymentType) {
         throw Error('createComponent: Invalid payment type. Make sure to pass a string value');
     }
