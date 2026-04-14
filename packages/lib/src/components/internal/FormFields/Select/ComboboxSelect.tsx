@@ -1,14 +1,11 @@
 import { h } from 'preact';
-import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
+import { useEffect, useRef, useState } from 'preact/hooks';
 import cx from 'classnames';
 import SelectInputCombobox from './components/SelectInputCombobox';
 import SelectList from './components/SelectList';
-import uuid from '../../../../utils/uuid';
 import { keys } from './constants';
-import { SelectItem, SelectProps } from './types';
-import { ARIA_CONTEXT_SUFFIX, ARIA_ERROR_SUFFIX } from '../../../../core/Errors/constants';
-import { simulateFocusScroll } from '../utils';
-import { useCoreContext } from '../../../../core/Context/CoreProvider';
+import { SelectProps } from './types';
+import useSelectBase from './useSelectBase';
 
 function ComboboxSelect({
     items = [],
@@ -30,49 +27,28 @@ function ComboboxSelect({
     onListToggle,
     required
 }: Readonly<SelectProps>) {
-    const { i18n } = useCoreContext();
     const filterInputRef = useRef(null);
-    const selectContainerRef = useRef(null);
-    const toggleButtonRef = useRef(null);
-    const selectListRef = useRef(null);
     const [textFilter, setTextFilter] = useState<string>(null);
-    const [showList, setShowList] = useState<boolean>(false);
-    const [statusMessage, setStatusMessage] = useState<string>(null);
-    const selectListId: string = useMemo(() => `select-${uuid()}`, []);
-
-    const active: SelectItem = items.find(i => i.id === selectedValue) || ({} as SelectItem);
     const [inputText, setInputText] = useState<string>();
-    const [activeOption, setActiveOption] = useState<SelectItem>(active);
-    const selectedOption = active;
 
     const filteredItems = disableTextFilter ? items : items.filter(item => !textFilter || item.name.toLowerCase().includes(textFilter.toLowerCase()));
 
-    const suffix = isInvalid ? ARIA_ERROR_SUFFIX : ARIA_CONTEXT_SUFFIX;
-    const ariaDescribedBy = uniqueId ? `${uniqueId}${suffix}` : null;
-
-    const setNextActive = () => {
-        if (!filteredItems || filteredItems.length < 1) return;
-        const possibleNextIndex = filteredItems.findIndex(listItem => listItem === activeOption) + 1;
-        const nextIndex = possibleNextIndex < filteredItems.length ? possibleNextIndex : 0;
-        const nextItem = filteredItems[nextIndex];
-        scrollToItem(nextItem);
-        setActiveOption(nextItem);
-    };
-
-    const setPreviousActive = () => {
-        if (!filteredItems || filteredItems.length < 1) return;
-        const possibleNextIndex = filteredItems.findIndex(listItem => listItem === activeOption) - 1;
-        const nextIndex = possibleNextIndex < 0 ? filteredItems.length - 1 : possibleNextIndex;
-        const nextItem = filteredItems[nextIndex];
-        scrollToItem(nextItem);
-        setActiveOption(nextItem);
-    };
-
-    const scrollToItem = (item: SelectItem) => {
-        if (!item) return;
-        const nextElement = document.getElementById(`listItem-${item.id}`);
-        simulateFocusScroll(nextElement);
-    };
+    const {
+        selectContainerRef,
+        toggleButtonRef,
+        selectListRef,
+        showList,
+        setShowList,
+        statusMessage,
+        selectListId,
+        activeOption,
+        selectedOption,
+        ariaDescribedBy,
+        openList,
+        extractItemFromEvent,
+        handleHover,
+        handleNavigationKeys
+    } = useSelectBase({ items: filteredItems, selectedValue, isInvalid, uniqueId, onListToggle });
 
     /**
      * Closes the selectList, empties the text filter and focuses the button element
@@ -81,15 +57,6 @@ function ComboboxSelect({
         //blurs the field when the list is closed, makes for a better UX for most users, needs more testing
         blurOnClose && filterInputRef.current.blur();
         setShowList(false);
-    };
-
-    const openList = () => {
-        setShowList(true);
-    };
-
-    const extractItemFromEvent = (e: Event): SelectItem => {
-        const value = (e.currentTarget as HTMLInputElement).getAttribute('data-value');
-        return filteredItems.find(listItem => listItem.id == value);
     };
 
     /**
@@ -105,7 +72,7 @@ function ComboboxSelect({
         if (e.currentTarget instanceof HTMLElement && e.currentTarget.getAttribute('role') === 'option') {
             // This is the main scenario when clicking and item in the list
             // Item comes from the event
-            valueToEmit = extractItemFromEvent(e);
+            valueToEmit = extractItemFromEvent(e, filteredItems);
         } else if (activeOption.id && filteredItems.some(item => item.id === activeOption.id)) {
             // This is the scenario where a user is using the keyboard to navigate
             // In the case item comes from the visually select item
@@ -132,16 +99,6 @@ function ComboboxSelect({
     };
 
     /**
-     * Handles hovering and directions
-     * @param e - Event
-     */
-    const handleHover = (e: Event) => {
-        e.preventDefault();
-        const item = extractItemFromEvent(e);
-        setActiveOption(item);
-    };
-
-    /**
      * Handle keyDown events on the selectList button
      * Responsible for opening and closing the list
      * @param e - KeyboardEvent
@@ -158,36 +115,13 @@ function ComboboxSelect({
             if (!showList) {
                 openList();
             } else {
-                handleNavigationKeys(e);
+                handleNavigationKeys(e, filteredItems, handleSelect);
             }
         } else if (e.shiftKey && e.key === keys.tab) {
             // Shift-Tab out of Select - close list re. a11y guidelines (above)
             closeList();
         } else if (e.key === keys.tab) {
             closeList();
-        }
-    };
-
-    /**
-     * Handles movement with navigation keys and enter
-     * Navigates through the list, or select an element, or focus the filter input, or close the menu.
-     * @param e - KeyDownEvent
-     */
-    const handleNavigationKeys = (e: KeyboardEvent) => {
-        switch (e.key) {
-            case keys.space:
-            case keys.enter:
-                handleSelect(e);
-                break;
-            case keys.arrowDown:
-                e.preventDefault();
-                setNextActive();
-                break;
-            case keys.arrowUp:
-                e.preventDefault();
-                setPreviousActive();
-                break;
-            default:
         }
     };
 
@@ -240,42 +174,7 @@ function ComboboxSelect({
         if (showList && filterInputRef.current) {
             filterInputRef.current.focus();
         }
-        onListToggle?.(showList);
     }, [showList]);
-
-    useEffect(() => {
-        /**
-         * Close the select list when clicking outside the list
-         * @param e - MouseEvent
-         */
-        function handleClickOutside(e: MouseEvent) {
-            // use composedPath so it can also check when inside a web component
-            // if composedPath is not available fallback to e.target
-            const clickIsOutside = e.composedPath
-                ? !e.composedPath().includes(selectContainerRef.current)
-                : !selectContainerRef.current.contains(e.target);
-            if (clickIsOutside) {
-                closeList();
-            }
-        }
-
-        document.addEventListener('click', handleClickOutside, false);
-
-        return () => {
-            document.removeEventListener('click', handleClickOutside, false);
-        };
-    }, [selectContainerRef]);
-
-    /**
-     * Update status message for screen readers when no options are found
-     */
-    useEffect(() => {
-        if (showList && filteredItems.length === 0) {
-            setStatusMessage(i18n.get('select.noOptionsFound'));
-        } else {
-            setStatusMessage(null);
-        }
-    }, [showList, filteredItems.length, i18n]);
 
     return (
         <div
@@ -288,7 +187,6 @@ function ComboboxSelect({
                 active={activeOption}
                 selected={selectedOption}
                 filterInputRef={filterInputRef}
-                filterable={true}
                 isInvalid={isInvalid}
                 isValid={isValid}
                 onButtonKeyDown={handleButtonKeyDown}
@@ -306,7 +204,7 @@ function ComboboxSelect({
             <SelectList
                 active={activeOption}
                 filteredItems={filteredItems}
-                onHover={handleHover}
+                onHover={e => handleHover(filteredItems, e)}
                 onSelect={handleSelect}
                 selected={selectedOption}
                 selectListId={selectListId}

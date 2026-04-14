@@ -42,12 +42,28 @@ export interface SelectProps {
     onListToggle?: (isOpen: boolean) => void;
 }
 
-export interface SelectButtonProps {
+export interface SelectTriggerButtonProps {
+    selected: SelectItem;
+    isInvalid: boolean;
+    isValid?: boolean;
+    onButtonKeyDown: (e: KeyboardEvent) => void;
+    placeholder: string;
+    readonly: boolean;
+    required: boolean;
+    selectListId: string;
+    showList: boolean;
+    toggleButtonRef;
+    toggleList: (e: Event) => void;
+    id?: string;
+    ariaDescribedBy: string;
+    disabled: boolean;
+}
+
+export interface SelectInputComboboxProps {
     inputText: string;
     active: SelectItem;
     selected: SelectItem;
     filterInputRef;
-    filterable: boolean;
     isInvalid: boolean;
     isValid?: boolean;
     onButtonKeyDown: (e: KeyboardEvent) => void;
@@ -64,6 +80,9 @@ export interface SelectButtonProps {
     ariaDescribedBy: string;
     disabled: boolean;
 }
+
+/** @deprecated Use SelectTriggerButtonProps or SelectInputComboboxProps directly */
+export type SelectButtonProps = SelectTriggerButtonProps | SelectInputComboboxProps;
 
 export interface SelectListProps {
     active: SelectItem;

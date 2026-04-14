@@ -3,7 +3,7 @@ import { useMemo } from 'preact/hooks';
 import cx from 'classnames';
 import classnames from 'classnames';
 import Img from '../../../Img';
-import { SelectButtonProps } from '../types';
+import { SelectTriggerButtonProps } from '../types';
 
 function SelectTriggerButton({
     id,
@@ -19,7 +19,7 @@ function SelectTriggerButton({
     ariaDescribedBy,
     placeholder,
     disabled
-}: Readonly<SelectButtonProps>) {
+}: Readonly<SelectTriggerButtonProps>) {
     const isShowingPlaceholder = useMemo(() => {
         const displayText = selected.selectedOptionName || selected.name;
         const isValidValue = typeof displayText === 'string' && displayText.trim() !== '';

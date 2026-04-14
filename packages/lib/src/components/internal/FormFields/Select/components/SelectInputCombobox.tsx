@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import cx from 'classnames';
 import Img from '../../../Img';
-import { SelectButtonProps } from '../types';
+import { SelectInputComboboxProps } from '../types';
 
 function SelectInputCombobox({
     id,
@@ -22,7 +22,7 @@ function SelectInputCombobox({
     disabled,
     required,
     filterInputRef
-}: Readonly<SelectButtonProps>) {
+}: Readonly<SelectInputComboboxProps>) {
     const displayText = selected.selectedOptionName || selected.name || placeholder || '';
     const displayInputText = showList ? inputText : displayText;
 
