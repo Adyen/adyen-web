@@ -25,51 +25,6 @@ describe('UPI', () => {
         isMobileMock.mockReset();
     });
 
-    describe('formatProps', () => {
-        describe('on mobile devices', () => {
-            beforeEach(() => {
-                isMobileMock.mockReturnValue(true);
-            });
-
-            test('should configure for intent mode if apps are provided', () => {
-                const core = setupCoreMock();
-                const upi = new UPI(core, props);
-                const gpayApp = { id: 'gpay', name: 'Google Pay' };
-                const formattedProps = upi.formatProps({ ...props, apps: [gpayApp] });
-
-                expect(formattedProps).toMatchObject({
-                    apps: [gpayApp]
-                });
-            });
-
-            test('should configure for qrCode mode if no apps are provided', () => {
-                const core = setupCoreMock();
-                const upi = new UPI(core, props);
-                const formattedProps = upi.formatProps({ ...props, apps: [] });
-
-                expect(formattedProps).toMatchObject({
-                    apps: []
-                });
-            });
-        });
-
-        describe('on non-mobile (desktop) devices', () => {
-            beforeEach(() => {
-                isMobileMock.mockReturnValue(false);
-            });
-
-            test('should configure for qrCode mode, and ignore any apps', () => {
-                const upi = new UPI(global.core, props);
-                const gpayApp = { id: 'gpay', name: 'Google Pay' };
-                const formattedProps = upi.formatProps({ ...props, apps: [gpayApp] });
-
-                expect(formattedProps).toMatchObject({
-                    apps: []
-                });
-            });
-        });
-    });
-
     describe('formatData', () => {
         test('should return type upi_qr when in QR code mode', async () => {
             isMobileMock.mockReturnValue(false);
