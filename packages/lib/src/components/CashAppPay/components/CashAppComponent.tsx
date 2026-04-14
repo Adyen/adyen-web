@@ -32,8 +32,6 @@ export function CashAppComponent({
     const subscriptions = useRef<Function[]>([]);
     const [storePaymentMethod, setStorePaymentMethod] = useState<boolean>(false);
 
-    this.setStatus = setStatus;
-
     const cashAppComponentRef = useRef<ComponentMethodsRef>({
         setStatus: setStatus
     });
