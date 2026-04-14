@@ -77,7 +77,7 @@ class ApplePayService {
      * @see {@link https://developer.apple.com/documentation/applepayontheweb/apple_pay_js_api/providing_merchant_validation}
      */
     onvalidatemerchant(event: ApplePayJS.ApplePayValidateMerchantEvent, onValidateMerchant: ApplePayConfiguration['onValidateMerchant']) {
-        return new Promise((resolve, reject) => {
+        return new Promise<unknown>((resolve, reject) => {
             void onValidateMerchant(resolve, reject, event.validationURL);
         })
             .then(response => {

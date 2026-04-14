@@ -215,7 +215,7 @@ export interface ApplePayConfiguration extends UIElementProps {
      * @param reject - Must be called if something failed during the merchant validation
      * @param validationURL - The URL your server must use to validate itself and obtain a merchant session object.
      */
-    onValidateMerchant?: (resolve: (merchantSession: any) => void, reject: (error?: string) => void, validationURL: string) => Promise<void>;
+    onValidateMerchant?: (resolve: (merchantSession: unknown) => void, reject: (error?: string) => void, validationURL: string) => Promise<void>;
 
     /**
      * An event handler to call when the user selects a new payment method.

@@ -9,6 +9,7 @@ import InputEmail from '../../../internal/FormFields/InputEmail';
 import Field from '../../../internal/FormFields/Field';
 import { optionalEmailValidationRule } from './validationRule';
 import { BankTransferInputProps } from './types';
+import { ComponentMethodsRef } from '../../../internal/UIElement/types';
 
 function BankTransferInput(props: Readonly<BankTransferInputProps>) {
     const { i18n } = useCoreContext();
@@ -22,7 +23,7 @@ function BankTransferInput(props: Readonly<BankTransferInputProps>) {
         }
     });
 
-    const self = useRef({
+    const self = useRef<ComponentMethodsRef>({
         showValidation: () => {
             triggerValidation();
         }

@@ -1,3 +1,4 @@
+import { ComponentChildren } from 'preact';
 import { ActionHandledReturnObject } from '../../../../types/global-types';
 
 export interface BankTransferVoucherProps {
@@ -8,13 +9,13 @@ export interface BankTransferVoucherProps {
     imageUrl?: string;
 
     /** Payment flow instruction */
-    instructions?: any;
+    instructions?: ComponentChildren;
 
     /** Total amount displayed on the voucher. */
     amount?: string;
 
     /** List of details that will be rendered on the voucher. */
-    voucherDetails?: any;
+    voucherDetails?: ComponentChildren;
 
     /** Additional CSS classes. */
     className?: string;
