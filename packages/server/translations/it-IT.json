@@ -12,7 +12,7 @@
     "creditCard.expiryDateField.year": "Anno",
     "creditCard.storeDetailsButton": "Ricorda per la prossima volta",
     "creditCard.dualBrand.title": "Marca della carta",
-    "creditCard.dualBrand.description": "Seleziona la marca della carta con cui preferisci pagare. Questo è facoltativo.",
+    "creditCard.dualBrand.description": "Puoi selezionare la marca della carta con cui preferisci pagare. Questa opzione è facoltativa.",
     "installments": "Numero di rate",
     "installmentOption": "%{partialValue} x%{times}",
     "installmentOptionMonths": "%{times} mesi",
