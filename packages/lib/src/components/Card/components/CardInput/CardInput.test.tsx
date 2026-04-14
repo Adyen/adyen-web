@@ -345,3 +345,74 @@ describe('CardInput > Installments', () => {
         expect(screen.getByText('Number of installments')).toBeVisible();
     });
 });
+
+describe('CardInput > holderName autocomplete', () => {
+    let cardInputRef;
+    const setComponentRef = ref => {
+        cardInputRef = ref;
+    };
+
+    test('should populate holderName field when valid autoCompleteName is received from SecuredFieldsProvider', async () => {
+        renderCardInput(
+            <CardInput
+                {...cardInputRequiredProps}
+                hasHolderName={true}
+                holderNameRequired={true}
+                onChange={onChange}
+                setComponentRef={setComponentRef}
+            />
+        );
+
+        const validAutoCompleteName = 'John Doe';
+
+        await act(() => {
+            // Simulate SecuredFieldsProvider triggering onChange with autoCompleteName
+            cardInputRef.sfp.current.props.onChange(
+                { autoCompleteName: validAutoCompleteName, valid: {}, data: {}, errors: {} },
+                { event: 'handleOnAutoComplete', fieldType: 'encryptedCardNumber' }
+            );
+        });
+
+        expect(data.holderName).toBe(validAutoCompleteName);
+        expect(valid.holderName).toBe(true);
+    });
+
+    test('should not populate holderName field when autoCompleteName is empty/whitespace', async () => {
+        renderCardInput(
+            <CardInput
+                {...cardInputRequiredProps}
+                hasHolderName={true}
+                holderNameRequired={true}
+                onChange={onChange}
+                setComponentRef={setComponentRef}
+            />
+        );
+
+        await act(() => {
+            // Simulate SecuredFieldsProvider triggering onChange with empty autoCompleteName
+            cardInputRef.sfp.current.props.onChange(
+                { autoCompleteName: '   ', valid: {}, data: {}, errors: {} },
+                { event: 'handleOnAutoComplete', fieldType: 'encryptedCardNumber' }
+            );
+        });
+
+        // holderName should remain empty since validation fails for whitespace-only
+        expect(data.holderName).toBe('');
+        expect(valid.holderName).toBe(false);
+    });
+
+    test('should not process autoCompleteName when hasHolderName is false', async () => {
+        renderCardInput(<CardInput {...cardInputRequiredProps} hasHolderName={false} onChange={onChange} setComponentRef={setComponentRef} />);
+
+        await act(() => {
+            // Simulate SecuredFieldsProvider triggering onChange with autoCompleteName
+            cardInputRef.sfp.current.props.onChange(
+                { autoCompleteName: 'John Doe', valid: {}, data: {}, errors: {} },
+                { event: 'handleOnAutoComplete', fieldType: 'encryptedCardNumber' }
+            );
+        });
+
+        // holderName should remain empty since hasHolderName is false (early return in handleSecuredFieldsChange)
+        expect(data.holderName).toBe('');
+    });
+});
