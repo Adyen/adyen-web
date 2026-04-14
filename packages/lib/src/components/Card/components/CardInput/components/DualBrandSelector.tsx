@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import { CardBrandsConfiguration, DualBrandSelectElement, DualBrandButtons } from '../../../types';
 import { DualBrandingChangeHandler } from './types';
 import { mapDualBrandButtons } from '../utils';
-import './DualBrandSelector.scss';
+import styles from './DualBrandSelector.module.scss';
 import { useCoreContext } from '../../../../../core/Context/CoreProvider';
 
 interface DualBrandSelectorProps {
@@ -37,13 +37,13 @@ export default function DualBrandSelector({
     };
 
     return (
-        <div className="adyen-checkout__card__dual-brand-selector" role="group" aria-label={i18n.get('creditCard.dualBrand.description')}>
+        <div className={styles.dualBrandSelector} role="group" aria-label={i18n.get('creditCard.dualBrand.description')}>
             {dualBrandItems.map((item: DualBrandButtons) => (
                 <button
                     key={item.id}
                     type="button"
-                    className={classNames('adyen-checkout__card__dual-brand-selector__button', {
-                        'adyen-checkout__card__dual-brand-selector__button--selected': selectedBrand === item.id
+                    className={classNames(styles.dualBrandSelectorButton, {
+                        [styles.dualBrandSelectorButtonSelected]: selectedBrand === item.id
                     })}
                     onMouseDown={e => e.preventDefault()}
                     onClick={() => handleBrandSelect(item.id)}
@@ -51,7 +51,7 @@ export default function DualBrandSelector({
                     aria-label={item.altName}
                     aria-pressed={selectedBrand === item.id}
                 >
-                    <img src={item.imageURL} alt={item.altName} className="adyen-checkout__card__dual-brand-selector__icon" />
+                    <img src={item.imageURL} alt={item.altName} className={styles.dualBrandSelectorIcon} />
                 </button>
             ))}
         </div>
