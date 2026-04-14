@@ -23,7 +23,6 @@ export interface PayToNameFieldsProps {
 }
 
 export default function PayToNameFields({ i18n, errors, data, handleChangeFor, placeholders }: Readonly<PayToNameFieldsProps>) {
-    console.log(errors);
     return (
         <Fragment>
             <Field
