@@ -42,14 +42,14 @@ export default {
     showContextualElement: true,
 
     // Events
-    onLoad: (): any => {},
-    onConfigSuccess: (): any => {},
-    onAllValid: (): any => {},
-    onFieldValid: (): any => {},
-    onBrand: (): any => {},
-    onError: (): any => {},
-    onBinValue: (): any => {},
-    onBlur: (): any => {},
-    onFocus: (): any => {},
-    onChange: (): any => {}
+    onLoad: (): void => {},
+    onConfigSuccess: (): void => {},
+    onAllValid: (): void => {},
+    onFieldValid: (): void => {},
+    onBrand: (): void => {},
+    onError: (): void => {},
+    onBinValue: (): void => {},
+    onBlur: (): void => {},
+    onFocus: (): void => {},
+    onChange: (): void => {}
 };
