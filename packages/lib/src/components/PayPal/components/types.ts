@@ -1,29 +1,37 @@
-import type { PayPalConfiguration } from '../types';
-import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
+import type { PayPalButtonOnError, PayPalNamespace } from '@paypal/paypal-js';
 
-export interface PayPalComponentProps extends PayPalConfiguration {
-    onApprove: (data: any, actions: any) => void;
+import type {
+    PayPalConfiguration,
+    PaypalOnApproveActions,
+    PaypalOnApproveData,
+    PaypalOnShippingAddressChangeData,
+    PaypalOnShippingOptionsChangeData
+} from '../types';
+import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
+import { ComponentMethodsRef } from '../../types';
+
+export interface PayPalComponentProps extends Omit<PayPalConfiguration, 'onError' | 'onSubmit'> {
+    onApprove: (data: PaypalOnApproveData, actions: PaypalOnApproveActions) => Promise<void>;
     onCancel: () => void;
-    onChange: (newState: any) => void;
-    onError: (data: any) => void;
-    onSubmit: () => Promise<any>;
-    ref?: any;
+    onError: PayPalButtonOnError;
+    onSubmit: () => Promise<string>;
+    setComponentRef: (ref: ComponentMethodsRef) => void;
     onScriptLoadFailure(error: AdyenCheckoutError): void;
 
     /**
      * While the buyer is on the PayPal site, you can update their shopping cart to reflect the shipping address they chose on PayPal
      * @see {@link https://developer.paypal.com/sdk/js/reference/#onshippingaddresschange}
      */
-    onShippingAddressChange?: (data: any, actions: { reject: (reason?: string) => Promise<void> }) => Promise<void>;
+    onShippingAddressChange?: (data: PaypalOnShippingAddressChangeData, actions: { reject: (reason?: string) => Promise<void> }) => Promise<void>;
 
     /**
      * While the buyer is on the PayPal site, you can update their shopping cart to reflect the shipping options they chose on PayPal
      * @see {@link https://developer.paypal.com/sdk/js/reference/#onshippingoptionschange}
      */
-    onShippingOptionsChange?: (data: any, actions: { reject: (reason?: string) => Promise<void> }) => Promise<void>;
+    onShippingOptionsChange?: (data: PaypalOnShippingOptionsChangeData, actions: { reject: (reason?: string) => Promise<void> }) => Promise<void>;
 }
 
-export interface PayPalButtonsProps extends Omit<PayPalComponentProps, 'ref' | 'onScriptLoadFailure'> {
-    paypalRef: any;
+export interface PayPalButtonsProps extends Omit<PayPalComponentProps, 'ref' | 'onScriptLoadFailure' | 'setComponentRef'> {
+    paypalRef: PayPalNamespace;
     isProcessingPayment: boolean;
 }

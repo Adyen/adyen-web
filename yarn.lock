@@ -81,6 +81,7 @@ __metadata:
   dependencies:
     "@adyen/bento-design-tokens": "npm:1.10.0"
     "@eslint/js": "npm:9.39.2"
+    "@paypal/paypal-js": "npm:^9.4.0"
     "@preact/preset-vite": "npm:2.10.3"
     "@rollup/plugin-commonjs": "npm:29.0.0"
     "@rollup/plugin-eslint": "npm:9.2.0"
@@ -2363,6 +2364,15 @@ __metadata:
     "@parcel/watcher-win32-x64":
       optional: true
   checksum: 10c0/1e1d91f92e94e4640089a7cead243b2b81ca9aa8e1c862a97a25f589e84fbf1ad93abeb503f325c43a8c0e024ae0e74b48ec42c1cd84e8e423a3a87d25ded4f2
+  languageName: node
+  linkType: hard
+
+"@paypal/paypal-js@npm:^9.4.0":
+  version: 9.6.0
+  resolution: "@paypal/paypal-js@npm:9.6.0"
+  dependencies:
+    promise-polyfill: "npm:^8.3.0"
+  checksum: 10c0/f7f771c6abb595400627e50a6fe41a252c7aac451d06e0fba85b7ee01d288888dc5b043888ebb660e8c49b8ea3e761d3ff19f7931c21ace03f4ccd7a6a35ee8d
   languageName: node
   linkType: hard
 
@@ -12644,6 +12654,13 @@ __metadata:
   version: 2.0.3
   resolution: "progress@npm:2.0.3"
   checksum: 10c0/1697e07cb1068055dbe9fe858d242368ff5d2073639e652b75a7eb1f2a1a8d4afd404d719de23c7b48481a6aa0040686310e2dac2f53d776daa2176d3f96369c
+  languageName: node
+  linkType: hard
+
+"promise-polyfill@npm:^8.3.0":
+  version: 8.3.0
+  resolution: "promise-polyfill@npm:8.3.0"
+  checksum: 10c0/97141f07a31a6be135ec9ed53700a3423a771cabec0ba5e08fcb2bf8cfda855479ff70e444fceb938f560be42b450cd032c14f4a940ed2ad1e5b4dcb78368dce
   languageName: node
   linkType: hard
 

@@ -1,5 +1,6 @@
 import { h } from 'preact';
-import { useState, useEffect, useCallback } from 'preact/hooks';
+import { useState, useEffect, useCallback, useRef } from 'preact/hooks';
+
 import PaypalButtons from './PaypalButtons';
 import Spinner from '../../internal/Spinner';
 import { getPaypalUrl } from '../utils/get-paypal-url';
@@ -7,25 +8,32 @@ import Script from '../../../utils/Script';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 import type { PayPalComponentProps } from './types';
 import useAnalytics from '../../../core/Analytics/useAnalytics';
+import { ComponentMethodsRef, PaypalOnApproveActions, PaypalOnApproveData } from '../../types';
 
 export default function PaypalComponent({
     onApprove,
     onCancel,
-    onChange,
     onError,
     onSubmit,
     onScriptLoadFailure,
+    setComponentRef,
     ...props
 }: Readonly<PayPalComponentProps>) {
     const [status, setStatus] = useState('pending');
     const { analytics } = useAnalytics();
 
-    this.setStatus = setStatus;
+    const paypalComponentRef = useRef<ComponentMethodsRef>({
+        setStatus: setStatus
+    });
+
+    useEffect(() => {
+        setComponentRef(paypalComponentRef.current);
+    }, [setComponentRef]);
 
     const handleOnApprove = useCallback(
-        (data: any, actions: any) => {
+        async (data: PaypalOnApproveData, actions: PaypalOnApproveActions) => {
             setStatus('processing');
-            onApprove(data, actions);
+            await onApprove(data, actions);
         },
         [onApprove]
     );
@@ -62,7 +70,7 @@ export default function PaypalComponent({
     if (status === 'pending') {
         return (
             <div className="adyen-checkout__paypal" aria-live="polite" aria-busy="true">
-                <div className="adyen-checkout__paypal__status adyen-checkout__paypal__status--pending" data-testid={'paypal-loader'}>
+                <div className="adyen-checkout__paypal__status adyen-checkout__paypal__status--pending" data-testid="paypal-loader">
                     <Spinner />
                 </div>
             </div>
@@ -74,7 +82,6 @@ export default function PaypalComponent({
             <PaypalButtons
                 {...props}
                 onCancel={onCancel}
-                onChange={onChange}
                 onError={onError}
                 onSubmit={onSubmit}
                 onApprove={handleOnApprove}
