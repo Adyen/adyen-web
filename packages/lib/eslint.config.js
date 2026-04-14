@@ -143,13 +143,12 @@ const config = tseslint.config(
 
             // ── Components
             'src/components/Ach/**',
-            // 'src/components/AmazonPay/**',
+            'src/components/AmazonPay/**',
             'src/components/ANCV/**',
             'src/components/ApplePay/**',
             'src/components/BankTransfer/**',
             'src/components/Boleto/**',
             'src/components/Card/**',
-            // 'src/components/CashAppPay/**',
             'src/components/Doku/**',
             'src/components/Dragonpay/**',
             'src/components/Dropin/**',
@@ -160,8 +159,6 @@ const config = tseslint.config(
             'src/components/Multibanco/**',
             'src/components/Oxxo/**',
             'src/components/PayByBankPix/**',
-            // 'src/components/PayPal/**',
-            // 'src/components/PayPalFastlane/**',
             'src/components/PayTo/**',
             'src/components/PreAuthorizedDebitCanada/**',
             'src/components/Redirect/**',
