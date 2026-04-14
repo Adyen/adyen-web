@@ -24,10 +24,10 @@ describe('createSdkData', () => {
         expect(decoded.channel).toBe(CHANNEL.WEB);
     });
 
-    test('should encode platform as PLATFORM.WEB', () => {
+    test('should encode platform as PLATFORM', () => {
         const result = createSdkData(TEST_CHECKOUT_ATTEMPT_ID, null, PAYMENT_METHOD_BEHAVIOR.NATIVE);
         const decoded = JSON.parse(base64.decode(result).data);
-        expect(decoded.platform).toBe(PLATFORM.WEB);
+        expect(decoded.platform).toBe(PLATFORM);
     });
 
     test('should encode sdkVersion from LIBRARY_VERSION', () => {

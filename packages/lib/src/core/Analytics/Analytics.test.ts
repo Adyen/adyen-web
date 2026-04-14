@@ -55,7 +55,7 @@ describe('Analytics', () => {
             expect(mockService.requestCheckoutAttemptId).toHaveBeenCalledWith(
                 expect.objectContaining({
                     channel: CHANNEL.WEB,
-                    platform: PLATFORM.WEB,
+                    platform: PLATFORM,
                     locale: 'en-US',
                     checkoutStage: 'checkout',
                     level: 'all'

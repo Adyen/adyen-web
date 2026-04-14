@@ -2,7 +2,7 @@ import AdyenCheckoutError from '../Errors/AdyenCheckoutError';
 import { AbstractAnalyticsEvent } from './events/AbstractAnalyticsEvent';
 import { HttpOptions, httpPost } from '../Services/http';
 import type { ApplicationInfo } from './types';
-import { Channel, Platform } from '../config';
+import { CHANNEL } from '../config';
 
 export interface IAnalyticsService {
     requestCheckoutAttemptId(payload: RequestAttemptIdPayload): Promise<string>;
@@ -12,8 +12,8 @@ export interface IAnalyticsService {
 
 export interface RequestAttemptIdPayload {
     version: string;
-    channel: Channel;
-    platform: Platform;
+    channel: CHANNEL;
+    platform: string;
     locale: string;
     checkoutStage: 'precheckout' | 'checkout';
     referrer: string;
@@ -26,8 +26,8 @@ export interface RequestAttemptIdPayload {
 }
 
 export interface AnalyticsEventPayload {
-    channel: Channel;
-    platform: Platform;
+    channel: CHANNEL;
+    platform: string;
     info: Array<AbstractAnalyticsEvent>;
     errors: Array<AbstractAnalyticsEvent>;
     logs: Array<AbstractAnalyticsEvent>;

@@ -73,17 +73,20 @@ export default {
 /**
  * @internal
  */
-export const CHANNEL = { WEB: 'web' } as const;
-export type Channel = (typeof CHANNEL)[keyof typeof CHANNEL];
+
+export enum CHANNEL {
+    WEB = 'web'
+}
 
 /**
  * @internal
  */
-export const PLATFORM = { WEB: 'web' } as const;
-export type Platform = (typeof PLATFORM)[keyof typeof PLATFORM];
+export const PLATFORM = 'web';
 
 /**
  * @internal
  */
-export const PAYMENT_METHOD_BEHAVIOR = { NATIVE: 'nativeComponent', GENERIC: 'genericComponent' } as const;
-export type PaymentMethodBehavior = (typeof PAYMENT_METHOD_BEHAVIOR)[keyof typeof PAYMENT_METHOD_BEHAVIOR];
+export enum PAYMENT_METHOD_BEHAVIOR {
+    NATIVE = 'nativeComponent',
+    GENERIC = 'genericComponent'
+}

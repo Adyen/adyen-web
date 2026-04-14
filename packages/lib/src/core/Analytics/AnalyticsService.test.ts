@@ -25,7 +25,7 @@ describe('AnalyticsService', () => {
         const payload = {
             version: '5.0.0',
             channel: CHANNEL.WEB,
-            platform: PLATFORM.WEB,
+            platform: PLATFORM,
             locale: 'en-US',
             checkoutStage: 'checkout' as const,
             referrer: 'https://merchant.com',
@@ -63,7 +63,7 @@ describe('AnalyticsService', () => {
 
         const createPayload = (hasEvents = true): AnalyticsEventPayload => ({
             channel: CHANNEL.WEB,
-            platform: PLATFORM.WEB,
+            platform: PLATFORM,
             info: hasEvents ? [new AnalyticsInfoEvent({ type: InfoEventType.rendered, component: 'card' })] : [],
             errors: [],
             logs: []

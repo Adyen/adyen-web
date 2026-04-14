@@ -85,7 +85,7 @@ class Analytics implements IAnalytics {
                 version: LIBRARY_VERSION,
                 buildType: LIBRARY_BUNDLE_TYPE,
                 channel: CHANNEL.WEB,
-                platform: PLATFORM.WEB,
+                platform: PLATFORM,
                 locale,
                 referrer: window.location.href,
                 screenWidth: window.screen.width,
@@ -161,7 +161,7 @@ class Analytics implements IAnalytics {
 
         const payload: AnalyticsEventPayload = {
             channel: CHANNEL.WEB,
-            platform: PLATFORM.WEB,
+            platform: PLATFORM,
             info: this.eventsQueue.infoEvents,
             errors: this.eventsQueue.errorEvents,
             logs: this.eventsQueue.logEvents
