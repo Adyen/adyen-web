@@ -12,7 +12,7 @@
     "creditCard.expiryDateField.year": "Leto",
     "creditCard.storeDetailsButton": "Zapomni si za prihodnjič",
     "creditCard.dualBrand.title": "Znamka kartice",
-    "creditCard.dualBrand.description": "Izberete lahko znamko kartice, s katero želite plačAti. To ni obvezno.",
+    "creditCard.dualBrand.description": "Izberete lahko znamko kartice, s katero želite plačati. To ni obvezno.",
     "installments": "Število obrokov",
     "installmentOption": "%{times} × %{partialValue}",
     "installmentOptionMonths": "Št. mesecev: %{times}",
@@ -443,5 +443,9 @@
     "econtext.customerNumber": "Številka stranke",
     "econtext.confirmationNumber": "Številka potrditve",
     "econtext.useBefore": "Uporabite pred",
-    "econtext.paymentInformation": "Podatki za plačilo"
+    "econtext.paymentInformation": "Podatki za plačilo",
+    "issuerList.separatorText": "ali izberite s seznama",
+    "upi.intent.apps.title": "Možnosti",
+    "upi.intent.apps.dropdown.label": "Aplikacije UPI",
+    "upi.intent.apps.dropdown.placeholder": "Izberite želeno aplikacijo"
 }

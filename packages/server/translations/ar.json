@@ -443,5 +443,9 @@
     "econtext.customerNumber": "رقم العميل",
     "econtext.confirmationNumber": "رقم التأكيد",
     "econtext.useBefore": "استخدم قبل",
-    "econtext.paymentInformation": "معلومات الدفع"
+    "econtext.paymentInformation": "معلومات الدفع",
+    "issuerList.separatorText": "أو يُرجى الاختيار من القائمة",
+    "upi.intent.apps.title": "الخيارات",
+    "upi.intent.apps.dropdown.label": "تطبيقات UPI",
+    "upi.intent.apps.dropdown.placeholder": "يُرجى اختيار التطبيق المفضل."
 }

@@ -443,5 +443,9 @@
     "econtext.customerNumber": "Númer viðskiptavinar",
     "econtext.confirmationNumber": "Staðfestingarnúmer",
     "econtext.useBefore": "Nota fyrir",
-    "econtext.paymentInformation": "Greiðsluupplýsingar"
+    "econtext.paymentInformation": "Greiðsluupplýsingar",
+    "issuerList.separatorText": "eða veldu af lista",
+    "upi.intent.apps.title": "Valkostir",
+    "upi.intent.apps.dropdown.label": "UPI-forrit",
+    "upi.intent.apps.dropdown.placeholder": "Veldu forritið sem þér hentar best"
 }

@@ -443,5 +443,9 @@
     "econtext.customerNumber": "Kundenummer",
     "econtext.confirmationNumber": "Bekræftelsesnummer",
     "econtext.useBefore": "Brug før",
-    "econtext.paymentInformation": "Betalingsoplysninger"
+    "econtext.paymentInformation": "Betalingsoplysninger",
+    "issuerList.separatorText": "eller vælg på listen",
+    "upi.intent.apps.title": "Valgmuligheder",
+    "upi.intent.apps.dropdown.label": "UPI-apps",
+    "upi.intent.apps.dropdown.placeholder": "Vælg foretrukne app"
 }

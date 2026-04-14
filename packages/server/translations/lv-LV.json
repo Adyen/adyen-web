@@ -443,5 +443,9 @@
     "econtext.customerNumber": "Klienta numurs",
     "econtext.confirmationNumber": "Apstiprinājuma numurs",
     "econtext.useBefore": "Izmantot pirms",
-    "econtext.paymentInformation": "Maksājuma informācija"
+    "econtext.paymentInformation": "Maksājuma informācija",
+    "issuerList.separatorText": "vai izvēlieties no saraksta",
+    "upi.intent.apps.title": "Opcijas",
+    "upi.intent.apps.dropdown.label": "UPI lietotnes",
+    "upi.intent.apps.dropdown.placeholder": "Izvēlieties vēlamo lietotni"
 }

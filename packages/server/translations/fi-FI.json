@@ -443,5 +443,9 @@
     "econtext.customerNumber": "Asiakasnumero",
     "econtext.confirmationNumber": "Vahvistusnumero",
     "econtext.useBefore": "Käytä ennen",
-    "econtext.paymentInformation": "Maksutiedot"
+    "econtext.paymentInformation": "Maksutiedot",
+    "issuerList.separatorText": "tai valitse luettelosta",
+    "upi.intent.apps.title": "Vaihtoehdot",
+    "upi.intent.apps.dropdown.label": "UPI-sovellukset",
+    "upi.intent.apps.dropdown.placeholder": "Valitse haluamasi sovellus"
 }

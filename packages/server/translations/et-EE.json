@@ -443,5 +443,9 @@
     "econtext.customerNumber": "Kliendi number",
     "econtext.confirmationNumber": "Kinnituse number",
     "econtext.useBefore": "Kõlblik kuni",
-    "econtext.paymentInformation": "Makseinfo"
+    "econtext.paymentInformation": "Makseinfo",
+    "issuerList.separatorText": "või valige nimekirjast",
+    "upi.intent.apps.title": "Valikud",
+    "upi.intent.apps.dropdown.label": "UPI rakendused",
+    "upi.intent.apps.dropdown.placeholder": "Valige eelistatud rakendus"
 }

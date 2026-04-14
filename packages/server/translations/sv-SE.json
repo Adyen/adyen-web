@@ -443,5 +443,9 @@
     "econtext.customerNumber": "Kundnummer",
     "econtext.confirmationNumber": "Bekräftelsenummer",
     "econtext.useBefore": "Använd före",
-    "econtext.paymentInformation": "Betalningsinformation"
+    "econtext.paymentInformation": "Betalningsinformation",
+    "issuerList.separatorText": "eller välj i listan",
+    "upi.intent.apps.title": "Alternativ",
+    "upi.intent.apps.dropdown.label": "UPI-appar",
+    "upi.intent.apps.dropdown.placeholder": "Välj önskad app"
 }

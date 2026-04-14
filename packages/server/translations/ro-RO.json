@@ -443,5 +443,9 @@
     "econtext.customerNumber": "Numărul clientului",
     "econtext.confirmationNumber": "Numărul de confirmare",
     "econtext.useBefore": "Utilizați înainte de",
-    "econtext.paymentInformation": "Informații de plată"
+    "econtext.paymentInformation": "Informații de plată",
+    "issuerList.separatorText": "sau alege din listă",
+    "upi.intent.apps.title": "Opțiuni",
+    "upi.intent.apps.dropdown.label": "Aplicații UPI",
+    "upi.intent.apps.dropdown.placeholder": "Alege aplicația preferată"
 }

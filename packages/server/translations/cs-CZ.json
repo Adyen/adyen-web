@@ -443,5 +443,9 @@
     "econtext.customerNumber": "Číslo zákazníka",
     "econtext.confirmationNumber": "Číslo potvrzení",
     "econtext.useBefore": "Použijte před",
-    "econtext.paymentInformation": "Informace o platbě"
+    "econtext.paymentInformation": "Informace o platbě",
+    "issuerList.separatorText": "nebo vyberte ze seznamu",
+    "upi.intent.apps.title": "Možnosti",
+    "upi.intent.apps.dropdown.label": "Aplikace UPI",
+    "upi.intent.apps.dropdown.placeholder": "Vyberte preferovanou aplikaci"
 }

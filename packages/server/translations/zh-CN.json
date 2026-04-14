@@ -443,5 +443,9 @@
     "econtext.customerNumber": "客户编号",
     "econtext.confirmationNumber": "确认号码",
     "econtext.useBefore": "在...之前使用",
-    "econtext.paymentInformation": "支付信息"
+    "econtext.paymentInformation": "支付信息",
+    "issuerList.separatorText": "或从列表中选择",
+    "upi.intent.apps.title": "选项",
+    "upi.intent.apps.dropdown.label": "UPI 应用",
+    "upi.intent.apps.dropdown.placeholder": "选择首选应用"
 }

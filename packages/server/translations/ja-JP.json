@@ -443,5 +443,9 @@
     "econtext.customerNumber": "顧客番号",
     "econtext.confirmationNumber": "確認番号",
     "econtext.useBefore": "使用期限",
-    "econtext.paymentInformation": "決済情報"
+    "econtext.paymentInformation": "決済情報",
+    "issuerList.separatorText": "またはリストから選択",
+    "upi.intent.apps.title": "オプション",
+    "upi.intent.apps.dropdown.label": "UPIアプリ",
+    "upi.intent.apps.dropdown.placeholder": "希望するアプリを選択"
 }

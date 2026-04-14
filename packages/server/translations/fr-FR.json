@@ -443,5 +443,9 @@
     "econtext.customerNumber": "Numéro de client",
     "econtext.confirmationNumber": "Numéro de confirmation",
     "econtext.useBefore": "À utiliser avant",
-    "econtext.paymentInformation": "Informations de paiement"
+    "econtext.paymentInformation": "Informations de paiement",
+    "issuerList.separatorText": "ou choisissez dans la liste",
+    "upi.intent.apps.title": "Options",
+    "upi.intent.apps.dropdown.label": "Applications UPI",
+    "upi.intent.apps.dropdown.placeholder": "Choisissez votre application préférée"
 }

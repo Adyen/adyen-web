@@ -441,5 +441,9 @@
     "econtext.customerNumber": "Номер клиента",
     "econtext.confirmationNumber": "Номер подтверждения",
     "econtext.useBefore": "Использовать до",
-    "econtext.paymentInformation": "Платежная информация"
+    "econtext.paymentInformation": "Платежная информация",
+    "issuerList.separatorText": "или выберите из списка",
+    "upi.intent.apps.title": "Опции",
+    "upi.intent.apps.dropdown.label": "Приложения UPI",
+    "upi.intent.apps.dropdown.placeholder": "Выберите предпочтительное приложение"
 }

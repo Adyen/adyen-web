@@ -443,5 +443,9 @@
     "econtext.customerNumber": "Broj kupca",
     "econtext.confirmationNumber": "Broj potvrde",
     "econtext.useBefore": "Koristiti prije",
-    "econtext.paymentInformation": "Podaci o plaćanju"
+    "econtext.paymentInformation": "Podaci o plaćanju",
+    "issuerList.separatorText": "ili odaberite s popisa",
+    "upi.intent.apps.title": "Opcije",
+    "upi.intent.apps.dropdown.label": "UPI aplikacije",
+    "upi.intent.apps.dropdown.placeholder": "Odaberite željenu aplikaciju"
 }
