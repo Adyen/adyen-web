@@ -14,6 +14,9 @@ import './testMocks/commonCorePropsMock';
 // https://github.com/mswjs/msw/issues/1916
 import { ReadableStream, WritableStream, TransformStream } from 'node:stream/web';
 
+process.env.VERSION = 'X.Y.Z';
+process.env.BUNDLE_TYPE = 'esm';
+
 Object.assign(global, {
     ReadableStream,
     WritableStream,
