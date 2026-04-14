@@ -219,7 +219,7 @@ const CardInput = (props: Readonly<CardInputProps>) => {
         if (sfState.autoCompleteName) {
             if (!props.hasHolderName) return;
             const holderNameValidationFn = getRuleByNameAndMode('holderName', 'blur');
-            const acHolderName = holderNameValidationFn(sfState.autoCompleteName, null) ? sfState.autoCompleteName : null;
+            const acHolderName = holderNameValidationFn?.(sfState.autoCompleteName, null) ? sfState.autoCompleteName : null;
             if (acHolderName) {
                 setFormData('holderName', acHolderName);
                 setFormValid('holderName', true); // only if holderName is valid does this fny get called - so we know it's valid and w/o error

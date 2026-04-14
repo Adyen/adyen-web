@@ -1,4 +1,4 @@
-import { ValidateFunction, ValidatorMode, ValidatorRule, ValidatorRules } from '../../../../utils/Validator/types';
+import { ValidateFunction, ValidatorMode, ValidatorRules } from '../../../../utils/Validator/types';
 import { formatCPFCNPJ } from '../../../internal/SocialSecurityNumberBrazil/utils';
 import validateSSN from '../../../internal/SocialSecurityNumberBrazil/validate';
 import { isEmpty } from '../../../../utils/validator-utils';
@@ -47,8 +47,9 @@ export const cardInputValidationRules: ValidatorRules = {
     ]
 };
 
-export const getRuleByNameAndMode = (name: string, mode: ValidatorMode): ValidateFunction => {
-    const ruleArr = cardInputValidationRules[name] as ValidatorRule[];
+export const getRuleByNameAndMode = (name: string, mode: ValidatorMode): ValidateFunction | undefined => {
+    const ruleOrRules = cardInputValidationRules[name] ?? [];
+    const ruleArr = Array.isArray(ruleOrRules) ? ruleOrRules : [ruleOrRules];
     const rule = ruleArr.reduce((acc, elem) => {
         if (!acc.length) {
             if (elem.modes.includes(mode)) {
