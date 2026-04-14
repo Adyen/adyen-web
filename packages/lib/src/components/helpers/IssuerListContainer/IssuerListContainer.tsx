@@ -6,6 +6,7 @@ import { FALLBACK_CONTEXT } from '../../../core/config';
 import RedirectButton from '../../internal/RedirectButton';
 import { IssuerListConfiguration, IssuerListData } from './types';
 import type { ICore } from '../../../core/types';
+import { PaymentMethodBrand } from '../../../types/global-types';
 
 class IssuerListContainer<TProps extends IssuerListConfiguration = IssuerListConfiguration, TData = IssuerListData> extends UIElement<TProps> {
     protected static readonly defaultProps = {
@@ -63,7 +64,7 @@ class IssuerListContainer<TProps extends IssuerListConfiguration = IssuerListCon
      * This is used to show the brands in the PaymentMethodItem
      * Requires brands icons to be loaded in the payment method
      */
-    get brands(): { icon: any; name: string }[] {
+    get brands(): PaymentMethodBrand[] {
         if (this.props.showPaymentMethodItemImages) {
             return this.props.issuers.map(brand => {
                 const brandIcon = brand.icon;

@@ -1,3 +1,5 @@
+export const API_VERSION = Number(process.env.API_VERSION.substring(1));
+
 export const BIN_LOOKUP_VERSION = 'v3';
 
 export const REGULAR_TEST_CARD = '5500000000000004';
@@ -28,7 +30,7 @@ export const UNKNOWN_VISA_CARD = '41111111'; // card is now in the test DBs (vis
 export const PLCC_NO_LUHN_OPTIONAL_DATE = '6044100018023838'; // binLookup gives luhn check and date not required
 export const PLCC_WITH_LUHN_NO_DATE = '6044141000018769'; // binLookup gives luhn check required but date not required
 export const PLCC_WITH_LUHN_OPTIONAL_DATE_WOULD_FAIL_LUHN = '6044141000018768'; // binLookup gives luhn check required, date not required, BUT that will fail the luhn check
-export const PLCC_NO_LUHN_OPTIONAL_DATE_WOULD_FAIL_LUHN = '6044100033327222'; // A PAN that identifies as a plcc that doesn't require a luhn check BUT that would fail the luhn check if it was required
+export const PLCC_NO_LUHN_HIDDEN_DATE_WOULD_FAIL_LUHN = '6044100033327222'; // A PAN that identifies as a plcc that doesn't require a luhn check BUT that would fail the luhn check if it was required
 
 // intersolve (plastix)
 export const GIFTCARD_NUMBER = '4010100000000000000';
@@ -100,3 +102,8 @@ export const IRIS_ISSUERS = [
 export const TAGS = {
     SCREENSHOT: '@screenshot'
 } as const;
+
+export const CARD_HEADER_LABEL = API_VERSION <= 70 ? 'Credit Card' : 'Cards';
+
+export const SMALL_MOBILE_VIEWPORT = { width: 375, height: 667 };
+export const MOBILE_USER_AGENT = 'Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X) AppleWebKit/605.1.15';

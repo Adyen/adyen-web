@@ -1,4 +1,4 @@
-import { h, Ref } from 'preact';
+import { h, Ref, TargetedMouseEvent } from 'preact';
 
 export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'action' | 'link' | 'iconOnly';
 
@@ -14,6 +14,8 @@ export interface ButtonProps {
     onClickCompletedLabel?: string | h.JSX.Element;
     ariaLabel?: string;
     ariaDescribedBy?: string;
+    ariaExpanded?: boolean;
+    ariaControls?: string;
     secondaryLabel?: string;
     icon?: string;
     onClickCompletedIcon?: string;
@@ -21,7 +23,7 @@ export interface ButtonProps {
     href?: string;
     target?: string;
     rel?: string;
-    onClick?: (e: h.JSX.TargetedMouseEvent<HTMLButtonElement | HTMLAnchorElement>, callbacks?: { complete?: () => void }) => void;
+    onClick?: (e: TargetedMouseEvent<HTMLButtonElement | HTMLAnchorElement>, callbacks?: { complete?: () => void }) => void;
     onKeyDown?: (event: KeyboardEvent) => void;
     onKeyPress?: (event: KeyboardEvent) => void;
     buttonRef?: Ref<HTMLButtonElement>;

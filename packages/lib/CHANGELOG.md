@@ -1,5 +1,25 @@
 # @adyen/adyen-web
 
+## 6.33.0
+
+### Minor Changes
+
+- New: Add Apple Pay Coupon Code Support ([#3801](https://github.com/Adyen/adyen-web/pull/3801))
+
+## 6.32.1
+
+### Patch Changes
+
+- Fixed: Updated Passkey SDK version to 1.2.0 for PayByBankPix component ([#3879](https://github.com/Adyen/adyen-web/pull/3879))
+
+- Fixed: Display correct amount on PayButton after redeeming giftcard on Dropin with sessions ([#3880](https://github.com/Adyen/adyen-web/pull/3880))
+
+- Fixed: Reported issue with PayButtonProps.onClick type ([#3864](https://github.com/Adyen/adyen-web/pull/3864))
+
+- Fixed: Update german label for compliance reasons zahlen -> kaufen ([#3873](https://github.com/Adyen/adyen-web/pull/3873))
+
+- Fixed: Standardize payment button label with amount across SDKs for consistency ([#3875](https://github.com/Adyen/adyen-web/pull/3875))
+
 ## 6.32.0
 
 ### Minor Changes

@@ -1,0 +1,36 @@
+@use 'styles/variable-generator';
+
+.container {
+    display: flex;
+    flex-basis: auto;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: variable-generator.token(spacer-040);
+    margin: variable-generator.token(spacer-020) variable-generator.token(spacer-000);
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(variable-generator.token(spacer-110), 1fr));
+}
+
+.smallImgGrid {
+    grid-template-columns: repeat(auto-fill, minmax(variable-generator.token(spacer-090), 1fr));
+}
+
+.remainingBrandsLabel {
+    color: variable-generator.token(color-label-secondary);
+    font-size: variable-generator.token(text-body-font-size);
+}
+
+.img {
+    padding: 0;
+    display: block;
+    width: variable-generator.token(spacer-110);
+    height: variable-generator.token(spacer-090);
+}
+
+.smallImg {
+    width: variable-generator.token(spacer-090);
+    height: variable-generator.token(spacer-070);
+}
