@@ -33,7 +33,7 @@ function createComponent(paymentType: unknown, checkout: ICore, options?: Record
         throw Error('createComponent: Drop-in is not a payment type');
     }
 
-    const Class = ComponentsMap[paymentType] || Redirect;
+    const Class = paymentType in ComponentsMap ? ComponentsMap[paymentType] : Redirect;
 
     return new Class(checkout, {
         type: paymentType,
