@@ -108,20 +108,18 @@ jobs:
             OVERALL_STATUS="⚠️ Regression"
           fi
 
-          # Generate per-file table rows with jq (sorted by PR count desc)
+          # Generate per-file table rows with jq (only files with increased errors)
           TABLE_ROWS=$(jq -r -n \
             --argjson baseline "$B_FILES" \
             --argjson pr "$PR_FILES" '
             (($baseline | keys) + ($pr | keys)) | unique |
             map({ file: ., b: ($baseline[.] // 0), p: ($pr[.] // 0) }) |
-            sort_by(-.p, -.b) | .[] |
-            (if .p > .b then "⚠️ +\(.p - .b)"
-             elif .p < .b then "✅ \(.p - .b)"
-             else "✅ 0" end) as $delta |
-            "| `\(.file)` | \(.p) | \(.b) | \($delta) |"
+            [ .[] | select(.p > .b) ] |
+            sort_by(-.p) | .[] |
+            "| `\(.file)` | \(.p) | \(.b) | ⚠️ +\(.p - .b) |"
           ')
 
-          NUM_FILES=$(jq -n --argjson b "$B_FILES" --argjson p "$PR_FILES" '(($b | keys) + ($p | keys)) | unique | length')
+          NUM_FILES=$(jq -n --argjson b "$B_FILES" --argjson p "$PR_FILES" '(($b | keys) + ($p | keys)) | unique | map({ file: ., b: ($b[.] // 0), p: ($p[.] // 0) }) | [ .[] | select(.p > .b) ] | length')
 
           {
             echo 'body<<EOF'
@@ -130,7 +128,7 @@ jobs:
             echo "**Total: ${PR_TOTAL} errors (baseline: ${B_TOTAL}) | ${OVERALL_STATUS}**"
             echo ''
             echo '<details>'
-            echo "<summary>Per-file breakdown (${NUM_FILES} files)</summary>"
+            echo "<summary>Files with regressions (${NUM_FILES} files)</summary>"
             echo ''
             echo '| File | PR | Baseline | Delta |'
             echo '|------|-----|----------|-------|'
@@ -152,14 +150,14 @@ jobs:
           body-includes: Strict TypeScript Scan Results
 
       - name: Delete previous comment
-        if: always() && steps.fc.outputs.comment-id != ''
+        if: always() && steps.fc.outputs.comment-id != '' && steps.fc.outputs.comment-id != '0'
         uses: actions/github-script@v7
         with:
           script: |
             await github.rest.issues.deleteComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              comment_id: ${{ steps.fc.outputs.comment-id }}
+              comment_id: Number('${{ steps.fc.outputs.comment-id }}')
             });
 
       - name: Post scan summary
