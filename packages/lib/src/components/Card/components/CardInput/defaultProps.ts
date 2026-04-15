@@ -1,5 +1,15 @@
 import { SocialSecurityMode } from '../../types';
 import { AddressModeOptions } from './types';
+import {
+    CardAllValidData,
+    CardBinValueData,
+    CardBrandData,
+    CardConfigSuccessData,
+    CardFieldValidData,
+    CardFocusData,
+    CardLoadData
+} from '../../../internal/SecuredFields/lib/types';
+import { AdyenCheckoutError } from '../../../../types';
 
 export default {
     type: 'scheme',
@@ -42,14 +52,14 @@ export default {
     showContextualElement: true,
 
     // Events
-    onLoad: (): void => {},
-    onConfigSuccess: (): void => {},
-    onAllValid: (): void => {},
-    onFieldValid: (): void => {},
-    onBrand: (): void => {},
-    onError: (): void => {},
-    onBinValue: (): void => {},
-    onBlur: (): void => {},
-    onFocus: (): void => {},
+    onLoad: (_: CardLoadData): void => {},
+    onConfigSuccess: (_: CardConfigSuccessData): void => {},
+    onAllValid: (_: CardAllValidData): void => {},
+    onFieldValid: (_: CardFieldValidData): void => {},
+    onBrand: (_: CardBrandData): void => {},
+    onError: (_: AdyenCheckoutError): void => {},
+    onBinValue: (_: CardBinValueData): void => {},
+    onBlur: (_: CardFocusData): void => {},
+    onFocus: (_: CardFocusData): void => {},
     onChange: (): void => {}
 };

@@ -1,9 +1,7 @@
-import { BrandConfiguration, CardBrandsConfiguration, DualBrandSelectElement } from '../../../types';
+import { BrandConfiguration, CardBrandsConfiguration, DualBrandingChangeHandler, DualBrandSelectElement } from '../../../types';
 import { ComponentChildren } from 'preact';
 import { CVCPolicyType, DatePolicyType } from '../../../../internal/SecuredFields/lib/types';
 import { SFPErrorMap, SFPValid } from '../../../../internal/SecuredFields/SFP/types';
-
-export type DualBrandingChangeHandler = (brandValue: string) => void;
 
 export interface BrandIconProps {
     brand: string;

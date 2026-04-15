@@ -549,3 +549,5 @@ export interface DualBrandButtons {
     imageURL: string;
     altName: string;
 }
+
+export type DualBrandingChangeHandler = (brandValue: string) => void;
