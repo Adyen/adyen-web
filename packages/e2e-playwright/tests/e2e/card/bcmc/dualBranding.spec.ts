@@ -240,7 +240,7 @@ test.describe('Bcmc payments with dual branding', () => {
                 await expect(bcmc.cvcErrorElement).toHaveText('Enter the security code');
             });
 
-            test('#4c should not submit the visa payment with invalid visa card number', async ({ bcmc, page }) => {
+            test('#4c should not submit the visa payment with invalid bcmc card number', async ({ bcmc, page }) => {
                 await binLookupMock(page, dualBrandedBcmcAndVisa);
 
                 await bcmc.goto(URL_MAP.bcmc);
@@ -353,7 +353,7 @@ test.describe('Bcmc payments with dual branding', () => {
                 await expect(bcmc.cvcErrorElement).toHaveText('Enter the security code');
             });
 
-            test('#6c should not submit the mc payment with invalid mc card number', async ({ bcmc, page }) => {
+            test('#6c should not submit the mc payment with invalid bcmc card number', async ({ bcmc, page }) => {
                 await binLookupMock(page, dualBrandedBcmcAndMc);
 
                 await bcmc.goto(URL_MAP.bcmc);
