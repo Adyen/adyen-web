@@ -105,9 +105,6 @@ export class AmazonPayElement extends UIElement<AmazonPayConfiguration> {
     protected override componentToRender(): h.JSX.Element {
         return (
             <AmazonPayComponent
-                ref={ref => {
-                    this.componentRef = ref;
-                }}
                 showPayButton={this.props.showPayButton}
                 onClick={this.props.onClick}
                 onError={this.props.onError}
