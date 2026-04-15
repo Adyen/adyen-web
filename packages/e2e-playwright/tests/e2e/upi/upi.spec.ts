@@ -26,7 +26,9 @@ test.describe('UPI - QR Code Flow (Desktop)', () => {
             await expect(upiPage.appList).not.toBeVisible();
             await expect(upiPage.qrCodeArea).toBeVisible();
 
-            await toHaveScreenshot(upiPage.qrCodeArea, browserName, 'upi-qr-code-initial.png');
+            await toHaveScreenshot(upiPage.qrCodeArea, browserName, 'upi-qr-code-initial.png', {
+                mask: [upiPage.page.locator('.adyen-checkout__image')]
+            });
             await upiPage.pay({ name: /generate qr code/i });
 
             await upiPage.isQrCodeVisible();
@@ -53,7 +55,9 @@ test.describe('UPI - Intent Flow (Mobile)', () => {
             await upiPage.pay({ name: /continue/i });
             await expect(upiPage.errorAlert).toBeVisible();
 
-            await toHaveScreenshot(upiPage.intentArea, browserName, 'upi-intent-error-alert.png');
+            await toHaveScreenshot(upiPage.intentArea, browserName, 'upi-intent-error-alert.png', {
+                mask: [upiPage.page.locator('.adyen-checkout__image')]
+            });
 
             // selected from priority list
             await upiPage.selectApp(/google pay/i);
@@ -71,11 +75,15 @@ test.describe('UPI - Intent Flow (Mobile)', () => {
             await expect(upiPage.intentArea).toBeVisible();
             await expect(upiPage.appList).toBeVisible();
             await expect(upiPage.appDropdown).toBeVisible();
-            await toHaveScreenshot(upiPage.intentArea, browserName, 'upi-intent-list-not-selected.png');
+            await toHaveScreenshot(upiPage.intentArea, browserName, 'upi-intent-list-not-selected.png', {
+                mask: [upiPage.page.locator('.adyen-checkout__image')]
+            });
 
             await upiPage.selectAppFromDropdown(/.+/);
 
-            await toHaveScreenshot(upiPage.intentArea, browserName, 'upi-intent-list-selected.png');
+            await toHaveScreenshot(upiPage.intentArea, browserName, 'upi-intent-list-selected.png', {
+                mask: [upiPage.page.locator('.adyen-checkout__image')]
+            });
             await upiPage.pay({ name: /continue/i });
 
             await expect(upiPage.intentArea).not.toBeVisible();

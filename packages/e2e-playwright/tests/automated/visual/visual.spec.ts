@@ -39,8 +39,14 @@ test.describe('Automated visual testing', () => {
             if (storyId.includes('click-to-pay')) {
                 await expect(page.locator('.adyen-checkout-ctp__card-animation')).toBeHidden();
             }
+
+            const mask = [page.getByRole('timer'), page.getByTestId('stored-card-info')];
+            if (storyId.includes('upi')) {
+                mask.push(page.locator('.adyen-checkout__image'));
+            }
+
             await toHaveScreenshot(page.getByTestId('checkout-component'), browserName, `${storyId}.png`, {
-                mask: [page.getByRole('timer'), page.getByTestId('stored-card-info')]
+                mask
             });
         });
     }

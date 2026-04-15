@@ -14,11 +14,15 @@ test.describe('Dropin - Sessions - UPI', () => {
 
             const upiPaymentMethodHeader = dropinWithSession.getPaymentMethodHeader('UPI');
 
-            await toHaveScreenshot(upiPaymentMethodHeader.rootElement, browserName, 'upi-payment-method-header-desktop.png');
+            await toHaveScreenshot(upiPaymentMethodHeader.rootElement, browserName, 'upi-payment-method-header-desktop.png', {
+                mask: [page.locator('.adyen-checkout__image')]
+            });
 
             await dropinWithSession.selectNonStoredPaymentMethod('upi');
 
-            await toHaveScreenshot(upiPaymentMethodHeader.rootElement, browserName, 'expanded-upi-payment-method-header-desktop.png');
+            await toHaveScreenshot(upiPaymentMethodHeader.rootElement, browserName, 'expanded-upi-payment-method-header-desktop.png', {
+                mask: [page.locator('.adyen-checkout__image')]
+            });
 
             const upi = new UPI(page);
 
@@ -39,11 +43,15 @@ test.describe('Dropin - Sessions - UPI', () => {
 
             const upiPaymentMethodHeader = dropinWithSession.getPaymentMethodHeader('UPI');
 
-            await toHaveScreenshot(upiPaymentMethodHeader.rootElement, browserName, 'upi-payment-method-header-mobile.png');
+            await toHaveScreenshot(upiPaymentMethodHeader.rootElement, browserName, 'upi-payment-method-header-mobile.png', {
+                mask: [page.locator('.adyen-checkout__image')]
+            });
 
             await dropinWithSession.selectNonStoredPaymentMethod('upi');
 
-            await toHaveScreenshot(upiPaymentMethodHeader.rootElement, browserName, 'expanded-upi-payment-method-header-mobile.png');
+            await toHaveScreenshot(upiPaymentMethodHeader.rootElement, browserName, 'expanded-upi-payment-method-header-mobile.png', {
+                mask: [page.locator('.adyen-checkout__image')]
+            });
 
             const upi = new UPI(page);
 
