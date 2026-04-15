@@ -1,15 +1,12 @@
 import { SUPPORTED_LOCALES_EU, SUPPORTED_LOCALES_US } from './config';
-import { UIElementProps } from '../internal/UIElement/types';
+import { ComponentMethodsRef, UIElementProps } from '../internal/UIElement/types';
 import { BrowserInfo, CheckoutAdvancedFlowResponse, PaymentAmount } from '../../types/global-types';
 import { AmazonPayElement } from './AmazonPay';
-import { h } from 'preact';
+import { h, RefObject } from 'preact';
 import { PayButtonProps } from '../internal/PayButton/PayButton';
-
-declare global {
-    interface Window {
-        amazon: object;
-    }
-}
+import { AdyenCheckoutError, SubmitData, UIElement } from '../../types';
+import AmazonPayButton from './components/AmazonPayButton';
+import OrderButton from './components/OrderButton';
 
 type ButtonColor = 'Gold' | 'LightGray' | 'DarkGray';
 type Placement = 'Home' | 'Product' | 'Cart' | 'Checkout' | 'Other';
@@ -19,6 +16,19 @@ type FrequencyUnit = 'Year' | 'Month' | 'Week' | 'Day' | 'Variable';
 export type Currency = 'EUR' | 'GBP' | 'USD';
 export type Region = 'EU' | 'UK' | 'US';
 export type SupportedLocale = (typeof SUPPORTED_LOCALES_EU)[number] | (typeof SUPPORTED_LOCALES_US)[number];
+
+interface AmazonPayButtonInstance {
+    onClick(handler: () => void): void;
+}
+
+export interface AmazonWindowObject {
+    Pay: {
+        renderButton(selector: string, settings: AmazonPayButtonSettings): AmazonPayButtonInstance;
+        initCheckout(options: AmazonPayButtonSettings & { createCheckoutSessionConfig: CheckoutSessionConfig }): void;
+        signout(): void;
+        bindChangeAction(selector: string, options: ChangeActionOptions): void;
+    };
+}
 
 export interface RecurringMetadata {
     frequency: {
@@ -50,12 +60,13 @@ export interface AmazonPayConfiguration extends UIElementProps {
     configuration?: AmazonPayBackendConfiguration;
     currency?: Currency;
     deliverySpecifications?: DeliverySpecifications;
+    design?: string;
     environment?: string;
     loadingContext?: string;
     locale?: string;
     merchantMetadata?: MerchantMetadata;
     onSubmit?(
-        state: any,
+        state: SubmitData,
         element: AmazonPayElement,
         actions: {
             resolve: (response: CheckoutAdvancedFlowResponse) => void;
@@ -71,9 +82,9 @@ export interface AmazonPayConfiguration extends UIElementProps {
     showOrderButton?: boolean;
     showSignOutButton?: boolean;
     signature?: string;
-    onClick?: (resolve, reject) => Promise<void>;
-    onError?: (error, component) => void;
-    onSignOut?: (resolve, reject) => Promise<void>;
+    onClick?: () => Promise<void>;
+    onError?: (error: AdyenCheckoutError, component: UIElement) => void;
+    onSignOut?: () => Promise<void>;
 
     /**
      * Used for analytics
@@ -92,13 +103,11 @@ export interface AmazonPayComponentProps extends AmazonPayConfiguration {
     amazonCheckoutSessionId?: string;
     showOrderButton?: boolean;
     showChangePaymentDetailsButton?: boolean;
-    onClick: (resolve, reject) => Promise<void>;
-    onError: (error, component) => void;
-    onSignOut: (resolve, reject) => Promise<void>;
+    setComponentRef: (ref: ComponentMethodsRef & { getSubmitFunction?: () => () => void }) => void;
 }
 
 export interface AmazonPayButtonProps {
-    amazonRef: any;
+    amazonRef: AmazonWindowObject;
     buttonColor?: ButtonColor;
     cancelUrl?: string;
     chargePermissionType?: ChargePermissionType;
@@ -109,24 +118,24 @@ export interface AmazonPayButtonProps {
     design?: string;
     environment?: string;
     locale?: string;
-    onClick: (resolve, reject) => Promise<void>;
-    onError: (error, component) => void;
+    onClick: () => Promise<void>;
+    onError?: (error: AdyenCheckoutError, component: UIElement) => void;
     placement?: Placement;
     productType?: ProductType;
     recurringMetadata?: RecurringMetadata;
-    ref: any;
+    ref: RefObject<typeof AmazonPayButton>;
     returnUrl?: string;
     showPayButton: boolean;
 }
 
 export interface SignOutButtonProps {
-    amazonRef: any;
-    onSignOut: (resolve, reject) => Promise<void>;
+    amazonRef: AmazonWindowObject;
+    onSignOut: () => Promise<void>;
 }
 
 export interface ChangePaymentDetailsButtonProps {
     amazonCheckoutSessionId: string;
-    amazonRef: any;
+    amazonRef: AmazonWindowObject;
 }
 
 export interface ChangeActionOptions {
@@ -138,9 +147,9 @@ export interface OrderButtonProps {
     amazonCheckoutSessionId: string;
     clientKey: string;
     chargePermissionType?: ChargePermissionType;
-    onError: (error, component) => void;
+    onError: (error: AdyenCheckoutError, component: UIElement) => void;
     recurringMetadata: RecurringMetadata;
-    ref: any;
+    ref: RefObject<typeof OrderButton>;
     region: Region;
     returnUrl: string;
     publicKeyId: string;
