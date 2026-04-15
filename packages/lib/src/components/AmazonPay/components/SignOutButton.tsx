@@ -6,8 +6,7 @@ export default function SignOutButton(props: Readonly<SignOutButtonProps>) {
     const { i18n } = useCoreContext();
 
     const handleClick = () => {
-        // eslint-disable-next-line @typescript-eslint/no-misused-promises
-        new Promise(props.onSignOut)
+        new Promise(() => void props.onSignOut())
             .then(() => {
                 props.amazonRef.Pay.signout();
             })
@@ -17,7 +16,7 @@ export default function SignOutButton(props: Readonly<SignOutButtonProps>) {
     return (
         <button
             type="button"
-            className="adyen-checkout__button  adyen-checkout__button--ghost adyen-checkout__amazonpay__button--signOut"
+            className="adyen-checkout__button adyen-checkout__button--ghost adyen-checkout__amazonpay__button--signOut"
             onClick={handleClick}
         >
             {i18n.get('amazonpay.signout')}
