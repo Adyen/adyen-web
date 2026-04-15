@@ -84,6 +84,8 @@ export enum CHANNEL {
 export const PLATFORM = 'web';
 
 /**
+ * nativeComponent: payment method explicitly supported with a dedicated component by the SDK
+ * genericComponent: payment method not explicitly supported by the SDK and handled in default fallback component
  * @internal
  */
 export enum PAYMENT_METHOD_BEHAVIOR {
