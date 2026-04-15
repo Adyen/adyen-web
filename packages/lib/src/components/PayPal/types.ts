@@ -223,3 +223,8 @@ export interface PayPalConfiguration extends UIElementProps {
 export type Intent = 'sale' | 'capture' | 'authorize' | 'order' | 'tokenize';
 
 export type SupportedPayPalFundingSources = 'paypal' | 'credit' | 'paylater' | 'venmo';
+
+/**
+ * @deprecated Use {@link SupportedPayPalFundingSources} instead
+ */
+export type FundingSource = SupportedPayPalFundingSources;
