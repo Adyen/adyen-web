@@ -58,5 +58,5 @@ export const getRuleByNameAndMode = (name: keyof typeof cardInputValidationRules
         }
         return acc;
     }, [] as ValidateFunction[]);
-    return rule[0];
+    return rule[0] ?? (() => true);
 };
