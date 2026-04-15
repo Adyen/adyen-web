@@ -95,7 +95,6 @@ export interface AmazonPayComponentProps extends AmazonPayConfiguration {
     onClick: (resolve, reject) => Promise<void>;
     onError: (error, component) => void;
     onSignOut: (resolve, reject) => Promise<void>;
-    ref: any;
 }
 
 export interface AmazonPayButtonProps {
