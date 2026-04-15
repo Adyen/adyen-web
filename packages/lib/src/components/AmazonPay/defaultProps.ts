@@ -11,8 +11,8 @@ const defaultProps: Partial<AmazonPayConfiguration> = {
     showOrderButton: true,
     showChangePaymentDetailsButton: false,
     showSignOutButton: false,
-    onClick: resolve => resolve(),
-    onSignOut: resolve => resolve(),
+    onClick: () => Promise.resolve(),
+    onSignOut: () => Promise.resolve(),
     isExpress: false
 };
 

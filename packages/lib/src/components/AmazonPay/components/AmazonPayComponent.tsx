@@ -20,10 +20,17 @@ export default function AmazonPayComponent(props: Readonly<AmazonPayComponentPro
         setStatus('ready');
     };
 
-    this.getSubmitFunction = () => {
-        if (amazonPayButtonRef.current && amazonPayButtonRef.current.initCheckout) return () => amazonPayButtonRef.current.initCheckout();
-        if (orderButtonRef.current && orderButtonRef.current.createOrder) return () => orderButtonRef.current.createOrder();
-    };
+    const amazonPayRef = useRef({
+        getSubmitFunction: () => {
+            if (amazonPayButtonRef.current?.initCheckout) return () => amazonPayButtonRef.current.initCheckout();
+            if (orderButtonRef.current?.createOrder) return () => orderButtonRef.current.createOrder();
+            return null;
+        }
+    });
+
+    useEffect(() => {
+        props.setComponentRef(amazonPayRef.current);
+    }, [props.setComponentRef]);
 
     useEffect(() => {
         const src = getAmazonPayUrl(props.configuration.region);
@@ -88,7 +95,27 @@ export default function AmazonPayComponent(props: Readonly<AmazonPayComponentPro
 
     return (
         <div className="adyen-checkout__amazonpay">
-            <AmazonPayButton {...props} showPayButton={this.props.showPayButton} amazonRef={window.amazon} ref={amazonPayButtonRef} />
+            <AmazonPayButton
+                showPayButton={props.showPayButton}
+                amazonRef={window.amazon}
+                ref={amazonPayButtonRef}
+                buttonColor={props.buttonColor}
+                cancelUrl={props.cancelUrl}
+                chargePermissionType={props.chargePermissionType}
+                onClick={props.onClick}
+                onError={props.onError}
+                clientKey={props.clientKey}
+                configuration={props.configuration}
+                currency={props.currency}
+                deliverySpecifications={props.deliverySpecifications}
+                design={props.design}
+                environment={props.environment}
+                locale={props.locale}
+                placement={props.placement}
+                productType={props.productType}
+                recurringMetadata={props.recurringMetadata}
+                returnUrl={props.returnUrl}
+            />
         </div>
     );
 }
