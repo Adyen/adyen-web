@@ -8,7 +8,7 @@ import Script from '../../../utils/Script';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 import type { PayPalComponentProps } from './types';
 import useAnalytics from '../../../core/Analytics/useAnalytics';
-import { ComponentMethodsRef, PaypalOnApproveActions, PaypalOnApproveData } from '../../types';
+import { ComponentMethodsRef, PayPalOnApproveActions, PayPalOnApproveData } from '../../types';
 
 export default function PaypalComponent({
     onApprove,
@@ -31,7 +31,7 @@ export default function PaypalComponent({
     }, [setComponentRef]);
 
     const handleOnApprove = useCallback(
-        async (data: PaypalOnApproveData, actions: PaypalOnApproveActions) => {
+        async (data: PayPalOnApproveData, actions: PayPalOnApproveActions) => {
             setStatus('processing');
             await onApprove(data, actions);
         },

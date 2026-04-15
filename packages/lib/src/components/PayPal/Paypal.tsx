@@ -12,13 +12,13 @@ import type { PaymentAction } from '../../types/global-types';
 import type {
     Intent,
     PayPalConfiguration,
-    PaypalOnApproveActions,
-    PaypalOnApproveData,
-    PaypalOnShippingAddressChangeActions,
-    PaypalOnShippingAddressChangeData,
-    PaypalOnShippingOptionsChangeActions,
-    PaypalOnShippingOptionsChangeData,
-    PaypalOrderResponseBody
+    PayPalOnApproveActions,
+    PayPalOnApproveData,
+    PayPalOnShippingAddressChangeActions,
+    PayPalOnShippingAddressChangeData,
+    PayPalOnShippingOptionsChangeActions,
+    PayPalOnShippingOptionsChangeData,
+    PayPalOrderResponseBody
 } from './types';
 
 import { AnalyticsInfoEvent, InfoEventType } from '../../core/Analytics/events/AnalyticsInfoEvent';
@@ -133,7 +133,7 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
         return true;
     }
 
-    private readonly handleOnApprove = (data: PaypalOnApproveData, actions: PaypalOnApproveActions): Promise<void> => {
+    private readonly handleOnApprove = (data: PayPalOnApproveData, actions: PayPalOnApproveActions): Promise<void> => {
         const { onAuthorized } = this.props;
         const state = { data: { details: data, paymentData: this.paymentData } };
 
@@ -144,7 +144,7 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
 
         return actions.order
             .get()
-            .then((paypalOrder: PaypalOrderResponseBody) => {
+            .then((paypalOrder: PayPalOrderResponseBody) => {
                 const billingAddress = formatPaypalOrderContactToAdyenFormat(paypalOrder?.payer);
                 const deliveryAddress = formatPaypalOrderContactToAdyenFormat(paypalOrder?.purchase_units?.[0].shipping, true);
 
@@ -196,7 +196,7 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
      * @param data - PayPal data
      * @param actions - PayPal actions.
      */
-    private handleOnShippingAddressChange(data: PaypalOnShippingAddressChangeData, actions: PaypalOnShippingAddressChangeActions): Promise<void> {
+    private handleOnShippingAddressChange(data: PayPalOnShippingAddressChangeData, actions: PayPalOnShippingAddressChangeActions): Promise<void> {
         return this.props.onShippingAddressChange(data, actions, this);
     }
 
@@ -208,7 +208,7 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
      * @param data - PayPal data
      * @param actions - PayPal actions.
      */
-    private handleOnShippingOptionsChange(data: PaypalOnShippingOptionsChangeData, actions: PaypalOnShippingOptionsChangeActions): Promise<void> {
+    private handleOnShippingOptionsChange(data: PayPalOnShippingOptionsChangeData, actions: PayPalOnShippingOptionsChangeActions): Promise<void> {
         return this.props.onShippingOptionsChange(data, actions, this);
     }
 

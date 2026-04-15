@@ -13,18 +13,18 @@ import { AddressData } from '../../types/global-types';
 import { UIElementProps } from '../internal/UIElement/types';
 import PaypalElement from './Paypal';
 
-export type PaypalOrderResponseBody = OrderResponseBody;
-export type PaypalOnApproveData = OnApproveData;
-export type PaypalOnApproveActions = OnApproveActions;
-export type PaypalOnShippingAddressChangeData = OnShippingAddressChangeData & {
+export type PayPalOrderResponseBody = OrderResponseBody;
+export type PayPalOnApproveData = OnApproveData;
+export type PayPalOnApproveActions = OnApproveActions;
+export type PayPalOnShippingAddressChangeData = OnShippingAddressChangeData & {
     errors: Record<string, string>;
 };
-export type PaypalOnShippingAddressChangeActions = OnShippingAddressChangeActions;
-export type PaypalOnShippingOptionsChangeData = OnShippingOptionsChangeData & {
+export type PayPalOnShippingAddressChangeActions = OnShippingAddressChangeActions;
+export type PayPalOnShippingOptionsChangeData = OnShippingOptionsChangeData & {
     errors: Record<string, string>;
 };
-export type PaypalOnShippingOptionsChangeActions = OnShippingOptionsChangeActions;
-export type PaypalOnInitActions = OnInitActions;
+export type PayPalOnShippingOptionsChangeActions = OnShippingOptionsChangeActions;
+export type PayPalOnInitActions = OnInitActions;
 
 export interface PayPalConfiguration extends UIElementProps {
     /**
@@ -85,7 +85,7 @@ export interface PayPalConfiguration extends UIElementProps {
      * @param actions - Used to indicate that payment flow must continue or must stop
      */
     onAuthorized?: (
-        data: { authorizedEvent: PaypalOrderResponseBody; billingAddress?: Partial<AddressData>; deliveryAddress?: Partial<AddressData> },
+        data: { authorizedEvent: PayPalOrderResponseBody; billingAddress?: Partial<AddressData>; deliveryAddress?: Partial<AddressData> },
         actions: { resolve: () => void; reject: () => void }
     ) => void;
 
@@ -98,7 +98,7 @@ export interface PayPalConfiguration extends UIElementProps {
      * @param component - Adyen instance of its PayPal implementation. It must be used to manipulate the 'paymentData' in order to apply the amount patch correctly
      */
     onShippingAddressChange?: (
-        data: PaypalOnShippingAddressChangeData,
+        data: PayPalOnShippingAddressChangeData,
         actions: { reject: (reason?: string) => Promise<void> },
         component: PaypalElement
     ) => Promise<void>;
@@ -112,7 +112,7 @@ export interface PayPalConfiguration extends UIElementProps {
      * @param component - Adyen instance of its PayPal implementation. It must be used to manipulate the 'paymentData' in order to apply the amount patch correctly
      */
     onShippingOptionsChange?: (
-        data: PaypalOnShippingOptionsChangeData,
+        data: PayPalOnShippingOptionsChangeData,
         actions: { reject: (reason?: string) => Promise<void> },
         component: PaypalElement
     ) => Promise<void>;
@@ -143,7 +143,7 @@ export interface PayPalConfiguration extends UIElementProps {
      * Called when the button first renders. You can use it for validations on your page if you are unable to do so prior to rendering.
      * @see {@link https://developer.paypal.com/sdk/js/reference/#oninitonclick}
      */
-    onInit?: (data?: Record<string, unknown>, actions?: PaypalOnInitActions) => void;
+    onInit?: (data?: Record<string, unknown>, actions?: PayPalOnInitActions) => void;
 
     /**
      * @see {@link https://developer.paypal.com/sdk/js/reference/#oninitonclick}
