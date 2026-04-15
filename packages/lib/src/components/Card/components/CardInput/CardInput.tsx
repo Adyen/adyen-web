@@ -71,7 +71,7 @@ const CardInput = (props: Readonly<CardInputProps>) => {
         ...(props.holderNameRequired && { holderName: false })
     });
     const [data, setData] = useState<CardInputDataState>({
-        ...(props.hasHolderName && { holderName: props.data.holderName ?? '' })
+        ...(props.hasHolderName && { holderName: props.data?.holderName ?? '' })
     });
 
     const [focusedElement, setFocusedElement] = useState('');
@@ -90,7 +90,7 @@ const CardInput = (props: Readonly<CardInputProps>) => {
     const partialAddressCountry = useRef<string>(partialAddressSchema && props.data?.billingAddress?.country);
 
     const [storePaymentMethod, setStorePaymentMethod] = useState(false);
-    const [billingAddress, setBillingAddress] = useState<AddressData>(showBillingAddress ? props.data.billingAddress : null);
+    const [billingAddress, setBillingAddress] = useState<AddressData>(showBillingAddress ? (props.data?.billingAddress ?? null) : null);
     const [showSocialSecurityNumber, setShowSocialSecurityNumber] = useState(false);
     const [socialSecurityNumber, setSocialSecurityNumber] = useState('');
     const [installments, setInstallments] = useState<InstallmentsState>({ value: null });

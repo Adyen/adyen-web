@@ -15,14 +15,14 @@ export interface CardFieldsProps {
     dualBrandingChangeHandler?: DualBrandingChangeHandler;
     dualBrandingElements?: DualBrandSelectElement[];
     dualBrandingSelected?: string;
-    errors?: SFPErrorMap;
+    errors: SFPErrorMap;
     focusedElement?: string;
     hasCVC?: boolean;
     cvcPolicy?: CVCPolicyType;
     expiryDatePolicy?: DatePolicyType;
     onFocusField?: (field: string) => void;
     showBrandIcon?: boolean;
-    valid?: SFPValid;
+    valid: SFPValid;
     showContextualElement?: boolean;
 }
 

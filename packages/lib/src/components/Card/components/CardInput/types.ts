@@ -85,7 +85,7 @@ export interface CardInputProps {
     brandsConfiguration?: CardBrandsConfiguration;
     brandsIcons: Array<BrandConfiguration>;
     clientKey: string;
-    configuration?: CardBackendConfiguration;
+    configuration: CardBackendConfiguration;
     countryCode?: string;
     cvcPolicy?: CVCPolicyType;
     data?: CardInputDataState;
