@@ -12,7 +12,7 @@
     "creditCard.expiryDateField.year": "Vuosi",
     "creditCard.storeDetailsButton": "Muista seuraavalla kerralla",
     "creditCard.dualBrand.title": "Korttibrändi",
-    "creditCard.dualBrand.description": "Valitse ensisijainen maksukorttisi. Tämä on vapaaehtoista.",
+    "creditCard.dualBrand.description": "Voit valita, millä kortilla haluat maksaa. Tämä on vapaaehtoista.",
     "installments": "Maksuerien määrä",
     "installmentOption": "% {kertaa} x% {osittainenarvo}",
     "installmentOptionMonths": "% {kertaa} kuukautta",
@@ -258,7 +258,7 @@
     "upi.completePayment": "Suorita maksusi loppuun",
     "upi.mode.enterUpiId": "UPI-tunnus",
     "upi.mode.qrCode": "QR-koodi",
-    "upi.mode.payByAnyUpi": "UPI-sovellus",
+    "upi.mode.payByAnyUpi": "UPI-sovellukset",
     "upi.collect.dropdown.label": "Syötä UPI-tunnus",
     "upi.collect.instruction": "Anna UPI-tunnuksesi",
     "upi.collect.field.label": "UPI-tunnus",
@@ -443,5 +443,9 @@
     "econtext.customerNumber": "Asiakasnumero",
     "econtext.confirmationNumber": "Vahvistusnumero",
     "econtext.useBefore": "Käytä ennen",
-    "econtext.paymentInformation": "Maksutiedot"
+    "econtext.paymentInformation": "Maksutiedot",
+    "issuerList.separatorText": "tai valitse luettelosta",
+    "upi.intent.apps.title": "Vaihtoehdot",
+    "upi.intent.apps.dropdown.label": "UPI-sovellukset",
+    "upi.intent.apps.dropdown.placeholder": "Valitse haluamasi sovellus"
 }

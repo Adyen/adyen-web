@@ -12,7 +12,7 @@
     "creditCard.expiryDateField.year": "Jaar",
     "creditCard.storeDetailsButton": "Onthouden voor de volgende keer",
     "creditCard.dualBrand.title": "Merk van kaart",
-    "creditCard.dualBrand.description": "Selecteer het merk van de kaart waarmee u het liefst wilt betalen. Dit is optioneel.",
+    "creditCard.dualBrand.description": "U kunt het merk van de kaart selecteren waarmee u het liefst wilt betalen. Dit is optioneel.",
     "installments": "Aantal termijnen",
     "installmentOption": "%{times}x %{partialValue}",
     "installmentOptionMonths": "%{times} maanden",
@@ -258,7 +258,7 @@
     "upi.completePayment": "U betaling afronden",
     "upi.mode.enterUpiId": "UPI-ID",
     "upi.mode.qrCode": "QR-code",
-    "upi.mode.payByAnyUpi": "UPI-app",
+    "upi.mode.payByAnyUpi": "UPI-apps",
     "upi.collect.dropdown.label": "UPI-ID invoeren",
     "upi.collect.instruction": "Voer uw UPI-ID in",
     "upi.collect.field.label": "UPI-ID",
@@ -443,5 +443,9 @@
     "econtext.customerNumber": "Klantnummer",
     "econtext.confirmationNumber": "Bevestigingsnummer",
     "econtext.useBefore": "Gebruiken voor",
-    "econtext.paymentInformation": "Betalingsgegevens"
+    "econtext.paymentInformation": "Betalingsgegevens",
+    "issuerList.separatorText": "of kies uit de lijst",
+    "upi.intent.apps.title": "Opties",
+    "upi.intent.apps.dropdown.label": "UPI-apps",
+    "upi.intent.apps.dropdown.placeholder": "Kies de gewenste app"
 }

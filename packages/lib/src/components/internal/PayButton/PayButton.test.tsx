@@ -7,6 +7,8 @@ import { CoreProvider } from '../../../core/Context/CoreProvider';
 import Language from '../../../language';
 import { AmountProvider, AmountProviderProps } from '../../../core/Context/AmountProvider';
 import { ButtonProps } from '../Button/types';
+import { ILanguageService } from '../../../language/LanguageService';
+import { mock } from 'jest-mock-extended';
 
 const renderPayButton = ({
     payButtonProps = {},
@@ -183,21 +185,25 @@ describe('PayButton', () => {
 });
 
 describe('PayButton - localized labels', () => {
+    const mockedService = mock<ILanguageService>({});
+
     const deI18n = new Language({
         locale: 'de-DE',
-        translations: {
-            payButton: 'Kaufen',
-            payAmountFormat: 'Kaufen für %@'
-        }
+        service: mockedService
     });
+    deI18n['_translations'] = {
+        payButton: 'Kaufen',
+        payAmountFormat: 'Kaufen für %@'
+    };
 
     const nlI18n = new Language({
         locale: 'nl-NL',
-        translations: {
-            payButton: 'Betaal',
-            payAmountFormat: '%@ betalen'
-        }
+        service: mockedService
     });
+    nlI18n['_translations'] = {
+        payButton: 'Betaal',
+        payAmountFormat: '%@ betalen'
+    };
 
     describe('de-DE', () => {
         test('should render formatted amount label using payAmountFormat', () => {

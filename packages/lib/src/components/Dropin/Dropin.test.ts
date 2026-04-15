@@ -7,18 +7,12 @@ import ThreeDS2DeviceFingerprint from '../ThreeDS2/ThreeDS2DeviceFingerprint';
 import ThreeDS2Challenge from '../ThreeDS2/ThreeDS2Challenge';
 import Dropin from './Dropin';
 import Fastlane from '../PayPalFastlane';
-import enUS from '../../../../server/translations/en-US.json';
-import getTranslations from '../../core/Services/get-translations';
 import { SRPanel } from '../../core/Errors/SRPanel';
 
 import type { CoreConfiguration, ICore } from '../../core/types';
 import type { PaymentActionsType } from '../../types/global-types';
 import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 import { InfoEventType } from '../../core/Analytics/events/AnalyticsInfoEvent';
-
-jest.mock('../../core/Services/get-translations');
-const mockedGetTranslations = getTranslations as jest.Mock;
-mockedGetTranslations.mockResolvedValue(enUS);
 
 async function createAdyenCheckout(configuration) {
     return await AdyenCheckout(configuration);

@@ -12,7 +12,7 @@
     "creditCard.expiryDateField.year": "Ár",
     "creditCard.storeDetailsButton": "Muna þetta til að nota næst",
     "creditCard.dualBrand.title": "Kortafyrirtæki",
-    "creditCard.dualBrand.description": "Veldu kortafyrirtæki kortsins sem þú vilt greiða með. Þetta er valfrjálst.",
+    "creditCard.dualBrand.description": "Þú getur valið kortafyrirtæki kortsins sem þú vilt greiða með. Þetta er valfrjálst.",
     "installments": "Fjöldi afborgana",
     "installmentOption": "%{times}x %{partialValue}",
     "installmentOptionMonths": "%{times} mánuðir",
@@ -443,5 +443,9 @@
     "econtext.customerNumber": "Númer viðskiptavinar",
     "econtext.confirmationNumber": "Staðfestingarnúmer",
     "econtext.useBefore": "Nota fyrir",
-    "econtext.paymentInformation": "Greiðsluupplýsingar"
+    "econtext.paymentInformation": "Greiðsluupplýsingar",
+    "issuerList.separatorText": "eða veldu af lista",
+    "upi.intent.apps.title": "Valkostir",
+    "upi.intent.apps.dropdown.label": "UPI-forrit",
+    "upi.intent.apps.dropdown.placeholder": "Veldu forritið sem þér hentar best"
 }
