@@ -174,7 +174,9 @@ test.describe('Bcmc payments with dual branding', () => {
                 await expect(bcmc.expiryDateErrorElement).toHaveText(/Enter the (complete )?expiry date/);
             });
 
-            test('#3c should not submit the bcmc payment with invalid bcmc card number', async ({ bcmc }) => {
+            test('#3c should not submit the bcmc payment with invalid bcmc card number', async ({ bcmc, page }) => {
+                await binLookupMock(page, dualBrandedBcmcAndVisa);
+
                 await bcmc.goto(URL_MAP.bcmc);
                 await bcmc.isComponentVisible();
                 await bcmc.typeCardNumber(`${BCMC_DUAL_BRANDED_VISA}111`);
@@ -238,7 +240,9 @@ test.describe('Bcmc payments with dual branding', () => {
                 await expect(bcmc.cvcErrorElement).toHaveText('Enter the security code');
             });
 
-            test('#4c should not submit the visa payment with invalid visa card number', async ({ bcmc }) => {
+            test('#4c should not submit the visa payment with invalid bcmc card number', async ({ bcmc, page }) => {
+                await binLookupMock(page, dualBrandedBcmcAndVisa);
+
                 await bcmc.goto(URL_MAP.bcmc);
                 await bcmc.isComponentVisible();
                 await bcmc.typeCardNumber(`${BCMC_DUAL_BRANDED_VISA}111`);
@@ -285,7 +289,9 @@ test.describe('Bcmc payments with dual branding', () => {
                 await expect(bcmc.expiryDateErrorElement).toHaveText(/Enter the (complete )?expiry date/);
             });
 
-            test('#5c should not submit the bcmc payment with invalid bcmc card number', async ({ bcmc }) => {
+            test('#5c should not submit the bcmc payment with invalid bcmc card number', async ({ bcmc, page }) => {
+                await binLookupMock(page, dualBrandedBcmcAndMc);
+
                 await bcmc.goto(URL_MAP.bcmc);
                 await bcmc.isComponentVisible();
                 await bcmc.typeCardNumber(`${BCMC_DUAL_BRANDED_MC}111`);
@@ -347,7 +353,9 @@ test.describe('Bcmc payments with dual branding', () => {
                 await expect(bcmc.cvcErrorElement).toHaveText('Enter the security code');
             });
 
-            test('#6c should not submit the mc payment with invalid mc card number', async ({ bcmc }) => {
+            test('#6c should not submit the mc payment with invalid bcmc card number', async ({ bcmc, page }) => {
+                await binLookupMock(page, dualBrandedBcmcAndMc);
+
                 await bcmc.goto(URL_MAP.bcmc);
                 await bcmc.isComponentVisible();
                 await bcmc.typeCardNumber(`${BCMC_DUAL_BRANDED_MC}111`);
