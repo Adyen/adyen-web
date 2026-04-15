@@ -2,6 +2,7 @@ import { test, expect } from '../../../../fixtures/dropin.fixture';
 import { MOBILE_USER_AGENT, SMALL_MOBILE_VIEWPORT, TAGS } from '../../../utils/constants';
 import { URL_MAP } from '../../../../fixtures/URL_MAP';
 import { toHaveScreenshot } from '../../../utils/assertions';
+import { waitForImageLoaded } from '../../../utils/image';
 import { UPI } from '../../../../models/upi';
 
 test.describe('Dropin - Sessions - UPI', () => {
