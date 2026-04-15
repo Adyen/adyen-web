@@ -3,6 +3,7 @@ import { UPI } from '../../../models/upi';
 import { URL_MAP } from '../../../fixtures/URL_MAP';
 import { MOBILE_USER_AGENT, SMALL_MOBILE_VIEWPORT } from '../../utils/constants';
 import { toHaveScreenshot } from '../../utils/assertions';
+import { waitForImageLoaded } from '../../utils/image';
 import { TAGS } from '../../utils/constants';
 
 type Fixture = {
@@ -26,9 +27,8 @@ test.describe('UPI - QR Code Flow (Desktop)', () => {
             await expect(upiPage.appList).not.toBeVisible();
             await expect(upiPage.qrCodeArea).toBeVisible();
 
-            await toHaveScreenshot(upiPage.qrCodeArea, browserName, 'upi-qr-code-initial.png', {
-                mask: [upiPage.page.locator('.adyen-checkout__image')]
-            });
+            await waitForImageLoaded(upiPage.page);
+            await toHaveScreenshot(upiPage.qrCodeArea, browserName, 'upi-qr-code-initial.png');
             await upiPage.pay({ name: /generate qr code/i });
 
             await upiPage.isQrCodeVisible();
@@ -55,9 +55,8 @@ test.describe('UPI - Intent Flow (Mobile)', () => {
             await upiPage.pay({ name: /continue/i });
             await expect(upiPage.errorAlert).toBeVisible();
 
-            await toHaveScreenshot(upiPage.intentArea, browserName, 'upi-intent-error-alert.png', {
-                mask: [upiPage.page.locator('.adyen-checkout__image')]
-            });
+            await waitForImageLoaded(upiPage.page);
+            await toHaveScreenshot(upiPage.intentArea, browserName, 'upi-intent-error-alert.png');
 
             // selected from priority list
             await upiPage.selectApp(/google pay/i);
@@ -75,15 +74,12 @@ test.describe('UPI - Intent Flow (Mobile)', () => {
             await expect(upiPage.intentArea).toBeVisible();
             await expect(upiPage.appList).toBeVisible();
             await expect(upiPage.appDropdown).toBeVisible();
-            await toHaveScreenshot(upiPage.intentArea, browserName, 'upi-intent-list-not-selected.png', {
-                mask: [upiPage.page.locator('.adyen-checkout__image')]
-            });
+            await waitForImageLoaded(upiPage.page);
+            await toHaveScreenshot(upiPage.intentArea, browserName, 'upi-intent-list-not-selected.png');
 
             await upiPage.selectAppFromDropdown(/.+/);
 
-            await toHaveScreenshot(upiPage.intentArea, browserName, 'upi-intent-list-selected.png', {
-                mask: [upiPage.page.locator('.adyen-checkout__image')]
-            });
+            await toHaveScreenshot(upiPage.intentArea, browserName, 'upi-intent-list-selected.png');
             await upiPage.pay({ name: /continue/i });
 
             await expect(upiPage.intentArea).not.toBeVisible();
