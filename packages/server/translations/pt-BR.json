@@ -12,7 +12,7 @@
     "creditCard.expiryDateField.year": "Ano",
     "creditCard.storeDetailsButton": "Lembrar para a próxima vez",
     "creditCard.dualBrand.title": "Bandeira do cartão",
-    "creditCard.dualBrand.description": "Selecione a bandeira do cartão com a qual prefere pagar. Isso é opcional.",
+    "creditCard.dualBrand.description": "Você pode selecionar a bandeira do cartão com a qual prefere pagar. Isso é opcional.",
     "installments": "Opções de Parcelamento",
     "installmentOption": "%{times}x %{partialValue}",
     "installmentOptionMonths": "%{times} meses",
@@ -258,7 +258,7 @@
     "upi.completePayment": "Conclua seu pagamento",
     "upi.mode.enterUpiId": "ID UPI",
     "upi.mode.qrCode": "Código QR",
-    "upi.mode.payByAnyUpi": "Aplicativo UPI",
+    "upi.mode.payByAnyUpi": "Aplicativos UPI",
     "upi.collect.dropdown.label": "Informe o ID da UPI",
     "upi.collect.instruction": "Digite o seu ID UPI",
     "upi.collect.field.label": "ID UPI",
@@ -443,5 +443,9 @@
     "econtext.customerNumber": "Número do cliente",
     "econtext.confirmationNumber": "Número de confirmação",
     "econtext.useBefore": "Use antes de",
-    "econtext.paymentInformation": "Informações de pagamento"
+    "econtext.paymentInformation": "Informações de pagamento",
+    "issuerList.separatorText": "ou escolha na lista",
+    "upi.intent.apps.title": "Opções",
+    "upi.intent.apps.dropdown.label": "Aplicativos UPI",
+    "upi.intent.apps.dropdown.placeholder": "Escolha o aplicativo preferencial"
 }

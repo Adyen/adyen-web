@@ -12,7 +12,7 @@
     "creditCard.expiryDateField.year": "年",
     "creditCard.storeDetailsButton": "次回のために保存します",
     "creditCard.dualBrand.title": "カードブランド",
-    "creditCard.dualBrand.description": "お支払いに使用するカードブランドをお選びください。これは任意です。",
+    "creditCard.dualBrand.description": "お支払いに使用するカードブランドを選択できます。これは任意です。",
     "installments": "分割回数",
     "installmentOption": "%{times}x %{partialValue}",
     "installmentOptionMonths": "%{times}か月",
@@ -443,5 +443,9 @@
     "econtext.customerNumber": "顧客番号",
     "econtext.confirmationNumber": "確認番号",
     "econtext.useBefore": "使用期限",
-    "econtext.paymentInformation": "決済情報"
+    "econtext.paymentInformation": "決済情報",
+    "issuerList.separatorText": "またはリストから選択",
+    "upi.intent.apps.title": "オプション",
+    "upi.intent.apps.dropdown.label": "UPIアプリ",
+    "upi.intent.apps.dropdown.placeholder": "希望するアプリを選択"
 }

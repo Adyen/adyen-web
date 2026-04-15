@@ -12,7 +12,7 @@
     "creditCard.expiryDateField.year": "Anno",
     "creditCard.storeDetailsButton": "Ricorda per la prossima volta",
     "creditCard.dualBrand.title": "Marca della carta",
-    "creditCard.dualBrand.description": "Seleziona la marca della carta con cui preferisci pagare. Questo è facoltativo.",
+    "creditCard.dualBrand.description": "Puoi selezionare la marca della carta con cui preferisci pagare. Questa opzione è facoltativa.",
     "installments": "Numero di rate",
     "installmentOption": "%{partialValue} x%{times}",
     "installmentOptionMonths": "%{times} mesi",
@@ -443,5 +443,9 @@
     "econtext.customerNumber": "Numero cliente",
     "econtext.confirmationNumber": "Numero di conferma",
     "econtext.useBefore": "Utilizzare prima di",
-    "econtext.paymentInformation": "Informazioni di pagamento"
+    "econtext.paymentInformation": "Informazioni di pagamento",
+    "issuerList.separatorText": "oppure scegli dalla lista",
+    "upi.intent.apps.title": "Opzioni",
+    "upi.intent.apps.dropdown.label": "App UPI",
+    "upi.intent.apps.dropdown.placeholder": "Scegli la tua app preferita"
 }
