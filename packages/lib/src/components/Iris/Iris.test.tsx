@@ -10,7 +10,7 @@ jest.mock('../../utils/isMobile', () => jest.fn());
 
 import isMobile from '../../utils/isMobile';
 
-const isMobileMock = isMobile as any;
+const isMobileMock = isMobile as jest.Mock;
 
 describe('Iris', () => {
     const defaultIssuers = [
@@ -22,9 +22,9 @@ describe('Iris', () => {
         { id: 'ATTIGRAA', name: 'CrediaBank' }
     ];
 
-    let core;
-    let user;
-    let onSubmitMock;
+    let core: ReturnType<typeof setupCoreMock>;
+    let user: ReturnType<typeof userEvent.setup>;
+    let onSubmitMock: jest.Mock;
 
     const createIris = (props = {}) =>
         new Iris(core, {
