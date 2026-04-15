@@ -122,12 +122,12 @@ export interface CardInputProps {
     onBlur?: (e) => {};
     onBrand?: (o: CardBrandData) => {};
     onConfigSuccess?: (O: CardConfigSuccessData) => {};
-    onChange?: (state) => {};
+    onChange: (state) => {};
     onError?: () => {};
     onFieldValid?: (o: CardFieldValidData) => {};
     onFocus?: (e) => {};
     onLoad?: (o: CardLoadData) => {};
-    onSubmitAnalytics?: (event: AbstractAnalyticsEvent) => void;
+    onSubmitAnalytics: (event: AbstractAnalyticsEvent) => void;
     handleKeyPress?: (obj: KeyboardEvent) => void;
     onAddressLookup?: OnAddressLookupType;
     onAddressSelected?: OnAddressSelectedType;

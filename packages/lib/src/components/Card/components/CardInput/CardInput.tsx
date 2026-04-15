@@ -144,7 +144,7 @@ const CardInput = (props: Readonly<CardInputProps>) => {
 
     const cardCountryCode: string = issuingCountryCode ?? props.countryCode;
     const isKorea = cardCountryCode === 'kr'; // If issuingCountryCode or the merchant defined countryCode is set to 'kr'
-    const showKCP = props.configuration.koreanAuthenticationRequired && isKorea;
+    const showKCP = !!props.configuration.koreanAuthenticationRequired && isKorea;
 
     const showBrazilianSSN: boolean =
         (showSocialSecurityNumber && props.configuration.socialSecurityNumberMode === 'auto') ||
@@ -433,10 +433,10 @@ const CardInput = (props: Readonly<CardInputProps>) => {
      * Main 'componentDidUpdate' handler
      */
     useEffect(() => {
-        const holderNameValid: boolean = valid.holderName;
+        const holderNameValid: boolean = !!valid.holderName;
 
         const sfpValid: boolean = isSfpValid;
-        const addressValid: boolean = showBillingAddress ? valid.billingAddress : true;
+        const addressValid: boolean = showBillingAddress ? !!valid.billingAddress : true;
 
         const koreanAuthentication: boolean = showKCP ? !!valid.taxNumber && !!valid.encryptedPassword : true;
 
