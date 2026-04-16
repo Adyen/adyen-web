@@ -209,29 +209,30 @@ The card input wrapper uses `<div role="form">` to expose it as a form landmark 
 
 #### Considered Options
 
-- **Option 1:** Replace with `<form aria-label>`
+- **Option 1:** Replace with `<form name="cardPayment" onSubmit={e => e.preventDefault()}>`
 - **Option 2:** Keep `<div role="form">` and suppress Sonar
 
 #### Decision Outcome
 
-Chosen option: **`<form name="cardPayment" onSubmit={e => e.preventDefault()}>`**
+Chosen option: **Keep `<div role="form">`, suppress Sonar**
 
-**Justification:** `<form>` is the native equivalent of `role="form"`. Sonar accepts `<form name=...>` as a compliant alternative, which avoids the need for a new i18n key or importing `useCoreContext` into `CardInput` (which does not currently use it). The `name` attribute satisfies the Sonar rule and exposes the form landmark to AT.
+**Justification:** The SDK is an embeddable library injected into merchant pages. Introducing a native `<form>` element into the merchant's DOM carries risks that outweigh the benefit:
 
-The `onSubmit={e => e.preventDefault()}` guard is added as a safety net against native form submission. In practice, no native submit path exists — the pay button is rendered outside this wrapper and the SDK payment flow is driven by `UIElement.submit()` — but the guard ensures robustness against any future changes (e.g. adding an `<input type="submit">` inside the wrapper).
+- A merchant's page may already have a `<form>` wrapping the checkout area. Nesting `<form>` elements is invalid HTML — browsers will silently split or discard the inner form.
+- Native `<form>` participates in the browser's built-in form submission machinery (Enter key on inputs, `requestSubmit()`, autofill heuristics). Even with `onSubmit={e => e.preventDefault()}`, some browser behaviours (e.g. implicit submission via Enter in a single-input form) are difficult to fully neutralise across all environments.
+- The SDK payment flow is driven entirely by `UIElement.submit()` — there is no intended native form submission path. `role="form"` correctly exposes the landmark to AT without any of the native `<form>` side effects.
 
-`CardInput` does not use `useCoreContext`, so `aria-label` with an i18n string was ruled out to avoid adding a new dependency and a new translation key for something a `name` attribute handles equivalently.
+This is a **justified Sonar suppression** — `role="form"` on a `<div>` is intentional library design, not an oversight.
 
 ##### Positive Consequences
 
-- Native `<form>` landmark exposed to AT without ARIA override
-- No new imports or translation keys needed
-- `onSubmit` guard prevents any accidental native submission
+- No risk of nested-form invalid HTML in merchant pages
+- No unintended native form submission behaviour
+- AT still receives the form landmark via `role="form"`
 
 ##### Negative Consequences
 
-- `<form>` introduces a new implicit landmark — screen readers will announce "form" on focus, which is the intended behaviour but is a minor AT experience change
-- Regression testing against ADR-0001's `onEnterKeyPressed` merchant API is required
+- Sonar flag remains open — must be suppressed via SonarCloud UI or `sonar.issue.ignore.multicriteria`
 
 ---
 

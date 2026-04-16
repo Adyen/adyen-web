@@ -521,16 +521,15 @@ const CardInput = (props: Readonly<CardInputProps>) => {
                 componentType={props.type}
                 disableIOSArrowKeys={props.disableIOSArrowKeys ? handleTouchstartIOS : null}
                 render={({ setRootNode, setFocusOn }, sfpState) => (
-                    <form
+                    <div
                         ref={setRootNode}
-                        name="cardPayment"
                         className={classNames({
                             'adyen-checkout__card-input': true,
                             'adyen-checkout-card-input__wrapper': true,
                             [`adyen-checkout__card-input--${props.fundingSource ?? 'credit'}`]: true,
                             'adyen-checkout__card-input--loading': status === 'loading'
                         })}
-                        onSubmit={e => e.preventDefault()}
+                        role={'form'}
                     >
                         {showCardUIElements && <FormInstruction />}
 
@@ -581,7 +580,7 @@ const CardInput = (props: Readonly<CardInputProps>) => {
                             onFieldFocusAnalytics={onFieldFocusAnalytics}
                             onFieldBlurAnalytics={onFieldBlurAnalytics}
                         />
-                    </form>
+                    </div>
                 )}
             />
 
