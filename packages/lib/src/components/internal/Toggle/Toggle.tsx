@@ -62,7 +62,7 @@ const Toggle = ({
             <span aria-hidden={true} className="adyen-checkout-toggle__track">
                 <span className="adyen-checkout-toggle__handle">
                     {checked && (
-                        <svg role="img" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none">
                             <path
                                 fill="#00112C"
                                 d="M12.0608 6.00011L11.0001 4.93945L7.00011 8.93945L5.00011 6.93945L3.93945 8.00011L7.00011 11.0608L12.0608 6.00011Z"
