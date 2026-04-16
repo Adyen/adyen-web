@@ -17,7 +17,7 @@ export interface PayPalConfiguration extends UIElementProps {
         /**
          * @see {@link https://developer.paypal.com/sdk/js/configuration/#merchant-id}
          */
-        merchantId: string;
+        merchantId?: string;
         /**
          * @see {@link https://developer.paypal.com/sdk/js/configuration/#intent}
          */

@@ -90,13 +90,13 @@ describe('Paypal', () => {
 describe('Paypal configuration prop configures correctly', () => {
     test('Paypal element has configuration object with default values', () => {
         const paypal = new Paypal(core);
-        expect(paypal.props.configuration.merchantId).toEqual(undefined);
-        expect(paypal.props.configuration.intent).toEqual(undefined);
+        expect(paypal.props.configuration?.merchantId).toEqual(undefined);
+        expect(paypal.props.configuration?.intent).toEqual(undefined);
     });
 
     test('Paypal element has configuration object with values pulled from props.configuration', () => {
         const paypal = new Paypal(core, { configuration: { merchantId: 'abcdef', intent: 'order' } });
-        expect(paypal.props.configuration.merchantId).toEqual('abcdef');
-        expect(paypal.props.configuration.intent).toEqual('order');
+        expect(paypal.props.configuration?.merchantId).toEqual('abcdef');
+        expect(paypal.props.configuration?.intent).toEqual('order');
     });
 });

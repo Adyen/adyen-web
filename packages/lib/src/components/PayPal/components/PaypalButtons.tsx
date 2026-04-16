@@ -44,15 +44,15 @@ export default function PaypalButtons({
             onApprove
         };
 
-        const button = paypalRef.Buttons(configuration);
+        const button = paypalRef?.Buttons?.(configuration);
 
-        if (button.isEligible()) {
+        if (button?.isEligible() && buttonRef.current) {
             void button.render(buttonRef.current);
         }
     };
 
     useEffect(() => {
-        const { PAYPAL, CREDIT, PAYLATER, VENMO } = paypalRef.FUNDING as Record<string, SupportedPayPalFundingSources>;
+        const { PAYPAL, CREDIT, PAYLATER, VENMO } = paypalRef?.FUNDING as Record<string, SupportedPayPalFundingSources>;
 
         if (!props.blockPayPalButton) createButton(PAYPAL, paypalButtonRef);
         if (!props.blockPayPalCreditButton) createButton(CREDIT, creditButtonRef);

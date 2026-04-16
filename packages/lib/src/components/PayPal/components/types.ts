@@ -32,6 +32,6 @@ export interface PayPalComponentProps extends Omit<PayPalConfiguration, 'onError
 }
 
 export interface PayPalButtonsProps extends Omit<PayPalComponentProps, 'ref' | 'onScriptLoadFailure' | 'setComponentRef'> {
-    paypalRef: PayPalNamespace;
+    paypalRef?: PayPalNamespace | null;
     isProcessingPayment: boolean;
 }

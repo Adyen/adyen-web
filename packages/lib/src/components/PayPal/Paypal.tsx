@@ -27,10 +27,10 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
     public static readonly type = TxVariants.paypal;
     public static readonly subtype = 'sdk';
 
-    public paymentData: string = null;
+    public paymentData: string | null = null;
 
-    private resolve = null;
-    private reject = null;
+    private resolve: ((value: string) => void) | null = null;
+    private reject: ((error?: Error) => void) | null = null;
 
     protected static readonly defaultProps = defaultProps;
 
@@ -45,7 +45,7 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
         const merchantId = props.configuration?.merchantId;
         const intentFromConfig = props.configuration?.intent;
         const isZeroAuth = props.amount?.value === 0;
-        const intent: Intent = isZeroAuth ? 'tokenize' : props.intent || intentFromConfig;
+        const intent: Intent | undefined = isZeroAuth ? 'tokenize' : props.intent || intentFromConfig;
         const vault = intent === 'tokenize' || props.vault;
 
         const displayContinueToReviewPageButton = props.userAction === 'continue';
@@ -134,11 +134,16 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
 
     private readonly handleOnApprove = (data: PayPalOnApproveData, actions: PayPalOnApproveActions): Promise<void> => {
         const { onAuthorized } = this.props;
-        const state = { data: { details: data, paymentData: this.paymentData } };
+        const state = { data: { details: data, paymentData: this.paymentData ?? undefined } };
 
         if (!onAuthorized) {
             this.handleAdditionalDetails(state);
-            return;
+            return Promise.resolve();
+        }
+
+        if (!actions.order) {
+            this.handleError(new AdyenCheckoutError('ERROR', 'PayPal order actions are not available'));
+            return Promise.resolve();
         }
 
         return actions.order
@@ -196,7 +201,11 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
      * @param actions - PayPal actions.
      */
     private handleOnShippingAddressChange(data: PayPalOnShippingAddressChangeData, actions: PayPalOnShippingAddressChangeActions): Promise<void> {
-        return this.props.onShippingAddressChange(data, actions, this);
+        const { onShippingAddressChange } = this.props;
+
+        if (!onShippingAddressChange) return Promise.resolve();
+
+        return onShippingAddressChange(data, actions, this);
     }
 
     /**
@@ -208,10 +217,14 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
      * @param actions - PayPal actions.
      */
     private handleOnShippingOptionsChange(data: PayPalOnShippingOptionsChangeData, actions: PayPalOnShippingOptionsChangeActions): Promise<void> {
-        return this.props.onShippingOptionsChange(data, actions, this);
+        const { onShippingOptionsChange } = this.props;
+
+        if (!onShippingOptionsChange) return Promise.resolve();
+
+        return onShippingOptionsChange(data, actions, this);
     }
 
-    protected override componentToRender(): h.JSX.Element {
+    protected override componentToRender(): h.JSX.Element | null {
         if (!this.props.showPayButton) return null;
 
         const { onShippingAddressChange, onShippingOptionsChange, ...rest } = this.props;
