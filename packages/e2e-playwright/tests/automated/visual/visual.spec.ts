@@ -40,10 +40,8 @@ test.describe('Automated visual testing', () => {
             if (storyId.includes('click-to-pay')) {
                 await expect(page.locator('.adyen-checkout-ctp__card-animation')).toBeHidden();
             }
-
-            if (storyId.includes('upi')) {
-                await waitForImageLoaded(page);
-            }
+            
+            await waitForImageLoaded(page);
 
             await toHaveScreenshot(page.getByTestId('checkout-component'), browserName, `${storyId}.png`, {
                 mask: [page.getByRole('timer'), page.getByTestId('stored-card-info')]

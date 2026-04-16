@@ -11,5 +11,8 @@ export const getImageCount = async (who: Locator) => {
  */
 export const waitForImageLoaded = async (scope: Page | Locator) => {
     const images = await scope.getByRole('img').all();
+    if (!images.length) {
+        return;
+    }
     await Promise.all(images.map(img => expect(img).toHaveCSS('opacity', '1')));
 };
