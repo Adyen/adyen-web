@@ -122,4 +122,19 @@ describe('OrderButton', () => {
             expect(console.error).toHaveBeenCalledWith('Something went wrong');
         });
     });
+
+    test('should call onError when updateAmazonCheckoutSession rejects', async () => {
+        const onError = jest.fn();
+        const error = new Error('Network error');
+        (updateAmazonCheckoutSession as jest.Mock).mockRejectedValue(error);
+
+        const user = userEvent.setup();
+        renderOrderButton({ onError });
+
+        await user.click(screen.getByRole('button', { name: 'Confirm purchase' }));
+
+        await waitFor(() => {
+            expect(onError).toHaveBeenCalledWith(error, undefined);
+        });
+    });
 });
