@@ -22,18 +22,22 @@ Sonar rule [S6819] flags components that apply ARIA `role` attributes to generic
 
 #### Decision Outcome
 
-Chosen option: **Remove `role="img"`**
+Chosen option: **Keep `role="img"`, suppress Sonar**
 
-**Justification:** `<svg>` elements with a `<title>` child already expose an accessible name to AT without an explicit role. Additionally, each SVG is toggled with `aria-hidden` — adding `role="img"` inside a conditionally hidden element is redundant. The `<title>` provides the accessible name when the SVG is visible; no role override is needed.
+**Justification:** Both SVGs are informative inline SVGs that carry meaning — they depict the front and back of a card with the CVC location highlighted, and their `<title>` element is populated with a localised `fieldLabel` string. Per [MDN](https://developer.mozilla.org/en-US/docs/Web/SVG/Guides/SVG_in_HTML#best_practices) and the [EU Data Visualisation Guide](https://data.europa.eu/apps/data-visualisation-guide/accessible-svg-and-aria), the recommended pattern for informative inline SVGs is `role="img"` + `<title>` + `aria-labelledby`. Without `role="img"`, the EU guide explicitly warns: *"some screen readers will not correctly treat it as an image, and might not read out the content of the `<title>` and `<desc>` elements. So it is safer to set the `role` attribute to `img`"* ([source](https://data.europa.eu/apps/data-visualisation-guide/making-svg-content-fully-accessible)).
+
+The `aria-hidden` toggling is complementary, not contradictory — it hides the *inactive* SVG from AT while the *active* one (with `role="img"`) is correctly announced. Removing `role="img"` risks the active SVG's `<title>` not being read by some screen readers.
+
+This is a **Sonar false positive** for this specific case — `role="img"` on an informative inline SVG is the spec-recommended pattern.
 
 ##### Positive Consequences
 
-- Removes contradictory markup (role on a conditionally hidden element)
-- Cleaner, spec-compliant SVG accessibility pattern
+- Active SVG correctly announced as an image with its `<title>` text by all screen readers
+- Follows MDN and ARIA spec recommendations for informative inline SVGs
 
 ##### Negative Consequences
 
-- None — AT experience is unchanged
+- Sonar flag remains — must be suppressed via SonarCloud UI
 
 ---
 
@@ -41,18 +45,20 @@ Chosen option: **Remove `role="img"`**
 
 #### Decision Outcome
 
-Chosen option: **Remove `role="img"`**
+Chosen option: **Keep `role="img"`, suppress Sonar**
 
-**Justification:** The SVG is nested inside `<div aria-hidden="true">`, making it invisible to all AT. Applying `role="img"` inside an `aria-hidden` subtree is a contradiction — the role is never exposed to the accessibility tree. The SVG is purely decorative and carries no informational value.
+**Justification:** `aria-hidden` is the single source of truth for AT visibility — it already controls whether any SVG (and its `role`) is exposed to the accessibility tree. Removing `role="img"` to satisfy Sonar would create a coupling where SVG semantics depend on knowledge of the surrounding `aria-hidden` context. If `aria-hidden` were ever removed or restructured, the SVG would be exposed to AT without a role. Keeping `role="img"` on all SVGs is the safer, more resilient pattern — `aria-hidden` suppresses it when decorative, and `role="img"` ensures correct AT announcement when visible.
+
+This is a **Sonar false positive** — the rule does not account for `aria-hidden` context.
 
 ##### Positive Consequences
 
-- Eliminates contradictory ARIA (role inside aria-hidden)
-- No meaningful change in AT output
+- SVG semantics are self-contained and independent of surrounding `aria-hidden` context
+- Consistent pattern across all SVGs in the codebase
 
 ##### Negative Consequences
 
-- None
+- Sonar flag remains — must be suppressed via SonarCloud UI
 
 ---
 
@@ -60,18 +66,18 @@ Chosen option: **Remove `role="img"`**
 
 #### Decision Outcome
 
-Chosen option: **Remove `role="img"`**
+Chosen option: **Keep `role="img"`, suppress Sonar**
 
-**Justification:** The checkmark SVG is inside `<span aria-hidden={true}>`, the decorative track/handle of the toggle. The toggle's checked state is already communicated to AT via `<input role="switch" checked={checked}>`. The visual checkmark is purely decorative reinforcement of a state already announced by the input.
+**Justification:** Same reasoning as `Timeline.tsx` — `aria-hidden` on the parent `<span>` is the AT visibility control. `role="img"` on the SVG is kept for the same resilience reason: if `aria-hidden` changes, the SVG still has correct semantics. Sonar does not consider the `aria-hidden` ancestor context when flagging this.
 
 ##### Positive Consequences
 
-- Removes contradictory ARIA inside `aria-hidden` subtree
-- Checked state remains correctly communicated via the `<input>`
+- Consistent with the unified SVG pattern across the codebase
+- Self-contained SVG semantics independent of surrounding structure
 
 ##### Negative Consequences
 
-- None
+- Sonar flag remains — must be suppressed via SonarCloud UI
 
 ---
 
