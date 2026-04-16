@@ -14,5 +14,13 @@ export const waitForImageLoaded = async (scope: Page | Locator) => {
     if (!images.length) {
         return;
     }
-    await Promise.all(images.map(img => expect(img).toHaveCSS('opacity', '1')));
+    await Promise.all(
+        images.map(
+            img =>
+                Promise.race([
+                    expect(img).toHaveCSS('opacity', '1'),
+                    new Promise<void>(resolve => setTimeout(() => resolve(undefined), 1000)) //timeout safeguard to avoid test flakiness due to CDN instability
+                ])
+        )
+    );
 };
