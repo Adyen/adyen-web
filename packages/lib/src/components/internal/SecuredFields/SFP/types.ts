@@ -8,6 +8,7 @@ import { Placeholders as GiftcardPlaceholders } from '../../../Giftcard/componen
 import type { SFFieldType } from '../lib/types';
 import type { AbstractAnalyticsEvent } from '../../../../core/Analytics/events/AbstractAnalyticsEvent';
 import type SecuredFieldsProvider from './SecuredFieldsProvider';
+import { RefObject } from 'preact';
 
 export type Placeholders = CardPlaceholders | GiftcardPlaceholders;
 
@@ -97,4 +98,4 @@ export interface OnChangeEventDetails {
     fieldType?: string;
 }
 
-export type SecuredFieldsProviderRef = { current: SecuredFieldsProvider };
+export type SecuredFieldsProviderRef = RefObject<SecuredFieldsProvider>;

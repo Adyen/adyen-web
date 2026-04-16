@@ -10,15 +10,19 @@ import { useCoreContext } from '../../../../core/Context/CoreProvider';
 import { LabelOnlyDisclaimerMessage } from '../../../internal/DisclaimerMessage/DisclaimerMessage';
 import { isConfigurationValid } from './utils/validate-configuration';
 import mobileNumberFormatter from './utils/mobile-number-formatter';
-import type { FastlaneSignupConfiguration } from '../../../PayPalFastlane/types';
+import type { FastlaneSignupConfiguration, FastlaneData } from '../../../PayPalFastlane/types';
 
 import './FastlaneSignup.scss';
 import { AnalyticsInfoEvent, InfoEventType, UiTarget } from '../../../../core/Analytics/events/AnalyticsInfoEvent';
 import { AbstractAnalyticsEvent } from '../../../../core/Analytics/events/AbstractAnalyticsEvent';
 
+interface FastlaneSignupState {
+    fastlaneData: FastlaneData;
+}
+
 type FastlaneSignupProps = FastlaneSignupConfiguration & {
     currentDetectedBrand: string;
-    onChange(state: any): void;
+    onChange(state: FastlaneSignupState): void;
     onSubmitAnalytics(event: AbstractAnalyticsEvent): void;
     // Component type (e.g. scheme, bcmc)
     type: string;
