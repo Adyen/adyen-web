@@ -173,18 +173,21 @@ The custom dropdown uses `<ul role="listbox">` to implement a fully custom selec
 
 #### Decision Outcome
 
-Chosen option: **Keep `role="listbox"`, suppress Sonar**
+Chosen option: **Keep `role="listbox"`, dismiss via SonarCloud UI**
 
 **Justification:** The ARIA spec explicitly defines the `listbox`/`option` pattern for custom select widgets. Native `<select>` cannot render icons, secondary text, or custom item layouts. The existing `eslint-disable jsx-a11y/no-noninteractive-element-to-interactive-role` comment already acknowledges this intentional ARIA usage. This is a **Sonar false positive**.
+
+**Suppression approach:** Dismiss the issue directly in the SonarCloud UI (mark as "Won't Fix" / "False Positive") rather than adding code-level suppression comments or `sonar-project.properties` entries. If the UI dismissal is not persistent across re-scans, fall back to a `sonar.issue.ignore.multicriteria` entry scoped to `**/Select/components/SelectList.tsx`.
 
 ##### Positive Consequences
 
 - No functionality lost
 - Correct ARIA composite widget semantics maintained
+- Source files remain clean (no suppression comments)
 
 ##### Negative Consequences
 
-- Requires inline Sonar suppression comment
+- UI dismissal must be re-applied if the issue resurfaces after a branch reset or project re-key
 
 ---
 
@@ -192,9 +195,9 @@ Chosen option: **Keep `role="listbox"`, suppress Sonar**
 
 #### Decision Outcome
 
-Chosen option: **Keep `role="option"`, suppress Sonar**
+Chosen option: **Keep `role="option"`, dismiss via SonarCloud UI**
 
-**Justification:** Paired with `SelectList`'s `role="listbox"`. `listbox` + `option` is the canonical ARIA pattern for custom select widgets per the ARIA spec. This is the same false positive as SelectList — the two must be treated together as a composite widget.
+**Justification:** Paired with `SelectList`'s `role="listbox"`. `listbox` + `option` is the canonical ARIA pattern for custom select widgets per the ARIA spec. This is the same false positive as SelectList — the two must be treated together as a composite widget. Same suppression approach applies: dismiss in the SonarCloud UI first, fall back to `sonar.issue.ignore.multicriteria` scoped to `**/Select/components/SelectListItem.tsx` if needed.
 
 ---
 
@@ -211,9 +214,24 @@ The card input wrapper uses `<div role="form">` to expose it as a form landmark 
 
 #### Decision Outcome
 
-Chosen option: **TBD — pending Phase 4 implementation**
+Chosen option: **`<form name="cardPayment" onSubmit={e => e.preventDefault()}>`**
 
-**Notes:** Replacing `<div>` with `<form>` introduces native `submit` event behaviour. The SDK payment flow is driven by `UIElement.submit()`, not a form submission — a native `submit` event (e.g. from pressing Enter in an input) could interfere. Mitigation: add `onSubmit={e => e.preventDefault()}`. Must be regression-tested against keyboard submission and the `onEnterKeyPressed` merchant API (see ADR-0001).
+**Justification:** `<form>` is the native equivalent of `role="form"`. Sonar accepts `<form name=...>` as a compliant alternative, which avoids the need for a new i18n key or importing `useCoreContext` into `CardInput` (which does not currently use it). The `name` attribute satisfies the Sonar rule and exposes the form landmark to AT.
+
+The `onSubmit={e => e.preventDefault()}` guard is added as a safety net against native form submission. In practice, no native submit path exists — the pay button is rendered outside this wrapper and the SDK payment flow is driven by `UIElement.submit()` — but the guard ensures robustness against any future changes (e.g. adding an `<input type="submit">` inside the wrapper).
+
+`CardInput` does not use `useCoreContext`, so `aria-label` with an i18n string was ruled out to avoid adding a new dependency and a new translation key for something a `name` attribute handles equivalently.
+
+##### Positive Consequences
+
+- Native `<form>` landmark exposed to AT without ARIA override
+- No new imports or translation keys needed
+- `onSubmit` guard prevents any accidental native submission
+
+##### Negative Consequences
+
+- `<form>` introduces a new implicit landmark — screen readers will announce "form" on focus, which is the intended behaviour but is a minor AT experience change
+- Regression testing against ADR-0001's `onEnterKeyPressed` merchant API is required
 
 ---
 
