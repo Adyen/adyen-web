@@ -13,6 +13,10 @@
     visibility: hidden;
     width: 100%;
     z-index: 10;
+    border: 0;
+    max-width: unset;
+    max-height: unset;
+    color: inherit;
 
     &::before {
         background: rgb(0 17 44 / 50%);

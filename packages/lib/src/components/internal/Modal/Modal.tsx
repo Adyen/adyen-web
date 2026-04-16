@@ -42,6 +42,7 @@ const Modal = ({
     focusAfterClose,
     ...props
 }: Readonly<ModalProps>) => {
+    const dialogRef = useRef<HTMLDialogElement>();
     const modalContainerRef = useRef<HTMLDivElement>();
     const { closeModal, handleClickOutside } = useModal({
         modalElement: modalContainerRef.current,
@@ -51,6 +52,15 @@ const Modal = ({
         focusAfterClose,
         onClose
     });
+
+    useEffect(() => {
+        if (!dialogRef.current) return;
+        if (isOpen) {
+            if (!dialogRef.current.open) dialogRef.current.showModal();
+        } else {
+            if (dialogRef.current.open) dialogRef.current.close();
+        }
+    }, [isOpen]);
 
     /**
      * It shouldn't propagate ENTER key event to the parent component. This effect suppress the event propagation
@@ -71,24 +81,22 @@ const Modal = ({
 
     return (
         // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-noninteractive-element-interactions
-        <div
+        <dialog
+            ref={dialogRef}
             className={cx(
                 'adyen-checkout__modal-wrapper',
                 classNameModifiers.map(m => `adyen-checkout__modal-wrapper--${m}`),
                 { 'adyen-checkout__modal-wrapper--open': isOpen }
             )}
-            role="dialog"
             aria-labelledby={labelledBy}
             aria-describedby={describedBy}
-            aria-modal="true"
-            aria-hidden={!isOpen}
             onClick={handleClickOutside}
             {...props}
         >
             <div className="adyen-checkout__modal" ref={modalContainerRef}>
                 {children({ onCloseModal: closeModal })}
             </div>
-        </div>
+        </dialog>
     );
 };
 

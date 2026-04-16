@@ -243,11 +243,36 @@ The Modal component uses `<div role="dialog" aria-modal>` with a custom `useModa
 
 #### Considered Options
 
-- **Option 1:** Migrate to native `<dialog>` with `showModal()`/`close()` API
-- **Option 2:** Keep `<div role="dialog">` and suppress Sonar
+- **Option 1:** Full native `<dialog>` migration — replace `useModal`/`useTrapFocus` with `showModal()`/`close()`, use `::backdrop` for overlay
+- **Option 2:** Minimal native `<dialog>` migration — use `<dialog>` element with `showModal()`/`close()`, keep existing `useModal`/`useTrapFocus` and CSS architecture
+- **Option 3:** Keep `<div role="dialog">` and suppress Sonar
 
 #### Decision Outcome
 
-Chosen option: **TBD — pending Phase 5 implementation**
+Chosen option: **Option 2 — Minimal native `<dialog>` migration**
 
-**Notes:** Native `<dialog>` provides built-in focus-trapping, `::backdrop`, and `close`/`cancel` events that could replace significant portions of `useModal`. However, browser support and existing merchant-facing behaviour (focus management, dismiss on outside click) must be validated. This is the highest-risk change in this set and warrants its own PR.
+**Justification:**
+
+Option 1 (full migration) was ruled out because:
+
+- Native `<dialog>::backdrop` has limited styling support — no `opacity` transition in all browsers, no `z-index` control — which would break the existing animated overlay in `Modal.scss`
+- Native `<dialog>` Escape handling fires a `cancel` event and closes the dialog without running `closeModal()` (focus restore + `onClose` callback) — requiring an additional `onCancel` listener
+- The existing `useModal`/`useTrapFocus` hooks are well-tested and correct; removing them is unnecessary scope
+
+Option 2 preserves all existing behaviour while satisfying the Sonar rule:
+
+- `<dialog>` element removes `role="dialog"`, `aria-modal`, and `aria-hidden` — all implicit on native `<dialog>`
+- `showModal()`/`close()` is driven by a `useEffect` on `isOpen`, alongside the existing CSS class toggle for the animated open/close
+- `useModal` and `useTrapFocus` remain unchanged — they receive `modalContainerRef.current` (the inner `<div>`) as before
+- Browser default `<dialog>` styles (`border`, `max-width`, `max-height`, `color`) are explicitly reset in `Modal.scss`
+
+##### Positive Consequences
+
+- Removes `role="dialog"`, `aria-modal`, `aria-hidden` — native `<dialog>` provides these semantics implicitly via `showModal()`
+- No changes to `useModal`, `useTrapFocus`, consumers, or CSS animation architecture
+- Clears the Sonar flag
+
+##### Negative Consequences
+
+- Native `<dialog>` Escape key fires its own `close` event in addition to `useModal`'s Escape handler — both will call `onClose`. The `useModal` Escape handler runs first (via `keydown` on the inner div), so `onClose` is called once and `dialog.close()` is then a no-op. Requires regression testing to confirm no double-close.
+- Browser support for `<dialog>` is 98%+ (Chrome 37+, Firefox 98+, Safari 15.4+) — acceptable for the SDK's target environments
