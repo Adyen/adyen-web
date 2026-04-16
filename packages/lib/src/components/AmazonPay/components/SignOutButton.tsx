@@ -6,7 +6,7 @@ export default function SignOutButton(props: Readonly<SignOutButtonProps>) {
     const { i18n } = useCoreContext();
 
     const handleClick = () => {
-        new Promise(() => void props.onSignOut())
+        new Promise((resolve, reject) => void props.onSignOut(resolve, reject))
             .then(() => {
                 props.amazonRef.Pay.signout();
             })

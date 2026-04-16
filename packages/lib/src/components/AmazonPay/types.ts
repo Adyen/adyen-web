@@ -5,8 +5,6 @@ import { AmazonPayElement } from './AmazonPay';
 import { h, RefObject } from 'preact';
 import { PayButtonProps } from '../internal/PayButton/PayButton';
 import { AdyenCheckoutError, SubmitData, UIElement } from '../../types';
-import AmazonPayButton from './components/AmazonPayButton';
-import OrderButton from './components/OrderButton';
 
 type ButtonColor = 'Gold' | 'LightGray' | 'DarkGray';
 type Placement = 'Home' | 'Product' | 'Cart' | 'Checkout' | 'Other';
@@ -82,9 +80,9 @@ export interface AmazonPayConfiguration extends UIElementProps {
     showOrderButton?: boolean;
     showSignOutButton?: boolean;
     signature?: string;
-    onClick?: () => Promise<void>;
+    onClick?: (resolve: (value?: unknown) => void, reject: () => void) => Promise<void>;
     onError?: (error: AdyenCheckoutError, component: UIElement) => void;
-    onSignOut?: () => Promise<void>;
+    onSignOut?: (resolve: (value?: unknown) => void, reject: () => void) => Promise<void>;
 
     /**
      * Used for analytics
@@ -118,19 +116,19 @@ export interface AmazonPayButtonProps {
     design?: string;
     environment?: string;
     locale?: string;
-    onClick: () => Promise<void>;
+    onClick: (resolve: (value?: unknown) => void, reject: () => void) => Promise<void>;
     onError?: (error: AdyenCheckoutError, component: UIElement) => void;
     placement?: Placement;
     productType?: ProductType;
     recurringMetadata?: RecurringMetadata;
-    ref: RefObject<typeof AmazonPayButton>;
+    ref: RefObject<{ initCheckout(): void }>;
     returnUrl?: string;
     showPayButton: boolean;
 }
 
 export interface SignOutButtonProps {
     amazonRef: AmazonWindowObject;
-    onSignOut: () => Promise<void>;
+    onSignOut: (resolve: (value?: unknown) => void, reject: () => void) => Promise<void>;
 }
 
 export interface ChangePaymentDetailsButtonProps {
@@ -149,7 +147,7 @@ export interface OrderButtonProps {
     chargePermissionType?: ChargePermissionType;
     onError: (error: AdyenCheckoutError, component: UIElement) => void;
     recurringMetadata: RecurringMetadata;
-    ref: RefObject<typeof OrderButton>;
+    ref: RefObject<{ createOrder(): void }>;
     region: Region;
     returnUrl: string;
     publicKeyId: string;
