@@ -1,4 +1,4 @@
-import { Fragment, h } from 'preact';
+import { Fragment, h, TargetedEvent } from 'preact';
 import { useState } from 'preact/hooks';
 import { mockRedirectUrlIssuerPage } from './mocks';
 
@@ -8,8 +8,8 @@ const SimulatedIssuer = () => {
         window.location.href = url;
     };
 
-    const handleTextareaChange = (event: any) => {
-        setUrl(event.target.value);
+    const handleTextareaChange = (event: TargetedEvent<HTMLTextAreaElement, Event>) => {
+        setUrl(event.currentTarget.value);
     };
 
     return (

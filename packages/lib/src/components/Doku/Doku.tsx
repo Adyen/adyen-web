@@ -41,13 +41,7 @@ export class DokuElement extends UIElement<VoucherConfiguration> {
 
     protected override componentToRender(): h.JSX.Element {
         return this.props.reference ? (
-            <DokuVoucherResult
-                ref={ref => {
-                    this.componentRef = ref;
-                }}
-                {...this.props}
-                onActionHandled={this.onActionHandled}
-            />
+            <DokuVoucherResult {...this.props} onActionHandled={this.onActionHandled} />
         ) : (
             <DokuInput
                 setComponentRef={this.setComponentRef}

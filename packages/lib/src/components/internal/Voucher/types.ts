@@ -60,7 +60,7 @@ export interface VoucherProps {
     /**
      * Any additional surcharge to the amount.
      */
-    surcharge?: any;
+    surcharge?: string;
 
     /**
      * List of details that will be rendered on the voucher.

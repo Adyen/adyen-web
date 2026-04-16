@@ -15,7 +15,7 @@ import { ILanguageService } from '../../../language/LanguageService';
 const meta: Meta<ButtonProps> = {
     title: 'Internal Elements/Button',
     tags: ['no-automated-visual-test'],
-    component: Button as any,
+    component: Button,
     argTypes: {
         status: {
             options: ['loading', 'redirect', 'other'],
