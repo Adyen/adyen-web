@@ -148,7 +148,6 @@ const config = tseslint.config(
             'src/components/ApplePay/**',
             'src/components/BankTransfer/**',
             'src/components/Boleto/**',
-            'src/components/Card/**',
             'src/components/CashAppPay/**',
             'src/components/Doku/**',
             'src/components/Dragonpay/**',

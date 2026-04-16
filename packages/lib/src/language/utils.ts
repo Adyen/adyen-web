@@ -1,54 +1,90 @@
 import { h } from 'preact';
 import { CustomTranslations } from './types';
-import AdyenCheckoutError from '../core/Errors/AdyenCheckoutError';
+import { DEFAULT_LOCALE, LOCALE_NAME_MAX_LENGTH, LOCALE_NAME_MIN_LENGTH } from './constants';
 
 /**
- * Returns a locale with the proper format
+ * @description Convert to ISO 639-1
+ */
+const toTwoLetterCode = (locale: string): string => locale.toLowerCase().substring(0, 2);
+
+/**
+ * @description Checks if the locale length is valid
+ * @param locale - The locale to check
+ * @returns true if the locale length is valid, false otherwise
+ */
+const isLocaleLenghtValid = (locale: string): boolean =>
+    Boolean(locale) && locale.length >= LOCALE_NAME_MIN_LENGTH && locale.length <= LOCALE_NAME_MAX_LENGTH;
+
+/**
+ * Matches a string with one of the locales
+ *
+ * @param locale - The locale to match
+ * @param supportedLocales - Array of possible locales
  *
  * @example
- * formatLocale('En_us'); -> en-US
- * formatLocale('ar') -> ar
+ * matchLocale('en-GB', ['en-US', 'es-ES']);
+ * // returns 'en-US'
  */
-export function formatLocale(localeParam: string): string {
-    const locale = localeParam.replace('_', '-');
-    const format = new RegExp('([a-z]{2})([-])([A-Z]{2})');
-
-    // If it's already formatted, return the locale
-    if (format.test(locale)) {
-        return locale;
-    }
-
-    // If no country code is defined (Ex: 'ar') , then returns 'ar'
-    const [languageCode, countryCode] = locale.split('-');
-    if (languageCode.length !== 2) {
-        throw new AdyenCheckoutError('IMPLEMENTATION_ERROR', `Locale '${localeParam}' does not match the expected format`);
-    }
-    if (!countryCode) {
-        return languageCode.toLowerCase();
-    }
-
-    // Ensure correct format and join the strings back together
-    const fullLocale = [languageCode.toLowerCase(), countryCode.toUpperCase()].join('-');
-    if (format.test(fullLocale)) {
-        return fullLocale;
-    } else {
-        throw new AdyenCheckoutError('IMPLEMENTATION_ERROR', `Locale '${localeParam}' does not match the expected format`);
-    }
+export function matchLocale(locale: string, supportedLocales: readonly string[]): string | null {
+    if (!locale || typeof locale !== 'string') return null;
+    return supportedLocales.find(supLoc => toTwoLetterCode(supLoc) === toTwoLetterCode(locale)) || null;
 }
 
 /**
- * Makes sure that if custom translation is defined using not properly formatted locale keys, then it gets formatted correctly
- * Ex: Custom translation defined as { en_US: { ... }} will be adjusted to { 'en-US': { ... }}
+ * Returns a locale with the proper format.
+ *
+ * @param localeParam - Locale example: 'En_us' or 'en-US'
+ *
+ * @example
+ * formatLocaleToLanguageCountryLocale('En_us');
+ * // returns 'en-US'
+ */
+export function formatLocaleToLanguageCountryLocale(localeParam: string): string | null {
+    const locale = localeParam.replace('_', '-');
+    const format = /^([a-z]{2})(-)([A-Z]{2})$/;
+
+    // If it's already formatted, return the locale
+    if (format.test(locale)) return locale;
+
+    // Split the string in two
+    const [languageCode, countryCode] = locale.split('-');
+
+    // If the locale or the country codes are missing, return null
+    if (!languageCode || !countryCode) return null;
+
+    // Ensure correct format and join the strings back together
+    const fullLocale = [languageCode.toLowerCase(), countryCode.toUpperCase()].join('-');
+
+    return fullLocale.length === 5 ? fullLocale : null;
+}
+
+export function parseLocale(locale: string, supportedLocales: readonly string[]): string {
+    if (!isLocaleLenghtValid(locale)) return DEFAULT_LOCALE;
+
+    const formattedLocale = formatLocaleToLanguageCountryLocale(locale);
+    const hasMatch = formattedLocale && supportedLocales.includes(formattedLocale);
+
+    if (hasMatch) return formattedLocale;
+
+    return matchLocale(formattedLocale || locale, supportedLocales) || DEFAULT_LOCALE;
+}
+
+/**
+ * @description Makes sure that if custom translation is defined using not properly formatted locale keys, then it gets formatted correctly
+ *
+ * @example { en_US: { ... }} will be adjusted to { 'en-US': { ... }} .  { ar: { ... }} is kept as is.
  */
 export function formatCustomTranslations(customTranslations: CustomTranslations = {}): CustomTranslations {
-    return Object.keys(customTranslations).reduce((memo, customTranslationLocaleKey) => {
-        const locale = formatLocale(customTranslationLocaleKey);
-        memo[locale] = customTranslations[customTranslationLocaleKey];
+    return Object.keys(customTranslations).reduce<CustomTranslations>((memo, localeKey) => {
+        if (!isLocaleLenghtValid(localeKey)) return memo;
+
+        const locale = formatLocaleToLanguageCountryLocale(localeKey) || toTwoLetterCode(localeKey);
+        memo[locale] = customTranslations[localeKey];
         return memo;
     }, {});
 }
 
-const replaceTranslationValues = (translation, values) => {
+const replaceTranslationValues = (translation: string, values: Record<string, string>) => {
     return translation.replace(/%{(\w+)}/g, (_, k) => values[k] || '');
 };
 

@@ -4,8 +4,6 @@ import { PaymentMethodsResponse } from '../types';
 import { PayPal, Card, Dropin, Redirect } from '../components';
 import { CoreConfiguration } from './types';
 
-jest.mock('./Services/get-translations');
-
 const paymentMethodsResponse: PaymentMethodsResponse = {
     paymentMethods: [
         {

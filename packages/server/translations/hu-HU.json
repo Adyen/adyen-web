@@ -12,7 +12,7 @@
     "creditCard.expiryDateField.year": "Év",
     "creditCard.storeDetailsButton": "Megjegyzés a következő alkalomra",
     "creditCard.dualBrand.title": "Kártyakibocsátó",
-    "creditCard.dualBrand.description": "Válassza ki a fizetéshez használni kívánt kártyakibocsátót. Ez nem kötelező.",
+    "creditCard.dualBrand.description": "Kiválaszthatja a fizetéshez használni kívánt kártyakibocsátót. Ez nem kötelező.",
     "installments": "Részletek száma",
     "installmentOption": "%{times} x %{partialValue}",
     "installmentOptionMonths": "%{times} hónap",
@@ -258,7 +258,7 @@
     "upi.completePayment": "Fizetés végrehajtása",
     "upi.mode.enterUpiId": "UPI-azonosító",
     "upi.mode.qrCode": "QR-kód",
-    "upi.mode.payByAnyUpi": "UPI-alkalmazás",
+    "upi.mode.payByAnyUpi": "UPI-alkalmazások",
     "upi.collect.dropdown.label": "UPI-azonosító megadása",
     "upi.collect.instruction": "Adja meg az UPI-azonosítóját",
     "upi.collect.field.label": "UPI-azonosító",
@@ -443,5 +443,9 @@
     "econtext.customerNumber": "Ügyfélszám",
     "econtext.confirmationNumber": "Megerősítés száma",
     "econtext.useBefore": "Eddig használható:",
-    "econtext.paymentInformation": "Fizetési adatok"
+    "econtext.paymentInformation": "Fizetési adatok",
+    "issuerList.separatorText": "vagy válasszon a listából",
+    "upi.intent.apps.title": "Lehetőségek",
+    "upi.intent.apps.dropdown.label": "UPI-alkalmazások",
+    "upi.intent.apps.dropdown.placeholder": "Válassza ki a kívánt alkalmazást"
 }

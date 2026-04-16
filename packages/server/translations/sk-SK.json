@@ -12,7 +12,7 @@
     "creditCard.expiryDateField.year": "Rok",
     "creditCard.storeDetailsButton": "Zapamätať na budúce použitie",
     "creditCard.dualBrand.title": "Značka karty",
-    "creditCard.dualBrand.description": "Vyberte značku karty, ktorou preferujete platiť. Táto možnosť je nepovinná.",
+    "creditCard.dualBrand.description": "Môžete vybrať značku karty, ktorou preferujete platiť. Táto možnosť je nepovinná.",
     "installments": "Počet splátok",
     "installmentOption": "% {times} x % {partialValue}",
     "installmentOptionMonths": "%{times} mesiace/-ov",
@@ -258,7 +258,7 @@
     "upi.completePayment": "Dokončite svoju platbu",
     "upi.mode.enterUpiId": "ID UPI",
     "upi.mode.qrCode": "QR kód",
-    "upi.mode.payByAnyUpi": "Aplikácia UPI",
+    "upi.mode.payByAnyUpi": "Aplikácie UPI",
     "upi.collect.dropdown.label": "Zadajte UPI ID",
     "upi.collect.instruction": "Zadajte svoje UPI ID",
     "upi.collect.field.label": "ID UPI",
@@ -443,5 +443,9 @@
     "econtext.customerNumber": "Číslo zákazníka",
     "econtext.confirmationNumber": "Číslo potvrdenia",
     "econtext.useBefore": "Použite do",
-    "econtext.paymentInformation": "Informácie o platbe"
+    "econtext.paymentInformation": "Informácie o platbe",
+    "issuerList.separatorText": "alebo vyberte zo zoznamu",
+    "upi.intent.apps.title": "Možnosti",
+    "upi.intent.apps.dropdown.label": "Aplikácie UPI",
+    "upi.intent.apps.dropdown.placeholder": "Vyberte preferovanú aplikáciu"
 }

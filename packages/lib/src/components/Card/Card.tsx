@@ -303,7 +303,7 @@ export class CardElement extends UIElement<CardConfiguration> {
         const { brands, brandsConfiguration } = this.props;
         if (brands) {
             return brands.map(brand => {
-                const brandIcon = brandsConfiguration[brand]?.icon ?? this.props.modules.resources.getImage()(brand);
+                const brandIcon = brandsConfiguration?.[brand]?.icon ?? this.props.modules.resources.getImage()(brand);
                 return { icon: brandIcon, name: brand };
             });
         }
