@@ -1,5 +1,5 @@
 import Paypal from './Paypal';
-import { render } from '@testing-library/preact';
+import { render, screen } from '@testing-library/preact';
 import { setupCoreMock, TEST_CHECKOUT_ATTEMPT_ID, TEST_RISK_DATA } from '../../../config/testMocks/setup-core-mock';
 
 const core = setupCoreMock();
@@ -98,5 +98,108 @@ describe('Paypal configuration prop configures correctly', () => {
         const paypal = new Paypal(core, { configuration: { merchantId: 'abcdef', intent: 'order' } });
         expect(paypal.props.configuration?.merchantId).toEqual('abcdef');
         expect(paypal.props.configuration?.intent).toEqual('order');
+    });
+});
+
+describe('Paypal formatProps', () => {
+    test('should set intent to tokenize and vault to true when amount is 0', () => {
+        const paypal = new Paypal(core, { amount: { value: 0, currency: 'USD' } });
+        expect(paypal.props.configuration?.intent).toBe('tokenize');
+        expect(paypal.props.vault).toBe(true);
+    });
+
+    test('should use intent from props over configuration intent', () => {
+        const paypal = new Paypal(core, { intent: 'capture', configuration: { intent: 'order' } });
+        expect(paypal.props.configuration?.intent).toBe('capture');
+    });
+
+    test('should set commit to false when userAction is continue', () => {
+        const paypal = new Paypal(core, { userAction: 'continue' });
+        expect(paypal.props.commit).toBe(false);
+    });
+
+    test('should keep commit as true when userAction is pay', () => {
+        const paypal = new Paypal(core, { userAction: 'pay' });
+        expect(paypal.props.commit).toBe(true);
+    });
+
+    test('should set vault to true when intent is tokenize', () => {
+        const paypal = new Paypal(core, { intent: 'tokenize' });
+        expect(paypal.props.vault).toBe(true);
+    });
+
+    test('should set vault based on props.vault when intent is not tokenize', () => {
+        const paypal = new Paypal(core, { vault: true, intent: 'capture' });
+        expect(paypal.props.vault).toBe(true);
+    });
+});
+
+describe('Paypal updatePaymentData', () => {
+    test('should update paymentData', () => {
+        const paypal = new Paypal(core);
+        paypal.updatePaymentData('test-payment-data');
+        expect(paypal.paymentData).toBe('test-payment-data');
+    });
+
+    test('should warn when updating with falsy value', () => {
+        jest.spyOn(console, 'warn').mockImplementation(() => {});
+        const paypal = new Paypal(core);
+        paypal.updatePaymentData('');
+        expect(console.warn).toHaveBeenCalledWith('PayPal - Updating payment data with an invalid value');
+    });
+});
+
+describe('Paypal updateWithAction', () => {
+    test('should throw if action paymentMethodType does not match', () => {
+        const paypal = new Paypal(core);
+        expect(() => paypal.updateWithAction({ type: 'sdk', paymentMethodType: 'scheme' })).toThrow('Invalid Action');
+    });
+
+    test('should store paymentData from action', () => {
+        const paypal = new Paypal(core);
+        // Set up resolve/reject to avoid WRONG_INSTANCE error
+        // @ts-ignore accessing private
+        paypal.resolve = jest.fn();
+        paypal.updateWithAction({ type: 'sdk', paymentMethodType: 'paypal', paymentData: 'pd-123', sdkData: { token: 'tok-abc' } });
+        expect(paypal.paymentData).toBe('pd-123');
+    });
+
+    test('should resolve with token when sdkData.token is provided', () => {
+        const paypal = new Paypal(core);
+        const resolveMock = jest.fn();
+        // @ts-ignore accessing private
+        paypal.resolve = resolveMock;
+        paypal.updateWithAction({ type: 'sdk', paymentMethodType: 'paypal', sdkData: { token: 'test-token' } });
+        expect(resolveMock).toHaveBeenCalledWith('test-token');
+    });
+
+    test('should reject when sdkData has no token', () => {
+        const paypal = new Paypal(core);
+        const rejectMock = jest.fn();
+        // @ts-ignore accessing private
+        paypal.reject = rejectMock;
+        paypal.updateWithAction({ type: 'sdk', paymentMethodType: 'paypal', sdkData: {} });
+        expect(rejectMock).toHaveBeenCalledWith(expect.any(Error));
+    });
+
+    test('should call handleError when resolve is not set and token is provided', () => {
+        const onErrorMock = jest.fn();
+        const paypal = new Paypal(core, { onError: onErrorMock });
+        paypal.updateWithAction({ type: 'sdk', paymentMethodType: 'paypal', sdkData: { token: 'test-token' } });
+        expect(onErrorMock).toHaveBeenCalled();
+    });
+});
+
+describe('Paypal componentToRender', () => {
+    test('should not render PayPal buttons when showPayButton is false', () => {
+        const paypal = new Paypal(core, { showPayButton: false });
+        render(paypal.render());
+        expect(screen.queryByTestId('spinner')).not.toBeInTheDocument();
+    });
+
+    test('should render component when showPayButton is true', () => {
+        const paypal = new Paypal(core, { showPayButton: true });
+        render(paypal.render());
+        expect(screen.getByTestId('spinner')).toBeInTheDocument();
     });
 });

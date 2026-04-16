@@ -79,7 +79,7 @@ export default function PaypalComponent({
     }
 
     return (
-        <div className="adyen-checkout__paypal">
+        <div className="adyen-checkout__paypal" data-testid="paypal-component">
             <PaypalButtons
                 {...props}
                 onCancel={onCancel}
