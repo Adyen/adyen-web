@@ -112,14 +112,23 @@ The component renders a group of issuer bank buttons. It uses `<div role="group"
 
 #### Considered Options
 
-- **Option 1:** Replace with `<fieldset>` + `aria-label`
+- **Option 1:** Replace with `<fieldset aria-label>`
 - **Option 2:** Keep `<div role="group">` and suppress Sonar
 
 #### Decision Outcome
 
-Chosen option: **TBD — pending Phase 2 implementation**
+Chosen option: **`<fieldset aria-label>`**
 
-**Notes:** `<fieldset>` carries default browser styles (border, padding, min-width). The existing `.adyen-checkout__issuer-button-group` CSS must be audited to ensure it neutralises any unwanted fieldset defaults. `aria-label` is valid on `<fieldset>` and preferred over `<legend>` here since the label is already provided via the design.
+**Justification:** `<fieldset>` is the native HTML equivalent of `role="group"` for form controls. The component groups interactive buttons, which is exactly the semantic purpose of `<fieldset>`. `aria-label` is valid on `<fieldset>` (preferred over `<legend>` here since no visible label text is needed in the layout). Browser default styles for `<fieldset>` (`border`, `margin`, `padding`, `min-width: min-content`) are explicitly reset in `IssuerButtonGroup.scss` to preserve the existing flex layout.
+
+##### Positive Consequences
+
+- Native semantic grouping for AT without ARIA override
+- Clears the Sonar flag
+
+##### Negative Consequences
+
+- Requires explicit fieldset CSS resets to prevent browser default styling
 
 ---
 
@@ -131,14 +140,23 @@ The component renders a set of mutually exclusive toggle buttons. It uses `<div 
 
 #### Considered Options
 
-- **Option 1:** Replace with `<fieldset>` + `aria-label`
+- **Option 1:** Replace with `<fieldset>`
 - **Option 2:** Keep `<div role="group">` and suppress Sonar
 
 #### Decision Outcome
 
-Chosen option: **TBD — pending Phase 2 implementation**
+Chosen option: **`<fieldset>`**
 
-**Notes:** Same `<fieldset>` styling considerations as `IssuerButtonGroup`. Additionally, `SegmentedControl` uses `aria-controls` + `aria-expanded` on each button to associate with `SegmentedControlRegion` panels — this relationship must be preserved after any element change.
+**Justification:** Same rationale as `IssuerButtonGroup` — `<fieldset>` is the native equivalent of `role="group"` for a set of related controls. No `aria-label` is added since the component has no accessible group label in its current design (the individual buttons carry their own labels via `aria-controls`/`aria-expanded`). Browser fieldset defaults (`border`, `margin`, `min-width`) are explicitly reset in `SegmentedControl.scss`; the existing `padding` declaration in the class already overrides the browser default padding.
+
+##### Positive Consequences
+
+- Native semantic grouping
+- `aria-controls`/`aria-expanded` relationship between buttons and `SegmentedControlRegion` panels is preserved unchanged
+
+##### Negative Consequences
+
+- Requires explicit fieldset CSS resets
 
 ---
 

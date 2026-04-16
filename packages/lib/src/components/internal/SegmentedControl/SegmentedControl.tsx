@@ -51,13 +51,12 @@ export const SegmentedControl = <T,>({
     }
 
     return (
-        <div
+        <fieldset
             className={cx(
                 'adyen-checkout__segmented-control',
                 { 'adyen-checkout__segmented-control--disabled': disabled },
                 ...classNameModifiers.map(modifier => `adyen-checkout__segmented-control--${modifier}`)
             )}
-            role="group"
         >
             {options.map(({ label, value, controls, htmlProps }: SegmentedControlOption<T>) => (
                 <button
@@ -78,6 +77,6 @@ export const SegmentedControl = <T,>({
                     {label}
                 </button>
             ))}
-        </div>
+        </fieldset>
     );
 };
