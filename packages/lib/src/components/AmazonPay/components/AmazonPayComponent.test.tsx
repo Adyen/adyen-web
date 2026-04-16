@@ -115,4 +115,15 @@ describe('AmazonPayComponent', () => {
             );
         });
     });
+
+    test('getSubmitFunction should return a function when the AmazonPayButton is rendered', async () => {
+        const setComponentRef = jest.fn();
+        customRender({ setComponentRef });
+        await waitFor(() => {
+            expect(setComponentRef).toHaveBeenCalled();
+        });
+        const ref = setComponentRef.mock.calls[0][0];
+        const submitFn = ref.getSubmitFunction();
+        expect(typeof submitFn).toBe('function');
+    });
 });
