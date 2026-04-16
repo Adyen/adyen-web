@@ -37,6 +37,7 @@ import { PayButtonProps } from '../../../internal/PayButton/PayButton';
 import { h } from 'preact';
 import { InstallmentOptions } from './components/Installments/Installments';
 import type { Form } from '../../../../utils/useForm/types';
+import type { SecuredFieldsProviderRef } from '../../../internal/SecuredFields/SFP/types';
 
 export interface CardInputValidState {
     holderName?: boolean;
@@ -84,7 +85,7 @@ export interface CardInputProps {
     brandsConfiguration?: CardBrandsConfiguration;
     brandsIcons: Array<BrandConfiguration>;
     clientKey: string;
-    configuration?: CardBackendConfiguration;
+    configuration: CardBackendConfiguration;
     countryCode?: string;
     cvcPolicy?: CVCPolicyType;
     data?: CardInputDataState;
@@ -113,20 +114,20 @@ export interface CardInputProps {
         risk: RiskElement;
         resources: Resources;
     };
-    onAdditionalSFConfig?: () => {};
-    onAdditionalSFRemoved?: () => {};
-    onAllValid?: (o: CardAllValidData) => {};
-    onAutoComplete?: (o: CardAutoCompleteData) => {};
-    onBinValue?: (o: CardBinValueData) => {};
-    onBlur?: (e) => {};
-    onBrand?: (o: CardBrandData) => {};
-    onConfigSuccess?: (O: CardConfigSuccessData) => {};
-    onChange?: (state) => {};
-    onError?: () => {};
-    onFieldValid?: (o: CardFieldValidData) => {};
-    onFocus?: (e) => {};
-    onLoad?: (o: CardLoadData) => {};
-    onSubmitAnalytics?: (event: AbstractAnalyticsEvent) => void;
+    onAdditionalSFConfig?: () => void;
+    onAdditionalSFRemoved?: () => void;
+    onAllValid?: (o: CardAllValidData) => void;
+    onAutoComplete?: (o: CardAutoCompleteData) => void;
+    onBinValue?: (o: CardBinValueData) => void;
+    onBlur?: (e) => void;
+    onBrand?: (o: CardBrandData) => void;
+    onConfigSuccess?: (O: CardConfigSuccessData) => void;
+    onChange: (state) => void;
+    onError?: () => void;
+    onFieldValid?: (o: CardFieldValidData) => void;
+    onFocus?: (e) => void;
+    onLoad?: (o: CardLoadData) => void;
+    onSubmitAnalytics: (event: AbstractAnalyticsEvent) => void;
     handleKeyPress?: (obj: KeyboardEvent) => void;
     onAddressLookup?: OnAddressLookupType;
     onAddressSelected?: OnAddressSelectedType;
@@ -171,7 +172,7 @@ export interface CardInputState {
 
 // An interface for the members exposed by CardInput to its parent Card/UIElement
 export interface CardInputRef extends ComponentMethodsRef {
-    sfp?: any;
+    sfp?: SecuredFieldsProviderRef;
     setFocusOn?: (who) => void;
     processBinLookupResponse?: (binLookupResponse: BinLookupResponse, isReset: boolean) => void;
     updateStyles?: (stylesObj: StylesObject) => void;
