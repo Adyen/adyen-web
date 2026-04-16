@@ -1,30 +1,12 @@
-import {
-    OrderResponseBody,
-    OnApproveData,
-    OnApproveActions,
-    OnShippingAddressChangeData,
-    OnShippingAddressChangeActions,
-    OnShippingOptionsChangeData,
-    OnShippingOptionsChangeActions,
-    OnInitActions
-} from '@paypal/paypal-js';
-
 import { AddressData } from '../../types/global-types';
 import { UIElementProps } from '../internal/UIElement/types';
 import PaypalElement from './Paypal';
-
-export type PayPalOrderResponseBody = OrderResponseBody;
-export type PayPalOnApproveData = OnApproveData;
-export type PayPalOnApproveActions = OnApproveActions;
-export type PayPalOnShippingAddressChangeData = OnShippingAddressChangeData & {
-    errors: Record<string, string>;
-};
-export type PayPalOnShippingAddressChangeActions = OnShippingAddressChangeActions;
-export type PayPalOnShippingOptionsChangeData = OnShippingOptionsChangeData & {
-    errors: Record<string, string>;
-};
-export type PayPalOnShippingOptionsChangeActions = OnShippingOptionsChangeActions;
-export type PayPalOnInitActions = OnInitActions;
+import type {
+    PayPalOnInitActions,
+    PayPalOnShippingAddressChangeData,
+    PayPalOnShippingOptionsChangeData,
+    PayPalOrderResponseBody
+} from './paypal-js-types';
 
 export interface PayPalConfiguration extends UIElementProps {
     /**

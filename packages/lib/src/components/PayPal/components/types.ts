@@ -1,12 +1,12 @@
 import type { PayPalButtonOnError, PayPalNamespace } from '@paypal/paypal-js';
 
+import type { PayPalConfiguration } from '../types';
 import type {
-    PayPalConfiguration,
     PayPalOnApproveActions,
     PayPalOnApproveData,
     PayPalOnShippingAddressChangeData,
     PayPalOnShippingOptionsChangeData
-} from '../types';
+} from '../paypal-js-types';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 import { ComponentMethodsRef } from '../../types';
 

@@ -1,5 +1,5 @@
 import { AddressData } from '../../../types/global-types';
-import { PayPalOrderResponseBody } from '../types';
+import type { PayPalOrderResponseBody } from '../paypal-js-types';
 
 /**
  * This function formats PayPal contact format to Adyen address format

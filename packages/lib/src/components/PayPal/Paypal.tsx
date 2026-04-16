@@ -9,9 +9,8 @@ import { formatPaypalOrderContactToAdyenFormat } from './utils/format-paypal-ord
 
 import type { ICore } from '../../core/types';
 import type { PaymentAction } from '../../types/global-types';
+import type { Intent, PayPalConfiguration } from './types';
 import type {
-    Intent,
-    PayPalConfiguration,
     PayPalOnApproveActions,
     PayPalOnApproveData,
     PayPalOnShippingAddressChangeActions,
@@ -19,7 +18,7 @@ import type {
     PayPalOnShippingOptionsChangeActions,
     PayPalOnShippingOptionsChangeData,
     PayPalOrderResponseBody
-} from './types';
+} from './paypal-js-types';
 
 import { AnalyticsInfoEvent, InfoEventType } from '../../core/Analytics/events/AnalyticsInfoEvent';
 import './Paypal.scss';

@@ -8,7 +8,8 @@ import Script from '../../../utils/Script';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 import type { PayPalComponentProps } from './types';
 import useAnalytics from '../../../core/Analytics/useAnalytics';
-import { ComponentMethodsRef, PayPalOnApproveActions, PayPalOnApproveData } from '../../types';
+import { ComponentMethodsRef } from '../../types';
+import type { PayPalOnApproveActions, PayPalOnApproveData } from '../paypal-js-types';
 
 export default function PaypalComponent({
     onApprove,
