@@ -96,7 +96,7 @@ The component wraps a content panel associated with a `SegmentedControl` tab. It
 
 Chosen option: **`<section aria-labelledby>`**
 
-**Justification:** `<section>` is the native HTML equivalent of `role="region"`. When paired with `aria-labelledby`, it is exposed as a landmark region identically to `<div role="region">`. `<section>` is a block-level element with no default styling differences from `<div>`, so no CSS changes are needed.
+**Justification:** `<section>` is the native HTML equivalent of `role="region"`. When paired with `aria-labelledby`, it is exposed as a landmark region identically to `<div role="region">`. `<section>` is a block-level element with no default styling differences from `<div>`, so no CSS changes are needed. Per [MDN — ARIA: region role](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/region_role): *"If the content warrants a navigation landmark, use the `nav` element; otherwise use `section`"* — and the landmark is only exposed when the element has an accessible name, which `aria-labelledby` provides.
 
 ##### Positive Consequences
 
