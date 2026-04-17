@@ -14,7 +14,8 @@ import {
     CardAutoCompleteData,
     CardConfigSuccessData,
     CardLoadData,
-    SFKeyPressObj
+    SFKeyPressObj,
+    SFFieldType
 } from '../lib/types';
 import { CSFReturnObject, CSFSetupObject } from '../lib/CSF/types';
 import { CVC_POLICY_REQUIRED, DATE_POLICY_REQUIRED, DEDICATED_CARD_COMPONENTS, ENCRYPTED_CARD_NUMBER, ENCRYPTED_PWD_FIELD } from '../lib/constants';
@@ -278,7 +279,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
         return hasUnsupportedCard;
     }
 
-    public setFocusOn(frame: string): void {
+    public setFocusOn(frame: SFFieldType): void {
         if (this.csf) this.csf.setFocusOnFrame(frame);
     }
 

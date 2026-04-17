@@ -6,10 +6,10 @@ import handleBrandFromBinLookup from './extensions/handleBrandFromBinLookup';
 
 abstract class AbstractCSF {
     // Set in CSF
-    protected callbacks: CSFCallbacksConfig;
-    protected config: CSFConfigObject;
+    protected callbacks: Partial<CSFCallbacksConfig>;
+    protected config: Partial<CSFConfigObject>;
     protected props: CSFSetupObject;
-    protected state: CSFStateObject;
+    protected state: Partial<CSFStateObject>;
     protected validateForm: () => void;
     protected handleBrandFromBinLookup: typeof handleBrandFromBinLookup;
     protected callbacksHandler: (callbacksObj: object) => void;
@@ -47,11 +47,11 @@ abstract class AbstractCSF {
     // --
     protected constructor(setupObj: CSFSetupObject) {
         this.props = setupObj;
-        this.state = {} as CSFStateObject;
+        this.state = {};
 
         // Initialise storage objects
-        this.config = {} as CSFConfigObject; // {} as ConfigObject fails in linting
-        this.callbacks = {} as CSFCallbacksConfig;
+        this.config = {};
+        this.callbacks = {};
     }
 }
 export default AbstractCSF;
