@@ -8,6 +8,8 @@ import type { PaymentData } from '../../../types/global-types';
 import { off, on } from '../../../utils/listenerUtils';
 import { AbstractAnalyticsEvent } from '../../../core/Analytics/events/AbstractAnalyticsEvent';
 import { createSdkData } from '../../../utils/createSdkData';
+import getComponentNameOfPaymentType from '../../components-name-map';
+import { PAYMENT_METHOD_BEHAVIOR } from '../../../core/config';
 
 /**
  * Verify if the first parameter is instance of Core.
@@ -89,12 +91,12 @@ abstract class BaseElement<P extends BaseElementProps> implements IBaseElement {
     public get data(): PaymentData {
         const order = this.state.order || this.props.order;
         const componentData = this.formatData();
-
+        const doesPaymentMethodHaveNativeComponent = Boolean(getComponentNameOfPaymentType(componentData.paymentMethod?.type));
         const clientData = this.core.modules.risk.data;
         const checkoutAttemptId = this.core.modules.analytics.checkoutAttemptId ?? NO_CHECKOUT_ATTEMPT_ID;
+        const paymentMethodBehavior = doesPaymentMethodHaveNativeComponent ? PAYMENT_METHOD_BEHAVIOR.NATIVE : PAYMENT_METHOD_BEHAVIOR.GENERIC;
 
-        const sdkData = createSdkData(checkoutAttemptId, clientData);
-
+        const sdkData = createSdkData(checkoutAttemptId, clientData, paymentMethodBehavior);
         if (componentData.paymentMethod && checkoutAttemptId) {
             componentData.paymentMethod.checkoutAttemptId = checkoutAttemptId;
         }

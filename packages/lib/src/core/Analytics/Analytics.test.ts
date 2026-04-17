@@ -6,6 +6,7 @@ import { AnalyticsLogEvent, LogEventType } from './events/AnalyticsLogEvent';
 import Storage from '../../utils/Storage';
 import type { IAnalyticsService } from './AnalyticsService';
 import { DEFAULT_DEBOUNCE_TIME_MS } from '../../utils/debounce';
+import { CHANNEL, PLATFORM } from '../config';
 
 jest.mock('../../utils/Storage');
 
@@ -53,8 +54,8 @@ describe('Analytics', () => {
 
             expect(mockService.requestCheckoutAttemptId).toHaveBeenCalledWith(
                 expect.objectContaining({
-                    channel: 'Web',
-                    platform: 'Web',
+                    channel: CHANNEL.WEB,
+                    platform: PLATFORM,
                     locale: 'en-US',
                     checkoutStage: 'checkout',
                     level: 'all'
