@@ -32,9 +32,12 @@ export default function PaypalComponent({
     }, [setComponentRef]);
 
     const handleOnApprove = useCallback(
-        async (data: PayPalOnApproveData, actions: PayPalOnApproveActions) => {
+        (data: PayPalOnApproveData, actions: PayPalOnApproveActions) => {
             setStatus('processing');
-            await onApprove(data, actions);
+            // Awaiting this callback delays closing of the PayPal popup or closing the redirect page
+            // after the payment has been approved
+            void onApprove(data, actions);
+            return Promise.resolve();
         },
         [onApprove]
     );
