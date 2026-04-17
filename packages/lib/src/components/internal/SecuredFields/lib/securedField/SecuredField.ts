@@ -31,6 +31,8 @@ const logPostMsg = false;
 const doLog = false;
 
 class SecuredField extends AbstractSecuredField {
+    public override sfConfig: SecuredFieldCommonProps;
+
     constructor(pSetupObj: SecuredFieldSetupObject, i18n: Language) {
         super();
 

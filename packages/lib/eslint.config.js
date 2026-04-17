@@ -165,7 +165,6 @@ const config = tseslint.config(
             'src/components/internal/IbanInput/**',
             'src/components/internal/IssuerList/**',
             'src/components/internal/OpenInvoice/**',
-            'src/components/internal/SecuredFields/**',
             'src/components/internal/UIElement/**',
 
             // ── Utils ──
