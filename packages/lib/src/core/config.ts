@@ -84,8 +84,10 @@ export enum CHANNEL {
 export const PLATFORM = 'web';
 
 /**
- * nativeComponent: payment method explicitly supported with a dedicated component by the SDK
- * genericComponent: payment method not explicitly supported by the SDK and handled in default fallback component
+ * How the SDK handles the rendering of a payment method.
+ *
+ * - NATIVE: The payment method has a dedicated component in the SDK.
+ * - GENERIC: The payment method has no dedicated component; it falls back to a generic component (Redirect).
  * @internal
  */
 export enum PAYMENT_METHOD_BEHAVIOR {
