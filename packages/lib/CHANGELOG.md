@@ -1,5 +1,25 @@
 # @adyen/adyen-web
 
+## 6.34.0
+
+### Minor Changes
+
+- Improved: responsiness of payment method list items with brand icons on mobile screens ([#3886](https://github.com/Adyen/adyen-web/pull/3886))
+
+- Improved: Add app icons images to UPI dropin payment method item ([#3886](https://github.com/Adyen/adyen-web/pull/3886))
+
+- New: Including English translations in the bundle as fallback ([#3895](https://github.com/Adyen/adyen-web/pull/3895))
+
+- New: Add internal BrandIcon component ([#3886](https://github.com/Adyen/adyen-web/pull/3886))
+
+- New: SDK requests the translations from CDN only if the locale is supported ([#3895](https://github.com/Adyen/adyen-web/pull/3895))
+
+- Improved: Types for PayPal and Cashapppay components ([#3908](https://github.com/Adyen/adyen-web/pull/3908))
+
+### Patch Changes
+
+- Fixed: Explicit any in Card.tsx and it's subdirectories ([#3906](https://github.com/Adyen/adyen-web/pull/3906))
+
 ## 6.33.0
 
 ### Minor Changes
