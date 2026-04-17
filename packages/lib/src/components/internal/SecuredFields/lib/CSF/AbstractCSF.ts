@@ -14,8 +14,8 @@ abstract class AbstractCSF {
     protected handleBrandFromBinLookup: typeof handleBrandFromBinLookup;
     protected callbacksHandler: (callbacksObj: object) => void;
     protected configHandler: (props: CSFSetupObject) => void;
-    protected createCardSecuredFields: (securedFields: HTMLElement[], cvcPolicy: CVCPolicyType, expiryDatePolicy: DatePolicyType) => Promise<any>;
-    protected createNonCardSecuredFields: (securedFields: HTMLElement[]) => Promise<any>;
+    protected createCardSecuredFields: (securedFields: HTMLElement[], cvcPolicy: CVCPolicyType, expiryDatePolicy: DatePolicyType) => Promise<void>;
+    protected createNonCardSecuredFields: (securedFields: HTMLElement[]) => Promise<void>;
     protected createSecuredFields: typeof createSecuredFields;
     protected destroySecuredFields: () => void;
     protected handleIOSTouchEvents: () => void;
@@ -47,11 +47,11 @@ abstract class AbstractCSF {
     // --
     protected constructor(setupObj: CSFSetupObject) {
         this.props = setupObj;
-        this.state = {} as any as CSFStateObject;
+        this.state = {} as CSFStateObject;
 
         // Initialise storage objects
-        this.config = {} as any as CSFConfigObject; // {} as ConfigObject fails in linting
-        this.callbacks = {} as any as CSFCallbacksConfig;
+        this.config = {} as CSFConfigObject; // {} as ConfigObject fails in linting
+        this.callbacks = {} as CSFCallbacksConfig;
     }
 }
 export default AbstractCSF;
