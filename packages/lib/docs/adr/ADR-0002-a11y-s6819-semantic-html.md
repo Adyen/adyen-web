@@ -4,21 +4,17 @@
 
 Sonar rule [S6819] flags components that apply ARIA `role` attributes to generic HTML elements (e.g. `<div role="dialog">`, `<div role="region">`) where a native semantic element exists. The rule states that native elements provide better screen reader compatibility than ARIA role overrides. Which of these flags are legitimate fixes, which are false positives, and what is the safest remediation for each?
 
-## Decision Drivers
-
-- First rule of ARIA: use native HTML elements with built-in semantics before reaching for ARIA
-- Contradictory ARIA usage (e.g. `role="img"` inside `aria-hidden` subtrees) must be fixed unconditionally
-- Custom composite widgets (listbox/option) are a sanctioned ARIA pattern and cannot be replaced by native elements without losing functionality
-- `<fieldset>` and `<form>` carry default browser styling and behaviour that must be verified before swapping
-- `<dialog>` migration is a significant refactor (focus-trapping, open/close lifecycle) requiring its own scope
-
----
 
 ## Decisions by Component
 
 ---
 
-### 1. `CVCHint.tsx` — `role="img"` on `<svg>`
+### 1. Issues with `role="img"` on SVG elements
+
+Sonar issues: 
+- `CVCHint.tsx` — `role="img"` on `<svg>` 
+- `Toggle.tsx` — `role="img"` on checkmark `<svg>`
+- `Timeline.tsx` — `role="img"` on decorative `<svg>`
 
 #### Decision Outcome
 
@@ -41,76 +37,8 @@ This is a **Sonar false positive** for this specific case — `role="img"` on an
 
 ---
 
-### 2. `Timeline.tsx` — `role="img"` on decorative `<svg>`
 
-#### Decision Outcome
-
-Chosen option: **Keep `role="img"`, suppress Sonar**
-
-**Justification:** `aria-hidden` is the single source of truth for AT visibility — it already controls whether any SVG (and its `role`) is exposed to the accessibility tree. Removing `role="img"` to satisfy Sonar would create a coupling where SVG semantics depend on knowledge of the surrounding `aria-hidden` context. If `aria-hidden` were ever removed or restructured, the SVG would be exposed to AT without a role. Keeping `role="img"` on all SVGs is the safer, more resilient pattern — `aria-hidden` suppresses it when decorative, and `role="img"` ensures correct AT announcement when visible.
-
-This is a **Sonar false positive** — the rule does not account for `aria-hidden` context.
-
-##### Positive Consequences
-
-- SVG semantics are self-contained and independent of surrounding `aria-hidden` context
-- Consistent pattern across all SVGs in the codebase
-
-##### Negative Consequences
-
-- Sonar flag remains — must be suppressed via SonarCloud UI
-
----
-
-### 3. `Toggle.tsx` — `role="img"` on checkmark `<svg>`
-
-#### Decision Outcome
-
-Chosen option: **Keep `role="img"`, suppress Sonar**
-
-**Justification:** Same reasoning as `Timeline.tsx` — `aria-hidden` on the parent `<span>` is the AT visibility control. `role="img"` on the SVG is kept for the same resilience reason: if `aria-hidden` changes, the SVG still has correct semantics. Sonar does not consider the `aria-hidden` ancestor context when flagging this.
-
-##### Positive Consequences
-
-- Consistent with the unified SVG pattern across the codebase
-- Self-contained SVG semantics independent of surrounding structure
-
-##### Negative Consequences
-
-- Sonar flag remains — must be suppressed via SonarCloud UI
-
----
-
-### 4. `SegmentedControlRegion.tsx` — `<div role="region">`
-
-#### Context and Problem Statement
-
-The component wraps a content panel associated with a `SegmentedControl` tab. It uses `<div role="region" aria-labelledby>` to expose it as a landmark region.
-
-#### Considered Options
-
-- **Option 1:** Replace with `<section aria-labelledby>`
-- **Option 2:** Keep `<div role="region">` and suppress Sonar
-
-#### Decision Outcome
-
-Chosen option: **`<section aria-labelledby>`**
-
-**Justification:** `<section>` is the native HTML equivalent of `role="region"`. When paired with `aria-labelledby`, it is exposed as a landmark region identically to `<div role="region">`. `<section>` is a block-level element with no default styling differences from `<div>`, so no CSS changes are needed. Per [MDN — ARIA: region role](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/region_role): *"If the content warrants a navigation landmark, use the `nav` element; otherwise use `section`"* — and the landmark is only exposed when the element has an accessible name, which `aria-labelledby` provides.
-
-##### Positive Consequences
-
-- Complies with the first rule of ARIA
-- No visual or behavioural change
-- Clears the Sonar flag without suppression
-
-##### Negative Consequences
-
-- None
-
----
-
-### 5. `IssuerButtonGroup.tsx` — `<div role="group">`
+### 2. `IssuerButtonGroup.tsx` — `<div role="group">`
 
 #### Context and Problem Statement
 
@@ -138,35 +66,12 @@ Chosen option: **`<fieldset aria-label>`**
 
 ---
 
-### 6. `SegmentedControl.tsx` — `<div role="group">`
+### Select Component custom Aria Controls
 
-#### Context and Problem Statement
+Sonar Issues:
 
-The component renders a set of mutually exclusive toggle buttons. It uses `<div role="group">` to group them as a control set.
-
-#### Considered Options
-
-- **Option 1:** Replace with `<fieldset>`
-- **Option 2:** Keep `<div role="group">` and suppress Sonar
-
-#### Decision Outcome
-
-Chosen option: **`<fieldset>`**
-
-**Justification:** Same rationale as `IssuerButtonGroup` — `<fieldset>` is the native equivalent of `role="group"` for a set of related controls. No `aria-label` is added since the component has no accessible group label in its current design (the individual buttons carry their own labels via `aria-controls`/`aria-expanded`). Browser fieldset defaults (`border`, `margin`, `min-width`) are explicitly reset in `SegmentedControl.scss`; the existing `padding` declaration in the class already overrides the browser default padding.
-
-##### Positive Consequences
-
-- Native semantic grouping
-- `aria-controls`/`aria-expanded` relationship between buttons and `SegmentedControlRegion` panels is preserved unchanged
-
-##### Negative Consequences
-
-- Requires explicit fieldset CSS resets
-
----
-
-### 7. `SelectList.tsx` — `role="listbox"` on `<ul>`
+- `SelectList.tsx` — `role="listbox"` on `<ul>`
+- `SelectListItem.tsx` — `role="option"` on `<li>`
 
 #### Context and Problem Statement
 
@@ -197,17 +102,7 @@ Chosen option: **Keep `role="listbox"`, dismiss via SonarCloud UI**
 
 ---
 
-### 8. `SelectListItem.tsx` — `role="option"` on `<li>`
-
-#### Decision Outcome
-
-Chosen option: **Keep `role="option"`, dismiss via SonarCloud UI**
-
-**Justification:** Paired with `SelectList`'s `role="listbox"`. `listbox` + `option` is the canonical ARIA pattern for custom select widgets per the ARIA spec. This is the same false positive as SelectList — the two must be treated together as a composite widget. Same suppression approach applies: dismiss in the SonarCloud UI first, fall back to `sonar.issue.ignore.multicriteria` scoped to `**/Select/components/SelectListItem.tsx` if needed.
-
----
-
-### 9. `CardInput.tsx` — `<div role="form">`
+### 3. `CardInput.tsx` — `<div role="form">`
 
 #### Context and Problem Statement
 
@@ -242,19 +137,4 @@ This is a **justified Sonar suppression** — `role="form"` on a `<div>` is inte
 
 ---
 
-### 10. `Modal.tsx` — `<div role="dialog">`
-
-#### Context and Problem Statement
-
-The Modal component uses `<div role="dialog" aria-modal>` with a custom `useModal` hook for focus-trapping and open/close lifecycle management. Sonar recommends migrating to native `<dialog>`.
-
-#### Considered Options
-
-- **Option 1:** Migrate to native `<dialog>` with `showModal()`/`close()` API
-- **Option 2:** Keep `<div role="dialog">` and suppress Sonar
-
-#### Decision Outcome
-
-Chosen option: **TBD — pending Phase 5 implementation**
-
-**Notes:** Native `<dialog>` provides built-in focus-trapping, `::backdrop`, and `close`/`cancel` events that could replace significant portions of `useModal`. However, browser support and existing merchant-facing behaviour (focus management, dismiss on outside click) must be validated. This is the highest-risk change in this set and warrants its own PR.
+For more details refer to COSDK-1077

@@ -18,8 +18,8 @@ export default function CVCHint({ frontCVC = false, fieldLabel }: Readonly<CVCHi
                 viewBox="0 0 27 18"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
-                role="img"
                 aria-hidden={!frontCVC}
+                role={'img'}
             >
                 <title id={'adyen-checkout__cvc__front-hint-img'}>{fieldLabel}</title>
                 <path
@@ -38,8 +38,8 @@ export default function CVCHint({ frontCVC = false, fieldLabel }: Readonly<CVCHi
                 viewBox="0 0 27 18"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
-                role="img"
                 aria-hidden={!!frontCVC}
+                role={'img'}
             >
                 <title id={'adyen-checkout__cvc__back-hint-img'}>{fieldLabel}</title>
                 <path
