@@ -6,7 +6,7 @@ interface RedirectShopperProps {
     beforeRedirect: (resolve, reject, url) => Promise<void>;
     url: string;
     method: 'GET' | 'POST';
-    data?: any;
+    data?: { [key: string]: unknown };
     redirectFromTopWhenInIframe?: boolean;
     paymentMethodType?: string;
     onActionHandled?: (rtnObj: ActionHandledReturnObject) => void;

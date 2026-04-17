@@ -1,4 +1,4 @@
-import { h, Fragment } from 'preact';
+import { h, Fragment, Ref } from 'preact';
 import { useCoreContext } from '../../../core/Context/CoreProvider';
 import { useState } from 'preact/hooks';
 import { useAmount } from '../../../core/Context/AmountProvider';
@@ -12,7 +12,7 @@ export interface RedirectButtonProps {
     onSubmit: Function;
     name: string;
     showPayButton: boolean;
-    ref?: any;
+    ref?: Ref<typeof RedirectButton>;
 }
 
 function RedirectButton({ label = null, icon = null, payButton, onSubmit, name, showPayButton, ...props }: Readonly<RedirectButtonProps>) {

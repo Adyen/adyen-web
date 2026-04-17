@@ -9,7 +9,5 @@ export interface DokuVoucherResultProps {
     instructionsUrl?: string;
     shopperName?: string;
     merchantName?: string;
-    outputDetails?: any;
-    ref?: any;
     onActionHandled?: (rtnObj: ActionHandledReturnObject) => void;
 }
