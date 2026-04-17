@@ -1,6 +1,7 @@
 import { FastlaneWindowInstance, FastlaneOptions } from '../components/PayPalFastlane/types';
 import { ApplePayButtonStyle, ApplePayButtonType, ApplePayWebConfiguration } from '../components/ApplePay/types';
 import { IAdyenPasskey } from '../components/PayByBankPix/services/types';
+import { AmazonWindowObject } from '../types';
 
 declare module '@paypal/paypal-js' {
     export interface PayPalNamespace {
@@ -24,6 +25,7 @@ declare module 'preact' {
 
 declare global {
     interface Window {
+        amazon?: AmazonWindowObject;
         /**
          * ApplePaySession added by ApplePaySDK
          */
