@@ -17,7 +17,7 @@ export interface CSFReturnObject {
     addSecuredField: (pFieldType: SFFieldType) => void;
     removeSecuredField: (pFieldType: SFFieldType) => void;
     setKCPStatus: (isKCP: boolean) => void;
-    sfIsOptionalOrHidden: (fieldType: string) => boolean;
+    sfIsOptionalOrHidden: (fieldType: SFFieldType) => boolean;
 }
 
 /**

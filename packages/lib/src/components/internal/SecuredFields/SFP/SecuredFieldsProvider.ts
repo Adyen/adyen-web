@@ -288,7 +288,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
     }
 
     public sfIsOptionalOrHidden(fieldType: string): boolean {
-        return this.csf.sfIsOptionalOrHidden(fieldType);
+        return this.csf.sfIsOptionalOrHidden(fieldType as SFFieldType);
     }
 
     public destroy(): void {
