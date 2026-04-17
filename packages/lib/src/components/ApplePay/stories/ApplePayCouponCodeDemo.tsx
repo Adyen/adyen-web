@@ -6,7 +6,7 @@ import getCurrency from '../../../../storybook/utils/get-currency';
 import { AdyenCheckout, Core } from '../../../index';
 import ApplePay from '../ApplePay';
 import { ComponentContainer } from '../../../../storybook/components/ComponentContainer';
-import type { CheckoutSession, PaymentAmount } from '../../../types';
+import type { CheckoutSession, CoreConfiguration, PaymentAmount } from '../../../types';
 import styles from './ApplePayCouponCodeDemo.module.scss';
 
 const VALID_COUPON = 'BONUS20';
@@ -69,7 +69,7 @@ const ApplePayCouponCodeDemo = ({ amount, countryCode, shopperLocale }: Readonly
 
         const checkout = await AdyenCheckout({
             clientKey: process.env.CLIENT_KEY,
-            environment: process.env.CLIENT_ENV as any,
+            environment: process.env.CLIENT_ENV as CoreConfiguration['environment'],
             countryCode,
             session: {
                 sessionData: session.sessionData,

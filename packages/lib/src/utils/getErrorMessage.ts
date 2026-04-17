@@ -1,13 +1,9 @@
 import { ERROR_FIELD_INVALID, ERROR_FIELD_REQUIRED } from '../core/Errors/constants';
 import Language from '../language';
+import { ValidationRuleResult } from './Validator/ValidationRuleResult';
 
-export const getErrorMessage = (
-    i18n: Language,
-    error?: { errorMessage: string },
-    label?: string,
-    lowerCaseLabel: boolean = true
-): string | boolean => {
-    if (error?.errorMessage) {
+export const getErrorMessage = (i18n: Language, error?: ValidationRuleResult, label?: string, lowerCaseLabel: boolean = true): string | boolean => {
+    if (error?.errorMessage && typeof error.errorMessage === 'string') {
         const errorKey = error.errorMessage;
         const shouldBuildErrorMessage = [ERROR_FIELD_REQUIRED, ERROR_FIELD_INVALID].includes(errorKey);
         // Build the error msg: Enter the [label name] or Enter a valid [label name]

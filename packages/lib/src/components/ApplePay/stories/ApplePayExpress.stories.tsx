@@ -91,7 +91,8 @@ const createLineItems = (shippingMethod: ApplePayJS.ApplePayShippingMethod): App
 
 const createApplePayTotal = (lineItems: ApplePayJS.ApplePayLineItem[]): ApplePayJS.ApplePayLineItem => {
     let totalPrice = 0.0;
-    lineItems.forEach((item: any) => (totalPrice += parseFloat(item.amount)));
+    lineItems.forEach((item: ApplePayJS.ApplePayLineItem) => (totalPrice += parseFloat(item.amount)));
+
     return {
         label: 'MYSTORE, INC.',
         amount: totalPrice.toString()

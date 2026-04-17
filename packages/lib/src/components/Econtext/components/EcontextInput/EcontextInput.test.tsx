@@ -14,13 +14,7 @@ const core = setupCoreMock();
 const renderEcontextInput = (props = {}) => {
     return render(
         <CoreProvider i18n={core.modules.i18n} loadingContext="test" resources={core.modules.resources}>
-            <EcontextInput
-                {...requiredPropsFromUiElement}
-                onChange={jest.fn()}
-                onSubmit={jest.fn()}
-                payButton={() => <button>Continue purchase</button>}
-                {...props}
-            />
+            <EcontextInput {...requiredPropsFromUiElement} onChange={jest.fn()} payButton={() => <button>Continue purchase</button>} {...props} />
         </CoreProvider>
     );
 };
