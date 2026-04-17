@@ -36,7 +36,7 @@ export function Tooltip(props: Readonly<TooltipProps>) {
                 newPosition = spaceBelow > spaceAbove ? 'bottom' : 'top';
             }
 
-            const newStyle: any = {
+            const newStyle: h.JSX.CSSProperties = {
                 position: 'absolute',
                 left: offsetLeft + anchorRect.width / 2,
                 transform: 'translateX(-50%)',

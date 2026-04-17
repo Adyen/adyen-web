@@ -1,6 +1,6 @@
 import { Fragment, h } from 'preact';
 import { Meta, StoryObj } from '@storybook/preact-vite';
-import { useRef } from 'preact/hooks';
+import { MutableRef, useRef } from 'preact/hooks';
 import { Tooltip } from './Tooltip';
 import { SingletonTooltipProvider, useTooltip } from './SingletonTooltipProvider';
 
@@ -15,7 +15,7 @@ const meta: Meta = {
     }
 };
 
-const TooltipConsumer = ({ anchorRef, margin }: Readonly<{ anchorRef: any; margin: number }>) => {
+const TooltipConsumer = ({ anchorRef, margin }: Readonly<{ anchorRef: MutableRef<HTMLButtonElement>; margin: number }>) => {
     const { id: tooltipId, showTooltip, hideTooltip } = useTooltip();
 
     return (

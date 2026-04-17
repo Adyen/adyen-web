@@ -14,11 +14,11 @@ import { useAmount } from '../../../../core/Context/AmountProvider';
 import { BrandIcon } from '../../../internal/BrandIcons/types';
 import { BrandIcons } from '../../../internal/BrandIcons/BrandIcons';
 import './UPIComponent.scss';
+import { ValidationRuleResult } from '../../../../utils/Validator/ValidationRuleResult';
 
 type UpiData = { app?: App };
 
-type OnChangeProps = { data: UpiData; valid?: { [key: string]: boolean }; errors?: { [key: string]: any }; isValid: boolean };
-
+type OnChangeProps = { data: UpiData; valid?: { [key: string]: boolean }; errors?: { [key: string]: ValidationRuleResult }; isValid: boolean };
 interface UPIComponentProps {
     mode: UpiMode;
     showPayButton: boolean;
