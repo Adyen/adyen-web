@@ -9,13 +9,24 @@ import { BoletoInputDataState } from '../../types';
 import useForm from '../../../../utils/useForm';
 import { BrazilPersonalDetail } from '../../../internal/SocialSecurityNumberBrazil/BrazilPersonalDetail';
 import FormInstruction from '../../../internal/FormInstruction';
-import { ComponentMethodsRef } from '../../../internal/UIElement/types';
+import type { ComponentMethodsRef } from '../../../internal/UIElement/types';
 import type { PayButtonProps } from '../../../internal/PayButton/PayButton';
+import type { ValidationRuleResult } from '../../../../utils/Validator/ValidationRuleResult';
 
-interface BoletoInputProps {
-    onChange(data: any): void;
+export interface BoletoInputProps {
+    setComponentRef: (ref: ComponentMethodsRef) => void;
     payButton: (props: PayButtonProps) => h.JSX.Element;
-    [key: string]: any;
+    onChange: (props: {
+        data: BoletoInputDataState;
+        errors: { [p: string]: ValidationRuleResult };
+        valid: { [p: string]: boolean };
+        isValid: boolean;
+    }) => void;
+    personalDetailsRequired?: boolean;
+    billingAddressRequired?: boolean;
+    showEmailAddress?: boolean;
+    data?: BoletoInputDataState;
+    showPayButton?: boolean;
 }
 
 function BoletoInput(props: Readonly<BoletoInputProps>) {
