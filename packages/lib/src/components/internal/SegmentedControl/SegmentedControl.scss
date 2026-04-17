@@ -7,9 +7,6 @@
     padding: variable-generator.token(spacer-030);
     background: variable-generator.token(color-background-tertiary);
     border-radius: variable-generator.token(border-radius-l);
-    border: 0;
-    margin: 0;
-    min-width: 0;
 
     &--disabled {
         pointer-events: none;
