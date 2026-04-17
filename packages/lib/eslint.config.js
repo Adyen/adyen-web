@@ -186,17 +186,10 @@ const config = tseslint.config(
             'src/components/internal/Voucher/**',
 
             // ── Utils ──
-            'src/utils/debounce.ts',
-            'src/utils/hookUtils.ts',
-            'src/utils/promiseTimeout.ts',
-            'src/utils/Script.ts',
             'src/utils/useForm/**',
-            'src/utils/Validator/**',
 
             // ── Others ──
             'src/core/**',
-            'src/language/**',
-            'src/create-component.umd.ts',
             'src/types/**'
         ],
         rules: {

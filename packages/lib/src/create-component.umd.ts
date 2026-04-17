@@ -24,7 +24,7 @@ function createComponent(
     checkout: ICore,
     options?: PaymentMethodOptions<TxVariants.redirect>
 ): InstanceType<PaymentMethods['redirect']>;
-function createComponent(paymentType: any, checkout: ICore, options?: any): any {
+function createComponent(paymentType: unknown, checkout: ICore, options?: Record<string, unknown>): unknown {
     if (typeof paymentType !== 'string' || !paymentType) {
         throw Error('createComponent: Invalid payment type. Make sure to pass a string value');
     }
@@ -33,7 +33,7 @@ function createComponent(paymentType: any, checkout: ICore, options?: any): any 
         throw Error('createComponent: Drop-in is not a payment type');
     }
 
-    const Class = ComponentsMap[paymentType] || Redirect;
+    const Class = paymentType in ComponentsMap ? ComponentsMap[paymentType] : Redirect;
 
     return new Class(checkout, {
         type: paymentType,
