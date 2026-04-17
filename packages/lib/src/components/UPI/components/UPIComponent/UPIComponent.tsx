@@ -3,7 +3,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'preact/hooks'
 import { ComponentMethodsRef, UIElementStatus } from '../../../types';
 import { App, UPIAppList, UpiMode } from '../../types';
 import useImage from '../../../../core/Context/useImage';
-import { A11Y, UPI_MODE } from '../../constants';
+import { A11Y, MAX_PRIMARY_APPS, UPI_MODE } from '../../constants';
+import './UPIComponent.scss';
 import { SegmentedControlRegion } from '../../../internal/SegmentedControl';
 import UPIIntentAppList from '../UPIIntentAppList';
 import { useCoreContext } from '../../../../core/Context/CoreProvider';
@@ -14,6 +15,14 @@ import { useAmount } from '../../../../core/Context/AmountProvider';
 import { BrandIcon } from '../../../internal/BrandIcons/types';
 import { BrandIcons } from '../../../internal/BrandIcons/BrandIcons';
 import './UPIComponent.scss';
+import ContentSeparator from '../../../internal/ContentSeparator';
+import Field from '../../../internal/FormFields/Field';
+import Select from '../../../internal/FormFields/Select';
+import { SelectTargetObject } from '../../../internal/FormFields/Select/types';
+import { AnalyticsInfoEvent, InfoEventType, UiTarget } from '../../../../core/Analytics/events/AnalyticsInfoEvent';
+import { AbstractAnalyticsEvent } from '../../../../core/Analytics/events/AbstractAnalyticsEvent';
+import { ANALYTICS_SEARCH_DEBOUNCE_TIME } from '../../../../core/Analytics/constants';
+import { debounce } from '../../../../utils/debounce';
 
 type UpiData = { app?: App };
 
@@ -27,6 +36,7 @@ interface UPIComponentProps {
     setComponentRef: (ref: ComponentMethodsRef) => void;
     payButton(props: PayButtonProps): h.JSX.Element;
     onChange({ data, valid, errors, isValid }: OnChangeProps): void;
+    onSubmitAnalytics(event: AbstractAnalyticsEvent): void;
 }
 
 export default function UPIComponent({
@@ -36,7 +46,8 @@ export default function UPIComponent({
     setComponentRef,
     showPayButton,
     mandate,
-    appsList
+    appsList,
+    onSubmitAnalytics
 }: Readonly<UPIComponentProps>): h.JSX.Element {
     const { i18n } = useCoreContext();
     const getImage = useImage();
@@ -55,20 +66,67 @@ export default function UPIComponent({
         }
     });
 
+    const priorityApps = useMemo(() => appsList.slice(0, MAX_PRIMARY_APPS), [appsList]);
+    const lowPriorityApps = useMemo(() => appsList.slice(MAX_PRIMARY_APPS), [appsList]);
+
+    this.setStatus = (status: UIElementStatus) => {
+        setStatus(status);
+    };
+
     useEffect(() => {
         setComponentRef(upiRef.current);
     }, [setComponentRef]);
 
-    const handleAppSelect = useCallback(
-        (app: App) => {
-            if (app?.id === selectedApp?.id) return;
+    const selectApp = useCallback(
+        (app: App, target: UiTarget) => {
+            if (!app || app.id === selectedApp?.id) return;
 
             setSelectedApp(app);
             setIsValid(true);
             setStatus('ready');
+
+            onSubmitAnalytics(
+                new AnalyticsInfoEvent({
+                    component: 'upi_intent',
+                    type: InfoEventType.selected,
+                    target,
+                    issuer: app.name
+                })
+            );
         },
-        [selectedApp]
+        [selectedApp, onSubmitAnalytics]
     );
+
+    const handleAppSelect = useCallback((app: App) => selectApp(app, UiTarget.list), [selectApp]);
+
+    const handleDropdownSelect = useCallback(
+        (event: { target: SelectTargetObject }) => {
+            const app = lowPriorityApps.find(a => a.id === event.target.value);
+            selectApp(app, UiTarget.listSearch);
+        },
+        [lowPriorityApps, selectApp]
+    );
+
+    const handleListToggle = useCallback(
+        (isOpen: boolean) => {
+            if (isOpen) {
+                onSubmitAnalytics(
+                    new AnalyticsInfoEvent({
+                        component: 'upi_intent',
+                        type: InfoEventType.displayed,
+                        target: UiTarget.list
+                    })
+                );
+            }
+        },
+        [onSubmitAnalytics]
+    );
+
+    const debounceSearchAnalytics = useRef(debounce(onSubmitAnalytics, ANALYTICS_SEARCH_DEBOUNCE_TIME));
+
+    const handleSearch = useCallback(() => {
+        debounceSearchAnalytics.current({ type: InfoEventType.input, target: UiTarget.listSearch });
+    }, []);
 
     const validateIntentApp = useCallback(() => {
         if (selectedApp) {
@@ -103,18 +161,49 @@ export default function UPIComponent({
         });
     }, [selectedApp, isValid, mode, onChange]);
 
+    useEffect(() => {
+        if (mode !== UPI_MODE.INTENT || priorityApps.length === 0) return;
+
+        onSubmitAnalytics(
+            new AnalyticsInfoEvent({
+                component: 'upi_intent',
+                type: InfoEventType.displayed,
+                target: UiTarget.list,
+                presentedValues: priorityApps.map(a => a.id)
+            })
+        );
+    }, []);
+
     return (
         <Fragment>
             {mode === UPI_MODE.INTENT && (
                 <SegmentedControlRegion id={A11Y.AreaId.INTENT} ariaLabelledBy={A11Y.ButtonId.INTENT} className="adyen-checkout-upi-area-intent">
                     <span className="adyen-checkout-upi-instruction-label">{i18n.get('upi.intent.instruction')}</span>
-                    {status === 'error' && <Alert icon="cross">{i18n.get('upi.error.noAppSelected')}</Alert>}
+                    <span className="adyen-checkout-upi-instruction-title">{i18n.get('upi.intent.apps.title')}</span>
+                    {status === 'error' && <Alert icon={'cross'}>{i18n.get('upi.error.noAppSelected')}</Alert>}
                     <UPIIntentAppList
                         disabled={status === 'loading'}
-                        appsList={appsList}
+                        appsList={priorityApps}
                         selectedAppId={selectedApp?.id}
                         onAppSelect={handleAppSelect}
                     />
+                    {lowPriorityApps.length > 0 && (
+                        <Fragment>
+                            <ContentSeparator classNames={['adyen-checkout-upi-instruction-separator']} label="issuerList.separatorText" />
+                            <Field label={i18n.get('upi.intent.apps.dropdown.label')} classNameModifiers={['upi-app-list']} name={'upi-app-list'}>
+                                <Select
+                                    items={lowPriorityApps}
+                                    selectedValue={lowPriorityApps.some(a => a.id === selectedApp?.id) ? selectedApp?.id : undefined}
+                                    placeholder={i18n.get('upi.intent.apps.dropdown.placeholder')}
+                                    name={'upi-app-list'}
+                                    className={'adyen-checkout__upi-app-list__dropdown'}
+                                    onChange={handleDropdownSelect}
+                                    onInput={handleSearch}
+                                    onListToggle={handleListToggle}
+                                />
+                            </Field>
+                        </Fragment>
+                    )}
                     {mandateComponent}
                     {showPayButton &&
                         payButton({
@@ -125,7 +214,7 @@ export default function UPIComponent({
             )}
             {mode === UPI_MODE.QR_CODE && (
                 <SegmentedControlRegion id={A11Y.AreaId.QR} ariaLabelledBy={A11Y.ButtonId.QR} className="adyen-checkout-upi-area-qr-code">
-                    <span className="adyen-checkout-upi-instruction-label">{i18n.get('upi.qrCode.instruction')}</span>
+                    <span className="adyen-checkout-upi-instruction-label-caption">{i18n.get('upi.qrCode.instruction')}</span>
                     <BrandIcons className="adyen-checkout-upi-brands" brandIcons={brandIcons} showIconOnError smallIcons containerType="grid" />
                     {mandateComponent}
                     {showPayButton &&

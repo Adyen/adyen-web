@@ -12,7 +12,17 @@ function SelectButtonElement({ filterable, toggleButtonRef, ...props }) {
         return <div {...strippedProps} ref={toggleButtonRef} />;
     }
 
-    return <button id={props.id} aria-expanded={props.showList} aria-disabled={props.readonly} aria-describedby={props.ariaDescribedBy} type={'button'} {...props} ref={toggleButtonRef} />;
+    return (
+        <button
+            id={props.id}
+            aria-expanded={props.showList}
+            aria-disabled={props.readonly}
+            aria-describedby={props.ariaDescribedBy}
+            type={'button'}
+            {...props}
+            ref={toggleButtonRef}
+        />
+    );
 }
 
 function SelectButton(props: Readonly<SelectButtonProps>) {
@@ -29,7 +39,9 @@ function SelectButton(props: Readonly<SelectButtonProps>) {
     // displayInputText only used for the text input for the filter
     // display the "typed" filter text when showing the dropdown,
     // hide it and show the "selected" value when collapsed
-    const displayInputText = showList ? inputText : displayText;
+    // When list is open, show user's typed input (or empty); otherwise show selected value
+    const textWhenListOpen = inputText ?? '';
+    const displayInputText = showList ? textWhenListOpen : displayText;
 
     const setFocus = (e: Event) => {
         e.preventDefault();
@@ -44,7 +56,6 @@ function SelectButton(props: Readonly<SelectButtonProps>) {
     // 2. If filterable we want to show the list and focus on the input
     // 3. Otherwise we just toggle the list
     const onClickHandler = readonly ? null : props.filterable ? setFocus : props.toggleList;
-
 
     // check COWEB-1301 [Investigate] Drop-in Accessibility - ADA Compliance questions
     const currentSelectedItemId = active.id ? `listItem-${active.id}` : '';
@@ -88,7 +99,9 @@ function SelectButton(props: Readonly<SelectButtonProps>) {
                         aria-expanded={showList}
                         aria-owns={props.selectListId}
                         autoComplete="off"
-                        className="adyen-checkout__filter-input"
+                        className={classnames('adyen-checkout__filter-input', {
+                            'adyen-checkout__filter-input--placeholder': !showList && isShowingPlaceholder
+                        })}
                         onInput={props.onInput}
                         ref={props.filterInputRef}
                         role="combobox"
