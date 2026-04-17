@@ -180,7 +180,6 @@ const config = tseslint.config(
             'src/components/internal/PersonalDetails/**',
             'src/components/internal/PhoneInput/**',
             'src/components/internal/RedirectButton/**',
-            'src/components/internal/SecuredFields/**',
             'src/components/internal/Tooltip/**',
             'src/components/internal/UIElement/**',
             'src/components/internal/Voucher/**',
