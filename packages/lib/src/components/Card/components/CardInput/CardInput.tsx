@@ -71,7 +71,7 @@ const CardInput = (props: Readonly<CardInputProps>) => {
         ...(props.holderNameRequired && { holderName: false })
     });
     const [data, setData] = useState<CardInputDataState>({
-        ...(props.hasHolderName && { holderName: props.data.holderName ?? '' })
+        ...(props.hasHolderName && { holderName: props.data?.holderName ?? '' })
     });
 
     const [focusedElement, setFocusedElement] = useState('');
@@ -90,7 +90,7 @@ const CardInput = (props: Readonly<CardInputProps>) => {
     const partialAddressCountry = useRef<string>(partialAddressSchema && props.data?.billingAddress?.country);
 
     const [storePaymentMethod, setStorePaymentMethod] = useState(false);
-    const [billingAddress, setBillingAddress] = useState<AddressData>(showBillingAddress ? props.data.billingAddress : null);
+    const [billingAddress, setBillingAddress] = useState<AddressData>(showBillingAddress ? (props.data?.billingAddress ?? null) : null);
     const [showSocialSecurityNumber, setShowSocialSecurityNumber] = useState(false);
     const [socialSecurityNumber, setSocialSecurityNumber] = useState('');
     const [installments, setInstallments] = useState<InstallmentsState>({ value: null });
@@ -144,7 +144,7 @@ const CardInput = (props: Readonly<CardInputProps>) => {
 
     const cardCountryCode: string = issuingCountryCode ?? props.countryCode;
     const isKorea = cardCountryCode === 'kr'; // If issuingCountryCode or the merchant defined countryCode is set to 'kr'
-    const showKCP = props.configuration.koreanAuthenticationRequired && isKorea;
+    const showKCP = !!props.configuration.koreanAuthenticationRequired && isKorea;
 
     const showBrazilianSSN: boolean =
         (showSocialSecurityNumber && props.configuration.socialSecurityNumberMode === 'auto') ||
@@ -219,7 +219,7 @@ const CardInput = (props: Readonly<CardInputProps>) => {
         if (sfState.autoCompleteName) {
             if (!props.hasHolderName) return;
             const holderNameValidationFn = getRuleByNameAndMode('holderName', 'blur');
-            const acHolderName = holderNameValidationFn(sfState.autoCompleteName) ? sfState.autoCompleteName : null;
+            const acHolderName = holderNameValidationFn?.(sfState.autoCompleteName, null) ? sfState.autoCompleteName : null;
             if (acHolderName) {
                 setFormData('holderName', acHolderName);
                 setFormValid('holderName', true); // only if holderName is valid does this fny get called - so we know it's valid and w/o error
@@ -433,10 +433,10 @@ const CardInput = (props: Readonly<CardInputProps>) => {
      * Main 'componentDidUpdate' handler
      */
     useEffect(() => {
-        const holderNameValid: boolean = valid.holderName;
+        const holderNameValid: boolean = !!valid.holderName;
 
         const sfpValid: boolean = isSfpValid;
-        const addressValid: boolean = showBillingAddress ? valid.billingAddress : true;
+        const addressValid: boolean = showBillingAddress ? !!valid.billingAddress : true;
 
         const koreanAuthentication: boolean = showKCP ? !!valid.taxNumber && !!valid.encryptedPassword : true;
 

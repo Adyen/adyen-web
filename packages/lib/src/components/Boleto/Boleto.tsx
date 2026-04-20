@@ -47,13 +47,7 @@ export class BoletoElement extends UIElement<BoletoConfiguration> {
         return this.props.reference ? (
             <BoletoVoucherResult ref={this.handleRef} icon={this.icon} {...this.props} onActionHandled={this.onActionHandled} />
         ) : (
-            <BoletoInput
-                setComponentRef={this.handleRef}
-                {...this.props}
-                onChange={this.setState}
-                onSubmit={this.submit}
-                payButton={this.payButton}
-            />
+            <BoletoInput setComponentRef={this.handleRef} {...this.props} onChange={this.setState} payButton={this.payButton} />
         );
     }
 }

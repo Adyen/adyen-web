@@ -1,5 +1,5 @@
 import AbstractCSF from './AbstractCSF';
-import { CSFReturnObject, CSFSetupObject, CSFStateObject, CSFThisObject } from './types';
+import { CSFReturnObject, CSFSetupObject, CSFStateObject, CSFThisObject, CSFCallbacksConfig, CSFConfigObject } from './types';
 import { StylesObject, CardAdditionalSFData, SFFieldType } from '../types';
 import { BinLookupResponse } from '../../../../Card/types';
 import { handleConfig } from './extensions/handleConfig';
@@ -35,7 +35,10 @@ const notConfiguredWarning = (str = 'You cannot use secured fields') => {
 };
 
 class CSF extends AbstractCSF {
-    // --
+    protected override callbacks: CSFCallbacksConfig;
+    protected override config: CSFConfigObject;
+    protected override state: CSFStateObject;
+
     constructor(setupObj: CSFSetupObject) {
         /**
          * Initialises:

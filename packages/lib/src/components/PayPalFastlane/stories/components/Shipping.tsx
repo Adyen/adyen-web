@@ -1,8 +1,9 @@
 import { h } from 'preact';
 import { useState } from 'preact/hooks';
+import { ShippingAddress } from './types';
 
 interface ShippingProps {
-    onCheckoutClick: (shippingAddress?: any) => void;
+    onCheckoutClick: (shippingAddress?: ShippingAddress) => void;
 }
 
 export const Shipping = ({ onCheckoutClick }: Readonly<ShippingProps>) => {
@@ -24,8 +25,8 @@ export const Shipping = ({ onCheckoutClick }: Readonly<ShippingProps>) => {
         setIsShippingRequired(!isShippingRequired);
     };
 
-    const handleChange = e => {
-        const { name, value } = e.target;
+    const handleChange = (e: Event) => {
+        const { name, value } = e.target as HTMLInputElement;
         setFormData(prevState => ({ ...prevState, [name]: value }));
     };
 
@@ -44,7 +45,7 @@ export const Shipping = ({ onCheckoutClick }: Readonly<ShippingProps>) => {
         });
     };
 
-    const handleOnSubmit = e => {
+    const handleOnSubmit = (e: Event) => {
         e.preventDefault();
         onCheckoutClick(formData);
     };

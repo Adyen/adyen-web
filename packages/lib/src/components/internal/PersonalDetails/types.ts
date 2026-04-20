@@ -15,7 +15,6 @@ export interface PersonalDetailsProps {
     onChange: (newState: object) => void;
     placeholders?: PersonalDetailsPlaceholders;
     readonly?: boolean;
-    ref?: any;
     validationRules?: ValidatorRules;
     setComponentRef?: (ref: ComponentMethodsRef) => void;
     payButton?: (options: PayButtonProps) => h.JSX.Element;

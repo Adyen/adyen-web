@@ -81,8 +81,8 @@ const Component = () => {
                     }
 
                     const patch = {
-                        sessionId: checkout.session.id,
-                        paymentData: component.paymentData,
+                        sessionId: checkout.session?.id || '',
+                        paymentData: component.paymentData ?? '',
                         amount: {
                             currency: 'USD',
                             value:
@@ -100,25 +100,25 @@ const Component = () => {
                 },
 
                 onShippingOptionsChange: async (data, actions, component) => {
-                    if (data.selectedShippingOption.label.includes('Teleport')) {
+                    if (data.selectedShippingOption?.label.includes('Teleport')) {
                         return actions.reject(data.errors.METHOD_UNAVAILABLE);
                     }
 
                     const patch = {
-                        sessionId: checkout.session.id,
-                        paymentData: component.paymentData,
+                        sessionId: checkout.session?.id,
+                        paymentData: component.paymentData ?? '',
                         amount: {
                             currency: 'USD',
                             value:
                                 AMOUNT.value +
                                 getSelectedDeliveryMethodAmount({
                                     countryCode: SHOPPER_SHIPPING_COUNTRY_CODE,
-                                    deliveryMethodId: data.selectedShippingOption.id
+                                    deliveryMethodId: data.selectedShippingOption?.id
                                 })
                         },
                         deliveryMethods: getDeliveryMethods({
                             countryCode: SHOPPER_SHIPPING_COUNTRY_CODE,
-                            deliveryMethodId: data.selectedShippingOption.id
+                            deliveryMethodId: data.selectedShippingOption?.id
                         })
                     };
 
@@ -131,7 +131,10 @@ const Component = () => {
                     actions.resolve();
                 }
             });
-            paypal.mount(container.current);
+
+            if (container.current) {
+                paypal.mount(container.current);
+            }
         }
 
         void createPaypalComponent();

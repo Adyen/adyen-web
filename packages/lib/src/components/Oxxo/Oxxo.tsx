@@ -23,13 +23,9 @@ export class OxxoElement extends UIElement<VoucherConfiguration> {
         };
     }
 
-    private handleRef = ref => {
-        this.componentRef = ref;
-    };
-
     protected override componentToRender(): h.JSX.Element {
         return this.props.reference ? (
-            <OxxoVoucherResult ref={this.handleRef} {...this.props} onActionHandled={this.onActionHandled} />
+            <OxxoVoucherResult {...this.props} onActionHandled={this.onActionHandled} />
         ) : (
             this.props.showPayButton &&
                 this.payButton({
