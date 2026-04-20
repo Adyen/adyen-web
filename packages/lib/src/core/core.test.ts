@@ -110,6 +110,28 @@ describe('Core', () => {
             expect(setupSessionSpy).toHaveBeenCalledWith(expect.objectContaining({ session: { id: 'session-id', sessionData: 'session-data' } }));
         });
 
+        test('should not block initialize() on analytics setUp (fire-and-forget)', async () => {
+            let resolveSetUp: () => void;
+            analyticsSetupSpy.mockImplementation(
+                () =>
+                    new Promise<void>(resolve => {
+                        resolveSetUp = resolve;
+                    })
+            );
+
+            const checkout = new AdyenCheckout({
+                countryCode: 'US',
+                environment: 'test',
+                clientKey: 'test_123456'
+            });
+
+            await checkout.initialize();
+
+            expect(analyticsSetupSpy).toHaveBeenCalled();
+            // resolve the pending promise so jest doesn't leak it
+            resolveSetUp();
+        });
+
         test('should call analytics setUp when initialized', async () => {
             const checkout = new AdyenCheckout({
                 countryCode: 'US',

@@ -106,12 +106,12 @@ class Core implements ICore {
     }
 
     public async initialize(): Promise<this> {
-        await this.initializeCore();
         this.validateCoreConfiguration();
+        await this.initializeCore();
         this.createCoreModules();
         this.assignLocaleToCore();
-        await Promise.allSettled([this.requestAnalyticsAttemptId(), this.requestTranslations()]);
-
+        void this.requestAnalyticsAttemptId();
+        await this.requestTranslations();
         return this;
     }
 
@@ -444,9 +444,15 @@ class Core implements ICore {
     }
 
     private async requestAnalyticsAttemptId(): Promise<void> {
-        await this.modules.analytics.setUp({
-            locale: this.options.locale,
-            ...(this.session?.id && { sessionId: this.session.id })
+        /** SIMULATING DELAY FOR REQUESTING ID*/
+        return new Promise((resolve, _reject) => {
+            setTimeout(() => {
+                void this.modules.analytics.setUp({
+                    locale: this.options.locale,
+                    ...(this.session?.id && { sessionId: this.session.id })
+                });
+                resolve();
+            }, 15000);
         });
     }
 }

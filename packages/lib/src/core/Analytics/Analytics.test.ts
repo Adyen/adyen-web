@@ -334,6 +334,68 @@ describe('Analytics', () => {
             expect(mockService.reportIntegrationFlavor).not.toHaveBeenCalled();
         });
 
+        test('should queue flavor when called before setUp and dispatch after setUp resolves', async () => {
+            const analytics = new Analytics({ service: mockService, eventQueue });
+
+            void analytics.sendFlavor('dropin');
+
+            expect(mockService.reportIntegrationFlavor).not.toHaveBeenCalled();
+
+            await analytics.setUp({ locale: 'en-US' });
+
+            expect(mockService.reportIntegrationFlavor).toHaveBeenCalledTimes(1);
+            expect(mockService.reportIntegrationFlavor).toHaveBeenCalledWith('dropin', MOCK_CHECKOUT_ATTEMPT_ID);
+        });
+
+        test('should keep the first queued flavor when sendFlavor is called multiple times before setUp', async () => {
+            const analytics = new Analytics({ service: mockService, eventQueue });
+
+            void analytics.sendFlavor('dropin');
+            void analytics.sendFlavor('components');
+            void analytics.sendFlavor('dropin');
+
+            await analytics.setUp({ locale: 'en-US' });
+
+            expect(mockService.reportIntegrationFlavor).toHaveBeenCalledTimes(1);
+            expect(mockService.reportIntegrationFlavor).toHaveBeenCalledWith('dropin', MOCK_CHECKOUT_ATTEMPT_ID);
+        });
+
+        test('should dispatch queued flavor before sending queued events when setUp resolves', async () => {
+            const callOrder: string[] = [];
+            mockService.reportIntegrationFlavor.mockImplementation(() => {
+                callOrder.push('flavor');
+                return Promise.resolve();
+            });
+            mockService.sendEvents.mockImplementation(() => {
+                callOrder.push('events');
+                return Promise.resolve();
+            });
+
+            const analytics = new Analytics({ service: mockService, eventQueue });
+
+            const infoEvent = new AnalyticsInfoEvent({ type: InfoEventType.rendered, component: 'card' });
+            analytics.sendAnalytics(infoEvent);
+            void analytics.sendFlavor('dropin');
+
+            await analytics.setUp({ locale: 'en-US' });
+
+            expect(callOrder[0]).toBe('flavor');
+            expect(callOrder).toContain('events');
+            expect(callOrder.indexOf('flavor')).toBeLessThan(callOrder.indexOf('events'));
+        });
+
+        test('should not dispatch queued flavor if setUp fails to obtain attempt ID', async () => {
+            jest.spyOn(console, 'warn').mockImplementation();
+            mockService.requestCheckoutAttemptId.mockRejectedValue(new Error('Network error'));
+
+            const analytics = new Analytics({ service: mockService, eventQueue });
+
+            void analytics.sendFlavor('dropin');
+            await analytics.setUp({ locale: 'en-US' });
+
+            expect(mockService.reportIntegrationFlavor).not.toHaveBeenCalled();
+        });
+
         it('should warn on flavor report failure', async () => {
             const warnSpy = jest.spyOn(console, 'warn').mockImplementation();
             mockService.reportIntegrationFlavor.mockRejectedValue(new Error('Network error'));

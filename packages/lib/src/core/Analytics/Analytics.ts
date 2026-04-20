@@ -52,6 +52,7 @@ class Analytics implements IAnalytics {
     private enabled: boolean = true;
     private capturedCheckoutAttemptId?: string;
     private isFlavorReported = false;
+    private pendingFlavor?: 'dropin' | 'components';
 
     constructor({ service, eventQueue, enabled, analyticsData }: AnalyticsProps) {
         this.service = service;
@@ -66,6 +67,11 @@ class Analytics implements IAnalytics {
 
     public get checkoutAttemptId(): string {
         return this.capturedCheckoutAttemptId;
+    }
+
+    private set checkoutAttemptId(checkoutAttemptId: string) {
+        this.capturedCheckoutAttemptId = checkoutAttemptId;
+        void this.onCheckoutAttemptIdReceived(checkoutAttemptId);
     }
 
     public async setUp({
@@ -96,10 +102,10 @@ class Analytics implements IAnalytics {
                 ...(availableCheckoutAttemptId && { checkoutAttemptId: availableCheckoutAttemptId })
             };
 
-            this.capturedCheckoutAttemptId = await this.service.requestCheckoutAttemptId(payload);
+            this.checkoutAttemptId = await this.service.requestCheckoutAttemptId(payload);
 
             this.storage.set({
-                id: this.capturedCheckoutAttemptId,
+                id: this.checkoutAttemptId,
                 timestamp: isSessionReusable ? checkoutAttemptIdSession.timestamp : Date.now()
             });
         } catch (error: unknown) {
@@ -120,14 +126,32 @@ class Analytics implements IAnalytics {
         }
     }
 
+    /**
+     * Sends the integration flavor to the analytics service.
+     * If the checkout attempt ID is not available, it will be stored and sent when it becomes available.
+     *
+     * @param flavor The integration flavor to send.
+     * @returns A promise that resolves when the flavor is sent.
+     */
     public async sendFlavor(flavor: 'dropin' | 'components'): Promise<void> {
-        if (!this.capturedCheckoutAttemptId) return;
         if (this.isFlavorReported) return;
+
+        if (!this.capturedCheckoutAttemptId) {
+            if (!this.pendingFlavor) this.pendingFlavor = flavor;
+            return;
+        }
+
+        await this.dispatchFlavor(flavor);
+    }
+
+    private async dispatchFlavor(flavor: 'dropin' | 'components'): Promise<void> {
+        if (this.isFlavorReported) return;
+        if (!this.capturedCheckoutAttemptId) return;
 
         this.isFlavorReported = true;
 
         try {
-            await this.service.reportIntegrationFlavor(flavor, this.capturedCheckoutAttemptId);
+            await this.service.reportIntegrationFlavor(flavor, this.checkoutAttemptId);
         } catch (error) {
             console.warn('Analytics: Error reporting flavor', error);
         }
@@ -174,6 +198,21 @@ class Analytics implements IAnalytics {
         } catch (error) {
             console.warn('Analytics: Error sending events', error);
         }
+    }
+
+    private async onCheckoutAttemptIdReceived(checkoutAttemptId: string): Promise<void> {
+        // TODO
+        console.log('Checkout attempt ID received:', checkoutAttemptId);
+
+        const hasIntegrationFlavorToBeReported = this.pendingFlavor && !this.isFlavorReported;
+
+        if (hasIntegrationFlavorToBeReported) {
+            const flavor = this.pendingFlavor;
+            this.pendingFlavor = undefined;
+            await this.dispatchFlavor(flavor);
+        }
+
+        void this.sendEvents();
     }
 }
 
