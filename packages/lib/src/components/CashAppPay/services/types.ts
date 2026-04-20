@@ -5,13 +5,13 @@ export interface ICashAppWindowObject {
 }
 
 /**
- * https://developers.cash.app/docs/api/technical-documentation/sdks/pay-kit/technical-reference
+ * @link https://developers.cash.app/cash-app-pay-partner-api/guides/pay-kit-sdk/pay-kit-web-overview/technical-reference
  */
 export interface ICashAppSDK {
-    render(target: string | HTMLElement, options?: any): Promise<{ begin?: () => void }>;
+    render(target: string | HTMLElement, options?: unknown): Promise<{ begin?: () => void }>;
     addEventListener(eventType: CashAppPayEvents, callback: Function): void;
     removeEventListener(eventType: CashAppPayEvents, callback: Function): void;
-    customerRequest(customerRequest: any): Promise<void>;
+    customerRequest(customerRequest: unknown): Promise<void>;
     restart(): Promise<void>;
 }
 

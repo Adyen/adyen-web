@@ -1,6 +1,12 @@
 import { AddressData } from '../../types/global-types';
 import { UIElementProps } from '../internal/UIElement/types';
 import PaypalElement from './Paypal';
+import type {
+    PayPalOnInitActions,
+    PayPalOnShippingAddressChangeData,
+    PayPalOnShippingOptionsChangeData,
+    PayPalOrderResponseBody
+} from './paypal-js-types';
 
 export interface PayPalConfiguration extends UIElementProps {
     /**
@@ -11,7 +17,7 @@ export interface PayPalConfiguration extends UIElementProps {
         /**
          * @see {@link https://developer.paypal.com/sdk/js/configuration/#merchant-id}
          */
-        merchantId: string;
+        merchantId?: string;
         /**
          * @see {@link https://developer.paypal.com/sdk/js/configuration/#intent}
          */
@@ -61,7 +67,7 @@ export interface PayPalConfiguration extends UIElementProps {
      * @param actions - Used to indicate that payment flow must continue or must stop
      */
     onAuthorized?: (
-        data: { authorizedEvent: any; billingAddress?: Partial<AddressData>; deliveryAddress?: Partial<AddressData> },
+        data: { authorizedEvent: PayPalOrderResponseBody; billingAddress?: Partial<AddressData>; deliveryAddress?: Partial<AddressData> },
         actions: { resolve: () => void; reject: () => void }
     ) => void;
 
@@ -73,7 +79,11 @@ export interface PayPalConfiguration extends UIElementProps {
      * @param actions - Used to reject the address change in case the address is invalid
      * @param component - Adyen instance of its PayPal implementation. It must be used to manipulate the 'paymentData' in order to apply the amount patch correctly
      */
-    onShippingAddressChange?: (data: any, actions: { reject: (reason?: string) => Promise<void> }, component: PaypalElement) => Promise<void>;
+    onShippingAddressChange?: (
+        data: PayPalOnShippingAddressChangeData,
+        actions: { reject: (reason?: string) => Promise<void> },
+        component: PaypalElement
+    ) => Promise<void>;
 
     /**
      * This callback is triggered any time the user selects a new shipping option.
@@ -83,7 +93,11 @@ export interface PayPalConfiguration extends UIElementProps {
      * @param actions - Used to indicates to PayPal that you will not support the shipping method selected by the buyer
      * @param component - Adyen instance of its PayPal implementation. It must be used to manipulate the 'paymentData' in order to apply the amount patch correctly
      */
-    onShippingOptionsChange?: (data: any, actions: { reject: (reason?: string) => Promise<void> }, component: PaypalElement) => Promise<void>;
+    onShippingOptionsChange?: (
+        data: PayPalOnShippingOptionsChangeData,
+        actions: { reject: (reason?: string) => Promise<void> },
+        component: PaypalElement
+    ) => Promise<void>;
 
     /**
      * If set to 'continue' , the button inside the lightbox will display the 'Continue' button
@@ -111,7 +125,7 @@ export interface PayPalConfiguration extends UIElementProps {
      * Called when the button first renders. You can use it for validations on your page if you are unable to do so prior to rendering.
      * @see {@link https://developer.paypal.com/sdk/js/reference/#oninitonclick}
      */
-    onInit?: (data?: any, actions?: any) => void;
+    onInit?: (data?: Record<string, unknown>, actions?: PayPalOnInitActions) => void;
 
     /**
      * @see {@link https://developer.paypal.com/sdk/js/reference/#oninitonclick}
@@ -190,4 +204,9 @@ export interface PayPalConfiguration extends UIElementProps {
  */
 export type Intent = 'sale' | 'capture' | 'authorize' | 'order' | 'tokenize';
 
-export type FundingSource = 'paypal' | 'credit' | 'paylater' | 'venmo';
+export type SupportedPayPalFundingSources = 'paypal' | 'credit' | 'paylater' | 'venmo';
+
+/**
+ * @deprecated Use {@link SupportedPayPalFundingSources} instead
+ */
+export type FundingSource = SupportedPayPalFundingSources;

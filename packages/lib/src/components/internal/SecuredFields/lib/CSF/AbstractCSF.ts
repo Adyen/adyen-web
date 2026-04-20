@@ -6,16 +6,16 @@ import handleBrandFromBinLookup from './extensions/handleBrandFromBinLookup';
 
 abstract class AbstractCSF {
     // Set in CSF
-    protected callbacks: CSFCallbacksConfig;
-    protected config: CSFConfigObject;
+    protected callbacks: Partial<CSFCallbacksConfig>;
+    protected config: Partial<CSFConfigObject>;
     protected props: CSFSetupObject;
-    protected state: CSFStateObject;
+    protected state: Partial<CSFStateObject>;
     protected validateForm: () => void;
     protected handleBrandFromBinLookup: typeof handleBrandFromBinLookup;
     protected callbacksHandler: (callbacksObj: object) => void;
     protected configHandler: (props: CSFSetupObject) => void;
-    protected createCardSecuredFields: (securedFields: HTMLElement[], cvcPolicy: CVCPolicyType, expiryDatePolicy: DatePolicyType) => Promise<any>;
-    protected createNonCardSecuredFields: (securedFields: HTMLElement[]) => Promise<any>;
+    protected createCardSecuredFields: (securedFields: HTMLElement[], cvcPolicy: CVCPolicyType, expiryDatePolicy: DatePolicyType) => Promise<void>;
+    protected createNonCardSecuredFields: (securedFields: HTMLElement[]) => Promise<void>;
     protected createSecuredFields: typeof createSecuredFields;
     protected destroySecuredFields: () => void;
     protected handleIOSTouchEvents: () => void;
@@ -47,11 +47,11 @@ abstract class AbstractCSF {
     // --
     protected constructor(setupObj: CSFSetupObject) {
         this.props = setupObj;
-        this.state = {} as any as CSFStateObject;
+        this.state = {};
 
         // Initialise storage objects
-        this.config = {} as any as CSFConfigObject; // {} as ConfigObject fails in linting
-        this.callbacks = {} as any as CSFCallbacksConfig;
+        this.config = {};
+        this.callbacks = {};
     }
 }
 export default AbstractCSF;

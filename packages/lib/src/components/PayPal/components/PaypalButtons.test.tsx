@@ -6,16 +6,23 @@ import { mock } from 'jest-mock-extended';
 import { PayPalButtonsProps } from './types';
 
 const paypalIsEligibleMock = jest.fn(() => true);
-const paypalRenderMock = jest.fn((el: HTMLElement) => Promise.resolve(el));
+const paypalRenderMock = jest.fn((_el: HTMLElement) => Promise.resolve());
 
 const paypalRefMock = {
     FUNDING: {
-        PAYPAL: 'paypal',
-        CREDIT: 'credit',
-        PAYLATER: 'paylater',
-        VENMO: 'venmo'
+        PAYPAL: 'paypal' as const,
+        CREDIT: 'credit' as const,
+        PAYLATER: 'paylater' as const,
+        VENMO: 'venmo' as const
     },
-    Buttons: jest.fn(() => ({ isEligible: paypalIsEligibleMock, render: paypalRenderMock }))
+    Buttons: jest.fn(() => ({
+        isEligible: paypalIsEligibleMock,
+        render: paypalRenderMock,
+        close: jest.fn(),
+        updateProps: jest.fn(),
+        resume: jest.fn(),
+        hasReturned: jest.fn()
+    }))
 };
 
 /**
