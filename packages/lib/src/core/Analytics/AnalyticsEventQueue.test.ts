@@ -160,5 +160,59 @@ describe('AnalyticsEventQueue', () => {
 
             expect(infoEvents1).toBe(infoEvents2);
         });
+
+        describe('hasEventsInQueue', () => {
+            test('should return false when no events are in the queue', () => {
+                expect(queue.hasEventsInQueue).toBe(false);
+            });
+
+            test('should return true when info events are in the queue', () => {
+                const infoEvent = new AnalyticsInfoEvent({
+                    type: InfoEventType.rendered,
+                    component: 'card'
+                });
+
+                queue.add(infoEvent);
+
+                expect(queue.hasEventsInQueue).toBe(true);
+            });
+
+            test('should return true when error events are in the queue', () => {
+                const errorEvent = new AnalyticsErrorEvent({
+                    component: 'card',
+                    errorType: ErrorEventType.network,
+                    code: '500'
+                });
+
+                queue.add(errorEvent);
+
+                expect(queue.hasEventsInQueue).toBe(true);
+            });
+
+            test('should return true when log events are in the queue', () => {
+                const logEvent = new AnalyticsLogEvent({
+                    type: LogEventType.submit,
+                    component: 'card',
+                    message: 'Payment submitted'
+                });
+
+                queue.add(logEvent);
+
+                expect(queue.hasEventsInQueue).toBe(true);
+            });
+
+            test('should return false after clearing the queue', () => {
+                const infoEvent = new AnalyticsInfoEvent({
+                    type: InfoEventType.rendered,
+                    component: 'card'
+                });
+
+                queue.add(infoEvent);
+                expect(queue.hasEventsInQueue).toBe(true);
+
+                queue.clear();
+                expect(queue.hasEventsInQueue).toBe(false);
+            });
+        });
     });
 });

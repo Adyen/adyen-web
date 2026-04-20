@@ -239,9 +239,11 @@ describe('Analytics', () => {
             expect(eventQueue.infoEvents).toHaveLength(0);
         });
 
-        it('should send info events after debounce delay', async () => {
+        test('should send info events after debounce delay', async () => {
             const analytics = new Analytics({ service: mockService, eventQueue });
             await analytics.setUp({ locale: 'en-US' });
+
+            expect(mockService.sendEvents).not.toHaveBeenCalled();
 
             const infoEvent = new AnalyticsInfoEvent({ type: InfoEventType.rendered, component: 'card' });
             analytics.sendAnalytics(infoEvent);
@@ -253,9 +255,11 @@ describe('Analytics', () => {
             expect(mockService.sendEvents).toHaveBeenCalled();
         });
 
-        it('should send error/log events after shorter debounce delay', async () => {
+        test('should send error/log events after shorter debounce delay', async () => {
             const analytics = new Analytics({ service: mockService, eventQueue });
             await analytics.setUp({ locale: 'en-US' });
+
+            expect(mockService.sendEvents).not.toHaveBeenCalled();
 
             const errorEvent = new AnalyticsErrorEvent({
                 component: 'card',
@@ -352,7 +356,8 @@ describe('Analytics', () => {
 
             void analytics.sendFlavor('dropin');
             void analytics.sendFlavor('components');
-            void analytics.sendFlavor('dropin');
+
+            expect(mockService.reportIntegrationFlavor).not.toHaveBeenCalled();
 
             await analytics.setUp({ locale: 'en-US' });
 
@@ -380,8 +385,7 @@ describe('Analytics', () => {
             await analytics.setUp({ locale: 'en-US' });
 
             expect(callOrder[0]).toBe('flavor');
-            expect(callOrder).toContain('events');
-            expect(callOrder.indexOf('flavor')).toBeLessThan(callOrder.indexOf('events'));
+            expect(callOrder[1]).toBe('events');
         });
 
         test('should not dispatch queued flavor if setUp fails to obtain attempt ID', async () => {

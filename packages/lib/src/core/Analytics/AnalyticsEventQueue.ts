@@ -25,6 +25,10 @@ class AnalyticsEventQueue {
         return this.logs;
     }
 
+    public get hasEventsInQueue(): boolean {
+        return this.info.length > 0 || this.errors.length > 0 || this.logs.length > 0;
+    }
+
     public clear(): void {
         this.info = [];
         this.errors = [];

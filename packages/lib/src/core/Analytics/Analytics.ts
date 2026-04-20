@@ -49,8 +49,8 @@ class Analytics implements IAnalytics {
     private readonly debouncedSendInfoEvents: () => void;
     private readonly debouncedSendEvents: () => void;
 
+    private _checkoutAttemptId?: string;
     private enabled: boolean = true;
-    private capturedCheckoutAttemptId?: string;
     private isFlavorReported = false;
     private pendingFlavor?: 'dropin' | 'components';
 
@@ -66,12 +66,12 @@ class Analytics implements IAnalytics {
     }
 
     public get checkoutAttemptId(): string {
-        return this.capturedCheckoutAttemptId;
+        return this._checkoutAttemptId;
     }
 
     private set checkoutAttemptId(checkoutAttemptId: string) {
-        this.capturedCheckoutAttemptId = checkoutAttemptId;
-        void this.onCheckoutAttemptIdReceived(checkoutAttemptId);
+        this._checkoutAttemptId = checkoutAttemptId;
+        void this.onCheckoutAttemptIdReceived();
     }
 
     public async setUp({
@@ -136,7 +136,7 @@ class Analytics implements IAnalytics {
     public async sendFlavor(flavor: 'dropin' | 'components'): Promise<void> {
         if (this.isFlavorReported) return;
 
-        if (!this.capturedCheckoutAttemptId) {
+        if (!this.checkoutAttemptId) {
             if (!this.pendingFlavor) this.pendingFlavor = flavor;
             return;
         }
@@ -146,7 +146,7 @@ class Analytics implements IAnalytics {
 
     private async dispatchFlavor(flavor: 'dropin' | 'components'): Promise<void> {
         if (this.isFlavorReported) return;
-        if (!this.capturedCheckoutAttemptId) return;
+        if (!this.checkoutAttemptId) return;
 
         this.isFlavorReported = true;
 
@@ -179,7 +179,11 @@ class Analytics implements IAnalytics {
     }
 
     private async sendEvents(): Promise<void> {
-        if (!this.capturedCheckoutAttemptId || !this.enabled) {
+        if (!this.checkoutAttemptId || !this.enabled) {
+            return;
+        }
+
+        if (!this.eventsQueue.hasEventsInQueue) {
             return;
         }
 
@@ -194,22 +198,22 @@ class Analytics implements IAnalytics {
         this.eventsQueue.clear();
 
         try {
-            await this.service.sendEvents(payload, this.capturedCheckoutAttemptId);
+            await this.service.sendEvents(payload, this.checkoutAttemptId);
         } catch (error) {
             console.warn('Analytics: Error sending events', error);
         }
     }
 
-    private async onCheckoutAttemptIdReceived(checkoutAttemptId: string): Promise<void> {
-        // TODO
-        console.log('Checkout attempt ID received:', checkoutAttemptId);
+    /**
+     * Report the integration flavor and send queued analyic events once the attempt ID is available
+     */
+    private onCheckoutAttemptIdReceived(): void {
+        const shouldReportFlavor = !this.isFlavorReported && this.pendingFlavor;
 
-        const hasIntegrationFlavorToBeReported = this.pendingFlavor && !this.isFlavorReported;
-
-        if (hasIntegrationFlavorToBeReported) {
+        if (shouldReportFlavor) {
             const flavor = this.pendingFlavor;
             this.pendingFlavor = undefined;
-            await this.dispatchFlavor(flavor);
+            void this.dispatchFlavor(flavor);
         }
 
         void this.sendEvents();
