@@ -3,6 +3,11 @@ import { render, screen } from '@testing-library/preact';
 import DragonpayInput from './DragonpayInput';
 import { CoreProvider } from '../../../../core/Context/CoreProvider';
 
+declare global {
+    var i18n: any;
+    var resources: any;
+}
+
 const defaultProps = {
     data: {},
     items: [

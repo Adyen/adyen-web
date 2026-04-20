@@ -137,9 +137,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
             // Set UI error & call onError callback
             this.setError(
                 {
-                    errorInfo: errorMsg.includes(MISSING_TOKEN_IN_ACTION_MSG)
-                        ? `${ErrorEventCode.THREEDS2_ACTION_IS_MISSING_TOKEN}: ${this.props.i18n.get('err.gen.9102')}`
-                        : `${ErrorEventCode.THREEDS2_TOKEN_DECODE_OR_PARSING_FAILED}: ${this.props.i18n.get('err.gen.9102')}`
+                    errorInfo: `${errorCode}: ${this.props.i18n.get('err.gen.9102')}`
                     // errorObj: this.state.challengeData // TODO Decide if we want to expose this data
                 },
                 true
