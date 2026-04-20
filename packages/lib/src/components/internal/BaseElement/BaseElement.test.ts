@@ -6,6 +6,14 @@ import { ICore } from '../../../types';
 import { PAYMENT_METHOD_BEHAVIOR } from '../../../core/config';
 import { TxVariants } from '../../tx-variants';
 
+const decodeSdkData = (input: string | undefined) => {
+    const { data } = base64.decode(input ?? '');
+    if (!data) {
+        throw new Error('Failed to decode sdkData');
+    }
+    return JSON.parse(data);
+};
+
 class MyElement extends BaseElement<BaseElementProps> {
     public override formatData() {
         return { paymentMethod: { type: 'my-element' } };
@@ -56,7 +64,7 @@ describe('BaseElement', () => {
             const myElement = new MyElement(core);
 
             const sdkData = myElement.data.paymentMethod.sdkData;
-            const decodedSdkData = JSON.parse(base64.decode(sdkData).data);
+            const decodedSdkData = decodeSdkData(sdkData);
 
             expect(decodedSdkData.analytics.checkoutAttemptId).toEqual(TEST_CHECKOUT_ATTEMPT_ID);
         });
@@ -73,7 +81,7 @@ describe('BaseElement', () => {
             const myElement = new MyElement(core);
 
             const sdkData = myElement.data.paymentMethod.sdkData;
-            const decodedSdkData = JSON.parse(base64.decode(sdkData).data);
+            const decodedSdkData = decodeSdkData(sdkData);
 
             expect(decodedSdkData.clientData).toBeUndefined();
         });
@@ -82,7 +90,7 @@ describe('BaseElement', () => {
             const myElement = new MyElement(core);
 
             const sdkData = myElement.data.paymentMethod.sdkData;
-            const decodedSdkData = JSON.parse(base64.decode(sdkData).data);
+            const decodedSdkData = decodeSdkData(sdkData);
 
             expect(decodedSdkData.paymentMethodBehavior).toEqual(PAYMENT_METHOD_BEHAVIOR.GENERIC);
         });
@@ -91,7 +99,7 @@ describe('BaseElement', () => {
             const nativeElement = new NativeElement(core);
 
             const sdkData = nativeElement.data.paymentMethod.sdkData;
-            const decodedSdkData = JSON.parse(base64.decode(sdkData).data);
+            const decodedSdkData = decodeSdkData(sdkData);
 
             expect(decodedSdkData.paymentMethodBehavior).toEqual(PAYMENT_METHOD_BEHAVIOR.NATIVE);
         });
