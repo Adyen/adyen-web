@@ -1,8 +1,7 @@
 import { h } from 'preact';
 import { useState } from 'preact/hooks';
 import classNames from 'classnames';
-import { CardBrandsConfiguration, DualBrandSelectElement, DualBrandButtons } from '../../../types';
-import { DualBrandingChangeHandler } from './types';
+import { CardBrandsConfiguration, DualBrandSelectElement, DualBrandButtons, DualBrandingChangeHandler } from '../../../types';
 import { mapDualBrandButtons } from '../utils';
 import styles from './DualBrandSelector.module.scss';
 import { useCoreContext } from '../../../../../core/Context/CoreProvider';
