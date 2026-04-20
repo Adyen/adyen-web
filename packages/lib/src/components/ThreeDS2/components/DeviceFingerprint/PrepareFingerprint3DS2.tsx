@@ -57,7 +57,7 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
         if (hasFingerPrintData) {
             const shouldAllowHttpDomains =
                 /** Allow http urls if in development and testing against localhost:8080 */
-                (process.env.NODE_ENV === 'development' && process.env.__CLIENT_ENV__?.indexOf('localhost:8080') > -1) ||
+                (process.env.NODE_ENV === 'development' && process.env.__CLIENT_ENV__?.includes('localhost:8080')) ||
                 /**
                  * Allows the checkoutshopper demo on localhost:8080 to work -
                  *  requires a configuration in localhost of environment: 'test', _environmentUrls: {api: 'http://localhost:8080/'}
@@ -125,10 +125,9 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
 
             const errorMsg: string = (this.state.fingerPrintData as ErrorObject).error;
 
-            const errorCode =
-                errorMsg.indexOf(MISSING_TOKEN_IN_ACTION_MSG) > -1
-                    ? ErrorEventCode.THREEDS2_ACTION_IS_MISSING_TOKEN
-                    : ErrorEventCode.THREEDS2_TOKEN_DECODE_OR_PARSING_FAILED;
+            const errorCode = errorMsg.includes(MISSING_TOKEN_IN_ACTION_MSG)
+                ? ErrorEventCode.THREEDS2_ACTION_IS_MISSING_TOKEN
+                : ErrorEventCode.THREEDS2_TOKEN_DECODE_OR_PARSING_FAILED;
 
             this.setStatusComplete(
                 { threeDSCompInd: 'N' },

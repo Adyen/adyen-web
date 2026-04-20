@@ -47,9 +47,9 @@ const initCSF = (pSetupObj: CSFSetupObject): CSFReturnObject => {
 
     if (
         (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test') &&
-        origin.indexOf('http') > -1 &&
-        origin.indexOf('localhost') === -1 &&
-        origin.indexOf('127.0.0.1') === -1
+        origin.includes('http') &&
+        !origin.includes('localhost') &&
+        !origin.includes('127.0.0.1')
     ) {
         console.warn(
             'WARNING: you are are running from an insecure context:',

@@ -4,6 +4,7 @@ module.exports = {
     rootDir: '../',
     setupFilesAfterEnv: ['<rootDir>/config/setupTests.ts'],
     transformIgnorePatterns: ['node_modules/(?!(preact|@testing-library|until-async)/)'],
+    //transform: { '^.+\\.(js|ts|tsx|mjs)$': ['ts-jest', { isolatedModules: true }]},
     transform: {
         '^.+\\.(js|ts|tsx|mjs)$': 'ts-jest'
     },

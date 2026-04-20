@@ -62,7 +62,7 @@ export const countrySpecificFormatters: CountryFormatRules = {
             // Formatter - excludes non digits, but allows hyphens, and limits to a maxlength that varies depending on whether a hyphen is present or not
             formatterFn: val => {
                 const nuVal = val.replace(getFormattingRegEx('^\\d-', 'g'), '');
-                const maxlength = nuVal.indexOf('-') > -1 ? 9 : 8;
+                const maxlength = nuVal.includes('-') ? 9 : 8;
                 return nuVal.substring(0, maxlength);
             },
             format: '12345678 or 12345-678',
@@ -193,7 +193,7 @@ export const countrySpecificFormatters: CountryFormatRules = {
             // Formatter - excludes non digits, but allows hyphens, and limits to a maxlength that varies depending on whether a hyphen is present or not
             formatterFn: val => {
                 const nuVal = val.replace(getFormattingRegEx('^\\d-', 'g'), '');
-                const maxlength = nuVal.indexOf('-') > -1 ? 6 : 5;
+                const maxlength = nuVal.includes('-') ? 6 : 5;
                 return nuVal.substring(0, maxlength);
             },
             format: '99999 or 99-999',
@@ -241,7 +241,7 @@ export const countrySpecificFormatters: CountryFormatRules = {
         postalCode: {
             formatterFn: val => {
                 const nuVal = val.replace(getFormattingRegEx('^\\d-', 'g'), '');
-                const maxlength = nuVal.indexOf('-') > -1 ? 10 : 5;
+                const maxlength = nuVal.includes('-') ? 10 : 5;
                 return nuVal.substring(0, maxlength);
             },
             format: '99999 or 99999-9999'
