@@ -35,12 +35,12 @@ export interface SFPProps {
     brands?: string[];
     brandsConfiguration?: CardBrandsConfiguration;
     clientKey: string;
-    componentType?: string;
+    componentType: string;
     countryCode?: string;
     forceCompat?: boolean;
     hasKoreanFields?: boolean;
-    i18n?: Language;
-    implementationType?: 'components' | 'custom';
+    i18n: Language;
+    implementationType?: string;
     keypadFix?: boolean;
     koreanAuthenticationRequired?: boolean;
     legacyInputMode?: boolean;
@@ -65,8 +65,8 @@ export interface SFPProps {
     showWarnings?: boolean;
     styles?: StylesObject;
     trimTrailingSeparator?: boolean;
-    type?: string;
-    render?: (helpers: { setRootNode: (input: HTMLElement) => void; setFocusOn: (fieldName: string) => void }, state: SFPState) => any;
+    type: string;
+    render: () => {};
     resources?: Resources;
     maskSecurityCode?: boolean;
     exposeExpiryDate?: boolean;

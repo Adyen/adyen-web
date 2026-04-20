@@ -15,9 +15,9 @@ export interface CardFieldsProps {
     dualBrandingChangeHandler: DualBrandingChangeHandler;
     dualBrandingElements?: DualBrandSelectElement[];
     selectedBrandValue: string;
-    errors?: any;
-    focusedElement?: any;
-    hasCVC?: any;
+    errors: SFPErrorMap;
+    focusedElement?: string;
+    hasCVC?: boolean;
     cvcPolicy?: CVCPolicyType;
     expiryDatePolicy?: DatePolicyType;
     onFocusField?: (field: string) => void;
@@ -51,7 +51,7 @@ export interface CardNumberProps {
     isValid: boolean;
     label: string;
     onFocusField: (field: string) => void;
-    showBrandIcon?: boolean;
+    showBrandIcon: boolean;
 }
 
 export interface CVCProps {
