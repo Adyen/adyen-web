@@ -444,15 +444,9 @@ class Core implements ICore {
     }
 
     private async requestAnalyticsAttemptId(): Promise<void> {
-        /** SIMULATING DELAY FOR REQUESTING ID*/
-        return new Promise((resolve, _reject) => {
-            setTimeout(() => {
-                void this.modules.analytics.setUp({
-                    locale: this.options.locale,
-                    ...(this.session?.id && { sessionId: this.session.id })
-                });
-                resolve();
-            }, 15000);
+        await this.modules.analytics.setUp({
+            locale: this.options.locale,
+            ...(this.session?.id && { sessionId: this.session.id })
         });
     }
 }

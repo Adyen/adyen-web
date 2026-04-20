@@ -1,4 +1,4 @@
-import { render } from '@testing-library/preact';
+import { render, screen } from '@testing-library/preact';
 import AdyenCheckout from './core';
 import BCMCMobileElement from '../components/BcmcMobile';
 import Session from './CheckoutSession';
@@ -110,7 +110,7 @@ describe('Core', () => {
             expect(setupSessionSpy).toHaveBeenCalledWith(expect.objectContaining({ session: { id: 'session-id', sessionData: 'session-data' } }));
         });
 
-        test('should not block initialize() on analytics setUp (fire-and-forget)', async () => {
+        test('should not block the rendering while analytics is setting up', async () => {
             let resolveSetUp: () => void;
             analyticsSetupSpy.mockImplementation(
                 () =>
@@ -122,13 +122,28 @@ describe('Core', () => {
             const checkout = new AdyenCheckout({
                 countryCode: 'US',
                 environment: 'test',
-                clientKey: 'test_123456'
+                clientKey: 'test_123456',
+                paymentMethodsResponse: {
+                    paymentMethods: [
+                        {
+                            name: 'iDeal',
+                            type: 'ideal'
+                        }
+                    ]
+                }
             });
 
             await checkout.initialize();
-
             expect(analyticsSetupSpy).toHaveBeenCalled();
-            // resolve the pending promise so jest doesn't leak it
+
+            const ideal = new Redirect(checkout, {
+                type: 'ideal'
+            });
+
+            render(ideal.render());
+
+            expect(screen.getByRole('button', { name: 'Continue to iDeal' })).toBeInTheDocument();
+            // Resolve the pending promise so we don't leak it
             resolveSetUp();
         });
 
