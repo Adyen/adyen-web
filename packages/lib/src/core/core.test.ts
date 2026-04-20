@@ -112,6 +112,7 @@ describe('Core', () => {
 
         test('should not block the rendering while analytics is setting up', async () => {
             let resolveSetUp: () => void;
+            // Delay setUp call to simulate slow analytics setup
             analyticsSetupSpy.mockImplementation(
                 () =>
                     new Promise<void>(resolve => {
