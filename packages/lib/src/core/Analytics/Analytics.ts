@@ -65,7 +65,7 @@ class Analytics implements IAnalytics {
         if (analyticsData) this.analyticsData = analyticsData;
     }
 
-    public get checkoutAttemptId(): string {
+    public get checkoutAttemptId(): string | undefined {
         return this._checkoutAttemptId;
     }
 
@@ -83,9 +83,9 @@ class Analytics implements IAnalytics {
             const checkoutAttemptIdSession = this.storage.get();
             const isSessionReusable = isSessionCreatedUnderFifteenMinutes(checkoutAttemptIdSession);
 
-            const { applicationInfo, checkoutAttemptId: checkoutAttemptIdFromPayByLink } = processAnalyticsData(this.analyticsData);
+            const { applicationInfo, checkoutAttemptId: checkoutAttemptIdFromPayByLink } = processAnalyticsData(this.analyticsData) ?? {};
 
-            const availableCheckoutAttemptId: string | undefined = isSessionReusable ? checkoutAttemptIdSession.id : checkoutAttemptIdFromPayByLink;
+            const availableCheckoutAttemptId: string | undefined = isSessionReusable ? checkoutAttemptIdSession?.id : checkoutAttemptIdFromPayByLink;
 
             const payload: RequestAttemptIdPayload = {
                 version: LIBRARY_VERSION,
@@ -208,9 +208,7 @@ class Analytics implements IAnalytics {
      * Report the integration flavor and send queued analyic events once the attempt ID is available
      */
     private onCheckoutAttemptIdReceived(): void {
-        const shouldReportFlavor = !this.isFlavorReported && this.pendingFlavor;
-
-        if (shouldReportFlavor) {
+        if (!this.isFlavorReported && this.pendingFlavor) {
             const flavor = this.pendingFlavor;
             this.pendingFlavor = undefined;
             void this.dispatchFlavor(flavor);

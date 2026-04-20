@@ -10,6 +10,7 @@ import Redirect from '../components/Redirect';
 import { PaymentActionsType } from '../types/global-types';
 import Analytics from './Analytics';
 import type { CoreConfiguration } from './types';
+import type { DropinComponent } from '../components/Dropin/components/DropinComponent';
 
 jest.mock('./CheckoutSession');
 
@@ -35,7 +36,7 @@ const setupSessionSpy = jest.spyOn(Session.prototype, 'setupSession').mockImplem
     return Promise.resolve(sessionSetupResponseMock);
 });
 
-let analyticsSetupSpy;
+let analyticsSetupSpy: jest.SpyInstance;
 
 describe('Core', () => {
     beforeEach(() => {
@@ -111,7 +112,7 @@ describe('Core', () => {
         });
 
         test('should not block the rendering while analytics is setting up', async () => {
-            let resolveSetUp: () => void;
+            let resolveSetUp: () => void = () => {};
             // Delay setUp call to simulate slow analytics setup
             analyticsSetupSpy.mockImplementation(
                 () =>
@@ -226,7 +227,7 @@ describe('Core', () => {
                 url: 'https://example.com'
             }) as Redirect;
 
-            expect(paymentAction.constructor['type']).toBe('redirect');
+            expect((paymentAction.constructor as typeof Redirect).type).toBe('redirect');
             expect(paymentAction.props.url).toBe('https://example.com');
         });
 
@@ -248,7 +249,7 @@ describe('Core', () => {
 
             const actionComponent = checkout.createFromAction(fingerprintAction, { challengeWindowSize: '04' }) as ThreeDS2DeviceFingerprint;
 
-            expect(actionComponent.constructor['type']).toBe('threeDS2Fingerprint');
+            expect((actionComponent.constructor as typeof ThreeDS2DeviceFingerprint).type).toBe('threeDS2Fingerprint');
 
             expect(actionComponent.props.elementRef).not.toBeDefined();
             expect(actionComponent.props.showSpinner).toEqual(true);
@@ -274,7 +275,7 @@ describe('Core', () => {
 
             const actionComponent = checkout.createFromAction(challengeAction, { challengeWindowSize: '03' }) as ThreeDS2Challenge;
 
-            expect(actionComponent.constructor['type']).toBe('threeDS2Challenge');
+            expect((actionComponent.constructor as typeof ThreeDS2Challenge).type).toBe('threeDS2Challenge');
             expect(actionComponent.props.elementRef).not.toBeDefined();
             expect(actionComponent.props.statusType).toEqual('custom');
             expect(actionComponent.props.challengeWindowSize).toEqual('03');
@@ -384,7 +385,7 @@ describe('Core', () => {
             const flushPromises = () => new Promise(process.nextTick);
             await flushPromises();
 
-            const ach = dropin.dropinRef.state.elements[0];
+            const ach = (dropin.dropinRef as unknown as DropinComponent).state.elements[0];
 
             expect(ach.props.onAdditionalDetails).toBe(onAdditionalDetailsPaymentMethodConfig);
         });
