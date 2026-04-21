@@ -131,9 +131,8 @@ const UPI_MANDATE = {
 
 export const IndiaAutoPay: DropinStory = {
     render: ({ componentConfiguration, ...checkoutConfig }: PaymentMethodStoryProps<DropinConfiguration>) => {
-        const { Dropin, ...Components } = components;
-        const Classes = Object.keys(Components).map(key => Components[key]);
-        AdyenCheckout.register(...Classes);
+        const { Dropin: _Dropin, ...Components } = components;
+        AdyenCheckout.register(...(Object.values(Components) as Parameters<typeof AdyenCheckout.register>));
 
         return (
             <Checkout checkoutConfig={checkoutConfig}>
