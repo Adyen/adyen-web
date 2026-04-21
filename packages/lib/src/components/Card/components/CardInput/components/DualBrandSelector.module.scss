@@ -34,13 +34,14 @@
 
     &Selected {
         background-color: variable-generator.token(color-background-primary);
-        border-color: variable-generator.token(color-outline-primary);
-        box-shadow: 0 2px 4px rgb(0 0 0 / 50%);
+        box-shadow:
+            inset 0 0 0 0.5px variable-generator.token(color-outline-primary),
+            0 2px 4px rgb(0 0 0 / 50%);
     }
 }
 
 .dualBrandSelectorIcon {
     border-radius: variable-generator.token(border-radius-s);
-    height: 14px;
-    width: 22px;
+    height: 16px;
+    width: 24px;
 }
