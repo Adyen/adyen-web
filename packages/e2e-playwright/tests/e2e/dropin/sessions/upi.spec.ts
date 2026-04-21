@@ -18,6 +18,9 @@ test.describe('Dropin - Sessions - UPI', () => {
 
             await dropinWithSession.selectNonStoredPaymentMethod('upi');
 
+            if (browserName === 'webkit') {
+                await page.waitForTimeout(1000);
+            }
             await toHaveScreenshot(upiPaymentMethodHeader.rootElement, browserName, 'expanded-upi-payment-method-header-desktop.png');
 
             const upi = new UPI(page);
