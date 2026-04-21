@@ -1,12 +1,9 @@
-import dotenv from 'dotenv';
 import { test, expect } from '../../../../fixtures/dropin.fixture';
 import { URL_MAP } from '../../../../fixtures/URL_MAP';
 import { Card } from '../../../../models/card';
 import { GiftCard } from '../../../../models/giftcard';
 import { toHaveScreenshot } from '../../../utils/assertions';
 import { TAGS } from '../../../utils/constants';
-
-dotenv.config();
 
 test.describe('Dropin - Sessions - GiftCards', () => {
     test(
