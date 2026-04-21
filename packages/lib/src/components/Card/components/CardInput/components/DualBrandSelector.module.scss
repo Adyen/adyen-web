@@ -3,10 +3,10 @@
 
 .dualBrandSelector {
     display: flex;
-    gap: variable-generator.token(spacer-040);
+    gap: variable-generator.token(spacer-030);
     background-color: variable-generator.token(color-background-tertiary);
     border-radius: variable-generator.token(border-radius-m);
-    padding: variable-generator.token(spacer-040);
+    padding: variable-generator.token(spacer-030);
     margin-right: variable-generator.token(spacer-060);
 }
 
@@ -14,26 +14,33 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: variable-generator.token(color-background-primary);
-    border: none;
+    background-color: transparent;
+    border: 1px solid transparent;
     border-radius: variable-generator.token(border-radius-s);
-    padding: variable-generator.token(spacer-040);
+    padding: 0;
     cursor: pointer;
-    transition: box-shadow 0.2s ease;
-    height: 18px;
-    width: 27px;
+    height: 24px;
+    width: 34px;
+    transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
 
     &:hover {
+        background-color: variable-generator.token(color-background-primary);
+        border-color: variable-generator.token(color-outline-primary);
         box-shadow: 0 2px 4px rgb(0 0 0 / 30%);
     }
 
     &Selected {
+        background-color: variable-generator.token(color-background-primary);
+        border-color: variable-generator.token(color-outline-primary);
         box-shadow: 0 2px 4px rgb(0 0 0 / 50%);
     }
 }
 
 .dualBrandSelectorIcon {
     border-radius: variable-generator.token(border-radius-s);
-    height: 18px;
-    width: 27px;
+    height: 14px;
+    width: 22px;
 }
