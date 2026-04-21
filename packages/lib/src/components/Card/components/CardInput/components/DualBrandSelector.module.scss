@@ -3,10 +3,10 @@
 
 .dualBrandSelector {
     display: flex;
-    gap: variable-generator.token(spacer-030);
+    gap: variable-generator.token(spacer-020);
     background-color: variable-generator.token(color-background-tertiary);
     border-radius: variable-generator.token(border-radius-m);
-    padding: variable-generator.token(spacer-030);
+    padding: variable-generator.token(spacer-020);
     margin-right: variable-generator.token(spacer-060);
 }
 
