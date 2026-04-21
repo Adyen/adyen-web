@@ -121,4 +121,44 @@ export const SplitFundingBrazil = {
     }
 };
 
+const UPI_MANDATE = {
+    amount: '100000',
+    amountRule: 'max' as const,
+    frequency: 'adhoc' as const,
+    endsAt: '2030-07-21',
+    remarks: 'Subscription'
+};
+
+export const IndiaAutoPay: DropinStory = {
+    render: ({ componentConfiguration, ...checkoutConfig }: PaymentMethodStoryProps<DropinConfiguration>) => {
+        const { Dropin, ...Components } = components;
+        const Classes = Object.keys(Components).map(key => Components[key]);
+        AdyenCheckout.register(...Classes);
+
+        return (
+            <Checkout checkoutConfig={checkoutConfig}>
+                {checkout => <ComponentContainer element={new DropinComponent(checkout, componentConfiguration)} />}
+            </Checkout>
+        );
+    },
+    args: {
+        countryCode: 'IN',
+        useSessions: true,
+        sessionData: {
+            mandate: UPI_MANDATE,
+            shopperReference: 'upi-autopay-shopper',
+            storePaymentMethod: true,
+            shopperInteraction: 'Ecommerce',
+            recurringProcessingModel: 'Subscription'
+        },
+        componentConfiguration: {
+            paymentMethodsConfiguration: {
+                upi: {
+                    mandate: UPI_MANDATE
+                }
+            }
+        }
+    }
+};
+
 export default meta;

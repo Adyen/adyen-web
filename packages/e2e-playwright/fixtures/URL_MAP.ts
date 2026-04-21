@@ -47,6 +47,8 @@ export const URL_MAP = {
      * UPI
      */
     upi: '/iframe.html?globals=&id=components-upi--default&viewMode=story',
+    upiAutoPay: '/iframe.html?globals=&id=components-upi--auto-pay-session&viewMode=story',
+    dropinSessionsIndiaAutoPay: '/iframe.html?globals=&id=drop-in-drop-in-component--india-auto-pay&viewMode=story',
 
     /**
      * Vouchers

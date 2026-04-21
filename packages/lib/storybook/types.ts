@@ -39,9 +39,15 @@ export type MetaConfiguration<T> = Meta<PaymentMethodStoryProps<T>>;
 
 export type SessionsRequestData = {
     shopperEmail?: string;
+    shopperReference?: string;
     mandate?: Partial<MandateType>;
     splitCardFundingSources?: boolean;
     installmentOptions?: Record<string, { values: number[]; plans?: string[] }>;
+    storePaymentMethod?: boolean;
+    storePaymentMethodMode?: 'enabled' | 'disabled' | 'askForConsent';
+    shopperInteraction?: 'Ecommerce' | 'ContAuth' | 'Moto' | 'POS';
+    recurringProcessingModel?: 'Subscription' | 'CardOnFile' | 'UnscheduledCardOnFile';
+    enableOneClick?: boolean;
 };
 
 export type AdyenCheckoutProps = {

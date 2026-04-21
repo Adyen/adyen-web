@@ -55,6 +55,49 @@ describe('UPI', () => {
                 });
             });
         });
+
+        describe('with mandate', () => {
+            const mandate = {
+                amount: '100000',
+                amountRule: 'max' as const,
+                frequency: 'adhoc' as const,
+                endsAt: '2030-07-21',
+                remarks: 'Test subscription'
+            };
+
+            test('should include mandate in formatData for QR code mode', () => {
+                isMobileMock.mockReturnValue(false);
+                const upi = new UPI(core, { ...props, mandate });
+                render(upi.render());
+                expect(upi.formatData()).toEqual({
+                    paymentMethod: { type: TxVariants.upi_qr },
+                    mandate
+                });
+            });
+
+            test('should include mandate in formatData for intent mode', async () => {
+                isMobileMock.mockReturnValue(true);
+                const gpayApp = { id: 'gpay', name: 'Google Pay' };
+                const upi = new UPI(core, { ...props, apps: [gpayApp], mandate });
+                render(upi.render());
+                const user = userEvent.setup();
+                const radioButton = await screen.findByRole('radio', { name: /google pay/i });
+                await user.click(radioButton);
+                await waitFor(() => {
+                    expect(upi.formatData()).toEqual({
+                        paymentMethod: { type: TxVariants.upi_intent, appId: 'gpay' },
+                        mandate
+                    });
+                });
+            });
+
+            test('should NOT include mandate when not provided', () => {
+                isMobileMock.mockReturnValue(false);
+                const upi = new UPI(core, { ...props });
+                render(upi.render());
+                expect(upi.formatData()).not.toHaveProperty('mandate');
+            });
+        });
     });
 
     describe('isValid', () => {

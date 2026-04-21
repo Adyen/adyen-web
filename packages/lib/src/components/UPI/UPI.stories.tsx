@@ -28,7 +28,13 @@ export const Default: UpiStory = {
     }
 };
 
-const MANDATE = { amount: '30000', frequency: 'monthly', amountRule: 'max' };
+const MANDATE = {
+    amount: '30000',
+    frequency: 'monthly',
+    amountRule: 'max',
+    endsAt: '2030-07-21',
+    remarks: 'Monthly subscription'
+};
 
 export const AutoPaySession: UpiStory = {
     render: ({ componentConfiguration, ...checkoutConfig }: PaymentMethodStoryProps<UPIConfiguration>) => (
@@ -37,7 +43,13 @@ export const AutoPaySession: UpiStory = {
     args: {
         countryCode: 'IN',
         useSessions: true,
-        sessionData: { mandate: MANDATE as Partial<MandateType> },
+        sessionData: {
+            mandate: MANDATE as Partial<MandateType>,
+            shopperReference: 'upi-autopay-shopper',
+            storePaymentMethod: true,
+            shopperInteraction: 'Ecommerce',
+            recurringProcessingModel: 'Subscription'
+        },
         componentConfiguration: {
             mandate: MANDATE as Mandate
         }

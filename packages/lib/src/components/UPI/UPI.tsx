@@ -62,7 +62,8 @@ class UPI extends UIElement<UPIConfiguration> {
             paymentMethod: {
                 type: this.paymentType,
                 ...(this.paymentType === TxVariants.upi_intent && app?.id && { appId: app.id })
-            }
+            },
+            ...(this.props.mandate && { mandate: this.props.mandate })
         };
     }
 
