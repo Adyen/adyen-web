@@ -20,8 +20,9 @@ test.describe('Dropin - Sessions - GiftCards', () => {
             await cardBeforeGiftCardRedeem.isComponentVisible();
             await expect(cardBeforeGiftCardRedeem.payButton).toHaveText('Pay $259.00');
 
-            const { paymentMethodDetailsLocator: givexDetailsLocator } = await dropinWithSession.selectNonStoredPaymentMethod('giftcard');
-            const giftCard = new GiftCard(page, givexDetailsLocator);
+            const giftcardDetailsLocator = dropinWithSession.getPaymentMethodHeader('Generic GiftCard');
+            await giftcardDetailsLocator.rootElement.click();
+            const giftCard = new GiftCard(page, giftcardDetailsLocator.rootElement);
 
             await giftCard.isComponentVisible();
             await giftCard.fillGiftCardNumber('6036280000000000000');
@@ -45,8 +46,9 @@ test.describe('Dropin - Sessions - GiftCards', () => {
     test('Should show the correct updated amount after removing a redeemed gift card', async ({ dropinWithSession, page }) => {
         await dropinWithSession.goto(URL_MAP.dropinWithSession);
 
-        const { paymentMethodDetailsLocator: givexDetailsLocator } = await dropinWithSession.selectNonStoredPaymentMethod('giftcard');
-        const giftCard = new GiftCard(page, givexDetailsLocator);
+        const giftcardDetailsLocator = dropinWithSession.getPaymentMethodHeader('Generic GiftCard');
+        await giftcardDetailsLocator.rootElement.click();
+        const giftCard = new GiftCard(page, giftcardDetailsLocator.rootElement);
 
         await giftCard.isComponentVisible();
         await giftCard.fillGiftCardNumber('6036280000000000000');
