@@ -1,3 +1,4 @@
+import { ComponentChildren, h } from 'preact';
 import type { Ref } from 'preact';
 import {
     CardAllValidData,
@@ -39,25 +40,25 @@ export interface SFPProps {
     countryCode?: string;
     forceCompat?: boolean;
     hasKoreanFields?: boolean;
-    i18n: Language;
-    implementationType?: string;
+    i18n?: Language;
+    implementationType?: 'components' | 'custom';
     keypadFix?: boolean;
     koreanAuthenticationRequired?: boolean;
     legacyInputMode?: boolean;
     loadingContext: string;
     minimumExpiryDate?: string;
-    onAdditionalSFConfig?: () => {};
-    onAdditionalSFRemoved?: () => {};
-    onAllValid?: (obj: CardAllValidData) => {};
-    onAutoComplete?: (obj: CardAutoCompleteData) => {};
-    onBinValue?: (obj: CardBinValueData) => {};
+    onAdditionalSFConfig?: () => void;
+    onAdditionalSFRemoved?: () => void;
+    onAllValid?: (obj: CardAllValidData) => void;
+    onAutoComplete?: (obj: CardAutoCompleteData) => void;
+    onBinValue?: (obj: CardBinValueData) => void;
     onBrand?: (obj: CardBrandData) => void;
     onChange?: (state: SFPState, eventDetails?: OnChangeEventDetails) => void;
-    onConfigSuccess?: (cbObj: CardConfigSuccessData) => {};
+    onConfigSuccess?: (cbObj: CardConfigSuccessData) => void;
     onError?: (error: AdyenCheckoutError) => void;
-    onFieldValid?: (fieldObj: CardFieldValidData) => {};
+    onFieldValid?: (fieldObj: CardFieldValidData) => void;
     onFocus?: (obj: CardFocusData) => void;
-    onLoad?: (cbObj: CardLoadData) => {};
+    onLoad?: (cbObj: CardLoadData) => void;
     onStateUpdate?: (obj: SFPState) => void;
     onSubmitAnalytics?: (event: AbstractAnalyticsEvent) => void;
     handleKeyPress?: (obj: KeyboardEvent) => void;
@@ -66,7 +67,7 @@ export interface SFPProps {
     styles?: StylesObject;
     trimTrailingSeparator?: boolean;
     type: string;
-    render: () => {};
+    render?: (helpers: { setRootNode: (input: HTMLElement) => void; setFocusOn: (fieldName: string) => void }, state: SFPState) => ComponentChildren;
     resources?: Resources;
     maskSecurityCode?: boolean;
     exposeExpiryDate?: boolean;

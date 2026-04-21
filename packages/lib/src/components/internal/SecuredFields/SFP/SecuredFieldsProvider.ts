@@ -304,7 +304,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
 
         Object.keys(state.valid)
             .reduce(getErrorReducer(numDateFields, state), [])
-            .forEach(field => {
+            .forEach((field: SFFieldType) => {
                 // For each detected error pass an error object to the handler (calls error callback & sets state)
                 const errorObj: CardErrorData = getErrorObject(field, this.rootNode, state);
                 this.handleOnError(errorObj, !!state.detectedUnsupportedBrands);
