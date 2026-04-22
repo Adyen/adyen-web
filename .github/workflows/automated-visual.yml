@@ -61,16 +61,9 @@ jobs:
         path: ~/.cache/ms-playwright
         key: ${{ runner.os }}-cache-${{ env.cache-name }}-playwright-${{ env.PLAYWRIGHT_VERSION }}-browser-${{ matrix.runner-browser }}
 
-    - name: Install Playwright Browser
+    - name: Install Playwright Dependencies
       if: steps.playwright-cache.outputs.cache-hit != 'true'
-      run: npx playwright install ${{ matrix.runner-browser }}
-
-    # System libraries (libnss3, libgbm1, libasound2t64, libwoff2dec, libvpx, etc.)
-    # live under /usr/lib and are NOT inside ~/.cache/ms-playwright, so they must
-    # be installed on every run — even on a cache hit — otherwise cached browser
-    # binaries fail to load their shared-library dependencies.
-    - name: Install Playwright System Dependencies
-      run: npx playwright install-deps ${{ matrix.runner-browser }}
+      run: npx playwright install --with-deps ${{ matrix.runner-browser }}
 
     - name: Run Visual Tests
       run: yarn test:automated-visual --project=${{ matrix.runner-browser }}
