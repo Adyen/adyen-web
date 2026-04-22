@@ -76,7 +76,7 @@ jobs:
         cache-name: webkit-apt-v1
       with:
         path: /var/cache/apt/archives
-        key: ${{ runner.os }}-${{ runner.name }}-cache-${{ env.cache-name }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
+        key: ${{ runner.os }}-cache-${{ env.cache-name }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
 
     # We always run `install --with-deps` — even on a Playwright cache hit —
     # because webkit's system libs live under /usr/lib (not in ~/.cache/ms-playwright)
