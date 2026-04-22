@@ -122,7 +122,7 @@ export const SplitFundingBrazil = {
 };
 
 const UPI_MANDATE = {
-    amount: '100000',
+    amount: '7005',
     amountRule: 'max' as const,
     frequency: 'adhoc' as const,
     endsAt: '2030-07-21',
@@ -143,6 +143,7 @@ export const IndiaAutoPay: DropinStory = {
     args: {
         countryCode: 'IN',
         useSessions: true,
+        amount: 7005,
         sessionData: {
             mandate: UPI_MANDATE,
             shopperReference: 'upi-autopay-shopper',

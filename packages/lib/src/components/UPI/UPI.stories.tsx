@@ -29,7 +29,7 @@ export const Default: UpiStory = {
 };
 
 const MANDATE = {
-    amount: '30000',
+    amount: '7005',
     frequency: 'monthly',
     amountRule: 'max',
     endsAt: '2030-07-21',
@@ -42,6 +42,7 @@ export const AutoPaySession: UpiStory = {
     ),
     args: {
         countryCode: 'IN',
+        amount: 7005,
         useSessions: true,
         sessionData: {
             mandate: MANDATE as Partial<MandateType>,
