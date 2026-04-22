@@ -8,8 +8,7 @@ import {
     OPTIONAL,
     HIDDEN,
     ENCRYPTED_EXPIRY_MONTH,
-    ENCRYPTED_EXPIRY_YEAR,
-    BEST_GUESS_MODE
+    ENCRYPTED_EXPIRY_YEAR
 } from '../lib/constants';
 import {
     CardErrorData,
@@ -24,8 +23,6 @@ import {
 } from '../lib/types';
 import { existy } from '../../../../utils/commonUtils';
 import AdyenCheckoutError from '../../../../core/Errors/AdyenCheckoutError';
-import { DUAL_BRAND_SELECTION_MECHANISM_MAP } from '../../../Card/constants';
-import cardType from '../lib/CSF/utils/cardType';
 
 /**
  * Emits the onLoad event
@@ -132,23 +129,6 @@ function fieldIsInError(fieldType: string, policy: string, numCharsObj: object, 
  * Emits the onBrand event
  */
 function handleOnBrand(cardInfo: CardBrandData): void {
-    let cardInfoToUse = cardInfo;
-
-    /**
-     * If not resetting back to an empty field,
-     * and if the brand is based on our regEx (mode = BEST_GUESS_MODE), rather than binLookup,
-     * and we're in a country that requires a dual-brand selection mechanism...
-     */
-    const brandIsNotResetting = cardInfo.brand !== 'card';
-    const brandDerivedFromBestGuess = cardInfo.mode === BEST_GUESS_MODE;
-    const forcedLocalBrand = DUAL_BRAND_SELECTION_MECHANISM_MAP[this.props.countryCode?.toLowerCase()];
-    const forcedLocalBrandIsConfigured = this.props.brands.includes(forcedLocalBrand);
-
-    if (brandIsNotResetting && brandDerivedFromBestGuess && forcedLocalBrand && forcedLocalBrandIsConfigured) {
-        const { cardType: brand, cvcPolicy, expiryDatePolicy } = cardType.getCardByBrand(forcedLocalBrand);
-        cardInfoToUse = { ...cardInfo, brand, cvcPolicy, expiryDatePolicy };
-    }
-
     this.setState(
         prevState => {
             /**
@@ -156,30 +136,30 @@ function handleOnBrand(cardInfo: CardBrandData): void {
              * (scenario: have validated empty form, then choose brand w. optional/hidden cvc or date)...
              * ...else propagate the existing error.
              */
-            const cvcFieldInError = fieldIsInError(ENCRYPTED_SECURITY_CODE, cardInfoToUse.cvcPolicy, this.numCharsInField, prevState.errors);
+            const cvcFieldInError = fieldIsInError(ENCRYPTED_SECURITY_CODE, cardInfo.cvcPolicy, this.numCharsInField, prevState.errors);
 
             const dateFieldInError =
                 this.numDateFields === 1
-                    ? fieldIsInError(ENCRYPTED_EXPIRY_DATE, cardInfoToUse.expiryDatePolicy, this.numCharsInField, prevState.errors)
+                    ? fieldIsInError(ENCRYPTED_EXPIRY_DATE, cardInfo.expiryDatePolicy, this.numCharsInField, prevState.errors)
                     : null;
 
             // For custom card comp
             const monthFieldInError =
                 this.numDateFields === 2
-                    ? fieldIsInError(ENCRYPTED_EXPIRY_MONTH, cardInfoToUse.expiryDatePolicy, this.numCharsInField, prevState.errors)
+                    ? fieldIsInError(ENCRYPTED_EXPIRY_MONTH, cardInfo.expiryDatePolicy, this.numCharsInField, prevState.errors)
                     : null;
 
             const yearFieldInError =
                 this.numDateFields === 2
-                    ? fieldIsInError(ENCRYPTED_EXPIRY_YEAR, cardInfoToUse.expiryDatePolicy, this.numCharsInField, prevState.errors)
+                    ? fieldIsInError(ENCRYPTED_EXPIRY_YEAR, cardInfo.expiryDatePolicy, this.numCharsInField, prevState.errors)
                     : null;
             // --
             /** end */
 
             return {
-                brand: cardInfoToUse.brand,
-                cvcPolicy: cardInfoToUse.cvcPolicy ?? CVC_POLICY_REQUIRED,
-                showSocialSecurityNumber: cardInfoToUse.showSocialSecurityNumber,
+                brand: cardInfo.brand,
+                cvcPolicy: cardInfo.cvcPolicy ?? CVC_POLICY_REQUIRED,
+                showSocialSecurityNumber: cardInfo.showSocialSecurityNumber,
                 errors: {
                     ...prevState.errors,
                     ...(existy(cvcFieldInError) && { [ENCRYPTED_SECURITY_CODE]: cvcFieldInError }),
@@ -187,16 +167,15 @@ function handleOnBrand(cardInfo: CardBrandData): void {
                     ...(existy(monthFieldInError) && { [ENCRYPTED_EXPIRY_MONTH]: monthFieldInError }),
                     ...(existy(yearFieldInError) && { [ENCRYPTED_EXPIRY_YEAR]: yearFieldInError })
                 },
-                expiryDatePolicy: cardInfoToUse.expiryDatePolicy ?? DATE_POLICY_REQUIRED
+                expiryDatePolicy: cardInfo.expiryDatePolicy ?? DATE_POLICY_REQUIRED
             };
         },
         () => {
             this.props.onChange(this.state, { event: 'handleOnBrand' });
 
             // Enhance data object with the url for the brand image, first checking if the merchant has configured their own one for this brand
-            const brandImageUrl =
-                this.props.brandsConfiguration[cardInfoToUse.brand]?.icon ?? getCardImageUrl(cardInfoToUse.brand, this.props.resources);
-            this.props.onBrand({ ...cardInfoToUse, brandImageUrl });
+            const brandImageUrl = this.props.brandsConfiguration[cardInfo.brand]?.icon ?? getCardImageUrl(cardInfo.brand, this.props.resources);
+            this.props.onBrand({ ...cardInfo, brandImageUrl });
         }
     );
 }

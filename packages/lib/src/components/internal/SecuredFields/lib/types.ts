@@ -90,7 +90,6 @@ interface StyleDefinitions {
 
 export interface CardObject {
     cardType: string;
-    startingRules?: number[];
     permittedLengths?: number[];
     pattern?: RegExp;
     securityCode?: string;
