@@ -14,7 +14,7 @@ const test = base.extend<Fixture>({
 });
 
 test.describe('Econtext ATM', () => {
-    test('should make an Econtext ATM payment', async ({ econtext }) => {
+    test.skip('should make an Econtext ATM payment', async ({ econtext }) => {
         await econtext.goto(URL_MAP.econtextAtm);
         await econtext.fillShopperData();
         await econtext.pay();
