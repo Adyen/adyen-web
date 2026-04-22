@@ -106,12 +106,12 @@ class Core implements ICore {
     }
 
     public async initialize(): Promise<this> {
-        await this.initializeCore();
         this.validateCoreConfiguration();
+        await this.initializeCore();
         this.createCoreModules();
         this.assignLocaleToCore();
-        await Promise.allSettled([this.requestAnalyticsAttemptId(), this.requestTranslations()]);
-
+        void this.requestAnalyticsAttemptId();
+        await this.requestTranslations();
         return this;
     }
 
