@@ -161,9 +161,9 @@ describe('AnalyticsEventQueue', () => {
             expect(infoEvents1).toBe(infoEvents2);
         });
 
-        describe('hasEventsInQueue', () => {
+        describe('hasEvents', () => {
             test('should return false when no events are in the queue', () => {
-                expect(queue.hasEventsInQueue).toBe(false);
+                expect(queue.hasEvents).toBe(false);
             });
 
             test('should return true when info events are in the queue', () => {
@@ -174,7 +174,7 @@ describe('AnalyticsEventQueue', () => {
 
                 queue.add(infoEvent);
 
-                expect(queue.hasEventsInQueue).toBe(true);
+                expect(queue.hasEvents).toBe(true);
             });
 
             test('should return true when error events are in the queue', () => {
@@ -186,7 +186,7 @@ describe('AnalyticsEventQueue', () => {
 
                 queue.add(errorEvent);
 
-                expect(queue.hasEventsInQueue).toBe(true);
+                expect(queue.hasEvents).toBe(true);
             });
 
             test('should return true when log events are in the queue', () => {
@@ -198,7 +198,7 @@ describe('AnalyticsEventQueue', () => {
 
                 queue.add(logEvent);
 
-                expect(queue.hasEventsInQueue).toBe(true);
+                expect(queue.hasEvents).toBe(true);
             });
 
             test('should return false after clearing the queue', () => {
@@ -208,10 +208,10 @@ describe('AnalyticsEventQueue', () => {
                 });
 
                 queue.add(infoEvent);
-                expect(queue.hasEventsInQueue).toBe(true);
+                expect(queue.hasEvents).toBe(true);
 
                 queue.clear();
-                expect(queue.hasEventsInQueue).toBe(false);
+                expect(queue.hasEvents).toBe(false);
             });
         });
     });

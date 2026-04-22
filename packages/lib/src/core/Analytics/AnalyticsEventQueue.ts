@@ -25,7 +25,7 @@ class AnalyticsEventQueue {
         return this.logs;
     }
 
-    public get hasEventsInQueue(): boolean {
+    public get hasEvents(): boolean {
         return this.info.length > 0 || this.errors.length > 0 || this.logs.length > 0;
     }
 

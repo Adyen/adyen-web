@@ -385,7 +385,7 @@ describe('Core', () => {
             const flushPromises = () => new Promise(process.nextTick);
             await flushPromises();
 
-            const ach = (dropin.dropinRef as unknown as DropinComponent).state.elements[0];
+            const ach = (dropin.dropinRef as DropinComponent).state.elements[0];
 
             expect(ach.props.onAdditionalDetails).toBe(onAdditionalDetailsPaymentMethodConfig);
         });

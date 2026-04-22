@@ -71,7 +71,6 @@ class Analytics implements IAnalytics {
 
     private set checkoutAttemptId(checkoutAttemptId: string) {
         this._checkoutAttemptId = checkoutAttemptId;
-        void this.onCheckoutAttemptIdReceived();
     }
 
     public async setUp({
@@ -103,6 +102,8 @@ class Analytics implements IAnalytics {
             };
 
             this.checkoutAttemptId = await this.service.requestCheckoutAttemptId(payload);
+
+            this.dispatchPendingAnalytics();
 
             this.storage.set({
                 id: this.checkoutAttemptId,
@@ -183,7 +184,7 @@ class Analytics implements IAnalytics {
             return;
         }
 
-        if (!this.eventsQueue.hasEventsInQueue) {
+        if (!this.eventsQueue.hasEvents) {
             return;
         }
 
@@ -207,7 +208,7 @@ class Analytics implements IAnalytics {
     /**
      * Report the integration flavor and send queued analyic events once the attempt ID is available
      */
-    private onCheckoutAttemptIdReceived(): void {
+    private dispatchPendingAnalytics(): void {
         if (!this.isFlavorReported && this.pendingFlavor) {
             const flavor = this.pendingFlavor;
             this.pendingFlavor = undefined;
