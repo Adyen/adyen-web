@@ -7,6 +7,9 @@ jobs:
   visual-tests:
     timeout-minutes: 60
     runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.50.0-noble
+      options: --user 1001
     strategy:
       fail-fast: false
       matrix:
@@ -44,26 +47,6 @@ jobs:
     - name: Install Project Dependencies
       if: steps.node-modules-cache.outputs.cache-hit != 'true'
       run: yarn install --immutable
-
-    - name: Extract Playwright version
-      id: playwright-version
-      run: echo "PLAYWRIGHT_VERSION=$(jq -r '.devDependencies["@playwright/test"]' packages/e2e-playwright/package.json)" >> $GITHUB_ENV
-
-    - name: Cache Playwright
-      # Using a cache for the webkit binary files causes this error on subsequent runs
-      # /home/runner/.cache/ms-playwright/webkit-2123/minibrowser-wpe/bin/MiniBrowser: error while loading shared libraries: libwoff2dec.so.1.0.2: cannot open shared object file: No such file or directory
-      if: matrix.runner-browser != 'webkit'
-      id: playwright-cache
-      uses: actions/cache@v5
-      env:
-        cache-name: playwright-v1
-      with:
-        path: ~/.cache/ms-playwright
-        key: ${{ runner.os }}-cache-${{ env.cache-name }}-playwright-${{ env.PLAYWRIGHT_VERSION }}-browser-${{ matrix.runner-browser }}
-
-    - name: Install Playwright Dependencies
-      if: steps.playwright-cache.outputs.cache-hit != 'true' || matrix.runner-browser == 'webkit'
-      run: npx playwright install --with-deps ${{ matrix.runner-browser }}
 
     - name: Run Visual Tests
       run: yarn test:automated-visual --project=${{ matrix.runner-browser }}

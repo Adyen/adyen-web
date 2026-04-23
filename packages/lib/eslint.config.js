@@ -142,7 +142,6 @@ const config = tseslint.config(
             // ══════════════════════════════════════════════════════════
 
             // ── Components
-            'src/components/AmazonPay/**',
             'src/components/ANCV/**',
             'src/components/ApplePay/**',
             'src/components/BankTransfer/**',
