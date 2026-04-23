@@ -1,4 +1,4 @@
-import { ValidatorRules } from '../../../../utils/Validator/types';
+import { ValidateFunction, ValidatorMode, ValidatorRule, ValidatorRules } from '../../../../utils/Validator/types';
 import { formatCPFCNPJ } from '../../../internal/SocialSecurityNumberBrazil/utils';
 import validateSSN from '../../../internal/SocialSecurityNumberBrazil/validate';
 import { isEmpty } from '../../../../utils/validator-utils';
@@ -12,7 +12,7 @@ export const cardInputFormatters = {
     socialSecurityNumber: formatCPFCNPJ
 };
 
-export const cardInputValidationRules: ValidatorRules = {
+export const cardInputValidationRules = {
     socialSecurityNumber: [
         {
             modes: ['blur'],
@@ -45,10 +45,11 @@ export const cardInputValidationRules: ValidatorRules = {
             validate: value => !!value && typeof value === 'string' && value.trim().length > 0
         }
     ]
-};
+} as const satisfies ValidatorRules;
 
-export const getRuleByNameAndMode = (name, mode) => {
-    const ruleArr = cardInputValidationRules[name] as any[];
+export const getRuleByNameAndMode = (name: keyof typeof cardInputValidationRules, mode: ValidatorMode): ValidateFunction => {
+    const ruleOrRules = cardInputValidationRules[name];
+    const ruleArr = (Array.isArray(ruleOrRules) ? ruleOrRules : [ruleOrRules]) as ValidatorRule[];
     const rule = ruleArr.reduce((acc, elem) => {
         if (!acc.length) {
             if (elem.modes.includes(mode)) {
@@ -56,6 +57,6 @@ export const getRuleByNameAndMode = (name, mode) => {
             }
         }
         return acc;
-    }, []);
-    return rule[0];
+    }, [] as ValidateFunction[]);
+    return rule[0] ?? (() => true);
 };

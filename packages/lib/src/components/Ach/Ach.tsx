@@ -1,4 +1,4 @@
-import { h, RefObject } from 'preact';
+import { h } from 'preact';
 import UIElement from '../internal/UIElement/UIElement';
 import RedirectButton from '../internal/RedirectButton';
 import { TxVariants } from '../tx-variants';
@@ -63,7 +63,7 @@ export class AchElement extends UIElement<AchConfiguration> {
                 name={this.displayName}
                 payButton={this.payButton}
                 onSubmit={this.submit}
-                ref={(ref: RefObject<typeof RedirectButton>) => {
+                ref={ref => {
                     this.componentRef = ref;
                 }}
             />

@@ -19,6 +19,7 @@ export const Default: UpiStory = {
     ),
     args: {
         countryCode: 'IN',
+        amount: 1005,
         componentConfiguration: {
             onChange(state) {
                 console.log({ state });

@@ -268,12 +268,12 @@ describe('Card', () => {
     describe('Test setting of configuration prop: koreanAuthenticationRequired', () => {
         test('Returns default value', () => {
             const card = new CardElement(global.core, { configuration: {} });
-            expect(card.props.configuration.koreanAuthenticationRequired).toBe(undefined);
+            expect(card.props.configuration?.koreanAuthenticationRequired).toBe(undefined);
         });
 
         test('Returns configuration defined value', () => {
             const card = new CardElement(global.core, { configuration: { koreanAuthenticationRequired: true } });
-            expect(card.props.configuration.koreanAuthenticationRequired).toBe(true);
+            expect(card.props.configuration?.koreanAuthenticationRequired).toBe(true);
         });
     });
 

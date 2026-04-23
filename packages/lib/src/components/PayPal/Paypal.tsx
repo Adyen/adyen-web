@@ -10,18 +10,27 @@ import { formatPaypalOrderContactToAdyenFormat } from './utils/format-paypal-ord
 import type { ICore } from '../../core/types';
 import type { PaymentAction } from '../../types/global-types';
 import type { Intent, PayPalConfiguration } from './types';
+import type {
+    PayPalOnApproveActions,
+    PayPalOnApproveData,
+    PayPalOnShippingAddressChangeActions,
+    PayPalOnShippingAddressChangeData,
+    PayPalOnShippingOptionsChangeActions,
+    PayPalOnShippingOptionsChangeData,
+    PayPalOrderResponseBody
+} from './paypal-js-types';
 
-import './Paypal.scss';
 import { AnalyticsInfoEvent, InfoEventType } from '../../core/Analytics/events/AnalyticsInfoEvent';
+import './Paypal.scss';
 
 class PaypalElement extends UIElement<PayPalConfiguration> {
     public static readonly type = TxVariants.paypal;
     public static readonly subtype = 'sdk';
 
-    public paymentData: string = null;
+    public paymentData: string | null = null;
 
-    private resolve = null;
-    private reject = null;
+    private resolve: ((value: string) => void) | null = null;
+    private reject: ((error?: Error) => void) | null = null;
 
     protected static readonly defaultProps = defaultProps;
 
@@ -36,7 +45,7 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
         const merchantId = props.configuration?.merchantId;
         const intentFromConfig = props.configuration?.intent;
         const isZeroAuth = props.amount?.value === 0;
-        const intent: Intent = isZeroAuth ? 'tokenize' : props.intent || intentFromConfig;
+        const intent: Intent | undefined = isZeroAuth ? 'tokenize' : props.intent || intentFromConfig;
         const vault = intent === 'tokenize' || props.vault;
 
         const displayContinueToReviewPageButton = props.userAction === 'continue';
@@ -123,18 +132,23 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
         return true;
     }
 
-    private handleOnApprove = (data: any, actions: any): Promise<void> | void => {
+    private readonly handleOnApprove = (data: PayPalOnApproveData, actions: PayPalOnApproveActions): Promise<void> => {
         const { onAuthorized } = this.props;
-        const state = { data: { details: data, paymentData: this.paymentData } };
+        const state = { data: { details: data, paymentData: this.paymentData ?? undefined } };
 
         if (!onAuthorized) {
             this.handleAdditionalDetails(state);
-            return;
+            return Promise.resolve();
+        }
+
+        if (!actions.order) {
+            this.handleError(new AdyenCheckoutError('ERROR', 'PayPal order actions are not available'));
+            return Promise.resolve();
         }
 
         return actions.order
             .get()
-            .then((paypalOrder: any) => {
+            .then((paypalOrder: PayPalOrderResponseBody) => {
                 const billingAddress = formatPaypalOrderContactToAdyenFormat(paypalOrder?.payer);
                 const deliveryAddress = formatPaypalOrderContactToAdyenFormat(paypalOrder?.purchase_units?.[0].shipping, true);
 
@@ -169,7 +183,7 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
         this.reject(new Error(errorMessage));
     }
 
-    private handleSubmit(): Promise<void> {
+    private handleSubmit(): Promise<string> {
         super.submit();
 
         return new Promise((resolve, reject) => {
@@ -186,8 +200,12 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
      * @param data - PayPal data
      * @param actions - PayPal actions.
      */
-    private handleOnShippingAddressChange(data: any, actions: any): Promise<void> {
-        return this.props.onShippingAddressChange(data, actions, this);
+    private handleOnShippingAddressChange(data: PayPalOnShippingAddressChangeData, actions: PayPalOnShippingAddressChangeActions): Promise<void> {
+        const { onShippingAddressChange } = this.props;
+
+        if (!onShippingAddressChange) return Promise.resolve();
+
+        return onShippingAddressChange(data, actions, this);
     }
 
     /**
@@ -198,28 +216,30 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
      * @param data - PayPal data
      * @param actions - PayPal actions.
      */
-    private handleOnShippingOptionsChange(data: any, actions: any): Promise<void> {
-        return this.props.onShippingOptionsChange(data, actions, this);
+    private handleOnShippingOptionsChange(data: PayPalOnShippingOptionsChangeData, actions: PayPalOnShippingOptionsChangeActions): Promise<void> {
+        const { onShippingOptionsChange } = this.props;
+
+        if (!onShippingOptionsChange) return Promise.resolve();
+
+        return onShippingOptionsChange(data, actions, this);
     }
 
-    protected override componentToRender(): h.JSX.Element {
+    protected override componentToRender(): h.JSX.Element | null {
         if (!this.props.showPayButton) return null;
 
         const { onShippingAddressChange, onShippingOptionsChange, ...rest } = this.props;
 
         return (
             <PaypalComponent
-                ref={ref => {
-                    this.componentRef = ref;
-                }}
                 {...rest}
+                setComponentRef={this.setComponentRef}
                 {...(onShippingAddressChange && { onShippingAddressChange: this.handleOnShippingAddressChange })}
                 {...(onShippingOptionsChange && { onShippingOptionsChange: this.handleOnShippingOptionsChange })}
                 onCancel={() => this.handleError(new AdyenCheckoutError('CANCEL'))}
                 onChange={this.setState}
                 onApprove={this.handleOnApprove}
                 onError={error => {
-                    this.handleError(new AdyenCheckoutError('ERROR', error.toString(), { cause: error }));
+                    this.handleError(new AdyenCheckoutError('ERROR', String(error), { cause: error }));
                 }}
                 onScriptLoadFailure={error => this.handleError(error)}
                 onSubmit={this.handleSubmit}

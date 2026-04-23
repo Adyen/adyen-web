@@ -137,6 +137,14 @@ export type FastlaneSignupConfiguration = FastlaneConsentRenderState & {
     telephoneNumber?: string;
 };
 
+export interface FastlaneData {
+    consentShown: boolean;
+    fastlaneSessionId: string;
+    consentGiven: boolean;
+    consentVersion?: string;
+    telephoneNumber?: string;
+}
+
 export type FastlanePaymentMethodConfiguration = FastlaneComponentConfiguration | FastlaneCardComponentConfiguration;
 
 export interface FastlaneSDKConfiguration {

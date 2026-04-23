@@ -44,6 +44,13 @@ class UPI extends UIElement<UPIConfiguration> {
         });
     }
 
+    protected formatProps(props: UPIConfiguration): UPIConfiguration {
+        return {
+            showOtherInsteadOfNumber: !isMobile(),
+            ...props
+        };
+    }
+
     public get isValid(): boolean {
         return this.state.isValid;
     }

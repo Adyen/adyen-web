@@ -1,12 +1,23 @@
 import { h } from 'preact';
 import Voucher from '../../../../components/internal/Voucher';
 import { VoucherDetail } from '../../../internal/Voucher/types';
-
 import { useCoreContext } from '../../../../core/Context/CoreProvider';
-import { OxxoVoucherResultProps } from '../../types';
 import './OxxoVoucherResult.scss';
 import useImage from '../../../../core/Context/useImage';
 import { extractCommonPropsForVoucher } from '../../../internal/Voucher/utils';
+import { ActionHandledReturnObject, PaymentAmount } from '../../../../types/global-types';
+
+interface OxxoVoucherResultProps {
+    alternativeReference?: string;
+    reference?: string;
+    expiresAt?: string;
+    merchantReference?: string;
+    totalAmount?: PaymentAmount;
+    paymentMethodType?: string;
+    downloadUrl?: string;
+    onActionHandled?: (rtnObj: ActionHandledReturnObject) => void;
+    clientKey?: string;
+}
 
 const OxxoVoucherResult = (props: Readonly<OxxoVoucherResultProps>) => {
     const { i18n, loadingContext } = useCoreContext();

@@ -13,12 +13,12 @@ import { PayButtonProps } from '../../../internal/PayButton/PayButton';
 import { useAmount } from '../../../../core/Context/AmountProvider';
 import { BrandIcon } from '../../../internal/BrandIcons/types';
 import { BrandIcons } from '../../../internal/BrandIcons/BrandIcons';
+import { ValidationRuleResult } from '../../../../utils/Validator/ValidationRuleResult';
 import './UPIComponent.scss';
 
 type UpiData = { app?: App };
 
-type OnChangeProps = { data: UpiData; valid?: { [key: string]: boolean }; errors?: { [key: string]: any }; isValid: boolean };
-
+type OnChangeProps = { data: UpiData; valid?: { [key: string]: boolean }; errors?: { [key: string]: ValidationRuleResult }; isValid: boolean };
 interface UPIComponentProps {
     mode: UpiMode;
     showPayButton: boolean;
@@ -126,7 +126,13 @@ export default function UPIComponent({
             {mode === UPI_MODE.QR_CODE && (
                 <SegmentedControlRegion id={A11Y.AreaId.QR} ariaLabelledBy={A11Y.ButtonId.QR} className="adyen-checkout-upi-area-qr-code">
                     <span className="adyen-checkout-upi-instruction-label">{i18n.get('upi.qrCode.instruction')}</span>
-                    <BrandIcons className="adyen-checkout-upi-brands" brandIcons={brandIcons} showIconOnError smallIcons containerType="grid" />
+                    <BrandIcons
+                        className="adyen-checkout-upi-brands"
+                        brandIcons={brandIcons}
+                        showIconOnError
+                        smallIcons
+                        remainingBrandsLabel={`+ ${i18n.get('paymentMethodBrand.other')}`}
+                    />
                     {mandateComponent}
                     {showPayButton &&
                         payButton({

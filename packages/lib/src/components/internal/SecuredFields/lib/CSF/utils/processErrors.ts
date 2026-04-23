@@ -5,7 +5,7 @@ import { hasOwnProperty } from '../../../../../../utils/hasOwnProperty';
 type RtnType_callbackFn = (obj: CardErrorData) => void;
 
 export const processErrors = (
-    pFeedbackObj: SFFeedbackObj,
+    pFeedbackObj: Pick<SFFeedbackObj, 'error' | 'fieldType'>,
     securedField: SecuredField,
     type: string,
     rootNode: HTMLElement,

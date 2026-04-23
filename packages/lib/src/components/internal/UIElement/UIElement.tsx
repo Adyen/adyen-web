@@ -31,10 +31,10 @@ import type { IAnalytics } from '../../../core/Analytics/Analytics';
 
 import { CoreProvider } from '../../../core/Context/CoreProvider';
 import { SRPanel } from '../../../core/Errors/SRPanel';
-import './UIElement.scss';
 import SRPanelProvider from '../../../core/Errors/SRPanelProvider';
 import { AmountProvider, AmountProviderRef } from '../../../core/Context/AmountProvider';
 import { PayButtonProps } from '../PayButton/PayButton';
+import './UIElement.scss';
 
 export abstract class UIElement<P extends UIElementProps = UIElementProps> extends BaseElement<P> {
     protected componentRef: any;
@@ -43,7 +43,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
 
     public elementRef: UIElement;
 
-    public static readonly type = undefined;
+    public static readonly type: string | undefined = undefined;
 
     /**
      * Reference to the methods exposed by the AmountProvider context
@@ -631,7 +631,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
             });
     }
 
-    protected abstract componentToRender(): h.JSX.Element;
+    protected abstract componentToRender(): h.JSX.Element | null;
 
     render() {
         return (

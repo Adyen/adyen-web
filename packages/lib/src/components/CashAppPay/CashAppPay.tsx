@@ -111,7 +111,7 @@ export class CashAppPay extends UIElement<CashAppPayConfiguration> {
         new Promise<void>((resolve, reject) => onClick({ resolve, reject }))
             .catch(() => {
                 onClickPromiseRejected = true;
-                throw Error('onClick rejected');
+                throw new Error('onClick rejected');
             })
             .then(() => {
                 return this.cashAppService.createCustomerRequest(this.props.amount);
@@ -132,12 +132,12 @@ export class CashAppPay extends UIElement<CashAppPayConfiguration> {
         return true;
     }
 
-    private handleOnChangeStoreDetails = (storePayment: boolean) => {
+    private readonly handleOnChangeStoreDetails = (storePayment: boolean) => {
         const data = { ...this.state.data, shopperWantsToStore: storePayment };
         this.setState({ data });
     };
 
-    private handleAuthorize = (cashAppPaymentData: CashAppPayEventData): void => {
+    private readonly handleAuthorize = (cashAppPaymentData: CashAppPayEventData): void => {
         const data = { ...this.state.data, ...cashAppPaymentData };
         this.setState({ data, valid: {}, errors: {}, isValid: true });
         super.submit();
@@ -158,9 +158,7 @@ export class CashAppPay extends UIElement<CashAppPayConfiguration> {
             />
         ) : (
             <CashAppComponent
-                ref={ref => {
-                    this.componentRef = ref;
-                }}
+                setComponentRef={this.setComponentRef}
                 enableStoreDetails={this.props.enableStoreDetails}
                 cashAppService={this.cashAppService}
                 onChangeStoreDetails={this.handleOnChangeStoreDetails}

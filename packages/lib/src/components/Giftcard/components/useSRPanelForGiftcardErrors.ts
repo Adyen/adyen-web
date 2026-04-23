@@ -8,6 +8,7 @@ import { SetSRMessagesReturnFn } from '../../../core/Errors/SRPanelProvider';
 import SecuredFieldsProvider from '../../internal/SecuredFields/SFP/SecuredFieldsProvider';
 import ua from '../../internal/SecuredFields/lib/CSF/utils/userAgent';
 import { windowScrollTo } from '../../../utils/windowScrollTo';
+import { SFFieldType } from '../../internal/SecuredFields/lib/types';
 
 /**
  * Interface for transformed error objects returned from mapErrorsToValidationRuleResult
@@ -93,7 +94,7 @@ const useSRPanelForGiftcardErrors = ({ errors, isValidating, setIsValidating, sf
                             windowScrollTo(elementToScrollTo);
                         }
 
-                        sfp?.setFocusOn(srPanelResp?.fieldToFocus);
+                        sfp?.setFocusOn(srPanelResp?.fieldToFocus as SFFieldType);
                     }
                     // Remove 'showValidation' mode - allowing time for collation of all the fields in error whilst it is 'showValidation' mode (some errors come in a second render pass)
                     setTimeout(() => {

@@ -12,7 +12,7 @@
     "creditCard.expiryDateField.year": "Gads",
     "creditCard.storeDetailsButton": "Atcerieties nākamajai reizei",
     "creditCard.dualBrand.title": "Kartes zīmols",
-    "creditCard.dualBrand.description": "Atlasiet kartes zīmolu, ar kuru vēlaties maksāt. Tas nav obligāti.",
+    "creditCard.dualBrand.description": "Jūs varat izvēlēties kartes zīmolu, ar kuru vēlaties norēķināties. Tas nav obligāti.",
     "installments": "Iemaksu skaits",
     "installmentOption": "%{times}x %{partialValue}",
     "installmentOptionMonths": "% {times} mēneši",
@@ -258,7 +258,7 @@
     "upi.completePayment": "Pabeidziet maksājumu",
     "upi.mode.enterUpiId": "UPI ID",
     "upi.mode.qrCode": "QR kods",
-    "upi.mode.payByAnyUpi": "UPI lietotne",
+    "upi.mode.payByAnyUpi": "UPI lietotnes",
     "upi.collect.dropdown.label": "Ievadiet UPI ID",
     "upi.collect.instruction": "Ievadiet savu UPI ID",
     "upi.collect.field.label": "UPI ID",
@@ -443,5 +443,9 @@
     "econtext.customerNumber": "Klienta numurs",
     "econtext.confirmationNumber": "Apstiprinājuma numurs",
     "econtext.useBefore": "Izmantot pirms",
-    "econtext.paymentInformation": "Maksājuma informācija"
+    "econtext.paymentInformation": "Maksājuma informācija",
+    "issuerList.separatorText": "vai izvēlieties no saraksta",
+    "upi.intent.apps.title": "Opcijas",
+    "upi.intent.apps.dropdown.label": "UPI lietotnes",
+    "upi.intent.apps.dropdown.placeholder": "Izvēlieties vēlamo lietotni"
 }
