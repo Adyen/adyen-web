@@ -13,14 +13,16 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
+      - name: Enable Corepack
+        run: |
+          corepack enable
+          corepack prepare --activate
+
       - name: Setup Node
         uses: actions/setup-node@v6
         with:
           node-version: 24
           cache: yarn
-
-      - name: Enable Corepack
-        run: corepack enable
 
       - name: Install Project Dependencies
         run: yarn install --immutable
@@ -63,6 +65,8 @@ jobs:
       API_VERSION: ${{ matrix.api-version }}
       STORYBOOK_PREBUILT: "1"
     steps:
+      - uses: actions/checkout@v6
+
       - name: Setup E2E environment
         uses: ./.github/actions/setup-e2e
         with:

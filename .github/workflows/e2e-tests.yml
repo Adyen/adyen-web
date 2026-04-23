@@ -19,14 +19,17 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
+      # Enable Corepack before setup-node so `cache: yarn` sees yarn 4.x, not 1.22.
+      - name: Enable Corepack
+        run: |
+          corepack enable
+          corepack prepare --activate
+
       - name: Setup Node
         uses: actions/setup-node@v6
         with:
           node-version: 24
           cache: yarn
-
-      - name: Enable Corepack
-        run: corepack enable
 
       - name: Install Project Dependencies
         run: yarn install --immutable
@@ -77,6 +80,10 @@ jobs:
       # the prebuilt artifact has already been downloaded into packages/lib/storybook-static.
       STORYBOOK_PREBUILT: "1"
     steps:
+      # Local composite actions require the repo on disk before `uses: ./...`
+      # can resolve action.yml, so we checkout explicitly here.
+      - uses: actions/checkout@v6
+
       - name: Setup E2E environment
         uses: ./.github/actions/setup-e2e
         with:
@@ -114,6 +121,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
+      - uses: actions/checkout@v6
+
       - name: Setup E2E environment
         uses: ./.github/actions/setup-e2e
 

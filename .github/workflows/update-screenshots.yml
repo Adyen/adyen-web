@@ -19,14 +19,16 @@ jobs:
           ref: ${{ github.event.pull_request.head.ref }}
           token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Enable Corepack
+        run: |
+          corepack enable
+          corepack prepare --activate
+
       - name: Setup Node
         uses: actions/setup-node@v6
         with:
           node-version: 24
           cache: yarn
-
-      - name: Enable Corepack
-        run: corepack enable
 
       - name: Install Project Dependencies
         run: yarn install --immutable
@@ -65,11 +67,15 @@ jobs:
       API_VERSION: v71
       STORYBOOK_PREBUILT: "1"
     steps:
+      # Checkout the PR branch so screenshot commits push back to the correct ref.
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Setup E2E environment
         uses: ./.github/actions/setup-e2e
         with:
-          checkout-ref: ${{ github.event.pull_request.head.ref }}
-          checkout-token: ${{ secrets.GITHUB_TOKEN }}
           storybook-artifact-name: storybook-static-${{ github.sha }}
 
       - name: Update automated visual test screenshots
