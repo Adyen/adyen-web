@@ -61,7 +61,6 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: mcr.microsoft.com/playwright:v${{ needs.build-storybook.outputs.playwright-version }}-jammy
-      options: --user 1001
     strategy:
       fail-fast: false
       max-parallel: 36
