@@ -28,6 +28,7 @@ export default function DualBrandSelector({
         dualBrandingChangeHandler(brandId);
     };
 
+    // override enter key to prevent submit form (default behavior)
     const handleKeyDown = (e: KeyboardEvent, brandId: string) => {
         if (e.key === 'Enter') {
             e.preventDefault();
