@@ -85,7 +85,6 @@ jobs:
 
       - name: Commit updated screenshots
         run: |
-          git config --global --add safe.directory "$GITHUB_WORKSPACE"
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git add packages/e2e-playwright/tests/
