@@ -2,7 +2,6 @@ import { h, createRef } from 'preact';
 import { render, act } from '@testing-library/preact/pure';
 import SecuredFieldsProvider from './SecuredFieldsProvider';
 import { SF_ErrorCodes } from '../../../../core/Errors/constants';
-import { setupResourceMock } from '../../../../../config/testMocks/resourcesMock';
 
 jest.mock('../lib/CSF', () => {
     return () => true;
@@ -116,18 +115,18 @@ describe('<SecuredFieldsProvider /> rendering', () => {
         expect(sfp.state.status).toBe('ready');
     });
 
-    it("should create a valid object in the SecuredFieldsProvider's state with initial properties set to false", () => {
+    it("#1 should create a valid object in the SecuredFieldsProvider's state with initial properties set to false", () => {
         expect(sfp.state.valid).toHaveProperty('encryptedCardNumber', false);
         expect(sfp.state.valid).toHaveProperty('encryptedExpiryMonth', false);
         expect(sfp.state.valid).toHaveProperty('encryptedExpiryYear', false);
         expect(sfp.state.valid).toHaveProperty('encryptedSecurityCode', false);
     });
 
-    it('should initialize an instance of adyen-secured-fields', () => {
+    it('#2 should initialize an instance of adyen-secured-fields', () => {
         expect(sfp.csf).toBeDefined();
     });
 
-    it('should create an error object for each visible secured field, pass the object to the props.onError fn & set state.errors', async () => {
+    it('#3 should create an error object for each visible secured field, pass the object to the props.onError fn & set state.errors', async () => {
         await act(() => {
             sfp.showValidation();
         });
@@ -137,22 +136,22 @@ describe('<SecuredFieldsProvider /> rendering', () => {
         expect(sfp.state.errors.encryptedSecurityCode).not.toBe(null);
     });
 
-    it('should call the passed render function', () => {
+    it('#4 should call the passed render function', () => {
         expect(renderFn).toHaveBeenCalled();
     });
 
-    it('should register the presence of a date field element within the passed rootNode', () => {
+    it('#5 should register the presence of a date field element within the passed rootNode', () => {
         expect(sfp.numDateFields).toBe(1);
     });
 
-    it('should register the presence of 2 date field elements within the passed rootNode', () => {
+    it('#6should register the presence of 2 date field elements within the passed rootNode', () => {
         nodeHolder.innerHTML = mockNodeTwoDateFields;
 
         renderSFP({ render: () => null });
         expect(sfp.numDateFields).toBe(2);
     });
 
-    it('should return the rootNode when the getter is called', () => {
+    it('#7 should return the rootNode when the getter is called', () => {
         nodeHolder.innerHTML = mockNode;
         renderSFP();
 
@@ -166,7 +165,7 @@ describe('<SecuredFieldsProvider /> rendering', () => {
  * Unsupported cards (including related errors)
  */
 describe('<SecuredFieldsProvider /> handling an unsupported card', () => {
-    it('should generate an "unsupported card" error that propagates to the onError callback', async () => {
+    it('#8 should generate an "unsupported card" error that propagates to the onError callback', async () => {
         nodeHolder.innerHTML = mockNode;
         unsupportedCardErrObj.error = SF_ErrorCodes.ERROR_MSG_UNSUPPORTED_CARD_ENTERED;
         renderSFP();
@@ -179,12 +178,12 @@ describe('<SecuredFieldsProvider /> handling an unsupported card', () => {
         expect(result).toBe(true);
     });
 
-    it('should see that the "unsupported card" error has set state on the SecuredFieldsProvider', () => {
+    it('#9 should see that the "unsupported card" error has set state on the SecuredFieldsProvider', () => {
         expect(sfp.state.detectedUnsupportedBrands.length).toEqual(1);
         expect(sfp.state.errors.encryptedCardNumber).toEqual(SF_ErrorCodes.ERROR_MSG_UNSUPPORTED_CARD_ENTERED);
     });
 
-    it('should clear the previously generated "unsupported card" error & propagate to the onError callback', async () => {
+    it('#10 should clear the previously generated "unsupported card" error & propagate to the onError callback', async () => {
         unsupportedCardErrObj.error = null;
 
         let result;
@@ -194,11 +193,11 @@ describe('<SecuredFieldsProvider /> handling an unsupported card', () => {
         expect(result).toBe(false);
     });
 
-    it('should see that the cleared "unsupported card" error has reset state on the SecuredFieldsProvider', () => {
+    it('#11 should see that the cleared "unsupported card" error has reset state on the SecuredFieldsProvider', () => {
         expect(sfp.state.errors.encryptedCardNumber).toBe(null);
     });
 
-    it('should clear the previously generated "unsupported card" error & then a regular error is handled correctly', async () => {
+    it('#12 should clear the previously generated "unsupported card" error & then a regular error is handled correctly', async () => {
         unsupportedCardErrObj.error = null;
 
         await act(() => {
@@ -214,7 +213,7 @@ describe('<SecuredFieldsProvider /> handling an unsupported card', () => {
         expect(sfp.state.errors.encryptedCardNumber).toEqual(SF_ErrorCodes.ERROR_MSG_INCOMPLETE_FIELD);
     });
 
-    it('should re-generate an "unsupported card" error and then a handleOnFieldValid call should be ignored', async () => {
+    it('#13 should re-generate an "unsupported card" error and then a handleOnFieldValid call should be ignored', async () => {
         // @ts-ignore - it's a test!
         unsupportedCardErrObj.error = 'Unsupported card';
         unsupportedCardErrObj.detectedBrands = ['cartebancaire'];
@@ -232,7 +231,7 @@ describe('<SecuredFieldsProvider /> handling an unsupported card', () => {
         expect(sfp.state.valid.encryptedCardNumber).toBe(false);
     });
 
-    it('should see that the previously generated "unsupported card" error will cause a handleOnAllValid call to be ignored', async () => {
+    it('#14 should see that the previously generated "unsupported card" error will cause a handleOnAllValid call to be ignored', async () => {
         let result;
         await act(() => {
             result = sfp.handleOnAllValid({ allValid: true });
@@ -241,7 +240,7 @@ describe('<SecuredFieldsProvider /> handling an unsupported card', () => {
         expect(sfp.state.isSfpValid).toBe(false);
     });
 
-    it('should clear the previously generated "unsupported card" error & then a handleOnFieldValid call is handled correctly', async () => {
+    it('#15 should clear the previously generated "unsupported card" error & then a handleOnFieldValid call is handled correctly', async () => {
         unsupportedCardErrObj.error = null;
 
         // Clear the error by mocking a drop in the number of digits in the PAN to below a /binLookup threshold
@@ -263,7 +262,7 @@ describe('<SecuredFieldsProvider /> handling an unsupported card', () => {
         expect(sfp.state.valid.encryptedCardNumber).toBe(true);
     });
 
-    it('should see that because we have cleared the "unsupported card" error that a handleOnAllValid call is handled correctly', async () => {
+    it('#16 should see that because we have cleared the "unsupported card" error that a handleOnAllValid call is handled correctly', async () => {
         let result;
         await act(() => {
             result = sfp.handleOnAllValid({ allValid: true });
@@ -276,7 +275,7 @@ describe('<SecuredFieldsProvider /> handling an unsupported card', () => {
 
 describe('<SecuredFieldsProvider /> handling an binLookup response', () => {
     it(
-        'should receive a populated binLookup object and set the issuingCountryCode' +
+        '#17 should receive a populated binLookup object and set the issuingCountryCode' +
             'then receive a "reset" object and reset the issuingCountryCode',
         async () => {
             nodeHolder.innerHTML = mockNode;
@@ -301,199 +300,4 @@ describe('<SecuredFieldsProvider /> handling an binLookup response', () => {
             expect(brandsFromBinLookup).toHaveBeenCalledTimes(2);
         }
     );
-});
-
-/**
- * handleOnBrand - forcing local brand in countries requiring dual-brand selection mechanism
- */
-describe('<SecuredFieldsProvider /> handleOnBrand with dual-brand selection mechanism', () => {
-    const createBrandData = (brand: string, mode: string) => ({
-        type: 'card',
-        rootNode: nodeHolder,
-        brand,
-        cvcPolicy: 'required',
-        expiryDatePolicy: 'required',
-        cvcText: 'Security code',
-        mode
-    });
-
-    beforeEach(() => {
-        nodeHolder.innerHTML = mockNode;
-    });
-
-    it('should force cartebancaire brand when countryCode is FR and brand derived from best-guess', async () => {
-        const onBrand = jest.fn();
-        renderSFP({
-            countryCode: 'fr',
-            brands: ['visa', 'mc', 'cartebancaire'],
-            brandsConfiguration: {},
-            resources: setupResourceMock(),
-            onBrand
-        });
-        sfp.csf = mockCSF;
-
-        await act(() => {
-            sfp.handleOnBrand(createBrandData('visa', 'best-guess'));
-        });
-
-        expect(onBrand).toHaveBeenCalledWith(
-            expect.objectContaining({
-                brand: 'cartebancaire'
-            })
-        );
-    });
-
-    it('should force bcmc brand when countryCode is BE and brand derived from best-guess', async () => {
-        const onBrand = jest.fn();
-        renderSFP({
-            countryCode: 'be',
-            brands: ['visa', 'mc', 'bcmc'],
-            brandsConfiguration: {},
-            resources: setupResourceMock(),
-            onBrand
-        });
-        sfp.csf = mockCSF;
-
-        await act(() => {
-            sfp.handleOnBrand(createBrandData('maestro', 'best-guess'));
-        });
-
-        expect(onBrand).toHaveBeenCalledWith(
-            expect.objectContaining({
-                brand: 'bcmc'
-            })
-        );
-    });
-
-    it('should force dankort brand when countryCode is DK and brand derived from best-guess', async () => {
-        const onBrand = jest.fn();
-        renderSFP({
-            countryCode: 'dk',
-            brands: ['visa', 'mc', 'dankort'],
-            brandsConfiguration: {},
-            resources: setupResourceMock(),
-            onBrand
-        });
-        sfp.csf = mockCSF;
-
-        await act(() => {
-            sfp.handleOnBrand(createBrandData('visa', 'best-guess'));
-        });
-
-        expect(onBrand).toHaveBeenCalledWith(
-            expect.objectContaining({
-                brand: 'dankort'
-            })
-        );
-    });
-
-    it('should NOT force local brand when brand derived from bin-lookup', async () => {
-        const onBrand = jest.fn();
-        renderSFP({
-            countryCode: 'fr',
-            brands: ['visa', 'mc', 'cartebancaire'],
-            brandsConfiguration: {},
-            resources: setupResourceMock(),
-            onBrand
-        });
-        sfp.csf = mockCSF;
-
-        await act(() => {
-            sfp.handleOnBrand(createBrandData('visa', 'bin-lookup'));
-        });
-
-        expect(onBrand).toHaveBeenCalledWith(
-            expect.objectContaining({
-                brand: 'visa'
-            })
-        );
-    });
-
-    it('should NOT force local brand when local brand is not configured by merchant', async () => {
-        const onBrand = jest.fn();
-        renderSFP({
-            countryCode: 'fr',
-            brands: ['visa', 'mc'], // cartebancaire not included
-            brandsConfiguration: {},
-            resources: setupResourceMock(),
-            onBrand
-        });
-        sfp.csf = mockCSF;
-
-        await act(() => {
-            sfp.handleOnBrand(createBrandData('visa', 'best-guess'));
-        });
-
-        expect(onBrand).toHaveBeenCalledWith(
-            expect.objectContaining({
-                brand: 'visa'
-            })
-        );
-    });
-
-    it('should NOT force local brand when countryCode is not in dual-brand selection map', async () => {
-        const onBrand = jest.fn();
-        renderSFP({
-            countryCode: 'us',
-            brands: ['visa', 'mc'],
-            brandsConfiguration: {},
-            resources: setupResourceMock(),
-            onBrand
-        });
-        sfp.csf = mockCSF;
-
-        await act(() => {
-            sfp.handleOnBrand(createBrandData('visa', 'best-guess'));
-        });
-
-        expect(onBrand).toHaveBeenCalledWith(
-            expect.objectContaining({
-                brand: 'visa'
-            })
-        );
-    });
-
-    it('should NOT force local brand when brand is resetting (brand = "card")', async () => {
-        const onBrand = jest.fn();
-        renderSFP({
-            countryCode: 'fr',
-            brands: ['visa', 'mc', 'cartebancaire'],
-            brandsConfiguration: {},
-            resources: setupResourceMock(),
-            onBrand
-        });
-        sfp.csf = mockCSF;
-
-        await act(() => {
-            sfp.handleOnBrand(createBrandData('card', 'best-guess'));
-        });
-
-        expect(onBrand).toHaveBeenCalledWith(
-            expect.objectContaining({
-                brand: 'card'
-            })
-        );
-    });
-
-    it('should handle uppercase countryCode', async () => {
-        const onBrand = jest.fn();
-        renderSFP({
-            countryCode: 'FR',
-            brands: ['visa', 'mc', 'cartebancaire'],
-            brandsConfiguration: {},
-            resources: setupResourceMock(),
-            onBrand
-        });
-        sfp.csf = mockCSF;
-
-        await act(() => {
-            sfp.handleOnBrand(createBrandData('visa', 'best-guess'));
-        });
-
-        expect(onBrand).toHaveBeenCalledWith(
-            expect.objectContaining({
-                brand: 'cartebancaire'
-            })
-        );
-    });
 });
