@@ -20,6 +20,8 @@ CardType.cards.push({
     securityCode: 'CVC'
 });
 
+CardType.cards.push({ cardType: 'visadankort', permittedLengths: [16], pattern: /^(4571)[0-9]{0,12}$/ });
+
 CardType.cards.push({
     cardType: 'visa',
     permittedLengths: [13, 16, 19],
@@ -173,8 +175,8 @@ CardType.cards.push({
     expiryDatePolicy: 'hidden'
 });
 
-const detectCard = (pCardNumber, pCardGroupTypes?) => {
-    let matchedCards;
+const detectCard = (pCardNumber: string, pCardGroupTypes?: string[]): CardObject => {
+    let matchedCards: CardObject[];
 
     if (pCardGroupTypes) {
         // Filter CardType.cards down to those that are found in pAvailableCards

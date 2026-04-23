@@ -97,8 +97,8 @@ class CSF extends AbstractCSF {
         this.createSecuredFields = createSecuredFields.bind(this);
         this.createNonCardSecuredFields = createNonCardSecuredFields.bind(this);
         this.createCardSecuredFields = createCardSecuredFields.bind(this);
-        // eslint-disable-next-line @typescript-eslint/no-misused-promises
-        this.setupSecuredField = setupSecuredField;
+         
+        this.setupSecuredField = setupSecuredField.bind(this);
 
         this.postMessageToAllIframes = partial(postMessageToAllIframes, thisObj);
 

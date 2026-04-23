@@ -6,12 +6,19 @@ import defaultProps from './defaultProps';
 import './CardInput.scss';
 import { AddressModeOptions, CardInputDataState, CardInputErrorState, CardInputProps, CardInputRef, CardInputValidState } from './types';
 import { CVC_POLICY_REQUIRED, DATE_POLICY_REQUIRED, ENCRYPTED_CARD_NUMBER } from '../../../internal/SecuredFields/lib/constants';
-import { BinLookupResponse } from '../../types';
+import { BinLookupResponse, DualBrandSelectElement } from '../../types';
 import { cardInputFormatters, cardInputValidationRules, getRuleByNameAndMode } from './validate';
 import CIExtensions from '../../../internal/SecuredFields/binLookup/extensions';
 import useForm from '../../../../utils/useForm';
 import { SortedErrorObject } from '../../../../core/Errors/types';
-import { handlePartialAddressMode, extractPropsForCardFields, extractPropsForSFP, getLayout, shouldShowInstallmentsComponent } from './utils';
+import {
+    handlePartialAddressMode,
+    extractPropsForCardFields,
+    extractPropsForSFP,
+    getLayout,
+    shouldShowInstallmentsComponent,
+    requiresDualBrandSelection
+} from './utils';
 import Specifications from '../../../internal/Address/Specifications';
 import { StoredCardFieldsWrapper } from './components/StoredCardFieldsWrapper';
 import { CardFieldsWrapper } from './components/CardFieldsWrapper';
@@ -34,6 +41,7 @@ import { SF_ErrorCodes } from '../../../../core/Errors/constants';
 import { usePrevious } from '../../../../utils/hookUtils';
 import { AnalyticsInfoEvent, InfoEventType, UiTarget } from '../../../../core/Analytics/events/AnalyticsInfoEvent';
 import { useAmount } from '../../../../core/Context/AmountProvider';
+import { DUAL_BRANDS_THAT_NEED_SELECTION_MECHANISM } from '../../constants';
 
 const CardInput = (props: Readonly<CardInputProps>) => {
     const sfp = useRef<SecuredFieldsProvider>(null);
@@ -80,7 +88,7 @@ const CardInput = (props: Readonly<CardInputProps>) => {
     const [cvcPolicy, setCvcPolicy] = useState(CVC_POLICY_REQUIRED);
     const [issuingCountryCode, setIssuingCountryCode] = useState<string>(null);
 
-    const [dualBrandSelectElements, setDualBrandSelectElements] = useState([]);
+    const [dualBrandSelectElements, setDualBrandSelectElements] = useState<DualBrandSelectElement[]>([]);
     const [selectedBrandValue, setSelectedBrandValue] = useState(props.storedPaymentMethodId ? props.brand : ''); // If this is a storedCard comp initialise state with the storedCard's brand
 
     const showBillingAddress = props.billingAddressMode !== AddressModeOptions.none && props.billingAddressRequired;
@@ -465,19 +473,26 @@ const CardInput = (props: Readonly<CardInputProps>) => {
      */
     useEffect(() => {
         if (dualBrandSelectElements.length > 0 && dualBrandSelectElements) {
-            const dualBrandsArr = dualBrandSelectElements.map(item => item.id);
+            const dualBrandsArr: string[] = dualBrandSelectElements.map(item => item.id);
             const brand = dualBrandsArr[0]; // initially selected brand
             const dualBrands = dualBrandsArr.toString();
 
-            const event = new AnalyticsInfoEvent({
-                component: props.type,
-                type: InfoEventType.displayed,
-                target: UiTarget.dualBrandButton,
-                brand,
-                configData: { dualBrands }
-            });
+            const showDualBrandSelector = dualBrandSelectElements
+                ? requiresDualBrandSelection(DUAL_BRANDS_THAT_NEED_SELECTION_MECHANISM, dualBrandSelectElements, 'id')
+                : false;
 
-            props.onSubmitAnalytics(event);
+            // Only send analytics event about displaying dualBrand selector for countries that need to show a selection mechanism
+            if (showDualBrandSelector) {
+                const event = new AnalyticsInfoEvent({
+                    component: props.type,
+                    type: InfoEventType.displayed,
+                    target: UiTarget.dualBrandButton,
+                    brand,
+                    configData: { dualBrands }
+                });
+
+                props.onSubmitAnalytics(event);
+            }
         }
     }, [dualBrandSelectElements]);
 
