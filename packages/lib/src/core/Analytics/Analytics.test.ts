@@ -240,9 +240,11 @@ describe('Analytics', () => {
             expect(eventQueue.infoEvents).toHaveLength(0);
         });
 
-        it('should send info events after debounce delay', async () => {
+        test('should send info events after debounce delay', async () => {
             const analytics = new Analytics({ service: mockService, eventQueue });
             await analytics.setUp({ locale: 'en-US' });
+
+            expect(mockService.sendEvents).not.toHaveBeenCalled();
 
             const infoEvent = new AnalyticsInfoEvent({ type: InfoEventType.rendered, component: 'card' });
             analytics.sendAnalytics(infoEvent);
@@ -254,9 +256,11 @@ describe('Analytics', () => {
             expect(mockService.sendEvents).toHaveBeenCalled();
         });
 
-        it('should send error/log events after shorter debounce delay', async () => {
+        test('should send error/log events after shorter debounce delay', async () => {
             const analytics = new Analytics({ service: mockService, eventQueue });
             await analytics.setUp({ locale: 'en-US' });
+
+            expect(mockService.sendEvents).not.toHaveBeenCalled();
 
             const errorEvent = new AnalyticsErrorEvent({
                 component: 'card',
@@ -331,6 +335,68 @@ describe('Analytics', () => {
             await analytics.setUp({ locale: 'en-US' });
 
             await analytics.sendFlavor('dropin');
+
+            expect(mockService.reportIntegrationFlavor).not.toHaveBeenCalled();
+        });
+
+        test('should queue flavor when called before setUp and dispatch after setUp resolves', async () => {
+            const analytics = new Analytics({ service: mockService, eventQueue });
+
+            void analytics.sendFlavor('dropin');
+
+            expect(mockService.reportIntegrationFlavor).not.toHaveBeenCalled();
+
+            await analytics.setUp({ locale: 'en-US' });
+
+            expect(mockService.reportIntegrationFlavor).toHaveBeenCalledTimes(1);
+            expect(mockService.reportIntegrationFlavor).toHaveBeenCalledWith('dropin', MOCK_CHECKOUT_ATTEMPT_ID);
+        });
+
+        test('should keep the first queued flavor when sendFlavor is called multiple times before setUp', async () => {
+            const analytics = new Analytics({ service: mockService, eventQueue });
+
+            void analytics.sendFlavor('dropin');
+            void analytics.sendFlavor('components');
+
+            expect(mockService.reportIntegrationFlavor).not.toHaveBeenCalled();
+
+            await analytics.setUp({ locale: 'en-US' });
+
+            expect(mockService.reportIntegrationFlavor).toHaveBeenCalledTimes(1);
+            expect(mockService.reportIntegrationFlavor).toHaveBeenCalledWith('dropin', MOCK_CHECKOUT_ATTEMPT_ID);
+        });
+
+        test('should dispatch queued flavor before sending queued events when setUp resolves', async () => {
+            const callOrder: string[] = [];
+            mockService.reportIntegrationFlavor.mockImplementation(() => {
+                callOrder.push('flavor');
+                return Promise.resolve();
+            });
+            mockService.sendEvents.mockImplementation(() => {
+                callOrder.push('events');
+                return Promise.resolve();
+            });
+
+            const analytics = new Analytics({ service: mockService, eventQueue });
+
+            const infoEvent = new AnalyticsInfoEvent({ type: InfoEventType.rendered, component: 'card' });
+            analytics.sendAnalytics(infoEvent);
+            void analytics.sendFlavor('dropin');
+
+            await analytics.setUp({ locale: 'en-US' });
+
+            expect(callOrder[0]).toBe('flavor');
+            expect(callOrder[1]).toBe('events');
+        });
+
+        test('should not dispatch queued flavor if setUp fails to obtain attempt ID', async () => {
+            jest.spyOn(console, 'warn').mockImplementation();
+            mockService.requestCheckoutAttemptId.mockRejectedValue(new Error('Network error'));
+
+            const analytics = new Analytics({ service: mockService, eventQueue });
+
+            void analytics.sendFlavor('dropin');
+            await analytics.setUp({ locale: 'en-US' });
 
             expect(mockService.reportIntegrationFlavor).not.toHaveBeenCalled();
         });

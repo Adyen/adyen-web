@@ -49,9 +49,10 @@ class Analytics implements IAnalytics {
     private readonly debouncedSendInfoEvents: () => void;
     private readonly debouncedSendEvents: () => void;
 
+    private _checkoutAttemptId?: string;
     private enabled: boolean = true;
-    private capturedCheckoutAttemptId?: string;
     private isFlavorReported = false;
+    private pendingFlavor?: 'dropin' | 'components';
 
     constructor({ service, eventQueue, enabled, analyticsData }: AnalyticsProps) {
         this.service = service;
@@ -64,8 +65,12 @@ class Analytics implements IAnalytics {
         if (analyticsData) this.analyticsData = analyticsData;
     }
 
-    public get checkoutAttemptId(): string {
-        return this.capturedCheckoutAttemptId;
+    public get checkoutAttemptId(): string | undefined {
+        return this._checkoutAttemptId;
+    }
+
+    private set checkoutAttemptId(checkoutAttemptId: string) {
+        this._checkoutAttemptId = checkoutAttemptId;
     }
 
     public async setUp({
@@ -77,9 +82,9 @@ class Analytics implements IAnalytics {
             const checkoutAttemptIdSession = this.storage.get();
             const isSessionReusable = isSessionCreatedUnderFifteenMinutes(checkoutAttemptIdSession);
 
-            const { applicationInfo, checkoutAttemptId: checkoutAttemptIdFromPayByLink } = processAnalyticsData(this.analyticsData);
+            const { applicationInfo, checkoutAttemptId: checkoutAttemptIdFromPayByLink } = processAnalyticsData(this.analyticsData) ?? {};
 
-            const availableCheckoutAttemptId: string | undefined = isSessionReusable ? checkoutAttemptIdSession.id : checkoutAttemptIdFromPayByLink;
+            const availableCheckoutAttemptId: string | undefined = isSessionReusable ? checkoutAttemptIdSession?.id : checkoutAttemptIdFromPayByLink;
 
             const payload: RequestAttemptIdPayload = {
                 version: LIBRARY_VERSION,
@@ -96,10 +101,12 @@ class Analytics implements IAnalytics {
                 ...(availableCheckoutAttemptId && { checkoutAttemptId: availableCheckoutAttemptId })
             };
 
-            this.capturedCheckoutAttemptId = await this.service.requestCheckoutAttemptId(payload);
+            this.checkoutAttemptId = await this.service.requestCheckoutAttemptId(payload);
+
+            this.dispatchPendingAnalytics();
 
             this.storage.set({
-                id: this.capturedCheckoutAttemptId,
+                id: this.checkoutAttemptId,
                 timestamp: isSessionReusable ? checkoutAttemptIdSession.timestamp : Date.now()
             });
         } catch (error: unknown) {
@@ -120,14 +127,32 @@ class Analytics implements IAnalytics {
         }
     }
 
+    /**
+     * Sends the integration flavor to the analytics service.
+     * If the checkout attempt ID is not available, it will be stored and sent when it becomes available.
+     *
+     * @param flavor The integration flavor to send.
+     * @returns A promise that resolves when the flavor is sent.
+     */
     public async sendFlavor(flavor: 'dropin' | 'components'): Promise<void> {
-        if (!this.capturedCheckoutAttemptId) return;
         if (this.isFlavorReported) return;
+
+        if (!this.checkoutAttemptId) {
+            if (!this.pendingFlavor) this.pendingFlavor = flavor;
+            return;
+        }
+
+        await this.dispatchFlavor(flavor);
+    }
+
+    private async dispatchFlavor(flavor: 'dropin' | 'components'): Promise<void> {
+        if (this.isFlavorReported) return;
+        if (!this.checkoutAttemptId) return;
 
         this.isFlavorReported = true;
 
         try {
-            await this.service.reportIntegrationFlavor(flavor, this.capturedCheckoutAttemptId);
+            await this.service.reportIntegrationFlavor(flavor, this.checkoutAttemptId);
         } catch (error) {
             console.warn('Analytics: Error reporting flavor', error);
         }
@@ -155,7 +180,11 @@ class Analytics implements IAnalytics {
     }
 
     private async sendEvents(): Promise<void> {
-        if (!this.capturedCheckoutAttemptId || !this.enabled) {
+        if (!this.checkoutAttemptId || !this.enabled) {
+            return;
+        }
+
+        if (!this.eventsQueue.hasEvents) {
             return;
         }
 
@@ -170,10 +199,23 @@ class Analytics implements IAnalytics {
         this.eventsQueue.clear();
 
         try {
-            await this.service.sendEvents(payload, this.capturedCheckoutAttemptId);
+            await this.service.sendEvents(payload, this.checkoutAttemptId);
         } catch (error) {
             console.warn('Analytics: Error sending events', error);
         }
+    }
+
+    /**
+     * Report the integration flavor and send queued analyic events once the attempt ID is available
+     */
+    private dispatchPendingAnalytics(): void {
+        if (!this.isFlavorReported && this.pendingFlavor) {
+            const flavor = this.pendingFlavor;
+            this.pendingFlavor = undefined;
+            void this.dispatchFlavor(flavor);
+        }
+
+        void this.sendEvents();
     }
 }
 
