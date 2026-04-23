@@ -10,6 +10,12 @@ jobs:
     timeout-minutes: 20
     outputs:
       playwright-version: ${{ steps.pw-version.outputs.version }}
+    env:
+      # Vite inlines these into the Storybook bundle at build time. Without
+      # them the SDK cannot initialize and a11y tests time out waiting for
+      # #component-root.
+      CLIENT_KEY: ${{ secrets.ADYEN_CHECKOUT_CLIENT_KEY }}
+      CLIENT_ENV: test
     steps:
       - uses: actions/checkout@v6
 
@@ -67,6 +73,8 @@ jobs:
       # Actions containers): overrides GitHub's HOME=/github/home so Firefox
       # and related browsers launch correctly.
       HOME: /root
+      # Silences "open /root/.docker/config.json: permission denied" warnings.
+      DOCKER_CONFIG: /tmp/.docker
     steps:
       - uses: actions/checkout@v6
 

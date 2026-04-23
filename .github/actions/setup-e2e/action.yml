@@ -50,3 +50,19 @@ runs:
       with:
         name: ${{ inputs.storybook-artifact-name }}
         path: packages/lib/storybook-static
+
+    # Diagnostic: confirm the artifact is in the exact layout expected by
+    # packages/server/index.js → `express.static('../lib/storybook-static')`.
+    # If `index.html` and `index.json` are NOT at the root of this listing,
+    # the webServer will 404 every request and every test will hit the 30s
+    # action timeout.
+    - name: Verify Storybook artifact layout
+      if: inputs.storybook-artifact-name != ''
+      shell: bash
+      run: |
+        echo "--- packages/lib/storybook-static ---"
+        ls -la packages/lib/storybook-static
+        echo
+        echo "--- sanity checks ---"
+        test -f packages/lib/storybook-static/index.html && echo "OK: index.html present" || { echo "FAIL: index.html missing"; exit 1; }
+        test -f packages/lib/storybook-static/index.json && echo "OK: index.json present" || { echo "FAIL: index.json missing"; exit 1; }

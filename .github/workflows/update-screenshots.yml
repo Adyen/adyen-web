@@ -13,6 +13,11 @@ jobs:
     timeout-minutes: 20
     outputs:
       playwright-version: ${{ steps.pw-version.outputs.version }}
+    env:
+      # Vite inlines these into the Storybook bundle at build time (see
+      # packages/lib/config/environment-variables.js). Required for SDK init.
+      CLIENT_KEY: ${{ secrets.ADYEN_CHECKOUT_CLIENT_KEY }}
+      CLIENT_ENV: test
     steps:
       - uses: actions/checkout@v6
         with:
@@ -68,6 +73,8 @@ jobs:
       # Required when the Playwright container runs as root: overrides GitHub's
       # HOME=/github/home so Firefox and related browsers launch correctly.
       HOME: /root
+      # Silences "open /root/.docker/config.json: permission denied" warnings.
+      DOCKER_CONFIG: /tmp/.docker
     steps:
       # Checkout the PR branch so screenshot commits push back to the correct ref.
       - uses: actions/checkout@v6
