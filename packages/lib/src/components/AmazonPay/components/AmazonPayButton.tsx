@@ -15,15 +15,14 @@ export default function AmazonPayButton(props: Readonly<AmazonPayButtonProps>) {
     const settings = getAmazonPaySettings(props, amount);
 
     const handleOnClick = () => {
-        // eslint-disable-next-line @typescript-eslint/no-misused-promises
-        new Promise(props.onClick).then(this.initCheckout).catch(error => {
+        return new Promise((resolve, reject) => void props.onClick(resolve, reject)).then(this.initCheckout).catch(error => {
             if (props.onError) props.onError(error, this.componentRef);
         });
     };
 
     const renderAmazonPayButton = (): void => {
         const amazonPayButton = amazonRef.Pay.renderButton('#amazonPayButton', settings);
-        amazonPayButton.onClick(handleOnClick);
+        amazonPayButton.onClick(() => void handleOnClick());
     };
 
     this.initCheckout = () => {
@@ -55,5 +54,5 @@ export default function AmazonPayButton(props: Readonly<AmazonPayButtonProps>) {
     }, []);
 
     if (!props.showPayButton) return null;
-    return <div className="adyen-checkout__amazonpay__button" id="amazonPayButton" />;
+    return <div className="adyen-checkout__amazonpay__button" id="amazonPayButton" data-testid="amazon-pay-button" />;
 }

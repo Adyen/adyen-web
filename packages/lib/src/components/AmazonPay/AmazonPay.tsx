@@ -5,10 +5,11 @@ import AmazonPayComponent from './components/AmazonPayComponent';
 import { AmazonPayElementData, AmazonPayConfiguration, CheckoutDetailsRequest } from './types';
 import defaultProps from './defaultProps';
 import { getCheckoutDetails } from './services';
-import './AmazonPay.scss';
 import { TxVariants } from '../tx-variants';
 import { sanitizeResponse, verifyPaymentDidNotFail } from '../internal/UIElement/utils';
 import { AnalyticsInfoEvent, InfoEventType } from '../../core/Analytics/events/AnalyticsInfoEvent';
+
+import './AmazonPay.scss';
 
 export class AmazonPayElement extends UIElement<AmazonPayConfiguration> {
     public static readonly type = TxVariants.amazonpay;
@@ -95,9 +96,9 @@ export class AmazonPayElement extends UIElement<AmazonPayConfiguration> {
     }
 
     public submit(): void {
-        const amazonComponentSubmit = this.componentRef && this.componentRef.getSubmitFunction();
-        if (amazonComponentSubmit) {
-            return amazonComponentSubmit();
+        const amazonComponentSubmitFunction = this.componentRef?.getSubmitFunction() || null;
+        if (amazonComponentSubmitFunction) {
+            return amazonComponentSubmitFunction();
         }
         this.makePaymentsCall().then(sanitizeResponse).then(verifyPaymentDidNotFail).then(this.handleResponse).catch(this.handleFailedResult);
     }
@@ -105,9 +106,7 @@ export class AmazonPayElement extends UIElement<AmazonPayConfiguration> {
     protected override componentToRender(): h.JSX.Element {
         return (
             <AmazonPayComponent
-                ref={ref => {
-                    this.componentRef = ref;
-                }}
+                setComponentRef={this.setComponentRef}
                 showPayButton={this.props.showPayButton}
                 onClick={this.props.onClick}
                 onError={this.props.onError}
