@@ -46,6 +46,10 @@ export interface UPIConfiguration extends UIElementProps {
      * Show the available UPI apps images on the Drop-in payment method item
      */
     showPaymentMethodItemImages?: boolean;
+    /**
+     * Show `+ other` after the UPI apps images on the Drop-in payment method item
+     */
+    showOtherInsteadOfNumber?: boolean;
 }
 
 /**
