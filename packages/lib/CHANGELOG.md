@@ -4,7 +4,7 @@
 
 ### Minor Changes
 
-- Improved: responsiness of payment method list items with brand icons on mobile screens ([#3886](https://github.com/Adyen/adyen-web/pull/3886))
+- Improved: responsiveness of payment method list items with brand icons on mobile screens ([#3886](https://github.com/Adyen/adyen-web/pull/3886))
 
 - Improved: Types of amazon pay component ([#3912](https://github.com/Adyen/adyen-web/pull/3912))
 
@@ -26,7 +26,6 @@
 
 - Fixed: Explicit any in internal/SecuredFields and it's subdirectories ([#3922](https://github.com/Adyen/adyen-web/pull/3922))
 
-- Fixed: Issues with binding & TS transpilation that emerged after merge with main ([#3929](https://github.com/Adyen/adyen-web/pull/3929))
 
 ## 6.33.0
 
