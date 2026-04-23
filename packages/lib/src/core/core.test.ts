@@ -1,4 +1,4 @@
-import { render } from '@testing-library/preact';
+import { render, screen } from '@testing-library/preact';
 import AdyenCheckout from './core';
 import BCMCMobileElement from '../components/BcmcMobile';
 import Session from './CheckoutSession';
@@ -10,6 +10,7 @@ import Redirect from '../components/Redirect';
 import { PaymentActionsType } from '../types/global-types';
 import Analytics from './Analytics';
 import type { CoreConfiguration } from './types';
+import type { DropinComponent } from '../components/Dropin/components/DropinComponent';
 
 jest.mock('./CheckoutSession');
 
@@ -35,7 +36,7 @@ const setupSessionSpy = jest.spyOn(Session.prototype, 'setupSession').mockImplem
     return Promise.resolve(sessionSetupResponseMock);
 });
 
-let analyticsSetupSpy;
+let analyticsSetupSpy: jest.SpyInstance;
 
 describe('Core', () => {
     beforeEach(() => {
@@ -108,6 +109,44 @@ describe('Core', () => {
 
             await checkout.initialize();
             expect(setupSessionSpy).toHaveBeenCalledWith(expect.objectContaining({ session: { id: 'session-id', sessionData: 'session-data' } }));
+        });
+
+        test('should not block the rendering while analytics is setting up', async () => {
+            let resolveSetUp: () => void = () => {};
+            // Delay setUp call to simulate slow analytics setup
+            analyticsSetupSpy.mockImplementation(
+                () =>
+                    new Promise<void>(resolve => {
+                        resolveSetUp = resolve;
+                    })
+            );
+
+            const checkout = new AdyenCheckout({
+                countryCode: 'US',
+                environment: 'test',
+                clientKey: 'test_123456',
+                paymentMethodsResponse: {
+                    paymentMethods: [
+                        {
+                            name: 'iDeal',
+                            type: 'ideal'
+                        }
+                    ]
+                }
+            });
+
+            await checkout.initialize();
+            expect(analyticsSetupSpy).toHaveBeenCalled();
+
+            const ideal = new Redirect(checkout, {
+                type: 'ideal'
+            });
+
+            render(ideal.render());
+
+            expect(screen.getByRole('button', { name: 'Continue to iDeal' })).toBeInTheDocument();
+            // Resolve the pending promise so we don't leak it
+            resolveSetUp();
         });
 
         test('should call analytics setUp when initialized', async () => {
@@ -188,7 +227,7 @@ describe('Core', () => {
                 url: 'https://example.com'
             }) as Redirect;
 
-            expect(paymentAction.constructor['type']).toBe('redirect');
+            expect((paymentAction.constructor as typeof Redirect).type).toBe('redirect');
             expect(paymentAction.props.url).toBe('https://example.com');
         });
 
@@ -210,7 +249,7 @@ describe('Core', () => {
 
             const actionComponent = checkout.createFromAction(fingerprintAction, { challengeWindowSize: '04' }) as ThreeDS2DeviceFingerprint;
 
-            expect(actionComponent.constructor['type']).toBe('threeDS2Fingerprint');
+            expect((actionComponent.constructor as typeof ThreeDS2DeviceFingerprint).type).toBe('threeDS2Fingerprint');
 
             expect(actionComponent.props.elementRef).not.toBeDefined();
             expect(actionComponent.props.showSpinner).toEqual(true);
@@ -236,7 +275,7 @@ describe('Core', () => {
 
             const actionComponent = checkout.createFromAction(challengeAction, { challengeWindowSize: '03' }) as ThreeDS2Challenge;
 
-            expect(actionComponent.constructor['type']).toBe('threeDS2Challenge');
+            expect((actionComponent.constructor as typeof ThreeDS2Challenge).type).toBe('threeDS2Challenge');
             expect(actionComponent.props.elementRef).not.toBeDefined();
             expect(actionComponent.props.statusType).toEqual('custom');
             expect(actionComponent.props.challengeWindowSize).toEqual('03');
@@ -346,7 +385,7 @@ describe('Core', () => {
             const flushPromises = () => new Promise(process.nextTick);
             await flushPromises();
 
-            const ach = dropin.dropinRef.state.elements[0];
+            const ach = (dropin.dropinRef as DropinComponent).state.elements[0];
 
             expect(ach.props.onAdditionalDetails).toBe(onAdditionalDetailsPaymentMethodConfig);
         });
