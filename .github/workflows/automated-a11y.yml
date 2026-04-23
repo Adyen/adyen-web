@@ -7,6 +7,9 @@ jobs:
   automated-a11y:
     timeout-minutes: 60
     runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.58.2-noble
+      options: --user 1001
     strategy:
       fail-fast: false
       matrix:
@@ -44,23 +47,6 @@ jobs:
     - name: Install Project Dependencies
       if: steps.node-modules-cache.outputs.cache-hit != 'true'
       run: yarn install --immutable
-
-    - name: Extract Playwright version
-      id: playwright-version
-      run: echo "PLAYWRIGHT_VERSION=$(jq -r '.devDependencies["@playwright/test"]' packages/e2e-playwright/package.json)" >> $GITHUB_ENV
-
-    - name: Cache Playwright
-      id: playwright-cache
-      uses: actions/cache@v5
-      env:
-        cache-name: playwright-v1
-      with:
-        path: ~/.cache/ms-playwright
-        key: ${{ runner.os }}-cache-${{ env.cache-name }}-playwright-${{ env.PLAYWRIGHT_VERSION }}-browser-${{ matrix.runner-browser }}
-
-    - name: Install Playwright Dependencies
-      if: steps.playwright-cache.outputs.cache-hit != 'true'
-      run: npx playwright install --with-deps ${{ matrix.runner-browser }}
 
     - name: Run Automated Accessibility Tests
       run: yarn test:automated-a11y --project=${{ matrix.runner-browser }}

@@ -9,6 +9,9 @@ jobs:
     if: github.event.label.name == 'screenshot'
     timeout-minutes: 60
     runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.58.2-noble
+      options: --user 1001
 
     env:
       CHECKOUT_API_KEY: ${{secrets.ADYEN_CHECKOUT_API_KEY}}
@@ -44,41 +47,6 @@ jobs:
 
     - name: Install Project Dependencies
       run: yarn install --immutable
-
-    - name: Extract Playwright version
-      id: playwright-version
-      run: echo "PLAYWRIGHT_VERSION=$(jq -r '.devDependencies["@playwright/test"]' packages/e2e-playwright/package.json)" >> $GITHUB_ENV
-
-    - name: Cache Playwright
-      id: playwright-cache
-      uses: actions/cache@v5
-      env:
-        cache-name: playwright-v1
-      with:
-        path: ~/.cache/ms-playwright
-        key: ${{ runner.os }}-cache-${{ env.cache-name }}-playwright-${{ env.PLAYWRIGHT_VERSION }}-all-browsers
-
-    # Webkit needs extra apt packages (libwoff2dec, libvpx, libevent, libopus,
-    # libgstreamer-*, libharfbuzz-icu, libenchant-2, libsecret-1, libhyphen,
-    # libmanette, libflite, libgles2, etc.) that live under /usr/lib and are NOT
-    # inside ~/.cache/ms-playwright. Caching the downloaded .deb files makes
-    # `playwright install --with-deps` skip the network download on subsequent
-    # runs. Key is scoped to OS + runner image version so it invalidates when
-    # GitHub rolls the ubuntu image. This workflow always installs webkit.
-    - name: Cache webkit system libraries
-      id: webkit-libs-cache
-      uses: actions/cache@v5
-      env:
-        cache-name: webkit-apt-v1
-      with:
-        path: /var/cache/apt/archives
-        key: ${{ runner.os }}-cache-${{ env.cache-name }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
-
-    # We always run `install --with-deps` — even on a Playwright cache hit —
-    # because webkit's system libs live under /usr/lib (not in ~/.cache/ms-playwright)
-    # and would otherwise be missing. With the apt cache above, this is fast.
-    - name: Install Playwright Dependencies
-      run: npx playwright install --with-deps
 
     - name: Update automated visual tests screenshots
       run: yarn test:automated-visual:update-screenshots
