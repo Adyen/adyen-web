@@ -65,6 +65,9 @@ jobs:
       TESTING_ENVIRONMENT: https://checkout-test.adyen.com/checkout/v71
       API_VERSION: v71
       STORYBOOK_PREBUILT: "1"
+      # Required when the Playwright container runs as root: overrides GitHub's
+      # HOME=/github/home so Firefox and related browsers launch correctly.
+      HOME: /root
     steps:
       # Checkout the PR branch so screenshot commits push back to the correct ref.
       - uses: actions/checkout@v6

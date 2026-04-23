@@ -35,7 +35,7 @@ const config: PlaywrightTestConfig = {
          * Maximum time expect() should wait for the condition to be met.
          * For example in `await expect(locator).toHaveText();`
          */
-        timeout: 30_000,
+        timeout: 3_000,
         toHaveScreenshot: {
             ...SCREENSHOT_CONFIG
         }

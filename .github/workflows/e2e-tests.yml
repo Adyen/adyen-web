@@ -78,6 +78,10 @@ jobs:
       # Tell playwright.config.ts webServer to skip `build:storybook:e2e` since
       # the prebuilt artifact has already been downloaded into packages/lib/storybook-static.
       STORYBOOK_PREBUILT: "1"
+      # GitHub sets HOME=/github/home (owned by uid 1001) but the Playwright
+      # container runs as root. Firefox refuses to launch in that combo; chromium
+      # and webkit have related issues. Override HOME to /root (the root user's home).
+      HOME: /root
     steps:
       # Local composite actions require the repo on disk before `uses: ./...`
       # can resolve action.yml, so we checkout explicitly here.
