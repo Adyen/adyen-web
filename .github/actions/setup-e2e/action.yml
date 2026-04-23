@@ -1,0 +1,56 @@
+name: Setup E2E Environment
+description: >
+  Shared setup for E2E / Playwright jobs: checkout, Node + yarn cache,
+  corepack, install dependencies, extract Playwright version, and optionally
+  download a prebuilt Storybook artifact.
+
+inputs:
+  checkout-ref:
+    description: Git ref to check out. Defaults to the workflow's default ref.
+    required: false
+    default: ''
+  checkout-token:
+    description: Token used for checkout (needed when the job must push back).
+    required: false
+    default: ${{ github.token }}
+  storybook-artifact-name:
+    description: >
+      If set, downloads a Storybook build artifact produced by an upstream
+      `build-storybook` job into `packages/lib/storybook-static`. Leave empty
+      to skip.
+    required: false
+    default: ''
+
+runs:
+  using: composite
+  steps:
+    - name: Checkout
+      uses: actions/checkout@v6
+      with:
+        ref: ${{ inputs.checkout-ref }}
+        token: ${{ inputs.checkout-token }}
+
+    - name: Setup Node
+      uses: actions/setup-node@v6
+      with:
+        node-version: 24
+        cache: yarn
+
+    - name: Enable Corepack
+      shell: bash
+      run: corepack enable
+
+    - name: Install Project Dependencies
+      shell: bash
+      run: yarn install --immutable
+
+    - name: Extract Playwright version
+      shell: bash
+      run: echo "PLAYWRIGHT_VERSION=$(jq -r '.devDependencies["@playwright/test"]' packages/e2e-playwright/package.json)" >> "$GITHUB_ENV"
+
+    - name: Download prebuilt Storybook
+      if: inputs.storybook-artifact-name != ''
+      uses: actions/download-artifact@v5
+      with:
+        name: ${{ inputs.storybook-artifact-name }}
+        path: packages/lib/storybook-static

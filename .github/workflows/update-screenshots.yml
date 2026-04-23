@@ -5,122 +5,109 @@ on:
     types: [labeled]
 
 jobs:
+  # Build Storybook once (no container needed here).
+  build-storybook:
+    if: github.event.label.name == 'screenshot'
+    name: Build Storybook
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    outputs:
+      playwright-version: ${{ steps.pw-version.outputs.version }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: yarn
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install Project Dependencies
+        run: yarn install --immutable
+
+      - name: Extract Playwright version
+        id: pw-version
+        run: echo "version=$(jq -r '.devDependencies["@playwright/test"]' packages/e2e-playwright/package.json)" >> "$GITHUB_OUTPUT"
+
+      - name: Build Storybook
+        run: yarn build:storybook:e2e
+
+      - name: Upload Storybook artifact
+        uses: actions/upload-artifact@v6
+        with:
+          name: storybook-static-${{ github.sha }}
+          path: packages/lib/storybook-static
+          retention-days: 1
+          if-no-files-found: error
+
+  # Update screenshots, commit, and push. Not sharded: shards would race on git push.
   update-screenshots:
     if: github.event.label.name == 'screenshot'
-    timeout-minutes: 60
+    needs: build-storybook
+    name: Update Screenshots
+    timeout-minutes: 45
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.50.0-noble
+      image: mcr.microsoft.com/playwright:v${{ needs.build-storybook.outputs.playwright-version }}-jammy
       options: --user 1001
-
     env:
-      CHECKOUT_API_KEY: ${{secrets.ADYEN_CHECKOUT_API_KEY}}
-      MERCHANT_ACCOUNT: ${{secrets.ADYEN_CHECKOUT_MERCHANT_ACCOUNT}}
-      CLIENT_KEY: ${{secrets.ADYEN_CHECKOUT_CLIENT_KEY}}
+      CHECKOUT_API_KEY: ${{ secrets.ADYEN_CHECKOUT_API_KEY }}
+      MERCHANT_ACCOUNT: ${{ secrets.ADYEN_CHECKOUT_MERCHANT_ACCOUNT }}
+      CLIENT_KEY: ${{ secrets.ADYEN_CHECKOUT_CLIENT_KEY }}
       CLIENT_ENV: test
       TESTING_ENVIRONMENT: https://checkout-test.adyen.com/checkout/v71
       API_VERSION: v71
+      STORYBOOK_PREBUILT: "1"
     steps:
-    - name: Checkout
-      uses: actions/checkout@v6
-      with:
-        ref: ${{ github.event.pull_request.head.ref }}
-        token: ${{ secrets.GITHUB_TOKEN }}
-    
-    - name: Setup Node
-      uses: actions/setup-node@v6
-      with:
-        node-version: 24
-        package-manager-cache: false
+      - name: Setup E2E environment
+        uses: ./.github/actions/setup-e2e
+        with:
+          checkout-ref: ${{ github.event.pull_request.head.ref }}
+          checkout-token: ${{ secrets.GITHUB_TOKEN }}
+          storybook-artifact-name: storybook-static-${{ github.sha }}
 
-    - name: Cache node modules
-      id: node-modules-cache
-      uses: actions/cache@v5
-      env:
-        cache-name: node-modules-v1
-      with:
-        path: node_modules
-        key: ${{ runner.os }}-cache-${{ env.cache-name }}-yarn-${{ hashFiles('**/yarn.lock') }}
+      - name: Update automated visual test screenshots
+        run: yarn test:automated-visual:update-screenshots
 
-    - name: Enable Corepack
-      run: corepack enable
+      - name: Update e2e test screenshots
+        run: yarn test:e2e:update-screenshots
 
-    - name: Install Project Dependencies
-      if: steps.node-modules-cache.outputs.cache-hit != 'true'
-      run: yarn install --immutable
+      - name: Commit updated screenshots
+        run: |
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add packages/e2e-playwright/tests/
+          if ! git diff --staged --quiet; then
+            git commit -m "chore: update screenshots"
+            git push
+          else
+            echo "No screenshot changes to commit"
+          fi
 
-    - name: Extract Playwright version
-      id: playwright-version
-      run: echo "PLAYWRIGHT_VERSION=$(jq -r '.devDependencies["@playwright/test"]' packages/e2e-playwright/package.json)" >> $GITHUB_ENV
+      - name: Upload HTML report (failures only)
+        if: failure()
+        uses: actions/upload-artifact@v6
+        with:
+          name: playwright-report-update-screenshots-${{ github.sha }}
+          path: packages/e2e-playwright/playwright-report
+          retention-days: 5
+          if-no-files-found: ignore
 
-    - name: Cache Playwright
-      id: playwright-cache
-      uses: actions/cache@v5
-      env:
-        cache-name: playwright-v1
-      with:
-        path: ~/.cache/ms-playwright
-        key: ${{ runner.os }}-cache-${{ env.cache-name }}-playwright-${{ env.PLAYWRIGHT_VERSION }}-all-browsers
-
-    # Webkit needs extra apt packages (libwoff2dec, libvpx, libevent, libopus,
-    # libgstreamer-*, libharfbuzz-icu, libenchant-2, libsecret-1, libhyphen,
-    # libmanette, libflite, libgles2, etc.) that live under /usr/lib and are NOT
-    # inside ~/.cache/ms-playwright. Caching the downloaded .deb files makes
-    # `playwright install --with-deps` skip the network download on subsequent
-    # runs. Key is scoped to OS + runner image version so it invalidates when
-    # GitHub rolls the ubuntu image. This workflow always installs webkit.
-    - name: Cache webkit system libraries
-      id: webkit-libs-cache
-      uses: actions/cache@v5
-      env:
-        cache-name: webkit-apt-v1
-      with:
-        path: /var/cache/apt/archives
-        key: ${{ runner.os }}-cache-${{ env.cache-name }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
-
-    # We always run `install --with-deps` — even on a Playwright cache hit —
-    # because webkit's system libs live under /usr/lib (not in ~/.cache/ms-playwright)
-    # and would otherwise be missing. With the apt cache above, this is fast.
-    - name: Install Playwright Dependencies
-      run: npx playwright install --with-deps
-
-    - name: Update automated visual tests screenshots
-      run: yarn test:automated-visual:update-screenshots
-
-    - name: Update e2e test screenshots
-      run: yarn test:e2e:update-screenshots
-
-    - name: Commit updated screenshots
-      run: |
-        git config --local user.email "github-actions[bot]@users.noreply.github.com"
-        git config --local user.name "github-actions[bot]"
-        git add packages/e2e-playwright/tests/
-        if ! git diff --staged --quiet; then
-          git commit -m "chore: update screenshots"
-          git push
-        else
-          echo "No screenshot changes to commit"
-        fi
-
-    - name: Archive test result artifacts
-      id: upload-artifact
-      if: always()
-      uses: actions/upload-artifact@v6
-      with:
-        name: playwright-report-update-screenshots-${{ github.sha }}
-        path: packages/e2e-playwright/playwright-report
-        retention-days: 5
-
-    - name: Remove screenshot label
-      if: always()
-      id: remove-screenshot-label
-      uses: actions/github-script@v8
-      with:
-        script: |
-          await github.rest.issues.removeLabel({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            issue_number: context.payload.pull_request.number,
-            name: 'screenshot'
-          });
-
+      - name: Remove screenshot label
+        if: always()
+        uses: actions/github-script@v8
+        with:
+          script: |
+            await github.rest.issues.removeLabel({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.pull_request.number,
+              name: 'screenshot'
+            });
