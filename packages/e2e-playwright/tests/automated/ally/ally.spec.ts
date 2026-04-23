@@ -10,6 +10,7 @@ const STORYBOOK_INDEX_PATH = '../lib/storybook-static/index.json';
 const EXCLUDED_STORIES: string[] = [
     'components-wallets-applepay--express', // Can't run Apple Pay in the e2e tests
     'components-wallets-applepay--default',
+    'components-wallets-applepay--coupon-codes',
     'components-wallets-fastlane--lookup',
     'helpers-paypalreviewpage--paypal-review-page', // Unsure what needs to be done here
     'components-paybybankpix--merchant-page', // demo pages for pix
