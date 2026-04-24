@@ -2,4 +2,4 @@
 '@adyen/adyen-web': patch
 ---
 
-Fixed: Form label font-weight to bold 
+Fixed: Form label font-weight to bold
