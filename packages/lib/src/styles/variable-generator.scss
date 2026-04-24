@@ -12,6 +12,8 @@ aliases.$color: map.merge(
         color-label-critical: map.get(aliases.$color, color-label-on-background-critical-weak),
         color-label-tertiary: map.get(aliases.$color, color-label-secondary),
         // label tertiary doesn't have enough contrast
+        color-outline-primary: map.get(aliases.$color, color-outline-tertiary-hover),
+        // CW-64 to CW-71: outline primary (#dbdee2) has insufficient contrast (1.26-1.35:1) on light backgrounds
     )
 );
 
