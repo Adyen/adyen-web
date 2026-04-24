@@ -49,7 +49,7 @@ jobs:
           if-no-files-found: error
 
   automated-a11y:
-    name: A11y ${{ matrix.api-version }}-${{ matrix.runner-browser }} shard ${{ matrix.shard }}/2
+    name: A11y ${{ matrix.api-version }}-${{ matrix.runner-browser }} - ${{ matrix.shard }}/2
     needs: build-storybook
     timeout-minutes: 30
     runs-on: ubuntu-latest

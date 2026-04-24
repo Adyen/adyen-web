@@ -62,7 +62,7 @@ jobs:
   # preinstalled (especially important for webkit).
   # ---------------------------------------------------------------------------
   e2e-tests:
-    name: E2E ${{ matrix.api-version }}-${{ matrix.runner-browser }} shard ${{ matrix.shard }}/4
+    name: E2E ${{ matrix.api-version }}-${{ matrix.runner-browser }} - ${{ matrix.shard }}/4
     needs: build-storybook
     timeout-minutes: 30
     runs-on: ubuntu-latest
