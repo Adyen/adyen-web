@@ -1,4 +1,4 @@
-import { Fragment, h } from 'preact';
+import { Fragment, h, RefObject } from 'preact';
 import { Meta, StoryObj } from '@storybook/preact-vite';
 import { MutableRef, useRef } from 'preact/hooks';
 import { Tooltip } from './Tooltip';
@@ -15,7 +15,7 @@ const meta: Meta = {
     }
 };
 
-const TooltipConsumer = ({ anchorRef, margin }: Readonly<{ anchorRef: MutableRef<HTMLButtonElement>; margin: number }>) => {
+const TooltipConsumer = ({ anchorRef, margin }: Readonly<{ anchorRef: RefObject<HTMLButtonElement>; margin: number }>) => {
     const { id: tooltipId, showTooltip, hideTooltip } = useTooltip();
 
     return (
@@ -23,7 +23,7 @@ const TooltipConsumer = ({ anchorRef, margin }: Readonly<{ anchorRef: MutableRef
             ref={anchorRef}
             style={{ margin: `${margin}px` }}
             aria-describedby={tooltipId}
-            onMouseEnter={() => showTooltip({ text: 'tooltip text', anchorRef })}
+            onMouseEnter={() => showTooltip({ text: 'tooltip text', anchorRef: anchorRef as MutableRef<HTMLButtonElement> })}
             onMouseLeave={() => hideTooltip()}
         >
             Hover me
@@ -31,7 +31,7 @@ const TooltipConsumer = ({ anchorRef, margin }: Readonly<{ anchorRef: MutableRef
     );
 };
 
-export const Default: StoryObj = {
+export const Default: StoryObj<{ margin: number }> = {
     render: args => {
         const anchorRef = useRef<HTMLButtonElement>(null);
 
