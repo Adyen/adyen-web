@@ -44,19 +44,10 @@ export class DragonpayElement extends UIElement<DragonpayConfiguraton> {
 
     protected override componentToRender(): h.JSX.Element {
         return this.props.reference ? (
-            <DragonpayVoucherResult
-                ref={ref => {
-                    this.componentRef = ref;
-                }}
-                icon={this.icon}
-                {...this.props}
-                onActionHandled={this.onActionHandled}
-            />
+            <DragonpayVoucherResult icon={this.icon} {...this.props} onActionHandled={this.onActionHandled} />
         ) : (
             <DragonpayInput
-                ref={ref => {
-                    this.componentRef = ref;
-                }}
+                setComponentRef={this.setComponentRef}
                 items={this.props.issuers}
                 {...this.props}
                 showPayButton={this.props.showPayButton}

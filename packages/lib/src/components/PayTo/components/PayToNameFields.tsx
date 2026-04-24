@@ -4,17 +4,18 @@ import { getErrorMessage } from '../../../utils/getErrorMessage';
 import InputText from '../../internal/FormFields/InputText';
 import Language from '../../../language';
 import { HandleChangeForModeType } from '../../../utils/useForm/types';
+import { ValidationRuleResult } from '../../../utils/Validator/ValidationRuleResult';
 
 export interface PayToNameFieldsProps {
     i18n: Language;
     errors: {
-        [key: string]: any;
+        [key: string]: ValidationRuleResult;
     };
     data: {
         firstName: string;
         lastName: string;
     };
-    handleChangeFor: (key: string, mode?: HandleChangeForModeType) => (e: any) => void;
+    handleChangeFor: (key: string, mode?: HandleChangeForModeType) => (e: h.JSX.TargetedEvent<HTMLInputElement, Event>) => void;
     placeholders: {
         firstName: string;
         lastName: string;

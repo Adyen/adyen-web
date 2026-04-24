@@ -16,7 +16,8 @@ const defaultProps = {
     ],
     onChange: jest.fn(),
     showPayButton: false,
-    payButton: jest.fn()
+    payButton: jest.fn(),
+    setComponentRef: jest.fn()
 };
 
 const renderDragonpayInput = (props = {}) => {

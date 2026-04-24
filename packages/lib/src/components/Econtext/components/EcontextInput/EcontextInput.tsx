@@ -8,6 +8,7 @@ import FormInstruction from '../../../internal/FormInstruction';
 import { ComponentMethodsRef } from '../../../internal/UIElement/types';
 import { PayButtonProps } from '../../../internal/PayButton/PayButton';
 import './EcontextInput.scss';
+import { ValidationRuleResult } from '../../../../utils/Validator/ValidationRuleResult';
 
 interface EcontextInputProps {
     setComponentRef: (ref: ComponentMethodsRef) => void;
@@ -15,8 +16,20 @@ interface EcontextInputProps {
     data?: PersonalDetailsSchema;
     showPayButton: boolean;
     payButton: (props: PayButtonProps) => h.JSX.Element;
-    onChange?(data: any): void;
-    onSubmit?(state: any, component: any): void;
+    onChange: (props: {
+        data: {
+            telephoneNumber: string;
+            shopperEmail: string;
+            dateOfBirth: string;
+            shopperName: {
+                lastName: string;
+                firstName: string;
+            };
+        };
+        errors: { [p: string]: ValidationRuleResult };
+        valid: { [p: string]: boolean };
+        isValid: boolean;
+    }) => void;
 }
 
 export default function EcontextInput({
