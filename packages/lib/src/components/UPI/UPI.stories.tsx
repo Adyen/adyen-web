@@ -30,10 +30,10 @@ export const Default: UpiStory = {
 
 const MANDATE = {
     amount: '7005',
-    frequency: 'monthly',
+    frequency: 'adhoc',
     amountRule: 'max',
     endsAt: '2030-07-21',
-    remarks: 'Monthly subscription'
+    remarks: 'Subscription'
 };
 
 export const AutoPaySession: UpiStory = {
