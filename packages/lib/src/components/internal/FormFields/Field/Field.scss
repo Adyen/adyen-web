@@ -211,7 +211,7 @@
     font-size: variable-generator.token(text-body-font-size);
     margin-bottom: variable-generator.token(spacer-020);
     color: variable-generator.token(color-label-primary);
-    font-weight: variable-generator.token(text-body-font-weight);
+    font-weight: variable-generator.token(text-body-stronger-font-weight);
     line-height: variable-generator.token(text-body-line-height);
     transition: color 0.1s ease-out;
     text-overflow: ellipsis;
