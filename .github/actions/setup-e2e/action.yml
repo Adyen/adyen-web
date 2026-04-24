@@ -1,0 +1,68 @@
+name: Setup E2E Environment
+description: >
+  Shared setup for E2E / Playwright jobs: enable Corepack, Node + yarn cache,
+  install dependencies, extract Playwright version, and optionally download a
+  prebuilt Storybook artifact.
+
+  NOTE: callers MUST run `actions/checkout` themselves before invoking this
+  composite action, because GitHub needs to locate `action.yml` on disk before
+  it can run. We do not checkout here.
+
+inputs:
+  storybook-artifact-name:
+    description: >
+      If set, downloads a Storybook build artifact produced by an upstream
+      `build-storybook` job into `packages/lib/storybook-static`. Leave empty
+      to skip.
+    required: false
+    default: ''
+
+runs:
+  using: composite
+  steps:
+    # Enable Corepack BEFORE setup-node so that `yarn --version` (invoked by
+    # setup-node's `cache: yarn` logic) resolves to the yarn version declared
+    # in package.json#packageManager (yarn 4.x), not the yarn 1.22 that ships
+    # globally on the runner / container image.
+    - name: Enable Corepack
+      shell: bash
+      run: |
+        corepack enable
+        corepack prepare --activate
+
+    - name: Setup Node
+      uses: actions/setup-node@v6
+      with:
+        node-version: 24
+        cache: yarn
+
+    - name: Install Project Dependencies
+      shell: bash
+      run: yarn install --immutable
+
+    - name: Extract Playwright version
+      shell: bash
+      run: echo "PLAYWRIGHT_VERSION=$(jq -r '.devDependencies["@playwright/test"]' packages/e2e-playwright/package.json)" >> "$GITHUB_ENV"
+
+    - name: Download prebuilt Storybook
+      if: inputs.storybook-artifact-name != ''
+      uses: actions/download-artifact@v5
+      with:
+        name: ${{ inputs.storybook-artifact-name }}
+        path: packages/lib/storybook-static
+
+    # Diagnostic: confirm the artifact is in the exact layout expected by
+    # packages/server/index.js → `express.static('../lib/storybook-static')`.
+    # If `index.html` and `index.json` are NOT at the root of this listing,
+    # the webServer will 404 every request and every test will hit the 30s
+    # action timeout.
+    - name: Verify Storybook artifact layout
+      if: inputs.storybook-artifact-name != ''
+      shell: bash
+      run: |
+        echo "--- packages/lib/storybook-static ---"
+        ls -la packages/lib/storybook-static
+        echo
+        echo "--- sanity checks ---"
+        test -f packages/lib/storybook-static/index.html && echo "OK: index.html present" || { echo "FAIL: index.html missing"; exit 1; }
+        test -f packages/lib/storybook-static/index.json && echo "OK: index.json present" || { echo "FAIL: index.json missing"; exit 1; }

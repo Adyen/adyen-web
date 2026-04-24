@@ -4,58 +4,156 @@ on:
   workflow_call:
 
 jobs:
+  # ---------------------------------------------------------------------------
+  # Build Storybook once; all sharded test jobs download the artifact and skip
+  # the Storybook build inside Playwright's webServer command (STORYBOOK_PREBUILT=1).
+  # Also exposes PLAYWRIGHT_VERSION so downstream jobs can pin the Playwright
+  # Docker image to the exact version from packages/e2e-playwright/package.json.
+  # ---------------------------------------------------------------------------
+  build-storybook:
+    name: Build Storybook
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    outputs:
+      playwright-version: ${{ steps.pw-version.outputs.version }}
+    env:
+      # Vite's loadEnv() inlines CLIENT_KEY and CLIENT_ENV into the Storybook
+      # bundle at build time (see packages/lib/config/environment-variables.js).
+      # Without these, the SDK cannot initialize in the browser, #component-root
+      # never renders, and a11y + e2e tests time out waiting for it.
+      CLIENT_KEY: ${{ secrets.ADYEN_CHECKOUT_CLIENT_KEY }}
+      CLIENT_ENV: test
+    steps:
+      - uses: actions/checkout@v6
+
+      # Enable Corepack before setup-node so `cache: yarn` sees yarn 4.x, not 1.22.
+      - name: Enable Corepack
+        run: |
+          corepack enable
+          corepack prepare --activate
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: yarn
+
+      - name: Install Project Dependencies
+        run: yarn install --immutable
+
+      - name: Extract Playwright version
+        id: pw-version
+        run: echo "version=$(jq -r '.devDependencies["@playwright/test"]' packages/e2e-playwright/package.json)" >> "$GITHUB_OUTPUT"
+
+      - name: Build Storybook
+        run: yarn build:storybook:e2e
+
+      - name: Upload Storybook artifact
+        uses: actions/upload-artifact@v6
+        with:
+          name: storybook-static-${{ github.sha }}
+          path: packages/lib/storybook-static
+          retention-days: 1
+          if-no-files-found: error
+
+  # ---------------------------------------------------------------------------
+  # Sharded E2E tests: 3 API versions x 3 browsers x 4 shards = 36 parallel jobs.
+  # Runs inside the official Playwright container so browsers + system libs are
+  # preinstalled (especially important for webkit).
+  # ---------------------------------------------------------------------------
   e2e-tests:
-    timeout-minutes: 120
+    name: E2E ${{ matrix.api-version }}-${{ matrix.runner-browser }} - ${{ matrix.shard }}/4
+    needs: build-storybook
+    timeout-minutes: 30
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.50.0-noble
-      options: --user 1001
+      image: mcr.microsoft.com/playwright:v${{ needs.build-storybook.outputs.playwright-version }}-jammy
     strategy:
       fail-fast: false
+      max-parallel: 36
       matrix:
         api-version: ["v69", "v70", "v71"]
         runner-browser: ["chromium", "firefox", "webkit"]
+        shard: [1, 2, 3, 4]
     env:
-      CHECKOUT_API_KEY: ${{secrets.ADYEN_CHECKOUT_API_KEY}}
-      MERCHANT_ACCOUNT: ${{secrets.ADYEN_CHECKOUT_MERCHANT_ACCOUNT}}
-      CLIENT_KEY: ${{secrets.ADYEN_CHECKOUT_CLIENT_KEY}}
+      CHECKOUT_API_KEY: ${{ secrets.ADYEN_CHECKOUT_API_KEY }}
+      MERCHANT_ACCOUNT: ${{ secrets.ADYEN_CHECKOUT_MERCHANT_ACCOUNT }}
+      CLIENT_KEY: ${{ secrets.ADYEN_CHECKOUT_CLIENT_KEY }}
       CLIENT_ENV: test
-      TESTING_ENVIRONMENT: https://checkout-test.adyen.com/checkout/${{matrix.api-version}}
-      API_VERSION: ${{matrix.api-version}}
+      TESTING_ENVIRONMENT: https://checkout-test.adyen.com/checkout/${{ matrix.api-version }}
+      API_VERSION: ${{ matrix.api-version }}
+      # Tell playwright.config.ts webServer to skip `build:storybook:e2e` since
+      # the prebuilt artifact has already been downloaded into packages/lib/storybook-static.
+      STORYBOOK_PREBUILT: "1"
+      # GitHub sets HOME=/github/home (owned by uid 1001) but the Playwright
+      # container runs as root. Firefox refuses to launch in that combo; chromium
+      # and webkit have related issues. Override HOME to /root (the root user's home).
+      HOME: /root
+      # Avoid "open /root/.docker/config.json: permission denied" warnings when
+      # tooling probes docker config — point docker CLI at a writable temp dir.
+      DOCKER_CONFIG: /tmp/.docker
     steps:
-    - name: Checkout
-      uses: actions/checkout@v6
+      # Local composite actions require the repo on disk before `uses: ./...`
+      # can resolve action.yml, so we checkout explicitly here.
+      - uses: actions/checkout@v6
 
-    - name: Setup Node
-      uses: actions/setup-node@v6
-      with:
-        node-version: 24
-        package-manager-cache: false
+      - name: Setup E2E environment
+        uses: ./.github/actions/setup-e2e
+        with:
+          storybook-artifact-name: storybook-static-${{ github.sha }}
 
-    - name: Cache node modules
-      id: node-modules-cache
-      uses: actions/cache@v5
-      env:
-        cache-name: node-modules-v1
-      with:
-        path: node_modules
-        key: ${{ runner.os }}-cache-${{ env.cache-name }}-yarn-${{ hashFiles('**/yarn.lock') }}
+      - name: Run E2E Tests
+        run: yarn test:e2e --project=${{ matrix.runner-browser }} --shard=${{ matrix.shard }}/4
 
-    - name: Enable Corepack
-      run: corepack enable
+      - name: Upload blob report (for merge)
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: blob-report-${{ matrix.api-version }}-${{ matrix.runner-browser }}-${{ matrix.shard }}
+          path: packages/e2e-playwright/blob-report
+          retention-days: 1
+          if-no-files-found: ignore
 
-    - name: Install Project Dependencies
-      if: steps.node-modules-cache.outputs.cache-hit != 'true'
-      run: yarn install --immutable
+      - name: Upload HTML report (failures only)
+        if: failure()
+        uses: actions/upload-artifact@v6
+        with:
+          name: playwright-report-${{ matrix.api-version }}-${{ matrix.runner-browser }}-${{ matrix.shard }}-${{ github.sha }}
+          path: packages/e2e-playwright/playwright-report
+          retention-days: 5
+          if-no-files-found: ignore
 
-    - name: Run E2E Tests
-      run: yarn test:e2e --project=${{ matrix.runner-browser }}
+  # ---------------------------------------------------------------------------
+  # Merge blob reports from all shards into a single HTML report.
+  # Runs even when some shards fail so the merged report always reflects reality.
+  # ---------------------------------------------------------------------------
+  merge-reports:
+    name: Merge Playwright Reports
+    needs: e2e-tests
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
 
-    - name: Archive test result artifacts
-      id: upload-artifact
-      if: always()
-      uses: actions/upload-artifact@v6
-      with:
-        name: playwright-report-${{matrix.api-version}}-${{matrix.runner-browser}}-${{ github.sha }}
-        path: packages/e2e-playwright/playwright-report
-        retention-days: 5
+      - name: Setup E2E environment
+        uses: ./.github/actions/setup-e2e
+
+      - name: Download all blob reports
+        uses: actions/download-artifact@v5
+        with:
+          pattern: blob-report-*
+          path: all-blob-reports
+          merge-multiple: true
+
+      - name: Merge into HTML report
+        run: npx playwright merge-reports --reporter html ../../all-blob-reports
+        working-directory: packages/e2e-playwright
+
+      - name: Upload merged HTML report
+        uses: actions/upload-artifact@v6
+        with:
+          name: merged-html-report-${{ github.sha }}
+          path: packages/e2e-playwright/playwright-report
+          retention-days: 14
+          if-no-files-found: ignore

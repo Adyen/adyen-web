@@ -4,58 +4,93 @@ on:
   workflow_call:
 
 jobs:
+  build-storybook:
+    name: Build Storybook
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    outputs:
+      playwright-version: ${{ steps.pw-version.outputs.version }}
+    env:
+      # Vite inlines these into the Storybook bundle at build time. Without
+      # them the SDK cannot initialize and a11y tests time out waiting for
+      # #component-root.
+      CLIENT_KEY: ${{ secrets.ADYEN_CHECKOUT_CLIENT_KEY }}
+      CLIENT_ENV: test
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Enable Corepack
+        run: |
+          corepack enable
+          corepack prepare --activate
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: yarn
+
+      - name: Install Project Dependencies
+        run: yarn install --immutable
+
+      - name: Extract Playwright version
+        id: pw-version
+        run: echo "version=$(jq -r '.devDependencies["@playwright/test"]' packages/e2e-playwright/package.json)" >> "$GITHUB_OUTPUT"
+
+      - name: Build Storybook
+        run: yarn build:storybook:e2e
+
+      - name: Upload Storybook artifact
+        uses: actions/upload-artifact@v6
+        with:
+          name: storybook-static-${{ github.sha }}
+          path: packages/lib/storybook-static
+          retention-days: 1
+          if-no-files-found: error
+
   automated-a11y:
-    timeout-minutes: 60
+    name: A11y ${{ matrix.api-version }}-${{ matrix.runner-browser }} - ${{ matrix.shard }}/2
+    needs: build-storybook
+    timeout-minutes: 30
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.50.0-noble
-      options: --user 1001
+      image: mcr.microsoft.com/playwright:v${{ needs.build-storybook.outputs.playwright-version }}-jammy
     strategy:
       fail-fast: false
       matrix:
         api-version: ["v71"]
         runner-browser: ["chromium"]
+        shard: [1, 2]
     env:
-      CHECKOUT_API_KEY: ${{secrets.ADYEN_CHECKOUT_API_KEY}}
-      MERCHANT_ACCOUNT: ${{secrets.ADYEN_CHECKOUT_MERCHANT_ACCOUNT}}
-      CLIENT_KEY: ${{secrets.ADYEN_CHECKOUT_CLIENT_KEY}}
+      CHECKOUT_API_KEY: ${{ secrets.ADYEN_CHECKOUT_API_KEY }}
+      MERCHANT_ACCOUNT: ${{ secrets.ADYEN_CHECKOUT_MERCHANT_ACCOUNT }}
+      CLIENT_KEY: ${{ secrets.ADYEN_CHECKOUT_CLIENT_KEY }}
       CLIENT_ENV: test
-      TESTING_ENVIRONMENT: https://checkout-test.adyen.com/checkout/${{matrix.api-version}}
-      API_VERSION: ${{matrix.api-version}}
+      TESTING_ENVIRONMENT: https://checkout-test.adyen.com/checkout/${{ matrix.api-version }}
+      API_VERSION: ${{ matrix.api-version }}
+      STORYBOOK_PREBUILT: "1"
+      # Required when the Playwright container runs as root (default for GH
+      # Actions containers): overrides GitHub's HOME=/github/home so Firefox
+      # and related browsers launch correctly.
+      HOME: /root
+      # Silences "open /root/.docker/config.json: permission denied" warnings.
+      DOCKER_CONFIG: /tmp/.docker
     steps:
-    - name: Checkout
-      uses: actions/checkout@v6
+      - uses: actions/checkout@v6
 
-    - name: Setup Node
-      uses: actions/setup-node@v6
-      with:
-        node-version: 24
-        package-manager-cache: false
+      - name: Setup E2E environment
+        uses: ./.github/actions/setup-e2e
+        with:
+          storybook-artifact-name: storybook-static-${{ github.sha }}
 
-    - name: Cache node modules
-      id: node-modules-cache
-      uses: actions/cache@v5
-      env:
-        cache-name: node-modules-v1
-      with:
-        path: node_modules
-        key: ${{ runner.os }}-cache-${{ env.cache-name }}-yarn-${{ hashFiles('**/yarn.lock') }}
+      - name: Run Automated Accessibility Tests
+        run: yarn test:automated-a11y --project=${{ matrix.runner-browser }} --shard=${{ matrix.shard }}/2
 
-    - name: Enable Corepack
-      run: corepack enable
-
-    - name: Install Project Dependencies
-      if: steps.node-modules-cache.outputs.cache-hit != 'true'
-      run: yarn install --immutable
-
-    - name: Run Automated Accessibility Tests
-      run: yarn test:automated-a11y --project=${{ matrix.runner-browser }}
-
-    - name: Archive test result artifacts
-      id: upload-artifact
-      if: always()
-      uses: actions/upload-artifact@v6
-      with:
-        name: a11y-report-${{matrix.api-version}}-${{matrix.runner-browser}}-${{ github.sha }}
-        path: packages/e2e-playwright/playwright-report
-        retention-days: 5
+      - name: Upload HTML report (failures only)
+        if: failure()
+        uses: actions/upload-artifact@v6
+        with:
+          name: a11y-report-${{ matrix.api-version }}-${{ matrix.runner-browser }}-${{ matrix.shard }}-${{ github.sha }}
+          path: packages/e2e-playwright/playwright-report
+          retention-days: 5
+          if-no-files-found: ignore

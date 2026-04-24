@@ -35,7 +35,7 @@ const config: PlaywrightTestConfig = {
          * Maximum time expect() should wait for the condition to be met.
          * For example in `await expect(locator).toHaveText();`
          */
-        timeout: 30_000,
+        timeout: 3_000,
         toHaveScreenshot: {
             ...SCREENSHOT_CONFIG
         }
@@ -50,7 +50,10 @@ const config: PlaywrightTestConfig = {
     workers: process.env.CI ? 4 : undefined,
 
     /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-    reporter: [['html', { open: 'never' }], ['list']],
+    /* On CI, also emit a `blob` report per shard so `playwright merge-reports` can aggregate them. */
+    reporter: process.env.CI
+        ? [['blob'], ['html', { open: 'never' }], ['list']]
+        : [['html', { open: 'never' }], ['list']],
 
     snapshotPathTemplate,
 
@@ -96,9 +99,12 @@ const config: PlaywrightTestConfig = {
     // outputDir: 'test-results/',
 
     /* Run your local dev server before starting the tests */
+    /* When `STORYBOOK_PREBUILT=1` (CI with a prebuilt Storybook artifact) skip the build step. */
     webServer: [
         {
-            command: 'npm run build:storybook:e2e && npm run start:prod-storybook',
+            command: process.env.STORYBOOK_PREBUILT
+                ? 'npm run start:prod-storybook'
+                : 'npm run build:storybook:e2e && npm run start:prod-storybook',
             cwd: '../..',
             port: STORYBOOK_PORT,
             reuseExistingServer: !process.env.CI,

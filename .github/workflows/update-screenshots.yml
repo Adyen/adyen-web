@@ -5,87 +5,123 @@ on:
     types: [labeled]
 
 jobs:
+  # Build Storybook once (no container needed here).
+  build-storybook:
+    if: github.event.label.name == 'screenshot'
+    name: Build Storybook
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    outputs:
+      playwright-version: ${{ steps.pw-version.outputs.version }}
+    env:
+      # Vite inlines these into the Storybook bundle at build time (see
+      # packages/lib/config/environment-variables.js). Required for SDK init.
+      CLIENT_KEY: ${{ secrets.ADYEN_CHECKOUT_CLIENT_KEY }}
+      CLIENT_ENV: test
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Enable Corepack
+        run: |
+          corepack enable
+          corepack prepare --activate
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: yarn
+
+      - name: Install Project Dependencies
+        run: yarn install --immutable
+
+      - name: Extract Playwright version
+        id: pw-version
+        run: echo "version=$(jq -r '.devDependencies["@playwright/test"]' packages/e2e-playwright/package.json)" >> "$GITHUB_OUTPUT"
+
+      - name: Build Storybook
+        run: yarn build:storybook:e2e
+
+      - name: Upload Storybook artifact
+        uses: actions/upload-artifact@v6
+        with:
+          name: storybook-static-${{ github.sha }}
+          path: packages/lib/storybook-static
+          retention-days: 1
+          if-no-files-found: error
+
+  # Update screenshots, commit, and push. Not sharded: shards would race on git push.
   update-screenshots:
     if: github.event.label.name == 'screenshot'
-    timeout-minutes: 60
+    needs: build-storybook
+    name: Update Screenshots
+    timeout-minutes: 45
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.50.0-noble
-      options: --user 1001
-
+      image: mcr.microsoft.com/playwright:v${{ needs.build-storybook.outputs.playwright-version }}-jammy
     env:
-      CHECKOUT_API_KEY: ${{secrets.ADYEN_CHECKOUT_API_KEY}}
-      MERCHANT_ACCOUNT: ${{secrets.ADYEN_CHECKOUT_MERCHANT_ACCOUNT}}
-      CLIENT_KEY: ${{secrets.ADYEN_CHECKOUT_CLIENT_KEY}}
+      CHECKOUT_API_KEY: ${{ secrets.ADYEN_CHECKOUT_API_KEY }}
+      MERCHANT_ACCOUNT: ${{ secrets.ADYEN_CHECKOUT_MERCHANT_ACCOUNT }}
+      CLIENT_KEY: ${{ secrets.ADYEN_CHECKOUT_CLIENT_KEY }}
       CLIENT_ENV: test
       TESTING_ENVIRONMENT: https://checkout-test.adyen.com/checkout/v71
       API_VERSION: v71
+      STORYBOOK_PREBUILT: "1"
+      # Required when the Playwright container runs as root: overrides GitHub's
+      # HOME=/github/home so Firefox and related browsers launch correctly.
+      HOME: /root
+      # Silences "open /root/.docker/config.json: permission denied" warnings.
+      DOCKER_CONFIG: /tmp/.docker
     steps:
-    - name: Checkout
-      uses: actions/checkout@v6
-      with:
-        ref: ${{ github.event.pull_request.head.ref }}
-        token: ${{ secrets.GITHUB_TOKEN }}
-    
-    - name: Setup Node
-      uses: actions/setup-node@v6
-      with:
-        node-version: 24
-        package-manager-cache: false
+      # Checkout the PR branch so screenshot commits push back to the correct ref.
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Cache node modules
-      id: node-modules-cache
-      uses: actions/cache@v5
-      env:
-        cache-name: node-modules-v1
-      with:
-        path: node_modules
-        key: ${{ runner.os }}-cache-${{ env.cache-name }}-yarn-${{ hashFiles('**/yarn.lock') }}
+      - name: Setup E2E environment
+        uses: ./.github/actions/setup-e2e
+        with:
+          storybook-artifact-name: storybook-static-${{ github.sha }}
 
-    - name: Enable Corepack
-      run: corepack enable
+      - name: Update automated visual test screenshots
+        run: yarn test:automated-visual:update-screenshots
 
-    - name: Install Project Dependencies
-      if: steps.node-modules-cache.outputs.cache-hit != 'true'
-      run: yarn install --immutable
+      - name: Update e2e test screenshots
+        run: yarn test:e2e:update-screenshots
 
-    - name: Update automated visual tests screenshots
-      run: yarn test:automated-visual:update-screenshots
+      - name: Commit updated screenshots
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add packages/e2e-playwright/tests/
+          if ! git diff --staged --quiet; then
+            git commit -m "chore: update screenshots"
+            git push
+          else
+            echo "No screenshot changes to commit"
+          fi
 
-    - name: Update e2e test screenshots
-      run: yarn test:e2e:update-screenshots
+      - name: Upload HTML report (failures only)
+        if: failure()
+        uses: actions/upload-artifact@v6
+        with:
+          name: playwright-report-update-screenshots-${{ github.sha }}
+          path: packages/e2e-playwright/playwright-report
+          retention-days: 5
+          if-no-files-found: ignore
 
-    - name: Commit updated screenshots
-      run: |
-        git config --local user.email "github-actions[bot]@users.noreply.github.com"
-        git config --local user.name "github-actions[bot]"
-        git add packages/e2e-playwright/tests/
-        if ! git diff --staged --quiet; then
-          git commit -m "chore: update screenshots"
-          git push
-        else
-          echo "No screenshot changes to commit"
-        fi
-
-    - name: Archive test result artifacts
-      id: upload-artifact
-      if: always()
-      uses: actions/upload-artifact@v6
-      with:
-        name: playwright-report-update-screenshots-${{ github.sha }}
-        path: packages/e2e-playwright/playwright-report
-        retention-days: 5
-
-    - name: Remove screenshot label
-      if: always()
-      id: remove-screenshot-label
-      uses: actions/github-script@v8
-      with:
-        script: |
-          await github.rest.issues.removeLabel({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            issue_number: context.payload.pull_request.number,
-            name: 'screenshot'
-          });
-
+      - name: Remove screenshot label
+        if: always()
+        uses: actions/github-script@v8
+        with:
+          script: |
+            await github.rest.issues.removeLabel({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.pull_request.number,
+              name: 'screenshot'
+            });
