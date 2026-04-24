@@ -49,7 +49,7 @@ jobs:
           if-no-files-found: error
 
   visual-tests:
-    name: Visual (${{ matrix.api-version }} / ${{ matrix.runner-browser }} / shard ${{ matrix.shard }})
+    name: Visual ${{ matrix.api-version }}-${{ matrix.runner-browser }}
     needs: build-storybook
     timeout-minutes: 30
     runs-on: ubuntu-latest
@@ -60,7 +60,6 @@ jobs:
       matrix:
         api-version: ["v71"]
         runner-browser: ["chromium"]
-        shard: [1, 2]
     env:
       CHECKOUT_API_KEY: ${{ secrets.ADYEN_CHECKOUT_API_KEY }}
       MERCHANT_ACCOUNT: ${{ secrets.ADYEN_CHECKOUT_MERCHANT_ACCOUNT }}
@@ -83,13 +82,15 @@ jobs:
           storybook-artifact-name: storybook-static-${{ github.sha }}
 
       - name: Run Visual Tests
-        run: yarn test:automated-visual --project=${{ matrix.runner-browser }} --shard=${{ matrix.shard }}/2
+        # Not sharded: the visual suite is a single spec with a for-loop;
+        # sharding would add container startup overhead without speedup.
+        run: yarn test:automated-visual --project=${{ matrix.runner-browser }}
 
       - name: Upload HTML report (failures only)
         if: failure()
         uses: actions/upload-artifact@v6
         with:
-          name: visual-report-${{ matrix.api-version }}-${{ matrix.runner-browser }}-${{ matrix.shard }}-${{ github.sha }}
+          name: visual-report-${{ matrix.api-version }}-${{ matrix.runner-browser }}-${{ github.sha }}
           path: packages/e2e-playwright/playwright-report
           retention-days: 5
           if-no-files-found: ignore
