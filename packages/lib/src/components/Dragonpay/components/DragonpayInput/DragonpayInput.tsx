@@ -16,7 +16,7 @@ export default function DragonpayInput(props: Readonly<DragonpayInputProps>) {
     const getImage = useImage();
     const isIssuerRequired = () => {
         const typesRequiringIssuers = ['dragonpay_ebanking', 'dragonpay_otc_banking', 'dragonpay_otc_non_banking'];
-        return typesRequiringIssuers.indexOf(props.type) > -1;
+        return typesRequiringIssuers.includes(props.type);
     };
 
     const { handleChangeFor, triggerValidation, data, valid, errors, isValid } = useForm<DragonpayInputData>({

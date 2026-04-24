@@ -2,6 +2,8 @@ import { CountryFormatRules, FormatRules } from '../../../utils/Validator/types'
 import { Formatter } from '../../../utils/useForm/types';
 import { getFormattingRegEx, SPECIAL_CHARS, trimValWithOneSpace } from '../../../utils/validator-utils';
 
+const asCountryFormatRules = <T extends CountryFormatRules>(rules: T): T & CountryFormatRules => rules;
+
 const createFormatByDigits = (digits: number): Formatter => {
     const format = new Array(digits).fill('9').join('');
     return {
@@ -44,7 +46,7 @@ export const addressFormatters: FormatRules = {
 // TODO make proper formatter fns for those entries that don't just have a straightforward, x number of digits, no spaces, format
 //  check against our internal documentation on address postal code
 //  which, for example, says BR isn't just 8 digits (it can be spilt by a hyphen) & CZ can also be 5 digits, no spaces
-export const countrySpecificFormatters: CountryFormatRules = {
+export const countrySpecificFormatters = asCountryFormatRules({
     AT: {
         postalCode: createFormatByDigits(4)
     },
@@ -62,7 +64,7 @@ export const countrySpecificFormatters: CountryFormatRules = {
             // Formatter - excludes non digits, but allows hyphens, and limits to a maxlength that varies depending on whether a hyphen is present or not
             formatterFn: val => {
                 const nuVal = val.replace(getFormattingRegEx('^\\d-', 'g'), '');
-                const maxlength = nuVal.indexOf('-') > -1 ? 9 : 8;
+                const maxlength = nuVal.includes('-') ? 9 : 8;
                 return nuVal.substring(0, maxlength);
             },
             format: '12345678 or 12345-678',
@@ -193,7 +195,7 @@ export const countrySpecificFormatters: CountryFormatRules = {
             // Formatter - excludes non digits, but allows hyphens, and limits to a maxlength that varies depending on whether a hyphen is present or not
             formatterFn: val => {
                 const nuVal = val.replace(getFormattingRegEx('^\\d-', 'g'), '');
-                const maxlength = nuVal.indexOf('-') > -1 ? 6 : 5;
+                const maxlength = nuVal.includes('-') ? 6 : 5;
                 return nuVal.substring(0, maxlength);
             },
             format: '99999 or 99-999',
@@ -241,10 +243,10 @@ export const countrySpecificFormatters: CountryFormatRules = {
         postalCode: {
             formatterFn: val => {
                 const nuVal = val.replace(getFormattingRegEx('^\\d-', 'g'), '');
-                const maxlength = nuVal.indexOf('-') > -1 ? 10 : 5;
+                const maxlength = nuVal.includes('-') ? 10 : 5;
                 return nuVal.substring(0, maxlength);
             },
             format: '99999 or 99999-9999'
         }
     }
-};
+});

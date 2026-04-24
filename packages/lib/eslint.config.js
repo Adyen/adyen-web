@@ -104,7 +104,8 @@ const config = tseslint.config(
             ],
             'react/react-in-jsx-scope': 'off',
             'react/prop-types': 'off',
-            'react/prefer-read-only-props': 'error'
+            'react/prefer-read-only-props': 'error',
+            '@typescript-eslint/prefer-includes': 'error'
         }
     },
     {
