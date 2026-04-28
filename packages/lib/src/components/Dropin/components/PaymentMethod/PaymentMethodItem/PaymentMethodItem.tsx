@@ -139,7 +139,7 @@ class PaymentMethodItem extends Component<Readonly<PaymentMethodItemProps>> {
                 </div>
 
                 <div className="adyen-checkout-pm-details-wrapper" aria-hidden={!isSelected}>
-                    <div className="adyen-checkout__payment-method__details" id={containerId}>
+                    <div className="adyen-checkout__payment-method__details" id={containerId} inert={!isSelected}>
                         {showRemovePaymentMethodButton && (
                             <DisableOneClickConfirmation
                                 id={disableConfirmationId}
