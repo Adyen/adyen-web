@@ -45,6 +45,15 @@ export const getPaymentMethods = async (configuration?: any): Promise<PaymentMet
 export const makePayment = async (stateData: any, paymentData: any, shopperDetails?: ShopperDetails): Promise<RawPaymentResponse> => {
     const paymentRequest = { ...paymentsConfig, ...stateData, ...paymentData, ...shopperDetails };
     if (paymentRequest.order) delete paymentRequest.amount; // why?
+
+    // UPI Autopay (and other mandate-bearing) requests require recurring context at the `/payments` level.
+    // Merchants must inject these fields in their own backend; we do it here so storybook flows succeed end-to-end.
+    if (paymentRequest.mandate) {
+        paymentRequest.storePaymentMethod = paymentRequest.storePaymentMethod ?? true;
+        paymentRequest.shopperInteraction = paymentRequest.shopperInteraction ?? 'Ecommerce';
+        paymentRequest.recurringProcessingModel = paymentRequest.recurringProcessingModel ?? 'Subscription';
+    }
+
     return await httpPost('payments', paymentRequest);
 };
 
