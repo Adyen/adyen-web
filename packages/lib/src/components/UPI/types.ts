@@ -13,7 +13,6 @@ export type UpiPaymentData = {
         type: UpiType;
         appId?: string;
     };
-    mandate?: Mandate;
 };
 
 export interface UPIConfiguration extends UIElementProps {
