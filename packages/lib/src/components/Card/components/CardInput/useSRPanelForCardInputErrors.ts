@@ -53,7 +53,7 @@ const useSRPanelForCardInputErrors = ({ errors, props, isValidating, retrieveLay
             switch (srPanelResp?.action) {
                 // A call to focus the first field in error will always follow the call to validate the whole form
                 case ERROR_ACTION_FOCUS_FIELD:
-                    if (shouldMoveFocusSR) {
+                    if (shouldMoveFocusSR && srPanelResp?.fieldToFocus) {
                         setFocusOnFirstField(isValidating.current, sfp, srPanelResp?.fieldToFocus);
                     }
 

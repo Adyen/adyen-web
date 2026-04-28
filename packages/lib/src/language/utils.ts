@@ -96,19 +96,24 @@ const replaceTranslationValues = (translation: string, values: Record<string, st
  *
  * @internal
  */
-export const getTranslation = (translations: object, key: string, options: { [key: string]: any } = { values: {}, count: 0 }): string => {
+export const getTranslation = (
+    translations: Record<string, string>,
+    key: string,
+    options: { values?: Record<string, string>; count?: number } = {}
+): string | null => {
+    const { values = {}, count = 0 } = options;
     const keyPlural = `${key}__plural`;
-    const keyForCount = count => `${key}__${count}`;
+    const keyForCount = (count: number) => `${key}__${count}`;
 
-    if (Object.prototype.hasOwnProperty.call(translations, keyForCount(options.count))) {
+    if (Object.prototype.hasOwnProperty.call(translations, keyForCount(count))) {
         // Find key__count translation key
-        return replaceTranslationValues(translations[keyForCount(options.count)], options.values);
-    } else if (Object.prototype.hasOwnProperty.call(translations, keyPlural) && options.count > 1) {
+        return replaceTranslationValues(translations[keyForCount(count)], values);
+    } else if (Object.prototype.hasOwnProperty.call(translations, keyPlural) && count > 1) {
         // Find key__plural translation key, if count greater than 1 (e.g. myTranslation__plural)
-        return replaceTranslationValues(translations[keyPlural], options.values);
+        return replaceTranslationValues(translations[keyPlural], values);
     } else if (Object.prototype.hasOwnProperty.call(translations, key)) {
         // Find key translation key (e.g. myTranslation)
-        return replaceTranslationValues(translations[key], options.values);
+        return replaceTranslationValues(translations[key], values);
     }
 
     return null;

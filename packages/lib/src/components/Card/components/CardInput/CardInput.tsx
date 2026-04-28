@@ -277,7 +277,7 @@ const CardInput = (props: Readonly<CardInputProps>) => {
      * Deciding to do it this way since we garante there's no DOM changes to merchants
      * We can break this in the next major version (v7)
      */
-    const mimicLoadingStatusChange = sfpState => {
+    const mimicLoadingStatusChange = (sfpState: SFPState) => {
         if (!sfpState.status) return;
         if (sfpState.status == 'loading') {
             setShowCardUIElements(false);
