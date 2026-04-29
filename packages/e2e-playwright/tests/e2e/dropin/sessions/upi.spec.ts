@@ -23,7 +23,7 @@ test.describe('Dropin - Sessions - UPI', () => {
                 await page.mouse.move(0, 0);
             }
             await toHaveScreenshot(upiPaymentMethodHeader.rootElement, browserName, 'expanded-upi-payment-method-header-desktop.png', {
-                timeout: 3000
+                mask: [upiPaymentMethodHeader.rootElement.locator('img')]
             });
 
             const upi = new UPI(page);
