@@ -575,7 +575,7 @@ describe('Core', () => {
     });
 
     describe('Initialising without a countryCode', () => {
-        test('AdvancedFlow, without a countryCode, should throw an error', () => {
+        test('[advanced flow] should thrown an error if core is initialized without countryCode', () => {
             const core = new AdyenCheckout({
                 environment: 'test',
                 _environmentUrls: {
@@ -587,8 +587,9 @@ describe('Core', () => {
             void expect(async () => await core.initialize()).rejects.toThrow('You must specify a countryCode');
         });
 
-        test('SessionsFlow, without a countryCode, should throw an error', () => {
-            delete sessionSetupResponseMock.countryCode;
+        test('[sessions flow] should thrown an error if Session setup does not return a countryCode', () => {
+            const { countryCode, ...responseWithoutCountryCode } = sessionSetupResponseMock;
+            setupSessionSpy.mockResolvedValueOnce({ ...responseWithoutCountryCode });
 
             const checkout = new AdyenCheckout({
                 environment: 'test',
@@ -597,6 +598,17 @@ describe('Core', () => {
             });
 
             void expect(async () => await checkout.initialize()).rejects.toThrow('You must specify a countryCode');
+        });
+
+        test('[sessions flow] should not thrown an error if core is initialized without countryCode but Session setup returns it', async () => {
+            const checkout = new AdyenCheckout({
+                environment: 'test',
+                clientKey: 'test_123456',
+                session: { id: 'session-id', sessionData: 'session-data' }
+            });
+
+            await expect(checkout.initialize()).resolves.toBe(checkout);
+            expect(checkout.options.countryCode).toBe('US');
         });
     });
 
