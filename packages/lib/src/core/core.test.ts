@@ -587,7 +587,7 @@ describe('Core', () => {
             void expect(async () => await core.initialize()).rejects.toThrow('You must specify a countryCode');
         });
 
-        test('[sessions flow] should thrown an error if Session setup does not return a countryCode', () => {
+        test('[sessions flow] should throw an error if Session setup does not return a countryCode', () => {
             const { countryCode, ...responseWithoutCountryCode } = sessionSetupResponseMock;
             setupSessionSpy.mockResolvedValueOnce({ ...responseWithoutCountryCode });
 
