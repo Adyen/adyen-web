@@ -600,7 +600,7 @@ describe('Core', () => {
             void expect(async () => await checkout.initialize()).rejects.toThrow('You must specify a countryCode');
         });
 
-        test('[sessions flow] should not thrown an error if core is initialized without countryCode but Session setup returns it', async () => {
+        test('[sessions flow] should not throw an error if core is initialized without countryCode but Session setup returns it', async () => {
             const checkout = new AdyenCheckout({
                 environment: 'test',
                 clientKey: 'test_123456',
