@@ -575,7 +575,7 @@ describe('Core', () => {
     });
 
     describe('Initialising without a countryCode', () => {
-        test('[advanced flow] should thrown an error if core is initialized without countryCode', () => {
+        test('[advanced flow] should throw an error if core is initialized without countryCode', () => {
             const core = new AdyenCheckout({
                 environment: 'test',
                 _environmentUrls: {
