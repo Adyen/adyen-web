@@ -7,6 +7,9 @@ jobs:
   e2e-tests:
     timeout-minutes: 120
     runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.50.0-noble
+      options: --user 1001
     strategy:
       fail-fast: false
       matrix:
@@ -45,31 +48,13 @@ jobs:
       if: steps.node-modules-cache.outputs.cache-hit != 'true'
       run: yarn install --immutable
 
-    - name: Extract Playwright version
-      id: playwright-version
-      run: echo "PLAYWRIGHT_VERSION=$(jq -r '.devDependencies["@playwright/test"]' packages/e2e-playwright/package.json)" >> $GITHUB_ENV
-
-    - name: Cache Playwright
-      if: matrix.runner-browser != 'webkit'
-      id: playwright-cache
-      uses: actions/cache@v5
-      env:
-        cache-name: playwright-v1
-      with:
-        path: ~/.cache/ms-playwright
-        key: ${{ runner.os }}-cache-${{ env.cache-name }}-playwright-${{ env.PLAYWRIGHT_VERSION }}-browser-${{ matrix.runner-browser }}
-
-    - name: Install Playwright Dependencies
-      if: steps.playwright-cache.outputs.cache-hit != 'true' || matrix.runner-browser == 'webkit'
-      run: npx playwright install --with-deps ${{ matrix.runner-browser }}
-
     - name: Run E2E Tests
       run: yarn test:e2e --project=${{ matrix.runner-browser }}
 
     - name: Archive test result artifacts
       id: upload-artifact
       if: always()
-      uses: actions/upload-artifact@v6
+      uses: actions/upload-artifact@v7
       with:
         name: playwright-report-${{matrix.api-version}}-${{matrix.runner-browser}}-${{ github.sha }}
         path: packages/e2e-playwright/playwright-report

@@ -9,6 +9,9 @@ jobs:
     if: github.event.label.name == 'screenshot'
     timeout-minutes: 60
     runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.50.0-noble
+      options: --user 1001
 
     env:
       CHECKOUT_API_KEY: ${{secrets.ADYEN_CHECKOUT_API_KEY}}
@@ -43,11 +46,8 @@ jobs:
       run: corepack enable
 
     - name: Install Project Dependencies
+      if: steps.node-modules-cache.outputs.cache-hit != 'true'
       run: yarn install --immutable
-
-
-    - name: Install Playwright Dependencies
-      run: npx playwright install --with-deps
 
     - name: Update automated visual tests screenshots
       run: yarn test:automated-visual:update-screenshots
@@ -70,7 +70,7 @@ jobs:
     - name: Archive test result artifacts
       id: upload-artifact
       if: always()
-      uses: actions/upload-artifact@v6
+      uses: actions/upload-artifact@v7
       with:
         name: playwright-report-update-screenshots-${{ github.sha }}
         path: packages/e2e-playwright/playwright-report

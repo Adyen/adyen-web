@@ -18,7 +18,11 @@ export interface MandateType {
 export type PayToPlaceholdersType = { [K in keyof PayToData]: string };
 
 export interface PayToConfiguration extends UIElementProps {
-    paymentData?: any;
+    /**
+     * Data received from the server to handle the action
+     * @internal
+     */
+    paymentData?: string;
     data?: PayToData;
     placeholders?: PayToPlaceholdersType;
     mandate?: MandateType;

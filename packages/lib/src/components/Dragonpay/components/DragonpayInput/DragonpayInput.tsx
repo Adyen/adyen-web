@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { useEffect, useState } from 'preact/hooks';
+import { useEffect, useRef, useState } from 'preact/hooks';
 import useForm from '../../../../utils/useForm';
 import Field from '../../../internal/FormFields/Field';
 import getIssuerImageUrl from '../../../../utils/get-issuer-image';
@@ -10,14 +10,16 @@ import Select from '../../../internal/FormFields/Select';
 import useImage from '../../../../core/Context/useImage';
 import { validationRules } from '../../../../utils/Validator/defaultRules';
 import { getErrorMessage } from '../../../../utils/getErrorMessage';
+import { ComponentMethodsRef } from '../../../internal/UIElement/types';
 
 export default function DragonpayInput(props: Readonly<DragonpayInputProps>) {
     const { i18n } = useCoreContext();
     const getImage = useImage();
     const isIssuerRequired = () => {
         const typesRequiringIssuers = ['dragonpay_ebanking', 'dragonpay_otc_banking', 'dragonpay_otc_non_banking'];
-        return typesRequiringIssuers.indexOf(props.type) > -1;
+        return typesRequiringIssuers.includes(props.type);
     };
+    const [status, setStatus] = useState('ready');
 
     const { handleChangeFor, triggerValidation, data, valid, errors, isValid } = useForm<DragonpayInputData>({
         schema: [...(isIssuerRequired() ? ['issuer'] : []), 'shopperEmail'],
@@ -27,6 +29,13 @@ export default function DragonpayInput(props: Readonly<DragonpayInputProps>) {
                 modes: ['input', 'blur']
             },
             shopperEmail: validationRules.emailRule
+        }
+    });
+
+    const self = useRef<ComponentMethodsRef>({
+        setStatus: setStatus,
+        showValidation: () => {
+            triggerValidation();
         }
     });
 
@@ -49,9 +58,9 @@ export default function DragonpayInput(props: Readonly<DragonpayInputProps>) {
         props.onChange({ isValid, data, valid, errors });
     }, [isValid, data, valid, errors]);
 
-    const [status, setStatus] = useState('ready');
-    this.setStatus = setStatus;
-    this.showValidation = triggerValidation;
+    useEffect(() => {
+        props.setComponentRef(self.current);
+    }, [props.setComponentRef]);
 
     return (
         <div className="adyen-checkout__dragonpay-input__field">

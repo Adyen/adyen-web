@@ -4,7 +4,35 @@ import { useCoreContext } from '../../../../core/Context/CoreProvider';
 import Alert from '../../../internal/Alert';
 import type { PaymentAmount } from '../../../../types/global-types';
 
-export type Mandate = { amount: string; frequency: 'monthly' | 'weekly' | 'adhoc'; amountRule: 'max' | 'exact' };
+export interface Mandate {
+    /**
+     * Mandate amount in the smallest unit of the currency. Maximum amount the shopper authorizes
+     * for future recurring charges.
+     */
+    amount: string;
+    /**
+     * Charge cadence for the mandate.
+     */
+    frequency: 'monthly' | 'weekly' | 'adhoc';
+    /**
+     * - `max`: merchant can charge any amount up to `amount` during future billing cycles.
+     * - `exact`: merchant must charge exactly `amount` on each recurring charge.
+     */
+    amountRule: 'max' | 'exact';
+    /**
+     * End date of the mandate in `YYYY-MM-DD` format. Required by the Checkout API.
+     * Recommended to set between 7 and 10 years in the future.
+     */
+    endsAt: string;
+    /**
+     * Start date of the mandate in `YYYY-MM-DD` format. Defaults to the mandate creation date.
+     */
+    startsAt?: string;
+    /**
+     * Free-form description of the mandate shown on the shopper's UPI app.
+     */
+    remarks?: string;
+}
 
 export interface UPIMandateProps {
     mandate: Mandate;

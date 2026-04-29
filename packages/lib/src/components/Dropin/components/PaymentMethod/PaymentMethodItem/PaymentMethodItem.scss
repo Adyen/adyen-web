@@ -88,6 +88,7 @@
         flex-direction: column;
         justify-content: space-between;
         gap: variable-generator.token(spacer-040);
+        overflow: hidden;
 
         @media (min-width: #{$media-query-between-xs-and-s}) {
             flex-direction: row;

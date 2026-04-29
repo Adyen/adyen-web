@@ -54,7 +54,7 @@ interface SortedErrorObject {
  */
 const useSRPanelForGiftcardErrors = ({ errors, isValidating, setIsValidating, sfp }: UseSRPanelForGiftcardErrorsProps) => {
     // Track sorted list of errors for comparison with previous state
-    const [sortedErrorList, setSortedErrorList] = useState<SortedErrorObject[]>(null);
+    const [sortedErrorList, setSortedErrorList] = useState<SortedErrorObject[] | null>(null);
     // Track previous error list for detecting changes
     const previousSortedErrors = usePrevious(sortedErrorList);
 

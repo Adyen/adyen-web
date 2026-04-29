@@ -51,7 +51,7 @@ class PaymentMethodItem extends Component<Readonly<PaymentMethodItemProps>> {
         this.toggleDisableConfirmation();
     };
 
-    private handleOnListItemClick = (): void => {
+    private readonly handleOnListItemClick = (): void => {
         const { onSelect, paymentMethod } = this.props;
         onSelect(paymentMethod);
     };
@@ -139,7 +139,7 @@ class PaymentMethodItem extends Component<Readonly<PaymentMethodItemProps>> {
                 </div>
 
                 <div className="adyen-checkout-pm-details-wrapper" aria-hidden={!isSelected}>
-                    <div className="adyen-checkout__payment-method__details" id={containerId}>
+                    <div className="adyen-checkout__payment-method__details" id={containerId} inert={isSelected ? undefined : true}>
                         {showRemovePaymentMethodButton && (
                             <DisableOneClickConfirmation
                                 id={disableConfirmationId}

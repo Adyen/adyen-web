@@ -104,7 +104,8 @@ const config = tseslint.config(
             ],
             'react/react-in-jsx-scope': 'off',
             'react/prop-types': 'off',
-            'react/prefer-read-only-props': 'error'
+            'react/prefer-read-only-props': 'error',
+            '@typescript-eslint/prefer-includes': 'error'
         }
     },
     {
@@ -142,13 +143,8 @@ const config = tseslint.config(
             // ══════════════════════════════════════════════════════════
 
             // ── Components
-            'src/components/AmazonPay/**',
             'src/components/ANCV/**',
-            'src/components/ApplePay/**',
-            'src/components/BankTransfer/**',
-            'src/components/Dragonpay/**',
             'src/components/Dropin/**',
-            'src/components/Econtext/**',
             'src/components/Giftcard/**',
             'src/components/Klarna/**',
             'src/components/PayTo/**',
@@ -165,17 +161,10 @@ const config = tseslint.config(
             'src/components/internal/UIElement/**',
 
             // ── Utils ──
-            'src/utils/debounce.ts',
-            'src/utils/hookUtils.ts',
-            'src/utils/promiseTimeout.ts',
-            'src/utils/Script.ts',
             'src/utils/useForm/**',
-            'src/utils/Validator/**',
 
             // ── Others ──
             'src/core/**',
-            'src/language/**',
-            'src/create-component.umd.ts',
             'src/types/**'
         ],
         rules: {

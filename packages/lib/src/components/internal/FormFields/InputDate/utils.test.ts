@@ -37,5 +37,13 @@ describe('InputDate utils', () => {
         test('returns the same value if no slashes are found', () => {
             expect(unformatDate('2003-02-01')).toBe('2003-02-01');
         });
+
+        test('returns empty string for empty input', () => {
+            expect(unformatDate('')).toBe('');
+        });
+
+        test('returns empty string when called with no arguments', () => {
+            expect(unformatDate()).toBe('');
+        });
     });
 });
