@@ -1,9 +1,9 @@
 import { h } from 'preact';
-import { MetaConfiguration, StoryConfiguration } from '../../../storybook/types';
-import { ComponentContainer } from '../../../storybook/components/ComponentContainer';
-import { GooglePayConfiguration } from './types';
-import GooglePay from './GooglePay';
-import { Checkout } from '../../../storybook/components/Checkout';
+import { MetaConfiguration, StoryConfiguration } from '../../../../storybook/types';
+import { ComponentContainer } from '../../../../storybook/components/ComponentContainer';
+import { GooglePayConfiguration } from '../types';
+import GooglePay from '../GooglePay';
+import { Checkout } from '../../../../storybook/components/Checkout';
 
 type GooglePayStory = StoryConfiguration<GooglePayConfiguration>;
 
@@ -19,6 +19,7 @@ export const Default: GooglePayStory = {
     ),
 
     args: {
+        countryCode: 'BR',
         componentConfiguration: {
             buttonColor: 'black',
             buttonType: 'buy',
