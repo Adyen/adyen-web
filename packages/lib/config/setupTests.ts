@@ -1,6 +1,3 @@
-process.env.VERSION = 'X.Y.Z';
-process.env.BUNDLE_TYPE = 'esm';
-
 import '@testing-library/jest-dom/jest-globals';
 import '@testing-library/jest-dom';
 import './testMocks/matchMedia';

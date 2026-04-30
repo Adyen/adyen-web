@@ -3,26 +3,10 @@ import { BaseElementProps } from './types';
 import { setupCoreMock, TEST_CHECKOUT_ATTEMPT_ID, TEST_RISK_DATA } from '../../../../config/testMocks/setup-core-mock';
 import base64 from '../../../utils/base64';
 import { ICore } from '../../../types';
-import { PAYMENT_METHOD_BEHAVIOR } from '../../../core/config';
-import { TxVariants } from '../../tx-variants';
-
-const decodeSdkData = (input: string | undefined) => {
-    const { data } = base64.decode(input ?? '');
-    if (!data) {
-        throw new Error('Failed to decode sdkData');
-    }
-    return JSON.parse(data);
-};
 
 class MyElement extends BaseElement<BaseElementProps> {
     public override formatData() {
         return { paymentMethod: { type: 'my-element' } };
-    }
-}
-
-class NativeElement extends BaseElement<BaseElementProps> {
-    public override formatData() {
-        return { paymentMethod: { type: TxVariants.scheme } };
     }
 }
 
@@ -64,7 +48,7 @@ describe('BaseElement', () => {
             const myElement = new MyElement(core);
 
             const sdkData = myElement.data.paymentMethod.sdkData;
-            const decodedSdkData = decodeSdkData(sdkData);
+            const decodedSdkData = JSON.parse(base64.decode(sdkData).data);
 
             expect(decodedSdkData.analytics.checkoutAttemptId).toEqual(TEST_CHECKOUT_ATTEMPT_ID);
         });
@@ -81,27 +65,9 @@ describe('BaseElement', () => {
             const myElement = new MyElement(core);
 
             const sdkData = myElement.data.paymentMethod.sdkData;
-            const decodedSdkData = decodeSdkData(sdkData);
+            const decodedSdkData = JSON.parse(base64.decode(sdkData).data);
 
             expect(decodedSdkData.clientData).toBeUndefined();
-        });
-
-        test('should set paymentMethodBehavior to GENERIC when payment method type is not a known TxVariant', () => {
-            const myElement = new MyElement(core);
-
-            const sdkData = myElement.data.paymentMethod.sdkData;
-            const decodedSdkData = decodeSdkData(sdkData);
-
-            expect(decodedSdkData.paymentMethodBehavior).toEqual(PAYMENT_METHOD_BEHAVIOR.GENERIC);
-        });
-
-        test('should set paymentMethodBehavior to NATIVE when payment method type is a known TxVariant', () => {
-            const nativeElement = new NativeElement(core);
-
-            const sdkData = nativeElement.data.paymentMethod.sdkData;
-            const decodedSdkData = decodeSdkData(sdkData);
-
-            expect(decodedSdkData.paymentMethodBehavior).toEqual(PAYMENT_METHOD_BEHAVIOR.NATIVE);
         });
     });
 
