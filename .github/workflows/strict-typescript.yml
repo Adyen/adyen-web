@@ -1,14 +1,11 @@
 name: Strict TypeScript Scan
 
 on:
-  pull_request:
-    types: [opened, synchronize, reopened]
+  workflow_call:
 
 jobs:
   strict-scan:
     runs-on: ubuntu-latest
-    # Non-blocking: this job is informational only and will never prevent merging.
-    continue-on-error: true
 
     steps:
       - name: Use Node.js 24
@@ -66,7 +63,6 @@ jobs:
 
       - name: Strict type check
         id: tsc-strict
-        continue-on-error: true
         run: |
           TSC_STRICT_BASELINE=${{ steps.baseline.outputs.count }}
           OUTPUT=$(yarn validate:strict 2>&1 || true)
@@ -151,7 +147,7 @@ jobs:
 
       - name: Delete previous comment
         if: always() && steps.fc.outputs.comment-id != '' && steps.fc.outputs.comment-id != '0'
-        uses: actions/github-script@v8
+        uses: actions/github-script@v7
         with:
           script: |
             await github.rest.issues.deleteComment({
