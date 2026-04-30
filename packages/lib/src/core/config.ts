@@ -69,28 +69,3 @@ export default {
     GENERIC_OPTIONS,
     DEFAULT_HTTP_TIMEOUT
 };
-
-/**
- * @internal
- */
-
-export enum CHANNEL {
-    WEB = 'web'
-}
-
-/**
- * @internal
- */
-export const PLATFORM = 'web';
-
-/**
- * How the SDK handles the rendering of a payment method.
- *
- * - NATIVE: The payment method has a dedicated component in the SDK.
- * - GENERIC: The payment method has no dedicated component; it falls back to a generic component (Redirect).
- * @internal
- */
-export enum PAYMENT_METHOD_BEHAVIOR {
-    NATIVE = 'nativeComponent',
-    GENERIC = 'genericComponent'
-}

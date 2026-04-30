@@ -2,7 +2,6 @@ import { AnalyticsEventPayload, AnalyticsService } from './AnalyticsService';
 import { httpPost } from '../Services/http';
 import AdyenCheckoutError from '../Errors/AdyenCheckoutError';
 import { AnalyticsInfoEvent, InfoEventType } from './events/AnalyticsInfoEvent';
-import { CHANNEL, PLATFORM } from '../config';
 
 jest.mock('../Services/http', () => ({
     httpPost: jest.fn()
@@ -24,8 +23,8 @@ describe('AnalyticsService', () => {
     describe('requestCheckoutAttemptId()', () => {
         const payload = {
             version: '5.0.0',
-            channel: CHANNEL.WEB,
-            platform: PLATFORM,
+            channel: 'Web' as const,
+            platform: 'Web' as const,
             locale: 'en-US',
             checkoutStage: 'checkout' as const,
             referrer: 'https://merchant.com',
@@ -62,8 +61,8 @@ describe('AnalyticsService', () => {
         const checkoutAttemptId = 'test-checkout-attempt-id';
 
         const createPayload = (hasEvents = true): AnalyticsEventPayload => ({
-            channel: CHANNEL.WEB,
-            platform: PLATFORM,
+            channel: 'Web' as const,
+            platform: 'Web' as const,
             info: hasEvents ? [new AnalyticsInfoEvent({ type: InfoEventType.rendered, component: 'card' })] : [],
             errors: [],
             logs: []

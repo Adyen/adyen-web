@@ -1,25 +1,5 @@
 # @adyen/adyen-web
 
-## 6.35.0
-
-### Minor Changes
-
-- New: The payload returned in the `onSubmit` callback has increased in size, because of changes to the included `sdkData` field. ([#3900](https://github.com/Adyen/adyen-web/pull/3900))
-
-### Patch Changes
-
-- Fixed: Validating countryCode after library initialization ([#3944](https://github.com/Adyen/adyen-web/pull/3944))
-
-- Fixed: Form label font-weight to bold ([#3897](https://github.com/Adyen/adyen-web/pull/3897))
-
-- Improved: Types for UPI mandate (Autopay) object by making `endsAt` a required property ([#3943](https://github.com/Adyen/adyen-web/pull/3943))
-
-- Fixed: add html inert property to disable focus of payment method item details when the payment method is not selected ([#3941](https://github.com/Adyen/adyen-web/pull/3941))
-
-- Fixed: Remove explicit any from utilities, language and UMD entry ([#3904](https://github.com/Adyen/adyen-web/pull/3904))
-
-- Fixed: overflowing text content for drop-in payment list items ([#3933](https://github.com/Adyen/adyen-web/pull/3933))
-
 ## 6.34.0
 
 ### Minor Changes
@@ -45,6 +25,7 @@
 - Fixed: Explicit any in Card.tsx and it's subdirectories ([#3906](https://github.com/Adyen/adyen-web/pull/3906))
 
 - Fixed: Explicit any in internal/SecuredFields and it's subdirectories ([#3922](https://github.com/Adyen/adyen-web/pull/3922))
+
 
 ## 6.33.0
 
