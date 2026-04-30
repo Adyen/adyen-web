@@ -39,7 +39,7 @@ function Select({
     const selectListRef = useRef(null);
     const [textFilter, setTextFilter] = useState<string>(null);
     const [showList, setShowList] = useState<boolean>(false);
-    const [statusMessage, setStatusMessage] = useState<string>(null);
+    const [statusMessage, setStatusMessage] = useState<string | null>(null);
     const selectListId: string = useMemo(() => `select-${uuid()}`, []);
 
     const active: SelectItem = items.find(i => i.id === selectedValue) || ({} as SelectItem);
