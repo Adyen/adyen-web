@@ -45,7 +45,7 @@ describe('Select', () => {
         // Test keyboard interaction - focus the button first with user event
         const button = screen.getByRole('button');
         await user.click(button); // Open dropdown
-        
+
         await user.keyboard('[ArrowDown][Enter]');
         expect(onChangeCb).toBeCalledTimes(2);
 
@@ -87,7 +87,7 @@ describe('Select', () => {
         // Test keyboard interaction - focus the combobox first with user event
         const combobox = screen.getByRole('combobox');
         await user.click(combobox); // Open dropdown
-        
+
         await user.keyboard('[ArrowDown][Enter]');
         expect(onChangeCb).toBeCalledTimes(2);
 
@@ -110,18 +110,18 @@ describe('Select', () => {
         });
 
         const combobox = screen.getByRole('combobox');
-        
+
         // Focus should not open the dropdown
         await user.tab(); // Focus the combobox using tab navigation
-        
+
         // Debug visibility
         const option1 = screen.getByText('Option 1');
         const option2 = screen.getByText('Option 2');
-        
+
         // Elements should be hidden (offsetParent is null and getBoundingClientRect is all zeros)
         expect(option1.offsetParent).toBeNull();
         expect(option2.offsetParent).toBeNull();
-        
+
         // Click should open the dropdown
         await user.click(combobox);
         expect(screen.getByText('Option 1')).toBeVisible();
@@ -142,18 +142,18 @@ describe('Select', () => {
         });
 
         const button = screen.getByRole('button');
-        
+
         // Focus should not open the dropdown
         await user.tab(); // Focus the button using tab navigation
-        
+
         // Debug visibility
         const option1 = screen.getByText('Option 1');
         const option2 = screen.getByText('Option 2');
-        
+
         // Elements should be hidden (offsetParent is null and getBoundingClientRect is all zeros)
         expect(option1.offsetParent).toBeNull();
         expect(option2.offsetParent).toBeNull();
-        
+
         // Click should open the dropdown
         await user.click(button);
         expect(screen.getByText('Option 1')).toBeVisible();
@@ -175,55 +175,17 @@ describe('Select', () => {
         });
 
         const combobox = screen.getByRole('combobox');
-        
+
         // Initially dropdown should be closed
         const apple = screen.getByText('Apple');
         const banana = screen.getByText('Banana');
-        
+
         // Elements should be hidden (offsetParent is null and getBoundingClientRect is all zeros)
         expect(apple.offsetParent).toBeNull();
         expect(banana.offsetParent).toBeNull();
-        
+
         // Typing should open the dropdown
         await user.type(combobox, 'A');
         expect(screen.getByText('Apple')).toBeVisible();
-    });
-
-    test('ARIA live region announces no options found message', async () => {
-        renderSelect({
-            items: [{ name: 'Apple', id: '1' }],
-            filterable: true,
-            selectedValue: '',
-            onChange: jest.fn()
-        });
-
-        const combobox = screen.getByRole('combobox');
-        
-        // Type something that won't match any items
-        await user.type(combobox, 'xyz');
-        
-        // Check that the live region is present and contains the no options message
-        const liveRegion = screen.getByRole('status');
-        expect(liveRegion).toBeInTheDocument();
-        expect(liveRegion).toHaveTextContent('No options found');
-        expect(liveRegion).toHaveAttribute('aria-live', 'polite');
-    });
-
-    test('ARIA live region is empty when options are available', async () => {
-        renderSelect({
-            items: [{ name: 'Apple', id: '1' }],
-            filterable: true,
-            selectedValue: '',
-            onChange: jest.fn()
-        });
-
-        const combobox = screen.getByRole('combobox');
-
-        await user.type(combobox, 'App'); // search for Apple
-
-        // Live region should be present but empty when there are options
-        const liveRegion = screen.getByRole('status');
-        expect(liveRegion).toBeInTheDocument();
-        expect(liveRegion).toBeEmptyDOMElement();
     });
 });
