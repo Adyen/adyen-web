@@ -18,10 +18,8 @@ test.describe('Dropin - Sessions - UPI', () => {
 
             await dropinWithSession.selectNonStoredPaymentMethod('upi');
 
-            if (browserName === 'webkit') {
-                // Move mouse to top left to ensure no hover states affect the screenshot
-                await page.mouse.move(0, 0);
-            }
+            // Move mouse to top left to ensure no hover states affect the screenshot
+            await page.mouse.move(0, 0);
             await toHaveScreenshot(upiPaymentMethodHeader.rootElement, browserName, 'expanded-upi-payment-method-header-desktop.png', {
                 mask: [upiPaymentMethodHeader.rootElement.locator('img')]
             });
