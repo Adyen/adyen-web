@@ -106,8 +106,8 @@ class Core implements ICore {
     }
 
     public async initialize(): Promise<this> {
-        this.validateCoreConfiguration();
         await this.initializeCore();
+        this.validateCoreConfiguration();
         this.createCoreModules();
         this.assignLocaleToCore();
         void this.requestAnalyticsAttemptId();
