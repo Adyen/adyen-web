@@ -26,6 +26,9 @@ jobs:
         uses: ./.github/workflows/validate-locales.yml
         secrets: inherit
 
+    strict-typescript:
+        uses: ./.github/workflows/strict-typescript.yml
+
     # Gateway check for PRs — unit-tests, a11y, and visual must pass
     # WHY: E2E is optional on PR since some tests might be flaky.
     # This allows the PR author to attempt merge if they believe tests will pass in the merge queue.
