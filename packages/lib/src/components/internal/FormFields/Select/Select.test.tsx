@@ -46,6 +46,7 @@ describe('Select', () => {
         const button = screen.getByRole('button');
         await user.click(button); // Open dropdown
 
+
         await user.keyboard('[ArrowDown][Enter]');
         expect(onChangeCb).toBeCalledTimes(2);
 
@@ -87,6 +88,7 @@ describe('Select', () => {
         // Test keyboard interaction - focus the combobox first with user event
         const combobox = screen.getByRole('combobox');
         await user.click(combobox); // Open dropdown
+
 
         await user.keyboard('[ArrowDown][Enter]');
         expect(onChangeCb).toBeCalledTimes(2);
