@@ -162,7 +162,7 @@ test('rejecting onAddressLookupMock should not trigger error', async () => {
     await waitFor(() => expect(onAddressLookupMock.mock.lastCall[0]).toBe('Test'));
 
     // Test if no options are displayed
-    const resultList = screen.getByRole('alert');
+    const resultList = screen.getByRole('listbox');
     expect(resultList).toHaveTextContent('No options found');
 
     // TODO fix this

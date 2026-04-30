@@ -9,6 +9,7 @@ import { SelectItem, SelectProps } from './types';
 import './Select.scss';
 import { ARIA_CONTEXT_SUFFIX, ARIA_ERROR_SUFFIX } from '../../../../core/Errors/constants';
 import { simulateFocusScroll } from '../utils';
+import { useCoreContext } from '../../../../core/Context/CoreProvider';
 
 function Select({
     items = [],
@@ -31,12 +32,14 @@ function Select({
     onListToggle,
     required
 }: Readonly<SelectProps>) {
+    const { i18n } = useCoreContext();
     const filterInputRef = useRef(null);
     const selectContainerRef = useRef(null);
     const toggleButtonRef = useRef(null);
     const selectListRef = useRef(null);
     const [textFilter, setTextFilter] = useState<string>(null);
     const [showList, setShowList] = useState<boolean>(false);
+    const [statusMessage, setStatusMessage] = useState<string>(null);
     const selectListId: string = useMemo(() => `select-${uuid()}`, []);
 
     const active: SelectItem = items.find(i => i.id === selectedValue) || ({} as SelectItem);
@@ -268,6 +271,19 @@ function Select({
         };
     }, [selectContainerRef]);
 
+    /**
+     * Update status message for screen readers when no options are found
+     */
+    useEffect(() => {
+        if (showList && filteredItems.length === 0) {
+            setStatusMessage(null);
+            const timer = setTimeout(() => setStatusMessage(i18n.get('select.noOptionsFound')), 500);
+            return () => clearTimeout(timer);
+        } else {
+            setStatusMessage(null);
+        }
+    }, [showList, filteredItems.length, i18n]);
+
     return (
         <div
             className={cx(['adyen-checkout__dropdown', className, ...classNameModifiers.map(m => `adyen-checkout__dropdown--${m}`)])}
@@ -304,6 +320,19 @@ function Select({
                 selectListRef={selectListRef}
                 showList={showList}
             />
+            <div
+                key={inputText}
+                role="status"
+                aria-live="polite"
+                // aria-relevant seems to be needed here make make sure a second time we get
+                // "No options found" we still announce the status message.
+                // What happens otherwise is that just the first status message is announced
+                // tested on VoiceOver on Chrome
+                aria-relevant="additions text"
+                className="adyen-checkout-sr-panel--sr-only"
+            >
+                {statusMessage}
+            </div>
         </div>
     );
 }
