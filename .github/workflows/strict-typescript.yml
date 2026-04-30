@@ -3,6 +3,10 @@ name: Strict TypeScript Scan
 on:
   workflow_call:
 
+concurrency:
+  group: strict-tsc-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   strict-scan:
     runs-on: ubuntu-latest
@@ -12,22 +16,21 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: 24
-          package-manager-cache: false
 
       - name: Enable Corepack
         run: corepack enable
 
-      # ── Get baseline from master ──
-      - name: Checkout master
+      # ── Get baseline from main ──
+      - name: Checkout main
         uses: actions/checkout@v6
         with:
           ref: main
           fetch-depth: 1
 
-      - name: Install dependencies (master)
+      - name: Install dependencies (main)
         run: yarn install --immutable
 
-      - name: Get strict error baseline from master
+      - name: Get strict error baseline from main
         id: baseline
         run: |
           OUTPUT=$(yarn validate:strict 2>&1 || true)
@@ -40,7 +43,7 @@ jobs:
           fi
           echo "count=$TOTAL" >> "$GITHUB_OUTPUT"
           echo "files=$FILES_JSON" >> "$GITHUB_OUTPUT"
-          echo "Master baseline — total: $TOTAL"
+          echo "Main baseline — total: $TOTAL"
 
       # ── Check PR branch ──
       - uses: actions/checkout@v6
@@ -78,7 +81,7 @@ jobs:
           echo "Current strict tsc errors: $ERROR_COUNT (baseline: $TSC_STRICT_BASELINE)"
 
           if [ "$ERROR_COUNT" -gt "$TSC_STRICT_BASELINE" ]; then
-            echo "::warning::Strict tsc errors INCREASED from $TSC_STRICT_BASELINE to $ERROR_COUNT"
+            echo "::warning::Strict tsc errors INCREASED from $TSC_STRICT_BASELINE (main) to $ERROR_COUNT"
             exit 1
           fi
 
