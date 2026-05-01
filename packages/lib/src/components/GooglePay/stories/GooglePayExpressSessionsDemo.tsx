@@ -99,7 +99,7 @@ export function GooglePayExpressSessionsDemo({
                     const { session } = component.core.session;
 
                     const amountToBePatched = {
-                        currency: getCurrency(EXPRESS_DEMO_SETTINGS.COUNTRY_CODE),
+                        currency: getCurrency(countryCode),
                         value: GooglePayAmountHelper.getFinalAmount()
                     };
 
