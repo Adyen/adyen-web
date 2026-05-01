@@ -3,10 +3,6 @@ name: Strict TypeScript Scan
 on:
   workflow_call:
 
-concurrency:
-  group: strict-tsc-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: true
-
 jobs:
   strict-scan:
     runs-on: ubuntu-latest
