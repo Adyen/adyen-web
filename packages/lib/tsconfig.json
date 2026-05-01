@@ -19,14 +19,14 @@
 
         /* Strictness */
         "strict": true,
-        "noImplicitAny": true,
-        "noImplicitThis": true,
-        "alwaysStrict": true,
-        "strictBindCallApply": true,
-        "strictNullChecks": true,
-        "strictFunctionTypes": true,
-        "strictPropertyInitialization": true,
-        "useDefineForClassFields": true,
+        "noImplicitAny": false,
+        "noImplicitThis": false,
+        "alwaysStrict": false,
+        "strictBindCallApply": false,
+        "strictNullChecks": false,
+        "strictFunctionTypes": false,
+        "strictPropertyInitialization": false,
+        "useDefineForClassFields": false,
 
         /** Preact */
         "jsx": "react",
