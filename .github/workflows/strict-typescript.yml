@@ -151,7 +151,7 @@ jobs:
 
       - name: Delete previous comment
         if: always() && steps.fc.outputs.comment-id != '' && steps.fc.outputs.comment-id != '0'
-        uses: actions/github-script@v8
+        uses: actions/github-script@v9
         with:
           script: |
             await github.rest.issues.deleteComment({
