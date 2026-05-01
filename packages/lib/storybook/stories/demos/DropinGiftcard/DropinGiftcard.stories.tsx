@@ -1,4 +1,5 @@
 import { h } from 'preact';
+import { useArgs } from 'storybook/preview-api';
 import type { Meta, StoryObj } from '@storybook/preact-vite';
 import { DropinGiftcardDemo } from './DropinGiftcardDemo';
 import { getSearchParameter } from '../../../utils/get-query-parameters';
@@ -27,9 +28,10 @@ const meta: Meta<DropinGiftcardStoryArgs> = {
 };
 
 export const Default: DropinGiftcardStory = {
-    render: ({ countryCode, shopperLocale, amount, sessionId }, context) => {
+    render: ({ countryCode, shopperLocale, amount, sessionId }) => {
+        const [, updateArgs] = useArgs();
         const handleSessionCreated = (newSessionId: string) => {
-            context.args.sessionId = newSessionId;
+            updateArgs({ sessionId: newSessionId });
         };
 
         return (

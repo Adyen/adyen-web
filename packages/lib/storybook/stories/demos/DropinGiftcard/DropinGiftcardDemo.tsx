@@ -19,6 +19,53 @@ interface DropinGiftcardDemoProps {
     readonly onSessionCreated?: (sessionId: string) => void;
 }
 
+type SessionSource = 'created' | 'reused-arg' | 'reused-url';
+
+interface SessionDebugInfo {
+    source: SessionSource;
+    id: string;
+    sessionDataOnInit: string | null;
+    sessionDataAfterSetup: string | null;
+    localStorageData: { id: string; sessionData: string } | null;
+}
+
+function readSessionFromLocalStorage(): { id: string; sessionData: string } | null {
+    try {
+        const raw = localStorage.getItem('adyen-checkout__session');
+        return raw ? JSON.parse(raw) : null;
+    } catch {
+        return null;
+    }
+}
+
+function truncate(value: string | null, len = 24): string {
+    if (!value) return '—';
+    return value.length > len ? `${value.slice(0, len)}…` : value;
+}
+
+const labelStyle: h.JSX.CSSProperties = { fontWeight: 'bold', minWidth: '180px', display: 'inline-block' };
+const rowStyle: h.JSX.CSSProperties = { marginBottom: '4px', fontFamily: 'monospace', fontSize: '12px' };
+const panelStyle: h.JSX.CSSProperties = {
+    background: '#f4f4f4',
+    border: '1px solid #ccc',
+    borderRadius: '4px',
+    padding: '12px 16px',
+    maxWidth: '600px',
+    margin: '0 auto 16px'
+};
+
+const sourceColors: Record<SessionSource, string> = {
+    created: '#d4edda',
+    'reused-arg': '#cce5ff',
+    'reused-url': '#fff3cd'
+};
+
+const sourceLabels: Record<SessionSource, string> = {
+    created: '🆕 Created (new session)',
+    'reused-arg': '♻️ Reused (from Storybook arg)',
+    'reused-url': '♻️ Reused (from URL ?sessionId=)'
+};
+
 function persistSessionId(sessionId: string): void {
     const url = new URL(window.location.href);
     url.searchParams.set('sessionId', sessionId);
@@ -34,14 +81,17 @@ const DropinGiftcardDemo = ({ countryCode, shopperLocale, amount, sessionId: arg
     const mountedRef = useRef(false);
     const [status, setStatus] = useState<'loading' | 'ready' | 'error'>('loading');
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
+    const [debugInfo, setDebugInfo] = useState<SessionDebugInfo | null>(null);
 
     const initCheckout = async () => {
         try {
             let session: { id: string; sessionData: string };
+            let source: SessionSource;
 
             const existingSessionId = resolveInitialSessionId(argSessionId);
 
             if (existingSessionId) {
+                source = argSessionId ? 'reused-arg' : 'reused-url';
                 session = { id: existingSessionId, sessionData: null };
             } else {
                 const created = await createSession({
@@ -56,11 +106,14 @@ const DropinGiftcardDemo = ({ countryCode, shopperLocale, amount, sessionId: arg
                     allowedPaymentMethods: ['scheme', 'giftcard']
                 });
 
+                source = 'created';
                 session = { id: created.id, sessionData: created.sessionData };
 
                 persistSessionId(created.id);
                 onSessionCreated?.(created.id);
             }
+
+            const sessionDataOnInit = session.sessionData ?? readSessionFromLocalStorage()?.sessionData ?? null;
 
             const checkout = await AdyenCheckout({
                 clientKey: process.env.CLIENT_KEY,
@@ -85,6 +138,15 @@ const DropinGiftcardDemo = ({ countryCode, shopperLocale, amount, sessionId: arg
             });
 
             checkoutRef.current = checkout;
+
+            setDebugInfo({
+                source,
+                id: checkout.session.id,
+                sessionDataOnInit,
+                sessionDataAfterSetup: checkout.session.data,
+                localStorageData: readSessionFromLocalStorage()
+            });
+
             const dropin = new DropinComponent(checkout);
             dropin.mount('#dropin-giftcard-container');
             setStatus('ready');
@@ -99,12 +161,27 @@ const DropinGiftcardDemo = ({ countryCode, shopperLocale, amount, sessionId: arg
         if (mountedRef.current) return;
         mountedRef.current = true;
         void initCheckout();
+
+        return () => {
+            checkoutRef.current = null;
+            mountedRef.current = false;
+        };
     }, []);
 
     return (
         <Fragment>
             {status === 'loading' && <div>Loading session...</div>}
             {status === 'error' && <div style={{ color: 'red' }}>Error: {errorMessage}</div>}
+            {debugInfo && (
+                <div style={{ ...panelStyle, background: sourceColors[debugInfo.source] }}>
+                    <div style={rowStyle}><span style={labelStyle}>Session source:</span> {sourceLabels[debugInfo.source]}</div>
+                    <div style={rowStyle}><span style={labelStyle}>Session ID:</span> {debugInfo.id}</div>
+                    <div style={rowStyle}><span style={labelStyle}>sessionData on init:</span> {truncate(debugInfo.sessionDataOnInit)}</div>
+                    <div style={rowStyle}><span style={labelStyle}>sessionData after /setup:</span> {truncate(debugInfo.sessionDataAfterSetup)}</div>
+                    <div style={rowStyle}><span style={labelStyle}>localStorage id:</span> {debugInfo.localStorageData?.id ?? '—'}</div>
+                    <div style={rowStyle}><span style={labelStyle}>localStorage sessionData:</span> {truncate(debugInfo.localStorageData?.sessionData)}</div>
+                </div>
+            )}
             <div id="dropin-giftcard-container" style={{ maxWidth: '600px', margin: '0 auto' }} />
         </Fragment>
     );
