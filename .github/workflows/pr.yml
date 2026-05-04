@@ -27,7 +27,6 @@ jobs:
         secrets: inherit
 
     strict-typescript:
-        if: github.event_name != 'merge_group'
         uses: ./.github/workflows/strict-typescript.yml
 
     # Gateway check for PRs — unit-tests, a11y, and visual must pass
@@ -53,7 +52,7 @@ jobs:
     # Stricter gateway check for merge queue — all jobs must pass
     verify-merge-queue:
         if: always() && github.event_name == 'merge_group'
-        needs: [unit-tests, e2e-tests, automated-a11y, automated-visual, validate-locales]
+        needs: [unit-tests, e2e-tests, automated-a11y, automated-visual, validate-locales, strict-typescript]
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v6
@@ -65,5 +64,6 @@ jobs:
                         "e2e-tests": "${{ needs.e2e-tests.result }}",
                         "automated-a11y": "${{ needs.automated-a11y.result }}",
                         "automated-visual": "${{ needs.automated-visual.result }}",
-                        "validate-locales": "${{ needs.validate-locales.result }}"
+                        "validate-locales": "${{ needs.validate-locales.result }}",
+                        "strict-typescript": "${{ needs.strict-typescript.result }}"
                       }
