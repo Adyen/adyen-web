@@ -1,6 +1,6 @@
 {
     "name": "@adyen/adyen-web",
-    "version": "6.34.0",
+    "version": "6.34.1",
     "license": "MIT",
     "homepage": "https://docs.adyen.com/checkout",
     "type": "module",
@@ -96,7 +96,7 @@
         "@storybook/addon-a11y": "10.3.4",
         "@storybook/addon-docs": "10.3.4",
         "@storybook/preact-vite": "10.3.4",
-        "@swc/core": "1.15.18",
+        "@swc/core": "1.15.24",
         "@testing-library/jest-dom": "6.9.1",
         "@testing-library/preact": "3.2.4",
         "@testing-library/preact-hooks": "1.1.0",
