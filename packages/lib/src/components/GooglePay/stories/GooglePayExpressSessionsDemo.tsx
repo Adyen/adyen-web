@@ -7,37 +7,73 @@ import { RETURN_URL, STORYBOOK_ENVIRONMENT_URLS } from '../../../../storybook/co
 import GooglePay from '../GooglePay';
 import { AdyenCheckout } from '../../../core/AdyenCheckout';
 import { createGooglePayAmountHelper, getShippingOptions, getTransactionInfo, EXPRESS_DEMO_SETTINGS } from './googlePayExpressUtils';
+import { InfoBox } from './GooglePayExpressDemoInfo';
 import type { PaymentAmount } from '../../../types/global-types';
-import type { CheckoutSession, CoreConfiguration } from '../../../types';
+import type { CheckoutSession, CoreConfiguration, GooglePayConfiguration } from '../../../types';
 
 const GooglePayAmountHelper = createGooglePayAmountHelper(EXPRESS_DEMO_SETTINGS.INITIAL_AMOUNT);
 
-export function InfoBox() {
-    return (
-        <div
-            style={{
-                padding: '12px 16px',
-                marginBottom: '16px',
-                border: '1px solid #ddd',
-                borderRadius: '8px',
-                backgroundColor: '#f8f9fa',
-                fontSize: '14px'
-            }}
-        >
-            <strong>Google Pay Express on Sessions Flow</strong>
-            <br />
-            <strong>About this story:</strong>
-            <ul style={{ margin: '8px 0 0', paddingLeft: '20px' }}>
-                <li>
-                    Country code is <code>BR</code> and currency is <code>BRL</code>.
-                </li>
-                <li>Initial amount is 100.00; shipping costs are added on top.</li>
-                <li>Ships only to Brazil and the United States.</li>
-                <li>Shipping options differ based on the selected country.</li>
-            </ul>
-        </div>
-    );
-}
+const GOOGLE_PAY_EXPRESS_PROPS: GooglePayConfiguration = {
+    isExpress: true,
+
+    onAuthorized: (data, actions) => {
+        console.log('Authorized data', data);
+        actions.resolve();
+    },
+
+    transactionInfo: getTransactionInfo(),
+
+    callbackIntents: ['SHIPPING_ADDRESS', 'SHIPPING_OPTION'],
+
+    paymentDataCallbacks: {
+        async onPaymentDataChanged(intermediatePaymentData) {
+            const { callbackTrigger, shippingAddress, shippingOptionData } = intermediatePaymentData;
+            const paymentDataRequestUpdate: google.payments.api.PaymentDataRequestUpdate = {};
+
+            /** Validate country/address selection  **/
+            if (shippingAddress?.countryCode !== 'US' && shippingAddress?.countryCode !== 'BR') {
+                paymentDataRequestUpdate.error = {
+                    reason: 'SHIPPING_ADDRESS_UNSERVICEABLE',
+                    message: 'Cannot ship to the selected address',
+                    intent: 'SHIPPING_ADDRESS'
+                };
+            }
+            /** If it initializes or changes the shipping address, we calculate the shipping options and transaction info  */
+            if (callbackTrigger === 'INITIALIZE' || callbackTrigger === 'SHIPPING_ADDRESS') {
+                if (shippingAddress?.countryCode) {
+                    paymentDataRequestUpdate.newShippingOptionParameters = await getShippingOptions(shippingAddress.countryCode);
+
+                    const selectedShippingOptionId =
+                        paymentDataRequestUpdate.newShippingOptionParameters?.defaultSelectedOptionId ||
+                        paymentDataRequestUpdate.newShippingOptionParameters.shippingOptions[0].id;
+
+                    paymentDataRequestUpdate.newTransactionInfo = GooglePayAmountHelper.calculateNewTransactionInfo(
+                        shippingAddress.countryCode,
+                        selectedShippingOptionId
+                    );
+                }
+            }
+            /** If SHIPPING_OPTION changed, we calculate the new fee */
+            if (callbackTrigger === 'SHIPPING_OPTION') {
+                if (shippingAddress?.countryCode && shippingOptionData?.id) {
+                    paymentDataRequestUpdate.newTransactionInfo = GooglePayAmountHelper.calculateNewTransactionInfo(
+                        shippingAddress.countryCode,
+                        shippingOptionData.id
+                    );
+                }
+            }
+
+            return paymentDataRequestUpdate;
+        }
+    },
+    shippingAddressRequired: true,
+
+    shippingAddressParameters: {
+        phoneNumberRequired: true
+    },
+
+    shippingOptionRequired: true
+};
 
 export function GooglePayExpressSessionsDemo({
     amount,
@@ -128,70 +164,7 @@ export function GooglePayExpressSessionsDemo({
             _environmentUrls: STORYBOOK_ENVIRONMENT_URLS
         });
 
-        const googlePay = new GooglePay(checkout, {
-            isExpress: true,
-
-            onAuthorized: (data, actions) => {
-                console.log('Authorized data', data);
-                actions.resolve();
-            },
-
-            transactionInfo: getTransactionInfo(),
-
-            callbackIntents: ['SHIPPING_ADDRESS', 'SHIPPING_OPTION'],
-
-            paymentDataCallbacks: {
-                onPaymentDataChanged(intermediatePaymentData) {
-                    // eslint-disable-next-line no-async-promise-executor, @typescript-eslint/no-misused-promises
-                    return new Promise(async resolve => {
-                        const { callbackTrigger, shippingAddress, shippingOptionData } = intermediatePaymentData;
-                        const paymentDataRequestUpdate: google.payments.api.PaymentDataRequestUpdate = {};
-
-                        /** Validate country/address selection  **/
-                        if (shippingAddress?.countryCode !== 'US' && shippingAddress?.countryCode !== 'BR') {
-                            paymentDataRequestUpdate.error = {
-                                reason: 'SHIPPING_ADDRESS_UNSERVICEABLE',
-                                message: 'Cannot ship to the selected address',
-                                intent: 'SHIPPING_ADDRESS'
-                            };
-                        }
-                        /** If it initializes or changes the shipping address, we calculate the shipping options and transaction info  */
-                        if (callbackTrigger === 'INITIALIZE' || callbackTrigger === 'SHIPPING_ADDRESS') {
-                            if (shippingAddress?.countryCode) {
-                                paymentDataRequestUpdate.newShippingOptionParameters = await getShippingOptions(shippingAddress.countryCode);
-
-                                const selectedShippingOptionId =
-                                    paymentDataRequestUpdate.newShippingOptionParameters?.defaultSelectedOptionId ||
-                                    paymentDataRequestUpdate.newShippingOptionParameters.shippingOptions[0].id;
-
-                                paymentDataRequestUpdate.newTransactionInfo = GooglePayAmountHelper.calculateNewTransactionInfo(
-                                    shippingAddress.countryCode,
-                                    selectedShippingOptionId
-                                );
-                            }
-                        }
-                        /** If SHIPPING_OPTION changed, we calculate the new fee */
-                        if (callbackTrigger === 'SHIPPING_OPTION') {
-                            if (shippingAddress?.countryCode && shippingOptionData?.id) {
-                                paymentDataRequestUpdate.newTransactionInfo = GooglePayAmountHelper.calculateNewTransactionInfo(
-                                    shippingAddress.countryCode,
-                                    shippingOptionData.id
-                                );
-                            }
-                        }
-
-                        resolve(paymentDataRequestUpdate);
-                    });
-                }
-            },
-            shippingAddressRequired: true,
-
-            shippingAddressParameters: {
-                phoneNumberRequired: true
-            },
-
-            shippingOptionRequired: true
-        });
+        const googlePay = new GooglePay(checkout, GOOGLE_PAY_EXPRESS_PROPS);
 
         setGooglePay(googlePay);
     };
