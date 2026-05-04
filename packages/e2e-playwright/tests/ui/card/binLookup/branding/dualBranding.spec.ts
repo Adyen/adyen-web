@@ -1,12 +1,12 @@
 import { expect, test } from '../../../../../fixtures/card.fixture';
 import { getStoryUrl } from '../../../../utils/getStoryUrl';
 import { URL_MAP } from '../../../../../fixtures/URL_MAP';
-import { BCMC_DUAL_BRANDED_VISA, DUAL_BRANDED_CARD_EXCLUDED, DUAL_BRANDED_EFTPOS, TAGS } from '../../../../utils/constants';
+import { BCMC_DUAL_BRANDED_MC, BCMC_DUAL_BRANDED_VISA, DUAL_BRANDED_CARD_EXCLUDED, DUAL_BRANDED_EFTPOS, TAGS } from '../../../../utils/constants';
 import { toHaveScreenshot } from '../../../../utils/assertions';
 
 import LANG from '../../../../../../server/translations/en-US.json';
 import { binLookupMock } from '../../../../../mocks/binLookup/binLookup.mock';
-import { dualBrandedBcmcAndVisa } from '../../../../../mocks/binLookup/binLookup.data';
+import { dualBrandedBcmcAndMc, dualBrandedBcmcAndVisa } from '../../../../../mocks/binLookup/binLookup.data';
 
 const PAN_ERROR_NOT_COMPLETE = LANG['cc.num.901'];
 
@@ -221,4 +221,56 @@ test.describe('Card - Dual branding UI after binLookup gives a dual brand result
             await toHaveScreenshot(card.cardNumberField, browserName, 'dual-brand-non-eu-display-only.png');
         }
     );
+
+    test('#7 should show regex brand "mc" while typing, then bcmc/mc dual brand from binLookup', async ({ card, page }) => {
+        await binLookupMock(page, dualBrandedBcmcAndMc);
+
+        await card.goto(getStoryUrl({ baseUrl: URL_MAP.card, componentConfig }));
+
+        // Regex best match: only the first 3 digits — binLookup not yet triggered
+        await card.typeCardNumber(BCMC_DUAL_BRANDED_MC.slice(0, 3));
+
+        // Regex best match: Mastercard, no dual-brand selector yet
+        await expect(card.isDualBrandSelectionVisible()).resolves.toBe(false);
+        await expect(card.brandingIcon).toHaveAttribute('alt', /mastercard/i);
+
+        await card.typeCardNumber(BCMC_DUAL_BRANDED_MC.slice(3));
+
+        await expect(card.dualBrandSelector).toBeVisible();
+        await expect(card.getBrandOptionCount()).resolves.toBe(2);
+        await expect(card.getBrandButton(/bancontact/i)).toBeVisible();
+        await expect(card.getBrandButton(/mastercard/i)).toBeVisible();
+    });
+
+    test('#8 should show regex brand "visa" while typing, then bcmc/visa dual brand from binLookup', async ({ card }) => {
+        await card.goto(getStoryUrl({ baseUrl: URL_MAP.card, componentConfig }));
+
+        // Regex best match: first 3 digits — binLookup not yet triggered
+        await card.typeCardNumber(BCMC_DUAL_BRANDED_VISA.slice(0, 3));
+
+        await expect(card.isDualBrandSelectionVisible()).resolves.toBe(false);
+        await expect(card.brandingIcon).toHaveAttribute('alt', /visa/i);
+
+        // Type up to 11 digits — binLookup triggers, dual brand appears
+        await card.typeCardNumber(BCMC_DUAL_BRANDED_VISA.slice(3, 11));
+
+        await expect(card.dualBrandSelector).toBeVisible();
+        await expect(card.getBrandOptionCount()).resolves.toBe(2);
+        await expect(card.getBrandButton(/bancontact/i)).toBeVisible();
+        await expect(card.getBrandButton(/visa/i)).toBeVisible();
+
+        // Remove one digit — drops below binLookup threshold, regex best match returns to visa
+        await card.cardNumberInput.press('Backspace');
+
+        await expect(card.isDualBrandSelectionVisible()).resolves.toBe(false);
+        await expect(card.brandingIcon).toHaveAttribute('alt', /visa/i);
+
+        // Fill the rest of the PAN — dual brand selector reappears
+        await card.typeCardNumber(BCMC_DUAL_BRANDED_VISA.slice(10));
+
+        await expect(card.dualBrandSelector).toBeVisible();
+        await expect(card.getBrandOptionCount()).resolves.toBe(2);
+        await expect(card.getBrandButton(/bancontact/i)).toBeVisible();
+        await expect(card.getBrandButton(/visa/i)).toBeVisible();
+    });
 });
