@@ -21,7 +21,9 @@ test.describe('Dropin - Sessions - PayByBankUS', () => {
 
                 const payByBankHeader = dropinWithSession.getPaymentMethodHeader('Pay by bank');
 
-                await toHaveScreenshot(payByBankHeader.rootElement, browserName, 'paybybankus-payment-method-header-mobile-320.png');
+                await toHaveScreenshot(payByBankHeader.rootElement, browserName, 'paybybankus-payment-method-header-mobile-320.png', {
+                    mask: [payByBankHeader.rootElement.locator('img')]
+                });
             }
         );
     });

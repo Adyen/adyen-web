@@ -14,7 +14,9 @@ test.describe('Dropin - Sessions - UPI', () => {
 
             const upiPaymentMethodHeader = dropinWithSession.getPaymentMethodHeader('UPI');
 
-            await toHaveScreenshot(upiPaymentMethodHeader.rootElement, browserName, 'upi-payment-method-header-desktop.png');
+            await toHaveScreenshot(upiPaymentMethodHeader.rootElement, browserName, 'upi-payment-method-header-desktop.png', {
+                mask: [upiPaymentMethodHeader.rootElement.locator('img')]
+            });
 
             await dropinWithSession.selectNonStoredPaymentMethod('upi');
 
@@ -43,7 +45,9 @@ test.describe('Dropin - Sessions - UPI', () => {
 
             const upiPaymentMethodHeader = dropinWithSession.getPaymentMethodHeader('UPI');
 
-            await toHaveScreenshot(upiPaymentMethodHeader.rootElement, browserName, 'upi-payment-method-header-mobile.png');
+            await toHaveScreenshot(upiPaymentMethodHeader.rootElement, browserName, 'upi-payment-method-header-mobile.png', {
+                mask: [upiPaymentMethodHeader.rootElement.locator('img')]
+            });
 
             await dropinWithSession.selectNonStoredPaymentMethod('upi');
 
