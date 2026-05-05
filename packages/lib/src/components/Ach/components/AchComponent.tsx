@@ -17,6 +17,7 @@ import type { PayButtonProps } from '../../internal/PayButton/PayButton';
 import type { ComponentMethodsRef } from '../../internal/UIElement/types';
 import type { AchPlaceholders } from '../types';
 import type { AchStateErrors } from './useSRPanelForACHErrors';
+import { ValidationRuleResult } from '../../../utils/Validator/ValidationRuleResult';
 
 type AchForm = {
     selectedAccountType: string;
@@ -38,7 +39,7 @@ interface AchComponentProps {
     }: {
         data: AchForm;
         valid: { [key: string]: boolean };
-        errors: { [key: string]: any };
+        errors: { [key: string]: ValidationRuleResult };
         isValid: boolean;
         storePaymentMethod: boolean;
     }): void;

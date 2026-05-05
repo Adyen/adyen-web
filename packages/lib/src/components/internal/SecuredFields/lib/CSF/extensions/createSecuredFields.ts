@@ -76,7 +76,7 @@ export function createSecuredFields(): number {
  *
  * Create a new SecuredField for each detected holding element
  */
-export async function createNonCardSecuredFields(securedFields: HTMLElement[]): Promise<any> {
+export async function createNonCardSecuredFields(securedFields: HTMLElement[]): Promise<void> {
     for (let i = 0; i < securedFields.length; i++) {
         const securedField = securedFields[i];
         await this.setupSecuredField(securedField).catch(e => {
@@ -89,7 +89,7 @@ export async function createCardSecuredFields(
     securedFields: HTMLElement[],
     cvcPolicy: CVCPolicyType,
     expiryDatePolicy: DatePolicyType
-): Promise<any> {
+): Promise<void> {
     // Declared card type from the initialisation of CSF
     let type: string = this.state.type;
 
@@ -169,7 +169,7 @@ export async function createCardSecuredFields(
 }
 
 // Run for each detected holder of a securedField...
-export function setupSecuredField(pItem: HTMLElement, cvcPolicy?: CVCPolicyType, expiryDatePolicy?: DatePolicyType): Promise<any> {
+export function setupSecuredField(pItem: HTMLElement, cvcPolicy?: CVCPolicyType, expiryDatePolicy?: DatePolicyType): Promise<SFFeedbackObj> {
     return new Promise((resolve, reject) => {
         /**
          *  possible values:

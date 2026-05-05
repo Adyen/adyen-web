@@ -443,5 +443,9 @@
     "econtext.customerNumber": "고객 번호",
     "econtext.confirmationNumber": "확인 번호",
     "econtext.useBefore": "사용 기한:",
-    "econtext.paymentInformation": "결제 정보"
+    "econtext.paymentInformation": "결제 정보",
+    "issuerList.separatorText": "또는 목록에서 선택",
+    "upi.intent.apps.title": "옵션",
+    "upi.intent.apps.dropdown.label": "UPI 앱",
+    "upi.intent.apps.dropdown.placeholder": "선호하는 앱 선택"
 }

@@ -390,3 +390,8 @@ export type DecodeObject = {
     error?: string;
     data?: string;
 };
+
+export type PaymentMethodBrand = {
+    icon: string;
+    name: string;
+};

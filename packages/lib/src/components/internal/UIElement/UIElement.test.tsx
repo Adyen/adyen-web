@@ -11,8 +11,6 @@ import { ErrorEventType } from '../../../core/Analytics/events/AnalyticsErrorEve
 import { InfoEventType } from '../../../core/Analytics/events/AnalyticsInfoEvent';
 import { render, screen } from '@testing-library/preact';
 
-jest.mock('../../../core/Services/get-translations');
-
 interface MyElementProps extends UIElementProps {
     challengeWindowSize?: string;
 }

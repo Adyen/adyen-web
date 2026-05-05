@@ -5,15 +5,15 @@ class UPI extends Base {
     readonly appList: Locator;
     readonly intentArea: Locator;
     readonly qrCodeImage: Locator;
+    readonly mandateInfo: Locator;
 
-    constructor(
-        public readonly page: Page,
-    ) {
+    constructor(public readonly page: Page) {
         super(page);
 
         this.appList = this.page.getByRole('radiogroup');
         this.intentArea = this.page.locator('#upi-area-intent');
         this.qrCodeImage = this.page.getByAltText('Scan QR code');
+        this.mandateInfo = this.page.locator('.adyen-checkout__alert-message--info');
     }
 
     async selectApp(appName: string | RegExp) {

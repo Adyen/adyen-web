@@ -1,49 +1,45 @@
 name: Strict TypeScript Scan
 
 on:
-  pull_request:
-    types: [opened, synchronize, reopened]
+  workflow_call:
 
 jobs:
   strict-scan:
     runs-on: ubuntu-latest
-    # Non-blocking: this job is informational only and will never prevent merging.
-    continue-on-error: true
 
     steps:
       - name: Use Node.js 24
         uses: actions/setup-node@v6
         with:
           node-version: 24
-          package-manager-cache: false
 
       - name: Enable Corepack
         run: corepack enable
 
-      # ── Get baseline from master ──
-      - name: Checkout master
+      # ── Get baseline from main ──
+      - name: Checkout main
         uses: actions/checkout@v6
         with:
           ref: main
           fetch-depth: 1
 
-      - name: Install dependencies (master)
+      - name: Install dependencies (main)
         run: yarn install --immutable
 
-      - name: Get strict error baseline from master
+      - name: Get strict error baseline from main
         id: baseline
         run: |
           OUTPUT=$(yarn validate:strict 2>&1 || true)
           TOTAL=$(echo "$OUTPUT" | grep -c "error TS" || true)
-          ERRORS=$(echo "$OUTPUT" | grep -oE "error TS[0-9]+" || true)
-          if [ -n "$ERRORS" ]; then
-            CODES_JSON=$(echo "$ERRORS" | sed 's/error //' | sort | uniq -c | sort -rn | awk 'BEGIN{printf "{"} NR>1{printf ","} {printf "\"%s\":%d",$2,$1} END{printf "}"}')
+          FILE_LINES=$(echo "$OUTPUT" | grep "error TS" | sed 's/(.*$//' || true)
+          if [ -n "$FILE_LINES" ]; then
+            FILES_JSON=$(echo "$FILE_LINES" | sort | uniq -c | sort -rn | awk 'BEGIN{printf "{"} NR>1{printf ","} { count=$1; sub(/^[[:space:]]*[0-9]+[[:space:]]+/, ""); printf "\"%s\":%d", $0, count } END{printf "}"}')
           else
-            CODES_JSON='{}'
+            FILES_JSON='{}'
           fi
           echo "count=$TOTAL" >> "$GITHUB_OUTPUT"
-          echo "codes=$CODES_JSON" >> "$GITHUB_OUTPUT"
-          echo "Master baseline — total: $TOTAL, codes: $CODES_JSON"
+          echo "files=$FILES_JSON" >> "$GITHUB_OUTPUT"
+          echo "Main baseline — total: $TOTAL"
 
       # ── Check PR branch ──
       - uses: actions/checkout@v6
@@ -66,23 +62,22 @@ jobs:
 
       - name: Strict type check
         id: tsc-strict
-        continue-on-error: true
         run: |
           TSC_STRICT_BASELINE=${{ steps.baseline.outputs.count }}
           OUTPUT=$(yarn validate:strict 2>&1 || true)
           ERROR_COUNT=$(echo "$OUTPUT" | grep -c "error TS" || true)
-          ERRORS=$(echo "$OUTPUT" | grep -oE "error TS[0-9]+" || true)
-          if [ -n "$ERRORS" ]; then
-            CODES_JSON=$(echo "$ERRORS" | sed 's/error //' | sort | uniq -c | sort -rn | awk 'BEGIN{printf "{"} NR>1{printf ","} {printf "\"%s\":%d",$2,$1} END{printf "}"}')
+          FILE_LINES=$(echo "$OUTPUT" | grep "error TS" | sed 's/(.*$//' || true)
+          if [ -n "$FILE_LINES" ]; then
+            FILES_JSON=$(echo "$FILE_LINES" | sort | uniq -c | sort -rn | awk 'BEGIN{printf "{"} NR>1{printf ","} { count=$1; sub(/^[[:space:]]*[0-9]+[[:space:]]+/, ""); printf "\"%s\":%d", $0, count } END{printf "}"}')
           else
-            CODES_JSON='{}'
+            FILES_JSON='{}'
           fi
           echo "error_count=$ERROR_COUNT" >> "$GITHUB_OUTPUT"
-          echo "codes=$CODES_JSON" >> "$GITHUB_OUTPUT"
+          echo "files=$FILES_JSON" >> "$GITHUB_OUTPUT"
           echo "Current strict tsc errors: $ERROR_COUNT (baseline: $TSC_STRICT_BASELINE)"
 
           if [ "$ERROR_COUNT" -gt "$TSC_STRICT_BASELINE" ]; then
-            echo "::warning::Strict tsc errors INCREASED from $TSC_STRICT_BASELINE to $ERROR_COUNT"
+            echo "::warning::Strict tsc errors INCREASED from $TSC_STRICT_BASELINE (main) to $ERROR_COUNT"
             exit 1
           fi
 
@@ -91,16 +86,16 @@ jobs:
           fi
 
       - name: Build comment body
-        if: always()
+        if: always() && github.event_name == 'pull_request'
         id: build-comment
         run: |
           B_TOTAL=${{ steps.baseline.outputs.count }}
-          B_CODES='${{ steps.baseline.outputs.codes }}'
-          [ -z "$B_CODES" ] && B_CODES='{}'
+          B_FILES='${{ steps.baseline.outputs.files }}'
+          [ -z "$B_FILES" ] && B_FILES='{}'
           PR_TOTAL="${{ steps.tsc-strict.outputs.error_count }}"
           PR_TOTAL="${PR_TOTAL:-N/A}"
-          PR_CODES='${{ steps.tsc-strict.outputs.codes }}'
-          [ -z "$PR_CODES" ] && PR_CODES='{}'
+          PR_FILES='${{ steps.tsc-strict.outputs.files }}'
+          [ -z "$PR_FILES" ] && PR_FILES='{}'
 
           if [ "${{ steps.tsc-strict.outcome }}" = "success" ]; then
             OVERALL_STATUS="✅ Pass"
@@ -108,20 +103,18 @@ jobs:
             OVERALL_STATUS="⚠️ Regression"
           fi
 
-          # Generate per-code table rows with jq (sorted by PR count desc)
+          # Generate per-file table rows with jq (only files with increased errors)
           TABLE_ROWS=$(jq -r -n \
-            --argjson baseline "$B_CODES" \
-            --argjson pr "$PR_CODES" '
+            --argjson baseline "$B_FILES" \
+            --argjson pr "$PR_FILES" '
             (($baseline | keys) + ($pr | keys)) | unique |
-            map({ code: ., b: ($baseline[.] // 0), p: ($pr[.] // 0) }) |
-            sort_by(-.p, -.b) | .[] |
-            (if .p > .b then "⚠️ +\(.p - .b)"
-             elif .p < .b then "✅ \(.p - .b)"
-             else "✅ 0" end) as $delta |
-            "| [`\(.code)`](https://typescript.tv/errors/\(.code)/) | \(.p) | \(.b) | \($delta) |"
+            map({ file: ., b: ($baseline[.] // 0), p: ($pr[.] // 0) }) |
+            [ .[] | select(.p > .b) ] |
+            sort_by(-.p) | .[] |
+            "| `\(.file)` | \(.p) | \(.b) | ⚠️ +\(.p - .b) |"
           ')
 
-          NUM_CODES=$(jq -n --argjson b "$B_CODES" --argjson p "$PR_CODES" '(($b | keys) + ($p | keys)) | unique | length')
+          NUM_FILES=$(jq -n --argjson b "$B_FILES" --argjson p "$PR_FILES" '(($b | keys) + ($p | keys)) | unique | map({ file: ., b: ($b[.] // 0), p: ($p[.] // 0) }) | [ .[] | select(.p > .b) ] | length')
 
           {
             echo 'body<<EOF'
@@ -130,10 +123,10 @@ jobs:
             echo "**Total: ${PR_TOTAL} errors (baseline: ${B_TOTAL}) | ${OVERALL_STATUS}**"
             echo ''
             echo '<details>'
-            echo "<summary>Per-code breakdown (${NUM_CODES} codes)</summary>"
+            echo "<summary>Files with regressions (${NUM_FILES} files)</summary>"
             echo ''
-            echo '| Error Code | PR | Baseline | Delta |'
-            echo '|------------|-----|----------|-------|'
+            echo '| File | PR | Baseline | Delta |'
+            echo '|------|-----|----------|-------|'
             echo "$TABLE_ROWS"
             echo ''
             echo '</details>'
@@ -142,8 +135,8 @@ jobs:
             echo 'EOF'
           } >> "$GITHUB_OUTPUT"
 
-      - name: Find comment
-        if: always()
+      - name: Find existing comment
+        if: always() && github.event_name == 'pull_request'
         uses: peter-evans/find-comment@v4
         id: fc
         with:
@@ -151,11 +144,20 @@ jobs:
           comment-author: 'github-actions[bot]'
           body-includes: Strict TypeScript Scan Results
 
+      - name: Delete previous comment
+        if: always() && github.event_name == 'pull_request' && steps.fc.outputs.comment-id != '' && steps.fc.outputs.comment-id != '0'
+        uses: actions/github-script@v8
+        with:
+          script: |
+            await github.rest.issues.deleteComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              comment_id: Number('${{ steps.fc.outputs.comment-id }}')
+            });
+
       - name: Post scan summary
-        if: always()
+        if: always() && github.event_name == 'pull_request'
         uses: peter-evans/create-or-update-comment@v5
         with:
-          comment-id: ${{ steps.fc.outputs.comment-id }}
           issue-number: ${{ github.event.pull_request.number }}
           body: ${{ steps.build-comment.outputs.body }}
-          edit-mode: replace

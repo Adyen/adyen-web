@@ -9,11 +9,16 @@ import { CopyButton, CopyButtonProps } from './CopyButton';
 import { Resources } from '../../../core/Context/Resources';
 import { resolveEnvironments } from '../../../core/Environment';
 import type { CoreConfiguration } from '../../../core/types';
+import { ILanguageService } from '../../../language/LanguageService';
 
-const meta: Meta<ButtonProps> = {
+const languageServiceStub: ILanguageService = {
+    fetchTranslationsFromCdn: () => Promise.resolve({})
+};
+
+const meta: Meta<typeof Button> = {
     title: 'Internal Elements/Button',
     tags: ['no-automated-visual-test'],
-    component: Button as any,
+    component: Button,
     argTypes: {
         status: {
             options: ['loading', 'redirect', 'other'],
@@ -31,19 +36,19 @@ const meta: Meta<ButtonProps> = {
     }
 };
 
+const i18n = new Language({ locale: 'en-US', service: languageServiceStub });
+i18n['_translations'] = {
+    'payButton.redirecting': 'Redirecting',
+    payButton: 'Pay',
+    'button.copy': 'Copy',
+    'button.copied': 'Copied!',
+    confirmPreauthorization: 'Confirm preauthorization',
+    payAmountFormat: 'Pay %@'
+};
+
 const coreProps = {
     loadingContext: process.env.CLIENT_ENV,
-    i18n: new Language({
-        locale: 'en-US',
-        translations: {
-            'payButton.redirecting': 'Redirecting',
-            payButton: 'Pay',
-            'button.copy': 'Copy',
-            'button.copied': 'Copied!',
-            confirmPreauthorization: 'Confirm preauthorization',
-            payAmountFormat: 'Pay %@'
-        }
-    }),
+    i18n,
     resources: new Resources(resolveEnvironments(process.env.CLIENT_ENV as CoreConfiguration['environment']).cdnImagesUrl)
 };
 

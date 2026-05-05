@@ -31,9 +31,14 @@ jobs:
         env:
           CI: true
 
+      # Read SDK version from packages/lib/package.json
+      - name: Read SDK version
+        id: sdk-version
+        run: echo "version=$(node -p "require('./packages/lib/package.json').version")" >> "$GITHUB_OUTPUT"
+
       # Upload UMD and translations
       - run: cp packages/server/translations/ packages/lib/dist/umd -r
-      - uses: actions/upload-artifact@v6
+      - uses: actions/upload-artifact@v7
         with:
-          name: umd-and-translations
+          name: adyen-web-sdk-umd-and-translations-${{ steps.sdk-version.outputs.version }}
           path: packages/lib/dist/umd

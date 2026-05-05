@@ -121,7 +121,7 @@ export interface CoreConfiguration {
     /**
      * Use 'test'. When you're ready to accept live payments, change the value to one of our {@link https://docs.adyen.com/checkout/drop-in-web#testing-your-integration | live environments}.
      */
-    environment?: 'test' | 'live' | 'live-us' | 'live-au' | 'live-apse' | 'live-in';
+    environment?: 'test' | 'live' | 'live-us' | 'live-au' | 'live-apse' | 'live-in' | 'live-nea';
 
     /**
      * Show or hides a Pay Button for each payment method

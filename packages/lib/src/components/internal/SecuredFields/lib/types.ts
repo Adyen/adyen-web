@@ -2,6 +2,8 @@ import { BrandObject } from '../../../Card/types';
 import SecuredField from './securedField/SecuredField';
 import {
     ALL_SECURED_FIELDS,
+    BEST_GUESS_MODE,
+    BIN_LOOKUP_MODE,
     ENCRYPTED_CARD_NUMBER,
     ENCRYPTED_EXPIRY_DATE,
     ENCRYPTED_EXPIRY_MONTH,
@@ -26,6 +28,8 @@ declare global {
 }
 
 export type SFFieldType = (typeof ALL_SECURED_FIELDS)[number];
+
+export type BrandModeType = typeof BIN_LOOKUP_MODE | typeof BEST_GUESS_MODE;
 
 export interface SecuredFields {
     encryptedCardNumber?: SecuredField;
@@ -86,7 +90,6 @@ interface StyleDefinitions {
 
 export interface CardObject {
     cardType: string;
-    startingRules?: number[];
     permittedLengths?: number[];
     pattern?: RegExp;
     securityCode?: string;
@@ -125,6 +128,7 @@ export interface CardBinLookupData {
     supportedBrandsRaw?: BrandObject[];
     rootNode?: HTMLElement;
     isReset?: boolean; // Used internally - not propagated to merchant callback
+    dualBrandingType?: string; // Whether dual brands can just be displayed or whether a selection mechanism is mandated under EU law
 }
 
 export interface CardBinValueData {
@@ -144,6 +148,7 @@ export interface CardBrandData {
     showSocialSecurityNumber?: boolean;
     brandImageUrl?: string; // Added by SFP
     // maxLength: number;
+    mode?: BrandModeType;
 }
 
 export interface CardConfigSuccessData {
@@ -216,10 +221,7 @@ export interface SFFeedbackObj {
     uuid?: string;
     encryptionSuccess?: boolean;
     hasGenuineTouchEvents?: boolean;
-    // [key: string]: EncryptionObj[]; // Doesn't work, so must use an intersection type (https://github.com/Microsoft/TypeScript/issues/20597)
-    // BUT this doesn't give as much feedback as an interface e.g. about missing properties
-    // } & {
-    //     [key: string]: EncryptionObj[];// To describe - { MY_DATA-CSE_VALUE: [EncryptionObj] } e.g. { encryptedCardNumber: [{type: '...', fieldName: '...', blob: '...'}] }
+    mode?: string;
 }
 
 export interface EncryptionObj {

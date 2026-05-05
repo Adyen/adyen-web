@@ -5,11 +5,11 @@ export type ValidatorMode = 'blur' | 'input';
 
 export type ErrorMessageObject = {
     translationKey: string;
-    translationObject: any;
+    translationObject: { values: Record<string, string | null> };
 };
 
 export type Ruleset = {
-    [key: string]: any;
+    [key: string]: unknown;
 };
 
 export type CountryRuleset = {
@@ -40,7 +40,7 @@ export interface FieldData {
 
 export interface FieldContext {
     state: {
-        [key: string]: any;
+        [key: string]: unknown;
     };
 }
 

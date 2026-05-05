@@ -751,14 +751,14 @@ describe('ApplePay', () => {
             expect(paymentRequest.supportsCouponCode).toBeUndefined();
         });
 
-        test('should pass onCouponCodeChange callback to ApplePayService', async () => {
+        test('should pass onCouponCodeChanged callback to ApplePayService', async () => {
             const onCouponCodeChangeMock = jest.fn();
 
             const applepay = new ApplePay(core, {
                 configuration: configurationMock,
                 amount: { currency: 'EUR', value: 2000 },
                 supportsCouponCode: true,
-                onCouponCodeChange: onCouponCodeChangeMock
+                onCouponCodeChanged: onCouponCodeChangeMock
             });
 
             applepay.submit();
@@ -767,10 +767,10 @@ describe('ApplePay', () => {
 
             // @ts-ignore ApplePayService is mocked
             const serviceOptions = ApplePayService.mock.calls[0][1];
-            expect(serviceOptions.onCouponCodeChange).toBe(onCouponCodeChangeMock);
+            expect(serviceOptions.onCouponCodeChanged).toBe(onCouponCodeChangeMock);
         });
 
-        test('should not pass onCouponCodeChange to ApplePayService when not provided', async () => {
+        test('should not pass onCouponCodeChanged to ApplePayService when not provided', async () => {
             const applepay = new ApplePay(core, {
                 configuration: configurationMock,
                 amount: { currency: 'EUR', value: 2000 }
@@ -782,7 +782,7 @@ describe('ApplePay', () => {
 
             // @ts-ignore ApplePayService is mocked
             const serviceOptions = ApplePayService.mock.calls[0][1];
-            expect(serviceOptions.onCouponCodeChange).toBeUndefined();
+            expect(serviceOptions.onCouponCodeChanged).toBeUndefined();
         });
 
         test('should call resolve with the coupon code update when the merchant resolves', async () => {
@@ -794,7 +794,7 @@ describe('ApplePay', () => {
                 configuration: configurationMock,
                 amount: { currency: 'EUR', value: 2000 },
                 supportsCouponCode: true,
-                onCouponCodeChange: (resolve, _reject, _event) => {
+                onCouponCodeChanged: (resolve, _reject, _event) => {
                     resolve(couponCodeUpdate);
                 }
             });
@@ -804,11 +804,11 @@ describe('ApplePay', () => {
             await new Promise(process.nextTick);
 
             // @ts-ignore ApplePayService is mocked
-            const onCouponCodeChange = ApplePayService.mock.calls[0][1].onCouponCodeChange;
+            const onCouponCodeChanged = ApplePayService.mock.calls[0][1].onCouponCodeChanged;
             const resolveMock = jest.fn();
             const rejectMock = jest.fn();
             const event = { couponCode: 'DISCOUNT10' } as ApplePayJS.ApplePayCouponCodeChangedEvent;
-            onCouponCodeChange(resolveMock, rejectMock, event);
+            onCouponCodeChanged(resolveMock, rejectMock, event);
 
             await new Promise(process.nextTick);
 
@@ -821,7 +821,7 @@ describe('ApplePay', () => {
                 configuration: configurationMock,
                 amount: { currency: 'EUR', value: 2000 },
                 supportsCouponCode: true,
-                onCouponCodeChange: (_resolve, reject, _event) => {
+                onCouponCodeChanged: (_resolve, reject, _event) => {
                     reject({ newTotal: { label: 'Total', amount: '20.00' } });
                 }
             });
@@ -831,11 +831,11 @@ describe('ApplePay', () => {
             await new Promise(process.nextTick);
 
             // @ts-ignore ApplePayService is mocked
-            const onCouponCodeChange = ApplePayService.mock.calls[0][1].onCouponCodeChange;
+            const onCouponCodeChanged = ApplePayService.mock.calls[0][1].onCouponCodeChanged;
             const resolveMock = jest.fn();
             const rejectMock = jest.fn();
             const event = { couponCode: 'INVALID' } as ApplePayJS.ApplePayCouponCodeChangedEvent;
-            onCouponCodeChange(resolveMock, rejectMock, event);
+            onCouponCodeChanged(resolveMock, rejectMock, event);
 
             await new Promise(process.nextTick);
 

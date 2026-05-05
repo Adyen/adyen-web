@@ -445,6 +445,13 @@ Note: Error boundaries don't catch errors in event handlers or async code.
 
 Jest 29 + `@testing-library/preact` + `@testing-library/jest-dom`
 
+### commands
+
+```bash
+cd packages/lib
+&& npm run test
+```
+
 ### File Organization
 
 - Colocate: `Component.test.tsx` next to `Component.tsx`

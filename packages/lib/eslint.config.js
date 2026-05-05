@@ -104,7 +104,8 @@ const config = tseslint.config(
             ],
             'react/react-in-jsx-scope': 'off',
             'react/prop-types': 'off',
-            'react/prefer-read-only-props': 'error'
+            'react/prefer-read-only-props': 'error',
+            '@typescript-eslint/prefer-includes': 'error'
         }
     },
     {
@@ -142,62 +143,28 @@ const config = tseslint.config(
             // ══════════════════════════════════════════════════════════
 
             // ── Components
-            'src/components/Ach/**',
-            'src/components/AmazonPay/**',
             'src/components/ANCV/**',
-            'src/components/ApplePay/**',
-            'src/components/BankTransfer/**',
-            'src/components/Boleto/**',
-            'src/components/Card/**',
-            'src/components/CashAppPay/**',
-            'src/components/Doku/**',
-            'src/components/Dragonpay/**',
             'src/components/Dropin/**',
-            'src/components/Econtext/**',
             'src/components/Giftcard/**',
-            'src/components/helpers/**',
             'src/components/Klarna/**',
-            'src/components/Multibanco/**',
-            'src/components/Oxxo/**',
-            'src/components/PayByBankPix/**',
-            'src/components/PayPal/**',
-            'src/components/PayPalFastlane/**',
             'src/components/PayTo/**',
-            'src/components/PreAuthorizedDebitCanada/**',
-            'src/components/Redirect/**',
             'src/components/ThreeDS2/**',
-            'src/components/UPI/**',
 
             // ── Internal Components ──
             'src/components/internal/Address/**',
             'src/components/internal/BaseElement/**',
-            'src/components/internal/Button/**',
             'src/components/internal/ClickToPay/**',
-            'src/components/internal/CompanyDetails/**',
             'src/components/internal/FormFields/**',
             'src/components/internal/IbanInput/**',
             'src/components/internal/IssuerList/**',
             'src/components/internal/OpenInvoice/**',
-            'src/components/internal/PersonalDetails/**',
-            'src/components/internal/PhoneInput/**',
-            'src/components/internal/RedirectButton/**',
-            'src/components/internal/SecuredFields/**',
-            'src/components/internal/Tooltip/**',
             'src/components/internal/UIElement/**',
-            'src/components/internal/Voucher/**',
 
             // ── Utils ──
-            'src/utils/debounce.ts',
-            'src/utils/hookUtils.ts',
-            'src/utils/promiseTimeout.ts',
-            'src/utils/Script.ts',
             'src/utils/useForm/**',
-            'src/utils/Validator/**',
 
             // ── Others ──
             'src/core/**',
-            'src/language/**',
-            'src/create-component.umd.ts',
             'src/types/**'
         ],
         rules: {

@@ -6,7 +6,7 @@ import Spinner from '../../internal/Spinner';
 import { useCoreContext } from '../../../core/Context/CoreProvider';
 
 import type { PayPalButtonsProps } from './types';
-import type { FundingSource } from '../types';
+import type { SupportedPayPalFundingSources } from '../types';
 
 export default function PaypalButtons({
     onInit,
@@ -29,7 +29,7 @@ export default function PaypalButtons({
     const payLaterButtonRef = useRef<HTMLDivElement>(null);
     const venmoButtonRef = useRef<HTMLDivElement>(null);
 
-    const createButton = (fundingSource: FundingSource, buttonRef: RefObject<HTMLDivElement>) => {
+    const createButton = (fundingSource: SupportedPayPalFundingSources, buttonRef: RefObject<HTMLDivElement>) => {
         const configuration = {
             ...(isTokenize && { createBillingAgreement: onSubmit }),
             ...(!isTokenize && { createOrder: onSubmit }),
@@ -44,15 +44,15 @@ export default function PaypalButtons({
             onApprove
         };
 
-        const button = paypalRef.Buttons(configuration);
+        const button = paypalRef?.Buttons?.(configuration);
 
-        if (button.isEligible()) {
-            button.render(buttonRef.current);
+        if (button?.isEligible() && buttonRef.current) {
+            void button.render(buttonRef.current);
         }
     };
 
     useEffect(() => {
-        const { PAYPAL, CREDIT, PAYLATER, VENMO } = paypalRef.FUNDING;
+        const { PAYPAL, CREDIT, PAYLATER, VENMO } = paypalRef?.FUNDING as Record<string, SupportedPayPalFundingSources>;
 
         if (!props.blockPayPalButton) createButton(PAYPAL, paypalButtonRef);
         if (!props.blockPayPalCreditButton) createButton(CREDIT, creditButtonRef);

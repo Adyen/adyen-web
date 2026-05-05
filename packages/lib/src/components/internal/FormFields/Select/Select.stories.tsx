@@ -9,6 +9,11 @@ import { Resources } from '../../../../core/Context/Resources';
 import { resolveEnvironments } from '../../../../core/Environment';
 import type { CoreConfiguration } from '../../../../core/types';
 import { SelectProps, SelectItem, SelectTargetObject } from './types';
+import { ILanguageService } from '../../../../language/LanguageService';
+
+const languageServiceStub: ILanguageService = {
+    fetchTranslationsFromCdn: () => Promise.resolve({})
+};
 
 const meta: Meta<SelectProps> = {
     title: 'Internal Elements/Select',
@@ -32,14 +37,17 @@ const meta: Meta<SelectProps> = {
     }
 };
 
+const i18n = new Language({
+    locale: 'en-US',
+    service: languageServiceStub
+});
+i18n['_translations'] = {
+    'select.noOptionsFound': 'No options found'
+};
+
 const coreProps = {
     loadingContext: process.env.CLIENT_ENV,
-    i18n: new Language({
-        locale: 'en-US',
-        translations: {
-            'select.noOptionsFound': 'No options found'
-        }
-    }),
+    i18n,
     resources: new Resources(resolveEnvironments(process.env.CLIENT_ENV as CoreConfiguration['environment']).cdnImagesUrl)
 };
 

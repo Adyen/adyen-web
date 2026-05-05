@@ -113,7 +113,7 @@ export class AnalyticsInfoEvent extends AbstractAnalyticsEvent {
         if (props.selectedValue) this.selectedValue = props.selectedValue;
         if (props.validationErrorCode) this.validationErrorCode = props.validationErrorCode;
         if (props.validationErrorMessage) this.validationErrorMessage = props.validationErrorMessage;
-        if (this.type === InfoEventType.rendered) {
+        if (this.type === InfoEventType.rendered || this.type === InfoEventType.displayed) {
             this.configData = this.createAnalyticsConfigData(props?.configData);
         }
 

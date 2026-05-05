@@ -1,6 +1,15 @@
 import { FastlaneWindowInstance, FastlaneOptions } from '../components/PayPalFastlane/types';
 import { ApplePayButtonStyle, ApplePayButtonType, ApplePayWebConfiguration } from '../components/ApplePay/types';
 import { IAdyenPasskey } from '../components/PayByBankPix/services/types';
+import { AmazonWindowObject } from '../types';
+import type { KlarnaWidgetAuthorizeResponse } from '../components/Klarna/types';
+
+declare module '@paypal/paypal-js' {
+    export interface PayPalNamespace {
+        Fastlane?: (options?: FastlaneOptions) => Promise<FastlaneWindowInstance>;
+        version?: string;
+    }
+}
 
 declare module 'preact' {
     namespace JSX {
@@ -17,9 +26,21 @@ declare module 'preact' {
 
 declare global {
     interface Window {
-        paypal?: {
-            Fastlane?: (options?: FastlaneOptions) => Promise<FastlaneWindowInstance>;
+        amazon?: AmazonWindowObject;
+        /**
+         * Klarna
+         */
+        Klarna?: {
+            Payments?: {
+                init(config: { client_token: string }): void;
+                load(
+                    config: { container: string; payment_method_category: string },
+                    callback: (res: { show_form: boolean; error: unknown }) => void
+                ): void;
+                authorize(config: { payment_method_category: string }, callback: (res: KlarnaWidgetAuthorizeResponse) => void): void;
+            };
         };
+        klarnaAsyncCallback?: () => void;
         /**
          * ApplePaySession added by ApplePaySDK
          */

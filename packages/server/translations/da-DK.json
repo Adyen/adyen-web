@@ -12,7 +12,7 @@
     "creditCard.expiryDateField.year": "År",
     "creditCard.storeDetailsButton": "Husk til næste gang",
     "creditCard.dualBrand.title": "Korttype",
-    "creditCard.dualBrand.description": "Vælg den korttype, du foretrækker at betale med. Dette er valgfrit.",
+    "creditCard.dualBrand.description": "Du kan vælge den korttype, du foretrækker at betale med. Dette er valgfrit.",
     "installments": "Antal rater",
     "installmentOption": "%{times}x %{partialValue}",
     "installmentOptionMonths": "%{times} måneder",
@@ -258,7 +258,7 @@
     "upi.completePayment": "Gennemfør din betaling",
     "upi.mode.enterUpiId": "UPI-id",
     "upi.mode.qrCode": "QR-kode",
-    "upi.mode.payByAnyUpi": "UPI-app",
+    "upi.mode.payByAnyUpi": "UPI-apps",
     "upi.collect.dropdown.label": "Indtast UPI-id",
     "upi.collect.instruction": "Indtast dit UPI-id",
     "upi.collect.field.label": "UPI-id",
@@ -443,5 +443,9 @@
     "econtext.customerNumber": "Kundenummer",
     "econtext.confirmationNumber": "Bekræftelsesnummer",
     "econtext.useBefore": "Brug før",
-    "econtext.paymentInformation": "Betalingsoplysninger"
+    "econtext.paymentInformation": "Betalingsoplysninger",
+    "issuerList.separatorText": "eller vælg på listen",
+    "upi.intent.apps.title": "Valgmuligheder",
+    "upi.intent.apps.dropdown.label": "UPI-apps",
+    "upi.intent.apps.dropdown.placeholder": "Vælg foretrukne app"
 }

@@ -188,7 +188,7 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
     }
 
     private startSession() {
-        const { onValidateMerchant, onPaymentMethodSelected, onShippingMethodSelected, onShippingContactSelected, onCouponCodeChange } = this.props;
+        const { onValidateMerchant, onPaymentMethodSelected, onShippingMethodSelected, onShippingContactSelected, onCouponCodeChanged } = this.props;
 
         const paymentRequest = preparePaymentRequest({
             companyName: this.props.configuration.merchantName,
@@ -211,7 +211,7 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
             onPaymentMethodSelected,
             onShippingMethodSelected,
             onShippingContactSelected,
-            onCouponCodeChange,
+            onCouponCodeChanged,
             onValidateMerchant: onValidateMerchant || this.validateMerchant,
             onPaymentAuthorized: (resolve, reject, event) => {
                 const billingAddress = formatApplePayContactToAdyenAddressFormat(event.payment.billingContact);
@@ -324,7 +324,7 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
             });
     }
 
-    private async validateMerchant(resolve: (merchantSession: any) => void, reject: (error: string) => void) {
+    private async validateMerchant(resolve: (merchantSession: unknown) => void, reject: (error: string) => void) {
         const { hostname } = window.location;
         const { clientKey, configuration, loadingContext, initiative, domainName } = this.props;
         const { merchantName, merchantId } = configuration;
@@ -340,10 +340,11 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
         try {
             const response = await httpPost(options, request);
             const decodedData: DecodeObject = base64.decode(response.data);
+
             if (!decodedData.success) {
                 reject('Could not decode Apple Pay session');
             } else {
-                const session = JSON.parse(decodedData.data);
+                const session: unknown = JSON.parse(decodedData.data);
                 resolve(session);
             }
         } catch (e) {

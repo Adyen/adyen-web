@@ -4,11 +4,12 @@ import { useEffect, useState } from 'preact/hooks';
 import { CollectEmail } from './CollectEmail';
 import { Shipping } from './Shipping';
 import { ShippingWithFastlane } from './ShippingWithFastlane';
-import './FastlaneStory.scss';
-
 import initializeFastlane from '../../initializeFastlane';
 import FastlaneSDK from '../../FastlaneSDK';
-import type { FastlaneAuthenticatedCustomerResult } from '../../types';
+import type { FastlaneAuthenticatedCustomerResult, FastlaneShipping } from '../../types';
+import { ShippingAddress } from './types';
+
+import './FastlaneStory.scss';
 
 interface GuestShopperFormProps {
     onCheckoutStep(componentConfig): void;
@@ -36,7 +37,7 @@ export const GuestShopperForm = ({ onCheckoutStep }: GuestShopperFormProps) => {
         setFastlaneAuthResult(data);
     };
 
-    const handleOnCheckoutClick = async (shippingAddress?: any) => {
+    const handleOnCheckoutClick = async (shippingAddress?: ShippingAddress | FastlaneShipping) => {
         console.log('Shipping address', shippingAddress);
         try {
             const componentConfig = await fastlane.getComponentConfiguration(fastlaneAuthResult);

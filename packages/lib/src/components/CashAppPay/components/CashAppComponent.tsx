@@ -1,26 +1,27 @@
-import { h, RefObject } from 'preact';
+import { h } from 'preact';
 import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 import Spinner from '../../internal/Spinner';
 import { CashAppPayEvents, ICashAppService } from '../services/types';
 import { CashAppPayEventData } from '../types';
 import StoreDetails from '../../internal/StoreDetails';
+import { ComponentMethodsRef, UIElementStatus } from '../../internal/UIElement/types';
 import './CashAppComponent.scss';
-import { UIElementStatus } from '../../internal/UIElement/types';
 
 interface CashAppComponentProps {
     enableStoreDetails?: boolean;
     cashAppService: ICashAppService;
     onClick(): void;
-    onChangeStoreDetails(data: any): void;
+    onChangeStoreDetails(storePayment: boolean): void;
     onAuthorize(payEventData: CashAppPayEventData): void;
     onError(error: AdyenCheckoutError): void;
-    ref(ref: RefObject<typeof CashAppComponent>): void;
+    setComponentRef: (ref: ComponentMethodsRef) => void;
 }
 
 export function CashAppComponent({
     enableStoreDetails,
     cashAppService,
+    setComponentRef,
     onClick,
     onChangeStoreDetails,
     onAuthorize,
@@ -31,7 +32,13 @@ export function CashAppComponent({
     const subscriptions = useRef<Function[]>([]);
     const [storePaymentMethod, setStorePaymentMethod] = useState<boolean>(false);
 
-    this.setStatus = setStatus;
+    const cashAppComponentRef = useRef<ComponentMethodsRef>({
+        setStatus: setStatus
+    });
+
+    useEffect(() => {
+        setComponentRef(cashAppComponentRef.current);
+    }, [setComponentRef]);
 
     const initializeCashAppSdk = useCallback(async () => {
         try {

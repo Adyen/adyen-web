@@ -6,12 +6,19 @@ import defaultProps from './defaultProps';
 import './CardInput.scss';
 import { AddressModeOptions, CardInputDataState, CardInputErrorState, CardInputProps, CardInputRef, CardInputValidState } from './types';
 import { CVC_POLICY_REQUIRED, DATE_POLICY_REQUIRED, ENCRYPTED_CARD_NUMBER } from '../../../internal/SecuredFields/lib/constants';
-import { BinLookupResponse } from '../../types';
+import { BinLookupResponse, DualBrandSelectElement } from '../../types';
 import { cardInputFormatters, cardInputValidationRules, getRuleByNameAndMode } from './validate';
 import CIExtensions from '../../../internal/SecuredFields/binLookup/extensions';
 import useForm from '../../../../utils/useForm';
 import { SortedErrorObject } from '../../../../core/Errors/types';
-import { handlePartialAddressMode, extractPropsForCardFields, extractPropsForSFP, getLayout, shouldShowInstallmentsComponent } from './utils';
+import {
+    handlePartialAddressMode,
+    extractPropsForCardFields,
+    extractPropsForSFP,
+    getLayout,
+    shouldShowInstallmentsComponent,
+    requiresDualBrandSelection
+} from './utils';
 import Specifications from '../../../internal/Address/Specifications';
 import { StoredCardFieldsWrapper } from './components/StoredCardFieldsWrapper';
 import { CardFieldsWrapper } from './components/CardFieldsWrapper';
@@ -34,6 +41,7 @@ import { SF_ErrorCodes } from '../../../../core/Errors/constants';
 import { usePrevious } from '../../../../utils/hookUtils';
 import { AnalyticsInfoEvent, InfoEventType, UiTarget } from '../../../../core/Analytics/events/AnalyticsInfoEvent';
 import { useAmount } from '../../../../core/Context/AmountProvider';
+import { DUAL_BRANDS_THAT_NEED_SELECTION_MECHANISM } from '../../constants';
 
 const CardInput = (props: Readonly<CardInputProps>) => {
     const sfp = useRef<SecuredFieldsProvider>(null);
@@ -71,7 +79,7 @@ const CardInput = (props: Readonly<CardInputProps>) => {
         ...(props.holderNameRequired && { holderName: false })
     });
     const [data, setData] = useState<CardInputDataState>({
-        ...(props.hasHolderName && { holderName: props.data.holderName ?? '' })
+        ...(props.hasHolderName && { holderName: props.data?.holderName ?? '' })
     });
 
     const [focusedElement, setFocusedElement] = useState('');
@@ -80,7 +88,7 @@ const CardInput = (props: Readonly<CardInputProps>) => {
     const [cvcPolicy, setCvcPolicy] = useState(CVC_POLICY_REQUIRED);
     const [issuingCountryCode, setIssuingCountryCode] = useState<string>(null);
 
-    const [dualBrandSelectElements, setDualBrandSelectElements] = useState([]);
+    const [dualBrandSelectElements, setDualBrandSelectElements] = useState<DualBrandSelectElement[]>([]);
     const [selectedBrandValue, setSelectedBrandValue] = useState(props.storedPaymentMethodId ? props.brand : ''); // If this is a storedCard comp initialise state with the storedCard's brand
 
     const showBillingAddress = props.billingAddressMode !== AddressModeOptions.none && props.billingAddressRequired;
@@ -90,7 +98,7 @@ const CardInput = (props: Readonly<CardInputProps>) => {
     const partialAddressCountry = useRef<string>(partialAddressSchema && props.data?.billingAddress?.country);
 
     const [storePaymentMethod, setStorePaymentMethod] = useState(false);
-    const [billingAddress, setBillingAddress] = useState<AddressData>(showBillingAddress ? props.data.billingAddress : null);
+    const [billingAddress, setBillingAddress] = useState<AddressData>(showBillingAddress ? (props.data?.billingAddress ?? null) : null);
     const [showSocialSecurityNumber, setShowSocialSecurityNumber] = useState(false);
     const [socialSecurityNumber, setSocialSecurityNumber] = useState('');
     const [installments, setInstallments] = useState<InstallmentsState>({ value: null });
@@ -144,7 +152,7 @@ const CardInput = (props: Readonly<CardInputProps>) => {
 
     const cardCountryCode: string = issuingCountryCode ?? props.countryCode;
     const isKorea = cardCountryCode === 'kr'; // If issuingCountryCode or the merchant defined countryCode is set to 'kr'
-    const showKCP = props.configuration.koreanAuthenticationRequired && isKorea;
+    const showKCP = !!props.configuration.koreanAuthenticationRequired && isKorea;
 
     const showBrazilianSSN: boolean =
         (showSocialSecurityNumber && props.configuration.socialSecurityNumberMode === 'auto') ||
@@ -219,7 +227,7 @@ const CardInput = (props: Readonly<CardInputProps>) => {
         if (sfState.autoCompleteName) {
             if (!props.hasHolderName) return;
             const holderNameValidationFn = getRuleByNameAndMode('holderName', 'blur');
-            const acHolderName = holderNameValidationFn(sfState.autoCompleteName) ? sfState.autoCompleteName : null;
+            const acHolderName = holderNameValidationFn?.(sfState.autoCompleteName, null) ? sfState.autoCompleteName : null;
             if (acHolderName) {
                 setFormData('holderName', acHolderName);
                 setFormValid('holderName', true); // only if holderName is valid does this fny get called - so we know it's valid and w/o error
@@ -277,7 +285,7 @@ const CardInput = (props: Readonly<CardInputProps>) => {
      * Deciding to do it this way since we garante there's no DOM changes to merchants
      * We can break this in the next major version (v7)
      */
-    const mimicLoadingStatusChange = sfpState => {
+    const mimicLoadingStatusChange = (sfpState: SFPState) => {
         if (!sfpState.status) return;
         if (sfpState.status == 'loading') {
             setShowCardUIElements(false);
@@ -433,10 +441,10 @@ const CardInput = (props: Readonly<CardInputProps>) => {
      * Main 'componentDidUpdate' handler
      */
     useEffect(() => {
-        const holderNameValid: boolean = valid.holderName;
+        const holderNameValid: boolean = !!valid.holderName;
 
         const sfpValid: boolean = isSfpValid;
-        const addressValid: boolean = showBillingAddress ? valid.billingAddress : true;
+        const addressValid: boolean = showBillingAddress ? !!valid.billingAddress : true;
 
         const koreanAuthentication: boolean = showKCP ? !!valid.taxNumber && !!valid.encryptedPassword : true;
 
@@ -465,19 +473,26 @@ const CardInput = (props: Readonly<CardInputProps>) => {
      */
     useEffect(() => {
         if (dualBrandSelectElements.length > 0 && dualBrandSelectElements) {
-            const dualBrandsArr = dualBrandSelectElements.map(item => item.id);
+            const dualBrandsArr: string[] = dualBrandSelectElements.map(item => item.id);
             const brand = dualBrandsArr[0]; // initially selected brand
             const dualBrands = dualBrandsArr.toString();
 
-            const event = new AnalyticsInfoEvent({
-                component: props.type,
-                type: InfoEventType.displayed,
-                target: UiTarget.dualBrandButton,
-                brand,
-                configData: { dualBrands }
-            });
+            const showDualBrandSelector = dualBrandSelectElements
+                ? requiresDualBrandSelection(DUAL_BRANDS_THAT_NEED_SELECTION_MECHANISM, dualBrandSelectElements, 'id')
+                : false;
 
-            props.onSubmitAnalytics(event);
+            // Only send analytics event about displaying dualBrand selector for countries that need to show a selection mechanism
+            if (showDualBrandSelector) {
+                const event = new AnalyticsInfoEvent({
+                    component: props.type,
+                    type: InfoEventType.displayed,
+                    target: UiTarget.dualBrandButton,
+                    brand,
+                    configData: { dualBrands }
+                });
+
+                props.onSubmitAnalytics(event);
+            }
         }
     }, [dualBrandSelectElements]);
 
@@ -520,7 +535,7 @@ const CardInput = (props: Readonly<CardInputProps>) => {
                 type={props.brand}
                 componentType={props.type}
                 disableIOSArrowKeys={props.disableIOSArrowKeys ? handleTouchstartIOS : null}
-                render={({ setRootNode, setFocusOn }, sfpState) => (
+                render={({ setRootNode, setFocusOn }, sfpState: SFPState) => (
                     <div
                         ref={setRootNode}
                         className={classNames({

@@ -4,13 +4,13 @@ import PaypalComponent from './PaypalComponent';
 import { mock } from 'jest-mock-extended';
 import { PayPalComponentProps } from './types';
 import { CoreProvider } from '../../../core/Context/CoreProvider';
-import type { IAnalytics } from '../../../core/Analytics/Analytics';
+import { setupCoreMock } from '../../../../config/testMocks/setup-core-mock';
 
-const mockAnalytics = mock<IAnalytics>();
+const core = setupCoreMock();
 
 const customRender = (props: PayPalComponentProps) =>
     render(
-        <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources} analytics={mockAnalytics}>
+        <CoreProvider i18n={core.modules.i18n} loadingContext="test" resources={core.modules.resources} analytics={core.modules.analytics}>
             <PaypalComponent {...props} />
         </CoreProvider>
     );
@@ -22,7 +22,8 @@ describe('PaypalComponent', () => {
                 merchantId: 'TestMerchant',
                 intent: 'authorize'
             },
-            onScriptLoadFailure: jest.fn()
+            onScriptLoadFailure: jest.fn(),
+            setComponentRef: jest.fn()
         });
         customRender(props);
         screen.getByTestId('spinner');

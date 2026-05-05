@@ -1,5 +1,5 @@
 import AbstractCSF from './AbstractCSF';
-import { CSFReturnObject, CSFSetupObject, CSFStateObject, CSFThisObject } from './types';
+import { CSFReturnObject, CSFSetupObject, CSFStateObject, CSFThisObject, CSFCallbacksConfig, CSFConfigObject } from './types';
 import { StylesObject, CardAdditionalSFData, SFFieldType } from '../types';
 import { BinLookupResponse } from '../../../../Card/types';
 import { handleConfig } from './extensions/handleConfig';
@@ -35,7 +35,10 @@ const notConfiguredWarning = (str = 'You cannot use secured fields') => {
 };
 
 class CSF extends AbstractCSF {
-    // --
+    declare protected callbacks: CSFCallbacksConfig;
+    declare protected config: CSFConfigObject;
+    declare protected state: CSFStateObject;
+
     constructor(setupObj: CSFSetupObject) {
         /**
          * Initialises:
@@ -77,9 +80,9 @@ class CSF extends AbstractCSF {
         const thisObj: CSFThisObject = { csfState: this.state, csfConfig: this.config, csfProps: this.props, csfCallbacks: this.callbacks };
 
         // Setup 'this' references
-        this.configHandler = handleConfig;
+        this.configHandler = handleConfig.bind(this);
 
-        this.callbacksHandler = configureCallbacks;
+        this.callbacksHandler = configureCallbacks.bind(this);
 
         this.validateForm = partial(validateForm, thisObj);
 
@@ -88,14 +91,14 @@ class CSF extends AbstractCSF {
 
         this.processBrand = partial(processBrand, thisObj);
 
-        this.handleValidation = handleValidation;
-        this.handleEncryption = handleEncryption;
+        this.handleValidation = handleValidation.bind(this);
+        this.handleEncryption = handleEncryption.bind(this);
 
-        this.createSecuredFields = createSecuredFields;
-        this.createNonCardSecuredFields = createNonCardSecuredFields;
-        this.createCardSecuredFields = createCardSecuredFields;
-        // eslint-disable-next-line @typescript-eslint/no-misused-promises
-        this.setupSecuredField = setupSecuredField;
+        this.createSecuredFields = createSecuredFields.bind(this);
+        this.createNonCardSecuredFields = createNonCardSecuredFields.bind(this);
+        this.createCardSecuredFields = createCardSecuredFields.bind(this);
+
+        this.setupSecuredField = setupSecuredField.bind(this);
 
         this.postMessageToAllIframes = partial(postMessageToAllIframes, thisObj);
 
@@ -108,18 +111,18 @@ class CSF extends AbstractCSF {
         this.setFocusOnFrame = partial(setFocusOnFrame, thisObj);
         this.handleFocus = partial(handleFocus, thisObj, this.handleIOSTouchEvents);
 
-        this.handleSFShiftTab = handleTab.handleSFShiftTab;
-        this.handleShiftTab = handleTab.handleShiftTab;
+        this.handleSFShiftTab = handleTab.handleSFShiftTab.bind(this);
+        this.handleShiftTab = handleTab.handleShiftTab.bind(this);
 
-        this.destroySecuredFields = destroySecuredFields;
+        this.destroySecuredFields = destroySecuredFields.bind(this);
 
         this.processAutoComplete = partial(processAutoComplete, thisObj);
 
         this.handleBinValue = partial(handleBinValue, thisObj);
 
-        this.handleBrandFromBinLookup = handleBrandFromBinLookup;
-        this.sendBrandToCardSF = sendBrandToCardSF;
-        this.sendExpiryDatePolicyToSF = sendExpiryDatePolicyToSF;
+        this.handleBrandFromBinLookup = handleBrandFromBinLookup.bind(this);
+        this.sendBrandToCardSF = sendBrandToCardSF.bind(this);
+        this.sendExpiryDatePolicyToSF = sendExpiryDatePolicyToSF.bind(this);
 
         // Populate config & callbacks objects & create securedFields
         this.init();

@@ -10,7 +10,7 @@ import { shouldIncludeInstallmentsInPaymentData } from './components/CardInput/u
 import createClickToPayService from '../internal/ClickToPay/services/create-clicktopay-service';
 import { ClickToPayCheckoutPayload, IClickToPayService } from '../internal/ClickToPay/services/types';
 import ClickToPayWrapper from './components/ClickToPayWrapper';
-import { ComponentFocusObject } from '../../types/global-types';
+import { ComponentFocusObject, PaymentMethodBrand } from '../../types/global-types';
 import { TxVariants } from '../tx-variants';
 import type { UIElementStatus } from '../internal/UIElement/types';
 import UIElement from '../internal/UIElement';
@@ -299,11 +299,11 @@ export class CardElement extends UIElement<CardConfiguration> {
         return this.props.icon ?? this.resources.getImage()(this.props.brand);
     }
 
-    get brands(): { icon: any; name: string }[] {
+    get brands(): PaymentMethodBrand[] {
         const { brands, brandsConfiguration } = this.props;
         if (brands) {
             return brands.map(brand => {
-                const brandIcon = brandsConfiguration[brand]?.icon ?? this.props.modules.resources.getImage()(brand);
+                const brandIcon = brandsConfiguration?.[brand]?.icon ?? this.props.modules.resources.getImage()(brand);
                 return { icon: brandIcon, name: brand };
             });
         }

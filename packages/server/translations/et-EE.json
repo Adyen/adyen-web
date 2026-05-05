@@ -12,7 +12,7 @@
     "creditCard.expiryDateField.year": "Aasta",
     "creditCard.storeDetailsButton": "Jäta järgmiseks korraks meelde",
     "creditCard.dualBrand.title": "Kaardi bränd",
-    "creditCard.dualBrand.description": "Valige kaardibränd, millega eelistate maksta. See on valikuline.",
+    "creditCard.dualBrand.description": "Saate valida kaardibrändi, millega eelistate maksta. See on valikuline.",
     "installments": "Osamaksete arv",
     "installmentOption": "%{times} x %{partialValue}",
     "installmentOptionMonths": "%{times} kuud",
@@ -258,7 +258,7 @@
     "upi.completePayment": "Vormistage oma makse",
     "upi.mode.enterUpiId": "UPI ID",
     "upi.mode.qrCode": "QR-kood",
-    "upi.mode.payByAnyUpi": "UPI rakendus",
+    "upi.mode.payByAnyUpi": "UPI rakendused",
     "upi.collect.dropdown.label": "Sisestage UPI ID",
     "upi.collect.instruction": "Sisestage oma UPI ID",
     "upi.collect.field.label": "UPI ID",
@@ -443,5 +443,9 @@
     "econtext.customerNumber": "Kliendi number",
     "econtext.confirmationNumber": "Kinnituse number",
     "econtext.useBefore": "Kõlblik kuni",
-    "econtext.paymentInformation": "Makseinfo"
+    "econtext.paymentInformation": "Makseinfo",
+    "issuerList.separatorText": "või valige nimekirjast",
+    "upi.intent.apps.title": "Valikud",
+    "upi.intent.apps.dropdown.label": "UPI rakendused",
+    "upi.intent.apps.dropdown.placeholder": "Valige eelistatud rakendus"
 }

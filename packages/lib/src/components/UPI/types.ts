@@ -6,7 +6,7 @@ export type UpiType = TxVariants.upi_qr | TxVariants.upi_intent;
 
 export type UpiMode = 'qrCode' | 'intent';
 
-export type App = { id: string; name: string; type?: UpiType };
+export type App = { id: string; name: string };
 
 export type UpiPaymentData = {
     paymentMethod: {
@@ -16,7 +16,10 @@ export type UpiPaymentData = {
 };
 
 export interface UPIConfiguration extends UIElementProps {
-    /** @deprecated UPI configuration property "defaultMode" is deprecated and will be removed in a future version. */
+    /**
+     * @deprecated
+     * UPI configuration property "defaultMode" is deprecated and will be removed in a future version.
+     */
     defaultMode?: UpiMode;
     // upi autopay
     mandate?: Mandate;
@@ -39,4 +42,17 @@ export interface UPIConfiguration extends UIElementProps {
      * The duration in minutes before the await/QR code expires.
      */
     countdownTime?: number;
+    /**
+     * Show the available UPI apps images on the Drop-in payment method item
+     */
+    showPaymentMethodItemImages?: boolean;
+    /**
+     * Show `+ other` after the UPI apps images on the Drop-in payment method item
+     */
+    showOtherInsteadOfNumber?: boolean;
 }
+
+/**
+ * @internal
+ */
+export type UPIAppList = Array<{ id: string; name: string; icon: string }>;

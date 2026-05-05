@@ -1,3 +1,6 @@
+process.env.VERSION = 'X.Y.Z';
+process.env.BUNDLE_TYPE = 'esm';
+
 import '@testing-library/jest-dom/jest-globals';
 import '@testing-library/jest-dom';
 import './testMocks/matchMedia';
@@ -13,6 +16,13 @@ import './testMocks/commonCorePropsMock';
 // Polyfill Web Streams API for MSW v2.x compatibility
 // https://github.com/mswjs/msw/issues/1916
 import { ReadableStream, WritableStream, TransformStream } from 'node:stream/web';
+
+const DEFAULT_TEST_TIMEOUT = 10_000;
+
+jest.setTimeout(DEFAULT_TEST_TIMEOUT);
+
+process.env.VERSION = 'X.Y.Z';
+process.env.BUNDLE_TYPE = 'esm';
 
 Object.assign(global, {
     ReadableStream,

@@ -12,7 +12,7 @@
     "creditCard.expiryDateField.year": "Έτος",
     "creditCard.storeDetailsButton": "Απομνημόνευση για την επόμενη φορά",
     "creditCard.dualBrand.title": "Επωνυμία κάρτας",
-    "creditCard.dualBrand.description": "Επιλέξτε την επωνυμία της κάρτας με την οποία προτιμάτε να πληρώσετε. Αυτό είναι προαιρετικό.",
+    "creditCard.dualBrand.description": "Μπορείτε να επιλέξετε την επωνυμία της κάρτας με την οποία προτιμάτε να πληρώσετε. Αυτό είναι προαιρετικό.",
     "installments": "Αριθμός δόσεων",
     "installmentOption": "%{times}x %{partialValue}",
     "installmentOptionMonths": "%{times} μήνες",
@@ -258,7 +258,7 @@
     "upi.completePayment": "Ολοκλήρωση της πληρωμής",
     "upi.mode.enterUpiId": "Αναγνωριστικό UPI",
     "upi.mode.qrCode": "Κωδικός QR",
-    "upi.mode.payByAnyUpi": "Εφαρμογή UPI",
+    "upi.mode.payByAnyUpi": "Εφαρμογές UPI",
     "upi.collect.dropdown.label": "Εισαγωγή αναγνωριστικού UPI",
     "upi.collect.instruction": "Εισαγάγετε το αναγνωριστικό UPI",
     "upi.collect.field.label": "Αναγνωριστικό UPI",
@@ -443,5 +443,9 @@
     "econtext.customerNumber": "Αριθμός πελάτη",
     "econtext.confirmationNumber": "Αριθμός επιβεβαίωσης",
     "econtext.useBefore": "Χρήση πριν από",
-    "econtext.paymentInformation": "Πληροφορίες πληρωμής"
+    "econtext.paymentInformation": "Πληροφορίες πληρωμής",
+    "issuerList.separatorText": "ή επιλέξτε από τη λίστα",
+    "upi.intent.apps.title": "Επιλογές",
+    "upi.intent.apps.dropdown.label": "Εφαρμογές UPI",
+    "upi.intent.apps.dropdown.placeholder": "Επιλέξτε την προτιμώμενη εφαρμογή"
 }

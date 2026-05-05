@@ -8,11 +8,6 @@ import Address from '../../../../internal/Address';
 import CardHolderName from './CardHolderName';
 import Installments from './Installments';
 import DisclaimerMessage from '../../../../internal/DisclaimerMessage';
-import RadioGroupExtended from '../../../../internal/FormFields/RadioGroupExtended';
-import { mapDualBrandButtons, mustHandleDualBrandingAccordingToEURegulations } from '../utils';
-import Fieldset from '../../../../internal/FormFields/Fieldset';
-import { useCoreContext } from '../../../../../core/Context/CoreProvider';
-import { DUAL_BRANDS_THAT_NEED_SELECTION_MECHANISM } from '../../../constants';
 
 export const CardFieldsWrapper = ({
     // vars created in CardInput:
@@ -75,8 +70,6 @@ export const CardFieldsWrapper = ({
     onFieldFocusAnalytics,
     onFieldBlurAnalytics
 }) => {
-    const { i18n } = useCoreContext();
-
     const cardHolderField = (
         <CardHolderName
             required={holderNameRequired}
@@ -92,13 +85,6 @@ export const CardFieldsWrapper = ({
         />
     );
 
-    //  Only if the brands in DUAL_BRANDS_THAT_NEED_SELECTION_MECHANISM are present in the binLookup response should we handle dual branding based on EU regulations
-    const showDualBrandSelectElements = mustHandleDualBrandingAccordingToEURegulations(
-        DUAL_BRANDS_THAT_NEED_SELECTION_MECHANISM,
-        dualBrandSelectElements,
-        'id'
-    );
-
     return (
         <LoadingWrapper status={sfpState.status}>
             {hasHolderName && positionHolderNameOnTop && cardHolderField}
@@ -106,7 +92,7 @@ export const CardFieldsWrapper = ({
             <CardFields
                 showBrandIcon={showBrandIcon}
                 showContextualElement={showContextualElement}
-                brand={sfpState.brand}
+                brand={sfpState.brand ?? 'card'}
                 brandsIcons={brandsIcons}
                 brandsConfiguration={brandsConfiguration}
                 focusedElement={focusedElement}
@@ -117,23 +103,11 @@ export const CardFieldsWrapper = ({
                 errors={sfpState.errors}
                 valid={sfpState.valid}
                 dualBrandingElements={dualBrandSelectElements.length > 0 && dualBrandSelectElements}
+                dualBrandingChangeHandler={extensions.handleDualBrandSelection}
+                selectedBrandValue={selectedBrandValue}
             />
 
             {hasHolderName && !positionHolderNameOnTop && cardHolderField}
-
-            {showDualBrandSelectElements && dualBrandSelectElements.length > 0 && dualBrandSelectElements && (
-                <Fieldset classNameModifiers={['dual-brand-switcher']} label={i18n.get('creditCard.dualBrand.title')}>
-                    <p className={'adyen-checkout-form-instruction'}>{i18n.get('creditCard.dualBrand.description')}</p>
-                    <RadioGroupExtended
-                        name={'dualBrandSwitcher'}
-                        value={selectedBrandValue} // Set which button is in a selected (checked) state
-                        items={mapDualBrandButtons(dualBrandSelectElements, brandsConfiguration)}
-                        onChange={extensions.handleDualBrandSelection}
-                        required={true}
-                        showSelectedTick={true}
-                    />
-                </Fieldset>
-            )}
 
             {showKCP && (
                 <KCPAuthentication

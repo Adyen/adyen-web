@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import classNames from 'classnames';
-import Brand from '../../../internal/Brand';
+import { BrandImage } from '../../../internal/BrandImage';
 
 interface PaymentMethodIconProps {
     /** URL to the payment method icon */
@@ -20,7 +20,7 @@ const PaymentMethodIcon = ({ src, altDescription, type }: Readonly<PaymentMethod
         ? 'adyen-checkout__payment-method__image__wrapper'
         : classNames('adyen-checkout__payment-method__image__wrapper', 'adyen-checkout__payment-method__image__wrapper--outline');
 
-    return <Brand wrapperClassName={classes} imgClassName={'adyen-checkout__payment-method__image'} url={src} alt={altDescription} />;
+    return <BrandImage wrapperClassName={classes} imgClassName={'adyen-checkout__payment-method__image'} src={src} alt={altDescription} />;
 };
 
 export default PaymentMethodIcon;

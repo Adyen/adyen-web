@@ -1,3 +1,6 @@
+import { CoreConfiguration } from '../types';
+import type { ILanguageService } from './LanguageService';
+
 export type CustomTranslations = {
     [locale: string]: Translations;
 };
@@ -7,7 +10,8 @@ export type Translations = {
 };
 
 export interface LanguageOptions {
-    locale: string;
-    translations: Translations;
+    service: ILanguageService;
+    locale?: string;
     customTranslations?: CustomTranslations;
+    onError?: CoreConfiguration['onError'];
 }

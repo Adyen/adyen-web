@@ -1,21 +1,19 @@
 import { h } from 'preact';
 import classNames from 'classnames';
-import { App } from '../../types';
+import { App, UPIAppList } from '../../types';
 import UPIIntentAppItem from './UPIIntentAppItem';
-import useImage from '../../../../core/Context/useImage';
 import { useCoreContext } from '../../../../core/Context/CoreProvider';
 import './UPIIntentAppList.scss';
 
 interface UPIIntentAppListProps {
-    apps: Array<App>;
+    appsList: UPIAppList;
     selectedAppId?: string;
     disabled?: boolean;
-    onAppSelect?: (app: App) => void;
+    onAppSelect: (app: App) => void;
 }
 
-const UPIIntentAppList = ({ apps, selectedAppId, disabled, onAppSelect = () => {} }: Readonly<UPIIntentAppListProps>): h.JSX.Element => {
+const UPIIntentAppList = ({ appsList, selectedAppId, disabled, onAppSelect }: Readonly<UPIIntentAppListProps>): h.JSX.Element => {
     const { i18n } = useCoreContext();
-    const getImage = useImage();
 
     return (
         /* eslint-disable jsx-a11y/no-noninteractive-element-to-interactive-role */
@@ -27,12 +25,18 @@ const UPIIntentAppList = ({ apps, selectedAppId, disabled, onAppSelect = () => {
             role="radiogroup"
             aria-label={i18n.get('paymentMethodsList.aria.label')}
         >
-            {apps.map(app => {
+            {appsList.map(app => {
                 const key = `adyen-checkout-upi-app-item-${app.id}`;
                 const isSelected = selectedAppId === app.id;
-                const imgName = `upi/${app.id}`;
-                const imgSrc = getImage()(imgName.toLowerCase());
-                return <UPIIntentAppItem key={key} app={app} imgSrc={imgSrc} isSelected={isSelected} onSelect={onAppSelect} />;
+                return (
+                    <UPIIntentAppItem
+                        key={key}
+                        app={{ id: app.id, name: app.name }}
+                        imgSrc={app.icon}
+                        isSelected={isSelected}
+                        onSelect={onAppSelect}
+                    />
+                );
             })}
         </ul>
     );
