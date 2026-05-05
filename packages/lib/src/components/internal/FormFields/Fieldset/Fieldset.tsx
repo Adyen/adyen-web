@@ -13,6 +13,7 @@ interface FieldsetProps {
     description?: string;
     readonly?: boolean;
     id?: string;
+    useHeading?: boolean;
 }
 
 export default function Fieldset({
@@ -22,7 +23,8 @@ export default function Fieldset({
     label,
     readonly = false,
     description,
-    id
+    id,
+    useHeading = false
 }: Readonly<FieldsetProps>) {
     const { i18n } = useCoreContext();
 
@@ -38,7 +40,11 @@ export default function Fieldset({
             ])}
             aria-describedby={description ? describedById : null}
         >
-            {label && <legend className="adyen-checkout__fieldset__title">{i18n.get(label)}</legend>}
+            {label && (
+                <legend className="adyen-checkout__fieldset__title">
+                    {useHeading ? <h2 className="adyen-checkout__fieldset__title-heading">{i18n.get(label)}</h2> : i18n.get(label)}
+                </legend>
+            )}
             {description && (
                 <p id={describedById} className="adyen-checkout__fieldset__description">
                     {i18n.get(description)}
