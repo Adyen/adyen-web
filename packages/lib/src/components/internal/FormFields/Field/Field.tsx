@@ -51,7 +51,7 @@ const Field: FunctionalComponent<Readonly<FieldProps>> = props => {
     // or whether it has an id attr that can be pointed to by an aria-describedby attr on an input element
     const contextVisibleToSR = contextVisibleToScreenReader ?? true;
     const showError = showErrorElement && typeof errorMessage === 'string' && errorMessage.length > 0;
-    const showContext = showContextualElement && !showError && contextualText?.length > 0;
+    const showContext = showContextualElement && !showError && contextualText && contextualText.length > 0;
 
     const uniqueId = useRef(getUniqueId(`adyen-checkout-${name}`));
     const staticValueId = useMemo(() => (staticValue ? `input-static-value-${uuid()}` : null), [staticValue]);
@@ -114,7 +114,7 @@ const Field: FunctionalComponent<Readonly<FieldProps>> = props => {
             <span
                 className={classNames({ 'adyen-checkout-contextual-text--error': true, 'adyen-checkout-contextual-text--hidden': !showError })}
                 {...(contextVisibleToSR && { id: `${uniqueId.current}${ARIA_ERROR_SUFFIX}` })}
-                aria-hidden={contextVisibleToSR ? null : 'true'}
+                aria-hidden={contextVisibleToSR ? undefined : 'true'}
             >
                 {errorMessage}
             </span>
@@ -123,7 +123,7 @@ const Field: FunctionalComponent<Readonly<FieldProps>> = props => {
             <span
                 className={classNames({ 'adyen-checkout-contextual-text': true, 'adyen-checkout-contextual-text--hidden': !showContext })}
                 {...(contextVisibleToSR && { id: `${uniqueId.current}${ARIA_CONTEXT_SUFFIX}` })}
-                aria-hidden={contextVisibleToSR ? null : 'true'}
+                aria-hidden={contextVisibleToSR ? undefined : 'true'}
             >
                 {contextualText}
             </span>
@@ -233,7 +233,7 @@ const Field: FunctionalComponent<Readonly<FieldProps>> = props => {
             className={classNames(
                 'adyen-checkout__field',
                 className,
-                classNameModifiers.map(m => `adyen-checkout__field--${m}`),
+                classNameModifiers?.map(m => `adyen-checkout__field--${m}`),
                 {
                     'adyen-checkout__field--error': errorMessage,
                     'adyen-checkout__field--valid': isValid,

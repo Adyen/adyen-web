@@ -1,4 +1,5 @@
 @use 'styles/variable-generator';
+@use 'styles/mixins';
 
 .adyen-checkout__field--cardNumber {
     .adyen-checkout__input-wrapper {
@@ -17,8 +18,13 @@
 
 .adyen-checkout__card__dual-branding__icons {
     display: flex;
-
+    
     .adyen-checkout__card__cardNumber__brandIcon {
         opacity: 1;
     }
+
+}
+
+.adyen-checkout__card__dual-branding__sr-only {
+    @include mixins.a11y-visually-hidden;
 }

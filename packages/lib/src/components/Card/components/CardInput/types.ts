@@ -101,7 +101,7 @@ export interface CardInputProps {
     holderName?: string;
     holderNameRequired?: boolean;
     i18n?: Language;
-    implementationType?: string;
+    implementationType?: 'components' | 'custom';
     installmentOptions?: InstallmentOptions;
     keypadFix?: boolean;
     lastFour?: string;

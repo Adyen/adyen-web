@@ -20,6 +20,8 @@ export default function CardFields({
     brandsIcons,
     brandsConfiguration,
     dualBrandingElements,
+    selectedBrandValue,
+    dualBrandingChangeHandler,
     errors,
     focusedElement,
     hasCVC,
@@ -56,6 +58,8 @@ export default function CardFields({
                 filled={!!errors.encryptedCardNumber || !!valid.encryptedCardNumber}
                 showBrandIcon={showBrandIcon}
                 dualBrandingElements={dualBrandingElements}
+                selectedBrandValue={selectedBrandValue}
+                dualBrandingChangeHandler={dualBrandingChangeHandler}
             />
 
             <AvailableBrands activeBrand={brand} brands={allowedBrands} />

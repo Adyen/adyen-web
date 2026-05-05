@@ -16,7 +16,7 @@ const test = base.extend<Fixture>({
     cardBrandingPage: async ({ page }, use) => {
         const cardPage = new Card(page);
         const componentConfig = {
-            brands: ['mc', 'visa', 'amex', 'maestro', 'bcmc']
+            brands: ['bcmc', 'mc', 'visa', 'amex', 'maestro']
         };
         await cardPage.goto(getStoryUrl({ baseUrl: URL_MAP.card, componentConfig }));
         await use(cardPage);

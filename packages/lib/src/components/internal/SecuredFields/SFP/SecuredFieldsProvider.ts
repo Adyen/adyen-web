@@ -36,7 +36,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
     private csfConfigFailTimeout: number;
     private csfConfigFailTimeoutMS: number;
     private numCharsInField: object;
-    private rootNode;
+    private rootNode: HTMLElement;
     private numDateFields: number;
     private csf: CSFReturnObject;
     private handleOnLoad: (obj: CardLoadData) => void;
@@ -51,8 +51,8 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
     private handleOnTouchstartIOS: (obj) => void;
     private handleKeyPressed: (obj: SFKeyPressObj) => void;
     public state: SFPState;
-    public props;
-    private issuingCountryCode;
+    public props: SFPProps;
+    private issuingCountryCode: string;
 
     constructor(props: SFPProps) {
         super(props);
@@ -127,7 +127,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
             this.destroy();
             this.initializeCSF(this.rootNode);
         } else {
-            if (this.props.componentType === TxVariants.customCard) {
+            if (this.props.componentType === (TxVariants.customCard as string)) {
                 console.debug(
                     'You are trying to create a CustomCard component but the element into which you are trying to mount the CustomCard component does not contain any elements with a "data-cse" attribute e.g. <div data-cse="encryptedCardNumber"></div>'
                 );
@@ -304,7 +304,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
 
         Object.keys(state.valid)
             .reduce(getErrorReducer(numDateFields, state), [])
-            .forEach(field => {
+            .forEach((field: SFFieldType) => {
                 // For each detected error pass an error object to the handler (calls error callback & sets state)
                 const errorObj: CardErrorData = getErrorObject(field, this.rootNode, state);
                 this.handleOnError(errorObj, !!state.detectedUnsupportedBrands);
@@ -397,7 +397,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
         this.rootNode = input;
     };
 
-    public render(props, state) {
+    public render(props, state: SFPState) {
         return props.render({ setRootNode: this.setRootNode, setFocusOn: this.setFocusOn }, state);
     }
 }
