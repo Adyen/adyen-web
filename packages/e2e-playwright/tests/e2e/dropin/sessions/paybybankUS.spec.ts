@@ -1,10 +1,7 @@
-import dotenv from 'dotenv';
 import { test } from '../../../../fixtures/dropin.fixture';
 import { MOBILE_USER_AGENT, SMALL_A11Y_MOBILE_VIEWPORT, TAGS } from '../../../utils/constants';
 import { URL_MAP } from '../../../../fixtures/URL_MAP';
 import { toHaveScreenshot } from '../../../utils/assertions';
-
-dotenv.config();
 
 test.describe('Dropin - Sessions - PayByBankUS', () => {
     test.describe('Brand list (Small Mobile)', () => {

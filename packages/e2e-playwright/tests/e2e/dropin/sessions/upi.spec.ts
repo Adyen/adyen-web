@@ -1,11 +1,8 @@
-import dotenv from 'dotenv';
 import { test, expect } from '../../../../fixtures/dropin.fixture';
 import { MOBILE_USER_AGENT, SMALL_MOBILE_VIEWPORT, TAGS } from '../../../utils/constants';
 import { URL_MAP } from '../../../../fixtures/URL_MAP';
 import { toHaveScreenshot } from '../../../utils/assertions';
 import { UPI } from '../../../../models/upi';
-
-dotenv.config();
 
 test.describe('Dropin - Sessions - UPI', () => {
     test.describe('QR Code Flow (Desktop)', () => {
