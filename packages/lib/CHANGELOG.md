@@ -1,5 +1,13 @@
 # @adyen/adyen-web
 
+## 6.35.0
+
+### Minor Changes
+
+- Improved: Co-badged card selection UI inside card PAN field ([#3883](https://github.com/Adyen/adyen-web/pull/3883))
+
+- New: The payload returned in the `onSubmit` callback has increased in size, because of changes to the included `sdkData` field. ([#3956](https://github.com/Adyen/adyen-web/pull/3956))
+
 ## 6.34.1
 
 ### Patch Changes
