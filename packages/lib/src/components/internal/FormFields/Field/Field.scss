@@ -4,7 +4,7 @@
 
 @mixin input-wrapper-inactive {
     background: variable-generator.token(color-background-disabled);
-    border-color: transparent;
+    border-color: variable-generator.token(color-outline-secondary);
 }
 
 .adyen-checkout__field {
@@ -137,16 +137,16 @@
     display: flex;
     align-items: center;
     background: variable-generator.token(color-background-primary);
-    border: variable-generator.token(border-width-s) solid variable-generator.token(color-outline-primary);
+    border: variable-generator.token(border-width-s) solid variable-generator.token(color-outline-tertiary);
     border-radius: variable-generator.token(border-radius-m);
 
-    & div,
+    & div:not(.adyen-checkout__input-wrapper),
     input,
     span {
         border-radius: inherit;
     }
 
-    & div,
+    & div:not(.adyen-checkout__input-wrapper),
     input,
     button {
         border: none;
@@ -156,12 +156,12 @@
     &:active:hover,
     &:focus-within,
     &:focus-within:hover {
-        box-shadow: 0 0 0 0.5px variable-generator.token(color-outline-primary-active);
-        border-color: variable-generator.token(color-outline-primary-active);
+        box-shadow: 0 0 0 0.5px variable-generator.token(color-outline-tertiary-active);
+        border-color: variable-generator.token(color-outline-tertiary-active);
     }
 
     &:hover {
-        border-color: variable-generator.token(color-outline-tertiary);
+        border-color: variable-generator.token(color-outline-tertiary-hover);
     }
 }
 

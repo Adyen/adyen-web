@@ -92,7 +92,7 @@
         height: variable-generator.token(spacer-070);
         border-radius: variable-generator.token(border-radius-s);
         background-color: variable-generator.token(color-background-primary);
-        border: variable-generator.token(border-width-s) solid variable-generator.token(color-outline-primary);
+        border: variable-generator.token(border-width-s) solid variable-generator.token(color-outline-tertiary);
         z-index: 0;
         transition: background 0.15s ease-out, border 0.05s ease-out, box-shadow 0.1s ease-out;
 
@@ -105,7 +105,7 @@
 
 .adyen-checkout__field--consentCheckbox {
     background: variable-generator.token(color-background-primary);
-    border: variable-generator.token(border-width-s) solid variable-generator.token(color-outline-primary);
+    border: variable-generator.token(border-width-s) solid variable-generator.token(color-outline-secondary);
     border-radius: variable-generator.token(border-radius-m);
     display: flex;
     padding: variable-generator.token(spacer-060) variable-generator.token(spacer-070);
