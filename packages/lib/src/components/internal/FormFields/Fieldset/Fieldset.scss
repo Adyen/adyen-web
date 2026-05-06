@@ -46,6 +46,13 @@
     }
 }
 
+.adyen-checkout__fieldset__title-heading {
+    font: inherit;
+    color: inherit;
+    margin: 0;
+    padding: 0;
+}
+
 .adyen-checkout__fieldset__fields {
     @include index.fieldset-fields-layout;
 }

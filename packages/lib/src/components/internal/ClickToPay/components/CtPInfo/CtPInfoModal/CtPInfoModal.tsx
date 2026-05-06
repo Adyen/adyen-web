@@ -42,9 +42,9 @@ const CtPInfoModal = ({ isOpen, onClose, focusAfterClose }: Readonly<CtPInfoModa
             {({ onCloseModal }) => (
                 <Fragment>
                     <Img className="adyen-checkout__ctp-modal-header-image" src={getImage({ imageFolder: 'components/' })('ctp_landscape')} alt="" />
-                    <h1 id={labelledBy} className="adyen-checkout__ctp-modal-title">
+                    <h2 id={labelledBy} className="adyen-checkout__ctp-modal-title">
                         {i18n.get('ctp.infoPopup.title')}
-                    </h1>
+                    </h2>
 
                     <div id={describedBy}>
                         <p tabIndex={-1} ref={focusFirstElement} className="adyen-checkout__ctp-modal-text">
