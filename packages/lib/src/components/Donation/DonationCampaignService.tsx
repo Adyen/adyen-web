@@ -28,8 +28,8 @@ class DonationCampaignService {
     constructor(checkout: ICore, donationCampaignProps: DonationCampaignOptions) {
         this.core = checkout;
 
-        this.onDonationCompleted = checkout.options.donation?.onSuccess;
-        this.onDonationFailed = checkout.options.donation?.onError;
+        this.onDonationCompleted = checkout.options.donation?.onDonationSuccess;
+        this.onDonationFailed = checkout.options.donation?.onDonationFailure;
 
         this.commercialTxAmount = donationCampaignProps.commercialTxAmount;
 
@@ -113,10 +113,16 @@ class DonationCampaignService {
     }
 
     private async makeSessionsDonationCampaignsCall(): Promise<CheckoutSessionDonationCampaignsResponse> {
+        if (!this.core.session) {
+            throw new Error('DonationCampaignService requires a session to be configured');
+        }
         return await this.core.session.fetchDonationCampaigns();
     }
 
     private async makeSessionDonationsCall(donationRequestData: CheckoutSessionDonationsRequestData): Promise<CheckoutSessionDonationsResponse> {
+        if (!this.core.session) {
+            throw new Error('DonationCampaignService requires a session to be configured');
+        }
         return await this.core.session.makeDonation(donationRequestData);
     }
 }

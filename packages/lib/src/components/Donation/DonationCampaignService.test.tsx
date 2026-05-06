@@ -6,8 +6,12 @@ import type { CheckoutSessionDonationCampaignsResponse, CheckoutSessionDonations
 import CheckoutSession from '../../core/CheckoutSession';
 import type { IAnalytics } from '../../core/Analytics/Analytics';
 
-const createMockCore = (): MockProxy<ICore> => {
-    const core = mock<ICore>();
+interface MockCoreWithSession extends MockProxy<ICore> {
+    session: MockProxy<CheckoutSession>;
+}
+
+const createMockCore = (): MockCoreWithSession => {
+    const core = mock<ICore>() as MockCoreWithSession;
     const analytics = mock<IAnalytics>();
     const session = mock<CheckoutSession>();
 
@@ -19,8 +23,8 @@ const createMockCore = (): MockProxy<ICore> => {
     core.options = {
         donation: {
             autoMount: true,
-            onSuccess: jest.fn(),
-            onError: jest.fn(),
+            onDonationSuccess: jest.fn(),
+            onDonationFailure: jest.fn(),
             delay: 0
         }
     };
@@ -84,8 +88,8 @@ describe('DonationCampaignService', () => {
                 donation: {
                     autoMount: true,
                     delay: DEFAULT_DONATION_AUTO_START_DELAY_MS,
-                    onSuccess: jest.fn(),
-                    onError: jest.fn()
+                    onDonationSuccess: jest.fn(),
+                    onDonationFailure: jest.fn()
                 }
             };
 
@@ -113,8 +117,8 @@ describe('DonationCampaignService', () => {
                 donation: {
                     autoMount: true,
                     delay: 1000,
-                    onSuccess: jest.fn(),
-                    onError: jest.fn()
+                    onDonationSuccess: jest.fn(),
+                    onDonationFailure: jest.fn()
                 }
             };
 
@@ -286,12 +290,12 @@ describe('DonationCampaignService', () => {
     describe('onCancel callback', () => {
         test('should call onDonationCompleted with false when onCancel is triggered', async () => {
             const core = createMockCore();
-            const onSuccess = jest.fn();
+            const onDonationSuccess = jest.fn();
             core.options = {
                 donation: {
                     autoMount: true,
-                    onSuccess,
-                    onError: jest.fn(),
+                    onDonationSuccess,
+                    onDonationFailure: jest.fn(),
                     delay: 0
                 }
             };
@@ -311,7 +315,7 @@ describe('DonationCampaignService', () => {
 
             result?.onCancel({ data: { amount: { currency: 'EUR', value: 100 } } });
 
-            expect(onSuccess).toHaveBeenCalledWith({ didDonate: false });
+            expect(onDonationSuccess).toHaveBeenCalledWith({ didDonate: false });
         });
     });
 
@@ -466,12 +470,12 @@ describe('DonationCampaignService', () => {
 
         test('should set status to success and call onDonationCompleted when donation is authorised', async () => {
             const core = createMockCore();
-            const onSuccess = jest.fn();
+            const onDonationSuccess = jest.fn();
             core.options = {
                 donation: {
                     autoMount: true,
-                    onSuccess,
-                    onError: jest.fn(),
+                    onDonationSuccess,
+                    onDonationFailure: jest.fn(),
                     delay: 0
                 }
             };
@@ -506,17 +510,17 @@ describe('DonationCampaignService', () => {
             await Promise.resolve();
 
             expect(mockComponent.setStatus).toHaveBeenCalledWith('success');
-            expect(onSuccess).toHaveBeenCalledWith({ didDonate: true });
+            expect(onDonationSuccess).toHaveBeenCalledWith({ didDonate: true });
         });
 
         test('should set status to error and call onDonationFailed when donation is refused', async () => {
             const core = createMockCore();
-            const onError = jest.fn();
+            const onDonationFailure = jest.fn();
             core.options = {
                 donation: {
                     autoMount: true,
-                    onError,
-                    onSuccess: jest.fn(),
+                    onDonationFailure,
+                    onDonationSuccess: jest.fn(),
                     delay: 0
                 }
             };
@@ -551,7 +555,7 @@ describe('DonationCampaignService', () => {
             await Promise.resolve();
 
             expect(mockComponent.setStatus).toHaveBeenCalledWith('error');
-            expect(onError).toHaveBeenCalledWith('Refused');
+            expect(onDonationFailure).toHaveBeenCalledWith('Refused');
         });
 
         test('should set status to error and call onDonationFailed when donations call fails', async () => {
@@ -559,12 +563,12 @@ describe('DonationCampaignService', () => {
             jest.useRealTimers();
 
             const core = createMockCore();
-            const onError = jest.fn();
+            const onDonationFailure = jest.fn();
             core.options = {
                 donation: {
                     autoMount: true,
-                    onError,
-                    onSuccess: jest.fn(),
+                    onDonationFailure,
+                    onDonationSuccess: jest.fn(),
                     delay: 0
                 }
             };
@@ -593,7 +597,7 @@ describe('DonationCampaignService', () => {
             await new Promise(resolve => setTimeout(resolve, 10));
 
             expect(mockComponent.setStatus).toHaveBeenCalledWith('error');
-            expect(onError).toHaveBeenCalledWith(error);
+            expect(onDonationFailure).toHaveBeenCalledWith(error);
         });
     });
 });

@@ -50,6 +50,8 @@ class DonationElement extends UIElement<DonationConfiguration> {
     };
 
     private async initialiseServiceMode(checkout: ICore, props: DonationCampaignOptions) {
+        console.log('### Donation::initialiseServiceMode:: checkout.session', checkout.session);
+
         if (checkout.session.sessionsDonationInitiated) {
             console.error(REPARENT_WITHOUT_AUTO_START_ERROR_MSG);
             return;
@@ -66,7 +68,7 @@ class DonationElement extends UIElement<DonationConfiguration> {
         } catch (error: unknown) {
             // Call merchant defined callback
             // e.g. when the merchant wants to reparent the component and donation type = roundup but no commercialTxAmount has been set
-            checkout.options.donation?.onError?.(error);
+            checkout.options.donation?.onDonationFailure?.(error);
         }
     }
 

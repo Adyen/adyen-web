@@ -131,8 +131,8 @@ export const SessionsDonation: DropinStory = {
         donation: {
             autoMount: true,
             delay: 3000,
-            onSuccess: obj => console.log('### Dropin_withSessionsDonation::onSuccess:: didDonate=', obj),
-            onError: obj => console.log('### Dropin_withSessionsDonation::onError:: obj', obj)
+            onDonationSuccess: obj => console.log('### Dropin_withSessionsDonation::onDonationSuccess:: didDonate=', obj),
+            onDonationFailure: obj => console.log('### Dropin_withSessionsDonation::onDonationFailure:: obj', obj)
         }
     },
 
@@ -157,15 +157,15 @@ export const SessionsDonationReparented: DropinStory = {
         donation: {
             autoMount: false,
             delay: 3000,
-            onSuccess: res => {
+            onDonationSuccess: res => {
                 const fcDialog = document.getElementById('donation-dialog') as HTMLDialogElement;
                 const delay = res.didDonate ? 3000 : 0;
                 setTimeout(() => {
                     fcDialog.close();
                 }, delay);
             },
-            onError: obj => {
-                console.log('### Dropin_withSessionsDonation::onError:: obj', obj);
+            onDonationFailure: obj => {
+                console.log('### Dropin_withSessionsDonation::onDonationFailure:: obj', obj);
                 const fcDialog = document.getElementById('donation-dialog') as HTMLDialogElement;
                 fcDialog.close();
             }
