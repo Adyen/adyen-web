@@ -277,7 +277,9 @@ describe('Donation element', () => {
             coreWithSession.options = { donation: { delay: 0 } };
 
             // Simulate that a donation has already been initiated
-            coreWithSession.session.sessionsDonationInitiated = true;
+            if (coreWithSession.session) {
+                coreWithSession.session.sessionsDonationInitiated = true;
+            }
 
             const initialiseSpy = jest.spyOn(DonationCampaignService.prototype, 'initialise');
             const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
