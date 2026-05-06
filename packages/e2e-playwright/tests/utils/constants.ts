@@ -106,4 +106,5 @@ export const TAGS = {
 export const CARD_HEADER_LABEL = API_VERSION <= 70 ? 'Credit Card' : 'Cards';
 
 export const SMALL_MOBILE_VIEWPORT = { width: 375, height: 667 };
+export const SMALL_A11Y_MOBILE_VIEWPORT = { width: 320, height: 568 };
 export const MOBILE_USER_AGENT = 'Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X) AppleWebKit/605.1.15';

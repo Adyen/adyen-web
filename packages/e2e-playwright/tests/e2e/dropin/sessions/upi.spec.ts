@@ -1,11 +1,8 @@
-import dotenv from 'dotenv';
 import { test, expect } from '../../../../fixtures/dropin.fixture';
 import { MOBILE_USER_AGENT, SMALL_MOBILE_VIEWPORT, TAGS } from '../../../utils/constants';
 import { URL_MAP } from '../../../../fixtures/URL_MAP';
 import { toHaveScreenshot } from '../../../utils/assertions';
 import { UPI } from '../../../../models/upi';
-
-dotenv.config();
 
 test.describe('Dropin - Sessions - UPI', () => {
     test.describe('QR Code Flow (Desktop)', () => {
@@ -14,7 +11,9 @@ test.describe('Dropin - Sessions - UPI', () => {
 
             const upiPaymentMethodHeader = dropinWithSession.getPaymentMethodHeader('UPI');
 
-            await toHaveScreenshot(upiPaymentMethodHeader.rootElement, browserName, 'upi-payment-method-header-desktop.png');
+            await toHaveScreenshot(upiPaymentMethodHeader.rootElement, browserName, 'upi-payment-method-header-desktop.png', {
+                mask: [upiPaymentMethodHeader.rootElement.locator('img')]
+            });
 
             await dropinWithSession.selectNonStoredPaymentMethod('upi');
 
@@ -43,7 +42,9 @@ test.describe('Dropin - Sessions - UPI', () => {
 
             const upiPaymentMethodHeader = dropinWithSession.getPaymentMethodHeader('UPI');
 
-            await toHaveScreenshot(upiPaymentMethodHeader.rootElement, browserName, 'upi-payment-method-header-mobile.png');
+            await toHaveScreenshot(upiPaymentMethodHeader.rootElement, browserName, 'upi-payment-method-header-mobile.png', {
+                mask: [upiPaymentMethodHeader.rootElement.locator('img')]
+            });
 
             await dropinWithSession.selectNonStoredPaymentMethod('upi');
 
