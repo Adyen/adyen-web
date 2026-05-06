@@ -256,7 +256,7 @@ describe('Donation element', () => {
             const onError = jest.fn();
             const coreWithSession = setupCoreMock({ mockSessions: true });
             // @ts-ignore - set options
-            coreWithSession.options = { donation: { delay: 0, onError } };
+            coreWithSession.options = { donation: { delay: 0, onDonationFailure: onError } };
 
             const testError = new Error('Campaign fetch failed');
             const initialiseSpy = jest.spyOn(DonationCampaignService.prototype, 'initialise').mockRejectedValue(testError);
