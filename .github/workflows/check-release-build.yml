@@ -1,4 +1,4 @@
-## If the latest commit message contains '[ci] release main', trigger release-build.yml
+## If the latest commit message contains '[ci] release main', trigger gh-release.yml
 name: Check Commit Message
 
 on:
@@ -30,7 +30,9 @@ jobs:
             exit 0
           fi
 
-  trigger-release-build:
+  trigger-gh-release:
     needs: check-commit-message
     if: needs.check-commit-message.outputs.trigger_release == 'true'
-    uses: ./.github/workflows/release-build.yml
+    uses: ./.github/workflows/gh-release.yml
+    permissions:
+      contents: write

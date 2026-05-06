@@ -16,6 +16,38 @@ jobs:
         with:
           fetch-depth: 0
 
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org/
+          package-manager-cache: false
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install Project Dependencies
+        run: yarn install
+
+      - name: Build
+        run: cd packages/lib && npm run build
+        env:
+          CI: true
+
+      - name: Read SDK version
+        id: sdk-version
+        run: echo "version=$(node -p "require('./packages/lib/package.json').version")" >> "$GITHUB_OUTPUT"
+
+      - name: Bundle UMD and translations
+        run: |
+          cp packages/server/translations/ packages/lib/dist/umd -r
+          cd packages/lib/dist && zip -r /tmp/adyen-web-sdk-umd-and-translations-${{ steps.sdk-version.outputs.version }}.zip umd
+
+      - name: Upload UMD and translations artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: adyen-web-sdk-umd-and-translations-${{ steps.sdk-version.outputs.version }}
+          path: packages/lib/dist/umd
+
       - name: Parse CHANGELOG and prepare release
         id: changelog
         run: |
@@ -108,4 +140,5 @@ jobs:
           gh release create "${{ steps.changelog.outputs.tag }}" \
             --title "${{ steps.changelog.outputs.version }}" \
             --notes-file /tmp/release-body.md \
-            --latest
+            --latest \
+            "/tmp/adyen-web-sdk-umd-and-translations-${{ steps.sdk-version.outputs.version }}.zip"
