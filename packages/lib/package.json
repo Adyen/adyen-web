@@ -116,7 +116,7 @@
         "jest-environment-jsdom": "29.7.0",
         "jest-fixed-jsdom": "^0.0.11",
         "jest-mock-extended": "4.0.0",
-        "msw": "2.12.14",
+        "msw": "2.13.3",
         "msw-storybook-addon": "2.0.7",
         "postcss": "8.5.10",
         "rollup": "4.60.1",
