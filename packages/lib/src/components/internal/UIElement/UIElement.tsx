@@ -28,16 +28,14 @@ import type {
 import type { IDropin } from '../../Dropin/types';
 import type { ComponentMethodsRef, UIElementProps, UIElementStatus } from './types';
 import type { IAnalytics } from '../../../core/Analytics/Analytics';
-
 import { CoreProvider } from '../../../core/Context/CoreProvider';
 import { SRPanel } from '../../../core/Errors/SRPanel';
-import './UIElement.scss';
 import SRPanelProvider from '../../../core/Errors/SRPanelProvider';
 import { AmountProvider, AmountProviderRef } from '../../../core/Context/AmountProvider';
 import { PayButtonProps } from '../PayButton/PayButton';
-import './UIElement.scss';
 import { TxVariants } from '../../tx-variants';
 import Donation from '../../Donation/Donation';
+import './UIElement.scss';
 
 export abstract class UIElement<P extends UIElementProps = UIElementProps> extends BaseElement<P> {
     /**
