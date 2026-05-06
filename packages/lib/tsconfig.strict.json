@@ -4,11 +4,11 @@
         "noImplicitAny": true,
         "strict": true,
         "strictNullChecks": true,
-        "strictFunctionTypes": false,
-        "strictPropertyInitialization": false,
-        "strictBindCallApply": false,
-        "noImplicitThis": false,
-        "alwaysStrict": false,
+        "strictFunctionTypes": true,
+        "strictPropertyInitialization": true,
+        "strictBindCallApply": true,
+        "noImplicitThis": true,
+        "alwaysStrict": true,
         "noEmit": true
     }
 }

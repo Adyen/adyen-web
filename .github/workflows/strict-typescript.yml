@@ -116,6 +116,16 @@ jobs:
 
           NUM_FILES=$(jq -n --argjson b "$B_FILES" --argjson p "$PR_FILES" '(($b | keys) + ($p | keys)) | unique | map({ file: ., b: ($b[.] // 0), p: ($p[.] // 0) }) | [ .[] | select(.p > .b) ] | length')
 
+          # Build a single grep pattern matching every regressed file's basename
+          GREP_PATTERN=$(jq -r -n \
+            --argjson baseline "$B_FILES" \
+            --argjson pr "$PR_FILES" '
+            (($baseline | keys) + ($pr | keys)) | unique |
+            map({ file: ., b: ($baseline[.] // 0), p: ($pr[.] // 0) }) |
+            [ .[] | select(.p > .b) | .file | split("/") | last ] |
+            join("\\|")
+          ')
+
           {
             echo 'body<<EOF'
             echo '## Strict TypeScript Scan Results'
@@ -128,6 +138,21 @@ jobs:
             echo '| File | PR | Baseline | Delta |'
             echo '|------|-----|----------|-------|'
             echo "$TABLE_ROWS"
+            echo ''
+            echo '</details>'
+            echo ''
+            echo '<details>'
+            echo '<summary>How to reproduce locally</summary>'
+            echo ''
+            echo 'Run the strict type-check and filter the output by file name:'
+            echo ''
+            echo '```bash'
+            if [ -n "$GREP_PATTERN" ]; then
+              echo "yarn workspace @adyen/adyen-web exec tsc -p tsconfig.strict.json 2>&1 | grep '${GREP_PATTERN}'"
+            else
+              echo 'yarn workspace @adyen/adyen-web exec tsc -p tsconfig.strict.json 2>&1 | grep <filename>'
+            fi
+            echo '```'
             echo ''
             echo '</details>'
             echo ''
