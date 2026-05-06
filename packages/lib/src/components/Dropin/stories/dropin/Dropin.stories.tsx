@@ -6,6 +6,7 @@ import { DropinConfiguration } from '../../types';
 import { Checkout } from '../../../../../storybook/components/Checkout';
 import { getComponentConfigFromUrl } from '../../../../../storybook/utils/get-configuration-from-url';
 import DropinComponent from '../../Dropin';
+import type { NewableComponent } from '../../../../core/core.registry';
 import './customization.scss';
 
 type DropinStory = StoryConfiguration<DropinConfiguration>;
@@ -48,7 +49,7 @@ export const Default: DropinStory = {
     render: ({ componentConfiguration, ...checkoutConfig }: PaymentMethodStoryProps<DropinConfiguration>) => {
         // Register all Components
         const { Dropin, ...Components } = components;
-        const Classes = Object.keys(Components).map(key => Components[key]);
+        const Classes = Object.values(Components) as NewableComponent[];
         AdyenCheckout.register(...Classes);
 
         return (
@@ -63,7 +64,7 @@ export const StyleCustomization: DropinStory = {
     render: ({ componentConfiguration, ...checkoutConfig }: PaymentMethodStoryProps<DropinConfiguration>) => {
         // Register all Components
         const { Dropin, ...Components } = components;
-        const Classes = Object.keys(Components).map(key => Components[key]);
+        const Classes = Object.values(Components) as NewableComponent[];
         AdyenCheckout.register(...Classes);
 
         return (
@@ -113,7 +114,7 @@ export const SplitFundingBrazil = {
     render: ({ componentConfiguration, ...checkoutConfig }: PaymentMethodStoryProps<DropinConfiguration>) => {
         // Register all Components
         const { Dropin, ...Components } = components;
-        const Classes = Object.keys(Components).map(key => Components[key]);
+        const Classes = Object.values(Components) as NewableComponent[];
         AdyenCheckout.register(...Classes);
 
         return (
@@ -139,7 +140,7 @@ export const SessionsDonation: DropinStory = {
     render: ({ componentConfiguration, ...checkoutConfig }: PaymentMethodStoryProps<DropinConfiguration>) => {
         // Register all Components
         const { Dropin, ...Components } = components;
-        const Classes = Object.keys(Components).map(key => Components[key]);
+        const Classes = Object.values(Components) as NewableComponent[];
         AdyenCheckout.register(...Classes);
 
         return (
@@ -172,17 +173,19 @@ export const SessionsDonationReparented: DropinStory = {
         },
 
         onPaymentCompleted: (result, element) => {
-            if (result.askDonation === true) {
+            if (result && typeof result === 'object' && 'askDonation' in result && result.askDonation === true) {
                 const fcDialog = document.getElementById('donation-dialog') as HTMLDialogElement;
 
                 setTimeout(() => {
                     fcDialog.showModal();
                 }, 3000);
 
-                new Donation(element.core, {
-                    rootNode: '#modalContent',
-                    commercialTxAmount: element.props.amount.value
-                });
+                if (element?.props?.amount) {
+                    new Donation(element.core, {
+                        rootNode: '#modalContent',
+                        commercialTxAmount: element.props.amount.value
+                    });
+                }
             }
         }
     },
@@ -190,7 +193,7 @@ export const SessionsDonationReparented: DropinStory = {
     render: ({ componentConfiguration, ...checkoutConfig }: PaymentMethodStoryProps<DropinConfiguration>) => {
         // Register all Components
         const { Dropin, ...Components } = components;
-        const Classes = Object.keys(Components).map(key => Components[key]);
+        const Classes = Object.values(Components) as NewableComponent[];
         AdyenCheckout.register(...Classes);
 
         return (

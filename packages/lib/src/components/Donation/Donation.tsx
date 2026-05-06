@@ -50,8 +50,6 @@ class DonationElement extends UIElement<DonationConfiguration> {
     };
 
     private async initialiseServiceMode(checkout: ICore, props: DonationCampaignOptions) {
-        console.log('### Donation::initialiseServiceMode:: checkout.session', checkout.session);
-
         if (checkout.session.sessionsDonationInitiated) {
             console.error(REPARENT_WITHOUT_AUTO_START_ERROR_MSG);
             return;
