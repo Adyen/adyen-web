@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
+/* eslint-disable @typescript-eslint/no-require-imports */
 const { execSync } = require('child_process');
 const path = require('path');
 require('dotenv').config({ path: path.resolve('../../', '.env') });
