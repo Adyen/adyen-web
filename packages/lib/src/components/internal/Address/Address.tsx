@@ -197,7 +197,7 @@ export default function Address(props: Readonly<AddressProps>) {
 
     return (
         <Fragment>
-            <Fieldset classNameModifiers={[label, 'address']} label={label} useHeading>
+            <Fieldset classNameModifiers={[label, 'address']} label={label} renderLabelAsSectionHeading>
                 {showAddressSearch && (
                     <AddressSearch
                         onAddressLookup={props.onAddressLookup}

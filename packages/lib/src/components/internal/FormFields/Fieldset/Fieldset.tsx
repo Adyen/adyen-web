@@ -13,7 +13,7 @@ interface FieldsetProps {
     description?: string;
     readonly?: boolean;
     id?: string;
-    useHeading?: boolean;
+    renderLabelAsSectionHeading?: boolean;
 }
 
 export default function Fieldset({
@@ -24,7 +24,7 @@ export default function Fieldset({
     readonly = false,
     description,
     id,
-    useHeading = false
+    renderLabelAsSectionHeading = false
 }: Readonly<FieldsetProps>) {
     const { i18n } = useCoreContext();
 
@@ -42,7 +42,7 @@ export default function Fieldset({
         >
             {label && (
                 <legend className="adyen-checkout__fieldset__title">
-                    {useHeading ? <h2 className="adyen-checkout__fieldset__title-heading">{i18n.get(label)}</h2> : i18n.get(label)}
+                    {renderLabelAsSectionHeading ? <h2 className="adyen-checkout__fieldset__title-heading">{i18n.get(label)}</h2> : i18n.get(label)}
                 </legend>
             )}
             {description && (
