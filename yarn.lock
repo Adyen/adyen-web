@@ -116,7 +116,7 @@ __metadata:
     jest-environment-jsdom: "npm:29.7.0"
     jest-fixed-jsdom: "npm:^0.0.11"
     jest-mock-extended: "npm:4.0.0"
-    msw: "npm:2.13.3"
+    msw: "npm:2.12.14"
     msw-storybook-addon: "npm:2.0.7"
     postcss: "npm:8.5.10"
     preact: "npm:10.29.1"
@@ -10586,9 +10586,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"msw@npm:2.13.3":
-  version: 2.13.3
-  resolution: "msw@npm:2.13.3"
+"msw@npm:2.12.14":
+  version: 2.12.14
+  resolution: "msw@npm:2.12.14"
   dependencies:
     "@inquirer/confirm": "npm:^5.0.0"
     "@mswjs/interceptors": "npm:^0.41.2"
@@ -10601,7 +10601,7 @@ __metadata:
     outvariant: "npm:^1.4.3"
     path-to-regexp: "npm:^6.3.0"
     picocolors: "npm:^1.1.1"
-    rettime: "npm:^0.11.7"
+    rettime: "npm:^0.10.1"
     statuses: "npm:^2.0.2"
     strict-event-emitter: "npm:^0.5.1"
     tough-cookie: "npm:^6.0.0"
@@ -10615,7 +10615,7 @@ __metadata:
       optional: true
   bin:
     msw: cli/index.js
-  checksum: 10c0/5c118672cd0cef6e787fed2b93ff5d82017c3b7f311efe5ab62b0dc9c309876396d7f2378ab3919a0a4c8e11317242dc5fe9036cb64e51cfbe76a48a6c6ba1a3
+  checksum: 10c0/73e2c08a74bac94036c75aa0340e48573a233d5060cb3098ead7ec0eaddaacef4de399b81e0e3f41ea73d5f92341adc9cf0ae908ad74583d294afa4667e7d277
   languageName: node
   linkType: hard
 
@@ -12828,10 +12828,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rettime@npm:^0.11.7":
-  version: 0.11.11
-  resolution: "rettime@npm:0.11.11"
-  checksum: 10c0/021fc9d9870ce04f032952e63fc5576f3f8e7c9c15513b1a479a64646df90239802eef6d60a98cbfb6ac87bb623d4f120a8ee71193d02984e3d2915c28695f6e
+"rettime@npm:^0.10.1":
+  version: 0.10.1
+  resolution: "rettime@npm:0.10.1"
+  checksum: 10c0/94fb30cd13684386c70301c4cff4391bc0c6dc7aeac49364fdfeeaba167897bdb28a58bbb46d1a415f1c5c6240fda3f765cb329e471f37fdc513c739f0b04fbe
   languageName: node
   linkType: hard
 
