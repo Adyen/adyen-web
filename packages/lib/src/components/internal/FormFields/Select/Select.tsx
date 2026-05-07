@@ -84,7 +84,9 @@ function Select({
      */
     const closeList = () => {
         //blurs the field when the list is closed, makes for a better UX for most users, needs more testing
-        blurOnClose && filterInputRef.current.blur();
+        if (blurOnClose) {
+            filterInputRef.current.blur();
+        }
         setShowList(false);
     };
 
@@ -275,13 +277,15 @@ function Select({
      * Update status message for screen readers when no options are found
      */
     useEffect(() => {
-        if (showList && filteredItems.length === 0) {
-            setStatusMessage(null);
-            const timer = setTimeout(() => setStatusMessage(i18n.get('select.noOptionsFound')), 500);
-            return () => clearTimeout(timer);
-        } else {
-            setStatusMessage(null);
-        }
+        const timer = setTimeout(() => {
+            if (filteredItems.length === 0) {
+                setStatusMessage(i18n.get('select.noOptionsFound'));
+            } else {
+                setStatusMessage(i18n.get('select.results', { values: { count: filteredItems.length } }));
+            }
+        }, 500);
+
+        return () => clearTimeout(timer);
     }, [showList, filteredItems.length, i18n]);
 
     return (

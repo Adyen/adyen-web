@@ -157,6 +157,7 @@
     "select.provinceOrTerritory": "Select province or territory",
     "select.country": "Select country/region",
     "select.noOptionsFound": "No options found",
+    "select.results": "%{count} results available",
     "telephoneNumber.invalid": "Invalid telephone number",
     "qrCodeOrApp": "or",
     "paypal.processingPayment": "Processing payment...",
