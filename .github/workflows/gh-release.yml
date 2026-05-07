@@ -40,7 +40,7 @@ jobs:
       - name: Bundle UMD and translations
         run: |
           cp packages/server/translations/ packages/lib/dist/umd -r
-          cd packages/lib/dist && zip -r /tmp/adyen-web-sdk-umd-and-translations-${{ steps.sdk-version.outputs.version }}.zip umd
+          cd packages/lib/dist/umd && zip -r /tmp/adyen-web-sdk-umd-and-translations-${{ steps.sdk-version.outputs.version }}.zip .
 
       - name: Upload UMD and translations artifact
         uses: actions/upload-artifact@v7
