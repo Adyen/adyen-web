@@ -12,7 +12,19 @@ function SelectButtonElement({ filterable, toggleButtonRef, ...props }) {
         return <div {...strippedProps} ref={toggleButtonRef} />;
     }
 
-    return <button id={props.id} aria-expanded={props.showList} aria-disabled={props.readonly} aria-describedby={props.ariaDescribedBy} type={'button'} {...props} ref={toggleButtonRef} />;
+    return (
+        <button
+            id={props.id}
+            aria-haspopup="listbox"
+            aria-expanded={props.showList}
+            aria-controls={props.selectListId}
+            aria-disabled={props.readonly}
+            aria-describedby={props.ariaDescribedBy}
+            type={'button'}
+            {...props}
+            ref={toggleButtonRef}
+        />
+    );
 }
 
 function SelectButton(props: Readonly<SelectButtonProps>) {
@@ -45,7 +57,6 @@ function SelectButton(props: Readonly<SelectButtonProps>) {
     // 3. Otherwise we just toggle the list
     const onClickHandler = readonly ? null : props.filterable ? setFocus : props.toggleList;
 
-
     // check COWEB-1301 [Investigate] Drop-in Accessibility - ADA Compliance questions
     const currentSelectedItemId = active.id ? `listItem-${active.id}` : '';
 
@@ -65,6 +76,8 @@ function SelectButton(props: Readonly<SelectButtonProps>) {
             onKeyDown={!readonly ? props.onButtonKeyDown : null}
             toggleButtonRef={props.toggleButtonRef}
             id={props.id}
+            showList={showList}
+            selectListId={props.selectListId}
         >
             {!props.filterable ? (
                 <Fragment>
