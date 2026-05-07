@@ -2,7 +2,7 @@
 
 ## Overview
 
-The release process is split into two phases: an **automated build** triggered by a commit to `main`, and a **manual release & publish** triggered by a maintainer.
+The release process is split into two phases: an **automated GitHub Release** triggered by a commit to `main`, and a **manual npm publish** triggered by a maintainer.
 
 ---
 
@@ -22,12 +22,15 @@ The release process is split into two phases: an **automated build** triggered b
              │
              │ (if matched)
              ▼
-┌──────────────────────────┐
-│    release-build.yml     │
-│                          │
-│  Builds the release      │
-│  artifacts               │
-└──────────────────────────┘
+┌────────────────────────────┐
+│       gh-release.yml       │
+│                            │
+│  - Build UMD + translations│
+│  - Parse CHANGELOG.md      │
+│  - Create git tag          │
+│  - Create GH Release with  │
+│    UMD bundle as asset     │
+└────────────────────────────┘
 
 
   ── Automated phase ends here ──
@@ -37,32 +40,21 @@ The release process is split into two phases: an **automated build** triggered b
   Maintainer clicks
   "Run workflow" in
   GitHub Actions UI
+  (selects the release tag)
        │
        ▼
-┌──────────────────────────────┐
-│  release-and-publish.yml     │
-│  (workflow_dispatch)         │
-│                              │
-│  ┌────────────────────────┐  │
-│  │  1. gh-release.yml     │  │
-│  │                        │  │
-│  │  - Parse CHANGELOG.md  │  │
-│  │  - Create git tag      │  │
-│  │  - Create GH Release   │  │
-│  └───────────┬────────────┘  │
-│              │               │
-│              │ (on success)  │
-│              ▼               │
-│  ┌────────────────────────┐  │
-│  │  2. npm-publish.yml    │  │
-│  │                        │  │
-│  │  - Checkout code       │  │
-│  │  - Install deps        │  │
-│  │  - Build & npm publish │  │
-│  │    (--tag latest)      │  │
-│  └────────────────────────┘  │
-└──────────────────────────────┘
+┌────────────────────────────┐
+│      npm-publish.yml       │
+│      (workflow_dispatch)   │
+│                            │
+│  - Checkout code           │
+│  - Install deps            │
+│  - Build & npm publish     │
+│    (--tag latest)          │
+└────────────────────────────┘
 ```
+
+> **Important:** When triggering `npm-publish.yml`, the maintainer **must select the git tag of the version they intend to publish** (for example `v6.20.0`) in the "Use workflow from" dropdown of the GitHub Actions UI. Running it against `main` (or any other branch) can publish a different version than the one created by the GitHub Release. Tags are created automatically by `gh-release.yml`.
 
 ---
 
@@ -70,8 +62,6 @@ The release process is split into two phases: an **automated build** triggered b
 
 | File | Trigger | Purpose |
 |------|---------|---------|
-| `check-release-build.yml` | Push to `main` | Checks commit message for `[ci] release main` and triggers the release build |
-| `release-build.yml` | `workflow_call` | Builds the release artifacts |
-| `release-and-publish.yml` | `workflow_dispatch` (manual) | Orchestrates the GH release and npm publish steps |
-| `gh-release.yml` | `workflow_dispatch` / `workflow_call` | Parses CHANGELOG, creates a git tag and GitHub Release |
-| `npm-publish.yml` | `workflow_call` | Builds and publishes the package to npm via OIDC |
+| `check-release-build.yml` | Push to `main` | Checks commit message for `[ci] release main` and triggers `gh-release.yml` |
+| `gh-release.yml` | `workflow_dispatch` / `workflow_call` | Builds UMD + translations, parses CHANGELOG, creates a git tag and GitHub Release with the UMD bundle attached as a release asset |
+| `npm-publish.yml` | `workflow_dispatch` (manual, **run from the release tag**) | Builds and publishes the package to npm via OIDC |
