@@ -64,7 +64,7 @@ jobs:
           TAG_PREFIX="v"
 
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
-          echo "tag=${TAG_PREFIX}${VERSION}-testing" >> "$GITHUB_OUTPUT"
+          echo "tag=${TAG_PREFIX}${VERSION}" >> "$GITHUB_OUTPUT"
 
           # Extract the body for the latest version (between first and second ## heading)
           BODY=$(awk '
@@ -140,4 +140,5 @@ jobs:
           gh release create "${{ steps.changelog.outputs.tag }}" \
             --title "${{ steps.changelog.outputs.version }}" \
             --notes-file /tmp/release-body.md \
+            --latest \
             "/tmp/adyen-web-sdk-umd-and-translations-${{ steps.sdk-version.outputs.version }}.zip"
