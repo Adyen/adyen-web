@@ -37,13 +37,13 @@ class ThreeDS2Challenge extends UIElement<ThreeDS2ChallengeConfiguration> {
         super.onActionHandled(rtnObj);
     };
 
+    /**
+     * Will make a call to onAdditionalDetails (as set in actionTypes.ts) for the regular, "native" flow.
+     * However, if the action to create this component came from the 3DS2InMDFlow process it will instead equal a call to the onComplete callback
+     * (as defined in the 3DS2InMDFlow and passed in as a config prop).
+     */
     onComplete(state: LegacyChallengeResolveData | ChallengeResolveData) {
-        /**
-         * Equals a call to onAdditionalDetails (as set in actionTypes.ts) for the regular, "native" flow.
-         * However, if the action to create this component came from the 3DS2InMDFlow process it will instead equal a call to the onComplete callback
-         * (as defined in the 3DS2InMDFlow and passed in as a config prop).
-         */
-        if (this.props.onComplete) {
+        if (this.props.isMDFlow) {
             this.props.onComplete(state, this.elementRef);
         } else {
             super.onComplete(state);

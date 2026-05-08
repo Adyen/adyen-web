@@ -38,8 +38,11 @@ class ThreeDS2DeviceFingerprint extends UIElement<ThreeDS2DeviceFingerprintConfi
         super.onActionHandled(rtnObj);
     };
 
+    /**
+     * Can be called directly from PrepareFingerprint (MDFlow) or after the call to /submitThreeDS2Fingerprint endpoint (native flow)
+     */
     onComplete(state: LegacyFingerprintResolveData | FingerprintResolveData) {
-        if (this.props.onComplete) {
+        if (this.props.isMDFlow) {
             this.props.onComplete(state, this.elementRef);
         } else {
             super.onComplete(state);
@@ -76,9 +79,10 @@ class ThreeDS2DeviceFingerprint extends UIElement<ThreeDS2DeviceFingerprintConfi
         return (
             <PrepareFingerprint
                 {...this.props}
+                // For MDFlow will bypass the /submitThreeDS2Fingerprint endpoint
                 onComplete={this.props.isMDFlow ? this.onComplete : this.callSubmit3DS2Fingerprint}
                 onSubmitAnalytics={this.submitAnalytics}
-                isMDFlow={this.props.paymentData.length < 15}
+                isMDFlow={this.props.isMDFlow}
                 onActionHandled={this.onActionHandled}
             />
         );
