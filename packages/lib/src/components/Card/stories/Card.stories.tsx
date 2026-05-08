@@ -120,15 +120,31 @@ export const WithAVSAddressLookup: CardStory = {
                     .then(res => res.json())
                     // This set is necessary to map the response receive from the external provider to our address field
                     .then(res =>
-                        res.map(({ id, name, city, address, houseNumber, postalCode }) => ({
-                            id,
-                            name,
-                            city,
-                            street: address,
-                            houseNumberOrName: houseNumber,
-                            postalCode,
-                            country: 'GB'
-                        }))
+                        res.map(
+                            ({
+                                id,
+                                name,
+                                city,
+                                address,
+                                houseNumber,
+                                postalCode
+                            }: {
+                                id: string;
+                                name: string;
+                                city: string;
+                                address: string;
+                                houseNumber: string;
+                                postalCode: string;
+                            }) => ({
+                                id,
+                                name,
+                                city,
+                                street: address,
+                                houseNumberOrName: houseNumber,
+                                postalCode,
+                                country: 'GB'
+                            })
+                        )
                     )
                     .catch(error => {
                         console.log('ERROR:', error);
@@ -252,7 +268,7 @@ export const CardWith_3DS2_own_onAdditionalDetails: CardStory = {
 
                         if (!resultCode) actions.reject();
 
-                        if (resMsg) container.removeChild(resMsg);
+                        if (resMsg && container) container.removeChild(resMsg);
 
                         actions.resolve({
                             resultCode,
