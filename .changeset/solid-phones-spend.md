@@ -2,4 +2,4 @@
 '@adyen/adyen-web': patch
 ---
 
-Fixes: Select not annoucing name, and association with listbox
+Fixed: Select not announcing name, and association with listbox
