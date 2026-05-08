@@ -97,7 +97,7 @@ class CSF extends AbstractCSF {
         this.createSecuredFields = createSecuredFields.bind(this);
         this.createNonCardSecuredFields = createNonCardSecuredFields.bind(this);
         this.createCardSecuredFields = createCardSecuredFields.bind(this);
-         
+
         this.setupSecuredField = setupSecuredField.bind(this);
 
         this.postMessageToAllIframes = partial(postMessageToAllIframes, thisObj);

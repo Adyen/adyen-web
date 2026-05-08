@@ -8,6 +8,14 @@ export const URL_MAP = {
         '/iframe.html?globals=&args=amount:0;sessionData.recurringProcessingModel:CardOnFile;sessionData.storePaymentMethodMode:askForConsent;sessionData.enableOneClick:!true&id=drop-in-drop-in-component--default&viewMode=story',
     dropinWithSession_BCMC_noStoredPms: '/iframe.html?args=countryCode:BE&globals=&id=drop-in-drop-in-component--default&viewMode=story',
     dropinSessionsIndia: '/iframe.html?id=drop-in-drop-in-component--default&viewMode=story&args=countryCode%3AIN%3Bamount%3A1005',
+    dropinWithSession_donations: '/iframe.html?args=&globals=&id=drop-in-drop-in-component--sessions-donation&viewMode=story',
+    dropinWithSession_donations_noDelay: '/iframe.html?args=donation.delay:0&globals=&id=drop-in-drop-in-component--sessions-donation&viewMode=story',
+    dropinWithSession_donations_autoMountFalse:
+        '/iframe.html?args=donation.autoMount:!false;donation.delay:0&globals=&id=drop-in-drop-in-component--sessions-donation&viewMode=story',
+    dropinWithSession_donations_reparented:
+        '/iframe.html?args=donation.autoMount:!false;donation.delay:0&globals=&id=drop-in-drop-in-component--sessions-donation-reparented&viewMode=story',
+    dropinWithSession_donations_reparented_autoMountTrue:
+        '/iframe.html?args=donation.autoMount:!true;donation.delay:0&globals=&id=drop-in-drop-in-component--sessions-donation-reparented&viewMode=story',
 
     /**
      * Card
