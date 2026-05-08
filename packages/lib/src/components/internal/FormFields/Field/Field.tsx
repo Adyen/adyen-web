@@ -204,7 +204,7 @@ const Field: FunctionalComponent<Readonly<FieldProps>> = props => {
 
             return useLabelElement ? (
                 // if we are NOT dealing with the label for a securedField... we can give it a `for` attribute
-                <label {...defaultWrapperProps} {...(!isSecuredField && name && { htmlFor: uniqueId })}>
+                <label {...defaultWrapperProps} {...(!isSecuredField && name && { htmlFor: uniqueId, id: `${uniqueId}-label` })}>
                     {children}
                 </label>
             ) : (

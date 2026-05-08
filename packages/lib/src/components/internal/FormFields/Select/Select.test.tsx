@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { render, screen } from '@testing-library/preact';
+import { render, screen, within } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import Select from './Select';
 import { CoreProvider } from '../../../../core/Context/CoreProvider';
@@ -239,6 +239,20 @@ describe('Select', () => {
         test('button has aria-haspopup="listbox"', () => {
             renderSelect({ filterable: false });
             expect(screen.getByRole('button')).toHaveAttribute('aria-haspopup', 'listbox');
+        });
+
+        test('button has aria-controls pointing to the listbox', () => {
+            renderSelect({ filterable: false });
+            const button = screen.getByRole('button');
+            const listbox = screen.getByRole('listbox');
+            expect(button).toHaveAttribute('aria-controls', listbox.id);
+        });
+
+        test('button has aria-labelledby combining label and selected value when uniqueId is provided', () => {
+            renderSelect({ filterable: false, uniqueId: 'test-select', selectedValue: '1', items: [{ id: '1', name: 'Mobile' }] });
+            const button = screen.getByRole('button');
+            expect(button).toHaveAttribute('aria-labelledby', 'test-select-label test-select-value');
+            expect(within(button).getByText('Mobile')).toBeInTheDocument();
         });
     });
 });

@@ -20,6 +20,7 @@ function SelectButtonElement({ filterable, toggleButtonRef, ...props }) {
             aria-controls={props.selectListId}
             aria-disabled={props.readonly}
             aria-describedby={props.ariaDescribedBy}
+            aria-labelledby={props.id ? `${props.id}-label ${props.id}-value` : undefined}
             type={'button'}
             {...props}
             ref={toggleButtonRef}
@@ -83,6 +84,7 @@ function SelectButton(props: Readonly<SelectButtonProps>) {
                 <Fragment>
                     {selected.icon && <Img className="adyen-checkout__dropdown__button__icon" src={selected.icon} alt={selected.name} />}
                     <span
+                        id={props.id ? `${props.id}-value` : undefined}
                         className={classnames('adyen-checkout__dropdown__button__text', {
                             'adyen-checkout__dropdown__button__text-placeholder': isShowingPlaceholder
                         })}
