@@ -17,13 +17,17 @@ jobs:
       runs-on: ubuntu-latest
       environment: test-manual-approval
       continue-on-error: true
+      outputs:
+        approved: ${{ steps.gate.outputs.approved }}
       steps:
-        - name: Manual approval gate
-          run: echo "Approved to proceed with next job."
-
+        - id: gate
+          name: Manual approval gate
+          run: |
+            echo "approved=true" >> $GITHUB_OUTPUT
+    
     log-two:
       needs: manual-approval
-      if: ${{ needs.manual-approval.result == 'success' }}
+      if: ${{ needs.manual-approval.outputs.approved == 'true' }}
       runs-on: ubuntu-latest
       steps:
         - name: Log second message
