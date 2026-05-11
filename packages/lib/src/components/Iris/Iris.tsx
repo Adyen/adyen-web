@@ -79,7 +79,7 @@ export class Iris extends IssuerListContainer<IrisConfiguration, IrisData> {
         return (
             <IrisComponent
                 setComponentRef={this.setComponentRef}
-                defaultMode={this.state.mode}
+                defaultMode={defaultMode}
                 onUpdateMode={mode => {
                     this.setState({ mode });
                 }}
