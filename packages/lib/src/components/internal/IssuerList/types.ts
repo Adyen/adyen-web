@@ -1,6 +1,7 @@
 import { PayButtonProps } from '../PayButton/PayButton';
 import { ComponentChildren } from 'preact';
 import { AbstractAnalyticsEvent } from '../../../core/Analytics/events/AbstractAnalyticsEvent';
+import { ComponentMethodsRef } from '../UIElement/types';
 
 export interface IssuerListProps {
     items: IssuerItem[];
@@ -17,7 +18,7 @@ export interface IssuerListProps {
     contextualText?: string;
     selectFieldLabel?: string;
     onSubmitAnalytics: (aObj: AbstractAnalyticsEvent) => void;
-    ref?: any;
+    setComponentRef: (ref: ComponentMethodsRef) => void;
 }
 
 export interface IssuerItem {

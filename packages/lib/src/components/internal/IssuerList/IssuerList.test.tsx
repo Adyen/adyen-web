@@ -5,6 +5,7 @@ import IssuerList from './IssuerList';
 import PayButton from '../PayButton';
 import { CoreProvider } from '../../../core/Context/CoreProvider';
 import { InfoEventType, UiTarget } from '../../../core/Analytics/events/AnalyticsInfoEvent';
+import { setupCoreMock } from '../../../../config/testMocks/setup-core-mock';
 
 /**
  * DON'T USE THIS FILE
@@ -12,6 +13,8 @@ import { InfoEventType, UiTarget } from '../../../core/Analytics/events/Analytic
  * All these tests are misleading, becaused clicking on Pay Button doesn't trigger the usual component submit logic
  * IMPORTANT: For any kind of integration test use IssuerListContainer instead
  */
+
+const core = setupCoreMock();
 
 describe('IssuerList', () => {
     test('Accepts Items as props', () => {
@@ -21,7 +24,7 @@ describe('IssuerList', () => {
             { name: 'Issuer 3', id: '3' }
         ];
         render(
-            <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+            <CoreProvider i18n={core.modules.i18n} loadingContext="test" resources={core.modules.resources}>
                 <IssuerList
                     items={items}
                     showPayButton={false}
@@ -29,6 +32,7 @@ describe('IssuerList', () => {
                     payButton={props => <PayButton {...props} />}
                     onSubmitAnalytics={() => {}}
                     type={'onlineBanking_PL'}
+                    setComponentRef={jest.fn()}
                 />
             </CoreProvider>
         );
@@ -48,7 +52,7 @@ describe('IssuerList', () => {
         const highlightedIds = ['2', '3'];
 
         render(
-            <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+            <CoreProvider i18n={core.modules.i18n} loadingContext="test" resources={core.modules.resources}>
                 <IssuerList
                     items={items}
                     highlightedIds={highlightedIds}
@@ -57,6 +61,7 @@ describe('IssuerList', () => {
                     payButton={props => <PayButton {...props} />}
                     onSubmitAnalytics={() => {}}
                     type={'onlineBanking_PL'}
+                    setComponentRef={jest.fn()}
                 />
             </CoreProvider>
         );
@@ -78,7 +83,7 @@ describe('IssuerList', () => {
         expect(onChangeCb).toBeCalledTimes(0);
 
         render(
-            <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+            <CoreProvider i18n={core.modules.i18n} loadingContext="test" resources={core.modules.resources}>
                 <IssuerList
                     items={items}
                     highlightedIds={highlightedIds}
@@ -87,6 +92,7 @@ describe('IssuerList', () => {
                     payButton={props => <PayButton {...props} />}
                     onSubmitAnalytics={() => {}}
                     type={'onlineBanking_PL'}
+                    setComponentRef={jest.fn()}
                 />
             </CoreProvider>
         );
@@ -118,7 +124,7 @@ describe('IssuerList', () => {
         const highlightedIds = ['3', '4', '5'];
 
         render(
-            <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+            <CoreProvider i18n={core.modules.i18n} loadingContext="test" resources={core.modules.resources}>
                 <IssuerList
                     items={items}
                     highlightedIds={highlightedIds}
@@ -127,6 +133,7 @@ describe('IssuerList', () => {
                     payButton={props => <PayButton {...props} />}
                     onSubmitAnalytics={() => {}}
                     type={'onlineBanking_PL'}
+                    setComponentRef={jest.fn()}
                 />
             </CoreProvider>
         );
@@ -146,7 +153,7 @@ describe('IssuerList', () => {
         const highlightedIds = ['3'];
 
         render(
-            <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+            <CoreProvider i18n={core.modules.i18n} loadingContext="test" resources={core.modules.resources}>
                 <IssuerList
                     items={items}
                     highlightedIds={highlightedIds}
@@ -155,6 +162,7 @@ describe('IssuerList', () => {
                     payButton={props => <PayButton {...props} />}
                     onSubmitAnalytics={() => {}}
                     type={'onlineBanking_PL'}
+                    setComponentRef={jest.fn()}
                 />
             </CoreProvider>
         );
@@ -180,7 +188,7 @@ describe('Analytics', () => {
         const onSubmitAnalytics = jest.fn();
 
         render(
-            <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+            <CoreProvider i18n={core.modules.i18n} loadingContext="test" resources={core.modules.resources}>
                 <IssuerList
                     items={items}
                     highlightedIds={highlightedIds}
@@ -189,6 +197,7 @@ describe('Analytics', () => {
                     payButton={props => <PayButton {...props} />}
                     onSubmitAnalytics={onSubmitAnalytics}
                     type={'onlineBanking_PL'}
+                    setComponentRef={jest.fn()}
                 />
             </CoreProvider>
         );
@@ -216,7 +225,7 @@ describe('Analytics', () => {
         const onSubmitAnalytics = jest.fn();
 
         render(
-            <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+            <CoreProvider i18n={core.modules.i18n} loadingContext="test" resources={core.modules.resources}>
                 <IssuerList
                     items={items}
                     showPayButton={false}
@@ -224,6 +233,7 @@ describe('Analytics', () => {
                     payButton={props => <PayButton {...props} />}
                     onSubmitAnalytics={onSubmitAnalytics}
                     type={'onlineBanking_PL'}
+                    setComponentRef={jest.fn()}
                 />
             </CoreProvider>
         );
