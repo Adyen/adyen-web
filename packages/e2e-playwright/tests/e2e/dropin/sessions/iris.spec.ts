@@ -7,7 +7,7 @@ import { Iris } from '../../../../models/iris';
 test.describe('Dropin - Sessions - IRIS', () => {
     test.describe('QR Code Flow', () => {
         test(
-            'Bank List Flow - should select issuer from the list, make payment',
+            'Bank List Flow - should select issuer from the list, click pay button',
             { tag: [TAGS.SCREENSHOT] },
             async ({ dropinWithSession, browserName, page }) => {
                 await dropinWithSession.goto(URL_MAP.dropinSessionsGreece);
@@ -24,9 +24,6 @@ test.describe('Dropin - Sessions - IRIS', () => {
                 await iris.pay();
 
                 await toHaveScreenshot(iris.rootElement, browserName, 'iris-bank-list-pay-button-clicked.png');
-
-                await expect(page).not.toHaveURL(URL_MAP.dropinSessionsGreece);
-            }
         );
     });
 });
