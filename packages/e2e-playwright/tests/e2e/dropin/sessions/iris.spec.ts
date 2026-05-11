@@ -10,7 +10,7 @@ test.describe('Dropin - Sessions - IRIS', () => {
             'Bank List Flow - should select issuer from the list, make payment',
             { tag: [TAGS.SCREENSHOT] },
             async ({ dropinWithSession, browserName, page }) => {
-                await dropinWithSession.goto(URL_MAP.dropinSessionsIndia);
+                await dropinWithSession.goto(URL_MAP.dropinSessionsGreece);
 
                 await dropinWithSession.selectNonStoredPaymentMethod('IRIS');
 
@@ -24,6 +24,8 @@ test.describe('Dropin - Sessions - IRIS', () => {
                 await iris.pay();
 
                 await toHaveScreenshot(iris.rootElement, browserName, 'iris-bank-list-pay-button-clicked.png');
+
+                await expect(page).not.toHaveURL(URL_MAP.dropinSessionsGreece, { timeout: 5000 });
             }
         );
     });
