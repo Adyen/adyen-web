@@ -18,7 +18,7 @@ const TERMS_CONDITIONS_URL = 'https://www.adyen.com/pt_BR/legal/termo-de-consent
 function Enrollment(props: Readonly<EnrollmentProps>) {
     const { i18n, loadingContext } = useCoreContext();
     const getImage = useImage();
-    const issuerListRef = useRef<ComponentMethodsRef>(null);
+    const issuerListRef = useRef<ComponentMethodsRef | null>(null);
     const [registrationOptions, setRegistrationOptions] = useState<string>(null);
     const logos = [
         {
@@ -92,7 +92,9 @@ function Enrollment(props: Readonly<EnrollmentProps>) {
                         onChange={props.onChange}
                         payButton={props.payButton}
                         showPayButton={true}
-                        ref={issuerListRef}
+                        setComponentRef={ref => {
+                            issuerListRef.current = ref;
+                        }}
                         type={TxVariants.paybybank_pix}
                     ></IssuerList>
                     <span className="adyen-checkout-disclaimer__label">

@@ -1,26 +1,21 @@
 import { h } from 'preact';
-import { ICore } from '../../types';
 import isMobile from '../../utils/isMobile';
 import IssuerListContainer from '../helpers/IssuerListContainer/IssuerListContainer';
 import { QRLoader } from '../internal/QRLoader';
 import { TxVariants } from '../tx-variants';
 import IrisComponent from './components/IrisComponent';
 import { IrisQrCodeInstructions } from './components/IrisQrCodeInstructions';
-import { IrisConfiguration, IrisData, IrisMode } from './types';
+import { IrisConfiguration, IrisData, IrisMode, IrisState } from './types';
 import { DEFAULT_IRIS_COUNTDOWN_TIME } from './constants';
 
 export class Iris extends IssuerListContainer<IrisConfiguration, IrisData> {
     public static readonly type = TxVariants.iris;
 
-    private mode: IrisMode;
-
-    constructor(checkout: ICore, props: IrisConfiguration) {
-        super(checkout, props);
-        this.mode = isMobile() ? IrisMode.BANK_LIST : IrisMode.QR_CODE;
-    }
-
-    private readonly onUpdateMode = (mode: IrisMode): void => {
-        this.mode = mode;
+    public state: IrisState = {
+        isValid: isMobile(),
+        data: {
+            mode: isMobile() ? IrisMode.BANK_LIST : IrisMode.QR_CODE
+        }
     };
 
     private renderIssuerList(): h.JSX.Element {
@@ -28,7 +23,7 @@ export class Iris extends IssuerListContainer<IrisConfiguration, IrisData> {
     }
 
     formatData(): IrisData {
-        if (this.mode === IrisMode.BANK_LIST) {
+        if (this.state.data.mode === IrisMode.BANK_LIST) {
             return {
                 paymentMethod: {
                     type: this.type,
@@ -52,7 +47,7 @@ export class Iris extends IssuerListContainer<IrisConfiguration, IrisData> {
     }
 
     get isValid() {
-        if (this.mode === IrisMode.BANK_LIST) {
+        if (this.state.data.mode === IrisMode.BANK_LIST) {
             return super.isValid;
         }
 
@@ -83,8 +78,10 @@ export class Iris extends IssuerListContainer<IrisConfiguration, IrisData> {
         return (
             <IrisComponent
                 setComponentRef={this.setComponentRef}
-                defaultMode={this.mode}
-                onUpdateMode={this.onUpdateMode}
+                defaultMode={this.state.data.mode}
+                onUpdateMode={mode => {
+                    this.setState({ data: { mode } });
+                }}
                 issuerListUI={this.renderIssuerList()}
                 showPayButton={this.props.showPayButton}
                 payButton={this.payButton}
