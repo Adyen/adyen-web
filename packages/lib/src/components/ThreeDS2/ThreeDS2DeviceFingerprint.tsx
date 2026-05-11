@@ -82,7 +82,6 @@ class ThreeDS2DeviceFingerprint extends UIElement<ThreeDS2DeviceFingerprintConfi
                 // For MDFlow will bypass the /submitThreeDS2Fingerprint endpoint
                 onComplete={this.props.isMDFlow ? this.onComplete : this.callSubmit3DS2Fingerprint}
                 onSubmitAnalytics={this.submitAnalytics}
-                isMDFlow={this.props.isMDFlow}
                 onActionHandled={this.onActionHandled}
             />
         );

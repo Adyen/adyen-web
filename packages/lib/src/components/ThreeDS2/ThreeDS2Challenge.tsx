@@ -80,7 +80,6 @@ class ThreeDS2Challenge extends UIElement<ThreeDS2ChallengeConfiguration> {
                 {...this.props}
                 onComplete={this.onComplete}
                 onSubmitAnalytics={this.submitAnalytics}
-                isMDFlow={this.props.paymentData.length < 15}
                 onActionHandled={this.onActionHandled}
             />
         );
