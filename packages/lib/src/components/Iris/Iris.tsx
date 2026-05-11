@@ -13,9 +13,8 @@ export class Iris extends IssuerListContainer<IrisConfiguration, IrisData> {
 
     public state: IrisState = {
         isValid: isMobile(),
-        data: {
-            mode: isMobile() ? IrisMode.BANK_LIST : IrisMode.QR_CODE
-        }
+        mode: isMobile() ? IrisMode.BANK_LIST : IrisMode.QR_CODE,
+        data: {}
     };
 
     private renderIssuerList(): h.JSX.Element {
@@ -23,7 +22,7 @@ export class Iris extends IssuerListContainer<IrisConfiguration, IrisData> {
     }
 
     formatData(): IrisData {
-        if (this.state.data.mode === IrisMode.BANK_LIST) {
+        if (this.state.mode === IrisMode.BANK_LIST) {
             return {
                 paymentMethod: {
                     type: this.type,
@@ -47,7 +46,7 @@ export class Iris extends IssuerListContainer<IrisConfiguration, IrisData> {
     }
 
     get isValid() {
-        if (this.state.data.mode === IrisMode.BANK_LIST) {
+        if (this.state.mode === IrisMode.BANK_LIST) {
             return super.isValid;
         }
 
@@ -78,9 +77,9 @@ export class Iris extends IssuerListContainer<IrisConfiguration, IrisData> {
         return (
             <IrisComponent
                 setComponentRef={this.setComponentRef}
-                defaultMode={this.state.data.mode}
+                defaultMode={this.state.mode}
                 onUpdateMode={mode => {
-                    this.setState({ data: { mode } });
+                    this.setState({ mode });
                 }}
                 issuerListUI={this.renderIssuerList()}
                 showPayButton={this.props.showPayButton}

@@ -28,8 +28,8 @@ export enum IrisMode {
  */
 export type IrisState = {
     isValid: boolean;
+    mode?: IrisMode;
     data: {
-        mode?: IrisMode;
         issuer?: string;
     };
 };
