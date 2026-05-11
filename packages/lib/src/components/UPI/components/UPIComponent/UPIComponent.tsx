@@ -69,16 +69,12 @@ export default function UPIComponent({
     const priorityApps = useMemo(() => appsList.slice(0, MAX_PRIMARY_APPS), [appsList]);
     const lowPriorityApps = useMemo(() => appsList.slice(MAX_PRIMARY_APPS), [appsList]);
 
-    this.setStatus = (status: UIElementStatus) => {
-        setStatus(status);
-    };
-
     useEffect(() => {
         setComponentRef(upiRef.current);
     }, [setComponentRef]);
 
     const selectApp = useCallback(
-        (app: App, target: UiTarget) => {
+        (app: App | undefined, target: UiTarget) => {
             if (!app || app.id === selectedApp?.id) return;
 
             setSelectedApp(app);
@@ -102,7 +98,7 @@ export default function UPIComponent({
     const handleDropdownSelect = useCallback(
         (event: { target: SelectTargetObject }) => {
             const app = lowPriorityApps.find(a => a.id === event.target.value);
-            if (app) selectApp(app, UiTarget.listSearch);
+            selectApp(app, UiTarget.listSearch);
         },
         [lowPriorityApps, selectApp]
     );

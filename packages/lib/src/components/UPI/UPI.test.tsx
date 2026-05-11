@@ -7,6 +7,12 @@ import { Resources } from '../../core/Context/Resources';
 import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 
 jest.mock('../../utils/isMobile');
+jest.mock('../internal/QRLoader', () => ({
+    QRLoader: jest.fn(() => null)
+}));
+jest.mock('../internal/Await', () => ({
+    Await: jest.fn(() => null)
+}));
 const isMobileMock = isMobile as jest.Mock;
 const onCompleteMock = jest.fn();
 const onSubmitMock = jest.fn();
@@ -178,11 +184,51 @@ describe('UPI', () => {
     });
 
     describe('UI Rendering', () => {
+        const QRLoaderMock: jest.Mock = jest.requireMock('../internal/QRLoader').QRLoader;
+        const AwaitMock: jest.Mock = jest.requireMock('../internal/Await').Await;
+
+        beforeEach(() => {
+            jest.clearAllMocks();
+        });
+
         test('should render the UPI component qrCode by default', () => {
             const upi = new UPI(core, props);
             render(upi.render());
 
             expect(upi.isValid).toBe(true);
+        });
+
+        test('should render QRLoader when type is qrCode', () => {
+            const upi = new UPI(core, { ...props, type: 'qrCode' });
+            render(upi.render());
+
+            expect(QRLoaderMock).toHaveBeenCalledWith(expect.objectContaining({ type: TxVariants.upi_qr }), expect.anything());
+        });
+
+        test('should render QRLoader with encoded qrCodeData when provided', () => {
+            const upi = new UPI(core, { ...props, type: 'qrCode', qrCodeData: 'test data' });
+            render(upi.render());
+
+            expect(QRLoaderMock).toHaveBeenCalledWith(expect.objectContaining({ qrCodeData: encodeURIComponent('test data') }), expect.anything());
+        });
+
+        test('should render Await with provided paymentMethodType and clientKey', () => {
+            const upi = new UPI(core, {
+                ...props,
+                type: 'await',
+                paymentMethodType: 'upi',
+                clientKey: 'test-client-key'
+            });
+            render(upi.render());
+
+            expect(AwaitMock).toHaveBeenCalledWith(expect.objectContaining({ type: 'upi', clientKey: 'test-client-key' }), expect.anything());
+        });
+
+        test('should render Await with fallback empty strings when paymentMethodType and clientKey are undefined', () => {
+            const upi = new UPI(core, { ...props, type: 'await' });
+            render(upi.render());
+
+            expect(AwaitMock).toHaveBeenCalledWith(expect.objectContaining({ type: '', clientKey: '' }), expect.anything());
         });
     });
 });
