@@ -8,14 +8,14 @@ import { IrisQrCodeInstructions } from './components/IrisQrCodeInstructions';
 import { IrisConfiguration, IrisData, IrisMode, IrisState } from './types';
 import { DEFAULT_IRIS_COUNTDOWN_TIME } from './constants';
 
-const defaultMode = isMobile() ? IrisMode.BANK_LIST : IrisMode.QR_CODE;
-
 export class Iris extends IssuerListContainer<IrisConfiguration, IrisData> {
     public static readonly type = TxVariants.iris;
 
+    private readonly defaultMode = isMobile() ? IrisMode.BANK_LIST : IrisMode.QR_CODE;
+
     public state: IrisState = {
-        isValid: defaultMode === IrisMode.QR_CODE,
-        mode: defaultMode,
+        isValid: this.defaultMode === IrisMode.QR_CODE,
+        mode: this.defaultMode,
         data: {}
     };
 
@@ -79,7 +79,7 @@ export class Iris extends IssuerListContainer<IrisConfiguration, IrisData> {
         return (
             <IrisComponent
                 setComponentRef={this.setComponentRef}
-                defaultMode={defaultMode}
+                defaultMode={this.defaultMode}
                 onUpdateMode={mode => {
                     this.setState({ mode });
                 }}
