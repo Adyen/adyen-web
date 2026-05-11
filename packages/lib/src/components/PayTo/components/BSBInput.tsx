@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import Fieldset from '../../internal/FormFields/Fieldset';
 import { useEffect, useRef } from 'preact/hooks';
-import useForm from '../../../utils/useForm';
+import useFormWithA11y from '../../../utils/useForm/useFormWithA11y';
 import { getErrorMessage } from '../../../utils/getErrorMessage';
 import Field from '../../internal/FormFields/Field';
 import { useCoreContext } from '../../../core/Context/CoreProvider';
@@ -12,6 +12,8 @@ import { phoneFormatters } from '../../internal/PhoneInput/validate';
 import { ComponentMethodsRef, UIElementStatus } from '../../internal/UIElement/types';
 import PayToNameFields from './PayToNameFields';
 import { PayToPlaceholdersType } from '../types';
+import type Language from '../../../language';
+import type { StringObject } from '../../internal/Address/types';
 
 export interface BSBFormData {
     bsb: string;
@@ -30,16 +32,34 @@ export interface BSBInputProps {
     id?: string;
 }
 
+const mapBSBFieldKey = (key: string, i18n: Language, _countrySpecificLabels?: StringObject): string => {
+    switch (key) {
+        case 'bsb':
+            return i18n.get('Bank State Branch');
+        case 'bankAccountNumber':
+            return i18n.get('payto.bsb.label.bankAccountNumber');
+        case 'firstName':
+            return i18n.get('payto.label.firstName');
+        case 'lastName':
+            return i18n.get('payto.label.lastName');
+        default:
+            return null;
+    }
+};
+
 const BASE_SCHEMA = ['bankAccountNumber', 'bsb', 'firstName', 'lastName'];
 
 export default function BSBInput({ setComponentRef, defaultData, placeholders, onChange, setStatus, id }: Readonly<BSBInputProps>) {
     const { i18n } = useCoreContext();
+    const formRef = useRef<HTMLDivElement>(null);
 
-    const form = useForm<BSBFormData>({
+    const form = useFormWithA11y<BSBFormData>({
         schema: BASE_SCHEMA,
         defaultData: defaultData,
         rules: bsbValidationRules,
-        formatters: phoneFormatters
+        formatters: phoneFormatters,
+        formRef,
+        fieldTypeMappingFn: mapBSBFieldKey
     });
     const { handleChangeFor, triggerValidation, data, errors, valid, isValid } = form;
 
@@ -58,42 +78,44 @@ export default function BSBInput({ setComponentRef, defaultData, placeholders, o
     }, [setComponentRef]);
 
     return (
-        <Fieldset id={id} classNameModifiers={['payto__bsb_input']} label={'BSB'} description={'payto.bsb.description'}>
-            <Field
-                label={i18n.get('payto.bsb.label.bankAccountNumber')}
-                classNameModifiers={['col-60', 'bankAccountNumber']}
-                errorMessage={getErrorMessage(i18n, errors.bankAccountNumber, i18n.get('payto.bsb.label.bankAccountNumber'))}
-                name={'bankAccountNumber'}
-                i18n={i18n}
-            >
-                <InputText
+        <div ref={formRef}>
+            <Fieldset id={id} classNameModifiers={['payto__bsb_input']} label={'BSB'} description={'payto.bsb.description'}>
+                <Field
+                    label={i18n.get('payto.bsb.label.bankAccountNumber')}
+                    classNameModifiers={['col-60', 'bankAccountNumber']}
+                    errorMessage={getErrorMessage(i18n, errors.bankAccountNumber, i18n.get('payto.bsb.label.bankAccountNumber'))}
                     name={'bankAccountNumber'}
-                    value={data.bankAccountNumber}
-                    onInput={handleChangeFor('bankAccountNumber', 'input')}
-                    onBlur={handleChangeFor('bankAccountNumber', 'blur')}
-                    placeholder={placeholders?.bankAccountNumber}
-                    required={true}
-                />
-            </Field>
+                    i18n={i18n}
+                >
+                    <InputText
+                        name={'bankAccountNumber'}
+                        value={data.bankAccountNumber}
+                        onInput={handleChangeFor('bankAccountNumber', 'input')}
+                        onBlur={handleChangeFor('bankAccountNumber', 'blur')}
+                        placeholder={placeholders?.bankAccountNumber}
+                        required={true}
+                    />
+                </Field>
 
-            <Field
-                label={i18n.get('Bank State Branch')}
-                classNameModifiers={['col-40', 'bsb']}
-                errorMessage={getErrorMessage(i18n, errors.bsb, i18n.get('Bank State Branch'))}
-                name={'bsb'}
-                i18n={i18n}
-            >
-                <InputText
+                <Field
+                    label={i18n.get('Bank State Branch')}
+                    classNameModifiers={['col-40', 'bsb']}
+                    errorMessage={getErrorMessage(i18n, errors.bsb, i18n.get('Bank State Branch'))}
                     name={'bsb'}
-                    value={data.bsb}
-                    onInput={handleChangeFor('bsb', 'input')}
-                    onBlur={handleChangeFor('bsb', 'blur')}
-                    placeholder={placeholders?.bsb}
-                    required={true}
-                />
-            </Field>
+                    i18n={i18n}
+                >
+                    <InputText
+                        name={'bsb'}
+                        value={data.bsb}
+                        onInput={handleChangeFor('bsb', 'input')}
+                        onBlur={handleChangeFor('bsb', 'blur')}
+                        placeholder={placeholders?.bsb}
+                        required={true}
+                    />
+                </Field>
 
-            <PayToNameFields i18n={i18n} data={data} handleChangeFor={handleChangeFor} errors={errors} placeholders={placeholders} />
-        </Fieldset>
+                <PayToNameFields i18n={i18n} data={data} handleChangeFor={handleChangeFor} errors={errors} placeholders={placeholders} />
+            </Fieldset>
+        </div>
     );
 }

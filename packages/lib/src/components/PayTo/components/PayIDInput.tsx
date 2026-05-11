@@ -2,7 +2,7 @@ import { h } from 'preact';
 import Fieldset from '../../internal/FormFields/Fieldset';
 import IdentifierSelector, { PayToIdentifierEnum } from './IdentifierSelector';
 import { useEffect, useRef } from 'preact/hooks';
-import useForm from '../../../utils/useForm';
+import useFormWithA11y from '../../../utils/useForm/useFormWithA11y';
 import PayToPhone from './PayToPhone';
 import InputEmail from '../../internal/FormFields/InputEmail';
 import { getErrorMessage } from '../../../utils/getErrorMessage';
@@ -15,6 +15,8 @@ import { phoneFormatters } from '../../internal/PhoneInput/validate';
 import { ComponentMethodsRef, UIElementStatus } from '../../internal/UIElement/types';
 import PayToNameFields from './PayToNameFields';
 import { PayToPlaceholdersType } from '../types';
+import type Language from '../../../language';
+import type { StringObject } from '../../internal/Address/types';
 
 export interface PayIdFormData {
     email: string;
@@ -38,6 +40,26 @@ export interface PayIDInputProps {
     id?: string;
 }
 
+const mapPayIdFieldKey = (key: string, i18n: Language, _countrySpecificLabels?: StringObject): string => {
+    switch (key) {
+        case 'email':
+            return i18n.get('shopperEmail');
+        case 'abn':
+            return i18n.get('ABN');
+        case 'orgid':
+            return i18n.get('payto.payid.label.orgid');
+        case 'phoneNumber':
+        case 'phonePrefix':
+            return i18n.get('mobileNumber');
+        case 'firstName':
+            return i18n.get('payto.label.firstName');
+        case 'lastName':
+            return i18n.get('payto.label.lastName');
+        default:
+            return null;
+    }
+};
+
 const BASE_SCHEMA = ['selectedIdentifier', 'firstName', 'lastName'];
 
 const IDENTIFIER_SCHEMA = {
@@ -49,12 +71,15 @@ const IDENTIFIER_SCHEMA = {
 
 export default function PayIDInput({ setComponentRef, defaultData, placeholders, onChange, setStatus, id }: Readonly<PayIDInputProps>) {
     const { i18n } = useCoreContext();
+    const formRef = useRef<HTMLDivElement>(null);
 
-    const form = useForm<PayIdFormData>({
+    const form = useFormWithA11y<PayIdFormData>({
         schema: BASE_SCHEMA,
         defaultData: { selectedIdentifier: PayToIdentifierEnum.phone, ...defaultData },
         rules: payIdValidationRules,
-        formatters: phoneFormatters
+        formatters: phoneFormatters,
+        formRef,
+        fieldTypeMappingFn: mapPayIdFieldKey
     });
     const { handleChangeFor, triggerValidation, data, errors, valid, isValid, setSchema } = form;
 
@@ -79,74 +104,76 @@ export default function PayIDInput({ setComponentRef, defaultData, placeholders,
     }, [setComponentRef]);
 
     return (
-        <Fieldset id={id} classNameModifiers={['payto__payid_input']} label={'PayID'} description={'payto.payid.description'}>
-            <IdentifierSelector
-                classNameModifiers={['col-40']}
-                onSelectedIdentifier={handleChangeFor('selectedIdentifier')}
-                selectedIdentifier={data.selectedIdentifier}
-            />
-            {data.selectedIdentifier === PayToIdentifierEnum.phone && <PayToPhone form={form} />}
+        <div ref={formRef}>
+            <Fieldset id={id} classNameModifiers={['payto__payid_input']} label={'PayID'} description={'payto.payid.description'}>
+                <IdentifierSelector
+                    classNameModifiers={['col-40']}
+                    onSelectedIdentifier={handleChangeFor('selectedIdentifier')}
+                    selectedIdentifier={data.selectedIdentifier}
+                />
+                {data.selectedIdentifier === PayToIdentifierEnum.phone && <PayToPhone form={form} />}
 
-            {/* TODO probably worth refactoring this into  either re-usable components or builder */}
-            {data.selectedIdentifier === PayToIdentifierEnum.email && (
-                <Field
-                    label={i18n.get('shopperEmail')}
-                    classNameModifiers={['col-60', 'email']}
-                    errorMessage={getErrorMessage(i18n, errors.email, i18n.get('shopperEmail'))}
-                    dir={'ltr'}
-                    name={'email'}
-                    i18n={i18n}
-                >
-                    <InputEmail
+                {/* TODO probably worth refactoring this into  either re-usable components or builder */}
+                {data.selectedIdentifier === PayToIdentifierEnum.email && (
+                    <Field
+                        label={i18n.get('shopperEmail')}
+                        classNameModifiers={['col-60', 'email']}
+                        errorMessage={getErrorMessage(i18n, errors.email, i18n.get('shopperEmail'))}
+                        dir={'ltr'}
                         name={'email'}
-                        value={data.email}
-                        onInput={handleChangeFor('email', 'input')}
-                        onBlur={handleChangeFor('email', 'blur')}
-                        placeholder={placeholders?.email}
-                        required={true}
-                    />
-                </Field>
-            )}
+                        i18n={i18n}
+                    >
+                        <InputEmail
+                            name={'email'}
+                            value={data.email}
+                            onInput={handleChangeFor('email', 'input')}
+                            onBlur={handleChangeFor('email', 'blur')}
+                            placeholder={placeholders?.email}
+                            required={true}
+                        />
+                    </Field>
+                )}
 
-            {data.selectedIdentifier === PayToIdentifierEnum.abn && (
-                <Field
-                    label={i18n.get('ABN')}
-                    classNameModifiers={['col-60', 'abn']}
-                    errorMessage={getErrorMessage(i18n, errors.abn, i18n.get('ABN'))}
-                    name={'ABN'}
-                    i18n={i18n}
-                >
-                    <InputText
-                        name={'abn'}
-                        value={data.abn}
-                        onInput={handleChangeFor('abn', 'input')}
-                        onBlur={handleChangeFor('abn', 'blur')}
-                        placeholder={placeholders?.abn}
-                        required={true}
-                    />
-                </Field>
-            )}
+                {data.selectedIdentifier === PayToIdentifierEnum.abn && (
+                    <Field
+                        label={i18n.get('ABN')}
+                        classNameModifiers={['col-60', 'abn']}
+                        errorMessage={getErrorMessage(i18n, errors.abn, i18n.get('ABN'))}
+                        name={'ABN'}
+                        i18n={i18n}
+                    >
+                        <InputText
+                            name={'abn'}
+                            value={data.abn}
+                            onInput={handleChangeFor('abn', 'input')}
+                            onBlur={handleChangeFor('abn', 'blur')}
+                            placeholder={placeholders?.abn}
+                            required={true}
+                        />
+                    </Field>
+                )}
 
-            {data.selectedIdentifier === PayToIdentifierEnum.orgid && (
-                <Field
-                    label={i18n.get('payto.payid.label.orgid')}
-                    classNameModifiers={['col-60', 'orgid']}
-                    errorMessage={getErrorMessage(i18n, errors.orgid, i18n.get('payto.payid.label.orgid'))}
-                    name={'orgid'}
-                    i18n={i18n}
-                >
-                    <InputText
+                {data.selectedIdentifier === PayToIdentifierEnum.orgid && (
+                    <Field
+                        label={i18n.get('payto.payid.label.orgid')}
+                        classNameModifiers={['col-60', 'orgid']}
+                        errorMessage={getErrorMessage(i18n, errors.orgid, i18n.get('payto.payid.label.orgid'))}
                         name={'orgid'}
-                        value={data.orgid}
-                        onInput={handleChangeFor('orgid', 'input')}
-                        onBlur={handleChangeFor('orgid', 'blur')}
-                        placeholder={placeholders?.orgid}
-                        required={true}
-                    />
-                </Field>
-            )}
+                        i18n={i18n}
+                    >
+                        <InputText
+                            name={'orgid'}
+                            value={data.orgid}
+                            onInput={handleChangeFor('orgid', 'input')}
+                            onBlur={handleChangeFor('orgid', 'blur')}
+                            placeholder={placeholders?.orgid}
+                            required={true}
+                        />
+                    </Field>
+                )}
 
-            <PayToNameFields i18n={i18n} data={data} handleChangeFor={handleChangeFor} errors={errors} placeholders={placeholders} />
-        </Fieldset>
+                <PayToNameFields i18n={i18n} data={data} handleChangeFor={handleChangeFor} errors={errors} placeholders={placeholders} />
+            </Fieldset>
+        </div>
     );
 }
