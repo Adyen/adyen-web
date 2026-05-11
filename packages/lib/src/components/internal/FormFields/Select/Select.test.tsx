@@ -45,7 +45,7 @@ describe('Select', () => {
         // Test keyboard interaction - focus the button first with user event
         const button = screen.getByRole('button');
         await user.click(button); // Open dropdown
-        
+
         await user.keyboard('[ArrowDown][Enter]');
         expect(onChangeCb).toBeCalledTimes(2);
 
@@ -87,7 +87,7 @@ describe('Select', () => {
         // Test keyboard interaction - focus the combobox first with user event
         const combobox = screen.getByRole('combobox');
         await user.click(combobox); // Open dropdown
-        
+
         await user.keyboard('[ArrowDown][Enter]');
         expect(onChangeCb).toBeCalledTimes(2);
 
@@ -110,18 +110,18 @@ describe('Select', () => {
         });
 
         const combobox = screen.getByRole('combobox');
-        
+
         // Focus should not open the dropdown
         await user.tab(); // Focus the combobox using tab navigation
-        
+
         // Debug visibility
         const option1 = screen.getByText('Option 1');
         const option2 = screen.getByText('Option 2');
-        
+
         // Elements should be hidden (offsetParent is null and getBoundingClientRect is all zeros)
         expect(option1.offsetParent).toBeNull();
         expect(option2.offsetParent).toBeNull();
-        
+
         // Click should open the dropdown
         await user.click(combobox);
         expect(screen.getByText('Option 1')).toBeVisible();
@@ -142,18 +142,18 @@ describe('Select', () => {
         });
 
         const button = screen.getByRole('button');
-        
+
         // Focus should not open the dropdown
         await user.tab(); // Focus the button using tab navigation
-        
+
         // Debug visibility
         const option1 = screen.getByText('Option 1');
         const option2 = screen.getByText('Option 2');
-        
+
         // Elements should be hidden (offsetParent is null and getBoundingClientRect is all zeros)
         expect(option1.offsetParent).toBeNull();
         expect(option2.offsetParent).toBeNull();
-        
+
         // Click should open the dropdown
         await user.click(button);
         expect(screen.getByText('Option 1')).toBeVisible();
@@ -175,15 +175,15 @@ describe('Select', () => {
         });
 
         const combobox = screen.getByRole('combobox');
-        
+
         // Initially dropdown should be closed
         const apple = screen.getByText('Apple');
         const banana = screen.getByText('Banana');
-        
+
         // Elements should be hidden (offsetParent is null and getBoundingClientRect is all zeros)
         expect(apple.offsetParent).toBeNull();
         expect(banana.offsetParent).toBeNull();
-        
+
         // Typing should open the dropdown
         await user.type(combobox, 'A');
         expect(screen.getByText('Apple')).toBeVisible();
@@ -198,10 +198,10 @@ describe('Select', () => {
         });
 
         const combobox = screen.getByRole('combobox');
-        
+
         // Type something that won't match any items
         await user.type(combobox, 'xyz');
-        
+
         // Check that the live region is present and contains the no options message
         const liveRegion = screen.getByRole('status');
         expect(liveRegion).toBeInTheDocument();
@@ -225,5 +225,147 @@ describe('Select', () => {
         const liveRegion = screen.getByRole('status');
         expect(liveRegion).toBeInTheDocument();
         expect(liveRegion).toBeEmptyDOMElement();
+    });
+
+    describe('select-only (filterable=false)', () => {
+        const items = [
+            { name: 'Option 1', id: '1' },
+            { name: 'Option 2', id: '2' }
+        ];
+
+        const getList = () => screen.getByRole('listbox');
+
+        test('Escape closes the list', async () => {
+            renderSelect({ items, filterable: false, onChange: jest.fn() });
+            const button = screen.getByRole('button');
+            await user.click(button);
+            const list = getList();
+
+            expect(list).toHaveClass('adyen-checkout__dropdown__list--active');
+            await user.keyboard('[Escape]');
+            expect(list).not.toHaveClass('adyen-checkout__dropdown__list--active');
+        });
+
+        test('Tab closes the list', async () => {
+            renderSelect({ items, filterable: false, onChange: jest.fn() });
+            const button = screen.getByRole('button');
+            await user.click(button);
+            const list = getList();
+            expect(list).toHaveClass('adyen-checkout__dropdown__list--active');
+            await user.keyboard('[Tab]');
+            expect(list).not.toHaveClass('adyen-checkout__dropdown__list--active');
+        });
+
+        test('outside click closes the list', async () => {
+            renderSelect({ items, filterable: false, onChange: jest.fn() });
+            const button = screen.getByRole('button');
+            await user.click(button);
+            const list = getList();
+
+            expect(list).toHaveClass('adyen-checkout__dropdown__list--active');
+            await user.click(document.body);
+            expect(list).not.toHaveClass('adyen-checkout__dropdown__list--active');
+        });
+
+        test('aria-expanded is false initially and true when open', async () => {
+            renderSelect({ items, filterable: false, onChange: jest.fn() });
+            const button = screen.getByRole('button');
+            expect(button).toHaveAttribute('aria-expanded', 'false');
+            await user.click(button);
+            expect(button).toHaveAttribute('aria-expanded', 'true');
+        });
+
+        test('button has aria-haspopup="listbox"', () => {
+            renderSelect({ items, filterable: false, onChange: jest.fn() });
+            expect(screen.getByRole('button')).toHaveAttribute('aria-haspopup', 'listbox');
+        });
+    });
+
+    describe('combobox (filterable=true)', () => {
+        const items = [
+            { name: 'Peru', id: 'PE' },
+            { name: 'Poland', id: 'PL' },
+            { name: 'Singapore', id: 'SG' }
+        ];
+
+        const getList = () => screen.getByRole('listbox');
+
+        test('Escape closes the list', async () => {
+            renderSelect({ items, filterable: true, onChange: jest.fn() });
+            const combobox = screen.getByRole('combobox');
+            await user.click(combobox);
+            const list = getList();
+
+            expect(list).toHaveClass('adyen-checkout__dropdown__list--active');
+            await user.keyboard('[Escape]');
+            expect(list).not.toHaveClass('adyen-checkout__dropdown__list--active');
+        });
+
+        test('Tab closes the list', async () => {
+            renderSelect({ items, filterable: true, onChange: jest.fn() });
+            const combobox = screen.getByRole('combobox');
+            await user.click(combobox);
+            const list = getList();
+
+            expect(list).toHaveClass('adyen-checkout__dropdown__list--active');
+            await user.keyboard('[Tab]');
+            expect(list).not.toHaveClass('adyen-checkout__dropdown__list--active');
+        });
+
+        test('outside click closes the list', async () => {
+            renderSelect({ items, filterable: true, onChange: jest.fn() });
+            const combobox = screen.getByRole('combobox');
+            await user.click(combobox);
+            const list = getList();
+
+            expect(list).toHaveClass('adyen-checkout__dropdown__list--active');
+            await user.click(document.body);
+            expect(list).not.toHaveClass('adyen-checkout__dropdown__list--active');
+        });
+
+        test('aria-expanded is false initially and true when open', async () => {
+            renderSelect({ items, filterable: true, onChange: jest.fn() });
+            const combobox = screen.getByRole('combobox');
+            expect(combobox).toHaveAttribute('aria-expanded', 'false');
+            await user.click(combobox);
+            expect(combobox).toHaveAttribute('aria-expanded', 'true');
+        });
+
+        test('typing filters out non-matching options', async () => {
+            renderSelect({ items, filterable: true, onChange: jest.fn() });
+            const combobox = screen.getByRole('combobox');
+            await user.type(combobox, 'P');
+            expect(screen.getByText('Peru')).toBeVisible();
+            expect(screen.getByText('Poland')).toBeVisible();
+            expect(screen.queryByText('Singapore').offsetParent).toBeNull();
+        });
+
+        test('aria-activedescendant updates when navigating with arrow keys', async () => {
+            renderSelect({ items, filterable: true, onChange: jest.fn() });
+            const combobox = screen.getByRole('combobox');
+            await user.click(combobox);
+            await user.keyboard('[ArrowDown]');
+            expect(combobox).toHaveAttribute('aria-activedescendant', 'listItem-PE');
+            await user.keyboard('[ArrowDown]');
+            expect(combobox).toHaveAttribute('aria-activedescendant', 'listItem-PL');
+        });
+    });
+
+    describe('shared behaviour', () => {
+        const items = [
+            { name: 'Option 1', id: '1' },
+            { name: 'Option 2', id: '2' }
+        ];
+
+        test('onListToggle fires with true on open and false on close', async () => {
+            const onListToggle = jest.fn();
+            renderSelect({ items, filterable: false, onChange: jest.fn(), onListToggle });
+            const button = screen.getByRole('button');
+            await user.click(button);
+            expect(onListToggle).toHaveBeenCalledWith(true);
+            await user.click(button);
+            expect(onListToggle).toHaveBeenCalledWith(false);
+            expect(onListToggle).toHaveBeenCalledTimes(3);
+        });
     });
 });
