@@ -12,7 +12,7 @@ test.describe('Dropin - Sessions - IRIS', () => {
             async ({ dropinWithSession, browserName, page }) => {
                 await dropinWithSession.goto(URL_MAP.dropinSessionsGreece);
 
-                const upiPaymentMethod = dropinWithSession.getPaymentMethodHeader('UPI');
+                const upiPaymentMethod = dropinWithSession.getPaymentMethodHeader('IRIS');
                 await upiPaymentMethod.rootElement.click();
 
                 const iris = new Iris(page);
