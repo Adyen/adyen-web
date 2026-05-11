@@ -52,7 +52,7 @@ export default function UPIComponent({
     const { i18n } = useCoreContext();
     const getImage = useImage();
     const [status, setStatus] = useState<UIElementStatus>('ready');
-    const [selectedApp, setSelectedApp] = useState<App>(null);
+    const [selectedApp, setSelectedApp] = useState<App | null>(null);
     const { amount } = useAmount();
     const [isValid, setIsValid] = useState<boolean>(mode === UPI_MODE.QR_CODE);
     const mandateComponent = mandate && <UPIMandate mandate={mandate} amount={amount} />;
@@ -102,7 +102,7 @@ export default function UPIComponent({
     const handleDropdownSelect = useCallback(
         (event: { target: SelectTargetObject }) => {
             const app = lowPriorityApps.find(a => a.id === event.target.value);
-            selectApp(app, UiTarget.listSearch);
+            if (app) selectApp(app, UiTarget.listSearch);
         },
         [lowPriorityApps, selectApp]
     );
