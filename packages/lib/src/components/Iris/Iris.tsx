@@ -60,7 +60,7 @@ export class Iris extends IssuerListContainer<IrisConfiguration, IrisData> {
                     type={TxVariants.iris}
                     brandLogo={this.icon}
                     clientKey={this.props.clientKey}
-                    qrCodeData={this.props.qrCodeData ? encodeURIComponent(this.props.qrCodeData) : null}
+                    qrCodeData={this.props.qrCodeData ? encodeURIComponent(this.props.qrCodeData) : undefined}
                     countdownTime={this.props.countdownTime}
                     paymentData={this.props.paymentData}
                     delay={this.props.delay}
@@ -84,7 +84,7 @@ export class Iris extends IssuerListContainer<IrisConfiguration, IrisData> {
                 issuerListUI={this.renderIssuerList()}
                 showPayButton={this.props.showPayButton}
                 payButton={this.payButton}
-                issuers={this.props.issuers}
+                issuers={this.props.issuers || []}
             />
         );
     }

@@ -28,7 +28,7 @@ export enum IrisMode {
  */
 export type IrisState = {
     isValid: boolean;
-    mode?: IrisMode;
+    mode: IrisMode;
     data: {
         issuer?: string;
     };
