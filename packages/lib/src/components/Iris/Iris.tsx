@@ -8,12 +8,14 @@ import { IrisQrCodeInstructions } from './components/IrisQrCodeInstructions';
 import { IrisConfiguration, IrisData, IrisMode, IrisState } from './types';
 import { DEFAULT_IRIS_COUNTDOWN_TIME } from './constants';
 
+const defaultMode = isMobile() ? IrisMode.BANK_LIST : IrisMode.QR_CODE;
+
 export class Iris extends IssuerListContainer<IrisConfiguration, IrisData> {
     public static readonly type = TxVariants.iris;
 
     public state: IrisState = {
-        isValid: isMobile(),
-        mode: isMobile() ? IrisMode.BANK_LIST : IrisMode.QR_CODE,
+        isValid: defaultMode === IrisMode.QR_CODE,
+        mode: defaultMode,
         data: {}
     };
 
