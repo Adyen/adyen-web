@@ -12,7 +12,8 @@ test.describe('Dropin - Sessions - IRIS', () => {
             async ({ dropinWithSession, browserName, page }) => {
                 await dropinWithSession.goto(URL_MAP.dropinSessionsGreece);
 
-                await dropinWithSession.selectNonStoredPaymentMethod('iris');
+                const upiPaymentMethod = dropinWithSession.getPaymentMethodHeader('UPI');
+                await upiPaymentMethod.rootElement.click();
 
                 const iris = new Iris(page);
 
@@ -23,7 +24,7 @@ test.describe('Dropin - Sessions - IRIS', () => {
 
                 await iris.pay();
 
-                await toHaveScreenshot(iris.rootElement, browserName, 'iris-bank-list-pay-button-clicked.png');
+                await toHaveScreenshot(upiPaymentMethod.rootElement, browserName, 'iris-bank-list-pay-button-clicked.png');
             }
         );
     });
