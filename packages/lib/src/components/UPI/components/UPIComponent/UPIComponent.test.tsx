@@ -29,15 +29,15 @@ describe('UPIComponent', () => {
     });
 
     describe('Upi intent mode', () => {
-        const gpayApp: App = { id: 'gpay', name: 'Google Pay' };
+        const gpayApp: App = { id: 'gpay', name: 'Google Pay', icon: '' };
 
         const allApps: App[] = [
             gpayApp,
-            { id: 'phonepe', name: 'PhonePe' },
-            { id: 'bhim', name: 'BHIM' },
-            { id: 'paytm', name: 'Paytm' },
-            { id: 'amazon', name: 'Amazon Pay' },
-            { id: 'whatsapp', name: 'WhatsApp' }
+            { id: 'phonepe', name: 'PhonePe', icon: '' },
+            { id: 'bhim', name: 'BHIM', icon: '' },
+            { id: 'paytm', name: 'Paytm', icon: '' },
+            { id: 'amazon', name: 'Amazon Pay', icon: '' },
+            { id: 'whatsapp', name: 'WhatsApp', icon: '' }
         ];
 
         const priorityApps = allApps.slice(0, MAX_PRIMARY_APPS);
@@ -165,7 +165,7 @@ describe('UPIComponent', () => {
                 expect(onChangeMock).toHaveBeenCalledTimes(2);
             });
             expect(onChangeMock).toHaveBeenLastCalledWith({
-                data: { app: { id: gpayApp.id, name: gpayApp.name } },
+                data: { app: { id: gpayApp.id, name: gpayApp.name, icon: gpayApp.icon } },
                 isValid: true
             });
         });

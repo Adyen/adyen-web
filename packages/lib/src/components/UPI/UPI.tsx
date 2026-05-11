@@ -39,7 +39,7 @@ class UPI extends UIElement<UPIConfiguration> {
 
         this.appsList = apps.map(app => {
             const imageName = `upi/${app.id.toLowerCase()}`;
-            const brandIcon = this.core.modules.resources?.getImage()(imageName);
+            const brandIcon = this.core.modules.resources?.getImage()(imageName) ?? '';
             return { id: app.id, name: app.name, icon: brandIcon };
         });
     }
@@ -93,11 +93,11 @@ class UPI extends UIElement<UPIConfiguration> {
                 return (
                     <QRLoader
                         {...this.props}
-                        qrCodeData={this.props.qrCodeData ? encodeURIComponent(this.props.qrCodeData) : null}
+                        qrCodeData={this.props.qrCodeData ? encodeURIComponent(this.props.qrCodeData) : undefined}
                         type={TxVariants.upi_qr}
                         brandLogo={this.props.brandLogo || this.icon}
                         onComplete={this.onComplete}
-                        introduction={this.props.i18n.get('upi.qrCodeWaitingMessage')}
+                        introduction={this.props.i18n?.get('upi.qrCodeWaitingMessage') ?? ''}
                         countdownTime={this.props.countdownTime}
                         onActionHandled={this.onActionHandled}
                         showAmount={!isAutoPay}
@@ -107,17 +107,17 @@ class UPI extends UIElement<UPIConfiguration> {
                 return (
                     <Await
                         url={url}
-                        type={paymentMethodType}
+                        type={paymentMethodType ?? ''}
                         showCountdownTimer
                         shouldRedirectAutomatically
                         showAmount={!isAutoPay}
                         countdownTime={this.props.countdownTime}
-                        clientKey={this.props.clientKey}
+                        clientKey={this.props.clientKey ?? ''}
                         paymentData={this.props.paymentData}
                         onActionHandled={this.onActionHandled}
                         onError={this.props.onError}
-                        messageText={this.props.i18n.get('upi.vpaWaitingMessage')}
-                        awaitText={this.props.i18n.get('await.waitForConfirmation')}
+                        messageText={this.props.i18n?.get('upi.vpaWaitingMessage') ?? ''}
+                        awaitText={this.props.i18n?.get('await.waitForConfirmation') ?? ''}
                         onComplete={this.onComplete}
                         brandLogo={this.icon}
                     />
@@ -130,7 +130,7 @@ class UPI extends UIElement<UPIConfiguration> {
                         onChange={this.setState}
                         appsList={this.appsList}
                         mode={this.mode}
-                        showPayButton={this.props.showPayButton}
+                        showPayButton={this.props.showPayButton ?? true}
                         mandate={this.props.mandate}
                         onSubmitAnalytics={this.submitAnalytics}
                     />
