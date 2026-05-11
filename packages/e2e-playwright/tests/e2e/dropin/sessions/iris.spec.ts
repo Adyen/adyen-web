@@ -25,7 +25,7 @@ test.describe('Dropin - Sessions - IRIS', () => {
 
                 await toHaveScreenshot(iris.rootElement, browserName, 'iris-bank-list-pay-button-clicked.png');
 
-                await expect(page).not.toHaveURL(URL_MAP.dropinSessionsGreece, { timeout: 5000 });
+                await expect(page).not.toHaveURL(URL_MAP.dropinSessionsGreece);
             }
         );
     });
