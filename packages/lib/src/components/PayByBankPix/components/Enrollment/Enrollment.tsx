@@ -24,7 +24,7 @@ function Enrollment(props: Readonly<EnrollmentProps>) {
         {
             name: 'open-finance',
             alt: i18n.get('paybybankpix.await.logoAlt.openFinance'),
-            src: `${getImage({ parentFolder: `${props.txVariant}/` })('open-finance')}`
+            src: `${getImage({ parentFolder: props.txVariant })('open-finance')}`
         },
         {
             name: 'arrow-down',
