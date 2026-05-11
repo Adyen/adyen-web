@@ -4,7 +4,6 @@ import { ComponentMethodsRef, UIElementStatus } from '../../../types';
 import { App, UPIAppList, UpiMode } from '../../types';
 import useImage from '../../../../core/Context/useImage';
 import { A11Y, MAX_PRIMARY_APPS, UPI_MODE } from '../../constants';
-import './UPIComponent.scss';
 import { SegmentedControlRegion } from '../../../internal/SegmentedControl';
 import UPIIntentAppList from '../UPIIntentAppList';
 import { useCoreContext } from '../../../../core/Context/CoreProvider';
