@@ -5,7 +5,7 @@ import { toHaveScreenshot } from '../../../utils/assertions';
 import { Iris } from '../../../../models/iris';
 
 test.describe('Dropin - Sessions - IRIS', () => {
-    test.describe('QR Code Flow', { tag: [TAGS.SCREENSHOT] }, () => {
+    test.describe('QR Code Flow', () => {
         test(
             'Bank List Flow - should select issuer from the list, make payment',
             { tag: [TAGS.SCREENSHOT] },
