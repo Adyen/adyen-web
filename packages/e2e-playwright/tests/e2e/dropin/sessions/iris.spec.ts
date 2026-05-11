@@ -24,6 +24,7 @@ test.describe('Dropin - Sessions - IRIS', () => {
                 await iris.pay();
 
                 await toHaveScreenshot(iris.rootElement, browserName, 'iris-bank-list-pay-button-clicked.png');
+            }
         );
     });
 });
