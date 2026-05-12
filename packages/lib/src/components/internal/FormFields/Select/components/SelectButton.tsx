@@ -5,7 +5,7 @@ import Img from '../../../Img';
 import { useMemo } from 'preact/hooks';
 import classnames from 'classnames';
 
-function SelectButtonElement({ filterable, toggleButtonRef, ...props }) {
+function SelectButtonElement({ filterable, toggleButtonRef, showList, selectListId, ...props }) {
     if (filterable) {
         // Even if passed, we can't add an id to this div since it is not allowed to associate a div with a label element
         const { id, ...strippedProps } = props;
@@ -16,8 +16,8 @@ function SelectButtonElement({ filterable, toggleButtonRef, ...props }) {
         <button
             id={props.id}
             aria-haspopup="listbox"
-            aria-expanded={props.showList}
-            aria-controls={props.selectListId}
+            aria-expanded={showList}
+            aria-controls={selectListId}
             aria-disabled={props.readonly}
             aria-describedby={props.ariaDescribedBy}
             aria-labelledby={props.id ? `${props.id}-label ${props.id}-value` : undefined}
