@@ -30,9 +30,11 @@ function SelectList({ selected, active, filteredItems, showList, ...props }: Rea
                     />
                 ))
             ) : (
-                <div className="adyen-checkout__dropdown__element adyen-checkout__dropdown__element--no-options">
-                    {i18n.get('select.noOptionsFound')}
-                </div>
+                <li>
+                    <div className="adyen-checkout__dropdown__element adyen-checkout__dropdown__element--no-options">
+                        {i18n.get('select.noOptionsFound')}
+                    </div>
+                </li>
             )}
         </ul>
     );

@@ -39,7 +39,7 @@ function Select({
     const selectListRef = useRef(null);
     const [textFilter, setTextFilter] = useState<string>(null);
     const [showList, setShowList] = useState<boolean>(false);
-    const [statusMessage, setStatusMessage] = useState<string>(null);
+    const [statusMessage, setStatusMessage] = useState<string | null>(null);
     const selectListId: string = useMemo(() => `select-${uuid()}`, []);
 
     const active: SelectItem = items.find(i => i.id === selectedValue) || ({} as SelectItem);
@@ -84,7 +84,9 @@ function Select({
      */
     const closeList = () => {
         //blurs the field when the list is closed, makes for a better UX for most users, needs more testing
-        blurOnClose && filterInputRef.current.blur();
+        if (blurOnClose) {
+            filterInputRef.current.blur();
+        }
         setShowList(false);
     };
 
@@ -275,11 +277,15 @@ function Select({
      * Update status message for screen readers when no options are found
      */
     useEffect(() => {
-        if (showList && filteredItems.length === 0) {
-            setStatusMessage(i18n.get('select.noOptionsFound'));
-        } else {
-            setStatusMessage(null);
-        }
+        const timer = setTimeout(() => {
+            if (filteredItems.length === 0) {
+                setStatusMessage(i18n.get('select.noOptionsFound'));
+            } else {
+                setStatusMessage(i18n.get('select.results', { values: { count: filteredItems.length } }));
+            }
+        }, 500);
+
+        return () => clearTimeout(timer);
     }, [showList, filteredItems.length, i18n]);
 
     return (
@@ -319,13 +325,14 @@ function Select({
                 showList={showList}
             />
             <div
+                key={inputText}
                 role="status"
                 aria-live="polite"
                 // aria-relevant seems to be needed here make make sure a second time we get
                 // "No options found" we still announce the status message.
                 // What happens otherwise is that just the first status message is announced
                 // tested on VoiceOver on Chrome
-                aria-relevant="all"
+                aria-relevant="additions text"
                 className="adyen-checkout-sr-panel--sr-only"
             >
                 {statusMessage}
