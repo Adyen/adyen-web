@@ -185,7 +185,8 @@ export const Express: ApplePayStory = {
 
             onAuthorized: (data, actions) => {
                 console.log('Authorized event', data);
-                actions.resolve();
+                // actions.resolve();
+                actions.reject(new ApplePayError('shippingContactInvalid', 'countryCode', 'Cannot ship to the selected address'));
             },
 
             onShippingContactSelected: async (resolve, reject, event) => {
