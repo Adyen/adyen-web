@@ -53,7 +53,7 @@ class ThreeDS2Challenge extends UIElement<ThreeDS2ChallengeConfiguration> {
     }
 
     protected override componentToRender(): h.JSX.Element {
-        // existy used because threeds2InMDFlow will send empty string for paymentData and we should be allowed to proceed with this
+        // existy used because threeds2InMDFlow might send an empty string for paymentData and we should be allowed to proceed with this
         if (!existy(this.props.paymentData)) {
             /**
              *   The presence of props.isMDFlow indicates the action to create this component came from the threeds2InMDFlow process which passes (an empty) paymentsData.
