@@ -43,7 +43,7 @@ class ThreeDS2DeviceFingerprint extends UIElement<ThreeDS2DeviceFingerprintConfi
      */
     onComplete(state: LegacyFingerprintResolveData | FingerprintResolveData) {
         if (this.props.isMDFlow) {
-            this.props.onComplete(state, this.elementRef);
+            this.props.onComplete?.(state, this.elementRef);
         } else {
             super.onComplete(state);
         }

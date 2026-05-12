@@ -64,7 +64,7 @@ describe('ThreeDS2DeviceFingerprint', () => {
             expect(spy).toHaveBeenCalledWith(fingerprintResolveData);
         });
 
-        test('should call "onComplete" if available', () => {
+        test('should call "onComplete" because we are in MDFlow', () => {
             const onComplete = jest.fn();
             const core = setupCoreMock();
 
@@ -72,7 +72,8 @@ describe('ThreeDS2DeviceFingerprint', () => {
                 token: 'xxx',
                 onError: () => {},
                 showSpinner: null,
-                onComplete
+                onComplete,
+                isMDFlow: true
             });
 
             // @ts-ignore - spying internal method
