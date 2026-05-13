@@ -17,7 +17,7 @@ import { defaultProps } from './core.defaultProps';
 import { resolveEnvironments } from './Environment';
 import { LIBRARY_BUNDLE_TYPE, LIBRARY_VERSION } from './config';
 
-import type { PaymentAction, PaymentAmount, PaymentResponseData } from '../types/global-types';
+import type { PaymentAction, PaymentAmount, PaymentResponseData, PaymentData } from '../types/global-types';
 import type { CoreConfiguration, ICore, AdditionalDetailsData, CoreModules } from './types';
 import type { UIElementProps } from '../components/internal/UIElement/types';
 import { AnalyticsLogEvent, LogEventType } from './Analytics/events/AnalyticsLogEvent';
@@ -366,6 +366,33 @@ class Core implements ICore {
             cdnContext: this.cdnImagesUrl,
             createFromAction: this.createFromAction
         };
+    }
+
+    public submitPayment(data: PaymentData): void {
+        if (!this.session) {
+            this.options.onError?.(new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'submitPayment requires a session to be configured'));
+            return;
+        }
+
+        this.session
+            .submitPayment(data)
+            .then(sanitizeResponse)
+            .then(verifyPaymentDidNotFail)
+            .then((response: PaymentResponseData) => {
+                if (response.action) {
+                    if (this.options.onPaymentAction) {
+                        this.options.onPaymentAction(this.createFromAction(response.action));
+                        return;
+                    }
+                }
+                cleanupFinalResult(response);
+                this.options.onPaymentCompleted?.(response);
+            })
+            .catch((e: PaymentResponseData | Error) => {
+                if (e instanceof CancelError) return;
+                cleanupFinalResult(e as PaymentResponseData);
+                this.options.onPaymentFailed?.(e as PaymentResponseData);
+            });
     }
 
     public storeElementReference(element: UIElement) {

@@ -12,6 +12,7 @@ type CoreCallbacks = Pick<
     | 'beforeRedirect'
     | 'beforeSubmit'
     | 'onSubmit'
+    | 'onReadyForReview'
     | 'onAdditionalDetails'
     | 'onPaymentFailed'
     | 'onPaymentCompleted'
