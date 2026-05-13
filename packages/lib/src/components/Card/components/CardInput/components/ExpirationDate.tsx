@@ -77,7 +77,6 @@ export default function ExpirationDate(props: Readonly<ExpirationDateProps>) {
                         : 'adyen-checkout__field__exp-date_hint_wrapper'
                 }
                 imgClassName={'adyen-checkout__field__exp-date_hint'}
-                aria-hidden="true"
                 alt=""
                 src={getImage({ imageFolder: 'components/' })('expiry_date_hint')}
             />

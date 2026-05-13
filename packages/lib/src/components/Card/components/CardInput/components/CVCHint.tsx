@@ -2,7 +2,7 @@ import { h } from 'preact';
 import classNames from 'classnames';
 import { CVCHintProps } from './types';
 
-export default function CVCHint({ frontCVC = false, fieldLabel }: Readonly<CVCHintProps>) {
+export default function CVCHint({ frontCVC = false }: Readonly<CVCHintProps>) {
     const hintClassnames = classNames({
         'adyen-checkout__card__cvc__hint__wrapper': true,
         'adyen-checkout__field__cvc--front-hint': !!frontCVC,
@@ -18,10 +18,8 @@ export default function CVCHint({ frontCVC = false, fieldLabel }: Readonly<CVCHi
                 viewBox="0 0 27 18"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
-                aria-hidden="true"
-                role={'img'}
+                aria-hidden={true}
             >
-                <title id={'adyen-checkout__cvc__front-hint-img'}>{fieldLabel}</title>
                 <path
                     d="M0 3C0 1.34315 1.34315 0 3 0H24C25.6569 0 27 1.34315 27 3V15C27 16.6569 25.6569 18 24 18H3C1.34315 18 0 16.6569 0 15V3Z"
                     fill="#E6E9EB"
@@ -38,10 +36,8 @@ export default function CVCHint({ frontCVC = false, fieldLabel }: Readonly<CVCHi
                 viewBox="0 0 27 18"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
-                aria-hidden="true"
-                role={'img'}
+                aria-hidden={true}
             >
-                <title id={'adyen-checkout__cvc__back-hint-img'}>{fieldLabel}</title>
                 <path
                     d="M27 4.00001V3.37501C27 2.4799 26.6444 1.62146 26.0115 0.988518C25.3786 0.355581 24.5201 0 23.625 0H3.375C2.47989 0 1.62145 0.355581 0.988514 0.988518C0.355579 1.62146 0 2.4799 0 3.37501V4.00001H27Z"
                     fill="#E6E9EB"
