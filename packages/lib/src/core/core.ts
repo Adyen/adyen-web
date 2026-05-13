@@ -380,8 +380,8 @@ class Core implements ICore {
             .then(verifyPaymentDidNotFail)
             .then((response: PaymentResponseData) => {
                 if (response.action) {
-                    if (this.options.onPaymentAction) {
-                        this.options.onPaymentAction(this.createFromAction(response.action));
+                    if (this.options.onAction) {
+                        this.options.onAction(this.createFromAction(response.action));
                         return;
                     }
                 }

@@ -119,7 +119,7 @@ const ReviewPage = ({ reviewData, sessionId, endDigits, countryCode, shopperLoca
                 countryCode,
                 locale: shopperLocale,
                 session: { id: sessionId },
-                onPaymentAction: actionElement => {
+                onAction: actionElement => {
                     if (actionRef.current) {
                         setHideReviewPage(true);
                         actionElement.mount(actionRef.current);

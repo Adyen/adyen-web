@@ -102,7 +102,7 @@ const ReviewPage = ({ reviewData, sessionId, amount, countryCode, shopperLocale 
                 environment: process.env.CLIENT_ENV as CoreConfiguration['environment'],
                 locale: shopperLocale,
                 session: { id: sessionId },
-                onPaymentAction: actionElement => {
+                onAction: actionElement => {
                     if (actionRef.current) {
                         setHideReviewPage(true);
                         actionElement.mount(actionRef.current);

@@ -294,7 +294,7 @@ export interface CoreConfiguration {
      */
     onActionHandled?(actionHandled: ActionHandledReturnObject): void;
 
-    onPaymentAction?(actionElement: UIElement): void;
+    onAction?(actionElement: UIElement): void;
 
     onChange?(state: OnChangeData, component: UIElement): void;
 

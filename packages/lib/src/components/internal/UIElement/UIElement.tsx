@@ -442,8 +442,8 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         });
 
         if (paymentAction) {
-            if (this.core.options.onPaymentAction) {
-                this.core.options.onPaymentAction(paymentAction);
+            if (this.core.options.onAction) {
+                this.core.options.onAction(paymentAction);
                 return paymentAction;
             }
             this.unmount();

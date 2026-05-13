@@ -59,7 +59,7 @@ export function assertConfigurationPropertiesAreValid(propsSetByMerchant: CoreCo
         'onReadyForReview',
         'onAdditionalDetails',
         'onActionHandled',
-        'onPaymentAction',
+        'onAction',
         'onChange',
         'onError',
         'onBalanceCheck',
