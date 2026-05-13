@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { SegmentedControl } from '../../internal/SegmentedControl';
+import { SegmentedControl, SegmentedControlRegion } from '../../internal/SegmentedControl';
 import { useMemo, useState } from 'preact/hooks';
 import { SegmentedControlOptions } from '../../internal/SegmentedControl/SegmentedControl';
 import PayIDInput from './PayIDInput';
@@ -69,26 +69,30 @@ export default function PayToComponent(props: Readonly<PayToComponentProps>) {
         >
             <SegmentedControl selectedValue={selectedInput} options={inputOptions} onChange={setSelectedInput} />
             {selectedInput === 'payid-option' && (
-                <PayIDInput
-                    id={payidInputId}
-                    status={status}
-                    setStatus={setStatus}
-                    setComponentRef={props.setComponentRef}
-                    onChange={onChange}
-                    defaultData={props.data}
-                    placeholders={props.placeholders}
-                />
+                <SegmentedControlRegion id={payidInputId} ariaLabelledBy="payid-option">
+                    <PayIDInput
+                        id={payidInputId}
+                        status={status}
+                        setStatus={setStatus}
+                        setComponentRef={props.setComponentRef}
+                        onChange={onChange}
+                        defaultData={props.data}
+                        placeholders={props.placeholders}
+                    />
+                </SegmentedControlRegion>
             )}
             {selectedInput === 'bsb-option' && (
-                <BSBInput
-                    id={bsbInputId}
-                    status={status}
-                    setStatus={setStatus}
-                    setComponentRef={props.setComponentRef}
-                    onChange={onChange}
-                    defaultData={props.data}
-                    placeholders={props.placeholders}
-                />
+                <SegmentedControlRegion id={bsbInputId} ariaLabelledBy="bsb-option">
+                    <BSBInput
+                        id={bsbInputId}
+                        status={status}
+                        setStatus={setStatus}
+                        setComponentRef={props.setComponentRef}
+                        onChange={onChange}
+                        defaultData={props.data}
+                        placeholders={props.placeholders}
+                    />
+                </SegmentedControlRegion>
             )}
 
             {props.showPayButton && props.payButton({ status, label: i18n.get('continue') })}

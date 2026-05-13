@@ -5,9 +5,9 @@ import { IssuerList } from './issuer-list';
  * Iris extends IssuerList with segmented control for QR Code / Bank List modes
  */
 class Iris extends IssuerList {
-    // Segmented control buttons
-    readonly qrCodeModeButton: Locator;
-    readonly bankListModeButton: Locator;
+    // Segmented control tabs
+    readonly qrCodeModeTab: Locator;
+    readonly bankListModeTab: Locator;
     readonly segmentedControlGroup: Locator;
 
     // QR Code mode elements
@@ -22,8 +22,8 @@ class Iris extends IssuerList {
 
         // Segmented control (outside of .adyen-checkout__issuer-list, so use page-level locator)
         this.segmentedControlGroup = page.locator('.adyen-checkout__segmented-control');
-        this.qrCodeModeButton = this.segmentedControlGroup.getByRole('button', { name: 'QR code' });
-        this.bankListModeButton = this.segmentedControlGroup.getByRole('button', { name: 'Bank list' });
+        this.qrCodeModeTab = this.segmentedControlGroup.getByRole('tab', { name: 'QR code' });
+        this.bankListModeTab = this.segmentedControlGroup.getByRole('tab', { name: 'Bank list' });
 
         // QR Code mode (QR elements are in a separate panel, not inside .adyen-checkout__issuer-list)
         this.generateQrCodeButton = page.getByRole('button', { name: 'Generate QR code' });
@@ -42,21 +42,21 @@ class Iris extends IssuerList {
     }
 
     async switchToQrCodeMode() {
-        await this.qrCodeModeButton.click();
+        await this.qrCodeModeTab.click();
     }
 
     async switchToBankListMode() {
-        await this.bankListModeButton.click();
+        await this.bankListModeTab.click();
     }
 
     async isQrCodeModeSelected(): Promise<boolean> {
-        const ariaExpanded = await this.qrCodeModeButton.getAttribute('aria-expanded');
-        return ariaExpanded === 'true';
+        const ariaSelected = await this.qrCodeModeTab.getAttribute('aria-selected');
+        return ariaSelected === 'true';
     }
 
     async isBankListModeSelected(): Promise<boolean> {
-        const ariaExpanded = await this.bankListModeButton.getAttribute('aria-expanded');
-        return ariaExpanded === 'true';
+        const ariaSelected = await this.bankListModeTab.getAttribute('aria-selected');
+        return ariaSelected === 'true';
     }
 
     async generateQrCode() {

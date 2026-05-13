@@ -4,9 +4,9 @@ import { SegmentedControl, SegmentedControlProps } from './SegmentedControl';
 import { useState } from 'preact/hooks';
 
 const options = [
-    { label: 'Master Card', value: 'mc' },
-    { label: 'Visa Card', value: 'visa' },
-    { label: 'American Express', value: 'amex' }
+    { label: 'Master Card', value: 'mc', id: 'tab-mc', controls: 'panel-mc' },
+    { label: 'Visa Card', value: 'visa', id: 'tab-visa', controls: 'panel-visa' },
+    { label: 'American Express', value: 'amex', id: 'tab-amex', controls: 'panel-amex' }
 ];
 
 const meta: Meta = {

@@ -224,7 +224,7 @@ describe('PayTo', () => {
 
             render(payTo.render());
 
-            await user.click(screen.queryByRole('button', { name: /BSB and account number/i }));
+            await user.click(screen.queryByRole('tab', { name: /BSB and account number/i }));
 
             await user.type(screen.queryByLabelText(/Bank account number/i), '12300123');
             await user.type(screen.queryByLabelText(/Bank State Branch/i), '123456');
