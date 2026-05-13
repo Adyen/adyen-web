@@ -13,6 +13,7 @@ export default function CVCHint({ frontCVC = false }: Readonly<CVCHintProps>) {
         <span className={hintClassnames}>
             <svg
                 className={'adyen-checkout__card__cvc__hint adyen-checkout__card__cvc__hint--front'}
+                data-testid="cvc-hint-front"
                 width="27"
                 height="18"
                 viewBox="0 0 27 18"
@@ -31,6 +32,7 @@ export default function CVCHint({ frontCVC = false }: Readonly<CVCHintProps>) {
 
             <svg
                 className={'adyen-checkout__card__cvc__hint adyen-checkout__card__cvc__hint--back'}
+                data-testid="cvc-hint-back"
                 width="27"
                 height="18"
                 viewBox="0 0 27 18"
