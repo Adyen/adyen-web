@@ -212,6 +212,10 @@ class DropinElement extends UIElement<DropinConfiguration> implements IDropin {
         });
 
         if (paymentAction) {
+            if (this.core.options.onAction) {
+                this.core.options.onAction(paymentAction);
+                return this;
+            }
             this.setStatus(paymentAction.props.statusType, { component: paymentAction });
             this.componentFromAction = paymentAction;
             return this;

@@ -39,6 +39,7 @@ export interface ICore {
     getComponent(txVariant: string): NewableComponent | undefined;
     createFromAction(action: PaymentAction, options?: any): UIElement;
     storeElementReference(element: UIElement): void;
+    submitPayment(data: PaymentData): void;
     options: CoreConfiguration;
     modules: CoreModules;
     paymentMethodsResponse: PaymentMethods;
@@ -261,6 +262,8 @@ export interface CoreConfiguration {
      */
     onSubmit?(state: SubmitData, component: UIElement, actions: SubmitActions): void;
 
+    onReadyForReview?(state: PaymentData, component: UIElement, additionalDetailsState?: AdditionalDetailsData): void;
+
     /**
      * Callback used in the Advanced flow to perform the /payments/details API call.
      *
@@ -290,6 +293,8 @@ export interface CoreConfiguration {
      * @param actionHandled
      */
     onActionHandled?(actionHandled: ActionHandledReturnObject): void;
+
+    onAction?(actionElement: UIElement): void;
 
     onChange?(state: OnChangeData, component: UIElement): void;
 

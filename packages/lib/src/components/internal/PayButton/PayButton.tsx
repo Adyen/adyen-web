@@ -28,9 +28,9 @@ export interface PayButtonProps extends ButtonProps {
 const PayButton = ({ customAmount, classNameModifiers = [], label, ...props }: Readonly<PayButtonProps>) => {
     const { amount, isZeroAuth } = useAmount();
     const { secondaryAmount } = useSecondaryAmount();
-    const { i18n } = useCoreContext();
+    const { i18n, showReviewPage } = useCoreContext();
 
-    const buttonLabel = createButtonLabel(i18n, label, amount, isZeroAuth, customAmount, secondaryAmount);
+    const buttonLabel = createButtonLabel(i18n, label, amount, isZeroAuth, customAmount, secondaryAmount, showReviewPage);
     const secondaryAmountLabel = createSecondaryLabel(i18n, secondaryAmount, isAmountValid(amount), isZeroAuth, label);
 
     const isDisabled = props.disabled || props.status === 'loading';

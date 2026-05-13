@@ -184,7 +184,11 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
     }
 
     private handleSubmit(): Promise<string> {
-        super.submit();
+        if (!this.isValid) {
+            this.showValidation();
+            return Promise.reject(new Error('PayPal component is not valid'));
+        }
+        this.executePaymentsCall();
 
         return new Promise((resolve, reject) => {
             this.resolve = resolve;

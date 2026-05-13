@@ -257,7 +257,14 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
             this.showValidation();
             return;
         }
+        if (this.props.onReadyForReview) {
+            this.props.onReadyForReview(this.data, this.elementRef);
+            return;
+        }
+        this.executePaymentsCall();
+    }
 
+    public executePaymentsCall(): void {
         this.makePaymentsCall()
             .then(sanitizeResponse)
             .then(verifyPaymentDidNotFail)
@@ -376,7 +383,11 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         }
     };
 
-    protected handleAdditionalDetails(state: AdditionalDetailsData): void {
+    public handleAdditionalDetails(state: AdditionalDetailsData): void {
+        if (this.props.onReadyForReview) {
+            this.props.onReadyForReview(this.data, this.elementRef, state);
+            return;
+        }
         this.makeAdditionalDetailsCall(state)
             .then(sanitizeResponse)
             .then(verifyPaymentDidNotFail)
@@ -431,6 +442,10 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         });
 
         if (paymentAction) {
+            if (this.core.options.onAction) {
+                this.core.options.onAction(paymentAction);
+                return paymentAction;
+            }
             this.unmount();
             return paymentAction.mount(this._node);
         }
@@ -663,7 +678,13 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
 
     render() {
         return (
-            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources} analytics={this.analytics}>
+            <CoreProvider
+                i18n={this.props.i18n}
+                loadingContext={this.props.loadingContext}
+                resources={this.resources}
+                analytics={this.analytics}
+                showReviewPage={!!this.props.onReadyForReview}
+            >
                 <SRPanelProvider srPanel={this.srPanel}>
                     <AmountProvider amount={this.props.amount} secondaryAmount={this.props.secondaryAmount} providerRef={this.amountProviderRef}>
                         {this.componentToRender()}

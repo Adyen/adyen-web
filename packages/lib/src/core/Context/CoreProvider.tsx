@@ -12,6 +12,7 @@ interface CoreProviderProps {
     resources: Resources;
     children: ComponentChildren;
     analytics?: IAnalytics;
+    showReviewPage?: boolean;
 }
 
 type ContextValue = {
@@ -19,11 +20,12 @@ type ContextValue = {
     loadingContext: string;
     resources: Resources;
     analytics: IAnalytics;
+    showReviewPage?: boolean;
 };
 
 const CoreContext = createContext<ContextValue | undefined>(undefined);
 
-const CoreProvider = ({ i18n, loadingContext, resources, analytics, children }: Readonly<CoreProviderProps>) => {
+const CoreProvider = ({ i18n, loadingContext, resources, analytics, showReviewPage, children }: Readonly<CoreProviderProps>) => {
     const coreContext = useContext(CoreContext);
 
     useEffect(() => {
@@ -44,7 +46,8 @@ const CoreProvider = ({ i18n, loadingContext, resources, analytics, children }: 
                 i18n,
                 loadingContext,
                 resources,
-                analytics
+                analytics,
+                showReviewPage
             }}
         >
             {toChildArray(children)}

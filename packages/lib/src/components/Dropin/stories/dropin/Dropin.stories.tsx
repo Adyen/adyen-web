@@ -7,6 +7,7 @@ import { Checkout } from '../../../../../storybook/components/Checkout';
 import { getComponentConfigFromUrl } from '../../../../../storybook/utils/get-configuration-from-url';
 import DropinComponent from '../../Dropin';
 import type { NewableComponent } from '../../../../core/core.registry';
+import { DropinWithReviewPageOnReadyForReview } from './DropinWithReviewPage';
 import './customization.scss';
 
 type DropinStory = StoryConfiguration<DropinConfiguration>;
@@ -73,6 +74,12 @@ export const StyleCustomization: DropinStory = {
             </Checkout>
         );
     }
+};
+
+export const DropinWithReviewPage: DropinStory = {
+    tags: ['no-automated-visual-test'],
+    render: args => <DropinWithReviewPageOnReadyForReview {...args} />,
+    args: { useSessions: true }
 };
 
 /**
