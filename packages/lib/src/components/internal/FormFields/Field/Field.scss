@@ -183,7 +183,7 @@
 }
 
 .adyen-checkout__label--focused + .adyen-checkout__input-wrapper {
-    box-shadow: 0 0 0 0.5px variable-generator.token(color-outline-primary-active);
+    box-shadow: 0 0 0 0.8px variable-generator.token(color-outline-primary-active);
     border-color: variable-generator.token(color-outline-primary-active);
 }
 
