@@ -31,6 +31,7 @@ export default function PayToNameFields({ i18n, errors, data, handleChangeFor, p
                 errorMessage={getErrorMessage(i18n, errors.firstName, i18n.get('firstName'))}
                 name={'firstName'}
                 i18n={i18n}
+                errorLive
             >
                 <InputText
                     name={'firstName'}
@@ -49,6 +50,7 @@ export default function PayToNameFields({ i18n, errors, data, handleChangeFor, p
                 errorMessage={getErrorMessage(i18n, errors.lastName, i18n.get('lastName'))}
                 name={'lastName'}
                 i18n={i18n}
+                errorLive
             >
                 <InputText
                     name={'lastName'}

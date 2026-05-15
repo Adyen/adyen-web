@@ -21,6 +21,7 @@ export interface PhoneInputFieldProps {
     showPrefix?: boolean;
     showNumber?: boolean;
     canSelectPrefix?: boolean;
+    errorLive?: boolean;
 }
 /**
  *
@@ -33,6 +34,7 @@ export default function PhoneInputFields({
     showPrefix,
     form,
     canSelectPrefix = true,
+    errorLive,
     ...props
 }: Readonly<PhoneInputFieldProps>) {
     const { i18n } = useCoreContext();
@@ -58,6 +60,7 @@ export default function PhoneInputFields({
                     dir={'ltr'}
                     i18n={i18n}
                     name={'phonePrefix'}
+                    errorLive={errorLive}
                 >
                     <Select
                         readonly={!canSelectPrefix}
@@ -81,6 +84,7 @@ export default function PhoneInputFields({
                     dir={'ltr'}
                     i18n={i18n}
                     name={'phoneNumber'}
+                    errorLive={errorLive}
                 >
                     <InputText
                         className="adyen-checkout__input adyen-checkout-input adyen-checkout-input--phone-number"
