@@ -65,7 +65,8 @@ describe('ThreeDS2Challenge', () => {
             const onComplete = jest.fn();
 
             const threeDS2Challenge = new ThreeDS2Challenge(core, {
-                onComplete
+                onComplete,
+                isMDFlow: true
             });
 
             // @ts-ignore - spying internal method

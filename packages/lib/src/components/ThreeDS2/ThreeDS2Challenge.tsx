@@ -37,14 +37,14 @@ class ThreeDS2Challenge extends UIElement<ThreeDS2ChallengeConfiguration> {
         super.onActionHandled(rtnObj);
     };
 
+    /**
+     * Will make a call to onAdditionalDetails (as set in actionTypes.ts) for the regular, "native" flow.
+     * However, if the action to create this component came from the 3DS2InMDFlow process it will instead equal a call to the onComplete callback
+     * (as defined in the 3DS2InMDFlow and passed in as a config prop).
+     */
     onComplete(state: LegacyChallengeResolveData | ChallengeResolveData) {
-        /**
-         * Equals a call to onAdditionalDetails (as set in actionTypes.ts) for the regular, "native" flow.
-         * However, if the action to create this component came from the 3DS2InMDFlow process it will instead equal a call to the onComplete callback
-         * (as defined in the 3DS2InMDFlow and passed in as a config prop).
-         */
-        if (this.props.onComplete) {
-            this.props.onComplete(state, this.elementRef);
+        if (this.props.isMDFlow) {
+            this.props.onComplete?.(state, this.elementRef);
         } else {
             super.onComplete(state);
         }
@@ -53,7 +53,7 @@ class ThreeDS2Challenge extends UIElement<ThreeDS2ChallengeConfiguration> {
     }
 
     protected override componentToRender(): h.JSX.Element {
-        // existy used because threeds2InMDFlow will send empty string for paymentData and we should be allowed to proceed with this
+        // existy used because threeds2InMDFlow might send an empty string for paymentData and we should be allowed to proceed with this
         if (!existy(this.props.paymentData)) {
             /**
              *   The presence of props.isMDFlow indicates the action to create this component came from the threeds2InMDFlow process which passes (an empty) paymentsData.
@@ -80,7 +80,6 @@ class ThreeDS2Challenge extends UIElement<ThreeDS2ChallengeConfiguration> {
                 {...this.props}
                 onComplete={this.onComplete}
                 onSubmitAnalytics={this.submitAnalytics}
-                isMDFlow={this.props.paymentData.length < 15}
                 onActionHandled={this.onActionHandled}
             />
         );
