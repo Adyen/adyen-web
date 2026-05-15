@@ -40,7 +40,7 @@
     },
     "devDependencies": {
         "@adyen/adyen-web-server": "1.0.0",
-        "@changesets/cli": "2.30.0",
+        "@changesets/cli": "2.31.0",
         "@changesets/get-github-info": "0.8.0",
         "concurrently": "9.2.1",
         "cross-env": "10.1.0",
@@ -51,5 +51,5 @@
     "resolutions": {
         "tar-fs": "^3.0.9"
     },
-    "packageManager": "yarn@4.13.0"
+    "packageManager": "yarn@4.14.1"
 }
