@@ -33,6 +33,7 @@ export default function PayToPhone({ form }: Readonly<PayToPhoneProps>) {
             showNumber={true}
             showPrefix={true}
             form={form}
+            errorLive
         />
     );
 }

@@ -2,7 +2,7 @@ import { h } from 'preact';
 import Fieldset from '../../internal/FormFields/Fieldset';
 import IdentifierSelector, { PayToIdentifierEnum } from './IdentifierSelector';
 import { useEffect, useRef } from 'preact/hooks';
-import useForm from '../../../utils/useForm';
+import useFormWithA11y from '../../../utils/useForm/useFormWithA11y';
 import PayToPhone from './PayToPhone';
 import InputEmail from '../../internal/FormFields/InputEmail';
 import { getErrorMessage } from '../../../utils/getErrorMessage';
@@ -50,11 +50,12 @@ const IDENTIFIER_SCHEMA = {
 export default function PayIDInput({ setComponentRef, defaultData, placeholders, onChange, setStatus, id }: Readonly<PayIDInputProps>) {
     const { i18n } = useCoreContext();
 
-    const form = useForm<PayIdFormData>({
+    const form = useFormWithA11y<PayIdFormData>({
         schema: BASE_SCHEMA,
         defaultData: { selectedIdentifier: PayToIdentifierEnum.phone, ...defaultData },
         rules: payIdValidationRules,
-        formatters: phoneFormatters
+        formatters: phoneFormatters,
+        formHolder: '.adyen-checkout__payto-component'
     });
     const { handleChangeFor, triggerValidation, data, errors, valid, isValid, setSchema } = form;
 
@@ -96,6 +97,7 @@ export default function PayIDInput({ setComponentRef, defaultData, placeholders,
                     dir={'ltr'}
                     name={'email'}
                     i18n={i18n}
+                    errorLive
                 >
                     <InputEmail
                         name={'email'}
@@ -115,6 +117,7 @@ export default function PayIDInput({ setComponentRef, defaultData, placeholders,
                     errorMessage={getErrorMessage(i18n, errors.abn, i18n.get('ABN'))}
                     name={'ABN'}
                     i18n={i18n}
+                    errorLive
                 >
                     <InputText
                         name={'abn'}
@@ -134,6 +137,7 @@ export default function PayIDInput({ setComponentRef, defaultData, placeholders,
                     errorMessage={getErrorMessage(i18n, errors.orgid, i18n.get('payto.payid.label.orgid'))}
                     name={'orgid'}
                     i18n={i18n}
+                    errorLive
                 >
                     <InputText
                         name={'orgid'}
