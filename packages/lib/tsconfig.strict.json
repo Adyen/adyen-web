@@ -8,7 +8,6 @@
         "strictPropertyInitialization": false,
         "strictBindCallApply": false,
         "noImplicitThis": false,
-        "alwaysStrict": false,
         "noEmit": true
     }
 }
