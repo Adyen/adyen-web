@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import Fieldset from '../../internal/FormFields/Fieldset';
 import { useEffect, useRef } from 'preact/hooks';
-import useForm from '../../../utils/useForm';
+import useFormWithA11y from '../../../utils/useForm/useFormWithA11y';
 import { getErrorMessage } from '../../../utils/getErrorMessage';
 import Field from '../../internal/FormFields/Field';
 import { useCoreContext } from '../../../core/Context/CoreProvider';
@@ -35,11 +35,12 @@ const BASE_SCHEMA = ['bankAccountNumber', 'bsb', 'firstName', 'lastName'];
 export default function BSBInput({ setComponentRef, defaultData, placeholders, onChange, setStatus, id }: Readonly<BSBInputProps>) {
     const { i18n } = useCoreContext();
 
-    const form = useForm<BSBFormData>({
+    const form = useFormWithA11y<BSBFormData>({
         schema: BASE_SCHEMA,
         defaultData: defaultData,
         rules: bsbValidationRules,
-        formatters: phoneFormatters
+        formatters: phoneFormatters,
+        formHolder: '.adyen-checkout__payto-component'
     });
     const { handleChangeFor, triggerValidation, data, errors, valid, isValid } = form;
 
@@ -65,6 +66,7 @@ export default function BSBInput({ setComponentRef, defaultData, placeholders, o
                 errorMessage={getErrorMessage(i18n, errors.bankAccountNumber, i18n.get('payto.bsb.label.bankAccountNumber'))}
                 name={'bankAccountNumber'}
                 i18n={i18n}
+                errorLive
             >
                 <InputText
                     name={'bankAccountNumber'}
@@ -82,6 +84,7 @@ export default function BSBInput({ setComponentRef, defaultData, placeholders, o
                 errorMessage={getErrorMessage(i18n, errors.bsb, i18n.get('Bank State Branch'))}
                 name={'bsb'}
                 i18n={i18n}
+                errorLive
             >
                 <InputText
                     name={'bsb'}

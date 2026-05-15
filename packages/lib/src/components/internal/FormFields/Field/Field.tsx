@@ -44,7 +44,8 @@ const Field: FunctionalComponent<Readonly<FieldProps>> = props => {
         i18n,
         contextVisibleToScreenReader,
         renderAlternativeToLabel,
-        onInputContainerClick
+        onInputContainerClick,
+        errorLive
     } = props;
 
     // Controls whether any error element has an aria-hidden="true" attr (which means it is the error for a securedField)
@@ -115,6 +116,7 @@ const Field: FunctionalComponent<Readonly<FieldProps>> = props => {
                 className={classNames({ 'adyen-checkout-contextual-text--error': true, 'adyen-checkout-contextual-text--hidden': !showError })}
                 {...(contextVisibleToSR && { id: `${uniqueId.current}${ARIA_ERROR_SUFFIX}` })}
                 aria-hidden={contextVisibleToSR ? undefined : 'true'}
+                {...(contextVisibleToSR && errorLive && { 'aria-live': 'polite' })}
             >
                 {errorMessage}
             </span>

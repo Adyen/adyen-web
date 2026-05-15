@@ -35,6 +35,12 @@ export interface FieldProps {
      * Callback that reports when there is a click on the input field parent container
      */
     onInputContainerClick?(): void;
+    /**
+     * When true, adds aria-live="polite" to the error span so that screen readers announce
+     * validation errors inline. Only applies when contextVisibleToScreenReader is true.
+     * Defaults to false to avoid breaking existing components.
+     */
+    errorLive?: boolean;
 }
 
 export interface FieldState {
