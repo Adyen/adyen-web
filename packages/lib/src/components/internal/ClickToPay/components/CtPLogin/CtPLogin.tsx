@@ -51,16 +51,25 @@ const CtPLogin = (): h.JSX.Element => {
             } else {
                 setErrorCode('NOT_FOUND');
                 setIsLoggingIn(false);
+                loginInputHandlers.announceError(i18n.get('ctp.errors.NOT_FOUND'));
+                loginInputHandlers.focusInput();
             }
         } catch (error: unknown) {
             if (error instanceof SrciError) console.warn(`CtP - Login error: ${error.toString()}`);
             if (error instanceof TimeoutError) console.warn(error.toString());
-            if (isSrciError(error)) setErrorCode(error?.reason);
-            else console.error(error);
+
+            if (isSrciError(error)) {
+                const reason = error?.reason ?? 'UNKNOWN_ERROR';
+                setErrorCode(reason);
+                loginInputHandlers.announceError(i18n.get(`ctp.errors.${reason}`));
+                loginInputHandlers.focusInput();
+            } else {
+                console.error(error);
+            }
 
             setIsLoggingIn(false);
         }
-    }, [verifyIfShopperIsEnrolled, startIdentityValidation, shopperLogin, isValid, loginInputHandlers]);
+    }, [verifyIfShopperIsEnrolled, startIdentityValidation, shopperLogin, isValid, loginInputHandlers, i18n]);
 
     const handleButtonKeyDown = useCallback(
         (event: KeyboardEvent) => {
