@@ -308,7 +308,7 @@ class Card extends Base {
     }
 
     async selectDateIcon() {
-        await this.expiryDateField.getByAltText(EXPIRY_DATE_ICON_ALT_TEXT).click();
+        await this.expiryDateField.locator('.adyen-checkout__field__exp-date').click();
     }
 
     async selectCVCIcon() {
