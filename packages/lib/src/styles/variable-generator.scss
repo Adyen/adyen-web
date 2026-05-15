@@ -4,6 +4,8 @@
 @use '~@adyen/bento-design-tokens/dist/scss-map/bento/components';
 @use 'overrides';
 
+
+
 // simple re-mapping
 aliases.$color: map.merge(
     aliases.$color,
@@ -12,6 +14,9 @@ aliases.$color: map.merge(
         color-label-critical: map.get(aliases.$color, color-label-on-background-critical-weak),
         color-label-tertiary: map.get(aliases.$color, color-label-secondary),
         // label tertiary doesn't have enough contrast
+        color-outline-tertiary: #848D96,
+         // We don't use color alone for hover, so we use the active color. This change is in line on what bento does.
+        color-outline-tertiary-hover: map.get(aliases.$color, color-outline-tertiary-active),
     )
 );
 
