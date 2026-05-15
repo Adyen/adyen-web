@@ -165,7 +165,11 @@ class Card extends Base {
         },
         force = false
     ) {
-        await this.cardNumberField.getByAltText(text, options).click({ force });
+        if (text === '') {
+            await this.cardNumberField.locator('img[alt=""]').click({ force });
+        } else {
+            await this.cardNumberField.getByAltText(text, options).click({ force });
+        }
     }
     /** end */
 
