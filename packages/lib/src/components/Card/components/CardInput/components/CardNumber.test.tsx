@@ -41,7 +41,7 @@ describe('CardNumber and the (dual)branding icons that show in the PAN field', (
     test('should render with standard brand image and no dual branding', () => {
         renderCardNumber();
         expect(screen.getByTestId('encryptedCardNumber')).toBeInTheDocument();
-        expect(screen.getByAltText('card')).toBeInTheDocument();
+        expect(screen.getByAltText('')).toBeInTheDocument();
         const images = screen.getAllByRole('img');
         expect(images).toHaveLength(1);
     });

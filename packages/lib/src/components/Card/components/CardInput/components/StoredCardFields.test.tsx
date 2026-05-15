@@ -36,7 +36,8 @@ describe('StoredCard', () => {
 
         // Look for cvc field elements
         expect(screen.getAllByText('Security code', { exact: true })).toBeTruthy();
-        expect(screen.getByRole('img', { name: 'Security code 3 digits on back of card' })).toBeTruthy();
+        expect(screen.getByTestId('cvc-hint-back')).toBeInTheDocument();
+        expect(screen.getByTestId('cvc-hint-back')).toHaveAttribute('aria-hidden', 'true');
     });
 
     test('Renders a StoredCard field, without expiryDate (relevant data is null); and with cvc field', () => {
@@ -49,7 +50,8 @@ describe('StoredCard', () => {
         expect(screen.queryByText('Expiry date', { exact: false })).toBeNull(); // non-presence
 
         expect(screen.getAllByText('Security code', { exact: true })).toBeTruthy();
-        expect(screen.getByRole('img', { name: 'Security code 3 digits on back of card' })).toBeTruthy();
+        expect(screen.getByTestId('cvc-hint-back')).toBeInTheDocument();
+        expect(screen.getByTestId('cvc-hint-back')).toHaveAttribute('aria-hidden', 'true');
     });
 
     test('Renders a StoredCard field, without expiryDate (relevant data is empty string); and with cvc field', () => {
@@ -62,7 +64,8 @@ describe('StoredCard', () => {
         expect(screen.queryByText('Expiry date', { exact: false })).toBeNull(); // non-presence
 
         expect(screen.getAllByText('Security code', { exact: true })).toBeTruthy();
-        expect(screen.getByRole('img', { name: 'Security code 3 digits on back of card' })).toBeTruthy();
+        expect(screen.getByTestId('cvc-hint-back')).toBeInTheDocument();
+        expect(screen.getByTestId('cvc-hint-back')).toHaveAttribute('aria-hidden', 'true');
     });
 
     test('Renders a StoredCard field, without expiryDate (relevant data is missing); and with cvc field', () => {
@@ -75,6 +78,7 @@ describe('StoredCard', () => {
         expect(screen.queryByText('Expiry date', { exact: false })).toBeNull(); // non-presence
 
         expect(screen.getAllByText('Security code', { exact: true })).toBeTruthy();
-        expect(screen.getByRole('img', { name: 'Security code 3 digits on back of card' })).toBeTruthy();
+        expect(screen.getByTestId('cvc-hint-back')).toBeInTheDocument();
+        expect(screen.getByTestId('cvc-hint-back')).toHaveAttribute('aria-hidden', 'true');
     });
 });
