@@ -1,6 +1,7 @@
 import { h } from 'preact';
 import { Meta, StoryObj } from '@storybook/preact-vite';
 import { SegmentedControl, SegmentedControlProps } from './SegmentedControl';
+import { SegmentedControlRegion } from './SegmentedControlRegion';
 import { useState } from 'preact/hooks';
 
 const options = [
@@ -29,7 +30,15 @@ const meta: Meta = {
 export const Default: StoryObj<SegmentedControlProps<string>> = {
     render: args => {
         const [selected, setSelected] = useState<string>(args.selectedValue);
-        return <SegmentedControl {...args} selectedValue={selected} onChange={v => setSelected(v)} />;
+        const selectedOption = options.find(opt => opt.value === selected) || options[0];
+        return (
+            <div>
+                <SegmentedControl {...args} selectedValue={selected} onChange={v => setSelected(v)} />
+                <SegmentedControlRegion id={selectedOption.controls} ariaLabelledBy={selectedOption.id}>
+                    <p>{selectedOption.label} content</p>
+                </SegmentedControlRegion>
+            </div>
+        );
     },
     parameters: {
         controls: { exclude: ['useSessions', 'countryCode', 'shopperLocale', 'amount', 'showPayButton'] }
