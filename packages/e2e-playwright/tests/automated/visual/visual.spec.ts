@@ -1,6 +1,7 @@
 import { test, expect } from '../../../fixtures/base-fixture';
 import fs from 'node:fs';
 import { toHaveScreenshot } from '../../utils/assertions';
+import { waitForImageLoaded } from '../../utils/image';
 import { StorybookIndex } from '../types';
 
 // This is relative to playwright root: adyen-web/lib/e2e-playwright/
@@ -39,6 +40,9 @@ test.describe('Automated visual testing', () => {
             if (storyId.includes('click-to-pay')) {
                 await expect(page.locator('.adyen-checkout-ctp__card-animation')).toBeHidden();
             }
+            
+            await waitForImageLoaded(page);
+
             await toHaveScreenshot(page.getByTestId('checkout-component'), browserName, `${storyId}.png`, {
                 mask: [page.getByRole('timer'), page.getByTestId('stored-card-info')]
             });

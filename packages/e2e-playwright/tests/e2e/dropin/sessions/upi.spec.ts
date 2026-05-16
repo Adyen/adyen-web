@@ -2,6 +2,7 @@ import { test, expect } from '../../../../fixtures/dropin.fixture';
 import { MOBILE_USER_AGENT, SMALL_MOBILE_VIEWPORT, TAGS } from '../../../utils/constants';
 import { URL_MAP } from '../../../../fixtures/URL_MAP';
 import { toHaveScreenshot } from '../../../utils/assertions';
+import { waitForImageLoaded } from '../../../utils/image';
 import { UPI } from '../../../../models/upi';
 
 test.describe('Dropin - Sessions - UPI', () => {
@@ -48,8 +49,9 @@ test.describe('Dropin - Sessions - UPI', () => {
 
             await dropinWithSession.selectNonStoredPaymentMethod('upi');
 
-            // TODO: Re-enable this screenshot when we have a way to capture the expanded state when this PR is merged: https://github.com/Adyen/adyen-web/pull/3885
-            // await toHaveScreenshot(upiPaymentMethodHeader.rootElement, browserName, 'expanded-upi-payment-method-header-mobile.png');
+            await toHaveScreenshot(upiPaymentMethodHeader.rootElement, browserName, 'expanded-upi-payment-method-header-mobile.png', {
+                mask: [upiPaymentMethodHeader.rootElement.locator('img')]
+            });
 
             const upi = new UPI(page);
 
