@@ -1,4 +1,4 @@
-import { h, ComponentChildren } from 'preact';
+import { h, ComponentChildren, Ref } from 'preact';
 import cx from 'classnames';
 import { useCoreContext } from '../../../../core/Context/CoreProvider';
 import './Fieldset.scss';
@@ -14,6 +14,7 @@ interface FieldsetProps {
     readonly?: boolean;
     id?: string;
     renderLabelAsSectionHeading?: boolean;
+    ref?: Ref<HTMLFieldSetElement>;
 }
 
 export default function Fieldset({
@@ -24,7 +25,8 @@ export default function Fieldset({
     readonly = false,
     description,
     id,
-    renderLabelAsSectionHeading = false
+    renderLabelAsSectionHeading = false,
+    ref
 }: Readonly<FieldsetProps>) {
     const { i18n } = useCoreContext();
 
@@ -32,6 +34,7 @@ export default function Fieldset({
 
     return (
         <fieldset
+            ref={ref}
             id={id}
             className={cx([
                 'adyen-checkout__fieldset',

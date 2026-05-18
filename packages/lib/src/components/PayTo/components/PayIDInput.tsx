@@ -2,7 +2,7 @@ import { h } from 'preact';
 import Fieldset from '../../internal/FormFields/Fieldset';
 import IdentifierSelector, { PayToIdentifierEnum } from './IdentifierSelector';
 import { useEffect, useRef } from 'preact/hooks';
-import useFormWithA11y from '../../../utils/useForm/useFormWithA11y';
+import { useFormWithA11y } from '../../../utils/useForm';
 import PayToPhone from './PayToPhone';
 import InputEmail from '../../internal/FormFields/InputEmail';
 import { getErrorMessage } from '../../../utils/getErrorMessage';
@@ -50,12 +50,14 @@ const IDENTIFIER_SCHEMA = {
 export default function PayIDInput({ setComponentRef, defaultData, placeholders, onChange, setStatus, id }: Readonly<PayIDInputProps>) {
     const { i18n } = useCoreContext();
 
+    const containerRef = useRef<HTMLFieldSetElement>(null);
+
     const form = useFormWithA11y<PayIdFormData>({
         schema: BASE_SCHEMA,
         defaultData: { selectedIdentifier: PayToIdentifierEnum.phone, ...defaultData },
         rules: payIdValidationRules,
         formatters: phoneFormatters,
-        formHolder: '.adyen-checkout__payto-component'
+        formHolder: containerRef
     });
     const { handleChangeFor, triggerValidation, data, errors, valid, isValid, setSchema } = form;
 
@@ -80,7 +82,7 @@ export default function PayIDInput({ setComponentRef, defaultData, placeholders,
     }, [setComponentRef]);
 
     return (
-        <Fieldset id={id} classNameModifiers={['payto__payid_input']} label={'PayID'} description={'payto.payid.description'}>
+        <Fieldset ref={containerRef} id={id} classNameModifiers={['payto__payid_input']} label={'PayID'} description={'payto.payid.description'}>
             <IdentifierSelector
                 classNameModifiers={['col-40']}
                 onSelectedIdentifier={handleChangeFor('selectedIdentifier')}

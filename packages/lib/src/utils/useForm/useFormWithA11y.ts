@@ -1,20 +1,20 @@
 import { useCallback, useEffect, useState } from 'preact/hooks';
+import { RefObject } from 'preact';
 import useForm from './useForm';
-import { useErrorFocus } from '../useErrorFocus';
+import { useErrorFocus } from './useErrorFocus';
 import { Form, FormProps } from './types';
 
 export interface FormWithA11yProps extends FormProps {
     /**
-     * DOM Element or CSS selector string for the form root.
+     * DOM Element, CSS selector string, or RefObject pointing to the form root.
      * Used to find and focus the first invalid field after submit-time validation.
-     * If omitted, focus management is skipped (announcement-only via aria-live).
      */
-    formHolder?: Element | string;
+    formHolder: Element | string | RefObject<Element>;
 }
 
 /**
  * Wraps useForm and adds submit-time focus management via useErrorFocus.
- * Designed for Plan B (E): inline aria-live on Field error spans, no SRPanel dependency.
+ * Adds inline aria-live announcements on Field error spans, without requiring an SRPanel.
  *
  * Usage:
  * - Pass `formHolder` (CSS selector or Element ref) to enable focus-on-first-error.
@@ -44,7 +44,7 @@ function useFormWithA11y<FormSchema>(props: FormWithA11yProps): Form<FormSchema>
         if (!isValidating) return;
         focusFirstError(form.errors, form.schema);
         setIsValidating(false);
-    }, [form.errors]);
+    }, [form.errors, form.schema, focusFirstError]);
 
     return {
         ...form,
