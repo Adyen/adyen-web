@@ -1,6 +1,6 @@
 # @adyen/adyen-web
 
-## 6.36.0
+## 6.36.0-testing
 
 ### Minor Changes
 
