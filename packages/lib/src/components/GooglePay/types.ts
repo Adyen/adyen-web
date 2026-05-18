@@ -76,6 +76,30 @@ export interface GooglePayConfiguration extends UIElementProps {
     allowPrepaidCards?: boolean;
 
     /**
+     * Issuer country allowlist that contains ISO 3166-1 alpha-2 country codes.
+     * When this allowlist is set, users can only choose payment methods issued in the specified countries.
+     *
+     * @remarks
+     * Note: allowedIssuerCountryCodes and blockedIssuerCountryCodes are mutually exclusive, so only one should be set at a time.
+     *
+     * @see https://developers.google.com/pay/api/web/reference/request-objects#CardParameters
+     * @example ['US', 'CA', 'GB']
+     */
+    allowedIssuerCountryCodes?: string[];
+
+    /**
+     * Issuer country blocklist that contains ISO 3166-1 alpha-2 country codes.
+     * When this blocklist is set, users are restricted from choosing payment methods issued in the specified countries.
+     *
+     * @remarks
+     * Note: allowedIssuerCountryCodes and blockedIssuerCountryCodes are mutually exclusive, so only one should be set at a time.
+     *
+     * @see https://developers.google.com/pay/api/web/reference/request-objects#CardParameters
+     * @example ['CN', 'RU']
+     */
+    blockedIssuerCountryCodes?: string[];
+
+    /**
      * Set to true if you require a billing address
      *
      * @remarks

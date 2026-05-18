@@ -14,7 +14,7 @@ import { ComponentMethodsRef } from '../UIElement/types';
  * @param PhoneInputFormProps
  * @constructor
  */
-function PhoneInputForm(props: PhoneInputFormProps) {
+function PhoneInputForm(props: Readonly<PhoneInputFormProps>) {
     const { i18n } = useCoreContext();
 
     const schema = props.requiredFields || [...(props?.items?.length ? ['phonePrefix'] : []), 'phoneNumber'];

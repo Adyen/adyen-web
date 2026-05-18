@@ -11,7 +11,6 @@ class Iris extends IssuerList {
     readonly segmentedControlGroup: Locator;
 
     // QR Code mode elements
-    private _generateQrCodeContainer: Locator | null = null;
     readonly generateQrCodeButton: Locator;
     readonly qrCodeImage: Locator;
 

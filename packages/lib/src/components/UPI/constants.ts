@@ -15,3 +15,5 @@ export const A11Y = {
         INTENT: 'upi-area-intent'
     }
 };
+
+export const UPI_COUNTDOWN_TIME = 5;

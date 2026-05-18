@@ -20,11 +20,11 @@ describe('getCheckoutLocale', () => {
 
 describe('getPayloadJSON', () => {
     test('should return a paymentDetails object when checkoutMode is ProcessOrder', () => {
+        const amount = { currency: 'EUR', value: 1234 };
         const props = {
-            amount: { currency: 'EUR', value: 1234 },
             configuration: { storeId: '123' }
         };
-        expect(getPayloadJSON({ ...props, checkoutMode: 'ProcessOrder' }).paymentDetails).toBeDefined();
-        expect(getPayloadJSON({ ...props }).paymentDetails).not.toBeDefined();
+        expect(getPayloadJSON({ ...props, checkoutMode: 'ProcessOrder' }, amount).paymentDetails).toBeDefined();
+        expect(getPayloadJSON({ ...props }, amount).paymentDetails).not.toBeDefined();
     });
 });

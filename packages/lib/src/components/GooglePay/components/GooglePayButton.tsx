@@ -13,7 +13,7 @@ interface GooglePayButtonProps {
     onClick: (e: Event) => void;
 }
 
-const GooglePayButton = (props: GooglePayButtonProps) => {
+const GooglePayButton = (props: Readonly<GooglePayButtonProps>) => {
     const googlePayWrapperRef = useRef<HTMLDivElement | undefined>(undefined);
 
     useEffect(() => {

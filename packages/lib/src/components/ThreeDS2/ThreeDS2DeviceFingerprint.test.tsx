@@ -36,7 +36,7 @@ describe('ThreeDS2DeviceFingerprint', () => {
 
             expect(core.modules.analytics.sendAnalytics).toHaveBeenCalledWith({
                 component: fingerprintComponent.constructor['type'],
-                errorType: ErrorEventType.apiError,
+                errorType: ErrorEventType.threeDS2,
                 message: `${THREEDS2_FINGERPRINT_ERROR}: Missing 'paymentData' property from threeDS2 action`,
                 code: ErrorEventCode.THREEDS2_ACTION_IS_MISSING_PAYMENT_DATA,
                 timestamp: expect.any(String),

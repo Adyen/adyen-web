@@ -115,6 +115,8 @@ export default function AddressSearch({
     const debounceInputHandler = useMemo(() => debounce(onTextInput, addressSearchDebounceMs), []);
 
     return (
+        // The search field is intentionally rendered before the manual entry button in the DOM.
+        // See: ../a11y.md
         <div className={'adyen-checkout__address-search adyen-checkout__field-group'}>
             <Field
                 label={i18n.get('address')}

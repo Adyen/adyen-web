@@ -24,7 +24,7 @@ export type CtPLoginInputHandlers = {
     validateInput(): void;
 };
 
-const CtPLoginInput = (props: CtPLoginInputProps): h.JSX.Element => {
+const CtPLoginInput = (props: Readonly<CtPLoginInputProps>): h.JSX.Element => {
     const { i18n } = useCoreContext();
     const formSchema = ['shopperLogin'];
     const { handleChangeFor, data, triggerValidation, valid, errors, isValid } = useForm<CtPLoginInputDataState>({

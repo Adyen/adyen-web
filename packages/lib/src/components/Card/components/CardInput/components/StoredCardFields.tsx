@@ -20,7 +20,7 @@ export default function StoredCardFields({
     expiryMonth,
     expiryYear,
     showContextualElement
-}: StoredCardFieldsProps) {
+}: Readonly<StoredCardFieldsProps>) {
     const { i18n } = useCoreContext();
     const storedCardDescription = i18n.get('creditCard.storedCard.description.ariaLabel').replace('%@', lastFour);
     const storedCardDescriptionSuffix = expiryMonth && expiryYear ? ` ${i18n.get('creditCard.expiryDate.label')} ${expiryMonth}/${expiryYear}` : '';

@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { render, screen } from '@testing-library/preact';
+import { render, screen, within } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import Select from './Select';
 import { CoreProvider } from '../../../../core/Context/CoreProvider';
@@ -45,7 +45,7 @@ describe('Select', () => {
         // Test keyboard interaction - focus the button first with user event
         const button = screen.getByRole('button');
         await user.click(button); // Open dropdown
-        
+
         await user.keyboard('[ArrowDown][Enter]');
         expect(onChangeCb).toBeCalledTimes(2);
 
@@ -87,7 +87,7 @@ describe('Select', () => {
         // Test keyboard interaction - focus the combobox first with user event
         const combobox = screen.getByRole('combobox');
         await user.click(combobox); // Open dropdown
-        
+
         await user.keyboard('[ArrowDown][Enter]');
         expect(onChangeCb).toBeCalledTimes(2);
 
@@ -110,18 +110,18 @@ describe('Select', () => {
         });
 
         const combobox = screen.getByRole('combobox');
-        
+
         // Focus should not open the dropdown
         await user.tab(); // Focus the combobox using tab navigation
-        
+
         // Debug visibility
         const option1 = screen.getByText('Option 1');
         const option2 = screen.getByText('Option 2');
-        
+
         // Elements should be hidden (offsetParent is null and getBoundingClientRect is all zeros)
         expect(option1.offsetParent).toBeNull();
         expect(option2.offsetParent).toBeNull();
-        
+
         // Click should open the dropdown
         await user.click(combobox);
         expect(screen.getByText('Option 1')).toBeVisible();
@@ -142,18 +142,18 @@ describe('Select', () => {
         });
 
         const button = screen.getByRole('button');
-        
+
         // Focus should not open the dropdown
         await user.tab(); // Focus the button using tab navigation
-        
+
         // Debug visibility
         const option1 = screen.getByText('Option 1');
         const option2 = screen.getByText('Option 2');
-        
+
         // Elements should be hidden (offsetParent is null and getBoundingClientRect is all zeros)
         expect(option1.offsetParent).toBeNull();
         expect(option2.offsetParent).toBeNull();
-        
+
         // Click should open the dropdown
         await user.click(button);
         expect(screen.getByText('Option 1')).toBeVisible();
@@ -175,15 +175,15 @@ describe('Select', () => {
         });
 
         const combobox = screen.getByRole('combobox');
-        
+
         // Initially dropdown should be closed
         const apple = screen.getByText('Apple');
         const banana = screen.getByText('Banana');
-        
+
         // Elements should be hidden (offsetParent is null and getBoundingClientRect is all zeros)
         expect(apple.offsetParent).toBeNull();
         expect(banana.offsetParent).toBeNull();
-        
+
         // Typing should open the dropdown
         await user.type(combobox, 'A');
         expect(screen.getByText('Apple')).toBeVisible();
@@ -198,10 +198,10 @@ describe('Select', () => {
         });
 
         const combobox = screen.getByRole('combobox');
-        
+
         // Type something that won't match any items
         await user.type(combobox, 'xyz');
-        
+
         // Check that the live region is present and contains the no options message
         const liveRegion = screen.getByRole('status');
         expect(liveRegion).toBeInTheDocument();
@@ -225,5 +225,34 @@ describe('Select', () => {
         const liveRegion = screen.getByRole('status');
         expect(liveRegion).toBeInTheDocument();
         expect(liveRegion).toBeEmptyDOMElement();
+    });
+
+    describe('select-only (filterable=false)', () => {
+        test('aria-expanded is false initially and true when open', async () => {
+            renderSelect({ filterable: false });
+            const button = screen.getByRole('button');
+            expect(button).toHaveAttribute('aria-expanded', 'false');
+            await user.click(button);
+            expect(button).toHaveAttribute('aria-expanded', 'true');
+        });
+
+        test('button has aria-haspopup="listbox"', () => {
+            renderSelect({ filterable: false });
+            expect(screen.getByRole('button')).toHaveAttribute('aria-haspopup', 'listbox');
+        });
+
+        test('button has aria-controls pointing to the listbox', () => {
+            renderSelect({ filterable: false });
+            const button = screen.getByRole('button');
+            const listbox = screen.getByRole('listbox');
+            expect(button).toHaveAttribute('aria-controls', listbox.id);
+        });
+
+        test('button has aria-labelledby combining label and selected value when uniqueId is provided', () => {
+            renderSelect({ filterable: false, uniqueId: 'test-select', selectedValue: '1', items: [{ id: '1', name: 'Mobile' }] });
+            const button = screen.getByRole('button');
+            expect(button).toHaveAttribute('aria-labelledby', 'test-select-label test-select-value');
+            expect(within(button).getByText('Mobile')).toBeInTheDocument();
+        });
     });
 });

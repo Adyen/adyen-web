@@ -1,6 +1,7 @@
 name: Size limit
 
-on: [pull_request]
+on: 
+  pull_request:
 
 jobs:
   size:
@@ -10,10 +11,10 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v6
 
-      - name: Use Node.js 22.18.0
+      - name: Use Node.js 24
         uses: actions/setup-node@v6
         with:
-          node-version: 22.18.0
+          node-version: 24
           package-manager-cache: false
 
       - name: Enable Corepack

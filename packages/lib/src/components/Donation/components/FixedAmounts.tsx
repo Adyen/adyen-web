@@ -13,7 +13,7 @@ interface FixedAmountsProps {
     onAmountSelected: ({ target }) => void;
     onDonateButtonClicked: () => void;
 }
-export default function FixedAmounts(props: FixedAmountsProps) {
+export default function FixedAmounts(props: Readonly<FixedAmountsProps>) {
     const { currency, values, selectedAmount, status, onAmountSelected, onDonateButtonClicked } = props;
     const { i18n } = useCoreContext();
 

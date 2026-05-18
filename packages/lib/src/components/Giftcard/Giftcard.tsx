@@ -6,13 +6,14 @@ import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { PaymentAmount } from '../../types/global-types';
 import { GiftCardElementData, GiftCardConfiguration, balanceCheckResponseType, GiftCardBalanceCheckErrorType } from './types';
 import { TxVariants } from '../tx-variants';
+import { PayButtonProps } from '../internal/PayButton/PayButton';
 
 export class GiftcardElement extends UIElement<GiftCardConfiguration> {
-    public static type = TxVariants.giftcard;
+    public static readonly type: TxVariants = TxVariants.giftcard;
 
     protected componentRef: GiftcardComponent | undefined;
 
-    protected static defaultProps = {
+    protected static readonly defaultProps = {
         brandsConfiguration: {}
     };
 
@@ -163,7 +164,7 @@ export class GiftcardElement extends UIElement<GiftCardConfiguration> {
     }
 
     // Giftcards override the regular payButton flow
-    public payButton = props => {
+    protected override payButton = (props: PayButtonProps) => {
         return <PayButton {...props} />;
     };
 

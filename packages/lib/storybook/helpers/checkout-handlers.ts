@@ -18,6 +18,7 @@ export function displayResultMessage(isAuthorized: boolean, resultCode: string):
     resultText.setAttribute('data-testid', 'result-message');
     resultText.classList.add('adyen-checkout__status', 'storybook-status-container');
     resultText.appendChild(image);
+    resultText.setAttribute('role', 'alert');
     resultText.appendChild(document.createTextNode(resultCode));
 
     const container = document.getElementById('component-root');

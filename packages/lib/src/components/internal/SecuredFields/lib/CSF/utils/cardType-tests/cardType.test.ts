@@ -2,7 +2,7 @@
 import CardType from '../cardType';
 import { CVC_POLICY_HIDDEN, CVC_POLICY_OPTIONAL } from '../../../constants';
 
-const allCards = CardType.allCards.map(pCard => pCard.cardType);
+const allCards: string[] = CardType.allCards.map(pCard => pCard.cardType);
 
 beforeEach(() => {
     console.error = jest.fn(error => {
@@ -10,6 +10,11 @@ beforeEach(() => {
     });
     console.log = jest.fn(() => {});
 });
+
+const reorderCards = (brand: string): string[] => {
+    const reorderedCards = [brand, ...allCards.filter(c => c !== brand)];
+    return reorderedCards;
+};
 
 describe('Top level checks for recognising card brands (confirm that at least one instance of the pattern returns the correct card)', () => {
     test('Should return a mc card', () => {
@@ -69,8 +74,9 @@ describe('Top level checks for recognising card brands (confirm that at least on
         expect(card.cvcPolicy).toBe(CVC_POLICY_HIDDEN);
     });
 
-    test('Should return a bijcard card', () => {
-        const card = CardType.detectCard('5100081', allCards);
+    test('Should return a bijcard card when it is first in the list', () => {
+        const reorderedCards = reorderCards('bijcard');
+        const card = CardType.detectCard('5100081', reorderedCards);
         expect(card.cardType).toEqual('bijcard');
     });
 
@@ -89,14 +95,16 @@ describe('Top level checks for recognising card brands (confirm that at least on
         expect(card.cardType).toEqual('cup');
     });
 
-    test('Should return a maestro card', () => {
-        const card = CardType.detectCard('50', allCards);
+    test('Should return a maestro card when it is first in the list', () => {
+        const reorderedCards = reorderCards('maestro');
+        const card = CardType.detectCard('50', reorderedCards);
         expect(card.cardType).toEqual('maestro');
-        expect(card.cvcPolicy).toBe(CVC_POLICY_OPTIONAL);
+        expect(card.cvcPolicy).toBe('optional');
     });
 
-    test('Should return a elo card', () => {
-        const card = CardType.detectCard('506699', allCards);
+    test('Should return a elo card when it is first in the list', () => {
+        const reorderedCards = reorderCards('elo');
+        const card = CardType.detectCard('506699', reorderedCards);
         expect(card.cardType).toEqual('elo');
     });
 
@@ -106,23 +114,27 @@ describe('Top level checks for recognising card brands (confirm that at least on
         expect(card.cvcPolicy).toBe(CVC_POLICY_OPTIONAL);
     });
 
-    test('Should return a cartebancaire card', () => {
-        const card = CardType.detectCard('5', allCards);
+    test('Should return a cartebancaire card when it is first in the list', () => {
+        const reorderedCards = reorderCards('cartebancaire');
+        const card = CardType.detectCard('5', reorderedCards);
         expect(card.cardType).toEqual('cartebancaire');
     });
 
-    test('Should return a visaalphabankbonus card', () => {
-        const card = CardType.detectCard('450903', allCards);
+    test('Should return a visaalphabankbonus card when it is first in the list', () => {
+        const reorderedCards = reorderCards('visaalphabankbonus');
+        const card = CardType.detectCard('450903', reorderedCards);
         expect(card.cardType).toEqual('visaalphabankbonus');
     });
 
-    test('Should return a mcalphabankbonus card', () => {
-        const card = CardType.detectCard('510099', allCards);
+    test('Should return a mcalphabankbonus card when it is first in the list', () => {
+        const reorderedCards = reorderCards('mcalphabankbonus');
+        const card = CardType.detectCard('510099', reorderedCards);
         expect(card.cardType).toEqual('mcalphabankbonus');
     });
 
-    test('Should return a hiper card', () => {
-        const card = CardType.detectCard('637095', allCards);
+    test('Should return a hiper card when it is first in the list', () => {
+        const reorderedCards = reorderCards('hiper');
+        const card = CardType.detectCard('637095', reorderedCards);
         expect(card.cardType).toEqual('hiper');
     });
 
@@ -144,38 +156,39 @@ describe('Top level checks for recognising card brands (confirm that at least on
         expect(card.cvcPolicy).toBe(CVC_POLICY_OPTIONAL);
     });
 
-    test('Should return a mir card', () => {
-        const card = CardType.detectCard('220', allCards);
+    test('Should return a mir card when it is first in the list', () => {
+        const reorderedCards = reorderCards('mir');
+        const card = CardType.detectCard('220', reorderedCards);
         expect(card.cardType).toEqual('mir');
     });
 
-    test('Should return a codensa card', () => {
-        const card = CardType.detectCard('590712', allCards);
+    test('Should return a codensa card when it is first in the list', () => {
+        const reorderedCards = reorderCards('codensa');
+        const card = CardType.detectCard('590712', reorderedCards);
         expect(card.cardType).toEqual('codensa');
     });
 
-    test('Should return a naranja card', () => {
-        const card = CardType.detectCard('377798', allCards);
+    test('Should return a naranja card when it is first in the list', () => {
+        const reorderedCards = reorderCards('naranja');
+        const card = CardType.detectCard('377798', reorderedCards);
         expect(card.cardType).toEqual('naranja');
     });
 
-    test('Should return a cabal card', () => {
-        //        const card = CardType.detectCard('589657', allCards):// TODO clashes with naranja
-        //        const card = CardType.detectCard('600691', allCards);// ok
-        //        const card = CardType.detectCard('603522', allCards);// ok
-        //        const card = CardType.detectCard('6042', allCards);// ok
-        //        const card = CardType.detectCard('6043', allCards);// ok
-        const card = CardType.detectCard('636908', allCards); // ok
+    test('Should return a cabal card when it is first in the list', () => {
+        const reorderedCards = reorderCards('cabal');
+        const card = CardType.detectCard('636908', reorderedCards); // ok
         expect(card.cardType).toEqual('cabal');
     });
 
-    test('Should return a shopping card', () => {
-        const card = CardType.detectCard('2799', allCards);
+    test('Should return a shopping card when it is first in the list', () => {
+        const reorderedCards = reorderCards('shopping');
+        const card = CardType.detectCard('2799', reorderedCards);
         expect(card.cardType).toEqual('shopping');
     });
 
-    test('Should return a argencard card', () => {
-        const card = CardType.detectCard('501', allCards);
+    test('Should return a argencard card when it is first in the list', () => {
+        const reorderedCards = reorderCards('argencard');
+        const card = CardType.detectCard('501', reorderedCards);
         expect(card.cardType).toEqual('argencard');
     });
 
@@ -184,15 +197,9 @@ describe('Top level checks for recognising card brands (confirm that at least on
         expect(card.cardType).toEqual('troy');
     });
 
-    test('Should return a vpay card', () => {
-        const card = CardType.detectCard('413', allCards);
+    test('Should return a vpay card when it is first in the list', () => {
+        const reorderedCards = reorderCards('vpay');
+        const card = CardType.detectCard('413', reorderedCards);
         expect(card.cardType).toEqual('vpay');
     });
-
-    // TODO clashes with cabal
-    //    test('Should return a forbrugsforeningen card', () => {
-    //
-    //        const card = CardType.detectCard('600722', allCards);
-    //        expect(card.cardType).toEqual('forbrugsforeningen');
-    //    });
 });

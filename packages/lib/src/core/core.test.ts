@@ -1,4 +1,4 @@
-import { render } from '@testing-library/preact';
+import { render, screen } from '@testing-library/preact';
 import AdyenCheckout from './core';
 import BCMCMobileElement from '../components/BcmcMobile';
 import Session from './CheckoutSession';
@@ -9,8 +9,9 @@ import ThreeDS2Challenge from '../components/ThreeDS2/ThreeDS2Challenge';
 import Redirect from '../components/Redirect';
 import { PaymentActionsType } from '../types/global-types';
 import Analytics from './Analytics';
+import type { CoreConfiguration } from './types';
+import type { DropinComponent } from '../components/Dropin/components/DropinComponent';
 
-jest.mock('./Services/get-translations');
 jest.mock('./CheckoutSession');
 
 const sessionSetupResponseMock: CheckoutSessionSetupResponse = {
@@ -35,7 +36,7 @@ const setupSessionSpy = jest.spyOn(Session.prototype, 'setupSession').mockImplem
     return Promise.resolve(sessionSetupResponseMock);
 });
 
-let analyticsSetupSpy;
+let analyticsSetupSpy: jest.SpyInstance;
 
 describe('Core', () => {
     beforeEach(() => {
@@ -50,6 +51,7 @@ describe('Core', () => {
         test('should default locale to en-US', async () => {
             const checkout = new AdyenCheckout({ countryCode: 'US', environment: 'test', clientKey: 'test_123456' });
             await checkout.initialize();
+
             expect(checkout.options.locale).toBe('en-US');
             expect(checkout.modules.i18n.locale).toBe('en-US');
         });
@@ -68,6 +70,34 @@ describe('Core', () => {
         });
     });
 
+    describe('Setting environment', () => {
+        test('should lowercase the environment value', async () => {
+            const checkout = new AdyenCheckout({
+                countryCode: 'US',
+                environment: 'TEST' as CoreConfiguration['environment'],
+                clientKey: 'test_123456'
+            });
+            await checkout.initialize();
+            expect(checkout.options.environment).toBe('test');
+        });
+
+        test('should lowercase mixed-case environment values', async () => {
+            const checkout = new AdyenCheckout({
+                countryCode: 'US',
+                environment: 'Live-AU' as CoreConfiguration['environment'],
+                clientKey: 'live_123456'
+            });
+            await checkout.initialize();
+            expect(checkout.options.environment).toBe('live-au');
+        });
+
+        test('should keep already lowercase environment values unchanged', async () => {
+            const checkout = new AdyenCheckout({ countryCode: 'US', environment: 'test', clientKey: 'test_123456' });
+            await checkout.initialize();
+            expect(checkout.options.environment).toBe('test');
+        });
+    });
+
     describe('initialize', () => {
         test('should do the setup call with the correct session data for the session flow', async () => {
             const checkout = new AdyenCheckout({
@@ -79,6 +109,44 @@ describe('Core', () => {
 
             await checkout.initialize();
             expect(setupSessionSpy).toHaveBeenCalledWith(expect.objectContaining({ session: { id: 'session-id', sessionData: 'session-data' } }));
+        });
+
+        test('should not block the rendering while analytics is setting up', async () => {
+            let resolveSetUp: () => void = () => {};
+            // Delay setUp call to simulate slow analytics setup
+            analyticsSetupSpy.mockImplementation(
+                () =>
+                    new Promise<void>(resolve => {
+                        resolveSetUp = resolve;
+                    })
+            );
+
+            const checkout = new AdyenCheckout({
+                countryCode: 'US',
+                environment: 'test',
+                clientKey: 'test_123456',
+                paymentMethodsResponse: {
+                    paymentMethods: [
+                        {
+                            name: 'iDeal',
+                            type: 'ideal'
+                        }
+                    ]
+                }
+            });
+
+            await checkout.initialize();
+            expect(analyticsSetupSpy).toHaveBeenCalled();
+
+            const ideal = new Redirect(checkout, {
+                type: 'ideal'
+            });
+
+            render(ideal.render());
+
+            expect(screen.getByRole('button', { name: 'Continue to iDeal' })).toBeInTheDocument();
+            // Resolve the pending promise so we don't leak it
+            resolveSetUp();
         });
 
         test('should call analytics setUp when initialized', async () => {
@@ -159,7 +227,7 @@ describe('Core', () => {
                 url: 'https://example.com'
             }) as Redirect;
 
-            expect(paymentAction.constructor['type']).toBe('redirect');
+            expect((paymentAction.constructor as typeof Redirect).type).toBe('redirect');
             expect(paymentAction.props.url).toBe('https://example.com');
         });
 
@@ -181,7 +249,7 @@ describe('Core', () => {
 
             const actionComponent = checkout.createFromAction(fingerprintAction, { challengeWindowSize: '04' }) as ThreeDS2DeviceFingerprint;
 
-            expect(actionComponent.constructor['type']).toBe('threeDS2Fingerprint');
+            expect((actionComponent.constructor as typeof ThreeDS2DeviceFingerprint).type).toBe('threeDS2Fingerprint');
 
             expect(actionComponent.props.elementRef).not.toBeDefined();
             expect(actionComponent.props.showSpinner).toEqual(true);
@@ -207,7 +275,7 @@ describe('Core', () => {
 
             const actionComponent = checkout.createFromAction(challengeAction, { challengeWindowSize: '03' }) as ThreeDS2Challenge;
 
-            expect(actionComponent.constructor['type']).toBe('threeDS2Challenge');
+            expect((actionComponent.constructor as typeof ThreeDS2Challenge).type).toBe('threeDS2Challenge');
             expect(actionComponent.props.elementRef).not.toBeDefined();
             expect(actionComponent.props.statusType).toEqual('custom');
             expect(actionComponent.props.challengeWindowSize).toEqual('03');
@@ -317,7 +385,7 @@ describe('Core', () => {
             const flushPromises = () => new Promise(process.nextTick);
             await flushPromises();
 
-            const ach = dropin.dropinRef.state.elements[0];
+            const ach = (dropin.dropinRef as DropinComponent).state.elements[0];
 
             expect(ach.props.onAdditionalDetails).toBe(onAdditionalDetailsPaymentMethodConfig);
         });
@@ -361,6 +429,99 @@ describe('Core', () => {
     });
 
     describe('update()', () => {
+        describe('Amount update', () => {
+            test('should update the amount for multiple components', async () => {
+                const initialAmount = { currency: 'USD', value: 5000 };
+
+                const checkout = new AdyenCheckout({
+                    amount: initialAmount,
+                    countryCode: 'US',
+                    environment: 'test',
+                    clientKey: 'test_123456',
+                    analytics: { enabled: false }
+                });
+                await checkout.initialize();
+
+                const component1 = new Redirect(checkout);
+                const component2 = new Redirect(checkout);
+
+                expect(checkout.options.amount).toEqual(initialAmount);
+                expect(component1.props.amount).toEqual(initialAmount);
+                expect(component2.props.amount).toEqual(initialAmount);
+
+                const spy1 = jest.spyOn(component1, 'updateAmount');
+                const spy2 = jest.spyOn(component2, 'updateAmount');
+
+                const newAmount = { currency: 'EUR', value: 1000 };
+
+                await checkout.update({ amount: newAmount }, { shouldReinitializeCheckout: false });
+
+                expect(spy1).toHaveBeenCalledWith(newAmount, undefined);
+                expect(spy2).toHaveBeenCalledWith(newAmount, undefined);
+
+                expect(checkout.options.amount).toEqual(newAmount);
+                expect(component1.props.amount).toEqual(newAmount);
+                expect(component2.props.amount).toEqual(newAmount);
+            });
+
+            test('should not update the amount if it is invalid', async () => {
+                console.warn = jest.fn();
+
+                const initialAmount = { currency: 'USD', value: 5000 };
+                const checkout = new AdyenCheckout({
+                    amount: initialAmount,
+                    countryCode: 'US',
+                    environment: 'test',
+                    clientKey: 'test_123456',
+                    analytics: { enabled: false }
+                });
+                await checkout.initialize();
+
+                const component = new Redirect(checkout);
+                const spy = jest.spyOn(component, 'updateAmount');
+
+                const newAmount = { currency: '', value: 100 };
+
+                await checkout.update({ amount: newAmount }, { shouldReinitializeCheckout: false });
+
+                expect(spy).not.toHaveBeenCalled();
+
+                expect(checkout.options.amount).toEqual(initialAmount);
+                expect(component.props.amount).toEqual(initialAmount);
+
+                expect(console.warn).toHaveBeenCalledWith('Core update(): Update canceled. Invalid amount object');
+            });
+
+            test('should not update the secondary amount if it is invalid', async () => {
+                console.warn = jest.fn();
+
+                const initialAmount = { currency: 'USD', value: 5000 };
+                const checkout = new AdyenCheckout({
+                    amount: initialAmount,
+                    countryCode: 'US',
+                    environment: 'test',
+                    clientKey: 'test_123456',
+                    analytics: { enabled: false }
+                });
+                await checkout.initialize();
+
+                const component = new Redirect(checkout);
+                const spy = jest.spyOn(component, 'updateAmount');
+
+                const newAmount = { currency: 'USD', value: 100 };
+                const secondaryAmount = { currency: '', value: 100 };
+
+                await checkout.update({ amount: newAmount, secondaryAmount }, { shouldReinitializeCheckout: false });
+
+                expect(spy).not.toHaveBeenCalled();
+
+                expect(checkout.options.secondaryAmount).toBeUndefined();
+                expect(component.props.secondaryAmount).toBeUndefined();
+
+                expect(console.warn).toHaveBeenCalledWith('Core update(): Update canceled. Invalid secondary amount object');
+            });
+        });
+
         test('should update all components under main instance', async () => {
             const checkout = new AdyenCheckout({
                 countryCode: 'US',
@@ -385,10 +546,13 @@ describe('Core', () => {
                 clientKey: 'xxxx'
             });
             await checkout.initialize();
-            const paymentMethodsResponse = { paymentMethods: [{ name: 'Credit Card', type: 'scheme', brands: ['visa'] }] };
+
             expect(checkout.paymentMethodsResponse).toHaveProperty('paymentMethods', []);
 
+            const paymentMethodsResponse = { paymentMethods: [{ name: 'Credit Card', type: 'scheme', brands: ['visa'] }] };
+
             await checkout.update({ paymentMethodsResponse });
+
             expect(checkout.paymentMethodsResponse.paymentMethods).toMatchObject([
                 { name: 'Credit Card', type: 'scheme', brands: ['visa'], _id: expect.any(String) }
             ]);
@@ -411,7 +575,7 @@ describe('Core', () => {
     });
 
     describe('Initialising without a countryCode', () => {
-        test('AdvancedFlow, without a countryCode, should throw an error', () => {
+        test('[advanced flow] should throw an error if core is initialized without countryCode', () => {
             const core = new AdyenCheckout({
                 environment: 'test',
                 _environmentUrls: {
@@ -423,8 +587,9 @@ describe('Core', () => {
             void expect(async () => await core.initialize()).rejects.toThrow('You must specify a countryCode');
         });
 
-        test('SessionsFlow, without a countryCode, should throw an error', () => {
-            delete sessionSetupResponseMock.countryCode;
+        test('[sessions flow] should throw an error if Session setup does not return a countryCode', () => {
+            const { countryCode, ...responseWithoutCountryCode } = sessionSetupResponseMock;
+            setupSessionSpy.mockResolvedValueOnce({ ...responseWithoutCountryCode });
 
             const checkout = new AdyenCheckout({
                 environment: 'test',
@@ -433,6 +598,17 @@ describe('Core', () => {
             });
 
             void expect(async () => await checkout.initialize()).rejects.toThrow('You must specify a countryCode');
+        });
+
+        test('[sessions flow] should not throw an error if core is initialized without countryCode but Session setup returns it', async () => {
+            const checkout = new AdyenCheckout({
+                environment: 'test',
+                clientKey: 'test_123456',
+                session: { id: 'session-id', sessionData: 'session-data' }
+            });
+
+            await expect(checkout.initialize()).resolves.toBe(checkout);
+            expect(checkout.options.countryCode).toBe('US');
         });
     });
 

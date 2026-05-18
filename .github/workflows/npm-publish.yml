@@ -1,19 +1,22 @@
 name: Publish Package
 
 on:
-  release:
-    types: [created]
+  workflow_dispatch:
 
 jobs:
   publish-npm:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
+      id-token: write # Required for OpenID Connect (OIDC) for trusted publishing on NPM
     steps:
       - uses: actions/checkout@v6
 
       # Setup .npmrc file to publish to npm
       - uses: actions/setup-node@v6
         with:
-          node-version: 22.18.0
+          node-version: 24
           registry-url: https://registry.npmjs.org/
           package-manager-cache: false
 
@@ -31,7 +34,5 @@ jobs:
 
       # Build and publish to npm
       - name: Build and release
-        run: cd packages/lib && npm publish --access public
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
-          CI: true
+        run: cd packages/lib && npm publish --access public --tag latest
+ 

@@ -5,7 +5,7 @@ import './Img.scss';
 import { h } from 'preact';
 import { ImgProps } from './types';
 
-export default function Img(props: ImgProps) {
+export default function Img(props: Readonly<ImgProps>) {
     const { backgroundUrl = '', className = '', classNameModifiers = [], src = '', alt = '', showOnError = false } = props;
     const [loaded, setLoaded] = useState(false);
     const imageRef = useRef(null);

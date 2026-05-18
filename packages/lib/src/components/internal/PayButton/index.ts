@@ -1,1 +1,1 @@
-export { default, payAmountLabel } from './PayButton';
+export { default } from './PayButton';

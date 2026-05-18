@@ -8,9 +8,9 @@ import { TxVariants } from '../tx-variants';
 import type { BoletoConfiguration } from './types';
 
 export class BoletoElement extends UIElement<BoletoConfiguration> {
-    public static type = TxVariants.boletobancario;
+    public static readonly type = TxVariants.boletobancario;
 
-    public static txVariants = [
+    public static readonly txVariants = [
         TxVariants.boletobancario,
         TxVariants.boletobancario_itau,
         TxVariants.boletobancario_santander,
@@ -47,13 +47,7 @@ export class BoletoElement extends UIElement<BoletoConfiguration> {
         return this.props.reference ? (
             <BoletoVoucherResult ref={this.handleRef} icon={this.icon} {...this.props} onActionHandled={this.onActionHandled} />
         ) : (
-            <BoletoInput
-                setComponentRef={this.handleRef}
-                {...this.props}
-                onChange={this.setState}
-                onSubmit={this.submit}
-                payButton={this.payButton}
-            />
+            <BoletoInput setComponentRef={this.handleRef} {...this.props} onChange={this.setState} payButton={this.payButton} />
         );
     }
 }

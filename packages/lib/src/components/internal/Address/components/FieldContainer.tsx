@@ -23,7 +23,7 @@ function getErrorMessage(errors: AddressStateError, fieldName: string, i18n: Lan
  * NOT TO BE USED: if you just want to add a Country or State dropdown outside of an Address component
  * - then you should implement <CountryField> or <StateField> directly
  */
-function FieldContainer(props: FieldContainerProps) {
+function FieldContainer(props: Readonly<FieldContainerProps>) {
     const { i18n } = useCoreContext();
     const { classNameModifiers = [], data, errors, valid, fieldName, onInput, onBlur, trimOnBlur, maxLength, disabled } = props;
 

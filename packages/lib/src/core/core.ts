@@ -13,21 +13,19 @@ import registry, { NewableComponent } from './core.registry';
 import { cleanupFinalResult, sanitizeResponse, verifyPaymentDidNotFail } from '../components/internal/UIElement/utils';
 import AdyenCheckoutError, { IMPLEMENTATION_ERROR } from './Errors/AdyenCheckoutError';
 import { THREEDS2_FULL } from '../components/ThreeDS2/constants';
-import { DEFAULT_LOCALE } from '../language/constants';
-import getTranslations from './Services/get-translations';
 import { defaultProps } from './core.defaultProps';
-import { formatCustomTranslations, formatLocale } from '../language/utils';
 import { resolveEnvironments } from './Environment';
 import { LIBRARY_BUNDLE_TYPE, LIBRARY_VERSION } from './config';
 
-import type { PaymentAction, PaymentResponseData } from '../types/global-types';
+import type { PaymentAction, PaymentAmount, PaymentResponseData } from '../types/global-types';
 import type { CoreConfiguration, ICore, AdditionalDetailsData, CoreModules } from './types';
-import type { Translations } from '../language/types';
 import type { UIElementProps } from '../components/internal/UIElement/types';
 import { AnalyticsLogEvent, LogEventType } from './Analytics/events/AnalyticsLogEvent';
 import CancelError from './Errors/CancelError';
 import { AnalyticsService } from './Analytics/AnalyticsService';
 import { AnalyticsEventQueue } from './Analytics/AnalyticsEventQueue';
+import { isAmountValid } from '../utils/amount-util';
+import { LanguageService } from '../language/LanguageService';
 
 class Core implements ICore {
     public session?: Session;
@@ -42,12 +40,12 @@ class Core implements ICore {
 
     private components: UIElement[] = [];
 
-    public static readonly metadata = {
+    public static readonly metadata: { version: string; bundleType: string } = {
         version: LIBRARY_VERSION,
         bundleType: LIBRARY_BUNDLE_TYPE
     };
 
-    public static registry = registry;
+    public static readonly registry = registry;
 
     public static setBundleType(type: string): void {
         Core.metadata.bundleType = type;
@@ -73,6 +71,7 @@ class Core implements ICore {
         assertConfigurationPropertiesAreValid(props);
 
         this.createFromAction = this.createFromAction.bind(this);
+        this.update = this.update.bind(this);
 
         this.setOptions({ ...defaultProps, ...props });
 
@@ -109,8 +108,10 @@ class Core implements ICore {
     public async initialize(): Promise<this> {
         await this.initializeCore();
         this.validateCoreConfiguration();
-        await this.createCoreModules();
-        await this.requestAnalyticsAttemptId();
+        this.createCoreModules();
+        this.assignLocaleToCore();
+        void this.requestAnalyticsAttemptId();
+        await this.requestTranslations();
         return this;
     }
 
@@ -160,15 +161,6 @@ class Core implements ICore {
         return Promise.resolve(this);
     }
 
-    private async fetchLocaleTranslations(): Promise<Translations> {
-        try {
-            return await getTranslations(this.cdnTranslationsUrl, Core.metadata.version, this.options.locale);
-        } catch (error: unknown) {
-            if (error instanceof AdyenCheckoutError) this.options.onError?.(error);
-            else this.options.onError?.(new AdyenCheckoutError('ERROR', 'Failed to fetch translation', { cause: error }));
-        }
-    }
-
     private validateCoreConfiguration(): void {
         // @ts-ignore This property does not exist, although merchants might be using when migrating from v5 to v6
         if (this.options.paymentMethodsConfiguration) {
@@ -178,13 +170,6 @@ class Core implements ICore {
         if (!this.options.countryCode) {
             throw new AdyenCheckoutError(IMPLEMENTATION_ERROR, 'You must specify a countryCode when initializing checkout.');
         }
-
-        if (!this.options.locale) {
-            this.setOptions({ locale: DEFAULT_LOCALE });
-        }
-
-        this.options.locale = formatLocale(this.options.locale);
-        this.options.translations = formatCustomTranslations(this.options.translations);
     }
 
     /**
@@ -296,24 +281,64 @@ class Core implements ICore {
     /**
      * Updates global configurations, resets the internal state and remounts each element.
      *
-     * @param options - props to update
-     * @returns this - the element instance
+     * @param props - props to update
+     * @param options - Can be used to avoid remounting the elements
+     * @returns this - the Core instance
      */
-    public update = (options: Partial<CoreConfiguration> = {}): Promise<this> => {
-        this.setOptions(options);
+    public update(props: Partial<Omit<CoreConfiguration, 'session'>> = {}, { shouldReinitializeCheckout = true } = {}): Promise<this> {
+        if (shouldReinitializeCheckout) {
+            this.setOptions(props);
 
-        return this.initialize().then(() => {
-            this.components.forEach(component => {
-                // We update only with the new options that have been received
-                const newProps: Partial<UIElementProps> = {
-                    ...options,
-                    ...(this.session && { session: this.session })
-                };
-                component.update(newProps);
+            return this.initialize().then(() => {
+                this.components.forEach(component => {
+                    // We update only with the new options that have been received
+                    const newProps: Partial<UIElementProps> = {
+                        ...(props.order?.remainingAmount ? { amount: props.order.remainingAmount } : { amount: this.options.amount }),
+                        ...(this.session && { session: this.session }),
+                        ...props
+                    };
+                    component.update(newProps);
+                });
+                return this;
             });
-            return this;
+        }
+
+        const { amount, secondaryAmount } = props;
+
+        if (amount || secondaryAmount) {
+            this.triggerAmountUpdate(amount, secondaryAmount);
+        }
+
+        return Promise.resolve(this);
+    }
+
+    /**
+     * Validates and propagates amount updates to all mounted components.
+     *
+     * @param amount - Primary payment amount object (required)
+     * @param secondaryAmount - Optional secondary amount for display purposes (e.g., converted currency)
+     * @internal
+     */
+    private triggerAmountUpdate(amount: PaymentAmount, secondaryAmount?: PaymentAmount): void {
+        if (!isAmountValid(amount)) {
+            console.warn('Core update(): Update canceled. Invalid amount object');
+            return;
+        }
+
+        if (secondaryAmount && !isAmountValid(secondaryAmount)) {
+            console.warn('Core update(): Update canceled. Invalid secondary amount object');
+            return;
+        }
+
+        this.setOptions({
+            amount,
+            ...(secondaryAmount && { secondaryAmount })
         });
-    };
+
+        this.components.forEach(component => {
+            component.updateAmount(amount, secondaryAmount);
+        });
+    }
 
     /**
      * Remove the reference of a component
@@ -336,7 +361,9 @@ class Core implements ICore {
         this.options = {
             ...this.options,
             ...options,
-            locale: options?.locale || this.options?.locale
+            locale: options?.locale || this.options?.locale,
+            // Make environment lowercase to ensure consistency
+            environment: String.prototype.toLowerCase.apply(options?.environment || this.options?.environment)
         };
     };
 
@@ -383,15 +410,13 @@ class Core implements ICore {
         this.paymentMethodsResponse = new PaymentMethods(this.options.paymentMethodsResponse || paymentMethodsResponse, this.options);
     }
 
-    private async createCoreModules(): Promise<void> {
+    private createCoreModules(): void {
         if (this.modules) {
             if (process.env.NODE_ENV === 'development') {
                 console.warn('Core: Core modules are already created.');
             }
             return;
         }
-
-        const translations = await this.fetchLocaleTranslations();
 
         this.modules = Object.freeze({
             risk: new RiskModule(this, { ...this.options, loadingContext: this.loadingContext }),
@@ -407,11 +432,33 @@ class Core implements ICore {
             resources: new Resources(this.cdnImagesUrl),
             i18n: new Language({
                 locale: this.options.locale,
-                translations,
-                customTranslations: this.options.translations
+                customTranslations: this.options.translations,
+                service: new LanguageService({
+                    cdnUrl: this.cdnTranslationsUrl,
+                    sdkVersion: Core.metadata.version
+                }),
+                onError: this.options?.onError
             }),
             srPanel: new SRPanel(this, { ...this.options.srConfig })
         });
+    }
+
+    /**
+     * Retrieve the parsed locale from the i18n module and assigns it to the core options.
+     */
+    private assignLocaleToCore(): void {
+        this.options.locale = this.modules.i18n.locale;
+    }
+
+    /**
+     * Request translations to the CDN. If an error occurs, it will be logged to the console in development mode.
+     */
+    private async requestTranslations(): Promise<void> {
+        try {
+            await this.modules.i18n.requestTranslations();
+        } catch (error: unknown) {
+            console.warn('Core - requestTranslations(): Something went wrong.', error);
+        }
     }
 
     private async requestAnalyticsAttemptId(): Promise<void> {

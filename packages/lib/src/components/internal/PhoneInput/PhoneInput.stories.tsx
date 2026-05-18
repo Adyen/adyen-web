@@ -3,6 +3,11 @@ import { Meta, StoryObj } from '@storybook/preact-vite';
 import PhoneInputForm from './PhoneInputForm';
 import { CoreProvider } from '../../../core/Context/CoreProvider';
 import Language from '../../../language';
+import { ILanguageService } from '../../../language/LanguageService';
+
+const languageServiceStub: ILanguageService = {
+    fetchTranslationsFromCdn: () => Promise.resolve({})
+};
 
 const COUNTRIES = [
     { id: '+7', name: 'Russian Federation', code: 'RU' },
@@ -63,7 +68,7 @@ const meta: Meta = {
 export const Default: StoryObj = {
     render: args => {
         return (
-            <CoreProvider loadingContext={'test'} i18n={new Language({ locale: 'en-US', translations: {} })} resources={global.resources}>
+            <CoreProvider loadingContext={'test'} i18n={new Language({ locale: 'en-US', service: languageServiceStub })} resources={global.resources}>
                 <PhoneInputForm
                     setComponentRef={ref => console.log(ref)}
                     items={COUNTRIES.map(formatPrefixName).filter(Boolean)}

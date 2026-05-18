@@ -6,9 +6,9 @@ import { DragonpayConfiguraton } from './types';
 import { TxVariants } from '../tx-variants';
 
 export class DragonpayElement extends UIElement<DragonpayConfiguraton> {
-    public static type = TxVariants.dragonpay;
+    public static readonly type = TxVariants.dragonpay;
 
-    public static txVariants = [
+    public static readonly txVariants = [
         TxVariants.dragonpay,
         TxVariants.dragonpay_ebanking,
         TxVariants.dragonpay_otc_banking,
@@ -44,19 +44,10 @@ export class DragonpayElement extends UIElement<DragonpayConfiguraton> {
 
     protected override componentToRender(): h.JSX.Element {
         return this.props.reference ? (
-            <DragonpayVoucherResult
-                ref={ref => {
-                    this.componentRef = ref;
-                }}
-                icon={this.icon}
-                {...this.props}
-                onActionHandled={this.onActionHandled}
-            />
+            <DragonpayVoucherResult icon={this.icon} {...this.props} onActionHandled={this.onActionHandled} />
         ) : (
             <DragonpayInput
-                ref={ref => {
-                    this.componentRef = ref;
-                }}
+                setComponentRef={this.setComponentRef}
                 items={this.props.issuers}
                 {...this.props}
                 showPayButton={this.props.showPayButton}

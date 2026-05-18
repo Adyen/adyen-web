@@ -11,8 +11,6 @@ import { ErrorEventType } from '../../../core/Analytics/events/AnalyticsErrorEve
 import { InfoEventType } from '../../../core/Analytics/events/AnalyticsInfoEvent';
 import { render, screen } from '@testing-library/preact';
 
-jest.mock('../../../core/Services/get-translations');
-
 interface MyElementProps extends UIElementProps {
     challengeWindowSize?: string;
 }
@@ -741,6 +739,38 @@ describe('UIElement', () => {
             const element = new MyElement(core);
             render(element.render());
             expect(screen.getAllByText('myelement')[0]).toBeInTheDocument();
+        });
+    });
+
+    describe('updateAmount()', () => {
+        test('should update amount and propagate it to the AmountProvider', () => {
+            const element = new MyElement(core);
+            render(element.render());
+            const spy = jest.spyOn(element['amountProviderRef'].current, 'update');
+
+            expect(element.props.amount).toBeUndefined();
+            const newAmount = { value: 1000, currency: 'USD' };
+
+            element.updateAmount(newAmount);
+
+            expect(element.props.amount).toEqual(newAmount);
+            expect(spy).toHaveBeenCalledWith(newAmount, undefined);
+        });
+
+        test('should update secondary amount and propagate it to the AmountProvider', () => {
+            const element = new MyElement(core);
+            render(element.render());
+            const spy = jest.spyOn(element['amountProviderRef'].current, 'update');
+
+            expect(element.props.secondaryAmount).toBeUndefined();
+            const newAmount = { value: 1000, currency: 'USD' };
+            const newSecondaryAmount = { value: 1000, currency: 'USD' };
+
+            element.updateAmount(newAmount, newSecondaryAmount);
+
+            expect(element.props.amount).toEqual(newAmount);
+            expect(element.props.secondaryAmount).toEqual(newSecondaryAmount);
+            expect(spy).toHaveBeenCalledWith(newAmount, newSecondaryAmount);
         });
     });
 

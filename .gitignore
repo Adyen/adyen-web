@@ -41,3 +41,11 @@ cert
 
 # Local Netlify folder
 .netlify
+
+# Windsurf
+.windsurf/workflows/
+
+
+# AI agents
+.claude
+.factory

@@ -19,7 +19,7 @@ interface BlikInputDataState {
     blikCode: string;
 }
 
-function BlikInput(props: BlikInputProps) {
+function BlikInput(props: Readonly<BlikInputProps>) {
     const { i18n } = useCoreContext();
     const getImage = useImage();
     const { handleChangeFor, triggerValidation, data, valid, errors, isValid } = useForm<BlikInputDataState>({

@@ -1,7 +1,7 @@
 import { useRef, useEffect } from 'preact/hooks';
 
-export function usePrevious<T>(value: T): T {
-    const ref: any = useRef<T>();
+export function usePrevious<T>(value: T): T | undefined {
+    const ref = useRef<T>();
 
     // Store current value in ref
     useEffect(() => {

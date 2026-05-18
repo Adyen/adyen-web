@@ -2,7 +2,7 @@ import { TxVariants } from '../tx-variants';
 import RedirectElement from '../Redirect';
 
 class Riverty extends RedirectElement {
-    public static readonly type = TxVariants.riverty;
+    public static override readonly type = TxVariants.riverty;
 
     public static override readonly defaultProps = {
         type: TxVariants.riverty

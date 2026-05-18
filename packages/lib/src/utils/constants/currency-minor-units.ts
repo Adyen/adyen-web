@@ -2,7 +2,7 @@
  * We need to hardcode minimumFractionDigits for the following currencies in order to force them to have 2 decimal places and
  * not be rounded up to a major unit
  */
-export const currencyMinorUnitsConfig = {
+export const currencyMinorUnitsConfig: Record<string, { minimumFractionDigits: number }> = {
     RSD: { minimumFractionDigits: 2 },
     AFN: { minimumFractionDigits: 2 },
     ALL: { minimumFractionDigits: 2 },

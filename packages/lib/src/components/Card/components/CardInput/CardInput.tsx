@@ -6,17 +6,24 @@ import defaultProps from './defaultProps';
 import './CardInput.scss';
 import { AddressModeOptions, CardInputDataState, CardInputErrorState, CardInputProps, CardInputRef, CardInputValidState } from './types';
 import { CVC_POLICY_REQUIRED, DATE_POLICY_REQUIRED, ENCRYPTED_CARD_NUMBER } from '../../../internal/SecuredFields/lib/constants';
-import { BinLookupResponse } from '../../types';
+import { BinLookupResponse, DualBrandSelectElement } from '../../types';
 import { cardInputFormatters, cardInputValidationRules, getRuleByNameAndMode } from './validate';
 import CIExtensions from '../../../internal/SecuredFields/binLookup/extensions';
 import useForm from '../../../../utils/useForm';
 import { SortedErrorObject } from '../../../../core/Errors/types';
-import { handlePartialAddressMode, extractPropsForCardFields, extractPropsForSFP, getLayout } from './utils';
+import {
+    handlePartialAddressMode,
+    extractPropsForCardFields,
+    extractPropsForSFP,
+    getLayout,
+    shouldShowInstallmentsComponent,
+    requiresDualBrandSelection
+} from './utils';
 import Specifications from '../../../internal/Address/Specifications';
 import { StoredCardFieldsWrapper } from './components/StoredCardFieldsWrapper';
 import { CardFieldsWrapper } from './components/CardFieldsWrapper';
 import { getAddressHandler, getAutoJumpHandler, getFocusHandler } from './handlers';
-import { InstallmentsObj } from './components/Installments/Installments';
+import { InstallmentsState } from './components/Installments/Installments';
 import { TouchStartEventObj } from './components/types';
 import classNames from 'classnames';
 import { getPartialAddressValidationRules } from '../../../internal/Address/validate';
@@ -33,9 +40,11 @@ import { getErrorMessageFromCode } from '../../../../core/Errors/utils';
 import { SF_ErrorCodes } from '../../../../core/Errors/constants';
 import { usePrevious } from '../../../../utils/hookUtils';
 import { AnalyticsInfoEvent, InfoEventType, UiTarget } from '../../../../core/Analytics/events/AnalyticsInfoEvent';
+import { useAmount } from '../../../../core/Context/AmountProvider';
+import { DUAL_BRANDS_THAT_NEED_SELECTION_MECHANISM } from '../../constants';
 
-const CardInput = (props: CardInputProps) => {
-    const sfp = useRef(null);
+const CardInput = (props: Readonly<CardInputProps>) => {
+    const sfp = useRef<SecuredFieldsProvider>(null);
     const isValidating = useRef(false);
     const getImage = useImage();
 
@@ -55,6 +64,8 @@ const CardInput = (props: CardInputProps) => {
 
     const specifications = useMemo(() => new Specifications(props.specifications), [props.specifications]);
 
+    const { amount } = useAmount();
+
     // Store ref to sfp (useful for 'deep' debugging)
     cardInputRef.current.sfp = sfp;
 
@@ -68,7 +79,7 @@ const CardInput = (props: CardInputProps) => {
         ...(props.holderNameRequired && { holderName: false })
     });
     const [data, setData] = useState<CardInputDataState>({
-        ...(props.hasHolderName && { holderName: props.data.holderName ?? '' })
+        ...(props.hasHolderName && { holderName: props.data?.holderName ?? '' })
     });
 
     const [focusedElement, setFocusedElement] = useState('');
@@ -77,7 +88,7 @@ const CardInput = (props: CardInputProps) => {
     const [cvcPolicy, setCvcPolicy] = useState(CVC_POLICY_REQUIRED);
     const [issuingCountryCode, setIssuingCountryCode] = useState<string>(null);
 
-    const [dualBrandSelectElements, setDualBrandSelectElements] = useState([]);
+    const [dualBrandSelectElements, setDualBrandSelectElements] = useState<DualBrandSelectElement[]>([]);
     const [selectedBrandValue, setSelectedBrandValue] = useState(props.storedPaymentMethodId ? props.brand : ''); // If this is a storedCard comp initialise state with the storedCard's brand
 
     const showBillingAddress = props.billingAddressMode !== AddressModeOptions.none && props.billingAddressRequired;
@@ -87,10 +98,10 @@ const CardInput = (props: CardInputProps) => {
     const partialAddressCountry = useRef<string>(partialAddressSchema && props.data?.billingAddress?.country);
 
     const [storePaymentMethod, setStorePaymentMethod] = useState(false);
-    const [billingAddress, setBillingAddress] = useState<AddressData>(showBillingAddress ? props.data.billingAddress : null);
+    const [billingAddress, setBillingAddress] = useState<AddressData>(showBillingAddress ? (props.data?.billingAddress ?? null) : null);
     const [showSocialSecurityNumber, setShowSocialSecurityNumber] = useState(false);
     const [socialSecurityNumber, setSocialSecurityNumber] = useState('');
-    const [installments, setInstallments] = useState<InstallmentsObj>({ value: null });
+    const [installments, setInstallments] = useState<InstallmentsState>({ value: null });
 
     // re. Disable arrows for iOS: The name of the element calling for other elements to be disabled
     // - either a securedField type (like 'encryptedCardNumber') when call is coming from SF
@@ -131,12 +142,17 @@ const CardInput = (props: CardInputProps) => {
         rules: cardInputValidationRules
     });
 
-    const hasInstallments = !!Object.keys(props.installmentOptions).length && (!props.fundingSource || props.fundingSource === 'credit');
+    const hasInstallments = shouldShowInstallmentsComponent({
+        installmentOptions: props.installmentOptions,
+        fundingSource: props.fundingSource,
+        amount
+    });
+
     const showAmountsInInstallments = props.showInstallmentAmounts ?? true;
 
     const cardCountryCode: string = issuingCountryCode ?? props.countryCode;
     const isKorea = cardCountryCode === 'kr'; // If issuingCountryCode or the merchant defined countryCode is set to 'kr'
-    const showKCP = props.configuration.koreanAuthenticationRequired && isKorea;
+    const showKCP = !!props.configuration.koreanAuthenticationRequired && isKorea;
 
     const showBrazilianSSN: boolean =
         (showSocialSecurityNumber && props.configuration.socialSecurityNumberMode === 'auto') ||
@@ -193,6 +209,17 @@ const CardInput = (props: CardInputProps) => {
 
     const doPanAutoJump = getAutoJumpHandler(isAutoJumping, sfp, retrieveLayout());
 
+    const mapSfpErrorsToCardInputErrors = (sfpErrors: SFPState['errors']): Partial<CardInputErrorState> => {
+        if (!sfpErrors) return {};
+
+        return {
+            encryptedCardNumber: !!sfpErrors.encryptedCardNumber,
+            encryptedExpiryDate: !!sfpErrors.encryptedExpiryDate,
+            encryptedSecurityCode: !!sfpErrors.encryptedSecurityCode,
+            encryptedPassword: !!sfpErrors.encryptedPassword
+        };
+    };
+
     const handleSecuredFieldsChange = (sfState: SFPState, eventDetails?: OnChangeEventDetails): void => {
         /**
          * Handling auto complete value for holderName (but only if the component is using a holderName field)
@@ -200,7 +227,7 @@ const CardInput = (props: CardInputProps) => {
         if (sfState.autoCompleteName) {
             if (!props.hasHolderName) return;
             const holderNameValidationFn = getRuleByNameAndMode('holderName', 'blur');
-            const acHolderName = holderNameValidationFn(sfState.autoCompleteName) ? sfState.autoCompleteName : null;
+            const acHolderName = holderNameValidationFn?.(sfState.autoCompleteName, null) ? sfState.autoCompleteName : null;
             if (acHolderName) {
                 setFormData('holderName', acHolderName);
                 setFormValid('holderName', true); // only if holderName is valid does this fny get called - so we know it's valid and w/o error
@@ -229,7 +256,7 @@ const CardInput = (props: CardInputProps) => {
          * Process SFP state
          */
         setData({ ...data, ...sfState.data });
-        setErrors({ ...errors, ...sfState.errors });
+        setErrors({ ...errors, ...mapSfpErrorsToCardInputErrors(sfState.errors) });
         setValid({ ...valid, ...sfState.valid });
 
         setIsSfpValid(sfState.isSfpValid);
@@ -258,7 +285,7 @@ const CardInput = (props: CardInputProps) => {
      * Deciding to do it this way since we garante there's no DOM changes to merchants
      * We can break this in the next major version (v7)
      */
-    const mimicLoadingStatusChange = sfpState => {
+    const mimicLoadingStatusChange = (sfpState: SFPState) => {
         if (!sfpState.status) return;
         if (sfpState.status == 'loading') {
             setShowCardUIElements(false);
@@ -401,7 +428,7 @@ const CardInput = (props: CardInputProps) => {
                 const event = new AnalyticsInfoEvent({
                     component: props.type,
                     type: InfoEventType.validationError,
-                    target: fieldTypeToSnakeCase(errorItem.field),
+                    target: fieldTypeToSnakeCase(errorItem.field) as UiTarget,
                     validationErrorCode: errorItem.errorCode,
                     validationErrorMessage: getErrorMessageFromCode(errorItem.errorCode, SF_ErrorCodes)
                 });
@@ -414,10 +441,10 @@ const CardInput = (props: CardInputProps) => {
      * Main 'componentDidUpdate' handler
      */
     useEffect(() => {
-        const holderNameValid: boolean = valid.holderName;
+        const holderNameValid: boolean = !!valid.holderName;
 
         const sfpValid: boolean = isSfpValid;
-        const addressValid: boolean = showBillingAddress ? valid.billingAddress : true;
+        const addressValid: boolean = showBillingAddress ? !!valid.billingAddress : true;
 
         const koreanAuthentication: boolean = showKCP ? !!valid.taxNumber && !!valid.encryptedPassword : true;
 
@@ -446,19 +473,26 @@ const CardInput = (props: CardInputProps) => {
      */
     useEffect(() => {
         if (dualBrandSelectElements.length > 0 && dualBrandSelectElements) {
-            const dualBrandsArr = dualBrandSelectElements.map(item => item.id);
+            const dualBrandsArr: string[] = dualBrandSelectElements.map(item => item.id);
             const brand = dualBrandsArr[0]; // initially selected brand
             const dualBrands = dualBrandsArr.toString();
 
-            const event = new AnalyticsInfoEvent({
-                component: props.type,
-                type: InfoEventType.displayed,
-                target: UiTarget.dualBrandButton,
-                brand,
-                configData: { dualBrands }
-            });
+            const showDualBrandSelector = dualBrandSelectElements
+                ? requiresDualBrandSelection(DUAL_BRANDS_THAT_NEED_SELECTION_MECHANISM, dualBrandSelectElements, 'id')
+                : false;
 
-            props.onSubmitAnalytics(event);
+            // Only send analytics event about displaying dualBrand selector for countries that need to show a selection mechanism
+            if (showDualBrandSelector) {
+                const event = new AnalyticsInfoEvent({
+                    component: props.type,
+                    type: InfoEventType.displayed,
+                    target: UiTarget.dualBrandButton,
+                    brand,
+                    configData: { dualBrands }
+                });
+
+                props.onSubmitAnalytics(event);
+            }
         }
     }, [dualBrandSelectElements]);
 
@@ -501,7 +535,7 @@ const CardInput = (props: CardInputProps) => {
                 type={props.brand}
                 componentType={props.type}
                 disableIOSArrowKeys={props.disableIOSArrowKeys ? handleTouchstartIOS : null}
-                render={({ setRootNode, setFocusOn }, sfpState) => (
+                render={({ setRootNode, setFocusOn }, sfpState: SFPState) => (
                     <div
                         ref={setRootNode}
                         className={classNames({

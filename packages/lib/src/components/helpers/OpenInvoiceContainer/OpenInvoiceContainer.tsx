@@ -4,7 +4,7 @@ import OpenInvoice from '../../internal/OpenInvoice';
 import { OpenInvoiceConfiguration } from './types';
 
 export default class OpenInvoiceContainer extends UIElement<OpenInvoiceConfiguration> {
-    protected static defaultProps: Partial<OpenInvoiceConfiguration> = {
+    protected static readonly defaultProps: Partial<OpenInvoiceConfiguration> = {
         onChange: () => {},
         data: { companyDetails: {}, personalDetails: {}, billingAddress: {}, deliveryAddress: {}, bankAccount: {} },
         visibility: {

@@ -37,16 +37,25 @@ export type CustomCardStoryConfiguration<Q> = StoryObj<CardPaymentMethodStoryPro
 
 export type MetaConfiguration<T> = Meta<PaymentMethodStoryProps<T>>;
 
+export type SessionsRequestData = {
+    shopperEmail?: string;
+    shopperReference?: string;
+    mandate?: Partial<MandateType>;
+    splitCardFundingSources?: boolean;
+    installmentOptions?: Record<string, { values: number[]; plans?: string[] }>;
+    storePaymentMethod?: boolean;
+    storePaymentMethodMode?: 'enabled' | 'disabled' | 'askForConsent';
+    shopperInteraction?: 'Ecommerce' | 'ContAuth' | 'Moto' | 'POS';
+    recurringProcessingModel?: 'Subscription' | 'CardOnFile' | 'UnscheduledCardOnFile';
+    enableOneClick?: boolean;
+};
+
 export type AdyenCheckoutProps = {
     showPayButton: boolean;
     countryCode: string;
     shopperLocale: string;
     amount: number;
-    sessionData?: PaymentMethodsResponse & {
-        mandate?: Partial<MandateType>;
-        splitCardFundingSources?: boolean;
-        installmentOptions?: Record<string, { values: number[]; plans?: string[] }>;
-    };
+    sessionData?: SessionsRequestData;
     allowedPaymentTypes?: string[];
     paymentMethodsOverride?: PaymentMethodsResponse;
     paymentsOptions?: {}; // TODO we don't have proper type for this right now

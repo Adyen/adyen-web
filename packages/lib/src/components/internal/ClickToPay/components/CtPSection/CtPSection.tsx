@@ -10,7 +10,7 @@ interface CtPSectionProps {
     children?: h.JSX.Element[];
 }
 
-const CtPSection = ({ children, onEnterKeyPress }: CtPSectionProps): h.JSX.Element => {
+const CtPSection = ({ children, onEnterKeyPress }: Readonly<CtPSectionProps>): h.JSX.Element => {
     const { isStandaloneComponent } = useClickToPayContext();
 
     return (
@@ -29,13 +29,13 @@ const CtPSection = ({ children, onEnterKeyPress }: CtPSectionProps): h.JSX.Eleme
     );
 };
 
-const Title = ({ endAdornment, children }: { endAdornment?; children }) => (
+const Title = ({ endAdornment, children }: Readonly<{ endAdornment?; children }>) => (
     <div className="adyen-checkout-ctp__section-header">
         <h1 className="adyen-checkout-ctp__section-header-title">{children}</h1>
         {endAdornment && <span className="adyen-checkout-ctp__section-header-adornment">{endAdornment}</span>}
     </div>
 );
-const Text = ({ children }: { children }) => <p className="adyen-checkout-ctp__section-text">{children}</p>;
+const Text = ({ children }: Readonly<{ children }>) => <p className="adyen-checkout-ctp__section-text">{children}</p>;
 
 CtPSection.Title = Title;
 CtPSection.Text = Text;

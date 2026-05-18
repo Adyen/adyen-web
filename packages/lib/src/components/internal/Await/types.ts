@@ -1,5 +1,5 @@
 import { UIElementProps } from '../UIElement/types';
-import { ActionHandledReturnObject, PaymentAmount, RawPaymentResponse } from '../../../types/global-types';
+import { ActionHandledReturnObject, RawPaymentResponse } from '../../../types/global-types';
 import { h } from 'preact';
 import { AdditionalDetailsData, AdyenCheckoutError, RawPaymentStatusResponse } from '../../../types';
 
@@ -24,7 +24,6 @@ export interface AwaitComponentProps {
     pollStatus?: () => Promise<RawPaymentResponse | RawPaymentStatusResponse>;
     instructions?: string | (() => h.JSX.Element);
     endSlot?: () => h.JSX.Element;
-    amount?: PaymentAmount;
     showAmount?: boolean;
 }
 

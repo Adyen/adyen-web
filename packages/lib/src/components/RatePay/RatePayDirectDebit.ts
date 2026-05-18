@@ -3,7 +3,7 @@ import { ALLOWED_COUNTRIES } from './config';
 import { TxVariants } from '../tx-variants';
 
 export default class RatePayDirectDebit extends OpenInvoiceContainer {
-    public static type = TxVariants.ratepay_directdebit;
+    public static readonly type = TxVariants.ratepay_directdebit;
 
     formatProps(props) {
         return {

@@ -50,7 +50,7 @@ const loadI18nForOptions = (i18n: Language, options: PayIdOptionsType) =>
         name: i18n.get(option.nameKey)
     }));
 
-export default function IdentifierSelector({ selectedIdentifier, onSelectedIdentifier, classNameModifiers }: IdentifierSelectorProps) {
+export default function IdentifierSelector({ selectedIdentifier, onSelectedIdentifier, classNameModifiers }: Readonly<IdentifierSelectorProps>) {
     const { i18n } = useCoreContext();
 
     const hydratedOptions = loadI18nForOptions(i18n, PAYID_IDENTIFIER_OPTIONS);

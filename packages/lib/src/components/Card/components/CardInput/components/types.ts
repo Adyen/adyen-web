@@ -1,28 +1,28 @@
-import { PaymentAmount } from '../../../../../types/global-types';
-import { BrandConfiguration, CardBrandsConfiguration } from '../../../types';
+import { BrandConfiguration, CardBrandsConfiguration, DualBrandSelectElement, DualBrandingChangeHandler } from '../../../types';
 import { ComponentChildren } from 'preact';
 import { CVCPolicyType, DatePolicyType } from '../../../../internal/SecuredFields/lib/types';
+import { SFPErrorMap, SFPValid } from '../../../../internal/SecuredFields/SFP/types';
 
 export interface BrandIconProps {
     brand: string;
-    brandsConfiguration: CardBrandsConfiguration;
+    brandsConfiguration?: CardBrandsConfiguration;
 }
 
 export interface CardFieldsProps {
-    brand?: string;
+    brand: string;
     brandsIcons?: Array<BrandConfiguration>;
     brandsConfiguration?: CardBrandsConfiguration;
-    dualBrandingChangeHandler?: any;
-    dualBrandingElements?: any;
-    dualBrandingSelected?: string;
-    errors?: any;
-    focusedElement?: any;
-    hasCVC?: any;
+    dualBrandingChangeHandler: DualBrandingChangeHandler;
+    dualBrandingElements?: DualBrandSelectElement[];
+    selectedBrandValue: string;
+    errors: SFPErrorMap;
+    focusedElement?: string;
+    hasCVC?: boolean;
     cvcPolicy?: CVCPolicyType;
     expiryDatePolicy?: DatePolicyType;
-    onFocusField?: any;
+    onFocusField?: (field: string) => void;
     showBrandIcon?: boolean;
-    valid?: any;
+    valid: SFPValid;
     showContextualElement?: boolean;
 }
 
@@ -42,9 +42,9 @@ export interface CardHolderNameProps {
 export interface CardNumberProps {
     brand: string;
     brandsConfiguration?: CardBrandsConfiguration;
-    dualBrandingChangeHandler?: any;
-    dualBrandingElements?: any;
-    dualBrandingSelected?: string;
+    dualBrandingChangeHandler: DualBrandingChangeHandler;
+    dualBrandingElements?: DualBrandSelectElement[];
+    selectedBrandValue: string;
     error: string;
     filled: boolean;
     focused: boolean;
@@ -58,12 +58,12 @@ export interface CVCProps {
     className?: string;
     classNameModifiers?: string[];
     error?: string;
-    filled?: any;
-    focused?: any;
+    filled?: boolean;
+    focused?: boolean;
     frontCVC?: boolean;
     cvcPolicy?: CVCPolicyType;
-    isValid?: any;
-    label?: any;
+    isValid?: boolean;
+    label?: string;
     onFocusField: (field: string) => void;
     showContextualElement?: boolean;
     contextualText?: string;
@@ -83,26 +83,10 @@ export interface ExpirationDateProps {
     focused?: boolean;
     isValid?: boolean;
     label?: string;
-    onFocusField: (fieldName: string) => {};
+    onFocusField: (field: string) => void;
     expiryDatePolicy?: DatePolicyType;
     showContextualElement?: boolean;
     contextualText?: string;
-}
-
-export interface InstallmentsProps {
-    amount?: PaymentAmount;
-    brand?: string;
-    onChange?: (installmentObject: object) => void;
-    installmentOptions: InstallmentOptions;
-    type?: string;
-}
-
-export interface InstallmentOptions {
-    [key: string]: {
-        values: number[];
-        plans?: string[];
-        preselectedValue?: number;
-    };
 }
 
 export interface InstallmentsItem {
@@ -140,15 +124,15 @@ export type RtnType_ParamVoidFn = (e) => void;
 
 export interface StoredCardFieldsProps {
     brand: string;
-    errors: any;
+    errors: SFPErrorMap;
     expiryMonth?: string;
     expiryYear?: string;
     focusedElement: string;
     hasCVC: boolean;
     cvcPolicy: CVCPolicyType;
     lastFour?: string;
-    onFocusField: any;
-    valid: any;
+    onFocusField: (field: string) => void;
+    valid: SFPValid;
     status?: string;
     showContextualElement?: boolean;
 }

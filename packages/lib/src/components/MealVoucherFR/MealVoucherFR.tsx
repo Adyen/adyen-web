@@ -5,8 +5,8 @@ import { GiftCardConfiguration } from '../Giftcard/types';
 import type { ICore } from '../../core/types';
 
 export class MealVoucherFRElement extends GiftcardElement {
-    public static type = TxVariants.mealVoucher_FR;
-    public static txVariants = [
+    public static override readonly type: TxVariants = TxVariants.mealVoucher_FR;
+    public static readonly txVariants = [
         TxVariants.mealVoucher_FR,
         TxVariants.mealVoucher_FR_natixis,
         TxVariants.mealVoucher_FR_sodexo,

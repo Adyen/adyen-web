@@ -49,6 +49,7 @@ export function assertConfigurationPropertiesAreValid(propsSetByMerchant: CoreCo
         'analytics',
         'risk',
         'order',
+        'donation',
         'exposeLibraryMetadata',
         'beforeRedirect',
         'beforeSubmit',

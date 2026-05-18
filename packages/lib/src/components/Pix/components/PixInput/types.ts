@@ -1,6 +1,6 @@
 import { h, RefObject } from 'preact';
 import PixInput from './PixInput';
-import { PayButtonFunctionProps } from '../../../internal/UIElement/types';
+import { PayButtonProps } from '../../../internal/PayButton/PayButton';
 
 export interface PixInputDataState {
     firstName?: string;
@@ -18,6 +18,6 @@ export interface PixInputProps {
     personalDetailsRequired: boolean;
     showPayButton: boolean;
     onChange({ data, valid, errors, isValid }): void;
-    payButton(props: PayButtonFunctionProps): h.JSX.Element;
+    payButton(props: PayButtonProps): h.JSX.Element;
     ref(ref: RefObject<typeof PixInput>): void;
 }

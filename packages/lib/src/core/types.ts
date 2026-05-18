@@ -4,7 +4,6 @@ import AdyenCheckoutError from './Errors/AdyenCheckoutError';
 import UIElement from '../components/internal/UIElement';
 import type { CustomTranslations } from '../language/types';
 import type {
-    PaymentAmountExtended,
     Order,
     PaymentAction,
     PaymentMethodsResponse,
@@ -14,7 +13,8 @@ import type {
     SessionsResponse,
     ResultCode,
     PaymentData,
-    AddressData
+    AddressData,
+    PaymentAmount
 } from '../types/global-types';
 import type { AnalyticsOptions } from './Analytics/types';
 import RiskModule, { RiskModuleOptions } from './RiskModule/RiskModule';
@@ -26,11 +26,13 @@ import { Resources } from './Context/Resources';
 import Language from '../language';
 import { SRPanel } from './Errors/SRPanel';
 import { IAnalytics } from './Analytics/Analytics';
+import type { DonationOptions } from '../components/Donation/types';
 
+export { CheckoutSession } from './CheckoutSession/types';
 export interface ICore {
     initialize(): Promise<ICore>;
     register(...items: NewableComponent[]): void;
-    update(options: CoreConfiguration): Promise<ICore>;
+    update(props: Partial<CoreConfiguration>, options?: { shouldReinitializeCheckout?: boolean }): Promise<ICore>;
     remove(component): ICore;
     submitDetails(details: AdditionalDetailsData['data']): void;
     getCorePropsForComponent(): any;
@@ -119,7 +121,7 @@ export interface CoreConfiguration {
     /**
      * Use 'test'. When you're ready to accept live payments, change the value to one of our {@link https://docs.adyen.com/checkout/drop-in-web#testing-your-integration | live environments}.
      */
-    environment?: 'test' | 'live' | 'live-us' | 'live-au' | 'live-apse' | 'live-in';
+    environment?: 'test' | 'live' | 'live-us' | 'live-au' | 'live-apse' | 'live-in' | 'live-nea';
 
     /**
      * Show or hides a Pay Button for each payment method
@@ -153,12 +155,12 @@ export interface CoreConfiguration {
     /**
      * Amount of the payment
      */
-    amount?: PaymentAmountExtended;
+    amount?: PaymentAmount;
 
     /**
      * Secondary amount of the payment - alternative currency & value converted according to rate
      */
-    secondaryAmount?: PaymentAmountExtended;
+    secondaryAmount?: PaymentAmount;
 
     /**
      * The shopper's country code. A valid value is an ISO two-character country code (e.g. 'NL').
@@ -183,6 +185,8 @@ export interface CoreConfiguration {
     analytics?: AnalyticsOptions;
 
     risk?: RiskModuleOptions;
+
+    donation?: DonationOptions;
 
     order?: Order;
 
@@ -222,7 +226,7 @@ export interface CoreConfiguration {
      * @param component
      * @param actions
      */
-    beforeSubmit?(state: PaymentData, component: UIElement, actions: BeforeSubmitActions): void;
+    beforeSubmit?(state: PaymentData, component: UIElement, actions: BeforeSubmitActions): Promise<void> | void;
 
     /**
      * Called when the payment succeeds.

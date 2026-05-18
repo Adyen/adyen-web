@@ -1,19 +1,20 @@
-@import '../../../src/style';
+@use '../../../src/style/colors';
+@use '../../../src/style/font-sizes';
 
 .voucher-demo h2 {
     margin: 16px 0;
 }
 
 .demo-voucher-input {
-    background: $color-white;
+    background: colors.$color-white;
     padding: 24px;
-    border: 1px solid $color-gray;
+    border: 1px solid colors.$color-gray;
     margin-bottom: 16px;
 }
 
 .url-hint-text {
-    color: $color-gray-darker;
-    font-size: $font-size-small;
+    color: colors.$color-gray-darker;
+    font-size: font-sizes.$font-size-small;
 }
 
 .qrcode-demo .merchant-checkout__payment-method__details{

@@ -23,7 +23,7 @@ interface InternalDisclaimerMsgObject {
  *  String inside the '%#' token pair will be rendered as an anchor element.
  */
 
-export default function DisclaimerMessage({ message, urls = [] }: InternalDisclaimerMsgObject) {
+export default function DisclaimerMessage({ message, urls = [] }: Readonly<InternalDisclaimerMsgObject>) {
     return (
         <span className="adyen-checkout-disclaimer__label">
             <LabelOnlyDisclaimerMessage message={message} urls={urls} />
@@ -31,23 +31,29 @@ export default function DisclaimerMessage({ message, urls = [] }: InternalDiscla
     );
 }
 
-export function LabelOnlyDisclaimerMessage({ message, urls }: InternalDisclaimerMsgObject) {
+export function LabelOnlyDisclaimerMessage({ message, urls }: Readonly<InternalDisclaimerMsgObject>) {
     const messageIsStr = typeof message === 'string';
     const validUrls = urls.every(url => typeof url === 'string' && isValidHttpUrl(url));
     if (!messageIsStr || !validUrls) return null;
 
-    return (
-        <Fragment>
-            {interpolateElement(
-                message,
-                urls.map(
-                    // for each URL in the URLs array, return a createLink function
-                    url =>
-                        function createLink(translation) {
-                            return <Link to={url}>{translation}</Link>;
-                        }
-                )
-            )}
-        </Fragment>
-    );
+    let content;
+    try {
+        content = interpolateElement(
+            message,
+            urls.map(
+                // for each URL in the URLs array, return a createLink function
+                url =>
+                    function createLink(translation) {
+                        return <Link to={url}>{translation}</Link>;
+                    }
+            )
+        );
+    } catch (e) {
+        // Fall back to raw message (i.e. the translation key) if interpolation fails
+        content = message;
+        // Report interpolation error to console
+        console.warn(e);
+    }
+
+    return <Fragment>{content}</Fragment>;
 }

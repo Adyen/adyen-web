@@ -1,23 +1,23 @@
 import Language from '../../../../../language/Language';
-import { BrandStorageObject, SecuredFields } from '../types';
-import { Placeholders } from '../../SFP/types';
+import { BrandStorageObject, SecuredFields, SFFieldType, StylesObject } from '../types';
+import { Placeholders, SingleBrandResetObject } from '../../SFP/types';
 import type { AbstractAnalyticsEvent } from '../../../../../core/Analytics/events/AbstractAnalyticsEvent';
+import { BinLookupResponse } from '../../../../Card/types';
 
 /**
  * Exposed functions that can be called on the CSF instance
  */
 export interface CSFReturnObject {
-    updateStyles: any;
-    setFocusOnFrame: any;
-    isValidated: any;
-    destroy: any;
-    brandsFromBinLookup: any;
-    hasUnsupportedCard: any;
-    addSecuredField: any;
-    removeSecuredField: any;
-    setKCPStatus: any;
-    sendValueToFrame?: any;
-    sfIsOptionalOrHidden: (f: string) => boolean;
+    updateStyles: (pStyleObject: StylesObject) => void;
+    setFocusOnFrame: (pFieldType: SFFieldType) => void;
+    isValidated: (pFieldType: SFFieldType, code: string) => void;
+    destroy: () => void;
+    brandsFromBinLookup: (binLookupResponse: BinLookupResponse, resetObj: SingleBrandResetObject) => void;
+    hasUnsupportedCard: (pFieldType: SFFieldType, code: string) => void;
+    addSecuredField: (pFieldType: SFFieldType) => void;
+    removeSecuredField: (pFieldType: SFFieldType) => void;
+    setKCPStatus: (isKCP: boolean) => void;
+    sfIsOptionalOrHidden: (fieldType: SFFieldType) => boolean;
 }
 
 /**

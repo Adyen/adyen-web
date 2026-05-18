@@ -1,5 +1,6 @@
-import classNames from 'classnames';
 import { ComponentChildren, h } from 'preact';
+import classNames from 'classnames';
+
 import './ExpandButton.scss';
 
 interface ExpandButton {
@@ -10,6 +11,7 @@ interface ExpandButton {
     showRadioButton?: boolean;
     classNameModifiers?: string[];
     standalone?: boolean;
+    className?: string;
 }
 
 function ExpandButton({
@@ -19,12 +21,19 @@ function ExpandButton({
     expandContentId,
     children,
     classNameModifiers = [],
-    standalone = false
+    standalone = false,
+    className
 }: Readonly<ExpandButton>) {
     // If we only have a single payment method we should use a div instead of toggable button
     if (standalone) {
         return (
-            <div className={classNames('adyen-checkout__payment-method__header__title', 'adyen-checkout__payment-method__header__title--standalone')}>
+            <div
+                className={classNames(
+                    'adyen-checkout__payment-method__header__title',
+                    'adyen-checkout__payment-method__header__title--standalone',
+                    className
+                )}
+            >
                 {children}
             </div>
         );
@@ -37,7 +46,8 @@ function ExpandButton({
         <button
             className={classNames(
                 'adyen-checkout__payment-method__header__title',
-                ...classNameModifiers.map(modifier => `adyen-checkout-expand-button--${modifier}`)
+                ...classNameModifiers.map(modifier => `adyen-checkout-expand-button--${modifier}`),
+                className
             )}
             id={buttonId}
             role={'radio'}

@@ -20,8 +20,6 @@ export * from './Giftcard/types';
 export * from './GooglePay/types';
 export * from './Iris/types';
 export * from './Klarna/types';
-export * from './Multibanco/types';
-export * from './Oxxo/types';
 export * from './PayPal/types';
 export * from './PayPalFastlane/types';
 export * from './Pix/types';

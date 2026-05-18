@@ -17,8 +17,9 @@ import { AwaitFinalState } from './components/AwaitFinalState';
 import { AwaitComponentProps } from './types';
 import { redirectToApp } from '../../../utils/urls';
 import './Await.scss';
+import { useAmount } from '../../../core/Context/AmountProvider';
 
-export function Await(props: AwaitComponentProps) {
+export function Await(props: Readonly<AwaitComponentProps>) {
     const { i18n, loadingContext } = useCoreContext();
 
     const { state: timerState, actions: timerActions } = usePaymentStatusTimer({
@@ -37,8 +38,7 @@ export function Await(props: AwaitComponentProps) {
 
     const { completed, expired, loading, percentage } = timerState;
     const { onTick, onTimeUp } = timerActions;
-
-    const { amount } = props;
+    const { amount } = useAmount();
 
     useEffect(() => {
         if (props.shouldRedirectAutomatically && props.url) {

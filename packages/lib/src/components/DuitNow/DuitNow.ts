@@ -3,7 +3,7 @@ import { delay, countdownTime } from './config';
 import { TxVariants } from '../tx-variants';
 
 class DuitNowElement extends QRLoaderContainer {
-    public static type = TxVariants.duitnow;
+    public static readonly type = TxVariants.duitnow;
 
     formatProps(props) {
         return {

@@ -13,7 +13,6 @@ const customRender = (ui, { clickToPayService = mock<IClickToPayService>(), conf
             <ClickToPayProvider
                 clickToPayService={clickToPayService}
                 isStandaloneComponent={true}
-                amount={{ value: 5000, currency: 'USD' }}
                 onSetStatus={jest.fn()}
                 configuration={configuration}
                 onError={jest.fn()}

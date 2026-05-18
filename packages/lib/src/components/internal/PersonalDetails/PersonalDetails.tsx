@@ -1,4 +1,4 @@
-import { h } from 'preact';
+import { GenericEventHandler, h } from 'preact';
 import { useEffect, useMemo, useRef } from 'preact/hooks';
 import Fieldset from '../FormFields/Fieldset';
 import Field from '../FormFields/Field';
@@ -45,7 +45,7 @@ export default function PersonalDetails(props: Readonly<PersonalDetailsProps>) {
     }, [props.setComponentRef]);
 
     const eventHandler =
-        (mode: HandleChangeForModeType): h.JSX.GenericEventHandler<EventTarget> =>
+        (mode: HandleChangeForModeType): GenericEventHandler<EventTarget> =>
         (e: Event): void => {
             const { name } = e.target as HTMLInputElement;
             const key = name.split(`${namePrefix}.`).pop();
@@ -80,7 +80,7 @@ export default function PersonalDetails(props: Readonly<PersonalDetailsProps>) {
                         onInput={eventHandler('input')}
                         onBlur={eventHandler('blur')}
                         placeholder={placeholders.firstName}
-                        spellCheck={false}
+                        spellcheck={false}
                         required={true}
                     />
                 </Field>
@@ -101,7 +101,7 @@ export default function PersonalDetails(props: Readonly<PersonalDetailsProps>) {
                         onInput={eventHandler('input')}
                         onBlur={eventHandler('blur')}
                         placeholder={placeholders.lastName}
-                        spellCheck={false}
+                        spellcheck={false}
                         required={true}
                     />
                 </Field>

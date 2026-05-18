@@ -1,5 +1,7 @@
 import makePayment from '../Services/sessions/make-payment';
 import submitDetails from '../Services/sessions/submit-details';
+import fetchDonationCampaigns from '../Services/sessions/fetch-donation-campaigns';
+import makeDonation from '../Services/sessions/make-donation';
 import setupSession from '../Services/sessions/setup-session';
 import checkBalance from '../Services/sessions/check-balance';
 import Storage from '../../utils/Storage';
@@ -9,6 +11,9 @@ import {
     CheckoutSession,
     CheckoutSessionBalanceResponse,
     CheckoutSessionDetailsResponse,
+    CheckoutSessionDonationCampaignsResponse,
+    CheckoutSessionDonationsRequestData,
+    CheckoutSessionDonationsResponse,
     CheckoutSessionOrdersResponse,
     CheckoutSessionPaymentResponse,
     CheckoutSessionSetupResponse,
@@ -21,11 +26,13 @@ import type { AdditionalDetailsData } from '../types';
 import collectBrowserInfo from '../../utils/browserInfo';
 
 class Session {
-    private readonly session: CheckoutSession;
     private readonly storage: Storage<CheckoutSession>;
+
+    public readonly session: CheckoutSession;
     public readonly clientKey: string;
     public readonly loadingContext: string;
     public configuration: SessionConfiguration;
+    private _sessionsDonationInitiated: boolean;
 
     constructor(rawSession: Partial<CheckoutSession>, clientKey: string, loadingContext: string) {
         const session = sanitizeSession(rawSession) as CheckoutSession;
@@ -37,6 +44,8 @@ class Session {
         this.clientKey = clientKey;
         this.loadingContext = loadingContext;
         this.session = session;
+
+        this._sessionsDonationInitiated = false;
 
         if (!this.session.sessionData) {
             this.session = this.getStoredSession();
@@ -55,6 +64,14 @@ class Session {
 
     get data() {
         return this.session.sessionData;
+    }
+
+    set sessionsDonationInitiated(donationInitiated: boolean) {
+        this._sessionsDonationInitiated = donationInitiated;
+    }
+
+    get sessionsDonationInitiated() {
+        return this._sessionsDonationInitiated;
     }
 
     /**
@@ -101,6 +118,32 @@ class Session {
      */
     submitDetails(data: AdditionalDetailsData['data']): Promise<CheckoutSessionDetailsResponse> {
         return submitDetails(data, this).then(response => {
+            if (response.sessionData) {
+                this.updateSessionData(response.sessionData);
+            }
+
+            return response;
+        });
+    }
+
+    /**
+     * Call donationCampaigns endpoint
+     */
+    fetchDonationCampaigns(): Promise<CheckoutSessionDonationCampaignsResponse> {
+        return fetchDonationCampaigns(this).then(response => {
+            if (response.sessionData) {
+                this.updateSessionData(response.sessionData);
+            }
+
+            return response;
+        });
+    }
+
+    /**
+     * Call donations endpoint
+     */
+    makeDonation(data: CheckoutSessionDonationsRequestData): Promise<CheckoutSessionDonationsResponse> {
+        return makeDonation(data, this).then(response => {
             if (response.sessionData) {
                 this.updateSessionData(response.sessionData);
             }

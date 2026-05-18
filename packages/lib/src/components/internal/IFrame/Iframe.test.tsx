@@ -1,28 +1,29 @@
-import { mount } from 'enzyme';
 import { h } from 'preact';
+import { render, screen } from '@testing-library/preact';
 
-const createWrapper = (props = {}) =>
-    mount(<iframe title="iframe-title" name={'test'} width={'200'} height={'300'} src={'https://www.google.com'} {...props} />);
+const renderIframe = (props = {}) =>
+    render(<iframe title="iframe-title" name={'test'} width={'200'} height={'300'} src={'https://www.google.com'} {...props} />);
 
 describe('iframe', () => {
-    test('Renders an iframe', () => {
-        const wrapper = createWrapper();
-        expect(wrapper.find('iframe')).toHaveLength(1);
+    test('should render an iframe', () => {
+        renderIframe();
+        expect(screen.getByTitle('iframe-title')).toBeInTheDocument();
     });
 
-    test('Has the right source', () => {
-        const wrapper = createWrapper();
-        expect(wrapper.getDOMNode().attributes.getNamedItem('src').value).toEqual('https://www.google.com');
+    test('should have the right source', () => {
+        renderIframe();
+        expect(screen.getByTitle('iframe-title')).toHaveAttribute('src', 'https://www.google.com');
     });
 
-    test('Renders the allow property', () => {
-        const wrapper = createWrapper({ allow: 'test' });
-        expect(wrapper.getDOMNode().attributes.getNamedItem('allow').value).toEqual('test');
+    test('should render the allow property', () => {
+        renderIframe({ allow: 'test' });
+        expect(screen.getByTitle('iframe-title')).toHaveAttribute('allow', 'test');
     });
 
-    test('Has the right width and height properties', () => {
-        const wrapper = createWrapper({ allow: 'test' });
-        expect(wrapper.getDOMNode().attributes.getNamedItem('height').value).toEqual('300');
-        expect(wrapper.getDOMNode().attributes.getNamedItem('width').value).toEqual('200');
+    test('should have the right width and height properties', () => {
+        renderIframe({ allow: 'test' });
+        const iframe = screen.getByTitle('iframe-title');
+        expect(iframe).toHaveAttribute('height', '300');
+        expect(iframe).toHaveAttribute('width', '200');
     });
 });

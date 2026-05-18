@@ -7,18 +7,12 @@ import ThreeDS2DeviceFingerprint from '../ThreeDS2/ThreeDS2DeviceFingerprint';
 import ThreeDS2Challenge from '../ThreeDS2/ThreeDS2Challenge';
 import Dropin from './Dropin';
 import Fastlane from '../PayPalFastlane';
-import enUS from '../../../../server/translations/en-US.json';
-import getTranslations from '../../core/Services/get-translations';
 import { SRPanel } from '../../core/Errors/SRPanel';
 
 import type { CoreConfiguration, ICore } from '../../core/types';
 import type { PaymentActionsType } from '../../types/global-types';
 import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 import { InfoEventType } from '../../core/Analytics/events/AnalyticsInfoEvent';
-
-jest.mock('../../core/Services/get-translations');
-const mockedGetTranslations = getTranslations as jest.Mock;
-mockedGetTranslations.mockResolvedValue(enUS);
 
 async function createAdyenCheckout(configuration) {
     return await AdyenCheckout(configuration);
@@ -438,6 +432,32 @@ describe('Dropin', () => {
             fireEvent.keyPress(alipayHeader, { key: 'Enter', code: 'Enter', charCode: 13 });
 
             expect(onEnterKeyPressedMock).toHaveBeenCalledTimes(1);
+        });
+    });
+
+    describe('updateAmount()', () => {
+        test('should update amount and propagate it to all payment method elements', async () => {
+            const initialAmount = { value: 2999, currency: 'USD ' };
+            const config = getAdyenCheckoutConfiguration({ amount: initialAmount });
+
+            const checkout = await createAdyenCheckout(config);
+            const dropin = new Dropin(checkout);
+            render(dropin.render());
+
+            await waitFor(() => expect(screen.getByRole('button', { name: 'Continue to AliPay' })).toBeVisible());
+
+            expect(dropin.props.amount).toEqual(initialAmount);
+            dropin.paymentMethodElements.forEach(element => {
+                expect(element.props.amount).toEqual(initialAmount);
+            });
+
+            const newAmount = { value: 5000, currency: 'USD' };
+            dropin.updateAmount(newAmount);
+
+            expect(dropin.props.amount).toEqual(newAmount);
+            dropin.paymentMethodElements.forEach(element => {
+                expect(element.props.amount).toEqual(newAmount);
+            });
         });
     });
 });

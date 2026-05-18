@@ -18,7 +18,7 @@ describe('UPIMandate', () => {
     test('should render the correct text for a mandate with the "exact" rule"', () => {
         const props: UPIMandateProps = {
             amount: { value: 10000, currency: 'INR' },
-            mandate: { amount: '10000', frequency: 'monthly', amountRule: 'exact' }
+            mandate: { amount: '10000', frequency: 'monthly', amountRule: 'exact', endsAt: '2030-07-21' }
         };
         customRender(<UPIMandate {...props} />);
         const status = screen.getByRole('status');
@@ -28,7 +28,7 @@ describe('UPIMandate', () => {
     test('should render the correct text for a mandate with the "max" rule and a transaction amount', () => {
         const props: UPIMandateProps = {
             amount: { value: 10000, currency: 'INR' },
-            mandate: { amount: '20000', frequency: 'monthly', amountRule: 'max' }
+            mandate: { amount: '20000', frequency: 'monthly', amountRule: 'max', endsAt: '2030-07-21' }
         };
         customRender(<UPIMandate {...props} />);
         const status = screen.getByRole('status');
@@ -41,7 +41,7 @@ describe('UPIMandate', () => {
         const props: UPIMandateProps = {
             // @ts-ignore not provide the value for the testing purpose
             amount: { currency: 'INR' },
-            mandate: { amount: '20000', frequency: 'monthly', amountRule: 'max' }
+            mandate: { amount: '20000', frequency: 'monthly', amountRule: 'max', endsAt: '2030-07-21' }
         };
         customRender(<UPIMandate {...props} />);
         const status = screen.getByRole('status');
@@ -51,7 +51,7 @@ describe('UPIMandate', () => {
     test('should render the correct text for an "adhoc" frequency mandate', () => {
         const props: UPIMandateProps = {
             amount: { value: 10000, currency: 'INR' },
-            mandate: { amount: '10000', frequency: 'adhoc', amountRule: 'exact' }
+            mandate: { amount: '10000', frequency: 'adhoc', amountRule: 'exact', endsAt: '2030-07-21' }
         };
         customRender(<UPIMandate {...props} />);
         const status = screen.getByRole('status');
@@ -64,7 +64,7 @@ describe('UPIMandate', () => {
         const props: UPIMandateProps = {
             // @ts-ignore not provide the currency for the testing purpose
             amount: { value: 10000 },
-            mandate: { amount: '10000', frequency: 'monthly', amountRule: 'exact' }
+            mandate: { amount: '10000', frequency: 'monthly', amountRule: 'exact', endsAt: '2030-07-21' }
         };
         customRender(<UPIMandate {...props} />);
 

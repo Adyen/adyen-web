@@ -9,7 +9,9 @@ const fastlaneMock = mockDeep<FastlaneWindowInstance>();
 let fastlaneConstructorMock = null;
 
 const mockScriptLoaded = jest.fn().mockImplementation(() => {
-    window.paypal = {};
+    window.paypal = {
+        version: '1.0.0'
+    };
     window.paypal.Fastlane = fastlaneConstructorMock;
     return Promise.resolve();
 });

@@ -2,7 +2,7 @@ import IssuerListContainer from '../helpers/IssuerListContainer/IssuerListContai
 import { TxVariants } from '../tx-variants';
 
 class BillDeskOnlineElement extends IssuerListContainer {
-    public static type = TxVariants.billdesk_online;
+    public static readonly type = TxVariants.billdesk_online;
 
     formatProps(props) {
         return {

@@ -11,7 +11,7 @@ export interface IPasskeySdkLoader {
 }
 
 class PasskeySdkLoader implements IPasskeySdkLoader {
-    private static readonly PASSKEY_SDK_URL = 'js/adyenpasskey/1.1.0/adyen-passkey.js';
+    public static readonly PASSKEY_SDK_URL = 'js/adyenpasskey/1.2.0/adyen-passkey.js';
     private AdyenPasskey: IAdyenPasskey;
 
     private readonly analytics: IAnalytics;

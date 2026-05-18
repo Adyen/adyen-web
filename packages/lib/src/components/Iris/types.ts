@@ -21,3 +21,15 @@ export enum IrisMode {
     QR_CODE = 'qrCode',
     BANK_LIST = 'bankList'
 }
+
+/**
+ * Iris component state
+ * @internal
+ */
+export type IrisState = {
+    isValid: boolean;
+    mode: IrisMode;
+    data: {
+        issuer?: string;
+    };
+};

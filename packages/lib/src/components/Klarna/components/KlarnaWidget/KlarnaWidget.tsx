@@ -6,7 +6,7 @@ import type { KlarnaWidgetAuthorizeResponse, KlarnaWidgetProps } from '../../typ
 import './KlarnaWidget.scss';
 import useAnalytics from '../../../../core/Analytics/useAnalytics';
 
-export function KlarnaWidget({ sdkData, paymentMethodType, widgetInitializationTime, payButton, ...props }: KlarnaWidgetProps) {
+export function KlarnaWidget({ sdkData, paymentMethodType, widgetInitializationTime, payButton, ...props }: Readonly<KlarnaWidgetProps>) {
     const klarnaWidgetRef = useRef(null);
     const [status, setStatus] = useState('ready');
     const { analytics } = useAnalytics();

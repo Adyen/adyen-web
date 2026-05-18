@@ -6,8 +6,8 @@ import { TxVariants } from '../tx-variants';
 import { VoucherConfiguration } from '../internal/Voucher/types';
 
 export class DokuElement extends UIElement<VoucherConfiguration> {
-    public static type = TxVariants.doku;
-    public static txVariants = [
+    public static readonly type = TxVariants.doku;
+    public static readonly txVariants = [
         TxVariants.doku,
         TxVariants.doku_alfamart,
         TxVariants.doku_permata_lite_atm,
@@ -41,13 +41,7 @@ export class DokuElement extends UIElement<VoucherConfiguration> {
 
     protected override componentToRender(): h.JSX.Element {
         return this.props.reference ? (
-            <DokuVoucherResult
-                ref={ref => {
-                    this.componentRef = ref;
-                }}
-                {...this.props}
-                onActionHandled={this.onActionHandled}
-            />
+            <DokuVoucherResult {...this.props} onActionHandled={this.onActionHandled} />
         ) : (
             <DokuInput
                 setComponentRef={this.setComponentRef}

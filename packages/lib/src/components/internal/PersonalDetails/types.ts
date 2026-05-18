@@ -1,7 +1,8 @@
 import { h } from 'preact';
 import { FieldsetVisibility, PersonalDetailsSchema } from '../../../types/global-types';
 import { ValidatorRules } from '../../../utils/Validator/types';
-import { ComponentMethodsRef, PayButtonFunctionProps } from '../../types';
+import { ComponentMethodsRef } from '../../types';
+import { PayButtonProps } from '../PayButton/PayButton';
 
 type PersonalDetailsPlaceholders = PersonalDetailsSchema;
 
@@ -14,10 +15,9 @@ export interface PersonalDetailsProps {
     onChange: (newState: object) => void;
     placeholders?: PersonalDetailsPlaceholders;
     readonly?: boolean;
-    ref?: any;
     validationRules?: ValidatorRules;
     setComponentRef?: (ref: ComponentMethodsRef) => void;
-    payButton?: (options: PayButtonFunctionProps) => h.JSX.Element;
+    payButton?: (options: PayButtonProps) => h.JSX.Element;
 }
 
 export interface PersonalDetailsStateError {

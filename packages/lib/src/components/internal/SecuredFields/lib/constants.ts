@@ -15,7 +15,7 @@ export const ENCRYPTED_SECURITY_CODE_4_DIGITS = 'encryptedSecurityCode4digits';
 
 export const GIFT_CARD = 'giftcard';
 
-export const SF_VERSION = '6.0.0';
+export const SF_VERSION = '6.2.0';
 
 export const DEFAULT_CARD_GROUP_TYPES = ['amex', 'mc', 'visa'];
 
@@ -29,8 +29,7 @@ export const CREDIT_CARD_SF_FIELDS = [
     ENCRYPTED_EXPIRY_YEAR,
     ENCRYPTED_SECURITY_CODE,
     ENCRYPTED_PWD_FIELD
-    // ENCRYPTED_PIN_FIELD,// probably redundant - it was an alt. name for KCP's encryptedPassword. But maybe has a role to play if we ever encrypt ibans.
-];
+] as const;
 
 /** A list of all the data-cse attributes that relate to securedFields (as found in card, giftcard) */
 export const ALL_SECURED_FIELDS = CREDIT_CARD_SF_FIELDS;
@@ -57,7 +56,7 @@ export const DATA_UID = 'data-uid';
 
 export const BRAND_ICON_UI_EXCLUSION_LIST = ['accel', 'pulse', 'star', 'nyce'];
 
-export const BRAND_READABLE_NAME_MAP = {
+export const BRAND_READABLE_NAME_MAP: Record<string, string> = {
     visa: 'VISA',
     mc: 'MasterCard',
     amex: 'American Express',
@@ -85,3 +84,6 @@ export const SF_FIELDS_MAP = {
 
 /** time within which we expect to receive a "configured" message from a securedField iframe, once it has registered as having loaded */
 export const SF_CONFIG_TIMEOUT = 6000;
+
+export const BEST_GUESS_MODE = 'best-guess';
+export const BIN_LOOKUP_MODE = 'bin-lookup';

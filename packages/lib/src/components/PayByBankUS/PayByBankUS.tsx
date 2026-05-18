@@ -2,12 +2,14 @@ import { Fragment, h } from 'preact';
 import RedirectElement from '../Redirect';
 import RedirectButton from '../internal/RedirectButton';
 import { TxVariants } from '../tx-variants';
-import './PayByBankUS.scss';
 import getIssuerImageUrl from '../../utils/get-issuer-image';
-import PayButton, { payAmountLabel } from '../internal/PayButton';
+import PayButton from '../internal/PayButton';
+import { payAmountLabel } from '../internal/PayButton/utils';
+import { PaymentMethodBrand } from '../../types/global-types';
 
+import './PayByBankUS.scss';
 export default class PayByBankUS extends RedirectElement {
-    public static type = TxVariants.paybybank_AIS_DD;
+    public static override readonly type: TxVariants = TxVariants.paybybank_AIS_DD;
 
     protected formatProps(props) {
         return {
@@ -44,7 +46,7 @@ export default class PayByBankUS extends RedirectElement {
     /*
     Hardcode US brands 
     */
-    get brands(): { icon: string; name: string }[] {
+    get brands(): PaymentMethodBrand[] {
         const getImage = props => this.resources.getImage(props);
         // paybybank_AIS_DD / tx_variant not used here since images are kept in paybybank subfolder
         const getIssuerIcon = getIssuerImageUrl({}, 'paybybank', getImage);
@@ -64,7 +66,6 @@ export default class PayByBankUS extends RedirectElement {
                 <PayButton
                     {...this.props}
                     classNameModifiers={['standalone']}
-                    amount={this.props.amount}
                     label={payAmountLabel(this.props.i18n, this.props.amount)}
                     onClick={this.submit}
                 />

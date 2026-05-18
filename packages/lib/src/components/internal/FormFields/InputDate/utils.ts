@@ -44,7 +44,7 @@ const formatDate = (value: string): string => {
  * // '1990-11-22'
  */
 const unformatDate = (value = ''): string => {
-    if (value.indexOf('/') === -1) return value;
+    if (!value.includes('/')) return value;
     const [day = '', month = '', year = ''] = value.split('/');
     if (!day || !month || !year) return null;
     return `${year}-${month}-${day}`;

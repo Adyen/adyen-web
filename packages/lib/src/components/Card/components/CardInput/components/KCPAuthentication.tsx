@@ -9,7 +9,7 @@ import InputTelephone from '../../../../internal/FormFields/InputTelephone';
 import { alternativeLabelContent } from './FieldLabelAlternative';
 import { CREDITCARD_TAX_NUMBER_INVALID } from '../../../../../core/Errors/constants';
 
-export default function KCPAuthentication(props: KCPProps) {
+export default function KCPAuthentication(props: Readonly<KCPProps>) {
     const { i18n } = useCoreContext();
 
     const taxNumberLabel = useMemo((): string => {

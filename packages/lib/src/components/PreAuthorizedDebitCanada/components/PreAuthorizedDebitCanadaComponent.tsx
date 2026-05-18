@@ -16,6 +16,7 @@ import type { ComponentMethodsRef } from '../../internal/UIElement/types';
 import type { PreAuthorizedDebitCanadaPlaceholders } from '../types';
 
 import './PreAuthorizedDebitCanada.scss';
+import { ValidationRuleResult } from '../../../utils/Validator/ValidationRuleResult';
 
 interface PreAuthorizedDebitCanadaForm {
     ownerName: string;
@@ -34,11 +35,11 @@ interface PreAuthorizedDebitCanadaComponentProps {
     }: {
         data: PreAuthorizedDebitCanadaForm;
         valid: { [key: string]: boolean };
-        errors: { [key: string]: any };
+        errors: { [key: string]: ValidationRuleResult };
         isValid: boolean;
         storePaymentMethod: boolean;
     }): void;
-    payButton: (props: Partial<PayButtonProps>) => h.JSX.Element;
+    payButton: (props: PayButtonProps) => h.JSX.Element;
     setComponentRef: (ref: ComponentMethodsRef) => void;
     showPayButton: boolean;
     enableStoreDetails: boolean;

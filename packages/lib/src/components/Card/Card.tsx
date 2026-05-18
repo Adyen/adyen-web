@@ -4,25 +4,25 @@ import collectBrowserInfo from '../../utils/browserInfo';
 import { BinLookupResponse, CardElementData, CardConfiguration } from './types';
 import triggerBinLookUp from '../internal/SecuredFields/binLookup/triggerBinLookUp';
 import { CardBinLookupData, CardConfigSuccessData, CardFocusData } from '../internal/SecuredFields/lib/types';
-import { fieldTypeToSnakeCase } from '../internal/SecuredFields/utils';
+import { fieldTypeToSnakeCase, isSecuredField } from '../internal/SecuredFields/utils';
 import { reject } from '../../utils/commonUtils';
-import { hasValidInstallmentsObject } from './components/CardInput/utils';
+import { shouldIncludeInstallmentsInPaymentData } from './components/CardInput/utils';
 import createClickToPayService from '../internal/ClickToPay/services/create-clicktopay-service';
 import { ClickToPayCheckoutPayload, IClickToPayService } from '../internal/ClickToPay/services/types';
 import ClickToPayWrapper from './components/ClickToPayWrapper';
-import { ComponentFocusObject } from '../../types/global-types';
+import { ComponentFocusObject, PaymentMethodBrand } from '../../types/global-types';
 import { TxVariants } from '../tx-variants';
-import type { PayButtonFunctionProps, UIElementStatus } from '../internal/UIElement/types';
+import type { UIElementStatus } from '../internal/UIElement/types';
 import UIElement from '../internal/UIElement';
 import PayButton from '../internal/PayButton';
 import type { ICore } from '../../core/types';
-import { ALL_SECURED_FIELDS } from '../internal/SecuredFields/lib/constants';
 import AdyenCheckoutError, { IMPLEMENTATION_ERROR } from '../../core/Errors/AdyenCheckoutError';
 import CardInputDefaultProps from './components/CardInput/defaultProps';
-import { AnalyticsInfoEvent, InfoEventType } from '../../core/Analytics/events/AnalyticsInfoEvent';
+import { PayButtonProps } from '../internal/PayButton/PayButton';
+import { AnalyticsInfoEvent, InfoEventType, UiTarget } from '../../core/Analytics/events/AnalyticsInfoEvent';
 
 export class CardElement extends UIElement<CardConfiguration> {
-    public static type = TxVariants.scheme;
+    public static readonly type: TxVariants = TxVariants.scheme;
 
     private readonly clickToPayService: IClickToPayService | null;
 
@@ -46,7 +46,7 @@ export class CardElement extends UIElement<CardConfiguration> {
         }
     }
 
-    protected static defaultProps = {
+    protected static readonly defaultProps = {
         showFormInstruction: true,
         _disableClickToPay: false,
         doBinLookup: true,
@@ -67,6 +67,16 @@ export class CardElement extends UIElement<CardConfiguration> {
     private setClickToPayRef = ref => {
         this.clickToPayRef = ref;
     };
+
+    // This is the most self contained way of handling funding source matching
+    // Alternatives would be to override getPaymentMethodConfigFromResponse and change it's signature
+    protected override getPaymentMethodConfigFromResponse(componentProps: CardConfiguration) {
+        if (componentProps?.fundingSource) {
+            return this.core.paymentMethodsResponse?.findByFundingSource(componentProps.type, componentProps.fundingSource);
+        }
+
+        return super.getPaymentMethodConfigFromResponse(componentProps);
+    }
 
     formatProps(props: CardConfiguration): CardConfiguration {
         // The value from a session should be used, before falling back to the merchant configuration
@@ -154,7 +164,7 @@ export class CardElement extends UIElement<CardConfiguration> {
             ...(this.state.billingAddress && { billingAddress: this.state.billingAddress }),
             ...(this.state.socialSecurityNumber && { socialSecurityNumber: this.state.socialSecurityNumber }),
             ...this.storePaymentMethodPayload,
-            ...(hasValidInstallmentsObject(this.state.installments) && { installments: this.state.installments }),
+            ...(shouldIncludeInstallmentsInPaymentData(this.state.installments) && { installments: this.state.installments }),
             browserInfo: this.browserInfo,
             origin: !!window && window.location.origin
         };
@@ -224,11 +234,15 @@ export class CardElement extends UIElement<CardConfiguration> {
     };
 
     private onFocus = (obj: ComponentFocusObject) => {
-        const event = new AnalyticsInfoEvent({ component: this.type, type: InfoEventType.focus, target: fieldTypeToSnakeCase(obj.fieldType) });
+        const event = new AnalyticsInfoEvent({
+            component: this.type,
+            type: InfoEventType.focus,
+            target: fieldTypeToSnakeCase(obj.fieldType) as UiTarget
+        });
         this.submitAnalytics(event);
 
         // Call merchant defined callback
-        if (ALL_SECURED_FIELDS.includes(obj.fieldType)) {
+        if (isSecuredField(obj.fieldType)) {
             this.props.onFocus?.(obj.event as CardFocusData);
         } else {
             this.props.onFocus?.(obj);
@@ -236,11 +250,15 @@ export class CardElement extends UIElement<CardConfiguration> {
     };
 
     private onBlur = (obj: ComponentFocusObject) => {
-        const event = new AnalyticsInfoEvent({ component: this.type, type: InfoEventType.unfocus, target: fieldTypeToSnakeCase(obj.fieldType) });
+        const event = new AnalyticsInfoEvent({
+            component: this.type,
+            type: InfoEventType.unfocus,
+            target: fieldTypeToSnakeCase(obj.fieldType) as UiTarget
+        });
         this.submitAnalytics(event);
 
         // Call merchant defined callback
-        if (ALL_SECURED_FIELDS.includes(obj.fieldType)) {
+        if (isSecuredField(obj.fieldType)) {
             this.props.onBlur?.(obj.event as CardFocusData);
         } else {
             this.props.onBlur?.(obj);
@@ -281,11 +299,11 @@ export class CardElement extends UIElement<CardConfiguration> {
         return this.props.icon ?? this.resources.getImage()(this.props.brand);
     }
 
-    get brands(): { icon: any; name: string }[] {
+    get brands(): PaymentMethodBrand[] {
         const { brands, brandsConfiguration } = this.props;
         if (brands) {
             return brands.map(brand => {
-                const brandIcon = brandsConfiguration[brand]?.icon ?? this.props.modules.resources.getImage()(brand);
+                const brandIcon = brandsConfiguration?.[brand]?.icon ?? this.props.modules.resources.getImage()(brand);
                 return { icon: brandIcon, name: brand };
             });
         }
@@ -315,18 +333,10 @@ export class CardElement extends UIElement<CardConfiguration> {
         return collectBrowserInfo();
     }
 
-    protected override payButton = (props: PayButtonFunctionProps) => {
+    protected override payButton = (props: PayButtonProps): h.JSX.Element => {
         const isZeroAuth = this.props.amount?.value === 0;
         const isStoredCard = this.props.storedPaymentMethodId?.length > 0;
-        return (
-            <PayButton
-                {...props}
-                amount={this.props.amount}
-                secondaryAmount={this.props.secondaryAmount}
-                label={isZeroAuth && !isStoredCard ? this.props.i18n.get('payButton.saveDetails') : ''}
-                onClick={this.submit}
-            />
-        );
+        return <PayButton {...props} label={isZeroAuth && !isStoredCard ? this.props.i18n.get('payButton.saveDetails') : ''} onClick={this.submit} />;
     };
 
     private renderCardInput(isCardPrimaryInput = true): h.JSX.Element {
@@ -356,7 +366,6 @@ export class CardElement extends UIElement<CardConfiguration> {
     protected override componentToRender(): h.JSX.Element {
         return (
             <ClickToPayWrapper
-                amount={this.props.amount}
                 configuration={this.props.clickToPayConfiguration}
                 clickToPayService={this.clickToPayService}
                 isStandaloneComponent={false}

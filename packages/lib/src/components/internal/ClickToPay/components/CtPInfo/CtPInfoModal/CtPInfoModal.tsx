@@ -21,7 +21,7 @@ type CtPInfoModalProps = {
     focusAfterClose: HTMLElement;
 };
 
-const CtPInfoModal = ({ isOpen, onClose, focusAfterClose }: CtPInfoModalProps) => {
+const CtPInfoModal = ({ isOpen, onClose, focusAfterClose }: Readonly<CtPInfoModalProps>) => {
     const focusFirstElement = useRef<HTMLParagraphElement>();
     const { i18n } = useCoreContext();
     const getImage = useImage();
@@ -42,16 +42,16 @@ const CtPInfoModal = ({ isOpen, onClose, focusAfterClose }: CtPInfoModalProps) =
             {({ onCloseModal }) => (
                 <Fragment>
                     <Img className="adyen-checkout__ctp-modal-header-image" src={getImage({ imageFolder: 'components/' })('ctp_landscape')} alt="" />
-                    <h1 id={labelledBy} className="adyen-checkout__ctp-modal-title">
+                    <h2 id={labelledBy} className="adyen-checkout__ctp-modal-title">
                         {i18n.get('ctp.infoPopup.title')}
-                    </h1>
+                    </h2>
 
                     <div id={describedBy}>
                         <p tabIndex={-1} ref={focusFirstElement} className="adyen-checkout__ctp-modal-text">
                             {i18n.get('ctp.infoPopup.subtitle')}
                         </p>
 
-                        <ul className="adyen-checkout__ctp-modal-text adyen-checkout__ctp-modal-benefits" type="disc">
+                        <ul className="adyen-checkout__ctp-modal-text adyen-checkout__ctp-modal-benefits">
                             <li>{i18n.get('ctp.infoPopup.benefit1')}</li>
                             <li>{i18n.get('ctp.infoPopup.benefit2')}</li>
                             <li>{i18n.get('ctp.infoPopup.benefit3')}</li>

@@ -11,7 +11,7 @@ interface IssuerButtonGroupProps {
     onChange: (event: UIEvent) => void;
 }
 
-const IssuerButtonGroup = ({ items = [], selectedIssuerId, onChange }: IssuerButtonGroupProps) => {
+const IssuerButtonGroup = ({ items = [], selectedIssuerId, onChange }: Readonly<IssuerButtonGroupProps>) => {
     const { i18n } = useCoreContext();
 
     const handleClick = useCallback(
@@ -24,11 +24,11 @@ const IssuerButtonGroup = ({ items = [], selectedIssuerId, onChange }: IssuerBut
     );
 
     return (
-        <div className="adyen-checkout__issuer-button-group" role="group" aria-label={i18n.get('issuerList.selectField.contextualText')}>
+        <fieldset className="adyen-checkout__issuer-button-group" aria-label={i18n.get('issuerList.selectField.contextualText')}>
             {items.map(issuer => (
                 <IssuerButton key={issuer.id} {...issuer} selected={selectedIssuerId === issuer.id} onClick={handleClick} />
             ))}
-        </div>
+        </fieldset>
     );
 };
 

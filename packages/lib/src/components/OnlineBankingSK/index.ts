@@ -5,9 +5,9 @@ const TERMS_AND_CONDITIONS = 'https://static.payu.com/sites/terms/files/payu_pri
 const ICON = 'bankTransfer_IBAN';
 
 class OnlineBankingSKElement extends IssuerListContainer {
-    public static type = TxVariants.onlineBanking_SK;
+    public static readonly type = TxVariants.onlineBanking_SK;
 
-    private static termsAndConditions = {
+    private static readonly termsAndConditions = {
         translationKey: 'onlineBanking.termsAndConditions',
         urls: [TERMS_AND_CONDITIONS]
     };

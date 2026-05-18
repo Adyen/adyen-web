@@ -7,7 +7,7 @@ import FormInstruction from '../internal/FormInstruction';
 import type { ICore } from '../../core/types';
 
 class SepaElement extends UIElement<SepaConfiguration> {
-    public static type = TxVariants.sepadirectdebit;
+    public static readonly type = TxVariants.sepadirectdebit;
 
     constructor(checkout: ICore, props?: SepaConfiguration) {
         super(checkout, props);

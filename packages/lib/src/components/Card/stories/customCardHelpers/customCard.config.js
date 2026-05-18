@@ -155,7 +155,8 @@ export function onBrand(pCallbackObj) {
 }
 
 function dualBrandListener(e) {
-    globalThis.customCard.dualBrandingChangeHandler(e);
+    const brandValue = e.currentTarget.getAttribute('data-value');
+    globalThis.customCard.dualBrandingChangeHandler(brandValue);
 }
 
 function resetDualBranding(rootNode) {

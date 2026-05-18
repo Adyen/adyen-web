@@ -22,7 +22,7 @@ const iframeName = 'threeDSMethodIframe';
 class DoFingerprint3DS2 extends Component<DoFingerprint3DS2Props, DoFingerprint3DS2State> {
     private processMessageHandler;
     private fingerPrintPromise: any;
-    public static defaultProps = {
+    public static readonly defaultProps = {
         showSpinner: true
     };
 

@@ -11,11 +11,9 @@ test.describe('Bcmc in dropin', () => {
         const bcmc = new BCMC(page, paymentMethodDetailsLocator);
 
         await bcmc.isComponentVisible();
-        await bcmc.waitForVisibleDualBrandIcons(1);
 
-        const [firstBrand, secondBrand] = await bcmc.dualBrandIcons;
         // Only a single brand in the PAN input
-        expect(firstBrand).toHaveAttribute('alt', /bancontact/i);
+        await expect(bcmc.brandingIcon).toHaveAttribute('alt', /bancontact/i);
 
         // Hidden Cvc
         await expect(bcmc.cvcField).toBeHidden();

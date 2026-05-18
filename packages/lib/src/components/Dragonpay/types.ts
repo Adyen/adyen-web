@@ -1,6 +1,8 @@
 import { ActionHandledReturnObject, PaymentAmount } from '../../types/global-types';
 import Language from '../../language/Language';
-import { UIElementProps } from '../internal/UIElement/types';
+import { ComponentMethodsRef, UIElementProps } from '../internal/UIElement/types';
+import { h } from 'preact';
+import { PayButtonProps } from '../internal/PayButton/PayButton';
 
 export interface DragonpayInputIssuerItem {
     id: string;
@@ -13,7 +15,7 @@ export interface DragonpayConfiguraton extends UIElementProps {
     issuers?: DragonpayInputIssuerItem[];
 
     /** @deprecated use issuers */
-    details?: any;
+    details?: { key: string; items: DragonpayInputIssuerItem[] }[];
 
     loadingContext?: string;
     reference?: string;
@@ -33,8 +35,8 @@ export interface DragonpayInputProps {
     onChange: (state) => void;
     onSubmit?: (state, component) => void;
     showPayButton: boolean;
-    payButton: any;
-    ref?: any;
+    payButton: (props: PayButtonProps) => h.JSX.Element;
+    setComponentRef: (ref: ComponentMethodsRef) => void;
 }
 
 export interface DragonpayVoucherResultProps {
@@ -47,6 +49,5 @@ export interface DragonpayVoucherResultProps {
     alternativeReference?: string;
     icon?: string;
     issuer?: string;
-    ref?: any;
     onActionHandled?: (rtnObj: ActionHandledReturnObject) => void;
 }

@@ -3,7 +3,7 @@ import { delay, countdownTime } from './config';
 import { TxVariants } from '../tx-variants';
 
 class PromptPayElement extends QRLoaderContainer {
-    public static type = TxVariants.promptpay;
+    public static readonly type = TxVariants.promptpay;
 
     formatProps(props) {
         return {

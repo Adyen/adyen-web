@@ -10,7 +10,7 @@ interface ThreeDS2FormProps {
     onFormSubmit: (msg: string) => void;
 }
 
-export default class ThreeDS2Form extends Component<ThreeDS2FormProps> {
+export default class ThreeDS2Form extends Component<Readonly<ThreeDS2FormProps>> {
     protected formEl;
 
     componentDidMount() {

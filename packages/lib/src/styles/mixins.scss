@@ -38,10 +38,23 @@
     @include b-outer-ring-generator(variable-generator.token(focus-ring-color));
 }
 
+$adyen-checkout-media-query-xs-min: 375px;
 $adyen-checkout-media-query-s-min: 480px;
 $adyen-checkout-media-query-m-min: 768px;
 $adyen-checkout-media-query-l-min: 1024px;
 $adyen-checkout-media-query-xl-min: 1280px;
+
+@mixin media-xs-and-down {
+    @media (max-width: #{$adyen-checkout-media-query-xs-min}) {
+        @content;
+    }
+}
+
+@mixin media-xs-and-up {
+    @media (min-width: #{$adyen-checkout-media-query-xs-min}) {
+        @content;
+    }
+}
 
 @mixin media-s-and-down {
     @media (max-width: #{$adyen-checkout-media-query-s-min}) {
@@ -160,7 +173,10 @@ $adyen-checkout-media-query-xl-min: 1280px;
     font-weight: variable-generator.token(text-caption-stronger-font-weight);
 }
 
-@mixin set-spinner-color($background-color: variable-generator.token(color-background-inverse-primary), $color: variable-generator.token(color-outline-primary-active)) {
+@mixin set-spinner-color(
+    $background-color: variable-generator.token(color-background-inverse-primary),
+    $color: variable-generator.token(color-outline-primary-active)
+) {
     &::before {
         border-color: $background-color;
         border-top-color: transparent;

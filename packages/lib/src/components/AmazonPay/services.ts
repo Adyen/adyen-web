@@ -9,7 +9,13 @@ import { CheckoutDetailsRequest, PayloadJSON, UpdateAmazonCheckoutSessionRequest
  * @param payloadJSON - Object to be signed
  * @returns A promise containing the response of the call
  */
-export function getAmazonSignature(loadingContext: string, clientKey: string, payloadJSON: PayloadJSON): Promise<any> {
+export function getAmazonSignature(
+    loadingContext: string,
+    clientKey: string,
+    payloadJSON: PayloadJSON
+): Promise<{
+    signature: string;
+}> {
     const options = {
         loadingContext,
         path: `${AMAZONPAY_SIGN_STRING_ENDPOINT}?clientKey=${clientKey}`
@@ -27,7 +33,15 @@ export function getAmazonSignature(loadingContext: string, clientKey: string, pa
  * @param request - Object to sent
  * @returns A promise containing the response of the call
  */
-export function getCheckoutDetails(loadingContext: string, clientKey: string, request: CheckoutDetailsRequest): Promise<any> {
+export function getCheckoutDetails(
+    loadingContext: string,
+    clientKey: string,
+    request: CheckoutDetailsRequest
+): Promise<
+    {
+        declineFlowUrl?: string;
+    } & Record<string, unknown>
+> {
     const options = {
         loadingContext,
         path: `${AMAZONPAY_GET_CHECKOUT_DETAILS_ENDPOINT}?clientKey=${clientKey}`
@@ -43,7 +57,17 @@ export function getCheckoutDetails(loadingContext: string, clientKey: string, re
  * @param data -
  * @returns A promise containing the response of the call
  */
-export function updateAmazonCheckoutSession(loadingContext: string, clientKey: string, data: UpdateAmazonCheckoutSessionRequest): Promise<any> {
+export function updateAmazonCheckoutSession(
+    loadingContext: string,
+    clientKey: string,
+    data: UpdateAmazonCheckoutSessionRequest
+): Promise<{
+    action?: {
+        type?: string;
+        url?: string;
+    };
+    errorMessage?: string;
+}> {
     const options = {
         loadingContext,
         path: `${AMAZONPAY_UPDATE_CHECKOUT_SESSION_ENDPOINT}?clientKey=${clientKey}`

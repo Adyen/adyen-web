@@ -3,11 +3,12 @@ import UIElement from '../internal/UIElement';
 import { TxVariants } from '../tx-variants';
 import FastlaneComponent from './components/FastlaneComponent';
 import type { FastlaneConfiguration } from './types';
+import { PaymentMethodBrand } from '../../types/global-types';
 
 class Fastlane extends UIElement<FastlaneConfiguration> {
     public static readonly type = TxVariants.fastlane;
 
-    protected static defaultProps = {
+    protected static readonly defaultProps = {
         keepBrandsVisible: true
     };
 
@@ -60,7 +61,7 @@ class Fastlane extends UIElement<FastlaneConfiguration> {
     /**
      * Used to display the payment method supported brands within Drop-in
      */
-    public get brands(): { icon: string; name: string }[] {
+    public get brands(): PaymentMethodBrand[] {
         const { brands } = this.props;
         return brands.map(brand => ({ icon: this.props.modules.resources.getImage()(brand), name: brand }));
     }

@@ -1,26 +1,29 @@
 import { h } from 'preact';
-import { mount } from 'enzyme';
+import { render, screen } from '@testing-library/preact';
 import Fieldset from './Fieldset';
 import { CoreProvider } from '../../../../core/Context/CoreProvider';
 
 describe('Fieldset', () => {
-    const i18n = { get: key => key };
-    const getWrapper = props =>
-        mount(
+    const renderFieldset = props =>
+        render(
             <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
-                <Fieldset i18n={i18n} {...props} />{' '}
+                <Fieldset {...props} />
             </CoreProvider>
         );
 
     test('shows a label', () => {
         const label = 'Test ABC';
-        const wrapper = getWrapper({ label });
-        expect(wrapper.find('.adyen-checkout__fieldset__title')).toHaveLength(1);
-        expect(wrapper.find('.adyen-checkout__fieldset__title').text()).toEqual(label);
+        renderFieldset({ label });
+        const legend = screen.getByText(label);
+        expect(legend).toBeTruthy();
+        expect(legend.className).toContain('adyen-checkout__fieldset__title');
     });
 
     test('shows no label', () => {
-        const wrapper = getWrapper({});
-        expect(wrapper.find('.adyen-checkout__fieldset__title')).toHaveLength(0);
+        const { container } = renderFieldset({});
+        /* eslint-disable testing-library/no-node-access */
+        // eslint-disable-next-line testing-library/no-container
+        expect(container.querySelector('.adyen-checkout__fieldset__title')).toBeNull();
+        /* eslint-enable testing-library/no-node-access */
     });
 });

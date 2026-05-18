@@ -4,7 +4,7 @@ import SelectListItem from './SelectListItem';
 import { useCoreContext } from '../../../../../core/Context/CoreProvider';
 import { SelectListProps } from '../types';
 
-function SelectList({ selected, active, filteredItems, showList, ...props }: SelectListProps) {
+function SelectList({ selected, active, filteredItems, showList, ...props }: Readonly<SelectListProps>) {
     const { i18n } = useCoreContext();
 
     return (

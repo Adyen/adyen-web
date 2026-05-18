@@ -1,4 +1,4 @@
-import { h } from 'preact';
+import { createRef, h } from 'preact';
 import { CardElement } from './Card';
 import { render, screen, waitFor } from '@testing-library/preact';
 import { CoreProvider } from '../../core/Context/CoreProvider';
@@ -7,6 +7,7 @@ import PaymentMethods from '../../core/ProcessResponse/PaymentMethods';
 import { InfoEventType } from '../../core/Analytics/events/AnalyticsInfoEvent';
 import { CardFocusData } from '../internal/SecuredFields/lib/types';
 import { mock } from 'jest-mock-extended';
+import { AmountProvider } from '../../core/Context/AmountProvider';
 import { ICore } from '../../types';
 
 describe('Card', () => {
@@ -42,12 +43,15 @@ describe('Card', () => {
 
     describe('payButton', () => {
         describe('Zero auth transaction', () => {
-            const props = { amount: { value: 0, currency: 'eur' }, enableStoreDetails: true, i18n: global.i18n };
+            const amount = { value: 0, currency: 'eur' };
+            const props = { amount, enableStoreDetails: true, i18n: global.i18n };
             const customRender = (ui: h.JSX.Element) => {
                 return render(
                     // @ts-ignore ignore
                     <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
-                        {ui}
+                        <AmountProvider amount={amount} providerRef={createRef()}>
+                            {ui}
+                        </AmountProvider>
                     </CoreProvider>
                 );
             };
@@ -264,12 +268,12 @@ describe('Card', () => {
     describe('Test setting of configuration prop: koreanAuthenticationRequired', () => {
         test('Returns default value', () => {
             const card = new CardElement(global.core, { configuration: {} });
-            expect(card.props.configuration.koreanAuthenticationRequired).toBe(undefined);
+            expect(card.props.configuration?.koreanAuthenticationRequired).toBe(undefined);
         });
 
         test('Returns configuration defined value', () => {
             const card = new CardElement(global.core, { configuration: { koreanAuthenticationRequired: true } });
-            expect(card.props.configuration.koreanAuthenticationRequired).toBe(true);
+            expect(card.props.configuration?.koreanAuthenticationRequired).toBe(true);
         });
     });
 

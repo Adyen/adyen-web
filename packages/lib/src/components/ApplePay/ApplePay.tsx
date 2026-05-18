@@ -23,9 +23,9 @@ import { AnalyticsInfoEvent, InfoEventType, UiTarget } from '../../core/Analytic
 const LATEST_APPLE_PAY_VERSION = 14;
 
 class ApplePayElement extends UIElement<ApplePayConfiguration> {
-    public static type = TxVariants.applepay;
+    public static readonly type = TxVariants.applepay;
 
-    protected static defaultProps = defaultProps;
+    protected static readonly defaultProps = defaultProps;
 
     private sdkLoader: ApplePaySdkLoader;
     private applePayVersionNumber: number = undefined;
@@ -127,7 +127,7 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
      * not mean there are no cards available, it means the status cannot be determined and as such defaulting
      * and upstreaming should still be considered.
      *
-     * {@link https://developer.apple.com/documentation/apple_pay_on_the_web/applepaysession/4440085-applepaycapabilities}
+     * {@link https://developer.apple.com/documentation/applepayontheweb/applepaysession/4440085-applepaycapabilities}
      * @param merchantIdentifier
      */
     public async applePayCapabilities(merchantIdentifier?: string): Promise<ApplePayJS.PaymentCredentialStatusResponse> {
@@ -188,7 +188,7 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
     }
 
     private startSession() {
-        const { onValidateMerchant, onPaymentMethodSelected, onShippingMethodSelected, onShippingContactSelected } = this.props;
+        const { onValidateMerchant, onPaymentMethodSelected, onShippingMethodSelected, onShippingContactSelected, onCouponCodeChanged } = this.props;
 
         const paymentRequest = preparePaymentRequest({
             companyName: this.props.configuration.merchantName,
@@ -211,6 +211,7 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
             onPaymentMethodSelected,
             onShippingMethodSelected,
             onShippingContactSelected,
+            onCouponCodeChanged,
             onValidateMerchant: onValidateMerchant || this.validateMerchant,
             onPaymentAuthorized: (resolve, reject, event) => {
                 const billingAddress = formatApplePayContactToAdyenAddressFormat(event.payment.billingContact);
@@ -258,7 +259,7 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
             }
         });
 
-        return new Promise((resolve, reject) => this.props.onClick(resolve, reject))
+        return new Promise<void>((resolve, reject) => this.props.onClick(resolve, reject))
             .then(() => {
                 session.begin();
             })
@@ -323,7 +324,7 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
             });
     }
 
-    private async validateMerchant(resolve, reject) {
+    private async validateMerchant(resolve: (merchantSession: unknown) => void, reject: (error: string) => void) {
         const { hostname } = window.location;
         const { clientKey, configuration, loadingContext, initiative, domainName } = this.props;
         const { merchantName, merchantId } = configuration;
@@ -339,10 +340,11 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
         try {
             const response = await httpPost(options, request);
             const decodedData: DecodeObject = base64.decode(response.data);
+
             if (!decodedData.success) {
                 reject('Could not decode Apple Pay session');
             } else {
-                const session = JSON.parse(decodedData.data);
+                const session: unknown = JSON.parse(decodedData.data);
                 resolve(session);
             }
         } catch (e) {

@@ -3,7 +3,7 @@ import { useEffect } from 'preact/hooks';
 import { useCoreContext } from '../../../core/Context/CoreProvider';
 import { ChangeActionOptions, ChangePaymentDetailsButtonProps } from '../types';
 
-export default function ChangePaymentDetailsButton(props: ChangePaymentDetailsButtonProps) {
+export default function ChangePaymentDetailsButton(props: Readonly<ChangePaymentDetailsButtonProps>) {
     const { i18n } = useCoreContext();
     const { amazonRef, amazonCheckoutSessionId } = props;
 
@@ -17,7 +17,11 @@ export default function ChangePaymentDetailsButton(props: ChangePaymentDetailsBu
     }, []);
 
     return (
-        <button type="button" className="adyen-checkout__button adyen-checkout__button--ghost adyen-checkout__amazonpay__button--changeAddress">
+        <button
+            type="button"
+            className="adyen-checkout__button adyen-checkout__button--ghost adyen-checkout__amazonpay__button--changeAddress"
+            data-testid="amazon-pay-change-payment-details-button"
+        >
             {i18n.get('amazonpay.changePaymentDetails')}
         </button>
     );

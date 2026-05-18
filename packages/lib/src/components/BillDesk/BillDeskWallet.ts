@@ -2,7 +2,7 @@ import IssuerListContainer from '../helpers/IssuerListContainer/IssuerListContai
 import { TxVariants } from '../tx-variants';
 
 class BillDeskWalletElement extends IssuerListContainer {
-    public static type = TxVariants.billdesk_wallet;
+    public static readonly type = TxVariants.billdesk_wallet;
 
     formatProps(props) {
         return {

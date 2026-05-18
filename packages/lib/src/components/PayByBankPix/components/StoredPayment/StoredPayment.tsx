@@ -12,7 +12,6 @@ function StoredPayment({
     onPay,
     type,
     countdownTime,
-    amount,
     txVariant,
     setComponentRef,
     enrollmentId,
@@ -20,7 +19,7 @@ function StoredPayment({
     clientKey,
     onAuthorize,
     onError
-}: PaymentProps) {
+}: Readonly<PaymentProps>) {
     const { i18n, loadingContext } = useCoreContext();
     const getImage = useImage();
     const [status, setStatus] = useState('ready');
@@ -70,13 +69,7 @@ function StoredPayment({
             pollStatus={pollStatus}
         ></PayByBankPixAwait>
     ) : (
-        <PayButton
-            classNameModifiers={buttonModifiers}
-            label={i18n.get('paybybankpix.redirectBtn.label')}
-            status={status}
-            amount={amount}
-            onClick={onPay}
-        />
+        <PayButton classNameModifiers={buttonModifiers} label={i18n.get('paybybankpix.redirectBtn.label')} status={status} onClick={onPay} />
     );
 }
 

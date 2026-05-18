@@ -5,7 +5,8 @@ import {
     DATE_POLICY_HIDDEN,
     ENCRYPTED_EXPIRY_DATE,
     ENCRYPTED_EXPIRY_MONTH,
-    ENCRYPTED_EXPIRY_YEAR
+    ENCRYPTED_EXPIRY_YEAR,
+    BIN_LOOKUP_MODE
 } from '../../constants';
 import postMessageToIframe from '../utils/iframes/postMessageToIframe';
 import { SFFeedbackObj, SendBrandObject, SendExpiryDateObject } from '../../types';
@@ -90,7 +91,8 @@ export default function handleBrandFromBinLookup(binLookupResponse: BinLookupRes
         expiryDatePolicy,
         cvcText: 'Security code',
         showSocialSecurityNumber: binBrandObj.showSocialSecurityNumber ?? false,
-        fieldType: ENCRYPTED_CARD_NUMBER
+        fieldType: ENCRYPTED_CARD_NUMBER,
+        mode: BIN_LOOKUP_MODE
     };
 
     // Take advantage of function used to handle brand messages from SF in order to process this new brand information

@@ -47,6 +47,17 @@ class PaymentMethods {
         return this.paymentMethods.find(pm => pm.type === this.mapCreatedComponentType(paymentMethod));
     }
 
+    /**
+     * Finds a payment method matching both type and funding source.
+     * Used when `splitCardFundingSources` is enabled, which results in multiple payment methods
+     * of the same type but with different fundingSource values (e.g. credit, debit, prepaid).
+     * Falls back to the first match by type if no funding source match is found.
+     */
+    findByFundingSource(paymentMethod: string, fundingSource: string): PaymentMethod {
+        const mappedType = this.mapCreatedComponentType(paymentMethod);
+        return this.paymentMethods.find(pm => pm.type === mappedType && pm.fundingSource === fundingSource);
+    }
+
     findById(paymentMethodId: string): PaymentMethod {
         return this.paymentMethods.find(pm => pm._id === paymentMethodId);
     }

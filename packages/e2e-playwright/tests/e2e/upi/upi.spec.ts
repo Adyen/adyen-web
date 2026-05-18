@@ -1,6 +1,7 @@
 import { test as base, expect } from '../../../fixtures/base-fixture';
 import { UPI } from '../../../models/upi';
 import { URL_MAP } from '../../../fixtures/URL_MAP';
+import { MOBILE_USER_AGENT, SMALL_MOBILE_VIEWPORT } from '../../utils/constants';
 
 type Fixture = {
     upiPage: UPI;
@@ -14,7 +15,7 @@ const test = base.extend<Fixture>({
 });
 
 test.describe('UPI - QR Code Flow (Desktop)', () => {
-    test('should complete payment with QR code generation', async ({ upiPage, page }) => {
+    test('should complete payment with QR code generation', async ({ upiPage }) => {
         await upiPage.goto(URL_MAP.upi);
 
         await expect(upiPage.intentArea).not.toBeVisible();
@@ -29,18 +30,18 @@ test.describe('UPI - QR Code Flow (Desktop)', () => {
 
 test.describe('UPI - Intent Flow (Mobile)', () => {
     test.use({
-        viewport: { width: 375, height: 667 },
-        userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X) AppleWebKit/605.1.15'
+        viewport: SMALL_MOBILE_VIEWPORT,
+        userAgent: MOBILE_USER_AGENT
     });
 
-    test('should complete payment with app selection and redirect', async ({ upiPage, page }) => {
+    test('should complete payment with app selection and redirect', async ({ upiPage }) => {
         await upiPage.goto(URL_MAP.upi);
 
         await expect(upiPage.intentArea).toBeVisible();
         await expect(upiPage.appList).toBeVisible();
 
         await upiPage.selectApp(/google pay/i);
-        
+
         await upiPage.pay({ name: /continue/i });
 
         await expect(upiPage.intentArea).not.toBeVisible();

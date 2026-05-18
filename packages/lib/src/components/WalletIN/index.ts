@@ -3,7 +3,7 @@ import collectBrowserInfo from '../../utils/browserInfo';
 import { TxVariants } from '../tx-variants';
 
 class WalletINElement extends IssuerListContainer {
-    public static type = TxVariants.wallet_IN;
+    public static readonly type = TxVariants.wallet_IN;
 
     formatProps(props) {
         return {

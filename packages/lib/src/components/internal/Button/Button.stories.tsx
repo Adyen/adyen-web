@@ -1,21 +1,24 @@
 import { h } from 'preact';
 import { Meta, StoryObj } from '@storybook/preact-vite';
 import Button from './Button';
-import PayButton from '../PayButton/PayButton';
 import Language from '../../../language';
 import { CoreProvider } from '../../../core/Context/CoreProvider';
 import { CopyIconButton, CopyIconButtonProps } from './CopyIconButton';
-import { PayButtonProps } from '../PayButton/PayButton';
 import { ButtonProps } from './types';
 import { CopyButton, CopyButtonProps } from './CopyButton';
 import { Resources } from '../../../core/Context/Resources';
 import { resolveEnvironments } from '../../../core/Environment';
 import type { CoreConfiguration } from '../../../core/types';
+import { ILanguageService } from '../../../language/LanguageService';
 
-const meta: Meta<ButtonProps> = {
+const languageServiceStub: ILanguageService = {
+    fetchTranslationsFromCdn: () => Promise.resolve({})
+};
+
+const meta: Meta<typeof Button> = {
     title: 'Internal Elements/Button',
     tags: ['no-automated-visual-test'],
-    component: Button as any,
+    component: Button,
     argTypes: {
         status: {
             options: ['loading', 'redirect', 'other'],
@@ -33,18 +36,19 @@ const meta: Meta<ButtonProps> = {
     }
 };
 
+const i18n = new Language({ locale: 'en-US', service: languageServiceStub });
+i18n['_translations'] = {
+    'payButton.redirecting': 'Redirecting',
+    payButton: 'Pay',
+    'button.copy': 'Copy',
+    'button.copied': 'Copied!',
+    confirmPreauthorization: 'Confirm preauthorization',
+    payAmountFormat: 'Pay %@'
+};
+
 const coreProps = {
     loadingContext: process.env.CLIENT_ENV,
-    i18n: new Language({
-        locale: 'en-US',
-        translations: {
-            'payButton.redirecting': 'Redirecting',
-            payButton: 'Pay',
-            'button.copy': 'Copy',
-            'button.copied': 'Copied!',
-            confirmPreauthorization: 'Confirm preauthorization'
-        }
-    }),
+    i18n,
     resources: new Resources(resolveEnvironments(process.env.CLIENT_ENV as CoreConfiguration['environment']).cdnImagesUrl)
 };
 
@@ -100,28 +104,24 @@ export const CopyIconOnlyButton: StoryObj<CopyIconButtonProps> = {
     }
 };
 
-export const PaymentButton: StoryObj<PayButtonProps> = {
+export const AnchorTagButton: StoryObj<ButtonProps> = {
     render: args => {
         return (
             <CoreProvider {...coreProps}>
-                <PayButton {...args} onClick={() => console.log('Pay button clicked')} />
+                <Button {...args} />
             </CoreProvider>
         );
     },
     parameters: {
-        controls: { exclude: ['useSessions', 'countryCode', 'shopperLocale', 'showPayButton'] }
-    },
-    argTypes: {
-        amount: { control: 'object' },
-        secondaryAmount: { control: 'object' }
+        controls: { include: ['disabled', 'inline', 'ariaLabel', 'href', 'target', 'label', 'variant'] }
     },
     args: {
-        amount: { value: 1000, currency: 'EUR' },
-        secondaryAmount: { value: 1200, currency: 'USD' },
         disabled: false,
-        inline: false,
+        inline: true,
+        href: 'https://www.adyen.com',
+        label: 'Go to Adyen',
         variant: 'primary',
-        icon: 'https://checkoutshopper-test.cdn.adyen.com/checkoutshopper/images/components/bento_lock.svg'
+        target: '_blank'
     }
 };
 

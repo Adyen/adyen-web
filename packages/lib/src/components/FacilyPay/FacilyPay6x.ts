@@ -3,7 +3,7 @@ import { ALLOWED_COUNTRIES } from './config';
 import { TxVariants } from '../tx-variants';
 
 export default class FacilyPay6x extends OpenInvoiceContainer {
-    public static type = TxVariants.facilypay_6x;
+    public static readonly type = TxVariants.facilypay_6x;
 
     formatProps(props) {
         return {

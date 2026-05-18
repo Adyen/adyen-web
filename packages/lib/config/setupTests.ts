@@ -1,7 +1,8 @@
-import { configure } from 'enzyme';
+process.env.VERSION = 'X.Y.Z';
+process.env.BUNDLE_TYPE = 'esm';
+
 import '@testing-library/jest-dom/jest-globals';
 import '@testing-library/jest-dom';
-import Adapter from 'enzyme-adapter-preact-pure';
 import './testMocks/matchMedia';
 import './testMocks/i18nMock';
 import './testMocks/resourcesMock';
@@ -16,10 +17,15 @@ import './testMocks/commonCorePropsMock';
 // https://github.com/mswjs/msw/issues/1916
 import { ReadableStream, WritableStream, TransformStream } from 'node:stream/web';
 
+const DEFAULT_TEST_TIMEOUT = 10_000;
+
+jest.setTimeout(DEFAULT_TEST_TIMEOUT);
+
+process.env.VERSION = 'X.Y.Z';
+process.env.BUNDLE_TYPE = 'esm';
+
 Object.assign(global, {
     ReadableStream,
     WritableStream,
-    TransformStream,
+    TransformStream
 });
-
-configure({ adapter: new Adapter() });

@@ -9,15 +9,15 @@ import {
     ENCRYPTED_EXPIRY_YEAR,
     ENCRYPTED_SECURITY_CODE
 } from '../lib/constants';
-import getProp from '../../../../utils/getProp';
 import { EMPTY_FIELD_ERROR_MESSAGES } from '../../../../core/Errors/constants';
+import type { SFPState, SFPErrorMap, SFPValid } from './types';
 
 /**
  * Make an array of encrypted field names based on the value of the 'data-cse' attribute of elements in the rootNode
  */
-export const getFields = rootNode => {
+export const getFields = (rootNode: HTMLElement) => {
     if (rootNode) {
-        return Array.prototype.slice.call(rootNode.querySelectorAll('[data-cse*="encrypted"]')).map(f => f.getAttribute('data-cse'));
+        return Array.prototype.slice.call(rootNode.querySelectorAll('[data-cse*="encrypted"]')).map((f: HTMLElement) => f.getAttribute('data-cse'));
     }
     return [];
 };
@@ -26,7 +26,7 @@ export const getFields = rootNode => {
  * If, visually, we're dealing with a single date field (expiryDate) we still need separate entries
  * for expiryMonth & expiryYear - since that is how the values will be delivered from securedFields
  */
-export const validFieldsReducer = (acc, cur) => {
+export const validFieldsReducer = (acc: Record<string, boolean>, cur: string): Record<string, boolean> => {
     if (cur === ENCRYPTED_EXPIRY_DATE) {
         acc[ENCRYPTED_EXPIRY_MONTH] = false;
         acc[ENCRYPTED_EXPIRY_YEAR] = false;
@@ -44,7 +44,7 @@ export const validFieldsReducer = (acc, cur) => {
  *  for the valid states of expiryMonth & expiryYear back to the single key we use to an store an error
  *  i.e `"encryptedExpiryMonth" & "encryptedExpiryYear" => "encryptedExpiryDate"`
  */
-const mapDateFields = (field, numDateFields) => {
+const mapDateFields = (field: string, numDateFields: number) => {
     const isDateField = field === ENCRYPTED_EXPIRY_MONTH || field === ENCRYPTED_EXPIRY_YEAR;
     return numDateFields === 1 && isDateField ? ENCRYPTED_EXPIRY_DATE : field;
 };
@@ -52,14 +52,13 @@ const mapDateFields = (field, numDateFields) => {
 /**
  * Skip generating an error for an optional field, unless it is already in error
  */
-const skipOptionalFields = (field, state, fieldNames) => {
-    // console.log('\n### utils::skipOptionalField3:: examining field=', field);
+const skipOptionalFields = (field: string, state: SFPState, fieldNames: string[]) => {
     const { isFieldOfType, fieldIsValid } = fieldNames.reduce(
-        (acc, fieldName) => {
+        (acc: { isFieldOfType: boolean; fieldIsValid: boolean }, fieldName: string) => {
             if (!acc.isFieldOfType) {
                 // console.log('### utils:: fieldName:: ', fieldName, 'match=', field === fieldName);
                 acc.isFieldOfType = field === fieldName;
-                acc.fieldIsValid = !state.errors[fieldName];
+                acc.fieldIsValid = !state.errors?.[fieldName as keyof SFPErrorMap];
             }
             return acc;
         },
@@ -75,10 +74,10 @@ const skipOptionalFields = (field, state, fieldNames) => {
     return (state[policyType] === policyOptional || state[policyType] === policyHidden) && fieldIsValid && isFieldOfType ? null : field;
 };
 
-export const getErrorReducer = (numDateFields, state) => (acc, field) => {
+export const getErrorReducer = (numDateFields: number, state: SFPState) => (acc: string[], field: string) => {
     // We're only interested in the non-valid fields from the state.valid object...
-    let val =
-        state.valid[field] !== true
+    let val: string | null =
+        state.valid[field as keyof SFPValid] !== true
             ? mapDateFields(field, numDateFields) // Map the keys we use for the valid state to the key(s) we use for the error state
             : null;
 
@@ -95,9 +94,11 @@ export const getErrorReducer = (numDateFields, state) => (acc, field) => {
 /**
  * Create an object suitable for sending to our handleOnError function
  */
-export const getErrorObject = (fieldType, rootNode, state) => {
+export const getErrorObject = (fieldType: string, rootNode: HTMLElement, state: SFPState) => {
     // Get existing error OR field is empty in which case get field specific msg OR use default
-    const error = getProp(state, `errors.${fieldType}`) || EMPTY_FIELD_ERROR_MESSAGES[fieldType];
+    const error: string | undefined =
+        state.errors?.[fieldType as keyof SFPErrorMap] || EMPTY_FIELD_ERROR_MESSAGES[fieldType as keyof typeof EMPTY_FIELD_ERROR_MESSAGES];
+
     return {
         rootNode,
         fieldType,

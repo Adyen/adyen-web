@@ -16,7 +16,7 @@ class DeviceFingerprint extends Component<DeviceFingerprintProps, DeviceFingerpr
         }
     }
 
-    public static defaultProps = {
+    public static readonly defaultProps = {
         onComplete: () => {},
         onError: () => {}
     };

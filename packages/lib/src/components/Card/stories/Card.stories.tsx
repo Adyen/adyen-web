@@ -1,9 +1,9 @@
 import { h } from 'preact';
 import { MetaConfiguration, StoryConfiguration } from '../../../../storybook/types';
 import { CardConfiguration } from '../types';
-import { searchFunctionExample } from '../../../../../playground/src/utils';
 import { CardWith3DS2Redirect } from './cardStoryHelpers/CardWith3DS2Redirect';
 import { createStoredCardComponent } from './cardStoryHelpers/createStoredCardComponent';
+import { SplitFundingSourceCards } from './cardStoryHelpers/SplitFundingSourceCards';
 import { createCardComponent } from './cardStoryHelpers/createCardComponent';
 import { getComponentConfigFromUrl } from '../../../../storybook/utils/get-configuration-from-url';
 import { CardWith3DS2CreateFromAction } from './cardStoryHelpers/CardWith3DS2CreateFromAction';
@@ -113,7 +113,45 @@ export const WithAVSAddressLookup: CardStory = {
         componentConfiguration: {
             _disableClickToPay: true,
             billingAddressRequired: true,
-            onAddressLookup: searchFunctionExample
+            onAddressLookup: async (value, actions) => {
+                const url = `/api/mock/addressSearch?search=${encodeURIComponent(value)}`;
+
+                const formattedData = await fetch(url)
+                    .then(res => res.json())
+                    // This set is necessary to map the response receive from the external provider to our address field
+                    .then(res =>
+                        res.map(
+                            ({
+                                id,
+                                name,
+                                city,
+                                address,
+                                houseNumber,
+                                postalCode
+                            }: {
+                                id: string;
+                                name: string;
+                                city: string;
+                                address: string;
+                                houseNumber: string;
+                                postalCode: string;
+                            }) => ({
+                                id,
+                                name,
+                                city,
+                                street: address,
+                                houseNumberOrName: houseNumber,
+                                postalCode,
+                                country: 'GB'
+                            })
+                        )
+                    )
+                    .catch(error => {
+                        console.log('ERROR:', error);
+                        actions.reject('Something went wrong, try adding manually.');
+                    });
+                actions.resolve(formattedData);
+            }
         }
     }
 };
@@ -130,7 +168,7 @@ export const WithInstallments: CardStory = {
                 },
                 visa: {
                     values: [1, 2, 3, 4],
-                    plans: ['regular', 'revolving']
+                    plans: ['regular', 'revolving', 'bonus']
                 }
             }
         }
@@ -171,8 +209,15 @@ export const WithMockedFastlane: CardStory = {
 
 export const WithClickToPay: CardStory = {
     render: createCardComponent,
+    tags: ['no-automated-visual-test'],
     args: {
         componentConfiguration: {
+            configuration: {
+                visaSrciDpaId: '8e6e347c-254e-863f-0e6a-196bf2d9df02',
+                visaSrcInitiatorId: 'B9SECVKIQX2SOBQ6J9X721dVBBKHhJJl1nxxVbemHGn5oB6S8',
+                mcDpaId: '6d41d4d6-45b1-42c3-a5d0-a28c0e69d4b1_dpa2',
+                mcSrcClientId: '6d41d4d6-45b1-42c3-a5d0-a28c0e69d4b1'
+            },
             clickToPayConfiguration: {
                 shopperEmail: 'gui.ctp@adyen.com',
                 merchantDisplayName: 'Adyen Merchant Name'
@@ -223,7 +268,7 @@ export const CardWith_3DS2_own_onAdditionalDetails: CardStory = {
 
                         if (!resultCode) actions.reject();
 
-                        if (resMsg) container.removeChild(resMsg);
+                        if (resMsg && container) container.removeChild(resMsg);
 
                         actions.resolve({
                             resultCode,
@@ -244,6 +289,42 @@ export const CardWith_3DS2_own_onAdditionalDetails: CardStory = {
 
 export const StandaloneStoredCard: CardStory = {
     render: createStoredCardComponent
+};
+
+/**
+ * Split funding source test
+ * This story exists to test the split funding source behavior when the merchant has enabled split card funding sources.
+ * It renders 3 different Card components to test the behavior across multiple instances.
+ *
+ * The clickToPayConfiguration, shopperEmail and installmentOptions are intentionally included to verify
+ * side-effect behavior per funding source:
+ * - Credit: Should render CtP and installments
+ * - Debit: Should render CtP, but NOT installments
+ * - Prepaid: Should NOT render CtP or installments
+ */
+export const SplitFundingSourceTest: CardStory = {
+    tags: ['no-automated-visual-test'],
+    render: SplitFundingSourceCards,
+    args: {
+        countryCode: 'BR',
+        componentConfiguration: {
+            _disableClickToPay: true,
+            clickToPayConfiguration: {
+                shopperEmail: 'levelaccess.ctp@adyen.com',
+                merchantDisplayName: 'Adyen Merchant Name'
+            }
+        },
+        sessionData: {
+            splitCardFundingSources: true,
+            shopperEmail: 'levelaccess.ctp@adyen.com',
+            installmentOptions: {
+                card: {
+                    values: [2, 3, 5],
+                    plans: ['regular']
+                }
+            }
+        }
+    }
 };
 
 export default meta;

@@ -1,9 +1,9 @@
 export function filterAllowedPaymentMethods(pm) {
-    return !this.length || this.indexOf(pm.type) > -1;
+    return !this.length || this.includes(pm.type);
 }
 
 export function filterRemovedPaymentMethods(pm) {
-    return !this.length || this.indexOf(pm.type) < 0;
+    return !this.length || !this.includes(pm.type);
 }
 
 export function filterEcomStoredPaymentMethods(pm) {

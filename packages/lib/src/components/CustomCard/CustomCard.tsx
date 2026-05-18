@@ -8,12 +8,16 @@ import { BrandObject } from '../Card/types';
 import { getCardImageUrl, fieldTypeToSnakeCase } from '../internal/SecuredFields/utils';
 import { TxVariants } from '../tx-variants';
 import { CustomCardConfiguration } from './types';
-import { AnalyticsInfoEvent, InfoEventType } from '../../core/Analytics/events/AnalyticsInfoEvent';
+import { AnalyticsInfoEvent, InfoEventType, UiTarget } from '../../core/Analytics/events/AnalyticsInfoEvent';
+import { DUAL_BRANDS_THAT_NEED_SELECTION_MECHANISM } from '../Card/constants';
+
+const SELECTABLE_DUAL_BRANDED_SCENARIO = 'Dual Branded (Selectable): Regulation mandates that you must provide a brand selection mechanism';
+const DISPLAY_ONLY_DUAL_BRANDED_SCENARIO = 'Dual Branded (Display-only): No selection mechanism required';
 
 export class CustomCard extends UIElement<CustomCardConfiguration> {
-    public static type = TxVariants.customCard;
+    public static readonly type = TxVariants.customCard;
 
-    protected static defaultProps = {
+    protected static readonly defaultProps = {
         onBinLookup: () => {},
         brandsConfiguration: {}
     };
@@ -78,6 +82,24 @@ export class CustomCard extends UIElement<CustomCardConfiguration> {
                 item.brandImageUrl = this.props.brandsConfiguration[item.brand]?.icon ?? getCardImageUrl(item.brand, this.resources);
                 return item;
             });
+
+            // Check for dual branded scenario and, if so, discern which type
+            let isDualBrandedScenario = false;
+            let isSelectableDualBrandedScenario = false;
+
+            if (obj.supportedBrandsRaw?.length > 1) {
+                isDualBrandedScenario = true;
+                isSelectableDualBrandedScenario = obj.detectedBrands.some(item =>
+                    (DUAL_BRANDS_THAT_NEED_SELECTION_MECHANISM as readonly string[]).includes(item)
+                );
+            }
+
+            // Set the dual branding type
+            nuObj.dualBrandingType = null;
+
+            if (isDualBrandedScenario) {
+                nuObj.dualBrandingType = isSelectableDualBrandedScenario ? SELECTABLE_DUAL_BRANDED_SCENARIO : DISPLAY_ONLY_DUAL_BRANDED_SCENARIO;
+            }
         }
 
         this.props.onBinLookup(nuObj);
@@ -97,7 +119,7 @@ export class CustomCard extends UIElement<CustomCardConfiguration> {
         const event = new AnalyticsInfoEvent({
             component: this.type,
             type: obj.focus === true ? InfoEventType.focus : InfoEventType.unfocus,
-            target: fieldTypeToSnakeCase(obj.fieldType)
+            target: fieldTypeToSnakeCase(obj.fieldType) as UiTarget
         });
 
         this.submitAnalytics(event);

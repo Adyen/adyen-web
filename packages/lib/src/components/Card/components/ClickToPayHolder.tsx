@@ -11,7 +11,7 @@ type ClickToPayWrapperProps = {
     children(isCardPrimaryInput?: boolean): h.JSX.Element;
 };
 
-const ClickToPayHolder = ({ children }: ClickToPayWrapperProps) => {
+const ClickToPayHolder = ({ children }: Readonly<ClickToPayWrapperProps>) => {
     const { i18n } = useCoreContext();
     const [isCardInputVisible, setIsCardInputVisible] = useState<boolean>(null);
     const { ctpState, isCtpPrimaryPaymentMethod, setIsCtpPrimaryPaymentMethod, status } = useClickToPayContext();

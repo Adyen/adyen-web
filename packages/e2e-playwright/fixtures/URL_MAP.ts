@@ -7,6 +7,16 @@ export const URL_MAP = {
     dropinSessions_zeroAuthCard_fail:
         '/iframe.html?globals=&args=amount:0;sessionData.recurringProcessingModel:CardOnFile;sessionData.storePaymentMethodMode:askForConsent;sessionData.enableOneClick:!true&id=drop-in-drop-in-component--default&viewMode=story',
     dropinWithSession_BCMC_noStoredPms: '/iframe.html?args=countryCode:BE&globals=&id=drop-in-drop-in-component--default&viewMode=story',
+    dropinSessionsIndia: '/iframe.html?id=drop-in-drop-in-component--default&viewMode=story&args=countryCode%3AIN%3Bamount%3A1005',
+    dropinSessionsGreece: '/iframe.html?id=drop-in-drop-in-component--default&viewMode=story&args=countryCode%3AGR%3Bamount%3A1001',
+    dropinWithSession_donations: '/iframe.html?args=&globals=&id=drop-in-drop-in-component--sessions-donation&viewMode=story',
+    dropinWithSession_donations_noDelay: '/iframe.html?args=donation.delay:0&globals=&id=drop-in-drop-in-component--sessions-donation&viewMode=story',
+    dropinWithSession_donations_autoMountFalse:
+        '/iframe.html?args=donation.autoMount:!false;donation.delay:0&globals=&id=drop-in-drop-in-component--sessions-donation&viewMode=story',
+    dropinWithSession_donations_reparented:
+        '/iframe.html?args=donation.autoMount:!false;donation.delay:0&globals=&id=drop-in-drop-in-component--sessions-donation-reparented&viewMode=story',
+    dropinWithSession_donations_reparented_autoMountTrue:
+        '/iframe.html?args=donation.autoMount:!true;donation.delay:0&globals=&id=drop-in-drop-in-component--sessions-donation-reparented&viewMode=story',
 
     /**
      * Card
@@ -46,6 +56,7 @@ export const URL_MAP = {
      * UPI
      */
     upi: '/iframe.html?globals=&id=components-upi--default&viewMode=story',
+    upiAutoPay: '/iframe.html?globals=&id=components-upi--auto-pay-session&viewMode=story',
 
     /**
      * Vouchers

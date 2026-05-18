@@ -9,7 +9,7 @@ import {
 } from '../types';
 
 abstract class AbstractSecuredField {
-    public sfConfig: SecuredFieldCommonProps; // could be protected but needs to be public for tests to run
+    public sfConfig: Partial<SecuredFieldCommonProps>; // could be protected but needs to be public for tests to run
     protected componentType: string;
     protected loadingContext: string;
     protected holderEl: HTMLElement;
@@ -40,7 +40,7 @@ abstract class AbstractSecuredField {
     protected onKeyPressedCallback: RtnType_callbackFn;
 
     protected constructor() {
-        this.sfConfig = {} as any as SecuredFieldCommonProps;
+        this.sfConfig = {};
     }
 }
 

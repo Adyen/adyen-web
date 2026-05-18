@@ -91,7 +91,7 @@ describe('PayTo', () => {
         await user.click(screen.queryByRole('option', { name: /Email/i }));
 
         expect(screen.queryByLabelText(/Prefix/i)).toBeFalsy();
-        expect(screen.getByLabelText(/Email/i)).toBeTruthy();
+        expect(screen.getByRole('textbox', { name: /Email/i })).toBeTruthy();
     });
 
     describe('PayTo shopperIdentifier', () => {
@@ -147,7 +147,7 @@ describe('PayTo', () => {
             await user.click(screen.queryByRole('button', { name: 'Mobile' }));
             await user.click(screen.queryByRole('option', { name: /Email/i }));
 
-            await user.type(screen.queryByLabelText(/Email/i), 'example@example.com');
+            await user.type(screen.getByRole('textbox', { name: /Email/i }), 'example@example.com');
             await user.type(screen.queryByLabelText(/First name/i), 'John');
             await user.type(screen.queryByLabelText(/Last name/i), 'Doe');
 
@@ -187,7 +187,7 @@ describe('PayTo', () => {
             await user.click(screen.queryByRole('button', { name: 'Mobile' }));
             await user.click(screen.queryByRole('option', { name: /ABN/i }));
 
-            await user.type(screen.queryByLabelText(/ABN/i), '123123123');
+            await user.type(screen.getByRole('textbox', { name: /ABN/i }), '123123123');
             await user.type(screen.queryByLabelText(/First name/i), 'John');
             await user.type(screen.queryByLabelText(/Last name/i), 'Doe');
 

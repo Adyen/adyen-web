@@ -41,7 +41,7 @@ const Modal = ({
     focusFirst,
     focusAfterClose,
     ...props
-}: ModalProps) => {
+}: Readonly<ModalProps>) => {
     const modalContainerRef = useRef<HTMLDivElement>();
     const { closeModal, handleClickOutside } = useModal({
         modalElement: modalContainerRef.current,

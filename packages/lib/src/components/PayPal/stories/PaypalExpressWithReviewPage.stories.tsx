@@ -50,10 +50,13 @@ export const ExpressWithReviewPage: StoryObj = {
 };
 
 const createLocalStore = () => {
-    let state = null;
+    let state: {
+        pspReference?: string;
+        amountValue?: number;
+    } | null = null;
 
     return {
-        setState(value: object) {
+        setState(value: Record<string, unknown>) {
             state = { ...state, ...value };
         },
         getState() {
@@ -107,8 +110,8 @@ const Component = () => {
                     }
 
                     const patch = {
-                        pspReference: store.getState().pspReference,
-                        paymentData: component.paymentData,
+                        pspReference: store.getState()?.pspReference ?? undefined,
+                        paymentData: component.paymentData || '',
                         amount: {
                             currency: 'USD',
                             value:
@@ -128,25 +131,25 @@ const Component = () => {
                 },
 
                 onShippingOptionsChange: async (data, actions, component) => {
-                    if (data.selectedShippingOption.label.includes('Teleport')) {
+                    if (data.selectedShippingOption?.label.includes('Teleport')) {
                         return actions.reject(data.errors.METHOD_UNAVAILABLE);
                     }
 
                     const patch = {
-                        pspReference: store.getState().pspReference,
-                        paymentData: component.paymentData,
+                        pspReference: store.getState()?.pspReference ?? undefined,
+                        paymentData: component.paymentData || '',
                         amount: {
                             currency: 'USD',
                             value:
                                 AMOUNT.value +
                                 getSelectedDeliveryMethodAmount({
                                     countryCode: SHOPPER_SHIPPING_COUNTRY_CODE,
-                                    deliveryMethodId: data.selectedShippingOption.id
+                                    deliveryMethodId: data.selectedShippingOption?.id
                                 })
                         },
                         deliveryMethods: getDeliveryMethods({
                             countryCode: SHOPPER_SHIPPING_COUNTRY_CODE,
-                            deliveryMethodId: data.selectedShippingOption.id
+                            deliveryMethodId: data.selectedShippingOption?.id
                         })
                     };
 
@@ -172,7 +175,10 @@ const Component = () => {
                     window.parent.location.assign('/?path=/story/helpers-paypalreviewpage--paypal-review-page');
                 }
             });
-            paypal.mount(container.current);
+
+            if (container.current) {
+                paypal.mount(container.current);
+            }
         }
 
         void createPaypalComponent();

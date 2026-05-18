@@ -21,7 +21,7 @@ function isComponentCached(oldProps: PaymentMethodDetailsProps, newProps: Paymen
     return componentIsDeselected;
 }
 
-const PaymentMethodDetails = memo(({ paymentMethodComponent, isSelected }: PaymentMethodDetailsProps) => {
+const PaymentMethodDetails = memo(({ paymentMethodComponent, isSelected }: Readonly<PaymentMethodDetailsProps>) => {
     if (!isSelected) {
         return null;
     }

@@ -11,10 +11,18 @@ import { AriaConfig, AriaConfigObject } from '../../types';
  */
 export function processAriaConfig(txVariant: string, fieldType: string, i18n: Language, showContextuaElement): AriaConfig {
     // txVariant can be the scheme name (VISA, Mastercard...) so we put all of them under creditCard
-    const type = ['ach', 'giftcard'].includes(txVariant) ? txVariant : 'creditCard';
+    const type = ['giftcard'].includes(txVariant) ? txVariant : 'creditCard';
 
     // Get translation for iframeTitle
-    const iframeTitle: string = i18n.get(`${type}.${fieldType}.aria.iframeTitle`);
+    let iframeTitle: string = i18n.get(`${type}.${fieldType}.aria.iframeTitle`);
+
+    /**
+     * Fix bug where, if iframeTitle was set to 'none', although we didn't add it to the iframe element, we still passed it through to the securedField
+     * where it got set as the title of the html page
+     */
+    if (iframeTitle === 'none') {
+        iframeTitle = '';
+    }
 
     // Get translation for aria label using *same* key that is used to label the element - important a11y consideration for (securedField) iframe
     const label: string = i18n.get(`${type}.${SF_FIELDS_MAP[fieldType]}.label`);

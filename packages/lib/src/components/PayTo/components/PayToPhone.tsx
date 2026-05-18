@@ -19,7 +19,7 @@ const AUSTRALIAN_PHONE_PREFIXES = [
     }
 ];
 
-export default function PayToPhone({ form }: PayToPhoneProps) {
+export default function PayToPhone({ form }: Readonly<PayToPhoneProps>) {
     const { i18n } = useCoreContext();
 
     const getError = useCallback((field: string) => getErrorMessage(i18n, form.errors[field]), [i18n, form]);

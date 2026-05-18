@@ -94,7 +94,8 @@ class Dropin extends Base {
 
         const paymentMethodHeaderLocator = this.page
             .locator('.adyen-checkout__payment-methods-list--otherPayments')
-            .getByRole('radio', { name: pmLabel });
+            .getByRole('radio', { name: pmLabel })
+            .filter({ has: this.page.getByText(pmLabel, { exact: true }) });
 
         await paymentMethodHeaderLocator.check();
 

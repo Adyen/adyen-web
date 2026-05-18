@@ -3,7 +3,7 @@ import { TxVariants } from '../tx-variants';
 import './Swish.scss';
 
 class SwishElement extends QRLoaderContainer {
-    public static type = TxVariants.swish;
+    public static readonly type = TxVariants.swish;
 
     formatProps(props) {
         return {

@@ -3,8 +3,8 @@ import { STATUS_INTERVAL, COUNTDOWN_MINUTES } from './config';
 import { TxVariants } from '../tx-variants';
 
 class BCMCMobileElement extends QRLoaderContainer {
-    public static type = TxVariants.bcmc_mobile;
-    public static txVariants = [TxVariants.bcmc_mobile, TxVariants.bcmc_mobile_QR];
+    public static readonly type = TxVariants.bcmc_mobile;
+    public static readonly txVariants = [TxVariants.bcmc_mobile, TxVariants.bcmc_mobile_QR];
 
     formatProps(props) {
         return {

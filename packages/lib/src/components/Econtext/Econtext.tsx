@@ -15,7 +15,7 @@ export class EcontextElement extends UIElement<EcontextConfiguration> {
         TxVariants.econtext_stores
     ];
 
-    protected static defaultProps = {
+    protected static readonly defaultProps = {
         personalDetailsRequired: true
     };
 
@@ -58,7 +58,6 @@ export class EcontextElement extends UIElement<EcontextConfiguration> {
                 personalDetailsRequired={this.props.personalDetailsRequired}
                 showPayButton={this.props.showPayButton}
                 onChange={this.setState}
-                onSubmit={this.submit}
                 payButton={this.payButton}
             />
         );

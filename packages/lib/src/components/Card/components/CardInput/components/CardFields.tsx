@@ -20,6 +20,8 @@ export default function CardFields({
     brandsIcons,
     brandsConfiguration,
     dualBrandingElements,
+    selectedBrandValue,
+    dualBrandingChangeHandler,
     errors,
     focusedElement,
     hasCVC,
@@ -29,7 +31,7 @@ export default function CardFields({
     showBrandIcon,
     valid,
     showContextualElement
-}: CardFieldsProps) {
+}: Readonly<CardFieldsProps>) {
     const { i18n } = useCoreContext();
 
     const getError = (errors, fieldType) => {
@@ -56,6 +58,8 @@ export default function CardFields({
                 filled={!!errors.encryptedCardNumber || !!valid.encryptedCardNumber}
                 showBrandIcon={showBrandIcon}
                 dualBrandingElements={dualBrandingElements}
+                selectedBrandValue={selectedBrandValue}
+                dualBrandingChangeHandler={dualBrandingChangeHandler}
             />
 
             <AvailableBrands activeBrand={brand} brands={allowedBrands} />

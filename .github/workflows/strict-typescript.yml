@@ -1,0 +1,186 @@
+name: Strict TypeScript Scan
+
+on:
+  workflow_call:
+
+jobs:
+  strict-scan:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Use Node.js 24
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      # ── Get baseline from main ──
+      - name: Checkout main
+        uses: actions/checkout@v6
+        with:
+          ref: main
+          fetch-depth: 1
+
+      - name: Install dependencies (main)
+        run: yarn install --immutable
+
+      - name: Get strict error baseline from main
+        id: baseline
+        run: |
+          OUTPUT=$(yarn validate:strict 2>&1 || true)
+          TOTAL=$(echo "$OUTPUT" | grep -c "error TS" || true)
+          FILE_LINES=$(echo "$OUTPUT" | grep "error TS" | sed 's/(.*$//' || true)
+          if [ -n "$FILE_LINES" ]; then
+            FILES_JSON=$(echo "$FILE_LINES" | sort | uniq -c | sort -rn | awk 'BEGIN{printf "{"} NR>1{printf ","} { count=$1; sub(/^[[:space:]]*[0-9]+[[:space:]]+/, ""); printf "\"%s\":%d", $0, count } END{printf "}"}')
+          else
+            FILES_JSON='{}'
+          fi
+          echo "count=$TOTAL" >> "$GITHUB_OUTPUT"
+          echo "files=$FILES_JSON" >> "$GITHUB_OUTPUT"
+          echo "Main baseline — total: $TOTAL"
+
+      # ── Check PR branch ──
+      - uses: actions/checkout@v6
+        with:
+          clean: false
+          fetch-depth: 1
+
+      - name: Cache node modules
+        id: node-modules-cache
+        uses: actions/cache@v5
+        env:
+          cache-name: node-modules-v1
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-cache-${{ env.cache-name }}-yarn-${{ hashFiles('**/yarn.lock') }}
+
+      - name: Install Project Dependencies
+        if: steps.node-modules-cache.outputs.cache-hit != 'true'
+        run: yarn install --immutable
+
+      - name: Strict type check
+        id: tsc-strict
+        run: |
+          TSC_STRICT_BASELINE=${{ steps.baseline.outputs.count }}
+          OUTPUT=$(yarn validate:strict 2>&1 || true)
+          ERROR_COUNT=$(echo "$OUTPUT" | grep -c "error TS" || true)
+          FILE_LINES=$(echo "$OUTPUT" | grep "error TS" | sed 's/(.*$//' || true)
+          if [ -n "$FILE_LINES" ]; then
+            FILES_JSON=$(echo "$FILE_LINES" | sort | uniq -c | sort -rn | awk 'BEGIN{printf "{"} NR>1{printf ","} { count=$1; sub(/^[[:space:]]*[0-9]+[[:space:]]+/, ""); printf "\"%s\":%d", $0, count } END{printf "}"}')
+          else
+            FILES_JSON='{}'
+          fi
+          echo "error_count=$ERROR_COUNT" >> "$GITHUB_OUTPUT"
+          echo "files=$FILES_JSON" >> "$GITHUB_OUTPUT"
+          echo "Current strict tsc errors: $ERROR_COUNT (baseline: $TSC_STRICT_BASELINE)"
+
+          if [ "$ERROR_COUNT" -gt "$TSC_STRICT_BASELINE" ]; then
+            echo "::warning::Strict tsc errors INCREASED from $TSC_STRICT_BASELINE (main) to $ERROR_COUNT"
+            exit 1
+          fi
+
+          if [ "$ERROR_COUNT" -lt "$TSC_STRICT_BASELINE" ]; then
+            echo "::notice::Strict tsc errors decreased from $TSC_STRICT_BASELINE to $ERROR_COUNT"
+          fi
+
+      - name: Build comment body
+        if: always() && github.event_name == 'pull_request'
+        id: build-comment
+        run: |
+          B_TOTAL=${{ steps.baseline.outputs.count }}
+          B_FILES='${{ steps.baseline.outputs.files }}'
+          [ -z "$B_FILES" ] && B_FILES='{}'
+          PR_TOTAL="${{ steps.tsc-strict.outputs.error_count }}"
+          PR_TOTAL="${PR_TOTAL:-N/A}"
+          PR_FILES='${{ steps.tsc-strict.outputs.files }}'
+          [ -z "$PR_FILES" ] && PR_FILES='{}'
+
+          if [ "${{ steps.tsc-strict.outcome }}" = "success" ]; then
+            OVERALL_STATUS="✅ Pass"
+          else
+            OVERALL_STATUS="⚠️ Regression"
+          fi
+
+          # Generate per-file table rows with jq (only files with increased errors)
+          TABLE_ROWS=$(jq -r -n \
+            --argjson baseline "$B_FILES" \
+            --argjson pr "$PR_FILES" '
+            (($baseline | keys) + ($pr | keys)) | unique |
+            map({ file: ., b: ($baseline[.] // 0), p: ($pr[.] // 0) }) |
+            [ .[] | select(.p > .b) ] |
+            sort_by(-.p) | .[] |
+            "| `\(.file)` | \(.p) | \(.b) | ⚠️ +\(.p - .b) |"
+          ')
+
+          NUM_FILES=$(jq -n --argjson b "$B_FILES" --argjson p "$PR_FILES" '(($b | keys) + ($p | keys)) | unique | map({ file: ., b: ($b[.] // 0), p: ($p[.] // 0) }) | [ .[] | select(.p > .b) ] | length')
+
+          # Build a single grep pattern matching every regressed file's basename
+          GREP_PATTERN=$(jq -r -n \
+            --argjson baseline "$B_FILES" \
+            --argjson pr "$PR_FILES" '
+            (($baseline | keys) + ($pr | keys)) | unique |
+            map({ file: ., b: ($baseline[.] // 0), p: ($pr[.] // 0) }) |
+            [ .[] | select(.p > .b) | .file | split("/") | last ] |
+            join("\\|")
+          ')
+
+          {
+            echo 'body<<EOF'
+            echo '## Strict TypeScript Scan Results'
+            echo ''
+            echo "**Total: ${PR_TOTAL} errors (baseline: ${B_TOTAL}) | ${OVERALL_STATUS}**"
+            echo ''
+            echo '<details>'
+            echo "<summary>Files with regressions (${NUM_FILES} files)</summary>"
+            echo ''
+            echo '| File | PR | Baseline | Delta |'
+            echo '|------|-----|----------|-------|'
+            echo "$TABLE_ROWS"
+            echo ''
+            echo '</details>'
+            echo ''
+            if [ -n "$GREP_PATTERN" ]; then
+              echo '<details>'
+              echo '<summary>How to reproduce locally</summary>'
+              echo ''
+              echo 'Run the strict type-check and filter the output by file name:'
+              echo ''
+              echo '```bash'
+              echo "yarn workspace @adyen/adyen-web exec tsc -p tsconfig.strict.json 2>&1 | grep '${GREP_PATTERN}'"
+              echo '```'
+              echo ''
+              echo '</details>'
+              echo ''
+            fi
+            echo "_Last updated: $(date -u '+%Y-%m-%d %H:%M:%S UTC')_"
+            echo 'EOF'
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Find existing comment
+        if: always() && github.event_name == 'pull_request'
+        uses: peter-evans/find-comment@v4
+        id: fc
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          comment-author: 'github-actions[bot]'
+          body-includes: Strict TypeScript Scan Results
+
+      - name: Delete previous comment
+        if: always() && github.event_name == 'pull_request' && steps.fc.outputs.comment-id != '' && steps.fc.outputs.comment-id != '0'
+        uses: actions/github-script@v8
+        with:
+          script: |
+            await github.rest.issues.deleteComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              comment_id: Number('${{ steps.fc.outputs.comment-id }}')
+            });
+
+      - name: Post scan summary
+        if: always() && github.event_name == 'pull_request'
+        uses: peter-evans/create-or-update-comment@v5
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body: ${{ steps.build-comment.outputs.body }}

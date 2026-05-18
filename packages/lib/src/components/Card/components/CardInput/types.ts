@@ -7,7 +7,6 @@ import type {
     DualBrandSelectElement,
     CardPlaceholders
 } from '../../types';
-import { InstallmentOptions } from './components/types';
 import { ValidationResult } from '../../../internal/PersonalDetails/types';
 import {
     CardAllValidData,
@@ -16,6 +15,7 @@ import {
     CardBrandData,
     CardConfigSuccessData,
     CardFieldValidData,
+    CardFocusData,
     CardLoadData,
     CVCPolicyType,
     DatePolicyType
@@ -29,10 +29,15 @@ import RiskElement from '../../../../core/RiskModule';
 import { DisclaimerMsgObject } from '../../../internal/DisclaimerMessage/DisclaimerMessage';
 import { OnAddressLookupType, OnAddressSelectedType } from '../../../internal/Address/components/AddressSearch';
 import { ComponentMethodsRef } from '../../../internal/UIElement/types';
-import { AddressData, PaymentAmount } from '../../../../types/global-types';
+import { AddressData } from '../../../../types/global-types';
 import type { FastlaneSignupConfiguration } from '../../../PayPalFastlane/types';
 import type { AbstractAnalyticsEvent } from '../../../../core/Analytics/events/AbstractAnalyticsEvent';
 import { IAnalytics } from '../../../../core/Analytics/Analytics';
+import { PayButtonProps } from '../../../internal/PayButton/PayButton';
+import { h } from 'preact';
+import { InstallmentOptions } from './components/Installments/Installments';
+import type { Form } from '../../../../utils/useForm/types';
+import type { SecuredFieldsProviderRef } from '../../../internal/SecuredFields/SFP/types';
 
 export interface CardInputValidState {
     holderName?: boolean;
@@ -69,7 +74,6 @@ export interface CardInputDataState {
  * - either in the comp itself or are passed on to its children
  */
 export interface CardInputProps {
-    amount?: PaymentAmount;
     isPayButtonPrimaryVariant?: boolean;
     autoFocus?: boolean;
     billingAddressAllowedCountries?: string[];
@@ -81,7 +85,7 @@ export interface CardInputProps {
     brandsConfiguration?: CardBrandsConfiguration;
     brandsIcons: Array<BrandConfiguration>;
     clientKey: string;
-    configuration?: CardBackendConfiguration;
+    configuration: CardBackendConfiguration;
     countryCode?: string;
     cvcPolicy?: CVCPolicyType;
     data?: CardInputDataState;
@@ -97,7 +101,7 @@ export interface CardInputProps {
     holderName?: string;
     holderNameRequired?: boolean;
     i18n?: Language;
-    implementationType?: string;
+    implementationType?: 'components' | 'custom';
     installmentOptions?: InstallmentOptions;
     keypadFix?: boolean;
     lastFour?: string;
@@ -110,25 +114,25 @@ export interface CardInputProps {
         risk: RiskElement;
         resources: Resources;
     };
-    onAdditionalSFConfig?: () => {};
-    onAdditionalSFRemoved?: () => {};
-    onAllValid?: (o: CardAllValidData) => {};
-    onAutoComplete?: (o: CardAutoCompleteData) => {};
-    onBinValue?: (o: CardBinValueData) => {};
-    onBlur?: (e) => {};
-    onBrand?: (o: CardBrandData) => {};
-    onConfigSuccess?: (O: CardConfigSuccessData) => {};
-    onChange?: (state) => {};
-    onError?: () => {};
-    onFieldValid?: (o: CardFieldValidData) => {};
-    onFocus?: (e) => {};
-    onLoad?: (o: CardLoadData) => {};
-    onSubmitAnalytics?: (event: AbstractAnalyticsEvent) => void;
+    onAdditionalSFConfig?: () => void;
+    onAdditionalSFRemoved?: () => void;
+    onAllValid?: (o: CardAllValidData) => void;
+    onAutoComplete?: (o: CardAutoCompleteData) => void;
+    onBinValue?: (o: CardBinValueData) => void;
+    onBlur?: (e) => void;
+    onBrand?: (o: CardBrandData) => void;
+    onConfigSuccess?: (O: CardConfigSuccessData) => void;
+    onChange: (state) => void;
+    onError?: () => void;
+    onFieldValid?: (o: CardFieldValidData) => void;
+    onFocus?: (e) => void;
+    onLoad?: (o: CardLoadData) => void;
+    onSubmitAnalytics: (event: AbstractAnalyticsEvent) => void;
     handleKeyPress?: (obj: KeyboardEvent) => void;
     onAddressLookup?: OnAddressLookupType;
     onAddressSelected?: OnAddressSelectedType;
     addressSearchDebounceMs?: number;
-    payButton?: (obj) => {};
+    payButton?: (props: PayButtonProps) => h.JSX.Element;
     placeholders?: CardPlaceholders;
     positionHolderNameOnTop?: boolean;
     resources: Resources;
@@ -168,7 +172,7 @@ export interface CardInputState {
 
 // An interface for the members exposed by CardInput to its parent Card/UIElement
 export interface CardInputRef extends ComponentMethodsRef {
-    sfp?: any;
+    sfp?: SecuredFieldsProviderRef;
     setFocusOn?: (who) => void;
     processBinLookupResponse?: (binLookupResponse: BinLookupResponse, isReset: boolean) => void;
     updateStyles?: (stylesObj: StylesObject) => void;
@@ -206,3 +210,9 @@ export enum AddressModeOptions {
     partial = 'partial',
     none = 'none'
 }
+
+export type CardSetFormData = Form<CardInputDataState>['setData'];
+export type CardSetFormValid = Form<CardInputDataState>['setValid'];
+export type CardSetFormErrors = Form<CardInputDataState>['setErrors'];
+
+export type OnFieldFocus = (who: string, e: Event | CardFocusData) => void;

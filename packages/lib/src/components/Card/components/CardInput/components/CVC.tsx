@@ -14,7 +14,7 @@ import DataSfSpan from './DataSfSpan';
 import { alternativeLabelContent } from './FieldLabelAlternative';
 import './CVC.scss';
 
-export default function CVC(props: CVCProps) {
+export default function CVC(props: Readonly<CVCProps>) {
     const {
         label,
         onFocusField = () => {},

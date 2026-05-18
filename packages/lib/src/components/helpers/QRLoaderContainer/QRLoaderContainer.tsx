@@ -6,7 +6,7 @@ import { QRLoaderConfiguration } from './types';
 
 class QRLoaderContainer<T extends QRLoaderConfiguration = QRLoaderConfiguration> extends UIElement<T> {
     // Using the generic here allow to fully extend the QRLoaderContainer (including it's props)
-    protected static defaultProps = {
+    protected static readonly defaultProps = {
         qrCodeImage: '',
         amount: null,
         paymentData: null,

@@ -8,9 +8,9 @@ import collectBrowserInfo from '../../utils/browserInfo';
 import { AnalyticsErrorEvent, ErrorEventCode, ErrorEventType } from '../../core/Analytics/events/AnalyticsErrorEvent';
 
 class RedirectElement extends UIElement<RedirectConfiguration> {
-    public static type = TxVariants.redirect;
+    public static readonly type: TxVariants = TxVariants.redirect;
 
-    public static defaultProps = {
+    public static readonly defaultProps = {
         type: RedirectElement.type
     };
 

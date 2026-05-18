@@ -411,6 +411,44 @@ describe('SecuredField handling placeholders from the placeholders config', () =
             expect(myCallback).toHaveBeenCalledWith(data);
         });
 
+        test('Check analytics event is submitted after "encryptionError" action', () => {
+            const submitAnalyticsSpy = jest.fn(() => {});
+
+            const localCard = new SecuredField(
+                {
+                    ...setupObj,
+                    fieldType: ENCRYPTED_SECURITY_CODE,
+                    submitAnalytics: submitAnalyticsSpy
+                },
+                global.i18n
+            );
+
+            const feedbackObj = {
+                action: 'encryptionError',
+                fieldType: ENCRYPTED_SECURITY_CODE,
+                numKey: localCard.numKey,
+                code: ErrorEventCode.SECURED_FIELDS_ENCRYPTION_ERROR,
+                error: 'Encryption failed'
+            };
+
+            const messageEvent = {
+                origin,
+                data: JSON.stringify(feedbackObj)
+            };
+
+            // @ts-ignore event type
+            localCard.postMessageListenerFn(messageEvent);
+
+            expect(submitAnalyticsSpy).toHaveBeenCalledWith({
+                timestamp: expect.any(String),
+                id: expect.any(String),
+                component: 'scheme',
+                errorType: ErrorEventType.internal,
+                code: ErrorEventCode.SECURED_FIELDS_ENCRYPTION_ERROR,
+                message: 'Encryption failed. Field= encryptedSecurityCode'
+            });
+        });
+
         test('Check callback is called after "focus" action', () => {
             card.onFocus(myCallback);
 

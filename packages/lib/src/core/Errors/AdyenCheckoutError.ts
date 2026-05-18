@@ -12,7 +12,7 @@ export const SCRIPT_ERROR = 'SCRIPT_ERROR';
 export const SDK_ERROR = 'SDK_ERROR';
 
 class AdyenCheckoutError extends Error {
-    protected static errorTypes = {
+    protected static readonly errorTypes = {
         /** Network error. */
         NETWORK_ERROR,
 

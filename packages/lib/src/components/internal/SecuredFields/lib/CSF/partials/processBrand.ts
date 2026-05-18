@@ -66,7 +66,7 @@ export default function processBrand({ csfState, csfConfig, csfProps, csfCallbac
 
         // Create object with brand related properties
         const brandInfoObj = treatAsGenericCard
-            ? pick(['brand', 'cvcPolicy', 'cvcText', 'expiryDatePolicy', 'showSocialSecurityNumber']).from(pFeedbackObj)
+            ? pick(['brand', 'cvcPolicy', 'cvcText', 'expiryDatePolicy', 'showSocialSecurityNumber', 'mode']).from(pFeedbackObj)
             : null;
 
         if (brandInfoObj && brandInfoObj.brand) {

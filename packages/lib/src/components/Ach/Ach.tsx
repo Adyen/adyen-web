@@ -8,9 +8,9 @@ import defaultProps from './defaultProps';
 import type { AchConfiguration } from './types';
 
 export class AchElement extends UIElement<AchConfiguration> {
-    public static type = TxVariants.ach;
+    public static readonly type = TxVariants.ach;
 
-    protected static defaultProps = defaultProps;
+    protected static readonly defaultProps = defaultProps;
 
     public override formatData() {
         const recurringPayment = !!this.props.storedPaymentMethodId;
@@ -61,7 +61,6 @@ export class AchElement extends UIElement<AchConfiguration> {
             <RedirectButton
                 showPayButton={this.props.showPayButton}
                 name={this.displayName}
-                amount={this.props.amount}
                 payButton={this.payButton}
                 onSubmit={this.submit}
                 ref={ref => {

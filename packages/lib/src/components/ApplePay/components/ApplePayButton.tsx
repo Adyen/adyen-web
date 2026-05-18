@@ -9,7 +9,7 @@ interface ApplePayButtonProps {
     onClick(): void;
 }
 
-const ApplePayButton = ({ buttonStyle, buttonType, buttonLocale, onClick }: ApplePayButtonProps) => {
+const ApplePayButton = ({ buttonStyle, buttonType, buttonLocale, onClick }: Readonly<ApplePayButtonProps>) => {
     return <apple-pay-button data-testid="apple-pay-button" buttonstyle={buttonStyle} type={buttonType} locale={buttonLocale} onclick={onClick} />;
 };
 

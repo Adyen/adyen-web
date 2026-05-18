@@ -5,7 +5,7 @@ export const getUrlFromMap = (env: CoreConfiguration['environment'], environment
     if (environmentUrl) {
         return environmentUrl;
     }
-    return environmentMap[env?.toLowerCase()] || environmentMap.fallback;
+    return environmentMap[env] || environmentMap.fallback;
 };
 
 export const resolveEnvironments = (environment: CoreConfiguration['environment'], environmentsUrls?: CoreConfiguration['_environmentUrls']) => {

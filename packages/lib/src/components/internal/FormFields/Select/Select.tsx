@@ -31,7 +31,7 @@ function Select({
     blurOnClose,
     onListToggle,
     required
-}: SelectProps) {
+}: Readonly<SelectProps>) {
     const { i18n } = useCoreContext();
     const filterInputRef = useRef(null);
     const selectContainerRef = useRef(null);
@@ -204,12 +204,12 @@ function Select({
         const value: string = (e.target as HTMLInputElement).value;
         setInputText(value);
         setTextFilter(value);
-        
+
         // Open the dropdown when user starts typing
         if (!showList) {
             openList();
         }
-        
+
         if (onInput) {
             onInput(value);
         }
@@ -321,14 +321,14 @@ function Select({
             <div
                 role="status"
                 aria-live="polite"
-                // aria-relevant seems to be needed here make make sure a second time we get 
+                // aria-relevant seems to be needed here make make sure a second time we get
                 // "No options found" we still announce the status message.
                 // What happens otherwise is that just the first status message is announced
                 // tested on VoiceOver on Chrome
                 aria-relevant="all"
                 className="adyen-checkout-sr-panel--sr-only"
-            > 
-                {statusMessage} 
+            >
+                {statusMessage}
             </div>
         </div>
     );

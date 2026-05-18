@@ -15,7 +15,7 @@ interface USOnlyPhoneInputProps {
     initialValue?: string;
 }
 
-const USOnlyPhoneInput = ({ initialValue, onChange }: USOnlyPhoneInputProps) => {
+const USOnlyPhoneInput = ({ initialValue, onChange }: Readonly<USOnlyPhoneInputProps>) => {
     const { i18n } = useCoreContext();
     const formSchema = ['mobileNumber'];
     const { handleChangeFor, data } = useForm<USOnlyPhoneInputStateData>({

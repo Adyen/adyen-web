@@ -5,15 +5,15 @@ import { KlarnaContainer } from './components/KlarnaContainer/KlarnaContainer';
 import { TxVariants } from '../tx-variants';
 import type { KlarnaAction, KlarnaAdditionalDetailsData, KlarnaComponentRef, KlarnaConfiguration } from './types';
 import type { ICore } from '../../core/types';
-import { PayButtonFunctionProps } from '../internal/UIElement/types';
+import { PayButtonProps } from '../internal/PayButton/PayButton';
 
 class KlarnaPayments extends UIElement<KlarnaConfiguration> {
-    public static type = TxVariants.klarna;
-    public static txVariants = [TxVariants.klarna, TxVariants.klarna_account, TxVariants.klarna_paynow, TxVariants.klarna_b2b];
+    public static readonly type = TxVariants.klarna;
+    public static readonly txVariants = [TxVariants.klarna, TxVariants.klarna_account, TxVariants.klarna_paynow, TxVariants.klarna_b2b];
 
     public componentRef: KlarnaComponentRef;
 
-    protected static defaultProps = {
+    protected static readonly defaultProps = {
         useKlarnaWidget: false
     };
 
@@ -38,8 +38,8 @@ class KlarnaPayments extends UIElement<KlarnaConfiguration> {
         };
     }
 
-    public payButton = (props: PayButtonFunctionProps) => {
-        return <PayButton amount={this.props.amount} onClick={this.submit} {...props} />;
+    public payButton = (props: PayButtonProps) => {
+        return <PayButton onClick={this.submit} {...props} />;
     };
 
     public override handleAction(action: KlarnaAction, props = {}): UIElement | null {

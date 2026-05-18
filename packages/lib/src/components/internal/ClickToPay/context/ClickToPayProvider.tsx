@@ -6,7 +6,6 @@ import { ClickToPayCheckoutPayload, IClickToPayService, IdentityLookupParams } f
 import ShopperCard from '../models/ShopperCard';
 import { ClickToPayProps } from '../types';
 import AdyenCheckoutError from '../../../../core/Errors/AdyenCheckoutError';
-import { PaymentAmount } from '../../../../types/global-types';
 import { UIElementStatus } from '../../UIElement/types';
 
 type ClickToPayProviderRef = {
@@ -17,7 +16,6 @@ export type ClickToPayProviderProps = {
     isStandaloneComponent: boolean;
     clickToPayService: IClickToPayService | null;
     configuration: ClickToPayProps;
-    amount: PaymentAmount;
     children: any;
     setClickToPayRef(ref): void;
     onSubmit(payload: ClickToPayCheckoutPayload): void;
@@ -28,14 +26,13 @@ export type ClickToPayProviderProps = {
 const ClickToPayProvider = ({
     isStandaloneComponent = false,
     clickToPayService,
-    amount,
     configuration,
     children,
     setClickToPayRef,
     onSubmit,
     onSetStatus,
     onError
-}: ClickToPayProviderProps) => {
+}: Readonly<ClickToPayProviderProps>) => {
     const [ctpService] = useState<IClickToPayService | null>(clickToPayService);
     const [ctpState, setCtpState] = useState<CtpState>(clickToPayService?.state || CtpState.NotAvailable);
     const [isCtpPrimaryPaymentMethod, setIsCtpPrimaryPaymentMethod] = useState<boolean>(true);
@@ -104,7 +101,6 @@ const ClickToPayProvider = ({
                 onSubmit,
                 onError,
                 onSetStatus,
-                amount,
                 configuration,
                 isStoringCookies: ctpService?.storeCookies,
                 isStandaloneComponent,

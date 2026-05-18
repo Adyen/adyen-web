@@ -1,5 +1,5 @@
 import PaymentMethods from './PaymentMethods';
-import { PaymentMethodsResponse } from '../../../types';
+import { PaymentMethodsResponse } from '../../../types/global-types';
 
 const paymentMethodsResponseMock: PaymentMethodsResponse = {
     paymentMethods: [
@@ -46,5 +46,31 @@ describe('PaymentMethodsResponse', () => {
     test('filters stored payment methods', () => {
         const pmResponse = new PaymentMethods(paymentMethodsResponseMock);
         expect(pmResponse.storedPaymentMethods.length).toBe(1);
+    });
+
+    describe('findByFundingSource()', () => {
+        const splitFundingResponse: PaymentMethodsResponse = {
+            paymentMethods: [
+                { name: 'Credit Card', type: 'scheme', fundingSource: 'credit' },
+                { name: 'Debit Card', type: 'scheme', fundingSource: 'debit' },
+                { name: 'PayPal', type: 'paypal' }
+            ]
+        };
+
+        test('should return the payment method matching both type and fundingSource', () => {
+            const pmResponse = new PaymentMethods(splitFundingResponse);
+            // eslint-disable-next-line testing-library/await-async-queries
+            const result = pmResponse.findByFundingSource('card', 'credit');
+            expect(result.name).toBe('Credit Card');
+            expect(result.fundingSource).toBe('credit');
+        });
+
+        test('should return the debit payment method when fundingSource is debit', () => {
+            const pmResponse = new PaymentMethods(splitFundingResponse);
+            // eslint-disable-next-line testing-library/await-async-queries
+            const result = pmResponse.findByFundingSource('card', 'debit');
+            expect(result.name).toBe('Debit Card');
+            expect(result.fundingSource).toBe('debit');
+        });
     });
 });

@@ -16,7 +16,7 @@ interface StoreDetailsProps {
 /**
  * "Store details" generic checkbox
  */
-function StoreDetails({ storeDetails = false, disabled = false, className = '', ...props }: StoreDetailsProps) {
+function StoreDetails({ storeDetails = false, disabled = false, className = '', ...props }: Readonly<StoreDetailsProps>) {
     const { i18n } = useCoreContext();
     const [value, setValue] = useState(storeDetails);
 

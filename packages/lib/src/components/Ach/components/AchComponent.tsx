@@ -17,6 +17,7 @@ import type { PayButtonProps } from '../../internal/PayButton/PayButton';
 import type { ComponentMethodsRef } from '../../internal/UIElement/types';
 import type { AchPlaceholders } from '../types';
 import type { AchStateErrors } from './useSRPanelForACHErrors';
+import { ValidationRuleResult } from '../../../utils/Validator/ValidationRuleResult';
 
 type AchForm = {
     selectedAccountType: string;
@@ -38,11 +39,11 @@ interface AchComponentProps {
     }: {
         data: AchForm;
         valid: { [key: string]: boolean };
-        errors: { [key: string]: any };
+        errors: { [key: string]: ValidationRuleResult };
         isValid: boolean;
         storePaymentMethod: boolean;
     }): void;
-    payButton: (props: Partial<PayButtonProps>) => h.JSX.Element;
+    payButton: (props: PayButtonProps) => h.JSX.Element;
     setComponentRef: (ref: ComponentMethodsRef) => void;
     hasHolderName: boolean;
     showPayButton: boolean;
@@ -60,7 +61,7 @@ function AchComponent({
     hasHolderName,
     setComponentRef,
     enableStoreDetails
-}: AchComponentProps) {
+}: Readonly<AchComponentProps>) {
     const getImage = useImage();
     const schema = useMemo(
         () => ['selectedAccountType', 'routingNumber', 'accountNumber', 'accountNumberVerification', ...(hasHolderName ? ['ownerName'] : [])],

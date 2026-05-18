@@ -445,6 +445,13 @@ Note: Error boundaries don't catch errors in event handlers or async code.
 
 Jest 29 + `@testing-library/preact` + `@testing-library/jest-dom`
 
+### commands
+
+```bash
+cd packages/lib
+&& yarn test
+```
+
 ### File Organization
 
 - Colocate: `Component.test.tsx` next to `Component.tsx`
@@ -471,6 +478,9 @@ Jest 29 + `@testing-library/preact` + `@testing-library/jest-dom`
 - **DO** use `waitFor()` for async assertions
 - **DO** test keyboard navigation and ARIA attributes
 - **DO** test error states and edge cases
+- **DO** maintain strict test isolation. Every test must be independent and idempotent, ensuring that the execution of one test does not influence the outcome of another through shared memory or persistent state.
+- **DO** use `await act()` when triggering state updates via refs or callbacks
+- **DO NOT** use `void act()` — always await the returned promise
 - **DO NOT** mock internal implementation (mock external APIs only)
 - **DO NOT** use `global.core` and `global.i18n` from test setup
 

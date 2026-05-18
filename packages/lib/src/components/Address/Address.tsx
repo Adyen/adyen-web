@@ -9,7 +9,7 @@ import { UIElementProps } from '../internal/UIElement/types';
 export type AddressConfiguration = AddressProps & UIElementProps;
 
 export class AddressElement extends UIElement<AddressConfiguration> {
-    public static type = TxVariants.address;
+    public static readonly type = TxVariants.address;
 
     protected override beforeRender(configSetByMerchant?: AddressConfiguration): void {
         const event = new AnalyticsInfoEvent({

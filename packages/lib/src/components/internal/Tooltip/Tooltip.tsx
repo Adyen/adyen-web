@@ -8,7 +8,7 @@ import { TooltipPosition, TooltipProps } from './types';
 // 8px space between the target and the tooltip
 const OFFSET = 8;
 
-export function Tooltip(props: TooltipProps) {
+export function Tooltip(props: Readonly<TooltipProps>) {
     const tooltipRef = useRef<HTMLDivElement>(null);
     const [position, setPosition] = useState<TooltipPosition>('top');
     const [isAnchorVisible, setIsAnchorVisible] = useState<boolean>(true);
@@ -36,7 +36,7 @@ export function Tooltip(props: TooltipProps) {
                 newPosition = spaceBelow > spaceAbove ? 'bottom' : 'top';
             }
 
-            const newStyle: any = {
+            const newStyle: h.JSX.CSSProperties = {
                 position: 'absolute',
                 left: offsetLeft + anchorRect.width / 2,
                 transform: 'translateX(-50%)',

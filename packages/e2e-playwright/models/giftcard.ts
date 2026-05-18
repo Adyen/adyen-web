@@ -9,9 +9,8 @@ const CVC_IFRAME_TITLE = LANG['giftcard.encryptedSecurityCode.aria.iframeTitle']
 const CARD_IFRAME_LABEL = LANG['giftcard.cardNumber.label'];
 const CVC_IFRAME_LABEL = LANG['giftcard.securityCode.label'];
 
-export class Giftcard extends Base {
+export class GiftCard extends Base {
     readonly rootElement: Locator;
-    readonly rootElementSelector: string;
 
     readonly cardNumberInput: Locator;
 
@@ -21,11 +20,10 @@ export class Giftcard extends Base {
 
     constructor(
         public readonly page: Page,
-        rootElementSelector = '.adyen-checkout__giftcard'
+        rootElementSelector: Locator | string = '.adyen-checkout__giftcard'
     ) {
         super(page);
-        this.rootElement = this.page.locator(rootElementSelector);
-        this.rootElementSelector = rootElementSelector;
+        this.rootElement = typeof rootElementSelector === 'string' ? this.page.locator(rootElementSelector) : rootElementSelector;
 
         const cardNumberIframe = this.rootElement.frameLocator(`[title="${CARD_IFRAME_TITLE}"]`);
         this.cardNumberInput = cardNumberIframe.locator(`input[aria-label="${CARD_IFRAME_LABEL}"]`);
@@ -63,7 +61,7 @@ export class Giftcard extends Base {
      *
      * For most of our test cases .fill can be seen to mimic a paste event
      */
-    async fillGiftcardNumber(cardNumber: string) {
+    async fillGiftCardNumber(cardNumber: string) {
         await this.cardNumberInput.fill(cardNumber);
     }
 

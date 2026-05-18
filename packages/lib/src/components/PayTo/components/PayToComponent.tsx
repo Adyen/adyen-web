@@ -22,10 +22,10 @@ export interface PayToComponentProps {
     setComponentRef: (ref: ComponentMethodsRef) => void;
     data: PayToData;
     placeholders: PayToPlaceholdersType;
-    payButton: (props: Partial<PayButtonProps>) => h.JSX.Element;
+    payButton: (props: PayButtonProps) => h.JSX.Element;
 }
 
-export default function PayToComponent(props: PayToComponentProps) {
+export default function PayToComponent(props: Readonly<PayToComponentProps>) {
     const { i18n } = useCoreContext();
 
     const [status, setStatus] = useState<UIElementStatus>('ready');

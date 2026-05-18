@@ -31,6 +31,8 @@ const logPostMsg = false;
 const doLog = false;
 
 class SecuredField extends AbstractSecuredField {
+    public override sfConfig: SecuredFieldCommonProps;
+
     constructor(pSetupObj: SecuredFieldSetupObject, i18n: Language) {
         super();
 
@@ -286,16 +288,28 @@ class SecuredField extends AbstractSecuredField {
                 this.onKeyPressedCallback(feedbackObj);
                 break;
 
+            case 'encryptionError': {
+                const event = new AnalyticsErrorEvent({
+                    component: this.componentType,
+                    code: feedbackObj.code,
+                    errorType: ErrorEventType.internal,
+                    message: `${feedbackObj.error}. Field= ${this.sfConfig.fieldType}`
+                });
+
+                this.submitAnalytics?.(event);
+                break;
+            }
+
             /**
              * Validate, because action =
              *
              *  'brand'
              *  'delete'
              *  'luhnCheck'
-             *              //'incomplete field' (an error that follows from a focus (blur) event)
-             *  'incorrectly filled field' (an error that follows from a focus (blur) event) // NEW
+             *  'incomplete field' (an error that follows from a focus (blur) event)
+             *  'incorrectly filled field' (an error that follows from a focus (blur) event)
              *  'numberKeyPressed' (or date-, month-, year-, cvc-, pin-, or iban- KeyPressed)
-             *    - since we have no "error" action "...KeyPressed" is the action type on most error events (other than "incomplete field" or "luhnCheck")
+             *    - since we have no "error" action "...KeyPressed" is the action type on most error events (other than "incomplete field, 'incorrectly filled field' or "luhnCheck")
              *    and often these error events representing the clearing of an existing error
              */
             default:

@@ -11,7 +11,10 @@ import {
 } from './constants';
 import { AdditionalDetailsData, ProcessedPaymentStatusResponse } from '../../types';
 
-export function usePaymentStatusTimer(props: UsePaymentStatusTimerProps): { state: PaymentStatusTimerState; actions: PaymentStatusTimerActions } {
+export function usePaymentStatusTimer(props: Readonly<UsePaymentStatusTimerProps>): {
+    state: PaymentStatusTimerState;
+    actions: PaymentStatusTimerActions;
+} {
     const [completed, setCompleted] = useState(false);
     const [expired, setExpired] = useState(false);
     const [loading, setLoading] = useState(true);

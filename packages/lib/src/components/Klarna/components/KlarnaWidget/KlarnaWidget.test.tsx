@@ -7,8 +7,8 @@ import { KLARNA_WIDGET_URL, KLARNA_REFUSED_RESULT_CODE } from '../../constants';
 import { KlarnaWidgetAuthorizeResponse, type KlarnaWidgetProps } from '../../types';
 import { CoreProvider } from '../../../../core/Context/CoreProvider';
 import { mock } from 'jest-mock-extended';
-import { PayButtonFunctionProps } from '../../../internal/UIElement/types';
 import type { IAnalytics } from '../../../../core/Analytics/Analytics';
+import { PayButtonProps } from '../../../internal/PayButton/PayButton';
 
 jest.mock('../../../../utils/Script', () => {
     return jest.fn().mockImplementation(() => {
@@ -44,7 +44,7 @@ describe('KlarnaWidget', () => {
     const paymentData = 'test';
     const paymentMethodType = 'klarna';
     const sdkData = { client_token: '123', payment_method_category: 'paynow' };
-    const payButton = (props: PayButtonFunctionProps) => (
+    const payButton = (props: PayButtonProps) => (
         <button data-testid="pay-with-klarna" {...props}>
             Pay with Klarna
         </button>

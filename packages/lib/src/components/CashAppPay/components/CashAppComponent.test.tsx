@@ -15,7 +15,7 @@ test('should initialize the CashAppPay through the CashAppService', async () => 
         <CashAppComponent
             onChangeStoreDetails={() => {}}
             onAuthorize={() => {}}
-            ref={jest.fn()}
+            setComponentRef={jest.fn()}
             onClick={jest.fn()}
             onError={jest.fn()}
             cashAppService={service}
@@ -64,7 +64,7 @@ test('should call onAuthorize when customer request is approved', async () => {
 
     render(
         <CashAppComponent
-            ref={jest.fn()}
+            setComponentRef={jest.fn()}
             onClick={jest.fn()}
             onChangeStoreDetails={jest.fn()}
             onAuthorize={onAuthorized}
@@ -90,7 +90,7 @@ test('should call onError with error type CANCEL when customer dismiss the pop-u
 
     render(
         <CashAppComponent
-            ref={jest.fn()}
+            setComponentRef={jest.fn()}
             onAuthorize={jest.fn()}
             onClick={jest.fn()}
             onChangeStoreDetails={jest.fn()}
@@ -116,7 +116,7 @@ test('should call onError with error type ERROR and CashApp is reinitialized whe
 
     render(
         <CashAppComponent
-            ref={jest.fn()}
+            setComponentRef={jest.fn()}
             onAuthorize={jest.fn()}
             onClick={jest.fn()}
             onChangeStoreDetails={jest.fn()}
@@ -145,7 +145,7 @@ test('should call onError with error type ERROR when customer request fails', as
 
     render(
         <CashAppComponent
-            ref={jest.fn()}
+            setComponentRef={jest.fn()}
             onAuthorize={jest.fn()}
             onClick={jest.fn()}
             onChangeStoreDetails={jest.fn()}

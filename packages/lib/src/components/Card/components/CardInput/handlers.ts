@@ -1,15 +1,28 @@
-import { ENCRYPTED_CARD_NUMBER, CREDIT_CARD_SF_FIELDS } from '../../../internal/SecuredFields/lib/constants';
+import { ENCRYPTED_CARD_NUMBER } from '../../../internal/SecuredFields/lib/constants';
 import { selectOne } from '../../../internal/SecuredFields/lib/utilities/dom';
 import { CardFocusData } from '../../../internal/SecuredFields/lib/types';
+import ua from '../../../internal/SecuredFields/lib/CSF/utils/userAgent';
+import { windowScrollTo } from '../../../../utils/windowScrollTo';
+import type { SecuredFieldsProviderRef } from '../../../internal/SecuredFields/SFP/types';
+import { CardSetFormData, CardSetFormValid, CardSetFormErrors, OnFieldFocus } from './types';
+import type { Dispatch, MutableRef, StateUpdater } from 'preact/hooks';
+import { isSecuredField } from '../../../internal/SecuredFields/utils';
 
 /**
  * Helper for CardInput - gets a field name and sets focus on it
  */
-export const setFocusOnFirstField = (isValidating, sfp, fieldToFocus) => {
+export const setFocusOnFirstField = (isValidating: boolean, sfp: SecuredFieldsProviderRef, fieldToFocus: string) => {
     if (isValidating) {
+        // Fix for iOS scrolling issues: can't programmatically set focus on a cross-origin element on iOS, so we scroll to it's label instead, so at least the element is in view
+        if (ua.__IS_IOS) {
+            const rootNode = sfp.current.getRootNode?.();
+            const elementToScrollTo: HTMLElement = rootNode?.querySelector(`[data-id="${fieldToFocus}"]`);
+            windowScrollTo(elementToScrollTo);
+        }
+
         // If not a cardInput related securedField - find field and set focus on it
-        if (!CREDIT_CARD_SF_FIELDS.includes(fieldToFocus)) {
-            setFocusOnNonSF(fieldToFocus, sfp);
+        if (!isSecuredField(fieldToFocus)) {
+            setFocusOnNonSF(fieldToFocus, sfp, ua.__IS_IOS);
         } else {
             // Is a securedField - so it has its own focus procedures
             sfp.current.setFocusOn(fieldToFocus);
@@ -17,7 +30,7 @@ export const setFocusOnFirstField = (isValidating, sfp, fieldToFocus) => {
     }
 };
 
-export const getAddressHandler = (setFormData, setFormValid, setFormErrors) => {
+export const getAddressHandler = (setFormData: CardSetFormData, setFormValid: CardSetFormValid, setFormErrors: CardSetFormErrors) => {
     // Return Handler fn:
     return address => {
         setFormData('billingAddress', address.data);
@@ -26,7 +39,7 @@ export const getAddressHandler = (setFormData, setFormValid, setFormErrors) => {
     };
 };
 
-export const getFocusHandler = (setFocusedElement, onFocus, onBlur) => {
+export const getFocusHandler = (setFocusedElement: Dispatch<StateUpdater<string>>, onFocus: OnFieldFocus, onBlur: OnFieldFocus) => {
     // Return Handler fn:
     return (e: CardFocusData) => {
         setFocusedElement(e.currentFocusObject);
@@ -34,7 +47,7 @@ export const getFocusHandler = (setFocusedElement, onFocus, onBlur) => {
     };
 };
 
-export const getAutoJumpHandler = (isAutoJumping, sfp, layout) => {
+export const getAutoJumpHandler = (isAutoJumping: MutableRef<boolean>, sfp: SecuredFieldsProviderRef, layout: string[]) => {
     return () => {
         if (!isAutoJumping.current) {
             isAutoJumping.current = true;
@@ -51,7 +64,7 @@ export const getAutoJumpHandler = (isAutoJumping, sfp, layout) => {
                  */
                 for (const field of subsequentFields) {
                     // Is the next field a credit card related securedField?
-                    if (CREDIT_CARD_SF_FIELDS.includes(field)) {
+                    if (isSecuredField(field)) {
                         const isOptionalOrHidden = sfp.current.sfIsOptionalOrHidden(field);
                         if (!isOptionalOrHidden) {
                             sfp.current.setFocusOn(field);
@@ -60,7 +73,7 @@ export const getAutoJumpHandler = (isAutoJumping, sfp, layout) => {
                     } else {
                         // If it isn't an SF - shift focus to it (we're currently not concerned with whether the field is optional)
 
-                        setFocusOnNonSF(field, sfp);
+                        setFocusOnNonSF(field, sfp, false);
                         break;
                     }
                 }
@@ -71,20 +84,20 @@ export const getAutoJumpHandler = (isAutoJumping, sfp, layout) => {
     };
 };
 
-const setFocusOnNonSF = (field, sfp) => {
-    let nameVal: string = field;
-
+const setFocusOnNonSF = (fieldName: string, sfp: SecuredFieldsProviderRef, shouldPreventScroll: boolean) => {
     // We have an exception with the kcp taxNumber where the name of the field ('kcpTaxNumberOrDOB') doesn't match
     // the value by which the field is referred to internally ('taxNumber')
-    if (nameVal === 'taxNumber') nameVal = 'kcpTaxNumberOrDOB';
+    if (fieldName === 'taxNumber') fieldName = 'kcpTaxNumberOrDOB';
 
-    if (nameVal === 'country' || nameVal === 'stateOrProvince') {
+    const rootNode = sfp.current.getRootNode?.();
+
+    if (fieldName === 'country' || fieldName === 'stateOrProvince') {
         // Set focus on dropdown
-        const field: HTMLElement = selectOne(sfp.current.rootNode, `.adyen-checkout__field--${nameVal} .adyen-checkout__filter-input`);
-        field?.focus();
+        const field: HTMLElement = selectOne(rootNode, `.adyen-checkout__field--${fieldName} .adyen-checkout__filter-input`);
+        field?.focus({ preventScroll: shouldPreventScroll }); // Don't even attempt to allow the focus call to trigger a scroll on iOS
     } else {
         // Set focus on input
-        const field: HTMLElement = selectOne(sfp.current.rootNode, `[name="${nameVal}"]`);
-        field?.focus();
+        const field: HTMLElement = selectOne(rootNode, `[name="${fieldName}"]`);
+        field?.focus({ preventScroll: shouldPreventScroll }); // Don't even attempt to allow the focus call to trigger a scroll on iOS
     }
 };

@@ -4,12 +4,12 @@ import { TxVariants } from '../tx-variants';
 import PreAuthorizedDebitCanadaComponent from './components/PreAuthorizedDebitCanadaComponent';
 import { SettlementInfo } from './components/SettlementInfo';
 import RedirectButton from '../internal/RedirectButton';
-import { payAmountLabel } from '../internal/PayButton';
+import { payAmountLabel } from '../internal/PayButton/utils';
 
 import type { PreAuthorizedDebitCanadaConfiguration } from './types';
 
 export class PreAuthorizedDebitCanada extends UIElement<PreAuthorizedDebitCanadaConfiguration> {
-    public static type = TxVariants.eft_directdebit_CA;
+    public static readonly type = TxVariants.eft_directdebit_CA;
 
     public override formatData() {
         const recurringPayment = !!this.props.storedPaymentMethodId;
@@ -71,7 +71,6 @@ export class PreAuthorizedDebitCanada extends UIElement<PreAuthorizedDebitCanada
                     icon={this.resources?.getImage({ imageFolder: 'components/' })(`bento_lock`)}
                     label={payAmountLabel(this.props.i18n, this.props.amount)}
                     name={this.displayName}
-                    amount={this.props.amount}
                     payButton={this.payButton}
                     onSubmit={this.submit}
                     ref={ref => {

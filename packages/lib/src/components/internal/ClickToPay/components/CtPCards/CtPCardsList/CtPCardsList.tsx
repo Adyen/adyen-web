@@ -23,7 +23,7 @@ type CardsSelectorDataState = {
 
 const schema = ['srcDigitalCardId'];
 
-const CtPCardsList = ({ cardSelected, cards, errorMessage, onChangeCard }: CtPCardsListProps) => {
+const CtPCardsList = ({ cardSelected, cards, errorMessage, onChangeCard }: Readonly<CtPCardsListProps>) => {
     const { i18n } = useCoreContext();
     const getImage = useImage();
     const { status } = useClickToPayContext();

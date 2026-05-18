@@ -15,7 +15,7 @@ interface GiftcardExampleProps {
     renderCard?: boolean; // Add a new prop to control which component to render
 }
 
-export const GiftcardExample = ({ contextArgs, renderCard = true }: GiftcardExampleProps) => {
+export const GiftcardExample = ({ contextArgs, renderCard = true }: Readonly<GiftcardExampleProps>) => {
     const container = useRef(null);
     const checkout = useRef<Checkout | null>(null);
     const [element, setElement] = useState<UIElement | null>(null);

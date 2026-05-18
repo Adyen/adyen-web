@@ -10,7 +10,7 @@ import './Field.scss';
 import { PREFIX } from '../../Icon/constants';
 import uuid from '../../../../utils/uuid';
 
-const Field: FunctionalComponent<FieldProps> = props => {
+const Field: FunctionalComponent<Readonly<FieldProps>> = props => {
     const {
         children,
         className,
@@ -51,7 +51,7 @@ const Field: FunctionalComponent<FieldProps> = props => {
     // or whether it has an id attr that can be pointed to by an aria-describedby attr on an input element
     const contextVisibleToSR = contextVisibleToScreenReader ?? true;
     const showError = showErrorElement && typeof errorMessage === 'string' && errorMessage.length > 0;
-    const showContext = showContextualElement && !showError && contextualText?.length > 0;
+    const showContext = showContextualElement && !showError && contextualText && contextualText.length > 0;
 
     const uniqueId = useRef(getUniqueId(`adyen-checkout-${name}`));
     const staticValueId = useMemo(() => (staticValue ? `input-static-value-${uuid()}` : null), [staticValue]);
@@ -114,7 +114,7 @@ const Field: FunctionalComponent<FieldProps> = props => {
             <span
                 className={classNames({ 'adyen-checkout-contextual-text--error': true, 'adyen-checkout-contextual-text--hidden': !showError })}
                 {...(contextVisibleToSR && { id: `${uniqueId.current}${ARIA_ERROR_SUFFIX}` })}
-                aria-hidden={contextVisibleToSR ? null : 'true'}
+                aria-hidden={contextVisibleToSR ? undefined : 'true'}
             >
                 {errorMessage}
             </span>
@@ -123,7 +123,7 @@ const Field: FunctionalComponent<FieldProps> = props => {
             <span
                 className={classNames({ 'adyen-checkout-contextual-text': true, 'adyen-checkout-contextual-text--hidden': !showContext })}
                 {...(contextVisibleToSR && { id: `${uniqueId.current}${ARIA_CONTEXT_SUFFIX}` })}
-                aria-hidden={contextVisibleToSR ? null : 'true'}
+                aria-hidden={contextVisibleToSR ? undefined : 'true'}
             >
                 {contextualText}
             </span>
@@ -204,7 +204,7 @@ const Field: FunctionalComponent<FieldProps> = props => {
 
             return useLabelElement ? (
                 // if we are NOT dealing with the label for a securedField... we can give it a `for` attribute
-                <label {...defaultWrapperProps} {...(!isSecuredField && name && { htmlFor: uniqueId })}>
+                <label {...defaultWrapperProps} {...(!isSecuredField && name && { htmlFor: uniqueId, id: `${uniqueId}-label` })}>
                     {children}
                 </label>
             ) : (
@@ -233,7 +233,7 @@ const Field: FunctionalComponent<FieldProps> = props => {
             className={classNames(
                 'adyen-checkout__field',
                 className,
-                classNameModifiers.map(m => `adyen-checkout__field--${m}`),
+                classNameModifiers?.map(m => `adyen-checkout__field--${m}`),
                 {
                     'adyen-checkout__field--error': errorMessage,
                     'adyen-checkout__field--valid': isValid,

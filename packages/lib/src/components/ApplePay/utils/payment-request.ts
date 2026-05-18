@@ -1,9 +1,15 @@
 import { getDecimalAmount } from '../../../utils/amount-util';
 import { PaymentAmount } from '../../../types/global-types';
+import { ApplePayConfiguration } from '../types';
 
 const formatAmount = (amount: PaymentAmount) => String(getDecimalAmount(amount.value, amount.currency));
 
-export const preparePaymentRequest = (paymentRequest): ApplePayJS.ApplePayPaymentRequest => {
+export const preparePaymentRequest = (
+    paymentRequest: ApplePayConfiguration & {
+        countryCode: string;
+        companyName: string;
+    }
+): ApplePayJS.ApplePayPaymentRequest => {
     const { countryCode, companyName, amount, ...props } = paymentRequest;
     const formattedAmount = formatAmount(amount);
 
@@ -38,7 +44,10 @@ export const preparePaymentRequest = (paymentRequest): ApplePayJS.ApplePayPaymen
         billingContact: props.billingContact,
         shippingContact: props.shippingContact,
 
-        applicationData: props.applicationData
+        applicationData: props.applicationData,
+
+        couponCode: props.couponCode,
+        supportsCouponCode: props.supportsCouponCode
     };
 };
 

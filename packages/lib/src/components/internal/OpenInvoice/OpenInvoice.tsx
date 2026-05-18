@@ -30,7 +30,7 @@ const consentCBErrorObj: GenericError = {
     error: 'consent.checkbox.invalid'
 };
 
-export default function OpenInvoice(props: OpenInvoiceProps) {
+export default function OpenInvoice(props: Readonly<OpenInvoiceProps>) {
     const { countryCode, visibility } = props;
     const { i18n } = useCoreContext();
 

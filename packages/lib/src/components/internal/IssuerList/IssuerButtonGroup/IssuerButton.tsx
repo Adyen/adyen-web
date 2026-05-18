@@ -11,7 +11,7 @@ interface IssuerButtonProps {
     icon?: string;
 }
 
-function IssuerButton({ name, id, icon, onClick, selected = false }: IssuerButtonProps) {
+function IssuerButton({ name, id, icon, onClick, selected = false }: Readonly<IssuerButtonProps>) {
     return (
         <button
             type="button"

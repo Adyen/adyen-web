@@ -14,7 +14,7 @@ export interface MandateSummaryProps {
 // this is the order the fields are going to be displayed in the UI
 const orderedMandateTableFields = ['payee', 'remarks', 'amount', 'frequency', 'startsAt', 'endsAt'];
 
-export default function MandateSummary({ mandate, currencyCode, payee }: MandateSummaryProps) {
+export default function MandateSummary({ mandate, currencyCode, payee }: Readonly<MandateSummaryProps>) {
     const { i18n } = useCoreContext();
     const tableFields: DetailsTableData = orderedMandateTableFields.map((key: keyof MandateType | 'payee') => {
         // get the label for the key, like payto.mandate.amount.label, payto.mandate.frequency.label

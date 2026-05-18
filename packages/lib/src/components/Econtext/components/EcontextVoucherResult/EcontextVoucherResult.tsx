@@ -7,7 +7,7 @@ import { EcontextVoucherResultProps } from '../../types';
 import useImage from '../../../../core/Context/useImage';
 import { extractCommonPropsForVoucher } from '../../../internal/Voucher/utils';
 
-const EcontextVoucherResult = (props: EcontextVoucherResultProps) => {
+const EcontextVoucherResult = (props: Readonly<EcontextVoucherResultProps>) => {
     const { i18n } = useCoreContext();
     const getImage = useImage();
 

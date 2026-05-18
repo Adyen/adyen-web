@@ -17,7 +17,7 @@ export interface ANCVInputProps extends UIElementProps {
 
 type ANCVInputDataState = ANCVDataState;
 
-function ANCVInput({ showPayButton, payButton, onChange, onSubmit }: ANCVInputProps) {
+function ANCVInput({ showPayButton, payButton, onChange, onSubmit }: Readonly<ANCVInputProps>) {
     const { i18n } = useCoreContext();
 
     const { handleChangeFor, triggerValidation, data, valid, errors, isValid } = useForm<ANCVInputDataState>({

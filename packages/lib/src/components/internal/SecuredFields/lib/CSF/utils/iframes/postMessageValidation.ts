@@ -31,7 +31,7 @@ export const originCheckPassed = (event: MessageEvent, pLoadingContext: string, 
 
 // Catch webpack postMessages responses
 export const isWebpackPostMsg = (event: MessageEvent): boolean =>
-    event.data && event.data.type && typeof event.data.type === 'string' && event.data.type.indexOf('webpack') > -1;
+    event.data && event.data.type && typeof event.data.type === 'string' && event.data.type.includes('webpack');
 
 // Catch ChromeVox postMessages responses
-export const isChromeVoxPostMsg = (event: MessageEvent): boolean => event.data && typeof event.data === 'string' && event.data.indexOf('cvox') > -1;
+export const isChromeVoxPostMsg = (event: MessageEvent): boolean => event.data && typeof event.data === 'string' && event.data.includes('cvox');

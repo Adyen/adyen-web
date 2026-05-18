@@ -33,9 +33,9 @@ class Script implements IScript {
 
     private script: HTMLScriptElement;
     private loadPromise: Promise<void> | null = null;
-    private rejectLoadPromise: (reason?: any) => void | null = null;
+    private rejectLoadPromise: (reason?: unknown) => void | null = null;
     private resolveLoadScript: (() => void) | null = null;
-    private rejectLoadScript: ((reason?: any) => void) | null = null;
+    private rejectLoadScript: ((reason?: unknown) => void) | null = null;
 
     private readonly handleOnLoad = () => {
         this.script?.setAttribute('data-script-loaded', 'true');

@@ -2,12 +2,11 @@ import { h } from 'preact';
 import { useCoreContext } from '../../../core/Context/CoreProvider';
 import { SignOutButtonProps } from '../types';
 
-export default function SignOutButton(props: SignOutButtonProps) {
+export default function SignOutButton(props: Readonly<SignOutButtonProps>) {
     const { i18n } = useCoreContext();
 
     const handleClick = () => {
-        // eslint-disable-next-line @typescript-eslint/no-misused-promises
-        new Promise(props.onSignOut)
+        new Promise((resolve, reject) => void props.onSignOut(resolve, reject))
             .then(() => {
                 props.amazonRef.Pay.signout();
             })
@@ -17,7 +16,7 @@ export default function SignOutButton(props: SignOutButtonProps) {
     return (
         <button
             type="button"
-            className="adyen-checkout__button  adyen-checkout__button--ghost adyen-checkout__amazonpay__button--signOut"
+            className="adyen-checkout__button adyen-checkout__button--ghost adyen-checkout__amazonpay__button--signOut"
             onClick={handleClick}
         >
             {i18n.get('amazonpay.signout')}

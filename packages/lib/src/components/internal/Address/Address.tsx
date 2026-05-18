@@ -16,7 +16,7 @@ import AddressSearch from './components/AddressSearch';
 import { ComponentMethodsRef } from '../UIElement/types';
 import './Address.scss';
 
-export default function Address(props: AddressProps) {
+export default function Address(props: Readonly<AddressProps>) {
     const { i18n } = useCoreContext();
 
     const { label = '', requiredFields, visibility, iOSFocusedField = null, showContextualElement } = props;
@@ -197,7 +197,7 @@ export default function Address(props: AddressProps) {
 
     return (
         <Fragment>
-            <Fieldset classNameModifiers={[label, 'address']} label={label}>
+            <Fieldset classNameModifiers={[label, 'address']} label={label} renderLabelAsSectionHeading>
                 {showAddressSearch && (
                     <AddressSearch
                         onAddressLookup={props.onAddressLookup}

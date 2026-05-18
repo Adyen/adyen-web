@@ -11,12 +11,12 @@ import {
 } from '../internal/SecuredFields/lib/types';
 import { CVCPolicyType, DatePolicyType, CardAllValidData } from '../internal/SecuredFields/lib/types';
 import { ClickToPayProps } from '../internal/ClickToPay/types';
-import { InstallmentOptions } from './components/CardInput/components/types';
 import { DisclaimerMsgObject } from '../internal/DisclaimerMessage/DisclaimerMessage';
 import { UIElementProps } from '../internal/UIElement/types';
 import type { OnAddressLookupType, OnAddressSelectedType } from '../internal/Address/components/AddressSearch';
 import type { FastlaneSignupConfiguration } from '../PayPalFastlane/types';
 import type { ChallengeWindowSize } from '../ThreeDS2/types';
+import { InstallmentOptions } from './components/CardInput/components/Installments/Installments';
 
 type PlaceholderKeys =
     | 'holderName'
@@ -27,6 +27,8 @@ type PlaceholderKeys =
     | 'securityCodeThreeDigits'
     | 'securityCodeFourDigits'
     | 'password';
+
+export type FundingSourceKeys = 'credit' | 'debit' | 'prepaid';
 
 export type CardPlaceholders = Partial<Record<PlaceholderKeys, string>>;
 
@@ -189,10 +191,12 @@ export interface CardConfiguration extends UIElementProps {
     forceCompat?: boolean;
 
     /**
-     * Funding source field populated when 'splitCardFundingSources' is used
-     * @internal
+     * Funding source field populated when 'splitCardFundingSources' is configured in `sessions/` call
+     * This value is automatically set in Drop-in integration. For standalone integration, it can be set manually.
+     * When provided, it ensures the component loads configuration specific to that funding source (e.g. credit, debit, prepaid)
+     * - merchant set config option
      */
-    fundingSource?: 'debit' | 'credit' | 'prepaid';
+    fundingSource?: FundingSourceKeys;
 
     /**
      *  Decides whether the CVC (Security Code) component will even be rendered.
@@ -372,8 +376,8 @@ export interface CardConfiguration extends UIElementProps {
     showBrandIcon?: boolean;
 
     /**
-     * Show/hide the contextual text under each form field. The contextual text is to assist shoppers filling in the payment form.
-     * @defaultValue `true`
+     * Show/Hide contextual element next to the logo
+     * @defaultValue true
      *
      * - merchant set config option
      */
@@ -480,7 +484,7 @@ interface CardPaymentMethodData {
     type: string;
     brand?: string;
     storedPaymentMethodId?: string;
-    fundingSource?: 'debit' | 'credit' | 'prepaid';
+    fundingSource?: FundingSourceKeys;
     holderName?: string;
     encryptedCardNumber?: string;
     encryptedExpiryMonth?: string;
@@ -538,3 +542,12 @@ export interface DualBrandSelectElement {
     id: string;
     brandObject: BrandObject;
 }
+
+export interface DualBrandButtons {
+    id: string;
+    name: string;
+    imageURL: string;
+    altName: string;
+}
+
+export type DualBrandingChangeHandler = (brandValue: string) => void;

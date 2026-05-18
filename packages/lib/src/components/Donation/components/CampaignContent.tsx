@@ -17,7 +17,7 @@ export default function CampaignContent({
     causeName = '',
     nonprofitUrl = '',
     bannerUrl = ''
-}: CampaignContentProps) {
+}: Readonly<CampaignContentProps>) {
     return (
         <div className="adyen-checkout__campaign">
             {nonprofitUrl ? (

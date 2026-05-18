@@ -13,12 +13,13 @@ import {
 } from './layouts';
 import { AddressSpecifications, StringObject } from '../../../internal/Address/types';
 import { PARTIAL_ADDRESS_SCHEMA } from '../../../internal/Address/constants';
-import { InstallmentsObj } from './components/Installments/Installments';
+import type { InstallmentOptions, InstallmentsState } from './components/Installments/Installments';
 import { SFPProps } from '../../../internal/SecuredFields/SFP/types';
 import { BRAND_READABLE_NAME_MAP } from '../../../internal/SecuredFields/lib/constants';
 import useImage, { UseImageHookType } from '../../../../core/Context/useImage';
 import { SF_ErrorCodes } from '../../../../core/Errors/constants';
-import { BrandObject, CardBrandsConfiguration, DualBrandSelectElement } from '../../types';
+import { BrandObject, CardBrandsConfiguration, DualBrandSelectElement, DualBrandButtons } from '../../types';
+import { PaymentAmount } from '../../../../types';
 
 export const getCardImageUrl = (brand: string, getImage: UseImageHookType): string => {
     const imageOptions = {
@@ -30,11 +31,13 @@ export const getCardImageUrl = (brand: string, getImage: UseImageHookType): stri
 };
 
 /**
- * Verifies that installment object is valid to send to the Backend.
- * Valid means that it has 'revolving' plan set, or the number of installments is bigger than one
+ * 'installments' should be added to the payload if it has plan as revolving or bonus
+ * or value greater than 1.
+ *
+ * More about it here: COWEB-1070
  */
-export const hasValidInstallmentsObject = (installments?: InstallmentsObj) => {
-    return installments?.plan === 'revolving' || installments?.value > 1;
+export const shouldIncludeInstallmentsInPaymentData = (installment?: InstallmentsState): boolean => {
+    return ['revolving', 'bonus'].includes(installment?.plan) || installment?.value > 1;
 };
 
 export const getLayout = ({
@@ -112,8 +115,7 @@ export const mapFieldKey = (key: string, i18n: Language, countrySpecificLabels: 
 
 export const extractPropsForCardFields = (props: CardInputProps) => {
     return {
-        // Extract props for CardFieldsWrapper & StoredCardFieldsWrapper(just needs amount, hasCVC, installmentOptions)
-        amount: props.amount,
+        // Extract props for CardFieldsWrapper & StoredCardFieldsWrapper(just needs hasCVC, installmentOptions)
         billingAddressRequired: props.billingAddressRequired,
         billingAddressRequiredFields: props.billingAddressRequiredFields,
         billingAddressAllowedCountries: props.billingAddressAllowedCountries,
@@ -136,7 +138,7 @@ export const extractPropsForCardFields = (props: CardInputProps) => {
     };
 };
 
-export const extractPropsForSFP = (props: CardInputProps) => {
+export const extractPropsForSFP = (props: CardInputProps): Pick<SFPProps, 'clientKey' | 'loadingContext'> & Partial<SFPProps> => {
     return {
         autoFocus: props.autoFocus,
         brands: props.brands,
@@ -167,7 +169,7 @@ export const extractPropsForSFP = (props: CardInputProps) => {
         showContextualElement: props.showContextualElement,
         showWarnings: props.showWarnings,
         trimTrailingSeparator: props.trimTrailingSeparator
-    } as SFPProps; // Can't set as return type on fn or it will complain about missing, mandatory, props
+    };
 };
 
 export const handlePartialAddressMode = (addressMode: AddressModeOptions): AddressSpecifications | null => {
@@ -185,16 +187,19 @@ export function lookupBlurBasedErrors(errorCode) {
     ].includes(errorCode);
 }
 
-export function getFullBrandName(brand) {
+export function getFullBrandName(brand: string): string {
     return BRAND_READABLE_NAME_MAP[brand] ?? brand;
 }
 
-export const mapDualBrandButtons = (dualBrandSelectElements: DualBrandSelectElement[], brandsConfiguration: CardBrandsConfiguration): any => {
+export const mapDualBrandButtons = (
+    dualBrandSelectElements: DualBrandSelectElement[],
+    brandsConfiguration?: CardBrandsConfiguration
+): DualBrandButtons[] => {
     return dualBrandSelectElements.map(item => {
         const brand = item.id;
         const getImage = useImage();
         const imageName = brand === 'card' ? 'nocard' : brand;
-        const imageURL = brandsConfiguration[brand]?.icon ?? getCardImageUrl(imageName, getImage);
+        const imageURL = brandsConfiguration?.[brand]?.icon ?? getCardImageUrl(imageName, getImage);
 
         // TODO - check below if we have to still generate altName through the mapping function or whether it just
         //  corresponds to item.brandObject.localeBrand
@@ -208,14 +213,43 @@ export const mapDualBrandButtons = (dualBrandSelectElements: DualBrandSelectElem
 };
 
 /**
- *  Only if the brands in EU_BrandArray are present in the binLookup response should we handle dual branding based on EU regulations
+ *  Checks if any of the brands requiring a selection mechanism are present in the binLookup response.
  *
- * If the result from Array.some is true - then we are in a EU dual branding regulation scenario, i.e.
- * - Show the new dualBranding UI Buttons
+ * If the result from Array.some is true - then we are in a dual branding scenario that requires selection, i.e.
+ * - Show the dualBranding selector UI
  * - Preselect a card brand
  */
-export const mustHandleDualBrandingAccordingToEURegulations = (
-    EU_BrandArray: readonly string[],
+export const requiresDualBrandSelection = (
+    brandsRequiringSelection: readonly string[],
     returnedDualBrandingObjects: DualBrandSelectElement[] | BrandObject[],
     key: string
-) => returnedDualBrandingObjects.some(item => EU_BrandArray.includes(item[key]));
+) => returnedDualBrandingObjects.some(item => brandsRequiringSelection.includes(item[key]));
+
+/**
+ * Determines whether the Installments component should be rendered.
+ *
+ * Installments Component is displayed when:
+ * - installmentOptions is provided and not empty
+ * - amount is provided and not zero
+ * - fundingSource is not provided or is 'credit'
+ *
+ * @param params.installmentOptions - The installment configuration options
+ * @param params.fundingSource - The card funding source (e.g. 'credit', 'debit')
+ * @param params.amount - The payment amount
+ * @returns Whether the Installments component should be rendered
+ */
+export const shouldShowInstallmentsComponent = ({
+    installmentOptions,
+    fundingSource,
+    amount
+}: {
+    installmentOptions?: InstallmentOptions;
+    fundingSource?: string;
+    amount?: PaymentAmount;
+}): boolean => {
+    if (!installmentOptions || Object.keys(installmentOptions).length === 0) return false;
+    if (!amount || amount.value === 0) return false;
+    if (fundingSource && fundingSource !== 'credit') return false;
+
+    return true;
+};

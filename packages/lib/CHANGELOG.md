@@ -1,5 +1,149 @@
 # @adyen/adyen-web
 
+## 6.36.0
+
+### Minor Changes
+
+- New: Adding support for Giving in the /sessions flow. If the /payments response mandates it we will automatically mount and handle a Donation component. ([#3878](https://github.com/Adyen/adyen-web/pull/3878))
+
+### Patch Changes
+
+- Fixed: ClickToPay info modal title and Address section title now use `<h2>` for correct heading hierarchy. ([#3966](https://github.com/Adyen/adyen-web/pull/3966))
+
+- Fixed: PayByBankUS Drop-in row no longer hides issuer brand icons on narrow viewports. ([#3964](https://github.com/Adyen/adyen-web/pull/3964))
+
+- Fixed: Iris segemented control order switch bug on Drop in after pay button click ([#3981](https://github.com/Adyen/adyen-web/pull/3981))
+
+- Fixed: Select not announcing name, and association with listbox ([#3980](https://github.com/Adyen/adyen-web/pull/3980))
+
+- Improved: HTML semantics in some elements ([#3913](https://github.com/Adyen/adyen-web/pull/3913))
+
+## 6.35.0
+
+### Minor Changes
+
+- Improved: Co-badged card selection UI inside card PAN field ([#3883](https://github.com/Adyen/adyen-web/pull/3883))
+
+- New: The payload returned in the `onSubmit` callback has increased in size, because of changes to the included `sdkData` field. ([#3956](https://github.com/Adyen/adyen-web/pull/3956))
+
+## 6.34.1
+
+### Patch Changes
+
+- Fixed: Validating countryCode after library initialization ([#3951](https://github.com/Adyen/adyen-web/pull/3951))
+
+- Fixed: Form label font-weight to bold ([#3951](https://github.com/Adyen/adyen-web/pull/3951))
+
+- Improved: Types for UPI mandate (Autopay) object by making `endsAt` a required property ([#3951](https://github.com/Adyen/adyen-web/pull/3951))
+
+- Fixed: add html inert property to disable focus of payment method item details when the payment method is not selected ([#3951](https://github.com/Adyen/adyen-web/pull/3951))
+
+- Fixed: Remove explicit any from utilities, language and UMD entry ([#3951](https://github.com/Adyen/adyen-web/pull/3951))
+
+- Fixed: overflowing text content for drop-in payment list items ([#3951](https://github.com/Adyen/adyen-web/pull/3951))
+
+## 6.34.0
+
+### Minor Changes
+
+- Improved: responsiveness of payment method list items with brand icons on mobile screens ([#3886](https://github.com/Adyen/adyen-web/pull/3886))
+
+- Improved: Types of amazon pay component ([#3912](https://github.com/Adyen/adyen-web/pull/3912))
+
+- Improved: Add app icons images to UPI dropin payment method item ([#3886](https://github.com/Adyen/adyen-web/pull/3886))
+
+- New: Including English translations in the bundle as fallback ([#3895](https://github.com/Adyen/adyen-web/pull/3895))
+
+- New: Add internal BrandIcon component ([#3886](https://github.com/Adyen/adyen-web/pull/3886))
+
+- New: SDK requests the translations from CDN only if the locale is supported ([#3895](https://github.com/Adyen/adyen-web/pull/3895))
+
+- Improved: Types for PayPal and Cashapppay components ([#3908](https://github.com/Adyen/adyen-web/pull/3908))
+
+### Patch Changes
+
+- Fixed: Attempt ID request blocking the UI rendering ([#3924](https://github.com/Adyen/adyen-web/pull/3924))
+
+- Fixed: Explicit any in Card.tsx and it's subdirectories ([#3906](https://github.com/Adyen/adyen-web/pull/3906))
+
+- Fixed: Explicit any in internal/SecuredFields and it's subdirectories ([#3922](https://github.com/Adyen/adyen-web/pull/3922))
+
+## 6.33.0
+
+### Minor Changes
+
+- New: Add Apple Pay Coupon Code Support ([#3801](https://github.com/Adyen/adyen-web/pull/3801))
+
+## 6.32.1
+
+### Patch Changes
+
+- Fixed: Updated Passkey SDK version to 1.2.0 for PayByBankPix component ([#3879](https://github.com/Adyen/adyen-web/pull/3879))
+
+- Fixed: Display correct amount on PayButton after redeeming giftcard on Dropin with sessions ([#3880](https://github.com/Adyen/adyen-web/pull/3880))
+
+- Fixed: Reported issue with PayButtonProps.onClick type ([#3864](https://github.com/Adyen/adyen-web/pull/3864))
+
+- Fixed: Update german label for compliance reasons zahlen -> kaufen ([#3873](https://github.com/Adyen/adyen-web/pull/3873))
+
+- Fixed: Standardize payment button label with amount across SDKs for consistency ([#3875](https://github.com/Adyen/adyen-web/pull/3875))
+
+## 6.32.0
+
+### Minor Changes
+
+- New: Add support for allowedIssuerCountryCodes and blockedIssuerCountryCodes props on GooglePay ([#3806](https://github.com/Adyen/adyen-web/pull/3806))
+
+- Fixed: Add support for split funding source card components on sessions ([#3828](https://github.com/Adyen/adyen-web/pull/3828))
+
+### Patch Changes
+
+- Fixed: restored the debounce time for analytics error and log events back to 300ms ([#3845](https://github.com/Adyen/adyen-web/pull/3845))
+
+- Fixed: An a11y issue around the title of the securedField's iframe (it was getting read twice) ([#3837](https://github.com/Adyen/adyen-web/pull/3837))
+
+- Fixed: default GooglePay environment to PRODUCTION instead of TEST for unrecognized environment strings ([#3853](https://github.com/Adyen/adyen-web/pull/3853))
+
+- Fixed: removes getProp util in favour of more type-safe direct property access ([#3835](https://github.com/Adyen/adyen-web/pull/3835))
+
+- Fixed: Do not show Installments component if amount is unavailable ([#3858](https://github.com/Adyen/adyen-web/pull/3858))
+
+## 6.31.1
+
+### Patch Changes
+
+- Aligning 3DS2 analytics errors with mobile sdks. Catch and propagate securedField encryption and key generation errors ([#3804](https://github.com/Adyen/adyen-web/pull/3804))
+
+- Fixed: issue in iOS where programmatic focus was not causing the affected field to scroll into view ([#3802](https://github.com/Adyen/adyen-web/pull/3802))
+
+## 6.31.0
+
+### Minor Changes
+
+- Improved: Upgrade Preact version to 10.28.2 ([#3762](https://github.com/Adyen/adyen-web/pull/3762))
+
+- Improved: Added support for Bonus installments (JP) ([#3797](https://github.com/Adyen/adyen-web/pull/3797))
+
+- New: Allowing amount updates without re-initializing Drop-in/Components ([#3741](https://github.com/Adyen/adyen-web/pull/3741))
+
+### Patch Changes
+
+- Fixed: Card installments dropdown does not block the pay button ([#3800](https://github.com/Adyen/adyen-web/pull/3800))
+
+## 6.30.0
+
+### Minor Changes
+
+- Improved: remove usused css classses ([#3776](https://github.com/Adyen/adyen-web/pull/3776))
+
+- Fix: Removed UPI Collect support to comply with NPCI regulations, updating default flows to QR code for desktop and Intent for mobile. ([#3777](https://github.com/Adyen/adyen-web/pull/3777))
+
+### Patch Changes
+
+- Fixed: Detect when the containing element for a component that relies on securedFields, is not in the DOM. This means the iframe can never configure since, in order for the window.postMessage to be sent, the iframe has to be in the DOM ([#3768](https://github.com/Adyen/adyen-web/pull/3768))
+
+- Fix: Getting checkout attempt ID directly from Analytics module ([#3781](https://github.com/Adyen/adyen-web/pull/3781))
+
 ## 6.29.0
 
 ### Minor Changes

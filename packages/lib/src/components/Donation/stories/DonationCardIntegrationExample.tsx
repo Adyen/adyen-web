@@ -10,6 +10,7 @@ import { PaymentMethodStoryProps } from '../../../../storybook/types';
 import { createDonation, getDonationCampaigns, makeDetailsCall, makePayment } from '../../../../storybook/helpers/checkout-api-calls';
 import { handleError, handleFinalState } from '../../../../storybook/helpers/checkout-handlers';
 import { ComponentContainer } from '../../../../storybook/components/ComponentContainer';
+import { STORYBOOK_ENVIRONMENT_URLS } from '../../../../storybook/config/commonConfig';
 import Spinner from '../../internal/Spinner';
 
 export interface DonationIntegrationExampleProps {
@@ -34,6 +35,7 @@ export const DonationCardIntegrationExample = ({ countryCode, amount, redirectRe
             // @ts-ignore CLIENT_ENV has valid value
             environment: process.env.CLIENT_ENV,
             countryCode,
+            _environmentUrls: STORYBOOK_ENVIRONMENT_URLS,
             onSubmit: async (state, _, actions) => {
                 try {
                     const paymentData = {
@@ -98,6 +100,7 @@ export const DonationCardIntegrationExample = ({ countryCode, amount, redirectRe
             // @ts-ignore CLIENT_ENV has valid value
             environment: process.env.CLIENT_ENV,
             countryCode,
+            _environmentUrls: STORYBOOK_ENVIRONMENT_URLS,
             onAdditionalDetails: async (state: AdditionalDetailsData, _, actions) => {
                 try {
                     const {

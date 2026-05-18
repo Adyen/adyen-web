@@ -16,8 +16,8 @@ interface IframeProps {
     callback?: (contentWindow) => void;
 }
 
-class Iframe extends Component<IframeProps> {
-    public static defaultProps = {
+class Iframe extends Component<Readonly<IframeProps>> {
+    public static readonly defaultProps = {
         width: '0',
         height: '0',
         minWidth: '0',

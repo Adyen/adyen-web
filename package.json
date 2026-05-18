@@ -25,28 +25,31 @@
         "test:watch": "yarn workspace @adyen/adyen-web test:watch",
         "test:coverage": "yarn workspace @adyen/adyen-web test:coverage",
         "test:e2e": "yarn workspace @adyen/adyen-web-playwright test:headless",
+        "test:ui": "yarn workspace @adyen/adyen-web-playwright test:ui",
         "test:e2e:update-screenshots": "yarn workspace @adyen/adyen-web-playwright test:update-screenshots",
         "test:automated-a11y": "yarn workspace @adyen/adyen-web-playwright test:automated-a11y:headless",
         "test:automated-visual": "yarn workspace @adyen/adyen-web-playwright test:automated-visual:headless",
         "test:automated-visual:update-screenshots": "yarn workspace @adyen/adyen-web-playwright test:automated-visual:update-screenshots",
         "type-check": "yarn workspace @adyen/adyen-web type-check",
         "changeset": "changeset",
+        "changeset:empty": "changeset --empty",
         "version": "changeset version && yarn install",
-        "validate:fix": "yarn workspaces foreach --all run validate:fix"
+        "validate:fix": "yarn workspaces foreach --all run validate:fix",
+        "validate:strict": "yarn workspace @adyen/adyen-web validate:strict",
+        "validate:locales": "node scripts/validate-locales.js"
     },
     "devDependencies": {
         "@adyen/adyen-web-server": "1.0.0",
-        "@changesets/cli": "2.29.8",
-        "@changesets/get-github-info": "0.7.0",
+        "@changesets/cli": "2.30.0",
+        "@changesets/get-github-info": "0.8.0",
         "concurrently": "9.2.1",
         "cross-env": "10.1.0",
         "husky": "9.1.7",
-        "lint-staged": "16.2.7",
-        "prettier": "3.7.4"
+        "lint-staged": "16.4.0",
+        "prettier": "3.8.3"
     },
     "resolutions": {
-        "tar-fs": "^3.0.9",
-        "cheerio": "1.0.0-rc.12"
+        "tar-fs": "^3.0.9"
     },
-    "packageManager": "yarn@4.12.0"
+    "packageManager": "yarn@4.13.0"
 }

@@ -28,3 +28,34 @@
         color: orange;
     }
 }
+
+::backdrop {
+  background-image: linear-gradient(
+                  45deg,
+                  white,
+                  green
+  );
+  opacity: 0.75;
+}
+
+#donation-dialog {
+  display: none;
+}
+
+#donation-dialog[open] {
+  display: block;
+}
+
+.modal {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.4rem;
+  width: 450px;
+  padding: 1rem;
+  min-height: 250px;
+  position: absolute;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 15px;
+}

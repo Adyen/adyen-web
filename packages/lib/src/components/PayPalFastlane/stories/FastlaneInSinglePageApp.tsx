@@ -16,7 +16,7 @@ interface Props {
     checkoutConfig: GlobalStoryProps;
 }
 
-export const FastlaneInSinglePageApp = ({ checkoutConfig }: Props) => {
+export const FastlaneInSinglePageApp = ({ checkoutConfig }: Readonly<Props>) => {
     const [componentConfig, setComponentConfig] = useState<FastlanePaymentMethodConfiguration>(null);
 
     const handleOnCheckoutStep = config => {

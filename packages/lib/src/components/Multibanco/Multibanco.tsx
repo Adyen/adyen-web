@@ -6,7 +6,7 @@ import { TxVariants } from '../tx-variants';
 import { VoucherConfiguration } from '../internal/Voucher/types';
 
 export class MultibancoElement extends UIElement<VoucherConfiguration> {
-    public static type = TxVariants.multibanco;
+    public static readonly type = TxVariants.multibanco;
 
     get isValid() {
         return true;
@@ -30,13 +30,9 @@ export class MultibancoElement extends UIElement<VoucherConfiguration> {
         };
     }
 
-    private handleRef = ref => {
-        this.componentRef = ref;
-    };
-
     protected override componentToRender(): h.JSX.Element {
         if (this.props.reference) {
-            return <MultibancoVoucherResult ref={this.handleRef} {...this.props} onActionHandled={this.onActionHandled} />;
+            return <MultibancoVoucherResult {...this.props} onActionHandled={this.onActionHandled} />;
         }
 
         if (this.props.showPayButton) {
@@ -44,7 +40,6 @@ export class MultibancoElement extends UIElement<VoucherConfiguration> {
                 <RedirectButton
                     showPayButton={this.props.showPayButton}
                     name={this.displayName}
-                    amount={this.props.amount}
                     payButton={this.payButton}
                     onSubmit={this.submit}
                     ref={ref => {

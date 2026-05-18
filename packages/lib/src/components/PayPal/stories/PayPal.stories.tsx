@@ -76,7 +76,14 @@ export const MultiplePayPalButtons: Story = {
         componentConfiguration: {
             blockPayPalCreditButton: false,
             blockPayPalPayLaterButton: false,
-            blockPayPalVenmoButton: false
+            blockPayPalVenmoButton: false,
+            onAuthorized: (data, actions) => {
+                console.log({ data });
+                // Simulate async action after authorization
+                setTimeout(() => {
+                    actions.resolve();
+                }, 3000);
+            }
         }
     }
 };

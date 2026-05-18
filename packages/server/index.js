@@ -15,6 +15,7 @@ const getDonationCampaigns = require('./api/donationCampaign');
 const createDonation = require('./api/donation');
 const paypalUpdateOrder = require('./api/paypalUpdateOrder');
 const getTranslation = require('./api/translations');
+const sessionPatch = require('./api/sessionPatch');
 
 // Load environment variables
 const isHttps = process.env.IS_HTTPS === 'true';
@@ -55,6 +56,8 @@ module.exports = (app = express(), options = {}) => {
     app.all('/api/orders/cancel', (req, res) => cancelOrder(res, req.body));
 
     app.all('/api/sessions', (req, res) => createSession(res, req.body));
+
+    app.all('/api/sessions/:sessionId', (req, res) => sessionPatch(req, res));
 
     app.all('/api/mock/addressSearch', (req, res) => mockAddressSearch(res, req));
 

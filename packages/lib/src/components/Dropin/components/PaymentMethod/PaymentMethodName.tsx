@@ -1,9 +1,10 @@
-import classNames from 'classnames';
 import { h } from 'preact';
+import classNames from 'classnames';
+
 import './PaymentMethodName.scss';
 
 const PaymentMethodName = ({ displayName, additionalInfo, isSelected }) => (
-    <span className={'adyen-checkout__payment-method__name_wrapper'}>
+    <div className={'adyen-checkout__payment-method__name_wrapper'}>
         <span
             className={classNames({
                 'adyen-checkout__payment-method__name': true,
@@ -23,7 +24,7 @@ const PaymentMethodName = ({ displayName, additionalInfo, isSelected }) => (
                 {additionalInfo}
             </span>
         )}
-    </span>
+    </div>
 );
 
 export default PaymentMethodName;

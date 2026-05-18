@@ -1,117 +1,115 @@
-import { mount } from 'enzyme';
-import { h } from 'preact';
-import { render, screen } from '@testing-library/preact';
+import { createRef, h } from 'preact';
+import { render, screen, waitFor } from '@testing-library/preact';
+import userEvent from '@testing-library/user-event';
 import IbanInput from './IbanInput';
-import { GenericError } from '../../../core/Errors/types';
 import { CoreProvider } from '../../../core/Context/CoreProvider';
+import { GenericError } from '../../../core/Errors/types';
 
-const createWrapper = (props = {}) =>
-    mount(
+const renderIbanInput = (props = {}) => {
+    const ibanRef = createRef();
+    const view = render(
         <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
-            <IbanInput data={{}} {...props} />
+            <IbanInput ref={ibanRef} data={{}} {...props} />
         </CoreProvider>
     );
 
-const ibanErrorObj: GenericError = {
-    isValid: false,
-    errorMessage: 'sepaDirectDebit.ibanField.invalid',
-    error: 'sepaDirectDebit.ibanField.invalid'
+    return { ibanRef, view };
 };
-
-const ibanHolderNameErrorObj: GenericError = {
-    isValid: false,
-    errorMessage: 'ach.accountHolderNameField.invalid',
-    error: 'ach.accountHolderNameField.invalid'
-};
-
 describe('IbanInput', () => {
-    test('Renders two fields', () => {
-        const wrapper = createWrapper();
-        expect(wrapper.find('input[name="ownerName"]')).toHaveLength(1);
-        expect(wrapper.find('input[name="ibanNumber"]')).toHaveLength(1);
+    test('should render holder name and iban number fields', async () => {
+        renderIbanInput();
+        expect(await screen.findByLabelText('Holder Name')).toBeInTheDocument();
+        expect(await screen.findByLabelText('Account Number (IBAN)')).toBeInTheDocument();
     });
 
     describe('Validation Errors', () => {
-        test('Set iban errors', () => {
-            const wrapper = createWrapper();
-            wrapper.find('IbanInput').instance().setError('iban', ibanErrorObj);
-            wrapper.update();
-            expect(wrapper.find('.adyen-checkout__field--error')).toHaveLength(1);
-            expect(wrapper.find('input[name="ibanNumber"]').prop('aria-invalid')).toBe(true);
+        test('should show iban error on blur with invalid value and clear on valid input', async () => {
+            const user = userEvent.setup();
+            renderIbanInput();
 
-            wrapper.find('IbanInput').instance().setError('iban', false);
-            wrapper.update();
-            expect(wrapper.find('.adyen-checkout__field--error')).toHaveLength(0);
-            expect(wrapper.find('input[name="ibanNumber"]').prop('aria-invalid')).toBe(false);
+            const ibanInput = await screen.findByLabelText('Account Number (IBAN)');
+
+            await user.type(ibanInput, 'NL13TEST0123456781');
+            await user.tab();
+
+            await waitFor(() => {
+                expect(ibanInput).toHaveAttribute('aria-invalid', 'true');
+            });
+
+            await user.clear(ibanInput);
+            await user.tab();
+
+            await waitFor(() => {
+                expect(ibanInput).toHaveAttribute('aria-invalid', 'false');
+            });
         });
 
-        test('Set holderName errors', () => {
-            const wrapper = createWrapper();
-            wrapper.find('IbanInput').instance().setError('holder', ibanHolderNameErrorObj);
-            wrapper.update();
-            expect(wrapper.find('.adyen-checkout__field--error')).toHaveLength(1);
+        test('should show holderName error', async () => {
+            const { ibanRef } = renderIbanInput();
 
-            wrapper.find('IbanInput').instance().setError('holder', false);
-            wrapper.update();
-            expect(wrapper.find('.adyen-checkout__field--error')).toHaveLength(0);
+            const ibanHolderNameErrorObj: GenericError = {
+                isValid: false,
+                errorMessage: 'ach.accountHolderNameField.invalid',
+                error: 'ach.accountHolderNameField.invalid'
+            };
+
+            const holderInput = await screen.findByLabelText('Holder Name');
+
+            ibanRef.current.setError('holder', ibanHolderNameErrorObj);
+
+            await waitFor(() => {
+                expect(holderInput).toHaveAttribute('aria-invalid', 'true');
+            });
         });
     });
 
     describe('Validation Success', () => {
-        test('Set iban validation success', () => {
-            const wrapper = createWrapper();
-            wrapper.find('IbanInput').instance().setValid('iban', true);
-            wrapper.update();
-            expect(wrapper.find('.adyen-checkout__input--valid')).toHaveLength(1);
+        test('should mark iban as valid when a correct IBAN is entered', async () => {
+            const user = userEvent.setup();
+            const { view } = renderIbanInput();
 
-            wrapper.find('IbanInput').instance().setValid('iban', false);
-            wrapper.update();
-            expect(wrapper.find('.adyen-checkout__field--valid')).toHaveLength(0);
+            const ibanInput = await screen.findByLabelText('Account Number (IBAN)');
+
+            await user.type(ibanInput, 'NL13TEST0123456789');
+
+            await waitFor(() => {
+                // eslint-disable-next-line testing-library/no-node-access, testing-library/no-container
+                expect(view.container.querySelector('.adyen-checkout__input--valid')).toBeInTheDocument();
+            });
         });
     });
 
     describe('Placeholders', () => {
-        test('Set iban placeholder', () => {
-            const wrapper = createWrapper({ placeholders: { ibanNumber: 'test' } });
-            expect(wrapper.find('input[name="ibanNumber"]').prop('placeholder')).toBe('test');
+        test('should set iban placeholder', async () => {
+            renderIbanInput({ placeholders: { ibanNumber: 'test' } });
+            expect(await screen.findByPlaceholderText('test')).toBeInTheDocument();
         });
 
-        test('Set holderName placeholder', () => {
-            const wrapper = createWrapper({ placeholders: { ownerName: 'test' } });
-            expect(wrapper.find('input[name="ownerName"]').prop('placeholder')).toBe('test');
+        test('should set holderName placeholder', async () => {
+            renderIbanInput({ placeholders: { ownerName: 'test' } });
+            expect(await screen.findByPlaceholderText('test')).toBeInTheDocument();
         });
     });
 
     describe('Send values from outside', () => {
-        const createElement = (props = {}) => {
-            return (
-                <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
-                    <IbanInput data={{}} {...props} />
-                </CoreProvider>
-            );
-        };
-
-        test('Set ibanNumber', async () => {
-            const el = createElement({ data: { ibanNumber: 'NL13TEST0123456789' } });
-            render(el);
+        test('should set ibanNumber', async () => {
+            renderIbanInput({ data: { ibanNumber: 'NL13TEST0123456789' } });
 
             const inputEl = await screen.findByLabelText('Account Number (IBAN)');
 
             expect(inputEl).toHaveValue('NL13 TEST 0123 4567 89');
         });
 
-        test('Set ibanNumber formatted', async () => {
-            const el = createElement({ data: { ibanNumber: 'NL13 TEST 0123 4567 89' } });
-            render(el);
+        test('should set ibanNumber formatted', async () => {
+            renderIbanInput({ data: { ibanNumber: 'NL13 TEST 0123 4567 89' } });
 
             const inputEl = await screen.findByLabelText('Account Number (IBAN)');
 
             expect(inputEl).toHaveValue('NL13 TEST 0123 4567 89');
         });
 
-        test('Set ownerName', async () => {
-            const el = createElement({ data: { ownerName: 'Hello World' } });
-            render(el);
+        test('should set ownerName', async () => {
+            renderIbanInput({ data: { ownerName: 'Hello World' } });
 
             const inputEl = await screen.findByLabelText('Holder Name');
 

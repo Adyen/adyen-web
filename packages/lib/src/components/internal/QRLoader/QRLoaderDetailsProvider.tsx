@@ -23,7 +23,7 @@ type QRLoaderDetailsContextValue = Omit<QRLoaderDetailsProviderProps, 'children'
 
 const QRLoaderDetailsContext = createContext<QRLoaderDetailsContextValue | undefined>(undefined);
 
-const QRLoaderDetailsProvider = ({ children, ...props }: QRLoaderDetailsProviderProps) => {
+const QRLoaderDetailsProvider = ({ children, ...props }: Readonly<QRLoaderDetailsProviderProps>) => {
     return <QRLoaderDetailsContext.Provider value={{ ...props }}>{children}</QRLoaderDetailsContext.Provider>;
 };
 

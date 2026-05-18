@@ -47,7 +47,7 @@ const IDENTIFIER_SCHEMA = {
     [PayToIdentifierEnum.orgid]: ['orgid']
 };
 
-export default function PayIDInput({ setComponentRef, defaultData, placeholders, onChange, setStatus, id }: PayIDInputProps) {
+export default function PayIDInput({ setComponentRef, defaultData, placeholders, onChange, setStatus, id }: Readonly<PayIDInputProps>) {
     const { i18n } = useCoreContext();
 
     const form = useForm<PayIdFormData>({

@@ -36,7 +36,7 @@ export default function SendCopyToEmail(props) {
                     errorMessage={getErrorMessage(i18n, errors, i18n.get('shopperEmail'))}
                     name={'shopperEmail'}
                 >
-                    <InputEmail name={'shopperEmail'} autoCorrect={'off'} spellCheck={false} value={value} onInput={onInput} onBlur={onBlur} />
+                    <InputEmail name={'shopperEmail'} autoCorrect={'off'} spellcheck={false} value={value} onInput={onInput} onBlur={onBlur} />
                 </Field>
             )}
         </div>

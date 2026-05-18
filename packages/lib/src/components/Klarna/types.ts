@@ -1,13 +1,8 @@
 import { type ComponentMethodsRef, UIElementProps } from '../internal/UIElement/types';
 import { PaymentAction, ResultCode } from '../../types/global-types';
 import { AdditionalDetailsData } from '../../core/types';
-
-declare global {
-    interface Window {
-        Klarna: any;
-        klarnaAsyncCallback: any;
-    }
-}
+import type { h } from 'preact';
+import type { PayButtonProps } from '../internal/PayButton/PayButton';
 
 /** sdkData present in Klarna `action`objects. */
 export type KlarnaSdkData = {
@@ -33,7 +28,7 @@ interface KlarnaPaymentsShared {
 
 export interface KlarnaWidgetProps extends KlarnaPaymentsShared {
     /** @internal */
-    payButton: (options) => any;
+    payButton: (props: PayButtonProps) => h.JSX.Element;
     /** @internal */
     onLoaded: () => void;
 
@@ -52,7 +47,7 @@ export interface KlarnaWidgetAuthorizeResponse {
     approved: boolean;
     show_form: boolean;
     authorization_token: string;
-    error?: any;
+    error?: unknown;
 }
 
 export interface KlarnaComponentRef extends ComponentMethodsRef {

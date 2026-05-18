@@ -5,14 +5,27 @@ import Img from '../../../Img';
 import { useMemo } from 'preact/hooks';
 import classnames from 'classnames';
 
-function SelectButtonElement({ filterable, toggleButtonRef, ...props }) {
+function SelectButtonElement({ filterable, toggleButtonRef, showList, selectListId, ...props }) {
     if (filterable) {
         // Even if passed, we can't add an id to this div since it is not allowed to associate a div with a label element
         const { id, ...strippedProps } = props;
         return <div {...strippedProps} ref={toggleButtonRef} />;
     }
 
-    return <button id={props.id} aria-expanded={props.showList} aria-disabled={props.readonly} aria-describedby={props.ariaDescribedBy} type={'button'} {...props} ref={toggleButtonRef} />;
+    return (
+        <button
+            id={props.id}
+            aria-haspopup="listbox"
+            aria-expanded={showList}
+            aria-controls={selectListId}
+            aria-disabled={props.readonly}
+            aria-describedby={props.ariaDescribedBy}
+            aria-labelledby={props.id ? `${props.id}-label ${props.id}-value` : undefined}
+            type={'button'}
+            {...props}
+            ref={toggleButtonRef}
+        />
+    );
 }
 
 function SelectButton(props: Readonly<SelectButtonProps>) {
@@ -45,7 +58,6 @@ function SelectButton(props: Readonly<SelectButtonProps>) {
     // 3. Otherwise we just toggle the list
     const onClickHandler = readonly ? null : props.filterable ? setFocus : props.toggleList;
 
-
     // check COWEB-1301 [Investigate] Drop-in Accessibility - ADA Compliance questions
     const currentSelectedItemId = active.id ? `listItem-${active.id}` : '';
 
@@ -65,11 +77,14 @@ function SelectButton(props: Readonly<SelectButtonProps>) {
             onKeyDown={!readonly ? props.onButtonKeyDown : null}
             toggleButtonRef={props.toggleButtonRef}
             id={props.id}
+            showList={showList}
+            selectListId={props.selectListId}
         >
             {!props.filterable ? (
                 <Fragment>
                     {selected.icon && <Img className="adyen-checkout__dropdown__button__icon" src={selected.icon} alt={selected.name} />}
                     <span
+                        id={props.id ? `${props.id}-value` : undefined}
                         className={classnames('adyen-checkout__dropdown__button__text', {
                             'adyen-checkout__dropdown__button__text-placeholder': isShowingPlaceholder
                         })}

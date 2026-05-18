@@ -1,4 +1,4 @@
-import { h } from 'preact';
+import { createRef, h } from 'preact';
 import checkPaymentStatus from '../../../core/Services/payment-status';
 import { Await } from './Await';
 import { fireEvent, render, screen, waitFor } from '@testing-library/preact';
@@ -7,11 +7,33 @@ import { AwaitComponentProps } from './types';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 import SRPanelProvider from '../../../core/Errors/SRPanelProvider';
 import { SRPanel } from '../../../core/Errors/SRPanel';
+import { AmountProvider, AmountProviderProps } from '../../../core/Context/AmountProvider';
 
 jest.mock('../../../core/Services/payment-status');
 
+const renderAwait = ({
+    awaitProps,
+    amountProviderProps
+}: {
+    awaitProps: AwaitComponentProps;
+    amountProviderProps?: Partial<AmountProviderProps>;
+}) => {
+    const srPanel = new SRPanel(global.core);
+
+    return render(
+        <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+            <SRPanelProvider srPanel={srPanel}>
+                <AmountProvider {...amountProviderProps} providerRef={createRef()}>
+                    <Await {...awaitProps} />
+                </AmountProvider>
+            </SRPanelProvider>
+        </CoreProvider>
+    );
+};
+
 describe('Await', () => {
     const assignSpy = jest.fn();
+
     const defaultProps: AwaitComponentProps = {
         countdownTime: 0,
         onActionHandled: jest.fn(),
@@ -27,17 +49,8 @@ describe('Await', () => {
         type: 'mbway',
         awaitText: 'test'
     };
-    const srPanel = new SRPanel(global.core);
-    const renderAwait = (props: AwaitComponentProps) => {
-        return render(
-            // @ts-ignore ignore
-            <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
-                <SRPanelProvider srPanel={srPanel}>
-                    <Await {...props} />
-                </SRPanelProvider>
-            </CoreProvider>
-        );
-    };
+
+    const amountProviderProps = { amount: { currency: 'USD', value: 1000 } };
 
     beforeAll(() => {
         Object.defineProperty(window, 'location', {
@@ -56,36 +69,38 @@ describe('Await', () => {
         });
 
         test('should show the spinner', async () => {
-            renderAwait(defaultProps);
+            renderAwait({ awaitProps: defaultProps, amountProviderProps });
             expect(await screen.findByTestId('spinner')).toBeTruthy();
         });
 
         test('should show brand logo', async () => {
-            renderAwait(defaultProps);
+            renderAwait({ awaitProps: defaultProps, amountProviderProps });
             const image = await screen.findByAltText(defaultProps.type);
             // @ts-ignore src is part of img
             expect(image.src).toContain(defaultProps.brandLogo);
         });
 
         test('should show a countdown timer', async () => {
-            renderAwait(defaultProps);
+            renderAwait({ awaitProps: defaultProps, amountProviderProps });
             expect(await screen.findByRole('timer')).toBeTruthy();
         });
 
         test('should show redirect button', async () => {
-            renderAwait({ ...defaultProps, url: 'redirect-url' });
+            renderAwait({ awaitProps: { ...defaultProps, url: 'redirect-url' }, amountProviderProps });
             expect(await screen.findByRole('button')).toBeTruthy();
         });
 
         test('click the redirect button should call location.assign', async () => {
-            renderAwait({ ...defaultProps, url: 'redirect-url' });
+            renderAwait({ awaitProps: { ...defaultProps, url: 'redirect-url' }, amountProviderProps });
             fireEvent.click(await screen.findByRole('button'));
             expect(assignSpy).toHaveBeenCalled();
         });
 
         test('should call location.assign if there is an url and shouldRedirectAutomatically is true', async () => {
             assignSpy.mockReset();
-            renderAwait({ ...defaultProps, shouldRedirectAutomatically: true, url: 'redirect-url' });
+
+            renderAwait({ awaitProps: { ...defaultProps, url: 'redirect-url', shouldRedirectAutomatically: true }, amountProviderProps });
+
             await waitFor(() => expect(assignSpy).toHaveBeenCalled());
             const button = screen.queryByRole('button');
             expect(button).not.toBeInTheDocument();
@@ -100,13 +115,15 @@ describe('Await', () => {
         });
 
         test('should show an error image', async () => {
-            renderAwait(defaultProps);
+            renderAwait({ awaitProps: defaultProps, amountProviderProps });
+
             const image = await screen.findByAltText(/payment.*? failed/i);
             expect(image).toBeTruthy();
         });
 
         test('should call onComplete if there is a payload', async () => {
-            renderAwait(defaultProps);
+            renderAwait({ awaitProps: defaultProps, amountProviderProps });
+
             await waitFor(() =>
                 expect(defaultProps.onComplete).toHaveBeenCalledWith({
                     data: {
@@ -121,7 +138,8 @@ describe('Await', () => {
             (checkPaymentStatus as jest.Mock).mockReset();
             checkPaymentStatusValue = { error: 'Un-known error' };
             (checkPaymentStatus as jest.Mock).mockResolvedValue(checkPaymentStatusValue);
-            renderAwait(defaultProps);
+            renderAwait({ awaitProps: defaultProps, amountProviderProps });
+
             await waitFor(() =>
                 expect(defaultProps.onError).toHaveBeenCalledWith(new AdyenCheckoutError('ERROR', 'error result with no payload in response'))
             );
@@ -136,13 +154,14 @@ describe('Await', () => {
         });
 
         test('should show a success image', async () => {
-            renderAwait(defaultProps);
+            renderAwait({ awaitProps: defaultProps, amountProviderProps });
             const image = await screen.findByAltText(/payment.*? successful/i);
             expect(image).toBeTruthy();
         });
 
         test('should call onComplete if there is a payload', () => {
-            renderAwait(defaultProps);
+            renderAwait({ awaitProps: defaultProps, amountProviderProps });
+
             expect(defaultProps.onComplete).toHaveBeenCalledWith({
                 data: {
                     details: { payload: checkPaymentStatusValue.payload },
@@ -159,12 +178,14 @@ describe('Await', () => {
         });
 
         test('should show the spinner on init', async () => {
-            renderAwait(defaultProps);
+            renderAwait({ awaitProps: defaultProps, amountProviderProps });
+
             expect(await screen.findByTestId('spinner')).toBeTruthy();
         });
 
         test('should show brand logo', async () => {
-            renderAwait(defaultProps);
+            renderAwait({ awaitProps: defaultProps, amountProviderProps });
+
             const image = await screen.findByAltText(defaultProps.type);
             // @ts-ignore src is part of img
             expect(image.src).toContain(defaultProps.brandLogo);

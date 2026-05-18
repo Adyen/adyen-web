@@ -6,7 +6,7 @@ import getDataset from '../../../../core/Services/get-dataset';
 import { StateFieldItem, StateFieldProps } from '../types';
 import Select from '../../FormFields/Select';
 
-export default function StateField(props: StateFieldProps) {
+export default function StateField(props: Readonly<StateFieldProps>) {
     const { classNameModifiers, label, onDropdownChange, readOnly, selectedCountry, specifications, value, required } = props;
     const { i18n, loadingContext } = useCoreContext();
     const [states, setStates] = useState<StateFieldItem[]>([]);

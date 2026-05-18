@@ -6,12 +6,15 @@ import { protocol } from './environment-variables';
 
 dotenv.config({ path: path.resolve('../../', '.env') });
 
-const playgroundBaseUrl = `${protocol}://localhost:3020`;
+export const WEB_SERVER_TIMEOUT_MS = 180_000;
+
+export const STORYBOOK_PORT = 3020;
+export const STORYBOOK_URL = `${protocol}://localhost:${STORYBOOK_PORT}`;
 
 const snapshotPathTemplate = '{testDir}/{testFileDir}/__screenshots__/{platform}/{projectName}/{arg}{ext}';
 
 export const SCREENSHOT_CONFIG = {
-    maxDiffPixels: 1000,
+    maxDiffPixels: 1_000,
     maxDiffPixelRatio: 0.01,
     animations: 'disabled',
     scale: 'device'
@@ -26,7 +29,7 @@ const config: PlaywrightTestConfig = {
     // Exclude the automated tests which run in a separate pipeline
     testIgnore: ['**/automated/**'],
     /* Maximum time one test can run for. */
-    timeout: 60 * 1000,
+    timeout: 60_000,
     expect: {
         /**
          * Maximum time expect() should wait for the condition to be met.
@@ -56,13 +59,13 @@ const config: PlaywrightTestConfig = {
         /* Maximum time each action such as `click()` can take. Defaults to 0 (no limit). */
         actionTimeout: 30_000,
         /* Base URL to use in actions like `await page.goto('/')`. */
-        baseURL: playgroundBaseUrl,
+        baseURL: STORYBOOK_URL,
 
         /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
         trace: 'on-first-retry',
         ignoreHTTPSErrors: true,
         screenshot: 'only-on-failure',
-        video: 'retain-on-failure'
+        video: 'on-first-retry'
     },
 
     /* Configure projects for major browsers */
@@ -95,11 +98,11 @@ const config: PlaywrightTestConfig = {
     /* Run your local dev server before starting the tests */
     webServer: [
         {
-            command: 'npm run build:storybook:e2e && npm run start:prod-storybook',
+            command: 'yarn build:storybook:e2e && yarn start:prod-storybook',
             cwd: '../..',
-            port: 3020,
+            port: STORYBOOK_PORT,
             reuseExistingServer: !process.env.CI,
-            timeout: 120 * 1000
+            timeout: WEB_SERVER_TIMEOUT_MS
         }
     ]
 };

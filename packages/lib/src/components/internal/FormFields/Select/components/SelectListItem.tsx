@@ -5,7 +5,7 @@ import Img from '../../../Img';
 import Icon from '../../../Icon';
 import { PREFIX } from '../../../Icon/constants';
 
-const SelectListItem = ({ item, active, selected, ...props }: SelectItemProps) => {
+const SelectListItem = ({ item, active, selected, ...props }: Readonly<SelectItemProps>) => {
     return (
         /* eslint-disable jsx-a11y/click-events-have-key-events  */
         <li

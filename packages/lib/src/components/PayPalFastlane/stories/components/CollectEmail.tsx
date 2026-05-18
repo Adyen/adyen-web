@@ -10,7 +10,7 @@ interface CollectEmailProps {
     onEditEmail: () => void;
 }
 
-export const CollectEmail = ({ fastlaneSdk, onFastlaneLookup, onEditEmail }: CollectEmailProps) => {
+export const CollectEmail = ({ fastlaneSdk, onFastlaneLookup, onEditEmail }: Readonly<CollectEmailProps>) => {
     const [email, setEmail] = useState<string>(null);
     const [viewOnly, setViewOnly] = useState<boolean>(false);
 

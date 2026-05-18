@@ -27,7 +27,14 @@ export interface PhoneInputFieldProps {
  * @param PhoneInputFormProps
  * @constructor
  */
-export default function PhoneInputFields({ getError, showNumber, showPrefix, form, canSelectPrefix = true, ...props }: PhoneInputFieldProps) {
+export default function PhoneInputFields({
+    getError,
+    showNumber,
+    showPrefix,
+    form,
+    canSelectPrefix = true,
+    ...props
+}: Readonly<PhoneInputFieldProps>) {
     const { i18n } = useCoreContext();
 
     const { handleChangeFor, data, valid } = form;

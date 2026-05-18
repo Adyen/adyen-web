@@ -7,17 +7,17 @@ import { CashAppPayElementData, CashAppPayConfiguration, CashAppPayEventData } f
 import { ICashAppService } from './services/types';
 import defaultProps from './defaultProps';
 import RedirectButton from '../internal/RedirectButton';
-import { payAmountLabel } from '../internal/PayButton';
+import { payAmountLabel } from '../internal/PayButton/utils';
 import { TxVariants } from '../tx-variants';
 import type { ICore } from '../../core/types';
 import { PREFIX } from '../internal/Icon/constants';
 
 export class CashAppPay extends UIElement<CashAppPayConfiguration> {
-    public static type = TxVariants.cashapp;
+    public static readonly type = TxVariants.cashapp;
 
     private readonly cashAppService: ICashAppService | undefined;
 
-    protected static defaultProps = defaultProps;
+    protected static readonly defaultProps = defaultProps;
 
     constructor(checkout: ICore, props?: CashAppPayConfiguration) {
         super(checkout, props);
@@ -41,7 +41,6 @@ export class CashAppPay extends UIElement<CashAppPayConfiguration> {
             storePaymentMethod: this.props.storePaymentMethod,
             useCashAppButtonUi: this.props.showPayButton,
             environment: this.props.environment,
-            amount: this.props.amount,
             redirectURL: this.props.redirectURL,
             clientId: this.props.configuration?.clientId,
             scopeId: this.props.configuration?.scopeId,
@@ -112,10 +111,10 @@ export class CashAppPay extends UIElement<CashAppPayConfiguration> {
         new Promise<void>((resolve, reject) => onClick({ resolve, reject }))
             .catch(() => {
                 onClickPromiseRejected = true;
-                throw Error('onClick rejected');
+                throw new Error('onClick rejected');
             })
             .then(() => {
-                return this.cashAppService.createCustomerRequest();
+                return this.cashAppService.createCustomerRequest(this.props.amount);
             })
             .then(() => {
                 this.cashAppService.begin();
@@ -133,12 +132,12 @@ export class CashAppPay extends UIElement<CashAppPayConfiguration> {
         return true;
     }
 
-    private handleOnChangeStoreDetails = (storePayment: boolean) => {
+    private readonly handleOnChangeStoreDetails = (storePayment: boolean) => {
         const data = { ...this.state.data, shopperWantsToStore: storePayment };
         this.setState({ data });
     };
 
-    private handleAuthorize = (cashAppPaymentData: CashAppPayEventData): void => {
+    private readonly handleAuthorize = (cashAppPaymentData: CashAppPayEventData): void => {
         const data = { ...this.state.data, ...cashAppPaymentData };
         this.setState({ data, valid: {}, errors: {}, isValid: true });
         super.submit();
@@ -151,7 +150,6 @@ export class CashAppPay extends UIElement<CashAppPayConfiguration> {
                 label={payAmountLabel(this.props.i18n, this.props.amount)}
                 icon={this.resources?.getImage({ imageFolder: 'components/' })(`${PREFIX}lock`)}
                 name={this.displayName}
-                amount={this.props.amount}
                 payButton={this.payButton}
                 onSubmit={this.submit}
                 ref={ref => {
@@ -160,9 +158,7 @@ export class CashAppPay extends UIElement<CashAppPayConfiguration> {
             />
         ) : (
             <CashAppComponent
-                ref={ref => {
-                    this.componentRef = ref;
-                }}
+                setComponentRef={this.setComponentRef}
                 enableStoreDetails={this.props.enableStoreDetails}
                 cashAppService={this.cashAppService}
                 onChangeStoreDetails={this.handleOnChangeStoreDetails}

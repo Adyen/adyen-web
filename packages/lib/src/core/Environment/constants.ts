@@ -5,6 +5,7 @@ const API_ENVIRONMENTS = {
     'live-au': 'https://checkoutshopper-live-au.adyen.com/checkoutshopper/',
     'live-apse': 'https://checkoutshopper-live-apse.adyen.com/checkoutshopper/',
     'live-in': 'https://checkoutshopper-live-in.adyen.com/checkoutshopper/',
+    'live-nea': 'https://checkoutshopper-live-nea.adyen.com/checkoutshopper/',
     fallback: 'https://checkoutshopper-live.adyen.com/checkoutshopper/'
 };
 
@@ -15,6 +16,7 @@ const CDN_ENVIRONMENTS = {
     'live-au': 'https://checkoutshopper-live-au.cdn.adyen.com/checkoutshopper/',
     'live-apse': 'https://checkoutshopper-live-apse.cdn.adyen.com/checkoutshopper/',
     'live-in': 'https://checkoutshopper-live-in.cdn.adyen.com/checkoutshopper/',
+    'live-nea': 'https://checkoutshopper-live-nea.cdn.adyen.com/checkoutshopper/',
     fallback: 'https://checkoutshopper-live.cdn.adyen.com/checkoutshopper/'
 };
 
@@ -25,6 +27,7 @@ const ANALYTICS_ENVIRONMENTS = {
     'live-au': 'https://checkoutanalytics-live-au.adyen.com/checkoutanalytics/',
     'live-apse': 'https://checkoutanalytics-live-apse.adyen.com/checkoutanalytics/',
     'live-in': 'https://checkoutanalytics-live-in.adyen.com/checkoutanalytics/',
+    'live-nea': 'https://checkoutanalytics-live-nea.adyen.com/checkoutanalytics/',
     fallback: 'https://checkoutanalytics-live.adyen.com/checkoutanalytics/'
 };
 

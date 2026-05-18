@@ -4,24 +4,25 @@ import { getAmazonSignature } from '../services';
 import { getAmazonPaySettings, getPayloadJSON } from '../utils';
 import { AmazonPayButtonProps, CheckoutSessionConfig, PayloadJSON } from '../types';
 import { useCoreContext } from '../../../core/Context/CoreProvider';
+import { useAmount } from '../../../core/Context/AmountProvider';
 
-export default function AmazonPayButton(props: AmazonPayButtonProps) {
+export default function AmazonPayButton(props: Readonly<AmazonPayButtonProps>) {
+    const { amount } = useAmount();
     const { loadingContext } = useCoreContext();
     const { amazonRef, configuration = {} } = props;
     const [signature, setSignature] = useState<string>(null);
-    const payloadJSON: PayloadJSON = getPayloadJSON(props);
-    const settings = getAmazonPaySettings(props);
+    const payloadJSON: PayloadJSON = getPayloadJSON(props, amount);
+    const settings = getAmazonPaySettings(props, amount);
 
     const handleOnClick = () => {
-        // eslint-disable-next-line @typescript-eslint/no-misused-promises
-        new Promise(props.onClick).then(this.initCheckout).catch(error => {
+        return new Promise((resolve, reject) => void props.onClick(resolve, reject)).then(this.initCheckout).catch(error => {
             if (props.onError) props.onError(error, this.componentRef);
         });
     };
 
     const renderAmazonPayButton = (): void => {
         const amazonPayButton = amazonRef.Pay.renderButton('#amazonPayButton', settings);
-        amazonPayButton.onClick(handleOnClick);
+        amazonPayButton.onClick(() => void handleOnClick());
     };
 
     this.initCheckout = () => {
@@ -53,5 +54,5 @@ export default function AmazonPayButton(props: AmazonPayButtonProps) {
     }, []);
 
     if (!props.showPayButton) return null;
-    return <div className="adyen-checkout__amazonpay__button" id="amazonPayButton" />;
+    return <div className="adyen-checkout__amazonpay__button" id="amazonPayButton" data-testid="amazon-pay-button" />;
 }

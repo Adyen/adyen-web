@@ -10,10 +10,11 @@ jest.mock('../../utils/isMobile');
 const isMobileMock = isMobile as jest.Mock;
 const onCompleteMock = jest.fn();
 const onSubmitMock = jest.fn();
+const core = setupCoreMock();
 
 describe('UPI', () => {
     const props = {
-        i18n: global.i18n,
+        i18n: core.modules.i18n,
         loadingContext: 'test',
         modules: { resources: new Resources('test') },
         onSubmit: onSubmitMock,
@@ -24,53 +25,9 @@ describe('UPI', () => {
         isMobileMock.mockReset();
     });
 
-    describe('formatProps', () => {
-        describe('on mobile devices', () => {
-            beforeEach(() => {
-                isMobileMock.mockReturnValue(true);
-            });
-
-            test('should configure for intent mode if apps are provided', () => {
-                const upi = new UPI(global.core, props);
-                const gpayApp = { id: 'gpay', name: 'Google Pay' };
-                const formattedProps = upi.formatProps({ ...props, apps: [gpayApp] });
-
-                expect(formattedProps).toMatchObject({
-                    apps: [gpayApp]
-                });
-            });
-
-            test('should configure for qrCode mode if no apps are provided', () => {
-                const upi = new UPI(global.core, props);
-                const formattedProps = upi.formatProps({ ...props, apps: [] });
-
-                expect(formattedProps).toMatchObject({
-                    apps: []
-                });
-            });
-        });
-
-        describe('on non-mobile (desktop) devices', () => {
-            beforeEach(() => {
-                isMobileMock.mockReturnValue(false);
-            });
-
-            test('should configure for qrCode mode, and ignore any apps', () => {
-                const upi = new UPI(global.core, props);
-                const gpayApp = { id: 'gpay', name: 'Google Pay' };
-                const formattedProps = upi.formatProps({ ...props, apps: [gpayApp] });
-
-                expect(formattedProps).toMatchObject({
-                    apps: []
-                });
-            });
-        });
-    });
-
     describe('formatData', () => {
         test('should return type upi_qr when in QR code mode', async () => {
             isMobileMock.mockReturnValue(false);
-            const core = setupCoreMock();
 
             const upi = new UPI(core, { ...props });
             render(upi.render());
@@ -84,7 +41,6 @@ describe('UPI', () => {
 
         test('should return type upi_intent and appId when in intent mode', async () => {
             isMobileMock.mockReturnValue(true);
-            const core = setupCoreMock();
             const gpayApp = { id: 'gpay', name: 'Google Pay' };
             const upi = new UPI(core, { ...props, apps: [gpayApp] });
             render(upi.render());
@@ -104,7 +60,6 @@ describe('UPI', () => {
     describe('isValid', () => {
         test('should be valid for QR code mode', () => {
             isMobileMock.mockReturnValue(false);
-            const core = setupCoreMock();
 
             const upi = new UPI(core, { ...props });
             render(upi.render());
@@ -117,8 +72,6 @@ describe('UPI', () => {
             });
 
             test('should not be valid on init', async () => {
-                const core = setupCoreMock();
-
                 const upi = new UPI(core, { ...props, apps: [{ id: 'gpay', name: 'Google Pay' }] });
                 render(upi.render());
                 await waitFor(() => {
@@ -127,8 +80,6 @@ describe('UPI', () => {
             });
 
             test('should be valid after selecting an app', async () => {
-                const core = setupCoreMock();
-
                 const upi = new UPI(core, { ...props, apps: [{ id: 'gpay', name: 'Google Pay' }] });
                 render(upi.render());
                 const user = userEvent.setup();
@@ -147,8 +98,6 @@ describe('UPI', () => {
         });
 
         test('should show an error alert in intent mode if no app is selected', async () => {
-            const core = setupCoreMock();
-
             const upi = new UPI(core, { ...props, apps: [{ id: 'gpay', name: 'Google Pay' }] });
             render(upi.render());
 
@@ -163,8 +112,6 @@ describe('UPI', () => {
         });
 
         test('should not show an error and be valid if an app is selected', async () => {
-            const core = setupCoreMock();
-
             const upi = new UPI(core, { ...props, apps: [{ id: 'gpay', name: 'Google Pay' }] });
             render(upi.render());
             const user = userEvent.setup();
@@ -179,10 +126,59 @@ describe('UPI', () => {
         });
     });
 
+    describe('paymentType', () => {
+        test('should return upi_qr when on desktop', () => {
+            isMobileMock.mockReturnValue(false);
+            const upi = new UPI(core, { ...props });
+            expect(upi.paymentType).toBe(TxVariants.upi_qr);
+        });
+
+        test('should return upi_intent when on mobile with apps', () => {
+            isMobileMock.mockReturnValue(true);
+            const upi = new UPI(core, { ...props, apps: [{ id: 'gpay', name: 'Google Pay' }] });
+            expect(upi.paymentType).toBe(TxVariants.upi_intent);
+        });
+
+        test('should return upi_qr when on mobile without apps', () => {
+            isMobileMock.mockReturnValue(true);
+            const upi = new UPI(core, { ...props, apps: [] });
+            expect(upi.paymentType).toBe(TxVariants.upi_qr);
+        });
+    });
+
+    describe('brands', () => {
+        test('should return brand icons and names from apps list', () => {
+            isMobileMock.mockReturnValue(true);
+            const apps = [
+                { id: 'gpay', name: 'Google Pay' },
+                { id: 'phonepe', name: 'PhonePe' }
+            ];
+            const upi = new UPI(core, { ...props, apps });
+
+            const brands = upi.brands;
+            expect(brands).toHaveLength(2);
+            expect(brands[0]).toEqual(expect.objectContaining({ name: 'Google Pay' }));
+            expect(brands[1]).toEqual(expect.objectContaining({ name: 'PhonePe' }));
+        });
+
+        test('should return empty array when showPaymentMethodItemImages is false', () => {
+            isMobileMock.mockReturnValue(true);
+            const apps = [{ id: 'gpay', name: 'Google Pay' }];
+            const upi = new UPI(core, { ...props, apps, showPaymentMethodItemImages: false });
+
+            expect(upi.brands).toEqual([]);
+        });
+
+        test('should return empty array when no apps are provided', () => {
+            isMobileMock.mockReturnValue(false);
+            const upi = new UPI(core, { ...props });
+
+            expect(upi.brands).toEqual([]);
+        });
+    });
+
     describe('UI Rendering', () => {
         test('should render the UPI component qrCode by default', () => {
-            const core = setupCoreMock();
-
             const upi = new UPI(core, props);
             render(upi.render());
 

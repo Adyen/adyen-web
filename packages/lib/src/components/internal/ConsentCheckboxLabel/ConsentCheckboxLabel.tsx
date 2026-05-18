@@ -5,7 +5,7 @@ interface ConsentCheckboxLabelProps {
     url: string;
 }
 
-export default function ConsentCheckboxLabel(props: ConsentCheckboxLabelProps) {
+export default function ConsentCheckboxLabel(props: Readonly<ConsentCheckboxLabelProps>) {
     const { i18n } = useCoreContext();
     const linkText = i18n.get('paymentConditions');
     const translationString = i18n.get('afterPay.agreement');

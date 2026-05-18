@@ -2,9 +2,9 @@ import RedirectElement from '../Redirect';
 import { TxVariants } from '../tx-variants';
 
 class VippsElement extends RedirectElement {
-    public static type = TxVariants.vipps;
+    public static override readonly type: TxVariants = TxVariants.vipps;
 
-    public static defaultProps = {
+    public static readonly defaultProps = {
         type: VippsElement.type,
         name: 'Vipps'
     };

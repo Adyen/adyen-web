@@ -66,4 +66,22 @@ describe('PaymentMethodItem', () => {
 
         expect(onSelect.mock.calls.length).toBe(0);
     });
+
+    test('should not have inert attribute on details when payment method is selected', () => {
+        const { container } = customRender(<PaymentMethodItem {...requiredProps} paymentMethod={paymentMethod} isSelected={true} />);
+
+        /* eslint-disable testing-library/no-container, testing-library/no-node-access */
+        const detailsElement = container.querySelector('.adyen-checkout__payment-method__details');
+        expect(detailsElement).not.toHaveAttribute('inert');
+        /* eslint-enable testing-library/no-container, testing-library/no-node-access */
+    });
+
+    test('should have inert attribute on details when payment method is not selected', () => {
+        const { container } = customRender(<PaymentMethodItem {...requiredProps} paymentMethod={paymentMethod} isSelected={false} />);
+
+        /* eslint-disable testing-library/no-container, testing-library/no-node-access */
+        const detailsElement = container.querySelector('.adyen-checkout__payment-method__details');
+        expect(detailsElement).toHaveAttribute('inert');
+        /* eslint-enable testing-library/no-container, testing-library/no-node-access */
+    });
 });

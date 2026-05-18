@@ -1,5 +1,6 @@
 import postMessageToIframe from '../utils/iframes/postMessageToIframe';
 import handleBrandFromBinLookup, { sendBrandToCardSF, sendExpiryDatePolicyToSF } from './handleBrandFromBinLookup';
+import { BIN_LOOKUP_MODE } from '../../constants';
 
 jest.mock('../utils/iframes/postMessageToIframe');
 
@@ -50,7 +51,8 @@ const expectedProcessBrandObj = {
     expiryDatePolicy: 'required',
     cvcText: 'Security code',
     showSocialSecurityNumber: false,
-    fieldType: 'encryptedCardNumber'
+    fieldType: 'encryptedCardNumber',
+    mode: BIN_LOOKUP_MODE
 };
 
 const expectedProcessBrand_resetObj = {

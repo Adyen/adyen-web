@@ -15,7 +15,7 @@ interface BlikElementData {
 }
 
 class BlikElement extends UIElement<AwaitConfiguration> {
-    public static type = TxVariants.blik;
+    public static readonly type = TxVariants.blik;
 
     formatData(): BlikElementData {
         const recurringPayment = !!this.props.storedPaymentMethodId;
@@ -82,7 +82,6 @@ class BlikElement extends UIElement<AwaitConfiguration> {
             <RedirectButton
                 showPayButton={this.props.showPayButton}
                 name={this.displayName}
-                amount={this.props.amount}
                 payButton={this.payButton}
                 onSubmit={this.submit}
                 ref={ref => {
