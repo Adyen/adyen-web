@@ -79,7 +79,7 @@ const CtPLoginInput = (props: Readonly<CtPLoginInputProps>): h.JSX.Element => {
                 label={i18n.get('ctp.login.inputLabel')}
                 errorMessage={isLoginInputDirty ? props.errorMessage || !!errors.shopperLogin : null}
                 classNameModifiers={['shopperLogin']}
-                errorLive
+                errorLive={true}
             >
                 <InputEmail
                     name={'shopperLogin'}

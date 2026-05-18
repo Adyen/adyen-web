@@ -68,7 +68,7 @@ export default function BSBInput({ setComponentRef, defaultData, placeholders, o
                 errorMessage={getErrorMessage(i18n, errors.bankAccountNumber, i18n.get('payto.bsb.label.bankAccountNumber'))}
                 name={'bankAccountNumber'}
                 i18n={i18n}
-                errorLive
+                errorLive={true}
             >
                 <InputText
                     name={'bankAccountNumber'}
@@ -86,7 +86,7 @@ export default function BSBInput({ setComponentRef, defaultData, placeholders, o
                 errorMessage={getErrorMessage(i18n, errors.bsb, i18n.get('Bank State Branch'))}
                 name={'bsb'}
                 i18n={i18n}
-                errorLive
+                errorLive={true}
             >
                 <InputText
                     name={'bsb'}

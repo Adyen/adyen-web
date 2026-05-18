@@ -99,7 +99,7 @@ export default function PayIDInput({ setComponentRef, defaultData, placeholders,
                     dir={'ltr'}
                     name={'email'}
                     i18n={i18n}
-                    errorLive
+                    errorLive={true}
                 >
                     <InputEmail
                         name={'email'}
@@ -119,7 +119,7 @@ export default function PayIDInput({ setComponentRef, defaultData, placeholders,
                     errorMessage={getErrorMessage(i18n, errors.abn, i18n.get('ABN'))}
                     name={'ABN'}
                     i18n={i18n}
-                    errorLive
+                    errorLive={true}
                 >
                     <InputText
                         name={'abn'}
@@ -139,7 +139,7 @@ export default function PayIDInput({ setComponentRef, defaultData, placeholders,
                     errorMessage={getErrorMessage(i18n, errors.orgid, i18n.get('payto.payid.label.orgid'))}
                     name={'orgid'}
                     i18n={i18n}
-                    errorLive
+                    errorLive={true}
                 >
                     <InputText
                         name={'orgid'}
