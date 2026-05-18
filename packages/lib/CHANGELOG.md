@@ -1,5 +1,23 @@
 # @adyen/adyen-web
 
+## 6.36.0
+
+### Minor Changes
+
+- New: Adding support for Giving in the /sessions flow. If the /payments response mandates it we will automatically mount and handle a Donation component. ([#3878](https://github.com/Adyen/adyen-web/pull/3878))
+
+### Patch Changes
+
+- Fixed: ClickToPay info modal title and Address section title now use `<h2>` for correct heading hierarchy. ([#3966](https://github.com/Adyen/adyen-web/pull/3966))
+
+- Fixed: PayByBankUS Drop-in row no longer hides issuer brand icons on narrow viewports. ([#3964](https://github.com/Adyen/adyen-web/pull/3964))
+
+- Fixed: Iris segemented control order switch bug on Drop in after pay button click ([#3981](https://github.com/Adyen/adyen-web/pull/3981))
+
+- Fixed: Select not announcing name, and association with listbox ([#3980](https://github.com/Adyen/adyen-web/pull/3980))
+
+- Improved: HTML semantics in some elements ([#3913](https://github.com/Adyen/adyen-web/pull/3913))
+
 ## 6.35.0
 
 ### Minor Changes

@@ -1,11 +1,4 @@
 {
-  "extends": "./tsconfig.json",
-  "include": [
-    "./src/**/*",
-    "./src/types/custom.d.ts",
-    "./storybook/**/*",
-    "./.storybook/**/*",
-    "./vite.config.ts",
-    "./.size-limit.cjs",
-  ]
+    "extends": "./tsconfig.json",
+    "include": ["./src/**/*", "./src/types/custom.d.ts", "./storybook/**/*", "./.storybook/**/*", "./vite.config.ts", "./.size-limit.cjs"]
 }

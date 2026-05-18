@@ -1,7 +1,6 @@
 import { h } from 'preact';
 import { MetaConfiguration, StoryConfiguration } from '../../../../storybook/types';
 import { CardConfiguration } from '../types';
-import { searchFunctionExample } from '../../../../../playground/src/utils';
 import { CardWith3DS2Redirect } from './cardStoryHelpers/CardWith3DS2Redirect';
 import { createStoredCardComponent } from './cardStoryHelpers/createStoredCardComponent';
 import { SplitFundingSourceCards } from './cardStoryHelpers/SplitFundingSourceCards';
@@ -114,7 +113,45 @@ export const WithAVSAddressLookup: CardStory = {
         componentConfiguration: {
             _disableClickToPay: true,
             billingAddressRequired: true,
-            onAddressLookup: searchFunctionExample
+            onAddressLookup: async (value, actions) => {
+                const url = `/api/mock/addressSearch?search=${encodeURIComponent(value)}`;
+
+                const formattedData = await fetch(url)
+                    .then(res => res.json())
+                    // This set is necessary to map the response receive from the external provider to our address field
+                    .then(res =>
+                        res.map(
+                            ({
+                                id,
+                                name,
+                                city,
+                                address,
+                                houseNumber,
+                                postalCode
+                            }: {
+                                id: string;
+                                name: string;
+                                city: string;
+                                address: string;
+                                houseNumber: string;
+                                postalCode: string;
+                            }) => ({
+                                id,
+                                name,
+                                city,
+                                street: address,
+                                houseNumberOrName: houseNumber,
+                                postalCode,
+                                country: 'GB'
+                            })
+                        )
+                    )
+                    .catch(error => {
+                        console.log('ERROR:', error);
+                        actions.reject('Something went wrong, try adding manually.');
+                    });
+                actions.resolve(formattedData);
+            }
         }
     }
 };
@@ -231,7 +268,7 @@ export const CardWith_3DS2_own_onAdditionalDetails: CardStory = {
 
                         if (!resultCode) actions.reject();
 
-                        if (resMsg) container.removeChild(resMsg);
+                        if (resMsg && container) container.removeChild(resMsg);
 
                         actions.resolve({
                             resultCode,

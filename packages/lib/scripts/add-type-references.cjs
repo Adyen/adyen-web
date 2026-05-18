@@ -4,7 +4,7 @@
  */
 
 const fs = require('fs');
-const path = './dist/temp-types/lib/src/types.d.ts';
+const path = './dist/temp-types/src/types.d.ts';
 
 const references = ['/// <reference types="googlepay" />', '/// <reference types="applepayjs" />'];
 
