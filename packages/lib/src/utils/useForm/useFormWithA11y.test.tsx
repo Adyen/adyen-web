@@ -10,6 +10,11 @@ jest.mock('../setFocus', () => ({
 
 const mockSetFocusOnField = setFocusOnField as jest.Mock;
 
+function getHookResult<T>(result: { current: T | undefined }): T {
+    if (!result.current) throw new Error('Hook result is undefined');
+    return result.current;
+}
+
 beforeEach(() => {
     mockSetFocusOnField.mockClear();
 });
@@ -24,7 +29,7 @@ describe('useErrorFocus', () => {
         const { result } = renderHook(() => useErrorFocus(holder));
 
         void act(() => {
-            result.current.focusFirstError({ firstName: null, lastName: { isValid: false } }, ['firstName', 'lastName']);
+            getHookResult(result).focusFirstError({ firstName: null, lastName: { isValid: false } }, ['firstName', 'lastName']);
         });
 
         expect(mockSetFocusOnField).toHaveBeenCalledTimes(1);
@@ -36,7 +41,7 @@ describe('useErrorFocus', () => {
         const { result } = renderHook(() => useErrorFocus(holder));
 
         void act(() => {
-            result.current.focusFirstError({ firstName: null, lastName: null }, ['firstName', 'lastName']);
+            getHookResult(result).focusFirstError({ firstName: null, lastName: null }, ['firstName', 'lastName']);
         });
 
         expect(mockSetFocusOnField).not.toHaveBeenCalled();
@@ -47,7 +52,7 @@ describe('useErrorFocus', () => {
         const { result } = renderHook(() => useErrorFocus(holder));
 
         void act(() => {
-            result.current.focusFirstError({ lastName: { isValid: false }, firstName: { isValid: false } }, ['firstName', 'lastName']);
+            getHookResult(result).focusFirstError({ lastName: { isValid: false }, firstName: { isValid: false } }, ['firstName', 'lastName']);
         });
 
         expect(mockSetFocusOnField).toHaveBeenCalledWith(holder, 'firstName');
@@ -80,7 +85,7 @@ describe('useFormWithA11y', () => {
         const { result } = renderHook(() => useFormWithA11y<FormSchema>({ schema, rules, formHolder: holder }));
 
         void act(() => {
-            result.current.handleChangeFor('email', 'blur')({ target: { value: '' } });
+            getHookResult(result).handleChangeFor('email', 'blur')({ target: { value: '' } });
         });
 
         expect(mockSetFocusOnField).not.toHaveBeenCalled();
@@ -91,7 +96,7 @@ describe('useFormWithA11y', () => {
         const { result } = renderHook(() => useFormWithA11y<FormSchema>({ schema, rules, formHolder: holder }));
 
         void act(() => {
-            result.current.triggerValidation();
+            getHookResult(result).triggerValidation();
         });
 
         expect(mockSetFocusOnField).toHaveBeenCalledTimes(1);
@@ -105,7 +110,7 @@ describe('useFormWithA11y', () => {
         );
 
         void act(() => {
-            result.current.triggerValidation();
+            getHookResult(result).triggerValidation();
         });
 
         expect(mockSetFocusOnField).toHaveBeenCalledWith(holder, 'name');
@@ -123,7 +128,7 @@ describe('useFormWithA11y', () => {
         );
 
         void act(() => {
-            result.current.triggerValidation();
+            getHookResult(result).triggerValidation();
         });
 
         expect(mockSetFocusOnField).not.toHaveBeenCalled();
@@ -134,11 +139,11 @@ describe('useFormWithA11y', () => {
         const { result } = renderHook(() => useFormWithA11y<FormSchema>({ schema: ['email'], rules, formHolder: holder }));
 
         void act(() => {
-            result.current.setSchema(['name']);
+            getHookResult(result).setSchema(['name']);
         });
 
         void act(() => {
-            result.current.triggerValidation();
+            getHookResult(result).triggerValidation();
         });
 
         // Should focus 'name' (from the updated schema), NOT 'email' (stale schema)
@@ -148,7 +153,7 @@ describe('useFormWithA11y', () => {
     it('returns all Form interface methods from the underlying useForm', () => {
         const holder = document.createElement('div');
         const { result } = renderHook(() => useFormWithA11y<FormSchema>({ schema, rules, formHolder: holder }));
-        const form = result.current;
+        const form = getHookResult(result);
 
         expect(typeof form.handleChangeFor).toBe('function');
         expect(typeof form.triggerValidation).toBe('function');

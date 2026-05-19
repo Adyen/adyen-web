@@ -3,8 +3,8 @@ import { RefObject } from 'preact';
 import { setFocusOnField } from '../setFocus';
 
 function resolveHolder(holder: Element | string | RefObject<Element>): Element | string | undefined {
-    if (holder && typeof holder === 'object' && 'current' in holder) return holder.current;
-    return holder as Element | string | undefined;
+    if (holder && typeof holder === 'object' && 'current' in holder) return holder.current ?? undefined;
+    return holder as Element | string;
 }
 
 /**
