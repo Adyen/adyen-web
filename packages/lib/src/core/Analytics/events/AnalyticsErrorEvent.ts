@@ -37,6 +37,8 @@ export enum ErrorEventCode {
      */
     SECURED_FIELDS_ENCRYPTION_ERROR = '610',
 
+    /** See also API_ERROR_CODE object in /src/core/Services/sessions/constants.ts which uses codes in the range 620-628 */
+
     /**  Missing 'paymentData' property from threeDS2 action */
     THREEDS2_ACTION_IS_MISSING_PAYMENT_DATA = '700',
 

@@ -7,6 +7,7 @@ import RedirectButton from '../../internal/RedirectButton';
 import { IssuerListConfiguration, IssuerListData } from './types';
 import type { ICore } from '../../../core/types';
 import { PaymentMethodBrand } from '../../../types/global-types';
+import { ImageOptions } from '../../../core/Context/Resources';
 
 class IssuerListContainer<TProps extends IssuerListConfiguration = IssuerListConfiguration, TData = IssuerListData> extends UIElement<TProps> {
     protected static readonly defaultProps = {
@@ -20,7 +21,7 @@ class IssuerListContainer<TProps extends IssuerListConfiguration = IssuerListCon
     constructor(checkout: ICore, props?: TProps) {
         super(checkout, props);
 
-        const getImage = props => this.resources.getImage(props);
+        const getImage = (props: ImageOptions) => this.resources.getImage(props);
 
         if (this.props.showImage) {
             const getIssuerIcon = getIssuerImageUrl({ loadingContext: this.props.loadingContext }, this.constructor['type'], getImage);
@@ -32,8 +33,10 @@ class IssuerListContainer<TProps extends IssuerListConfiguration = IssuerListCon
         }
     }
 
-    formatProps(props) {
-        const issuers = (props.details && props.details.length && (props.details.find(d => d.key === 'issuer') || {}).items) || props.issuers || [];
+    formatProps(props: TProps): TProps {
+        const issuers =
+            // @ts-expect-error - details is not in the props type but we need it for backward compatibility
+            (props?.details?.length && props.details.find((d: Record<string, unknown>) => d.key === 'issuer')?.items) || props.issuers || [];
         return { ...props, issuers };
     }
 
@@ -56,7 +59,7 @@ class IssuerListContainer<TProps extends IssuerListConfiguration = IssuerListCon
         if (this.props.issuers.length === 0) {
             return true;
         }
-        return !!this.state?.isValid;
+        return Boolean(this.state?.isValid);
     }
 
     /**
@@ -78,13 +81,11 @@ class IssuerListContainer<TProps extends IssuerListConfiguration = IssuerListCon
     protected override componentToRender(): h.JSX.Element {
         return this.props.issuers.length > 0 ? (
             <IssuerList
-                ref={ref => {
-                    this.componentRef = ref;
-                }}
                 items={this.props.issuers}
                 highlightedIds={this.props.highlightedIssuers}
                 {...this.props}
                 {...this.state}
+                setComponentRef={this.setComponentRef}
                 showImage={this.props.showImage}
                 type={this.constructor['type']}
                 onChange={this.setState}

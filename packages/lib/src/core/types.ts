@@ -26,6 +26,7 @@ import { Resources } from './Context/Resources';
 import Language from '../language';
 import { SRPanel } from './Errors/SRPanel';
 import { IAnalytics } from './Analytics/Analytics';
+import type { DonationOptions } from '../components/Donation/types';
 
 export { CheckoutSession } from './CheckoutSession/types';
 export interface ICore {
@@ -184,6 +185,8 @@ export interface CoreConfiguration {
     analytics?: AnalyticsOptions;
 
     risk?: RiskModuleOptions;
+
+    donation?: DonationOptions;
 
     order?: Order;
 

@@ -343,6 +343,7 @@ export interface PaymentResponseData {
     sessionResult?: string;
     order?: Order;
     donationToken?: string;
+    askDonation?: boolean;
 }
 
 export type RawPaymentResponse = PaymentResponseData &

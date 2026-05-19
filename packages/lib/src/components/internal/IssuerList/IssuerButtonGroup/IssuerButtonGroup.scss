@@ -4,4 +4,8 @@
     display: flex;
     flex-wrap: wrap;
     gap: variable-generator.token(spacer-070);
+    border: 0;
+    margin: 0;
+    padding: 0;
+    min-width: 0;
 }

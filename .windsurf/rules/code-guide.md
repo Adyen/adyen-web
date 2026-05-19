@@ -449,7 +449,7 @@ Jest 29 + `@testing-library/preact` + `@testing-library/jest-dom`
 
 ```bash
 cd packages/lib
-&& npm run test
+&& yarn test
 ```
 
 ### File Organization

@@ -1,5 +1,6 @@
 import { Fragment, h } from 'preact';
 import { useState, useEffect, useCallback, useRef } from 'preact/hooks';
+
 import useForm from '../../../utils/useForm';
 import Field from '../FormFields/Field';
 import IssuerButtonGroup from './IssuerButtonGroup';
@@ -7,7 +8,6 @@ import ContentSeparator from '../ContentSeparator';
 import { useCoreContext } from '../../../core/Context/CoreProvider';
 import { ValidatorRules } from '../../../utils/Validator/types';
 import { IssuerListProps } from './types';
-import './IssuerList.scss';
 import useSRPanelContext from '../../../core/Errors/useSRPanelContext';
 import { SetSRMessagesReturnFn } from '../../../core/Errors/SRPanelProvider';
 import { SetSRMessagesReturnObject } from '../../../core/Errors/types';
@@ -19,6 +19,8 @@ import { SelectTargetObject } from '../FormFields/Select/types';
 import { ANALYTICS_SEARCH_DEBOUNCE_TIME } from '../../../core/Analytics/constants';
 import { debounce } from '../../../utils/debounce';
 import { AnalyticsInfoEvent, InfoEventType, UiTarget } from '../../../core/Analytics/events/AnalyticsInfoEvent';
+import { ComponentMethodsRef } from '../UIElement/types';
+import './IssuerList.scss';
 
 const payButtonLabel = ({ issuer, items }, i18n): string => {
     const issuerName = items.find(i => i.id === issuer)?.name;
@@ -66,10 +68,6 @@ function IssuerList({
 
     const getErrorMessage = error => (error && error.errorMessage ? i18n.get(error.errorMessage) : !!error);
 
-    this.setStatus = newStatus => {
-        setStatus(newStatus);
-    };
-
     const handleInputChange = useCallback(
         (type: IssuerListInputTypes) => (event: h.JSX.TargetedKeyboardEvent<HTMLInputElement>) => {
             const target = type === IssuerListInputTypes.Dropdown ? UiTarget.list : UiTarget.featuredIssuer;
@@ -109,6 +107,17 @@ function IssuerList({
         debounceSearchAnalytics.current({ type: InfoEventType.input, target: UiTarget.listSearch });
     }, []);
 
+    const issuerListRef = useRef<ComponentMethodsRef>({
+        setStatus: setStatus,
+        showValidation: () => {
+            triggerValidation();
+        }
+    });
+
+    useEffect(() => {
+        props.setComponentRef(issuerListRef.current);
+    }, [props.setComponentRef]);
+
     useEffect(() => {
         props.onChange({ data, valid, errors, isValid });
 
@@ -118,10 +127,6 @@ function IssuerList({
             if (shouldMoveFocusSR) setFocusOnField(containerRef.current, 'issuer-list');
         }
     }, [data, valid, errors, isValid]);
-
-    this.showValidation = () => {
-        triggerValidation();
-    };
 
     const { highlightedItems } = items.reduce(
         (memo, item) => {
