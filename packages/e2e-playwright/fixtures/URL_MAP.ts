@@ -59,6 +59,12 @@ export const URL_MAP = {
     upiAutoPay: '/iframe.html?globals=&id=components-upi--auto-pay-session&viewMode=story',
 
     /**
+     * EMI
+     */
+    emi: '/iframe.html?args=&globals=&id=components-emi--card-emi&viewMode=story',
+    emiWithCustomButton: '/iframe.html?args=&globals=&id=components-emi--card-emi-with-custom-button&viewMode=story',
+
+    /**
      * Vouchers
      */
     boleto: '/iframe.html?globals=&id=components-vouchers-boleto--default&viewMode=story',
