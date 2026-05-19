@@ -19,7 +19,6 @@ class EMI extends UIElement<EMIConfiguration> {
         if (this.validateFundingSources()) {
             this.initFundingSources();
         } else {
-            // Optional: Handle the "nothing" state (e.g., log a warning, render an error, or leave component empty)
             console.warn('EMI: Component initialization aborted due to invalid or missing funding sources.');
         }
     }
@@ -31,7 +30,10 @@ class EMI extends UIElement<EMIConfiguration> {
     }
 
     private initFundingSources(): void {
-        this.activeFundingSource = SUPPORTED_FUNDING_SOURCES[this.props.supportedPaymentMethods[0].type];
+        const firstMethod = this.props.supportedPaymentMethods?.[0];
+        if (!firstMethod) return;
+
+        this.activeFundingSource = SUPPORTED_FUNDING_SOURCES[firstMethod.type];
 
         this.fundingSourceUIElements[EMIFundingSource.CARD] = new CardElement(this.core, {
             ...this.props.fundingSourceConfiguration?.card,
@@ -80,7 +82,7 @@ class EMI extends UIElement<EMIConfiguration> {
     protected override componentToRender(): h.JSX.Element {
         return (
             <EMIComponent
-                activeFundingSourceElement={this.activeFundingSourceElement}
+                activeFundingSourceElement={this.activeFundingSourceElement ?? null}
                 showPayButton={this.props.showPayButton}
                 payButton={this.payButton}
                 setComponentRef={this.setComponentRef}
