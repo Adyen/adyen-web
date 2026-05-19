@@ -204,12 +204,12 @@ describe('EMI', () => {
             expect(card).toBeInstanceOf(CardElement);
 
             // Forced overrides set by EMI
-            expect(card.props._disableClickToPay).toBe(true);
-            expect(card.props.showPayButton).toBe(false);
+            expect(card?.props._disableClickToPay).toBe(true);
+            expect(card?.props.showPayButton).toBe(false);
 
             // User-provided config passed through
-            expect(card.props.hasHolderName).toBe(false);
-            expect(card.props.onBinLookup).toBe(onBinLookupMock);
+            expect(card?.props.hasHolderName).toBe(false);
+            expect(card?.props.onBinLookup).toBe(onBinLookupMock);
         });
     });
 
@@ -224,7 +224,7 @@ describe('EMI', () => {
             const card = emi.card;
             expect(card).toBeDefined();
 
-            const cardFormatData = card.formatData();
+            const cardFormatData = card?.formatData();
             const emiFormatData = emi.formatData();
 
             expect(emiFormatData).toEqual(cardFormatData);
