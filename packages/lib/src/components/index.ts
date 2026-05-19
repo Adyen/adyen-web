@@ -95,6 +95,9 @@ export { default as UPI } from './UPI';
 export { default as ANCV } from './ANCV';
 export { default as PayTo } from './PayTo';
 
+/** EMI */
+export { default as EMI } from './EMI';
+
 /** Giftcard */
 export { default as Giftcard } from './Giftcard';
 export { default as MealVoucherFR } from './MealVoucherFR';
