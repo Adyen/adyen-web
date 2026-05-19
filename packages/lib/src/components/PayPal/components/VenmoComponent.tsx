@@ -6,9 +6,11 @@ interface VenmoComponentProps {
     paypalService: PayPalService;
     onSubmit: () => void;
     onAdditionalDetails(data: { orderID: string; payerID: string }): void;
+    onCancel: () => void;
+    onError: (error: Error) => void;
 }
 
-export const VenmoComponent = ({ paypalService, onSubmit, onAdditionalDetails }: VenmoComponentProps) => {
+export const VenmoComponent = ({ paypalService, onSubmit, onAdditionalDetails, onCancel, onError }: Readonly<VenmoComponentProps>) => {
     const [paymentSession, setPaymentSession] = useState();
 
     useEffect(() => {
@@ -25,12 +27,12 @@ export const VenmoComponent = ({ paypalService, onSubmit, onAdditionalDetails }:
                 onAdditionalDetails(payload);
             },
             // Called when user cancels a payment
-            onCancel(data) {
-                console.log('Payment cancelled:', data);
+            onCancel() {
+                onCancel();
             },
             // Called when an error occurs during payment
             onError(error) {
-                console.error('Payment error:', error);
+                onError(error);
             }
         });
 
@@ -43,5 +45,5 @@ export const VenmoComponent = ({ paypalService, onSubmit, onAdditionalDetails }:
         await paymentSession.start({ presentationMode: 'auto' }, onSubmit());
     }, [paymentSession]);
 
-    return <venmo-button onclick={onClick} id="venmo-blue" type="pay"></venmo-button>;
+    return <venmo-button onclick={onClick} id="venmo-blue" />;
 };

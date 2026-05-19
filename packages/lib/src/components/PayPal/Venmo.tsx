@@ -39,7 +39,9 @@ class VenmoElement extends UIElement<PayPalConfiguration> {
         this.paypalService = PayPalService.getInstance({
             loadingContext: this.props.loadingContext,
             clientKey: this.props.clientKey,
-            sdkLoader
+            sdkLoader,
+            countryCode: this.props.countryCode,
+            currencyCode: this.props.amount.currency
         });
 
         void this.paypalService.initialize();
@@ -50,16 +52,10 @@ class VenmoElement extends UIElement<PayPalConfiguration> {
 
         await this.paypalService.isPayPalSdkReady();
 
-        const paymentMethods = await this.paypalService.sdkInstance.findEligibleMethods({
-            currencyCode: this.props.amount.currency,
-            countryCode: this.props.countryCode
-        });
-
-        if (!paymentMethods.isEligible('venmo')) {
-            return Promise.reject();
+        if (!this.paypalService.paymentMethods.isEligible('venmo')) {
+            return Promise.reject(new Error('Venmo is not eligible'));
         }
 
-        console.log('# isAvailable finished');
         return Promise.resolve();
     }
 
@@ -226,7 +222,17 @@ class VenmoElement extends UIElement<PayPalConfiguration> {
 
         const { onShippingAddressChange, onShippingOptionsChange, ...rest } = this.props;
 
-        return <VenmoComponent onSubmit={this.handleSubmit} onAdditionalDetails={this.handleOnApprove} paypalService={this.paypalService} />;
+        return (
+            <VenmoComponent
+                onSubmit={this.handleSubmit}
+                onAdditionalDetails={this.handleOnApprove}
+                paypalService={this.paypalService}
+                onCancel={() => this.handleError(new AdyenCheckoutError('CANCEL'))}
+                onError={error => {
+                    this.handleError(new AdyenCheckoutError('ERROR', String(error), { cause: error }));
+                }}
+            />
+        );
     }
 }
 

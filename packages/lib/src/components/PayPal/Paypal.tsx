@@ -65,7 +65,7 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
             await this.paypalService.isPayPalSdkReady();
 
             if (!this.paypalService.paymentMethods.isEligible('paypal')) {
-                return Promise.reject();
+                return Promise.reject(new Error('PayPal is not eligible'));
             }
 
             return Promise.resolve();
