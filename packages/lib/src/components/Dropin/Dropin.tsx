@@ -13,7 +13,7 @@ import type { PaymentAction, PaymentAmount, PaymentResponseData } from '../../ty
 import type { ICore } from '../../core/types';
 import type { IDropin } from './types';
 
-const SUPPORTED_INSTANT_PAYMENTS = ['paywithgoogle', 'googlepay', 'applepay', 'paypal', 'venmo'];
+const SUPPORTED_INSTANT_PAYMENTS = ['paywithgoogle', 'googlepay', 'applepay'];
 
 class DropinElement extends UIElement<DropinConfiguration> implements IDropin {
     public static readonly type = TxVariants.dropin;

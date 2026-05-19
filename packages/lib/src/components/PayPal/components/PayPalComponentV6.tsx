@@ -7,16 +7,18 @@ interface PayPalComponentProps {
     paypalService: PayPalService;
     onSubmit: () => void;
     onAdditionalDetails(data: { orderID: string; payerID: string }): void;
-    currencyCode: string;
-    countryCode: string;
+    onCancel: () => void;
+    onError: (error: Error) => void;
 }
 
-const PayPalComponentV6 = ({ paypalService, onSubmit, onAdditionalDetails, currencyCode, countryCode }: PayPalComponentProps) => {
-    const [paymentSession, setPaymentSession] = useState();
-    const id = useMemo(getUniqueId, []);
+const PayPalComponentV6 = ({ paypalService, onSubmit, onAdditionalDetails, onCancel, onError }: Readonly<PayPalComponentProps>) => {
+    const [paypalPaymentSession, setPayPalPaymentSession] = useState();
+    const [paylaterPaymentSession, setPaylaterPaymentSession] = useState();
+    const [creditPaymentSession, setCreditPaymentSession] = useState();
+    const id = useMemo(() => getUniqueId('paypal'), []);
 
-    useEffect(() => {
-        const paypalPaymentSession = paypalService.sdkInstance.createPayPalOneTimePaymentSession({
+    const sessionProps = useMemo(
+        () => ({
             // Called when user approves a payment
             onApprove(data) {
                 console.log('Payment approved');
@@ -29,38 +31,52 @@ const PayPalComponentV6 = ({ paypalService, onSubmit, onAdditionalDetails, curre
                 onAdditionalDetails(payload);
             },
             // Called when user cancels a payment
-            onCancel(data) {
-                console.log('Payment cancelled:', data);
+            onCancel() {
+                onCancel();
             },
             // Called when an error occurs during payment
             onError(error) {
-                console.error('Payment error:', error);
+                onError(error);
             }
-        });
-
-        setPaymentSession(paypalPaymentSession);
-    }, [onAdditionalDetails]);
+        }),
+        [onAdditionalDetails, onCancel, onError]
+    );
 
     useEffect(() => {
-        (async () => {
-            const paymentMethods = await paypalService.sdkInstance.findEligibleMethods({
-                currencyCode,
-                countryCode
-            });
+        const payPalPaymentSession = paypalService.sdkInstance.createPayPalOneTimePaymentSession(sessionProps);
+        setPayPalPaymentSession(payPalPaymentSession);
 
-            const payLaterDetails = paymentMethods.getDetails('paylater');
+        const paylaterPaymentSession = paypalService.sdkInstance.createPayLaterOneTimePaymentSession(sessionProps);
+        setPaylaterPaymentSession(paylaterPaymentSession);
 
-            const button = document.querySelector(`#paypal-pay-later-button-${id}`);
-            button.productCode = payLaterDetails.productCode;
-            button.countryCode = payLaterDetails.countryCode;
-        })();
-    }, []);
+        if (paypalService?.paymentMethods?.isEligible('paylater')) {
+            const payLaterDetails = paypalService?.paymentMethods?.getDetails('paylater');
+            const button = document.querySelector(`#paypal-paylater-button-${id}`);
+            button?.setAttribute('productCode', payLaterDetails.productCode);
+            button?.setAttribute('countryCode', payLaterDetails.countryCode);
+        }
 
-    const onClick = useCallback(async () => {
-        if (!paymentSession) return;
+        const creditPaymentSession = paypalService.sdkInstance.createPayPalCreditOneTimePaymentSession(sessionProps);
+        setCreditPaymentSession(creditPaymentSession);
+    }, [sessionProps]);
 
-        await paymentSession.start({ presentationMode: 'auto' }, onSubmit());
-    }, [paymentSession]);
+    const onPayPalClick = useCallback(async () => {
+        if (!paypalPaymentSession) return;
+
+        await paypalPaymentSession.start({ presentationMode: 'auto' }, onSubmit());
+    }, [paypalPaymentSession]);
+
+    const onPayLaterClick = useCallback(async () => {
+        if (!paylaterPaymentSession) return;
+
+        await paylaterPaymentSession.start({ presentationMode: 'auto' }, onSubmit());
+    }, [paylaterPaymentSession]);
+
+    const onCreditClick = useCallback(async () => {
+        if (!creditPaymentSession) return;
+
+        await creditPaymentSession.start({ presentationMode: 'auto' }, onSubmit());
+    }, [creditPaymentSession]);
 
     return (
         <div
@@ -70,9 +86,9 @@ const PayPalComponentV6 = ({ paypalService, onSubmit, onAdditionalDetails, curre
                 gap: 16
             }}
         >
-            <paypal-button onclick={onClick} type="pay" class="paypal-gold" id={`paypal-button-${id}`}></paypal-button>
-            {/* <paypal-pay-later-button onclick={onClick} class="paypal-white" id={`paypal-pay-later-button-${id}`}></paypal-pay-later-button>
-            <paypal-credit-button onclick={onClick} class="paypal-white" id={`paypal-credit-button-${id}`}></paypal-credit-button> */}
+            <paypal-button onclick={onPayPalClick} class="paypal-gold" />
+            <paypal-pay-later-button onclick={onPayLaterClick} class="paypal-white" id={`paypal-paylater-button-${id}`} />
+            <paypal-credit-button onclick={onCreditClick} class="paypal-white" />
         </div>
     );
 };

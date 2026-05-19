@@ -47,14 +47,11 @@
     }
 }
 
-paypal-button {
-    --paypal-button-border-radius: 4px;
-    width: 100%;
-    height: 48px;
-}
-
+paypal-button,
+paypal-pay-later-button,
+paypal-credit-button,
 venmo-button {
-    --venmo-button-border-radius: 4px;
+    --paypal-button-border-radius: 4px;
     width: 100%;
     height: 48px;
 }

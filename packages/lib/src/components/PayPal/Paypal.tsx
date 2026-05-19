@@ -7,7 +7,7 @@ import { TxVariants } from '../tx-variants';
 import { formatPaypalOrderContactToAdyenFormat } from './utils/format-paypal-order-contact-to-adyen-format';
 
 import type { ICore } from '../../core/types';
-import type { PaymentAction } from '../../types/global-types';
+import type { PaymentAction, PaymentMethodBrand } from '../../types/global-types';
 import type { Intent, PayPalConfiguration } from './types';
 import type {
     PayPalOnApproveActions,
@@ -51,7 +51,9 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
             this.paypalService = PayPalService.getInstance({
                 loadingContext: this.props.loadingContext,
                 clientKey: this.props.clientKey,
-                sdkLoader
+                sdkLoader,
+                countryCode: this.props.countryCode,
+                currencyCode: this.props.amount.currency
             });
 
             void this.paypalService.initialize();
@@ -60,26 +62,12 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
 
     public override async isAvailable(): Promise<void> {
         if (this.props.useV6) {
-            console.log('# isAvailable started');
-
             await this.paypalService.isPayPalSdkReady();
 
-            const paymentMethods = await this.paypalService.sdkInstance.findEligibleMethods({
-                currencyCode: this.props.amount.currency,
-                countryCode: this.props.countryCode
-            });
-
-            console.log({
-                paypal: paymentMethods.isEligible('paypal'),
-                paylater: paymentMethods.isEligible('paylater'),
-                credit: paymentMethods.isEligible('credit')
-            });
-
-            if (!paymentMethods.isEligible('paypal')) {
+            if (!this.paypalService.paymentMethods.isEligible('paypal')) {
                 return Promise.reject();
             }
 
-            console.log('# isAvailable finished');
             return Promise.resolve();
         }
 
@@ -292,6 +280,42 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
         return onShippingOptionsChange(data, actions, this);
     }
 
+    get brands(): PaymentMethodBrand[] {
+        if (!this.props.useV6) {
+            return [];
+        }
+
+        const brandIcon = this.core.modules.resources?.getImage()('paypal');
+
+        const brands = [];
+
+        if (this.paypalService?.paymentMethods?.isEligible('paylater')) {
+            brands.push({ icon: brandIcon, name: 'paylater' });
+        }
+
+        if (this.paypalService?.paymentMethods?.isEligible('credit')) {
+            brands.push({ icon: brandIcon, name: 'credit' });
+        }
+
+        return brands;
+    }
+
+    get additionalInfo(): string {
+        if (!this.props.useV6) {
+            return '';
+        }
+
+        if (this.paypalService?.paymentMethods?.isEligible('paylater') && this.paypalService?.paymentMethods?.isEligible('credit')) {
+            return 'Offers PayPal Credit and Pay Later';
+        } else if (this.paypalService?.paymentMethods?.isEligible('paylater')) {
+            return 'Offers Pay Later';
+        } else if (this.paypalService?.paymentMethods?.isEligible('credit')) {
+            return 'Offers PayPal Credit';
+        }
+
+        return '';
+    }
+
     protected override componentToRender(): h.JSX.Element | null {
         if (!this.props.showPayButton) return null;
 
@@ -303,8 +327,10 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
                     onSubmit={this.handleSubmit}
                     onAdditionalDetails={this.handleOnApproveV6}
                     paypalService={this.paypalService}
-                    currencyCode={this.props.amount.currency}
-                    countryCode={this.props.countryCode}
+                    onCancel={() => this.handleError(new AdyenCheckoutError('CANCEL'))}
+                    onError={error => {
+                        this.handleError(new AdyenCheckoutError('ERROR', String(error), { cause: error }));
+                    }}
                 />
             );
         }

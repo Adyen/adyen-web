@@ -4,7 +4,6 @@ import defaultProps from './defaultProps';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { ERRORS } from './constants';
 import { TxVariants } from '../tx-variants';
-import { formatPaypalOrderContactToAdyenFormat } from './utils/format-paypal-order-contact-to-adyen-format';
 
 import type { ICore } from '../../core/types';
 import type { PaymentAction } from '../../types/global-types';

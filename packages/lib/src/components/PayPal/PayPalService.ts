@@ -5,10 +5,12 @@ interface PayPalServiceConfig {
     loadingContext: string;
     clientKey: string;
     sdkLoader: PayPalSdkLoader;
+    currencyCode: string;
+    countryCode: string;
 }
 
 class PayPalService {
-    private static instances: Map<string, PayPalService> = new Map();
+    private static readonly instances: Map<string, PayPalService> = new Map();
 
     private static createKey(loadingContext: string, clientKey: string): string {
         return `${loadingContext}:${clientKey}`;
@@ -26,23 +28,29 @@ class PayPalService {
     private readonly sdkLoader: PayPalSdkLoader;
     private readonly loadingContext: string;
     private readonly clientKey: string;
+    private readonly currencyCode: string;
+    private readonly countryCode: string;
 
-    private loadingPromise: Promise<void>;
+    private loadingPromise: Promise<void> = undefined;
     public sdkInstance: any;
+    public paymentMethods: any;
 
-    private constructor({ loadingContext, clientKey, sdkLoader }: PayPalServiceConfig) {
+    private constructor({ loadingContext, clientKey, sdkLoader, currencyCode, countryCode }: PayPalServiceConfig) {
         this.sdkLoader = sdkLoader;
         this.loadingContext = loadingContext;
         this.clientKey = clientKey;
+        this.currencyCode = currencyCode;
+        this.countryCode = countryCode;
 
         this.createPayPalSdkInstance = this.createPayPalSdkInstance.bind(this);
+        this.createPayPalPaymentMethods = this.createPayPalPaymentMethods.bind(this);
         this.initialize = this.initialize.bind(this);
 
         void sdkLoader.load();
     }
 
     public async initialize(): Promise<void> {
-        if (this.loadingPromise) {
+        if (this.loadingPromise !== undefined) {
             return this.loadingPromise;
         }
 
@@ -54,7 +62,8 @@ class PayPalService {
                 console.log('PayPal SDK loaded and token data received');
                 return tokenData.value;
             })
-            .then(this.createPayPalSdkInstance);
+            .then(this.createPayPalSdkInstance)
+            .then(this.createPayPalPaymentMethods);
 
         return this.loadingPromise;
     }
@@ -67,10 +76,10 @@ class PayPalService {
         return this.loadingPromise;
     }
 
-    private async createPayPalSdkInstance(clientToken: string): Promise<void> {
+    private async createPayPalSdkInstance(clientToken: string): Promise<any> {
         console.log('createPayPalSdkInstance(): executed');
 
-        // @ts-ignore
+        // @ts-ignore: paypal instance
         this.sdkInstance = await window.paypal.createInstance({
             clientToken,
             components: ['paypal-payments', 'venmo-payments'],
@@ -78,6 +87,21 @@ class PayPalService {
         });
 
         console.log('createPayPalSdkInstance(): PayPalSDK instance', this.sdkInstance);
+
+        return this.sdkInstance;
+    }
+
+    private async createPayPalPaymentMethods(): Promise<void> {
+        console.log('createPayPalPaymentMethods(): executed');
+
+        this.paymentMethods = await this.sdkInstance.findEligibleMethods({
+            currencyCode: this.currencyCode,
+            countryCode: this.countryCode
+        });
+
+        console.log('createPayPalPaymentMethods(): PayPalSDK payment methods', this.paymentMethods);
+
+        return Promise.resolve();
     }
 }
 
