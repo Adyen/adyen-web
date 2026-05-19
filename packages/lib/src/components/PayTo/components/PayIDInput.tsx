@@ -50,14 +50,12 @@ const IDENTIFIER_SCHEMA = {
 export default function PayIDInput({ setComponentRef, defaultData, placeholders, onChange, setStatus, id }: Readonly<PayIDInputProps>) {
     const { i18n } = useCoreContext();
 
-    const containerRef = useRef<HTMLFieldSetElement>(null);
-
     const form = useFormWithA11y<PayIdFormData>({
         schema: BASE_SCHEMA,
         defaultData: { selectedIdentifier: PayToIdentifierEnum.phone, ...defaultData },
         rules: payIdValidationRules,
         formatters: phoneFormatters,
-        formHolder: containerRef
+        formHolder: `#${id}`
     });
     const { handleChangeFor, triggerValidation, data, errors, valid, isValid, setSchema } = form;
 
@@ -82,7 +80,7 @@ export default function PayIDInput({ setComponentRef, defaultData, placeholders,
     }, [setComponentRef]);
 
     return (
-        <Fieldset ref={containerRef} id={id} classNameModifiers={['payto__payid_input']} label={'PayID'} description={'payto.payid.description'}>
+        <Fieldset id={id} classNameModifiers={['payto__payid_input']} label={'PayID'} description={'payto.payid.description'}>
             <IdentifierSelector
                 classNameModifiers={['col-40']}
                 onSelectedIdentifier={handleChangeFor('selectedIdentifier')}

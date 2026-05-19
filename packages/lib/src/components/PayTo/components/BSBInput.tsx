@@ -35,14 +35,12 @@ const BASE_SCHEMA = ['bankAccountNumber', 'bsb', 'firstName', 'lastName'];
 export default function BSBInput({ setComponentRef, defaultData, placeholders, onChange, setStatus, id }: Readonly<BSBInputProps>) {
     const { i18n } = useCoreContext();
 
-    const containerRef = useRef<HTMLFieldSetElement>(null);
-
     const form = useFormWithA11y<BSBFormData>({
         schema: BASE_SCHEMA,
         defaultData: defaultData,
         rules: bsbValidationRules,
         formatters: phoneFormatters,
-        formHolder: containerRef
+        formHolder: `#${id}`
     });
     const { handleChangeFor, triggerValidation, data, errors, valid, isValid } = form;
 
@@ -61,7 +59,7 @@ export default function BSBInput({ setComponentRef, defaultData, placeholders, o
     }, [setComponentRef]);
 
     return (
-        <Fieldset ref={containerRef} id={id} classNameModifiers={['payto__bsb_input']} label={'BSB'} description={'payto.bsb.description'}>
+        <Fieldset id={id} classNameModifiers={['payto__bsb_input']} label={'BSB'} description={'payto.bsb.description'}>
             <Field
                 label={i18n.get('payto.bsb.label.bankAccountNumber')}
                 classNameModifiers={['col-60', 'bankAccountNumber']}
