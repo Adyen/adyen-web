@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'preact/hooks';
+import { useCallback, useEffect, useRef } from 'preact/hooks';
 import { RefObject } from 'preact';
 import useForm from './useForm';
 import { useErrorFocus } from './useErrorFocus';
@@ -27,24 +27,25 @@ function useFormWithA11y<FormSchema>(props: FormWithA11yProps): Form<FormSchema>
     const { focusFirstError } = useErrorFocus(formHolder);
 
     // Tracks whether we are in a submit-triggered validation pass.
-    // A state (not ref) so the useEffect below reacts to it alongside form.errors.
-    const [isValidating, setIsValidating] = useState(false);
+    // A ref (not state) so that setting it does not schedule an extra render,
+    // and so it does not need to be listed in the useEffect dependency array.
+    const isValidating = useRef(false);
 
     const triggerValidation = useCallback(
         (selectedSchema = null) => {
-            setIsValidating(true);
+            isValidating.current = true;
             form.triggerValidation(selectedSchema);
         },
         [form.triggerValidation]
     );
 
     // After errors update from a submit-time validation, focus the first error field.
-    // Blur-time validations (isValidating === false) do NOT trigger focus management.
+    // Blur-time validations (isValidating.current === false) do NOT trigger focus management.
     useEffect(() => {
-        if (!isValidating) return;
+        if (!isValidating.current) return;
+        isValidating.current = false;
         focusFirstError(form.errors, form.schema);
-        setIsValidating(false);
-    }, [form.errors, form.schema, focusFirstError]);
+    }, [form.errors]);
 
     return {
         ...form,
