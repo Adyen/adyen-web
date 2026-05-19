@@ -44,7 +44,7 @@ class ThreeDS2Challenge extends UIElement<ThreeDS2ChallengeConfiguration> {
      */
     onComplete(state: LegacyChallengeResolveData | ChallengeResolveData) {
         if (this.props.isMDFlow) {
-            this.props.onComplete?.(state, this.elementRef);
+            this.props.on3DS2RedirectFlowComplete?.(state, this.elementRef);
         } else {
             super.onComplete(state);
         }

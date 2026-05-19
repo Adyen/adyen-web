@@ -46,7 +46,7 @@ describe('ThreeDS2DeviceFingerprint', () => {
     });
 
     describe('Additional details callbacks priority', () => {
-        test('should call default additional details flow if "onComplete" is not present', () => {
+        test('should call default additional details because we are not in the MDFlow', () => {
             const core = setupCoreMock();
 
             const fingerprintComponent = new ThreeDS2DeviceFingerprint(core, {
@@ -64,15 +64,15 @@ describe('ThreeDS2DeviceFingerprint', () => {
             expect(spy).toHaveBeenCalledWith(fingerprintResolveData);
         });
 
-        test('should call "onComplete" because we are in MDFlow', () => {
-            const onComplete = jest.fn();
+        test('should call "on3DS2RedirectFlowComplete" because we are in MDFlow', () => {
+            const on3DS2RedirectFlowComplete = jest.fn();
             const core = setupCoreMock();
 
             const fingerprintComponent = new ThreeDS2DeviceFingerprint(core, {
                 token: 'xxx',
                 onError: () => {},
                 showSpinner: null,
-                onComplete,
+                on3DS2RedirectFlowComplete,
                 isMDFlow: true
             });
 
@@ -82,7 +82,7 @@ describe('ThreeDS2DeviceFingerprint', () => {
 
             fingerprintComponent.onComplete(fingerprintResolveData);
 
-            expect(onComplete).toHaveBeenCalledWith(fingerprintResolveData, fingerprintComponent);
+            expect(on3DS2RedirectFlowComplete).toHaveBeenCalledWith(fingerprintResolveData, fingerprintComponent);
             expect(spy).not.toHaveBeenCalled();
         });
     });
