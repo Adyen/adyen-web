@@ -52,8 +52,6 @@ export default function CVC(props: Readonly<CVCProps>) {
         onFocusField(ENCRYPTED_SECURITY_CODE);
     };
 
-    const imageDescription = `${fieldLabel} ${contextualText}`;
-
     return (
         <Field
             label={fieldLabel}
@@ -76,7 +74,7 @@ export default function CVC(props: Readonly<CVCProps>) {
         >
             <DataSfSpan encryptedFieldType={ENCRYPTED_SECURITY_CODE} className={cvcClassnames} />
 
-            <CVCHint frontCVC={frontCVC} fieldLabel={imageDescription} />
+            <CVCHint frontCVC={frontCVC} />
         </Field>
     );
 }
