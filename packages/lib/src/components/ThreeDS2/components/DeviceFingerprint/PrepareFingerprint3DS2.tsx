@@ -1,8 +1,8 @@
 import { Component, h } from 'preact';
 import DoFingerprint3DS2 from './DoFingerprint3DS2';
-import { createFingerprintResolveData, createOldFingerprintResolveData, isErrorObject, prepareFingerPrintData } from '../utils';
+import { createFingerprintResolveData, isErrorObject, prepareFingerPrintData } from '../utils';
 import { PrepareFingerprint3DS2Props, PrepareFingerprint3DS2State } from './types';
-import { FingerPrintData, ResultObject, ErrorCodeObject, LegacyFingerprintResolveData, FingerprintResolveData } from '../../types';
+import { FingerPrintData, ResultObject, ErrorCodeObject, FingerprintResolveData } from '../../types';
 import { ErrorObject } from '../../../../core/Errors/types';
 import { isValidHttpUrl } from '../../../../utils/isValidURL';
 import { THREEDS2_FINGERPRINT, THREEDS2_FINGERPRINT_ERROR, THREEDS2_NUM, MISSING_TOKEN_IN_ACTION_MSG, TIMEOUT } from '../../constants';
@@ -143,16 +143,7 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
 
     setStatusComplete(resultObj: ResultObject, errorCodeObject: ErrorCodeObject = null) {
         this.setState({ status: 'complete' }, () => {
-            /**
-             * Create the data in the way that the /details endpoint expects.
-             *  This is different for the flow triggered by the threeds2InMDFlow process than for the new, v67, 'threeDS2' action
-             */
-            const resolveDataFunction = this.props.isMDFlow ? createOldFingerprintResolveData : createFingerprintResolveData;
-            const data: LegacyFingerprintResolveData | FingerprintResolveData = resolveDataFunction(
-                this.props.dataKey,
-                resultObj,
-                this.props.paymentData
-            );
+            const data: FingerprintResolveData = createFingerprintResolveData(this.props.dataKey, resultObj, this.props.paymentData);
 
             let event: AbstractAnalyticsEvent;
 

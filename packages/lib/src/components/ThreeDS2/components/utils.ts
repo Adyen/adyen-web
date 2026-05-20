@@ -139,25 +139,9 @@ export const createFingerprintResolveData = (dataKey: string, resultObj: ResultO
     }
 });
 
-// Old 3DS2 flow
-export const createOldFingerprintResolveData = (dataKey: string, resultObj: ResultObject, paymentData: string): any => ({
-    data: {
-        details: { 'threeds2.fingerprint': encodeObject(resultObj) },
-        paymentData
-    }
-});
-
 export const createChallengeResolveData = (dataKey: string, transStatus: string, authorisationToken: string): ChallengeResolveData => ({
     data: {
         details: { [dataKey]: encodeObject({ transStatus, authorisationToken }) }
-    }
-});
-
-// Needed for old 3DS2 flow & threeds2InMDFlow
-export const createOldChallengeResolveData = (dataKey: string, transStatus: string, authorisationToken: string): any => ({
-    data: {
-        details: { 'threeds2.challengeResult': encodeObject({ transStatus }) },
-        paymentData: authorisationToken
     }
 });
 
