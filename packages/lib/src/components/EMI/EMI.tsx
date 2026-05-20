@@ -19,7 +19,10 @@ class EMI extends UIElement<EMIConfiguration> {
         if (this.validateFundingSources()) {
             this.initFundingSources();
         } else {
-            console.warn('EMI: Component initialization aborted due to invalid or missing funding sources.');
+            const types = this.props.supportedPaymentMethods?.map(m => m.type).join(', ') || 'none';
+            console.warn(
+                `EMI: No valid funding sources found. Received types: [${types}]. Supported types: [${Object.keys(SUPPORTED_FUNDING_SOURCES).join(', ')}].`
+            );
         }
     }
 
@@ -41,7 +44,8 @@ class EMI extends UIElement<EMIConfiguration> {
             i18n: this.props.i18n,
             _disableClickToPay: true,
             showPayButton: false,
-            elementRef: this.elementRef
+            elementRef: this.elementRef,
+            onChange: () => this.onChange()
         });
     }
 
@@ -55,6 +59,10 @@ class EMI extends UIElement<EMIConfiguration> {
 
     private get activeFundingSourceElement(): UIElement | undefined {
         return this.activeFundingSource ? this.fundingSourceUIElements[this.activeFundingSource] : undefined;
+    }
+
+    public override isAvailable(): Promise<void> {
+        return this.validateFundingSources() ? Promise.resolve() : Promise.reject(new Error('EMI: No valid funding sources available'));
     }
 
     public get isValid(): boolean {
