@@ -12,9 +12,11 @@ export interface SupportedPaymentMethod {
     brands?: string[];
 }
 
+type EMICardOverrides = 'showPayButton' | '_disableClickToPay';
+
 export interface EMIConfiguration extends UIElementProps {
     supportedPaymentMethods?: SupportedPaymentMethod[];
     fundingSourceConfiguration?: {
-        card?: Partial<CardConfiguration>;
+        card?: Partial<Omit<CardConfiguration, EMICardOverrides>>;
     };
 }
