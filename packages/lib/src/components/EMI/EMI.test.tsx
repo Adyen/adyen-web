@@ -5,6 +5,8 @@ import { TxVariants } from '../tx-variants';
 import { Resources } from '../../core/Context/Resources';
 import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 import PaymentMethods from '../../core/ProcessResponse/PaymentMethods';
+import { AdyenCheckout, ThreeDS2Challenge, ThreeDS2DeviceFingerprint } from '../../index';
+import type { PaymentActionsType } from '../../types/global-types';
 
 const core = setupCoreMock();
 
@@ -268,6 +270,120 @@ describe('EMI', () => {
 
             render(emi.render());
             expect(screen.queryByRole('button', { name: /pay/i })).toBeNull();
+        });
+    });
+
+    describe('onChange', () => {
+        test('should call onChange prop on EMI when Card child state changes', () => {
+            const coreWithEmi = createCoreWithEmi(true);
+            const onChangeMock = jest.fn();
+
+            const emi = new EMI(coreWithEmi, {
+                ...baseProps,
+                supportedPaymentMethods: [schemePaymentMethod],
+                onChange: onChangeMock
+            });
+
+            expect(emi.card).toBeDefined();
+
+            // Trigger a state change on the child Card to simulate card input
+            emi.card?.setState({ data: { cardNumber: '4111111111111111' } });
+
+            expect(onChangeMock).toHaveBeenCalled();
+        });
+
+        test('should not throw when onChange is not provided', () => {
+            const coreWithEmi = createCoreWithEmi(true);
+
+            const emi = new EMI(coreWithEmi, {
+                ...baseProps,
+                supportedPaymentMethods: [schemePaymentMethod]
+            });
+
+            expect(() => emi.card?.setState({ data: {} })).not.toThrow();
+        });
+    });
+
+    describe('isAvailable', () => {
+        test('should resolve when valid funding sources exist', async () => {
+            const coreWithEmi = createCoreWithEmi(true);
+            const emi = new EMI(coreWithEmi, {
+                ...baseProps,
+                supportedPaymentMethods: [schemePaymentMethod]
+            });
+
+            await expect(emi.isAvailable()).resolves.toBeUndefined();
+        });
+
+        test('should reject when no supportedPaymentMethods are provided', async () => {
+            const coreWithEmi = createCoreWithEmi(false);
+            const emi = new EMI(coreWithEmi, {
+                ...baseProps
+            });
+
+            await expect(emi.isAvailable()).rejects.toThrow('EMI: No valid funding sources available');
+        });
+
+        test('should reject when supportedPaymentMethods contains unsupported rail', async () => {
+            const coreWithEmi = createCoreWithEmi(false);
+            const emi = new EMI(coreWithEmi, {
+                ...baseProps,
+                supportedPaymentMethods: [{ type: 'unsupported_rail' }]
+            });
+
+            await expect(emi.isAvailable()).rejects.toThrow('EMI: No valid funding sources available');
+        });
+    });
+
+    describe('handleAction (3DS)', () => {
+        test('should handle fingerprint action via elementRef propagation', async () => {
+            const fingerprintAction = {
+                paymentData: 'Ab02b4c0!BQABAgCUeRP+3La4...',
+                authorisationToken: 'BQABAQCmFNEdaCE3rcbbB...',
+                paymentMethodType: 'scheme',
+                subtype: 'fingerprint',
+                token: 'eyJ0aHJlZURTTWV0aG9kTm90a...',
+                type: 'threeDS2' as PaymentActionsType
+            };
+
+            const checkout = await AdyenCheckout({
+                countryCode: 'IN',
+                environment: 'test',
+                clientKey: 'test_123456'
+            });
+
+            const emi = new EMI(checkout, {
+                supportedPaymentMethods: [schemePaymentMethod]
+            }).mount('body');
+
+            const actionComponent = emi.handleAction(fingerprintAction);
+            expect(actionComponent instanceof ThreeDS2DeviceFingerprint).toBe(true);
+        });
+
+        test('should handle challenge action via elementRef propagation', async () => {
+            const challengeAction = {
+                paymentData: 'Ab02b4c0!BQABAgCUeRP+3La4...',
+                authorisationToken: 'BQABAQCmFNEdaCE3rcbbB...',
+                subtype: 'challenge',
+                token: 'xxx',
+                paymentMethodType: 'scheme',
+                type: 'threeDS2' as PaymentActionsType
+            };
+
+            const checkout = await AdyenCheckout({
+                countryCode: 'IN',
+                environment: 'test',
+                clientKey: 'test_123456',
+                analytics: { enabled: false },
+                srConfig: { enabled: false }
+            });
+
+            const emi = new EMI(checkout, {
+                supportedPaymentMethods: [schemePaymentMethod]
+            }).mount('body');
+
+            const actionComponent = emi.handleAction(challengeAction);
+            expect(actionComponent instanceof ThreeDS2Challenge).toBe(true);
         });
     });
 
