@@ -206,6 +206,7 @@
     "amazonpay.changePaymentDetails": "Change payment details",
     "partialPayment.warning": "Select another payment method to pay the remaining",
     "partialPayment.remainingBalance": "Remaining balance will be %{amount}",
+    "order.paymentMethod.description": "%{name} ending in %{lastFour}",
     "bankTransfer.beneficiary": "Beneficiary name",
     "bankTransfer.iban": "IBAN",
     "bankTransfer.bic": "BIC",
