@@ -1,6 +1,13 @@
 import { test as base, expect } from '../../../fixtures/base-fixture';
 import { EMI } from '../../../models/emi';
 import { URL_MAP } from '../../../fixtures/URL_MAP';
+import {
+    PAYMENT_RESULT,
+    TEST_CVC_VALUE,
+    TEST_DATE_VALUE,
+    THREEDS2_FULL_FLOW_CARD,
+    THREEDS2_CHALLENGE_PASSWORD
+} from '../../utils/constants';
 
 type Fixture = {
     emiPage: EMI;
@@ -46,5 +53,26 @@ test.describe('EMI - CardEmiWithCustomButton (Custom Pay Button)', () => {
 
         // Clicking submit on empty card fields triggers validation (fields show error state)
         await expect(emiPage.errorFields.first()).toBeVisible();
+    });
+});
+
+test.describe('EMI - 3DS2 Full Flow', () => {
+    test('should complete full 3DS2 flow (fingerprint & challenge)', async ({ page, emiPage }) => {
+        const makeDetailsCallResponsePromise = page.waitForResponse(response => response.url().includes('/paymentDetails'));
+
+        await emiPage.goto(URL_MAP.emi);
+
+        await emiPage.typeCardNumber(THREEDS2_FULL_FLOW_CARD);
+        await emiPage.typeCvc(TEST_CVC_VALUE);
+        await emiPage.typeExpiryDate(TEST_DATE_VALUE);
+        await emiPage.pay();
+
+        await emiPage.threeDs2Challenge.fillInPassword(THREEDS2_CHALLENGE_PASSWORD);
+        await emiPage.threeDs2Challenge.submit();
+
+        const detailsCallResponse = await makeDetailsCallResponsePromise;
+
+        await expect(emiPage.paymentResult).toContainText(PAYMENT_RESULT.authorised);
+        expect(detailsCallResponse.status()).toBe(200);
     });
 });
