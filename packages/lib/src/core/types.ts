@@ -28,7 +28,7 @@ import { SRPanel } from './Errors/SRPanel';
 import { IAnalytics } from './Analytics/Analytics';
 import type { DonationOptions } from '../components/Donation/types';
 
-export { CheckoutSession } from './CheckoutSession/types';
+export type { CheckoutSession } from './CheckoutSession/types';
 export interface ICore {
     initialize(): Promise<ICore>;
     register(...items: NewableComponent[]): void;
