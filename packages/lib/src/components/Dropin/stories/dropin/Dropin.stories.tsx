@@ -35,6 +35,7 @@ const meta: MetaConfiguration<DropinConfiguration> = {
             showRadioButton: false,
             instantPaymentTypes: ['googlepay', 'applepay'],
             showRemovePaymentMethodButton: false,
+            showStoredPaymentMethods: false,
             paymentMethodsConfiguration: {
                 googlepay: {
                     buttonType: 'plain',
