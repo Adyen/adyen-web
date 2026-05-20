@@ -97,6 +97,7 @@ class PayPalService {
         this.paymentMethods = await this.sdkInstance.findEligibleMethods({
             currencyCode: this.currencyCode,
             countryCode: this.countryCode
+            // paymentFlow: 'VAULT_WITHOUT_PAYMENT'
         });
 
         console.log('createPayPalPaymentMethods(): PayPalSDK payment methods', this.paymentMethods);

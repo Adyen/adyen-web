@@ -58,6 +58,13 @@ const PayPalComponentV6 = ({ paypalService, onSubmit, onAdditionalDetails, onCan
 
         const creditPaymentSession = paypalService.sdkInstance.createPayPalCreditOneTimePaymentSession(sessionProps);
         setCreditPaymentSession(creditPaymentSession);
+
+        if (paypalService?.paymentMethods?.isEligible('credit')) {
+            const creditDetails = paypalService?.paymentMethods?.getDetails('credit');
+            const button = document.querySelector(`#paypal-credit-button-${id}`);
+            button?.setAttribute('productCode', creditDetails.productCode);
+            button?.setAttribute('countryCode', creditDetails.countryCode);
+        }
     }, [sessionProps]);
 
     const onPayPalClick = useCallback(async () => {
@@ -88,7 +95,7 @@ const PayPalComponentV6 = ({ paypalService, onSubmit, onAdditionalDetails, onCan
         >
             <paypal-button onclick={onPayPalClick} class="paypal-gold" />
             <paypal-pay-later-button onclick={onPayLaterClick} class="paypal-white" id={`paypal-paylater-button-${id}`} />
-            <paypal-credit-button onclick={onCreditClick} class="paypal-white" />
+            <paypal-credit-button onclick={onCreditClick} class="paypal-white" id={`paypal-credit-button-${id}`} />
         </div>
     );
 };
