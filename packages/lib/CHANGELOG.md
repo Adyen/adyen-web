@@ -1,5 +1,19 @@
 # @adyen/adyen-web
 
+## 6.37.0
+
+### Minor Changes
+
+- Improved: UPI Intent UI improvements for apps list ([#3885](https://github.com/Adyen/adyen-web/pull/3885))
+
+### Patch Changes
+
+- Fixed: SegmentedControl component to follow proper tablist and tabpanel WAI-ARIA semantics ([#3985](https://github.com/Adyen/adyen-web/pull/3985))
+
+- Fixed: Decorative images in Card component are now removed from the accessibility tree ([#3988](https://github.com/Adyen/adyen-web/pull/3988))
+
+- Fixed: 3DS2 Redirect(MD) flow uses new data structures ([#3982](https://github.com/Adyen/adyen-web/pull/3982))
+
 ## 6.36.0
 
 ### Minor Changes
