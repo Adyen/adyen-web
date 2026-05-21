@@ -18,11 +18,6 @@ export interface DonationCampaign extends CampaignContentProps {
 
 export interface DonationOptions {
     /**
-     * Optional boolean to delay, or halt, the showing of the Donation component when in the Sessions flow.
-     * Defaults to true.
-     */
-    autoMount?: boolean;
-    /**
      * Optional number representing the delay in milliseconds before the Donation component is mounted (if mandated by the /payments response in the Sessions flow),
      * Defaults to 3000.
      */
@@ -37,10 +32,17 @@ export interface DonationOptions {
      * @param reason - the reason why the donation failed (could be an error message; or a string, stating for example, that the donation payment was refused)
      */
     onDonationFailure: (reason: unknown) => void;
+    /**
+     * Callback to receive the Donation element for mounting. Used when the merchant handles mounting themselves,
+     * for example when displaying the review page.
+     * When set, the Donation element will be passed to this callback instead of being auto-mounted.
+     * @param donationElement - the Donation UIElement ready to be mounted
+     */
+    onDonationAvailable?: (donationElement: DonationElement) => void;
 }
 
 export interface DonationCampaignOptions {
-    rootNode: HTMLElement | string;
+    rootNode?: HTMLElement | string;
     commercialTxAmount: number;
 }
 

@@ -15,7 +15,7 @@ class DonationElement extends UIElement<DonationConfiguration> {
     private readonly isInServiceMode: boolean = false;
 
     constructor(checkout: ICore, props: DonationProps) {
-        const isServiceMode = DonationElement.isServiceMode(props);
+        const isServiceMode = DonationElement.isServiceMode(props, checkout);
         const initialConfig = isServiceMode ? undefined : props;
 
         super(checkout, initialConfig);
@@ -40,8 +40,11 @@ class DonationElement extends UIElement<DonationConfiguration> {
      * The opposite of this mode is the "direct" mode, used in the Advanced flow:
      * - the merchant makes their own call to the /donationCampaigns endpoint and provides the Donation Campaign directly to the component.
      */
-    private static isServiceMode(props: DonationProps): props is DonationCampaignOptions {
-        return 'rootNode' in props && !!props.rootNode;
+    private static isServiceMode(props: DonationProps, checkout: ICore): props is DonationCampaignOptions {
+        if ('onDonate' in props) {
+            return false;
+        }
+        return !!props.rootNode || !!checkout.options?.donation?.onDonationAvailable;
     }
 
     public static readonly defaultProps = {
@@ -64,7 +67,13 @@ class DonationElement extends UIElement<DonationConfiguration> {
             const donationCampaign = await new DonationCampaignService(checkout, props).initialise();
             if (donationCampaign) {
                 this.props = { ...this.props, ...donationCampaign };
-                this.mount(props.rootNode);
+                if (checkout.options?.donation?.onDonationAvailable) {
+                    checkout.options.donation?.onDonationAvailable?.(this);
+                } else if (props.rootNode) {
+                    this.mount(props.rootNode);
+                } else {
+                    // No rootNode and no onDonationAvailable callback - throw error
+                }
             }
             // If no campaigns found (response is null), don't mount - silently do nothing
         } catch (error: unknown) {

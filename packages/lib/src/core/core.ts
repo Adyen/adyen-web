@@ -386,6 +386,12 @@ class Core implements ICore {
                     }
                 }
                 cleanupFinalResult(response);
+                if (response.askDonation === true && this.options.donation?.onDonationAvailable) {
+                    const DonationComponentRef = this.getComponent('donation');
+                    if (DonationComponentRef) {
+                        new DonationComponentRef(this, { commercialTxAmount: this.options.amount?.value ?? 0 });
+                    }
+                }
                 this.options.onPaymentCompleted?.(response);
             })
             .catch((e: PaymentResponseData | Error) => {

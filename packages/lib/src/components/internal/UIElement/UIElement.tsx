@@ -474,8 +474,10 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     protected setupSessionsDonation() {
         const { amount, donation } = this.props;
 
-        // If merchant hasn't explicitly disabled autoMount by setting it to false
-        if (donation?.autoMount !== false) {
+        if (donation?.onDonationAvailable) {
+            const DonationComponentRef = this.core.getComponent(TxVariants.donation) as typeof Donation;
+            new DonationComponentRef(this.core, { commercialTxAmount: amount.value }); // NOSONAR: Instantiation triggers internal async initialization (fire-and-forget pattern)
+        } else {
             const rootNode: HTMLElement = assertIsDropin(this.elementRef) ? this.elementRef._node : this._node;
 
             const DonationComponentRef = this.core.getComponent(TxVariants.donation) as typeof Donation;

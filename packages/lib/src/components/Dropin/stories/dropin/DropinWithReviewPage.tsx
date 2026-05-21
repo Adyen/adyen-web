@@ -6,7 +6,6 @@ import DropinComponent from '../../Dropin';
 import getCurrency from '../../../../../storybook/utils/get-currency';
 import { createSession } from '../../../../../storybook/helpers/checkout-api-calls';
 import { RETURN_URL, SHOPPER_REFERENCE } from '../../../../../storybook/config/commonConfig';
-import { handleFinalState } from '../../../../../storybook/helpers/checkout-handlers';
 import { PaymentMethodStoryProps } from '../../../../../storybook/types';
 import { DropinConfiguration } from '../../types';
 import Spinner from '../../../internal/Spinner';
@@ -91,9 +90,11 @@ interface ReviewPageProps {
 
 const ReviewPage = ({ reviewData, sessionId, amount, countryCode, shopperLocale }: ReviewPageProps) => {
     const actionRef = useRef<HTMLDivElement>(null);
+    const donationRef = useRef<HTMLDivElement>(null);
     const checkoutRef = useRef<ICore | null>(null);
     const [hideReviewPage, setHideReviewPage] = useState(false);
     const [submitting, setSubmitting] = useState(false);
+    const [resultCode, setResultCode] = useState<string | null>(null);
 
     useEffect(() => {
         const init = async () => {
@@ -108,13 +109,23 @@ const ReviewPage = ({ reviewData, sessionId, amount, countryCode, shopperLocale 
                         actionElement.mount(actionRef.current);
                     }
                 },
-                onPaymentCompleted: (result, component) => {
+                onPaymentCompleted: result => {
                     setSubmitting(false);
-                    handleFinalState(result, component);
+                    setResultCode(result.resultCode);
                 },
-                onPaymentFailed: (result, component) => {
+                onPaymentFailed: result => {
                     setSubmitting(false);
-                    handleFinalState(result, component);
+                    setResultCode(result?.resultCode ?? 'Failed');
+                },
+                donation: {
+                    onDonationAvailable: donationElement => {
+                        if (donationRef.current) {
+                            setHideReviewPage(true);
+                            donationElement.mount(donationRef.current);
+                        }
+                    },
+                    onDonationSuccess: ({ didDonate }) => console.log('[ReviewPage] Donation completed, didDonate:', didDonate),
+                    onDonationFailure: reason => console.error('[ReviewPage] Donation failed:', reason)
                 }
             });
             checkoutRef.current = reviewCheckout;
@@ -125,6 +136,11 @@ const ReviewPage = ({ reviewData, sessionId, amount, countryCode, shopperLocale 
 
     return (
         <div data-testid="review-page" style={{ border: '1px solid #ccc', padding: '1rem', borderRadius: 8, maxWidth: 500 }}>
+            {resultCode && (
+                <p data-testid="result-message">
+                    <strong>Result:</strong> {resultCode}
+                </p>
+            )}
             {!hideReviewPage && (
                 <div>
                     <h2 style={{ marginTop: 0 }}>Review your order</h2>
@@ -154,6 +170,7 @@ const ReviewPage = ({ reviewData, sessionId, amount, countryCode, shopperLocale 
                 </div>
             )}
             <div ref={actionRef} id="action-root" style={{ marginTop: 16 }} />
+            <div ref={donationRef} id="donation-root" style={{ marginTop: 16 }} />
         </div>
     );
 };

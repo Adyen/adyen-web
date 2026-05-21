@@ -22,7 +22,6 @@ const createMockCore = (): MockCoreWithSession => {
     core.session = session;
     core.options = {
         donation: {
-            autoMount: true,
             onDonationSuccess: jest.fn(),
             onDonationFailure: jest.fn(),
             delay: 0
@@ -86,7 +85,6 @@ describe('DonationCampaignService', () => {
             const core = createMockCore();
             core.options = {
                 donation: {
-                    autoMount: true,
                     delay: DEFAULT_DONATION_AUTO_START_DELAY_MS,
                     onDonationSuccess: jest.fn(),
                     onDonationFailure: jest.fn()
@@ -115,7 +113,6 @@ describe('DonationCampaignService', () => {
             const core = createMockCore();
             core.options = {
                 donation: {
-                    autoMount: true,
                     delay: 1000,
                     onDonationSuccess: jest.fn(),
                     onDonationFailure: jest.fn()
@@ -293,7 +290,6 @@ describe('DonationCampaignService', () => {
             const onDonationSuccess = jest.fn();
             core.options = {
                 donation: {
-                    autoMount: true,
                     onDonationSuccess,
                     onDonationFailure: jest.fn(),
                     delay: 0
@@ -473,7 +469,6 @@ describe('DonationCampaignService', () => {
             const onDonationSuccess = jest.fn();
             core.options = {
                 donation: {
-                    autoMount: true,
                     onDonationSuccess,
                     onDonationFailure: jest.fn(),
                     delay: 0
@@ -518,7 +513,6 @@ describe('DonationCampaignService', () => {
             const onDonationFailure = jest.fn();
             core.options = {
                 donation: {
-                    autoMount: true,
                     onDonationFailure,
                     onDonationSuccess: jest.fn(),
                     delay: 0
@@ -566,7 +560,6 @@ describe('DonationCampaignService', () => {
             const onDonationFailure = jest.fn();
             core.options = {
                 donation: {
-                    autoMount: true,
                     onDonationFailure,
                     onDonationSuccess: jest.fn(),
                     delay: 0

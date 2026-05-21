@@ -1,5 +1,5 @@
 import { h, Fragment } from 'preact';
-import { AdyenCheckout, components, Donation } from '../../../..';
+import { AdyenCheckout, components } from '../../../..';
 import { MetaConfiguration, PaymentMethodStoryProps, StoryConfiguration } from '../../../../../storybook/types';
 import { ComponentContainer } from '../../../../../storybook/components/ComponentContainer';
 import { DropinConfiguration } from '../../types';
@@ -79,7 +79,7 @@ export const StyleCustomization: DropinStory = {
 export const DropinWithReviewPage: DropinStory = {
     tags: ['no-automated-visual-test'],
     render: args => <DropinWithReviewPageOnReadyForReview {...args} />,
-    args: { useSessions: true }
+    args: { useSessions: true, countryCode: 'NL' }
 };
 
 /**
@@ -137,7 +137,6 @@ export const SessionsDonation: DropinStory = {
         countryCode: 'NL',
 
         donation: {
-            autoMount: true,
             delay: 3000,
             onDonationSuccess: obj => console.log('### Dropin_withSessionsDonation::onDonationSuccess:: didDonate=', obj),
             onDonationFailure: obj => console.log('### Dropin_withSessionsDonation::onDonationFailure:: obj', obj)
@@ -163,8 +162,14 @@ export const SessionsDonationReparented: DropinStory = {
         countryCode: 'NL',
 
         donation: {
-            autoMount: false,
             delay: 3000,
+            onDonationAvailable: donationElement => {
+                const fcDialog = document.getElementById('donation-dialog') as HTMLDialogElement;
+                setTimeout(() => {
+                    fcDialog.showModal();
+                }, 3000);
+                donationElement.mount('#modalContent');
+            },
             onDonationSuccess: res => {
                 const fcDialog = document.getElementById('donation-dialog') as HTMLDialogElement;
                 const delay = res.didDonate ? 3000 : 0;
@@ -176,23 +181,6 @@ export const SessionsDonationReparented: DropinStory = {
                 console.log('### Dropin_withSessionsDonation::onDonationFailure:: obj', obj);
                 const fcDialog = document.getElementById('donation-dialog') as HTMLDialogElement;
                 fcDialog.close();
-            }
-        },
-
-        onPaymentCompleted: (result, element) => {
-            if (result && typeof result === 'object' && 'askDonation' in result && result.askDonation === true) {
-                const fcDialog = document.getElementById('donation-dialog') as HTMLDialogElement;
-
-                setTimeout(() => {
-                    fcDialog.showModal();
-                }, 3000);
-
-                if (element?.props?.amount) {
-                    new Donation(element.core, {
-                        rootNode: '#modalContent',
-                        commercialTxAmount: element.props.amount.value
-                    });
-                }
             }
         }
     },
