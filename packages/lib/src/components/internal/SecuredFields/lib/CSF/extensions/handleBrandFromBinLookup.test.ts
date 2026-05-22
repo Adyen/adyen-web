@@ -46,12 +46,14 @@ const nonGenericCard_resetObj = {
 // //////////
 
 const expectedProcessBrandObj = {
+    action: 'brand',
     brand: 'mc',
     cvcPolicy: 'required',
     expiryDatePolicy: 'required',
     cvcText: 'Security code',
     showSocialSecurityNumber: false,
     fieldType: 'encryptedCardNumber',
+    numKey: 654321,
     mode: BIN_LOOKUP_MODE
 };
 

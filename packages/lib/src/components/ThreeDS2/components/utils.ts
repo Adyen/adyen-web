@@ -97,7 +97,7 @@ export const prepareChallengeData = ({ token, size }): ChallengeData | ErrorObje
         },
         iframeSizeArr: getChallengeWindowSize(size),
         postMessageDomain: notificationURLOrigin
-    } as ChallengeData;
+    };
 };
 
 /**
@@ -129,7 +129,7 @@ export const prepareFingerPrintData = ({ token, notificationURL }): FingerPrintD
         threeDSMethodURL,
         threeDSMethodNotificationURL: receivedNotificationURL,
         postMessageDomain: notificationURLOrigin
-    } as FingerPrintData;
+    };
 };
 
 export const createFingerprintResolveData = (dataKey: string, resultObj: ResultObject, paymentData: string): FingerprintResolveData => ({

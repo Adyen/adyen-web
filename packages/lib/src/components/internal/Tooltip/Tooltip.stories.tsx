@@ -1,6 +1,6 @@
 import { Fragment, h, RefObject } from 'preact';
 import { Meta, StoryObj } from '@storybook/preact-vite';
-import { MutableRef, useRef } from 'preact/hooks';
+import { useRef } from 'preact/hooks';
 import { Tooltip } from './Tooltip';
 import { SingletonTooltipProvider, useTooltip } from './SingletonTooltipProvider';
 
@@ -23,7 +23,7 @@ const TooltipConsumer = ({ anchorRef, margin }: Readonly<{ anchorRef: RefObject<
             ref={anchorRef}
             style={{ margin: `${margin}px` }}
             aria-describedby={tooltipId}
-            onMouseEnter={() => showTooltip({ text: 'tooltip text', anchorRef: anchorRef as MutableRef<HTMLButtonElement> })}
+            onMouseEnter={() => showTooltip({ text: 'tooltip text', anchorRef })}
             onMouseLeave={() => hideTooltip()}
         >
             Hover me

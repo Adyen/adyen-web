@@ -122,7 +122,7 @@ describe('LanguageService', () => {
             });
 
             test('should handle undefined locale', async () => {
-                const result = await service.fetchTranslationsFromCdn(undefined as unknown as string);
+                const result = await service.fetchTranslationsFromCdn(undefined);
 
                 expectEnUSFallbackWithoutHttpCall(result);
             });

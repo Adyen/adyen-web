@@ -1,4 +1,3 @@
-import { SingleBrandResetObject } from '../SFP/types';
 import { BrandObject } from '../../../Card/types';
 import createCardVariantSwitcher from './createCardVariantSwitcher';
 import { BRAND_ICON_UI_EXCLUSION_LIST } from '../lib/constants';
@@ -51,7 +50,7 @@ export default function extensions(props, refs, states, hasPanLengthRef: Partial
                 sfp.current.processBinLookupResponse(binLookupResponse, {
                     brand: brandToReset,
                     cvcPolicy: cvcPolicy // undefined except for Bancontact
-                } as SingleBrandResetObject);
+                });
 
                 // Reset storage var
                 hasPanLengthRef.current = 0;

@@ -71,7 +71,7 @@ export const getLayout = ({
     // w. Billing address
     if (countrySpecificSchemas) {
         // Flatten array and remove any numbers that describe how fields should be aligned
-        const countrySpecificSchemasFlat: string[] = countrySpecificSchemas['flat'](2).filter(item => typeof item !== 'number') as string[];
+        const countrySpecificSchemasFlat: string[] = countrySpecificSchemas['flat'](2).filter(item => typeof item !== 'number');
 
         let countryBasedAddressLayout = countrySpecificSchemasFlat;
 
