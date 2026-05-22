@@ -34,7 +34,7 @@ export default function Img(props: Readonly<ImgProps>) {
     }, []);
 
     if (backgroundUrl) {
-        return <div data-testid="background" style={{ backgroundImage: `url(${backgroundUrl})` }} {...props} className={classNames} />;
+        return <div data-testid="background" style={{ backgroundUrl }} {...props} className={classNames} />;
     }
 
     return <img {...props} alt={alt} ref={imageRef} className={classNames} onError={handleError} />;

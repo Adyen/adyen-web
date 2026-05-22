@@ -86,14 +86,12 @@ export default function handleBrandFromBinLookup(binLookupResponse: BinLookupRes
     const expiryDatePolicy = binBrandObj.expiryDatePolicy ?? (binBrandObj.showExpiryDate === true ? DATE_POLICY_REQUIRED : DATE_POLICY_HIDDEN);
 
     const brandObj: SFFeedbackObj = {
-        action: 'brand',
         brand: passedBrand,
         cvcPolicy: binBrandObj.cvcPolicy,
         expiryDatePolicy,
         cvcText: 'Security code',
         showSocialSecurityNumber: binBrandObj.showSocialSecurityNumber ?? false,
         fieldType: ENCRYPTED_CARD_NUMBER,
-        numKey: this.state.securedFields[ENCRYPTED_CARD_NUMBER].numKey,
         mode: BIN_LOOKUP_MODE
     };
 
