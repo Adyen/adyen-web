@@ -43,11 +43,11 @@ const CtPLoginInput = (props: Readonly<CtPLoginInputProps>): h.JSX.Element => {
         triggerValidation();
     }, [triggerValidation]);
 
-    const focusInput = useCallback(() => {
-        if (containerRef.current) {
+    useEffect(() => {
+        if (containerRef.current && props.errorMessage) {
             setFocusOnField(containerRef.current, 'shopperLogin');
         }
-    }, []);
+    }, [props.errorMessage]);
 
     useEffect(() => {
         if (data.shopperLogin) setIsLoginInputDirty(true);
@@ -55,9 +55,8 @@ const CtPLoginInput = (props: Readonly<CtPLoginInputProps>): h.JSX.Element => {
 
     useEffect(() => {
         loginInputHandlersRef.current.validateInput = validateInput;
-        loginInputHandlersRef.current.focusInput = focusInput;
         props.onSetInputHandlers(loginInputHandlersRef.current);
-    }, [validateInput, focusInput, props.onSetInputHandlers]);
+    }, [validateInput, props.onSetInputHandlers]);
 
     const handleOnKeyPress = useCallback(
         (event: h.JSX.TargetedKeyboardEvent<HTMLInputElement>) => {

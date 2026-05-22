@@ -51,7 +51,6 @@ const CtPLogin = (): h.JSX.Element => {
             } else {
                 setErrorCode('NOT_FOUND');
                 setIsLoggingIn(false);
-                loginInputHandlers?.focusInput();
             }
         } catch (error: unknown) {
             if (error instanceof SrciError) console.warn(`CtP - Login error: ${error.toString()}`);
@@ -60,7 +59,6 @@ const CtPLogin = (): h.JSX.Element => {
             else console.error(error);
 
             setIsLoggingIn(false);
-            loginInputHandlers?.focusInput();
         }
     }, [verifyIfShopperIsEnrolled, startIdentityValidation, shopperLogin, isValid, loginInputHandlers]);
 

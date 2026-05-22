@@ -4,7 +4,8 @@ import { otpValidationRules } from './validate';
 import CtPResendOtpLink from './CtPResendOtpLink';
 import useClickToPayContext from '../../../context/useClickToPayContext';
 import { useCoreContext } from '../../../../../../core/Context/CoreProvider';
-import useForm from '../../../../../../utils/useForm';
+import { useFormWithA11y } from '../../../../../../utils/useForm';
+import { setFocusOnField } from '../../../../../../utils/setFocus';
 import Field from '../../../../FormFields/Field';
 import './CtPOneTimePasswordInput.scss';
 import InputText from '../../../../FormFields/InputText';
@@ -39,9 +40,11 @@ const CtPOneTimePasswordInput = (props: Readonly<CtPOneTimePasswordInputProps>):
 
     const formSchema = ['otp'];
     const [resendOtpError, setResendOtpError] = useState<string>(null);
-    const { handleChangeFor, data, triggerValidation, valid, errors, isValid, setData } = useForm<CtPOneTimePasswordInputDataState>({
+    const containerRef = useRef<HTMLDivElement>(null);
+    const { handleChangeFor, data, triggerValidation, valid, errors, isValid, setData } = useFormWithA11y<CtPOneTimePasswordInputDataState>({
         schema: formSchema,
-        rules: otpValidationRules
+        rules: otpValidationRules,
+        formHolder: containerRef
     });
     const otpInputHandlersRef = useRef<CtPOneTimePasswordInputHandlers>({ validateInput: null });
     const inputRef = useRef<HTMLInputElement>(null);
@@ -64,6 +67,12 @@ const CtPOneTimePasswordInput = (props: Readonly<CtPOneTimePasswordInputProps>):
             inputRef.current.focus();
         }
     }, [inputRef.current, disableOtpAutoFocus]);
+
+    useEffect(() => {
+        if (containerRef.current && props.errorMessage) {
+            setFocusOnField(containerRef.current, 'otp');
+        }
+    }, [props.errorMessage]);
 
     useEffect(() => {
         otpInputHandlersRef.current.validateInput = validateInput;
@@ -107,8 +116,14 @@ const CtPOneTimePasswordInput = (props: Readonly<CtPOneTimePasswordInputProps>):
     }, [isOtpFielDirty, resendOtpError, props.errorMessage, errors.otp, i18n]);
 
     return (
-        <div className={'adyen-checkout-ctp__otp-field-wrapper'}>
-            <Field name="oneTimePassword" label={i18n.get('ctp.otp.fieldLabel')} errorMessage={getOtpErrorMessage()} classNameModifiers={['otp']}>
+        <div ref={containerRef} className={'adyen-checkout-ctp__otp-field-wrapper'}>
+            <Field
+                name="oneTimePassword"
+                label={i18n.get('ctp.otp.fieldLabel')}
+                errorMessage={getOtpErrorMessage()}
+                classNameModifiers={['otp']}
+                errorLive={true}
+            >
                 <InputText
                     name={'otp'}
                     autocorrect={'off'}
