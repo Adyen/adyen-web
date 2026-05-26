@@ -24,13 +24,14 @@ export const OrderPaymentMethods = ({ order, orderStatus, onOrderCancel, brandLo
                         <div className="adyen-checkout__order-payment-method__header">
                             <div
                                 className="adyen-checkout__payment-method__header__title"
+                                role="group"
                                 id={`order-payment-method-${orderPaymentMethod.type}-${index}`}
                                 aria-label={
                                     orderPaymentMethod.lastFour
                                         ? i18n.get('order.paymentMethod.description', {
                                               values: {
                                                   name: orderPaymentMethod.name ?? orderPaymentMethod.type,
-                                                  lastFour: orderPaymentMethod.lastFour.toString()
+                                                  lastFour: orderPaymentMethod.lastFour.toString().split('').join(' ')
                                               }
                                           })
                                         : undefined
