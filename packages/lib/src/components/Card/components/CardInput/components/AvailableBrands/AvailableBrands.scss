@@ -3,11 +3,11 @@
 .adyen-checkout__card__brands {
     margin-top: calc(-1 * variable-generator.token(spacer-040));
     margin-bottom: variable-generator.token(spacer-060);
-}
 
-.adyen-checkout__card__brands--hidden {
-    opacity: 0;
-    max-height: 0;
-    min-height: 0;
-    margin: -8px 0 8px;
+    &--hidden {
+        opacity: 0;
+        max-height: 0;
+        min-height: 0;
+        margin: -8px 0 8px;
+    }
 }

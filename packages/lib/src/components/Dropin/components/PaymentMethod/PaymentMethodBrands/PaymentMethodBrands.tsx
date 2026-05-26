@@ -42,7 +42,7 @@ const PaymentMethodBrands = ({
             className="adyen-checkout__payment-method__brands"
             remainingBrandsLabelClassName="adyen-checkout__payment-method__brand-number"
             renderBrandIcon={brandIcon => (
-                <PaymentMethodIcon key={brandIcon.alt} altDescription={brandIcon.alt} type={brandIcon.alt} src={brandIcon.src} />
+                <PaymentMethodIcon key={brandIcon.alt} as="li" alt={brandIcon.alt} type={brandIcon.alt} src={brandIcon.src} />
             )}
         />
     );
