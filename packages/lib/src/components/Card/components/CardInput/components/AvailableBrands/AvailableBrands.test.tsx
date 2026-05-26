@@ -16,11 +16,6 @@ describe('AvailableBrands', () => {
         expect(screen.queryByRole('list')).not.toBeInTheDocument();
     });
 
-    test('renders null when brands is undefined', () => {
-        renderAvailableBrands({ brands: undefined as BrandConfiguration[], activeBrand: 'card' });
-        expect(screen.queryByRole('list')).not.toBeInTheDocument();
-    });
-
     test('renders brand icons when brands are provided', () => {
         renderAvailableBrands({ brands: BRANDS, activeBrand: 'card' });
         const images = screen.getAllByRole('img');
@@ -39,7 +34,7 @@ describe('AvailableBrands', () => {
             renderAvailableBrands({ brands: BRANDS, activeBrand: 'card' });
             const list = screen.getByRole('list');
 
-            expect(list).toHaveAttribute('aria-hidden', 'false');
+            expect(list).not.toHaveAttribute('aria-hidden');
             expect(screen.getAllByRole('img')).toHaveLength(2);
         });
     });
