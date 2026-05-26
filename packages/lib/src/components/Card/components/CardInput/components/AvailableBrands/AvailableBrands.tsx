@@ -39,7 +39,7 @@ const AvailableBrands = ({ brands, activeBrand }: Readonly<PaymentMethodBrandsPr
             smallIcons
             showIconOnError
             containerType="grid"
-            ariaHidden={isValidBrand}
+            ariaHidden={isValidBrand || undefined}
         />
     );
 };
