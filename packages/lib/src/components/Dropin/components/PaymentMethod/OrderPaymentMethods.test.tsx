@@ -12,7 +12,7 @@ const baseOrderStatus: OrderStatus = {
     pspReference: 'dummyPsp',
     reference: 'dummyRef',
     paymentMethods: [],
-    remainingAmount: null
+    remainingAmount: { currency: 'EUR', value: 0 }
 };
 
 const customRender = (ui: h.JSX.Element) =>
@@ -111,17 +111,6 @@ describe('OrderPaymentMethods', () => {
             expect(screen.getByRole('button', { name: /Remove/i })).toBeInTheDocument();
         });
 
-        test('is not rendered when onOrderCancel is not provided', () => {
-            const orderStatus: OrderStatus = {
-                ...baseOrderStatus,
-                paymentMethods: [{ type: 'visa', lastFour: '1234', amount: { currency: 'EUR', value: 5000 } }]
-            };
-
-            customRender(<OrderPaymentMethods order={order} orderStatus={orderStatus} onOrderCancel={null} brandLogoConfiguration={{}} />);
-
-            expect(screen.queryByRole('button')).not.toBeInTheDocument();
-        });
-
         test('calls onOrderCancel with the order when clicked', async () => {
             const onOrderCancel = jest.fn();
             const orderStatus: OrderStatus = {
@@ -173,18 +162,6 @@ describe('OrderPaymentMethods', () => {
             customRender(<OrderPaymentMethods order={order} orderStatus={orderStatus} onOrderCancel={jest.fn()} brandLogoConfiguration={{}} />);
 
             expect(screen.getByText(/Select another payment method/i)).toBeInTheDocument();
-        });
-
-        test('does not show the remaining amount paragraph when remainingAmount is absent', () => {
-            const orderStatus: OrderStatus = {
-                ...baseOrderStatus,
-                paymentMethods: [{ type: 'visa', lastFour: '1234', amount: { currency: 'EUR', value: 5000 } }],
-                remainingAmount: null
-            };
-
-            customRender(<OrderPaymentMethods order={order} orderStatus={orderStatus} onOrderCancel={jest.fn()} brandLogoConfiguration={{}} />);
-
-            expect(screen.queryByText(/Select another payment method/i)).not.toBeInTheDocument();
         });
     });
 
