@@ -14,8 +14,7 @@ export const STORYBOOK_URL = `${protocol}://localhost:${STORYBOOK_PORT}`;
 const snapshotPathTemplate = '{testDir}/{testFileDir}/__screenshots__/{platform}/{projectName}/{arg}{ext}';
 
 export const SCREENSHOT_CONFIG = {
-    maxDiffPixels: 500,
-    maxDiffPixelRatio: 0.005,
+    maxDiffPixelRatio: 0.001,
     animations: 'disabled',
     scale: 'device'
 } as const;
