@@ -2,8 +2,8 @@ import { test, expect } from '../../../../fixtures/dropin.fixture';
 import { MOBILE_USER_AGENT, SMALL_MOBILE_VIEWPORT, TAGS } from '../../../utils/constants';
 import { URL_MAP } from '../../../../fixtures/URL_MAP';
 import { toHaveScreenshot } from '../../../utils/assertions';
+import { waitForImageLoaded } from '../../../utils/image';
 import { UPI } from '../../../../models/upi';
-import { SCREENSHOT_CONFIG } from '../../../utils/constants';
 
 test.describe('Dropin - Sessions - UPI', () => {
     test.describe('QR Code Flow (Desktop)', () => {
@@ -13,8 +13,7 @@ test.describe('Dropin - Sessions - UPI', () => {
             const upiPaymentMethodHeader = dropinWithSession.getPaymentMethodHeader('UPI');
 
             await toHaveScreenshot(upiPaymentMethodHeader.rootElement, browserName, 'upi-payment-method-header-desktop.png', {
-                mask: [upiPaymentMethodHeader.rootElement.locator('img')],
-                ...SCREENSHOT_CONFIG
+                mask: [upiPaymentMethodHeader.rootElement.locator('img')]
             });
 
             await dropinWithSession.selectNonStoredPaymentMethod('upi');
@@ -22,8 +21,7 @@ test.describe('Dropin - Sessions - UPI', () => {
             // Move mouse to top left to ensure no hover states affect the screenshot
             await page.mouse.move(0, 0);
             await toHaveScreenshot(upiPaymentMethodHeader.rootElement, browserName, 'expanded-upi-payment-method-header-desktop.png', {
-                mask: [upiPaymentMethodHeader.rootElement.locator('img')],
-                ...SCREENSHOT_CONFIG
+                mask: [upiPaymentMethodHeader.rootElement.locator('img')]
             });
 
             const upi = new UPI(page);
@@ -46,15 +44,13 @@ test.describe('Dropin - Sessions - UPI', () => {
             const upiPaymentMethodHeader = dropinWithSession.getPaymentMethodHeader('UPI');
 
             await toHaveScreenshot(upiPaymentMethodHeader.rootElement, browserName, 'upi-payment-method-header-mobile.png', {
-                mask: [upiPaymentMethodHeader.rootElement.locator('img')],
-                ...SCREENSHOT_CONFIG
+                mask: [upiPaymentMethodHeader.rootElement.locator('img')]
             });
 
             await dropinWithSession.selectNonStoredPaymentMethod('upi');
 
             await toHaveScreenshot(upiPaymentMethodHeader.rootElement, browserName, 'expanded-upi-payment-method-header-mobile.png', {
-                mask: [upiPaymentMethodHeader.rootElement.locator('img')],
-                ...SCREENSHOT_CONFIG
+                mask: [upiPaymentMethodHeader.rootElement.locator('img')]
             });
 
             const upi = new UPI(page);

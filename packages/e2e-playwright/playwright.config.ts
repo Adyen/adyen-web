@@ -3,7 +3,6 @@ import { devices } from '@playwright/test';
 import * as dotenv from 'dotenv';
 import * as path from 'path';
 import { protocol } from './environment-variables';
-import { SCREENSHOT_CONFIG } from './tests/utils/constants';
 
 dotenv.config({ path: path.resolve('../../', '.env') });
 
@@ -13,6 +12,13 @@ export const STORYBOOK_PORT = 3020;
 export const STORYBOOK_URL = `${protocol}://localhost:${STORYBOOK_PORT}`;
 
 const snapshotPathTemplate = '{testDir}/{testFileDir}/__screenshots__/{platform}/{projectName}/{arg}{ext}';
+
+export const SCREENSHOT_CONFIG = {
+    maxDiffPixels: 500,
+    maxDiffPixelRatio: 0.005,
+    animations: 'disabled',
+    scale: 'device'
+} as const;
 
 /**
  * See https://playwright.dev/docs/test-configuration.
