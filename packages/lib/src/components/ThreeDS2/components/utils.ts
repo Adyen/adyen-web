@@ -24,7 +24,7 @@ export const isErrorObject = (obj: ErrorObject | ThreeDS2Token): boolean => {
 
 export const decodeAndParseToken = (token: string): ThreeDS2Token | ErrorObject => {
     const decodedToken: DecodeObject = base64.decode(token);
-    if (decodedToken.success) {
+    if (decodedToken.success && decodedToken.data) {
         try {
             return JSON.parse(decodedToken.data) as ThreeDS2Token;
         } catch (e) {
@@ -76,7 +76,7 @@ export const getChallengeWindowSize = (sizeStr: string): string[] => CHALLENGE_W
  *     threeDSNotificationURL and threeDSServerTransID
  *  @param size - one of five possible challenge window sizes
  */
-export const prepareChallengeData = ({ token, size }): ChallengeData | ErrorObject => {
+export const prepareChallengeData = ({ token, size }: { token: string; size: string }): ChallengeData | ErrorObject => {
     const decodedChallengeToken = decodeAndParseToken(token);
 
     if (isErrorObject(decodedChallengeToken)) {
@@ -84,20 +84,20 @@ export const prepareChallengeData = ({ token, size }): ChallengeData | ErrorObje
     }
 
     const { acsTransID, acsURL, messageVersion, threeDSNotificationURL, threeDSServerTransID } = decodedChallengeToken as ThreeDS2Token;
-    const notificationURLOrigin = getOrigin(threeDSNotificationURL);
+    const notificationURLOrigin = getOrigin(threeDSNotificationURL ?? '');
 
     return {
-        acsURL,
+        acsURL: acsURL ?? '',
         cReqData: {
-            acsTransID,
-            messageVersion,
-            threeDSServerTransID,
+            acsTransID: acsTransID ?? '',
+            messageVersion: messageVersion ?? '',
+            threeDSServerTransID: threeDSServerTransID ?? '',
             messageType: 'CReq',
             challengeWindowSize: validateChallengeWindowSize(size)
         },
         iframeSizeArr: getChallengeWindowSize(size),
         postMessageDomain: notificationURLOrigin
-    } as ChallengeData;
+    };
 };
 
 /**
@@ -113,7 +113,7 @@ export const prepareChallengeData = ({ token, size }): ChallengeData | ErrorObje
  *  But if the merchant is using checkout.create('threeDS2DeviceFingerprint') we still support the fact that they might want to set their own
  *  notificationURL (aka threeDSMethodNotificationURL)
  */
-export const prepareFingerPrintData = ({ token, notificationURL }): FingerPrintData | ErrorObject => {
+export const prepareFingerPrintData = ({ token, notificationURL }: { token: string; notificationURL?: string }): FingerPrintData | ErrorObject => {
     const decodedFingerPrintToken = decodeAndParseToken(token);
 
     if (isErrorObject(decodedFingerPrintToken)) {
@@ -121,15 +121,15 @@ export const prepareFingerPrintData = ({ token, notificationURL }): FingerPrintD
     }
 
     const { threeDSMethodNotificationURL, threeDSMethodUrl: threeDSMethodURL, threeDSServerTransID } = decodedFingerPrintToken as ThreeDS2Token;
-    const receivedNotificationURL = notificationURL || threeDSMethodNotificationURL;
+    const receivedNotificationURL = notificationURL ?? threeDSMethodNotificationURL ?? '';
     const notificationURLOrigin = getOrigin(receivedNotificationURL);
 
     return {
-        threeDSServerTransID,
-        threeDSMethodURL,
+        threeDSServerTransID: threeDSServerTransID ?? '',
+        threeDSMethodURL: threeDSMethodURL ?? '',
         threeDSMethodNotificationURL: receivedNotificationURL,
         postMessageDomain: notificationURLOrigin
-    } as FingerPrintData;
+    };
 };
 
 export const createFingerprintResolveData = (dataKey: string, resultObj: ResultObject, paymentData: string): FingerprintResolveData => ({

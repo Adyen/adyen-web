@@ -66,7 +66,7 @@ export default function handleBrandFromBinLookup(binLookupResponse: BinLookupRes
              * to internally reset the brand
              */
             if (resetObj) {
-                this.processBrand({ ...resetObj, fieldType: ENCRYPTED_CARD_NUMBER } as SFFeedbackObj);
+                this.processBrand({ ...resetObj, fieldType: ENCRYPTED_CARD_NUMBER });
             }
         }
 
@@ -85,7 +85,7 @@ export default function handleBrandFromBinLookup(binLookupResponse: BinLookupRes
     // Look first for expiryDatePolicy string otherwise use showExpiryDate boolean
     const expiryDatePolicy = binBrandObj.expiryDatePolicy ?? (binBrandObj.showExpiryDate === true ? DATE_POLICY_REQUIRED : DATE_POLICY_HIDDEN);
 
-    const brandObj: object = {
+    const brandObj: SFFeedbackObj = {
         brand: passedBrand,
         cvcPolicy: binBrandObj.cvcPolicy,
         expiryDatePolicy,
@@ -96,7 +96,7 @@ export default function handleBrandFromBinLookup(binLookupResponse: BinLookupRes
     };
 
     // Take advantage of function used to handle brand messages from SF in order to process this new brand information
-    this.processBrand(brandObj as SFFeedbackObj);
+    this.processBrand(brandObj);
 
     if (isGenericCard) {
         // Pass brand to CardNumber SF

@@ -15,7 +15,6 @@ import { SecuredFieldSetupObject } from '../../types';
 import SecuredField from '../../securedField/SecuredField';
 import { CardObject, CardBrandData, SFFeedbackObj, CardLoadData, CVCPolicyType, DatePolicyType } from '../../types';
 import AdyenCheckoutError from '../../../../../../core/Errors/AdyenCheckoutError';
-import type { SFKeyPressObj } from '../../types';
 import { isSecuredField } from '../../../utils';
 
 /**
@@ -304,7 +303,7 @@ export function setupSecuredField(pItem: HTMLElement, cvcPolicy?: CVCPolicyType,
             })
             .onKeyPressed((pFeedbackObj: SFFeedbackObj): void => {
                 const { numKey, ...rest } = pFeedbackObj;
-                this.callbacks.onKeyPressed(rest as SFKeyPressObj);
+                this.callbacks.onKeyPressed(rest);
             });
 
         // Store reference to securedField in this.state (under fieldType)

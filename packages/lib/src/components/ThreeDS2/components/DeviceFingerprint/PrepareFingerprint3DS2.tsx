@@ -30,7 +30,7 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
 
             this.state = {
                 status: 'init',
-                fingerPrintData: fingerPrintData as FingerPrintData
+                fingerPrintData
             };
         } else {
             // Will be picked up in componentDidMount

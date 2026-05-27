@@ -34,7 +34,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
 
             this.state = {
                 status: 'init',
-                challengeData: challengeData as ChallengeData
+                challengeData
             };
         } else {
             // Will be picked up in componentDidMount

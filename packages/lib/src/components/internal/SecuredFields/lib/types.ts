@@ -195,9 +195,9 @@ export interface CardLoadData {
 }
 
 export interface SFFeedbackObj {
-    action: string;
+    action?: string;
     fieldType: SFFieldType;
-    numKey: number;
+    numKey?: number;
     brand?: string;
     code?: string;
     cvcText?: string;
