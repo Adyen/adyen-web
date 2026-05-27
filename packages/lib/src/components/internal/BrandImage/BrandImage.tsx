@@ -14,7 +14,7 @@ interface BrandImageProps {
     as?: ElementType;
 }
 
-export const BrandImage = ({ src, alt, wrapperClassName = '', imgClassName = '', showOnError, as = 'span' }: Readonly<BrandImageProps>) => {
+export const BrandImage = ({ src, alt, wrapperClassName = '', imgClassName = '', showOnError, as }: Readonly<BrandImageProps>) => {
     const [hasError, setHasError] = useState(false);
     const classesOnError = showOnError ? {} : { 'adyen-checkout-brand-wrapper--error': hasError };
     const classes = cx('adyen-checkout-brand-wrapper', wrapperClassName, classesOnError);
