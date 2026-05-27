@@ -51,6 +51,7 @@ class BlikElement extends UIElement<AwaitConfiguration> {
         return null;
     }
 
+    // NOSONAR: Await component configuration is intentionally similar across payment methods
     protected override componentToRender(): h.JSX.Element {
         if (this.props.paymentData) {
             return (
