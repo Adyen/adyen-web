@@ -78,7 +78,7 @@ class ThreeDS2Challenge extends UIElement<ThreeDS2ChallengeConfiguration> {
         return (
             <PrepareChallenge
                 {...this.props}
-                onComplete={this.onActionFlowComplete}
+                on3DS2ChallengeComplete={this.onActionFlowComplete}
                 onSubmitAnalytics={this.submitAnalytics}
                 onActionHandled={this.onActionHandled}
             />

@@ -18,7 +18,7 @@ import { AbstractAnalyticsEvent } from '../../../../core/Analytics/events/Abstra
 
 class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareChallenge3DS2State> {
     public static readonly defaultProps = {
-        onComplete: () => {},
+        on3DS2ChallengeComplete: () => {},
         onError: () => {},
         isMDFlow: false
     };
@@ -223,7 +223,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
             /**
              * Equals call to onAdditionalDetails (except for in 3DS2InMDFlow)
              */
-            this.props.onComplete(data);
+            this.props.on3DS2ChallengeComplete(data);
         });
     }
 
