@@ -64,7 +64,7 @@ export default class RiskElement extends BaseElement<RiskModuleProps> {
         };
     }
 
-    public onComplete = result => {
+    public onRiskComplete = result => {
         const data = { ...this.state.data, [result.type]: result.value, persistentCookie: result.persistentCookie, components: result.components };
         this.setState({ data, isValid: true });
         this.props.risk.onComplete(this.data);
@@ -102,6 +102,13 @@ export default class RiskElement extends BaseElement<RiskModuleProps> {
     }
 
     render() {
-        return <DeviceFingerprint {...this.props} loadingContext={this.props.loadingContext} onComplete={this.onComplete} onError={this.onError} />;
+        return (
+            <DeviceFingerprint
+                {...this.props}
+                loadingContext={this.props.loadingContext}
+                onRiskFingerprintComplete={this.onRiskComplete}
+                onError={this.onError}
+            />
+        );
     }
 }
