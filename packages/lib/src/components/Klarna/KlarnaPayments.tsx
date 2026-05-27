@@ -20,7 +20,7 @@ class KlarnaPayments extends UIElement<KlarnaConfiguration> {
     constructor(checkout: ICore, props?: KlarnaConfiguration) {
         super(checkout, props);
 
-        this.onComplete = this.onComplete.bind(this);
+        this.onKlarnaComplete = this.onKlarnaComplete.bind(this);
         this.updateWithAction = this.updateWithAction.bind(this);
         this.submit = this.submit.bind(this);
         this.onLoaded = this.onLoaded.bind(this);
@@ -64,7 +64,7 @@ class KlarnaPayments extends UIElement<KlarnaConfiguration> {
         this.componentRef.reinitializeWidget();
     }
 
-    protected onComplete(details: KlarnaAdditionalDetailsData): void {
+    protected onKlarnaComplete(details: KlarnaAdditionalDetailsData): void {
         this.handleAdditionalDetails(details);
     }
 
@@ -74,7 +74,7 @@ class KlarnaPayments extends UIElement<KlarnaConfiguration> {
                 {...this.props}
                 setComponentRef={this.setComponentRef}
                 displayName={this.displayName}
-                onComplete={this.onComplete}
+                onComplete={this.onKlarnaComplete}
                 onError={this.props.onError}
                 payButton={this.payButton}
                 onLoaded={this.onLoaded}
