@@ -49,7 +49,7 @@ class PixElement extends QRLoaderContainer<PixConfiguration> {
                 {...this.props}
                 type={this.type}
                 brandLogo={this.props.brandLogo || this.icon}
-                onComplete={this.onComplete}
+                onComplete={this.onActionFlowComplete}
                 onActionHandled={this.onActionHandled}
                 brandName={this.displayName}
                 onSubmitAnalytics={this.submitAnalytics}

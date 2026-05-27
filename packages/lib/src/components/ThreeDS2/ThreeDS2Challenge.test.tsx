@@ -55,7 +55,7 @@ describe('ThreeDS2Challenge', () => {
             const spy = jest.spyOn(threeDS2Challenge, 'handleAdditionalDetails');
             const challengeResolveData: ChallengeResolveData = { data: { details: { foo: 'bar' } } };
 
-            threeDS2Challenge.onComplete(challengeResolveData);
+            threeDS2Challenge.onActionFlowComplete(challengeResolveData);
 
             expect(spy).toHaveBeenCalledWith(challengeResolveData);
         });
@@ -73,7 +73,7 @@ describe('ThreeDS2Challenge', () => {
             const spy = jest.spyOn(threeDS2Challenge, 'handleAdditionalDetails');
             const challengeResolveData: ChallengeResolveData = { data: { details: { foo: 'bar' } } };
 
-            threeDS2Challenge.onComplete(challengeResolveData);
+            threeDS2Challenge.onActionFlowComplete(challengeResolveData);
 
             expect(on3DS2RedirectFlowComplete).toHaveBeenCalledWith(challengeResolveData, threeDS2Challenge);
             expect(spy).not.toHaveBeenCalled();
