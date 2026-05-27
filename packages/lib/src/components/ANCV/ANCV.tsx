@@ -89,7 +89,6 @@ export class ANCVElement extends UIElement<ANCVConfiguration> {
         return this.props.name;
     }
 
-    // NOSONAR: Await component configuration is intentionally similar across payment methods
     protected override componentToRender(): h.JSX.Element {
         if (this.props.paymentData) {
             return (

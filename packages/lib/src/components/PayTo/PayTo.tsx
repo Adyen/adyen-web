@@ -123,7 +123,7 @@ export class PayToElement extends UIElement<PayToConfiguration> {
                 </Fragment>
             );
         }
-        // NOSONAR: Await component configuration is intentionally similar across payment methods
+
         if (this.props.paymentData) {
             return (
                 <Await
