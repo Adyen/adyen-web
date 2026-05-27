@@ -7,7 +7,7 @@ export interface GetDeviceFingerprintProps {
 
 export interface DeviceFingerprintProps {
     loadingContext: string;
-    onRiskFingerprintComplete: (fingerprint) => void;
+    onComplete: (fingerprint) => void;
     onError: (error) => void;
 }
 

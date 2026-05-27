@@ -17,13 +17,13 @@ class DeviceFingerprint extends Component<DeviceFingerprintProps, DeviceFingerpr
     }
 
     public static readonly defaultProps = {
-        onRiskFingerprintComplete: () => {},
+        onComplete: () => {},
         onError: () => {}
     };
 
     setStatusComplete(fingerprintResult) {
         this.setState({ status: 'complete' }, () => {
-            this.props.onRiskFingerprintComplete(fingerprintResult);
+            this.props.onComplete(fingerprintResult);
         });
     }
 

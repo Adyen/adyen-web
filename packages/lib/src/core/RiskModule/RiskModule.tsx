@@ -103,12 +103,7 @@ export default class RiskElement extends BaseElement<RiskModuleProps> {
 
     render() {
         return (
-            <DeviceFingerprint
-                {...this.props}
-                loadingContext={this.props.loadingContext}
-                onRiskFingerprintComplete={this.onRiskComplete}
-                onError={this.onError}
-            />
+            <DeviceFingerprint {...this.props} loadingContext={this.props.loadingContext} onComplete={this.onRiskComplete} onError={this.onError} />
         );
     }
 }
