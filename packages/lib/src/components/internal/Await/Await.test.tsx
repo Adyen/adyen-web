@@ -13,12 +13,14 @@ jest.mock('../../../core/Services/payment-status');
 
 const renderAwait = ({
     awaitProps,
-    amountProviderProps
+    amountProviderProps,
+    srPanel: externalSrPanel
 }: {
     awaitProps: AwaitComponentProps;
     amountProviderProps?: Partial<AmountProviderProps>;
+    srPanel?: SRPanel;
 }) => {
-    const srPanel = new SRPanel(global.core);
+    const srPanel = externalSrPanel ?? new SRPanel(global.core);
 
     return render(
         <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
@@ -167,6 +169,23 @@ describe('Await', () => {
                     details: { payload: checkPaymentStatusValue.payload },
                     paymentData: defaultProps.paymentData
                 }
+            });
+        });
+    });
+
+    describe('Accessibility', () => {
+        beforeEach(() => {
+            const checkPaymentStatusValue = { payload: 'Ab02b4c0!', resultCode: 'pending', type: 'complete' };
+            (checkPaymentStatus as jest.Mock).mockResolvedValue(checkPaymentStatusValue);
+        });
+
+        test('should report awaitText to SRPanel on mount', async () => {
+            const srPanel = new SRPanel(global.core);
+            const setMessagesSpy = jest.spyOn(srPanel, 'setMessages');
+            renderAwait({ awaitProps: { ...defaultProps, awaitText: 'Awaiting your approval' }, amountProviderProps, srPanel });
+
+            await waitFor(() => {
+                expect(setMessagesSpy).toHaveBeenCalledWith('Awaiting your approval');
             });
         });
     });
