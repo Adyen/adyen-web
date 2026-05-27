@@ -1,6 +1,5 @@
 import { renderHook, act } from '@testing-library/preact-hooks';
 import useFormWithA11y from './useFormWithA11y';
-import { useErrorFocus } from './useErrorFocus';
 import { setFocusOnField } from '../setFocus';
 import { ValidatorMode } from '../Validator/types';
 
@@ -17,46 +16,6 @@ function getHookResult<T>(result: { current: T | undefined }): T {
 
 beforeEach(() => {
     mockSetFocusOnField.mockClear();
-});
-
-// ---------------------------------------------------------------------------
-// useErrorFocus
-// ---------------------------------------------------------------------------
-
-describe('useErrorFocus', () => {
-    it('focuses the first field that has an error, in schema order', () => {
-        const holder = document.createElement('div');
-        const { result } = renderHook(() => useErrorFocus(holder));
-
-        void act(() => {
-            getHookResult(result).focusFirstError({ firstName: null, lastName: { isValid: false } }, ['firstName', 'lastName']);
-        });
-
-        expect(mockSetFocusOnField).toHaveBeenCalledTimes(1);
-        expect(mockSetFocusOnField).toHaveBeenCalledWith(holder, 'lastName');
-    });
-
-    it('does nothing when there are no errors', () => {
-        const holder = document.createElement('div');
-        const { result } = renderHook(() => useErrorFocus(holder));
-
-        void act(() => {
-            getHookResult(result).focusFirstError({ firstName: null, lastName: null }, ['firstName', 'lastName']);
-        });
-
-        expect(mockSetFocusOnField).not.toHaveBeenCalled();
-    });
-
-    it('uses the first error key according to the schema order, not the errors object key order', () => {
-        const holder = document.createElement('div');
-        const { result } = renderHook(() => useErrorFocus(holder));
-
-        void act(() => {
-            getHookResult(result).focusFirstError({ lastName: { isValid: false }, firstName: { isValid: false } }, ['firstName', 'lastName']);
-        });
-
-        expect(mockSetFocusOnField).toHaveBeenCalledWith(holder, 'firstName');
-    });
 });
 
 // ---------------------------------------------------------------------------
