@@ -315,6 +315,7 @@
     "ctp.errors.SERVICE_ERROR": "Something went wrong, try again or use the manual card entry",
     "ctp.errors.SERVER_ERROR": "Something went wrong, try again or use the manual card entry",
     "ctp.errors.INVALID_PARAMETER": "Something went wrong, try again or use the manual card entry",
+    "ctp.errors.INVALID_EMAIL": "Enter a valid email address",
     "ctp.errors.AUTH_ERROR": "Something went wrong, try again or use the manual card entry",
     "paymentMethodsList.aria.label": "Choose a payment method",
     "paymentMethodsList.storedPayments.label": "Saved payment methods",

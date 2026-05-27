@@ -55,8 +55,9 @@ const CtPLogin = (): h.JSX.Element => {
         } catch (error: unknown) {
             if (error instanceof SrciError) console.warn(`CtP - Login error: ${error.toString()}`);
             if (error instanceof TimeoutError) console.warn(error.toString());
-            if (isSrciError(error)) setErrorCode(error?.reason);
-            else console.error(error);
+            if (isSrciError(error)) {
+                setErrorCode(error?.reason == 'INVALID_PARAMETER' ? 'INVALID_EMAIL' : error?.reason);
+            } else console.error(error);
 
             setIsLoggingIn(false);
         }
