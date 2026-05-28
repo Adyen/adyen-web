@@ -32,5 +32,5 @@
   all: unset;
   text-transform: lowercase;
   cursor: pointer;
-  color:  variable-generator.token(color-label-on-background-highlight-weak);
+  color: variable-generator.token(color-label-on-background-highlight-weak);
 }
