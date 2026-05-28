@@ -194,8 +194,8 @@ test.describe('Test Card, & binLookup w. panLength property', () => {
 
         // Should be able to add more digits to the PAN
         await card.cardNumberInput.focus();
-        await card.cardNumberInput.press('End'); /** NOTE: how to add text at end */
-        await card.typeCardNumber('6');
+        await card.page.keyboard.press('End');
+        await card.page.keyboard.type('6');
 
         // Confirm PAN value has had chars added
         let val = await card.cardNumberInput.inputValue();
