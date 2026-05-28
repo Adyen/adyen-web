@@ -102,12 +102,12 @@ test.describe('Test how Custom Card Component with regular date field handles hi
         // Card out of date
         await customCard.typeExpiryDate(INVALID_TEST_DATE_VALUE);
 
+        // Force blur event to fire on date field
+        await customCard.cardNumberLabelElement.click();
+
         // Expect error in UI
         await expect(customCard.expiryDateErrorElement).toBeVisible();
         await expect(customCard.expiryDateErrorElement).toHaveText(DATE_INVALID_ERROR);
-
-        // Force blur event to fire on date field
-        await customCard.cardNumberLabelElement.click();
 
         // Fill number to provoke (mock) binLookup response
         await customCard.typeCardNumber(REGULAR_TEST_CARD);
@@ -126,11 +126,7 @@ test.describe('Test how Custom Card Component with regular date field handles hi
         // Delete erroneous date
         await customCard.deleteExpiryDate();
 
-        // Headless test seems to need time for UI reset to register on state
-        await page.waitForTimeout(500);
-
         // Card now seen as valid
-        cardValid = await page.evaluate('window.customCard.isValid');
-        await expect(cardValid).toEqual(true);
+        await page.waitForFunction(() => window['customCard'].isValid === true);
     });
 });
