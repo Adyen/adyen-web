@@ -119,7 +119,7 @@ test.describe('Card - Dual branding UI after binLookup gives a dual brand result
         // Complete the number
         await card.cardNumberInput.focus();
         await page.keyboard.press('End');
-        await card.typeCardNumber(lastDigits);
+        await page.keyboard.type(lastDigits);
 
         // Expect error to have gone away
         await expect(card.cardNumberErrorElement).not.toBeVisible();
@@ -166,7 +166,7 @@ test.describe('Card - Dual branding UI after binLookup gives a dual brand result
         // Complete the number
         await card.cardNumberInput.focus();
         await page.keyboard.press('End');
-        await card.typeCardNumber(lastDigits);
+        await page.keyboard.type(lastDigits);
 
         // Expect error to have gone away
         await expect(card.cardNumberErrorElement).not.toBeVisible();

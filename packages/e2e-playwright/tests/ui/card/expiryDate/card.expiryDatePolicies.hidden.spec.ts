@@ -45,8 +45,7 @@ test.describe('Test how Card Component handles hidden expiryDate policy', () => 
         await expect(card.expiryDateField).toBeVisible();
 
         // Card seen as invalid
-        cardValid = await page.evaluate('window.component.isValid');
-        await expect(cardValid).toEqual(false);
+        await page.waitForFunction(() => window['component'].isValid === false);
     });
 
     test('#2 Validating fields first should see visible errors and then entering PAN should see errors cleared from state', async ({
@@ -127,7 +126,6 @@ test.describe('Test how Card Component handles hidden expiryDate policy', () => 
         await expect(card.expiryDateErrorElement).toHaveText(DATE_INVALID_ERROR);
 
         // Card is not valid
-        cardValid = await page.evaluate('window.component.isValid');
-        await expect(cardValid).toEqual(false);
+        await page.waitForFunction(() => window['component'].isValid === false);
     });
 });
