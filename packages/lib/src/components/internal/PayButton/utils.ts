@@ -43,10 +43,15 @@ function createButtonLabel(
     amount: PaymentAmount,
     isZeroAuth: boolean,
     customAmount?: PaymentAmount,
-    secondaryAmount?: PaymentAmount
+    secondaryAmount?: PaymentAmount,
+    showReview?: boolean
 ): string {
     if (customLabel) {
         return customLabel;
+    }
+
+    if (showReview) {
+        return i18n.get('continue');
     }
 
     if (customAmount) {
