@@ -9,6 +9,11 @@ jest.mock('../setFocus', () => ({
 
 const mockSetFocusOnField = setFocusOnField as jest.Mock;
 
+function getHookResult<T>(result: { current: T | undefined }): T {
+    if (!result.current) throw new Error('Hook result is undefined');
+    return result.current;
+}
+
 beforeEach(() => {
     mockSetFocusOnField.mockClear();
 });
@@ -19,7 +24,7 @@ describe('useErrorFocus', () => {
         const { result } = renderHook(() => useErrorFocus(holder));
 
         void act(() => {
-            result.current.focusFirstError({ firstName: null, lastName: { isValid: false } }, ['firstName', 'lastName']);
+            getHookResult(result).focusFirstError({ firstName: null, lastName: { isValid: false } }, ['firstName', 'lastName']);
         });
 
         expect(mockSetFocusOnField).toHaveBeenCalledTimes(1);
@@ -31,7 +36,7 @@ describe('useErrorFocus', () => {
         const { result } = renderHook(() => useErrorFocus(holder));
 
         void act(() => {
-            result.current.focusFirstError({ firstName: null, lastName: null }, ['firstName', 'lastName']);
+            getHookResult(result).focusFirstError({ firstName: null, lastName: null }, ['firstName', 'lastName']);
         });
 
         expect(mockSetFocusOnField).not.toHaveBeenCalled();
@@ -42,7 +47,7 @@ describe('useErrorFocus', () => {
         const { result } = renderHook(() => useErrorFocus(holder));
 
         void act(() => {
-            result.current.focusFirstError({ lastName: { isValid: false }, firstName: { isValid: false } }, ['firstName', 'lastName']);
+            getHookResult(result).focusFirstError({ lastName: { isValid: false }, firstName: { isValid: false } }, ['firstName', 'lastName']);
         });
 
         expect(mockSetFocusOnField).toHaveBeenCalledWith(holder, 'firstName');
@@ -53,7 +58,7 @@ describe('useErrorFocus', () => {
         const { result } = renderHook(() => useErrorFocus(selector));
 
         void act(() => {
-            result.current.focusFirstError({ email: { isValid: false } }, ['email']);
+            getHookResult(result).focusFirstError({ email: { isValid: false } }, ['email']);
         });
 
         expect(mockSetFocusOnField).toHaveBeenCalledTimes(1);
@@ -66,7 +71,7 @@ describe('useErrorFocus', () => {
         const { result } = renderHook(() => useErrorFocus(ref));
 
         void act(() => {
-            result.current.focusFirstError({ email: { isValid: false } }, ['email']);
+            getHookResult(result).focusFirstError({ email: { isValid: false } }, ['email']);
         });
 
         expect(mockSetFocusOnField).toHaveBeenCalledTimes(1);
@@ -78,7 +83,7 @@ describe('useErrorFocus', () => {
         const { result } = renderHook(() => useErrorFocus(ref));
 
         void act(() => {
-            result.current.focusFirstError({ email: { isValid: false } }, ['email']);
+            getHookResult(result).focusFirstError({ email: { isValid: false } }, ['email']);
         });
 
         expect(mockSetFocusOnField).not.toHaveBeenCalled();
