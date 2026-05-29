@@ -7,6 +7,7 @@ import { Checkout } from '../../../../../storybook/components/Checkout';
 import { getComponentConfigFromUrl } from '../../../../../storybook/utils/get-configuration-from-url';
 import DropinComponent from '../../Dropin';
 import type { NewableComponent } from '../../../../core/core.registry';
+import { WithReviewPageAndDonations } from './WithReviewPageAndDonations';
 import './customization.scss';
 
 type DropinStory = StoryConfiguration<DropinConfiguration>;
@@ -208,5 +209,7 @@ export const SessionsDonationReparented: DropinStory = {
         );
     }
 };
+
+export { WithReviewPageAndDonations };
 
 export default meta;
