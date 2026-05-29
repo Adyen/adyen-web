@@ -49,7 +49,8 @@ storyIds = allEntries
     .filter(
         entry =>
             entry.type === 'story' && // Keep only actual stories
-            !EXCLUDED_STORIES.includes(entry.id) // Exclude stories in the exclusion list
+            !EXCLUDED_STORIES.includes(entry.id) && // Exclude stories in the exclusion list
+            !entry.tags.includes('no-automated-visual-test') // Exclude stories with the no-automated-visual-test tag
     )
     .map(entry => entry.id); // Extract the IDs
 
