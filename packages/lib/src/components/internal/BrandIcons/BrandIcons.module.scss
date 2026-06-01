@@ -7,6 +7,8 @@
     align-items: center;
     gap: variable-generator.token(spacer-040);
     margin: variable-generator.token(spacer-020) variable-generator.token(spacer-000);
+    list-style: none;
+    padding: 0;
 }
 
 .grid {
