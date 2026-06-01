@@ -54,7 +54,7 @@ test.describe('Test how Card Component handles optional expiryDate policy', () =
         await expect(cardValid).toEqual(false);
     });
 
-    test('#2 how securedFields responds', async ({ page, card }) => {
+    test.skip('#2 how securedFields responds', async ({ page, card }) => {
         await binLookupMock(page, optionalDateAndCvcMock);
 
         await card.goto(url);

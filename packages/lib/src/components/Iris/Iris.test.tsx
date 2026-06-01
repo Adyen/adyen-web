@@ -47,8 +47,8 @@ describe('Iris', () => {
         const iris = createIris();
         render(iris.render());
 
-        const qrCodeButton = await screen.findByRole('button', { name: 'QR code' });
-        expect(qrCodeButton).toHaveAttribute('aria-expanded', 'true');
+        const qrCodeTab = await screen.findByRole('tab', { name: 'QR code' });
+        expect(qrCodeTab).toHaveAttribute('aria-selected', 'true');
         expect(await screen.findByRole('button', { name: /Generate QR code/i })).toBeInTheDocument();
     });
 
@@ -57,8 +57,8 @@ describe('Iris', () => {
         const iris = createIris();
         render(iris.render());
 
-        const bankListButton = await screen.findByRole('button', { name: 'Bank list' });
-        expect(bankListButton).toHaveAttribute('aria-expanded', 'true');
+        const bankListTab = await screen.findByRole('tab', { name: 'Bank list' });
+        expect(bankListTab).toHaveAttribute('aria-selected', 'true');
         expect(screen.queryByRole('button', { name: /Generate QR code/i })).not.toBeInTheDocument();
     });
 
@@ -135,8 +135,8 @@ describe('Iris', () => {
         await user.click(issuerOption);
 
         // Switch to QR Code mode
-        const qrCodeButton = await screen.findByRole('button', { name: 'QR code' });
-        await user.click(qrCodeButton);
+        const qrCodeTab = await screen.findByRole('tab', { name: 'QR code' });
+        await user.click(qrCodeTab);
 
         await waitFor(() => {
             expect(screen.getByRole('button', { name: /Generate QR code/i })).toBeInTheDocument();
@@ -163,9 +163,9 @@ describe('Iris', () => {
         const generateQrButton = await screen.findByRole('button', { name: /Generate QR code/i });
         expect(generateQrButton).toBeInTheDocument();
 
-        // Should NOT show the segment control buttons or issuer list
-        expect(screen.queryByRole('button', { name: 'QR code' })).not.toBeInTheDocument();
-        expect(screen.queryByRole('button', { name: 'Bank list' })).not.toBeInTheDocument();
+        // Should NOT show the segment control tabs or issuer list
+        expect(screen.queryByRole('tab', { name: 'QR code' })).not.toBeInTheDocument();
+        expect(screen.queryByRole('tab', { name: 'Bank list' })).not.toBeInTheDocument();
         expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
 
         // Component should be valid without issuer selection
@@ -237,12 +237,12 @@ describe('Iris', () => {
             render(iris.render());
 
             // Verify QR code is initially selected
-            const qrCodeButton = await screen.findByRole('button', { name: 'QR code' });
-            expect(qrCodeButton).toHaveAttribute('aria-expanded', 'true');
+            const qrCodeTab = await screen.findByRole('tab', { name: 'QR code' });
+            expect(qrCodeTab).toHaveAttribute('aria-selected', 'true');
 
             // Click on Bank list
-            const bankListButton = await screen.findByRole('button', { name: 'Bank list' });
-            await user.click(bankListButton);
+            const bankListTab = await screen.findByRole('tab', { name: 'Bank list' });
+            await user.click(bankListTab);
 
             expect(core.modules.analytics.sendAnalytics).toHaveBeenCalledWith(
                 expect.objectContaining({
@@ -260,12 +260,12 @@ describe('Iris', () => {
             render(iris.render());
 
             // Verify Bank list is initially selected
-            const bankListButton = await screen.findByRole('button', { name: 'Bank list' });
-            expect(bankListButton).toHaveAttribute('aria-expanded', 'true');
+            const bankListTab = await screen.findByRole('tab', { name: 'Bank list' });
+            expect(bankListTab).toHaveAttribute('aria-selected', 'true');
 
             // Click on QR code
-            const qrCodeButton = await screen.findByRole('button', { name: 'QR code' });
-            await user.click(qrCodeButton);
+            const qrCodeTab = await screen.findByRole('tab', { name: 'QR code' });
+            await user.click(qrCodeTab);
 
             expect(core.modules.analytics.sendAnalytics).toHaveBeenCalledWith(
                 expect.objectContaining({
@@ -283,8 +283,8 @@ describe('Iris', () => {
 
             // Should show Generate QR code button directly (no segmented control)
             expect(await screen.findByRole('button', { name: 'Generate QR code' })).toBeInTheDocument();
-            expect(screen.queryByRole('button', { name: 'QR code' })).not.toBeInTheDocument();
-            expect(screen.queryByRole('button', { name: 'Bank list' })).not.toBeInTheDocument();
+            expect(screen.queryByRole('tab', { name: 'QR code' })).not.toBeInTheDocument();
+            expect(screen.queryByRole('tab', { name: 'Bank list' })).not.toBeInTheDocument();
 
             // No segmented control click events should be sent (only rendered event)
             expect(core.modules.analytics.sendAnalytics).not.toHaveBeenCalledWith(

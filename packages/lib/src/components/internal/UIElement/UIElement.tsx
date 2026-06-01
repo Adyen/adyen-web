@@ -25,7 +25,6 @@ import type {
     PaymentResponseData,
     RawPaymentMethod
 } from '../../../types/global-types';
-import type { IDropin } from '../../Dropin/types';
 import type { ComponentMethodsRef, UIElementProps, UIElementStatus } from './types';
 import type { IAnalytics } from '../../../core/Analytics/Analytics';
 import { CoreProvider } from '../../../core/Context/CoreProvider';
@@ -155,7 +154,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
             ...componentProps
         };
 
-        const isDropinInstance = assertIsDropin(this as unknown as IDropin);
+        const isDropinInstance = assertIsDropin(this);
 
         this.props = this.formatProps({
             ...this.constructor['defaultProps'], // component defaults

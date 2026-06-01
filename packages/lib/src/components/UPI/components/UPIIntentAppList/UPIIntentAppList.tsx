@@ -28,15 +28,7 @@ const UPIIntentAppList = ({ appsList, selectedAppId, disabled, onAppSelect }: Re
             {appsList.map(app => {
                 const key = `adyen-checkout-upi-app-item-${app.id}`;
                 const isSelected = selectedAppId === app.id;
-                return (
-                    <UPIIntentAppItem
-                        key={key}
-                        app={{ id: app.id, name: app.name }}
-                        imgSrc={app.icon}
-                        isSelected={isSelected}
-                        onSelect={onAppSelect}
-                    />
-                );
+                return <UPIIntentAppItem key={key} app={app} imgSrc={app.icon} isSelected={isSelected} onSelect={onAppSelect} />;
             })}
         </ul>
     );

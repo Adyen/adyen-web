@@ -165,7 +165,11 @@ class Card extends Base {
         },
         force = false
     ) {
-        await this.cardNumberField.getByAltText(text, options).click({ force });
+        if (text === '') {
+            await this.cardNumberField.locator('img[alt=""]').click({ force });
+        } else {
+            await this.cardNumberField.getByAltText(text, options).click({ force });
+        }
     }
     /** end */
 
@@ -304,7 +308,7 @@ class Card extends Base {
     }
 
     async selectDateIcon() {
-        await this.expiryDateField.getByAltText(EXPIRY_DATE_ICON_ALT_TEXT).click();
+        await this.expiryDateField.locator('.adyen-checkout__field__exp-date_hint_wrapper').click();
     }
 
     async selectCVCIcon() {

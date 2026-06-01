@@ -66,7 +66,7 @@ export default function CardNumber(props: Readonly<CardNumberProps>) {
                     'adyen-checkout__input--valid': isValid,
                     'adyen-checkout__card__cardNumber__input--noBrand': !props.showBrandIcon
                 })}
-            ></DataSfSpan>
+            />
 
             {props.showBrandIcon && !dualBrandingElements && <BrandIcon brandsConfiguration={props.brandsConfiguration} brand={props.brand} />}
 

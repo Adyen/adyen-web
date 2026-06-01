@@ -1,5 +1,6 @@
 import { h } from 'preact';
 import cx from 'classnames';
+
 import './SegmentedControl.scss';
 import { stopPropagationForActionKeys } from '../Button/stopPropagationForActionKeys';
 
@@ -57,10 +58,12 @@ export const SegmentedControl = <T,>({
                 { 'adyen-checkout__segmented-control--disabled': disabled },
                 ...classNameModifiers.map(modifier => `adyen-checkout__segmented-control--${modifier}`)
             )}
-            role="group"
+            role="tablist"
         >
-            {options.map(({ label, value, controls, htmlProps }: SegmentedControlOption<T>) => (
+            {options.map(({ label, value, id, controls, htmlProps }: SegmentedControlOption<T>) => (
                 <button
+                    role="tab"
+                    id={id}
                     disabled={disabled}
                     key={value}
                     onClick={(event: MouseEvent) => onChange(value, event)}
@@ -71,7 +74,7 @@ export const SegmentedControl = <T,>({
                         'adyen-checkout__segmented-control-segment--selected': selectedValue === value
                     })}
                     aria-controls={controls}
-                    aria-expanded={selectedValue === value}
+                    aria-selected={selectedValue === value}
                     type="button"
                     {...htmlProps}
                 >

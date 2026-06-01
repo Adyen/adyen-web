@@ -44,7 +44,7 @@ describe('ThreeDS2Challenge', () => {
     });
 
     describe('Additional details callbacks priority', () => {
-        test('should call default additional details flow if "onComplete" is not present', () => {
+        test('should call default additional details because we are not in the MDFlow', () => {
             const core = setupCoreMock();
 
             const threeDS2Challenge = new ThreeDS2Challenge(core, {
@@ -60,12 +60,13 @@ describe('ThreeDS2Challenge', () => {
             expect(spy).toHaveBeenCalledWith(challengeResolveData);
         });
 
-        test('should call "onComplete" if available', () => {
+        test('should call "on3DS2RedirectFlowComplete" if available', () => {
             const core = setupCoreMock();
-            const onComplete = jest.fn();
+            const on3DS2RedirectFlowComplete = jest.fn();
 
             const threeDS2Challenge = new ThreeDS2Challenge(core, {
-                onComplete
+                on3DS2RedirectFlowComplete,
+                isMDFlow: true
             });
 
             // @ts-ignore - spying internal method
@@ -74,7 +75,7 @@ describe('ThreeDS2Challenge', () => {
 
             threeDS2Challenge.onComplete(challengeResolveData);
 
-            expect(onComplete).toHaveBeenCalledWith(challengeResolveData, threeDS2Challenge);
+            expect(on3DS2RedirectFlowComplete).toHaveBeenCalledWith(challengeResolveData, threeDS2Challenge);
             expect(spy).not.toHaveBeenCalled();
         });
     });

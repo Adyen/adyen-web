@@ -82,11 +82,10 @@ export function usePaymentStatusTimer(props: Readonly<UsePaymentStatusTimerProps
         return pollStatusFunction()
             .then(processPaymentStatusResponse)
             .catch(
-                (error: unknown) =>
-                    ({
-                        type: 'network-error',
-                        props: error
-                    }) as ProcessedPaymentStatusResponse
+                (error: unknown): ProcessedPaymentStatusResponse => ({
+                    type: 'network-error',
+                    props: error
+                })
             )
             .then((status: ProcessedPaymentStatusResponse) => {
                 switch (status.type) {

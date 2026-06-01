@@ -27,7 +27,7 @@ class LanguageService implements ILanguageService {
         const cdnLocale = this.matchLocaleWithCdnSupportedLocales(locale);
 
         if (cdnLocale === 'en-US') {
-            return enUS as Translations;
+            return enUS;
         }
 
         try {
@@ -39,7 +39,7 @@ class LanguageService implements ILanguageService {
             });
         } catch (error) {
             console.warn(`LanguageService - fetchTranslationsFromCdn(): Failed to fetch locale "${cdnLocale}."`, error);
-            return enUS as Translations;
+            return enUS;
         }
     }
 

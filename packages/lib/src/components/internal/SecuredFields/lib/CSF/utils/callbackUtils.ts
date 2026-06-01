@@ -52,7 +52,7 @@ export const makeCallbackObjectsValidation = ({ fieldType, txVariant, rootNode }
             isValid: false,
             txVariant,
             rootNode
-        } as CallbackObjectProps);
+        });
 
         callbackObjectsArr.push(callbackObj);
     }
@@ -84,7 +84,7 @@ export const makeCallbackObjectsEncryption = ({ fieldType, txVariant, rootNode, 
             isValid: true,
             txVariant,
             rootNode
-        } as CallbackObjectProps);
+        });
         callbackObj.blob = encryptedBlob;
 
         callbackObjectsArr.push(callbackObj);

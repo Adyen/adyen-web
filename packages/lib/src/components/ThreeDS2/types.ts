@@ -32,6 +32,10 @@ interface ThreeDS2Configuration extends UIElementProps {
     modules?: { analytics: IAnalytics };
     notificationURL?: string;
     onActionHandled?: (rtnObj: ActionHandledReturnObject) => void;
+    on3DS2RedirectFlowComplete?: (
+        state: LegacyChallengeResolveData | ChallengeResolveData | LegacyFingerprintResolveData | FingerprintResolveData,
+        component: UIElement
+    ) => void;
     onError?: (error: AdyenCheckoutError, element?: UIElement) => void;
     paymentData?: string;
     token?: string;
@@ -183,7 +187,7 @@ export type ThreeDS2ConfigProps = {
     readonly token: string;
     readonly paymentData: string;
     readonly onActionHandled?: (rtnObj: ActionHandledReturnObject) => void;
-    readonly onComplete?: (state: LegacyChallengeResolveData | ChallengeResolveData, component: UIElement) => void;
+    readonly on3DS2RedirectFlowComplete?: (state: LegacyChallengeResolveData | ChallengeResolveData, component: UIElement) => void;
     readonly onAdditionalDetails?: (state: AdditionalDetailsData, component: UIElement, actions: AdditionalDetailsActions) => void;
     readonly onError?: (error: AdyenCheckoutError, element?: UIElement) => void;
     readonly isDropin?: boolean;
@@ -204,4 +208,4 @@ export type ThreeDS2ConfigProps = {
     readonly i18n?: Language;
 };
 
-export type ThreeDS2ActionProps = CardConfiguration & Pick<ThreeDS2ConfigProps, 'isMDFlow'>;
+export type ThreeDS2ActionProps = CardConfiguration & Pick<ThreeDS2ConfigProps, 'isMDFlow' | 'on3DS2RedirectFlowComplete'>;
