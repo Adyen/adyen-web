@@ -117,15 +117,10 @@ test.describe('Testing branding - especially regarding optional and hidden cvc f
             await cardBrandingPage.deleteCardNumber();
 
             // Card is reset to generic card
-            brandingIconSrc = await cardBrandingPage.brandingIcon.getAttribute('src');
-            await expect(brandingIconSrc).toContain('nocard.svg');
-
-            // Headless test seems to need time for UI change to register on state
-            await page.waitForTimeout(500);
+            await expect(cardBrandingPage.brandingIcon).toHaveAttribute('src', /nocard\.svg/);
 
             // Is not valid
-            cardValid = await page.evaluate('window.component.isValid');
-            await expect(cardValid).toEqual(false);
+            await page.waitForFunction(() => window['component'].isValid === false);
         }
     );
 

@@ -1,0 +1,36 @@
+name: Slack Release Notification
+
+on:
+  workflow_dispatch:
+  workflow_call:
+    inputs:
+      version:
+        description: SDK version to include in the notification
+        required: false
+        type: string
+
+jobs:
+  notify-slack:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Resolve SDK version
+        id: sdk-version
+        run: |
+          INPUT_VERSION="${{ inputs.version }}"
+          if [ -n "$INPUT_VERSION" ]; then
+            echo "version=$INPUT_VERSION" >> "$GITHUB_OUTPUT"
+          else
+            echo "version=$(node -p "require('./packages/lib/package.json').version")" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Post Slack notification
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          VERSION: ${{ steps.sdk-version.outputs.version }}
+        run: |
+          curl -X POST "$SLACK_WEBHOOK_URL" \
+            -H "Content-Type: application/json" \
+            -d "{\"text\": \"Hey team. We released a new SDK version. The notes can be found here: https://github.com/Adyen/adyen-web/releases/tag/v${VERSION}\nThank you!\"}"
