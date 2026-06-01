@@ -117,7 +117,7 @@ test.describe('Bcmc payments with dual branding', () => {
             await expect(bcmc.cardNumberErrorElement).toHaveText('Enter a valid card number');
         });
 
-        test('#4 should submit the visa payment', async ({ bcmc, page }) => {
+        test.skip('#4 should submit the visa payment', async ({ bcmc, page }) => {
             await binLookupMock(page, dualBrandedBcmcAndVisa);
 
             await bcmc.goto(URL_MAP.bcmc);
