@@ -99,7 +99,7 @@ export async function createCardSecuredFields(
         this.state.type = type;
     }
 
-    // So, is it a single branded card?
+    // So, is it a single branded card? i.e. a storedCard or a regular card that has just one brand set in its brands array
     this.isSingleBrandedCard = type !== 'card';
 
     // If single branded card field...
