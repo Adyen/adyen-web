@@ -1,4 +1,5 @@
-import { ErrorMessageObject, ValidatorRule, ValidatorMode } from './types';
+import { ErrorMessageObject, ValidatorRule, ValidatorMode, FieldContext } from './types';
+import Language from '../../language';
 
 /**
  * Holds the result of a validation
@@ -7,11 +8,13 @@ export class ValidationRuleResult {
     private readonly shouldValidate: boolean;
     public isValid: boolean;
     public errorMessage: string | ErrorMessageObject;
+    public errorI18n: string;
 
-    constructor(rule: ValidatorRule, value: string, mode: ValidatorMode, context) {
+    constructor(rule: ValidatorRule, value: string, mode: ValidatorMode, context: FieldContext, i18n: Language) {
         this.shouldValidate = rule.modes.includes(mode);
         this.isValid = rule.validate(value, context);
         this.errorMessage = rule.errorMessage;
+        this.errorI18n = i18n.get(rule.errorMessage as string);
     }
 
     /**

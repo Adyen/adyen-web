@@ -1,5 +1,6 @@
 import { ValidatorRules, ValidatorRule, FieldContext, FieldData } from './types';
 import { ValidationRuleResult } from './ValidationRuleResult';
+import type Language from '../../language';
 
 class ValidationResult {
     private validationResults: ValidationRuleResult[];
@@ -37,8 +38,11 @@ class Validator {
         }
     };
 
-    constructor(rules) {
+    private readonly i18n: Language;
+
+    constructor(rules, i18n: Language) {
         this.setRules(rules);
+        this.i18n = i18n;
     }
 
     setRules(newRules) {
@@ -70,7 +74,7 @@ class Validator {
         // validate is called in the constructor of ValidationRuleResult
         // line rule.validate(value, context);
         //
-        const validationRulesResult = fieldRules.map(rule => new ValidationRuleResult(rule, value, mode, context));
+        const validationRulesResult = fieldRules.map(rule => new ValidationRuleResult(rule, value, mode, context, this.i18n));
 
         return new ValidationResult(validationRulesResult);
     }

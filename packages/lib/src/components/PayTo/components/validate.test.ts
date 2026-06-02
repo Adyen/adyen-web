@@ -1,8 +1,11 @@
 import Validator from '../../../utils/Validator';
 import { payIdValidationRules } from './validate';
+import { setupCoreMock } from '../../../../config/testMocks/setup-core-mock';
 
 describe('Test payIdValidationRules', () => {
-    const validator = new Validator(payIdValidationRules);
+    const core = setupCoreMock();
+    const { i18n } = core.modules;
+    const validator = new Validator(payIdValidationRules, i18n);
 
     // Email tests
     test('Test success email', () => {
