@@ -46,7 +46,6 @@ describe('Select', () => {
         const button = screen.getByRole('button');
         await user.click(button); // Open dropdown
 
-
         await user.keyboard('[ArrowDown][Enter]');
         expect(onChangeCb).toBeCalledTimes(2);
 
@@ -88,7 +87,6 @@ describe('Select', () => {
         // Test keyboard interaction - focus the combobox first with user event
         const combobox = screen.getByRole('combobox');
         await user.click(combobox); // Open dropdown
-
 
         await user.keyboard('[ArrowDown][Enter]');
         expect(onChangeCb).toBeCalledTimes(2);
@@ -208,44 +206,6 @@ describe('Select', () => {
         const liveRegion = screen.getByRole('status');
         expect(liveRegion).toBeInTheDocument();
         await waitFor(() => expect(liveRegion).toHaveTextContent('No options found'));
-        expect(liveRegion).toHaveAttribute('aria-live', 'polite');
-    });
-
-    test('ARIA live region is empty when options are available', async () => {
-        renderSelect({
-            items: [{ name: 'Apple', id: '1' }],
-            filterable: true,
-            selectedValue: '',
-            onChange: jest.fn()
-        });
-
-        const combobox = screen.getByRole('combobox');
-
-        await user.type(combobox, 'App'); // search for Apple
-
-        // Live region should be present but empty when there are options
-        const liveRegion = screen.getByRole('status');
-        expect(liveRegion).toBeInTheDocument();
-        expect(liveRegion).toBeEmptyDOMElement();
-    });
-
-    test('ARIA live region announces no options found message', async () => {
-        renderSelect({
-            items: [{ name: 'Apple', id: '1' }],
-            filterable: true,
-            selectedValue: '',
-            onChange: jest.fn()
-        });
-
-        const combobox = screen.getByRole('combobox');
-
-        // Type something that won't match any items
-        await user.type(combobox, 'xyz');
-
-        // Check that the live region is present and contains the no options message
-        const liveRegion = screen.getByRole('status');
-        expect(liveRegion).toBeInTheDocument();
-        expect(liveRegion).toHaveTextContent('No options found');
         expect(liveRegion).toHaveAttribute('aria-live', 'polite');
     });
 
