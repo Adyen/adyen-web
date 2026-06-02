@@ -447,5 +447,6 @@
     "issuerList.separatorText": "arba pasirinkite iš sąrašo",
     "upi.intent.apps.title": "Parinktys",
     "upi.intent.apps.dropdown.label": "UPI programos",
-    "upi.intent.apps.dropdown.placeholder": "Pasirinkite pageidaujamą programą"
+    "upi.intent.apps.dropdown.placeholder": "Pasirinkite pageidaujamą programą",
+    "order.paymentMethod.description": "%{name}, kuris baigiasi %{lastFour}"
 }

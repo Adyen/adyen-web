@@ -447,5 +447,6 @@
     "issuerList.separatorText": "或从列表中选择",
     "upi.intent.apps.title": "选项",
     "upi.intent.apps.dropdown.label": "UPI 应用",
-    "upi.intent.apps.dropdown.placeholder": "选择首选应用"
+    "upi.intent.apps.dropdown.placeholder": "选择首选应用",
+    "order.paymentMethod.description": "尾号为 %{lastFour} 的 %{name}"
 }

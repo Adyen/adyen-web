@@ -447,5 +447,6 @@
     "issuerList.separatorText": "またはリストから選択",
     "upi.intent.apps.title": "オプション",
     "upi.intent.apps.dropdown.label": "UPIアプリ",
-    "upi.intent.apps.dropdown.placeholder": "希望するアプリを選択"
+    "upi.intent.apps.dropdown.placeholder": "希望するアプリを選択",
+    "order.paymentMethod.description": "末尾が%{lastFour}の%{name}"
 }
