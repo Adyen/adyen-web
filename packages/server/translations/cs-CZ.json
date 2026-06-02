@@ -449,5 +449,6 @@
     "upi.intent.apps.dropdown.label": "Aplikace UPI",
     "upi.intent.apps.dropdown.placeholder": "Vyberte preferovanou aplikaci",
     "order.paymentMethod.description": "%{name} končící na %{lastFour}",
-    "select.results": "Dostupných výsledků: %{count}"
+    "select.results": "Dostupných výsledků: %{count}",
+    "ctp.errors.INVALID_EMAIL": "Zadejte platnou e-mailovou adresu (např. jmeno@priklad.cz)"
 }

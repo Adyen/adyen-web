@@ -449,5 +449,6 @@
     "upi.intent.apps.dropdown.label": "Aplikacije UPI",
     "upi.intent.apps.dropdown.placeholder": "Izberite želeno aplikacijo",
     "order.paymentMethod.description": "%{name}, ki se konča z %{lastFour}",
-    "select.results": "Na voljo je toliko rezultatov: %{count}"
+    "select.results": "Na voljo je toliko rezultatov: %{count}",
+    "ctp.errors.INVALID_EMAIL": "Vnesite veljaven e-poštni naslov (npr. ime@primer.com)"
 }

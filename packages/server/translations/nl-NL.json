@@ -449,5 +449,6 @@
     "upi.intent.apps.dropdown.label": "UPI-apps",
     "upi.intent.apps.dropdown.placeholder": "Kies de gewenste app",
     "order.paymentMethod.description": "%{name} eindigend op %{lastFour}",
-    "select.results": "%{count} resultaten beschikbaar"
+    "select.results": "%{count} resultaten beschikbaar",
+    "ctp.errors.INVALID_EMAIL": "Voer een geldig e-mailadres in (bijv. naam@example.com)"
 }

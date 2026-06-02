@@ -449,5 +449,6 @@
     "upi.intent.apps.dropdown.label": "UPI-alkalmazások",
     "upi.intent.apps.dropdown.placeholder": "Válassza ki a kívánt alkalmazást",
     "order.paymentMethod.description": "%{name} (kártyaszám vége: %{lastFour})",
-    "select.results": "%{count} találat elérhető"
+    "select.results": "%{count} találat elérhető",
+    "ctp.errors.INVALID_EMAIL": "Adjon meg egy érvényes e-mail-címet (pl. name@example.com)"
 }

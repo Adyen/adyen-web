@@ -449,5 +449,6 @@
     "upi.intent.apps.dropdown.label": "UPI 앱",
     "upi.intent.apps.dropdown.placeholder": "선호하는 앱 선택",
     "order.paymentMethod.description": "끝자리가 %{lastFour}인 %{name}",
-    "select.results": "결과 %{count}개"
+    "select.results": "결과 %{count}개",
+    "ctp.errors.INVALID_EMAIL": "유효한 이메일 주소를 입력하세요(예: name@example.com)"
 }

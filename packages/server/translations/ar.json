@@ -449,5 +449,6 @@
     "upi.intent.apps.dropdown.label": "تطبيقات UPI",
     "upi.intent.apps.dropdown.placeholder": "يُرجى اختيار التطبيق المفضل.",
     "order.paymentMethod.description": "%{name} المنتهي بـ %{lastFour}",
-    "select.results": "عدد النتائج المتاحة هو %{count}"
+    "select.results": "عدد النتائج المتاحة هو %{count}",
+    "ctp.errors.INVALID_EMAIL": "أدخل عنوان بريد إلكتروني صالح (مثلاً: name@example.com)"
 }
