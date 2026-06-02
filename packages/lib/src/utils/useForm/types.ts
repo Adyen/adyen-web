@@ -2,7 +2,7 @@ import { ValidatorRules } from '../Validator/types';
 import { FormatterFn } from '../Formatters/types';
 
 export type FormState<FormSchema> = {
-    schema?: string[];
+    schema: string[];
     data: FormSchema;
     errors: {
         [key: string]: any;
