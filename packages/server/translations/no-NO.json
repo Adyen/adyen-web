@@ -447,5 +447,6 @@
     "issuerList.separatorText": "eller velg fra listen",
     "upi.intent.apps.title": "Alternativer",
     "upi.intent.apps.dropdown.label": "UPI-apper",
-    "upi.intent.apps.dropdown.placeholder": "Velg app"
+    "upi.intent.apps.dropdown.placeholder": "Velg app",
+    "order.paymentMethod.description": "%{name} som slutter på %{lastFour}"
 }

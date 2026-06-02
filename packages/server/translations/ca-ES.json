@@ -447,5 +447,6 @@
     "issuerList.separatorText": "o trieu de la llista",
     "upi.intent.apps.title": "Opcions",
     "upi.intent.apps.dropdown.label": "Aplicacions UPI",
-    "upi.intent.apps.dropdown.placeholder": "Trieu l'aplicació preferida"
+    "upi.intent.apps.dropdown.placeholder": "Trieu l'aplicació preferida",
+    "order.paymentMethod.description": "%{name} que acaba en %{lastFour}"
 }
