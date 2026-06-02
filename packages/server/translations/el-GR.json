@@ -448,5 +448,6 @@
     "upi.intent.apps.title": "Επιλογές",
     "upi.intent.apps.dropdown.label": "Εφαρμογές UPI",
     "upi.intent.apps.dropdown.placeholder": "Επιλέξτε την προτιμώμενη εφαρμογή",
-    "order.paymentMethod.description": "%{name} που τελειώνει σε %{lastFour}"
+    "order.paymentMethod.description": "%{name} που τελειώνει σε %{lastFour}",
+    "select.results": "%{count} διαθέσιμα αποτελέσματα"
 }

@@ -448,5 +448,6 @@
     "upi.intent.apps.title": "Parinktys",
     "upi.intent.apps.dropdown.label": "UPI programos",
     "upi.intent.apps.dropdown.placeholder": "Pasirinkite pageidaujamą programą",
-    "order.paymentMethod.description": "%{name}, kuris baigiasi %{lastFour}"
+    "order.paymentMethod.description": "%{name}, kuris baigiasi %{lastFour}",
+    "select.results": "Rasta rezultatų: %{count}"
 }

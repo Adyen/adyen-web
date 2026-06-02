@@ -448,5 +448,6 @@
     "upi.intent.apps.title": "الخيارات",
     "upi.intent.apps.dropdown.label": "تطبيقات UPI",
     "upi.intent.apps.dropdown.placeholder": "يُرجى اختيار التطبيق المفضل.",
-    "order.paymentMethod.description": "%{name} المنتهي بـ %{lastFour}"
+    "order.paymentMethod.description": "%{name} المنتهي بـ %{lastFour}",
+    "select.results": "عدد النتائج المتاحة هو %{count}"
 }

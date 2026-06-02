@@ -448,5 +448,6 @@
     "upi.intent.apps.title": "Opties",
     "upi.intent.apps.dropdown.label": "UPI-apps",
     "upi.intent.apps.dropdown.placeholder": "Kies de gewenste app",
-    "order.paymentMethod.description": "%{name} eindigend op %{lastFour}"
+    "order.paymentMethod.description": "%{name} eindigend op %{lastFour}",
+    "select.results": "%{count} resultaten beschikbaar"
 }

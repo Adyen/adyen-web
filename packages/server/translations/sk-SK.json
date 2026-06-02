@@ -448,5 +448,6 @@
     "upi.intent.apps.title": "Možnosti",
     "upi.intent.apps.dropdown.label": "Aplikácie UPI",
     "upi.intent.apps.dropdown.placeholder": "Vyberte preferovanú aplikáciu",
-    "order.paymentMethod.description": "%{name} končiaca sa číslom %{lastFour}"
+    "order.paymentMethod.description": "%{name} končiaca sa číslom %{lastFour}",
+    "select.results": "Dostupné výsledky: %{count}"
 }

@@ -448,5 +448,6 @@
     "upi.intent.apps.title": "Opções",
     "upi.intent.apps.dropdown.label": "aplicações de UPI",
     "upi.intent.apps.dropdown.placeholder": "Escolha a sua aplicação preferencial",
-    "order.paymentMethod.description": "%{name} que termina em %{lastFour}"
+    "order.paymentMethod.description": "%{name} que termina em %{lastFour}",
+    "select.results": "%{count} resultados disponíveis"
 }

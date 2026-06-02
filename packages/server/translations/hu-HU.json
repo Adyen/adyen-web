@@ -448,5 +448,6 @@
     "upi.intent.apps.title": "Lehetőségek",
     "upi.intent.apps.dropdown.label": "UPI-alkalmazások",
     "upi.intent.apps.dropdown.placeholder": "Válassza ki a kívánt alkalmazást",
-    "order.paymentMethod.description": "%{name} (kártyaszám vége: %{lastFour})"
+    "order.paymentMethod.description": "%{name} (kártyaszám vége: %{lastFour})",
+    "select.results": "%{count} találat elérhető"
 }

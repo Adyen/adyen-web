@@ -448,5 +448,6 @@
     "upi.intent.apps.title": "Valkostir",
     "upi.intent.apps.dropdown.label": "UPI-forrit",
     "upi.intent.apps.dropdown.placeholder": "Veldu forritið sem þér hentar best",
-    "order.paymentMethod.description": "%{name} sem endar á %{lastFour}"
+    "order.paymentMethod.description": "%{name} sem endar á %{lastFour}",
+    "select.results": "%{count} niðurstöður í boði"
 }

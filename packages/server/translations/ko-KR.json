@@ -448,5 +448,6 @@
     "upi.intent.apps.title": "옵션",
     "upi.intent.apps.dropdown.label": "UPI 앱",
     "upi.intent.apps.dropdown.placeholder": "선호하는 앱 선택",
-    "order.paymentMethod.description": "끝자리가 %{lastFour}인 %{name}"
+    "order.paymentMethod.description": "끝자리가 %{lastFour}인 %{name}",
+    "select.results": "결과 %{count}개"
 }
