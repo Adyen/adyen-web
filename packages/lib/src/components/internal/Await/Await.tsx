@@ -18,9 +18,11 @@ import { AwaitComponentProps } from './types';
 import { redirectToApp } from '../../../utils/urls';
 import './Await.scss';
 import { useAmount } from '../../../core/Context/AmountProvider';
+import { useA11yReporter } from '../../../core/Errors/useA11yReporter';
 
 export function Await(props: Readonly<AwaitComponentProps>) {
     const { i18n, loadingContext } = useCoreContext();
+    useA11yReporter(props.awaitText);
 
     const { state: timerState, actions: timerActions } = usePaymentStatusTimer({
         loadingContext,
