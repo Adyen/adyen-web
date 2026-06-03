@@ -133,10 +133,11 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
     }
 
     private readonly handleOnApprove = (data: PayPalOnApproveData, actions: PayPalOnApproveActions): Promise<void> => {
-        const { onAuthorized } = this.props;
+        const { onAuthorized, amount } = this.props;
+        const isZeroAuth = amount?.value === 0;
         const state = { data: { details: data, paymentData: this.paymentData ?? undefined } };
 
-        if (!onAuthorized) {
+        if (!onAuthorized || isZeroAuth) {
             this.handleAdditionalDetails(state);
             return Promise.resolve();
         }
