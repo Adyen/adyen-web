@@ -8,20 +8,24 @@ import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 import SRPanelProvider from '../../../core/Errors/SRPanelProvider';
 import { SRPanel } from '../../../core/Errors/SRPanel';
 import { AmountProvider, AmountProviderProps } from '../../../core/Context/AmountProvider';
+import { setupCoreMock } from '../../../../config/testMocks/setup-core-mock';
 
 jest.mock('../../../core/Services/payment-status');
 
 const renderAwait = ({
     awaitProps,
-    amountProviderProps
+    amountProviderProps,
+    srPanel: externalSrPanel
 }: {
     awaitProps: AwaitComponentProps;
     amountProviderProps?: Partial<AmountProviderProps>;
+    srPanel?: SRPanel;
 }) => {
-    const srPanel = new SRPanel(global.core);
+    const core = setupCoreMock();
+    const srPanel = externalSrPanel ?? core.modules.srPanel;
 
     return render(
-        <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+        <CoreProvider i18n={core.modules.i18n} loadingContext="test" resources={core.modules.resources}>
             <SRPanelProvider srPanel={srPanel}>
                 <AmountProvider {...amountProviderProps} providerRef={createRef()}>
                     <Await {...awaitProps} />
@@ -62,7 +66,7 @@ describe('Await', () => {
     });
 
     describe('In progress', () => {
-        let checkPaymentStatusValue;
+        let checkPaymentStatusValue: { payload?: string; resultCode?: string; type?: string; error?: string };
         beforeEach(() => {
             checkPaymentStatusValue = { payload: 'Ab02b4c0!', resultCode: 'pending', type: 'complete' };
             (checkPaymentStatus as jest.Mock).mockResolvedValue(checkPaymentStatusValue);
@@ -108,7 +112,7 @@ describe('Await', () => {
     });
 
     describe('Expired', () => {
-        let checkPaymentStatusValue;
+        let checkPaymentStatusValue: { payload?: string; resultCode?: string; type?: string; error?: string };
         beforeEach(() => {
             checkPaymentStatusValue = { error: 'Unkown error', payload: 'Ab02b4c0!' };
             (checkPaymentStatus as jest.Mock).mockResolvedValue(checkPaymentStatusValue);
@@ -147,7 +151,7 @@ describe('Await', () => {
     });
 
     describe('Completed', () => {
-        let checkPaymentStatusValue;
+        let checkPaymentStatusValue: { payload?: string; resultCode?: string; type?: string; error?: string };
         beforeEach(() => {
             checkPaymentStatusValue = { payload: 'Ab02b4c0!', resultCode: 'authorised', type: 'complete' };
             (checkPaymentStatus as jest.Mock).mockResolvedValue(checkPaymentStatusValue);
@@ -167,6 +171,23 @@ describe('Await', () => {
                     details: { payload: checkPaymentStatusValue.payload },
                     paymentData: defaultProps.paymentData
                 }
+            });
+        });
+    });
+
+    describe('Accessibility', () => {
+        beforeEach(() => {
+            const checkPaymentStatusValue = { payload: 'Ab02b4c0!', resultCode: 'pending', type: 'complete' };
+            (checkPaymentStatus as jest.Mock).mockResolvedValue(checkPaymentStatusValue);
+        });
+
+        test('should report awaitText to SRPanel on mount', async () => {
+            const srPanel = setupCoreMock().modules.srPanel;
+            const setMessagesSpy = jest.spyOn(srPanel, 'setMessages');
+            renderAwait({ awaitProps: { ...defaultProps, awaitText: 'Awaiting your approval' }, amountProviderProps, srPanel });
+
+            await waitFor(() => {
+                expect(setMessagesSpy).toHaveBeenCalledWith('Awaiting your approval');
             });
         });
     });
