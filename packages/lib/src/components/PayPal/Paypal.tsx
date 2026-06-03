@@ -1,6 +1,5 @@
 import { h } from 'preact';
 import UIElement from '../internal/UIElement/UIElement';
-import PaypalComponent from './components/PaypalComponent';
 import defaultProps from './defaultProps';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { ERRORS } from './constants';
@@ -8,7 +7,7 @@ import { TxVariants } from '../tx-variants';
 import { formatPaypalOrderContactToAdyenFormat } from './utils/format-paypal-order-contact-to-adyen-format';
 
 import type { ICore } from '../../core/types';
-import type { PaymentAction } from '../../types/global-types';
+import type { PaymentAction, PaymentMethodBrand } from '../../types/global-types';
 import type { Intent, PayPalConfiguration } from './types';
 import type {
     PayPalOnApproveActions,
@@ -21,6 +20,10 @@ import type {
 } from './paypal-js-types';
 
 import { AnalyticsInfoEvent, InfoEventType } from '../../core/Analytics/events/AnalyticsInfoEvent';
+import { PayPalService } from './PayPalService';
+import { PayPalSdkLoader } from './PayPalSdkLoader';
+import { PayPalComponentV6 } from './components/PayPalComponentV6';
+import PaypalComponent from './components/PaypalComponent';
 import './Paypal.scss';
 
 class PaypalElement extends UIElement<PayPalConfiguration> {
@@ -32,6 +35,8 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
     private resolve: ((value: string) => void) | null = null;
     private reject: ((error?: Error) => void) | null = null;
 
+    private readonly paypalService: PayPalService;
+
     protected static readonly defaultProps = defaultProps;
 
     constructor(checkout: ICore, props?: PayPalConfiguration) {
@@ -39,6 +44,34 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleOnShippingAddressChange = this.handleOnShippingAddressChange.bind(this);
         this.handleOnShippingOptionsChange = this.handleOnShippingOptionsChange.bind(this);
+
+        if (this.props.useV6) {
+            const sdkLoader = new PayPalSdkLoader({ analytics: this.analytics });
+
+            this.paypalService = PayPalService.getInstance({
+                loadingContext: this.props.loadingContext,
+                clientKey: this.props.clientKey,
+                sdkLoader,
+                countryCode: this.props.countryCode,
+                currencyCode: this.props.amount.currency
+            });
+
+            void this.paypalService.initialize();
+        }
+    }
+
+    public override async isAvailable(): Promise<void> {
+        if (this.props.useV6) {
+            await this.paypalService.isPayPalSdkReady();
+
+            if (!this.paypalService.paymentMethods.isEligible('paypal')) {
+                return Promise.reject(new Error('PayPal is not eligible'));
+            }
+
+            return Promise.resolve();
+        }
+
+        return Promise.resolve();
     }
 
     formatProps(props: PayPalConfiguration): PayPalConfiguration {
@@ -114,7 +147,9 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
 
         if (action.sdkData && action.sdkData.token) {
             this.onActionHandled({ componentType: this.type, actionDescription: 'sdk-loaded', originalAction: action });
-            this.handleResolve(action.sdkData.token);
+
+            if (this.props.useV6) this.handleResolveV6(action.sdkData.token);
+            else this.handleResolve(action.sdkData.token);
         } else {
             this.handleReject(ERRORS.NO_TOKEN_PROVIDED);
         }
@@ -131,6 +166,21 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
     get isValid() {
         return true;
     }
+
+    private handleOnApproveV6 = (data: any): Promise<void> => {
+        const { onAuthorized } = this.props;
+        const state = { data: { details: data, paymentData: this.paymentData } };
+
+        if (!onAuthorized) {
+            this.handleAdditionalDetails(state);
+            return;
+        }
+
+        /**
+         * TODO: Request profile details from backend if onAuthorized is defined
+         */
+        this.handleError(new AdyenCheckoutError('ERROR', 'Something went wrong while parsing PayPal Order'));
+    };
 
     private readonly handleOnApprove = (data: PayPalOnApproveData, actions: PayPalOnApproveActions): Promise<void> => {
         const { onAuthorized } = this.props;
@@ -176,6 +226,12 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
     handleResolve(token: string) {
         if (!this.resolve) return this.handleError(new AdyenCheckoutError('ERROR', ERRORS.WRONG_INSTANCE));
         this.resolve(token);
+    }
+
+    handleResolveV6(token: string) {
+        if (!this.resolve) return this.handleError(new AdyenCheckoutError('ERROR', ERRORS.WRONG_INSTANCE));
+        const obj = { orderId: token };
+        this.resolve(obj);
     }
 
     handleReject(errorMessage: string) {
@@ -224,10 +280,60 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
         return onShippingOptionsChange(data, actions, this);
     }
 
+    get brands(): PaymentMethodBrand[] {
+        if (!this.props.useV6) {
+            return [];
+        }
+
+        const brandIcon = this.core.modules.resources?.getImage()('paypal');
+
+        const brands = [];
+
+        if (this.paypalService?.paymentMethods?.isEligible('paylater')) {
+            brands.push({ icon: brandIcon, name: 'paylater' });
+        }
+
+        if (this.paypalService?.paymentMethods?.isEligible('credit')) {
+            brands.push({ icon: brandIcon, name: 'credit' });
+        }
+
+        return brands;
+    }
+
+    get additionalInfo(): string {
+        if (!this.props.useV6) {
+            return '';
+        }
+
+        if (this.paypalService?.paymentMethods?.isEligible('paylater') && this.paypalService?.paymentMethods?.isEligible('credit')) {
+            return 'Offers PayPal Credit and Pay Later';
+        } else if (this.paypalService?.paymentMethods?.isEligible('paylater')) {
+            return 'Offers Pay Later';
+        } else if (this.paypalService?.paymentMethods?.isEligible('credit')) {
+            return 'Offers PayPal Credit';
+        }
+
+        return '';
+    }
+
     protected override componentToRender(): h.JSX.Element | null {
         if (!this.props.showPayButton) return null;
 
         const { onShippingAddressChange, onShippingOptionsChange, ...rest } = this.props;
+
+        if (this.props.useV6) {
+            return (
+                <PayPalComponentV6
+                    onSubmit={this.handleSubmit}
+                    onAdditionalDetails={this.handleOnApproveV6}
+                    paypalService={this.paypalService}
+                    onCancel={() => this.handleError(new AdyenCheckoutError('CANCEL'))}
+                    onError={error => {
+                        this.handleError(new AdyenCheckoutError('ERROR', String(error), { cause: error }));
+                    }}
+                />
+            );
+        }
 
         return (
             <PaypalComponent

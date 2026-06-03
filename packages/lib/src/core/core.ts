@@ -129,7 +129,41 @@ class Core implements ICore {
                         countryCode: this.options.countryCode || countryCode
                     });
 
-                    this.createPaymentMethodsList(paymentMethods);
+                    let mockedPaymentMethods = paymentMethods;
+
+                    // mock vemno payment method
+                    const paypal = paymentMethods.paymentMethods.find(pm => pm.type === 'paypal');
+                    if (paypal) {
+                        mockedPaymentMethods = {
+                            ...mockedPaymentMethods,
+                            paymentMethods: [
+                                ...mockedPaymentMethods.paymentMethods,
+                                {
+                                    ...paypal,
+                                    name: 'Venmo',
+                                    type: 'venmo'
+                                }
+                            ].filter(
+                                pm =>
+                                    !pm.type.startsWith('wechatpay') &&
+                                    !pm.type.startsWith('giftcard') &&
+                                    !pm.type.startsWith('afterpay') &&
+                                    !pm.type.startsWith('alipay') &&
+                                    !pm.type.startsWith('paysafecard') &&
+                                    !pm.type.startsWith('doku') &&
+                                    !pm.type.startsWith('bankTransfer') &&
+                                    !pm.type.startsWith('union') &&
+                                    !pm.type.startsWith('ach') &&
+                                    !pm.type.startsWith('cash') &&
+                                    !pm.type.startsWith('payby') &&
+                                    !pm.type.startsWith('google') &&
+                                    !pm.type.startsWith('apple') &&
+                                    !pm.type.startsWith('affirm')
+                            )
+                        };
+                    }
+
+                    this.createPaymentMethodsList(mockedPaymentMethods);
 
                     return this;
                 })

@@ -11,7 +11,6 @@
     align-self: start;
 }
 
-
 .adyen-checkout-payment-methods-container {
     display: flex;
     flex-direction: column;
@@ -38,19 +37,23 @@
     }
 }
 
-
 .adyen-checkout__instant-payment-methods-list {
     $instant-pm-gap: variable-generator.token(spacer-070);
 
     list-style: none;
     padding: 0;
     margin: 0;
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
     gap: $instant-pm-gap;
 
-    li {
-        flex: 1 0 calc(50% - $instant-pm-gap / 2);
+    @include index.media-m-and-up {
+        grid-template-columns: repeat(2, 1fr);
+
+        > :last-child:nth-child(odd) {
+            grid-column: 1 / -1;
+            width: calc((100% - $instant-pm-gap) / 2);
+            justify-self: center;
+        }
     }
 }
 
@@ -85,7 +88,7 @@
     grid-template-rows: 1fr;
     visibility: visible;
 
-    .adyen-checkout__payment-method__details{
+    .adyen-checkout__payment-method__details {
         overflow: visible;
     }
 }

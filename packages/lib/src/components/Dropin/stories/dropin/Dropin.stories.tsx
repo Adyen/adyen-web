@@ -35,10 +35,17 @@ const meta: MetaConfiguration<DropinConfiguration> = {
             showRadioButton: false,
             instantPaymentTypes: ['googlepay', 'applepay'],
             showRemovePaymentMethodButton: false,
+            showStoredPaymentMethods: false,
             paymentMethodsConfiguration: {
                 googlepay: {
                     buttonType: 'plain',
                     challengeWindowSize: '05'
+                },
+                paypal: {
+                    useV6: true
+                },
+                venmo: {
+                    useV6: true
                 }
             }
         }
