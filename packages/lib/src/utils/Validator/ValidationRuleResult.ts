@@ -7,7 +7,7 @@ import Language from '../../language';
 export class ValidationRuleResult {
     private readonly shouldValidate: boolean;
     public isValid: boolean;
-    public errorMessage: string | ErrorMessageObject;
+    public errorMessage: string | ErrorMessageObject | undefined;
     public errorI18n: string;
 
     constructor(rule: ValidatorRule, value: string, mode: ValidatorMode, context: FieldContext, i18n: Language) {
@@ -17,7 +17,7 @@ export class ValidationRuleResult {
 
         if (typeof rule.errorMessage === 'string') {
             this.errorI18n = i18n.get(rule.errorMessage);
-        } else {
+        } else if (rule.errorMessage) {
             this.errorI18n = i18n.get(rule.errorMessage.translationKey, rule.errorMessage.translationObject);
         }
     }
