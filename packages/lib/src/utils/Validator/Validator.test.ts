@@ -1,10 +1,8 @@
 import Validator from './Validator';
 import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
-
-const mockRules = {};
-
 import enUS from '../../../../server/translations/en-US.json';
 
+const mockRules = {};
 const translatedErrorMsg = enUS['field.invalid'];
 
 describe('Validator', () => {

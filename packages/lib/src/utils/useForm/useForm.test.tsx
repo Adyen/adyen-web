@@ -7,7 +7,7 @@ import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 
 const core = setupCoreMock();
 
-const wrapper = ({ children }) => (
+const wrapper = ({ children }: { children: any }) => (
     <CoreProvider i18n={core.modules.i18n} loadingContext="test" resources={core.modules.resources}>
         {children}
     </CoreProvider>
