@@ -40,7 +40,7 @@ class Validator {
 
     private readonly i18n: Language;
 
-    constructor(rules, i18n: Language) {
+    constructor(rules: ValidatorRules, i18n: Language) {
         this.setRules(rules);
         this.i18n = i18n;
     }
