@@ -14,7 +14,12 @@ export class ValidationRuleResult {
         this.shouldValidate = rule.modes.includes(mode);
         this.isValid = rule.validate(value, context);
         this.errorMessage = rule.errorMessage;
-        this.errorI18n = i18n.get(rule.errorMessage as string);
+
+        if (typeof rule.errorMessage === 'string') {
+            this.errorI18n = i18n.get(rule.errorMessage);
+        } else {
+            this.errorI18n = i18n.get(rule.errorMessage.translationKey, rule.errorMessage.translationObject);
+        }
     }
 
     /**
