@@ -59,8 +59,8 @@ describe('Validator', () => {
             const result = validator.validate({ key: 'testField', value: 'invalid' });
             const error = result.getError();
 
-            expect(error.errorMessage).toBe('field.invalid');
-            expect(error.errorI18n).toBe(translatedErrorMsg);
+            expect(error?.errorMessage).toBe('field.invalid');
+            expect(error?.errorI18n).toBe(translatedErrorMsg);
         });
 
         test('should set errorI18n from ErrorMessageObject with translationKey and translationObject', () => {
@@ -83,8 +83,8 @@ describe('Validator', () => {
             const result = validator.validate({ key: 'testField', value: 'invalid' });
             const error = result.getError();
 
-            expect(error.errorMessage).toEqual(errorMessageObject);
-            expect(error.errorI18n).toBe(translatedErrorMsg);
+            expect(error?.errorMessage).toEqual(errorMessageObject);
+            expect(error?.errorI18n).toBe(translatedErrorMsg);
         });
 
         test('should leave errorI18n undefined when errorMessage is undefined', () => {
@@ -101,8 +101,8 @@ describe('Validator', () => {
             const result = validator.validate({ key: 'testField', value: 'invalid' });
             const error = result.getError();
 
-            expect(error.errorMessage).toBeUndefined();
-            expect(error.errorI18n).toBeUndefined();
+            expect(error?.errorMessage).toBeUndefined();
+            expect(error?.errorI18n).toBeUndefined();
         });
     });
 });
