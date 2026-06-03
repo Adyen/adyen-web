@@ -3,6 +3,10 @@ import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 
 const mockRules = {};
 
+import enUS from '../../../../server/translations/en-US.json';
+
+const translatedErrorMsg = enUS['field.invalid'];
+
 describe('Validator', () => {
     const core = setupCoreMock();
     const { i18n } = core.modules;
@@ -39,5 +43,68 @@ describe('Validator', () => {
         expect(validator.validate({ key: 'aNewField', value: '123' }).hasError()).toBe(false);
         expect(validator.validate({ key: 'aNewField', value: null }).hasError()).toBe(false);
         expect(validator.validate({ key: 'shopperEmail', value: 'test@test.com' }).hasError()).toBe(false);
+    });
+
+    describe('errorI18n', () => {
+        test('should set errorI18n from string errorMessage', () => {
+            const validator = new Validator(
+                {
+                    testField: {
+                        validate: () => false,
+                        errorMessage: 'field.invalid',
+                        modes: ['blur']
+                    }
+                },
+                i18n
+            );
+
+            const result = validator.validate({ key: 'testField', value: 'invalid' });
+            const error = result.getError();
+
+            expect(error.errorMessage).toBe('field.invalid');
+            expect(error.errorI18n).toBe(translatedErrorMsg);
+        });
+
+        test('should set errorI18n from ErrorMessageObject with translationKey and translationObject', () => {
+            const errorMessageObject = {
+                translationKey: 'field.invalid',
+                translationObject: { values: { fieldName: 'Test Field' } }
+            };
+
+            const validator = new Validator(
+                {
+                    testField: {
+                        validate: () => false,
+                        errorMessage: errorMessageObject,
+                        modes: ['blur']
+                    }
+                },
+                i18n
+            );
+
+            const result = validator.validate({ key: 'testField', value: 'invalid' });
+            const error = result.getError();
+
+            expect(error.errorMessage).toEqual(errorMessageObject);
+            expect(error.errorI18n).toBe(translatedErrorMsg);
+        });
+
+        test('should leave errorI18n undefined when errorMessage is undefined', () => {
+            const validator = new Validator(
+                {
+                    testField: {
+                        validate: () => false,
+                        modes: ['blur']
+                    }
+                },
+                i18n
+            );
+
+            const result = validator.validate({ key: 'testField', value: 'invalid' });
+            const error = result.getError();
+
+            expect(error.errorMessage).toBeUndefined();
+            expect(error.errorI18n).toBeUndefined();
+        });
     });
 });
