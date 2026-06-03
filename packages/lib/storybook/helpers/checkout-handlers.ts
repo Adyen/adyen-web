@@ -27,7 +27,7 @@ export function displayResultMessage(isAuthorized: boolean, resultCode: string):
 
 export function handleFinalState(result: any, component: UIElement): void {
     const isDropin = component?.props?.isDropin;
-    const isAuthorized = result.resultCode === 'Authorised' || result.resultCode === 'Received';
+    const isAuthorized = result?.resultCode === 'Authorised' || result?.resultCode === 'Received';
 
     if (isDropin) {
         if (isAuthorized) {
@@ -38,10 +38,13 @@ export function handleFinalState(result: any, component: UIElement): void {
         return;
     }
 
-    if (component?.unmount) {
+    if (result?.resultCode && component?.unmount) {
         component.unmount();
     }
-    displayResultMessage(isAuthorized, result.resultCode);
+
+    if (result?.resultCode) {
+        displayResultMessage(isAuthorized, result.resultCode);
+    }
 
     return result;
 }
