@@ -1,5 +1,27 @@
 # @adyen/adyen-web
 
+## 6.38.0
+
+### Minor Changes
+
+- Improved: Minor and Patch Updates plus TS changes required by the update to typescript-eslint ([#3995](https://github.com/Adyen/adyen-web/pull/3995))
+
+- Improved: ClickToPay and PayTo a11y - now move keyboard focus to the first invalid field on submit and improve error announcements ([#3991](https://github.com/Adyen/adyen-web/pull/3991))
+
+- Improved: border contrast for input fields ([#3940](https://github.com/Adyen/adyen-web/pull/3940))
+
+### Patch Changes
+
+- Fixed: Bumped SecuredFields version to one that recognises ionic:// domains ([#4009](https://github.com/Adyen/adyen-web/pull/4009))
+
+- Fixed: Brand icon lists in Card and Drop-in now use correct list semantics ([#4004](https://github.com/Adyen/adyen-web/pull/4004))
+
+- Fixed: Improved contrast ratio on ClickToPay "read more" text ([#4007](https://github.com/Adyen/adyen-web/pull/4007))
+
+- Fixed: visually hidden content leaking to AT ([#3998](https://github.com/Adyen/adyen-web/pull/3998))
+
+- Fixed: Await component now announces its status text to screen readers via the global SRPanel (WCAG 4.1.3) ([#4002](https://github.com/Adyen/adyen-web/pull/4002))
+
 ## 6.37.0
 
 ### Minor Changes
