@@ -3,14 +3,8 @@
 const { transformSync } = require('esbuild');
 
 module.exports = {
-    process(source, filename) {
-        const result = transformSync(source, {
-            loader: 'js',
-            format: 'cjs',
-            sourcemap: 'inline',
-            sourcefile: filename,
-            target: 'node18',
-        });
+    process(source) {
+        const result = transformSync(source, { format: 'cjs', loader: 'js' });
         return { code: result.code };
     },
 };
