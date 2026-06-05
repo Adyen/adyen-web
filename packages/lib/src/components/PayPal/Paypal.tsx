@@ -8,7 +8,7 @@ import { TxVariants } from '../tx-variants';
 import { formatPaypalOrderContactToAdyenFormat } from './utils/format-paypal-order-contact-to-adyen-format';
 
 import type { ICore } from '../../core/types';
-import type { PaymentAction } from '../../types/global-types';
+import type { PaymentAction, PaymentResponseData } from '../../types/global-types';
 import type { Intent, PayPalConfiguration } from './types';
 import type {
     PayPalOnApproveActions,
@@ -21,6 +21,8 @@ import type {
 } from './paypal-js-types';
 
 import { AnalyticsInfoEvent, InfoEventType } from '../../core/Analytics/events/AnalyticsInfoEvent';
+import { sanitizeResponse, verifyPaymentDidNotFail } from '../internal/UIElement/utils';
+import CancelError from '../../core/Errors/CancelError';
 import './Paypal.scss';
 
 class PaypalElement extends UIElement<PayPalConfiguration> {
@@ -184,11 +186,24 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
     }
 
     private handleSubmit(): Promise<string> {
-        super.submit();
-
         return new Promise((resolve, reject) => {
             this.resolve = resolve;
             this.reject = reject;
+
+            this.makePaymentsCall()
+                .then(sanitizeResponse)
+                .then(verifyPaymentDidNotFail)
+                .then(this.handleResponse)
+                .catch((e: PaymentResponseData | Error) => {
+                    if (e instanceof CancelError) {
+                        this.setElementStatus('ready');
+                        return;
+                    }
+                    this.handleFailedResult(e as PaymentResponseData);
+                    const errorDetail = e instanceof Error ? e.message : JSON.stringify(e);
+                    const errorMessage = e ? `: ${errorDetail}` : '';
+                    this.handleReject(`${ERRORS.PAYMENT_FAILED}${errorMessage}`);
+                });
         });
     }
 

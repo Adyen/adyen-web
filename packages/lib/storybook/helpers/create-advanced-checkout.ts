@@ -96,13 +96,14 @@ async function createAdvancedFlowCheckout(
                 const { resultCode, action, order, donationToken } = await makeDetailsCall(state.data);
 
                 if (!resultCode) actions.reject();
-
-                actions.resolve({
-                    resultCode,
-                    action,
-                    order,
-                    donationToken
-                });
+                else {
+                    actions.resolve({
+                        resultCode,
+                        action,
+                        order,
+                        donationToken
+                    });
+                }
             } catch (error) {
                 console.error('## onAdditionalDetails - critical error', error);
                 actions.reject();
