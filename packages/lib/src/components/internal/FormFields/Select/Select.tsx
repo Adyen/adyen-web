@@ -277,13 +277,15 @@ function Select({
      * Update status message for screen readers when no options are found
      */
     useEffect(() => {
+        // Debounce to avoid announcing on every keystroke
+        const SR_ANNOUNCEMENT_DELAY_MS = 500;
         const timer = setTimeout(() => {
             if (filteredItems.length === 0) {
                 setStatusMessage(i18n.get('select.noOptionsFound'));
             } else {
                 setStatusMessage(i18n.get('select.results', { values: { count: filteredItems.length } }));
             }
-        }, 500);
+        }, SR_ANNOUNCEMENT_DELAY_MS);
 
         return () => clearTimeout(timer);
     }, [showList, filteredItems.length, i18n]);
