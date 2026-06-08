@@ -3,7 +3,7 @@ import UIElement from '../internal/UIElement/UIElement';
 import GooglePayService from './GooglePayService';
 import GooglePayButton from './components/GooglePayButton';
 import defaultProps from './defaultProps';
-import { formatGooglePayContactToAdyenAddressFormat, getGooglePayLocale } from './utils';
+import { formatGooglePayContactToAdyenAddressFormat, getGooglePayLocale, resolveEnvironment } from './utils';
 import collectBrowserInfo from '../../utils/browserInfo';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { TxVariants } from '../tx-variants';
@@ -14,6 +14,10 @@ import type { GooglePayConfiguration } from './types';
 import type { ICore } from '../../core/types';
 import { AnalyticsInfoEvent, InfoEventType, UiTarget } from '../../core/Analytics/events/AnalyticsInfoEvent';
 import { mapGooglePayBrands } from './utils/map-adyen-brands-to-googlepay-brands';
+import { PaymentDataRequest } from './models/PaymentDataRequest';
+import { URL_GOOGLE_PAY_ACCELERATED_CHECKOUT } from './config';
+import Script from '../../utils/Script';
+import GooglePayAcceleratedService from './services/GooglePayAcceleratedService';
 
 const DEFAULT_ALLOWED_CARD_NETWORKS: google.payments.api.CardNetwork[] = ['AMEX', 'DISCOVER', 'JCB', 'MASTERCARD', 'VISA'];
 
@@ -23,6 +27,7 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
     public static readonly defaultProps = defaultProps;
 
     protected readonly googlePay;
+    protected readonly googleAcceleratedCheckout: GooglePayAcceleratedService;
 
     constructor(checkout: ICore, props?: GooglePayConfiguration) {
         super(checkout, props);
@@ -44,6 +49,24 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
                 'GooglePay - Missing merchantId. Please ensure that it is correctly configured in your customer area.'
             );
         }
+
+        const paymentDataRequest = new PaymentDataRequest(this.props);
+        console.log('[Adyen] GooglePay - paymentDataRequest', paymentDataRequest);
+
+        this.googleAcceleratedCheckout = new GooglePayAcceleratedService(
+            {
+                environment: resolveEnvironment(this.props.environment),
+                acceleratedCheckoutConfig: {
+                    type: 'INLINE',
+                    containerId: 'adyen-gpay-accelerated-checkout-container'
+                },
+                paymentDataCallbacks: {
+                    onPaymentAuthorized: this.onPaymentAuthorized
+                },
+                checkoutRequest: paymentDataRequest
+            },
+            new Script({ src: URL_GOOGLE_PAY_ACCELERATED_CHECKOUT, component: 'googlepay', analytics: this.analytics })
+        );
 
         this.googlePay = new GooglePayService(this.props.environment, this.analytics, {
             ...(isExpress && paymentDataCallbacks?.onPaymentDataChanged && { onPaymentDataChanged: paymentDataCallbacks.onPaymentDataChanged }),

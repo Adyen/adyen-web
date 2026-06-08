@@ -47,7 +47,7 @@ class Script implements IScript {
         this.cleanupListeners();
         const error = new AdyenCheckoutError(
             'SCRIPT_ERROR',
-            `Unable to load script ${this.src}.${errorEvent?.message && `Message: ${errorEvent.message}`}`,
+            `Unable to load script ${this.src}. ${errorEvent?.message && `Message: ${errorEvent.message}`}`,
             {
                 cause: errorEvent?.error || errorEvent
             }
@@ -82,6 +82,7 @@ class Script implements IScript {
 
             const loadScriptWithRetry = async (): Promise<void> => {
                 try {
+                    console.log(`[Adyen] Script - loading attempt for ${this.src}: ${attempts + 1}`);
                     attempts++;
                     await this.loadScript();
                     this.trackEvent(InfoEventType.sdkDownloadCompleted);
