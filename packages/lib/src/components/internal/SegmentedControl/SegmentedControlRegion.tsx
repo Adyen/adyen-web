@@ -1,15 +1,15 @@
-import { h } from 'preact';
+import { ComponentChildren, h } from 'preact';
 
 export interface SegmentedControlRegionProps {
     id: string;
     ariaLabelledBy: string;
     className?: string;
-    children: h.JSX.Element | h.JSX.Element[];
+    children: ComponentChildren;
 }
 
 export const SegmentedControlRegion = ({ id, ariaLabelledBy, className, children }: Readonly<SegmentedControlRegionProps>) => {
     return (
-        <div id={id} aria-labelledby={ariaLabelledBy} className={className} role="region">
+        <div id={id} aria-labelledby={ariaLabelledBy} className={className} role="tabpanel">
             {children}
         </div>
     );

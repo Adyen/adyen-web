@@ -1,7 +1,7 @@
 import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 import { ICore } from '../../types';
 import CustomCard from './CustomCard';
-import { CardBinLookupData } from '../internal/SecuredFields/lib/types';
+import type { CardBinLookupData } from '../internal/SecuredFields/lib/types';
 import { BrandObject } from '../Card/types';
 import { setupResourceMock } from '../../../config/testMocks/resourcesMock';
 
@@ -65,7 +65,7 @@ describe('CustomCard', () => {
                 isReset: false
             };
 
-            customCard.onBinLookup(binLookupData as CardBinLookupData);
+            customCard.onBinLookup(binLookupData);
 
             expect(onBinLookupMock).toHaveBeenCalledWith(
                 expect.objectContaining({
@@ -81,7 +81,7 @@ describe('CustomCard', () => {
                 isReset: false
             };
 
-            customCard.onBinLookup(binLookupData as CardBinLookupData);
+            customCard.onBinLookup(binLookupData);
 
             expect(onBinLookupMock).toHaveBeenCalledWith(
                 expect.objectContaining({
@@ -97,7 +97,7 @@ describe('CustomCard', () => {
                 isReset: false
             };
 
-            customCard.onBinLookup(binLookupData as CardBinLookupData);
+            customCard.onBinLookup(binLookupData);
 
             expect(onBinLookupMock).toHaveBeenCalledWith(
                 expect.objectContaining({
@@ -113,7 +113,7 @@ describe('CustomCard', () => {
                 isReset: false
             };
 
-            customCard.onBinLookup(binLookupData as CardBinLookupData);
+            customCard.onBinLookup(binLookupData);
 
             expect(onBinLookupMock).toHaveBeenCalledWith(
                 expect.objectContaining({
@@ -129,7 +129,7 @@ describe('CustomCard', () => {
                 isReset: false
             };
 
-            customCard.onBinLookup(binLookupData as CardBinLookupData);
+            customCard.onBinLookup(binLookupData);
 
             expect(onBinLookupMock).toHaveBeenCalledWith(
                 expect.objectContaining({
@@ -145,7 +145,7 @@ describe('CustomCard', () => {
                 isReset: true
             };
 
-            customCard.onBinLookup(binLookupData as CardBinLookupData);
+            customCard.onBinLookup(binLookupData);
 
             expect(onBinLookupMock).toHaveBeenCalledWith(
                 expect.not.objectContaining({

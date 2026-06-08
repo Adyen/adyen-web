@@ -38,7 +38,7 @@ export const OrderPaymentMethods = ({ order, orderStatus, onOrderCancel, brandLo
                                 }
                             >
                                 <PaymentMethodIcon
-                                    altDescription={orderPaymentMethod.name}
+                                    alt={orderPaymentMethod.name}
                                     type={orderPaymentMethod.type}
                                     src={brandLogoConfiguration[orderPaymentMethod.type] || getImage()(orderPaymentMethod.type)}
                                 />

@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { SegmentedControl } from '../../internal/SegmentedControl';
+import { SegmentedControl, SegmentedControlRegion } from '../../internal/SegmentedControl';
 import { useMemo, useState } from 'preact/hooks';
 import { SegmentedControlOptions } from '../../internal/SegmentedControl/SegmentedControl';
 import PayIDInput from './PayIDInput';
@@ -30,7 +30,9 @@ export default function PayToComponent(props: Readonly<PayToComponentProps>) {
 
     const [status, setStatus] = useState<UIElementStatus>('ready');
 
-    // Generate unique IDs for the input sections
+    // Generate unique IDs for the tab panels and input sections
+    const payidPanelId = useMemo(() => getUniqueId('payid-panel'), []);
+    const bsbPanelId = useMemo(() => getUniqueId('bsb-panel'), []);
     const payidInputId = useMemo(() => getUniqueId('payid-input'), []);
     const bsbInputId = useMemo(() => getUniqueId('bsb-input'), []);
 
@@ -40,16 +42,16 @@ export default function PayToComponent(props: Readonly<PayToComponentProps>) {
                 value: 'payid-option',
                 label: 'PayID',
                 id: 'payid-option',
-                controls: payidInputId
+                controls: payidPanelId
             },
             {
                 value: 'bsb-option',
                 label: i18n.get('payto.bsb.option.label'),
                 id: 'bsb-option',
-                controls: bsbInputId
+                controls: bsbPanelId
             }
         ],
-        [i18n, payidInputId, bsbInputId]
+        [i18n, payidPanelId, bsbPanelId]
     );
 
     const defaultOption = inputOptions[0].value;
@@ -69,26 +71,30 @@ export default function PayToComponent(props: Readonly<PayToComponentProps>) {
         >
             <SegmentedControl selectedValue={selectedInput} options={inputOptions} onChange={setSelectedInput} />
             {selectedInput === 'payid-option' && (
-                <PayIDInput
-                    id={payidInputId}
-                    status={status}
-                    setStatus={setStatus}
-                    setComponentRef={props.setComponentRef}
-                    onChange={onChange}
-                    defaultData={props.data}
-                    placeholders={props.placeholders}
-                />
+                <SegmentedControlRegion id={payidPanelId} ariaLabelledBy="payid-option">
+                    <PayIDInput
+                        id={payidInputId}
+                        status={status}
+                        setStatus={setStatus}
+                        setComponentRef={props.setComponentRef}
+                        onChange={onChange}
+                        defaultData={props.data}
+                        placeholders={props.placeholders}
+                    />
+                </SegmentedControlRegion>
             )}
             {selectedInput === 'bsb-option' && (
-                <BSBInput
-                    id={bsbInputId}
-                    status={status}
-                    setStatus={setStatus}
-                    setComponentRef={props.setComponentRef}
-                    onChange={onChange}
-                    defaultData={props.data}
-                    placeholders={props.placeholders}
-                />
+                <SegmentedControlRegion id={bsbPanelId} ariaLabelledBy="bsb-option">
+                    <BSBInput
+                        id={bsbInputId}
+                        status={status}
+                        setStatus={setStatus}
+                        setComponentRef={props.setComponentRef}
+                        onChange={onChange}
+                        defaultData={props.data}
+                        placeholders={props.placeholders}
+                    />
+                </SegmentedControlRegion>
             )}
 
             {props.showPayButton && props.payButton({ status, label: i18n.get('continue') })}

@@ -42,7 +42,9 @@ function SelectButton(props: Readonly<SelectButtonProps>) {
     // displayInputText only used for the text input for the filter
     // display the "typed" filter text when showing the dropdown,
     // hide it and show the "selected" value when collapsed
-    const displayInputText = showList ? inputText : displayText;
+    // When list is open, show user's typed input (or empty); otherwise show selected value
+    const textWhenListOpen = inputText ?? '';
+    const displayInputText = showList ? textWhenListOpen : displayText;
 
     const setFocus = (e: Event) => {
         e.preventDefault();
@@ -103,7 +105,9 @@ function SelectButton(props: Readonly<SelectButtonProps>) {
                         aria-expanded={showList}
                         aria-owns={props.selectListId}
                         autoComplete="off"
-                        className="adyen-checkout__filter-input"
+                        className={classnames('adyen-checkout__filter-input', {
+                            'adyen-checkout__filter-input--placeholder': !showList && isShowingPlaceholder
+                        })}
                         onInput={props.onInput}
                         ref={props.filterInputRef}
                         role="combobox"

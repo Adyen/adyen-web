@@ -30,7 +30,7 @@ const UPIIntentAppItem = ({ app, imgSrc, isSelected, onSelect }: Readonly<UPIInt
         >
             <div className="adyen-checkout-upi-app-item-header">
                 <ExpandButton classNameModifiers={['upi-app-item']} buttonId={buttonId} isSelected={isSelected} expandContentId={containerId}>
-                    <PaymentMethodIcon src={imgSrc} altDescription={app.name} type={app.id}></PaymentMethodIcon>
+                    <PaymentMethodIcon src={imgSrc} alt={app.name} type={app.id}></PaymentMethodIcon>
                     <label className="adyen-checkout-upi-app-item__label" htmlFor={buttonId}>
                         {app.name}
                     </label>
