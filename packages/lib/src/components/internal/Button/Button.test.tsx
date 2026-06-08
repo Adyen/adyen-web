@@ -104,4 +104,14 @@ describe('Button', () => {
         expect(statusRegion).toBeTruthy();
         expect(statusRegion.textContent).toBe('');
     });
+
+    test('Renders button with id', () => {
+        renderButton({ label: 'Pay', id: 'test-button-id' });
+        expect(screen.getByRole('button')).toHaveAttribute('id', 'test-button-id');
+    });
+
+    test('Renders button with aria-labelledby', () => {
+        renderButton({ label: 'Pay', ariaLabelledBy: 'label-id button-id' });
+        expect(screen.getByRole('button')).toHaveAttribute('aria-labelledby', 'label-id button-id');
+    });
 });

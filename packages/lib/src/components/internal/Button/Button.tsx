@@ -41,6 +41,7 @@ class Button extends Component<ButtonProps, ButtonState> {
 
     render() {
         const {
+            id,
             classNameModifiers = [],
             disabled,
             href,
@@ -49,6 +50,7 @@ class Button extends Component<ButtonProps, ButtonState> {
             inline,
             label,
             ariaLabel,
+            ariaLabelledBy,
             ariaDescribedBy,
             ariaExpanded,
             ariaControls,
@@ -132,11 +134,13 @@ class Button extends Component<ButtonProps, ButtonState> {
         return (
             <button
                 ref={buttonRef}
+                id={id}
                 className={buttonClasses}
                 type="button"
                 disabled={disabled}
                 onClick={this.onClick}
                 aria-label={ariaLabel}
+                aria-labelledby={ariaLabelledBy}
                 aria-describedby={ariaDescribedBy}
                 aria-expanded={ariaExpanded}
                 aria-controls={ariaControls}
