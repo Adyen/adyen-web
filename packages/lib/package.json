@@ -84,7 +84,6 @@
     "devDependencies": {
         "@adyen/bento-design-tokens": "1.10.0",
         "@eslint/js": "10.0.1",
-        "@paypal/paypal-js": "9.7.0",
         "@preact/preset-vite": "2.10.5",
         "@rollup/plugin-commonjs": "29.0.2",
         "@rollup/plugin-eslint": "9.2.0",
@@ -138,6 +137,7 @@
         "whatwg-fetch": "3.6.20"
     },
     "dependencies": {
+        "@paypal/paypal-js": "9.7.0",
         "@types/applepayjs": "14.0.9",
         "@types/googlepay": "0.7.10",
         "classnames": "2.5.1",
