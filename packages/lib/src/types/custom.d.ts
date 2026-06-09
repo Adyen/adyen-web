@@ -29,6 +29,8 @@ declare global {
     namespace google.payments.api {
         class AcceleratedCheckoutClient {
             constructor(options: AcceleratedCheckoutOptions);
+            load(): Promise<any>;
+            isAvailable(): Promise<any>;
         }
     }
     interface Window {

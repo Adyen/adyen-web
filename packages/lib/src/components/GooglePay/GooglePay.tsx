@@ -18,8 +18,16 @@ import { PaymentDataRequest } from './models/PaymentDataRequest';
 import { URL_GOOGLE_PAY_ACCELERATED_CHECKOUT } from './config';
 import Script from '../../utils/Script';
 import GooglePayAcceleratedService from './services/GooglePayAcceleratedService';
+import GoogleAcceleratedCheckout from './components/GoogleAcceleratedCheckout';
 
 const DEFAULT_ALLOWED_CARD_NETWORKS: google.payments.api.CardNetwork[] = ['AMEX', 'DISCOVER', 'JCB', 'MASTERCARD', 'VISA'];
+
+enum GooglePayUi {
+    BUTTON = 'button',
+    ACCELERATED = 'accelerated'
+}
+
+export const GOOGLE_PAY_ACCELERATED_DIV_ID = 'adyen-gpay-accelerated-checkout-container';
 
 class GooglePay extends UIElement<GooglePayConfiguration> {
     public static readonly type = TxVariants.googlepay;
@@ -28,6 +36,8 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
 
     protected readonly googlePay;
     protected readonly googleAcceleratedCheckout: GooglePayAcceleratedService;
+
+    private googleUi: GooglePayUi = GooglePayUi.ACCELERATED;
 
     constructor(checkout: ICore, props?: GooglePayConfiguration) {
         super(checkout, props);
@@ -130,6 +140,33 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
             ...(billingAddress && { billingAddress }),
             ...(deliveryAddress && { deliveryAddress })
         };
+    }
+
+    /**
+     * Determine a shopper's ability to return a form of payment from the Google Pay API.
+     */
+    public override async isAvailable(): Promise<void> {
+        try {
+            await this.googleAcceleratedCheckout.isAvailable();
+        } catch (error) {
+            console.warn('[Adyen] GooglePay isAvailable() error', error);
+        }
+
+        return this.isReadyToPay()
+            .then(response => {
+                if (!response.result) {
+                    throw new AdyenCheckoutError('ERROR', 'GooglePay is not available');
+                }
+
+                if (response.paymentMethodPresent === false) {
+                    throw new AdyenCheckoutError('ERROR', 'GooglePay - No paymentMethodPresent');
+                }
+
+                return Promise.resolve();
+            })
+            .catch(error => {
+                return Promise.reject(error);
+            });
     }
 
     /**
@@ -299,27 +336,6 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
     /**
      * Determine a shopper's ability to return a form of payment from the Google Pay API.
      */
-    public override async isAvailable(): Promise<void> {
-        return this.isReadyToPay()
-            .then(response => {
-                if (!response.result) {
-                    throw new AdyenCheckoutError('ERROR', 'GooglePay is not available');
-                }
-
-                if (response.paymentMethodPresent === false) {
-                    throw new AdyenCheckoutError('ERROR', 'GooglePay - No paymentMethodPresent');
-                }
-
-                return Promise.resolve();
-            })
-            .catch(error => {
-                return Promise.reject(error);
-            });
-    }
-
-    /**
-     * Determine a shopper's ability to return a form of payment from the Google Pay API.
-     */
     public isReadyToPay = (): Promise<google.payments.api.IsReadyToPayResponse> => {
         return this.googlePay.isReadyToPay(this.props);
     };
@@ -340,6 +356,10 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
     }
 
     protected override componentToRender(): h.JSX.Element {
+        if (this.googleUi === GooglePayUi.ACCELERATED) {
+            return <GoogleAcceleratedCheckout service={this.googleAcceleratedCheckout} />;
+        }
+
         if (this.props.showPayButton) {
             return (
                 <GooglePayButton

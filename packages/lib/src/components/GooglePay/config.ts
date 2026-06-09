@@ -5,6 +5,6 @@ export default {
     URL: 'https://pay.google.com/gp/p/js/pay.js'
 };
 
-const URL_GOOGLE_PAY_ACCELERATED_CHECKOUT = 'https://pay.google.com/gp/p/js/accelerated.js';
+const URL_GOOGLE_PAY_ACCELERATED_CHECKOUT = 'https://pay.google.com/gp/p/js/acceleratedcheckout.js';
 
 export { URL_GOOGLE_PAY_ACCELERATED_CHECKOUT };
