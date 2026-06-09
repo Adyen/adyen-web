@@ -125,9 +125,9 @@ export default function InputBase({ setRef, ...props }: Readonly<InputBaseProps>
         ...restProps
     } = props;
 
-    const internalDescribedBy = `${uniqueId}${isInvalid ? ARIA_ERROR_SUFFIX : ARIA_CONTEXT_SUFFIX}`;
+    const internalDescribedBy = uniqueId ? `${uniqueId}${isInvalid ? ARIA_ERROR_SUFFIX : ARIA_CONTEXT_SUFFIX}` : null;
     const extraDescribedBy = typeof ariaDescribedByProp === 'string' && ariaDescribedByProp ? ariaDescribedByProp : null;
-    const mergedAriaDescribedBy = extraDescribedBy ? `${extraDescribedBy} ${internalDescribedBy}` : internalDescribedBy;
+    const mergedAriaDescribedBy = [extraDescribedBy, internalDescribedBy].filter(Boolean).join(' ') || null;
 
     return (
         <input
