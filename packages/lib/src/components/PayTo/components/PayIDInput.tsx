@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import Fieldset from '../../internal/FormFields/Fieldset';
 import IdentifierSelector, { PayToIdentifierEnum } from './IdentifierSelector';
-import { useEffect, useRef } from 'preact/hooks';
+import { useEffect, useMemo, useRef } from 'preact/hooks';
 import { useFormWithA11y } from '../../../utils/useForm';
 import PayToPhone from './PayToPhone';
 import InputEmail from '../../internal/FormFields/InputEmail';
@@ -10,6 +10,7 @@ import Field from '../../internal/FormFields/Field';
 import { useCoreContext } from '../../../core/Context/CoreProvider';
 import InputText from '../../internal/FormFields/InputText';
 import { payIdValidationRules } from './validate';
+import { getUniqueId } from '../../../utils/idGenerator';
 import './PayIDInput.scss';
 import { phoneFormatters } from '../../internal/PhoneInput/validate';
 import { ComponentMethodsRef, UIElementStatus } from '../../internal/UIElement/types';
@@ -50,6 +51,8 @@ const IDENTIFIER_SCHEMA = {
 export default function PayIDInput({ setComponentRef, defaultData, placeholders, onChange, setStatus, id }: Readonly<PayIDInputProps>) {
     const { i18n } = useCoreContext();
 
+    const instructionId = useMemo(() => getUniqueId('payid-instruction'), []);
+
     const form = useFormWithA11y<PayIdFormData>({
         schema: BASE_SCHEMA,
         defaultData: { selectedIdentifier: PayToIdentifierEnum.phone, ...defaultData },
@@ -80,11 +83,18 @@ export default function PayIDInput({ setComponentRef, defaultData, placeholders,
     }, [setComponentRef]);
 
     return (
-        <Fieldset id={id} classNameModifiers={['payto__payid_input']} label={'PayID'} description={'payto.payid.description'}>
+        <Fieldset
+            id={id}
+            classNameModifiers={['payto__payid_input']}
+            label={'PayID'}
+            description={'payto.payid.description'}
+            descriptionId={instructionId}
+        >
             <IdentifierSelector
                 classNameModifiers={['col-40']}
                 onSelectedIdentifier={handleChangeFor('selectedIdentifier')}
                 selectedIdentifier={data.selectedIdentifier}
+                describedBy={instructionId}
             />
             {data.selectedIdentifier === PayToIdentifierEnum.phone && <PayToPhone form={form} />}
 
