@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { render, screen, within } from '@testing-library/preact';
+import { render, screen, within, waitFor } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import Select from './Select';
 import { CoreProvider } from '../../../../core/Context/CoreProvider';
@@ -205,7 +205,7 @@ describe('Select', () => {
         // Check that the live region is present and contains the no options message
         const liveRegion = screen.getByRole('status');
         expect(liveRegion).toBeInTheDocument();
-        expect(liveRegion).toHaveTextContent('No options found');
+        await waitFor(() => expect(liveRegion).toHaveTextContent('No options found'));
         expect(liveRegion).toHaveAttribute('aria-live', 'polite');
     });
 

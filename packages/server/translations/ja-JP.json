@@ -448,5 +448,6 @@
     "upi.intent.apps.title": "オプション",
     "upi.intent.apps.dropdown.label": "UPIアプリ",
     "upi.intent.apps.dropdown.placeholder": "希望するアプリを選択",
-    "order.paymentMethod.description": "末尾が%{lastFour}の%{name}"
+    "order.paymentMethod.description": "末尾が%{lastFour}の%{name}",
+    "select.results": "%{count}件の結果が利用可能です"
 }

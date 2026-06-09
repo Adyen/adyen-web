@@ -448,5 +448,6 @@
     "upi.intent.apps.title": "Opcije",
     "upi.intent.apps.dropdown.label": "UPI aplikacije",
     "upi.intent.apps.dropdown.placeholder": "Odaberite željenu aplikaciju",
-    "order.paymentMethod.description": "%{name} završava s %{lastFour}"
+    "order.paymentMethod.description": "%{name} završava s %{lastFour}",
+    "select.results": "Dostupno rezultata: %{count}"
 }

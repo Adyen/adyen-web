@@ -448,5 +448,6 @@
     "upi.intent.apps.title": "Alternativ",
     "upi.intent.apps.dropdown.label": "UPI-appar",
     "upi.intent.apps.dropdown.placeholder": "Välj önskad app",
-    "order.paymentMethod.description": "%{name} som slutar på %{lastFour}"
+    "order.paymentMethod.description": "%{name} som slutar på %{lastFour}",
+    "select.results": "%{count} resultat tillgängliga"
 }
