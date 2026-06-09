@@ -30,17 +30,32 @@ class GooglePayAcceleratedService {
     /**
      * Initialize a Google Pay Accelerated Checkout client
      *
-     * @returns Google Pay Accelerated Checkout client
+     * @returns Google Pay Accelerated Checkout client wrapped in a Promise
      */
-    async getGoogleAccelerateCheckoutClient(
+    private async getGoogleAccelerateCheckoutClient(
         acceleratedCheckoutOptions: AcceleratedCheckoutOptions,
         script: Script
     ): Promise<google.payments.api.AcceleratedCheckoutClient> {
-        if (!window.google?.payments?.api?.AcceleratedCheckoutClient) {
+        if (!globalThis.google?.payments?.api?.AcceleratedCheckoutClient) {
             await script.load();
         }
 
         return new google.payments.api.AcceleratedCheckoutClient(acceleratedCheckoutOptions);
+    }
+
+    /**
+     * Determines whether user is eligible for accelerated checkout. Returns an error if the user is ineligible
+     */
+    public async isAvailable() {
+        return this.paymentsClientPromise.then(client => client.isAvailable());
+    }
+
+    /**
+     * Initiates the accelerated checkout session in the target iframe. Returns an unavailable status
+     * if the user is ineligible for accelerated checkout.
+     */
+    public async load() {
+        return this.paymentsClientPromise.then(client => client.load());
     }
 }
 
