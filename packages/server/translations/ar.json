@@ -447,5 +447,6 @@
     "issuerList.separatorText": "أو يُرجى الاختيار من القائمة",
     "upi.intent.apps.title": "الخيارات",
     "upi.intent.apps.dropdown.label": "تطبيقات UPI",
-    "upi.intent.apps.dropdown.placeholder": "يُرجى اختيار التطبيق المفضل."
+    "upi.intent.apps.dropdown.placeholder": "يُرجى اختيار التطبيق المفضل.",
+    "order.paymentMethod.description": "%{name} المنتهي بـ %{lastFour}"
 }

@@ -447,5 +447,6 @@
     "issuerList.separatorText": "of kies uit de lijst",
     "upi.intent.apps.title": "Opties",
     "upi.intent.apps.dropdown.label": "UPI-apps",
-    "upi.intent.apps.dropdown.placeholder": "Kies de gewenste app"
+    "upi.intent.apps.dropdown.placeholder": "Kies de gewenste app",
+    "order.paymentMethod.description": "%{name} eindigend op %{lastFour}"
 }

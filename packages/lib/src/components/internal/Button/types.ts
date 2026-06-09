@@ -12,7 +12,9 @@ export interface ButtonProps {
     disabled?: boolean;
     label?: string | h.JSX.Element;
     onClickCompletedLabel?: string | h.JSX.Element;
+    id?: string;
     ariaLabel?: string;
+    ariaLabelledBy?: string;
     ariaDescribedBy?: string;
     ariaExpanded?: boolean;
     ariaControls?: string;

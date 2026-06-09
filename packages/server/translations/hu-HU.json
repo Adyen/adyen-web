@@ -447,5 +447,6 @@
     "issuerList.separatorText": "vagy válasszon a listából",
     "upi.intent.apps.title": "Lehetőségek",
     "upi.intent.apps.dropdown.label": "UPI-alkalmazások",
-    "upi.intent.apps.dropdown.placeholder": "Válassza ki a kívánt alkalmazást"
+    "upi.intent.apps.dropdown.placeholder": "Válassza ki a kívánt alkalmazást",
+    "order.paymentMethod.description": "%{name} (kártyaszám vége: %{lastFour})"
 }

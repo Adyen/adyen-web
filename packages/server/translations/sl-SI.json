@@ -447,5 +447,6 @@
     "issuerList.separatorText": "ali izberite s seznama",
     "upi.intent.apps.title": "Možnosti",
     "upi.intent.apps.dropdown.label": "Aplikacije UPI",
-    "upi.intent.apps.dropdown.placeholder": "Izberite želeno aplikacijo"
+    "upi.intent.apps.dropdown.placeholder": "Izberite želeno aplikacijo",
+    "order.paymentMethod.description": "%{name}, ki se konča z %{lastFour}"
 }

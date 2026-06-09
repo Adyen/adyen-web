@@ -447,5 +447,6 @@
     "issuerList.separatorText": "ή επιλέξτε από τη λίστα",
     "upi.intent.apps.title": "Επιλογές",
     "upi.intent.apps.dropdown.label": "Εφαρμογές UPI",
-    "upi.intent.apps.dropdown.placeholder": "Επιλέξτε την προτιμώμενη εφαρμογή"
+    "upi.intent.apps.dropdown.placeholder": "Επιλέξτε την προτιμώμενη εφαρμογή",
+    "order.paymentMethod.description": "%{name} που τελειώνει σε %{lastFour}"
 }

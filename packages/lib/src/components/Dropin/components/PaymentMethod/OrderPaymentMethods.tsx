@@ -1,9 +1,11 @@
 import { h } from 'preact';
 import PaymentMethodIcon from './PaymentMethodIcon';
+import Button from '../../../internal/Button';
 import { useCoreContext } from '../../../../core/Context/CoreProvider';
 import useImage from '../../../../core/Context/useImage';
 import './OrderPaymentMethods.scss';
 import { Order, OrderStatus } from '../../../../types';
+import { stopPropagationForActionKeys } from '../../../internal/Button/stopPropagationForActionKeys';
 
 type OrderPaymentMethodsProps = {
     order: Order;
@@ -22,7 +24,21 @@ export const OrderPaymentMethods = ({ order, orderStatus, onOrderCancel, brandLo
                 {orderStatus?.paymentMethods?.map((orderPaymentMethod, index) => (
                     <li key={`${orderPaymentMethod.type}-${index}`} className="adyen-checkout__order-payment-method">
                         <div className="adyen-checkout__order-payment-method__header">
-                            <div className="adyen-checkout__payment-method__header__title">
+                            <div
+                                className="adyen-checkout__payment-method__header__title"
+                                role="group"
+                                id={`order-payment-method-${orderPaymentMethod.type}-${index}`}
+                                aria-label={
+                                    orderPaymentMethod.lastFour
+                                        ? i18n.get('order.paymentMethod.description', {
+                                              values: {
+                                                  name: orderPaymentMethod.name ?? orderPaymentMethod.type,
+                                                  lastFour: orderPaymentMethod.lastFour.toString().split('').join(' ')
+                                              }
+                                          })
+                                        : undefined
+                                }
+                            >
                                 <PaymentMethodIcon
                                     alt={orderPaymentMethod.name}
                                     type={orderPaymentMethod.type}
@@ -32,15 +48,22 @@ export const OrderPaymentMethods = ({ order, orderStatus, onOrderCancel, brandLo
                             </div>
 
                             {onOrderCancel && (
-                                <button
-                                    type="button"
-                                    className="adyen-checkout__button adyen-checkout__button--inline adyen-checkout__button--link"
+                                <Button
+                                    inline
+                                    variant="link"
+                                    id={`order-payment-method-remove-${orderPaymentMethod.type}-${index}`}
+                                    ariaLabelledBy={
+                                        orderPaymentMethod.lastFour
+                                            ? `order-payment-method-${orderPaymentMethod.type}-${index} order-payment-method-remove-${orderPaymentMethod.type}-${index}`
+                                            : undefined
+                                    }
+                                    label={i18n.get('storedPaymentMethod.disable.button')}
+                                    onKeyPress={stopPropagationForActionKeys}
+                                    onKeyDown={stopPropagationForActionKeys}
                                     onClick={() => {
                                         onOrderCancel({ order });
                                     }}
-                                >
-                                    {i18n.get('storedPaymentMethod.disable.button')}
-                                </button>
+                                />
                             )}
                         </div>
                         <div className="adyen-checkout__order-payment-method__details">

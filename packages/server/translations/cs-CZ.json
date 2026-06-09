@@ -447,5 +447,6 @@
     "issuerList.separatorText": "nebo vyberte ze seznamu",
     "upi.intent.apps.title": "Možnosti",
     "upi.intent.apps.dropdown.label": "Aplikace UPI",
-    "upi.intent.apps.dropdown.placeholder": "Vyberte preferovanou aplikaci"
+    "upi.intent.apps.dropdown.placeholder": "Vyberte preferovanou aplikaci",
+    "order.paymentMethod.description": "%{name} končící na %{lastFour}"
 }
