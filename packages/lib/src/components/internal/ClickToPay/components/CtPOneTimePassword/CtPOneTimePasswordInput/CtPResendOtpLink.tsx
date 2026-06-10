@@ -3,12 +3,14 @@ import { useCallback, useEffect, useState } from 'preact/hooks';
 import useClickToPayContext from '../../../context/useClickToPayContext';
 import classnames from 'classnames';
 import { useCoreContext } from '../../../../../../core/Context/CoreProvider';
+import { useA11yReporter } from '../../../../../../core/Errors/useA11yReporter';
 import Icon from '../../../../Icon';
 import { isSrciError } from '../../../services/utils';
 import { PREFIX } from '../../../../Icon/constants';
 import Button from '../../../../Button';
 
 const CONFIRMATION_SHOWING_TIME = 2000;
+const RESEND_OTP_COUNTDOWN_SECONDS = 60;
 
 interface CtPResendOtpLinkProps {
     onError(errorCode: string): void;
@@ -21,6 +23,13 @@ const CtPResendOtpLink = ({ onError, onResendCode, disabled }: Readonly<CtPResen
     const [showConfirmation, setShowConfirmation] = useState<boolean>(false);
     const { i18n } = useCoreContext();
     const { startIdentityValidation } = useClickToPayContext();
+    const announcementPoints = [RESEND_OTP_COUNTDOWN_SECONDS, 0];
+    const resendStatusMessage = announcementPoints.includes(counter)
+        ? counter > 0
+            ? `${i18n.get('ctp.otp.resendCode')} - ${counter}s`
+            : i18n.get('ctp.otp.resendCode')
+        : null;
+    useA11yReporter(resendStatusMessage);
 
     useEffect(() => {
         let timeout = null;
@@ -36,7 +45,7 @@ const CtPResendOtpLink = ({ onError, onResendCode, disabled }: Readonly<CtPResen
         if (showConfirmation) {
             timeout = setTimeout(() => {
                 setShowConfirmation(false);
-                setCounter(60);
+                setCounter(RESEND_OTP_COUNTDOWN_SECONDS);
             }, CONFIRMATION_SHOWING_TIME);
         }
         return () => clearTimeout(timeout);
