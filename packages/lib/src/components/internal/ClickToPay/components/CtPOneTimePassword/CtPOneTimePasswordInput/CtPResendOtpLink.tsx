@@ -23,18 +23,18 @@ const CtPResendOtpLink = ({ onError, onResendCode, disabled }: Readonly<CtPResen
     const [showConfirmation, setShowConfirmation] = useState<boolean>(false);
     const { i18n } = useCoreContext();
     const { startIdentityValidation } = useClickToPayContext();
-    const announcementPoints = [RESEND_OTP_COUNTDOWN_SECONDS, 0];
-    const resendStatusMessage = announcementPoints.includes(counter)
-        ? counter > 0
-            ? `${i18n.get('ctp.otp.resendCode')} - ${counter}s`
-            : i18n.get('ctp.otp.resendCode')
-        : null;
+    const [resendStatusMessage, setResendStatusMessage] = useState<string>(null);
     useA11yReporter(resendStatusMessage);
 
     useEffect(() => {
         let timeout = null;
         if (counter > 0) {
             timeout = setTimeout(() => setCounter(counter - 1), 1000);
+        }
+        if (counter === RESEND_OTP_COUNTDOWN_SECONDS) {
+            setResendStatusMessage(`${i18n.get('ctp.otp.resendCode')} - ${counter}s`);
+        } else if (counter === 0) {
+            setResendStatusMessage(i18n.get('ctp.otp.resendCode'));
         }
         return () => clearTimeout(timeout);
     }, [counter]);
