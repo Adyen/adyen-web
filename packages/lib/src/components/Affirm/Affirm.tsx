@@ -8,7 +8,8 @@ export default class Affirm extends OpenInvoiceContainer {
 
     formatProps(props: AffirmConfiguration) {
         const allowedCountries = props.allowedCountries?.filter(country => ALLOWED_COUNTRIES.includes(country)) || DEFAULT_COUNTRIES;
-        const countryCode = allowedCountries.includes(props.countryCode) ? props.countryCode : allowedCountries[0];
+        const countryCode = allowedCountries.some(country => country === props.countryCode) ? props.countryCode : allowedCountries[0];
+
         return {
             ...super.formatProps({ ...props, countryCode }),
             allowedCountries,

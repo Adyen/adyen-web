@@ -3,15 +3,15 @@ import { MetaConfiguration, PaymentMethodStoryProps, StoryConfiguration } from '
 import { ComponentContainer } from '../../../storybook/components/ComponentContainer';
 import { Checkout } from '../../../storybook/components/Checkout';
 import Affirm from './Affirm';
-import { OpenInvoiceConfiguration } from '../types';
+import type { AffirmConfiguration } from './types';
 
-type AffirmStory = StoryConfiguration<OpenInvoiceConfiguration>;
+type AffirmStory = StoryConfiguration<AffirmConfiguration>;
 
-const meta: MetaConfiguration<OpenInvoiceConfiguration> = {
+const meta: MetaConfiguration<AffirmConfiguration> = {
     title: 'Components/Affirm'
 };
 
-const render = ({ componentConfiguration, ...checkoutConfig }: PaymentMethodStoryProps<OpenInvoiceConfiguration>) => (
+const render = ({ componentConfiguration, ...checkoutConfig }: PaymentMethodStoryProps<AffirmConfiguration>) => (
     <Checkout checkoutConfig={checkoutConfig}>{checkout => <ComponentContainer element={new Affirm(checkout, componentConfiguration)} />}</Checkout>
 );
 
