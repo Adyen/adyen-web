@@ -39,4 +39,9 @@ describe('Affirm', () => {
         const affirm = new Affirm(core, { allowedCountries: ['US', 'FR'] });
         expect(affirm.props.allowedCountries).toEqual(['US']);
     });
+
+    test('falls back to DEFAULT_COUNTRIES when all allowedCountries are unsupported', () => {
+        const affirm = new Affirm(core, { allowedCountries: ['FR'] });
+        expect(affirm.props.allowedCountries).toEqual(['CA', 'US']);
+    });
 });
