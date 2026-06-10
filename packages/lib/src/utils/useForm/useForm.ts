@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useReducer } from 'preact/hooks';
 import Validator from '../Validator';
 import { getReducer, init } from './reducer';
 import { Form, FormState, FormProps, Formatter } from './types';
+import { useCoreContext } from '../../core/Context/CoreProvider';
 
 function isFormatterObject(formatter: Formatter | Function): formatter is Formatter {
     return formatter && 'formatterFn' in formatter;
@@ -10,7 +11,9 @@ function isFormatterObject(formatter: Formatter | Function): formatter is Format
 function useForm<FormSchema>(props: FormProps): Form<FormSchema> {
     const { rules = {}, formatters = {}, defaultData = {}, fieldProblems = {}, schema = [] } = props;
 
-    const validator = useMemo(() => new Validator(rules), [rules]);
+    const { i18n } = useCoreContext();
+
+    const validator = useMemo(() => new Validator(rules, i18n), [rules]);
 
     /** Formats and validates a field */
     const processField = ({ key, value, mode }, fieldContext) => {

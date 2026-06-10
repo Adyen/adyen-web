@@ -1,7 +1,18 @@
+import { h } from 'preact';
 import { renderHook, act } from '@testing-library/preact-hooks';
 import useFormWithA11y from './useFormWithA11y';
 import { setFocusOnField } from '../setFocus';
 import { ValidatorMode } from '../Validator/types';
+import { CoreProvider } from '../../core/Context/CoreProvider';
+import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
+
+const core = setupCoreMock();
+
+const wrapper = ({ children }: { children: any }) => (
+    <CoreProvider i18n={core.modules.i18n} loadingContext="test" resources={core.modules.resources}>
+        {children}
+    </CoreProvider>
+);
 
 jest.mock('../setFocus', () => ({
     setFocusOnField: jest.fn()
@@ -41,7 +52,7 @@ describe('useFormWithA11y', () => {
 
     it('does NOT focus any field when triggerValidation is NOT called (blur-time field change)', () => {
         const holder = document.createElement('div');
-        const { result } = renderHook(() => useFormWithA11y<FormSchema>({ schema, rules, formHolder: holder }));
+        const { result } = renderHook(() => useFormWithA11y<FormSchema>({ schema, rules, formHolder: holder }), { wrapper });
 
         void act(() => {
             getHookResult(result).handleChangeFor('email', 'blur')({ target: { value: '' } });
@@ -52,7 +63,7 @@ describe('useFormWithA11y', () => {
 
     it('focuses the first error field after triggerValidation is called', () => {
         const holder = document.createElement('div');
-        const { result } = renderHook(() => useFormWithA11y<FormSchema>({ schema, rules, formHolder: holder }));
+        const { result } = renderHook(() => useFormWithA11y<FormSchema>({ schema, rules, formHolder: holder }), { wrapper });
 
         void act(() => {
             getHookResult(result).triggerValidation();
@@ -64,8 +75,9 @@ describe('useFormWithA11y', () => {
 
     it('focuses the correct first error field when only later schema fields are invalid', () => {
         const holder = document.createElement('div');
-        const { result } = renderHook(() =>
-            useFormWithA11y<FormSchema>({ schema, rules, formHolder: holder, defaultData: { email: 'valid@email.com', name: '' } })
+        const { result } = renderHook(
+            () => useFormWithA11y<FormSchema>({ schema, rules, formHolder: holder, defaultData: { email: 'valid@email.com', name: '' } }),
+            { wrapper }
         );
 
         void act(() => {
@@ -77,13 +89,15 @@ describe('useFormWithA11y', () => {
 
     it('does NOT focus any field after triggerValidation when the form is fully valid', () => {
         const holder = document.createElement('div');
-        const { result } = renderHook(() =>
-            useFormWithA11y<FormSchema>({
-                schema,
-                rules,
-                formHolder: holder,
-                defaultData: { email: 'valid@email.com', name: 'John' }
-            })
+        const { result } = renderHook(
+            () =>
+                useFormWithA11y<FormSchema>({
+                    schema,
+                    rules,
+                    formHolder: holder,
+                    defaultData: { email: 'valid@email.com', name: 'John' }
+                }),
+            { wrapper }
         );
 
         void act(() => {
@@ -95,7 +109,7 @@ describe('useFormWithA11y', () => {
 
     it('uses the current schema at the time triggerValidation is called (no stale closure)', () => {
         const holder = document.createElement('div');
-        const { result } = renderHook(() => useFormWithA11y<FormSchema>({ schema: ['email'], rules, formHolder: holder }));
+        const { result } = renderHook(() => useFormWithA11y<FormSchema>({ schema: ['email'], rules, formHolder: holder }), { wrapper });
 
         void act(() => {
             getHookResult(result).setSchema(['name']);
@@ -111,7 +125,7 @@ describe('useFormWithA11y', () => {
 
     it('returns all Form interface methods from the underlying useForm', () => {
         const holder = document.createElement('div');
-        const { result } = renderHook(() => useFormWithA11y<FormSchema>({ schema, rules, formHolder: holder }));
+        const { result } = renderHook(() => useFormWithA11y<FormSchema>({ schema, rules, formHolder: holder }), { wrapper });
         const form = getHookResult(result);
 
         expect(typeof form.handleChangeFor).toBe('function');

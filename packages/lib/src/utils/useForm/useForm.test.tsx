@@ -1,6 +1,17 @@
+import { h } from 'preact';
 import useForm from './useForm';
 import { renderHook, act } from '@testing-library/preact-hooks';
 import { Form } from './types';
+import { CoreProvider } from '../../core/Context/CoreProvider';
+import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
+
+const core = setupCoreMock();
+
+const wrapper = ({ children }: { children: any }) => (
+    <CoreProvider i18n={core.modules.i18n} loadingContext="test" resources={core.modules.resources}>
+        {children}
+    </CoreProvider>
+);
 
 describe('useForm', () => {
     const defaultSchema = ['firstName', 'lastName'];
@@ -14,7 +25,7 @@ describe('useForm', () => {
         let useFormHook;
 
         it('should set a default schema', () => {
-            const { result } = renderHook(() => useForm({ schema: defaultSchema }));
+            const { result } = renderHook(() => useForm({ schema: defaultSchema }), { wrapper });
             useFormHook = result;
 
             expect(useFormHook.current.schema).toEqual(defaultSchema);
@@ -27,7 +38,7 @@ describe('useForm', () => {
         });
 
         it('should update the schema', () => {
-            const { result } = renderHook(() => useForm({ schema: defaultSchema }));
+            const { result } = renderHook(() => useForm({ schema: defaultSchema }), { wrapper });
             useFormHook = result;
 
             void act(() => {
@@ -43,14 +54,14 @@ describe('useForm', () => {
 
     describe('defaultData', () => {
         it('should set defaultData', () => {
-            const { result } = renderHook<unknown, Form<defaultSchemaType>>(() => useForm({ schema: defaultSchema, defaultData }));
+            const { result } = renderHook<unknown, Form<defaultSchemaType>>(() => useForm({ schema: defaultSchema, defaultData }), { wrapper });
 
             expect(result.current.data.firstName).toEqual(defaultData.firstName);
             expect(result.current.data.lastName).toEqual(null);
         });
 
         it('should set default data after changing the schema', () => {
-            const { result } = renderHook(() => useForm({ schema: defaultSchema, defaultData }));
+            const { result } = renderHook(() => useForm({ schema: defaultSchema, defaultData }), { wrapper });
 
             void act(() => {
                 result.current.setSchema(['email']);
@@ -74,7 +85,7 @@ describe('useForm', () => {
         const firstNameValue = 'John';
 
         it('should handle changes for a field', () => {
-            const { result } = renderHook<unknown, Form<defaultSchemaType>>(() => useForm({ schema: defaultSchema }));
+            const { result } = renderHook<unknown, Form<defaultSchemaType>>(() => useForm({ schema: defaultSchema }), { wrapper });
 
             void act(() => {
                 result.current.handleChangeFor('firstName')(firstNameValue);
@@ -87,7 +98,7 @@ describe('useForm', () => {
 
         it('should format the value of a field using formatters', () => {
             const formatterMock = jest.fn();
-            const { result } = renderHook(() => useForm({ schema: defaultSchema, formatters: { firstName: formatterMock } }));
+            const { result } = renderHook(() => useForm({ schema: defaultSchema, formatters: { firstName: formatterMock } }), { wrapper });
 
             void act(() => {
                 result.current.handleChangeFor('firstName')(firstNameValue);
@@ -119,7 +130,7 @@ describe('useForm', () => {
         });
 
         it('should set the value of a checkbox', () => {
-            const { result } = renderHook<unknown, Form<defaultSchemaType>>(() => useForm({ schema: defaultSchema }));
+            const { result } = renderHook<unknown, Form<defaultSchemaType>>(() => useForm({ schema: defaultSchema }), { wrapper });
             const mockEvent = { target: { type: 'checkbox' } };
 
             // call once to set to "checked"
