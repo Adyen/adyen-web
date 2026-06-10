@@ -103,6 +103,7 @@ function BacsInput(props: Readonly<BacsInputProps>) {
                     required={true}
                     readonly={status === CONFIRM_STATE || status === 'loading'}
                     autocorrect={'off'}
+                    autocomplete={'name'}
                     onBlur={handleChangeFor('holderName', 'blur')}
                     onInput={handleChangeFor('holderName', 'input')}
                 />
@@ -131,6 +132,7 @@ function BacsInput(props: Readonly<BacsInputProps>) {
                         required={true}
                         readonly={status === CONFIRM_STATE || status === 'loading'}
                         autocorrect={'off'}
+                        autocomplete={null}
                         onBlur={handleChangeFor('bankAccountNumber', 'blur')}
                         onInput={handleChangeFor('bankAccountNumber', 'input')}
                     />
@@ -158,6 +160,7 @@ function BacsInput(props: Readonly<BacsInputProps>) {
                         required={true}
                         readonly={status === CONFIRM_STATE || status === 'loading'}
                         autocorrect={'off'}
+                        autocomplete={null}
                         onBlur={handleChangeFor('bankLocationId', 'blur')}
                         onInput={handleChangeFor('bankLocationId', 'input')}
                     />
@@ -188,6 +191,7 @@ function BacsInput(props: Readonly<BacsInputProps>) {
                     required={true}
                     readonly={status === CONFIRM_STATE || status === 'loading'}
                     autocorrect={'off'}
+                    autocomplete={'email'}
                     onInput={handleChangeFor('shopperEmail', 'input')}
                     onBlur={handleChangeFor('shopperEmail', 'blur')}
                 />

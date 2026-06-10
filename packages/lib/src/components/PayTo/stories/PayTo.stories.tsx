@@ -77,7 +77,10 @@ export const Default: PayToStory = {
                     element={
                         new PayTo(checkout, {
                             mandate,
-                            ...componentConfiguration
+                            ...componentConfiguration,
+                            onChange: data => {
+                                console.log('PayTo onChange', data);
+                            }
                         })
                     }
                 />

@@ -10,7 +10,10 @@ export type StringObject = {
     [key: string]: string;
 };
 
+export type AddressType = 'billingAddress' | 'deliveryAddress' | null;
+
 export interface AddressProps {
+    addressType?: AddressType;
     allowedCountries?: string[];
     countryCode?: string;
     data?: object;
@@ -63,6 +66,7 @@ export interface FieldContainerProps {
     maxLength?: number;
     trimOnBlur?: boolean;
     disabled?: boolean;
+    addressType?: AddressType;
     onFieldFocusAnalytics?: (who: string, event: Event) => void;
     onFieldBlurAnalytics?: (who: string, event: Event) => void;
 }

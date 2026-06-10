@@ -77,6 +77,7 @@ export default function DragonpayInput(props: Readonly<DragonpayInputProps>) {
                     spellcheck={false}
                     onInput={handleChangeFor('shopperEmail', 'input')}
                     onBlur={handleChangeFor('shopperEmail', 'blur')}
+                    autocomplete={'email'}
                 />
             </Field>
 

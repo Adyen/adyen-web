@@ -106,6 +106,7 @@ export default function PayIDInput({ setComponentRef, defaultData, placeholders,
                         onBlur={handleChangeFor('email', 'blur')}
                         placeholder={placeholders?.email}
                         required={true}
+                        autocomplete={'email'}
                     />
                 </Field>
             )}

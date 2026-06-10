@@ -58,6 +58,7 @@ function BankTransferInput(props: Readonly<BankTransferInputProps>) {
                         value={data.shopperEmail}
                         onInput={handleChangeFor('shopperEmail', 'input')}
                         onBlur={handleChangeFor('shopperEmail', 'blur')}
+                        autocomplete={'email'}
                     />
                 </Field>
             </div>

@@ -25,6 +25,7 @@ export function BrazilPersonalDetail(props) {
                         value={data.firstName}
                         onInput={handleChangeFor('firstName', 'input')}
                         onBlur={handleChangeFor('firstName', 'blur')}
+                        autocomplete={'given-name'}
                     />
                 </Field>
 
@@ -41,6 +42,7 @@ export function BrazilPersonalDetail(props) {
                         value={data.lastName}
                         onInput={handleChangeFor('lastName', 'input')}
                         onBlur={handleChangeFor('lastName', 'blur')}
+                        autocomplete={'family-name'}
                     />
                 </Field>
                 <SocialSecurityNumberBrazil
