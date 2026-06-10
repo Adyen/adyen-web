@@ -449,5 +449,6 @@
     "upi.intent.apps.dropdown.label": "UPI-apper",
     "upi.intent.apps.dropdown.placeholder": "Velg app",
     "order.paymentMethod.description": "%{name} som slutter på %{lastFour}",
-    "select.results": "%{count} tilgjengelige resultater"
+    "select.results": "%{count} tilgjengelige resultater",
+    "ctp.errors.INVALID_EMAIL": "Skriv inn en gyldig e-postadresse (f.eks. navn@eksempel.no)"
 }

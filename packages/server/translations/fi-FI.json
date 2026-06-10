@@ -449,5 +449,6 @@
     "upi.intent.apps.dropdown.label": "UPI-sovellukset",
     "upi.intent.apps.dropdown.placeholder": "Valitse haluamasi sovellus",
     "order.paymentMethod.description": "%{name}, joka päättyy kirjaimiin %{lastFour}",
-    "select.results": "%{count} tulosta saatavilla"
+    "select.results": "%{count} tulosta saatavilla",
+    "ctp.errors.INVALID_EMAIL": "Anna kelvollinen sähköpostiosoite (esimerkiksi name@example.com)"
 }

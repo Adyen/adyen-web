@@ -449,5 +449,6 @@
     "upi.intent.apps.dropdown.label": "Aplikácie UPI",
     "upi.intent.apps.dropdown.placeholder": "Vyberte preferovanú aplikáciu",
     "order.paymentMethod.description": "%{name} končiaca sa číslom %{lastFour}",
-    "select.results": "Dostupné výsledky: %{count}"
+    "select.results": "Dostupné výsledky: %{count}",
+    "ctp.errors.INVALID_EMAIL": "Zadajte platnú e-mailovú adresu (napr. meno@priklad.com)"
 }

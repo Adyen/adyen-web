@@ -449,5 +449,6 @@
     "upi.intent.apps.dropdown.label": "UPI-forrit",
     "upi.intent.apps.dropdown.placeholder": "Veldu forritið sem þér hentar best",
     "order.paymentMethod.description": "%{name} sem endar á %{lastFour}",
-    "select.results": "%{count} niðurstöður í boði"
+    "select.results": "%{count} niðurstöður í boði",
+    "ctp.errors.INVALID_EMAIL": "Sláðu inn gilt netfang (t.d. name@example.com)"
 }

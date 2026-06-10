@@ -449,5 +449,6 @@
     "upi.intent.apps.dropdown.label": "Applications UPI",
     "upi.intent.apps.dropdown.placeholder": "Choisissez votre application préférée",
     "order.paymentMethod.description": "%{name} se terminant par %{lastFour}",
-    "select.results": "%{count} résultats disponibles"
+    "select.results": "%{count} résultats disponibles",
+    "ctp.errors.INVALID_EMAIL": "Saisissez une adresse e-mail valide (par ex. nom@exemple.com)"
 }
