@@ -18,7 +18,10 @@ const render = ({ componentConfiguration, ...checkoutConfig }: PaymentMethodStor
 export const Default: AffirmStory = {
     render,
     args: {
-        countryCode: 'US'
+        countryCode: 'US',
+        componentConfiguration: {
+            allowedCountries: ['CA', 'US']
+        }
     }
 };
 
