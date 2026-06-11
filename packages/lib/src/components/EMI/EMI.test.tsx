@@ -163,6 +163,56 @@ describe('EMI', () => {
         });
     });
 
+    describe('mixed funding sources', () => {
+        const upiPaymentMethod = { type: 'upi', name: 'UPI' };
+
+        test('should create Card when supportedPaymentMethods contains both scheme and upi', () => {
+            const coreWithEmi = createCoreWithEmi(true);
+            const emi = new EMI(coreWithEmi, {
+                ...baseProps,
+                supportedPaymentMethods: [schemePaymentMethod, upiPaymentMethod]
+            });
+
+            expect(emi.card).toBeDefined();
+            expect(emi.card).toBeInstanceOf(CardElement);
+        });
+
+        test('should resolve isAvailable when at least one funding source is supported', async () => {
+            const coreWithEmi = createCoreWithEmi(true);
+            const emi = new EMI(coreWithEmi, {
+                ...baseProps,
+                supportedPaymentMethods: [schemePaymentMethod, upiPaymentMethod]
+            });
+
+            await expect(emi.isAvailable()).resolves.toBeUndefined();
+        });
+
+        test('should render card form with mixed funding sources', () => {
+            const coreWithEmi = createCoreWithEmi(true);
+            const emi = new EMI(coreWithEmi, {
+                ...baseProps,
+                supportedPaymentMethods: [schemePaymentMethod, upiPaymentMethod]
+            });
+
+            const { container } = render(emi.render());
+            expect(container.innerHTML).not.toBe('');
+        });
+
+        test('should initialize Card even when scheme is not the first entry', () => {
+            const coreWithEmi = createCoreWithEmi(true);
+            const emi = new EMI(coreWithEmi, {
+                ...baseProps,
+                supportedPaymentMethods: [upiPaymentMethod, schemePaymentMethod]
+            });
+
+            expect(emi.card).toBeDefined();
+            expect(emi.card).toBeInstanceOf(CardElement);
+
+            const { container } = render(emi.render());
+            expect(container.innerHTML).not.toBe('');
+        });
+    });
+
     describe('card getter', () => {
         test('should return CardElement when scheme is supported', () => {
             const coreWithEmi = createCoreWithEmi(true);
