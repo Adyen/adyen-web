@@ -10,7 +10,7 @@ export type StringObject = {
     [key: string]: string;
 };
 
-export type AddressType = 'billingAddress' | 'deliveryAddress' | null;
+export type AddressType = 'billingAddress' | 'deliveryAddress' | undefined;
 
 export interface AddressProps {
     addressType?: AddressType;

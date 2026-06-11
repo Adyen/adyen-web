@@ -66,8 +66,8 @@ export type AutocompleteToken =
  *
  * - Pass a valid WCAG token for fields that should support autofill
  * - Pass 'off' to explicitly disable autocomplete (renders autocomplete="off")
- * - Pass null to omit the autocomplete attribute entirely
+ * - Pass undefined to omit the autocomplete attribute entirely
  *
  * @see https://www.w3.org/TR/WCAG22/#input-purposes
  */
-export type AutocompleteValue = AutocompleteToken | 'off' | null;
+export type AutocompleteValue = AutocompleteToken | 'off' | undefined;

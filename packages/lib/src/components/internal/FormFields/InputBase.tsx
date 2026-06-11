@@ -38,10 +38,10 @@ export interface InputBaseProps extends InputHTMLAttributes {
     type?: string;
     /**
      * WCAG 2.2 autocomplete token for browser autofill.
-     * Pass null to omit the attribute entirely.
+     * Pass undefined to omit the attribute entirely.
      * @see https://www.w3.org/TR/WCAG22/#input-purposes
      */
-    autocomplete?: AutocompleteValue;
+    autocomplete: AutocompleteValue;
 }
 
 export default function InputBase({ setRef, ...props }: Readonly<InputBaseProps>) {
@@ -129,7 +129,7 @@ export default function InputBase({ setRef, ...props }: Readonly<InputBaseProps>
             id={uniqueId}
             {...restProps}
             // eslint-disable-next-line react/no-unknown-property -- Preact uses lowercase 'autocomplete'
-            autocomplete={autocomplete === null ? undefined : autocomplete}
+            autocomplete={autocomplete}
             aria-required={restProps.required}
             type={type}
             className={inputClassNames}

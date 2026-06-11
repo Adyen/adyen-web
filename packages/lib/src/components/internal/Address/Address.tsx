@@ -15,12 +15,13 @@ import { useCoreContext } from '../../../core/Context/CoreProvider';
 import AddressSearch from './components/AddressSearch';
 import { ComponentMethodsRef } from '../UIElement/types';
 import './Address.scss';
+import { getAddressTypeFromLabel } from './utils';
 
 export default function Address(props: Readonly<AddressProps>) {
     const { i18n } = useCoreContext();
 
     const { label = '', requiredFields, visibility, iOSFocusedField = null, showContextualElement } = props;
-    const addressType: AddressType = props.addressType || (label === 'billingAddress' || label === 'deliveryAddress' ? (label) : null);
+    const addressType: AddressType = getAddressTypeFromLabel(props.addressType, label);
 
     /** An object by which to expose 'public' members to the parent UIElement */
     const addressRef = useRef<ComponentMethodsRef>({});

@@ -77,6 +77,7 @@ function BacsInput(props: Readonly<BacsInputProps>) {
                         aria-label={i18n.get('edit')}
                         readonly={true}
                         onClick={handleEdit}
+                        autocomplete={undefined}
                     />
                 </div>
             )}
@@ -132,7 +133,7 @@ function BacsInput(props: Readonly<BacsInputProps>) {
                         required={true}
                         readonly={status === CONFIRM_STATE || status === 'loading'}
                         autocorrect={'off'}
-                        autocomplete={null}
+                        autocomplete={undefined}
                         onBlur={handleChangeFor('bankAccountNumber', 'blur')}
                         onInput={handleChangeFor('bankAccountNumber', 'input')}
                     />
@@ -160,7 +161,7 @@ function BacsInput(props: Readonly<BacsInputProps>) {
                         required={true}
                         readonly={status === CONFIRM_STATE || status === 'loading'}
                         autocorrect={'off'}
-                        autocomplete={null}
+                        autocomplete={undefined}
                         onBlur={handleChangeFor('bankLocationId', 'blur')}
                         onInput={handleChangeFor('bankLocationId', 'input')}
                     />

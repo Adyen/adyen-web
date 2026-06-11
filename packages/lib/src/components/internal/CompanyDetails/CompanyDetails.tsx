@@ -80,6 +80,7 @@ export default function CompanyDetails(props: Readonly<CompanyDetailsProps>) {
                         onInput={inputEventHandler('input')}
                         onBlur={eventHandler('blur')}
                         spellcheck={false}
+                        autocomplete={'organization'}
                     />
                 </Field>
             )}
@@ -99,6 +100,7 @@ export default function CompanyDetails(props: Readonly<CompanyDetailsProps>) {
                         onInput={inputEventHandler('input')}
                         onBlur={eventHandler('blur')}
                         spellcheck={false}
+                        autocomplete={undefined}
                     />
                 </Field>
             )}

@@ -52,6 +52,7 @@ function ANCVInput({ showPayButton, payButton, onChange, onSubmit }: Readonly<AN
                         required={true}
                         onInput={handleChangeFor('beneficiaryId', 'input')}
                         onBlur={handleChangeFor('beneficiaryId', 'blur')}
+                        autocomplete={undefined}
                     />
                 </Field>
                 {showPayButton && payButton({ status, label: i18n.get('confirmPurchase'), onClick: onSubmit })}

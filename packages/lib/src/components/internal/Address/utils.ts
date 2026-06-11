@@ -2,6 +2,7 @@ import Language from '../../../language';
 import { ADDRESS_SCHEMA } from './constants';
 import { AddressField } from '../../../types/global-types';
 import { StringObject } from './types';
+import { AddressType } from './types';
 
 /**
  * Used by the SRPanel sorting function to tell it whether we need to prepend the field type to the SR panel message, and, if so, we retrieve the correct translation for the field type.
@@ -11,6 +12,16 @@ import { StringObject } from './types';
 export const mapFieldKey = (key: string, i18n: Language, countrySpecificLabels: StringObject): string => {
     if (ADDRESS_SCHEMA.includes(key as AddressField)) {
         return countrySpecificLabels?.[key] ? i18n.get(countrySpecificLabels?.[key]) : i18n.get(key);
+    }
+    return null;
+};
+
+export const getAddressTypeFromLabel = (addressType: AddressType, label: string): AddressType => {
+    if (addressType) {
+        return addressType;
+    }
+    if (label === 'billingAddress' || label === 'deliveryAddress') {
+        return label;
     }
     return null;
 };

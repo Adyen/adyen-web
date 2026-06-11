@@ -203,6 +203,7 @@ class IbanInput extends Component<Readonly<IbanInputProps>, IbanInputState> {
                             aria-label={i18n.get('sepa.ownerName')}
                             onInput={e => this.handleHolderInput((e.target as HTMLInputElement).value)}
                             onBlur={e => this.handleHolderInput((e.target as HTMLInputElement).value)}
+                            autocomplete={'name'}
                         />
                     </Field>
                 )}
@@ -232,6 +233,7 @@ class IbanInput extends Component<Readonly<IbanInputProps>, IbanInputState> {
                         aria-label={i18n.get('sepa.ibanNumber')}
                         autocorrect={'off'}
                         spellcheck={false}
+                        autocomplete={undefined}
                     />
                 </Field>
 
