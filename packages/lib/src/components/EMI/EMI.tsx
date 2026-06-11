@@ -29,11 +29,11 @@ class EMI extends UIElement<EMIConfiguration> {
     private validateFundingSources(): boolean {
         if (!this.props.supportedPaymentMethods?.length) return false;
 
-        return this.props.supportedPaymentMethods.every(method => SUPPORTED_FUNDING_SOURCES[method.type] !== undefined);
+        return this.props.supportedPaymentMethods.some(method => SUPPORTED_FUNDING_SOURCES[method.type] !== undefined);
     }
 
     private initFundingSources(): void {
-        const firstMethod = this.props.supportedPaymentMethods?.[0];
+        const firstMethod = this.props.supportedPaymentMethods?.find(m => SUPPORTED_FUNDING_SOURCES[m.type] !== undefined);
         if (!firstMethod) return;
 
         this.activeFundingSource = SUPPORTED_FUNDING_SOURCES[firstMethod.type];
