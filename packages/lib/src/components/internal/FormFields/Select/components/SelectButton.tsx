@@ -13,18 +13,24 @@ function SelectButtonElement({ filterable, toggleButtonRef, showList, selectList
     }
 
     return (
-        <button
+        <div
+            role="combobox"
+            tabIndex={props.disabled ? -1 : 0}
             id={props.id}
+            className={props.className}
             aria-haspopup="listbox"
             aria-expanded={showList}
             aria-controls={selectListId}
-            aria-disabled={props.readonly}
+            aria-activedescendant={props['aria-activedescendant'] || undefined}
+            aria-disabled={props.disabled || props.readonly}
             aria-describedby={props.ariaDescribedBy}
             aria-labelledby={props.id ? `${props.id}-label ${props.id}-value` : undefined}
-            type={'button'}
-            {...props}
+            onClick={props.onClick}
+            onKeyDown={props.onKeyDown}
             ref={toggleButtonRef}
-        />
+        >
+            {props.children}
+        </div>
     );
 }
 
@@ -58,7 +64,7 @@ function SelectButton(props: Readonly<SelectButtonProps>) {
     // 1. If readonly we ignore the click action
     // 2. If filterable we want to show the list and focus on the input
     // 3. Otherwise we just toggle the list
-    const onClickHandler = readonly ? null : props.filterable ? setFocus : props.toggleList;
+    const onClickHandler = readonly || props.disabled ? null : props.filterable ? setFocus : props.toggleList;
 
     // check COWEB-1301 [Investigate] Drop-in Accessibility - ADA Compliance questions
     const currentSelectedItemId = active.id ? `listItem-${active.id}` : '';
@@ -76,11 +82,12 @@ function SelectButton(props: Readonly<SelectButtonProps>) {
             disabled={props.disabled}
             filterable={props.filterable}
             onClick={onClickHandler}
-            onKeyDown={!readonly ? props.onButtonKeyDown : null}
+            onKeyDown={!readonly && !props.disabled ? props.onButtonKeyDown : null}
             toggleButtonRef={props.toggleButtonRef}
             id={props.id}
             showList={showList}
             selectListId={props.selectListId}
+            aria-activedescendant={!props.filterable ? currentSelectedItemId || undefined : undefined}
         >
             {!props.filterable ? (
                 <Fragment>
