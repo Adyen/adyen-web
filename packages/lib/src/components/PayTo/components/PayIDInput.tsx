@@ -88,6 +88,8 @@ export default function PayIDInput({ setComponentRef, defaultData, placeholders,
             classNameModifiers={['payto__payid_input']}
             label={'PayID'}
             description={'payto.payid.description'}
+            // this is needed for the identifier selector to know which element to describe since
+            // Select doesn't automatically associate the fieldset description (at least on VoiceOver)
             descriptionId={instructionId}
         >
             <IdentifierSelector
