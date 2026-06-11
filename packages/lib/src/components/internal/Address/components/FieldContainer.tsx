@@ -27,7 +27,7 @@ function getErrorMessage(errors: AddressStateError, fieldName: string, i18n: Lan
  */
 function getAddressAutocomplete(fieldName: string, addressType: AddressType): AutocompleteValue {
     const token = ADDRESS_FIELD_TOKEN_MAP[fieldName];
-    if (!token) return null;
+    if (!token) return undefined;
     if (addressType === 'billingAddress') return `billing ${token}` as AutocompleteValue;
     if (addressType === 'deliveryAddress') return `shipping ${token}` as AutocompleteValue;
     // Fallback: bare token (no prefix) when address type is unspecified

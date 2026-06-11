@@ -23,5 +23,5 @@ export const getAddressTypeFromLabel = (addressType: AddressType, label: string)
     if (label === 'billingAddress' || label === 'deliveryAddress') {
         return label;
     }
-    return null;
+    return undefined;
 };
