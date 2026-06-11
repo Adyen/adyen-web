@@ -1,5 +1,23 @@
 # @adyen/adyen-web
 
+## 6.39.0
+
+### Minor Changes
+
+- New: Also add translated error message to error object for non-SF errors ([#4013](https://github.com/Adyen/adyen-web/pull/4013))
+
+### Patch Changes
+
+- Fixed: Select component a11y issue ([#3965](https://github.com/Adyen/adyen-web/pull/3965))
+
+- Fixed: Moved paypal js to dependencies from dev dependencies ([#4022](https://github.com/Adyen/adyen-web/pull/4022))
+
+- Fixed: actions.reject onSubmit bug for PayPal ([#4015](https://github.com/Adyen/adyen-web/pull/4015))
+
+- Fixed: Suggestion for invalid email error in click to pay ([#4006](https://github.com/Adyen/adyen-web/pull/4006))
+
+- Fixed: add aria-labelledby to giftcards remove button ([#3993](https://github.com/Adyen/adyen-web/pull/3993))
+
 ## 6.38.0
 
 ### Minor Changes
