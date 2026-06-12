@@ -89,6 +89,7 @@ const CtPLoginInput = (props: Readonly<CtPLoginInputProps>): h.JSX.Element => {
                     onInput={handleChangeFor('shopperLogin', 'input')}
                     onBlur={handleChangeFor('shopperLogin', 'blur')}
                     onKeyPress={handleOnKeyPress}
+                    autocomplete={'email'}
                 />
             </Field>
         </div>

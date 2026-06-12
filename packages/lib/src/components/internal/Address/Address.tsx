@@ -4,7 +4,7 @@ import Fieldset from '../FormFields/Fieldset';
 import ReadOnlyAddress from './components/ReadOnlyAddress';
 import { getAddressValidationRules } from './validate';
 import { addressFormatters, countrySpecificFormatters } from './validate.formats';
-import { AddressProps } from './types';
+import { AddressProps, AddressType } from './types';
 import { AddressData } from '../../../types/global-types';
 import FieldContainer from './components/FieldContainer';
 import useForm from '../../../utils/useForm';
@@ -15,11 +15,13 @@ import { useCoreContext } from '../../../core/Context/CoreProvider';
 import AddressSearch from './components/AddressSearch';
 import { ComponentMethodsRef } from '../UIElement/types';
 import './Address.scss';
+import { getAddressTypeFromLabel } from './utils';
 
 export default function Address(props: Readonly<AddressProps>) {
     const { i18n } = useCoreContext();
 
     const { label = '', requiredFields, visibility, iOSFocusedField = null, showContextualElement } = props;
+    const addressType: AddressType = getAddressTypeFromLabel(props.addressType, label);
 
     /** An object by which to expose 'public' members to the parent UIElement */
     const addressRef = useRef<ComponentMethodsRef>({});
@@ -181,6 +183,7 @@ export default function Address(props: Readonly<AddressProps>) {
                 maxLength={getMaxLengthByFieldAndCountry(countrySpecificFormatters, fieldName, effectiveCountry, true)}
                 trimOnBlur={true}
                 disabled={!enabledFields.includes(fieldName)}
+                addressType={addressType}
                 onFieldFocusAnalytics={props.onFieldFocusAnalytics}
                 onFieldBlurAnalytics={props.onFieldBlurAnalytics}
             />

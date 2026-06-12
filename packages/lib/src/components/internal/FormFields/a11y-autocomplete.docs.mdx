@@ -1,0 +1,112 @@
+{/* Select.docs.mdx */}
+
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Internal Elements/FormFields/a11y-autocomplete" />
+
+# Autocomplete Tokens for Accessibility (WCAG 2.2)
+
+This document provides guidance on using the `autocomplete` attribute for form fields
+to ensure WCAG 2.2 compliance and proper browser autofill behavior.
+
+## Quick Reference
+
+<table>
+  <thead>
+    <tr>
+      <th>Field Type</th>
+      <th>Autocomplete Token</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>First name</td>
+      <td><code>given-name</code></td>
+    </tr>
+    <tr>
+      <td>Last name</td>
+      <td><code>family-name</code></td>
+    </tr>
+    <tr>
+      <td>Full name</td>
+      <td><code>name</code></td>
+    </tr>
+    <tr>
+      <td>Email</td>
+      <td><code>email</code></td>
+    </tr>
+    <tr>
+      <td>Phone</td>
+      <td><code>tel</code></td>
+    </tr>
+    <tr>
+      <td>Date of birth</td>
+      <td><code>bday</code></td>
+    </tr>
+    <tr>
+      <td>Street address</td>
+      <td><code>address-line1</code></td>
+    </tr>
+    <tr>
+      <td>Apt/Suite/Unit</td>
+      <td><code>address-line2</code></td>
+    </tr>
+    <tr>
+      <td>City</td>
+      <td><code>address-level2</code></td>
+    </tr>
+    <tr>
+      <td>State/Province</td>
+      <td><code>address-level1</code></td>
+    </tr>
+    <tr>
+      <td>Postal/ZIP code</td>
+      <td><code>postal-code</code></td>
+    </tr>
+    <tr>
+      <td>Country</td>
+      <td><code>country-name</code></td>
+    </tr>
+  </tbody>
+</table>
+
+## Address Prefixes
+
+For billing/shipping distinction, prefix tokens with `billing` or `shipping`:
+
+- `billing address-line1`
+- `shipping postal-code`
+
+The `Address` component derives the prefix automatically from its `label` prop:
+
+- `label="billingAddress"` → `billing` prefix
+- `label="deliveryAddress"` → `shipping` prefix
+
+## When to Use `'off'` or `undefined`
+
+- **`'off'`**: Security-sensitive fields (CVV, OTP codes) — explicitly prevents autofill
+- **`undefined`**: Fields without a standard token (bank account numbers, sort codes) — omits attribute entirely
+
+## Usage in Components
+
+Pass the `autocomplete` prop to any `InputText`, `InputEmail`, or `InputTelephone` component:
+
+```tsx
+<InputText
+    name="firstName"
+    value={data.firstName}
+    autocomplete="given-name"
+    onInput={handleChangeFor('firstName', 'input')}
+    onBlur={handleChangeFor('firstName', 'blur')}
+/>
+```
+
+The `InputBase` component handles the `undefined` case by omitting the attribute entirely:
+
+- `autocomplete="email"` → renders `autocomplete="email"`
+- `autocomplete={undefined}` → attribute is omitted
+- `autocomplete="off"` → renders `autocomplete="off"`
+
+## WCAG Reference
+
+Full list of input purposes: https://www.w3.org/TR/WCAG22/#input-purposes

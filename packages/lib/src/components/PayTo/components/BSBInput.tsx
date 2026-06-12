@@ -75,6 +75,7 @@ export default function BSBInput({ setComponentRef, defaultData, placeholders, o
                     onBlur={handleChangeFor('bankAccountNumber', 'blur')}
                     placeholder={placeholders?.bankAccountNumber}
                     required={true}
+                    autocomplete={undefined}
                 />
             </Field>
 
@@ -93,6 +94,7 @@ export default function BSBInput({ setComponentRef, defaultData, placeholders, o
                     onBlur={handleChangeFor('bsb', 'blur')}
                     placeholder={placeholders?.bsb}
                     required={true}
+                    autocomplete={undefined}
                 />
             </Field>
 

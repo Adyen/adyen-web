@@ -96,6 +96,7 @@ export default function PhoneInputFields({
                         placeholder={props?.placeholders?.phoneNumber}
                         autoCorrect="off"
                         required={true}
+                        autocomplete={'tel'}
                     />
                 </Field>
             )}

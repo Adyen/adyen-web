@@ -136,6 +136,7 @@ const CtPOneTimePasswordInput = (props: Readonly<CtPOneTimePasswordInputProps>):
                     setRef={(ref: HTMLInputElement) => {
                         inputRef.current = ref;
                     }}
+                    autocomplete={'off'}
                 />
             </Field>
             <div className={'adyen-checkout-ctp__otp-resend-code-wrapper'}>
