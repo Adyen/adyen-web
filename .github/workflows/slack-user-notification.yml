@@ -1,0 +1,51 @@
+name: Slack User Notification
+
+on:
+  workflow_call:
+    inputs:
+      status:
+        description: Workflow status to report (e.g. success, failure)
+        required: true
+        type: string
+      workflow_name:
+        description: Name of the workflow to include in the message
+        required: false
+        type: string
+
+jobs:
+  notify-user:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get actor email
+        id: actor-email
+        run: |
+          EMAIL=$(curl -s \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            https://api.github.com/users/${{ github.actor }} | jq -r '.email')
+          echo "email=$EMAIL" >> "$GITHUB_OUTPUT"
+
+      - name: Look up Slack user by email
+        id: slack-user
+        if: steps.actor-email.outputs.email != 'null'
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+          EMAIL: ${{ steps.actor-email.outputs.email }}
+        run: |
+          RESPONSE=$(curl -s "https://slack.com/api/users.lookupByEmail?email=$EMAIL" \
+            -H "Authorization: Bearer $SLACK_BOT_TOKEN")
+          echo "$RESPONSE"
+          USER_ID=$(echo "$RESPONSE" | jq -r '.user.id')
+          echo "user_id=$USER_ID" >> "$GITHUB_OUTPUT"
+
+      - name: Send Slack DM
+        if: steps.slack-user.outputs.user_id != 'null'
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+          USER_ID: ${{ steps.slack-user.outputs.user_id }}
+          STATUS: ${{ inputs.status }}
+          WORKFLOW_NAME: ${{ inputs.workflow_name }}
+        run: |
+          curl -X POST "https://slack.com/api/chat.postMessage" \
+            -H "Authorization: Bearer $SLACK_BOT_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d "{\"channel\": \"$USER_ID\", \"text\": \"Your workflow \\\"$WORKFLOW_NAME\\\" completed with status: $STATUS\"}"

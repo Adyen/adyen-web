@@ -35,3 +35,12 @@ jobs:
             -H "Authorization: Bearer $SLACK_BOT_TOKEN" \
             -H "Content-Type: application/json" \
             -d "{\"channel\": \"${{ vars.WEB_RELEASE_NOTES_SLACK_ID }}\", \"text\": \"Hey team. We released a new SDK version. The notes can be found here: https://github.com/Adyen/adyen-web/releases/tag/v${VERSION}\nThank you!\"}"
+
+  notify-triggering-user:
+    needs: notify-slack
+    if: always()
+    uses: ./.github/workflows/slack-user-notification.yml
+    with:
+      status: ${{ needs.notify-slack.result }}
+      workflow_name: Slack Release Notification
+    secrets: inherit
