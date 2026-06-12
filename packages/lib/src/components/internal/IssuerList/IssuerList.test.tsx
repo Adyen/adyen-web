@@ -80,7 +80,7 @@ describe('IssuerList', () => {
         const highlightedIds = ['2', '3'];
         const onChangeCb = jest.fn();
 
-        expect(onChangeCb).toBeCalledTimes(0);
+        expect(onChangeCb).toHaveBeenCalledTimes(0);
 
         render(
             <CoreProvider i18n={core.modules.i18n} loadingContext="test" resources={core.modules.resources}>
@@ -99,7 +99,7 @@ describe('IssuerList', () => {
 
         let callbackData = { data: { issuer: null }, valid: { issuer: false }, errors: { issuer: null }, isValid: false };
 
-        expect(onChangeCb).toBeCalledTimes(2);
+        expect(onChangeCb).toHaveBeenCalledTimes(2);
         expect(onChangeCb.mock.calls[0][0]).toStrictEqual(callbackData);
         expect(onChangeCb.mock.calls[1][0]).toStrictEqual(callbackData);
 
@@ -110,7 +110,7 @@ describe('IssuerList', () => {
         callbackData = { data: { issuer: '3' }, valid: { issuer: true }, errors: { issuer: null }, isValid: true };
 
         await waitFor(() => {
-            expect(onChangeCb).toBeCalledTimes(3);
+            expect(onChangeCb).toHaveBeenCalledTimes(3);
         });
         expect(onChangeCb.mock.calls[2][0]).toStrictEqual(callbackData);
     });
