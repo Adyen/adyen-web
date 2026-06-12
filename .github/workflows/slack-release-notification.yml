@@ -28,9 +28,10 @@ jobs:
 
       - name: Post Slack notification
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
           VERSION: ${{ steps.sdk-version.outputs.version }}
         run: |
-          curl -X POST "$SLACK_WEBHOOK_URL" \
+          curl -X POST "https://slack.com/api/chat.postMessage" \
+            -H "Authorization: Bearer $SLACK_BOT_TOKEN" \
             -H "Content-Type: application/json" \
-            -d "{\"text\": \"Hey team. We released a new SDK version. The notes can be found here: https://github.com/Adyen/adyen-web/releases/tag/v${VERSION}\nThank you!\"}"
+            -d "{\"channel\": \"${{ vars.WEB_RELEASE_NOTES_SLACK_ID }}\", \"text\": \"Hey team. We released a new SDK version. The notes can be found here: https://github.com/Adyen/adyen-web/releases/tag/v${VERSION}\nThank you!\"}"
