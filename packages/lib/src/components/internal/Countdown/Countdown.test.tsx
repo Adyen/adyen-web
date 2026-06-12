@@ -33,20 +33,20 @@ describe('Countdown', () => {
     test('should call onTick after 1 second', () => {
         const onTickMock = jest.fn();
         customRender(<Countdown minutesFromNow={1} onTick={onTickMock} />);
-        expect(onTickMock).not.toBeCalled();
+        expect(onTickMock).not.toHaveBeenCalled();
 
         jest.advanceTimersByTime(1000);
-        expect(onTickMock).toBeCalled();
+        expect(onTickMock).toHaveBeenCalled();
         expect(onTickMock).toHaveBeenCalledTimes(1);
     });
 
     test('should call onCompleted when time is up', () => {
         const onCompletedMock = jest.fn();
         customRender(<Countdown minutesFromNow={1} onCompleted={onCompletedMock} />);
-        expect(onCompletedMock).not.toBeCalled();
+        expect(onCompletedMock).not.toHaveBeenCalled();
 
         jest.advanceTimersByTime(60_000);
-        expect(onCompletedMock).toBeCalled();
+        expect(onCompletedMock).toHaveBeenCalled();
         expect(onCompletedMock).toHaveBeenCalledTimes(1);
     });
 

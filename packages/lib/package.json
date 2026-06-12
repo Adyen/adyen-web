@@ -66,7 +66,7 @@
         "docs:generate": "typedoc --out docs src --exclude \"**/*+(index|.test).ts\"",
         "start:storybook": "node .storybook/run.cjs",
         "build:storybook": "storybook build --disable-telemetry",
-        "test": "jest --config config/jest.config.cjs",
+        "test": "jest",
         "test:watch": "yarn run test --watchAll",
         "test:coverage": "yarn run test --coverage",
         "type-check": "tsc --noEmit",
