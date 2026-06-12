@@ -59,7 +59,7 @@ describe('ThreeDS2DeviceFingerprint', () => {
             const spy = jest.spyOn(fingerprintComponent, 'handleAdditionalDetails');
             const fingerprintResolveData: FingerprintResolveData = { data: { paymentData: 'xxx' } };
 
-            fingerprintComponent.onComplete(fingerprintResolveData);
+            fingerprintComponent.onActionFlowComplete(fingerprintResolveData);
 
             expect(spy).toHaveBeenCalledWith(fingerprintResolveData);
         });
@@ -80,7 +80,7 @@ describe('ThreeDS2DeviceFingerprint', () => {
             const spy = jest.spyOn(fingerprintComponent, 'handleAdditionalDetails');
             const fingerprintResolveData: FingerprintResolveData = { data: { paymentData: 'xxx' } };
 
-            fingerprintComponent.onComplete(fingerprintResolveData);
+            fingerprintComponent.onActionFlowComplete(fingerprintResolveData);
 
             expect(on3DS2RedirectFlowComplete).toHaveBeenCalledWith(fingerprintResolveData, fingerprintComponent);
             expect(spy).not.toHaveBeenCalled();

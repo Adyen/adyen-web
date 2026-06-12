@@ -20,8 +20,8 @@ class MyElement extends UIElement<MyElementProps> {
     public get isValid(): boolean {
         return false;
     }
-    public callOnComplete() {
-        super.onComplete({});
+    public callOnActionFlowComplete() {
+        super.onActionFlowComplete({});
     }
     public callOnChange() {
         super.onChange();

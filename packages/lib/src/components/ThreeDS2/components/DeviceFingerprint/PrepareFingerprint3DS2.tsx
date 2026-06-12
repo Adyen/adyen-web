@@ -14,7 +14,7 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
     public static readonly type = 'scheme';
 
     public static readonly defaultProps = {
-        onComplete: () => {},
+        on3DS2FingerprintComplete: () => {},
         onError: () => {},
         paymentData: '',
         showSpinner: true,
@@ -218,7 +218,7 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
             /**
              * Equals call to callSubmit3DS2Fingerprint (except for in 3DS2InMDFlow)
              */
-            this.props.onComplete(data);
+            this.props.on3DS2FingerprintComplete(data);
         });
     }
 

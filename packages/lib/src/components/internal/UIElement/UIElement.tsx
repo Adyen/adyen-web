@@ -68,7 +68,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
 
         this.submit = this.submit.bind(this);
         this.setState = this.setState.bind(this);
-        this.onComplete = this.onComplete.bind(this);
+        this.onActionFlowComplete = this.onActionFlowComplete.bind(this);
         this.handleAction = this.handleAction.bind(this);
         this.handleOrder = this.handleOrder.bind(this);
         this.handleAdditionalDetails = this.handleAdditionalDetails.bind(this);
@@ -348,7 +348,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         // };
     }
 
-    protected onComplete(state): void {
+    protected onActionFlowComplete(state): void {
         this.handleAdditionalDetails(state);
     }
 

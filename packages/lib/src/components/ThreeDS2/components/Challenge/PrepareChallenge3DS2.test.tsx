@@ -60,7 +60,13 @@ const renderPrepareChallenge = props => {
     return render(
         <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
             {/*@ts-ignore Ignore typing on props*/}
-            <PrepareChallenge3DS2 {...props} isMDFlow={false} onComplete={completeFunction} onSubmitAnalytics={onSubmitAnalytics} onError={onError} />
+            <PrepareChallenge3DS2
+                {...props}
+                isMDFlow={false}
+                on3DS2ChallengeComplete={completeFunction}
+                onSubmitAnalytics={onSubmitAnalytics}
+                onError={onError}
+            />
         </CoreProvider>
     );
 };
