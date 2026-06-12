@@ -1,8 +1,7 @@
 import Language from '../../../language';
 import { ADDRESS_SCHEMA } from './constants';
 import { AddressField } from '../../../types/global-types';
-import { StringObject } from './types';
-import { AddressType } from './types';
+import { StringObject, AddressType } from './types';
 
 /**
  * Used by the SRPanel sorting function to tell it whether we need to prepend the field type to the SR panel message, and, if so, we retrieve the correct translation for the field type.
