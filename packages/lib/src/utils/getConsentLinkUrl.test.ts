@@ -37,15 +37,15 @@ describe('getConsentLinkUrl', () => {
         });
         test('should give a warning if no country code is provided', () => {
             getConsentUrl(undefined, 'en', rivertyConsentUrlMap);
-            expect(console.warn).toBeCalled();
+            expect(console.warn).toHaveBeenCalled();
         });
         test('should give a warning if wrong country code is provided', () => {
             getConsentUrl('WRONG', 'en', rivertyConsentUrlMap);
-            expect(console.warn).toBeCalled();
+            expect(console.warn).toHaveBeenCalled();
         });
         test('should give a warning if wrong locale is provided', () => {
             getConsentUrl('nl', 'fr', rivertyConsentUrlMap);
-            expect(console.warn).toBeCalled();
+            expect(console.warn).toHaveBeenCalled();
         });
     });
 });

@@ -24,7 +24,7 @@ describe('Select', () => {
             value = e.target.value;
         });
 
-        expect(onChangeCb).toBeCalledTimes(0);
+        expect(onChangeCb).toHaveBeenCalledTimes(0);
 
         renderSelect({
             items: items,
@@ -39,7 +39,7 @@ describe('Select', () => {
 
         const callbackData = { target: { name: 'mockSelect', value: '3' } };
 
-        expect(onChangeCb).toBeCalledTimes(1);
+        expect(onChangeCb).toHaveBeenCalledTimes(1);
         expect(onChangeCb.mock.calls[0][0]).toStrictEqual(callbackData);
 
         // Test keyboard interaction - focus the button first with user event
@@ -47,10 +47,10 @@ describe('Select', () => {
         await user.click(button); // Open dropdown
 
         await user.keyboard('[ArrowDown][Enter]');
-        expect(onChangeCb).toBeCalledTimes(2);
+        expect(onChangeCb).toHaveBeenCalledTimes(2);
 
         await user.keyboard('[ArrowUp][Space]');
-        expect(onChangeCb).toBeCalledTimes(3);
+        expect(onChangeCb).toHaveBeenCalledTimes(3);
     });
 
     test('Combobox list should select with correct inputs', async () => {
@@ -66,7 +66,7 @@ describe('Select', () => {
             value = e.target.value;
         });
 
-        expect(onChangeCb).toBeCalledTimes(0);
+        expect(onChangeCb).toHaveBeenCalledTimes(0);
 
         renderSelect({
             items: items,
@@ -81,7 +81,7 @@ describe('Select', () => {
 
         const callbackData = { target: { name: 'mockSelect', value: 'PF' } };
 
-        expect(onChangeCb).toBeCalledTimes(1);
+        expect(onChangeCb).toHaveBeenCalledTimes(1);
         expect(onChangeCb.mock.calls[0][0]).toStrictEqual(callbackData);
 
         // Test keyboard interaction - focus the combobox first with user event
@@ -89,11 +89,11 @@ describe('Select', () => {
         await user.click(combobox); // Open dropdown
 
         await user.keyboard('[ArrowDown][Enter]');
-        expect(onChangeCb).toBeCalledTimes(2);
+        expect(onChangeCb).toHaveBeenCalledTimes(2);
 
         await user.keyboard('[ArrowUp][Space]');
         // Should NOT trigger on space
-        expect(onChangeCb).toBeCalledTimes(2);
+        expect(onChangeCb).toHaveBeenCalledTimes(2);
     });
 
     test('Focus should not open dropdown but click should open it', async () => {
