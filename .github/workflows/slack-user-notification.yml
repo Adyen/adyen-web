@@ -16,29 +16,16 @@ jobs:
   notify-user:
     runs-on: ubuntu-latest
     steps:
-      - name: Get actor email
-        id: actor-email
-        run: |
-          EMAIL=$(curl -s \
-            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-            https://api.github.com/users/${{ github.actor }} | jq -r '.email')
-          echo "email=$EMAIL" >> "$GITHUB_OUTPUT"
-
-      - name: Look up Slack user by email
+      - name: Look up Slack user ID
         id: slack-user
-        if: steps.actor-email.outputs.email != 'null'
         env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-          EMAIL: ${{ steps.actor-email.outputs.email }}
+          SLACK_USERS_MAP: ${{ secrets.SLACK_USERS_MAP }}
         run: |
-          RESPONSE=$(curl -s "https://slack.com/api/users.lookupByEmail?email=$EMAIL" \
-            -H "Authorization: Bearer $SLACK_BOT_TOKEN")
-          echo "$RESPONSE"
-          USER_ID=$(echo "$RESPONSE" | jq -r '.user.id')
+          USER_ID=$(echo "$SLACK_USERS_MAP" | jq -r --arg username "${{ github.actor }}" '.[$username] // empty')
           echo "user_id=$USER_ID" >> "$GITHUB_OUTPUT"
 
       - name: Send Slack DM
-        if: steps.slack-user.outputs.user_id != 'null'
+        if: steps.slack-user.outputs.user_id != ''
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
           USER_ID: ${{ steps.slack-user.outputs.user_id }}
