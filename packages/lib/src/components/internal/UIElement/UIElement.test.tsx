@@ -251,7 +251,7 @@ describe('UIElement', () => {
 
             element.submit();
 
-            expect(showValidation).toBeCalledTimes(1);
+            expect(showValidation).toHaveBeenCalledTimes(1);
             expect(makePaymentsCallSpy).not.toHaveBeenCalled();
         });
 
