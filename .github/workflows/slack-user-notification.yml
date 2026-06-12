@@ -21,7 +21,10 @@ jobs:
         env:
           SLACK_USERS_MAP: ${{ secrets.SLACK_USERS_MAP }}
         run: |
-          USER_ID=$(echo "$SLACK_USERS_MAP" | jq -r --arg username "${{ github.actor }}" '.[$username] // empty')
+          echo "Actor: ${{ github.actor }}"
+          echo "Map keys: $(echo "${SLACK_USERS_MAP:-{\}}" | jq -r 'keys[]' 2>/dev/null || echo 'failed to parse map')"
+          USER_ID=$(echo "${SLACK_USERS_MAP:-{\}}" | jq -r --arg username "${{ github.actor }}" '.[$username] // empty' 2>/dev/null || echo '')
+          echo "Resolved user_id: $USER_ID"
           echo "user_id=$USER_ID" >> "$GITHUB_OUTPUT"
 
       - name: Send Slack DM
