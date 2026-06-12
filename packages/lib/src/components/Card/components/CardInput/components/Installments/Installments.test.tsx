@@ -62,7 +62,7 @@ describe('Installments', () => {
             card: { values: [3] }
         };
         renderInstallments({ installmentsProps: { installmentOptions } });
-        expect(screen.getByRole('combobox')).toHaveAttribute('aria-disabled', 'true');
+        expect(screen.getByRole('combobox')).toBeDisabled();
     });
 
     test('should preselect the value from "preselectedValue"', async () => {

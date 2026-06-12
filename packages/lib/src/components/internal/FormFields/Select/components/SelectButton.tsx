@@ -13,16 +13,17 @@ function SelectButtonElement({ filterable, toggleButtonRef, showList, selectList
     }
 
     return (
-        <div
+        <button
             role="combobox"
-            tabIndex={props.disabled ? -1 : 0}
+            type="button"
             id={props.id}
             className={props.className}
             aria-haspopup="listbox"
             aria-expanded={showList}
             aria-controls={selectListId}
             aria-activedescendant={props['aria-activedescendant'] || undefined}
-            aria-disabled={props.disabled || props.readonly}
+            disabled={props.disabled}
+            aria-disabled={props.readonly}
             aria-describedby={props.ariaDescribedBy}
             aria-labelledby={props.id ? `${props.id}-label ${props.id}-value` : undefined}
             onClick={props.onClick}
@@ -30,7 +31,7 @@ function SelectButtonElement({ filterable, toggleButtonRef, showList, selectList
             ref={toggleButtonRef}
         >
             {props.children}
-        </div>
+        </button>
     );
 }
 
