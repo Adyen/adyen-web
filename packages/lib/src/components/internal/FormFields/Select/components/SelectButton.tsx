@@ -65,7 +65,7 @@ function SelectButton(props: Readonly<SelectButtonProps>) {
     // 1. If readonly we ignore the click action
     // 2. If filterable we want to show the list and focus on the input
     // 3. Otherwise we just toggle the list
-    const onClickHandler = readonly || props.disabled ? null : props.filterable ? setFocus : props.toggleList;
+    const onClickHandler = readonly ? null : props.filterable ? setFocus : props.toggleList;
 
     // check COWEB-1301 [Investigate] Drop-in Accessibility - ADA Compliance questions
     const currentSelectedItemId = active.id ? `listItem-${active.id}` : '';
@@ -83,12 +83,12 @@ function SelectButton(props: Readonly<SelectButtonProps>) {
             disabled={props.disabled}
             filterable={props.filterable}
             onClick={onClickHandler}
-            onKeyDown={!readonly && !props.disabled ? props.onButtonKeyDown : null}
+            onKeyDown={!readonly ? props.onButtonKeyDown : null}
             toggleButtonRef={props.toggleButtonRef}
             id={props.id}
             showList={showList}
             selectListId={props.selectListId}
-            aria-activedescendant={!props.filterable ? currentSelectedItemId || undefined : undefined}
+            aria-activedescendant={!props.filterable && showList ? currentSelectedItemId || undefined : undefined}
         >
             {!props.filterable ? (
                 <Fragment>
