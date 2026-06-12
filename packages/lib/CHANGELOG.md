@@ -1,5 +1,13 @@
 # @adyen/adyen-web
 
+## 6.39.1
+
+### Patch Changes
+
+- Fixed: Add autocomplete tokens to all personal details and address fields ([#4027](https://github.com/Adyen/adyen-web/pull/4027))
+
+- Fixed: a11y announcements for resend OTP countdown in Click to Pay ([#4026](https://github.com/Adyen/adyen-web/pull/4026))
+
 ## 6.39.0
 
 ### Minor Changes
