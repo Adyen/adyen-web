@@ -69,8 +69,8 @@ describe('PayTo', () => {
         expect(onSubmitMock).toHaveBeenCalledTimes(0);
 
         expect(await screen.findByText('Invalid mobile number')).toBeTruthy();
-        expect(await screen.findByText('Enter your first name')).toBeTruthy();
-        expect(await screen.findByText('Enter your last name')).toBeTruthy();
+        expect(await screen.findByText('Enter your account holder first name')).toBeTruthy();
+        expect(await screen.findByText('Enter your account holder last name')).toBeTruthy();
     });
 
     test('should change to different identifier when selected', async () => {

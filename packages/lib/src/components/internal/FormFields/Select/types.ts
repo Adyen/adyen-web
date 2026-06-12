@@ -40,6 +40,7 @@ export interface SelectProps {
     clearOnSelect?: boolean;
     blurOnClose?: boolean;
     onListToggle?: (isOpen: boolean) => void;
+    additionalDescribedBy?: string;
 }
 
 export interface SelectButtonProps {

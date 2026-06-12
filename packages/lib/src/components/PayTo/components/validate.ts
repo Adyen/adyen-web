@@ -54,12 +54,12 @@ export const payIdValidationRules: ValidatorRules = {
     orgid: orgidValidatorRule,
     firstName: {
         validate: value => (isEmpty(value) ? null : true), // valid, if there are chars other than spaces,
-        errorMessage: 'firstName.invalid',
+        errorMessage: 'payto.errors.accountHolderFirstName.invalid',
         modes: ['blur']
     },
     lastName: {
         validate: value => (isEmpty(value) ? null : true),
-        errorMessage: 'lastName.invalid',
+        errorMessage: 'payto.errors.accountHolderLastName.invalid',
         modes: ['blur']
     },
     phoneNumber: {
@@ -97,12 +97,12 @@ export const bsbValidationRules: ValidatorRules = {
     bankAccountNumber: bankAccountNumberValidatorRule,
     firstName: {
         validate: value => (isEmpty(value) ? null : true), // valid, if there are chars other than spaces,
-        errorMessage: 'firstName.invalid',
+        errorMessage: 'payto.errors.accountHolderFirstName.invalid',
         modes: ['blur']
     },
     lastName: {
         validate: value => (isEmpty(value) ? null : true),
-        errorMessage: 'lastName.invalid',
+        errorMessage: 'payto.errors.accountHolderLastName.invalid',
         modes: ['blur']
     }
 };
