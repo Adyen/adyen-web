@@ -132,13 +132,13 @@ class Core implements ICore {
 
                     let mockedPaymentMethods = paymentMethods;
 
-                    // mock vemno payment method
                     const paypal = paymentMethods.paymentMethods.find(pm => pm.type === 'paypal');
+                    const scheme = paymentMethods.paymentMethods.find(pm => pm.type === 'scheme');
                     if (paypal) {
                         mockedPaymentMethods = {
                             ...mockedPaymentMethods,
                             paymentMethods: [
-                                ...mockedPaymentMethods.paymentMethods.filter(pm => pm.type !== 'paypal'),
+                                scheme,
                                 {
                                     ...paypal,
                                     name: 'PayPal',
@@ -159,24 +159,7 @@ class Core implements ICore {
                                     name: 'Venmo',
                                     type: TxVariants.paypal_venmo
                                 }
-                            ].filter(
-                                pm =>
-                                    !pm.type.startsWith('wechatpay') &&
-                                    !pm.type.startsWith('giftcard') &&
-                                    !pm.type.startsWith('afterpay') &&
-                                    !pm.type.startsWith('alipay') &&
-                                    !pm.type.startsWith('paysafecard') &&
-                                    !pm.type.startsWith('doku') &&
-                                    !pm.type.startsWith('bankTransfer') &&
-                                    !pm.type.startsWith('union') &&
-                                    !pm.type.startsWith('ach') &&
-                                    !pm.type.startsWith('cash') &&
-                                    !pm.type.startsWith('payby') &&
-                                    !pm.type.startsWith('google') &&
-                                    !pm.type.startsWith('apple') &&
-                                    !pm.type.startsWith('revolutpay') &&
-                                    !pm.type.startsWith('affirm')
-                            )
+                            ]
                         };
                     }
 
