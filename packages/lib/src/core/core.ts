@@ -26,6 +26,7 @@ import { AnalyticsService } from './Analytics/AnalyticsService';
 import { AnalyticsEventQueue } from './Analytics/AnalyticsEventQueue';
 import { isAmountValid } from '../utils/amount-util';
 import { LanguageService } from '../language/LanguageService';
+import { TxVariants } from '../components/tx-variants';
 
 class Core implements ICore {
     public session?: Session;
@@ -137,11 +138,26 @@ class Core implements ICore {
                         mockedPaymentMethods = {
                             ...mockedPaymentMethods,
                             paymentMethods: [
-                                ...mockedPaymentMethods.paymentMethods,
+                                ...mockedPaymentMethods.paymentMethods.filter(pm => pm.type !== 'paypal'),
+                                {
+                                    ...paypal,
+                                    name: 'PayPal',
+                                    type: TxVariants.paypal
+                                },
+                                {
+                                    ...paypal,
+                                    name: 'PayPal PayLater',
+                                    type: TxVariants.paypal_paylater
+                                },
+                                {
+                                    ...paypal,
+                                    name: 'PayPal Credit',
+                                    type: TxVariants.paypal_credit
+                                },
                                 {
                                     ...paypal,
                                     name: 'Venmo',
-                                    type: 'venmo'
+                                    type: TxVariants.paypal_venmo
                                 }
                             ].filter(
                                 pm =>
@@ -158,6 +174,7 @@ class Core implements ICore {
                                     !pm.type.startsWith('payby') &&
                                     !pm.type.startsWith('google') &&
                                     !pm.type.startsWith('apple') &&
+                                    !pm.type.startsWith('revolutpay') &&
                                     !pm.type.startsWith('affirm')
                             )
                         };

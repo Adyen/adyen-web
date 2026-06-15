@@ -62,7 +62,9 @@ const ComponentsNameMap = {
     [TxVariants.clicktopay]: 'ClickToPay',
     [TxVariants.googlepay]: 'GooglePay',
     [TxVariants.paypal]: 'PayPal',
-    [TxVariants.venmo]: 'Venmo',
+    [TxVariants.paypal_venmo]: 'PayPalVenmo',
+    [TxVariants.paypal_paylater]: 'PayPalPayLater',
+    [TxVariants.paypal_credit]: 'PayPalCredit',
     [TxVariants.fastlane]: 'Fastlane',
     [TxVariants.paywithgoogle]: 'GooglePay',
     /** Wallets */

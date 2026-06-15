@@ -55,9 +55,9 @@ async function createSessionsCheckout(
 
         beforeSubmit: (data, component, actions) => {
             console.log({ data });
-            const isPaymentMethodVenmo = data.paymentMethod.type === 'venmo';
+            const isPaymentMethodPayPal = data.paymentMethod.type.startsWith('paypal');
 
-            if (isPaymentMethodVenmo) {
+            if (isPaymentMethodPayPal) {
                 const newData = {
                     ...data,
                     paymentMethod: {

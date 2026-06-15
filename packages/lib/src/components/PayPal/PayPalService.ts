@@ -12,12 +12,12 @@ interface PayPalServiceConfig {
 class PayPalService {
     private static readonly instances: Map<string, PayPalService> = new Map();
 
-    private static createKey(loadingContext: string, clientKey: string): string {
-        return `${loadingContext}:${clientKey}`;
+    private static createKey(config: PayPalServiceConfig): string {
+        return `${Object.values(config).join(':')}`;
     }
 
     public static getInstance(config: PayPalServiceConfig): PayPalService {
-        const key = PayPalService.createKey(config.loadingContext, config.clientKey);
+        const key = PayPalService.createKey(config);
 
         if (!PayPalService.instances.has(key)) {
             PayPalService.instances.set(key, new PayPalService(config));

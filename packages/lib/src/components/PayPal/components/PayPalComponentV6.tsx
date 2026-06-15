@@ -94,8 +94,8 @@ const PayPalComponentV6 = ({ paypalService, onSubmit, onAdditionalDetails, onCan
             }}
         >
             <paypal-button onclick={onPayPalClick} class="paypal-gold" />
-            <paypal-pay-later-button onclick={onPayLaterClick} class="paypal-white" id={`paypal-paylater-button-${id}`} />
-            <paypal-credit-button onclick={onCreditClick} class="paypal-white" id={`paypal-credit-button-${id}`} />
+            {/* <paypal-pay-later-button onclick={onPayLaterClick} class="paypal-white" id={`paypal-paylater-button-${id}`} />
+            <paypal-credit-button onclick={onCreditClick} class="paypal-white" id={`paypal-credit-button-${id}`} /> */}
         </div>
     );
 };

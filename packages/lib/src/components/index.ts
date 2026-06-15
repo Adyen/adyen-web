@@ -35,7 +35,9 @@ export { default as CashAppPay } from './CashAppPay';
 export { default as ClickToPay } from './ClickToPay';
 export { default as GooglePay } from './GooglePay';
 export { default as PayPal } from './PayPal';
-export { default as Venmo } from './PayPal/Venmo';
+export { default as PayPalVenmo } from './PayPal/PayPalVenmo';
+export { default as PayPalCredit } from './PayPal/PayPalCredit';
+export { default as PayPalPayLater } from './PayPal/PayPalPayLater';
 export { default as Fastlane } from './PayPalFastlane';
 
 /** Vouchers */

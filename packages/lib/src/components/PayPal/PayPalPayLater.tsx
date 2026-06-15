@@ -12,11 +12,11 @@ import type { Intent, PayPalConfiguration } from './types';
 import { AnalyticsInfoEvent, InfoEventType } from '../../core/Analytics/events/AnalyticsInfoEvent';
 import { PayPalService } from './PayPalService';
 import { PayPalSdkLoader } from './PayPalSdkLoader';
-import { VenmoComponent } from './components/VenmoComponent';
+import { PayPalPayLaterComponent } from './components/PayPalPayLaterComponent';
 import './Paypal.scss';
 
-class VenmoElement extends UIElement<PayPalConfiguration> {
-    public static type = TxVariants.venmo;
+class PayPalPayLaterElement extends UIElement<PayPalConfiguration> {
+    public static type = TxVariants.paypal_paylater;
     public static subtype = 'sdk';
 
     public paymentData: string = null;
@@ -52,11 +52,16 @@ class VenmoElement extends UIElement<PayPalConfiguration> {
 
         await this.paypalService.isPayPalSdkReady();
 
-        if (!this.paypalService.paymentMethods.isEligible('venmo')) {
-            return Promise.reject(new Error('Venmo is not eligible'));
+        if (!this.paypalService.paymentMethods.isEligible('paylater')) {
+            console.log('# PayPal Pay Later is not eligible');
+            return Promise.reject(new Error('PayPal Pay Later is not eligible'));
         }
 
         return Promise.resolve();
+    }
+
+    public get icon(): string {
+        return this.resources.getImage()('paypal');
     }
 
     formatProps(props: PayPalConfiguration): PayPalConfiguration {
@@ -223,7 +228,7 @@ class VenmoElement extends UIElement<PayPalConfiguration> {
         const { onShippingAddressChange, onShippingOptionsChange, ...rest } = this.props;
 
         return (
-            <VenmoComponent
+            <PayPalPayLaterComponent
                 onSubmit={this.handleSubmit}
                 onAdditionalDetails={this.handleOnApprove}
                 paypalService={this.paypalService}
@@ -236,4 +241,4 @@ class VenmoElement extends UIElement<PayPalConfiguration> {
     }
 }
 
-export default VenmoElement;
+export default PayPalPayLaterElement;

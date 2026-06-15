@@ -7,7 +7,7 @@ import { TxVariants } from '../tx-variants';
 import { formatPaypalOrderContactToAdyenFormat } from './utils/format-paypal-order-contact-to-adyen-format';
 
 import type { ICore } from '../../core/types';
-import type { PaymentAction, PaymentMethodBrand } from '../../types/global-types';
+import type { PaymentAction } from '../../types/global-types';
 import type { Intent, PayPalConfiguration } from './types';
 import type {
     PayPalOnApproveActions,
@@ -280,41 +280,41 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
         return onShippingOptionsChange(data, actions, this);
     }
 
-    get brands(): PaymentMethodBrand[] {
-        if (!this.props.useV6) {
-            return [];
-        }
+    // get brands(): PaymentMethodBrand[] {
+    //     if (!this.props.useV6) {
+    //         return [];
+    //     }
 
-        const brandIcon = this.core.modules.resources?.getImage()('paypal');
+    //     const brandIcon = this.core.modules.resources?.getImage()('paypal');
 
-        const brands = [];
+    //     const brands = [];
 
-        if (this.paypalService?.paymentMethods?.isEligible('paylater')) {
-            brands.push({ icon: brandIcon, name: 'paylater' });
-        }
+    //     if (this.paypalService?.paymentMethods?.isEligible('paylater')) {
+    //         brands.push({ icon: brandIcon, name: 'paylater' });
+    //     }
 
-        if (this.paypalService?.paymentMethods?.isEligible('credit')) {
-            brands.push({ icon: brandIcon, name: 'credit' });
-        }
+    //     if (this.paypalService?.paymentMethods?.isEligible('credit')) {
+    //         brands.push({ icon: brandIcon, name: 'credit' });
+    //     }
 
-        return brands;
-    }
+    //     return brands;
+    // }
 
-    get additionalInfo(): string {
-        if (!this.props.useV6) {
-            return '';
-        }
+    // get additionalInfo(): string {
+    //     if (!this.props.useV6) {
+    //         return '';
+    //     }
 
-        if (this.paypalService?.paymentMethods?.isEligible('paylater') && this.paypalService?.paymentMethods?.isEligible('credit')) {
-            return 'Offers PayPal Credit and Pay Later';
-        } else if (this.paypalService?.paymentMethods?.isEligible('paylater')) {
-            return 'Offers Pay Later';
-        } else if (this.paypalService?.paymentMethods?.isEligible('credit')) {
-            return 'Offers PayPal Credit';
-        }
+    //     if (this.paypalService?.paymentMethods?.isEligible('paylater') && this.paypalService?.paymentMethods?.isEligible('credit')) {
+    //         return 'Offers PayPal Credit and Pay Later';
+    //     } else if (this.paypalService?.paymentMethods?.isEligible('paylater')) {
+    //         return 'Offers Pay Later';
+    //     } else if (this.paypalService?.paymentMethods?.isEligible('credit')) {
+    //         return 'Offers PayPal Credit';
+    //     }
 
-        return '';
-    }
+    //     return '';
+    // }
 
     protected override componentToRender(): h.JSX.Element | null {
         if (!this.props.showPayButton) return null;

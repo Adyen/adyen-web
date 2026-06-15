@@ -65,7 +65,9 @@ import Fastlane from './PayPalFastlane/Fastlane';
 import PreAuthorizedDebitCanada from './PreAuthorizedDebitCanada';
 import PayTo from './PayTo/PayTo';
 import PayByBankPix from './PayByBankPix';
-import Venmo from './PayPal/Venmo';
+import PayPalVenmo from './PayPal/PayPalVenmo';
+import PayPalPayLater from './PayPal/PayPalPayLater';
+import PayPalCredit from './PayPal/PayPalCredit';
 
 import { TxVariants } from './tx-variants';
 
@@ -150,7 +152,9 @@ export const ComponentsMap = {
     [TxVariants.clicktopay]: ClickToPay,
     [TxVariants.googlepay]: GooglePay,
     [TxVariants.paypal]: PayPal,
-    [TxVariants.venmo]: Venmo,
+    [TxVariants.paypal_venmo]: PayPalVenmo,
+    [TxVariants.paypal_paylater]: PayPalPayLater,
+    [TxVariants.paypal_credit]: PayPalCredit,
     [TxVariants.fastlane]: Fastlane,
     [TxVariants.paywithgoogle]: GooglePay,
     /** Wallets */
