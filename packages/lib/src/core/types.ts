@@ -13,7 +13,6 @@ import type {
     SessionsResponse,
     ResultCode,
     PaymentData,
-    AddressData,
     PaymentAmount
 } from '../types/global-types';
 import type { AnalyticsOptions } from './Analytics/types';
@@ -86,9 +85,7 @@ export type AdditionalDetailsActions = {
 };
 
 export type BeforeSubmitActions = {
-    resolve: (
-        data: PaymentData & { billingAddress?: AddressData; deliveryAddress?: AddressData; shopperEmail?: string; shopperName?: string }
-    ) => void;
+    resolve: (data: PaymentData) => void;
     reject: () => void;
 };
 
