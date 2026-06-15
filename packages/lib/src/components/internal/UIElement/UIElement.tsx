@@ -383,9 +383,9 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         }
     };
 
-    public handleAdditionalDetails(state: AdditionalDetailsData): void {
+    public handleAdditionalDetails(state: AdditionalDetailsData, newState?: any): void {
         if (this.props.onReadyForReview) {
-            this.props.onReadyForReview(this.data, this.elementRef, state);
+            this.props.onReadyForReview(state, this.elementRef, newState);
             return;
         }
         this.makeAdditionalDetailsCall(state)

@@ -262,7 +262,7 @@ export interface CoreConfiguration {
      */
     onSubmit?(state: SubmitData, component: UIElement, actions: SubmitActions): void;
 
-    onReadyForReview?(state: PaymentData, component: UIElement, additionalDetailsState?: AdditionalDetailsData): void;
+    onReadyForReview?(state: any, component: UIElement, additionalDetailsState?: AdditionalDetailsData): void;
 
     /**
      * Callback used in the Advanced flow to perform the /payments/details API call.

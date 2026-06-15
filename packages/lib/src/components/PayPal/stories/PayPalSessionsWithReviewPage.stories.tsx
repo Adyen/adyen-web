@@ -88,7 +88,7 @@ const PaymentPage = ({ componentConfiguration, countryCode, amount, shopperLocal
 };
 
 interface ReviewPageProps {
-    readonly reviewData: PaymentData | null;
+    readonly reviewData: AdditionalDetailsData;
     readonly additionalDetailsState: AdditionalDetailsData;
     readonly sessionId: string;
     readonly componentConfiguration: PayPalConfiguration;
@@ -129,7 +129,7 @@ const ReviewPage = ({ reviewData, additionalDetailsState, sessionId, componentCo
 
     const confirmPayment = () => {
         setSubmitting(true);
-        paypalRef.current?.handleAdditionalDetails(additionalDetailsState);
+        paypalRef.current?.handleAdditionalDetails(reviewData);
     };
 
     return (
@@ -137,7 +137,7 @@ const ReviewPage = ({ reviewData, additionalDetailsState, sessionId, componentCo
             {!hideReviewPage && (
                 <div>
                     <h2 style={{ marginTop: 0 }}>Review your order</h2>
-                    <pre style={{ overflow: 'auto', fontSize: 11 }}>{JSON.stringify(reviewData, null, 2)}</pre>
+                    <pre style={{ overflow: 'auto', fontSize: 11 }}>{JSON.stringify(additionalDetailsState, null, 2)}</pre>
                     <button type="button" data-testid="review-confirm" style={{ fontWeight: 600 }} onClick={confirmPayment}>
                         {submitting ? 'Processing…' : 'Place order'}
                     </button>
@@ -160,7 +160,7 @@ export const SessionsWithReviewPage: Story = {
         if (reviewState) {
             return (
                 <ReviewPage
-                    reviewData={reviewState.data}
+                    reviewData={reviewState.data as unknown as AdditionalDetailsData}
                     additionalDetailsState={reviewState.additionalDetailsState}
                     sessionId={reviewState.sessionId}
                     componentConfiguration={componentConfiguration}
