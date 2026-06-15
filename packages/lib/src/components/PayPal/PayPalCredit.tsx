@@ -41,7 +41,7 @@ class PayPalCreditElement extends UIElement<PayPalConfiguration> {
             clientKey: this.props.clientKey,
             sdkLoader,
             countryCode: this.props.countryCode,
-            currencyCode: this.props.amount.currency
+            amount: this.props.amount
         });
 
         void this.paypalService.initialize();

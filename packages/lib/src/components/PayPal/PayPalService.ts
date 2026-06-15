@@ -1,3 +1,4 @@
+import { PaymentAmount } from '../../types';
 import requestFastlaneToken from '../PayPalFastlane/services/request-fastlane-token';
 import { PayPalSdkLoader } from './PayPalSdkLoader';
 
@@ -5,15 +6,16 @@ interface PayPalServiceConfig {
     loadingContext: string;
     clientKey: string;
     sdkLoader: PayPalSdkLoader;
-    currencyCode: string;
     countryCode: string;
+    amount: PaymentAmount;
 }
 
 class PayPalService {
     private static readonly instances: Map<string, PayPalService> = new Map();
 
     private static createKey(config: PayPalServiceConfig): string {
-        return `${Object.values(config).join(':')}`;
+        const { loadingContext, clientKey, countryCode, amount } = config;
+        return [loadingContext, clientKey, countryCode, amount.currency, amount.value].join(':');
     }
 
     public static getInstance(config: PayPalServiceConfig): PayPalService {
@@ -28,18 +30,18 @@ class PayPalService {
     private readonly sdkLoader: PayPalSdkLoader;
     private readonly loadingContext: string;
     private readonly clientKey: string;
-    private readonly currencyCode: string;
+    private readonly amount: PaymentAmount;
     private readonly countryCode: string;
 
     private loadingPromise: Promise<void> = undefined;
     public sdkInstance: any;
     public paymentMethods: any;
 
-    private constructor({ loadingContext, clientKey, sdkLoader, currencyCode, countryCode }: PayPalServiceConfig) {
+    private constructor({ loadingContext, clientKey, sdkLoader, amount, countryCode }: PayPalServiceConfig) {
         this.sdkLoader = sdkLoader;
         this.loadingContext = loadingContext;
         this.clientKey = clientKey;
-        this.currencyCode = currencyCode;
+        this.amount = { ...amount };
         this.countryCode = countryCode;
 
         this.createPayPalSdkInstance = this.createPayPalSdkInstance.bind(this);
@@ -95,9 +97,9 @@ class PayPalService {
         console.log('createPayPalPaymentMethods(): executed');
 
         this.paymentMethods = await this.sdkInstance.findEligibleMethods({
-            currencyCode: this.currencyCode,
-            countryCode: this.countryCode
-            // paymentFlow: 'VAULT_WITHOUT_PAYMENT'
+            currencyCode: this.amount.currency,
+            countryCode: this.countryCode,
+            paymentFlow: this.amount.value === 0 ? 'VAULT_WITHOUT_PAYMENT' : undefined
         });
 
         console.log('createPayPalPaymentMethods(): PayPalSDK payment methods', this.paymentMethods);
