@@ -22,7 +22,7 @@ import GoogleAcceleratedCheckout from './components/GoogleAcceleratedCheckout';
 
 const DEFAULT_ALLOWED_CARD_NETWORKS: google.payments.api.CardNetwork[] = ['AMEX', 'DISCOVER', 'JCB', 'MASTERCARD', 'VISA'];
 
-enum GooglePayUi {
+export enum GooglePaymentFlow {
     BUTTON = 'button',
     ACCELERATED = 'accelerated'
 }
@@ -34,10 +34,10 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
     public static readonly txVariants = [TxVariants.googlepay, TxVariants.paywithgoogle];
     public static readonly defaultProps = defaultProps;
 
-    protected readonly googlePay;
+    protected readonly googlePay: GooglePayService;
     protected readonly googleAcceleratedCheckout: GooglePayAcceleratedService;
 
-    private googleUi: GooglePayUi = GooglePayUi.ACCELERATED;
+    private googlePaymentFlow: GooglePaymentFlow = GooglePaymentFlow.BUTTON;
 
     constructor(checkout: ICore, props?: GooglePayConfiguration) {
         super(checkout, props);
@@ -146,27 +146,41 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
      * Determine a shopper's ability to return a form of payment from the Google Pay API.
      */
     public override async isAvailable(): Promise<void> {
-        try {
-            await this.googleAcceleratedCheckout.isAvailable();
-        } catch (error) {
-            console.warn('[Adyen] GooglePay isAvailable() error', error);
+        const [acceleratedCheckoutResult, googleButtonResult] = await Promise.allSettled([
+            this.googleAcceleratedCheckout.isAvailable(),
+            this.googlePay.isReadyToPay(this.props)
+        ]);
+
+        if (acceleratedCheckoutResult.status === 'fulfilled') {
+            // dispatch analytics notifying the status of the eligibility check
+            console.log('[Adyen] GAC isAvailable() result', acceleratedCheckoutResult.value);
+
+            if (acceleratedCheckoutResult.value?.status === 'SUCCESS') {
+                // if (acceleratedCheckoutResult.value === 'SUCCESS' && this.props.configuration.acceleratedCheckoutExperiment === 'enabled') {
+                this.googlePaymentFlow = GooglePaymentFlow.ACCELERATED;
+                return;
+            }
+        } else {
+            console.log('[Adyen] isAvailable() acceleratedCheckoutResult', acceleratedCheckoutResult.reason);
+            // dispatch analytics notifying the status of the eligibility check
         }
 
-        return this.isReadyToPay()
-            .then(response => {
-                if (!response.result) {
-                    throw new AdyenCheckoutError('ERROR', 'GooglePay is not available');
-                }
+        if (googleButtonResult.status === 'fulfilled') {
+            const isReadyToPayResponse = googleButtonResult.value;
 
-                if (response.paymentMethodPresent === false) {
-                    throw new AdyenCheckoutError('ERROR', 'GooglePay - No paymentMethodPresent');
-                }
+            console.log('[Adyen] isReadyToPay() result', isReadyToPayResponse);
 
-                return Promise.resolve();
-            })
-            .catch(error => {
-                return Promise.reject(error);
-            });
+            if (!isReadyToPayResponse.result) {
+                throw new AdyenCheckoutError('ERROR', 'GooglePay is not available');
+            }
+            if (isReadyToPayResponse.paymentMethodPresent === false) {
+                throw new AdyenCheckoutError('ERROR', 'GooglePay - No paymentMethodPresent');
+            }
+
+            return;
+        }
+
+        throw new AdyenCheckoutError('ERROR', 'GooglePay is not available', { cause: googleButtonResult.reason });
     }
 
     /**
@@ -356,7 +370,9 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
     }
 
     protected override componentToRender(): h.JSX.Element {
-        if (this.googleUi === GooglePayUi.ACCELERATED) {
+        console.log('[Adyen] GooglePay componentToRender', this.googlePaymentFlow);
+
+        if (this.googlePaymentFlow === GooglePaymentFlow.ACCELERATED) {
             return <GoogleAcceleratedCheckout service={this.googleAcceleratedCheckout} />;
         }
 

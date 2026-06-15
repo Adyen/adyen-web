@@ -238,6 +238,11 @@ export interface GooglePayConfiguration extends UIElementProps {
          * To request Google Pay credentials, you can enable platforms to send requests that are authenticated with the platform credentials. You don't need to register individual domain names to call Google Pay APIs.
          */
         authJwt?: string;
+
+        /**
+         * Flag indicating whether the accelerated checkout experiment is enabled
+         */
+        acceleratedCheckoutExperiment?: 'enabled' | 'disabled';
     };
 }
 

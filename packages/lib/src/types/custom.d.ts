@@ -30,7 +30,7 @@ declare global {
         class AcceleratedCheckoutClient {
             constructor(options: AcceleratedCheckoutOptions);
             load(): Promise<any>;
-            isAvailable(): Promise<any>;
+            isAvailable(): Promise<{ status?: 'SUCCESS' }>;
         }
     }
     interface Window {
