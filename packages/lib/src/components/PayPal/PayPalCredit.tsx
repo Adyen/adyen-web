@@ -116,9 +116,9 @@ class PayPalCreditElement extends UIElement<PayPalConfiguration> {
 
         return {
             paymentMethod: {
-                type: VenmoElement.type,
+                type: PayPalCreditElement.type,
                 userAction,
-                subtype: isExpress ? 'express' : VenmoElement.subtype
+                subtype: isExpress ? 'express' : PayPalCreditElement.subtype
             }
         };
     }

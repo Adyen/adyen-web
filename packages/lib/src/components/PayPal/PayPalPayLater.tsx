@@ -117,9 +117,9 @@ class PayPalPayLaterElement extends UIElement<PayPalConfiguration> {
 
         return {
             paymentMethod: {
-                type: VenmoElement.type,
+                type: PayPalPayLaterElement.type,
                 userAction,
-                subtype: isExpress ? 'express' : VenmoElement.subtype
+                subtype: isExpress ? 'express' : PayPalPayLaterElement.subtype
             }
         };
     }

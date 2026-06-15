@@ -15,7 +15,7 @@ import { PayPalSdkLoader } from './PayPalSdkLoader';
 import { VenmoComponent } from './components/PayPalVenmoComponent';
 import './Paypal.scss';
 
-class VenmoElement extends UIElement<PayPalConfiguration> {
+class PayPalVenmoElement extends UIElement<PayPalConfiguration> {
     public static type = TxVariants.paypal_venmo;
     public static subtype = 'sdk';
 
@@ -116,9 +116,9 @@ class VenmoElement extends UIElement<PayPalConfiguration> {
 
         return {
             paymentMethod: {
-                type: VenmoElement.type,
+                type: PayPalVenmoElement.type,
                 userAction,
-                subtype: isExpress ? 'express' : VenmoElement.subtype
+                subtype: isExpress ? 'express' : PayPalVenmoElement.subtype
             }
         };
     }
@@ -238,4 +238,4 @@ class VenmoElement extends UIElement<PayPalConfiguration> {
     }
 }
 
-export default VenmoElement;
+export default PayPalVenmoElement;
