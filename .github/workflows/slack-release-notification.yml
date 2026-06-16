@@ -26,15 +26,28 @@ jobs:
             echo "version=$(node -p "require('./packages/lib/package.json').version")" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Post Slack notification
+      - name: Post Slack notification - start
+        id: slack-start
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
           VERSION: ${{ steps.sdk-version.outputs.version }}
         run: |
+          response=$(curl -s -X POST "https://slack.com/api/chat.postMessage" \
+            -H "Authorization: Bearer $SLACK_BOT_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d "{\"channel\": \"${{ vars.WEB_RELEASE_NOTES_SLACK_ID }}\", \"text\": \":rocket: A new SDK release is in progress: *v${VERSION}*\"}")
+          echo "ts=$(echo "$response" | jq -r '.ts')" >> "$GITHUB_OUTPUT"
+
+      - name: Post Slack notification - done
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+          VERSION: ${{ steps.sdk-version.outputs.version }}
+          THREAD_TS: ${{ steps.slack-start.outputs.ts }}
+        run: |
           curl -X POST "https://slack.com/api/chat.postMessage" \
             -H "Authorization: Bearer $SLACK_BOT_TOKEN" \
             -H "Content-Type: application/json" \
-            -d "{\"channel\": \"${{ vars.WEB_RELEASE_NOTES_SLACK_ID }}\", \"text\": \"Hey team. We released a new SDK version. The notes can be found here: https://github.com/Adyen/adyen-web/releases/tag/v${VERSION}\nThank you!\"}"
+            -d "{\"channel\": \"${{ vars.WEB_RELEASE_NOTES_SLACK_ID }}\", \"thread_ts\": \"$THREAD_TS\", \"text\": \"Hey team. We released a new SDK version. The notes can be found here: https://github.com/Adyen/adyen-web/releases/tag/v${VERSION}\nThank you!\"}"
 
   notify-triggering-user:
     needs: notify-slack
