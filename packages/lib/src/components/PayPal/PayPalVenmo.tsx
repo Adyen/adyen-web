@@ -138,8 +138,7 @@ class PayPalVenmoElement extends UIElement<PayPalConfiguration> {
         if (action.sdkData && action.sdkData.token) {
             this.onActionHandled({ componentType: this.type, actionDescription: 'sdk-loaded', originalAction: action });
 
-            if (this.props.useV6) this.handleResolveV6(action.sdkData.token);
-            else this.handleResolve(action.sdkData.token);
+            this.handleResolveV6(action.sdkData.token);
         } else {
             this.handleReject(ERRORS.NO_TOKEN_PROVIDED);
         }
