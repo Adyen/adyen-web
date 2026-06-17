@@ -1,10 +1,11 @@
 import { h } from 'preact';
 import { useCallback, useState } from 'preact/hooks';
-import { GooglePaymentMode } from '../GooglePay';
+
 import GooglePayButton from './GooglePayButton';
 import GoogleAcceleratedCheckout from './GoogleAcceleratedCheckout';
 import GoogleAcceleratedCheckoutClient from '../services/GoogleAcceleratedCheckoutClient';
 import GooglePayService from '../GooglePayService';
+import { GooglePaymentMode } from '../config';
 
 interface Props {
     defaultMode: GooglePaymentMode;

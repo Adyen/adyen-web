@@ -14,18 +14,13 @@ import type { ICore } from '../../core/types';
 import { AnalyticsInfoEvent, InfoEventType, UiTarget } from '../../core/Analytics/events/AnalyticsInfoEvent';
 import { mapGooglePayBrands } from './utils/map-adyen-brands-to-googlepay-brands';
 import { PaymentDataRequest } from './models/PaymentDataRequest';
-import { URL_GOOGLE_PAY_ACCELERATED_CHECKOUT } from './config';
+import { GooglePaymentMode, URL_GOOGLE_PAY_ACCELERATED_CHECKOUT } from './config';
 import Script from '../../utils/Script';
 import GoogleAcceleratedCheckoutClient, { AcceleratedCheckoutOptions } from './services/GoogleAcceleratedCheckoutClient';
 import { GooglePayComponent } from './components/GooglePayComponent';
 import { GOOGLE_PAY_ACCELERATED_DIV_ID } from './components/GoogleAcceleratedCheckout';
 
 const DEFAULT_ALLOWED_CARD_NETWORKS: google.payments.api.CardNetwork[] = ['AMEX', 'DISCOVER', 'JCB', 'MASTERCARD', 'VISA'];
-
-export enum GooglePaymentMode {
-    STANDARD_BUTTON = 'standard_button',
-    ACCELERATED_CHECKOUT = 'accelerated_checkout'
-}
 
 class GooglePay extends UIElement<GooglePayConfiguration> {
     public static readonly type = TxVariants.googlepay;
@@ -153,8 +148,9 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
             // dispatch analytics notifying the status of the eligibility check
             console.log('[Adyen] GAC isAvailable() result', acceleratedCheckoutResult.value);
 
-            if (acceleratedCheckoutResult.value?.status === 'SUCCESS') {
-                // if (acceleratedCheckoutResult.value === 'SUCCESS' && this.props.configuration.acceleratedCheckoutExperiment === 'enabled') {
+            // Show GAC only when it's available and it's not an instant payment
+            if (acceleratedCheckoutResult.value?.status === 'SUCCESS' && !this.props.isInstantPayment) {
+                // if (acceleratedCheckoutResult.value === 'SUCCESS' && this.props.configuration.acceleratedCheckoutExperiment === 'true') {
                 this.mode = GooglePaymentMode.ACCELERATED_CHECKOUT;
                 return;
             }

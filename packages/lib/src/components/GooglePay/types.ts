@@ -242,7 +242,7 @@ export interface GooglePayConfiguration extends UIElementProps {
         /**
          * Flag indicating whether the accelerated checkout experiment is enabled
          */
-        acceleratedCheckoutExperiment?: 'enabled' | 'disabled';
+        acceleratedCheckoutExperiment?: 'true' | 'false';
     };
 }
 
