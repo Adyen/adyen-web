@@ -1,7 +1,6 @@
 import { h } from 'preact';
 import UIElement from '../internal/UIElement/UIElement';
 import GooglePayService from './GooglePayService';
-import GooglePayButton from './components/GooglePayButton';
 import defaultProps from './defaultProps';
 import { formatGooglePayContactToAdyenAddressFormat, getGooglePayLocale, resolveEnvironment } from './utils';
 import collectBrowserInfo from '../../utils/browserInfo';
@@ -17,27 +16,26 @@ import { mapGooglePayBrands } from './utils/map-adyen-brands-to-googlepay-brands
 import { PaymentDataRequest } from './models/PaymentDataRequest';
 import { URL_GOOGLE_PAY_ACCELERATED_CHECKOUT } from './config';
 import Script from '../../utils/Script';
-import GooglePayAcceleratedService from './services/GooglePayAcceleratedService';
-import GoogleAcceleratedCheckout from './components/GoogleAcceleratedCheckout';
+import GoogleAcceleratedCheckoutClient, { AcceleratedCheckoutOptions } from './services/GoogleAcceleratedCheckoutClient';
+import { GooglePayComponent } from './components/GooglePayComponent';
+import { GOOGLE_PAY_ACCELERATED_DIV_ID } from './components/GoogleAcceleratedCheckout';
 
 const DEFAULT_ALLOWED_CARD_NETWORKS: google.payments.api.CardNetwork[] = ['AMEX', 'DISCOVER', 'JCB', 'MASTERCARD', 'VISA'];
 
-export enum GooglePaymentFlow {
-    BUTTON = 'button',
-    ACCELERATED = 'accelerated'
+export enum GooglePaymentMode {
+    STANDARD_BUTTON = 'standard_button',
+    ACCELERATED_CHECKOUT = 'accelerated_checkout'
 }
-
-export const GOOGLE_PAY_ACCELERATED_DIV_ID = 'adyen-gpay-accelerated-checkout-container';
 
 class GooglePay extends UIElement<GooglePayConfiguration> {
     public static readonly type = TxVariants.googlepay;
     public static readonly txVariants = [TxVariants.googlepay, TxVariants.paywithgoogle];
     public static readonly defaultProps = defaultProps;
 
-    protected readonly googlePay: GooglePayService;
-    protected readonly googleAcceleratedCheckout: GooglePayAcceleratedService;
+    private readonly googleButtonClient: GooglePayService;
+    private readonly googleAcceleratedCheckoutClient: GoogleAcceleratedCheckoutClient;
 
-    private googlePaymentFlow: GooglePaymentFlow = GooglePaymentFlow.BUTTON;
+    private mode: GooglePaymentMode = GooglePaymentMode.STANDARD_BUTTON;
 
     constructor(checkout: ICore, props?: GooglePayConfiguration) {
         super(checkout, props);
@@ -61,24 +59,24 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
         }
 
         const paymentDataRequest = new PaymentDataRequest(this.props);
-        console.log('[Adyen] GooglePay - paymentDataRequest', paymentDataRequest);
-
-        this.googleAcceleratedCheckout = new GooglePayAcceleratedService(
-            {
-                environment: resolveEnvironment(this.props.environment),
-                acceleratedCheckoutConfig: {
-                    type: 'INLINE',
-                    containerId: 'adyen-gpay-accelerated-checkout-container'
-                },
-                paymentDataCallbacks: {
-                    onPaymentAuthorized: this.onPaymentAuthorized
-                },
-                checkoutRequest: paymentDataRequest
+        const acceleratedOptions: AcceleratedCheckoutOptions = {
+            environment: resolveEnvironment(this.props.environment),
+            acceleratedCheckoutConfig: {
+                type: 'INLINE',
+                containerId: GOOGLE_PAY_ACCELERATED_DIV_ID
             },
+            paymentDataCallbacks: {
+                onPaymentAuthorized: this.onPaymentAuthorized
+            },
+            checkoutRequest: paymentDataRequest
+        };
+
+        this.googleAcceleratedCheckoutClient = new GoogleAcceleratedCheckoutClient(
+            acceleratedOptions,
             new Script({ src: URL_GOOGLE_PAY_ACCELERATED_CHECKOUT, component: 'googlepay', analytics: this.analytics })
         );
 
-        this.googlePay = new GooglePayService(this.props.environment, this.analytics, {
+        this.googleButtonClient = new GooglePayService(this.props.environment, this.analytics, {
             ...(isExpress && paymentDataCallbacks?.onPaymentDataChanged && { onPaymentDataChanged: paymentDataCallbacks.onPaymentDataChanged }),
             onPaymentAuthorized: this.onPaymentAuthorized
         });
@@ -147,8 +145,8 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
      */
     public override async isAvailable(): Promise<void> {
         const [acceleratedCheckoutResult, googleButtonResult] = await Promise.allSettled([
-            this.googleAcceleratedCheckout.isAvailable(),
-            this.googlePay.isReadyToPay(this.props)
+            this.googleAcceleratedCheckoutClient.isAvailable(),
+            this.googleButtonClient.isReadyToPay(this.props)
         ]);
 
         if (acceleratedCheckoutResult.status === 'fulfilled') {
@@ -157,7 +155,7 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
 
             if (acceleratedCheckoutResult.value?.status === 'SUCCESS') {
                 // if (acceleratedCheckoutResult.value === 'SUCCESS' && this.props.configuration.acceleratedCheckoutExperiment === 'enabled') {
-                this.googlePaymentFlow = GooglePaymentFlow.ACCELERATED;
+                this.mode = GooglePaymentMode.ACCELERATED_CHECKOUT;
                 return;
             }
         } else {
@@ -229,7 +227,7 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
      * Displays the Google Pay payment sheet overlay
      */
     private showGooglePayPaymentSheet() {
-        this.googlePay.initiatePayment(this.props, this.core.options.countryCode).catch((error: google.payments.api.PaymentsError) => {
+        this.googleButtonClient.initiatePayment(this.props, this.core.options.countryCode).catch((error: google.payments.api.PaymentsError) => {
             // eslint-disable-next-line @typescript-eslint/no-base-to-string
             this.handleError(new AdyenCheckoutError(error.statusCode === 'CANCELED' ? 'CANCEL' : 'ERROR', error.toString(), { cause: error }));
         });
@@ -351,14 +349,14 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
      * Determine a shopper's ability to return a form of payment from the Google Pay API.
      */
     public isReadyToPay = (): Promise<google.payments.api.IsReadyToPayResponse> => {
-        return this.googlePay.isReadyToPay(this.props);
+        return this.googleButtonClient.isReadyToPay(this.props);
     };
 
     /**
      * Use this method to prefetch a PaymentDataRequest configuration to improve loadPaymentData execution time on later user interaction. No value is returned.
      */
     public prefetch = (): void => {
-        return this.googlePay.prefetchPaymentData(this.props, this.core.options.countryCode);
+        return this.googleButtonClient.prefetchPaymentData(this.props, this.core.options.countryCode);
     };
 
     get browserInfo(): BrowserInfo {
@@ -370,28 +368,23 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
     }
 
     protected override componentToRender(): h.JSX.Element {
-        console.log('[Adyen] GooglePay componentToRender', this.googlePaymentFlow);
-
-        if (this.googlePaymentFlow === GooglePaymentFlow.ACCELERATED) {
-            return <GoogleAcceleratedCheckout service={this.googleAcceleratedCheckout} />;
-        }
-
-        if (this.props.showPayButton) {
-            return (
-                <GooglePayButton
-                    buttonColor={this.props.buttonColor}
-                    buttonType={this.props.buttonType}
-                    buttonSizeMode={this.props.buttonSizeMode}
-                    buttonLocale={this.props.buttonLocale}
-                    buttonRootNode={this.props.buttonRootNode}
-                    buttonRadius={this.props.buttonRadius}
-                    paymentsClient={this.googlePay.paymentsClient}
-                    onClick={this.submit}
-                />
-            );
-        }
-
-        return null;
+        return (
+            <GooglePayComponent
+                defaultMode={this.mode}
+                googleButtonClient={this.googleButtonClient}
+                googleAcceleratedCheckoutClient={this.googleAcceleratedCheckoutClient}
+                showPayButton={this.props.showPayButton}
+                googleButtonProps={{
+                    buttonColor: this.props.buttonColor,
+                    buttonType: this.props.buttonType,
+                    buttonSizeMode: this.props.buttonSizeMode,
+                    buttonLocale: this.props.buttonLocale,
+                    buttonRadius: this.props.buttonRadius,
+                    buttonRootNode: this.props.buttonRootNode,
+                    onClick: this.submit
+                }}
+            />
+        );
     }
 }
 

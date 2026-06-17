@@ -2,7 +2,7 @@ import { FastlaneWindowInstance, FastlaneOptions } from '../components/PayPalFas
 import { ApplePayButtonStyle, ApplePayButtonType, ApplePayWebConfiguration } from '../components/ApplePay/types';
 import { IAdyenPasskey } from '../components/PayByBankPix/services/types';
 import { AmazonWindowObject } from '../types';
-import type { AcceleratedCheckoutOptions } from '../components/GooglePay/services/GooglePayAcceleratedService';
+import type { AcceleratedCheckoutOptions } from '../components/GooglePay/services/GoogleAcceleratedCheckoutClient';
 import type { KlarnaWidgetAuthorizeResponse } from '../components/Klarna/types';
 
 declare module '@paypal/paypal-js' {
@@ -29,7 +29,7 @@ declare global {
     namespace google.payments.api {
         class AcceleratedCheckoutClient {
             constructor(options: AcceleratedCheckoutOptions);
-            load(): Promise<any>;
+            load(): Promise<{ status: 'SUCCESS' | 'ERROR' }>;
             isAvailable(): Promise<{ status?: 'SUCCESS' }>;
         }
     }

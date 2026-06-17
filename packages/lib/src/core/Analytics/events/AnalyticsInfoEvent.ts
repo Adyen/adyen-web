@@ -57,6 +57,10 @@ export enum InfoEventType {
     input = 'input',
     /** When shopper clicks to download the image (e.g. QR code image) */
     download = 'download',
+    /** When shopper is eligibile with a specific payment method */
+    eligibilityPassed = 'eligibilityPassed',
+    /** When shopper is not eligibile with a specific payment method */
+    eligibilityFailed = 'eligibilityFailed',
     sdkDownloadInitiated = 'sdkDownloadInitiated',
     sdkDownloadFailed = 'sdkDownloadFailed',
     sdkDownloadAborted = 'sdkDownloadAborted',

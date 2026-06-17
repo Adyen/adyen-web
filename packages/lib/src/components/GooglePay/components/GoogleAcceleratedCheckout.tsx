@@ -1,30 +1,37 @@
 import { h } from 'preact';
-import { useEffect } from 'preact/hooks';
-import './GooglePayButton.scss';
-import GooglePayAcceleratedService from '../services/GooglePayAcceleratedService';
-import { GOOGLE_PAY_ACCELERATED_DIV_ID } from '../GooglePay';
+import { useEffect, useCallback } from 'preact/hooks';
+import GoogleAcceleratedCheckoutClient from '../services/GoogleAcceleratedCheckoutClient';
+import styles from './GoogleAcceleratedCheckout.module.scss';
+
+export const GOOGLE_PAY_ACCELERATED_DIV_ID = 'adyen-accelerated-checkout-container';
 
 interface Props {
-    service: GooglePayAcceleratedService;
+    paymentsClient: GoogleAcceleratedCheckoutClient;
+    onFail(): void;
 }
 
-const GoogleAcceleratedCheckout = ({ service }: Readonly<Props>) => {
-    function loadGooglePayIframe() {
-        service
+const GoogleAcceleratedCheckout = ({ paymentsClient, onFail }: Readonly<Props>) => {
+    const loadGooglePayIframe = useCallback(() => {
+        paymentsClient
             .load()
-            .then(data => {
-                console.log('[Adyen] Google Pay Accelerated Checkout loaded', data);
+            .then(result => {
+                if (result.status === 'ERROR') {
+                    onFail();
+                    return;
+                }
+                console.log('[Adyen] Google Pay Accelerated Checkout loaded', result);
             })
             .catch(error => {
                 console.error('[Adyen] Google Pay Accelerated Checkout error', error);
+                onFail();
             });
-    }
+    }, [paymentsClient, onFail]);
 
     useEffect(() => {
         loadGooglePayIframe();
-    }, []);
+    }, [loadGooglePayIframe]);
 
-    return <div id={GOOGLE_PAY_ACCELERATED_DIV_ID} />;
+    return <div id={GOOGLE_PAY_ACCELERATED_DIV_ID} className={styles.iframeContainer} />;
 };
 
 export default GoogleAcceleratedCheckout;

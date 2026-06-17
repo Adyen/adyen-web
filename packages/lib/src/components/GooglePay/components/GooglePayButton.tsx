@@ -1,6 +1,7 @@
 import { h } from 'preact';
 import { useEffect, useRef } from 'preact/hooks';
 import './GooglePayButton.scss';
+import GooglePayService from '../GooglePayService';
 
 interface GooglePayButtonProps {
     buttonColor: google.payments.api.ButtonColor;
@@ -9,7 +10,7 @@ interface GooglePayButtonProps {
     buttonLocale: string;
     buttonRadius?: number;
     buttonRootNode?: HTMLDocument | ShadowRoot;
-    paymentsClient: Promise<google.payments.api.PaymentsClient>;
+    paymentsClient: GooglePayService;
     onClick: (e: Event) => void;
 }
 
@@ -20,17 +21,15 @@ const GooglePayButton = (props: Readonly<GooglePayButtonProps>) => {
         const { onClick, buttonRadius, buttonColor, buttonType, buttonLocale, buttonSizeMode, buttonRootNode, paymentsClient } = props;
 
         void paymentsClient
-            .then(client =>
-                client.createButton({
-                    onClick,
-                    buttonType,
-                    buttonColor,
-                    buttonLocale,
-                    buttonSizeMode,
-                    buttonRootNode,
-                    ...(buttonRadius !== undefined && { buttonRadius })
-                })
-            )
+            .createButton({
+                onClick,
+                buttonType,
+                buttonColor,
+                buttonLocale,
+                buttonSizeMode,
+                buttonRootNode,
+                ...(buttonRadius !== undefined && { buttonRadius })
+            })
             .then(googlePayButton => {
                 if (googlePayWrapperRef.current) {
                     googlePayWrapperRef.current.appendChild(googlePayButton);
