@@ -259,7 +259,17 @@ export interface CoreConfiguration {
      */
     onSubmit?(state: SubmitData, component: UIElement, actions: SubmitActions): void;
 
+    /**
+     * Called before the payment is submitted, allowing the shopper to review their payment details.
+     *
+     * Note: payment methods that manage their own payment submission internally (e.g. PayByBankPix, PayPal, Apple Pay, Google Pay, AmazonPay, ANCV)
+     * bypass this callback internally to avoid interrupting their native experiences.
+     *
+     * @param state
+     * @param component
+     */
     onReview?(state: PaymentData, component: UIElement): void;
+
     /**
      * Callback used in the Advanced flow to perform the /payments/details API call.
      *
