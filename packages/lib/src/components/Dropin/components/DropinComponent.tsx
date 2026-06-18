@@ -11,6 +11,7 @@ import type { DropinComponentProps, DropinComponentState, DropinStatus, DropinSt
 import UIElement from '../../internal/UIElement';
 import { AnalyticsInfoEvent, InfoEventType, UiTarget } from '../../../core/Analytics/events/AnalyticsInfoEvent';
 import { DropinSuccessState } from './DropinSuccessState';
+import { promoteGooglePayIfNeeded } from '../elements';
 
 export class DropinComponent extends Component<DropinComponentProps, DropinComponentState> {
     public state: DropinComponentState = {
@@ -35,8 +36,9 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
         const [storedElementsPromises, elementsPromises, instantPaymentsPromises, fastlanePaymentElementPromise] = this.props.onCreateElements();
         const orderStatusPromise = order ? getOrderStatus({ clientKey, loadingContext }, order) : null;
 
-        void Promise.all([storedElementsPromises, elementsPromises, instantPaymentsPromises, fastlanePaymentElementPromise, orderStatusPromise]).then(
-            ([storedPaymentElements, elements, instantPaymentElements, fastlanePaymentElement, orderStatus]) => {
+        void Promise.all([storedElementsPromises, elementsPromises, instantPaymentsPromises, fastlanePaymentElementPromise, orderStatusPromise])
+            .then(promoteGooglePayIfNeeded)
+            .then(([storedPaymentElements, elements, instantPaymentElements, fastlanePaymentElement, orderStatus]) => {
                 this.setState({
                     orderStatus,
                     elements,
@@ -48,8 +50,7 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
                 this.setStatus('ready');
 
                 this.props.onElementsCreated([...instantPaymentElements, ...storedPaymentElements, ...elements, ...fastlanePaymentElement]);
-            }
-        );
+            });
 
         this.onOrderCancel = this.getOnOrderCancel();
     };

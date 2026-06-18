@@ -30,7 +30,7 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
     private readonly googleButtonClient: GooglePayService;
     private readonly googleAcceleratedCheckoutClient: GoogleAcceleratedCheckoutClient;
 
-    private mode: GooglePaymentMode = GooglePaymentMode.STANDARD_BUTTON;
+    public mode: GooglePaymentMode = GooglePaymentMode.STANDARD_BUTTON;
 
     constructor(checkout: ICore, props?: GooglePayConfiguration) {
         super(checkout, props);
@@ -107,7 +107,7 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
         return {
             ...props,
             allowedCardNetworks,
-            configuration: props.configuration,
+            configuration: { ...props.configuration, acceleratedCheckoutExperiment: 'enabled' },
             buttonSizeMode,
             buttonLocale,
             callbackIntents
