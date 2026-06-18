@@ -31,7 +31,7 @@ class DonationCampaignService {
         this.onDonationCompleted = checkout.options.donation?.onDonationSuccess;
         this.onDonationFailed = checkout.options.donation?.onDonationFailure;
 
-        this.commercialTxAmount = donationCampaignProps.commercialTxAmount ?? checkout.options.amount.value ?? 0;
+        this.commercialTxAmount = donationCampaignProps.commercialTxAmount ?? checkout.options.amount?.value ?? 0;
 
         this.delayMS = checkout.options.donation?.delay ?? DEFAULT_DONATION_AUTO_START_DELAY_MS;
     }

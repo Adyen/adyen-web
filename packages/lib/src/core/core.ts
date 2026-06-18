@@ -385,6 +385,12 @@ class Core implements ICore {
                         return;
                     }
                 }
+                if (response.order?.remainingAmount?.value > 0) {
+                    void this.update({ order: response.order }).then(() => {
+                        this.options.onOrderUpdated?.({ order: response.order });
+                    });
+                    return;
+                }
                 cleanupFinalResult(response);
                 this.options.onPaymentCompleted?.(response);
             })

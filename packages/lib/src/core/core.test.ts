@@ -612,6 +612,134 @@ describe('Core', () => {
         });
     });
 
+    describe('processPayment', () => {
+        const paymentData = { paymentMethod: { type: 'scheme' }, clientStateDataIndicator: true as const };
+        const mockOnPaymentCompleted = jest.fn();
+        const mockOnPaymentFailed = jest.fn();
+        const mockOnOrderUpdated = jest.fn();
+        const mockOnAction = jest.fn();
+        const mockOnError = jest.fn();
+
+        beforeEach(() => {
+            jest.clearAllMocks();
+        });
+
+        test('calls onError with IMPLEMENTATION_ERROR when no session is configured', async () => {
+            const core = new AdyenCheckout({
+                countryCode: 'US',
+                clientKey: 'test_CLIENT_KEY',
+                environment: 'test',
+                exposeLibraryMetadata: false,
+                onError: mockOnError
+            });
+            await core.initialize();
+            core.processPayment(paymentData);
+            expect(mockOnError).toHaveBeenCalledWith(expect.objectContaining({ name: 'IMPLEMENTATION_ERROR' }));
+        });
+
+        test('calls onPaymentCompleted for a successful payment', async () => {
+            const submitPaymentRes = { resultCode: 'Authorised' as const, sessionData: 'dummySessionData', sessionResult: 'dummySessionResult' };
+            jest.spyOn(Session.prototype, 'submitPayment').mockResolvedValueOnce(submitPaymentRes);
+
+            const core = new AdyenCheckout({
+                countryCode: 'US',
+                clientKey: 'test_CLIENT_KEY',
+                session: { id: 'session-id' },
+                environment: 'test',
+                exposeLibraryMetadata: false,
+                onPaymentCompleted: mockOnPaymentCompleted,
+                onError: mockOnError
+            });
+            await core.initialize();
+            core.processPayment(paymentData);
+            const flushPromises = () => new Promise(process.nextTick);
+            await flushPromises();
+            expect(mockOnPaymentCompleted).toHaveBeenCalledWith(submitPaymentRes);
+        });
+
+        test('calls onAction when response contains an action', async () => {
+            const submitPaymentRes = {
+                resultCode: 'RedirectShopper' as const,
+                sessionData: 'dummySessionData',
+                action: { type: 'redirect', paymentMethodType: 'ideal', paymentData: 'mock' },
+                sessionResult: 'dummySessionResult'
+            };
+            // @ts-ignore: testing
+            jest.spyOn(Session.prototype, 'submitPayment').mockResolvedValueOnce(submitPaymentRes);
+
+            const core = new AdyenCheckout({
+                countryCode: 'US',
+                clientKey: 'test_CLIENT_KEY',
+                session: { id: 'session-id' },
+                environment: 'test',
+                exposeLibraryMetadata: false,
+                onAction: mockOnAction,
+                onPaymentCompleted: mockOnPaymentCompleted,
+                onError: mockOnError
+            });
+            await core.initialize();
+            jest.spyOn(core, 'createFromAction').mockReturnValue({} as any);
+            core.processPayment(paymentData);
+            const flushPromises = () => new Promise(process.nextTick);
+            await flushPromises();
+            expect(mockOnAction).toHaveBeenCalled();
+            expect(mockOnPaymentCompleted).not.toHaveBeenCalled();
+        });
+
+        test('calls onPaymentFailed when the payment is refused', async () => {
+            const submitPaymentRes = { resultCode: 'Refused' as const, sessionData: 'dummySessionData' };
+            // @ts-ignore: testing purpose
+            jest.spyOn(Session.prototype, 'submitPayment').mockResolvedValueOnce(submitPaymentRes);
+
+            const core = new AdyenCheckout({
+                countryCode: 'US',
+                clientKey: 'test_CLIENT_KEY',
+                session: { id: 'session-id' },
+                environment: 'test',
+                exposeLibraryMetadata: false,
+                onPaymentCompleted: mockOnPaymentCompleted,
+                onPaymentFailed: mockOnPaymentFailed,
+                onError: mockOnError
+            });
+            await core.initialize();
+            core.processPayment(paymentData);
+            const flushPromises = () => new Promise(process.nextTick);
+            await flushPromises();
+            expect(mockOnPaymentFailed).toHaveBeenCalledWith(submitPaymentRes);
+            expect(mockOnPaymentCompleted).not.toHaveBeenCalled();
+        });
+
+        test('calls update and onOrderUpdated when response has a remaining amount, and does not call onPaymentCompleted', async () => {
+            const order = {
+                orderData: 'mock-order-data',
+                pspReference: 'mock-psp',
+                remainingAmount: { value: 500, currency: 'USD' }
+            };
+            const submitPaymentRes = { resultCode: 'Authorised' as const, sessionData: 'dummySessionData', order };
+            // @ts-ignore: testing
+            jest.spyOn(Session.prototype, 'submitPayment').mockResolvedValueOnce(submitPaymentRes);
+
+            const core = new AdyenCheckout({
+                countryCode: 'US',
+                clientKey: 'test_CLIENT_KEY',
+                session: { id: 'session-id' },
+                environment: 'test',
+                exposeLibraryMetadata: false,
+                onPaymentCompleted: mockOnPaymentCompleted,
+                onOrderUpdated: mockOnOrderUpdated,
+                onError: mockOnError
+            });
+            await core.initialize();
+            jest.spyOn(core, 'update').mockResolvedValue(core);
+            core.processPayment(paymentData);
+            const flushPromises = () => new Promise(process.nextTick);
+            await flushPromises();
+            expect(core.update).toHaveBeenCalledWith({ order });
+            expect(mockOnOrderUpdated).toHaveBeenCalledWith({ order });
+            expect(mockOnPaymentCompleted).not.toHaveBeenCalled();
+        });
+    });
+
     describe('submitDetails', () => {
         const details = { details: { redirectResult: 'dummy-redirect-result' } };
         const mockOnPaymentCompleted = jest.fn();
