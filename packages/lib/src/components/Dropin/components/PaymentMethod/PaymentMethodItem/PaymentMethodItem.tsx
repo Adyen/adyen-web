@@ -66,6 +66,8 @@ class PaymentMethodItem extends Component<Readonly<PaymentMethodItemProps>> {
 
         const isCard = paymentMethod.props.type === 'card' || paymentMethod.props.type === 'scheme';
 
+        // const isGooglePayPromoted = paymentMethod.isPromoted();
+
         const paymentMethodClassnames = classNames({
             'adyen-checkout__payment-method': true,
             [`adyen-checkout__payment-method--${paymentMethod.props.type}`]: true,

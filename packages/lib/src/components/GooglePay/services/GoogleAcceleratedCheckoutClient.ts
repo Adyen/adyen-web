@@ -2,9 +2,11 @@ import Script from '../../../utils/Script';
 import { PaymentDataRequest } from '../models/PaymentDataRequest';
 
 interface IGoogleAcceleratedCheckoutClient {
-    isAvailable(): Promise<{ status?: 'SUCCESS' }>;
-    load(): Promise<{ status: 'SUCCESS' | 'ERROR' }>;
+    isAvailable(): Promise<AcceleratedCheckoutResult>;
+    load(): Promise<AcceleratedCheckoutResult>;
 }
+
+type AcceleratedCheckoutResult = { status: 'SUCCESS' | 'ERROR'; errorMessage?: string };
 
 export type AcceleratedCheckoutOptions = {
     environment: google.payments.api.Environment;
@@ -42,7 +44,7 @@ class GoogleAcceleratedCheckoutClient implements IGoogleAcceleratedCheckoutClien
     /**
      * Determines whether user is eligible for accelerated checkout. Returns an error if the user is ineligible
      */
-    public async isAvailable(): Promise<{ status?: 'SUCCESS' }> {
+    public async isAvailable(): Promise<AcceleratedCheckoutResult> {
         return this.clientPromise.then(client => client.isAvailable());
     }
 
@@ -50,7 +52,7 @@ class GoogleAcceleratedCheckoutClient implements IGoogleAcceleratedCheckoutClien
      * Initiates the accelerated checkout session in the target iframe. Returns an unavailable status
      * if the user is ineligible for accelerated checkout.
      */
-    public async load(): Promise<{ status: 'SUCCESS' | 'ERROR' }> {
+    public async load(): Promise<AcceleratedCheckoutResult> {
         return this.clientPromise.then(client => client.load());
     }
 }

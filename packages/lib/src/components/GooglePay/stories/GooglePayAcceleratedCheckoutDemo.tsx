@@ -5,6 +5,7 @@ import { ComponentContainer } from '../../../../storybook/components/ComponentCo
 import DropinElement from '../../Dropin';
 
 import type { ICore } from '../../../core/types';
+import { GooglePayConfiguration } from '../types';
 
 function moveGooglePayToTop(checkout: ICore): void {
     const pmList = checkout.paymentMethodsResponse.paymentMethods;
@@ -15,13 +16,21 @@ function moveGooglePayToTop(checkout: ICore): void {
     }
 }
 
-export function GooglePayAcceleratedCheckoutDemo({ checkout }: Readonly<{ checkout: ICore }>) {
+export function GooglePayAcceleratedCheckoutDemo({
+    checkout,
+    googleConfiguration
+}: Readonly<{ checkout: ICore; googleConfiguration: GooglePayConfiguration }>) {
     const [dropin, setDropin] = useState<DropinElement>();
 
     useEffect(() => {
         moveGooglePayToTop(checkout);
-        setDropin(new DropinElement(checkout));
-    }, [checkout]);
+        setDropin(
+            new DropinElement(checkout, {
+                instantPaymentTypes: ['applepay', 'googlepay'],
+                paymentMethodsConfiguration: { googlepay: googleConfiguration }
+            })
+        );
+    }, [checkout, googleConfiguration]);
 
     if (!dropin) {
         return <div>Loading...</div>;

@@ -73,11 +73,16 @@ export const AcceleratedCheckout: GooglePayStory = {
         const Classes = Object.values(Components) as NewableComponent[];
         AdyenCheckout.register(...Classes);
 
-        return <Checkout checkoutConfig={checkoutConfig}>{checkout => <GooglePayAcceleratedCheckoutDemo checkout={checkout} />}</Checkout>;
+        return (
+            <Checkout checkoutConfig={checkoutConfig}>
+                {checkout => <GooglePayAcceleratedCheckoutDemo checkout={checkout} googleConfiguration={componentConfiguration} />}
+            </Checkout>
+        );
     },
     args: {
         useSessions: false,
-        countryCode: 'BR'
+        countryCode: 'BR',
+        componentConfiguration: { acceleratedCheckout: true }
     }
 };
 

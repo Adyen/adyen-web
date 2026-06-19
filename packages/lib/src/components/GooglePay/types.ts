@@ -244,6 +244,11 @@ export interface GooglePayConfiguration extends UIElementProps {
          */
         acceleratedCheckoutExperiment?: 'enabled' | 'disabled';
     };
+
+    /**
+     * Temporary flag for enable GAC
+     */
+    acceleratedCheckout?: boolean;
 }
 
 // Used to add undocumented google payment options

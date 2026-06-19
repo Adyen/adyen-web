@@ -77,6 +77,12 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
         });
     }
 
+    public hasDropinHeaader() {
+        if (this.mode === GooglePaymentMode.ACCELERATED_CHECKOUT) {
+            return false;
+        }
+    }
+
     /**
      * Google Pay requires custom logic due to supporting two Tx variants that lead to the same payment method.
      * If the merchant creates a standalone Google Pay component, we need to verify if the payment method is available using both tx variants
@@ -104,10 +110,16 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
             brands: props.brands
         });
 
+        // Temporary hack to enable accelerated checkout experiment
+        const configuration: GooglePayConfiguration['configuration'] = props.configuration;
+        if (props.acceleratedCheckout) {
+            configuration.acceleratedCheckoutExperiment = 'enabled';
+        }
+
         return {
             ...props,
             allowedCardNetworks,
-            configuration: { ...props.configuration, acceleratedCheckoutExperiment: 'enabled' },
+            configuration,
             buttonSizeMode,
             buttonLocale,
             callbackIntents
@@ -148,9 +160,8 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
             // dispatch analytics notifying the status of the eligibility check
             console.log('[Adyen] GAC isAvailable() result', acceleratedCheckoutResult.value);
 
-            // Show GAC only when it's available and it's not an instant payment
-            if (acceleratedCheckoutResult.value?.status === 'SUCCESS' && !this.props.isInstantPayment) {
-                // if (acceleratedCheckoutResult.value === 'SUCCESS' && this.props.configuration.acceleratedCheckoutExperiment === 'true') {
+            // Show GAC only when it's available and experiment is enabled
+            if (acceleratedCheckoutResult.value?.status === 'SUCCESS' && this.props.configuration.acceleratedCheckoutExperiment === 'enabled') {
                 this.mode = GooglePaymentMode.ACCELERATED_CHECKOUT;
                 return;
             }
