@@ -8,7 +8,7 @@ import { createSession } from '../../../../../storybook/helpers/checkout-api-cal
 import { RETURN_URL, SHOPPER_REFERENCE } from '../../../../../storybook/config/commonConfig';
 import type { StoryConfiguration } from '../../../../../storybook/types';
 import type { DropinConfiguration } from '../../types';
-import type { PaymentData } from '../../../../types/global-types';
+import type { Order, PaymentData } from '../../../../types/global-types';
 import type { NewableComponent } from '../../../../core/core.registry';
 import type { CheckoutSessionDonationCampaignsResponse } from '../../../../core/CheckoutSession/types';
 
@@ -20,9 +20,19 @@ interface PaymentPageProps {
     readonly amount: string | number;
     readonly shopperLocale: string;
     readonly onReview: (data: PaymentData, sessionId: string) => void;
+    readonly existingSessionId?: string;
+    readonly existingOrder?: Order;
 }
 
-const PaymentPage = ({ componentConfiguration, countryCode, amount, shopperLocale, onReview }: PaymentPageProps) => {
+const PaymentPage = ({
+    componentConfiguration,
+    countryCode,
+    amount,
+    shopperLocale,
+    onReview,
+    existingSessionId,
+    existingOrder
+}: PaymentPageProps) => {
     const wrapperRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -30,14 +40,24 @@ const PaymentPage = ({ componentConfiguration, countryCode, amount, shopperLocal
         AdyenCheckout.register(...(Object.values(Components) as NewableComponent[]));
 
         const init = async () => {
-            const session = await createSession({
-                amount: { currency: getCurrency(countryCode), value: Number(amount) },
-                shopperLocale,
-                countryCode,
-                reference: 'ABC123',
-                returnUrl: RETURN_URL,
-                shopperReference: SHOPPER_REFERENCE
-            });
+            let sessionId: string;
+            let session: { id: string; sessionData?: string };
+
+            if (existingSessionId) {
+                sessionId = existingSessionId;
+                session = { id: existingSessionId };
+            } else {
+                const newSession = await createSession({
+                    amount: { currency: getCurrency(countryCode), value: Number(amount) },
+                    shopperLocale,
+                    countryCode,
+                    reference: 'ABC123',
+                    returnUrl: RETURN_URL,
+                    shopperReference: SHOPPER_REFERENCE
+                });
+                sessionId = newSession.id;
+                session = newSession;
+            }
 
             const checkout = await AdyenCheckout({
                 clientKey: process.env.CLIENT_KEY,
@@ -45,7 +65,8 @@ const PaymentPage = ({ componentConfiguration, countryCode, amount, shopperLocal
                 countryCode,
                 locale: shopperLocale,
                 session,
-                onReview: data => onReview(data, session.id),
+                ...(existingOrder && { order: existingOrder }),
+                onReview: data => onReview(data, sessionId),
                 onError: (err: unknown) => console.error('[WithReviewPageAndDonations] onError', err)
             });
 
@@ -64,9 +85,10 @@ interface ReviewPageProps {
     readonly amount: string | number;
     readonly countryCode: string;
     readonly shopperLocale: string;
+    readonly onOrderUpdated?: (order: Order, sessionId: string) => void;
 }
 
-const ReviewPage = ({ reviewData, sessionId, amount, countryCode, shopperLocale }: ReviewPageProps) => {
+const ReviewPage = ({ reviewData, sessionId, amount, countryCode, shopperLocale, onOrderUpdated }: ReviewPageProps) => {
     const actionModalRef = useRef<HTMLDialogElement>(null);
     const actionRef = useRef<HTMLDivElement>(null);
     const donationRef = useRef<HTMLDivElement>(null);
@@ -96,6 +118,10 @@ const ReviewPage = ({ reviewData, sessionId, amount, countryCode, shopperLocale 
                             commercialTxAmount: Number(amount)
                         });
                     }
+                },
+                onOrderUpdated: result => {
+                    setSubmitting(false);
+                    onOrderUpdated?.(result.order, sessionId);
                 },
                 onPaymentFailed: result => {
                     setSubmitting(false);
@@ -175,6 +201,7 @@ export const WithReviewPageAndDonations: DropinStory = {
     render: ({ componentConfiguration, ...checkoutConfig }) => {
         const { countryCode, amount, shopperLocale } = checkoutConfig;
         const [reviewState, setReviewState] = useState<{ data: PaymentData; sessionId: string } | null>(null);
+        const [orderReturn, setOrderReturn] = useState<{ order: Order; sessionId: string } | null>(null);
 
         if (reviewState) {
             return (
@@ -184,6 +211,10 @@ export const WithReviewPageAndDonations: DropinStory = {
                     amount={amount}
                     countryCode={countryCode}
                     shopperLocale={shopperLocale}
+                    onOrderUpdated={(order, sessionId) => {
+                        setOrderReturn({ order, sessionId });
+                        setReviewState(null);
+                    }}
                 />
             );
         }
@@ -195,6 +226,8 @@ export const WithReviewPageAndDonations: DropinStory = {
                 amount={amount}
                 shopperLocale={shopperLocale}
                 onReview={(data, sessionId) => setReviewState({ data, sessionId })}
+                existingSessionId={orderReturn?.sessionId}
+                existingOrder={orderReturn?.order}
             />
         );
     }
