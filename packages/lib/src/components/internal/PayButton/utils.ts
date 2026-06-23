@@ -46,12 +46,12 @@ function createButtonLabel(
     secondaryAmount?: PaymentAmount,
     showReview?: boolean
 ): string {
-    if (customLabel) {
-        return customLabel;
-    }
-
     if (showReview) {
         return i18n.get('continue');
+    }
+
+    if (customLabel) {
+        return customLabel;
     }
 
     if (customAmount) {
