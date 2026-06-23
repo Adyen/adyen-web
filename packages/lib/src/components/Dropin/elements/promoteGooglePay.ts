@@ -16,6 +16,7 @@ type ResolvedDropinElements = [
 interface PromotableGooglePay {
     mode?: GooglePaymentMode;
     props: GooglePayConfiguration;
+    isAcceleratedCheckoutAvailable: () => boolean;
 }
 
 const isGooglePayElement = (element: UIElement): boolean =>
@@ -30,8 +31,8 @@ const isPromotableGooglePay = (element: UIElement): boolean => {
         return false;
     }
 
-    const googlePay = element as PromotableGooglePay;
-    return googlePay.props.configuration?.acceleratedCheckoutExperiment === 'enabled' && googlePay.mode === GooglePaymentMode.ACCELERATED_CHECKOUT;
+    const googlePay = element as unknown as PromotableGooglePay;
+    return googlePay.isAcceleratedCheckoutAvailable();
 };
 
 /**

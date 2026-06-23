@@ -22,6 +22,8 @@ import { GOOGLE_PAY_ACCELERATED_DIV_ID } from './components/GoogleAcceleratedChe
 
 const DEFAULT_ALLOWED_CARD_NETWORKS: google.payments.api.CardNetwork[] = ['AMEX', 'DISCOVER', 'JCB', 'MASTERCARD', 'VISA'];
 
+const GOOGLE_ACCELERATED_CHECKOUT_EXPERIMENT_COMPONENT = 'googlepay_accelerated_checkout_experiment';
+
 class GooglePay extends UIElement<GooglePayConfiguration> {
     public static readonly type = TxVariants.googlepay;
     public static readonly txVariants = [TxVariants.googlepay, TxVariants.paywithgoogle];
@@ -75,12 +77,6 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
             ...(isExpress && paymentDataCallbacks?.onPaymentDataChanged && { onPaymentDataChanged: paymentDataCallbacks.onPaymentDataChanged }),
             onPaymentAuthorized: this.onPaymentAuthorized
         });
-    }
-
-    public hasDropinHeaader() {
-        if (this.mode === GooglePaymentMode.ACCELERATED_CHECKOUT) {
-            return false;
-        }
     }
 
     /**
@@ -148,6 +144,13 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
     }
 
     /**
+     * Indicates if the Google Pay component is using the accelerated checkout flow
+     */
+    public isAcceleratedCheckoutAvailable(): boolean {
+        return this.mode === GooglePaymentMode.ACCELERATED_CHECKOUT && this.props.configuration?.acceleratedCheckoutExperiment === 'enabled';
+    }
+
+    /**
      * Determine a shopper's ability to return a form of payment from the Google Pay API.
      */
     public override async isAvailable(): Promise<void> {
@@ -157,17 +160,31 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
         ]);
 
         if (acceleratedCheckoutResult.status === 'fulfilled') {
-            // dispatch analytics notifying the status of the eligibility check
             console.log('[Adyen] GAC isAvailable() result', acceleratedCheckoutResult.value);
 
-            // Show GAC only when it's available and experiment is enabled
-            if (acceleratedCheckoutResult.value?.status === 'SUCCESS' && this.props.configuration.acceleratedCheckoutExperiment === 'enabled') {
+            const { status } = acceleratedCheckoutResult.value;
+
+            this.analytics.sendAnalytics(
+                new AnalyticsInfoEvent({
+                    type: status === 'SUCCESS' ? InfoEventType.eligibilityPassed : InfoEventType.eligibilityFailed,
+                    component: GOOGLE_ACCELERATED_CHECKOUT_EXPERIMENT_COMPONENT
+                })
+            );
+
+            // Show Accelerated Checkout only when it's available and experiment is enabled
+            if (status === 'SUCCESS' && this.props.configuration.acceleratedCheckoutExperiment === 'enabled') {
                 this.mode = GooglePaymentMode.ACCELERATED_CHECKOUT;
                 return;
             }
         } else {
             console.log('[Adyen] isAvailable() acceleratedCheckoutResult', acceleratedCheckoutResult.reason);
-            // dispatch analytics notifying the status of the eligibility check
+
+            this.analytics.sendAnalytics(
+                new AnalyticsInfoEvent({
+                    type: InfoEventType.eligibilityFailed,
+                    component: GOOGLE_ACCELERATED_CHECKOUT_EXPERIMENT_COMPONENT
+                })
+            );
         }
 
         if (googleButtonResult.status === 'fulfilled') {

@@ -101,6 +101,18 @@
     }
 }
 
+.adyen-checkout__payment-method--selected.adyen-checkout__payment-method--google-pay-accelerated-checkout {
+    background-color: white;
+
+    .adyen-checkout__payment-method__header {
+        display: none;
+    }
+
+    .adyen-checkout__payment-method__details {
+        padding: 4px;
+    }
+}
+
 .adyen-checkout__payment-method__surcharge {
     color: variable-generator.token(color-label-secondary);
     margin-left: variable-generator.token(spacer-020);
