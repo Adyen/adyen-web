@@ -1,5 +1,13 @@
 # @adyen/adyen-web
 
+## 6.40.1
+
+### Patch Changes
+
+- Fixed: Removes incorrect presentation role on card fields ([#4035](https://github.com/Adyen/adyen-web/pull/4035))
+
+- Fixed: a11y keyboard navigation inside Select list ([#4029](https://github.com/Adyen/adyen-web/pull/4029))
+
 ## 6.40.0
 
 ### Minor Changes
