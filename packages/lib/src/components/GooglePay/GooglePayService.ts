@@ -66,6 +66,16 @@ class GooglePayService {
         const paymentDataRequest = initiatePaymentRequest(props, countryCode);
         return this.paymentsClient.then(client => client.loadPaymentData(paymentDataRequest));
     }
+
+    /**
+     * Creates a Google Pay button
+     *
+     * @param options Button options
+     * @returns Promise that resolves to the created button
+     */
+    public createButton(options: google.payments.api.ButtonOptions): Promise<HTMLElement> {
+        return this.paymentsClient.then(client => client.createButton(options));
+    }
 }
 
 export default GooglePayService;

@@ -4,7 +4,11 @@ import GooglePay from '../GooglePay';
 import { Checkout } from '../../../../storybook/components/Checkout';
 import { GooglePayExpressDemo } from './GooglePayExpressDemo';
 import { GooglePayExpressSessionsDemo } from './GooglePayExpressSessionsDemo';
+import { GooglePayAcceleratedCheckoutDemo } from './GooglePayAcceleratedCheckoutDemo';
 import { EXPRESS_DEMO_SETTINGS } from './googlePayExpressUtils';
+import { AdyenCheckout, components } from '../../..';
+
+import type { NewableComponent } from '../../../core/core.registry';
 
 import type { MetaConfiguration, StoryConfiguration } from '../../../../storybook/types';
 import type { GooglePayConfiguration } from '../types';
@@ -60,6 +64,25 @@ export const ExpressOnSessions: GooglePayStory = {
         countryCode: EXPRESS_DEMO_SETTINGS.COUNTRY_CODE,
         amount: EXPRESS_DEMO_SETTINGS.INITIAL_AMOUNT,
         shopperLocale: EXPRESS_DEMO_SETTINGS.SHOPPER_LOCALE
+    }
+};
+
+export const AcceleratedCheckout: GooglePayStory = {
+    render: ({ componentConfiguration, ...checkoutConfig }) => {
+        const { Dropin, ...Components } = components;
+        const Classes = Object.values(Components) as NewableComponent[];
+        AdyenCheckout.register(...Classes);
+
+        return (
+            <Checkout checkoutConfig={checkoutConfig}>
+                {checkout => <GooglePayAcceleratedCheckoutDemo checkout={checkout} googleConfiguration={componentConfiguration} />}
+            </Checkout>
+        );
+    },
+    args: {
+        useSessions: false,
+        countryCode: 'BR',
+        componentConfiguration: { acceleratedCheckout: true }
     }
 };
 
