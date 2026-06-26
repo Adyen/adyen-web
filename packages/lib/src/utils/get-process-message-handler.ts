@@ -18,10 +18,6 @@ const getProcessMessageHandler =
         const parseErrorObj: PostMsgParseErrorObject = {};
         const origin = event.origin;
 
-        // console.log('\n### get-process-message-handler::event:: ', event);
-        // console.log('### get-process-message-handler:: event.origin:: ', origin);
-        // console.log('### get-process-message-handler:: expected domain:: ', domain);
-
         if (origin !== domain) {
             // FAIL SILENTLY: if it's not from the expected domain then it's not our traffic
             return 'Message was not sent from the expected domain';
@@ -36,13 +32,13 @@ const getProcessMessageHandler =
         if (typeof event.data !== 'string') {
             // If it's from our domain but not a string - log this somewhere?
             // console.log('### get-process-message-handler:: Event data from expected domain but not in expected form');
-            return 'Event data was not of type string'; // "Event data from expected domain but not in expected form"
+            return 'Event data was not of type string';
         }
 
         if (!event.data.length) {
             // If it's from our domain, is a string, but is empty - log this somewhere?
             // console.log('### get-process-message-handler:: Event data from expected domain, in expected form, but empty');
-            return 'Invalid event data string'; //  "Event data from expected domain, in expected form, but empty"
+            return 'Invalid event data string';
         }
 
         // Try to parse the data
@@ -55,7 +51,7 @@ const getProcessMessageHandler =
                     resolve(feedbackObj);
                     return true;
                 } else {
-                    // event.data has 'type' but not what we were expecting
+                    // event.data has 'type' but not what we were expecting - log this somewhere?
                     // console.log(
                     //     '### get-process-message-handler:::: feedbackObj.type was not of expected type',
                     //     feedbackObj.type,
@@ -65,7 +61,7 @@ const getProcessMessageHandler =
                     return 'Event data was not of expected type';
                 }
             } else {
-                // FAIL SILENTLY: event.data had no 'type' property
+                // FAIL SILENTLY: event.data had no 'type' property - log this somewhere, if we know we're in 3DS2 scenario?
                 //  example: applies when RiskModule device fingerprinting is ongoing and this handler is picking up securedFields traffic
                 // console.log('### get-process-message-handler:::: returned data had no type property feedbackObj=', feedbackObj);
                 return 'Event data had no type';
