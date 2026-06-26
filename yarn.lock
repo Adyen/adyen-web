@@ -133,7 +133,7 @@ __metadata:
     ts-jest: "npm:29.4.11"
     tslib: "npm:2.8.1"
     typescript: "npm:6.0.3"
-    typescript-eslint: "npm:8.60.0"
+    typescript-eslint: "npm:8.60.1"
     vite: "npm:6.4.3"
     vite-plugin-stylelint: "npm:6.1.0"
     whatwg-fetch: "npm:3.6.20"
