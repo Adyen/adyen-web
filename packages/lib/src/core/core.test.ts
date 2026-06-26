@@ -686,6 +686,33 @@ describe('Core', () => {
             expect(mockOnPaymentCompleted).not.toHaveBeenCalled();
         });
 
+        test('calls onError with IMPLEMENTATION_ERROR when response has an action but onAction is not configured', async () => {
+            const submitPaymentRes = {
+                resultCode: 'RedirectShopper' as const,
+                sessionData: 'dummySessionData',
+                action: { type: 'redirect', paymentMethodType: 'ideal', paymentData: 'mock' },
+                sessionResult: 'dummySessionResult'
+            };
+            // @ts-ignore: testing
+            jest.spyOn(Session.prototype, 'submitPayment').mockResolvedValueOnce(submitPaymentRes);
+
+            const core = new AdyenCheckout({
+                countryCode: 'US',
+                clientKey: 'test_CLIENT_KEY',
+                session: { id: 'session-id' },
+                environment: 'test',
+                exposeLibraryMetadata: false,
+                onPaymentCompleted: mockOnPaymentCompleted,
+                onError: mockOnError
+            });
+            await core.initialize();
+            core.processPayment(paymentData);
+            const flushPromises = () => new Promise(process.nextTick);
+            await flushPromises();
+            expect(mockOnError).toHaveBeenCalledWith(expect.objectContaining({ name: 'IMPLEMENTATION_ERROR' }));
+            expect(mockOnPaymentCompleted).not.toHaveBeenCalled();
+        });
+
         test('calls onPaymentFailed when the payment is refused', async () => {
             const submitPaymentRes = { resultCode: 'Refused' as const, sessionData: 'dummySessionData' };
             // @ts-ignore: testing purpose

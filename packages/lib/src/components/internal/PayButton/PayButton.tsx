@@ -25,18 +25,19 @@ export interface PayButtonProps extends ButtonProps {
     icon?: string;
 }
 
-const PayButton = ({ customAmount, classNameModifiers = [], label, ...props }: Readonly<PayButtonProps>) => {
+const PayButton = ({ customAmount, classNameModifiers = [], label, icon, ...props }: Readonly<PayButtonProps>) => {
     const { amount, isZeroAuth } = useAmount();
     const { secondaryAmount } = useSecondaryAmount();
     const { i18n, showReview } = useCoreContext();
 
     const buttonLabel = createButtonLabel(i18n, label, amount, isZeroAuth, customAmount, secondaryAmount, showReview);
+    const buttonIcon = icon && !showReview ? icon : undefined;
     const secondaryAmountLabel = createSecondaryLabel(i18n, secondaryAmount, isAmountValid(amount), isZeroAuth, label);
 
     const isDisabled = props.disabled || props.status === 'loading';
 
     return (
-        <Button {...props} disabled={isDisabled} classNameModifiers={[...classNameModifiers, 'pay']} label={buttonLabel}>
+        <Button {...props} icon={buttonIcon} disabled={isDisabled} classNameModifiers={[...classNameModifiers, 'pay']} label={buttonLabel}>
             {secondaryAmountLabel && <SecondaryButtonLabel label={secondaryAmountLabel} />}
         </Button>
     );

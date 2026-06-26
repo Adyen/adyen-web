@@ -9,6 +9,7 @@ import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 import { setupCoreMock } from '../../../../config/testMocks/setup-core-mock';
 import { ErrorEventType } from '../../../core/Analytics/events/AnalyticsErrorEvent';
 import { InfoEventType } from '../../../core/Analytics/events/AnalyticsInfoEvent';
+import { LogEventType } from '../../../core/Analytics/events/AnalyticsLogEvent';
 import { render, screen } from '@testing-library/preact';
 
 interface MyElementProps extends UIElementProps {
@@ -579,6 +580,42 @@ describe('UIElement', () => {
                 id: expect.any(String),
                 component: expect.any(String)
             });
+        });
+
+        test('should call onReview with data and elementRef, and not proceed to payment', () => {
+            const onReview = jest.fn();
+            const mockData = { clientStateDataIndicator: true as const, paymentMethod: { type: 'payment-type' } };
+            jest.spyOn(MyElement.prototype, 'isValid', 'get').mockReturnValue(true);
+            jest.spyOn(MyElement.prototype, 'data', 'get').mockReturnValue(mockData);
+            const element = new MyElement(core, { onReview });
+            const executePaymentsCallSpy = jest.spyOn(element, 'executePaymentsCall').mockImplementation(() => {});
+            element.submit();
+            expect(onReview).toHaveBeenCalledTimes(1);
+            expect(onReview).toHaveBeenCalledWith(mockData, element.elementRef);
+            expect(executePaymentsCallSpy).not.toHaveBeenCalled();
+        });
+
+        test('should submit a review analytics log event when onReview is configured', () => {
+            const onReview = jest.fn();
+            const mockData = { clientStateDataIndicator: true as const, paymentMethod: { type: 'payment-type' } };
+            jest.spyOn(MyElement.prototype, 'isValid', 'get').mockReturnValue(true);
+            jest.spyOn(MyElement.prototype, 'data', 'get').mockReturnValue(mockData);
+            const element = new MyElement(core, { onReview });
+            element.submit();
+            expect(core.modules.analytics.sendAnalytics).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    type: LogEventType.review,
+                    component: 'super_pay',
+                    message: 'Review page enabled'
+                })
+            );
+        });
+
+        test('should not call onReview when component is invalid', () => {
+            const onReview = jest.fn();
+            const element = new MyElement(core, { onReview });
+            element.submit();
+            expect(onReview).not.toHaveBeenCalled();
         });
     });
 
