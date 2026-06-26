@@ -382,14 +382,17 @@ class Core implements ICore {
                 if (response.action) {
                     if (this.options.onAction) {
                         this.options.onAction(this.createFromAction(response.action));
-                        return;
+                    } else {
+                        this.options.onError?.(
+                            new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'onAction callback is required to handle payment actions')
+                        );
                     }
+                    return;
                 }
                 if (response.order?.remainingAmount?.value > 0) {
-                    void this.update({ order: response.order }).then(() => {
+                    return this.update({ order: response.order }).then(() => {
                         this.options.onOrderUpdated?.({ order: response.order });
                     });
-                    return;
                 }
                 cleanupFinalResult(response);
                 this.options.onPaymentCompleted?.(response);
