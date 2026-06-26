@@ -19,6 +19,7 @@ export type BrandIconsProp = {
     brandImageClassName?: string;
     showIconOnError?: boolean;
     smallIcons?: boolean;
+    ariaHidden?: boolean;
     renderBrandIcon?: (brandIcon: BrandIcon) => h.JSX.Element;
 };
 
@@ -33,7 +34,8 @@ export const BrandIcons = ({
     brandImageWrapperClassName,
     showIconOnError,
     smallIcons,
-    renderBrandIcon
+    renderBrandIcon,
+    ariaHidden
 }: Readonly<BrandIconsProp>) => {
     const visibleBrands = useMemo(() => brandIcons.slice(0, maxBrandsToShow), [brandIcons, maxBrandsToShow]);
     const remainingBrands = useMemo(() => brandIcons.slice(maxBrandsToShow), [brandIcons, maxBrandsToShow]);
@@ -41,18 +43,20 @@ export const BrandIcons = ({
     const hasRemainingBrands = Boolean(remainingBrandsLabel) || remainingBrands.length > 0;
 
     return (
-        <div
+        <ul
             className={cn(
                 styles.container,
                 { [styles.grid]: containerType === 'grid', [styles.smallImgGrid]: smallIcons && containerType === 'grid' },
                 className
             )}
+            aria-hidden={ariaHidden}
         >
             {visibleBrands.map(brandIcon =>
                 renderBrandIcon ? (
                     renderBrandIcon(brandIcon)
                 ) : (
                     <BrandImage
+                        as="li"
                         key={brandIcon.alt}
                         src={brandIcon.src}
                         alt={brandIcon.alt}
@@ -63,10 +67,10 @@ export const BrandIcons = ({
                 )
             )}
             {hasRemainingBrands && (
-                <span className={cn(styles.remainingBrandsLabel, remainingBrandsLabelClassName)}>
+                <li className={cn(styles.remainingBrandsLabel, remainingBrandsLabelClassName)}>
                     {remainingBrandsLabel || `+ ${remainingBrands.length}`}
-                </span>
+                </li>
             )}
-        </div>
+        </ul>
     );
 };

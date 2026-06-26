@@ -36,6 +36,7 @@ const SocialSecurityNumberBrazil = ({
                 onBlur={onBlur}
                 required={required}
                 disabled={disabled}
+                autocomplete={undefined}
             />
         </Field>
     );

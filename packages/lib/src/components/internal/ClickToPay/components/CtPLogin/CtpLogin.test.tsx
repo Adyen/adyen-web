@@ -95,6 +95,23 @@ test('should display not found if the email is not registered', async () => {
     expect(button).not.toHaveClass('adyen-checkout__button--loading');
 });
 
+test('should display local validation error message if the user clicks Continue without typing an email', async () => {
+    const user = userEvent.setup();
+
+    const contextProps = mock<IClickToPayContext>();
+    contextProps.isCtpPrimaryPaymentMethod = true;
+    contextProps.setIsCtpPrimaryPaymentMethod.mockImplementation(() => {});
+    contextProps.schemes = ['mc', 'visa'];
+
+    customRender(<CtPLogin />, contextProps);
+
+    const button = await screen.findByRole('button', { name: 'Continue' });
+    await user.click(button);
+
+    expect(contextProps.verifyIfShopperIsEnrolled).not.toHaveBeenCalled();
+    expect(await screen.findByText('Enter a valid email address (e.g. name@example.com)')).toBeInTheDocument();
+});
+
 test('should start the identity validation if the user is enrolled', async () => {
     const user = userEvent.setup();
 

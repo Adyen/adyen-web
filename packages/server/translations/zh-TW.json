@@ -447,5 +447,8 @@
     "issuerList.separatorText": "或是從清單中進行選擇",
     "upi.intent.apps.title": "選項",
     "upi.intent.apps.dropdown.label": "UPI 應用程式",
-    "upi.intent.apps.dropdown.placeholder": "選擇偏好的應用程式"
+    "upi.intent.apps.dropdown.placeholder": "選擇偏好的應用程式",
+    "order.paymentMethod.description": "%{name} 結尾為 %{lastFour}",
+    "select.results": "有 %{count} 項結果",
+    "ctp.errors.INVALID_EMAIL": "輸入有效的電子郵件地址（例如 name@example.com）"
 }

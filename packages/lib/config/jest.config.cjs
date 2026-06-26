@@ -3,9 +3,10 @@ module.exports = {
     verbose: true,
     rootDir: '../',
     setupFilesAfterEnv: ['<rootDir>/config/setupTests.ts'],
-    transformIgnorePatterns: ['node_modules/(?!(preact|@testing-library|until-async)/)'],
+    transformIgnorePatterns: ['node_modules/(?!(preact|@testing-library|until-async|@open-draft|rettime|msw)/)'],
     transform: {
-        '^.+\\.(js|ts|tsx|mjs)$': 'ts-jest'
+        '^.+\\.(js|ts|tsx)$': 'ts-jest',
+        '^.+\\.mjs$': '<rootDir>/config/esbuild-jest-transformer.cjs',
     },
     moduleNameMapper: {
         '\\.scss$': '<rootDir>/config/testMocks/styleMock.js'

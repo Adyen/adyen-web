@@ -49,7 +49,8 @@ storyIds = allEntries
     .filter(
         entry =>
             entry.type === 'story' && // Keep only actual stories
-            !EXCLUDED_STORIES.includes(entry.id) // Exclude stories in the exclusion list
+            !EXCLUDED_STORIES.includes(entry.id) && // Exclude stories in the exclusion list
+            !entry.tags.includes('no-automated-visual-test') // Exclude stories with the no-automated-visual-test tag
     )
     .map(entry => entry.id); // Extract the IDs
 
@@ -59,11 +60,9 @@ test.describe('Automated a11y testing', () => {
         const testTitle = `A11y Check: ${storyId.replace(/[^a-zA-Z0-9_.-]/g, '_')}`;
 
         test(testTitle, async ({ page }) => {
-            const storyUrl = `/iframe.html?id=${storyId}&viewMode=story`;
-
             // Create tests model
             const automatedModel = new Automated(page);
-            await automatedModel.goto(storyUrl);
+            await automatedModel.gotoStory(storyId);
 
             // get known violations id
             const knownViolations: string[] = KNOWN_A11Y_VIOLATIONS.hasOwnProperty(storyId) ? KNOWN_A11Y_VIOLATIONS[storyId] : [];
@@ -71,7 +70,7 @@ test.describe('Automated a11y testing', () => {
             const violations = await automatedModel.getA11yErrors(knownViolations);
             expect(
                 violations,
-                `Accessibility violations found on story: ${storyId} (${storyUrl}) \nViolations:\n ${JSON.stringify(violations, null, 2)}` // Include violations in error message
+                `Accessibility violations found on story: ${storyId} \nViolations:\n ${JSON.stringify(violations, null, 2)}` // Include violations in error message
             ).toEqual([]);
         });
     }

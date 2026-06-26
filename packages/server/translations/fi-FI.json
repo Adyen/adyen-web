@@ -447,5 +447,8 @@
     "issuerList.separatorText": "tai valitse luettelosta",
     "upi.intent.apps.title": "Vaihtoehdot",
     "upi.intent.apps.dropdown.label": "UPI-sovellukset",
-    "upi.intent.apps.dropdown.placeholder": "Valitse haluamasi sovellus"
+    "upi.intent.apps.dropdown.placeholder": "Valitse haluamasi sovellus",
+    "order.paymentMethod.description": "%{name}, joka päättyy kirjaimiin %{lastFour}",
+    "select.results": "%{count} tulosta saatavilla",
+    "ctp.errors.INVALID_EMAIL": "Anna kelvollinen sähköpostiosoite (esimerkiksi name@example.com)"
 }

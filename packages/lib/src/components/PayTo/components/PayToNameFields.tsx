@@ -31,6 +31,7 @@ export default function PayToNameFields({ i18n, errors, data, handleChangeFor, p
                 errorMessage={getErrorMessage(i18n, errors.firstName, i18n.get('firstName'))}
                 name={'firstName'}
                 i18n={i18n}
+                errorLive={true}
             >
                 <InputText
                     name={'firstName'}
@@ -41,6 +42,7 @@ export default function PayToNameFields({ i18n, errors, data, handleChangeFor, p
                     placeholder={placeholders?.firstName}
                     spellcheck={false}
                     required={true}
+                    autocomplete={'given-name'}
                 />
             </Field>
             <Field
@@ -49,6 +51,7 @@ export default function PayToNameFields({ i18n, errors, data, handleChangeFor, p
                 errorMessage={getErrorMessage(i18n, errors.lastName, i18n.get('lastName'))}
                 name={'lastName'}
                 i18n={i18n}
+                errorLive={true}
             >
                 <InputText
                     name={'lastName'}
@@ -59,6 +62,7 @@ export default function PayToNameFields({ i18n, errors, data, handleChangeFor, p
                     placeholder={placeholders?.lastName}
                     spellcheck={false}
                     required={true}
+                    autocomplete={'family-name'}
                 />
             </Field>
         </Fragment>

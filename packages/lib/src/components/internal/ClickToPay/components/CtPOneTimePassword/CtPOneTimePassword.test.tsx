@@ -1,6 +1,8 @@
 import { h } from 'preact';
 import { render, screen } from '@testing-library/preact';
 import { CoreProvider } from '../../../../../core/Context/CoreProvider';
+import SRPanelProvider from '../../../../../core/Errors/SRPanelProvider';
+import { setupCoreMock } from '../../../../../../config/testMocks/setup-core-mock';
 import ClickToPayProvider from '../../context/ClickToPayProvider';
 import { IClickToPayService } from '../../services/types';
 import { mock } from 'jest-mock-extended';
@@ -8,19 +10,22 @@ import userEvent from '@testing-library/user-event';
 import CtPOneTimePassword from './CtPOneTimePassword';
 
 const customRender = (ui, { clickToPayService = mock<IClickToPayService>(), configuration = {} } = {}) => {
+    const core = setupCoreMock();
     return render(
         <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
-            <ClickToPayProvider
-                clickToPayService={clickToPayService}
-                isStandaloneComponent={true}
-                onSetStatus={jest.fn()}
-                configuration={configuration}
-                onError={jest.fn()}
-                onSubmit={jest.fn()}
-                setClickToPayRef={jest.fn()}
-            >
-                {ui}
-            </ClickToPayProvider>
+            <SRPanelProvider srPanel={core.modules.srPanel}>
+                <ClickToPayProvider
+                    clickToPayService={clickToPayService}
+                    isStandaloneComponent={true}
+                    onSetStatus={jest.fn()}
+                    configuration={configuration}
+                    onError={jest.fn()}
+                    onSubmit={jest.fn()}
+                    setClickToPayRef={jest.fn()}
+                >
+                    {ui}
+                </ClickToPayProvider>
+            </SRPanelProvider>
         </CoreProvider>
     );
 };

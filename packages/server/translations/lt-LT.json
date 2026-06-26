@@ -447,5 +447,8 @@
     "issuerList.separatorText": "arba pasirinkite iš sąrašo",
     "upi.intent.apps.title": "Parinktys",
     "upi.intent.apps.dropdown.label": "UPI programos",
-    "upi.intent.apps.dropdown.placeholder": "Pasirinkite pageidaujamą programą"
+    "upi.intent.apps.dropdown.placeholder": "Pasirinkite pageidaujamą programą",
+    "order.paymentMethod.description": "%{name}, kuris baigiasi %{lastFour}",
+    "select.results": "Rasta rezultatų: %{count}",
+    "ctp.errors.INVALID_EMAIL": "Įveskite galiojantį el. pašto adresą (pvz., name@example.com)"
 }

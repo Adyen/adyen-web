@@ -447,5 +447,8 @@
     "issuerList.separatorText": "või valige nimekirjast",
     "upi.intent.apps.title": "Valikud",
     "upi.intent.apps.dropdown.label": "UPI rakendused",
-    "upi.intent.apps.dropdown.placeholder": "Valige eelistatud rakendus"
+    "upi.intent.apps.dropdown.placeholder": "Valige eelistatud rakendus",
+    "order.paymentMethod.description": "%{name}, mis lõpeb %{lastFour}-ga",
+    "select.results": "Saadaval on %{count} tulemust",
+    "ctp.errors.INVALID_EMAIL": "Sisestage kehtiv e-posti aadress (nt name@example.com)"
 }

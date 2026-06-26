@@ -33,7 +33,41 @@ const renderFieldContainer = (props = {}) => {
     );
 };
 
+const renderFieldContainerWithProps = (props: Partial<FieldContainerProps> = {}) => {
+    return render(
+        <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+            <FieldContainer {...propsMock} {...mockedProps} {...props} />
+        </CoreProvider>
+    );
+};
+
 describe('FieldContainer', () => {
+    describe('autocomplete tokens', () => {
+        const billingFields = [
+            { fieldName: 'street', expectedAutocomplete: 'billing address-line1' },
+            { fieldName: 'houseNumberOrName', expectedAutocomplete: 'billing address-line2' },
+            { fieldName: 'postalCode', expectedAutocomplete: 'billing postal-code' },
+            { fieldName: 'city', expectedAutocomplete: 'billing address-level2' }
+        ];
+
+        const deliveryFields = [
+            { fieldName: 'street', expectedAutocomplete: 'shipping address-line1' },
+            { fieldName: 'houseNumberOrName', expectedAutocomplete: 'shipping address-line2' },
+            { fieldName: 'postalCode', expectedAutocomplete: 'shipping postal-code' },
+            { fieldName: 'city', expectedAutocomplete: 'shipping address-level2' }
+        ];
+
+        test.each(billingFields)('field "$fieldName" renders autocomplete="$expectedAutocomplete"', ({ fieldName, expectedAutocomplete }) => {
+            renderFieldContainerWithProps({ fieldName, addressType: 'billingAddress' });
+            expect(screen.getByRole('textbox')).toHaveAttribute('autocomplete', expectedAutocomplete);
+        });
+
+        test.each(deliveryFields)('field "$fieldName" renders autocomplete="$expectedAutocomplete"', ({ fieldName, expectedAutocomplete }) => {
+            renderFieldContainerWithProps({ fieldName, addressType: 'deliveryAddress' });
+            expect(screen.getByRole('textbox')).toHaveAttribute('autocomplete', expectedAutocomplete);
+        });
+    });
+
     test('renders the StateField', async () => {
         renderFieldContainer({ fieldName: 'stateOrProvince', data: { country: 'US' } });
 

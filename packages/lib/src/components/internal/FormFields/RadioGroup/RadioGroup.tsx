@@ -51,5 +51,6 @@ export default function RadioGroup(props: Readonly<RadioGroupProps>) {
 
 RadioGroup.defaultProps = {
     onChange: () => {},
-    items: []
+    items: [],
+    autocomplete: undefined
 };

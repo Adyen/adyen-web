@@ -3,9 +3,6 @@ export default function createIframe({ src, title = 'iframe element', policy = '
     iframeEl.setAttribute('src', src);
     iframeEl.classList.add('js-iframe');
 
-    // Following a11y advice from LevelAccess, we always set the iframe to be role=presentation
-    iframeEl.setAttribute('role', 'presentation');
-
     if (title !== '' && title.trim().length > 0) {
         iframeEl.setAttribute('title', title);
     }

@@ -14,17 +14,24 @@ function SelectButtonElement({ filterable, toggleButtonRef, showList, selectList
 
     return (
         <button
+            role="combobox"
+            type="button"
             id={props.id}
+            className={props.className}
             aria-haspopup="listbox"
             aria-expanded={showList}
             aria-controls={selectListId}
+            aria-activedescendant={props['aria-activedescendant'] || undefined}
+            disabled={props.disabled}
             aria-disabled={props.readonly}
             aria-describedby={props.ariaDescribedBy}
             aria-labelledby={props.id ? `${props.id}-label ${props.id}-value` : undefined}
-            type={'button'}
-            {...props}
+            onClick={props.onClick}
+            onKeyDown={props.onKeyDown}
             ref={toggleButtonRef}
-        />
+        >
+            {props.children}
+        </button>
     );
 }
 
@@ -81,6 +88,7 @@ function SelectButton(props: Readonly<SelectButtonProps>) {
             id={props.id}
             showList={showList}
             selectListId={props.selectListId}
+            aria-activedescendant={!props.filterable && showList ? currentSelectedItemId || undefined : undefined}
         >
             {!props.filterable ? (
                 <Fragment>

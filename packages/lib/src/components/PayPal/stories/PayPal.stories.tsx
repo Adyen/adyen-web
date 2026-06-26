@@ -26,10 +26,7 @@ export const Default: Story = {
             blockPayPalVenmoButton: false,
             onAuthorized: (data, actions) => {
                 console.log({ data });
-                // Simulate async action after authorization
-                setTimeout(() => {
-                    actions.resolve();
-                }, 3000);
+                actions.resolve();
             }
         }
     }

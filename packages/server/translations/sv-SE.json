@@ -447,5 +447,8 @@
     "issuerList.separatorText": "eller välj i listan",
     "upi.intent.apps.title": "Alternativ",
     "upi.intent.apps.dropdown.label": "UPI-appar",
-    "upi.intent.apps.dropdown.placeholder": "Välj önskad app"
+    "upi.intent.apps.dropdown.placeholder": "Välj önskad app",
+    "order.paymentMethod.description": "%{name} som slutar på %{lastFour}",
+    "select.results": "%{count} resultat tillgängliga",
+    "ctp.errors.INVALID_EMAIL": "Ange en giltig e-postadress (t.ex. namn@exempel.com)"
 }

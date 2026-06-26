@@ -445,5 +445,8 @@
     "issuerList.separatorText": "или выберите из списка",
     "upi.intent.apps.title": "Опции",
     "upi.intent.apps.dropdown.label": "Приложения UPI",
-    "upi.intent.apps.dropdown.placeholder": "Выберите предпочтительное приложение"
+    "upi.intent.apps.dropdown.placeholder": "Выберите предпочтительное приложение",
+    "order.paymentMethod.description": "%{name}, заканчивающаяся на %{lastFour}",
+    "select.results": "Доступно результатов: %{count}",
+    "ctp.errors.INVALID_EMAIL": "Введите действительный адрес эл. почты (например, name@example.com)"
 }

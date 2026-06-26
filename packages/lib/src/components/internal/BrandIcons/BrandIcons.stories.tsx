@@ -80,9 +80,9 @@ export const WithCustomRenderBrandIcon: StoryObj<BrandIconsProp> = {
     args: {
         brandIcons: sampleBrands.slice(0, 3),
         renderBrandIcon: (brandIcon: BrandIcon) => (
-            <span key={brandIcon.alt} style={{ border: '1px solid #ccc', padding: '4px', borderRadius: '4px' }}>
+            <li key={brandIcon.alt} style={{ border: '1px solid #ccc', padding: '4px', borderRadius: '4px' }}>
                 <img src={brandIcon.src} alt={brandIcon.alt} style={{ margin: 0, padding: 0 }} />
-            </span>
+            </li>
         )
     }
 };

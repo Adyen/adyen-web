@@ -42,6 +42,10 @@ class VisaSdk extends AbstractSrcInitiator {
             };
 
             await this.schemeSdk.init(sdkProps);
+            const systemIframe = document.getElementById('vcop-src-system-frame');
+            systemIframe?.setAttribute('aria-hidden', 'true');
+            systemIframe?.setAttribute('tabindex', '-1');
+            systemIframe?.setAttribute('inert', '');
         } catch (err) {
             const srciError = new SrciError(err as VisaError | MastercardError, 'init', this.schemeName);
             throw srciError;

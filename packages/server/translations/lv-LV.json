@@ -447,5 +447,8 @@
     "issuerList.separatorText": "vai izvēlieties no saraksta",
     "upi.intent.apps.title": "Opcijas",
     "upi.intent.apps.dropdown.label": "UPI lietotnes",
-    "upi.intent.apps.dropdown.placeholder": "Izvēlieties vēlamo lietotni"
+    "upi.intent.apps.dropdown.placeholder": "Izvēlieties vēlamo lietotni",
+    "order.paymentMethod.description": "%{name}, kas beidzas ar %{lastFour}",
+    "select.results": "Pieejami %{count} rezultāti",
+    "ctp.errors.INVALID_EMAIL": "Ievadiet derīgu e-pasta adresi (piemēram, vards@piemers.com)"
 }

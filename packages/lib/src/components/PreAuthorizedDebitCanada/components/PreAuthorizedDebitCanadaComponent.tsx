@@ -103,6 +103,7 @@ function PreAuthorizedDebitCanadaComponent({
                         onBlur={handleChangeFor('ownerName', 'blur')}
                         required={true}
                         data-testid={'owner-name'}
+                        autocomplete="name"
                     />
                 </Field>
 
@@ -123,6 +124,7 @@ function PreAuthorizedDebitCanadaComponent({
                         onBlur={handleChangeFor('bankAccountNumber', 'blur')}
                         required={true}
                         maxlength={12}
+                        autocomplete={undefined}
                     />
                 </Field>
 
@@ -144,6 +146,7 @@ function PreAuthorizedDebitCanadaComponent({
                         onBlur={handleChangeFor('bankCode', 'blur')}
                         required={true}
                         maxlength={3}
+                        autocomplete={undefined}
                     />
                 </Field>
 
@@ -165,6 +168,7 @@ function PreAuthorizedDebitCanadaComponent({
                         onBlur={handleChangeFor('bankLocationId', 'blur')}
                         required={true}
                         maxlength={5}
+                        autocomplete={undefined}
                     />
                 </Field>
             </Fieldset>

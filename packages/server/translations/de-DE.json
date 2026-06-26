@@ -447,5 +447,8 @@
     "issuerList.separatorText": "oder aus der Liste auswählen",
     "upi.intent.apps.title": "Optionen",
     "upi.intent.apps.dropdown.label": "UPI-Apps",
-    "upi.intent.apps.dropdown.placeholder": "Bevorzugte App wählen"
+    "upi.intent.apps.dropdown.placeholder": "Bevorzugte App wählen",
+    "order.paymentMethod.description": "%{name} endet mit %{lastFour}",
+    "select.results": "%{count} Ergebnisse verfügbar",
+    "ctp.errors.INVALID_EMAIL": "Geben Sie eine gültige E-Mail-Adresse ein (z. B. name@example.com)"
 }

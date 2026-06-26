@@ -447,5 +447,8 @@
     "issuerList.separatorText": "sau alege din listă",
     "upi.intent.apps.title": "Opțiuni",
     "upi.intent.apps.dropdown.label": "Aplicații UPI",
-    "upi.intent.apps.dropdown.placeholder": "Alege aplicația preferată"
+    "upi.intent.apps.dropdown.placeholder": "Alege aplicația preferată",
+    "order.paymentMethod.description": "%{name} care se termină în %{lastFour}",
+    "select.results": "%{count} rezultate disponibile",
+    "ctp.errors.INVALID_EMAIL": "Introduceți o adresă de email validă (de exemplu, name@example.com)"
 }

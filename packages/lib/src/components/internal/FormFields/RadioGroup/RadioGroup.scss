@@ -136,7 +136,7 @@
 
     .adyen-checkout__radio_group__input:checked:focus + .adyen-checkout__radio_group__label,
     .adyen-checkout__radio_group__input:checked:active + .adyen-checkout__radio_group__label {
-        box-shadow: 0 0 0 0.5px variable-generator.token(color-outline-primary-active);
+        box-shadow: 0 0 0 0.8px variable-generator.token(color-outline-primary-active);
         border-color: variable-generator.token(color-outline-primary-active);
     }
 }

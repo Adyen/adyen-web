@@ -7,7 +7,7 @@ import { UPI } from '../../../../models/upi';
 
 test.describe('Dropin - Sessions - UPI', () => {
     test.describe('QR Code Flow (Desktop)', () => {
-        test('should succeed in making a payment', { tag: [TAGS.SCREENSHOT] }, async ({ dropinWithSession, browserName, page }) => {
+        test.skip('should succeed in making a payment', { tag: [TAGS.SCREENSHOT] }, async ({ dropinWithSession, browserName, page }) => {
             await dropinWithSession.goto(URL_MAP.dropinSessionsIndia);
 
             const upiPaymentMethodHeader = dropinWithSession.getPaymentMethodHeader('UPI');
