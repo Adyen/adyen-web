@@ -13,8 +13,13 @@ import { hasOwnProperty } from './hasOwnProperty';
 import { PostMsgParseErrorObject } from '../components/ThreeDS2/types';
 
 const getProcessMessageHandler =
-    (domain: string, resolve: Function, reject: Function, expectedType: string): Function =>
-    (event: MessageEvent): string | boolean => {
+    (
+        domain: string,
+        resolve: (value: unknown) => void,
+        reject: (reason?: unknown) => void,
+        expectedType: string
+    ): ((event: Pick<MessageEvent, 'origin' | 'data'>) => string | boolean) =>
+    (event: Pick<MessageEvent, 'origin' | 'data'>): string | boolean => {
         const parseErrorObj: PostMsgParseErrorObject = {};
         const origin = event.origin;
 
@@ -41,9 +46,8 @@ const getProcessMessageHandler =
 
         // Try to parse the data
         try {
-            const feedbackObj = JSON.parse(event.data);
-
-            if (hasOwnProperty(feedbackObj, 'type')) {
+            const feedbackObj = JSON.parse(event.data) as Record<string, unknown>;
+            if (feedbackObj && typeof feedbackObj === 'object' && hasOwnProperty(feedbackObj, 'type')) {
                 if (feedbackObj.type === expectedType) {
                     // Happy flow
                     resolve(feedbackObj);
