@@ -6,7 +6,8 @@ import DropinComponent from '../../Dropin';
 import getCurrency from '../../../../../storybook/utils/get-currency';
 import { createSession } from '../../../../../storybook/helpers/checkout-api-calls';
 import { RETURN_URL, SHOPPER_REFERENCE } from '../../../../../storybook/config/commonConfig';
-import type { StoryConfiguration } from '../../../../../storybook/types';
+import Klarna from '../../../Klarna/KlarnaPayments';
+import type { MetaConfiguration, StoryConfiguration } from '../../../../../storybook/types';
 import type { DropinConfiguration } from '../../types';
 import type { Order, PaymentData } from '../../../../types/global-types';
 import type { NewableComponent } from '../../../../core/core.registry';
@@ -53,7 +54,8 @@ const PaymentPage = ({
                     countryCode,
                     reference: 'ABC123',
                     returnUrl: RETURN_URL,
-                    shopperReference: SHOPPER_REFERENCE
+                    shopperReference: SHOPPER_REFERENCE,
+                    shopperEmail: 'shopper.ctp1@adyen.com'
                 });
                 sessionId = newSession.id;
                 session = newSession;
@@ -67,7 +69,7 @@ const PaymentPage = ({
                 session,
                 ...(existingOrder && { order: existingOrder }),
                 onReview: data => onReview(data, sessionId),
-                onError: (err: unknown) => console.error('[WithReviewPageAndDonations] onError', err)
+                onError: (err: unknown) => console.error('[ReviewPage] onError', err)
             });
             if (wrapperRef.current) {
                 new DropinComponent(checkout, componentConfiguration).mount(wrapperRef.current);
@@ -77,7 +79,7 @@ const PaymentPage = ({
         void init();
     }, []);
 
-    return <div ref={wrapperRef} />;
+    return <div ref={wrapperRef} className="component-wrapper" />;
 };
 
 interface ReviewPageProps {
@@ -87,9 +89,10 @@ interface ReviewPageProps {
     readonly countryCode: string;
     readonly shopperLocale: string;
     readonly onOrderUpdated?: (order: Order, sessionId: string) => void;
+    readonly showDonation?: boolean;
 }
 
-const ReviewPage = ({ reviewData, sessionId, amount, countryCode, shopperLocale, onOrderUpdated }: ReviewPageProps) => {
+const ReviewPage = ({ reviewData, sessionId, amount, countryCode, shopperLocale, onOrderUpdated, showDonation = false }: ReviewPageProps) => {
     const actionModalRef = useRef<HTMLDialogElement>(null);
     const actionRef = useRef<HTMLDivElement>(null);
     const donationRef = useRef<HTMLDivElement>(null);
@@ -115,7 +118,7 @@ const ReviewPage = ({ reviewData, sessionId, amount, countryCode, shopperLocale,
                     actionModalRef.current?.close();
                     setSubmitting(false);
                     setResultCode(result.resultCode);
-                    if (donationRef.current && checkoutRef.current) {
+                    if (showDonation && donationRef.current && checkoutRef.current) {
                         new Donation(checkoutRef.current, {
                             rootNode: donationRef.current,
                             commercialTxAmount: Number(amount)
@@ -161,7 +164,7 @@ const ReviewPage = ({ reviewData, sessionId, amount, countryCode, shopperLocale,
     }, []);
 
     return (
-        <div data-testid="review-page" style={{ maxWidth: 500 }}>
+        <div data-testid="review-page" className="component-wrapper">
             {!resultCode && (
                 <div>
                     <h2>Review your order</h2>
@@ -199,12 +202,153 @@ const ReviewPage = ({ reviewData, sessionId, amount, countryCode, shopperLocale,
     );
 };
 
-export const WithReviewPageAndDonations: DropinStory = {
+interface KlarnaPageProps {
+    readonly countryCode: string;
+    readonly amount: string | number;
+    readonly shopperLocale: string;
+    readonly onReview: (data: PaymentData, sessionId: string) => void;
+    readonly useKlarnaWidget?: boolean;
+}
+
+const KlarnaPage = ({ onReview, countryCode, amount, shopperLocale, useKlarnaWidget = false }: KlarnaPageProps) => {
+    const wrapperRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const init = async () => {
+            const session = await createSession({
+                amount: { currency: getCurrency(countryCode), value: Number(amount) },
+                shopperLocale,
+                countryCode,
+                reference: 'ABC123',
+                returnUrl: RETURN_URL,
+                shopperReference: SHOPPER_REFERENCE,
+                shopperEmail: 'shopper.ctp1@adyen.com'
+            });
+
+            const checkout = await AdyenCheckout({
+                clientKey: process.env.CLIENT_KEY,
+                environment: process.env.CLIENT_ENV as CoreConfiguration['environment'],
+                countryCode,
+                locale: shopperLocale,
+                session,
+                onReview: data => onReview(data, session.id),
+                onError: (err: unknown) => console.error('[KlarnaWidget] onError', err)
+            });
+
+            if (wrapperRef.current) {
+                new Klarna(checkout, { useKlarnaWidget }).mount(wrapperRef.current);
+            }
+        };
+
+        void init();
+    }, []);
+
+    return <div ref={wrapperRef} className="component-wrapper" />;
+};
+
+const renderWithDonations: DropinStory['render'] = ({ componentConfiguration, ...checkoutConfig }) => {
+    const { countryCode, amount, shopperLocale } = checkoutConfig;
+    const [reviewState, setReviewState] = useState<{ data: PaymentData; sessionId: string } | null>(null);
+    const [orderReturn, setOrderReturn] = useState<{ order: Order; sessionId: string } | null>(null);
+
+    if (reviewState) {
+        return (
+            <ReviewPage
+                reviewData={reviewState.data}
+                sessionId={reviewState.sessionId}
+                amount={amount}
+                countryCode={countryCode}
+                shopperLocale={shopperLocale}
+                showDonation
+                onOrderUpdated={(order, sessionId) => {
+                    setOrderReturn({ order, sessionId });
+                    setReviewState(null);
+                }}
+            />
+        );
+    }
+
+    return (
+        <PaymentPage
+            componentConfiguration={componentConfiguration}
+            countryCode={countryCode}
+            amount={amount}
+            shopperLocale={shopperLocale}
+            onReview={(data, sessionId) => setReviewState({ data, sessionId })}
+            existingSessionId={orderReturn?.sessionId}
+            existingOrder={orderReturn?.order}
+        />
+    );
+};
+
+const meta: MetaConfiguration<DropinConfiguration> = {
+    title: 'Review Page',
+    tags: ['no-automated-visual-test'],
+    argTypes: {
+        componentConfiguration: {
+            control: 'object'
+        }
+    }
+};
+
+export default meta;
+
+const renderDropin: DropinStory['render'] = ({ componentConfiguration, ...checkoutConfig }) => {
+    const { countryCode, amount, shopperLocale } = checkoutConfig;
+    const [reviewState, setReviewState] = useState<{ data: PaymentData; sessionId: string } | null>(null);
+
+    if (reviewState) {
+        return (
+            <ReviewPage
+                reviewData={reviewState.data}
+                sessionId={reviewState.sessionId}
+                amount={amount}
+                countryCode={countryCode}
+                shopperLocale={shopperLocale}
+            />
+        );
+    }
+
+    return (
+        <PaymentPage
+            componentConfiguration={componentConfiguration}
+            countryCode={countryCode}
+            amount={amount}
+            shopperLocale={shopperLocale}
+            onReview={(data, sessionId) => setReviewState({ data, sessionId })}
+        />
+    );
+};
+
+export const Dropin: DropinStory = {
     args: { countryCode: 'NL', useSessions: true },
-    render: ({ componentConfiguration, ...checkoutConfig }) => {
+    render: renderDropin
+};
+
+export const DropinWithCardsBypassingReview: DropinStory = {
+    args: {
+        countryCode: 'NL',
+        useSessions: true,
+        componentConfiguration: {
+            paymentMethodsConfiguration: {
+                card: {
+                    onReview: null
+                }
+            }
+        }
+    },
+    render: renderDropin
+};
+
+export const WithDonations: DropinStory = {
+    args: { countryCode: 'NL', useSessions: true },
+    render: renderWithDonations
+};
+
+const renderKlarnaStory = (useKlarnaWidget: boolean): DropinStory['render'] =>
+    function KlarnaStory({ ...checkoutConfig }) {
         const { countryCode, amount, shopperLocale } = checkoutConfig;
         const [reviewState, setReviewState] = useState<{ data: PaymentData; sessionId: string } | null>(null);
-        const [orderReturn, setOrderReturn] = useState<{ order: Order; sessionId: string } | null>(null);
 
         if (reviewState) {
             return (
@@ -214,24 +358,27 @@ export const WithReviewPageAndDonations: DropinStory = {
                     amount={amount}
                     countryCode={countryCode}
                     shopperLocale={shopperLocale}
-                    onOrderUpdated={(order, sessionId) => {
-                        setOrderReturn({ order, sessionId });
-                        setReviewState(null);
-                    }}
                 />
             );
         }
 
         return (
-            <PaymentPage
-                componentConfiguration={componentConfiguration}
+            <KlarnaPage
                 countryCode={countryCode}
                 amount={amount}
                 shopperLocale={shopperLocale}
+                useKlarnaWidget={useKlarnaWidget}
                 onReview={(data, sessionId) => setReviewState({ data, sessionId })}
-                existingSessionId={orderReturn?.sessionId}
-                existingOrder={orderReturn?.order}
             />
         );
-    }
+    };
+
+export const KlarnaWidget: DropinStory = {
+    args: { countryCode: 'NL', useSessions: true },
+    render: renderKlarnaStory(true)
+};
+
+export const KlarnaRedirect_InIsolationMode: DropinStory = {
+    args: { countryCode: 'NL', useSessions: true },
+    render: renderKlarnaStory(false)
 };
