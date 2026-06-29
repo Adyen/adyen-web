@@ -69,8 +69,9 @@ const PaymentPage = ({
                 onReview: data => onReview(data, sessionId),
                 onError: (err: unknown) => console.error('[WithReviewPageAndDonations] onError', err)
             });
-
-            new DropinComponent(checkout, componentConfiguration).mount(wrapperRef.current);
+            if (wrapperRef.current) {
+                new DropinComponent(checkout, componentConfiguration).mount(wrapperRef.current);
+            }
         };
 
         void init();
@@ -106,7 +107,9 @@ const ReviewPage = ({ reviewData, sessionId, amount, countryCode, shopperLocale,
                 session: { id: sessionId },
                 onAction: actionElement => {
                     actionModalRef.current?.showModal();
-                    actionElement.mount(actionRef.current);
+                    if (actionRef.current) {
+                        actionElement.mount(actionRef.current);
+                    }
                 },
                 onPaymentCompleted: result => {
                     actionModalRef.current?.close();
