@@ -27,6 +27,7 @@ const isLocaleLenghtValid = (locale: string): boolean =>
  */
 export function matchLocale(locale: string, supportedLocales: readonly string[]): string | null {
     if (!locale || typeof locale !== 'string') return null;
+    if (supportedLocales.includes(locale)) return locale;
     return supportedLocales.find(supLoc => toTwoLetterCode(supLoc) === toTwoLetterCode(locale)) || null;
 }
 
