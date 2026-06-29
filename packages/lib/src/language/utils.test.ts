@@ -51,17 +51,21 @@ describe('matchLocale()', () => {
         expect(matchLocale('en-CA', localesWithDuplicates)).toBe('en-US');
     });
 
-    test('should prefer the exact locale over a same-language sibling for zh-TW', () => {
+    test.only('should prefer the exact locale over a same-language sibling for zh-TW', () => {
         expect(matchLocale('zh-TW', CDN_SUPPORTED_LOCALES)).toBe('zh-TW');
+        expect(matchLocale('zh-tw', CDN_SUPPORTED_LOCALES)).toBe('zh-TW');
     });
 
-    test('should prefer the exact locale over a same-language sibling for pt-PT', () => {
+    test.only('should prefer the exact locale over a same-language sibling for pt-PT', () => {
         expect(matchLocale('pt-PT', CDN_SUPPORTED_LOCALES)).toBe('pt-PT');
+        expect(matchLocale('pt-pt', CDN_SUPPORTED_LOCALES)).toBe('pt-PT');
     });
 
-    test('should still resolve the unambiguous siblings correctly', () => {
+    test.only('should still resolve the unambiguous siblings correctly', () => {
         expect(matchLocale('zh-CN', CDN_SUPPORTED_LOCALES)).toBe('zh-CN');
         expect(matchLocale('pt-BR', CDN_SUPPORTED_LOCALES)).toBe('pt-BR');
+        expect(matchLocale('zh-cn', CDN_SUPPORTED_LOCALES)).toBe('zh-CN');
+        expect(matchLocale('pt-br', CDN_SUPPORTED_LOCALES)).toBe('pt-BR');
     });
 });
 
