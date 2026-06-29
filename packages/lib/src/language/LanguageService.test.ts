@@ -92,6 +92,14 @@ describe('LanguageService', () => {
                     })
                 );
             });
+
+            test('should request the exact translation file for zh-TW (not zh-CN)', async () => {
+                mockHttpGet.mockResolvedValueOnce({});
+                await service.fetchTranslationsFromCdn('zh-TW');
+                expect(mockHttpGet).toHaveBeenCalledWith(
+                    expect.objectContaining({ path: `sdk/${sdkVersion}/translations/zh-TW.json` })
+                );
+            });
         });
 
         describe('fallback behavior', () => {
