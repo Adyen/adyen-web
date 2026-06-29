@@ -50,6 +50,7 @@ export default function StoredCardFields({
                             value={`${expiryMonth} / ${expiryYear}`}
                             disabled={true}
                             dir={'ltr'}
+                            autocomplete={undefined}
                         />
                     </Field>
                 )}

@@ -58,6 +58,15 @@ describe('PersonalDetails', () => {
         expect(screen.getByLabelText(/date of birth/i)).toHaveValue(data.dateOfBirth);
     });
 
+    test('should render correct autocomplete attributes on all fields', () => {
+        renderPersonalDetails({});
+
+        expect(screen.getByLabelText(/first name/i)).toHaveAttribute('autocomplete', 'given-name');
+        expect(screen.getByLabelText(/last name/i)).toHaveAttribute('autocomplete', 'family-name');
+        expect(screen.getByLabelText(/email address/i)).toHaveAttribute('autocomplete', 'email');
+        expect(screen.getByLabelText(/telephone number/i)).toHaveAttribute('autocomplete', 'tel');
+    });
+
     test('should return the data in the expected format on initial render', async () => {
         const data = {
             firstName: 'John',

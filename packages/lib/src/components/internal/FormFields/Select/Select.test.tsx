@@ -33,7 +33,7 @@ describe('Select', () => {
             onChange: onChangeCb
         });
 
-        await user.click(screen.getByRole('button'));
+        await user.click(screen.getByRole('combobox'));
 
         await user.click(screen.getByText('Issuer 3'));
 
@@ -43,7 +43,7 @@ describe('Select', () => {
         expect(onChangeCb.mock.calls[0][0]).toStrictEqual(callbackData);
 
         // Test keyboard interaction - focus the button first with user event
-        const button = screen.getByRole('button');
+        const button = screen.getByRole('combobox');
         await user.click(button); // Open dropdown
 
         await user.keyboard('[ArrowDown][Enter]');
@@ -141,10 +141,10 @@ describe('Select', () => {
             onChange: jest.fn()
         });
 
-        const button = screen.getByRole('button');
+        const combobox = screen.getByRole('combobox');
 
         // Focus should not open the dropdown
-        await user.tab(); // Focus the button using tab navigation
+        await user.tab(); // Focus the combobox using tab navigation
 
         // Debug visibility
         const option1 = screen.getByText('Option 1');
@@ -155,7 +155,7 @@ describe('Select', () => {
         expect(option2.offsetParent).toBeNull();
 
         // Click should open the dropdown
-        await user.click(button);
+        await user.click(combobox);
         expect(screen.getByText('Option 1')).toBeVisible();
         expect(screen.getByText('Option 2')).toBeVisible();
     });
@@ -230,29 +230,29 @@ describe('Select', () => {
     describe('select-only (filterable=false)', () => {
         test('aria-expanded is false initially and true when open', async () => {
             renderSelect({ filterable: false });
-            const button = screen.getByRole('button');
-            expect(button).toHaveAttribute('aria-expanded', 'false');
-            await user.click(button);
-            expect(button).toHaveAttribute('aria-expanded', 'true');
+            const combobox = screen.getByRole('combobox');
+            expect(combobox).toHaveAttribute('aria-expanded', 'false');
+            await user.click(combobox);
+            expect(combobox).toHaveAttribute('aria-expanded', 'true');
         });
 
         test('button has aria-haspopup="listbox"', () => {
             renderSelect({ filterable: false });
-            expect(screen.getByRole('button')).toHaveAttribute('aria-haspopup', 'listbox');
+            expect(screen.getByRole('combobox')).toHaveAttribute('aria-haspopup', 'listbox');
         });
 
         test('button has aria-controls pointing to the listbox', () => {
             renderSelect({ filterable: false });
-            const button = screen.getByRole('button');
+            const combobox = screen.getByRole('combobox');
             const listbox = screen.getByRole('listbox');
-            expect(button).toHaveAttribute('aria-controls', listbox.id);
+            expect(combobox).toHaveAttribute('aria-controls', listbox.id);
         });
 
         test('button has aria-labelledby combining label and selected value when uniqueId is provided', () => {
             renderSelect({ filterable: false, uniqueId: 'test-select', selectedValue: '1', items: [{ id: '1', name: 'Mobile' }] });
-            const button = screen.getByRole('button');
-            expect(button).toHaveAttribute('aria-labelledby', 'test-select-label test-select-value');
-            expect(within(button).getByText('Mobile')).toBeInTheDocument();
+            const combobox = screen.getByRole('combobox');
+            expect(combobox).toHaveAttribute('aria-labelledby', 'test-select-label test-select-value');
+            expect(within(combobox).getByText('Mobile')).toBeInTheDocument();
         });
     });
 });

@@ -42,6 +42,7 @@ export default function PayToNameFields({ i18n, errors, data, handleChangeFor, p
                     placeholder={placeholders?.firstName}
                     spellcheck={false}
                     required={true}
+                    autocomplete={'given-name'}
                 />
             </Field>
             <Field
@@ -61,6 +62,7 @@ export default function PayToNameFields({ i18n, errors, data, handleChangeFor, p
                     placeholder={placeholders?.lastName}
                     spellcheck={false}
                     required={true}
+                    autocomplete={'family-name'}
                 />
             </Field>
         </Fragment>

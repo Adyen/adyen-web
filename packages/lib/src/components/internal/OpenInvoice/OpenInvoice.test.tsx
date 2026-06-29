@@ -134,4 +134,51 @@ describe('OpenInvoice', () => {
         renderOpenInvoice();
         expect(screen.getByText('All fields are required unless marked otherwise.')).toBeInTheDocument();
     });
+
+    describe('autocomplete attributes', () => {
+        test('should render correct autocomplete on personal details fields', () => {
+            renderOpenInvoice({
+                visibility: { personalDetails: 'editable', billingAddress: 'hidden', deliveryAddress: 'hidden' }
+            });
+
+            expect(screen.getByLabelText(/first name/i)).toHaveAttribute('autocomplete', 'given-name');
+            expect(screen.getByLabelText(/last name/i)).toHaveAttribute('autocomplete', 'family-name');
+            expect(screen.getByLabelText(/email address/i)).toHaveAttribute('autocomplete', 'email');
+            expect(screen.getByLabelText(/telephone number/i)).toHaveAttribute('autocomplete', 'tel');
+            expect(screen.getByLabelText(/date of birth/i)).toHaveAttribute('autocomplete', 'bday');
+        });
+
+        test('should render correct autocomplete on billing address text fields', () => {
+            renderOpenInvoice({
+                visibility: { personalDetails: 'hidden', billingAddress: 'editable', deliveryAddress: 'hidden' }
+            });
+
+            expect(screen.getByLabelText('Street')).toHaveAttribute('autocomplete', 'billing address-line1');
+            expect(screen.getByLabelText('House number')).toHaveAttribute('autocomplete', 'billing address-line2');
+            expect(screen.getByLabelText('Postal code')).toHaveAttribute('autocomplete', 'billing postal-code');
+            expect(screen.getByLabelText('City')).toHaveAttribute('autocomplete', 'billing address-level2');
+        });
+
+        test('should render correct autocomplete on delivery address text fields', async () => {
+            const { user } = renderOpenInvoice({
+                visibility: { personalDetails: 'hidden', billingAddress: 'editable', deliveryAddress: 'editable' }
+            });
+
+            const deliveryCheckbox = screen.getByRole('checkbox', { name: 'Specify a separate delivery address' });
+            await user.click(deliveryCheckbox);
+
+            const deliveryAddressSection = await screen.findByText('Delivery Address');
+            expect(deliveryAddressSection).toBeInTheDocument();
+
+            const streetInputs = screen.getAllByLabelText('Street');
+            const houseInputs = screen.getAllByLabelText('House number');
+            const postalInputs = screen.getAllByLabelText('Postal code');
+            const cityInputs = screen.getAllByLabelText('City');
+
+            expect(streetInputs[1]).toHaveAttribute('autocomplete', 'shipping address-line1');
+            expect(houseInputs[1]).toHaveAttribute('autocomplete', 'shipping address-line2');
+            expect(postalInputs[1]).toHaveAttribute('autocomplete', 'shipping postal-code');
+            expect(cityInputs[1]).toHaveAttribute('autocomplete', 'shipping address-level2');
+        });
+    });
 });

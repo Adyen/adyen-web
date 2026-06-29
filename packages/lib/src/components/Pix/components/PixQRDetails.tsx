@@ -22,6 +22,7 @@ const PixQRDetails = () => {
                     value={qrCodeData}
                     readonly
                     aria-label={i18n.get('pix.code.label')}
+                    autocomplete={undefined}
                 />
             </Field>
             <QRCodeCopyButton
