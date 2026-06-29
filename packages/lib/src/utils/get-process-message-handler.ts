@@ -31,14 +31,12 @@ const getProcessMessageHandler =
 
         if (typeof event.data !== 'string') {
             // If it's from our domain but not a string - log this somewhere?
-            // console.log('### get-process-message-handler:: Event data from expected domain but not in expected form');
-            return 'Event data was not of type string';
+            return 'Event data from expected domain but not in expected form';
         }
 
         if (!event.data.length) {
             // If it's from our domain, is a string, but is empty - log this somewhere?
-            // console.log('### get-process-message-handler:: Event data from expected domain, in expected form, but empty');
-            return 'Invalid event data string';
+            return 'Event data from expected domain, in expected form, but empty';
         }
 
         // Try to parse the data
@@ -51,19 +49,13 @@ const getProcessMessageHandler =
                     resolve(feedbackObj);
                     return true;
                 } else {
-                    // event.data has 'type' but not what we were expecting - log this somewhere?
-                    // console.log(
-                    //     '### get-process-message-handler:::: feedbackObj.type was not of expected type',
-                    //     feedbackObj.type,
-                    //     '!=',
-                    //     expectedType
-                    // );
-                    return 'Event data was not of expected type';
+                    // feedbackObj.type != expectedType - log this somewhere?
+                    return 'Event data has "type" but the object is not in the expected form';
                 }
             } else {
-                // FAIL SILENTLY: event.data had no 'type' property - log this somewhere, if we know we're in 3DS2 scenario?
+                // FAIL SILENTLY: event.data had no 'type' property
                 //  example: applies when RiskModule device fingerprinting is ongoing and this handler is picking up securedFields traffic
-                // console.log('### get-process-message-handler:::: returned data had no type property feedbackObj=', feedbackObj);
+                //  - But, *if* we know we're in 3DS2 scenario - log this somewhere?
                 return 'Event data had no type';
             }
         } catch (e) {
