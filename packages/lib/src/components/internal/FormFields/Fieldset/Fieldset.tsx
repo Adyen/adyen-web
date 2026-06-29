@@ -41,7 +41,6 @@ export default function Fieldset({
                 ...classNameFieldsetModifiers.map(m => `adyen-checkout__fieldset--${m}`),
                 { 'adyen-checkout__fieldset--readonly': readonly }
             ])}
-            aria-describedby={description ? describedById : null}
         >
             {label && (
                 <legend className="adyen-checkout__fieldset__title">
