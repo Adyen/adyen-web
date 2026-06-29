@@ -1,8 +1,9 @@
 import { h } from 'preact';
 import { UIElement } from './UIElement';
-import { any, mock } from 'jest-mock-extended';
+import { mock } from 'jest-mock-extended';
 import { AdyenCheckout, ThreeDS2Challenge, ThreeDS2DeviceFingerprint } from '../../../index';
 import { UIElementProps } from './types';
+import { AdditionalDetailsData, ICore } from '../../../types';
 import { Resources } from '../../../core/Context/Resources';
 import { PaymentActionsType } from '../../../types/global-types';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
@@ -27,7 +28,7 @@ class MyElement extends UIElement<MyElementProps> {
     public callOnChange() {
         super.onChange();
     }
-    public handleAdditionalDetails(data) {
+    public handleAdditionalDetails(data: AdditionalDetailsData) {
         super.handleAdditionalDetails(data);
     }
     protected override componentToRender() {
@@ -38,7 +39,7 @@ class MyElement extends UIElement<MyElementProps> {
 const submitMock = jest.fn();
 (global as any).HTMLFormElement.prototype.submit = () => submitMock;
 
-let core;
+let core: ICore;
 beforeEach(() => {
     core = setupCoreMock();
 });
@@ -119,6 +120,7 @@ describe('UIElement', () => {
         test('should use the name from payment methods response', () => {
             core.paymentMethodsResponse.paymentMethods = [
                 {
+                    _id: '123456',
                     name: 'SuperPayeee',
                     type: 'super_pay'
                 }
@@ -131,6 +133,7 @@ describe('UIElement', () => {
         test('should use the name prop as it has precedence over payment methods response name property', () => {
             core.paymentMethodsResponse.paymentMethods = [
                 {
+                    _id: '123456',
                     name: 'SuperPayeee',
                     type: 'super_pay'
                 }
@@ -163,10 +166,10 @@ describe('UIElement', () => {
             const actionComponent = element.handleAction(fingerprintAction);
             expect(actionComponent instanceof ThreeDS2DeviceFingerprint).toEqual(true);
 
-            expect(actionComponent.props.elementRef).not.toBeDefined();
+            expect(actionComponent?.props.elementRef).not.toBeDefined();
             expect((actionComponent as unknown as ThreeDS2DeviceFingerprint).props.showSpinner).toEqual(true);
-            expect(actionComponent.props.statusType).toEqual('loading');
-            expect(actionComponent.props.isDropin).toBe(false);
+            expect(actionComponent?.props.statusType).toEqual('loading');
+            expect(actionComponent?.props.isDropin).toBe(false);
         });
 
         test('should handle challenge action', async () => {
@@ -195,9 +198,9 @@ describe('UIElement', () => {
 
             const actionComponent = element.handleAction(challengeAction);
             expect(actionComponent instanceof ThreeDS2Challenge).toEqual(true);
-            expect(actionComponent.props.elementRef).not.toBeDefined();
-            expect(actionComponent.props.statusType).toEqual('custom');
-            expect(actionComponent.props.isDropin).toBe(false);
+            expect(actionComponent?.props.elementRef).not.toBeDefined();
+            expect(actionComponent?.props.statusType).toEqual('custom');
+            expect(actionComponent?.props.isDropin).toBe(false);
             expect((actionComponent as unknown as ThreeDS2Challenge).props.challengeWindowSize).toEqual('02');
         });
 
@@ -287,7 +290,7 @@ describe('UIElement', () => {
         test('should make successful payment using sessions flow', async () => {
             const onPaymentCompletedMock = jest.fn();
 
-            core.session.submitPayment.calledWith(any()).mockResolvedValue({
+            (core.session?.submitPayment as jest.Mock).mockResolvedValue({
                 resultCode: 'Authorised',
                 sessionData: 'session-data',
                 sessionResult: 'session-result'
@@ -419,8 +422,8 @@ describe('UIElement', () => {
             const onOrderUpdatedMock = jest.fn();
 
             jest.spyOn(MyElement.prototype, 'isValid', 'get').mockReturnValue(true);
-            core.update.calledWith(any()).mockResolvedValue(core);
-            core.session.submitPayment.calledWith(any()).mockResolvedValue({
+            (core.update as jest.Mock).mockResolvedValue(core);
+            (core.session?.submitPayment as jest.Mock).mockResolvedValue({
                 resultCode: 'Pending',
                 // @ts-ignore  ADD ORDER TO SESSION CHECKOUT RESPONSE
                 order,
@@ -473,9 +476,9 @@ describe('UIElement', () => {
             const onOrderUpdatedMock = jest.fn();
 
             jest.spyOn(MyElement.prototype, 'isValid', 'get').mockReturnValue(true);
-            core.update.calledWith(any()).mockResolvedValue(core);
+            (core.update as jest.Mock).mockResolvedValue(core);
             core.options.locale = 'en-US';
-            core.session = null;
+            core.session = undefined;
 
             const element = new MyElement(core, {
                 onSubmit: onSubmitMock,
@@ -535,9 +538,9 @@ describe('UIElement', () => {
             const onErrorMock = jest.fn();
 
             jest.spyOn(MyElement.prototype, 'isValid', 'get').mockReturnValue(true);
-            core.update.calledWith(any()).mockResolvedValue(core);
+            (core.update as jest.Mock).mockResolvedValue(core);
             core.options.locale = 'en-US';
-            core.session = null;
+            core.session = undefined;
 
             const element = new MyElement(core, {
                 onSubmit: onSubmitMock,
@@ -565,7 +568,9 @@ describe('UIElement', () => {
             const errorCode = 'mockedErrorCode';
             const txVariant = 'scheme';
 
-            core.session.submitPayment.mockImplementation(() => Promise.reject(new AdyenCheckoutError('NETWORK_ERROR', '', { code: errorCode })));
+            (core.session?.submitPayment as jest.Mock).mockImplementation(() =>
+                Promise.reject(new AdyenCheckoutError('NETWORK_ERROR', '', { code: errorCode }))
+            );
             jest.spyOn(MyElement.prototype, 'isValid', 'get').mockReturnValue(true);
 
             const element = new MyElement(core, { type: txVariant });
@@ -661,7 +666,7 @@ describe('UIElement', () => {
                 onPaymentCompleted: onPaymentCompletedMock
             });
 
-            core.session.submitDetails.calledWith(any()).mockResolvedValue({
+            (core.session?.submitDetails as jest.Mock).mockResolvedValue({
                 resultCode: 'Authorised',
                 sessionData: 'session-data',
                 sessionResult: 'session-result'
@@ -681,8 +686,8 @@ describe('UIElement', () => {
 
             await new Promise(process.nextTick);
 
-            expect(core.session.submitDetails).toHaveBeenCalledTimes(1);
-            expect(core.session.submitDetails).toHaveBeenCalledWith(state.data);
+            expect(core.session?.submitDetails).toHaveBeenCalledTimes(1);
+            expect(core.session?.submitDetails).toHaveBeenCalledWith(state.data);
 
             expect(onPaymentCompletedMock).toHaveBeenCalledTimes(1);
             expect(onPaymentCompletedMock).toHaveBeenCalledWith(
@@ -755,10 +760,12 @@ describe('UIElement', () => {
             const errorCode = 'mockedErrorCode';
             const txVariant = 'scheme';
 
-            core.session.submitDetails.mockImplementation(() => Promise.reject(new AdyenCheckoutError('NETWORK_ERROR', '', { code: errorCode })));
+            (core.session?.submitDetails as jest.Mock).mockImplementation(() =>
+                Promise.reject(new AdyenCheckoutError('NETWORK_ERROR', '', { code: errorCode }))
+            );
 
             const element = new MyElement(core, { type: txVariant });
-            element.handleAdditionalDetails({});
+            element.handleAdditionalDetails({ data: { details: {}, paymentData: '' } });
             await new Promise(process.nextTick);
 
             expect(core.modules.analytics.sendAnalytics).toHaveBeenCalledWith({
@@ -783,7 +790,9 @@ describe('UIElement', () => {
         test('should update amount and propagate it to the AmountProvider', () => {
             const element = new MyElement(core);
             render(element.render());
-            const spy = jest.spyOn(element['amountProviderRef'].current, 'update');
+            const amountProvider = element['amountProviderRef'].current;
+            if (!amountProvider) throw new Error('amountProviderRef not initialized after render');
+            const spy = jest.spyOn(amountProvider, 'update');
 
             expect(element.props.amount).toBeUndefined();
             const newAmount = { value: 1000, currency: 'USD' };
@@ -797,7 +806,9 @@ describe('UIElement', () => {
         test('should update secondary amount and propagate it to the AmountProvider', () => {
             const element = new MyElement(core);
             render(element.render());
-            const spy = jest.spyOn(element['amountProviderRef'].current, 'update');
+            const amountProvider = element['amountProviderRef'].current;
+            if (!amountProvider) throw new Error('amountProviderRef not initialized after render');
+            const spy = jest.spyOn(amountProvider, 'update');
 
             expect(element.props.secondaryAmount).toBeUndefined();
             const newAmount = { value: 1000, currency: 'USD' };
