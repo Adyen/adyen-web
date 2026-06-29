@@ -59,7 +59,7 @@ function Select({
 
     const setNextActive = () => {
         if (!filteredItems || filteredItems.length < 1) return;
-        const possibleNextIndex = filteredItems.findIndex(listItem => listItem === activeOption) + 1;
+        const possibleNextIndex = filteredItems.findIndex(listItem => listItem.id === activeOption.id) + 1;
         const nextIndex = possibleNextIndex < filteredItems.length ? possibleNextIndex : 0;
         const nextItem = filteredItems[nextIndex];
         scrollToItem(nextItem);
@@ -68,7 +68,7 @@ function Select({
 
     const setPreviousActive = () => {
         if (!filteredItems || filteredItems.length < 1) return;
-        const possibleNextIndex = filteredItems.findIndex(listItem => listItem === activeOption) - 1;
+        const possibleNextIndex = filteredItems.findIndex(listItem => listItem.id === activeOption.id) - 1;
         const nextIndex = possibleNextIndex < 0 ? filteredItems.length - 1 : possibleNextIndex;
         const nextItem = filteredItems[nextIndex];
         scrollToItem(nextItem);

@@ -42,14 +42,14 @@
         "@adyen/adyen-web-server": "1.0.0",
         "@changesets/cli": "2.31.0",
         "@changesets/get-github-info": "0.8.0",
-        "concurrently": "9.2.1",
+        "concurrently": "10.0.3",
         "cross-env": "10.1.0",
         "husky": "9.1.7",
-        "lint-staged": "17.0.4",
+        "lint-staged": "17.0.7",
         "prettier": "3.8.3"
     },
     "resolutions": {
         "tar-fs": "^3.0.9"
     },
-    "packageManager": "yarn@4.14.1"
+    "packageManager": "yarn@4.16.0"
 }

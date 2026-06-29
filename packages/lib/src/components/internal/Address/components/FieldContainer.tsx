@@ -2,10 +2,12 @@ import { h } from 'preact';
 import Field from '../../FormFields/Field';
 import StateField from './StateField';
 import CountryField from './CountryField';
-import { AddressStateError, FieldContainerProps } from '../types';
+import { AddressStateError, AddressType, FieldContainerProps } from '../types';
 import { useCoreContext } from '../../../../core/Context/CoreProvider';
 import Language from '../../../../language/Language';
 import InputText from '../../FormFields/InputText';
+import { AutocompleteValue } from '../../FormFields/types';
+import { ADDRESS_FIELD_TOKEN_MAP } from '../constants';
 
 function getErrorMessage(errors: AddressStateError, fieldName: string, i18n: Language, label: string): string | boolean {
     if (typeof errors[fieldName]?.errorMessage === 'object') {
@@ -23,9 +25,18 @@ function getErrorMessage(errors: AddressStateError, fieldName: string, i18n: Lan
  * NOT TO BE USED: if you just want to add a Country or State dropdown outside of an Address component
  * - then you should implement <CountryField> or <StateField> directly
  */
+function getAddressAutocomplete(fieldName: string, addressType: AddressType): AutocompleteValue {
+    const token = ADDRESS_FIELD_TOKEN_MAP[fieldName];
+    if (!token) return undefined;
+    if (addressType === 'billingAddress') return `billing ${token}` as AutocompleteValue;
+    if (addressType === 'deliveryAddress') return `shipping ${token}` as AutocompleteValue;
+    // Fallback: bare token (no prefix) when address type is unspecified
+    return token as AutocompleteValue;
+}
+
 function FieldContainer(props: Readonly<FieldContainerProps>) {
     const { i18n } = useCoreContext();
-    const { classNameModifiers = [], data, errors, valid, fieldName, onInput, onBlur, trimOnBlur, maxLength, disabled } = props;
+    const { classNameModifiers = [], data, errors, valid, fieldName, onInput, onBlur, trimOnBlur, maxLength, disabled, addressType } = props;
 
     const value: string = data[fieldName];
     const selectedCountry: string = data.country;
@@ -83,6 +94,7 @@ function FieldContainer(props: Readonly<FieldContainerProps>) {
                         trimOnBlur={trimOnBlur}
                         disabled={disabled}
                         required={!isOptional}
+                        autocomplete={getAddressAutocomplete(fieldName, addressType)}
                     />
                 </Field>
             );

@@ -82,6 +82,7 @@ export default function PersonalDetails(props: Readonly<PersonalDetailsProps>) {
                         placeholder={placeholders.firstName}
                         spellcheck={false}
                         required={true}
+                        autocomplete={'given-name'}
                     />
                 </Field>
             )}
@@ -103,6 +104,7 @@ export default function PersonalDetails(props: Readonly<PersonalDetailsProps>) {
                         placeholder={placeholders.lastName}
                         spellcheck={false}
                         required={true}
+                        autocomplete={'family-name'}
                     />
                 </Field>
             )}
@@ -124,6 +126,7 @@ export default function PersonalDetails(props: Readonly<PersonalDetailsProps>) {
                         onBlur={eventHandler('blur')}
                         placeholder={placeholders.dateOfBirth}
                         required={true}
+                        autocomplete={'bday'}
                     />
                 </Field>
             )}
@@ -145,6 +148,7 @@ export default function PersonalDetails(props: Readonly<PersonalDetailsProps>) {
                         onBlur={eventHandler('blur')}
                         placeholder={placeholders.shopperEmail}
                         required={true}
+                        autocomplete={'email'}
                     />
                 </Field>
             )}
@@ -166,6 +170,7 @@ export default function PersonalDetails(props: Readonly<PersonalDetailsProps>) {
                         onBlur={eventHandler('blur')}
                         placeholder={placeholders.telephoneNumber}
                         required={true}
+                        autocomplete={'tel'}
                     />
                 </Field>
             )}

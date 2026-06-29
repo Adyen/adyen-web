@@ -3,6 +3,15 @@ import { AddressSpecifications } from './types';
 export const FALLBACK_VALUE = 'N/A';
 export const ADDRESS_SCHEMA = ['street', 'houseNumberOrName', 'postalCode', 'city', 'stateOrProvince', 'country'] as const;
 export const [STREET, HOUSE_NUMBER_OR_NAME, POSTAL_CODE, CITY, STATE_OR_PROVINCE, COUNTRY] = ADDRESS_SCHEMA;
+
+// WCAG 2.2 - Address field autocomplete tokens
+export const ADDRESS_FIELD_TOKEN_MAP: Record<string, string> = {
+    street: 'address-line1',
+    houseNumberOrName: 'address-line2',
+    postalCode: 'postal-code',
+    city: 'address-level2'
+};
+
 // prettier-ignore
 export const ADDRESS_SPECIFICATIONS: AddressSpecifications = {
     AU: {

@@ -12,6 +12,7 @@ import { useCallback } from 'preact/hooks';
 import classNames from 'classnames';
 import { ARIA_CONTEXT_SUFFIX, ARIA_ERROR_SUFFIX } from '../../../core/Errors/constants';
 import Language from '../../../language';
+import { AutocompleteValue } from './types';
 import './FormFields.scss';
 
 export interface InputBaseProps extends InputHTMLAttributes {
@@ -35,6 +36,12 @@ export interface InputBaseProps extends InputHTMLAttributes {
     maxlength?: number | null;
     addContextualElement?: boolean;
     type?: string;
+    /**
+     * WCAG 2.2 autocomplete token for browser autofill.
+     * Pass undefined to omit the attribute entirely.
+     * @see https://www.w3.org/TR/WCAG22/#input-purposes
+     */
+    autocomplete: AutocompleteValue;
 }
 
 export default function InputBase({ setRef, ...props }: Readonly<InputBaseProps>) {
@@ -122,6 +129,7 @@ export default function InputBase({ setRef, ...props }: Readonly<InputBaseProps>
         isValid: iv,
         addContextualElement: ace,
         'aria-describedby': ariaDescribedByProp,
+        autocomplete,
         ...restProps
     } = props;
 
@@ -133,6 +141,8 @@ export default function InputBase({ setRef, ...props }: Readonly<InputBaseProps>
         <input
             id={uniqueId}
             {...restProps}
+            // eslint-disable-next-line react/no-unknown-property -- Preact uses lowercase 'autocomplete'
+            autocomplete={autocomplete}
             aria-required={restProps.required}
             type={type}
             className={inputClassNames}

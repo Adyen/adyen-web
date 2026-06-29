@@ -1,5 +1,45 @@
 # @adyen/adyen-web
 
+## 6.40.1
+
+### Patch Changes
+
+- Fixed: Removes incorrect presentation role on card fields ([#4035](https://github.com/Adyen/adyen-web/pull/4035))
+
+- Fixed: a11y keyboard navigation inside Select list ([#4029](https://github.com/Adyen/adyen-web/pull/4029))
+
+## 6.40.0
+
+### Minor Changes
+
+- Improved: UK support for Affirm ([#4025](https://github.com/Adyen/adyen-web/pull/4025))
+
+### Patch Changes
+
+- Fixed: countryCode & allowedCountries mismatch issue for Affirm ([#4025](https://github.com/Adyen/adyen-web/pull/4025))
+
+- Fixed: Add autocomplete tokens to all personal details and address fields ([#4027](https://github.com/Adyen/adyen-web/pull/4027))
+
+- Fixed: a11y announcements for resend OTP countdown in Click to Pay ([#4026](https://github.com/Adyen/adyen-web/pull/4026))
+
+## 6.39.0
+
+### Minor Changes
+
+- New: Also add translated error message to error object for non-SF errors ([#4013](https://github.com/Adyen/adyen-web/pull/4013))
+
+### Patch Changes
+
+- Fixed: Select component a11y issue ([#3965](https://github.com/Adyen/adyen-web/pull/3965))
+
+- Fixed: Moved paypal js to dependencies from dev dependencies ([#4022](https://github.com/Adyen/adyen-web/pull/4022))
+
+- Fixed: actions.reject onSubmit bug for PayPal ([#4015](https://github.com/Adyen/adyen-web/pull/4015))
+
+- Fixed: Suggestion for invalid email error in click to pay ([#4006](https://github.com/Adyen/adyen-web/pull/4006))
+
+- Fixed: add aria-labelledby to giftcards remove button ([#3993](https://github.com/Adyen/adyen-web/pull/3993))
+
 ## 6.38.0
 
 ### Minor Changes
