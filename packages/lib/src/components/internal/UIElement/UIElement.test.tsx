@@ -1,4 +1,4 @@
-import { h } from 'preact';
+import { createRef, h } from 'preact';
 import { UIElement } from './UIElement';
 import { mock } from 'jest-mock-extended';
 import { AdyenCheckout, ThreeDS2Challenge, ThreeDS2DeviceFingerprint } from '../../../index';
@@ -12,6 +12,8 @@ import { ErrorEventType } from '../../../core/Analytics/events/AnalyticsErrorEve
 import { InfoEventType } from '../../../core/Analytics/events/AnalyticsInfoEvent';
 import { LogEventType } from '../../../core/Analytics/events/AnalyticsLogEvent';
 import { render, screen } from '@testing-library/preact';
+import { CoreProvider } from '../../../core/Context/CoreProvider';
+import { AmountProvider } from '../../../core/Context/AmountProvider';
 
 interface MyElementProps extends UIElementProps {
     challengeWindowSize?: string;
@@ -621,6 +623,39 @@ describe('UIElement', () => {
             const element = new MyElement(core, { onReview });
             element.submit();
             expect(onReview).not.toHaveBeenCalled();
+        });
+    });
+
+    describe('payButton()', () => {
+        const amount = { value: 1000, currency: 'USD' };
+        const renderPayButton = (ui: h.JSX.Element, contextShowReview = false) =>
+            render(
+                <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources} showReview={contextShowReview}>
+                    <AmountProvider amount={amount} providerRef={createRef()}>
+                        {ui}
+                    </AmountProvider>
+                </CoreProvider>
+            );
+
+        test('should show "Continue" when onReview is set, overriding the context', () => {
+            const element = new MyElement(core, { onReview: jest.fn() });
+            // @ts-ignore access protected method
+            renderPayButton(element.payButton({ status: 'ready' }));
+            expect(screen.getByRole('button', { name: 'Continue' })).toBeInTheDocument();
+        });
+
+        test('should show the amount label when onReview is not set', () => {
+            const element = new MyElement(core, {});
+            // @ts-ignore access protected method
+            renderPayButton(element.payButton({ status: 'ready' }));
+            expect(screen.getByRole('button', { name: 'Pay $10.00' })).toBeInTheDocument();
+        });
+
+        test('should show the amount label when onReview is null, even when context has showReview=true', () => {
+            const element = new MyElement(core, { onReview: null });
+            // @ts-ignore access protected method
+            renderPayButton(element.payButton({ status: 'ready' }), true);
+            expect(screen.getByRole('button', { name: 'Pay $10.00' })).toBeInTheDocument();
         });
     });
 

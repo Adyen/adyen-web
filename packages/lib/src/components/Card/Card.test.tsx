@@ -70,6 +70,33 @@ describe('Card', () => {
                 expect(await screen.findByRole('button', { name: 'Confirm preauthorization' })).toBeTruthy();
             });
         });
+
+        describe('onReview', () => {
+            const amount = { value: 1000, currency: 'USD' };
+            const customRender = (ui: h.JSX.Element, contextShowReview = false) =>
+                render(
+                    // @ts-ignore ignore
+                    <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources} showReview={contextShowReview}>
+                        <AmountProvider amount={amount} providerRef={createRef()}>
+                            {ui}
+                        </AmountProvider>
+                    </CoreProvider>
+                );
+
+            test('should show "Continue" when onReview is set', async () => {
+                const card = new CardElement(global.core, { amount, onReview: jest.fn() });
+                // @ts-ignore ignore
+                customRender(card.payButton());
+                expect(await screen.findByRole('button', { name: 'Continue' })).toBeTruthy();
+            });
+
+            test('should show the amount label when onReview is null, even when context showReview is true', async () => {
+                const card = new CardElement(global.core, { amount, onReview: null });
+                // @ts-ignore ignore
+                customRender(card.payButton(), true);
+                expect(await screen.findByRole('button', { name: 'Pay $10.00' })).toBeTruthy();
+            });
+        });
     });
 
     describe('get data', () => {
