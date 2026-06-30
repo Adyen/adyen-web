@@ -374,6 +374,14 @@ class Core implements ICore {
             return;
         }
 
+        const event = new AnalyticsLogEvent({
+            type: LogEventType.submit,
+            message: 'Shopper clicked pay',
+            component: LogEventType.review
+        });
+
+        this.modules.analytics.sendAnalytics(event);
+
         this.session
             .submitPayment(data)
             .then(sanitizeResponse)

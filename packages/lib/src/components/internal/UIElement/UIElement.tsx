@@ -258,7 +258,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         }
 
         if (this.props.onReview) {
-            this.submitAnalytics(new AnalyticsLogEvent({ component: this.type, type: LogEventType.review, message: 'Review page enabled' }));
+            this.submitAnalytics(new AnalyticsLogEvent({ component: this.type, type: LogEventType.review, message: 'Review page displayed' }));
             this.props.onReview(this.data, this.elementRef);
             return;
         }
