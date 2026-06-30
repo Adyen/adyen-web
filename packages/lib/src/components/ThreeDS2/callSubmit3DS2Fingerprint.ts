@@ -50,7 +50,7 @@ export default function callSubmit3DS2Fingerprint({ data }): void {
                     return;
                 }
 
-                return this.onActionFlowComplete({ data: { details } });
+                return this.onActionComplete({ data: { details } });
             }
 
             /**

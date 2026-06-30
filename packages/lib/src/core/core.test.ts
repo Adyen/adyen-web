@@ -301,8 +301,8 @@ describe('Core', () => {
                 paymentData: 'test'
             });
 
-            // @ts-ignore onActionFlowComplete is not public method, although we call it here to test the callback (equates to UIElement.onActionFlowComplete)
-            paymentAction.onActionFlowComplete({});
+            // @ts-ignore onActionComplete is not public method, although we call it here to test the callback (equates to UIElement.onActionComplete)
+            paymentAction.onActionComplete({});
 
             expect(onAdditionalDetails).toHaveBeenCalledWith(
                 {},
@@ -412,8 +412,8 @@ describe('Core', () => {
 
             expect(paymentAction.props.onAdditionalDetails).toBe(onAdditionalDetailsCreateFromAction);
 
-            // @ts-ignore onActionFlowComplete is not public method, although we call it here to test the callback
-            paymentAction.onActionFlowComplete({});
+            // @ts-ignore onActionComplete is not public method, although we call it here to test the callback
+            paymentAction.onActionComplete({});
 
             expect(onAdditionalDetailsCreateFromAction).toHaveBeenCalledWith(
                 {},

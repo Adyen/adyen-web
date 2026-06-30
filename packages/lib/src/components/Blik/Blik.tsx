@@ -58,7 +58,7 @@ class BlikElement extends UIElement<AwaitConfiguration> {
                     clientKey={this.props.clientKey}
                     paymentData={this.props.paymentData}
                     onError={this.handleError}
-                    onComplete={this.onActionFlowComplete}
+                    onComplete={this.onActionComplete}
                     brandLogo={this.icon}
                     type={config.type}
                     messageText={this.props.i18n.get(config.messageTextId)}

@@ -68,7 +68,7 @@ export class Iris extends IssuerListContainer<IrisConfiguration, IrisData> {
                     delay={this.props.delay}
                     onActionHandled={this.onActionHandled}
                     onError={this.props.onError}
-                    onComplete={this.onActionFlowComplete}
+                    onComplete={this.onActionComplete}
                     introduction={IrisQrCodeInstructions}
                     showAmount
                     copyBtn={false}

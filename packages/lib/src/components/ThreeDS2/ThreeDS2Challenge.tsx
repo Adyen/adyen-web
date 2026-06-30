@@ -42,11 +42,11 @@ class ThreeDS2Challenge extends UIElement<ThreeDS2ChallengeConfiguration> {
      * However, if the action to create this component came from the 3DS2InMDFlow process it will instead equal a call to the onComplete callback
      * (as defined in the 3DS2InMDFlow and passed in as a config prop).
      */
-    onActionFlowComplete(state: LegacyChallengeResolveData | ChallengeResolveData) {
+    onActionComplete(state: LegacyChallengeResolveData | ChallengeResolveData) {
         if (this.props.isMDFlow) {
             this.props.on3DS2RedirectFlowComplete?.(state, this.elementRef);
         } else {
-            super.onActionFlowComplete(state);
+            super.onActionComplete(state);
         }
 
         this.unmount(); // re. fixing issue around back to back challenge calls
@@ -78,7 +78,7 @@ class ThreeDS2Challenge extends UIElement<ThreeDS2ChallengeConfiguration> {
         return (
             <PrepareChallenge
                 {...this.props}
-                on3DS2ChallengeComplete={this.onActionFlowComplete}
+                on3DS2ChallengeComplete={this.onActionComplete}
                 onSubmitAnalytics={this.submitAnalytics}
                 onActionHandled={this.onActionHandled}
             />
