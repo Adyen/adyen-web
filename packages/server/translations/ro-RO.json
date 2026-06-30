@@ -392,6 +392,8 @@
     "payto.label.firstName": "Prenumele titularului de cont",
     "payto.label.lastName": "Numele de familie al titularului de cont",
     "payto.await.waitForConfirmation": "Se așteaptă aprobarea dvs.",
+    "payto.errors.accountHolderFirstName.invalid": "Completați prenumele titularului de cont",
+    "payto.errors.accountHolderLastName.invalid": "Completați numele de familie al titularului de cont",
     "payto.bsb.option.label": "BSB și numărul de cont",
     "card.fastlane.a11y.logo": "Logo Fastlane by Paypal",
     "card.fastlane.a11y.openDialog": "Citiți mai multe despre Fastlane",

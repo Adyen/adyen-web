@@ -392,6 +392,8 @@
     "payto.label.firstName": "Konto omaniku eesnimi",
     "payto.label.lastName": "Konto omaniku perekonnanimi",
     "payto.await.waitForConfirmation": "Teie heakskiidu ootel",
+    "payto.errors.accountHolderFirstName.invalid": "Sisestage oma kontoomaniku eesnimi",
+    "payto.errors.accountHolderLastName.invalid": "Sisestage oma kontoomaniku perekonnanimi",
     "payto.bsb.option.label": "BSB ja kontonumber",
     "card.fastlane.a11y.logo": "Fastlane by Paypal logo",
     "card.fastlane.a11y.openDialog": "Lisateave Fastlane'i kohta",

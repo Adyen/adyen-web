@@ -392,6 +392,8 @@
     "payto.label.firstName": "Imię posiadacza rachunku",
     "payto.label.lastName": "Nazwisko posiadacza rachunku",
     "payto.await.waitForConfirmation": "Oczekiwanie na Twoją zgodę",
+    "payto.errors.accountHolderFirstName.invalid": "Wprowadź imię posiadacza rachunku",
+    "payto.errors.accountHolderLastName.invalid": "Wprowadź nazwisko posiadacza rachunku",
     "payto.bsb.option.label": "BSB i numer rachunku",
     "card.fastlane.a11y.logo": "Logo Fastlane by Paypal",
     "card.fastlane.a11y.openDialog": "Przeczytaj więcej o Fastlane",

@@ -392,6 +392,8 @@
     "payto.label.firstName": "Ime imetnika računa",
     "payto.label.lastName": "Priimek imetnika računa",
     "payto.await.waitForConfirmation": "Čakanje na vašo odobritev",
+    "payto.errors.accountHolderFirstName.invalid": "Vnesite ime imetnika računa",
+    "payto.errors.accountHolderLastName.invalid": "Vnesite priimek imetnika računa",
     "payto.bsb.option.label": "Podružnična številka BSB in številka računa",
     "card.fastlane.a11y.logo": "Logotip storitve Fastlane by Paypal",
     "card.fastlane.a11y.openDialog": "Preberite več o storitvi Fastlane",
