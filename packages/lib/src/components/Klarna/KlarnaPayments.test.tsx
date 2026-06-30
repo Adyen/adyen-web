@@ -73,6 +73,11 @@ describe('KlarnaPayments', () => {
             expect(await screen.findByRole('button', { name: 'Continue' })).toBeTruthy();
         });
 
+        test('should show the Klarna label when onReview is null and useKlarnaWidget is false', async () => {
+            renderKlarna({ paymentData: '', paymentMethodType: '', sdkData: undefined, useKlarnaWidget: false, onReview: null });
+            expect(await screen.findByRole('button', { name: 'Continue to Klarna' })).toBeTruthy();
+        });
+
         test('should show the Klarna label when useKlarnaWidget is true, even when onReview is set', async () => {
             renderKlarna({ paymentData: '', paymentMethodType: '', sdkData: undefined, useKlarnaWidget: true, onReview: jest.fn() });
             expect(await screen.findByRole('button', { name: 'Continue to Klarna' })).toBeTruthy();
