@@ -22,7 +22,7 @@ export interface DoFingerprint3DS2State {
 }
 
 export interface PrepareFingerprint3DS2Props extends ThreeDS2DeviceFingerprintConfiguration {
-    onComplete: (data: LegacyFingerprintResolveData | FingerprintResolveData) => void;
+    on3DS2FingerprintComplete: (data: LegacyFingerprintResolveData | FingerprintResolveData) => void;
     onSubmitAnalytics: (aObj: AbstractAnalyticsEvent) => void;
     environment?: string;
     _environmentUrls?: {

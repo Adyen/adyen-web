@@ -51,11 +51,6 @@ class BlikElement extends UIElement<AwaitConfiguration> {
         return null;
     }
 
-    /**
-     * NOTE: for future reference:
-     *  this.props.onComplete (which is called from this.onComplete) equates to the merchant defined onAdditionalDetails callback
-     *  (the initial /payments response defines an "await" action, actionTypes.ts translates this to "onComplete: props.onAdditionalDetails")
-     */
     protected override componentToRender(): h.JSX.Element {
         if (this.props.paymentData) {
             return (
@@ -63,7 +58,7 @@ class BlikElement extends UIElement<AwaitConfiguration> {
                     clientKey={this.props.clientKey}
                     paymentData={this.props.paymentData}
                     onError={this.handleError}
-                    onComplete={this.onComplete}
+                    onComplete={this.onActionComplete}
                     brandLogo={this.icon}
                     type={config.type}
                     messageText={this.props.i18n.get(config.messageTextId)}

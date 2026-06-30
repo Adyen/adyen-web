@@ -96,7 +96,7 @@ class UPI extends UIElement<UPIConfiguration> {
                         qrCodeData={this.props.qrCodeData ? encodeURIComponent(this.props.qrCodeData) : undefined}
                         type={TxVariants.upi_qr}
                         brandLogo={this.props.brandLogo || this.icon}
-                        onComplete={this.onComplete}
+                        onComplete={this.onActionComplete}
                         introduction={this.props.i18n?.get('upi.qrCodeWaitingMessage') ?? ''}
                         countdownTime={this.props.countdownTime}
                         onActionHandled={this.onActionHandled}
@@ -118,7 +118,7 @@ class UPI extends UIElement<UPIConfiguration> {
                         onError={this.props.onError}
                         messageText={this.props.i18n?.get('upi.vpaWaitingMessage') ?? ''}
                         awaitText={this.props.i18n?.get('await.waitForConfirmation') ?? ''}
-                        onComplete={this.onComplete}
+                        onComplete={this.onActionComplete}
                         brandLogo={this.icon}
                     />
                 );

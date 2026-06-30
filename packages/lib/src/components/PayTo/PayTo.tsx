@@ -123,7 +123,7 @@ export class PayToElement extends UIElement<PayToConfiguration> {
                 </Fragment>
             );
         }
-        // Await
+
         if (this.props.paymentData) {
             return (
                 <Await
@@ -132,7 +132,7 @@ export class PayToElement extends UIElement<PayToConfiguration> {
                     clientKey={this.props.clientKey}
                     paymentData={this.props.paymentData}
                     onError={this.props.onError}
-                    onComplete={this.onComplete}
+                    onComplete={this.onActionComplete}
                     brandLogo={this.icon}
                     type={this.constructor['type']}
                     messageText={this.props.i18n.get('payto.confirmPayment')}

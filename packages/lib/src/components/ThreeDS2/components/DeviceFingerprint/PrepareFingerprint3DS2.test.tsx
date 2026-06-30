@@ -62,7 +62,13 @@ jest.mock('./DoFingerprint3DS2', () => ({
 
 const renderPrepareFingerprint = props => {
     return render(
-        <PrepareFingerprint3DS2 {...props} isMDFlow={false} onError={onError} onComplete={completeFunction} onSubmitAnalytics={onSubmitAnalytics} />
+        <PrepareFingerprint3DS2
+            {...props}
+            isMDFlow={false}
+            onError={onError}
+            on3DS2FingerprintComplete={completeFunction}
+            onSubmitAnalytics={onSubmitAnalytics}
+        />
     );
 };
 

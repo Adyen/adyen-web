@@ -34,8 +34,6 @@ export type UIElementProps = {
         environment?: string;
         session?: Session;
 
-        onComplete?: (state, element: UIElement) => void;
-
         isInstantPayment?: boolean;
 
         /**
