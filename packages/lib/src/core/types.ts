@@ -262,7 +262,7 @@ export interface CoreConfiguration {
     /**
      * Called before the payment is submitted, allowing the shopper to review their payment details.
      *
-     * Note: payment methods that manage their own payment submission internally (e.g. Klarna, PayPal, Apple Pay, Google Pay, AmazonPay, ANCV, PayByBankPix)
+     * Note: payment methods that manage their own payment submission internally (e.g. Klarna (Klarna widget flow), PayPal, Apple Pay, Google Pay, AmazonPay, ANCV, PayByBankPix)
      * bypass this callback internally to avoid interrupting their native experiences.
      *
      * @param state
