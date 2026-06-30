@@ -5,7 +5,7 @@ import { DEFAULT_CHALLENGE_WINDOW_SIZE, THREEDS2_CHALLENGE, THREEDS2_CHALLENGE_E
 import { existy } from '../../utils/commonUtils';
 import { hasOwnProperty } from '../../utils/hasOwnProperty';
 import { TxVariants } from '../tx-variants';
-import { ChallengeResolveData, LegacyChallengeResolveData, ThreeDS2ChallengeConfiguration } from './types';
+import { ChallengeResolveData, ThreeDS2ChallengeConfiguration } from './types';
 import AdyenCheckoutError, { API_ERROR } from '../../core/Errors/AdyenCheckoutError';
 import { ActionHandledReturnObject } from '../../types/global-types';
 import { AnalyticsLogEvent, LogEventSubtype, LogEventType } from '../../core/Analytics/events/AnalyticsLogEvent';
@@ -42,7 +42,7 @@ class ThreeDS2Challenge extends UIElement<ThreeDS2ChallengeConfiguration> {
      * However, if the action to create this component came from the 3DS2InMDFlow process it will instead equal a call to the onComplete callback
      * (as defined in the 3DS2InMDFlow and passed in as a config prop).
      */
-    onComplete(state: LegacyChallengeResolveData | ChallengeResolveData) {
+    onComplete(state: ChallengeResolveData) {
         if (this.props.isMDFlow) {
             this.props.on3DS2RedirectFlowComplete?.(state, this.elementRef);
         } else {

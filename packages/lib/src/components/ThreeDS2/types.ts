@@ -32,10 +32,7 @@ interface ThreeDS2Configuration extends UIElementProps {
     modules?: { analytics: IAnalytics };
     notificationURL?: string;
     onActionHandled?: (rtnObj: ActionHandledReturnObject) => void;
-    on3DS2RedirectFlowComplete?: (
-        state: LegacyChallengeResolveData | ChallengeResolveData | LegacyFingerprintResolveData | FingerprintResolveData,
-        component: UIElement
-    ) => void;
+    on3DS2RedirectFlowComplete?: (state: ChallengeResolveData | FingerprintResolveData, component: UIElement) => void;
     onError?: (error: AdyenCheckoutError, element?: UIElement) => void;
     paymentData?: string;
     token?: string;
@@ -143,29 +140,11 @@ export interface FingerprintResolveData {
     };
 }
 
-export interface LegacyFingerprintResolveData {
-    data: {
-        details: {
-            [key: string]: string;
-        };
-        paymentData: string;
-    };
-}
-
 export interface ChallengeResolveData {
     data: {
         details: {
             [key: string]: string;
         };
-    };
-}
-
-export interface LegacyChallengeResolveData {
-    data: {
-        details: {
-            [key: string]: string;
-        };
-        paymentData: string;
     };
 }
 
@@ -187,7 +166,7 @@ export type ThreeDS2ConfigProps = {
     readonly token: string;
     readonly paymentData: string;
     readonly onActionHandled?: (rtnObj: ActionHandledReturnObject) => void;
-    readonly on3DS2RedirectFlowComplete?: (state: LegacyChallengeResolveData | ChallengeResolveData, component: UIElement) => void;
+    readonly on3DS2RedirectFlowComplete?: (state: ChallengeResolveData, component: UIElement) => void;
     readonly onAdditionalDetails?: (state: AdditionalDetailsData, component: UIElement, actions: AdditionalDetailsActions) => void;
     readonly onError?: (error: AdyenCheckoutError, element?: UIElement) => void;
     readonly isDropin?: boolean;
