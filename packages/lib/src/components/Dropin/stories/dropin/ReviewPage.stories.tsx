@@ -120,8 +120,7 @@ const ReviewPage = ({ reviewData, sessionId, amount, countryCode, shopperLocale,
                     setResultCode(result.resultCode);
                     if (showDonation && donationRef.current && checkoutRef.current) {
                         new Donation(checkoutRef.current, {
-                            rootNode: donationRef.current,
-                            commercialTxAmount: Number(amount)
+                            rootNode: donationRef.current
                         });
                     }
                 },

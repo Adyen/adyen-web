@@ -17,6 +17,7 @@ export const URL_MAP = {
         '/iframe.html?args=donation.autoMount:!false;donation.delay:0&globals=&id=drop-in-drop-in-component--sessions-donation-reparented&viewMode=story',
     dropinWithSession_donations_reparented_autoMountTrue:
         '/iframe.html?args=donation.autoMount:!true;donation.delay:0&globals=&id=drop-in-drop-in-component--sessions-donation-reparented&viewMode=story',
+    dropinReviewPage: '/iframe.html?args=&globals=&id=review-page--dropin&viewMode=story',
 
     /**
      * Card
