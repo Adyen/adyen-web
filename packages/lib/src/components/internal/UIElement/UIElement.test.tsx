@@ -613,7 +613,7 @@ describe('UIElement', () => {
                 expect.objectContaining({
                     type: LogEventType.review,
                     component: 'super_pay',
-                    message: 'Review page enabled'
+                    message: 'Review page displayed'
                 })
             );
         });
