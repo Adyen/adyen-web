@@ -392,6 +392,8 @@
     "payto.label.firstName": "口座名義人の名",
     "payto.label.lastName": "口座名義人の姓",
     "payto.await.waitForConfirmation": "承認待ち",
+    "payto.errors.accountHolderFirstName.invalid": "アカウント保有者の名を入力してください",
+    "payto.errors.accountHolderLastName.invalid": "アカウント保有者の姓を入力してください",
     "payto.bsb.option.label": "BSBおよび口座番号",
     "card.fastlane.a11y.logo": "Fastlane by PayPalのロゴ",
     "card.fastlane.a11y.openDialog": "Fastlaneについて詳細を確認",

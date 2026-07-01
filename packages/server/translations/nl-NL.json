@@ -392,6 +392,8 @@
     "payto.label.firstName": "Voornaam rekeninghouder",
     "payto.label.lastName": "Achternaam rekeninghouder",
     "payto.await.waitForConfirmation": "In afwachting van uw goedkeuring",
+    "payto.errors.accountHolderFirstName.invalid": "Voer de voornaam van de bankrekeninghouder in",
+    "payto.errors.accountHolderLastName.invalid": "Voer de achternaam van de bankrekeninghouder in",
     "payto.bsb.option.label": "BSB- en rekeningnummer",
     "card.fastlane.a11y.logo": "Logo Fastlane by Paypal",
     "card.fastlane.a11y.openDialog": "Lees meer over Fastlane",

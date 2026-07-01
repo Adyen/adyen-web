@@ -392,6 +392,8 @@
     "payto.label.firstName": "계좌 소유자 이름(이름)",
     "payto.label.lastName": "계좌 소유자 성",
     "payto.await.waitForConfirmation": "승인 대기 중",
+    "payto.errors.accountHolderFirstName.invalid": "예금주 이름 입력",
+    "payto.errors.accountHolderLastName.invalid": "예금주 성 입력",
     "payto.bsb.option.label": "BSB 및 계좌 번호",
     "card.fastlane.a11y.logo": "Fastlane by PayPal 로고",
     "card.fastlane.a11y.openDialog": "Fastlane 자세히 알아보기",

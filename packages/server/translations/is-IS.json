@@ -392,6 +392,8 @@
     "payto.label.firstName": "Fornafn reikningshafa",
     "payto.label.lastName": "Eftirnafn reikningshafa",
     "payto.await.waitForConfirmation": "Bíður samþykkis",
+    "payto.errors.accountHolderFirstName.invalid": "Sláðu inn fornafn reikningshafa",
+    "payto.errors.accountHolderLastName.invalid": "Sláðu inn eftirnafn reikningshafa",
     "payto.bsb.option.label": "Bankanúmer banka og reikningsnúmer",
     "card.fastlane.a11y.logo": "Lógó fyrir Fastlane by Paypal",
     "card.fastlane.a11y.openDialog": "Lesa meira um Fastlane",

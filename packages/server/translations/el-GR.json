@@ -392,6 +392,8 @@
     "payto.label.firstName": "Όνομα κατόχου λογαριασμού",
     "payto.label.lastName": "Επώνυμο κατόχου λογαριασμού",
     "payto.await.waitForConfirmation": "Αναμονή για την έγκρισή σας",
+    "payto.errors.accountHolderFirstName.invalid": "Εισαγάγετε το όνομα κατόχου του λογαριασμού σας",
+    "payto.errors.accountHolderLastName.invalid": "Εισαγάγετε το επώνυμο κατόχου του λογαριασμού σας",
     "payto.bsb.option.label": "BSB και αριθμός λογαριασμού",
     "card.fastlane.a11y.logo": "Λογότυπο Fastlane by Paypal",
     "card.fastlane.a11y.openDialog": "Διαβάστε περισσότερα για το Fastlane",

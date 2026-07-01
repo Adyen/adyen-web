@@ -392,6 +392,8 @@
     "payto.label.firstName": "Tilinhaltijan etunimi",
     "payto.label.lastName": "Tilinhaltijan sukunimi",
     "payto.await.waitForConfirmation": "Odottaa hyväksyntääsi",
+    "payto.errors.accountHolderFirstName.invalid": "Anna tilinhaltijan etunimi",
+    "payto.errors.accountHolderLastName.invalid": "Anna tilinhaltijan sukunimi",
     "payto.bsb.option.label": "BSB- ja tilinumero",
     "card.fastlane.a11y.logo": "Fastlane by Paypal ‑logo",
     "card.fastlane.a11y.openDialog": "Lue lisää Fastlanesta",

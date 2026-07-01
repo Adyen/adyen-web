@@ -1,4 +1,4 @@
-import { h } from 'preact';
+import { h, Ref, RefObject, HTMLAttributes, TargetedKeyboardEvent } from 'preact';
 
 export interface SelectItem {
     disabled?: boolean;
@@ -27,7 +27,7 @@ export interface SelectProps {
             | {
                   target: SelectTargetObject;
               }
-            | Partial<h.JSX.TargetedKeyboardEvent<HTMLInputElement>>
+            | Partial<TargetedKeyboardEvent<HTMLInputElement>>
     ) => void;
     onInput?: (value: string) => void;
     placeholder?: string;
@@ -40,13 +40,14 @@ export interface SelectProps {
     clearOnSelect?: boolean;
     blurOnClose?: boolean;
     onListToggle?: (isOpen: boolean) => void;
+    additionalDescribedBy?: string;
 }
 
 export interface SelectButtonProps {
     inputText: string;
     active: SelectItem;
     selected: SelectItem;
-    filterInputRef;
+    filterInputRef: RefObject<HTMLInputElement>;
     filterable: boolean;
     isInvalid: boolean;
     isValid?: boolean;
@@ -58,7 +59,7 @@ export interface SelectButtonProps {
     required: boolean;
     selectListId: string;
     showList: boolean;
-    toggleButtonRef;
+    toggleButtonRef: Ref<HTMLElement>;
     toggleList: (e: Event) => void;
     id?: string;
     ariaDescribedBy: string;
@@ -72,8 +73,19 @@ export interface SelectListProps {
     onSelect: (e: Event) => void;
     selected: SelectItem;
     selectListId: string;
-    selectListRef;
+    selectListRef: Ref<HTMLUListElement>;
     showList: boolean;
+}
+
+export interface SelectButtonElementProps extends Omit<HTMLAttributes<HTMLElement>, 'onClick' | 'onKeyDown'> {
+    disabled: boolean;
+    filterable: boolean;
+    readonly?: boolean;
+    selectListId: string;
+    showList: boolean;
+    toggleButtonRef: Ref<HTMLElement>;
+    onClick: ((e: Event) => void) | null;
+    onKeyDown: ((e: KeyboardEvent) => void) | null;
 }
 
 export interface SelectItemProps {
