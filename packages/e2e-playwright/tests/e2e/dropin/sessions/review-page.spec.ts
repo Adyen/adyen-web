@@ -10,7 +10,10 @@ test.describe('Dropin - Review Page', () => {
         const { paymentMethodDetailsLocator } = await dropinWithSession.selectNonStoredPaymentMethod('scheme');
 
         const card = new Card(page, paymentMethodDetailsLocator);
-        await card.isComponentVisible();
+
+        await card.cardNumberInput.waitFor({ state: 'visible' });
+        await card.expiryDateInput.waitFor({ state: 'visible' });
+        await card.cvcInput.waitFor({ state: 'visible' });
 
         await card.typeCardNumber(REGULAR_TEST_CARD);
         await card.typeExpiryDate(TEST_DATE_VALUE);
