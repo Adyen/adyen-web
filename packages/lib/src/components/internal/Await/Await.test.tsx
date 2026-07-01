@@ -47,6 +47,7 @@ describe('Await', () => {
         throttleInterval: 0,
         throttleTime: 0,
         brandLogo: 'https://example.com',
+        brandName: 'MBWay',
         clientKey: 'test_client_key',
         messageText: 'test',
         paymentData: 'dummy',
@@ -79,7 +80,7 @@ describe('Await', () => {
 
         test('should show brand logo', async () => {
             renderAwait({ awaitProps: defaultProps, amountProviderProps });
-            const image = await screen.findByAltText(defaultProps.type);
+            const image = await screen.findByAltText(defaultProps.brandName);
             // @ts-ignore src is part of img
             expect(image.src).toContain(defaultProps.brandLogo);
         });
@@ -207,7 +208,7 @@ describe('Await', () => {
         test('should show brand logo', async () => {
             renderAwait({ awaitProps: defaultProps, amountProviderProps });
 
-            const image = await screen.findByAltText(defaultProps.type);
+            const image = await screen.findByAltText(defaultProps.brandName);
             // @ts-ignore src is part of img
             expect(image.src).toContain(defaultProps.brandLogo);
         });
