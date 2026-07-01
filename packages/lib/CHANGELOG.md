@@ -1,5 +1,11 @@
 # @adyen/adyen-web
 
+## 6.40.2
+
+### Patch Changes
+
+- Fixed: PayTo accessibility enhancements for form instruction and account holder errors ([#4023](https://github.com/Adyen/adyen-web/pull/4023))
+
 ## 6.40.1
 
 ### Patch Changes
