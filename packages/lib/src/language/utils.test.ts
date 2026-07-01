@@ -1,6 +1,6 @@
 import { formatCustomTranslations, formatLocaleToLanguageCountryLocale, getTranslation, interpolateElement, matchLocale, parseLocale } from './utils';
 import { createElement } from 'preact';
-import { DEFAULT_LOCALE } from './constants';
+import { CDN_SUPPORTED_LOCALES, DEFAULT_LOCALE } from './constants';
 
 describe('matchLocale()', () => {
     const supportedLocales = ['en-US', 'es-ES', 'fr-FR', 'de-DE', 'nl-NL'];
@@ -49,6 +49,23 @@ describe('matchLocale()', () => {
     test('should match first occurrence when multiple locales share language code', () => {
         const localesWithDuplicates = ['en-US', 'en-GB', 'es-ES'];
         expect(matchLocale('en-CA', localesWithDuplicates)).toBe('en-US');
+    });
+
+    test.only('should prefer the exact locale over a same-language sibling for zh-TW', () => {
+        expect(matchLocale('zh-TW', CDN_SUPPORTED_LOCALES)).toBe('zh-TW');
+        expect(matchLocale('zh-tw', CDN_SUPPORTED_LOCALES)).toBe('zh-TW');
+    });
+
+    test.only('should prefer the exact locale over a same-language sibling for pt-PT', () => {
+        expect(matchLocale('pt-PT', CDN_SUPPORTED_LOCALES)).toBe('pt-PT');
+        expect(matchLocale('pt-pt', CDN_SUPPORTED_LOCALES)).toBe('pt-PT');
+    });
+
+    test.only('should still resolve the unambiguous siblings correctly', () => {
+        expect(matchLocale('zh-CN', CDN_SUPPORTED_LOCALES)).toBe('zh-CN');
+        expect(matchLocale('pt-BR', CDN_SUPPORTED_LOCALES)).toBe('pt-BR');
+        expect(matchLocale('zh-cn', CDN_SUPPORTED_LOCALES)).toBe('zh-CN');
+        expect(matchLocale('pt-br', CDN_SUPPORTED_LOCALES)).toBe('pt-BR');
     });
 });
 
