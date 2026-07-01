@@ -17,7 +17,7 @@ import { defaultProps } from './core.defaultProps';
 import { resolveEnvironments } from './Environment';
 import { LIBRARY_BUNDLE_TYPE, LIBRARY_VERSION } from './config';
 
-import type { PaymentAction, PaymentAmount, PaymentResponseData } from '../types/global-types';
+import type { PaymentAction, PaymentAmount, PaymentData, PaymentResponseData } from '../types/global-types';
 import type { CoreConfiguration, ICore, AdditionalDetailsData, CoreModules } from './types';
 import type { UIElementProps } from '../components/internal/UIElement/types';
 import { AnalyticsLogEvent, LogEventType } from './Analytics/events/AnalyticsLogEvent';
@@ -366,6 +366,51 @@ class Core implements ICore {
             cdnContext: this.cdnImagesUrl,
             createFromAction: this.createFromAction
         };
+    }
+
+    public processPayment(data: PaymentData): void {
+        if (!this.session) {
+            this.options.onError?.(new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'processPayment requires a session to be configured'));
+            return;
+        }
+
+        const event = new AnalyticsLogEvent({
+            type: LogEventType.submit,
+            message: 'Shopper clicked pay',
+            component: LogEventType.review
+        });
+
+        this.modules.analytics.sendAnalytics(event);
+
+        this.session
+            .submitPayment(data)
+            .then(sanitizeResponse)
+            .then(verifyPaymentDidNotFail)
+            .then((response: PaymentResponseData) => {
+                if (response.action) {
+                    if (this.options.onAction) {
+                        this.options.onAction(this.createFromAction(response.action));
+                    } else {
+                        this.options.onError?.(
+                            new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'onAction callback is required to handle payment actions')
+                        );
+                    }
+                    return;
+                }
+                const order = response.order;
+                if (order && (order.remainingAmount?.value ?? 0) > 0) {
+                    return this.update({ order }).then(() => {
+                        this.options.onOrderUpdated?.({ order });
+                    });
+                }
+                cleanupFinalResult(response);
+                this.options.onPaymentCompleted?.(response);
+            })
+            .catch((e: PaymentResponseData | Error) => {
+                if (e instanceof CancelError) return;
+                cleanupFinalResult(e as PaymentResponseData);
+                this.options.onPaymentFailed?.(e as PaymentResponseData);
+            });
     }
 
     public storeElementReference(element: UIElement) {

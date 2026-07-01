@@ -336,7 +336,14 @@ export class CardElement extends UIElement<CardConfiguration> {
     protected override payButton = (props: PayButtonProps): h.JSX.Element => {
         const isZeroAuth = this.props.amount?.value === 0;
         const isStoredCard = this.props.storedPaymentMethodId?.length > 0;
-        return <PayButton {...props} label={isZeroAuth && !isStoredCard ? this.props.i18n.get('payButton.saveDetails') : ''} onClick={this.submit} />;
+        return (
+            <PayButton
+                {...props}
+                label={isZeroAuth && !isStoredCard ? this.props.i18n.get('payButton.saveDetails') : ''}
+                onClick={this.submit}
+                showReview={!!this.props.onReview}
+            />
+        );
     };
 
     private renderCardInput(isCardPrimaryInput = true): h.JSX.Element {

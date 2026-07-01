@@ -257,6 +257,16 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
             return;
         }
 
+        if (this.props.onReview) {
+            this.submitAnalytics(new AnalyticsLogEvent({ component: this.type, type: LogEventType.review, message: 'Review page displayed' }));
+            this.props.onReview(this.data, this.elementRef);
+            return;
+        }
+
+        this.executePaymentsCall();
+    }
+
+    public executePaymentsCall(): void {
         this.makePaymentsCall()
             .then(sanitizeResponse)
             .then(verifyPaymentDidNotFail)
@@ -606,7 +616,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
      * Get the payButton component for the current element
      */
     protected payButton = (props: PayButtonProps) => {
-        return <PayButton {...props} onClick={this.submit} />;
+        return <PayButton {...props} onClick={this.submit} showReview={!!this.props.onReview} />;
     };
 
     /**
@@ -662,7 +672,13 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
 
     render() {
         return (
-            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources} analytics={this.analytics}>
+            <CoreProvider
+                i18n={this.props.i18n}
+                loadingContext={this.props.loadingContext}
+                resources={this.resources}
+                analytics={this.analytics}
+                showReview={!!this.props.onReview}
+            >
                 <SRPanelProvider srPanel={this.srPanel}>
                     <AmountProvider amount={this.props.amount} secondaryAmount={this.props.secondaryAmount} providerRef={this.amountProviderRef}>
                         {this.componentToRender()}

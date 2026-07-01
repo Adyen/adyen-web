@@ -31,7 +31,7 @@ class TwintElement extends RedirectElement {
      * @param props - props
      */
     protected override payButton = (props: PayButtonProps): h.JSX.Element => {
-        return <PayButton {...props} label={this.payButtonLabel()} onClick={this.submit} />;
+        return <PayButton {...props} label={this.payButtonLabel()} onClick={this.submit} showReview={!!this.props.onReview} />;
     };
 }
 

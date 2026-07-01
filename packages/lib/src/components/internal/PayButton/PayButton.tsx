@@ -23,20 +23,23 @@ export interface PayButtonProps extends ButtonProps {
     status?: string;
     disabled?: boolean;
     icon?: string;
+    showReview?: boolean;
 }
 
-const PayButton = ({ customAmount, classNameModifiers = [], label, ...props }: Readonly<PayButtonProps>) => {
+const PayButton = ({ customAmount, classNameModifiers = [], label, icon, showReview: showReviewProp, ...props }: Readonly<PayButtonProps>) => {
     const { amount, isZeroAuth } = useAmount();
     const { secondaryAmount } = useSecondaryAmount();
-    const { i18n } = useCoreContext();
+    const { i18n, showReview: contextShowReview } = useCoreContext();
+    const showReview = showReviewProp ?? contextShowReview;
 
-    const buttonLabel = createButtonLabel(i18n, label, amount, isZeroAuth, customAmount, secondaryAmount);
+    const buttonLabel = createButtonLabel(i18n, label, amount, isZeroAuth, customAmount, secondaryAmount, showReview);
+    const buttonIcon = icon && !showReview ? icon : undefined;
     const secondaryAmountLabel = createSecondaryLabel(i18n, secondaryAmount, isAmountValid(amount), isZeroAuth, label);
 
     const isDisabled = props.disabled || props.status === 'loading';
 
     return (
-        <Button {...props} disabled={isDisabled} classNameModifiers={[...classNameModifiers, 'pay']} label={buttonLabel}>
+        <Button {...props} icon={buttonIcon} disabled={isDisabled} classNameModifiers={[...classNameModifiers, 'pay']} label={buttonLabel}>
             {secondaryAmountLabel && <SecondaryButtonLabel label={secondaryAmountLabel} />}
         </Button>
     );

@@ -1,6 +1,7 @@
 import { ADDRESS_SCHEMA } from '../components/internal/Address/constants';
 import actionTypes from '../core/ProcessResponse/PaymentAction/actionTypes';
 import { CardFocusData } from '../components/internal/SecuredFields/lib/types';
+import { BankDetailsSchema } from '../components/internal/OpenInvoice/types';
 
 export type PaymentActionsType = keyof typeof actionTypes;
 
@@ -295,6 +296,14 @@ export interface PaymentData extends PaymentMethodData {
     storePaymentMethod?: boolean;
     billingAddress?: AddressData;
     deliveryAddress?: AddressData;
+    socialSecurityNumber?: string;
+    installments?: { value: number };
+    shopperEmail?: string;
+    shopperName?: { firstName: string; lastName: string };
+    telephoneNumber?: string;
+    dateOfBirth?: string;
+    bankAccount?: BankDetailsSchema;
+    beneficiaryId?: string;
 }
 
 export type ResultCode =

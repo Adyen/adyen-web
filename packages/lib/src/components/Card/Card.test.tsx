@@ -9,8 +9,10 @@ import { CardFocusData } from '../internal/SecuredFields/lib/types';
 import { mock } from 'jest-mock-extended';
 import { AmountProvider } from '../../core/Context/AmountProvider';
 import { ICore } from '../../types';
+import { _MockProxy } from 'jest-mock-extended/lib/Mock';
 
 describe('Card', () => {
+    const core = global.core as _MockProxy<ICore> & ICore;
     describe('formatProps', function () {
         test('should not require a billingAddress if it is a stored card', () => {
             const core = setupCoreMock({
@@ -30,12 +32,12 @@ describe('Card', () => {
         });
 
         test('should format countryCode to lowerCase', () => {
-            const card = new CardElement(global.core, { countryCode: 'KR' });
+            const card = new CardElement(core, { countryCode: 'KR' });
             expect(card.props.countryCode).toEqual('kr');
         });
 
         test('should return false for showStoreDetailsCheckbox in case of zero-auto transaction, whilst preserving the original value of enableStoreDetail', () => {
-            const card = new CardElement(global.core, { amount: { value: 0, currency: 'eur' }, enableStoreDetails: true });
+            const card = new CardElement(core, { amount: { value: 0, currency: 'eur' }, enableStoreDetails: true });
             expect(card.props.enableStoreDetails).toEqual(true);
             expect(card.props.showStoreDetailsCheckbox).toEqual(false);
         });
@@ -57,17 +59,44 @@ describe('Card', () => {
             };
 
             test('should show the label "Save details" for the regular card', async () => {
-                const card = new CardElement(global.core, props);
+                const card = new CardElement(core, props);
                 // @ts-ignore ignore
                 customRender(card.payButton());
                 expect(await screen.findByRole('button', { name: 'Save details' })).toBeTruthy();
             });
 
             test('should show the label "Confirm preauthorization" for the stored card', async () => {
-                const card = new CardElement(global.core, { ...props, storedPaymentMethodId: 'test', supportedShopperInteractions: ['Ecommerce'] });
+                const card = new CardElement(core, { ...props, storedPaymentMethodId: 'test', supportedShopperInteractions: ['Ecommerce'] });
                 // @ts-ignore ignore
                 customRender(card.payButton());
                 expect(await screen.findByRole('button', { name: 'Confirm preauthorization' })).toBeTruthy();
+            });
+        });
+
+        describe('onReview', () => {
+            const amount = { value: 1000, currency: 'USD' };
+            const customRender = (ui: h.JSX.Element, contextShowReview = false) =>
+                render(
+                    // @ts-ignore ignore
+                    <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources} showReview={contextShowReview}>
+                        <AmountProvider amount={amount} providerRef={createRef()}>
+                            {ui}
+                        </AmountProvider>
+                    </CoreProvider>
+                );
+
+            test('should show "Continue" when onReview is set', async () => {
+                const card = new CardElement(core, { amount, onReview: jest.fn() });
+                // @ts-ignore ignore
+                customRender(card.payButton());
+                expect(await screen.findByRole('button', { name: 'Continue' })).toBeTruthy();
+            });
+
+            test('should show the amount label when onReview is undefined, even when context showReview is true', async () => {
+                const card = new CardElement(core, { amount, onReview: undefined });
+                // @ts-ignore ignore
+                customRender(card.payButton(), true);
+                expect(await screen.findByRole('button', { name: 'Pay $10.00' })).toBeTruthy();
             });
         });
     });
@@ -267,12 +296,12 @@ describe('Card', () => {
 
     describe('Test setting of configuration prop: koreanAuthenticationRequired', () => {
         test('Returns default value', () => {
-            const card = new CardElement(global.core, { configuration: {} });
+            const card = new CardElement(core, { configuration: {} });
             expect(card.props.configuration?.koreanAuthenticationRequired).toBe(undefined);
         });
 
         test('Returns configuration defined value', () => {
-            const card = new CardElement(global.core, { configuration: { koreanAuthenticationRequired: true } });
+            const card = new CardElement(core, { configuration: { koreanAuthenticationRequired: true } });
             expect(card.props.configuration?.koreanAuthenticationRequired).toBe(true);
         });
     });
@@ -295,7 +324,7 @@ describe('Card', () => {
         };
 
         test('Creates storedCard', () => {
-            const card = new CardElement(global.core, { ...regularStoredCardData });
+            const card = new CardElement(core, { ...regularStoredCardData });
             expect(card.props).not.toBe(undefined);
             expect(card.props.storedPaymentMethodId).toEqual('MUC44SHNG3M84H82');
         });
@@ -317,7 +346,7 @@ describe('Card', () => {
         };
 
         test('Creates storedCard from raw storedCardData, generating a storedPaymentMethodId along the way', () => {
-            const card = new CardElement(global.core, { ...rawStoredCardData });
+            const card = new CardElement(core, { ...rawStoredCardData });
             expect(card.props).not.toBe(undefined);
             expect(card.props.storedPaymentMethodId).toEqual('TBD44SHNG3M84H82');
         });
@@ -325,13 +354,13 @@ describe('Card', () => {
         test('Fails to create storedCard from raw storedCardData since card does not support "Ecommerce"', () => {
             rawStoredCardData.supportedShopperInteractions = ['ContAuth'];
             expect(() => {
-                new CardElement(global.core, { ...rawStoredCardData });
+                new CardElement(core, { ...rawStoredCardData });
             }).toThrow('You are trying to create a storedCard from a stored PM that does not support Ecommerce interactions');
         });
 
         test('Creates storedCard when cardData has no storedPaymentMethodId (which will actually result in rendering a regular card)', () => {
             delete rawStoredCardData.id;
-            const card = new CardElement(global.core, { ...rawStoredCardData });
+            const card = new CardElement(core, { ...rawStoredCardData });
             expect(card.props).not.toBe(undefined);
             expect(card.props.storedPaymentMethodId).toBe(undefined);
         });
