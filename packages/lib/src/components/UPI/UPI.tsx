@@ -96,7 +96,7 @@ class UPI extends UIElement<UPIConfiguration> {
                         qrCodeData={this.props.qrCodeData ? encodeURIComponent(this.props.qrCodeData) : undefined}
                         type={TxVariants.upi_qr}
                         brandLogo={this.props.brandLogo || this.icon}
-                        brandName={this.props.name}
+                        brandName={this.displayName}
                         onComplete={this.onComplete}
                         introduction={this.props.i18n?.get('upi.qrCodeWaitingMessage') ?? ''}
                         countdownTime={this.props.countdownTime}
