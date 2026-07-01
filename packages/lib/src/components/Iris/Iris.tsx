@@ -61,6 +61,7 @@ export class Iris extends IssuerListContainer<IrisConfiguration, IrisData> {
                 <QRLoader
                     type={TxVariants.iris}
                     brandLogo={this.icon}
+                    brandName={this.displayName}
                     clientKey={this.props.clientKey}
                     qrCodeData={this.props.qrCodeData ? encodeURIComponent(this.props.qrCodeData) : undefined}
                     countdownTime={this.props.countdownTime}
