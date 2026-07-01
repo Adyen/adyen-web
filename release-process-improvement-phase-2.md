@@ -19,14 +19,14 @@ Today we do not have a standard, repeatable way to publish alpha and beta releas
 - **New major versions.** When we work towards a big release such as `7.0.0`, we need a way to share early `alpha`, `beta` and `rc` builds while `main` keeps shipping normal patch and minor releases. We do not have a branch or workflow for this.
 - **Feature branches.** When a single new feature is still in review, merchants and internal teams often want to try it before it is merged. We have no simple way to make a one off release from a feature branch that does not affect the normal stable release.
 
-Because of this, pre-releases are manual, inconsistent and risky. A tester can easily install the wrong build, or a pre-release can accidentally become the default version that everyone downloads.
+Because of this, pre-releases are slow and inconsistent, and there is no clear, visible way to track what has been released. Without a single record of every build, testers cannot easily find the right one and the team cannot see the release history at a glance.
 
 ## Goal of Phase 2 improvements
 
 Give the team one clear strategy for pre-releases, covering both new major versions and feature branches, so that:
 
-- Early builds are easy to create and easy to find.
-- A pre-release can never overwrite the stable release.
+- Early builds are fast and consistent to create.
+- Every build is tracked and easy to find via GitHub releases.
 - The version numbers make it obvious what a build is (for example `7.0.0-alpha.0` or `6.43.0-alpha+{commit-hash}`).
 
 Every pre-release always produces a GitHub release with the build attached. The npm publish is a separate, tag driven step that we do not need to trigger for every build.
