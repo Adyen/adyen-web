@@ -1,0 +1,86 @@
+# Task 3: Point (snapshot) release from a feature branch.
+#
+# Manually triggered by a maintainer to build a one off preview of a feature
+# branch, e.g. 6.43.0-alpha+{commit-hash}.
+#
+# It does NOT commit any version or changelog change back to the branch. It
+# creates a prerelease GitHub Release with the UMD build attached and a git tag
+# for the snapshot version. npm is NOT published here; trigger
+# .github/workflows/npm-publish.yml manually on the tag it creates.
+#
+# Requires at least one changeset on the branch so the snapshot can be computed.
+name: Feature Point Release
+
+on:
+  workflow_dispatch:
+
+jobs:
+  point-release:
+    if: github.repository == 'adyen/adyen-web'
+    name: Build Snapshot
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # create git tag and GitHub Release
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          package-manager-cache: false
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install Project Dependencies
+        run: yarn install
+
+      # Computes a snapshot version like 6.43.0-alpha+{commit-hash} using the
+      # snapshot template ({tag}+{commit}) defined in .changeset/config.json.
+      # The bump is applied in the runner only and is never pushed to the branch.
+      - name: Version snapshot
+        run: yarn changeset version --snapshot alpha
+
+      - name: Read SDK version
+        id: sdk-version
+        run: echo "version=$(node -p "require('./packages/lib/package.json').version")" >> "$GITHUB_OUTPUT"
+
+      - name: Build
+        run: cd packages/lib && yarn build
+        env:
+          CI: true
+
+      - name: Bundle UMD and translations
+        run: |
+          cp packages/server/translations/ packages/lib/dist/umd -r
+          cd packages/lib/dist/umd && zip -r /tmp/adyen-web-sdk-umd-and-translations-${{ steps.sdk-version.outputs.version }}.zip .
+
+      - name: Upload UMD and translations artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: adyen-web-sdk-umd-and-translations-${{ steps.sdk-version.outputs.version }}
+          path: packages/lib/dist/umd
+
+      # Tag the snapshot version. This commits the version bump only to a detached
+      # commit that the tag points at, so the feature branch itself stays clean.
+      - name: Create Git tag
+        run: |
+          TAG="v${{ steps.sdk-version.outputs.version }}"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git commit -am "[ci] snapshot ${TAG}"
+          git tag "$TAG"
+          git push origin "$TAG"
+
+      - name: Create GitHub Prerelease
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "v${{ steps.sdk-version.outputs.version }}" \
+            --title "${{ steps.sdk-version.outputs.version }}" \
+            --notes "Snapshot preview build from feature branch ${{ github.ref_name }}." \
+            --prerelease \
+            "/tmp/adyen-web-sdk-umd-and-translations-${{ steps.sdk-version.outputs.version }}.zip"

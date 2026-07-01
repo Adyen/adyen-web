@@ -1,0 +1,137 @@
+# Task 2: Release workflow for the next major version branch (e.g. next-v7).
+#
+# Mirrors .github/workflows/release.yml but for prerelease branches.
+# Pre mode must be enabled on the branch (.changeset/pre.json committed), so
+# the changesets action produces versions like 7.0.0-alpha.0, 7.0.0-beta.0, etc.
+#
+# Flow:
+#   1. On a normal push, create/update the prerelease version PR (like release.yml).
+#   2. When the release commit lands, create a prerelease GitHub Release with the
+#      UMD build attached (like gh-release.yml). npm is NOT published here;
+#      trigger .github/workflows/npm-publish.yml manually on the tag it creates.
+name: Next Version Release
+
+on:
+  push:
+    branches:
+      - 'next-v*'
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+
+jobs:
+  version-pr:
+    # Prevents changesets action from creating a PR on forks
+    if: github.repository == 'adyen/adyen-web'
+    name: Create Prerelease PR
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js 24
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          package-manager-cache: false
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install Dependencies
+        run: yarn install --immutable
+
+      # With pre mode on, `yarn run version` bumps to the next prerelease version.
+      - name: Create Prerelease Pull Request
+        uses: changesets/action@v1
+        with:
+          version: yarn run version
+          commit: '[ci] release ${{ github.ref_name }}'
+          title: '[ci] Release ${{ github.ref_name }}'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  gh-release:
+    # Runs only on the release commit produced by merging the prerelease version PR.
+    if: github.repository == 'adyen/adyen-web' && startsWith(github.event.head_commit.message, '[ci] release next-v')
+    name: Create Prerelease
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # create git tag and GitHub Release
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          package-manager-cache: false
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install Project Dependencies
+        run: yarn install
+
+      - name: Build
+        run: cd packages/lib && yarn build
+        env:
+          CI: true
+
+      - name: Read SDK version
+        id: sdk-version
+        run: echo "version=$(node -p "require('./packages/lib/package.json').version")" >> "$GITHUB_OUTPUT"
+
+      - name: Bundle UMD and translations
+        run: |
+          cp packages/server/translations/ packages/lib/dist/umd -r
+          cd packages/lib/dist/umd && zip -r /tmp/adyen-web-sdk-umd-and-translations-${{ steps.sdk-version.outputs.version }}.zip .
+
+      - name: Upload UMD and translations artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: adyen-web-sdk-umd-and-translations-${{ steps.sdk-version.outputs.version }}
+          path: packages/lib/dist/umd
+
+      - name: Prepare release notes
+        id: changelog
+        run: |
+          CHANGELOG="packages/lib/CHANGELOG.md"
+
+          # Extract the latest version number (first ## heading)
+          VERSION=$(awk '/^## /{print $2; exit}' "$CHANGELOG")
+
+          if [ -z "$VERSION" ]; then
+            echo "::error::Could not extract version from CHANGELOG.md"
+            exit 1
+          fi
+
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "tag=v${VERSION}" >> "$GITHUB_OUTPUT"
+
+          # Extract the body for the latest version (between first and second ## heading)
+          awk '
+            /^## / { count++; if (count == 2) exit; next }
+            count == 1 { print }
+          ' "$CHANGELOG" > /tmp/release-body.md
+
+          cat /tmp/release-body.md
+
+      - name: Create Git tag
+        run: |
+          TAG="${{ steps.changelog.outputs.tag }}"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag "$TAG"
+          git push origin "$TAG"
+
+      - name: Create GitHub Prerelease
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "${{ steps.changelog.outputs.tag }}" \
+            --title "${{ steps.changelog.outputs.version }}" \
+            --notes-file /tmp/release-body.md \
+            --prerelease \
+            "/tmp/adyen-web-sdk-umd-and-translations-${{ steps.sdk-version.outputs.version }}.zip"

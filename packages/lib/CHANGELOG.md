@@ -1,5 +1,11 @@
 # @adyen/adyen-web
 
+## 6.41.0-alpha.561ca49e58ce3a4b388551304a8965af305acddb
+
+### Minor Changes
+
+- Testing
+
 ## 6.40.1
 
 ### Patch Changes

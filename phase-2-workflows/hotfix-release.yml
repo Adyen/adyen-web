@@ -1,0 +1,165 @@
+# Task 4: Release from a hotfix branch.
+#
+# Manually triggered on a hotfix branch. Bumps the patch version and updates the
+# changelog (e.g. 6.4.0 -> 6.4.1), commits the new version and changelog back to
+# the branch, and creates a GitHub Release with the UMD build attached.
+# npm is NOT published here; trigger .github/workflows/npm-publish.yml manually
+# on the tag it creates.
+#
+# Requires at least one changeset on the hotfix branch describing the fix.
+name: Hotfix Release
+
+on:
+  workflow_dispatch:
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+
+jobs:
+  hotfix:
+    if: github.repository == 'adyen/adyen-web'
+    name: Publish Hotfix
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # push version bump and create GitHub Release
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          package-manager-cache: false
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install Project Dependencies
+        run: yarn install
+
+      # Bump the patch version and update CHANGELOG.md from the changesets.
+      - name: Apply version bump
+        run: yarn run version
+
+      - name: Read SDK version
+        id: sdk-version
+        run: echo "version=$(node -p "require('./packages/lib/package.json').version")" >> "$GITHUB_OUTPUT"
+
+      - name: Build
+        run: cd packages/lib && yarn build
+        env:
+          CI: true
+
+      - name: Bundle UMD and translations
+        run: |
+          cp packages/server/translations/ packages/lib/dist/umd -r
+          cd packages/lib/dist/umd && zip -r /tmp/adyen-web-sdk-umd-and-translations-${{ steps.sdk-version.outputs.version }}.zip .
+
+      - name: Upload UMD and translations artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: adyen-web-sdk-umd-and-translations-${{ steps.sdk-version.outputs.version }}
+          path: packages/lib/dist/umd
+
+      - name: Parse CHANGELOG and prepare release
+        id: changelog
+        run: |
+          CHANGELOG="packages/lib/CHANGELOG.md"
+
+          # Extract the latest version number (first ## heading)
+          VERSION=$(awk '/^## [0-9]/{print $2; exit}' "$CHANGELOG")
+
+          if [ -z "$VERSION" ]; then
+            echo "::error::Could not extract version from CHANGELOG.md"
+            exit 1
+          fi
+
+          TAG_PREFIX="v"
+
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "tag=${TAG_PREFIX}${VERSION}" >> "$GITHUB_OUTPUT"
+
+          # Extract the body for the latest version (between first and second ## heading)
+          BODY=$(awk '
+            /^## [0-9]/ { count++; if (count == 2) exit; next }
+            count == 1 { print }
+          ' "$CHANGELOG")
+
+          # Convert markdown links to bare URLs: ([#123](url)) → (url)
+          BODY=$(echo "$BODY" | sed -E 's/\(\[#[0-9]+\]\(([^)]+)\)\)/(\1)/g')
+
+          # Categorize items into New, Improvements, Bug fixes
+          NEW=""
+          IMPROVED=""
+          FIXED=""
+
+           while IFS= read -r line; do
+            case "$line" in
+              -\ New:*)
+                NEW="${NEW}${line}"$'\n\n'
+                ;;
+              -\ Improved:*)
+                IMPROVED="${IMPROVED}${line}"$'\n\n'
+                ;;
+              -\ Fixed:*)
+                FIXED="${FIXED}${line}"$'\n\n'
+                ;;
+              -\ *)
+                IMPROVED="${IMPROVED}${line}"$'\n\n'
+                ;;
+            esac
+          done <<< "$BODY"
+
+          # Build the release body
+          RELEASE_BODY=""
+
+          if [ -n "$NEW" ]; then
+            RELEASE_BODY="${RELEASE_BODY}## New"$'\n\n'"${NEW}"
+          fi
+
+          if [ -n "$IMPROVED" ]; then
+            RELEASE_BODY="${RELEASE_BODY}## Improvements"$'\n\n'"${IMPROVED}"
+          fi
+
+          if [ -n "$FIXED" ]; then
+            RELEASE_BODY="${RELEASE_BODY}## Bug fixes"$'\n\n'"${FIXED}"
+          fi
+
+          # If no categorized items found, fall back to the raw body
+          if [ -z "$RELEASE_BODY" ]; then
+            RELEASE_BODY="$BODY"
+          fi
+
+          # Write body to a temp file to avoid shell escaping issues
+          echo "$RELEASE_BODY" > /tmp/release-body.md
+
+          echo "Release version: $VERSION"
+          echo "Release tag: v$VERSION"
+          echo "---"
+          cat /tmp/release-body.md
+
+      # Commit the new version and changelog back to the hotfix branch.
+      - name: Commit version and changelog
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "[ci] release ${{ github.ref_name }} (v${{ steps.sdk-version.outputs.version }})"
+          git push origin HEAD:${{ github.ref_name }}
+
+      - name: Create Git tag
+        run: |
+          TAG="v${{ steps.sdk-version.outputs.version }}"
+          git tag "$TAG"
+          git push origin "$TAG"
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "${{ steps.changelog.outputs.tag }}" \
+            --title "${{ steps.changelog.outputs.version }}" \
+            --notes-file /tmp/release-body.md \
+            --latest \
+            "/tmp/adyen-web-sdk-umd-and-translations-${{ steps.sdk-version.outputs.version }}.zip"
