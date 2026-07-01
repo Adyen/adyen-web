@@ -65,6 +65,7 @@ class BlikElement extends UIElement<AwaitConfiguration> {
                     onError={this.handleError}
                     onComplete={this.onComplete}
                     brandLogo={this.icon}
+                    brandName={this.displayName}
                     type={config.type}
                     messageText={this.props.i18n.get(config.messageTextId)}
                     awaitText={this.props.i18n.get(config.awaitTextId)}

@@ -23,6 +23,8 @@ const renderQRLoader = ({
     const srPanel = new SRPanel(global.core);
     const defaultProps: QRLoaderProps = {
         type: 'pix',
+        brandLogo: 'logo.png',
+        brandName: 'Pix',
         onComplete: jest.fn(),
         onError: jest.fn(),
         paymentData: 'initial-payment-data',
