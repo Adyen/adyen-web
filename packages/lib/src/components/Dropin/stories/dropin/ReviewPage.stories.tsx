@@ -332,7 +332,7 @@ export const DropinWithCardsBypassingReview: DropinStory = {
         componentConfiguration: {
             paymentMethodsConfiguration: {
                 card: {
-                    onReview: null
+                    onReview: undefined
                 }
             }
         }
