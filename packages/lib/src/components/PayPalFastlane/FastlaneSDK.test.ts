@@ -429,13 +429,13 @@ describe('FastlaneSDK', () => {
 
     test('should throw error if Fastlane does not get created', async () => {
         fastlaneConstructorMock = jest.fn().mockRejectedValue({});
-        await expect(initializeFastlane({ clientKey: 'test_xxx', environment: 'test' })).rejects.toThrowError(
+        await expect(initializeFastlane({ clientKey: 'test_xxx', environment: 'test' })).rejects.toThrow(
             'Fastlane SDK: Failed to initialize fastlane using the window.paypal.Fastlane constructor'
         );
     });
 
     test('should throw error if authentication is triggered without Fastlane being available', async () => {
         const fastlaneSdk = new FastlaneSDK({ environment: 'test', clientKey: 'test' });
-        await expect(fastlaneSdk.authenticate('test@adyen.com')).rejects.toThrowError('authenticate(): Fastlane SDK is not initialized');
+        await expect(fastlaneSdk.authenticate('test@adyen.com')).rejects.toThrow('authenticate(): Fastlane SDK is not initialized');
     });
 });
