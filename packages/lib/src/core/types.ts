@@ -53,7 +53,7 @@ export type CoreModules = Readonly<{
     srPanel: SRPanel;
 }>;
 
-export type PaymentCompletedData = SessionsResponse | { resultCode: ResultCode; donationToken?: string };
+export type PaymentCompletedData = SessionsResponse | { resultCode: ResultCode; donationToken?: string; askDonation?: boolean };
 
 export type PaymentFailedData = SessionsResponse | { resultCode: ResultCode };
 

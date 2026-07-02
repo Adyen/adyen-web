@@ -325,6 +325,7 @@ export type SessionsResponse = {
     sessionData: string;
     sessionResult: string;
     resultCode: ResultCode;
+    askDonation?: boolean;
 };
 
 export interface PaymentMethodsRequestData {

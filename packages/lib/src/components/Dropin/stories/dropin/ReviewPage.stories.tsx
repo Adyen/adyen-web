@@ -12,6 +12,7 @@ import type { DropinConfiguration } from '../../types';
 import type { Order, PaymentData } from '../../../../types/global-types';
 import type { NewableComponent } from '../../../../core/core.registry';
 import type { CheckoutSessionDonationCampaignsResponse } from '../../../../core/CheckoutSession/types';
+import { CardFieldValidData } from '../../../../types';
 
 type DropinStory = StoryConfiguration<DropinConfiguration>;
 
@@ -89,10 +90,10 @@ interface ReviewPageProps {
     readonly countryCode: string;
     readonly shopperLocale: string;
     readonly onOrderUpdated?: (order: Order, sessionId: string) => void;
-    readonly showDonation?: boolean;
+    readonly endDigits?: string;
 }
 
-const ReviewPage = ({ reviewData, sessionId, amount, countryCode, shopperLocale, onOrderUpdated, showDonation = false }: ReviewPageProps) => {
+const ReviewPage = ({ reviewData, sessionId, amount, countryCode, shopperLocale, onOrderUpdated, endDigits }: ReviewPageProps) => {
     const actionModalRef = useRef<HTMLDialogElement>(null);
     const actionRef = useRef<HTMLDivElement>(null);
     const donationRef = useRef<HTMLDivElement>(null);
@@ -118,7 +119,7 @@ const ReviewPage = ({ reviewData, sessionId, amount, countryCode, shopperLocale,
                     actionModalRef.current?.close();
                     setSubmitting(false);
                     setResultCode(result.resultCode);
-                    if (showDonation && donationRef.current && checkoutRef.current) {
+                    if (result.askDonation === true && donationRef.current && checkoutRef.current) {
                         new Donation(checkoutRef.current, {
                             rootNode: donationRef.current
                         });
@@ -174,6 +175,11 @@ const ReviewPage = ({ reviewData, sessionId, amount, countryCode, shopperLocale,
                         <strong>Payment method:</strong> {reviewData.paymentMethod?.type}
                         {reviewData.paymentMethod?.brand ? ` (${reviewData.paymentMethod.brand})` : ''}
                     </p>
+                    {endDigits && (
+                        <p>
+                            <strong>Card ending in:</strong> {endDigits}
+                        </p>
+                    )}
                     <pre style={{ overflow: 'auto', fontSize: 11 }}>{JSON.stringify(reviewData, null, 2)}</pre>
                     <button
                         type="button"
@@ -258,7 +264,6 @@ const renderWithDonations: DropinStory['render'] = ({ componentConfiguration, ..
                 amount={amount}
                 countryCode={countryCode}
                 shopperLocale={shopperLocale}
-                showDonation
                 onOrderUpdated={(order, sessionId) => {
                     setOrderReturn({ order, sessionId });
                     setReviewState(null);
@@ -295,6 +300,22 @@ export default meta;
 const renderDropin: DropinStory['render'] = ({ componentConfiguration, ...checkoutConfig }) => {
     const { countryCode, amount, shopperLocale } = checkoutConfig;
     const [reviewState, setReviewState] = useState<{ data: PaymentData; sessionId: string } | null>(null);
+    const endDigitsRef = useRef<string | undefined>(undefined);
+
+    const mergedConfig: typeof componentConfiguration = {
+        ...componentConfiguration,
+        paymentMethodsConfiguration: {
+            ...componentConfiguration?.paymentMethodsConfiguration,
+            card: {
+                ...componentConfiguration?.paymentMethodsConfiguration?.card,
+                onFieldValid: (e: CardFieldValidData) => {
+                    if (e.fieldType === 'encryptedCardNumber' && e.endDigits) {
+                        endDigitsRef.current = e.endDigits;
+                    }
+                }
+            }
+        }
+    };
 
     if (reviewState) {
         return (
@@ -304,13 +325,14 @@ const renderDropin: DropinStory['render'] = ({ componentConfiguration, ...checko
                 amount={amount}
                 countryCode={countryCode}
                 shopperLocale={shopperLocale}
+                endDigits={endDigitsRef.current}
             />
         );
     }
 
     return (
         <PaymentPage
-            componentConfiguration={componentConfiguration}
+            componentConfiguration={mergedConfig}
             countryCode={countryCode}
             amount={amount}
             shopperLocale={shopperLocale}
