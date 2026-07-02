@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - main
+      - next-v*
 
 jobs:
   check-commit-message:
