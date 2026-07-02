@@ -7,7 +7,7 @@
 # .github/workflows/npm-publish.yml manually on the tag it creates.
 #
 # Requires at least one changeset on the branch so the snapshot can be computed.
-name: Snapshot Release
+name: Release CI | Snapshot
 
 on:
   workflow_dispatch:
