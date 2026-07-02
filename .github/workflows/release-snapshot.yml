@@ -7,13 +7,13 @@
 # .github/workflows/npm-publish.yml manually on the tag it creates.
 #
 # Requires at least one changeset on the branch so the snapshot can be computed.
-name: Release CI | Snapshot
+name: Release | Snapshot
 
 on:
   workflow_dispatch:
 
 jobs:
-  snapshot-release:
+  release-snapshot:
     if: github.repository == 'adyen/adyen-web'
     name: Build Snapshot
     runs-on: ubuntu-latest

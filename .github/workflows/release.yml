@@ -1,4 +1,4 @@
-name: Release CI | Latest
+name: Release | Latest
 
 on:
   push:
