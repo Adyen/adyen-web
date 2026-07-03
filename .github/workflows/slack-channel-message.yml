@@ -1,0 +1,78 @@
+name: Slack Send Channel Message
+
+on:
+  workflow_call:
+    inputs:
+      version:
+        description: SDK version (resolved from package.json if omitted)
+        required: false
+        type: string
+      channel:
+        description: Slack channel ID or name
+        required: true
+        type: string
+      message:
+        description: 'Message text. Use {version} as a placeholder for the resolved SDK version'
+        required: true
+        type: string
+      thread_ts:
+        description: Thread timestamp to reply to an existing thread (optional)
+        required: false
+        type: string
+    secrets:
+      SLACK_BOT_TOKEN:
+        required: true
+    outputs:
+      thread_ts:
+        description: Timestamp of the posted message, for threading replies
+        value: ${{ jobs.send-channel-message.outputs.thread_ts }}
+
+jobs:
+  send-channel-message:
+    runs-on: ubuntu-latest
+    outputs:
+      thread_ts: ${{ steps.send-message.outputs.thread_ts }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Resolve SDK version
+        id: sdk-version
+        run: |
+          INPUT_VERSION="${{ inputs.version }}"
+          if [ -n "$INPUT_VERSION" ]; then
+            echo "version=$INPUT_VERSION" >> "$GITHUB_OUTPUT"
+          else
+            echo "version=$(node -p "require('./packages/lib/package.json').version")" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Send channel message
+        id: send-message
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+          CHANNEL: ${{ inputs.channel }}
+          THREAD_TS: ${{ inputs.thread_ts }}
+          VERSION: ${{ steps.sdk-version.outputs.version }}
+          RAW_MESSAGE: ${{ inputs.message }}
+        run: |
+          MESSAGE="${RAW_MESSAGE//\{version\}/$VERSION}"
+
+          PAYLOAD=$(jq -n \
+            --arg channel "$CHANNEL" \
+            --arg text "$MESSAGE" \
+            --arg thread_ts "$THREAD_TS" \
+            'if $thread_ts != "" then {channel: $channel, text: $text, thread_ts: $thread_ts} else {channel: $channel, text: $text} end')
+
+          RESPONSE=$(curl -s -X POST "https://slack.com/api/chat.postMessage" \
+            -H "Authorization: Bearer $SLACK_BOT_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d "$PAYLOAD")
+
+          echo "$RESPONSE" | jq .
+
+          if [ "$(echo "$RESPONSE" | jq -r '.ok')" != "true" ]; then
+            echo "Slack API error: $(echo "$RESPONSE" | jq -r '.error')"
+            exit 1
+          fi
+
+          echo "thread_ts=$(echo "$RESPONSE" | jq -r '.ts')" >> "$GITHUB_OUTPUT"
