@@ -38,6 +38,8 @@ const renderAwait = ({
 describe('Await', () => {
     const assignSpy = jest.fn();
 
+    const brandName = 'MBWay';
+
     const defaultProps: AwaitComponentProps = {
         countdownTime: 0,
         onActionHandled: jest.fn(),
@@ -47,6 +49,7 @@ describe('Await', () => {
         throttleInterval: 0,
         throttleTime: 0,
         brandLogo: 'https://example.com',
+        brandName,
         clientKey: 'test_client_key',
         messageText: 'test',
         paymentData: 'dummy',
@@ -79,7 +82,7 @@ describe('Await', () => {
 
         test('should show brand logo', async () => {
             renderAwait({ awaitProps: defaultProps, amountProviderProps });
-            const image = await screen.findByAltText(defaultProps.type);
+            const image = await screen.findByAltText(brandName);
             // @ts-ignore src is part of img
             expect(image.src).toContain(defaultProps.brandLogo);
         });
@@ -207,7 +210,7 @@ describe('Await', () => {
         test('should show brand logo', async () => {
             renderAwait({ awaitProps: defaultProps, amountProviderProps });
 
-            const image = await screen.findByAltText(defaultProps.type);
+            const image = await screen.findByAltText(brandName);
             // @ts-ignore src is part of img
             expect(image.src).toContain(defaultProps.brandLogo);
         });

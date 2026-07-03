@@ -392,6 +392,8 @@
     "payto.label.firstName": "Kontoinnehaverens fornavn",
     "payto.label.lastName": "Kontoinnehaverens etternavn",
     "payto.await.waitForConfirmation": "Venter på godkjenningen din",
+    "payto.errors.accountHolderFirstName.invalid": "Skriv inn kontoinnehaverens fornavn",
+    "payto.errors.accountHolderLastName.invalid": "Skriv inn kontoinnehaverens etternavn",
     "payto.bsb.option.label": "BSB- og kontonummer",
     "card.fastlane.a11y.logo": "Fastlane by Paypal-logo",
     "card.fastlane.a11y.openDialog": "Les mer om Fastlane",

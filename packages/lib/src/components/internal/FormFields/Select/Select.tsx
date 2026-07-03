@@ -30,7 +30,8 @@ function Select({
     clearOnSelect,
     blurOnClose,
     onListToggle,
-    required
+    required,
+    additionalDescribedBy
 }: Readonly<SelectProps>) {
     const { i18n } = useCoreContext();
     const filterInputRef = useRef(null);
@@ -53,7 +54,8 @@ function Select({
     const filteredItems = disableTextFilter ? items : items.filter(item => !textFilter || item.name.toLowerCase().includes(textFilter.toLowerCase()));
 
     const suffix = isInvalid ? ARIA_ERROR_SUFFIX : ARIA_CONTEXT_SUFFIX;
-    const ariaDescribedBy = uniqueId ? `${uniqueId}${suffix}` : null;
+    const baseDescribedBy = uniqueId ? `${uniqueId}${suffix}` : null;
+    const ariaDescribedBy = [baseDescribedBy, additionalDescribedBy].filter(Boolean).join(' ') || null;
 
     const setNextActive = () => {
         if (!filteredItems || filteredItems.length < 1) return;

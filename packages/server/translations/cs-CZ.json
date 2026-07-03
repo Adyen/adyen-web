@@ -392,6 +392,8 @@
     "payto.label.firstName": "Křestní jméno držitele účtu",
     "payto.label.lastName": "Příjmení držitele účtu",
     "payto.await.waitForConfirmation": "Čekáme na vaše schválení",
+    "payto.errors.accountHolderFirstName.invalid": "Zadejte jméno držitele účtu",
+    "payto.errors.accountHolderLastName.invalid": "Zadejte příjmení držitele účtu",
     "payto.bsb.option.label": "Kód banky BSB a číslo účtu",
     "card.fastlane.a11y.logo": "Logo Fastlane by Paypal",
     "card.fastlane.a11y.openDialog": "Přečtěte si více o Fastlane",

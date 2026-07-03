@@ -1,15 +1,15 @@
-import { h, Fragment } from 'preact';
+import { h, Fragment, Ref } from 'preact';
 import cx from 'classnames';
-import { SelectButtonProps } from '../types';
+import { SelectButtonElementProps, SelectButtonProps } from '../types';
 import Img from '../../../Img';
 import { useMemo } from 'preact/hooks';
 import classnames from 'classnames';
 
-function SelectButtonElement({ filterable, toggleButtonRef, showList, selectListId, ...props }) {
+function SelectButtonElement({ filterable, toggleButtonRef, showList, selectListId, ...props }: Readonly<SelectButtonElementProps>) {
     if (filterable) {
         // Even if passed, we can't add an id to this div since it is not allowed to associate a div with a label element
         const { id, ...strippedProps } = props;
-        return <div {...strippedProps} ref={toggleButtonRef} />;
+        return <div {...strippedProps} ref={toggleButtonRef as Ref<HTMLDivElement>} />;
     }
 
     return (
@@ -24,11 +24,11 @@ function SelectButtonElement({ filterable, toggleButtonRef, showList, selectList
             aria-activedescendant={props['aria-activedescendant'] || undefined}
             disabled={props.disabled}
             aria-disabled={props.readonly}
-            aria-describedby={props.ariaDescribedBy}
-            aria-labelledby={props.id ? `${props.id}-label ${props.id}-value` : undefined}
+            aria-describedby={props['aria-describedby']}
+            aria-labelledby={props.id ? `${props.id as string}-label ${props.id as string}-value` : undefined}
             onClick={props.onClick}
             onKeyDown={props.onKeyDown}
-            ref={toggleButtonRef}
+            ref={toggleButtonRef as Ref<HTMLButtonElement>}
         >
             {props.children}
         </button>
@@ -89,6 +89,7 @@ function SelectButton(props: Readonly<SelectButtonProps>) {
             showList={showList}
             selectListId={props.selectListId}
             aria-activedescendant={!props.filterable && showList ? currentSelectedItemId || undefined : undefined}
+            aria-describedby={props.ariaDescribedBy}
         >
             {!props.filterable ? (
                 <Fragment>

@@ -59,7 +59,7 @@ export function Await(props: Readonly<AwaitComponentProps>) {
     if (loading) {
         return (
             <div className="adyen-checkout__await">
-                {props.brandLogo && <img src={props.brandLogo} alt={props.type} className="adyen-checkout__await__brand-logo" />}
+                {props.brandLogo && <img src={props.brandLogo} alt={props.brandName ?? props.type} className="adyen-checkout__await__brand-logo" />}
                 <Spinner inline={false} size="large" />
             </div>
         );
@@ -75,7 +75,7 @@ export function Await(props: Readonly<AwaitComponentProps>) {
                 props.classNameModifiers.map(m => `adyen-checkout__await--${m}`)
             )}
         >
-            {props.brandLogo && <img src={props.brandLogo} alt={props.type} className="adyen-checkout__await__brand-logo" />}
+            {props.brandLogo && <img src={props.brandLogo} alt={props.brandName ?? props.type} className="adyen-checkout__await__brand-logo" />}
 
             {/* Everything is wrapped in !! so we evaluate the result as boolean,
              otherwise we might just print the value or object as mistake */}

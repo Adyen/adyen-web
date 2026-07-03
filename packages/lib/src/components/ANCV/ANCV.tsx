@@ -98,6 +98,7 @@ export class ANCVElement extends UIElement<ANCVConfiguration> {
                     onError={this.props.onError}
                     onComplete={this.onComplete}
                     brandLogo={this.icon}
+                    brandName={this.displayName}
                     type={this.constructor['type']}
                     messageText={this.props.i18n.get('ancv.confirmPayment')}
                     awaitText={this.props.i18n.get('await.waitForConfirmation')}

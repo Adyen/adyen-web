@@ -392,6 +392,8 @@
     "payto.label.firstName": "الاسم الأول لصاحب الحساب",
     "payto.label.lastName": "اسم العائلة لصاحب الحساب",
     "payto.await.waitForConfirmation": "في انتظار موافقتكم",
+    "payto.errors.accountHolderFirstName.invalid": "أدخل الاسم الأول لصاحب الحساب",
+    "payto.errors.accountHolderLastName.invalid": "أدخل اسم العائلة لصاحب الحساب",
     "payto.bsb.option.label": "رمز فرع البنك ورقم الحساب",
     "card.fastlane.a11y.logo": "شعار Fastlane by Paypal",
     "card.fastlane.a11y.openDialog": "اقرأ المزيد عن Fastlane",

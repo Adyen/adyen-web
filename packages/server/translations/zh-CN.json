@@ -392,6 +392,8 @@
     "payto.label.firstName": "账户持有人名字",
     "payto.label.lastName": "账户持有人姓氏",
     "payto.await.waitForConfirmation": "等待您的批准…",
+    "payto.errors.accountHolderFirstName.invalid": "输入账户持有人的名字",
+    "payto.errors.accountHolderLastName.invalid": "输入账户持有人的姓氏",
     "payto.bsb.option.label": "BSB 和账号",
     "card.fastlane.a11y.logo": "Fastlane by Paypal 徽标",
     "card.fastlane.a11y.openDialog": "阅读更多关于 Fastlane 的信息",

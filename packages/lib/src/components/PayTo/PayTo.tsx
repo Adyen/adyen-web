@@ -134,6 +134,7 @@ export class PayToElement extends UIElement<PayToConfiguration> {
                     onError={this.props.onError}
                     onComplete={this.onComplete}
                     brandLogo={this.icon}
+                    brandName={this.displayName}
                     type={this.constructor['type']}
                     messageText={this.props.i18n.get('payto.confirmPayment')}
                     awaitText={this.props.i18n.get('payto.await.waitForConfirmation')}

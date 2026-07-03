@@ -392,6 +392,8 @@
     "payto.label.firstName": "Konta īpašnieka vārds",
     "payto.label.lastName": "Konta īpašnieka uzvārds",
     "payto.await.waitForConfirmation": "Gaida jūsu apstiprinājumu",
+    "payto.errors.accountHolderFirstName.invalid": "Ievadiet savu konta turētāja vārdu",
+    "payto.errors.accountHolderLastName.invalid": "Ievadiet savu konta turētāja uzvārdu",
     "payto.bsb.option.label": "BSB un konta numurs",
     "card.fastlane.a11y.logo": "Fastlane ar Paypal logotipu",
     "card.fastlane.a11y.openDialog": "Lasīt vairāk par Fastlane",
