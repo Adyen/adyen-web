@@ -102,6 +102,4 @@ For a one off preview build of a feature branch. Does not change the branch.
 | `check-release-build.yml` | `.github/workflows` | Push to `main` or `next-v*` | Checks commit message for `[ci] release main` or `[ci] release next-v{version}` and triggers `gh-release.yml` |
 | `gh-release.yml` | `.github/workflows` | `workflow_dispatch` / `workflow_call` | Builds UMD + translations, parses CHANGELOG, creates a git tag and GitHub Release (`--latest` or `--prerelease`) with the UMD bundle attached |
 | `npm-publish.yml` | `.github/workflows` | `workflow_dispatch` (run from the release tag) | Builds and publishes the package to npm via OIDC |
-| `snapshot-release.yml` | `phase-2-workflows` | `workflow_dispatch` | Builds a snapshot (`6.43.0-alpha+{commit-hash}`), tags it, and creates a prerelease GitHub Release with the UMD build. The branch is not changed |
-
-> The Phase 2 workflows currently live in `phase-2-workflows/` as drafts. GitHub only runs workflows in `.github/workflows`, so move a file there to activate it.
+| `snapshot-release.yml` | `.github/workflows` | `workflow_dispatch` | Builds a snapshot (`6.43.0-alpha+{commit-hash}`), tags it, and creates a prerelease GitHub Release with the UMD build. The branch is not changed |
