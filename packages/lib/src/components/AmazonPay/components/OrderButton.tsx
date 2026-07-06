@@ -4,6 +4,7 @@ import Button from '../../internal/Button';
 import { updateAmazonCheckoutSession } from '../services';
 import { OrderButtonProps, UpdateAmazonCheckoutSessionRequest } from '../types';
 import { useAmount } from '../../../core/Context/AmountProvider';
+import { redirectToApp } from '../../../utils/urls';
 
 export default function OrderButton(props: Readonly<OrderButtonProps>) {
     const { i18n, loadingContext } = useCoreContext();
@@ -25,7 +26,7 @@ export default function OrderButton(props: Readonly<OrderButtonProps>) {
         updateAmazonCheckoutSession(loadingContext, clientKey, request)
             .then(response => {
                 if (!response?.action?.type) return console.error(response.errorMessage || 'Could not get the AmazonPay URL');
-                if (response.action.type === 'redirect') window.location.assign(response.action.url);
+                if (response.action.type === 'redirect') redirectToApp(response.action.url);
             })
             .catch(error => {
                 if (props.onError) props.onError(error, this.componentRef);

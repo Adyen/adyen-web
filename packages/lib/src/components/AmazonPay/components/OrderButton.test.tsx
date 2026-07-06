@@ -6,10 +6,16 @@ import { CoreProvider } from '../../../core/Context/CoreProvider';
 import { AmountProvider } from '../../../core/Context/AmountProvider';
 import { updateAmazonCheckoutSession } from '../services';
 import { setupCoreMock } from '../../../../config/testMocks/setup-core-mock';
+import { redirectToApp } from '../../../utils/urls';
 
 jest.mock('../services', () => ({
     updateAmazonCheckoutSession: jest.fn()
 }));
+jest.mock('../../../utils/urls', () => ({
+    redirectToApp: jest.fn()
+}));
+
+const redirectToAppMock = redirectToApp as jest.Mock;
 
 const core = setupCoreMock();
 
@@ -39,27 +45,6 @@ const renderOrderButton = (props = {}) => {
 };
 
 describe('OrderButton', () => {
-    const oldWindowLocation = window.location;
-
-    beforeAll(() => {
-        delete window.location;
-        // @ts-ignore test only
-        window.location = Object.defineProperties(
-            {},
-            {
-                ...Object.getOwnPropertyDescriptors(oldWindowLocation),
-                assign: {
-                    configurable: true,
-                    value: jest.fn()
-                }
-            }
-        );
-    });
-
-    afterAll(() => {
-        window.location = oldWindowLocation as string & Location;
-    });
-
     beforeEach(() => {
         jest.clearAllMocks();
     });
@@ -102,7 +87,7 @@ describe('OrderButton', () => {
         await user.click(screen.getByRole('button', { name: 'Confirm purchase' }));
 
         await waitFor(() => {
-            expect(window.location.assign).toHaveBeenCalledWith('https://amazon.com/checkout');
+            expect(redirectToAppMock).toHaveBeenCalledWith('https://amazon.com/checkout');
         });
     });
 

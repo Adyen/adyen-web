@@ -1,6 +1,7 @@
 import { Component, h } from 'preact';
 import detectInIframeInSameOrigin from '../../../../utils/detectInIframeInSameOrigin';
 import { ActionHandledReturnObject } from '../../../../types/global-types';
+import { redirectToApp } from '../../../../utils/urls';
 
 interface RedirectShopperProps {
     beforeRedirect: (resolve, reject, url) => Promise<void>;
@@ -37,7 +38,7 @@ class RedirectShopper extends Component<Readonly<RedirectShopperProps>> {
                     // if in an iframe and the config prop allows it - try to redirect from the top level window
                     window.top.location.assign?.(this.props.url);
                 } else {
-                    window.location.assign(this.props.url);
+                    redirectToApp(this.props.url);
                 }
             }
         };

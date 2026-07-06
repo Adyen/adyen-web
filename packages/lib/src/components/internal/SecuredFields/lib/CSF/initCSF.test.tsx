@@ -36,28 +36,11 @@ describe('Calling initCSF', () => {
         ); // Using a regEx (w. line start & end markers) to test the exact error message
     });
 
-    test('initializing with a custom http origin should throw an error', () => {
-        global['window'] ??= Object.create(window);
-        const url = 'http://www.mycustomdomain.com';
-        Object.defineProperty(window, 'location', {
-            value: {
-                origin: url
-            },
-            writable: true
-        });
-
-        /* @ts-ignore deliberately-not-implementing-all-members */
-        expect(() => initCSF({ rootNode: {}, clientKey: 'fsdg', type: 'card' })).toThrow(/WARNING: you are are running from an insecure context:/);
-    });
+    // Note: the "insecure http origin" scenario lives in initCSF.insecureContext.test.tsx because jsdom v26
+    // makes window.location unforgeable; the origin can only be controlled per-file via @jest-environment-options.
 
     test('initializing with a local http origin should be ok and CSF should be initialised but then throw a loadingContext error', () => {
-        const url = 'http://localhost';
-        Object.defineProperty(window, 'location', {
-            value: {
-                origin: url
-            }
-        });
-
+        // Default jsdom origin is http://localhost, which is treated as a secure local context.
         /* @ts-ignore deliberately-not-implementing-all-members */
         expect(() => initCSF({ rootNode: {}, clientKey: 'fsdg', type: 'card' })).toThrow(/WARNING Config :: no loadingContext has been specified!/);
     });

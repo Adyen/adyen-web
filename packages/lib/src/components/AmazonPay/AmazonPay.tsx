@@ -8,6 +8,7 @@ import { getCheckoutDetails } from './services';
 import { TxVariants } from '../tx-variants';
 import { sanitizeResponse, verifyPaymentDidNotFail } from '../internal/UIElement/utils';
 import { AnalyticsInfoEvent, InfoEventType } from '../../core/Analytics/events/AnalyticsInfoEvent';
+import { redirectToApp } from '../../utils/urls';
 
 import './AmazonPay.scss';
 
@@ -80,7 +81,7 @@ export class AmazonPayElement extends UIElement<AmazonPayConfiguration> {
         getCheckoutDetails(loadingContext, clientKey, request)
             .then((response = {}) => {
                 if (!response?.declineFlowUrl) throw response;
-                window.location.assign(response.declineFlowUrl);
+                redirectToApp(response.declineFlowUrl);
             })
             .catch(error => {
                 if (this.props.onError) this.props.onError(error, this.componentRef);

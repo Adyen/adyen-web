@@ -4,12 +4,18 @@ import RedirectShopper from './components/RedirectShopper';
 import RedirectElement from './Redirect';
 import { RedirectConfiguration } from './types';
 import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
+import { redirectToApp } from '../../utils/urls';
 
 jest.mock('../../utils/detectInIframeInSameOrigin', () => {
     return jest.fn().mockImplementation(() => {
         return true;
     });
 });
+jest.mock('../../utils/urls', () => ({
+    redirectToApp: jest.fn()
+}));
+
+const redirectToAppMock = redirectToApp as jest.Mock;
 
 describe('Redirect', () => {
     describe('isValid', () => {
@@ -61,25 +67,8 @@ describe('Redirect', () => {
 });
 
 describe('Redirect error', () => {
-    const oldWindowLocation = window.location;
-
-    beforeAll(() => {
-        delete window.location;
-        // @ts-ignore test only
-        window.location = Object.defineProperties(
-            {},
-            {
-                ...Object.getOwnPropertyDescriptors(oldWindowLocation),
-                assign: {
-                    configurable: true,
-                    value: jest.fn()
-                }
-            }
-        );
-    });
-
-    afterAll(() => {
-        window.location = oldWindowLocation as string & Location;
+    afterEach(() => {
+        redirectToAppMock.mockReset();
     });
 
     test('should send an error event to the analytics module if beforeRedirect rejects', async () => {
@@ -110,7 +99,7 @@ describe('Redirect error', () => {
     });
 
     test('should send an error event to the analytics module if the redirection failed', async () => {
-        (window.location.assign as jest.Mock).mockImplementation(() => {
+        redirectToAppMock.mockImplementation(() => {
             throw new Error('Mock error');
         });
 

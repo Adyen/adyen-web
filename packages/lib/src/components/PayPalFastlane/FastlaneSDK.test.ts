@@ -393,15 +393,17 @@ describe('FastlaneSDK', () => {
         });
 
         // @ts-ignore It is expected to omit the parameter here
-        await expect(fastlane.getComponentConfiguration()).rejects.toThrowError();
+        await expect(fastlane.getComponentConfiguration()).rejects.toThrow(
+            'FastlaneSDK: you must pass the authentication result to get the component configuration'
+        );
     });
 
     test('should throw error if environment and clientKey are not passed when initializing it', async () => {
         // @ts-ignore Testing not passing the parameters
-        await expect(initializeFastlane()).rejects.toThrowError("FastlaneSDK: 'environment' property is required");
+        await expect(initializeFastlane()).rejects.toThrow("FastlaneSDK: 'environment' property is required");
 
         // @ts-ignore Testing not passing the parameters
-        await expect(initializeFastlane({ environment: 'test' })).rejects.toThrowError("FastlaneSDK: 'clientKey' property is required");
+        await expect(initializeFastlane({ environment: 'test' })).rejects.toThrow("FastlaneSDK: 'clientKey' property is required");
     });
 
     test('should warn if "forceConsentDetails" is set in a "live" environment', async () => {

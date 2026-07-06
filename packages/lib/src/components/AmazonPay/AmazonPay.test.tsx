@@ -5,8 +5,14 @@ import { httpPost } from '../../core/Services/http';
 import { mock } from 'jest-mock-extended';
 import { AmazonPayConfiguration } from './types';
 import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
+import { redirectToApp } from '../../utils/urls';
 
 jest.mock('../../core/Services/http');
+jest.mock('../../utils/urls', () => ({
+    redirectToApp: jest.fn()
+}));
+
+const redirectToAppMock = redirectToApp as jest.Mock;
 
 const declineFlowMock = {
     declineFlowUrl: 'https://example.com'
@@ -166,14 +172,10 @@ describe('AmazonPay', () => {
         });
 
         test('redirects the shopper if a declineFlowUrl is received', async () => {
-            Object.defineProperty(window, 'location', {
-                writable: true,
-                value: { assign: jest.fn() }
-            });
             const amazonPay = getElement({ amazonCheckoutSessionId: 'ABC123' });
             /* eslint-disable @typescript-eslint/await-thenable */
             void (await amazonPay.handleDeclineFlow());
-            expect(window.location.assign).toHaveBeenCalledTimes(1);
+            expect(redirectToAppMock).toHaveBeenCalledTimes(1);
         });
 
         test('calls onError if declineFlowUrl is missing from response', async () => {
