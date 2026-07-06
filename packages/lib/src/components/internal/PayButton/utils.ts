@@ -39,12 +39,21 @@ const formatSecondaryAmountLabel = (i18n: Language, secondaryAmount: PaymentAmou
 
 function createButtonLabel(
     i18n: Language,
-    customLabel: string,
-    amount: PaymentAmount,
-    isZeroAuth: boolean,
-    customAmount?: PaymentAmount,
-    secondaryAmount?: PaymentAmount,
-    showReview?: boolean
+    {
+        customLabel,
+        amount,
+        isZeroAuth,
+        customAmount,
+        secondaryAmount,
+        showReview
+    }: {
+        customLabel: string;
+        amount: PaymentAmount;
+        isZeroAuth: boolean;
+        customAmount?: PaymentAmount;
+        secondaryAmount?: PaymentAmount;
+        showReview?: boolean;
+    }
 ): string {
     if (showReview) {
         return i18n.get('continue');
