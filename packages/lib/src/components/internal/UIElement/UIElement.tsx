@@ -672,13 +672,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
 
     render() {
         return (
-            <CoreProvider
-                i18n={this.props.i18n}
-                loadingContext={this.props.loadingContext}
-                resources={this.resources}
-                analytics={this.analytics}
-                showReview={!!this.props.onReview}
-            >
+            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources} analytics={this.analytics}>
                 <SRPanelProvider srPanel={this.srPanel}>
                     <AmountProvider amount={this.props.amount} secondaryAmount={this.props.secondaryAmount} providerRef={this.amountProviderRef}>
                         {this.componentToRender()}

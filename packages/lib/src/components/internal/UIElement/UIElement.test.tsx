@@ -628,9 +628,9 @@ describe('UIElement', () => {
 
     describe('payButton()', () => {
         const amount = { value: 1000, currency: 'USD' };
-        const renderPayButton = (ui: h.JSX.Element, contextShowReview = false) =>
+        const renderPayButton = (ui: h.JSX.Element) =>
             render(
-                <CoreProvider i18n={core.modules.i18n} loadingContext="test" resources={core.modules.resources} showReview={contextShowReview}>
+                <CoreProvider i18n={core.modules.i18n} loadingContext="test" resources={core.modules.resources}>
                     <AmountProvider amount={amount} providerRef={createRef()}>
                         {ui}
                     </AmountProvider>
