@@ -613,7 +613,7 @@ describe('UIElement', () => {
                 expect.objectContaining({
                     type: LogEventType.review,
                     component: 'super_pay',
-                    message: 'Review page displayed'
+                    message: 'Review flow triggered'
                 })
             );
         });
@@ -630,7 +630,7 @@ describe('UIElement', () => {
         const amount = { value: 1000, currency: 'USD' };
         const renderPayButton = (ui: h.JSX.Element, contextShowReview = false) =>
             render(
-                <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources} showReview={contextShowReview}>
+                <CoreProvider i18n={core.modules.i18n} loadingContext="test" resources={core.modules.resources} showReview={contextShowReview}>
                     <AmountProvider amount={amount} providerRef={createRef()}>
                         {ui}
                     </AmountProvider>

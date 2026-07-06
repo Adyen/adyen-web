@@ -32,7 +32,7 @@ const PayButton = ({ customAmount, classNameModifiers = [], label, icon, showRev
     const { i18n, showReview: contextShowReview } = useCoreContext();
     const showReview = showReviewProp ?? contextShowReview;
 
-    const buttonLabel = createButtonLabel(i18n, label, amount, isZeroAuth, customAmount, secondaryAmount, showReview);
+    const buttonLabel = createButtonLabel(i18n, { customLabel: label, amount, isZeroAuth, customAmount, secondaryAmount, showReview });
     const buttonIcon = icon && !showReview ? icon : undefined;
     const secondaryAmountLabel = createSecondaryLabel(i18n, secondaryAmount, isAmountValid(amount), isZeroAuth, label);
 

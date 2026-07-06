@@ -9,11 +9,14 @@ import { AmountProvider, AmountProviderProps } from '../../../core/Context/Amoun
 import { ButtonProps } from '../Button/types';
 import { ILanguageService } from '../../../language/LanguageService';
 import { mock } from 'jest-mock-extended';
+import { setupCoreMock } from '../../../../config/testMocks/setup-core-mock';
+
+const core = setupCoreMock();
 
 const renderPayButton = ({
     payButtonProps = {},
     amountProviderProps = {},
-    i18n = global.i18n,
+    i18n = core.modules.i18n,
     showReview = false
 }: {
     payButtonProps?: Partial<PayButtonProps>;
@@ -22,7 +25,7 @@ const renderPayButton = ({
     showReview?: boolean;
 } = {}) => {
     return render(
-        <CoreProvider i18n={i18n} loadingContext="test" resources={global.resources} showReview={showReview}>
+        <CoreProvider i18n={i18n} loadingContext="test" resources={core.modules.resources as any} showReview={showReview}>
             <AmountProvider amount={amountProviderProps.amount} secondaryAmount={amountProviderProps.secondaryAmount} providerRef={createRef()}>
                 <PayButton {...payButtonProps} />
             </AmountProvider>

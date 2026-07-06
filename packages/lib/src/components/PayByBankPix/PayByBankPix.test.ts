@@ -343,7 +343,7 @@ describe('PayByBankPix', () => {
             });
 
             render(element.render());
-            await user.click(screen.getByRole('button', { name: /Continue/i }));
+            await user.click(screen.getByRole('button', { name: 'Continue' }));
             await new Promise(process.nextTick);
 
             expect(onReviewMock).not.toHaveBeenCalled();
@@ -359,7 +359,7 @@ describe('PayByBankPix', () => {
 
         test('should send the storedPaymentMethodId when the pay button is clicked', async () => {
             render(payByBankPixElement.render());
-            await user.click(screen.getByRole('button', { name: /Continue/i }));
+            await user.click(screen.getByRole('button', { name: 'Continue to PIX through OpenBanking' }));
             expect(onSubmitMock).toHaveBeenCalledWith(
                 {
                     data: {

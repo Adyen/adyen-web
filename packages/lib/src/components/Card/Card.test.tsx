@@ -9,10 +9,9 @@ import { CardFocusData } from '../internal/SecuredFields/lib/types';
 import { mock } from 'jest-mock-extended';
 import { AmountProvider } from '../../core/Context/AmountProvider';
 import { ICore } from '../../types';
-import { _MockProxy } from 'jest-mock-extended/lib/Mock';
 
 describe('Card', () => {
-    const core = global.core as _MockProxy<ICore> & ICore;
+    const core = setupCoreMock();
     describe('formatProps', function () {
         test('should not require a billingAddress if it is a stored card', () => {
             const core = setupCoreMock({
@@ -46,11 +45,11 @@ describe('Card', () => {
     describe('payButton', () => {
         describe('Zero auth transaction', () => {
             const amount = { value: 0, currency: 'eur' };
-            const props = { amount, enableStoreDetails: true, i18n: global.i18n };
+            const props = { amount, enableStoreDetails: true, i18n: core.modules.i18n };
             const customRender = (ui: h.JSX.Element) => {
                 return render(
                     // @ts-ignore ignore
-                    <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+                    <CoreProvider i18n={core.modules.i18n} loadingContext="test" resources={core.modules.resources}>
                         <AmountProvider amount={amount} providerRef={createRef()}>
                             {ui}
                         </AmountProvider>
@@ -77,8 +76,7 @@ describe('Card', () => {
             const amount = { value: 1000, currency: 'USD' };
             const customRender = (ui: h.JSX.Element, contextShowReview = false) =>
                 render(
-                    // @ts-ignore ignore
-                    <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources} showReview={contextShowReview}>
+                    <CoreProvider i18n={core.modules.i18n} loadingContext="test" resources={core.modules.resources} showReview={contextShowReview}>
                         <AmountProvider amount={amount} providerRef={createRef()}>
                             {ui}
                         </AmountProvider>
@@ -208,9 +206,9 @@ describe('Card', () => {
     });
 
     describe('formatData', () => {
-        const i18n = global.i18n;
-        const resources = global.resources;
-        const srPanel = global.srPanel;
+        const i18n = core.modules.i18n;
+        const resources = core.modules.resources;
+        const srPanel = core.modules.srPanel;
 
         const props = { loadingContext: 'test', i18n, modules: { resources, srPanel } };
         const storedCardProps = { supportedShopperInteractions: ['Ecommerce'], storedPaymentMethodId: 'xxx' };
@@ -370,8 +368,8 @@ describe('Card', () => {
         test('should send "rendered" event when the component is rendered', () => {
             const core = setupCoreMock();
             const card = new CardElement(core, {
-                i18n: global.i18n,
-                modules: { resources: global.resources }
+                i18n: core.modules.i18n,
+                modules: { resources: core.modules.resources }
             });
 
             render(card.render());
@@ -392,10 +390,10 @@ describe('Card', () => {
         test('should send "rendered" event flagging as stored payment method when stored card is rendered', () => {
             const core = setupCoreMock();
             const card = new CardElement(core, {
-                i18n: global.i18n,
+                i18n: core.modules.i18n,
                 oneClick: true,
                 brand: 'visa',
-                modules: { resources: global.resources }
+                modules: { resources: core.modules.resources }
             });
 
             render(card.render());
