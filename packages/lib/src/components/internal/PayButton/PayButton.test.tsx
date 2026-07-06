@@ -25,9 +25,9 @@ const renderPayButton = ({
     showReview?: boolean;
 } = {}) => {
     return render(
-        <CoreProvider i18n={i18n} loadingContext="test" resources={core.modules.resources as any} showReview={showReview}>
+        <CoreProvider i18n={i18n} loadingContext="test" resources={core.modules.resources as any}>
             <AmountProvider amount={amountProviderProps.amount} secondaryAmount={amountProviderProps.secondaryAmount} providerRef={createRef()}>
-                <PayButton {...payButtonProps} />
+                <PayButton {...payButtonProps} showReview={showReview} />
             </AmountProvider>
         </CoreProvider>
     );

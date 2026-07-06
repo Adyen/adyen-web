@@ -26,11 +26,10 @@ export interface PayButtonProps extends ButtonProps {
     showReview?: boolean;
 }
 
-const PayButton = ({ customAmount, classNameModifiers = [], label, icon, showReview: showReviewProp, ...props }: Readonly<PayButtonProps>) => {
+const PayButton = ({ customAmount, classNameModifiers = [], label, icon, showReview, ...props }: Readonly<PayButtonProps>) => {
     const { amount, isZeroAuth } = useAmount();
     const { secondaryAmount } = useSecondaryAmount();
-    const { i18n, showReview: contextShowReview } = useCoreContext();
-    const showReview = showReviewProp ?? contextShowReview;
+    const { i18n } = useCoreContext();
 
     const buttonLabel = createButtonLabel(i18n, { customLabel: label, amount, isZeroAuth, customAmount, secondaryAmount, showReview });
     const buttonIcon = icon && !showReview ? icon : undefined;

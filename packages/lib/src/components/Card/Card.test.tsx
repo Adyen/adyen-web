@@ -150,9 +150,9 @@ describe('Card', () => {
 
         describe('onReview', () => {
             const amount = { value: 1000, currency: 'USD' };
-            const customRender = (ui: h.JSX.Element, contextShowReview = false) =>
+            const customRender = (ui: h.JSX.Element) =>
                 render(
-                    <CoreProvider i18n={core.modules.i18n} loadingContext="test" resources={core.modules.resources} showReview={contextShowReview}>
+                    <CoreProvider i18n={core.modules.i18n} loadingContext="test" resources={core.modules.resources}>
                         <AmountProvider amount={amount} providerRef={createRef()}>
                             {ui}
                         </AmountProvider>
@@ -166,10 +166,10 @@ describe('Card', () => {
                 expect(await screen.findByRole('button', { name: 'Continue' })).toBeTruthy();
             });
 
-            test('should show the amount label when onReview is undefined, even when context showReview is true', async () => {
+            test('should show the amount label when onReview is undefined', async () => {
                 const card = new CardElement(core, { amount, onReview: undefined });
                 // @ts-ignore ignore
-                customRender(card.payButton(), true);
+                customRender(card.payButton());
                 expect(await screen.findByRole('button', { name: 'Pay $10.00' })).toBeTruthy();
             });
         });

@@ -343,7 +343,7 @@ describe('PayByBankPix', () => {
             });
 
             render(element.render());
-            await user.click(screen.getByRole('button', { name: 'Continue' }));
+            await user.click(screen.getByRole('button', { name: 'Continue to PIX through OpenBanking' }));
             await new Promise(process.nextTick);
 
             expect(onReviewMock).not.toHaveBeenCalled();
