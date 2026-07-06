@@ -4,18 +4,13 @@ import RedirectShopper from './components/RedirectShopper';
 import RedirectElement from './Redirect';
 import { RedirectConfiguration } from './types';
 import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
-import { redirectToApp } from '../../utils/urls';
+import { mockLocationAssign } from '../../../config/testMocks/mockLocationAssign';
 
 jest.mock('../../utils/detectInIframeInSameOrigin', () => {
     return jest.fn().mockImplementation(() => {
         return true;
     });
 });
-jest.mock('../../utils/urls', () => ({
-    redirectToApp: jest.fn()
-}));
-
-const redirectToAppMock = redirectToApp as jest.Mock;
 
 describe('Redirect', () => {
     describe('isValid', () => {
@@ -68,7 +63,7 @@ describe('Redirect', () => {
 
 describe('Redirect error', () => {
     afterEach(() => {
-        redirectToAppMock.mockReset();
+        jest.restoreAllMocks();
     });
 
     test('should send an error event to the analytics module if beforeRedirect rejects', async () => {
@@ -99,7 +94,7 @@ describe('Redirect error', () => {
     });
 
     test('should send an error event to the analytics module if the redirection failed', async () => {
-        redirectToAppMock.mockImplementation(() => {
+        mockLocationAssign().mockImplementation(() => {
             throw new Error('Mock error');
         });
 

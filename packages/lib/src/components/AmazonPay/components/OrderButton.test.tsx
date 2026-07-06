@@ -6,16 +6,11 @@ import { CoreProvider } from '../../../core/Context/CoreProvider';
 import { AmountProvider } from '../../../core/Context/AmountProvider';
 import { updateAmazonCheckoutSession } from '../services';
 import { setupCoreMock } from '../../../../config/testMocks/setup-core-mock';
-import { redirectToApp } from '../../../utils/urls';
+import { mockLocationAssign } from '../../../../config/testMocks/mockLocationAssign';
 
 jest.mock('../services', () => ({
     updateAmazonCheckoutSession: jest.fn()
 }));
-jest.mock('../../../utils/urls', () => ({
-    redirectToApp: jest.fn()
-}));
-
-const redirectToAppMock = redirectToApp as jest.Mock;
 
 const core = setupCoreMock();
 
@@ -77,6 +72,7 @@ describe('OrderButton', () => {
     });
 
     test('should redirect when a redirect action is received', async () => {
+        const assignSpy = mockLocationAssign();
         (updateAmazonCheckoutSession as jest.Mock).mockResolvedValue({
             action: { type: 'redirect', url: 'https://amazon.com/checkout' }
         });
@@ -87,8 +83,9 @@ describe('OrderButton', () => {
         await user.click(screen.getByRole('button', { name: 'Confirm purchase' }));
 
         await waitFor(() => {
-            expect(redirectToAppMock).toHaveBeenCalledWith('https://amazon.com/checkout');
+            expect(assignSpy).toHaveBeenCalledWith('https://amazon.com/checkout');
         });
+        assignSpy.mockRestore();
     });
 
     test('should log error if response has no action type', async () => {
