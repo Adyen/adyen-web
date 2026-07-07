@@ -1,4 +1,4 @@
-## If the latest commit message contains '[ci] release main', trigger gh-release.yml
+## If the latest commit message contains '[ci] release <branch>' (e.g. '[ci] release main' or '[ci] release next-v7'), trigger gh-release.yml
 name: Check Commit Message
 
 on:
@@ -23,11 +23,11 @@ jobs:
       - name: Check commit message
         id: check_commit_message
         run: |
-          if [[ "${{ steps.get_commit_message.outputs.message }}" == *"[ci] release main"* ]]; then
-            echo "Commit message contains '[ci] release main', triggering release build..."
+          if [[ "${{ steps.get_commit_message.outputs.message }}" == *"[ci] release ${{ github.ref_name }}"* ]]; then
+            echo "Commit message contains '[ci] release ${{ github.ref_name }}', triggering release build..."
             echo "trigger_release=true" >> $GITHUB_OUTPUT
           else
-            echo "Commit message does not contain '[ci] release main', skipping release build..."
+            echo "Commit message does not contain '[ci] release ${{ github.ref_name }}', skipping release build..."
             exit 0
           fi
 
