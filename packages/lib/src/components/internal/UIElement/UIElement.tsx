@@ -524,7 +524,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         this.handleSuccessResult(response);
     }
 
-    protected handleKeyPress(e: h.JSX.TargetedKeyboardEvent<HTMLInputElement> | KeyboardEvent) {
+    protected handleKeyDown(e: h.JSX.TargetedKeyboardEvent<HTMLInputElement> | KeyboardEvent) {
         if (e.key === 'Enter' || e.code === 'Enter') {
             e.preventDefault(); // Prevent <form> submission if Component is placed inside a form
 
@@ -533,7 +533,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     }
 
     /**
-     * Handle Enter key pressed from a UIElement (called via handleKeyPress)
+     * Handle Enter key pressed from a UIElement (called via handleKeyDown)
      * @param obj
      */
     protected onEnterKeyPressed(activeElement: Element, component: UIElement) {
