@@ -30,7 +30,6 @@ const customRender = (props: KlarnaWidgetProps) => {
 };
 
 let klarnaObj;
-const originalLocation = window;
 const klarnaInit = jest.fn();
 const getKlarnaActionImp = (res: Partial<KlarnaWidgetAuthorizeResponse> = {}) =>
     jest.fn().mockImplementation((_, onAction) => {
@@ -75,9 +74,6 @@ describe('KlarnaWidget', () => {
 
     afterAll(() => {
         jest.restoreAllMocks();
-        Object.defineProperty(globalThis, 'window', {
-            value: originalLocation
-        });
     });
 
     describe('Klarna widget initialization', () => {

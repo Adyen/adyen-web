@@ -1,3 +1,10 @@
+/**
+ * @jest-environment-options {"url": "https://adyen.dev/"}
+ *
+ * jsdom v26 makes window.location unforgeable, so location.protocol/hostname can no longer be
+ * mocked at runtime. The secure (https) origin is set here via the jsdom `url` environment option.
+ * The insecure-context scenario lives in ApplePay.insecureContext.test.ts.
+ */
 import { httpPost } from '../../core/Services/http';
 import ApplePay from './ApplePay';
 import ApplePayService from './services/ApplePayService';
@@ -67,13 +74,6 @@ const configurationMock = {
 describe('ApplePay', () => {
     describe('constructor()', () => {
         test('should load the SDK and define the apple pay version/applepay web options', async () => {
-            Object.defineProperty(window, 'location', {
-                writable: true,
-                value: {
-                    protocol: 'https:'
-                }
-            });
-
             const onApplePayCodeCloseMock = jest.fn();
             new ApplePay(core, {
                 onApplePayCodeClose: onApplePayCodeCloseMock
@@ -111,38 +111,12 @@ describe('ApplePay', () => {
 
     describe('isAvailable()', () => {
         test('should use canMakePayments() API', async () => {
-            Object.defineProperty(window, 'location', {
-                writable: true,
-                value: {
-                    protocol: 'https:'
-                }
-            });
-
             const applepay = new ApplePay(core);
             await expect(applepay.isAvailable()).resolves.toBeUndefined();
             expect(ApplePaySession.canMakePayments).toHaveBeenCalledTimes(1);
         });
 
-        test('should reject if the page is not https', async () => {
-            Object.defineProperty(window, 'location', {
-                writable: true,
-                value: {
-                    protocol: 'http:'
-                }
-            });
-
-            const applepay = new ApplePay(core);
-            await expect(applepay.isAvailable()).rejects.toThrow('Trying to start an Apple Pay session from an insecure document');
-        });
-
         test('should reject if canMakePayments() returns false', async () => {
-            Object.defineProperty(window, 'location', {
-                writable: true,
-                value: {
-                    protocol: 'https:'
-                }
-            });
-
             const applepay = new ApplePay(core);
             await new Promise(process.nextTick);
 
@@ -152,13 +126,6 @@ describe('ApplePay', () => {
         });
 
         test('should reject if something fails when loading the SDK', async () => {
-            Object.defineProperty(window, 'location', {
-                writable: true,
-                value: {
-                    protocol: 'https:'
-                }
-            });
-
             const applepay = new ApplePay(core);
             await new Promise(process.nextTick);
 
@@ -218,12 +185,7 @@ describe('ApplePay', () => {
         });
 
         test('should use the current URL as default', () => {
-            const originalHostname = window.location.hostname;
-            Object.defineProperty(window.location, 'hostname', {
-                value: 'adyen.dev',
-                configurable: true
-            });
-
+            // Hostname is provided by the jsdom `url` environment option (https://adyen.dev/).
             const applepay = new ApplePay(core, {
                 configuration: configurationMock,
                 amount: { currency: 'EUR', value: 2000 }
@@ -240,12 +202,6 @@ describe('ApplePay', () => {
                 domainName: 'adyen.dev',
                 initiative: 'web',
                 merchantIdentifier: 'test-merchant'
-            });
-
-            // Restoring original value
-            Object.defineProperty(window.location, 'hostname', {
-                value: originalHostname,
-                configurable: true
             });
         });
 

@@ -127,11 +127,11 @@ describe('Testing CSFs setupSecuredField functionality', () => {
 
         expect(numIframes).toEqual(0);
 
-        expect(console.warn).toBeCalledWith(
+        expect(console.warn).toHaveBeenCalledWith(
             `WARNING: 'encryptedCustomField' is not a valid type for the '${DATA_ENCRYPTED_FIELD_ATTR}' attribute. A SecuredField will not be created for this element.`
         );
 
-        expect(myCSF.createNonCardSecuredFields).toBeCalledWith([]);
+        expect(myCSF.createNonCardSecuredFields).toHaveBeenCalledWith([]);
     });
 
     test('Calling setupSecuredField to see that an "encryptedCardNumber" SF is created and stored in state', () => {
