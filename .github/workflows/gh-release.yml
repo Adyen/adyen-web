@@ -66,6 +66,12 @@ jobs:
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
           echo "tag=${TAG_PREFIX}${VERSION}" >> "$GITHUB_OUTPUT"
 
+          if echo "$VERSION" | grep -qE '(alpha|beta|rc)'; then
+            echo "prerelease=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "prerelease=false" >> "$GITHUB_OUTPUT"
+          fi
+
           # Extract the body for the latest version (between first and second ## heading)
           BODY=$(awk '
             /^## [0-9]/ { count++; if (count == 2) exit; next }
@@ -137,8 +143,15 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
+          RELEASE_FLAG=""
+          if [ "${{ steps.changelog.outputs.prerelease }}" = "true" ]; then
+            RELEASE_FLAG="--prerelease"
+          else
+            RELEASE_FLAG="--latest"
+          fi
+
           gh release create "${{ steps.changelog.outputs.tag }}" \
             --title "${{ steps.changelog.outputs.version }}" \
             --notes-file /tmp/release-body.md \
-            --latest \
+            $RELEASE_FLAG \
             "/tmp/adyen-web-sdk-umd-and-translations-${{ steps.sdk-version.outputs.version }}.zip"
