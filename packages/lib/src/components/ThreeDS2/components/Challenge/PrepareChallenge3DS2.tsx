@@ -76,7 +76,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
             const hasValidPostMessageDomain = isValidHttpUrl(postMessageDomain, shouldAllowHttpDomains);
 
             // Only render component if we have a valid acsURL & postMessageDomain.
-            //  i.e. a url to load into the iframe, and a domain so that the iframe can send messages back
+            //  i.e. a url to load into the iframe, and the domain that we expect the iframe to be sending messages back from
             if (!hasValidAcsURL || !hasValidPostMessageDomain) {
                 const errorCode = !hasValidAcsURL
                     ? ErrorEventCode.THREEDS2_TOKEN_IS_MISSING_ACSURL
@@ -252,7 +252,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
         }
     }
 
-    render(_, { challengeData }) {
+    render(_, { challengeData }: { challengeData: ChallengeData }) {
         const getImage = useImage();
         if (this.state.status === 'performingChallenge') {
             return (
