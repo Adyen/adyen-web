@@ -9,7 +9,7 @@ export const URL_MAP = {
     dropinSessions_zeroAuthCard_fail:
         '/iframe.html?globals=&args=amount:0;sessionData.recurringProcessingModel:CardOnFile;sessionData.storePaymentMethodMode:askForConsent;sessionData.enableOneClick:!true&id=drop-in-drop-in-component--default&viewMode=story',
     dropinWithSession_BCMC_noStoredPms: '/iframe.html?args=countryCode:BE&globals=&id=drop-in-drop-in-component--default&viewMode=story',
-    dropinSessionsIndia: '/iframe.html?id=drop-in-drop-in-component--default&viewMode=story&args=countryCode%3AIN%3Bamount%3A1005',
+    dropinSessionsIndia: '/iframe.html?id=drop-in-drop-in-component--default&viewMode=story&args=countryCode%3AIN%3Bamount%3A1005%3BuseSessions%3A!false',
     dropinSessionsGreece: '/iframe.html?id=drop-in-drop-in-component--default&viewMode=story&args=countryCode%3AGR%3Bamount%3A1001',
     dropinWithSession_donations: '/iframe.html?args=&globals=&id=drop-in-drop-in-component--sessions-donation&viewMode=story',
     dropinWithSession_donations_noDelay: '/iframe.html?args=donation.delay:0&globals=&id=drop-in-drop-in-component--sessions-donation&viewMode=story',
