@@ -13,18 +13,20 @@ import type {
     DropinStatus,
     DropinStatusProps,
     onOrderCancelData,
-    onOrderCancelInternalCallback
+    onOrderCancelInternalCallback,
+    PaymentMethodDisplayMode
 } from '../types';
+import { getReadyPaymentMethods, getUnavailablePaymentMethods } from '../utils/readyEventPaymentMethods';
 import UIElement from '../../internal/UIElement';
 import { AnalyticsInfoEvent, InfoEventType, UiTarget } from '../../../core/Analytics/events/AnalyticsInfoEvent';
 import { DropinSuccessState } from './DropinSuccessState';
 
 export class DropinComponent extends Component<DropinComponentProps, DropinComponentState> {
     public state: DropinComponentState = {
-        elements: [],
-        fastlanePaymentElement: [],
-        instantPaymentElements: [],
-        storedPaymentElements: [],
+        paymentMethodElements: [],
+        fastlanePaymentMethodElement: [],
+        instantPaymentMethodElements: [],
+        storedPaymentMethodElements: [],
         orderStatus: null,
         isDisabling: false,
         status: { type: 'loading', props: undefined },
@@ -39,24 +41,55 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
 
     public prepareDropinData = () => {
         const { order, clientKey, loadingContext } = this.props;
-        const [storedElementsPromises, elementsPromises, instantPaymentsPromises, fastlanePaymentElementPromise] = this.props.onCreateElements();
+        const {
+            storedPaymentMethodElements,
+            paymentMethodElements,
+            instantPaymentMethodElements,
+            fastlanePaymentMethodElement,
+            paymentMethodDisplayModes
+        } = this.props.onBuildPaymentMethods();
         const orderStatusPromise = order ? getOrderStatus({ clientKey, loadingContext }, order) : null;
 
-        void Promise.all([storedElementsPromises, elementsPromises, instantPaymentsPromises, fastlanePaymentElementPromise, orderStatusPromise]).then(
-            ([storedPaymentElements, elements, instantPaymentElements, fastlanePaymentElement, orderStatus]) => {
-                this.setState({
-                    orderStatus,
-                    elements,
-                    instantPaymentElements,
-                    storedPaymentElements,
-                    fastlanePaymentElement,
-                    showDefaultPaymentMethodList: fastlanePaymentElement.length === 0
-                });
-                this.setStatus('ready');
+        void Promise.all([
+            storedPaymentMethodElements,
+            paymentMethodElements,
+            instantPaymentMethodElements,
+            fastlanePaymentMethodElement,
+            orderStatusPromise
+        ]).then(([storedElements, elements, instantElements, fastlaneElements, orderStatus]) => {
+            const elementsByDisplayMode: Record<PaymentMethodDisplayMode, UIElement[]> = {
+                fastlane: fastlaneElements,
+                instant: instantElements,
+                stored: storedElements,
+                regular: elements
+            };
 
-                this.props.onElementsCreated([...instantPaymentElements, ...storedPaymentElements, ...elements, ...fastlanePaymentElement]);
-            }
-        );
+            const paymentMethods = getReadyPaymentMethods(
+                paymentMethodDisplayModes.map(e => e.displayMode),
+                elementsByDisplayMode,
+                this.props.core
+            );
+            const unavailablePaymentMethods = getUnavailablePaymentMethods(paymentMethodDisplayModes, elementsByDisplayMode);
+            this.setState({
+                orderStatus,
+                paymentMethodElements: elements,
+                instantPaymentMethodElements: instantElements,
+                storedPaymentMethodElements: storedElements,
+                fastlanePaymentMethodElement: fastlaneElements,
+                showDefaultPaymentMethodList: fastlaneElements.length === 0
+            });
+            this.setStatus('ready');
+
+            this.props.onElementsCreated([...instantElements, ...storedElements, ...elements, ...fastlaneElements]);
+
+            const dropinReadyEvent = new AnalyticsInfoEvent({
+                type: InfoEventType.Ready,
+                component: 'dropin',
+                paymentMethods,
+                unavailablePaymentMethods
+            });
+            this.props.core.modules.analytics.sendAnalytics(dropinReadyEvent);
+        });
 
         this.onOrderCancel = this.getOnOrderCancel();
     };
@@ -107,7 +140,7 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
         new Promise((resolve, reject) => this.props.onDisableStoredPaymentMethod(storedPaymentMethod.props.storedPaymentMethodId, resolve, reject))
             .then(() => {
                 this.setState(prevState => ({
-                    storedPaymentElements: prevState.storedPaymentElements.filter(pm => pm._id !== storedPaymentMethod._id)
+                    storedPaymentMethodElements: prevState.storedPaymentMethodElements.filter(pm => pm._id !== storedPaymentMethod._id)
                 }));
                 this.setState({ isDisabling: false });
             })
@@ -167,10 +200,10 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
 
     render() {
         const {
-            elements,
-            fastlanePaymentElement,
-            instantPaymentElements,
-            storedPaymentElements,
+            paymentMethodElements,
+            fastlanePaymentMethodElement,
+            instantPaymentMethodElements,
+            storedPaymentMethodElements,
             status,
             activePaymentMethod,
             showDefaultPaymentMethodList
@@ -178,7 +211,11 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
 
         const isLoading = status.type === 'loading';
         const isRedirecting = status.type === 'redirect';
-        const hasPaymentMethodsToBeDisplayed = !!(elements?.length || instantPaymentElements?.length || storedPaymentElements?.length);
+        const hasPaymentMethodsToBeDisplayed = !!(
+            paymentMethodElements?.length ||
+            instantPaymentMethodElements?.length ||
+            storedPaymentMethodElements?.length
+        );
 
         switch (status.type) {
             case 'success':
@@ -200,7 +237,7 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
                             <Fragment>
                                 <PaymentMethodList
                                     isLoading={isLoading}
-                                    paymentMethods={fastlanePaymentElement}
+                                    paymentMethods={fastlanePaymentMethodElement}
                                     activePaymentMethod={activePaymentMethod}
                                     onSelect={this.handleOnSelectPaymentMethod}
                                     openFirstPaymentMethod
@@ -223,9 +260,9 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
                             <PaymentMethodList
                                 isLoading={isLoading || isRedirecting}
                                 isDisablingPaymentMethod={this.state.isDisabling}
-                                paymentMethods={elements}
-                                instantPaymentMethods={instantPaymentElements}
-                                storedPaymentMethods={storedPaymentElements}
+                                paymentMethods={paymentMethodElements}
+                                instantPaymentMethods={instantPaymentMethodElements}
+                                storedPaymentMethods={storedPaymentMethodElements}
                                 activePaymentMethod={activePaymentMethod}
                                 order={this.props.order}
                                 orderStatus={this.state.orderStatus}

@@ -32,6 +32,8 @@ type NonMappedPaymentMethodsMap = {
 
 export type PaymentMethodsConfiguration = PaymentMethodsConfigurationMap & PaymentActionTypesMap & NonMappedPaymentMethodsMap;
 
+export type PaymentMethodDisplayMode = 'fastlane' | 'instant' | 'stored' | 'regular';
+
 export type InstantPaymentTypes = 'paywithgoogle' | 'googlepay' | 'applepay';
 
 export interface DropinConfiguration extends UIElementProps {
@@ -172,10 +174,10 @@ export interface DropinStatusProps {
 }
 
 export interface DropinComponentState {
-    elements: UIElement[];
-    fastlanePaymentElement: UIElement[];
-    instantPaymentElements: UIElement[];
-    storedPaymentElements: UIElement[];
+    paymentMethodElements: UIElement[];
+    fastlanePaymentMethodElement: UIElement[];
+    instantPaymentMethodElements: UIElement[];
+    storedPaymentMethodElements: UIElement[];
     status: DropinStatus;
     activePaymentMethod: UIElement;
     cachedPaymentMethods: Record<string, boolean>;

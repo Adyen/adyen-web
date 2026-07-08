@@ -194,7 +194,7 @@ describe('Core - tests ensuring props reach components', () => {
             const flushPromises = () => new Promise(process.nextTick);
             await flushPromises();
 
-            const storedCard = dropin.dropinRef.state.storedPaymentElements[0];
+            const storedCard = dropin.dropinRef.state.storedPaymentMethodElements[0];
 
             expect(storedCard.core).toEqual(checkout);
 
@@ -223,7 +223,7 @@ describe('Core - tests ensuring props reach components', () => {
             const flushPromises = () => new Promise(process.nextTick);
             await flushPromises();
 
-            const card = dropin.dropinRef.state.elements[0];
+            const card = dropin.dropinRef.state.paymentMethodElements[0];
 
             expect(card.core).toEqual(checkout);
 
@@ -252,7 +252,7 @@ describe('Core - tests ensuring props reach components', () => {
             const flushPromises = () => new Promise(process.nextTick);
             await flushPromises();
 
-            const paypal = dropin.dropinRef.state.elements[1];
+            const paypal = dropin.dropinRef.state.paymentMethodElements[1];
 
             expect(paypal.core).toEqual(checkout);
 
@@ -278,7 +278,7 @@ describe('Core - tests ensuring props reach components', () => {
             const flushPromises = () => new Promise(process.nextTick);
             await flushPromises();
 
-            const redirect = dropin.dropinRef.state.elements[2];
+            const redirect = dropin.dropinRef.state.paymentMethodElements[2];
 
             expect(redirect.core).toEqual(checkout);
 
