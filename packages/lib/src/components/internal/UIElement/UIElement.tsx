@@ -1,4 +1,4 @@
-import { createRef, h, RefObject } from 'preact';
+import { createRef, h, RefObject, TargetedKeyboardEvent } from 'preact';
 import { Resources } from '../../../core/Context/Resources';
 import AdyenCheckoutError, { NETWORK_ERROR } from '../../../core/Errors/AdyenCheckoutError';
 import { hasOwnProperty } from '../../../utils/hasOwnProperty';
@@ -524,7 +524,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         this.handleSuccessResult(response);
     }
 
-    protected handleKeyDown(e: h.JSX.TargetedKeyboardEvent<HTMLInputElement> | KeyboardEvent) {
+    protected handleKeyDown(e: TargetedKeyboardEvent<HTMLInputElement> | KeyboardEvent) {
         if (e.key === 'Enter' || e.code === 'Enter') {
             e.preventDefault(); // Prevent <form> submission if Component is placed inside a form
 
