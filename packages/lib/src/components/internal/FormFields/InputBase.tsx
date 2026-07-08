@@ -63,28 +63,11 @@ export default function InputBase({ setRef, ...props }: Readonly<InputBaseProps>
         [props.onInput]
     );
 
-    /**
-     *  Event is fired when a key that produces a character value is pressed down.
-     *  ENTER keydown also triggers this event.
-     */
     const handleKeyDown = useCallback(
         (event: TargetedKeyboardEvent<HTMLInputElement>) => {
             if (props?.onKeyDown) props.onKeyDown(event);
         },
         [props?.onKeyDown]
-    );
-
-    /**
-     * Event is fired when certain keys are pressed (keys that do not output characters):
-     * Backspace, Arrow keys, Shift, Ctrl, Command, Option, Esc
-     *
-     * Exception: ENTER keydown triggers 'onKeyDown' AND 'onKeyUp'
-     */
-    const handleKeyUp = useCallback(
-        (event: TargetedKeyboardEvent<HTMLInputElement>) => {
-            if (props?.onKeyUp) props.onKeyUp(event);
-        },
-        [props?.onKeyUp]
     );
 
     const handleBlur = useCallback(
@@ -152,7 +135,6 @@ export default function InputBase({ setRef, ...props }: Readonly<InputBaseProps>
             onInput={handleInput}
             onBlur={handleBlur}
             onFocus={handleFocus}
-            onKeyUp={handleKeyUp}
             onKeyDown={handleKeyDown}
             disabled={disabled}
             ref={setRef}
