@@ -5,6 +5,7 @@ on:
     types: [enqueued, dequeued, closed]
     branches:
       - main
+      - next-v*
   workflow_run:
     workflows: ["GitHub Release", "Publish Package"]
     types: [completed]
