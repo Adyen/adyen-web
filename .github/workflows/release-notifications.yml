@@ -35,7 +35,7 @@ jobs:
     secrets:
       SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
 
-  entering-queue-retry:
+  queue-retry:
     needs: resolve-version
     if: needs.resolve-version.result == 'success' && vars.RELEASE_THREAD_TS != '' && vars.RELEASE_VERSION == needs.resolve-version.outputs.version
     uses: ./.github/workflows/slack-channel-message.yml
