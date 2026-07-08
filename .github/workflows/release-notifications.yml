@@ -25,7 +25,7 @@ jobs:
         id: read-version
         run: echo "value=$(node -p "require('./packages/lib/package.json').version")" >> "$GITHUB_OUTPUT"
 
-  entering-queue-new-thread:
+  queue-new-thread:
     needs: resolve-version
     if: needs.resolve-version.result == 'success' && (vars.RELEASE_THREAD_TS == '' || vars.RELEASE_VERSION != needs.resolve-version.outputs.version)
     uses: ./.github/workflows/slack-channel-message.yml
