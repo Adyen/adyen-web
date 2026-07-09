@@ -109,7 +109,7 @@
     "button.download": "下载",
     "boleto.socialSecurityNumber": "CPF/CNPJ",
     "boleto.socialSecurityNumber.invalid": "输入有效的 CPF/CNPJ 号码",
-    "creditCard.storedCard.description.ariaLabel": "存储的卡片以 ％@ 结尾",
+    "creditCard.storedCard.description.ariaLabel": "存储的卡片以 %@ 结尾",
     "voucher.entity": "实体",
     "donateButton": "捐赠",
     "donationTermsCondition": "通过捐款，即表示您同意%#条款和细则%#",
