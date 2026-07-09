@@ -252,7 +252,8 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
         }
     }
 
-    render(_, { challengeData }: { challengeData: ChallengeData }) {
+    render(_, { challengeData: stateChallengeData }: PrepareChallenge3DS2State) {
+        const challengeData = stateChallengeData as ChallengeData;
         const getImage = useImage();
         if (this.state.status === 'performingChallenge') {
             return (
