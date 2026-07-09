@@ -259,6 +259,28 @@ describe('PrepareChallenge3DS2 - unhappy flows', () => {
         expect(onSubmitAnalytics).toHaveBeenCalledTimes(1);
     });
 
+    test('should call onError and onSubmitAnalytics when postMessageDomain is not valid', () => {
+        const alteredToken = { ...challengeToken };
+        alteredToken.threeDSNotificationURL = '';
+
+        prepareProps(alteredToken);
+
+        const propsMock = { ...propsMaster };
+
+        renderPrepareChallenge(propsMock);
+
+        expect(errorMessage).toBe(`${ErrorEventCode.THREEDS2_CHALLENGE_TOKEN_IS_MISSING_THREEDSNOTIFICATIONURL}: Data parsing error`);
+
+        const analyticsError = {
+            ...baseAnalyticsError,
+            code: ErrorEventCode.THREEDS2_CHALLENGE_TOKEN_IS_MISSING_THREEDSNOTIFICATIONURL,
+            message: '3DS2Challenge_Error: Decoded token is missing a valid threeDSNotificationURL property'
+        };
+        expect(onSubmitAnalytics).toHaveBeenCalledWith(analyticsError);
+
+        expect(onSubmitAnalytics).toHaveBeenCalledTimes(1);
+    });
+
     test('should call onError and onSubmitAnalytics when acsTransID is not valid', () => {
         const alteredToken = { ...challengeToken };
         alteredToken.acsTransID = '';
