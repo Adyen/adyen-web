@@ -75,6 +75,8 @@ test.describe('Card with 3DS2', () => {
             expect(detailsCallResponse.status()).toBe(200);
         });
 
+        // The reason for skipping this test is that the card number 4212345678910006 is not working in the current test environment.
+        // TODO: Find a new card number that works for this test.
         test.skip('should handle challenge-only flow', async ({ page, card }) => {
             let submitFingerprintRequestWasMade = false;
 
