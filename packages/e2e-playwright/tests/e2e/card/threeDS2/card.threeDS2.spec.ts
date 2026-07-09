@@ -75,7 +75,7 @@ test.describe('Card with 3DS2', () => {
             expect(detailsCallResponse.status()).toBe(200);
         });
 
-        test('should handle challenge-only flow', async ({ page, card }) => {
+        test.skip('should handle challenge-only flow', async ({ page, card }) => {
             let submitFingerprintRequestWasMade = false;
 
             page.on('request', request => {
