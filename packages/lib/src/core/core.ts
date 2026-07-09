@@ -21,6 +21,7 @@ import type { PaymentAction, PaymentAmount, PaymentResponseData } from '../types
 import type { CoreConfiguration, ICore, AdditionalDetailsData, CoreModules } from './types';
 import type { UIElementProps } from '../components/internal/UIElement/types';
 import { AnalyticsLogEvent, LogEventType } from './Analytics/events/AnalyticsLogEvent';
+import { AnalyticsInfoEvent, InfoEventType } from './Analytics/events/AnalyticsInfoEvent';
 import CancelError from './Errors/CancelError';
 import { AnalyticsService } from './Analytics/AnalyticsService';
 import { AnalyticsEventQueue } from './Analytics/AnalyticsEventQueue';
@@ -39,6 +40,12 @@ class Core implements ICore {
     public cdnTranslationsUrl: string;
 
     private components: UIElement[] = [];
+
+    /**
+     * Ensures the checkout configuration analytics event is only reported once per checkout instance,
+     * and not again when the configuration is updated via update().
+     */
+    private hasReportedCheckoutConfiguration = false;
 
     public static readonly metadata: { version: string; bundleType: string } = {
         version: LIBRARY_VERSION,
@@ -111,8 +118,29 @@ class Core implements ICore {
         this.createCoreModules();
         this.assignLocaleToCore();
         void this.requestAnalyticsAttemptId();
+        this.reportCheckoutConfiguration();
         await this.requestTranslations();
         return this;
+    }
+
+    /**
+     * Sends an analytics 'initialized' event capturing the global checkout configuration.
+     * Sensitive fields are obfuscated before being sent. The event is dispatched only once per
+     * checkout instance (not on subsequent configuration updates) and is queued until the Analytics
+     * module has retrieved a checkoutAttemptId.
+     */
+    private reportCheckoutConfiguration(): void {
+        if (this.hasReportedCheckoutConfiguration) {
+            return;
+        }
+        this.hasReportedCheckoutConfiguration = true;
+
+        const event = new AnalyticsInfoEvent({
+            type: InfoEventType.Initialized,
+            component: 'checkout',
+            configData: this.options
+        });
+        this.modules.analytics.sendAnalytics(event);
     }
 
     private async initializeCore(): Promise<this> {

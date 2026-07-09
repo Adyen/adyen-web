@@ -1,6 +1,9 @@
 import { AbstractAnalyticsEvent, AnalyticsEventCategory } from './AbstractAnalyticsEvent';
 import { mapErrorCodesForAnalytics } from '../utils';
 
+import type { CoreConfiguration } from '../../types';
+import type { DropinConfiguration } from '../../../components/Dropin/types';
+
 type AnalyticsInfoEventProps = {
     type: InfoEventType;
     component: string;
@@ -80,10 +83,10 @@ export class AnalyticsInfoEvent extends AbstractAnalyticsEvent {
     private readonly type: InfoEventType;
 
     /**
-     * Component config data set by the merchant. Sent only in 'rendered' events
+     * Component config data set by the merchant. Sent on 'rendered' events or 'initialized' events
      * @private
      */
-    private readonly configData?: Record<string, string | boolean>;
+    private readonly configData?: Record<string, string | boolean | number | null>;
     private readonly target?: UiTarget;
     private readonly issuer?: string;
     private readonly isExpress?: boolean;
@@ -116,7 +119,8 @@ export class AnalyticsInfoEvent extends AbstractAnalyticsEvent {
         if (props.validationErrorCode) this.validationErrorCode = props.validationErrorCode;
         if (props.validationErrorMessage) this.validationErrorMessage = props.validationErrorMessage;
         if (props.presentedValues) this.presentedValues = props.presentedValues;
-        if (this.type === InfoEventType.rendered) {
+
+        if (this.type === InfoEventType.rendered || (this.type === InfoEventType.Initialized && props.configData)) {
             this.configData = this.createAnalyticsConfigData(props?.configData);
         }
 
@@ -130,8 +134,11 @@ export class AnalyticsInfoEvent extends AbstractAnalyticsEvent {
      * Set of properties that must not be included when creating the configData for Analytics
      * @private
      */
-    private get configDataExcludedFields() {
-        const DROPIN_FIELDS = ['paymentMethodsConfiguration'];
+    private get configDataExcludedFields(): string[] {
+        const DROPIN_FIELDS = ['paymentMethodsConfiguration', 'paymentMethodComponents'] satisfies Array<keyof DropinConfiguration>;
+
+        const CORE_INTERNAL_FIELDS = ['_environmentUrls', 'loadingContext'] satisfies Array<keyof CoreConfiguration>;
+
         const FIELDS_INJECTED_BY_DROPIN = [
             'elementRef',
             'isDropin',
@@ -140,8 +147,7 @@ export class AnalyticsInfoEvent extends AbstractAnalyticsEvent {
             'paymentMethodId',
             'isInstantPayment',
             'type'
-        ];
-        const PII_FIELDS = ['data', 'holderName', 'shopperEmail', 'email', 'telephoneNumber', 'clickToPayConfiguration'];
+        ] satisfies Array<keyof DropinConfiguration>;
 
         /**
          * TODO: Many unit tests are passing 'modules' as props, which leads to circular structure issue
@@ -149,31 +155,49 @@ export class AnalyticsInfoEvent extends AbstractAnalyticsEvent {
          */
         const UNIT_TEST_FIELDS = ['modules', 'i18n'];
 
-        return [...DROPIN_FIELDS, ...FIELDS_INJECTED_BY_DROPIN, ...PII_FIELDS, ...UNIT_TEST_FIELDS];
+        return [...DROPIN_FIELDS, ...CORE_INTERNAL_FIELDS, ...FIELDS_INJECTED_BY_DROPIN, ...UNIT_TEST_FIELDS];
+    }
+
+    /**
+     * Set of fields whose value must be masked (replaced with '<masked>') when creating the configData.
+     * These fields either contain merchant credentials, shopper PII, or large objects that would
+     * pollute the analytics payload without adding value.
+     * @private
+     */
+    private get configDataMaskedFields(): string[] {
+        const PII_FIELDS = ['data', 'holderName', 'shopperEmail', 'email', 'telephoneNumber', 'clickToPayConfiguration'];
+        const CORE_FIELDS = ['clientKey', 'session', 'paymentMethodsResponse', 'translations', 'order'] satisfies Array<keyof CoreConfiguration>;
+
+        return [...PII_FIELDS, ...CORE_FIELDS];
     }
 
     /**
      * Creates a serializable analytics payload from the given config object.
-     * Functions are replaced with 'function', and objects/arrays are stringified.
+     * Sensitive fields are masked with '<masked>', functions are replaced with '<function>',
+     * and objects/arrays are stringified (capped at 128 characters).
      */
     private createAnalyticsConfigData(config: Record<string, any>) {
         if (!config) return {};
 
         const MAX_STRING_LENGTH = 128;
-        const result: Record<string, string> = {};
+        const result: Record<string, string | boolean> = {};
 
         try {
             for (const [key, value] of Object.entries(config)) {
-                if (!this.configDataExcludedFields.includes(key)) {
-                    if (typeof value === 'function') {
-                        result[key] = 'function';
-                    } else if (Array.isArray(value)) {
-                        result[key] = value.join(', ').substring(0, MAX_STRING_LENGTH);
-                    } else if (typeof value === 'object' && value !== null) {
-                        result[key] = JSON.stringify(value).substring(0, MAX_STRING_LENGTH);
-                    } else {
-                        result[key] = value;
-                    }
+                if (this.configDataExcludedFields.includes(key)) {
+                    continue;
+                }
+
+                if (this.configDataMaskedFields.includes(key)) {
+                    result[key] = '<masked>';
+                } else if (typeof value === 'function') {
+                    result[key] = '<function>';
+                } else if (Array.isArray(value)) {
+                    result[key] = value.join(', ').substring(0, MAX_STRING_LENGTH);
+                } else if (typeof value === 'object' && value !== null) {
+                    result[key] = JSON.stringify(value).substring(0, MAX_STRING_LENGTH);
+                } else {
+                    result[key] = value;
                 }
             }
 
