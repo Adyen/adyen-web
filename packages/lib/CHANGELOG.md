@@ -1,5 +1,19 @@
 # @adyen/adyen-web
 
+## 6.40.2
+
+### Patch Changes
+
+- Fixed: UPI and Iris brand logo images missing alt text for screen readers ([#4071](https://github.com/Adyen/adyen-web/pull/4071))
+
+- Fixed: improving types & clarifying possible paths in postMessage handling function ([#4071](https://github.com/Adyen/adyen-web/pull/4071))
+
+- Fixed: Removed legacy data types for 3DS2 resolve data ([#4071](https://github.com/Adyen/adyen-web/pull/4071))
+
+- Fixed: Prefer exact locale match rather than two-letter match (thanks to @kevinccbsg) ([#4071](https://github.com/Adyen/adyen-web/pull/4071))
+
+- Fixed: PayTo accessibility enhancements for form instruction and account holder errors ([#4071](https://github.com/Adyen/adyen-web/pull/4071))
+
 ## 6.40.1
 
 ### Patch Changes
