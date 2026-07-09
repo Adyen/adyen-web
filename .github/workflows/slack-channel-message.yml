@@ -1,0 +1,99 @@
+name: Slack Send Channel Message
+
+on:
+  workflow_call:
+    inputs:
+      version:
+        description: SDK version (resolved from package.json if omitted)
+        required: false
+        type: string
+      channel:
+        description: Slack channel ID or name
+        required: true
+        type: string
+      message:
+        description: 'Message text. Use {version} as a placeholder for the resolved SDK version'
+        required: true
+        type: string
+      thread_ts:
+        description: Thread timestamp to reply to an existing thread (optional)
+        required: false
+        type: string
+    secrets:
+      SLACK_BOT_TOKEN:
+        required: true
+    outputs:
+      thread_ts:
+        description: Timestamp of the posted message, for threading replies
+        value: ${{ jobs.send-channel-message.outputs.thread_ts }}
+
+jobs:
+  send-channel-message:
+    runs-on: ubuntu-latest
+    outputs:
+      thread_ts: ${{ steps.send-message.outputs.thread_ts }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Resolve SDK version
+        id: sdk-version
+        run: |
+          INPUT_VERSION="${{ inputs.version }}"
+          if [ -n "$INPUT_VERSION" ]; then
+            echo "version=$INPUT_VERSION" >> "$GITHUB_OUTPUT"
+          else
+            echo "version=$(node -p "require('./packages/lib/package.json').version")" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Send channel message
+        id: send-message
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+          CHANNEL: ${{ inputs.channel }}
+          THREAD_TS: ${{ inputs.thread_ts }}
+          VERSION: ${{ steps.sdk-version.outputs.version }}
+          RAW_MESSAGE: ${{ inputs.message }}
+        run: |
+          MESSAGE="${RAW_MESSAGE//\{version\}/$VERSION}"
+
+          PAYLOAD=$(jq -n \
+            --arg channel "$CHANNEL" \
+            --arg text "$MESSAGE" \
+            --arg thread_ts "$THREAD_TS" \
+            'if $thread_ts != "" then {channel: $channel, text: $text, thread_ts: $thread_ts} else {channel: $channel, text: $text} end')
+
+          MAX_RETRIES=3
+          ATTEMPT=0
+
+          while [ $ATTEMPT -lt $MAX_RETRIES ]; do
+            ATTEMPT=$((ATTEMPT + 1))
+
+            RESPONSE=$(curl -s -D /tmp/slack-headers.txt -X POST "https://slack.com/api/chat.postMessage" \
+              -H "Authorization: Bearer $SLACK_BOT_TOKEN" \
+              -H "Content-Type: application/json" \
+              -d "$PAYLOAD")
+
+            echo "$RESPONSE" | jq .
+
+            if [ "$(echo "$RESPONSE" | jq -r '.ok')" == "true" ]; then
+              echo "thread_ts=$(echo "$RESPONSE" | jq -r '.ts')" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+
+            ERROR=$(echo "$RESPONSE" | jq -r '.error')
+
+            if [ "$ERROR" == "ratelimited" ] && [ $ATTEMPT -lt $MAX_RETRIES ]; then
+              RETRY_AFTER=$(grep -i '^retry-after:' /tmp/slack-headers.txt | awk '{print $2}' | tr -d '\r')
+              WAIT=${RETRY_AFTER:-4}
+              echo "Rate limited. Waiting ${WAIT}s before retry (attempt $ATTEMPT/$MAX_RETRIES)..."
+              sleep "$WAIT"
+            else
+              echo "Slack API error: $ERROR"
+              exit 1
+            fi
+          done
