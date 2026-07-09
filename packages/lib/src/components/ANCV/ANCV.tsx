@@ -8,6 +8,7 @@ import PayButton from '../internal/PayButton';
 import { ANCVConfiguration } from './types';
 import { sanitizeResponse, verifyPaymentDidNotFail } from '../internal/UIElement/utils';
 import { PayButtonProps } from '../internal/PayButton/PayButton';
+import { Order, PaymentData } from '../../types/global-types';
 
 export class ANCVElement extends UIElement<ANCVConfiguration> {
     public static readonly type = 'ancv';
@@ -24,15 +25,17 @@ export class ANCVElement extends UIElement<ANCVConfiguration> {
         };
     }
 
-    private onOrderRequest = data => {
+    private onOrderRequest = (data: PaymentData): Promise<Order> => {
         if (this.props.onOrderRequest)
-            return new Promise((resolve, reject) => {
+            return new Promise<Order>((resolve, reject) => {
                 void this.props.onOrderRequest(resolve, reject, data);
             });
 
         if (this.props.session) {
             return this.props.session.createOrder();
         }
+
+        return Promise.reject(new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'onOrderRequest or session must be provided'));
     };
 
     /**
