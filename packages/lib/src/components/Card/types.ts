@@ -13,6 +13,9 @@ import { CVCPolicyType, DatePolicyType, CardAllValidData } from '../internal/Sec
 import { ClickToPayProps } from '../internal/ClickToPay/types';
 import { DisclaimerMsgObject } from '../internal/DisclaimerMessage/DisclaimerMessage';
 import { UIElementProps } from '../internal/UIElement/types';
+import { BrandConfiguration, CardBrandsConfiguration } from '../internal/types';
+
+export { BrandConfiguration, CardBrandsConfiguration };
 import type { OnAddressLookupType, OnAddressSelectedType } from '../internal/Address/components/AddressSearch';
 import type { FastlaneSignupConfiguration } from '../PayPalFastlane/types';
 import type { ChallengeWindowSize } from '../ThreeDS2/types';
@@ -469,15 +472,6 @@ export interface CardBackendConfiguration {
     // Remove?
     icon?: string;
     brandsConfiguration?: CardBrandsConfiguration;
-}
-
-export interface BrandConfiguration {
-    name?: string;
-    icon?: string;
-}
-
-export interface CardBrandsConfiguration {
-    [key: string]: BrandConfiguration;
 }
 
 interface CardPaymentMethodData {

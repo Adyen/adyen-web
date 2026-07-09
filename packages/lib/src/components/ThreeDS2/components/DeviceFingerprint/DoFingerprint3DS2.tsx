@@ -7,6 +7,7 @@ import getProcessMessageHandler from '../../../../utils/get-process-message-hand
 import { THREEDS_METHOD_TIMEOUT, FAILED_METHOD_STATUS_RESOLVE_OBJECT_TIMEOUT, THREEDS2_NUM } from '../../constants';
 import { encodeBase64URL } from '../utils';
 import { DoFingerprint3DS2Props, DoFingerprint3DS2State } from './types';
+import { ThreeDS2FlowObject } from '../../types';
 
 const iframeName = 'threeDSMethodIframe';
 
@@ -21,7 +22,7 @@ const iframeName = 'threeDSMethodIframe';
  */
 class DoFingerprint3DS2 extends Component<DoFingerprint3DS2Props, DoFingerprint3DS2State> {
     private processMessageHandler;
-    private fingerPrintPromise: any;
+    private fingerPrintPromise: { cancel: () => void; promise: Promise<ThreeDS2FlowObject> };
     public static readonly defaultProps = {
         showSpinner: true
     };
@@ -42,8 +43,8 @@ class DoFingerprint3DS2 extends Component<DoFingerprint3DS2Props, DoFingerprint3
         this.state = { base64URLencodedData };
     }
 
-    get3DS2MethodPromise() {
-        return new Promise((resolve, reject) => {
+    get3DS2MethodPromise(): Promise<ThreeDS2FlowObject> {
+        return new Promise<ThreeDS2FlowObject>((resolve, reject) => {
             /**
              * Listen for postMessage responses from the notification url
              */

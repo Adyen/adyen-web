@@ -26,6 +26,7 @@ type PaymentActionTypesMap = {
  * Type must be loose, otherwise it will take priority over the rest
  */
 type NonMappedPaymentMethodsMap = {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Intentionally loose to avoid taking priority over the rest of the intersection type
     [key: string]: any;
 };
 
@@ -150,9 +151,16 @@ export type onOrderCancelType = (
     }
 ) => void;
 
+export type DropinCreateElementsReturn = [
+    Promise<UIElement[]> | UIElement[],
+    Promise<UIElement[]> | UIElement[],
+    Promise<UIElement[]> | UIElement[],
+    Promise<UIElement[]> | UIElement[]
+];
+
 export interface DropinComponentProps extends DropinConfiguration {
     core: ICore;
-    onCreateElements(): any;
+    onCreateElements(): DropinCreateElementsReturn;
     onElementsCreated(elements: UIElement[]): void;
     onOrderCancel?: onOrderCancelType;
 }

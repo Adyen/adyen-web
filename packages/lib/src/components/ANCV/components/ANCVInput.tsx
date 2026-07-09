@@ -1,4 +1,4 @@
-import { h } from 'preact';
+import { h, Ref } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 import { useCoreContext } from '../../../core/Context/CoreProvider';
 import LoadingWrapper from '../../internal/LoadingWrapper';
@@ -10,7 +10,7 @@ import { ANCVDataState } from '../types';
 import { UIElementProps } from '../../internal/UIElement/types';
 
 export interface ANCVInputProps extends UIElementProps {
-    ref?: any;
+    ref?: Ref<unknown>;
     showPayButton: boolean;
     onSubmit: () => void;
 }

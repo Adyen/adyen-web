@@ -6,12 +6,13 @@ import useImage from '../../../../core/Context/useImage';
 import './OrderPaymentMethods.scss';
 import { Order, OrderStatus } from '../../../../types';
 import { stopPropagationForActionKeys } from '../../../internal/Button/stopPropagationForActionKeys';
+import { BrandLogoConfiguration } from './useBrandLogoConfiguration';
 
 type OrderPaymentMethodsProps = {
     order: Order;
     orderStatus: OrderStatus;
     onOrderCancel: (order) => void;
-    brandLogoConfiguration: any;
+    brandLogoConfiguration: BrandLogoConfiguration;
 };
 
 export const OrderPaymentMethods = ({ order, orderStatus, onOrderCancel, brandLogoConfiguration }: Readonly<OrderPaymentMethodsProps>) => {

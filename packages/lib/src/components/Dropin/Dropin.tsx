@@ -8,7 +8,7 @@ import { hasOwnProperty } from '../../utils/hasOwnProperty';
 import splitPaymentMethods from './elements/splitPaymentMethods';
 import { TxVariants } from '../tx-variants';
 
-import type { DropinConfiguration, InstantPaymentTypes, PaymentMethodsConfiguration } from './types';
+import type { DropinConfiguration, DropinCreateElementsReturn, InstantPaymentTypes, PaymentMethodsConfiguration } from './types';
 import type { PaymentAction, PaymentAmount, PaymentResponseData } from '../../types/global-types';
 import type { ICore } from '../../core/types';
 import type { IDropin } from './types';
@@ -153,7 +153,7 @@ class DropinElement extends UIElement<DropinConfiguration> implements IDropin {
     /**
      * Creates the Drop-in elements
      */
-    private handleCreate = () => {
+    private handleCreate = (): DropinCreateElementsReturn => {
         const { paymentMethodsConfiguration, showStoredPaymentMethods, showPaymentMethods, instantPaymentTypes } = this.props;
 
         const { paymentMethods, storedPaymentMethods, instantPaymentMethods, fastlanePaymentMethod } = splitPaymentMethods(

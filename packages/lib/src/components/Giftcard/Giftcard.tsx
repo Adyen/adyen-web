@@ -128,7 +128,7 @@ export class GiftcardElement extends UIElement<GiftCardConfiguration> {
     /**
      * Check if it should call onRequiringConfirmation
      */
-    private handleOnRequiringConfirmation = (balance, transactionLimit): Promise<any> => {
+    private handleOnRequiringConfirmation = (balance, transactionLimit): void | Promise<void> => {
         this.componentRef.setBalance({ balance, transactionLimit });
         this.setStatus('ready');
 

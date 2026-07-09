@@ -1,10 +1,11 @@
 import { UIElementProps } from '../internal/UIElement/types';
+import { onOrderRequestCallbackType, onOrderUpdatedCallbackType } from '../Giftcard/types';
 
 export interface ANCVConfiguration extends UIElementProps {
-    paymentData?: any;
+    paymentData?: string;
     data: ANCVDataState;
-    onOrderRequest?: any;
-    onOrderUpdated?: any;
+    onOrderRequest?: onOrderRequestCallbackType;
+    onOrderUpdated?: onOrderUpdatedCallbackType;
 }
 
 export interface ANCVDataState {
