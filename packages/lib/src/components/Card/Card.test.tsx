@@ -97,6 +97,22 @@ describe('Card', () => {
                 expect(consoleWarnSpy).not.toHaveBeenCalled();
                 expect(card.props.installmentOptions).toBeNull();
             });
+
+            test('no session, installments defined on the component: no warning, uses the component value', () => {
+                const card = new CardElement(core, {
+                    installmentOptions: merchantInstallmentOptions
+                });
+
+                expect(consoleWarnSpy).not.toHaveBeenCalled();
+                expect(card.props.installmentOptions).toEqual(merchantInstallmentOptions);
+            });
+
+            test('no session, no installments defined on the component: no warning, resolves to null', () => {
+                const card = new CardElement(core, {});
+
+                expect(consoleWarnSpy).not.toHaveBeenCalled();
+                expect(card.props.installmentOptions).toBeNull();
+            });
         });
     });
 
