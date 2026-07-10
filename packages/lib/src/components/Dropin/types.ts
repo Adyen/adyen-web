@@ -152,7 +152,7 @@ export type onOrderCancelType = (
 ) => void;
 
 // internaly we pass onOrderCancel which is just a wrapper around the external callback
-export type onOrderCancelInternalCallback = (data: onOrderCancelData) => void;
+export type onOrderCancelInternalCallback = (data: onOrderCancelData) => void | null;
 
 export interface DropinComponentProps extends DropinConfiguration {
     core: ICore;
