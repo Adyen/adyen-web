@@ -77,7 +77,7 @@ describe('Card', () => {
                 expect(card.props.installmentOptions).toEqual(sessionInstallmentOptions);
             });
 
-            test('no installments defined on the session, but defined on the component: warns, resolves to null', () => {
+            test('no installments defined on the session, but defined on the component: warns, resolves to the default, empty, object', () => {
                 const card = new CardElement(core, {
                     installmentOptions: merchantInstallmentOptions,
                     // @ts-ignore it's just a test
@@ -85,17 +85,17 @@ describe('Card', () => {
                 });
 
                 expect(consoleWarnSpy).toHaveBeenCalled();
-                expect(card.props.installmentOptions).toBeNull();
+                expect(card.props.installmentOptions).toEqual({});
             });
 
-            test('no installments defined on the session, and not defined on the component: no warning, resolves to null', () => {
+            test('no installments defined on the session, and not defined on the component: no warning, resolves to the default, empty, object', () => {
                 const card = new CardElement(core, {
                     // @ts-ignore it's just a test
                     session: { configuration: {} }
                 });
 
                 expect(consoleWarnSpy).not.toHaveBeenCalled();
-                expect(card.props.installmentOptions).toBeNull();
+                expect(card.props.installmentOptions).toEqual({});
             });
 
             test('no session, installments defined on the component: no warning, uses the component value', () => {
@@ -107,11 +107,11 @@ describe('Card', () => {
                 expect(card.props.installmentOptions).toEqual(merchantInstallmentOptions);
             });
 
-            test('no session, no installments defined on the component: no warning, resolves to null', () => {
+            test('no session, no installments defined on the component: no warning, resolves to the default, empty, object', () => {
                 const card = new CardElement(core, {});
 
                 expect(consoleWarnSpy).not.toHaveBeenCalled();
-                expect(card.props.installmentOptions).toBeNull();
+                expect(card.props.installmentOptions).toEqual({});
             });
         });
     });

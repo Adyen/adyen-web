@@ -5,7 +5,7 @@ import { BinLookupResponse, CardElementData, CardConfiguration } from './types';
 import triggerBinLookUp from '../internal/SecuredFields/binLookup/triggerBinLookUp';
 import { CardBinLookupData, CardConfigSuccessData, CardFocusData } from '../internal/SecuredFields/lib/types';
 import { fieldTypeToSnakeCase, isSecuredField } from '../internal/SecuredFields/utils';
-import { falsy, reject } from '../../utils/commonUtils';
+import { notFalsy, reject } from '../../utils/commonUtils';
 import { shouldIncludeInstallmentsInPaymentData } from './components/CardInput/utils';
 import createClickToPayService from '../internal/ClickToPay/services/create-clicktopay-service';
 import { ClickToPayCheckoutPayload, IClickToPayService } from '../internal/ClickToPay/services/types';
@@ -98,10 +98,10 @@ export class CardElement extends UIElement<CardConfiguration> {
             );
         }
 
-        // If it's been defined by the merchant, take the configuration set on the card component
-        const merchantInstallmentOptions = falsy(props.installmentOptions) ? null : props.installmentOptions;
+        // Take the configuration set on the card component - which is either merchant defined or default
+        const merchantInstallmentOptions = props.installmentOptions;
 
-        if (props.session && merchantInstallmentOptions) {
+        if (props.session && notFalsy(merchantInstallmentOptions)) {
             console.warn(
                 'WARNING: You have defined installments configuration on the Card component, but you are using a /sessions integration.\nWith this integration, installments configuration must be defined when you create the session. Any configuration defined elsewhere will be ignored.\n\n'
             );
@@ -109,7 +109,7 @@ export class CardElement extends UIElement<CardConfiguration> {
 
         // In a session scenario, only the session's own installments configuration is used; otherwise fall back to the merchant configuration
         const shownInstallmentOptions: InstallmentOptions = props.session
-            ? (props.session?.configuration?.installmentOptions ?? null)
+            ? (props.session?.configuration?.installmentOptions ?? CardInputDefaultProps.installmentOptions)
             : merchantInstallmentOptions;
 
         return {
@@ -134,7 +134,7 @@ export class CardElement extends UIElement<CardConfiguration> {
             brandsConfiguration: props.brandsConfiguration || props.configuration?.brandsConfiguration || {},
             icon: props.icon || props.configuration?.icon,
             // installmentOptions of a session should be used before falling back to the merchant configuration
-            installmentOptions: shownInstallmentOptions, //props.session?.configuration?.installmentOptions || props.installmentOptions,
+            installmentOptions: shownInstallmentOptions,
             enableStoreDetails,
             showStoreDetailsCheckbox,
             /**
