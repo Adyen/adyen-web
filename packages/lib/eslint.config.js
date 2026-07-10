@@ -148,7 +148,6 @@ const config = defineConfig(
             'src/components/Dropin/**',
             'src/components/Klarna/**',
             'src/components/PayTo/**',
-            'src/components/ThreeDS2/**',
 
             // ── Internal Components ──
             'src/components/internal/Address/**',
