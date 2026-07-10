@@ -107,7 +107,7 @@ class Core implements ICore {
 
         Core.increaseInitialisationCount();
         if (Core.metadata.numberOfInitialisedCheckouts > 1) {
-            if (!props.suppressConfigWarnings) {
+            if (!this.options.suppressConfigWarnings) {
                 console.warn(
                     '\nMultiple instances of AdyenCheckout detected on the same page. This is not recommended and may lead to unexpected behavior.\nIf this is intentional you can suppress this warning by setting "suppressConfigWarnings: true" in your Checkout config.\n'
                 );
