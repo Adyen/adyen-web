@@ -5,7 +5,7 @@ import { BinLookupResponse, CardElementData, CardConfiguration } from './types';
 import triggerBinLookUp from '../internal/SecuredFields/binLookup/triggerBinLookUp';
 import { CardBinLookupData, CardConfigSuccessData, CardFocusData } from '../internal/SecuredFields/lib/types';
 import { fieldTypeToSnakeCase, isSecuredField } from '../internal/SecuredFields/utils';
-import { reject } from '../../utils/commonUtils';
+import { falsy, reject } from '../../utils/commonUtils';
 import { shouldIncludeInstallmentsInPaymentData } from './components/CardInput/utils';
 import createClickToPayService from '../internal/ClickToPay/services/create-clicktopay-service';
 import { ClickToPayCheckoutPayload, IClickToPayService } from '../internal/ClickToPay/services/types';
@@ -20,6 +20,7 @@ import AdyenCheckoutError, { IMPLEMENTATION_ERROR } from '../../core/Errors/Adye
 import CardInputDefaultProps from './components/CardInput/defaultProps';
 import { PayButtonProps } from '../internal/PayButton/PayButton';
 import { AnalyticsInfoEvent, InfoEventType, UiTarget } from '../../core/Analytics/events/AnalyticsInfoEvent';
+import { InstallmentOptions } from './components/CardInput/components/Installments/Installments';
 
 export class CardElement extends UIElement<CardConfiguration> {
     public static readonly type: TxVariants = TxVariants.scheme;
@@ -97,6 +98,36 @@ export class CardElement extends UIElement<CardConfiguration> {
             );
         }
 
+        // If it's been defined by the merchant, take the configuration set on the card component
+        // let shownInstallmentOptions: InstallmentOptions = falsy(props.installmentOptions) ? null : props.installmentOptions;
+        // if (props.session) {
+        //     if (shownInstallmentOptions) {
+        //         console.warn(
+        //             'WARNING: You have defined installments configuration on the Card component, but you are using a /sessions integration.\nWith this integration, installments configuration must be defined when you create the session. Any configuration defined elsewhere will be ignored.\n\n'
+        //         );
+        //         shownInstallmentOptions = null; // If in a session scenario, ignore the merchant defined configuration
+        //     }
+        //
+        //     // In a session we will only accept installments configuration from the session itself
+        //     if (props.session?.configuration?.installmentOptions) {
+        //         shownInstallmentOptions = props.session?.configuration?.installmentOptions;
+        //     }
+        // }
+
+        // If it's been defined by the merchant, take the configuration set on the card component
+        const merchantInstallmentOptions = falsy(props.installmentOptions) ? null : props.installmentOptions;
+
+        if (props.session && merchantInstallmentOptions) {
+            console.warn(
+                'WARNING: You have defined installments configuration on the Card component, but you are using a /sessions integration.\nWith this integration, installments configuration must be defined when you create the session. Any configuration defined elsewhere will be ignored.\n\n'
+            );
+        }
+
+        // In a session scenario, only the session's own installments configuration is used; otherwise fall back to the merchant configuration
+        const shownInstallmentOptions: InstallmentOptions = props.session
+            ? (props.session?.configuration?.installmentOptions ?? null)
+            : merchantInstallmentOptions;
+
         return {
             ...props,
             // Mismatch between hasHolderName & holderNameRequired which can mean card can never be valid
@@ -119,7 +150,7 @@ export class CardElement extends UIElement<CardConfiguration> {
             brandsConfiguration: props.brandsConfiguration || props.configuration?.brandsConfiguration || {},
             icon: props.icon || props.configuration?.icon,
             // installmentOptions of a session should be used before falling back to the merchant configuration
-            installmentOptions: props.session?.configuration?.installmentOptions || props.installmentOptions,
+            installmentOptions: shownInstallmentOptions, //props.session?.configuration?.installmentOptions || props.installmentOptions,
             enableStoreDetails,
             showStoreDetailsCheckbox,
             /**
