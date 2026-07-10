@@ -144,7 +144,6 @@ const config = defineConfig(
             'src/**/*.spec.tsx',
 
             // ── Components
-            'src/components/ANCV/**',
             'src/components/Dropin/**',
             'src/components/Klarna/**',
             'src/components/PayTo/**',

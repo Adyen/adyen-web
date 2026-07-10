@@ -27,7 +27,7 @@ export class ANCVElement extends UIElement<ANCVConfiguration> {
     private onOrderRequest = data => {
         if (this.props.onOrderRequest)
             return new Promise((resolve, reject) => {
-                this.props.onOrderRequest(resolve, reject, data);
+                void this.props.onOrderRequest(resolve, reject, data);
             });
 
         if (this.props.session) {

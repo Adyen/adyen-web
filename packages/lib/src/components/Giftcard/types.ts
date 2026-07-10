@@ -27,6 +27,8 @@ export type onBalanceCheckCallbackType = (
     data: GiftCardElementData
 ) => Promise<void>;
 
+export type onOrderUpdatedCallbackType = (data: { order: Order }) => void;
+
 export type onRequiringConfirmationCallbackType = (resolve: () => void, reject: (error: Error) => void) => Promise<void>;
 
 export type onOrderRequestCallbackType = (resolve: (order: Order) => void, reject: (error: Error) => void, data: PaymentData) => Promise<void>;
@@ -37,7 +39,7 @@ export interface GiftCardConfiguration extends UIElementProps {
     expiryDateRequired?: boolean;
     brandsConfiguration?: CardBrandsConfiguration;
     brand?: string;
-    onOrderUpdated?: (data) => void;
+    onOrderUpdated?: onOrderUpdatedCallbackType;
     onBalanceCheck?: onBalanceCheckCallbackType;
     onOrderRequest?: onOrderRequestCallbackType;
 
