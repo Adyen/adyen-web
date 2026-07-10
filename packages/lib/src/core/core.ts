@@ -40,15 +40,20 @@ class Core implements ICore {
 
     private components: UIElement[] = [];
 
-    public static readonly metadata: { version: string; bundleType: string } = {
+    public static readonly metadata: { version: string; bundleType: string; numberOfInitialisedCheckouts: number } = {
         version: LIBRARY_VERSION,
-        bundleType: LIBRARY_BUNDLE_TYPE
+        bundleType: LIBRARY_BUNDLE_TYPE,
+        numberOfInitialisedCheckouts: 0
     };
 
     public static readonly registry = registry;
 
     public static setBundleType(type: string): void {
         Core.metadata.bundleType = type;
+    }
+
+    public static increaseInitialisationCount(): void {
+        Core.metadata.numberOfInitialisedCheckouts += 1;
     }
 
     public static register(...items: NewableComponent[]) {
@@ -98,6 +103,15 @@ class Core implements ICore {
             console.debug(
                 `The value you are passing as your "clientKey" looks like an originKey (${this.options.clientKey?.substring(0, 12)}..). Although this is supported it is not the recommended way to integrate. To generate a clientKey, see the documentation (https://docs.adyen.com/development-resources/client-side-authentication/migrate-from-origin-key-to-client-key/) for more details.`
             );
+        }
+
+        Core.increaseInitialisationCount();
+        if (Core.metadata.numberOfInitialisedCheckouts > 1) {
+            if (!props.suppressConfigWarnings) {
+                console.warn(
+                    '\nMultiple instances of AdyenCheckout detected on the same page. This is not recommended and may lead to unexpected behavior.\nIf this is intentional you can suppress this warning by setting "suppressConfigWarnings: true" in your Checkout config.\n'
+                );
+            }
         }
 
         if (this.options.exposeLibraryMetadata) {
