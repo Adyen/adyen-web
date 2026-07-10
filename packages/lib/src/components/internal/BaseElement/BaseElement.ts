@@ -1,4 +1,4 @@
-import { ComponentChild, h, render } from 'preact';
+import { ComponentChild, h, render, TargetedKeyboardEvent } from 'preact';
 import uuid from '../../../utils/uuid';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 import { NO_CHECKOUT_ATTEMPT_ID } from '../../../core/Analytics/constants';
@@ -47,7 +47,7 @@ abstract class BaseElement<P extends BaseElementProps> implements IBaseElement {
         this.core = checkout;
         this.buildElementProps(props);
 
-        this.handleKeyPress = this.handleKeyPress.bind(this);
+        this.handleKeyDown = this.handleKeyDown.bind(this);
     }
 
     protected buildElementProps(componentProps?: P) {
@@ -70,13 +70,11 @@ abstract class BaseElement<P extends BaseElementProps> implements IBaseElement {
         return {};
     }
 
-    /* eslint-disable-next-line */
-    protected submitAnalytics(analyticsObj?: AbstractAnalyticsEvent) {
+    protected submitAnalytics(_analyticsObj?: AbstractAnalyticsEvent) {
         return null;
     }
 
-    /* eslint-disable-next-line */
-    protected handleKeyPress(e: h.JSX.TargetedKeyboardEvent<HTMLInputElement>) {
+    protected handleKeyDown(_e: TargetedKeyboardEvent<HTMLInputElement>) {
         return null;
     }
 
@@ -145,7 +143,7 @@ abstract class BaseElement<P extends BaseElementProps> implements IBaseElement {
         this._node = node;
 
         // Add listener for key press events, notably 'Enter' key presses
-        on(this._node, 'keypress', this.handleKeyPress, false);
+        on(this._node, 'keydown', this.handleKeyDown, false);
 
         this._component = this.render();
 
@@ -172,7 +170,7 @@ abstract class BaseElement<P extends BaseElementProps> implements IBaseElement {
      */
     public unmount(): this {
         // Remove listener
-        off(this._node, 'keypress', this.handleKeyPress);
+        off(this._node, 'keydown', this.handleKeyDown);
 
         if (this._node) {
             render(null, this._node);

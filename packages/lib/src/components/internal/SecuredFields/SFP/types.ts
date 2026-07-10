@@ -61,7 +61,7 @@ export interface SFPProps {
     onLoad?: (cbObj: CardLoadData) => void;
     onStateUpdate?: (obj: SFPState) => void;
     onSubmitAnalytics?: (event: AbstractAnalyticsEvent) => void;
-    handleKeyPress?: (obj: KeyboardEvent) => void;
+    handleKeyDown?: (event: KeyboardEvent) => void;
     rootNode?: HTMLElement; // Specific to SecuredFieldsInput
     showWarnings?: boolean;
     styles?: StylesObject;
