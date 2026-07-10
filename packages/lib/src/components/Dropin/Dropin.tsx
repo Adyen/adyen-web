@@ -8,7 +8,7 @@ import { hasOwnProperty } from '../../utils/hasOwnProperty';
 import splitPaymentMethods from './elements/splitPaymentMethods';
 import { TxVariants } from '../tx-variants';
 
-import type { DropinConfiguration, InstantPaymentTypes, PaymentMethodsConfiguration } from './types';
+import type { DropinComponentProps, DropinConfiguration, InstantPaymentTypes, PaymentMethodsConfiguration } from './types';
 import type { PaymentAction, PaymentAmount, PaymentResponseData } from '../../types/global-types';
 import type { ICore } from '../../core/types';
 import type { IDropin } from './types';
@@ -153,7 +153,7 @@ class DropinElement extends UIElement<DropinConfiguration> implements IDropin {
     /**
      * Creates the Drop-in elements
      */
-    private handleCreate = () => {
+    private handleCreate = (): ReturnType<DropinComponentProps['onCreateElements']> => {
         const { paymentMethodsConfiguration, showStoredPaymentMethods, showPaymentMethods, instantPaymentTypes } = this.props;
 
         const { paymentMethods, storedPaymentMethods, instantPaymentMethods, fastlanePaymentMethod } = splitPaymentMethods(
@@ -166,7 +166,9 @@ class DropinElement extends UIElement<DropinConfiguration> implements IDropin {
             isDropin: true
         };
 
-        const elements = showPaymentMethods ? createElements(paymentMethods, paymentMethodsConfiguration, dropinProps, this.core) : [];
+        const elements = showPaymentMethods
+            ? createElements(paymentMethods, paymentMethodsConfiguration, dropinProps, this.core)
+            : Promise.resolve([]);
         const instantPaymentElements = createInstantPaymentElements(instantPaymentMethods, paymentMethodsConfiguration, dropinProps, this.core);
         const storedElements = showStoredPaymentMethods
             ? createStoredElements(
@@ -175,8 +177,8 @@ class DropinElement extends UIElement<DropinConfiguration> implements IDropin {
                   dropinProps,
                   this.core
               )
-            : [];
-        const fastlanePaymentElement = fastlanePaymentMethod
+            : Promise.resolve([]);
+        const fastlanePaymentElement: Promise<UIElement[]> | [] = fastlanePaymentMethod
             ? createElements([fastlanePaymentMethod], paymentMethodsConfiguration, dropinProps, this.core)
             : [];
 

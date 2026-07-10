@@ -26,6 +26,7 @@ type PaymentActionTypesMap = {
  * Type must be loose, otherwise it will take priority over the rest
  */
 type NonMappedPaymentMethodsMap = {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- we allow "unknown" payment methods defaulting to redirect
     [key: string]: any;
 };
 
@@ -141,7 +142,7 @@ export interface onOrderCancelData {
         pspReference: string;
     };
 }
-
+// external onOrderCancel callback type - called when shopper clicks "Cancel order" button
 export type onOrderCancelType = (
     data: onOrderCancelData,
     actions: {
@@ -150,9 +151,12 @@ export type onOrderCancelType = (
     }
 ) => void;
 
+// internaly we pass onOrderCancel which is just a wrapper around the external callback
+export type onOrderCancelInternalCallback = (data: onOrderCancelData) => void;
+
 export interface DropinComponentProps extends DropinConfiguration {
     core: ICore;
-    onCreateElements(): any;
+    onCreateElements(): [Promise<UIElement[]>, Promise<UIElement[]>, Promise<UIElement[]>, Promise<UIElement[]> | []];
     onElementsCreated(elements: UIElement[]): void;
     onOrderCancel?: onOrderCancelType;
 }

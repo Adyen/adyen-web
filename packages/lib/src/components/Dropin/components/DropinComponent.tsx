@@ -7,7 +7,14 @@ import { sanitizeOrder } from '../../internal/UIElement/utils';
 import type { PaymentAmount } from '../../../types/global-types';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 import Button from '../../internal/Button';
-import type { DropinComponentProps, DropinComponentState, DropinStatus, DropinStatusProps, onOrderCancelData } from '../types';
+import type {
+    DropinComponentProps,
+    DropinComponentState,
+    DropinStatus,
+    DropinStatusProps,
+    onOrderCancelData,
+    onOrderCancelInternalCallback
+} from '../types';
 import UIElement from '../../internal/UIElement';
 import { AnalyticsInfoEvent, InfoEventType, UiTarget } from '../../../core/Analytics/events/AnalyticsInfoEvent';
 import { DropinSuccessState } from './DropinSuccessState';
@@ -130,7 +137,7 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
     /**
      * getOnOrderCancel decides which onOrderCancel logic should be used, manual or sessions
      */
-    private getOnOrderCancel = () => {
+    private getOnOrderCancel = (): ((data: onOrderCancelData) => void) | null => {
         if (this.props.onOrderCancel) {
             return (data: onOrderCancelData) => {
                 const order = sanitizeOrder(data.order);
@@ -145,7 +152,7 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
         }
         if (this.props.session) {
             return (data: onOrderCancelData) =>
-                this.props.session
+                void this.props.session
                     .cancelOrder(data)
                     .then(() => this.props.core.update({ order: null }))
                     .catch(error => {
@@ -156,7 +163,7 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
         return null;
     };
 
-    private onOrderCancel: (data: onOrderCancelData) => void;
+    private onOrderCancel: onOrderCancelInternalCallback;
 
     render() {
         const {
