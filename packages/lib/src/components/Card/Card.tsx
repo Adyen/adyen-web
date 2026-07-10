@@ -99,22 +99,6 @@ export class CardElement extends UIElement<CardConfiguration> {
         }
 
         // If it's been defined by the merchant, take the configuration set on the card component
-        // let shownInstallmentOptions: InstallmentOptions = falsy(props.installmentOptions) ? null : props.installmentOptions;
-        // if (props.session) {
-        //     if (shownInstallmentOptions) {
-        //         console.warn(
-        //             'WARNING: You have defined installments configuration on the Card component, but you are using a /sessions integration.\nWith this integration, installments configuration must be defined when you create the session. Any configuration defined elsewhere will be ignored.\n\n'
-        //         );
-        //         shownInstallmentOptions = null; // If in a session scenario, ignore the merchant defined configuration
-        //     }
-        //
-        //     // In a session we will only accept installments configuration from the session itself
-        //     if (props.session?.configuration?.installmentOptions) {
-        //         shownInstallmentOptions = props.session?.configuration?.installmentOptions;
-        //     }
-        // }
-
-        // If it's been defined by the merchant, take the configuration set on the card component
         const merchantInstallmentOptions = falsy(props.installmentOptions) ? null : props.installmentOptions;
 
         if (props.session && merchantInstallmentOptions) {

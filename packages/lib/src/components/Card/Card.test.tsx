@@ -39,6 +39,65 @@ describe('Card', () => {
             expect(card.props.enableStoreDetails).toEqual(true);
             expect(card.props.showStoreDetailsCheckbox).toEqual(false);
         });
+
+        describe('installmentOptions', () => {
+            let core: ICore;
+            let consoleWarnSpy: jest.SpyInstance;
+
+            const merchantInstallmentOptions = { mc: { values: [1, 2, 3] } };
+            const sessionInstallmentOptions = { visa: { values: [1, 2] } };
+
+            beforeEach(() => {
+                core = setupCoreMock();
+                consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation();
+            });
+
+            afterEach(() => {
+                consoleWarnSpy.mockRestore();
+            });
+
+            test('installments defined on the session, not on the component: no warning, uses the session value', () => {
+                const card = new CardElement(core, {
+                    // @ts-ignore it's just a test
+                    session: { configuration: { installmentOptions: sessionInstallmentOptions } }
+                });
+
+                expect(consoleWarnSpy).not.toHaveBeenCalled();
+                expect(card.props.installmentOptions).toEqual(sessionInstallmentOptions);
+            });
+
+            test('installments defined on the session, and on the component: warns, uses the session value', () => {
+                const card = new CardElement(core, {
+                    installmentOptions: merchantInstallmentOptions,
+                    // @ts-ignore it's just a test
+                    session: { configuration: { installmentOptions: sessionInstallmentOptions } }
+                });
+
+                expect(consoleWarnSpy).toHaveBeenCalled();
+                expect(card.props.installmentOptions).toEqual(sessionInstallmentOptions);
+            });
+
+            test('no installments defined on the session, but defined on the component: warns, resolves to null', () => {
+                const card = new CardElement(core, {
+                    installmentOptions: merchantInstallmentOptions,
+                    // @ts-ignore it's just a test
+                    session: { configuration: {} }
+                });
+
+                expect(consoleWarnSpy).toHaveBeenCalled();
+                expect(card.props.installmentOptions).toBeNull();
+            });
+
+            test('no installments defined on the session, and not defined on the component: no warning, resolves to null', () => {
+                const card = new CardElement(core, {
+                    // @ts-ignore it's just a test
+                    session: { configuration: {} }
+                });
+
+                expect(consoleWarnSpy).not.toHaveBeenCalled();
+                expect(card.props.installmentOptions).toBeNull();
+            });
+        });
     });
 
     describe('payButton', () => {
