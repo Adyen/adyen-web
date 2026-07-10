@@ -137,7 +137,7 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
     /**
      * getOnOrderCancel decides which onOrderCancel logic should be used, manual or sessions
      */
-    private getOnOrderCancel = (): ((data: onOrderCancelData) => void) | null => {
+    private readonly getOnOrderCancel = (): ((data: onOrderCancelData) => void) | null => {
         if (this.props.onOrderCancel) {
             return (data: onOrderCancelData) => {
                 const order = sanitizeOrder(data.order);
