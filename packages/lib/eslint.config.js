@@ -146,7 +146,6 @@ const config = defineConfig(
             // ── Components
             'src/components/ANCV/**',
             'src/components/Dropin/**',
-            'src/components/Giftcard/**',
             'src/components/Klarna/**',
             'src/components/PayTo/**',
             'src/components/ThreeDS2/**',

@@ -14,7 +14,8 @@ import {
     StylesObject
 } from '../lib/types';
 import { AddressData } from '../../../../types/global-types';
-import { CardBrandsConfiguration, CardPlaceholders } from '../../../Card/types';
+import { CardBrandsConfiguration } from '../lib/types';
+import { CardPlaceholders } from '../../../Card/types';
 import Language from '../../../../language';
 import { Resources } from '../../../../core/Context/Resources';
 import { TouchStartEventObj } from '../../../Card/components/CardInput/components/types';
