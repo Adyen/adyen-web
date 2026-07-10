@@ -17,7 +17,7 @@ import { InfoEventType } from '../../core/Analytics/events/AnalyticsInfoEvent';
 import PaymentMethods from '../../core/ProcessResponse/PaymentMethods';
 import getOrderStatus from '../../core/Services/order-status';
 
-jest.mock('../../core/Services/order-status', () => jest.fn());
+jest.mock('../../core/Services/order-status');
 
 async function createAdyenCheckout(configuration) {
     return await AdyenCheckout(configuration);
@@ -214,6 +214,16 @@ describe('Dropin', () => {
             expect(await screen.findAllByRole('radio')).toBeTruthy();
             dropin.setStatus('error');
             expect(await screen.findByText(/An unknown error occurred/i)).toBeTruthy();
+        });
+
+        test('should show the Error status when preparing Drop-in data fails', async () => {
+            (getOrderStatus as jest.Mock).mockRejectedValueOnce(new Error('Network request failed'));
+
+            const dropin = new Dropin(checkout, { order: { orderData: 'xxx', pspReference: 'yyy' } });
+            render(dropin.render());
+
+            expect(await screen.findByText(/An unknown error occurred/i)).toBeTruthy();
+            expect(screen.queryByText(/Network request failed/i)).not.toBeInTheDocument();
         });
     });
 

@@ -18,7 +18,9 @@ export function getUnavailablePaymentMethods(
         const isStored = entry.displayMode === 'stored';
 
         const readyIds = new Set(
-            elementsByDisplayMode[entry.displayMode].map(element => (isStored ? element.props.storedPaymentMethodId : element.props.paymentMethodId))
+            (elementsByDisplayMode[entry.displayMode] || []).map(element =>
+                isStored ? element.props.storedPaymentMethodId : element.props.paymentMethodId
+            )
         );
 
         return optionallyFilterUpiSubTxVariants(entry.paymentMethods)
@@ -40,7 +42,7 @@ export function getReadyPaymentMethods(
     core: ICore
 ): PaymentMethodWithDisplayMode[] {
     return orderedDisplayModes.flatMap(displayMode =>
-        elementsByDisplayMode[displayMode]
+        (elementsByDisplayMode[displayMode] || [])
             .map(element => {
                 const isStored = displayMode === 'stored';
                 const id = isStored ? element.props.storedPaymentMethodId : element.props.paymentMethodId;

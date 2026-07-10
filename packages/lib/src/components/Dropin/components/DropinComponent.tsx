@@ -56,40 +56,44 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
             instantPaymentMethodElements,
             fastlanePaymentMethodElement,
             orderStatusPromise
-        ]).then(([storedElements, elements, instantElements, fastlaneElements, orderStatus]) => {
-            const elementsByDisplayMode: Record<PaymentMethodDisplayMode, UIElement[]> = {
-                fastlane: fastlaneElements,
-                instant: instantElements,
-                stored: storedElements,
-                regular: elements
-            };
+        ])
+            .then(([storedElements, elements, instantElements, fastlaneElements, orderStatus]) => {
+                const elementsByDisplayMode: Record<PaymentMethodDisplayMode, UIElement[]> = {
+                    fastlane: fastlaneElements,
+                    instant: instantElements,
+                    stored: storedElements,
+                    regular: elements
+                };
 
-            const paymentMethods = getReadyPaymentMethods(
-                paymentMethodDisplayModes.map(e => e.displayMode),
-                elementsByDisplayMode,
-                this.props.core
-            );
-            const unavailablePaymentMethods = getUnavailablePaymentMethods(paymentMethodDisplayModes, elementsByDisplayMode);
-            this.setState({
-                orderStatus,
-                paymentMethodElements: elements,
-                instantPaymentMethodElements: instantElements,
-                storedPaymentMethodElements: storedElements,
-                fastlanePaymentMethodElement: fastlaneElements,
-                showDefaultPaymentMethodList: fastlaneElements.length === 0
+                const paymentMethods = getReadyPaymentMethods(
+                    paymentMethodDisplayModes.map(e => e.displayMode),
+                    elementsByDisplayMode,
+                    this.props.core
+                );
+                const unavailablePaymentMethods = getUnavailablePaymentMethods(paymentMethodDisplayModes, elementsByDisplayMode);
+                this.setState({
+                    orderStatus,
+                    paymentMethodElements: elements,
+                    instantPaymentMethodElements: instantElements,
+                    storedPaymentMethodElements: storedElements,
+                    fastlanePaymentMethodElement: fastlaneElements,
+                    showDefaultPaymentMethodList: fastlaneElements.length === 0
+                });
+                this.setStatus('ready');
+
+                this.props.onElementsCreated([...instantElements, ...storedElements, ...elements, ...fastlaneElements]);
+
+                const dropinReadyEvent = new AnalyticsInfoEvent({
+                    type: InfoEventType.Ready,
+                    component: 'dropin',
+                    paymentMethods,
+                    unavailablePaymentMethods
+                });
+                this.props.core.modules.analytics.sendAnalytics(dropinReadyEvent);
+            })
+            .catch(() => {
+                this.setStatus('error');
             });
-            this.setStatus('ready');
-
-            this.props.onElementsCreated([...instantElements, ...storedElements, ...elements, ...fastlaneElements]);
-
-            const dropinReadyEvent = new AnalyticsInfoEvent({
-                type: InfoEventType.Ready,
-                component: 'dropin',
-                paymentMethods,
-                unavailablePaymentMethods
-            });
-            this.props.core.modules.analytics.sendAnalytics(dropinReadyEvent);
-        });
 
         this.onOrderCancel = this.getOnOrderCancel();
     };
