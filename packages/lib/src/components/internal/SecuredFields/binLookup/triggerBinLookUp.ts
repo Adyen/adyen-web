@@ -51,7 +51,8 @@ export default parent => {
                                             // showExpiryDate: true, // deprecated in /binLookup v3
                                             expiryDatePolicy: 'optional',
                                             // panLength: 16,
-                                            supported: true
+                                            supported: true,
+                                            healthcare: true
                                         }
                                     ];
                                     // data.issuingCountryCode = 'KR'; // needed to mock korean_local_card
@@ -69,7 +70,8 @@ export default parent => {
                                             enableLuhnCheck: true,
                                             showExpiryDate: true,
                                             supported: true,
-                                            showSocialSecurityNumber: false
+                                            showSocialSecurityNumber: false,
+                                            healthcare: false
                                             // panLength: 16
                                         }
                                     ];
@@ -87,6 +89,8 @@ export default parent => {
                                 acc.detectedBrands.push(item.brand);
                                 // Also add the paymentMethodVariants (more granular description of the txvariant)
                                 acc.paymentMethodVariants.push(item.paymentMethodVariant);
+                                // Add healthcare to the healthcare array
+                                acc.healthcare.push(item.healthcare);
 
                                 // Add supported brand objects to the supportedBrands array
                                 if (item.supported === true) {
@@ -96,7 +100,7 @@ export default parent => {
 
                                 return acc;
                             },
-                            { supportedBrands: [], detectedBrands: [], paymentMethodVariants: [] }
+                            { supportedBrands: [], detectedBrands: [], paymentMethodVariants: [], healthcare: [] }
                         );
 
                         /**
@@ -119,7 +123,10 @@ export default parent => {
                                 paymentMethodVariants: mappedResponse.paymentMethodVariants,
                                 supportedBrandsRaw: mappedResponse.supportedBrands, // full supportedBrands data (for customCard comp)
                                 brands: parent.props.brands || DEFAULT_CARD_GROUP_TYPES,
-                                issuingCountryCode: data.issuingCountryCode
+                                issuingCountryCode: data.issuingCountryCode,
+                                ...(mappedResponse.healthcare.some(healthcareValue => healthcareValue !== undefined) && {
+                                    healthcare: mappedResponse.healthcare
+                                })
                             });
 
                             return;
@@ -144,6 +151,9 @@ export default parent => {
                                 detectedBrands: mappedResponse.detectedBrands,
                                 supportedBrands: null,
                                 paymentMethodVariants: mappedResponse.paymentMethodVariants,
+                                ...(mappedResponse.healthcare.some(healthcareValue => healthcareValue !== undefined) && {
+                                    healthcare: mappedResponse.healthcare
+                                }),
                                 brands: parent.props.brands || DEFAULT_CARD_GROUP_TYPES
                             });
 
