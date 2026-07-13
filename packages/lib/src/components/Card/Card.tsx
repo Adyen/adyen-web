@@ -98,8 +98,8 @@ export class CardElement extends UIElement<CardConfiguration> {
             );
         }
 
-        // Take the configuration set on the card component - which is either merchant defined or default
-        const merchantInstallmentOptions = props.installmentOptions;
+        // Take the configuration set on the card component - which is either merchant defined or default (empty object)
+        const merchantInstallmentOptions: InstallmentOptions = props.installmentOptions;
 
         if (props.session && notFalsy(merchantInstallmentOptions)) {
             console.warn(
@@ -107,7 +107,7 @@ export class CardElement extends UIElement<CardConfiguration> {
             );
         }
 
-        // In a session scenario, only the session's own installments configuration is used; otherwise fall back to the merchant configuration
+        // In a session scenario, only the session's own installments configuration is used; otherwise fall back to the merchant configuration / default
         const shownInstallmentOptions: InstallmentOptions = props.session
             ? (props.session?.configuration?.installmentOptions ?? CardInputDefaultProps.installmentOptions)
             : merchantInstallmentOptions;
@@ -133,7 +133,6 @@ export class CardElement extends UIElement<CardConfiguration> {
             },
             brandsConfiguration: props.brandsConfiguration || props.configuration?.brandsConfiguration || {},
             icon: props.icon || props.configuration?.icon,
-            // installmentOptions of a session should be used before falling back to the merchant configuration
             installmentOptions: shownInstallmentOptions,
             enableStoreDetails,
             showStoreDetailsCheckbox,
