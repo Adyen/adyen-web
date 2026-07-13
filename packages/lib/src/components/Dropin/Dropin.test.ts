@@ -10,9 +10,12 @@ import Fastlane from '../PayPalFastlane';
 import { SRPanel } from '../../core/Errors/SRPanel';
 
 import type { CoreConfiguration, ICore } from '../../core/types';
-import type { PaymentActionsType } from '../../types/global-types';
+import type { OrderStatus, PaymentActionsType } from '../../types/global-types';
 import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 import { InfoEventType } from '../../core/Analytics/events/AnalyticsInfoEvent';
+import getOrderStatus from '../../core/Services/order-status';
+
+jest.mock('../../core/Services/order-status', () => jest.fn());
 
 async function createAdyenCheckout(configuration) {
     return await AdyenCheckout(configuration);
@@ -458,6 +461,39 @@ describe('Dropin', () => {
             dropin.paymentMethodElements.forEach(element => {
                 expect(element.props.amount).toEqual(newAmount);
             });
+        });
+    });
+
+    describe('Session-based order cancel', () => {
+        test('should call session.cancelOrder when the order cancel button is clicked', async () => {
+            const cancelOrderMock = jest.fn().mockResolvedValue({});
+
+            const mockOrderStatus: OrderStatus = {
+                expiresAt: '2030-01-01T00:00:00Z',
+                pspReference: 'mockPsp',
+                reference: 'mockRef',
+                paymentMethods: [{ type: 'visa', lastFour: '1234', amount: { value: 1000, currency: 'EUR' } }],
+                remainingAmount: { value: 0, currency: 'EUR' }
+            };
+
+            (getOrderStatus as jest.Mock).mockResolvedValue(mockOrderStatus);
+
+            const config = getAdyenCheckoutConfiguration();
+            const sessionCheckout = await createAdyenCheckout(config);
+
+            const dropin = new Dropin(sessionCheckout, {
+                order: { orderData: 'mockOrderData', pspReference: 'mockPsp' },
+                // @ts-ignore test only
+                session: { cancelOrder: cancelOrderMock }
+            });
+
+            render(dropin.render());
+
+            await waitFor(() => expect(screen.getByRole('button', { name: /Remove/i })).toBeVisible());
+
+            await userEvent.click(screen.getByRole('button', { name: /Remove/i }));
+
+            expect(cancelOrderMock).toHaveBeenCalledTimes(1);
         });
     });
 });

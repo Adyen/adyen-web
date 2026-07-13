@@ -4,14 +4,14 @@ import Button from '../../../internal/Button';
 import { useCoreContext } from '../../../../core/Context/CoreProvider';
 import useImage from '../../../../core/Context/useImage';
 import './OrderPaymentMethods.scss';
-import { Order, OrderStatus } from '../../../../types';
+import { BrandConfiguration, onOrderCancelInternalCallback, Order, OrderStatus } from '../../../../types';
 import { stopPropagationForActionKeys } from '../../../internal/Button/stopPropagationForActionKeys';
 
 type OrderPaymentMethodsProps = {
     order: Order;
     orderStatus: OrderStatus;
-    onOrderCancel: (order) => void;
-    brandLogoConfiguration: any;
+    onOrderCancel: onOrderCancelInternalCallback;
+    brandLogoConfiguration: BrandConfiguration;
 };
 
 export const OrderPaymentMethods = ({ order, orderStatus, onOrderCancel, brandLogoConfiguration }: Readonly<OrderPaymentMethodsProps>) => {
