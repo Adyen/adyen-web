@@ -520,7 +520,11 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
      */
     protected handleResponse(response: PaymentResponseData): void {
         if (response.action) {
-            this.elementRef.handleAction(response.action);
+            if (this.core.options?.onAction) {
+                this.core.options.onAction(this.core.createFromAction(response.action, { ...this.elementRef.props }));
+            } else {
+                this.elementRef.handleAction(response.action);
+            }
             return;
         }
 

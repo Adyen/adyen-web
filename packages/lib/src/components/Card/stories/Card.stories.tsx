@@ -10,6 +10,7 @@ import { CardWith3DS2CreateFromAction } from './cardStoryHelpers/CardWith3DS2Cre
 import { AdditionalDetailsActions, AdditionalDetailsData } from '../../../core/types';
 import { displayResultMessage } from '../../../../storybook/helpers/checkout-handlers';
 import { makeDetailsCall } from '../../../../storybook/helpers/checkout-api-calls';
+import { renderCardReviewPage } from '../../../../storybook/helpers/review-page-renders';
 
 type CardStory = StoryConfiguration<CardConfiguration>;
 
@@ -325,6 +326,12 @@ export const SplitFundingSourceTest: CardStory = {
             }
         }
     }
+};
+
+export const ReviewPage: CardStory = {
+    args: { countryCode: 'NL', useSessions: true },
+    tags: ['no-automated-visual-test'],
+    render: renderCardReviewPage
 };
 
 export default meta;

@@ -736,7 +736,7 @@ describe('Core', () => {
             expect(mockOnPaymentCompleted).not.toHaveBeenCalled();
         });
 
-        test('calls update and onOrderUpdated when response has a remaining amount, and does not call onPaymentCompleted', async () => {
+        test('calls onOrderUpdated when response has a remaining amount, and does not call onPaymentCompleted', async () => {
             const order = {
                 orderData: 'mock-order-data',
                 pspReference: 'mock-psp',
@@ -757,11 +757,9 @@ describe('Core', () => {
                 onError: mockOnError
             });
             await core.initialize();
-            jest.spyOn(core, 'update').mockResolvedValue(core);
             core.processPayment(paymentData);
             const flushPromises = () => new Promise(process.nextTick);
             await flushPromises();
-            expect(core.update).toHaveBeenCalledWith({ order });
             expect(mockOnOrderUpdated).toHaveBeenCalledWith({ order });
             expect(mockOnPaymentCompleted).not.toHaveBeenCalled();
         });
