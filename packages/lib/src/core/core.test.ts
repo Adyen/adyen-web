@@ -227,6 +227,24 @@ describe('Core', () => {
             );
         });
 
+        test('should report the raw merchant configuration and not the defaults applied internally', async () => {
+            const checkout = new AdyenCheckout({
+                countryCode: 'US',
+                environment: 'test',
+                clientKey: 'test_123456'
+            });
+
+            await checkout.initialize();
+
+            const initializedEvent = sendAnalyticsSpy.mock.calls
+                .map(([event]) => event)
+                .find(event => event.component === 'checkout' && event.type === 'initialized');
+
+            // showPayButton and exposeLibraryMetadata are applied via defaultProps, not set by the merchant
+            expect(initializedEvent.configData).not.toHaveProperty('showPayButton');
+            expect(initializedEvent.configData).not.toHaveProperty('exposeLibraryMetadata');
+        });
+
         test('should send the checkout "initialized" event only once', async () => {
             const checkout = new AdyenCheckout({ countryCode: 'US', environment: 'test', clientKey: 'test_123456' });
             await checkout.initialize();
