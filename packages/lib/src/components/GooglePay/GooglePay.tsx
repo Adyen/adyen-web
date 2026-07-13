@@ -151,6 +151,14 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
     }
 
     /**
+     * When rendering in accelerated checkout mode inside Drop-in, GooglePay displays its own full UI,
+     * so the PaymentMethodItem header is hidden while selected.
+     */
+    public override get showDropinHeaderWhenSelected(): boolean {
+        return !this.isAcceleratedCheckoutAvailable();
+    }
+
+    /**
      * Determine a shopper's ability to return a form of payment from the Google Pay API.
      */
     public override async isAvailable(): Promise<void> {

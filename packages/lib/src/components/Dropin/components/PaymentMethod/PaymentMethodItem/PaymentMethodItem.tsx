@@ -66,13 +66,13 @@ class PaymentMethodItem extends Component<Readonly<PaymentMethodItemProps>> {
 
         const isCard = paymentMethod.props.type === 'card' || paymentMethod.props.type === 'scheme';
 
-        // const isGoogleAcceleratedCheckoutSelected = paymentMethod.isAcceleratedCheckoutAvailable?.() && isSelected;
+        const hideHeader = !paymentMethod.showDropinHeaderWhenSelected && isSelected;
 
         const paymentMethodClassnames = classNames({
             'adyen-checkout__payment-method': true,
             [`adyen-checkout__payment-method--${paymentMethod.props.type}`]: true,
             ...(isCard && { [`adyen-checkout__payment-method--${paymentMethod.props.fundingSource ?? 'credit'}`]: true }),
-            // ...(isGoogleAcceleratedCheckoutSelected && { 'adyen-checkout__payment-method--google-pay-accelerated-checkout': true }),
+            'adyen-checkout__payment-method--headerless': hideHeader,
             'adyen-checkout__payment-method--selected': isSelected,
             'adyen-checkout__payment-method--loading': isLoading,
             'adyen-checkout__payment-method--disabling': isDisablingPaymentMethod,
@@ -92,54 +92,56 @@ class PaymentMethodItem extends Component<Readonly<PaymentMethodItemProps>> {
         return (
             // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions
             <div data-test-id="payment-method-item" key={paymentMethod._id} className={paymentMethodClassnames} onClick={this.handleOnListItemClick}>
-                <div className="adyen-checkout__payment-method__header">
-                    <ExpandButton
-                        className="adyen-checkout__payment-method__header__content"
-                        buttonId={buttonId}
-                        showRadioButton={showRadioButton}
-                        isSelected={isSelected}
-                        expandContentId={containerId}
-                        standalone={standalone}
-                    >
-                        <PaymentMethodIcon
-                            // Only add alt attribute to storedPaymentMethods (to avoid SR reading the PM name twice)
-                            {...(paymentMethod.props.oneClick && { alt: getFullBrandName(paymentMethod.props.brand) })}
-                            type={paymentMethod.type}
-                            src={paymentMethod.icon}
-                        />
-
-                        <div className="adyen-checkout__payment-method__header__details">
-                            <PaymentMethodName
-                                displayName={paymentMethod.displayName}
-                                isSelected={isSelected}
-                                additionalInfo={paymentMethod.additionalInfo}
-                            />
-                            {showBrands && (
-                                <PaymentMethodBrands
-                                    showOtherInsteadOfNumber={paymentMethod.props.showOtherInsteadOfNumber}
-                                    keepBrandsVisible={paymentMethod.props.keepBrandsVisible}
-                                    brands={paymentMethod.brands}
-                                    excludedUIBrands={BRAND_ICON_UI_EXCLUSION_LIST}
-                                    isPaymentMethodSelected={isSelected}
-                                />
-                            )}
-                        </div>
-                    </ExpandButton>
-
-                    {showRemovePaymentMethodButton && (
-                        <Button
-                            inline
-                            variant="link"
-                            onClick={this.toggleDisableConfirmation}
-                            onKeyPress={stopPropagationForActionKeys}
-                            onKeyDown={stopPropagationForActionKeys}
-                            ariaExpanded={this.state.showDisableStoredPaymentMethodConfirmation}
-                            ariaControls={disableConfirmationId}
+                {!hideHeader && (
+                    <div className="adyen-checkout__payment-method__header">
+                        <ExpandButton
+                            className="adyen-checkout__payment-method__header__content"
+                            buttonId={buttonId}
+                            showRadioButton={showRadioButton}
+                            isSelected={isSelected}
+                            expandContentId={containerId}
+                            standalone={standalone}
                         >
-                            {i18n.get('storedPaymentMethod.disable.button')}
-                        </Button>
-                    )}
-                </div>
+                            <PaymentMethodIcon
+                                // Only add alt attribute to storedPaymentMethods (to avoid SR reading the PM name twice)
+                                {...(paymentMethod.props.oneClick && { alt: getFullBrandName(paymentMethod.props.brand) })}
+                                type={paymentMethod.type}
+                                src={paymentMethod.icon}
+                            />
+
+                            <div className="adyen-checkout__payment-method__header__details">
+                                <PaymentMethodName
+                                    displayName={paymentMethod.displayName}
+                                    isSelected={isSelected}
+                                    additionalInfo={paymentMethod.additionalInfo}
+                                />
+                                {showBrands && (
+                                    <PaymentMethodBrands
+                                        showOtherInsteadOfNumber={paymentMethod.props.showOtherInsteadOfNumber}
+                                        keepBrandsVisible={paymentMethod.props.keepBrandsVisible}
+                                        brands={paymentMethod.brands}
+                                        excludedUIBrands={BRAND_ICON_UI_EXCLUSION_LIST}
+                                        isPaymentMethodSelected={isSelected}
+                                    />
+                                )}
+                            </div>
+                        </ExpandButton>
+
+                        {showRemovePaymentMethodButton && (
+                            <Button
+                                inline
+                                variant="link"
+                                onClick={this.toggleDisableConfirmation}
+                                onKeyPress={stopPropagationForActionKeys}
+                                onKeyDown={stopPropagationForActionKeys}
+                                ariaExpanded={this.state.showDisableStoredPaymentMethodConfirmation}
+                                ariaControls={disableConfirmationId}
+                            >
+                                {i18n.get('storedPaymentMethod.disable.button')}
+                            </Button>
+                        )}
+                    </div>
+                )}
 
                 <div className="adyen-checkout-pm-details-wrapper" aria-hidden={!isSelected}>
                     <div className="adyen-checkout__payment-method__details" id={containerId} inert={isSelected ? undefined : true}>
