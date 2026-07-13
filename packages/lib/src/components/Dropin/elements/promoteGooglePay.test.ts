@@ -1,24 +1,37 @@
 import promoteGooglePayIfNeeded from './promoteGooglePay';
 import { TxVariants } from '../../tx-variants';
 import { GooglePaymentMode } from '../../GooglePay/config';
+import GooglePay from '../../GooglePay/GooglePay';
+import GooglePayService from '../../GooglePay/GooglePayService';
+import { setupCoreMock } from '../../../../config/testMocks/setup-core-mock';
 import UIElement from '../../internal/UIElement';
+
+jest.mock('../../GooglePay/GooglePayService');
 
 const makeElement = (type: string): UIElement => ({ type }) as unknown as UIElement;
 
 const makeGooglePay = ({
-    type = TxVariants.googlepay,
     experiment = 'enabled',
     mode = GooglePaymentMode.ACCELERATED_CHECKOUT
 }: {
-    type?: string;
+    type?: TxVariants.googlepay | TxVariants.paywithgoogle;
     experiment?: 'enabled' | 'disabled';
     mode?: GooglePaymentMode;
-} = {}): UIElement =>
-    ({
-        type,
-        mode,
-        props: { configuration: { acceleratedCheckoutExperiment: experiment } }
-    }) as unknown as UIElement;
+} = {}): GooglePay => {
+    const googlePay = new GooglePay(setupCoreMock(), {
+        configuration: { merchantId: 'merchant-id', gatewayMerchantId: 'gateway-id' }
+    });
+
+    googlePay.props.configuration.acceleratedCheckoutExperiment = experiment;
+    googlePay.mode = mode;
+
+    return googlePay;
+};
+
+beforeEach(() => {
+    // @ts-ignore 'mockClear' is provided by jest.mock
+    GooglePayService.mockClear();
+});
 
 describe('Drop-in: promoteGooglePayIfNeeded', () => {
     test('should promote GooglePay from "elements" to the front of "storedPaymentElements" when experiment enabled and mode is accelerated', () => {
