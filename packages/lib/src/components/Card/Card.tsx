@@ -99,6 +99,9 @@ export class CardElement extends UIElement<CardConfiguration> {
         }
 
         // Take the configuration set on the card component - which is either merchant defined or default (empty object)
+        // @ts-ignore 'installmentOptions' is optional on CardConfiguration (the merchant-facing type), but by this point
+        // UIElement.buildElementProps has already merged CardInputDefaultProps.installmentOptions ({}) into props
+        // before formatProps() is called, so the value is always defined here.
         const merchantInstallmentOptions: InstallmentOptions = props.installmentOptions;
 
         if (props.session && notFalsy(merchantInstallmentOptions)) {
