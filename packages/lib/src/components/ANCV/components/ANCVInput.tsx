@@ -1,5 +1,5 @@
-import { h, Ref } from 'preact';
-import { useEffect, useState } from 'preact/hooks';
+import { h } from 'preact';
+import { useEffect, useRef, useState } from 'preact/hooks';
 import { useCoreContext } from '../../../core/Context/CoreProvider';
 import LoadingWrapper from '../../internal/LoadingWrapper';
 import InputText from '../../internal/FormFields/InputText';
@@ -7,17 +7,26 @@ import Field from '../../internal/FormFields/Field';
 import useForm from '../../../utils/useForm';
 import { ancvValidationRules } from '../validate';
 import { ANCVDataState } from '../types';
-import { UIElementProps } from '../../internal/UIElement/types';
+import { ComponentMethodsRef } from '../../internal/UIElement/types';
+import { PayButtonProps } from '../../internal/PayButton/PayButton';
+import { ValidationRuleResult } from '../../../utils/Validator/ValidationRuleResult';
 
-export interface ANCVInputProps extends UIElementProps {
-    ref?: Ref<typeof ANCVInput>;
+export interface ANCVInputProps {
+    setComponentRef: (ref: ComponentMethodsRef) => void;
     showPayButton: boolean;
     onSubmit: () => void;
+    payButton: (props: PayButtonProps) => h.JSX.Element;
+    onChange: (data: {
+        data: ANCVDataState;
+        errors: { [key: string]: ValidationRuleResult };
+        valid: { [key: string]: boolean };
+        isValid: boolean;
+    }) => void;
 }
 
 type ANCVInputDataState = ANCVDataState;
 
-function ANCVInput({ showPayButton, payButton, onChange, onSubmit }: Readonly<ANCVInputProps>) {
+function ANCVInput({ showPayButton, payButton, onChange, onSubmit, setComponentRef }: Readonly<ANCVInputProps>) {
     const { i18n } = useCoreContext();
 
     const { handleChangeFor, triggerValidation, data, valid, errors, isValid } = useForm<ANCVInputDataState>({
@@ -26,14 +35,19 @@ function ANCVInput({ showPayButton, payButton, onChange, onSubmit }: Readonly<AN
     });
 
     useEffect(() => {
-        // @ts-ignore TODO: Fix this. Preact component types should not inherit from UIElementProps.
-        onChange({ data, errors, valid, isValid }, this);
-    }, [data, valid, errors, isValid]);
+        onChange({ data, errors, valid, isValid });
+    }, [onChange, data, valid, errors, isValid]);
 
     const [status, setStatus] = useState<string>('ready');
 
-    this.setStatus = setStatus;
-    this.showValidation = triggerValidation;
+    const ancvRef = useRef<ComponentMethodsRef>({
+        setStatus,
+        showValidation: triggerValidation
+    });
+
+    useEffect(() => {
+        setComponentRef(ancvRef.current);
+    }, [setComponentRef, ancvRef.current]);
 
     return (
         <LoadingWrapper>

@@ -112,10 +112,8 @@ export class ANCVElement extends UIElement<ANCVConfiguration> {
 
         return (
             <ANCVInput
-                ref={ref => {
-                    this.componentRef = ref;
-                }}
                 {...this.props}
+                setComponentRef={this.setComponentRef}
                 onSubmit={this.submit}
                 onChange={this.setState}
                 payButton={this.payButton}
