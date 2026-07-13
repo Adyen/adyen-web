@@ -392,6 +392,8 @@
     "payto.label.firstName": "Име на титуляра на сметката",
     "payto.label.lastName": "Фамилия на титуляра на сметката",
     "payto.await.waitForConfirmation": "Очакваме Вашето одобрение",
+    "payto.errors.accountHolderFirstName.invalid": "Въведете собственото име на титуляра на сметката",
+    "payto.errors.accountHolderLastName.invalid": "Въведете фамилното име на титуляра на сметката",
     "payto.bsb.option.label": "BSB и номер на сметка",
     "card.fastlane.a11y.logo": "Лого на Fastlane by Paypal",
     "card.fastlane.a11y.openDialog": "Прочетете повече за Fastlane",

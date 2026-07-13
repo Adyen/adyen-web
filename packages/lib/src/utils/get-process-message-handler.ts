@@ -1,5 +1,5 @@
 /**
- * Centralised window.postMessage processing function used in 3DS2 components and also by the deviceFingerprinting process
+ * Centralised window.postMessage processing function used in 3DS2 components and *also* by the RiskModule's device fingerprinting process
  * NOTE: this latter use case means that while the deviceFingerprinting is still completing this component is also listening to
  *  securedFields related postMessaging
  *
@@ -7,37 +7,60 @@
  * @param resolve - the resolve function from the Promise that called this function
  * @param reject - the reject function from the Promise that called this function
  * @param parseErrorObj - an error object to log in the case of unparseable data (albeit from a valid origin)
- * @param expectedType - string to check that the passed data has the expected type
+ * @param expectedType - string to check that the message event's data has the expected type
  */
 import { hasOwnProperty } from './hasOwnProperty';
 import { PostMsgParseErrorObject } from '../components/ThreeDS2/types';
 
 const getProcessMessageHandler =
-    (domain: string, resolve: Function, reject: Function, expectedType: string): Function =>
-    event => {
+    (
+        domain: string,
+        resolve: (value: unknown) => void,
+        reject: (reason?: unknown) => void,
+        expectedType: string
+    ): ((event: Pick<MessageEvent, 'origin' | 'data'>) => string | boolean) =>
+    (event: Pick<MessageEvent, 'origin' | 'data'>): string | boolean => {
         const parseErrorObj: PostMsgParseErrorObject = {};
-        const origin = event.origin || event.originalEvent?.origin;
+        const origin = event.origin;
 
         if (origin !== domain) {
+            // FAIL SILENTLY: if it's not from the expected domain then it's not our traffic
             return 'Message was not sent from the expected domain';
         }
 
+        /**
+         *  At this point we know the message is from the expected domain
+         *  - so is presumably "our" traffic and not random messages from the merchant's site, the build process, or from the browser (or extensions)
+         *  // TODO - Do more here in terms of logging to help debug issues with 3DS2
+         */
+
         if (typeof event.data !== 'string') {
-            return 'Event data was not of type string';
+            // If it's from our domain but not a string - log this somewhere?
+            return 'Event data from expected domain but not in expected form';
         }
 
         if (!event.data.length) {
-            return 'Invalid event data string';
+            // If it's from our domain, is a string, but is empty - log this somewhere?
+            return 'Event data from expected domain, in expected form, but empty';
         }
 
         // Try to parse the data
         try {
-            const feedbackObj = JSON.parse(event.data);
-            if (hasOwnProperty(feedbackObj, 'type') && feedbackObj.type === expectedType) {
-                resolve(feedbackObj);
+            const feedbackObj = JSON.parse(event.data) as Record<string, unknown>;
+            if (feedbackObj && typeof feedbackObj === 'object' && hasOwnProperty(feedbackObj, 'type')) {
+                if (feedbackObj.type === expectedType) {
+                    // Happy flow
+                    resolve(feedbackObj);
+                    return true;
+                } else {
+                    // feedbackObj.type != expectedType - log this somewhere?
+                    return 'Event data has "type" but the object is not in the expected form';
+                }
             } else {
-                // Silent fail - applies when RiskModule device fingerprinting is ongoing and this handler is picking up securedFields traffic
-                return 'Event data was not of expected type';
+                // FAIL SILENTLY: event.data had no 'type' property
+                //  example: applies when RiskModule device fingerprinting is ongoing and this handler is picking up securedFields traffic
+                //  - But, *if* we know we're in 3DS2 scenario - log this somewhere?
+                return 'Event data had no type';
             }
         } catch (e) {
             parseErrorObj.type = `${expectedType}-JSON-parse-error`;
@@ -50,8 +73,6 @@ const getProcessMessageHandler =
 
             return false;
         }
-
-        return true;
     };
 
 export default getProcessMessageHandler;

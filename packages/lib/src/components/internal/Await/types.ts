@@ -18,6 +18,7 @@ export interface AwaitComponentProps {
     onError: (error: AdyenCheckoutError) => void;
     onComplete: (status: AdditionalDetailsData) => void;
     brandLogo?: string;
+    brandName?: string;
     messageText?: string;
     awaitText: string;
     onActionHandled?: (rtnObj: ActionHandledReturnObject) => void;

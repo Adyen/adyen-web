@@ -32,16 +32,14 @@ describe('Storage implementation - normal, window-based, storage', () => {
 });
 
 describe('Storage implementation - storage fallback', () => {
-    let windowSpy;
-
-    beforeEach(() => {
-        windowSpy = jest.spyOn(window, 'window', 'get');
+    afterEach(() => {
+        jest.restoreAllMocks();
     });
 
     test('Should add, retrieve and remove item from storage', () => {
-        windowSpy.mockImplementation(() => ({
-            localStorage: null
-        }));
+        jest.spyOn(window, 'localStorage', 'get').mockImplementation(() => {
+            throw new Error('localStorage is not available');
+        });
 
         const storage = new Storage('checkout-attempt-id', 'localStorage');
 

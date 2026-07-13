@@ -390,6 +390,8 @@
     "payto.label.firstName": "Имя владельца счета",
     "payto.label.lastName": "Фамилия владельца счета",
     "payto.await.waitForConfirmation": "В ожидании вашего одобрения",
+    "payto.errors.accountHolderFirstName.invalid": "Введите имя владельца счета",
+    "payto.errors.accountHolderLastName.invalid": "Введите фамилию владельца счета",
     "payto.bsb.option.label": "Номер BSB и номер счета",
     "card.fastlane.a11y.logo": "Логотип Fastlane by Paypal",
     "card.fastlane.a11y.openDialog": "Узнайте больше о Fastlane",

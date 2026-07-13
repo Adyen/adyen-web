@@ -1,5 +1,41 @@
 # @adyen/adyen-web
 
+## 6.40.2
+
+### Patch Changes
+
+- Fixed: UPI and Iris brand logo images missing alt text for screen readers ([#4071](https://github.com/Adyen/adyen-web/pull/4071))
+
+- Fixed: improving types & clarifying possible paths in postMessage handling function ([#4071](https://github.com/Adyen/adyen-web/pull/4071))
+
+- Fixed: Removed legacy data types for 3DS2 resolve data ([#4071](https://github.com/Adyen/adyen-web/pull/4071))
+
+- Fixed: Prefer exact locale match rather than two-letter match (thanks to @kevinccbsg) ([#4071](https://github.com/Adyen/adyen-web/pull/4071))
+
+- Fixed: PayTo accessibility enhancements for form instruction and account holder errors ([#4071](https://github.com/Adyen/adyen-web/pull/4071))
+
+## 6.40.1
+
+### Patch Changes
+
+- Fixed: Removes incorrect presentation role on card fields ([#4035](https://github.com/Adyen/adyen-web/pull/4035))
+
+- Fixed: a11y keyboard navigation inside Select list ([#4029](https://github.com/Adyen/adyen-web/pull/4029))
+
+## 6.40.0
+
+### Minor Changes
+
+- Improved: UK support for Affirm ([#4025](https://github.com/Adyen/adyen-web/pull/4025))
+
+### Patch Changes
+
+- Fixed: countryCode & allowedCountries mismatch issue for Affirm ([#4025](https://github.com/Adyen/adyen-web/pull/4025))
+
+- Fixed: Add autocomplete tokens to all personal details and address fields ([#4027](https://github.com/Adyen/adyen-web/pull/4027))
+
+- Fixed: a11y announcements for resend OTP countdown in Click to Pay ([#4026](https://github.com/Adyen/adyen-web/pull/4026))
+
 ## 6.39.0
 
 ### Minor Changes

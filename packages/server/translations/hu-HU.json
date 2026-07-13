@@ -392,6 +392,8 @@
     "payto.label.firstName": "Számlatulajdonos utóneve",
     "payto.label.lastName": "Számlatulajdonos vezetékneve",
     "payto.await.waitForConfirmation": "Várakozás az Ön jóváhagyására",
+    "payto.errors.accountHolderFirstName.invalid": "Adja meg a számlatulajdonos utónevét",
+    "payto.errors.accountHolderLastName.invalid": "Adja meg a számlatulajdonos vezetéknevét",
     "payto.bsb.option.label": "BSB és számlaszám",
     "card.fastlane.a11y.logo": "Fastlane by PayPal logó",
     "card.fastlane.a11y.openDialog": "További információ a Fastlane-ről",

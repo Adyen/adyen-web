@@ -392,6 +392,8 @@
     "payto.label.firstName": "Vorname des Kontoinhabers",
     "payto.label.lastName": "Nachname des Kontoinhabers",
     "payto.await.waitForConfirmation": "Wir warten auf Ihre Genehmigung",
+    "payto.errors.accountHolderFirstName.invalid": "Vorname des Kontoinhabers eingeben",
+    "payto.errors.accountHolderLastName.invalid": "Nachname des Kontoinhabers eingeben",
     "payto.bsb.option.label": "BLZ und Kontonummer",
     "card.fastlane.a11y.logo": "Fastlane by Paypal-Logo",
     "card.fastlane.a11y.openDialog": "Lesen Sie mehr über Fastlane",

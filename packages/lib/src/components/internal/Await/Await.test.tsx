@@ -9,8 +9,14 @@ import SRPanelProvider from '../../../core/Errors/SRPanelProvider';
 import { SRPanel } from '../../../core/Errors/SRPanel';
 import { AmountProvider, AmountProviderProps } from '../../../core/Context/AmountProvider';
 import { setupCoreMock } from '../../../../config/testMocks/setup-core-mock';
+import { redirectToApp } from '../../../utils/urls';
 
 jest.mock('../../../core/Services/payment-status');
+jest.mock('../../../utils/urls', () => ({
+    redirectToApp: jest.fn()
+}));
+
+const redirectToAppMock = redirectToApp as jest.Mock;
 
 const renderAwait = ({
     awaitProps,
@@ -36,7 +42,8 @@ const renderAwait = ({
 };
 
 describe('Await', () => {
-    const assignSpy = jest.fn();
+
+    const brandName = 'MBWay';
 
     const defaultProps: AwaitComponentProps = {
         countdownTime: 0,
@@ -47,6 +54,7 @@ describe('Await', () => {
         throttleInterval: 0,
         throttleTime: 0,
         brandLogo: 'https://example.com',
+        brandName,
         clientKey: 'test_client_key',
         messageText: 'test',
         paymentData: 'dummy',
@@ -56,13 +64,9 @@ describe('Await', () => {
 
     const amountProviderProps = { amount: { currency: 'USD', value: 1000 } };
 
-    beforeAll(() => {
-        Object.defineProperty(window, 'location', {
-            value: { assign: assignSpy }
-        });
-    });
     afterEach(() => {
         jest.restoreAllMocks();
+        redirectToAppMock.mockReset();
     });
 
     describe('In progress', () => {
@@ -79,7 +83,7 @@ describe('Await', () => {
 
         test('should show brand logo', async () => {
             renderAwait({ awaitProps: defaultProps, amountProviderProps });
-            const image = await screen.findByAltText(defaultProps.type);
+            const image = await screen.findByAltText(brandName);
             // @ts-ignore src is part of img
             expect(image.src).toContain(defaultProps.brandLogo);
         });
@@ -97,15 +101,15 @@ describe('Await', () => {
         test('click the redirect button should call location.assign', async () => {
             renderAwait({ awaitProps: { ...defaultProps, url: 'redirect-url' }, amountProviderProps });
             fireEvent.click(await screen.findByRole('button'));
-            expect(assignSpy).toHaveBeenCalled();
+            expect(redirectToAppMock).toHaveBeenCalled();
         });
 
         test('should call location.assign if there is an url and shouldRedirectAutomatically is true', async () => {
-            assignSpy.mockReset();
+            redirectToAppMock.mockReset();
 
             renderAwait({ awaitProps: { ...defaultProps, url: 'redirect-url', shouldRedirectAutomatically: true }, amountProviderProps });
 
-            await waitFor(() => expect(assignSpy).toHaveBeenCalled());
+            await waitFor(() => expect(redirectToAppMock).toHaveBeenCalled());
             const button = screen.queryByRole('button');
             expect(button).not.toBeInTheDocument();
         });
@@ -207,7 +211,7 @@ describe('Await', () => {
         test('should show brand logo', async () => {
             renderAwait({ awaitProps: defaultProps, amountProviderProps });
 
-            const image = await screen.findByAltText(defaultProps.type);
+            const image = await screen.findByAltText(brandName);
             // @ts-ignore src is part of img
             expect(image.src).toContain(defaultProps.brandLogo);
         });

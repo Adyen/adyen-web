@@ -122,7 +122,20 @@ export default function InputBase({ setRef, ...props }: Readonly<InputBaseProps>
     );
 
     // Don't spread classNameModifiers etc to input element (it ends up as an attribute on the element itself)
-    const { classNameModifiers: cnm, uniqueId: uid, isInvalid: iiv, isValid: iv, addContextualElement: ace, autocomplete, ...restProps } = props;
+    const {
+        classNameModifiers: cnm,
+        uniqueId: uid,
+        isInvalid: iiv,
+        isValid: iv,
+        addContextualElement: ace,
+        'aria-describedby': ariaDescribedByProp,
+        autocomplete,
+        ...restProps
+    } = props;
+
+    const internalDescribedBy = uniqueId ? `${uniqueId}${isInvalid ? ARIA_ERROR_SUFFIX : ARIA_CONTEXT_SUFFIX}` : null;
+    const extraDescribedBy = typeof ariaDescribedByProp === 'string' && ariaDescribedByProp ? ariaDescribedByProp : null;
+    const mergedAriaDescribedBy = [extraDescribedBy, internalDescribedBy].filter(Boolean).join(' ') || null;
 
     return (
         <input
@@ -137,7 +150,7 @@ export default function InputBase({ setRef, ...props }: Readonly<InputBaseProps>
             // eslint-disable-next-line react/no-unknown-property -- Preact uses lowercase 'spellcheck'
             spellcheck={spellcheck}
             autoCorrect={autoCorrect}
-            aria-describedby={`${uniqueId}${isInvalid ? ARIA_ERROR_SUFFIX : ARIA_CONTEXT_SUFFIX}`}
+            aria-describedby={mergedAriaDescribedBy}
             aria-invalid={isInvalid}
             onInput={handleInput}
             onBlur={handleBlur}

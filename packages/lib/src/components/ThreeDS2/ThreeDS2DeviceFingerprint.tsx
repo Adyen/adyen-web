@@ -4,7 +4,7 @@ import PrepareFingerprint from './components/DeviceFingerprint';
 import callSubmit3DS2Fingerprint from './callSubmit3DS2Fingerprint';
 import { existy } from '../../utils/commonUtils';
 import { TxVariants } from '../tx-variants';
-import { FingerprintResolveData, LegacyFingerprintResolveData, ThreeDS2DeviceFingerprintConfiguration } from './types';
+import { FingerprintResolveData, ThreeDS2DeviceFingerprintConfiguration } from './types';
 import AdyenCheckoutError, { API_ERROR } from '../../core/Errors/AdyenCheckoutError';
 import { THREEDS2_FINGERPRINT, THREEDS2_FINGERPRINT_ERROR } from './constants';
 import { ActionHandledReturnObject } from '../../types/global-types';
@@ -41,7 +41,7 @@ class ThreeDS2DeviceFingerprint extends UIElement<ThreeDS2DeviceFingerprintConfi
     /**
      * Can be called directly from PrepareFingerprint (MDFlow) or after the call to /submitThreeDS2Fingerprint endpoint (native flow)
      */
-    onComplete(state: LegacyFingerprintResolveData | FingerprintResolveData) {
+    onComplete(state: FingerprintResolveData) {
         if (this.props.isMDFlow) {
             this.props.on3DS2RedirectFlowComplete?.(state, this.elementRef);
         } else {

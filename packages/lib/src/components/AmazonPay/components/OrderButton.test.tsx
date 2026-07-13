@@ -6,6 +6,7 @@ import { CoreProvider } from '../../../core/Context/CoreProvider';
 import { AmountProvider } from '../../../core/Context/AmountProvider';
 import { updateAmazonCheckoutSession } from '../services';
 import { setupCoreMock } from '../../../../config/testMocks/setup-core-mock';
+import { mockLocationAssign } from '../../../../config/testMocks/mockLocationAssign';
 
 jest.mock('../services', () => ({
     updateAmazonCheckoutSession: jest.fn()
@@ -39,27 +40,6 @@ const renderOrderButton = (props = {}) => {
 };
 
 describe('OrderButton', () => {
-    const oldWindowLocation = window.location;
-
-    beforeAll(() => {
-        delete window.location;
-        // @ts-ignore test only
-        window.location = Object.defineProperties(
-            {},
-            {
-                ...Object.getOwnPropertyDescriptors(oldWindowLocation),
-                assign: {
-                    configurable: true,
-                    value: jest.fn()
-                }
-            }
-        );
-    });
-
-    afterAll(() => {
-        window.location = oldWindowLocation as string & Location;
-    });
-
     beforeEach(() => {
         jest.clearAllMocks();
     });
@@ -92,6 +72,7 @@ describe('OrderButton', () => {
     });
 
     test('should redirect when a redirect action is received', async () => {
+        const assignSpy = mockLocationAssign();
         (updateAmazonCheckoutSession as jest.Mock).mockResolvedValue({
             action: { type: 'redirect', url: 'https://amazon.com/checkout' }
         });
@@ -102,8 +83,9 @@ describe('OrderButton', () => {
         await user.click(screen.getByRole('button', { name: 'Confirm purchase' }));
 
         await waitFor(() => {
-            expect(window.location.assign).toHaveBeenCalledWith('https://amazon.com/checkout');
+            expect(assignSpy).toHaveBeenCalledWith('https://amazon.com/checkout');
         });
+        assignSpy.mockRestore();
     });
 
     test('should log error if response has no action type', async () => {

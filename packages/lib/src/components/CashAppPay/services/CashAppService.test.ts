@@ -27,8 +27,8 @@ test('should initialize the CashAppPay SDK', async () => {
     const service = new CashAppService(sdkLoader, configuration);
     await service.initialize();
 
-    expect(sdkLoader.load).toBeCalledWith(configuration.environment);
-    expect(cashAppWindowObject.pay).toBeCalledWith({ clientId: configuration.clientId });
+    expect(sdkLoader.load).toHaveBeenCalledWith(configuration.environment);
+    expect(cashAppWindowObject.pay).toHaveBeenCalledWith({ clientId: configuration.clientId });
 });
 
 test('should trigger the SDK button rendering', async () => {
@@ -47,7 +47,7 @@ test('should trigger the SDK button rendering', async () => {
     await service.initialize();
     await service.renderButton(divContainer);
 
-    expect(cashAppSdk.render).toBeCalledWith(divContainer, { button: { width: 'full', shape: 'semiround' }, manage: false });
+    expect(cashAppSdk.render).toHaveBeenCalledWith(divContainer, { button: { width: 'full', shape: 'semiround' }, manage: false });
 });
 
 test('should create a customer request with one time action', async () => {
@@ -62,7 +62,7 @@ test('should create a customer request with one time action', async () => {
     await service.initialize();
     await service.createCustomerRequest(TEST_AMOUNT);
 
-    expect(cashAppSdk.customerRequest).toBeCalledWith({
+    expect(cashAppSdk.customerRequest).toHaveBeenCalledWith({
         referenceId: configuration.referenceId,
         redirectURL: configuration.redirectURL,
         actions: {
@@ -87,7 +87,7 @@ test('should create a customer request with on file action', async () => {
     await service.initialize();
     await service.createCustomerRequest(TEST_ZERO_AMOUNT);
 
-    expect(cashAppSdk.customerRequest).toBeCalledWith({
+    expect(cashAppSdk.customerRequest).toHaveBeenCalledWith({
         referenceId: configuration.referenceId,
         redirectURL: configuration.redirectURL,
         actions: {
@@ -111,7 +111,7 @@ test('should create a customer request with on file AND one time actions', async
     await service.initialize();
     await service.createCustomerRequest(TEST_AMOUNT);
 
-    expect(cashAppSdk.customerRequest).toBeCalledWith({
+    expect(cashAppSdk.customerRequest).toHaveBeenCalledWith({
         referenceId: configuration.referenceId,
         redirectURL: configuration.redirectURL,
         actions: {
@@ -141,7 +141,7 @@ test('should be able to enable/disable on file action (Scenario: user tick/untic
     service.setStorePaymentMethod(true);
     await service.createCustomerRequest(TEST_AMOUNT);
 
-    expect(cashAppSdk.customerRequest).toBeCalledWith({
+    expect(cashAppSdk.customerRequest).toHaveBeenCalledWith({
         referenceId: configuration.referenceId,
         redirectURL: configuration.redirectURL,
         actions: {
@@ -195,7 +195,7 @@ test('should disable CashAppPay button if needed', async () => {
     await service.initialize();
     await service.renderButton(divContainer);
 
-    expect(cashAppSdk.render).toBeCalledWith(divContainer, { button: false, manage: false });
+    expect(cashAppSdk.render).toHaveBeenCalledWith(divContainer, { button: false, manage: false });
 });
 
 test('should be able to restart the SDK', async () => {
@@ -236,10 +236,10 @@ test('should be able to subscribe/unsubscribe to CashAppSdk events', async () =>
     const handleRequestApproved = jest.fn();
     const unsubscribeFn = service.subscribeToEvent(CashAppPayEvents.CustomerRequestApproved, handleRequestApproved);
 
-    expect(handleRequestApproved).toBeCalledWith(onCustomerApprovedResponse);
+    expect(handleRequestApproved).toHaveBeenCalledWith(onCustomerApprovedResponse);
     expect(handleRequestApproved).toHaveBeenCalledTimes(1);
 
     unsubscribeFn();
 
-    expect(cashAppSdk.removeEventListener).toBeCalledWith(CashAppPayEvents.CustomerRequestApproved, handleRequestApproved);
+    expect(cashAppSdk.removeEventListener).toHaveBeenCalledWith(CashAppPayEvents.CustomerRequestApproved, handleRequestApproved);
 });

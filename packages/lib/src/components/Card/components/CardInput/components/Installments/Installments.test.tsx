@@ -44,7 +44,7 @@ describe('Installments', () => {
     test('should render the installments dropdown by default', () => {
         renderInstallments();
         expect(screen.getByText('Number of installments')).toBeInTheDocument();
-        expect(screen.getByRole('button', { name: /Number of installments/i })).toBeInTheDocument();
+        expect(screen.getByRole('combobox', { name: /Number of installments/i })).toBeInTheDocument();
     });
 
     test('should not render if the passed amount is 0', () => {
@@ -62,7 +62,7 @@ describe('Installments', () => {
             card: { values: [3] }
         };
         renderInstallments({ installmentsProps: { installmentOptions } });
-        expect(screen.getByRole('button')).toBeDisabled();
+        expect(screen.getByRole('combobox')).toBeDisabled();
     });
 
     test('should preselect the value from "preselectedValue"', async () => {
@@ -70,17 +70,17 @@ describe('Installments', () => {
             card: { values: [1, 2], preselectedValue: 2 }
         };
         renderInstallments({ installmentsProps: { installmentOptions, type: 'amount' } });
-        expect(await screen.findByRole('button')).toHaveTextContent('2x $150.00');
+        expect(await screen.findByRole('combobox')).toHaveTextContent('2x $150.00');
     });
 
     test('should preselect the first value if "preselectedValue" is not provided', async () => {
         renderInstallments({ installmentsProps: { type: 'amount' } });
-        expect(await screen.findByRole('button')).toHaveTextContent('1x $300.00');
+        expect(await screen.findByRole('combobox')).toHaveTextContent('1x $300.00');
     });
 
     test('should render the correct number of installment options for each brand', async () => {
         const { rerender } = renderInstallments({ installmentsProps: { brand: 'card' } });
-        await user.click(screen.getByRole('button'));
+        await user.click(screen.getByRole('combobox'));
         expect(await screen.findAllByRole('option')).toHaveLength(2);
 
         rerender(
@@ -90,7 +90,7 @@ describe('Installments', () => {
                 </AmountProvider>
             </CoreProvider>
         );
-        await user.click(screen.getByRole('button'));
+        await user.click(screen.getByRole('combobox'));
         expect(await screen.findAllByRole('option')).toHaveLength(3);
 
         rerender(
@@ -100,7 +100,7 @@ describe('Installments', () => {
                 </AmountProvider>
             </CoreProvider>
         );
-        await user.click(screen.getByRole('button'));
+        await user.click(screen.getByRole('combobox'));
         expect(await screen.findAllByRole('option')).toHaveLength(4);
     });
 
@@ -112,7 +112,7 @@ describe('Installments', () => {
             };
 
             const { rerender } = renderInstallments({ installmentsProps: { installmentOptions, brand: 'card', type: 'amount' } });
-            expect(await screen.findByRole('button')).toHaveTextContent('2x $150.00');
+            expect(await screen.findByRole('combobox')).toHaveTextContent('2x $150.00');
 
             // Rerender with a new brand
             rerender(
@@ -123,7 +123,7 @@ describe('Installments', () => {
                 </CoreProvider>
             );
 
-            expect(await screen.findByRole('button')).toHaveTextContent('2x $150.00');
+            expect(await screen.findByRole('combobox')).toHaveTextContent('2x $150.00');
         });
 
         test('should use the new brands "preselectedValue" if the old value is not supported', async () => {
@@ -133,7 +133,7 @@ describe('Installments', () => {
             };
             const { rerender } = renderInstallments({ installmentsProps: { installmentOptions, brand: 'card', type: 'amount' } });
 
-            expect(await screen.findByRole('button')).toHaveTextContent('4x $75.00');
+            expect(await screen.findByRole('combobox')).toHaveTextContent('4x $75.00');
 
             rerender(
                 <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
@@ -143,7 +143,7 @@ describe('Installments', () => {
                 </CoreProvider>
             );
 
-            expect(await screen.findByRole('button')).toHaveTextContent('2x $150.00');
+            expect(await screen.findByRole('combobox')).toHaveTextContent('2x $150.00');
         });
 
         test('should default to the first option if the old value and "preselectedValue" are not supported', async () => {
@@ -153,7 +153,7 @@ describe('Installments', () => {
             };
             const { rerender } = renderInstallments({ installmentsProps: { installmentOptions, brand: 'card', type: 'amount' } });
 
-            expect(await screen.findByRole('button')).toHaveTextContent('4x $75.00');
+            expect(await screen.findByRole('combobox')).toHaveTextContent('4x $75.00');
 
             rerender(
                 <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
@@ -163,7 +163,7 @@ describe('Installments', () => {
                 </CoreProvider>
             );
 
-            expect(await screen.findByRole('button')).toHaveTextContent('1x $300.00');
+            expect(await screen.findByRole('combobox')).toHaveTextContent('1x $300.00');
         });
     });
 

@@ -392,6 +392,8 @@
     "payto.label.firstName": "Nome próprio do titular da conta",
     "payto.label.lastName": "Sobrenome do titular da conta",
     "payto.await.waitForConfirmation": "Aguardando sua aprovação",
+    "payto.errors.accountHolderFirstName.invalid": "Introduza o nome próprio do titular da conta",
+    "payto.errors.accountHolderLastName.invalid": "Introduza o apelido do titular da conta",
     "payto.bsb.option.label": "Número BSB e número da conta",
     "card.fastlane.a11y.logo": "Logótipo Fastlane by Paypal",
     "card.fastlane.a11y.openDialog": "Leia mais sobre Fastlane",

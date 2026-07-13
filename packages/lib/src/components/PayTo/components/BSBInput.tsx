@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import Fieldset from '../../internal/FormFields/Fieldset';
-import { useEffect, useRef } from 'preact/hooks';
+import { useEffect, useMemo, useRef } from 'preact/hooks';
 import { useFormWithA11y } from '../../../utils/useForm';
 import { getErrorMessage } from '../../../utils/getErrorMessage';
 import Field from '../../internal/FormFields/Field';
@@ -12,6 +12,7 @@ import { phoneFormatters } from '../../internal/PhoneInput/validate';
 import { ComponentMethodsRef, UIElementStatus } from '../../internal/UIElement/types';
 import PayToNameFields from './PayToNameFields';
 import { PayToPlaceholdersType } from '../types';
+import { getUniqueId } from '../../../utils/idGenerator';
 
 export interface BSBFormData {
     bsb: string;
@@ -34,6 +35,8 @@ const BASE_SCHEMA = ['bankAccountNumber', 'bsb', 'firstName', 'lastName'];
 
 export default function BSBInput({ setComponentRef, defaultData, placeholders, onChange, setStatus, id }: Readonly<BSBInputProps>) {
     const { i18n } = useCoreContext();
+
+    const descriptionId = useMemo(() => getUniqueId('payid-instruction'), []);
 
     const form = useFormWithA11y<BSBFormData>({
         schema: BASE_SCHEMA,
@@ -59,7 +62,7 @@ export default function BSBInput({ setComponentRef, defaultData, placeholders, o
     }, [setComponentRef]);
 
     return (
-        <Fieldset id={id} classNameModifiers={['payto__bsb_input']} label={'BSB'} description={'payto.bsb.description'}>
+        <Fieldset id={id} classNameModifiers={['payto__bsb_input']} label={'BSB'} description={'payto.bsb.description'} descriptionId={descriptionId}>
             <Field
                 label={i18n.get('payto.bsb.label.bankAccountNumber')}
                 classNameModifiers={['col-60', 'bankAccountNumber']}
@@ -74,6 +77,7 @@ export default function BSBInput({ setComponentRef, defaultData, placeholders, o
                     onInput={handleChangeFor('bankAccountNumber', 'input')}
                     onBlur={handleChangeFor('bankAccountNumber', 'blur')}
                     placeholder={placeholders?.bankAccountNumber}
+                    aria-describedby={descriptionId}
                     required={true}
                     autocomplete={undefined}
                 />
