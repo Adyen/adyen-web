@@ -373,6 +373,32 @@ describe('UIElement', () => {
             expect(onPaymentFailedMock).toHaveBeenCalledWith(undefined, element);
         });
 
+        test('should call onAction callback instead of handleAction if onAction is configured', async () => {
+            const onActionMock = jest.fn();
+            const mockActionElement = mock<UIElement>();
+            const onSubmitMock = jest.fn().mockImplementation((_, __, actions) => {
+                actions.resolve({
+                    resultCode: 'Pending',
+                    action: {
+                        type: 'sdk',
+                        paymentMethodType: 'payment-type',
+                        paymentData: 'payment-data'
+                    }
+                });
+            });
+
+            jest.spyOn(MyElement.prototype, 'isValid', 'get').mockReturnValue(true);
+            core.options = { onAction: onActionMock };
+            jest.spyOn(core, 'createFromAction').mockReturnValue(mockActionElement);
+            const element = new MyElement(core, { onSubmit: onSubmitMock });
+            const handleActionSpy = jest.spyOn(element, 'handleAction');
+            element.submit();
+            await new Promise(process.nextTick);
+            expect(onActionMock).toHaveBeenCalledTimes(1);
+            expect(onActionMock).toHaveBeenCalledWith(mockActionElement);
+            expect(handleActionSpy).not.toHaveBeenCalled();
+        });
+
         test('should call component.handleAction if payment is resolved with action', async () => {
             const onSubmitMock = jest.fn().mockImplementation((data, component, actions) => {
                 actions.resolve({

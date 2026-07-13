@@ -294,7 +294,7 @@ export interface CoreConfiguration {
     afterAdditionalDetails?(component: UIElement): void;
 
     /**
-     * Callback called when an action (for example a QR code or 3D Secure 2 authentication screen) is shown to the shopper.
+     * Callback called when an action (for example a QR code or 3D Secure 2 authentication screen) needs to be mounted by the merchant.
      *
      * @param actionElement - The UIElement representing the action, which needs to get mounted on the page for the user to interact with.
      */
