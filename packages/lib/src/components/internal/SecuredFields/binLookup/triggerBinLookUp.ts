@@ -89,8 +89,10 @@ export default parent => {
                                 acc.detectedBrands.push(item.brand);
                                 // Also add the paymentMethodVariants (more granular description of the txvariant)
                                 acc.paymentMethodVariants.push(item.paymentMethodVariant);
-                                // Add healthcare to the healthcare array
-                                acc.healthcare.push(item.healthcare);
+                                // Add healthcare to the healthcare array, keyed by brand (only when the field is present)
+                                if (item.healthcare !== undefined) {
+                                    acc.healthcare.push({ [item.brand]: item.healthcare });
+                                }
 
                                 // Add supported brand objects to the supportedBrands array
                                 if (item.supported === true) {
@@ -104,11 +106,11 @@ export default parent => {
                                 supportedBrands: [] as BrandObject[],
                                 detectedBrands: [] as string[],
                                 paymentMethodVariants: [] as (string | undefined)[],
-                                healthcare: [] as (boolean | undefined)[]
+                                healthcare: [] as Record<string, boolean>[]
                             }
                         );
 
-                        const hasHealthcare = mappedResponse.healthcare.some(healthcareValue => healthcareValue !== undefined);
+                        const hasHealthcareData = mappedResponse.healthcare.length > 0;
 
                         /**
                          * supportedBrands = merchant supports this brand(s); we have detected the card number to be of this brand(s); carry on!
@@ -131,7 +133,7 @@ export default parent => {
                                 supportedBrandsRaw: mappedResponse.supportedBrands, // full supportedBrands data (for customCard comp)
                                 brands: parent.props.brands || DEFAULT_CARD_GROUP_TYPES,
                                 issuingCountryCode: data.issuingCountryCode,
-                                ...(hasHealthcare && { healthcare: mappedResponse.healthcare })
+                                ...(hasHealthcareData && { healthcare: mappedResponse.healthcare })
                             });
 
                             return;
@@ -156,7 +158,7 @@ export default parent => {
                                 detectedBrands: mappedResponse.detectedBrands,
                                 supportedBrands: null,
                                 paymentMethodVariants: mappedResponse.paymentMethodVariants,
-                                ...(hasHealthcare && { healthcare: mappedResponse.healthcare }),
+                                ...(hasHealthcareData && { healthcare: mappedResponse.healthcare }),
                                 brands: parent.props.brands || DEFAULT_CARD_GROUP_TYPES
                             });
 

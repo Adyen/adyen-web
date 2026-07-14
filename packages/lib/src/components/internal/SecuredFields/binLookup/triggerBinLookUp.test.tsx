@@ -203,7 +203,7 @@ describe('triggerBinLookUp', () => {
                         lookUpBin(bin);
                         await new Promise(process.nextTick);
 
-                        expect(mockOnBinLookup).toHaveBeenCalledWith(expect.objectContaining({ healthcare: [true] }));
+                        expect(mockOnBinLookup).toHaveBeenCalledWith(expect.objectContaining({ healthcare: [{ visa: true }] }));
                     });
 
                     test('should omit the healthcare field from the UIElement onBinLookup when not present in the response', async () => {
@@ -221,6 +221,7 @@ describe('triggerBinLookUp', () => {
                         lookUpBin(bin);
                         await new Promise(process.nextTick);
 
+                        expect(mockOnBinLookup).toHaveBeenCalledTimes(1);
                         const callArg = mockOnBinLookup.mock.calls[0][0];
                         expect(callArg).not.toHaveProperty('healthcare');
                     });
