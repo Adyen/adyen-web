@@ -3,10 +3,12 @@ import { TxVariants } from '../../tx-variants';
 import { GooglePaymentMode } from '../../GooglePay/config';
 import GooglePay from '../../GooglePay/GooglePay';
 import GooglePayService from '../../GooglePay/GooglePayService';
+import GoogleAcceleratedCheckoutClient from '../../GooglePay/services/GoogleAcceleratedCheckoutClient';
 import { setupCoreMock } from '../../../../config/testMocks/setup-core-mock';
 import UIElement from '../../internal/UIElement';
 
 jest.mock('../../GooglePay/GooglePayService');
+jest.mock('../../GooglePay/services/GoogleAcceleratedCheckoutClient');
 
 const makeElement = (type: string): UIElement => ({ type }) as unknown as UIElement;
 
@@ -31,6 +33,8 @@ const makeGooglePay = ({
 beforeEach(() => {
     // @ts-ignore 'mockClear' is provided by jest.mock
     GooglePayService.mockClear();
+    // @ts-ignore 'mockClear' is provided by jest.mock
+    GoogleAcceleratedCheckoutClient.mockClear();
 });
 
 describe('Drop-in: promoteGooglePayIfNeeded', () => {
