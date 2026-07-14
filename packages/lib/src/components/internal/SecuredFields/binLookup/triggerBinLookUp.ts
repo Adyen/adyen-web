@@ -2,14 +2,14 @@ import { httpPost } from '../../../../core/Services/http';
 import { CardBinValueData, CardErrorData } from '../lib/types';
 import { DEFAULT_CARD_GROUP_TYPES } from '../lib/constants';
 import { SF_ErrorCodes } from '../../../../core/Errors/constants';
-import { BinLookupResponseRaw } from '../../../Card/types';
+import { BinLookupResponseRaw, BrandObject } from '../../../Card/types';
 
 if (process.env.NODE_ENV === 'development') {
     window.mockBinCount = 0; // Set to 0 to turn off mocking, 1 to turn it on
 }
 
 export default parent => {
-    let currentRequestId = null;
+    let currentRequestId: string | null = null;
 
     return (callbackObj: CardBinValueData) => {
         // Allow way for merchant to disallow binLookup by specifically setting the prop to false
@@ -100,8 +100,15 @@ export default parent => {
 
                                 return acc;
                             },
-                            { supportedBrands: [], detectedBrands: [], paymentMethodVariants: [], healthcare: [] }
+                            {
+                                supportedBrands: [] as BrandObject[],
+                                detectedBrands: [] as string[],
+                                paymentMethodVariants: [] as (string | undefined)[],
+                                healthcare: [] as (boolean | undefined)[]
+                            }
                         );
+
+                        const hasHealthcare = mappedResponse.healthcare.some(healthcareValue => healthcareValue !== undefined);
 
                         /**
                          * supportedBrands = merchant supports this brand(s); we have detected the card number to be of this brand(s); carry on!
@@ -124,9 +131,7 @@ export default parent => {
                                 supportedBrandsRaw: mappedResponse.supportedBrands, // full supportedBrands data (for customCard comp)
                                 brands: parent.props.brands || DEFAULT_CARD_GROUP_TYPES,
                                 issuingCountryCode: data.issuingCountryCode,
-                                ...(mappedResponse.healthcare.some(healthcareValue => healthcareValue !== undefined) && {
-                                    healthcare: mappedResponse.healthcare
-                                })
+                                ...(hasHealthcare && { healthcare: mappedResponse.healthcare })
                             });
 
                             return;
@@ -151,9 +156,7 @@ export default parent => {
                                 detectedBrands: mappedResponse.detectedBrands,
                                 supportedBrands: null,
                                 paymentMethodVariants: mappedResponse.paymentMethodVariants,
-                                ...(mappedResponse.healthcare.some(healthcareValue => healthcareValue !== undefined) && {
-                                    healthcare: mappedResponse.healthcare
-                                }),
+                                ...(hasHealthcare && { healthcare: mappedResponse.healthcare }),
                                 brands: parent.props.brands || DEFAULT_CARD_GROUP_TYPES
                             });
 
