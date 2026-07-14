@@ -18,7 +18,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        api-version: ${{ inputs.all-api-versions && fromJSON('["v69", "v70", "v71"]') || fromJSON('["v71"]') }}
+        api-version: ${{ inputs.all-api-versions && fromJSON('["v69", "v70", "v71", "v72"]') || fromJSON('["v72"]') }}
         runner-browser: ["chromium", "firefox", "webkit"]
         test-group: ["e2e", "ui"]
     env:
