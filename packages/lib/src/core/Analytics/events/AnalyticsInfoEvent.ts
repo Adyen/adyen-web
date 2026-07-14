@@ -179,33 +179,39 @@ export class AnalyticsInfoEvent extends AbstractAnalyticsEvent {
     private createAnalyticsConfigData(config: Record<string, any>) {
         if (!config) return {};
 
-        const MAX_STRING_LENGTH = 128;
         const result: Record<string, string | boolean> = {};
 
         try {
             for (const [key, value] of Object.entries(config)) {
-                if (this.configDataExcludedFields.includes(key)) {
-                    continue;
-                }
-
-                if (this.configDataMaskedFields.includes(key)) {
-                    result[key] = '<masked>';
-                } else if (typeof value === 'function') {
-                    result[key] = '<function>';
-                } else if (Array.isArray(value)) {
-                    result[key] = value.join(', ').substring(0, MAX_STRING_LENGTH);
-                } else if (typeof value === 'object' && value !== null) {
-                    result[key] = JSON.stringify(value).substring(0, MAX_STRING_LENGTH);
-                } else {
-                    result[key] = value;
-                }
+                if (this.configDataExcludedFields.includes(key)) continue;
+                result[key] = this.serializeConfigValue(key, value);
             }
-
-            return result;
         } catch (error: unknown) {
             if (process.env.NODE_ENV === 'development') console.warn('AnalyticsInfoEvent: Error when creating configData\n', error);
-            return result;
         }
+
+        return result;
+    }
+
+    /**
+     * Serializes a single config value into an analytics-safe representation.
+     * Sensitive fields are masked, functions are replaced with '<function>',
+     * and objects/arrays are stringified (capped at 128 characters).
+     */
+    private serializeConfigValue(key: string, value: unknown): string | boolean {
+        const MAX_STRING_LENGTH = 128;
+
+        if (this.configDataMaskedFields.includes(key)) return '<masked>';
+        if (typeof value === 'function') return '<function>';
+        if (Array.isArray(value)) return value.join(', ').substring(0, MAX_STRING_LENGTH);
+        if (typeof value === 'object' && value !== null) {
+            try {
+                return JSON.stringify(value).substring(0, MAX_STRING_LENGTH);
+            } catch {
+                return '[object]';
+            }
+        }
+        return value as string | boolean;
     }
 
     public getEventCategory(): AnalyticsEventCategory {
