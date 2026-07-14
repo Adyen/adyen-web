@@ -109,7 +109,7 @@
     "button.download": "Sækja",
     "boleto.socialSecurityNumber": "CPF/CNPJ",
     "boleto.socialSecurityNumber.invalid": "Sláðu inn gilt CPF-/CNPJ-númer",
-    "creditCard.storedCard.description.ariaLabel": "Vistað kort endar á % @",
+    "creditCard.storedCard.description.ariaLabel": "Vistað kort endar á %@",
     "voucher.entity": "Aðili",
     "donateButton": "Gefa fjárframlag",
     "donationTermsCondition": "Með því að gefa samþykkir þú %#skilmálana%#",
