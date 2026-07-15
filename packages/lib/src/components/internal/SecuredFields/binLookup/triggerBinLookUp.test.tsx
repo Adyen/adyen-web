@@ -185,6 +185,69 @@ describe('triggerBinLookUp', () => {
                             expect.objectContaining({ supportedBrands: [{ brand: visa, supported: true }], showSocialSecurityNumber: true })
                         );
                     });
+
+                    test('should call the UIElement onBinLookup with the healthcare value when present in the response', async () => {
+                        const requestId = '123456789';
+                        httpPostMock.mockImplementation(
+                            jest.fn(() => Promise.resolve({ requestId, brands: [{ brand: visa, supported: true, healthcare: true }] }))
+                        );
+
+                        const mockUIElement = new MockUIElement(global.core, {
+                            clientKey,
+                            loadingContext,
+                            // @ts-ignore test
+                            brands: [visa, 'mc']
+                        });
+                        const bin = { binValue: '', type: '', encryptedBin: 'xxx-xxx', uuid: requestId };
+                        const lookUpBin = triggerBinLookUp(mockUIElement);
+                        lookUpBin(bin);
+                        await new Promise(process.nextTick);
+
+                        expect(mockOnBinLookup).toHaveBeenCalledWith(expect.objectContaining({ healthcare: [{ visa: true }] }));
+                    });
+
+                    test('should omit the healthcare field from the UIElement onBinLookup when not present in the response', async () => {
+                        const requestId = '123456789';
+                        httpPostMock.mockImplementation(jest.fn(() => Promise.resolve({ requestId, brands: [{ brand: visa, supported: true }] })));
+
+                        const mockUIElement = new MockUIElement(global.core, {
+                            clientKey,
+                            loadingContext,
+                            // @ts-ignore test
+                            brands: [visa, 'mc']
+                        });
+                        const bin = { binValue: '', type: '', encryptedBin: 'xxx-xxx', uuid: requestId };
+                        const lookUpBin = triggerBinLookUp(mockUIElement);
+                        lookUpBin(bin);
+                        await new Promise(process.nextTick);
+
+                        expect(mockOnBinLookup).toHaveBeenCalledTimes(1);
+                        const callArg = mockOnBinLookup.mock.calls[0][0];
+                        expect(callArg).not.toHaveProperty('healthcare');
+                    });
+                });
+
+                describe('BinLookup returns detected but unsupported brands', () => {
+                    test('should call the UIElement onBinLookup with healthcare when the unsupported brand has healthcare', async () => {
+                        const requestId = '123456789';
+                        httpPostMock.mockImplementation(
+                            jest.fn(() => Promise.resolve({ requestId, brands: [{ brand: visa, supported: false, healthcare: true }] }))
+                        );
+
+                        const mockUIElement = new MockUIElement(global.core, {
+                            clientKey,
+                            loadingContext,
+                            // @ts-ignore test
+                            brands: ['mc']
+                        });
+                        const bin = { binValue: '', type: '', encryptedBin: 'xxx-xxx', uuid: requestId };
+                        const lookUpBin = triggerBinLookUp(mockUIElement);
+                        lookUpBin(bin);
+                        await new Promise(process.nextTick);
+
+                        expect(mockHandleUnsupportedCard).toHaveBeenCalled();
+                        expect(mockOnBinLookup).toHaveBeenCalledWith(expect.objectContaining({ healthcare: [{ visa: true }] }));
+                    });
                 });
             });
         });

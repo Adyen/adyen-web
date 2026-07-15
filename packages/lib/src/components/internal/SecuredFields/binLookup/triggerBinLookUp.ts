@@ -2,14 +2,14 @@ import { httpPost } from '../../../../core/Services/http';
 import { CardBinValueData, CardErrorData } from '../lib/types';
 import { DEFAULT_CARD_GROUP_TYPES } from '../lib/constants';
 import { SF_ErrorCodes } from '../../../../core/Errors/constants';
-import { BinLookupResponseRaw } from '../../../Card/types';
+import { BinLookupResponseRaw, BrandObject } from '../../../Card/types';
 
 if (process.env.NODE_ENV === 'development') {
     window.mockBinCount = 0; // Set to 0 to turn off mocking, 1 to turn it on
 }
 
 export default parent => {
-    let currentRequestId = null;
+    let currentRequestId: string | null = null;
 
     return (callbackObj: CardBinValueData) => {
         // Allow way for merchant to disallow binLookup by specifically setting the prop to false
@@ -51,7 +51,8 @@ export default parent => {
                                             // showExpiryDate: true, // deprecated in /binLookup v3
                                             expiryDatePolicy: 'optional',
                                             // panLength: 16,
-                                            supported: true
+                                            supported: true,
+                                            healthcare: true
                                         }
                                     ];
                                     // data.issuingCountryCode = 'KR'; // needed to mock korean_local_card
@@ -69,7 +70,8 @@ export default parent => {
                                             enableLuhnCheck: true,
                                             showExpiryDate: true,
                                             supported: true,
-                                            showSocialSecurityNumber: false
+                                            showSocialSecurityNumber: false,
+                                            healthcare: false
                                             // panLength: 16
                                         }
                                     ];
@@ -87,6 +89,10 @@ export default parent => {
                                 acc.detectedBrands.push(item.brand);
                                 // Also add the paymentMethodVariants (more granular description of the txvariant)
                                 acc.paymentMethodVariants.push(item.paymentMethodVariant);
+                                // Add healthcare to the healthcare array, keyed by brand (only when the field is present)
+                                if (item.healthcare !== undefined) {
+                                    acc.healthcare.push({ [item.brand]: item.healthcare });
+                                }
 
                                 // Add supported brand objects to the supportedBrands array
                                 if (item.supported === true) {
@@ -96,8 +102,15 @@ export default parent => {
 
                                 return acc;
                             },
-                            { supportedBrands: [], detectedBrands: [], paymentMethodVariants: [] }
+                            {
+                                supportedBrands: [] as BrandObject[],
+                                detectedBrands: [] as string[],
+                                paymentMethodVariants: [] as (string | undefined)[],
+                                healthcare: [] as Record<string, boolean>[]
+                            }
                         );
+
+                        const hasHealthcareData = mappedResponse.healthcare.length > 0;
 
                         /**
                          * supportedBrands = merchant supports this brand(s); we have detected the card number to be of this brand(s); carry on!
@@ -119,7 +132,8 @@ export default parent => {
                                 paymentMethodVariants: mappedResponse.paymentMethodVariants,
                                 supportedBrandsRaw: mappedResponse.supportedBrands, // full supportedBrands data (for customCard comp)
                                 brands: parent.props.brands || DEFAULT_CARD_GROUP_TYPES,
-                                issuingCountryCode: data.issuingCountryCode
+                                issuingCountryCode: data.issuingCountryCode,
+                                ...(hasHealthcareData && { healthcare: mappedResponse.healthcare })
                             });
 
                             return;
@@ -144,6 +158,7 @@ export default parent => {
                                 detectedBrands: mappedResponse.detectedBrands,
                                 supportedBrands: null,
                                 paymentMethodVariants: mappedResponse.paymentMethodVariants,
+                                ...(hasHealthcareData && { healthcare: mappedResponse.healthcare }),
                                 brands: parent.props.brands || DEFAULT_CARD_GROUP_TYPES
                             });
 

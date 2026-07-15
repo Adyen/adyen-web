@@ -124,6 +124,7 @@ export interface CardBinLookupData {
     supportedBrands?: string[];
     brands?: string[];
     issuingCountryCode?: string;
+    healthcare?: Record<string, boolean>[];
     // New for CustomCard
     supportedBrandsRaw?: BrandObject[];
     rootNode?: HTMLElement;

@@ -507,6 +507,7 @@ export interface BrandObject {
     brandImageUrl?: string;
     panLength?: number;
     paymentMethodVariant?: string;
+    healthcare?: boolean;
 }
 
 export interface BinLookupResponseRaw {
