@@ -55,7 +55,7 @@ function PaymentMethodsContainer({
                 aria-label={standalone ? undefined : i18n.get('paymentMethodsList.aria.label')}
             >
                 {paymentMethods.map((paymentMethod, index, paymentMethodsCollection) => {
-                    const isSelected = activePaymentMethod && activePaymentMethod._id === paymentMethod._id;
+                    const isSelected: boolean = activePaymentMethod?._id === paymentMethod._id;
                     const isNextOneSelected =
                         activePaymentMethod &&
                         paymentMethodsCollection[index + 1] &&
