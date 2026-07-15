@@ -13,10 +13,10 @@ import { ThreeDS2FlowObject } from '../../types';
 const iframeName = 'threeDSIframe';
 
 class DoChallenge3DS2 extends Component<DoChallenge3DS2Props, DoChallenge3DS2State> {
-    private processMessageHandler;
+    private processMessageHandler: (event: Pick<MessageEvent, 'origin' | 'data'>) => string | boolean;
     private challengePromise: { promise: Promise<ThreeDS2FlowObject>; cancel: () => void };
 
-    constructor(props) {
+    constructor(props: DoChallenge3DS2Props) {
         super(props);
 
         /**
