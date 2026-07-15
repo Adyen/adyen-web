@@ -207,6 +207,12 @@ export interface PayPalConfiguration extends UIElementProps {
          * @default undefined
          */
         vault?: boolean;
+        /**
+         * Pass a Content Security Policy single-use token if you use them on your site
+         *
+         * @default undefined
+         */
+        nonce?: string;
     };
 }
 

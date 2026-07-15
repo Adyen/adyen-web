@@ -1,23 +1,26 @@
 import { IAnalytics } from '../../../core/Analytics/Analytics';
 import { AdyenCheckoutError } from '../../../types';
 import Script from '../../../utils/Script';
-
-const PAYPAL_SDK_URL = 'https://www.sandbox.paypal.com/web-sdk/v6/core';
+import { PAYPAL_SDK_URL_PRODUCTION, PAYPAL_SDK_URL_SANDBOX } from '../config';
 
 class PayPalSdkLoader {
     private sdkLoadingPromise: Promise<void>;
     private readonly analytics: IAnalytics;
+    private readonly environment: string;
+    private readonly nonce?: string;
 
-    constructor({ analytics }: { analytics: IAnalytics }) {
+    constructor({ analytics, environment, nonce }: { analytics: IAnalytics; environment: string; nonce?: string }) {
         this.analytics = analytics;
+        this.environment = environment;
+        this.nonce = nonce;
     }
 
     public async load(): Promise<typeof window.paypal> {
         try {
             const scriptElement = new Script({
-                src: PAYPAL_SDK_URL,
+                src: this.environment.toLowerCase() === 'test' ? PAYPAL_SDK_URL_SANDBOX : PAYPAL_SDK_URL_PRODUCTION,
                 component: 'paypal',
-                attributes: { crossOrigin: 'anonymous' },
+                attributes: { crossOrigin: 'anonymous', ...(this.nonce ? { nonce: this.nonce } : {}) },
                 analytics: this.analytics
             });
 

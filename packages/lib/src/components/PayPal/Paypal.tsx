@@ -49,7 +49,7 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
         if (this.props.usePayPalV6) {
             const paypalV6Props = this.props.usePayPalV6;
 
-            const sdkLoader = new PayPalSdkLoader({ analytics: this.analytics });
+            const sdkLoader = new PayPalSdkLoader({ analytics: this.analytics, environment: this.props.environment, nonce: paypalV6Props.nonce });
 
             this.paypalService = new PayPalService({
                 loadingContext: this.props.loadingContext,
