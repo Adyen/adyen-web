@@ -14,7 +14,13 @@ import { makeDetailsCall } from '../../../../storybook/helpers/checkout-api-call
 type CardStory = StoryConfiguration<CardConfiguration>;
 
 const meta: MetaConfiguration<CardConfiguration> = {
-    title: 'Components/Cards'
+    title: 'Components/Cards',
+    argTypes: {
+        sessionData: {
+            control: 'object',
+            if: { arg: 'useSessions', truthy: true }
+        }
+    }
 };
 
 export const Default: CardStory = {
