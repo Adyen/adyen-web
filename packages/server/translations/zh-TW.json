@@ -251,7 +251,7 @@
     "pix.code.copied.label": "已複製 PIX 代碼",
     "twint.saved": "儲存的",
     "orPayWith": "或透過以下方式支付：",
-    "invalid.format.expects": "{label} 格式無效。格式必須為：%{format}",
+    "invalid.format.expects": "%{label} 格式無效。格式必須為：%{format}",
     "upi.qrCodeWaitingMessage": "使用您偏好的 UPI 應用程式掃描 QR 代碼以完成付款",
     "upi.vpaWaitingMessage": "開啟您的 UPI 應用程式以確認付款",
     "upi.modeSelection": "您想如何使用 UPI？",

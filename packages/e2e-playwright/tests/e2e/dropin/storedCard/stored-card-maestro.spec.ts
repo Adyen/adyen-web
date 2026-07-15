@@ -7,7 +7,7 @@ import { getCardNumberLast4 } from '../../../utils/cards';
 test.describe('Stored Maestro card - cvc optional', () => {
     // When user do not fill in the cvc
     test('should make a successful payment without the cvc code', async ({ dropinWithSession, page }) => {
-        await dropinWithSession.goto(URL_MAP.dropinWithSession);
+        await dropinWithSession.goto(URL_MAP.dropinWithSession_executeThreeD);
         const { paymentMethodDetailsLocator } = await dropinWithSession.selectFirstStoredPaymentMethod('maestro', getCardNumberLast4(THREEDS2_MAESTRO_CARD));
 
         const card = new Card(page, paymentMethodDetailsLocator);
@@ -21,7 +21,7 @@ test.describe('Stored Maestro card - cvc optional', () => {
     });
     // When user fills in the cvc
     test('should make a successful payment after filling in the correct 3ds challenge password', async ({ dropinWithSession, page }) => {
-        await dropinWithSession.goto(URL_MAP.dropinWithSession);
+        await dropinWithSession.goto(URL_MAP.dropinWithSession_executeThreeD);
         const { paymentMethodDetailsLocator } = await dropinWithSession.selectFirstStoredPaymentMethod('maestro', getCardNumberLast4(THREEDS2_MAESTRO_CARD));
 
         const card = new Card(page, paymentMethodDetailsLocator);
@@ -36,7 +36,7 @@ test.describe('Stored Maestro card - cvc optional', () => {
     });
 
     test('should decline the payment after filling in the wrong 3ds challenge password', async ({ dropinWithSession, page }) => {
-        await dropinWithSession.goto(URL_MAP.dropinWithSession);
+        await dropinWithSession.goto(URL_MAP.dropinWithSession_executeThreeD);
         const { paymentMethodDetailsLocator } = await dropinWithSession.selectFirstStoredPaymentMethod('maestro', getCardNumberLast4(THREEDS2_MAESTRO_CARD));
 
         const card = new Card(page, paymentMethodDetailsLocator);

@@ -1,4 +1,4 @@
-import { h } from 'preact';
+import { h, TargetedKeyboardEvent } from 'preact';
 import { useCallback, useEffect } from 'preact/hooks';
 import { CtpState } from './services/ClickToPayService';
 import useClickToPayContext from './context/useClickToPayContext';
@@ -37,13 +37,13 @@ const ClickToPayComponent = ({ onDisplayCardComponent }: Readonly<ClickToPayComp
     }, [ctpState]);
 
     /**
-     * We capture the ENTER keypress within the ClickToPay component because we do not want to propagate the event up to the UIElement
+     * We capture the ENTER keydown within the ClickToPay component because we do not want to propagate the event up to the UIElement
      * UIElement would perform the payment flow (by calling .submit), which is not relevant/supported by Click to Pay
      */
-    const handleEnterKeyPress = useCallback((event: h.JSX.TargetedKeyboardEvent<HTMLInputElement>) => {
+    const handleEnterKeyPress = useCallback((event: TargetedKeyboardEvent<HTMLInputElement>) => {
         if (event.key === 'Enter') {
             event.preventDefault(); // Prevent <form> submission if Component is placed inside a form
-            event.stopPropagation(); // Prevent global BaseElement keypress event to be triggered
+            event.stopPropagation(); // Prevent global BaseElement keydown event to be triggered
         }
     }, []);
 

@@ -3,11 +3,15 @@ import { createElement } from 'preact';
 import { DEFAULT_LOCALE } from './constants';
 
 describe('matchLocale()', () => {
-    const supportedLocales = ['en-US', 'es-ES', 'fr-FR', 'de-DE', 'nl-NL'];
+    const supportedLocales = ['en-US', 'es-ES', 'fr-FR', 'de-DE', 'nl-NL', 'pt-BR', 'pt-PT', 'zh-CN', 'zh-TW'];
 
     test('should match locale with exact match in supported locales', () => {
         expect(matchLocale('en-US', supportedLocales)).toBe('en-US');
         expect(matchLocale('es-ES', supportedLocales)).toBe('es-ES');
+        expect(matchLocale('pt-BR', supportedLocales)).toBe('pt-BR');
+        expect(matchLocale('pt-PT', supportedLocales)).toBe('pt-PT');
+        expect(matchLocale('zh-CN', supportedLocales)).toBe('zh-CN');
+        expect(matchLocale('zh-TW', supportedLocales)).toBe('zh-TW');
     });
 
     test('should match locale with same language code but different country code', () => {
@@ -19,11 +23,12 @@ describe('matchLocale()', () => {
     test('should match locale case-insensitively', () => {
         expect(matchLocale('EN-US', supportedLocales)).toBe('en-US');
         expect(matchLocale('Es-ES', supportedLocales)).toBe('es-ES');
+        expect(matchLocale('pt-pt', supportedLocales)).toBe('pt-PT');
+        expect(matchLocale('zh-tw', supportedLocales)).toBe('zh-TW');
     });
 
     test('should return null when no match is found', () => {
         expect(matchLocale('ja-JP', supportedLocales)).toBe(null);
-        expect(matchLocale('zh-CN', supportedLocales)).toBe(null);
     });
 
     test('should return null when locale is null', () => {

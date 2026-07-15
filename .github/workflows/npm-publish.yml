@@ -32,7 +32,30 @@ jobs:
       # Copy LICENSE to adyen-web package
       - run: cp LICENSE packages/lib/
 
+      # Determine the npm dist-tag from the git ref this workflow runs from:
+      #   - prerelease ref (alpha / beta / rc) -> use "next"
+      #   - otherwise                          -> use "latest"
+      - name: Determine npm dist-tag
+        id: dist-tag
+        run: |
+          REF_NAME="${GITHUB_REF_NAME}"
+          echo "Publishing from ref: ${REF_NAME}"
+
+          if [[ "${REF_NAME}" == *alpha* || "${REF_NAME}" == *beta* || "${REF_NAME}" == *rc* ]]; then
+            DIST_TAG="next"
+          else
+            DIST_TAG="latest"
+          fi
+
+          echo "Resolved dist-tag: ${DIST_TAG}"
+          echo "dist_tag=${DIST_TAG}" >> "${GITHUB_OUTPUT}"
+
       # Build and publish to npm
       - name: Build and release
-        run: cd packages/lib && npm publish --access public --tag latest
+        env:
+          DIST_TAG: ${{ steps.dist-tag.outputs.dist_tag }}
+        run: |
+          cd packages/lib
+          echo "Publishing with dist-tag: ${DIST_TAG}"
+          npm publish --access public --tag "${DIST_TAG}"
  

@@ -37,6 +37,8 @@ jobs:
         run: yarn install
 
       - name: Version snapshot
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: yarn changeset version --snapshot alpha+${GITHUB_SHA::7}
 
       - name: Read SDK version

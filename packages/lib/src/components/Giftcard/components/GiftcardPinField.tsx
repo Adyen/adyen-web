@@ -17,7 +17,7 @@ export const GiftcardPinField = ({
         <Field
             label={label}
             classNameModifiers={['pin', ...classNameModifiers]}
-            errorMessage={sfpState.errors.encryptedSecurityCode && i18n.get(sfpState.errors.encryptedSecurityCode)}
+            errorMessage={sfpState.errors?.encryptedSecurityCode && i18n.get(sfpState.errors.encryptedSecurityCode)}
             focused={focusedElement === 'encryptedSecurityCode'}
             onFocusField={() => setFocusOn('encryptedSecurityCode')}
             dir={'ltr'}
@@ -33,7 +33,7 @@ export const GiftcardPinField = ({
                     'adyen-checkout__input': true,
                     'adyen-checkout__input--large': true,
                     'adyen-checkout__card__cvc__input': true,
-                    'adyen-checkout__input--error': sfpState.errors.encryptedSecurityCode,
+                    'adyen-checkout__input--error': sfpState.errors?.encryptedSecurityCode,
                     'adyen-checkout__input--focus': focusedElement === 'encryptedSecurityCode'
                 })}
             />

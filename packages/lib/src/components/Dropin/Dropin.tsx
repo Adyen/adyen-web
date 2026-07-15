@@ -1,4 +1,4 @@
-import { h } from 'preact';
+import { h, TargetedKeyboardEvent } from 'preact';
 import UIElement from '../internal/UIElement/UIElement';
 import defaultProps from './defaultProps';
 import DropinComponent from '../../components/Dropin/components/DropinComponent';
@@ -8,7 +8,7 @@ import { hasOwnProperty } from '../../utils/hasOwnProperty';
 import splitPaymentMethods from './elements/splitPaymentMethods';
 import { TxVariants } from '../tx-variants';
 
-import type { DropinConfiguration, InstantPaymentTypes, PaymentMethodsConfiguration } from './types';
+import type { DropinComponentProps, DropinConfiguration, InstantPaymentTypes, PaymentMethodsConfiguration } from './types';
 import type { PaymentAction, PaymentAmount, PaymentResponseData } from '../../types/global-types';
 import type { ICore } from '../../core/types';
 import type { IDropin } from './types';
@@ -153,7 +153,7 @@ class DropinElement extends UIElement<DropinConfiguration> implements IDropin {
     /**
      * Creates the Drop-in elements
      */
-    private handleCreate = () => {
+    private handleCreate = (): ReturnType<DropinComponentProps['onCreateElements']> => {
         const { paymentMethodsConfiguration, showStoredPaymentMethods, showPaymentMethods, instantPaymentTypes } = this.props;
 
         const { paymentMethods, storedPaymentMethods, instantPaymentMethods, fastlanePaymentMethod } = splitPaymentMethods(
@@ -166,7 +166,9 @@ class DropinElement extends UIElement<DropinConfiguration> implements IDropin {
             isDropin: true
         };
 
-        const elements = showPaymentMethods ? createElements(paymentMethods, paymentMethodsConfiguration, dropinProps, this.core) : [];
+        const elements = showPaymentMethods
+            ? createElements(paymentMethods, paymentMethodsConfiguration, dropinProps, this.core)
+            : Promise.resolve([]);
         const instantPaymentElements = createInstantPaymentElements(instantPaymentMethods, paymentMethodsConfiguration, dropinProps, this.core);
         const storedElements = showStoredPaymentMethods
             ? createStoredElements(
@@ -175,8 +177,8 @@ class DropinElement extends UIElement<DropinConfiguration> implements IDropin {
                   dropinProps,
                   this.core
               )
-            : [];
-        const fastlanePaymentElement = fastlanePaymentMethod
+            : Promise.resolve([]);
+        const fastlanePaymentElement: Promise<UIElement[]> | [] = fastlanePaymentMethod
             ? createElements([fastlanePaymentMethod], paymentMethodsConfiguration, dropinProps, this.core)
             : [];
 
@@ -232,14 +234,14 @@ class DropinElement extends UIElement<DropinConfiguration> implements IDropin {
         this.dropinRef.closeActivePaymentMethod();
     }
 
-    protected handleKeyPress(e: h.JSX.TargetedKeyboardEvent<HTMLInputElement> | KeyboardEvent) {
+    protected handleKeyDown(e: TargetedKeyboardEvent<HTMLInputElement> | KeyboardEvent) {
         if (e.key === 'Enter' || e.code === 'Enter') {
             // If the active element has role="radio", we're on a header in the PMList, in which case we don't want to validate the form, or, prevent the default behaviour
             const isPMHeader = document?.activeElement?.getAttribute('role') === 'radio';
             if (isPMHeader) {
                 return;
             }
-            super.handleKeyPress(e);
+            super.handleKeyDown(e);
         }
     }
 

@@ -347,7 +347,16 @@ export interface SFPlaceholdersObject {
     [ENCRYPTED_PWD_FIELD]?: string;
 }
 
-export interface SFKeyPressObj {
+export interface SFKeyDownObj {
     fieldType: string;
     action: string;
+}
+
+export interface BrandConfiguration {
+    name?: string;
+    icon?: string;
+}
+
+export interface CardBrandsConfiguration {
+    [key: string]: BrandConfiguration;
 }

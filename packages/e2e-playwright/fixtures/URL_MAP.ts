@@ -1,6 +1,8 @@
 export const URL_MAP = {
     /* Drop-in */
     dropinWithSession: '/iframe.html?args=&globals=&id=drop-in-drop-in-component--default&viewMode=story',
+    dropinWithSession_executeThreeD:
+        '/iframe.html?args=sessionData.additionalData.executeThreeD:true&globals=&id=drop-in-drop-in-component--default&viewMode=story',
     dropinWithAdvanced: '/iframe.html?globals=&args=useSessions:!false&id=drop-in-drop-in-component--default&viewMode=story',
     dropinSessions_zeroAuthCard_success:
         '/iframe.html?globals=&args=amount:0;sessionData.recurringProcessingModel:CardOnFile;sessionData.storePaymentMethodMode:askForConsent&id=drop-in-drop-in-component--default&viewMode=story',
@@ -22,6 +24,7 @@ export const URL_MAP = {
      * Card
      */
     card: '/iframe.html?args=&id=components-cards--default&viewMode=story',
+    card_executeThreeD: '/iframe.html?args=sessionData.additionalData.executeThreeD:true&globals=&id=components-cards--default&viewMode=story',
     cardWithVisibleSrPanel: '/iframe.html?args=srConfig.showPanel:!true&globals=&id=components-cards--default&viewMode=story',
     cardWithSsn: '/iframe.html?globals=&id=components-cards--with-ssn&viewMode=story',
     cardWithAdvancedFlow: '/iframe.html?args=useSessions:!false&globals=&id=components-cards--default&viewMode=story',

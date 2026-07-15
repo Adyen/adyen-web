@@ -14,7 +14,7 @@ const iframeName = 'threeDSIframe';
 
 class DoChallenge3DS2 extends Component<DoChallenge3DS2Props, DoChallenge3DS2State> {
     private processMessageHandler: (event: Pick<MessageEvent, 'origin' | 'data'>) => string | boolean;
-    private challengePromise: { cancel: () => void; promise: Promise<any> };
+    private challengePromise: { promise: Promise<ThreeDS2FlowObject>; cancel: () => void };
 
     constructor(props: DoChallenge3DS2Props) {
         super(props);
@@ -36,7 +36,7 @@ class DoChallenge3DS2 extends Component<DoChallenge3DS2Props, DoChallenge3DS2Sta
         }
     };
 
-    private get3DS2ChallengePromise(): Promise<any> {
+    private get3DS2ChallengePromise(): Promise<ThreeDS2FlowObject> {
         return new Promise((resolve, reject) => {
             /**
              * Listen for postMessage responses from the notification url
