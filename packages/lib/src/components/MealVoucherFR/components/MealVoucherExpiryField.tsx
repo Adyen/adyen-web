@@ -10,7 +10,7 @@ export const MealVoucherExpiryField = ({ i18n, sfpState, focusedElement, setFocu
         <Field
             label={i18n.get('giftcard.expiryDate.label')}
             classNameModifiers={['expireDate', '50']}
-            errorMessage={sfpState.errors.encryptedExpiryDate && i18n.get(sfpState.errors.encryptedExpiryDate)}
+            errorMessage={sfpState.errors?.encryptedExpiryDate && i18n.get(sfpState.errors.encryptedExpiryDate)}
             focused={focusedElement === 'encryptedExpiryDate'}
             onFocusField={() => setFocusOn('encryptedExpiryDate')}
             dir={'ltr'}
@@ -22,7 +22,7 @@ export const MealVoucherExpiryField = ({ i18n, sfpState, focusedElement, setFocu
             <DataSfSpan
                 encryptedFieldType={'encryptedExpiryDate'}
                 className={classNames('adyen-checkout__input', 'adyen-checkout__input--small', 'adyen-checkout__card__exp-date__input', {
-                    'adyen-checkout__input--error': sfpState.errors.encryptedExpiryDate,
+                    'adyen-checkout__input--error': sfpState.errors?.encryptedExpiryDate,
                     'adyen-checkout__input--focus': focusedElement === 'encryptedExpiryDate',
                     'adyen-checkout__input--valid': !!sfpState.valid.encryptedExpiryMonth && !!sfpState.valid.encryptedExpiryYear
                 })}

@@ -348,7 +348,7 @@ export class CardElement extends UIElement<CardConfiguration> {
                 onSubmitAnalytics={this.submitAnalytics}
                 onChange={this.setState}
                 onSubmit={this.submit}
-                handleKeyPress={this.handleKeyPress}
+                handleKeyDown={this.handleKeyDown}
                 payButton={this.payButton}
                 onBrand={this.onBrand}
                 onBinValue={this.onBinValue}

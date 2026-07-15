@@ -27,7 +27,7 @@ export class ANCVElement extends UIElement<ANCVConfiguration> {
     private onOrderRequest = data => {
         if (this.props.onOrderRequest)
             return new Promise((resolve, reject) => {
-                this.props.onOrderRequest(resolve, reject, data);
+                void this.props.onOrderRequest(resolve, reject, data);
             });
 
         if (this.props.session) {
@@ -112,10 +112,8 @@ export class ANCVElement extends UIElement<ANCVConfiguration> {
 
         return (
             <ANCVInput
-                ref={ref => {
-                    this.componentRef = ref;
-                }}
                 {...this.props}
+                setComponentRef={this.setComponentRef}
                 onSubmit={this.submit}
                 onChange={this.setState}
                 payButton={this.payButton}

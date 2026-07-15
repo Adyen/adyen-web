@@ -1,4 +1,5 @@
 import { ComponentFocusObject, AddressData, BrowserInfo } from '../../types/global-types';
+import type { CardBrandsConfiguration } from '../internal/SecuredFields/lib/types';
 import {
     CardBinValueData,
     CardBrandData,
@@ -471,14 +472,7 @@ export interface CardBackendConfiguration {
     brandsConfiguration?: CardBrandsConfiguration;
 }
 
-export interface BrandConfiguration {
-    name?: string;
-    icon?: string;
-}
-
-export interface CardBrandsConfiguration {
-    [key: string]: BrandConfiguration;
-}
+export type { BrandConfiguration, CardBrandsConfiguration } from '../internal/SecuredFields/lib/types';
 
 interface CardPaymentMethodData {
     type: string;
