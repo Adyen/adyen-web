@@ -106,12 +106,10 @@ class Core implements ICore {
         }
 
         Core.increaseInitialisationCount();
-        if (Core.metadata.numberOfInitialisedCheckouts > 1) {
-            if (!this.options.suppressConfigWarnings) {
-                console.warn(
-                    '\nMultiple instances of AdyenCheckout detected on the same page. This is not recommended and may lead to unexpected behaviour.\nIf this is intentional you can suppress this warning by setting "suppressConfigWarnings: true" in your Checkout config.\n'
-                );
-            }
+        if (Core.metadata.numberOfInitialisedCheckouts > 1 && !this.options.suppressConfigWarnings) {
+            console.warn(
+                '\nMultiple instances of AdyenCheckout detected on the same page. This is not recommended and may lead to unexpected behaviour.\nIf this is intentional you can suppress this warning by setting "suppressConfigWarnings: true" in your Checkout config.\n'
+            );
         }
 
         if (this.options.exposeLibraryMetadata) {
