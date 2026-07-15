@@ -18,8 +18,8 @@ jobs:
       MERCHANT_ACCOUNT: ${{secrets.ADYEN_CHECKOUT_MERCHANT_ACCOUNT}}
       CLIENT_KEY: ${{secrets.ADYEN_CHECKOUT_CLIENT_KEY}}
       CLIENT_ENV: test
-      TESTING_ENVIRONMENT: https://checkout-test.adyen.com/checkout/v71
-      API_VERSION: v71
+      TESTING_ENVIRONMENT: https://checkout-test.adyen.com/checkout/v72
+      API_VERSION: v72
     steps:
     - name: Checkout
       uses: actions/checkout@v6
