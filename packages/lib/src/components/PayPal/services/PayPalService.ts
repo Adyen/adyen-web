@@ -1,0 +1,105 @@
+import { PaymentAmount } from '../../../types';
+import { PayPalSdkLoader } from './PayPalSdkLoader';
+import { PayPalComponents, PayPalEligiblePaymentMethods, PayPalSdkInstance } from '../paypal-js-types';
+import requestPayPalOauthToken from './request-paypal-oauth-token';
+
+interface PayPalServiceConfig {
+    loadingContext: string;
+    clientKey: string;
+    merchantId: string;
+    sdkLoader: PayPalSdkLoader;
+    countryCode: string;
+    amount: PaymentAmount;
+    vault: boolean;
+}
+
+class PayPalService {
+    private readonly sdkLoader: PayPalSdkLoader;
+    private readonly loadingContext: string;
+    private readonly clientKey: string;
+    private readonly merchantId: string;
+    private readonly amount: PaymentAmount;
+    private readonly countryCode: string;
+    private readonly vault: boolean;
+
+    private loadingPromise: Promise<void> = undefined;
+    private sdkInstance: PayPalSdkInstance;
+    private paymentMethods: PayPalEligiblePaymentMethods;
+
+    constructor({ loadingContext, clientKey, merchantId, sdkLoader, amount, countryCode, vault }: PayPalServiceConfig) {
+        this.sdkLoader = sdkLoader;
+        this.loadingContext = loadingContext;
+        this.clientKey = clientKey;
+        this.merchantId = merchantId;
+        this.amount = { ...amount };
+        this.countryCode = countryCode;
+        this.vault = vault;
+
+        this.createPayPalSdkInstance = this.createPayPalSdkInstance.bind(this);
+        this.createPayPalPaymentMethods = this.createPayPalPaymentMethods.bind(this);
+        this.initialize = this.initialize.bind(this);
+
+        void sdkLoader.load();
+    }
+
+    public async initialize(): Promise<void> {
+        if (this.loadingPromise !== undefined) {
+            return this.loadingPromise;
+        }
+
+        const isSdkLoaderLoadedPromise = this.sdkLoader.isSdkLoaded();
+        const tokenDataPromise = requestPayPalOauthToken(this.loadingContext, { clientKey: this.clientKey, merchantId: this.merchantId });
+
+        this.loadingPromise = Promise.all([isSdkLoaderLoadedPromise, tokenDataPromise])
+            .then(([_loadedSdk, tokenData]) => {
+                return tokenData.clientToken;
+            })
+            .then(this.createPayPalSdkInstance)
+            .then(this.createPayPalPaymentMethods);
+
+        return this.loadingPromise;
+    }
+
+    public async isSdkLoaded(): Promise<void> {
+        if (this.loadingPromise === undefined) {
+            return Promise.reject(new Error('PayPal SDK not loaded'));
+        }
+
+        return this.loadingPromise;
+    }
+
+    private async createPayPalSdkInstance(clientToken: string): Promise<PayPalSdkInstance> {
+        const paypal = window.paypal;
+        const createInstance = paypal?.v6?.createInstance || paypal.createInstance;
+
+        this.sdkInstance = await createInstance({
+            clientToken,
+            components: ['paypal-payments', 'venmo-payments'] satisfies PayPalComponents,
+            pageType: 'checkout'
+        });
+
+        return this.sdkInstance;
+    }
+
+    private async createPayPalPaymentMethods(): Promise<void> {
+        const isZeroAuth = this.amount.value === 0;
+        this.paymentMethods = await this.sdkInstance.findEligibleMethods({
+            currencyCode: this.amount.currency,
+            // @ts-expect-error: @paypal/paypal-js is missing countryCode in the types
+            countryCode: this.countryCode,
+            paymentFlow: isZeroAuth ? 'VAULT_WITHOUT_PAYMENT' : this.vault ? 'VAULT_WITH_PAYMENT' : undefined
+        });
+
+        return Promise.resolve();
+    }
+
+    public getInstance(): PayPalSdkInstance {
+        return this.sdkInstance;
+    }
+
+    public getEligiblePaymentMethods(): PayPalEligiblePaymentMethods {
+        return this.paymentMethods;
+    }
+}
+
+export { PayPalService, type PayPalServiceConfig };

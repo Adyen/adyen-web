@@ -8,6 +8,7 @@ import type {
     OnShippingOptionsChangeActions,
     OnInitActions
 } from '@paypal/paypal-js';
+import type { SdkInstance, EligiblePaymentMethodsOutput, CreateInstanceOptions } from '@paypal/paypal-js/sdk-v6';
 
 export type PayPalOrderResponseBody = OrderResponseBody;
 export type PayPalOnApproveData = OnApproveData;
@@ -21,3 +22,11 @@ export type PayPalOnShippingOptionsChangeData = OnShippingOptionsChangeData & {
 };
 export type PayPalOnShippingOptionsChangeActions = OnShippingOptionsChangeActions;
 export type PayPalOnInitActions = OnInitActions;
+
+export type PayPalComponents = ['paypal-payments', 'venmo-payments'];
+
+export type PayPalSdkInstance = SdkInstance<PayPalComponents>;
+
+export type PayPalCreateInstanceOptions = CreateInstanceOptions<PayPalComponents>;
+
+export type PayPalEligiblePaymentMethods = EligiblePaymentMethodsOutput;

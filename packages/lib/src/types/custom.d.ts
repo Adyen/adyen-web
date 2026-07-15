@@ -1,13 +1,43 @@
+import type { PayPalV6Namespace } from '@paypal/paypal-js/sdk-v6';
+
 import { FastlaneWindowInstance, FastlaneOptions } from '../components/PayPalFastlane/types';
 import { ApplePayButtonStyle, ApplePayButtonType, ApplePayWebConfiguration } from '../components/ApplePay/types';
 import { IAdyenPasskey } from '../components/PayByBankPix/services/types';
 import { AmazonWindowObject } from '../types';
 import type { KlarnaWidgetAuthorizeResponse } from '../components/Klarna/types';
+import { PayPalComponents, PayPalCreateInstanceOptions, PayPalSdkInstance } from '../components/PayPal/paypal-js-types';
 
 declare module '@paypal/paypal-js' {
     export interface PayPalNamespace {
         Fastlane?: (options?: FastlaneOptions) => Promise<FastlaneWindowInstance>;
         version?: string;
+        /**
+         * Creates an SDK instance, which is the first step in an SDK integration. This instance serves as the base layer for all SDK components.
+         *
+         * @remarks
+         * This is an asynchronous method that initializes the PayPal SDK with the provided
+         * client token and components.
+         *
+         * @param createInstanceOptions - Configuration options for creating the SDK instance
+         * @returns A promise that resolves to an SDK instance with methods based on the specified components
+         *
+         * @example
+         * ```typescript
+         * const sdkInstance = await window.paypal.createInstance({
+         *   clientToken: "your-client-token",
+         *   components: ["paypal-payments"],
+         *   locale: "en-US",
+         *   pageType: "checkout"
+         * });
+         * ```
+         */
+        createInstance?: <T extends readonly PayPalComponents[]>(
+            createInstanceOptions: PayPalCreateInstanceOptions<T>
+        ) => Promise<PayPalSdkInstance<T>>;
+        /**
+         * If the PayPal v5 SDK is loaded with the v6 SDK, the v6 namespace will be available under the v6 property
+         */
+        v6?: PayPalV6Namespace;
     }
 }
 
@@ -44,7 +74,7 @@ declare global {
         /**
          * ApplePaySession added by ApplePaySDK
          */
-        ApplePaySession?: ApplePaySession;
+        ApplePaySession?: typeof ApplePaySession;
 
         ApplePayWebOptions?: {
             set(config: ApplePayWebConfiguration): void;
