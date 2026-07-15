@@ -38,7 +38,7 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
 
     protected static readonly defaultProps = defaultProps;
 
-    private readonly paypalService: PayPalService;
+    private readonly paypalService?: PayPalService;
 
     constructor(checkout: ICore, props?: PayPalConfiguration) {
         super(checkout, props);
@@ -67,6 +67,10 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
 
     public override async isAvailable(): Promise<void> {
         if (this.props.usePayPalV6) {
+            if (!this.paypalService) {
+                return Promise.reject(new Error('PayPal service not initialized'));
+            }
+
             await this.paypalService.isSdkLoaded();
 
             if (!this.paypalService.getEligiblePaymentMethods().isEligible('paypal')) {

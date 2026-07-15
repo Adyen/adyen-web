@@ -6,10 +6,10 @@ import requestPayPalOauthToken from './request-paypal-oauth-token';
 interface PayPalServiceConfig {
     loadingContext: string;
     clientKey: string;
-    merchantId: string;
+    merchantId?: string;
     sdkLoader: PayPalSdkLoader;
-    countryCode: string;
-    amount: PaymentAmount;
+    countryCode?: string;
+    amount?: PaymentAmount;
     vault: boolean;
 }
 
@@ -17,12 +17,12 @@ class PayPalService {
     private readonly sdkLoader: PayPalSdkLoader;
     private readonly loadingContext: string;
     private readonly clientKey: string;
-    private readonly merchantId: string;
-    private readonly amount: PaymentAmount;
-    private readonly countryCode: string;
+    private readonly merchantId?: string;
+    private readonly amount?: PaymentAmount;
+    private readonly countryCode?: string;
     private readonly vault: boolean;
 
-    private loadingPromise: Promise<void> = undefined;
+    private loadingPromise?: Promise<void>;
     private sdkInstance: PayPalSdkInstance;
     private paymentMethods: PayPalEligiblePaymentMethods;
 
@@ -31,7 +31,7 @@ class PayPalService {
         this.loadingContext = loadingContext;
         this.clientKey = clientKey;
         this.merchantId = merchantId;
-        this.amount = { ...amount };
+        this.amount = amount ? { ...amount } : undefined;
         this.countryCode = countryCode;
         this.vault = vault;
 
@@ -70,7 +70,11 @@ class PayPalService {
 
     private async createPayPalSdkInstance(clientToken: string): Promise<PayPalSdkInstance> {
         const paypal = window.paypal;
-        const createInstance = paypal?.v6?.createInstance || paypal.createInstance;
+        const createInstance = paypal?.v6?.createInstance || paypal?.createInstance;
+
+        if (!createInstance) {
+            throw new Error('PayPal SDK `createInstance` is not available');
+        }
 
         this.sdkInstance = await createInstance({
             clientToken,
@@ -82,9 +86,9 @@ class PayPalService {
     }
 
     private async createPayPalPaymentMethods(): Promise<void> {
-        const isZeroAuth = this.amount.value === 0;
+        const isZeroAuth = this.amount?.value === 0;
         this.paymentMethods = await this.sdkInstance.findEligibleMethods({
-            currencyCode: this.amount.currency,
+            currencyCode: this.amount?.currency,
             // @ts-expect-error: @paypal/paypal-js is missing countryCode in the types
             countryCode: this.countryCode,
             paymentFlow: isZeroAuth ? 'VAULT_WITHOUT_PAYMENT' : this.vault ? 'VAULT_WITH_PAYMENT' : undefined
