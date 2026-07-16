@@ -1,6 +1,6 @@
 import { PaymentAmount } from '../../../types';
 import { PayPalSdkLoader } from './PayPalSdkLoader';
-import { PayPalComponents, PayPalEligiblePaymentMethods, PayPalSdkInstance } from '../paypal-js-types';
+import { PayPalComponents, PayPalEligiblePaymentMethods, PayPalPaymentFlow, PayPalSdkInstance } from '../paypal-js-types';
 import requestPayPalOauthToken from './request-paypal-oauth-token';
 
 interface PayPalServiceConfig {
@@ -87,11 +87,19 @@ class PayPalService {
 
     private async createPayPalPaymentMethods(): Promise<void> {
         const isZeroAuth = this.amount?.value === 0;
+
+        let paymentFlow: PayPalPaymentFlow;
+        if (isZeroAuth) {
+            paymentFlow = 'VAULT_WITHOUT_PAYMENT';
+        } else if (this.vault) {
+            paymentFlow = 'VAULT_WITH_PAYMENT';
+        }
+
         this.paymentMethods = await this.sdkInstance.findEligibleMethods({
             currencyCode: this.amount?.currency,
             // @ts-expect-error: @paypal/paypal-js is missing countryCode in the types
             countryCode: this.countryCode,
-            paymentFlow: isZeroAuth ? 'VAULT_WITHOUT_PAYMENT' : this.vault ? 'VAULT_WITH_PAYMENT' : undefined
+            paymentFlow
         });
 
         return Promise.resolve();

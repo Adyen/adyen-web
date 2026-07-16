@@ -1,11 +1,11 @@
 import type { PayPalV6Namespace } from '@paypal/paypal-js/sdk-v6';
 
-import { FastlaneWindowInstance, FastlaneOptions } from '../components/PayPalFastlane/types';
-import { ApplePayButtonStyle, ApplePayButtonType, ApplePayWebConfiguration } from '../components/ApplePay/types';
-import { IAdyenPasskey } from '../components/PayByBankPix/services/types';
-import { AmazonWindowObject } from '../types';
+import type { FastlaneWindowInstance, FastlaneOptions } from '../components/PayPalFastlane/types';
+import type { ApplePayButtonStyle, ApplePayButtonType, ApplePayWebConfiguration } from '../components/ApplePay/types';
+import type { IAdyenPasskey } from '../components/PayByBankPix/services/types';
+import type { AmazonWindowObject } from '../types';
 import type { KlarnaWidgetAuthorizeResponse } from '../components/Klarna/types';
-import { PayPalComponents, PayPalCreateInstanceOptions, PayPalSdkInstance } from '../components/PayPal/paypal-js-types';
+import type { PayPalComponents, PayPalCreateInstanceOptions, PayPalSdkInstance } from '../components/PayPal/paypal-js-types';
 
 declare module '@paypal/paypal-js' {
     export interface PayPalNamespace {

@@ -1,5 +1,5 @@
 import { IAnalytics } from '../../../core/Analytics/Analytics';
-import { AdyenCheckoutError } from '../../../types';
+import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 import Script from '../../../utils/Script';
 import { PAYPAL_SDK_URL_PRODUCTION, PAYPAL_SDK_URL_SANDBOX } from '../config';
 
@@ -20,7 +20,7 @@ class PayPalSdkLoader {
             const scriptElement = new Script({
                 src: this.environment.toLowerCase() === 'test' ? PAYPAL_SDK_URL_SANDBOX : PAYPAL_SDK_URL_PRODUCTION,
                 component: 'paypal',
-                attributes: { crossOrigin: 'anonymous', ...(this.nonce ? { nonce: this.nonce } : {}) },
+                attributes: { crossOrigin: 'anonymous', ...(this.nonce && { nonce: this.nonce }) },
                 analytics: this.analytics
             });
 
