@@ -2,8 +2,7 @@ import { AbstractAnalyticsEvent, AnalyticsEventCategory } from './AbstractAnalyt
 import { mapErrorCodesForAnalytics } from '../utils';
 
 export type AnalyticsPaymentMethod = {
-    type: string;
-    brand?: string;
+    paymentMethodType: string;
     brands?: string[];
     fundingSource?: 'debit' | 'credit' | 'prepaid';
     displayMode: string;
@@ -24,7 +23,7 @@ type AnalyticsInfoEventProps = {
     cdnUrl?: string;
     selectedValue?: string;
     presentedValues?: Array<string>;
-    paymentMethods?: Record<string, any>[];
+    availablePaymentMethods?: Record<string, any>[];
     unavailablePaymentMethods?: Record<string, any>[];
 };
 
@@ -81,7 +80,7 @@ export enum InfoEventType {
     AddressSelectorClicked = 'addressSelectorClicked',
     AddressSelectorClosed = 'addressSelectorClosed',
     AddressChanged = 'addressChanged',
-    Ready = 'ready'
+    PaymentListDisplayed = 'paymentListDisplayed'
 }
 
 export class AnalyticsInfoEvent extends AbstractAnalyticsEvent {
@@ -105,7 +104,7 @@ export class AnalyticsInfoEvent extends AbstractAnalyticsEvent {
     private readonly validationErrorCode?: string;
     private readonly validationErrorMessage?: string;
     private readonly presentedValues?: string[];
-    private readonly paymentMethods?: AnalyticsPaymentMethod[];
+    private readonly availablePaymentMethods?: AnalyticsPaymentMethod[];
     private readonly unavailablePaymentMethods?: AnalyticsPaymentMethod[];
 
     /**
@@ -129,7 +128,7 @@ export class AnalyticsInfoEvent extends AbstractAnalyticsEvent {
         if (props.validationErrorCode) this.validationErrorCode = props.validationErrorCode;
         if (props.validationErrorMessage) this.validationErrorMessage = props.validationErrorMessage;
         if (props.presentedValues) this.presentedValues = props.presentedValues;
-        if (props.paymentMethods) this.paymentMethods = this.createAnalyticsPaymentMethods(props.paymentMethods);
+        if (props.availablePaymentMethods) this.availablePaymentMethods = this.createAnalyticsPaymentMethods(props.availablePaymentMethods);
         if (props.unavailablePaymentMethods) this.unavailablePaymentMethods = this.createAnalyticsPaymentMethods(props.unavailablePaymentMethods);
         if (this.type === InfoEventType.rendered) {
             this.configData = this.createAnalyticsConfigData(props?.configData);
@@ -203,13 +202,15 @@ export class AnalyticsInfoEvent extends AbstractAnalyticsEvent {
      * Allow-list only: StoredPaymentMethod carries PII (holderName, shopperEmail, …) that must never reach analytics.
      */
     private createAnalyticsPaymentMethods(paymentMethods: Record<string, any>[]): AnalyticsPaymentMethod[] {
-        return paymentMethods.map(({ type, brand, brands, fundingSource, displayMode }) => ({
-            type,
-            ...(brand !== undefined && { brand }),
-            ...(brands !== undefined && { brands }),
-            ...(fundingSource !== undefined && { fundingSource }),
-            displayMode
-        }));
+        return paymentMethods.map(({ type, brand, brands, fundingSource, displayMode }) => {
+            const normalizedBrands = brands !== undefined ? brands : brand !== undefined ? [brand] : undefined;
+            return {
+                paymentMethodType: type,
+                ...(normalizedBrands !== undefined && { brands: normalizedBrands }),
+                ...(fundingSource !== undefined && { fundingSource }),
+                displayMode
+            };
+        });
     }
 
     public getEventCategory(): AnalyticsEventCategory {

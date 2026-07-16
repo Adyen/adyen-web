@@ -334,12 +334,12 @@ describe('Dropin', () => {
             await waitFor(() =>
                 expect(core.modules.analytics.sendAnalytics).toHaveBeenCalledWith(
                     expect.objectContaining({
-                        type: InfoEventType.Ready,
+                        type: InfoEventType.PaymentListDisplayed,
                         component: 'dropin',
-                        paymentMethods: [],
+                        availablePaymentMethods: [],
                         unavailablePaymentMethods: [
-                            expect.objectContaining({ type: 'alipay', displayMode: 'regular' }),
-                            expect.objectContaining({ type: 'kakaopay', displayMode: 'regular' })
+                            expect.objectContaining({ paymentMethodType: 'alipay', displayMode: 'regular' }),
+                            expect.objectContaining({ paymentMethodType: 'kakaopay', displayMode: 'regular' })
                         ]
                     })
                 )
@@ -370,9 +370,9 @@ describe('Dropin', () => {
             await waitFor(() =>
                 expect(core.modules.analytics.sendAnalytics).toHaveBeenCalledWith(
                     expect.objectContaining({
-                        type: InfoEventType.Ready,
+                        type: InfoEventType.PaymentListDisplayed,
                         component: 'dropin',
-                        unavailablePaymentMethods: [{ type: 'scheme', displayMode: 'stored' }]
+                        unavailablePaymentMethods: [{ paymentMethodType: 'scheme', displayMode: 'stored' }]
                     })
                 )
             );
@@ -384,12 +384,14 @@ describe('Dropin', () => {
             render(dropin.render());
 
             await waitFor(() =>
-                expect(core.modules.analytics.sendAnalytics).toHaveBeenCalledWith(expect.objectContaining({ type: InfoEventType.Ready }))
+                expect(core.modules.analytics.sendAnalytics).toHaveBeenCalledWith(
+                    expect.objectContaining({ type: InfoEventType.PaymentListDisplayed })
+                )
             );
 
             const readyCallCount = jest
                 .mocked(core.modules.analytics.sendAnalytics)
-                .mock.calls.filter(([event]) => (event as { type?: InfoEventType }).type === InfoEventType.Ready).length;
+                .mock.calls.filter(([event]) => (event as { type?: InfoEventType }).type === InfoEventType.PaymentListDisplayed).length;
             expect(readyCallCount).toBe(1);
         });
 
@@ -442,13 +444,13 @@ describe('Dropin', () => {
             await waitFor(() =>
                 expect(sendAnalyticsSpy).toHaveBeenCalledWith(
                     expect.objectContaining({
-                        type: InfoEventType.Ready,
+                        type: InfoEventType.PaymentListDisplayed,
                         component: 'dropin',
-                        paymentMethods: [
-                            { type: 'scheme', brand: 'visa', displayMode: 'stored' },
-                            { type: 'scheme', brand: 'mc', displayMode: 'stored' }
+                        availablePaymentMethods: [
+                            { paymentMethodType: 'scheme', brands: ['visa'], displayMode: 'stored' },
+                            { paymentMethodType: 'scheme', brands: ['mc'], displayMode: 'stored' }
                         ],
-                        unavailablePaymentMethods: [{ type: 'ach', displayMode: 'stored' }]
+                        unavailablePaymentMethods: [{ paymentMethodType: 'ach', displayMode: 'stored' }]
                     })
                 )
             );
@@ -491,11 +493,11 @@ describe('Dropin', () => {
             await waitFor(() =>
                 expect(sendAnalyticsSpy).toHaveBeenCalledWith(
                     expect.objectContaining({
-                        type: InfoEventType.Ready,
+                        type: InfoEventType.PaymentListDisplayed,
                         component: 'dropin',
-                        paymentMethods: [
-                            { type: 'scheme', brand: 'mc', displayMode: 'stored' },
-                            { type: 'scheme', brand: 'visa', displayMode: 'stored' }
+                        availablePaymentMethods: [
+                            { paymentMethodType: 'scheme', brands: ['mc'], displayMode: 'stored' },
+                            { paymentMethodType: 'scheme', brands: ['visa'], displayMode: 'stored' }
                         ]
                     })
                 )
@@ -531,9 +533,9 @@ describe('Dropin', () => {
             await waitFor(() =>
                 expect(sendAnalyticsSpy).toHaveBeenCalledWith(
                     expect.objectContaining({
-                        type: InfoEventType.Ready,
+                        type: InfoEventType.PaymentListDisplayed,
                         component: 'dropin',
-                        paymentMethods: [{ type: 'scheme', displayMode: 'stored' }]
+                        availablePaymentMethods: [{ paymentMethodType: 'scheme', displayMode: 'stored' }]
                     })
                 )
             );

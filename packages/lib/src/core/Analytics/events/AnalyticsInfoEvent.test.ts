@@ -16,30 +16,57 @@ describe('AnalyticsInfoEvent - payment methods sanitization', () => {
             displayMode: 'regular'
         };
 
-        const event = new AnalyticsInfoEvent({ type: InfoEventType.Ready, component: 'dropin', paymentMethods: [paymentMethod] });
-        const [result] = serialize(event).paymentMethods;
+        const event = new AnalyticsInfoEvent({
+            type: InfoEventType.PaymentListDisplayed,
+            component: 'dropin',
+            availablePaymentMethods: [paymentMethod]
+        });
+        const [result] = serialize(event).availablePaymentMethods;
 
-        expect(result.type).toBe('scheme');
+        expect(result.paymentMethodType).toBe('scheme');
         expect(result.brands).toEqual(['visa', 'mc']);
-        expect(result.brand).toBe('visa');
         expect(result.fundingSource).toBe('debit');
         expect(result.displayMode).toBe('regular');
         expect(result).not.toHaveProperty('name');
         expect(result).not.toHaveProperty('issuers');
         expect(result).not.toHaveProperty('configuration');
         expect(result).not.toHaveProperty('group');
+        expect(result).not.toHaveProperty('brand');
     });
 
     test('omits optional fields when absent on the raw object', () => {
         const paymentMethod = { type: 'alipay', name: 'AliPay', displayMode: 'instant' };
 
-        const event = new AnalyticsInfoEvent({ type: InfoEventType.Ready, component: 'dropin', paymentMethods: [paymentMethod] });
-        const [result] = serialize(event).paymentMethods;
+        const event = new AnalyticsInfoEvent({
+            type: InfoEventType.PaymentListDisplayed,
+            component: 'dropin',
+            availablePaymentMethods: [paymentMethod]
+        });
+        const [result] = serialize(event).availablePaymentMethods;
 
         expect(result).not.toHaveProperty('brands');
         expect(result).not.toHaveProperty('brand');
         expect(result).not.toHaveProperty('fundingSource');
         expect(result).not.toHaveProperty('name');
+    });
+
+    test('normalizes a single "brand" string into a "brands" array for payment methods like giftcard', () => {
+        const paymentMethod = {
+            type: 'giftcard',
+            name: 'My Store Loyalty Card',
+            brand: 'mystore_loyal',
+            displayMode: 'regular'
+        };
+
+        const event = new AnalyticsInfoEvent({
+            type: InfoEventType.PaymentListDisplayed,
+            component: 'dropin',
+            availablePaymentMethods: [paymentMethod]
+        });
+        const [result] = serialize(event).availablePaymentMethods;
+
+        expect(result).toEqual({ paymentMethodType: 'giftcard', brands: ['mystore_loyal'], displayMode: 'regular' });
+        expect(result).not.toHaveProperty('brand');
     });
 
     test('strips PII and internal fields from stored payment methods', () => {
@@ -59,7 +86,11 @@ describe('AnalyticsInfoEvent - payment methods sanitization', () => {
             displayMode: 'stored'
         };
 
-        const event = new AnalyticsInfoEvent({ type: InfoEventType.Ready, component: 'dropin', unavailablePaymentMethods: [paymentMethod] });
+        const event = new AnalyticsInfoEvent({
+            type: InfoEventType.PaymentListDisplayed,
+            component: 'dropin',
+            unavailablePaymentMethods: [paymentMethod]
+        });
         const [result] = serialize(event).unavailablePaymentMethods;
 
         expect(result).not.toHaveProperty('holderName');
@@ -71,7 +102,7 @@ describe('AnalyticsInfoEvent - payment methods sanitization', () => {
         expect(result).not.toHaveProperty('storedPaymentMethodId');
         expect(result).not.toHaveProperty('isStoredPaymentMethod');
         expect(result).not.toHaveProperty('name');
-        expect(result.type).toBe('scheme');
+        expect(result.paymentMethodType).toBe('scheme');
         expect(result.displayMode).toBe('stored');
     });
 });

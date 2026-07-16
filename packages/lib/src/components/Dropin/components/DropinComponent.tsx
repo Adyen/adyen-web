@@ -65,7 +65,7 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
                     regular: elements
                 };
 
-                const paymentMethods = getReadyPaymentMethods(
+                const availablePaymentMethods = getReadyPaymentMethods(
                     paymentMethodDisplayModes.map(e => e.displayMode),
                     elementsByDisplayMode,
                     this.props.core
@@ -83,13 +83,13 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
 
                 this.props.onElementsCreated([...instantElements, ...storedElements, ...elements, ...fastlaneElements]);
 
-                const dropinReadyEvent = new AnalyticsInfoEvent({
-                    type: InfoEventType.Ready,
+                const dropinPaymentListDisplayedEvent = new AnalyticsInfoEvent({
+                    type: InfoEventType.PaymentListDisplayed,
                     component: 'dropin',
-                    paymentMethods,
+                    availablePaymentMethods,
                     unavailablePaymentMethods
                 });
-                this.props.core.modules.analytics.sendAnalytics(dropinReadyEvent);
+                this.props.core.modules.analytics.sendAnalytics(dropinPaymentListDisplayedEvent);
             })
             .catch(() => {
                 this.setStatus('error');
