@@ -73,7 +73,7 @@ class PayPalService {
         const createInstance = paypal?.v6?.createInstance || paypal?.createInstance;
 
         if (!createInstance) {
-            throw new Error('PayPal SDK `createInstance` is not available');
+            return Promise.reject(new Error('PayPal SDK `createInstance` is not available'));
         }
 
         this.sdkInstance = await createInstance({

@@ -87,6 +87,15 @@ describe('PayPalService', () => {
             expect(createInstanceMock).not.toHaveBeenCalled();
         });
 
+        test('should reject when the PayPal SDK "createInstance" is not available', async () => {
+            window.paypal = mock<typeof window.paypal>({ v6: undefined, createInstance: undefined });
+
+            const service = new PayPalService(createConfig());
+
+            await expect(service.initialize()).rejects.toThrow('PayPal SDK `createInstance` is not available');
+            expect(findEligibleMethodsMock).not.toHaveBeenCalled();
+        });
+
         test('should use "VAULT_WITHOUT_PAYMENT" payment flow for a zero-auth transaction', async () => {
             const config = createConfig({ amount: { value: 0, currency: 'USD' } });
             const service = new PayPalService(config);

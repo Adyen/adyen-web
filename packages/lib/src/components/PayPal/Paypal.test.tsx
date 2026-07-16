@@ -2,6 +2,15 @@ import Paypal from './Paypal';
 import { render, screen } from '@testing-library/preact';
 import { setupCoreMock, TEST_CHECKOUT_ATTEMPT_ID, TEST_RISK_DATA } from '../../../config/testMocks/setup-core-mock';
 import CancelError from '../../core/Errors/CancelError';
+import { PayPalService } from './services/PayPalService';
+import { PayPalSdkLoader } from './services/PayPalSdkLoader';
+import type { PayPalEligiblePaymentMethods } from './paypal-js-types';
+
+jest.mock('./services/PayPalService');
+jest.mock('./services/PayPalSdkLoader');
+
+const PayPalServiceMock = PayPalService as jest.MockedClass<typeof PayPalService>;
+const PayPalSdkLoaderMock = PayPalSdkLoader as jest.MockedClass<typeof PayPalSdkLoader>;
 
 const core = setupCoreMock();
 
@@ -430,6 +439,95 @@ describe('Paypal', () => {
             const paypal = new Paypal(core, { showPayButton: true, onShippingOptionsChange: jest.fn() });
             render(paypal.render());
             expect(paypal.props.onShippingOptionsChange).toBeDefined();
+        });
+    });
+
+    describe('PayPal v6', () => {
+        const isEligibleMock = jest.fn();
+
+        beforeEach(() => {
+            jest.clearAllMocks();
+            PayPalServiceMock.prototype.initialize.mockResolvedValue(undefined);
+            PayPalServiceMock.prototype.isSdkLoaded.mockResolvedValue(undefined);
+            PayPalServiceMock.prototype.getEligiblePaymentMethods.mockReturnValue({
+                isEligible: isEligibleMock
+            } as unknown as PayPalEligiblePaymentMethods);
+            isEligibleMock.mockReturnValue(true);
+        });
+
+        describe('constructor', () => {
+            test('should create the SDK loader and PayPal service and initialize it when usePayPalV6 is set', () => {
+                new Paypal(core, {
+                    usePayPalV6: { vault: true, nonce: 'test-nonce' },
+                    configuration: { merchantId: 'merchant-1' },
+                    countryCode: 'US',
+                    amount: { value: 1000, currency: 'USD' }
+                });
+
+                expect(PayPalSdkLoaderMock).toHaveBeenCalledTimes(1);
+                expect(PayPalSdkLoaderMock).toHaveBeenCalledWith(expect.objectContaining({ nonce: 'test-nonce' }));
+
+                expect(PayPalServiceMock).toHaveBeenCalledTimes(1);
+                expect(PayPalServiceMock).toHaveBeenCalledWith(
+                    expect.objectContaining({
+                        merchantId: 'merchant-1',
+                        countryCode: 'US',
+                        amount: { value: 1000, currency: 'USD' },
+                        vault: true,
+                        sdkLoader: expect.any(PayPalSdkLoader)
+                    })
+                );
+
+                expect(PayPalServiceMock.prototype.initialize).toHaveBeenCalledTimes(1);
+            });
+
+            test('should default vault to false when not provided in usePayPalV6', () => {
+                new Paypal(core, { usePayPalV6: {} });
+
+                expect(PayPalServiceMock).toHaveBeenCalledWith(expect.objectContaining({ vault: false }));
+            });
+
+            test('should not create the SDK loader or PayPal service when usePayPalV6 is not set', () => {
+                new Paypal(core);
+
+                expect(PayPalSdkLoaderMock).not.toHaveBeenCalled();
+                expect(PayPalServiceMock).not.toHaveBeenCalled();
+                expect(PayPalServiceMock.prototype.initialize).not.toHaveBeenCalled();
+            });
+        });
+
+        describe('isAvailable', () => {
+            test('should resolve without using the PayPal service when usePayPalV6 is not set', async () => {
+                const paypal = new Paypal(core);
+
+                await expect(paypal.isAvailable()).resolves.toBeUndefined();
+                expect(PayPalServiceMock.prototype.isSdkLoaded).not.toHaveBeenCalled();
+            });
+
+            test('should wait for the SDK and resolve when PayPal is eligible', async () => {
+                isEligibleMock.mockReturnValue(true);
+                const paypal = new Paypal(core, { usePayPalV6: {} });
+
+                await expect(paypal.isAvailable()).resolves.toBeUndefined();
+
+                expect(PayPalServiceMock.prototype.isSdkLoaded).toHaveBeenCalledTimes(1);
+                expect(isEligibleMock).toHaveBeenCalledWith('paypal');
+            });
+
+            test('should reject when PayPal is not eligible', async () => {
+                isEligibleMock.mockReturnValue(false);
+                const paypal = new Paypal(core, { usePayPalV6: {} });
+
+                await expect(paypal.isAvailable()).rejects.toThrow('PayPal is not eligible');
+            });
+
+            test('should reject when the SDK fails to load', async () => {
+                PayPalServiceMock.prototype.isSdkLoaded.mockRejectedValue(new Error('PayPal SDK not loaded'));
+                const paypal = new Paypal(core, { usePayPalV6: {} });
+
+                await expect(paypal.isAvailable()).rejects.toThrow('PayPal SDK not loaded');
+                expect(isEligibleMock).not.toHaveBeenCalled();
+            });
         });
     });
 });
