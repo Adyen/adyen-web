@@ -243,14 +243,14 @@ export class CardElement extends UIElement<CardConfiguration> {
         }
     }
 
-    private onConfigSuccess = (obj: CardConfigSuccessData) => {
+    private readonly onConfigSuccess = (obj: CardConfigSuccessData) => {
         const event = new AnalyticsInfoEvent({ component: this.type, type: InfoEventType.configured });
         this.submitAnalytics(event);
 
         this.props.onConfigSuccess?.(obj);
     };
 
-    private onFocus = (obj: ComponentFocusObject) => {
+    private readonly onFocus = (obj: ComponentFocusObject) => {
         const event = new AnalyticsInfoEvent({
             component: this.type,
             type: InfoEventType.focus,
