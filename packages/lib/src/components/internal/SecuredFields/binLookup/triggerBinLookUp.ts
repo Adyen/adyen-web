@@ -2,35 +2,38 @@ import { httpPost } from '../../../../core/Services/http';
 import { CardBinValueData, CardErrorData } from '../lib/types';
 import { DEFAULT_CARD_GROUP_TYPES } from '../lib/constants';
 import { SF_ErrorCodes } from '../../../../core/Errors/constants';
-import { BinLookupResponseRaw, BrandObject } from '../../../Card/types';
+import { BinLookupResponse, BinLookupResponseRaw, BrandObject } from '../../../Card/types';
+import CardElement from '../../../Card';
+import CustomCardElement from '../../../CustomCard';
+import { TxVariants } from '../../../tx-variants';
 
 if (process.env.NODE_ENV === 'development') {
     window.mockBinCount = 0; // Set to 0 to turn off mocking, 1 to turn it on
 }
 
-export default parent => {
+export const triggerBinLookUp = (element: CardElement | CustomCardElement) => {
     let currentRequestId: string | null = null;
 
     return (callbackObj: CardBinValueData) => {
         // Allow way for merchant to disallow binLookup by specifically setting the prop to false
-        if (parent.props.doBinLookup === false) {
-            if (parent.props.onBinValue) parent.props.onBinValue(callbackObj);
+        if (element.props.doBinLookup === false) {
+            if (element.props.onBinValue) element.props.onBinValue(callbackObj);
             return;
         }
 
         // Do binLookup when encryptedBin property is present (and only if the merchant is using a clientKey)
-        if (callbackObj.encryptedBin && parent.props.clientKey) {
+        if (callbackObj.encryptedBin && 'clientKey' in element.props) {
             // Store id of request we're about to make
-            currentRequestId = callbackObj.uuid;
+            currentRequestId = callbackObj.uuid ?? null;
 
             void httpPost(
                 {
-                    loadingContext: parent.props.loadingContext,
-                    path: `v3/bin/binLookup?token=${parent.props.clientKey}`
+                    loadingContext: element.props.loadingContext,
+                    path: `v3/bin/binLookup?token=${element.props.clientKey}`
                 },
                 {
-                    type: parent.props.brand,
-                    supportedBrands: parent.props.brands || DEFAULT_CARD_GROUP_TYPES,
+                    type: 'brand' in element.props ? element.props.brand : TxVariants.card,
+                    supportedBrands: element.props.brands || DEFAULT_CARD_GROUP_TYPES,
                     encryptedBin: callbackObj.encryptedBin,
                     requestId: callbackObj.uuid // Pass id of request
                 }
@@ -117,21 +120,21 @@ export default parent => {
                          */
                         if (mappedResponse.supportedBrands.length) {
                             // ...call processBinLookupResponse with, a simplified, response object if it contains at least one supported brand
-                            parent.processBinLookupResponse({
+                            element.processBinLookupResponse({
                                 issuingCountryCode: data.issuingCountryCode,
                                 supportedBrands: mappedResponse.supportedBrands,
                                 ...(data.showSocialSecurityNumber ? { showSocialSecurityNumber: data.showSocialSecurityNumber } : {})
                             });
 
                             // Inform merchant of the result
-                            parent.onBinLookup({
+                            element.onBinLookup({
                                 type: callbackObj.type,
                                 detectedBrands: mappedResponse.detectedBrands,
                                 // supportedBrands contains the subset of this.props.brands that matches the card number that the shopper has typed
                                 supportedBrands: mappedResponse.supportedBrands.map(item => item.brand),
                                 paymentMethodVariants: mappedResponse.paymentMethodVariants,
                                 supportedBrandsRaw: mappedResponse.supportedBrands, // full supportedBrands data (for customCard comp)
-                                brands: parent.props.brands || DEFAULT_CARD_GROUP_TYPES,
+                                brands: element.props.brands || DEFAULT_CARD_GROUP_TYPES,
                                 issuingCountryCode: data.issuingCountryCode,
                                 ...(hasHealthcareData && { healthcare: mappedResponse.healthcare })
                             });
@@ -150,16 +153,16 @@ export default parent => {
                                 error: SF_ErrorCodes.ERROR_MSG_UNSUPPORTED_CARD_ENTERED,
                                 detectedBrands: mappedResponse.detectedBrands
                             };
-                            parent.handleUnsupportedCard(errObj);
+                            element.handleUnsupportedCard(errObj);
 
                             // Inform merchant of the result
-                            parent.onBinLookup({
+                            element.onBinLookup({
                                 type: callbackObj.type,
                                 detectedBrands: mappedResponse.detectedBrands,
                                 supportedBrands: null,
                                 paymentMethodVariants: mappedResponse.paymentMethodVariants,
                                 ...(hasHealthcareData && { healthcare: mappedResponse.healthcare }),
-                                brands: parent.props.brands || DEFAULT_CARD_GROUP_TYPES
+                                brands: element.props.brands || DEFAULT_CARD_GROUP_TYPES
                             });
 
                             return;
@@ -168,21 +171,22 @@ export default parent => {
                         /**
                          *  BIN not in DB (a failed lookup will just contain a requestId)
                          */
-                        parent.onBinLookup({
+                        element.onBinLookup({
                             type: callbackObj.type,
                             detectedBrands: null,
                             supportedBrands: null,
-                            brands: parent.props.brands || DEFAULT_CARD_GROUP_TYPES
+                            brands: element.props.brands || DEFAULT_CARD_GROUP_TYPES
                         });
 
                         // Reset the UI and let the native, regex branding happen (for the generic card)
                         // For a single-branded card we need to pass a boolean to prompt resetting the brand logo to the 'base' type
-                        parent.processBinLookupResponse({}, true);
+                        element.processBinLookupResponse({} as BinLookupResponse, true);
                     }
                 } else {
                     if (!data?.requestId) {
                         // Some other kind of error on the backend
-                        parent.props.onError(data || { errorType: 'binLookup', message: 'unknownError' });
+                        // @ts-ignore: update this parameter type to match Adyen's error type
+                        element.props.onError(data || { errorType: 'binLookup', message: 'unknownError' });
                     }
                     // Else - response with wrong requestId
                 }
@@ -192,7 +196,7 @@ export default parent => {
              * If onBinValue callback is called AND we have been doing binLookup BUT passed object doesn't have an encryptedBin property
              * - then THE NUMBER OF DIGITS IN NUMBER FIELD HAS DROPPED BELOW THRESHOLD for BIN lookup - so reset the UI
              */
-            parent.processBinLookupResponse(null, true);
+            element.processBinLookupResponse(null, true);
 
             currentRequestId = null; // Ignore any pending responses
 
@@ -202,14 +206,14 @@ export default parent => {
                 fieldType: 'encryptedCardNumber',
                 error: ''
             };
-            parent.handleUnsupportedCard(errObj);
+            element.handleUnsupportedCard(errObj);
 
             // CustomCard needs this to reset the UI
-            parent.onBinLookup({
+            element.onBinLookup({
                 isReset: true
             });
         }
 
-        if (parent.props.onBinValue) parent.props.onBinValue(callbackObj);
+        if (element.props.onBinValue) element.props.onBinValue(callbackObj);
     };
 };

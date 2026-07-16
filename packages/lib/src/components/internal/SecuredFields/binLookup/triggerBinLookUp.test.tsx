@@ -1,8 +1,9 @@
 import { h } from 'preact';
-import triggerBinLookUp from './triggerBinLookUp';
+import { triggerBinLookUp } from './triggerBinLookUp';
 import { httpPost } from '../../../../core/Services/http';
-import UIElement from '../../UIElement';
 import { DEFAULT_CARD_GROUP_TYPES } from '../lib/constants';
+import { setupCoreMock } from '../../../../../config/testMocks/setup-core-mock';
+import CardElement from '../../../Card';
 
 jest.mock('../../../../core/Services/http');
 
@@ -11,7 +12,7 @@ const mockProcessBinLookupResponse = jest.fn();
 const mockOnError = jest.fn();
 const mockHandleUnsupportedCard = jest.fn();
 
-class MockUIElement extends UIElement {
+class MockUIElement extends CardElement {
     public processBinLookupResponse = mockProcessBinLookupResponse;
     public onBinLookup = mockOnBinLookup;
     public handleUnsupportedCard = mockHandleUnsupportedCard;
@@ -24,6 +25,7 @@ const clientKey = 'test';
 const loadingContext = 'test';
 const visa = 'visa';
 const httpPostMock = httpPost as jest.Mock;
+const core = setupCoreMock();
 
 beforeEach(() => {
     httpPostMock.mockImplementation(jest.fn(() => Promise.resolve({})));
@@ -37,7 +39,7 @@ describe('triggerBinLookUp', () => {
     describe('Turning off the doBinLookup flag ', () => {
         test('should call the onBinValue callback if doBinLookup is false and onBinValue exists', () => {
             // @ts-ignore test
-            const mockUIElement = new MockUIElement(global.core, { onBinValue: mockOnBinLookup, doBinLookup: false });
+            const mockUIElement = new MockUIElement(core, { onBinValue: mockOnBinLookup, doBinLookup: false });
             triggerBinLookUp(mockUIElement)({ type: '', binValue: '' });
 
             expect(mockOnBinLookup).toHaveBeenCalledWith({ type: '', binValue: '' });
@@ -47,7 +49,7 @@ describe('triggerBinLookUp', () => {
     describe('Performing binLookUp', () => {
         test('should call the onBinValue callback if it exists', () => {
             // @ts-ignore test
-            const mockUIElement = new MockUIElement(global.core, { onBinValue: mockOnBinLookup });
+            const mockUIElement = new MockUIElement(core, { onBinValue: mockOnBinLookup });
             const bin = { type: '', binValue: '' };
             triggerBinLookUp(mockUIElement)(bin);
 
@@ -56,7 +58,7 @@ describe('triggerBinLookUp', () => {
 
         test('should call the correct binLookup endpoint with the given brands from UIElement', () => {
             // @ts-ignore test
-            const mockUIElement = new MockUIElement(global.core, { clientKey, loadingContext, brand: visa, brands: [visa], onError: mockOnError });
+            const mockUIElement = new MockUIElement(core, { clientKey, loadingContext, brand: visa, brands: [visa], onError: mockOnError });
             const bin = { binValue: '', type: '', encryptedBin: 'xxx-xxx', uuid: '123456789' };
             const lookUpBin = triggerBinLookUp(mockUIElement);
             lookUpBin(bin);
@@ -74,7 +76,7 @@ describe('triggerBinLookUp', () => {
 
         test('should call the correct binLookup endpoint with the predefined brands', () => {
             // @ts-ignore test
-            const mockUIElement = new MockUIElement(global.core, { clientKey, loadingContext, brand: visa, onError: mockOnError });
+            const mockUIElement = new MockUIElement(core, { clientKey, loadingContext, brand: visa, onError: mockOnError });
             const bin = { binValue: '', type: '', encryptedBin: 'xxx-xxx', uuid: '123456789' };
             const lookUpBin = triggerBinLookUp(mockUIElement);
             lookUpBin(bin);
@@ -93,7 +95,7 @@ describe('triggerBinLookUp', () => {
         describe('Handling the binLookUp response', () => {
             test('should call the onError callback if the response does not contain the matching requestId', async () => {
                 // @ts-ignore test
-                const mockUIElement = new MockUIElement(global.core, {
+                const mockUIElement = new MockUIElement(core, {
                     clientKey,
                     loadingContext,
                     // @ts-ignore test
@@ -114,7 +116,7 @@ describe('triggerBinLookUp', () => {
                         httpPostMock.mockImplementation(jest.fn(() => Promise.resolve({ requestId })));
 
                         // @ts-ignore test
-                        const mockUIElement = new MockUIElement(global.core, {
+                        const mockUIElement = new MockUIElement(core, {
                             clientKey,
                             loadingContext,
                             // @ts-ignore test
@@ -140,7 +142,7 @@ describe('triggerBinLookUp', () => {
                         httpPostMock.mockImplementation(jest.fn(() => Promise.resolve({ requestId, brands: [{ brand: visa, supported: true }] })));
 
                         // @ts-ignore test
-                        const mockUIElement = new MockUIElement(global.core, {
+                        const mockUIElement = new MockUIElement(core, {
                             clientKey,
                             loadingContext,
                             // @ts-ignore test
@@ -170,7 +172,7 @@ describe('triggerBinLookUp', () => {
                         );
 
                         // @ts-ignore test
-                        const mockUIElement = new MockUIElement(global.core, {
+                        const mockUIElement = new MockUIElement(core, {
                             clientKey,
                             loadingContext,
                             // @ts-ignore test
@@ -192,7 +194,7 @@ describe('triggerBinLookUp', () => {
                             jest.fn(() => Promise.resolve({ requestId, brands: [{ brand: visa, supported: true, healthcare: true }] }))
                         );
 
-                        const mockUIElement = new MockUIElement(global.core, {
+                        const mockUIElement = new MockUIElement(core, {
                             clientKey,
                             loadingContext,
                             // @ts-ignore test
@@ -210,7 +212,7 @@ describe('triggerBinLookUp', () => {
                         const requestId = '123456789';
                         httpPostMock.mockImplementation(jest.fn(() => Promise.resolve({ requestId, brands: [{ brand: visa, supported: true }] })));
 
-                        const mockUIElement = new MockUIElement(global.core, {
+                        const mockUIElement = new MockUIElement(core, {
                             clientKey,
                             loadingContext,
                             // @ts-ignore test
@@ -234,7 +236,7 @@ describe('triggerBinLookUp', () => {
                             jest.fn(() => Promise.resolve({ requestId, brands: [{ brand: visa, supported: false, healthcare: true }] }))
                         );
 
-                        const mockUIElement = new MockUIElement(global.core, {
+                        const mockUIElement = new MockUIElement(core, {
                             clientKey,
                             loadingContext,
                             // @ts-ignore test

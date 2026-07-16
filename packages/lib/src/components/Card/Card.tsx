@@ -2,7 +2,7 @@ import { h } from 'preact';
 import CardInput from './components/CardInput';
 import collectBrowserInfo from '../../utils/browserInfo';
 import { BinLookupResponse, CardElementData, CardConfiguration } from './types';
-import triggerBinLookUp from '../internal/SecuredFields/binLookup/triggerBinLookUp';
+import { triggerBinLookUp } from '../internal/SecuredFields/binLookup/triggerBinLookUp';
 import { CardBinLookupData, CardConfigSuccessData, CardFocusData } from '../internal/SecuredFields/lib/types';
 import { fieldTypeToSnakeCase, isSecuredField } from '../internal/SecuredFields/utils';
 import { notFalsy, reject } from '../../utils/commonUtils';
