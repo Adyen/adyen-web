@@ -121,7 +121,7 @@ export const triggerBinLookUp = (element: CardElement | CustomCardElement) => {
                         if (mappedResponse.supportedBrands.length) {
                             // ...call processBinLookupResponse with, a simplified, response object if it contains at least one supported brand
                             element.processBinLookupResponse({
-                                issuingCountryCode: data.issuingCountryCode,
+                                issuingCountryCode: data.issuingCountryCode ?? '',
                                 supportedBrands: mappedResponse.supportedBrands,
                                 ...(data.showSocialSecurityNumber ? { showSocialSecurityNumber: data.showSocialSecurityNumber } : {})
                             });
