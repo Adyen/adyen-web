@@ -3,8 +3,8 @@ import { CardBinValueData, CardErrorData } from '../lib/types';
 import { DEFAULT_CARD_GROUP_TYPES } from '../lib/constants';
 import { SF_ErrorCodes } from '../../../../core/Errors/constants';
 import { BinLookupResponse, BinLookupResponseRaw, BrandObject } from '../../../Card/types';
-import CardElement from '../../../Card';
-import CustomCardElement from '../../../CustomCard';
+import type CardElement from '../../../Card';
+import type CustomCardElement from '../../../CustomCard';
 import { TxVariants } from '../../../tx-variants';
 
 if (process.env.NODE_ENV === 'development') {
