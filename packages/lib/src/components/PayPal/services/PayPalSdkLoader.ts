@@ -6,10 +6,10 @@ import { PAYPAL_SDK_URL_PRODUCTION, PAYPAL_SDK_URL_SANDBOX } from '../config';
 class PayPalSdkLoader {
     private sdkLoadingPromise: Promise<void>;
     private readonly analytics: IAnalytics;
-    private readonly environment: string;
+    private readonly environment?: string;
     private readonly nonce?: string;
 
-    constructor({ analytics, environment, nonce }: { analytics: IAnalytics; environment: string; nonce?: string }) {
+    constructor({ analytics, environment, nonce }: { analytics: IAnalytics; environment?: string; nonce?: string }) {
         this.analytics = analytics;
         this.environment = environment;
         this.nonce = nonce;

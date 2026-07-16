@@ -6,9 +6,9 @@ import requestPayPalOauthToken from './request-paypal-oauth-token';
 interface PayPalServiceConfig {
     loadingContext: string;
     clientKey: string;
-    merchantId?: string;
+    merchantId: string;
     sdkLoader: PayPalSdkLoader;
-    countryCode?: string;
+    countryCode: string;
     amount?: PaymentAmount;
     vault: boolean;
 }
@@ -17,9 +17,9 @@ class PayPalService {
     private readonly sdkLoader: PayPalSdkLoader;
     private readonly loadingContext: string;
     private readonly clientKey: string;
-    private readonly merchantId?: string;
+    private readonly merchantId: string;
     private readonly amount?: PaymentAmount;
-    private readonly countryCode?: string;
+    private readonly countryCode: string;
     private readonly vault: boolean;
 
     private loadingPromise?: Promise<void>;
@@ -88,7 +88,7 @@ class PayPalService {
     private async createPayPalPaymentMethods(): Promise<void> {
         const isZeroAuth = this.amount?.value === 0;
 
-        let paymentFlow: PayPalPaymentFlow;
+        let paymentFlow: PayPalPaymentFlow | undefined;
         if (isZeroAuth) {
             paymentFlow = 'VAULT_WITHOUT_PAYMENT';
         } else if (this.vault) {

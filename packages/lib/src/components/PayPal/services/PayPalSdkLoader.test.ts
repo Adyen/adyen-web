@@ -16,7 +16,7 @@ const mockLoad = jest.fn().mockImplementation(() => {
 const mockAnalytics = mock<IAnalytics>();
 
 describe('PayPalSdkLoader', () => {
-    let loader;
+    let loader: PayPalSdkLoader;
 
     beforeEach(() => {
         loader = new PayPalSdkLoader({ analytics: mockAnalytics, environment: 'test' });
