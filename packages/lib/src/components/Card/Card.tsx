@@ -12,7 +12,7 @@ import { ClickToPayCheckoutPayload, IClickToPayService } from '../internal/Click
 import ClickToPayWrapper from './components/ClickToPayWrapper';
 import { ComponentFocusObject, PaymentMethodBrand } from '../../types/global-types';
 import { TxVariants } from '../tx-variants';
-import type { UIElementStatus } from '../internal/UIElement/types';
+import type { ComponentMethodsRef, UIElementStatus } from '../internal/UIElement/types';
 import UIElement from '../internal/UIElement';
 import PayButton from '../internal/PayButton';
 import type { ICore } from '../../core/types';
@@ -30,7 +30,7 @@ export class CardElement extends UIElement<CardConfiguration> {
     /**
      * Reference to the 'ClickToPayComponent'
      */
-    private clickToPayRef = null;
+    private clickToPayRef: ComponentMethodsRef | null = null;
 
     constructor(checkout: ICore, props?: CardConfiguration) {
         super(checkout, props);
@@ -60,12 +60,12 @@ export class CardElement extends UIElement<CardConfiguration> {
             this.componentRef.setStatus(status, props);
         }
         if (this.clickToPayRef?.setStatus) {
-            this.clickToPayRef.setStatus(status, props);
+            this.clickToPayRef.setStatus(status);
         }
         return this;
     }
 
-    private readonly setClickToPayRef = ref => {
+    private readonly setClickToPayRef = (ref: ComponentMethodsRef) => {
         this.clickToPayRef = ref;
     };
 

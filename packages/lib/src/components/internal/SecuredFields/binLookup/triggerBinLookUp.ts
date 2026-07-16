@@ -22,7 +22,7 @@ export const triggerBinLookUp = (element: CardElement | CustomCardElement) => {
         }
 
         // Do binLookup when encryptedBin property is present (and only if the merchant is using a clientKey)
-        if (callbackObj.encryptedBin && 'clientKey' in element.props) {
+        if (callbackObj.encryptedBin && 'clientKey' in element.props && element.props.clientKey) {
             // Store id of request we're about to make
             currentRequestId = callbackObj.uuid ?? null;
 
@@ -182,14 +182,12 @@ export const triggerBinLookUp = (element: CardElement | CustomCardElement) => {
                         // For a single-branded card we need to pass a boolean to prompt resetting the brand logo to the 'base' type
                         element.processBinLookupResponse({} as BinLookupResponse, true);
                     }
-                } else {
-                    if (!data?.requestId) {
-                        // Some other kind of error on the backend
-                        // @ts-ignore: update this parameter type to match Adyen's error type
-                        element.props.onError(data || { errorType: 'binLookup', message: 'unknownError' });
-                    }
-                    // Else - response with wrong requestId
+                } else if (!data?.requestId) {
+                    // Some other kind of error on the backend
+                    // @ts-ignore: update this parameter type to match Adyen's error type
+                    element.props.onError?.(data || { errorType: 'binLookup', message: 'unknownError' });
                 }
+                // Else - response with wrong requestId
             });
         } else if (currentRequestId) {
             /**
