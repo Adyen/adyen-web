@@ -2,18 +2,40 @@ import { optionallyFilterUpiSubTxVariants } from '../elements/filters';
 import type { ICore } from '../../../core/types';
 import type UIElement from '../../internal/UIElement';
 import type { PaymentMethod, StoredPaymentMethod } from '../../../core/ProcessResponse/PaymentMethods/PaymentMethods';
-import type { PaymentMethodDisplayModeEntry, PaymentMethodDisplayMode } from '../types';
+import type { PaymentMethodDisplayMode } from '../types';
+import type { AnalyticsPaymentMethod } from '../../../core/Analytics/events/AnalyticsInfoEvent';
 
-export type PaymentMethodWithDisplayMode = (PaymentMethod | StoredPaymentMethod) & { displayMode: PaymentMethodDisplayMode };
+export interface PaymentMethodDisplayModeEntry {
+    displayMode: PaymentMethodDisplayMode;
+    paymentMethods: Array<PaymentMethod | StoredPaymentMethod>;
+}
+
+/**
+ * Maps a raw /paymentMethods entry to the analytics-safe shape.
+ * Allow-list only: StoredPaymentMethod carries PII (holderName, shopperEmail, …) that must never reach analytics.
+ */
+function toAnalyticsPaymentMethod(
+    paymentMethod: PaymentMethod | StoredPaymentMethod,
+    displayMode: PaymentMethodDisplayMode
+): AnalyticsPaymentMethod<PaymentMethodDisplayMode> {
+    const { type, brand, brands, fundingSource } = paymentMethod;
+    const normalizedBrands = brands !== undefined ? brands : brand !== undefined ? [brand] : undefined;
+    return {
+        paymentMethodType: type,
+        ...(normalizedBrands !== undefined && { brands: normalizedBrands }),
+        ...(fundingSource !== undefined && { fundingSource }),
+        displayMode
+    };
+}
 
 /**
  * Payment methods present in the /paymentMethods response that Drop-in did not render,
  * for any reason, EXCEPT UPI sub-variants collapsed into a rendered `upi` parent.
  */
-export function getUnavailablePaymentMethods(
+export function createUnavailablePaymentsList(
     displayModeEntries: PaymentMethodDisplayModeEntry[],
     elementsByDisplayMode: Record<PaymentMethodDisplayMode, UIElement[]>
-): PaymentMethodWithDisplayMode[] {
+): AnalyticsPaymentMethod<PaymentMethodDisplayMode>[] {
     return displayModeEntries.flatMap(entry => {
         const isStored = entry.displayMode === 'stored';
 
@@ -28,7 +50,7 @@ export function getUnavailablePaymentMethods(
                 const id = isStored ? (paymentMethod as StoredPaymentMethod).storedPaymentMethodId : (paymentMethod as PaymentMethod)._id;
                 return !readyIds.has(id);
             })
-            .map(paymentMethod => ({ ...paymentMethod, displayMode: entry.displayMode }));
+            .map(paymentMethod => toAnalyticsPaymentMethod(paymentMethod, entry.displayMode));
     });
 }
 
@@ -36,11 +58,11 @@ export function getUnavailablePaymentMethods(
  * Builds the ordered list of ready payment methods for the Drop-in analytics event
  * preserving the ordered display mode's parameter order.
  */
-export function getReadyPaymentMethods(
+export function createAvailablePaymentsList(
     orderedDisplayModes: PaymentMethodDisplayMode[],
     elementsByDisplayMode: Record<PaymentMethodDisplayMode, UIElement[]>,
     core: ICore
-): PaymentMethodWithDisplayMode[] {
+): AnalyticsPaymentMethod<PaymentMethodDisplayMode>[] {
     return orderedDisplayModes.flatMap(displayMode =>
         (elementsByDisplayMode[displayMode] || [])
             .map(element => {
@@ -49,8 +71,8 @@ export function getReadyPaymentMethods(
                 if (!id) return undefined;
 
                 const raw = isStored ? core.paymentMethodsResponse.findStoredPaymentMethod(id) : core.paymentMethodsResponse.findById(id);
-                return raw ? { ...raw, displayMode } : undefined;
+                return raw ? toAnalyticsPaymentMethod(raw, displayMode) : undefined;
             })
-            .filter((paymentMethod): paymentMethod is PaymentMethodWithDisplayMode => paymentMethod !== undefined)
+            .filter((paymentMethod): paymentMethod is AnalyticsPaymentMethod<PaymentMethodDisplayMode> => paymentMethod !== undefined)
     );
 }

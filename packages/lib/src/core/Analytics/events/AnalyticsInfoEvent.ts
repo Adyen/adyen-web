@@ -1,11 +1,11 @@
 import { AbstractAnalyticsEvent, AnalyticsEventCategory } from './AbstractAnalyticsEvent';
 import { mapErrorCodesForAnalytics } from '../utils';
 
-export type AnalyticsPaymentMethod = {
+export type AnalyticsPaymentMethod<DisplayMode extends string = string> = {
     paymentMethodType: string;
     brands?: string[];
     fundingSource?: 'debit' | 'credit' | 'prepaid';
-    displayMode: string;
+    displayMode: DisplayMode;
 };
 
 type AnalyticsInfoEventProps = {
@@ -23,8 +23,8 @@ type AnalyticsInfoEventProps = {
     cdnUrl?: string;
     selectedValue?: string;
     presentedValues?: Array<string>;
-    availablePaymentMethods?: Record<string, any>[];
-    unavailablePaymentMethods?: Record<string, any>[];
+    availablePaymentMethods?: AnalyticsPaymentMethod[];
+    unavailablePaymentMethods?: AnalyticsPaymentMethod[];
 };
 
 export enum UiTarget {
@@ -128,8 +128,8 @@ export class AnalyticsInfoEvent extends AbstractAnalyticsEvent {
         if (props.validationErrorCode) this.validationErrorCode = props.validationErrorCode;
         if (props.validationErrorMessage) this.validationErrorMessage = props.validationErrorMessage;
         if (props.presentedValues) this.presentedValues = props.presentedValues;
-        if (props.availablePaymentMethods) this.availablePaymentMethods = this.createAnalyticsPaymentMethods(props.availablePaymentMethods);
-        if (props.unavailablePaymentMethods) this.unavailablePaymentMethods = this.createAnalyticsPaymentMethods(props.unavailablePaymentMethods);
+        if (props.availablePaymentMethods) this.availablePaymentMethods = props.availablePaymentMethods;
+        if (props.unavailablePaymentMethods) this.unavailablePaymentMethods = props.unavailablePaymentMethods;
         if (this.type === InfoEventType.rendered) {
             this.configData = this.createAnalyticsConfigData(props?.configData);
         }
@@ -196,21 +196,6 @@ export class AnalyticsInfoEvent extends AbstractAnalyticsEvent {
             if (process.env.NODE_ENV === 'development') console.warn('AnalyticsInfoEvent: Error when creating configData\n', error);
             return result;
         }
-    }
-
-    /**
-     * Allow-list only: StoredPaymentMethod carries PII (holderName, shopperEmail, …) that must never reach analytics.
-     */
-    private createAnalyticsPaymentMethods(paymentMethods: Record<string, any>[]): AnalyticsPaymentMethod[] {
-        return paymentMethods.map(({ type, brand, brands, fundingSource, displayMode }) => {
-            const normalizedBrands = brands !== undefined ? brands : brand !== undefined ? [brand] : undefined;
-            return {
-                paymentMethodType: type,
-                ...(normalizedBrands !== undefined && { brands: normalizedBrands }),
-                ...(fundingSource !== undefined && { fundingSource }),
-                displayMode
-            };
-        });
     }
 
     public getEventCategory(): AnalyticsEventCategory {
