@@ -19,7 +19,8 @@ function toAnalyticsPaymentMethod(
     displayMode: PaymentMethodDisplayMode
 ): AnalyticsPaymentMethod<PaymentMethodDisplayMode> {
     const { type, brand, brands, fundingSource } = paymentMethod;
-    const normalizedBrands = brands !== undefined ? brands : brand !== undefined ? [brand] : undefined;
+    const brandFallback = brand !== undefined ? [brand] : undefined;
+    const normalizedBrands = brands ?? brandFallback;
     return {
         paymentMethodType: type,
         ...(normalizedBrands !== undefined && { brands: normalizedBrands }),
