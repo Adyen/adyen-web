@@ -67,6 +67,8 @@ const config: PlaywrightTestConfig = {
         video: 'on-first-retry',
         launchOptions: {
             args: process.env.CI ? [
+                '--disable-gpu',
+                '--disable-gpu-compositing',
                 '--disable-dev-shm-usage'
             ] : []
         }
