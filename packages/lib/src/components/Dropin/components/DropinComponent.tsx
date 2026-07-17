@@ -80,7 +80,7 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
         try {
             const { paymentMethods, storedPaymentMethods, instantPaymentMethods, fastlanePaymentMethod } = splitPaymentMethods(
                 this.props.core.paymentMethodsResponse,
-                this.props.instantPaymentTypes
+                this.props.instantPaymentTypes ?? []
             );
 
             const paymentMethodDisplayModes: PaymentMethodDisplayModeEntry[] = [
