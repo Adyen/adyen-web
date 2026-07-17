@@ -42,34 +42,27 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
 
     public prepareDropinData = () => {
         const { order, clientKey, loadingContext } = this.props;
-        const [storedPaymentMethodElements, paymentMethodElements, instantPaymentMethodElements, fastlanePaymentMethodElement] =
-            this.props.onCreateElements();
+        const [storedElementsPromises, elementsPromises, instantPaymentsPromises, fastlanePaymentElementPromise] = this.props.onCreateElements();
         const orderStatusPromise = order ? getOrderStatus({ clientKey, loadingContext }, order) : null;
 
-        void Promise.all([
-            storedPaymentMethodElements,
-            paymentMethodElements,
-            instantPaymentMethodElements,
-            fastlanePaymentMethodElement,
-            orderStatusPromise
-        ])
-            .then(([storedElements, elements, instantElements, fastlaneElements, orderStatus]) => {
+        void Promise.all([storedElementsPromises, elementsPromises, instantPaymentsPromises, fastlanePaymentElementPromise, orderStatusPromise])
+            .then(([storedPaymentElements, elements, instantPaymentElements, fastlanePaymentElement, orderStatus]) => {
                 this.setState({
                     orderStatus,
                     elements,
-                    instantPaymentElements: instantElements,
-                    storedPaymentElements: storedElements,
-                    fastlanePaymentElement: fastlaneElements,
-                    showDefaultPaymentMethodList: fastlaneElements.length === 0
+                    instantPaymentElements,
+                    storedPaymentElements,
+                    fastlanePaymentElement,
+                    showDefaultPaymentMethodList: fastlanePaymentElement.length === 0
                 });
                 this.setStatus('ready');
 
-                this.props.onElementsCreated([...instantElements, ...storedElements, ...elements, ...fastlaneElements]);
+                this.props.onElementsCreated([...instantPaymentElements, ...storedPaymentElements, ...elements, ...fastlanePaymentElement]);
 
                 this.reportPaymentMethodList({
-                    fastlane: fastlaneElements,
-                    instant: instantElements,
-                    stored: storedElements,
+                    fastlane: fastlanePaymentElement,
+                    instant: instantPaymentElements,
+                    stored: storedPaymentElements,
                     regular: elements
                 });
             })
