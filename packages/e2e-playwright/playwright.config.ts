@@ -64,7 +64,12 @@ const config: PlaywrightTestConfig = {
         trace: 'on-first-retry',
         ignoreHTTPSErrors: true,
         screenshot: 'only-on-failure',
-        video: 'on-first-retry'
+        video: 'on-first-retry',
+        launchOptions: {
+            args: process.env.CI ? [
+                '--disable-dev-shm-usage'
+            ] : []
+        }
     },
 
     /* Configure projects for major browsers */
