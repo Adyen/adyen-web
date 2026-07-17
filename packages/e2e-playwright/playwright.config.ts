@@ -68,6 +68,8 @@ const config: PlaywrightTestConfig = {
         launchOptions: {
             args: [
                 '--disable-dev-shm-usage',
+                '--disable-features=SkiaGraphite',
+                '--force-color-profile=srgb'
             ]
         }
     },
