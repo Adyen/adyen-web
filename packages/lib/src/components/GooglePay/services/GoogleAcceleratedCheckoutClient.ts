@@ -11,6 +11,9 @@ type AcceleratedCheckoutResult = { status: 'SUCCESS' | 'ERROR'; errorMessage?: s
 export type AcceleratedCheckoutOptions = {
     environment: google.payments.api.Environment;
     paymentDataCallbacks: google.payments.api.PaymentDataCallbacks;
+    checkoutUiCallbacks: {
+        onPaymentSheetResized({ height, heightCss }: { height: number; heightCss: string }): void;
+    };
     checkoutRequest: PaymentDataRequest;
     acceleratedCheckoutConfig: {
         type: 'INLINE';
