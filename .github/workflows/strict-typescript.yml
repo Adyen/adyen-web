@@ -18,7 +18,7 @@ jobs:
 
       # ── Get baseline from main ──
       - name: Checkout main
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           ref: main
           fetch-depth: 1
@@ -42,7 +42,7 @@ jobs:
           echo "Main baseline — total: $TOTAL"
 
       # ── Check PR branch ──
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           clean: false
           fetch-depth: 1

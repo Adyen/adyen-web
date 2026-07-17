@@ -24,7 +24,7 @@ jobs:
       API_VERSION: ${{matrix.api-version}}
     steps:
     - name: Checkout
-      uses: actions/checkout@v6
+      uses: actions/checkout@v7
 
     - name: Setup Node
       uses: actions/setup-node@v6
