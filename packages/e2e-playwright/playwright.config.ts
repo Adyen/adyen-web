@@ -67,10 +67,7 @@ const config: PlaywrightTestConfig = {
         video: 'on-first-retry',
         launchOptions: {
             args: [
-                '--disable-gpu',
-                '--disable-gpu-compositing',
                 '--disable-dev-shm-usage',
-                '--disable-software-rasterizer',
             ]
         }
     },
@@ -80,7 +77,7 @@ const config: PlaywrightTestConfig = {
         {
             name: 'chromium',
             use: {
-                ...devices['Desktop Chrome']
+                ...devices['Desktop Chrome'], channel: 'chromium'
             }
         },
 
