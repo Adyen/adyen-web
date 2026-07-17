@@ -8,7 +8,7 @@ jobs:
     timeout-minutes: 60
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.61.1-noble
+      image: mcr.microsoft.com/playwright:v1.61.1-jammy
       options: --user 1001
     strategy:
       fail-fast: false
