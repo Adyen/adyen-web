@@ -67,7 +67,7 @@ class DoChallenge3DS2 extends Component<DoChallenge3DS2Props, DoChallenge3DS2Sta
         window.removeEventListener('message', this.processMessageHandler);
     }
 
-    render({ acsURL, cReqData, iframeSizeArr, onFormSubmit }, { base64URLencodedData, status }) {
+    render({ acsURL, cReqData, iframeSizeArr, onFormSubmit }: DoChallenge3DS2Props, { base64URLencodedData, status }: DoChallenge3DS2State) {
         const [width, height] = iframeSizeArr;
 
         return (
@@ -85,7 +85,7 @@ class DoChallenge3DS2 extends Component<DoChallenge3DS2Props, DoChallenge3DS2Sta
                     action={acsURL}
                     target={iframeName}
                     inputName={'creq'}
-                    inputValue={base64URLencodedData}
+                    inputValue={base64URLencodedData ?? ''}
                     onFormSubmit={onFormSubmit}
                 />
             </div>

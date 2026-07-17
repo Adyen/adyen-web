@@ -2,7 +2,7 @@ import { h } from 'preact';
 import CardInput from './components/CardInput';
 import collectBrowserInfo from '../../utils/browserInfo';
 import { BinLookupResponse, CardElementData, CardConfiguration } from './types';
-import triggerBinLookUp from '../internal/SecuredFields/binLookup/triggerBinLookUp';
+import { triggerBinLookUp } from '../internal/SecuredFields/binLookup/triggerBinLookUp';
 import { CardBinLookupData, CardConfigSuccessData, CardFocusData } from '../internal/SecuredFields/lib/types';
 import { fieldTypeToSnakeCase, isSecuredField } from '../internal/SecuredFields/utils';
 import { notFalsy, reject } from '../../utils/commonUtils';
@@ -12,7 +12,7 @@ import { ClickToPayCheckoutPayload, IClickToPayService } from '../internal/Click
 import ClickToPayWrapper from './components/ClickToPayWrapper';
 import { ComponentFocusObject, PaymentMethodBrand } from '../../types/global-types';
 import { TxVariants } from '../tx-variants';
-import type { UIElementStatus } from '../internal/UIElement/types';
+import type { ComponentMethodsRef, UIElementStatus } from '../internal/UIElement/types';
 import UIElement from '../internal/UIElement';
 import PayButton from '../internal/PayButton';
 import type { ICore } from '../../core/types';
@@ -30,7 +30,7 @@ export class CardElement extends UIElement<CardConfiguration> {
     /**
      * Reference to the 'ClickToPayComponent'
      */
-    private clickToPayRef = null;
+    private clickToPayRef: ComponentMethodsRef | null = null;
 
     constructor(checkout: ICore, props?: CardConfiguration) {
         super(checkout, props);
@@ -60,12 +60,12 @@ export class CardElement extends UIElement<CardConfiguration> {
             this.componentRef.setStatus(status, props);
         }
         if (this.clickToPayRef?.setStatus) {
-            this.clickToPayRef.setStatus(status, props);
+            this.clickToPayRef.setStatus(status);
         }
         return this;
     }
 
-    private setClickToPayRef = ref => {
+    private readonly setClickToPayRef = (ref: ComponentMethodsRef) => {
         this.clickToPayRef = ref;
     };
 
@@ -220,7 +220,7 @@ export class CardElement extends UIElement<CardConfiguration> {
         this.props.onBrand?.(event);
     };
 
-    processBinLookupResponse(binLookupResponse: BinLookupResponse, isReset = false) {
+    processBinLookupResponse(binLookupResponse: BinLookupResponse | null, isReset = false) {
         if (this.componentRef?.processBinLookupResponse) this.componentRef.processBinLookupResponse(binLookupResponse, isReset);
         return this;
     }
@@ -230,7 +230,7 @@ export class CardElement extends UIElement<CardConfiguration> {
         return this;
     }
 
-    private handleClickToPaySubmit = (payload: ClickToPayCheckoutPayload) => {
+    private readonly handleClickToPaySubmit = (payload: ClickToPayCheckoutPayload) => {
         this.setState({ data: { ...payload }, valid: {}, errors: {}, isValid: true });
         this.submit();
     };
@@ -243,14 +243,14 @@ export class CardElement extends UIElement<CardConfiguration> {
         }
     }
 
-    private onConfigSuccess = (obj: CardConfigSuccessData) => {
+    private readonly onConfigSuccess = (obj: CardConfigSuccessData) => {
         const event = new AnalyticsInfoEvent({ component: this.type, type: InfoEventType.configured });
         this.submitAnalytics(event);
 
         this.props.onConfigSuccess?.(obj);
     };
 
-    private onFocus = (obj: ComponentFocusObject) => {
+    private readonly onFocus = (obj: ComponentFocusObject) => {
         const event = new AnalyticsInfoEvent({
             component: this.type,
             type: InfoEventType.focus,
@@ -266,7 +266,7 @@ export class CardElement extends UIElement<CardConfiguration> {
         }
     };
 
-    private onBlur = (obj: ComponentFocusObject) => {
+    private readonly onBlur = (obj: ComponentFocusObject) => {
         const event = new AnalyticsInfoEvent({
             component: this.type,
             type: InfoEventType.unfocus,
