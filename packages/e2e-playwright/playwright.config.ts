@@ -69,7 +69,8 @@ const config: PlaywrightTestConfig = {
             args: process.env.CI ? [
                 '--disable-gpu',
                 '--disable-gpu-compositing',
-                '--disable-dev-shm-usage'
+                '--disable-dev-shm-usage',
+                '--disable-software-rasterizer',
             ] : []
         }
     },
