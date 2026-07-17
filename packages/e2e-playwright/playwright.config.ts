@@ -66,12 +66,12 @@ const config: PlaywrightTestConfig = {
         screenshot: 'only-on-failure',
         video: 'on-first-retry',
         launchOptions: {
-            args: process.env.CI ? [
+            args: [
                 '--disable-gpu',
                 '--disable-gpu-compositing',
                 '--disable-dev-shm-usage',
                 '--disable-software-rasterizer',
-            ] : []
+            ]
         }
     },
 
