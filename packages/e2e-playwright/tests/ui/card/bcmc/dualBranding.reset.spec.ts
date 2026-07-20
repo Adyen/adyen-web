@@ -92,7 +92,7 @@ test.describe('Testing Bancontact, with dual branded cards, how UI resets', () =
             await bcmc.deleteCardNumber();
 
             // Returns to a Bcmc
-            await expect(bcmc.isDualBrandSelectionVisible()).resolves.toBe(false);
+            await expect(bcmc.dualBrandSelector).not.toBeVisible();
             await expect(bcmc.brandingIcon).toHaveAttribute('alt', /bancontact/i);
 
             // with hidden cvc
