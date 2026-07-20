@@ -64,14 +64,7 @@ const config: PlaywrightTestConfig = {
         trace: 'on-first-retry',
         ignoreHTTPSErrors: true,
         screenshot: 'only-on-failure',
-        video: 'on-first-retry',
-        launchOptions: {
-            args: [
-                '--disable-dev-shm-usage',
-                '--disable-features=SkiaGraphite',
-                '--force-color-profile=srgb'
-            ]
-        }
+        video: 'on-first-retry'
     },
 
     /* Configure projects for major browsers */
@@ -79,7 +72,7 @@ const config: PlaywrightTestConfig = {
         {
             name: 'chromium',
             use: {
-                ...devices['Desktop Chrome'], channel: 'chromium'
+                ...devices['Desktop Chrome']
             }
         },
 
