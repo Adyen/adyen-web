@@ -24,7 +24,7 @@ class PayPalService {
 
     private loadingPromise?: Promise<void>;
     private sdkInstance: PayPalSdkInstance;
-    private eligibleMethods: PayPalEligiblePaymentMethods;
+    private eligiblePaymentMethods: PayPalEligiblePaymentMethods;
 
     constructor({ loadingContext, clientKey, merchantId, sdkLoader, amount, countryCode, vault }: PayPalServiceConfig) {
         this.sdkLoader = sdkLoader;
@@ -95,7 +95,7 @@ class PayPalService {
             paymentFlow = 'VAULT_WITH_PAYMENT';
         }
 
-        this.eligibleMethods = await this.sdkInstance.findEligibleMethods({
+        this.eligiblePaymentMethods = await this.sdkInstance.findEligibleMethods({
             currencyCode: this.amount?.currency,
             // @ts-expect-error: @paypal/paypal-js is missing countryCode in the types
             countryCode: this.countryCode,
@@ -107,8 +107,8 @@ class PayPalService {
         return this.sdkInstance;
     }
 
-    public getEligibleMethods(): PayPalEligiblePaymentMethods {
-        return this.eligibleMethods;
+    public getEligiblePaymentMethods(): PayPalEligiblePaymentMethods {
+        return this.eligiblePaymentMethods;
     }
 }
 

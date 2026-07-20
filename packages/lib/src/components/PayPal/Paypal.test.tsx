@@ -452,7 +452,7 @@ describe('Paypal', () => {
             jest.clearAllMocks();
             PayPalServiceMock.prototype.initialize.mockResolvedValue(undefined);
             PayPalServiceMock.prototype.isSdkLoaded.mockResolvedValue(undefined);
-            PayPalServiceMock.prototype.getEligibleMethods.mockReturnValue({
+            PayPalServiceMock.prototype.getEligiblePaymentMethods.mockReturnValue({
                 isEligible: isEligibleMock
             } as unknown as PayPalEligiblePaymentMethods);
             isEligibleMock.mockReturnValue(true);
