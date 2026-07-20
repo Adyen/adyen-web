@@ -1,6 +1,6 @@
-import { PaymentAmount } from '../../../types';
+import { AdyenCheckoutError, type PaymentAmount } from '../../../types';
 import { PayPalSdkLoader } from './PayPalSdkLoader';
-import { PayPalComponents, PayPalEligiblePaymentMethods, PayPalPaymentFlow, PayPalSdkInstance } from '../paypal-js-types';
+import type { PayPalComponents, PayPalEligiblePaymentMethods, PayPalPaymentFlow, PayPalSdkInstance } from '../paypal-js-types';
 import requestPayPalOauthToken from './request-paypal-oauth-token';
 
 interface PayPalServiceConfig {
@@ -24,7 +24,7 @@ class PayPalService {
 
     private loadingPromise?: Promise<void>;
     private sdkInstance: PayPalSdkInstance;
-    private paymentMethods: PayPalEligiblePaymentMethods;
+    private eligibleMethods: PayPalEligiblePaymentMethods;
 
     constructor({ loadingContext, clientKey, merchantId, sdkLoader, amount, countryCode, vault }: PayPalServiceConfig) {
         this.sdkLoader = sdkLoader;
@@ -36,7 +36,7 @@ class PayPalService {
         this.vault = vault;
 
         this.createPayPalSdkInstance = this.createPayPalSdkInstance.bind(this);
-        this.createPayPalPaymentMethods = this.createPayPalPaymentMethods.bind(this);
+        this.createEligibleMethods = this.createEligibleMethods.bind(this);
         this.initialize = this.initialize.bind(this);
 
         void sdkLoader.load();
@@ -55,7 +55,7 @@ class PayPalService {
                 return tokenData.clientToken;
             })
             .then(this.createPayPalSdkInstance)
-            .then(this.createPayPalPaymentMethods);
+            .then(this.createEligibleMethods);
 
         return this.loadingPromise;
     }
@@ -73,7 +73,7 @@ class PayPalService {
         const createInstance = paypal?.v6?.createInstance || paypal?.createInstance;
 
         if (!createInstance) {
-            return Promise.reject(new Error('PayPal SDK `createInstance` is not available'));
+            return Promise.reject(new AdyenCheckoutError('ERROR', 'PayPal SDK `createInstance` is not available'));
         }
 
         this.sdkInstance = await createInstance({
@@ -85,7 +85,7 @@ class PayPalService {
         return this.sdkInstance;
     }
 
-    private async createPayPalPaymentMethods(): Promise<void> {
+    private async createEligibleMethods(): Promise<void> {
         const isZeroAuth = this.amount?.value === 0;
 
         let paymentFlow: PayPalPaymentFlow | undefined;
@@ -95,22 +95,20 @@ class PayPalService {
             paymentFlow = 'VAULT_WITH_PAYMENT';
         }
 
-        this.paymentMethods = await this.sdkInstance.findEligibleMethods({
+        this.eligibleMethods = await this.sdkInstance.findEligibleMethods({
             currencyCode: this.amount?.currency,
             // @ts-expect-error: @paypal/paypal-js is missing countryCode in the types
             countryCode: this.countryCode,
             paymentFlow
         });
-
-        return Promise.resolve();
     }
 
     public getInstance(): PayPalSdkInstance {
         return this.sdkInstance;
     }
 
-    public getEligiblePaymentMethods(): PayPalEligiblePaymentMethods {
-        return this.paymentMethods;
+    public getEligibleMethods(): PayPalEligiblePaymentMethods {
+        return this.eligibleMethods;
     }
 }
 

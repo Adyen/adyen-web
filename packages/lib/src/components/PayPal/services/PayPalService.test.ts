@@ -70,7 +70,7 @@ describe('PayPalService', () => {
                 paymentFlow: undefined
             });
             expect(service.getInstance()).toBe(sdkInstance);
-            expect(service.getEligiblePaymentMethods()).toBe(eligibleMethods);
+            expect(service.getEligibleMethods()).toBe(eligibleMethods);
         });
 
         test('should use the "v6" namespace to create the instance when available', async () => {
@@ -153,7 +153,7 @@ describe('PayPalService', () => {
             const service = new PayPalService(createConfig());
 
             expect(service.getInstance()).toBeUndefined();
-            expect(service.getEligiblePaymentMethods()).toBeUndefined();
+            expect(service.getEligibleMethods()).toBeUndefined();
         });
     });
 });

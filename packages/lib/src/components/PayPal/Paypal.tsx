@@ -65,20 +65,26 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
                 vault: Boolean(paypalV6Props.vault)
             });
 
-            void this.paypalService.initialize();
+            this.paypalService.initialize().catch(error => {
+                this.handleError(
+                    error instanceof AdyenCheckoutError
+                        ? error
+                        : new AdyenCheckoutError('ERROR', 'Something went wrong while initializing PayPal', { cause: error })
+                );
+            });
         }
     }
 
     public override async isAvailable(): Promise<void> {
         if (this.props.usePayPalV6) {
             if (!this.paypalService) {
-                return Promise.reject(new Error('PayPal service not initialized'));
+                return Promise.reject(new AdyenCheckoutError('ERROR', 'PayPal is not available'));
             }
 
             await this.paypalService.isSdkLoaded();
 
-            if (!this.paypalService.getEligiblePaymentMethods().isEligible('paypal')) {
-                return Promise.reject(new Error('PayPal is not eligible'));
+            if (!this.paypalService.getEligibleMethods().isEligible('paypal')) {
+                return Promise.reject(new AdyenCheckoutError('ERROR', 'PayPal is not available'));
             }
 
             return Promise.resolve();
