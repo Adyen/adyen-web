@@ -69,8 +69,7 @@ test.describe('Testing branding - especially regarding optional and hidden cvc f
             await cardBrandingPage.deleteCardNumber();
 
             // Card is reset
-            brandingIconSrc = await cardBrandingPage.brandingIcon.getAttribute('src');
-            expect(brandingIconSrc).toContain('nocard.svg');
+            await expect(cardBrandingPage.brandingIcon).toHaveAttribute('src', /nocard\.svg/);
 
             // Visible cvc field
             await expect(cardBrandingPage.cvcField).toBeVisible();

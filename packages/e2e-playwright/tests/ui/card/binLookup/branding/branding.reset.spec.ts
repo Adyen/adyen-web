@@ -37,10 +37,8 @@ test.describe('Card - Testing resetting brand after binLookup has occurred', () 
 
         await card.deleteCardNumber();
 
-        let cardData: any = await page.evaluate('window.component.data');
-
         // Check brand has been reset in paymentMethod data
-        expect(cardData.paymentMethod.brand).toBe(undefined);
+        await page.waitForFunction(() => window['component'].data.paymentMethod.brand === undefined);
 
         // Check brand is reset in the UI
         brandingIconSrc = await card.brandingIcon.getAttribute('src');
