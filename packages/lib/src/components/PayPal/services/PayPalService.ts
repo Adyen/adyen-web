@@ -1,4 +1,5 @@
-import { AdyenCheckoutError, type PaymentAmount } from '../../../types';
+import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
+import type { PaymentAmount } from '../../../types';
 import { PayPalSdkLoader } from './PayPalSdkLoader';
 import type { PayPalComponents, PayPalEligiblePaymentMethods, PayPalPaymentFlow, PayPalSdkInstance } from '../paypal-js-types';
 import requestPayPalOauthToken from './request-paypal-oauth-token';
@@ -97,7 +98,7 @@ class PayPalService {
 
         this.eligiblePaymentMethods = await this.sdkInstance.findEligibleMethods({
             currencyCode: this.amount?.currency,
-            // @ts-expect-error: @paypal/paypal-js is missing countryCode in the types
+            // @ts-expect-error: @paypal/paypal-js/sdk-v6 is missing countryCode in the types
             countryCode: this.countryCode,
             paymentFlow
         });
