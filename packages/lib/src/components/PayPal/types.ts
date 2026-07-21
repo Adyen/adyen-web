@@ -196,6 +196,24 @@ export interface PayPalConfiguration extends UIElementProps {
      * @default undefined
      */
     countryCode?: string;
+
+    /**
+     * Use PayPal V6 SDK instead of V5
+     * @default undefined
+     */
+    usePayPalV6?: {
+        /**
+         * Whether to enable vaulting for the payment
+         * @default undefined
+         */
+        vault?: boolean;
+        /**
+         * Pass a Content Security Policy single-use token if you use them on your site
+         *
+         * @default undefined
+         */
+        nonce?: string;
+    };
 }
 
 /**
