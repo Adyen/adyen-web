@@ -23,6 +23,8 @@ import type {
 import { AnalyticsInfoEvent, InfoEventType } from '../../core/Analytics/events/AnalyticsInfoEvent';
 import { sanitizeResponse, verifyPaymentDidNotFail } from '../internal/UIElement/utils';
 import CancelError from '../../core/Errors/CancelError';
+import { PayPalSdkLoader } from './services/PayPalSdkLoader';
+import { PayPalService } from './services/PayPalService';
 import './Paypal.scss';
 
 class PaypalElement extends UIElement<PayPalConfiguration> {
@@ -36,11 +38,59 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
 
     protected static readonly defaultProps = defaultProps;
 
+    private readonly paypalService?: PayPalService;
+
     constructor(checkout: ICore, props?: PayPalConfiguration) {
         super(checkout, props);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleOnShippingAddressChange = this.handleOnShippingAddressChange.bind(this);
         this.handleOnShippingOptionsChange = this.handleOnShippingOptionsChange.bind(this);
+
+        if (this.props.usePayPalV6) {
+            const paypalV6Props = this.props.usePayPalV6;
+
+            const sdkLoader = new PayPalSdkLoader({
+                analytics: this.analytics,
+                environment: this.props.environment,
+                nonce: paypalV6Props.nonce
+            });
+
+            this.paypalService = new PayPalService({
+                loadingContext: this.props.loadingContext ?? '',
+                clientKey: this.props.clientKey ?? '',
+                merchantId: this.props.configuration?.merchantId ?? '',
+                sdkLoader,
+                countryCode: this.props.countryCode ?? '',
+                amount: this.props.amount,
+                vault: Boolean(paypalV6Props.vault)
+            });
+
+            this.paypalService.initialize().catch(error => {
+                this.handleError(
+                    error instanceof AdyenCheckoutError
+                        ? error
+                        : new AdyenCheckoutError('ERROR', 'Something went wrong while initializing PayPal', { cause: error })
+                );
+            });
+        }
+    }
+
+    public override async isAvailable(): Promise<void> {
+        if (this.props.usePayPalV6) {
+            if (!this.paypalService) {
+                return Promise.reject(new AdyenCheckoutError('ERROR', 'PayPal is not available'));
+            }
+
+            await this.paypalService.isSdkLoaded();
+
+            if (!this.paypalService.getEligiblePaymentMethods().isEligible('paypal')) {
+                return Promise.reject(new AdyenCheckoutError('ERROR', 'PayPal is not available'));
+            }
+
+            return Promise.resolve();
+        }
+
+        return Promise.resolve();
     }
 
     formatProps(props: PayPalConfiguration): PayPalConfiguration {
@@ -241,6 +291,10 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
 
     protected override componentToRender(): h.JSX.Element | null {
         if (!this.props.showPayButton) return null;
+
+        if (this.props.usePayPalV6) {
+            return <div>Paypal v6 button</div>;
+        }
 
         const { onShippingAddressChange, onShippingOptionsChange, ...rest } = this.props;
 
