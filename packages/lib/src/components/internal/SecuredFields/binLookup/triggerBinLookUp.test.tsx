@@ -385,6 +385,93 @@ describe('triggerBinLookUp', () => {
                         expect(mockOnBinLookup).toHaveBeenCalledWith(expect.objectContaining({ healthcare: [{ visa: true }] }));
                     });
                 });
+
+                describe('Strict funding source validation', () => {
+                    test('should reject the card as unsupported when the binLookup funding source is not in allowedFundingSources', async () => {
+                        const requestId = '123456789';
+                        httpPostMock.mockImplementation(
+                            jest.fn(() => Promise.resolve({ requestId, brands: [{ brand: visa, supported: true, fundingSource: 'credit' }] }))
+                        );
+
+                        const mockCardElement = new MockCardElement(core, { clientKey, loadingContext, brands: [visa, 'mc'] });
+                        mockCardElement.props.allowedFundingSources = ['debit', 'prepaid'];
+                        const bin = { binValue: '', type: '', encryptedBin: 'xxx-xxx', uuid: requestId };
+                        triggerBinLookUp(mockCardElement)(bin);
+                        await new Promise(process.nextTick);
+
+                        expect(mockHandleUnsupportedCard).toHaveBeenCalledWith({
+                            type: 'card',
+                            fieldType: 'encryptedCardNumber',
+                            error: SF_ErrorCodes.ERROR_MSG_UNSUPPORTED_CARD_ENTERED,
+                            detectedBrands: [visa]
+                        });
+                        expect(mockOnBinLookup).toHaveBeenCalledWith(expect.objectContaining({ detectedBrands: [visa], supportedBrands: null }));
+                        expect(mockProcessBinLookupResponse).not.toHaveBeenCalled();
+                    });
+
+                    test('should accept the card when the binLookup funding source is included in allowedFundingSources', async () => {
+                        const requestId = '123456789';
+                        httpPostMock.mockImplementation(
+                            jest.fn(() => Promise.resolve({ requestId, brands: [{ brand: visa, supported: true, fundingSource: 'debit' }] }))
+                        );
+
+                        const mockCardElement = new MockCardElement(core, { clientKey, loadingContext, brands: [visa, 'mc'] });
+                        mockCardElement.props.allowedFundingSources = ['debit', 'prepaid'];
+                        const bin = { binValue: '', type: '', encryptedBin: 'xxx-xxx', uuid: requestId };
+                        triggerBinLookUp(mockCardElement)(bin);
+                        await new Promise(process.nextTick);
+
+                        expect(mockHandleUnsupportedCard).not.toHaveBeenCalled();
+                        expect(mockProcessBinLookupResponse).toHaveBeenCalledWith(
+                            expect.objectContaining({ supportedBrands: [{ brand: visa, supported: true, fundingSource: 'debit' }] })
+                        );
+                    });
+
+                    test('should not validate when the binLookup returns no funding source', async () => {
+                        const requestId = '123456789';
+                        httpPostMock.mockImplementation(jest.fn(() => Promise.resolve({ requestId, brands: [{ brand: visa, supported: true }] })));
+
+                        const mockCardElement = new MockCardElement(core, { clientKey, loadingContext, brands: [visa, 'mc'] });
+                        mockCardElement.props.allowedFundingSources = ['debit', 'prepaid'];
+                        const bin = { binValue: '', type: '', encryptedBin: 'xxx-xxx', uuid: requestId };
+                        triggerBinLookUp(mockCardElement)(bin);
+                        await new Promise(process.nextTick);
+
+                        expect(mockHandleUnsupportedCard).not.toHaveBeenCalled();
+                        expect(mockProcessBinLookupResponse).toHaveBeenCalled();
+                    });
+
+                    test('should not validate when allowedFundingSources is not present, even on a disallowed funding source', async () => {
+                        const requestId = '123456789';
+                        httpPostMock.mockImplementation(
+                            jest.fn(() => Promise.resolve({ requestId, brands: [{ brand: visa, supported: true, fundingSource: 'credit' }] }))
+                        );
+
+                        const mockCardElement = new MockCardElement(core, { clientKey, loadingContext, brands: [visa, 'mc'] });
+                        const bin = { binValue: '', type: '', encryptedBin: 'xxx-xxx', uuid: requestId };
+                        triggerBinLookUp(mockCardElement)(bin);
+                        await new Promise(process.nextTick);
+
+                        expect(mockHandleUnsupportedCard).not.toHaveBeenCalled();
+                        expect(mockProcessBinLookupResponse).toHaveBeenCalled();
+                    });
+
+                    test('should not validate when allowedFundingSources is an empty array, even on a disallowed funding source', async () => {
+                        const requestId = '123456789';
+                        httpPostMock.mockImplementation(
+                            jest.fn(() => Promise.resolve({ requestId, brands: [{ brand: visa, supported: true, fundingSource: 'credit' }] }))
+                        );
+
+                        const mockCardElement = new MockCardElement(core, { clientKey, loadingContext, brands: [visa, 'mc'] });
+                        mockCardElement.props.allowedFundingSources = [];
+                        const bin = { binValue: '', type: '', encryptedBin: 'xxx-xxx', uuid: requestId };
+                        triggerBinLookUp(mockCardElement)(bin);
+                        await new Promise(process.nextTick);
+
+                        expect(mockHandleUnsupportedCard).not.toHaveBeenCalled();
+                        expect(mockProcessBinLookupResponse).toHaveBeenCalled();
+                    });
+                });
             });
         });
 
