@@ -1,5 +1,5 @@
 import { getPaypalSettings } from './get-paypal-settings';
-import { PAYPAL_JS_URL } from '../config';
+import { PAYPAL_JS_URL_V5 } from '../config';
 import type { PayPalComponentProps } from '../components/types';
 
 /**
@@ -13,5 +13,5 @@ export const getPaypalUrl = (props: Partial<PayPalComponentProps>): string => {
             .map(key => `${key}=${settings[key]}`)
             .join('&')
     );
-    return `${PAYPAL_JS_URL}?${params}`;
+    return `${PAYPAL_JS_URL_V5}?${params}`;
 };
