@@ -23,7 +23,7 @@ describe('ApplePaySession', () => {
             onshippingcontactselected: jest.fn(),
             onshippingmethodselected: jest.fn(),
             oncouponcodechanged: jest.fn()
-        })) as unknown as ApplePaySession;
+        })) as unknown as typeof window.ApplePaySession;
     });
 
     afterEach(() => {
