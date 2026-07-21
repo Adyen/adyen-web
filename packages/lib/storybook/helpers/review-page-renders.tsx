@@ -2,7 +2,7 @@ import { h } from 'preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { AdyenCheckout, components } from '../../src';
 import type { CoreConfiguration, ICore } from '../../src/core/types';
-import type { PaymentData } from '../../src/types/global-types';
+import type { OrderStatus, PaymentData } from '../../src/types/global-types';
 import type { CardFieldValidData } from '../../src/types';
 import type { NewableComponent } from '../../src/core/core.registry';
 import type { DropinConfiguration } from '../../src/components/Dropin/types';
@@ -26,7 +26,7 @@ const captureEndDigits = (endDigitsRef: { current: string | undefined }) => (e: 
 function createReviewPageRender<T>(mountFn: MountFn<T>) {
     return function ReviewPageStory({ componentConfiguration, ...checkoutConfig }: PaymentMethodStoryProps<T>) {
         const { countryCode, amount, shopperLocale } = checkoutConfig;
-        const [reviewState, setReviewState] = useState<{ data: PaymentData; sessionId: string } | null>(null);
+        const [reviewState, setReviewState] = useState<{ data: PaymentData; sessionId: string; orderStatus?: OrderStatus } | null>(null);
         const endDigitsRef = useRef<string | undefined>(undefined);
         const wrapperRef = useRef<HTMLDivElement>(null);
 
@@ -48,7 +48,7 @@ function createReviewPageRender<T>(mountFn: MountFn<T>) {
                     countryCode,
                     locale: shopperLocale,
                     session,
-                    onReview: data => setReviewState({ data, sessionId: session.id }),
+                    onReview: (data, _component, orderStatus) => setReviewState({ data, sessionId: session.id, orderStatus }),
                     onError: (err: unknown) => console.error('[ReviewPage] onError', err)
                 });
 
@@ -64,6 +64,7 @@ function createReviewPageRender<T>(mountFn: MountFn<T>) {
                 <ReviewPage
                     reviewData={reviewState.data}
                     sessionId={reviewState.sessionId}
+                    orderStatus={reviewState.orderStatus}
                     amount={amount}
                     countryCode={countryCode}
                     shopperLocale={shopperLocale}

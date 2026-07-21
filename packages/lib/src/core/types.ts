@@ -5,6 +5,7 @@ import UIElement from '../components/internal/UIElement';
 import type { CustomTranslations } from '../language/types';
 import type {
     Order,
+    OrderStatus,
     PaymentAction,
     PaymentMethodsResponse,
     ActionHandledReturnObject,
@@ -268,7 +269,7 @@ export interface CoreConfiguration {
      * @param state
      * @param component
      */
-    onReview?(state: PaymentData, component: UIElement): void;
+    onReview?(state: PaymentData, component: UIElement, orderStatus?: OrderStatus): void;
 
     /**
      * Callback used in the Advanced flow to perform the /payments/details API call.

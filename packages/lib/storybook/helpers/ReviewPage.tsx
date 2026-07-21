@@ -3,18 +3,19 @@ import { useEffect, useRef, useState } from 'preact/hooks';
 import { AdyenCheckout } from '../../src';
 import type { CoreConfiguration, ICore } from '../../src/core/types';
 import getCurrency from '../utils/get-currency';
-import type { PaymentData } from '../../src/types/global-types';
+import type { OrderStatus, PaymentData } from '../../src/types/global-types';
 
 export interface ReviewPageProps {
     readonly reviewData: PaymentData;
     readonly sessionId: string;
+    readonly orderStatus?: OrderStatus;
     readonly amount: string | number;
     readonly countryCode: string;
     readonly shopperLocale: string;
     readonly endDigits?: string;
 }
 
-export const ReviewPage = ({ reviewData, sessionId, amount, countryCode, shopperLocale, endDigits }: ReviewPageProps) => {
+export const ReviewPage = ({ reviewData, sessionId, orderStatus, amount, countryCode, shopperLocale, endDigits }: ReviewPageProps) => {
     const actionModalRef = useRef<HTMLDialogElement>(null);
     const actionRef = useRef<HTMLDivElement>(null);
     const checkoutRef = useRef<ICore | null>(null);
@@ -67,6 +68,25 @@ export const ReviewPage = ({ reviewData, sessionId, amount, countryCode, shopper
                         </p>
                     )}
                     <pre style={{ overflow: 'auto', fontSize: 11 }}>{JSON.stringify(reviewData, null, 2)}</pre>
+                    {orderStatus && (
+                        <div>
+                            <p>
+                                <strong>Remaining amount:</strong> {(orderStatus.remainingAmount.value / 100).toFixed(2)}{' '}
+                                {orderStatus.remainingAmount.currency}
+                            </p>
+                            <p>
+                                <strong>Paid with:</strong>
+                            </p>
+                            <ul>
+                                {orderStatus.paymentMethods.map((pm, i) => (
+                                    <li key={i}>
+                                        {pm.name ?? pm.type}
+                                        {pm.lastFour ? ` •••• ${pm.lastFour}` : ''} — {(pm.amount.value / 100).toFixed(2)} {pm.amount.currency}
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
                     <button
                         type="button"
                         onClick={() => {
