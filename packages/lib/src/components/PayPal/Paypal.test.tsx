@@ -2,6 +2,16 @@ import Paypal from './Paypal';
 import { render, screen } from '@testing-library/preact';
 import { setupCoreMock, TEST_CHECKOUT_ATTEMPT_ID, TEST_RISK_DATA } from '../../../config/testMocks/setup-core-mock';
 import CancelError from '../../core/Errors/CancelError';
+import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
+import { PayPalService } from './services/PayPalService';
+import { PayPalSdkLoader } from './services/PayPalSdkLoader';
+import type { PayPalEligiblePaymentMethods } from './paypal-js-types';
+
+jest.mock('./services/PayPalService');
+jest.mock('./services/PayPalSdkLoader');
+
+const PayPalServiceMock = PayPalService as jest.MockedClass<typeof PayPalService>;
+const PayPalSdkLoaderMock = PayPalSdkLoader as jest.MockedClass<typeof PayPalSdkLoader>;
 
 const core = setupCoreMock();
 
@@ -75,7 +85,7 @@ describe('Paypal', () => {
         const onErrorMock = jest.fn();
         const paypal = new Paypal(core, { onError: onErrorMock });
         paypal.submit();
-        expect(onErrorMock).toHaveBeenCalled();
+        expect(onErrorMock).toHaveBeenCalledWith(expect.any(AdyenCheckoutError), expect.anything());
     });
 
     test('should pass the required callbacks to the Component', () => {
@@ -186,7 +196,7 @@ describe('Paypal', () => {
             const onErrorMock = jest.fn();
             const paypal = new Paypal(core, { onError: onErrorMock });
             paypal.updateWithAction({ type: 'sdk', paymentMethodType: 'paypal', sdkData: { token: 'test-token' } });
-            expect(onErrorMock).toHaveBeenCalled();
+            expect(onErrorMock).toHaveBeenCalledWith(expect.any(AdyenCheckoutError), expect.anything());
         });
     });
 
@@ -231,6 +241,7 @@ describe('Paypal', () => {
                 expect.objectContaining({ message: 'PayPal order actions are not available' }),
                 expect.anything()
             );
+            expect(onErrorMock.mock.calls[0][0]).toBeInstanceOf(AdyenCheckoutError);
         });
 
         test('should get order details and call onAuthorized when provided', async () => {
@@ -273,6 +284,7 @@ describe('Paypal', () => {
                 expect.objectContaining({ message: 'Something went wrong while parsing PayPal Order' }),
                 expect.anything()
             );
+            expect(onErrorMock.mock.calls[0][0]).toBeInstanceOf(AdyenCheckoutError);
         });
     });
 
@@ -281,7 +293,7 @@ describe('Paypal', () => {
             const onErrorMock = jest.fn();
             const paypal = new Paypal(core, { onError: onErrorMock });
             paypal.handleReject('some error');
-            expect(onErrorMock).toHaveBeenCalled();
+            expect(onErrorMock).toHaveBeenCalledWith(expect.any(AdyenCheckoutError), expect.anything());
         });
     });
 
@@ -430,6 +442,126 @@ describe('Paypal', () => {
             const paypal = new Paypal(core, { showPayButton: true, onShippingOptionsChange: jest.fn() });
             render(paypal.render());
             expect(paypal.props.onShippingOptionsChange).toBeDefined();
+        });
+    });
+
+    describe('PayPal v6', () => {
+        const isEligibleMock = jest.fn();
+
+        beforeEach(() => {
+            jest.clearAllMocks();
+            PayPalServiceMock.prototype.initialize.mockResolvedValue(undefined);
+            PayPalServiceMock.prototype.isSdkLoaded.mockResolvedValue(undefined);
+            PayPalServiceMock.prototype.getEligiblePaymentMethods.mockReturnValue({
+                isEligible: isEligibleMock
+            } as unknown as PayPalEligiblePaymentMethods);
+            isEligibleMock.mockReturnValue(true);
+        });
+
+        describe('constructor', () => {
+            test('should create the SDK loader and PayPal service and initialize it when usePayPalV6 is set', () => {
+                new Paypal(core, {
+                    usePayPalV6: { vault: true, nonce: 'test-nonce' },
+                    configuration: { merchantId: 'merchant-1' },
+                    countryCode: 'US',
+                    amount: { value: 1000, currency: 'USD' }
+                });
+
+                expect(PayPalSdkLoaderMock).toHaveBeenCalledTimes(1);
+                expect(PayPalSdkLoaderMock).toHaveBeenCalledWith(expect.objectContaining({ nonce: 'test-nonce' }));
+
+                expect(PayPalServiceMock).toHaveBeenCalledTimes(1);
+                expect(PayPalServiceMock).toHaveBeenCalledWith(
+                    expect.objectContaining({
+                        merchantId: 'merchant-1',
+                        countryCode: 'US',
+                        amount: { value: 1000, currency: 'USD' },
+                        vault: true,
+                        sdkLoader: expect.any(PayPalSdkLoader)
+                    })
+                );
+
+                expect(PayPalServiceMock.prototype.initialize).toHaveBeenCalledTimes(1);
+            });
+
+            test('should default vault to false when not provided in usePayPalV6', () => {
+                new Paypal(core, { usePayPalV6: {} });
+
+                expect(PayPalServiceMock).toHaveBeenCalledWith(expect.objectContaining({ vault: false }));
+            });
+
+            test('should not create the SDK loader or PayPal service when usePayPalV6 is not set', () => {
+                new Paypal(core);
+
+                expect(PayPalSdkLoaderMock).not.toHaveBeenCalled();
+                expect(PayPalServiceMock).not.toHaveBeenCalled();
+                expect(PayPalServiceMock.prototype.initialize).not.toHaveBeenCalled();
+            });
+
+            test('should report the error via onError when initialization fails', async () => {
+                const initError = new Error('Failed to load token');
+                PayPalServiceMock.prototype.initialize.mockRejectedValue(initError);
+                const onErrorMock = jest.fn();
+
+                new Paypal(core, { usePayPalV6: {}, onError: onErrorMock });
+
+                await new Promise(resolve => setTimeout(resolve, 0));
+
+                expect(onErrorMock).toHaveBeenCalledTimes(1);
+                expect(onErrorMock.mock.calls[0][0]).toBeInstanceOf(AdyenCheckoutError);
+                expect(onErrorMock.mock.calls[0][0]).toMatchObject({
+                    message: 'Something went wrong while initializing PayPal',
+                    cause: initError
+                });
+            });
+
+            test('should forward an AdyenCheckoutError as-is when initialization fails', async () => {
+                const initError = new AdyenCheckoutError('NETWORK_ERROR', 'PayPal token request failed');
+                PayPalServiceMock.prototype.initialize.mockRejectedValue(initError);
+                const onErrorMock = jest.fn();
+
+                new Paypal(core, { usePayPalV6: {}, onError: onErrorMock });
+
+                await new Promise(resolve => setTimeout(resolve, 0));
+
+                expect(onErrorMock).toHaveBeenCalledTimes(1);
+                expect(onErrorMock).toHaveBeenCalledWith(initError, expect.anything());
+            });
+        });
+
+        describe('isAvailable', () => {
+            test('should resolve without using the PayPal service when usePayPalV6 is not set', async () => {
+                const paypal = new Paypal(core);
+
+                await expect(paypal.isAvailable()).resolves.toBeUndefined();
+                expect(PayPalServiceMock.prototype.isSdkLoaded).not.toHaveBeenCalled();
+            });
+
+            test('should wait for the SDK and resolve when PayPal is eligible', async () => {
+                isEligibleMock.mockReturnValue(true);
+                const paypal = new Paypal(core, { usePayPalV6: {} });
+
+                await expect(paypal.isAvailable()).resolves.toBeUndefined();
+
+                expect(PayPalServiceMock.prototype.isSdkLoaded).toHaveBeenCalledTimes(1);
+                expect(isEligibleMock).toHaveBeenCalledWith('paypal');
+            });
+
+            test('should reject when PayPal is not eligible', async () => {
+                isEligibleMock.mockReturnValue(false);
+                const paypal = new Paypal(core, { usePayPalV6: {} });
+
+                await expect(paypal.isAvailable()).rejects.toThrow('PayPal is not available');
+                await expect(paypal.isAvailable()).rejects.toBeInstanceOf(AdyenCheckoutError);
+            });
+
+            test('should reject when the SDK fails to load', async () => {
+                PayPalServiceMock.prototype.isSdkLoaded.mockRejectedValue(new Error('PayPal SDK not loaded'));
+                const paypal = new Paypal(core, { usePayPalV6: {} });
+
+                await expect(paypal.isAvailable()).rejects.toThrow('PayPal SDK not loaded');
+                expect(isEligibleMock).not.toHaveBeenCalled();
+            });
         });
     });
 });
