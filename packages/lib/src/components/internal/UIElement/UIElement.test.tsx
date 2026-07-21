@@ -14,6 +14,7 @@ import { LogEventType } from '../../../core/Analytics/events/AnalyticsLogEvent';
 import { render, screen } from '@testing-library/preact';
 import { CoreProvider } from '../../../core/Context/CoreProvider';
 import { AmountProvider } from '../../../core/Context/AmountProvider';
+import * as orderStatusModule from '../../../core/Services/order-status';
 
 interface MyElementProps extends UIElementProps {
     challengeWindowSize?: string;
@@ -615,7 +616,7 @@ describe('UIElement', () => {
             });
         });
 
-        test('should call onReview with data and elementRef, and not proceed to payment', () => {
+        test('should call onReview with data, elementRef and undefined orderStatus when no order present, and not proceed to payment', () => {
             const onReview = jest.fn();
             const mockData = { clientStateDataIndicator: true as const, paymentMethod: { type: 'payment-type' } };
             jest.spyOn(MyElement.prototype, 'isValid', 'get').mockReturnValue(true);
@@ -624,8 +625,32 @@ describe('UIElement', () => {
             const executePaymentsCallSpy = jest.spyOn(element, 'executePaymentsCall').mockImplementation(() => {});
             element.submit();
             expect(onReview).toHaveBeenCalledTimes(1);
-            expect(onReview).toHaveBeenCalledWith(mockData, element.elementRef);
+            expect(onReview).toHaveBeenCalledWith(mockData, element.elementRef, undefined);
             expect(executePaymentsCallSpy).not.toHaveBeenCalled();
+        });
+
+        test('should fetch orderStatus and pass it to onReview when an order is present', async () => {
+            const mockOrderStatus = {
+                remainingAmount: { value: 500, currency: 'EUR' },
+                paymentMethods: [],
+                pspReference: 'ref',
+                reference: 'ref',
+                expiresAt: ''
+            };
+            jest.spyOn(orderStatusModule, 'default').mockResolvedValue(mockOrderStatus);
+
+            const onReview = jest.fn();
+            const mockData = { clientStateDataIndicator: true as const, paymentMethod: { type: 'payment-type' } };
+            const mockOrder = { orderData: 'order-data', pspReference: 'psp-ref' };
+            jest.spyOn(MyElement.prototype, 'isValid', 'get').mockReturnValue(true);
+            jest.spyOn(MyElement.prototype, 'data', 'get').mockReturnValue(mockData);
+            const element = new MyElement(core, { onReview, order: mockOrder });
+            element.submit();
+
+            await new Promise(process.nextTick);
+
+            expect(orderStatusModule.default).toHaveBeenCalledWith(expect.any(Object), mockOrder);
+            expect(onReview).toHaveBeenCalledWith(mockData, element.elementRef, mockOrderStatus);
         });
 
         test('should submit a review analytics log event when onReview is configured', () => {

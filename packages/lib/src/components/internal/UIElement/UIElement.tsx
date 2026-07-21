@@ -1,6 +1,7 @@
 import { createRef, h, RefObject, TargetedKeyboardEvent } from 'preact';
 import { Resources } from '../../../core/Context/Resources';
 import AdyenCheckoutError, { NETWORK_ERROR } from '../../../core/Errors/AdyenCheckoutError';
+import getOrderStatus from '../../../core/Services/order-status';
 import { hasOwnProperty } from '../../../utils/hasOwnProperty';
 import BaseElement from '../BaseElement/BaseElement';
 import PayButton from '../PayButton';
@@ -18,6 +19,7 @@ import type {
     ActionHandledReturnObject,
     CheckoutAdvancedFlowResponse,
     Order,
+    OrderStatus,
     PaymentAction,
     PaymentAmount,
     PaymentData,
@@ -258,8 +260,18 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         }
 
         if (this.props.onReview) {
-            this.submitAnalytics(new AnalyticsLogEvent({ component: this.type, type: LogEventType.review, message: 'Review flow triggered' }));
-            this.props.onReview(this.data, this.elementRef);
+            const order = this.state.order ?? this.props.order;
+            const onReview = (orderStatus?: OrderStatus) => {
+                this.submitAnalytics(new AnalyticsLogEvent({ component: this.type, type: LogEventType.review, message: 'Review flow triggered' }));
+                this.props.onReview(this.data, this.elementRef, orderStatus);
+            };
+            if (order) {
+                void getOrderStatus({ clientKey: this.props.clientKey, loadingContext: this.props.loadingContext }, order)
+                    .then(orderStatus => onReview(orderStatus))
+                    .catch(() => onReview());
+                return;
+            }
+            onReview();
             return;
         }
 
