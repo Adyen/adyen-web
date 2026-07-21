@@ -11,6 +11,14 @@ if (process.env.NODE_ENV === 'development') {
     window.mockBinCount = 0; // Set to 0 to turn off mocking, 1 to turn it on
 }
 
+/**
+ * Determines whether the funding source resolved by the BIN lookup is not part of the funding sources the card
+ * component is allowed to accept. Brands without a resolved funding source are ignored (no validation, preserving
+ * default behavior).
+ */
+export const hasDisallowedFundingSource = (supportedBrands: BrandObject[], allowedFundingSources: string[]): boolean =>
+    supportedBrands.some(brand => !!brand.fundingSource && !allowedFundingSources.includes(brand.fundingSource));
+
 export const triggerBinLookUp = (element: CardElement | CustomCardElement) => {
     let currentRequestId: string | null = null;
 
@@ -119,6 +127,36 @@ export const triggerBinLookUp = (element: CardElement | CustomCardElement) => {
                          * supportedBrands = merchant supports this brand(s); we have detected the card number to be of this brand(s); carry on!
                          */
                         if (mappedResponse.supportedBrands.length) {
+                            /**
+                             * Strict funding source validation (driven by `allowedFundingSources` in the scheme's configuration
+                             * object in the /paymentMethods response): if the funding source resolved by binLookup is not part of
+                             * the allowed funding sources, reject the card as unsupported. When `allowedFundingSources` is absent or
+                             * empty, or when binLookup resolves no funding source, no validation is performed.
+                             */
+                            const allowedFundingSources = 'allowedFundingSources' in element.props ? element.props.allowedFundingSources : undefined;
+
+                            if (allowedFundingSources?.length && hasDisallowedFundingSource(mappedResponse.supportedBrands, allowedFundingSources)) {
+                                const errObj: CardErrorData = {
+                                    type: 'card',
+                                    fieldType: 'encryptedCardNumber',
+                                    error: SF_ErrorCodes.ERROR_MSG_UNSUPPORTED_CARD_ENTERED,
+                                    detectedBrands: mappedResponse.detectedBrands
+                                };
+                                element.handleUnsupportedCard(errObj);
+
+                                // Inform merchant of the result
+                                element.onBinLookup({
+                                    type: callbackObj.type,
+                                    detectedBrands: mappedResponse.detectedBrands,
+                                    supportedBrands: null,
+                                    paymentMethodVariants: mappedResponse.paymentMethodVariants,
+                                    ...(hasHealthcareData && { healthcare: mappedResponse.healthcare }),
+                                    brands: element.props.brands || DEFAULT_CARD_GROUP_TYPES
+                                });
+
+                                return;
+                            }
+
                             // ...call processBinLookupResponse with, a simplified, response object if it contains at least one supported brand
                             element.processBinLookupResponse({
                                 issuingCountryCode: data.issuingCountryCode ?? '',
