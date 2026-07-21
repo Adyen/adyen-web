@@ -101,6 +101,7 @@
         "@testing-library/preact-hooks": "1.1.0",
         "@testing-library/user-event": "14.6.1",
         "@types/jest": "30.0.0",
+        "adyen-component-theming": "file:adyen-component-theming-0.0.0.tgz",
         "autoprefixer": "10.5.0",
         "cssnano": "8.0.1",
         "dotenv": "17.4.2",

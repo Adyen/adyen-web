@@ -35,6 +35,7 @@ import { PayButtonProps } from '../PayButton/PayButton';
 import { TxVariants } from '../../tx-variants';
 import Donation from '../../Donation/Donation';
 import './UIElement.scss';
+import { ThemeProvider } from '../../../core/Context/ThemeProvider';
 
 export abstract class UIElement<P extends UIElementProps = UIElementProps> extends BaseElement<P> {
     /**
@@ -665,7 +666,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
             <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources} analytics={this.analytics}>
                 <SRPanelProvider srPanel={this.srPanel}>
                     <AmountProvider amount={this.props.amount} secondaryAmount={this.props.secondaryAmount} providerRef={this.amountProviderRef}>
-                        {this.componentToRender()}
+                        <ThemeProvider>{this.componentToRender()}</ThemeProvider>
                     </AmountProvider>
                 </SRPanelProvider>
             </CoreProvider>

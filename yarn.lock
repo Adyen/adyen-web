@@ -101,6 +101,7 @@ __metadata:
     "@types/applepayjs": "npm:14.0.9"
     "@types/googlepay": "npm:0.7.10"
     "@types/jest": "npm:30.0.0"
+    adyen-component-theming: "file:adyen-component-theming-0.0.0.tgz"
     autoprefixer: "npm:10.5.0"
     classnames: "npm:2.5.1"
     cssnano: "npm:8.0.1"
@@ -5209,6 +5210,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"adyen-component-theming@file:adyen-component-theming-0.0.0.tgz::locator=%40adyen%2Fadyen-web%40workspace%3Apackages%2Flib":
+  version: 0.0.0
+  resolution: "adyen-component-theming@file:adyen-component-theming-0.0.0.tgz#adyen-component-theming-0.0.0.tgz::hash=9954a6&locator=%40adyen%2Fadyen-web%40workspace%3Apackages%2Flib"
+  dependencies:
+    chroma-js: "npm:^3.2.0"
+  checksum: 10c0/39449bd48deb69e1834fab4bcaf3004425167f461e243d025bc1d88e788b9209a218fdceaa20b7ea9153ee73833aa0f4045f6c96ce49eae40a79347e70f23cbd
+  languageName: node
+  linkType: hard
+
 "agent-base@npm:^7.1.0, agent-base@npm:^7.1.2":
   version: 7.1.4
   resolution: "agent-base@npm:7.1.4"
@@ -6216,6 +6226,13 @@ __metadata:
   version: 3.0.0
   resolution: "chownr@npm:3.0.0"
   checksum: 10c0/43925b87700f7e3893296c8e9c56cc58f926411cce3a6e5898136daaf08f08b9a8eb76d37d3267e707d0dcc17aed2e2ebdf5848c0c3ce95cf910a919935c1b10
+  languageName: node
+  linkType: hard
+
+"chroma-js@npm:^3.2.0":
+  version: 3.2.0
+  resolution: "chroma-js@npm:3.2.0"
+  checksum: 10c0/6ff6213d234e096ad3536291b1e1f11a506ea0fccfe163dd8eff69afa5f4f8a905b31a4a7ebc22b7eb722590887fed77073805ce89485f6d563edd1ea2d0a1db
   languageName: node
   linkType: hard
 
