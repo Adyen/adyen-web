@@ -77,6 +77,10 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
 
     public override async isAvailable(): Promise<void> {
         if (this.props.usePayPalV6) {
+            if (!this.paypalService) {
+                return Promise.reject(new AdyenCheckoutError('ERROR', 'PayPal is not available'));
+            }
+
             await this.paypalService.isSdkLoaded();
 
             if (!this.paypalService.getEligiblePaymentMethods().isEligible('paypal')) {
