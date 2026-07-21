@@ -76,7 +76,7 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
     /**
      * Builds and sends the payment list displayed analytics event.
      */
-    private reportPaymentMethodList = (elementsByDisplayMode: Record<PaymentMethodDisplayMode, UIElement[]>): void => {
+    private reportPaymentMethodList = (availableElementsByDisplayMode: Record<PaymentMethodDisplayMode, UIElement[]>): void => {
         try {
             const { paymentMethods, storedPaymentMethods, instantPaymentMethods, fastlanePaymentMethod } = splitPaymentMethods(
                 this.props.core.paymentMethodsResponse,
@@ -92,11 +92,11 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
 
             const availablePaymentMethods = createAvailablePaymentsList(
                 paymentMethodDisplayModes.map(e => e.displayMode),
-                elementsByDisplayMode,
+                availableElementsByDisplayMode,
                 this.props.core
             );
 
-            const unavailablePaymentMethods = createUnavailablePaymentsList(paymentMethodDisplayModes, elementsByDisplayMode);
+            const unavailablePaymentMethods = createUnavailablePaymentsList(paymentMethodDisplayModes, availableElementsByDisplayMode);
 
             const dropinPaymentListDisplayedEvent = new AnalyticsInfoEvent({
                 type: InfoEventType.PaymentListDisplayed,
