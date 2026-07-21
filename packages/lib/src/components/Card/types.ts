@@ -174,6 +174,15 @@ export interface CardConfiguration extends UIElementProps {
     enableStoreDetails?: boolean;
 
     /**
+     * List of funding sources the entered card is allowed to have. Parsed from the `allowedFundingSources`
+     * string in the scheme's `configuration` object in the /paymentMethods response.
+     * When present and non-empty, the entered card's funding source (from the internal BIN lookup) is
+     * strictly validated to be included in this list.
+     * @internal
+     */
+    allowedFundingSources?: string[];
+
+    /**
      * Comes from Stored payment method object
      * @internal
      */
@@ -467,6 +476,9 @@ export interface CardBackendConfiguration {
     // Card?
     socialSecurityNumberMode?: SocialSecurityMode;
 
+    // Comma-separated list of funding sources the card is allowed to have (e.g. "debit,prepaid")
+    allowedFundingSources?: string;
+
     // Remove?
     icon?: string;
     brandsConfiguration?: CardBrandsConfiguration;
@@ -508,6 +520,11 @@ export interface BrandObject {
     panLength?: number;
     paymentMethodVariant?: string;
     healthcare?: boolean;
+    /**
+     * Funding source of the detected brand, as resolved by the internal BIN lookup (v3).
+     * Nullable/absent when it cannot be determined, in which case no funding source validation is performed.
+     */
+    fundingSource?: FundingSourceKeys;
 }
 
 export interface BinLookupResponseRaw {
