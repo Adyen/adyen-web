@@ -59,13 +59,19 @@ declare module 'preact' {
             'paypal-pay-later-button': {
                 id?: string;
                 onclick(): void;
+<<<<<<< HEAD
                 countryCode?: string;
                 productCode?: string;
+=======
+>>>>>>> aa6da350f (chore: add paypal v6 button components)
             };
             'paypal-credit-button': {
                 id?: string;
                 onclick(): void;
+<<<<<<< HEAD
                 countryCode?: string;
+=======
+>>>>>>> aa6da350f (chore: add paypal v6 button components)
             };
             'venmo-button': {
                 id?: string;
@@ -73,10 +79,13 @@ declare module 'preact' {
                 class?: VenmoButtonClass;
                 onclick(): void;
             };
+<<<<<<< HEAD
             'paypal-message': {
                 id?: string;
                 amount?: string;
             };
+=======
+>>>>>>> aa6da350f (chore: add paypal v6 button components)
         }
     }
 }
