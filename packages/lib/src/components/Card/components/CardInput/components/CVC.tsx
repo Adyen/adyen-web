@@ -14,11 +14,18 @@ import DataSfSpan from './DataSfSpan';
 import { alternativeLabelContent } from './FieldLabelAlternative';
 import './CVC.scss';
 
+// CVC's format guidance (digit count/position) is brand-dependent, so the Amex variant of each CVC
+// error message is a distinct, fully-translated key rather than something composed at runtime.
+const CVC_AMEX_ERROR_KEYS = {
+    'cc.cvc.920': 'cc.cvc.920.amex',
+    'cc.cvc.921': 'cc.cvc.921.amex'
+};
+
 export default function CVC(props: Readonly<CVCProps>) {
     const {
         label,
         onFocusField = () => {},
-        error = '',
+        errorCode = '',
         className = '',
         classNameModifiers = [],
         focused,
@@ -31,6 +38,8 @@ export default function CVC(props: Readonly<CVCProps>) {
     } = props;
     const { i18n } = useCoreContext();
 
+    const errorMessage = errorCode ? i18n.get((frontCVC && CVC_AMEX_ERROR_KEYS[errorCode]) || errorCode) : '';
+
     const fieldClassnames = classNames(className, {
         'adyen-checkout__field__cvc': true,
         'adyen-checkout__card__cvc__input--hidden': cvcPolicy === CVC_POLICY_HIDDEN,
@@ -41,7 +50,7 @@ export default function CVC(props: Readonly<CVCProps>) {
         'adyen-checkout__input': true,
         'adyen-checkout__input--small': true,
         'adyen-checkout__card__cvc__input': true,
-        'adyen-checkout__input--error': error,
+        'adyen-checkout__input--error': errorMessage,
         'adyen-checkout__input--focus': focused,
         'adyen-checkout__input--valid': isValid
     });
@@ -60,7 +69,7 @@ export default function CVC(props: Readonly<CVCProps>) {
             classNameModifiers={[...classNameModifiers, 'securityCode']}
             onFocusField={() => onFocusField(ENCRYPTED_SECURITY_CODE)}
             className={fieldClassnames}
-            errorMessage={error}
+            errorMessage={errorMessage}
             isValid={isValid}
             dir={'ltr'}
             name={ENCRYPTED_SECURITY_CODE}

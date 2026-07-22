@@ -10,7 +10,7 @@ import enUS from '../../../../../../../server/translations/en-US.json';
 
 /**
  * Builds a real Language instance (rather than the shared global.i18n mock) so that tests can supply
- * their own customTranslations and exercise Language#hasCustomTranslation.
+ * their own customTranslations to verify merchant overrides are respected as-is.
  */
 const createI18n = (customTranslations: Record<string, string> = {}) => {
     const mockedService = mock<ILanguageService>({});
@@ -46,25 +46,29 @@ describe('CardFields', () => {
         expect(screen.queryByText(/enter/i)).not.toBeInTheDocument();
     });
 
-    test('should append the contextual hint to the expiry date error message', () => {
+    test('should show the expiry date format hint baked into the error message itself', () => {
         renderCardFields({ errors: { [ENCRYPTED_EXPIRY_DATE]: 'cc.dat.912' } });
 
         expect(screen.getByText('Enter a valid expiry date. Front of card in MM/YY format.')).toBeInTheDocument();
     });
 
-    test('should not append a contextual hint for fields that are not configured with one (e.g. CVC)', () => {
-        renderCardFields({ errors: { [ENCRYPTED_SECURITY_CODE]: 'cc.cvc.920' } });
+    test('should show the "3 digits on back of card" hint for non-Amex CVC errors', () => {
+        renderCardFields({ errors: { [ENCRYPTED_SECURITY_CODE]: 'cc.cvc.920' }, brand: 'visa' });
 
-        // Exact match confirms no hint text got concatenated onto the error message
-        expect(screen.getByText('Enter the security code')).toBeInTheDocument();
+        expect(screen.getByText('Enter the security code. 3 digits on back of card.')).toBeInTheDocument();
     });
 
-    test('should skip the contextual hint when the merchant has provided a custom translation for the error itself', () => {
+    test('should show the "4 digits on front of card" hint for Amex CVC errors', () => {
+        renderCardFields({ errors: { [ENCRYPTED_SECURITY_CODE]: 'cc.cvc.920' }, brand: 'amex' });
+
+        expect(screen.getByText('Enter the security code. 4 digits on front of card.')).toBeInTheDocument();
+    });
+
+    test('should render a merchant-provided custom translation for an error verbatim, unaffected by our default copy', () => {
         const i18n = createI18n({ 'cc.dat.912': 'Data de validade inválida (MM/AA)' });
 
         renderCardFields({ errors: { [ENCRYPTED_EXPIRY_DATE]: 'cc.dat.912' } }, i18n);
 
-        // Exact match confirms the merchant's own translation is used verbatim, without our hint appended
         expect(screen.getByText('Data de validade inválida (MM/AA)')).toBeInTheDocument();
     });
 });

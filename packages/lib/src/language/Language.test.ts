@@ -156,48 +156,4 @@ describe('Language', () => {
             expect(language.get('payButton')).toBe('Pay!');
         });
     });
-
-    describe('hasCustomTranslation', () => {
-        test('should return true when a custom translation is provided for the current locale', () => {
-            const customTranslations = {
-                'pt-BR': {
-                    'cc.dat.912': 'Data de validade inválida (MM/AA)'
-                }
-            };
-
-            const language = new Language({ locale: 'pt-BR', service: mockService, customTranslations });
-
-            expect(language.hasCustomTranslation('cc.dat.912')).toBe(true);
-        });
-
-        test('should return false when no custom translation is provided for the key', () => {
-            const customTranslations = {
-                'pt-BR': {
-                    payButton: 'Pagar agora'
-                }
-            };
-
-            const language = new Language({ locale: 'pt-BR', service: mockService, customTranslations });
-
-            expect(language.hasCustomTranslation('cc.dat.912')).toBe(false);
-        });
-
-        test('should return false when no custom translations are provided at all', () => {
-            const language = new Language({ locale: 'pt-BR', service: mockService });
-
-            expect(language.hasCustomTranslation('cc.dat.912')).toBe(false);
-        });
-
-        test('should return false when the custom translation is for a different locale', () => {
-            const customTranslations = {
-                'es-ES': {
-                    'cc.dat.912': 'Fecha de caducidad no válida'
-                }
-            };
-
-            const language = new Language({ locale: 'pt-BR', service: mockService, customTranslations });
-
-            expect(language.hasCustomTranslation('cc.dat.912')).toBe(false);
-        });
-    });
 });

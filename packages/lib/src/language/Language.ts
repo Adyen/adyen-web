@@ -83,17 +83,6 @@ export class Language {
     }
 
     /**
-     * Checks whether a merchant has provided a custom translation for the given key, for the current locale.
-     * Useful to avoid overriding/augmenting a merchant's own copy with SDK-generated content (e.g. appending
-     * a contextual hint onto an error message the merchant has already fully customized).
-     * @param key - Translation key
-     * @returns true if a custom translation exists for this key in the current locale
-     */
-    public hasCustomTranslation(key: string): boolean {
-        return Boolean(this.customTranslations[this.locale]?.[key]);
-    }
-
-    /**
      * Returns a localized string for an amount
      * @param amount - Amount to be converted
      * @param currencyCode - Currency code of the amount

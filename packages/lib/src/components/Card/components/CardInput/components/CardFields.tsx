@@ -34,17 +34,9 @@ export default function CardFields({
 }: Readonly<CardFieldsProps>) {
     const { i18n } = useCoreContext();
 
-    const getError = (errors, fieldType, contextualText = '') => {
+    const getError = (errors, fieldType) => {
         const errorKey = errors[fieldType];
-        if (!errorKey) return null;
-
-        const translatedError = i18n.get(errorKey);
-
-        // Don't append our own hint if the merchant has already customized this error message themselves
-        // (e.g. by following our previously suggested workaround of baking format guidance into the error string)
-        if (!contextualText || i18n.hasCustomTranslation(errorKey)) return translatedError;
-
-        return i18n.get('field.error.withContextualHint', { values: { error: translatedError, hint: contextualText } });
+        return errorKey ? i18n.get(errorKey) : null;
     };
 
     // A set of brands filtered to exclude those that can never appear in the UI
@@ -80,7 +72,7 @@ export default function CardFields({
             >
                 <ExpirationDate
                     classNameModifiers={['col-50']}
-                    error={getError(errors, ENCRYPTED_EXPIRY_DATE, i18n.get('creditCard.expiryDate.contextualText'))}
+                    error={getError(errors, ENCRYPTED_EXPIRY_DATE)}
                     focused={focusedElement === ENCRYPTED_EXPIRY_DATE}
                     isValid={!!valid.encryptedExpiryMonth && !!valid.encryptedExpiryYear}
                     filled={!!errors.encryptedExpiryDate || !!valid.encryptedExpiryYear}
@@ -94,7 +86,7 @@ export default function CardFields({
                 {hasCVC && (
                     <CVC
                         classNameModifiers={['col-50']}
-                        error={getError(errors, ENCRYPTED_SECURITY_CODE)}
+                        errorCode={errors[ENCRYPTED_SECURITY_CODE]}
                         focused={focusedElement === ENCRYPTED_SECURITY_CODE}
                         cvcPolicy={cvcPolicy}
                         isValid={!!valid.encryptedSecurityCode}

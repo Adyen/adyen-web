@@ -2,4 +2,4 @@
 '@adyen/adyen-web': patch
 ---
 
-Fixed: Expiry date field no longer loses its format guidance when it enters an error state
+Fixed: Card expiry date and security code fields no longer lose their format guidance when they enter an error state
