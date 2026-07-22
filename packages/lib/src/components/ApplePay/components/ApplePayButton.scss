@@ -1,5 +1,7 @@
+@use 'styles/variable-generator';
+
 apple-pay-button {
   --apple-pay-button-width: 100%;
-  --apple-pay-button-height: 48px;
-  --apple-pay-button-border-radius: 4px;
+  --apple-pay-button-height: variable-generator.token(spacer-120);
+  --apple-pay-button-border-radius: variable-generator.token(border-radius-s);
 }

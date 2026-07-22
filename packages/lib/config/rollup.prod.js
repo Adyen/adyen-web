@@ -136,7 +136,7 @@ export default () => {
         {
             input: 'dist/temp-types/src/types.d.ts',
             output: [{ file: './dist/cjs/index.d.cts', format: 'commonjs' }],
-            external: [/\.scss$/u, '@paypal/paypal-js/sdk-v6'],
+            external: [/\.scss$/u],
             plugins: [generateTypes()]
         },
 
@@ -144,7 +144,7 @@ export default () => {
         {
             input: 'dist/temp-types/src/types.d.ts',
             output: [{ file: './dist/es/index.d.ts', format: 'es' }],
-            external: [/\.scss$/u, /\.json$/u, '@paypal/paypal-js/sdk-v6'],
+            external: [/\.scss$/u, /\.json$/u],
             plugins: [generateTypes()]
         }
     ];
