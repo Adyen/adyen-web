@@ -1,14 +1,12 @@
 @use 'styles/variable-generator';
 
 .adyen-checkout__paypal {
-    &__buttons {
-        position: relative;
-        z-index: 0;
-    }
+    display: flex;
+    flex-direction: column;
+    gap: variable-generator.token(spacer-070);
 
-    &__button {
+        &__button {
         display: flex;
-        margin-bottom: variable-generator.token(spacer-070);
 
         &:empty {
             display: none;
@@ -45,4 +43,15 @@
             padding: variable-generator.token(spacer-080) 0 65px;
         }
     }
+}
+
+
+paypal-button,
+paypal-pay-later-button,
+paypal-credit-button,
+venmo-button {
+    --paypal-button-border-radius: variable-generator.token(border-radius-s);
+
+    width: 100%;
+    height: variable-generator.token(spacer-120);
 }

@@ -90,6 +90,7 @@ class PayPalService {
         const isZeroAuth = this.amount?.value === 0;
 
         let paymentFlow: PayPalPaymentFlow | undefined;
+
         if (isZeroAuth) {
             paymentFlow = 'VAULT_WITHOUT_PAYMENT';
         } else if (this.vault) {

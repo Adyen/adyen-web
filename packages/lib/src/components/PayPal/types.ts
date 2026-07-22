@@ -5,7 +5,9 @@ import type {
     PayPalOnInitActions,
     PayPalOnShippingAddressChangeData,
     PayPalOnShippingOptionsChangeData,
-    PayPalOrderResponseBody
+    PayPalOrderResponseBody,
+    PayPalV6OnShippingAddressChangeData,
+    PayPalV6OnShippingOptionsChangeData
 } from './paypal-js-types';
 
 export interface PayPalConfiguration extends UIElementProps {
@@ -203,8 +205,8 @@ export interface PayPalConfiguration extends UIElementProps {
      */
     usePayPalV6?: {
         /**
-         * Whether to enable vaulting for the payment
-         * @default undefined
+         * Whether to enable vaulting (save payment method for future use)
+         * @default false
          */
         vault?: boolean;
         /**
@@ -213,6 +215,50 @@ export interface PayPalConfiguration extends UIElementProps {
          * @default undefined
          */
         nonce?: string;
+        /**
+         * Controls the final button text in the PayPal flow.
+         *  - true — Shows “Pay Now” (payment happens immediately)
+         *  - false — Shows “Continue” (additional confirmation step)
+         * @default true
+         * @see {@link https://docs.paypal.ai/reference/sdk/js/v6/reference#parameters-4}
+         */
+        commit?: boolean;
+        /**
+         * Called when the buyer selects or changes their shipping address within the PayPal flow. Use this callback to update shipping costs, validate addresses, or apply location-based restrictions.
+         *
+         * @see {@link https://docs.paypal.ai/reference/sdk/js/v6/reference#onshippingaddresschange-data}
+         *
+         * @param data - The shipping address change data
+         * @param component - The PayPal component instance
+         */
+        onShippingAddressChange?: (data: PayPalV6OnShippingAddressChangeData, component: PaypalElement) => Promise<void>;
+        /**
+         * Called when the buyer selects a different shipping option, for example, standard or express delivery. Use this to update the order total with the selected shipping cost.
+         *
+         * @see {@link https://docs.paypal.ai/reference/sdk/js/v6/reference#onshippingoptionschange-data}
+         *
+         * @param data - The shipping options change data
+         * @param component - The PayPal component instance
+         */
+        onShippingOptionsChange?: (data: PayPalV6OnShippingOptionsChangeData, component: PaypalElement) => Promise<void>;
+        /**
+         * Customize your buttons using the style option.
+         *
+         * @see {@link https://docs.paypal.ai/reference/sdk/js/v6/reference#attributes}
+         */
+        /**
+         * Callback called when PayPal authorizes the payment.
+         * Must be resolved/rejected with the action object. If resolved, the additional details will be invoked. Otherwise it will be skipped
+         *
+         * @param data - Contains the raw event from PayPal, along with the billingAddress and deliveryAddress parsed by Adyen based on the raw event data
+         * @param actions - Used to indicate that payment flow must continue or must stop
+         */
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        onAuthorized?: (data: any, actions: { resolve: () => void; reject: () => void }) => void;
+        style?: {
+            paypal?: PayPalButtonStyle;
+            venmo?: PayPalVenmoButtonStyle;
+        };
     };
 }
 
@@ -228,3 +274,19 @@ export type SupportedPayPalFundingSources = 'paypal' | 'credit' | 'paylater' | '
  * @deprecated Use {@link SupportedPayPalFundingSources} instead
  */
 export type FundingSource = SupportedPayPalFundingSources;
+
+export type PayPalButtonType = 'paypal' | 'paylater' | 'credit' | 'venmo';
+
+export type PayPalButtonClass = 'paypal-gold' | 'paypal-blue' | 'paypal-white' | 'paypal-black';
+
+export type VenmoButtonClass = 'venmo-blue' | 'venmo-black';
+
+export type PayPalButtonStyle = {
+    type?: PayPalButtonType;
+    class?: PayPalButtonClass;
+};
+
+export type PayPalVenmoButtonStyle = {
+    type?: PayPalButtonType;
+    class?: VenmoButtonClass;
+};

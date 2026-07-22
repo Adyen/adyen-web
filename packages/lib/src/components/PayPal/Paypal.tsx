@@ -17,7 +17,10 @@ import type {
     PayPalOnShippingAddressChangeData,
     PayPalOnShippingOptionsChangeActions,
     PayPalOnShippingOptionsChangeData,
-    PayPalOrderResponseBody
+    PayPalOrderResponseBody,
+    PayPalV6OnApproveData,
+    PayPalV6OnShippingAddressChangeData,
+    PayPalV6OnShippingOptionsChangeData
 } from './paypal-js-types';
 
 import { AnalyticsInfoEvent, InfoEventType } from '../../core/Analytics/events/AnalyticsInfoEvent';
@@ -25,6 +28,7 @@ import { sanitizeResponse, verifyPaymentDidNotFail } from '../internal/UIElement
 import CancelError from '../../core/Errors/CancelError';
 import { PayPalSdkLoader } from './services/PayPalSdkLoader';
 import { PayPalService } from './services/PayPalService';
+import { PayPalComponentV6 } from './components/PaypalComponentV6';
 import './Paypal.scss';
 
 class PaypalElement extends UIElement<PayPalConfiguration> {
@@ -225,6 +229,13 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
             .catch(error => this.handleError(new AdyenCheckoutError('ERROR', 'Something went wrong while parsing PayPal Order', { cause: error })));
     };
 
+    private readonly handleOnApproveV6 = (data: PayPalV6OnApproveData): Promise<void> => {
+        const state = { data: { details: data, paymentData: this.paymentData ?? undefined } };
+
+        this.handleAdditionalDetails(state);
+        return Promise.resolve();
+    };
+
     handleResolve(token: string) {
         if (!this.resolve) return this.handleError(new AdyenCheckoutError('ERROR', ERRORS.WRONG_INSTANCE));
         this.resolve(token);
@@ -289,11 +300,55 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
         return onShippingOptionsChange(data, actions, this);
     }
 
+    /**
+     * If the merchant provides the 'usePayPalV6' prop with an 'onShippingAddressChange' callback, then this method is used as a wrapper to it, in order
+     * to expose to the merchant the 'component' instance. The merchant needs the 'component' in order to manipulate the
+     * paymentData
+     *
+     * @param data - The shipping address change data
+     */
+    private handleOnShippingAddressChangeV6(data: PayPalV6OnShippingAddressChangeData): Promise<void> {
+        const { usePayPalV6 } = this.props;
+
+        if (!usePayPalV6?.onShippingAddressChange) return Promise.resolve();
+
+        return usePayPalV6.onShippingAddressChange(data, this);
+    }
+
+    /**
+     * If the merchant provides the 'usePayPalV6' prop with an 'onShippingOptionsChange' callback, then this method is used as a wrapper to it, in order
+     * to expose to the merchant the 'component' instance. The merchant needs the 'component' in order to manipulate the
+     * paymentData
+     *
+     * @param data - The shipping options change data
+     */
+    private handleOnShippingOptionsChangeV6(data: PayPalV6OnShippingOptionsChangeData): Promise<void> {
+        const { usePayPalV6 } = this.props;
+
+        if (!usePayPalV6?.onShippingOptionsChange) return Promise.resolve();
+
+        return usePayPalV6.onShippingOptionsChange(data, this);
+    }
+
     protected override componentToRender(): h.JSX.Element | null {
         if (!this.props.showPayButton) return null;
 
         if (this.props.usePayPalV6) {
-            return <div>Paypal v6 button</div>;
+            const { usePayPalV6: paypalv6Props } = this.props;
+            return (
+                <PayPalComponentV6
+                    paypalService={this.paypalService}
+                    onShippingAddressChange={this.handleOnShippingAddressChangeV6}
+                    onShippingOptionsChange={this.handleOnShippingOptionsChangeV6}
+                    style={paypalv6Props.style}
+                    commit={paypalv6Props.commit}
+                    vault={paypalv6Props.vault}
+                    onSubmit={this.handleSubmit}
+                    onApprove={this.handleOnApproveV6}
+                    onCancel={() => this.handleError(new AdyenCheckoutError('CANCEL'))}
+                    onError={error => this.handleError(new AdyenCheckoutError('ERROR', String(error), { cause: error }))}
+                />
+            );
         }
 
         const { onShippingAddressChange, onShippingOptionsChange, ...rest } = this.props;
