@@ -7,7 +7,10 @@ jest.mock('../lib/CSF', () => {
     return () => true;
 });
 
-let sfp;
+// Explicitly typed `any` (rather than left implicit): this test reaches into private members and
+// mocked partial shapes throughout, so a real class type would surface many unrelated strict-mode
+// errors. Explicit `any` satisfies `noImplicitAny` without changing runtime behavior.
+let sfp: any;
 let sfpRef;
 
 const onError = jest.fn(() => {});
