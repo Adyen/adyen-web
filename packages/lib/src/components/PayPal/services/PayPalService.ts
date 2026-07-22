@@ -79,7 +79,7 @@ class PayPalService {
 
         this.sdkInstance = await createInstance({
             clientToken,
-            components: ['paypal-payments', 'venmo-payments'] satisfies PayPalComponents,
+            components: ['paypal-payments', 'venmo-payments', 'paypal-messages'] satisfies PayPalComponents,
             pageType: 'checkout'
         });
 

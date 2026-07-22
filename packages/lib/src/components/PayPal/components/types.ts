@@ -40,7 +40,10 @@ export interface PayPalButtonsProps extends Omit<PayPalComponentProps, 'ref' | '
     isProcessingPayment: boolean;
 }
 
-export type PayPalComponentV6Props = Pick<PayPalConfiguration['usePayPalV6'], 'commit' | 'vault' | 'style'> & {
+export type PayPalComponentV6Props = Pick<
+    PayPalConfiguration['usePayPalV6'],
+    'commit' | 'vault' | 'style' | 'blockPayPalCreditButton' | 'blockPayPalPayLaterButton' | 'blockPayPalVenmoButton'
+> & {
     paypalService: PayPalService;
     onSubmit: () => Promise<string>;
     onApprove: (data: PayPalV6OnApproveData) => Promise<void>;

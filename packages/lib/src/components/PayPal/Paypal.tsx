@@ -69,13 +69,20 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
                 vault: Boolean(paypalV6Props.vault)
             });
 
-            this.paypalService.initialize().catch(error => {
-                this.handleError(
-                    error instanceof AdyenCheckoutError
-                        ? error
-                        : new AdyenCheckoutError('ERROR', 'Something went wrong while initializing PayPal', { cause: error })
-                );
-            });
+            this.paypalService
+                .initialize()
+                .then(() => {
+                    if (paypalV6Props.onCreatePayPalMessages && this.paypalService) {
+                        paypalV6Props.onCreatePayPalMessages(this.paypalService.getInstance().createPayPalMessages);
+                    }
+                })
+                .catch(error => {
+                    this.handleError(
+                        error instanceof AdyenCheckoutError
+                            ? error
+                            : new AdyenCheckoutError('ERROR', 'Something went wrong while initializing PayPal', { cause: error })
+                    );
+                });
         }
     }
 
@@ -343,6 +350,9 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
                     style={paypalv6Props.style}
                     commit={paypalv6Props.commit}
                     vault={paypalv6Props.vault}
+                    blockPayPalCreditButton={paypalv6Props.blockPayPalCreditButton}
+                    blockPayPalPayLaterButton={paypalv6Props.blockPayPalPayLaterButton}
+                    blockPayPalVenmoButton={paypalv6Props.blockPayPalVenmoButton}
                     onSubmit={this.handleSubmit}
                     onApprove={this.handleOnApproveV6}
                     onCancel={() => this.handleError(new AdyenCheckoutError('CANCEL'))}

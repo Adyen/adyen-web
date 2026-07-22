@@ -7,15 +7,18 @@ import { VenmoButton } from './VenmoButton';
 
 const PayPalComponentV6 = ({
     paypalService,
+    style,
+    commit,
+    vault,
+    blockPayPalCreditButton,
+    blockPayPalPayLaterButton,
+    blockPayPalVenmoButton,
     onSubmit,
     onApprove,
     onShippingAddressChange,
     onShippingOptionsChange,
     onCancel,
-    onError,
-    style,
-    commit,
-    vault
+    onError
 }: Readonly<PayPalComponentV6Props>) => {
     const commonProps = {
         paypalService,
@@ -24,28 +27,16 @@ const PayPalComponentV6 = ({
         onError,
         onShippingAddressChange,
         onShippingOptionsChange,
-        onCancel
+        onCancel,
+        commit
     };
 
     return (
         <div className="adyen-checkout__paypal" data-testid="paypal-component">
-            <PayPalButton {...commonProps} style={style.paypal} commit={commit} vault={vault} />
-            <PayPalPayLaterButton
-                {...commonProps}
-                commit={commit}
-                onShippingAddressChange={onShippingAddressChange}
-                onShippingOptionsChange={onShippingOptionsChange}
-                onCancel={onCancel}
-            />
-            <PayPalCreditButton
-                {...commonProps}
-                onShippingAddressChange={onShippingAddressChange}
-                onShippingOptionsChange={onShippingOptionsChange}
-                onCancel={onCancel}
-                commit={commit}
-                vault={vault}
-            />
-            <VenmoButton {...commonProps} style={style.venmo} onCancel={onCancel} commit={commit} />
+            <PayPalButton {...commonProps} style={style.paypal} vault={vault} />
+            {!blockPayPalPayLaterButton && <PayPalPayLaterButton {...commonProps} />}
+            {!blockPayPalCreditButton && <PayPalCreditButton {...commonProps} vault={vault} />}
+            {!blockPayPalVenmoButton && <VenmoButton {...commonProps} style={style.venmo} onCancel={onCancel} vault={vault} />}
         </div>
     );
 };

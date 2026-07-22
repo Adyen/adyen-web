@@ -2,6 +2,8 @@ import { AddressData } from '../../types/global-types';
 import { UIElementProps } from '../internal/UIElement/types';
 import PaypalElement from './Paypal';
 import type {
+    PayPalMessagesOptions,
+    PayPalMessagesSession,
     PayPalOnInitActions,
     PayPalOnShippingAddressChangeData,
     PayPalOnShippingOptionsChangeData,
@@ -205,7 +207,7 @@ export interface PayPalConfiguration extends UIElementProps {
      */
     usePayPalV6?: {
         /**
-         * Whether to enable vaulting (save payment method for future use)
+         * Set to true to enable vaulting of the payment method (save for future use).
          * @default false
          */
         vault?: boolean;
@@ -223,6 +225,21 @@ export interface PayPalConfiguration extends UIElementProps {
          * @see {@link https://docs.paypal.ai/reference/sdk/js/v6/reference#parameters-4}
          */
         commit?: boolean;
+        /**
+         * Set to true to force the UI to not render PayPal Credit button
+         * @default false
+         */
+        blockPayPalCreditButton?: boolean;
+        /**
+         * Set to true to force the UI to not render PayPal Pay Later button
+         * @default false
+         */
+        blockPayPalPayLaterButton?: boolean;
+        /**
+         * Set to true to force the UI to not render PayPal Venmo button
+         * @default false
+         */
+        blockPayPalVenmoButton?: boolean;
         /**
          * Called when the buyer selects or changes their shipping address within the PayPal flow. Use this callback to update shipping costs, validate addresses, or apply location-based restrictions.
          *
@@ -255,6 +272,17 @@ export interface PayPalConfiguration extends UIElementProps {
          */
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         onAuthorized?: (data: any, actions: { resolve: () => void; reject: () => void }) => void;
+        /**
+         * Callback called to enable creating the PayPal messages component.
+         * @param createPayPalMessages - Function to create the messages component
+         * @returns
+         */
+        onCreatePayPalMessages?: (createPayPalMessages: (messagesOptions?: PayPalMessagesOptions) => PayPalMessagesSession) => void;
+        /**
+         * Customize the paypal button web components.
+         *
+         * @see {@link https://docs.paypal.ai/reference/sdk/js/v6/reference#web-components}
+         */
         style?: {
             paypal?: PayPalButtonStyle;
             venmo?: PayPalVenmoButtonStyle;
