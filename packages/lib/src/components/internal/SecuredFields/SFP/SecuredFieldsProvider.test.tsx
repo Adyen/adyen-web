@@ -301,3 +301,45 @@ describe('<SecuredFieldsProvider /> handling an binLookup response', () => {
         }
     );
 });
+
+describe('<SecuredFieldsProvider /> mapErrorsToValidationRuleResult', () => {
+    it('should resolve the base (non-Amex) CVC error key into errorI18n when the brand is not Amex', async () => {
+        nodeHolder.innerHTML = mockNode;
+        renderSFP();
+
+        await act(() => {
+            sfp.setState({ brand: 'mc', errors: { encryptedSecurityCode: 'cc.cvc.920' } });
+        });
+
+        const result = sfp.mapErrorsToValidationRuleResult();
+
+        expect(result.encryptedSecurityCode.errorI18n).toEqual(global.i18n.get('cc.cvc.920'));
+        expect(result.encryptedSecurityCode.errorI18n).not.toEqual(global.i18n.get('cc.cvc.920.amex'));
+    });
+
+    it('should resolve the Amex-specific CVC error key into errorI18n when the brand is Amex', async () => {
+        nodeHolder.innerHTML = mockNode;
+        renderSFP();
+
+        await act(() => {
+            sfp.setState({ brand: 'amex', errors: { encryptedSecurityCode: 'cc.cvc.920' } });
+        });
+
+        const result = sfp.mapErrorsToValidationRuleResult();
+
+        expect(result.encryptedSecurityCode.errorI18n).toEqual(global.i18n.get('cc.cvc.920.amex'));
+    });
+
+    it('should leave non-CVC error codes unaffected by brand', async () => {
+        nodeHolder.innerHTML = mockNode;
+        renderSFP();
+
+        await act(() => {
+            sfp.setState({ brand: 'amex', errors: { encryptedCardNumber: SF_ErrorCodes.ERROR_MSG_INCOMPLETE_FIELD } });
+        });
+
+        const result = sfp.mapErrorsToValidationRuleResult();
+
+        expect(result.encryptedCardNumber.errorI18n).toEqual(global.i18n.get(SF_ErrorCodes.ERROR_MSG_INCOMPLETE_FIELD));
+    });
+});

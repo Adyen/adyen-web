@@ -12,14 +12,8 @@ import {
 } from '../../../../internal/SecuredFields/lib/constants';
 import DataSfSpan from './DataSfSpan';
 import { alternativeLabelContent } from './FieldLabelAlternative';
+import { resolveCVCErrorKey } from '../utils';
 import './CVC.scss';
-
-// CVC's format guidance (digit count/position) is brand-dependent, so the Amex variant of each CVC
-// error message is a distinct, fully-translated key rather than something composed at runtime.
-const CVC_AMEX_ERROR_KEYS = {
-    'cc.cvc.920': 'cc.cvc.920.amex',
-    'cc.cvc.921': 'cc.cvc.921.amex'
-};
 
 export default function CVC(props: Readonly<CVCProps>) {
     const {
@@ -38,7 +32,7 @@ export default function CVC(props: Readonly<CVCProps>) {
     } = props;
     const { i18n } = useCoreContext();
 
-    const errorMessage = errorCode ? i18n.get((frontCVC && CVC_AMEX_ERROR_KEYS[errorCode]) || errorCode) : '';
+    const errorMessage = errorCode ? i18n.get(resolveCVCErrorKey(errorCode, frontCVC)) : '';
 
     const fieldClassnames = classNames(className, {
         'adyen-checkout__field__cvc': true,
