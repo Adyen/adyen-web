@@ -3,7 +3,7 @@ import { TxVariants } from '../../tx-variants';
 
 import type { OrderStatus } from '../../../types/global-types';
 import type { GooglePayConfiguration } from '../../GooglePay/types';
-import { GooglePaymentMode } from '../../GooglePay/config';
+import type { GooglePaymentMode } from '../../GooglePay/config';
 
 type ResolvedDropinElements = [
     storedPaymentElements: UIElement[],
@@ -16,7 +16,7 @@ type ResolvedDropinElements = [
 interface PromotableGooglePay {
     mode?: GooglePaymentMode;
     props: GooglePayConfiguration;
-    isAcceleratedCheckoutAvailable: () => boolean;
+    isShopperEligibleForAcceleratedCheckout: boolean;
 }
 
 const isGooglePayElement = (element: UIElement): boolean =>
@@ -32,7 +32,7 @@ const isPromotableGooglePay = (element: UIElement): boolean => {
     }
 
     const googlePay = element as unknown as PromotableGooglePay;
-    return googlePay.isAcceleratedCheckoutAvailable();
+    return googlePay.isShopperEligibleForAcceleratedCheckout;
 };
 
 /**

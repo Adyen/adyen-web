@@ -528,7 +528,7 @@ describe('GooglePay', () => {
 
             await expect(gpay.isAvailable()).resolves.not.toThrow();
             expect(gpay.mode).toBe(GooglePaymentMode.ACCELERATED_CHECKOUT);
-            expect(gpay.isAcceleratedCheckoutAvailable()).toBe(true);
+            expect(gpay.isShopperEligibleForAcceleratedCheckout).toBe(true);
             expect(global.core.modules.analytics.sendAnalytics).toHaveBeenCalledWith(
                 expect.objectContaining({
                     type: InfoEventType.eligibilityPassed,
@@ -544,7 +544,7 @@ describe('GooglePay', () => {
 
             await expect(gpay.isAvailable()).resolves.not.toThrow();
             expect(gpay.mode).toBe(GooglePaymentMode.STANDARD_BUTTON);
-            expect(gpay.isAcceleratedCheckoutAvailable()).toBe(false);
+            expect(gpay.isShopperEligibleForAcceleratedCheckout).toBe(true);
             expect(global.core.modules.analytics.sendAnalytics).toHaveBeenCalledWith(
                 expect.objectContaining({
                     type: InfoEventType.eligibilityPassed,

@@ -34,6 +34,12 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
 
     public mode: GooglePaymentMode = GooglePaymentMode.STANDARD_BUTTON;
 
+    /**
+     * Whether the shopper is eligible for accelerated checkout.
+     * This is set during the availability check and used to determine the mode AND to place GooglePay on top of the Drop-in
+     */
+    public isShopperEligibleForAcceleratedCheckout: boolean = false;
+
     constructor(checkout: ICore, props?: GooglePayConfiguration) {
         super(checkout, props);
         this.handleAuthorization = this.handleAuthorization.bind(this);
@@ -145,18 +151,11 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
     }
 
     /**
-     * Indicates if the Google Pay component is using the accelerated checkout flow
-     */
-    public isAcceleratedCheckoutAvailable(): boolean {
-        return this.mode === GooglePaymentMode.ACCELERATED_CHECKOUT && this.props.configuration?.acceleratedCheckoutExperiment === 'enabled';
-    }
-
-    /**
      * When rendering in accelerated checkout mode inside Drop-in, GooglePay displays its own full UI,
      * so the PaymentMethodItem header is hidden while selected.
      */
     public override get showDropinHeaderWhenSelected(): boolean {
-        return !this.isAcceleratedCheckoutAvailable();
+        return this.mode !== GooglePaymentMode.ACCELERATED_CHECKOUT;
     }
 
     /**
@@ -168,26 +167,26 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
             this.googleButtonClient.isReadyToPay(this.props)
         ]);
 
-        if (acceleratedCheckoutResult.status === 'fulfilled') {
-            console.log('[Adyen] GAC isAvailable() result', acceleratedCheckoutResult.value);
+        console.log('[Adyen] GAC isAvailable() result', acceleratedCheckoutResult);
 
+        if (acceleratedCheckoutResult.status === 'fulfilled') {
             const { status } = acceleratedCheckoutResult.value;
+
+            this.isShopperEligibleForAcceleratedCheckout = status === 'SUCCESS';
 
             this.analytics.sendAnalytics(
                 new AnalyticsInfoEvent({
-                    type: status === 'SUCCESS' ? InfoEventType.eligibilityPassed : InfoEventType.eligibilityFailed,
+                    type: this.isShopperEligibleForAcceleratedCheckout ? InfoEventType.eligibilityPassed : InfoEventType.eligibilityFailed,
                     component: GOOGLE_ACCELERATED_CHECKOUT_EXPERIMENT_COMPONENT
                 })
             );
 
-            // Show Accelerated Checkout only when it's available and experiment is enabled
-            if (status === 'SUCCESS' && this.props.configuration.acceleratedCheckoutExperiment === 'enabled') {
+            // Show Accelerated Checkout only when shopper is eligible AND and experiment is enabled
+            if (this.isShopperEligibleForAcceleratedCheckout && this.props.configuration.acceleratedCheckoutExperiment === 'enabled') {
                 this.mode = GooglePaymentMode.ACCELERATED_CHECKOUT;
                 return;
             }
         } else {
-            console.log('[Adyen] isAvailable() acceleratedCheckoutResult', acceleratedCheckoutResult.reason);
-
             this.analytics.sendAnalytics(
                 new AnalyticsInfoEvent({
                     type: InfoEventType.eligibilityFailed,
@@ -196,10 +195,10 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
             );
         }
 
+        console.log('[Adyen] Google Button isReadyToPay() result', googleButtonResult);
+
         if (googleButtonResult.status === 'fulfilled') {
             const isReadyToPayResponse = googleButtonResult.value;
-
-            console.log('[Adyen] isReadyToPay() result', isReadyToPayResponse);
 
             if (!isReadyToPayResponse.result) {
                 throw new AdyenCheckoutError('ERROR', 'GooglePay is not available');
