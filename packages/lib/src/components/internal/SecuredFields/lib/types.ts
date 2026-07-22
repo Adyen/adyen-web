@@ -120,15 +120,17 @@ export interface CardAutoCompleteData {
 
 export interface CardBinLookupData {
     type?: string;
-    detectedBrands?: string[];
-    supportedBrands?: string[];
+    detectedBrands?: string[] | null;
+    supportedBrands?: string[] | null;
     brands?: string[];
     issuingCountryCode?: string;
+    healthcare?: Record<string, boolean>[];
     // New for CustomCard
     supportedBrandsRaw?: BrandObject[];
     rootNode?: HTMLElement;
     isReset?: boolean; // Used internally - not propagated to merchant callback
     dualBrandingType?: string; // Whether dual brands can just be displayed or whether a selection mechanism is mandated under EU law
+    paymentMethodVariants?: (string | undefined)[];
 }
 
 export interface CardBinValueData {
@@ -347,7 +349,16 @@ export interface SFPlaceholdersObject {
     [ENCRYPTED_PWD_FIELD]?: string;
 }
 
-export interface SFKeyPressObj {
+export interface SFKeyDownObj {
     fieldType: string;
     action: string;
+}
+
+export interface BrandConfiguration {
+    name?: string;
+    icon?: string;
+}
+
+export interface CardBrandsConfiguration {
+    [key: string]: BrandConfiguration;
 }

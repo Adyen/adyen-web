@@ -93,7 +93,7 @@
     "voucher.expirationDate": "Gültig bis",
     "voucher.alternativeReference": "Alternative Referenz",
     "voucher.paymentReferenceLabel": "Zahlungsreferenz",
-    "voucher.surcharge": "Inkl. % @Zuschlag",
+    "voucher.surcharge": "Inkl. %@ Zuschlag",
     "voucher.introduction.doku": "Vielen Dank für Ihren Kauf. Bitte schließen Sie Ihre Zahlung unter Verwendung der folgenden Informationen ab.",
     "voucher.shopperName": "Name des Käufers",
     "voucher.merchantName": "Händler",

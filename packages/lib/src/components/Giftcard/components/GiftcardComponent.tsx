@@ -7,7 +7,7 @@ import { GIFT_CARD } from '../../internal/SecuredFields/lib/constants';
 import { GiftCardFields } from './GiftcardFields';
 import { GiftcardFieldsProps, Placeholders } from './types';
 import { useSRPanelForGiftcardErrors } from './useSRPanelForGiftcardErrors';
-import { GiftCardBalanceCheckErrorType } from '../types';
+import { GiftCardBalanceCheckErrorType, GiftCardValidationError } from '../types';
 import { PayButtonProps } from '../../internal/PayButton/PayButton';
 import { useAmount } from '../../../core/Context/AmountProvider';
 import type { AbstractAnalyticsEvent } from '../../../core/Analytics/events/AbstractAnalyticsEvent';
@@ -25,7 +25,7 @@ interface GiftcardComponentProps extends Partial<Pick<SFPProps, 'clientKey' | 'l
     expiryDateRequired?: boolean;
     fieldsLayoutComponent: FunctionComponent<GiftcardFieldsProps>;
     placeholders?: Placeholders;
-    handleKeyPress?: (o: KeyboardEvent) => void;
+    handleKeyDown?: (event: KeyboardEvent) => void;
     onSubmitAnalytics?: (event: AbstractAnalyticsEvent) => void;
 }
 
@@ -62,7 +62,7 @@ class Giftcard extends Component<Readonly<GiftcardComponentProps>> {
         return this.sfp.mapErrorsToValidationRuleResult();
     };
 
-    private updateTransformedErrors = (balanceCheckErrors?: Record<string, any>) => {
+    private updateTransformedErrors = (balanceCheckErrors?: Record<string, GiftCardValidationError>) => {
         const transformedErrors = this.mapErrorsToValidationObjects();
 
         const mergedErrors = { ...transformedErrors, ...balanceCheckErrors };
@@ -98,8 +98,8 @@ class Giftcard extends Component<Readonly<GiftcardComponentProps>> {
      * Generates balance check errors in the same format as SFP errors
      * Compatible with the transformedErrors structure
      */
-    private generateBalanceCheckErrors(errorType?: GiftCardBalanceCheckErrorType | null): Record<string, any> {
-        const balanceCheckErrors: Record<string, any> = {};
+    private generateBalanceCheckErrors(errorType?: GiftCardBalanceCheckErrorType | null): Record<string, GiftCardValidationError> {
+        const balanceCheckErrors: Record<string, GiftCardValidationError> = {};
 
         // This is the field that the error is associated with, only used for SR logic
         const fieldToAnnounce = 'encryptedCardNumber';

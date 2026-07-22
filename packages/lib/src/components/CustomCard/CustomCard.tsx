@@ -2,7 +2,7 @@ import { h } from 'preact';
 import UIElement from '../internal/UIElement';
 import CustomCardInput from './CustomCardInput';
 import collectBrowserInfo from '../../utils/browserInfo';
-import triggerBinLookUp from '../internal/SecuredFields/binLookup/triggerBinLookUp';
+import { triggerBinLookUp } from '../internal/SecuredFields/binLookup/triggerBinLookUp';
 import { CardBinLookupData, CardFocusData } from '../internal/SecuredFields/lib/types';
 import { BrandObject } from '../Card/types';
 import { getCardImageUrl, fieldTypeToSnakeCase } from '../internal/SecuredFields/utils';
@@ -140,7 +140,7 @@ export class CustomCard extends UIElement<CustomCardConfiguration> {
                 }}
                 {...this.props}
                 {...this.state}
-                handleKeyPress={this.handleKeyPress}
+                handleKeyDown={this.handleKeyDown}
                 rootNode={this._node}
                 onChange={this.setState}
                 onBinValue={this.onBinValue}

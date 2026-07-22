@@ -71,15 +71,22 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
             /**
              * Check the structure of the created challengeData
              */
-            const { acsURL } = this.state.challengeData as ChallengeData;
+            const { acsURL, postMessageDomain } = this.state.challengeData as ChallengeData;
             const hasValidAcsURL = isValidHttpUrl(acsURL, shouldAllowHttpDomains);
+            const hasValidPostMessageDomain = isValidHttpUrl(postMessageDomain, shouldAllowHttpDomains);
 
-            // Only render component if we have an acsURL.
-            if (!hasValidAcsURL) {
+            // Only render component if we have a valid acsURL & postMessageDomain.
+            //  i.e. a url to load into the iframe, and the domain that we expect the iframe to be sending messages back from
+            if (!hasValidAcsURL || !hasValidPostMessageDomain) {
+                const errorCode = !hasValidAcsURL
+                    ? ErrorEventCode.THREEDS2_TOKEN_IS_MISSING_ACSURL
+                    : ErrorEventCode.THREEDS2_CHALLENGE_TOKEN_IS_MISSING_THREEDSNOTIFICATIONURL;
+                const missingProperty = !hasValidAcsURL ? 'acsURL' : 'threeDSNotificationURL';
+
                 // Set UI error & call onError callback
                 this.setError(
                     {
-                        errorInfo: `${ErrorEventCode.THREEDS2_TOKEN_IS_MISSING_ACSURL}: ${this.props.i18n.get('err.gen.9102')}` //
+                        errorInfo: `${errorCode}: ${this.props.i18n.get('err.gen.9102')}` //
                     },
                     true
                 );
@@ -87,13 +94,15 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                 // Send error to analytics endpoint // TODO - check logs to see if this *ever* happens
                 const event = new AnalyticsErrorEvent({
                     component: this.props.type,
-                    code: ErrorEventCode.THREEDS2_TOKEN_IS_MISSING_ACSURL,
+                    code: errorCode,
                     errorType: ErrorEventType.threeDS2,
-                    message: `${THREEDS2_CHALLENGE_ERROR}: Decoded token is missing a valid acsURL property`
+                    message: `${THREEDS2_CHALLENGE_ERROR}: Decoded token is missing a valid ${missingProperty} property`
                 });
                 this.props.onSubmitAnalytics(event);
 
-                console.debug('### PrepareChallenge3DS2::exiting:: no valid acsURL');
+                console.debug(
+                    `### PrepareChallenge3DS2::exiting:: no valid ${missingProperty}.${!hasValidPostMessageDomain ? ` postMessageDomain=${postMessageDomain}` : ''}`
+                );
                 return;
             }
 
@@ -243,7 +252,8 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
         }
     }
 
-    render(_, { challengeData }) {
+    render(_, { challengeData: stateChallengeData }: PrepareChallenge3DS2State) {
+        const challengeData = stateChallengeData as ChallengeData;
         const getImage = useImage();
         if (this.state.status === 'performingChallenge') {
             return (

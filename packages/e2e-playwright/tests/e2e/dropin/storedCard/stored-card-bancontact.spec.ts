@@ -3,7 +3,8 @@ import { BCMC_CARD, PAYMENT_RESULT, THREEDS2_CHALLENGE_PASSWORD } from '../../..
 import { BCMC } from '../../../../models/bcmc';
 import { getCardNumberLast4 } from '../../../utils/cards';
 
-const BCMC_URL = '/iframe.html?args=countryCode:BE&globals=&id=drop-in-drop-in-component--default&viewMode=story';
+const BCMC_URL =
+    '/iframe.html?args=countryCode:BE;sessionData.additionalData.executeThreeD:true&globals=&id=drop-in-drop-in-component--default&viewMode=story';
 
 test.describe('Stored Bancontact card', () => {
     test('should make a successful payment', async ({ dropinWithSession, page }) => {

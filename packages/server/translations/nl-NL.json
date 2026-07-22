@@ -181,7 +181,7 @@
     "err.gen.9100": "Onvolledig veld",
     "err.gen.9101": "Veld niet geldig",
     "err.gen.9102": "Fout bij het parseren van gegevens",
-    "3ds.chal.805": "Uitdaging opgelost zonder een% {result} -object",
+    "3ds.chal.805": "Uitdaging opgelost zonder een %{result}-object",
     "cc.num.902": "Voer een geldig kaartnummer in",
     "cc.num.900": "Voer het kaartnummer in",
     "cc.num.903": "Voer een ondersteund kaartmerk in",

@@ -10,7 +10,7 @@ jobs:
     timeout-minutes: 60
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.50.0-noble
+      image: mcr.microsoft.com/playwright:v1.61.1-noble
       options: --user 1001
 
     env:
@@ -18,11 +18,11 @@ jobs:
       MERCHANT_ACCOUNT: ${{secrets.ADYEN_CHECKOUT_MERCHANT_ACCOUNT}}
       CLIENT_KEY: ${{secrets.ADYEN_CHECKOUT_CLIENT_KEY}}
       CLIENT_ENV: test
-      TESTING_ENVIRONMENT: https://checkout-test.adyen.com/checkout/v71
-      API_VERSION: v71
+      TESTING_ENVIRONMENT: https://checkout-test.adyen.com/checkout/v72
+      API_VERSION: v72
     steps:
     - name: Checkout
-      uses: actions/checkout@v6
+      uses: actions/checkout@v7
       with:
         ref: ${{ github.event.pull_request.head.ref }}
         token: ${{ secrets.GITHUB_TOKEN }}
@@ -35,7 +35,7 @@ jobs:
 
     - name: Cache node modules
       id: node-modules-cache
-      uses: actions/cache@v5
+      uses: actions/cache@v6
       env:
         cache-name: node-modules-v1
       with:

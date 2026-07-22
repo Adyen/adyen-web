@@ -15,9 +15,9 @@ The main CI workflow for pull requests and merge queue is **`pr.yml`** (name: `P
 | File | Job name | Timeout | Matrix | Description |
 |------|----------|---------|--------|-------------|
 | `unit-tests.yml` | `unit-tests` | — | single job | Lint, type-check, test coverage |
-| `e2e-tests.yml` | `e2e-tests` | 120 min | 3 API versions (v69, v70, v71) x 3 browsers (chromium, firefox, webkit) = **9 jobs** | Playwright E2E tests. Uploads report artifacts. |
-| `automated-a11y.yml` | `automated-a11y` | 60 min | API v71 x chromium = **1 job** | Playwright accessibility tests. Uploads a11y report artifact. |
-| `visual-tests.yml` | `visual-tests` | 60 min | API v71 x chromium = **1 job** | Playwright visual regression tests. Uploads visual report artifact. |
+| `e2e-tests.yml` | `e2e-tests` | 120 min | **Regular PRs/merges**: 1 API version (v72, latest) x 3 browsers (chromium, firefox, webkit) x 2 test types (e2e, ui)<br>**Release PR** (`changeset-release/*`): all API versions — 4 API versions (v69, v70, v71, v72) x 3 browsers x 2 test types (e2e, ui) | Playwright E2E tests. Uploads report artifacts. Takes an `all-api-versions` input (see below). |
+| `automated-a11y.yml` | `automated-a11y` | 60 min | API v72 x chromium = **1 job** | Playwright accessibility tests. Uploads a11y report artifact. |
+| `visual-tests.yml` | `visual-tests` | 60 min | API v72 x chromium = **1 job** | Playwright visual regression tests. Uploads visual report artifact. |
 
 ### Gateway Jobs
 
@@ -27,6 +27,11 @@ The main CI workflow for pull requests and merge queue is **`pr.yml`** (name: `P
 | `verify-merge-queue` | `merge_group` only | `unit-tests`, `e2e-tests`, `automated-a11y`, `visual-tests` | Passes only if **all** jobs succeed. Enforces stricter requirements in the merge queue. |
 
 **Rationale for E2E on PR**: Some E2E tests may be flaky. By making E2E optional on PR, the PR author can attempt to merge if they believe the tests will pass in the merge queue. The merge queue enforces that E2E must pass before merging to main.
+
+
+**E2E test matrix: quick PR feedback and full regression on the release PR**
+
+Every PR only tests the latest API version for quick feedback. All API versions run only for the Changeset release PR (`changeset-release/*`), both when it's updated and when it enters the merge queue. `all-api-versions` is `true` when either `github.head_ref` or the merge group's head commit message shows it's the release PR. Everything else gets `false`.
 
 ### Branch protection configuration
 

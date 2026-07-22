@@ -75,16 +75,14 @@ test.describe('Card with 3DS2', () => {
             expect(detailsCallResponse.status()).toBe(200);
         });
 
-        // The reason for skipping this test is that the card number 4212345678910006 is not working in the current test environment.
-        // TODO: Find a new card number that works for this test.
-        test.skip('should handle challenge-only flow', async ({ page, card }) => {
+        test('should handle challenge-only flow', async ({ page, card }) => {
             let submitFingerprintRequestWasMade = false;
 
             page.on('request', request => {
                 if (request.url().includes('/submitThreeDS2Fingerprint')) submitFingerprintRequestWasMade = true;
             });
 
-            await card.goto(URL_MAP.card);
+            await card.goto(URL_MAP.card_executeThreeD);
 
             await card.typeCardNumber(THREEDS2_CHALLENGE_ONLY_CARD);
             await card.typeCvc(TEST_CVC_VALUE);
@@ -101,7 +99,7 @@ test.describe('Card with 3DS2', () => {
 
     test.describe('Different 3DS2 challenge window sizes', () => {
         test('should use the default window size', async ({ card }) => {
-            await card.goto(URL_MAP.card);
+            await card.goto(URL_MAP.card_executeThreeD);
 
             await card.typeCardNumber(THREEDS2_CHALLENGE_ONLY_CARD);
             await card.typeCvc(TEST_CVC_VALUE);
@@ -117,7 +115,7 @@ test.describe('Card with 3DS2', () => {
         test('should be possible to use a custom window size', async ({ card }) => {
             await card.goto(
                 getStoryUrl({
-                    baseUrl: URL_MAP.card,
+                    baseUrl: URL_MAP.card_executeThreeD,
                     componentConfig: {
                         challengeWindowSize: '04'
                     }

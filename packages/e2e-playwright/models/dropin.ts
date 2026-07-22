@@ -129,6 +129,8 @@ class Dropin extends Base {
             .locator('..')
             .locator(':scope > .adyen-checkout-pm-details-wrapper');
 
+        await paymentMethodDetailsLocator.waitFor({ state: 'visible' });
+
         return { paymentMethodDetailsLocator };
     }
 

@@ -2,18 +2,23 @@ name: E2E Tests
 
 on:
   workflow_call:
+    inputs:
+      all-api-versions:
+        description: 'Run all supported API versions. Defaults to the latest API version only, for fast PR feedback.'
+        type: boolean
+        default: false
 
 jobs:
   e2e-tests:
     timeout-minutes: 120
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.50.0-noble
+      image: mcr.microsoft.com/playwright:v1.61.1-noble
       options: --user 1001
     strategy:
       fail-fast: false
       matrix:
-        api-version: ["v69", "v70", "v71"]
+        api-version: ${{ inputs.all-api-versions && fromJSON('["v69", "v70", "v71", "v72"]') || fromJSON('["v72"]') }}
         runner-browser: ["chromium", "firefox", "webkit"]
         test-group: ["e2e", "ui"]
     env:
@@ -25,7 +30,7 @@ jobs:
       API_VERSION: ${{matrix.api-version}}
     steps:
     - name: Checkout
-      uses: actions/checkout@v6
+      uses: actions/checkout@v7
 
     - name: Setup Node
       uses: actions/setup-node@v6
@@ -35,7 +40,7 @@ jobs:
 
     - name: Cache node modules
       id: node-modules-cache
-      uses: actions/cache@v5
+      uses: actions/cache@v6
       env:
         cache-name: node-modules-v1
       with:

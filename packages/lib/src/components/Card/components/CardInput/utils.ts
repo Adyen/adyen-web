@@ -160,7 +160,7 @@ export const extractPropsForSFP = (props: CardInputProps): Pick<SFPProps, 'clien
         onAutoComplete: props.onAutoComplete,
         onBinValue: props.onBinValue,
         onConfigSuccess: props.onConfigSuccess,
-        handleKeyPress: props.handleKeyPress,
+        handleKeyDown: props.handleKeyDown,
         onError: props.onError,
         onFieldValid: props.onFieldValid,
         onLoad: props.onLoad,

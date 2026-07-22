@@ -3,16 +3,12 @@ name: Slack Send Channel Message
 on:
   workflow_call:
     inputs:
-      version:
-        description: SDK version (resolved from package.json if omitted)
-        required: false
-        type: string
       channel:
         description: Slack channel ID or name
         required: true
         type: string
       message:
-        description: 'Message text. Use {version} as a placeholder for the resolved SDK version'
+        description: 'Message text'
         required: true
         type: string
       thread_ts:
@@ -33,34 +29,14 @@ jobs:
     outputs:
       thread_ts: ${{ steps.send-message.outputs.thread_ts }}
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 24
-
-      - name: Resolve SDK version
-        id: sdk-version
-        run: |
-          INPUT_VERSION="${{ inputs.version }}"
-          if [ -n "$INPUT_VERSION" ]; then
-            echo "version=$INPUT_VERSION" >> "$GITHUB_OUTPUT"
-          else
-            echo "version=$(node -p "require('./packages/lib/package.json').version")" >> "$GITHUB_OUTPUT"
-          fi
-
       - name: Send channel message
         id: send-message
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
           CHANNEL: ${{ inputs.channel }}
           THREAD_TS: ${{ inputs.thread_ts }}
-          VERSION: ${{ steps.sdk-version.outputs.version }}
-          RAW_MESSAGE: ${{ inputs.message }}
+          MESSAGE: ${{ inputs.message }}
         run: |
-          MESSAGE="${RAW_MESSAGE//\{version\}/$VERSION}"
-
           PAYLOAD=$(jq -n \
             --arg channel "$CHANNEL" \
             --arg text "$MESSAGE" \

@@ -18,7 +18,7 @@ export type GiftcardFieldsProps = {
 export type GiftcardFieldProps = {
     i18n: Language;
     classNameModifiers?: Array<string>;
-    sfpState: any;
+    sfpState: SFPState;
     getCardErrorMessage;
     focusedElement;
     setFocusOn;
