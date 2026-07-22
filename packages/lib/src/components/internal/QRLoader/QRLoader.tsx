@@ -12,9 +12,9 @@ import Button from '../Button';
 import ContentSeparator from '../ContentSeparator';
 import { AnalyticsInfoEvent, InfoEventType, UiTarget } from '../../../core/Analytics/events/AnalyticsInfoEvent';
 import { CountdownTime } from '../Countdown/types';
-import Spinner from '../Spinner';
 import { QRDetails } from './components/QRDetails';
 import { QRFinalState } from './components/QRFinalState';
+import { QRLoaderPendingState } from './components/QRLoaderPendingState';
 import { QRLoaderDetailsProvider } from './QRLoaderDetailsProvider';
 import { QRLoaderProps } from './types';
 import { redirectToApp } from '../../../utils/urls';
@@ -74,16 +74,7 @@ export function QRLoader(props: Readonly<QRLoaderProps>) {
     }
 
     if (loading) {
-        return (
-            <div className="adyen-checkout__qr-loader">
-                {brandLogo && (
-                    <div className="adyen-checkout__qr-loader__brand-logo-wrapper">
-                        <img alt={brandName} src={brandLogo} className="adyen-checkout__qr-loader__brand-logo" />
-                    </div>
-                )}
-                <Spinner />
-            </div>
-        );
+        return <QRLoaderPendingState brandLogo={brandLogo} brandName={brandName} />;
     }
 
     const classnames = props.classNameModifiers.map(m => `adyen-checkout__qr-loader--${m}`);

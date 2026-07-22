@@ -8,6 +8,7 @@ import SRPanelProvider from '../../../core/Errors/SRPanelProvider';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 import type { QRLoaderProps } from './types';
 import { AmountProvider, AmountProviderProps } from '../../../core/Context/AmountProvider';
+import { setupCoreMock } from '../../../../config/testMocks/setup-core-mock';
 
 jest.mock('../../../core/Services/payment-status');
 
@@ -15,12 +16,14 @@ const TIMEOUT_OFFSET = 200;
 
 const renderQRLoader = ({
     qrLoaderProps,
-    amountProviderProps
+    amountProviderProps,
+    srPanel: externalSrPanel
 }: {
     qrLoaderProps: Partial<QRLoaderProps>;
     amountProviderProps?: Partial<AmountProviderProps>;
+    srPanel?: SRPanel;
 }) => {
-    const srPanel = new SRPanel(global.core);
+    const srPanel = externalSrPanel ?? new SRPanel(global.core);
     const defaultProps: QRLoaderProps = {
         type: 'pix',
         brandLogo: 'logo.png',
@@ -161,5 +164,23 @@ describe('QRLoader', () => {
         await waitFor(() => expect(checkPaymentStatus).toHaveBeenCalledTimes(2), { timeout: delay + TIMEOUT_OFFSET });
         await waitFor(() => expect(checkPaymentStatus).toHaveBeenCalledTimes(3), { timeout: throttledInterval + TIMEOUT_OFFSET });
         expect(setTimeout).toHaveBeenCalledWith(expect.any(Function), throttledInterval);
+    });
+
+    describe('Accessibility', () => {
+        test('should report the loading status to the SRPanel while waiting for the initial payment status check', async () => {
+            const pendingResponse = { payload: 'Ab02b4c0!', resultCode: 'pending', type: 'complete' };
+            (checkPaymentStatus as jest.Mock).mockResolvedValue(pendingResponse);
+
+            const srPanel = setupCoreMock().modules.srPanel;
+            const setMessagesSpy = jest.spyOn(srPanel, 'setMessages');
+
+            renderQRLoader({ qrLoaderProps: {}, srPanel });
+
+            expect(setMessagesSpy).toHaveBeenCalledWith('Loading…');
+
+            await waitFor(() => {
+                expect(screen.getByText('Scan QR code')).toBeInTheDocument();
+            });
+        });
     });
 });
