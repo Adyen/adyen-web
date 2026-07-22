@@ -64,7 +64,7 @@ class GoogleAcceleratedCheckoutClient implements IGoogleAcceleratedCheckoutClien
         return new google.payments.api.AcceleratedCheckoutClient(acceleratedCheckoutOptions);
     }
 
-    private handlePaymentSheetResized = (resize: PaymentSheetResize): void => {
+    private readonly handlePaymentSheetResized = (resize: PaymentSheetResize): void => {
         this.lastResize = resize;
         this.resizeSubscriber?.(resize);
     };
