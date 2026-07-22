@@ -61,7 +61,7 @@ describe('PayPalService', () => {
             });
             expect(createInstanceMock).toHaveBeenCalledWith({
                 clientToken: 'client-token-123',
-                components: ['paypal-payments', 'venmo-payments'],
+                components: ['paypal-payments', 'venmo-payments', 'paypal-messages'],
                 pageType: 'checkout'
             });
             expect(findEligibleMethodsMock).toHaveBeenCalledWith({

@@ -10,6 +10,14 @@ import type { PayPalEligiblePaymentMethods } from './paypal-js-types';
 jest.mock('./services/PayPalService');
 jest.mock('./services/PayPalSdkLoader');
 
+const mockPayPalComponentV6 = jest.fn();
+jest.mock('./components/PaypalComponentV6', () => ({
+    PayPalComponentV6: props => {
+        mockPayPalComponentV6(props);
+        return null;
+    }
+}));
+
 const PayPalServiceMock = PayPalService as jest.MockedClass<typeof PayPalService>;
 const PayPalSdkLoaderMock = PayPalSdkLoader as jest.MockedClass<typeof PayPalSdkLoader>;
 
@@ -561,6 +569,131 @@ describe('Paypal', () => {
 
                 await expect(paypal.isAvailable()).rejects.toThrow('PayPal SDK not loaded');
                 expect(isEligibleMock).not.toHaveBeenCalled();
+            });
+        });
+
+        describe('handleOnApproveV6', () => {
+            test('should call handleAdditionalDetails with the approve data and the stored paymentData', async () => {
+                const paypal = new Paypal(core, { usePayPalV6: {} });
+                paypal.paymentData = 'pd-v6';
+                // @ts-ignore spying on a protected method
+                const handleAdditionalDetailsSpy = jest.spyOn(paypal, 'handleAdditionalDetails').mockImplementation(() => paypal);
+
+                const data = { orderId: 'order-v6' } as any;
+                // @ts-ignore accessing private method
+                await paypal.handleOnApproveV6(data);
+
+                expect(handleAdditionalDetailsSpy).toHaveBeenCalledWith({ data: { details: data, paymentData: 'pd-v6' } });
+            });
+
+            test('should pass undefined paymentData when none is stored', async () => {
+                const paypal = new Paypal(core, { usePayPalV6: {} });
+                // @ts-ignore spying on a protected method
+                const handleAdditionalDetailsSpy = jest.spyOn(paypal, 'handleAdditionalDetails').mockImplementation(() => paypal);
+
+                const data = { orderId: 'order-v6' } as any;
+                // @ts-ignore accessing private method
+                await paypal.handleOnApproveV6(data);
+
+                expect(handleAdditionalDetailsSpy).toHaveBeenCalledWith({ data: { details: data, paymentData: undefined } });
+            });
+        });
+
+        describe('V6 shipping change handlers', () => {
+            test('handleOnShippingAddressChangeV6 should call the merchant callback with the component instance', async () => {
+                const onShippingAddressChangeMock = jest.fn().mockResolvedValue(undefined);
+                const paypal = new Paypal(core, { usePayPalV6: { onShippingAddressChange: onShippingAddressChangeMock } });
+
+                const data = { shippingAddress: { city: 'Amsterdam' } } as any;
+                // @ts-ignore accessing private method
+                await paypal.handleOnShippingAddressChangeV6(data);
+
+                expect(onShippingAddressChangeMock).toHaveBeenCalledWith(data, paypal);
+            });
+
+            test('handleOnShippingAddressChangeV6 should resolve when no callback is provided', async () => {
+                const paypal = new Paypal(core, { usePayPalV6: {} });
+                // @ts-ignore accessing private method
+                await expect(paypal.handleOnShippingAddressChangeV6({} as any)).resolves.toBeUndefined();
+            });
+
+            test('handleOnShippingOptionsChangeV6 should call the merchant callback with the component instance', async () => {
+                const onShippingOptionsChangeMock = jest.fn().mockResolvedValue(undefined);
+                const paypal = new Paypal(core, { usePayPalV6: { onShippingOptionsChange: onShippingOptionsChangeMock } });
+
+                const data = { selectedShippingOption: { id: 'option-1' } } as any;
+                // @ts-ignore accessing private method
+                await paypal.handleOnShippingOptionsChangeV6(data);
+
+                expect(onShippingOptionsChangeMock).toHaveBeenCalledWith(data, paypal);
+            });
+
+            test('handleOnShippingOptionsChangeV6 should resolve when no callback is provided', async () => {
+                const paypal = new Paypal(core, { usePayPalV6: {} });
+                // @ts-ignore accessing private method
+                await expect(paypal.handleOnShippingOptionsChangeV6({} as any)).resolves.toBeUndefined();
+            });
+        });
+
+        describe('componentToRender', () => {
+            test('should render the PayPalComponentV6 forwarding the usePayPalV6 configuration', () => {
+                const style = { paypal: { type: 'paypal' as const, class: 'paypal-gold' as const } };
+                const paypal = new Paypal(core, {
+                    showPayButton: true,
+                    usePayPalV6: {
+                        commit: true,
+                        vault: true,
+                        style,
+                        blockPayPalCreditButton: true,
+                        blockPayPalPayLaterButton: false,
+                        blockPayPalVenmoButton: true
+                    }
+                });
+
+                render(paypal.render());
+
+                expect(mockPayPalComponentV6).toHaveBeenCalledWith(
+                    expect.objectContaining({
+                        commit: true,
+                        vault: true,
+                        style,
+                        blockPayPalCreditButton: true,
+                        blockPayPalPayLaterButton: false,
+                        blockPayPalVenmoButton: true,
+                        onSubmit: expect.any(Function),
+                        onApprove: expect.any(Function),
+                        onShippingAddressChange: expect.any(Function),
+                        onShippingOptionsChange: expect.any(Function),
+                        onCancel: expect.any(Function),
+                        onError: expect.any(Function)
+                    })
+                );
+            });
+
+            test('should map the onCancel prop to a CANCEL AdyenCheckoutError', () => {
+                const onErrorMock = jest.fn();
+                const paypal = new Paypal(core, { showPayButton: true, usePayPalV6: {}, onError: onErrorMock });
+                render(paypal.render());
+
+                const { onCancel } = mockPayPalComponentV6.mock.calls[0][0];
+                onCancel();
+
+                expect(onErrorMock).toHaveBeenCalledTimes(1);
+                expect(onErrorMock.mock.calls[0][0]).toBeInstanceOf(AdyenCheckoutError);
+            });
+
+            test('should map the onError prop to an ERROR AdyenCheckoutError preserving the cause', () => {
+                const onErrorMock = jest.fn();
+                const paypal = new Paypal(core, { showPayButton: true, usePayPalV6: {}, onError: onErrorMock });
+                render(paypal.render());
+
+                const cause = new Error('sdk failure');
+                const { onError } = mockPayPalComponentV6.mock.calls[0][0];
+                onError(cause);
+
+                expect(onErrorMock).toHaveBeenCalledTimes(1);
+                expect(onErrorMock.mock.calls[0][0]).toBeInstanceOf(AdyenCheckoutError);
+                expect(onErrorMock.mock.calls[0][0]).toMatchObject({ cause });
             });
         });
     });
