@@ -56,11 +56,9 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
         }
 
         const paymentDataRequest = new PaymentDataRequest(this.props);
+
         const acceleratedOptions: AcceleratedCheckoutOptions = {
             environment: resolveEnvironment(this.props.environment),
-            checkoutUiCallbacks: {
-                onPaymentSheetResized: (...args) => console.log('onPaymentSheetResized', args)
-            },
             acceleratedCheckoutConfig: {
                 type: 'INLINE',
                 containerId: GOOGLE_PAY_ACCELERATED_DIV_ID

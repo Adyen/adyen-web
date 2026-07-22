@@ -4,15 +4,18 @@ import { PaymentDataRequest } from '../models/PaymentDataRequest';
 interface IGoogleAcceleratedCheckoutClient {
     isAvailable(): Promise<AcceleratedCheckoutResult>;
     load(): Promise<AcceleratedCheckoutResult>;
+    onPaymentSheetResize(callback: (resize: PaymentSheetResize) => void): () => void;
 }
 
 type AcceleratedCheckoutResult = { status: 'SUCCESS' | 'ERROR'; errorMessage?: string };
 
+export type PaymentSheetResize = { height: number; heightCss: string };
+
 export type AcceleratedCheckoutOptions = {
     environment: google.payments.api.Environment;
     paymentDataCallbacks: google.payments.api.PaymentDataCallbacks;
-    checkoutUiCallbacks: {
-        onPaymentSheetResized({ height, heightCss }: { height: number; heightCss: string }): void;
+    checkoutUiCallbacks?: {
+        onPaymentSheetResized?({ height, heightCss }: { height: number; heightCss: string }): void;
     };
     checkoutRequest: PaymentDataRequest;
     acceleratedCheckoutConfig: {
@@ -24,8 +27,25 @@ export type AcceleratedCheckoutOptions = {
 class GoogleAcceleratedCheckoutClient implements IGoogleAcceleratedCheckoutClient {
     private readonly clientPromise: Promise<google.payments.api.AcceleratedCheckoutClient>;
 
+    /**
+     *  Last dimensions reported by the Google payment sheet resize callback
+     */
+    private lastResize: PaymentSheetResize | null = null;
+
+    /**
+     * Subscriber notified whenever the payment sheet is resized
+     */
+    private resizeSubscriber: ((resize: PaymentSheetResize) => void) | null = null;
+
     constructor(acceleratedCheckoutOptions: AcceleratedCheckoutOptions, script: Script) {
-        this.clientPromise = this.getAcceleratedCheckoutClient(acceleratedCheckoutOptions, script);
+        const options: AcceleratedCheckoutOptions = {
+            ...acceleratedCheckoutOptions,
+            checkoutUiCallbacks: {
+                onPaymentSheetResized: this.handlePaymentSheetResized
+            }
+        };
+
+        this.clientPromise = this.getAcceleratedCheckoutClient(options, script);
     }
 
     /**
@@ -42,6 +62,30 @@ class GoogleAcceleratedCheckoutClient implements IGoogleAcceleratedCheckoutClien
         }
 
         return new google.payments.api.AcceleratedCheckoutClient(acceleratedCheckoutOptions);
+    }
+
+    private handlePaymentSheetResized = (resize: PaymentSheetResize): void => {
+        this.lastResize = resize;
+        this.resizeSubscriber?.(resize);
+    };
+
+    /**
+     * Subscribe to payment sheet resize events. The callback is invoked immediately with the last emitted
+     * value (if any) so late subscribers are not left with stale dimensions.
+     *
+     * @param callback - Invoked with the new dimensions whenever the payment sheet is resized
+     * @returns Unsubscribe function
+     */
+    public onPaymentSheetResize(callback: (resize: PaymentSheetResize) => void): () => void {
+        this.resizeSubscriber = callback;
+
+        if (this.lastResize) {
+            callback(this.lastResize);
+        }
+
+        return () => {
+            this.resizeSubscriber = null;
+        };
     }
 
     /**
