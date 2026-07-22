@@ -10,7 +10,7 @@ type ResolvedDropinElements = [
     elements: UIElement[],
     instantPaymentElements: UIElement[],
     fastlanePaymentElement: UIElement[],
-    orderStatus: OrderStatus
+    orderStatus: OrderStatus | null
 ];
 
 interface PromotableGooglePay {

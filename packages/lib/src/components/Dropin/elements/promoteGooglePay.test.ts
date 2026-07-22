@@ -22,10 +22,9 @@ const makeGooglePay = ({
     mode?: GooglePaymentMode;
 } = {}): GooglePay => {
     const googlePay = new GooglePay(setupCoreMock(), {
-        configuration: { merchantId: 'merchant-id', gatewayMerchantId: 'gateway-id' }
+        configuration: { merchantId: 'merchant-id', gatewayMerchantId: 'gateway-id', acceleratedCheckoutExperiment: experiment }
     });
 
-    googlePay.props.configuration.acceleratedCheckoutExperiment = experiment;
     googlePay.isShopperEligibleForAcceleratedCheckout = shopperEligible;
     googlePay.mode = mode;
 

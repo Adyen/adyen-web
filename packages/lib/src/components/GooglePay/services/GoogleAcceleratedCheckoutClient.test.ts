@@ -9,7 +9,7 @@ type MockAcceleratedClient = {
     load: jest.Mock;
 };
 
-let capturedOptions: AcceleratedCheckoutOptions;
+let capturedOptions: AcceleratedCheckoutOptions | undefined;
 let mockClientInstance: MockAcceleratedClient;
 
 const setGoogleGlobal = () => {
@@ -39,7 +39,7 @@ const createOptions = (overrides?: Partial<AcceleratedCheckoutOptions>): Acceler
 });
 
 /** Fires a resize event the same way the Google client would */
-const emitResize = (resize: PaymentSheetResize) => capturedOptions.checkoutUiCallbacks.onPaymentSheetResized(resize);
+const emitResize = (resize: PaymentSheetResize) => capturedOptions?.checkoutUiCallbacks?.onPaymentSheetResized?.(resize);
 
 /** Constructs the client and waits for the async Google client creation to settle */
 const createClient = async (overrides?: Partial<AcceleratedCheckoutOptions>) => {
@@ -86,7 +86,7 @@ describe('GoogleAcceleratedCheckoutClient', () => {
         test('should inject its own "onPaymentSheetResized" handler into the Google client options', async () => {
             await createClient();
 
-            expect(capturedOptions.checkoutUiCallbacks.onPaymentSheetResized).toEqual(expect.any(Function));
+            expect(capturedOptions?.checkoutUiCallbacks?.onPaymentSheetResized).toEqual(expect.any(Function));
         });
     });
 

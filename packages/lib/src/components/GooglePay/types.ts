@@ -220,7 +220,7 @@ export interface GooglePayConfiguration extends UIElementProps {
          * Required when PaymentsClient is initialized with an environment property of PRODUCTION.
          * @see https://developers.google.com/pay/api/web/reference/request-objects#MerchantInfo
          */
-        merchantId?: string;
+        merchantId: string;
 
         /**
          * Merchant name is rendered in the payment sheet.
