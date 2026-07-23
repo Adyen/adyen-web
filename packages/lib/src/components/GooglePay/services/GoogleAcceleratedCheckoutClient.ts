@@ -1,7 +1,7 @@
 import Script from '../../../utils/Script';
 import { PaymentDataRequest } from '../models/PaymentDataRequest';
 
-interface IGoogleAcceleratedCheckoutClient {
+export interface IGoogleAcceleratedCheckoutClient {
     isAvailable(): Promise<AcceleratedCheckoutResult>;
     load(): Promise<AcceleratedCheckoutResult>;
     onPaymentSheetResize(callback: (resize: PaymentSheetResize) => void): () => void;
@@ -15,7 +15,7 @@ export type AcceleratedCheckoutOptions = {
     environment: google.payments.api.Environment;
     paymentDataCallbacks: google.payments.api.PaymentDataCallbacks;
     checkoutUiCallbacks?: {
-        onPaymentSheetResized?({ height, heightCss }: { height: number; heightCss: string }): void;
+        onPaymentSheetResized?(resizeSize: PaymentSheetResize): void;
     };
     checkoutRequest: PaymentDataRequest;
     acceleratedCheckoutConfig: {

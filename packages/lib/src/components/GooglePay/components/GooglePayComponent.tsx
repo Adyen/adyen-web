@@ -32,8 +32,6 @@ const GooglePayComponent = ({
 }: Readonly<Props>) => {
     const [activeMode, setPaymentMode] = useState<GooglePaymentMode>(defaultMode);
 
-    console.log('[Adyen] GooglePayComponent active mode', activeMode);
-
     const onAcceleratedCheckoutLoadFailed = useCallback(() => {
         setPaymentMode(GooglePaymentMode.STANDARD_BUTTON);
     }, []);

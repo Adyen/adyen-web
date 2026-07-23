@@ -213,14 +213,14 @@ export interface GooglePayConfiguration extends UIElementProps {
          * Adyen's merchant account name
          * @see https://developers.google.com/pay/api/web/reference/request-objects#gateway
          */
-        gatewayMerchantId: string;
+        gatewayMerchantId?: string;
 
         /**
          * A Google merchant identifier issued after registration with the {@link https://pay.google.com/business/console | Google Pay Business Console}.
          * Required when PaymentsClient is initialized with an environment property of PRODUCTION.
          * @see https://developers.google.com/pay/api/web/reference/request-objects#MerchantInfo
          */
-        merchantId: string;
+        merchantId?: string;
 
         /**
          * Merchant name is rendered in the payment sheet.
@@ -240,15 +240,11 @@ export interface GooglePayConfiguration extends UIElementProps {
         authJwt?: string;
 
         /**
-         * Flag indicating whether the accelerated checkout experiment is enabled
+         * Flag indicating whether the accelerated checkout experiment is enabled.
+         * Value is returned from the /paymentMethods endpoint.
          */
         acceleratedCheckoutExperiment?: 'enabled' | 'disabled';
     };
-
-    /**
-     * Temporary flag for enable GAC
-     */
-    acceleratedCheckout?: boolean;
 }
 
 // Used to add undocumented google payment options

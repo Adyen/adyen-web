@@ -1,3 +1,9 @@
+/**
+ * NOTE: This file exists solely to support the experiment/alpha release of the GooglePay
+ * Accelerated Checkout promotion. It is temporary and will be deleted (won't go live) if the
+ * feature is widely accepted.
+ */
+
 import UIElement from '../../internal/UIElement';
 import { TxVariants } from '../../tx-variants';
 
@@ -23,8 +29,7 @@ const isGooglePayElement = (element: UIElement): boolean =>
     element.type === (TxVariants.googlepay as string) || element.type === (TxVariants.paywithgoogle as string);
 
 /**
- * A GooglePay element is promotable when the accelerated checkout experiment is enabled and the
- * component resolved to the accelerated checkout mode during its availability check.
+ * A GooglePay element is promotable when the shopper is eligible for Accelerated Checkout
  */
 const isPromotableGooglePay = (element: UIElement): boolean => {
     if (!isGooglePayElement(element)) {

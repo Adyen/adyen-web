@@ -36,7 +36,7 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
 
     /**
      * Whether the shopper is eligible for accelerated checkout.
-     * This is set during the availability check and used to determine the mode AND to place GooglePay on top of the Drop-in
+     * Set during the availability check. Used to determine the mode AND to place GooglePay on top of the Drop-in
      */
     public isShopperEligibleForAcceleratedCheckout: boolean = false;
 
@@ -113,16 +113,10 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
             brands: props.brands
         });
 
-        // Temporary hack to enable accelerated checkout experiment
-        const configuration: GooglePayConfiguration['configuration'] = props.configuration;
-        if (props.acceleratedCheckout) {
-            configuration.acceleratedCheckoutExperiment = 'enabled';
-        }
-
         return {
             ...props,
             allowedCardNetworks,
-            configuration,
+            configuration: props.configuration,
             buttonSizeMode,
             buttonLocale,
             callbackIntents
@@ -151,7 +145,7 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
     }
 
     /**
-     * When rendering in accelerated checkout mode inside Drop-in, GooglePay displays its own full UI,
+     * When rendering in Accelerated Checkout mode inside Drop-in, GooglePay displays its own full UI,
      * so the PaymentMethodItem header is hidden while selected.
      */
     public override get showDropinHeaderWhenSelected(): boolean {
@@ -166,8 +160,6 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
             this.googleAcceleratedCheckoutClient.isAvailable(),
             this.googleButtonClient.isReadyToPay(this.props)
         ]);
-
-        console.log('[Adyen] GAC isAvailable() result', acceleratedCheckoutResult);
 
         if (acceleratedCheckoutResult.status === 'fulfilled') {
             const { status } = acceleratedCheckoutResult.value;
@@ -194,8 +186,6 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
                 })
             );
         }
-
-        console.log('[Adyen] Google Button isReadyToPay() result', googleButtonResult);
 
         if (googleButtonResult.status === 'fulfilled') {
             const isReadyToPayResponse = googleButtonResult.value;

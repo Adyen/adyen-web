@@ -1,6 +1,6 @@
 import { getDecimalAmount } from '../../../utils/amount-util';
 import config from '../config';
-import { ExtendedMerchantInfo, GooglePayConfiguration, GooglePaymentDataRequest } from '../types';
+import type { ExtendedMerchantInfo, GooglePayConfiguration, GooglePaymentDataRequest } from '../types';
 
 class PaymentDataRequest implements GooglePaymentDataRequest {
     public apiVersion: number;
