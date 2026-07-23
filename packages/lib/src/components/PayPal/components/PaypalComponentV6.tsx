@@ -6,8 +6,8 @@ import { PayPalButton } from './PayPalButton';
 import { PayPalPayLaterButton } from './PayPalPayLaterButton';
 import { PayPalCreditButton } from './PayPalCreditButton';
 import { VenmoButton } from './VenmoButton';
+import { PayPalSpinner } from './PayPalSpinner';
 import { ComponentMethodsRef } from '../../types';
-import Spinner from '../../internal/Spinner';
 
 const PayPalComponentV6 = ({
     paypalService,
@@ -65,9 +65,7 @@ const PayPalComponentV6 = ({
     if (status === 'pending') {
         return (
             <div className="adyen-checkout__paypal" aria-live="polite" aria-busy="true">
-                <div className="adyen-checkout__paypal__status adyen-checkout__paypal__status--pending" data-testid="paypal-loader">
-                    <Spinner />
-                </div>
+                <PayPalSpinner />
             </div>
         );
     }
@@ -77,7 +75,7 @@ const PayPalComponentV6 = ({
             <PayPalButton {...commonProps} style={style.paypal} vault={vault} />
             {!blockPayPalPayLaterButton && <PayPalPayLaterButton {...commonProps} />}
             {!blockPayPalCreditButton && <PayPalCreditButton {...commonProps} vault={vault} />}
-            {!blockPayPalVenmoButton && <VenmoButton {...commonProps} style={style.venmo} onCancel={onCancel} vault={vault} />}
+            {!blockPayPalVenmoButton && <VenmoButton {...commonProps} style={style.venmo} vault={vault} />}
         </div>
     );
 };

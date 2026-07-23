@@ -150,6 +150,11 @@ describe('Paypal', () => {
             const paypal = new Paypal(core, { vault: true, intent: 'capture' });
             expect(paypal.props.vault).toBe(true);
         });
+
+        test('should not set usePayPalV6 when it is not provided', () => {
+            const paypal = new Paypal(core);
+            expect(paypal.props.usePayPalV6).toBeUndefined();
+        });
     });
 
     describe('updatePaymentData', () => {
@@ -537,6 +542,19 @@ describe('Paypal', () => {
             });
         });
 
+        describe('formatProps', () => {
+            test('should default the presentationModeOptions to auto when not provided', () => {
+                const paypal = new Paypal(core, { usePayPalV6: { vault: true } });
+                expect(paypal.props.usePayPalV6?.presentationModeOptions).toEqual({ presentationMode: 'auto' });
+            });
+
+            test('should keep the merchant provided presentationModeOptions', () => {
+                const presentationModeOptions = { presentationMode: 'modal' as const };
+                const paypal = new Paypal(core, { usePayPalV6: { presentationModeOptions } });
+                expect(paypal.props.usePayPalV6?.presentationModeOptions).toEqual(presentationModeOptions);
+            });
+        });
+
         describe('isAvailable', () => {
             test('should resolve without using the PayPal service when usePayPalV6 is not set', async () => {
                 const paypal = new Paypal(core);
@@ -638,12 +656,14 @@ describe('Paypal', () => {
         describe('componentToRender', () => {
             test('should render the PayPalComponentV6 forwarding the usePayPalV6 configuration', () => {
                 const style = { paypal: { type: 'paypal' as const, class: 'paypal-gold' as const } };
+                const presentationModeOptions = { presentationMode: 'modal' as const };
                 const paypal = new Paypal(core, {
                     showPayButton: true,
                     usePayPalV6: {
                         commit: true,
                         vault: true,
                         style,
+                        presentationModeOptions,
                         blockPayPalCreditButton: true,
                         blockPayPalPayLaterButton: false,
                         blockPayPalVenmoButton: true
@@ -657,6 +677,7 @@ describe('Paypal', () => {
                         commit: true,
                         vault: true,
                         style,
+                        presentationModeOptions,
                         blockPayPalCreditButton: true,
                         blockPayPalPayLaterButton: false,
                         blockPayPalVenmoButton: true,
@@ -665,7 +686,8 @@ describe('Paypal', () => {
                         onShippingAddressChange: expect.any(Function),
                         onShippingOptionsChange: expect.any(Function),
                         onCancel: expect.any(Function),
-                        onError: expect.any(Function)
+                        onError: expect.any(Function),
+                        setComponentRef: expect.any(Function)
                     })
                 );
             });

@@ -18,7 +18,7 @@ class PayPalSdkLoader {
     public async load(): Promise<typeof window.paypal> {
         try {
             const scriptElement = new Script({
-                src: this.environment.toLowerCase() === 'test' ? PAYPAL_SDK_URL_SANDBOX : PAYPAL_SDK_URL_PRODUCTION,
+                src: this.environment?.toLowerCase() === 'test' ? PAYPAL_SDK_URL_SANDBOX : PAYPAL_SDK_URL_PRODUCTION,
                 component: 'paypal',
                 attributes: { crossOrigin: 'anonymous', ...(this.nonce && { nonce: this.nonce }) },
                 analytics: this.analytics
