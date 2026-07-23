@@ -5,9 +5,15 @@
     flex-direction: column;
     gap: variable-generator.token(spacer-070);
 
-        &__button {
+    &__buttons {    
         display: flex;
+        flex-direction: column;
+        gap: variable-generator.token(spacer-070);
+    }
 
+    &__button {
+        line-height: 0;
+        
         &:empty {
             display: none;
         }

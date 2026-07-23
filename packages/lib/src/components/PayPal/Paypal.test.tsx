@@ -6,13 +6,14 @@ import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { PayPalService } from './services/PayPalService';
 import { PayPalSdkLoader } from './services/PayPalSdkLoader';
 import type { PayPalEligiblePaymentMethods } from './paypal-js-types';
+import type { PayPalComponentV6Props } from './components/types';
 
 jest.mock('./services/PayPalService');
 jest.mock('./services/PayPalSdkLoader');
 
 const mockPayPalComponentV6 = jest.fn();
 jest.mock('./components/PaypalComponentV6', () => ({
-    PayPalComponentV6: props => {
+    PayPalComponentV6: (props: PayPalComponentV6Props) => {
         mockPayPalComponentV6(props);
         return null;
     }
@@ -542,19 +543,6 @@ describe('Paypal', () => {
             });
         });
 
-        describe('formatProps', () => {
-            test('should default the presentationModeOptions to auto when not provided', () => {
-                const paypal = new Paypal(core, { usePayPalV6: { vault: true } });
-                expect(paypal.props.usePayPalV6?.presentationModeOptions).toEqual({ presentationMode: 'auto' });
-            });
-
-            test('should keep the merchant provided presentationModeOptions', () => {
-                const presentationModeOptions = { presentationMode: 'modal' as const };
-                const paypal = new Paypal(core, { usePayPalV6: { presentationModeOptions } });
-                expect(paypal.props.usePayPalV6?.presentationModeOptions).toEqual(presentationModeOptions);
-            });
-        });
-
         describe('isAvailable', () => {
             test('should resolve without using the PayPal service when usePayPalV6 is not set', async () => {
                 const paypal = new Paypal(core);
@@ -655,7 +643,7 @@ describe('Paypal', () => {
 
         describe('componentToRender', () => {
             test('should render the PayPalComponentV6 forwarding the usePayPalV6 configuration', () => {
-                const style = { paypal: { type: 'paypal' as const, class: 'paypal-gold' as const } };
+                const style = { paypal: { type: 'pay' as const, class: 'paypal-gold' as const } };
                 const presentationModeOptions = { presentationMode: 'modal' as const };
                 const paypal = new Paypal(core, {
                     showPayButton: true,

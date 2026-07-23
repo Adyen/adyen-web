@@ -16,7 +16,7 @@ const createProps = (overrides: Partial<PayPalComponentV6Props> = {}): PayPalCom
 
     return {
         paypalService,
-        style: { paypal: { type: 'paypal', class: 'paypal-gold' }, venmo: { type: 'venmo', class: 'venmo-blue' } },
+        style: { paypal: { type: 'pay', class: 'paypal-gold' }, venmo: { type: 'pay', class: 'venmo-blue' } },
         commit: true,
         vault: false,
         onSubmit: jest.fn(),

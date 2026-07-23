@@ -316,7 +316,7 @@ export type SupportedPayPalFundingSources = 'paypal' | 'credit' | 'paylater' | '
  */
 export type FundingSource = SupportedPayPalFundingSources;
 
-export type PayPalButtonType = 'paypal' | 'paylater' | 'credit' | 'venmo';
+export type PayPalButtonType = 'pay' | 'checkout' | 'buynow' | 'subscribe';
 
 export type PayPalButtonClass = 'paypal-gold' | 'paypal-blue' | 'paypal-white' | 'paypal-black';
 

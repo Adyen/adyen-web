@@ -32,7 +32,7 @@ const setup = ({ isEligible = true, amount = { value: 1000, currency: 'USD' } }:
         paypalService,
         commit: true,
         vault: false,
-        style: { type: 'venmo' as const, class: 'venmo-blue' as const },
+        style: { type: 'pay' as const, class: 'venmo-blue' as const },
         onApprove: jest.fn(),
         onShippingAddressChange: jest.fn(),
         onShippingOptionsChange: jest.fn(),
@@ -61,7 +61,7 @@ describe('VenmoButton', () => {
         const { container } = setup();
 
         await waitFor(() => expect(getWebComponent(container as HTMLElement)).toBeInTheDocument());
-        expect(getWebComponent(container as HTMLElement)).toHaveAttribute('type', 'venmo');
+        expect(getWebComponent(container as HTMLElement)).toHaveAttribute('type', 'pay');
         expect(getWebComponent(container as HTMLElement)).toHaveAttribute('class', 'venmo-blue');
     });
 

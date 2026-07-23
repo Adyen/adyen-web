@@ -31,3 +31,28 @@ export const Default: Story = {
         }
     }
 };
+
+export const PaypalV6: Story = {
+    render: ({ componentConfiguration, ...checkoutConfig }) => (
+        <Checkout checkoutConfig={checkoutConfig}>
+            {checkout => <ComponentContainer element={new Paypal(checkout, componentConfiguration)} />}
+        </Checkout>
+    ),
+    args: {
+        componentConfiguration: {
+            usePayPalV6: {
+                style: {
+                    paypal: {
+                        type: 'checkout',
+                        class: 'paypal-blue'
+                    },
+                    venmo: {
+                        type: 'checkout',
+                        class: 'venmo-black'
+                    }
+                },
+                vault: false
+            }
+        }
+    }
+};

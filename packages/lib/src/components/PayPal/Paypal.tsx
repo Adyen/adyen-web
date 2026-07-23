@@ -30,7 +30,6 @@ import { PayPalSdkLoader } from './services/PayPalSdkLoader';
 import { PayPalService } from './services/PayPalService';
 import { PayPalComponentV6 } from './components/PaypalComponentV6';
 import './Paypal.scss';
-import { DEFAULT_PAYMENT_SESSION_OPTIONS } from './config';
 
 class PaypalElement extends UIElement<PayPalConfiguration> {
     public static readonly type = TxVariants.paypal;
@@ -114,17 +113,8 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
 
         const displayContinueToReviewPageButton = props.userAction === 'continue';
 
-        // v6 default configuration
-        const usePayPalV6 = props.usePayPalV6
-            ? {
-                  ...props.usePayPalV6,
-                  presentationModeOptions: props.usePayPalV6.presentationModeOptions ?? DEFAULT_PAYMENT_SESSION_OPTIONS
-              }
-            : undefined;
-
         return {
             ...props,
-            usePayPalV6,
             commit: displayContinueToReviewPageButton ? false : props.commit,
             vault,
             configuration: {
@@ -352,6 +342,9 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
 
         if (this.props.usePayPalV6) {
             const { usePayPalV6: paypalv6Props } = this.props;
+
+            if (!this.paypalService) return null;
+
             return (
                 <PayPalComponentV6
                     setComponentRef={this.setComponentRef}

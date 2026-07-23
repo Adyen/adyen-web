@@ -11,7 +11,7 @@ import { ComponentMethodsRef } from '../../types';
 
 const PayPalComponentV6 = ({
     paypalService,
-    style,
+    style = {},
     commit,
     vault,
     blockPayPalCreditButton,
@@ -72,10 +72,10 @@ const PayPalComponentV6 = ({
 
     return (
         <div className="adyen-checkout__paypal" data-testid="paypal-component">
-            <PayPalButton {...commonProps} style={style.paypal} vault={vault} />
+            <PayPalButton {...commonProps} style={style.paypal ?? {}} vault={vault} />
             {!blockPayPalPayLaterButton && <PayPalPayLaterButton {...commonProps} />}
             {!blockPayPalCreditButton && <PayPalCreditButton {...commonProps} vault={vault} />}
-            {!blockPayPalVenmoButton && <VenmoButton {...commonProps} style={style.venmo} vault={vault} />}
+            {!blockPayPalVenmoButton && <VenmoButton {...commonProps} style={style.venmo ?? {}} vault={vault} />}
         </div>
     );
 };
