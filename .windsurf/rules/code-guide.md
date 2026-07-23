@@ -23,6 +23,7 @@ trigger: always_on
 - [Bundle Size Discipline](#bundle-size-discipline)
 - [Common Pitfalls](#common-pitfalls)
 
+
 ---
 
 ## Persona
