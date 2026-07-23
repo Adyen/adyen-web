@@ -46,6 +46,20 @@ const meta: MetaConfiguration<DropinConfiguration> = {
 };
 
 export const Default: DropinStory = {
+    args: {
+        componentConfiguration: {
+            showRadioButton: false,
+            instantPaymentTypes: ['googlepay', 'applepay'],
+            showRemovePaymentMethodButton: false,
+
+            paymentMethodsConfiguration: {
+                paypal: {
+                    usePayPalV6: {}
+                }
+            }
+        }
+    },
+
     render: ({ componentConfiguration, ...checkoutConfig }: PaymentMethodStoryProps<DropinConfiguration>) => {
         // Register all Components
         const { Dropin, ...Components } = components;
