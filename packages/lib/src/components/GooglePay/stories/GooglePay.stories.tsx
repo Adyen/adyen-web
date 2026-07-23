@@ -87,11 +87,11 @@ export const AcceleratedCheckout: GooglePayStory = {
         );
     },
     args: {
-        useSessions: false,
+        useSessions: true,
         countryCode: 'BR',
         componentConfiguration: {
             configuration: {
-                gatewayMerchantId: 'CheckoutWeb',
+                gatewayMerchantId: 'TestMerchantCheckout',
                 merchantId: '50',
                 acceleratedCheckoutExperiment: 'enabled'
             }
