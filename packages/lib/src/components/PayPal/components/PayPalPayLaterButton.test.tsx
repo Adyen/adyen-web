@@ -1,13 +1,12 @@
 import { h } from 'preact';
-import { render, fireEvent, waitFor } from '@testing-library/preact';
+import { render, fireEvent, waitFor, screen } from '@testing-library/preact';
 import { mock } from 'jest-mock-extended';
 import { PayPalPayLaterButton } from './PayPalPayLaterButton';
 import type { PayPalService } from '../services/PayPalService';
 import type { PayPalSdkInstance } from '../paypal-js-types';
 
-const getWebComponent = (container: HTMLElement): HTMLElement =>
-    // eslint-disable-next-line testing-library/no-node-access
-    container.querySelector('paypal-pay-later-button');
+const getWebComponent = () => screen.getByTestId('paypal-paylater-button');
+const queryWebComponent = () => screen.queryByTestId('paypal-paylater-button');
 
 const createSessionMock = () => ({ start: jest.fn().mockResolvedValue(undefined) });
 
@@ -47,33 +46,33 @@ const setup = ({ isEligible = true } = {}) => {
 
 describe('PayPalPayLaterButton', () => {
     test('should not render when the funding source is not eligible', () => {
-        const { container } = setup({ isEligible: false });
-        expect(getWebComponent(container as HTMLElement)).not.toBeInTheDocument();
+        setup({ isEligible: false });
+        expect(queryWebComponent()).not.toBeInTheDocument();
     });
 
     test('should render the paypal-pay-later-button web component when eligible', async () => {
-        const { container } = setup();
-        await waitFor(() => expect(getWebComponent(container as HTMLElement)).toBeInTheDocument());
+        setup();
+        await waitFor(() => expect(getWebComponent()).toBeInTheDocument());
     });
 
     test('should set the productCode attribute from the eligible method details', async () => {
-        const { container, getDetailsMock } = setup();
+        const { getDetailsMock } = setup();
 
-        await waitFor(() => expect(getWebComponent(container as HTMLElement)).toHaveAttribute('productCode', 'PAY_LATER_SHORT_TERM'));
+        await waitFor(() => expect(getWebComponent()).toHaveAttribute('productCode', 'PAY_LATER_SHORT_TERM'));
         expect(getDetailsMock).toHaveBeenCalledWith('paylater');
     });
 
     test('should set the countryCode attribute from the eligible method details', async () => {
-        const { container } = setup();
+        setup();
 
-        await waitFor(() => expect(getWebComponent(container as HTMLElement)).toHaveAttribute('countryCode', 'US'));
+        await waitFor(() => expect(getWebComponent()).toHaveAttribute('countryCode', 'US'));
     });
 
     test('should start a one-time payment session on click', async () => {
-        const { container, sdkInstance, oneTimeSession } = setup();
+        const { sdkInstance, oneTimeSession } = setup();
 
-        await waitFor(() => expect(getWebComponent(container as HTMLElement)).toBeInTheDocument());
-        fireEvent.click(getWebComponent(container as HTMLElement));
+        await waitFor(() => expect(getWebComponent()).toBeInTheDocument());
+        fireEvent.click(getWebComponent());
 
         expect(sdkInstance.createPayLaterOneTimePaymentSession).toHaveBeenCalled();
         await waitFor(() => expect(oneTimeSession.start).toHaveBeenCalled());

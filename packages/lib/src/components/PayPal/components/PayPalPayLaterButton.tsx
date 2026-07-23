@@ -60,5 +60,5 @@ export const PayPalPayLaterButton = ({
         return null;
     }
 
-    return <paypal-pay-later-button onclick={onClick} productCode={productCode} countryCode={countryCode} />;
+    return <paypal-pay-later-button onclick={onClick} productCode={productCode} countryCode={countryCode} data-testid="paypal-paylater-button" />;
 };

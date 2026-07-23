@@ -1,5 +1,5 @@
 import { createRef, h } from 'preact';
-import { render, fireEvent, waitFor } from '@testing-library/preact';
+import { render, fireEvent, waitFor, screen } from '@testing-library/preact';
 import { mock } from 'jest-mock-extended';
 import { PayPalCreditButton } from './PayPalCreditButton';
 import { AmountProvider, AmountProviderRef } from '../../../core/Context/AmountProvider';
@@ -7,9 +7,8 @@ import type { PayPalService } from '../services/PayPalService';
 import type { PayPalSdkInstance } from '../paypal-js-types';
 import type { PaymentAmount } from '../../../types';
 
-const getWebComponent = (container: HTMLElement): HTMLElement =>
-    // eslint-disable-next-line testing-library/no-node-access
-    container.querySelector('paypal-credit-button');
+const getWebComponent = () => screen.getByTestId('paypal-credit-button');
+const queryWebComponent = () => screen.queryByTestId('paypal-credit-button');
 
 const createSessionMock = () => ({ start: jest.fn().mockResolvedValue(undefined) });
 
@@ -56,37 +55,37 @@ const setup = ({ isEligible = true, amount = { value: 1000, currency: 'USD' } }:
 
 describe('PayPalCreditButton', () => {
     test('should not render when the funding source is not eligible', () => {
-        const { container } = setup({ isEligible: false });
-        expect(getWebComponent(container as HTMLElement)).not.toBeInTheDocument();
+        setup({ isEligible: false });
+        expect(queryWebComponent()).not.toBeInTheDocument();
     });
 
     test('should render the paypal-credit-button web component when eligible', async () => {
-        const { container } = setup();
-        await waitFor(() => expect(getWebComponent(container as HTMLElement)).toBeInTheDocument());
+        setup();
+        await waitFor(() => expect(getWebComponent()).toBeInTheDocument());
     });
 
     test('should set the countryCode attribute from the eligible method details', async () => {
-        const { container, getDetailsMock } = setup();
+        const { getDetailsMock } = setup();
 
-        await waitFor(() => expect(getWebComponent(container as HTMLElement)).toHaveAttribute('countryCode', 'US'));
+        await waitFor(() => expect(getWebComponent()).toHaveAttribute('countryCode', 'US'));
         expect(getDetailsMock).toHaveBeenCalledWith('credit');
     });
 
     test('should start a one-time payment session on click for a regular transaction', async () => {
-        const { container, sdkInstance, oneTimeSession } = setup({ amount: { value: 1000, currency: 'USD' } });
+        const { sdkInstance, oneTimeSession } = setup({ amount: { value: 1000, currency: 'USD' } });
 
-        await waitFor(() => expect(getWebComponent(container as HTMLElement)).toBeInTheDocument());
-        fireEvent.click(getWebComponent(container as HTMLElement));
+        await waitFor(() => expect(getWebComponent()).toBeInTheDocument());
+        fireEvent.click(getWebComponent());
 
         expect(sdkInstance.createPayPalCreditOneTimePaymentSession).toHaveBeenCalled();
         await waitFor(() => expect(oneTimeSession.start).toHaveBeenCalled());
     });
 
     test('should start a save payment session on click for a zero-auth transaction', async () => {
-        const { container, sdkInstance, saveSession } = setup({ amount: { value: 0, currency: 'USD' } });
+        const { sdkInstance, saveSession } = setup({ amount: { value: 0, currency: 'USD' } });
 
-        await waitFor(() => expect(getWebComponent(container as HTMLElement)).toBeInTheDocument());
-        fireEvent.click(getWebComponent(container as HTMLElement));
+        await waitFor(() => expect(getWebComponent()).toBeInTheDocument());
+        fireEvent.click(getWebComponent());
 
         expect(sdkInstance.createPayPalCreditSavePaymentSession).toHaveBeenCalled();
         await waitFor(() => expect(saveSession.start).toHaveBeenCalled());

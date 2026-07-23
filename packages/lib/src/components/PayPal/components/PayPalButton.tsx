@@ -74,5 +74,12 @@ export const PayPalButton = ({
         return null;
     }
 
-    return <paypal-button onclick={isZeroAuth ? savePaymentClick : oneTimePaymentClick} type={style.type} class={style.class} />;
+    return (
+        <paypal-button
+            onclick={isZeroAuth ? savePaymentClick : oneTimePaymentClick}
+            type={style.type}
+            class={style.class}
+            data-testid="paypal-button"
+        />
+    );
 };

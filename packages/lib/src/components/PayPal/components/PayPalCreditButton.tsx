@@ -77,5 +77,11 @@ export const PayPalCreditButton = ({
         return null;
     }
 
-    return <paypal-credit-button onclick={isZeroAuth ? savePaymentClick : oneTimePaymentClick} countryCode={countryCode} />;
+    return (
+        <paypal-credit-button
+            onclick={isZeroAuth ? savePaymentClick : oneTimePaymentClick}
+            countryCode={countryCode}
+            data-testid="paypal-credit-button"
+        />
+    );
 };

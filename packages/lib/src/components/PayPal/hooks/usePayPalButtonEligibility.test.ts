@@ -18,7 +18,7 @@ describe('usePayPalButtonEligibility', () => {
 
         const { result } = renderHook(() => usePayPalButtonEligibility(service, 'paypal'));
 
-        await waitFor(() => expect(result.current.isEligible).toBe(true));
+        await waitFor(() => expect(result.current?.isEligible).toBe(true));
         expect(isEligibleMock).toHaveBeenCalledWith('paypal');
     });
 
@@ -28,6 +28,6 @@ describe('usePayPalButtonEligibility', () => {
         const { result } = renderHook(() => usePayPalButtonEligibility(service, 'venmo'));
 
         await waitFor(() => expect(isEligibleMock).toHaveBeenCalledWith('venmo'));
-        expect(result.current.isEligible).toBe(false);
+        expect(result.current?.isEligible).toBe(false);
     });
 });

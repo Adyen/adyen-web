@@ -7,7 +7,7 @@ describe('useCreateVaultSetupToken', () => {
 
         const { result } = renderHook(() => useCreateVaultSetupToken(onSubmit));
 
-        await expect(result.current()).resolves.toEqual({ vaultSetupToken: 'vault-token-123' });
+        await expect(result.current?.()).resolves.toEqual({ vaultSetupToken: 'vault-token-123' });
         expect(onSubmit).toHaveBeenCalledTimes(1);
     });
 
@@ -17,6 +17,6 @@ describe('useCreateVaultSetupToken', () => {
 
         const { result } = renderHook(() => useCreateVaultSetupToken(onSubmit));
 
-        await expect(result.current()).rejects.toThrow('submit failed');
+        await expect(result.current?.()).rejects.toThrow('submit failed');
     });
 });

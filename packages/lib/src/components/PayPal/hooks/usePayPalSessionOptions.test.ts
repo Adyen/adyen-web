@@ -20,7 +20,7 @@ describe('usePayPalSessionOptions', () => {
 
         const { result } = renderHook(() => usePayPalSessionOptions(params));
 
-        expect(result.current.oneTimeSessionOptions).toEqual({
+        expect(result.current?.oneTimeSessionOptions).toEqual({
             onApprove: params.onApprove,
             onShippingAddressChange: params.onShippingAddressChange,
             onShippingOptionsChange: params.onShippingOptionsChange,
@@ -36,7 +36,7 @@ describe('usePayPalSessionOptions', () => {
 
         const { result } = renderHook(() => usePayPalSessionOptions(params));
 
-        expect(result.current.saveSessionOptions).toEqual({
+        expect(result.current?.saveSessionOptions).toEqual({
             onApprove: params.onApprove,
             onCancel: params.onCancel,
             onError: params.onError
@@ -48,6 +48,6 @@ describe('usePayPalSessionOptions', () => {
 
         const { result } = renderHook(() => usePayPalSessionOptions(params));
 
-        expect(result.current.oneTimeSessionOptions.savePayment).toBe(false);
+        expect(result.current?.oneTimeSessionOptions.savePayment).toBe(false);
     });
 });

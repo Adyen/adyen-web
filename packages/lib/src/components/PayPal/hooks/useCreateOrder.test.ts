@@ -7,7 +7,7 @@ describe('useCreateOrder', () => {
 
         const { result } = renderHook(() => useCreateOrder(onSubmit));
 
-        await expect(result.current()).resolves.toEqual({ orderId: 'order-123' });
+        await expect(result.current?.()).resolves.toEqual({ orderId: 'order-123' });
         expect(onSubmit).toHaveBeenCalledTimes(1);
     });
 
@@ -17,6 +17,6 @@ describe('useCreateOrder', () => {
 
         const { result } = renderHook(() => useCreateOrder(onSubmit));
 
-        await expect(result.current()).rejects.toThrow('submit failed');
+        await expect(result.current?.()).rejects.toThrow('submit failed');
     });
 });

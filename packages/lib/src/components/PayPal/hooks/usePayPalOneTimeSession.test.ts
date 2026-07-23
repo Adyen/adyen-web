@@ -27,7 +27,7 @@ describe('usePayPalOneTimeSession', () => {
 
         const { result } = renderHook(() => usePayPalOneTimeSession({ createSession, createOrder, presentationModeOptions }));
 
-        await result.current.onClick();
+        await result.current?.onClick();
 
         expect(createOrder).toHaveBeenCalledTimes(1);
         expect(session.start).toHaveBeenCalledWith(presentationModeOptions, orderPromise);
@@ -42,7 +42,7 @@ describe('usePayPalOneTimeSession', () => {
 
         const { result } = renderHook(() => usePayPalOneTimeSession({ createSession, createOrder, presentationModeOptions: modalOptions }));
 
-        await result.current.onClick();
+        await result.current?.onClick();
 
         expect(session.start).toHaveBeenCalledWith(modalOptions, orderPromise);
     });
@@ -53,7 +53,7 @@ describe('usePayPalOneTimeSession', () => {
 
         const { result } = renderHook(() => usePayPalOneTimeSession({ createSession, createOrder, presentationModeOptions }));
 
-        await result.current.onClick();
+        await result.current?.onClick();
 
         expect(createOrder).not.toHaveBeenCalled();
     });

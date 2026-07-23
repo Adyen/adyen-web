@@ -27,7 +27,7 @@ describe('usePayPalSaveSession', () => {
 
         const { result } = renderHook(() => usePayPalSaveSession({ createSession, createVaultSetupToken, presentationModeOptions }));
 
-        await result.current.onClick();
+        await result.current?.onClick();
 
         expect(createVaultSetupToken).toHaveBeenCalledTimes(1);
         expect(session.start).toHaveBeenCalledWith(presentationModeOptions, tokenPromise);
@@ -42,7 +42,7 @@ describe('usePayPalSaveSession', () => {
 
         const { result } = renderHook(() => usePayPalSaveSession({ createSession, createVaultSetupToken, presentationModeOptions: modalOptions }));
 
-        await result.current.onClick();
+        await result.current?.onClick();
 
         expect(session.start).toHaveBeenCalledWith(modalOptions, tokenPromise);
     });
@@ -53,7 +53,7 @@ describe('usePayPalSaveSession', () => {
 
         const { result } = renderHook(() => usePayPalSaveSession({ createSession, createVaultSetupToken, presentationModeOptions }));
 
-        await result.current.onClick();
+        await result.current?.onClick();
 
         expect(createVaultSetupToken).not.toHaveBeenCalled();
     });

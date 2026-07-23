@@ -75,5 +75,12 @@ export const VenmoButton = ({
         return null;
     }
 
-    return <venmo-button onclick={isZeroAuth ? savePaymentClick : oneTimePaymentClick} type={style.type} class={style.class} />;
+    return (
+        <venmo-button
+            onclick={isZeroAuth ? savePaymentClick : oneTimePaymentClick}
+            type={style.type}
+            class={style.class}
+            data-testid="venmo-button"
+        />
+    );
 };
