@@ -90,9 +90,12 @@ describe('PaymentMethodItem', () => {
         const headerlessPaymentMethod = mock<UIElement>({
             _id: '654321',
             displayName: 'GooglePay',
+            additionalInfo: '',
+            icon: 'googlepay.svg',
             showDropinHeaderWhenSelected: false,
             props: {
-                type: 'googlepay'
+                type: 'googlepay',
+                oneClick: false
             },
             render: jest.fn()
         });
@@ -105,11 +108,16 @@ describe('PaymentMethodItem', () => {
             expect(container.getElementsByClassName('adyen-checkout__payment-method--headerless').length).toBe(0);
         });
 
-        test('should hide the header and add the headerless modifier when opted-in and selected', () => {
-            const { container } = customRender(<PaymentMethodItem {...requiredProps} paymentMethod={headerlessPaymentMethod} isSelected={true} />);
+        test('should visually hide the header while retaining selected radio semantics when opted-in and selected', () => {
+            const { container } = customRender(
+                <PaymentMethodItem {...requiredProps} paymentMethod={headerlessPaymentMethod} isSelected={true} standalone={false} />
+            );
 
-            expect(container.querySelector('.adyen-checkout__payment-method__header')).not.toBeInTheDocument();
+            expect(container.querySelector('.adyen-checkout__payment-method__header')).toHaveClass(
+                'adyen-checkout__payment-method__header--visually-hidden'
+            );
             expect(container.getElementsByClassName('adyen-checkout__payment-method--headerless').length).toBe(1);
+            expect(screen.getByRole('radio', { name: 'GooglePay' })).toHaveAttribute('aria-checked', 'true');
         });
 
         test('should keep the header when opted-in but not selected', () => {

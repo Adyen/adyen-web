@@ -2,8 +2,7 @@ import { h } from 'preact';
 import { useEffect, useCallback, useState } from 'preact/hooks';
 import styles from './GoogleAcceleratedCheckout.module.scss';
 
-import type { IGoogleAcceleratedCheckoutClient } from '../services/GoogleAcceleratedCheckoutClient';
-import type { PaymentSheetResize } from '../services/GoogleAcceleratedCheckoutClient';
+import type { IGoogleAcceleratedCheckoutClient, PaymentSheetResize } from '../services/GoogleAcceleratedCheckoutClient';
 
 export const GOOGLE_PAY_ACCELERATED_DIV_ID = 'adyen-accelerated-checkout-container';
 
@@ -21,7 +20,6 @@ const GoogleAcceleratedCheckout = ({ paymentsClient, onFail }: Readonly<Props>) 
             .then(result => {
                 if (result.status === 'ERROR') {
                     onFail();
-                    return;
                 }
             })
             .catch(_error => {

@@ -65,6 +65,10 @@
     transition: background 0.1s ease-out;
     width: 100%;
 
+    &--visually-hidden:not(:focus-within) {
+        @include index.a11y-visually-hidden;
+    }
+
     [dir='rtl'] & {
         $pm-h-spacer-70: variable-generator.token(spacer-070);
         $pm-h-spacer-20: variable-generator.token(spacer-020);
