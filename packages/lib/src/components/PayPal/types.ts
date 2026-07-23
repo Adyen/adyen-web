@@ -284,11 +284,6 @@ export interface PayPalConfiguration extends UIElementProps {
          */
         onCreatePayPalMessages?: (createPayPalMessages: (messagesOptions?: PayPalMessagesOptions) => PayPalMessagesSession) => void;
         /**
-         * Customize the paypal button web components.
-         *
-         * @see {@link https://docs.paypal.ai/reference/sdk/js/v6/reference#web-components}
-         */
-        /**
          * Configuration for how the payment UI is presented.
          *
          * @see {@link https://docs.paypal.ai/reference/sdk/js/v6/reference#paymentsession-start-options-orderpromise}
@@ -296,6 +291,11 @@ export interface PayPalConfiguration extends UIElementProps {
          * @description { presentationMode: 'auto' } - Recommended. SDK automatically selects the best experience. Tries popup first and falls back to modal if popups are blocked.
          */
         presentationModeOptions?: PayPalPresentationModeOptions;
+        /**
+         * Customize the paypal button web components.
+         *
+         * @see {@link https://docs.paypal.ai/reference/sdk/js/v6/reference#web-components}
+         */
         style?: {
             paypal?: PayPalButtonStyle;
             venmo?: PayPalVenmoButtonStyle;
