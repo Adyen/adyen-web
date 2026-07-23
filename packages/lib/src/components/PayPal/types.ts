@@ -8,6 +8,11 @@ import type {
     PayPalOnShippingAddressChangeData,
     PayPalOnShippingOptionsChangeData,
     PayPalOrderResponseBody,
+    PayPalPresentationModeOptionsForAuto,
+    PayPalPresentationModeOptionsForModal,
+    PayPalPresentationModeOptionsForPaymentHandler,
+    PayPalPresentationModeOptionsForPopup,
+    PayPalPresentationModeOptionsForRedirect,
     PayPalV6OnShippingAddressChangeData,
     PayPalV6OnShippingOptionsChangeData
 } from './paypal-js-types';
@@ -283,6 +288,14 @@ export interface PayPalConfiguration extends UIElementProps {
          *
          * @see {@link https://docs.paypal.ai/reference/sdk/js/v6/reference#web-components}
          */
+        /**
+         * Configuration for how the payment UI is presented.
+         *
+         * @see {@link https://docs.paypal.ai/reference/sdk/js/v6/reference#paymentsession-start-options-orderpromise}
+         * @default { presentationMode: 'auto' }
+         * @description { presentationMode: 'auto' } - Recommended. SDK automatically selects the best experience. Tries popup first and falls back to modal if popups are blocked.
+         */
+        presentationModeOptions?: PayPalPresentationModeOptions;
         style?: {
             paypal?: PayPalButtonStyle;
             venmo?: PayPalVenmoButtonStyle;
@@ -318,3 +331,10 @@ export type PayPalVenmoButtonStyle = {
     type?: PayPalButtonType;
     class?: VenmoButtonClass;
 };
+
+export type PayPalPresentationModeOptions =
+    | PayPalPresentationModeOptionsForPopup
+    | PayPalPresentationModeOptionsForModal
+    | PayPalPresentationModeOptionsForRedirect
+    | PayPalPresentationModeOptionsForPaymentHandler
+    | PayPalPresentationModeOptionsForAuto;

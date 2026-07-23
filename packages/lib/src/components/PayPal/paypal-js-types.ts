@@ -54,3 +54,27 @@ export type PayPalV6OnApproveData = OnApproveDataOneTimePayments | OnApproveData
 export type PayPalSavePaymentSessionOptions = SavePaymentSessionOptions;
 export type PayPalOneTimePaymentSession = OneTimePaymentSession;
 export type PayPalSavePaymentSession = SavePaymentSession;
+
+export type PayPalPresentationModeOptionsForPopup = {
+    presentationMode: 'popup';
+    fullPageOverlay?: { enabled: boolean };
+};
+
+export type PayPalPresentationModeOptionsForModal = {
+    presentationMode: 'modal';
+};
+
+export type PayPalPresentationModeOptionsForRedirect = {
+    presentationMode: 'redirect';
+    autoRedirect?: { enabled: boolean };
+    fullPageOverlay?: { enabled: boolean };
+};
+
+export type PayPalPresentationModeOptionsForPaymentHandler = {
+    presentationMode: 'payment-handler';
+};
+
+export type PayPalPresentationModeOptionsForAuto = {
+    presentationMode: 'auto';
+    fullPageOverlay?: { enabled: boolean };
+};

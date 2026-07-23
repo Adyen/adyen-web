@@ -1,11 +1,14 @@
 import { useCallback, useEffect, useState } from 'preact/hooks';
 import { PayPalOneTimePaymentSession } from '../paypal-js-types';
+import { PayPalPresentationModeOptions } from '../types';
 
 export const usePayPalOneTimeSession = ({
     createSession,
-    createOrder
+    createOrder,
+    presentationModeOptions
 }: {
-    createSession: () => PayPalOneTimePaymentSession;
+    presentationModeOptions: PayPalPresentationModeOptions;
+    createSession: () => PayPalOneTimePaymentSession | undefined;
     createOrder: () => Promise<{
         orderId: string;
     }>;
@@ -19,8 +22,8 @@ export const usePayPalOneTimeSession = ({
     const onClick = useCallback(async () => {
         if (!paymentSession) return;
 
-        await paymentSession.start({ presentationMode: 'auto' }, createOrder());
-    }, [paymentSession, createOrder]);
+        await paymentSession.start(presentationModeOptions, createOrder());
+    }, [paymentSession, createOrder, presentationModeOptions]);
 
     return {
         onClick

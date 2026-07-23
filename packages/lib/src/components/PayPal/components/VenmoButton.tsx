@@ -16,6 +16,7 @@ export const VenmoButton = ({
     commit,
     style,
     vault,
+    presentationModeOptions,
     onApprove,
     onShippingAddressChange,
     onShippingOptionsChange,
@@ -23,7 +24,7 @@ export const VenmoButton = ({
     onError,
     onSubmit
 }: Readonly<
-    Omit<PayPalComponentV6Props, 'style'> & {
+    Omit<PayPalComponentV6Props, 'style' | 'setComponentRef'> & {
         style: PayPalVenmoButtonStyle;
     }
 >) => {
@@ -45,16 +46,28 @@ export const VenmoButton = ({
     const createOrder = useCreateOrder(onSubmit);
     const createVaultSetupToken = useCreateVaultSetupToken(onSubmit);
 
-    const { onClick: oneTimePaymentClick } = usePayPalOneTimeSession({
-        createSession: () => payPalSDKInstance.createVenmoOneTimePaymentSession(oneTimeSessionOptions),
-        createOrder
-    });
+    const { onClick: oneTimePaymentClick } = usePayPalOneTimeSession(
+        useMemo(
+            () => ({
+                presentationModeOptions,
+                createSession: () => payPalSDKInstance.createVenmoOneTimePaymentSession(oneTimeSessionOptions),
+                createOrder
+            }),
+            [payPalSDKInstance, oneTimeSessionOptions, createOrder]
+        )
+    );
 
-    const { onClick: savePaymentClick } = usePayPalSaveSession({
-        // @ts-expect-error - createVenmoSavePaymentSession is not in the type definition but exists in the SDK
-        createSession: () => payPalSDKInstance.createVenmoSavePaymentSession(saveSessionOptions),
-        createVaultSetupToken
-    });
+    const { onClick: savePaymentClick } = usePayPalSaveSession(
+        useMemo(
+            () => ({
+                presentationModeOptions,
+                // @ts-expect-error - createVenmoSavePaymentSession is not in the type definition but exists in the SDK
+                createSession: () => payPalSDKInstance.createVenmoSavePaymentSession(saveSessionOptions),
+                createVaultSetupToken
+            }),
+            [payPalSDKInstance, saveSessionOptions, createVaultSetupToken]
+        )
+    );
 
     const { isEligible } = usePayPalButtonEligibility(paypalService, 'venmo');
 

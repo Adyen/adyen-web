@@ -35,6 +35,10 @@ const SUPPORTED_LOCALES = [
     'zh_TW'
 ] as const;
 
+const DEFAULT_PAYMENT_SESSION_OPTIONS = {
+    presentationMode: 'auto'
+} as const;
+
 export {
     INTEGRATION_DATE,
     PAYPAL_JS_URL_V5,
@@ -43,5 +47,6 @@ export {
     SUPPORTED_LOCALES,
     SUPPORTED_COLORS_FOR_CREDIT,
     PAYPAL_SDK_URL_PRODUCTION,
-    PAYPAL_SDK_URL_SANDBOX
+    PAYPAL_SDK_URL_SANDBOX,
+    DEFAULT_PAYMENT_SESSION_OPTIONS
 };

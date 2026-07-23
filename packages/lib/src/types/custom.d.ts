@@ -59,10 +59,13 @@ declare module 'preact' {
             'paypal-pay-later-button': {
                 id?: string;
                 onclick(): void;
+                countryCode?: string;
+                productCode?: string;
             };
             'paypal-credit-button': {
                 id?: string;
                 onclick(): void;
+                countryCode?: string;
             };
             'venmo-button': {
                 id?: string;

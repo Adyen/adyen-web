@@ -30,6 +30,7 @@ import { PayPalSdkLoader } from './services/PayPalSdkLoader';
 import { PayPalService } from './services/PayPalService';
 import { PayPalComponentV6 } from './components/PaypalComponentV6';
 import './Paypal.scss';
+import { DEFAULT_PAYMENT_SESSION_OPTIONS } from './config';
 
 class PaypalElement extends UIElement<PayPalConfiguration> {
     public static readonly type = TxVariants.paypal;
@@ -113,8 +114,17 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
 
         const displayContinueToReviewPageButton = props.userAction === 'continue';
 
+        // v6 default configuration
+        const usePayPalV6 = props.usePayPalV6
+            ? {
+                  ...props.usePayPalV6,
+                  presentationModeOptions: props.usePayPalV6.presentationModeOptions ?? DEFAULT_PAYMENT_SESSION_OPTIONS
+              }
+            : undefined;
+
         return {
             ...props,
+            usePayPalV6,
             commit: displayContinueToReviewPageButton ? false : props.commit,
             vault,
             configuration: {
@@ -344,6 +354,7 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
             const { usePayPalV6: paypalv6Props } = this.props;
             return (
                 <PayPalComponentV6
+                    setComponentRef={this.setComponentRef}
                     paypalService={this.paypalService}
                     onShippingAddressChange={this.handleOnShippingAddressChangeV6}
                     onShippingOptionsChange={this.handleOnShippingOptionsChangeV6}
@@ -353,6 +364,7 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
                     blockPayPalCreditButton={paypalv6Props.blockPayPalCreditButton}
                     blockPayPalPayLaterButton={paypalv6Props.blockPayPalPayLaterButton}
                     blockPayPalVenmoButton={paypalv6Props.blockPayPalVenmoButton}
+                    presentationModeOptions={paypalv6Props.presentationModeOptions}
                     onSubmit={this.handleSubmit}
                     onApprove={this.handleOnApproveV6}
                     onCancel={() => this.handleError(new AdyenCheckoutError('CANCEL'))}

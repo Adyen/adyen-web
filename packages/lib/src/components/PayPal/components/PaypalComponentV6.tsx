@@ -1,9 +1,13 @@
 import { h } from 'preact';
+import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
+
 import { PayPalComponentV6Props } from './types';
 import { PayPalButton } from './PayPalButton';
 import { PayPalPayLaterButton } from './PayPalPayLaterButton';
 import { PayPalCreditButton } from './PayPalCreditButton';
 import { VenmoButton } from './VenmoButton';
+import { ComponentMethodsRef } from '../../types';
+import Spinner from '../../internal/Spinner';
 
 const PayPalComponentV6 = ({
     paypalService,
@@ -13,23 +17,60 @@ const PayPalComponentV6 = ({
     blockPayPalCreditButton,
     blockPayPalPayLaterButton,
     blockPayPalVenmoButton,
+    presentationModeOptions,
     onSubmit,
     onApprove,
     onShippingAddressChange,
     onShippingOptionsChange,
     onCancel,
-    onError
+    onError,
+    setComponentRef
 }: Readonly<PayPalComponentV6Props>) => {
-    const commonProps = {
-        paypalService,
-        onSubmit,
-        onApprove,
-        onError,
-        onShippingAddressChange,
-        onShippingOptionsChange,
-        onCancel,
-        commit
-    };
+    const [status, setStatus] = useState('pending');
+
+    const paypalComponentRef = useRef<ComponentMethodsRef>({
+        setStatus: setStatus
+    });
+
+    useEffect(() => {
+        setComponentRef(paypalComponentRef.current);
+    }, [setComponentRef]);
+
+    useEffect(() => {
+        paypalService
+            .isSdkLoaded()
+            .then(() => {
+                setStatus('ready');
+            })
+            .catch(() => {
+                // SDK failed to load, but we don't need to handle it here
+            });
+    }, [paypalService]);
+
+    const commonProps = useMemo(
+        () => ({
+            paypalService,
+            presentationModeOptions,
+            commit,
+            onSubmit,
+            onApprove,
+            onError,
+            onShippingAddressChange,
+            onShippingOptionsChange,
+            onCancel
+        }),
+        [paypalService, onSubmit, onApprove, onError, onShippingAddressChange, onShippingOptionsChange, onCancel, commit]
+    );
+
+    if (status === 'pending') {
+        return (
+            <div className="adyen-checkout__paypal" aria-live="polite" aria-busy="true">
+                <div className="adyen-checkout__paypal__status adyen-checkout__paypal__status--pending" data-testid="paypal-loader">
+                    <Spinner />
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="adyen-checkout__paypal" data-testid="paypal-component">

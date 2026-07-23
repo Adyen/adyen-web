@@ -16,6 +16,7 @@ export const PayPalButton = ({
     commit,
     vault,
     style,
+    presentationModeOptions,
     onApprove,
     onShippingAddressChange,
     onShippingOptionsChange,
@@ -23,7 +24,7 @@ export const PayPalButton = ({
     onError,
     onSubmit
 }: Readonly<
-    Omit<PayPalComponentV6Props, 'style'> & {
+    Omit<PayPalComponentV6Props, 'style' | 'setComponentRef'> & {
         style: PayPalButtonStyle;
     }
 >) => {
@@ -45,15 +46,27 @@ export const PayPalButton = ({
     const createOrder = useCreateOrder(onSubmit);
     const createVaultSetupToken = useCreateVaultSetupToken(onSubmit);
 
-    const { onClick: oneTimePaymentClick } = usePayPalOneTimeSession({
-        createSession: () => payPalSDKInstance.createPayPalOneTimePaymentSession(oneTimeSessionOptions),
-        createOrder
-    });
+    const { onClick: oneTimePaymentClick } = usePayPalOneTimeSession(
+        useMemo(
+            () => ({
+                presentationModeOptions,
+                createSession: () => payPalSDKInstance.createPayPalOneTimePaymentSession(oneTimeSessionOptions),
+                createOrder
+            }),
+            [payPalSDKInstance, oneTimeSessionOptions, createOrder]
+        )
+    );
 
-    const { onClick: savePaymentClick } = usePayPalSaveSession({
-        createSession: () => payPalSDKInstance.createPayPalSavePaymentSession(saveSessionOptions),
-        createVaultSetupToken
-    });
+    const { onClick: savePaymentClick } = usePayPalSaveSession(
+        useMemo(
+            () => ({
+                presentationModeOptions,
+                createSession: () => payPalSDKInstance.createPayPalSavePaymentSession(saveSessionOptions),
+                createVaultSetupToken
+            }),
+            [payPalSDKInstance, saveSessionOptions, createVaultSetupToken]
+        )
+    );
 
     const { isEligible } = usePayPalButtonEligibility(paypalService, 'paypal');
 

@@ -1,11 +1,14 @@
 import { useCallback, useEffect, useState } from 'preact/hooks';
 import { PayPalSavePaymentSession } from '../paypal-js-types';
+import { PayPalPresentationModeOptions } from '../types';
 
 export const usePayPalSaveSession = ({
+    presentationModeOptions,
     createSession,
     createVaultSetupToken
 }: {
-    createSession: () => PayPalSavePaymentSession;
+    presentationModeOptions: PayPalPresentationModeOptions;
+    createSession: () => PayPalSavePaymentSession | undefined;
     createVaultSetupToken: () => Promise<{
         vaultSetupToken: string;
     }>;
@@ -19,8 +22,8 @@ export const usePayPalSaveSession = ({
     const onClick = useCallback(async () => {
         if (!paymentSession) return;
 
-        await paymentSession.start({ presentationMode: 'auto' }, createVaultSetupToken());
-    }, [paymentSession, createVaultSetupToken]);
+        await paymentSession.start(presentationModeOptions, createVaultSetupToken());
+    }, [paymentSession, createVaultSetupToken, presentationModeOptions]);
 
     return {
         onClick
