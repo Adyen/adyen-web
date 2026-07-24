@@ -49,6 +49,7 @@
         "prettier": "3.9.4"
     },
     "resolutions": {
+        "shell-quote": "1.9.0",
         "tar-fs": "^3.0.9"
     },
     "packageManager": "yarn@4.17.0"
