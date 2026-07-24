@@ -139,10 +139,6 @@ export class CardElement extends UIElement<CardConfiguration> {
             installmentOptions: shownInstallmentOptions,
             enableStoreDetails,
             showStoreDetailsCheckbox,
-            allowedFundingSources: props.configuration?.allowedFundingSources
-                ?.split(',')
-                .map(fundingSource => fundingSource.trim())
-                .filter(Boolean),
             /**
              * Click to Pay configuration
              * - If email is set explicitly in the configuration, then it can override the one used in the session creation

@@ -11,14 +11,6 @@ if (process.env.NODE_ENV === 'development') {
     window.mockBinCount = 0; // Set to 0 to turn off mocking, 1 to turn it on
 }
 
-/**
- * Determines whether the funding source resolved by the BIN lookup is not part of the funding sources the card
- * component is allowed to accept. Brands without a resolved funding source are ignored (no validation, preserving
- * default behavior).
- */
-export const hasDisallowedFundingSource = (supportedBrands: BrandObject[], allowedFundingSources: string[]): boolean =>
-    supportedBrands.some(brand => !!brand.fundingSource && !allowedFundingSources.includes(brand.fundingSource));
-
 export const triggerBinLookUp = (element: CardElement | CustomCardElement) => {
     let currentRequestId: string | null = null;
 
@@ -128,18 +120,28 @@ export const triggerBinLookUp = (element: CardElement | CustomCardElement) => {
                          */
                         if (mappedResponse.supportedBrands.length) {
                             /**
-                             * Strict funding source validation (driven by `allowedFundingSources` in the scheme's configuration
-                             * object in the /paymentMethods response): if the funding source resolved by binLookup is not part of
-                             * the allowed funding sources, reject the card as unsupported. When `allowedFundingSources` is absent or
-                             * empty, or when binLookup resolves no funding source, no validation is performed.
+                             * Strict funding source validation.
+                             * Only runs when allowedFundingSources is configured and every supported brand reports a
+                             * fundingSource; the card is then rejected if none of those funding sources is allowed.
                              */
-                            const allowedFundingSources = 'allowedFundingSources' in element.props ? element.props.allowedFundingSources : undefined;
+                            const allowedFundingSources =
+                                'configuration' in element.props
+                                    ? element.props.configuration?.allowedFundingSources
+                                          ?.split(',')
+                                          .map(fundingSource => fundingSource.trim())
+                                          .filter(Boolean)
+                                    : undefined;
+                            const fundingSources = mappedResponse.supportedBrands.map(brand => brand.fundingSource);
+                            const shouldValidateFundingSource = !!allowedFundingSources?.length && fundingSources.every(Boolean);
+                            const hasAllowedFundingSource = fundingSources.some(
+                                fundingSource => !!fundingSource && allowedFundingSources?.includes(fundingSource)
+                            );
 
-                            if (allowedFundingSources?.length && hasDisallowedFundingSource(mappedResponse.supportedBrands, allowedFundingSources)) {
+                            if (shouldValidateFundingSource && !hasAllowedFundingSource) {
                                 const errObj: CardErrorData = {
                                     type: 'card',
                                     fieldType: 'encryptedCardNumber',
-                                    error: SF_ErrorCodes.ERROR_MSG_UNSUPPORTED_CARD_ENTERED,
+                                    error: SF_ErrorCodes.ERROR_MSG_UNSUPPORTED_FUNDING_SOURCE,
                                     detectedBrands: mappedResponse.detectedBrands
                                 };
                                 element.handleUnsupportedCard(errObj);
