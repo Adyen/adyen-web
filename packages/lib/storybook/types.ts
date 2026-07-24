@@ -31,9 +31,15 @@ export interface CardPaymentMethodStoryProps<Q> extends PaymentMethodStoryProps<
     force3DS2Redirect: boolean;
 }
 
+export interface SplitFundingSourceStoryProps<Q> extends PaymentMethodStoryProps<Q> {
+    applyFundingSourceValidation: boolean;
+}
+
 export type StoryConfiguration<T> = StoryObj<PaymentMethodStoryProps<T>>;
 
 export type CustomCardStoryConfiguration<Q> = StoryObj<CardPaymentMethodStoryProps<Q>>;
+
+export type SplitFundingSourceStoryConfiguration<Q> = StoryObj<SplitFundingSourceStoryProps<Q>>;
 
 export type MetaConfiguration<T> = Meta<PaymentMethodStoryProps<T>>;
 
