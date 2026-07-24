@@ -1,14 +1,20 @@
 import { h } from 'preact';
-import { render, screen, waitFor } from '@testing-library/preact';
+import { act, render, screen, waitFor } from '@testing-library/preact';
 import { mock } from 'jest-mock-extended';
 import { PayPalComponentV6 } from './PaypalComponentV6';
 import type { PayPalComponentV6Props } from './types';
 import type { PayPalService } from '../services/PayPalService';
+import type { ComponentMethodsRef, UIElementStatus } from '../../types';
 
 jest.mock('./PayPalButton', () => ({ PayPalButton: () => <div data-testid="paypal-button" /> }));
 jest.mock('./PayPalPayLaterButton', () => ({ PayPalPayLaterButton: () => <div data-testid="paypal-pay-later-button" /> }));
 jest.mock('./PayPalCreditButton', () => ({ PayPalCreditButton: () => <div data-testid="paypal-credit-button" /> }));
 jest.mock('./VenmoButton', () => ({ VenmoButton: () => <div data-testid="venmo-button" /> }));
+jest.mock('./PayPalProcessingSpinner', () => ({
+    PayPalProcessingSpinner: ({ withReviewPage }: Readonly<{ withReviewPage: boolean }>) => (
+        <div data-testid="paypal-processing-spinner" data-with-review-page={String(withReviewPage)} />
+    )
+}));
 
 const createProps = (overrides: Partial<PayPalComponentV6Props> = {}): PayPalComponentV6Props => {
     const paypalService = mock<PayPalService>();
@@ -101,5 +107,41 @@ describe('PayPalComponentV6', () => {
         await waitFor(() => expect(paypalService.isSdkLoaded).toHaveBeenCalled());
         expect(screen.getByTestId('paypal-loader')).toBeInTheDocument();
         expect(screen.queryByTestId('paypal-component')).not.toBeInTheDocument();
+    });
+
+    test('should render the processing spinner and hide the buttons when the status is set to processing', async () => {
+        let componentRef: ComponentMethodsRef;
+        const setComponentRef = jest.fn((ref: ComponentMethodsRef) => {
+            componentRef = ref;
+        });
+
+        render(<PayPalComponentV6 {...createProps({ setComponentRef })} />);
+
+        expect(await screen.findByTestId('paypal-component')).toBeInTheDocument();
+
+        void act(() => {
+            componentRef.setStatus('processing' as UIElementStatus);
+        });
+
+        expect(screen.getByTestId('paypal-processing-spinner')).toBeInTheDocument();
+        expect(screen.queryByTestId('paypal-component')).not.toBeInTheDocument();
+        expect(screen.queryByTestId('paypal-button')).not.toBeInTheDocument();
+    });
+
+    test('should forward the commit flag to the processing spinner as the review page indicator', async () => {
+        let componentRef: ComponentMethodsRef;
+        const setComponentRef = jest.fn((ref: ComponentMethodsRef) => {
+            componentRef = ref;
+        });
+
+        render(<PayPalComponentV6 {...createProps({ setComponentRef, commit: false })} />);
+
+        expect(await screen.findByTestId('paypal-component')).toBeInTheDocument();
+
+        void act(() => {
+            componentRef.setStatus('processing' as UIElementStatus);
+        });
+
+        expect(screen.getByTestId('paypal-processing-spinner')).toHaveAttribute('data-with-review-page', 'false');
     });
 });

@@ -589,7 +589,7 @@ describe('Paypal', () => {
                 // @ts-ignore accessing private method
                 await paypal.handleOnApproveV6(data);
 
-                expect(handleAdditionalDetailsSpy).toHaveBeenCalledWith({ data: { details: data, paymentData: 'pd-v6' } });
+                expect(handleAdditionalDetailsSpy).toHaveBeenCalledWith({ data: { details: { orderID: 'order-v6' }, paymentData: 'pd-v6' } });
             });
 
             test('should pass undefined paymentData when none is stored', async () => {
@@ -601,7 +601,40 @@ describe('Paypal', () => {
                 // @ts-ignore accessing private method
                 await paypal.handleOnApproveV6(data);
 
-                expect(handleAdditionalDetailsSpy).toHaveBeenCalledWith({ data: { details: data, paymentData: undefined } });
+                expect(handleAdditionalDetailsSpy).toHaveBeenCalledWith({ data: { details: { orderID: 'order-v6' }, paymentData: undefined } });
+            });
+
+            test('should remap orderId/payerId to orderID/payerID and forward the remaining data', async () => {
+                const paypal = new Paypal(core, { usePayPalV6: {} });
+                paypal.paymentData = 'pd-v6';
+                // @ts-ignore spying on a protected method
+                const handleAdditionalDetailsSpy = jest.spyOn(paypal, 'handleAdditionalDetails').mockImplementation(() => paypal);
+
+                const data = { orderId: 'order-v6', payerId: 'payer-v6', paymentSource: 'paypal' } as any;
+                // @ts-ignore accessing private method
+                await paypal.handleOnApproveV6(data);
+
+                expect(handleAdditionalDetailsSpy).toHaveBeenCalledWith({
+                    data: {
+                        details: { orderID: 'order-v6', payerID: 'payer-v6', paymentSource: 'paypal' },
+                        paymentData: 'pd-v6'
+                    }
+                });
+            });
+
+            test('should forward the data as-is when there is no orderId (save payment flow)', async () => {
+                const paypal = new Paypal(core, { usePayPalV6: {} });
+                paypal.paymentData = 'pd-v6';
+                // @ts-ignore spying on a protected method
+                const handleAdditionalDetailsSpy = jest.spyOn(paypal, 'handleAdditionalDetails').mockImplementation(() => paypal);
+
+                const data = { vaultSetupToken: 'vault-token-v6' } as any;
+                // @ts-ignore accessing private method
+                await paypal.handleOnApproveV6(data);
+
+                expect(handleAdditionalDetailsSpy).toHaveBeenCalledWith({
+                    data: { details: { vaultSetupToken: 'vault-token-v6' }, paymentData: 'pd-v6' }
+                });
             });
         });
 
@@ -654,7 +687,9 @@ describe('Paypal', () => {
                         presentationModeOptions,
                         blockPayPalCreditButton: true,
                         blockPayPalPayLaterButton: false,
-                        blockPayPalVenmoButton: true
+                        blockPayPalVenmoButton: true,
+                        onShippingAddressChange: jest.fn(),
+                        onShippingOptionsChange: jest.fn()
                     }
                 });
 
