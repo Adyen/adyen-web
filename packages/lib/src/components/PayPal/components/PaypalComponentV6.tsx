@@ -73,7 +73,7 @@ const PayPalComponentV6 = ({
 
     if (status === 'pending') {
         return (
-            <div className="adyen-checkout__paypal" aria-live="polite" aria-busy="true">
+            <div className="adyen-checkout__paypal" aria-live="polite" aria-busy="true" data-testid="paypal-component">
                 <PayPalSpinner />
             </div>
         );

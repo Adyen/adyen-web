@@ -43,11 +43,11 @@ export const PaypalV6: Story = {
             usePayPalV6: {
                 style: {
                     paypal: {
-                        type: 'checkout',
+                        type: 'buynow',
                         class: 'paypal-blue'
                     },
                     venmo: {
-                        type: 'checkout',
+                        type: 'pay',
                         class: 'venmo-black'
                     }
                 },
