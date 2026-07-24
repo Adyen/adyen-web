@@ -58,7 +58,7 @@ export default function InputBase({ setRef, ...props }: Readonly<InputBaseProps>
 
     const handleInput = useCallback(
         (event: TargetedInputEvent<HTMLInputElement>) => {
-            props.onInput(event);
+            props.onInput?.(event);
         },
         [props.onInput]
     );
@@ -98,7 +98,7 @@ export default function InputBase({ setRef, ...props }: Readonly<InputBaseProps>
             'adyen-checkout__input--invalid': isInvalid,
             'adyen-checkout__input--valid': isValid
         },
-        classNameModifiers.map(m => `adyen-checkout__input--${m}`)
+        (classNameModifiers ?? []).map(m => `adyen-checkout__input--${m}`)
     );
 
     // Don't spread classNameModifiers etc to input element (it ends up as an attribute on the element itself)

@@ -1,6 +1,6 @@
 import { CountryFormatRules, FormatRules } from '../../../utils/Validator/types';
 import { Formatter } from '../../../utils/useForm/types';
-import { getFormattingRegEx, SPECIAL_CHARS, trimValWithOneSpace } from '../../../utils/validator-utils';
+import { getFormattingRegEx, SPECIAL_CHARS } from '../../../utils/validator-utils';
 
 const asCountryFormatRules = <T extends CountryFormatRules>(rules: T): T & CountryFormatRules => rules;
 
@@ -15,7 +15,7 @@ const createFormatByDigits = (digits: number): Formatter => {
 };
 
 const specialCharsRegEx = getFormattingRegEx(SPECIAL_CHARS);
-const formattingFn = val => trimValWithOneSpace(val).replace(specialCharsRegEx, '');
+const formattingFn = (val: string) => val.replace(specialCharsRegEx, '');
 
 export const addressFormatters: FormatRules = {
     postalCode: {
