@@ -148,7 +148,7 @@ jobs:
     uses: ./.github/workflows/slack-channel-message.yml
     with:
       channel: ${{ vars.CHECKOUT_WEB_CHANNEL_ID }}
-      message: "Release ${{ needs.resolve-version.outputs.version }} has been successfully published to npm!"
+      message: "Release ${{ needs.resolve-version.outputs.version }} has been successfully published to npm! You can find it here: https://www.npmjs.com/package/@adyen/adyen-web/v/${{ needs.resolve-version.outputs.version }}"
       thread_ts: ${{ needs.load-thread-ts.outputs.thread_ts }}
     secrets:
       SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
