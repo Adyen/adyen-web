@@ -41,23 +41,6 @@ describe('Card', () => {
             expect(card.props.showStoreDetailsCheckbox).toEqual(false);
         });
 
-        describe('allowedFundingSources', () => {
-            test('should parse the comma-separated allowedFundingSources string into a trimmed array', () => {
-                const card = new CardElement(global.core, { configuration: { allowedFundingSources: 'debit, prepaid' } });
-                expect(card.props.allowedFundingSources).toEqual(['debit', 'prepaid']);
-            });
-
-            test('should be undefined when allowedFundingSources is not present in the configuration', () => {
-                const card = new CardElement(global.core, { configuration: {} });
-                expect(card.props.allowedFundingSources).toBeUndefined();
-            });
-
-            test('should resolve to an empty array when allowedFundingSources is an empty string', () => {
-                const card = new CardElement(global.core, { configuration: { allowedFundingSources: '' } });
-                expect(card.props.allowedFundingSources).toEqual([]);
-            });
-        });
-
         describe('installmentOptions', () => {
             let core: ICore;
             let consoleWarnSpy: jest.SpyInstance;

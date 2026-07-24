@@ -41,6 +41,7 @@ export enum SF_ErrorCodes {
     ERROR_MSG_EMPTY_PAN = `${ErrorCodePrefixes.CC_NUM}.900`,
     ERROR_MSG_UNSUPPORTED_CARD_ENTERED = `${ErrorCodePrefixes.CC_NUM}.903`,
     ERROR_MSG_INCORRECTLY_FILLED_PAN = `${ErrorCodePrefixes.CC_NUM}.901`, // 'Enter the complete card number'
+    ERROR_MSG_UNSUPPORTED_FUNDING_SOURCE = `${ErrorCodePrefixes.CC_NUM}.904`, // 'This card type is not supported.'
 
     ERROR_MSG_CARD_TOO_OLD = `${ErrorCodePrefixes.CC_DAT}.912`,
     ERROR_MSG_CARD_TOO_FAR_IN_FUTURE = `${ErrorCodePrefixes.CC_DAT}.913`,
