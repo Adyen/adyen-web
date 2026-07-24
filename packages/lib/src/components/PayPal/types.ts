@@ -8,6 +8,7 @@ import type {
     PayPalOnShippingAddressChangeData,
     PayPalOnShippingOptionsChangeData,
     PayPalOrderResponseBody,
+    PayPalPageTypes,
     PayPalPresentationModeOptionsForAuto,
     PayPalPresentationModeOptionsForModal,
     PayPalPresentationModeOptionsForPaymentHandler,
@@ -212,6 +213,12 @@ export interface PayPalConfiguration extends UIElementProps {
      */
     usePayPalV6?: {
         /**
+         * The type of page where the SDK is being initialized. This helps PayPal optimize the payment experience and provide better analytics.
+         * @see {@link https://docs.paypal.ai/developer/how-to/sdk/js/v6/configuration#parameters}
+         * @default "checkout"
+         */
+        pageType?: PayPalPageTypes;
+        /**
          * Set to true to enable vaulting of the payment method (save for future use).
          * @default false
          */
@@ -245,6 +252,13 @@ export interface PayPalConfiguration extends UIElementProps {
          * @default false
          */
         blockPayPalVenmoButton?: boolean;
+        /**
+         * The locale for the UI components, specified as a BCP-47 language tag, for example, "en-US", "fr-FR", "de-DE". If not specified, the SDK automatically detects the buyer’s locale from their browser settings.
+         *
+         * @see {@link https://docs.paypal.ai/developer/how-to/sdk/js/v6/configuration#parameters}
+         * @default undefined
+         */
+        locale?: string;
         /**
          * Called when the buyer selects or changes their shipping address within the PayPal flow. Use this callback to update shipping costs, validate addresses, or apply location-based restrictions.
          *

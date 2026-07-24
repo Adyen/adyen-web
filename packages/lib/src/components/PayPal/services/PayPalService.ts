@@ -1,17 +1,23 @@
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 import type { PaymentAmount } from '../../../types';
 import { PayPalSdkLoader } from './PayPalSdkLoader';
-import type { PayPalComponents, PayPalEligiblePaymentMethods, PayPalPaymentFlow, PayPalSdkInstance } from '../paypal-js-types';
-import requestPayPalOauthToken from './request-paypal-oauth-token';
+import type { PayPalComponents, PayPalEligiblePaymentMethods, PayPalPageTypes, PayPalPaymentFlow, PayPalSdkInstance } from '../paypal-js-types';
+// import requestPayPalOauthToken from './request-paypal-oauth-token';
+import requestFastlaneToken from '../../PayPalFastlane/services/request-fastlane-token';
+import { PayPalV6SupportedLocale } from '../utils/types';
+import { getSupportedLocalePayPalV6 } from '../utils/get-paypal-locale';
 
 interface PayPalServiceConfig {
+    sdkLoader: PayPalSdkLoader;
     loadingContext: string;
     clientKey: string;
     merchantId: string;
-    sdkLoader: PayPalSdkLoader;
     countryCode: string;
     amount?: PaymentAmount;
     vault: boolean;
+    locale?: string;
+    pageType?: PayPalPageTypes;
+    environment?: string;
 }
 
 class PayPalService {
@@ -22,12 +28,26 @@ class PayPalService {
     private readonly amount?: PaymentAmount;
     private readonly countryCode: string;
     private readonly vault: boolean;
+    private readonly locale?: PayPalV6SupportedLocale;
+    private readonly pageType?: PayPalPageTypes;
+    private readonly environment?: string;
 
     private loadingPromise?: Promise<void>;
     private sdkInstance: PayPalSdkInstance;
     private eligiblePaymentMethods: PayPalEligiblePaymentMethods;
 
-    constructor({ loadingContext, clientKey, merchantId, sdkLoader, amount, countryCode, vault }: PayPalServiceConfig) {
+    constructor({
+        sdkLoader,
+        loadingContext,
+        clientKey,
+        merchantId,
+        amount,
+        countryCode,
+        vault,
+        locale,
+        pageType,
+        environment
+    }: PayPalServiceConfig) {
         this.sdkLoader = sdkLoader;
         this.loadingContext = loadingContext;
         this.clientKey = clientKey;
@@ -35,6 +55,9 @@ class PayPalService {
         this.amount = amount ? { ...amount } : undefined;
         this.countryCode = countryCode;
         this.vault = vault;
+        this.locale = getSupportedLocalePayPalV6(locale) ?? undefined;
+        this.pageType = pageType;
+        this.environment = environment;
 
         this.createPayPalSdkInstance = this.createPayPalSdkInstance.bind(this);
         this.createEligibleMethods = this.createEligibleMethods.bind(this);
@@ -49,11 +72,13 @@ class PayPalService {
         }
 
         const isSdkLoaderLoadedPromise = this.sdkLoader.isSdkLoaded();
-        const tokenDataPromise = requestPayPalOauthToken(this.loadingContext, { clientKey: this.clientKey, merchantId: this.merchantId });
+        // TODO: enable this line again to use the paypal oauth token when the backend fix is done
+        // const tokenDataPromise = requestPayPalOauthToken(this.loadingContext, { clientKey: this.clientKey, merchantId: this.merchantId });
+        const tokenDataPromise = requestFastlaneToken(this.loadingContext, this.clientKey);
 
         this.loadingPromise = Promise.all([isSdkLoaderLoadedPromise, tokenDataPromise])
             .then(([_loadedSdk, tokenData]) => {
-                return tokenData.clientToken;
+                return tokenData.value;
             })
             .then(this.createPayPalSdkInstance)
             .then(this.createEligibleMethods);
@@ -74,13 +99,18 @@ class PayPalService {
         const createInstance = paypal?.v6?.createInstance || paypal?.createInstance;
 
         if (!createInstance) {
-            return Promise.reject(new AdyenCheckoutError('ERROR', 'PayPal SDK `createInstance` is not available'));
+            throw new AdyenCheckoutError('ERROR', 'PayPal SDK `createInstance` is not available');
         }
+
+        const isTestEnvironment = this.environment?.toLowerCase() === 'test';
 
         this.sdkInstance = await createInstance({
             clientToken,
             components: ['paypal-payments', 'venmo-payments', 'paypal-messages'] satisfies PayPalComponents,
-            pageType: 'checkout'
+            pageType: this.pageType,
+            merchantId: this.merchantId,
+            locale: this.locale,
+            testBuyerCountry: isTestEnvironment ? this.countryCode : undefined
         });
 
         return this.sdkInstance;

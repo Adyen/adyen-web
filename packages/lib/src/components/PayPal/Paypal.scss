@@ -57,6 +57,7 @@ paypal-pay-later-button,
 paypal-credit-button,
 venmo-button {
     --paypal-button-border-radius: variable-generator.token(border-radius-s);
+    --venmo-button-border-radius: variable-generator.token(border-radius-s);
 
     width: 100%;
     height: variable-generator.token(spacer-120);

@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'preact/hooks';
 
 import { PayPalComponentV6Props } from './types';
 import { PayPalButton } from './PayPalButton';
@@ -8,11 +8,13 @@ import { PayPalCreditButton } from './PayPalCreditButton';
 import { VenmoButton } from './VenmoButton';
 import { PayPalSpinner } from './PayPalSpinner';
 import { ComponentMethodsRef } from '../../types';
+import { PayPalV6OnApproveData } from '../paypal-js-types';
+import { PayPalProcessingSpinner } from './PayPalProcessingSpinner';
 
 const PayPalComponentV6 = ({
     paypalService,
     style = {},
-    commit,
+    commit = true,
     vault,
     blockPayPalCreditButton,
     blockPayPalPayLaterButton,
@@ -47,34 +49,68 @@ const PayPalComponentV6 = ({
             });
     }, [paypalService]);
 
+    const handleOnApprove = useCallback(
+        (data: PayPalV6OnApproveData) => {
+            setStatus('processing');
+            void onApprove(data);
+            return Promise.resolve();
+        },
+        [onApprove]
+    );
+
     const commonProps = useMemo(
         () => ({
             paypalService,
             presentationModeOptions,
             commit,
             onSubmit,
-            onApprove,
+            onApprove: handleOnApprove,
             onError,
-            onShippingAddressChange,
-            onShippingOptionsChange,
             onCancel
         }),
-        [paypalService, onSubmit, onApprove, onError, onShippingAddressChange, onShippingOptionsChange, onCancel, commit]
+        [paypalService, onSubmit, handleOnApprove, onError, onShippingAddressChange, onShippingOptionsChange, onCancel, commit]
     );
 
     if (status === 'pending') {
         return (
-            <div className="adyen-checkout__paypal" aria-live="polite" aria-busy="true">
+            <div className="adyen-checkout__paypal" aria-live="polite" aria-busy="true" data-testid="paypal-component">
                 <PayPalSpinner />
+            </div>
+        );
+    }
+
+    if (status === 'processing') {
+        return (
+            <div className="adyen-checkout__paypal" aria-live="polite" aria-busy="true" data-testid="paypal-component">
+                <PayPalProcessingSpinner withReviewPage={commit} />
             </div>
         );
     }
 
     return (
         <div className="adyen-checkout__paypal" data-testid="paypal-component">
-            <PayPalButton {...commonProps} style={style.paypal ?? {}} vault={vault} />
-            {!blockPayPalPayLaterButton && <PayPalPayLaterButton {...commonProps} />}
-            {!blockPayPalCreditButton && <PayPalCreditButton {...commonProps} vault={vault} />}
+            <PayPalButton
+                {...commonProps}
+                style={style.paypal ?? {}}
+                vault={vault}
+                onShippingAddressChange={onShippingAddressChange}
+                onShippingOptionsChange={onShippingOptionsChange}
+            />
+            {!blockPayPalPayLaterButton && (
+                <PayPalPayLaterButton
+                    {...commonProps}
+                    onShippingAddressChange={onShippingAddressChange}
+                    onShippingOptionsChange={onShippingOptionsChange}
+                />
+            )}
+            {!blockPayPalCreditButton && (
+                <PayPalCreditButton
+                    {...commonProps}
+                    vault={vault}
+                    onShippingAddressChange={onShippingAddressChange}
+                    onShippingOptionsChange={onShippingOptionsChange}
+                />
+            )}
             {!blockPayPalVenmoButton && <VenmoButton {...commonProps} style={style.venmo ?? {}} vault={vault} />}
         </div>
     );

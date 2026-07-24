@@ -18,8 +18,6 @@ export const VenmoButton = ({
     vault,
     presentationModeOptions,
     onApprove,
-    onShippingAddressChange,
-    onShippingOptionsChange,
     onCancel,
     onError,
     onSubmit
@@ -36,8 +34,6 @@ export const VenmoButton = ({
         paypalService,
         commit,
         onApprove,
-        onShippingAddressChange,
-        onShippingOptionsChange,
         onCancel,
         onError,
         vault

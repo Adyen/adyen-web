@@ -2,11 +2,10 @@ import { h, RefObject } from 'preact';
 import { useEffect, useRef } from 'preact/hooks';
 import classnames from 'classnames';
 import { getStyle } from '../utils/get-paypal-styles';
-import Spinner from '../../internal/Spinner';
-import { useCoreContext } from '../../../core/Context/CoreProvider';
 
 import type { PayPalButtonsProps } from './types';
 import type { SupportedPayPalFundingSources } from '../types';
+import { PayPalProcessingSpinner } from './PayPalProcessingSpinner';
 
 export default function PaypalButtons({
     onInit,
@@ -22,7 +21,6 @@ export default function PaypalButtons({
     style,
     ...props
 }: Readonly<PayPalButtonsProps>) {
-    const { i18n } = useCoreContext();
     const isTokenize = props.configuration?.intent === 'tokenize';
     const paypalButtonRef = useRef<HTMLDivElement>(null);
     const creditButtonRef = useRef<HTMLDivElement>(null);
@@ -60,8 +58,6 @@ export default function PaypalButtons({
         if (!props.blockPayPalVenmoButton) createButton(VENMO, venmoButtonRef);
     }, []);
 
-    const isProcessingPaymentWithoutReviewPage = props.commit === true;
-
     return (
         <div className={classnames('adyen-checkout__paypal__buttons', { 'adyen-checkout__paypal-processing': isProcessingPayment })}>
             <div className="adyen-checkout__paypal__button adyen-checkout__paypal__button--paypal" ref={paypalButtonRef} />
@@ -71,10 +67,7 @@ export default function PaypalButtons({
 
             {isProcessingPayment && (
                 <div className="adyen-checkout__paypal">
-                    <div className="adyen-checkout__paypal__status adyen-checkout__paypal__status--processing">
-                        <Spinner size="medium" inline />
-                        {isProcessingPaymentWithoutReviewPage && i18n.get('paypal.processingPayment')}
-                    </div>
+                    <PayPalProcessingSpinner withReviewPage={props.commit} />
                 </div>
             )}
         </div>

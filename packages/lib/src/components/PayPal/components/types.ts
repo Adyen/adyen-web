@@ -47,8 +47,8 @@ export type PayPalComponentV6Props = Pick<
     paypalService: PayPalService;
     onSubmit: () => Promise<string>;
     onApprove: (data: PayPalV6OnApproveData) => Promise<void>;
-    onShippingAddressChange: (data: PayPalV6OnShippingAddressChangeData) => Promise<void>;
-    onShippingOptionsChange: (data: PayPalV6OnShippingOptionsChangeData) => Promise<void>;
+    onShippingAddressChange?: (data: PayPalV6OnShippingAddressChangeData) => Promise<void>;
+    onShippingOptionsChange?: (data: PayPalV6OnShippingOptionsChangeData) => Promise<void>;
     onCancel: () => void;
     onError: (error: Error) => void;
     setComponentRef: (ref: ComponentMethodsRef) => void;

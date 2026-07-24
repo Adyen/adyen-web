@@ -1,11 +1,11 @@
-import { getSupportedLocale } from './get-paypal-locale';
+import { getSupportedLocalePayPalV5 } from './get-paypal-locale';
 
-describe('getSupportedLocale', () => {
+describe('getSupportedLocalePayPalV5', () => {
     test('return the locale in the right format', () => {
-        expect(getSupportedLocale('en-US')).toBe('en_US');
+        expect(getSupportedLocalePayPalV5('en-US')).toBe('en_US');
     });
 
     test('return null if the passed locale is not supported', () => {
-        expect(getSupportedLocale('es_AR')).toBe(null);
+        expect(getSupportedLocalePayPalV5('es_AR')).toBe(null);
     });
 });

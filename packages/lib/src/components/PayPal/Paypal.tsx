@@ -7,7 +7,7 @@ import { ERRORS } from './constants';
 import { TxVariants } from '../tx-variants';
 import { formatPaypalOrderContactToAdyenFormat } from './utils/format-paypal-order-contact-to-adyen-format';
 
-import type { ICore } from '../../core/types';
+import type { AdditionalDetailsData, ICore } from '../../core/types';
 import type { PaymentAction, PaymentResponseData } from '../../types/global-types';
 import type { Intent, PayPalConfiguration } from './types';
 import type {
@@ -60,13 +60,16 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
             });
 
             this.paypalService = new PayPalService({
+                sdkLoader,
                 loadingContext: this.props.loadingContext ?? '',
                 clientKey: this.props.clientKey ?? '',
                 merchantId: this.props.configuration?.merchantId ?? '',
-                sdkLoader,
                 countryCode: this.props.countryCode ?? '',
                 amount: this.props.amount,
-                vault: Boolean(paypalV6Props.vault)
+                vault: Boolean(paypalV6Props.vault),
+                locale: paypalV6Props.locale,
+                pageType: paypalV6Props.pageType,
+                environment: this.props.environment
             });
 
             this.paypalService
@@ -237,7 +240,26 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
     };
 
     private readonly handleOnApproveV6 = (data: PayPalV6OnApproveData): Promise<void> => {
-        const state = { data: { details: data, paymentData: this.paymentData ?? undefined } };
+        let state: AdditionalDetailsData = {
+            data: {
+                details: data,
+                paymentData: this.paymentData ?? undefined
+            }
+        };
+
+        if ('orderId' in data) {
+            const { orderId, payerId, ...restData } = data;
+            state = {
+                data: {
+                    details: {
+                        orderID: orderId,
+                        payerID: payerId,
+                        ...restData
+                    },
+                    paymentData: this.paymentData ?? undefined
+                }
+            };
+        }
 
         this.handleAdditionalDetails(state);
         return Promise.resolve();
@@ -349,8 +371,8 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
                 <PayPalComponentV6
                     setComponentRef={this.setComponentRef}
                     paypalService={this.paypalService}
-                    onShippingAddressChange={this.handleOnShippingAddressChangeV6}
-                    onShippingOptionsChange={this.handleOnShippingOptionsChangeV6}
+                    {...(paypalv6Props.onShippingAddressChange && { onShippingAddressChange: this.handleOnShippingAddressChangeV6 })}
+                    {...(paypalv6Props.onShippingOptionsChange && { onShippingOptionsChange: this.handleOnShippingOptionsChangeV6 })}
                     style={paypalv6Props.style}
                     commit={paypalv6Props.commit}
                     vault={paypalv6Props.vault}
