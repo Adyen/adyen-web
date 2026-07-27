@@ -378,4 +378,38 @@ describe('AfterPay', () => {
         expect(screen.getByText('Enter the city')).toBeInTheDocument();
         expect(within(<HTMLElement>consentCheckboxContainer).getByAltText('Error')).toBeInTheDocument();
     });
+
+    test('should focus a field within the submitted instance (not another instance) when multiple OpenInvoice-based components are rendered on the same page', async () => {
+        const user = userEvent.setup();
+
+        const buildAfterPay = () =>
+            new AfterPay(setupCoreMock(), {
+                countryCode: 'NL',
+                modules: { resources: global.resources },
+                i18n: global.i18n,
+                onSubmit: jest.fn(),
+                loadingContext: 'https://checkoutshopper-live.adyen.com/checkoutshopper/'
+            });
+
+        // Render two independent AfterPay instances on the same page, as can happen when a merchant shows
+        // multiple OpenInvoice-based payment methods (AfterPay, RatePay, FacilyPay, Atome, ...) at once.
+        render(buildAfterPay().render());
+        render(buildAfterPay().render());
+
+        const payButtons = screen.getAllByRole('button', { name: 'Confirm purchase' });
+        expect(payButtons).toHaveLength(2);
+
+        // Submit the SECOND instance with an empty form, triggering validation errors on it
+        await user.click(payButtons[1]);
+
+        const firstNameInputs = screen.getAllByLabelText('First name');
+        expect(firstNameInputs).toHaveLength(2);
+
+        // Focus must move to the first invalid field of the instance that was actually submitted (the second
+        // one), not to the first instance rendered on the page.
+        await waitFor(() => {
+            expect(firstNameInputs[1]).toHaveFocus();
+        });
+        expect(firstNameInputs[0]).not.toHaveFocus();
+    });
 });

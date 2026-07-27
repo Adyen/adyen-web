@@ -42,6 +42,7 @@ export default function OpenInvoice(props: Readonly<OpenInvoiceProps>) {
     }
 
     const isValidating = useRef(false);
+    const containerRef = useRef<HTMLDivElement>(null);
 
     const initialActiveFieldsets: OpenInvoiceActiveFieldsets = getInitialActiveFieldsets(visibility, props.data);
     const [activeFieldsets, setActiveFieldsets] = useState<OpenInvoiceActiveFieldsets>(initialActiveFieldsets);
@@ -82,7 +83,7 @@ export default function OpenInvoice(props: Readonly<OpenInvoiceProps>) {
 
     openInvoiceRef.current.setStatus = setStatus;
 
-    useSRPanelForOpenInvoiceErrors({ errors, data, props, isValidating });
+    useSRPanelForOpenInvoiceErrors({ errors, data, props, isValidating, containerRef });
 
     useEffect(() => {
         const fieldsetsAreValid: boolean = checkFieldsets();
@@ -113,6 +114,7 @@ export default function OpenInvoice(props: Readonly<OpenInvoiceProps>) {
     };
     return (
         <div
+            ref={containerRef}
             className={classNames({
                 'adyen-checkout__open-invoice': true,
                 'adyen-checkout__open-invoice--loading': status === 'loading'
