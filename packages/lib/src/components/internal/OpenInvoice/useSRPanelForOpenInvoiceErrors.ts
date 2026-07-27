@@ -18,7 +18,7 @@ interface UseSRPanelForErrorsProps {
     data: OpenInvoiceStateData;
     props: OpenInvoiceProps;
     isValidating: MutableRef<boolean>;
-    containerRef: MutableRef<HTMLDivElement>;
+    containerRef: MutableRef<HTMLDivElement | null>;
 }
 
 const useSRPanelForOpenInvoiceErrors = ({ errors, data, props, isValidating, containerRef }: UseSRPanelForErrorsProps) => {
