@@ -120,9 +120,12 @@ export const triggerBinLookUp = (element: CardElement | CustomCardElement) => {
                          */
                         if (mappedResponse.supportedBrands.length) {
                             /**
-                             * Strict funding source validation.
-                             * Only runs when allowedFundingSources is configured and every supported brand reports a
-                             * fundingSource; the card is then rejected if none of those funding sources is allowed.
+                             * Funding source validation & filtering.
+                             *
+                             * When allowedFundingSources is configured, every supported brand that reports a funding
+                             * source outside the allowed list is filtered out. Brands without a funding source (null,
+                             * undefined or empty string) are never filtered. If every supported brand reports a
+                             * disallowed funding source they all get filtered out and the card is rejected.
                              */
                             const allowedFundingSources =
                                 'configuration' in element.props
@@ -131,13 +134,18 @@ export const triggerBinLookUp = (element: CardElement | CustomCardElement) => {
                                           .map(fundingSource => fundingSource.trim())
                                           .filter(Boolean)
                                     : undefined;
-                            const fundingSources = mappedResponse.supportedBrands.map(brand => brand.fundingSource);
-                            const shouldValidateFundingSource = !!allowedFundingSources?.length && fundingSources.every(Boolean);
-                            const hasAllowedFundingSource = fundingSources.some(
-                                fundingSource => !!fundingSource && allowedFundingSources?.includes(fundingSource)
-                            );
 
-                            if (shouldValidateFundingSource && !hasAllowedFundingSource) {
+                            const supportedBrands = allowedFundingSources?.length
+                                ? mappedResponse.supportedBrands.filter(
+                                      brand => !brand.fundingSource || allowedFundingSources.includes(brand.fundingSource)
+                                  )
+                                : mappedResponse.supportedBrands;
+
+                            /**
+                             * Nothing survived the filter, meaning every supported brand reported a disallowed funding
+                             * source; reject the card the same way as any other unsupported card.
+                             */
+                            if (!supportedBrands.length) {
                                 const errObj: CardErrorData = {
                                     type: 'card',
                                     fieldType: 'encryptedCardNumber',
@@ -159,14 +167,12 @@ export const triggerBinLookUp = (element: CardElement | CustomCardElement) => {
                                 return;
                             }
 
-                            // ...call processBinLookupResponse with, a simplified, response object if it contains at least one supported brand
                             element.processBinLookupResponse({
                                 issuingCountryCode: data.issuingCountryCode ?? '',
-                                supportedBrands: mappedResponse.supportedBrands,
+                                supportedBrands,
                                 ...(data.showSocialSecurityNumber ? { showSocialSecurityNumber: data.showSocialSecurityNumber } : {})
                             });
 
-                            // Inform merchant of the result
                             element.onBinLookup({
                                 type: callbackObj.type,
                                 detectedBrands: mappedResponse.detectedBrands,
