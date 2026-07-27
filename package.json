@@ -45,11 +45,12 @@
         "concurrently": "10.0.3",
         "cross-env": "10.1.0",
         "husky": "9.1.7",
-        "lint-staged": "17.0.7",
-        "prettier": "3.8.4"
+        "lint-staged": "17.0.8",
+        "prettier": "3.9.4"
     },
     "resolutions": {
+        "shell-quote": "1.9.0",
         "tar-fs": "^3.0.9"
     },
-    "packageManager": "yarn@4.16.0"
+    "packageManager": "yarn@4.17.0"
 }
