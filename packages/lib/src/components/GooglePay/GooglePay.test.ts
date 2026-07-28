@@ -1,4 +1,4 @@
-import { render } from '@testing-library/preact';
+import { act, screen, render } from '@testing-library/preact';
 import GooglePay from './GooglePay';
 import GooglePayService from './GooglePayService';
 import GoogleAcceleratedCheckoutClient from './services/GoogleAcceleratedCheckoutClient';
@@ -596,6 +596,30 @@ describe('GooglePay', () => {
                     component: 'googlepay_accelerated_checkout_experiment'
                 })
             );
+        });
+
+        test('should restore the Drop-in header when accelerated checkout load falls back to the standard button', async () => {
+            const core = setupCoreMock();
+            const gpay = new GooglePay(core, {
+                configuration: { merchantId: 'merchant-id', gatewayMerchantId: 'gateway-id', acceleratedCheckoutExperiment: 'enabled' }
+            });
+
+            const acceleratedCheckoutClient = getAcceleratedCheckoutClientInstance();
+            const buttonClient = getButtonClientInstance();
+
+            acceleratedCheckoutClient.isAvailable.mockResolvedValue({ status: 'SUCCESS' });
+            acceleratedCheckoutClient.load.mockResolvedValue({ status: 'ERROR' });
+            acceleratedCheckoutClient.onPaymentSheetResize.mockReturnValue(() => {});
+            buttonClient.createButton.mockResolvedValue(document.createElement('button'));
+
+            await gpay.isAvailable();
+
+            expect(gpay.showDropinHeaderWhenSelected).toBe(false);
+            render(gpay.render());
+
+            await act(() => new Promise(process.nextTick));
+            expect(screen.getByTestId('googlepay-button-container')).toBeInTheDocument();
+            expect(gpay.showDropinHeaderWhenSelected).toBe(true);
         });
     });
 

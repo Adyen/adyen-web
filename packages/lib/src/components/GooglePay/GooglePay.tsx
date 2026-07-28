@@ -175,7 +175,7 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
 
             // Show Accelerated Checkout only when shopper is eligible AND and experiment is enabled
             if (this.isShopperEligibleForAcceleratedCheckout && this.props.configuration.acceleratedCheckoutExperiment === 'enabled') {
-                this.mode = GooglePaymentMode.ACCELERATED_CHECKOUT;
+                this.setMode(GooglePaymentMode.ACCELERATED_CHECKOUT);
                 return;
             }
         } else {
@@ -389,10 +389,15 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
         return this.props.icon ?? this.resources.getImage()('googlepay');
     }
 
+    private readonly setMode = (mode: GooglePaymentMode): void => {
+        this.mode = mode;
+    };
+
     protected override componentToRender(): h.JSX.Element {
         return (
             <GooglePayComponent
                 defaultMode={this.mode}
+                onUpdateMode={this.setMode}
                 googleButtonClient={this.googleButtonClient}
                 googleAcceleratedCheckoutClient={this.googleAcceleratedCheckoutClient}
                 showPayButton={this.props.showPayButton}

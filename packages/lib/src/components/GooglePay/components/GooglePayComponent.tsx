@@ -9,6 +9,7 @@ import { GooglePaymentMode } from '../config';
 
 interface Props {
     defaultMode: GooglePaymentMode;
+    onUpdateMode: (mode: GooglePaymentMode) => void;
     googleButtonClient: GooglePayService;
     googleAcceleratedCheckoutClient: GoogleAcceleratedCheckoutClient;
     showPayButton: boolean;
@@ -25,6 +26,7 @@ interface Props {
 
 const GooglePayComponent = ({
     defaultMode,
+    onUpdateMode,
     googleAcceleratedCheckoutClient,
     googleButtonClient,
     showPayButton,
@@ -34,7 +36,8 @@ const GooglePayComponent = ({
 
     const onAcceleratedCheckoutLoadFailed = useCallback(() => {
         setPaymentMode(GooglePaymentMode.STANDARD_BUTTON);
-    }, []);
+        onUpdateMode(GooglePaymentMode.STANDARD_BUTTON);
+    }, [onUpdateMode]);
 
     if (activeMode === GooglePaymentMode.ACCELERATED_CHECKOUT) {
         if (!showPayButton) {

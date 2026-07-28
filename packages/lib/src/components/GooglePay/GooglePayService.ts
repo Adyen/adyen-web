@@ -27,7 +27,7 @@ class GooglePayService {
      * @returns Google Pay API client
      */
     async getGooglePaymentsClient(paymentOptions: google.payments.api.PaymentOptions): Promise<google.payments.api.PaymentsClient> {
-        if (!window.google?.payments) {
+        if (!globalThis.google?.payments) {
             const script = new Script({ src: config.URL, component: 'googlepay', analytics: this.analytics });
             await script.load();
         }
