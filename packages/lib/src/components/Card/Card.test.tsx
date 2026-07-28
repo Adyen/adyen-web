@@ -9,6 +9,7 @@ import { CardFocusData } from '../internal/SecuredFields/lib/types';
 import { mock } from 'jest-mock-extended';
 import { AmountProvider } from '../../core/Context/AmountProvider';
 import { ICore } from '../../types';
+import { FALLBACK_VALUE } from '../internal/Address/constants';
 
 describe('Card', () => {
     describe('formatProps', function () {
@@ -319,6 +320,20 @@ describe('Card', () => {
             render(card.render());
             // we need to wait here for the screen to render / hook to trigger
             await waitFor(() => expect(card.formatData().paymentMethod.holderName).toContain(''));
+        });
+
+        test('should send stateOrProvince as "N/A" in the billingAddress when in partial address mode', async () => {
+            const core = setupCoreMock();
+
+            const card = new CardElement(core, {
+                ...props,
+                billingAddressRequired: true,
+                billingAddressMode: 'partial',
+                data: { billingAddress: { country: 'US', postalCode: '95014' } }
+            });
+            render(card.render());
+
+            await waitFor(() => expect(card.formatData().billingAddress?.stateOrProvince).toBe(FALLBACK_VALUE));
         });
     });
 

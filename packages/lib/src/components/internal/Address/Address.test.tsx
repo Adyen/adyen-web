@@ -3,7 +3,7 @@ import Address from './Address';
 import getDataset from '../../../core/Services/get-dataset';
 import { AddressSpecifications } from './types';
 import { AddressData } from '../../../types';
-import { FALLBACK_VALUE } from './constants';
+import { FALLBACK_VALUE, PARTIAL_ADDRESS_SCHEMA } from './constants';
 import { render, screen, waitFor } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import { CoreProvider } from '../../../core/Context/CoreProvider';
@@ -321,6 +321,46 @@ describe('Address', () => {
                 const postCode = await screen.findByRole('textbox', { name: /code/ });
                 expect(postCode).toHaveValue(expected);
             });
+        });
+
+        test('should regionalize the postal code label in partial address mode using the country from the merchant config', async () => {
+            const allowedCountries = Object.keys(countrySpecificFormatters);
+            customRender(
+                <Address
+                    data={{ country: 'US' }}
+                    specifications={PARTIAL_ADDRESS_SCHEMA}
+                    requiredFields={['postalCode']}
+                    allowedCountries={allowedCountries}
+                />
+            );
+
+            expect(await screen.findByRole('textbox', { name: /Zip code/ })).toBeInTheDocument();
+        });
+
+        describe.each`
+            countryCode | raw                | expected
+            ${'US'}     | ${'1234599999999'} | ${'12345'}
+            ${'BR'}     | ${'12345678999'}   | ${'12345678'}
+            ${'PL'}     | ${'99-99999999'}   | ${'99-999'}
+        `('Format post code in partial address mode', ({ countryCode, raw, expected }) => {
+            it(`should format the post code being typed for ${countryCode}, using the country from the merchant config`, async () => {
+                const user = userEvent.setup();
+                customRender(<Address data={{ country: countryCode }} specifications={PARTIAL_ADDRESS_SCHEMA} requiredFields={['postalCode']} />);
+
+                const postCode = await screen.findByRole('textbox', { name: /code/ });
+                await user.type(postCode, raw);
+                expect(postCode).toHaveValue(expected);
+            });
+        });
+
+        test('should regionalize the postal code label in partial address mode', async () => {
+            customRender(<Address data={{ country: 'us' }} specifications={PARTIAL_ADDRESS_SCHEMA} requiredFields={['postalCode']} />);
+            expect(await screen.findByRole('textbox', { name: /Zip code/ })).toBeInTheDocument();
+        });
+
+        test('should preselect the country in the country dropdown', async () => {
+            customRender(<Address data={{ country: 'us' }} allowedCountries={['US', 'CA']} onChange={jest.fn()} />);
+            expect(await screen.findByRole('combobox', { name: 'Country/Region' })).toHaveValue('United States');
         });
 
         test("should show proper 'Zip Code' label for US", async () => {

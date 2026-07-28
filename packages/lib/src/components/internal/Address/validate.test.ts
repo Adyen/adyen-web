@@ -68,6 +68,16 @@ describe('validatePostalCode', () => {
         expect(result).toBe(false);
     });
 
+    it('should return true for a valid 9-digit US postal code with a hyphen', () => {
+        const result = validatePostalCode('12345-6789', 'US', validatorRules);
+        expect(result).toBe(true);
+    });
+
+    it('should return false for an invalid 9-digit US postal code', () => {
+        const result = validatePostalCode('12345-678', 'US', validatorRules);
+        expect(result).toBe(false);
+    });
+
     // General
     it('should return null if the postal code is empty', () => {
         const result = validatePostalCode('', 'AT', validatorRules);
