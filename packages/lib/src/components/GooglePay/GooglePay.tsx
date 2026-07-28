@@ -2,7 +2,7 @@ import { h } from 'preact';
 import UIElement from '../internal/UIElement/UIElement';
 import GooglePayService from './GooglePayService';
 import defaultProps from './defaultProps';
-import { formatGooglePayContactToAdyenAddressFormat, getGooglePayLocale, resolveEnvironment } from './utils';
+import { formatGooglePayContactToAdyenAddressFormat, getGooglePayLocale } from './utils';
 import collectBrowserInfo from '../../utils/browserInfo';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { TxVariants } from '../tx-variants';
@@ -19,6 +19,7 @@ import Script from '../../utils/Script';
 import GoogleAcceleratedCheckoutClient, { AcceleratedCheckoutOptions } from './services/GoogleAcceleratedCheckoutClient';
 import { GooglePayComponent } from './components/GooglePayComponent';
 import { GOOGLE_PAY_ACCELERATED_DIV_ID } from './components/GoogleAcceleratedCheckout';
+import { resolveEnvironmentForAcceleratedCheckout } from './utils/resolve-environment';
 
 const DEFAULT_ALLOWED_CARD_NETWORKS: google.payments.api.CardNetwork[] = ['AMEX', 'DISCOVER', 'JCB', 'MASTERCARD', 'VISA'];
 
@@ -64,7 +65,7 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
         const paymentDataRequest = new PaymentDataRequest(this.props);
 
         const acceleratedOptions: AcceleratedCheckoutOptions = {
-            environment: resolveEnvironment(this.props.environment),
+            environment: resolveEnvironmentForAcceleratedCheckout(this.props.environment),
             acceleratedCheckoutConfig: {
                 type: 'INLINE',
                 containerId: GOOGLE_PAY_ACCELERATED_DIV_ID

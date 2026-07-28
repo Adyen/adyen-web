@@ -1,7 +1,7 @@
 import { isReadyToPayRequest, initiatePaymentRequest } from './requests';
-import { resolveEnvironment } from './utils';
 import Script from '../../utils/Script';
 import config from './config';
+import { resolveEnvironment } from './utils/resolve-environment';
 import type { GooglePayConfiguration } from './types';
 import type { IAnalytics } from '../../core/Analytics/Analytics';
 

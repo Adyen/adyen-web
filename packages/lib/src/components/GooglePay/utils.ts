@@ -1,19 +1,6 @@
 import { AddressData } from '../../types/global-types';
 
 /**
- * Use same logic as Environment.ts where fallback is live (production)
- */
-export function resolveEnvironment(env = 'PRODUCTION'): google.payments.api.Environment {
-    switch (env) {
-        case 'beta':
-        case 'test':
-            return 'TEST';
-        default:
-            return 'PRODUCTION';
-    }
-}
-
-/**
  * This function formats Google Pay contact format to Adyen address format
  *
  * Setting 'houseNumberOrName' to ZZ won't affect the AVS check, and it will make the algorithm take the

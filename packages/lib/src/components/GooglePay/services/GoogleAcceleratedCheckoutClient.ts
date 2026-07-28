@@ -12,7 +12,7 @@ type AcceleratedCheckoutResult = { status: 'SUCCESS' | 'ERROR'; errorMessage?: s
 export type PaymentSheetResize = { height: number; heightCss: string };
 
 export type AcceleratedCheckoutOptions = {
-    environment: google.payments.api.Environment;
+    environment: google.payments.api.Environment | 'EMULATOR';
     paymentDataCallbacks: google.payments.api.PaymentDataCallbacks;
     checkoutUiCallbacks?: {
         onPaymentSheetResized?(resizeSize: PaymentSheetResize): void;
