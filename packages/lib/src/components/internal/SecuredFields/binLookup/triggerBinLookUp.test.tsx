@@ -393,8 +393,12 @@ describe('triggerBinLookUp', () => {
                             jest.fn(() => Promise.resolve({ requestId, brands: [{ brand: visa, supported: true, fundingSource: 'credit' }] }))
                         );
 
-                        const mockCardElement = new MockCardElement(core, { clientKey, loadingContext, brands: [visa, 'mc'] });
-                        mockCardElement.props.configuration.allowedFundingSources = 'debit, prepaid';
+                        const mockCardElement = new MockCardElement(core, {
+                            clientKey,
+                            loadingContext,
+                            brands: [visa, 'mc'],
+                            configuration: { allowedFundingSources: 'debit, prepaid' }
+                        });
                         const bin = { binValue: '', type: '', encryptedBin: 'xxx-xxx', uuid: requestId };
                         triggerBinLookUp(mockCardElement)(bin);
                         await new Promise(process.nextTick);
@@ -415,8 +419,12 @@ describe('triggerBinLookUp', () => {
                             jest.fn(() => Promise.resolve({ requestId, brands: [{ brand: visa, supported: true, fundingSource: 'debit' }] }))
                         );
 
-                        const mockCardElement = new MockCardElement(core, { clientKey, loadingContext, brands: [visa, 'mc'] });
-                        mockCardElement.props.configuration.allowedFundingSources = 'debit, prepaid';
+                        const mockCardElement = new MockCardElement(core, {
+                            clientKey,
+                            loadingContext,
+                            brands: [visa, 'mc'],
+                            configuration: { allowedFundingSources: 'debit, prepaid' }
+                        });
                         const bin = { binValue: '', type: '', encryptedBin: 'xxx-xxx', uuid: requestId };
                         triggerBinLookUp(mockCardElement)(bin);
                         await new Promise(process.nextTick);
@@ -431,8 +439,12 @@ describe('triggerBinLookUp', () => {
                         const requestId = '123456789';
                         httpPostMock.mockImplementation(jest.fn(() => Promise.resolve({ requestId, brands: [{ brand: visa, supported: true }] })));
 
-                        const mockCardElement = new MockCardElement(core, { clientKey, loadingContext, brands: [visa, 'mc'] });
-                        mockCardElement.props.configuration.allowedFundingSources = 'debit, prepaid';
+                        const mockCardElement = new MockCardElement(core, {
+                            clientKey,
+                            loadingContext,
+                            brands: [visa, 'mc'],
+                            configuration: { allowedFundingSources: 'debit, prepaid' }
+                        });
                         const bin = { binValue: '', type: '', encryptedBin: 'xxx-xxx', uuid: requestId };
                         triggerBinLookUp(mockCardElement)(bin);
                         await new Promise(process.nextTick);
@@ -462,8 +474,12 @@ describe('triggerBinLookUp', () => {
                             jest.fn(() => Promise.resolve({ requestId, brands: [{ brand: visa, supported: true, fundingSource: 'credit' }] }))
                         );
 
-                        const mockCardElement = new MockCardElement(core, { clientKey, loadingContext, brands: [visa, 'mc'] });
-                        mockCardElement.props.configuration.allowedFundingSources = '';
+                        const mockCardElement = new MockCardElement(core, {
+                            clientKey,
+                            loadingContext,
+                            brands: [visa, 'mc'],
+                            configuration: { allowedFundingSources: '' }
+                        });
                         const bin = { binValue: '', type: '', encryptedBin: 'xxx-xxx', uuid: requestId };
                         triggerBinLookUp(mockCardElement)(bin);
                         await new Promise(process.nextTick);
@@ -486,8 +502,12 @@ describe('triggerBinLookUp', () => {
                             )
                         );
 
-                        const mockCardElement = new MockCardElement(core, { clientKey, loadingContext, brands: [visa, 'cartebancaire'] });
-                        mockCardElement.props.configuration.allowedFundingSources = 'debit, prepaid';
+                        const mockCardElement = new MockCardElement(core, {
+                            clientKey,
+                            loadingContext,
+                            brands: [visa, 'cartebancaire'],
+                            configuration: { allowedFundingSources: 'debit, prepaid' }
+                        });
                         const bin = { binValue: '', type: '', encryptedBin: 'xxx-xxx', uuid: requestId };
                         triggerBinLookUp(mockCardElement)(bin);
                         await new Promise(process.nextTick);
@@ -526,8 +546,12 @@ describe('triggerBinLookUp', () => {
                             )
                         );
 
-                        const mockCardElement = new MockCardElement(core, { clientKey, loadingContext, brands: [visa, 'cartebancaire'] });
-                        mockCardElement.props.configuration.allowedFundingSources = 'debit, prepaid';
+                        const mockCardElement = new MockCardElement(core, {
+                            clientKey,
+                            loadingContext,
+                            brands: [visa, 'cartebancaire'],
+                            configuration: { allowedFundingSources: 'debit, prepaid' }
+                        });
                         const bin = { binValue: '', type: '', encryptedBin: 'xxx-xxx', uuid: requestId };
                         triggerBinLookUp(mockCardElement)(bin);
                         await new Promise(process.nextTick);
@@ -559,8 +583,12 @@ describe('triggerBinLookUp', () => {
                             )
                         );
 
-                        const mockCardElement = new MockCardElement(core, { clientKey, loadingContext, brands: [visa, 'cartebancaire'] });
-                        mockCardElement.props.configuration.allowedFundingSources = 'debit, prepaid';
+                        const mockCardElement = new MockCardElement(core, {
+                            clientKey,
+                            loadingContext,
+                            brands: [visa, 'cartebancaire'],
+                            configuration: { allowedFundingSources: 'debit, prepaid' }
+                        });
                         const bin = { binValue: '', type: '', encryptedBin: 'xxx-xxx', uuid: requestId };
                         triggerBinLookUp(mockCardElement)(bin);
                         await new Promise(process.nextTick);
@@ -593,8 +621,12 @@ describe('triggerBinLookUp', () => {
                             )
                         );
 
-                        const mockCardElement = new MockCardElement(core, { clientKey, loadingContext, brands: [visa, 'cartebancaire'] });
-                        mockCardElement.props.configuration.allowedFundingSources = 'debit, prepaid';
+                        const mockCardElement = new MockCardElement(core, {
+                            clientKey,
+                            loadingContext,
+                            brands: [visa, 'cartebancaire'],
+                            configuration: { allowedFundingSources: 'debit, prepaid' }
+                        });
                         const bin = { binValue: '', type: '', encryptedBin: 'xxx-xxx', uuid: requestId };
                         triggerBinLookUp(mockCardElement)(bin);
                         await new Promise(process.nextTick);
@@ -620,8 +652,12 @@ describe('triggerBinLookUp', () => {
                             )
                         );
 
-                        const mockCardElement = new MockCardElement(core, { clientKey, loadingContext, brands: [visa, 'mc', 'cartebancaire'] });
-                        mockCardElement.props.configuration.allowedFundingSources = 'debit, prepaid';
+                        const mockCardElement = new MockCardElement(core, {
+                            clientKey,
+                            loadingContext,
+                            brands: [visa, 'mc', 'cartebancaire'],
+                            configuration: { allowedFundingSources: 'debit, prepaid' }
+                        });
                         const bin = { binValue: '', type: '', encryptedBin: 'xxx-xxx', uuid: requestId };
                         triggerBinLookUp(mockCardElement)(bin);
                         await new Promise(process.nextTick);
@@ -656,8 +692,12 @@ describe('triggerBinLookUp', () => {
                             )
                         );
 
-                        const mockCardElement = new MockCardElement(core, { clientKey, loadingContext, brands: [visa, 'cartebancaire'] });
-                        mockCardElement.props.configuration.allowedFundingSources = 'debit, prepaid';
+                        const mockCardElement = new MockCardElement(core, {
+                            clientKey,
+                            loadingContext,
+                            brands: [visa, 'cartebancaire'],
+                            configuration: { allowedFundingSources: 'debit, prepaid' }
+                        });
                         const bin = { binValue: '', type: '', encryptedBin: 'xxx-xxx', uuid: requestId };
                         triggerBinLookUp(mockCardElement)(bin);
                         await new Promise(process.nextTick);
