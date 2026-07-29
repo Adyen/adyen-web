@@ -188,8 +188,7 @@ test('should not be able to checkout with expired card (card list)', async () =>
 
     const selectButton = screen.getByRole('combobox', { name: /Select a card to use\./ });
 
-    // The collapsed select button shows the card title only - the expiry label lives in the list item
-    expect(selectButton.textContent).toBe('Mastercard •••• 3456 ');
+    expect(selectButton.textContent).toBe('Mastercard •••• 3456 Expired');
 
     await user.click(selectButton);
     const options = screen.getAllByRole('option');
