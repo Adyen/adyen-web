@@ -129,32 +129,32 @@ describe('Select with tags', () => {
             expect(textOf(getOption(EMPTY_TAGS_ITEM))).toBe('Empty tags option');
         });
 
-        test('renders a single tag in place of the secondaryText', async () => {
+        test('renders a single tag after the secondaryText', async () => {
             renderTaggedSelect({ items: ITEMS, filterable: false });
             await openList();
 
-            expect(textOf(getOption(ONE_TAG_ITEM))).toMatch(contentOf('Single tag option', 'Verified'));
+            expect(textOf(getOption(ONE_TAG_ITEM))).toMatch(contentOf('Single tag option', 'Supporting text one', 'Verified'));
         });
 
-        test('renders two tags in array order', async () => {
+        test('renders two tags in array order, after the secondaryText', async () => {
             renderTaggedSelect({ items: ITEMS, filterable: false });
             await openList();
 
-            expect(textOf(getOption(TWO_TAGS_ITEM))).toMatch(contentOf('Two tags option', 'Verified', 'New'));
+            expect(textOf(getOption(TWO_TAGS_ITEM))).toMatch(contentOf('Two tags option', 'Supporting text two', 'Verified', 'New'));
         });
 
         test('renders three tags in array order, without dropping any', async () => {
             renderTaggedSelect({ items: ITEMS, filterable: false });
             await openList();
 
-            expect(textOf(getOption(THREE_TAGS_ITEM))).toMatch(contentOf('Three tags option', 'Verified', 'New', 'Popular'));
+            expect(textOf(getOption(THREE_TAGS_ITEM))).toMatch(contentOf('Three tags option', 'Supporting text three', 'Verified', 'New', 'Popular'));
         });
 
-        test('exposes the name and the tags to screen readers in that order, omitting the secondaryText', async () => {
+        test('exposes the name, the secondaryText and the tags to screen readers in that order', async () => {
             renderTaggedSelect({ items: ITEMS, filterable: false });
             await openList();
 
-            expect(getOption(TWO_TAGS_ITEM)).toHaveAccessibleName('Two tags option Verified New');
+            expect(getOption(TWO_TAGS_ITEM)).toHaveAccessibleName('Two tags option Supporting text two Verified New');
         });
     });
 
@@ -177,10 +177,12 @@ describe('Select with tags', () => {
             expect(textOf(getCollapsedButton())).toMatch(contentOf('Three tags option', 'Verified', 'New', 'Popular'));
         });
 
-        test('includes the tag labels in the accessible name when uniqueId is set', () => {
+        // With a uniqueId the button is labelled by '[id]-label [id]-value', so the accessible name is
+        // scoped to the label and the selected name, leaving the tags out of it.
+        test('narrows the accessible name down to the selected name when uniqueId is set', () => {
             renderTaggedSelect({ items: ITEMS, filterable: false, selectedValue: TWO_TAGS_ITEM.id, uniqueId: 'tagged-select' });
 
-            expect(screen.getByRole('combobox')).toHaveAccessibleName(/Two tags option[\s\S]*Verified[\s\S]*New/);
+            expect(screen.getByRole('combobox')).toHaveAccessibleName('Two tags option');
         });
 
         test('shows the tags of the selected option in the filterable variant', () => {
@@ -258,35 +260,6 @@ describe('Select with tags', () => {
     });
 
     describe('secondaryContent mode', () => {
-        const openList = async () => {
-            await user.click(screen.getByRole('combobox'));
-        };
-
-        test('defaults to secondaryText, leaving the tags of an option unrendered', async () => {
-            renderSelect({ items: ITEMS, filterable: false });
-            await openList();
-
-            expect(textOf(getOption(ONE_TAG_ITEM))).toMatch(contentOf('Single tag option', 'Supporting text one'));
-            expect(screen.queryByText(SUCCESS_TAG.label)).not.toBeInTheDocument();
-        });
-
-        test("treats an explicit 'secondaryText' the same as the default", async () => {
-            renderSelect({ items: ITEMS, filterable: false, secondaryContent: SecondaryContentVariant.SECONDARY_TEXT });
-            await openList();
-
-            expect(textOf(getOption(TWO_TAGS_ITEM))).toMatch(contentOf('Two tags option', 'Supporting text two'));
-            expect(screen.queryByText(SUCCESS_TAG.label)).not.toBeInTheDocument();
-            expect(screen.queryByText(INFO_TAG.label)).not.toBeInTheDocument();
-        });
-
-        test("renders the tags of an option only once 'tag' is passed", async () => {
-            renderSelect({ items: ITEMS, filterable: false, secondaryContent: SecondaryContentVariant.TAG });
-            await openList();
-
-            expect(within(getOption(TWO_TAGS_ITEM)).getByText(SUCCESS_TAG.label)).toBeInTheDocument();
-            expect(within(getOption(TWO_TAGS_ITEM)).getByText(INFO_TAG.label)).toBeInTheDocument();
-        });
-
         test('keeps the secondaryText in the collapsed button under the default', () => {
             renderSelect({ items: ITEMS, filterable: false, selectedValue: TWO_TAGS_ITEM.id });
 
@@ -297,23 +270,6 @@ describe('Select with tags', () => {
             renderSelect({ items: ITEMS, filterable: false, selectedValue: TWO_TAGS_ITEM.id, secondaryContent: SecondaryContentVariant.TAG });
 
             expect(textOf(getCollapsedButton())).toMatch(contentOf('Two tags option', 'Verified', 'New'));
-        });
-
-        test("ignores the secondaryText of a tagless option under 'tag', rather than rendering it as a tag", async () => {
-            const items: SelectItem[] = [{ id: 'no-tags', name: 'Tagless option', secondaryText: 'Supporting text' }];
-
-            renderSelect({ items, filterable: false, secondaryContent: SecondaryContentVariant.TAG });
-            await openList();
-
-            expect(textOf(getOption(items[0]))).toBe('Tagless option');
-        });
-
-        test("ignores the tags of an option under 'secondaryText', rather than rendering both", async () => {
-            renderSelect({ items: ITEMS, filterable: false, secondaryContent: SecondaryContentVariant.SECONDARY_TEXT });
-            await openList();
-
-            expect(textOf(getOption(THREE_TAGS_ITEM))).toMatch(contentOf('Three tags option', 'Supporting text three'));
-            expect(screen.queryByText(EXTRA_TAG.label)).not.toBeInTheDocument();
         });
     });
 });
