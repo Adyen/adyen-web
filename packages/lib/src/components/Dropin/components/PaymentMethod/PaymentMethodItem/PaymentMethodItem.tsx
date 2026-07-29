@@ -89,8 +89,6 @@ class PaymentMethodItem extends Component<Readonly<PaymentMethodItemProps>> {
 
         const showBrands = !paymentMethod.props.oneClick && paymentMethod.brands && paymentMethod.brands.length > 0;
 
-        console.log('PaymentMethodItem rendered', paymentMethod.type, hideHeader);
-
         return (
             // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions
             <div data-test-id="payment-method-item" key={paymentMethod._id} className={paymentMethodClassnames} onClick={this.handleOnListItemClick}>

@@ -394,7 +394,6 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
         if (mode !== this.mode) {
             this.mode = mode;
             this.setElementStatus('ready');
-            console.log('Mode updated to:', this.mode);
         }
     };
 
