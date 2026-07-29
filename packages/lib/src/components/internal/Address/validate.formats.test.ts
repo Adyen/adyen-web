@@ -5,15 +5,15 @@ describe('addressFormatters', () => {
         const format = addressFormatters[field].formatterFn;
 
         test('should not trim trailing or leading spaces', () => {
-            expect(format('  Main Road  ')).toBe('  Main Road  ');
+            expect(format?.('  Main Road  ')).toBe('  Main Road  ');
         });
 
         test('should not collapse consecutive spaces', () => {
-            expect(format('Main   Road')).toBe('Main   Road');
+            expect(format?.('Main   Road')).toBe('Main   Road');
         });
 
         test('should strip special characters without touching spaces', () => {
-            expect(format('  Main@ Ro#ad  ')).toBe('  Main Road  ');
+            expect(format?.('  Main@ Ro#ad  ')).toBe('  Main Road  ');
         });
     });
 });
