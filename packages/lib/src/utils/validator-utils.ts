@@ -51,5 +51,5 @@ export const validateForSpecialChars = (name: string) => {
     return CHARACTER_PATTERNS.noSpecialChars.test(name) || hasNoLength;
 };
 
-// Trim start and never allow more than 1 space on the end
-export const trimValWithOneSpace = (val: string) => val.trimStart().replace(/\s+/g, ' ');
+// Trim both ends and never allow more than 1 space in between
+export const trimValWithOneSpace = (val: string) => val.trim().replace(/\s+/g, ' ');

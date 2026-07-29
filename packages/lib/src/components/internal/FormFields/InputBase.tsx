@@ -11,6 +11,7 @@ import {
 import { useCallback } from 'preact/hooks';
 import classNames from 'classnames';
 import { ARIA_CONTEXT_SUFFIX, ARIA_ERROR_SUFFIX } from '../../../core/Errors/constants';
+import { trimValWithOneSpace } from '../../../utils/validator-utils';
 import Language from '../../../language';
 import { AutocompleteValue } from './types';
 import './FormFields.scss';
@@ -75,7 +76,8 @@ export default function InputBase({ setRef, ...props }: Readonly<InputBaseProps>
             props?.onBlurHandler?.(event); // From Field component
 
             if (props.trimOnBlur) {
-                (event.target as HTMLInputElement).value = (event.target as HTMLInputElement).value.trim(); // needed to trim trailing spaces in field (leading spaces can be done via formatting)
+                const input = event.target as HTMLInputElement;
+                input.value = trimValWithOneSpace(input.value);
             }
 
             props?.onBlur?.(event);
