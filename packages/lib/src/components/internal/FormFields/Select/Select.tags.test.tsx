@@ -5,7 +5,8 @@ import userEvent from '@testing-library/user-event';
 import Select from './Select';
 import { CoreProvider } from '../../../../core/Context/CoreProvider';
 import { setupCoreMock } from '../../../../../config/testMocks/setup-core-mock';
-import type { SelectItem, SelectProps, SelectTargetObject } from './types';
+import { SecondaryContentVariant, type SelectItem, type SelectProps, type SelectTargetObject } from './types';
+import { TagVariant } from '../../Tag/types';
 
 const core = setupCoreMock();
 
@@ -13,18 +14,18 @@ const SELECT_NAME = 'taggedSelect';
 
 interface TagContract {
     label: string;
-    variant: 'success' | 'info';
+    variant: TagVariant.SUCCESS | TagVariant.INFO;
 }
 
 interface TaggedSelectItem extends SelectItem {
     tags?: TagContract[];
 }
 
-type SecondaryContent = 'tag' | 'secondaryText';
+type SecondaryContent = SecondaryContentVariant.TAG | SecondaryContentVariant.SECONDARY_TEXT;
 
-const SUCCESS_TAG: TagContract = { label: 'Verified', variant: 'success' };
-const INFO_TAG: TagContract = { label: 'New', variant: 'info' };
-const EXTRA_TAG: TagContract = { label: 'Popular', variant: 'info' };
+const SUCCESS_TAG: TagContract = { label: 'Verified', variant: TagVariant.SUCCESS };
+const INFO_TAG: TagContract = { label: 'New', variant: TagVariant.INFO };
+const EXTRA_TAG: TagContract = { label: 'Popular', variant: TagVariant.INFO };
 
 const PLAIN_ITEM: TaggedSelectItem = { id: 'plain', name: 'Plain option' };
 const EMPTY_TAGS_ITEM: TaggedSelectItem = { id: 'empty-tags', name: 'Empty tags option', tags: [] };
@@ -32,24 +33,24 @@ const ONE_TAG_ITEM: TaggedSelectItem = {
     id: 'one-tag',
     name: 'Single tag option',
     secondaryText: 'Supporting text one',
-    tags: [SUCCESS_TAG]
+    tag: [SUCCESS_TAG]
 };
 const TWO_TAGS_ITEM: TaggedSelectItem = {
     id: 'two-tags',
     name: 'Two tags option',
     secondaryText: 'Supporting text two',
-    tags: [SUCCESS_TAG, INFO_TAG]
+    tag: [SUCCESS_TAG, INFO_TAG]
 };
 const THREE_TAGS_ITEM: TaggedSelectItem = {
     id: 'three-tags',
     name: 'Three tags option',
     secondaryText: 'Supporting text three',
-    tags: [SUCCESS_TAG, INFO_TAG, EXTRA_TAG]
+    tag: [SUCCESS_TAG, INFO_TAG, EXTRA_TAG]
 };
 const DISABLED_TAGGED_ITEM: TaggedSelectItem = {
     id: 'disabled-tagged',
     name: 'Disabled option',
-    tags: [INFO_TAG],
+    tag: [INFO_TAG],
     disabled: true
 };
 
@@ -66,7 +67,7 @@ type RenderSelectProps = Partial<SelectProps> & { items: TaggedSelectItem[]; sec
 const renderSelect = (props: RenderSelectProps) =>
     render(withCore(<Select className="" classNameModifiers={[]} readonly={false} name={SELECT_NAME} {...props} />));
 
-const renderTaggedSelect = (props: RenderSelectProps) => renderSelect({ secondaryContent: 'tag', ...props });
+const renderTaggedSelect = (props: RenderSelectProps) => renderSelect({ secondaryContent: SecondaryContentVariant.TAG, ...props });
 
 interface ControlledSelectProps {
     items: TaggedSelectItem[];
@@ -78,7 +79,7 @@ const ControlledSelect = ({ items }: Readonly<ControlledSelectProps>) => {
     const props: RenderSelectProps = {
         items,
         filterable: false,
-        secondaryContent: 'tag',
+        secondaryContent: SecondaryContentVariant.TAG,
         selectedValue,
         onChange: e => setSelectedValue((e.target as SelectTargetObject).value)
     };
@@ -104,7 +105,7 @@ const getCollapsedButton = (): HTMLElement => {
     return combobox.tagName === 'INPUT' ? combobox.parentElement : combobox;
 };
 
-const getOption = (item: TaggedSelectItem) => screen.getByRole('option', { name: new RegExp(item.name) });
+const getOption = (item: SelectItem) => screen.getByRole('option', { name: new RegExp(item.name) });
 
 describe('Select with tags', () => {
     const user = userEvent.setup();
@@ -242,8 +243,8 @@ describe('Select with tags', () => {
 
     describe('translations', () => {
         test('renders a tag label that looks like a translation key verbatim, in the option and in the button', async () => {
-            const items: TaggedSelectItem[] = [
-                { id: 'raw-label', name: 'Raw label option', tags: [{ label: 'select.tag.example', variant: 'info' }] }
+            const items: SelectItem[] = [
+                { id: 'raw-label', name: 'Raw label option', tag: [{ label: 'select.tag.example', variant: TagVariant.INFO }] }
             ];
 
             renderTaggedSelect({ items, filterable: false, selectedValue: 'raw-label' });
@@ -270,7 +271,7 @@ describe('Select with tags', () => {
         });
 
         test("treats an explicit 'secondaryText' the same as the default", async () => {
-            renderSelect({ items: ITEMS, filterable: false, secondaryContent: 'secondaryText' });
+            renderSelect({ items: ITEMS, filterable: false, secondaryContent: SecondaryContentVariant.SECONDARY_TEXT });
             await openList();
 
             expect(textOf(getOption(TWO_TAGS_ITEM))).toMatch(contentOf('Two tags option', 'Supporting text two'));
@@ -279,7 +280,7 @@ describe('Select with tags', () => {
         });
 
         test("renders the tags of an option only once 'tag' is passed", async () => {
-            renderSelect({ items: ITEMS, filterable: false, secondaryContent: 'tag' });
+            renderSelect({ items: ITEMS, filterable: false, secondaryContent: SecondaryContentVariant.TAG });
             await openList();
 
             expect(within(getOption(TWO_TAGS_ITEM)).getByText(SUCCESS_TAG.label)).toBeInTheDocument();
@@ -293,22 +294,22 @@ describe('Select with tags', () => {
         });
 
         test("swaps the collapsed button over to the tags under 'tag'", () => {
-            renderSelect({ items: ITEMS, filterable: false, selectedValue: TWO_TAGS_ITEM.id, secondaryContent: 'tag' });
+            renderSelect({ items: ITEMS, filterable: false, selectedValue: TWO_TAGS_ITEM.id, secondaryContent: SecondaryContentVariant.TAG });
 
             expect(textOf(getCollapsedButton())).toMatch(contentOf('Two tags option', 'Verified', 'New'));
         });
 
         test("ignores the secondaryText of a tagless option under 'tag', rather than rendering it as a tag", async () => {
-            const items: TaggedSelectItem[] = [{ id: 'no-tags', name: 'Tagless option', secondaryText: 'Supporting text' }];
+            const items: SelectItem[] = [{ id: 'no-tags', name: 'Tagless option', secondaryText: 'Supporting text' }];
 
-            renderSelect({ items, filterable: false, secondaryContent: 'tag' });
+            renderSelect({ items, filterable: false, secondaryContent: SecondaryContentVariant.TAG });
             await openList();
 
             expect(textOf(getOption(items[0]))).toBe('Tagless option');
         });
 
         test("ignores the tags of an option under 'secondaryText', rather than rendering both", async () => {
-            renderSelect({ items: ITEMS, filterable: false, secondaryContent: 'secondaryText' });
+            renderSelect({ items: ITEMS, filterable: false, secondaryContent: SecondaryContentVariant.SECONDARY_TEXT });
             await openList();
 
             expect(textOf(getOption(THREE_TAGS_ITEM))).toMatch(contentOf('Three tags option', 'Supporting text three'));

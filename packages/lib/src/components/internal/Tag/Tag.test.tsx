@@ -1,10 +1,9 @@
 import { h } from 'preact';
 import { render, screen } from '@testing-library/preact';
 import { Tag } from './Tag';
-import type { TagVariant } from './types';
+import { TagVariant } from './types';
 
-
-const VARIANTS: TagVariant[] = ['success', 'info'];
+const VARIANTS: TagVariant[] = Object.values(TagVariant);
 
 describe('Tag', () => {
     test.each(VARIANTS)('renders the label text for the %s variant', variant => {
@@ -31,12 +30,11 @@ describe('Tag', () => {
     test('renders every variant as the same element type, so the variant carries no semantics', () => {
         render(
             <div>
-                <Tag label="Verified" variant="success" />
-                <Tag label="New" variant="info" />
+                <Tag label="Verified" variant={TagVariant.SUCCESS} />
+                <Tag label="New" variant={TagVariant.INFO} />
             </div>
         );
 
         expect(screen.getByText('Verified').tagName).toBe(screen.getByText('New').tagName);
     });
-
 });

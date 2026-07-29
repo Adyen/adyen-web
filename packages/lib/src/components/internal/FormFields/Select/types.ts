@@ -1,4 +1,10 @@
-import { h, Ref, RefObject, HTMLAttributes, TargetedKeyboardEvent } from 'preact';
+import { Ref, RefObject, HTMLAttributes, TargetedKeyboardEvent } from 'preact';
+import type { TagVariant } from '../../Tag/types';
+
+export enum SecondaryContentVariant {
+    SECONDARY_TEXT = 'secondaryText',
+    TAG = 'tag'
+}
 
 export interface SelectItem {
     disabled?: boolean;
@@ -6,6 +12,7 @@ export interface SelectItem {
     id: string | number;
     name: string;
     secondaryText?: string;
+    tag?: { label: string; variant?: TagVariant }[];
     selectedOptionName?: string;
 }
 
@@ -41,6 +48,7 @@ export interface SelectProps {
     blurOnClose?: boolean;
     onListToggle?: (isOpen: boolean) => void;
     additionalDescribedBy?: string;
+    secondaryContent?: SecondaryContentVariant;
 }
 
 export interface SelectButtonProps {
@@ -64,6 +72,7 @@ export interface SelectButtonProps {
     id?: string;
     ariaDescribedBy: string;
     disabled: boolean;
+    secondaryContent: SecondaryContentVariant;
 }
 
 export interface SelectListProps {

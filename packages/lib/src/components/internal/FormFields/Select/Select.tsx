@@ -5,7 +5,7 @@ import SelectButton from './components/SelectButton';
 import SelectList from './components/SelectList';
 import uuid from '../../../../utils/uuid';
 import { keys } from './constants';
-import { SelectItem, SelectProps } from './types';
+import { SecondaryContentVariant, SelectItem, SelectProps } from './types';
 import './Select.scss';
 import { ARIA_CONTEXT_SUFFIX, ARIA_ERROR_SUFFIX } from '../../../../core/Errors/constants';
 import { simulateFocusScroll } from '../utils';
@@ -31,7 +31,8 @@ function Select({
     blurOnClose,
     onListToggle,
     required,
-    additionalDescribedBy
+    additionalDescribedBy,
+    secondaryContent = SecondaryContentVariant.SECONDARY_TEXT
 }: Readonly<SelectProps>) {
     const { i18n } = useCoreContext();
     const filterInputRef = useRef(null);
@@ -317,6 +318,7 @@ function Select({
                 disabled={disabled}
                 ariaDescribedBy={ariaDescribedBy}
                 required={required}
+                secondaryContent={secondaryContent}
             />
             <SelectList
                 active={activeOption}
@@ -337,7 +339,7 @@ function Select({
                 // What happens otherwise is that just the first status message is announced
                 // tested on VoiceOver on Chrome
                 aria-relevant="additions text"
-                className="adyen-checkout-sr-panel--sr-only"
+                className="adyen-checkout__dropdown__status"
             >
                 {statusMessage}
             </div>

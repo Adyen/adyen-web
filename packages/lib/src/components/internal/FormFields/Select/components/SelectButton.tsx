@@ -1,7 +1,8 @@
 import { h, Fragment, Ref } from 'preact';
 import cx from 'classnames';
-import { SelectButtonElementProps, SelectButtonProps } from '../types';
+import { SelectButtonElementProps, SelectButtonProps, SelectItem, SecondaryContentVariant } from '../types';
 import Img from '../../../Img';
+import { Tag } from '../../../Tag';
 import { useMemo } from 'preact/hooks';
 import classnames from 'classnames';
 
@@ -33,6 +34,23 @@ function SelectButtonElement({ filterable, toggleButtonRef, showList, selectList
             {props.children}
         </button>
     );
+}
+
+function SecondaryContent({ selected, variant }: Readonly<{ selected: SelectItem; variant: SecondaryContentVariant }>) {
+    switch (variant) {
+        case SecondaryContentVariant.TAG:
+            if (!selected.tag?.length) return null;
+            return (
+                <div className="adyen-checkout__dropdown__button__tags">
+                    {selected.tag.map(tag => (
+                        <Tag key={tag.label} label={tag.label} variant={tag.variant} />
+                    ))}
+                </div>
+            );
+        case SecondaryContentVariant.SECONDARY_TEXT:
+            if (!selected.secondaryText) return null;
+            return <span className="adyen-checkout__dropdown__button__secondary-text">{selected.secondaryText}</span>;
+    }
 }
 
 function SelectButton(props: Readonly<SelectButtonProps>) {
@@ -102,7 +120,7 @@ function SelectButton(props: Readonly<SelectButtonProps>) {
                     >
                         {displayText}
                     </span>
-                    {selected.secondaryText && <span className="adyen-checkout__dropdown__button__secondary-text">{selected.secondaryText}</span>}
+                    <SecondaryContent selected={selected} variant={props.secondaryContent} />
                 </Fragment>
             ) : (
                 <Fragment>
@@ -128,9 +146,7 @@ function SelectButton(props: Readonly<SelectButtonProps>) {
                         aria-describedby={props.ariaDescribedBy}
                         required={required}
                     />
-                    {!showList && selected.secondaryText && (
-                        <span className="adyen-checkout__dropdown__button__secondary-text">{selected.secondaryText}</span>
-                    )}
+                    {!showList && <SecondaryContent selected={selected} variant={props.secondaryContent} />}
                 </Fragment>
             )}
         </SelectButtonElement>

@@ -4,6 +4,7 @@ import { SelectItemProps } from '../types';
 import Img from '../../../Img';
 import Icon from '../../../Icon';
 import { PREFIX } from '../../../Icon/constants';
+import { Tag } from '../../../Tag';
 
 const SelectListItem = ({ item, active, selected, ...props }: Readonly<SelectItemProps>) => {
     return (
@@ -30,9 +31,20 @@ const SelectListItem = ({ item, active, selected, ...props }: Readonly<SelectIte
             //tabIndex={-1}
             id={`listItem-${item.id}`}
         >
-            {item.icon && <Img className="adyen-checkout__dropdown__element__icon" alt={item.name} src={item.icon} />}
-            <span className="adyen-checkout__dropdown__element__text">{item.name}</span>
-            {item.secondaryText && <span className="adyen-checkout__dropdown__element__secondary-text">{item.secondaryText}</span>}
+            <div className="adyen-checkout__dropdown__element__content">
+                <div className="adyen-checkout__dropdown__element__primary">
+                    {item.icon && <Img className="adyen-checkout__dropdown__element__icon" alt={item.name} src={item.icon} />}
+                    <span className="adyen-checkout__dropdown__element__text">{item.name}</span>
+                </div>
+                {item.secondaryText && <span className="adyen-checkout__dropdown__element__secondary-text">{item.secondaryText}</span>}
+            </div>
+            {item.tag?.length && (
+                <div className="adyen-checkout__dropdown__element__tags">
+                    {item.tag.map(tag => (
+                        <Tag key={tag.label} label={tag.label} variant={tag.variant} />
+                    ))}
+                </div>
+            )}
             {selected && <Icon type={`${PREFIX}checkmark_black`} height={14} width={14} />}
         </li>
     );

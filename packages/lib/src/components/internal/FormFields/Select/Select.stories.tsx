@@ -8,8 +8,9 @@ import { CoreProvider } from '../../../../core/Context/CoreProvider';
 import { Resources } from '../../../../core/Context/Resources';
 import { resolveEnvironments } from '../../../../core/Environment';
 import type { CoreConfiguration } from '../../../../core/types';
-import { SelectProps, SelectItem, SelectTargetObject } from './types';
+import { SelectProps, SelectItem, SelectTargetObject, SecondaryContentVariant } from './types';
 import { ILanguageService } from '../../../../language/LanguageService';
+import { TagVariant } from '../../Tag/types';
 
 const languageServiceStub: ILanguageService = {
     fetchTranslationsFromCdn: () => Promise.resolve({})
@@ -52,7 +53,15 @@ const coreProps = {
 };
 
 const sampleItems: SelectItem[] = [
-    { id: 'option1', name: 'Option 1' },
+    {
+        id: 'option1',
+        name: 'Option 1',
+        tag: [
+            { label: 'low cost', variant: TagVariant.SUCCESS },
+            { label: 'no cost', variant: TagVariant.INFO }
+        ],
+        secondaryText: 'Secondary text'
+    },
     { id: 'option2', name: 'Option 2' },
     { id: 'option3', name: 'Option 3', disabled: true },
     { id: 'option4', name: 'Option 4' },
@@ -78,9 +87,29 @@ const itemsWithIcons: SelectItem[] = [
 ];
 
 const itemsWithSecondaryText: SelectItem[] = [
-    { id: 'account1', name: 'Checking Account', secondaryText: '****1234' },
-    { id: 'account2', name: 'Savings Account', secondaryText: '****5678' },
-    { id: 'account3', name: 'Business Account', secondaryText: '****9012', disabled: true }
+    {
+        id: 'account1',
+        name: 'Checking Account',
+        icon: 'https://checkoutshopper-test.cdn.adyen.com/checkoutshopper/images/logos/visa.svg',
+        secondaryText: '****1234',
+        tag: [{ label: 'No cost', variant: TagVariant.SUCCESS }]
+    },
+    {
+        id: 'account2',
+        name: '₹51,666.00 x 3 months | @00.00% p.a',
+        secondaryText: '****5678',
+        tag: [
+            { label: 'No cost', variant: TagVariant.SUCCESS },
+            { label: 'Low cost', variant: TagVariant.INFO }
+        ]
+    },
+    {
+        id: 'account3',
+        name: 'Business Account',
+        icon: 'https://checkoutshopper-test.cdn.adyen.com/checkoutshopper/images/logos/amex.svg',
+        secondaryText: '****9012',
+        disabled: true
+    }
 ];
 
 const countryItems: SelectItem[] = [
@@ -185,11 +214,12 @@ export const WithSecondaryText: StoryObj<SelectProps> = {
 
         return (
             <CoreProvider {...coreProps}>
-                <div style={{ width: '300px', padding: '20px' }}>
+                <div style={{ width: '500px', padding: '20px' }}>
                     <Field name="account-select" label="Select Account">
                         <Select
                             {...args}
                             selectedValue={selectedValue}
+                            secondaryContent={SecondaryContentVariant.TAG}
                             onChange={e => {
                                 setSelectedValue((e.target as SelectTargetObject).value);
                                 console.log('Selected:', (e.target as SelectTargetObject).value);
