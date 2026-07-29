@@ -391,7 +391,11 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
     }
 
     private readonly setMode = (mode: GooglePaymentMode): void => {
-        this.mode = mode;
+        if (mode !== this.mode) {
+            this.mode = mode;
+            this.setElementStatus('ready');
+            console.log('Mode updated to:', this.mode);
+        }
     };
 
     protected override componentToRender(): h.JSX.Element {

@@ -65,7 +65,7 @@
     transition: background 0.1s ease-out;
     width: 100%;
 
-    &--visually-hidden:not(:focus-within) {
+    &--visually-hidden:not(:has(:focus-visible)) {
         @include index.a11y-visually-hidden;
     }
 
