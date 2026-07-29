@@ -76,6 +76,20 @@ describe('Address', () => {
         expect(await screen.findByLabelText('Country/Region')).toBeInTheDocument();
     });
 
+    test('should maintain spaces while typing but trim and collapse them on blur', async () => {
+        const user = userEvent.setup();
+        const requiredFields = ['street', 'houseNumberOrName', 'postalCode', 'country'];
+
+        customRender(<Address specifications={addressSpecificationsMock} requiredFields={requiredFields} />);
+
+        const street = screen.getByLabelText('Street');
+        await user.type(street, '  Simon   Carmiggeltstraat  ');
+        expect(street).toHaveValue('  Simon   Carmiggeltstraat  ');
+
+        await user.tab();
+        await waitFor(() => expect(street).toHaveValue('Simon Carmiggeltstraat'));
+    });
+
     test('should show the address as readOnly', () => {
         const requiredFields = ['street', 'houseNumberOrName', 'postalCode', 'country'];
 
