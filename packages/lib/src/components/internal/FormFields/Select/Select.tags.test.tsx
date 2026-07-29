@@ -20,6 +20,8 @@ interface TaggedSelectItem extends SelectItem {
     tags?: TagContract[];
 }
 
+type SecondaryContent = 'tag' | 'secondaryText';
+
 const SUCCESS_TAG: TagContract = { label: 'Verified', variant: 'success' };
 const INFO_TAG: TagContract = { label: 'New', variant: 'info' };
 const EXTRA_TAG: TagContract = { label: 'Popular', variant: 'info' };
@@ -59,8 +61,12 @@ const withCore = (children: h.JSX.Element) => (
     </CoreProvider>
 );
 
-const renderSelect = (props: Partial<SelectProps> & { items: TaggedSelectItem[] }) =>
+type RenderSelectProps = Partial<SelectProps> & { items: TaggedSelectItem[]; secondaryContent?: SecondaryContent };
+
+const renderSelect = (props: RenderSelectProps) =>
     render(withCore(<Select className="" classNameModifiers={[]} readonly={false} name={SELECT_NAME} {...props} />));
+
+const renderTaggedSelect = (props: RenderSelectProps) => renderSelect({ secondaryContent: 'tag', ...props });
 
 interface ControlledSelectProps {
     items: TaggedSelectItem[];
@@ -69,18 +75,15 @@ interface ControlledSelectProps {
 const ControlledSelect = ({ items }: Readonly<ControlledSelectProps>) => {
     const [selectedValue, setSelectedValue] = useState<string | number | undefined>('');
 
-    return (
-        <Select
-            className=""
-            classNameModifiers={[]}
-            readonly={false}
-            filterable={false}
-            items={items}
-            name={SELECT_NAME}
-            selectedValue={selectedValue}
-            onChange={e => setSelectedValue((e.target as SelectTargetObject).value)}
-        />
-    );
+    const props: RenderSelectProps = {
+        items,
+        filterable: false,
+        secondaryContent: 'tag',
+        selectedValue,
+        onChange: e => setSelectedValue((e.target as SelectTargetObject).value)
+    };
+
+    return <Select className="" classNameModifiers={[]} readonly={false} name={SELECT_NAME} {...props} />;
 };
 
 const textOf = (element: HTMLElement) => element.textContent.replace(/\s+/g, ' ').trim();
@@ -112,75 +115,75 @@ describe('Select with tags', () => {
         };
 
         test('adds no tag node for an option without tags', async () => {
-            renderSelect({ items: ITEMS, filterable: false });
+            renderTaggedSelect({ items: ITEMS, filterable: false });
             await openList();
 
             expect(textOf(getOption(PLAIN_ITEM))).toBe('Plain option');
         });
 
         test('adds no tag node for an empty tags array', async () => {
-            renderSelect({ items: ITEMS, filterable: false });
+            renderTaggedSelect({ items: ITEMS, filterable: false });
             await openList();
 
             expect(textOf(getOption(EMPTY_TAGS_ITEM))).toBe('Empty tags option');
         });
 
-        test('renders a single tag after the secondaryText', async () => {
-            renderSelect({ items: ITEMS, filterable: false });
+        test('renders a single tag in place of the secondaryText', async () => {
+            renderTaggedSelect({ items: ITEMS, filterable: false });
             await openList();
 
-            expect(textOf(getOption(ONE_TAG_ITEM))).toMatch(contentOf('Single tag option', 'Supporting text one', 'Verified'));
+            expect(textOf(getOption(ONE_TAG_ITEM))).toMatch(contentOf('Single tag option', 'Verified'));
         });
 
         test('renders two tags in array order', async () => {
-            renderSelect({ items: ITEMS, filterable: false });
+            renderTaggedSelect({ items: ITEMS, filterable: false });
             await openList();
 
-            expect(textOf(getOption(TWO_TAGS_ITEM))).toMatch(contentOf('Two tags option', 'Supporting text two', 'Verified', 'New'));
+            expect(textOf(getOption(TWO_TAGS_ITEM))).toMatch(contentOf('Two tags option', 'Verified', 'New'));
         });
 
         test('renders three tags in array order, without dropping any', async () => {
-            renderSelect({ items: ITEMS, filterable: false });
+            renderTaggedSelect({ items: ITEMS, filterable: false });
             await openList();
 
-            expect(textOf(getOption(THREE_TAGS_ITEM))).toMatch(contentOf('Three tags option', 'Supporting text three', 'Verified', 'New', 'Popular'));
+            expect(textOf(getOption(THREE_TAGS_ITEM))).toMatch(contentOf('Three tags option', 'Verified', 'New', 'Popular'));
         });
 
-        test('exposes name, secondaryText and tags to screen readers in that order', async () => {
-            renderSelect({ items: ITEMS, filterable: false });
+        test('exposes the name and the tags to screen readers in that order, omitting the secondaryText', async () => {
+            renderTaggedSelect({ items: ITEMS, filterable: false });
             await openList();
 
-            expect(getOption(TWO_TAGS_ITEM)).toHaveAccessibleName('Two tags option Supporting text two Verified New');
+            expect(getOption(TWO_TAGS_ITEM)).toHaveAccessibleName('Two tags option Verified New');
         });
     });
 
     describe('collapsed select button', () => {
-        test('shows the name and the single tag of the selected option, without the secondaryText', () => {
-            renderSelect({ items: ITEMS, filterable: false, selectedValue: ONE_TAG_ITEM.id });
+        test('shows the name and the single tag of the selected option', () => {
+            renderTaggedSelect({ items: ITEMS, filterable: false, selectedValue: ONE_TAG_ITEM.id });
 
             expect(textOf(getCollapsedButton())).toMatch(contentOf('Single tag option', 'Verified'));
         });
 
-        test('shows both tags of the selected option, without the secondaryText', () => {
-            renderSelect({ items: ITEMS, filterable: false, selectedValue: TWO_TAGS_ITEM.id });
+        test('shows both tags of the selected option', () => {
+            renderTaggedSelect({ items: ITEMS, filterable: false, selectedValue: TWO_TAGS_ITEM.id });
 
             expect(textOf(getCollapsedButton())).toMatch(contentOf('Two tags option', 'Verified', 'New'));
         });
 
-        test('shows all three tags of the selected option, without the secondaryText', () => {
-            renderSelect({ items: ITEMS, filterable: false, selectedValue: THREE_TAGS_ITEM.id });
+        test('shows all three tags of the selected option', () => {
+            renderTaggedSelect({ items: ITEMS, filterable: false, selectedValue: THREE_TAGS_ITEM.id });
 
             expect(textOf(getCollapsedButton())).toMatch(contentOf('Three tags option', 'Verified', 'New', 'Popular'));
         });
 
         test('includes the tag labels in the accessible name when uniqueId is set', () => {
-            renderSelect({ items: ITEMS, filterable: false, selectedValue: TWO_TAGS_ITEM.id, uniqueId: 'tagged-select' });
+            renderTaggedSelect({ items: ITEMS, filterable: false, selectedValue: TWO_TAGS_ITEM.id, uniqueId: 'tagged-select' });
 
             expect(screen.getByRole('combobox')).toHaveAccessibleName(/Two tags option[\s\S]*Verified[\s\S]*New/);
         });
 
         test('shows the tags of the selected option in the filterable variant', () => {
-            renderSelect({ items: ITEMS, filterable: true, selectedValue: TWO_TAGS_ITEM.id });
+            renderTaggedSelect({ items: ITEMS, filterable: true, selectedValue: TWO_TAGS_ITEM.id });
 
             const button = getCollapsedButton();
 
@@ -191,7 +194,7 @@ describe('Select with tags', () => {
         });
 
         test('hides the tags of the filterable variant while the list is open', async () => {
-            renderSelect({ items: ITEMS, filterable: true, selectedValue: TWO_TAGS_ITEM.id });
+            renderTaggedSelect({ items: ITEMS, filterable: true, selectedValue: TWO_TAGS_ITEM.id });
 
             await user.click(screen.getByRole('combobox'));
 
@@ -215,7 +218,7 @@ describe('Select with tags', () => {
 
     describe('disabled tagged option', () => {
         test('is announced as disabled and still exposes its tag label', async () => {
-            renderSelect({ items: ITEMS, filterable: false });
+            renderTaggedSelect({ items: ITEMS, filterable: false });
 
             await user.click(screen.getByRole('combobox'));
 
@@ -228,7 +231,7 @@ describe('Select with tags', () => {
 
     describe('filtering', () => {
         test('does not match on tag labels', async () => {
-            renderSelect({ items: ITEMS, filterable: true });
+            renderTaggedSelect({ items: ITEMS, filterable: true });
 
             await user.type(screen.getByRole('combobox'), SUCCESS_TAG.label);
 
@@ -243,13 +246,73 @@ describe('Select with tags', () => {
                 { id: 'raw-label', name: 'Raw label option', tags: [{ label: 'select.tag.example', variant: 'info' }] }
             ];
 
-            renderSelect({ items, filterable: false, selectedValue: 'raw-label' });
+            renderTaggedSelect({ items, filterable: false, selectedValue: 'raw-label' });
 
             expect(within(getCollapsedButton()).getByText('select.tag.example')).toBeInTheDocument();
 
             await user.click(screen.getByRole('combobox'));
 
             expect(within(screen.getAllByRole('option')[0]).getByText('select.tag.example')).toBeInTheDocument();
+        });
+    });
+
+    describe('secondaryContent mode', () => {
+        const openList = async () => {
+            await user.click(screen.getByRole('combobox'));
+        };
+
+        test('defaults to secondaryText, leaving the tags of an option unrendered', async () => {
+            renderSelect({ items: ITEMS, filterable: false });
+            await openList();
+
+            expect(textOf(getOption(ONE_TAG_ITEM))).toMatch(contentOf('Single tag option', 'Supporting text one'));
+            expect(screen.queryByText(SUCCESS_TAG.label)).not.toBeInTheDocument();
+        });
+
+        test("treats an explicit 'secondaryText' the same as the default", async () => {
+            renderSelect({ items: ITEMS, filterable: false, secondaryContent: 'secondaryText' });
+            await openList();
+
+            expect(textOf(getOption(TWO_TAGS_ITEM))).toMatch(contentOf('Two tags option', 'Supporting text two'));
+            expect(screen.queryByText(SUCCESS_TAG.label)).not.toBeInTheDocument();
+            expect(screen.queryByText(INFO_TAG.label)).not.toBeInTheDocument();
+        });
+
+        test("renders the tags of an option only once 'tag' is passed", async () => {
+            renderSelect({ items: ITEMS, filterable: false, secondaryContent: 'tag' });
+            await openList();
+
+            expect(within(getOption(TWO_TAGS_ITEM)).getByText(SUCCESS_TAG.label)).toBeInTheDocument();
+            expect(within(getOption(TWO_TAGS_ITEM)).getByText(INFO_TAG.label)).toBeInTheDocument();
+        });
+
+        test('keeps the secondaryText in the collapsed button under the default', () => {
+            renderSelect({ items: ITEMS, filterable: false, selectedValue: TWO_TAGS_ITEM.id });
+
+            expect(textOf(getCollapsedButton())).toMatch(contentOf('Two tags option', 'Supporting text two'));
+        });
+
+        test("swaps the collapsed button over to the tags under 'tag'", () => {
+            renderSelect({ items: ITEMS, filterable: false, selectedValue: TWO_TAGS_ITEM.id, secondaryContent: 'tag' });
+
+            expect(textOf(getCollapsedButton())).toMatch(contentOf('Two tags option', 'Verified', 'New'));
+        });
+
+        test("ignores the secondaryText of a tagless option under 'tag', rather than rendering it as a tag", async () => {
+            const items: TaggedSelectItem[] = [{ id: 'no-tags', name: 'Tagless option', secondaryText: 'Supporting text' }];
+
+            renderSelect({ items, filterable: false, secondaryContent: 'tag' });
+            await openList();
+
+            expect(textOf(getOption(items[0]))).toBe('Tagless option');
+        });
+
+        test("ignores the tags of an option under 'secondaryText', rather than rendering both", async () => {
+            renderSelect({ items: ITEMS, filterable: false, secondaryContent: 'secondaryText' });
+            await openList();
+
+            expect(textOf(getOption(THREE_TAGS_ITEM))).toMatch(contentOf('Three tags option', 'Supporting text three'));
+            expect(screen.queryByText(EXTRA_TAG.label)).not.toBeInTheDocument();
         });
     });
 });
