@@ -9,12 +9,15 @@ import { CoreProvider } from '../../../../../core/Context/CoreProvider';
 import ClickToPayProvider, { ClickToPayProviderProps } from '../../context/ClickToPayProvider';
 import { AmountProvider } from '../../../../../core/Context/AmountProvider';
 import { PaymentAmount } from '../../../../../types';
+import { setupCoreMock } from '../../../../../../config/testMocks/setup-core-mock';
 
 const AMOUNT: PaymentAmount = { value: 2000, currency: 'EUR' };
 
+const core = setupCoreMock();
+
 const customRender = (children: ComponentChildren, providerProps?: ClickToPayProviderProps) => {
     return render(
-        <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+        <CoreProvider i18n={core.modules.i18n} loadingContext="test" resources={core.modules.resources}>
             <AmountProvider amount={AMOUNT} providerRef={createRef()}>
                 <ClickToPayProvider {...providerProps}>{children}</ClickToPayProvider>
             </AmountProvider>
@@ -185,7 +188,8 @@ test('should not be able to checkout with expired card (card list)', async () =>
 
     const selectButton = screen.getByRole('combobox', { name: /Select a card to use\./ });
 
-    expect(selectButton.textContent).toBe('Mastercard •••• 3456 Expired');
+    // The collapsed select button shows the card title only - the expiry label lives in the list item
+    expect(selectButton.textContent).toBe('Mastercard •••• 3456 ');
 
     await user.click(selectButton);
     const options = screen.getAllByRole('option');
