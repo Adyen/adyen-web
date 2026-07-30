@@ -1,14 +1,21 @@
 import { Locator, expect } from '@playwright/test';
 import * as os from 'os';
+import { waitForImageLoaded } from './image';
 
 const isCI = process.env.CI === 'true';
 const isLinux = os.platform() === 'linux';
 
-export const toHaveScreenshot = (
+export const toHaveScreenshot = async (
     locator: Locator,
     browserName: 'chromium' | 'firefox' | 'webkit',
     name: string | ReadonlyArray<string>,
     options?: {
+        /**
+         * When true, skips waiting for images to load before taking the screenshot.
+         * Use this when the screenshot intentionally captures a transient state right after an action.
+         */
+        skipWaitForImages?: boolean;
+
         /**
          * When set to `"disabled"`, stops CSS animations, CSS transitions and Web Animations. Animations get different
          * treatment depending on their duration:
@@ -91,5 +98,11 @@ export const toHaveScreenshot = (
         return;
     }
 
-    return expect(locator).toHaveScreenshot(name, { ...options });
+    const { skipWaitForImages, ...screenshotOptions } = options ?? {};
+
+    if (!skipWaitForImages) {
+        await waitForImageLoaded(locator);
+    }
+
+    return expect(locator).toHaveScreenshot(name, { ...screenshotOptions });
 };
