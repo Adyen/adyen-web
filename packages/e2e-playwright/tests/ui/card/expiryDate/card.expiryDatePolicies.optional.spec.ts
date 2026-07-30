@@ -138,8 +138,7 @@ test.describe('Test how Card Component handles optional expiryDate policy', () =
         await expect(card.expiryDateErrorElement).toHaveText(DATE_INVALID_ERROR);
 
         // Card seen as invalid
-        const cardValid = await page.evaluate('window.component.isValid');
-        await expect(cardValid).toEqual(false);
+        await page.waitForFunction(() => window['component'].isValid === false);
 
         // Delete erroneous date
         await card.deleteExpiryDate();

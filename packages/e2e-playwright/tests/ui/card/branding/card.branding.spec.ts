@@ -96,8 +96,7 @@ test.describe('Testing branding - especially regarding optional and hidden cvc f
             await expect(cardBrandingPage.cvcField).toHaveClass(/adyen-checkout__field__cvc--optional/);
 
             // Is valid
-            const cardValid = await page.evaluate('window.component.isValid');
-            await expect(cardValid).toEqual(true);
+            await page.waitForFunction(() => window['component'].isValid === true);
 
             await cardBrandingPage.typeCvc(TEST_CVC_VALUE);
 

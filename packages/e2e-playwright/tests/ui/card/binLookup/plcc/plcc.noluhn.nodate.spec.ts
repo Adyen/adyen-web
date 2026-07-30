@@ -25,8 +25,7 @@ test.describe('Testing binLookup endpoint for a response that should indicate a 
         await card.typeCvc(TEST_CVC_VALUE);
 
         // PM is valid
-        const cardValid = await page.evaluate('window.component.isValid');
-        expect(cardValid).toEqual(true);
+        await page.waitForFunction(() => window['component'].isValid === true);
 
         // Delete number
         await card.deleteCardNumber();
