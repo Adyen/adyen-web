@@ -8,29 +8,20 @@ test.describe('Test how Custom Card Component with regular date field handles hi
         await binLookupMock(page, optionalDateAndCvcMock);
 
         // Expect iframe's expiryDate (& cvc) input fields to have an aria-required attr set to true
-        let dateAriaRequired = await customCard.expiryDateInput.getAttribute('aria-required');
-        await expect(dateAriaRequired).toEqual('true');
-
-        let cvcAriaRequired = await customCard.cvcInput.getAttribute('aria-required');
-        await expect(cvcAriaRequired).toEqual('true');
+        await expect(customCard.expiryDateInput).toHaveAttribute('aria-required', 'true');
+        await expect(customCard.cvcInput).toHaveAttribute('aria-required', 'true');
 
         // Fill number to provoke (mock) binLookup response
         await customCard.typeCardNumber(REGULAR_TEST_CARD);
 
         // Expect iframe's expiryDate (& cvc) input fields to have an aria-required attr set to false
-        dateAriaRequired = await customCard.expiryDateInput.getAttribute('aria-required');
-        await expect(dateAriaRequired).toEqual('false');
-
-        cvcAriaRequired = await customCard.cvcInput.getAttribute('aria-required');
-        await expect(cvcAriaRequired).toEqual('false');
+        await expect(customCard.expiryDateInput).toHaveAttribute('aria-required', 'false');
+        await expect(customCard.cvcInput).toHaveAttribute('aria-required', 'false');
 
         // Clear number and see SF's aria-required reset
         await customCard.deleteCardNumber();
 
-        dateAriaRequired = await customCard.expiryDateInput.getAttribute('aria-required');
-        await expect(dateAriaRequired).toEqual('true');
-
-        cvcAriaRequired = await customCard.cvcInput.getAttribute('aria-required');
-        await expect(cvcAriaRequired).toEqual('true');
+        await expect(customCard.expiryDateInput).toHaveAttribute('aria-required', 'true');
+        await expect(customCard.cvcInput).toHaveAttribute('aria-required', 'true');
     });
 });

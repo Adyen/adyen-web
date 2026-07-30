@@ -31,8 +31,7 @@ test.describe('Testing branding - especially regarding optional and hidden cvc f
             'then delete number (back to generic card)',
         async ({ cardBrandingPage }) => {
             // generic card
-            let brandingIconSrc = await cardBrandingPage.brandingIcon.getAttribute('src');
-            expect(brandingIconSrc).toContain('nocard.svg');
+            await expect(cardBrandingPage.brandingIcon).toHaveAttribute('src', /\/nocard\.svg$/);
 
             // visible & required cvc field
             await expect(cardBrandingPage.cvcField).toBeVisible();
@@ -46,8 +45,7 @@ test.describe('Testing branding - especially regarding optional and hidden cvc f
             await cardBrandingPage.typeCardNumber('670');
 
             // maestro card icon
-            brandingIconSrc = await cardBrandingPage.brandingIcon.getAttribute('src');
-            expect(brandingIconSrc).toContain('maestro.svg');
+            await expect(cardBrandingPage.brandingIcon).toHaveAttribute('src', /\/maestro\.svg$/);
 
             // with "optional" text
             await expect(cardBrandingPage.cvcLabelText).toHaveText(CVC_LABEL_OPTIONAL);
@@ -59,8 +57,7 @@ test.describe('Testing branding - especially regarding optional and hidden cvc f
             await cardBrandingPage.typeCardNumber('3');
 
             // bcmc card icon
-            brandingIconSrc = await cardBrandingPage.brandingIcon.getAttribute('src');
-            expect(brandingIconSrc).toContain('bcmc.svg');
+            await expect(cardBrandingPage.brandingIcon).toHaveAttribute('src', /\/bcmc\.svg$/);
 
             // hidden cvc field
             await expect(cardBrandingPage.cvcField).not.toBeVisible();
@@ -69,7 +66,7 @@ test.describe('Testing branding - especially regarding optional and hidden cvc f
             await cardBrandingPage.deleteCardNumber();
 
             // Card is reset
-            await expect(cardBrandingPage.brandingIcon).toHaveAttribute('src', /nocard\.svg/);
+            await expect(cardBrandingPage.brandingIcon).toHaveAttribute('src', /\/nocard\.svg$/);
 
             // Visible cvc field
             await expect(cardBrandingPage.cvcField).toBeVisible();
@@ -91,8 +88,7 @@ test.describe('Testing branding - especially regarding optional and hidden cvc f
             await cardBrandingPage.typeExpiryDate(TEST_DATE_VALUE);
 
             // maestro card icon
-            let brandingIconSrc = await cardBrandingPage.brandingIcon.getAttribute('src');
-            expect(brandingIconSrc).toContain('maestro.svg');
+            await expect(cardBrandingPage.brandingIcon).toHaveAttribute('src', /\/maestro\.svg$/);
 
             // with "optional" text
             await expect(cardBrandingPage.cvcLabelText).toHaveText(CVC_LABEL_OPTIONAL);
@@ -100,23 +96,18 @@ test.describe('Testing branding - especially regarding optional and hidden cvc f
             await expect(cardBrandingPage.cvcField).toHaveClass(/adyen-checkout__field__cvc--optional/);
 
             // Is valid
-            let cardValid = await page.evaluate('window.component.isValid');
-            await expect(cardValid).toEqual(true);
+            await page.waitForFunction(() => window['component'].isValid === true);
 
             await cardBrandingPage.typeCvc(TEST_CVC_VALUE);
 
-            // Headless test seems to need time for UI reset to register on state
-            await page.waitForTimeout(500);
-
             // Is valid
-            cardValid = await page.evaluate('window.component.isValid');
-            await expect(cardValid).toEqual(true);
+            await page.waitForFunction(() => window['component'].isValid === true);
 
             // Delete number
             await cardBrandingPage.deleteCardNumber();
 
             // Card is reset to generic card
-            await expect(cardBrandingPage.brandingIcon).toHaveAttribute('src', /nocard\.svg/);
+            await expect(cardBrandingPage.brandingIcon).toHaveAttribute('src', /\/nocard\.svg$/);
 
             // Is not valid
             await page.waitForFunction(() => window['component'].isValid === false);
@@ -138,26 +129,20 @@ test.describe('Testing branding - especially regarding optional and hidden cvc f
             // Force blur event to fire
             await cardBrandingPage.cardNumberLabelElement.click();
 
-            // Wait for UI to render
-            await page.waitForTimeout(300);
-
             // Is not valid
-            let cardValid = await page.evaluate('window.component.isValid');
-            await expect(cardValid).toEqual(false);
+            await page.waitForFunction(() => window['component'].isValid === false);
 
             // Complete cvc
             await cardBrandingPage.cvcInput.press('End'); /** NOTE: how to add text at end */
             await cardBrandingPage.typeCvc('7');
 
             // Is valid
-            cardValid = await page.evaluate('window.component.isValid');
-            await expect(cardValid).toEqual(true);
+            await page.waitForFunction(() => window['component'].isValid === true);
 
             await cardBrandingPage.deleteCvc();
 
             // Is valid
-            cardValid = await page.evaluate('window.component.isValid');
-            await expect(cardValid).toEqual(true);
+            await page.waitForFunction(() => window['component'].isValid === true);
         }
     );
 });
