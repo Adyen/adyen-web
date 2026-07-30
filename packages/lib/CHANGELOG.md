@@ -1,5 +1,17 @@
 # @adyen/adyen-web
 
+## 6.41.1
+
+### Patch Changes
+
+- Fixed: Internal types for triggerBinLookup and CardElement ([#4089](https://github.com/Adyen/adyen-web/pull/4089))
+
+- Fixed: focus moving to the wrong component when multiple OpenInvoice-based components (e.g. AfterPay, RatePay, FacilyPay, Atome) are rendered on the same page and a validation error occurs ([#4109](https://github.com/Adyen/adyen-web/pull/4109))
+
+- Fixed: Prevent payment submission when press enter inside active element (select, dualBrandSelector) ([#4114](https://github.com/Adyen/adyen-web/pull/4114))
+
+- Fixed: Duplicate characters when typing in address fields using an IME ([#4095](https://github.com/Adyen/adyen-web/pull/4095))
+
 ## 6.41.0
 
 ### Minor Changes
