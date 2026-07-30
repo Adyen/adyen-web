@@ -38,7 +38,7 @@ const SelectListItem = ({ item, active, selected, ...props }: Readonly<SelectIte
                 </div>
                 {item.secondaryText && <span className="adyen-checkout__dropdown__element__secondary-text">{item.secondaryText}</span>}
             </div>
-            {item.tag?.length && (
+            {!!item.tag?.length && (
                 <div className="adyen-checkout__dropdown__element__tags">
                     {item.tag.map(tag => (
                         <Tag key={tag.label} label={tag.label} variant={tag.variant} />

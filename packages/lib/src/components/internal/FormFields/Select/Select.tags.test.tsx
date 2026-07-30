@@ -12,49 +12,47 @@ const core = setupCoreMock();
 
 const SELECT_NAME = 'taggedSelect';
 
-interface TagContract {
-    label: string;
-    variant: TagVariant.SUCCESS | TagVariant.INFO;
-}
+/**
+ * Derived from the component contract so the fixtures cannot drift from what `Select` accepts.
+ */
+type SelectItemTag = NonNullable<SelectItem['tag']>[number];
 
-interface TaggedSelectItem extends SelectItem {
-    tags?: TagContract[];
-}
+const SUCCESS_TAG: SelectItemTag = { label: 'Verified', variant: TagVariant.SUCCESS };
+const INFO_TAG: SelectItemTag = { label: 'New', variant: TagVariant.INFO };
+const EXTRA_TAG: SelectItemTag = { label: 'Popular', variant: TagVariant.INFO };
 
-type SecondaryContent = SecondaryContentVariant.TAG | SecondaryContentVariant.SECONDARY_TEXT;
-
-const SUCCESS_TAG: TagContract = { label: 'Verified', variant: TagVariant.SUCCESS };
-const INFO_TAG: TagContract = { label: 'New', variant: TagVariant.INFO };
-const EXTRA_TAG: TagContract = { label: 'Popular', variant: TagVariant.INFO };
-
-const PLAIN_ITEM: TaggedSelectItem = { id: 'plain', name: 'Plain option' };
-const EMPTY_TAGS_ITEM: TaggedSelectItem = { id: 'empty-tags', name: 'Empty tags option', tags: [] };
-const ONE_TAG_ITEM: TaggedSelectItem = {
+/**
+ * `satisfies` checks the fixtures against `SelectItem` while keeping the concrete property types, so
+ * optional fields such as `secondaryText` stay `string` at the call sites instead of `string | undefined`.
+ */
+const PLAIN_ITEM = { id: 'plain', name: 'Plain option' } satisfies SelectItem;
+const EMPTY_TAGS_ITEM = { id: 'empty-tags', name: 'Empty tags option', tag: [] } satisfies SelectItem;
+const ONE_TAG_ITEM = {
     id: 'one-tag',
     name: 'Single tag option',
     secondaryText: 'Supporting text one',
     tag: [SUCCESS_TAG]
-};
-const TWO_TAGS_ITEM: TaggedSelectItem = {
+} satisfies SelectItem;
+const TWO_TAGS_ITEM = {
     id: 'two-tags',
     name: 'Two tags option',
     secondaryText: 'Supporting text two',
     tag: [SUCCESS_TAG, INFO_TAG]
-};
-const THREE_TAGS_ITEM: TaggedSelectItem = {
+} satisfies SelectItem;
+const THREE_TAGS_ITEM = {
     id: 'three-tags',
     name: 'Three tags option',
     secondaryText: 'Supporting text three',
     tag: [SUCCESS_TAG, INFO_TAG, EXTRA_TAG]
-};
-const DISABLED_TAGGED_ITEM: TaggedSelectItem = {
+} satisfies SelectItem;
+const DISABLED_TAGGED_ITEM = {
     id: 'disabled-tagged',
     name: 'Disabled option',
     tag: [INFO_TAG],
     disabled: true
-};
+} satisfies SelectItem;
 
-const ITEMS: TaggedSelectItem[] = [PLAIN_ITEM, EMPTY_TAGS_ITEM, ONE_TAG_ITEM, TWO_TAGS_ITEM, THREE_TAGS_ITEM, DISABLED_TAGGED_ITEM];
+const ITEMS: SelectItem[] = [PLAIN_ITEM, EMPTY_TAGS_ITEM, ONE_TAG_ITEM, TWO_TAGS_ITEM, THREE_TAGS_ITEM, DISABLED_TAGGED_ITEM];
 
 const withCore = (children: h.JSX.Element) => (
     <CoreProvider i18n={core.modules.i18n} loadingContext="test" resources={core.modules.resources}>
@@ -62,7 +60,7 @@ const withCore = (children: h.JSX.Element) => (
     </CoreProvider>
 );
 
-type RenderSelectProps = Partial<SelectProps> & { items: TaggedSelectItem[]; secondaryContent?: SecondaryContent };
+type RenderSelectProps = Partial<SelectProps> & { items: SelectItem[] };
 
 const renderSelect = (props: RenderSelectProps) =>
     render(withCore(<Select className="" classNameModifiers={[]} readonly={false} name={SELECT_NAME} {...props} />));
@@ -70,7 +68,7 @@ const renderSelect = (props: RenderSelectProps) =>
 const renderTaggedSelect = (props: RenderSelectProps) => renderSelect({ secondaryContent: SecondaryContentVariant.TAG, ...props });
 
 interface ControlledSelectProps {
-    items: TaggedSelectItem[];
+    items: SelectItem[];
 }
 
 const ControlledSelect = ({ items }: Readonly<ControlledSelectProps>) => {
