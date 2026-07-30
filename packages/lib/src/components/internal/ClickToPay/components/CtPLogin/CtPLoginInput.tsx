@@ -1,4 +1,4 @@
-import { h, TargetedKeyboardEvent } from 'preact';
+import { h } from 'preact';
 import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
 import { loginValidationRules } from './validate';
 import { useCoreContext } from '../../../../../core/Context/CoreProvider';
@@ -58,8 +58,8 @@ const CtPLoginInput = (props: Readonly<CtPLoginInputProps>): h.JSX.Element => {
         props.onSetInputHandlers(loginInputHandlersRef.current);
     }, [validateInput, props.onSetInputHandlers]);
 
-    const handleOnKeyDown = useCallback(
-        (event: TargetedKeyboardEvent<HTMLInputElement>) => {
+    const handleOnKeyPress = useCallback(
+        (event: h.JSX.TargetedKeyboardEvent<HTMLInputElement>) => {
             if (event.key === 'Enter') {
                 void props.onPressEnter();
             }
@@ -88,7 +88,7 @@ const CtPLoginInput = (props: Readonly<CtPLoginInputProps>): h.JSX.Element => {
                     disabled={props.disabled}
                     onInput={handleChangeFor('shopperLogin', 'input')}
                     onBlur={handleChangeFor('shopperLogin', 'blur')}
-                    onKeyDown={handleOnKeyDown}
+                    onKeyPress={handleOnKeyPress}
                     autocomplete={'email'}
                 />
             </Field>

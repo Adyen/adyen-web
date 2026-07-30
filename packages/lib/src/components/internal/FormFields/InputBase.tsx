@@ -64,11 +64,31 @@ export default function InputBase({ setRef, ...props }: Readonly<InputBaseProps>
         [props.onInput]
     );
 
-    const handleKeyDown = useCallback(
+    /**
+     *  Event is fired when a key that produces a character value is pressed down.
+     *  ENTER keypress also triggers this event.
+     *
+     *  TODO: 'keypress' event is deprecated
+     *  https://developer.mozilla.org/en-US/docs/Web/API/Element/keypress_event
+     */
+    const handleKeyPress = useCallback(
         (event: TargetedKeyboardEvent<HTMLInputElement>) => {
-            if (props?.onKeyDown) props.onKeyDown(event);
+            if (props?.onKeyPress) props.onKeyPress(event);
         },
-        [props?.onKeyDown]
+        [props?.onKeyPress]
+    );
+
+    /**
+     * Event is fired when certain keys are pressed (keys that do not output characters):
+     * Backspace, Arrow keys, Shift, Ctrl, Command, Option, Esc
+     *
+     * Exception: ENTER keypress triggers 'onKeyPress' AND 'onKeyUp'
+     */
+    const handleKeyUp = useCallback(
+        (event: TargetedKeyboardEvent<HTMLInputElement>) => {
+            if (props?.onKeyUp) props.onKeyUp(event);
+        },
+        [props?.onKeyUp]
     );
 
     const handleBlur = useCallback(
@@ -137,7 +157,8 @@ export default function InputBase({ setRef, ...props }: Readonly<InputBaseProps>
             onInput={handleInput}
             onBlur={handleBlur}
             onFocus={handleFocus}
-            onKeyDown={handleKeyDown}
+            onKeyUp={handleKeyUp}
+            onKeyPress={handleKeyPress}
             disabled={disabled}
             ref={setRef}
         />

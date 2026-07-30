@@ -1,4 +1,4 @@
-import { h, TargetedKeyboardEvent } from 'preact';
+import { h } from 'preact';
 import classnames from 'classnames';
 import CtPLogoutLink from './CtPLogoutLink';
 import { CtPBrand } from '../CtPBrand';
@@ -6,7 +6,7 @@ import useClickToPayContext from '../../context/useClickToPayContext';
 import './CtPSection.scss';
 
 interface CtPSectionProps {
-    onEnterKeyPress: (event: TargetedKeyboardEvent<HTMLInputElement>) => void;
+    onEnterKeyPress: (event: h.JSX.TargetedKeyboardEvent<HTMLInputElement>) => void;
     children?: h.JSX.Element[];
 }
 
@@ -17,7 +17,7 @@ const CtPSection = ({ children, onEnterKeyPress }: Readonly<CtPSectionProps>): h
         // eslint-disable-next-line jsx-a11y/no-static-element-interactions
         <div
             className={classnames('adyen-checkout-ctp__section', { 'adyen-checkout-ctp__section--standalone': isStandaloneComponent })}
-            onKeyDown={onEnterKeyPress}
+            onKeyPress={onEnterKeyPress}
         >
             <div className="adyen-checkout-ctp__section-brand">
                 <CtPBrand />

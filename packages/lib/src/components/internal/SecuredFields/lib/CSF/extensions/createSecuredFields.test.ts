@@ -21,7 +21,7 @@ const myCSF = {
     callbacks: {
         onLoad: jest.fn(() => {}),
         onTouchstartIOS: jest.fn(() => {}),
-        onKeyDown: jest.fn(() => {})
+        onKeyPressed: jest.fn(() => {})
     },
     createSecuredFields,
     setupSecuredField,
@@ -68,7 +68,7 @@ describe('Testing CSFs setupSecuredField functionality', () => {
             onEncryptionCallback: null,
             onValidationCallback: null,
             onAutoCompleteCallback: null,
-            onKeyDownCallback: null,
+            onKeyPressedCallback: null,
             onIframeLoaded: cbFn => {
                 MySecuredField.onIframeLoadedCallback = cbFn;
                 return MySecuredField;
@@ -105,8 +105,8 @@ describe('Testing CSFs setupSecuredField functionality', () => {
                 MySecuredField.onAutoCompleteCallback = cbFn;
                 return MySecuredField;
             },
-            onKeyDown: cbFn => {
-                MySecuredField.onKeyDownCallback = cbFn;
+            onKeyPressed: cbFn => {
+                MySecuredField.onKeyPressedCallback = cbFn;
                 return MySecuredField;
             }
         };
@@ -312,10 +312,10 @@ describe('Testing CSFs setupSecuredField functionality', () => {
         MySecuredField.onAutoCompleteCallback(dummyObj);
         expect(myCSF.processAutoComplete).toHaveBeenCalledWith(dummyObj);
 
-        // onKeyDownCallback
-        expect(MySecuredField.onKeyDownCallback).not.toEqual(null);
+        // onKeyPressedCallback
+        expect(MySecuredField.onKeyPressedCallback).not.toEqual(null);
 
-        MySecuredField.onKeyDownCallback(dummyObjWithNumKey);
-        expect(myCSF.callbacks.onKeyDown).toHaveBeenCalledWith(dummyObj); // checking that numKey prop gets removed
+        MySecuredField.onKeyPressedCallback(dummyObjWithNumKey);
+        expect(myCSF.callbacks.onKeyPressed).toHaveBeenCalledWith(dummyObj); // checking that numKey prop gets removed
     });
 });

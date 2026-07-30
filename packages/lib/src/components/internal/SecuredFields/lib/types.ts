@@ -349,7 +349,7 @@ export interface SFPlaceholdersObject {
     [ENCRYPTED_PWD_FIELD]?: string;
 }
 
-export interface SFKeyDownObj {
+export interface SFKeyPressObj {
     fieldType: string;
     action: string;
 }

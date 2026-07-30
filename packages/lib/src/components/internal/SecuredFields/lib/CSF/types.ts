@@ -90,7 +90,7 @@ export interface CSFCallbacksConfig {
     onAdditionalSFConfig?: (callbackObj: object) => void;
     onAdditionalSFRemoved?: (callbackObj: object) => void;
     onTouchstartIOS?: (callbackObj: object) => void;
-    onKeyDown?: (callbackObj: object) => void;
+    onKeyPressed?: (callbackObj: object) => void;
 }
 
 export interface CSFStateObject {
