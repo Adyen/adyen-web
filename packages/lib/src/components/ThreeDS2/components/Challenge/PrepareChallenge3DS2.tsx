@@ -350,6 +350,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                     {...challengeData}
                     onActionHandled={this.props.onActionHandled}
                     onFormSubmit={this.onFormSubmit}
+                    usePasskeyIFrameAttributes={this.props.usePasskeyIFrameAttributes}
                 />
             );
         }
