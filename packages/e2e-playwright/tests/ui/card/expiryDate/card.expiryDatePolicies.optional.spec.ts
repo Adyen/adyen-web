@@ -46,12 +46,8 @@ test.describe('Test how Card Component handles optional expiryDate policy', () =
         await expect(card.expiryDateLabelText).toHaveText(DATE_LABEL);
         await expect(card.cvcLabelText).toHaveText(CVC_LABEL);
 
-        // Headless test seems to need time for UI reset to register on state
-        await page.waitForTimeout(500);
-
         // Card seen as invalid
-        cardValid = await page.evaluate('window.component.isValid');
-        await expect(cardValid).toEqual(false);
+        await page.waitForFunction(() => window['component'].isValid === false);
     });
 
     test.skip('#2 how securedFields responds', async ({ page, card }) => {
@@ -59,30 +55,21 @@ test.describe('Test how Card Component handles optional expiryDate policy', () =
 
         await card.goto(url);
         // Expect iframe's expiryDate (& cvc) input fields to have an aria-required attr set to true
-        let dateAriaRequired = await card.expiryDateInput.getAttribute('aria-required');
-        await expect(dateAriaRequired).toEqual('true');
-
-        let cvcAriaRequired = await card.cvcInput.getAttribute('aria-required');
-        await expect(cvcAriaRequired).toEqual('true');
+        await expect(card.expiryDateInput).toHaveAttribute('aria-required', 'true');
+        await expect(card.cvcInput).toHaveAttribute('aria-required', 'true');
 
         // Fill number to provoke (mock) binLookup response
         await card.typeCardNumber(REGULAR_TEST_CARD);
 
         // Expect iframe's expiryDate (& cvc) input fields to have an aria-required attr set to false
-        dateAriaRequired = await card.expiryDateInput.getAttribute('aria-required');
-        await expect(dateAriaRequired).toEqual('false');
-
-        cvcAriaRequired = await card.cvcInput.getAttribute('aria-required');
-        await expect(cvcAriaRequired).toEqual('false');
+        await expect(card.expiryDateInput).toHaveAttribute('aria-required', 'false');
+        await expect(card.cvcInput).toHaveAttribute('aria-required', 'false');
 
         // Clear number and see SF's aria-required reset
         await card.deleteCardNumber();
 
-        dateAriaRequired = await card.expiryDateInput.getAttribute('aria-required');
-        await expect(dateAriaRequired).toEqual('true');
-
-        cvcAriaRequired = await card.cvcInput.getAttribute('aria-required');
-        await expect(cvcAriaRequired).toEqual('true');
+        await expect(card.expiryDateInput).toHaveAttribute('aria-required', 'true');
+        await expect(card.cvcInput).toHaveAttribute('aria-required', 'true');
     });
 
     test('#3 validating fields first and then entering PAN should see errors cleared from both UI & state', async ({ page, card }) => {
@@ -151,17 +138,13 @@ test.describe('Test how Card Component handles optional expiryDate policy', () =
         await expect(card.expiryDateErrorElement).toHaveText(DATE_INVALID_ERROR);
 
         // Card seen as invalid
-        let cardValid = await page.evaluate('window.component.isValid');
+        const cardValid = await page.evaluate('window.component.isValid');
         await expect(cardValid).toEqual(false);
 
         // Delete erroneous date
         await card.deleteExpiryDate();
 
-        // Headless test seems to need time for UI reset to register on state
-        await page.waitForTimeout(500);
-
         // Card now seen as valid
-        cardValid = await page.evaluate('window.component.isValid');
-        await expect(cardValid).toEqual(true);
+        await page.waitForFunction(() => window['component'].isValid === true);
     });
 });
