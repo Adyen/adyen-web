@@ -95,15 +95,7 @@ const textOf = (element: HTMLElement) => element.textContent.replace(/\s+/g, ' '
  */
 const contentOf = (...parts: string[]) => new RegExp(`^${parts.join('\\s*')}$`);
 
-/**
- * In the filterable variant the `combobox` role sits on the filter input, so the collapsed button
- * (which holds the tags) is its parent element.
- */
-const getCollapsedButton = (): HTMLElement => {
-    const combobox = screen.getByRole('combobox');
-    // eslint-disable-next-line testing-library/no-node-access -- the filter input has no role of its own to scope tag queries to
-    return combobox.tagName === 'INPUT' ? combobox.parentElement : combobox;
-};
+const getCollapsedButton = (): HTMLElement => screen.getByTestId('dropdown-button');
 
 const getOption = (item: SelectItem) => screen.getByRole('option', { name: new RegExp(item.name) });
 
