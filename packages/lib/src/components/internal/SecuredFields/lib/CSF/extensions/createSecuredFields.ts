@@ -301,9 +301,9 @@ export function setupSecuredField(pItem: HTMLElement, cvcPolicy?: CVCPolicyType,
             .onAutoComplete((pFeedbackObj: SFFeedbackObj): void => {
                 this.processAutoComplete(pFeedbackObj);
             })
-            .onKeyDown((pFeedbackObj: SFFeedbackObj): void => {
+            .onKeyPressed((pFeedbackObj: SFFeedbackObj): void => {
                 const { numKey, ...rest } = pFeedbackObj;
-                this.callbacks.onKeyDown(rest);
+                this.callbacks.onKeyPressed(rest);
             });
 
         // Store reference to securedField in this.state (under fieldType)

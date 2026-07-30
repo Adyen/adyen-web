@@ -1,4 +1,4 @@
-import { h, TargetedKeyboardEvent } from 'preact';
+import { h } from 'preact';
 import UIElement from '../internal/UIElement/UIElement';
 import defaultProps from './defaultProps';
 import DropinComponent from '../../components/Dropin/components/DropinComponent';
@@ -234,14 +234,14 @@ class DropinElement extends UIElement<DropinConfiguration> implements IDropin {
         this.dropinRef.closeActivePaymentMethod();
     }
 
-    protected handleKeyDown(e: TargetedKeyboardEvent<HTMLInputElement> | KeyboardEvent) {
+    protected handleKeyPress(e: h.JSX.TargetedKeyboardEvent<HTMLInputElement> | KeyboardEvent) {
         if (e.key === 'Enter' || e.code === 'Enter') {
             // If the active element has role="radio", we're on a header in the PMList, in which case we don't want to validate the form, or, prevent the default behaviour
             const isPMHeader = document?.activeElement?.getAttribute('role') === 'radio';
             if (isPMHeader) {
                 return;
             }
-            super.handleKeyDown(e);
+            super.handleKeyPress(e);
         }
     }
 

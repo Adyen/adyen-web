@@ -59,13 +59,13 @@ const Modal = ({
     useEffect(() => {
         if (!modalContainerRef.current) return;
 
-        const suppressKeyDown = (event: KeyboardEvent) => {
+        const suppressKeyPress = (event: KeyboardEvent) => {
             if (event.key === 'Enter' || event.code === 'Enter') event.stopPropagation();
         };
 
-        modalContainerRef.current.addEventListener('keydown', suppressKeyDown, { capture: true });
+        modalContainerRef.current.addEventListener('keypress', suppressKeyPress, { capture: true });
         return () => {
-            modalContainerRef.current.removeEventListener('keydown', suppressKeyDown);
+            modalContainerRef.current.removeEventListener('keypress', suppressKeyPress);
         };
     }, [modalContainerRef.current]);
 

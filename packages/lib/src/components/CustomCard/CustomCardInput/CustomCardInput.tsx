@@ -34,7 +34,7 @@ interface SecuredFieldsProps {
     onConfigSuccess?: () => {};
     onChange: (data) => void;
     onSubmitAnalytics?: (event: AbstractAnalyticsEvent) => void;
-    handleKeyDown?: (event: KeyboardEvent) => void;
+    handleKeyPress?: (obj: KeyboardEvent) => void;
     onError?: () => {};
     onFieldValid?: () => {};
     onFocus?: (e) => {};
@@ -172,6 +172,7 @@ const extractPropsForSFP = (props: SecuredFieldsProps) => {
         brandsConfiguration: props.brandsConfiguration,
         clientKey: props.clientKey,
         forceCompat: props.forceCompat,
+        // countryCode: props.countryCode, // only used for korean cards when koreanAuthenticationRequired is true
         i18n: props.i18n,
         implementationType: props.implementationType,
         keypadFix: props.keypadFix,
@@ -184,12 +185,14 @@ const extractPropsForSFP = (props: SecuredFieldsProps) => {
         onAutoComplete: props.onAutoComplete,
         onBinValue: props.onBinValue,
         onBrand: props.onBrand,
+        // onChange // set directly
         onConfigSuccess: props.onConfigSuccess,
-        handleKeyDown: props.handleKeyDown,
+        handleKeyPress: props.handleKeyPress,
         onError: props.onError,
         onFieldValid: props.onFieldValid,
         onFocus: props.onFocus,
         onLoad: props.onLoad,
+        // render // set directly
         rootNode: props.rootNode,
         showWarnings: props.showWarnings,
         styles: props.styles,
