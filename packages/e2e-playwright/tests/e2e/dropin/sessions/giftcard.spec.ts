@@ -26,6 +26,8 @@ test.describe('Dropin - Sessions - GiftCards', () => {
             await giftCard.fillPin('123');
             await giftCard.redeem();
 
+            await expect(page.locator('.adyen-checkout__order-remaining-amount')).toBeVisible();
+
             const redeemedGiftCards = page.locator('.adyen-checkout__order-payment-methods-list');
             await toHaveScreenshot(redeemedGiftCards, browserName, 'redeemed-gift-cards.png', {
                 mask: [page.getByTestId('brand-image-wrapper')]
@@ -61,9 +63,13 @@ test.describe('Dropin - Sessions - GiftCards', () => {
 
         await page.getByRole('button', { name: 'Remove' }).click();
 
+        await expect(page.locator('.adyen-checkout__order-remaining-amount')).not.toBeVisible();
+
         const { paymentMethodDetailsLocator: cardAfterGiftCardRemoveLocator } = await dropinWithSession.selectNonStoredPaymentMethod('scheme');
         const cardAfterGiftCardRemove = new Card(page, cardAfterGiftCardRemoveLocator);
         await cardAfterGiftCardRemove.isComponentVisible();
+        await cardAfterGiftCardRemove.rootElement.click();
+
         await expect(cardAfterGiftCardRemove.payButton).toContainText('Pay $259.00');
     });
 });
