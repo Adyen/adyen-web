@@ -2,4 +2,4 @@
 '@adyen/adyen-web': patch
 ---
 
-Fixed: Postal code not being formatted for the configured country in partial billing address mode
+Fixed: US postal code validation & postal code formatting for partial billing address mode
