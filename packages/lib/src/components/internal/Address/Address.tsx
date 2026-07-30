@@ -50,17 +50,18 @@ export default function Address(props: Readonly<AddressProps>) {
     // The country the merchant configured must still be part of the form data for country dependent rules to be applied.
     const merchantCountry = (props.data as AddressData)?.country;
     const formSchema = merchantCountry && !requiredFieldsSchema.includes(COUNTRY) ? [...requiredFieldsSchema, COUNTRY] : requiredFieldsSchema;
+    const defaultData = useMemo<AddressData>(
+        () => (merchantCountry ? { ...props.data, country: merchantCountry.toUpperCase() } : (props.data)),
+        [props.data, merchantCountry]
+    );
 
     const { data, errors, valid, isValid, handleChangeFor, triggerValidation, setData, mergeData } = useForm<AddressData>({
         schema: formSchema,
-        defaultData: props.data,
+        defaultData,
         // Ensure any passed validation rules are merged with the default ones
         rules: { ...getAddressValidationRules(specifications), ...props.validationRules },
         formatters: addressFormatters
     });
-
-    const formattedCountry = data.country?.toUpperCase();
-    const dataWithCountry = useMemo(() => ({ ...data, country: formattedCountry }), [data, formattedCountry]);
 
     const setSearchData = useCallback(
         (selectedAddress: AddressData) => {
@@ -147,7 +148,7 @@ export default function Address(props: Readonly<AddressProps>) {
             const isOptional = optionalFields.includes(cur);
             const isRequired = requiredFields.includes(cur);
             const newValue = data[cur];
-            const initialValue = props.data[cur];
+            const initialValue = defaultData[cur];
             // recover default data values which are not requiredFields, or prefill with 'N/A'
             const fallbackValue = !isRequired && initialValue ? initialValue : FALLBACK_VALUE;
             const value = (isOptional && !newValue) || !isRequired ? fallbackValue : newValue;
@@ -169,7 +170,7 @@ export default function Address(props: Readonly<AddressProps>) {
                 key={fieldName}
                 allowedCountries={props.allowedCountries}
                 classNameModifiers={[...classNameModifiers, fieldName]}
-                data={dataWithCountry}
+                data={data}
                 errors={errors}
                 valid={valid}
                 fieldName={fieldName}
@@ -177,7 +178,7 @@ export default function Address(props: Readonly<AddressProps>) {
                 onBlur={handleChangeFor(fieldName, 'blur')}
                 onDropdownChange={handleChangeFor(fieldName, 'blur')}
                 specifications={specifications}
-                maxLength={getMaxLengthByFieldAndCountry(countrySpecificFormatters, fieldName, formattedCountry, true)}
+                maxLength={getMaxLengthByFieldAndCountry(countrySpecificFormatters, fieldName, data.country, true)}
                 trimOnBlur={true}
                 disabled={!enabledFields.includes(fieldName)}
                 addressType={addressType}

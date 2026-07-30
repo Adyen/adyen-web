@@ -342,6 +342,8 @@ describe('Address', () => {
             ${'US'}     | ${'1234599999999'} | ${'12345'}
             ${'BR'}     | ${'12345678999'}   | ${'12345678'}
             ${'PL'}     | ${'99-99999999'}   | ${'99-999'}
+            ${'us'}     | ${'1234599999999'} | ${'12345'}
+            ${'br'}     | ${'12345678999'}   | ${'12345678'}
         `('Format post code in partial address mode', ({ countryCode, raw, expected }) => {
             it(`should format the post code being typed for ${countryCode}, using the country from the merchant config`, async () => {
                 const user = userEvent.setup();
@@ -353,12 +355,22 @@ describe('Address', () => {
             });
         });
 
-        test('should regionalize the postal code label in partial address mode', async () => {
+        test('should regionalize the postal code label in partial address mode when the country is in lowercase', async () => {
             customRender(<Address data={{ country: 'us' }} specifications={PARTIAL_ADDRESS_SCHEMA} requiredFields={['postalCode']} />);
             expect(await screen.findByRole('textbox', { name: /Zip code/ })).toBeInTheDocument();
         });
 
-        test('should preselect the country in the country dropdown', async () => {
+        test('should emit an uppercased country when the merchant configures it in lowercase', async () => {
+            const onChangeMock = jest.fn();
+            customRender(
+                <Address data={{ country: 'us' }} specifications={PARTIAL_ADDRESS_SCHEMA} requiredFields={['postalCode']} onChange={onChangeMock} />
+            );
+            await waitFor(() =>
+                expect(onChangeMock).toHaveBeenCalledWith(expect.objectContaining({ data: expect.objectContaining({ country: 'US' }) }))
+            );
+        });
+
+        test('should preselect the country in the country dropdown when the country is in lowercase', async () => {
             customRender(<Address data={{ country: 'us' }} allowedCountries={['US', 'CA']} onChange={jest.fn()} />);
             expect(await screen.findByRole('combobox', { name: 'Country/Region' })).toHaveValue('United States');
         });
