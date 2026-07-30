@@ -1,6 +1,7 @@
 import { createRef, h, RefObject } from 'preact';
 import { Resources } from '../../../core/Context/Resources';
 import AdyenCheckoutError, { NETWORK_ERROR } from '../../../core/Errors/AdyenCheckoutError';
+import getOrderStatus from '../../../core/Services/order-status';
 import { hasOwnProperty } from '../../../utils/hasOwnProperty';
 import BaseElement from '../BaseElement/BaseElement';
 import PayButton from '../PayButton';
@@ -18,6 +19,7 @@ import type {
     ActionHandledReturnObject,
     CheckoutAdvancedFlowResponse,
     Order,
+    OrderStatus,
     PaymentAction,
     PaymentAmount,
     PaymentData,
@@ -257,6 +259,26 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
             return;
         }
 
+        if (this.props.onReview) {
+            const order = this.state.order ?? this.props.order;
+            const onReview = (orderStatus?: OrderStatus) => {
+                this.submitAnalytics(new AnalyticsLogEvent({ component: this.type, type: LogEventType.review, message: 'Review flow triggered' }));
+                this.props.onReview(this.data, this.elementRef, orderStatus);
+            };
+            if (order) {
+                void getOrderStatus({ clientKey: this.props.clientKey, loadingContext: this.props.loadingContext }, order)
+                    .then(orderStatus => onReview(orderStatus))
+                    .catch(() => onReview());
+                return;
+            }
+            onReview();
+            return;
+        }
+
+        this.executePaymentsCall();
+    }
+
+    public executePaymentsCall(): void {
         this.makePaymentsCall()
             .then(sanitizeResponse)
             .then(verifyPaymentDidNotFail)
@@ -510,7 +532,11 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
      */
     protected handleResponse(response: PaymentResponseData): void {
         if (response.action) {
-            this.elementRef.handleAction(response.action);
+            if (this.core.options?.onAction) {
+                this.core.options.onAction(this.core.createFromAction(response.action, { ...this.elementRef.props }));
+            } else {
+                this.elementRef.handleAction(response.action);
+            }
             return;
         }
 
@@ -606,7 +632,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
      * Get the payButton component for the current element
      */
     protected payButton = (props: PayButtonProps) => {
-        return <PayButton {...props} onClick={this.submit} />;
+        return <PayButton {...props} onClick={this.submit} showReview={!!this.props.onReview} />;
     };
 
     /**

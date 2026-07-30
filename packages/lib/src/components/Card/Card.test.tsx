@@ -11,6 +11,7 @@ import { AmountProvider } from '../../core/Context/AmountProvider';
 import { ICore } from '../../types';
 
 describe('Card', () => {
+    const core = setupCoreMock();
     describe('formatProps', function () {
         test('should not require a billingAddress if it is a stored card', () => {
             const core = setupCoreMock({
@@ -30,12 +31,12 @@ describe('Card', () => {
         });
 
         test('should format countryCode to lowerCase', () => {
-            const card = new CardElement(global.core, { countryCode: 'KR' });
+            const card = new CardElement(core, { countryCode: 'KR' });
             expect(card.props.countryCode).toEqual('kr');
         });
 
         test('should return false for showStoreDetailsCheckbox in case of zero-auto transaction, whilst preserving the original value of enableStoreDetail', () => {
-            const card = new CardElement(global.core, { amount: { value: 0, currency: 'eur' }, enableStoreDetails: true });
+            const card = new CardElement(core, { amount: { value: 0, currency: 'eur' }, enableStoreDetails: true });
             expect(card.props.enableStoreDetails).toEqual(true);
             expect(card.props.showStoreDetailsCheckbox).toEqual(false);
         });
@@ -119,11 +120,11 @@ describe('Card', () => {
     describe('payButton', () => {
         describe('Zero auth transaction', () => {
             const amount = { value: 0, currency: 'eur' };
-            const props = { amount, enableStoreDetails: true, i18n: global.i18n };
+            const props = { amount, enableStoreDetails: true, i18n: core.modules.i18n };
             const customRender = (ui: h.JSX.Element) => {
                 return render(
                     // @ts-ignore ignore
-                    <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+                    <CoreProvider i18n={core.modules.i18n} loadingContext="test" resources={core.modules.resources}>
                         <AmountProvider amount={amount} providerRef={createRef()}>
                             {ui}
                         </AmountProvider>
@@ -132,17 +133,43 @@ describe('Card', () => {
             };
 
             test('should show the label "Save details" for the regular card', async () => {
-                const card = new CardElement(global.core, props);
+                const card = new CardElement(core, props);
                 // @ts-ignore ignore
                 customRender(card.payButton());
                 expect(await screen.findByRole('button', { name: 'Save details' })).toBeTruthy();
             });
 
             test('should show the label "Confirm preauthorization" for the stored card', async () => {
-                const card = new CardElement(global.core, { ...props, storedPaymentMethodId: 'test', supportedShopperInteractions: ['Ecommerce'] });
+                const card = new CardElement(core, { ...props, storedPaymentMethodId: 'test', supportedShopperInteractions: ['Ecommerce'] });
                 // @ts-ignore ignore
                 customRender(card.payButton());
                 expect(await screen.findByRole('button', { name: 'Confirm preauthorization' })).toBeTruthy();
+            });
+        });
+
+        describe('onReview', () => {
+            const amount = { value: 1000, currency: 'USD' };
+            const customRender = (ui: h.JSX.Element) =>
+                render(
+                    <CoreProvider i18n={core.modules.i18n} loadingContext="test" resources={core.modules.resources}>
+                        <AmountProvider amount={amount} providerRef={createRef()}>
+                            {ui}
+                        </AmountProvider>
+                    </CoreProvider>
+                );
+
+            test('should show "Continue" when onReview is set', async () => {
+                const card = new CardElement(core, { amount, onReview: jest.fn() });
+                // @ts-ignore ignore
+                customRender(card.payButton());
+                expect(await screen.findByRole('button', { name: 'Continue' })).toBeTruthy();
+            });
+
+            test('should show the amount label when onReview is undefined', async () => {
+                const card = new CardElement(core, { amount, onReview: undefined });
+                // @ts-ignore ignore
+                customRender(card.payButton());
+                expect(await screen.findByRole('button', { name: 'Pay $10.00' })).toBeTruthy();
             });
         });
     });
@@ -254,9 +281,9 @@ describe('Card', () => {
     });
 
     describe('formatData', () => {
-        const i18n = global.i18n;
-        const resources = global.resources;
-        const srPanel = global.srPanel;
+        const i18n = core.modules.i18n;
+        const resources = core.modules.resources;
+        const srPanel = core.modules.srPanel;
 
         const props = { loadingContext: 'test', i18n, modules: { resources, srPanel } };
         const storedCardProps = { supportedShopperInteractions: ['Ecommerce'], storedPaymentMethodId: 'xxx' };
@@ -342,12 +369,12 @@ describe('Card', () => {
 
     describe('Test setting of configuration prop: koreanAuthenticationRequired', () => {
         test('Returns default value', () => {
-            const card = new CardElement(global.core, { configuration: {} });
+            const card = new CardElement(core, { configuration: {} });
             expect(card.props.configuration?.koreanAuthenticationRequired).toBe(undefined);
         });
 
         test('Returns configuration defined value', () => {
-            const card = new CardElement(global.core, { configuration: { koreanAuthenticationRequired: true } });
+            const card = new CardElement(core, { configuration: { koreanAuthenticationRequired: true } });
             expect(card.props.configuration?.koreanAuthenticationRequired).toBe(true);
         });
     });
@@ -370,7 +397,7 @@ describe('Card', () => {
         };
 
         test('Creates storedCard', () => {
-            const card = new CardElement(global.core, { ...regularStoredCardData });
+            const card = new CardElement(core, { ...regularStoredCardData });
             expect(card.props).not.toBe(undefined);
             expect(card.props.storedPaymentMethodId).toEqual('MUC44SHNG3M84H82');
         });
@@ -392,7 +419,7 @@ describe('Card', () => {
         };
 
         test('Creates storedCard from raw storedCardData, generating a storedPaymentMethodId along the way', () => {
-            const card = new CardElement(global.core, { ...rawStoredCardData });
+            const card = new CardElement(core, { ...rawStoredCardData });
             expect(card.props).not.toBe(undefined);
             expect(card.props.storedPaymentMethodId).toEqual('TBD44SHNG3M84H82');
         });
@@ -400,13 +427,13 @@ describe('Card', () => {
         test('Fails to create storedCard from raw storedCardData since card does not support "Ecommerce"', () => {
             rawStoredCardData.supportedShopperInteractions = ['ContAuth'];
             expect(() => {
-                new CardElement(global.core, { ...rawStoredCardData });
+                new CardElement(core, { ...rawStoredCardData });
             }).toThrow('You are trying to create a storedCard from a stored PM that does not support Ecommerce interactions');
         });
 
         test('Creates storedCard when cardData has no storedPaymentMethodId (which will actually result in rendering a regular card)', () => {
             delete rawStoredCardData.id;
-            const card = new CardElement(global.core, { ...rawStoredCardData });
+            const card = new CardElement(core, { ...rawStoredCardData });
             expect(card.props).not.toBe(undefined);
             expect(card.props.storedPaymentMethodId).toBe(undefined);
         });
@@ -416,8 +443,8 @@ describe('Card', () => {
         test('should send "rendered" event when the component is rendered', () => {
             const core = setupCoreMock();
             const card = new CardElement(core, {
-                i18n: global.i18n,
-                modules: { resources: global.resources }
+                i18n: core.modules.i18n,
+                modules: { resources: core.modules.resources }
             });
 
             render(card.render());
@@ -438,10 +465,10 @@ describe('Card', () => {
         test('should send "rendered" event flagging as stored payment method when stored card is rendered', () => {
             const core = setupCoreMock();
             const card = new CardElement(core, {
-                i18n: global.i18n,
+                i18n: core.modules.i18n,
                 oneClick: true,
                 brand: 'visa',
-                modules: { resources: global.resources }
+                modules: { resources: core.modules.resources }
             });
 
             render(card.render());
