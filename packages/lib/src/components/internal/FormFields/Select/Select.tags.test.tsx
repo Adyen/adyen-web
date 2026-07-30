@@ -95,7 +95,23 @@ const textOf = (element: HTMLElement) => element.textContent.replace(/\s+/g, ' '
  */
 const contentOf = (...parts: string[]) => new RegExp(`^${parts.join('\\s*')}$`);
 
-const getCollapsedButton = (): HTMLElement => screen.getByTestId('dropdown-button');
+/**
+ * In the non-filterable variant the collapsed button itself carries the `combobox` role, so it can be
+ * queried directly. The filterable variant is covered by `countOutsideList`.
+ */
+const getCollapsedButton = (): HTMLElement => screen.getByRole('combobox');
+
+/**
+ * In the filterable variant the `combobox` role sits on the filter input and its wrapper — the element
+ * holding the tags — has no role of its own. The list is always in the DOM, so comparing how often a
+ * text occurs in total against how often it occurs inside the `listbox` reveals whether the collapsed
+ * button renders it, without reaching into the DOM.
+ */
+const countOutsideList = (text: string): number => {
+    const total = screen.queryAllByText(text).length;
+    const insideList = within(screen.getByRole('listbox')).queryAllByText(text).length;
+    return total - insideList;
+};
 
 const getOption = (item: SelectItem) => screen.getByRole('option', { name: new RegExp(item.name) });
 
@@ -180,12 +196,10 @@ describe('Select with tags', () => {
         test('shows the tags of the selected option in the filterable variant', () => {
             renderTaggedSelect({ items: ITEMS, filterable: true, selectedValue: TWO_TAGS_ITEM.id });
 
-            const button = getCollapsedButton();
-
             expect(screen.getByRole('combobox')).toHaveValue(TWO_TAGS_ITEM.name);
-            expect(within(button).getByText(SUCCESS_TAG.label)).toBeInTheDocument();
-            expect(within(button).getByText(INFO_TAG.label)).toBeInTheDocument();
-            expect(textOf(button)).not.toContain(TWO_TAGS_ITEM.secondaryText);
+            expect(countOutsideList(SUCCESS_TAG.label)).toBe(1);
+            expect(countOutsideList(INFO_TAG.label)).toBe(1);
+            expect(countOutsideList(TWO_TAGS_ITEM.secondaryText)).toBe(0);
         });
 
         test('hides the tags of the filterable variant while the list is open', async () => {
@@ -193,10 +207,8 @@ describe('Select with tags', () => {
 
             await user.click(screen.getByRole('combobox'));
 
-            const button = getCollapsedButton();
-
-            expect(within(button).queryByText(SUCCESS_TAG.label)).not.toBeInTheDocument();
-            expect(within(button).queryByText(INFO_TAG.label)).not.toBeInTheDocument();
+            expect(countOutsideList(SUCCESS_TAG.label)).toBe(0);
+            expect(countOutsideList(INFO_TAG.label)).toBe(0);
         });
     });
 
