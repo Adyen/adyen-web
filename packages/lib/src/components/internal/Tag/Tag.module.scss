@@ -4,19 +4,20 @@
     display: inline-flex;
     align-items: center;
     padding: variable-generator.token(spacer-010) variable-generator.token(spacer-040);
-    border-radius: variable-generator.token(border-radius-s) !important;
     font-size: variable-generator.token(text-caption-font-size);
     font-weight: variable-generator.token(text-caption-stronger-font-weight);
     line-height: variable-generator.token(text-caption-line-height);
     white-space: nowrap;
 }
 
-.success {
+.tag.success {
+    border-radius: variable-generator.token(border-radius-s);
     background: variable-generator.token(color-background-success-weak);
     color: variable-generator.token(color-label-on-background-success-weak);
 }
 
-.info {
+.tag.info {
+    border-radius: variable-generator.token(border-radius-s);
     background: variable-generator.token(color-background-highlight-weak);
     color: variable-generator.token(color-label-on-background-highlight-weak);
 }
