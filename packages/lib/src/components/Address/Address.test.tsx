@@ -12,7 +12,7 @@ describe('Address standalone component', () => {
         expect(core.modules.analytics.sendAnalytics).toHaveBeenCalledWith({
             component: 'address',
             configData: {
-                onChange: 'function'
+                onChange: '<function>'
             },
             timestamp: expect.any(String),
             id: expect.any(String),

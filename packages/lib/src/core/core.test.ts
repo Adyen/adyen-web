@@ -190,6 +190,80 @@ describe('Core', () => {
         });
     });
 
+    describe('Checkout configuration analytics', () => {
+        let sendAnalyticsSpy: jest.SpyInstance;
+
+        beforeEach(() => {
+            sendAnalyticsSpy = jest.spyOn(Analytics.prototype, 'sendAnalytics').mockImplementation(() => {});
+        });
+
+        afterEach(() => {
+            sendAnalyticsSpy.mockRestore();
+        });
+
+        test('should send an "initialized" info event for the checkout with obfuscated config', async () => {
+            const checkout = new AdyenCheckout({
+                countryCode: 'US',
+                environment: 'test',
+                clientKey: 'test_123456',
+                translations: { 'en-US': { pay: 'Pay!' } },
+                onSubmit: jest.fn()
+            });
+
+            await checkout.initialize();
+
+            expect(sendAnalyticsSpy).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    component: 'checkout',
+                    type: 'initialized',
+                    configData: expect.objectContaining({
+                        environment: 'test',
+                        countryCode: 'US',
+                        clientKey: '<masked>',
+                        translations: '<masked>',
+                        onSubmit: '<function>'
+                    })
+                })
+            );
+        });
+
+        test('should report the raw merchant configuration and not the defaults applied internally', async () => {
+            const checkout = new AdyenCheckout({
+                countryCode: 'US',
+                environment: 'test',
+                clientKey: 'test_123456'
+            });
+
+            await checkout.initialize();
+
+            const initializedEvent = sendAnalyticsSpy.mock.calls
+                .map(([event]) => event)
+                .find(event => event.component === 'checkout' && event.type === 'initialized');
+
+            // showPayButton and exposeLibraryMetadata are applied via defaultProps, not set by the merchant
+            expect(initializedEvent.configData).not.toHaveProperty('showPayButton');
+            expect(initializedEvent.configData).not.toHaveProperty('exposeLibraryMetadata');
+        });
+
+        test('should send the checkout "initialized" event only once', async () => {
+            const checkout = new AdyenCheckout({ countryCode: 'US', environment: 'test', clientKey: 'test_123456' });
+            await checkout.initialize();
+
+            const initializedEvents = sendAnalyticsSpy.mock.calls.filter(([event]) => event.component === 'checkout' && event.type === 'initialized');
+            expect(initializedEvents).toHaveLength(1);
+        });
+
+        test('should not send the checkout "initialized" event again on update()', async () => {
+            const checkout = new AdyenCheckout({ countryCode: 'US', environment: 'test', clientKey: 'test_123456' });
+            await checkout.initialize();
+
+            await checkout.update({ countryCode: 'NL' });
+
+            const initializedEvents = sendAnalyticsSpy.mock.calls.filter(([event]) => event.component === 'checkout' && event.type === 'initialized');
+            expect(initializedEvents).toHaveLength(1);
+        });
+    });
+
     describe('Creating modules', () => {
         test('should create the modules when initializing on Advanced Flow', async () => {
             const checkout = new AdyenCheckout({ countryCode: 'US', environment: 'test', clientKey: 'test_123456' });

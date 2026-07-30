@@ -21,6 +21,7 @@ import type { PaymentAction, PaymentAmount, PaymentResponseData } from '../types
 import type { CoreConfiguration, ICore, AdditionalDetailsData, CoreModules } from './types';
 import type { UIElementProps } from '../components/internal/UIElement/types';
 import { AnalyticsLogEvent, LogEventType } from './Analytics/events/AnalyticsLogEvent';
+import { AnalyticsInfoEvent, InfoEventType } from './Analytics/events/AnalyticsInfoEvent';
 import CancelError from './Errors/CancelError';
 import { AnalyticsService } from './Analytics/AnalyticsService';
 import { AnalyticsEventQueue } from './Analytics/AnalyticsEventQueue';
@@ -39,6 +40,19 @@ class Core implements ICore {
     public cdnTranslationsUrl: string;
 
     private components: UIElement[] = [];
+
+    /**
+     * Raw configuration received by the constructor, before defaults are applied and values are
+     * normalized/merged (e.g. via setOptions or the session setup). Used to report the actual
+     * configuration set by the merchant to analytics.
+     */
+    private readonly initialConfiguration: CoreConfiguration;
+
+    /**
+     * Ensures the checkout configuration analytics event is only reported once per checkout instance,
+     * and not again when the configuration is updated via update().
+     */
+    private hasReportedCheckoutConfiguration = false;
 
     public static readonly metadata: { version: string; bundleType: string } = {
         version: LIBRARY_VERSION,
@@ -69,6 +83,8 @@ class Core implements ICore {
 
     constructor(props: CoreConfiguration) {
         assertConfigurationPropertiesAreValid(props);
+
+        this.initialConfiguration = { ...props };
 
         this.createFromAction = this.createFromAction.bind(this);
         this.update = this.update.bind(this);
@@ -111,8 +127,30 @@ class Core implements ICore {
         this.createCoreModules();
         this.assignLocaleToCore();
         void this.requestAnalyticsAttemptId();
+        this.reportCheckoutConfiguration();
         await this.requestTranslations();
         return this;
+    }
+
+    /**
+     * Sends an analytics 'initialized' event capturing the raw checkout configuration set by the merchant
+     * (before defaults are applied and values are normalized/merged).
+     * Sensitive fields are obfuscated before being sent. The event is dispatched only once per
+     * checkout instance (not on subsequent configuration updates) and is queued until the Analytics
+     * module has retrieved a checkoutAttemptId.
+     */
+    private reportCheckoutConfiguration(): void {
+        if (this.hasReportedCheckoutConfiguration) {
+            return;
+        }
+        this.hasReportedCheckoutConfiguration = true;
+
+        const event = new AnalyticsInfoEvent({
+            type: InfoEventType.Initialized,
+            component: 'checkout',
+            configData: this.initialConfiguration
+        });
+        this.modules.analytics.sendAnalytics(event);
     }
 
     private async initializeCore(): Promise<this> {
@@ -120,10 +158,9 @@ class Core implements ICore {
             return this.session
                 .setupSession(this.options)
                 .then(sessionResponse => {
-                    const { amount, shopperLocale, countryCode, paymentMethods, ...rest } = sessionResponse;
+                    const { amount, shopperLocale, countryCode, paymentMethods } = sessionResponse;
 
                     this.setOptions({
-                        ...rest,
                         amount: this.options.order ? this.options.order.remainingAmount : amount,
                         locale: this.options.locale || shopperLocale,
                         countryCode: this.options.countryCode || countryCode
@@ -339,7 +376,7 @@ class Core implements ICore {
      * @internal
      * Create or update the config object passed when AdyenCheckout is initialised (environment, clientKey, etc...)
      */
-    private setOptions = (options: CoreConfiguration): void => {
+    private readonly setOptions = (options: CoreConfiguration): void => {
         this.options = {
             ...this.options,
             ...options,
