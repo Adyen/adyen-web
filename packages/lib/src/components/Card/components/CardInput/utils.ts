@@ -204,13 +204,10 @@ export const CVC_AMEX_ERROR_KEYS: Record<string, string> = {
 /**
  * Resolve the correct (brand-aware) translation key for a CVC error code.
  * @param errorCode - the raw, untranslated CVC error key (e.g. 'cc.cvc.920')
- * @param brand - the current/detected card brand
+ * @param isAmex - whether the current/detected card brand is Amex
  */
-export function resolveCVCErrorKey(errorCode: string, brand: string): string {
-    if (brand === 'amex') {
-        return CVC_AMEX_ERROR_KEYS[errorCode] || errorCode;
-    }
-    return errorCode;
+export function resolveCVCErrorKey(errorCode: string, isAmex: boolean): string {
+    return (isAmex && CVC_AMEX_ERROR_KEYS[errorCode]) || errorCode;
 }
 
 export const mapDualBrandButtons = (

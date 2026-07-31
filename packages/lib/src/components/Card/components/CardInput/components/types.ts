@@ -55,7 +55,6 @@ export interface CardNumberProps {
 }
 
 export interface CVCProps {
-    brand?: string;
     className?: string;
     classNameModifiers?: string[];
     /**

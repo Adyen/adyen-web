@@ -9,7 +9,7 @@ jest.mock('../lib/CSF', () => {
 
 // typed any here because this tests is badly written and reaches into private members
 let sfp: any;
-let sfpRef: any;
+let sfpRef;
 
 const onError = jest.fn(() => {});
 const renderFn = jest.fn(() => null);
