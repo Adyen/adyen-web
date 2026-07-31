@@ -1,6 +1,13 @@
 import { AbstractAnalyticsEvent, AnalyticsEventCategory } from './AbstractAnalyticsEvent';
 import { mapErrorCodesForAnalytics } from '../utils';
 
+export type AnalyticsPaymentMethod<DisplayMode extends string = string> = {
+    paymentMethodType: string;
+    brands?: string[];
+    fundingSource?: 'debit' | 'credit' | 'prepaid';
+    displayMode: DisplayMode;
+};
+
 type AnalyticsInfoEventProps = {
     type: InfoEventType;
     component: string;
@@ -16,6 +23,8 @@ type AnalyticsInfoEventProps = {
     cdnUrl?: string;
     selectedValue?: string;
     presentedValues?: Array<string>;
+    availablePaymentMethods?: AnalyticsPaymentMethod[];
+    unavailablePaymentMethods?: AnalyticsPaymentMethod[];
 };
 
 export enum UiTarget {
@@ -70,7 +79,8 @@ export enum InfoEventType {
     OtpFailed = 'otpFailed',
     AddressSelectorClicked = 'addressSelectorClicked',
     AddressSelectorClosed = 'addressSelectorClosed',
-    AddressChanged = 'addressChanged'
+    AddressChanged = 'addressChanged',
+    PaymentListDisplayed = 'paymentListDisplayed'
 }
 
 export class AnalyticsInfoEvent extends AbstractAnalyticsEvent {
@@ -94,6 +104,8 @@ export class AnalyticsInfoEvent extends AbstractAnalyticsEvent {
     private readonly validationErrorCode?: string;
     private readonly validationErrorMessage?: string;
     private readonly presentedValues?: string[];
+    private readonly availablePaymentMethods?: AnalyticsPaymentMethod[];
+    private readonly unavailablePaymentMethods?: AnalyticsPaymentMethod[];
 
     /**
      *  Third party script URL's (e.g. Apple Pay)
@@ -116,6 +128,8 @@ export class AnalyticsInfoEvent extends AbstractAnalyticsEvent {
         if (props.validationErrorCode) this.validationErrorCode = props.validationErrorCode;
         if (props.validationErrorMessage) this.validationErrorMessage = props.validationErrorMessage;
         if (props.presentedValues) this.presentedValues = props.presentedValues;
+        if (props.availablePaymentMethods) this.availablePaymentMethods = props.availablePaymentMethods;
+        if (props.unavailablePaymentMethods) this.unavailablePaymentMethods = props.unavailablePaymentMethods;
         if (this.type === InfoEventType.rendered) {
             this.configData = this.createAnalyticsConfigData(props?.configData);
         }
