@@ -259,6 +259,40 @@ describe('Select', () => {
         });
     });
 
+    describe('combobox (filterable=true) click targets', () => {
+        const items = [
+            { name: 'Option 1', id: '1' },
+            { name: 'Option 2', id: '2' }
+        ];
+
+        //Since the chevron is a pseudo element, clicking the wrapper is equivalent
+        // eslint-disable-next-line testing-library/no-node-access
+        const getChevron = () => screen.getByRole('combobox').parentElement;
+
+        test('clicking the chevron opens the list and moves focus to the filter input', async () => {
+            renderSelect({ items, filterable: true, selectedValue: '1' });
+            await user.click(getChevron());
+            expect(screen.getByRole('combobox')).toHaveAttribute('aria-expanded', 'true');
+            expect(screen.getByRole('combobox')).toHaveFocus();
+        });
+
+        test('clicking the chevron of an open list closes it again', async () => {
+            renderSelect({ items, filterable: true, selectedValue: '1' });
+            await user.click(getChevron());
+            expect(screen.getByRole('combobox')).toHaveAttribute('aria-expanded', 'true');
+            await user.click(getChevron());
+            expect(screen.getByRole('combobox')).toHaveAttribute('aria-expanded', 'false');
+        });
+
+        test('clicking the filter input of an open list keeps it open', async () => {
+            renderSelect({ items, filterable: true, selectedValue: '1' });
+            const combobox = screen.getByRole('combobox');
+            await user.click(combobox);
+            await user.click(combobox);
+            expect(combobox).toHaveAttribute('aria-expanded', 'true');
+        });
+    });
+
     describe('selected option', () => {
         const items = [
             { name: 'Issuer 1', id: '1' },

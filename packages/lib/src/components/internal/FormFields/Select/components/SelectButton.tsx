@@ -64,19 +64,20 @@ function SelectButton(props: Readonly<SelectButtonProps>) {
     const textWhenListOpen = inputText ?? '';
     const displayInputText = showList ? textWhenListOpen : displayText;
 
-    const setFocus = (e: Event) => {
+    const handleClick = (e: Event) => {
         e.preventDefault();
-        if (document.activeElement === props.filterInputRef.current) {
-            if (!props.showList) {
-                props.toggleList(e);
-            }
-        } else if (props.filterInputRef.current) props.filterInputRef.current.focus();
+        props.filterInputRef.current?.focus();
+
+        // Clicking the input of an open list keeps it open
+        if (e.target === props.filterInputRef.current && props.showList) return;
+
+        props.toggleList(e);
     };
 
     // 1. If readonly we ignore the click action
-    // 2. If filterable we want to show the list and focus on the input
+    // 2. If filterable we want to toggle the list and focus on the input
     // 3. Otherwise we just toggle the list
-    const onClickHandler = readonly ? null : props.filterable ? setFocus : props.toggleList;
+    const onClickHandler = readonly ? null : props.filterable ? handleClick : props.toggleList;
 
     // check COWEB-1301 [Investigate] Drop-in Accessibility - ADA Compliance questions
     const currentSelectedItemId = active.id ? `listItem-${active.id}` : '';
