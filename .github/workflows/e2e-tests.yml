@@ -20,7 +20,7 @@ jobs:
       matrix:
         api-version: ${{ inputs.all-api-versions && fromJSON('["v69", "v70", "v71", "v72"]') || fromJSON('["v72"]') }}
         runner-browser: ["chromium", "firefox", "webkit"]
-        test-group: ["e2e", "ui"]
+        test-group: ["e2e", "ui", "a11y"]
     env:
       CHECKOUT_API_KEY: ${{secrets.ADYEN_CHECKOUT_API_KEY}}
       MERCHANT_ACCOUNT: ${{secrets.ADYEN_CHECKOUT_MERCHANT_ACCOUNT}}

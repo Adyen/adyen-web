@@ -22,10 +22,7 @@ test.describe('Custom Card - Dual branding reset', () => {
         // Single band holder visible
         await expect(customCard.singleBrandHolder).toBeVisible();
 
-        const brand = customCard.singleBrand;
-
-        const brandingIconSrc = await brand.getAttribute('src');
-        expect(brandingIconSrc).toContain('nocard.svg');
+        await expect(customCard.singleBrand).toHaveAttribute('src', /\/nocard\.svg$/);
     });
 
     test(
@@ -68,9 +65,7 @@ test.describe('Custom Card - Dual branding reset', () => {
             await page.waitForFunction(() => window['customCardSeparate'].data.paymentMethod.brand === undefined);
 
             // Check regEx recognises brand and sets it in the UI
-            const brand = customCard.singleBrand;
-            const brandingIconSrc = await brand.getAttribute('src');
-            expect(brandingIconSrc).toContain('visa.svg');
+            await expect(customCard.singleBrand).toHaveAttribute('src', /\/visa\.svg$/);
         }
     );
 
@@ -90,8 +85,6 @@ test.describe('Custom Card - Dual branding reset', () => {
         await page.waitForFunction(() => window['customCardSeparate'].data.paymentMethod.brand === 'visa');
 
         // Check brand is set in the UI
-        const brand = customCard.singleBrand;
-        const brandingIconSrc = await brand.getAttribute('src');
-        expect(brandingIconSrc).toContain('visa.svg');
+        await expect(customCard.singleBrand).toHaveAttribute('src', /\/visa\.svg$/);
     });
 });

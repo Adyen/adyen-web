@@ -175,7 +175,7 @@ export class GiftcardElement extends UIElement<GiftCardConfiguration> {
                     this.componentRef = ref;
                 }}
                 {...this.props}
-                handleKeyDown={this.handleKeyDown}
+                handleKeyPress={this.handleKeyPress}
                 showPayButton={this.props.showPayButton}
                 onChange={this.setState}
                 makeBalanceCheck={() => this.onBalanceCheck()}
