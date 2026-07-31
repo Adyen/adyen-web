@@ -108,11 +108,7 @@
 }
 
 .adyen-checkout__dropdown__button__tags {
-    display: flex;
-    align-items: center;
-    gap: variable-generator.token(spacer-020);
     margin-right: variable-generator.token(spacer-090);
-    flex-shrink: 0;
     max-width: 50%;
     overflow: hidden;
 }
@@ -230,10 +226,6 @@
 }
 
 .adyen-checkout__dropdown__element__tags {
-    display: flex;
-    align-items: center;
-    flex-shrink: 0;
-    gap: variable-generator.token(spacer-020);
     margin-left: variable-generator.token(spacer-040);
 
     &:not(:last-child) {

@@ -2,7 +2,7 @@ import { h, Fragment, Ref } from 'preact';
 import cx from 'classnames';
 import { SelectButtonElementProps, SelectButtonProps, SelectItem, SecondaryContentVariant } from '../types';
 import Img from '../../../Img';
-import { Tag } from '../../../Tag';
+import { TagList } from '../../../TagList';
 import { useMemo } from 'preact/hooks';
 import classnames from 'classnames';
 
@@ -37,18 +37,11 @@ function SelectButtonElement({ filterable, toggleButtonRef, showList, selectList
 }
 
 function SecondaryContent({ selected, variant }: Readonly<{ selected: SelectItem; variant: SecondaryContentVariant }>) {
+    if (!selected[variant]?.length) return null;
     switch (variant) {
         case SecondaryContentVariant.TAG:
-            if (!selected.tag?.length) return null;
-            return (
-                <div className="adyen-checkout__dropdown__button__tags">
-                    {selected.tag.map(tag => (
-                        <Tag key={tag.label} label={tag.label} variant={tag.variant} />
-                    ))}
-                </div>
-            );
+            return <TagList tags={selected.tag} className="adyen-checkout__dropdown__button__tags" />;
         case SecondaryContentVariant.SECONDARY_TEXT:
-            if (!selected.secondaryText) return null;
             return <span className="adyen-checkout__dropdown__button__secondary-text">{selected.secondaryText}</span>;
     }
 }
