@@ -266,8 +266,12 @@ describe('Select', () => {
         ];
 
         //Since the chevron is a pseudo element, clicking the wrapper is equivalent
-        // eslint-disable-next-line testing-library/no-node-access
-        const getChevron = () => screen.getByRole('combobox').parentElement;
+        const getChevron = (): HTMLElement => {
+            // eslint-disable-next-line testing-library/no-node-access
+            const wrapper = screen.getByRole('combobox').closest<HTMLElement>('.adyen-checkout__dropdown__button');
+            if (!wrapper) throw new Error('The dropdown button wrapper was not found');
+            return wrapper;
+        };
 
         test('clicking the chevron opens the list and moves focus to the filter input', async () => {
             renderSelect({ items, filterable: true, selectedValue: '1' });
