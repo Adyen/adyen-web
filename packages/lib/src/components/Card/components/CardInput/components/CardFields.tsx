@@ -85,6 +85,7 @@ export default function CardFields({
 
                 {hasCVC && (
                     <CVC
+                        brand={brand}
                         classNameModifiers={['col-50']}
                         errorCode={errors[ENCRYPTED_SECURITY_CODE]}
                         focused={focusedElement === ENCRYPTED_SECURITY_CODE}

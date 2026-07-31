@@ -333,7 +333,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
                     // CVC's error copy is brand-dependent (Amex vs. others), so resolve the brand-aware
                     // key here too - otherwise this errorI18n value (consumed by the SR-live-panel and
                     // the public state.errors.<field>.errorI18n API) would always report the non-Amex text.
-                    errorI18n: this.props.i18n.get(resolveCVCErrorKey(errorCode, this.state.brand === 'amex')),
+                    errorI18n: this.props.i18n.get(resolveCVCErrorKey(errorCode, this.state.brand)),
                     error: errorCode,
                     rootNode: this.rootNode,
                     ...(this.state.detectedUnsupportedBrands && { detectedBrands: this.state.detectedUnsupportedBrands })

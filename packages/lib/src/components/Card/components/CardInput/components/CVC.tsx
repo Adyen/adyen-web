@@ -17,6 +17,7 @@ import './CVC.scss';
 
 export default function CVC(props: Readonly<CVCProps>) {
     const {
+        brand,
         label,
         onFocusField = () => {},
         errorCode = '',
@@ -32,7 +33,7 @@ export default function CVC(props: Readonly<CVCProps>) {
     } = props;
     const { i18n } = useCoreContext();
 
-    const errorMessage = errorCode ? i18n.get(resolveCVCErrorKey(errorCode, frontCVC)) : '';
+    const errorMessage = errorCode ? i18n.get(resolveCVCErrorKey(errorCode, brand)) : '';
 
     const fieldClassnames = classNames(className, {
         'adyen-checkout__field__cvc': true,

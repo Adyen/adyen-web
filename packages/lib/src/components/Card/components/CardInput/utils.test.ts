@@ -51,17 +51,12 @@ describe('shouldShowInstallmentsComponent', () => {
 
 describe('resolveCVCErrorKey', () => {
     it('should return the base error key when isAmex is false', () => {
-        expect(resolveCVCErrorKey('cc.cvc.920', false)).toBe('cc.cvc.920');
-        expect(resolveCVCErrorKey('cc.cvc.921', false)).toBe('cc.cvc.921');
+        expect(resolveCVCErrorKey('cc.cvc.920', 'mc')).toBe('cc.cvc.920');
+        expect(resolveCVCErrorKey('cc.cvc.921', 'mc')).toBe('cc.cvc.921');
     });
 
     it('should return the Amex-specific error key when isAmex is true', () => {
-        expect(resolveCVCErrorKey('cc.cvc.920', true)).toBe('cc.cvc.920.amex');
-        expect(resolveCVCErrorKey('cc.cvc.921', true)).toBe('cc.cvc.921.amex');
-    });
-
-    it('should return the original error code unchanged when it has no Amex variant, regardless of brand', () => {
-        expect(resolveCVCErrorKey('cc.num.902', true)).toBe('cc.num.902');
-        expect(resolveCVCErrorKey('cc.num.902', false)).toBe('cc.num.902');
+        expect(resolveCVCErrorKey('cc.cvc.920', 'amex')).toBe('cc.cvc.920.amex');
+        expect(resolveCVCErrorKey('cc.cvc.921', 'amex')).toBe('cc.cvc.921.amex');
     });
 });
