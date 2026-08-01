@@ -175,6 +175,7 @@
     "field.invalid": "Campo inválido",
     "field.error.required": "Insira o %{label}",
     "field.error.invalid": "Insira um %{label} válido",
+    "field.error.invalidCharacters": "Alguns caracteres especiais não são permitidos; digite um %{label} válido",
     "error.giftcard.no-balance": "Este vale-presente tem saldo zero",
     "error.giftcard.card-error": "Não existe um vale-presente com esse número em nossos registros",
     "error.giftcard.currency-error": "Os vales-presente são válidos somente na moeda em que foram emitidos",

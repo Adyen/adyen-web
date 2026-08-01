@@ -175,6 +175,7 @@
     "field.invalid": "Campo non valido",
     "field.error.required": "Digita %{label}",
     "field.error.invalid": "Inserisci una %{label} valida",
+    "field.error.invalidCharacters": "Alcuni caratteri speciali non sono consentiti, immettere un %{label} valido",
     "error.giftcard.no-balance": "Questo buono regalo ha un saldo pari a zero",
     "error.giftcard.card-error": "Non abbiamo alcun buono regalo con questo numero nei nostri archivi",
     "error.giftcard.currency-error": "I buono regalo sono validi solo nella valuta in cui sono state emessi",

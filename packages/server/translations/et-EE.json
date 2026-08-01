@@ -175,6 +175,7 @@
     "field.invalid": "Väli ei sobi",
     "field.error.required": "Sisestage %{label}",
     "field.error.invalid": "Sisestage õige %{label}",
+    "field.error.invalidCharacters": "Mõned erimärgid ei ole lubatud, sisestage kehtiv %{label}",
     "error.giftcard.no-balance": "Selle kinkekaardi jääk on null",
     "error.giftcard.card-error": "Meie andmetes pole sellise numbriga kinkekaarti",
     "error.giftcard.currency-error": "Kinkekaardid kehtivad ainult valuutas, milles need väljastati",

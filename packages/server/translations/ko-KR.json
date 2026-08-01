@@ -175,6 +175,7 @@
     "field.invalid": "필드가 유효하지 않습니다",
     "field.error.required": "%{label} 입력",
     "field.error.invalid": "올바른 %{label} 입력",
+    "field.error.invalidCharacters": "일부 특수 문자는 사용할 수 없습니다. 유효한 %{label}을(를) 입력하세요.",
     "error.giftcard.no-balance": "이 기프트 카드에는 잔액이 없습니다",
     "error.giftcard.card-error": "이 기프트 카드 번호는 당사에 등록되어 있지 않습니다",
     "error.giftcard.currency-error": "기프트 카드는 발급된 통화로만 사용하실 수 있습니다",

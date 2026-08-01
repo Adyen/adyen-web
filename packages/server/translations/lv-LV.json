@@ -175,6 +175,7 @@
     "field.invalid": "Lauks nav derīgs",
     "field.error.required": "Ievadiet %{label}",
     "field.error.invalid": "Ievadiet derīgu %{label}",
+    "field.error.invalidCharacters": "Dažas speciālās rakstzīmes nav atļautas, lūdzu, ievadiet derīgu %{label}",
     "error.giftcard.no-balance": "Šai dāvanu kartei ir nulles atlikums",
     "error.giftcard.card-error": "Mūsu uzskaitē nav dāvanu kartes ar šo numuru",
     "error.giftcard.currency-error": "Dāvanu kartes ir derīgas tikai tajā valūtā, kurā tās ir izsniegtas",

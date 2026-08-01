@@ -175,6 +175,7 @@
     "field.invalid": "حقل غير صحيح",
     "field.error.required": "أدخل %{label}",
     "field.error.invalid": "أدخل علامة صحيحة %{label}",
+    "field.error.invalidCharacters": "بعض الأحرف الخاصة غير مسموح بها، يُرجى إدخال %{label} صالح",
     "error.giftcard.no-balance": "لا يوجد رصيد ببطاقة الهدايا هذه",
     "error.giftcard.card-error": "لا توجد بسجلاتنا بطاقة هدايا تحمل هذا الرقم",
     "error.giftcard.currency-error": "لا تسري بطاقات الهدايا إلا بالعملة التي صدرت بها",

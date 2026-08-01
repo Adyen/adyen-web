@@ -175,6 +175,7 @@
     "field.invalid": "Campo no válido",
     "field.error.required": "Introduzca: %{label}",
     "field.error.invalid": "Introduzca un valor válido en el campo: %{label}",
+    "field.error.invalidCharacters": "Algunos caracteres especiales no están permitidos, introduzca un %{label} válido.",
     "error.giftcard.no-balance": "Esta tarjeta regalo no tiene saldo",
     "error.giftcard.card-error": "No tenemos ninguna tarjeta regalo con este número en nuestros registros.",
     "error.giftcard.currency-error": "Las tarjetas regalo solo son válidas en la moneda en que fueron emitidas",

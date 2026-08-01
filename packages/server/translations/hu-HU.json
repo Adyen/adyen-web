@@ -175,6 +175,7 @@
     "field.invalid": "Érvénytelen mező",
     "field.error.required": "Adja meg a következőt: %{label}",
     "field.error.invalid": "Adja meg a következőt (érvényesnek kell lennie): %{label}",
+    "field.error.invalidCharacters": "Néhány speciális karakter nem engedélyezett, adjon meg egy érvényes %{label} elemet",
     "error.giftcard.no-balance": "Az ajándékkártya egyenlege nulla",
     "error.giftcard.card-error": "Nyilvántartásunkban nem szerepel ilyen számú ajándékkártya",
     "error.giftcard.currency-error": "Az ajándékkártyák csak abban a pénznemben érvényesek, amelyre kiállították azokat",
