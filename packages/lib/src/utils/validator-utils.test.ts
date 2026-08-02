@@ -40,6 +40,8 @@ describe('validateForSpecialChars', () => {
             expect(validateForSpecialChars('😀')).toBe(false);
             expect(validateForSpecialChars('🎉')).toBe(false);
             expect(validateForSpecialChars('❤️')).toBe(false);
+            expect(validateForSpecialChars('🇫🇷')).toBe(false);
+            expect(validateForSpecialChars('1️⃣')).toBe(false);
         });
 
         it('should return false for text containing emojis', () => {

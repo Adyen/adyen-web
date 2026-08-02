@@ -26,7 +26,7 @@ export const hasText = (input: string) => isString(input) && !isEmpty(input);
 let INVALID_CHARS_REGEX: RegExp;
 try {
     // This is inside a try/catch just in case the browser doesn't support Unicode property escapes
-    INVALID_CHARS_REGEX = new RegExp('[\\p{Extended_Pictographic}\\p{Cc}\\p{Cf}]', 'gu');
+    INVALID_CHARS_REGEX = new RegExp('(?:[\\p{Extended_Pictographic}\\p{Regional_Indicator}\\p{Cc}\\p{Cf}]|[0-9#*]\\uFE0F?\\u20E3)', 'gu');
 } catch {
     // Fallback for browsers without Unicode property escapes - just block control chars
     // eslint-disable-next-line no-control-regex
