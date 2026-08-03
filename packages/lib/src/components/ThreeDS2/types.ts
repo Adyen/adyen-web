@@ -38,6 +38,12 @@ interface ThreeDS2Configuration extends UIElementProps {
     token?: string;
     type?: string;
     challengeWindowSize?: ChallengeWindowSize;
+    /**
+     * @internal Visa Passkey only. Requires isMDFlow.
+     * When true, adds sandbox and allow attributes to the challenge iframe
+     * for WebAuthn credential creation/retrieval.
+     */
+    usePasskeyIFrameAttributes?: boolean;
 }
 
 export interface ThreeDS2DeviceFingerprintConfiguration extends ThreeDS2Configuration {
@@ -174,6 +180,12 @@ export type ThreeDS2ConfigProps = {
     readonly clientKey: string;
     readonly paymentMethodType: string;
     readonly challengeWindowSize?: ChallengeWindowSize;
+    /**
+     * @internal Visa Passkey only. Requires isMDFlow.
+     * When true, adds sandbox and allow attributes to the challenge iframe
+     * for WebAuthn credential creation/retrieval.
+     */
+    readonly usePasskeyIFrameAttributes?: boolean;
     readonly isMDFlow?: boolean;
     readonly modules?: {
         readonly analytics?: IAnalytics;
@@ -187,4 +199,4 @@ export type ThreeDS2ConfigProps = {
     readonly i18n?: Language;
 };
 
-export type ThreeDS2ActionProps = CardConfiguration & Pick<ThreeDS2ConfigProps, 'isMDFlow' | 'on3DS2RedirectFlowComplete'>;
+export type ThreeDS2ActionProps = CardConfiguration & Pick<ThreeDS2ConfigProps, 'isMDFlow' | 'on3DS2RedirectFlowComplete' | 'usePasskeyIFrameAttributes'>;
