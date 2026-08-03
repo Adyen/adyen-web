@@ -346,6 +346,60 @@ describe('Dropin', () => {
             );
         });
 
+        test('should report a backend instant payment method with the "instant" display mode', async () => {
+            const core = setupCoreMock({
+                paymentMethods: new PaymentMethods({
+                    paymentMethods: [
+                        { name: 'Google Pay', type: 'googlepay', configuration: { displayMode: 'instant' } },
+                        { name: 'AliPay', type: 'alipay', configuration: { displayMode: 'regular' } }
+                    ]
+                })
+            });
+
+            const dropin = new Dropin(core);
+            render(dropin.render());
+
+            await waitFor(() =>
+                expect(core.modules.analytics.sendAnalytics).toHaveBeenCalledWith(
+                    expect.objectContaining({
+                        type: InfoEventType.PaymentListDisplayed,
+                        component: 'dropin',
+                        unavailablePaymentMethods: [
+                            expect.objectContaining({ paymentMethodType: 'googlepay', displayMode: 'instant' }),
+                            expect.objectContaining({ paymentMethodType: 'alipay', displayMode: 'regular' })
+                        ]
+                    })
+                )
+            );
+        });
+
+        test('should report the backend display mode even when instantPaymentTypes says otherwise', async () => {
+            const core = setupCoreMock({
+                paymentMethods: new PaymentMethods({
+                    paymentMethods: [
+                        { name: 'Google Pay', type: 'googlepay', configuration: { displayMode: 'instant' } },
+                        { name: 'ApplePay', type: 'applepay', configuration: { displayMode: 'regular' } }
+                    ]
+                })
+            });
+
+            const dropin = new Dropin(core, { instantPaymentTypes: ['applepay'] });
+            render(dropin.render());
+
+            await waitFor(() =>
+                expect(core.modules.analytics.sendAnalytics).toHaveBeenCalledWith(
+                    expect.objectContaining({
+                        type: InfoEventType.PaymentListDisplayed,
+                        component: 'dropin',
+                        unavailablePaymentMethods: [
+                            expect.objectContaining({ paymentMethodType: 'googlepay', displayMode: 'instant' }),
+                            expect.objectContaining({ paymentMethodType: 'applepay', displayMode: 'regular' })
+                        ]
+                    })
+                )
+            );
+        });
+
         test('should not include PII fields on stored payment method entries on "ready" event', async () => {
             const core = setupCoreMock({
                 paymentMethods: new PaymentMethods({

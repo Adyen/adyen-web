@@ -32,6 +32,19 @@ import { handleOnPaymentCompleted, handleOnPaymentFailed } from '../../handlers'
 export async function initManual() {
     const paymentMethodsResponse = await getPaymentMethods({ amount, shopperLocale });
 
+    // Simulates the backend deciding the display mode, e.g. ?displayModeInstant=googlepay,applepay
+    const { displayModeInstant } = getSearchParameters(window.location.search);
+    if (displayModeInstant !== undefined) {
+        const instantTypes = displayModeInstant.split(',').filter(Boolean);
+        paymentMethodsResponse.paymentMethods = paymentMethodsResponse.paymentMethods.map(paymentMethod => ({
+            ...paymentMethod,
+            configuration: {
+                ...paymentMethod.configuration,
+                displayMode: instantTypes.includes(paymentMethod.type) ? 'instant' : 'regular'
+            }
+        }));
+    }
+
     window.checkout = await AdyenCheckout({
         amount,
         countryCode,

@@ -5,6 +5,7 @@ import type { ICore } from '../../core/types';
 
 import UIElement from '../internal/UIElement/UIElement';
 import { ComponentsMap } from '../components-map';
+import { DisplayMode } from './constants';
 
 /**
  * Available components
@@ -32,7 +33,7 @@ type NonMappedPaymentMethodsMap = {
 
 export type PaymentMethodsConfiguration = PaymentMethodsConfigurationMap & PaymentActionTypesMap & NonMappedPaymentMethodsMap;
 
-export type PaymentMethodDisplayMode = 'fastlane' | 'instant' | 'stored' | 'regular';
+export type PaymentMethodDisplayMode = (typeof DisplayMode)[keyof typeof DisplayMode];
 
 export type InstantPaymentTypes = 'paywithgoogle' | 'googlepay' | 'applepay';
 

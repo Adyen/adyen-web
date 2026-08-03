@@ -7,13 +7,12 @@ import createInstantPaymentElements from './elements/createInstantPaymentElement
 import { hasOwnProperty } from '../../utils/hasOwnProperty';
 import splitPaymentMethods from './elements/splitPaymentMethods';
 import { TxVariants } from '../tx-variants';
+import { SUPPORTED_INSTANT_PAYMENTS } from './constants';
 
 import type { DropinComponentProps, DropinConfiguration, InstantPaymentTypes, PaymentMethodsConfiguration } from './types';
 import type { PaymentAction, PaymentAmount, PaymentResponseData } from '../../types/global-types';
 import type { ICore } from '../../core/types';
 import type { IDropin } from './types';
-
-const SUPPORTED_INSTANT_PAYMENTS = ['paywithgoogle', 'googlepay', 'applepay'];
 
 class DropinElement extends UIElement<DropinConfiguration> implements IDropin {
     public static readonly type = TxVariants.dropin;
