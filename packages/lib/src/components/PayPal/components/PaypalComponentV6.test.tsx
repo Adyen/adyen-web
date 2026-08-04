@@ -120,7 +120,7 @@ describe('PayPalComponentV6', () => {
         expect(await screen.findByTestId('paypal-component')).toBeInTheDocument();
 
         void act(() => {
-            componentRef?.setStatus('processing' as UIElementStatus);
+            componentRef?.setStatus?.('processing' as UIElementStatus);
         });
 
         expect(screen.getByTestId('paypal-processing-spinner')).toBeInTheDocument();
@@ -139,7 +139,7 @@ describe('PayPalComponentV6', () => {
         expect(await screen.findByTestId('paypal-component')).toBeInTheDocument();
 
         void act(() => {
-            componentRef?.setStatus('processing' as UIElementStatus);
+            componentRef?.setStatus?.('processing' as UIElementStatus);
         });
 
         expect(screen.getByTestId('paypal-processing-spinner')).toHaveAttribute('data-with-review-page', 'false');

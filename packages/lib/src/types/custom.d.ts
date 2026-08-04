@@ -73,6 +73,10 @@ declare module 'preact' {
                 class?: VenmoButtonClass;
                 onclick(): void;
             };
+            'paypal-message': {
+                id?: string;
+                amount?: string;
+            };
         }
     }
 }
