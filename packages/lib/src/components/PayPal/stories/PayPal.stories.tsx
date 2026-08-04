@@ -25,7 +25,7 @@ export const Default: Story = {
             blockPayPalPayLaterButton: false,
             blockPayPalVenmoButton: false,
             onAuthorized: (data, actions) => {
-                console.log({ data });
+                console.log('PayPal onAuthorized data', { data });
                 actions.resolve();
             }
         }
@@ -33,7 +33,6 @@ export const Default: Story = {
 };
 
 export const PaypalV6: Story = {
-    tags: ['no-automated-visual-test'],
     render: ({ componentConfiguration, ...checkoutConfig }) => (
         <Checkout checkoutConfig={checkoutConfig}>
             {checkout => <ComponentContainer element={new Paypal(checkout, componentConfiguration)} />}
@@ -54,7 +53,7 @@ export const PaypalV6: Story = {
                 },
                 vault: false,
                 onAuthorized: (data, actions) => {
-                    console.log({ data });
+                    console.log('PaypalV6 onAuthorized data', { data });
                     actions.resolve();
                 }
             }
