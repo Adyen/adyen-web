@@ -23,11 +23,11 @@ export const Default: Story = {
         componentConfiguration: {
             blockPayPalCreditButton: false,
             blockPayPalPayLaterButton: false,
-            blockPayPalVenmoButton: false,
-            onAuthorized: (data, actions) => {
-                console.log({ data });
-                actions.resolve();
-            }
+            blockPayPalVenmoButton: false
+            // onAuthorized: (data, actions) => {
+            //     console.log({ data });
+            //     actions.resolve();
+            // }
         }
     }
 };

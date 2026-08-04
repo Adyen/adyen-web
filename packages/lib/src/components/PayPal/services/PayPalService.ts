@@ -2,8 +2,7 @@ import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 import type { PaymentAmount } from '../../../types';
 import { PayPalSdkLoader } from './PayPalSdkLoader';
 import type { PayPalComponents, PayPalEligiblePaymentMethods, PayPalPageTypes, PayPalPaymentFlow, PayPalSdkInstance } from '../paypal-js-types';
-// import requestPayPalOauthToken from './request-paypal-oauth-token';
-import requestFastlaneToken from '../../PayPalFastlane/services/request-fastlane-token';
+import requestPayPalOauthToken from './request-paypal-oauth-token';
 import { PayPalV6SupportedLocale } from '../utils/types';
 import { getSupportedLocalePayPalV6 } from '../utils/get-paypal-locale';
 
@@ -72,13 +71,11 @@ class PayPalService {
         }
 
         const isSdkLoaderLoadedPromise = this.sdkLoader.isSdkLoaded();
-        // TODO: enable this line again to use the paypal oauth token when the backend fix is done
-        // const tokenDataPromise = requestPayPalOauthToken(this.loadingContext, { clientKey: this.clientKey, merchantId: this.merchantId });
-        const tokenDataPromise = requestFastlaneToken(this.loadingContext, this.clientKey);
+        const tokenDataPromise = requestPayPalOauthToken(this.loadingContext, { clientKey: this.clientKey, merchantId: this.merchantId });
 
         this.loadingPromise = Promise.all([isSdkLoaderLoadedPromise, tokenDataPromise])
             .then(([_loadedSdk, tokenData]) => {
-                return tokenData.value;
+                return tokenData.clientToken;
             })
             .then(this.createPayPalSdkInstance)
             .then(this.createEligibleMethods);

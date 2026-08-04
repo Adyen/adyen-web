@@ -75,7 +75,7 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
             this.paypalService
                 .initialize()
                 .then(() => {
-                    if (paypalV6Props.onCreatePayPalMessages && this.paypalService) {
+                    if (paypalV6Props.onCreatePayPalMessages && this.paypalService?.getInstance()?.createPayPalMessages) {
                         paypalV6Props.onCreatePayPalMessages(this.paypalService.getInstance().createPayPalMessages);
                     }
                 })
