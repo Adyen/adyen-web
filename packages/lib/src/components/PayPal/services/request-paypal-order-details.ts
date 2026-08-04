@@ -1,12 +1,12 @@
-import { httpPost } from '../../../core/Services/http';
+import { httpGet } from '../../../core/Services/http';
 
 export type PayPalOrderDetailsData = {
     requestId: string;
-    shopperName: {
+    shopperName?: {
         firstName: string;
         lastName: string;
     };
-    billingAddress: {
+    billingAddress?: {
         street: string;
         houseNumberOrName: string;
         city: string;
@@ -14,7 +14,7 @@ export type PayPalOrderDetailsData = {
         stateOrProvince: string;
         country: string;
     };
-    deliveryAddress: {
+    deliveryAddress?: {
         street: string;
         houseNumberOrName: string;
         city: string;
@@ -31,7 +31,7 @@ function requestPayPalOrderDetails(
     { clientKey, merchantId, orderId }: { clientKey: string; merchantId?: string; orderId?: string }
 ): Promise<PayPalOrderDetailsData> {
     const path = `utility/v1/payPal/${merchantId}/orders/${orderId}?clientKey=${clientKey}`;
-    return httpPost<PayPalOrderDetailsData>({ loadingContext: url, path, errorLevel: 'fatal' }, { merchantId });
+    return httpGet<PayPalOrderDetailsData>({ loadingContext: url, path, errorLevel: 'fatal' });
 }
 
 export default requestPayPalOrderDetails;

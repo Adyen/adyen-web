@@ -23,11 +23,11 @@ export const Default: Story = {
         componentConfiguration: {
             blockPayPalCreditButton: false,
             blockPayPalPayLaterButton: false,
-            blockPayPalVenmoButton: false
-            // onAuthorized: (data, actions) => {
-            //     console.log({ data });
-            //     actions.resolve();
-            // }
+            blockPayPalVenmoButton: false,
+            onAuthorized: (data, actions) => {
+                console.log({ data });
+                actions.resolve();
+            }
         }
     }
 };
@@ -51,7 +51,11 @@ export const PaypalV6: Story = {
                         class: 'venmo-black'
                     }
                 },
-                vault: false
+                vault: false,
+                onAuthorized: (data, actions) => {
+                    console.log({ data });
+                    actions.resolve();
+                }
             }
         }
     }

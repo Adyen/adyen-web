@@ -30,6 +30,7 @@ import { PayPalSdkLoader } from './services/PayPalSdkLoader';
 import { PayPalService } from './services/PayPalService';
 import { PayPalComponentV6 } from './components/PaypalComponentV6';
 import './Paypal.scss';
+import requestPayPalOrderDetails from './services/request-paypal-order-details';
 
 class PaypalElement extends UIElement<PayPalConfiguration> {
     public static readonly type = TxVariants.paypal;
@@ -240,6 +241,8 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
     };
 
     private readonly handleOnApproveV6 = (data: PayPalV6OnApproveData): Promise<void> => {
+        const onAuthorized = this.props.usePayPalV6?.onAuthorized;
+
         let state: AdditionalDetailsData = {
             data: {
                 details: data,
@@ -261,8 +264,52 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
             };
         }
 
-        this.handleAdditionalDetails(state);
-        return Promise.resolve();
+        if ('vaultSetupToken' in data) {
+            const { vaultSetupToken, payerId, ...restData } = data;
+            state = {
+                data: {
+                    details: {
+                        vaultToken: vaultSetupToken,
+                        payerID: payerId,
+                        ...restData
+                    },
+                    paymentData: this.paymentData ?? undefined
+                }
+            };
+        }
+
+        if (!onAuthorized || !('orderId' in data)) {
+            this.handleAdditionalDetails(state);
+            return Promise.resolve();
+        }
+
+        return requestPayPalOrderDetails(this.props.loadingContext ?? '', {
+            clientKey: this.props.clientKey ?? '',
+            merchantId: this.props.configuration?.merchantId ?? '',
+            orderId: data.orderId
+        })
+            .then(res => {
+                this.setState({
+                    authorizedEvent: res.payPalOrder,
+                    ...(res.billingAddress && { billingAddress: res.billingAddress }),
+                    ...(res.deliveryAddress && { deliveryAddress: res.deliveryAddress }),
+                    ...(res.shopperName && { shopperName: res.shopperName })
+                });
+
+                return new Promise<void>((resolve, reject) =>
+                    onAuthorized(
+                        {
+                            authorizedEvent: res.payPalOrder,
+                            ...(res.billingAddress && { billingAddress: res.billingAddress }),
+                            ...(res.deliveryAddress && { deliveryAddress: res.deliveryAddress }),
+                            ...(res.shopperName && { shopperName: res.shopperName })
+                        },
+                        { resolve, reject }
+                    )
+                );
+            })
+            .then(() => this.handleAdditionalDetails(state))
+            .catch(error => this.handleError(new AdyenCheckoutError('ERROR', 'Something went wrong while fetching PayPal Order', { cause: error })));
     };
 
     handleResolve(token: string) {

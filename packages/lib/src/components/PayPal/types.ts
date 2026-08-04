@@ -17,6 +17,7 @@ import type {
     PayPalV6OnShippingAddressChangeData,
     PayPalV6OnShippingOptionsChangeData
 } from './paypal-js-types';
+import { PayPalOrderDetailsData } from './services/request-paypal-order-details';
 
 export interface PayPalConfiguration extends UIElementProps {
     /**
@@ -289,8 +290,12 @@ export interface PayPalConfiguration extends UIElementProps {
          * @param data - Contains the raw event from PayPal, along with the billingAddress and deliveryAddress parsed by Adyen based on the raw event data
          * @param actions - Used to indicate that payment flow must continue or must stop
          */
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        onAuthorized?: (data: any, actions: { resolve: () => void; reject: () => void }) => void;
+        onAuthorized?: (
+            data: Pick<PayPalOrderDetailsData, 'billingAddress' | 'deliveryAddress' | 'shopperName'> & {
+                authorizedEvent: PayPalOrderDetailsData['payPalOrder'];
+            },
+            actions: { resolve: () => void; reject: () => void }
+        ) => void;
         /**
          * Callback called to enable creating the PayPal messages component.
          * @param createPayPalMessages - Function to create the messages component
