@@ -5,11 +5,13 @@ import CancelError from '../../core/Errors/CancelError';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { PayPalService } from './services/PayPalService';
 import { PayPalSdkLoader } from './services/PayPalSdkLoader';
-import type { PayPalEligiblePaymentMethods } from './paypal-js-types';
+import requestPayPalOrderDetails from './services/request-paypal-order-details';
+import type { PayPalEligiblePaymentMethods, PayPalSdkInstance } from './paypal-js-types';
 import type { PayPalComponentV6Props } from './components/types';
 
 jest.mock('./services/PayPalService');
 jest.mock('./services/PayPalSdkLoader');
+jest.mock('./services/request-paypal-order-details');
 
 const mockPayPalComponentV6 = jest.fn();
 jest.mock('./components/PaypalComponentV6', () => ({
@@ -21,6 +23,7 @@ jest.mock('./components/PaypalComponentV6', () => ({
 
 const PayPalServiceMock = PayPalService as jest.MockedClass<typeof PayPalService>;
 const PayPalSdkLoaderMock = PayPalSdkLoader as jest.MockedClass<typeof PayPalSdkLoader>;
+const requestPayPalOrderDetailsMock = requestPayPalOrderDetails as jest.Mock;
 
 const core = setupCoreMock();
 
@@ -543,6 +546,99 @@ describe('Paypal', () => {
             });
         });
 
+        describe('onCreatePayPalMessages', () => {
+            const createPayPalMessagesMock = jest.fn();
+
+            const mockSdkInstance = (instance?: Partial<PayPalSdkInstance>) => {
+                PayPalServiceMock.prototype.getInstance.mockReturnValue(instance as PayPalSdkInstance);
+            };
+
+            test('should hand over the SDK createPayPalMessages function once the service is initialized', async () => {
+                mockSdkInstance({ createPayPalMessages: createPayPalMessagesMock });
+                const onCreatePayPalMessagesMock = jest.fn();
+
+                new Paypal(core, { usePayPalV6: { onCreatePayPalMessages: onCreatePayPalMessagesMock } });
+
+                expect(onCreatePayPalMessagesMock).not.toHaveBeenCalled();
+
+                await new Promise(resolve => setTimeout(resolve, 0));
+
+                expect(onCreatePayPalMessagesMock).toHaveBeenCalledTimes(1);
+                expect(onCreatePayPalMessagesMock).toHaveBeenCalledWith(createPayPalMessagesMock);
+            });
+
+            test('should not be called when the SDK instance does not expose createPayPalMessages', async () => {
+                mockSdkInstance({});
+                const onCreatePayPalMessagesMock = jest.fn();
+
+                new Paypal(core, { usePayPalV6: { onCreatePayPalMessages: onCreatePayPalMessagesMock } });
+
+                await new Promise(resolve => setTimeout(resolve, 0));
+
+                expect(onCreatePayPalMessagesMock).not.toHaveBeenCalled();
+            });
+
+            test('should not be called when there is no SDK instance', async () => {
+                mockSdkInstance(undefined);
+                const onCreatePayPalMessagesMock = jest.fn();
+
+                new Paypal(core, { usePayPalV6: { onCreatePayPalMessages: onCreatePayPalMessagesMock } });
+
+                await new Promise(resolve => setTimeout(resolve, 0));
+
+                expect(onCreatePayPalMessagesMock).not.toHaveBeenCalled();
+            });
+
+            test('should not read the SDK instance when the callback is not provided', async () => {
+                mockSdkInstance({ createPayPalMessages: createPayPalMessagesMock });
+
+                new Paypal(core, { usePayPalV6: {} });
+
+                await new Promise(resolve => setTimeout(resolve, 0));
+
+                expect(PayPalServiceMock.prototype.getInstance).not.toHaveBeenCalled();
+                expect(createPayPalMessagesMock).not.toHaveBeenCalled();
+            });
+
+            test('should not be called when the service fails to initialize', async () => {
+                mockSdkInstance({ createPayPalMessages: createPayPalMessagesMock });
+                PayPalServiceMock.prototype.initialize.mockRejectedValue(new Error('Failed to load token'));
+                const onCreatePayPalMessagesMock = jest.fn();
+                const onErrorMock = jest.fn();
+
+                new Paypal(core, { usePayPalV6: { onCreatePayPalMessages: onCreatePayPalMessagesMock }, onError: onErrorMock });
+
+                await new Promise(resolve => setTimeout(resolve, 0));
+
+                expect(onCreatePayPalMessagesMock).not.toHaveBeenCalled();
+                expect(onErrorMock).toHaveBeenCalledTimes(1);
+            });
+
+            test('should report the error via onError when the merchant callback throws', async () => {
+                mockSdkInstance({ createPayPalMessages: createPayPalMessagesMock });
+                const callbackError = new Error('Failed to render the messages component');
+                const onErrorMock = jest.fn();
+
+                new Paypal(core, {
+                    usePayPalV6: {
+                        onCreatePayPalMessages: () => {
+                            throw callbackError;
+                        }
+                    },
+                    onError: onErrorMock
+                });
+
+                await new Promise(resolve => setTimeout(resolve, 0));
+
+                expect(onErrorMock).toHaveBeenCalledTimes(1);
+                expect(onErrorMock.mock.calls[0][0]).toBeInstanceOf(AdyenCheckoutError);
+                expect(onErrorMock.mock.calls[0][0]).toMatchObject({
+                    message: 'Something went wrong while initializing PayPal',
+                    cause: callbackError
+                });
+            });
+        });
+
         describe('isAvailable', () => {
             test('should resolve without using the PayPal service when usePayPalV6 is not set', async () => {
                 const paypal = new Paypal(core);
@@ -622,18 +718,166 @@ describe('Paypal', () => {
                 });
             });
 
-            test('should forward the data as-is when there is no orderId (save payment flow)', async () => {
+            test('should remap vaultSetupToken/payerId to vaultToken/payerID when there is no orderId (save payment flow)', async () => {
                 const paypal = new Paypal(core, { usePayPalV6: {} });
                 paypal.paymentData = 'pd-v6';
                 // @ts-ignore spying on a protected method
                 const handleAdditionalDetailsSpy = jest.spyOn(paypal, 'handleAdditionalDetails').mockImplementation(() => paypal);
 
-                const data = { vaultSetupToken: 'vault-token-v6' } as any;
+                const data = { vaultSetupToken: 'vault-token-v6', payerId: 'payer-v6' } as any;
                 // @ts-ignore accessing private method
                 await paypal.handleOnApproveV6(data);
 
                 expect(handleAdditionalDetailsSpy).toHaveBeenCalledWith({
-                    data: { details: { vaultSetupToken: 'vault-token-v6' }, paymentData: 'pd-v6' }
+                    data: { details: { vaultToken: 'vault-token-v6', payerID: 'payer-v6' }, paymentData: 'pd-v6' }
+                });
+            });
+
+            test('should not request the order details when onAuthorized is not provided', async () => {
+                const paypal = new Paypal(core, { usePayPalV6: {} });
+                // @ts-ignore spying on a protected method
+                jest.spyOn(paypal, 'handleAdditionalDetails').mockImplementation(() => paypal);
+
+                // @ts-ignore accessing private method
+                await paypal.handleOnApproveV6({ orderId: 'order-v6' });
+
+                expect(requestPayPalOrderDetailsMock).not.toHaveBeenCalled();
+            });
+
+            test('should not request the order details when there is no orderId, even if onAuthorized is provided', async () => {
+                const onAuthorizedMock = jest.fn();
+                const paypal = new Paypal(core, { usePayPalV6: { onAuthorized: onAuthorizedMock } });
+                // @ts-ignore spying on a protected method
+                const handleAdditionalDetailsSpy = jest.spyOn(paypal, 'handleAdditionalDetails').mockImplementation(() => paypal);
+
+                // @ts-ignore accessing private method
+                await paypal.handleOnApproveV6({ vaultSetupToken: 'vault-token-v6' });
+
+                expect(requestPayPalOrderDetailsMock).not.toHaveBeenCalled();
+                expect(onAuthorizedMock).not.toHaveBeenCalled();
+                expect(handleAdditionalDetailsSpy).toHaveBeenCalledTimes(1);
+            });
+
+            describe('when onAuthorized is provided', () => {
+                const orderDetails = {
+                    requestId: 'request-id',
+                    shopperName: { firstName: 'John', lastName: 'Doe' },
+                    billingAddress: { street: 'Simon Carmiggeltstraat', city: 'Amsterdam', country: 'NL' },
+                    deliveryAddress: { street: 'Simon Carmiggeltstraat', city: 'Amsterdam', country: 'NL', firstName: 'John' },
+                    payPalOrder: { id: 'order-v6' }
+                };
+
+                beforeEach(() => {
+                    requestPayPalOrderDetailsMock.mockResolvedValue(orderDetails);
+                });
+
+                test('should request the order details using the loadingContext, clientKey, merchantId and orderId', async () => {
+                    const paypal = new Paypal(core, {
+                        usePayPalV6: { onAuthorized: jest.fn().mockImplementation((_data, { resolve }) => resolve()) },
+                        loadingContext: 'https://loading-context/',
+                        clientKey: 'test_client_key',
+                        configuration: { merchantId: 'merchant-1' }
+                    });
+                    // @ts-ignore spying on a protected method
+                    jest.spyOn(paypal, 'handleAdditionalDetails').mockImplementation(() => paypal);
+
+                    // @ts-ignore accessing private method
+                    await paypal.handleOnApproveV6({ orderId: 'order-v6' });
+
+                    expect(requestPayPalOrderDetailsMock).toHaveBeenCalledWith('https://loading-context/', {
+                        clientKey: 'test_client_key',
+                        merchantId: 'merchant-1',
+                        orderId: 'order-v6'
+                    });
+                });
+
+                test('should set the state and call onAuthorized with the parsed order details', async () => {
+                    const onAuthorizedMock = jest.fn().mockImplementation((_data, { resolve }) => resolve());
+                    const paypal = new Paypal(core, { usePayPalV6: { onAuthorized: onAuthorizedMock } });
+                    // @ts-ignore spying on a protected method
+                    jest.spyOn(paypal, 'handleAdditionalDetails').mockImplementation(() => paypal);
+
+                    // @ts-ignore accessing private method
+                    await paypal.handleOnApproveV6({ orderId: 'order-v6' });
+
+                    const expectedData = {
+                        authorizedEvent: orderDetails.payPalOrder,
+                        billingAddress: orderDetails.billingAddress,
+                        deliveryAddress: orderDetails.deliveryAddress,
+                        shopperName: orderDetails.shopperName
+                    };
+
+                    expect(onAuthorizedMock).toHaveBeenCalledWith(
+                        expectedData,
+                        expect.objectContaining({ resolve: expect.any(Function), reject: expect.any(Function) })
+                    );
+                    expect(paypal.state).toMatchObject(expectedData);
+                });
+
+                test('should omit the addresses and the shopper name when they are not returned', async () => {
+                    requestPayPalOrderDetailsMock.mockResolvedValue({ requestId: 'request-id', payPalOrder: { id: 'order-v6' } });
+                    const onAuthorizedMock = jest.fn().mockImplementation((_data, { resolve }) => resolve());
+                    const paypal = new Paypal(core, { usePayPalV6: { onAuthorized: onAuthorizedMock } });
+                    // @ts-ignore spying on a protected method
+                    jest.spyOn(paypal, 'handleAdditionalDetails').mockImplementation(() => paypal);
+
+                    // @ts-ignore accessing private method
+                    await paypal.handleOnApproveV6({ orderId: 'order-v6' });
+
+                    expect(onAuthorizedMock).toHaveBeenCalledWith({ authorizedEvent: { id: 'order-v6' } }, expect.anything());
+                });
+
+                test('should call handleAdditionalDetails once onAuthorized resolves', async () => {
+                    const onAuthorizedMock = jest.fn().mockImplementation((_data, { resolve }) => resolve());
+                    const paypal = new Paypal(core, { usePayPalV6: { onAuthorized: onAuthorizedMock } });
+                    paypal.paymentData = 'pd-v6';
+                    // @ts-ignore spying on a protected method
+                    const handleAdditionalDetailsSpy = jest.spyOn(paypal, 'handleAdditionalDetails').mockImplementation(() => paypal);
+
+                    // @ts-ignore accessing private method
+                    await paypal.handleOnApproveV6({ orderId: 'order-v6', payerId: 'payer-v6' });
+
+                    expect(handleAdditionalDetailsSpy).toHaveBeenCalledWith({
+                        data: { details: { orderID: 'order-v6', payerID: 'payer-v6' }, paymentData: 'pd-v6' }
+                    });
+                });
+
+                test('should report the error and skip handleAdditionalDetails when onAuthorized rejects', async () => {
+                    const onErrorMock = jest.fn();
+                    const onAuthorizedMock = jest.fn().mockImplementation((_data, { reject }) => reject());
+                    const paypal = new Paypal(core, { usePayPalV6: { onAuthorized: onAuthorizedMock }, onError: onErrorMock });
+                    // @ts-ignore spying on a protected method
+                    const handleAdditionalDetailsSpy = jest.spyOn(paypal, 'handleAdditionalDetails').mockImplementation(() => paypal);
+
+                    // @ts-ignore accessing private method
+                    await paypal.handleOnApproveV6({ orderId: 'order-v6' });
+
+                    expect(handleAdditionalDetailsSpy).not.toHaveBeenCalled();
+                    expect(onErrorMock).toHaveBeenCalledTimes(1);
+                    expect(onErrorMock.mock.calls[0][0]).toBeInstanceOf(AdyenCheckoutError);
+                    expect(onErrorMock.mock.calls[0][0]).toMatchObject({ message: 'Something went wrong while fetching PayPal Order' });
+                });
+
+                test('should report the error and skip handleAdditionalDetails when the order details request fails', async () => {
+                    const requestError = new Error('Order details fetch failed');
+                    requestPayPalOrderDetailsMock.mockRejectedValue(requestError);
+                    const onErrorMock = jest.fn();
+                    const onAuthorizedMock = jest.fn();
+                    const paypal = new Paypal(core, { usePayPalV6: { onAuthorized: onAuthorizedMock }, onError: onErrorMock });
+                    // @ts-ignore spying on a protected method
+                    const handleAdditionalDetailsSpy = jest.spyOn(paypal, 'handleAdditionalDetails').mockImplementation(() => paypal);
+
+                    // @ts-ignore accessing private method
+                    await paypal.handleOnApproveV6({ orderId: 'order-v6' });
+
+                    expect(onAuthorizedMock).not.toHaveBeenCalled();
+                    expect(handleAdditionalDetailsSpy).not.toHaveBeenCalled();
+                    expect(onErrorMock).toHaveBeenCalledTimes(1);
+                    expect(onErrorMock.mock.calls[0][0]).toBeInstanceOf(AdyenCheckoutError);
+                    expect(onErrorMock.mock.calls[0][0]).toMatchObject({
+                        message: 'Something went wrong while fetching PayPal Order',
+                        cause: requestError
+                    });
                 });
             });
         });
