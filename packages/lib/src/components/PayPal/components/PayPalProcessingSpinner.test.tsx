@@ -16,19 +16,19 @@ const renderWithCoreProvider = (ui: h.JSX.Element) => {
 
 describe('PayPalProcessingSpinner', () => {
     test('should render the spinner inside the processing status container', () => {
-        renderWithCoreProvider(<PayPalProcessingSpinner withReviewPage={false} />);
+        renderWithCoreProvider(<PayPalProcessingSpinner withoutReviewPage={false} />);
 
         expect(screen.getByTestId('spinner')).toBeInTheDocument();
     });
 
     test('should show the processing payment message when there is no review page', () => {
-        renderWithCoreProvider(<PayPalProcessingSpinner withReviewPage={true} />);
+        renderWithCoreProvider(<PayPalProcessingSpinner withoutReviewPage={true} />);
 
         expect(screen.getByText(core.modules.i18n.get('paypal.processingPayment'))).toBeInTheDocument();
     });
 
     test('should not show the processing payment message when there is a review page', () => {
-        renderWithCoreProvider(<PayPalProcessingSpinner withReviewPage={false} />);
+        renderWithCoreProvider(<PayPalProcessingSpinner withoutReviewPage={false} />);
 
         expect(screen.queryByText(core.modules.i18n.get('paypal.processingPayment'))).not.toBeInTheDocument();
     });

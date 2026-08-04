@@ -507,6 +507,26 @@ describe('Paypal', () => {
                 expect(PayPalServiceMock).toHaveBeenCalledWith(expect.objectContaining({ vault: false }));
             });
 
+            test('should pass the paypal and venmo components to the PayPal service by default', () => {
+                new Paypal(core, { usePayPalV6: {} });
+
+                expect(PayPalServiceMock).toHaveBeenCalledWith(expect.objectContaining({ components: ['paypal-payments', 'venmo-payments'] }));
+            });
+
+            test('should not pass the venmo component to the PayPal service when the venmo button is blocked', () => {
+                new Paypal(core, { usePayPalV6: { blockPayPalVenmoButton: true } });
+
+                expect(PayPalServiceMock).toHaveBeenCalledWith(expect.objectContaining({ components: ['paypal-payments'] }));
+            });
+
+            test('should pass the messages component to the PayPal service when onCreatePayPalMessages is provided', () => {
+                new Paypal(core, { usePayPalV6: { onCreatePayPalMessages: jest.fn() } });
+
+                expect(PayPalServiceMock).toHaveBeenCalledWith(
+                    expect.objectContaining({ components: ['paypal-payments', 'venmo-payments', 'paypal-messages'] })
+                );
+            });
+
             test('should not create the SDK loader or PayPal service when usePayPalV6 is not set', () => {
                 new Paypal(core);
 

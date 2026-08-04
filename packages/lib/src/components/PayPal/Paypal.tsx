@@ -11,6 +11,7 @@ import type { AdditionalDetailsData, ICore } from '../../core/types';
 import type { PaymentAction, PaymentResponseData } from '../../types/global-types';
 import type { Intent, PayPalConfiguration } from './types';
 import type {
+    PayPalComponents,
     PayPalOnApproveActions,
     PayPalOnApproveData,
     PayPalOnShippingAddressChangeActions,
@@ -43,51 +44,71 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
 
     protected static readonly defaultProps = defaultProps;
 
-    private readonly paypalService?: PayPalService;
+    private paypalService?: PayPalService;
 
     constructor(checkout: ICore, props?: PayPalConfiguration) {
         super(checkout, props);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleOnShippingAddressChange = this.handleOnShippingAddressChange.bind(this);
         this.handleOnShippingOptionsChange = this.handleOnShippingOptionsChange.bind(this);
+        this.handleOnApprove = this.handleOnApprove.bind(this);
+        this.handleOnShippingAddressChangeV6 = this.handleOnShippingAddressChangeV6.bind(this);
+        this.handleOnShippingOptionsChangeV6 = this.handleOnShippingOptionsChangeV6.bind(this);
+        this.handleOnApproveV6 = this.handleOnApproveV6.bind(this);
+        this.initializePayPalV6 = this.initializePayPalV6.bind(this);
 
         if (this.props.usePayPalV6) {
-            const paypalV6Props = this.props.usePayPalV6;
-
-            const sdkLoader = new PayPalSdkLoader({
-                analytics: this.analytics,
-                environment: this.props.environment,
-                nonce: paypalV6Props.nonce
-            });
-
-            this.paypalService = new PayPalService({
-                sdkLoader,
-                loadingContext: this.props.loadingContext ?? '',
-                clientKey: this.props.clientKey ?? '',
-                merchantId: this.props.configuration?.merchantId ?? '',
-                countryCode: this.props.countryCode ?? '',
-                amount: this.props.amount,
-                vault: Boolean(paypalV6Props.vault),
-                locale: paypalV6Props.locale,
-                pageType: paypalV6Props.pageType,
-                environment: this.props.environment
-            });
-
-            this.paypalService
-                .initialize()
-                .then(() => {
-                    if (paypalV6Props.onCreatePayPalMessages && this.paypalService?.getInstance()?.createPayPalMessages) {
-                        paypalV6Props.onCreatePayPalMessages(this.paypalService.getInstance().createPayPalMessages);
-                    }
-                })
-                .catch(error => {
-                    this.handleError(
-                        error instanceof AdyenCheckoutError
-                            ? error
-                            : new AdyenCheckoutError('ERROR', 'Something went wrong while initializing PayPal', { cause: error })
-                    );
-                });
+            this.initializePayPalV6();
         }
+    }
+
+    private initializePayPalV6() {
+        const paypalV6Props = this.props.usePayPalV6;
+
+        const sdkLoader = new PayPalSdkLoader({
+            analytics: this.analytics,
+            environment: this.props.environment,
+            nonce: paypalV6Props?.nonce
+        });
+
+        const components: PayPalComponents = ['paypal-payments'];
+
+        if (!this.props?.usePayPalV6?.blockPayPalVenmoButton) {
+            components.push('venmo-payments');
+        }
+
+        if (this.props?.usePayPalV6?.onCreatePayPalMessages) {
+            components.push('paypal-messages');
+        }
+
+        this.paypalService = new PayPalService({
+            sdkLoader,
+            loadingContext: this.props.loadingContext ?? '',
+            clientKey: this.props.clientKey ?? '',
+            merchantId: this.props.configuration?.merchantId ?? '',
+            countryCode: this.props.countryCode ?? '',
+            amount: this.props.amount,
+            vault: Boolean(paypalV6Props?.vault),
+            locale: paypalV6Props?.locale,
+            pageType: paypalV6Props?.pageType,
+            environment: this.props.environment,
+            components
+        });
+
+        this.paypalService
+            .initialize()
+            .then(() => {
+                if (paypalV6Props?.onCreatePayPalMessages && this.paypalService?.getInstance()?.createPayPalMessages) {
+                    paypalV6Props.onCreatePayPalMessages(this.paypalService.getInstance().createPayPalMessages);
+                }
+            })
+            .catch(error => {
+                this.handleError(
+                    error instanceof AdyenCheckoutError
+                        ? error
+                        : new AdyenCheckoutError('ERROR', 'Something went wrong while initializing PayPal', { cause: error })
+                );
+            });
     }
 
     public override async isAvailable(): Promise<void> {
@@ -199,7 +220,7 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
         return true;
     }
 
-    private readonly handleOnApprove = (data: PayPalOnApproveData, actions: PayPalOnApproveActions): Promise<void> => {
+    private handleOnApprove(data: PayPalOnApproveData, actions: PayPalOnApproveActions): Promise<void> {
         const { onAuthorized } = this.props;
         const state = { data: { details: data, paymentData: this.paymentData ?? undefined } };
 
@@ -238,9 +259,16 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
             })
             .then(() => this.handleAdditionalDetails(state))
             .catch(error => this.handleError(new AdyenCheckoutError('ERROR', 'Something went wrong while parsing PayPal Order', { cause: error })));
-    };
+    }
 
-    private readonly handleOnApproveV6 = (data: PayPalV6OnApproveData): Promise<void> => {
+    /**
+     * Handles the PayPal SDK v6 'onApprove' event. The shape of the data depends on which session type was started:
+     * a one-time payment session returns an 'orderId', whereas a save payment session (zero-auth) returns a
+     * 'vaultSetupToken'.
+     *
+     * @param data - Approve data from the PayPal SDK
+     */
+    private handleOnApproveV6(data: PayPalV6OnApproveData): Promise<void> {
         const onAuthorized = this.props.usePayPalV6?.onAuthorized;
 
         let state: AdditionalDetailsData = {
@@ -250,6 +278,8 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
             }
         };
 
+        // 'orderId' is only present when the shopper approved a one-time payment session, meaning an actual
+        // PayPal order was created. The SDK v6 keys are remapped to the casing expected by the /payments/details API.
         if ('orderId' in data) {
             const { orderId, payerId, ...restData } = data;
             state = {
@@ -264,6 +294,8 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
             };
         }
 
+        // 'vaultSetupToken' is only present when the shopper approved a save payment session (zero-auth
+        // tokenization). No PayPal order exists in this flow, so the vault token is sent instead of an order id.
         if ('vaultSetupToken' in data) {
             const { vaultSetupToken, payerId, ...restData } = data;
             state = {
@@ -278,6 +310,8 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
             };
         }
 
+        // The order details can only be fetched for a one-time payment session, since the save payment session
+        // does not create a PayPal order. Therefore 'onAuthorized' is skipped in the zero-auth flow.
         if (!onAuthorized || !('orderId' in data)) {
             this.handleAdditionalDetails(state);
             return Promise.resolve();
@@ -310,7 +344,7 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
             })
             .then(() => this.handleAdditionalDetails(state))
             .catch(error => this.handleError(new AdyenCheckoutError('ERROR', 'Something went wrong while fetching PayPal Order', { cause: error })));
-    };
+    }
 
     handleResolve(token: string) {
         if (!this.resolve) return this.handleError(new AdyenCheckoutError('ERROR', ERRORS.WRONG_INSTANCE));

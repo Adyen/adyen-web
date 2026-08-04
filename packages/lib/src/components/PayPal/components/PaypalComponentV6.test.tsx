@@ -11,8 +11,8 @@ jest.mock('./PayPalPayLaterButton', () => ({ PayPalPayLaterButton: () => <div da
 jest.mock('./PayPalCreditButton', () => ({ PayPalCreditButton: () => <div data-testid="paypal-credit-button" /> }));
 jest.mock('./VenmoButton', () => ({ VenmoButton: () => <div data-testid="venmo-button" /> }));
 jest.mock('./PayPalProcessingSpinner', () => ({
-    PayPalProcessingSpinner: ({ withReviewPage }: Readonly<{ withReviewPage: boolean }>) => (
-        <div data-testid="paypal-processing-spinner" data-with-review-page={String(withReviewPage)} />
+    PayPalProcessingSpinner: ({ withoutReviewPage }: Readonly<{ withoutReviewPage: boolean }>) => (
+        <div data-testid="paypal-processing-spinner" data-with-review-page={String(withoutReviewPage)} />
     )
 }));
 

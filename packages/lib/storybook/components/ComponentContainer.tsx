@@ -12,7 +12,7 @@ interface IContainer {
 export const ComponentContainer = ({ element, id = 'component-root' }: Readonly<IContainer>) => {
     const container = useRef(null);
     const [errorMessage, setErrorMessage] = useState(null);
-    const [isAvailable, setIsAvailable] = useState(false);
+    const [isAvailableCheckDone, setIsAvailableCheckDone] = useState(false);
 
     useEffect(() => {
         if (!element) return;
@@ -23,16 +23,17 @@ export const ComponentContainer = ({ element, id = 'component-root' }: Readonly<
             element
                 .isAvailable()
                 .then(() => {
-                    setIsAvailable(true);
+                    setIsAvailableCheckDone(true);
                     if (container.current) {
                         element.mount(container.current);
                     }
                 })
                 .catch(error => {
+                    setIsAvailableCheckDone(true);
                     setErrorMessage(error.toString());
                 });
         } else {
-            setIsAvailable(true);
+            setIsAvailableCheckDone(true);
             if (container.current) {
                 element.mount(container.current);
             }
@@ -45,15 +46,15 @@ export const ComponentContainer = ({ element, id = 'component-root' }: Readonly<
 
     return (
         <Fragment>
-            {isAvailable ? null : (
+            {isAvailableCheckDone ? null : (
                 <div data-testid="checkout-component-spinner">
                     <Spinner />
                 </div>
             )}
             {errorMessage ? (
-                <div style={isAvailable ? {} : { display: 'none' }}>{errorMessage}</div>
+                <div style={isAvailableCheckDone ? {} : { display: 'none' }}>{errorMessage}</div>
             ) : (
-                <div ref={container} style={isAvailable ? {} : { display: 'none' }} id={id} className="component-wrapper" />
+                <div ref={container} style={isAvailableCheckDone ? {} : { display: 'none' }} id={id} className="component-wrapper" />
             )}
         </Fragment>
     );

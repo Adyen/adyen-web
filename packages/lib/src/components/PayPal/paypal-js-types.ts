@@ -43,7 +43,8 @@ export type PayPalOnInitActions = OnInitActions;
 
 // Paypal SDK V6 types
 export type PayPalPageTypes = PageTypes;
-export type PayPalComponents = ['paypal-payments', 'venmo-payments', 'paypal-messages'];
+export type PayPaylComponent = 'paypal-payments' | 'venmo-payments' | 'paypal-messages';
+export type PayPalComponents = Array<PayPaylComponent>;
 export type PayPalSdkInstance = SdkInstance<PayPalComponents>;
 export type PayPalCreateInstanceOptions = CreateInstanceOptions<PayPalComponents>;
 export type PayPalEligiblePaymentMethods = EligiblePaymentMethodsOutput;

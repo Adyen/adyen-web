@@ -82,7 +82,7 @@ const PayPalComponentV6 = ({
     if (status === 'processing') {
         return (
             <div className="adyen-checkout__paypal" aria-live="polite" aria-busy="true">
-                <PayPalProcessingSpinner withReviewPage={commit} />
+                <PayPalProcessingSpinner withoutReviewPage={commit} />
             </div>
         );
     }

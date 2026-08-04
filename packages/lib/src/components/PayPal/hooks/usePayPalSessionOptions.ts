@@ -10,7 +10,7 @@ export const usePayPalSessionOptions = ({
     onError,
     commit,
     vault
-}: Omit<PayPalComponentV6Props, 'onSubmit' | 'style' | 'setComponentRef' | 'paymentSessionOptions'>) => {
+}: Omit<PayPalComponentV6Props, 'onSubmit' | 'style' | 'setComponentRef'>) => {
     const oneTimeSessionOptions: PayPalOneTimePaymentSessionOptions = useMemo(
         () => ({
             onApprove,

@@ -17,6 +17,7 @@ interface PayPalServiceConfig {
     locale?: string;
     pageType?: PayPalPageTypes;
     environment?: string;
+    components: PayPalComponents;
 }
 
 class PayPalService {
@@ -30,6 +31,7 @@ class PayPalService {
     private readonly locale?: PayPalV6SupportedLocale;
     private readonly pageType?: PayPalPageTypes;
     private readonly environment?: string;
+    private readonly components: PayPalComponents;
 
     private loadingPromise?: Promise<void>;
     private sdkInstance: PayPalSdkInstance;
@@ -45,7 +47,8 @@ class PayPalService {
         vault,
         locale,
         pageType,
-        environment
+        environment,
+        components
     }: PayPalServiceConfig) {
         this.sdkLoader = sdkLoader;
         this.loadingContext = loadingContext;
@@ -57,6 +60,7 @@ class PayPalService {
         this.locale = getSupportedLocalePayPalV6(locale ?? '') ?? undefined;
         this.pageType = pageType;
         this.environment = environment;
+        this.components = components;
 
         this.createPayPalSdkInstance = this.createPayPalSdkInstance.bind(this);
         this.createEligibleMethods = this.createEligibleMethods.bind(this);
@@ -99,16 +103,19 @@ class PayPalService {
             throw new AdyenCheckoutError('ERROR', 'PayPal SDK `createInstance` is not available');
         }
 
-        const isTestEnvironment = this.environment?.toLowerCase() === 'test';
+        console.log('PayPal SDK component', this.components);
 
+        const isLiveEnvironment = this.environment?.toLowerCase() === 'live';
         this.sdkInstance = await createInstance({
             clientToken,
-            components: ['paypal-payments', 'venmo-payments', 'paypal-messages'] satisfies PayPalComponents,
+            components: this.components,
             pageType: this.pageType,
             merchantId: this.merchantId,
             locale: this.locale,
-            testBuyerCountry: isTestEnvironment ? this.countryCode : undefined
+            testBuyerCountry: isLiveEnvironment ? undefined : this.countryCode
         });
+
+        console.log('PayPal SDK instance created', this.sdkInstance);
 
         return this.sdkInstance;
     }

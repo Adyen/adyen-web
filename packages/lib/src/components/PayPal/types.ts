@@ -335,22 +335,40 @@ export type SupportedPayPalFundingSources = 'paypal' | 'credit' | 'paylater' | '
  */
 export type FundingSource = SupportedPayPalFundingSources;
 
+/**
+ * @internal
+ */
 export type PayPalButtonType = 'pay' | 'checkout' | 'buynow' | 'subscribe';
 
+/**
+ * @internal
+ */
 export type PayPalButtonClass = 'paypal-gold' | 'paypal-blue' | 'paypal-white' | 'paypal-black';
 
+/**
+ * @internal
+ */
 export type VenmoButtonClass = 'venmo-blue' | 'venmo-black';
 
+/**
+ * @internal
+ */
 export type PayPalButtonStyle = {
     type?: PayPalButtonType;
     class?: PayPalButtonClass;
 };
 
+/**
+ * @internal
+ */
 export type PayPalVenmoButtonStyle = {
     type?: PayPalButtonType;
     class?: VenmoButtonClass;
 };
 
+/**
+ * @internal
+ */
 export type PayPalPresentationModeOptions =
     | PayPalPresentationModeOptionsForPopup
     | PayPalPresentationModeOptionsForModal
