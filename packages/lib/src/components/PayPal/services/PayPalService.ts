@@ -54,7 +54,7 @@ class PayPalService {
         this.amount = amount ? { ...amount } : undefined;
         this.countryCode = countryCode;
         this.vault = vault;
-        this.locale = getSupportedLocalePayPalV6(locale) ?? undefined;
+        this.locale = getSupportedLocalePayPalV6(locale ?? '') ?? undefined;
         this.pageType = pageType;
         this.environment = environment;
 

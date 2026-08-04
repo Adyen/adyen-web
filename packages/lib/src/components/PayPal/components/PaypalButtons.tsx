@@ -67,7 +67,7 @@ export default function PaypalButtons({
 
             {isProcessingPayment && (
                 <div className="adyen-checkout__paypal">
-                    <PayPalProcessingSpinner withReviewPage={props.commit} />
+                    <PayPalProcessingSpinner withReviewPage={Boolean(props.commit)} />
                 </div>
             )}
         </div>
