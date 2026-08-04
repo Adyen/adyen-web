@@ -39,7 +39,7 @@ jobs:
       - name: Version snapshot
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: yarn changeset version --snapshot alpha+${GITHUB_SHA::7}
+        run: yarn changeset version --snapshot alpha.${GITHUB_SHA::7}
 
       - name: Read SDK version
         id: sdk-version
@@ -78,6 +78,6 @@ jobs:
         run: |
           gh release create "v${{ steps.sdk-version.outputs.version }}" \
             --title "${{ steps.sdk-version.outputs.version }}" \
-            --notes "Snapshot preview build from feature branch ${{ github.ref_name }}." \
+            --notes "Snapshot preview build from feature branch [${{ github.ref_name }}](${{ github.server_url }}/${{ github.repository }}/tree/${{ github.ref_name }})." \
             --prerelease \
             "/tmp/adyen-web-sdk-umd-and-translations-${{ steps.sdk-version.outputs.version }}.zip"

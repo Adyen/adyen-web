@@ -7,6 +7,14 @@ import { protocol } from './environment-variables';
 dotenv.config({ path: path.resolve('../../', '.env') });
 
 export const WEB_SERVER_TIMEOUT_MS = 180_000;
+export const EXPECT_TIMEOUT_MS = 30_000;
+export const ACTION_TIMEOUT_MS = 30_000;
+
+export const N_RETRIES_LOCAL = 0;
+export const N_RETRIES_CI = 2;
+
+export const WORKERS_LOCAL = undefined;
+export const WORKERS_CI = 4;
 
 export const STORYBOOK_PORT = 3020;
 export const STORYBOOK_URL = `${protocol}://localhost:${STORYBOOK_PORT}`;
@@ -34,7 +42,7 @@ const config: PlaywrightTestConfig = {
          * Maximum time expect() should wait for the condition to be met.
          * For example in `await expect(locator).toHaveText();`
          */
-        timeout: 30_000,
+        timeout: EXPECT_TIMEOUT_MS,
         toHaveScreenshot: {
             ...SCREENSHOT_CONFIG
         }
@@ -44,9 +52,9 @@ const config: PlaywrightTestConfig = {
     /* Fail the build on CI if you accidentally left test.only in the source code. */
     forbidOnly: !!process.env.CI,
     /* Retry on CI only */
-    retries: process.env.CI ? 2 : 0,
+    retries: process.env.CI ? N_RETRIES_CI : N_RETRIES_LOCAL,
     /* Opt out of parallel tests on CI. Use default locally */
-    workers: process.env.CI ? 4 : undefined,
+    workers: process.env.CI ? WORKERS_CI : WORKERS_LOCAL,
 
     /* Reporter to use. See https://playwright.dev/docs/test-reporters */
     reporter: [['html', { open: 'never' }], ['list']],
@@ -56,15 +64,15 @@ const config: PlaywrightTestConfig = {
     /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
     use: {
         /* Maximum time each action such as `click()` can take. Defaults to 0 (no limit). */
-        actionTimeout: 30_000,
+        actionTimeout: ACTION_TIMEOUT_MS,
         /* Base URL to use in actions like `await page.goto('/')`. */
         baseURL: STORYBOOK_URL,
 
         /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-        trace: 'on-first-retry',
+        trace: 'retain-on-failure',
         ignoreHTTPSErrors: true,
         screenshot: 'only-on-failure',
-        video: 'on-first-retry'
+        video: 'retain-on-failure'
     },
 
     /* Configure projects for major browsers */
