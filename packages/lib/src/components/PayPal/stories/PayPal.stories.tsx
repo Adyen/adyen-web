@@ -1,4 +1,4 @@
-import { h } from 'preact';
+import { Fragment, h } from 'preact';
 import { Meta, StoryObj } from '@storybook/preact-vite';
 import { PaymentMethodStoryProps } from '../../../../storybook/types';
 import { ComponentContainer } from '../../../../storybook/components/ComponentContainer';
@@ -33,6 +33,7 @@ export const Default: Story = {
 };
 
 export const PaypalV6: Story = {
+    tags: ['no-automated-visual-test'],
     render: ({ componentConfiguration, ...checkoutConfig }) => (
         <Checkout checkoutConfig={checkoutConfig}>
             {checkout => <ComponentContainer element={new Paypal(checkout, componentConfiguration)} />}
@@ -55,6 +56,46 @@ export const PaypalV6: Story = {
                 onAuthorized: (data, actions) => {
                     console.log({ data });
                     actions.resolve();
+                }
+            }
+        }
+    }
+};
+
+export const PaypalV6Messaging: Story = {
+    tags: ['no-automated-visual-test'],
+    render: ({ componentConfiguration, ...checkoutConfig }) => (
+        <Checkout checkoutConfig={checkoutConfig}>
+            {checkout => (
+                <Fragment>
+                    <paypal-message id="paypal-message"></paypal-message>
+                    <ComponentContainer element={new Paypal(checkout, componentConfiguration)} />
+                </Fragment>
+            )}
+        </Checkout>
+    ),
+    args: {
+        componentConfiguration: {
+            usePayPalV6: {
+                onCreatePayPalMessages: async createPayPalMessages => {
+                    const messagesInstance = createPayPalMessages({
+                        buyerCountry: 'US',
+                        currencyCode: 'USD'
+                    });
+                    const messageElement = document.querySelector('#paypal-message');
+
+                    const content = await messagesInstance.fetchContent({
+                        textColor: 'MONOCHROME',
+                        logoPosition: 'LEFT',
+                        logoType: 'MONOGRAM',
+                        amount: '100',
+                        onReady: content => {
+                            // @ts-ignore - messageElement is guaranteed to be a PayPalMessageElement
+                            messageElement.setContent(content);
+                        }
+                    });
+
+                    return content;
                 }
             }
         }
