@@ -72,7 +72,7 @@ const config: PlaywrightTestConfig = {
         trace: 'retain-on-failure',
         ignoreHTTPSErrors: true,
         screenshot: 'only-on-failure',
-        video: 'retain-on-failure'
+        video: 'on-first-retry'
     },
 
     /* Configure projects for major browsers */
