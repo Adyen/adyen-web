@@ -61,6 +61,32 @@ export const PaypalV6: Story = {
     }
 };
 
+export const PaypalV6WithPayPalV5: Story = {
+    render: ({ componentConfiguration, ...checkoutConfig }) => (
+        <Checkout checkoutConfig={checkoutConfig}>
+            {checkout => (
+                <div id="component-root">
+                    <h3>PayPal V5</h3>
+                    <ComponentContainer id="paypal-v5" element={new Paypal(checkout)} />
+                    <h3>PayPal V6</h3>
+                    <ComponentContainer
+                        id="paypal-v6"
+                        element={
+                            new Paypal(checkout, {
+                                ...componentConfiguration,
+                                usePayPalV6: {}
+                            })
+                        }
+                    />
+                </div>
+            )}
+        </Checkout>
+    ),
+    args: {
+        componentConfiguration: {}
+    }
+};
+
 export const PaypalV6Messaging: Story = {
     tags: ['no-automated-visual-test'],
     render: ({ componentConfiguration, ...checkoutConfig }) => (
