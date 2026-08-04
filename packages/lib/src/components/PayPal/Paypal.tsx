@@ -29,8 +29,8 @@ import CancelError from '../../core/Errors/CancelError';
 import { PayPalSdkLoader } from './services/PayPalSdkLoader';
 import { PayPalService } from './services/PayPalService';
 import { PayPalComponentV6 } from './components/PaypalComponentV6';
-import './Paypal.scss';
 import requestPayPalOrderDetails from './services/request-paypal-order-details';
+import './Paypal.scss';
 
 class PaypalElement extends UIElement<PayPalConfiguration> {
     public static readonly type = TxVariants.paypal;
