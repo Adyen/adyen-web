@@ -51,7 +51,11 @@ export const PaypalV6: Story = {
                         class: 'venmo-black'
                     }
                 },
-                vault: false
+                vault: false,
+                onAuthorized: (data, actions) => {
+                    console.log({ data });
+                    actions.resolve();
+                }
             }
         }
     }
