@@ -7,15 +7,17 @@ import ThreeDS2DeviceFingerprint from '../ThreeDS2/ThreeDS2DeviceFingerprint';
 import ThreeDS2Challenge from '../ThreeDS2/ThreeDS2Challenge';
 import Dropin from './Dropin';
 import Fastlane from '../PayPalFastlane';
+import Card from '../Card';
 import { SRPanel } from '../../core/Errors/SRPanel';
 
 import type { CoreConfiguration, ICore } from '../../core/types';
 import type { OrderStatus, PaymentActionsType } from '../../types/global-types';
 import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 import { InfoEventType } from '../../core/Analytics/events/AnalyticsInfoEvent';
+import PaymentMethods from '../../core/ProcessResponse/PaymentMethods';
 import getOrderStatus from '../../core/Services/order-status';
 
-jest.mock('../../core/Services/order-status', () => jest.fn());
+jest.mock('../../core/Services/order-status');
 
 async function createAdyenCheckout(configuration) {
     return await AdyenCheckout(configuration);
@@ -213,6 +215,16 @@ describe('Dropin', () => {
             dropin.setStatus('error');
             expect(await screen.findByText(/An unknown error occurred/i)).toBeTruthy();
         });
+
+        test('should show the Error status when preparing Drop-in data fails', async () => {
+            (getOrderStatus as jest.Mock).mockRejectedValueOnce(new Error('Network request failed'));
+
+            const dropin = new Dropin(checkout, { order: { orderData: 'xxx', pspReference: 'yyy' } });
+            render(dropin.render());
+
+            expect(await screen.findByText(/An unknown error occurred/i)).toBeTruthy();
+            expect(screen.queryByText(/Network request failed/i)).not.toBeInTheDocument();
+        });
     });
 
     describe('Complying with local regulations', () => {
@@ -304,6 +316,229 @@ describe('Dropin', () => {
             const core = setupCoreMock();
             const dropin = new Dropin(core, {});
             expect(dropin.core.modules.analytics.sendFlavor).toHaveBeenCalledWith('dropin');
+        });
+
+        test('should report all baseline PMs as unavailable on "ready" event when no component handles them', async () => {
+            const core = setupCoreMock({
+                paymentMethods: new PaymentMethods({
+                    paymentMethods: [
+                        { name: 'AliPay', type: 'alipay' },
+                        { name: 'KakaoPay', type: 'kakaopay' }
+                    ]
+                })
+            });
+
+            const dropin = new Dropin(core);
+            render(dropin.render());
+
+            await waitFor(() =>
+                expect(core.modules.analytics.sendAnalytics).toHaveBeenCalledWith(
+                    expect.objectContaining({
+                        type: InfoEventType.PaymentListDisplayed,
+                        component: 'dropin',
+                        availablePaymentMethods: [],
+                        unavailablePaymentMethods: [
+                            expect.objectContaining({ paymentMethodType: 'alipay', displayMode: 'regular' }),
+                            expect.objectContaining({ paymentMethodType: 'kakaopay', displayMode: 'regular' })
+                        ]
+                    })
+                )
+            );
+        });
+
+        test('should not include PII fields on stored payment method entries on "ready" event', async () => {
+            const core = setupCoreMock({
+                paymentMethods: new PaymentMethods({
+                    paymentMethods: [],
+                    storedPaymentMethods: [
+                        {
+                            id: 'stored-1',
+                            type: 'scheme',
+                            name: 'Visa',
+                            supportedShopperInteractions: ['Ecommerce'],
+                            lastFour: '1234',
+                            holderName: 'John Doe',
+                            shopperEmail: 'john@example.com'
+                        }
+                    ]
+                })
+            });
+
+            const dropin = new Dropin(core);
+            render(dropin.render());
+
+            await waitFor(() =>
+                expect(core.modules.analytics.sendAnalytics).toHaveBeenCalledWith(
+                    expect.objectContaining({
+                        type: InfoEventType.PaymentListDisplayed,
+                        component: 'dropin',
+                        unavailablePaymentMethods: [{ paymentMethodType: 'scheme', displayMode: 'stored' }]
+                    })
+                )
+            );
+        });
+
+        test('should emit the "ready" event exactly once per mount', async () => {
+            const core = setupCoreMock();
+            const dropin = new Dropin(core);
+            render(dropin.render());
+
+            await waitFor(() =>
+                expect(core.modules.analytics.sendAnalytics).toHaveBeenCalledWith(
+                    expect.objectContaining({ type: InfoEventType.PaymentListDisplayed })
+                )
+            );
+
+            const readyCallCount = jest
+                .mocked(core.modules.analytics.sendAnalytics)
+                .mock.calls.filter(([event]) => (event as { type?: InfoEventType }).type === InfoEventType.PaymentListDisplayed).length;
+            expect(readyCallCount).toBe(1);
+        });
+
+        test('should report filtered-out stored PMs as unavailable and kept ones as rendered in the "ready" event', async () => {
+            const config = getAdyenCheckoutConfiguration({
+                paymentMethodsResponse: {
+                    paymentMethods: [],
+                    storedPaymentMethods: [
+                        {
+                            id: 'stored-visa',
+                            type: 'scheme',
+                            name: 'VISA',
+                            brand: 'visa',
+                            lastFour: '1111',
+                            expiryMonth: '03',
+                            expiryYear: '2030',
+                            supportedShopperInteractions: ['Ecommerce', 'ContAuth']
+                        },
+                        {
+                            id: 'stored-mc',
+                            type: 'scheme',
+                            name: 'Mastercard',
+                            brand: 'mc',
+                            lastFour: '4444',
+                            expiryMonth: '12',
+                            expiryYear: '2028',
+                            supportedShopperInteractions: ['Ecommerce', 'ContAuth']
+                        },
+                        {
+                            id: 'stored-ach',
+                            type: 'ach',
+                            name: 'ACH Direct Debit',
+                            supportedShopperInteractions: ['Ecommerce']
+                        }
+                    ]
+                }
+            });
+            const checkout = await createAdyenCheckout(config);
+            const sendAnalyticsSpy = jest.spyOn(checkout.modules.analytics, 'sendAnalytics');
+
+            const dropin = new Dropin(checkout, {
+                paymentMethodComponents: [Card],
+                filterStoredPaymentMethods: pms => pms.filter(pm => pm.type === 'scheme')
+            });
+            render(dropin.render());
+
+            const flushPromises = () => new Promise(process.nextTick);
+            await flushPromises();
+
+            await waitFor(() =>
+                expect(sendAnalyticsSpy).toHaveBeenCalledWith(
+                    expect.objectContaining({
+                        type: InfoEventType.PaymentListDisplayed,
+                        component: 'dropin',
+                        availablePaymentMethods: [
+                            { paymentMethodType: 'scheme', brands: ['visa'], displayMode: 'stored' },
+                            { paymentMethodType: 'scheme', brands: ['mc'], displayMode: 'stored' }
+                        ],
+                        unavailablePaymentMethods: [{ paymentMethodType: 'ach', displayMode: 'stored' }]
+                    })
+                )
+            );
+        });
+
+        test('should report paymentMethods in render order, not API response order', async () => {
+            const config = getAdyenCheckoutConfiguration({
+                paymentMethodsResponse: {
+                    paymentMethods: [],
+                    storedPaymentMethods: [
+                        {
+                            id: 'stored-visa',
+                            type: 'scheme',
+                            name: 'VISA',
+                            brand: 'visa',
+                            supportedShopperInteractions: ['Ecommerce', 'ContAuth']
+                        },
+                        {
+                            id: 'stored-mc',
+                            type: 'scheme',
+                            name: 'Mastercard',
+                            brand: 'mc',
+                            supportedShopperInteractions: ['Ecommerce', 'ContAuth']
+                        }
+                    ]
+                }
+            });
+            const checkout = await createAdyenCheckout(config);
+            const sendAnalyticsSpy = jest.spyOn(checkout.modules.analytics, 'sendAnalytics');
+
+            const dropin = new Dropin(checkout, {
+                paymentMethodComponents: [Card],
+                filterStoredPaymentMethods: pms => [...pms].reverse()
+            });
+            render(dropin.render());
+
+            const flushPromises = () => new Promise(process.nextTick);
+            await flushPromises();
+
+            await waitFor(() =>
+                expect(sendAnalyticsSpy).toHaveBeenCalledWith(
+                    expect.objectContaining({
+                        type: InfoEventType.PaymentListDisplayed,
+                        component: 'dropin',
+                        availablePaymentMethods: [
+                            { paymentMethodType: 'scheme', brands: ['mc'], displayMode: 'stored' },
+                            { paymentMethodType: 'scheme', brands: ['visa'], displayMode: 'stored' }
+                        ]
+                    })
+                )
+            );
+        });
+
+        test('should ignore properties injected via filterStoredPaymentMethods in the "ready" event', async () => {
+            const config = getAdyenCheckoutConfiguration({
+                paymentMethodsResponse: {
+                    paymentMethods: [],
+                    storedPaymentMethods: [
+                        {
+                            id: 'stored-visa',
+                            type: 'scheme',
+                            name: 'VISA',
+                            supportedShopperInteractions: ['Ecommerce', 'ContAuth']
+                        }
+                    ]
+                }
+            });
+            const checkout = await createAdyenCheckout(config);
+            const sendAnalyticsSpy = jest.spyOn(checkout.modules.analytics, 'sendAnalytics');
+
+            const dropin = new Dropin(checkout, {
+                paymentMethodComponents: [Card],
+                filterStoredPaymentMethods: pms => pms.map(pm => ({ ...pm, injectedField: 'should-be-ignored' }))
+            });
+            render(dropin.render());
+
+            const flushPromises = () => new Promise(process.nextTick);
+            await flushPromises();
+
+            await waitFor(() =>
+                expect(sendAnalyticsSpy).toHaveBeenCalledWith(
+                    expect.objectContaining({
+                        type: InfoEventType.PaymentListDisplayed,
+                        component: 'dropin',
+                        availablePaymentMethods: [{ paymentMethodType: 'scheme', displayMode: 'stored' }]
+                    })
+                )
+            );
         });
     });
 

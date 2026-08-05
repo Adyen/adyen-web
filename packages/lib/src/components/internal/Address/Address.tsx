@@ -9,7 +9,7 @@ import { AddressData } from '../../../types/global-types';
 import FieldContainer from './components/FieldContainer';
 import useForm from '../../../utils/useForm';
 import Specifications from './Specifications';
-import { ADDRESS_SCHEMA, FALLBACK_VALUE } from './constants';
+import { ADDRESS_SCHEMA, COUNTRY, FALLBACK_VALUE } from './constants';
 import { getMaxLengthByFieldAndCountry } from '../../../utils/validator-utils';
 import { useCoreContext } from '../../../core/Context/CoreProvider';
 import AddressSearch from './components/AddressSearch';
@@ -46,19 +46,22 @@ export default function Address(props: Readonly<AddressProps>) {
 
     const showAddressFields = props.onAddressLookup ? hasSelectedAddress || useManualAddress : true;
 
+    // In partial address mode the country field is not rendered, so it is absent from the address schema.
+    // The country the merchant configured must still be part of the form data for country dependent rules to be applied.
+    const merchantCountry = (props.data as AddressData)?.country;
+    const formSchema = merchantCountry && !requiredFieldsSchema.includes(COUNTRY) ? [...requiredFieldsSchema, COUNTRY] : requiredFieldsSchema;
+    const defaultData = useMemo<AddressData>(
+        () => (merchantCountry ? { ...props.data, country: merchantCountry.toUpperCase() } : props.data),
+        [props.data, merchantCountry]
+    );
+
     const { data, errors, valid, isValid, handleChangeFor, triggerValidation, setData, mergeData } = useForm<AddressData>({
-        schema: requiredFieldsSchema,
-        defaultData: props.data,
+        schema: formSchema,
+        defaultData,
         // Ensure any passed validation rules are merged with the default ones
         rules: { ...getAddressValidationRules(specifications), ...props.validationRules },
         formatters: addressFormatters
     });
-
-    // In partial address mode, country is not in the form schema but we need it for regionalized labels.
-    // Store the merchant's country config once at mount, then use it if form data doesn't have country.
-    const initialCountryRef = useRef<string | undefined>((props.data as AddressData)?.country);
-    const effectiveCountry = (data.country || initialCountryRef.current)?.toUpperCase();
-    const dataWithCountry = useMemo(() => ({ ...data, country: effectiveCountry }), [data, effectiveCountry]);
 
     const setSearchData = useCallback(
         (selectedAddress: AddressData) => {
@@ -145,18 +148,13 @@ export default function Address(props: Readonly<AddressProps>) {
             const isOptional = optionalFields.includes(cur);
             const isRequired = requiredFields.includes(cur);
             const newValue = data[cur];
-            const initialValue = props.data[cur];
+            const initialValue = defaultData[cur];
             // recover default data values which are not requiredFields, or prefill with 'N/A'
-            const fallbackValue = !isRequired && !newValue && !!initialValue ? initialValue : FALLBACK_VALUE;
+            const fallbackValue = !isRequired && initialValue ? initialValue : FALLBACK_VALUE;
             const value = (isOptional && !newValue) || !isRequired ? fallbackValue : newValue;
             if (value?.length) acc[cur] = value;
             return acc;
         }, {});
-
-        // In partial address mode, ensure country is included in output for regionalized labels/validation.
-        if (!(processedData as AddressData).country && initialCountryRef.current) {
-            (processedData as AddressData).country = initialCountryRef.current;
-        }
 
         props.onChange({ data: processedData, valid, errors, isValid });
     }, [data, valid, errors, isValid]);
@@ -172,7 +170,7 @@ export default function Address(props: Readonly<AddressProps>) {
                 key={fieldName}
                 allowedCountries={props.allowedCountries}
                 classNameModifiers={[...classNameModifiers, fieldName]}
-                data={dataWithCountry}
+                data={data}
                 errors={errors}
                 valid={valid}
                 fieldName={fieldName}
@@ -180,7 +178,7 @@ export default function Address(props: Readonly<AddressProps>) {
                 onBlur={handleChangeFor(fieldName, 'blur')}
                 onDropdownChange={handleChangeFor(fieldName, 'blur')}
                 specifications={specifications}
-                maxLength={getMaxLengthByFieldAndCountry(countrySpecificFormatters, fieldName, effectiveCountry, true)}
+                maxLength={getMaxLengthByFieldAndCountry(countrySpecificFormatters, fieldName, data.country, true)}
                 trimOnBlur={true}
                 disabled={!enabledFields.includes(fieldName)}
                 addressType={addressType}

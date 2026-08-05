@@ -100,7 +100,7 @@ export default function callSubmit3DS2Fingerprint({ data }): void {
              */
             if (resData.action?.type === 'threeDS2') {
                 // Ensure challengeWindowSize is propagated if there was a (merchant defined) handleAction call proceeding this one that had it set as an option
-                return actionHandler.handleAction(resData.action, pick('challengeWindowSize').from(this.props));
+                return actionHandler.handleAction(resData.action, pick('challengeWindowSize', 'usePasskeyIFrameAttributes').from(this.props));
             }
 
             /**

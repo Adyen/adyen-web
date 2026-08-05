@@ -71,7 +71,7 @@ const postalCodePatterns = {
     SE: createPatternByDigits(5),
     SG: createPatternByDigits(6),
     SK: createPatternByDigits(5),
-    US: createPatternByDigits(5)
+    US: { pattern: /^\d{5}(?:-\d{4})?$/ }
 };
 
 /**

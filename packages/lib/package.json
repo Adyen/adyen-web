@@ -1,6 +1,6 @@
 {
     "name": "@adyen/adyen-web",
-    "version": "6.41.1",
+    "version": "6.42.0",
     "license": "MIT",
     "homepage": "https://docs.adyen.com/checkout",
     "type": "module",
@@ -117,7 +117,7 @@
         "jest-mock-extended": "4.0.1",
         "msw": "2.14.6",
         "msw-storybook-addon": "2.0.7",
-        "postcss": "8.5.16",
+        "postcss": "8.5.18",
         "rollup": "4.62.2",
         "rollup-plugin-dts": "6.4.1",
         "rollup-plugin-postcss": "4.0.2",

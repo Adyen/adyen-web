@@ -13,8 +13,11 @@ import type {
     DropinStatus,
     DropinStatusProps,
     onOrderCancelData,
-    onOrderCancelInternalCallback
+    onOrderCancelInternalCallback,
+    PaymentMethodDisplayMode
 } from '../types';
+import splitPaymentMethods from '../elements/splitPaymentMethods';
+import { createAvailablePaymentsList, createUnavailablePaymentsList, type PaymentMethodDisplayModeEntry } from '../utils/paymentMethodsAnalytics';
 import UIElement from '../../internal/UIElement';
 import { AnalyticsInfoEvent, InfoEventType, UiTarget } from '../../../core/Analytics/events/AnalyticsInfoEvent';
 import { DropinSuccessState } from './DropinSuccessState';
@@ -57,9 +60,56 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
                 this.setStatus('ready');
 
                 this.props.onElementsCreated([...instantPaymentElements, ...storedPaymentElements, ...elements, ...fastlanePaymentElement]);
+
+                this.reportPaymentMethodList({
+                    fastlane: fastlanePaymentElement,
+                    instant: instantPaymentElements,
+                    stored: storedPaymentElements,
+                    regular: elements
+                });
+            })
+            .catch(() => {
+                this.setStatus('error');
             });
 
         this.onOrderCancel = this.getOnOrderCancel();
+    };
+
+    /**
+     * Builds and sends the payment list displayed analytics event.
+     */
+    private reportPaymentMethodList = (availableElementsByDisplayMode: Record<PaymentMethodDisplayMode, UIElement[]>): void => {
+        try {
+            const { paymentMethods, storedPaymentMethods, instantPaymentMethods, fastlanePaymentMethod } = splitPaymentMethods(
+                this.props.core.paymentMethodsResponse,
+                this.props.instantPaymentTypes ?? []
+            );
+
+            const paymentMethodDisplayModes: PaymentMethodDisplayModeEntry[] = [
+                { displayMode: 'fastlane', paymentMethods: fastlanePaymentMethod ? [fastlanePaymentMethod] : [] },
+                { displayMode: 'instant', paymentMethods: instantPaymentMethods },
+                { displayMode: 'stored', paymentMethods: storedPaymentMethods },
+                { displayMode: 'regular', paymentMethods: paymentMethods }
+            ];
+
+            const availablePaymentMethods = createAvailablePaymentsList(
+                paymentMethodDisplayModes.map(e => e.displayMode),
+                availableElementsByDisplayMode,
+                this.props.core
+            );
+
+            const unavailablePaymentMethods = createUnavailablePaymentsList(paymentMethodDisplayModes, availableElementsByDisplayMode);
+
+            const dropinPaymentListDisplayedEvent = new AnalyticsInfoEvent({
+                type: InfoEventType.PaymentListDisplayed,
+                component: 'dropin',
+                availablePaymentMethods,
+                unavailablePaymentMethods
+            });
+            this.props.core.modules.analytics.sendAnalytics(dropinPaymentListDisplayedEvent);
+        } catch (error) {
+            console.warn('Drop-in: failed to report payment method list analytics', error);
+        }
     };
 
     public setStatus = (status: DropinStatus['type'], props: DropinStatusProps = {}) => {

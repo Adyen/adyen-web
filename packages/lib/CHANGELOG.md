@@ -1,5 +1,17 @@
 # @adyen/adyen-web
 
+## 6.42.0
+
+### Minor Changes
+
+- Improved: the 3DS2 iframe to add attributes which enable WebAuthn and SPC challenges. ([#4116](https://github.com/Adyen/adyen-web/pull/4116))
+
+- New: Drop-in emits a new `paymentListDisplayed` analytics event reporting the payment methods it rendered (`availablePaymentMethods`, each with `displayMode`) in display order, plus the `/paymentMethods` items it did not render (`unavailablePaymentMethods`). ([#4081](https://github.com/Adyen/adyen-web/pull/4081))
+
+### Patch Changes
+
+- Fixed: US postal code validation & postal code formatting for partial billing address mode ([#4111](https://github.com/Adyen/adyen-web/pull/4111))
+
 ## 6.41.1
 
 ### Patch Changes

@@ -1,3 +1,4 @@
+import { FormatterContext } from '../../../utils/Formatters/types';
 import { CountryFormatRules, FormatRules } from '../../../utils/Validator/types';
 import { Formatter } from '../../../utils/useForm/types';
 import { getFormattingRegEx, SPECIAL_CHARS } from '../../../utils/validator-utils';
@@ -19,7 +20,7 @@ const formattingFn = (val: string) => val.replace(specialCharsRegEx, '');
 
 export const addressFormatters: FormatRules = {
     postalCode: {
-        formatterFn: (val, context) => {
+        formatterFn: (val: string, context: FormatterContext) => {
             const country = context.state.data.country;
 
             // Country specific formatting rule
