@@ -186,6 +186,7 @@
     "cc.num.900": "Vnesite številko kartice",
     "cc.num.903": "Vnesite podprto blagovno znamko kartice",
     "cc.num.901": "Vnesite celotno številko kartice",
+    "cc.num.904": "Ta vrsta kartice ni podprta",
     "cc.dat.912": "Vnesite veljavni datum poteka veljavnosti",
     "cc.dat.913": "Vnesite veljavni datum poteka veljavnosti",
     "cc.dat.914": "Kreditna kartica bo kmalu potekla",

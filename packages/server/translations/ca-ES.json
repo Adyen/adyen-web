@@ -186,6 +186,7 @@
     "cc.num.900": "Introduïu el número de la targeta",
     "cc.num.903": "Introduïu una marca de targeta compatible",
     "cc.num.901": "Introduïu el número complet de la targeta",
+    "cc.num.904": "Aquest tipus de targeta no és compatible",
     "cc.dat.912": "Introduïu una data de caducitat vàlida",
     "cc.dat.913": "Introduïu una data de caducitat vàlida",
     "cc.dat.914": "Targeta de crèdit a punt de caducar",

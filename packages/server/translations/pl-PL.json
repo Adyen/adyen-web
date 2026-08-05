@@ -186,6 +186,7 @@
     "cc.num.900": "Wprowadź numer karty",
     "cc.num.903": "Wprowadź obsługiwaną markę karty",
     "cc.num.901": "Wprowadź pełny numer karty",
+    "cc.num.904": "Ten typ karty nie jest obsługiwany",
     "cc.dat.912": "Wprowadź prawidłową datę ważności",
     "cc.dat.913": "Wprowadź prawidłową datę ważności",
     "cc.dat.914": "Karta kredytowa wkrótce straci ważność",

@@ -186,6 +186,7 @@
     "cc.num.900": "Digite o número do cartão",
     "cc.num.903": "Digite uma bandeira de cartão aceita",
     "cc.num.901": "Digite o número completo do cartão",
+    "cc.num.904": "Esse tipo de cartão não é aceito",
     "cc.dat.912": "Digite uma data válida",
     "cc.dat.913": "Digite uma data válida",
     "cc.dat.914": "Cartão de crédito prestes a vencer",

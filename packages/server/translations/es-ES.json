@@ -186,6 +186,7 @@
     "cc.num.900": "Introduzca el número de tarjeta",
     "cc.num.903": "Introduzca una marca de tarjeta admitida",
     "cc.num.901": "Introduzca el número de tarjeta completo",
+    "cc.num.904": "Este tipo de tarjeta no es compatible",
     "cc.dat.912": "Introduzca una fecha de caducidad válida",
     "cc.dat.913": "Introduzca una fecha de caducidad válida",
     "cc.dat.914": "La tarjeta de crédito está a punto de caducar",

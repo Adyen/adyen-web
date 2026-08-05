@@ -186,6 +186,7 @@
     "cc.num.900": "Introduza o número do cartão",
     "cc.num.903": "Introduza uma marca de cartão suportada",
     "cc.num.901": "Introduza o número do cartão completo",
+    "cc.num.904": "Este tipo de cartão não é suportado.",
     "cc.dat.912": "Introduza uma data de validade válida",
     "cc.dat.913": "Introduza uma data de validade válida",
     "cc.dat.914": "Cartão de crédito prestes a expirar",
