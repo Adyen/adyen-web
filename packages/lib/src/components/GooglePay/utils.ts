@@ -1,4 +1,5 @@
 import { AddressData } from '../../types/global-types';
+import { TxVariants } from '../tx-variants';
 
 /**
  * This function formats Google Pay contact format to Adyen address format
@@ -60,6 +61,11 @@ const supportedLocales = [
     'uk',
     'zh'
 ];
+
+export function isGooglePayTxVariant(txVariant: string): boolean {
+    const googlePayTxVariants = new Set<string>([TxVariants.googlepay, TxVariants.paywithgoogle]);
+    return googlePayTxVariants.has(txVariant);
+}
 
 export function getGooglePayLocale(locale = '') {
     const twoLetterLocale = locale.toLowerCase().substring(0, 2);
