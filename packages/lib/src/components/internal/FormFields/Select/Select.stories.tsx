@@ -8,7 +8,7 @@ import { CoreProvider } from '../../../../core/Context/CoreProvider';
 import { Resources } from '../../../../core/Context/Resources';
 import { resolveEnvironments } from '../../../../core/Environment';
 import type { CoreConfiguration } from '../../../../core/types';
-import { SelectProps, SelectItem, SelectTargetObject, SecondaryContentVariant } from './types';
+import { SelectProps, SelectItem, SelectTargetObject } from './types';
 import { ILanguageService } from '../../../../language/LanguageService';
 import { TagVariant } from '../../Tag/types';
 
@@ -56,7 +56,7 @@ const sampleItems: SelectItem[] = [
     {
         id: 'option1',
         name: 'Option 1',
-        tag: [
+        tags: [
             { label: 'low cost', variant: TagVariant.SUCCESS },
             { label: 'no cost', variant: TagVariant.INFO }
         ],
@@ -65,7 +65,14 @@ const sampleItems: SelectItem[] = [
     { id: 'option2', name: 'Option 2' },
     { id: 'option3', name: 'Option 3', disabled: true },
     { id: 'option4', name: 'Option 4' },
-    { id: 'option5', name: 'Very long option name that might overflow the container' }
+    {
+        id: 'option5',
+        name: 'Very long option name that might overflow the container',
+        tags: [
+            { label: 'No cost', variant: TagVariant.SUCCESS },
+            { label: 'Low cost', variant: TagVariant.INFO }
+        ]
+    }
 ];
 
 const itemsWithIcons: SelectItem[] = [
@@ -92,19 +99,31 @@ const itemsWithSecondaryText: SelectItem[] = [
         name: 'Checking Account',
         icon: 'https://checkoutshopper-test.cdn.adyen.com/checkoutshopper/images/logos/visa.svg',
         secondaryText: '****1234',
-        tag: [{ label: 'No cost', variant: TagVariant.SUCCESS }]
+        tags: [{ label: 'No cost', variant: TagVariant.SUCCESS }]
     },
     {
         id: 'account2',
         name: '₹51,666.00 x 3 months | @00.00% p.a',
         secondaryText: '****5678',
-        tag: [
+        tags: [
             { label: 'No cost', variant: TagVariant.SUCCESS },
             { label: 'Low cost', variant: TagVariant.INFO }
         ]
     },
     {
         id: 'account3',
+        name: 'Bank 3',
+        icon: 'https://checkoutshopper-test.cdn.adyen.com/checkoutshopper/images/logos/visa.svg',
+        secondaryText: '-$6000 Discount available'
+    },
+    {
+        id: 'account4',
+        name: '****5678',
+        icon: 'https://checkoutshopper-test.cdn.adyen.com/checkoutshopper/images/logos/visa.svg',
+        secondaryText: 'expired'
+    },
+    {
+        id: 'account5',
         name: 'Business Account',
         icon: 'https://checkoutshopper-test.cdn.adyen.com/checkoutshopper/images/logos/amex.svg',
         secondaryText: '****9012',
@@ -219,7 +238,6 @@ export const WithSecondaryText: StoryObj<SelectProps> = {
                         <Select
                             {...args}
                             selectedValue={selectedValue}
-                            secondaryContent={SecondaryContentVariant.TAG}
                             onChange={e => {
                                 setSelectedValue((e.target as SelectTargetObject).value);
                                 console.log('Selected:', (e.target as SelectTargetObject).value);

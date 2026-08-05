@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import { render, screen } from '@testing-library/preact';
 import { TagList } from './TagList';
-import { TagVariant } from '../Tag/types';
+import { TagVariant } from './types';
 
 describe('TagList', () => {
     test('renders one tag per entry, in the order they were passed', () => {

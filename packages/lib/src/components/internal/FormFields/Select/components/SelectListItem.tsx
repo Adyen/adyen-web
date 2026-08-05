@@ -4,7 +4,7 @@ import { SelectItemProps } from '../types';
 import Img from '../../../Img';
 import Icon from '../../../Icon';
 import { PREFIX } from '../../../Icon/constants';
-import { TagList } from '../../../TagList';
+import { TagList } from '../../../Tag';
 
 const SelectListItem = ({ item, active, selected, ...props }: Readonly<SelectItemProps>) => {
     return (
@@ -38,7 +38,7 @@ const SelectListItem = ({ item, active, selected, ...props }: Readonly<SelectIte
                 </div>
                 {item.secondaryText && <span className="adyen-checkout__dropdown__element__secondary-text">{item.secondaryText}</span>}
             </div>
-            <TagList tags={item.tag} className="adyen-checkout__dropdown__element__tags" />
+            <TagList tags={item.tags} className="adyen-checkout__dropdown__element__tags" />
             {selected && <Icon type={`${PREFIX}checkmark_black`} height={14} width={14} />}
         </li>
     );

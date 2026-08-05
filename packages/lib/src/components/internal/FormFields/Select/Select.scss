@@ -95,17 +95,14 @@
     white-space: nowrap;
     flex-grow: 1;
     text-align: left;
+
+    // Without this the flex item's automatic minimum size keeps it from shrinking, so a long name
+    // pushes the tags out of the button instead of being ellipsed.
+    min-width: 0;
 }
 
 .adyen-checkout__dropdown__button__text-placeholder {
     color: variable-generator.token(color-label-secondary);
-}
-
-.adyen-checkout__dropdown__button__secondary-text {
-    margin-right: variable-generator.token(spacer-090);
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
 }
 
 .adyen-checkout__dropdown__button__tags {
@@ -123,6 +120,13 @@
     height: 100%;
     padding: 0;
     width: 100%;
+
+    // `width: 100%` plus the automatic minimum size makes the input refuse to shrink, which pushes
+    // the tags out of the collapsed button. Let it give way so the tags stay visible, and ellipse
+    // the overflow so a long selected name matches the non-filterable variant instead of hard-clipping.
+    flex: 1 1 auto;
+    min-width: 0;
+    text-overflow: ellipsis;
 
     &:focus,
     &:active {

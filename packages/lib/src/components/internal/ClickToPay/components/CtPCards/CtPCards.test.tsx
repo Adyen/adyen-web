@@ -93,6 +93,67 @@ test('should pre selected available card', async () => {
     expect(options[1]).toHaveAttribute('aria-disabled', 'false');
 });
 
+// The collapsed Select button renders tags only, so the 'Expired' label is visible in the open list
+// but not on the closed button. Disabling the option is what stops a shopper picking an expired card.
+test('should not select an expired card when its option is clicked', async () => {
+    const user = userEvent.setup();
+
+    const ctpService = mock<IClickToPayService>();
+    ctpService.shopperCards = [
+        new ShopperCard(
+            {
+                srcDigitalCardId: '654321',
+                panLastFour: '8902',
+                dateOfCardCreated: '2015-10-10T09:15:00.312Z',
+                dateOfCardLastUsed: '2020-05-28T08:10:02.312Z',
+                paymentCardDescriptor: 'visa',
+                panExpirationMonth: '08',
+                panExpirationYear: '2020',
+                digitalCardData: {
+                    descriptorName: 'Visa',
+                    artUri: 'http://image.com/visa',
+                    status: 'EXPIRED'
+                },
+                tokenId: 'xxxx-wwww'
+            },
+            'visa',
+            '1234566'
+        ),
+        new ShopperCard(
+            {
+                srcDigitalCardId: '123456',
+                panLastFour: '3456',
+                dateOfCardCreated: '2015-10-10T09:15:00.312Z',
+                dateOfCardLastUsed: '2022-02-16T08:10:02.312Z',
+                paymentCardDescriptor: 'mc',
+                panExpirationMonth: '12',
+                panExpirationYear: '9999',
+                digitalCardData: {
+                    descriptorName: 'Mastercard',
+                    artUri: 'http://image.com/mc',
+                    status: 'ACTIVE'
+                },
+                tokenId: 'xxxx-wwww'
+            },
+            'mc',
+            '1234566'
+        )
+    ];
+
+    const contextProps = mock<ClickToPayProviderProps>();
+    contextProps.onSetStatus.mockReturnValue();
+    contextProps.setClickToPayRef.mockImplementation(() => {});
+    contextProps.clickToPayService = ctpService;
+
+    customRender(<CtPCards onDisplayCardComponent={jest.fn()} />, contextProps);
+
+    await user.click(screen.getByRole('combobox', { name: /Select a card to use\./ }));
+    await user.click(screen.getByRole('option', { name: /Visa •••• 8902/ }));
+
+    expect(screen.getByRole('combobox', { name: /Select a card to use\./ }).textContent).toBe('Mastercard •••• 3456 ');
+    expect(screen.getByRole('button', { name: 'Pay €20.00 with •••• 3456' })).toBeEnabled();
+});
+
 test('should not be able to checkout with expired card (single card)', async () => {
     const user = userEvent.setup();
 
@@ -188,7 +249,8 @@ test('should not be able to checkout with expired card (card list)', async () =>
 
     const selectButton = screen.getByRole('combobox', { name: /Select a card to use\./ });
 
-    expect(selectButton.textContent).toBe('Mastercard •••• 3456 Expired');
+    // The 'Expired' label lives in the open list only — the collapsed button renders tags, not supporting text.
+    expect(selectButton.textContent).toBe('Mastercard •••• 3456 ');
 
     await user.click(selectButton);
     const options = screen.getAllByRole('option');

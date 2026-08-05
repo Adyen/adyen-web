@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import cx from 'classnames';
-import { Tag } from '../Tag';
+import { Tag } from './Tag';
 import type { TagListProps } from './types';
 import styles from './TagList.module.scss';
 

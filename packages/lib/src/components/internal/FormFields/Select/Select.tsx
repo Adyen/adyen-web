@@ -5,7 +5,7 @@ import SelectButton from './components/SelectButton';
 import SelectList from './components/SelectList';
 import uuid from '../../../../utils/uuid';
 import { keys } from './constants';
-import { SecondaryContentVariant, SelectItem, SelectProps } from './types';
+import { SelectItem, SelectProps } from './types';
 import './Select.scss';
 import { ARIA_CONTEXT_SUFFIX, ARIA_ERROR_SUFFIX } from '../../../../core/Errors/constants';
 import { simulateFocusScroll } from '../utils';
@@ -31,8 +31,7 @@ function Select({
     blurOnClose,
     onListToggle,
     required,
-    additionalDescribedBy,
-    secondaryContent = SecondaryContentVariant.SECONDARY_TEXT
+    additionalDescribedBy
 }: Readonly<SelectProps>) {
     const { i18n } = useCoreContext();
     const filterInputRef = useRef(null);
@@ -318,7 +317,6 @@ function Select({
                 disabled={disabled}
                 ariaDescribedBy={ariaDescribedBy}
                 required={required}
-                secondaryContent={secondaryContent}
             />
             <SelectList
                 active={activeOption}

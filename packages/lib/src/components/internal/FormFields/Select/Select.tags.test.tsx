@@ -5,7 +5,7 @@ import userEvent from '@testing-library/user-event';
 import Select from './Select';
 import { CoreProvider } from '../../../../core/Context/CoreProvider';
 import { setupCoreMock } from '../../../../../config/testMocks/setup-core-mock';
-import { SecondaryContentVariant, type SelectItem, type SelectProps, type SelectTargetObject } from './types';
+import { type SelectItem, type SelectProps, type SelectTargetObject } from './types';
 import { TagVariant } from '../../Tag/types';
 
 const core = setupCoreMock();
@@ -15,7 +15,7 @@ const SELECT_NAME = 'taggedSelect';
 /**
  * Derived from the component contract so the fixtures cannot drift from what `Select` accepts.
  */
-type SelectItemTag = NonNullable<SelectItem['tag']>[number];
+type SelectItemTag = NonNullable<SelectItem['tags']>[number];
 
 const SUCCESS_TAG: SelectItemTag = { label: 'Verified', variant: TagVariant.SUCCESS };
 const INFO_TAG: SelectItemTag = { label: 'New', variant: TagVariant.INFO };
@@ -26,30 +26,40 @@ const EXTRA_TAG: SelectItemTag = { label: 'Popular', variant: TagVariant.INFO };
  * optional fields such as `secondaryText` stay `string` at the call sites instead of `string | undefined`.
  */
 const PLAIN_ITEM = { id: 'plain', name: 'Plain option' } satisfies SelectItem;
-const EMPTY_TAGS_ITEM = { id: 'empty-tags', name: 'Empty tags option', tag: [] } satisfies SelectItem;
+const EMPTY_TAGS_ITEM = { id: 'empty-tags', name: 'Empty tags option', tags: [] } satisfies SelectItem;
 const ONE_TAG_ITEM = {
     id: 'one-tag',
     name: 'Single tag option',
     secondaryText: 'Supporting text one',
-    tag: [SUCCESS_TAG]
+    tags: [SUCCESS_TAG]
 } satisfies SelectItem;
 const TWO_TAGS_ITEM = {
     id: 'two-tags',
     name: 'Two tags option',
     secondaryText: 'Supporting text two',
-    tag: [SUCCESS_TAG, INFO_TAG]
+    tags: [SUCCESS_TAG, INFO_TAG]
 } satisfies SelectItem;
 const THREE_TAGS_ITEM = {
     id: 'three-tags',
     name: 'Three tags option',
     secondaryText: 'Supporting text three',
-    tag: [SUCCESS_TAG, INFO_TAG, EXTRA_TAG]
+    tags: [SUCCESS_TAG, INFO_TAG, EXTRA_TAG]
 } satisfies SelectItem;
 const DISABLED_TAGGED_ITEM = {
     id: 'disabled-tagged',
     name: 'Disabled option',
-    tag: [INFO_TAG],
+    tags: [INFO_TAG],
     disabled: true
+} satisfies SelectItem;
+
+/**
+ * A name long enough that it cannot share a row with the tags, used to pin down what survives the
+ * collapsed button's truncation.
+ */
+const LONG_NAME_TAGGED_ITEM = {
+    id: 'long-name',
+    name: 'An extremely long option name that will not fit inside the collapsed dropdown button on any sensible width',
+    tags: [SUCCESS_TAG, INFO_TAG]
 } satisfies SelectItem;
 
 const ITEMS: SelectItem[] = [PLAIN_ITEM, EMPTY_TAGS_ITEM, ONE_TAG_ITEM, TWO_TAGS_ITEM, THREE_TAGS_ITEM, DISABLED_TAGGED_ITEM];
@@ -65,8 +75,6 @@ type RenderSelectProps = Partial<SelectProps> & { items: SelectItem[] };
 const renderSelect = (props: RenderSelectProps) =>
     render(withCore(<Select className="" classNameModifiers={[]} readonly={false} name={SELECT_NAME} {...props} />));
 
-const renderTaggedSelect = (props: RenderSelectProps) => renderSelect({ secondaryContent: SecondaryContentVariant.TAG, ...props });
-
 interface ControlledSelectProps {
     items: SelectItem[];
 }
@@ -77,7 +85,6 @@ const ControlledSelect = ({ items }: Readonly<ControlledSelectProps>) => {
     const props: RenderSelectProps = {
         items,
         filterable: false,
-        secondaryContent: SecondaryContentVariant.TAG,
         selectedValue,
         onChange: e => setSelectedValue((e.target as SelectTargetObject).value)
     };
@@ -122,42 +129,42 @@ describe('Select with tags', () => {
         };
 
         test('adds no tag node for an option without tags', async () => {
-            renderTaggedSelect({ items: ITEMS, filterable: false });
+            renderSelect({ items: ITEMS, filterable: false });
             await openList();
 
             expect(textOf(getOption(PLAIN_ITEM))).toBe('Plain option');
         });
 
         test('adds no tag node for an empty tags array', async () => {
-            renderTaggedSelect({ items: ITEMS, filterable: false });
+            renderSelect({ items: ITEMS, filterable: false });
             await openList();
 
             expect(textOf(getOption(EMPTY_TAGS_ITEM))).toBe('Empty tags option');
         });
 
         test('renders a single tag after the secondaryText', async () => {
-            renderTaggedSelect({ items: ITEMS, filterable: false });
+            renderSelect({ items: ITEMS, filterable: false });
             await openList();
 
             expect(textOf(getOption(ONE_TAG_ITEM))).toMatch(contentOf('Single tag option', 'Supporting text one', 'Verified'));
         });
 
         test('renders two tags in array order, after the secondaryText', async () => {
-            renderTaggedSelect({ items: ITEMS, filterable: false });
+            renderSelect({ items: ITEMS, filterable: false });
             await openList();
 
             expect(textOf(getOption(TWO_TAGS_ITEM))).toMatch(contentOf('Two tags option', 'Supporting text two', 'Verified', 'New'));
         });
 
         test('renders three tags in array order, without dropping any', async () => {
-            renderTaggedSelect({ items: ITEMS, filterable: false });
+            renderSelect({ items: ITEMS, filterable: false });
             await openList();
 
             expect(textOf(getOption(THREE_TAGS_ITEM))).toMatch(contentOf('Three tags option', 'Supporting text three', 'Verified', 'New', 'Popular'));
         });
 
         test('exposes the name, the secondaryText and the tags to screen readers in that order', async () => {
-            renderTaggedSelect({ items: ITEMS, filterable: false });
+            renderSelect({ items: ITEMS, filterable: false });
             await openList();
 
             expect(getOption(TWO_TAGS_ITEM)).toHaveAccessibleName('Two tags option Supporting text two Verified New');
@@ -166,19 +173,19 @@ describe('Select with tags', () => {
 
     describe('collapsed select button', () => {
         test('shows the name and the single tag of the selected option', () => {
-            renderTaggedSelect({ items: ITEMS, filterable: false, selectedValue: ONE_TAG_ITEM.id });
+            renderSelect({ items: ITEMS, filterable: false, selectedValue: ONE_TAG_ITEM.id });
 
             expect(textOf(getCollapsedButton())).toMatch(contentOf('Single tag option', 'Verified'));
         });
 
         test('shows both tags of the selected option', () => {
-            renderTaggedSelect({ items: ITEMS, filterable: false, selectedValue: TWO_TAGS_ITEM.id });
+            renderSelect({ items: ITEMS, filterable: false, selectedValue: TWO_TAGS_ITEM.id });
 
             expect(textOf(getCollapsedButton())).toMatch(contentOf('Two tags option', 'Verified', 'New'));
         });
 
         test('shows all three tags of the selected option', () => {
-            renderTaggedSelect({ items: ITEMS, filterable: false, selectedValue: THREE_TAGS_ITEM.id });
+            renderSelect({ items: ITEMS, filterable: false, selectedValue: THREE_TAGS_ITEM.id });
 
             expect(textOf(getCollapsedButton())).toMatch(contentOf('Three tags option', 'Verified', 'New', 'Popular'));
         });
@@ -186,13 +193,13 @@ describe('Select with tags', () => {
         // With a uniqueId the button is labelled by '[id]-label [id]-value', so the accessible name is
         // scoped to the label and the selected name, leaving the tags out of it.
         test('narrows the accessible name down to the selected name when uniqueId is set', () => {
-            renderTaggedSelect({ items: ITEMS, filterable: false, selectedValue: TWO_TAGS_ITEM.id, uniqueId: 'tagged-select' });
+            renderSelect({ items: ITEMS, filterable: false, selectedValue: TWO_TAGS_ITEM.id, uniqueId: 'tagged-select' });
 
             expect(screen.getByRole('combobox')).toHaveAccessibleName('Two tags option');
         });
 
         test('shows the tags of the selected option in the filterable variant', () => {
-            renderTaggedSelect({ items: ITEMS, filterable: true, selectedValue: TWO_TAGS_ITEM.id });
+            renderSelect({ items: ITEMS, filterable: true, selectedValue: TWO_TAGS_ITEM.id });
 
             expect(screen.getByRole('combobox')).toHaveValue(TWO_TAGS_ITEM.name);
             expect(countOutsideList(SUCCESS_TAG.label)).toBe(1);
@@ -201,12 +208,45 @@ describe('Select with tags', () => {
         });
 
         test('hides the tags of the filterable variant while the list is open', async () => {
-            renderTaggedSelect({ items: ITEMS, filterable: true, selectedValue: TWO_TAGS_ITEM.id });
+            renderSelect({ items: ITEMS, filterable: true, selectedValue: TWO_TAGS_ITEM.id });
 
             await user.click(screen.getByRole('combobox'));
 
             expect(countOutsideList(SUCCESS_TAG.label)).toBe(0);
             expect(countOutsideList(INFO_TAG.label)).toBe(0);
+        });
+
+        // The collapsed button is tags-only: supporting text is reserved for the open list, so a
+        // consumer that needs it collapsed has to convey the state another way, e.g. `disabled`.
+        test('never renders the secondaryText of the selected option', () => {
+            renderSelect({ items: ITEMS, filterable: false, selectedValue: TWO_TAGS_ITEM.id });
+
+            expect(within(getCollapsedButton()).queryByText(TWO_TAGS_ITEM.secondaryText)).not.toBeInTheDocument();
+        });
+    });
+
+    /**
+     * Structural only. jsdom has no layout engine, so these cannot assert that the tags visually fit
+     * beside a truncated name — they pin down that nothing is dropped from the DOM and that the name
+     * keeps the class carrying `text-overflow: ellipsis`, which is what the layout fix builds on.
+     */
+    describe('truncation', () => {
+        test('keeps both tags beside a name too long for the collapsed button', () => {
+            renderSelect({ items: [LONG_NAME_TAGGED_ITEM], filterable: false, selectedValue: LONG_NAME_TAGGED_ITEM.id });
+
+            const button = getCollapsedButton();
+
+            expect(within(button).getByText(LONG_NAME_TAGGED_ITEM.name)).toHaveClass('adyen-checkout__dropdown__button__text');
+            expect(within(button).getByText(SUCCESS_TAG.label)).toBeInTheDocument();
+            expect(within(button).getByText(INFO_TAG.label)).toBeInTheDocument();
+        });
+
+        test('keeps both tags beside a long name in the filterable variant', () => {
+            renderSelect({ items: [LONG_NAME_TAGGED_ITEM], filterable: true, selectedValue: LONG_NAME_TAGGED_ITEM.id });
+
+            expect(screen.getByRole('combobox')).toHaveValue(LONG_NAME_TAGGED_ITEM.name);
+            expect(countOutsideList(SUCCESS_TAG.label)).toBe(1);
+            expect(countOutsideList(INFO_TAG.label)).toBe(1);
         });
     });
 
@@ -223,7 +263,7 @@ describe('Select with tags', () => {
 
     describe('disabled tagged option', () => {
         test('is announced as disabled and still exposes its tag label', async () => {
-            renderTaggedSelect({ items: ITEMS, filterable: false });
+            renderSelect({ items: ITEMS, filterable: false });
 
             await user.click(screen.getByRole('combobox'));
 
@@ -236,7 +276,7 @@ describe('Select with tags', () => {
 
     describe('filtering', () => {
         test('does not match on tag labels', async () => {
-            renderTaggedSelect({ items: ITEMS, filterable: true });
+            renderSelect({ items: ITEMS, filterable: true });
 
             await user.type(screen.getByRole('combobox'), SUCCESS_TAG.label);
 
@@ -248,30 +288,16 @@ describe('Select with tags', () => {
     describe('translations', () => {
         test('renders a tag label that looks like a translation key verbatim, in the option and in the button', async () => {
             const items: SelectItem[] = [
-                { id: 'raw-label', name: 'Raw label option', tag: [{ label: 'select.tag.example', variant: TagVariant.INFO }] }
+                { id: 'raw-label', name: 'Raw label option', tags: [{ label: 'select.tag.example', variant: TagVariant.INFO }] }
             ];
 
-            renderTaggedSelect({ items, filterable: false, selectedValue: 'raw-label' });
+            renderSelect({ items, filterable: false, selectedValue: 'raw-label' });
 
             expect(within(getCollapsedButton()).getByText('select.tag.example')).toBeInTheDocument();
 
             await user.click(screen.getByRole('combobox'));
 
             expect(within(screen.getAllByRole('option')[0]).getByText('select.tag.example')).toBeInTheDocument();
-        });
-    });
-
-    describe('secondaryContent mode', () => {
-        test('keeps the secondaryText in the collapsed button under the default', () => {
-            renderSelect({ items: ITEMS, filterable: false, selectedValue: TWO_TAGS_ITEM.id });
-
-            expect(textOf(getCollapsedButton())).toMatch(contentOf('Two tags option', 'Supporting text two'));
-        });
-
-        test("swaps the collapsed button over to the tags under 'tag'", () => {
-            renderSelect({ items: ITEMS, filterable: false, selectedValue: TWO_TAGS_ITEM.id, secondaryContent: SecondaryContentVariant.TAG });
-
-            expect(textOf(getCollapsedButton())).toMatch(contentOf('Two tags option', 'Verified', 'New'));
         });
     });
 });

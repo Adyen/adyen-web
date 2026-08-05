@@ -1,8 +1,7 @@
 import { h } from 'preact';
 import { Meta, StoryObj } from '@storybook/preact-vite';
 import { TagList } from './TagList';
-import { TagListProps } from './types';
-import { TagVariant } from '../Tag/types';
+import { TagListProps, TagVariant } from './types';
 
 const meta: Meta<TagListProps> = {
     title: 'Internal Elements/TagList',

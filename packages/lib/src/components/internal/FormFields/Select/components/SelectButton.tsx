@@ -1,8 +1,8 @@
 import { h, Fragment, Ref } from 'preact';
 import cx from 'classnames';
-import { SelectButtonElementProps, SelectButtonProps, SelectItem, SecondaryContentVariant } from '../types';
+import { SelectButtonElementProps, SelectButtonProps } from '../types';
 import Img from '../../../Img';
-import { TagList } from '../../../TagList';
+import { TagList } from '../../../Tag';
 import { useMemo } from 'preact/hooks';
 import classnames from 'classnames';
 
@@ -34,16 +34,6 @@ function SelectButtonElement({ filterable, toggleButtonRef, showList, selectList
             {props.children}
         </button>
     );
-}
-
-function SecondaryContent({ selected, variant }: Readonly<{ selected: SelectItem; variant: SecondaryContentVariant }>) {
-    if (!selected[variant]?.length) return null;
-    switch (variant) {
-        case SecondaryContentVariant.TAG:
-            return <TagList tags={selected.tag} className="adyen-checkout__dropdown__button__tags" />;
-        case SecondaryContentVariant.SECONDARY_TEXT:
-            return <span className="adyen-checkout__dropdown__button__secondary-text">{selected.secondaryText}</span>;
-    }
 }
 
 function SelectButton(props: Readonly<SelectButtonProps>) {
@@ -121,7 +111,7 @@ function SelectButton(props: Readonly<SelectButtonProps>) {
                     >
                         {displayText}
                     </span>
-                    <SecondaryContent selected={selected} variant={props.secondaryContent} />
+                    <TagList tags={selected.tags} className="adyen-checkout__dropdown__button__tags" />
                 </Fragment>
             ) : (
                 <Fragment>
@@ -147,7 +137,7 @@ function SelectButton(props: Readonly<SelectButtonProps>) {
                         aria-describedby={props.ariaDescribedBy}
                         required={required}
                     />
-                    {!showList && <SecondaryContent selected={selected} variant={props.secondaryContent} />}
+                    {!showList && <TagList tags={selected.tags} className="adyen-checkout__dropdown__button__tags" />}
                 </Fragment>
             )}
         </SelectButtonElement>
