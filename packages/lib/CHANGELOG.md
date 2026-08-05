@@ -1,5 +1,11 @@
 # @adyen/adyen-web
 
+## 6.43.0-alpha.084dc82
+
+### Minor Changes
+
+- New: Adding support for Google Accelerated Checkout ([#4005](https://github.com/Adyen/adyen-web/pull/4005))
+
 ## 6.42.0
 
 ### Minor Changes
