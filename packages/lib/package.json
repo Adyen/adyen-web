@@ -137,7 +137,7 @@
         "whatwg-fetch": "3.6.20"
     },
     "dependencies": {
-        "@paypal/paypal-js": "10.0.2",
+        "@paypal/paypal-js": "10.0.3",
         "@types/applepayjs": "14.0.9",
         "@types/googlepay": "0.7.11",
         "classnames": "2.5.1",

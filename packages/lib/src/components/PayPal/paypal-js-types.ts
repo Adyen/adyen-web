@@ -20,6 +20,7 @@ import type {
     OnApproveDataOneTimePayments,
     OneTimePaymentSession,
     SavePaymentSession,
+    VenmoSavePaymentSessionOptions,
     PageTypes
 } from '@paypal/paypal-js/sdk-v6';
 
@@ -55,6 +56,7 @@ export type PayPalV6OnApproveData = OnApproveDataOneTimePayments | OnApproveData
 export type PayPalSavePaymentSessionOptions = SavePaymentSessionOptions;
 export type PayPalOneTimePaymentSession = OneTimePaymentSession;
 export type PayPalSavePaymentSession = SavePaymentSession;
+export type PayPalVenmoSavePaymentSessionOptions = VenmoSavePaymentSessionOptions;
 export type PayPalPresentationModeOptionsForPopup = {
     presentationMode: 'popup';
     fullPageOverlay?: { enabled: boolean };

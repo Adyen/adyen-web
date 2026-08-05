@@ -80,7 +80,6 @@ describe('VenmoButton', () => {
         await waitFor(() => expect(getWebComponent()).toBeInTheDocument());
         fireEvent.click(getWebComponent());
 
-        // @ts-expect-error - createVenmoSavePaymentSession is not in the SDK type definition
         expect(sdkInstance.createVenmoSavePaymentSession).toHaveBeenCalled();
         await waitFor(() => expect(saveSession.start).toHaveBeenCalled());
     });
