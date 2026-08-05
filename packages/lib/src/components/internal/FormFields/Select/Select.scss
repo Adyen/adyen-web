@@ -86,6 +86,11 @@
     max-width: variable-generator.token(spacer-110);
     height: 26px;
     border-radius: 3px;
+    
+    [dir='rtl'] & {
+        margin-right: 0;
+        margin-left: variable-generator.token(spacer-040);
+    }
 }
 
 .adyen-checkout__dropdown__button__text {
@@ -210,6 +215,11 @@
     margin-right: variable-generator.token(spacer-040);
     max-width: variable-generator.token(spacer-110);
     max-height: 26px;
+
+    [dir='rtl'] & {
+        margin-left: variable-generator.token(spacer-040);
+        margin-right: 0;
+    }
 }
 
 .adyen-checkout__dropdown__element__content {
