@@ -297,6 +297,61 @@ describe('Select', () => {
         });
     });
 
+    describe('selected item icon', () => {
+        const items = [
+            { name: 'Option 1', id: '1', icon: 'option-1.svg' },
+            { name: 'Option 2', id: '2', icon: 'option-2.svg' }
+        ];
+
+        test('renders the icon of the selected item inside the select-only button', () => {
+            renderSelect({ items, filterable: false, selectedValue: '1' });
+
+            expect(within(screen.getByRole('combobox')).getByRole('img', { name: 'Option 1' })).toBeInTheDocument();
+        });
+
+        test('renders the icon of the selected item in the collapsed combobox and drops it once the list opens', async () => {
+            renderSelect({ items, filterable: true, selectedValue: '1' });
+
+            // the collapsed combobox icon plus the icon of the matching option in the list
+            expect(screen.getAllByRole('img', { name: 'Option 1' })).toHaveLength(2);
+
+            await user.click(screen.getByRole('combobox'));
+
+            expect(screen.getAllByRole('img', { name: 'Option 1' })).toHaveLength(1);
+        });
+    });
+
+    describe('readonly', () => {
+        const items = [
+            { name: 'Option 1', id: '1' },
+            { name: 'Option 2', id: '2' }
+        ];
+
+        test('clicking a readonly select-only dropdown does not open the list', async () => {
+            const onChange = jest.fn();
+            renderSelect({ items, filterable: false, readonly: true, selectedValue: '1', onChange });
+
+            const combobox = screen.getByRole('combobox');
+            await user.click(combobox);
+
+            expect(combobox).toHaveAttribute('aria-expanded', 'false');
+            expect(combobox).toHaveAttribute('aria-disabled', 'true');
+            expect(onChange).not.toHaveBeenCalled();
+        });
+
+        test('clicking a readonly combobox does not open the list', async () => {
+            const onChange = jest.fn();
+            renderSelect({ items, filterable: true, readonly: true, selectedValue: '1', onChange });
+
+            const combobox = screen.getByRole('combobox');
+            await user.click(combobox);
+
+            expect(combobox).toHaveAttribute('aria-expanded', 'false');
+            expect(combobox).toHaveAttribute('aria-disabled', 'true');
+            expect(onChange).not.toHaveBeenCalled();
+        });
+    });
+
     describe('selected option', () => {
         const items = [
             { name: 'Issuer 1', id: '1' },
