@@ -8,7 +8,6 @@ import { BasePaypalElement } from './models/BasePaypalElement';
 import { VenmoComponent } from './components/VenmoComponent';
 import type { VenmoConfiguration } from './types';
 import { PayPalComponents } from './paypal-js-types';
-import './Paypal.scss';
 
 class VenmoElement extends BasePaypalElement<VenmoConfiguration> {
     public static readonly type = TxVariants.paypal_venmo;
