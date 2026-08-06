@@ -175,6 +175,7 @@
     "field.invalid": "Feld ungültig",
     "field.error.required": "Geben Sie %{label} ein",
     "field.error.invalid": "Geben Sie einen gültigen %{label} ein",
+    "field.error.invalidCharacters": "Einige Sonderzeichen sind nicht zulässig. Geben Sie ein gültiges %{label} ein",
     "error.giftcard.no-balance": "Auf dieser Geschenkkarte ist kein Guthaben vorhanden",
     "error.giftcard.card-error": "Es gibt in unserem System keine Geschenkkarte mit dieser Nummer",
     "error.giftcard.currency-error": "Geschenkkarten sind nur in der Währung gültig, in der sie ausgestellt wurden",

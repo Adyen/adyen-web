@@ -175,6 +175,7 @@
     "field.invalid": "Το πεδίο δεν είναι έγκυρο",
     "field.error.required": "Εισαγάγετε %{label}",
     "field.error.invalid": "Εισαγάγετε έγκυρο %{label}",
+    "field.error.invalidCharacters": "Ορισμένοι ειδικοί χαρακτήρες δεν επιτρέπονται, εισαγάγετε έγκυρο %{label}",
     "error.giftcard.no-balance": "Η συγκεκριμένη δωροκάρτα έχει μηδενικό υπόλοιπο",
     "error.giftcard.card-error": "Στα αρχεία μας δεν υπάρχει δωροκάρτα με αυτόν τον αριθμό",
     "error.giftcard.currency-error": "Οι δωροκάρτες ισχύουν μόνο για το νόμισμα στο οποίο εκδόθηκαν",

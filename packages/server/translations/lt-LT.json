@@ -175,6 +175,7 @@
     "field.invalid": "Laukas negalioja",
     "field.error.required": "Įveskite %{label}",
     "field.error.invalid": "Įveskite tinkamą %{label}",
+    "field.error.invalidCharacters": "Kai kurie specialieji simboliai neleidžiami, įveskite tinkamą %{label}",
     "error.giftcard.no-balance": "Šios dovanų kortelės likutis yra nulinis",
     "error.giftcard.card-error": "Mūsų apskaitoje nėra dovanų kortelės su šiuo numeriu",
     "error.giftcard.currency-error": "Dovanų kortelės galioja tik ta valiuta, kuria jos buvo išduotos",

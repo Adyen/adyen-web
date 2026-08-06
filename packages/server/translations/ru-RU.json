@@ -175,6 +175,7 @@
     "field.invalid": "Недействительное поле",
     "field.error.required": "Введите %{label}",
     "field.error.invalid": "Введите действительное значение %{label}",
+    "field.error.invalidCharacters": "Разрешены не все спец. символы. Введите допуст. значение: %{label}",
     "error.giftcard.no-balance": "На этой подарочной карте нет средств",
     "error.giftcard.card-error": "У нас не зарегистрирована карта с таким номером",
     "error.giftcard.currency-error": "Принимаются только подарочные карты соответствующей валюты",

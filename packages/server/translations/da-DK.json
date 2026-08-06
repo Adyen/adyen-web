@@ -175,6 +175,7 @@
     "field.invalid": "Ugyldigt felt",
     "field.error.required": "Indtast %{label}",
     "field.error.invalid": "Indtast en gyldig %{label}",
+    "field.error.invalidCharacters": "Nogle specialtegn er ikke tilladt, angiv gyldigt %{label}",
     "error.giftcard.no-balance": "Saldoen på gavekortet er 0",
     "error.giftcard.card-error": "Vi har ikke et gavekort med dette nummer i vores optegnelser",
     "error.giftcard.currency-error": "Gavekort er kun gyldige i udstedelsesvalutaen",

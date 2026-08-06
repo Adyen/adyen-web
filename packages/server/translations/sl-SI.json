@@ -175,6 +175,7 @@
     "field.invalid": "Polje ni veljavno",
     "field.error.required": "Vnesite %{label}",
     "field.error.invalid": "Vnesite veljavno %{label}",
+    "field.error.invalidCharacters": "Nekateri posebni znaki niso dovoljeni, vnesite veljaven %{label}",
     "error.giftcard.no-balance": "Na tej darilni kartici ni sredstev",
     "error.giftcard.card-error": "V naši evidenci nimamo darilne kartice s to številko",
     "error.giftcard.currency-error": "Darilne kartice so veljavne samo za valuto, za katero so bile izdane",

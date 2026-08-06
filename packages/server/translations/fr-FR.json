@@ -175,6 +175,7 @@
     "field.invalid": "Champ non valide",
     "field.error.required": "Saisissez le %{label}",
     "field.error.invalid": "Saisissez un %{label} valide",
+    "field.error.invalidCharacters": "Certains caractères spéciaux ne sont pas autorisés ; entrez un %{label} valide",
     "error.giftcard.no-balance": "Aucun solde n'est disponible sur cette carte cadeau",
     "error.giftcard.card-error": "Aucune carte cadeau ne correspond à ce numéro",
     "error.giftcard.currency-error": "Les cartes cadeaux sont valables uniquement dans la devise dans laquelle elles ont été émises",

@@ -175,6 +175,7 @@
     "field.invalid": "Pole není platné",
     "field.error.required": "Zadejte %{label}",
     "field.error.invalid": "Zadejte platné %{label}",
+    "field.error.invalidCharacters": "Některé speciální znaky nejsou povoleny, zadejte platný údaj do políčka %{label}",
     "error.giftcard.no-balance": "Na dárkové kartě je nulový zůstatek",
     "error.giftcard.card-error": "V našich záznamech není žádná dárková karta s tímto číslem",
     "error.giftcard.currency-error": "Dárkové karty jsou platné jenom v měně, ve které byly vystavené",

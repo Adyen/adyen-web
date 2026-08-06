@@ -175,6 +175,7 @@
     "field.invalid": "El camp no és vàlid",
     "field.error.required": "Introduïu el %{label}",
     "field.error.invalid": "Introduïu un %{label} vàlid",
+    "field.error.invalidCharacters": "No es permeten alguns caràcters especials, introduïu un %{label} vàlid",
     "error.giftcard.no-balance": "Aquesta targeta regal té un saldo zero",
     "error.giftcard.card-error": "Als nostres registres no tenim cap targeta regal amb aquest número",
     "error.giftcard.currency-error": "Les targetes regal només són vàlides en la moneda en què van ser emeses",

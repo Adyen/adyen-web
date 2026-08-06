@@ -175,6 +175,7 @@
     "field.invalid": "Veld niet geldig",
     "field.error.required": "Voer het %{label} in",
     "field.error.invalid": "Voer een geldig %{label} in",
+    "field.error.invalidCharacters": "Sommige speciale tekens zijn niet toegestaan, voer een geldig %{label} in",
     "error.giftcard.no-balance": "Deze cadeaukaart heeft geen saldo",
     "error.giftcard.card-error": "We hebben geen cadeaukaart met dit nummer in onze administratie",
     "error.giftcard.currency-error": "Cadeaukaarten zijn alleen geldig in de valuta waarin ze zijn uitgegeven",

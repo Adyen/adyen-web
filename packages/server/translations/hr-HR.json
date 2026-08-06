@@ -175,6 +175,7 @@
     "field.invalid": "Nevažeće polje",
     "field.error.required": "Unesite %{label}",
     "field.error.invalid": "Unesite valjanu %{label}",
+    "field.error.invalidCharacters": "Neki posebni znakovi nisu dopušteni, unesite valjani %{label}",
     "error.giftcard.no-balance": "Stanje na ovoj poklon-kartici iznosi nula",
     "error.giftcard.card-error": "U našoj evidenciji nemamo poklon-karticu s ovim brojem",
     "error.giftcard.currency-error": "Poklon-kartice vrijede samo u valuti u kojoj su izdane",

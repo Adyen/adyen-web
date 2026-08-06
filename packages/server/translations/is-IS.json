@@ -175,6 +175,7 @@
     "field.invalid": "Ógildur reitur",
     "field.error.required": "Sláðu inn %{label}",
     "field.error.invalid": "Sláðu inn %{label} í gildi",
+    "field.error.invalidCharacters": "Sum sértákn eru ekki leyfð, sláðu inn %{label} í gildi",
     "error.giftcard.no-balance": "Þetta gjafakort hefur enga innistæðu",
     "error.giftcard.card-error": "Við höfum ekkert gjafakort með þessu númeri í skránum okkar",
     "error.giftcard.currency-error": "Gjafakort gilda aðeins í þeim gjaldmiðli sem þau voru gefin út í",

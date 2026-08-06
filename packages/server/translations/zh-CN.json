@@ -175,6 +175,7 @@
     "field.invalid": "无效字段",
     "field.error.required": "输入%{label}",
     "field.error.invalid": "输入有效%{label}",
+    "field.error.invalidCharacters": "不允许使用某些特殊字符，请输入有效的 %{label}",
     "error.giftcard.no-balance": "礼品卡余额为零",
     "error.giftcard.card-error": "我们的数据库中没有这个号码的礼品卡",
     "error.giftcard.currency-error": "礼品卡仅以其发行的货币为有效货币",

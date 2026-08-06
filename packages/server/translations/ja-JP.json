@@ -175,6 +175,7 @@
     "field.invalid": "フィールドが無効です",
     "field.error.required": "%{label}を入力してください",
     "field.error.invalid": "有効な%{label}を入力してください",
+    "field.error.invalidCharacters": "一部の特殊文字は使用できません。有効な%{label}を入力してください。",
     "error.giftcard.no-balance": "このギフトカードの残高はゼロです",
     "error.giftcard.card-error": "記録では、この番号のギフトカードはありません",
     "error.giftcard.currency-error": "ギフトカードは、発行された通貨でのみ有効です。",

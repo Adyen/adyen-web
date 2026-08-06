@@ -175,6 +175,7 @@
     "field.invalid": "Câmp incorect",
     "field.error.required": "Completați %{label}",
     "field.error.invalid": "Completați o %{label} valabilă",
+    "field.error.invalidCharacters": "Unele caractere speciale nu sunt permise. Introduceți un %{label} valid.",
     "error.giftcard.no-balance": "Acest card cadou are soldul zero",
     "error.giftcard.card-error": "În evidențele noastre nu figurează niciun card cadou cu acest număr",
     "error.giftcard.currency-error": "Cardurile cadou sunt valabile numai în moneda în care au fost emise",

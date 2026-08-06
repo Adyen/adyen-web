@@ -1,7 +1,7 @@
 import { ValidatorRules, ValidatorRule } from '../../../utils/Validator/types';
 import { countrySpecificFormatters } from './validate.formats';
-import { ERROR_FIELD_REQUIRED, ERROR_INVALID_FORMAT_EXPECTS } from '../../../core/Errors/constants';
-import { isEmpty } from '../../../utils/validator-utils';
+import { ERROR_FIELD_REQUIRED, ERROR_INVALID_FORMAT_EXPECTS, ERROR_INVALID_CHARACTERS } from '../../../core/Errors/constants';
+import { isEmpty, validateForSpecialChars } from '../../../utils/validator-utils';
 
 const createPatternByDigits = (digits: number) => {
     return {
@@ -93,6 +93,18 @@ export const getPartialAddressValidationRules = (country: string): ValidatorRule
     return validationRules;
 };
 
+const ruleIsEmpty: ValidatorRule = {
+    modes: ['blur'],
+    validate: value => (isEmpty(value) ? null : true),
+    errorMessage: ERROR_FIELD_REQUIRED
+};
+
+const ruleValidateForSpecialChars: ValidatorRule = {
+    modes: ['blur'],
+    validate: value => validateForSpecialChars(value),
+    errorMessage: ERROR_INVALID_CHARACTERS
+};
+
 export const getAddressValidationRules = (specifications): ValidatorRules => {
     const addressValidationRules: ValidatorRules = {
         postalCode: {
@@ -103,20 +115,27 @@ export const getAddressValidationRules = (specifications): ValidatorRules => {
             },
             errorMessage: ERROR_FIELD_REQUIRED
         },
-        houseNumberOrName: {
-            validate: (value, context) => {
-                const selectedCountry = context.state?.data?.country;
-                const isOptional = selectedCountry && specifications.countryHasOptionalField(selectedCountry, 'houseNumberOrName');
-                return isOptional || (isEmpty(value) ? null : true);
+        street: [
+            ruleIsEmpty,
+            ruleValidateForSpecialChars
+        ],
+        houseNumberOrName: [
+            {
+                validate: (value, context) => {
+                    const selectedCountry = context.state?.data?.country;
+                    const isOptional = selectedCountry && specifications.countryHasOptionalField(selectedCountry, 'houseNumberOrName');
+                    return isOptional || (isEmpty(value) ? null : true);
+                },
+                modes: ['blur'],
+                errorMessage: ERROR_FIELD_REQUIRED
             },
-            modes: ['blur'],
-            errorMessage: ERROR_FIELD_REQUIRED
-        },
-        default: {
-            validate: value => (isEmpty(value) ? null : true), // true, if there are chars other than spaces
-            modes: ['blur'],
-            errorMessage: ERROR_FIELD_REQUIRED
-        }
+            ruleValidateForSpecialChars
+        ],
+        city: [
+            ruleIsEmpty,
+            ruleValidateForSpecialChars
+        ],
+        default: ruleIsEmpty
     };
     return addressValidationRules;
 };

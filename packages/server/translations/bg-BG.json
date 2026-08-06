@@ -175,6 +175,7 @@
     "field.invalid": "Полето не е валидно",
     "field.error.required": "Въведете %{label}",
     "field.error.invalid": "Въведете валиден %{label}",
+    "field.error.invalidCharacters": "Някои специални символи не са разрешени, въведете валиден %{label}",
     "error.giftcard.no-balance": "Тази подаръчна карта е с нулев баланс",
     "error.giftcard.card-error": "В нашите записи нямаме карта за подарък с този номер",
     "error.giftcard.currency-error": "Подаръчните карти са валидни само във валутата, в която са издадени",
