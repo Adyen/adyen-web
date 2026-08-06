@@ -81,7 +81,7 @@ __metadata:
   dependencies:
     "@adyen/bento-design-tokens": "npm:1.10.0"
     "@eslint/js": "npm:10.0.1"
-    "@paypal/paypal-js": "npm:10.0.2"
+    "@paypal/paypal-js": "npm:10.0.3"
     "@preact/preset-vite": "npm:2.10.5"
     "@rollup/plugin-commonjs": "npm:29.0.3"
     "@rollup/plugin-eslint": "npm:9.2.0"
@@ -2948,12 +2948,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@paypal/paypal-js@npm:10.0.2":
-  version: 10.0.2
-  resolution: "@paypal/paypal-js@npm:10.0.2"
+"@paypal/paypal-js@npm:10.0.3":
+  version: 10.0.3
+  resolution: "@paypal/paypal-js@npm:10.0.3"
   dependencies:
     promise-polyfill: "npm:^8.3.0"
-  checksum: 10c0/a821721d244d18b31f6598160cdfd696cad0272bcb62a1618b9b1df992fb07f6a43179ad1ce2fe1888c9b8c1e0cc45c5b4a462f00711134457dd6bd8f17744d0
+  checksum: 10c0/228acd957ffaaf5df52ecd2c87b97954195ee7d8be64a8b686c77a7dc52b170738c2f51e30f9b51a6d683bf509f84e23bc974ff15eb006e0c0b5a8dd112bbc53
   languageName: node
   linkType: hard
 
