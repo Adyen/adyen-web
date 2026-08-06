@@ -1,15 +1,14 @@
 import { h } from 'preact';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'preact/hooks';
+import { useMemo } from 'preact/hooks';
 
-import { PayPalComponentV6Props } from './types';
+import { usePayPalStatus } from '../hooks/usePayPalStatus';
 import { PayPalButton } from './PayPalButton';
-import { PayPalPayLaterButton } from './PayPalPayLaterButton';
 import { PayPalCreditButton } from './PayPalCreditButton';
-import { VenmoButton } from './VenmoButton';
-import { PayPalSpinner } from './PayPalSpinner';
-import { ComponentMethodsRef } from '../../types';
-import { PayPalV6OnApproveData } from '../paypal-js-types';
+import { PayPalPayLaterButton } from './PayPalPayLaterButton';
 import { PayPalProcessingSpinner } from './PayPalProcessingSpinner';
+import { PayPalSpinner } from './PayPalSpinner';
+import { PayPalComponentV6Props } from './types';
+import { VenmoButton } from './VenmoButton';
 
 const PayPalComponentV6 = ({
     paypalService,
@@ -28,35 +27,11 @@ const PayPalComponentV6 = ({
     onError,
     setComponentRef
 }: Readonly<PayPalComponentV6Props>) => {
-    const [status, setStatus] = useState('pending');
-
-    const paypalComponentRef = useRef<ComponentMethodsRef>({
-        setStatus: setStatus
+    const { status, handleOnApprove } = usePayPalStatus({
+        paypalService,
+        onApprove,
+        setComponentRef
     });
-
-    useEffect(() => {
-        setComponentRef(paypalComponentRef.current);
-    }, [setComponentRef]);
-
-    useEffect(() => {
-        paypalService
-            .isSdkLoaded()
-            .then(() => {
-                setStatus('ready');
-            })
-            .catch(() => {
-                // SDK failed to load, but we don't need to handle it here
-            });
-    }, [paypalService]);
-
-    const handleOnApprove = useCallback(
-        (data: PayPalV6OnApproveData) => {
-            setStatus('processing');
-            void onApprove(data);
-            return Promise.resolve();
-        },
-        [onApprove]
-    );
 
     const commonProps = useMemo(
         () => ({
