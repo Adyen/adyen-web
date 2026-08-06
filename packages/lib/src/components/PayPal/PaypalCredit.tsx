@@ -6,7 +6,6 @@ import type { BasePayPalConfiguration, SupportedPayPalFundingSources } from './t
 
 import { BasePaypalElement } from './models/BasePaypalElement';
 import { PaypalCreditComponent } from './components/PaypalCreditComponent';
-import './Paypal.scss';
 
 class PaypalCreditElement extends BasePaypalElement<BasePayPalConfiguration> {
     public static readonly type = TxVariants.paypal_credit;
