@@ -1,13 +1,11 @@
 import { h } from 'preact';
-import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
 
-import { ComponentMethodsRef } from '../../types';
-import { PayPalV6OnApproveData } from '../paypal-js-types';
+import { usePayPalStatus } from '../hooks/usePayPalStatus';
+import { PayPalMessaging } from './PayPalMessaging';
 import { PayPalPayLaterButton } from './PayPalPayLaterButton';
 import { PayPalProcessingSpinner } from './PayPalProcessingSpinner';
 import { PayPalSpinner } from './PayPalSpinner';
 import { PayPalComponentV6Props } from './types';
-import { PayPalMessaging } from './PayPalMessaging';
 
 export const PayPalPaylaterComponent = ({
     paypalService,
@@ -28,35 +26,11 @@ export const PayPalPaylaterComponent = ({
         countryCode?: string;
     }
 >) => {
-    const [status, setStatus] = useState('pending');
-
-    const paypalPaylaterComponentRef = useRef<ComponentMethodsRef>({
-        setStatus: setStatus
+    const { status, handleOnApprove } = usePayPalStatus({
+        paypalService,
+        onApprove,
+        setComponentRef
     });
-
-    useEffect(() => {
-        setComponentRef(paypalPaylaterComponentRef.current);
-    }, [setComponentRef]);
-
-    useEffect(() => {
-        paypalService
-            .isSdkLoaded()
-            .then(() => {
-                setStatus('ready');
-            })
-            .catch(() => {
-                // SDK failed to load, but we don't need to handle it here
-            });
-    }, [paypalService]);
-
-    const handleOnApprove = useCallback(
-        (data: PayPalV6OnApproveData) => {
-            setStatus('processing');
-            void onApprove(data);
-            return Promise.resolve();
-        },
-        [onApprove]
-    );
 
     if (status === 'pending') {
         return (
