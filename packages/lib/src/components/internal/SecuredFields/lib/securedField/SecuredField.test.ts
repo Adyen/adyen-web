@@ -182,6 +182,18 @@ describe('SecuredField handling ariaConfig object - should trim the config objec
         expect(card.sfConfig.iframeUIConfig.ariaConfig[ENCRYPTED_EXPIRY_DATE].error[ERROR_MSG_CARD_TOO_OLD]).toEqual(TRANSLATED_CARD_TOO_OLD_ERROR);
     });
 
+    test('cvc field, with default ariaConfig, should include both the base and the Amex-specific translated error strings', () => {
+        setupObj.fieldType = ENCRYPTED_SECURITY_CODE;
+        const card = new SecuredField(setupObj, global.i18n);
+
+        const cvcErrors = card.sfConfig.iframeUIConfig.ariaConfig[ENCRYPTED_SECURITY_CODE].error;
+
+        expect(cvcErrors[SF_ErrorCodes.ERROR_MSG_EMPTY_CVC]).toEqual(en[SF_ErrorCodes.ERROR_MSG_EMPTY_CVC]);
+        expect(cvcErrors[SF_ErrorCodes.ERROR_MSG_INCORRECTLY_FILLED_CVC]).toEqual(en[SF_ErrorCodes.ERROR_MSG_INCORRECTLY_FILLED_CVC]);
+        expect(cvcErrors[SF_ErrorCodes.ERROR_MSG_EMPTY_CVC_AMEX]).toEqual(en[SF_ErrorCodes.ERROR_MSG_EMPTY_CVC_AMEX]);
+        expect(cvcErrors[SF_ErrorCodes.ERROR_MSG_INCORRECTLY_FILLED_CVC_AMEX]).toEqual(en[SF_ErrorCodes.ERROR_MSG_INCORRECTLY_FILLED_CVC_AMEX]);
+    });
+
     test('Card number field with default ariaConfig should have an error object containing certain keys whose values are the correct translations', () => {
         setupObj.fieldType = ENCRYPTED_CARD_NUMBER;
         setupObj.iframeUIConfig.ariaConfig = {};

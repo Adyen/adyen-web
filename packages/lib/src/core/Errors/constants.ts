@@ -57,6 +57,9 @@ export enum SF_ErrorCodes {
     ERROR_MSG_EMPTY_CVC = `${ErrorCodePrefixes.CC_CVC}.920`,
     ERROR_MSG_INCORRECTLY_FILLED_CVC = `${ErrorCodePrefixes.CC_CVC}.921`,
 
+    ERROR_MSG_EMPTY_CVC_AMEX = `${ErrorCodePrefixes.CC_CVC}.920.amex`,
+    ERROR_MSG_INCORRECTLY_FILLED_CVC_AMEX = `${ErrorCodePrefixes.CC_CVC}.921.amex`,
+
     ERROR_MSG_EMPTY_KCP_PWD = `${ErrorCodePrefixes.KCP_PWD}.940`,
     ERROR_MSG_INCORRECTLY_FILLED_KCP_PWD = `${ErrorCodePrefixes.KCP_PWD}.941`
 }
