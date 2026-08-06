@@ -1,8 +1,7 @@
 import { h } from 'preact';
-import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
 
-import { ComponentMethodsRef, PayPalVenmoButtonStyle } from '../../types';
-import { PayPalV6OnApproveData } from '../paypal-js-types';
+import { PayPalVenmoButtonStyle } from '../../types';
+import { usePayPalStatus } from '../hooks/usePayPalStatus';
 import { PayPalProcessingSpinner } from './PayPalProcessingSpinner';
 import { PayPalSpinner } from './PayPalSpinner';
 import { PayPalComponentV6Props } from './types';
@@ -25,35 +24,11 @@ export const VenmoComponent = ({
         style?: PayPalVenmoButtonStyle;
     }
 >) => {
-    const [status, setStatus] = useState('pending');
-
-    const venmoComponentRef = useRef<ComponentMethodsRef>({
-        setStatus: setStatus
+    const { status, handleOnApprove } = usePayPalStatus({
+        paypalService,
+        onApprove,
+        setComponentRef
     });
-
-    useEffect(() => {
-        setComponentRef(venmoComponentRef.current);
-    }, [setComponentRef]);
-
-    useEffect(() => {
-        paypalService
-            .isSdkLoaded()
-            .then(() => {
-                setStatus('ready');
-            })
-            .catch(() => {
-                // SDK failed to load, but we don't need to handle it here
-            });
-    }, [paypalService]);
-
-    const handleOnApprove = useCallback(
-        (data: PayPalV6OnApproveData) => {
-            setStatus('processing');
-            void onApprove(data);
-            return Promise.resolve();
-        },
-        [onApprove]
-    );
 
     if (status === 'pending') {
         return (
@@ -72,7 +47,7 @@ export const VenmoComponent = ({
     }
 
     return (
-        <div className="adyen-checkout__paypal" data-testid="paypal-venmo-component">
+        <div className="adyen-checkout__paypal" data-testid="venmo-component">
             <VenmoButton
                 paypalService={paypalService}
                 presentationModeOptions={presentationModeOptions}
