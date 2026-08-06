@@ -6,6 +6,7 @@ import { BinLookupResponse, BinLookupResponseRaw, BrandObject } from '../../../C
 import type CardElement from '../../../Card';
 import type CustomCardElement from '../../../CustomCard';
 import { TxVariants } from '../../../tx-variants';
+import { filterBrandsByFundingSource } from './fundingSource';
 
 if (process.env.NODE_ENV === 'development') {
     window.mockBinCount = 0; // Set to 0 to turn off mocking, 1 to turn it on
@@ -120,26 +121,12 @@ export const triggerBinLookUp = (element: CardElement | CustomCardElement) => {
                          */
                         if (mappedResponse.supportedBrands.length) {
                             /**
-                             * Funding source validation & filtering.
-                             *
-                             * When allowedFundingSources is configured, every supported brand that reports a funding
-                             * source outside the allowed list is filtered out. Brands without a funding source (null,
-                             * undefined or empty string) are never filtered. If every supported brand reports a
-                             * disallowed funding source they all get filtered out and the card is rejected.
+                             * Funding source filtering. Only the Card component carries a normalized
+                             * allowedFundingSources list; CustomCard has no equivalent configuration.
                              */
-                            const allowedFundingSources =
-                                'configuration' in element.props
-                                    ? element.props.configuration?.allowedFundingSources
-                                          ?.split(',')
-                                          .map(fundingSource => fundingSource.trim())
-                                          .filter(Boolean)
-                                    : undefined;
+                            const allowedFundingSources = 'allowedFundingSources' in element.props ? element.props.allowedFundingSources : undefined;
 
-                            const supportedBrands = allowedFundingSources?.length
-                                ? mappedResponse.supportedBrands.filter(
-                                      brand => !brand.fundingSource || allowedFundingSources.includes(brand.fundingSource)
-                                  )
-                                : mappedResponse.supportedBrands;
+                            const supportedBrands = filterBrandsByFundingSource(mappedResponse.supportedBrands, allowedFundingSources);
 
                             /**
                              * Nothing survived the filter, meaning every supported brand reported a disallowed funding
