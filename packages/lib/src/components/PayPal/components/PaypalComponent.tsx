@@ -2,7 +2,7 @@ import { h } from 'preact';
 import { useState, useEffect, useCallback, useRef } from 'preact/hooks';
 
 import PaypalButtons from './PaypalButtons';
-import Spinner from '../../internal/Spinner';
+import { PayPalSpinner } from './PayPalSpinner';
 import { getPaypalUrl } from '../utils/get-paypal-url';
 import Script from '../../../utils/Script';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
@@ -74,9 +74,7 @@ export default function PaypalComponent({
     if (status === 'pending') {
         return (
             <div className="adyen-checkout__paypal" aria-live="polite" aria-busy="true">
-                <div className="adyen-checkout__paypal__status adyen-checkout__paypal__status--pending" data-testid="paypal-loader">
-                    <Spinner />
-                </div>
+                <PayPalSpinner />
             </div>
         );
     }

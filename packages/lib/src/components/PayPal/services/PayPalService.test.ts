@@ -2,7 +2,7 @@ import { PayPalService, PayPalServiceConfig } from './PayPalService';
 import { PayPalSdkLoader } from './PayPalSdkLoader';
 import requestPayPalOauthToken from './request-paypal-oauth-token';
 import { mock } from 'jest-mock-extended';
-import type { PayPalEligiblePaymentMethods, PayPalSdkInstance } from '../paypal-js-types';
+import type { PayPalComponents, PayPalEligiblePaymentMethods, PayPalSdkInstance } from '../paypal-js-types';
 import type { PayPalV6Namespace } from '@paypal/paypal-js/sdk-v6';
 
 jest.mock('./request-paypal-oauth-token');
@@ -23,6 +23,7 @@ const createConfig = (overrides: Partial<PayPalServiceConfig> = {}): PayPalServi
     countryCode: 'US',
     amount: { value: 1000, currency: 'USD' },
     vault: false,
+    components: ['paypal-payments'],
     ...overrides
 });
 
@@ -61,8 +62,11 @@ describe('PayPalService', () => {
             });
             expect(createInstanceMock).toHaveBeenCalledWith({
                 clientToken: 'client-token-123',
-                components: ['paypal-payments', 'venmo-payments'],
-                pageType: 'checkout'
+                components: config.components,
+                merchantId: config.merchantId,
+                pageType: undefined,
+                locale: undefined,
+                testBuyerCountry: config.countryCode
             });
             expect(findEligibleMethodsMock).toHaveBeenCalledWith({
                 currencyCode: 'USD',
@@ -71,6 +75,63 @@ describe('PayPalService', () => {
             });
             expect(service.getInstance()).toBe(sdkInstance);
             expect(service.getEligiblePaymentMethods()).toBe(eligibleMethods);
+        });
+
+        test('should forward the configured components to the SDK instance', async () => {
+            const components: PayPalComponents = ['paypal-payments', 'venmo-payments', 'paypal-messages'];
+            const service = new PayPalService(createConfig({ components }));
+
+            await service.initialize();
+
+            expect(createInstanceMock).toHaveBeenCalledWith(expect.objectContaining({ components }));
+        });
+
+        test('should only forward the "paypal-payments" component when no other component is configured', async () => {
+            const service = new PayPalService(createConfig({ components: ['paypal-payments'] }));
+
+            await service.initialize();
+
+            expect(createInstanceMock).toHaveBeenCalledWith(expect.objectContaining({ components: ['paypal-payments'] }));
+        });
+
+        test('should forward the pageType and the supported locale to the SDK instance', async () => {
+            const service = new PayPalService(createConfig({ pageType: 'product-details', locale: 'en_US' }));
+
+            await service.initialize();
+
+            expect(createInstanceMock).toHaveBeenCalledWith(expect.objectContaining({ pageType: 'product-details', locale: 'en-US' }));
+        });
+
+        test('should not forward an unsupported locale to the SDK instance', async () => {
+            const service = new PayPalService(createConfig({ locale: 'xx-XX' }));
+
+            await service.initialize();
+
+            expect(createInstanceMock).toHaveBeenCalledWith(expect.objectContaining({ locale: undefined }));
+        });
+
+        test('should set the testBuyerCountry in the test environment', async () => {
+            const service = new PayPalService(createConfig({ environment: 'test', countryCode: 'NL' }));
+
+            await service.initialize();
+
+            expect(createInstanceMock).toHaveBeenCalledWith(expect.objectContaining({ testBuyerCountry: 'NL' }));
+        });
+
+        test('should set the testBuyerCountry when the environment is not specified', async () => {
+            const service = new PayPalService(createConfig({ environment: undefined, countryCode: 'NL' }));
+
+            await service.initialize();
+
+            expect(createInstanceMock).toHaveBeenCalledWith(expect.objectContaining({ testBuyerCountry: 'NL' }));
+        });
+
+        test('should not set the testBuyerCountry in the live environment', async () => {
+            const service = new PayPalService(createConfig({ environment: 'live', countryCode: 'NL' }));
+
+            await service.initialize();
+
+            expect(createInstanceMock).toHaveBeenCalledWith(expect.objectContaining({ testBuyerCountry: undefined }));
         });
 
         test('should use the "v6" namespace to create the instance when available', async () => {
