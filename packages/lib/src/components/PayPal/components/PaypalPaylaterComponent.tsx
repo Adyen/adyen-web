@@ -14,6 +14,7 @@ export const PayPalPaylaterComponent = ({
     commit = true,
     presentationModeOptions,
     hidePayPalMessaging,
+    countryCode,
     onSubmit,
     onApprove,
     onShippingAddressChange,
@@ -75,7 +76,7 @@ export const PayPalPaylaterComponent = ({
 
     return (
         <div className="adyen-checkout__paypal" data-testid="paypal-paylater-component">
-            {!hidePayPalMessaging && <PayPalMessaging paypalService={paypalService} />}
+            {!hidePayPalMessaging && <PayPalMessaging paypalService={paypalService} countryCode={countryCode} />}
             <PayPalPayLaterButton
                 paypalService={paypalService}
                 presentationModeOptions={presentationModeOptions}
