@@ -35,7 +35,7 @@ export const PayPalMessaging = ({
         };
 
         void fetchMessageContent();
-    }, [payPalSDKInstance, countryCode]);
+    }, [payPalSDKInstance, countryCode, amount]);
 
     return <paypal-message id="paypal-message" ref={messageElementRef}></paypal-message>;
 };
