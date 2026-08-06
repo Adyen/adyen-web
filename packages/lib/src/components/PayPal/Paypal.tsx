@@ -73,11 +73,11 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
 
         const components: PayPalComponents = ['paypal-payments'];
 
-        if (!this.props?.usePayPalV6?.blockPayPalVenmoButton) {
+        if (!paypalV6Props?.blockPayPalVenmoButton) {
             components.push('venmo-payments');
         }
 
-        if (this.props?.usePayPalV6?.onCreatePayPalMessages) {
+        if (paypalV6Props?.onCreatePayPalMessages) {
             components.push('paypal-messages');
         }
 
@@ -86,7 +86,7 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
             loadingContext: this.props.loadingContext ?? '',
             clientKey: this.props.clientKey ?? '',
             merchantId: this.props.configuration?.merchantId ?? '',
-            countryCode: this.props.countryCode ?? '',
+            countryCode: paypalV6Props?.countryCode ?? '',
             amount: this.props.amount,
             vault: Boolean(paypalV6Props?.vault),
             locale: paypalV6Props?.locale,
