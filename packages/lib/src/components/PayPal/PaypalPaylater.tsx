@@ -7,7 +7,6 @@ import type { PayPalPayLaterConfiguration, SupportedPayPalFundingSources } from 
 import { BasePaypalElement } from './models/BasePaypalElement';
 import { PayPalPaylaterComponent } from './components/PaypalPaylaterComponent';
 import { PayPalComponents } from './paypal-js-types';
-import './Paypal.scss';
 
 class PaypalPaylaterElement extends BasePaypalElement<PayPalPayLaterConfiguration> {
     public static readonly type = TxVariants.paypal_paylater;
