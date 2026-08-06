@@ -3,7 +3,6 @@ import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 import UIElement from '../../internal/UIElement/UIElement';
 import { TxVariants } from '../../tx-variants';
 import { ERRORS } from '../constants';
-import defaultProps from '../defaultProps';
 
 import type { AdditionalDetailsData, ICore } from '../../../core/types';
 import type { PaymentAction, PaymentResponseData } from '../../../types/global-types';
@@ -34,8 +33,6 @@ export class BasePaypalElement<TProps extends BasePayPalConfiguration = BasePayP
 
     private resolve: ((value: string) => void) | null = null;
     private reject: ((error?: Error) => void) | null = null;
-
-    protected static readonly defaultProps = defaultProps;
 
     protected paypalService?: PayPalService;
 
