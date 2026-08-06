@@ -8,7 +8,7 @@ const PAYPAL_SDK_URL_SANDBOX = 'https://www.sandbox.paypal.com/web-sdk/v6/core';
 
 const SUPPORTED_COLORS_FOR_CREDIT = ['black', 'white'];
 
-const SUPPORTED_LOCALES = [
+const SUPPORTED_LOCALES_PAYPAL_V5 = [
     'en_US',
     'en_AU',
     'en_GB',
@@ -35,13 +35,46 @@ const SUPPORTED_LOCALES = [
     'zh_TW'
 ] as const;
 
+const SUPPORTED_LOCALES_PAYPAL_V6 = [
+    'en-US',
+    'en-AU',
+    'en-GB',
+    'fr-CA',
+    'es-ES',
+    'it-IT',
+    'fr-FR',
+    'de-DE',
+    'pt-BR',
+    'zh-CN',
+    'da-DK',
+    'zh-HK',
+    'id-ID',
+    'he-IL',
+    'ja-JP',
+    'ko-KR',
+    'nl-NL',
+    'no-NO',
+    'pl-PL',
+    'pt-PT',
+    'ru-RU',
+    'sv-SE',
+    'th-TH',
+    'zh-TW'
+] as const;
+
+const DEFAULT_PAYMENT_SESSION_OPTIONS = {
+    presentationMode: 'auto'
+} as const;
+
 export {
     INTEGRATION_DATE,
     PAYPAL_JS_URL_V5,
     ADYEN_CLIENTID_V5_TEST,
     ADYEN_CLIENTID_V5_LIVE,
-    SUPPORTED_LOCALES,
+    SUPPORTED_LOCALES_PAYPAL_V5,
+    SUPPORTED_LOCALES_PAYPAL_V6,
     SUPPORTED_COLORS_FOR_CREDIT,
     PAYPAL_SDK_URL_PRODUCTION,
-    PAYPAL_SDK_URL_SANDBOX
+    PAYPAL_SDK_URL_SANDBOX,
+    DEFAULT_PAYMENT_SESSION_OPTIONS
 };

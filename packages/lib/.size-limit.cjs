@@ -32,7 +32,7 @@ module.exports = [
     {
         name: 'UMD',
         path: 'dist/umd/adyen.js',
-        limit: '131 KB',
+        limit: '132 KB',
         running: false
     },
     /**

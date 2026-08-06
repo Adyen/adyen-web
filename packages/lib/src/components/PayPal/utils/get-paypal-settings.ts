@@ -1,6 +1,6 @@
-import { getSupportedLocale } from './get-paypal-locale';
+import { getSupportedLocalePayPalV5 } from './get-paypal-locale';
 import { ADYEN_CLIENTID_V5_LIVE, ADYEN_CLIENTID_V5_TEST, INTEGRATION_DATE } from '../config';
-import type { PaypalSettings, PayPalSupportedLocale } from './types';
+import type { PaypalSettings, PayPalV5SupportedLocale } from './types';
 import type { PayPalComponentProps } from '../components/types';
 
 /**
@@ -17,7 +17,7 @@ export const getPaypalSettings = ({
     vault,
     enableMessages
 }: Partial<PayPalComponentProps>): PaypalSettings => {
-    const shopperLocale: PayPalSupportedLocale = getSupportedLocale(locale);
+    const shopperLocale: PayPalV5SupportedLocale = getSupportedLocalePayPalV5(locale);
     const currency: string = amount ? amount.currency : null;
     const isTestEnvironment: boolean = environment.toLowerCase() === 'test';
     const clientId: string = isTestEnvironment ? ADYEN_CLIENTID_V5_TEST : ADYEN_CLIENTID_V5_LIVE;
