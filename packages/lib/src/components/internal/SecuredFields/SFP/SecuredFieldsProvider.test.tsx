@@ -7,7 +7,8 @@ jest.mock('../lib/CSF', () => {
     return () => true;
 });
 
-let sfp;
+// typed any here because this tests is badly written and reaches into private members
+let sfp: any;
 let sfpRef;
 
 const onError = jest.fn(() => {});
@@ -300,4 +301,46 @@ describe('<SecuredFieldsProvider /> handling an binLookup response', () => {
             expect(brandsFromBinLookup).toHaveBeenCalledTimes(2);
         }
     );
+});
+
+describe('<SecuredFieldsProvider /> mapErrorsToValidationRuleResult', () => {
+    it('should resolve the base (non-Amex) CVC error key into errorI18n when the brand is not Amex', async () => {
+        nodeHolder.innerHTML = mockNode;
+        renderSFP();
+
+        await act(() => {
+            sfp.setState({ brand: 'mc', errors: { encryptedSecurityCode: 'cc.cvc.920' } });
+        });
+
+        const result = sfp.mapErrorsToValidationRuleResult();
+
+        expect(result.encryptedSecurityCode.errorI18n).toEqual(global.i18n.get('cc.cvc.920'));
+        expect(result.encryptedSecurityCode.errorI18n).not.toEqual(global.i18n.get('cc.cvc.920.amex'));
+    });
+
+    it('should resolve the Amex-specific CVC error key into errorI18n when the brand is Amex', async () => {
+        nodeHolder.innerHTML = mockNode;
+        renderSFP();
+
+        await act(() => {
+            sfp.setState({ brand: 'amex', errors: { encryptedSecurityCode: 'cc.cvc.920' } });
+        });
+
+        const result = sfp.mapErrorsToValidationRuleResult();
+
+        expect(result.encryptedSecurityCode.errorI18n).toEqual(global.i18n.get('cc.cvc.920.amex'));
+    });
+
+    it('should leave non-CVC error codes unaffected by brand', async () => {
+        nodeHolder.innerHTML = mockNode;
+        renderSFP();
+
+        await act(() => {
+            sfp.setState({ brand: 'amex', errors: { encryptedCardNumber: SF_ErrorCodes.ERROR_MSG_INCOMPLETE_FIELD } });
+        });
+
+        const result = sfp.mapErrorsToValidationRuleResult();
+
+        expect(result.encryptedCardNumber.errorI18n).toEqual(global.i18n.get(SF_ErrorCodes.ERROR_MSG_INCOMPLETE_FIELD));
+    });
 });
