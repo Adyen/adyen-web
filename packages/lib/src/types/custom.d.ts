@@ -3,7 +3,7 @@ import type { PayPalV6Namespace } from '@paypal/paypal-js/sdk-v6';
 import type { FastlaneWindowInstance, FastlaneOptions } from '../components/PayPalFastlane/types';
 import type { ApplePayButtonStyle, ApplePayButtonType, ApplePayWebConfiguration } from '../components/ApplePay/types';
 import type { IAdyenPasskey } from '../components/PayByBankPix/services/types';
-import type { AmazonWindowObject } from '../types';
+import type { AmazonWindowObject, PayPalButtonClass, PayPalButtonType, VenmoButtonClass } from '../components/PayPal/types';
 import type { KlarnaWidgetAuthorizeResponse } from '../components/Klarna/types';
 import type { PayPalComponents, PayPalCreateInstanceOptions, PayPalSdkInstance } from '../components/PayPal/paypal-js-types';
 
@@ -49,6 +49,33 @@ declare module 'preact' {
                 type: ApplePayButtonType;
                 locale: string;
                 onclick(): void;
+            };
+            'paypal-button': {
+                id?: string;
+                type?: PayPalButtonType;
+                class?: PayPalButtonClass;
+                onclick(): void;
+            };
+            'paypal-pay-later-button': {
+                id?: string;
+                onclick(): void;
+                countryCode?: string;
+                productCode?: string;
+            };
+            'paypal-credit-button': {
+                id?: string;
+                onclick(): void;
+                countryCode?: string;
+            };
+            'venmo-button': {
+                id?: string;
+                type?: PayPalButtonType;
+                class?: VenmoButtonClass;
+                onclick(): void;
+            };
+            'paypal-message': {
+                id?: string;
+                amount?: string;
             };
         }
     }

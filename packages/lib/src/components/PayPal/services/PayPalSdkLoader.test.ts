@@ -44,7 +44,7 @@ describe('PayPalSdkLoader', () => {
         expect(mockLoad).toHaveBeenCalledTimes(1);
     });
 
-    test('should load the production SDK URL when environment is not test', async () => {
+    test('should load the production SDK URL when the environment is live', async () => {
         // @ts-ignore 'Script' is mocked
         Script.mockImplementation(() => ({ load: mockLoad }));
 
@@ -57,6 +57,16 @@ describe('PayPalSdkLoader', () => {
             analytics: mockAnalytics,
             attributes: { crossOrigin: 'anonymous' }
         });
+    });
+
+    test('should load the sandbox SDK URL when the environment is not specified', async () => {
+        // @ts-ignore 'Script' is mocked
+        Script.mockImplementation(() => ({ load: mockLoad }));
+
+        const loaderWithoutEnvironment = new PayPalSdkLoader({ analytics: mockAnalytics });
+
+        await expect(loaderWithoutEnvironment.load()).resolves.toBe(window.paypal);
+        expect(Script).toHaveBeenCalledWith(expect.objectContaining({ src: PAYPAL_SDK_URL_SANDBOX }));
     });
 
     test('should set the nonce attribute on the script element when a nonce is provided', async () => {
