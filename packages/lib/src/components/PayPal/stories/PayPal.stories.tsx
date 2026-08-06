@@ -5,6 +5,7 @@ import { ComponentContainer } from '../../../../storybook/components/ComponentCo
 import Paypal from '..';
 import type { PayPalConfiguration } from '../types';
 import { Checkout } from '../../../../storybook/components/Checkout';
+import { DEFAULT_COUNTRY_CODE } from '../../../../storybook/config/commonConfig';
 
 type Story = StoryObj<PaymentMethodStoryProps<PayPalConfiguration>>;
 

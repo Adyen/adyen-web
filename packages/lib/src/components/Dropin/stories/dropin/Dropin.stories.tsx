@@ -60,6 +60,83 @@ export const Default: DropinStory = {
     }
 };
 
+export const DropInSplitPaypal: DropinStory = {
+    render: ({ componentConfiguration, ...checkoutConfig }: PaymentMethodStoryProps<DropinConfiguration>) => {
+        // Register all Components
+        const { Dropin, ...Components } = components;
+        const Classes = Object.values(Components) as NewableComponent[];
+        AdyenCheckout.register(...Classes);
+
+        return (
+            <Checkout checkoutConfig={checkoutConfig}>
+                {checkout => {
+                    const paypalPm = checkout.paymentMethodsResponse.paymentMethods.find(pm => pm.type === 'paypal');
+
+                    if (paypalPm) {
+                        checkout.paymentMethodsResponse.paymentMethods = [
+                            paypalPm,
+                            {
+                                ...paypalPm,
+                                _id: `${paypalPm._id}_paylater`,
+                                name: 'PayPal Pay Later',
+                                type: 'paypal_paylater'
+                            },
+                            {
+                                ...paypalPm,
+                                _id: `${paypalPm._id}_credit`,
+                                name: 'PayPal Credit',
+                                type: 'paypal_credit'
+                            },
+                            {
+                                ...paypalPm,
+                                _id: `${paypalPm._id}_venmo`,
+                                name: 'Venmo',
+                                type: 'paypal_venmo'
+                            }
+                        ];
+
+                        checkout.paymentMethodsResponse.storedPaymentMethods = [];
+                    }
+
+                    return <ComponentContainer element={new DropinComponent(checkout, componentConfiguration)} />;
+                }}
+            </Checkout>
+        );
+    },
+    args: {
+        componentConfiguration: {
+            paymentMethodsConfiguration: {
+                paypal: {
+                    usePayPalV6: {
+                        countryCode: 'US',
+                        blockPayPalCreditButton: true,
+                        blockPayPalPayLaterButton: true,
+                        blockPayPalVenmoButton: true
+                    }
+                },
+                paypal_paylater: {
+                    onAuthorized: (data, actions) => {
+                        console.log('PayPal PayLater onAuthorized data', { data });
+                        actions.resolve();
+                    }
+                },
+                paypal_credit: {
+                    onAuthorized: (data, actions) => {
+                        console.log('PayPal Credit onAuthorized data', { data });
+                        actions.resolve();
+                    }
+                },
+                venmo: {
+                    onAuthorized: (data, actions) => {
+                        console.log('Venmo onAuthorized data', { data });
+                        actions.resolve();
+                    }
+                }
+            }
+        }
+    }
+};
+
 export const StyleCustomization: DropinStory = {
     render: ({ componentConfiguration, ...checkoutConfig }: PaymentMethodStoryProps<DropinConfiguration>) => {
         // Register all Components
