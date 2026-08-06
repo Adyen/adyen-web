@@ -126,7 +126,7 @@ export const DropInSplitPaypal: DropinStory = {
                         actions.resolve();
                     }
                 },
-                venmo: {
+                paypal_venmo: {
                     onAuthorized: (data, actions) => {
                         console.log('Venmo onAuthorized data', { data });
                         actions.resolve();
