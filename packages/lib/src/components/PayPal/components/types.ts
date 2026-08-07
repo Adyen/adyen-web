@@ -6,6 +6,11 @@ import type {
     PayPalOnApproveData,
     PayPalOnShippingAddressChangeData,
     PayPalOnShippingOptionsChangeData,
+    PayPalPresentationModeOptionsForAuto,
+    PayPalPresentationModeOptionsForModal,
+    PayPalPresentationModeOptionsForPaymentHandler,
+    PayPalPresentationModeOptionsForPopup,
+    PayPalPresentationModeOptionsForRedirect,
     PayPalV6OnApproveData,
     PayPalV6OnShippingAddressChangeData,
     PayPalV6OnShippingOptionsChangeData
@@ -53,3 +58,44 @@ export type PayPalComponentV6Props = Pick<
     onError: (error: Error) => void;
     setComponentRef: (ref: ComponentMethodsRef) => void;
 };
+
+/**
+ * @internal
+ */
+export type PayPalButtonType = 'pay' | 'checkout' | 'buynow' | 'subscribe';
+
+/**
+ * @internal
+ */
+export type PayPalButtonClass = 'paypal-gold' | 'paypal-blue' | 'paypal-white' | 'paypal-black';
+
+/**
+ * @internal
+ */
+export type VenmoButtonClass = 'venmo-blue' | 'venmo-black';
+
+/**
+ * @internal
+ */
+export type PayPalButtonStyle = {
+    type?: PayPalButtonType;
+    class?: PayPalButtonClass;
+};
+
+/**
+ * @internal
+ */
+export type PayPalVenmoButtonStyle = {
+    type?: PayPalButtonType;
+    class?: VenmoButtonClass;
+};
+
+/**
+ * @internal
+ */
+export type PayPalPresentationModeOptions =
+    | PayPalPresentationModeOptionsForPopup
+    | PayPalPresentationModeOptionsForModal
+    | PayPalPresentationModeOptionsForRedirect
+    | PayPalPresentationModeOptionsForPaymentHandler
+    | PayPalPresentationModeOptionsForAuto;

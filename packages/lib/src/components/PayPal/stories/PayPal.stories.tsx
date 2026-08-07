@@ -4,6 +4,7 @@ import { PaymentMethodStoryProps } from '../../../../storybook/types';
 import { ComponentContainer } from '../../../../storybook/components/ComponentContainer';
 import Paypal from '..';
 import type { PayPalConfiguration } from '../types';
+import type { PayPalMessageElement } from '../paypal-js-types';
 import { Checkout } from '../../../../storybook/components/Checkout';
 import { DEFAULT_COUNTRY_CODE } from '../../../../storybook/config/commonConfig';
 

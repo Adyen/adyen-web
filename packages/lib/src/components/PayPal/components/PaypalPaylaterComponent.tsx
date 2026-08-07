@@ -6,12 +6,14 @@ import { PayPalPayLaterButton } from './PayPalPayLaterButton';
 import { PayPalProcessingSpinner } from './PayPalProcessingSpinner';
 import { PayPalSpinner } from './PayPalSpinner';
 import { PayPalComponentV6Props } from './types';
+import { PayPalFetchContentOptions } from '../paypal-js-types';
 
 export const PayPalPaylaterComponent = ({
     paypalService,
     commit = true,
     presentationModeOptions,
     hidePayPalMessaging,
+    messagingContentOptions,
     countryCode,
     onSubmit,
     onApprove,
@@ -24,6 +26,7 @@ export const PayPalPaylaterComponent = ({
     Omit<PayPalComponentV6Props, 'style' | 'vault'> & {
         hidePayPalMessaging?: boolean;
         countryCode?: string;
+        messagingContentOptions?: Pick<PayPalFetchContentOptions, 'logoType' | 'logoPosition' | 'textColor'>;
     }
 >) => {
     const { status, handleOnApprove } = usePayPalStatus({
@@ -50,7 +53,9 @@ export const PayPalPaylaterComponent = ({
 
     return (
         <div className="adyen-checkout__paypal" data-testid="paypal-paylater-component">
-            {!hidePayPalMessaging && <PayPalMessaging paypalService={paypalService} countryCode={countryCode} />}
+            {!hidePayPalMessaging && (
+                <PayPalMessaging paypalService={paypalService} countryCode={countryCode} messagingContentOptions={messagingContentOptions} />
+            )}
             <PayPalPayLaterButton
                 paypalService={paypalService}
                 presentationModeOptions={presentationModeOptions}
