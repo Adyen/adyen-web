@@ -36,6 +36,8 @@ test.describe('Dropin - Sessions - Cards', () => {
         await card.isComponentVisible();
 
         if (API_VERSION >= 71) {
+            // Move mouse to top left to ensure no hover states affect the screenshot
+            await page.mouse.move(0, 0);
             await toHaveScreenshot(cardPaymentMethodHeader.rootElement, browserName, 'expanded-card-payment-method-item.png');
         } else {
             console.log(`Skipping expanded-card-payment-method-item.png screenshot assertion because API version (v${API_VERSION}) is less than 71`);

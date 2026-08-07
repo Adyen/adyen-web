@@ -51,7 +51,7 @@ export default function Address(props: Readonly<AddressProps>) {
     const merchantCountry = (props.data as AddressData)?.country;
     const formSchema = merchantCountry && !requiredFieldsSchema.includes(COUNTRY) ? [...requiredFieldsSchema, COUNTRY] : requiredFieldsSchema;
     const defaultData = useMemo<AddressData>(
-        () => (merchantCountry ? { ...props.data, country: merchantCountry.toUpperCase() } : (props.data)),
+        () => (merchantCountry ? { ...props.data, country: merchantCountry.toUpperCase() } : props.data),
         [props.data, merchantCountry]
     );
 

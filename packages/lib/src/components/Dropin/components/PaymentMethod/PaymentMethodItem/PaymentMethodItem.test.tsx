@@ -11,6 +11,7 @@ import type { PaymentMethodItemProps } from './PaymentMethodItem';
 const paymentMethod = mock<UIElement>({
     _id: '123456',
     displayName: 'iDeal',
+    showDropinHeaderWhenSelected: true,
     props: {
         type: 'ideal'
     },
@@ -82,6 +83,49 @@ describe('PaymentMethodItem', () => {
         /* eslint-disable testing-library/no-container, testing-library/no-node-access */
         const detailsElement = container.querySelector('.adyen-checkout__payment-method__details');
         expect(detailsElement).toHaveAttribute('inert');
+        /* eslint-enable testing-library/no-container, testing-library/no-node-access */
+    });
+
+    describe('showDropinHeaderWhenSelected', () => {
+        const headerlessPaymentMethod = mock<UIElement>({
+            _id: '654321',
+            displayName: 'GooglePay',
+            additionalInfo: '',
+            icon: 'googlepay.svg',
+            showDropinHeaderWhenSelected: false,
+            props: {
+                type: 'googlepay',
+                oneClick: false
+            },
+            render: jest.fn()
+        });
+
+        /* eslint-disable testing-library/no-container, testing-library/no-node-access */
+        test('should render the header and no headerless modifier by default when selected', () => {
+            const { container } = customRender(<PaymentMethodItem {...requiredProps} paymentMethod={paymentMethod} isSelected={true} />);
+
+            expect(container.querySelector('.adyen-checkout__payment-method__header')).toBeInTheDocument();
+            expect(container.getElementsByClassName('adyen-checkout__payment-method--headerless').length).toBe(0);
+        });
+
+        test('should visually hide the header while retaining selected radio semantics when opted-in and selected', () => {
+            const { container } = customRender(
+                <PaymentMethodItem {...requiredProps} paymentMethod={headerlessPaymentMethod} isSelected={true} standalone={false} />
+            );
+
+            expect(container.querySelector('.adyen-checkout__payment-method__header')).toHaveClass(
+                'adyen-checkout__payment-method__header--visually-hidden'
+            );
+            expect(container.getElementsByClassName('adyen-checkout__payment-method--headerless').length).toBe(1);
+            expect(screen.getByRole('radio', { name: 'GooglePay' })).toHaveAttribute('aria-checked', 'true');
+        });
+
+        test('should keep the header when opted-in but not selected', () => {
+            const { container } = customRender(<PaymentMethodItem {...requiredProps} paymentMethod={headerlessPaymentMethod} isSelected={false} />);
+
+            expect(container.querySelector('.adyen-checkout__payment-method__header')).toBeInTheDocument();
+            expect(container.getElementsByClassName('adyen-checkout__payment-method--headerless').length).toBe(0);
+        });
         /* eslint-enable testing-library/no-container, testing-library/no-node-access */
     });
 });

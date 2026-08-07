@@ -21,6 +21,8 @@ import { createAvailablePaymentsList, createUnavailablePaymentsList, type Paymen
 import UIElement from '../../internal/UIElement';
 import { AnalyticsInfoEvent, InfoEventType, UiTarget } from '../../../core/Analytics/events/AnalyticsInfoEvent';
 import { DropinSuccessState } from './DropinSuccessState';
+import { promoteGooglePayIfNeeded } from '../elements';
+import { isGooglePayTxVariant } from '../../GooglePay/utils';
 
 export class DropinComponent extends Component<DropinComponentProps, DropinComponentState> {
     public state: DropinComponentState = {
@@ -46,6 +48,7 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
         const orderStatusPromise = order ? getOrderStatus({ clientKey, loadingContext }, order) : null;
 
         void Promise.all([storedElementsPromises, elementsPromises, instantPaymentsPromises, fastlanePaymentElementPromise, orderStatusPromise])
+            .then(promoteGooglePayIfNeeded)
             .then(([storedPaymentElements, elements, instantPaymentElements, fastlanePaymentElement, orderStatus]) => {
                 this.setState({
                     orderStatus,
@@ -76,19 +79,42 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
     /**
      * Builds and sends the payment list displayed analytics event.
      */
-    private reportPaymentMethodList = (availableElementsByDisplayMode: Record<PaymentMethodDisplayMode, UIElement[]>): void => {
+    private readonly reportPaymentMethodList = (availableElementsByDisplayMode: Record<PaymentMethodDisplayMode, UIElement[]>): void => {
         try {
             const { paymentMethods, storedPaymentMethods, instantPaymentMethods, fastlanePaymentMethod } = splitPaymentMethods(
                 this.props.core.paymentMethodsResponse,
                 this.props.instantPaymentTypes ?? []
             );
 
-            const paymentMethodDisplayModes: PaymentMethodDisplayModeEntry[] = [
-                { displayMode: 'fastlane', paymentMethods: fastlanePaymentMethod ? [fastlanePaymentMethod] : [] },
-                { displayMode: 'instant', paymentMethods: instantPaymentMethods },
-                { displayMode: 'stored', paymentMethods: storedPaymentMethods },
-                { displayMode: 'regular', paymentMethods: paymentMethods }
-            ];
+            /**
+             * TODO: REMOVE THIS WHEN THE EXPERIMENTATION IS DONE
+             *
+             * Check that Google is supposed to be on instant payment OR standard payment method, but it is promoted as part of the stored payment methods section
+             */
+            const isGooglePromoted =
+                (instantPaymentMethods.some(pm => isGooglePayTxVariant(pm.type)) || paymentMethods.some(pm => isGooglePayTxVariant(pm.type))) &&
+                availableElementsByDisplayMode.stored.some(pm => isGooglePayTxVariant(pm.type));
+
+            let paymentMethodDisplayModes: PaymentMethodDisplayModeEntry[];
+
+            if (isGooglePromoted) {
+                const googlePay =
+                    paymentMethods.find(pm => isGooglePayTxVariant(pm.type)) ?? instantPaymentMethods.find(pm => isGooglePayTxVariant(pm.type));
+
+                paymentMethodDisplayModes = [
+                    { displayMode: 'fastlane', paymentMethods: fastlanePaymentMethod ? [fastlanePaymentMethod] : [] },
+                    { displayMode: 'instant', paymentMethods: instantPaymentMethods.filter(pm => !isGooglePayTxVariant(pm.type)) },
+                    { displayMode: 'stored', paymentMethods: googlePay ? [googlePay, ...storedPaymentMethods] : storedPaymentMethods },
+                    { displayMode: 'regular', paymentMethods: paymentMethods.filter(pm => !isGooglePayTxVariant(pm.type)) }
+                ];
+            } else {
+                paymentMethodDisplayModes = [
+                    { displayMode: 'fastlane', paymentMethods: fastlanePaymentMethod ? [fastlanePaymentMethod] : [] },
+                    { displayMode: 'instant', paymentMethods: instantPaymentMethods },
+                    { displayMode: 'stored', paymentMethods: storedPaymentMethods },
+                    { displayMode: 'regular', paymentMethods: paymentMethods }
+                ];
+            }
 
             const availablePaymentMethods = createAvailablePaymentsList(
                 paymentMethodDisplayModes.map(e => e.displayMode),
