@@ -1,10 +1,9 @@
 import { h } from 'preact';
 
-import { PayPalVenmoButtonStyle } from './types';
+import type { PayPalVenmoButtonStyle, PayPalComponentV6Props } from './types';
 import { usePayPalStatus } from '../hooks/usePayPalStatus';
 import { PayPalProcessingSpinner } from './PayPalProcessingSpinner';
 import { PayPalSpinner } from './PayPalSpinner';
-import { PayPalComponentV6Props } from './types';
 import { VenmoButton } from './VenmoButton';
 
 export const VenmoComponent = ({
