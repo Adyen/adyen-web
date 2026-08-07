@@ -186,6 +186,7 @@
     "cc.num.900": "Completați numărul cardului",
     "cc.num.903": "Completați un brand de card acceptat",
     "cc.num.901": "Completați numărul complet al cardului",
+    "cc.num.904": "Acest tip de card nu este acceptat",
     "cc.dat.912": "Completați o dată de expirare valabilă",
     "cc.dat.913": "Completați o dată de expirare valabilă",
     "cc.dat.914": "Card de credit pe cale să expire",

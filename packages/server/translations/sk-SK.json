@@ -186,6 +186,7 @@
     "cc.num.900": "Zadajte číslo karty",
     "cc.num.903": "Zadajte podporovanú značku karty",
     "cc.num.901": "Zadajte celé číslo karty",
+    "cc.num.904": "Tento typ karty nie je podporovaný",
     "cc.dat.912": "Zadajte platný dátum vypršania platnosti",
     "cc.dat.913": "Zadajte platný dátum vypršania platnosti",
     "cc.dat.914": "Platnosť kreditnej karty čoskoro vyprší",

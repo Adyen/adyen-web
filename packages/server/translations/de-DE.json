@@ -186,6 +186,7 @@
     "cc.num.900": "Geben Sie die Kartennummer ein",
     "cc.num.903": "Geben Sie eine unterstützte Kartenmarke ein",
     "cc.num.901": "Geben Sie die vollständige Kartennummer ein",
+    "cc.num.904": "Dieser Kartentyp wird nicht unterstützt.",
     "cc.dat.912": "Geben Sie ein gültiges Ablaufdatum ein",
     "cc.dat.913": "Geben Sie ein gültiges Ablaufdatum ein",
     "cc.dat.914": "Kreditkarte läuft bald ab",

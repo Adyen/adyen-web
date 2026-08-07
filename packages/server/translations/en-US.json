@@ -187,6 +187,7 @@
     "cc.num.900": "Enter the card number",
     "cc.num.903": "Enter a supported card brand",
     "cc.num.901": "Enter the complete card number",
+    "cc.num.904": "This card type is not supported",
     "cc.dat.912": "Enter a valid expiry date",
     "cc.dat.913": "Enter a valid expiry date",
     "cc.dat.914": "Credit card about to expire",

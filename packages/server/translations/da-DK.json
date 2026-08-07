@@ -186,6 +186,7 @@
     "cc.num.900": "Indtast kortnummeret",
     "cc.num.903": "Indtast et understøttet kort",
     "cc.num.901": "Indtast det fulde kortnummer",
+    "cc.num.904": "Denne korttype understøttes ikke",
     "cc.dat.912": "Indtast en gyldig udløbsdato",
     "cc.dat.913": "Indtast en gyldig udløbsdato",
     "cc.dat.914": "Kreditkort udløber snart",

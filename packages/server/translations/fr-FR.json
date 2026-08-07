@@ -186,6 +186,7 @@
     "cc.num.900": "Entrez le numéro de la carte",
     "cc.num.903": "Entrez un émetteur de carte pris en charge",
     "cc.num.901": "Entrez le numéro de carte complet",
+    "cc.num.904": "Ce type de carte n'est pas pris en charge",
     "cc.dat.912": "Entrez une date d'expiration valide",
     "cc.dat.913": "Entrez une date d'expiration valide",
     "cc.dat.914": "La carte de crédit arrive à expiration",

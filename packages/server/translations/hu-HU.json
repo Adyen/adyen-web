@@ -186,6 +186,7 @@
     "cc.num.900": "Adja meg a kártya számát",
     "cc.num.903": "Adjon meg egy elfogadott kártyakibocsátót",
     "cc.num.901": "Adja meg a teljes kártyaszámot",
+    "cc.num.904": "Ez a kártyatípus nem támogatott",
     "cc.dat.912": "Adjon meg egy érvényes lejárati dátumot",
     "cc.dat.913": "Adjon meg egy érvényes lejárati dátumot",
     "cc.dat.914": "Hamarosan lejáró hitelkártya",

@@ -367,6 +367,34 @@ describe('Card', () => {
         });
     });
 
+    describe('Test normalization of configuration prop: allowedFundingSources', () => {
+        let core: ICore;
+
+        beforeEach(() => {
+            core = setupCoreMock();
+        });
+
+        test('Is undefined when not configured', () => {
+            const card = new CardElement(core, { configuration: {} });
+            expect(card.props.allowedFundingSources).toBe(undefined);
+        });
+
+        test('Is normalized into a trimmed, lowercased array', () => {
+            const card = new CardElement(core, { configuration: { allowedFundingSources: 'Debit, prepaid' } });
+            expect(card.props.allowedFundingSources).toEqual(['debit', 'prepaid']);
+        });
+
+        test('Keeps the raw configuration value intact', () => {
+            const card = new CardElement(core, { configuration: { allowedFundingSources: 'debit, prepaid' } });
+            expect(card.props.configuration?.allowedFundingSources).toBe('debit, prepaid');
+        });
+
+        test('Is undefined when no configured value is recognized, so that validation fails open', () => {
+            const card = new CardElement(core, { configuration: { allowedFundingSources: 'Debitt' } });
+            expect(card.props.allowedFundingSources).toBe(undefined);
+        });
+    });
+
     describe('Test creating storedCard with regular, processed, stored card data', () => {
         const regularStoredCardData = {
             brand: 'mc',

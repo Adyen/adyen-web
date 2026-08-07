@@ -186,6 +186,7 @@
     "cc.num.900": "Immetti il numero della carta",
     "cc.num.903": "Immetti un marchio di carta supportato",
     "cc.num.901": "Immetti il numero completo della carta",
+    "cc.num.904": "Questo tipo di carta non è supportato",
     "cc.dat.912": "Immetti una data di scadenza valida",
     "cc.dat.913": "Immetti una data di scadenza valida",
     "cc.dat.914": "Carta di credito in scadenza",
