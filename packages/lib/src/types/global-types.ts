@@ -105,7 +105,7 @@ export interface RawPaymentMethod {
     /**
      * Configuration props as set by the merchant in the CA and received in the PM object in the /paymentMethods response
      */
-    configuration?: object;
+    configuration?: Record<string, string>;
 
     /**
      * Brand for the selected gift card. For example: plastix, hmclub.
