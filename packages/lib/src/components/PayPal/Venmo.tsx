@@ -2,11 +2,10 @@ import { h } from 'preact';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { TxVariants } from '../tx-variants';
 
-import type { SupportedPayPalFundingSources } from './types';
+import type { SupportedPayPalFundingSources, VenmoConfiguration } from './types';
 
 import { BasePaypalElement } from './models/BasePaypalElement';
 import { VenmoComponent } from './components/VenmoComponent';
-import type { VenmoConfiguration } from './types';
 import { PayPalComponents } from './paypal-js-types';
 
 class VenmoElement extends BasePaypalElement<VenmoConfiguration> {
