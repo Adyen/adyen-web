@@ -1,8 +1,10 @@
 import { AddressData } from '../../types/global-types';
 import { UIElementProps } from '../internal/UIElement/types';
+import { PayPalButtonStyle, PayPalVenmoButtonStyle, PayPalPresentationModeOptions } from './components/types';
 import { BasePaypalElement } from './models/BasePaypalElement';
 import PaypalElement from './Paypal';
 import type {
+    PayPalFetchContentOptions,
     PayPalMessagesOptions,
     PayPalMessagesSession,
     PayPalOnInitActions,
@@ -10,11 +12,6 @@ import type {
     PayPalOnShippingOptionsChangeData,
     PayPalOrderResponseBody,
     PayPalPageTypes,
-    PayPalPresentationModeOptionsForAuto,
-    PayPalPresentationModeOptionsForModal,
-    PayPalPresentationModeOptionsForPaymentHandler,
-    PayPalPresentationModeOptionsForPopup,
-    PayPalPresentationModeOptionsForRedirect,
     PayPalV6OnShippingAddressChangeData,
     PayPalV6OnShippingOptionsChangeData
 } from './paypal-js-types';
@@ -362,6 +359,11 @@ export type PayPalPayLaterConfiguration = Omit<BasePayPalConfiguration, 'vault'>
      * @returns
      */
     onCreatePayPalMessages?: (createPayPalMessages: (messagesOptions?: PayPalMessagesOptions) => PayPalMessagesSession) => void;
+    /**
+     * Options for fetching PayPal messages content
+     * @see {@link https://docs.paypal.ai/reference/sdk/js/v6/reference#messagesinstance-fetchcontent-options}
+     */
+    messagingContentOptions?: Pick<PayPalFetchContentOptions, 'logoType' | 'logoPosition' | 'textColor'>;
 };
 
 export type VenmoConfiguration = Omit<
@@ -383,44 +385,3 @@ export type SupportedPayPalFundingSources = 'paypal' | 'credit' | 'paylater' | '
  * @deprecated Use {@link SupportedPayPalFundingSources} instead
  */
 export type FundingSource = SupportedPayPalFundingSources;
-
-/**
- * @internal
- */
-export type PayPalButtonType = 'pay' | 'checkout' | 'buynow' | 'subscribe';
-
-/**
- * @internal
- */
-export type PayPalButtonClass = 'paypal-gold' | 'paypal-blue' | 'paypal-white' | 'paypal-black';
-
-/**
- * @internal
- */
-export type VenmoButtonClass = 'venmo-blue' | 'venmo-black';
-
-/**
- * @internal
- */
-export type PayPalButtonStyle = {
-    type?: PayPalButtonType;
-    class?: PayPalButtonClass;
-};
-
-/**
- * @internal
- */
-export type PayPalVenmoButtonStyle = {
-    type?: PayPalButtonType;
-    class?: VenmoButtonClass;
-};
-
-/**
- * @internal
- */
-export type PayPalPresentationModeOptions =
-    | PayPalPresentationModeOptionsForPopup
-    | PayPalPresentationModeOptionsForModal
-    | PayPalPresentationModeOptionsForRedirect
-    | PayPalPresentationModeOptionsForPaymentHandler
-    | PayPalPresentationModeOptionsForAuto;

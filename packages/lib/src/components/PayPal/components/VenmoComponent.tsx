@@ -1,6 +1,6 @@
 import { h } from 'preact';
 
-import { PayPalVenmoButtonStyle } from '../../types';
+import { PayPalVenmoButtonStyle } from './types';
 import { usePayPalStatus } from '../hooks/usePayPalStatus';
 import { PayPalProcessingSpinner } from './PayPalProcessingSpinner';
 import { PayPalSpinner } from './PayPalSpinner';

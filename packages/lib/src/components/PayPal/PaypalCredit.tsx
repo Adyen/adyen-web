@@ -14,7 +14,7 @@ class PaypalCreditElement extends BasePaypalElement<BasePayPalConfiguration> {
     protected override elementName: string = 'PayPalCredit';
 
     public override get icon(): string {
-        return this.resources.getImage()('paypal');
+        return this.resources.getImage()(TxVariants.paypal);
     }
 
     protected override componentToRender(): h.JSX.Element | null {

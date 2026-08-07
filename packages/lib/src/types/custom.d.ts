@@ -5,7 +5,7 @@ import type { ApplePayButtonStyle, ApplePayButtonType, ApplePayWebConfiguration 
 import type { IAdyenPasskey } from '../components/PayByBankPix/services/types';
 import type { AmazonWindowObject, PayPalButtonClass, PayPalButtonType, VenmoButtonClass } from '../components/PayPal/types';
 import type { KlarnaWidgetAuthorizeResponse } from '../components/Klarna/types';
-import type { PayPalComponents, PayPalCreateInstanceOptions, PayPalSdkInstance } from '../components/PayPal/paypal-js-types';
+import type { PayPalComponents, PayPalCreateInstanceOptions, PayPalMessageElement, PayPalSdkInstance } from '../components/PayPal/paypal-js-types';
 
 declare module '@paypal/paypal-js' {
     export interface PayPalNamespace {
@@ -76,7 +76,7 @@ declare module 'preact' {
             'paypal-message': {
                 id?: string;
                 amount?: string;
-                ref?: MutableRef<HTMLElement>;
+                ref?: MutableRef<PayPalMessageElement>;
             };
         }
     }

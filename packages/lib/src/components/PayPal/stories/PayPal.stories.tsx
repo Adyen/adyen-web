@@ -4,6 +4,7 @@ import { PaymentMethodStoryProps } from '../../../../storybook/types';
 import { ComponentContainer } from '../../../../storybook/components/ComponentContainer';
 import Paypal from '..';
 import type { PayPalConfiguration } from '../types';
+import type { PayPalMessageElement } from '../paypal-js-types';
 import { Checkout } from '../../../../storybook/components/Checkout';
 import { DEFAULT_COUNTRY_CODE } from '../../../../storybook/config/commonConfig';
 
@@ -109,7 +110,7 @@ export const PaypalV6Messaging: Story = {
                                             buyerCountry: componentConfiguration.countryCode,
                                             currencyCode: componentConfiguration.amount.currency
                                         });
-                                        const messageElement = document.querySelector('#paypal-message');
+                                        const messageElement = document.querySelector<PayPalMessageElement>('#paypal-message');
 
                                         const content = await messagesInstance.fetchContent({
                                             textColor: 'MONOCHROME',
@@ -117,8 +118,7 @@ export const PaypalV6Messaging: Story = {
                                             logoType: 'NONE',
                                             amount: '100',
                                             onReady: content => {
-                                                // @ts-ignore - messageElement is guaranteed to be a PayPalMessageElement
-                                                messageElement.setContent(content);
+                                                messageElement?.setContent(content);
                                             }
                                         });
 

@@ -478,9 +478,8 @@ describe('Paypal', () => {
         describe('constructor', () => {
             test('should create the SDK loader and PayPal service and initialize it when usePayPalV6 is set', () => {
                 new Paypal(core, {
-                    usePayPalV6: { vault: true, nonce: 'test-nonce' },
+                    usePayPalV6: { vault: true, nonce: 'test-nonce', countryCode: 'US' },
                     configuration: { merchantId: 'merchant-1' },
-                    countryCode: 'US',
                     amount: { value: 1000, currency: 'USD' }
                 });
 

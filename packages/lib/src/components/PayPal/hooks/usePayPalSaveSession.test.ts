@@ -1,7 +1,7 @@
 import { renderHook } from '@testing-library/preact-hooks';
 import { usePayPalSaveSession } from './usePayPalSaveSession';
 import type { PayPalSavePaymentSession } from '../paypal-js-types';
-import type { PayPalPresentationModeOptions } from '../types';
+import type { PayPalPresentationModeOptions } from '../components/types';
 
 describe('usePayPalSaveSession', () => {
     const presentationModeOptions: PayPalPresentationModeOptions = { presentationMode: 'auto' };

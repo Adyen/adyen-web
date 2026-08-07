@@ -15,7 +15,7 @@ class PaypalPaylaterElement extends BasePaypalElement<PayPalPayLaterConfiguratio
     protected override elementName: string = 'PayPalPaylater';
 
     public override get icon(): string {
-        return this.resources.getImage()('paypal');
+        return this.resources.getImage()(TxVariants.paypal);
     }
 
     protected override get paypalComponents(): PayPalComponents {
@@ -38,6 +38,7 @@ class PaypalPaylaterElement extends BasePaypalElement<PayPalPayLaterConfiguratio
                 commit={this.props.commit}
                 presentationModeOptions={this.props.presentationModeOptions}
                 hidePayPalMessaging={this.props.hidePayPalMessaging}
+                messagingContentOptions={this.props.messagingContentOptions}
                 countryCode={this.props.countryCode}
                 onSubmit={this.handleSubmit}
                 onApprove={this.handleOnApprove}
