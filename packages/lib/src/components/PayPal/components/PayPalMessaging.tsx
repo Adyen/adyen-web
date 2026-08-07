@@ -3,7 +3,6 @@ import { useMemo, useEffect, useRef } from 'preact/hooks';
 
 import { PayPalService } from '../services/PayPalService';
 import { useAmount } from '../../../core/Context/AmountProvider';
-import { useCoreContext } from '../../../core/Context/CoreProvider';
 import type { PayPalFetchContentOptions, PayPalMessageElement } from '../paypal-js-types';
 
 export const PayPalMessaging = ({
@@ -18,7 +17,6 @@ export const PayPalMessaging = ({
     const payPalSDKInstance = useMemo(() => paypalService.getInstance(), [paypalService]);
     const messageElementRef = useRef<PayPalMessageElement | null>(null);
     const { amount } = useAmount();
-    const { i18n } = useCoreContext();
 
     useEffect(() => {
         const fetchMessageContent = async (): Promise<void> => {
@@ -27,11 +25,7 @@ export const PayPalMessaging = ({
                 currencyCode: amount.currency
             });
 
-            const amountString = i18n.amount(amount.value, amount.currency, {
-                style: 'decimal',
-                minimumFractionDigits: 0,
-                signDisplay: 'never'
-            });
+            const amountString = String(amount.value / 100);
 
             await messagesInstance.fetchContent({
                 textColor: messagingContentOptions?.textColor ?? 'BLACK',
@@ -47,5 +41,5 @@ export const PayPalMessaging = ({
         void fetchMessageContent();
     }, [payPalSDKInstance, countryCode, amount?.currency, amount?.value]);
 
-    return <paypal-message id="paypal-message" ref={messageElementRef}></paypal-message>;
+    return <paypal-message id="paypal-message" ref={messageElementRef} data-testid="paypal-message"></paypal-message>;
 };
