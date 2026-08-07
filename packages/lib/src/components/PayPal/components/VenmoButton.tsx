@@ -1,7 +1,7 @@
-import { useMemo } from 'preact/hooks';
 import { h } from 'preact';
+import { useMemo } from 'preact/hooks';
 
-import type { PayPalVenmoButtonStyle } from '../types';
+import type { PayPalVenmoButtonStyle } from './types';
 import type { PayPalComponentV6Props } from './types';
 import { usePayPalSessionOptions } from '../hooks/usePayPalSessionOptions';
 import { useCreateOrder } from '../hooks/useCreateOrder';
