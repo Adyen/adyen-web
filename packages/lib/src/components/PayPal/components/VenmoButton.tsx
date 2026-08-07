@@ -1,8 +1,7 @@
-import { useMemo } from 'preact/hooks';
 import { h } from 'preact';
+import { useMemo } from 'preact/hooks';
 
-import type { PayPalVenmoButtonStyle } from '../types';
-import type { PayPalComponentV6Props } from './types';
+import type { PayPalVenmoButtonStyle, PayPalComponentV6Props } from './types';
 import { usePayPalSessionOptions } from '../hooks/usePayPalSessionOptions';
 import { useCreateOrder } from '../hooks/useCreateOrder';
 import { usePayPalOneTimeSession } from '../hooks/usePayPalOneTimeSession';
@@ -74,8 +73,8 @@ export const VenmoButton = ({
     return (
         <venmo-button
             onclick={isZeroAuth ? savePaymentClick : oneTimePaymentClick}
-            type={style.type}
-            class={style.class}
+            type={style?.type}
+            class={style?.class}
             data-testid="venmo-button"
         />
     );

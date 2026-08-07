@@ -21,7 +21,10 @@ import type {
     OneTimePaymentSession,
     SavePaymentSession,
     VenmoSavePaymentSessionOptions,
-    PageTypes
+    PageTypes,
+    FetchContentOptions,
+    PayPalMessagesSession,
+    PayPalMessageElement as PayPalMessageElementV6
 } from '@paypal/paypal-js/sdk-v6';
 
 export type { PayPalOneTimePaymentSessionOptions, PayPalMessagesOptions, PayPalMessagesSession } from '@paypal/paypal-js/sdk-v6';
@@ -57,6 +60,15 @@ export type PayPalSavePaymentSessionOptions = SavePaymentSessionOptions;
 export type PayPalOneTimePaymentSession = OneTimePaymentSession;
 export type PayPalSavePaymentSession = SavePaymentSession;
 export type PayPalVenmoSavePaymentSessionOptions = VenmoSavePaymentSessionOptions;
+export type PayPalFetchContentOptions = FetchContentOptions;
+export type PayPalMessageContent = NonNullable<Awaited<ReturnType<PayPalMessagesSession['fetchContent']>>>;
+/**
+ * The `<paypal-message>` custom element. The PayPal SDK types omit the `setContent` method,
+ * which is the method used to render the content resolved by `fetchContent` into the element.
+ */
+export type PayPalMessageElement = PayPalMessageElementV6 & {
+    setContent(content: PayPalMessageContent): void;
+};
 export type PayPalPresentationModeOptionsForPopup = {
     presentationMode: 'popup';
     fullPageOverlay?: { enabled: boolean };

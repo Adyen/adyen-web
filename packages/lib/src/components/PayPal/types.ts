@@ -1,7 +1,10 @@
 import { AddressData } from '../../types/global-types';
 import { UIElementProps } from '../internal/UIElement/types';
+import { PayPalButtonStyle, PayPalVenmoButtonStyle, PayPalPresentationModeOptions } from './components/types';
+import { BasePaypalElement } from './models/BasePaypalElement';
 import PaypalElement from './Paypal';
 import type {
+    PayPalFetchContentOptions,
     PayPalMessagesOptions,
     PayPalMessagesSession,
     PayPalOnInitActions,
@@ -9,31 +12,116 @@ import type {
     PayPalOnShippingOptionsChangeData,
     PayPalOrderResponseBody,
     PayPalPageTypes,
-    PayPalPresentationModeOptionsForAuto,
-    PayPalPresentationModeOptionsForModal,
-    PayPalPresentationModeOptionsForPaymentHandler,
-    PayPalPresentationModeOptionsForPopup,
-    PayPalPresentationModeOptionsForRedirect,
     PayPalV6OnShippingAddressChangeData,
     PayPalV6OnShippingOptionsChangeData
 } from './paypal-js-types';
 import { PayPalOrderDetailsData } from './services/request-paypal-order-details';
+
+type PayPalV6Props<E extends PaypalElement | BasePaypalElement> = {
+    /**
+     * The type of page where the SDK is being initialized. This helps PayPal optimize the payment experience and provide better analytics.
+     * @see {@link https://docs.paypal.ai/developer/how-to/sdk/js/v6/configuration#parameters}
+     * @default "checkout"
+     */
+    pageType?: PayPalPageTypes;
+    /**
+     * Set to true to enable vaulting of the payment method (save for future use).
+     * @default false
+     */
+    vault?: boolean;
+    /**
+     * Pass a Content Security Policy single-use token if you use them on your site
+     *
+     * @default undefined
+     */
+    nonce?: string;
+    /**
+     * Controls the final button text in the PayPal flow.
+     *  - true — Shows “Pay Now” (payment happens immediately)
+     *  - false — Shows “Continue” (additional confirmation step)
+     * @default true
+     * @see {@link https://docs.paypal.ai/reference/sdk/js/v6/reference#parameters-4}
+     */
+    commit?: boolean;
+    /**
+     * A two-letter ISO 3166 country code which will be passed to the PayPal SDK as the buyer-country.
+     * Note: The buyer country is only used in the sandbox. Don't pass this query parameter in production.
+     *
+     * @see {@link https://developer.paypal.com/sdk/js/configuration/#buyer-country}
+     * @default undefined
+     */
+    countryCode?: string;
+    /**
+     * The locale for the UI components, specified as a BCP-47 language tag, for example, "en-US", "fr-FR", "de-DE". If not specified, the SDK automatically detects the buyer’s locale from their browser settings.
+     *
+     * @see {@link https://docs.paypal.ai/developer/how-to/sdk/js/v6/configuration#parameters}
+     * @default undefined
+     */
+    locale?: string;
+    /**
+     * Called when the buyer selects or changes their shipping address within the PayPal flow. Use this callback to update shipping costs, validate addresses, or apply location-based restrictions.
+     *
+     * @see {@link https://docs.paypal.ai/reference/sdk/js/v6/reference#onshippingaddresschange-data}
+     *
+     * @param data - The shipping address change data
+     * @param component - The PayPal component instance
+     */
+    onShippingAddressChange?: (data: PayPalV6OnShippingAddressChangeData, component: E) => Promise<void>;
+    /**
+     * Called when the buyer selects a different shipping option, for example, standard or express delivery. Use this to update the order total with the selected shipping cost.
+     *
+     * @see {@link https://docs.paypal.ai/reference/sdk/js/v6/reference#onshippingoptionschange-data}
+     *
+     * @param data - The shipping options change data
+     * @param component - The PayPal component instance
+     */
+    onShippingOptionsChange?: (data: PayPalV6OnShippingOptionsChangeData, component: E) => Promise<void>;
+    /**
+     * Callback called when PayPal authorizes the payment.
+     * Must be resolved/rejected with the action object. If resolved, the additional details will be invoked. Otherwise it will be skipped
+     *
+     * @param data - Contains the raw event from PayPal, along with the billingAddress and deliveryAddress parsed by Adyen based on the raw event data
+     * @param actions - Used to indicate that payment flow must continue or must stop
+     */
+    onAuthorized?: (
+        data: Pick<PayPalOrderDetailsData, 'billingAddress' | 'deliveryAddress' | 'shopperName'> & {
+            authorizedEvent: PayPalOrderDetailsData['payPalOrder'];
+        },
+        actions: { resolve: () => void; reject: () => void }
+    ) => void;
+    /**
+     * Callback called to enable creating the PayPal messages component.
+     * @param createPayPalMessages - Function to create the messages component
+     * @returns
+     */
+    onCreatePayPalMessages?: (createPayPalMessages: (messagesOptions?: PayPalMessagesOptions) => PayPalMessagesSession) => void;
+    /**
+     * Configuration for how the payment UI is presented.
+     *
+     * @see {@link https://docs.paypal.ai/reference/sdk/js/v6/reference#paymentsession-start-options-orderpromise}
+     * @default  presentationMode: 'auto'
+     * @description { presentationMode: 'auto' } - Recommended. SDK automatically selects the best experience. Tries popup first and falls back to modal if popups are blocked.
+     */
+    presentationModeOptions?: PayPalPresentationModeOptions;
+};
+
+type PayPalInternalConfiguration = {
+    /**
+     * @see {@link https://developer.paypal.com/sdk/js/configuration/#merchant-id}
+     */
+    merchantId?: string;
+    /**
+     * @see {@link https://developer.paypal.com/sdk/js/configuration/#intent}
+     */
+    intent?: Intent;
+};
 
 export interface PayPalConfiguration extends UIElementProps {
     /**
      * Configuration returned by the backend
      * @internal
      */
-    configuration?: {
-        /**
-         * @see {@link https://developer.paypal.com/sdk/js/configuration/#merchant-id}
-         */
-        merchantId?: string;
-        /**
-         * @see {@link https://developer.paypal.com/sdk/js/configuration/#intent}
-         */
-        intent?: Intent;
-    };
+    configuration?: PayPalInternalConfiguration;
 
     /**
      *  Identifies if the payment is Express. Also used for analytics
@@ -212,32 +300,7 @@ export interface PayPalConfiguration extends UIElementProps {
      * Use PayPal V6 SDK instead of V5
      * @default undefined
      */
-    usePayPalV6?: {
-        /**
-         * The type of page where the SDK is being initialized. This helps PayPal optimize the payment experience and provide better analytics.
-         * @see {@link https://docs.paypal.ai/developer/how-to/sdk/js/v6/configuration#parameters}
-         * @default "checkout"
-         */
-        pageType?: PayPalPageTypes;
-        /**
-         * Set to true to enable vaulting of the payment method (save for future use).
-         * @default false
-         */
-        vault?: boolean;
-        /**
-         * Pass a Content Security Policy single-use token if you use them on your site
-         *
-         * @default undefined
-         */
-        nonce?: string;
-        /**
-         * Controls the final button text in the PayPal flow.
-         *  - true — Shows “Pay Now” (payment happens immediately)
-         *  - false — Shows “Continue” (additional confirmation step)
-         * @default true
-         * @see {@link https://docs.paypal.ai/reference/sdk/js/v6/reference#parameters-4}
-         */
-        commit?: boolean;
+    usePayPalV6?: PayPalV6Props<PaypalElement> & {
         /**
          * Set to true to force the UI to not render PayPal Credit button
          * @default false
@@ -254,73 +317,61 @@ export interface PayPalConfiguration extends UIElementProps {
          */
         blockPayPalVenmoButton?: boolean;
         /**
-         * The locale for the UI components, specified as a BCP-47 language tag, for example, "en-US", "fr-FR", "de-DE". If not specified, the SDK automatically detects the buyer’s locale from their browser settings.
-         *
-         * @see {@link https://docs.paypal.ai/developer/how-to/sdk/js/v6/configuration#parameters}
-         * @default undefined
-         */
-        locale?: string;
-        /**
-         * Called when the buyer selects or changes their shipping address within the PayPal flow. Use this callback to update shipping costs, validate addresses, or apply location-based restrictions.
-         *
-         * @see {@link https://docs.paypal.ai/reference/sdk/js/v6/reference#onshippingaddresschange-data}
-         *
-         * @param data - The shipping address change data
-         * @param component - The PayPal component instance
-         */
-        onShippingAddressChange?: (data: PayPalV6OnShippingAddressChangeData, component: PaypalElement) => Promise<void>;
-        /**
-         * Called when the buyer selects a different shipping option, for example, standard or express delivery. Use this to update the order total with the selected shipping cost.
-         *
-         * @see {@link https://docs.paypal.ai/reference/sdk/js/v6/reference#onshippingoptionschange-data}
-         *
-         * @param data - The shipping options change data
-         * @param component - The PayPal component instance
-         */
-        onShippingOptionsChange?: (data: PayPalV6OnShippingOptionsChangeData, component: PaypalElement) => Promise<void>;
-        /**
-         * Customize your buttons using the style option.
-         *
-         * @see {@link https://docs.paypal.ai/reference/sdk/js/v6/reference#attributes}
-         */
-        /**
-         * Callback called when PayPal authorizes the payment.
-         * Must be resolved/rejected with the action object. If resolved, the additional details will be invoked. Otherwise it will be skipped
-         *
-         * @param data - Contains the raw event from PayPal, along with the billingAddress and deliveryAddress parsed by Adyen based on the raw event data
-         * @param actions - Used to indicate that payment flow must continue or must stop
-         */
-        onAuthorized?: (
-            data: Pick<PayPalOrderDetailsData, 'billingAddress' | 'deliveryAddress' | 'shopperName'> & {
-                authorizedEvent: PayPalOrderDetailsData['payPalOrder'];
-            },
-            actions: { resolve: () => void; reject: () => void }
-        ) => void;
-        /**
          * Callback called to enable creating the PayPal messages component.
          * @param createPayPalMessages - Function to create the messages component
          * @returns
          */
         onCreatePayPalMessages?: (createPayPalMessages: (messagesOptions?: PayPalMessagesOptions) => PayPalMessagesSession) => void;
-        /**
-         * Configuration for how the payment UI is presented.
-         *
-         * @see {@link https://docs.paypal.ai/reference/sdk/js/v6/reference#paymentsession-start-options-orderpromise}
-         * @default { presentationMode: 'auto' }
-         * @description { presentationMode: 'auto' } - Recommended. SDK automatically selects the best experience. Tries popup first and falls back to modal if popups are blocked.
-         */
-        presentationModeOptions?: PayPalPresentationModeOptions;
-        /**
-         * Customize the paypal button web components.
-         *
-         * @see {@link https://docs.paypal.ai/reference/sdk/js/v6/reference#web-components}
-         */
         style?: {
             paypal?: PayPalButtonStyle;
             venmo?: PayPalVenmoButtonStyle;
         };
     };
 }
+
+export type BasePayPalConfiguration = UIElementProps &
+    PayPalV6Props<BasePaypalElement> & {
+        /**
+         * Configuration returned by the backend
+         * @internal
+         */
+        configuration?: PayPalInternalConfiguration;
+        /**
+         *  Identifies if the payment is Express. Also used for analytics
+         *  @defaultValue false
+         */
+        isExpress?: boolean;
+        /**
+         * Used for analytics
+         */
+        expressPage?: 'cart' | 'minicart' | 'pdp' | 'checkout';
+    };
+
+export type PayPalPayLaterConfiguration = Omit<BasePayPalConfiguration, 'vault'> & {
+    /**
+     * Set to true to hide the PayPal messages component
+     * @default false
+     */
+    hidePayPalMessaging?: boolean;
+    /**
+     * Callback called when the PayPal messages component is created
+     * @param createPayPalMessages - Function to create the messages component
+     * @returns
+     */
+    onCreatePayPalMessages?: (createPayPalMessages: (messagesOptions?: PayPalMessagesOptions) => PayPalMessagesSession) => void;
+    /**
+     * Options for fetching PayPal messages content
+     * @see {@link https://docs.paypal.ai/reference/sdk/js/v6/reference#messagesinstance-fetchcontent-options}
+     */
+    messagingContentOptions?: Pick<PayPalFetchContentOptions, 'logoType' | 'logoPosition' | 'textColor'>;
+};
+
+export type VenmoConfiguration = Omit<
+    BasePayPalConfiguration,
+    'isExpress' | 'expressPage' | 'onShippingAddressChange' | 'onShippingOptionsChange'
+> & {
+    style?: PayPalVenmoButtonStyle;
+};
 
 /**
  * The intent for the transaction. This determines whether the funds are captured immediately, or later.
@@ -334,44 +385,3 @@ export type SupportedPayPalFundingSources = 'paypal' | 'credit' | 'paylater' | '
  * @deprecated Use {@link SupportedPayPalFundingSources} instead
  */
 export type FundingSource = SupportedPayPalFundingSources;
-
-/**
- * @internal
- */
-export type PayPalButtonType = 'pay' | 'checkout' | 'buynow' | 'subscribe';
-
-/**
- * @internal
- */
-export type PayPalButtonClass = 'paypal-gold' | 'paypal-blue' | 'paypal-white' | 'paypal-black';
-
-/**
- * @internal
- */
-export type VenmoButtonClass = 'venmo-blue' | 'venmo-black';
-
-/**
- * @internal
- */
-export type PayPalButtonStyle = {
-    type?: PayPalButtonType;
-    class?: PayPalButtonClass;
-};
-
-/**
- * @internal
- */
-export type PayPalVenmoButtonStyle = {
-    type?: PayPalButtonType;
-    class?: VenmoButtonClass;
-};
-
-/**
- * @internal
- */
-export type PayPalPresentationModeOptions =
-    | PayPalPresentationModeOptionsForPopup
-    | PayPalPresentationModeOptionsForModal
-    | PayPalPresentationModeOptionsForRedirect
-    | PayPalPresentationModeOptionsForPaymentHandler
-    | PayPalPresentationModeOptionsForAuto;

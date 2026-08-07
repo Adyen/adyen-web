@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'preact/hooks';
 import { PayPalSavePaymentSession } from '../paypal-js-types';
-import { PayPalPresentationModeOptions } from '../types';
+import { PayPalPresentationModeOptions } from '../components/types';
 import { DEFAULT_PAYMENT_SESSION_OPTIONS } from '../config';
 
 export const usePayPalSaveSession = ({
