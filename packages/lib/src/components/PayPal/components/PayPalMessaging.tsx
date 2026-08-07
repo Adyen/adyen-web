@@ -22,10 +22,10 @@ export const PayPalMessaging = ({
         const fetchMessageContent = async (): Promise<void> => {
             const messagesInstance = payPalSDKInstance.createPayPalMessages({
                 buyerCountry: countryCode,
-                currencyCode: amount.currency
+                currencyCode: amount?.currency
             });
 
-            const amountString = String(amount.value / 100);
+            const amountString = amount?.value ? String(amount.value / 100) : undefined;
 
             await messagesInstance.fetchContent({
                 textColor: messagingContentOptions?.textColor ?? 'BLACK',

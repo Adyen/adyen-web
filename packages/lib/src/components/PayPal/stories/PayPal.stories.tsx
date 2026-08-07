@@ -108,7 +108,7 @@ export const PaypalV6Messaging: Story = {
                                     onCreatePayPalMessages: async createPayPalMessages => {
                                         const messagesInstance = createPayPalMessages({
                                             buyerCountry: componentConfiguration.countryCode,
-                                            currencyCode: componentConfiguration.amount.currency
+                                            currencyCode: componentConfiguration.amount?.currency
                                         });
                                         const messageElement = document.querySelector<PayPalMessageElement>('#paypal-message');
 
