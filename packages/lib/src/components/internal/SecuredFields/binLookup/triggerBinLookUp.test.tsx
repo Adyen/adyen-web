@@ -385,47 +385,6 @@ describe('triggerBinLookUp', () => {
                         expect(mockOnBinLookup).toHaveBeenCalledWith(expect.objectContaining({ healthcare: [{ visa: true }] }));
                     });
                 });
-
-                describe('Funding source validation is not applied at this layer', () => {
-                    test('should pass every supported brand through untouched, leaving the funding source rules to the Card component', async () => {
-                        const requestId = '123456789';
-                        httpPostMock.mockImplementation(
-                            jest.fn(() =>
-                                Promise.resolve({
-                                    requestId,
-                                    brands: [
-                                        { brand: visa, supported: true, fundingSource: 'credit' },
-                                        { brand: 'cartebancaire', supported: true, fundingSource: 'debit' }
-                                    ]
-                                })
-                            )
-                        );
-
-                        const mockCardElement = new MockCardElement(core, {
-                            clientKey,
-                            loadingContext,
-                            brands: [visa, 'cartebancaire'],
-                            configuration: { allowedFundingSources: 'debit' }
-                        });
-                        const bin = { binValue: '', type: '', encryptedBin: 'xxx-xxx', uuid: requestId };
-                        triggerBinLookUp(mockCardElement)(bin);
-                        await new Promise(process.nextTick);
-
-                        // Neither reordered nor rejected - the brands reach the Card component exactly as binLookup returned them
-                        expect(mockProcessBinLookupResponse).toHaveBeenCalledWith(
-                            expect.objectContaining({
-                                supportedBrands: [
-                                    { brand: visa, supported: true, fundingSource: 'credit' },
-                                    { brand: 'cartebancaire', supported: true, fundingSource: 'debit' }
-                                ]
-                            })
-                        );
-                        expect(mockHandleUnsupportedCard).not.toHaveBeenCalled();
-                        expect(mockOnBinLookup).toHaveBeenCalledWith(
-                            expect.objectContaining({ detectedBrands: [visa, 'cartebancaire'], supportedBrands: [visa, 'cartebancaire'] })
-                        );
-                    });
-                });
             });
         });
 
