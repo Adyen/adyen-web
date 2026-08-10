@@ -47,7 +47,8 @@ export const PayPalCreditButton = ({
             () => ({
                 presentationModeOptions,
                 createSession: () => payPalSDKInstance.createPayPalCreditOneTimePaymentSession(oneTimeSessionOptions),
-                createOrder
+                createOrder,
+                onError
             }),
             [payPalSDKInstance, oneTimeSessionOptions, createOrder]
         )
@@ -58,7 +59,8 @@ export const PayPalCreditButton = ({
             () => ({
                 presentationModeOptions,
                 createSession: () => payPalSDKInstance.createPayPalCreditSavePaymentSession(saveSessionOptions),
-                createVaultSetupToken
+                createVaultSetupToken,
+                onError
             }),
             [payPalSDKInstance, saveSessionOptions, createVaultSetupToken]
         )

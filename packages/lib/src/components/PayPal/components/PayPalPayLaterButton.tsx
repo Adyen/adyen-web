@@ -40,7 +40,8 @@ export const PayPalPayLaterButton = ({
             () => ({
                 presentationModeOptions,
                 createSession: () => payPalSDKInstance.createPayLaterOneTimePaymentSession(oneTimeSessionOptions),
-                createOrder
+                createOrder,
+                onError
             }),
             [payPalSDKInstance, oneTimeSessionOptions, createOrder]
         )
