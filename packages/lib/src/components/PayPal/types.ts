@@ -1,6 +1,6 @@
 import { AddressData } from '../../types/global-types';
 import { UIElementProps } from '../internal/UIElement/types';
-import { PayPalButtonStyle, PayPalVenmoButtonStyle, PayPalPresentationModeOptions } from './components/types';
+import { PayPalButtonStyle, PayPalVenmoButtonStyle } from './components/types';
 import { BasePaypalElement } from './models/BasePaypalElement';
 import PaypalElement from './Paypal';
 import type {
@@ -13,7 +13,8 @@ import type {
     PayPalOrderResponseBody,
     PayPalPageTypes,
     PayPalV6OnShippingAddressChangeData,
-    PayPalV6OnShippingOptionsChangeData
+    PayPalV6OnShippingOptionsChangeData,
+    PayPalPresentationModeOptions
 } from './paypal-js-types';
 import { PayPalOrderDetailsData } from './services/request-paypal-order-details';
 
@@ -100,7 +101,7 @@ type PayPalV6Props<E extends PaypalElement | BasePaypalElement> = {
      *
      * @see {@link https://docs.paypal.ai/reference/sdk/js/v6/reference#paymentsession-start-options-orderpromise}
      * @default  presentationMode: 'auto'
-     * @description { presentationMode: 'auto' } - Recommended. SDK automatically selects the best experience. Tries popup first and falls back to modal if popups are blocked.
+     * @description { presentationMode: 'auto' } - Recommended. SDK automatically selects the best experience. Does not yet support 'redirect' mode.
      */
     presentationModeOptions?: PayPalPresentationModeOptions;
 };

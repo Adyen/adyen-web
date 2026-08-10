@@ -47,7 +47,8 @@ export const VenmoButton = ({
             () => ({
                 presentationModeOptions,
                 createSession: () => payPalSDKInstance.createVenmoOneTimePaymentSession(oneTimeSessionOptions),
-                createOrder
+                createOrder,
+                onError
             }),
             [payPalSDKInstance, oneTimeSessionOptions, createOrder]
         )
@@ -58,7 +59,8 @@ export const VenmoButton = ({
             () => ({
                 presentationModeOptions,
                 createSession: () => payPalSDKInstance.createVenmoSavePaymentSession(saveSessionOptions as PayPalVenmoSavePaymentSessionOptions),
-                createVaultSetupToken
+                createVaultSetupToken,
+                onError
             }),
             [payPalSDKInstance, saveSessionOptions, createVaultSetupToken]
         )

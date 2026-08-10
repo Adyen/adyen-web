@@ -6,11 +6,6 @@ import type {
     PayPalOnApproveData,
     PayPalOnShippingAddressChangeData,
     PayPalOnShippingOptionsChangeData,
-    PayPalPresentationModeOptionsForAuto,
-    PayPalPresentationModeOptionsForModal,
-    PayPalPresentationModeOptionsForPaymentHandler,
-    PayPalPresentationModeOptionsForPopup,
-    PayPalPresentationModeOptionsForRedirect,
     PayPalV6OnApproveData,
     PayPalV6OnShippingAddressChangeData,
     PayPalV6OnShippingOptionsChangeData
@@ -89,13 +84,3 @@ export type PayPalVenmoButtonStyle = {
     type?: PayPalButtonType;
     class?: VenmoButtonClass;
 };
-
-/**
- * @internal
- */
-export type PayPalPresentationModeOptions =
-    | PayPalPresentationModeOptionsForPopup
-    | PayPalPresentationModeOptionsForModal
-    | PayPalPresentationModeOptionsForRedirect
-    | PayPalPresentationModeOptionsForPaymentHandler
-    | PayPalPresentationModeOptionsForAuto;
