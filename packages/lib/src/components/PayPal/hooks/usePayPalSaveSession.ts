@@ -1,20 +1,23 @@
 import { useCallback, useEffect, useState } from 'preact/hooks';
-import { PayPalSavePaymentSession } from '../paypal-js-types';
-import { PayPalPresentationModeOptions } from '../components/types';
-import { DEFAULT_PAYMENT_SESSION_OPTIONS } from '../config';
+import { PayPalPresentationModeOptions, PayPalSavePaymentSession } from '../paypal-js-types';
+import { useStartPayPalSession } from './useStartPayPalSession';
 
 export const usePayPalSaveSession = ({
     presentationModeOptions,
     createSession,
-    createVaultSetupToken
+    createVaultSetupToken,
+    onError
 }: {
     presentationModeOptions?: PayPalPresentationModeOptions;
     createSession: () => PayPalSavePaymentSession | undefined;
     createVaultSetupToken: () => Promise<{
         vaultSetupToken: string;
     }>;
+    onError: (error: Error) => void;
 }) => {
     const [paymentSession, setPaymentSession] = useState<PayPalSavePaymentSession | undefined>();
+
+    const startSession = useStartPayPalSession({ presentationModeOptions, onError });
 
     useEffect(() => {
         setPaymentSession(createSession());
@@ -23,11 +26,8 @@ export const usePayPalSaveSession = ({
     const onClick = useCallback(async () => {
         if (!paymentSession) return;
 
-        await paymentSession.start(
-            presentationModeOptions?.presentationMode ? presentationModeOptions : DEFAULT_PAYMENT_SESSION_OPTIONS,
-            createVaultSetupToken()
-        );
-    }, [paymentSession, createVaultSetupToken, presentationModeOptions]);
+        await startSession(sessionOptions => paymentSession.start(sessionOptions, createVaultSetupToken()));
+    }, [paymentSession, createVaultSetupToken, startSession]);
 
     return {
         onClick
