@@ -1,12 +1,20 @@
-import { createRef, h } from 'preact';
+import { ComponentChild, createRef, h } from 'preact';
 import { render, screen, act, fireEvent } from '@testing-library/preact';
 import CardInput from './CardInput';
 import { CoreProvider } from '../../../../core/Context/CoreProvider';
 import { AmountProvider } from '../../../../core/Context/AmountProvider';
+import { CardInputRef } from './types';
+import { BinLookupResponse, BrandObject } from '../../types';
 
 jest.mock('../../../internal/SecuredFields/lib/CSF');
 
-let cardInputRef;
+// Required<> because the ref's members are all optional on the interface, but always present once CardInput has assigned it.
+// processBinLookupResponse is redeclared because triggerBinLookUp passes null on reset, which the interface's signature does not admit.
+type AssignedCardInputRef = Required<Omit<CardInputRef, 'processBinLookupResponse'>> & {
+    processBinLookupResponse: (binLookupResponse: BinLookupResponse | null, isReset: boolean) => void;
+};
+
+let cardInputRef: AssignedCardInputRef;
 
 const cardInputRequiredProps = {
     i18n: global.i18n,
@@ -22,7 +30,7 @@ const cardInputRequiredProps = {
     })
 };
 
-const selectableDualBrandResp = {
+const selectableDualBrandResp: BinLookupResponse = {
     issuingCountryCode: 'FR',
     supportedBrands: [
         {
@@ -48,7 +56,7 @@ const selectableDualBrandResp = {
     ]
 };
 
-const displayOnlyDualBrandResp = {
+const displayOnlyDualBrandResp: BinLookupResponse = {
     issuingCountryCode: 'AU',
     supportedBrands: [
         {
@@ -74,35 +82,34 @@ const displayOnlyDualBrandResp = {
     ]
 };
 
-const fundingSourceDualBrandResp = {
-    issuingCountryCode: 'FR',
-    supportedBrands: [
-        {
-            brand: 'cartebancaire',
-            cvcPolicy: 'required',
-            enableLuhnCheck: true,
-            expiryDatePolicy: 'required',
-            localeBrand: 'Carte Bancaire',
-            paymentMethodVariant: 'cartebancaire',
-            showSocialSecurityNumber: false,
-            supported: true,
-            fundingSource: 'debit'
-        },
-        {
-            brand: 'visa',
-            cvcPolicy: 'required',
-            enableLuhnCheck: true,
-            expiryDatePolicy: 'required',
-            localeBrand: 'VISA',
-            paymentMethodVariant: 'visa',
-            showSocialSecurityNumber: false,
-            supported: true,
-            fundingSource: 'credit'
-        }
-    ]
-};
+const fundingSourceBrands: BrandObject[] = [
+    {
+        brand: 'cartebancaire',
+        cvcPolicy: 'required',
+        enableLuhnCheck: true,
+        expiryDatePolicy: 'required',
+        localeBrand: 'Carte Bancaire',
+        paymentMethodVariant: 'cartebancaire',
+        showSocialSecurityNumber: false,
+        supported: true,
+        fundingSource: 'debit'
+    },
+    {
+        brand: 'visa',
+        cvcPolicy: 'required',
+        enableLuhnCheck: true,
+        expiryDatePolicy: 'required',
+        localeBrand: 'VISA',
+        paymentMethodVariant: 'visa',
+        showSocialSecurityNumber: false,
+        supported: true,
+        fundingSource: 'credit'
+    }
+];
 
-const renderCardInput = ui => {
+const fundingSourceDualBrandResp: BinLookupResponse = { issuingCountryCode: 'FR', supportedBrands: fundingSourceBrands };
+
+const renderCardInput = (ui: ComponentChild) => {
     return render(
         <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
             <AmountProvider amount={{ value: 10, currency: 'EUR' }} providerRef={createRef()}>
@@ -277,7 +284,7 @@ describe('CardNumber and the dual branding UI', () => {
                 cardInputRef.processBinLookupResponse(
                     {
                         issuingCountryCode: 'FR',
-                        supportedBrands: fundingSourceDualBrandResp.supportedBrands.map(brand => ({ ...brand, fundingSource: 'credit' }))
+                        supportedBrands: fundingSourceBrands.map(brand => ({ ...brand, fundingSource: 'credit' as const }))
                     },
                     false
                 );
@@ -301,7 +308,7 @@ describe('CardNumber and the dual branding UI', () => {
                 cardInputRef.processBinLookupResponse(
                     {
                         issuingCountryCode: 'FR',
-                        supportedBrands: fundingSourceDualBrandResp.supportedBrands.map(brand => ({ ...brand, fundingSource: 'credit' }))
+                        supportedBrands: fundingSourceBrands.map(brand => ({ ...brand, fundingSource: 'credit' as const }))
                     },
                     false
                 );

@@ -1,8 +1,9 @@
 import extensions, { cloneBrandsArr, containsExcludedBrand, removeExcludedBrand } from './extensions';
 import { BRAND_ICON_UI_EXCLUSION_LIST, CVC_POLICY_REQUIRED } from '../lib/constants';
 import { SF_ErrorCodes } from '../../../../core/Errors/constants';
+import { DualBrandSelectElement } from '../../../Card/types';
 
-let CIExtensions;
+let CIExtensions: ReturnType<typeof extensions>;
 
 // Mock sfp useRef
 const sfp = {
@@ -12,14 +13,14 @@ const sfp = {
     }
 };
 
-let issuingCountryCode = null;
-let setIssuingCountryCode;
+let issuingCountryCode: string | null = null;
+let setIssuingCountryCode: jest.Mock;
 
-let dualBrandSelectElements = [];
-let setDualBrandSelectElements;
+let dualBrandSelectElements: DualBrandSelectElement[] = [];
+let setDualBrandSelectElements: jest.Mock;
 
 let selectedBrandValue = '';
-let setSelectedBrandValue;
+let setSelectedBrandValue: jest.Mock;
 
 beforeEach(() => {
     console.log = jest.fn(() => {});
@@ -210,7 +211,7 @@ describe('Test mock binLookup results on CardInput.state', () => {
 });
 
 describe('Funding source validation - the contract with SecuredFields', () => {
-    const brandObj = (brand, fundingSource?) => ({
+    const brandObj = (brand: string, fundingSource?: string) => ({
         brand,
         cvcPolicy: CVC_POLICY_REQUIRED,
         enableLuhnCheck: true,
