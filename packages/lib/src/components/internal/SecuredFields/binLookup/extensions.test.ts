@@ -3,7 +3,7 @@ import { BRAND_ICON_UI_EXCLUSION_LIST, CVC_POLICY_REQUIRED } from '../lib/consta
 import { SF_ErrorCodes } from '../../../../core/Errors/constants';
 import { DualBrandSelectElement } from '../../../Card/types';
 
-let CIExtensions: ReturnType<typeof extensions>;
+let CIExtensions;
 
 // Mock sfp useRef
 const sfp = {
@@ -13,14 +13,14 @@ const sfp = {
     }
 };
 
-let issuingCountryCode: string | null = null;
-let setIssuingCountryCode: jest.Mock;
+let issuingCountryCode = null;
+let setIssuingCountryCode;
 
-let dualBrandSelectElements: DualBrandSelectElement[] = [];
-let setDualBrandSelectElements: jest.Mock;
+let dualBrandSelectElements = [];
+let setDualBrandSelectElements;
 
 let selectedBrandValue = '';
-let setSelectedBrandValue: jest.Mock;
+let setSelectedBrandValue;
 
 beforeEach(() => {
     console.log = jest.fn(() => {});
@@ -223,12 +223,29 @@ describe('Funding source validation - the contract with SecuredFields', () => {
     const visaCredit = brandObj('visa', 'credit');
     const cbDebit = brandObj('cartebancaire', 'debit');
 
+    // Local state, so this block does not read the mocks the other describes share and mutate
+    let selectElements: DualBrandSelectElement[] = [];
+    const setSelectElements = jest.fn((elements: DualBrandSelectElement[]) => {
+        selectElements = elements;
+    });
+
+    beforeEach(() => {
+        selectElements = [];
+        setSelectElements.mockClear();
+    });
+
     // Rebuilt after every result, because handleDualBrandSelection closes over the selector elements the result created
     const buildExtensions = (allowedFundingSources?: string[]) =>
         extensions(
             { allowedFundingSources },
             { sfp },
-            { dualBrandSelectElements, setSelectedBrandValue, setDualBrandSelectElements, issuingCountryCode, setIssuingCountryCode },
+            {
+                dualBrandSelectElements: selectElements,
+                setSelectedBrandValue: jest.fn(),
+                setDualBrandSelectElements: setSelectElements,
+                issuingCountryCode: null,
+                setIssuingCountryCode: jest.fn()
+            },
             { current: 0 }
         );
 
