@@ -1,7 +1,6 @@
 import { renderHook } from '@testing-library/preact-hooks';
 import { usePayPalOneTimeSession } from './usePayPalOneTimeSession';
-import type { PayPalOneTimePaymentSession } from '../paypal-js-types';
-import type { PayPalPresentationModeOptions } from '../components/types';
+import type { PayPalError, PayPalOneTimePaymentSession, PayPalPresentationModeOptions } from '../paypal-js-types';
 
 describe('usePayPalOneTimeSession', () => {
     const presentationModeOptions: PayPalPresentationModeOptions = { presentationMode: 'auto' };
@@ -14,7 +13,7 @@ describe('usePayPalOneTimeSession', () => {
         const createSession = jest.fn().mockReturnValue(session);
         const createOrder = jest.fn();
 
-        renderHook(() => usePayPalOneTimeSession({ createSession, createOrder, presentationModeOptions }));
+        renderHook(() => usePayPalOneTimeSession({ createSession, createOrder, onError: jest.fn(), presentationModeOptions }));
 
         expect(createSession).toHaveBeenCalledTimes(1);
     });
@@ -25,7 +24,7 @@ describe('usePayPalOneTimeSession', () => {
         const orderPromise = Promise.resolve({ orderId: 'order-1' });
         const createOrder = jest.fn().mockReturnValue(orderPromise);
 
-        const { result } = renderHook(() => usePayPalOneTimeSession({ createSession, createOrder, presentationModeOptions }));
+        const { result } = renderHook(() => usePayPalOneTimeSession({ createSession, createOrder, onError: jest.fn(), presentationModeOptions }));
 
         await result.current?.onClick();
 
@@ -40,7 +39,9 @@ describe('usePayPalOneTimeSession', () => {
         const createOrder = jest.fn().mockReturnValue(orderPromise);
         const modalOptions: PayPalPresentationModeOptions = { presentationMode: 'modal' };
 
-        const { result } = renderHook(() => usePayPalOneTimeSession({ createSession, createOrder, presentationModeOptions: modalOptions }));
+        const { result } = renderHook(() =>
+            usePayPalOneTimeSession({ createSession, createOrder, onError: jest.fn(), presentationModeOptions: modalOptions })
+        );
 
         await result.current?.onClick();
 
@@ -51,10 +52,65 @@ describe('usePayPalOneTimeSession', () => {
         const createSession = jest.fn().mockReturnValue(undefined);
         const createOrder = jest.fn();
 
-        const { result } = renderHook(() => usePayPalOneTimeSession({ createSession, createOrder, presentationModeOptions }));
+        const { result } = renderHook(() => usePayPalOneTimeSession({ createSession, createOrder, onError: jest.fn(), presentationModeOptions }));
 
         await result.current?.onClick();
 
         expect(createOrder).not.toHaveBeenCalled();
+    });
+
+    describe('error handling', () => {
+        const createPaymentFlowError = () => {
+            const error = new Error('Payment flow failed') as PayPalError;
+            error.name = 'PaymentFlowError';
+            error.code = 'PAYMENT_FLOW_ERROR';
+            error.isRecoverable = true;
+            return error;
+        };
+
+        const createFailingSessionMock = (error: unknown): PayPalOneTimePaymentSession =>
+            ({ start: jest.fn().mockRejectedValueOnce(error).mockResolvedValue(undefined) }) as unknown as PayPalOneTimePaymentSession;
+
+        beforeEach(() => {
+            jest.spyOn(console, 'warn').mockImplementation(() => {});
+        });
+
+        afterEach(() => {
+            jest.restoreAllMocks();
+        });
+
+        test('should retry with the auto presentation mode when the session fails with a PaymentFlowError', async () => {
+            const error = createPaymentFlowError();
+            const session = createFailingSessionMock(error);
+            const createSession = jest.fn().mockReturnValue(session);
+            const createOrder = jest.fn().mockResolvedValue({ orderId: 'order-1' });
+            const onError = jest.fn();
+            const modalOptions: PayPalPresentationModeOptions = { presentationMode: 'modal' };
+
+            const { result } = renderHook(() =>
+                usePayPalOneTimeSession({ createSession, createOrder, onError, presentationModeOptions: modalOptions })
+            );
+
+            await result.current?.onClick();
+
+            expect(session.start).toHaveBeenCalledTimes(2);
+            expect(session.start).toHaveBeenLastCalledWith({ presentationMode: 'auto' }, expect.anything());
+            expect(onError).not.toHaveBeenCalled();
+        });
+
+        test('should report the error raised by the session', async () => {
+            const error = new Error('Session failed');
+            const session = createFailingSessionMock(error);
+            const createSession = jest.fn().mockReturnValue(session);
+            const createOrder = jest.fn().mockResolvedValue({ orderId: 'order-1' });
+            const onError = jest.fn();
+
+            const { result } = renderHook(() => usePayPalOneTimeSession({ createSession, createOrder, onError, presentationModeOptions }));
+
+            await result.current?.onClick();
+
+            expect(session.start).toHaveBeenCalledTimes(1);
+            expect(onError).toHaveBeenCalledWith(error);
+        });
     });
 });

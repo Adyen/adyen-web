@@ -64,6 +64,39 @@ export const PaypalV6: Story = {
     }
 };
 
+export const PaypalV6DirectAppSwitch: Story = {
+    render: ({ componentConfiguration, ...checkoutConfig }) => (
+        <Checkout checkoutConfig={checkoutConfig}>
+            {checkout => <ComponentContainer element={new Paypal(checkout, componentConfiguration)} />}
+        </Checkout>
+    ),
+    args: {
+        componentConfiguration: {
+            usePayPalV6: {
+                presentationModeOptions: {
+                    presentationMode: 'direct-app-switch'
+                },
+                countryCode: DEFAULT_COUNTRY_CODE,
+                style: {
+                    paypal: {
+                        type: 'buynow',
+                        class: 'paypal-blue'
+                    },
+                    venmo: {
+                        type: 'pay',
+                        class: 'venmo-black'
+                    }
+                },
+                vault: false,
+                onAuthorized: (data, actions) => {
+                    console.log('PaypalV6 onAuthorized data', { data });
+                    actions.resolve();
+                }
+            }
+        }
+    }
+};
+
 export const PaypalV6WithPayPalV5: Story = {
     render: ({ componentConfiguration, ...checkoutConfig }) => (
         <Checkout checkoutConfig={checkoutConfig}>

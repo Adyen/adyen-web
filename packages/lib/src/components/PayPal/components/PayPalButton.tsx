@@ -50,7 +50,8 @@ export const PayPalButton = ({
             () => ({
                 presentationModeOptions,
                 createSession: () => payPalSDKInstance.createPayPalOneTimePaymentSession(oneTimeSessionOptions),
-                createOrder
+                createOrder,
+                onError
             }),
             [payPalSDKInstance, oneTimeSessionOptions, createOrder]
         )
@@ -61,7 +62,8 @@ export const PayPalButton = ({
             () => ({
                 presentationModeOptions,
                 createSession: () => payPalSDKInstance.createPayPalSavePaymentSession(saveSessionOptions),
-                createVaultSetupToken
+                createVaultSetupToken,
+                onError
             }),
             [payPalSDKInstance, saveSessionOptions, createVaultSetupToken]
         )

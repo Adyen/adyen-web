@@ -1,7 +1,6 @@
 import { renderHook } from '@testing-library/preact-hooks';
 import { usePayPalSaveSession } from './usePayPalSaveSession';
-import type { PayPalSavePaymentSession } from '../paypal-js-types';
-import type { PayPalPresentationModeOptions } from '../components/types';
+import type { PayPalError, PayPalPresentationModeOptions, PayPalSavePaymentSession } from '../paypal-js-types';
 
 describe('usePayPalSaveSession', () => {
     const presentationModeOptions: PayPalPresentationModeOptions = { presentationMode: 'auto' };
@@ -14,7 +13,7 @@ describe('usePayPalSaveSession', () => {
         const createSession = jest.fn().mockReturnValue(session);
         const createVaultSetupToken = jest.fn();
 
-        renderHook(() => usePayPalSaveSession({ createSession, createVaultSetupToken, presentationModeOptions }));
+        renderHook(() => usePayPalSaveSession({ createSession, createVaultSetupToken, onError: jest.fn(), presentationModeOptions }));
 
         expect(createSession).toHaveBeenCalledTimes(1);
     });
@@ -25,7 +24,9 @@ describe('usePayPalSaveSession', () => {
         const tokenPromise = Promise.resolve({ vaultSetupToken: 'vault-token-1' });
         const createVaultSetupToken = jest.fn().mockReturnValue(tokenPromise);
 
-        const { result } = renderHook(() => usePayPalSaveSession({ createSession, createVaultSetupToken, presentationModeOptions }));
+        const { result } = renderHook(() =>
+            usePayPalSaveSession({ createSession, createVaultSetupToken, onError: jest.fn(), presentationModeOptions })
+        );
 
         await result.current?.onClick();
 
@@ -40,7 +41,9 @@ describe('usePayPalSaveSession', () => {
         const createVaultSetupToken = jest.fn().mockReturnValue(tokenPromise);
         const modalOptions: PayPalPresentationModeOptions = { presentationMode: 'modal' };
 
-        const { result } = renderHook(() => usePayPalSaveSession({ createSession, createVaultSetupToken, presentationModeOptions: modalOptions }));
+        const { result } = renderHook(() =>
+            usePayPalSaveSession({ createSession, createVaultSetupToken, onError: jest.fn(), presentationModeOptions: modalOptions })
+        );
 
         await result.current?.onClick();
 
@@ -51,10 +54,60 @@ describe('usePayPalSaveSession', () => {
         const createSession = jest.fn().mockReturnValue(undefined);
         const createVaultSetupToken = jest.fn();
 
-        const { result } = renderHook(() => usePayPalSaveSession({ createSession, createVaultSetupToken, presentationModeOptions }));
+        const { result } = renderHook(() =>
+            usePayPalSaveSession({ createSession, createVaultSetupToken, onError: jest.fn(), presentationModeOptions })
+        );
 
         await result.current?.onClick();
 
         expect(createVaultSetupToken).not.toHaveBeenCalled();
+    });
+
+    describe('error handling', () => {
+        const createFailingSessionMock = (error: unknown): PayPalSavePaymentSession =>
+            ({ start: jest.fn().mockRejectedValueOnce(error).mockResolvedValue(undefined) }) as unknown as PayPalSavePaymentSession;
+
+        beforeEach(() => {
+            jest.spyOn(console, 'warn').mockImplementation(() => {});
+        });
+
+        afterEach(() => {
+            jest.restoreAllMocks();
+        });
+
+        test('should retry with the auto presentation mode when the session fails with a PaymentFlowError', async () => {
+            const error = new Error('Payment flow failed') as PayPalError;
+            error.name = 'PaymentFlowError';
+            const session = createFailingSessionMock(error);
+            const createSession = jest.fn().mockReturnValue(session);
+            const createVaultSetupToken = jest.fn().mockResolvedValue({ vaultSetupToken: 'vault-token-1' });
+            const onError = jest.fn();
+            const modalOptions: PayPalPresentationModeOptions = { presentationMode: 'modal' };
+
+            const { result } = renderHook(() =>
+                usePayPalSaveSession({ createSession, createVaultSetupToken, onError, presentationModeOptions: modalOptions })
+            );
+
+            await result.current?.onClick();
+
+            expect(session.start).toHaveBeenCalledTimes(2);
+            expect(session.start).toHaveBeenLastCalledWith({ presentationMode: 'auto' }, expect.anything());
+            expect(onError).not.toHaveBeenCalled();
+        });
+
+        test('should report the error raised by the session', async () => {
+            const error = new Error('Session failed');
+            const session = createFailingSessionMock(error);
+            const createSession = jest.fn().mockReturnValue(session);
+            const createVaultSetupToken = jest.fn().mockResolvedValue({ vaultSetupToken: 'vault-token-1' });
+            const onError = jest.fn();
+
+            const { result } = renderHook(() => usePayPalSaveSession({ createSession, createVaultSetupToken, onError, presentationModeOptions }));
+
+            await result.current?.onClick();
+
+            expect(session.start).toHaveBeenCalledTimes(1);
+            expect(onError).toHaveBeenCalledWith(error);
+        });
     });
 });
