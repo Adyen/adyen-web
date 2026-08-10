@@ -5,7 +5,8 @@ import type {
     CardBrandsConfiguration,
     CardBackendConfiguration,
     DualBrandSelectElement,
-    CardPlaceholders
+    CardPlaceholders,
+    FundingSourceKeys
 } from '../../types';
 import { ValidationResult } from '../../../internal/PersonalDetails/types';
 import {
@@ -75,6 +76,7 @@ export interface CardInputDataState {
  */
 export interface CardInputProps {
     isPayButtonPrimaryVariant?: boolean;
+    allowedFundingSources?: FundingSourceKeys[];
     autoFocus?: boolean;
     billingAddressAllowedCountries?: string[];
     billingAddressRequired?: boolean;
