@@ -23,12 +23,18 @@ export const parseAllowedFundingSources = (allowedFundingSources?: string): Fund
     return knownValues.length ? knownValues : undefined;
 };
 
-/**
- * Retains only the brands whose funding source is in the allowed list. Brands that report no funding source
- * cannot be evaluated, so they are never filtered out.
- */
-export const filterBrandsByFundingSource = (brands: BrandObject[], allowedFundingSources?: FundingSourceKeys[]): BrandObject[] => {
+export const isFundingSourceAllowed = (brand: BrandObject, allowedFundingSources?: FundingSourceKeys[]): boolean => {
+    // Brands that report no funding source cannot be evaluated, so they always count as allowed
+    if (!allowedFundingSources?.length || !brand?.fundingSource) return true;
+
+    return allowedFundingSources.includes(brand.fundingSource.toLowerCase() as FundingSourceKeys);
+};
+
+export const sortBrandsByFundingSource = (brands: BrandObject[], allowedFundingSources?: FundingSourceKeys[]): BrandObject[] => {
     if (!allowedFundingSources?.length) return brands;
 
-    return brands.filter(brand => !brand.fundingSource || allowedFundingSources.includes(brand.fundingSource.toLowerCase() as FundingSourceKeys));
+    const allowed = brands.filter(brand => isFundingSourceAllowed(brand, allowedFundingSources));
+    if (allowed.length === brands.length) return brands;
+
+    return [...allowed, ...brands.filter(brand => !isFundingSourceAllowed(brand, allowedFundingSources))];
 };

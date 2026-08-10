@@ -188,6 +188,10 @@ export function lookupBlurBasedErrors(errorCode) {
     ].includes(errorCode);
 }
 
+export function isUnsupportedFundingSourceError(errorCode?: string): boolean {
+    return errorCode === (SF_ErrorCodes.ERROR_MSG_UNSUPPORTED_FUNDING_SOURCE as string);
+}
+
 export function getFullBrandName(brand: string): string {
     return BRAND_READABLE_NAME_MAP[brand] ?? brand;
 }

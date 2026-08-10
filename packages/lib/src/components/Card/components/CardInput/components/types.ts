@@ -46,6 +46,7 @@ export interface CardNumberProps {
     dualBrandingElements?: DualBrandSelectElement[];
     selectedBrandValue: string;
     error: string;
+    errorCode?: string;
     filled: boolean;
     focused: boolean;
     isValid: boolean;

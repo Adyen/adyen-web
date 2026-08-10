@@ -74,6 +74,34 @@ const displayOnlyDualBrandResp = {
     ]
 };
 
+const fundingSourceDualBrandResp = {
+    issuingCountryCode: 'FR',
+    supportedBrands: [
+        {
+            brand: 'cartebancaire',
+            cvcPolicy: 'required',
+            enableLuhnCheck: true,
+            expiryDatePolicy: 'required',
+            localeBrand: 'Carte Bancaire',
+            paymentMethodVariant: 'cartebancaire',
+            showSocialSecurityNumber: false,
+            supported: true,
+            fundingSource: 'debit'
+        },
+        {
+            brand: 'visa',
+            cvcPolicy: 'required',
+            enableLuhnCheck: true,
+            expiryDatePolicy: 'required',
+            localeBrand: 'VISA',
+            paymentMethodVariant: 'visa',
+            showSocialSecurityNumber: false,
+            supported: true,
+            fundingSource: 'credit'
+        }
+    ]
+};
+
 const renderCardInput = ui => {
     return render(
         <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
@@ -193,6 +221,124 @@ describe('CardNumber and the dual branding UI', () => {
         // Error state shown — at least one error element is visible
         expect(screen.queryAllByRole('button')).toHaveLength(0);
         expect(screen.queryAllByText(/the card brand/i)[0]).toHaveClass('adyen-checkout__card__dual-branding__sr-only');
+    });
+
+    describe('Funding source validation', () => {
+        const renderWithAllowedDebit = () => renderCardInput(<CardInput {...cardInputRequiredProps} allowedFundingSources={['debit']} />);
+
+        test('should preselect brand with an allowed funding source as the leading brand', async () => {
+            renderWithAllowedDebit();
+
+            await act(() => {
+                cardInputRef.processBinLookupResponse(fundingSourceDualBrandResp, false);
+            });
+
+            expect(screen.getByRole('button', { name: /cartebancaire/i })).toHaveAttribute('aria-pressed', 'true');
+            expect(screen.getByRole('button', { name: /visa/i })).toHaveAttribute('aria-pressed', 'false');
+            expect(screen.queryByText(/not supported/i)).not.toBeInTheDocument();
+        });
+
+        test('should show the unsupported funding source error while keeping the selector visible on disallowed brand selection', async () => {
+            renderWithAllowedDebit();
+
+            await act(() => {
+                cardInputRef.processBinLookupResponse(fundingSourceDualBrandResp, false);
+            });
+
+            fireEvent.click(screen.getByRole('button', { name: /visa/i }));
+
+            expect(screen.getAllByText(/not supported/i).length).toBeGreaterThanOrEqual(1);
+
+            // The shopper is not stranded: both options remain on screen and the picked one is selected
+            expect(screen.getAllByRole('button')).toHaveLength(2);
+            expect(screen.getByRole('button', { name: /visa/i })).toHaveAttribute('aria-pressed', 'true');
+        });
+
+        test('should clear the error when the shopper switches back to the allowed brand', async () => {
+            renderWithAllowedDebit();
+
+            await act(() => {
+                cardInputRef.processBinLookupResponse(fundingSourceDualBrandResp, false);
+            });
+
+            fireEvent.click(screen.getByRole('button', { name: /visa/i }));
+            expect(screen.getAllByText(/not supported/i).length).toBeGreaterThanOrEqual(1);
+
+            fireEvent.click(screen.getByRole('button', { name: /cartebancaire/i }));
+
+            expect(screen.queryByText(/not supported/i)).not.toBeInTheDocument();
+            expect(screen.getByRole('button', { name: /cartebancaire/i })).toHaveAttribute('aria-pressed', 'true');
+        });
+
+        test('should show the error with no brand selector when neither brand has an allowed funding source', async () => {
+            renderCardInput(<CardInput {...cardInputRequiredProps} allowedFundingSources={['debit']} />);
+
+            await act(() => {
+                cardInputRef.processBinLookupResponse(
+                    {
+                        issuingCountryCode: 'FR',
+                        supportedBrands: fundingSourceDualBrandResp.supportedBrands.map(brand => ({ ...brand, fundingSource: 'credit' }))
+                    },
+                    false
+                );
+            });
+
+            expect(screen.getAllByText(/not supported/i).length).toBeGreaterThanOrEqual(1);
+            // Nothing to choose between, so unlike the picked-the-wrong-brand case no selector is offered
+            expect(screen.queryAllByRole('button')).toHaveLength(0);
+        });
+
+        test('should not leave the previous selector on screen when the next card is rejected', async () => {
+            renderWithAllowedDebit();
+
+            await act(() => {
+                cardInputRef.processBinLookupResponse(fundingSourceDualBrandResp, false);
+            });
+            expect(screen.getAllByRole('button')).toHaveLength(2);
+
+            // The shopper edits a digit in place, so the PAN never drops below the threshold and no reset happens
+            await act(() => {
+                cardInputRef.processBinLookupResponse(
+                    {
+                        issuingCountryCode: 'FR',
+                        supportedBrands: fundingSourceDualBrandResp.supportedBrands.map(brand => ({ ...brand, fundingSource: 'credit' }))
+                    },
+                    false
+                );
+            });
+
+            expect(screen.getAllByText(/not supported/i).length).toBeGreaterThanOrEqual(1);
+            expect(screen.queryAllByRole('button')).toHaveLength(0);
+        });
+
+        test('should clear the error when the PAN drops below the binLookup threshold', async () => {
+            renderWithAllowedDebit();
+
+            await act(() => {
+                cardInputRef.processBinLookupResponse(fundingSourceDualBrandResp, false);
+            });
+            fireEvent.click(screen.getByRole('button', { name: /visa/i }));
+            expect(screen.getAllByText(/not supported/i).length).toBeGreaterThanOrEqual(1);
+
+            await act(() => {
+                cardInputRef.processBinLookupResponse(null, true);
+            });
+
+            expect(screen.queryByText(/not supported/i)).not.toBeInTheDocument();
+            expect(screen.queryAllByRole('button')).toHaveLength(0);
+        });
+
+        test('should not flag any brand when no funding sources are configured', async () => {
+            renderCardInput(<CardInput {...cardInputRequiredProps} />);
+
+            await act(() => {
+                cardInputRef.processBinLookupResponse(fundingSourceDualBrandResp, false);
+            });
+
+            fireEvent.click(screen.getByRole('button', { name: /visa/i }));
+
+            expect(screen.queryByText(/not supported/i)).not.toBeInTheDocument();
+        });
     });
 
     describe('Accessibility - Live Region', () => {

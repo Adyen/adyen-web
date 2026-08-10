@@ -1,8 +1,10 @@
 import { BrandObject } from '../../../Card/types';
 import createCardVariantSwitcher from './createCardVariantSwitcher';
-import { BRAND_ICON_UI_EXCLUSION_LIST } from '../lib/constants';
+import { BRAND_ICON_UI_EXCLUSION_LIST, ENCRYPTED_CARD_NUMBER } from '../lib/constants';
 import { requiresDualBrandSelection } from '../../../Card/components/CardInput/utils';
 import { DUAL_BRANDS_THAT_NEED_SELECTION_MECHANISM } from '../../../Card/constants';
+import { isFundingSourceAllowed, sortBrandsByFundingSource } from './fundingSource';
+import { SF_ErrorCodes } from '../../../../core/Errors/constants';
 
 // Externally testable utils
 export const containsExcludedBrand = (brandsArr: BrandObject[], excludedBrands: string[]): boolean => {
@@ -22,9 +24,18 @@ export const removeExcludedBrand = (brandsArr: BrandObject[], mainBrand1 = 'mc',
 
 export default function extensions(props, refs, states, hasPanLengthRef: Partial<{ current }> = {}) {
     // Destructure props, refs and state hooks
-    const { type, cvcPolicy } = props;
+    const { type, cvcPolicy, allowedFundingSources } = props;
     const { sfp } = refs;
     const { dualBrandSelectElements, setDualBrandSelectElements, setSelectedBrandValue, issuingCountryCode, setIssuingCountryCode } = states;
+
+    const rejectFundingSource = (brands: BrandObject[]): void => {
+        sfp.current.handleUnsupportedCard({
+            type: 'card',
+            fieldType: ENCRYPTED_CARD_NUMBER,
+            error: SF_ErrorCodes.ERROR_MSG_UNSUPPORTED_FUNDING_SOURCE,
+            detectedBrands: brands.map(brand => brand.brand)
+        });
+    };
 
     return {
         /**
@@ -61,9 +72,20 @@ export default function extensions(props, refs, states, hasPanLengthRef: Partial
             if (binLookupResponse.supportedBrands?.length) {
                 const hasExcludedBrand: boolean = containsExcludedBrand(binLookupResponse.supportedBrands, BRAND_ICON_UI_EXCLUSION_LIST);
 
-                const supportedBrands: BrandObject[] = hasExcludedBrand
+                const brandsForUI: BrandObject[] = hasExcludedBrand
                     ? removeExcludedBrand(binLookupResponse.supportedBrands)
                     : cloneBrandsArr(binLookupResponse.supportedBrands);
+
+                const supportedBrands: BrandObject[] = sortBrandsByFundingSource(brandsForUI, allowedFundingSources);
+
+                if (!isFundingSourceAllowed(supportedBrands[0], allowedFundingSources)) {
+                    setDualBrandSelectElements([]);
+                    setSelectedBrandValue('');
+                    hasPanLengthRef.current = 0;
+
+                    rejectFundingSource(supportedBrands);
+                    return;
+                }
 
                 // 1) Multiple options found - add to the UI & inform SFP
                 if (supportedBrands.length > 1) {
@@ -144,6 +166,10 @@ export default function extensions(props, refs, states, hasPanLengthRef: Partial
                 supportedBrands: brandObjArr,
                 isDualBrandSelection: true
             });
+
+            if (!isFundingSourceAllowed(brandObjArr[0], allowedFundingSources)) {
+                rejectFundingSource(brandObjArr);
+            }
         }
     };
 }
