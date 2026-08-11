@@ -60,7 +60,7 @@ describe('usePayPalOneTimeSession', () => {
     });
 
     describe('error handling', () => {
-        const createPaymentFlowError = () => {
+        const createRecoverableError = () => {
             const error = new Error('Payment flow failed') as PayPalError;
             error.name = 'PaymentFlowError';
             error.code = 'PAYMENT_FLOW_ERROR';
@@ -79,8 +79,8 @@ describe('usePayPalOneTimeSession', () => {
             jest.restoreAllMocks();
         });
 
-        test('should retry with the auto presentation mode when the session fails with a PaymentFlowError', async () => {
-            const error = createPaymentFlowError();
+        test('should retry with the auto presentation mode when the session fails with a recoverable error', async () => {
+            const error = createRecoverableError();
             const session = createFailingSessionMock(error);
             const createSession = jest.fn().mockReturnValue(session);
             const createOrder = jest.fn().mockResolvedValue({ orderId: 'order-1' });
