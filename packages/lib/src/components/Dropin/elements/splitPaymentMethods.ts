@@ -46,21 +46,36 @@ const resolveDisplayMode = (
     return DisplayMode.regular;
 };
 
+/**
+ * Buckets the payment methods by the Drop-in section they belong to, preserving the response order within each bucket.
+ */
+const groupByDisplayMode = (
+    paymentMethods: PaymentMethod[],
+    instantPaymentTypes: InstantPaymentTypes[]
+): Record<ResolvedDisplayMode, PaymentMethod[]> => {
+    const hasRequestedDisplayMode = paymentMethods.some(getRequestedDisplayMode);
+
+    const groups: Record<ResolvedDisplayMode, PaymentMethod[]> = {
+        [DisplayMode.fastlane]: [],
+        [DisplayMode.instant]: [],
+        [DisplayMode.regular]: []
+    };
+
+    paymentMethods.forEach(paymentMethod => {
+        const displayMode = resolveDisplayMode(paymentMethod, hasRequestedDisplayMode, instantPaymentTypes);
+        groups[displayMode].push(paymentMethod);
+    });
+
+    return groups;
+};
+
 function splitPaymentMethods(paymentMethods: PaymentMethods, instantPaymentTypes: InstantPaymentTypes[] = []): SplitPaymentMethods {
-    const hasRequestedDisplayMode = paymentMethods.paymentMethods.some(getRequestedDisplayMode);
-
-    const sectionedPaymentMethods = paymentMethods.paymentMethods.map(paymentMethod => ({
-        paymentMethod,
-        displayMode: resolveDisplayMode(paymentMethod, hasRequestedDisplayMode, instantPaymentTypes)
-    }));
-
-    const getPaymentMethodsByDisplayMode = (displayMode: ResolvedDisplayMode): PaymentMethod[] =>
-        sectionedPaymentMethods.filter(entry => entry.displayMode === displayMode).map(entry => entry.paymentMethod);
+    const groups = groupByDisplayMode(paymentMethods.paymentMethods, instantPaymentTypes);
 
     return {
-        fastlanePaymentMethod: getPaymentMethodsByDisplayMode(DisplayMode.fastlane)[0],
-        instantPaymentMethods: getPaymentMethodsByDisplayMode(DisplayMode.instant),
-        paymentMethods: getPaymentMethodsByDisplayMode(DisplayMode.regular),
+        fastlanePaymentMethod: groups[DisplayMode.fastlane][0],
+        instantPaymentMethods: groups[DisplayMode.instant],
+        paymentMethods: groups[DisplayMode.regular],
         storedPaymentMethods: paymentMethods.storedPaymentMethods
     };
 }
