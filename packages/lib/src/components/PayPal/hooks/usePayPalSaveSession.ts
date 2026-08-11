@@ -26,7 +26,9 @@ export const usePayPalSaveSession = ({
     const onClick = useCallback(async () => {
         if (!paymentSession) return;
 
-        await startSession(sessionOptions => paymentSession.start(sessionOptions, createVaultSetupToken()));
+        const createVaultSetupTokenPromise = createVaultSetupToken();
+
+        await startSession(sessionOptions => paymentSession.start(sessionOptions, createVaultSetupTokenPromise));
     }, [paymentSession, createVaultSetupToken, startSession]);
 
     return {
