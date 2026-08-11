@@ -1,4 +1,4 @@
-import { screen, render, fireEvent, waitFor } from '@testing-library/preact';
+import { screen, render, fireEvent, waitFor, within } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import { mock } from 'jest-mock-extended';
 
@@ -10,14 +10,27 @@ import Fastlane from '../PayPalFastlane';
 import Card from '../Card';
 import { SRPanel } from '../../core/Errors/SRPanel';
 
+import UIElement from '../internal/UIElement';
+import { TxVariants } from '../tx-variants';
+
 import type { CoreConfiguration, ICore } from '../../core/types';
 import type { OrderStatus, PaymentActionsType } from '../../types/global-types';
+import type { DropinConfiguration } from './types';
 import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 import { InfoEventType } from '../../core/Analytics/events/AnalyticsInfoEvent';
 import PaymentMethods from '../../core/ProcessResponse/PaymentMethods';
 import getOrderStatus from '../../core/Services/order-status';
 
 jest.mock('../../core/Services/order-status');
+
+class InstantCapablePaymentMethod extends UIElement {
+    public static override readonly type = TxVariants.googlepay;
+    public static override readonly txVariants = [TxVariants.googlepay, TxVariants.paywithgoogle, TxVariants.applepay];
+
+    protected componentToRender() {
+        return null;
+    }
+}
 
 async function createAdyenCheckout(configuration) {
     return await AdyenCheckout(configuration);
@@ -197,6 +210,78 @@ describe('Dropin', () => {
             const dropin = new Dropin(checkout, { instantPaymentTypes: ['paywithgoogle', 'paywithgoogle', 'paypal', 'alipay'] });
             expect(dropin.props.instantPaymentTypes).toStrictEqual(['paywithgoogle']);
         });
+
+        describe('display mode driven by the payment methods response', () => {
+            const renderDropin = async (paymentMethods: Array<Record<string, any>>, dropinConfiguration: DropinConfiguration = {}) => {
+                const core = await AdyenCheckout(getAdyenCheckoutConfiguration({ paymentMethodsResponse: { paymentMethods } }));
+                const dropin = new Dropin(core, { paymentMethodComponents: [InstantCapablePaymentMethod], ...dropinConfiguration });
+                render(dropin.render());
+            };
+
+            /**
+             * The instant payments area is the only list in the Drop-in, and each of its entries is tagged with the payment method type.
+             */
+            const findInstantPaymentMethodTypes = async (): Promise<string[]> => {
+                const instantPaymentsArea = await screen.findByRole('list');
+                return within(instantPaymentsArea)
+                    .getAllByRole('listitem')
+                    .map(entry => entry.dataset.testid);
+            };
+
+            const getRegularPaymentMethodNames = (): string[] => screen.getAllByRole('radio').map(entry => entry.textContent);
+
+            test('should render a payment method the response marks as "instant" in the instant payments area', async () => {
+                await renderDropin([
+                    { name: 'Google Pay', type: 'googlepay', configuration: { displayMode: 'instant' } },
+                    { name: 'AliPay', type: 'alipay', configuration: { displayMode: 'regular' } },
+                    { name: 'KakaoPay', type: 'kakaopay', configuration: { displayMode: 'regular' } }
+                ]);
+
+                expect(await findInstantPaymentMethodTypes()).toEqual(['googlepay']);
+                expect(getRegularPaymentMethodNames()).toEqual(['AliPay', 'KakaoPay']);
+            });
+
+            test('should render a payment method in the regular list when the response overrides instantPaymentTypes', async () => {
+                await renderDropin(
+                    [
+                        { name: 'Google Pay', type: 'googlepay', configuration: { displayMode: 'regular' } },
+                        { name: 'AliPay', type: 'alipay', configuration: { displayMode: 'regular' } }
+                    ],
+                    { instantPaymentTypes: ['googlepay'] }
+                );
+
+                expect(await screen.findByRole('radio', { name: /Google Pay/ })).toBeInTheDocument();
+                expect(screen.queryByRole('list')).not.toBeInTheDocument();
+            });
+
+            test('should keep using instantPaymentTypes when the response carries no displayMode', async () => {
+                await renderDropin(
+                    [
+                        { name: 'Google Pay', type: 'googlepay' },
+                        { name: 'AliPay', type: 'alipay' },
+                        { name: 'KakaoPay', type: 'kakaopay' }
+                    ],
+                    { instantPaymentTypes: ['googlepay'] }
+                );
+
+                expect(await findInstantPaymentMethodTypes()).toEqual(['googlepay']);
+                expect(screen.queryByRole('radio', { name: /Google Pay/ })).not.toBeInTheDocument();
+            });
+
+            test('should keep the response order within the instant payments area and the regular list', async () => {
+                await renderDropin([
+                    { name: 'ApplePay', type: 'applepay', configuration: { displayMode: 'instant' } },
+                    { name: 'AliPay', type: 'alipay', configuration: { displayMode: 'regular' } },
+                    { name: 'Google Pay', type: 'googlepay', configuration: { displayMode: 'instant' } },
+                    { name: 'KakaoPay', type: 'kakaopay', configuration: { displayMode: 'regular' } },
+                    { name: 'Pay with Google', type: 'paywithgoogle', configuration: { displayMode: 'instant' } },
+                    { name: 'Paytm', type: 'paytm', configuration: { displayMode: 'regular' } }
+                ]);
+
+                expect(await findInstantPaymentMethodTypes()).toEqual(['applepay', 'googlepay', 'paywithgoogle']);
+                expect(getRegularPaymentMethodNames()).toEqual(['AliPay', 'KakaoPay', 'Paytm']);
+            });
+        });
     });
 
     describe('Payment status', () => {
@@ -340,60 +425,6 @@ describe('Dropin', () => {
                         unavailablePaymentMethods: [
                             expect.objectContaining({ paymentMethodType: 'alipay', displayMode: 'regular' }),
                             expect.objectContaining({ paymentMethodType: 'kakaopay', displayMode: 'regular' })
-                        ]
-                    })
-                )
-            );
-        });
-
-        test('should report a backend instant payment method with the "instant" display mode', async () => {
-            const core = setupCoreMock({
-                paymentMethods: new PaymentMethods({
-                    paymentMethods: [
-                        { name: 'Google Pay', type: 'googlepay', configuration: { displayMode: 'instant' } },
-                        { name: 'AliPay', type: 'alipay', configuration: { displayMode: 'regular' } }
-                    ]
-                })
-            });
-
-            const dropin = new Dropin(core);
-            render(dropin.render());
-
-            await waitFor(() =>
-                expect(core.modules.analytics.sendAnalytics).toHaveBeenCalledWith(
-                    expect.objectContaining({
-                        type: InfoEventType.PaymentListDisplayed,
-                        component: 'dropin',
-                        unavailablePaymentMethods: [
-                            expect.objectContaining({ paymentMethodType: 'googlepay', displayMode: 'instant' }),
-                            expect.objectContaining({ paymentMethodType: 'alipay', displayMode: 'regular' })
-                        ]
-                    })
-                )
-            );
-        });
-
-        test('should report the backend display mode even when instantPaymentTypes says otherwise', async () => {
-            const core = setupCoreMock({
-                paymentMethods: new PaymentMethods({
-                    paymentMethods: [
-                        { name: 'Google Pay', type: 'googlepay', configuration: { displayMode: 'instant' } },
-                        { name: 'ApplePay', type: 'applepay', configuration: { displayMode: 'regular' } }
-                    ]
-                })
-            });
-
-            const dropin = new Dropin(core, { instantPaymentTypes: ['applepay'] });
-            render(dropin.render());
-
-            await waitFor(() =>
-                expect(core.modules.analytics.sendAnalytics).toHaveBeenCalledWith(
-                    expect.objectContaining({
-                        type: InfoEventType.PaymentListDisplayed,
-                        component: 'dropin',
-                        unavailablePaymentMethods: [
-                            expect.objectContaining({ paymentMethodType: 'googlepay', displayMode: 'instant' }),
-                            expect.objectContaining({ paymentMethodType: 'applepay', displayMode: 'regular' })
                         ]
                     })
                 )
