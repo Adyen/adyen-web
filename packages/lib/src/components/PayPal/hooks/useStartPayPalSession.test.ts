@@ -6,7 +6,7 @@ describe('useStartPayPalSession', () => {
     const modalOptions: PayPalPresentationModeOptions = { presentationMode: 'modal' };
     const autoOptions: PayPalPresentationModeOptions = { presentationMode: 'auto' };
 
-    const createPaymentFlowError = () => {
+    const createRecoverableError = () => {
         const error = new Error('Payment flow failed') as PayPalError;
         error.name = 'PaymentFlowError';
         error.code = 'PAYMENT_FLOW_ERROR';
@@ -45,8 +45,9 @@ describe('useStartPayPalSession', () => {
         expect(startSession).toHaveBeenCalledWith(autoOptions);
     });
 
-    test('should retry with the auto presentation mode when the session fails with a PaymentFlowError', async () => {
-        const startSession = jest.fn().mockRejectedValueOnce(createPaymentFlowError()).mockResolvedValue(undefined);
+    test('should retry with the auto presentation mode when the session fails with a recoverable error', async () => {
+        const error = createRecoverableError();
+        const startSession = jest.fn().mockRejectedValueOnce(error).mockResolvedValue(undefined);
         const onError = jest.fn();
 
         const { result } = renderHook(() => useStartPayPalSession({ presentationModeOptions: modalOptions, onError }));
@@ -56,11 +57,15 @@ describe('useStartPayPalSession', () => {
         expect(startSession).toHaveBeenCalledTimes(2);
         expect(startSession).toHaveBeenLastCalledWith(autoOptions);
         expect(onError).not.toHaveBeenCalled();
+        expect(console.warn).toHaveBeenCalledWith(
+            `PayPal - Error occurred starting session with '${modalOptions.presentationMode}' presentation mode, retrying with auto presentation mode`,
+            error
+        );
     });
 
     test('should report the error raised by the retry', async () => {
         const retryError = new Error('Retry failed');
-        const startSession = jest.fn().mockRejectedValueOnce(createPaymentFlowError()).mockRejectedValueOnce(retryError);
+        const startSession = jest.fn().mockRejectedValueOnce(createRecoverableError()).mockRejectedValueOnce(retryError);
         const onError = jest.fn();
 
         const { result } = renderHook(() => useStartPayPalSession({ presentationModeOptions: modalOptions, onError }));
@@ -71,7 +76,7 @@ describe('useStartPayPalSession', () => {
     });
 
     test('should report the error without retrying when the presentation mode is already auto', async () => {
-        const error = createPaymentFlowError();
+        const error = createRecoverableError();
         const startSession = jest.fn().mockRejectedValue(error);
         const onError = jest.fn();
 
@@ -83,7 +88,7 @@ describe('useStartPayPalSession', () => {
         expect(onError).toHaveBeenCalledWith(error);
     });
 
-    test('should report any other error without retrying', async () => {
+    test('should report a non recoverable error without retrying', async () => {
         const error = new Error('Session failed');
         const startSession = jest.fn().mockRejectedValue(error);
         const onError = jest.fn();

@@ -26,7 +26,9 @@ export const usePayPalOneTimeSession = ({
     const onClick = useCallback(async () => {
         if (!paymentSession) return;
 
-        await startSession(sessionOptions => paymentSession.start(sessionOptions, createOrder()));
+        const createOrderPromise = createOrder();
+
+        await startSession(sessionOptions => paymentSession.start(sessionOptions, createOrderPromise));
     }, [paymentSession, createOrder, startSession]);
 
     return {

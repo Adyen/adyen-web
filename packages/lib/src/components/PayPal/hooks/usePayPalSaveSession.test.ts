@@ -75,9 +75,9 @@ describe('usePayPalSaveSession', () => {
             jest.restoreAllMocks();
         });
 
-        test('should retry with the auto presentation mode when the session fails with a PaymentFlowError', async () => {
+        test('should retry with the auto presentation mode when the session fails with a recoverable error', async () => {
             const error = new Error('Payment flow failed') as PayPalError;
-            error.name = 'PaymentFlowError';
+            error.isRecoverable = true;
             const session = createFailingSessionMock(error);
             const createSession = jest.fn().mockReturnValue(session);
             const createVaultSetupToken = jest.fn().mockResolvedValue({ vaultSetupToken: 'vault-token-1' });

@@ -7,9 +7,9 @@ type StartSession = (presentationModeOptions: PayPalPresentationModeOptions) => 
 /**
  * Starts a PayPal payment session with the configured presentation mode.
  *
- * When the PayPal SDK fails to open the configured presentation mode, it rejects with a 'PaymentFlowError'. In that case
- * the session is started again with the auto presentation mode, letting the SDK decide how to present the payment flow.
- * Any other failure, as well as a failing retry, is reported through 'onError'.
+ * When the PayPal SDK rejects with a recoverable error, for instance because it failed to open the configured
+ * presentation mode, the session is started again with the auto presentation mode, letting the SDK decide how to
+ * present the payment flow. Any other failure, as well as a failing retry, is reported through 'onError'.
  */
 export const useStartPayPalSession = ({
     presentationModeOptions,
@@ -24,15 +24,17 @@ export const useStartPayPalSession = ({
                 await startSession(presentationModeOptions?.presentationMode ? presentationModeOptions : DEFAULT_PAYMENT_SESSION_OPTIONS);
             } catch (error: unknown) {
                 const paymentError = error as PayPalError;
-                const shouldRetryWithAutoPresentationMode =
-                    paymentError?.name === 'PaymentFlowError' && presentationModeOptions?.presentationMode !== 'auto';
+                const shouldRetryWithAutoPresentationMode = paymentError?.isRecoverable && presentationModeOptions?.presentationMode !== 'auto';
 
                 if (!shouldRetryWithAutoPresentationMode) {
                     onError(paymentError);
                     return;
                 }
 
-                console.warn('PayPal - PaymentFlowError occurred, retrying with auto presentation mode', paymentError);
+                console.warn(
+                    `PayPal - Error occurred starting session with '${presentationModeOptions?.presentationMode}' presentation mode, retrying with auto presentation mode`,
+                    paymentError
+                );
 
                 try {
                     await startSession(DEFAULT_PAYMENT_SESSION_OPTIONS);
