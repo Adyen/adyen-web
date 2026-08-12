@@ -1,5 +1,11 @@
 # @adyen/adyen-web
 
+## 6.43.0
+
+### Minor Changes
+
+- Improved: Select options can now carry informative `tags` (a coloured label), rendered both in the open list and on the collapsed button. As part of this, `secondaryText` now renders as supporting text underneath the option name instead of inline beside it, and it is no longer shown on the collapsed button. ([#4112](https://github.com/Adyen/adyen-web/pull/4112))
+
 ## 6.42.0
 
 ### Minor Changes
