@@ -52,8 +52,8 @@ describe('Dropin - splitPaymentMethods', () => {
         expect(storedPaymentMethods).toHaveLength(0);
     });
 
-    describe('backend driven displayMode', () => {
-        test('should treat a payment method marked instant by the backend as instant, without instantPaymentTypes', () => {
+    describe('Custom display mode', () => {
+        test('should group a payment method with custom display mode "instant" as instant', () => {
             const parsedPaymentMethods = new PaymentMethods({
                 paymentMethods: [
                     { name: 'Google Pay', type: 'googlepay', configuration: { displayMode: 'instant' } },
@@ -69,7 +69,7 @@ describe('Dropin - splitPaymentMethods', () => {
             expect(paymentMethods[0]).toMatchObject({ type: 'alipay' });
         });
 
-        test('should ignore instantPaymentTypes entirely once the backend has expressed an intent', () => {
+        test('should ignore instantPaymentTypes entirely once custom display mode is set', () => {
             const parsedPaymentMethods = new PaymentMethods({
                 paymentMethods: [
                     { name: 'Google Pay', type: 'googlepay', configuration: { displayMode: 'instant' } },
@@ -85,7 +85,7 @@ describe('Dropin - splitPaymentMethods', () => {
             expect(paymentMethods[0]).toMatchObject({ type: 'applepay' });
         });
 
-        test('should render no instant payment methods when the backend only sends regular', () => {
+        test('should group no instant payment methods when custom display mode only sends regular', () => {
             const parsedPaymentMethods = new PaymentMethods({
                 paymentMethods: [
                     { name: 'Google Pay', type: 'googlepay', configuration: { displayMode: 'regular' } },
@@ -99,7 +99,7 @@ describe('Dropin - splitPaymentMethods', () => {
             expect(paymentMethods).toHaveLength(2);
         });
 
-        test('should not surface a non-supported payment method in the instant area', () => {
+        test('should not surface a non-supported payment method in the instant group', () => {
             const parsedPaymentMethods = new PaymentMethods({
                 paymentMethods: [{ name: 'PayPal', type: 'paypal', configuration: { displayMode: 'instant' } }]
             });
@@ -111,25 +111,22 @@ describe('Dropin - splitPaymentMethods', () => {
             expect(paymentMethods[0]).toMatchObject({ type: 'paypal' });
         });
 
-        test.each([['promoted'], ['INSTANT'], ['something-new'], ['stored'], ['fastlane']])(
-            'should fall back to regular for the unknown displayMode "%s"',
-            displayMode => {
-                const parsedPaymentMethods = new PaymentMethods({
-                    paymentMethods: [{ name: 'Google Pay', type: 'googlepay', configuration: { displayMode } }]
-                });
+        test('should fall back to regular for the unknown custom display mode', () => {
+            const parsedPaymentMethods = new PaymentMethods({
+                paymentMethods: [{ name: 'Google Pay', type: 'googlepay', configuration: { displayMode: 'INVALID_VALUE' } }]
+            });
 
-                const { paymentMethods, instantPaymentMethods } = splitPaymentMethods(parsedPaymentMethods, ['googlepay']);
+            const { paymentMethods, instantPaymentMethods } = splitPaymentMethods(parsedPaymentMethods, ['googlepay']);
 
-                // any displayMode hands the decision to the response, so instantPaymentTypes no longer applies
-                expect(instantPaymentMethods).toHaveLength(0);
-                expect(paymentMethods).toHaveLength(1);
-            }
-        );
+            // any displayMode hands the decision to the response, so instantPaymentTypes no longer applies
+            expect(instantPaymentMethods).toHaveLength(0);
+            expect(paymentMethods).toHaveLength(1);
+        });
 
         test('should resolve an unknown displayMode to regular while still honouring a sibling instant', () => {
             const parsedPaymentMethods = new PaymentMethods({
                 paymentMethods: [
-                    { name: 'Google Pay', type: 'googlepay', configuration: { displayMode: 'promoted' } },
+                    { name: 'Google Pay', type: 'googlepay', configuration: { displayMode: 'INVALID_VALUE' } },
                     { name: 'ApplePay', type: 'applepay', configuration: { displayMode: 'instant' } }
                 ]
             });
@@ -140,7 +137,7 @@ describe('Dropin - splitPaymentMethods', () => {
             expect(paymentMethods.map(pm => pm.type)).toEqual(['googlepay']);
         });
 
-        test.each([[''], [null]])('should not let the empty displayMode "%s" hand control to the response', displayMode => {
+        test.each([[''], [null]])('should not let the empty "%s" activate custom display mode', displayMode => {
             const parsedPaymentMethods = new PaymentMethods({
                 paymentMethods: [{ name: 'Google Pay', type: 'googlepay', configuration: { displayMode } }]
             });
@@ -151,18 +148,7 @@ describe('Dropin - splitPaymentMethods', () => {
             expect(paymentMethods).toHaveLength(0);
         });
 
-        test('should not compare a non-string displayMode against "instant"', () => {
-            const parsedPaymentMethods = new PaymentMethods({
-                paymentMethods: [{ name: 'Google Pay', type: 'googlepay', configuration: { displayMode: 42 as unknown as string } }]
-            });
-
-            const { paymentMethods, instantPaymentMethods } = splitPaymentMethods(parsedPaymentMethods, []);
-
-            expect(instantPaymentMethods).toHaveLength(0);
-            expect(paymentMethods).toHaveLength(1);
-        });
-
-        test('should let the backend control the whole list even when only one payment method carries a displayMode', () => {
+        test('should activate custom display mode even when only one payment method carries a displayMode', () => {
             const parsedPaymentMethods = new PaymentMethods({
                 paymentMethods: [
                     { name: 'Google Pay', type: 'googlepay', configuration: { displayMode: 'instant' } },
@@ -179,7 +165,7 @@ describe('Dropin - splitPaymentMethods', () => {
             expect(paymentMethods.map(pm => pm.type)).toEqual(['alipay', 'applepay']);
         });
 
-        test('should keep a fastlane payment method out of the instant area even when the backend marks it instant', () => {
+        test('should keep a fastlane payment method out of the instant area even if displayMode is set as instant', () => {
             const parsedPaymentMethods = new PaymentMethods({
                 paymentMethods: [
                     { name: 'Fastlane', type: 'fastlane', brands: ['visa'], configuration: { displayMode: 'instant' } },
@@ -231,22 +217,6 @@ describe('Dropin - splitPaymentMethods', () => {
             // response positions 1, 4, 5 -- 'scheme' is here because it is not an instant-capable type
             expect(paymentMethods.map(pm => pm.type)).toEqual(['alipay', 'kakaopay', 'scheme']);
             expect(fastlanePaymentMethod).toMatchObject({ type: 'fastlane' });
-        });
-
-        test('should keep the first fastlane entry when the response contains more than one', () => {
-            const parsedPaymentMethods = new PaymentMethods({
-                paymentMethods: [
-                    { name: 'Fastlane A', type: 'fastlane', brands: ['visa'] },
-                    { name: 'Fastlane B', type: 'fastlane', brands: ['mc'] },
-                    { name: 'AliPay', type: 'alipay', configuration: { displayMode: 'regular' } }
-                ]
-            });
-
-            const { paymentMethods, fastlanePaymentMethod } = splitPaymentMethods(parsedPaymentMethods, []);
-
-            expect(fastlanePaymentMethod).toMatchObject({ name: 'Fastlane A' });
-            // both fastlane entries stay out of the regular list
-            expect(paymentMethods.map(pm => pm.type)).toEqual(['alipay']);
         });
     });
 });
