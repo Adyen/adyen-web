@@ -1,8 +1,7 @@
 import { ComponentChildren, h } from 'preact';
 import classNames from 'classnames';
 import Spinner from '../../internal/Spinner';
-import { useCoreContext } from '../../../core/Context/CoreProvider';
-import { useA11yReporter } from '../../../core/Errors/useA11yReporter';
+import { useLoadingA11yReporter } from '../../../core/Errors/useLoadingA11yReporter';
 import './LoadingWrapper.scss';
 
 interface LoadingWrapperProps {
@@ -11,10 +10,8 @@ interface LoadingWrapperProps {
 }
 
 const LoadingWrapper = ({ children, status }: Readonly<LoadingWrapperProps>) => {
-    const { i18n } = useCoreContext();
-
     // Announce the loading status to screen readers, since the spinner itself has no accessible name
-    useA11yReporter(status === 'loading' ? i18n.get('loading') : null);
+    useLoadingA11yReporter(status === 'loading');
 
     const wrapperClass = classNames('adyen-checkout__loading-input__form', 'loading-input__form', {
         'loading-input__form--loading': status === 'loading'

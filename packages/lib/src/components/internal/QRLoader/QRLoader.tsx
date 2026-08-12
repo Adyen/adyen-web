@@ -15,6 +15,7 @@ import { CountdownTime } from '../Countdown/types';
 import { QRDetails } from './components/QRDetails';
 import { QRFinalState } from './components/QRFinalState';
 import { QRLoaderPendingState } from './components/QRLoaderPendingState';
+import { useLoadingA11yReporter } from '../../../core/Errors/useLoadingA11yReporter';
 import { QRLoaderDetailsProvider } from './QRLoaderDetailsProvider';
 import { QRLoaderProps } from './types';
 import { redirectToApp } from '../../../utils/urls';
@@ -64,6 +65,17 @@ export function QRLoader(props: Readonly<QRLoaderProps>) {
     };
 
     const qrSubtitleRef = useAutoFocus();
+
+    /**
+     * Reported from here rather than from the child states: QRLoaderPendingState unmounts as soon
+     * as the QR code arrives and so cannot announce that loading has finished, and a reporter in
+     * QRFinalState would be overwritten by this one, since child effects run first and `loading`
+     * flips in the same batch as `completed`/`expired`.
+     */
+    let finalStateMessage: string;
+    if (expired) finalStateMessage = i18n.get('error.subtitle.payment');
+    if (completed) finalStateMessage = i18n.get('creditCard.success');
+    useLoadingA11yReporter(loading, finalStateMessage);
 
     if (expired) {
         return <QRFinalState image="error" message={i18n.get('error.subtitle.payment')} />;

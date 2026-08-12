@@ -182,5 +182,39 @@ describe('QRLoader', () => {
                 expect(screen.getByText('Scan QR code')).toBeInTheDocument();
             });
         });
+
+        test('should supersede the loading message once the QR code is shown', async () => {
+            const pendingResponse = { payload: 'Ab02b4c0!', resultCode: 'pending', type: 'complete' };
+            (checkPaymentStatus as jest.Mock).mockResolvedValue(pendingResponse);
+
+            const srPanel = setupCoreMock().modules.srPanel;
+            const setMessagesSpy = jest.spyOn(srPanel, 'setMessages');
+
+            renderQRLoader({ qrLoaderProps: {}, srPanel });
+
+            expect(await screen.findByText('Scan QR code')).toBeInTheDocument();
+
+            // The SR panel is not cleared on unmount, so 'Loading…' would otherwise be left
+            // on display next to the QR code.
+            expect(setMessagesSpy).toHaveBeenLastCalledWith('Loaded');
+        });
+
+        /**
+         * loading and completed flip in the same state batch, so QRLoader re-renders to 'Loaded'
+         * at the same moment QRFinalState mounts and announces the result. The result must win.
+         */
+        test('should announce the payment result, not the generic loaded message, on completion', async () => {
+            const authorisedResponse = { payload: 'details-payload', resultCode: 'authorised', type: 'complete' };
+            (checkPaymentStatus as jest.Mock).mockResolvedValue(authorisedResponse);
+
+            const srPanel = setupCoreMock().modules.srPanel;
+            const setMessagesSpy = jest.spyOn(srPanel, 'setMessages');
+
+            const { onCompleteMock } = renderQRLoader({ qrLoaderProps: {}, srPanel });
+
+            await waitFor(() => expect(onCompleteMock).toHaveBeenCalledTimes(1));
+
+            expect(setMessagesSpy).toHaveBeenLastCalledWith('Payment Successful');
+        });
     });
 });

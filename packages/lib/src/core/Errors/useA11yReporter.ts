@@ -8,7 +8,10 @@ export const useA11yReporter = (statusMessage): void => {
         if (!srPanel) return;
         srPanel.setAriaProps({ 'aria-relevant': 'additions text' });
         return () => {
-            srPanel.setMessages(null);
+            // Deliberately does not clear the panel. The panel is shared, so clearing on unmount
+            // destroys whatever is on display -- often a message another component just wrote --
+            // and truncates our own message before a screen reader has had time to read it.
+            // A status message stays until something supersedes it.
             srPanel.setAriaProps({ 'aria-relevant': srPanel.constructor['defaultProps'].ariaAttributes['aria-relevant'] });
         };
     }, [srPanel]);

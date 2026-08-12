@@ -1,6 +1,4 @@
 import { h } from 'preact';
-import { useCoreContext } from '../../../../core/Context/CoreProvider';
-import { useA11yReporter } from '../../../../core/Errors/useA11yReporter';
 import Spinner from '../../Spinner';
 
 interface QRLoaderPendingStateProps {
@@ -10,13 +8,10 @@ interface QRLoaderPendingStateProps {
 
 /**
  * Rendered while QRLoader is waiting for the initial payment status check to resolve.
- * Announces the loading status to screen readers, since the spinner itself has no accessible name.
+ * The loading status is announced by QRLoader, which stays mounted across the transition and so
+ * can also announce that loading has finished.
  */
 export const QRLoaderPendingState = ({ brandLogo, brandName }: Readonly<QRLoaderPendingStateProps>) => {
-    const { i18n } = useCoreContext();
-
-    useA11yReporter(i18n.get('loading'));
-
     return (
         <div className="adyen-checkout__qr-loader">
             {brandLogo && (

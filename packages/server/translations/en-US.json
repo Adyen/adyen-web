@@ -32,6 +32,7 @@
     "idealIssuer.selectField.title": "Bank",
     "creditCard.success": "Payment Successful",
     "loading": "Loading…",
+    "loaded": "Loaded",
     "continue": "Continue",
     "continueTo": "Continue to",
     "wechatpay.timetopay": "You have %@ to pay",
