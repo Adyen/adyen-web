@@ -60,7 +60,7 @@ export const Default: DropinStory = {
     }
 };
 
-export const BackendDrivenDisplayMode: DropinStory = {
+export const CustomDisplayMode: DropinStory = {
     args: {
         useSessions: false,
         paymentMethodsOverride: {
