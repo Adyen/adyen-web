@@ -139,6 +139,7 @@ describe('Dropin - splitPaymentMethods', () => {
 
         test.each([[''], [null]])('should not let the empty "%s" activate custom display mode', displayMode => {
             const parsedPaymentMethods = new PaymentMethods({
+                // @ts-ignore Testing a null the interface does not allow but the response can hold
                 paymentMethods: [{ name: 'Google Pay', type: 'googlepay', configuration: { displayMode } }]
             });
 

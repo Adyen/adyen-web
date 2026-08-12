@@ -221,7 +221,7 @@ describe('Dropin', () => {
             /**
              * The instant payments area is the only list in the Drop-in, and each of its entries is tagged with the payment method type.
              */
-            const findInstantPaymentMethodTypes = async (): Promise<string[]> => {
+            const findInstantPaymentMethodTypes = async (): Promise<Array<string | undefined>> => {
                 const instantPaymentsArea = await screen.findByRole('list');
                 return within(instantPaymentsArea)
                     .getAllByRole('listitem')
