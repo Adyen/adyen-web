@@ -11,4 +11,4 @@ export const DisplayMode = {
 /**
  * Payment method types that are allowed to render in the instant payments section of the Drop-in
  */
-export const SUPPORTED_INSTANT_PAYMENTS = ['paywithgoogle', 'googlepay', 'applepay'];
+export const SUPPORTED_INSTANT_PAYMENTS = ['paywithgoogle', 'googlepay', 'applepay'] as const;

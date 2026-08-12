@@ -13,29 +13,44 @@ interface SplitPaymentMethods {
 /**
  * The display modes a payment method from the 'paymentMethods' array can resolve to.
  */
-type ResolvedDisplayMode = Exclude<PaymentMethodDisplayMode, typeof DisplayMode.stored>;
+type ResolvedDisplayMode = Exclude<PaymentMethodDisplayMode, 'stored'>;
 
 const getCustomDisplayMode = (paymentMethod: PaymentMethod): string | undefined => {
-    return paymentMethod.configuration?.displayMode;
+    const { configuration } = paymentMethod;
+
+    if (!configuration || !('displayMode' in configuration)) {
+        return;
+    }
+
+    const { displayMode } = configuration;
+
+    if (typeof displayMode !== 'string' || !displayMode.trim().length) {
+        return;
+    }
+
+    return displayMode;
 };
+
+export const hasCustomDisplayMode = (paymentMethods: PaymentMethod[]): boolean =>
+    paymentMethods.some(paymentMethod => getCustomDisplayMode(paymentMethod) !== undefined);
 
 /**
  * Decides which Drop-in section a payment method belongs to.
  */
 const resolveDisplayMode = (
     paymentMethod: PaymentMethod,
-    hasCustomDisplayMode: boolean,
+    isCustomDisplayModeActive: boolean,
     instantPaymentTypes: InstantPaymentTypes[]
 ): ResolvedDisplayMode => {
     if (paymentMethod.type === 'fastlane') {
         return DisplayMode.fastlane;
     }
 
-    if (!SUPPORTED_INSTANT_PAYMENTS.includes(paymentMethod.type)) {
+    if (!SUPPORTED_INSTANT_PAYMENTS.some(supportedType => supportedType === paymentMethod.type)) {
         return DisplayMode.regular;
     }
 
-    const isInstant = hasCustomDisplayMode
+    const isInstant = isCustomDisplayModeActive
         ? getCustomDisplayMode(paymentMethod) === DisplayMode.instant
         : instantPaymentTypes.includes(paymentMethod.type as InstantPaymentTypes);
 
@@ -53,7 +68,7 @@ const groupByDisplayMode = (
     paymentMethods: PaymentMethod[],
     instantPaymentTypes: InstantPaymentTypes[]
 ): Record<ResolvedDisplayMode, PaymentMethod[]> => {
-    const hasCustomDisplayMode = paymentMethods.some(getCustomDisplayMode);
+    const isCustomDisplayModeActive = hasCustomDisplayMode(paymentMethods);
 
     const groups: Record<ResolvedDisplayMode, PaymentMethod[]> = {
         [DisplayMode.fastlane]: [],
@@ -62,7 +77,7 @@ const groupByDisplayMode = (
     };
 
     paymentMethods.forEach(paymentMethod => {
-        const displayMode = resolveDisplayMode(paymentMethod, hasCustomDisplayMode, instantPaymentTypes);
+        const displayMode = resolveDisplayMode(paymentMethod, isCustomDisplayModeActive, instantPaymentTypes);
         groups[displayMode].push(paymentMethod);
     });
 
