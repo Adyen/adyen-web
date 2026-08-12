@@ -82,7 +82,7 @@ class Dropin extends Base {
     /**
      * Returns the tx variants rendered in the instant payments area, in the order they are displayed
      */
-    async getInstantPaymentMethodTypes(): Promise<string[]> {
+    async getInstantPaymentMethodTypes(): Promise<Array<string | undefined>> {
         return this.instantPaymentMethodsList.locator('li').evaluateAll(items => items.map(item => (item as HTMLElement).dataset.testid));
     }
 

@@ -5,7 +5,7 @@ import DropinComponent from '../../components/Dropin/components/DropinComponent'
 import { createElements, createStoredElements } from './elements';
 import createInstantPaymentElements from './elements/createInstantPaymentElements';
 import { hasOwnProperty } from '../../utils/hasOwnProperty';
-import splitPaymentMethods from './elements/splitPaymentMethods';
+import splitPaymentMethods, { hasCustomDisplayMode } from './elements/splitPaymentMethods';
 import { TxVariants } from '../tx-variants';
 import { SUPPORTED_INSTANT_PAYMENTS } from './constants';
 
@@ -150,10 +150,26 @@ class DropinElement extends UIElement<DropinConfiguration> implements IDropin {
     }
 
     /**
+     * Warns the merchant that their 'instantPaymentTypes' configuration no longer has any effect, since the payment
+     * methods response decides where every payment method is rendered as soon as it sends a display mode.
+     */
+    private warnAboutIgnoredInstantPaymentTypes(): void {
+        console.warn(
+            'Drop-in: the "instantPaymentTypes" configuration is not being applied. The payment methods returned by ' +
+                'the server carry a configuration that defines where each one is displayed.'
+        );
+    }
+
+    /**
      * Creates the Drop-in elements
      */
     private handleCreate = (): ReturnType<DropinComponentProps['onCreateElements']> => {
         const { paymentMethodsConfiguration, showStoredPaymentMethods, showPaymentMethods, instantPaymentTypes } = this.props;
+
+        const hasInstantPaymentTypesConfig = Boolean(this.props.instantPaymentTypes?.length);
+        if (hasCustomDisplayMode(this.core.paymentMethodsResponse.paymentMethods) && hasInstantPaymentTypesConfig) {
+            this.warnAboutIgnoredInstantPaymentTypes();
+        }
 
         const { paymentMethods, storedPaymentMethods, instantPaymentMethods, fastlanePaymentMethod } = splitPaymentMethods(
             this.core.paymentMethodsResponse,

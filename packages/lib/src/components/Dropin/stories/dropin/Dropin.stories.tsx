@@ -76,7 +76,7 @@ export const CustomDisplayMode: DropinStory = {
             ]
         },
         componentConfiguration: {
-            instantPaymentTypes: ['applepay']
+            instantPaymentTypes: ['googlepay']
         }
     },
     render: ({ componentConfiguration, ...checkoutConfig }: PaymentMethodStoryProps<DropinConfiguration>) => {
