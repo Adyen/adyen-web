@@ -1,7 +1,7 @@
 import { createRef, h } from 'preact';
 import { render, screen, fireEvent, act } from '@testing-library/preact';
 import CardInput from './CardInput';
-import { CardInputDataState, CardInputValidState } from './types';
+import { AddressModeOptions, CardInputDataState, CardInputValidState } from './types';
 import { CoreProvider } from '../../../../core/Context/CoreProvider';
 import { AmountProvider } from '../../../../core/Context/AmountProvider';
 
@@ -53,6 +53,21 @@ describe('CardInput', () => {
     test('Has HolderName element', () => {
         renderCardInput(<CardInput {...cardInputRequiredProps} hasHolderName={true} />);
         expect(screen.getByText('Name on card')).toBeVisible();
+    });
+});
+
+describe('CardInput - partial billing address', () => {
+    test.each([undefined, null])('should render when billingAddress is %s', billingAddress => {
+        expect(() =>
+            renderCardInput(
+                <CardInput
+                    {...cardInputRequiredProps}
+                    billingAddressMode={AddressModeOptions.partial}
+                    billingAddressRequired={true}
+                    data={{ billingAddress }}
+                />
+            )
+        ).not.toThrow();
     });
 });
 

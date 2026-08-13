@@ -76,6 +76,12 @@ describe('Address', () => {
         expect(await screen.findByLabelText('Country/Region')).toBeInTheDocument();
     });
 
+    test('should render when data is null', () => {
+        const requiredFields = ['street', 'houseNumberOrName', 'postalCode', 'country'];
+
+        expect(() => customRender(<Address data={null} specifications={addressSpecificationsMock} requiredFields={requiredFields} />)).not.toThrow();
+    });
+
     test('should maintain spaces while typing but trim and collapse them on blur', async () => {
         const user = userEvent.setup();
         const requiredFields = ['street', 'houseNumberOrName', 'postalCode', 'country'];

@@ -17,6 +17,8 @@ import { ComponentMethodsRef } from '../UIElement/types';
 import './Address.scss';
 import { getAddressTypeFromLabel } from './utils';
 
+const EMPTY_ADDRESS_DATA: AddressData = {};
+
 export default function Address(props: Readonly<AddressProps>) {
     const { i18n } = useCoreContext();
 
@@ -48,11 +50,12 @@ export default function Address(props: Readonly<AddressProps>) {
 
     // In partial address mode the country field is not rendered, so it is absent from the address schema.
     // The country the merchant configured must still be part of the form data for country dependent rules to be applied.
-    const merchantCountry = (props.data as AddressData)?.country;
+    const addressData = props.data ?? EMPTY_ADDRESS_DATA;
+    const merchantCountry = addressData.country;
     const formSchema = merchantCountry && !requiredFieldsSchema.includes(COUNTRY) ? [...requiredFieldsSchema, COUNTRY] : requiredFieldsSchema;
     const defaultData = useMemo<AddressData>(
-        () => (merchantCountry ? { ...props.data, country: merchantCountry.toUpperCase() } : (props.data)),
-        [props.data, merchantCountry]
+        () => (merchantCountry ? { ...addressData, country: merchantCountry.toUpperCase() } : addressData),
+        [addressData, merchantCountry]
     );
 
     const { data, errors, valid, isValid, handleChangeFor, triggerValidation, setData, mergeData } = useForm<AddressData>({
