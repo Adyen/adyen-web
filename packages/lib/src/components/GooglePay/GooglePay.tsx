@@ -222,7 +222,7 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
         allowedCardNetworks,
         brands
     }: {
-        countryCode: string;
+        countryCode?: string;
         allowedCardNetworks?: google.payments.api.CardNetwork[];
         brands?: string[];
     }): google.payments.api.CardNetwork[] {

@@ -11,7 +11,7 @@ const brandMapping: Record<string, google.payments.api.CardNetwork> = Object.fre
     maestro: 'MAESTRO'
 });
 
-export function mapGooglePayBrands(brands: string[], countryCode: string): google.payments.api.CardNetwork[] {
+export function mapGooglePayBrands(brands: string[], countryCode?: string): google.payments.api.CardNetwork[] {
     /**
      * TODO: Remove this once this feature promotes to GA
      * Maestro only works when countryCode=BR . API is not filtering that out, so we need to filter for merchants
