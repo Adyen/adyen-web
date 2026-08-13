@@ -110,6 +110,7 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
         const callbackIntents: google.payments.api.CallbackIntent[] = [...props.callbackIntents, 'PAYMENT_AUTHORIZATION'];
 
         const allowedCardNetworks = this.createAllowedCardNetworksValues({
+            countryCode: this.core.options.countryCode,
             allowedCardNetworks: props.allowedCardNetworks,
             brands: props.brands
         });
@@ -217,14 +218,16 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
      * @private
      */
     private createAllowedCardNetworksValues({
+        countryCode,
         allowedCardNetworks,
         brands
     }: {
+        countryCode: string;
         allowedCardNetworks?: google.payments.api.CardNetwork[];
         brands?: string[];
     }): google.payments.api.CardNetwork[] {
         if (allowedCardNetworks?.length > 0) return allowedCardNetworks;
-        if (brands?.length > 0) return mapGooglePayBrands(brands);
+        if (brands?.length > 0) return mapGooglePayBrands(brands, countryCode);
 
         return DEFAULT_ALLOWED_CARD_NETWORKS;
     }

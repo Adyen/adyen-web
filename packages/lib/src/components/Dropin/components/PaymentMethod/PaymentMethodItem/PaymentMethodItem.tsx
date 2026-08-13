@@ -14,6 +14,7 @@ import { getFullBrandName } from '../../../../Card/components/CardInput/utils';
 import { stopPropagationForActionKeys } from '../../../../internal/Button/stopPropagationForActionKeys';
 import './PaymentMethodItem.scss';
 import Button from '../../../../internal/Button';
+import { isGooglePayTxVariant } from '../../../../GooglePay/utils';
 
 export interface PaymentMethodItemProps {
     paymentMethod: UIElement;
@@ -65,6 +66,7 @@ class PaymentMethodItem extends Component<Readonly<PaymentMethodItemProps>> {
         }
 
         const isCard = paymentMethod.props.type === 'card' || paymentMethod.props.type === 'scheme';
+        const isStoredGooglePay = isGooglePayTxVariant(paymentMethod.props.type) && paymentMethod.props.oneClick === true;
 
         const hideHeader = !paymentMethod.showDropinHeaderWhenSelected && isSelected;
 
@@ -82,7 +84,8 @@ class PaymentMethodItem extends Component<Readonly<PaymentMethodItemProps>> {
             [this.props.className]: true
         });
 
-        const showRemovePaymentMethodButton = this.props.showRemovePaymentMethodButton && paymentMethod.props.oneClick && isSelected;
+        const showRemovePaymentMethodButton =
+            this.props.showRemovePaymentMethodButton && paymentMethod.props.oneClick && isSelected && !isStoredGooglePay;
         const disableConfirmationId = `remove-${paymentMethod._id}`;
         const containerId = `container-${paymentMethod._id}`;
         const buttonId = `button-${paymentMethod._id}`;

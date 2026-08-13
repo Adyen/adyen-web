@@ -660,6 +660,54 @@ describe('GooglePay', () => {
                 });
                 expect(gpay.props.allowedCardNetworks).toEqual(['AMEX', 'DISCOVER', 'JCB', 'MASTERCARD', 'VISA']);
             });
+
+            test('should keep "maestro" from the "brands" if the countryCode is BR', () => {
+                const core = setupCoreMock();
+                // @ts-ignore Disable TS check because the 'options' is read-only
+                core.options = { countryCode: 'BR' };
+
+                const gpay = new GooglePay(core, {
+                    configuration: {
+                        merchantId: 'adyen',
+                        gatewayMerchantId: 'adyen'
+                    },
+                    brands: ['mc', 'visa', 'maestro']
+                });
+
+                expect(gpay.props.allowedCardNetworks).toEqual(['MASTERCARD', 'VISA', 'MAESTRO']);
+            });
+
+            test('should filter out "maestro" from the "brands" if the countryCode is not BR', () => {
+                const core = setupCoreMock();
+                // @ts-ignore Disable TS check because the 'options' is read-only
+                core.options = { countryCode: 'NL' };
+
+                const gpay = new GooglePay(core, {
+                    configuration: {
+                        merchantId: 'adyen',
+                        gatewayMerchantId: 'adyen'
+                    },
+                    brands: ['mc', 'visa', 'maestro']
+                });
+
+                expect(gpay.props.allowedCardNetworks).toEqual(['MASTERCARD', 'VISA']);
+            });
+
+            test('should not filter out "maestro" if it is passed through "allowedCardNetworks"', () => {
+                const core = setupCoreMock();
+                // @ts-ignore Disable TS check because the 'options' is read-only
+                core.options = { countryCode: 'NL' };
+
+                const gpay = new GooglePay(core, {
+                    configuration: {
+                        merchantId: 'adyen',
+                        gatewayMerchantId: 'adyen'
+                    },
+                    allowedCardNetworks: ['MASTERCARD', 'MAESTRO']
+                });
+
+                expect(gpay.props.allowedCardNetworks).toEqual(['MASTERCARD', 'MAESTRO']);
+            });
         });
 
         test('Retrieves merchantId from configuration', () => {

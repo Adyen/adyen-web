@@ -78,6 +78,11 @@ export const AcceleratedCheckout: GooglePayStory = {
                     <ComponentContainer
                         element={
                             new DropinComponent(checkout, {
+                                showRemovePaymentMethodButton: true,
+                                onDisableStoredPaymentMethod: (_stored, _resolve, reject) => {
+                                    alert('Not implemented');
+                                    reject();
+                                },
                                 paymentMethodsConfiguration: { googlepay: { ...componentConfiguration } }
                             })
                         }
