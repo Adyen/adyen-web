@@ -36,13 +36,13 @@ describe('LoadingWrapper', () => {
             expect(setMessagesSpy).toHaveBeenCalledWith('Loading…');
         });
 
-        test('should not report a loading message when status is not loading', () => {
+        test('should not report a message before loading has started', () => {
             const srPanel = setupCoreMock().modules.srPanel;
             const setMessagesSpy = jest.spyOn(srPanel, 'setMessages');
 
             renderLoadingWrapper('ready', srPanel);
 
-            expect(setMessagesSpy).not.toHaveBeenCalledWith('Loading…');
+            expect(setMessagesSpy).not.toHaveBeenCalled();
         });
     });
 });

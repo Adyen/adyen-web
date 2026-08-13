@@ -72,7 +72,7 @@ export function QRLoader(props: Readonly<QRLoaderProps>) {
      * QRFinalState would be overwritten by this one, since child effects run first and `loading`
      * flips in the same batch as `completed`/`expired`.
      */
-    let finalStateMessage: string;
+    let finalStateMessage: string | undefined;
     if (expired) finalStateMessage = i18n.get('error.subtitle.payment');
     if (completed) finalStateMessage = i18n.get('creditCard.success');
     useLoadingA11yReporter(loading, finalStateMessage);

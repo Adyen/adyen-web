@@ -1,3 +1,5 @@
+import { useRef } from 'preact/hooks';
+
 import { useCoreContext } from '../Context/CoreProvider';
 import { useA11yReporter } from './useA11yReporter';
 
@@ -18,6 +20,12 @@ import { useA11yReporter } from './useA11yReporter';
  */
 export const useLoadingA11yReporter = (isLoading: boolean, finalMessage?: string): void => {
     const { i18n } = useCoreContext();
+    const hasStartedLoading = useRef(isLoading);
 
-    useA11yReporter(isLoading ? i18n.get('loading') : (finalMessage ?? i18n.get('loaded')));
+    if (isLoading) {
+        hasStartedLoading.current = true;
+    }
+
+    const statusMessage = isLoading ? i18n.get('loading') : (finalMessage ?? (hasStartedLoading.current ? i18n.get('loaded') : undefined));
+    useA11yReporter(statusMessage);
 };

@@ -21,6 +21,15 @@ const renderConsumer = (srPanel: SRPanel, isLoading: boolean, finalMessage?: str
     );
 
 describe('useLoadingA11yReporter', () => {
+    test('does not report a message before loading has started', () => {
+        const srPanel = setupCoreMock().modules.srPanel;
+        const setMessagesSpy = jest.spyOn(srPanel, 'setMessages');
+
+        renderConsumer(srPanel, false);
+
+        expect(setMessagesSpy).not.toHaveBeenCalled();
+    });
+
     test('reports the loading message while loading', () => {
         const srPanel = setupCoreMock().modules.srPanel;
         const setMessagesSpy = jest.spyOn(srPanel, 'setMessages');

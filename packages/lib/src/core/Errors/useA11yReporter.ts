@@ -1,7 +1,7 @@
 import { useEffect } from 'preact/hooks';
 import useSRPanelContext from './useSRPanelContext';
 
-export const useA11yReporter = (statusMessage): void => {
+export const useA11yReporter = (statusMessage?: string | null): void => {
     const { srPanel } = useSRPanelContext();
 
     useEffect(() => {
@@ -17,7 +17,7 @@ export const useA11yReporter = (statusMessage): void => {
     }, [srPanel]);
 
     useEffect(() => {
-        if (!srPanel) return;
+        if (!srPanel || statusMessage === undefined) return;
         srPanel.setMessages(statusMessage);
     }, [srPanel, statusMessage]);
 };
