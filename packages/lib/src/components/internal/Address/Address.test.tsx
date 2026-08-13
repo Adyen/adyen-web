@@ -76,10 +76,15 @@ describe('Address', () => {
         expect(await screen.findByLabelText('Country/Region')).toBeInTheDocument();
     });
 
-    test('should render when data is null', () => {
+    test('should render with empty fields and no preselected country when data is null', async () => {
         const requiredFields = ['street', 'houseNumberOrName', 'postalCode', 'country'];
 
-        expect(() => customRender(<Address data={null} specifications={addressSpecificationsMock} requiredFields={requiredFields} />)).not.toThrow();
+        customRender(<Address data={null} specifications={addressSpecificationsMock} requiredFields={requiredFields} />);
+
+        expect(screen.getByLabelText('Street')).toHaveValue('');
+        expect(screen.getByLabelText('House number')).toHaveValue('');
+        expect(screen.getByLabelText('Postal code')).toHaveValue('');
+        expect(await screen.findByLabelText('Country/Region')).toHaveValue('');
     });
 
     test('should maintain spaces while typing but trim and collapse them on blur', async () => {

@@ -2,4 +2,4 @@
 '@adyen/adyen-web': patch
 ---
 
-Fixed: Card component crashing on empty billing address object
+Fixed: Card component crashing when `billingAddress` is `null`

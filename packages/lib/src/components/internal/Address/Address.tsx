@@ -17,7 +17,7 @@ import { ComponentMethodsRef } from '../UIElement/types';
 import './Address.scss';
 import { getAddressTypeFromLabel } from './utils';
 
-const EMPTY_ADDRESS_DATA: AddressData = {};
+const EMPTY_ADDRESS_DATA: Readonly<AddressData> = {};
 
 export default function Address(props: Readonly<AddressProps>) {
     const { i18n } = useCoreContext();

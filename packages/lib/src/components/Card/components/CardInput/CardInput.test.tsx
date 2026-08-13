@@ -57,17 +57,17 @@ describe('CardInput', () => {
 });
 
 describe('CardInput - partial billing address', () => {
-    test.each([undefined, null])('should render when billingAddress is %s', billingAddress => {
-        expect(() =>
-            renderCardInput(
-                <CardInput
-                    {...cardInputRequiredProps}
-                    billingAddressMode={AddressModeOptions.partial}
-                    billingAddressRequired={true}
-                    data={{ billingAddress }}
-                />
-            )
-        ).not.toThrow();
+    test.each([undefined, null])('should render with an empty postal code field when billingAddress is %s', billingAddress => {
+        renderCardInput(
+            <CardInput
+                {...cardInputRequiredProps}
+                billingAddressMode={AddressModeOptions.partial}
+                billingAddressRequired={true}
+                data={{ billingAddress }}
+            />
+        );
+
+        expect(screen.getByLabelText('Postal code')).toHaveValue('');
     });
 });
 
