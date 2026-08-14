@@ -117,6 +117,7 @@ export class PayToElement extends UIElement<PayToConfiguration> {
                             {...this.props}
                             classNameModifiers={['standalone']}
                             label={payAmountLabel(this.props.i18n, this.props.amount)}
+                            showReview={!!this.props.onReview}
                             onClick={this.submit}
                         />
                     )}

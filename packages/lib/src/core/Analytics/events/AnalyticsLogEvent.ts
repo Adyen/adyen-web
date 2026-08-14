@@ -15,7 +15,8 @@ export enum LogEventType {
     redirect = 'redirect',
     threeDS2 = 'threeDS2',
     closed = 'closed',
-    apiRequest = 'apiRequest'
+    apiRequest = 'apiRequest',
+    review = 'review'
 }
 
 export enum LogEventSubtype {
