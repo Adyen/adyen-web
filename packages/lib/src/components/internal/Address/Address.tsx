@@ -117,8 +117,9 @@ export default function Address(props: Readonly<AddressProps>) {
             return;
         }
 
+        const country = data.country ?? '';
         const countryHasVisibleStateField =
-            specifications.countryHasDataset(data.country) || specifications.countryHasFreeTextField(data.country, 'stateOrProvince');
+            specifications.countryHasDataset(country) || specifications.countryHasFreeTextField(country, 'stateOrProvince');
         const stateOrProvince = countryHasVisibleStateField ? '' : FALLBACK_VALUE;
         const newData = { ...data, stateOrProvince };
 
