@@ -70,7 +70,7 @@ export const SRPanelDebugger = () => {
                         const later = mutations
                             .slice(i + 1)
                             .find(n => n.type === 'attributes' && n.attributeName === m.attributeName && n.target === m.target);
-                        const next = later ? later.oldValue : (m.target as HTMLElement).getAttribute(m.attributeName);
+                        const next = later ? later.oldValue : (m.target as HTMLElement).getAttribute(m.attributeName ?? '');
                         const changed = m.oldValue !== next;
                         push('ATTR', `${m.attributeName}: "${m.oldValue}" -> "${next}"${changed ? '' : '  (no-op write)'}`, changed);
                     } else if (m.type === 'characterData') {
