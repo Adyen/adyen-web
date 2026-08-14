@@ -119,5 +119,7 @@ export interface AddressSpecifications {
         optionalFields?: AddressField[];
         placeholders?: StringObject;
         schema?: AddressSchema;
+        /** Fields that should always render as a plain text input, e.g. 'stateOrProvince' for countries where it isn't backed by a dataset (dropdown) */
+        freeTextFields?: AddressField[];
     };
 }
