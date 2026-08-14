@@ -60,6 +60,28 @@ describe('useForm', () => {
             expect(result.current.data.lastName).toEqual(null);
         });
 
+        test('should initialize fields when defaultData is null', () => {
+            const { result } = renderHook(() => useForm({ schema: defaultSchema, defaultData: null }), { wrapper });
+
+            expect(result.current.schema).toEqual(defaultSchema);
+            expect(result.current.data).toEqual({ firstName: null, lastName: null });
+            expect(result.current.valid).toEqual({ firstName: false, lastName: false });
+            expect(result.current.errors).toEqual({ firstName: null, lastName: null });
+        });
+
+        test('should normalize null configuration values', () => {
+            const { result } = renderHook(() => useForm({ schema: null, rules: null, formatters: null, defaultData: null, fieldProblems: null }), {
+                wrapper
+            });
+
+            expect(result.current.schema).toEqual([]);
+            expect(result.current.data).toEqual({});
+            expect(result.current.valid).toEqual({});
+            expect(result.current.errors).toEqual({});
+            expect(result.current.fieldProblems).toEqual({});
+            expect(result.current.isValid).toBe(true);
+        });
+
         it('should set default data after changing the schema', () => {
             const { result } = renderHook(() => useForm({ schema: defaultSchema, defaultData }), { wrapper });
 

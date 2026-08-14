@@ -97,7 +97,7 @@ const CardInput = (props: Readonly<CardInputProps>) => {
     const initialBillingAddress = props.data?.billingAddress ?? null;
 
     // Keeps the value of the country set initially by the merchant, before the Address Component mutates it
-    const partialAddressCountry = useRef<string | null>(partialAddressSchema ? (initialBillingAddress?.country ?? null) : null);
+    const partialAddressCountry = useRef<string | null>(partialAddressSchema ? (initialBillingAddress?.country?.toUpperCase() ?? null) : null);
 
     const [storePaymentMethod, setStorePaymentMethod] = useState(false);
     const [billingAddress, setBillingAddress] = useState<AddressData | null>(showBillingAddress ? initialBillingAddress : null);

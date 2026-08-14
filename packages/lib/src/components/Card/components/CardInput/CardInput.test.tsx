@@ -69,6 +69,21 @@ describe('CardInput - partial billing address', () => {
 
         expect(screen.getByLabelText('Postal code')).toHaveValue('');
     });
+
+    test('should validate the postal code when the initial country is lowercase', () => {
+        renderCardInput(
+            <CardInput
+                {...cardInputRequiredProps}
+                billingAddressMode={AddressModeOptions.partial}
+                billingAddressRequired={true}
+                data={{ billingAddress: { country: 'us' } }}
+            />
+        );
+
+        fireEvent.blur(screen.getByLabelText('Zip code'), { target: { value: '1' } });
+
+        expect(screen.getByText('Invalid format. Expected format: 99999 or 99999-9999')).toBeInTheDocument();
+    });
 });
 
 describe('CardInput - Brands beneath Card Number field', () => {
