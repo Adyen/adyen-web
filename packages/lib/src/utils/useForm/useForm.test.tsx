@@ -13,6 +13,11 @@ const wrapper = ({ children }: { children: any }) => (
     </CoreProvider>
 );
 
+function getHookResult<T>(result: { current: T | undefined }): T {
+    if (!result.current) throw new Error('Hook result is undefined');
+    return result.current;
+}
+
 describe('useForm', () => {
     const defaultSchema = ['firstName', 'lastName'];
     type defaultSchemaType = {
@@ -61,25 +66,31 @@ describe('useForm', () => {
         });
 
         test('should initialize fields when defaultData is null', () => {
-            const { result } = renderHook(() => useForm({ schema: defaultSchema, defaultData: null }), { wrapper });
+            const { result } = renderHook<unknown, Form<defaultSchemaType>>(
+                () => useForm<defaultSchemaType>({ schema: defaultSchema, defaultData: null }),
+                { wrapper }
+            );
+            const form = getHookResult(result);
 
-            expect(result.current.schema).toEqual(defaultSchema);
-            expect(result.current.data).toEqual({ firstName: null, lastName: null });
-            expect(result.current.valid).toEqual({ firstName: false, lastName: false });
-            expect(result.current.errors).toEqual({ firstName: null, lastName: null });
+            expect(form.schema).toEqual(defaultSchema);
+            expect(form.data).toEqual({ firstName: null, lastName: null });
+            expect(form.valid).toEqual({ firstName: false, lastName: false });
+            expect(form.errors).toEqual({ firstName: null, lastName: null });
         });
 
         test('should normalize null configuration values', () => {
-            const { result } = renderHook(() => useForm({ schema: null, rules: null, formatters: null, defaultData: null, fieldProblems: null }), {
-                wrapper
-            });
+            const { result } = renderHook<unknown, Form<Record<string, unknown>>>(
+                () => useForm<Record<string, unknown>>({ schema: null, rules: null, formatters: null, defaultData: null, fieldProblems: null }),
+                { wrapper }
+            );
+            const form = getHookResult(result);
 
-            expect(result.current.schema).toEqual([]);
-            expect(result.current.data).toEqual({});
-            expect(result.current.valid).toEqual({});
-            expect(result.current.errors).toEqual({});
-            expect(result.current.fieldProblems).toEqual({});
-            expect(result.current.isValid).toBe(true);
+            expect(form.schema).toEqual([]);
+            expect(form.data).toEqual({});
+            expect(form.valid).toEqual({});
+            expect(form.errors).toEqual({});
+            expect(form.fieldProblems).toEqual({});
+            expect(form.isValid).toBe(true);
         });
 
         it('should set default data after changing the schema', () => {
