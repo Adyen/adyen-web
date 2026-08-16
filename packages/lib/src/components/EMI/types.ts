@@ -1,12 +1,20 @@
 import type { UIElementProps } from '../internal/UIElement/types';
-import type { CardConfiguration } from '../Card/types';
+import type CardElement from '../Card';
+import type { CardConfiguration, CardElementData } from '../Card/types';
 import { TxVariants } from '../tx-variants';
 
 export enum EMIFundingSource {
     CARD = TxVariants.card
 }
 
-export interface SupportedPaymentMethod {
+/**
+ * Payment elements EMI can delegate to. Each one must expose a public 'formatData()'
+ */
+export type EMIFundingSourceElement = CardElement;
+
+export type EMIFundingSourceData = CardElementData;
+
+export interface EMISupportedPaymentMethod {
     type: string;
     name?: string;
     brands?: string[];
@@ -15,7 +23,7 @@ export interface SupportedPaymentMethod {
 type EMICardOverrides = 'showPayButton' | '_disableClickToPay';
 
 export interface EMIConfiguration extends UIElementProps {
-    supportedPaymentMethods?: SupportedPaymentMethod[];
+    supportedPaymentMethods?: EMISupportedPaymentMethod[];
     fundingSourceConfiguration?: {
         card?: Partial<Omit<CardConfiguration, EMICardOverrides>>;
     };
