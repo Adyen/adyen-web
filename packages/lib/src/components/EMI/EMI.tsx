@@ -5,13 +5,14 @@ import { EMIComponent } from './EMIComponent';
 import { TxVariants } from '../tx-variants';
 import type { ICore } from '../../core/types';
 import type { UIElementStatus } from '../internal/UIElement/types';
-import { EMIConfiguration, EMIFundingSource } from './types';
+import { EMIFundingSource } from './types';
+import type { EMIConfiguration, EMIFundingSourceData, EMIFundingSourceElement } from './types';
 import { SUPPORTED_FUNDING_SOURCES } from './constants';
 
 class EMI extends UIElement<EMIConfiguration> {
     public static readonly type = TxVariants.emi;
 
-    private readonly fundingSourceUIElements: Partial<Record<EMIFundingSource, UIElement>> = {};
+    private readonly fundingSourceUIElements: Partial<Record<EMIFundingSource, EMIFundingSourceElement>> = {};
     private activeFundingSource: EMIFundingSource | null = null;
 
     constructor(checkout: ICore, props?: EMIConfiguration) {
@@ -19,7 +20,7 @@ class EMI extends UIElement<EMIConfiguration> {
         if (this.validateFundingSources()) {
             this.initFundingSources();
         } else {
-            const types = this.props.supportedPaymentMethods?.map(m => m.type).join(', ') || 'none';
+            const types = this.props.supportedPaymentMethods?.map(m => m.type).join(', ') || '';
             console.warn(
                 `EMI: No valid funding sources found. Received types: [${types}]. Supported types: [${Object.keys(SUPPORTED_FUNDING_SOURCES).join(', ')}].`
             );
@@ -50,14 +51,14 @@ class EMI extends UIElement<EMIConfiguration> {
     }
 
     public get card(): CardElement | undefined {
-        return this.fundingSourceUIElements[EMIFundingSource.CARD] as CardElement | undefined;
+        return this.fundingSourceUIElements[EMIFundingSource.CARD];
     }
 
     public override get additionalInfo(): string {
         return this.props.i18n?.get('emi.subtitle') ?? '';
     }
 
-    private get activeFundingSourceElement(): UIElement | undefined {
+    private get activeFundingSourceElement(): EMIFundingSourceElement | undefined {
         return this.activeFundingSource ? this.fundingSourceUIElements[this.activeFundingSource] : undefined;
     }
 
@@ -69,9 +70,8 @@ class EMI extends UIElement<EMIConfiguration> {
         return this.activeFundingSourceElement?.isValid ?? false;
     }
 
-    public formatData() {
+    public formatData(): EMIFundingSourceData | Record<string, never> {
         if (!this.activeFundingSourceElement) return {};
-        // @ts-expect-error - protected cross-instance access; EMI owns these child elements
         return this.activeFundingSourceElement.formatData();
     }
 
