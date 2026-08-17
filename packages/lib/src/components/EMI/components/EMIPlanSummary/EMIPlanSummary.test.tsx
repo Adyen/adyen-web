@@ -4,17 +4,18 @@ import { EMIPlanSummary } from './EMIPlanSummary';
 import { CoreProvider } from '../../../../core/Context/CoreProvider';
 import { AmountProvider } from '../../../../core/Context/AmountProvider';
 import { setupCoreMock } from '../../../../../config/testMocks/setup-core-mock';
-import { EMI_FIXTURE_CHECKOUT_AMOUNT, emiIssuersFixture } from '../../emi-plans.fixture';
-import type { EmiPlanOption } from '../../types';
+import { EMI_FIXTURE_CHECKOUT_AMOUNT, emiPlansResponseMock } from '../../stories/mocks';
+import type { EmiPlan } from '../../types';
 import type { PaymentAmount } from '../../../../types/global-types';
 
 const core = setupCoreMock();
 const i18n = core.modules.i18n;
 
-const [hdfc, , axis, kotak] = emiIssuersFixture;
+const [hdfc, , axis] = emiPlansResponseMock.issuers;
 const noCostPlanWithDiscount = hdfc.plans[0];
 const standardPlanWithInterest = axis.plans[0];
-const planWithoutAmounts = kotak.plans[0];
+/** The larger of the two offers the no cost plan carries, which is the one the design shows */
+const displayedOffer = noCostPlanWithDiscount.offers?.[1];
 
 const formatAmount = (amount?: PaymentAmount) => (amount ? i18n.amount(amount.value, amount.currency) : '');
 
@@ -22,7 +23,7 @@ const formatAmount = (amount?: PaymentAmount) => (amount ? i18n.amount(amount.va
  * The checkout amount comes from context, the plan from props. EMIComponent owns the heading the group
  * is named after, so that naming is asserted in `EMIComponent.test.tsx`.
  */
-const renderPlanSummary = (plan: EmiPlanOption, { amount }: { amount?: PaymentAmount } = { amount: EMI_FIXTURE_CHECKOUT_AMOUNT }) =>
+const renderPlanSummary = (plan: EmiPlan, { amount }: { amount?: PaymentAmount } = { amount: EMI_FIXTURE_CHECKOUT_AMOUNT }) =>
     render(
         <CoreProvider i18n={i18n} loadingContext={'test'} resources={core.modules.resources}>
             <AmountProvider amount={amount} providerRef={createRef()}>
@@ -57,11 +58,11 @@ describe('EMIPlanSummary', () => {
         // An exact match also proves that no struck-through original amount is rendered next to a value
         expect(screen.getAllByRole('definition').map(definition => definition.textContent)).toEqual([
             formatAmount(EMI_FIXTURE_CHECKOUT_AMOUNT),
-            `-${formatAmount(noCostPlanWithDiscount.selectedOffer?.amount)}`,
+            `-${formatAmount(displayedOffer?.amount)}`,
             formatAmount(EMI_FIXTURE_CHECKOUT_AMOUNT),
-            formatAmount(noCostPlanWithDiscount.totalInterestAmount),
-            formatAmount(noCostPlanWithDiscount.totalPayableAmount),
-            formatAmount(noCostPlanWithDiscount.monthlyPayableAmount)
+            formatAmount(noCostPlanWithDiscount.transactionAmounts.totalInterestAmount),
+            formatAmount(noCostPlanWithDiscount.transactionAmounts.totalPayableAmount),
+            formatAmount(noCostPlanWithDiscount.transactionAmounts.monthlyPayableAmount)
         ]);
     });
 
@@ -91,20 +92,26 @@ describe('EMIPlanSummary', () => {
         const definitions = screen.getAllByRole('definition').map(definition => definition.textContent);
 
         expect(terms[terms.length - 1]).toBe('Upcoming monthly payment');
-        expect(definitions[definitions.length - 1]).toBe(formatAmount(noCostPlanWithDiscount.monthlyPayableAmount));
+        expect(definitions[definitions.length - 1]).toBe(formatAmount(noCostPlanWithDiscount.transactionAmounts.monthlyPayableAmount));
     });
 
-    test('should omit every row whose source amount is missing', () => {
-        renderPlanSummary(planWithoutAmounts);
+    test('should omit the checkout amount rows when no amount was configured, keeping the plan rows', () => {
+        renderPlanSummary(standardPlanWithInterest, {});
 
-        expect(screen.getAllByRole('term').map(term => term.textContent)).toEqual(['Item price', 'Amount reserved on card']);
-        expect(screen.queryByText('Upcoming monthly payment')).toBeNull();
+        expect(screen.getAllByRole('term').map(term => term.textContent)).toEqual([
+            'Interest charged by bank @15.5%',
+            'Total amount to be paid over time',
+            'Upcoming monthly payment'
+        ]);
     });
 
-    test('should render nothing at all when neither the checkout amount nor the plan amounts are known', () => {
-        renderPlanSummary(planWithoutAmounts, {});
+    test('should render the plan rows when the merchant configured no amount', () => {
+        // Merchants configure the amount, so `null` reaches the context at runtime even though the type forbids it
+        const unconfiguredAmount: unknown = null;
 
-        expect(screen.queryAllByRole('term')).toHaveLength(0);
-        expect(screen.queryByRole('group')).toBeNull();
+        renderPlanSummary(standardPlanWithInterest, { amount: unconfiguredAmount as PaymentAmount });
+
+        expect(screen.queryByText('Item price')).toBeNull();
+        expect(screen.getByText('Upcoming monthly payment')).toBeInTheDocument();
     });
 });

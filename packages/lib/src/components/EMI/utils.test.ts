@@ -1,70 +1,88 @@
-import { getDefaultSelection, getSelectableIssuers, resolveSelection } from './utils';
-import { emiIssuersFixture } from './emi-plans.fixture';
-import type { EmiIssuerOption } from './types';
+import { resolvePlanIssuers, selectDisplayOffer } from './utils';
+import { emiPlansEmptyResponseMock, emiPlansResponseMock } from './stories/mocks';
+import type { EmiOffer, EmiPlansResponse } from './types';
 
-const [hdfc, icici, axis, kotak] = emiIssuersFixture;
-const issuerWithoutPlans: EmiIssuerOption = { id: 'sbi', name: 'State Bank of India', fundingSource: 'credit', plans: [] };
+/** Merchants hand the response over untyped, so these shapes reach the SDK at runtime. */
+const asResponse = (plans: unknown): EmiPlansResponse => plans as EmiPlansResponse;
 
-describe('getSelectableIssuers', () => {
-    test('should drop issuers that carry no plans', () => {
-        expect(getSelectableIssuers([issuerWithoutPlans, hdfc])).toEqual([hdfc]);
+describe('resolvePlanIssuers', () => {
+    let warn: jest.SpyInstance;
+
+    beforeEach(() => {
+        warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
     });
 
-    test('should keep the order of the remaining issuers', () => {
-        expect(getSelectableIssuers(emiIssuersFixture)).toEqual([hdfc, icici, axis, kotak]);
+    afterEach(() => {
+        warn.mockRestore();
+    });
+
+    test('should return the issuers of a valid response', () => {
+        expect(resolvePlanIssuers(emiPlansResponseMock)).toEqual(emiPlansResponseMock.issuers);
+        expect(warn).not.toHaveBeenCalled();
+    });
+
+    test('should return the very same objects, not copies of them', () => {
+        expect(resolvePlanIssuers(emiPlansResponseMock)[0]).toBe(emiPlansResponseMock.issuers[0]);
+    });
+
+    test('should keep the backend order of the issuers and of their plans', () => {
+        const issuers = resolvePlanIssuers(emiPlansResponseMock);
+
+        expect(issuers.map(issuer => issuer.issuerCode)).toEqual(['HDFC', 'ICICI', 'AXIS', 'KOTAK']);
+        expect(issuers[0].plans.map(plan => plan.tenureMonths)).toEqual([3, 6]);
+    });
+
+    test('should return no issuer for a response holding none', () => {
+        expect(resolvePlanIssuers(emiPlansEmptyResponseMock)).toEqual([]);
+        expect(warn).not.toHaveBeenCalled();
+    });
+
+    test('should stay quiet when no plans are configured at all', () => {
+        expect(resolvePlanIssuers(undefined)).toEqual([]);
+        expect(warn).not.toHaveBeenCalled();
+    });
+
+    test('should throw on a response that was never parsed', () => {
+        expect(() => resolvePlanIssuers(asResponse(JSON.stringify(emiPlansResponseMock)))).toThrow(/a string was provided/);
+    });
+
+    test('should throw when only part of the response was passed', () => {
+        expect(() => resolvePlanIssuers(asResponse(emiPlansResponseMock.issuers))).toThrow(/an array was provided/);
+    });
+
+    test('should name the misconfiguration as an implementation error', () => {
+        expect(() => resolvePlanIssuers(asResponse('{}'))).toThrow(expect.objectContaining({ name: 'IMPLEMENTATION_ERROR' }));
+    });
+
+    test('should warn and offer no issuer when the response carries no issuers array', () => {
+        expect(resolvePlanIssuers(asResponse({}))).toEqual([]);
+        expect(resolvePlanIssuers(asResponse({ issuers: 'HDFC' }))).toEqual([]);
+
+        expect(warn).toHaveBeenCalledTimes(2);
+        expect(warn).toHaveBeenCalledWith(expect.stringContaining('no `issuers` array'));
     });
 });
 
-describe('getDefaultSelection', () => {
-    test('should select the first issuer and its first plan', () => {
-        expect(getDefaultSelection(emiIssuersFixture)).toEqual({ issuer: hdfc, plan: hdfc.plans[0] });
+describe('selectDisplayOffer', () => {
+    const offer = (offerId: string, value: number): EmiOffer => ({ offerId, amount: { value, currency: 'INR' } });
+
+    test('should show the largest discount', () => {
+        expect(selectDisplayOffer([offer('small', 100000), offer('largest', 400000), offer('medium', 250000)])).toEqual(offer('largest', 400000));
     });
 
-    test('should skip a leading issuer that has no plans', () => {
-        expect(getDefaultSelection([issuerWithoutPlans, icici])).toEqual({ issuer: icici, plan: icici.plans[0] });
+    test('should keep the first of two offers tied on amount', () => {
+        expect(selectDisplayOffer([offer('first', 400000), offer('second', 400000)])).toEqual(offer('first', 400000));
     });
 
-    test('should return null when nothing can be selected', () => {
-        expect(getDefaultSelection([])).toBeNull();
-        expect(getDefaultSelection([issuerWithoutPlans])).toBeNull();
-    });
-});
-
-describe('resolveSelection', () => {
-    test('should return the very same selection when the list still holds it', () => {
-        const current = { issuer: icici, plan: icici.plans[1] };
-
-        expect(resolveSelection(emiIssuersFixture, current)).toBe(current);
+    test('should show the only offer there is', () => {
+        expect(selectDisplayOffer([offer('only', 100000)])).toEqual(offer('only', 100000));
     });
 
-    test('should keep the selection across a re-created list carrying the same ids', () => {
-        const current = { issuer: icici, plan: icici.plans[1] };
-        const recreated = emiIssuersFixture.map(issuer => ({ ...issuer, plans: issuer.plans.map(plan => ({ ...plan })) }));
-
-        const resolved = resolveSelection(recreated, current);
-
-        expect(resolved).not.toBe(current);
-        expect(resolved).toEqual(current);
+    test('should show nothing when the plan carries no offer', () => {
+        expect(selectDisplayOffer([])).toBeUndefined();
     });
 
-    test('should fall back to the default when the selected issuer is gone', () => {
-        const current = { issuer: icici, plan: icici.plans[0] };
-
-        expect(resolveSelection([hdfc], current)).toEqual({ issuer: hdfc, plan: hdfc.plans[0] });
-    });
-
-    test('should fall back to the default when the selected plan is gone', () => {
-        const current = { issuer: hdfc, plan: hdfc.plans[1] };
-        const hdfcWithOnePlan = { ...hdfc, plans: [hdfc.plans[0]] };
-
-        expect(resolveSelection([hdfcWithOnePlan], current)).toEqual({ issuer: hdfcWithOnePlan, plan: hdfc.plans[0] });
-    });
-
-    test('should return the default when there is no selection yet', () => {
-        expect(resolveSelection(emiIssuersFixture, null)).toEqual({ issuer: hdfc, plan: hdfc.plans[0] });
-    });
-
-    test('should return null when the list becomes empty', () => {
-        expect(resolveSelection([], { issuer: hdfc, plan: hdfc.plans[0] })).toBeNull();
+    test('should show nothing when the plan carries no offers field at all', () => {
+        expect(selectDisplayOffer()).toBeUndefined();
     });
 });
