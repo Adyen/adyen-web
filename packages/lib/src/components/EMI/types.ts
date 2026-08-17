@@ -1,5 +1,6 @@
 import type { UIElementProps } from '../internal/UIElement/types';
 import type { CardConfiguration } from '../Card/types';
+import type { PaymentAmount } from '../../types/global-types';
 import { TxVariants } from '../tx-variants';
 
 export enum EMIFundingSource {
@@ -10,6 +11,41 @@ export interface SupportedPaymentMethod {
     type: string;
     name?: string;
     brands?: string[];
+}
+
+export type EmiPlanTypeKey = 'standard' | 'noCost' | 'lowCost';
+
+export interface EmiPlanOption {
+    /** Unique across the whole list: `${issuerId}:${tenureMonths}:${type}` */
+    id: string;
+    tenureMonths: number;
+    type: EmiPlanTypeKey;
+    /** Basis points. 1599 = 15.99% p.a. */
+    interestRateBps: number;
+    monthlyPayableAmount?: PaymentAmount;
+    totalPayableAmount?: PaymentAmount;
+    totalInterestAmount?: PaymentAmount;
+    /**
+     * The single winning offer for this plan, if any: the highest discount amount available.
+     * Drives the discount banner and the `Discount` summary row, so what the shopper sees is
+     * always exactly what gets sent.
+     */
+    selectedOffer?: { id: string; amount: PaymentAmount };
+}
+
+export interface EmiIssuerOption {
+    /** `issuerCode`, lowercased. Doubles as the CDN logo lookup key. */
+    id: string;
+    /** `issuerName`, echoed verbatim. Rendered as the provider label. */
+    name: string;
+    /** `credit` | `debit`. */
+    fundingSource: string;
+    plans: EmiPlanOption[];
+}
+
+export interface EmiSelection {
+    issuer: EmiIssuerOption;
+    plan: EmiPlanOption;
 }
 
 type EMICardOverrides = 'showPayButton' | '_disableClickToPay';

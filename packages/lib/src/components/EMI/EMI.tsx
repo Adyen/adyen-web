@@ -6,6 +6,7 @@ import { TxVariants } from '../tx-variants';
 import type { ICore } from '../../core/types';
 import type { UIElementStatus } from '../internal/UIElement/types';
 import { EMIConfiguration, EMIFundingSource } from './types';
+import type { EmiIssuerOption, EmiSelection } from './types';
 import { SUPPORTED_FUNDING_SOURCES } from './constants';
 
 class EMI extends UIElement<EMIConfiguration> {
@@ -13,6 +14,12 @@ class EMI extends UIElement<EMIConfiguration> {
 
     private readonly fundingSourceUIElements: Partial<Record<EMIFundingSource, UIElement>> = {};
     private activeFundingSource: EMIFundingSource | null = null;
+
+    /**
+     * Plan selection view model. Empty until Phase 2.1 supplies the plans; the view contract is the
+     * same whatever the source, so nothing below this line changes when it does.
+     */
+    private readonly issuers: EmiIssuerOption[] = [];
 
     constructor(checkout: ICore, props?: EMIConfiguration) {
         super(checkout, props);
@@ -87,10 +94,16 @@ class EMI extends UIElement<EMIConfiguration> {
         return this;
     }
 
+    private readonly onPlanSelect = (emiSelection: EmiSelection): void => {
+        this.setState({ emiSelection });
+    };
+
     protected override componentToRender(): h.JSX.Element {
         return (
             <EMIComponent
                 activeFundingSourceElement={this.activeFundingSourceElement ?? null}
+                issuers={this.issuers}
+                onPlanSelect={this.onPlanSelect}
                 showPayButton={this.props.showPayButton}
                 payButton={this.payButton}
                 setComponentRef={this.setComponentRef}
