@@ -1,16 +1,19 @@
 import { Locator, Page } from '@playwright/test';
 import { Base } from './base';
 import { Card } from './card';
+import { EMIPlanSelection } from './emiPlanSelection';
 import { ThreeDs2Challenge } from './threeds2Challenge';
 
 class EMI extends Base {
     readonly card: Card;
+    readonly planSelection: EMIPlanSelection;
     readonly errorFields: Locator;
     readonly threeDs2Challenge: ThreeDs2Challenge;
 
     constructor(public readonly page: Page) {
         super(page);
         this.card = new Card(page);
+        this.planSelection = new EMIPlanSelection(page);
         this.errorFields = this.page.locator('.adyen-checkout__field--error');
         this.threeDs2Challenge = this.card.threeDs2Challenge;
     }
