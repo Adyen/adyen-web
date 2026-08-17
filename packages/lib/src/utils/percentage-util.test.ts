@@ -1,4 +1,4 @@
-import { BASIS_POINTS_IN_A_UNIT, getLocalisedPercentage } from './percentage-util';
+import { getLocalisedPercentage, getLocalisedPercentageFromBasisPoints } from './percentage-util';
 
 describe('getLocalisedPercentage', () => {
     test('should render a fraction as a percentage', () => {
@@ -32,8 +32,20 @@ describe('getLocalisedPercentage', () => {
         // Intl throws a RangeError on a tag it cannot parse, such as one with an underscore
         expect(getLocalisedPercentage(0.155, 'en_US')).toBe('0.155');
     });
+});
 
-    test('should convert a rate given in basis points', () => {
-        expect(getLocalisedPercentage(1599 / BASIS_POINTS_IN_A_UNIT, 'en-US')).toBe('15.99%');
+describe('getLocalisedPercentageFromBasisPoints', () => {
+    test('should convert basis points into a localised percentage', () => {
+        expect(getLocalisedPercentageFromBasisPoints(1599, 'en-US')).toBe('15.99%');
+        expect(getLocalisedPercentageFromBasisPoints(1550, 'en-US')).toBe('15.5%');
+        expect(getLocalisedPercentageFromBasisPoints(750, 'en-IN')).toBe('7.5%');
+    });
+
+    test('should render a rate of zero without fraction digits', () => {
+        expect(getLocalisedPercentageFromBasisPoints(0, 'en-US')).toBe('0%');
+    });
+
+    test('should pass format options through', () => {
+        expect(getLocalisedPercentageFromBasisPoints(1599, 'en-US', { maximumFractionDigits: 0 })).toBe('16%');
     });
 });
