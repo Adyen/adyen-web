@@ -486,4 +486,35 @@ describe('EMI', () => {
             expect(screen.queryByText(/low cost/i)).toBeNull();
         });
     });
+
+    describe('plan selection', () => {
+        test('should render the same output as Phase 1 while no plans are available', () => {
+            const coreWithEmi = createCoreWithEmi(true);
+            const emi = new EMI(coreWithEmi, {
+                ...baseProps,
+                supportedPaymentMethods: [schemePaymentMethod]
+            });
+
+            render(emi.render());
+
+            expect(screen.queryAllByRole('heading')).toHaveLength(0);
+            expect(screen.queryByLabelText('Provider')).toBeNull();
+            expect(screen.queryByLabelText('Plan')).toBeNull();
+            expect(screen.getByRole('form')).toBeInTheDocument();
+        });
+
+        test('should not issue a network request while rendering', () => {
+            const fetchSpy = jest.spyOn(globalThis, 'fetch');
+            const coreWithEmi = createCoreWithEmi(true);
+            const emi = new EMI(coreWithEmi, {
+                ...baseProps,
+                supportedPaymentMethods: [schemePaymentMethod]
+            });
+
+            render(emi.render());
+
+            expect(fetchSpy).not.toHaveBeenCalled();
+            fetchSpy.mockRestore();
+        });
+    });
 });
