@@ -1,8 +1,13 @@
 import { h, Fragment } from 'preact';
-import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'preact/hooks';
+import Alert from '../internal/Alert';
+import { PREFIX } from '../internal/Icon/constants';
 import { useCoreContext } from '../../core/Context/CoreProvider';
+import { useA11yReporter } from '../../core/Errors/useA11yReporter';
 import { EMIPlanSelection } from './components/EMIPlanSelection';
 import { EMIPlanSummary } from './components/EMIPlanSummary';
+import { getDefaultSelection, resolveSelection } from './utils';
+import { getUniqueId } from '../../utils/idGenerator';
 import type UIElement from '../internal/UIElement/UIElement';
 import type { ComponentMethodsRef, UIElementStatus } from '../internal/UIElement/types';
 import type { PayButtonProps } from '../internal/PayButton/PayButton';
@@ -12,21 +17,10 @@ import styles from './EMI.module.scss';
 interface EMIComponentProps {
     activeFundingSourceElement: UIElement | null;
     issuers: EmiIssuerOption[];
-    onPlanSelect(selection: EmiSelection): void;
+    onPlanSelect(selection: EmiSelection | null): void;
     showPayButton?: boolean;
     payButton(props: PayButtonProps): h.JSX.Element;
     setComponentRef: (ref: ComponentMethodsRef) => void;
-}
-
-/**
- * First issuer, first plan. Resolved during render so the very first paint already shows a complete
- * plan, instead of appearing empty until an effect has run.
- */
-function getDefaultSelection(issuers: EmiIssuerOption[]): EmiSelection | null {
-    const issuer = issuers[0];
-    const plan = issuer?.plans[0];
-
-    return issuer && plan ? { issuer, plan } : null;
 }
 
 export function EMIComponent({
@@ -39,7 +33,13 @@ export function EMIComponent({
 }: Readonly<EMIComponentProps>): h.JSX.Element | null {
     const { i18n } = useCoreContext();
     const [status, setStatus] = useState<UIElementStatus>('ready');
+    // Resolved during render so the very first paint already shows a complete plan
     const [selection, setSelection] = useState<EmiSelection | null>(() => getDefaultSelection(issuers));
+    const selectionRef = useRef(selection);
+
+    const titleId = useMemo(() => getUniqueId('adyen-checkout-emi-title'), []);
+    const instructionsId = useMemo(() => getUniqueId('adyen-checkout-emi-instructions'), []);
+    const planSummaryId = useMemo(() => getUniqueId('adyen-checkout-emi-plan-summary'), []);
 
     const emiRef = useRef<ComponentMethodsRef>({
         setStatus: setStatus,
@@ -50,21 +50,48 @@ export function EMIComponent({
         setComponentRef(emiRef.current);
     }, [setComponentRef]);
 
+    // Only a change the shopper made is worth announcing; the preselected plan is not news to them
+    const hasShopperSelected = useRef(false);
+
     const selectPlan = useCallback(
         (newSelection: EmiSelection) => {
+            hasShopperSelected.current = true;
+            selectionRef.current = newSelection;
             setSelection(newSelection);
             onPlanSelect(newSelection);
         },
         [onPlanSelect]
     );
 
-    // Announces the default selection, and re-resolves it whenever a new set of plans arrives
+    /**
+     * Announces the default selection on mount, and re-resolves it whenever a new set of plans arrives.
+     * The selection is matched on plan id rather than on object identity, so a list carrying the same
+     * plans never discards what the shopper picked.
+     */
     useEffect(() => {
-        const defaultSelection = getDefaultSelection(issuers);
+        const previous = selectionRef.current;
+        const resolved = resolveSelection(issuers, previous);
 
-        setSelection(defaultSelection);
-        if (defaultSelection) onPlanSelect(defaultSelection);
+        selectionRef.current = resolved;
+        setSelection(resolved);
+
+        // Nothing to report while there are no plans at all, which is the Phase 1 behaviour
+        if (resolved || previous) onPlanSelect(resolved);
     }, [issuers]);
+
+    const offer = selection?.plan.selectedOffer;
+    const discountMessage = offer
+        ? i18n.get('emi.discountApplied', {
+              // The locale places the minus sign, the same way it places the currency symbol
+              values: { amount: i18n.amount(-offer.amount.value, offer.amount.currency), provider: selection.issuer.name }
+          })
+        : null;
+
+    /**
+     * The banner below is mounted together with its own text, which no screen reader announces
+     * reliably, so the message goes through the SR panel that is always present instead.
+     */
+    useA11yReporter(hasShopperSelected.current ? discountMessage : null);
 
     if (!activeFundingSourceElement) {
         return null;
@@ -74,13 +101,31 @@ export function EMIComponent({
         <div className={styles.emiWrapper}>
             {selection && (
                 <Fragment>
-                    <h2 className={styles.emiTitle}>{i18n.get('emi.title')}</h2>
-                    <p className={styles.emiInstructions}>{i18n.get('emi.instructions')}</p>
+                    <h2 id={titleId} className={styles.emiTitle}>
+                        {i18n.get('emi.title')}
+                    </h2>
+                    <p id={instructionsId} className={styles.emiInstructions}>
+                        {i18n.get('emi.instructions')}
+                    </p>
 
-                    <EMIPlanSelection issuers={issuers} selection={selection} onSelectionChange={selectPlan} />
+                    <EMIPlanSelection
+                        issuers={issuers}
+                        selection={selection}
+                        onSelectionChange={selectPlan}
+                        labelledBy={titleId}
+                        describedBy={instructionsId}
+                    />
 
-                    <h3 className={styles.emiSectionHeading}>{i18n.get('emi.planSummary')}</h3>
-                    <EMIPlanSummary plan={selection.plan} />
+                    {discountMessage && (
+                        <Alert type={'success'} icon={`${PREFIX}checkmark_black`}>
+                            {discountMessage}
+                        </Alert>
+                    )}
+
+                    <h3 id={planSummaryId} className={styles.emiSectionHeading}>
+                        {i18n.get('emi.planSummary')}
+                    </h3>
+                    <EMIPlanSummary plan={selection.plan} labelledBy={planSummaryId} />
 
                     <h3 className={styles.emiSectionHeading}>{i18n.get('emi.cardDetails')}</h3>
                     <p className={styles.emiInstructions}>

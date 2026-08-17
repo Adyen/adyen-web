@@ -1,5 +1,5 @@
 import { createRef, h } from 'preact';
-import { render, screen } from '@testing-library/preact';
+import { render, screen, within } from '@testing-library/preact';
 import { EMIPlanSummary } from './EMIPlanSummary';
 import { CoreProvider } from '../../../../core/Context/CoreProvider';
 import { AmountProvider } from '../../../../core/Context/AmountProvider';
@@ -18,6 +18,10 @@ const planWithoutAmounts = kotak.plans[0];
 
 const formatAmount = (amount?: PaymentAmount) => (amount ? i18n.amount(amount.value, amount.currency) : '');
 
+/**
+ * The checkout amount comes from context, the plan from props. EMIComponent owns the heading the group
+ * is named after, so that naming is asserted in `EMIComponent.test.tsx`.
+ */
 const renderPlanSummary = (plan: EmiPlanOption, { amount }: { amount?: PaymentAmount } = { amount: EMI_FIXTURE_CHECKOUT_AMOUNT }) =>
     render(
         <CoreProvider i18n={i18n} loadingContext={'test'} resources={core.modules.resources}>
@@ -28,6 +32,12 @@ const renderPlanSummary = (plan: EmiPlanOption, { amount }: { amount?: PaymentAm
     );
 
 describe('EMIPlanSummary', () => {
+    test('should keep every row in a single group', () => {
+        renderPlanSummary(noCostPlanWithDiscount);
+
+        expect(within(screen.getByRole('group')).getAllByRole('term')).toHaveLength(6);
+    });
+
     test('should render every row of a complete plan, in the order of the design', () => {
         renderPlanSummary(noCostPlanWithDiscount);
 
@@ -91,9 +101,10 @@ describe('EMIPlanSummary', () => {
         expect(screen.queryByText('Upcoming monthly payment')).toBeNull();
     });
 
-    test('should render nothing when neither the checkout amount nor the plan amounts are known', () => {
+    test('should render nothing at all when neither the checkout amount nor the plan amounts are known', () => {
         renderPlanSummary(planWithoutAmounts, {});
 
         expect(screen.queryAllByRole('term')).toHaveLength(0);
+        expect(screen.queryByRole('group')).toBeNull();
     });
 });

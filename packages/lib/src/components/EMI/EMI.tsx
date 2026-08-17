@@ -95,7 +95,7 @@ class EMI extends UIElement<EMIConfiguration> {
         return this;
     }
 
-    private readonly onPlanSelect = (emiSelection: EmiSelection): void => {
+    private readonly onPlanSelect = (emiSelection: EmiSelection | null): void => {
         this.setState({ emiSelection });
     };
 
