@@ -9,7 +9,19 @@ function isFormatterObject(formatter: Formatter | Function): formatter is Format
 }
 
 function useForm<FormSchema>(props: FormProps): Form<FormSchema> {
-    const { rules = {}, formatters = {}, defaultData = {}, fieldProblems = {}, schema = [] } = props;
+    // Normalize null values to empty objects/arrays to avoid type errors
+    const {
+        rules: providedRules,
+        formatters: providedFormatters,
+        defaultData: providedDefaultData,
+        fieldProblems: providedFieldProblems,
+        schema: providedSchema
+    } = props;
+    const rules = providedRules ?? {};
+    const formatters = providedFormatters ?? {};
+    const defaultData = providedDefaultData ?? {};
+    const fieldProblems = providedFieldProblems ?? {};
+    const schema = providedSchema ?? [];
 
     const { i18n } = useCoreContext();
 
@@ -28,7 +40,7 @@ function useForm<FormSchema>(props: FormProps): Form<FormSchema> {
 
     const [state, dispatch] = useReducer<FormState<FormSchema>, any, any>(
         getReducer(processField),
-        { defaultData, schema: schema ?? [], processField, fieldProblems },
+        { defaultData, schema, processField, fieldProblems },
         init
     );
     const isValid = useMemo(() => state.schema.reduce((acc, val) => acc && state.valid[val], true), [state.schema, state.valid]);

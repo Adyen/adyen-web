@@ -64,7 +64,7 @@ export interface CardInputErrorState {
 
 export interface CardInputDataState {
     holderName?: string;
-    billingAddress?: AddressData;
+    billingAddress?: AddressData | null;
     socialSecurityNumber?: string;
     taxNumber?: string;
 }
