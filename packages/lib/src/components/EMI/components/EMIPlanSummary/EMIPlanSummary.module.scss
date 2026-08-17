@@ -1,0 +1,63 @@
+@use 'styles/mixins';
+@use 'styles/variable-generator';
+
+.planSummary {
+    display: flex;
+    flex-direction: column;
+    gap: variable-generator.token(spacer-060);
+}
+
+.rows,
+.monthlyPayment {
+    border: variable-generator.token(border-width-s) solid variable-generator.token(color-outline-primary);
+    border-radius: variable-generator.token(border-radius-m);
+    background: variable-generator.token(color-background-primary);
+    margin: 0;
+    padding: 0 variable-generator.token(spacer-070);
+}
+
+.row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: variable-generator.token(spacer-060);
+    padding: variable-generator.token(spacer-060) 0;
+
+    &:not(:last-child) {
+        border-bottom: variable-generator.token(border-width-s) solid variable-generator.token(color-outline-primary);
+    }
+}
+
+.rowLabel,
+.rowValue {
+    color: variable-generator.token(color-label-primary);
+
+    @include mixins.adyen-checkout-text-body;
+}
+
+.rowValue {
+    margin: 0;
+    text-align: end;
+    white-space: nowrap;
+}
+
+.monthlyPayment {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: variable-generator.token(spacer-060);
+    padding: variable-generator.token(spacer-060) variable-generator.token(spacer-070);
+}
+
+.monthlyPaymentLabel,
+.monthlyPaymentValue {
+    color: variable-generator.token(color-label-primary);
+
+    @include mixins.adyen-checkout-text-body-strongest;
+}
+
+.monthlyPaymentValue {
+    margin: 0;
+    text-align: end;
+    white-space: nowrap;
+}

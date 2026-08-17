@@ -1,6 +1,30 @@
+@use 'styles/mixins';
+@use 'styles/variable-generator';
+
 .emiWrapper {
     display: flex;
     flex-direction: column;
+}
+
+.emiTitle {
+    color: variable-generator.token(color-label-primary);
+    margin: 0;
+
+    @include mixins.adyen-checkout-text-title;
+}
+
+.emiSectionHeading {
+    color: variable-generator.token(color-label-primary);
+    margin: variable-generator.token(spacer-070) 0 variable-generator.token(spacer-040);
+
+    @include mixins.adyen-checkout-text-title;
+}
+
+.emiInstructions {
+    color: variable-generator.token(color-label-primary);
+    margin: 0 0 variable-generator.token(spacer-070);
+
+    @include mixins.adyen-checkout-text-body;
 }
 
 .emiFundingSourceForm {
