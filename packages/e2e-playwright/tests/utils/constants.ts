@@ -43,6 +43,8 @@ export const TEST_POSTCODE = '60607'; // adyen chicago office postcode
 
 export const BIN_LOOKUP_URL = `https://checkoutshopper-test.adyen.com/checkoutshopper/${BIN_LOOKUP_VERSION}/bin/binLookup?token=${process.env.CLIENT_KEY}`;
 
+export const EMI_PLANS_URL = '**/api/paymentMethods/emi/plans';
+
 export const USER_TYPE_DELAY = 150;
 export const KEYBOARD_DELAY = 300;
 
@@ -98,6 +100,13 @@ export const IRIS_ISSUERS = [
     { id: 'PRXBGRAA', name: 'Viva' },
     { id: 'ATTIGRAA', name: 'CrediaBank' }
 ];
+
+// EMI plan mocks — mirror packages/lib/src/components/EMI/stories/mocks.ts
+export const EMI_PLANS = {
+    hdfc: { name: 'HDFC Bank', firstPlan: /₹58,800.00 x 3 months/, secondPlan: /₹29,400.00 x 6 months/ },
+    icici: { name: 'ICICI Bank', firstPlan: /₹58,800.00 x 3 months/ },
+    discountedProvider: 'HDFC Bank'
+};
 
 export const TAGS = {
     SCREENSHOT: '@screenshot'

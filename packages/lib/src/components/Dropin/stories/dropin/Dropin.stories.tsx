@@ -5,6 +5,11 @@ import { ComponentContainer } from '../../../../../storybook/components/Componen
 import { DropinConfiguration } from '../../types';
 import { Checkout } from '../../../../../storybook/components/Checkout';
 import { getComponentConfigFromUrl } from '../../../../../storybook/utils/get-configuration-from-url';
+import getCurrency from '../../../../../storybook/utils/get-currency';
+import CardElement from '../../../Card';
+import EMI from '../../../EMI';
+import { EmiPlansLoader } from '../../../EMI/stories/EmiPlansLoader';
+import { emiPlansHandlers } from '../../../EMI/stories/handlers';
 import type { NewableComponent } from '../../../../core/core.registry';
 import './customization.scss';
 
@@ -209,34 +214,37 @@ export const SessionsDonationReparented: DropinStory = {
 };
 
 /**
- * Renders two independent Drop-in instances, both created against the *same* Checkout/session,
- * side by side. Used to test scenarios where one Drop-in instance is torn down (e.g. via raw DOM
- * manipulation that bypasses Preact's unmount lifecycle) while a second, sibling instance - sharing
- * the same session - is still in use. See DoChallenge3DS2's stale postMessage listener handling.
+ * Merchants hand the plans to Drop-in the same way they configure any other payment method, through
+ * `paymentMethodsConfiguration.emi`. Advanced flow: the plans lookup is merchant-authenticated, so
+ * sessions integrations cannot offer plan selection until the sessions endpoint ships.
  */
-export const TwoInstances: DropinStory = {
+export const EmiPlans: DropinStory = {
+    // The plans come from the merchant backend, which MSW stands in for. Playwright mocks the same
+    // endpoint itself, because the E2E Storybook build runs with MSW disabled.
+    parameters: { msw: { handlers: emiPlansHandlers } },
+
     args: {
+        useSessions: false,
+        countryCode: 'IN',
+        amount: 15499900,
         componentConfiguration: {
-            showStoredPaymentMethods: false
+            paymentMethodComponents: [EMI, CardElement]
         }
     },
-    render: ({ componentConfiguration, ...checkoutConfig }: PaymentMethodStoryProps<DropinConfiguration>) => {
-        // Register all Components
-        const { Dropin, ...Components } = components;
-        const Classes = Object.values(Components) as NewableComponent[];
-        AdyenCheckout.register(...Classes);
 
-        return (
-            <Checkout checkoutConfig={checkoutConfig}>
-                {checkout => (
-                    <Fragment>
-                        <ComponentContainer id="component-root-1" element={new DropinComponent(checkout, componentConfiguration)} />
-                        <ComponentContainer id="component-root-2" element={new DropinComponent(checkout, componentConfiguration)} />
-                    </Fragment>
-                )}
-            </Checkout>
-        );
-    }
+    render: ({ componentConfiguration, ...checkoutConfig }: PaymentMethodStoryProps<DropinConfiguration>) => (
+        <Checkout checkoutConfig={checkoutConfig}>
+            {checkout => (
+                <EmiPlansLoader amount={{ value: checkoutConfig.amount, currency: getCurrency(checkoutConfig.countryCode) }}>
+                    {plans => (
+                        <ComponentContainer
+                            element={new DropinComponent(checkout, { ...componentConfiguration, paymentMethodsConfiguration: { emi: { plans } } })}
+                        />
+                    )}
+                </EmiPlansLoader>
+            )}
+        </Checkout>
+    )
 };
 
 export default meta;

@@ -12,6 +12,7 @@ import type {
     ResultCode
 } from '../../src/types';
 import type { CheckoutSessionSetupResponse } from '../../src/core/CheckoutSession/types';
+import type { EmiPlansResponse } from '../../src/components/EMI/types';
 import type { DonationAmount, DonationComponentProps } from '../../src/components/Donation/components/types';
 import type { ShopperDetails } from '../types';
 
@@ -41,6 +42,12 @@ type PatchSessionRequest = {
 
 export const getPaymentMethods = async (configuration?: any): Promise<PaymentMethodsResponse> =>
     await httpPost('paymentMethods', { ...paymentMethodsConfig, ...configuration });
+
+/**
+ * EMI installment plans. Merchant-authenticated on the Checkout API, so the merchant backend makes the
+ * call and hands the response to the component — the SDK never fetches it.
+ */
+export const getEmiPlans = async (amount: PaymentAmount): Promise<EmiPlansResponse> => await httpPost('paymentMethods/emi/plans', { amount });
 
 export const makePayment = async (stateData: any, paymentData: any, shopperDetails?: ShopperDetails): Promise<RawPaymentResponse> => {
     const paymentRequest = { ...paymentsConfig, ...stateData, ...paymentData, ...shopperDetails };

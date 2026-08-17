@@ -14,33 +14,41 @@ class EMIPlanSelection extends Base {
 
     constructor(public readonly page: Page) {
         super(page);
-        this.providerSelect = this.page.getByLabel('Provider');
-        this.planSelect = this.page.getByLabel('Plan');
+        // Scoped to the combobox role: the sections around the selects are named 'EMI plan' and
+        // 'Plan summary', which a plain `getByLabel('Plan')` also matches
+        this.providerSelect = this.page.getByRole('combobox', { name: 'Provider' });
+        this.planSelect = this.page.getByRole('combobox', { name: 'Plan' });
         this.discountBanner = this.page.getByText(/discount offer applied for using/i);
         this.summaryLabels = this.page.getByRole('term');
         this.summaryValues = this.page.getByRole('definition');
     }
 
     /**
-     * The list of a Select stays in the DOM when collapsed, so options are scoped to the listbox of
-     * the select they belong to rather than queried globally.
+     * A Select only exposes its options while the list is open, so the list is opened first and
+     * scoped to the select that owns it through `aria-controls`.
      */
-    get providerOptions(): Locator {
-        return this.page.getByRole('listbox').first().getByRole('option');
+    async openProviderList(): Promise<Locator> {
+        return this.openList(this.providerSelect);
     }
 
-    get planOptions(): Locator {
-        return this.page.getByRole('listbox').last().getByRole('option');
+    async openPlanList(): Promise<Locator> {
+        return this.openList(this.planSelect);
     }
 
     async selectProvider(name: string | RegExp) {
-        await this.providerSelect.click();
-        await this.providerOptions.filter({ hasText: name }).click();
+        const options = await this.openProviderList();
+        await options.filter({ hasText: name }).click();
     }
 
     async selectPlan(name: string | RegExp) {
-        await this.planSelect.click();
-        await this.planOptions.filter({ hasText: name }).click();
+        const options = await this.openPlanList();
+        await options.filter({ hasText: name }).click();
+    }
+
+    private async openList(select: Locator): Promise<Locator> {
+        await select.click();
+        const listId = await select.getAttribute('aria-controls');
+        return this.page.locator(`#${listId}`).getByRole('option');
     }
 }
 
