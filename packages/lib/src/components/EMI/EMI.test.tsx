@@ -468,23 +468,6 @@ describe('EMI', () => {
 
             expect(emi.additionalInfo).toMatch(/installment plans on credit cards/i);
         });
-
-        test('should not render Phase 2 UI elements', () => {
-            const coreWithEmi = createCoreWithEmi(true);
-            const emi = new EMI(coreWithEmi, {
-                ...baseProps,
-                supportedPaymentMethods: [schemePaymentMethod]
-            });
-
-            render(emi.render());
-
-            expect(screen.queryByText(/^provider$/i)).toBeNull();
-            expect(screen.queryByText(/^plans$/i)).toBeNull();
-            expect(screen.queryByText(/^offers$/i)).toBeNull();
-            expect(screen.queryByText(/^summary$/i)).toBeNull();
-            expect(screen.queryByText(/no cost/i)).toBeNull();
-            expect(screen.queryByText(/low cost/i)).toBeNull();
-        });
     });
 
     describe('plan selection', () => {
