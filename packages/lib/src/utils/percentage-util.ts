@@ -1,8 +1,7 @@
 /**
- * @internal
  * Basis points in a whole unit. Payment APIs report interest rates in basis points: 1599 bps = 15.99%
  */
-export const BASIS_POINTS_IN_A_UNIT = 10000;
+const BASIS_POINTS_IN_A_UNIT = 10000;
 
 /**
  * @internal
@@ -30,3 +29,15 @@ export const getLocalisedPercentage = (rate: number, locale: string, options: In
         return String(rate);
     }
 };
+
+/**
+ * @internal
+ * Localised string for a rate reported in basis points, the unit payment APIs use for interest rates.
+ * Keeps the conversion out of the views that render it.
+ *
+ * @param basisPoints - Rate in basis points. `1599` renders as `15.99%`
+ * @param locale - Locale to format for
+ * @param options - Options for {@link Intl.NumberFormatOptions}
+ */
+export const getLocalisedPercentageFromBasisPoints = (basisPoints: number, locale: string, options: Intl.NumberFormatOptions = {}): string =>
+    getLocalisedPercentage(basisPoints / BASIS_POINTS_IN_A_UNIT, locale, options);

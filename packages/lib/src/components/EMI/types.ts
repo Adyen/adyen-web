@@ -15,6 +15,15 @@ export interface SupportedPaymentMethod {
 
 export type EmiPlanTypeKey = 'standard' | 'noCost' | 'lowCost';
 
+/** Funding source of an issuer, as the plans response reports it. */
+export type EmiIssuerFundingSource = 'credit' | 'debit';
+
+/** A discount the shopper is granted on a plan. */
+export interface EmiPlanOffer {
+    id: string;
+    amount: PaymentAmount;
+}
+
 export interface EmiPlanOption {
     /** Unique across the whole list: `${issuerId}:${tenureMonths}:${type}` */
     id: string;
@@ -30,7 +39,7 @@ export interface EmiPlanOption {
      * Drives the discount banner and the `Discount` summary row, so what the shopper sees is
      * always exactly what gets sent.
      */
-    selectedOffer?: { id: string; amount: PaymentAmount };
+    selectedOffer?: EmiPlanOffer;
 }
 
 export interface EmiIssuerOption {
@@ -38,8 +47,7 @@ export interface EmiIssuerOption {
     id: string;
     /** `issuerName`, echoed verbatim. Rendered as the provider label. */
     name: string;
-    /** `credit` | `debit`. */
-    fundingSource: string;
+    fundingSource: EmiIssuerFundingSource;
     plans: EmiPlanOption[];
 }
 
