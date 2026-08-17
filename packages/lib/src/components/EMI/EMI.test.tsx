@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/preact';
+import { render, screen, within } from '@testing-library/preact';
 import EMI from './EMI';
 import CardElement from '../Card';
 import { TxVariants } from '../tx-variants';
@@ -6,15 +6,21 @@ import { Resources } from '../../core/Context/Resources';
 import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 import PaymentMethods from '../../core/ProcessResponse/PaymentMethods';
 import { AdyenCheckout, ThreeDS2Challenge, ThreeDS2DeviceFingerprint } from '../../index';
+import { emiPlansEmptyResponseMock, emiPlansResponseMock } from './stories/mocks';
 import type { PaymentActionsType } from '../../types/global-types';
+import type { EMIConfiguration } from './types';
 
 const core = setupCoreMock();
 
+/** EMI only offers itself once it has plans, so every construction here starts from a valid response. */
 const baseProps = {
     i18n: core.modules.i18n,
     loadingContext: 'test',
-    modules: { resources: new Resources('test') }
+    modules: { resources: new Resources('test') },
+    plans: emiPlansResponseMock
 };
+
+const [hdfc] = emiPlansResponseMock.issuers;
 
 const schemePaymentMethod = { type: 'scheme', name: 'Card', brands: ['visa', 'mc'] };
 
@@ -471,7 +477,7 @@ describe('EMI', () => {
     });
 
     describe('plan selection', () => {
-        test('should render the same output as Phase 1 while no plans are available', () => {
+        test('should preselect the first issuer and its first plan from the plans prop', () => {
             const coreWithEmi = createCoreWithEmi(true);
             const emi = new EMI(coreWithEmi, {
                 ...baseProps,
@@ -480,10 +486,23 @@ describe('EMI', () => {
 
             render(emi.render());
 
-            expect(screen.queryAllByRole('heading')).toHaveLength(0);
-            expect(screen.queryByLabelText('Provider')).toBeNull();
-            expect(screen.queryByLabelText('Plan')).toBeNull();
+            expect(screen.getByLabelText('Provider')).toHaveTextContent(hdfc.issuerName);
+            expect(screen.getByLabelText('Plan')).toHaveTextContent('₹58,800.00 x 3 months');
             expect(screen.getByRole('form')).toBeInTheDocument();
+        });
+
+        test('should offer every issuer the response carries', () => {
+            const coreWithEmi = createCoreWithEmi(true);
+            const emi = new EMI(coreWithEmi, {
+                ...baseProps,
+                supportedPaymentMethods: [schemePaymentMethod]
+            });
+
+            render(emi.render());
+
+            const providerOptions = within(screen.getAllByRole('listbox')[0]).getAllByRole('option');
+
+            expect(providerOptions).toHaveLength(emiPlansResponseMock.issuers.length);
         });
 
         test('should not issue a network request while rendering', () => {
@@ -498,6 +517,101 @@ describe('EMI', () => {
 
             expect(fetchSpy).not.toHaveBeenCalled();
             fetchSpy.mockRestore();
+        });
+
+        test('should not include emiPlan in formatData once a plan is selected', () => {
+            const coreWithEmi = createCoreWithEmi(true);
+            const emi = new EMI(coreWithEmi, {
+                ...baseProps,
+                supportedPaymentMethods: [schemePaymentMethod]
+            });
+
+            render(emi.render());
+
+            expect(emi.formatData()).not.toHaveProperty('emiPlan');
+        });
+    });
+
+    describe('plans configuration', () => {
+        const createEmiWith = (props: Partial<EMIConfiguration>) => {
+            const coreWithEmi = createCoreWithEmi(true);
+
+            return new EMI(coreWithEmi, { ...baseProps, supportedPaymentMethods: [schemePaymentMethod], ...props });
+        };
+
+        test('should render nothing and warn when there are no plans and no session', () => {
+            const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+            const emi = createEmiWith({ plans: undefined });
+
+            const { container } = render(emi.render());
+
+            expect(container.innerHTML).toBe('');
+            expect(warn).toHaveBeenCalledTimes(1);
+            expect(warn).toHaveBeenCalledWith(expect.stringContaining('No installment plans available'));
+            warn.mockRestore();
+        });
+
+        test('should reject isAvailable when there are no plans and no session', async () => {
+            const emi = createEmiWith({ plans: undefined });
+
+            await expect(emi.isAvailable()).rejects.toThrow('EMI: No installment plans available');
+        });
+
+        test('should reject isAvailable when the response holds no usable plan', async () => {
+            const emi = createEmiWith({ plans: emiPlansEmptyResponseMock });
+
+            await expect(emi.isAvailable()).rejects.toThrow('EMI: No installment plans available');
+        });
+
+        test('should resolve isAvailable when a session is present without plans', async () => {
+            const emi = createEmiWith({ plans: undefined, session: core.session });
+
+            await expect(emi.isAvailable()).resolves.toBeUndefined();
+        });
+
+        test('should render the Phase 1 card form when a session is present without plans', () => {
+            const emi = createEmiWith({ plans: undefined, session: core.session });
+
+            render(emi.render());
+
+            expect(screen.queryAllByRole('heading')).toHaveLength(0);
+            expect(screen.queryByLabelText('Provider')).toBeNull();
+            expect(screen.getByRole('form')).toBeInTheDocument();
+        });
+
+        test('should use the plans prop rather than the session, so no second lookup is ever needed', () => {
+            const emi = createEmiWith({ session: core.session });
+
+            render(emi.render());
+
+            expect(screen.getByLabelText('Provider')).toHaveTextContent(hdfc.issuerName);
+        });
+
+        /**
+         * `resolvePlanIssuers` owns the message of each case; these two say only that a merchant who
+         * passes the wrong thing hears about it from their own integration rather than from a render.
+         */
+        test('should throw when the plans response was passed unparsed', () => {
+            const unparsedPlans = JSON.stringify(emiPlansResponseMock) as unknown as EMIConfiguration['plans'];
+
+            expect(() => createEmiWith({ plans: unparsedPlans })).toThrow(/a string was provided/);
+        });
+
+        test('should throw when only the issuers of the plans response were passed', () => {
+            const partialPlans = emiPlansResponseMock.issuers as unknown as EMIConfiguration['plans'];
+
+            expect(() => createEmiWith({ plans: partialPlans })).toThrow(/an array was provided/);
+        });
+
+        test('should warn and offer no EMI when the plans object carries no issuers', () => {
+            const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+            const emi = createEmiWith({ plans: {} as unknown as EMIConfiguration['plans'] });
+
+            const { container } = render(emi.render());
+
+            expect(container.innerHTML).toBe('');
+            expect(warn).toHaveBeenCalledWith(expect.stringContaining('no `issuers` array'));
+            warn.mockRestore();
         });
     });
 });

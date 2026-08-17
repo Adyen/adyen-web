@@ -28,9 +28,16 @@ describe('getLocalisedPercentage', () => {
         expect(getLocalisedPercentage(0.12, 'en-US', { minimumFractionDigits: 2 })).toBe('12.00%');
     });
 
-    test('should fall back to the raw rate when the locale tag is malformed', () => {
-        // Intl throws a RangeError on a tag it cannot parse, such as one with an underscore
-        expect(getLocalisedPercentage(0.155, 'en_US')).toBe('0.155');
+    test('should accept a locale tag with an underscore, the way getLocalisedAmount does', () => {
+        expect(getLocalisedPercentage(0.155, 'en_US')).toBe('15.5%');
+    });
+
+    test('should stay a percentage when the locale tag cannot be parsed at all', () => {
+        // Intl throws a RangeError on a tag it cannot parse; the runtime default keeps the percent semantics
+        const formatted = getLocalisedPercentage(0.155, 'not a locale!');
+
+        expect(formatted).toContain('%');
+        expect(formatted).toMatch(/15/);
     });
 });
 

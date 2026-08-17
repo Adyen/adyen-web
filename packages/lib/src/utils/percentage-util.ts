@@ -9,7 +9,8 @@ const BASIS_POINTS_IN_A_UNIT = 10000;
  * locale, the same way {@link getLocalisedAmount} takes the currency symbol from it.
  *
  * @param rate - Fraction of a whole unit. `0.1599` renders as `15.99%`
- * @param locale - Locale to format for
+ * @param locale - Locale to format for. A tag with an underscore, such as `en_US`, is normalised
+ * the same way {@link getLocalisedAmount} normalises it
  * @param options - Options for {@link Intl.NumberFormatOptions}
  *
  * @example
@@ -17,6 +18,8 @@ const BASIS_POINTS_IN_A_UNIT = 10000;
  * getLocalisedPercentage(0.155, 'de-DE'); // '15,5 %', with a non-breaking space
  */
 export const getLocalisedPercentage = (rate: number, locale: string, options: Intl.NumberFormatOptions = {}): string => {
+    const formattedLocale = locale.replace('_', '-');
+
     const localeOptions: Intl.NumberFormatOptions = {
         style: 'percent',
         maximumFractionDigits: 2,
@@ -24,9 +27,10 @@ export const getLocalisedPercentage = (rate: number, locale: string, options: In
     };
 
     try {
-        return rate.toLocaleString(locale, localeOptions);
+        return rate.toLocaleString(formattedLocale, localeOptions);
     } catch {
-        return String(rate);
+        // Still a percentage: falling back to the raw fraction would understate the rate a hundredfold
+        return rate.toLocaleString(undefined, localeOptions);
     }
 };
 

@@ -1,36 +1,49 @@
-import type { EmiIssuerOption, EmiSelection } from './types';
+import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
+import type { EmiIssuer, EmiOffer, EmiPlansResponse } from './types';
 
 /**
  * @internal
- * Issuers the shopper can actually act on. An issuer without plans would render as an option that
- * cannot be selected, so it is never offered.
+ * The issuers of the plans response, as they arrived — same objects, same field names, same order.
+ *
+ * Nothing converts the response, so this is also where a `plans` prop the merchant got wrong is named
+ * while the stack still points at their integration: without it a typo surfaces as a `TypeError` from
+ * inside a Preact render, which is a bad way to learn about one.
+ *
  */
-export const getSelectableIssuers = (issuers: EmiIssuerOption[]): EmiIssuerOption[] => issuers.filter(issuer => issuer.plans.length > 0);
+export const resolvePlanIssuers = (plans?: EmiPlansResponse): EmiIssuer[] => {
+    if (typeof plans === 'string') {
+        throw new AdyenCheckoutError(
+            'IMPLEMENTATION_ERROR',
+            'EMI: the `plans` configuration was provided but of an incorrect type (should be an object but a string was provided). ' +
+                'Try JSON.parse("{...}") your /paymentMethods/emi/plans response.'
+        );
+    }
 
-/**
- * @internal
- * First selectable issuer and its first plan, or `null` when nothing can be selected.
- */
-export const getDefaultSelection = (issuers: EmiIssuerOption[]): EmiSelection | null => {
-    const [issuer] = getSelectableIssuers(issuers);
+    if (Array.isArray(plans)) {
+        throw new AdyenCheckoutError(
+            'IMPLEMENTATION_ERROR',
+            'EMI: the `plans` configuration was provided but of an incorrect type (should be an object but an array was provided). ' +
+                'Please check you are passing the whole /paymentMethods/emi/plans response.'
+        );
+    }
 
-    return issuer ? { issuer, plan: issuer.plans[0] } : null;
+    // Advanced flow without plans, and sessions before the plans endpoint ships. `isAvailable()` owns it
+    if (!plans) return [];
+
+    if (!Array.isArray(plans.issuers)) {
+        console.warn('EMI: the `plans` configuration was provided but carries no `issuers` array. Pass the plans response verbatim.');
+        return [];
+    }
+
+    return plans.issuers;
 };
 
+/** Ties keep the first offer in backend order, so the same response always resolves the same way. */
+const higherOffer = (winner: EmiOffer, candidate: EmiOffer): EmiOffer => (candidate.amount.value > winner.amount.value ? candidate : winner);
+
 /**
  * @internal
- * Keeps the shopper's choice whenever the new list still holds it — matched on `id`, so a re-created
- * list carrying the same plans preserves the selection — and falls back to the default otherwise.
- * Returns `current` unchanged when the very same objects are still in the list, so a caller can
- * compare by identity to tell a no-op apart from a real change.
+ * See ADR-0004-emi-plans-data-transformation for the display-offer policy.
  */
-export const resolveSelection = (issuers: EmiIssuerOption[], current: EmiSelection | null): EmiSelection | null => {
-    if (!current) return getDefaultSelection(issuers);
-
-    const issuer = issuers.find(item => item.id === current.issuer.id);
-    const plan = issuer?.plans.find(item => item.id === current.plan.id);
-
-    if (!issuer || !plan) return getDefaultSelection(issuers);
-
-    return issuer === current.issuer && plan === current.plan ? current : { issuer, plan };
-};
+export const selectDisplayOffer = (offers: EmiOffer[] = []): EmiOffer | undefined =>
+    offers.reduce<EmiOffer | undefined>((winner, candidate) => (winner ? higherOffer(winner, candidate) : candidate), undefined);

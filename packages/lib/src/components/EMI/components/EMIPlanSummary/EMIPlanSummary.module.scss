@@ -5,6 +5,10 @@
     display: flex;
     flex-direction: column;
     gap: variable-generator.token(spacer-060);
+    border: 0;
+    margin: 0;
+    padding: 0;
+    min-inline-size: 0;
 }
 
 .rows,

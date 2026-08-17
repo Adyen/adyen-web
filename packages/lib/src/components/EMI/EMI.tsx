@@ -3,11 +3,11 @@ import UIElement from '../internal/UIElement';
 import CardElement from '../Card';
 import { EMIComponent } from './EMIComponent';
 import { TxVariants } from '../tx-variants';
+import { resolvePlanIssuers } from './utils';
 import type { ICore } from '../../core/types';
 import type { UIElementStatus } from '../internal/UIElement/types';
-import { EMIFundingSource } from './types';
-import type { EMIConfiguration, EMIFundingSourceData, EMIFundingSourceElement } from './types';
-import type { EmiIssuerOption, EmiSelection } from './types';
+import { EMIConfiguration, EMIFundingSource } from './types';
+import type { EmiIssuer, EmiSelection } from './types';
 import { SUPPORTED_FUNDING_SOURCES } from './constants';
 
 class EMI extends UIElement<EMIConfiguration> {
@@ -17,27 +17,34 @@ class EMI extends UIElement<EMIConfiguration> {
     private activeFundingSource: EMIFundingSource | null = null;
 
     /**
-     * Plan selection view model. Empty until Phase 2.1 supplies the plans; the view contract is the
-     * same whatever the source, so nothing below this line changes when it does.
+     * The issuers of the plans response, as they arrived. Read once here rather than per render, so
+     * `isAvailable()` always answers from the same list the view renders.
      */
-    private readonly issuers: EmiIssuerOption[] = [];
+    private readonly issuers: EmiIssuer[];
 
     constructor(checkout: ICore, props?: EMIConfiguration) {
         super(checkout, props);
-        if (this.validateFundingSources()) {
-            this.initFundingSources();
-        } else {
-            const types = this.props.supportedPaymentMethods?.map(m => m.type).join(', ') || '';
+
+        this.issuers = resolvePlanIssuers(this.props.plans);
+
+        this.initFundingSources();
+
+        if (!this.activeFundingSource) {
+            const types = this.props.supportedPaymentMethods?.map(m => m.type).join(', ') || 'none';
             console.warn(
                 `EMI: No valid funding sources found. Received types: [${types}]. Supported types: [${Object.keys(SUPPORTED_FUNDING_SOURCES).join(', ')}].`
             );
         }
+
+        if (!this.hasPlansAvailable) {
+            console.warn(
+                'EMI: No installment plans available. Pass the Checkout API /paymentMethods/emi/plans response through the `plans` configuration.'
+            );
+        }
     }
 
-    private validateFundingSources(): boolean {
-        if (!this.props.supportedPaymentMethods?.length) return false;
-
-        return this.props.supportedPaymentMethods.some(method => SUPPORTED_FUNDING_SOURCES[method.type] !== undefined);
+    private get hasPlansAvailable(): boolean {
+        return this.issuers.length > 0 || !!this.props.session;
     }
 
     private initFundingSources(): void {
@@ -70,7 +77,10 @@ class EMI extends UIElement<EMIConfiguration> {
     }
 
     public override isAvailable(): Promise<void> {
-        return this.validateFundingSources() ? Promise.resolve() : Promise.reject(new Error('EMI: No valid funding sources available'));
+        if (!this.activeFundingSource) return Promise.reject(new Error('EMI: No valid funding sources available'));
+        if (!this.hasPlansAvailable) return Promise.reject(new Error('EMI: No installment plans available'));
+
+        return Promise.resolve();
     }
 
     public get isValid(): boolean {
@@ -94,11 +104,13 @@ class EMI extends UIElement<EMIConfiguration> {
         return this;
     }
 
-    private readonly onPlanSelect = (emiSelection: EmiSelection | null): void => {
+    private readonly onPlanSelect = (emiSelection: EmiSelection): void => {
         this.setState({ emiSelection });
     };
 
-    protected override componentToRender(): h.JSX.Element {
+    protected override componentToRender(): h.JSX.Element | null {
+        if (!this.hasPlansAvailable) return null;
+
         return (
             <EMIComponent
                 activeFundingSourceElement={this.activeFundingSourceElement ?? null}
