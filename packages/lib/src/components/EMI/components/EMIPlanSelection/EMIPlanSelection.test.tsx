@@ -60,7 +60,6 @@ const getOptions = (list: HTMLElement) =>
 const getProviderOptions = () => getOptions(screen.getAllByRole('listbox')[0]);
 const getPlanOptions = () => getOptions(screen.getAllByRole('listbox')[1]);
 
-/** What the select reports back on a choice, before the component trades it for a response object. */
 const getOptionValues = (list: HTMLElement) =>
     within(list)
         .getAllByRole('option')
@@ -105,7 +104,6 @@ describe('EMIPlanSelection', () => {
         ]);
     });
 
-    // The response is the only source, and every issuer it carries is selectable
     test('should offer every issuer it is given', () => {
         renderPlanSelection(emiPlansResponseMock.issuers);
 
@@ -132,7 +130,6 @@ describe('EMIPlanSelection', () => {
         expect(onSelectionChange).toHaveBeenCalledWith({ issuer: hdfc, plan: hdfc.plans[1] });
     });
 
-    // Going back to the plan that was preselected is a normal move, and its row is no different
     test('should report the first plan again after the shopper picked another one', async () => {
         const { onSelectionChange } = renderPlanSelection(emiPlansResponseMock.issuers, { issuer: hdfc, plan: hdfc.plans[1] });
 
@@ -154,7 +151,6 @@ describe('EMIPlanSelection', () => {
         expect(getPlanOptionValues()).toEqual(['plan:HDFC:credit:noCost:3', 'plan:HDFC:credit:standard:6']);
     });
 
-    // A row answers to what it is, so reordering the response moves the rows and nothing else
     test('should keep those identities when the response order changes', () => {
         const reordered: EmiIssuer = { ...hdfc, plans: [hdfc.plans[1], hdfc.plans[0]] };
 
@@ -181,7 +177,6 @@ describe('EMIPlanSelection', () => {
         await user.click(getPlanSelect());
         await user.click(within(screen.getAllByRole('listbox')[1]).getByRole('option', { name: /₹28,166.50 x 3 months/ }));
 
-        // The objects of the response itself, so nothing derived here travels with the selection
         const [{ issuer, plan }] = onSelectionChange.mock.calls[0] as [EmiSelection];
 
         expect(issuer).toBe(issuerWithSimilarPlans);

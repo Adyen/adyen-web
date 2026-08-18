@@ -11,10 +11,7 @@ interface EmiPlansLoaderProps {
     children(plans?: EmiPlansResponse): ComponentChildren;
 }
 
-/**
- * Stands in for the merchant backend: the plans exist before the component does. `Checkout` resolves the
- * core asynchronously but knows nothing about EMI, so the fetch lives here instead.
- */
+/** Stands in for the merchant backend call: the plans exist before the component does. */
 export function EmiPlansLoader({ amount, children }: Readonly<EmiPlansLoaderProps>) {
     const [state, setState] = useState<{ isLoading: boolean; plans?: EmiPlansResponse }>({ isLoading: true });
 
