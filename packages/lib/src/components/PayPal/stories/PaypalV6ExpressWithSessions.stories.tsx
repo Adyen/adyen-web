@@ -66,9 +66,12 @@ const Component = () => {
             }
 
             const paypal = new PayPal(checkout, {
-                // isExpress: true,
+                isExpress: true,
                 usePayPalV6: {
                     countryCode: COUNTRY_CODE,
+                    // presentationModeOptions: {
+                    //     presentationMode: 'redirect'
+                    // },
                     onShippingAddressChange: async (data, component) => {
                         // Store the country code value, so it can be used in the 'onShippingOptionsChange'
                         SHOPPER_SHIPPING_COUNTRY_CODE = data.shippingAddress.countryCode;
