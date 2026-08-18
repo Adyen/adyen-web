@@ -56,10 +56,11 @@ test.describe('EMI - plan selection', () => {
         await expect(planSelection.planSelect).toContainText(hdfc.firstPlan);
 
         await expect(planSelection.summaryLabels).toContainText([/Item price/, /Discount/, /Amount reserved on card/, /Interest charged by bank/]);
+    });
 
-        // The item price is the transaction amount rather than plan data, so it must match what the shopper is asked to pay
-        const itemPrice = await planSelection.summaryValues.first().innerText();
-        await expect(emiPage.page.getByRole('button', { name: /pay/i })).toContainText(itemPrice);
+    // The summary owns every figure, so the button must not repeat an amount the shopper would compare against it
+    test('should render a pay button without an amount', async ({ emiPage }) => {
+        await expect(emiPage.page.getByRole('button', { name: 'Pay', exact: true })).toBeVisible();
     });
 
     test('should reset the plan to the first plan of a newly selected provider, and update the summary', async ({ emiPage }) => {

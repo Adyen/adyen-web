@@ -116,7 +116,8 @@ export function EMIComponent({
             )}
 
             <div className={styles.emiFundingSourceForm}>{activeFundingSourceElement.render()}</div>
-            {showPayButton && payButton({ status })}
+            {/* The plan summary already itemises every figure, so the button label omits the amount */}
+            {showPayButton && payButton({ status, label: i18n.get('payButton') })}
         </div>
     );
 }
