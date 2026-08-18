@@ -103,7 +103,7 @@ export function EMIComponent({
                     />
 
                     {discountMessage && (
-                        <Alert type={'success'} icon={`${PREFIX}checkmark_black`}>
+                        <Alert type={'success'} icon={`${PREFIX}checkmark_black`} classNames={[styles.emiDiscountBanner]}>
                             {discountMessage}
                         </Alert>
                     )}

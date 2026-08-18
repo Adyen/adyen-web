@@ -93,15 +93,15 @@ describe('EMIPlanSelection', () => {
         renderPlanSelection(emiPlansResponseMock.issuers);
 
         expect(getProviderSelect()).toHaveTextContent(hdfc.issuerName);
-        expect(getPlanSelect()).toHaveTextContent('₹58,800.00 x 3 months');
+        expect(getPlanSelect()).toHaveTextContent('₹51,666.33 x 3 months');
     });
 
     test('should list only the plans of the selected issuer', () => {
         renderPlanSelection(emiPlansResponseMock.issuers, { issuer: icici, plan: icici.plans[0] });
 
         expect(getPlanOptions()).toEqual([
-            '₹58,800.00 x 3 months | @7.5% p.a-₹6,000.00 discount availableLow cost',
-            '₹19,600.00 x 9 months | @15.99% p.a'
+            '₹52,366.50 x 3 months | @7.5% p.a-₹2,100.50 discount availableLow cost',
+            '₹19,333.22 x 9 months | @15.99% p.a'
         ]);
     });
 
@@ -179,7 +179,7 @@ describe('EMIPlanSelection', () => {
         expect(getPlanOptionValues()).toEqual(['plan:HDFC:credit:noCost:3', 'plan:HDFC:credit:standard:3', 'plan:HDFC:credit:standard:6']);
 
         await user.click(getPlanSelect());
-        await user.click(within(screen.getAllByRole('listbox')[1]).getByRole('option', { name: /₹29,400.00 x 3 months/ }));
+        await user.click(within(screen.getAllByRole('listbox')[1]).getByRole('option', { name: /₹28,166.50 x 3 months/ }));
 
         // The objects of the response itself, so nothing derived here travels with the selection
         const [{ issuer, plan }] = onSelectionChange.mock.calls[0] as [EmiSelection];

@@ -20,6 +20,16 @@
     @include mixins.adyen-checkout-text-title;
 }
 
+.emiWrapper .emiDiscountBanner {
+    border-color: variable-generator.token(color-outline-success);
+    padding: variable-generator.token(spacer-060) variable-generator.token(spacer-070);
+    margin-bottom: variable-generator.token(spacer-090);
+}
+
+.emiDiscountBanner + .emiSectionHeading {
+    margin-top: 0;
+}
+
 .emiInstructions {
     color: variable-generator.token(color-label-primary);
     margin: 0 0 variable-generator.token(spacer-070);

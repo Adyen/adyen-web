@@ -22,8 +22,8 @@ export const emiPlansResponseMock: EmiPlansResponse = {
                     tenureMonths: 3,
                     interestRateBps: 1550,
                     transactionAmounts: {
-                        monthlyPayableAmount: { value: 5880000, currency: 'INR' },
-                        totalPayableAmount: { value: 16399900, currency: 'INR' },
+                        monthlyPayableAmount: { value: 5033300, currency: 'INR' },
+                        totalPayableAmount: { value: 15099900, currency: 'INR' },
                         totalInterestAmount: { value: 0, currency: 'INR' }
                     },
                     // Both offers ride on the payload; only the larger one is shown
@@ -37,7 +37,7 @@ export const emiPlansResponseMock: EmiPlansResponse = {
                     tenureMonths: 6,
                     interestRateBps: 1550,
                     transactionAmounts: {
-                        monthlyPayableAmount: { value: 2940000, currency: 'INR' },
+                        monthlyPayableAmount: { value: 2816650, currency: 'INR' },
                         totalPayableAmount: { value: 16899900, currency: 'INR' },
                         totalInterestAmount: { value: 1400000, currency: 'INR' }
                     }
@@ -54,8 +54,8 @@ export const emiPlansResponseMock: EmiPlansResponse = {
                     tenureMonths: 3,
                     interestRateBps: 750,
                     transactionAmounts: {
-                        monthlyPayableAmount: { value: 5880000, currency: 'INR' },
-                        totalPayableAmount: { value: 16399900, currency: 'INR' },
+                        monthlyPayableAmount: { value: 5106667, currency: 'INR' },
+                        totalPayableAmount: { value: 15320000, currency: 'INR' },
                         totalInterestAmount: { value: 420100, currency: 'INR' }
                     },
                     offers: [{ offerId: 'offer-icici-lowcost', type: 'DISCOUNT', amount: { value: 600000, currency: 'INR' } }]
@@ -65,7 +65,7 @@ export const emiPlansResponseMock: EmiPlansResponse = {
                     tenureMonths: 9,
                     interestRateBps: 1599,
                     transactionAmounts: {
-                        monthlyPayableAmount: { value: 1960000, currency: 'INR' },
+                        monthlyPayableAmount: { value: 1933322, currency: 'INR' },
                         totalPayableAmount: { value: 17399900, currency: 'INR' },
                         totalInterestAmount: { value: 1900000, currency: 'INR' }
                     }
@@ -82,8 +82,8 @@ export const emiPlansResponseMock: EmiPlansResponse = {
                     tenureMonths: 3,
                     interestRateBps: 1550,
                     transactionAmounts: {
-                        monthlyPayableAmount: { value: 5880000, currency: 'INR' },
-                        totalPayableAmount: { value: 16399900, currency: 'INR' },
+                        monthlyPayableAmount: { value: 5410233, currency: 'INR' },
+                        totalPayableAmount: { value: 16230700, currency: 'INR' },
                         totalInterestAmount: { value: 730800, currency: 'INR' }
                     },
                     offers: []
