@@ -1,5 +1,11 @@
 # @adyen/adyen-web
 
+## 6.43.1-alpha.9c9aced
+
+### Patch Changes
+
+- Fixed: Components crashing when `null` data was passed ([#4134](https://github.com/Adyen/adyen-web/pull/4134))
+
 ## 6.43.0
 
 ### Minor Changes
