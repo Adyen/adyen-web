@@ -142,7 +142,7 @@ abstract class BaseElement<P extends BaseElementProps> implements IBaseElement {
 
         this._node = node;
 
-        // Add listener for key press events, notably 'Enter' key presses
+        // Add listener for key down events, notably 'Enter' key presses
         on(this._node, 'keydown', this.handleKeyDown, false);
 
         this._component = this.render();

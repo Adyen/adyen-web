@@ -156,6 +156,7 @@ function Select({
      * @param e - KeyboardEvent
      */
     const handleButtonKeyDown = (e: KeyboardEvent) => {
+        e.stopPropagation();
         if (e.key === keys.enter && filterable && showList && textFilter) {
             handleSelect(e);
         } else if (e.key === keys.escape) {
