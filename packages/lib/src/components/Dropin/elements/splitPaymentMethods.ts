@@ -3,6 +3,8 @@ import { DisplayMode, SUPPORTED_INSTANT_PAYMENTS } from '../constants';
 import type { InstantPaymentTypes, PaymentMethodDisplayMode } from '../types';
 import type { PaymentMethod, StoredPaymentMethod } from '../../../core/ProcessResponse/PaymentMethods/PaymentMethods';
 
+const CUSTOM_DISPLAY_MODES = [DisplayMode.instant, DisplayMode.regular] as const;
+
 interface SplitPaymentMethods {
     fastlanePaymentMethod: PaymentMethod | undefined;
     storedPaymentMethods: StoredPaymentMethod[];
@@ -11,11 +13,20 @@ interface SplitPaymentMethods {
 }
 
 /**
- * The display modes a payment method from the 'paymentMethods' array can resolve to.
+ * Possible display modes for a payment method received from the /paymentMethods response.
+ */
+type CustomDisplayMode = (typeof CUSTOM_DISPLAY_MODES)[number];
+
+/**
+ * The display modes a non-stored payment method can resolve to in the Drop-in.
  */
 type ResolvedDisplayMode = Exclude<PaymentMethodDisplayMode, 'stored'>;
 
-const getCustomDisplayMode = (paymentMethod: PaymentMethod): string | undefined => {
+// Type guard only: keeps CustomDisplayMode typing aligned with runtime validation.
+const isCustomDisplayMode = (displayMode: unknown): displayMode is CustomDisplayMode =>
+    CUSTOM_DISPLAY_MODES.includes(displayMode as CustomDisplayMode);
+
+const getCustomDisplayMode = (paymentMethod: PaymentMethod): CustomDisplayMode | undefined => {
     const { configuration } = paymentMethod;
 
     if (!configuration || !('displayMode' in configuration)) {
@@ -24,11 +35,7 @@ const getCustomDisplayMode = (paymentMethod: PaymentMethod): string | undefined 
 
     const { displayMode } = configuration;
 
-    if (typeof displayMode !== 'string' || !displayMode.trim().length) {
-        return;
-    }
-
-    return displayMode;
+    return isCustomDisplayMode(displayMode) ? displayMode : undefined;
 };
 
 export const hasCustomDisplayMode = (paymentMethods: PaymentMethod[]): boolean =>
