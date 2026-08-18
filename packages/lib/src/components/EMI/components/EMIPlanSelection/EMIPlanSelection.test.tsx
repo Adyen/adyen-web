@@ -225,8 +225,9 @@ describe('EMIPlanSelection', () => {
     });
 
     /**
-     * The tag and the discount of a provider row advertise what the bank has on offer, so they hold
+     * A provider row describes the provider and not the selection, so its tag and its discount hold
      * still while the shopper moves through that bank's plans. Only the plan rows track the selection.
+     * See ADR-0004-emi-plans-data-transformation for the whole rule.
      */
     describe('provider rows', () => {
         test('should keep the tag of the provider while a plan without one is selected', () => {
