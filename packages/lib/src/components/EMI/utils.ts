@@ -3,12 +3,8 @@ import type { EmiIssuer, EmiOffer, EmiPlansResponse } from './types';
 
 /**
  * @internal
- * The issuers of the plans response, as they arrived — same objects, same field names, same order.
- *
- * Nothing converts the response, so this is also where a `plans` prop the merchant got wrong is named
- * while the stack still points at their integration: without it a typo surfaces as a `TypeError` from
- * inside a Preact render, which is a bad way to learn about one.
- *
+ * Returns the issuers, and rejects a malformed `plans` prop here so the merchant hears about
+ * it from their own integration rather than as a `TypeError` from inside a Preact render.
  */
 export const resolvePlanIssuers = (plans?: EmiPlansResponse): EmiIssuer[] => {
     if (typeof plans === 'string') {

@@ -45,14 +45,11 @@ test.describe('EMI - CardEmiWithCustomButton (Custom Pay Button)', () => {
 
         await expect(customButton).toBeVisible();
 
-        // Native pay button from the EMI wrapper should not be rendered (showPayButton: false)
-        // The only button with "pay" text should be the custom one
         const payButtons = emiPage.page.getByRole('button', { name: /pay/i });
         await expect(payButtons).toHaveCount(1);
 
         await customButton.click();
 
-        // Clicking submit on empty card fields triggers validation (fields show error state)
         await expect(emiPage.errorFields.first()).toBeVisible();
     });
 });

@@ -342,7 +342,6 @@ describe('EMI', () => {
 
             expect(emi.card).toBeDefined();
 
-            // Trigger a state change on the child Card to simulate card input
             emi.card?.setState({ data: { cardNumber: '4111111111111111' } });
 
             expect(onChangeMock).toHaveBeenCalled();
@@ -587,10 +586,6 @@ describe('EMI', () => {
             expect(screen.getByLabelText('Provider')).toHaveTextContent(hdfc.issuerName);
         });
 
-        /**
-         * `resolvePlanIssuers` owns the message of each case; these two say only that a merchant who
-         * passes the wrong thing hears about it from their own integration rather than from a render.
-         */
         test('should throw when the plans response was passed unparsed', () => {
             const unparsedPlans = JSON.stringify(emiPlansResponseMock) as unknown as EMIConfiguration['plans'];
 
