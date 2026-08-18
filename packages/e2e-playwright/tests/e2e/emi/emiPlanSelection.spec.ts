@@ -75,6 +75,19 @@ test.describe('EMI - plan selection', () => {
         await expect(planSelection.summaryLabels).toContainText([/Interest charged by bank @7.5%/]);
     });
 
+    // The provider tag advertises what the bank offers, so an untagged plan cannot take it away
+    test('should keep the tag of the provider while one of its untagged plans is selected', async ({ emiPage }) => {
+        const { planSelection } = emiPage;
+
+        await planSelection.selectProvider(icici.name);
+        await expect(planSelection.providerSelect).toContainText(icici.tag);
+
+        await planSelection.selectPlan(icici.secondPlan);
+
+        await expect(planSelection.planSelect).not.toContainText(icici.tag);
+        await expect(planSelection.providerSelect).toContainText(icici.tag);
+    });
+
     test('should show the discount banner only while a discounted plan is selected', async ({ emiPage }) => {
         const { planSelection } = emiPage;
 
