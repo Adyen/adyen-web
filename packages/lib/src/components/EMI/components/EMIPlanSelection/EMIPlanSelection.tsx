@@ -84,8 +84,8 @@ export function EMIPlanSelection({ issuers, selection, onSelectionChange, labell
 
     const getPlanTags = (plan: EmiPlan): TagProps[] | undefined => toTags([plan.type]);
 
-    // The tag advertises what the provider has on offer, so it holds still while the shopper
-    // moves through that provider's plans. Only the plan rows track the selection.
+    // Every tagged plan type the provider offers, so the tag advertises what is available at that bank
+    // instead of tracking the selection. See ADR-0004-emi-plans-data-transformation for that rule.
     const getIssuerTags = (issuer: EmiIssuer): TagProps[] | undefined => toTags(issuer.plans.map(plan => plan.type));
 
     // The locale places the minus sign, the same way it places the currency symbol
@@ -98,7 +98,8 @@ export function EMIPlanSelection({ issuers, selection, onSelectionChange, labell
 
     const getPlanDiscountText = (plan: EmiPlan): string | undefined => getDiscountText(plan.offers);
 
-    // The largest discount the provider has anywhere, for the same reason its tags are provider-wide
+    // The largest offer found anywhere among the provider's plans, provider-wide for the same reason
+    // its tags are. See ADR-0004-emi-plans-data-transformation.
     const getIssuerDiscountText = (issuer: EmiIssuer): string | undefined => getDiscountText(issuer.plans.flatMap(plan => plan.offers ?? []));
 
     const getIssuerIcon = getIssuerImageUrl({ loadingContext }, TxVariants.emi, getImage);
