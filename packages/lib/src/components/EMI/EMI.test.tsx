@@ -466,7 +466,7 @@ describe('EMI', () => {
                 supportedPaymentMethods: [schemePaymentMethod]
             });
 
-            expect(emi.additionalInfo).toMatch(/offers available for credit cards/i);
+            expect(emi.additionalInfo).toMatch(/installment plans on credit cards/i);
         });
 
         test('should not render Phase 2 UI elements', () => {
