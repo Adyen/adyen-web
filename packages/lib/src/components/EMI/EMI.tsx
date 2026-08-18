@@ -16,10 +16,6 @@ class EMI extends UIElement<EMIConfiguration> {
     private readonly fundingSourceUIElements: Partial<Record<EMIFundingSource, EMIFundingSourceElement>> = {};
     private activeFundingSource: EMIFundingSource | null = null;
 
-    /**
-     * The issuers of the plans response, as they arrived. Read once here rather than per render, so
-     * `isAvailable()` always answers from the same list the view renders.
-     */
     private readonly issuers: EmiIssuer[];
 
     constructor(checkout: ICore, props?: EMIConfiguration) {

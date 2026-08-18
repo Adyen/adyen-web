@@ -21,19 +21,10 @@ export interface SupportedPaymentMethod {
     brands?: string[];
 }
 
-/** Plan type, as the plans response reports it. */
 export type EmiPlanTypeKey = 'standard' | 'noCost' | 'lowCost';
 
-/** Funding source of an issuer, as the plans response reports it. */
 export type EmiIssuerFundingSource = 'credit' | 'debit';
 
-/**
- * Raw shape of the Checkout API `POST /paymentMethods/emi/plans` response (v72+). The view and the
- * payment request read it as it arrives, so what the contract guarantees is required here and only
- * what the contract really leaves out is optional. `type` and `fundingSource` are closed sets, and a
- * value added to either one is a new SDK version rather than a case to handle at runtime: the casing
- * tables of `constants.ts` are what has to learn it.
- */
 export interface EmiTransactionAmounts {
     totalPayableAmount: PaymentAmount;
     monthlyPayableAmount: PaymentAmount;
@@ -78,7 +69,6 @@ export interface EmiPlansResponse {
     issuers: EmiIssuer[];
 }
 
-/** The provider and plan the payment request is built from, as the lookup reported them. */
 export interface EmiSelection {
     issuer: EmiIssuer;
     plan: EmiPlan;

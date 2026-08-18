@@ -1,10 +1,7 @@
 import { Locator, Page } from '@playwright/test';
 import { Base } from './base';
 
-/**
- * Plan selection and plan summary UI of the EMI component. Kept out of the EMI model so the
- * locators stay grouped with the section they belong to, and reached through `EMI.planSelection`.
- */
+/** Plan selection and plan summary UI of the EMI component, reached through `EMI.planSelection`. */
 class EMIPlanSelection extends Base {
     readonly providerSelect: Locator;
     readonly planSelect: Locator;
@@ -23,10 +20,6 @@ class EMIPlanSelection extends Base {
         this.summaryValues = this.page.getByRole('definition');
     }
 
-    /**
-     * A Select only exposes its options while the list is open, so the list is opened first and
-     * scoped to the select that owns it through `aria-controls`.
-     */
     async openProviderList(): Promise<Locator> {
         return this.openList(this.providerSelect);
     }
