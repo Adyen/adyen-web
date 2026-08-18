@@ -316,6 +316,23 @@ describe('EMI', () => {
             showValidationSpy.mockRestore();
         });
 
+        /**
+         * The plan summary already itemises the transaction amount, the discount and the interest,
+         * so repeating the amount on the button only invites the shopper to compare figures.
+         */
+        test('native pay button omits the amount', () => {
+            const coreWithEmi = createCoreWithEmi(true);
+            const emi = new EMI(coreWithEmi, {
+                ...baseProps,
+                amount: { value: 100000, currency: 'INR' },
+                supportedPaymentMethods: [schemePaymentMethod]
+            });
+
+            render(emi.render());
+
+            expect(screen.getByRole('button', { name: 'Pay' })).toBeInTheDocument();
+        });
+
         test('native pay button is not rendered when showPayButton is false', () => {
             const coreWithEmi = createCoreWithEmi(true);
             const emi = new EMI(coreWithEmi, {
