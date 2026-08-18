@@ -1,6 +1,6 @@
 import type { UIElementProps } from '../internal/UIElement/types';
 import type CardElement from '../Card';
-import type { CardConfiguration, CardElementData } from '../Card/types';
+import type { CardConfiguration } from '../Card/types';
 import type { PaymentAmount } from '../../types/global-types';
 import { TxVariants } from '../tx-variants';
 
@@ -9,11 +9,15 @@ export enum EMIFundingSource {
 }
 
 /**
- * Payment elements EMI can delegate to. Each one must expose a public 'formatData()'
+ * The concrete element class EMI owns per funding source. Typing the children concretely, rather than
+ * as the abstract `UIElement`, is what lets EMI merge a child's payment data: `formatData()` is public
+ * on the concrete classes and `protected` on the base. Extend this map when a new funding source ships.
  */
-export type EMIFundingSourceElement = CardElement;
+export interface EMIFundingSourceElements {
+    [EMIFundingSource.CARD]: CardElement;
+}
 
-export type EMIFundingSourceData = CardElementData;
+export type EMIFundingSourceElement = EMIFundingSourceElements[EMIFundingSource];
 
 export interface SupportedPaymentMethod {
     type: string;
@@ -32,7 +36,7 @@ export interface EmiTransactionAmounts {
 }
 
 export interface EmiOffer {
-    /** Sent on the payment request as one of `appliedOfferIds`. */
+    /** Sent on the payment request as `appliedOfferIds` when this is the offer the shopper was shown. */
     offerId: string;
     type?: string;
     amount: PaymentAmount;
@@ -45,11 +49,6 @@ export interface EmiPlan {
     /** Basis points. 1599 = 15.99% p.a. */
     interestRateBps: number;
     transactionAmounts: EmiTransactionAmounts;
-    /**
-     * Every discount the payment request can apply to this plan, in backend order. `appliedOfferIds`
-     * takes a list, so all of them ride on the payload while the design shows only the largest, which
-     * `selectDisplayOffer` picks.
-     */
     offers?: EmiOffer[];
 }
 
@@ -72,6 +71,19 @@ export interface EmiPlansResponse {
 export interface EmiSelection {
     issuer: EmiIssuer;
     plan: EmiPlan;
+}
+
+export type EmiPlanPayloadType = 'STANDARD' | 'LOW_COST' | 'NO_COST';
+
+export type EmiPlanPayloadFundingSource = 'CREDIT' | 'DEBIT';
+
+export interface EmiPlanPayload {
+    tenureMonths: number;
+    issuerName: string;
+    fundingSource: EmiPlanPayloadFundingSource;
+    planType: EmiPlanPayloadType;
+    interestRateBps: number;
+    appliedOfferIds?: string[];
 }
 
 type EMICardOverrides = 'showPayButton' | '_disableClickToPay';
