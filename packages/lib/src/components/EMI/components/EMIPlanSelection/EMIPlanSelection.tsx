@@ -8,7 +8,7 @@ import getIssuerImageUrl from '../../../../utils/get-issuer-image';
 import { TxVariants } from '../../../tx-variants';
 import { getLocalisedPercentageFromBasisPoints } from '../../../../utils/percentage-util';
 import { selectDisplayOffer } from '../../utils';
-import type { EmiIssuer, EmiPlan, EmiPlanTypeKey, EmiSelection } from '../../types';
+import type { EmiIssuer, EmiOffer, EmiPlan, EmiPlanTypeKey, EmiSelection } from '../../types';
 import type { PaymentAmount } from '../../../../types/global-types';
 import type { SelectItem, SelectTargetObject } from '../../../internal/FormFields/Select/types';
 import type { TagProps } from '../../../internal/Tag/types';
@@ -22,10 +22,10 @@ interface EMIPlanSelectionProps {
     describedBy?: string;
 }
 
-const PLAN_TAG: Partial<Record<EmiPlanTypeKey, { translationKey: string; variant: TagVariant }>> = {
-    noCost: { translationKey: 'emi.noCost', variant: TagVariant.SUCCESS },
-    lowCost: { translationKey: 'emi.lowCost', variant: TagVariant.INFO }
-};
+const PLAN_TAGS: { type: EmiPlanTypeKey; translationKey: string; variant: TagVariant }[] = [
+    { type: 'noCost', translationKey: 'emi.noCost', variant: TagVariant.SUCCESS },
+    { type: 'lowCost', translationKey: 'emi.lowCost', variant: TagVariant.INFO }
+];
 
 // See ADR-0004-emi-plans-data-transformation for the select-only identity and uniqueness rules.
 const toItemId = (prefix: string, segments: (string | number)[]): string =>
@@ -73,34 +73,43 @@ export function EMIPlanSelection({ issuers, selection, onSelectionChange, labell
         return `${label} | @${interestRate} ${i18n.get('emi.perAnnum')}`;
     };
 
-    const getPlanTags = (plan: EmiPlan): TagProps[] | undefined => {
-        const tag = PLAN_TAG[plan.type];
-        return tag ? [{ label: i18n.get(tag.translationKey), variant: tag.variant }] : undefined;
+    const toTags = (types: EmiPlanTypeKey[]): TagProps[] | undefined => {
+        const tags = PLAN_TAGS.filter(({ type }) => types.includes(type)).map(({ translationKey, variant }) => ({
+            label: i18n.get(translationKey),
+            variant
+        }));
+
+        return tags.length ? tags : undefined;
     };
+
+    const getPlanTags = (plan: EmiPlan): TagProps[] | undefined => toTags([plan.type]);
+
+    // The tag advertises what the provider has on offer, so it holds still while the shopper
+    // moves through that provider's plans. Only the plan rows track the selection.
+    const getIssuerTags = (issuer: EmiIssuer): TagProps[] | undefined => toTags(issuer.plans.map(plan => plan.type));
 
     // The locale places the minus sign, the same way it places the currency symbol
     const formatDiscount = ({ value, currency }: PaymentAmount): string => i18n.amount(-value, currency);
 
-    const getPlanDiscountText = (plan: EmiPlan): string | undefined => {
-        const offer = selectDisplayOffer(plan.offers);
+    const getDiscountText = (offers?: EmiOffer[]): string | undefined => {
+        const offer = selectDisplayOffer(offers);
         return offer ? `${formatDiscount(offer.amount)} ${i18n.get('emi.discountAvailable')}` : undefined;
     };
 
+    const getPlanDiscountText = (plan: EmiPlan): string | undefined => getDiscountText(plan.offers);
+
+    // The largest discount the provider has anywhere, for the same reason its tags are provider-wide
+    const getIssuerDiscountText = (issuer: EmiIssuer): string | undefined => getDiscountText(issuer.plans.flatMap(plan => plan.offers ?? []));
+
     const getIssuerIcon = getIssuerImageUrl({ loadingContext }, TxVariants.emi, getImage);
 
-    const issuerItems: SelectItem[] = issuers.map(issuer => {
-        // The collapsed row previews the selected plan; every other row previews the plan that
-        // selecting that issuer would activate, so the preview always matches the outcome
-        const previewPlan = issuer === selectedIssuer ? selectedPlan : issuer.plans[0];
-
-        return {
-            id: getIssuerId(issuer),
-            name: issuer.issuerName,
-            icon: getIssuerIcon(issuer.issuerCode.toLowerCase()),
-            tags: getPlanTags(previewPlan),
-            secondaryText: getPlanDiscountText(previewPlan)
-        };
-    });
+    const issuerItems: SelectItem[] = issuers.map(issuer => ({
+        id: getIssuerId(issuer),
+        name: issuer.issuerName,
+        icon: getIssuerIcon(issuer.issuerCode.toLowerCase()),
+        tags: getIssuerTags(issuer),
+        secondaryText: getIssuerDiscountText(issuer)
+    }));
 
     const planItems: SelectItem[] = selectedIssuer.plans.map(plan => ({
         id: getPlanId(selectedIssuer, plan),

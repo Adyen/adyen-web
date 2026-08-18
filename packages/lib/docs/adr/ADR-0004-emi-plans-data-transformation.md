@@ -63,7 +63,9 @@ The response carries _no id_, and _no flag for which plan or which offer to show
 
 Amounts below are minor units, rendered `en-US`.
 
-**A plan has to be selected before the shopper does anything.** The summary is part of the first paint, so the component preselects the first issuer and that issuer's first plan. There is no empty state and no "choose a plan" placeholder. Picking a provider selects that provider's first plan, and in the open list each provider row previews the plan that picking it would select, so the preview matches the outcome.
+**A plan has to be selected before the shopper does anything.** The summary is part of the first paint, so the component preselects the first issuer and that issuer's first plan. There is no empty state and no "choose a plan" placeholder. Picking a provider selects that provider's first plan.
+
+**A provider row describes the provider, not the selection.** Its tags and its discount are read from _all_ of that issuer's plans: every tagged plan type the issuer offers, ordered `noCost` then `lowCost`, and the largest offer found anywhere among its plans. They advertise what is available at that bank, so they hold still while the shopper moves through the bank's plans — selecting a `standard` plan at a bank that also offers a `lowCost` one leaves the `Low cost` tag on the provider row. Only the plan rows, the discount banner and the summary track the selection.
 
 **Selection needs a key, and the response has none.** Two `<Select>` menus resolve a choice by id, and `Select` also puts that id in the DOM, as `listItem-<id>`. The key is composed of the fields that identify the payment itself, each unique within one response:
 

@@ -10,7 +10,7 @@ import type { EmiIssuer, EmiSelection } from '../../types';
 const core = setupCoreMock();
 const i18n = core.modules.i18n;
 
-const [hdfc, icici] = emiPlansResponseMock.issuers;
+const [hdfc, icici, , kotak] = emiPlansResponseMock.issuers;
 
 /**
  * One issuer offering a plan type at a tenure another of its plans also carries: the pair
@@ -26,6 +26,15 @@ const issuerWithSimilarPlans: EmiIssuer = {
         // standard, 6 months
         hdfc.plans[1]
     ]
+};
+
+/**
+ * One issuer advertising both tagged plan types. Its untagged plan comes first, so neither the
+ * preselected plan nor the plan order can be mistaken for the source of the provider tags.
+ */
+const issuerWithEveryPlanType: EmiIssuer = {
+    ...hdfc,
+    plans: [hdfc.plans[1], icici.plans[0], hdfc.plans[0]]
 };
 
 /**
@@ -67,6 +76,17 @@ const getOptionValues = (list: HTMLElement) =>
 
 const getProviderOptionValues = () => getOptionValues(screen.getAllByRole('listbox')[0]);
 const getPlanOptionValues = () => getOptionValues(screen.getAllByRole('listbox')[1]);
+
+// Anchored, so only the tag itself matches and not every row that contains one
+const TAG_LABEL = /^(No cost|Low cost)$/;
+
+const getTagsWithin = (element: HTMLElement) =>
+    within(element)
+        .getAllByText(TAG_LABEL)
+        .map(tag => tag.textContent);
+
+const getProviderOption = (issuerName: string) =>
+    within(screen.getAllByRole('listbox')[0]).getByRole('option', { name: new RegExp(issuerName, 'i') });
 
 describe('EMIPlanSelection', () => {
     const user = userEvent.setup();
@@ -198,15 +218,47 @@ describe('EMIPlanSelection', () => {
         expect(standardPlan).toContain('@15.5% p.a');
     });
 
-    test('should show the tag of the selected plan on the collapsed provider row', () => {
-        renderPlanSelection([hdfc]);
-
-        expect(getProviderSelect()).toHaveTextContent('No cost');
-    });
-
     test('should offer the discount of a plan as supporting text', () => {
         renderPlanSelection([hdfc]);
 
         expect(getPlanOptions()[0]).toContain('-₹4,000.00 discount available');
+    });
+
+    /**
+     * The tag and the discount of a provider row advertise what the bank has on offer, so they hold
+     * still while the shopper moves through that bank's plans. Only the plan rows track the selection.
+     */
+    describe('provider rows', () => {
+        test('should keep the tag of the provider while a plan without one is selected', () => {
+            renderPlanSelection([hdfc], { issuer: hdfc, plan: hdfc.plans[1] });
+
+            expect(getTagsWithin(getProviderSelect())).toEqual(['No cost']);
+        });
+
+        test('should tag a provider with every plan type it offers, no cost first', () => {
+            renderPlanSelection([issuerWithEveryPlanType]);
+
+            expect(getTagsWithin(getProviderSelect())).toEqual(['No cost', 'Low cost']);
+            expect(getTagsWithin(getProviderOption(issuerWithEveryPlanType.issuerName))).toEqual(['No cost', 'Low cost']);
+        });
+
+        test('should leave a provider offering only standard plans untagged', () => {
+            renderPlanSelection([kotak]);
+
+            expect(within(getProviderSelect()).queryByText(TAG_LABEL)).not.toBeInTheDocument();
+            expect(within(getProviderOption(kotak.issuerName)).queryByText(TAG_LABEL)).not.toBeInTheDocument();
+        });
+
+        test('should offer the largest discount of the provider as supporting text, whichever plan is selected', () => {
+            renderPlanSelection([hdfc], { issuer: hdfc, plan: hdfc.plans[1] });
+
+            expect(getProviderOption(hdfc.issuerName)).toHaveTextContent('-₹4,000.00 discount available');
+        });
+
+        test('should offer no supporting text for a provider without a discount', () => {
+            renderPlanSelection([kotak]);
+
+            expect(getProviderOption(kotak.issuerName)).not.toHaveTextContent('discount available');
+        });
     });
 });
