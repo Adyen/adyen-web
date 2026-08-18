@@ -18,9 +18,7 @@ interface EMIPlanSelectionProps {
     issuers: EmiIssuer[];
     selection: EmiSelection;
     onSelectionChange(selection: EmiSelection): void;
-    /** Id of the heading naming this section. */
     labelledBy?: string;
-    /** Id of the copy describing this section. */
     describedBy?: string;
 }
 
@@ -49,7 +47,6 @@ export function EMIPlanSelection({ issuers, selection, onSelectionChange, labell
 
     // Switching provider activates that provider's first plan, so the two selects stay consistent
     const selectIssuer = (id: string) => {
-        // Unique per response, so the first match is the only one
         const issuer = issuers.find(candidate => getIssuerId(candidate) === id);
         if (!issuer) return;
 

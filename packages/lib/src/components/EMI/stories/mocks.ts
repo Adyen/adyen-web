@@ -1,14 +1,11 @@
 import type { EmiPlansResponse } from '../types';
 
-/**
- * Amounts are in minor units and mirror the design screenshots (₹1,54,999.00 checkout amount).
- */
+/** Minor units, mirroring the design screenshots (₹1,54,999.00 checkout amount). */
 export const EMI_FIXTURE_CHECKOUT_AMOUNT = { value: 15499900, currency: 'INR' };
 
 /**
- * Raw `POST /paymentMethods/emi/plans` response, as a merchant would hand it over, and the single
- * fixture behind the Storybook handler, the Playwright route mock and the unit tests. Everything in it
- * is selectable and payable, exactly as the contract promises.
+ * Raw `POST /paymentMethods/emi/plans` response, and the single fixture behind the Storybook handler,
+ * the Playwright route mock and the unit tests.
  */
 export const emiPlansResponseMock: EmiPlansResponse = {
     issuers: [
@@ -22,9 +19,9 @@ export const emiPlansResponseMock: EmiPlansResponse = {
                     tenureMonths: 3,
                     interestRateBps: 1550,
                     transactionAmounts: {
-                        monthlyPayableAmount: { value: 5033300, currency: 'INR' },
-                        totalPayableAmount: { value: 15099900, currency: 'INR' },
-                        totalInterestAmount: { value: 0, currency: 'INR' }
+                        monthlyPayableAmount: { value: 5166633, currency: 'INR' },
+                        totalPayableAmount: { value: 15499900, currency: 'INR' },
+                        totalInterestAmount: { value: 400000, currency: 'INR' }
                     },
                     // Both offers ride on the payload; only the larger one is shown
                     offers: [
@@ -54,11 +51,11 @@ export const emiPlansResponseMock: EmiPlansResponse = {
                     tenureMonths: 3,
                     interestRateBps: 750,
                     transactionAmounts: {
-                        monthlyPayableAmount: { value: 5106667, currency: 'INR' },
-                        totalPayableAmount: { value: 15320000, currency: 'INR' },
+                        monthlyPayableAmount: { value: 5236650, currency: 'INR' },
+                        totalPayableAmount: { value: 15709950, currency: 'INR' },
                         totalInterestAmount: { value: 420100, currency: 'INR' }
                     },
-                    offers: [{ offerId: 'offer-icici-lowcost', type: 'DISCOUNT', amount: { value: 600000, currency: 'INR' } }]
+                    offers: [{ offerId: 'offer-icici-lowcost', type: 'DISCOUNT', amount: { value: 210050, currency: 'INR' } }]
                 },
                 {
                     type: 'standard',
