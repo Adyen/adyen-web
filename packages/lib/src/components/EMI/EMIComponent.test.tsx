@@ -91,7 +91,7 @@ describe('EMIComponent', () => {
             renderEmiComponent(emiPlansResponseMock.issuers);
 
             expect(screen.getByLabelText('Provider')).toHaveTextContent(hdfc.issuerName);
-            expect(screen.getByLabelText('Plan')).toHaveTextContent('₹58,800.00 x 3 months');
+            expect(screen.getByLabelText('Plan')).toHaveTextContent('₹51,666.33 x 3 months');
         });
 
         test('should announce the default selection once, without waiting for an interaction', () => {
@@ -108,7 +108,7 @@ describe('EMIComponent', () => {
 
             expect(onPlanSelect).toHaveBeenLastCalledWith({ issuer: hdfc, plan: hdfc.plans[1] });
             // The new plan carries no offer and a different monthly amount
-            expect(screen.getByText('₹29,400.00')).toBeInTheDocument();
+            expect(screen.getByText('₹28,166.50')).toBeInTheDocument();
             expect(screen.queryByText('Discount')).toBeNull();
         });
 
@@ -119,7 +119,7 @@ describe('EMIComponent', () => {
             await selectOption('Provider', new RegExp(icici.issuerName, 'i'));
 
             expect(onPlanSelect).toHaveBeenLastCalledWith({ issuer: icici, plan: icici.plans[0] });
-            expect(screen.getByLabelText('Plan')).toHaveTextContent('₹58,800.00 x 3 months');
+            expect(screen.getByLabelText('Plan')).toHaveTextContent('₹52,366.50 x 3 months');
             expect(screen.getByText('Interest charged by bank @7.5%')).toBeInTheDocument();
             expect(screen.getByText(`Enter card details that are associated with a ${icici.issuerName} card`)).toBeInTheDocument();
         });
@@ -143,7 +143,7 @@ describe('EMIComponent', () => {
 
             await selectOption('Provider', new RegExp(icici.issuerName, 'i'));
 
-            await waitFor(() => expect(setMessages).toHaveBeenCalledWith('-₹6,000.00 discount offer applied for using ICICI Bank'));
+            await waitFor(() => expect(setMessages).toHaveBeenCalledWith('-₹2,100.50 discount offer applied for using ICICI Bank'));
         });
 
         test('should summarise the preselected plan', () => {

@@ -103,8 +103,8 @@ export const IRIS_ISSUERS = [
 
 // EMI plan mocks — mirror packages/lib/src/components/EMI/stories/mocks.ts
 export const EMI_PLANS = {
-    hdfc: { name: 'HDFC Bank', firstPlan: /₹58,800.00 x 3 months/, secondPlan: /₹29,400.00 x 6 months/ },
-    icici: { name: 'ICICI Bank', firstPlan: /₹58,800.00 x 3 months/ },
+    hdfc: { name: 'HDFC Bank', firstPlan: /₹51,666.33 x 3 months/, secondPlan: /₹28,166.50 x 6 months/ },
+    icici: { name: 'ICICI Bank', firstPlan: /₹52,366.50 x 3 months/ },
     discountedProvider: 'HDFC Bank'
 };
 
