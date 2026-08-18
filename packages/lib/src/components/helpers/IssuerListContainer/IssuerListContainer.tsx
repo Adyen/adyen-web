@@ -101,9 +101,7 @@ class IssuerListContainer<TProps extends IssuerListConfiguration = IssuerListCon
                 {...this.props}
                 onSubmit={this.submit}
                 payButton={this.payButton}
-                ref={ref => {
-                    this.componentRef = ref;
-                }}
+                setComponentRef={this.setComponentRef}
             />
         );
     }

@@ -1,11 +1,12 @@
 import { h } from 'preact';
-import { useState } from 'preact/hooks';
+import { useEffect, useRef, useState } from 'preact/hooks';
 import { useCoreContext } from '../../../../core/Context/CoreProvider';
 import { MBWayInputProps } from './types';
 import './MBWayInput.scss';
 import PhoneInputForm from '../../../internal/PhoneInput';
 import LoadingWrapper from '../../../internal/LoadingWrapper';
 import usePhonePrefixes from '../../../internal/PhoneInput/usePhonePrefixes';
+import { ComponentMethodsRef } from '../../../types';
 
 function MBWayInput(props: Readonly<MBWayInputProps>) {
     const { i18n, loadingContext } = useCoreContext();
@@ -15,6 +16,14 @@ function MBWayInput(props: Readonly<MBWayInputProps>) {
     const [status, setStatus] = useState<string>('ready');
 
     this.setStatus = setStatus;
+
+    const mbWayInputRef = useRef<ComponentMethodsRef>({
+        setStatus: setStatus
+    });
+
+    useEffect(() => {
+        props.setComponentRef(mbWayInputRef.current);
+    }, [props.setComponentRef]);
 
     const { loadingStatus: prefixLoadingStatus, phonePrefixes } = usePhonePrefixes({ allowedCountries, loadingContext, handleError: props.onError });
 

@@ -1,9 +1,10 @@
-import { Order } from '../../../types/global-types';
+import { Order, PaymentData } from '../../../types/global-types';
 import { SRPanel } from '../../../core/Errors/SRPanel';
 import { Resources } from '../../../core/Context/Resources';
 import RiskElement from '../../../core/RiskModule';
 import { ComponentChild } from 'preact';
 import type { IAnalytics } from '../../../core/Analytics/Analytics';
+import type { OnChangeData } from '../../../types';
 
 export interface BaseElementProps {
     order?: Order;
@@ -19,15 +20,17 @@ export interface BaseElementProps {
     isDropin?: boolean;
 }
 
-export interface IBaseElement {
-    data: object;
-    state: any;
-    props: any;
+export type BaseElementState = { order?: Order } & Pick<OnChangeData, 'valid' | 'errors'> & Record<string, unknown>;
+
+export interface IBaseElement<P extends BaseElementProps = BaseElementProps, S extends BaseElementState = BaseElementState> {
+    data: Partial<PaymentData>;
+    state: S;
+    props: P;
     _id: string;
-    _component: any;
+    _component: ComponentChild;
     render(): ComponentChild | Error;
     mount(domNode: HTMLElement | string): IBaseElement;
-    update(props): IBaseElement;
+    update(props: Partial<P>): IBaseElement;
     unmount(): IBaseElement;
     remove(): void;
     activate(): void;

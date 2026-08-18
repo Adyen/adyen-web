@@ -34,22 +34,15 @@ class BacsElement extends UIElement<VoucherConfiguration> {
     protected override componentToRender(): h.JSX.Element {
         return this.props.url ? (
             <BacsResult
-                ref={ref => {
-                    this.componentRef = ref;
-                }}
                 icon={this.icon}
                 url={this.props.url}
                 paymentMethodType={this.props.paymentMethodType}
                 onActionHandled={this.onActionHandled}
-                // originalAction={this.props.originalAction}
             />
         ) : (
             <BacsInput
-                // @ts-ignore ref is internal from the Component
-                ref={ref => {
-                    this.componentRef = ref;
-                }}
                 {...this.props}
+                setComponentRef={this.setComponentRef}
                 onChange={this.setState}
                 payButton={this.payButton}
                 onSubmit={this.submit}
