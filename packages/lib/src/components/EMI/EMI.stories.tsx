@@ -14,18 +14,13 @@ type EMIStory = StoryConfiguration<EMIConfiguration>;
 
 const meta: MetaConfiguration<EMIConfiguration> = {
     title: 'Components/EMI',
-    // The automated visual build runs with MSW disabled, so these stories would snapshot an empty component
     tags: ['no-automated-visual-test'],
-    // The plans come from the merchant backend, which MSW stands in for. Playwright mocks the same
-    // endpoint itself, because the E2E Storybook build runs with MSW disabled.
     parameters: { msw: { handlers: emiPlansHandlers } }
 };
 
 /**
- * The plans exist before the component does, so they are fetched around it rather than by it.
- * `Checkout` resolves the core asynchronously and knows nothing about EMI, hence the two nested
- * render props. Advanced flow throughout: the plans lookup is merchant-authenticated, so sessions
- * integrations cannot offer plan selection until the sessions endpoint ships.
+ * Advanced flow throughout: the plans lookup is merchant-authenticated, so sessions integrations
+ * cannot offer plan selection until the sessions endpoint ships.
  */
 const withPlans = (
     { componentConfiguration, ...checkoutConfig }: PaymentMethodStoryProps<EMIConfiguration>,

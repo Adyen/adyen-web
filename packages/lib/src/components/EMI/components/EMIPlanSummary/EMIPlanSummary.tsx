@@ -9,7 +9,6 @@ import styles from './EMIPlanSummary.module.scss';
 
 interface EMIPlanSummaryProps {
     plan: EmiPlan;
-    /** Id of the heading naming this section. */
     labelledBy?: string;
 }
 
@@ -45,9 +44,8 @@ export function EMIPlanSummary({ plan, labelledBy }: Readonly<EMIPlanSummaryProp
     ];
 
     /**
-     * The plan always carries its own amounts, but the checkout amount is the merchant's: it is absent
-     * when none was configured, and `null` reaches here in that case, which would throw on
-     * destructuring. A plan without an offer has no discount row either.
+     * The checkout amount is the merchant's, so `null` reaches here when none was configured, and a
+     * plan without an offer has no discount row.
      */
     const rows = candidateRows.filter((row): row is SummaryRow => row.amount != null);
 
