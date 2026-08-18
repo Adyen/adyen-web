@@ -1,4 +1,5 @@
 import { render, screen, within } from '@testing-library/preact';
+import userEvent from '@testing-library/user-event';
 import EMI from './EMI';
 import CardElement from '../Card';
 import { TxVariants } from '../tx-variants';
@@ -7,8 +8,8 @@ import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 import PaymentMethods from '../../core/ProcessResponse/PaymentMethods';
 import { AdyenCheckout, ThreeDS2Challenge, ThreeDS2DeviceFingerprint } from '../../index';
 import { emiPlansEmptyResponseMock, emiPlansResponseMock } from './stories/mocks';
-import type { PaymentActionsType } from '../../types/global-types';
-import type { EMIConfiguration } from './types';
+import type { PaymentActionsType, PaymentData } from '../../types/global-types';
+import type { EMIConfiguration, EmiPlanPayload } from './types';
 
 const core = setupCoreMock();
 
@@ -71,7 +72,8 @@ describe('EMI', () => {
             expect(emi.formatData()).toEqual({});
         });
 
-        test('should not include emiPlan in formatData', () => {
+        /** The plan is preselected by the first render, so an unrendered component has no selection yet. */
+        test('should not include emiPlan while no plan has been selected', () => {
             const coreWithEmi = createCoreWithEmi(true);
             const emi = new EMI(coreWithEmi, {
                 ...baseProps,
@@ -535,7 +537,7 @@ describe('EMI', () => {
             fetchSpy.mockRestore();
         });
 
-        test('should not include emiPlan in formatData once a plan is selected', () => {
+        test('should include the emiPlan of the preselected plan in formatData', () => {
             const coreWithEmi = createCoreWithEmi(true);
             const emi = new EMI(coreWithEmi, {
                 ...baseProps,
@@ -544,7 +546,90 @@ describe('EMI', () => {
 
             render(emi.render());
 
+            expect(emi.formatData()).toHaveProperty('emiPlan', {
+                tenureMonths: 3,
+                issuerName: 'HDFC',
+                fundingSource: 'CREDIT',
+                planType: 'NO_COST',
+                interestRateBps: 1550,
+                appliedOfferIds: ['offer-hdfc-nocost']
+            });
+        });
+    });
+
+    describe('payment data', () => {
+        const user = userEvent.setup();
+
+        const mountEmi = (props: Partial<EMIConfiguration> = {}) => {
+            const coreWithEmi = createCoreWithEmi(true);
+            const emi = new EMI(coreWithEmi, { ...baseProps, supportedPaymentMethods: [schemePaymentMethod], ...props });
+
+            render(emi.render());
+
+            return emi;
+        };
+
+        /** `emiPlan` is a sibling of `paymentMethod`, the position Card gives `installments`. */
+        test('should place emiPlan next to paymentMethod, never inside it', () => {
+            const data = mountEmi().formatData() as Record<string, Record<string, unknown>>;
+
+            expect(data.emiPlan).toBeDefined();
+            expect(data.paymentMethod).not.toHaveProperty('emiPlan');
+        });
+
+        test('should leave the funding source data of the child untouched', () => {
+            const data = mountEmi().formatData() as Record<string, Record<string, unknown>>;
+
+            expect(data.paymentMethod).toHaveProperty('type', TxVariants.scheme);
+            expect(data).toHaveProperty('browserInfo');
+        });
+
+        test('should send no emiPlan when no plans were configured', () => {
+            const emi = mountEmi({ plans: undefined, session: core.session });
+
             expect(emi.formatData()).not.toHaveProperty('emiPlan');
+        });
+
+        test('should send the plan the shopper switched to', async () => {
+            const emi = mountEmi();
+
+            await user.click(screen.getByLabelText('Plan'));
+            await user.click(within(screen.getAllByRole('listbox')[1]).getByRole('option', { name: /6 months/i }));
+
+            expect(emi.formatData()).toHaveProperty('emiPlan', {
+                tenureMonths: 6,
+                issuerName: 'HDFC',
+                fundingSource: 'CREDIT',
+                planType: 'STANDARD',
+                interestRateBps: 1550
+            });
+        });
+
+        test('should send the provider the shopper switched to, with that provider first plan', async () => {
+            const emi = mountEmi();
+            const [, icici] = emiPlansResponseMock.issuers;
+
+            await user.click(screen.getByLabelText('Provider'));
+            await user.click(within(screen.getAllByRole('listbox')[0]).getByRole('option', { name: new RegExp(icici.issuerName, 'i') }));
+
+            expect(emi.formatData()).toHaveProperty('emiPlan', {
+                tenureMonths: 3,
+                issuerName: 'ICICI',
+                fundingSource: 'CREDIT',
+                planType: 'LOW_COST',
+                interestRateBps: 750,
+                appliedOfferIds: ['offer-icici-lowcost']
+            });
+        });
+
+        /** The `data` getter is what both submission paths read, so the payload has to survive it. */
+        test('should expose emiPlan on the data getter, alongside the wrapping it adds', () => {
+            const data: PaymentData & { emiPlan?: EmiPlanPayload } = mountEmi().data;
+
+            expect(data.emiPlan).toEqual(expect.objectContaining({ issuerName: 'HDFC', planType: 'NO_COST' }));
+            expect(data.paymentMethod).toHaveProperty('type', TxVariants.scheme);
+            expect(data.paymentMethod).toHaveProperty('checkoutAttemptId');
+            expect(data).toHaveProperty('clientStateDataIndicator', true);
         });
     });
 

@@ -23,7 +23,7 @@ export const emiPlansResponseMock: EmiPlansResponse = {
                         totalPayableAmount: { value: 15499900, currency: 'INR' },
                         totalInterestAmount: { value: 400000, currency: 'INR' }
                     },
-                    // Both offers ride on the payload; only the larger one is shown
+                    // The larger offer is the one shown, and the only one the payment request applies
                     offers: [
                         { offerId: 'offer-hdfc-cashback', type: 'CASHBACK', amount: { value: 250000, currency: 'INR' }, description: 'Cashback' },
                         { offerId: 'offer-hdfc-nocost', type: 'DISCOUNT', amount: { value: 400000, currency: 'INR' }, description: 'No cost EMI' }
