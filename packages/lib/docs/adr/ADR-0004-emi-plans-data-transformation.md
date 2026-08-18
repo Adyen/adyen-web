@@ -76,7 +76,7 @@ Every segment is `encodeURIComponent`-ed before the segments are joined on `:`, 
 
 The key is a select adapter and nothing else. The handlers trade it back for the `EmiIssuer` and `EmiPlan` the lookup returned, so the selection, the callbacks and `/payments` only ever see response objects. If the uniqueness above stops holding, the two helpers in `EMIPlanSelection.tsx` and this section change together.
 
-**One discount is shown, and choosing which one is a display decision.** A plan can carry several offers. The design shows a single discount, so the largest wins, and ties keep the backend's order. This is not a payload decision: `appliedOfferIds` takes a list and sends all of them. Stacking discounts on screen is a possible product change later, and it would change only `selectDisplayOffer`.
+**One discount is shown, and the same one is charged.** A plan can carry several offers. The design shows a single discount, so the largest wins, and ties keep the backend's order. `appliedOfferIds` takes a list, but we send only that one id, so the shopper is charged the discount they were quoted rather than a total no screen ever showed. `selectDisplayOffer` is the single decision point: display and payload both read it, and neither can drift from the other. Stacking discounts is a possible product change later, and it would change that one function, the summary and the payload together.
 
 ```ts
 // Provider select
@@ -112,7 +112,7 @@ A no-cost plan hides the rate in its label but keeps the interest row, because t
         "fundingSource": "CREDIT",
         "planType": "NO_COST",
         "interestRateBps": 1550,
-        "appliedOfferIds": ["offer-hdfc-cashback", "offer-hdfc-nocost"]
+        "appliedOfferIds": ["offer-hdfc-nocost"]
     },
     "browserInfo": { "...": "..." },
     "clientStateDataIndicator": true
@@ -121,9 +121,11 @@ A no-cost plan hides the rate in its label but keeps the interest row, because t
 
 - `plan.type` is cast: `standard` → `STANDARD`, `noCost` → `NO_COST`, `lowCost` → `LOW_COST`.
 - `issuer.fundingSource` is cast: `credit` → `CREDIT`, `debit` → `DEBIT`.
-- `issuerName` is `issuerCode` as it arrived, because the backend compares it to the card BIN by exact string match. Never a lowercased copy of it.
+- `issuerName` is `issuerCode` as it arrived, because the backend compares it to the card BIN by exact string match. Never a lowercased copy of it, and never the `issuerName` the provider row displays: `HDFC Bank` would fail where `HDFC` succeeds.
+- `tenureMonths` and `interestRateBps` are echoed from the selected plan, as JSON numbers.
+- `appliedOfferIds` carries the single displayed offer, and is omitted rather than sent empty when the plan carries none.
 
-Both casing tables live in `constants.ts`, as `PLAN_TYPE` and `ISSUER_FUNDING_SOURCE`.
+`buildEmiPlanPayload` in `utils.ts` builds the object, and `EMI.formatData()` merges it in only once a plan is selected — a partial or placeholder `emiPlan` is never sent. Both casing tables live in `constants.ts`, as `PLAN_TYPE` and `ISSUER_FUNDING_SOURCE`.
 
 ## Considered options
 
@@ -166,4 +168,4 @@ The response already contains the domain data needed by the selectors, summary, 
 
 `type` and `fundingSource` are closed sets. If the backend adds a value that the installed SDK does not know how to map, that SDK cannot build a correct `/payments` payload. The change requires a new SDK version rather than a runtime filter that silently hides the plan.
 
-Runtime filtering would change an explicit incompatibility into missing plans in the UI. Exhaustiveness is checked by TypeScript: `PLAN_TYPE` and `ISSUER_FUNDING_SOURCE` are typed as `Record<EmiPlanTypeKey, string>` and `Record<EmiIssuerFundingSource, string>`. Adding a value to either union without adding its casing mapping fails the build.
+Runtime filtering would change an explicit incompatibility into missing plans in the UI. Exhaustiveness is checked by TypeScript, in both directions: `PLAN_TYPE` and `ISSUER_FUNDING_SOURCE` satisfy `Record<EmiPlanTypeKey, EmiPlanPayloadType>` and `Record<EmiIssuerFundingSource, EmiPlanPayloadFundingSource>`, so a lookup value with no mapping is a missing key, while `EmiPayloadCasingIsExhaustive` fails the build for a payment-request value nothing maps onto. Adding a value to either side without its counterpart fails the build.
