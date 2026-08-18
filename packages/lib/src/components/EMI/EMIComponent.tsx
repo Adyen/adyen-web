@@ -23,10 +23,6 @@ interface EMIComponentProps {
     setComponentRef: (ref: ComponentMethodsRef) => void;
 }
 
-/**
- * The first issuer and its first plan, or nothing when the response holds no issuer. Every issuer
- * carries at least one plan, which the lookup contract guarantees.
- */
 const getDefaultSelection = (issuers: EmiIssuer[]): EmiSelection | null => {
     const [issuer] = issuers;
 
@@ -68,7 +64,6 @@ export function EMIComponent({
     const discountMessage =
         selection && offer
             ? i18n.get('emi.discountApplied', {
-                  // The locale places the minus sign, the same way it places the currency symbol
                   values: { amount: i18n.amount(-offer.amount.value, offer.amount.currency), provider: selection.issuer.issuerName }
               })
             : null;
