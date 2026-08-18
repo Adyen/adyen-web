@@ -111,16 +111,19 @@ describe('Dropin - splitPaymentMethods', () => {
             expect(paymentMethods[0]).toMatchObject({ type: 'paypal' });
         });
 
-        test('should fall back to regular for the unknown custom display mode', () => {
+        test('should use instantPaymentTypes when all custom display modes are unsupported', () => {
             const parsedPaymentMethods = new PaymentMethods({
-                paymentMethods: [{ name: 'Google Pay', type: 'googlepay', configuration: { displayMode: 'INVALID_VALUE' } }]
+                paymentMethods: [
+                    { name: 'Google Pay', type: 'googlepay', configuration: { displayMode: 'INVALID_VALUE' } },
+                    { name: 'Apple Pay', type: 'applepay', configuration: { displayMode: 'ANOTHER_INVALID_VALUE' } }
+                ]
             });
 
-            const { paymentMethods, instantPaymentMethods } = splitPaymentMethods(parsedPaymentMethods, ['googlepay']);
+            const { paymentMethods, instantPaymentMethods } = splitPaymentMethods(parsedPaymentMethods, ['googlepay', 'applepay']);
 
-            // any displayMode hands the decision to the response, so instantPaymentTypes no longer applies
-            expect(instantPaymentMethods).toHaveLength(0);
-            expect(paymentMethods).toHaveLength(1);
+            // All displayMode values are unsupported, so instantPaymentTypes still applies.
+            expect(instantPaymentMethods.map(pm => pm.type)).toEqual(['googlepay', 'applepay']);
+            expect(paymentMethods).toHaveLength(0);
         });
 
         test('should resolve an unknown displayMode to regular while still honouring a sibling instant', () => {
@@ -135,6 +138,21 @@ describe('Dropin - splitPaymentMethods', () => {
 
             expect(instantPaymentMethods.map(pm => pm.type)).toEqual(['applepay']);
             expect(paymentMethods.map(pm => pm.type)).toEqual(['googlepay']);
+        });
+
+        test('should ignore instantPaymentTypes when one custom display mode is valid among multiple invalid values', () => {
+            const parsedPaymentMethods = new PaymentMethods({
+                paymentMethods: [
+                    { name: 'Google Pay', type: 'googlepay', configuration: { displayMode: 'INVALID_VALUE' } },
+                    { name: 'Apple Pay', type: 'applepay', configuration: { displayMode: 'ANOTHER_INVALID_VALUE' } },
+                    { name: 'Pay with Google', type: 'paywithgoogle', configuration: { displayMode: 'instant' } }
+                ]
+            });
+
+            const { paymentMethods, instantPaymentMethods } = splitPaymentMethods(parsedPaymentMethods, ['googlepay', 'applepay']);
+
+            expect(instantPaymentMethods.map(pm => pm.type)).toEqual(['paywithgoogle']);
+            expect(paymentMethods.map(pm => pm.type)).toEqual(['googlepay', 'applepay']);
         });
 
         test.each([[''], [null]])('should not let the empty "%s" activate custom display mode', displayMode => {
