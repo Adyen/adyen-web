@@ -34,3 +34,12 @@
     height: 14px;
     margin-right: variable-generator.token(spacer-040);
 }
+
+.adyen-checkout__alert-message--icon-end {
+    justify-content: space-between;
+}
+
+.adyen-checkout__alert-message--icon-end .adyen-checkout__alert-message__icon {
+    margin-right: 0;
+    margin-inline-start: variable-generator.token(spacer-040);
+}
