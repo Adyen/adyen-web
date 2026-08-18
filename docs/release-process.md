@@ -71,10 +71,10 @@ For a new major version on a `next-v*` branch with changeset pre mode enabled. S
 
 For a one off alpha preview build of a pull request. Does not change the branch.
 
-The only trigger is the **`release-alpha` label** on a pull request. Adding the label starts a build from the PR's source branch head (not the merge commit); the workflow cannot be started manually. The label is **removed automatically when the run finishes**, whether it succeeded or failed, so adding it again is all that is needed for another build.
+The only trigger is the **`release-snapshot` label** on a pull request. Adding the label starts a build from the PR's source branch head (not the merge commit); the workflow cannot be started manually. The label is **removed automatically when the run finishes**, whether it succeeded or failed, so adding it again is all that is needed for another build.
 
 ```text
-  Maintainer adds the `release-alpha` label to a PR
+  Maintainer adds the `release-snapshot` label to a PR
        │
        ▼
 ┌─────────────────────────────────────┐
@@ -113,4 +113,4 @@ Requirements and caveats:
 | `check-release-build.yml` | `.github/workflows` | Push to `main` or `next-v*` | Checks commit message for `[ci] release main` or `[ci] release next-v{version}` and triggers `gh-release.yml` |
 | `gh-release.yml` | `.github/workflows` | `workflow_dispatch` / `workflow_call` | Builds UMD + translations, parses CHANGELOG, creates a git tag and GitHub Release (`--latest` or `--prerelease`) with the UMD bundle attached |
 | `npm-publish.yml` | `.github/workflows` | `workflow_dispatch` (run from the release tag) | Builds and publishes the package to npm via OIDC |
-| `release-snapshot.yml` | `.github/workflows` | `release-alpha` label added to an approved PR | Builds a snapshot (`6.43.0-alpha.{commit-hash}`) from the PR's source branch, tags it, creates a prerelease GitHub Release with the UMD build linking the PR, comments the release link on the PR, and removes the label again. The branch is not changed |
+| `release-snapshot.yml` | `.github/workflows` | `release-snapshot` label added to an approved PR | Builds a snapshot (`6.43.0-alpha.{commit-hash}`) from the PR's source branch, tags it, creates a prerelease GitHub Release with the UMD build linking the PR, comments the release link on the PR, and removes the label again. The branch is not changed |
