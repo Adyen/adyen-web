@@ -16,16 +16,14 @@ test.describe('Card - Contextual text', () => {
 
         // checkout expiryDate element
         await expect(card.expiryDateContextualElement).toHaveText(EXPIRY_DATE_CONTEXTUAL_TEXT);
-        const expiryDateAriaHidden = await card.expiryDateContextualElement.getAttribute('aria-hidden');
-        await expect(expiryDateAriaHidden).toEqual('true');
+        await expect(card.expiryDateContextualElement).toHaveAttribute('aria-hidden', 'true');
 
         // iframe expiryDate element
         await expect(card.expiryDateIframeContextualElement).toHaveText(EXPIRY_DATE_CONTEXTUAL_TEXT);
 
         // checkout security code contextual element
         await expect(card.cvcContextualElement).toHaveText(CVC_CONTEXTUAL_TEXT_3_DIGITS);
-        const cvcAriaHidden = await card.cvcContextualElement.getAttribute('aria-hidden');
-        await expect(cvcAriaHidden).toEqual('true');
+        await expect(card.cvcContextualElement).toHaveAttribute('aria-hidden', 'true');
 
         // iframe security code element
         await expect(card.cvcIframeContextualElement).toHaveText(CVC_CONTEXTUAL_TEXT_3_DIGITS);
@@ -47,8 +45,7 @@ test.describe('Card - Contextual text', () => {
         await card.goto(URL_MAP.card);
         // checkout security code contextual element
         await expect(card.cvcContextualElement).toHaveText(CVC_CONTEXTUAL_TEXT_3_DIGITS);
-        let cvcAriaHidden = await card.cvcContextualElement.getAttribute('aria-hidden');
-        await expect(cvcAriaHidden).toEqual('true');
+        await expect(card.cvcContextualElement).toHaveAttribute('aria-hidden', 'true');
 
         // error element hidden
         await expect(card.cvcErrorElement).not.toBeVisible();
@@ -62,8 +59,7 @@ test.describe('Card - Contextual text', () => {
         // checkout security code error element
         await expect(card.cvcErrorElement).toBeVisible();
         await expect(card.cvcErrorElement).toHaveText(CVC_ERROR);
-        cvcAriaHidden = await card.cvcErrorElement.getAttribute('aria-hidden');
-        await expect(cvcAriaHidden).toEqual('true');
+        await expect(card.cvcErrorElement).toHaveAttribute('aria-hidden', 'true');
 
         // contextual element being hidden
         await expect(card.cvcContextualElement).not.toBeVisible();
@@ -71,7 +67,10 @@ test.describe('Card - Contextual text', () => {
         // iframe contextual (error) element
         await expect(card.cvcIframeContextualElement).toHaveText(CVC_ERROR);
 
-        // Allow default focusing after validation to happen
+        // Allow default focusing after validation to happen.
+        // useSRPanelForCardInputErrors resets isValidating on a 300ms timer; while it is still true any
+        // further error change re-triggers ERROR_ACTION_FOCUS_FIELD and steals focus back to the PAN field,
+        // which would swallow the digits typed below. There is no DOM signal for that timer.
         await page.waitForTimeout(1000);
 
         // type

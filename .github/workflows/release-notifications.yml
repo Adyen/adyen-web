@@ -9,7 +9,7 @@ on:
     paths:
       - '**/CHANGELOG.md'
   workflow_run:
-    workflows: ["GitHub Release", "Publish Package"]
+    workflows: ["GitHub Release", "Publish Package", "Check Commit Message"]
     types: [completed]
 
 jobs:
@@ -21,7 +21,7 @@ jobs:
       - uses: actions/checkout@v7
         with:
           ref: ${{ github.event.workflow_run.head_sha || github.sha }}
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7
         with:
           node-version: 24
       - name: Read SDK version
@@ -100,7 +100,7 @@ jobs:
 
   removed-from-queue:
     needs: [resolve-version, load-thread-ts]
-    if: github.event.action == 'dequeued' && contains(github.head_ref, 'changeset-release')
+    if: github.event.action == 'dequeued' && github.event.reason != 'MERGE' && github.event.reason != 'ALREADY_MERGED' && contains(github.head_ref, 'changeset-release')
     uses: ./.github/workflows/slack-channel-message.yml
     with:
       channel: ${{ vars.CHECKOUT_WEB_CHANNEL_ID }}
@@ -122,7 +122,7 @@ jobs:
 
   gh-release:
     needs: [resolve-version, load-thread-ts]
-    if: github.event_name == 'workflow_run' && github.event.workflow_run.name == 'GitHub Release' && github.event.workflow_run.conclusion == 'success'
+    if: github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success' && (github.event.workflow_run.name == 'GitHub Release' || (github.event.workflow_run.name == 'Check Commit Message' && contains(github.event.workflow_run.head_commit.message, '[ci] release')))
     uses: ./.github/workflows/slack-channel-message.yml
     with:
       channel: ${{ vars.CHECKOUT_WEB_CHANNEL_ID }}
@@ -133,7 +133,7 @@ jobs:
 
   gh-release-failed:
     needs: [resolve-version, load-thread-ts]
-    if: github.event_name == 'workflow_run' && github.event.workflow_run.name == 'GitHub Release' && github.event.workflow_run.conclusion != 'success'
+    if: github.event_name == 'workflow_run' && github.event.workflow_run.conclusion != 'success' && (github.event.workflow_run.name == 'GitHub Release' || (github.event.workflow_run.name == 'Check Commit Message' && contains(github.event.workflow_run.head_commit.message, '[ci] release')))
     uses: ./.github/workflows/slack-channel-message.yml
     with:
       channel: ${{ vars.CHECKOUT_WEB_CHANNEL_ID }}
@@ -148,7 +148,7 @@ jobs:
     uses: ./.github/workflows/slack-channel-message.yml
     with:
       channel: ${{ vars.CHECKOUT_WEB_CHANNEL_ID }}
-      message: "Release ${{ needs.resolve-version.outputs.version }} has been successfully published to npm!"
+      message: "Release ${{ needs.resolve-version.outputs.version }} has been successfully published to npm! You can find it here: https://www.npmjs.com/package/@adyen/adyen-web/v/${{ needs.resolve-version.outputs.version }}"
       thread_ts: ${{ needs.load-thread-ts.outputs.thread_ts }}
     secrets:
       SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}

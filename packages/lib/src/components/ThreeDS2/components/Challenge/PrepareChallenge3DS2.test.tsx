@@ -44,9 +44,12 @@ const completeFunction = jest.fn();
 
 let mockCallbacks: any = {};
 
+let mockDoChallengeProps: any = {};
+
 jest.mock('./DoChallenge3DS2', () => ({
     __esModule: true,
     default: function MockDoChallenge(props) {
+        mockDoChallengeProps = props;
         mockCallbacks = {
             onCompleteChallenge: props.onCompleteChallenge,
             onErrorChallenge: props.onErrorChallenge
@@ -70,6 +73,7 @@ describe('PrepareChallenge3DS2 - Happy flow', () => {
         onError = jest.fn();
         onSubmitAnalytics = jest.fn();
         mockCallbacks = {};
+        mockDoChallengeProps = {};
     });
 
     test('should not throw an error when passing correct properties', () => {
@@ -116,6 +120,7 @@ describe('PrepareChallenge3DS2 - flow completes with errors that are considered 
         onError = jest.fn();
         onSubmitAnalytics = jest.fn();
         mockCallbacks = {};
+        mockDoChallengeProps = {};
     });
 
     test('should fire timeout analytics when challenge times out', async () => {
@@ -195,6 +200,7 @@ describe('PrepareChallenge3DS2 - unhappy flows', () => {
         });
 
         onSubmitAnalytics = jest.fn(() => {});
+        mockDoChallengeProps = {};
     });
 
     test('should call onError and onSubmitAnalytics when token is missing from props', () => {
@@ -348,5 +354,38 @@ describe('PrepareChallenge3DS2 - unhappy flows', () => {
         expect(onSubmitAnalytics).toHaveBeenCalledWith(analyticsError);
 
         expect(onSubmitAnalytics).toHaveBeenCalledTimes(1);
+    });
+});
+
+describe('PrepareChallenge3DS2 - usePasskeyIFrameAttributes', () => {
+    beforeEach(() => {
+        onError = jest.fn();
+        onSubmitAnalytics = jest.fn();
+        mockCallbacks = {};
+        mockDoChallengeProps = {};
+    });
+
+    test('should pass usePasskeyIFrameAttributes to DoChallenge3DS2 when set to true', () => {
+        prepareProps();
+
+        renderPrepareChallenge({ ...propsMaster, usePasskeyIFrameAttributes: true });
+
+        expect(mockDoChallengeProps.usePasskeyIFrameAttributes).toBe(true);
+    });
+
+    test('should pass usePasskeyIFrameAttributes to DoChallenge3DS2 when set to false', () => {
+        prepareProps();
+
+        renderPrepareChallenge({ ...propsMaster, usePasskeyIFrameAttributes: false });
+
+        expect(mockDoChallengeProps.usePasskeyIFrameAttributes).toBe(false);
+    });
+
+    test('should not pass usePasskeyIFrameAttributes to DoChallenge3DS2 when not set', () => {
+        prepareProps();
+
+        renderPrepareChallenge(propsMaster);
+
+        expect(mockDoChallengeProps.usePasskeyIFrameAttributes).toBeUndefined();
     });
 });

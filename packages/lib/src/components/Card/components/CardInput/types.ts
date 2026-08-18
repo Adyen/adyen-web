@@ -64,7 +64,7 @@ export interface CardInputErrorState {
 
 export interface CardInputDataState {
     holderName?: string;
-    billingAddress?: AddressData;
+    billingAddress?: AddressData | null;
     socialSecurityNumber?: string;
     taxNumber?: string;
 }
@@ -128,7 +128,7 @@ export interface CardInputProps {
     onFocus?: (e) => void;
     onLoad?: (o: CardLoadData) => void;
     onSubmitAnalytics: (event: AbstractAnalyticsEvent) => void;
-    handleKeyDown?: (event: KeyboardEvent) => void;
+    handleKeyPress?: (obj: KeyboardEvent) => void;
     onAddressLookup?: OnAddressLookupType;
     onAddressSelected?: OnAddressSelectedType;
     addressSearchDebounceMs?: number;

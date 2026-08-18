@@ -1,4 +1,22 @@
-import { countrySpecificFormatters } from './validate.formats';
+import { addressFormatters, countrySpecificFormatters } from './validate.formats';
+
+describe('addressFormatters', () => {
+    describe.each(['street', 'houseNumberOrName', 'city'])('%s formatterFn', field => {
+        const format = addressFormatters[field].formatterFn;
+
+        test('should not trim trailing or leading spaces', () => {
+            expect(format?.('  Main Road  ')).toBe('  Main Road  ');
+        });
+
+        test('should not collapse consecutive spaces', () => {
+            expect(format?.('Main   Road')).toBe('Main   Road');
+        });
+
+        test('should strip special characters without touching spaces', () => {
+            expect(format?.('  Main@ Ro#ad  ')).toBe('  Main Road  ');
+        });
+    });
+});
 
 describe('countrySpecificFormatters', () => {
     describe('BR postalCode formatterFn', () => {

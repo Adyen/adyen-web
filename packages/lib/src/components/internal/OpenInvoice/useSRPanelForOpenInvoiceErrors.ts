@@ -18,9 +18,10 @@ interface UseSRPanelForErrorsProps {
     data: OpenInvoiceStateData;
     props: OpenInvoiceProps;
     isValidating: MutableRef<boolean>;
+    containerRef: MutableRef<HTMLDivElement | null>;
 }
 
-const useSRPanelForOpenInvoiceErrors = ({ errors, data, props, isValidating }: UseSRPanelForErrorsProps) => {
+const useSRPanelForOpenInvoiceErrors = ({ errors, data, props, isValidating, containerRef }: UseSRPanelForErrorsProps) => {
     // Relates to onBlur errors
     const [sortedErrorList, setSortedErrorList] = useState(null);
     // Get the previous value (Relates to onBlur errors)
@@ -126,7 +127,9 @@ const useSRPanelForOpenInvoiceErrors = ({ errors, data, props, isValidating }: U
                     }
 
                     // Focus first field in error, if required
-                    if (shouldMoveFocusSR) setFocusOnField('.adyen-checkout__open-invoice', fieldToFocus, focusContextSelector);
+                    // Use the component's own container ref (rather than a global class selector) so that, when multiple
+                    // OpenInvoice-based components are rendered on the same page, focus moves within the correct instance
+                    if (shouldMoveFocusSR && containerRef.current) setFocusOnField(containerRef.current, fieldToFocus, focusContextSelector);
                     // Remove 'showValidation' mode - allowing time for collation of all the fields in error whilst it is 'showValidation' mode (some errors come in a second render pass)
                     setTimeout(() => {
                         isValidating.current = false;

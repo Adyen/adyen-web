@@ -63,11 +63,20 @@ describe('validatePostalCode', () => {
         expect(result).toBe(true);
     });
 
-    // It fails because createPatternByDigits actually just check if there's at least X amount of digits
-    // it('should return false for an invalid US postal code with more than 5 digits without a hyphen', () => {
-    //     const result = validatePostalCode('1234567', 'US', validatorRules);
-    //     expect(result).toBe(false);
-    // });
+    it('should return false for an invalid US postal code with more than 5 digits without a hyphen', () => {
+        const result = validatePostalCode('1234567', 'US', validatorRules);
+        expect(result).toBe(false);
+    });
+
+    it('should return true for a valid 9-digit US postal code with a hyphen', () => {
+        const result = validatePostalCode('12345-6789', 'US', validatorRules);
+        expect(result).toBe(true);
+    });
+
+    it('should return false for an invalid 9-digit US postal code', () => {
+        const result = validatePostalCode('12345-678', 'US', validatorRules);
+        expect(result).toBe(false);
+    });
 
     // General
     it('should return null if the postal code is empty', () => {

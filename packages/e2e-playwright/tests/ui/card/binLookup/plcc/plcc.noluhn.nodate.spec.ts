@@ -16,8 +16,7 @@ test.describe('Testing binLookup endpoint for a response that should indicate a 
         await card.typeCardNumber(PLCC_NO_LUHN_HIDDEN_DATE_WOULD_FAIL_LUHN);
 
         // Confirm plcc brand
-        let brandingIconSrc = await card.brandingIcon.getAttribute('src');
-        expect(brandingIconSrc).toContain('synchrony_plcc.svg');
+        await expect(card.brandingIcon).toHaveAttribute('src', /\/synchrony_plcc\.svg$/);
 
         // Confirm date is hidden
         await expect(card.expiryDateField).not.toBeVisible();
@@ -26,24 +25,18 @@ test.describe('Testing binLookup endpoint for a response that should indicate a 
         await card.typeCvc(TEST_CVC_VALUE);
 
         // PM is valid
-        let cardValid = await page.evaluate('window.component.isValid');
-        expect(cardValid).toEqual(true);
+        await page.waitForFunction(() => window['component'].isValid === true);
 
         // Delete number
         await card.deleteCardNumber();
 
-        // Allow time for icon to load
-        await page.waitForTimeout(500);
-
         // UI reset
-        brandingIconSrc = await card.brandingIcon.getAttribute('src');
-        expect(brandingIconSrc).toContain('nocard.svg');
+        await expect(card.brandingIcon).toHaveAttribute('src', /\/nocard\.svg$/);
 
         // Confirm date is required again
         await expect(card.expiryDateField).toBeVisible();
 
         // PM is not valid
-        cardValid = await page.evaluate('window.component.isValid');
-        expect(cardValid).toEqual(false);
+        await page.waitForFunction(() => window['component'].isValid === false);
     });
 });

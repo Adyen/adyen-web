@@ -14,7 +14,7 @@ import {
     CardAutoCompleteData,
     CardConfigSuccessData,
     CardLoadData,
-    SFKeyDownObj,
+    SFKeyPressObj,
     SFFieldType
 } from '../lib/types';
 import { CSFReturnObject, CSFSetupObject } from '../lib/CSF/types';
@@ -33,24 +33,24 @@ import { TxVariants } from '../../../tx-variants';
  */
 class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
     private csfLoadFailTimeout: number;
-    private readonly csfLoadFailTimeoutMS: number;
-    private readonly csfConfigFailTimeout: number;
-    private readonly csfConfigFailTimeoutMS: number;
+    private csfLoadFailTimeoutMS: number;
+    private csfConfigFailTimeout: number;
+    private csfConfigFailTimeoutMS: number;
     private numCharsInField: object;
     private rootNode: HTMLElement;
     private numDateFields: number;
     private csf: CSFReturnObject;
-    private readonly handleOnLoad: (obj: CardLoadData) => void;
-    private readonly handleOnConfigSuccess: (obj: CardConfigSuccessData) => void;
-    private readonly handleOnFieldValid: (obj: CardFieldValidData) => void;
-    private readonly handleOnAllValid: (obj: CardAllValidData) => void;
-    private readonly handleOnBrand: (obj: CardBrandData) => void;
-    private readonly handleFocus: (obj: CardFocusData) => void;
-    private readonly handleOnError: (obj: CardErrorData, hasUnsupportedCard?: boolean) => void;
-    private readonly handleOnAutoComplete: (obj: CardAutoCompleteData) => void;
-    private readonly handleOnNoDataRequired: () => void;
-    private readonly handleOnTouchstartIOS: (obj) => void;
-    private readonly handleKeyDown: (obj: SFKeyDownObj) => void;
+    private handleOnLoad: (obj: CardLoadData) => void;
+    private handleOnConfigSuccess: (obj: CardConfigSuccessData) => void;
+    private handleOnFieldValid: (obj: CardFieldValidData) => void;
+    private handleOnAllValid: (obj: CardAllValidData) => void;
+    private handleOnBrand: (obj: CardBrandData) => void;
+    private handleFocus: (obj: CardFocusData) => void;
+    private handleOnError: (obj: CardErrorData, hasUnsupportedCard?: boolean) => void;
+    private handleOnAutoComplete: (obj: CardAutoCompleteData) => void;
+    private handleOnNoDataRequired: () => void;
+    private handleOnTouchstartIOS: (obj) => void;
+    private handleKeyPressed: (obj: SFKeyPressObj) => void;
     public state: SFPState;
     public props: SFPProps;
     private issuingCountryCode: string;
@@ -90,7 +90,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
         this.handleOnNoDataRequired = handlers.handleOnNoDataRequired.bind(this);
         this.handleOnAutoComplete = handlers.handleOnAutoComplete.bind(this);
         this.handleOnTouchstartIOS = handlers.handleOnTouchstartIOS.bind(this); // Only called when iOS detected
-        this.handleKeyDown = handlers.handleKeyDown.bind(this);
+        this.handleKeyPressed = handlers.handleKeyPressed.bind(this);
 
         this.processBinLookupResponse = this.processBinLookupResponse.bind(this);
 
@@ -186,7 +186,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
                 onAdditionalSFConfig: this.props.onAdditionalSFConfig,
                 onAdditionalSFRemoved: this.props.onAdditionalSFRemoved,
                 onTouchstartIOS: this.handleOnTouchstartIOS,
-                onKeyDown: this.handleKeyDown
+                onKeyPressed: this.handleKeyPressed
             },
             isKCP: this.state.hasKoreanFields,
             legacyInputMode: this.props.legacyInputMode,

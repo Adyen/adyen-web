@@ -28,6 +28,7 @@ const DisableOneClickConfirmation = ({ id, open, onDisable, onCancel }) => {
                         )}
                         disabled={!open}
                         onClick={onDisable}
+                        onKeyPress={stopPropagationForActionKeys}
                         onKeyDown={stopPropagationForActionKeys}
                     >
                         {i18n.get('storedPaymentMethod.disable.confirmButton')}
@@ -41,6 +42,7 @@ const DisableOneClickConfirmation = ({ id, open, onDisable, onCancel }) => {
                         )}
                         disabled={!open}
                         onClick={onCancel}
+                        onKeyPress={stopPropagationForActionKeys}
                         onKeyDown={stopPropagationForActionKeys}
                     >
                         {i18n.get('storedPaymentMethod.disable.cancelButton')}

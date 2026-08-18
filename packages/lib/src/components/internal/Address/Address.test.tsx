@@ -3,7 +3,7 @@ import Address from './Address';
 import getDataset from '../../../core/Services/get-dataset';
 import { AddressSpecifications } from './types';
 import { AddressData } from '../../../types';
-import { FALLBACK_VALUE } from './constants';
+import { FALLBACK_VALUE, PARTIAL_ADDRESS_SCHEMA } from './constants';
 import { render, screen, waitFor } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import { CoreProvider } from '../../../core/Context/CoreProvider';
@@ -74,6 +74,31 @@ describe('Address', () => {
         expect(screen.getByLabelText('House number')).toBeInTheDocument();
         expect(screen.getByLabelText('Postal code')).toBeInTheDocument();
         expect(await screen.findByLabelText('Country/Region')).toBeInTheDocument();
+    });
+
+    test('should render with empty fields and no preselected country when data is null', async () => {
+        const requiredFields = ['street', 'houseNumberOrName', 'postalCode', 'country'];
+
+        customRender(<Address data={null} specifications={addressSpecificationsMock} requiredFields={requiredFields} />);
+
+        expect(screen.getByLabelText('Street')).toHaveValue('');
+        expect(screen.getByLabelText('House number')).toHaveValue('');
+        expect(screen.getByLabelText('Postal code')).toHaveValue('');
+        expect(await screen.findByLabelText('Country/Region')).toHaveValue('');
+    });
+
+    test('should maintain spaces while typing but trim and collapse them on blur', async () => {
+        const user = userEvent.setup();
+        const requiredFields = ['street', 'houseNumberOrName', 'postalCode', 'country'];
+
+        customRender(<Address specifications={addressSpecificationsMock} requiredFields={requiredFields} />);
+
+        const street = screen.getByLabelText('Street');
+        await user.type(street, '  Simon   Carmiggeltstraat  ');
+        expect(street).toHaveValue('  Simon   Carmiggeltstraat  ');
+
+        await user.tab();
+        await waitFor(() => expect(street).toHaveValue('Simon Carmiggeltstraat'));
     });
 
     test('should show the address as readOnly', () => {
@@ -307,6 +332,58 @@ describe('Address', () => {
                 const postCode = await screen.findByRole('textbox', { name: /code/ });
                 expect(postCode).toHaveValue(expected);
             });
+        });
+
+        test('should regionalize the postal code label in partial address mode using the country from the merchant config', async () => {
+            const allowedCountries = Object.keys(countrySpecificFormatters);
+            customRender(
+                <Address
+                    data={{ country: 'US' }}
+                    specifications={PARTIAL_ADDRESS_SCHEMA}
+                    requiredFields={['postalCode']}
+                    allowedCountries={allowedCountries}
+                />
+            );
+
+            expect(await screen.findByRole('textbox', { name: /Zip code/ })).toBeInTheDocument();
+        });
+
+        describe.each`
+            countryCode | raw                | expected
+            ${'US'}     | ${'1234599999999'} | ${'12345'}
+            ${'BR'}     | ${'12345678999'}   | ${'12345678'}
+            ${'PL'}     | ${'99-99999999'}   | ${'99-999'}
+            ${'us'}     | ${'1234599999999'} | ${'12345'}
+            ${'br'}     | ${'12345678999'}   | ${'12345678'}
+        `('Format post code in partial address mode', ({ countryCode, raw, expected }) => {
+            it(`should format the post code being typed for ${countryCode}, using the country from the merchant config`, async () => {
+                const user = userEvent.setup();
+                customRender(<Address data={{ country: countryCode }} specifications={PARTIAL_ADDRESS_SCHEMA} requiredFields={['postalCode']} />);
+
+                const postCode = await screen.findByRole('textbox', { name: /code/ });
+                await user.type(postCode, raw);
+                expect(postCode).toHaveValue(expected);
+            });
+        });
+
+        test('should regionalize the postal code label in partial address mode when the country is in lowercase', async () => {
+            customRender(<Address data={{ country: 'us' }} specifications={PARTIAL_ADDRESS_SCHEMA} requiredFields={['postalCode']} />);
+            expect(await screen.findByRole('textbox', { name: /Zip code/ })).toBeInTheDocument();
+        });
+
+        test('should emit an uppercased country when the merchant configures it in lowercase', async () => {
+            const onChangeMock = jest.fn();
+            customRender(
+                <Address data={{ country: 'us' }} specifications={PARTIAL_ADDRESS_SCHEMA} requiredFields={['postalCode']} onChange={onChangeMock} />
+            );
+            await waitFor(() =>
+                expect(onChangeMock).toHaveBeenCalledWith(expect.objectContaining({ data: expect.objectContaining({ country: 'US' }) }))
+            );
+        });
+
+        test('should preselect the country in the country dropdown when the country is in lowercase', async () => {
+            customRender(<Address data={{ country: 'us' }} allowedCountries={['US', 'CA']} onChange={jest.fn()} />);
+            expect(await screen.findByRole('combobox', { name: 'Country/Region' })).toHaveValue('United States');
         });
 
         test("should show proper 'Zip Code' label for US", async () => {
