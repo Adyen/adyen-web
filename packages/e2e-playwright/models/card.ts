@@ -243,6 +243,14 @@ class Card extends Base {
 
     async isComponentVisible() {
         await this.payButton.waitFor({ state: 'visible' });
+        await this.isCardFormVisible();
+    }
+
+    /**
+     * The card fields on their own, without the pay button, for composite components that embed the
+     * card form and own the button themselves (e.g. EMI).
+     */
+    async isCardFormVisible() {
         // for some reason on webkit this line needs to be here
         // removing this waitFor makes that the focus state is never returned to the Card Number Input in case of error handling
         // it's unclear why is that the case and why only happens in Webkit, but also doesn't seem to be a race condition as adding
