@@ -25,7 +25,7 @@ interface GiftcardComponentProps extends Partial<Pick<SFPProps, 'clientKey' | 'l
     expiryDateRequired?: boolean;
     fieldsLayoutComponent: FunctionComponent<GiftcardFieldsProps>;
     placeholders?: Placeholders;
-    handleKeyPress?: (o: KeyboardEvent) => void;
+    handleKeyDown?: (event: KeyboardEvent) => void;
     onSubmitAnalytics?: (event: AbstractAnalyticsEvent) => void;
 }
 
