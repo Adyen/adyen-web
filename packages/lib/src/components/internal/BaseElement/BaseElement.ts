@@ -3,7 +3,7 @@ import uuid from '../../../utils/uuid';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 import { NO_CHECKOUT_ATTEMPT_ID } from '../../../core/Analytics/constants';
 import type { ICore } from '../../../core/types';
-import type { BaseElementProps, IBaseElement } from './types';
+import type { BaseElementProps, BaseElementState, IBaseElement } from './types';
 import type { PaymentData } from '../../../types/global-types';
 import { off, on } from '../../../utils/listenerUtils';
 import { AbstractAnalyticsEvent } from '../../../core/Analytics/events/AbstractAnalyticsEvent';
@@ -22,13 +22,13 @@ function assertIsCoreInstance(checkout: ICore): checkout is ICore {
     return isCoreObject;
 }
 
-abstract class BaseElement<P extends BaseElementProps> implements IBaseElement {
+abstract class BaseElement<P extends BaseElementProps, S extends BaseElementState = BaseElementState> implements IBaseElement<P> {
     public readonly _id = `${this.constructor['type']}-${uuid()}`;
     public readonly core: ICore;
 
     public props: P;
-    public state: any = {};
-    public _component;
+    public state: S = {} as S;
+    public _component: ComponentChild | undefined;
 
     protected _node: HTMLElement = null;
 
@@ -66,7 +66,7 @@ abstract class BaseElement<P extends BaseElementProps> implements IBaseElement {
      * Executed on the `data` getter.
      * Returns the component data necessary for the /payments request
      */
-    protected formatData(): any {
+    protected formatData(): Partial<PaymentData> {
         return {};
     }
 
@@ -86,7 +86,7 @@ abstract class BaseElement<P extends BaseElementProps> implements IBaseElement {
      * Returns the component payment data ready to submit to the Checkout API
      * Note: this does not ensure validity, check isValid first
      */
-    public get data(): PaymentData {
+    public get data(): Partial<PaymentData> {
         const order = this.state.order || this.props.order;
         const componentData = this.formatData();
         const doesPaymentMethodHaveNativeComponent = Boolean(getComponentNameOfPaymentType(componentData.paymentMethod?.type));
@@ -160,7 +160,7 @@ abstract class BaseElement<P extends BaseElementProps> implements IBaseElement {
      */
     public update(props: Partial<P>): this {
         this.props = this.formatProps({ ...this.props, ...props });
-        this.state = {};
+        this.state = {} as S;
 
         return this.unmount().mount(this._node); // for new mount fny
     }
