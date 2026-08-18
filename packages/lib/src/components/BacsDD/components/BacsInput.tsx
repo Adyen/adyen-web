@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { useState, useEffect } from 'preact/hooks';
+import { useState, useEffect, useRef } from 'preact/hooks';
 import classNames from 'classnames';
 import { useCoreContext } from '../../../core/Context/CoreProvider';
 import Field from '../../internal/FormFields/Field';
@@ -16,6 +16,7 @@ import FormInstruction from '../../internal/FormInstruction';
 import { getErrorMessage } from '../../../utils/getErrorMessage';
 import { PREFIX } from '../../internal/Icon/constants';
 import { useAmount } from '../../../core/Context/AmountProvider';
+import { ComponentMethodsRef } from '../../types';
 
 const ENTER_STATE = 'enter-data';
 const CONFIRM_STATE = 'confirm-data';
@@ -33,8 +34,17 @@ function BacsInput(props: Readonly<BacsInputProps>) {
     });
 
     const [status, setStatus] = useState(ENTER_STATE);
-    this.setStatus = setStatus;
-    this.showValidation = triggerValidation;
+
+    const bacsInputRef = useRef<ComponentMethodsRef>({
+        setStatus: setStatus,
+        showValidation: () => {
+            triggerValidation();
+        }
+    });
+
+    useEffect(() => {
+        props.setComponentRef(bacsInputRef.current);
+    }, [props.setComponentRef]);
 
     const handlePayButton = () => {
         if (!isValid) return this.showValidation();

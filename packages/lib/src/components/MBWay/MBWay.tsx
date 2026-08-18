@@ -69,10 +69,6 @@ export class MBWayElement extends UIElement<AwaitConfiguration> {
 
         return (
             <MBWayInput
-                /* @ts-ignore ref handled internally by Component */
-                ref={ref => {
-                    this.componentRef = ref;
-                }}
                 {...this.props}
                 setComponentRef={this.setComponentRef}
                 onChange={this.setState}

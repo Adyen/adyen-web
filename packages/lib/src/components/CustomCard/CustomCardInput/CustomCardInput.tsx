@@ -1,52 +1,78 @@
-import { h } from 'preact';
+import { h, Ref } from 'preact';
 import { useState, useEffect, useRef, useMemo } from 'preact/hooks';
 import Language from '../../../language/Language';
 import SecuredFieldsProvider from '../../internal/SecuredFields/SFP/SecuredFieldsProvider';
 import { SFPState } from '../../internal/SecuredFields/SFP/types';
 import { BinLookupResponse, CardBrandsConfiguration, CardPlaceholders } from '../../Card/types';
 import SFExtensions from '../../internal/SecuredFields/binLookup/extensions';
-import { StylesObject } from '../../internal/SecuredFields/lib/types';
+import {
+    CardAllValidData,
+    CardAutoCompleteData,
+    CardBinValueData,
+    CardBrandData,
+    CardConfigSuccessData,
+    CardFieldValidData,
+    CardFocusData,
+    CardLoadData,
+    CardErrorData,
+    SFFieldType,
+    StylesObject
+} from '../../internal/SecuredFields/lib/types';
 import { Resources } from '../../../core/Context/Resources';
 import { SFError } from '../../Card/components/CardInput/types';
 import { ValidationError } from '../types';
 import type { AbstractAnalyticsEvent } from '../../../core/Analytics/events/AbstractAnalyticsEvent';
+import { AdyenCheckoutError, UIElement } from '../../../types';
+import type { ComponentMethodsRef } from '../../internal/UIElement/types';
+
+/**
+ * Methods that CustomCardInput exposes to the CustomCard element through the ref
+ */
+export interface CustomCardInputRef extends ComponentMethodsRef {
+    processBinLookupResponse(binLookupResponse: BinLookupResponse, isReset?: boolean): void;
+    dualBrandingChangeHandler(event: Event | string): void;
+    setFocusOn(frame: SFFieldType): void;
+    updateStyles(stylesObj: StylesObject): void;
+    handleUnsupportedCard(errObj: CardErrorData): boolean;
+}
 
 interface SecuredFieldsProps {
     autoFocus?: boolean;
     brand?: string;
     brands?: string[];
     brandsConfiguration?: CardBrandsConfiguration;
-    clientKey: string;
+    clientKey?: string;
     countryCode?: string;
     forceCompat?: boolean;
-    i18n: Language;
+    i18n?: Language;
     implementationType?: 'components' | 'custom';
     keypadFix?: boolean;
     loadingContext?: string;
     legacyInputMode?: boolean;
     minimumExpiryDate?: string;
-    onAdditionalSFConfig?: () => {};
-    onAdditionalSFRemoved?: () => {};
-    onAllValid?: () => {};
-    onAutoComplete?: () => {};
-    onBinValue?: () => {};
-    onBrand?: () => {};
-    onConfigSuccess?: () => {};
-    onChange: (data) => void;
+    onAdditionalSFConfig?: () => void;
+    onAdditionalSFRemoved?: () => void;
+    onAllValid?: (data: CardAllValidData) => void;
+    onAutoComplete?: (data: CardAutoCompleteData) => void;
+    onBinValue?: (data: CardBinValueData) => void;
+    onBrand?: (data: CardBrandData) => void;
+    onConfigSuccess?: (data: CardConfigSuccessData) => void;
+    onChange?: (data) => void;
     onSubmitAnalytics?: (event: AbstractAnalyticsEvent) => void;
     handleKeyDown?: (event: KeyboardEvent) => void;
-    onError?: () => {};
-    onFieldValid?: () => {};
-    onFocus?: (e) => {};
-    onLoad?: () => {};
+    onError?: (error: AdyenCheckoutError, component?: UIElement) => void;
+    onFieldValid?: (data: CardFieldValidData) => void;
+    onFocus?: (data: CardFocusData) => void;
+    onLoad?: (data: CardLoadData) => void;
     placeholders?: CardPlaceholders;
-    rootNode: HTMLElement;
-    resources: Resources;
+    rootNode?: HTMLElement;
+    resources?: Resources;
     showWarnings?: boolean;
     styles?: StylesObject;
     trimTrailingSeparator?: boolean;
-    type: string;
+    type?: string;
     maskSecurityCode?: boolean;
+    ref?: Ref<CustomCardInputRef>;
 }
 
 const defaultProps = {
@@ -97,25 +123,17 @@ function CustomCardInput(props: Readonly<SecuredFieldsProps>) {
 
     this.dualBrandingChangeHandler = extensions.handleDualBrandSelection;
 
-    /**
-     * EFFECT HOOKS
-     */
     useEffect(() => {
-        // componentDidMount
         this.setFocusOn = sfp.current.setFocusOn;
         this.updateStyles = sfp.current.updateStyles;
         this.showValidation = sfp.current.showValidation;
         this.handleUnsupportedCard = sfp.current.handleUnsupportedCard;
 
-        // componentWillUnmount
         return () => {
             sfp.current.destroy();
         };
     }, []);
 
-    /**
-     * Main 'componentDidUpdate' handler
-     */
     useEffect(() => {
         const sfStateErrorsObj = sfp.current.mapErrorsToValidationRuleResult();
 
@@ -142,10 +160,6 @@ function CustomCardInput(props: Readonly<SecuredFieldsProps>) {
         }
     }, [data, valid, errors, selectedBrandValue]);
 
-    /**
-     * RENDER
-     */
-    // prettier-ignore
     return (
         <SecuredFieldsProvider
             ref={sfp}

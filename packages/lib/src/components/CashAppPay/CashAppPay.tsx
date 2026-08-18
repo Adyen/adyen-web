@@ -152,9 +152,7 @@ export class CashAppPay extends UIElement<CashAppPayConfiguration> {
                 name={this.displayName}
                 payButton={this.payButton}
                 onSubmit={this.submit}
-                ref={ref => {
-                    this.componentRef = ref;
-                }}
+                setComponentRef={this.setComponentRef}
             />
         ) : (
             <CashAppComponent
