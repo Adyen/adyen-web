@@ -9,6 +9,7 @@ class EMI extends Base {
     readonly planSelection: EMIPlanSelection;
     readonly errorFields: Locator;
     readonly threeDs2Challenge: ThreeDs2Challenge;
+    readonly payButton: Locator;
 
     constructor(public readonly page: Page) {
         super(page);
@@ -16,6 +17,8 @@ class EMI extends Base {
         this.planSelection = new EMIPlanSelection(page);
         this.errorFields = this.page.locator('.adyen-checkout__field--error');
         this.threeDs2Challenge = this.card.threeDs2Challenge;
+        // The plan summary carries every figure, so the EMI button is labelled 'Pay' without an amount
+        this.payButton = this.page.getByRole('button', { name: 'Pay', exact: true });
     }
 
     get cardNumberField(): Locator {
@@ -26,8 +29,9 @@ class EMI extends Base {
         return this.card.holderNameField;
     }
 
+    /** The pay button is optional (`showPayButton`), so readiness is the embedded card form */
     async isComponentVisible() {
-        await this.card.isComponentVisible();
+        await this.card.isCardFormVisible();
     }
 
     async typeCardNumber(cardNumber: string) {
