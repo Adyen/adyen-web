@@ -3,17 +3,17 @@ import UIElement from '../internal/UIElement';
 import CardElement from '../Card';
 import { EMIComponent } from './EMIComponent';
 import { TxVariants } from '../tx-variants';
-import { resolvePlanIssuers } from './utils';
+import { buildEmiPlanPayload, resolvePlanIssuers } from './utils';
 import type { ICore } from '../../core/types';
 import type { UIElementStatus } from '../internal/UIElement/types';
 import { EMIConfiguration, EMIFundingSource } from './types';
-import type { EmiIssuer, EmiSelection } from './types';
+import type { EmiIssuer, EmiSelection, EMIFundingSourceElement, EMIFundingSourceElements } from './types';
 import { SUPPORTED_FUNDING_SOURCES } from './constants';
 
 class EMI extends UIElement<EMIConfiguration> {
     public static readonly type = TxVariants.emi;
 
-    private readonly fundingSourceUIElements: Partial<Record<EMIFundingSource, EMIFundingSourceElement>> = {};
+    private readonly fundingSourceUIElements: Partial<EMIFundingSourceElements> = {};
     private activeFundingSource: EMIFundingSource | null = null;
 
     private readonly issuers: EmiIssuer[];
@@ -83,9 +83,19 @@ class EMI extends UIElement<EMIConfiguration> {
         return this.activeFundingSourceElement?.isValid ?? false;
     }
 
-    public formatData(): EMIFundingSourceData | Record<string, never> {
+    private get emiSelection(): EmiSelection | undefined {
+        return this.state.emiSelection;
+    }
+
+    public formatData() {
         if (!this.activeFundingSourceElement) return {};
-        return this.activeFundingSourceElement.formatData();
+
+        const selection = this.emiSelection;
+
+        return {
+            ...this.activeFundingSourceElement.formatData(),
+            ...(selection && { emiPlan: buildEmiPlanPayload(selection.issuer, selection.plan) })
+        };
     }
 
     public override showValidation(): this {
