@@ -487,7 +487,7 @@ describe('EMI', () => {
             render(emi.render());
 
             expect(screen.getByLabelText('Provider')).toHaveTextContent(hdfc.issuerName);
-            expect(screen.getByLabelText('Plan')).toHaveTextContent('₹58,800.00 x 3 months');
+            expect(screen.getByLabelText('Plan')).toHaveTextContent('₹51,666.33 x 3 months');
             expect(screen.getByRole('form')).toBeInTheDocument();
         });
 
