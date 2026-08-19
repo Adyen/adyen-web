@@ -96,12 +96,14 @@ export interface AmazonPayConfiguration extends UIElementProps {
     isExpress?: boolean;
 }
 
+export type AmazonPayComponentRef = ComponentMethodsRef & { getSubmitFunction?: () => () => void };
+
 export interface AmazonPayComponentProps extends AmazonPayConfiguration {
     showSignOutButton?: boolean;
     amazonCheckoutSessionId?: string;
     showOrderButton?: boolean;
     showChangePaymentDetailsButton?: boolean;
-    setComponentRef: (ref: ComponentMethodsRef & { getSubmitFunction?: () => () => void }) => void;
+    setComponentRef: (ref: AmazonPayComponentRef) => void;
 }
 
 export interface AmazonPayButtonProps {

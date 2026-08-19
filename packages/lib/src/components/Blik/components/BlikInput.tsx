@@ -9,6 +9,7 @@ import useImage from '../../../core/Context/useImage';
 import InputText from '../../internal/FormFields/InputText';
 import { ComponentMethodsRef, UIElementProps } from '../../internal/UIElement/types';
 import { PREFIX } from '../../internal/Icon/constants';
+import { PaymentData } from '../../../types';
 
 interface BlikInputProps extends UIElementProps {
     data?: BlikInputDataState;
@@ -38,7 +39,7 @@ function BlikInput(props: Readonly<BlikInputProps>) {
     });
 
     useEffect(() => {
-        props.onChange({ data, errors, valid, isValid }, this);
+        props.onChange({ data: data as unknown as PaymentData, errors, valid, isValid }, this);
     }, [data, valid, errors, isValid]);
 
     const [status, setStatus] = useState('ready');

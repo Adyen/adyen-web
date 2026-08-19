@@ -22,7 +22,8 @@ import { Resources } from '../../../core/Context/Resources';
 import { SFError } from '../../Card/components/CardInput/types';
 import { ValidationError } from '../types';
 import type { AbstractAnalyticsEvent } from '../../../core/Analytics/events/AbstractAnalyticsEvent';
-import { AdyenCheckoutError, UIElement } from '../../../types';
+import type AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
+import type UIElement from '../../internal/UIElement';
 import type { ComponentMethodsRef } from '../../internal/UIElement/types';
 
 /**
