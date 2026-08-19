@@ -4,7 +4,7 @@ import AdyenCheckoutError from '../Errors/AdyenCheckoutError';
 export interface HttpOptions {
     accept?: string;
     contentType?: string;
-    headers?;
+    headers?: Record<string, string>;
     loadingContext?: string;
     method?: string;
     path: string;
@@ -30,13 +30,18 @@ type AdyenApiErrorResponse = {
     status: number;
 };
 
-function isAdyenApiErrorResponse(data: any): data is AdyenApiErrorResponse {
-    return data && data.errorCode && data.errorType && data.message && data.status;
+function isAdyenApiErrorResponse(data: unknown): data is AdyenApiErrorResponse {
+    if (typeof data !== 'object' || data === null) {
+        return false;
+    }
+
+    const { errorCode, errorType, message, status } = data as Partial<AdyenApiErrorResponse>;
+    return Boolean(errorCode && errorType && message && status);
 }
 
-export function http<T>(options: HttpOptions, payload?: any): Promise<T> {
+export async function http<T>(options: HttpOptions, payload?: unknown): Promise<T> {
     const {
-        headers = [],
+        headers = {},
         errorLevel = 'warn',
         errorCode,
         loadingContext = FALLBACK_CONTEXT,
@@ -63,48 +68,42 @@ export function http<T>(options: HttpOptions, payload?: any): Promise<T> {
 
     const url = `${loadingContext}${path}`;
 
-    return (
-        fetch(url, request)
-            .then(async response => {
-                // Handle empty responses (e.g., 204 No Content)
-                if (response.status === 204) {
-                    return;
-                }
+    try {
+        const response = await fetch(url, request);
 
-                const data = await response.json();
+        // Handle empty responses (e.g., 204 No Content)
+        if (response.status === 204) {
+            return undefined;
+        }
 
-                if (response.ok) {
-                    return data;
-                }
+        const data: unknown = await response.json();
 
-                if (isAdyenApiErrorResponse(data)) {
-                    handleFetchError({ message: data.message, level: errorLevel, cause: data, code: errorCode });
-                    return;
-                }
+        if (response.ok) {
+            return data as T;
+        }
 
-                const errorMessage = options.errorMessage || `Service at ${url} is not available`;
-                handleFetchError({ message: errorMessage, level: errorLevel, cause: data, code: errorCode });
-                return;
-            })
-            /**
-             * Catch block handles Network error, CORS error, or exception throw by the `handleFetchError`
-             * inside the `then` block
-             */
-            .catch((error: unknown) => {
-                /**
-                 * If error is instance of AdyenCheckoutError, which means that it was already
-                 * handled by the `handleFetchError` on the `then` block, then we just throw it.
-                 * There is no need to create it again
-                 */
-                if (error instanceof AdyenCheckoutError) {
-                    throw error;
-                }
+        const responseErrorMessage = isAdyenApiErrorResponse(data) ? data.message : options.errorMessage || `Service at ${url} is not available`;
 
-                // eslint-disable-next-line @typescript-eslint/no-base-to-string,@typescript-eslint/restrict-template-expressions
-                const errorMessage = options.errorMessage || `Call to ${url} failed. Error= ${error}`;
-                handleFetchError({ message: errorMessage, level: errorLevel, cause: error, code: errorCode });
-            })
-    );
+        handleFetchError({ message: responseErrorMessage, level: errorLevel, cause: data, code: errorCode });
+        return undefined;
+    } catch (error: unknown) {
+        /**
+         * Catch block handles Network error, CORS error, or exception thrown by the `handleFetchError`
+         * above.
+         *
+         * If error is instance of AdyenCheckoutError, which means that it was already
+         * handled by the `handleFetchError`, then we just throw it.
+         * There is no need to create it again
+         */
+        if (error instanceof AdyenCheckoutError) {
+            throw error;
+        }
+
+        // eslint-disable-next-line @typescript-eslint/no-base-to-string,@typescript-eslint/restrict-template-expressions
+        const errorMessage = options.errorMessage || `Call to ${url} failed. Error= ${error}`;
+        handleFetchError({ message: errorMessage, level: errorLevel, cause: error, code: errorCode });
+        return undefined;
+    }
 }
 
 function handleFetchError({ message, level, cause, code }: FetchErrorOptions): void {
@@ -123,10 +122,10 @@ function handleFetchError({ message, level, cause, code }: FetchErrorOptions): v
     }
 }
 
-export function httpGet<T = any>(options: HttpOptions, data?: any): Promise<T> {
+export function httpGet<T = unknown>(options: HttpOptions, data?: unknown): Promise<T> {
     return http<T>({ ...options, method: 'GET' }, data);
 }
 
-export function httpPost<T = any>(options: HttpOptions, data?: any): Promise<T> {
+export function httpPost<T = unknown>(options: HttpOptions, data?: unknown): Promise<T> {
     return http<T>({ ...options, method: 'POST' }, data);
 }

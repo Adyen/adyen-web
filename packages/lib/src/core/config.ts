@@ -61,7 +61,7 @@ export const GENERIC_OPTIONS = [
     'onOrderRequest',
     'onOrderUpdated',
     'onPaymentMethodsRequest'
-];
+] as const;
 
 export const DEFAULT_HTTP_TIMEOUT = 60000;
 

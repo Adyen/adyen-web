@@ -17,8 +17,8 @@ import { defaultProps } from './core.defaultProps';
 import { resolveEnvironments } from './Environment';
 import { LIBRARY_BUNDLE_TYPE, LIBRARY_VERSION } from './config';
 
-import type { PaymentAction, PaymentAmount, PaymentResponseData } from '../types/global-types';
-import type { CoreConfiguration, ICore, AdditionalDetailsData, CoreModules } from './types';
+import type { PaymentAction, PaymentAmount, PaymentMethodsResponse, PaymentResponseData } from '../types/global-types';
+import type { CoreConfiguration, ICore, AdditionalDetailsData, CoreModules, CorePropsForComponent } from './types';
 import type { UIElementProps } from '../components/internal/UIElement/types';
 import { AnalyticsLogEvent, LogEventType } from './Analytics/events/AnalyticsLogEvent';
 import CancelError from './Errors/CancelError';
@@ -353,7 +353,7 @@ class Core implements ICore {
      * @internal
      * @returns props for a new UIElement
      */
-    public getCorePropsForComponent(): any {
+    public getCorePropsForComponent(): CorePropsForComponent {
         const globalOptions = processGlobalOptions(this.options);
 
         return {
@@ -388,7 +388,7 @@ class Core implements ICore {
         throw new Error(errorMessage);
     }
 
-    private createPaymentMethodsList(paymentMethodsResponse?: PaymentMethods): void {
+    private createPaymentMethodsList(paymentMethodsResponse?: PaymentMethodsResponse): void {
         this.paymentMethodsResponse = new PaymentMethods(this.options.paymentMethodsResponse || paymentMethodsResponse, this.options);
     }
 

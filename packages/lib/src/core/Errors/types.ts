@@ -3,10 +3,13 @@ import { SFError } from '../../components/Card/components/CardInput/types';
 import Language from '../../language';
 import { StringObject } from '../../components/internal/Address/types';
 import { BaseElementProps } from '../../components/internal/BaseElement/types';
+import type { SRMessagesRef } from './SRMessages';
+
+export type FieldError = ValidationRuleResult | SFError | GenericError;
 
 export interface ErrorObj {
-    // Describes an object with unknown keys whose value is always a ValidationRuleResult or FieldError
-    [key: string]: ValidationRuleResult | SFError;
+    // Describes an object with unknown keys whose value is always a ValidationRuleResult, SFError or GenericError
+    [key: string]: FieldError;
 }
 
 export interface ValidationRuleErrorObj {
@@ -48,7 +51,7 @@ export interface SRPanelProps extends BaseElementProps {
 export type SRPanelConfig = Pick<SRPanelProps, 'enabled' | 'node' | 'showPanel' | 'moveFocus' | 'id' | 'ariaAttributes'>;
 
 export interface SRMessagesProps {
-    setComponentRef: (ref: any) => void;
+    setComponentRef: (ref: SRMessagesRef) => void;
 }
 
 export interface GenericError {

@@ -1,7 +1,7 @@
 import { useLayoutEffect, useState } from 'preact/hooks';
 import getDataset from '../../../core/Services/get-dataset';
 import { DataSet } from '../../../core/Services/data-set';
-import { PhonePrefixes } from './types';
+import { PhonePrefixDataSetItem, PhonePrefixes } from './types';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 
 function usePhonePrefixes({ allowedCountries, loadingContext, handleError }): PhonePrefixes {
@@ -9,9 +9,9 @@ function usePhonePrefixes({ allowedCountries, loadingContext, handleError }): Ph
     const [phonePrefixes, setPhonePrefixes] = useState<DataSet>([]);
 
     useLayoutEffect(() => {
-        getDataset('phonenumbers', loadingContext)
+        getDataset<PhonePrefixDataSetItem[]>('phonenumbers', loadingContext)
             .then(response => {
-                const countriesFilter = country => allowedCountries.includes(country.id);
+                const countriesFilter = (country: PhonePrefixDataSetItem) => allowedCountries.includes(country.id);
                 const filteredCountries = allowedCountries.length ? response.filter(countriesFilter) : response;
                 const mappedCountries = filteredCountries.map(({ prefix, id }) => ({
                     id: prefix,
