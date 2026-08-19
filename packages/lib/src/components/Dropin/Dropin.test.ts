@@ -192,10 +192,31 @@ describe('Dropin', () => {
     });
 
     describe('Instant Payments feature', () => {
-        test('formatProps formats instantPaymentTypes removing duplicates and invalid values', () => {
-            // @ts-ignore Testing invalid interface
-            const dropin = new Dropin(checkout, { instantPaymentTypes: ['paywithgoogle', 'paywithgoogle', 'paypal', 'alipay'] });
-            expect(dropin.props.instantPaymentTypes).toStrictEqual(['paywithgoogle']);
+        // TODO: REMOVE THIS WHEN THE EXPERIMENTATION IS DONE - the feature is disabled during the experimentation phase
+        test('formatProps ignores the instantPaymentTypes set by the merchant', () => {
+            const dropin = new Dropin(checkout, { instantPaymentTypes: ['paywithgoogle', 'applepay'] });
+            expect(dropin.props.instantPaymentTypes).toStrictEqual([]);
+        });
+
+        // TODO: REMOVE THIS WHEN THE EXPERIMENTATION IS DONE - the feature is disabled during the experimentation phase
+        test('should not create any instant payment element, even when the merchant configures instantPaymentTypes', async () => {
+            const dropin = new Dropin(
+                await createAdyenCheckout(
+                    getAdyenCheckoutConfiguration({
+                        paymentMethodsResponse: {
+                            paymentMethods: [
+                                { name: 'AliPay', type: 'alipay' },
+                                { name: 'Google Pay', type: 'googlepay', configuration: { merchantId: 'xxx', gatewayMerchantId: 'yyy' } }
+                            ]
+                        }
+                    })
+                ),
+                { instantPaymentTypes: ['googlepay'] }
+            );
+
+            const [, , instantPaymentElements] = (dropin as any).handleCreate();
+
+            await expect(instantPaymentElements).resolves.toStrictEqual([]);
         });
     });
 
