@@ -688,7 +688,7 @@ describe('Dropin', () => {
             await waitFor(() => expect(screen.getByRole('button', { name: 'Continue to AliPay' })).toBeVisible());
 
             const alipayHeader = screen.getByText('AliPay');
-            fireEvent.keyPress(alipayHeader, { key: 'Enter', code: 'Enter', charCode: 13 });
+            fireEvent.keyDown(alipayHeader, { key: 'Enter', code: 'Enter', charCode: 13 });
 
             expect(onEnterKeyPressedMock).toHaveBeenCalledTimes(1);
         });

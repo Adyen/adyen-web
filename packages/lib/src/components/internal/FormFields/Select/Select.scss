@@ -1,4 +1,5 @@
 @use 'styles/variable-generator';
+@use 'styles/mixins';
 
 .adyen-checkout__dropdown {
     position: relative;
@@ -7,7 +8,12 @@
     font-size: variable-generator.token(text-subtitle-font-size);
 }
 
+.adyen-checkout__dropdown__status {
+    @include mixins.a11y-visually-hidden;
+}
+
 .adyen-checkout__dropdown__button {
+    box-sizing: border-box;
     display: flex;
     align-items: center;
     cursor: pointer;
@@ -76,10 +82,15 @@
 }
 
 .adyen-checkout__dropdown__button__icon {
-    margin-right: variable-generator.token(spacer-060);
+    margin-right: variable-generator.token(spacer-040);
     max-width: variable-generator.token(spacer-110);
     height: 26px;
     border-radius: 3px;
+    
+    [dir='rtl'] & {
+        margin-right: 0;
+        margin-left: variable-generator.token(spacer-040);
+    }
 }
 
 .adyen-checkout__dropdown__button__text {
@@ -89,14 +100,20 @@
     white-space: nowrap;
     flex-grow: 1;
     text-align: left;
+
+    // Without this the flex item's automatic minimum size keeps it from shrinking, so a long name
+    // pushes the tags out of the button instead of being ellipsed.
+    min-width: 0;
 }
 
 .adyen-checkout__dropdown__button__text-placeholder {
     color: variable-generator.token(color-label-secondary);
 }
 
-.adyen-checkout__dropdown__button__secondary-text {
-    margin-right: variable-generator.token(spacer-070);
+.adyen-checkout__dropdown__button__tags {
+    margin-right: variable-generator.token(spacer-090);
+    max-width: 50%;
+    overflow: hidden;
 }
 
 .adyen-checkout__filter-input {
@@ -108,6 +125,13 @@
     height: 100%;
     padding: 0;
     width: 100%;
+
+    // `width: 100%` plus the automatic minimum size makes the input refuse to shrink, which pushes
+    // the tags out of the collapsed button. Let it give way so the tags stay visible, and ellipse
+    // the overflow so a long selected name matches the non-filterable variant instead of hard-clipping.
+    flex: 1 1 auto;
+    min-width: 0;
+    text-overflow: ellipsis;
 
     &:focus,
     &:active {
@@ -148,7 +172,7 @@
 .adyen-checkout__dropdown__element {
     display: flex;
     align-items: center;
-    padding: variable-generator.token(spacer-040);
+    padding: variable-generator.token(spacer-060);
     line-height: variable-generator.token(text-body-line-height);
     border: variable-generator.token(border-width-s) solid transparent;
     // stylelint-disable-next-line declaration-property-value-keyword-no-deprecated
@@ -163,8 +187,7 @@
         border-color 0.2s ease-out;
 
     .adyen-checkout__icon {
-        position: absolute;
-        right: variable-generator.token(spacer-040);
+        flex-shrink: 0;
     }
 }
 
@@ -189,17 +212,40 @@
 
 .adyen-checkout__dropdown__element__icon {
     border-radius: variable-generator.token(border-radius-s);
-    margin-right: variable-generator.token(spacer-060);
+    margin-right: variable-generator.token(spacer-040);
     max-width: variable-generator.token(spacer-110);
     max-height: 26px;
+
+    [dir='rtl'] & {
+        margin-left: variable-generator.token(spacer-040);
+        margin-right: 0;
+    }
+}
+
+.adyen-checkout__dropdown__element__content {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    min-width: 0;
+    gap: variable-generator.token(spacer-040);
+}
+
+.adyen-checkout__dropdown__element__primary {
+    display: flex;
+    align-items: center;
 }
 
 .adyen-checkout__dropdown__element__text {
     flex-grow: 1;
+    font-size: variable-generator.token(text-subtitle-font-size);
 }
 
-.adyen-checkout__dropdown__element__secondary-text:not(:last-child) {
-    margin-right: variable-generator.token(spacer-040);
+.adyen-checkout__dropdown__element__tags {
+    margin-left: variable-generator.token(spacer-040);
+
+    &:not(:last-child) {
+        margin-right: variable-generator.token(spacer-040);
+    }
 }
 
 .adyen-checkout__dropdown + .adyen-checkout-input__inline-validation {

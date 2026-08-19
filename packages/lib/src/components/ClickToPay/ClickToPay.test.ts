@@ -104,7 +104,7 @@ test('should reject isAvailable if shopper account is not found', async () => {
     await expect(element.isAvailable()).rejects.toBeFalsy();
 });
 
-describe('Click to Pay: ENTER keypress should perform an action only within the CtP Component and should not propagate the event up to UIElement', () => {
+describe('Click to Pay: ENTER keydown should perform an action only within the CtP Component and should not propagate the event up to UIElement', () => {
     test('[Login form] should trigger shopper email lookup when ENTER key is pressed', async () => {
         // It's not possible to wait for onChange because it's not called.
         // Hence, add some delay between individual keystrokes, which yields to the event loop and allows pending state updates to be processed.

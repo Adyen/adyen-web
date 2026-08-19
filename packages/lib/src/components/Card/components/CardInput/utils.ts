@@ -160,7 +160,7 @@ export const extractPropsForSFP = (props: CardInputProps): Pick<SFPProps, 'clien
         onAutoComplete: props.onAutoComplete,
         onBinValue: props.onBinValue,
         onConfigSuccess: props.onConfigSuccess,
-        handleKeyPress: props.handleKeyPress,
+        handleKeyDown: props.handleKeyDown,
         onError: props.onError,
         onFieldValid: props.onFieldValid,
         onLoad: props.onLoad,
@@ -189,6 +189,25 @@ export function lookupBlurBasedErrors(errorCode) {
 
 export function getFullBrandName(brand: string): string {
     return BRAND_READABLE_NAME_MAP[brand] ?? brand;
+}
+
+// CVC's format guidance (digit count/position) is brand-dependent, so the Amex variant of each CVC
+// error message is a distinct, fully-translated key rather than something composed at runtime.
+// Shared between CVC.tsx (on-screen error) and SecuredFieldsProvider.mapErrorsToValidationRuleResult
+// (SR-live-panel announcement & the public state.errors.<field>.errorI18n API), so both resolve the
+// same key for the same errorCode/brand combination.
+export const CVC_AMEX_ERROR_KEYS: Record<string, string> = {
+    'cc.cvc.920': 'cc.cvc.920.amex',
+    'cc.cvc.921': 'cc.cvc.921.amex'
+};
+
+/**
+ * Resolve the correct (brand-aware) translation key for a CVC error code.
+ * @param errorCode - the raw, untranslated CVC error key (e.g. 'cc.cvc.920')
+ * @param isAmex - whether the current/detected card brand is Amex
+ */
+export function resolveCVCErrorKey(errorCode: string, isAmex: boolean): string {
+    return (isAmex && CVC_AMEX_ERROR_KEYS[errorCode]) || errorCode;
 }
 
 export const mapDualBrandButtons = (

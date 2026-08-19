@@ -1,4 +1,5 @@
-import { h, Ref, RefObject, HTMLAttributes, TargetedKeyboardEvent } from 'preact';
+import { Ref, RefObject, HTMLAttributes, TargetedKeyboardEvent } from 'preact';
+import type { TagProps } from '../../Tag/types';
 
 export interface SelectItem {
     disabled?: boolean;
@@ -6,6 +7,7 @@ export interface SelectItem {
     id: string | number;
     name: string;
     secondaryText?: string;
+    tags?: TagProps[];
     selectedOptionName?: string;
 }
 

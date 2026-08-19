@@ -30,10 +30,6 @@ export default function StoredCardFields({
         ? i18n.get('creditCard.securityCode.contextualText.4digits')
         : i18n.get('creditCard.securityCode.contextualText.3digits');
 
-    const getError = (errors, fieldType) => {
-        return errors[fieldType] ? i18n.get(errors[fieldType]) : null;
-    };
-
     return (
         <div className="adyen-checkout__card__form adyen-checkout__card__form--oneClick" aria-label={ariaLabel}>
             <Fieldset classNamesFields={['adyen-checkout__card__exp-cvc']}>
@@ -58,7 +54,7 @@ export default function StoredCardFields({
                 {hasCVC && (
                     <CVC
                         cvcPolicy={cvcPolicy}
-                        error={getError(errors, ENCRYPTED_SECURITY_CODE)}
+                        errorCode={errors[ENCRYPTED_SECURITY_CODE]}
                         focused={focusedElement === 'encryptedSecurityCode'}
                         filled={!!valid.encryptedSecurityCode || !!errors.encryptedSecurityCode}
                         isValid={!!valid.encryptedSecurityCode}

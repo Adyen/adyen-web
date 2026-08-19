@@ -14,7 +14,7 @@ import {
     CardAutoCompleteData,
     CardConfigSuccessData,
     CardLoadData,
-    SFKeyPressObj,
+    SFKeyDownObj,
     SFFieldType
 } from '../lib/types';
 import { CSFReturnObject, CSFSetupObject } from '../lib/CSF/types';
@@ -22,6 +22,7 @@ import { CVC_POLICY_REQUIRED, DATE_POLICY_REQUIRED, DEDICATED_CARD_COMPONENTS, E
 import { BinLookupResponse } from '../../../Card/types';
 import AdyenCheckoutError from '../../../../core/Errors/AdyenCheckoutError';
 import { SFStateErrorObj } from '../../../Card/components/CardInput/types';
+import { resolveCVCErrorKey } from '../../../Card/components/CardInput/utils';
 import { getErrorMessageFromCode } from '../../../../core/Errors/utils';
 import { SF_ErrorCodes } from '../../../../core/Errors/constants';
 import { TxVariants } from '../../../tx-variants';
@@ -32,24 +33,24 @@ import { TxVariants } from '../../../tx-variants';
  */
 class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
     private csfLoadFailTimeout: number;
-    private csfLoadFailTimeoutMS: number;
-    private csfConfigFailTimeout: number;
-    private csfConfigFailTimeoutMS: number;
+    private readonly csfLoadFailTimeoutMS: number;
+    private readonly csfConfigFailTimeout: number;
+    private readonly csfConfigFailTimeoutMS: number;
     private numCharsInField: object;
     private rootNode: HTMLElement;
     private numDateFields: number;
     private csf: CSFReturnObject;
-    private handleOnLoad: (obj: CardLoadData) => void;
-    private handleOnConfigSuccess: (obj: CardConfigSuccessData) => void;
-    private handleOnFieldValid: (obj: CardFieldValidData) => void;
-    private handleOnAllValid: (obj: CardAllValidData) => void;
-    private handleOnBrand: (obj: CardBrandData) => void;
-    private handleFocus: (obj: CardFocusData) => void;
-    private handleOnError: (obj: CardErrorData, hasUnsupportedCard?: boolean) => void;
-    private handleOnAutoComplete: (obj: CardAutoCompleteData) => void;
-    private handleOnNoDataRequired: () => void;
-    private handleOnTouchstartIOS: (obj) => void;
-    private handleKeyPressed: (obj: SFKeyPressObj) => void;
+    private readonly handleOnLoad: (obj: CardLoadData) => void;
+    private readonly handleOnConfigSuccess: (obj: CardConfigSuccessData) => void;
+    private readonly handleOnFieldValid: (obj: CardFieldValidData) => void;
+    private readonly handleOnAllValid: (obj: CardAllValidData) => void;
+    private readonly handleOnBrand: (obj: CardBrandData) => void;
+    private readonly handleFocus: (obj: CardFocusData) => void;
+    private readonly handleOnError: (obj: CardErrorData, hasUnsupportedCard?: boolean) => void;
+    private readonly handleOnAutoComplete: (obj: CardAutoCompleteData) => void;
+    private readonly handleOnNoDataRequired: () => void;
+    private readonly handleOnTouchstartIOS: (obj) => void;
+    private readonly handleKeyDown: (obj: SFKeyDownObj) => void;
     public state: SFPState;
     public props: SFPProps;
     private issuingCountryCode: string;
@@ -89,7 +90,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
         this.handleOnNoDataRequired = handlers.handleOnNoDataRequired.bind(this);
         this.handleOnAutoComplete = handlers.handleOnAutoComplete.bind(this);
         this.handleOnTouchstartIOS = handlers.handleOnTouchstartIOS.bind(this); // Only called when iOS detected
-        this.handleKeyPressed = handlers.handleKeyPressed.bind(this);
+        this.handleKeyDown = handlers.handleKeyDown.bind(this);
 
         this.processBinLookupResponse = this.processBinLookupResponse.bind(this);
 
@@ -185,7 +186,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
                 onAdditionalSFConfig: this.props.onAdditionalSFConfig,
                 onAdditionalSFRemoved: this.props.onAdditionalSFRemoved,
                 onTouchstartIOS: this.handleOnTouchstartIOS,
-                onKeyPressed: this.handleKeyPressed
+                onKeyDown: this.handleKeyDown
             },
             isKCP: this.state.hasKoreanFields,
             legacyInputMode: this.props.legacyInputMode,
@@ -329,7 +330,10 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
                     errorMessage: getErrorMessageFromCode(errorCode, SF_ErrorCodes), // this is the human-readable, untranslated, explanation of the error that will exist on the error object in card.state.errors
                     // For v5 the object found in state.errors should also contain the additional properties that used to be sent to the onError callback
                     // namely: translation, errorCode, a ref to rootNode &, in the case of failed binLookup, an array of the detectedBrands
-                    errorI18n: this.props.i18n.get(errorCode),
+                    // CVC's error copy is brand-dependent (Amex vs. others), so resolve the brand-aware
+                    // key here too - otherwise this errorI18n value (consumed by the SR-live-panel and
+                    // the public state.errors.<field>.errorI18n API) would always report the non-Amex text.
+                    errorI18n: this.props.i18n.get(resolveCVCErrorKey(errorCode, this.state.brand === 'amex')),
                     error: errorCode,
                     rootNode: this.rootNode,
                     ...(this.state.detectedUnsupportedBrands && { detectedBrands: this.state.detectedUnsupportedBrands })
