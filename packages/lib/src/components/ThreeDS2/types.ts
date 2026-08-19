@@ -199,4 +199,5 @@ export type ThreeDS2ConfigProps = {
     readonly i18n?: Language;
 };
 
-export type ThreeDS2ActionProps = CardConfiguration & Pick<ThreeDS2ConfigProps, 'isMDFlow' | 'on3DS2RedirectFlowComplete' | 'usePasskeyIFrameAttributes'>;
+export type ThreeDS2ActionProps = CardConfiguration &
+    Pick<ThreeDS2ConfigProps, 'isMDFlow' | 'on3DS2RedirectFlowComplete' | 'usePasskeyIFrameAttributes'>;
