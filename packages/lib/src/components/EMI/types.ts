@@ -56,7 +56,7 @@ export interface EmiIssuer {
     /** e.g. `HDFC Bank`. Rendered as the provider label. */
     issuerName: string;
     /**
-     * e.g. `HDFC`. Sent on the payment request as `issuerName`, exactly as it arrived: the backend
+     * e.g. `HDFC`. Sent on the payment request as `issuerCode`, exactly as it arrived: the backend
      * matches it against the card BIN by string equality, so never send a normalised copy of it.
      */
     issuerCode: string;
@@ -73,15 +73,12 @@ export interface EmiSelection {
     plan: EmiPlan;
 }
 
-export type EmiPlanPayloadType = 'STANDARD' | 'LOW_COST' | 'NO_COST';
-
-export type EmiPlanPayloadFundingSource = 'CREDIT' | 'DEBIT';
-
+/** The `emiPlan` object of the `/payments` request: the selected plan and issuer, as the lookup returned them. */
 export interface EmiPlanPayload {
     tenureMonths: number;
-    issuerName: string;
-    fundingSource: EmiPlanPayloadFundingSource;
-    planType: EmiPlanPayloadType;
+    issuerCode: string;
+    fundingSource: EmiIssuerFundingSource;
+    planType: EmiPlanTypeKey;
     interestRateBps: number;
     appliedOfferIds?: string[];
 }

@@ -548,9 +548,9 @@ describe('EMI', () => {
 
             expect(emi.formatData()).toHaveProperty('emiPlan', {
                 tenureMonths: 3,
-                issuerName: 'HDFC',
-                fundingSource: 'CREDIT',
-                planType: 'NO_COST',
+                issuerCode: 'HDFC',
+                fundingSource: 'credit',
+                planType: 'noCost',
                 interestRateBps: 1550,
                 appliedOfferIds: ['offer-hdfc-nocost']
             });
@@ -598,9 +598,9 @@ describe('EMI', () => {
 
             expect(emi.formatData()).toHaveProperty('emiPlan', {
                 tenureMonths: 6,
-                issuerName: 'HDFC',
-                fundingSource: 'CREDIT',
-                planType: 'STANDARD',
+                issuerCode: 'HDFC',
+                fundingSource: 'credit',
+                planType: 'standard',
                 interestRateBps: 1550
             });
         });
@@ -614,9 +614,9 @@ describe('EMI', () => {
 
             expect(emi.formatData()).toHaveProperty('emiPlan', {
                 tenureMonths: 3,
-                issuerName: 'ICICI',
-                fundingSource: 'CREDIT',
-                planType: 'LOW_COST',
+                issuerCode: 'ICICI',
+                fundingSource: 'credit',
+                planType: 'lowCost',
                 interestRateBps: 750,
                 appliedOfferIds: ['offer-icici-lowcost']
             });
@@ -626,7 +626,7 @@ describe('EMI', () => {
         test('should expose emiPlan on the data getter, alongside the wrapping it adds', () => {
             const data: PaymentData & { emiPlan?: EmiPlanPayload } = mountEmi().data;
 
-            expect(data.emiPlan).toEqual(expect.objectContaining({ issuerName: 'HDFC', planType: 'NO_COST' }));
+            expect(data.emiPlan).toEqual(expect.objectContaining({ issuerCode: 'HDFC', planType: 'noCost' }));
             expect(data.paymentMethod).toHaveProperty('type', TxVariants.scheme);
             expect(data.paymentMethod).toHaveProperty('checkoutAttemptId');
             expect(data).toHaveProperty('clientStateDataIndicator', true);

@@ -108,9 +108,9 @@ A no-cost plan hides the rate in its label but keeps the interest row, because t
     "paymentMethod": { "type": "scheme", "encryptedCardNumber": "adyenjs_0_1_18$...", "...": "..." },
     "emiPlan": {
         "tenureMonths": 3,
-        "issuerName": "HDFC",
-        "fundingSource": "CREDIT",
-        "planType": "NO_COST",
+        "issuerCode": "HDFC",
+        "fundingSource": "credit",
+        "planType": "noCost",
         "interestRateBps": 1550,
         "appliedOfferIds": ["offer-hdfc-nocost"]
     },
@@ -119,13 +119,10 @@ A no-cost plan hides the rate in its label but keeps the interest row, because t
 }
 ```
 
-- `plan.type` is cast: `standard` → `STANDARD`, `noCost` → `NO_COST`, `lowCost` → `LOW_COST`.
-- `issuer.fundingSource` is cast: `credit` → `CREDIT`, `debit` → `DEBIT`.
-- `issuerName` is `issuerCode` as it arrived, because the backend compares it to the card BIN by exact string match. Never a lowercased copy of it, and never the `issuerName` the provider row displays: `HDFC Bank` would fail where `HDFC` succeeds.
 - `tenureMonths` and `interestRateBps` are echoed from the selected plan, as JSON numbers.
 - `appliedOfferIds` carries the single displayed offer, and is omitted rather than sent empty when the plan carries none.
 
-`buildEmiPlanPayload` in `utils.ts` builds the object, and `EMI.formatData()` merges it in only once a plan is selected — a partial or placeholder `emiPlan` is never sent. Both casing tables live in `constants.ts`, as `PLAN_TYPE` and `ISSUER_FUNDING_SOURCE`.
+`buildEmiPlanPayload` in `utils.ts` builds the object, and `EMI.formatData()` merges it in only once a plan is selected — a partial or placeholder `emiPlan` is never sent. `appliedOfferIds` is the one field the SDK decides; every other one is a straight echo, so a value the backend adds needs no mapping here.
 
 ## Considered options
 
@@ -164,8 +161,8 @@ Choose **Option 1: Keep the API response**.
 
 The response already contains the domain data needed by the selectors, summary, and payment payload. The few UI-specific values can be derived where they are used. Keeping the response intact reduces code and, more importantly for an evolving MVP API, removes a conversion layer where fields could be dropped or changed by accident.
 
-### Unsupported enum values require an SDK release
+### An unsupported enum value costs display, not the payment
 
-`type` and `fundingSource` are closed sets. If the backend adds a value that the installed SDK does not know how to map, that SDK cannot build a correct `/payments` payload. The change requires a new SDK version rather than a runtime filter that silently hides the plan.
+`type` and `fundingSource` are typed as closed sets, but the payload no longer depends on that: a value the installed SDK has never heard of is echoed to `/payments` unchanged, so the payment still carries what the shopper picked. What such a plan misses is its display treatment — `PLAN_TAGS` in `EMIPlanSelection.tsx` only names the plan types it knows, so a new one renders untagged and priced like a `standard` plan. Showing it properly is an SDK release.
 
-Runtime filtering would change an explicit incompatibility into missing plans in the UI. Exhaustiveness is checked by TypeScript, in both directions: `PLAN_TYPE` and `ISSUER_FUNDING_SOURCE` satisfy `Record<EmiPlanTypeKey, EmiPlanPayloadType>` and `Record<EmiIssuerFundingSource, EmiPlanPayloadFundingSource>`, so a lookup value with no mapping is a missing key, while `EmiPayloadCasingIsExhaustive` fails the build for a payment-request value nothing maps onto. Adding a value to either side without its counterpart fails the build.
+The plan is not filtered out in the meantime. Filtering would turn a cosmetic gap into a plan the shopper cannot select at all, which is the worse of the two.
