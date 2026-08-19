@@ -8,6 +8,7 @@ import Language from '../../../../language/Language';
 import InputText from '../../FormFields/InputText';
 import { AutocompleteValue } from '../../FormFields/types';
 import { ADDRESS_FIELD_TOKEN_MAP } from '../constants';
+import { AddressField } from '../../../../types';
 
 function getErrorMessage(errors: AddressStateError, fieldName: string, i18n: Language, label: string): string | boolean {
     if (typeof errors[fieldName]?.errorMessage === 'object') {
@@ -40,7 +41,7 @@ function FieldContainer(props: Readonly<FieldContainerProps>) {
 
     const value: string = data[fieldName];
     const selectedCountry: string = data.country;
-    const isOptional: boolean = props.specifications.countryHasOptionalField(selectedCountry, fieldName);
+    const isOptional: boolean = props.specifications.countryHasOptionalField(selectedCountry, fieldName as AddressField);
     const labelKey: string = props.specifications.getKeyForField(fieldName, selectedCountry);
     const optionalLabel = isOptional ? ` ${i18n.get('field.title.optional')}` : '';
     const label = `${i18n.get(labelKey)}${optionalLabel}`;

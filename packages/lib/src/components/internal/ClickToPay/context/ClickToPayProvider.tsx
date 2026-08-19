@@ -1,4 +1,4 @@
-import { h } from 'preact';
+import { ComponentChildren, h } from 'preact';
 import { CtpState } from '../services/ClickToPayService';
 import { ClickToPayContext } from './ClickToPayContext';
 import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
@@ -16,7 +16,7 @@ export type ClickToPayProviderProps = {
     isStandaloneComponent: boolean;
     clickToPayService: IClickToPayService | null;
     configuration: ClickToPayProps;
-    children: any;
+    children: ComponentChildren;
     setClickToPayRef(ref: ComponentMethodsRef): void;
     onSubmit(payload: ClickToPayCheckoutPayload): void;
     onSetStatus(status: UIElementStatus): void;

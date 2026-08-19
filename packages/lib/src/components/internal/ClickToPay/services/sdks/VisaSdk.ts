@@ -3,6 +3,7 @@ import AbstractSrcInitiator from './AbstractSrcInitiator';
 import SrciError, { MastercardError, VisaError } from './SrciError';
 import type {
     CustomSdkConfiguration,
+    ISchemeSdk,
     SrciCompleteIdentityValidationResponse,
     SrcIdentityLookupParams,
     SrciIdentityLookupResponse,
@@ -15,8 +16,17 @@ const IdentityTypeMap = {
     telephoneNumber: 'MOBILE_NUMBER'
 };
 
+type VisaSdkInitParams = SrcInitParams & ReturnType<typeof getVisaSetttings> & { srciTransactionId: string };
+
+export interface IVisaSchemeSdk extends ISchemeSdk {
+    init(params: VisaSdkInitParams): Promise<void>;
+    identityLookup(params: { identityValue: string; type: string }): Promise<SrciIdentityLookupResponse>;
+    completeIdentityValidation(otp: string): Promise<SrciCompleteIdentityValidationResponse>;
+}
+
 class VisaSdk extends AbstractSrcInitiator {
     public readonly schemeName = 'visa';
+    declare public schemeSdk: IVisaSchemeSdk;
 
     constructor(environment: string, customSdkConfig: CustomSdkConfiguration, analytics: IAnalytics) {
         super(environment.toLowerCase().includes('live') ? VISA_SDK_PROD : VISA_SDK_TEST, customSdkConfig, analytics);
