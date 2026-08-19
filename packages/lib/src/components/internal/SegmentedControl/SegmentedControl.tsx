@@ -68,6 +68,7 @@ export const SegmentedControl = <T,>({
                     key={value}
                     onClick={(event: MouseEvent) => onChange(value, event)}
                     // Workaround: See ADR-0001-uielement-keyboard-event-propagation-workaround
+                    onKeyPress={stopPropagationForActionKeys}
                     onKeyDown={stopPropagationForActionKeys}
                     className={cx('adyen-checkout__segmented-control-segment', {
                         'adyen-checkout__segmented-control-segment--selected': selectedValue === value

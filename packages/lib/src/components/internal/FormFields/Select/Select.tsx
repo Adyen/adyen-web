@@ -337,7 +337,7 @@ function Select({
                 // What happens otherwise is that just the first status message is announced
                 // tested on VoiceOver on Chrome
                 aria-relevant="additions text"
-                className="adyen-checkout-sr-panel--sr-only"
+                className="adyen-checkout__dropdown__status"
             >
                 {statusMessage}
             </div>

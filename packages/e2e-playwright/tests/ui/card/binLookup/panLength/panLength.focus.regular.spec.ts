@@ -41,14 +41,12 @@ test.describe('Test Card, & binLookup w. panLength property', () => {
         await expect(card.expiryDateInput).toBeFocused();
 
         // Expect iframe to exist in number field with maxlength attr kept to 24, since we know mitigate against binLookup having incorrect panLength values
-        let panInputMaxLength = await card.cardNumberInput.getAttribute('maxlength');
-        expect(panInputMaxLength).toEqual('24');
+        await expect(card.cardNumberInput).toHaveAttribute('maxlength', '24');
 
         // Delete number and see that the maxlength is kept on the iframe
         await card.deleteCardNumber();
-        panInputMaxLength = await card.cardNumberInput.getAttribute('maxlength');
 
-        expect(panInputMaxLength).toEqual('24');
+        await expect(card.cardNumberInput).toHaveAttribute('maxlength', '24');
     });
 
     test('#2 Fill out PAN & see that focus moves to CVC since expiryDate is optional', async ({ card, page }) => {

@@ -1,5 +1,35 @@
 # @adyen/adyen-web
 
+## 6.43.0
+
+### Minor Changes
+
+- Improved: Select options can now carry informative `tags` (a coloured label), rendered both in the open list and on the collapsed button. As part of this, `secondaryText` now renders as supporting text underneath the option name instead of inline beside it, and it is no longer shown on the collapsed button. ([#4112](https://github.com/Adyen/adyen-web/pull/4112))
+
+## 6.42.0
+
+### Minor Changes
+
+- Improved: the 3DS2 iframe to add attributes which enable WebAuthn and SPC challenges. ([#4116](https://github.com/Adyen/adyen-web/pull/4116))
+
+- New: Drop-in emits a new `paymentListDisplayed` analytics event reporting the payment methods it rendered (`availablePaymentMethods`, each with `displayMode`) in display order, plus the `/paymentMethods` items it did not render (`unavailablePaymentMethods`). ([#4081](https://github.com/Adyen/adyen-web/pull/4081))
+
+### Patch Changes
+
+- Fixed: US postal code validation & postal code formatting for partial billing address mode ([#4111](https://github.com/Adyen/adyen-web/pull/4111))
+
+## 6.41.1
+
+### Patch Changes
+
+- Fixed: Internal types for triggerBinLookup and CardElement ([#4089](https://github.com/Adyen/adyen-web/pull/4089))
+
+- Fixed: focus moving to the wrong component when multiple OpenInvoice-based components (e.g. AfterPay, RatePay, FacilyPay, Atome) are rendered on the same page and a validation error occurs ([#4109](https://github.com/Adyen/adyen-web/pull/4109))
+
+- Fixed: Prevent payment submission when press enter inside active element (select, dualBrandSelector) ([#4114](https://github.com/Adyen/adyen-web/pull/4114))
+
+- Fixed: Duplicate characters when typing in address fields using an IME ([#4095](https://github.com/Adyen/adyen-web/pull/4095))
+
 ## 6.41.0
 
 ### Minor Changes

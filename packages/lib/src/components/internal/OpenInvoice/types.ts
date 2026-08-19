@@ -27,7 +27,7 @@ export interface OpenInvoiceProps extends UIElementProps {
     countryCode?: string;
     data: {
         companyDetails?: CompanyDetailsSchema;
-        personalDetails?: PersonalDetailsSchema;
+        personalDetails?: PersonalDetailsSchema | null;
         billingAddress?: AddressData;
         deliveryAddress?: AddressData;
         bankAccount?: BankDetailsSchema;

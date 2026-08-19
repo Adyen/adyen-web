@@ -18,7 +18,7 @@ test.describe('Testing Bancontact, with dual branded cards, how UI resets', () =
             await bcmc.deleteCardNumber();
 
             // Now only a single brand
-            await expect(bcmc.isDualBrandSelectionVisible()).resolves.toBe(false);
+            await expect(bcmc.dualBrandSelector).toBeHidden();
             await expect(bcmc.brandingIcon).toHaveAttribute('alt', 'Bancontact card');
         }
     );

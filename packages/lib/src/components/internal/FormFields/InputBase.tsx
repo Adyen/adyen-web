@@ -11,6 +11,7 @@ import {
 import { useCallback } from 'preact/hooks';
 import classNames from 'classnames';
 import { ARIA_CONTEXT_SUFFIX, ARIA_ERROR_SUFFIX } from '../../../core/Errors/constants';
+import { trimValWithOneSpace } from '../../../utils/validator-utils';
 import Language from '../../../language';
 import { AutocompleteValue } from './types';
 import './FormFields.scss';
@@ -58,16 +59,36 @@ export default function InputBase({ setRef, ...props }: Readonly<InputBaseProps>
 
     const handleInput = useCallback(
         (event: TargetedInputEvent<HTMLInputElement>) => {
-            props.onInput(event);
+            props.onInput?.(event);
         },
         [props.onInput]
     );
 
-    const handleKeyDown = useCallback(
+    /**
+     *  Event is fired when a key that produces a character value is pressed down.
+     *  ENTER keypress also triggers this event.
+     *
+     *  TODO: 'keypress' event is deprecated
+     *  https://developer.mozilla.org/en-US/docs/Web/API/Element/keypress_event
+     */
+    const handleKeyPress = useCallback(
         (event: TargetedKeyboardEvent<HTMLInputElement>) => {
-            if (props?.onKeyDown) props.onKeyDown(event);
+            if (props?.onKeyPress) props.onKeyPress(event);
         },
-        [props?.onKeyDown]
+        [props?.onKeyPress]
+    );
+
+    /**
+     * Event is fired when certain keys are pressed (keys that do not output characters):
+     * Backspace, Arrow keys, Shift, Ctrl, Command, Option, Esc
+     *
+     * Exception: ENTER keypress triggers 'onKeyPress' AND 'onKeyUp'
+     */
+    const handleKeyUp = useCallback(
+        (event: TargetedKeyboardEvent<HTMLInputElement>) => {
+            if (props?.onKeyUp) props.onKeyUp(event);
+        },
+        [props?.onKeyUp]
     );
 
     const handleBlur = useCallback(
@@ -75,7 +96,8 @@ export default function InputBase({ setRef, ...props }: Readonly<InputBaseProps>
             props?.onBlurHandler?.(event); // From Field component
 
             if (props.trimOnBlur) {
-                (event.target as HTMLInputElement).value = (event.target as HTMLInputElement).value.trim(); // needed to trim trailing spaces in field (leading spaces can be done via formatting)
+                const input = event.target as HTMLInputElement;
+                input.value = trimValWithOneSpace(input.value);
             }
 
             props?.onBlur?.(event);
@@ -98,7 +120,7 @@ export default function InputBase({ setRef, ...props }: Readonly<InputBaseProps>
             'adyen-checkout__input--invalid': isInvalid,
             'adyen-checkout__input--valid': isValid
         },
-        classNameModifiers.map(m => `adyen-checkout__input--${m}`)
+        (classNameModifiers ?? []).map(m => `adyen-checkout__input--${m}`)
     );
 
     // Don't spread classNameModifiers etc to input element (it ends up as an attribute on the element itself)
@@ -135,7 +157,8 @@ export default function InputBase({ setRef, ...props }: Readonly<InputBaseProps>
             onInput={handleInput}
             onBlur={handleBlur}
             onFocus={handleFocus}
-            onKeyDown={handleKeyDown}
+            onKeyUp={handleKeyUp}
+            onKeyPress={handleKeyPress}
             disabled={disabled}
             ref={setRef}
         />

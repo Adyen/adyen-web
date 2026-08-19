@@ -23,11 +23,11 @@ export interface Formatter {
 }
 
 export type FormProps = {
-    schema: string[];
-    rules?: ValidatorRules;
+    schema: string[] | null;
+    rules?: ValidatorRules | null;
     formatters?: {
         [key: string]: Formatter | Function;
-    };
+    } | null;
     [key: string]: any;
 };
 

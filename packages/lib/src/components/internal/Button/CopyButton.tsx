@@ -1,4 +1,4 @@
-import { h, TargetedMouseEvent } from 'preact';
+import { h } from 'preact';
 import { useCallback } from 'preact/hooks';
 import Button from './Button';
 import { ButtonProps } from './types';
@@ -14,7 +14,7 @@ export interface CopyButtonProps extends Omit<ButtonProps, 'variant' | 'onClickC
      */
     text: string;
     copiedLabel?: string;
-    onClick?: (e: TargetedMouseEvent<HTMLButtonElement>) => void;
+    onClick?: (e: h.JSX.TargetedMouseEvent<HTMLButtonElement>) => void;
 }
 
 const CopyButton = (props: Readonly<CopyButtonProps>) => {
@@ -36,6 +36,7 @@ const CopyButton = (props: Readonly<CopyButtonProps>) => {
             variant="action"
             onClick={onClick}
             // Workaround: See ADR-0001-uielement-keyboard-event-propagation-workaround
+            onKeyPress={stopPropagationForActionKeys}
             onKeyDown={stopPropagationForActionKeys}
             icon={props.icon ?? getImage({ imageFolder: 'components/' })(`${PREFIX}copy`)}
             label={props.label ?? i18n.get('button.copy')}

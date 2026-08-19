@@ -9,7 +9,7 @@ const createPatternByDigits = (digits: number) => {
     };
 };
 
-export const validatePostalCode = (val: string, countryCode: string, validatorRules: ValidatorRules) => {
+export const validatePostalCode = (val: string, countryCode: string | null, validatorRules: ValidatorRules) => {
     if (countryCode) {
         // If there is no value, we display the 'required' error message
         if (isEmpty(val)) return null;
@@ -71,7 +71,7 @@ const postalCodePatterns = {
     SE: createPatternByDigits(5),
     SG: createPatternByDigits(6),
     SK: createPatternByDigits(5),
-    US: createPatternByDigits(5)
+    US: { pattern: /^\d{5}(?:-\d{4})?$/ }
 };
 
 /**
@@ -80,7 +80,7 @@ const postalCodePatterns = {
  *
  * @param country - Country that will be used to validate postal code
  */
-export const getPartialAddressValidationRules = (country: string): ValidatorRules => {
+export const getPartialAddressValidationRules = (country: string | null): ValidatorRules => {
     const validationRules: ValidatorRules = {
         postalCode: {
             modes: ['blur'],
