@@ -236,7 +236,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     protected onChange(): void {
         this.props.onChange?.(
             {
-                data: this.data as PaymentData,
+                data: this.data,
                 isValid: this.isValid,
                 errors: this.state.errors,
                 valid: this.state.valid
@@ -278,12 +278,12 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         if (this.core.session) {
             const beforeSubmitEvent: Promise<PaymentData> = this.props.beforeSubmit
                 ? new Promise((resolve, reject) => {
-                      void this.props.beforeSubmit(this.data as PaymentData, this.elementRef, {
+                      void this.props.beforeSubmit(this.data, this.elementRef, {
                           resolve,
                           reject: () => reject(new CancelError('beforeSubmitRejected'))
                       });
                   })
-                : Promise.resolve(this.data as PaymentData);
+                : Promise.resolve(this.data);
 
             return beforeSubmitEvent.then(this.submitUsingSessionsFlow);
         }
@@ -307,7 +307,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         return new Promise<CheckoutAdvancedFlowResponse>((resolve, reject) => {
             this.props.onSubmit(
                 {
-                    data: this.data as PaymentData,
+                    data: this.data,
                     isValid: this.isValid
                 },
                 this.elementRef,
