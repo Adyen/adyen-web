@@ -66,8 +66,8 @@ abstract class BaseElement<P extends BaseElementProps, S extends BaseElementStat
      * Executed on the `data` getter.
      * Returns the component data necessary for the /payments request
      */
-    protected formatData(): Partial<PaymentData> {
-        return {};
+    protected formatData(): PaymentData {
+        return {} as PaymentData;
     }
 
     protected submitAnalytics(_analyticsObj?: AbstractAnalyticsEvent) {
@@ -86,7 +86,7 @@ abstract class BaseElement<P extends BaseElementProps, S extends BaseElementStat
      * Returns the component payment data ready to submit to the Checkout API
      * Note: this does not ensure validity, check isValid first
      */
-    public get data(): Partial<PaymentData> {
+    public get data(): PaymentData {
         const order = this.state.order || this.props.order;
         const componentData = this.formatData();
         const doesPaymentMethodHaveNativeComponent = Boolean(getComponentNameOfPaymentType(componentData.paymentMethod?.type));

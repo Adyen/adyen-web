@@ -24,7 +24,7 @@ export interface BaseElementProps {
 export type BaseElementState = { order?: Order } & Pick<OnChangeData, 'valid' | 'errors'> & Record<string, any>;
 
 export interface IBaseElement<P extends BaseElementProps = BaseElementProps, S extends BaseElementState = BaseElementState> {
-    data: Partial<PaymentData>;
+    data: PaymentData;
     state: S;
     props: P;
     _id: string;
