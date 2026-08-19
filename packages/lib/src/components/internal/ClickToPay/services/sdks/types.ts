@@ -82,3 +82,11 @@ export interface SrcIdentityLookupParams {
     identityValue: string;
     type: 'email' | 'telephoneNumber';
 }
+
+export interface ISchemeSdk {
+    isRecognized(): Promise<SrciIsRecognizedResponse>;
+    initiateIdentityValidation(): Promise<SrciInitiateIdentityValidationResponse>;
+    getSrcProfile(params: { idTokens: string[] }): Promise<SrcProfile>;
+    checkout(params: SrcCheckoutParams): Promise<SrciCheckoutResponse>;
+    unbindAppInstance(): Promise<void>;
+}

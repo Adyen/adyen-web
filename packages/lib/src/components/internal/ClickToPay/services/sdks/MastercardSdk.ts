@@ -3,6 +3,7 @@ import AbstractSrcInitiator from './AbstractSrcInitiator';
 import SrciError, { MastercardError, VisaError } from './SrciError';
 import {
     CustomSdkConfiguration,
+    ISchemeSdk,
     SrciCompleteIdentityValidationResponse,
     SrcIdentityLookupParams,
     SrciIdentityLookupResponse,
@@ -15,8 +16,17 @@ const IdentityTypeMap = {
     telephoneNumber: 'MOBILE_PHONE_NUMBER'
 };
 
+type MastercardSdkInitParams = SrcInitParams & ReturnType<typeof getMastercardSettings> & { srciTransactionId: string };
+
+export interface IMastercardSchemeSdk extends ISchemeSdk {
+    init(params: MastercardSdkInitParams): Promise<void>;
+    identityLookup(params: { consumerIdentity: { identityValue: string; identityType: string } }): Promise<SrciIdentityLookupResponse>;
+    completeIdentityValidation(params: { validationData: string }): Promise<SrciCompleteIdentityValidationResponse>;
+}
+
 class MastercardSdk extends AbstractSrcInitiator {
     public readonly schemeName = 'mc';
+    declare public schemeSdk: IMastercardSchemeSdk;
 
     constructor(environment: string, customSdkConfig: CustomSdkConfiguration, analytics: IAnalytics) {
         super(environment.toLowerCase().includes('live') ? MC_SDK_PROD : MC_SDK_TEST, customSdkConfig, analytics);
