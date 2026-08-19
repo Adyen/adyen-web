@@ -140,7 +140,7 @@ export class CustomCard extends UIElement<CustomCardConfiguration> {
                 }}
                 {...this.props}
                 {...this.state}
-                handleKeyPress={this.handleKeyPress}
+                handleKeyDown={this.handleKeyDown}
                 rootNode={this._node}
                 onChange={this.setState}
                 onBinValue={this.onBinValue}

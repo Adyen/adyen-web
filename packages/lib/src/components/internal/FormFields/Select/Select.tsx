@@ -10,6 +10,7 @@ import './Select.scss';
 import { ARIA_CONTEXT_SUFFIX, ARIA_ERROR_SUFFIX } from '../../../../core/Errors/constants';
 import { simulateFocusScroll } from '../utils';
 import { useCoreContext } from '../../../../core/Context/CoreProvider';
+import { stopPropagationForActionKeys } from '../../Button/stopPropagationForActionKeys';
 
 function Select({
     items = [],
@@ -156,6 +157,7 @@ function Select({
      * @param e - KeyboardEvent
      */
     const handleButtonKeyDown = (e: KeyboardEvent) => {
+        stopPropagationForActionKeys(e);
         if (e.key === keys.enter && filterable && showList && textFilter) {
             handleSelect(e);
         } else if (e.key === keys.escape) {
