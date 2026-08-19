@@ -211,7 +211,7 @@ describe('Test mock binLookup results on CardInput.state', () => {
 });
 
 describe('Funding source validation - the contract with SecuredFields', () => {
-    const brandObj = (brand: string, fundingSource?: string) => ({
+    const brandObj = (brand: string, fundingSource?: string[]) => ({
         brand,
         cvcPolicy: CVC_POLICY_REQUIRED,
         enableLuhnCheck: true,
@@ -220,8 +220,8 @@ describe('Funding source validation - the contract with SecuredFields', () => {
         ...(fundingSource && { fundingSource })
     });
 
-    const visaCredit = brandObj('visa', 'credit');
-    const cbDebit = brandObj('cartebancaire', 'debit');
+    const visaCredit = brandObj('visa', ['credit']);
+    const cbDebit = brandObj('cartebancaire', ['debit']);
 
     // Local state, so this block does not read the mocks the other describes share and mutate
     let selectElements: DualBrandSelectElement[] = [];
@@ -259,7 +259,7 @@ describe('Funding source validation - the contract with SecuredFields', () => {
     };
 
     test('reports every evaluated brand on the error, and never tells SecuredFields about a card it rejects', () => {
-        buildExtensions(['debit']).processBinLookup({ issuingCountryCode: 'FR', supportedBrands: [visaCredit, brandObj('mc', 'credit')] }, false);
+        buildExtensions(['debit']).processBinLookup({ issuingCountryCode: 'FR', supportedBrands: [visaCredit, brandObj('mc', ['credit'])] }, false);
 
         expectRejected(['visa', 'mc']);
         expect(sfp.current.processBinLookupResponse).not.toHaveBeenCalled();

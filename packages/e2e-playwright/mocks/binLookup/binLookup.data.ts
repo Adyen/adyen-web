@@ -312,7 +312,7 @@ const dualBrandedVisaCreditAndCbDebit = {
             paymentMethodVariant: 'visa',
             showSocialSecurityNumber: false,
             supported: true,
-            fundingSource: 'credit'
+            fundingSource: ['credit']
         },
         {
             brand: 'cartebancaire',
@@ -323,7 +323,7 @@ const dualBrandedVisaCreditAndCbDebit = {
             paymentMethodVariant: 'cartebancaire',
             showSocialSecurityNumber: false,
             supported: true,
-            fundingSource: 'debit'
+            fundingSource: ['debit']
         }
     ],
     issuingCountryCode: 'FR',

@@ -511,7 +511,7 @@ export interface BrandObject {
     panLength?: number;
     paymentMethodVariant?: string;
     healthcare?: boolean;
-    fundingSource?: FundingSourceKeys;
+    fundingSource?: FundingSourceKeys[];
 }
 
 export interface BinLookupResponseRaw {

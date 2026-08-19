@@ -1,7 +1,7 @@
 import { isFundingSourceAllowed, parseAllowedFundingSources, sortBrandsByFundingSource } from './fundingSource';
 import type { BrandObject, FundingSourceKeys } from '../../../Card/types';
 
-const brandObject = (brand: string, fundingSource?: string): BrandObject =>
+const brandObject = (brand: string, fundingSource?: string[]): BrandObject =>
     ({ brand, cvcPolicy: 'required', enableLuhnCheck: true, showExpiryDate: true, supported: true, fundingSource }) as BrandObject;
 
 describe('parseAllowedFundingSources', () => {
@@ -37,9 +37,9 @@ describe('parseAllowedFundingSources', () => {
     });
 });
 
-const visaCredit = brandObject('visa', 'credit');
-const visaDebit = brandObject('visa', 'debit');
-const cbDebit = brandObject('cartebancaire', 'debit');
+const visaCredit = brandObject('visa', ['credit']);
+const visaDebit = brandObject('visa', ['debit']);
+const cbDebit = brandObject('cartebancaire', ['debit']);
 const mcNoFundingSource = brandObject('mc');
 
 describe('isFundingSourceAllowed', () => {
@@ -49,7 +49,7 @@ describe('isFundingSourceAllowed', () => {
     });
 
     test('allows a brand whose funding source is in the list', () => {
-        expect(isFundingSourceAllowed(visaDebit, ['debit', 'prepaid'] as FundingSourceKeys[])).toBe(true);
+        expect(isFundingSourceAllowed(brandObject('visa', ['credit', 'debit']), ['debit', 'prepaid'] as FundingSourceKeys[])).toBe(true);
     });
 
     test('rejects a brand whose funding source is not in the list', () => {
@@ -61,7 +61,7 @@ describe('isFundingSourceAllowed', () => {
     });
 
     test('matches the funding source case-insensitively', () => {
-        expect(isFundingSourceAllowed(brandObject('visa', 'DEBIT'), ['debit'])).toBe(true);
+        expect(isFundingSourceAllowed(brandObject('visa', ['DEBIT']), ['debit'])).toBe(true);
     });
 });
 
@@ -82,8 +82,8 @@ describe('sortBrandsByFundingSource', () => {
     });
 
     test('preserves the relative order within the allowed and the disallowed group', () => {
-        const brands = [visaCredit, cbDebit, brandObject('mc', 'credit'), visaDebit];
-        expect(sortBrandsByFundingSource(brands, ['debit'])).toEqual([cbDebit, visaDebit, visaCredit, brandObject('mc', 'credit')]);
+        const brands = [visaCredit, cbDebit, brandObject('mc', ['credit']), visaDebit];
+        expect(sortBrandsByFundingSource(brands, ['debit'])).toEqual([cbDebit, visaDebit, visaCredit, brandObject('mc', ['credit'])]);
     });
 
     test('treats a brand without a funding source as allowed', () => {
@@ -91,7 +91,7 @@ describe('sortBrandsByFundingSource', () => {
     });
 
     test('returns every brand, in order, when none of them is allowed', () => {
-        const brands = [visaCredit, brandObject('mc', 'credit')];
+        const brands = [visaCredit, brandObject('mc', ['credit'])];
         expect(sortBrandsByFundingSource(brands, ['debit', 'prepaid'] as FundingSourceKeys[])).toEqual(brands);
     });
 });
