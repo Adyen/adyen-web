@@ -38,6 +38,7 @@ import { h } from 'preact';
 import { InstallmentOptions } from './components/Installments/Installments';
 import type { Form } from '../../../../utils/useForm/types';
 import type { SecuredFieldsProviderRef } from '../../../internal/SecuredFields/SFP/types';
+import { AdyenCheckoutError } from '../../../../types';
 
 export interface CardInputValidState {
     holderName?: boolean;
@@ -84,7 +85,7 @@ export interface CardInputProps {
     brands?: string[];
     brandsConfiguration?: CardBrandsConfiguration;
     brandsIcons: Array<BrandConfiguration>;
-    clientKey: string;
+    clientKey?: string;
     configuration: CardBackendConfiguration;
     countryCode?: string;
     cvcPolicy?: CVCPolicyType;
@@ -105,14 +106,14 @@ export interface CardInputProps {
     installmentOptions?: InstallmentOptions;
     keypadFix?: boolean;
     lastFour?: string;
-    loadingContext: string;
+    loadingContext?: string;
     legacyInputMode?: boolean;
     minimumExpiryDate?: string;
     modules?: {
-        srPanel: SRPanel;
-        analytics: IAnalytics;
-        risk: RiskElement;
-        resources: Resources;
+        srPanel?: SRPanel;
+        analytics?: IAnalytics;
+        risk?: RiskElement;
+        resources?: Resources;
     };
     onAdditionalSFConfig?: () => void;
     onAdditionalSFRemoved?: () => void;
@@ -123,7 +124,7 @@ export interface CardInputProps {
     onBrand?: (o: CardBrandData) => void;
     onConfigSuccess?: (O: CardConfigSuccessData) => void;
     onChange: (state) => void;
-    onError?: () => void;
+    onError?: (e: AdyenCheckoutError) => void;
     onFieldValid?: (o: CardFieldValidData) => void;
     onFocus?: (e) => void;
     onLoad?: (o: CardLoadData) => void;
@@ -131,6 +132,7 @@ export interface CardInputProps {
     handleKeyDown?: (event: KeyboardEvent) => void;
     onAddressLookup?: OnAddressLookupType;
     onAddressSelected?: OnAddressSelectedType;
+    onSubmit?: () => void;
     addressSearchDebounceMs?: number;
     payButton?: (props: PayButtonProps) => h.JSX.Element;
     placeholders?: CardPlaceholders;
@@ -139,7 +141,7 @@ export interface CardInputProps {
     setComponentRef?: (ref) => void;
     showBrandIcon?: boolean;
     showInstallmentAmounts?: boolean;
-    showPayButton: boolean;
+    showPayButton?: boolean;
     showStoreDetailsCheckbox?: boolean;
     showWarnings?: boolean;
     showContextualElement?: boolean;
@@ -173,7 +175,7 @@ export interface CardInputState {
 // An interface for the members exposed by CardInput to its parent Card/UIElement
 export interface CardInputRef extends ComponentMethodsRef {
     sfp?: SecuredFieldsProviderRef;
-    setFocusOn?: (who) => void;
+    setFocusOn?: (field: string) => void;
     processBinLookupResponse?: (binLookupResponse: BinLookupResponse, isReset: boolean) => void;
     updateStyles?: (stylesObj: StylesObject) => void;
     handleUnsupportedCard?: (errObj: CardErrorData) => boolean;

@@ -6,6 +6,8 @@ import { electronicFormat, formatIban, getCountryCode, getNextCursorPosition } f
 import Fieldset from '../FormFields/Fieldset';
 import { GenericError } from '../../../core/Errors/types';
 import InputText from '../FormFields/InputText';
+import { UIElementStatus } from '../UIElement/types';
+import { OnChangeData } from '../../../types';
 
 interface IbanInputProps {
     holderName?: boolean;
@@ -13,12 +15,12 @@ interface IbanInputProps {
     countryCode?: string;
     showPayButton?: boolean;
     payButton?: any;
-    onChange: (data) => void;
+    onChange: (data: OnChangeData) => void;
     label: string;
-    data: IbanData;
+    data?: IbanData;
 }
 
-interface IbanData {
+export interface IbanData {
     ownerName?: string;
     ibanNumber?: string;
     countryCode?: string;
@@ -70,8 +72,8 @@ class IbanInput extends Component<Readonly<IbanInputProps>, IbanInputState> {
         }
 
         if (this.state.data['ibanNumber'] || this.state.data['ownerName']) {
-            const holderNameValid = this.props.holderName ? isValidHolder(this.state.data['ownerName']) : '';
-            const ibanValid = this.state.data['ibanNumber'] ? checkIbanStatus(this.state.data['ibanNumber']).status === 'valid' : '';
+            const holderNameValid = this.props.holderName ? isValidHolder(this.state.data['ownerName']) : false;
+            const ibanValid = this.state.data['ibanNumber'] ? checkIbanStatus(this.state.data['ibanNumber']).status === 'valid' : false;
             const isValid = ibanValid && holderNameValid;
             const data = { data: this.state.data, isValid };
 
@@ -87,7 +89,7 @@ class IbanInput extends Component<Readonly<IbanInputProps>, IbanInputState> {
         label: null
     };
 
-    setStatus(status) {
+    setStatus(status: UIElementStatus) {
         this.setState({ status });
     }
 

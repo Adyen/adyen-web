@@ -64,9 +64,7 @@ class RedirectElement extends UIElement<RedirectConfiguration> {
                     name={this.displayName}
                     onSubmit={this.submit}
                     payButton={this.payButton}
-                    ref={ref => {
-                        this.componentRef = ref;
-                    }}
+                    setComponentRef={this.setComponentRef}
                 />
             );
         }

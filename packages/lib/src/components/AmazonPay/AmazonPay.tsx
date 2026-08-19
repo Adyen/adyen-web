@@ -2,7 +2,7 @@ import { h } from 'preact';
 import UIElement from '../internal/UIElement/UIElement';
 import collectBrowserInfo from '../../utils/browserInfo';
 import AmazonPayComponent from './components/AmazonPayComponent';
-import { AmazonPayElementData, AmazonPayConfiguration, CheckoutDetailsRequest } from './types';
+import { AmazonPayElementData, AmazonPayConfiguration, CheckoutDetailsRequest, AmazonPayComponentRef } from './types';
 import defaultProps from './defaultProps';
 import { getCheckoutDetails } from './services';
 import { TxVariants } from '../tx-variants';
@@ -15,6 +15,8 @@ export class AmazonPayElement extends UIElement<AmazonPayConfiguration> {
     public static readonly type = TxVariants.amazonpay;
 
     protected static readonly defaultProps = defaultProps;
+
+    protected componentRef: AmazonPayComponentRef | undefined;
 
     formatProps(props) {
         return {
@@ -83,7 +85,7 @@ export class AmazonPayElement extends UIElement<AmazonPayConfiguration> {
                 window.location.assign(response.declineFlowUrl);
             })
             .catch(error => {
-                if (this.props.onError) this.props.onError(error, this.componentRef);
+                if (this.props.onError) this.props.onError(error, this.componentRef as unknown as UIElement);
             });
     }
 
