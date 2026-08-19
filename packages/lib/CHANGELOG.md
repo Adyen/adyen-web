@@ -1,5 +1,19 @@
 # @adyen/adyen-web
 
+## 6.44.0
+
+### Minor Changes
+
+- Improved: replace deprecated keypress event with keydown event ([#4143](https://github.com/Adyen/adyen-web/pull/4143))
+
+- Fixed: Card expiry date and security code fields no longer lose their format guidance when they enter an error state ([#4091](https://github.com/Adyen/adyen-web/pull/4091))
+
+### Patch Changes
+
+- Fixed: Announce loading to screen readers for QR/redirect payment methods and for Card and stop these announcements being cleared from the shared screen reader panel before they can be read ([#4098](https://github.com/Adyen/adyen-web/pull/4098))
+
+- Fixed: Components crashing when `null` data was passed ([#4134](https://github.com/Adyen/adyen-web/pull/4134))
+
 ## 6.43.0
 
 ### Minor Changes
