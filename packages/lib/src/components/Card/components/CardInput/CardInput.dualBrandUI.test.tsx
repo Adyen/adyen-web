@@ -86,7 +86,7 @@ const fundingSourceDualBrandResp = {
             paymentMethodVariant: 'cartebancaire',
             showSocialSecurityNumber: false,
             supported: true,
-            fundingSource: 'debit'
+            fundingSource: ['debit']
         },
         {
             brand: 'visa',
@@ -97,7 +97,7 @@ const fundingSourceDualBrandResp = {
             paymentMethodVariant: 'visa',
             showSocialSecurityNumber: false,
             supported: true,
-            fundingSource: 'credit'
+            fundingSource: ['credit']
         }
     ]
 };
@@ -277,7 +277,7 @@ describe('CardNumber and the dual branding UI', () => {
                 cardInputRef.processBinLookupResponse(
                     {
                         issuingCountryCode: 'FR',
-                        supportedBrands: fundingSourceDualBrandResp.supportedBrands.map(brand => ({ ...brand, fundingSource: 'credit' }))
+                        supportedBrands: fundingSourceDualBrandResp.supportedBrands.map(brand => ({ ...brand, fundingSource: ['credit'] }))
                     },
                     false
                 );
@@ -301,7 +301,7 @@ describe('CardNumber and the dual branding UI', () => {
                 cardInputRef.processBinLookupResponse(
                     {
                         issuingCountryCode: 'FR',
-                        supportedBrands: fundingSourceDualBrandResp.supportedBrands.map(brand => ({ ...brand, fundingSource: 'credit' }))
+                        supportedBrands: fundingSourceDualBrandResp.supportedBrands.map(brand => ({ ...brand, fundingSource: ['credit'] }))
                     },
                     false
                 );

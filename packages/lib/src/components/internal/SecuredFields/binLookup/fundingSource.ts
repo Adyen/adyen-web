@@ -25,9 +25,9 @@ export const parseAllowedFundingSources = (allowedFundingSources?: string): Fund
 
 export const isFundingSourceAllowed = (brand: BrandObject, allowedFundingSources?: FundingSourceKeys[]): boolean => {
     // Brands that report no funding source cannot be evaluated, so they always count as allowed
-    if (!allowedFundingSources?.length || !brand?.fundingSource) return true;
+    if (!allowedFundingSources?.length || !brand?.fundingSource?.length) return true;
 
-    return allowedFundingSources.includes(brand.fundingSource.toLowerCase() as FundingSourceKeys);
+    return brand.fundingSource.some(fundingSource => allowedFundingSources.includes(fundingSource.toLowerCase() as FundingSourceKeys));
 };
 
 export const sortBrandsByFundingSource = (brands: BrandObject[], allowedFundingSources?: FundingSourceKeys[]): BrandObject[] => {
