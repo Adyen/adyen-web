@@ -80,6 +80,7 @@ export class BankTransferElement extends UIElement<BankTransferConfiguration> {
                 {this.props.showEmailAddress && <BankTransferInput setComponentRef={this.setComponentRef} {...this.props} onChange={this.setState} />}
                 <RedirectButton
                     {...this.props}
+                    setComponentRef={this.setComponentRef}
                     showPayButton={this.props.showPayButton}
                     name={this.displayName}
                     onSubmit={this.submit}

@@ -20,7 +20,8 @@ export interface BaseElementProps {
     isDropin?: boolean;
 }
 
-export type BaseElementState = { order?: Order } & Pick<OnChangeData, 'valid' | 'errors'> & Record<string, unknown>;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type BaseElementState = { order?: Order } & Pick<OnChangeData, 'valid' | 'errors'> & Record<string, any>;
 
 export interface IBaseElement<P extends BaseElementProps = BaseElementProps, S extends BaseElementState = BaseElementState> {
     data: Partial<PaymentData>;
