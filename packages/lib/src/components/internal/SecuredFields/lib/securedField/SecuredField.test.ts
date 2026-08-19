@@ -552,7 +552,7 @@ describe('SecuredField handling placeholders from the placeholders config', () =
         });
 
         test('Check callback is called after "enterKeyPressed" action', () => {
-            card.onKeyPressed(myCallback);
+            card.onKeyDown(myCallback);
 
             // Set action
             data.action = 'enterKeyPressed';

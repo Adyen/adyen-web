@@ -26,7 +26,7 @@ test.describe('Stored master card - cvc required', () => {
 
         await card.cvcInput.waitFor({ state: 'visible' });
         await card.pay({ name: /pay \$259\.00/i });
-        await expect(card.cvcErrorElement).toContainText('Enter the security code');
+        await expect(card.cvcErrorElement).toContainText('Enter the security code. 3 digits on back of card.');
     });
 
     test('#3 A storedCard with no expiry date field still can be used for a successful payment', async ({ dropinWithSession, page }) => {
