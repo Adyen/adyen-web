@@ -1,17 +1,27 @@
 name: Generate Changeset
 
-# Adding the `changeset` label to a pull request generates a changeset from the diff and
-# commits it to the branch, so developers do not have to run `yarn changeset` locally.
-# The label is removed when the run finishes, so adding it again is all that is needed to
-# regenerate. A changeset created manually is never overwritten.
+# Generates a changeset from the diff and commits it to the branch, so developers do not have to
+# run `yarn changeset` locally. A changeset created manually is never overwritten.
 #
+# Runs when a pull request is opened, and again whenever the `changeset` label is added. The label
+# is removed when the run finishes, so adding it again is how you force a regenerate.
+
 on:
   pull_request:
-    types: [labeled]
+    types: [opened, ready_for_review, labeled]
 
 jobs:
   generate-changeset:
-    if: github.event.label.name == 'changeset' && github.event.pull_request.head.repo.full_name == github.repository
+    if: >-
+      github.event.pull_request.head.repo.full_name == github.repository
+      && (
+        github.event.label.name == 'changeset'
+        || (
+          github.event.action != 'labeled'
+          && github.event.pull_request.draft == false
+          && github.event.pull_request.user.type != 'Bot'
+        )
+      )
     name: Generate Changeset
     runs-on: ubuntu-latest
     permissions:
