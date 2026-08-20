@@ -1,0 +1,66 @@
+name: Generate Changeset
+
+# Adding the `changeset` label to a pull request generates a changeset from the diff and
+# commits it to the branch, so developers do not have to run `yarn changeset` locally.
+# The label is removed when the run finishes, so adding it again is all that is needed to
+# regenerate. A changeset created manually is never overwritten.
+#
+on:
+  pull_request:
+    types: [labeled]
+
+jobs:
+  generate-changeset:
+    if: github.event.label.name == 'changeset' && github.event.pull_request.head.repo.full_name == github.repository
+    name: Generate Changeset
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          package-manager-cache: false
+
+      - name: Generate changeset
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          BASE_REF: ${{ github.base_ref }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_BODY: ${{ github.event.pull_request.body }}
+        run: node .github/scripts/generate-changeset.js
+
+      - name: Commit changeset
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add .changeset/
+          if ! git diff --staged --quiet; then
+            git commit -m "chore: add changeset"
+            git push
+          else
+            echo "No changeset changes to commit"
+          fi
+
+      - name: Remove changeset label
+        if: always()
+        uses: actions/github-script@v9
+        with:
+          script: |
+            await github.rest.issues.removeLabel({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.pull_request.number,
+              name: 'changeset'
+            });
