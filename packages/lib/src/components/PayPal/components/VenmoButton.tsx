@@ -42,22 +42,32 @@ export const VenmoButton = ({
     const createOrder = useCreateOrder(onSubmit);
     const createVaultSetupToken = useCreateVaultSetupToken(onSubmit);
 
+    const presentationModeOptionsWithSandboxSupport = useMemo(
+        () => ({
+            ...presentationModeOptions,
+            sandboxSupport: {
+                enabled: true
+            }
+        }),
+        [presentationModeOptions]
+    );
+
     const { onClick: oneTimePaymentClick } = usePayPalOneTimeSession(
         useMemo(
             () => ({
-                presentationModeOptions,
+                presentationModeOptions: presentationModeOptionsWithSandboxSupport,
                 createSession: () => payPalSDKInstance.createVenmoOneTimePaymentSession(oneTimeSessionOptions),
                 createOrder,
                 onError
             }),
-            [payPalSDKInstance, oneTimeSessionOptions, createOrder]
+            [payPalSDKInstance, oneTimeSessionOptions, createOrder, presentationModeOptionsWithSandboxSupport]
         )
     );
 
     const { onClick: savePaymentClick } = usePayPalSaveSession(
         useMemo(
             () => ({
-                presentationModeOptions,
+                presentationModeOptions: presentationModeOptionsWithSandboxSupport,
                 createSession: () => payPalSDKInstance.createVenmoSavePaymentSession(saveSessionOptions as PayPalVenmoSavePaymentSessionOptions),
                 createVaultSetupToken,
                 onError
