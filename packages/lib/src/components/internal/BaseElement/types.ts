@@ -20,6 +20,7 @@ export interface BaseElementProps {
     isDropin?: boolean;
 }
 
+// TODO: Remove any when the state data of all components have been typed
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type BaseElementState = { order?: Order } & Pick<OnChangeData, 'valid' | 'errors'> & Record<string, any>;
 
