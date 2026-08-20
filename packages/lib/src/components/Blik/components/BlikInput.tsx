@@ -39,7 +39,7 @@ function BlikInput(props: Readonly<BlikInputProps>) {
     });
 
     useEffect(() => {
-        props.onChange({ data: data as unknown as PaymentData, errors, valid, isValid }, this);
+        props.onChange?.({ data: data as unknown as PaymentData, errors, valid, isValid: Boolean(isValid) }, this);
     }, [data, valid, errors, isValid]);
 
     const [status, setStatus] = useState('ready');
@@ -82,7 +82,7 @@ function BlikInput(props: Readonly<BlikInputProps>) {
             </Field>
 
             {props.showPayButton &&
-                props.payButton({
+                props.payButton?.({
                     status,
                     icon: getImage({ imageFolder: 'components/' })(`${PREFIX}lock`)
                 })}
