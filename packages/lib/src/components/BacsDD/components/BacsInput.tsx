@@ -16,7 +16,7 @@ import FormInstruction from '../../internal/FormInstruction';
 import { getErrorMessage } from '../../../utils/getErrorMessage';
 import { PREFIX } from '../../internal/Icon/constants';
 import { useAmount } from '../../../core/Context/AmountProvider';
-import { ComponentMethodsRef } from '../../types';
+import { ComponentMethodsRef, UIElementStatus } from '../../types';
 
 const ENTER_STATE = 'enter-data';
 const CONFIRM_STATE = 'confirm-data';
@@ -36,7 +36,7 @@ function BacsInput(props: Readonly<BacsInputProps>) {
     const [status, setStatus] = useState(ENTER_STATE);
 
     const bacsInputRef = useRef<ComponentMethodsRef>({
-        setStatus: setStatus,
+        setStatus,
         showValidation: () => {
             triggerValidation();
         }
@@ -47,17 +47,17 @@ function BacsInput(props: Readonly<BacsInputProps>) {
     }, [props.setComponentRef]);
 
     const handlePayButton = () => {
-        if (!isValid) return this.showValidation();
+        if (!isValid) return bacsInputRef.current.showValidation();
 
         if (status === ENTER_STATE) {
-            return this.setStatus(CONFIRM_STATE);
+            return bacsInputRef.current.setStatus(CONFIRM_STATE as UIElementStatus);
         } else if (status === CONFIRM_STATE) {
             return props.onSubmit();
         }
     };
 
     const handleEdit = () => {
-        return this.setStatus(ENTER_STATE);
+        return bacsInputRef.current.setStatus(ENTER_STATE as UIElementStatus);
     };
 
     useEffect(() => {
