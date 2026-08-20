@@ -64,17 +64,19 @@ export default function OpenInvoice(props: Readonly<OpenInvoiceProps>) {
 
     const openInvoiceRef = useRef<ComponentMethodsRef>({
         setStatus,
-        showValidation: () => {
-            isValidating.current = true;
-            fieldsetsSchema.forEach(fieldset => {
-                if (fieldsetsRefs[fieldset].current) fieldsetsRefs[fieldset].current.showValidation();
-            });
-
-            setErrors({
-                ...(hasConsentCheckbox && { consentCheckbox: data.consentCheckbox ? null : consentCBErrorObj })
-            });
-        }
+        showValidation: () => {}
     });
+
+    openInvoiceRef.current.showValidation = () => {
+        isValidating.current = true;
+        fieldsetsSchema.forEach(fieldset => {
+            if (fieldsetsRefs[fieldset].current) fieldsetsRefs[fieldset].current.showValidation();
+        });
+
+        setErrors({
+            ...(hasConsentCheckbox && { consentCheckbox: data.consentCheckbox ? null : consentCBErrorObj })
+        });
+    };
 
     useEffect(() => {
         props.setComponentRef?.(openInvoiceRef.current);
