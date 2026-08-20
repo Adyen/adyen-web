@@ -16,12 +16,17 @@ import type {
     OnShippingAddressChangeData as OnShippingAddressChangeDataV6,
     OnShippingOptionsChangeData as OnShippingOptionsChangeDataV6,
     OnApproveDataSavePayments,
+    OnErrorData,
     SavePaymentSessionOptions,
     OnApproveDataOneTimePayments,
     OneTimePaymentSession,
     SavePaymentSession,
     VenmoSavePaymentSessionOptions,
-    PageTypes
+    PageTypes,
+    FetchContentOptions,
+    PayPalMessagesSession,
+    PayPalMessageElement as PayPalMessageElementV6,
+    PayPalPresentationModeOptions as PayPalPresentationModeOptionsV6
 } from '@paypal/paypal-js/sdk-v6';
 
 export type { PayPalOneTimePaymentSessionOptions, PayPalMessagesOptions, PayPalMessagesSession } from '@paypal/paypal-js/sdk-v6';
@@ -53,27 +58,26 @@ export type PayPalPaymentFlow = PaymentFlow;
 export type PayPalV6OnShippingAddressChangeData = OnShippingAddressChangeDataV6;
 export type PayPalV6OnShippingOptionsChangeData = OnShippingOptionsChangeDataV6;
 export type PayPalV6OnApproveData = OnApproveDataOneTimePayments | OnApproveDataSavePayments;
+/**
+ * Error rejected by the PayPal SDK. It extends `Error` with the PayPal specific `code`, `name` and `isRecoverable` fields.
+ */
+export type PayPalError = OnErrorData;
 export type PayPalSavePaymentSessionOptions = SavePaymentSessionOptions;
 export type PayPalOneTimePaymentSession = OneTimePaymentSession;
 export type PayPalSavePaymentSession = SavePaymentSession;
 export type PayPalVenmoSavePaymentSessionOptions = VenmoSavePaymentSessionOptions;
-export type PayPalPresentationModeOptionsForPopup = {
-    presentationMode: 'popup';
-    fullPageOverlay?: { enabled: boolean };
+export type PayPalFetchContentOptions = FetchContentOptions;
+export type PayPalMessageContent = NonNullable<Awaited<ReturnType<PayPalMessagesSession['fetchContent']>>>;
+/**
+ * The `<paypal-message>` custom element. The PayPal SDK types omit the `setContent` method,
+ * which is the method used to render the content resolved by `fetchContent` into the element.
+ */
+export type PayPalMessageElement = PayPalMessageElementV6 & {
+    setContent(content: PayPalMessageContent): void;
 };
-export type PayPalPresentationModeOptionsForModal = {
-    presentationMode: 'modal';
+/**
+ * Presentation modes offered by the PayPal SDK, without the 'redirect' mode, which is not supported yet.
+ */
+export type PayPalPresentationModeOptions = Exclude<PayPalPresentationModeOptionsV6, { presentationMode: 'redirect' }> & {
+    sandboxSupport?: { enabled: boolean };
 };
-export type PayPalPresentationModeOptionsForRedirect = {
-    presentationMode: 'redirect';
-    autoRedirect?: { enabled: boolean };
-    fullPageOverlay?: { enabled: boolean };
-};
-export type PayPalPresentationModeOptionsForPaymentHandler = {
-    presentationMode: 'payment-handler';
-};
-export type PayPalPresentationModeOptionsForAuto = {
-    presentationMode: 'auto';
-    fullPageOverlay?: { enabled: boolean };
-};
-// End of Paypal SDK V6 types

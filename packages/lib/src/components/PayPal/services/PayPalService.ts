@@ -103,8 +103,6 @@ class PayPalService {
             throw new AdyenCheckoutError('ERROR', 'PayPal SDK `createInstance` is not available');
         }
 
-        console.log('PayPal SDK component', this.components);
-
         const isLiveEnvironment = this.environment?.toLowerCase() === 'live';
         this.sdkInstance = await createInstance({
             clientToken,
@@ -114,8 +112,6 @@ class PayPalService {
             locale: this.locale,
             testBuyerCountry: isLiveEnvironment ? undefined : this.countryCode
         });
-
-        console.log('PayPal SDK instance created', this.sdkInstance);
 
         return this.sdkInstance;
     }

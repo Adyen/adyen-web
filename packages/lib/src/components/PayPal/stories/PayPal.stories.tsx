@@ -4,7 +4,9 @@ import { PaymentMethodStoryProps } from '../../../../storybook/types';
 import { ComponentContainer } from '../../../../storybook/components/ComponentContainer';
 import Paypal from '..';
 import type { PayPalConfiguration } from '../types';
+import type { PayPalMessageElement } from '../paypal-js-types';
 import { Checkout } from '../../../../storybook/components/Checkout';
+import { DEFAULT_COUNTRY_CODE } from '../../../../storybook/config/commonConfig';
 
 type Story = StoryObj<PaymentMethodStoryProps<PayPalConfiguration>>;
 
@@ -41,6 +43,40 @@ export const PaypalV6: Story = {
     args: {
         componentConfiguration: {
             usePayPalV6: {
+                countryCode: DEFAULT_COUNTRY_CODE,
+                style: {
+                    paypal: {
+                        type: 'buynow',
+                        class: 'paypal-blue'
+                    },
+                    venmo: {
+                        type: 'pay',
+                        class: 'venmo-black'
+                    }
+                },
+                vault: false,
+                onAuthorized: (data, actions) => {
+                    console.log('PaypalV6 onAuthorized data', { data });
+                    actions.resolve();
+                }
+            }
+        }
+    }
+};
+
+export const PaypalV6DirectAppSwitch: Story = {
+    render: ({ componentConfiguration, ...checkoutConfig }) => (
+        <Checkout checkoutConfig={checkoutConfig}>
+            {checkout => <ComponentContainer element={new Paypal(checkout, componentConfiguration)} />}
+        </Checkout>
+    ),
+    args: {
+        componentConfiguration: {
+            usePayPalV6: {
+                presentationModeOptions: {
+                    presentationMode: 'direct-app-switch'
+                },
+                countryCode: DEFAULT_COUNTRY_CODE,
                 style: {
                     paypal: {
                         type: 'buynow',
@@ -74,7 +110,9 @@ export const PaypalV6WithPayPalV5: Story = {
                         element={
                             new Paypal(checkout, {
                                 ...componentConfiguration,
-                                usePayPalV6: {}
+                                usePayPalV6: {
+                                    countryCode: DEFAULT_COUNTRY_CODE
+                                }
                             })
                         }
                     />
@@ -94,7 +132,35 @@ export const PaypalV6Messaging: Story = {
             {checkout => (
                 <Fragment>
                     <paypal-message id="paypal-message"></paypal-message>
-                    <ComponentContainer element={new Paypal(checkout, componentConfiguration)} />
+                    <ComponentContainer
+                        element={
+                            new Paypal(checkout, {
+                                ...componentConfiguration,
+                                usePayPalV6: {
+                                    ...componentConfiguration.usePayPalV6,
+                                    onCreatePayPalMessages: async createPayPalMessages => {
+                                        const messagesInstance = createPayPalMessages({
+                                            buyerCountry: componentConfiguration.countryCode,
+                                            currencyCode: componentConfiguration.amount?.currency
+                                        });
+                                        const messageElement = document.querySelector<PayPalMessageElement>('#paypal-message');
+
+                                        const content = await messagesInstance.fetchContent({
+                                            textColor: 'MONOCHROME',
+                                            logoPosition: 'LEFT',
+                                            logoType: 'NONE',
+                                            amount: '100',
+                                            onReady: content => {
+                                                messageElement?.setContent(content);
+                                            }
+                                        });
+
+                                        return content;
+                                    }
+                                }
+                            })
+                        }
+                    />
                 </Fragment>
             )}
         </Checkout>
@@ -102,26 +168,7 @@ export const PaypalV6Messaging: Story = {
     args: {
         componentConfiguration: {
             usePayPalV6: {
-                onCreatePayPalMessages: async createPayPalMessages => {
-                    const messagesInstance = createPayPalMessages({
-                        buyerCountry: 'US',
-                        currencyCode: 'USD'
-                    });
-                    const messageElement = document.querySelector('#paypal-message');
-
-                    const content = await messagesInstance.fetchContent({
-                        textColor: 'MONOCHROME',
-                        logoPosition: 'LEFT',
-                        logoType: 'MONOGRAM',
-                        amount: '100',
-                        onReady: content => {
-                            // @ts-ignore - messageElement is guaranteed to be a PayPalMessageElement
-                            messageElement.setContent(content);
-                        }
-                    });
-
-                    return content;
-                }
+                countryCode: DEFAULT_COUNTRY_CODE
             }
         }
     }
