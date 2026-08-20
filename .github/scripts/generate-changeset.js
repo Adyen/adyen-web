@@ -32,6 +32,9 @@ const MAX_DIFF_CHARS = 100000;
 const TARGET_DESCRIPTION_LENGTH = 150;
 const MAX_DESCRIPTION_LENGTH = 400;
 const VALID_PREFIXES = ['Improved:', 'New:', 'Fixed:'];
+// 'none' produces the frontmatter-only file that `yarn changeset:empty` writes
+const VALID_BUMPS = ['none', 'patch', 'minor'];
+const EMPTY_CHANGESET = '---\n---\n';
 
 const git = (...args) => execFileSync('git', args, { encoding: 'utf8', maxBuffer: 50 * 1024 * 1024 }).trim();
 
@@ -88,10 +91,19 @@ const SYSTEM_INSTRUCTION = [
     'You write changeset entries for the Adyen Web SDK. Your output becomes a public CHANGELOG bullet,',
     'read by merchants who integrate the SDK.',
     '',
-    'Write the description as exactly one line, starting with one of these prefixes followed by a space:',
+    'Decide first whether the change deserves a changelog entry at all.',
+    '',
+    'Answer with the bump "none" and no description when nothing that ships behaves differently for a',
+    'merchant or a shopper: internal typings, refactors, dead code removal, lint or Sonar fixes,',
+    'tooling, build configuration, documentation and stories. This is the right answer for a pull',
+    'request that only tidies the source. When you are unsure whether anyone would notice, write a',
+    'description rather than answering "none".',
+    '',
+    'Otherwise write the description as exactly one line, starting with one of these prefixes',
+    'followed by a space:',
     '- "New:" for a new feature, payment method or public API.',
     '- "Fixed:" for a bug fix.',
-    '- "Improved:" for an enhancement, refactor or internal change with no other user-visible effect.',
+    '- "Improved:" for an enhancement a merchant or shopper can notice.',
     '',
     'Rules for the description:',
     '- Describe the effect on the integration, not the implementation. Say what a merchant or shopper notices.',
@@ -101,7 +113,7 @@ const SYSTEM_INSTRUCTION = [
     '- Wrap code identifiers in backticks, for example `onSubmit` or `null`.',
     '- Do not mention the pull request number, the branch, or yourself. A link to the PR is added automatically.',
     '',
-    'Rules for the bump:',
+    'Rules for the bump when there is a description:',
     '- A "New:" entry is always "minor".',
     '- An "Improved:" entry is always "minor".',
     '- A "Fixed:" entry is "patch", unless the fix had to add something to the public API to work,',
@@ -133,10 +145,10 @@ async function requestChangeset(prompt) {
                 responseSchema: {
                     type: 'OBJECT',
                     properties: {
-                        bump: { type: 'STRING', enum: ['patch', 'minor'] },
+                        bump: { type: 'STRING', enum: VALID_BUMPS },
                         description: { type: 'STRING' }
                     },
-                    required: ['bump', 'description']
+                    required: ['bump']
                 }
             }
         })
@@ -161,11 +173,19 @@ async function requestChangeset(prompt) {
  * @throws {Error} When the changeset does not match the repository conventions.
  */
 function assertValid({ bump, description }) {
-    if (!['patch', 'minor'].includes(bump)) {
-        throw new Error(`Expected a 'patch' or 'minor' bump, got '${bump}'.`);
+    if (!VALID_BUMPS.includes(bump)) {
+        throw new Error(`Expected one of ${VALID_BUMPS.join(', ')} as the bump, got '${bump}'.`);
     }
 
-    const [line, ...extraLines] = description.split('\n').filter(text => text.trim());
+    if (bump === 'none') {
+        return;
+    }
+
+    const [line, ...extraLines] = (description || '').split('\n').filter(text => text.trim());
+
+    if (!line) {
+        throw new Error(`A '${bump}' bump needs a description.`);
+    }
 
     if (extraLines.length) {
         throw new Error(`Expected a single line description, got ${extraLines.length + 1} lines.`);
@@ -205,16 +225,20 @@ async function main() {
         return;
     }
 
-    // Nothing that ships changed, so no version bump is needed and there is nothing for the model
-    // to describe. Dependency bumps that touch every test file land here.
+    // An empty diff means nothing that ships changed, which is the same verdict the model gives as
+    // 'none'.
     if (!diff) {
-        writeFileSync(CHANGESET_FILE, '---\n---\n');
-        console.log(`Only tests, stories or snapshots changed (${files.length} files). Wrote an empty ${CHANGESET_FILE}.`);
-        return;
+        console.log(`Only tests, stories or snapshots changed (${files.length} files), so no model call is needed.`);
     }
 
-    const changeset = await requestChangeset(buildPrompt(diff));
+    const changeset = diff ? await requestChangeset(buildPrompt(diff)) : { bump: 'none' };
     assertValid(changeset);
+
+    if (changeset.bump === 'none') {
+        writeFileSync(CHANGESET_FILE, EMPTY_CHANGESET);
+        console.log(`Nothing that ships changed. Wrote an empty ${CHANGESET_FILE}.`);
+        return;
+    }
 
     writeFileSync(CHANGESET_FILE, `---\n'${PACKAGE_NAME}': ${changeset.bump}\n---\n\n${changeset.description}\n`);
 
