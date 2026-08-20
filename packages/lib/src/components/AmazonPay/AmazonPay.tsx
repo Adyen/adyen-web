@@ -18,12 +18,12 @@ export class AmazonPayElement extends UIElement<AmazonPayConfiguration> {
 
     protected componentRef: AmazonPayComponentRef | undefined;
 
-    formatProps(props) {
+    formatProps(props: AmazonPayConfiguration): AmazonPayConfiguration {
         return {
             ...props,
             checkoutMode: props.isDropin ? 'ProcessOrder' : props.checkoutMode,
-            environment: props.environment.toUpperCase(),
-            locale: props.locale.replace('-', '_'),
+            environment: props.environment?.toUpperCase(),
+            locale: props.locale?.replace('-', '_'),
             productType: props.isDropin && !props.addressDetails ? 'PayOnly' : props.productType
         };
     }
@@ -61,11 +61,11 @@ export class AmazonPayElement extends UIElement<AmazonPayConfiguration> {
         const request: CheckoutDetailsRequest = {
             checkoutSessionId: amazonCheckoutSessionId,
             getDeliveryAddress: true,
-            publicKeyId: configuration.publicKeyId,
+            publicKeyId: configuration?.publicKeyId || '',
             region: configuration.region
         };
 
-        return getCheckoutDetails(loadingContext, clientKey, request);
+        return getCheckoutDetails(loadingContext ?? '', clientKey ?? '', request);
     }
 
     public handleDeclineFlow() {
@@ -75,11 +75,11 @@ export class AmazonPayElement extends UIElement<AmazonPayConfiguration> {
         const request: CheckoutDetailsRequest = {
             checkoutSessionId: amazonCheckoutSessionId,
             getDeclineFlowUrl: true,
-            publicKeyId: configuration.publicKeyId,
+            publicKeyId: configuration.publicKeyId ?? '',
             region: configuration.region
         };
 
-        getCheckoutDetails(loadingContext, clientKey, request)
+        getCheckoutDetails(loadingContext ?? '', clientKey ?? '', request)
             .then((response = {}) => {
                 if (!response?.declineFlowUrl) throw response;
                 window.location.assign(response.declineFlowUrl);
@@ -98,7 +98,7 @@ export class AmazonPayElement extends UIElement<AmazonPayConfiguration> {
     }
 
     public submit(): void {
-        const amazonComponentSubmitFunction = this.componentRef?.getSubmitFunction() || null;
+        const amazonComponentSubmitFunction = this.componentRef?.getSubmitFunction?.() || null;
         if (amazonComponentSubmitFunction) {
             return amazonComponentSubmitFunction();
         }
