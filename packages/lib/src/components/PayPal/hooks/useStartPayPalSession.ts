@@ -21,7 +21,14 @@ export const useStartPayPalSession = ({
     useCallback(
         async (startSession: StartSession) => {
             try {
-                await startSession(presentationModeOptions?.presentationMode ? presentationModeOptions : DEFAULT_PAYMENT_SESSION_OPTIONS);
+                await startSession(
+                    presentationModeOptions?.presentationMode
+                        ? presentationModeOptions
+                        : {
+                              ...DEFAULT_PAYMENT_SESSION_OPTIONS,
+                              ...(presentationModeOptions?.sandboxSupport ? { sandboxSupport: presentationModeOptions.sandboxSupport } : {})
+                          }
+                );
             } catch (error: unknown) {
                 const paymentError = error as PayPalError;
                 const shouldRetryWithAutoPresentationMode = paymentError?.isRecoverable && presentationModeOptions?.presentationMode !== 'auto';
@@ -37,7 +44,10 @@ export const useStartPayPalSession = ({
                 );
 
                 try {
-                    await startSession(DEFAULT_PAYMENT_SESSION_OPTIONS);
+                    await startSession({
+                        ...DEFAULT_PAYMENT_SESSION_OPTIONS,
+                        ...(presentationModeOptions?.sandboxSupport ? { sandboxSupport: presentationModeOptions.sandboxSupport } : {})
+                    });
                 } catch (retryError: unknown) {
                     onError(retryError as PayPalError);
                 }
