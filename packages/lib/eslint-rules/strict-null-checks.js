@@ -23,13 +23,32 @@
  * Delete this plugin once `strictNullChecks` is enabled in `tsconfig.json`.
  */
 
-import { dirname, resolve } from 'node:path';
+import { dirname, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import ts from 'typescript';
 
 const LIB_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const TSCONFIG_PATH = resolve(LIB_ROOT, 'tsconfig.json');
+const SRC_ROOT = resolve(LIB_ROOT, 'src');
+
+/**
+ * Mirrors the `files`/`ignores` of the `Strict null checks` block in eslint.config.js, which is
+ * what actually decides where the rule reports. Nothing in `src` imports a test or a story, so
+ * leaving them out of the program cannot change a production diagnostic — it only avoids
+ * parsing and version-checking ~420 files that are never reported on.
+ */
+const OUT_OF_SCOPE = /\.(test|spec)\.tsx?$|[\\/]stories[\\/]|\.stories\.tsx$/;
 const BACKLOG_HINT = '`STRICT_NULL_CHECKS_BACKLOG` in eslint-rules/strict-null-checks.js';
+
+/**
+ * On a case-insensitive filesystem the same file can reach us with different casing — an editor
+ * may hand ESLint a lowercase drive letter while Node resolves an uppercase one. Comparing raw
+ * strings would then miss a backlog entry or track one file twice, so every lookup key goes
+ * through here. On Linux this is the identity function.
+ *
+ * @param {string} fileName
+ */
+const canonicalPath = fileName => (ts.sys.useCaseSensitiveFileNames ? fileName : fileName.toLowerCase());
 
 // ══════════════════════════════════════════════════════════
 // Files that do not compile with `strictNullChecks` yet.
@@ -352,15 +371,20 @@ const STRICT_NULL_CHECKS_BACKLOG = [
     'src/components/UPI/UPI.tsx'
 ];
 
+/** Lookup index for the list above. */
+const CANONICAL_BACKLOG = new Set(STRICT_NULL_CHECKS_BACKLOG.map(canonicalPath));
+
 /* ── Language service over the project, with strictNullChecks forced on ──
  * Created once per ESLint process and kept in sync with the editor: ESLint hands us the
  * current buffer, so bumping the script version on change keeps diagnostics live while typing.
  * Which files are actually reported is decided by `files`/`ignores` in eslint.config.js.
  */
 
-/** @type {{ service: ts.LanguageService, files: Set<string> } | undefined} */
+/** @type {{ service: ts.LanguageService, files: Map<string, string> } | undefined} */
 let project;
+/** Canonical path -> current buffer. @type {Map<string, string>} */
 const sourceTexts = new Map();
+/** Canonical path -> revision of that buffer. @type {Map<string, number>} */
 const sourceVersions = new Map();
 
 function getProject() {
@@ -371,26 +395,40 @@ function getProject() {
         throw new Error(`Could not read ${TSCONFIG_PATH}: ${ts.flattenDiagnosticMessageText(configFile.error.messageText, ' ')}`);
     }
 
-    const parsed = ts.parseJsonConfigFileContent(configFile.config, ts.sys, LIB_ROOT);
+    const parsed = ts.parseJsonConfigFileContent(configFile.config, ts.sys, LIB_ROOT, undefined, TSCONFIG_PATH);
     if (parsed.errors.length > 0) {
         throw new Error(
             `Could not parse ${TSCONFIG_PATH}: ${parsed.errors.map(error => ts.flattenDiagnosticMessageText(error.messageText, ' ')).join(' ')}`
         );
     }
 
-    const fileNames = parsed.fileNames.map(fileName => ts.sys.resolvePath(fileName));
+    // Keyed by canonical path so one file is never tracked under two spellings, valued with the
+    // spelling TypeScript should read from disk. Mutable: files created after the ESLint process
+    // started are added on demand, so a long-running editor session type-checks them instead of
+    // silently skipping them.
+    /** @type {Map<string, string>} */
+    const files = new Map();
+    const canonicalSrcRoot = canonicalPath(SRC_ROOT);
+
+    for (const parsedFileName of parsed.fileNames) {
+        const fileName = ts.sys.resolvePath(parsedFileName);
+        const key = canonicalPath(fileName);
+        if (!key.startsWith(canonicalSrcRoot) || OUT_OF_SCOPE.test(key)) continue;
+        files.set(key, fileName);
+    }
+
     const options = { ...parsed.options, strictNullChecks: true, noEmit: true };
 
     const service = ts.createLanguageService({
         getCompilationSettings: () => options,
-        getScriptFileNames: () => fileNames,
+        getScriptFileNames: () => [...files.values()],
         getScriptVersion: fileName => {
-            const version = sourceVersions.get(fileName);
+            const version = sourceVersions.get(canonicalPath(fileName));
             if (version !== undefined) return version.toString();
             return ts.sys.getModifiedTime?.(fileName)?.getTime().toString() ?? '0';
         },
         getScriptSnapshot: fileName => {
-            const sourceText = sourceTexts.get(fileName) ?? ts.sys.readFile(fileName);
+            const sourceText = sourceTexts.get(canonicalPath(fileName)) ?? ts.sys.readFile(fileName);
             return sourceText === undefined ? undefined : ts.ScriptSnapshot.fromString(sourceText);
         },
         getCurrentDirectory: () => LIB_ROOT,
@@ -405,7 +443,7 @@ function getProject() {
         getNewLine: () => ts.sys.newLine
     });
 
-    project = { service, files: new Set(fileNames) };
+    project = { service, files };
     return project;
 }
 
@@ -414,9 +452,10 @@ function getProject() {
  * @param {string} sourceText
  */
 function syncSourceText(fileName, sourceText) {
-    if (sourceTexts.get(fileName) === sourceText) return;
-    sourceTexts.set(fileName, sourceText);
-    sourceVersions.set(fileName, (sourceVersions.get(fileName) ?? 0) + 1);
+    const key = canonicalPath(fileName);
+    if (sourceTexts.get(key) === sourceText) return;
+    sourceTexts.set(key, sourceText);
+    sourceVersions.set(key, (sourceVersions.get(key) ?? 0) + 1);
 }
 
 /**
@@ -425,10 +464,12 @@ function syncSourceText(fileName, sourceText) {
  * @param {string} absolutePath
  */
 function toListedPath(absolutePath) {
-    return absolutePath
-        .slice(LIB_ROOT.length + 1)
-        .split('\\')
-        .join('/');
+    const listedPath = relative(LIB_ROOT, absolutePath).split('\\').join('/');
+    if (!listedPath.startsWith('..')) return listedPath;
+
+    // `relative` compares case-sensitively on POSIX, so a differently-cased root escapes the
+    // package. Retry canonically rather than hand back a path that matches nothing.
+    return relative(canonicalPath(LIB_ROOT), canonicalPath(absolutePath)).split('\\').join('/');
 }
 
 /**
@@ -476,13 +517,15 @@ const enforce = {
         const fileName = ts.sys.resolvePath(context.filename);
         const { service, files } = getProject();
 
-        // Test files, stories and anything else the ESLint block does not scope in.
-        if (!files.has(fileName)) return {};
+        // A file created after this process started is not in the tsconfig snapshot. Adding it
+        // keeps the promise that new code is checked from the moment it is written, including
+        // in a long-running editor session.
+        files.set(canonicalPath(fileName), fileName);
 
         syncSourceText(fileName, context.sourceCode.text);
 
         const listedPath = toListedPath(fileName);
-        const isUnmigrated = STRICT_NULL_CHECKS_BACKLOG.includes(listedPath);
+        const isUnmigrated = CANONICAL_BACKLOG.has(canonicalPath(listedPath));
 
         return {
             Program() {
