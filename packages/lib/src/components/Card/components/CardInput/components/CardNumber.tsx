@@ -8,7 +8,7 @@ import DataSfSpan from './DataSfSpan';
 import { ENCRYPTED_CARD_NUMBER } from '../../../../internal/SecuredFields/lib/constants';
 import { alternativeLabelContent } from './FieldLabelAlternative';
 import './CardNumber.scss';
-import { requiresDualBrandSelection } from '../utils';
+import { isUnsupportedFundingSourceError, requiresDualBrandSelection } from '../utils';
 import { DUAL_BRANDS_THAT_NEED_SELECTION_MECHANISM } from '../../../constants';
 import DualBrandSelector from './DualBrandSelector';
 
@@ -16,6 +16,7 @@ export default function CardNumber(props: Readonly<CardNumberProps>) {
     const { i18n } = useCoreContext();
     const {
         error = '',
+        errorCode,
         isValid = false,
         onFocusField = () => {},
         dualBrandingElements,
@@ -23,6 +24,8 @@ export default function CardNumber(props: Readonly<CardNumberProps>) {
         brandsConfiguration,
         selectedBrandValue
     } = props;
+
+    const keepDualBrandingOnError = isUnsupportedFundingSourceError(errorCode);
 
     const handleIconClick = () => {
         onFocusField(ENCRYPTED_CARD_NUMBER);
@@ -70,7 +73,7 @@ export default function CardNumber(props: Readonly<CardNumberProps>) {
 
             {props.showBrandIcon && !dualBrandingElements && <BrandIcon brandsConfiguration={props.brandsConfiguration} brand={props.brand} />}
 
-            {dualBrandingElements && !error && (
+            {dualBrandingElements && (!error || keepDualBrandingOnError) && (
                 <div className={classNames(['adyen-checkout__card__dual-branding__icons'])}>
                     {showDualBrandSelector ? (
                         <DualBrandSelector
