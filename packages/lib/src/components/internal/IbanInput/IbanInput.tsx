@@ -27,7 +27,7 @@ interface IbanData {
 
 interface IbanInputState {
     data: IbanData;
-    errors: Record<string, GenericError>;
+    errors: Record<string, GenericError | null>;
     valid: Record<string, boolean>;
     status: string;
     isValid: boolean;
