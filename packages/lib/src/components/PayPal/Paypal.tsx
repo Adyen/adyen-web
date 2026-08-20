@@ -221,7 +221,6 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
     }
 
     private handleOnApprove(data: PayPalOnApproveData, actions: PayPalOnApproveActions): Promise<void> {
-        console.log({ data });
         const { onAuthorized } = this.props;
         const state = { data: { details: data, paymentData: this.paymentData ?? undefined } };
 
@@ -270,7 +269,6 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
      * @param data - Approve data from the PayPal SDK
      */
     private handleOnApproveV6(data: PayPalV6OnApproveData): Promise<void> {
-        console.log({ data });
         const onAuthorized = this.props.usePayPalV6?.onAuthorized;
 
         let state: AdditionalDetailsData = {

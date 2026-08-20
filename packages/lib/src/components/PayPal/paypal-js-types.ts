@@ -78,5 +78,6 @@ export type PayPalMessageElement = PayPalMessageElementV6 & {
 /**
  * Presentation modes offered by the PayPal SDK, without the 'redirect' mode, which is not supported yet.
  */
-export type PayPalPresentationModeOptions = Exclude<PayPalPresentationModeOptionsV6, { presentationMode: 'redirect' }>;
-// End of Paypal SDK V6 types
+export type PayPalPresentationModeOptions = Exclude<PayPalPresentationModeOptionsV6, { presentationMode: 'redirect' }> & {
+    sandboxSupport?: { enabled: boolean };
+};
