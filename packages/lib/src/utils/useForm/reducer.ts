@@ -1,4 +1,6 @@
-const omitKeys = (obj, omit) =>
+import { FormAction, FormInitArg, FormState, ProcessFieldType } from './types';
+
+const omitKeys = (obj: Record<string, unknown>, omit: string[]) =>
     Object.keys(obj)
         .filter(k => !omit.includes(k))
         .reduce((a, c) => {
@@ -6,16 +8,20 @@ const omitKeys = (obj, omit) =>
             return a;
         }, {});
 
-const addKeys = (obj, add, initialValue, defaultData, pendingData) =>
-    add.reduce((a, c) => ({ ...a, [c]: a[c] ?? pendingData?.[c] ?? defaultData?.[c] ?? initialValue }), obj);
+const addKeys = (
+    obj: Record<string, unknown>,
+    add: string[],
+    initialValue: unknown,
+    defaultData: Record<string, unknown>,
+    pendingData: Record<string, unknown>
+) => add.reduce((a, c) => ({ ...a, [c]: a[c] ?? pendingData?.[c] ?? defaultData?.[c] ?? initialValue }), obj);
 
 /**
  * Processes default data and sets as default in state
  */
-export function init({ schema, defaultData, processField, fieldProblems }) {
-    const getProcessedState = fieldKey => {
-        if (typeof defaultData[fieldKey] === 'undefined')
-            return { valid: false, errors: null, data: null, fieldProblems: fieldProblems?.[fieldKey] ?? null };
+export function init({ schema, defaultData, processField, fieldProblems }: FormInitArg) {
+    const getProcessedState = (fieldKey: string) => {
+        if (defaultData[fieldKey] === undefined) return { valid: false, errors: null, data: null, fieldProblems: fieldProblems?.[fieldKey] ?? null };
 
         const [formattedValue, validationResult] = processField(
             { key: fieldKey, value: defaultData[fieldKey], mode: 'blur' },
@@ -31,7 +37,7 @@ export function init({ schema, defaultData, processField, fieldProblems }) {
     };
 
     const formData = schema.reduce(
-        (acc: any, fieldKey) => {
+        (acc: Pick<FormState<Record<string, unknown>>, 'data' | 'valid' | 'errors' | 'fieldProblems'>, fieldKey) => {
             const { valid, errors, data, fieldProblems } = getProcessedState(fieldKey);
 
             return {
@@ -53,8 +59,11 @@ export function init({ schema, defaultData, processField, fieldProblems }) {
     };
 }
 
-export function getReducer(processField) {
-    return function reducer(state, { type, key, value, mode, schema, defaultData, formValue, selectedSchema, fieldProblems, data }) {
+export function getReducer(processField: ProcessFieldType) {
+    return function reducer(
+        state: FormState<Record<string, unknown>>,
+        { type, key, value, mode, schema, defaultData, formValue, selectedSchema, fieldProblems, data }: FormAction<Record<string, unknown>>
+    ) {
         const validationSchema: string[] = selectedSchema || state.schema;
 
         switch (type) {
