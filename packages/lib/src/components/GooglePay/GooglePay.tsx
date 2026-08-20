@@ -1,7 +1,6 @@
 import { h } from 'preact';
 import UIElement from '../internal/UIElement/UIElement';
 import GooglePayService from './GooglePayService';
-import GooglePayButton from './components/GooglePayButton';
 import defaultProps from './defaultProps';
 import { formatGooglePayContactToAdyenAddressFormat, getGooglePayLocale } from './utils';
 import collectBrowserInfo from '../../utils/browserInfo';
@@ -14,15 +13,33 @@ import type { GooglePayConfiguration } from './types';
 import type { ICore } from '../../core/types';
 import { AnalyticsInfoEvent, InfoEventType, UiTarget } from '../../core/Analytics/events/AnalyticsInfoEvent';
 import { mapGooglePayBrands } from './utils/map-adyen-brands-to-googlepay-brands';
+import { PaymentDataRequest } from './models/PaymentDataRequest';
+import { GooglePaymentMode, URL_GOOGLE_PAY_ACCELERATED_CHECKOUT } from './config';
+import Script from '../../utils/Script';
+import GoogleAcceleratedCheckoutClient, { AcceleratedCheckoutOptions } from './services/GoogleAcceleratedCheckoutClient';
+import { GooglePayComponent } from './components/GooglePayComponent';
+import { GOOGLE_PAY_ACCELERATED_DIV_ID } from './components/GoogleAcceleratedCheckout';
+import { resolveEnvironmentForAcceleratedCheckout } from './utils/resolve-environment';
 
 const DEFAULT_ALLOWED_CARD_NETWORKS: google.payments.api.CardNetwork[] = ['AMEX', 'DISCOVER', 'JCB', 'MASTERCARD', 'VISA'];
+
+const GOOGLE_ACCELERATED_CHECKOUT_EXPERIMENT_COMPONENT = 'googlepay_accelerated_checkout_experiment';
 
 class GooglePay extends UIElement<GooglePayConfiguration> {
     public static readonly type = TxVariants.googlepay;
     public static readonly txVariants = [TxVariants.googlepay, TxVariants.paywithgoogle];
     public static readonly defaultProps = defaultProps;
 
-    protected readonly googlePay;
+    private readonly googleButtonClient: GooglePayService;
+    private readonly googleAcceleratedCheckoutClient: GoogleAcceleratedCheckoutClient;
+
+    public mode: GooglePaymentMode = GooglePaymentMode.STANDARD_BUTTON;
+
+    /**
+     * Whether the shopper is eligible for accelerated checkout.
+     * Set during the availability check. Used to determine the mode AND to place GooglePay on top of the Drop-in
+     */
+    public isShopperEligibleForAcceleratedCheckout: boolean = false;
 
     constructor(checkout: ICore, props?: GooglePayConfiguration) {
         super(checkout, props);
@@ -45,7 +62,26 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
             );
         }
 
-        this.googlePay = new GooglePayService(this.props.environment, this.analytics, {
+        const paymentDataRequest = new PaymentDataRequest(this.props);
+
+        const acceleratedOptions: AcceleratedCheckoutOptions = {
+            environment: resolveEnvironmentForAcceleratedCheckout(this.props.environment),
+            acceleratedCheckoutConfig: {
+                type: 'INLINE',
+                containerId: GOOGLE_PAY_ACCELERATED_DIV_ID
+            },
+            paymentDataCallbacks: {
+                onPaymentAuthorized: this.onPaymentAuthorized
+            },
+            checkoutRequest: paymentDataRequest
+        };
+
+        this.googleAcceleratedCheckoutClient = new GoogleAcceleratedCheckoutClient(
+            acceleratedOptions,
+            new Script({ src: URL_GOOGLE_PAY_ACCELERATED_CHECKOUT, component: 'googlepay', analytics: this.analytics })
+        );
+
+        this.googleButtonClient = new GooglePayService(this.props.environment, this.analytics, {
             ...(isExpress && paymentDataCallbacks?.onPaymentDataChanged && { onPaymentDataChanged: paymentDataCallbacks.onPaymentDataChanged }),
             onPaymentAuthorized: this.onPaymentAuthorized
         });
@@ -74,6 +110,7 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
         const callbackIntents: google.payments.api.CallbackIntent[] = [...props.callbackIntents, 'PAYMENT_AUTHORIZATION'];
 
         const allowedCardNetworks = this.createAllowedCardNetworksValues({
+            countryCode: this.core.options.countryCode,
             allowedCardNetworks: props.allowedCardNetworks,
             brands: props.brands
         });
@@ -110,6 +147,65 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
     }
 
     /**
+     * When rendering in Accelerated Checkout mode inside Drop-in, GooglePay displays its own full UI,
+     * so the PaymentMethodItem header is hidden while selected.
+     */
+    public override get showDropinHeaderWhenSelected(): boolean {
+        return this.mode !== GooglePaymentMode.ACCELERATED_CHECKOUT;
+    }
+
+    /**
+     * Determine a shopper's ability to return a form of payment from the Google Pay API.
+     */
+    public override async isAvailable(): Promise<void> {
+        const [acceleratedCheckoutResult, googleButtonResult] = await Promise.allSettled([
+            this.googleAcceleratedCheckoutClient.isAvailable(),
+            this.googleButtonClient.isReadyToPay(this.props)
+        ]);
+
+        if (acceleratedCheckoutResult.status === 'fulfilled') {
+            const { status } = acceleratedCheckoutResult.value;
+
+            this.isShopperEligibleForAcceleratedCheckout = status === 'SUCCESS';
+
+            this.analytics.sendAnalytics(
+                new AnalyticsInfoEvent({
+                    type: this.isShopperEligibleForAcceleratedCheckout ? InfoEventType.eligibilityPassed : InfoEventType.eligibilityFailed,
+                    component: GOOGLE_ACCELERATED_CHECKOUT_EXPERIMENT_COMPONENT
+                })
+            );
+
+            // Show Accelerated Checkout only when shopper is eligible AND and experiment is enabled
+            if (this.isShopperEligibleForAcceleratedCheckout && this.props.configuration.acceleratedCheckoutExperiment === 'enabled') {
+                this.setMode(GooglePaymentMode.ACCELERATED_CHECKOUT);
+                return;
+            }
+        } else {
+            this.analytics.sendAnalytics(
+                new AnalyticsInfoEvent({
+                    type: InfoEventType.eligibilityFailed,
+                    component: GOOGLE_ACCELERATED_CHECKOUT_EXPERIMENT_COMPONENT
+                })
+            );
+        }
+
+        if (googleButtonResult.status === 'fulfilled') {
+            const isReadyToPayResponse = googleButtonResult.value;
+
+            if (!isReadyToPayResponse.result) {
+                throw new AdyenCheckoutError('ERROR', 'GooglePay is not available');
+            }
+            if (isReadyToPayResponse.paymentMethodPresent === false) {
+                throw new AdyenCheckoutError('ERROR', 'GooglePay - No paymentMethodPresent');
+            }
+
+            return;
+        }
+
+        throw new AdyenCheckoutError('ERROR', 'GooglePay is not available', { cause: googleButtonResult.reason });
+    }
+
+    /**
      * Generate the 'allowedCardNetworks' value used by Google Pay
      *
      * If the 'allowedCardNetworks' is defined in the Component configuration, it will be used. Otherwise we fallback
@@ -122,14 +218,16 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
      * @private
      */
     private createAllowedCardNetworksValues({
+        countryCode,
         allowedCardNetworks,
         brands
     }: {
+        countryCode?: string;
         allowedCardNetworks?: google.payments.api.CardNetwork[];
         brands?: string[];
     }): google.payments.api.CardNetwork[] {
         if (allowedCardNetworks?.length > 0) return allowedCardNetworks;
-        if (brands?.length > 0) return mapGooglePayBrands(brands);
+        if (brands?.length > 0) return mapGooglePayBrands(brands, countryCode);
 
         return DEFAULT_ALLOWED_CARD_NETWORKS;
     }
@@ -155,7 +253,7 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
      * Displays the Google Pay payment sheet overlay
      */
     private showGooglePayPaymentSheet() {
-        this.googlePay.initiatePayment(this.props, this.core.options.countryCode).catch((error: google.payments.api.PaymentsError) => {
+        this.googleButtonClient.initiatePayment(this.props, this.core.options.countryCode).catch((error: google.payments.api.PaymentsError) => {
             // eslint-disable-next-line @typescript-eslint/no-base-to-string
             this.handleError(new AdyenCheckoutError(error.statusCode === 'CANCELED' ? 'CANCEL' : 'ERROR', error.toString(), { cause: error }));
         });
@@ -276,36 +374,15 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
     /**
      * Determine a shopper's ability to return a form of payment from the Google Pay API.
      */
-    public override async isAvailable(): Promise<void> {
-        return this.isReadyToPay()
-            .then(response => {
-                if (!response.result) {
-                    throw new AdyenCheckoutError('ERROR', 'GooglePay is not available');
-                }
-
-                if (response.paymentMethodPresent === false) {
-                    throw new AdyenCheckoutError('ERROR', 'GooglePay - No paymentMethodPresent');
-                }
-
-                return Promise.resolve();
-            })
-            .catch(error => {
-                return Promise.reject(error);
-            });
-    }
-
-    /**
-     * Determine a shopper's ability to return a form of payment from the Google Pay API.
-     */
     public isReadyToPay = (): Promise<google.payments.api.IsReadyToPayResponse> => {
-        return this.googlePay.isReadyToPay(this.props);
+        return this.googleButtonClient.isReadyToPay(this.props);
     };
 
     /**
      * Use this method to prefetch a PaymentDataRequest configuration to improve loadPaymentData execution time on later user interaction. No value is returned.
      */
     public prefetch = (): void => {
-        return this.googlePay.prefetchPaymentData(this.props, this.core.options.countryCode);
+        return this.googleButtonClient.prefetchPaymentData(this.props, this.core.options.countryCode);
     };
 
     get browserInfo(): BrowserInfo {
@@ -316,23 +393,32 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
         return this.props.icon ?? this.resources.getImage()('googlepay');
     }
 
-    protected override componentToRender(): h.JSX.Element {
-        if (this.props.showPayButton) {
-            return (
-                <GooglePayButton
-                    buttonColor={this.props.buttonColor}
-                    buttonType={this.props.buttonType}
-                    buttonSizeMode={this.props.buttonSizeMode}
-                    buttonLocale={this.props.buttonLocale}
-                    buttonRootNode={this.props.buttonRootNode}
-                    buttonRadius={this.props.buttonRadius}
-                    paymentsClient={this.googlePay.paymentsClient}
-                    onClick={this.submit}
-                />
-            );
+    private readonly setMode = (mode: GooglePaymentMode): void => {
+        if (mode !== this.mode) {
+            this.mode = mode;
+            this.setElementStatus('ready');
         }
+    };
 
-        return null;
+    protected override componentToRender(): h.JSX.Element {
+        return (
+            <GooglePayComponent
+                defaultMode={this.mode}
+                onUpdateMode={this.setMode}
+                googleButtonClient={this.googleButtonClient}
+                googleAcceleratedCheckoutClient={this.googleAcceleratedCheckoutClient}
+                showPayButton={this.props.showPayButton}
+                googleButtonProps={{
+                    buttonColor: this.props.buttonColor,
+                    buttonType: this.props.buttonType,
+                    buttonSizeMode: this.props.buttonSizeMode,
+                    buttonLocale: this.props.buttonLocale,
+                    buttonRadius: this.props.buttonRadius,
+                    buttonRootNode: this.props.buttonRootNode,
+                    onClick: this.submit
+                }}
+            />
+        );
     }
 }
 

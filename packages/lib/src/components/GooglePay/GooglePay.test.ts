@@ -1,19 +1,28 @@
-import { render } from '@testing-library/preact';
+import { act, screen, render } from '@testing-library/preact';
 import GooglePay from './GooglePay';
 import GooglePayService from './GooglePayService';
+import GoogleAcceleratedCheckoutClient from './services/GoogleAcceleratedCheckoutClient';
 
 import PaymentMethods from '../../core/ProcessResponse/PaymentMethods';
 import { setupCoreMock, TEST_CHECKOUT_ATTEMPT_ID } from '../../../config/testMocks/setup-core-mock';
 import { InfoEventType } from '../../core/Analytics/events/AnalyticsInfoEvent';
+import { GooglePaymentMode } from './config';
 import { ICore } from '../../types';
 
 jest.mock('./GooglePayService');
+jest.mock('./services/GoogleAcceleratedCheckoutClient');
 
 beforeEach(() => {
     // @ts-ignore 'mockClear' is provided by jest.mock
     GooglePayService.mockClear();
+    // @ts-ignore 'mockClear' is provided by jest.mock
+    GoogleAcceleratedCheckoutClient.mockClear();
     jest.resetModules();
     jest.resetAllMocks();
+
+    // By default the accelerated checkout client is not available, so tests exercise the standard button flow.
+    // @ts-ignore prototype method is mocked by jest.mock
+    GoogleAcceleratedCheckoutClient.prototype.isAvailable.mockResolvedValue({ status: 'ERROR' });
 });
 
 let googlePaymentData: Partial<google.payments.api.PaymentData> = {};
@@ -76,7 +85,8 @@ describe('GooglePay', () => {
 
     describe('onClick()', () => {
         test('should not call "initiatePayment" if the onClick reject() is called', async () => {
-            const googlepay = new GooglePay(global.core, {
+            const core = setupCoreMock();
+            const googlepay = new GooglePay(core, {
                 configuration: { merchantId: 'merchant-id', gatewayMerchantId: 'gateway-id' },
                 onClick(resolve, reject) {
                     reject();
@@ -93,7 +103,8 @@ describe('GooglePay', () => {
         });
 
         test('should call "initiatePayment" if the onClick resolve() is called', async () => {
-            const googlepay = new GooglePay(global.core, {
+            const core = setupCoreMock();
+            const googlepay = new GooglePay(core, {
                 configuration: { merchantId: 'merchant-id', gatewayMerchantId: 'gateway-id' },
                 onClick(resolve) {
                     resolve();
@@ -389,8 +400,10 @@ describe('GooglePay', () => {
         };
 
         test('should provide GooglePay auth event and formatted data', () => {
+            const core = setupCoreMock();
             const onAuthorizedMock = jest.fn();
-            new GooglePay(global.core, {
+
+            new GooglePay(core, {
                 configuration: { merchantId: 'merchant-id', gatewayMerchantId: 'gateway-id' },
                 onAuthorized: onAuthorizedMock
             });
@@ -403,12 +416,13 @@ describe('GooglePay', () => {
         });
 
         test('should pass error to GooglePay if the action.reject happens on onAuthorized', async () => {
+            const core = setupCoreMock();
             const onAuthorizedMock = jest.fn().mockImplementation((_data, actions) => {
                 actions.reject('Not supported network scheme');
             });
             const onPaymentFailedMock = jest.fn();
 
-            new GooglePay(global.core, {
+            new GooglePay(core, {
                 configuration: { merchantId: 'merchant-id', gatewayMerchantId: 'gateway-id' },
                 i18n: global.i18n,
                 onAuthorized: onAuthorizedMock,
@@ -433,12 +447,13 @@ describe('GooglePay', () => {
         });
 
         test('should continue the payment flow if action.resolve happens on onAuthorized', async () => {
+            const core = setupCoreMock();
             const onAuthorizedMock = jest.fn().mockImplementation((_data, actions) => {
                 actions.resolve();
             });
             const onPaymentCompletedMock = jest.fn();
 
-            const gpay = new GooglePay(global.core, {
+            const gpay = new GooglePay(core, {
                 configuration: { merchantId: 'merchant-id', gatewayMerchantId: 'gateway-id' },
                 i18n: global.i18n,
                 onAuthorized: onAuthorizedMock,
@@ -456,7 +471,8 @@ describe('GooglePay', () => {
         });
 
         test('should make the payments call if onAuthorized is not provided', async () => {
-            const gpay = new GooglePay(global.core, {
+            const core = setupCoreMock();
+            const gpay = new GooglePay(core, {
                 configuration: { merchantId: 'merchant-id', gatewayMerchantId: 'gateway-id' },
                 i18n: global.i18n
             });
@@ -473,38 +489,145 @@ describe('GooglePay', () => {
     });
 
     describe('isAvailable()', () => {
+        const getButtonClientInstance = () => {
+            // @ts-ignore GooglePayService is mocked
+            return GooglePayService.mock.instances[GooglePayService.mock.instances.length - 1];
+        };
+
+        const getAcceleratedCheckoutClientInstance = () => {
+            // @ts-ignore GoogleAcceleratedCheckoutClient is mocked
+            return GoogleAcceleratedCheckoutClient.mock.instances[GoogleAcceleratedCheckoutClient.mock.instances.length - 1];
+        };
+
         test('should resolve if GooglePay is available', async () => {
-            const gpay = new GooglePay(global.core, { configuration: { merchantId: 'merchant-id', gatewayMerchantId: 'gateway-id' } });
-            gpay.isReadyToPay = jest.fn(() => {
-                return Promise.resolve({ result: true });
-            });
+            const core = setupCoreMock();
+            const gpay = new GooglePay(core, { configuration: { merchantId: 'merchant-id', gatewayMerchantId: 'gateway-id' } });
+            getButtonClientInstance().isReadyToPay.mockResolvedValue({ result: true });
 
             await expect(gpay.isAvailable()).resolves.not.toThrow();
         });
 
         test('should reject if is not available', async () => {
-            const gpay = new GooglePay(global.core, { configuration: { merchantId: 'merchant-id', gatewayMerchantId: 'gateway-id' } });
-            gpay.isReadyToPay = jest.fn(() => {
-                return Promise.resolve({ result: false });
-            });
+            const core = setupCoreMock();
+            const gpay = new GooglePay(core, { configuration: { merchantId: 'merchant-id', gatewayMerchantId: 'gateway-id' } });
+            getButtonClientInstance().isReadyToPay.mockResolvedValue({ result: false });
 
             await expect(gpay.isAvailable()).rejects.toThrow();
         });
 
         test('should reject if "paymentMethodPresent" is false', async () => {
-            const gpay = new GooglePay(global.core, { configuration: { merchantId: 'merchant-id', gatewayMerchantId: 'gateway-id' } });
-            gpay.isReadyToPay = jest.fn(() => {
-                return Promise.resolve({ result: true, paymentMethodPresent: false });
-            });
+            const core = setupCoreMock();
+            const gpay = new GooglePay(core, { configuration: { merchantId: 'merchant-id', gatewayMerchantId: 'gateway-id' } });
+            getButtonClientInstance().isReadyToPay.mockResolvedValue({ result: true, paymentMethodPresent: false });
 
             await expect(gpay.isAvailable()).rejects.toThrow();
+        });
+
+        test('should reject if the isReadyToPay call rejects', async () => {
+            const core = setupCoreMock();
+            const gpay = new GooglePay(core, { configuration: { merchantId: 'merchant-id', gatewayMerchantId: 'gateway-id' } });
+            getButtonClientInstance().isReadyToPay.mockRejectedValue(new Error('Google Pay is not available'));
+
+            await expect(gpay.isAvailable()).rejects.toThrow();
+        });
+
+        test('should resolve and switch to accelerated checkout mode when accelerated checkout is available and the experiment is enabled', async () => {
+            const core = setupCoreMock();
+            const gpay = new GooglePay(core, {
+                configuration: { merchantId: 'merchant-id', gatewayMerchantId: 'gateway-id', acceleratedCheckoutExperiment: 'enabled' }
+            });
+            getAcceleratedCheckoutClientInstance().isAvailable.mockResolvedValue({ status: 'SUCCESS' });
+
+            await expect(gpay.isAvailable()).resolves.not.toThrow();
+            expect(gpay.mode).toBe(GooglePaymentMode.ACCELERATED_CHECKOUT);
+            expect(gpay.isShopperEligibleForAcceleratedCheckout).toBe(true);
+            expect(core.modules.analytics.sendAnalytics).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    type: InfoEventType.eligibilityPassed,
+                    component: 'googlepay_accelerated_checkout_experiment'
+                })
+            );
+        });
+
+        test('should fall back to the standard button flow when accelerated checkout is available but the experiment is not enabled', async () => {
+            const core = setupCoreMock();
+            const gpay = new GooglePay(core, { configuration: { merchantId: 'merchant-id', gatewayMerchantId: 'gateway-id' } });
+            getAcceleratedCheckoutClientInstance().isAvailable.mockResolvedValue({ status: 'SUCCESS' });
+            getButtonClientInstance().isReadyToPay.mockResolvedValue({ result: true });
+
+            await expect(gpay.isAvailable()).resolves.not.toThrow();
+            expect(gpay.mode).toBe(GooglePaymentMode.STANDARD_BUTTON);
+            expect(gpay.isShopperEligibleForAcceleratedCheckout).toBe(true);
+            expect(core.modules.analytics.sendAnalytics).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    type: InfoEventType.eligibilityPassed,
+                    component: 'googlepay_accelerated_checkout_experiment'
+                })
+            );
+        });
+
+        test('should report a failed eligibility check via analytics when accelerated checkout is not available', async () => {
+            const core = setupCoreMock();
+            const gpay = new GooglePay(core, { configuration: { merchantId: 'merchant-id', gatewayMerchantId: 'gateway-id' } });
+            getAcceleratedCheckoutClientInstance().isAvailable.mockResolvedValue({ status: 'ERROR' });
+            getButtonClientInstance().isReadyToPay.mockResolvedValue({ result: true });
+
+            await expect(gpay.isAvailable()).resolves.not.toThrow();
+            expect(gpay.mode).toBe(GooglePaymentMode.STANDARD_BUTTON);
+            expect(core.modules.analytics.sendAnalytics).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    type: InfoEventType.eligibilityFailed,
+                    component: 'googlepay_accelerated_checkout_experiment'
+                })
+            );
+        });
+
+        test('should report a failed eligibility check via analytics when the accelerated checkout availability call rejects', async () => {
+            const core = setupCoreMock();
+            const gpay = new GooglePay(core, { configuration: { merchantId: 'merchant-id', gatewayMerchantId: 'gateway-id' } });
+            getAcceleratedCheckoutClientInstance().isAvailable.mockRejectedValue(new Error('Accelerated checkout unavailable'));
+            getButtonClientInstance().isReadyToPay.mockResolvedValue({ result: true });
+
+            await expect(gpay.isAvailable()).resolves.not.toThrow();
+            expect(gpay.mode).toBe(GooglePaymentMode.STANDARD_BUTTON);
+            expect(core.modules.analytics.sendAnalytics).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    type: InfoEventType.eligibilityFailed,
+                    component: 'googlepay_accelerated_checkout_experiment'
+                })
+            );
+        });
+
+        test('should restore the Drop-in header when accelerated checkout load falls back to the standard button', async () => {
+            const core = setupCoreMock();
+            const gpay = new GooglePay(core, {
+                configuration: { merchantId: 'merchant-id', gatewayMerchantId: 'gateway-id', acceleratedCheckoutExperiment: 'enabled' }
+            });
+
+            const acceleratedCheckoutClient = getAcceleratedCheckoutClientInstance();
+            const buttonClient = getButtonClientInstance();
+
+            acceleratedCheckoutClient.isAvailable.mockResolvedValue({ status: 'SUCCESS' });
+            acceleratedCheckoutClient.load.mockResolvedValue({ status: 'ERROR' });
+            acceleratedCheckoutClient.onPaymentSheetResize.mockReturnValue(() => {});
+            buttonClient.createButton.mockResolvedValue(document.createElement('button'));
+
+            await gpay.isAvailable();
+
+            expect(gpay.showDropinHeaderWhenSelected).toBe(false);
+            render(gpay.render());
+
+            await act(() => new Promise(process.nextTick));
+            expect(screen.getByTestId('googlepay-button-container')).toBeInTheDocument();
+            expect(gpay.showDropinHeaderWhenSelected).toBe(true);
         });
     });
 
     describe('Process CA based configuration data', () => {
         describe('brands', () => {
             test('should parse "brands" from configuration if available', () => {
-                const gpay = new GooglePay(global.core, {
+                const core = setupCoreMock();
+                const gpay = new GooglePay(core, {
                     configuration: {
                         merchantId: 'adyen',
                         gatewayMerchantId: 'adyen'
@@ -515,7 +638,8 @@ describe('GooglePay', () => {
             });
 
             test('should ignore "brands" from configuration if "allowedCardNetworks" is set', () => {
-                const gpay = new GooglePay(global.core, {
+                const core = setupCoreMock();
+                const gpay = new GooglePay(core, {
                     configuration: {
                         merchantId: 'adyen',
                         gatewayMerchantId: 'adyen'
@@ -527,7 +651,8 @@ describe('GooglePay', () => {
             });
 
             test('should set default "allowedCardNetworks" values if "brands" and "allowedCardNetworks" props are not set', () => {
-                const gpay = new GooglePay(global.core, {
+                const core = setupCoreMock();
+                const gpay = new GooglePay(core, {
                     configuration: {
                         merchantId: 'adyen',
                         gatewayMerchantId: 'adyen'
@@ -535,15 +660,65 @@ describe('GooglePay', () => {
                 });
                 expect(gpay.props.allowedCardNetworks).toEqual(['AMEX', 'DISCOVER', 'JCB', 'MASTERCARD', 'VISA']);
             });
+
+            test('should keep "maestro" from the "brands" if the countryCode is BR', () => {
+                const core = setupCoreMock();
+                // @ts-ignore Disable TS check because the 'options' is read-only
+                core.options = { countryCode: 'BR' };
+
+                const gpay = new GooglePay(core, {
+                    configuration: {
+                        merchantId: 'adyen',
+                        gatewayMerchantId: 'adyen'
+                    },
+                    brands: ['mc', 'visa', 'maestro']
+                });
+
+                expect(gpay.props.allowedCardNetworks).toEqual(['MASTERCARD', 'VISA', 'MAESTRO']);
+            });
+
+            test('should filter out "maestro" from the "brands" if the countryCode is not BR', () => {
+                const core = setupCoreMock();
+                // @ts-ignore Disable TS check because the 'options' is read-only
+                core.options = { countryCode: 'NL' };
+
+                const gpay = new GooglePay(core, {
+                    configuration: {
+                        merchantId: 'adyen',
+                        gatewayMerchantId: 'adyen'
+                    },
+                    brands: ['mc', 'visa', 'maestro']
+                });
+
+                expect(gpay.props.allowedCardNetworks).toEqual(['MASTERCARD', 'VISA']);
+            });
+
+            test('should not filter out "maestro" if it is passed through "allowedCardNetworks"', () => {
+                const core = setupCoreMock();
+                // @ts-ignore Disable TS check because the 'options' is read-only
+                core.options = { countryCode: 'NL' };
+
+                const gpay = new GooglePay(core, {
+                    configuration: {
+                        merchantId: 'adyen',
+                        gatewayMerchantId: 'adyen'
+                    },
+                    allowedCardNetworks: ['MASTERCARD', 'MAESTRO']
+                });
+
+                expect(gpay.props.allowedCardNetworks).toEqual(['MASTERCARD', 'MAESTRO']);
+            });
         });
 
         test('Retrieves merchantId from configuration', () => {
-            const gpay = new GooglePay(global.core, { configuration: { merchantId: 'abcdef', gatewayMerchantId: 'TestMerchant' } });
+            const core = setupCoreMock();
+            const gpay = new GooglePay(core, { configuration: { merchantId: 'abcdef', gatewayMerchantId: 'TestMerchant' } });
             expect(gpay.props.configuration.merchantId).toEqual('abcdef');
         });
 
         test('Retrieves merchantOrigin from configuration', () => {
-            const gpay = new GooglePay(global.core, {
+            const core = setupCoreMock();
+            const gpay = new GooglePay(core, {
                 configuration: {
                     merchantId: 'abcdef',
                     gatewayMerchantId: 'TestMerchant',
@@ -554,7 +729,8 @@ describe('GooglePay', () => {
         });
 
         test('Retrieves authJwt from configuration', () => {
-            const gpay = new GooglePay(global.core, {
+            const core = setupCoreMock();
+            const gpay = new GooglePay(core, {
                 configuration: { merchantId: 'abcdef', gatewayMerchantId: 'TestMerchant', authJwt: 'jwt.code' }
             });
             expect(gpay.props.configuration.authJwt).toEqual('jwt.code');

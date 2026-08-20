@@ -14,6 +14,7 @@ import { getFullBrandName } from '../../../../Card/components/CardInput/utils';
 import { stopPropagationForActionKeys } from '../../../../internal/Button/stopPropagationForActionKeys';
 import './PaymentMethodItem.scss';
 import Button from '../../../../internal/Button';
+import { isGooglePayTxVariant } from '../../../../GooglePay/utils';
 
 export interface PaymentMethodItemProps {
     paymentMethod: UIElement;
@@ -65,11 +66,15 @@ class PaymentMethodItem extends Component<Readonly<PaymentMethodItemProps>> {
         }
 
         const isCard = paymentMethod.props.type === 'card' || paymentMethod.props.type === 'scheme';
+        const isStoredGooglePay = isGooglePayTxVariant(paymentMethod.props.type) && paymentMethod.props.oneClick === true;
+
+        const hideHeader = !paymentMethod.showDropinHeaderWhenSelected && isSelected;
 
         const paymentMethodClassnames = classNames({
             'adyen-checkout__payment-method': true,
             [`adyen-checkout__payment-method--${paymentMethod.props.type}`]: true,
             ...(isCard && { [`adyen-checkout__payment-method--${paymentMethod.props.fundingSource ?? 'credit'}`]: true }),
+            'adyen-checkout__payment-method--headerless': hideHeader,
             'adyen-checkout__payment-method--selected': isSelected,
             'adyen-checkout__payment-method--loading': isLoading,
             'adyen-checkout__payment-method--disabling': isDisablingPaymentMethod,
@@ -79,7 +84,8 @@ class PaymentMethodItem extends Component<Readonly<PaymentMethodItemProps>> {
             [this.props.className]: true
         });
 
-        const showRemovePaymentMethodButton = this.props.showRemovePaymentMethodButton && paymentMethod.props.oneClick && isSelected;
+        const showRemovePaymentMethodButton =
+            this.props.showRemovePaymentMethodButton && paymentMethod.props.oneClick && isSelected && !isStoredGooglePay;
         const disableConfirmationId = `remove-${paymentMethod._id}`;
         const containerId = `container-${paymentMethod._id}`;
         const buttonId = `button-${paymentMethod._id}`;
@@ -88,8 +94,12 @@ class PaymentMethodItem extends Component<Readonly<PaymentMethodItemProps>> {
 
         return (
             // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions
-            <div key={paymentMethod._id} className={paymentMethodClassnames} onClick={this.handleOnListItemClick}>
-                <div className="adyen-checkout__payment-method__header">
+            <div data-test-id="payment-method-item" key={paymentMethod._id} className={paymentMethodClassnames} onClick={this.handleOnListItemClick}>
+                <div
+                    className={classNames('adyen-checkout__payment-method__header', {
+                        'adyen-checkout__payment-method__header--visually-hidden': hideHeader
+                    })}
+                >
                     <ExpandButton
                         className="adyen-checkout__payment-method__header__content"
                         buttonId={buttonId}

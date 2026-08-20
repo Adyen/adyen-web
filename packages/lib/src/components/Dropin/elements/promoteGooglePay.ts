@@ -1,0 +1,78 @@
+/**
+ * NOTE: This file exists solely to support the experiment/alpha release of the GooglePay
+ * Accelerated Checkout promotion. It is temporary and will be deleted (won't go live) if the
+ * feature is widely accepted.
+ */
+
+import UIElement from '../../internal/UIElement';
+import { TxVariants } from '../../tx-variants';
+
+import type { OrderStatus } from '../../../types/global-types';
+import type { GooglePayConfiguration } from '../../GooglePay/types';
+import type { GooglePaymentMode } from '../../GooglePay/config';
+
+type ResolvedDropinElements = [
+    storedPaymentElements: UIElement[],
+    elements: UIElement[],
+    instantPaymentElements: UIElement[],
+    fastlanePaymentElement: UIElement[],
+    orderStatus: OrderStatus | null
+];
+
+interface PromotableGooglePay {
+    mode?: GooglePaymentMode;
+    props: GooglePayConfiguration;
+    isShopperEligibleForAcceleratedCheckout: boolean;
+}
+
+const isGooglePayElement = (element: UIElement): boolean =>
+    element.type === (TxVariants.googlepay as string) || element.type === (TxVariants.paywithgoogle as string);
+
+/**
+ * A GooglePay element is promotable when the shopper is eligible for Accelerated Checkout
+ */
+const isPromotableGooglePay = (element: UIElement): boolean => {
+    if (!isGooglePayElement(element)) {
+        return false;
+    }
+
+    const googlePay = element as unknown as PromotableGooglePay;
+    return googlePay.isShopperEligibleForAcceleratedCheckout;
+};
+
+/**
+ * Promotes the GooglePay element when it is participating in the accelerated checkout experiment.
+ *
+ * Picks the GooglePay component wherever it is (regular or instant payment elements) and, if promotable,
+ * removes it from its original list and prepends it as the first stored payment element. It also flags the
+ * element with `oneClick` so the stored payment method list can open it at the top.
+ *
+ * @param resolvedElements - The Drop-in elements resolved from `onCreateElements`, plus the order status
+ * @returns The (possibly reshuffled) Drop-in elements in the same tuple shape
+ * @internal
+ */
+const promoteGooglePayIfNeeded = ([
+    storedPaymentElements,
+    elements,
+    instantPaymentElements,
+    fastlanePaymentElement,
+    orderStatus
+]: ResolvedDropinElements): ResolvedDropinElements => {
+    const googlePay = elements.find(isPromotableGooglePay) ?? instantPaymentElements.find(isPromotableGooglePay);
+
+    if (!googlePay) {
+        return [storedPaymentElements, elements, instantPaymentElements, fastlanePaymentElement, orderStatus];
+    }
+
+    googlePay.props.oneClick = true;
+
+    return [
+        [googlePay, ...storedPaymentElements],
+        elements.filter(element => element !== googlePay),
+        instantPaymentElements.filter(element => element !== googlePay),
+        fastlanePaymentElement,
+        orderStatus
+    ];
+};
+
+export default promoteGooglePayIfNeeded;

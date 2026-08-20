@@ -1,7 +1,7 @@
 import { isReadyToPayRequest, initiatePaymentRequest } from './requests';
-import { resolveEnvironment } from './utils';
 import Script from '../../utils/Script';
 import config from './config';
+import { resolveEnvironment } from './utils/resolve-environment';
 import type { GooglePayConfiguration } from './types';
 import type { IAnalytics } from '../../core/Analytics/Analytics';
 
@@ -27,7 +27,7 @@ class GooglePayService {
      * @returns Google Pay API client
      */
     async getGooglePaymentsClient(paymentOptions: google.payments.api.PaymentOptions): Promise<google.payments.api.PaymentsClient> {
-        if (!window.google?.payments) {
+        if (!globalThis.google?.payments) {
             const script = new Script({ src: config.URL, component: 'googlepay', analytics: this.analytics });
             await script.load();
         }
@@ -65,6 +65,16 @@ class GooglePayService {
 
         const paymentDataRequest = initiatePaymentRequest(props, countryCode);
         return this.paymentsClient.then(client => client.loadPaymentData(paymentDataRequest));
+    }
+
+    /**
+     * Creates a Google Pay button
+     *
+     * @param options Button options
+     * @returns Promise that resolves to the created button
+     */
+    public createButton(options: google.payments.api.ButtonOptions): Promise<HTMLElement> {
+        return this.paymentsClient.then(client => client.createButton(options));
     }
 }
 

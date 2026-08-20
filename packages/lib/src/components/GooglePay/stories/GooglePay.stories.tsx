@@ -5,7 +5,10 @@ import { Checkout } from '../../../../storybook/components/Checkout';
 import { GooglePayExpressDemo } from './GooglePayExpressDemo';
 import { GooglePayExpressSessionsDemo } from './GooglePayExpressSessionsDemo';
 import { EXPRESS_DEMO_SETTINGS } from './googlePayExpressUtils';
+import { AdyenCheckout, components } from '../../..';
+import DropinComponent from '../../Dropin';
 
+import type { NewableComponent } from '../../../core/core.registry';
 import type { MetaConfiguration, StoryConfiguration } from '../../../../storybook/types';
 import type { GooglePayConfiguration } from '../types';
 
@@ -60,6 +63,44 @@ export const ExpressOnSessions: GooglePayStory = {
         countryCode: EXPRESS_DEMO_SETTINGS.COUNTRY_CODE,
         amount: EXPRESS_DEMO_SETTINGS.INITIAL_AMOUNT,
         shopperLocale: EXPRESS_DEMO_SETTINGS.SHOPPER_LOCALE
+    }
+};
+
+export const AcceleratedCheckout: GooglePayStory = {
+    render: ({ componentConfiguration, ...checkoutConfig }) => {
+        const { Dropin, ...Components } = components;
+        const Classes = Object.values(Components) as NewableComponent[];
+        AdyenCheckout.register(...Classes);
+
+        return (
+            <Checkout checkoutConfig={checkoutConfig}>
+                {checkout => (
+                    <ComponentContainer
+                        element={
+                            new DropinComponent(checkout, {
+                                showRemovePaymentMethodButton: true,
+                                onDisableStoredPaymentMethod: (_stored, _resolve, reject) => {
+                                    alert('Not implemented');
+                                    reject();
+                                },
+                                paymentMethodsConfiguration: { googlepay: { ...componentConfiguration } }
+                            })
+                        }
+                    />
+                )}
+            </Checkout>
+        );
+    },
+    args: {
+        useSessions: true,
+        countryCode: 'BR',
+        componentConfiguration: {
+            configuration: {
+                gatewayMerchantId: 'TestMerchantCheckout',
+                merchantId: '50',
+                acceleratedCheckoutExperiment: 'enabled'
+            }
+        }
     }
 };
 

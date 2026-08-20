@@ -1,17 +1,15 @@
 import { h } from 'preact';
-import GooglePayButton from './GooglePayButton';
-import { render } from '@testing-library/preact';
+import { render, screen } from '@testing-library/preact';
 import { mock } from 'jest-mock-extended';
 
-describe('GooglePayButton', () => {
-    test('should call Google "createButton" API with proper values', async () => {
-        const googleClient = mock<google.payments.api.PaymentsClient>();
-        const onClickMock = jest.fn();
+import GooglePayButton from './GooglePayButton';
+import GooglePayService from '../GooglePayService';
 
-        googleClient.createButton.mockImplementation(() => {
-            const googleElement = document.createElement('div');
-            return googleElement;
-        });
+describe('GooglePayButton', () => {
+    test('should call GooglePayService "createButton" with proper values', async () => {
+        const paymentsClient = mock<GooglePayService>();
+        const onClickMock = jest.fn();
+        paymentsClient.createButton.mockResolvedValue(document.createElement('div'));
 
         render(
             <GooglePayButton
@@ -20,14 +18,13 @@ describe('GooglePayButton', () => {
                 buttonSizeMode={'fill'}
                 buttonLocale={'en-US'}
                 onClick={onClickMock}
-                paymentsClient={Promise.resolve(googleClient)}
+                paymentsClient={paymentsClient}
             />
         );
 
-        const flushPromises = () => new Promise(process.nextTick);
-        await flushPromises();
+        await new Promise(process.nextTick);
 
-        expect(googleClient.createButton).toHaveBeenCalledWith(
+        expect(paymentsClient.createButton).toHaveBeenCalledWith(
             expect.objectContaining({
                 buttonColor: 'default',
                 buttonLocale: 'en-US',
@@ -37,5 +34,48 @@ describe('GooglePayButton', () => {
                 onClick: expect.any(Function)
             })
         );
+    });
+
+    test('should forward "buttonRadius" to "createButton" when provided', async () => {
+        const paymentsClient = mock<GooglePayService>();
+        paymentsClient.createButton.mockResolvedValue(document.createElement('div'));
+
+        render(
+            <GooglePayButton
+                buttonColor={'default'}
+                buttonType={'pay'}
+                buttonSizeMode={'fill'}
+                buttonLocale={'en-US'}
+                buttonRadius={4}
+                onClick={jest.fn()}
+                paymentsClient={paymentsClient}
+            />
+        );
+
+        await new Promise(process.nextTick);
+
+        expect(paymentsClient.createButton).toHaveBeenCalledWith(expect.objectContaining({ buttonRadius: 4 }));
+    });
+
+    test('should append the created button to the container', async () => {
+        const paymentsClient = mock<GooglePayService>();
+        const googleButton = document.createElement('div');
+        googleButton.dataset.testid = 'google-created-button';
+        paymentsClient.createButton.mockResolvedValue(googleButton);
+
+        render(
+            <GooglePayButton
+                buttonColor={'default'}
+                buttonType={'pay'}
+                buttonSizeMode={'fill'}
+                buttonLocale={'en-US'}
+                onClick={jest.fn()}
+                paymentsClient={paymentsClient}
+            />
+        );
+
+        await new Promise(process.nextTick);
+
+        expect(screen.getByTestId('googlepay-button-container')).toContainElement(screen.getByTestId('google-created-button'));
     });
 });

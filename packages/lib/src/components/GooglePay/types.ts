@@ -213,7 +213,7 @@ export interface GooglePayConfiguration extends UIElementProps {
          * Adyen's merchant account name
          * @see https://developers.google.com/pay/api/web/reference/request-objects#gateway
          */
-        gatewayMerchantId: string;
+        gatewayMerchantId?: string;
 
         /**
          * A Google merchant identifier issued after registration with the {@link https://pay.google.com/business/console | Google Pay Business Console}.
@@ -238,6 +238,12 @@ export interface GooglePayConfiguration extends UIElementProps {
          * To request Google Pay credentials, you can enable platforms to send requests that are authenticated with the platform credentials. You don't need to register individual domain names to call Google Pay APIs.
          */
         authJwt?: string;
+
+        /**
+         * Flag indicating whether the accelerated checkout experiment is enabled.
+         * Value is returned from the /paymentMethods endpoint.
+         */
+        acceleratedCheckoutExperiment?: 'enabled' | 'disabled';
     };
 }
 

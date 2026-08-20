@@ -65,6 +65,10 @@
     transition: background 0.1s ease-out;
     width: 100%;
 
+    &--visually-hidden:not(:has(:focus-visible)) {
+        @include index.a11y-visually-hidden;
+    }
+
     [dir='rtl'] & {
         $pm-h-spacer-70: variable-generator.token(spacer-070);
         $pm-h-spacer-20: variable-generator.token(spacer-020);
@@ -98,6 +102,14 @@
 
     .adyen-checkout__payment-method--standalone & {
         padding: variable-generator.token(spacer-070);
+    }
+}
+
+.adyen-checkout__payment-method--selected.adyen-checkout__payment-method--headerless {
+    background-color: variable-generator.token(color-background-primary);
+
+    .adyen-checkout__payment-method__details {
+        padding: variable-generator.token(spacer-020);
     }
 }
 

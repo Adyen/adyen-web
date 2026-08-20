@@ -47,7 +47,7 @@ export function getTransactionInfo({
     countryCode = 'US',
     totalPriceStatus = 'FINAL',
     ...props
-}: GooglePayConfiguration): google.payments.api.TransactionInfo {
+}: Omit<GooglePayConfiguration, 'configuration'>): google.payments.api.TransactionInfo {
     const formattedPrice = String(getDecimalAmount(amount.value, amount.currency));
 
     return {

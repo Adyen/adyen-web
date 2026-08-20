@@ -4,7 +4,7 @@ describe('mapGooglePayBrands()', () => {
     it('should correctly map a list of known Adyen brand codes', () => {
         const adyenBrands = ['mc', 'visa', 'amex'];
         const expected = ['MASTERCARD', 'VISA', 'AMEX'];
-        const result = mapGooglePayBrands(adyenBrands);
+        const result = mapGooglePayBrands(adyenBrands, 'NL');
 
         expect(result).toEqual(expected);
     });
@@ -12,7 +12,7 @@ describe('mapGooglePayBrands()', () => {
     it('should ignore any unknown or unsupported brand codes in the list', () => {
         const adyenBrands = ['mc', 'unsupported_brand', 'visa'];
         const expected = ['MASTERCARD', 'VISA'];
-        const result = mapGooglePayBrands(adyenBrands);
+        const result = mapGooglePayBrands(adyenBrands, 'NL');
 
         expect(result).toEqual(expected);
     });
@@ -20,7 +20,7 @@ describe('mapGooglePayBrands()', () => {
     it('should return a unique list of brands even if the input contains duplicates', () => {
         const adyenBrands = ['mc', 'visa', 'mc'];
         const expected = ['MASTERCARD', 'VISA'];
-        const result = mapGooglePayBrands(adyenBrands);
+        const result = mapGooglePayBrands(adyenBrands, 'NL');
 
         expect(result.length).toBe(2);
         expect(result).toEqual(expected);
@@ -28,14 +28,14 @@ describe('mapGooglePayBrands()', () => {
 
     it('should return an empty array when given an empty array', () => {
         const adyenBrands: string[] = [];
-        const result = mapGooglePayBrands(adyenBrands);
+        const result = mapGooglePayBrands(adyenBrands, 'NL');
 
         expect(result).toEqual([]);
     });
 
     it('should return an empty array if all provided brands are unknown', () => {
         const adyenBrands = ['unknown1', 'unknown2'];
-        const result = mapGooglePayBrands(adyenBrands);
+        const result = mapGooglePayBrands(adyenBrands, 'NL');
 
         expect(result).toEqual([]);
     });
@@ -55,9 +55,41 @@ describe('mapGooglePayBrands()', () => {
             'MAESTRO'
         ];
 
-        const result = mapGooglePayBrands(allAdyenBrands);
+        const result = mapGooglePayBrands(allAdyenBrands, 'BR');
 
         expect(result.length).toBe(allExpectedGooglePayBrands.length);
         expect(result).toEqual(allExpectedGooglePayBrands);
+    });
+
+    describe('maestro', () => {
+        it('should keep "maestro" when the countryCode is BR', () => {
+            const result = mapGooglePayBrands(['mc', 'maestro', 'visa'], 'BR');
+
+            expect(result).toEqual(['MASTERCARD', 'MAESTRO', 'VISA']);
+        });
+
+        it('should filter out "maestro" when the countryCode is not BR', () => {
+            const result = mapGooglePayBrands(['mc', 'maestro', 'visa'], 'NL');
+
+            expect(result).toEqual(['MASTERCARD', 'VISA']);
+        });
+
+        it('should filter out "maestro" when the countryCode is not set', () => {
+            const result = mapGooglePayBrands(['mc', 'maestro', 'visa'], undefined);
+
+            expect(result).toEqual(['MASTERCARD', 'VISA']);
+        });
+
+        it('should filter out "maestro" when the countryCode is lowercase "br"', () => {
+            const result = mapGooglePayBrands(['mc', 'maestro'], 'br');
+
+            expect(result).toEqual(['MASTERCARD']);
+        });
+
+        it('should return an empty array if "maestro" is the only brand and the countryCode is not BR', () => {
+            const result = mapGooglePayBrands(['maestro'], 'US');
+
+            expect(result).toEqual([]);
+        });
     });
 });

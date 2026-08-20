@@ -596,6 +596,15 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     }
 
     /**
+     * Controls whether the Drop-in PaymentMethodItem renders its header (and selected-state background)
+     * while this element is the selected item. Elements that render their own full UI when selected
+     * (e.g. GooglePay accelerated checkout) can override this to return `false` to render "headerless".
+     */
+    public get showDropinHeaderWhenSelected(): boolean {
+        return true;
+    }
+
+    /**
      * Return the type of an element
      */
     public get type(): string {
