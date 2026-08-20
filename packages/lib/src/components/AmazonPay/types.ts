@@ -54,6 +54,7 @@ export interface AmazonPayConfiguration extends UIElementProps {
     buttonColor?: ButtonColor;
     cancelUrl?: string;
     chargePermissionType?: ChargePermissionType;
+    checkoutMode?: string;
     clientKey?: string;
     configuration?: AmazonPayBackendConfiguration;
     currency?: Currency;
@@ -252,7 +253,7 @@ export interface CheckoutDetailsRequest {
     getDeliveryAddress?: boolean;
     getDeclineFlowUrl?: boolean;
     publicKeyId: string;
-    region: Region;
+    region?: Region;
 }
 
 export interface UpdateAmazonCheckoutSessionRequest {

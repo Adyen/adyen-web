@@ -78,7 +78,7 @@ abstract class BaseElement<P extends BaseElementProps, S extends BaseElementStat
         return null;
     }
 
-    protected setState(newState: object): void {
+    protected setState(newState: S): void {
         this.state = { ...this.state, ...newState };
     }
 
