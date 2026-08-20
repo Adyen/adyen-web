@@ -13,6 +13,8 @@ import type { PaymentAction, PaymentAmount, PaymentResponseData } from '../../ty
 import type { ICore } from '../../core/types';
 import type { IDropin } from './types';
 
+const SUPPORTED_INSTANT_PAYMENTS = ['paywithgoogle', 'googlepay', 'applepay'];
+
 class DropinElement extends UIElement<DropinConfiguration> implements IDropin {
     public static readonly type = TxVariants.dropin;
 
@@ -52,19 +54,9 @@ class DropinElement extends UIElement<DropinConfiguration> implements IDropin {
     formatProps(props) {
         return {
             ...super.formatProps(props),
-            /**
-             * TODO: REMOVE THIS WHEN THE EXPERIMENTATION IS DONE
-             *
-             * The instant payments feature is disabled during the experimentation phase: whatever the merchant
-             * configures is ignored, so Google Pay and Apple Pay are rendered as regular payment methods.
-             *
-             * Original implementation:
-             * const SUPPORTED_INSTANT_PAYMENTS = ['paywithgoogle', 'googlepay', 'applepay'];
-             * instantPaymentTypes: Array.from<InstantPaymentTypes>(new Set(props.instantPaymentTypes)).filter(value =>
-             *     SUPPORTED_INSTANT_PAYMENTS.includes(value)
-             * )
-             */
-            instantPaymentTypes: [] as InstantPaymentTypes[]
+            instantPaymentTypes: Array.from<InstantPaymentTypes>(new Set(props.instantPaymentTypes)).filter(value =>
+                SUPPORTED_INSTANT_PAYMENTS.includes(value)
+            )
         };
     }
 
