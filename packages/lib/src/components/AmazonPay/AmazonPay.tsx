@@ -85,7 +85,7 @@ export class AmazonPayElement extends UIElement<AmazonPayConfiguration> {
                 window.location.assign(response.declineFlowUrl);
             })
             .catch(error => {
-                if (this.props.onError) this.props.onError(error, this.componentRef as unknown as UIElement);
+                if (this.props.onError) this.props.onError(error, this);
             });
     }
 

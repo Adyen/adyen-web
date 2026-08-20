@@ -72,4 +72,4 @@ export const checkIbanStatus = iban => {
 /**
  * Checks validity of a holder name
  */
-export const isValidHolder = value => (isEmpty(value) ? null : true); // true, if there are chars other than spaces
+export const isValidHolder = (value: string) => !isEmpty(value);
