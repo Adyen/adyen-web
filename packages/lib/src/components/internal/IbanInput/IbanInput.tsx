@@ -6,6 +6,8 @@ import { electronicFormat, formatIban, getCountryCode, getNextCursorPosition } f
 import Fieldset from '../FormFields/Fieldset';
 import { GenericError } from '../../../core/Errors/types';
 import InputText from '../FormFields/InputText';
+import { UIElementStatus } from '../UIElement/types';
+import { OnChangeData } from '../../../types';
 
 interface IbanInputProps {
     holderName?: boolean;
@@ -13,12 +15,12 @@ interface IbanInputProps {
     countryCode?: string;
     showPayButton?: boolean;
     payButton?: any;
-    onChange: (data) => void;
+    onChange: (data: OnChangeData) => void;
     label: string;
-    data: IbanData;
+    data?: IbanData;
 }
 
-interface IbanData {
+export interface IbanData {
     ownerName?: string;
     ibanNumber?: string;
     countryCode?: string;
@@ -70,8 +72,8 @@ class IbanInput extends Component<Readonly<IbanInputProps>, IbanInputState> {
         }
 
         if (this.state.data['ibanNumber'] || this.state.data['ownerName']) {
-            const holderNameValid = this.props.holderName ? isValidHolder(this.state.data['ownerName']) : '';
-            const ibanValid = this.state.data['ibanNumber'] ? checkIbanStatus(this.state.data['ibanNumber']).status === 'valid' : '';
+            const holderNameValid = this.props.holderName ? isValidHolder(this.state.data['ownerName']) : true;
+            const ibanValid = this.state.data['ibanNumber'] ? checkIbanStatus(this.state.data['ibanNumber']).status === 'valid' : false;
             const isValid = ibanValid && holderNameValid;
             const data = { data: this.state.data, isValid };
 
@@ -87,7 +89,7 @@ class IbanInput extends Component<Readonly<IbanInputProps>, IbanInputState> {
         label: null
     };
 
-    setStatus(status) {
+    setStatus(status: UIElementStatus) {
         this.setState({ status });
     }
 
@@ -117,10 +119,7 @@ class IbanInput extends Component<Readonly<IbanInputProps>, IbanInputState> {
             prevState => ({ data: { ...prevState.data, ownerName: holder } }),
             () => {
                 const holderStatus = isValidHolder(this.state.data['ownerName']);
-                const holderErr =
-                    holderStatus != null && !holderStatus // *don't* consider null, i.e. a value that has just been deleted, to be in error
-                        ? ibanHolderNameErrorObj
-                        : null;
+                const holderErr = holderStatus && !holderStatus ? ibanHolderNameErrorObj : null;
 
                 this.setError('holder', holderErr, this.onChange);
             }
@@ -161,7 +160,7 @@ class IbanInput extends Component<Readonly<IbanInputProps>, IbanInputState> {
 
         if (currentIban.length > 0) {
             const validationStatus = checkIbanStatus(currentIban).status;
-            this.setError('iban', validationStatus !== 'valid' ? ibanErrorObj : null, this.onChange);
+            this.setError('iban', validationStatus === 'valid' ? null : ibanErrorObj, this.onChange);
         } else {
             // Empty field is not in error
             this.setError('iban', null, this.onChange);
@@ -171,11 +170,9 @@ class IbanInput extends Component<Readonly<IbanInputProps>, IbanInputState> {
     showValidation() {
         const validationStatus = checkIbanStatus(this.state.data['ibanNumber']).status;
         const holderStatus = isValidHolder(this.state.data['ownerName']);
-        this.setError('iban', validationStatus !== 'valid' ? ibanErrorObj : null);
+        this.setError('iban', validationStatus === 'valid' ? null : ibanErrorObj);
 
-        const holderErr = !holderStatus // *do* consider null, i.e. an empty field, to be in error
-            ? ibanHolderNameErrorObj
-            : null;
+        const holderErr = holderStatus ? null : ibanHolderNameErrorObj;
 
         this.setError('holder', holderErr, this.onChange); // add callback param to force propagation of state to parent comp
     }
