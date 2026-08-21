@@ -187,7 +187,7 @@ const STRICT_NULL_CHECKS_BACKLOG = [
     'src/components/ThreeDS2/ThreeDS2Challenge.tsx',
     'src/components/ThreeDS2/ThreeDS2DeviceFingerprint.tsx',
 
-    // ── Ticket 8: Google Pay and Apple Pay (71 errors) ──
+    // ── Ticket 8: Google Pay and Apple Pay (85 errors) ──
     'src/components/ApplePay/ApplePay.tsx',
     'src/components/ApplePay/services/ApplePaySdkLoader.ts',
     'src/components/ApplePay/services/ApplePayService.ts',
@@ -195,6 +195,7 @@ const STRICT_NULL_CHECKS_BACKLOG = [
     'src/components/ApplePay/utils/payment-request.ts',
     'src/components/GooglePay/components/GooglePayButton.tsx',
     'src/components/GooglePay/GooglePay.tsx',
+    'src/components/GooglePay/models/PaymentDataRequest.ts',
     'src/components/GooglePay/requests.ts',
 
     // ── Ticket 9: Amazon Pay, PayPal and Cash App Pay (79 errors) ──
