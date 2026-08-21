@@ -199,7 +199,6 @@ const STRICT_NULL_CHECKS_BACKLOG = [
     'src/components/GooglePay/requests.ts',
 
     // ── Ticket 9: Amazon Pay, PayPal and Cash App Pay (79 errors) ──
-    'src/components/AmazonPay/AmazonPay.tsx',
     'src/components/AmazonPay/components/AmazonPayButton.tsx',
     'src/components/AmazonPay/components/AmazonPayComponent.tsx',
     'src/components/AmazonPay/components/OrderButton.tsx',
@@ -244,14 +243,12 @@ const STRICT_NULL_CHECKS_BACKLOG = [
     'src/components/ANCV/ANCV.tsx',
     'src/components/ANCV/components/ANCVInput.tsx',
     // src/components/BacsDD (5 errors)
-    'src/components/BacsDD/components/BacsInput.tsx',
     // src/components/BankTransfer (6 errors)
     'src/components/BankTransfer/BankTransfer.tsx',
     'src/components/BankTransfer/components/BankTransferInput/BankTransferInput.tsx',
     'src/components/BankTransfer/components/BankTransferResult/BankTransferResult.tsx',
     // src/components/Blik (9 errors)
     'src/components/Blik/Blik.tsx',
-    'src/components/Blik/components/BlikInput.tsx',
     // src/components/Boleto (3 errors)
     'src/components/Boleto/components/BoletoInput/BoletoInput.tsx',
     // src/components/Doku (4 errors)
