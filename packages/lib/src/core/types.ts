@@ -28,6 +28,8 @@ import { SRPanel } from './Errors/SRPanel';
 import { IAnalytics } from './Analytics/Analytics';
 import type { DonationOptions } from '../components/Donation/types';
 import type { GENERIC_OPTIONS } from './config';
+import type { UIElementProps } from '../components/internal/UIElement/types';
+import type { ThreeDS2ConfigProps } from '../components/ThreeDS2/types';
 
 export { CheckoutSession } from './CheckoutSession/types';
 
@@ -51,6 +53,9 @@ export type CorePropsForComponent = Omit<GlobalOptions, 'session'> & {
     createFromAction: ICore['createFromAction'];
 };
 
+export type CreateFromActionOptions = Partial<UIElementProps> &
+    Pick<ThreeDS2ConfigProps, 'challengeWindowSize' | 'isMDFlow' | 'on3DS2RedirectFlowComplete' | 'usePasskeyIFrameAttributes'>;
+
 export interface ICore {
     initialize(): Promise<ICore>;
     register(...items: NewableComponent[]): void;
@@ -59,7 +64,7 @@ export interface ICore {
     submitDetails(details: AdditionalDetailsData['data']): void;
     getCorePropsForComponent(): CorePropsForComponent;
     getComponent(txVariant: string): NewableComponent | undefined;
-    createFromAction(action: PaymentAction, options?: object): UIElement;
+    createFromAction(action: PaymentAction, options?: CreateFromActionOptions): UIElement;
     storeElementReference(element: UIElement): void;
     options: CoreConfiguration;
     modules: CoreModules;

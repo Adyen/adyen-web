@@ -19,7 +19,7 @@ type AnalyticsInfoEventProps = {
     brand?: string;
     validationErrorCode?: string;
     validationErrorMessage?: string;
-    configData?: object;
+    configData?: unknown;
     cdnUrl?: string;
     selectedValue?: string;
     presentedValues?: Array<string>;
@@ -170,8 +170,8 @@ export class AnalyticsInfoEvent extends AbstractAnalyticsEvent {
      * Creates a serializable analytics payload from the given config object.
      * Functions are replaced with 'function', and objects/arrays are stringified.
      */
-    private createAnalyticsConfigData(config?: object): Record<string, string | boolean> {
-        if (!config) return {};
+    private createAnalyticsConfigData(config?: unknown): Record<string, string | boolean> {
+        if (!config || (typeof config !== 'object' && typeof config !== 'function')) return {};
 
         const MAX_STRING_LENGTH = 128;
         const result: Record<string, string | boolean> = {};

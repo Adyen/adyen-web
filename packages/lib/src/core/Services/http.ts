@@ -41,7 +41,7 @@ function isAdyenApiErrorResponse(data: unknown): data is AdyenApiErrorResponse {
     return Boolean(data && response.errorCode && response.errorType && response.message && response.status);
 }
 
-export function http<T>(options: HttpOptions, payload?: object): Promise<T> {
+export function http<T>(options: HttpOptions, payload?: unknown): Promise<T> {
     const {
         headers = [],
         errorLevel = 'warn',
@@ -64,9 +64,12 @@ export function http<T>(options: HttpOptions, payload?: object): Promise<T> {
         },
         redirect: 'follow',
         referrerPolicy: 'no-referrer-when-downgrade',
-        ...(AbortSignal?.timeout && { signal: AbortSignal?.timeout(timeout) }),
-        ...(payload && { body: JSON.stringify(payload) })
+        ...(AbortSignal?.timeout && { signal: AbortSignal?.timeout(timeout) })
     };
+
+    if (payload) {
+        request.body = JSON.stringify(payload);
+    }
 
     const url = `${loadingContext}${path}`;
 
@@ -130,10 +133,10 @@ function handleFetchError({ message, level, cause, code }: FetchErrorOptions): v
     }
 }
 
-export function httpGet<T = unknown>(options: HttpOptions, data?: object): Promise<T> {
+export function httpGet<T = unknown>(options: HttpOptions, data?: unknown): Promise<T> {
     return http<T>({ ...options, method: 'GET' }, data);
 }
 
-export function httpPost<T = unknown>(options: HttpOptions, data?: object): Promise<T> {
+export function httpPost<T = unknown>(options: HttpOptions, data?: unknown): Promise<T> {
     return http<T>({ ...options, method: 'POST' }, data);
 }

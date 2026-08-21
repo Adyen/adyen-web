@@ -18,7 +18,7 @@ import { resolveEnvironments } from './Environment';
 import { LIBRARY_BUNDLE_TYPE, LIBRARY_VERSION } from './config';
 
 import type { PaymentAction, PaymentAmount, PaymentMethodsResponse, PaymentResponseData } from '../types/global-types';
-import type { CoreConfiguration, ICore, AdditionalDetailsData, CoreModules, CorePropsForComponent } from './types';
+import type { CoreConfiguration, ICore, AdditionalDetailsData, CoreModules, CorePropsForComponent, CreateFromActionOptions } from './types';
 import type { UIElementProps } from '../components/internal/UIElement/types';
 import { AnalyticsLogEvent, LogEventType } from './Analytics/events/AnalyticsLogEvent';
 import CancelError from './Errors/CancelError';
@@ -226,7 +226,7 @@ class Core implements ICore {
      * @param options - options that will be merged to the global Checkout props
      * @returns new UIElement
      */
-    public createFromAction(action: PaymentAction, options = {}): UIElement {
+    public createFromAction(action: PaymentAction, options: CreateFromActionOptions = {}): UIElement {
         if (!action || !action.type) {
             if (hasOwnProperty(action, 'action') && hasOwnProperty(action, 'resultCode')) {
                 throw new Error(

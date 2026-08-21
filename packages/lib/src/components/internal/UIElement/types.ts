@@ -4,7 +4,7 @@ import Language from '../../../language';
 import UIElement from './UIElement';
 import type { PaymentAction, PaymentAmount } from '../../../types/global-types';
 import type { BaseElementProps } from '../BaseElement/types';
-import type { CoreConfiguration } from '../../../core/types';
+import type { CoreConfiguration, CreateFromActionOptions } from '../../../core/types';
 import { PayButtonProps } from '../PayButton/PayButton';
 
 type CoreCallbacks = Pick<
@@ -82,7 +82,7 @@ export type UIElementProps = {
         loadingContext?: string;
 
         /** @internal */
-        createFromAction?: (action: PaymentAction, props: object) => UIElement;
+        createFromAction?: (action: PaymentAction, props: CreateFromActionOptions) => UIElement;
 
         /** @internal */
         clientKey?: string;
