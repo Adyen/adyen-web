@@ -59,7 +59,7 @@ function BlikInput(props: Readonly<BlikInputProps>) {
         <div className="adyen-checkout__blik">
             <p className="adyen-checkout__blik__helper">{i18n.get('blik.help')}</p>
             <Field
-                errorMessage={!!errors.blikCode && typeof errors.blikCode.errorMessage === 'string' ? i18n.get(errors.blikCode.errorMessage) : null}
+                errorMessage={typeof errors.blikCode?.errorMessage === 'string' ? i18n.get(errors.blikCode.errorMessage) : false}
                 label={i18n.get('blik.code')}
                 classNameModifiers={['blikCode', '50']}
                 isValid={valid.blikCode}

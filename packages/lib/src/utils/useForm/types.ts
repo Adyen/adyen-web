@@ -17,7 +17,8 @@ export type FormStateLocal<FormSchema> = {
 
 export type FormState<FormSchema> = FormStateLocal<FormSchema> & {
     schema: string[];
-    local?: FormStateLocal<FormSchema>;
+    /** Values of fields removed from the schema, kept around so they can be recovered if the field is re-added */
+    local?: Omit<FormStateLocal<FormSchema>, 'fieldProblems'>;
 };
 
 export interface Formatter {
@@ -62,18 +63,16 @@ export type FormInitArg<FormSchema> = {
     fieldProblems?: FormStateFieldProblems;
 };
 
-export type FormAction<FormSchema> = {
-    type: string;
-    key?: string;
-    value?: unknown;
-    mode?: ValidatorMode;
-    schema?: string[];
-    defaultData?: FormSchema;
-    formValue?: FormState<FormSchema>;
-    selectedSchema?: string[];
-    fieldProblems?: FormStateFieldProblems;
-    data?: FormSchema;
-};
+export type FormAction<FormSchema> =
+    | { type: 'setData'; key: string; value: unknown }
+    | { type: 'mergeData'; data: FormSchema }
+    | { type: 'setValid'; key: string; value: boolean }
+    | { type: 'setErrors'; key: string; value: ValidationRuleResult | null }
+    | { type: 'setFieldProblems'; fieldProblems: FormStateFieldProblems }
+    | { type: 'updateField'; key: string; value: unknown; mode: ValidatorMode }
+    | { type: 'mergeForm'; formValue: FormState<FormSchema> }
+    | { type: 'setSchema'; schema: string[]; defaultData: FormSchema }
+    | { type: 'validateForm'; selectedSchema?: string[] };
 
 export type ProcessFieldType = (
     field: { key: string; value: unknown; mode: ValidatorMode },
