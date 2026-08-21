@@ -12,6 +12,8 @@ import EMI from '../../../EMI';
 import { EmiPlansLoader } from '../../../EMI/stories/EmiPlansLoader';
 import { emiPlansHandlers } from '../../../EMI/stories/handlers';
 import type { NewableComponent } from '../../../../core/core.registry';
+import type { ICore } from '../../../../core/types';
+import type { PaymentAmount } from '../../../../types/global-types';
 import './customization.scss';
 
 type DropinStory = StoryConfiguration<DropinConfiguration>;
@@ -50,6 +52,27 @@ const meta: MetaConfiguration<DropinConfiguration> = {
     }
 };
 
+interface DropinWithEmiPlansProps {
+    checkout: ICore;
+    componentConfiguration: DropinConfiguration;
+    amount: PaymentAmount;
+}
+
+const DropinWithEmiPlans = ({ checkout, componentConfiguration, amount }: Readonly<DropinWithEmiPlansProps>) => (
+    <EmiPlansLoader amount={amount}>
+        {plans => (
+            <ComponentContainer
+                element={
+                    new DropinComponent(checkout, {
+                        ...componentConfiguration,
+                        paymentMethodsConfiguration: { ...componentConfiguration?.paymentMethodsConfiguration, emi: { plans } }
+                    })
+                }
+            />
+        )}
+    </EmiPlansLoader>
+);
+
 export const Default: DropinStory = {
     render: ({ componentConfiguration, ...checkoutConfig }: PaymentMethodStoryProps<DropinConfiguration>) => {
         // Register all Components
@@ -57,9 +80,21 @@ export const Default: DropinStory = {
         const Classes = Object.values(Components) as NewableComponent[];
         AdyenCheckout.register(...Classes);
 
+        const offersEmi = checkoutConfig.countryCode === 'IN';
+
         return (
             <Checkout checkoutConfig={checkoutConfig}>
-                {checkout => <ComponentContainer element={new DropinComponent(checkout, componentConfiguration)} />}
+                {checkout =>
+                    offersEmi ? (
+                        <DropinWithEmiPlans
+                            checkout={checkout}
+                            componentConfiguration={componentConfiguration}
+                            amount={{ value: checkoutConfig.amount, currency: getCurrency(checkoutConfig.countryCode) }}
+                        />
+                    ) : (
+                        <ComponentContainer element={new DropinComponent(checkout, componentConfiguration)} />
+                    )
+                }
             </Checkout>
         );
     }
