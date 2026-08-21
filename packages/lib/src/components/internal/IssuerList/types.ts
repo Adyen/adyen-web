@@ -9,7 +9,7 @@ export interface IssuerListProps {
     type: string;
     showPayButton: boolean;
     payButton(props: PayButtonProps): ComponentChildren;
-    onChange(payload: any): void;
+    onChange(payload: unknown): void;
     highlightedIds?: string[];
     placeholder?: string;
     issuer?: string;

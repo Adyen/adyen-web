@@ -4,6 +4,8 @@ import { AddressSpecifications } from '../Address/types';
 import UIElement from '../UIElement/UIElement';
 import { GenericError, ValidationRuleErrorObj } from '../../../core/Errors/types';
 import { UIElementProps } from '../UIElement/types';
+import { h, ComponentChild } from 'preact';
+import { PayButtonProps } from '../PayButton/PayButton';
 
 type OpenInvoiceAddressSpecification = AddressSpecifications & { allowedCountries?: string[] };
 
@@ -17,13 +19,13 @@ export interface OpenInvoiceVisibility {
 
 export interface BankDetailsSchema {
     countryCode?: string;
-    ibanNumber?: any;
+    ibanNumber?: string;
     ownerName?: string;
 }
 
 export interface OpenInvoiceProps extends UIElementProps {
     allowedCountries?: string[];
-    consentCheckboxLabel: any;
+    consentCheckboxLabel: ComponentChild;
     countryCode?: string;
     data: {
         companyDetails?: CompanyDetailsSchema;
@@ -32,8 +34,8 @@ export interface OpenInvoiceProps extends UIElementProps {
         deliveryAddress?: AddressData;
         bankAccount?: BankDetailsSchema;
     };
-    onChange: (state: any, element?: UIElement) => void;
-    payButton: any;
+    onChange: (state: OpenInvoiceState, element?: UIElement) => void;
+    payButton: (props: PayButtonProps) => h.JSX.Element;
     visibility?: OpenInvoiceVisibility;
     personalDetailsRequiredFields?: string[];
     billingAddressRequiredFields?: string[];
@@ -68,6 +70,13 @@ export interface OpenInvoiceStateValid {
     deliveryAddress?: boolean;
     personalDetails?: boolean;
     bankAccount?: boolean;
+}
+
+export interface OpenInvoiceState {
+    data: OpenInvoiceStateData;
+    errors?: OpenInvoiceStateError;
+    valid?: OpenInvoiceStateValid;
+    isValid: boolean;
 }
 
 export interface OpenInvoiceActiveFieldsets {

@@ -26,8 +26,8 @@ class Specifications {
      * @param fieldName - The field to be checked
      * @returns Boolean
      */
-    countryHasOptionalField(country: string, fieldName: string): boolean {
-        return !!this.specifications?.[country]?.optionalFields?.includes(fieldName as any);
+    countryHasOptionalField(country: string, fieldName: AddressField): boolean {
+        return !!this.specifications?.[country]?.optionalFields?.includes(fieldName);
     }
 
     /**
