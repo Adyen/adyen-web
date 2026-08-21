@@ -19,7 +19,7 @@ type AnalyticsInfoEventProps = {
     brand?: string;
     validationErrorCode?: string;
     validationErrorMessage?: string;
-    configData?: Record<string, any>;
+    configData?: unknown;
     cdnUrl?: string;
     selectedValue?: string;
     presentedValues?: Array<string>;
@@ -170,14 +170,14 @@ export class AnalyticsInfoEvent extends AbstractAnalyticsEvent {
      * Creates a serializable analytics payload from the given config object.
      * Functions are replaced with 'function', and objects/arrays are stringified.
      */
-    private createAnalyticsConfigData(config: Record<string, any>) {
-        if (!config) return {};
+    private createAnalyticsConfigData(config?: unknown): Record<string, string | boolean> {
+        if (!config || (typeof config !== 'object' && typeof config !== 'function')) return {};
 
         const MAX_STRING_LENGTH = 128;
-        const result: Record<string, string> = {};
+        const result: Record<string, string | boolean> = {};
 
         try {
-            for (const [key, value] of Object.entries(config)) {
+            for (const [key, value] of Object.entries(config) as [string, unknown][]) {
                 if (!this.configDataExcludedFields.includes(key)) {
                     if (typeof value === 'function') {
                         result[key] = 'function';
@@ -185,8 +185,12 @@ export class AnalyticsInfoEvent extends AbstractAnalyticsEvent {
                         result[key] = value.join(', ').substring(0, MAX_STRING_LENGTH);
                     } else if (typeof value === 'object' && value !== null) {
                         result[key] = JSON.stringify(value).substring(0, MAX_STRING_LENGTH);
-                    } else {
+                    } else if (typeof value === 'string' || typeof value === 'boolean') {
                         result[key] = value;
+                    } else if (typeof value === 'number' || typeof value === 'bigint' || typeof value === 'symbol') {
+                        result[key] = value.toString();
+                    } else {
+                        result[key] = 'undefined';
                     }
                 }
             }

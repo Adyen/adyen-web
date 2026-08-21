@@ -27,17 +27,44 @@ import Language from '../language';
 import { SRPanel } from './Errors/SRPanel';
 import { IAnalytics } from './Analytics/Analytics';
 import type { DonationOptions } from '../components/Donation/types';
+import type { GENERIC_OPTIONS } from './config';
+import type { UIElementProps } from '../components/internal/UIElement/types';
+import type { ThreeDS2ConfigProps } from '../components/ThreeDS2/types';
 
 export { CheckoutSession } from './CheckoutSession/types';
+
+/**
+ * The subset of the merchant configuration that is forwarded to every Component (see GENERIC_OPTIONS).
+ * Every property is optional, since only the ones set by the merchant are forwarded
+ */
+export type GlobalOptions = Partial<Pick<CoreConfiguration, Extract<keyof CoreConfiguration, (typeof GENERIC_OPTIONS)[number]>>>;
+
+/**
+ * @internal
+ * The props that the Core provides to every Component it creates
+ */
+export type CorePropsForComponent = Omit<GlobalOptions, 'session'> & {
+    core: ICore;
+    i18n: Language;
+    modules: CoreModules;
+    session: Session;
+    loadingContext: string;
+    cdnContext: string;
+    createFromAction: ICore['createFromAction'];
+};
+
+export type CreateFromActionOptions = Partial<UIElementProps> &
+    Pick<ThreeDS2ConfigProps, 'challengeWindowSize' | 'isMDFlow' | 'on3DS2RedirectFlowComplete' | 'usePasskeyIFrameAttributes'>;
+
 export interface ICore {
     initialize(): Promise<ICore>;
     register(...items: NewableComponent[]): void;
     update(props: Partial<CoreConfiguration>, options?: { shouldReinitializeCheckout?: boolean }): Promise<ICore>;
     remove(component): ICore;
     submitDetails(details: AdditionalDetailsData['data']): void;
-    getCorePropsForComponent(): any;
+    getCorePropsForComponent(): CorePropsForComponent;
     getComponent(txVariant: string): NewableComponent | undefined;
-    createFromAction(action: PaymentAction, options?: any): UIElement;
+    createFromAction(action: PaymentAction, options?: CreateFromActionOptions): UIElement;
     storeElementReference(element: UIElement): void;
     options: CoreConfiguration;
     modules: CoreModules;
@@ -72,7 +99,7 @@ export type AdditionalDetailsData = {
         details: {
             redirectResult?: string;
             threeDSResult?: string;
-            [key: string]: any;
+            [key: string]: string | undefined;
         };
         paymentData?: string;
         sessionData?: string;
@@ -212,7 +239,7 @@ export interface CoreConfiguration {
         redirectData: {
             url: string;
             method: string;
-            data?: any;
+            data?: Record<string, unknown>;
         }
     ): void;
 

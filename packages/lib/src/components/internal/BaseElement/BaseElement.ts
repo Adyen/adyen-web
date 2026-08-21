@@ -90,7 +90,7 @@ abstract class BaseElement<P extends BaseElementProps> implements IBaseElement {
         const order = this.state.order || this.props.order;
         const componentData = this.formatData();
         const doesPaymentMethodHaveNativeComponent = Boolean(getComponentNameOfPaymentType(componentData.paymentMethod?.type));
-        const clientData = this.core.modules.risk.data;
+        const clientData = this.core.modules.risk.riskData;
         const checkoutAttemptId = this.core.modules.analytics.checkoutAttemptId ?? NO_CHECKOUT_ATTEMPT_ID;
         const paymentMethodBehavior = doesPaymentMethodHaveNativeComponent ? PAYMENT_METHOD_BEHAVIOR.NATIVE : PAYMENT_METHOD_BEHAVIOR.GENERIC;
 

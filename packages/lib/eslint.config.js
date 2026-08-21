@@ -167,7 +167,6 @@ const config = defineConfig(
             'src/utils/useForm/**',
 
             // ── Others ──
-            'src/core/**',
             'src/types/**'
         ],
         rules: {

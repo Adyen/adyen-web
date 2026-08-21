@@ -26,7 +26,7 @@ export default function CountryField(props: Readonly<CountryFieldProps>) {
     const [readOnly, setReadOnly] = useState(props.readOnly);
 
     useLayoutEffect(() => {
-        getDataset('countries', loadingContext, i18n.locale)
+        getDataset<CountryFieldItem[]>('countries', loadingContext, i18n.locale)
             .then(response => {
                 const newCountries = formatCountries(response, allowedCountries);
                 setCountries(newCountries || []);
