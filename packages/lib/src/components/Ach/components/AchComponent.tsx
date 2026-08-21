@@ -106,7 +106,7 @@ function AchComponent({
         (event: TargetedInputEvent<HTMLInputElement>) => {
             handleChangeFor('accountNumber', 'input')(event);
 
-            const hasAccountVerificationError = !!errors.accountNumberVerification;
+            const hasAccountVerificationError = Boolean(errors.accountNumberVerification);
             if (hasAccountVerificationError) {
                 triggerValidation(['accountNumberVerification']);
             }
@@ -124,19 +124,13 @@ function AchComponent({
                     onSelect={handleChangeFor('selectedAccountType')}
                     selectedAccountType={data.selectedAccountType}
                     disabled={isFormDisabled}
-                    errorMessage={
-                        !!errors.selectedAccountType &&
-                        typeof errors.selectedAccountType.errorMessage === 'string' &&
-                        i18n.get(errors.selectedAccountType.errorMessage)
-                    }
+                    errorMessage={typeof errors.selectedAccountType?.errorMessage === 'string' && i18n.get(errors.selectedAccountType.errorMessage)}
                 />
 
                 {hasHolderName && (
                     <Field
                         label={i18n.get('ach.accountHolderNameField.title')}
-                        errorMessage={
-                            !!errors.ownerName && typeof errors.ownerName.errorMessage === 'string' && i18n.get(errors.ownerName.errorMessage)
-                        }
+                        errorMessage={typeof errors.ownerName?.errorMessage === 'string' && i18n.get(errors.ownerName.errorMessage)}
                         isValid={!!valid.ownerName}
                         name={'ownerName'}
                     >
@@ -156,9 +150,7 @@ function AchComponent({
                 <Field
                     label={i18n.get('ach.routingNumber.label')}
                     classNameModifiers={['col-60']}
-                    errorMessage={
-                        !!errors.routingNumber && typeof errors.routingNumber.errorMessage === 'string' && i18n.get(errors.routingNumber.errorMessage)
-                    }
+                    errorMessage={typeof errors.routingNumber?.errorMessage === 'string' && i18n.get(errors.routingNumber.errorMessage)}
                     name={'routingNumber'}
                     isValid={!!valid.routingNumber}
                 >
@@ -178,9 +170,7 @@ function AchComponent({
                 <Field
                     label={i18n.get('ach.bankAccountNumber.label')}
                     classNameModifiers={['col-40']}
-                    errorMessage={
-                        !!errors.accountNumber && typeof errors.accountNumber.errorMessage === 'string' && i18n.get(errors.accountNumber.errorMessage)
-                    }
+                    errorMessage={typeof errors.accountNumber?.errorMessage === 'string' && i18n.get(errors.accountNumber.errorMessage)}
                     isValid={!!valid.accountNumber}
                     name={'accountNumber'}
                 >
@@ -200,9 +190,7 @@ function AchComponent({
                 <Field
                     label={i18n.get('ach.bankAccountNumberVerification.label')}
                     errorMessage={
-                        !!errors.accountNumberVerification &&
-                        typeof errors.accountNumberVerification.errorMessage === 'string' &&
-                        i18n.get(errors.accountNumberVerification.errorMessage)
+                        typeof errors.accountNumberVerification?.errorMessage === 'string' && i18n.get(errors.accountNumberVerification.errorMessage)
                     }
                     name={'accountNumberVerification'}
                     isValid={!!valid.accountNumberVerification}

@@ -54,9 +54,7 @@ function ANCVInput({ showPayButton, payButton, onChange, onSubmit, setComponentR
             <div className="adyen-checkout__ancv">
                 <p className="adyen-checkout-form-instruction">{i18n.get('ancv.form.instruction')}</p>
                 <Field
-                    errorMessage={
-                        !!errors.beneficiaryId && typeof errors.beneficiaryId.errorMessage === 'string' && i18n.get(errors.beneficiaryId.errorMessage)
-                    }
+                    errorMessage={typeof errors.beneficiaryId?.errorMessage === 'string' && i18n.get(errors.beneficiaryId.errorMessage)}
                     label={i18n.get('ancv.input.label')}
                     isValid={valid.beneficiaryId}
                     name={'beneficiaryId'}

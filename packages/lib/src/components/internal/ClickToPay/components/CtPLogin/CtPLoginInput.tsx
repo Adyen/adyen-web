@@ -79,7 +79,7 @@ const CtPLoginInput = (props: Readonly<CtPLoginInputProps>): h.JSX.Element => {
                 errorMessage={
                     isLoginInputDirty
                         ? props.errorMessage ||
-                          (errors.shopperLogin && typeof errors.shopperLogin.errorMessage === 'string'
+                          (errors.shopperLogin && typeof errors.shopperLogin?.errorMessage === 'string'
                               ? i18n.get(errors.shopperLogin.errorMessage)
                               : null)
                         : null
