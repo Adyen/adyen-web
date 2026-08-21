@@ -2,7 +2,6 @@ import { useCallback, useEffect, useMemo, useReducer } from 'preact/hooks';
 import Validator from '../Validator';
 import { getReducer, init } from './reducer';
 
-import type { Reducer } from 'preact/hooks';
 import type { Form, FormState, FormProps, Formatter, FormAction, FormInitArg, ProcessFieldType, FormChangeEventTarget } from './types';
 import { useCoreContext } from '../../core/Context/CoreProvider';
 import { ValidatorMode } from '../Validator/types';
@@ -47,9 +46,9 @@ function useForm<FormSchema extends object>(props: FormProps): Form<FormSchema> 
     };
 
     const [state, dispatch] = useReducer<FormState<FormSchema>, FormAction<FormSchema>, FormInitArg<FormSchema>>(
-        getReducer<FormSchema>(processField) as Reducer<FormState<FormSchema>, FormAction<FormSchema>>,
+        getReducer<FormSchema>(processField),
         { defaultData, schema, processField, fieldProblems },
-        init as (arg: FormInitArg<FormSchema>) => FormState<FormSchema>
+        init
     );
     const isValid = useMemo(() => state.schema.reduce((acc, val) => acc && state.valid[val], true), [state.schema, state.valid]);
 
@@ -57,7 +56,7 @@ function useForm<FormSchema extends object>(props: FormProps): Form<FormSchema> 
         if (!hasEventTarget(e)) return e;
 
         if (e.target?.type === 'checkbox') {
-            return !(state.data as Record<string, unknown>)[key];
+            return !state.data[key];
         }
         return e.target?.value;
     };
