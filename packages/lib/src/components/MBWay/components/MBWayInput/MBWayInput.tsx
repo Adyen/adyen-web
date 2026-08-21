@@ -15,8 +15,6 @@ function MBWayInput(props: Readonly<MBWayInputProps>) {
 
     const [status, setStatus] = useState<string>('ready');
 
-    this.setStatus = setStatus;
-
     const mbWayInputRef = useRef<ComponentMethodsRef>({
         setStatus: setStatus
     });
@@ -34,7 +32,18 @@ function MBWayInput(props: Readonly<MBWayInputProps>) {
     return (
         <LoadingWrapper status={prefixLoadingStatus}>
             <div className="adyen-checkout__mb-way">
-                <PhoneInputForm setComponentRef={props.setComponentRef} {...props} items={phonePrefixes} onChange={onChange} data={props.data} />
+                <PhoneInputForm
+                    setComponentRef={ref => {
+                        mbWayInputRef.current = {
+                            ...mbWayInputRef.current,
+                            ...ref
+                        };
+                    }}
+                    {...props}
+                    items={phonePrefixes}
+                    onChange={onChange}
+                    data={props.data}
+                />
 
                 {props.showPayButton && props.payButton({ status, label: i18n.get('confirmPurchase') })}
             </div>

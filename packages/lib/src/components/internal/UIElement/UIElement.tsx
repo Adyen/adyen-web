@@ -367,7 +367,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         // };
     }
 
-    protected onComplete(state): void {
+    protected onComplete(state: AdditionalDetailsData): void {
         this.handleAdditionalDetails(state);
     }
 
