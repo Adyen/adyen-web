@@ -12,6 +12,7 @@ import type { DropinComponentProps, DropinConfiguration, InstantPaymentTypes, Pa
 import type { PaymentAction, PaymentAmount, PaymentResponseData } from '../../types/global-types';
 import type { ICore } from '../../core/types';
 import type { IDropin } from './types';
+import { UIElementStatus } from '../types';
 
 const SUPPORTED_INSTANT_PAYMENTS = ['paywithgoogle', 'googlepay', 'applepay'];
 
@@ -22,7 +23,9 @@ class DropinElement extends UIElement<DropinConfiguration> implements IDropin {
 
     public dropinRef = null;
 
-    private paymentMethodsConfiguration: PaymentMethodsConfiguration;
+    public elementRef: DropinElement;
+
+    private readonly paymentMethodsConfiguration: PaymentMethodsConfiguration;
     /**
      * Reference to the component created from `handleAction` (Ex.: ThreeDS2Challenge)
      */
@@ -51,7 +54,7 @@ class DropinElement extends UIElement<DropinConfiguration> implements IDropin {
         this.core.storeElementReference(this);
     }
 
-    formatProps(props) {
+    formatProps(props: DropinConfiguration) {
         return {
             ...super.formatProps(props),
             instantPaymentTypes: Array.from<InstantPaymentTypes>(new Set(props.instantPaymentTypes)).filter(value =>
@@ -72,7 +75,12 @@ class DropinElement extends UIElement<DropinConfiguration> implements IDropin {
         return this;
     }
 
-    public setStatus(status, props = {}): this {
+    public setElementStatus(status: UIElementStatus, props?: Record<string, unknown>): this {
+        this.elementRef?.setStatus?.(status, props);
+        return this;
+    }
+
+    public setStatus(status: UIElementStatus, props: Record<string, unknown> = {}): this {
         this.dropinRef?.setStatus(status, props);
         return this;
     }
@@ -153,7 +161,7 @@ class DropinElement extends UIElement<DropinConfiguration> implements IDropin {
     /**
      * Creates the Drop-in elements
      */
-    private handleCreate = (): ReturnType<DropinComponentProps['onCreateElements']> => {
+    private readonly handleCreate = (): ReturnType<DropinComponentProps['onCreateElements']> => {
         const { paymentMethodsConfiguration, showStoredPaymentMethods, showPaymentMethods, instantPaymentTypes } = this.props;
 
         const { paymentMethods, storedPaymentMethods, instantPaymentMethods, fastlanePaymentMethod } = splitPaymentMethods(
@@ -214,7 +222,7 @@ class DropinElement extends UIElement<DropinConfiguration> implements IDropin {
         });
 
         if (paymentAction) {
-            this.setStatus(paymentAction.props.statusType, { component: paymentAction });
+            this.setStatus(paymentAction.props.statusType as UIElementStatus, { component: paymentAction });
             this.componentFromAction = paymentAction;
             return this;
         }
