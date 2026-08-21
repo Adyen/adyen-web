@@ -3,11 +3,15 @@ import { ValidationRuleResult } from '../Validator/ValidationRuleResult';
 import type { ValidationResult } from '../Validator/Validator';
 import { FormatterFn } from '../Formatters/types';
 
+export type FormStateValid = Record<string, boolean>;
+export type FormStateErrors = Record<string, ValidationRuleResult | null>;
+export type FormStateFieldProblems = Record<string, string | null>;
+
 export type FormStateLocal<FormSchema> = {
     data: FormSchema;
-    valid: Record<string, boolean>;
-    errors: Record<string, ValidationRuleResult | null>;
-    fieldProblems: Record<string, string | null>;
+    valid: FormStateValid;
+    errors: FormStateErrors;
+    fieldProblems: FormStateFieldProblems;
     isValid?: boolean;
 };
 
@@ -48,14 +52,14 @@ export interface Form<FormSchema> extends FormState<FormSchema> {
     setValid: (key: string, value: boolean) => void;
     setErrors: (key: string, value: ValidationRuleResult | null) => void;
     mergeForm: (formValue: FormState<FormSchema>) => void;
-    setFieldProblems: (fieldProblems: Record<string, string | null>) => void;
+    setFieldProblems: (fieldProblems: FormStateFieldProblems) => void;
 }
 
-export type FormInitArg = {
+export type FormInitArg<FormSchema> = {
     schema: string[];
-    defaultData: Record<string, unknown>;
+    defaultData: FormSchema;
     processField: ProcessFieldType;
-    fieldProblems?: Record<string, string | null>;
+    fieldProblems?: FormStateFieldProblems;
 };
 
 export type FormAction<FormSchema> = {
@@ -64,10 +68,10 @@ export type FormAction<FormSchema> = {
     value?: unknown;
     mode?: ValidatorMode;
     schema?: string[];
-    defaultData?: Record<string, unknown>;
+    defaultData?: FormSchema;
     formValue?: FormState<FormSchema>;
     selectedSchema?: string[];
-    fieldProblems?: Record<string, string | null>;
+    fieldProblems?: FormStateFieldProblems;
     data?: FormSchema;
 };
 

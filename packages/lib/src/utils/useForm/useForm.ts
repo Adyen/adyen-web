@@ -16,7 +16,7 @@ function hasEventTarget(event: unknown): event is { target: FormChangeEventTarge
     return !!event && typeof event === 'object' && 'target' in event;
 }
 
-function useForm<FormSchema>(props: FormProps): Form<FormSchema> {
+function useForm<FormSchema extends object>(props: FormProps): Form<FormSchema> {
     // Normalize null values to empty objects/arrays to avoid type errors
     const {
         rules: providedRules,
@@ -27,7 +27,7 @@ function useForm<FormSchema>(props: FormProps): Form<FormSchema> {
     } = props;
     const rules = providedRules ?? {};
     const formatters = providedFormatters ?? {};
-    const defaultData = (providedDefaultData ?? {}) as Record<string, unknown>;
+    const defaultData = (providedDefaultData ?? {}) as FormSchema;
     const fieldProblems = (providedFieldProblems ?? {}) as Record<string, string | null>;
     const schema = providedSchema ?? [];
 
@@ -46,10 +46,10 @@ function useForm<FormSchema>(props: FormProps): Form<FormSchema> {
         return [formattedValue, validationResult];
     };
 
-    const [state, dispatch] = useReducer<FormState<FormSchema>, FormAction<FormSchema>, FormInitArg>(
-        getReducer(processField) as Reducer<FormState<FormSchema>, FormAction<FormSchema>>,
+    const [state, dispatch] = useReducer<FormState<FormSchema>, FormAction<FormSchema>, FormInitArg<FormSchema>>(
+        getReducer<FormSchema>(processField) as Reducer<FormState<FormSchema>, FormAction<FormSchema>>,
         { defaultData, schema, processField, fieldProblems },
-        init as (arg: FormInitArg) => FormState<FormSchema>
+        init as (arg: FormInitArg<FormSchema>) => FormState<FormSchema>
     );
     const isValid = useMemo(() => state.schema.reduce((acc, val) => acc && state.valid[val], true), [state.schema, state.valid]);
 
@@ -71,7 +71,7 @@ function useForm<FormSchema>(props: FormProps): Form<FormSchema> {
     };
 
     /** Validates every field in the form OR just those in selectedSchema */
-    const triggerValidation = useCallback((selectedSchema = null) => {
+    const triggerValidation = useCallback((selectedSchema?: string[]) => {
         dispatch({ type: 'validateForm', selectedSchema });
     }, []);
 
