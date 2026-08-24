@@ -40,7 +40,10 @@ const useSRPanelForCardInputErrors = ({ errors, props, isValidating, retrieveLay
                 isValidating: isValidating.current,
                 layout: retrieveLayout(),
                 // If we don't have country specific address labels, we might have a label related to a partialAddressSchema (i.e. zipCode)
-                countrySpecificLabels: specifications.getAddressLabelsForCountry(billingAddress?.country) ?? partialAddressSchema?.default?.labels
+                countrySpecificLabels: specifications.getAddressLabelsForCountry(billingAddress?.country) ?? partialAddressSchema?.default?.labels,
+                // Only let this form clear the shared SR panel if it currently has errors on
+                // display. Otherwise it wipes status messages (loading etc) written by others.
+                hasDisplayedErrors: !!sortedErrorList?.length
             });
 
             // Store the array of sorted error objects separately so that we can use it to make comparisons between the old and new arrays

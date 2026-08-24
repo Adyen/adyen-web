@@ -2,10 +2,11 @@ import { h, Fragment, Ref } from 'preact';
 import cx from 'classnames';
 import { SelectButtonElementProps, SelectButtonProps } from '../types';
 import Img from '../../../Img';
+import { TagList } from '../../../Tag';
 import { useMemo } from 'preact/hooks';
 import classnames from 'classnames';
 
-function SelectButtonElement({ filterable, toggleButtonRef, showList, selectListId, ...props }: Readonly<SelectButtonElementProps>) {
+function SelectButtonElement({ filterable, toggleButtonRef, showList, selectListId, readonly, ...props }: Readonly<SelectButtonElementProps>) {
     if (filterable) {
         // Even if passed, we can't add an id to this div since it is not allowed to associate a div with a label element
         const { id, ...strippedProps } = props;
@@ -23,7 +24,7 @@ function SelectButtonElement({ filterable, toggleButtonRef, showList, selectList
             aria-controls={selectListId}
             aria-activedescendant={props['aria-activedescendant'] || undefined}
             disabled={props.disabled}
-            aria-disabled={props.readonly}
+            aria-disabled={readonly}
             aria-describedby={props['aria-describedby']}
             aria-labelledby={props.id ? `${props.id as string}-label ${props.id as string}-value` : undefined}
             onClick={props.onClick}
@@ -53,19 +54,26 @@ function SelectButton(props: Readonly<SelectButtonProps>) {
     const textWhenListOpen = inputText ?? '';
     const displayInputText = showList ? textWhenListOpen : displayText;
 
-    const setFocus = (e: Event) => {
+    const handleClick = (e: Event) => {
         e.preventDefault();
-        if (document.activeElement === props.filterInputRef.current) {
-            if (!props.showList) {
-                props.toggleList(e);
-            }
-        } else if (props.filterInputRef.current) props.filterInputRef.current.focus();
+        props.filterInputRef.current?.focus();
+
+        // Clicking the input of an open list keeps it open
+        if (e.target === props.filterInputRef.current && props.showList) return;
+
+        props.toggleList(e);
     };
 
     // 1. If readonly we ignore the click action
-    // 2. If filterable we want to show the list and focus on the input
+    // 2. If filterable we want to toggle the list and focus on the input
     // 3. Otherwise we just toggle the list
-    const onClickHandler = readonly ? null : props.filterable ? setFocus : props.toggleList;
+    const getOnClickHandler = (): ((e: Event) => void) | null => {
+        if (readonly) return null;
+
+        if (props.filterable) return handleClick;
+
+        return props.toggleList;
+    };
 
     // check COWEB-1301 [Investigate] Drop-in Accessibility - ADA Compliance questions
     const currentSelectedItemId = active.id ? `listItem-${active.id}` : '';
@@ -82,7 +90,8 @@ function SelectButton(props: Readonly<SelectButtonProps>) {
             })}
             disabled={props.disabled}
             filterable={props.filterable}
-            onClick={onClickHandler}
+            readonly={readonly}
+            onClick={getOnClickHandler()}
             onKeyDown={!readonly ? props.onButtonKeyDown : null}
             toggleButtonRef={props.toggleButtonRef}
             id={props.id}
@@ -102,7 +111,7 @@ function SelectButton(props: Readonly<SelectButtonProps>) {
                     >
                         {displayText}
                     </span>
-                    {selected.secondaryText && <span className="adyen-checkout__dropdown__button__secondary-text">{selected.secondaryText}</span>}
+                    <TagList tags={selected.tags} className="adyen-checkout__dropdown__button__tags" />
                 </Fragment>
             ) : (
                 <Fragment>
@@ -128,9 +137,7 @@ function SelectButton(props: Readonly<SelectButtonProps>) {
                         aria-describedby={props.ariaDescribedBy}
                         required={required}
                     />
-                    {!showList && selected.secondaryText && (
-                        <span className="adyen-checkout__dropdown__button__secondary-text">{selected.secondaryText}</span>
-                    )}
+                    {!showList && <TagList tags={selected.tags} className="adyen-checkout__dropdown__button__tags" />}
                 </Fragment>
             )}
         </SelectButtonElement>

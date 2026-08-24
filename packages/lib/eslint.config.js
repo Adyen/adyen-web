@@ -10,6 +10,8 @@ import globals from 'globals';
 import { dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import strictNullChecks from './eslint-rules/strict-null-checks.js';
+
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const config = defineConfig(
@@ -24,6 +26,7 @@ const config = defineConfig(
             'auto/*',
             'postcss.config.cjs',
             'eslint.config.js',
+            'eslint-rules/*',
             'lint-staged.config.js',
             '**/*_*.*'
         ]
@@ -104,6 +107,9 @@ const config = defineConfig(
                     allow: ['arrowFunctions']
                 }
             ],
+            // Guardrail for the strictNullChecks migration: `!` silences the compiler without
+            // making the value any less nullable at runtime.
+            '@typescript-eslint/no-non-null-assertion': 'error',
             'react/react-in-jsx-scope': 'off',
             'react/prop-types': 'off',
             'react/prefer-read-only-props': 'error',
@@ -166,6 +172,26 @@ const config = defineConfig(
         ],
         rules: {
             '@typescript-eslint/no-explicit-any': 'error'
+        }
+    },
+    {
+        name: 'Strict null checks',
+        files: ['src/**/*.ts', 'src/**/*.tsx'],
+        ignores: [
+            // Not in scope yet — the final migration ticket brings these in.
+            'src/**/*.test.ts',
+            'src/**/*.test.tsx',
+            'src/**/*.spec.ts',
+            'src/**/*.spec.tsx',
+            'src/**/stories/**',
+            'src/**/*.stories.tsx'
+        ],
+        plugins: {
+            'strict-null-checks': strictNullChecks
+        },
+        rules: {
+            'strict-null-checks/enforce': 'error',
+            'strict-null-checks/no-suppression': 'error'
         }
     },
     {

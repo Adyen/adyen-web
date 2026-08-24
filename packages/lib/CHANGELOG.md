@@ -1,5 +1,37 @@
 # @adyen/adyen-web
 
+## 6.44.0
+
+### Minor Changes
+
+- Improved: replace deprecated keypress event with keydown event ([#4143](https://github.com/Adyen/adyen-web/pull/4143))
+
+- Fixed: Card expiry date and security code fields no longer lose their format guidance when they enter an error state ([#4091](https://github.com/Adyen/adyen-web/pull/4091))
+
+### Patch Changes
+
+- Fixed: Announce loading to screen readers for QR/redirect payment methods and for Card and stop these announcements being cleared from the shared screen reader panel before they can be read ([#4098](https://github.com/Adyen/adyen-web/pull/4098))
+
+- Fixed: Components crashing when `null` data was passed ([#4134](https://github.com/Adyen/adyen-web/pull/4134))
+
+## 6.43.0
+
+### Minor Changes
+
+- Improved: Select options can now carry informative `tags` (a coloured label), rendered both in the open list and on the collapsed button. As part of this, `secondaryText` now renders as supporting text underneath the option name instead of inline beside it, and it is no longer shown on the collapsed button. ([#4112](https://github.com/Adyen/adyen-web/pull/4112))
+
+## 6.42.0
+
+### Minor Changes
+
+- Improved: the 3DS2 iframe to add attributes which enable WebAuthn and SPC challenges. ([#4116](https://github.com/Adyen/adyen-web/pull/4116))
+
+- New: Drop-in emits a new `paymentListDisplayed` analytics event reporting the payment methods it rendered (`availablePaymentMethods`, each with `displayMode`) in display order, plus the `/paymentMethods` items it did not render (`unavailablePaymentMethods`). ([#4081](https://github.com/Adyen/adyen-web/pull/4081))
+
+### Patch Changes
+
+- Fixed: US postal code validation & postal code formatting for partial billing address mode ([#4111](https://github.com/Adyen/adyen-web/pull/4111))
+
 ## 6.41.1
 
 ### Patch Changes

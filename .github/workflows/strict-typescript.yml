@@ -9,7 +9,7 @@ jobs:
 
     steps:
       - name: Use Node.js 24
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version: 24
 
@@ -97,12 +97,6 @@ jobs:
           PR_FILES='${{ steps.tsc-strict.outputs.files }}'
           [ -z "$PR_FILES" ] && PR_FILES='{}'
 
-          if [ "${{ steps.tsc-strict.outcome }}" = "success" ]; then
-            OVERALL_STATUS="✅ Pass"
-          else
-            OVERALL_STATUS="⚠️ Regression"
-          fi
-
           # Generate per-file table rows with jq (only files with increased errors)
           TABLE_ROWS=$(jq -r -n \
             --argjson baseline "$B_FILES" \
@@ -115,6 +109,16 @@ jobs:
           ')
 
           NUM_FILES=$(jq -n --argjson b "$B_FILES" --argjson p "$PR_FILES" '(($b | keys) + ($p | keys)) | unique | map({ file: ., b: ($b[.] // 0), p: ($p[.] // 0) }) | [ .[] | select(.p > .b) ] | length')
+
+          # Flag a regression whenever any file gained errors — even if the total went down —
+          # so reviewers notice it. Blocking the PR remains based on the total count only.
+          if [ "$NUM_FILES" -gt 0 ] || [ "${{ steps.tsc-strict.outcome }}" != "success" ]; then
+            OVERALL_STATUS="⚠️ Regression"
+            DETAILS_TAG="<details open>"
+          else
+            OVERALL_STATUS="✅ Pass"
+            DETAILS_TAG="<details>"
+          fi
 
           # Build a single grep pattern matching every regressed file's basename
           GREP_PATTERN=$(jq -r -n \
@@ -132,7 +136,7 @@ jobs:
             echo ''
             echo "**Total: ${PR_TOTAL} errors (baseline: ${B_TOTAL}) | ${OVERALL_STATUS}**"
             echo ''
-            echo '<details>'
+            echo "$DETAILS_TAG"
             echo "<summary>Files with regressions (${NUM_FILES} files)</summary>"
             echo ''
             echo '| File | PR | Baseline | Delta |'

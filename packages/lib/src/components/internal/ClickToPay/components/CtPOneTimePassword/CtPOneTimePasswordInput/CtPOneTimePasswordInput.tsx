@@ -1,4 +1,4 @@
-import { h } from 'preact';
+import { h, TargetedKeyboardEvent } from 'preact';
 import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
 import { otpValidationRules } from './validate';
 import CtPResendOtpLink from './CtPResendOtpLink';
@@ -96,8 +96,8 @@ const CtPOneTimePasswordInput = (props: Readonly<CtPOneTimePasswordInputProps>):
         [i18n]
     );
 
-    const handleOnKeyPress = useCallback(
-        (event: h.JSX.TargetedKeyboardEvent<HTMLInputElement>) => {
+    const handleOnKeyDown = useCallback(
+        (event: TargetedKeyboardEvent<HTMLInputElement>) => {
             if (event.key === 'Enter') {
                 void props.onPressEnter();
             }
@@ -132,7 +132,7 @@ const CtPOneTimePasswordInput = (props: Readonly<CtPOneTimePasswordInputProps>):
                     disabled={props.disabled}
                     onInput={handleChangeFor('otp', 'input')}
                     onBlur={handleChangeFor('otp', 'blur')}
-                    onKeyPress={handleOnKeyPress}
+                    onKeyDown={handleOnKeyDown}
                     setRef={(ref: HTMLInputElement) => {
                         inputRef.current = ref;
                     }}

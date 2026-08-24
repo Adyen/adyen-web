@@ -1,7 +1,7 @@
 import { createRef, h } from 'preact';
 import { render, screen, fireEvent, act } from '@testing-library/preact';
 import CardInput from './CardInput';
-import { CardInputDataState, CardInputValidState } from './types';
+import { AddressModeOptions, CardInputDataState, CardInputValidState } from './types';
 import { CoreProvider } from '../../../../core/Context/CoreProvider';
 import { AmountProvider } from '../../../../core/Context/AmountProvider';
 
@@ -53,6 +53,36 @@ describe('CardInput', () => {
     test('Has HolderName element', () => {
         renderCardInput(<CardInput {...cardInputRequiredProps} hasHolderName={true} />);
         expect(screen.getByText('Name on card')).toBeVisible();
+    });
+});
+
+describe('CardInput - partial billing address', () => {
+    test.each([undefined, null])('should render with an empty postal code field when billingAddress is %s', billingAddress => {
+        renderCardInput(
+            <CardInput
+                {...cardInputRequiredProps}
+                billingAddressMode={AddressModeOptions.partial}
+                billingAddressRequired={true}
+                data={{ billingAddress }}
+            />
+        );
+
+        expect(screen.getByLabelText('Postal code')).toHaveValue('');
+    });
+
+    test('should validate the postal code when the initial country is lowercase', () => {
+        renderCardInput(
+            <CardInput
+                {...cardInputRequiredProps}
+                billingAddressMode={AddressModeOptions.partial}
+                billingAddressRequired={true}
+                data={{ billingAddress: { country: 'us' } }}
+            />
+        );
+
+        fireEvent.blur(screen.getByLabelText('Zip code'), { target: { value: '1' } });
+
+        expect(screen.getByText('Invalid format. Expected format: 99999 or 99999-9999')).toBeInTheDocument();
     });
 });
 
