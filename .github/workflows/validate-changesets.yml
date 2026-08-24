@@ -23,7 +23,7 @@ jobs:
           CHANGESETS=$(git diff --name-only --diff-filter=AM origin/${{ github.base_ref }}...HEAD -- '.changeset/*.md' | grep -v 'README.md' || true)
 
           if [ -n "$LIB_CHANGES" ] && [ -z "$CHANGESETS" ]; then
-            echo "::error::Changes detected in packages/lib/src/ but no changeset found. Add the 'changeset' label to this pull request to generate one, or create it locally with 'yarn changeset'. If this change does not need a new version, create an empty changeset with 'yarn changeset:empty'."
+            echo "::error::Changes detected in packages/lib/src/ but no changeset found. Please add a changeset. If this change does not need a new version, create an empty changeset with 'yarn changeset:empty'."
             exit 1
           fi
 
@@ -70,8 +70,8 @@ jobs:
 
             LINE=$(echo "$LINES" | head -1)
 
-            if ! echo "$LINE" | grep -qE '^(Improved|New|Fixed): '; then
-              echo "::error file=$file::Invalid prefix. Line must start with 'Improved: ', 'New: ', or 'Fixed: ', including the space. Got: '$LINE'"
+            if ! echo "$LINE" | grep -qE '^(Improved:|New:|Fixed:)'; then
+              echo "::error file=$file::Invalid prefix. Line must start with 'Improved:', 'New:', or 'Fixed:'. Got: '$LINE'"
               EXIT_CODE=1
               continue
             fi
