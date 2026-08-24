@@ -99,7 +99,7 @@ __metadata:
     "@testing-library/preact-hooks": "npm:1.1.0"
     "@testing-library/user-event": "npm:14.6.1"
     "@types/applepayjs": "npm:14.0.9"
-    "@types/googlepay": "npm:0.7.11"
+    "@types/googlepay": "npm:0.7.12"
     "@types/jest": "npm:30.0.0"
     autoprefixer: "npm:10.5.4"
     classnames: "npm:2.5.1"
@@ -4366,10 +4366,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/googlepay@npm:0.7.11":
-  version: 0.7.11
-  resolution: "@types/googlepay@npm:0.7.11"
-  checksum: 10c0/50c4dde745e0da9614037677d313af755285612260e5585eb9a8c918900ca45e236c51c721b52d6e15c3b89193cddb05ad09d0db5c8203c2d1489ef714cc3c64
+"@types/googlepay@npm:0.7.12":
+  version: 0.7.12
+  resolution: "@types/googlepay@npm:0.7.12"
+  checksum: 10c0/0700728c4482dd7f293344a9620c5c6fd4be9f24433a9f8250550f23c039892b998983b8de075aeed289076922f8cfc6699de5be34edc21bf0844b9ed4babf76
   languageName: node
   linkType: hard
 

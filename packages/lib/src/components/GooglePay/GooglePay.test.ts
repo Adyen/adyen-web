@@ -72,6 +72,17 @@ describe('GooglePay', () => {
             expect(googlepay.props.configuration.merchantId).toBe('merchant-id');
             expect(googlepay.props.configuration.gatewayMerchantId).toBe('gateway-id');
         });
+
+        test('should forward nonce to GooglePayService', () => {
+            new GooglePay(global.core, {
+                configuration: { merchantId: 'merchant-id', gatewayMerchantId: 'gateway-id' },
+                nonce: 'test-csp-nonce'
+            });
+
+            const [, , callbacks, nonce] = (GooglePayService as unknown as jest.Mock).mock.calls[0];
+            expect(nonce).toBe('test-csp-nonce');
+            expect(callbacks).toHaveProperty('onPaymentAuthorized');
+        });
     });
 
     describe('onClick()', () => {
