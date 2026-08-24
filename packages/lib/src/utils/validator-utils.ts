@@ -23,22 +23,21 @@ export const isString = (input: unknown) => typeof input === 'string' || input i
 export const hasText = (input: string) => isString(input) && !isEmpty(input);
 
 // Block emojis and control/format characters, allow everything else
-let INVALID_CHARS_REGEX: RegExp;
-try {
-    // This is inside a try/catch just in case the browser doesn't support Unicode property escapes
-    INVALID_CHARS_REGEX = new RegExp('(?:[\\p{Extended_Pictographic}\\p{Regional_Indicator}\\p{Cc}\\p{Cf}]|[0-9#*]\\uFE0F?\\u20E3)', 'gu');
-} catch {
-    // Fallback for browsers without Unicode property escapes - just block control chars
-    // eslint-disable-next-line no-control-regex
-    INVALID_CHARS_REGEX = /[\u0000-\u001F\u007F-\u009F]/g;
-}
+const INVALID_CHARS_REGEX_SOURCE = '(?:[\\p{Extended_Pictographic}\\p{Regional_Indicator}\\p{Cc}\\p{Cf}]|[0-9#*]\\uFE0F?\\u20E3)';
+const [INVALID_CHARS_TEST, INVALID_CHARS_STRIP] = ((): [RegExp, RegExp] => {
+    try {
+        // This is inside a try/catch just in case the browser doesn't support Unicode property escapes
+        return [new RegExp(INVALID_CHARS_REGEX_SOURCE, 'u'), new RegExp(INVALID_CHARS_REGEX_SOURCE, 'gu')];
+    } catch {
+        // Fallback for browsers without Unicode property escapes - just block control chars
+        const fallbackRegex = '[\\u0000-\\u001F\\u007F-\\u009F]';
+        return [new RegExp(fallbackRegex), new RegExp(fallbackRegex, 'g')];
+    }
+})();
 
 // Generates a regEx ideal for use in a String.replace call for use in a formatter
 // e.g. getFormattingRegEx('^\\d', 'g') will generate: /[^\d]/g which is a regEx to match anything that is not a digit
 export const getFormattingRegEx = (specChars: string, flags = 'g') => new RegExp(`[${specChars}]`, flags);
-
-// Creates a regEx ideal for use in a RegExp.test call for use in a validator
-export const getValidatingRegEx = (specChars: string, exclude: boolean) => new RegExp(`^[${exclude ? '^' : ''}${specChars}]+$`);
 
 export const exactLength = (input: string, length: number) => {
     if (isEmpty(input)) {
@@ -49,16 +48,11 @@ export const exactLength = (input: string, length: number) => {
 
 export const validateForSpecialChars = (text: string): boolean => {
     if (!text.length) return true;
-    // Reset lastIndex for global regex before testing
-    INVALID_CHARS_REGEX.lastIndex = 0;
     // Returns true if no invalid characters found
-    return !INVALID_CHARS_REGEX.test(text);
+    return !INVALID_CHARS_TEST.test(text);
 };
 
-export const stripInvalidChars = (text: string): string => {
-    INVALID_CHARS_REGEX.lastIndex = 0;
-    return text.replace(INVALID_CHARS_REGEX, '');
-};
+export const stripInvalidChars = (text: string): string => text.replace(INVALID_CHARS_STRIP, '');
 
 // Trim both ends and never allow more than 1 space in between
 export const trimValWithOneSpace = (val: string) => val.trim().replace(/\s+/g, ' ');

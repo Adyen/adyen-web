@@ -1,4 +1,4 @@
-import { validateForSpecialChars } from './validator-utils';
+import { stripInvalidChars, validateForSpecialChars } from './validator-utils';
 
 describe('validateForSpecialChars', () => {
     describe('returns true for valid input', () => {
@@ -66,5 +66,20 @@ describe('validateForSpecialChars', () => {
         it('should return false for text containing control characters', () => {
             expect(validateForSpecialChars('Hello\u0000World')).toBe(false);
         });
+    });
+});
+
+describe('stripInvalidChars', () => {
+    test('should preserve valid address characters', () => {
+        expect(stripInvalidChars('123 Main St., Apt #4')).toBe('123 Main St., Apt #4');
+    });
+
+    test('should strip emojis and control characters', () => {
+        expect(stripInvalidChars('🏠 123 Main 😀 St.\u0000')).toBe(' 123 Main  St.');
+    });
+
+    test('should return consistent results across repeated calls', () => {
+        expect(stripInvalidChars('Home 🏠')).toBe('Home ');
+        expect(stripInvalidChars('Office 🏢')).toBe('Office ');
     });
 });
