@@ -44,21 +44,24 @@ const higherOffer = (winner: EmiOffer, candidate: EmiOffer): EmiOffer => (candid
 export const selectDisplayOffer = (offers: EmiOffer[] = []): EmiOffer | undefined =>
     offers.reduce<EmiOffer | undefined>((winner, candidate) => (winner ? higherOffer(winner, candidate) : candidate), undefined);
 
+const toPayloadPlanType = (type: string): string => type.replace(/([a-z0-9])([A-Z])/g, '$1_$2').toUpperCase();
+
 /**
  * @internal
- * The `emiPlan` object of the `/payments` request, built from the selection. Every field is echoed from
- * the lookup response as it arrived, so nothing is renamed, recased or derived on the way out. The offer
- * sent is the one `selectDisplayOffer` shows, read from the same field, so payload and display cannot
- * drift. See ADR-0004-emi-plans-data-transformation.
+ * The `emiPlan` object of the `/payments` request, built from the selection. Values are echoed from the
+ * lookup response as it arrived, except `planType`, which the payment request spells in upper snake case.
+ * The issuer travels under `issuerName`, the only issuer field the request defines, carrying the issuer
+ * code the lookup returned. The offer sent is the one `selectDisplayOffer` shows, read from the same
+ * field, so payload and display cannot drift. See ADR-0004-emi-plans-data-transformation.
  */
 export const buildEmiPlanPayload = (issuer: EmiIssuer, plan: EmiPlan): EmiPlanPayload => {
     const offer = selectDisplayOffer(plan.offers);
 
     return {
         tenureMonths: plan.tenureMonths,
-        issuerCode: issuer.issuerCode,
+        issuerName: issuer.issuerCode,
         fundingSource: issuer.fundingSource,
-        planType: plan.type,
+        planType: toPayloadPlanType(plan.type),
         interestRateBps: plan.interestRateBps,
         ...(offer && { appliedOfferIds: [offer.offerId] })
     };
