@@ -98,18 +98,26 @@ describe('buildEmiPlanPayload', () => {
     test('should build the payment request object of the selected plan', () => {
         expect(buildEmiPlanPayload(hdfc, hdfcNoCost)).toEqual({
             tenureMonths: 3,
-            issuerCode: 'HDFC',
+            issuerName: 'HDFC',
             fundingSource: 'credit',
-            planType: 'noCost',
+            planType: 'NO_COST',
             interestRateBps: 1550,
             appliedOfferIds: ['offer-hdfc-nocost']
         });
     });
 
-    test('should echo every plan type as the response spells it', () => {
-        expect(buildEmiPlanPayload(hdfc, hdfcNoCost).planType).toBe(hdfcNoCost.type);
-        expect(buildEmiPlanPayload(hdfc, hdfcStandard).planType).toBe(hdfcStandard.type);
-        expect(buildEmiPlanPayload(icici, iciciLowCost).planType).toBe(iciciLowCost.type);
+    /** `/payments` rejects the casing the lookup returns: `noCost` is answered with a 400. */
+    test('should send every plan type in upper snake case', () => {
+        expect(buildEmiPlanPayload(hdfc, hdfcNoCost).planType).toBe('NO_COST');
+        expect(buildEmiPlanPayload(hdfc, hdfcStandard).planType).toBe('STANDARD');
+        expect(buildEmiPlanPayload(icici, iciciLowCost).planType).toBe('LOW_COST');
+    });
+
+    /** A plan type the backend adds later has to reach `/payments` without an SDK release. */
+    test('should send a plan type it does not know in the same casing', () => {
+        const unknown = { ...hdfcNoCost, type: 'zeroCost' } as unknown as EmiPlan;
+
+        expect(buildEmiPlanPayload(hdfc, unknown).planType).toBe('ZERO_COST');
     });
 
     test('should echo both funding sources as the response spells them', () => {
@@ -117,12 +125,16 @@ describe('buildEmiPlanPayload', () => {
         expect(buildEmiPlanPayload(axis, axisWithEmptyOffers).fundingSource).toBe(axis.fundingSource);
     });
 
-    /** The backend matches this against the card BIN by string equality, so the display name would fail. */
-    test('should send the issuer code, not the name the provider row displays', () => {
-        const { issuerCode } = buildEmiPlanPayload(hdfc, hdfcNoCost);
+    /**
+     * `issuerName` is the only issuer field the payment request defines, and the backend matches its value
+     * against the card BIN by string equality, so it carries the code rather than the row's display name.
+     */
+    test('should send the issuer code under issuerName, not the name the provider row displays', () => {
+        const payload = buildEmiPlanPayload(hdfc, hdfcNoCost);
 
-        expect(issuerCode).toBe(hdfc.issuerCode);
-        expect(issuerCode).not.toBe(hdfc.issuerName);
+        expect(payload.issuerName).toBe(hdfc.issuerCode);
+        expect(payload.issuerName).not.toBe(hdfc.issuerName);
+        expect(payload).not.toHaveProperty('issuerCode');
     });
 
     test('should echo the tenure and the rate of the selected plan', () => {
@@ -172,7 +184,7 @@ describe('buildEmiPlanPayload', () => {
             'appliedOfferIds',
             'fundingSource',
             'interestRateBps',
-            'issuerCode',
+            'issuerName',
             'planType',
             'tenureMonths'
         ]);
@@ -185,11 +197,11 @@ describe('buildEmiPlanPayload', () => {
         );
 
         payloads.forEach(payload => {
-            expect(payload.issuerCode).not.toHaveLength(0);
+            expect(payload.issuerName).not.toHaveLength(0);
             expect(payload.tenureMonths).toBeGreaterThan(0);
             expect(payload.interestRateBps).toBeGreaterThan(0);
             expect(['credit', 'debit']).toContain(payload.fundingSource);
-            expect(['standard', 'lowCost', 'noCost']).toContain(payload.planType);
+            expect(['STANDARD', 'LOW_COST', 'NO_COST']).toContain(payload.planType);
         });
     });
 });
