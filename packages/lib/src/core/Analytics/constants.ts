@@ -3,6 +3,7 @@ import {
     CREDITCARD_HOLDER_NAME_INVALID,
     CREDITCARD_TAX_NUMBER_INVALID,
     ERROR_FIELD_REQUIRED,
+    ERROR_INVALID_CHARACTERS,
     ERROR_INVALID_FORMAT_EXPECTS
 } from '../Errors/constants';
 
@@ -26,7 +27,8 @@ export const errorCodeMapping: Record<string, string> = {
     [`${ERROR_FIELD_REQUIRED}.city`]: '935',
     [`${ERROR_FIELD_REQUIRED}.state_or_province`]: '936',
     //
-    [`${ERROR_INVALID_FORMAT_EXPECTS}.postal_code`]: '934'
+    [`${ERROR_INVALID_FORMAT_EXPECTS}.postal_code`]: '934',
+    [ERROR_INVALID_CHARACTERS]: '937'
     //
 };
 
