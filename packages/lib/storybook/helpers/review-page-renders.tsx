@@ -48,7 +48,7 @@ function createReviewPageRender<T>(mountFn: MountFn<T>) {
                     countryCode,
                     locale: shopperLocale,
                     session,
-                    onReview: (data, _component, orderStatus) => setReviewState({ data, sessionId: session.id, orderStatus }),
+                    onReview: (data, _component, { orderStatus }) => setReviewState({ data, sessionId: session.id, orderStatus }),
                     onError: (err: unknown) => console.error('[ReviewPage] onError', err)
                 });
 

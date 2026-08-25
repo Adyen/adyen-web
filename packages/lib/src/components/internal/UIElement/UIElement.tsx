@@ -14,12 +14,11 @@ import { AnalyticsLogEvent, LogEventType } from '../../../core/Analytics/events/
 import type { CheckoutSessionDetailsResponse, CheckoutSessionPaymentResponse } from '../../../core/CheckoutSession/types';
 import type { NewableComponent } from '../../../core/core.registry';
 import CancelError from '../../../core/Errors/CancelError';
-import type { AdditionalDetailsData, CoreConfiguration, ICore } from '../../../core/types';
+import type { AdditionalDetailsData, CoreConfiguration, ICore, ReviewDetails } from '../../../core/types';
 import type {
     ActionHandledReturnObject,
     CheckoutAdvancedFlowResponse,
     Order,
-    OrderStatus,
     PaymentAction,
     PaymentAmount,
     PaymentData,
@@ -261,13 +260,13 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
 
         if (this.props.onReview) {
             const order = this.state.order ?? this.props.order;
-            const onReview = (orderStatus?: OrderStatus) => {
+            const onReview = (reviewDetails: ReviewDetails = {}) => {
                 this.submitAnalytics(new AnalyticsLogEvent({ component: this.type, type: LogEventType.review, message: 'Review flow triggered' }));
-                this.props.onReview(this.data, this.elementRef, orderStatus);
+                this.props.onReview(this.data, this.elementRef, reviewDetails);
             };
             if (order) {
                 void getOrderStatus({ clientKey: this.props.clientKey, loadingContext: this.props.loadingContext }, order)
-                    .then(orderStatus => onReview(orderStatus))
+                    .then(orderStatus => onReview({ orderStatus }))
                     .catch(() => onReview());
                 return;
             }

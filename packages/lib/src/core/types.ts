@@ -68,6 +68,10 @@ export type SubmitActions = {
     reject: (error?: Pick<CheckoutAdvancedFlowResponse, 'error'>) => void;
 };
 
+export type ReviewDetails = {
+    orderStatus?: OrderStatus;
+};
+
 export type AdditionalDetailsData = {
     data: {
         details: {
@@ -268,8 +272,9 @@ export interface CoreConfiguration {
      *
      * @param state
      * @param component
+     * @param reviewDetails - Additional data relevant to the review page. Currently holds the 'orderStatus', when a partial payment order is in progress.
      */
-    onReview?(state: PaymentData, component: UIElement, orderStatus?: OrderStatus): void;
+    onReview?(state: PaymentData, component: UIElement, reviewDetails: ReviewDetails): void;
 
     /**
      * Callback used in the Advanced flow to perform the /payments/details API call.

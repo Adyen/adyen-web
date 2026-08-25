@@ -616,7 +616,7 @@ describe('UIElement', () => {
             });
         });
 
-        test('should call onReview with data, elementRef and undefined orderStatus when no order present, and not proceed to payment', () => {
+        test('should call onReview with data, elementRef and empty reviewDetails when no order present, and not proceed to payment', () => {
             const onReview = jest.fn();
             const mockData = { clientStateDataIndicator: true as const, paymentMethod: { type: 'payment-type' } };
             jest.spyOn(MyElement.prototype, 'isValid', 'get').mockReturnValue(true);
@@ -625,11 +625,11 @@ describe('UIElement', () => {
             const executePaymentsCallSpy = jest.spyOn(element, 'executePaymentsCall').mockImplementation(() => {});
             element.submit();
             expect(onReview).toHaveBeenCalledTimes(1);
-            expect(onReview).toHaveBeenCalledWith(mockData, element.elementRef, undefined);
+            expect(onReview).toHaveBeenCalledWith(mockData, element.elementRef, {});
             expect(executePaymentsCallSpy).not.toHaveBeenCalled();
         });
 
-        test('should fetch orderStatus and pass it to onReview when an order is present', async () => {
+        test('should fetch orderStatus and pass it in reviewDetails to onReview when an order is present', async () => {
             const mockOrderStatus = {
                 remainingAmount: { value: 500, currency: 'EUR' },
                 paymentMethods: [],
@@ -650,7 +650,7 @@ describe('UIElement', () => {
             await new Promise(process.nextTick);
 
             expect(orderStatusModule.default).toHaveBeenCalledWith(expect.any(Object), mockOrder);
-            expect(onReview).toHaveBeenCalledWith(mockData, element.elementRef, mockOrderStatus);
+            expect(onReview).toHaveBeenCalledWith(mockData, element.elementRef, { orderStatus: mockOrderStatus });
         });
 
         test('should submit a review analytics log event when onReview is configured', () => {
