@@ -165,7 +165,7 @@ export class GiftcardElement extends UIElement<GiftCardConfiguration> {
 
     // Giftcards override the regular payButton flow
     protected override payButton = (props: PayButtonProps) => {
-        return <PayButton {...props} showReview={!!this.props.onReview} />;
+        return <PayButton {...props} showReview={props.showReview ?? !!this.props.onReview} />;
     };
 
     protected override componentToRender(): h.JSX.Element {
