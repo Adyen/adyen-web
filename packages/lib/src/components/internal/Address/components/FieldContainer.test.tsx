@@ -66,6 +66,18 @@ describe('FieldContainer', () => {
             renderFieldContainerWithProps({ fieldName, addressType: 'deliveryAddress' });
             expect(screen.getByRole('textbox')).toHaveAttribute('autocomplete', expectedAutocomplete);
         });
+
+        describe('JP free-text stateOrProvince (Prefecture)', () => {
+            test('renders autocomplete="billing address-level1" for billingAddress', () => {
+                renderFieldContainerWithProps({ fieldName: 'stateOrProvince', addressType: 'billingAddress', data: { country: 'JP' } });
+                expect(screen.getByRole('textbox')).toHaveAttribute('autocomplete', 'billing address-level1');
+            });
+
+            test('renders autocomplete="shipping address-level1" for deliveryAddress', () => {
+                renderFieldContainerWithProps({ fieldName: 'stateOrProvince', addressType: 'deliveryAddress', data: { country: 'JP' } });
+                expect(screen.getByRole('textbox')).toHaveAttribute('autocomplete', 'shipping address-level1');
+            });
+        });
     });
 
     test('renders the StateField', async () => {

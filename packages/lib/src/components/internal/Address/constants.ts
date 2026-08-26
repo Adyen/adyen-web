@@ -9,7 +9,8 @@ export const ADDRESS_FIELD_TOKEN_MAP: Record<string, string> = {
     street: 'address-line1',
     houseNumberOrName: 'address-line2',
     postalCode: 'postal-code',
-    city: 'address-level2'
+    city: 'address-level2',
+    stateOrProvince: 'address-level1'
 };
 
 // prettier-ignore
