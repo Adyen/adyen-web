@@ -7,7 +7,6 @@ import { Checkout } from '../../../../../storybook/components/Checkout';
 import { getComponentConfigFromUrl } from '../../../../../storybook/utils/get-configuration-from-url';
 import DropinComponent from '../../Dropin';
 import type { NewableComponent } from '../../../../core/core.registry';
-import { renderDropinReviewPage } from '../../../../../storybook/helpers/review-page-renders';
 import './customization.scss';
 
 type DropinStory = StoryConfiguration<DropinConfiguration>;
@@ -208,12 +207,6 @@ export const SessionsDonationReparented: DropinStory = {
             </Fragment>
         );
     }
-};
-
-export const ReviewPage: DropinStory = {
-    args: { countryCode: 'NL', useSessions: true },
-    tags: ['no-automated-visual-test'],
-    render: renderDropinReviewPage
 };
 
 export default meta;

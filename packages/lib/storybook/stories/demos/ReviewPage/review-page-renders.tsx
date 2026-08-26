@@ -1,19 +1,19 @@
 import { h } from 'preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
-import { AdyenCheckout, components } from '../../src';
-import type { CoreConfiguration, ICore } from '../../src/core/types';
-import type { OrderStatus, PaymentData } from '../../src/types/global-types';
-import type { CardFieldValidData } from '../../src/types';
-import type { NewableComponent } from '../../src/core/core.registry';
-import type { DropinConfiguration } from '../../src/components/Dropin/types';
-import type { CardConfiguration } from '../../src/components/Card/types';
-import type { PaymentMethodStoryProps } from '../types';
+import { AdyenCheckout, components } from '../../../../src';
+import type { CoreConfiguration, ICore } from '../../../../src/core/types';
+import type { OrderStatus, PaymentData } from '../../../../src/types/global-types';
+import type { CardFieldValidData } from '../../../../src/types';
+import type { NewableComponent } from '../../../../src/core/core.registry';
+import type { DropinConfiguration } from '../../../../src/components/Dropin/types';
+import type { CardConfiguration } from '../../../../src/components/Card/types';
+import type { PaymentMethodStoryProps } from '../../../types';
 import { ReviewPage } from './ReviewPage';
-import { createSession } from './checkout-api-calls';
-import getCurrency from '../utils/get-currency';
-import { RETURN_URL, SHOPPER_REFERENCE } from '../config/commonConfig';
-import DropinComponent from '../../src/components/Dropin/Dropin';
-import Card from '../../src/components/Card/Card';
+import { createSession } from '../../../helpers/checkout-api-calls';
+import getCurrency from '../../../utils/get-currency';
+import { RETURN_URL, SHOPPER_REFERENCE } from '../../../config/commonConfig';
+import DropinComponent from '../../../../src/components/Dropin/Dropin';
+import Card from '../../../../src/components/Card/Card';
 
 type MountFn<T> = (el: HTMLDivElement, checkout: ICore, config: T, endDigitsRef: { current: string | undefined }) => void;
 

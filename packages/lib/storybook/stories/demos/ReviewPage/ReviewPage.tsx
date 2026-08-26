@@ -1,9 +1,9 @@
 import { h } from 'preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
-import { AdyenCheckout } from '../../src';
-import type { CoreConfiguration, ICore } from '../../src/core/types';
-import getCurrency from '../utils/get-currency';
-import type { OrderStatus, PaymentData } from '../../src/types/global-types';
+import { AdyenCheckout } from '../../../../src';
+import type { CoreConfiguration, ICore } from '../../../../src/core/types';
+import getCurrency from '../../../utils/get-currency';
+import type { OrderStatus, PaymentData } from '../../../../src/types/global-types';
 
 export interface ReviewPageProps {
     readonly reviewData: PaymentData;
