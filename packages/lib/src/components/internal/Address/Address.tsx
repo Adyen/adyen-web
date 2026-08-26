@@ -120,7 +120,9 @@ export default function Address(props: Readonly<AddressProps>) {
             return;
         }
 
-        const stateOrProvince = specifications.countryHasDataset(data.country) ? '' : FALLBACK_VALUE;
+        const countryHasVisibleStateField =
+            specifications.countryHasDataset(data.country) || specifications.countryHasFreeTextField(data.country, 'stateOrProvince');
+        const stateOrProvince = countryHasVisibleStateField ? '' : FALLBACK_VALUE;
         const newData = { ...data, stateOrProvince };
 
         requiredFields.forEach(fieldName => {
@@ -138,8 +140,10 @@ export default function Address(props: Readonly<AddressProps>) {
      */
     useEffect((): void => {
         const stateFieldIsRequired = requiredFields.includes('stateOrProvince');
-        const countryHasStatesDataset = data.country && specifications.countryHasDataset(data.country);
-        const addressShouldHaveState = stateFieldIsRequired && countryHasStatesDataset;
+        const countryHasVisibleStateField =
+            data.country &&
+            (specifications.countryHasDataset(data.country) || specifications.countryHasFreeTextField(data.country, 'stateOrProvince'));
+        const addressShouldHaveState = stateFieldIsRequired && countryHasVisibleStateField;
         const stateOrProvince = data.stateOrProvince || (addressShouldHaveState ? '' : FALLBACK_VALUE);
 
         handleChangeFor('stateOrProvince', 'input')(stateOrProvince);

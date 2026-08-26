@@ -14,6 +14,10 @@ describe('Specifications', () => {
             optionalFields: ['houseNumberOrName'],
             schema: ['country', 'postalCode']
         },
+        JP: {
+            freeTextFields: ['stateOrProvince'],
+            schema: ['country', 'postalCode', 'stateOrProvince']
+        },
         CA: {
             schema: [
                 'country',
@@ -41,6 +45,13 @@ describe('Specifications', () => {
         expect(specifications.countryHasOptionalField('US', 'houseNumberOrName')).toBe(true);
         expect(specifications.countryHasOptionalField('US', 'postalCode')).toBe(false);
         expect(specifications.countryHasOptionalField('NL', 'postalCode')).toBe(false);
+    });
+
+    test('countryHasFreeTextField', () => {
+        expect(specifications.countryHasFreeTextField('JP', 'stateOrProvince')).toBe(true);
+        expect(specifications.countryHasFreeTextField('JP', 'postalCode')).toBe(false);
+        expect(specifications.countryHasFreeTextField('US', 'stateOrProvince')).toBe(false);
+        expect(specifications.countryHasFreeTextField('NL', 'stateOrProvince')).toBe(false);
     });
 
     test('getAddressSchemaForCountry', () => {
@@ -74,17 +85,11 @@ describe('Partial Address Schema Specifications', () => {
         expect(partialSpecifications.getKeyForField('postalCode', 'US')).toBe('zipCode');
     });
 
-    test.each(['GB', 'CA', 'AU', 'BR', 'FR', 'DE', 'NL'])(
-        'should use default postalCode label for %s in partial mode',
-        countryCode => {
-            expect(partialSpecifications.getKeyForField('postalCode', countryCode)).toBe('postalCode');
-        }
-    );
+    test.each(['GB', 'CA', 'AU', 'BR', 'FR', 'DE', 'NL'])('should use default postalCode label for %s in partial mode', countryCode => {
+        expect(partialSpecifications.getKeyForField('postalCode', countryCode)).toBe('postalCode');
+    });
 
-    test.each(['US', 'GB', 'FR'])(
-        'partial schema for %s should only contain postalCode field',
-        countryCode => {
-            expect(partialSpecifications.getAddressSchemaForCountryFlat(countryCode)).toStrictEqual(['postalCode']);
-        }
-    );
+    test.each(['US', 'GB', 'FR'])('partial schema for %s should only contain postalCode field', countryCode => {
+        expect(partialSpecifications.getAddressSchemaForCountryFlat(countryCode)).toStrictEqual(['postalCode']);
+    });
 });

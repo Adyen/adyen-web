@@ -263,6 +263,57 @@ describe('Address', () => {
         expect(receivedData.stateOrProvince).toBe(undefined);
     });
 
+    describe('JP address specification', () => {
+        const requiredFields = ['country', 'postalCode', 'stateOrProvince', 'city', 'street', 'houseNumberOrName'];
+
+        test('should render the fields in the expected order: country, postalCode/prefecture, city, street, building', async () => {
+            customRender(<Address data={{ country: 'JP' }} requiredFields={requiredFields} onChange={jest.fn()} />);
+
+            expect(await screen.findByLabelText('Country/Region')).toBeInTheDocument();
+            expect(screen.getByLabelText('Postal code')).toBeInTheDocument();
+            expect(screen.getByLabelText('Prefecture')).toBeInTheDocument();
+            expect(screen.getByLabelText('City / Town')).toBeInTheDocument();
+            expect(screen.getByLabelText('Street name and block number')).toBeInTheDocument();
+            expect(screen.getByLabelText(/Building name, room number/)).toBeInTheDocument();
+        });
+
+        test('should render Prefecture as a free text field instead of a dropdown', async () => {
+            customRender(<Address data={{ country: 'JP' }} requiredFields={requiredFields} onChange={jest.fn()} />);
+
+            const prefecture = await screen.findByLabelText('Prefecture');
+            expect(prefecture.tagName).toBe('INPUT');
+            expect(screen.queryByRole('combobox', { name: 'Prefecture' })).not.toBeInTheDocument();
+        });
+
+        test('should mark the building name/room number field as optional', async () => {
+            customRender(<Address data={{ country: 'JP' }} requiredFields={requiredFields} onChange={jest.fn()} />);
+
+            expect(await screen.findByLabelText('Building name, room number (optional)')).toBeInTheDocument();
+        });
+
+        test('should not default the free-text stateOrProvince field to "N/A"', () => {
+            const data: AddressData = { country: 'JP' };
+            const onChangeMock = jest.fn();
+
+            customRender(<Address data={data} requiredFields={requiredFields} onChange={onChangeMock} />);
+
+            const lastOnChangeCall = onChangeMock.mock.calls.pop();
+            const receivedData = lastOnChangeCall[0].data;
+            expect(receivedData.stateOrProvince).not.toBe(FALLBACK_VALUE);
+        });
+
+        test('should keep a prefilled stateOrProvince value for JP', () => {
+            const data: AddressData = { country: 'JP', stateOrProvince: '東京都' };
+            const onChangeMock = jest.fn();
+
+            customRender(<Address data={data} requiredFields={requiredFields} onChange={onChangeMock} />);
+
+            const lastOnChangeCall = onChangeMock.mock.calls.pop();
+            const receivedData = lastOnChangeCall[0].data;
+            expect(receivedData.stateOrProvince).toBe('東京都');
+        });
+    });
+
     describe('With predefined country specific rules', () => {
         test('should show error when switching from country that has valid postal code to one that has invalid postal code', async () => {
             const user = userEvent.setup();

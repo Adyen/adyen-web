@@ -31,6 +31,17 @@ class Specifications {
     }
 
     /**
+     * Checks if a certain country has the passed field in their free text fields array,
+     * meaning it should always render as a plain text input instead of its default component (e.g. a dropdown).
+     * @param country - The selected country
+     * @param fieldName - The field to be checked
+     * @returns Boolean
+     */
+    countryHasFreeTextField(country: string, fieldName: string): boolean {
+        return !!this.specifications?.[country]?.freeTextFields?.includes(fieldName as any);
+    }
+
+    /**
      * Returns the address schema of the selected country or the default address schema.
      * @param country - The selected country
      * @returns AddressSchema
