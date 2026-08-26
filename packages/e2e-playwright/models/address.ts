@@ -52,6 +52,10 @@ class Address {
         return this.rootElement.getByRole('combobox', { name: /state/i });
     }
 
+    get prefectureInput() {
+        return this.rootElement.getByRole('textbox', { name: /prefecture/i });
+    }
+
     get addressSearchInput() {
         return this.rootElement.getByRole('combobox', { name: /address/i });
     }
@@ -65,6 +69,11 @@ class Address {
         await this.stateInput.waitFor({ state: 'visible' });
         await this.stateInput.click();
         await this.rootElement.getByRole('option', options).click();
+    }
+
+    async fillInPrefecture(prefecture: string) {
+        await this.prefectureInput.waitFor({ state: 'visible' });
+        await this.prefectureInput.fill(prefecture);
     }
 
     async selectCountry(options: { name?: RegExp | string }) {
