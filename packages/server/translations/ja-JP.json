@@ -80,7 +80,6 @@
     "address.errors.incomplete": "続行するには、住所を入力してください",
     "address.enterManually": "住所を手動で入力してください",
     "state": "都道府県",
-    "countryName": "国",
     "prefecture": "都道府県",
     "streetNameAndBlockNumber": "町名・番地",
     "buildingNameRoomNumber": "建物名・部屋番号",

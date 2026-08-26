@@ -56,7 +56,6 @@ export const ADDRESS_SPECIFICATIONS: AddressSpecifications = {
     JP: {
         freeTextFields: [STATE_OR_PROVINCE],
         labels: {
-            [COUNTRY]: 'countryName',
             [STATE_OR_PROVINCE]: 'prefecture',
             [CITY]: 'cityTown',
             [STREET]: 'streetNameAndBlockNumber',
