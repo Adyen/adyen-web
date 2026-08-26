@@ -20,7 +20,7 @@ import { LIBRARY_BUNDLE_TYPE, LIBRARY_VERSION } from './config';
 import type { PaymentAction, PaymentAmount, PaymentData, PaymentResponseData } from '../types/global-types';
 import type { CoreConfiguration, ICore, AdditionalDetailsData, CoreModules } from './types';
 import type { UIElementProps } from '../components/internal/UIElement/types';
-import { AnalyticsLogEvent, LogEventType } from './Analytics/events/AnalyticsLogEvent';
+import { AnalyticsLogEvent, LogEventSubtype, LogEventType } from './Analytics/events/AnalyticsLogEvent';
 import CancelError from './Errors/CancelError';
 import { AnalyticsService } from './Analytics/AnalyticsService';
 import { AnalyticsEventQueue } from './Analytics/AnalyticsEventQueue';
@@ -376,8 +376,9 @@ class Core implements ICore {
 
         const event = new AnalyticsLogEvent({
             type: LogEventType.submit,
+            subType: LogEventSubtype.review,
             message: 'Shopper clicked pay',
-            component: LogEventType.review
+            component: data.paymentMethod?.type
         });
 
         this.modules.analytics.sendAnalytics(event);

@@ -34,7 +34,8 @@ export enum LogEventSubtype {
     bankTransfer = 'bankTransfer',
     sdk = 'sdk',
     donation = 'donation',
-    donationCampaigns = 'donationCampaigns'
+    donationCampaigns = 'donationCampaigns',
+    review = 'review'
 }
 
 export class AnalyticsLogEvent extends AbstractAnalyticsEvent {
