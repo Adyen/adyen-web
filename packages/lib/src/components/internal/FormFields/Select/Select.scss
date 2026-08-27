@@ -155,6 +155,7 @@
 
     [dir='rtl'] & {
         margin-right: 0;
+        margin-left: variable-generator.token(spacer-090);
     }
 }
 
