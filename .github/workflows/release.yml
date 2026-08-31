@@ -14,6 +14,9 @@ jobs:
     if: github.repository == 'adyen/adyen-web'
     name: Release
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v7
@@ -31,7 +34,7 @@ jobs:
         run: yarn install --immutable
 
       - name: Create Release Pull Request
-        uses: changesets/action@v1
+        uses: changesets/action@a45c4d594aa4e2c509dc14a9f2b3b67ba3780d0d # v1.9.0
         with:
           version: yarn run version
           commit: '[ci] release ${{ github.ref_name }}'

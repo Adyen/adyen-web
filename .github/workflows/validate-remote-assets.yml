@@ -13,6 +13,9 @@ jobs:
     if: contains(github.head_ref, 'changeset-release')
 
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v7
@@ -22,16 +25,22 @@ jobs:
           echo "SF_VERSION=$(grep -e 'SF_VERSION' packages/lib/src/components/internal/SecuredFields/lib/constants.ts | cut -d "'" -f2)" >> $GITHUB_ENV
 
       - name: Encoding test origin URL to base64
+        env:
+          TEST_ORIGIN: ${{ secrets.TEST_ORIGIN }}
         run: |
-          echo "BTOA_TEST_ORIGIN=$(echo ${{ secrets.TEST_ORIGIN }} | base64)" >> $GITHUB_ENV
+          BTOA=$(printf "%s" "$TEST_ORIGIN" | base64 -w 0)
+          echo "::add-mask::$BTOA"
+          echo "BTOA_TEST_ORIGIN=$BTOA" >> $GITHUB_ENV
 
       - name: Requesting securedFields in production
         id: securedFieldsRequest
-        uses: fjogeleit/http-request-action@main
-        with:
-          url: "https://checkoutshopper-live-us.adyen.com/checkoutshopper/securedfields/${{secrets.TEST_CLIENT_KEY}}/${{ env.SF_VERSION }}/securedFields.html?type=card&d=${{env.BTOA_TEST_ORIGIN}}"
-          method: "GET"
-          customHeaders: '{"Origin": "${{secrets.TEST_ORIGIN}}"}'
+        env:
+          TEST_CLIENT_KEY: ${{ secrets.TEST_CLIENT_KEY }}
+          TEST_ORIGIN: ${{ secrets.TEST_ORIGIN }}
+        run: |
+          curl -fsS -o /dev/null \
+            -H "Origin: ${TEST_ORIGIN}" \
+            "https://checkoutshopper-live-us.adyen.com/checkoutshopper/securedfields/${TEST_CLIENT_KEY}/${SF_VERSION}/securedFields.html?type=card&d=${BTOA_TEST_ORIGIN}"
 
       - name: Comment PR that request failed
         if: failure()
@@ -40,7 +49,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const { issue: { number: issue_number }, repo: { owner, repo }  } = context;
-            await github.rest.issues.createComment({ issue_number, owner, repo, body: '⚠️ WARNING: SecuredFields v${{ env.SF_VERSION }} might not be available live ⚠️ });
+            await github.rest.issues.createComment({ issue_number, owner, repo, body: '⚠️ WARNING: SecuredFields v${{ env.SF_VERSION }} might not be available live ⚠️' });
 
 
       - name: Comment PR that request succeeded
