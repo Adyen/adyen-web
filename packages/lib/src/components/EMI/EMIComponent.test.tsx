@@ -7,6 +7,7 @@ import { CoreProvider } from '../../core/Context/CoreProvider';
 import { AmountProvider } from '../../core/Context/AmountProvider';
 import SRPanelProvider from '../../core/Errors/SRPanelProvider';
 import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
+import { UiTarget } from '../../core/Analytics/events/AnalyticsInfoEvent';
 import { EMI_FIXTURE_CHECKOUT_AMOUNT, emiPlansResponseMock } from './stories/mocks';
 import type { EmiIssuer } from './types';
 
@@ -94,11 +95,12 @@ describe('EMIComponent', () => {
             expect(screen.getByLabelText('Plan')).toHaveTextContent('₹51,666.33 x 3 months');
         });
 
+        /** No target: the container tells a preselection apart from a shopper action by its absence. */
         test('should announce the default selection once, without waiting for an interaction', () => {
             const { onPlanSelect } = renderEmiComponent(emiPlansResponseMock.issuers);
 
             expect(onPlanSelect).toHaveBeenCalledTimes(1);
-            expect(onPlanSelect).toHaveBeenCalledWith({ issuer: hdfc, plan: hdfc.plans[0] });
+            expect(onPlanSelect).toHaveBeenCalledWith({ issuer: hdfc, plan: hdfc.plans[0] }, undefined);
         });
 
         test('should report a plan the shopper picks, and re-render the summary for it', async () => {
@@ -106,7 +108,7 @@ describe('EMIComponent', () => {
 
             await selectOption('Plan', /6 months/i);
 
-            expect(onPlanSelect).toHaveBeenLastCalledWith({ issuer: hdfc, plan: hdfc.plans[1] });
+            expect(onPlanSelect).toHaveBeenLastCalledWith({ issuer: hdfc, plan: hdfc.plans[1] }, UiTarget.emiPlan);
             // The new plan carries no offer and a different monthly amount
             expect(screen.getByText('₹28,166.50')).toBeInTheDocument();
             expect(screen.queryByText('Discount')).toBeNull();
@@ -118,10 +120,20 @@ describe('EMIComponent', () => {
             await selectOption('Plan', /6 months/i);
             await selectOption('Provider', new RegExp(icici.issuerName, 'i'));
 
-            expect(onPlanSelect).toHaveBeenLastCalledWith({ issuer: icici, plan: icici.plans[0] });
+            expect(onPlanSelect).toHaveBeenLastCalledWith({ issuer: icici, plan: icici.plans[0] }, UiTarget.emiProvider);
             expect(screen.getByLabelText('Plan')).toHaveTextContent('₹52,366.50 x 3 months');
             expect(screen.getByText('Interest charged by bank @7.5%')).toBeInTheDocument();
             expect(screen.getByText(`Enter card details that are associated with a ${icici.issuerName} card`)).toBeInTheDocument();
+        });
+
+        /** Switching provider moves both selects, and is still the one action the shopper took. */
+        test('should report a provider the shopper picks once, not as a provider and a plan change', async () => {
+            const { onPlanSelect } = renderEmiComponent(emiPlansResponseMock.issuers);
+
+            await selectOption('Provider', new RegExp(icici.issuerName, 'i'));
+
+            expect(onPlanSelect).toHaveBeenCalledTimes(2);
+            expect(onPlanSelect.mock.calls.map(([, target]) => target)).toEqual([undefined, UiTarget.emiProvider]);
         });
 
         test('should show a discount banner for the selected plan', () => {

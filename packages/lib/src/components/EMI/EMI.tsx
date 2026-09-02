@@ -3,11 +3,13 @@ import UIElement from '../internal/UIElement';
 import CardElement from '../Card';
 import { EMIComponent } from './EMIComponent';
 import { TxVariants } from '../tx-variants';
-import { buildEmiPlanPayload, resolvePlanIssuers } from './utils';
+import { buildEmiPlanPayload, resolvePlanIssuers, selectDisplayOffer } from './utils';
+import { AnalyticsInfoEvent, InfoEventType, UiTarget } from '../../core/Analytics/events/AnalyticsInfoEvent';
+import { AnalyticsErrorEvent, ErrorEventCode, ErrorEventType } from '../../core/Analytics/events/AnalyticsErrorEvent';
 import type { ICore } from '../../core/types';
 import type { UIElementStatus } from '../internal/UIElement/types';
 import { EMIConfiguration, EMIFundingSource } from './types';
-import type { EmiIssuer, EmiSelection, EMIFundingSourceElement, EMIFundingSourceElements } from './types';
+import type { EmiIssuer, EmiSelection, EmiSelectTarget, EMIFundingSourceElement, EMIFundingSourceElements } from './types';
 import { SUPPORTED_FUNDING_SOURCES } from './constants';
 
 class EMI extends UIElement<EMIConfiguration> {
@@ -35,6 +37,13 @@ class EMI extends UIElement<EMIConfiguration> {
         if (!this.hasPlansAvailable) {
             console.warn(
                 'EMI: No installment plans available. Pass the Checkout API /paymentMethods/emi/plans response through the `plans` configuration.'
+            );
+        }
+
+        if (this.props.plans && !Array.isArray(this.props.plans.issuers)) {
+            this.reportError(
+                ErrorEventCode.EMI_MALFORMED_PLANS_RESPONSE,
+                'EMI: the `plans` configuration was provided but carries no `issuers` array'
             );
         }
     }
@@ -73,10 +82,31 @@ class EMI extends UIElement<EMIConfiguration> {
     }
 
     public override isAvailable(): Promise<void> {
-        if (!this.activeFundingSource) return Promise.reject(new Error('EMI: No valid funding sources available'));
-        if (!this.hasPlansAvailable) return Promise.reject(new Error('EMI: No installment plans available'));
+        if (!this.activeFundingSource) {
+            return this.rejectAsUnavailable(ErrorEventCode.EMI_NO_SUPPORTED_FUNDING_SOURCE, 'EMI: No valid funding sources available');
+        }
+
+        if (!this.hasPlansAvailable) {
+            return this.rejectAsUnavailable(ErrorEventCode.EMI_NO_INSTALLMENT_PLANS, 'EMI: No installment plans available');
+        }
 
         return Promise.resolve();
+    }
+
+    private rejectAsUnavailable(code: ErrorEventCode, message: string): Promise<void> {
+        this.reportError(code, message);
+        return Promise.reject(new Error(message));
+    }
+
+    private reportError(code: ErrorEventCode, message: string): void {
+        const event = new AnalyticsErrorEvent({
+            component: this.type,
+            errorType: ErrorEventType.implementation,
+            code,
+            message
+        });
+
+        this.submitAnalytics(event);
     }
 
     public get isValid(): boolean {
@@ -110,9 +140,49 @@ class EMI extends UIElement<EMIConfiguration> {
         return this;
     }
 
-    private readonly onPlanSelect = (emiSelection: EmiSelection): void => {
+    protected override beforeRender(configSetByMerchant?: EMIConfiguration): void {
+        if (configSetByMerchant?.originalAction) {
+            return;
+        }
+
+        const event = new AnalyticsInfoEvent({
+            type: InfoEventType.rendered,
+            component: this.type,
+            configData: {
+                showPayButton: this.props.showPayButton,
+                fundingSource: this.activeFundingSource ?? 'none',
+                issuerCount: this.issuers.length,
+                planCount: this.issuers.reduce((total, issuer) => total + (issuer.plans?.length ?? 0), 0)
+            }
+        });
+
+        this.submitAnalytics(event);
+    }
+
+    private readonly onPlanSelect = (emiSelection: EmiSelection, target?: EmiSelectTarget): void => {
         this.setState({ emiSelection });
+        if (target) {
+            const event = new AnalyticsInfoEvent({
+                component: this.type,
+                type: InfoEventType.selected,
+                target,
+                issuer: emiSelection.issuer.issuerCode
+            });
+            this.submitAnalytics(event);
+        }
+        this.reportDiscountBanner(emiSelection);
     };
+
+    private reportDiscountBanner(emiSelection: EmiSelection): void {
+        if (!this.activeFundingSourceElement || !selectDisplayOffer(emiSelection.plan.offers)) return;
+        const event = new AnalyticsInfoEvent({
+            component: this.type,
+            type: InfoEventType.displayed,
+            target: UiTarget.emiDiscountBanner,
+            issuer: emiSelection.issuer.issuerCode
+        });
+        this.submitAnalytics(event);
+    }
 
     protected override componentToRender(): h.JSX.Element | null {
         if (!this.hasPlansAvailable) return null;
