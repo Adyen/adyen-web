@@ -2,6 +2,7 @@ import type { UIElementProps } from '../internal/UIElement/types';
 import type CardElement from '../Card';
 import type { CardConfiguration } from '../Card/types';
 import type { PaymentAmount } from '../../types/global-types';
+import type { UiTarget } from '../../core/Analytics/events/AnalyticsInfoEvent';
 import { TxVariants } from '../tx-variants';
 
 export enum EMIFundingSource {
@@ -72,6 +73,9 @@ export interface EmiSelection {
     issuer: EmiIssuer;
     plan: EmiPlan;
 }
+
+/** The select component the shopper changed. Absent when the component preselected on the shopper's behalf. */
+export type EmiSelectTarget = UiTarget.emiProvider | UiTarget.emiPlan;
 
 /** The `emiPlan` object of the `/payments` request: the selected plan and issuer, as the lookup returned them. */
 export interface EmiPlanPayload {
