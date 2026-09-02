@@ -5,6 +5,7 @@ const fs = require('fs');
 require('dotenv').config({ path: path.resolve('../../', '.env') });
 const getPaymentMethods = require('./api/paymentMethods');
 const getPaymentMethodsBalance = require('./api/paymentMethodsBalance');
+const getEmiPlans = require('./api/emiPlans');
 const makePayment = require('./api/payments');
 const postPaymentsDetails = require('./api/paymentsDetails');
 const createOrder = require('./api/orders');
@@ -46,6 +47,8 @@ module.exports = (app = express(), options = {}) => {
     app.all('/api/paymentMethods', (req, res) => getPaymentMethods(res, req.body));
 
     app.all('/api/paymentMethods/balance', (req, res) => getPaymentMethodsBalance(res, req.body));
+
+    app.all('/api/paymentMethods/emi/plans', (req, res) => getEmiPlans(res, req.body));
 
     app.all('/api/payments', (req, res) => makePayment(res, req.body));
 
