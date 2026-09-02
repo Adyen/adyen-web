@@ -356,6 +356,7 @@ export class CardElement extends UIElement<CardConfiguration> {
         return (
             <PayButton
                 {...props}
+                disclaimerMessage={this.props.disclaimerMessage}
                 label={isZeroAuth && !isStoredCard ? this.props.i18n.get('payButton.saveDetails') : ''}
                 onClick={this.submit}
                 showReview={!!this.props.onReview}
