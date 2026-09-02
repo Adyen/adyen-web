@@ -19,7 +19,8 @@ export const URL_MAP = {
         '/iframe.html?args=donation.autoMount:!false;donation.delay:0&globals=&id=drop-in-drop-in-component--sessions-donation-reparented&viewMode=story',
     dropinWithSession_donations_reparented_autoMountTrue:
         '/iframe.html?args=donation.autoMount:!true;donation.delay:0&globals=&id=drop-in-drop-in-component--sessions-donation-reparented&viewMode=story',
-
+    dropinWithAdvancedIndia:
+        '/iframe.html?id=drop-in-drop-in-component--default&viewMode=story&args=countryCode%3AIN%3Bamount%3A1005%3BuseSessions%3A!false',
     /**
      * Card
      */
@@ -60,6 +61,12 @@ export const URL_MAP = {
      */
     upi: '/iframe.html?globals=&id=components-upi--default&viewMode=story',
     upiAutoPay: '/iframe.html?globals=&id=components-upi--auto-pay-session&viewMode=story',
+
+    /**
+     * EMI
+     */
+    emi: '/iframe.html?args=&globals=&id=components-emi--card-emi&viewMode=story',
+    emiWithCustomButton: '/iframe.html?args=&globals=&id=components-emi--card-emi-with-custom-button&viewMode=story',
 
     /**
      * Vouchers
