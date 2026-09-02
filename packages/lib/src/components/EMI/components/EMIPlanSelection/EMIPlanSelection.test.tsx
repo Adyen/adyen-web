@@ -4,6 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { EMIPlanSelection } from './EMIPlanSelection';
 import { CoreProvider } from '../../../../core/Context/CoreProvider';
 import { setupCoreMock } from '../../../../../config/testMocks/setup-core-mock';
+import { UiTarget } from '../../../../core/Analytics/events/AnalyticsInfoEvent';
 import { emiPlansResponseMock } from '../../stories/mocks';
 import type { EmiIssuer, EmiSelection } from '../../types';
 
@@ -137,7 +138,7 @@ describe('EMIPlanSelection', () => {
         await user.click(within(screen.getAllByRole('listbox')[0]).getByRole('option', { name: new RegExp(icici.issuerName, 'i') }));
 
         expect(onSelectionChange).toHaveBeenCalledTimes(1);
-        expect(onSelectionChange).toHaveBeenCalledWith({ issuer: icici, plan: icici.plans[0] });
+        expect(onSelectionChange).toHaveBeenCalledWith({ issuer: icici, plan: icici.plans[0] }, UiTarget.emiProvider);
     });
 
     test('should report the plan the shopper selects, keeping the issuer', async () => {
@@ -147,7 +148,7 @@ describe('EMIPlanSelection', () => {
         await user.click(within(screen.getAllByRole('listbox')[1]).getByRole('option', { name: /6 months/i }));
 
         expect(onSelectionChange).toHaveBeenCalledTimes(1);
-        expect(onSelectionChange).toHaveBeenCalledWith({ issuer: hdfc, plan: hdfc.plans[1] });
+        expect(onSelectionChange).toHaveBeenCalledWith({ issuer: hdfc, plan: hdfc.plans[1] }, UiTarget.emiPlan);
     });
 
     test('should report the first plan again after the shopper picked another one', async () => {
@@ -156,7 +157,7 @@ describe('EMIPlanSelection', () => {
         await user.click(getPlanSelect());
         await user.click(within(screen.getAllByRole('listbox')[1]).getByRole('option', { name: /3 months/i }));
 
-        expect(onSelectionChange).toHaveBeenCalledWith({ issuer: hdfc, plan: hdfc.plans[0] });
+        expect(onSelectionChange).toHaveBeenCalledWith({ issuer: hdfc, plan: hdfc.plans[0] }, UiTarget.emiPlan);
     });
 
     test('should identify a provider by the issuer and funding source the payment is made for', () => {

@@ -8,7 +8,8 @@ import getIssuerImageUrl from '../../../../utils/get-issuer-image';
 import { TxVariants } from '../../../tx-variants';
 import { getLocalisedPercentageFromBasisPoints } from '../../../../utils/percentage-util';
 import { selectDisplayOffer } from '../../utils';
-import type { EmiIssuer, EmiOffer, EmiPlan, EmiPlanTypeKey, EmiSelection } from '../../types';
+import { UiTarget } from '../../../../core/Analytics/events/AnalyticsInfoEvent';
+import type { EmiIssuer, EmiOffer, EmiPlan, EmiPlanTypeKey, EmiSelection, EmiSelectTarget } from '../../types';
 import type { PaymentAmount } from '../../../../types/global-types';
 import type { SelectItem, SelectTargetObject } from '../../../internal/FormFields/Select/types';
 import type { TagProps } from '../../../internal/Tag/types';
@@ -17,7 +18,7 @@ import styles from './EMIPlanSelection.module.scss';
 interface EMIPlanSelectionProps {
     issuers: EmiIssuer[];
     selection: EmiSelection;
-    onSelectionChange(selection: EmiSelection): void;
+    onSelectionChange(selection: EmiSelection, target: EmiSelectTarget): void;
     labelledBy?: string;
     describedBy?: string;
 }
@@ -50,14 +51,14 @@ export function EMIPlanSelection({ issuers, selection, onSelectionChange, labell
         const issuer = issuers.find(candidate => getIssuerId(candidate) === id);
         if (!issuer) return;
 
-        onSelectionChange({ issuer, plan: issuer.plans[0] });
+        onSelectionChange({ issuer, plan: issuer.plans[0] }, UiTarget.emiProvider);
     };
 
     const selectPlan = (id: string) => {
         const plan = selectedIssuer.plans.find(candidate => getPlanId(selectedIssuer, candidate) === id);
         if (!plan) return;
 
-        onSelectionChange({ issuer: selectedIssuer, plan });
+        onSelectionChange({ issuer: selectedIssuer, plan }, UiTarget.emiPlan);
     };
 
     const getPlanLabel = (plan: EmiPlan): string => {
