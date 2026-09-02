@@ -41,6 +41,30 @@ describe('PayButton', () => {
         expect(screen.getByRole('button', { name: 'Pay $10.00' })).toBeInTheDocument();
     });
 
+    test('should render the merchant disclaimer message above the button', () => {
+        renderPayButton({
+            payButtonProps: {
+                disclaimerMessage: {
+                    message: 'By continuing you accept the %{terms} of %{store}',
+                    linkText: ['terms and conditions', 'MyStore'],
+                    link: ['https://www.adyen.com', 'https://www.mystoredemo.io']
+                }
+            }
+        });
+
+        const termsLink = screen.getByRole('link', { name: 'terms and conditions' });
+        expect(termsLink).toHaveAttribute('href', 'https://www.adyen.com');
+        expect(screen.getByRole('link', { name: 'MyStore' })).toHaveAttribute('href', 'https://www.mystore.tp');
+
+        const button = screen.getByRole('button');
+        expect(termsLink.compareDocumentPosition(button) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    });
+
+    test('should not render a disclaimer message when none is configured', () => {
+        renderPayButton();
+        expect(screen.queryByRole('link')).toBeNull();
+    });
+
     test('should render a pay button with a secondary amount', () => {
         const amountProviderProps = { amount: { currency: 'EUR', value: 1000 }, secondaryAmount: { currency: 'HRK', value: 7534 } };
         renderPayButton({ amountProviderProps });

@@ -38,7 +38,11 @@ export const Default: CardStory = {
             //     holderName: 'J. Smith'
             // },
             disableIOSArrowKeys: false,
-            // disclaimerMessage,
+            disclaimerMessage: {
+                message: 'By continuing you agree with the %{terms}',
+                linkText: 'terms and conditions',
+                link: 'https://www.adyen.com'
+            },
             // doBinLookup: false,
             enableStoreDetails: false,
             // exposeExpiryDate: true,

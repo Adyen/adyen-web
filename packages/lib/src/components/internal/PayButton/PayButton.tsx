@@ -1,4 +1,4 @@
-import { h } from 'preact';
+import { Fragment, h } from 'preact';
 import Button from '../Button';
 import { useCoreContext } from '../../../core/Context/CoreProvider';
 import { ButtonProps } from '../Button/types';
@@ -7,6 +7,8 @@ import SecondaryButtonLabel from './components/SecondaryButtonLabel';
 import { useAmount, useSecondaryAmount } from '../../../core/Context/AmountProvider';
 import type { PaymentAmount } from '../../../types';
 import { isAmountValid } from '../../../utils/amount-util';
+import DisclaimerMessage, { formatDisclaimerMessage } from '../DisclaimerMessage';
+import type { DisclaimerMsgObject } from '../DisclaimerMessage';
 
 export interface PayButtonProps extends ButtonProps {
     /**
@@ -23,9 +25,13 @@ export interface PayButtonProps extends ButtonProps {
     status?: string;
     disabled?: boolean;
     icon?: string;
+    /**
+     * Disclaimer message displayed above the button
+     */
+    disclaimerMessage?: DisclaimerMsgObject;
 }
 
-const PayButton = ({ customAmount, classNameModifiers = [], label, ...props }: Readonly<PayButtonProps>) => {
+const PayButton = ({ customAmount, classNameModifiers = [], label, disclaimerMessage, ...props }: Readonly<PayButtonProps>) => {
     const { amount, isZeroAuth } = useAmount();
     const { secondaryAmount } = useSecondaryAmount();
     const { i18n } = useCoreContext();
@@ -36,9 +42,12 @@ const PayButton = ({ customAmount, classNameModifiers = [], label, ...props }: R
     const isDisabled = props.disabled || props.status === 'loading';
 
     return (
-        <Button {...props} disabled={isDisabled} classNameModifiers={[...classNameModifiers, 'pay']} label={buttonLabel}>
-            {secondaryAmountLabel && <SecondaryButtonLabel label={secondaryAmountLabel} />}
-        </Button>
+        <Fragment>
+            {disclaimerMessage && <DisclaimerMessage {...formatDisclaimerMessage(disclaimerMessage)} />}
+            <Button {...props} disabled={isDisabled} classNameModifiers={[...classNameModifiers, 'pay']} label={buttonLabel}>
+                {secondaryAmountLabel && <SecondaryButtonLabel label={secondaryAmountLabel} />}
+            </Button>
+        </Fragment>
     );
 };
 

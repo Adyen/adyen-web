@@ -742,6 +742,41 @@ describe('UIElement', () => {
         });
     });
 
+    describe('payButton()', () => {
+        class MyElementWithPayButton extends MyElement {
+            protected override componentToRender() {
+                return this.payButton({});
+            }
+        }
+
+        test('should render the configured disclaimerMessage above the pay button', () => {
+            const element = new MyElementWithPayButton(core, {
+                i18n: global.i18n,
+                disclaimerMessage: {
+                    message: 'By continuing you accept the %{terms} of %{myStore}',
+                    linkText: ['terms and conditions', 'MyStore'],
+                    link: ['https://www.adyen.com', 'https://www.mystore.tp']
+                }
+            });
+            render(element.render());
+
+            const termsLink = screen.getByRole('link', { name: 'terms and conditions' });
+            expect(termsLink).toHaveAttribute('href', 'https://www.adyen.com');
+            expect(screen.getByRole('link', { name: 'MyStore' })).toHaveAttribute('href', 'https://www.mystore.tp');
+
+            const button = screen.getByRole('button');
+            expect(termsLink.compareDocumentPosition(button) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+        });
+
+        test('should not render a disclaimer message when none is configured', () => {
+            const element = new MyElementWithPayButton(core, { i18n: global.i18n });
+            render(element.render());
+
+            expect(screen.getByRole('button')).toBeInTheDocument();
+            expect(screen.queryByRole('link')).toBeNull();
+        });
+    });
+
     describe('updateAmount()', () => {
         test('should update amount and propagate it to the AmountProvider', () => {
             const element = new MyElement(core);

@@ -6,11 +6,11 @@ import Link from '../Link';
 
 export interface DisclaimerMsgObject {
     message: string;
-    linkText: string;
-    link: string;
+    linkText: string | Array<string>;
+    link: string | Array<string>;
 }
 
-interface InternalDisclaimerMsgObject {
+export interface DisclaimerMessageProps {
     message: string;
     urls?: Array<string>;
 }
@@ -21,9 +21,12 @@ interface InternalDisclaimerMsgObject {
  *    urls: ['https://www.adyen.com']
  *  }
  *  String inside the '%#' token pair will be rendered as an anchor element.
+ *
+ *  Merchant configured disclaimers use the `%{placeholder}` format instead, and must be passed
+ *  through `formatDisclaimerMessage` to obtain these props.
  */
 
-export default function DisclaimerMessage({ message, urls = [] }: Readonly<InternalDisclaimerMsgObject>) {
+export default function DisclaimerMessage({ message, urls = [] }: Readonly<DisclaimerMessageProps>) {
     return (
         <span className="adyen-checkout-disclaimer__label">
             <LabelOnlyDisclaimerMessage message={message} urls={urls} />
@@ -31,7 +34,7 @@ export default function DisclaimerMessage({ message, urls = [] }: Readonly<Inter
     );
 }
 
-export function LabelOnlyDisclaimerMessage({ message, urls }: Readonly<InternalDisclaimerMsgObject>) {
+export function LabelOnlyDisclaimerMessage({ message, urls = [] }: Readonly<DisclaimerMessageProps>) {
     const messageIsStr = typeof message === 'string';
     const validUrls = urls.every(url => typeof url === 'string' && isValidHttpUrl(url));
     if (!messageIsStr || !validUrls) return null;

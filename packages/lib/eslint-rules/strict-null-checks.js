@@ -287,8 +287,6 @@ const STRICT_NULL_CHECKS_BACKLOG = [
     'src/components/internal/Button/CopyIconButton.tsx',
     // src/components/internal/Countdown (2 errors)
     'src/components/internal/Countdown/useCountdownA11yReporter.ts',
-    // src/components/internal/DisclaimerMessage (2 errors)
-    'src/components/internal/DisclaimerMessage/DisclaimerMessage.tsx',
     // src/components/internal/IFrame (2 errors)
     'src/components/internal/IFrame/Iframe.tsx',
     // src/components/internal/Img (4 errors)
