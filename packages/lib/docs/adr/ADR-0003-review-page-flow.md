@@ -40,7 +40,7 @@ Option 1 was rejected as unintuitive, treating Advanced and Sessions differently
 
 ### Positive Consequences
 
-- Advanced and Sessions flows are aligned
+- Advanced and Sessions flows share the same entry point: `onReview` fires identically in both. They still diverge on submit — Sessions uses `processPayment`, Advanced keeps its own `/payments` call
 - Merchant is notified only when component state is valid for payment
 - SDK owns the button label change ("Pay" → "Continue") and can emit a reliable `review` analytics event
 - Additional data (card last four, session details) is easy to surface
@@ -48,7 +48,6 @@ Option 1 was rejected as unintuitive, treating Advanced and Sessions differently
 ### Negative Consequences
 
 - New public callback (`onReview`) and new configuration surface
-- On web, breaks the existing documented Advanced flow review page pattern
 - On web, requires a new method to submit the payment in Sessions flow
 
 ## Pros and Cons of the Options
@@ -72,7 +71,7 @@ Merchant hides the SDK pay button and renders its own; SDK exposes a `validate` 
 Merchant opts in via configuration; on button click the SDK fires `onReview` with component state plus additional information, and the merchant navigates to its review page and re-initialises the component there. ([Flow diagram](https://www.figma.com/board/QzxbaVv9VlbF8JZSIYEkl3/Review-Page---Flow-Diagram?node-id=0-1&p=f&t=dk6IHDekhbb3u5dU-0))
 
 - **Pros:** all of Option 2's, plus built-in button support, SDK-driven button text, reliable tracking, easy additional information
-- **Cons:** new callback and configuration; breaks existing web Advanced flow review pattern; needs a new Sessions submit method on web
+- **Cons:** new callback and configuration; needs a new Sessions submit method on web
 
 ## API Contract (Web)
 
@@ -84,7 +83,7 @@ When `onReview` is configured:
 - A `review` analytics event is fired, enabling tracking of review page usage.
 
 ```typescript
-onReview?(state: PaymentData, component: UIElement): void;
+onReview?(state: PaymentData, component: UIElement, reviewDetails: ReviewDetails): void;
 
 // Sessions flow only — errors in Advanced flow.
 // Calls session.submitPayment internally and handles the full response lifecycle:
@@ -116,7 +115,7 @@ Advanced flow merchants are therefore unaffected and keep the existing pattern: 
 
 - **Unsupported payment methods.** The following bypass `onReview` to avoid interrupting their native flows: **Apple Pay, Google Pay, AmazonPay, PayPal, Klarna (widget), ANCV, PayByBankPix**.
     - Apple Pay / Google Pay / AmazonPay: the payment must complete while their overlay is open, so data cannot be carried to a review page.
-    - PayPal: possible in **Advanced flow only**, not Sessions ([explanation](https://hub.is.adyen.com/engineering/platform/payments/checkout/web/a-developers-guide-to/paypal#qa)).
+    - PayPal: possible in **Advanced flow only**, not Sessions.
     - Klarna widget: the Klarna SDK owns the full UX; interrupting it disconnects the widget from its internal state machine.
     - ANCV: overrides `submit()` for an order-creation step before the payment call, bypassing the `onReview` check.
 
