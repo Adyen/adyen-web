@@ -39,6 +39,15 @@ export enum ErrorEventCode {
 
     /** See also API_ERROR_CODE object in /src/core/Services/sessions/constants.ts which uses codes in the range 620-628 */
 
+    /** None of the funding sources EMI was configured with is one the component implements */
+    EMI_NO_SUPPORTED_FUNDING_SOURCE = '630',
+
+    /** EMI has no installment plan to offer, so the shopper has nothing to select */
+    EMI_NO_INSTALLMENT_PLANS = '631',
+
+    /** The EMI `plans` configuration was provided but carries no `issuers` array */
+    EMI_MALFORMED_PLANS_RESPONSE = '632',
+
     /**  Missing 'paymentData' property from threeDS2 action */
     THREEDS2_ACTION_IS_MISSING_PAYMENT_DATA = '700',
 

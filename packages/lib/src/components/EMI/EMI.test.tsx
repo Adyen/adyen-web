@@ -7,6 +7,8 @@ import { Resources } from '../../core/Context/Resources';
 import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 import PaymentMethods from '../../core/ProcessResponse/PaymentMethods';
 import { AdyenCheckout, ThreeDS2Challenge, ThreeDS2DeviceFingerprint } from '../../index';
+import { InfoEventType, UiTarget } from '../../core/Analytics/events/AnalyticsInfoEvent';
+import { ErrorEventCode, ErrorEventType } from '../../core/Analytics/events/AnalyticsErrorEvent';
 import { emiPlansEmptyResponseMock, emiPlansResponseMock } from './stories/mocks';
 import type { PaymentActionsType, PaymentData } from '../../types/global-types';
 import type { EMIConfiguration, EmiPlanPayload } from './types';
@@ -709,6 +711,181 @@ describe('EMI', () => {
             expect(container.innerHTML).toBe('');
             expect(warn).toHaveBeenCalledWith(expect.stringContaining('no `issuers` array'));
             warn.mockRestore();
+        });
+    });
+
+    describe('analytics', () => {
+        const user = userEvent.setup();
+
+        const setupAnalytics = (props: Partial<EMIConfiguration> = {}, hasSupportedScheme = true) => {
+            const coreWithEmi = createCoreWithEmi(hasSupportedScheme);
+            const emi = new EMI(coreWithEmi, {
+                ...baseProps,
+                ...(hasSupportedScheme && { supportedPaymentMethods: [schemePaymentMethod] }),
+                ...props
+            });
+
+            return { emi, sendAnalytics: coreWithEmi.modules.analytics.sendAnalytics as jest.Mock };
+        };
+
+        const eventsOfType = (sendAnalytics: jest.Mock, type: InfoEventType) =>
+            sendAnalytics.mock.calls.map(([event]) => event).filter(event => event.type === type);
+
+        describe('rendered event', () => {
+            test('should describe the plans by their counts rather than carrying them', () => {
+                const { emi, sendAnalytics } = setupAnalytics();
+                render(emi.render());
+                expect(sendAnalytics).toHaveBeenCalledWith(
+                    expect.objectContaining({
+                        type: InfoEventType.rendered,
+                        component: TxVariants.emi,
+                        configData: {
+                            showPayButton: true,
+                            fundingSource: TxVariants.card,
+                            issuerCount: 4,
+                            planCount: 6
+                        }
+                    })
+                );
+            });
+
+            test('should carry no merchant configuration at all, not even a configured amount', () => {
+                const { emi, sendAnalytics } = setupAnalytics({
+                    amount: { value: 15499900, currency: 'INR' },
+                    fundingSourceConfiguration: { card: { hasHolderName: true } }
+                });
+
+                render(emi.render());
+                const [rendered] = eventsOfType(sendAnalytics, InfoEventType.rendered);
+
+                expect(Object.keys(rendered.configData).sort()).toEqual(['fundingSource', 'issuerCount', 'planCount', 'showPayButton']);
+            });
+
+            test('should report the absence of a funding source rather than omitting it', () => {
+                const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+                const { emi, sendAnalytics } = setupAnalytics({}, false);
+                render(emi.render());
+                expect(eventsOfType(sendAnalytics, InfoEventType.rendered)[0].configData).toHaveProperty('fundingSource', 'none');
+                warn.mockRestore();
+            });
+        });
+
+        describe('selection events', () => {
+            test('should send no selected event for the plan the component preselects', () => {
+                const { emi, sendAnalytics } = setupAnalytics();
+                render(emi.render());
+                expect(eventsOfType(sendAnalytics, InfoEventType.selected)).toHaveLength(0);
+            });
+
+            test('should report a plan the shopper picks', async () => {
+                const { emi, sendAnalytics } = setupAnalytics();
+                render(emi.render());
+                await user.click(screen.getByLabelText('Plan'));
+                await user.click(within(screen.getAllByRole('listbox')[1]).getByRole('option', { name: /6 months/i }));
+                expect(sendAnalytics).toHaveBeenCalledWith(
+                    expect.objectContaining({
+                        type: InfoEventType.selected,
+                        component: TxVariants.emi,
+                        target: UiTarget.emiPlan,
+                        issuer: hdfc.issuerCode
+                    })
+                );
+            });
+
+            test('should report a provider the shopper picks exactly once', async () => {
+                const { emi, sendAnalytics } = setupAnalytics();
+                const [, icici] = emiPlansResponseMock.issuers;
+                render(emi.render());
+                await user.click(screen.getByLabelText('Provider'));
+                await user.click(within(screen.getAllByRole('listbox')[0]).getByRole('option', { name: new RegExp(icici.issuerName, 'i') }));
+                const selected = eventsOfType(sendAnalytics, InfoEventType.selected);
+                expect(selected).toHaveLength(1);
+                expect(selected[0]).toEqual(
+                    expect.objectContaining({
+                        target: UiTarget.emiProvider,
+                        issuer: icici.issuerCode
+                    })
+                );
+            });
+        });
+
+        describe('discount banner event', () => {
+            test('should report the banner shown for the preselected plan', () => {
+                const { emi, sendAnalytics } = setupAnalytics();
+                render(emi.render());
+                expect(sendAnalytics).toHaveBeenCalledWith(
+                    expect.objectContaining({
+                        type: InfoEventType.displayed,
+                        component: TxVariants.emi,
+                        target: UiTarget.emiDiscountBanner,
+                        issuer: hdfc.issuerCode
+                    })
+                );
+            });
+
+            test('should report nothing when the shopper picks a plan carrying no offer', async () => {
+                const { emi, sendAnalytics } = setupAnalytics();
+                render(emi.render());
+                const bannersOnMount = eventsOfType(sendAnalytics, InfoEventType.displayed).length;
+                await user.click(screen.getByLabelText('Plan'));
+                await user.click(within(screen.getAllByRole('listbox')[1]).getByRole('option', { name: /6 months/i }));
+                expect(hdfc.plans[1].offers).toBeUndefined();
+                expect(eventsOfType(sendAnalytics, InfoEventType.displayed)).toHaveLength(bannersOnMount);
+            });
+        });
+
+        describe('error events', () => {
+            test('should report the dropped tile when no funding source is supported', async () => {
+                const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+                const { emi, sendAnalytics } = setupAnalytics({}, false);
+                await expect(emi.isAvailable()).rejects.toThrow('EMI: No valid funding sources available');
+                expect(sendAnalytics).toHaveBeenCalledWith(
+                    expect.objectContaining({
+                        component: TxVariants.emi,
+                        errorType: ErrorEventType.implementation,
+                        code: ErrorEventCode.EMI_NO_SUPPORTED_FUNDING_SOURCE,
+                        message: 'EMI: No valid funding sources available'
+                    })
+                );
+                warn.mockRestore();
+            });
+
+            test('should report the dropped tile when no installment plan is available', async () => {
+                const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+                const { emi, sendAnalytics } = setupAnalytics({ plans: undefined });
+                await expect(emi.isAvailable()).rejects.toThrow('EMI: No installment plans available');
+                expect(sendAnalytics).toHaveBeenCalledWith(
+                    expect.objectContaining({
+                        errorType: ErrorEventType.implementation,
+                        code: ErrorEventCode.EMI_NO_INSTALLMENT_PLANS
+                    })
+                );
+                warn.mockRestore();
+            });
+
+            test('should report a plans response that carries no issuers array', () => {
+                const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+                const { sendAnalytics } = setupAnalytics({ plans: {} as unknown as EMIConfiguration['plans'] });
+                expect(sendAnalytics).toHaveBeenCalledWith(
+                    expect.objectContaining({
+                        errorType: ErrorEventType.implementation,
+                        code: ErrorEventCode.EMI_MALFORMED_PLANS_RESPONSE
+                    })
+                );
+                warn.mockRestore();
+            });
+        });
+
+        test('should carry no amount, and no data of the card the shopper is filling in', async () => {
+            const { emi, sendAnalytics } = setupAnalytics({ amount: { value: 15499900, currency: 'INR' } });
+            render(emi.render());
+            await user.click(screen.getByLabelText('Provider'));
+            await user.click(within(screen.getAllByRole('listbox')[0]).getByRole('option', { name: new RegExp(hdfc.issuerName, 'i') }));
+            const payload = JSON.stringify(sendAnalytics.mock.calls.map(([event]) => event));
+            expect(payload).not.toContain('5166633');
+            expect(payload).not.toContain('INR');
+            expect(payload).not.toContain('transactionAmounts');
+            expect(payload).not.toContain('encryptedCardNumber');
         });
     });
 });
