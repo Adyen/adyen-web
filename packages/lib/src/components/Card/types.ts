@@ -12,7 +12,6 @@ import {
 } from '../internal/SecuredFields/lib/types';
 import { CVCPolicyType, DatePolicyType, CardAllValidData } from '../internal/SecuredFields/lib/types';
 import { ClickToPayProps } from '../internal/ClickToPay/types';
-import { DisclaimerMsgObject } from '../internal/DisclaimerMessage/DisclaimerMessage';
 import { UIElementProps } from '../internal/UIElement/types';
 import type { OnAddressLookupType, OnAddressSelectedType } from '../internal/Address/components/AddressSearch';
 import type { FastlaneSignupConfiguration } from '../PayPalFastlane/types';
@@ -146,12 +145,6 @@ export interface CardConfiguration extends UIElementProps {
      * - merchant set config option
      */
     disableIOSArrowKeys?: boolean;
-
-    /**
-     * Object to configure the message and text for a disclaimer message, added after the Card input fields
-     * - merchant set config option
-     */
-    disclaimerMessage?: DisclaimerMsgObject;
 
     /**
      * Allow binLookup process to occur

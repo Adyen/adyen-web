@@ -6,6 +6,7 @@ import type { PaymentAction, PaymentAmount } from '../../../types/global-types';
 import type { CoreConfiguration, CreateFromActionOptions } from '../../../core/types';
 import type { BaseElementProps, BaseElementState } from '../BaseElement/types';
 import { PayButtonProps } from '../PayButton/PayButton';
+import type { DisclaimerMsgObject } from '../DisclaimerMessage';
 
 type CoreCallbacks = Pick<
     CoreConfiguration,
@@ -75,6 +76,11 @@ export type UIElementProps = {
          * @defaultValue true
          */
         showPayButton?: boolean;
+
+        /**
+         * Disclaimer message displayed above the pay button
+         */
+        disclaimerMessage?: DisclaimerMsgObject;
 
         /** @internal */
         payButton?: (options: PayButtonProps) => h.JSX.Element;
