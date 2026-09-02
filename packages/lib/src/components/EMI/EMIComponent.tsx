@@ -11,13 +11,13 @@ import { getUniqueId } from '../../utils/idGenerator';
 import type UIElement from '../internal/UIElement/UIElement';
 import type { ComponentMethodsRef, UIElementStatus } from '../internal/UIElement/types';
 import type { PayButtonProps } from '../internal/PayButton/PayButton';
-import type { EmiIssuer, EmiSelection } from './types';
+import type { EmiIssuer, EmiSelection, EmiSelectTarget } from './types';
 import styles from './EMI.module.scss';
 
 interface EMIComponentProps {
     activeFundingSourceElement: UIElement | null;
     issuers: EmiIssuer[];
-    onPlanSelect(selection: EmiSelection): void;
+    onPlanSelect(selection: EmiSelection, target?: EmiSelectTarget): void;
     showPayButton?: boolean;
     payButton(props: PayButtonProps): h.JSX.Element;
     setComponentRef: (ref: ComponentMethodsRef) => void;
@@ -51,14 +51,22 @@ export function EMIComponent({
         showValidation: () => {}
     });
 
+    const selectTarget = useRef<EmiSelectTarget | undefined>(undefined);
+
     useEffect(() => {
         setComponentRef(emiRef.current);
     }, [setComponentRef]);
 
     // The container needs every selection for the payment request, including the preselected one
     useEffect(() => {
-        if (selection) onPlanSelect(selection);
+        if (selection) onPlanSelect(selection, selectTarget.current);
     }, [selection]);
+
+    // Names the select the shopper changed, and stays empty for the selection made on their behalf
+    const handleSelectionChange = (nextSelection: EmiSelection, target: EmiSelectTarget): void => {
+        selectTarget.current = target;
+        setSelection(nextSelection);
+    };
 
     const offer = selection ? selectDisplayOffer(selection.plan.offers) : undefined;
     const discountMessage =
@@ -92,7 +100,7 @@ export function EMIComponent({
                     <EMIPlanSelection
                         issuers={issuers}
                         selection={selection}
-                        onSelectionChange={setSelection}
+                        onSelectionChange={handleSelectionChange}
                         labelledBy={titleId}
                         describedBy={instructionsId}
                     />
