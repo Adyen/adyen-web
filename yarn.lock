@@ -117,7 +117,7 @@ __metadata:
     jest-fixed-jsdom: "npm:^0.0.11"
     jest-mock-extended: "npm:4.0.1"
     msw: "npm:2.15.0"
-    msw-storybook-addon: "npm:2.0.7"
+    msw-storybook-addon: "npm:3.0.0"
     postcss: "npm:8.5.26"
     preact: "npm:10.29.7"
     rollup: "npm:4.62.4"
@@ -10082,7 +10082,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"is-node-process@npm:^1.0.1, is-node-process@npm:^1.2.0":
+"is-node-process@npm:^1.2.0":
   version: 1.2.0
   resolution: "is-node-process@npm:1.2.0"
   checksum: 10c0/5b24fda6776d00e42431d7bcd86bce81cb0b6cabeb944142fe7b077a54ada2e155066ad06dbe790abdb397884bdc3151e04a9707b8cd185099efbc79780573ed
@@ -11780,14 +11780,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"msw-storybook-addon@npm:2.0.7":
-  version: 2.0.7
-  resolution: "msw-storybook-addon@npm:2.0.7"
-  dependencies:
-    is-node-process: "npm:^1.0.1"
+"msw-storybook-addon@npm:3.0.0":
+  version: 3.0.0
+  resolution: "msw-storybook-addon@npm:3.0.0"
   peerDependencies:
-    msw: ^2.0.0
-  checksum: 10c0/0df84f0212de1d224daa422e10174c7f079fab959b4e2bb449a5bd875dc65ec78f2f211d64588af08c947142b37e478f049906eaf60d1898667e3158cc0bcec1
+    msw: ">=2"
+    storybook: ">=9"
+  bin:
+    msw-storybook-migrate: ./build/migrate.mjs
+  checksum: 10c0/235e141f80c9f9ef916825a7351d9c80f3479cd12b62afed032eee1be3c0918f51c835b1e75fb289b6abad975910ccff376d20c79fb1c5773b9b4792ca58d237
   languageName: node
   linkType: hard
 
