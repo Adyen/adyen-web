@@ -271,18 +271,16 @@ describe('Address', () => {
 
             expect(await screen.findByLabelText('Country/Region')).toBeInTheDocument();
             expect(screen.getByLabelText('Postal code')).toBeInTheDocument();
-            expect(screen.getByLabelText('Prefecture')).toBeInTheDocument();
+            expect(await screen.findByRole('combobox', { name: 'Prefecture' })).toBeInTheDocument();
             expect(screen.getByLabelText('City / Town')).toBeInTheDocument();
             expect(screen.getByLabelText('Street name and block number')).toBeInTheDocument();
             expect(screen.getByLabelText(/Building name, room number/)).toBeInTheDocument();
         });
 
-        test('should render Prefecture as a free text field instead of a dropdown', async () => {
+        test('should render Prefecture as a dropdown backed by a dataset, like other countries with a state/province dataset', async () => {
             customRender(<Address data={{ country: 'JP' }} requiredFields={requiredFields} onChange={jest.fn()} />);
 
-            const prefecture = await screen.findByLabelText('Prefecture');
-            expect(prefecture.tagName).toBe('INPUT');
-            expect(screen.queryByRole('combobox', { name: 'Prefecture' })).not.toBeInTheDocument();
+            expect(await screen.findByRole('combobox', { name: 'Prefecture' })).toBeInTheDocument();
         });
 
         test('should mark the building name/room number field as optional', async () => {
@@ -291,7 +289,7 @@ describe('Address', () => {
             expect(await screen.findByLabelText('Building name, room number (optional)')).toBeInTheDocument();
         });
 
-        test('should not default the free-text stateOrProvince field to "N/A"', () => {
+        test('should remove the stateOrProvince field when no value is selected, same as other dataset-backed countries', () => {
             const data: AddressData = { country: 'JP' };
             const onChangeMock = jest.fn();
 
@@ -299,18 +297,18 @@ describe('Address', () => {
 
             const lastOnChangeCall = onChangeMock.mock.calls.pop();
             const receivedData = lastOnChangeCall[0].data;
-            expect(receivedData.stateOrProvince).not.toBe(FALLBACK_VALUE);
+            expect(receivedData.stateOrProvince).toBe(undefined);
         });
 
         test('should keep a prefilled stateOrProvince value for JP', () => {
-            const data: AddressData = { country: 'JP', stateOrProvince: '東京都' };
+            const data: AddressData = { country: 'JP', stateOrProvince: 'Tokyo' };
             const onChangeMock = jest.fn();
 
             customRender(<Address data={data} requiredFields={requiredFields} onChange={onChangeMock} />);
 
             const lastOnChangeCall = onChangeMock.mock.calls.pop();
             const receivedData = lastOnChangeCall[0].data;
-            expect(receivedData.stateOrProvince).toBe('東京都');
+            expect(receivedData.stateOrProvince).toBe('Tokyo');
         });
     });
 

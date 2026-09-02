@@ -9,8 +9,7 @@ export const ADDRESS_FIELD_TOKEN_MAP: Record<string, string> = {
     street: 'address-line1',
     houseNumberOrName: 'address-line2',
     postalCode: 'postal-code',
-    city: 'address-level2',
-    stateOrProvince: 'address-level1'
+    city: 'address-level2'
 };
 
 // prettier-ignore
@@ -54,7 +53,7 @@ export const ADDRESS_SPECIFICATIONS: AddressSpecifications = {
         schema: [COUNTRY, [[HOUSE_NUMBER_OR_NAME, 30], [STREET, 70]], [[CITY, 70], [POSTAL_CODE, 30]], STATE_OR_PROVINCE]
     },
     JP: {
-        freeTextFields: [STATE_OR_PROVINCE],
+        hasDataset: true,
         labels: {
             [STATE_OR_PROVINCE]: 'prefecture',
             [CITY]: 'cityTown',

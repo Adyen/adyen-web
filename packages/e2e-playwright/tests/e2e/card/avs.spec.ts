@@ -87,7 +87,7 @@ test.describe('Card payments with full avs', () => {
             await expect(cardWithAvs.billingAddress.postalCodeError).toContainText('Invalid format. Expected format');
             await cardWithAvs.billingAddress.selectCountry({ name: 'Japan' });
             await cardWithAvs.billingAddress.fillInPostCode('123-4567');
-            await cardWithAvs.billingAddress.fillInPrefecture('Tokyo');
+            await cardWithAvs.billingAddress.selectPrefecture({ name: 'Tokyo' });
             await cardWithAvs.billingAddress.fillInCity('Shibuya');
             await cardWithAvs.billingAddress.fillInStreet('1-2-3 Jingumae');
             await cardWithAvs.typeCardNumber(REGULAR_TEST_CARD);

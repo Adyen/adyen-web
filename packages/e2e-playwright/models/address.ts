@@ -53,7 +53,7 @@ class Address {
     }
 
     get prefectureInput() {
-        return this.rootElement.getByRole('textbox', { name: /prefecture/i });
+        return this.rootElement.getByRole('combobox', { name: /prefecture/i });
     }
 
     get addressSearchInput() {
@@ -71,9 +71,10 @@ class Address {
         await this.rootElement.getByRole('option', options).click();
     }
 
-    async fillInPrefecture(prefecture: string) {
+    async selectPrefecture(options: { name?: RegExp | string }) {
         await this.prefectureInput.waitFor({ state: 'visible' });
-        await this.prefectureInput.fill(prefecture);
+        await this.prefectureInput.click();
+        await this.rootElement.getByRole('option', options).click();
     }
 
     async selectCountry(options: { name?: RegExp | string }) {

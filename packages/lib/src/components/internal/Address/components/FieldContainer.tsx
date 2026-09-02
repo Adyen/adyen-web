@@ -46,8 +46,6 @@ function FieldContainer(props: Readonly<FieldContainerProps>) {
     const label = `${i18n.get(labelKey)}${optionalLabel}`;
     const errorMessage = getErrorMessage(errors, fieldName, i18n, label);
 
-    const isFreeTextField = props.specifications.countryHasFreeTextField(selectedCountry, fieldName);
-
     if (fieldName === 'country') {
         return (
             <CountryField
@@ -62,7 +60,7 @@ function FieldContainer(props: Readonly<FieldContainerProps>) {
         );
     }
 
-    if (fieldName === 'stateOrProvince' && !isFreeTextField) {
+    if (fieldName === 'stateOrProvince') {
         return (
             <StateField
                 classNameModifiers={classNameModifiers}
