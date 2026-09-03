@@ -1,5 +1,17 @@
 # @adyen/adyen-web
 
+## 6.45.0
+
+### Minor Changes
+
+- Improved: Add review page support for sessions via `onReview` callback ([#4044](https://github.com/Adyen/adyen-web/pull/4044))
+
+### Patch Changes
+
+- Improved: restrictions on some special characters on address validation ([#3769](https://github.com/Adyen/adyen-web/pull/3769))
+
+- Fixed: Select dropdown spacing and secondary text color ([#4162](https://github.com/Adyen/adyen-web/pull/4162))
+
 ## 6.44.0
 
 ### Minor Changes
