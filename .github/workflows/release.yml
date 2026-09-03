@@ -31,7 +31,7 @@ jobs:
         run: yarn install --immutable
 
       - name: Create Release Pull Request
-        uses: changesets/action@v1
+        uses: changesets/action@v2.1.0
         with:
           version: yarn run version
           commit: '[ci] release ${{ github.ref_name }}'
