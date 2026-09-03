@@ -301,6 +301,35 @@ const bcmcOnly = {
     requestId: '23fada4f-12dc-48f2-9380-873ae3702075'
 };
 
+const dualBrandedVisaCreditAndCbDebit = {
+    brands: [
+        {
+            brand: 'visa',
+            cvcPolicy: 'required',
+            enableLuhnCheck: true,
+            expiryDatePolicy: 'required',
+            localeBrand: 'VISA',
+            paymentMethodVariant: 'visa',
+            showSocialSecurityNumber: false,
+            supported: true,
+            fundingSource: ['credit']
+        },
+        {
+            brand: 'cartebancaire',
+            cvcPolicy: 'required',
+            enableLuhnCheck: true,
+            expiryDatePolicy: 'required',
+            localeBrand: 'Carte Bancaire',
+            paymentMethodVariant: 'cartebancaire',
+            showSocialSecurityNumber: false,
+            supported: true,
+            fundingSource: ['debit']
+        }
+    ],
+    issuingCountryCode: 'FR',
+    requestId: 'b1c0e4bb-3f0e-4f2a-9b6d-1c5a2e7f9d31'
+};
+
 export {
     optionalDateAndCvcMock,
     hiddenDateAndCvcMock,
@@ -318,5 +347,6 @@ export {
     dualBcmcAndMaestro,
     dualBrandedVisaAndBcmc,
     dualBrandedMcAndBcmc,
+    dualBrandedVisaCreditAndCbDebit,
     bcmcOnly
 };

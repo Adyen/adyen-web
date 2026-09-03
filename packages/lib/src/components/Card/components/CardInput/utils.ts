@@ -181,10 +181,15 @@ export function lookupBlurBasedErrors(errorCode) {
     // If it's NOT one of these, then it's a blur based error
     return ![
         SF_ErrorCodes.ERROR_MSG_UNSUPPORTED_CARD_ENTERED,
+        SF_ErrorCodes.ERROR_MSG_UNSUPPORTED_FUNDING_SOURCE,
         SF_ErrorCodes.ERROR_MSG_CARD_TOO_OLD,
         SF_ErrorCodes.ERROR_MSG_CARD_TOO_FAR_IN_FUTURE,
         SF_ErrorCodes.ERROR_MSG_CARD_EXPIRES_TOO_SOON
     ].includes(errorCode);
+}
+
+export function isUnsupportedFundingSourceError(errorCode?: string): boolean {
+    return errorCode === (SF_ErrorCodes.ERROR_MSG_UNSUPPORTED_FUNDING_SOURCE as string);
 }
 
 export function getFullBrandName(brand: string): string {

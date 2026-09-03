@@ -52,6 +52,7 @@ export default function CardFields({
                 brand={brand}
                 brandsConfiguration={brandsConfiguration}
                 error={getError(errors, ENCRYPTED_CARD_NUMBER)}
+                errorCode={errors[ENCRYPTED_CARD_NUMBER]}
                 focused={focusedElement === ENCRYPTED_CARD_NUMBER}
                 isValid={!!valid.encryptedCardNumber}
                 label={i18n.get('creditCard.cardNumber.label')}
