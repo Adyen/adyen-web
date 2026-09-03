@@ -6,13 +6,14 @@ import { electronicFormat, formatIban, getCountryCode, getNextCursorPosition } f
 import Fieldset from '../FormFields/Fieldset';
 import { GenericError } from '../../../core/Errors/types';
 import InputText from '../FormFields/InputText';
+import { PayButtonProps } from '../PayButton/PayButton';
 
 interface IbanInputProps {
     holderName?: boolean;
     placeholders?: Omit<IbanData, 'countryCode'>;
     countryCode?: string;
     showPayButton?: boolean;
-    payButton?: any;
+    payButton?: (props: PayButtonProps) => h.JSX.Element;
     onChange: (data) => void;
     label: string;
     data: IbanData;
@@ -25,9 +26,9 @@ interface IbanData {
 }
 
 interface IbanInputState {
-    data: any;
-    errors: any;
-    valid: any;
+    data: IbanData;
+    errors: Record<string, GenericError | null>;
+    valid: Record<string, boolean>;
     status: string;
     isValid: boolean;
     cursor: number;
@@ -46,8 +47,6 @@ const ibanErrorObj: GenericError = {
 };
 
 class IbanInput extends Component<Readonly<IbanInputProps>, IbanInputState> {
-    private ibanNumber: HTMLInputElement;
-
     constructor(props) {
         super(props);
 
@@ -100,16 +99,8 @@ class IbanInput extends Component<Readonly<IbanInputProps>, IbanInputState> {
         this.props.onChange(data);
     }
 
-    public setData = (key, value, cb?) => {
-        this.setState(prevState => ({ data: { ...prevState.data, [key]: value } }), cb);
-    };
-
     public setError = (key, value, cb?) => {
         this.setState(prevState => ({ errors: { ...prevState.errors, [key]: value } }), cb);
-    };
-
-    public setValid = (key, value, cb?) => {
-        this.setState(prevState => ({ valid: { ...prevState.valid, [key]: value } }), cb);
     };
 
     public handleHolderInput = holder => {
@@ -220,9 +211,6 @@ class IbanInput extends Component<Readonly<IbanInputProps>, IbanInputState> {
                     name={'ibanNumber'}
                 >
                     <InputText
-                        setRef={ref => {
-                            this.ibanNumber = ref;
-                        }}
                         name={'ibanNumber'}
                         className={'adyen-checkout__iban-input__iban-number'}
                         classNameModifiers={['large']}

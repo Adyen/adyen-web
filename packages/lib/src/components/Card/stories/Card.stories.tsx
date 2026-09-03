@@ -154,7 +154,7 @@ export const WithAVSAddressLookup: CardStory = {
                     )
                     .catch(error => {
                         console.log('ERROR:', error);
-                        actions.reject('Something went wrong, try adding manually.');
+                        actions.reject({ errorMessage: 'Something went wrong, try adding manually.' });
                     });
                 actions.resolve(formattedData);
             }

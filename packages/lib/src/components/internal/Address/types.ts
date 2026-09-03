@@ -23,7 +23,6 @@ export interface AddressProps {
     onAddressSelected?: OnAddressSelectedType;
     addressSearchDebounceMs?: number;
     requiredFields?: string[];
-    ref?: any;
     specifications?: AddressSpecifications;
     validationRules?: ValidatorRules;
     visibility?: string;
