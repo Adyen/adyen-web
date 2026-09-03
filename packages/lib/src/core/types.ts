@@ -5,6 +5,7 @@ import UIElement from '../components/internal/UIElement';
 import type { CustomTranslations } from '../language/types';
 import type {
     Order,
+    OrderStatus,
     PaymentAction,
     PaymentMethodsResponse,
     ActionHandledReturnObject,
@@ -13,7 +14,6 @@ import type {
     SessionsResponse,
     ResultCode,
     PaymentData,
-    AddressData,
     PaymentAmount
 } from '../types/global-types';
 import type { AnalyticsOptions } from './Analytics/types';
@@ -39,6 +39,7 @@ export interface ICore {
     getComponent(txVariant: string): NewableComponent | undefined;
     createFromAction(action: PaymentAction, options?: any): UIElement;
     storeElementReference(element: UIElement): void;
+    processPayment(data: PaymentData): void;
     options: CoreConfiguration;
     modules: CoreModules;
     paymentMethodsResponse: PaymentMethods;
@@ -53,7 +54,7 @@ export type CoreModules = Readonly<{
     srPanel: SRPanel;
 }>;
 
-export type PaymentCompletedData = SessionsResponse | { resultCode: ResultCode; donationToken?: string };
+export type PaymentCompletedData = SessionsResponse | { resultCode: ResultCode; donationToken?: string; askDonation?: boolean };
 
 export type PaymentFailedData = SessionsResponse | { resultCode: ResultCode };
 
@@ -65,6 +66,10 @@ export type SubmitData = {
 export type SubmitActions = {
     resolve: (response: CheckoutAdvancedFlowResponse) => void;
     reject: (error?: Pick<CheckoutAdvancedFlowResponse, 'error'>) => void;
+};
+
+export type ReviewDetails = {
+    orderStatus?: OrderStatus;
 };
 
 export type AdditionalDetailsData = {
@@ -85,9 +90,7 @@ export type AdditionalDetailsActions = {
 };
 
 export type BeforeSubmitActions = {
-    resolve: (
-        data: PaymentData & { billingAddress?: AddressData; deliveryAddress?: AddressData; shopperEmail?: string; shopperName?: string }
-    ) => void;
+    resolve: (data: PaymentData) => void;
     reject: () => void;
 };
 
@@ -262,6 +265,18 @@ export interface CoreConfiguration {
     onSubmit?(state: SubmitData, component: UIElement, actions: SubmitActions): void;
 
     /**
+     * Called before the payment is submitted, allowing the shopper to review their payment details.
+     *
+     * Note: payment methods that manage their own payment submission internally (e.g. Klarna (Klarna widget flow), PayPal, Apple Pay, Google Pay, AmazonPay, ANCV, PayByBankPix)
+     * bypass this callback internally to avoid interrupting their native experiences.
+     *
+     * @param state
+     * @param component
+     * @param reviewDetails - Additional data relevant to the review page. Currently holds the 'orderStatus', when a partial payment order is in progress.
+     */
+    onReview?(state: PaymentData, component: UIElement, reviewDetails: ReviewDetails): void;
+
+    /**
      * Callback used in the Advanced flow to perform the /payments/details API call.
      *
      * The payment response must be passed to the 'resolve' function, even if the payment wasn't authorized (Ex: resultCode = Refused).
@@ -283,6 +298,13 @@ export interface CoreConfiguration {
      * @internal - used by PBL
      */
     afterAdditionalDetails?(component: UIElement): void;
+
+    /**
+     * Callback called when an action (for example a QR code or 3D Secure 2 authentication screen) needs to be mounted by the merchant.
+     *
+     * @param actionElement - The UIElement representing the action, which needs to get mounted on the page for the user to interact with.
+     */
+    onAction?(actionElement: UIElement): void;
 
     /**
      * Callback called when an action (for example a QR code or 3D Secure 2 authentication screen) is shown to the shopper.

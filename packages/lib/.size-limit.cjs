@@ -52,7 +52,7 @@ module.exports = [
         name: 'ESM - Core',
         path: 'dist/es/index.js',
         import: '{ AdyenCheckout }',
-        limit: '38 KB',
+        limit: '39 KB',
         running: false
     },
     {

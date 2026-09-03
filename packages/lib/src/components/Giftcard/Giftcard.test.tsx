@@ -450,4 +450,85 @@ describe('Giftcard', () => {
             expect(onOrderRequest).not.toHaveBeenCalled();
         });
     });
+
+    describe('onReview handling', () => {
+        test('the balance check button should keep its own label when onReview is configured', async () => {
+            const core = setupCoreMock();
+            const giftcard = new Giftcard(core, {
+                ...baseProps,
+                onBalanceCheck: jest.fn(),
+                onReview: jest.fn()
+            });
+            render(giftcard.render());
+            expect(await screen.findByRole('button', { name: 'Redeem' })).toBeInTheDocument();
+        });
+
+        test('should show the review label on the confirmation button when the balance covers the amount', async () => {
+            const onBalanceCheck = jest.fn(resolve =>
+                resolve({
+                    balance: { value: 2000, currency: 'EUR' }
+                })
+            );
+            const core = setupCoreMock();
+            const giftcard = new Giftcard(core, {
+                ...baseProps,
+                onBalanceCheck,
+                onReview: jest.fn(),
+                showPayButton: true
+            });
+            render(giftcard.render());
+            giftcard.setState({ isValid: true });
+            await user.click(await screen.findByRole('button', { name: 'Redeem' }));
+            expect(await screen.findByRole('button', { name: 'Continue' })).toBeInTheDocument();
+        });
+
+        test('should trigger the review flow when the balance covers the amount', async () => {
+            const onBalanceCheck = jest.fn(resolve =>
+                resolve({
+                    balance: { value: 2000, currency: 'EUR' }
+                })
+            );
+            const onReview = jest.fn();
+            const onSubmit = jest.fn();
+            const core = setupCoreMock();
+            const giftcard = new Giftcard(core, {
+                ...baseProps,
+                onBalanceCheck,
+                onReview,
+                onSubmit,
+                showPayButton: true
+            });
+            render(giftcard.render());
+            giftcard.setState({ isValid: true });
+            await user.click(await screen.findByRole('button', { name: 'Redeem' }));
+            await user.click(await screen.findByRole('button', { name: 'Continue' }));
+            expect(onReview).toHaveBeenCalled();
+            expect(onSubmit).not.toHaveBeenCalled();
+        });
+
+        test('should not trigger the review flow when the balance does not cover the amount, and pay the partial amount instead', async () => {
+            const onBalanceCheck = jest.fn(resolve =>
+                resolve({
+                    balance: { value: 500, currency: 'EUR' }
+                })
+            );
+            const onOrderRequest = jest.fn(resolve => resolve({ orderData: 'mockOrderData', pspReference: 'mock' }));
+            const onReview = jest.fn();
+            const onSubmit = jest.fn();
+            const core = setupCoreMock();
+            const giftcard = new Giftcard(core, {
+                ...baseProps,
+                onBalanceCheck,
+                onOrderRequest,
+                onReview,
+                onSubmit
+            });
+            render(giftcard.render());
+            giftcard.setState({ isValid: true });
+            giftcard.submit();
+            await flushPromises();
+            expect(onReview).not.toHaveBeenCalled();
+            expect(onSubmit).toHaveBeenCalled();
+        });
+    });
 });

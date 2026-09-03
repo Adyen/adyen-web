@@ -41,7 +41,7 @@ export interface DonationOptions {
 
 export interface DonationCampaignOptions {
     rootNode: HTMLElement | string;
-    commercialTxAmount: number;
+    commercialTxAmount?: number;
 }
 
 /**
