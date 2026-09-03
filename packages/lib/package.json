@@ -117,7 +117,7 @@
         "jest-mock-extended": "4.0.1",
         "msw": "2.15.0",
         "msw-storybook-addon": "3.0.0",
-        "postcss": "8.5.26",
+        "postcss": "8.5.23",
         "rollup": "4.62.4",
         "rollup-plugin-dts": "6.5.1",
         "rollup-plugin-postcss": "4.0.2",
