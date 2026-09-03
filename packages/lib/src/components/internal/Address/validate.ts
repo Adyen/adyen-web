@@ -55,6 +55,7 @@ const postalCodePatterns = {
     IE: { pattern: /(?:^[AC-FHKNPRTV-Y][0-9]{2}|D6W)[ -]?[0-9AC-FHKNPRTV-Y]{4}/ },
     IS: createPatternByDigits(3),
     IT: createPatternByDigits(5),
+    JP: { pattern: /^\d{3}-?\d{4}$/ },
     LI: createPatternByDigits(4),
     LT: { pattern: /^(LT-\d{5}|\d{4,5})$/ },
     LU: createPatternByDigits(4),
@@ -115,10 +116,7 @@ export const getAddressValidationRules = (specifications): ValidatorRules => {
             },
             errorMessage: ERROR_FIELD_REQUIRED
         },
-        street: [
-            ruleIsEmpty,
-            ruleValidateForSpecialChars
-        ],
+        street: [ruleIsEmpty, ruleValidateForSpecialChars],
         houseNumberOrName: [
             {
                 validate: (value, context) => {
@@ -131,10 +129,7 @@ export const getAddressValidationRules = (specifications): ValidatorRules => {
             },
             ruleValidateForSpecialChars
         ],
-        city: [
-            ruleIsEmpty,
-            ruleValidateForSpecialChars
-        ],
+        city: [ruleIsEmpty, ruleValidateForSpecialChars],
         default: ruleIsEmpty
     };
     return addressValidationRules;

@@ -74,17 +74,11 @@ describe('Partial Address Schema Specifications', () => {
         expect(partialSpecifications.getKeyForField('postalCode', 'US')).toBe('zipCode');
     });
 
-    test.each(['GB', 'CA', 'AU', 'BR', 'FR', 'DE', 'NL'])(
-        'should use default postalCode label for %s in partial mode',
-        countryCode => {
-            expect(partialSpecifications.getKeyForField('postalCode', countryCode)).toBe('postalCode');
-        }
-    );
+    test.each(['GB', 'CA', 'AU', 'BR', 'FR', 'DE', 'NL'])('should use default postalCode label for %s in partial mode', countryCode => {
+        expect(partialSpecifications.getKeyForField('postalCode', countryCode)).toBe('postalCode');
+    });
 
-    test.each(['US', 'GB', 'FR'])(
-        'partial schema for %s should only contain postalCode field',
-        countryCode => {
-            expect(partialSpecifications.getAddressSchemaForCountryFlat(countryCode)).toStrictEqual(['postalCode']);
-        }
-    );
+    test.each(['US', 'GB', 'FR'])('partial schema for %s should only contain postalCode field', countryCode => {
+        expect(partialSpecifications.getAddressSchemaForCountryFlat(countryCode)).toStrictEqual(['postalCode']);
+    });
 });
