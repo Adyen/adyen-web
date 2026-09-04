@@ -1,15 +1,17 @@
 import { GENERIC_OPTIONS } from './config';
-import type { CoreConfiguration } from './types';
+import type { CoreConfiguration, GlobalOptions } from './types';
 
 /**
  * Filter properties in a global configuration object from an allow list (GENERIC_OPTIONS)
  * @param globalOptions -
- * @returns any
+ * @returns the properties of the configuration that are forwarded to the Components
  */
-export function processGlobalOptions(globalOptions) {
-    return Object.keys(globalOptions).reduce((r, e) => {
-        if (GENERIC_OPTIONS.includes(e)) r[e] = globalOptions[e];
-        return r;
+export function processGlobalOptions(globalOptions: CoreConfiguration): GlobalOptions {
+    const genericOptions: readonly string[] = GENERIC_OPTIONS;
+
+    return Object.keys(globalOptions).reduce<GlobalOptions>((accumulator, option) => {
+        if (genericOptions.includes(option)) accumulator[option] = globalOptions[option];
+        return accumulator;
     }, {});
 }
 

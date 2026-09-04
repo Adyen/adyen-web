@@ -8,13 +8,13 @@ import { setFocusOnField } from '../../../utils/setFocus';
 import { getArrayDifferences } from '../../../utils/arrayUtils';
 import { ValidationRuleResult } from '../../../utils/Validator/ValidationRuleResult';
 
-export interface AchStateErrors {
+export type AchStateErrors = {
     selectedAccountType: ValidationRuleResult;
     ownerName: ValidationRuleResult;
     routingNumber: ValidationRuleResult;
     accountNumber: ValidationRuleResult;
     accountNumberVerification: ValidationRuleResult;
-}
+};
 
 interface UseSRPanelForErrorsProps {
     errors: AchStateErrors;
