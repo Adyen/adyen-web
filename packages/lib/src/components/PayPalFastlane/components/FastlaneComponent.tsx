@@ -17,7 +17,7 @@ interface FastlaneComponentProps {
     payButton(props: PayButtonProps): h.JSX.Element;
 }
 
-const FastlaneComponent = ({ lastFour, brand, payButton, setComponentRef, showPayButton }: Readonly<FastlaneComponentProps>) => {
+const FastlaneComponent = ({ lastFour, brand, payButton, setComponentRef }: Readonly<FastlaneComponentProps>) => {
     const getImage = useImage();
     const [status, setStatus] = useState<UIElementStatus>('ready');
     const fastlaneRef = useRef({
@@ -35,7 +35,7 @@ const FastlaneComponent = ({ lastFour, brand, payButton, setComponentRef, showPa
                 <span className="adyen-checkout-fastlane__card-number">•••• {lastFour}</span>
             </div>
 
-            {showPayButton && payButton({ status, icon: getImage({ imageFolder: 'components/' })(`${PREFIX}lock`) })}
+            {payButton({ status, icon: getImage({ imageFolder: 'components/' })(`${PREFIX}lock`) })}
 
             <div className="adyen-checkout-fastlane__brand">
                 <Img src={getImage({ imageFolder: 'components/' })(`paypal_fastlane_gray`)} alt="Fastlane logo" />

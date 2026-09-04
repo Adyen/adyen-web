@@ -22,7 +22,6 @@ class TrustlyElement extends RedirectElement {
                     </ul>
                 </div>
 
-                {this.props.showPayButton && (
                     <RedirectButton
                         {...this.props}
                         showPayButton={this.props.showPayButton}
@@ -31,7 +30,6 @@ class TrustlyElement extends RedirectElement {
                         payButton={this.payButton}
                         setComponentRef={this.setComponentRef}
                     />
-                )}
             </Fragment>
         );
     }

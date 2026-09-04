@@ -42,14 +42,11 @@ function RedirectButton({
         return `${i18n.get('continueTo')} ${name}`;
     };
 
-    if (!showPayButton) {
-        return;
-    }
-
     return (
         <Fragment>
             {payButton({
                 ...props,
+                showPayButton,
                 status,
                 icon,
                 classNameModifiers: ['standalone'],

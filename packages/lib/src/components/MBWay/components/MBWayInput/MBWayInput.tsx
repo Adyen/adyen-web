@@ -39,7 +39,7 @@ function MBWayInput(props: Readonly<MBWayInputProps>) {
             <div className="adyen-checkout__mb-way">
                 <PhoneInputForm {...props} setComponentRef={setPhoneInputRef} items={phonePrefixes} onChange={onChange} data={props.data} />
 
-                {props.showPayButton && props.payButton({ status, label: i18n.get('confirmPurchase') })}
+                {props.payButton({ status, label: i18n.get('confirmPurchase') })}
             </div>
         </LoadingWrapper>
     );
