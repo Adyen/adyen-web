@@ -50,7 +50,6 @@ interface PreAuthorizedDebitCanadaComponentProps {
 function PreAuthorizedDebitCanadaComponent({
     onChange,
     payButton,
-    showPayButton,
     placeholders,
     setComponentRef,
     enableStoreDetails,
@@ -179,7 +178,7 @@ function PreAuthorizedDebitCanadaComponent({
 
             <SettlementInfo />
 
-            {showPayButton && payButton({ status, icon: getImage({ imageFolder: 'components/' })('bento_lock') })}
+            {payButton({ status, icon: getImage({ imageFolder: 'components/' })('bento_lock') })}
         </div>
     );
 }

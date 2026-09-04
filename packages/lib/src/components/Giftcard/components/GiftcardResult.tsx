@@ -15,7 +15,7 @@ interface GiftcardResultProps {
     payButton(props: PayButtonProps): h.JSX.Element;
 }
 
-function GiftcardResult({ balance, transactionLimit, status, makePayment, showPayButton, payButton }: Readonly<GiftcardResultProps>) {
+function GiftcardResult({ balance, transactionLimit, status, makePayment, payButton }: Readonly<GiftcardResultProps>) {
     const { i18n } = useCoreContext();
     const { amount } = useAmount();
 
@@ -43,12 +43,11 @@ function GiftcardResult({ balance, transactionLimit, status, makePayment, showPa
                 )}
             </ul>
 
-            {showPayButton &&
-                payButton({
-                    customAmount: transactionAmount,
-                    status: status,
-                    onClick: makePayment
-                })}
+            {payButton({
+                customAmount: transactionAmount,
+                status: status,
+                onClick: makePayment
+            })}
 
             <p className="adyen-checkout__giftcard-result__remaining-balance">
                 {i18n.get('partialPayment.remainingBalance', {
