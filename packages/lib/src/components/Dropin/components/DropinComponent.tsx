@@ -193,6 +193,7 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
                 new Promise<{ amount: PaymentAmount }>((resolve, reject) => {
                     this.props.onOrderCancel({ order }, { resolve, reject });
                 })
+                    // @ts-ignore - handleAdvanceFlowPaymentMethodsUpdate is protected but we need to call it from here
                     .then(({ amount }) => this.props.elementRef.handleAdvanceFlowPaymentMethodsUpdate(null, amount))
                     .catch(error => {
                         throw new AdyenCheckoutError('NETWORK_ERROR', error);

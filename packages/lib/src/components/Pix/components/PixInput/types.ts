@@ -1,6 +1,6 @@
-import { h, RefObject } from 'preact';
-import PixInput from './PixInput';
+import { h } from 'preact';
 import { PayButtonProps } from '../../../internal/PayButton/PayButton';
+import { ComponentMethodsRef } from '../../../types';
 
 export interface PixInputDataState {
     firstName?: string;
@@ -19,5 +19,5 @@ export interface PixInputProps {
     showPayButton: boolean;
     onChange({ data, valid, errors, isValid }): void;
     payButton(props: PayButtonProps): h.JSX.Element;
-    ref(ref: RefObject<typeof PixInput>): void;
+    setComponentRef: (ref: ComponentMethodsRef) => void;
 }
