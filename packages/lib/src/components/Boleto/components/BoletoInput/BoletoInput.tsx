@@ -119,12 +119,11 @@ function BoletoInput(props: Readonly<BoletoInputProps>) {
                 />
             )}
 
-            {props.showPayButton &&
-                props.payButton({
-                    status,
-                    label: i18n.get('boletobancario.btnLabel'),
-                    classNameModifiers: buttonModifiers
-                })}
+            {props.payButton({
+                status,
+                label: i18n.get('boletobancario.btnLabel'),
+                classNameModifiers: buttonModifiers
+            })}
         </div>
     );
 }

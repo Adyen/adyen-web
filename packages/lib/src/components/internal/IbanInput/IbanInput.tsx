@@ -237,7 +237,8 @@ class IbanInput extends Component<Readonly<IbanInputProps>, IbanInputState> {
                     />
                 </Field>
 
-                {this.props.showPayButton && this.props.payButton({ status: this.state.status })}
+                {/* IbanInput is also embedded in OpenInvoice, which owns the pay button and passes none down */}
+                {this.props.payButton?.({ status: this.state.status })}
             </Fieldset>
         );
     }

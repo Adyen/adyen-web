@@ -71,11 +71,10 @@ function BlikInput(props: Readonly<BlikInputProps>) {
                 />
             </Field>
 
-            {props.showPayButton &&
-                props.payButton({
-                    status,
-                    icon: getImage({ imageFolder: 'components/' })(`${PREFIX}lock`)
-                })}
+            {props.payButton({
+                status,
+                icon: getImage({ imageFolder: 'components/' })(`${PREFIX}lock`)
+            })}
         </div>
     );
 }

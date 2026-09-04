@@ -632,7 +632,13 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
      */
     protected payButton = (props: PayButtonProps) => {
         return (
-            <PayButton {...props} disclaimerMessage={this.props.disclaimerMessage} onClick={this.submit} showReview={!!this.props.onReview} />
+            <PayButton
+                {...props}
+                showPayButton={this.props.showPayButton}
+                disclaimerMessage={this.props.disclaimerMessage}
+                onClick={this.submit}
+                showReview={!!this.props.onReview}
+            />
         );
     };
 

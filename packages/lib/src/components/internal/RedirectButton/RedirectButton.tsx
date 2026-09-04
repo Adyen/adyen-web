@@ -30,14 +30,11 @@ function RedirectButton({ label = null, icon = null, payButton, onSubmit, name, 
         return `${i18n.get('continueTo')} ${name}`;
     };
 
-    if (!showPayButton) {
-        return;
-    }
-
     return (
         <Fragment>
             {payButton({
                 ...props,
+                showPayButton,
                 status,
                 icon,
                 classNameModifiers: ['standalone'],

@@ -55,7 +55,6 @@ interface AchComponentProps {
 function AchComponent({
     onChange,
     payButton,
-    showPayButton,
     placeholders,
     data: defaultData,
     hasHolderName,
@@ -209,7 +208,7 @@ function AchComponent({
 
             {enableStoreDetails && <StoreDetails disabled={isFormDisabled} onChange={setStorePaymentMethod} />}
 
-            {showPayButton && payButton({ status, icon: getImage({ imageFolder: 'components/' })(`${PREFIX}lock`) })}
+            {payButton({ status, icon: getImage({ imageFolder: 'components/' })(`${PREFIX}lock`) })}
         </div>
     );
 }

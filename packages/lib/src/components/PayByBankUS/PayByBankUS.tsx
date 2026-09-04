@@ -62,15 +62,13 @@ export default class PayByBankUS extends RedirectElement {
 
     protected override componentToRender(): h.JSX.Element {
         return this.props.storedPaymentMethodId ? (
-            this.props.showPayButton && (
-                <PayButton
-                    {...this.props}
-                    classNameModifiers={['standalone']}
-                    label={payAmountLabel(this.props.i18n, this.props.amount)}
-                    showReview={!!this.props.onReview}
-                    onClick={this.submit}
-                />
-            )
+            <PayButton
+                {...this.props}
+                classNameModifiers={['standalone']}
+                label={payAmountLabel(this.props.i18n, this.props.amount)}
+                showReview={!!this.props.onReview}
+                onClick={this.submit}
+            />
         ) : (
             <Fragment>
                 <div className="adyen-checkout-paybybank_AIS_DD">
@@ -78,18 +76,16 @@ export default class PayByBankUS extends RedirectElement {
                     <p className="adyen-checkout-paybybank_AIS_DD__description-body">{this.props.i18n.get('payByBankAISDD.disclaimer.body')}</p>
                 </div>
 
-                {this.props.showPayButton && (
-                    <RedirectButton
-                        {...this.props}
-                        showPayButton={this.props.showPayButton}
-                        name={this.displayName}
-                        onSubmit={this.submit}
-                        payButton={this.payButton}
-                        ref={ref => {
-                            this.componentRef = ref;
-                        }}
-                    />
-                )}
+                <RedirectButton
+                    {...this.props}
+                    showPayButton={this.props.showPayButton}
+                    name={this.displayName}
+                    onSubmit={this.submit}
+                    payButton={this.payButton}
+                    ref={ref => {
+                        this.componentRef = ref;
+                    }}
+                />
             </Fragment>
         );
     }
