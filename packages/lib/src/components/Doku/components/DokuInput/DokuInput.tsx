@@ -40,7 +40,7 @@ export default function DokuInput(props) {
                 setComponentRef={setPersonalDetailsRef}
             />
 
-            {props.showPayButton && props.payButton({ status, label: i18n.get('confirmPurchase') })}
+            {props.payButton({ status, label: i18n.get('confirmPurchase') })}
         </div>
     );
 }

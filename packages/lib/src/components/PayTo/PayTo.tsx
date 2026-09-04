@@ -112,14 +112,12 @@ export class PayToElement extends UIElement<PayToConfiguration> {
         if (this.props.storedPaymentMethodId) {
             return (
                 <Fragment>
-                    {this.props.showPayButton && (
-                        <PayButton
-                            {...this.props}
-                            classNameModifiers={['standalone']}
-                            label={payAmountLabel(this.props.i18n, this.props.amount)}
-                            onClick={this.submit}
-                        />
-                    )}
+                    <PayButton
+                        {...this.props}
+                        classNameModifiers={['standalone']}
+                        label={payAmountLabel(this.props.i18n, this.props.amount)}
+                        onClick={this.submit}
+                    />
                 </Fragment>
             );
         }

@@ -606,7 +606,9 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
      * Get the payButton component for the current element
      */
     protected payButton = (props: PayButtonProps) => {
-        return <PayButton {...props} disclaimerMessage={this.props.disclaimerMessage} onClick={this.submit} />;
+        return (
+            <PayButton {...props} showPayButton={this.props.showPayButton} disclaimerMessage={this.props.disclaimerMessage} onClick={this.submit} />
+        );
     };
 
     /**

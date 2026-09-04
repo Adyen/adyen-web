@@ -54,7 +54,7 @@ describe('PayButton', () => {
 
         const termsLink = screen.getByRole('link', { name: 'terms and conditions' });
         expect(termsLink).toHaveAttribute('href', 'https://www.adyen.com');
-        expect(screen.getByRole('link', { name: 'MyStore' })).toHaveAttribute('href', 'https://www.mystore.tp');
+        expect(screen.getByRole('link', { name: 'MyStore' })).toHaveAttribute('href', 'https://www.mystoredemo.io');
 
         const button = screen.getByRole('button');
         expect(termsLink.compareDocumentPosition(button) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();

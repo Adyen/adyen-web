@@ -221,12 +221,11 @@ class Giftcard extends Component<Readonly<GiftcardComponentProps>> {
                     }
                 />
 
-                {this.props.showPayButton &&
-                    this.props.payButton({
-                        status: this.state.status,
-                        onClick: this.props.makeBalanceCheck,
-                        label: i18n.get('applyGiftcard')
-                    })}
+                {this.props.payButton({
+                    status: this.state.status,
+                    onClick: this.props.makeBalanceCheck,
+                    label: i18n.get('applyGiftcard')
+                })}
             </div>
         );
     }

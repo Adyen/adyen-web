@@ -55,15 +55,11 @@ export function KlarnaContainer({ setComponentRef, ...props }: Readonly<KlarnaCo
         );
     }
 
-    if (props.showPayButton) {
-        return props.payButton({
-            ...props,
-            status,
-            disabled: status === 'loading',
-            classNameModifiers: ['standalone'],
-            label: `${this.props.i18n.get('continueTo')} ${props.displayName}`
-        });
-    }
-
-    return null;
+    return props.payButton({
+        ...props,
+        status,
+        disabled: status === 'loading',
+        classNameModifiers: ['standalone'],
+        label: `${this.props.i18n.get('continueTo')} ${props.displayName}`
+    });
 }

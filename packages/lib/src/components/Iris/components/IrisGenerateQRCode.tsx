@@ -18,12 +18,11 @@ export default function IrisGenerateQRCode(props: Readonly<IrisGenerateQRCodePro
     return (
         <div data-testid="iris-generate-qr-code">
             <p className={styles.instruction}>{i18n.get('iris.instructions.generateQrCode')}</p>
-            {props.showPayButton &&
-                props.payButton({
-                    label: i18n.get('generateQRCode'),
-                    icon: getImage({ imageFolder: 'components/' })('qr'),
-                    status: props.status
-                })}
+            {props.payButton({
+                label: i18n.get('generateQRCode'),
+                icon: getImage({ imageFolder: 'components/' })('qr'),
+                status: props.status
+            })}
         </div>
     );
 }

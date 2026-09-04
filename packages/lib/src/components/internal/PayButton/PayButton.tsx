@@ -29,9 +29,15 @@ export interface PayButtonProps extends ButtonProps {
      * Disclaimer message displayed above the button
      */
     disclaimerMessage?: DisclaimerMsgObject;
+    /**
+     * Hides the button itself. The disclaimer message is still rendered, since it belongs to the
+     * payment step rather than to the button, and merchants hiding the button supply their own.
+     * @defaultValue `true`
+     */
+    showPayButton?: boolean;
 }
 
-const PayButton = ({ customAmount, classNameModifiers = [], label, disclaimerMessage, ...props }: Readonly<PayButtonProps>) => {
+const PayButton = ({ customAmount, classNameModifiers = [], label, disclaimerMessage, showPayButton = true, ...props }: Readonly<PayButtonProps>) => {
     const { amount, isZeroAuth } = useAmount();
     const { secondaryAmount } = useSecondaryAmount();
     const { i18n } = useCoreContext();
@@ -44,9 +50,11 @@ const PayButton = ({ customAmount, classNameModifiers = [], label, disclaimerMes
     return (
         <Fragment>
             {disclaimerMessage && <DisclaimerMessage {...formatDisclaimerMessage(disclaimerMessage)} />}
-            <Button {...props} disabled={isDisabled} classNameModifiers={[...classNameModifiers, 'pay']} label={buttonLabel}>
-                {secondaryAmountLabel && <SecondaryButtonLabel label={secondaryAmountLabel} />}
-            </Button>
+            {showPayButton && (
+                <Button {...props} disabled={isDisabled} classNameModifiers={[...classNameModifiers, 'pay']} label={buttonLabel}>
+                    {secondaryAmountLabel && <SecondaryButtonLabel label={secondaryAmountLabel} />}
+                </Button>
+            )}
         </Fragment>
     );
 };

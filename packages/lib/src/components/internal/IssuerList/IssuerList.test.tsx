@@ -2,7 +2,6 @@ import { render, screen, waitFor } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import { h } from 'preact';
 import IssuerList from './IssuerList';
-import PayButton from '../PayButton';
 import { CoreProvider } from '../../../core/Context/CoreProvider';
 import { InfoEventType, UiTarget } from '../../../core/Analytics/events/AnalyticsInfoEvent';
 import { setupCoreMock } from '../../../../config/testMocks/setup-core-mock';
@@ -29,7 +28,7 @@ describe('IssuerList', () => {
                     items={items}
                     showPayButton={false}
                     onChange={jest.fn()}
-                    payButton={props => <PayButton {...props} />}
+                    payButton={() => <button>Pay</button>}
                     onSubmitAnalytics={() => {}}
                     type={'onlineBanking_PL'}
                     setComponentRef={jest.fn()}
@@ -58,7 +57,7 @@ describe('IssuerList', () => {
                     highlightedIds={highlightedIds}
                     showPayButton={false}
                     onChange={jest.fn()}
-                    payButton={props => <PayButton {...props} />}
+                    payButton={() => <button>Pay</button>}
                     onSubmitAnalytics={() => {}}
                     type={'onlineBanking_PL'}
                     setComponentRef={jest.fn()}
@@ -89,7 +88,7 @@ describe('IssuerList', () => {
                     highlightedIds={highlightedIds}
                     showPayButton={false}
                     onChange={onChangeCb}
-                    payButton={props => <PayButton {...props} />}
+                    payButton={() => <button>Pay</button>}
                     onSubmitAnalytics={() => {}}
                     type={'onlineBanking_PL'}
                     setComponentRef={jest.fn()}
@@ -130,7 +129,7 @@ describe('IssuerList', () => {
                     highlightedIds={highlightedIds}
                     showPayButton={false}
                     onChange={jest.fn()}
-                    payButton={props => <PayButton {...props} />}
+                    payButton={() => <button>Pay</button>}
                     onSubmitAnalytics={() => {}}
                     type={'onlineBanking_PL'}
                     setComponentRef={jest.fn()}
@@ -159,7 +158,7 @@ describe('IssuerList', () => {
                     highlightedIds={highlightedIds}
                     showPayButton={false}
                     onChange={jest.fn()}
-                    payButton={props => <PayButton {...props} />}
+                    payButton={() => <button>Pay</button>}
                     onSubmitAnalytics={() => {}}
                     type={'onlineBanking_PL'}
                     setComponentRef={jest.fn()}
@@ -194,7 +193,7 @@ describe('Analytics', () => {
                     highlightedIds={highlightedIds}
                     showPayButton={false}
                     onChange={() => {}}
-                    payButton={props => <PayButton {...props} />}
+                    payButton={() => <button>Pay</button>}
                     onSubmitAnalytics={onSubmitAnalytics}
                     type={'onlineBanking_PL'}
                     setComponentRef={jest.fn()}
@@ -230,7 +229,7 @@ describe('Analytics', () => {
                     items={items}
                     showPayButton={false}
                     onChange={() => {}}
-                    payButton={props => <PayButton {...props} />}
+                    payButton={() => <button>Pay</button>}
                     onSubmitAnalytics={onSubmitAnalytics}
                     type={'onlineBanking_PL'}
                     setComponentRef={jest.fn()}

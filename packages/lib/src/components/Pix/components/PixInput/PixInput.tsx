@@ -43,12 +43,11 @@ function PixInput({ name, data: dataProps, personalDetailsRequired, showPayButto
                 <BrazilPersonalDetail i18n={i18n} data={data} handleChangeFor={handleChangeFor} errors={errors} valid={valid} />
             )}
 
-            {showPayButton &&
-                payButton({
-                    status,
-                    label: `${i18n.get('continueTo')} ${name}`,
-                    classNameModifiers: buttonModifiers
-                })}
+            {payButton({
+                status,
+                label: `${i18n.get('continueTo')} ${name}`,
+                classNameModifiers: buttonModifiers
+            })}
         </div>
     );
 }

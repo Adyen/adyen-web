@@ -97,7 +97,7 @@ export default function PayToComponent(props: Readonly<PayToComponentProps>) {
                 </SegmentedControlRegion>
             )}
 
-            {props.showPayButton && props.payButton({ status, label: i18n.get('continue') })}
+            {props.payButton({ status, label: i18n.get('continue') })}
         </div>
     );
 }

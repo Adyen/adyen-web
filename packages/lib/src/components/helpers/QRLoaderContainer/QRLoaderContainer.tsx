@@ -49,21 +49,17 @@ class QRLoaderContainer<T extends QRLoaderConfiguration = QRLoaderConfiguration>
             return this.renderQRCode();
         }
 
-        if (this.props.showPayButton) {
-            return (
-                <RedirectButton
-                    showPayButton={this.props.showPayButton}
-                    name={this.displayName}
-                    onSubmit={this.submit}
-                    payButton={this.payButton}
-                    ref={ref => {
-                        this.componentRef = ref;
-                    }}
-                />
-            );
-        }
-
-        return null;
+        return (
+            <RedirectButton
+                showPayButton={this.props.showPayButton}
+                name={this.displayName}
+                onSubmit={this.submit}
+                payButton={this.payButton}
+                ref={ref => {
+                    this.componentRef = ref;
+                }}
+            />
+        );
     }
 }
 

@@ -30,11 +30,6 @@ describe('Econtext: EcontextInput', () => {
         expect(screen.queryByLabelText('First name')).not.toBeInTheDocument();
     });
 
-    test('hide PayButton if showPayButton is set to false', () => {
-        renderEcontextInput({ personalDetailsRequired: false, showPayButton: false });
-        expect(screen.queryByRole('button', { name: 'Continue purchase' })).not.toBeInTheDocument();
-    });
-
     test('hide form instruction if personalDetailsRequired sets to false', () => {
         renderEcontextInput({ personalDetailsRequired: false });
         expect(screen.queryByText('All fields are required unless marked otherwise.')).not.toBeInTheDocument();

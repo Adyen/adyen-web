@@ -208,12 +208,11 @@ export default function OpenInvoice(props: Readonly<OpenInvoiceProps>) {
                 />
             )}
 
-            {props.showPayButton &&
-                props.payButton({
-                    status,
-                    classNameModifiers: [...(isStandAloneButton ? ['standalone'] : [])],
-                    label: i18n.get('confirmPurchase')
-                })}
+            {props.payButton({
+                status,
+                classNameModifiers: [...(isStandAloneButton ? ['standalone'] : [])],
+                label: i18n.get('confirmPurchase')
+            })}
         </div>
     );
 }

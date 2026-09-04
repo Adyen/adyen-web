@@ -6,7 +6,8 @@ import { AmountProvider } from '../../../core/Context/AmountProvider';
 
 const defaultProps = {
     onChange: () => {},
-    onSubmit: () => {}
+    onSubmit: () => {},
+    payButton: () => null
 };
 
 const renderBacsInput = (props = {}) => {

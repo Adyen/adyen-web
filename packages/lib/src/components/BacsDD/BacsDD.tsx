@@ -28,7 +28,9 @@ class BacsElement extends UIElement<VoucherConfiguration> {
     }
 
     protected override payButton = (props: PayButtonProps) => {
-        return <PayButton onClick={this.submit} {...props} />;
+        return (
+            <PayButton onClick={this.submit} {...props} showPayButton={this.props.showPayButton} disclaimerMessage={this.props.disclaimerMessage} />
+        );
     };
 
     protected override componentToRender(): h.JSX.Element {
