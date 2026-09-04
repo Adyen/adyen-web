@@ -101,12 +101,12 @@ export class GiftcardElement extends UIElement<GiftCardConfiguration> {
 
                 if (this.props.amount.value > balance.value || this.props.amount.value > transactionLimit.value) {
                     if (this.props.order) {
-                        return this.makeSubmitCall();
+                        return this.executePaymentsCall();
                     }
 
                     return this.onOrderRequest(this.data).then((order: { orderData: string; pspReference: string }) => {
                         this.setState({ order: { orderData: order.orderData, pspReference: order.pspReference } });
-                        return this.makeSubmitCall();
+                        return this.executePaymentsCall();
                     });
                 } else {
                     return this.handleOnRequiringConfirmation(balance, transactionLimit);
@@ -165,7 +165,7 @@ export class GiftcardElement extends UIElement<GiftCardConfiguration> {
 
     // Giftcards override the regular payButton flow
     protected override payButton = (props: PayButtonProps) => {
-        return <PayButton {...props} />;
+        return <PayButton {...props} showReview={props.showReview ?? !!this.props.onReview} />;
     };
 
     protected override componentToRender(): h.JSX.Element {
