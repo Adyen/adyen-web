@@ -1,4 +1,4 @@
-import { h } from 'preact';
+import { h, TargetedInputEvent } from 'preact';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'preact/hooks';
 import { useCoreContext } from '../../../core/Context/CoreProvider';
 import FormInstruction from '../../internal/FormInstruction';
@@ -92,7 +92,7 @@ function AchComponent({
         setComponentRef(achRef.current);
     }, [setComponentRef, achRef.current]);
 
-    useSRPanelForAchErrors({ errors: errors as AchStateErrors, data, isValidating });
+    useSRPanelForAchErrors({ errors: errors as unknown as AchStateErrors, data, isValidating });
 
     useEffect(() => {
         onChange({ data, valid, errors, isValid, storePaymentMethod });
@@ -103,10 +103,10 @@ function AchComponent({
      * its validation when there is any change done to the "Account number" field
      */
     const onAccountNumberInput = useCallback(
-        (event: h.JSX.TargetedInputEvent<HTMLInputElement>) => {
+        (event: TargetedInputEvent<HTMLInputElement>) => {
             handleChangeFor('accountNumber', 'input')(event);
 
-            const hasAccountVerificationError = !!errors.accountNumberVerification;
+            const hasAccountVerificationError = Boolean(errors.accountNumberVerification);
             if (hasAccountVerificationError) {
                 triggerValidation(['accountNumberVerification']);
             }
@@ -124,13 +124,13 @@ function AchComponent({
                     onSelect={handleChangeFor('selectedAccountType')}
                     selectedAccountType={data.selectedAccountType}
                     disabled={isFormDisabled}
-                    errorMessage={!!errors.selectedAccountType && i18n.get(errors.selectedAccountType.errorMessage)}
+                    errorMessage={typeof errors.selectedAccountType?.errorMessage === 'string' && i18n.get(errors.selectedAccountType.errorMessage)}
                 />
 
                 {hasHolderName && (
                     <Field
                         label={i18n.get('ach.accountHolderNameField.title')}
-                        errorMessage={!!errors.ownerName && i18n.get(errors.ownerName.errorMessage)}
+                        errorMessage={typeof errors.ownerName?.errorMessage === 'string' && i18n.get(errors.ownerName.errorMessage)}
                         isValid={!!valid.ownerName}
                         name={'ownerName'}
                     >
@@ -150,7 +150,7 @@ function AchComponent({
                 <Field
                     label={i18n.get('ach.routingNumber.label')}
                     classNameModifiers={['col-60']}
-                    errorMessage={!!errors.routingNumber && i18n.get(errors.routingNumber.errorMessage)}
+                    errorMessage={typeof errors.routingNumber?.errorMessage === 'string' && i18n.get(errors.routingNumber.errorMessage)}
                     name={'routingNumber'}
                     isValid={!!valid.routingNumber}
                 >
@@ -170,7 +170,7 @@ function AchComponent({
                 <Field
                     label={i18n.get('ach.bankAccountNumber.label')}
                     classNameModifiers={['col-40']}
-                    errorMessage={!!errors.accountNumber && i18n.get(errors.accountNumber.errorMessage)}
+                    errorMessage={typeof errors.accountNumber?.errorMessage === 'string' && i18n.get(errors.accountNumber.errorMessage)}
                     isValid={!!valid.accountNumber}
                     name={'accountNumber'}
                 >
@@ -189,7 +189,9 @@ function AchComponent({
 
                 <Field
                     label={i18n.get('ach.bankAccountNumberVerification.label')}
-                    errorMessage={!!errors.accountNumberVerification && i18n.get(errors.accountNumberVerification.errorMessage)}
+                    errorMessage={
+                        typeof errors.accountNumberVerification?.errorMessage === 'string' && i18n.get(errors.accountNumberVerification.errorMessage)
+                    }
                     name={'accountNumberVerification'}
                     isValid={!!valid.accountNumberVerification}
                 >

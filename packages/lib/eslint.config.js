@@ -161,9 +161,6 @@ const config = defineConfig(
             'src/components/internal/IssuerList/**',
             'src/components/internal/OpenInvoice/**',
 
-            // ── Utils ──
-            'src/utils/useForm/**',
-
             // ── Others ──
             'src/core/**',
             'src/types/**'
