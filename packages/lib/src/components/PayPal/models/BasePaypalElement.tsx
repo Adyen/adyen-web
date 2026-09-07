@@ -120,22 +120,21 @@ export class BasePaypalElement<TProps extends BasePayPalConfiguration = BasePayP
         this.paymentData = paymentData;
     }
 
+    protected override get sdkDataPaymentMethodConfiguration() {
+        return {
+            supportsPayPalV6: true
+        };
+    }
+
     /**
      * Formats the component data output
      */
     protected formatData() {
         const { isExpress } = this.props;
 
-        // TODO: Uncomment when we the paypal subvariants have been added on the backend
-        // return {
-        //     paymentMethod: {
-        //         type: this.type,
-        //         subtype: isExpress ? 'express' : BasePaypalElement.subtype
-        //     }
-        // };
         return {
             paymentMethod: {
-                type: BasePaypalElement.type,
+                type: this.type,
                 subtype: isExpress ? 'express' : BasePaypalElement.subtype
             }
         };
@@ -146,9 +145,7 @@ export class BasePaypalElement<TProps extends BasePayPalConfiguration = BasePayP
     };
 
     public updateWithAction = (action: PaymentAction) => {
-        // TODO: Uncomment when we the paypal subvariants have been added on the backend
-        // if (action.paymentMethodType !== this.type) throw new Error('Invalid Action');
-        if (action.paymentMethodType !== BasePaypalElement.type) throw new Error('Invalid Action');
+        if (action.paymentMethodType !== this.type) throw new Error('Invalid Action');
 
         if (action.paymentData) {
             this.paymentData = action.paymentData;

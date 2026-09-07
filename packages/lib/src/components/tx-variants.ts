@@ -78,7 +78,7 @@ export enum TxVariants {
     paypal = 'paypal',
     paypal_paylater = 'paypal_paylater',
     paypal_credit = 'paypal_credit',
-    paypal_venmo = 'paypal_venmo',
+    venmo = 'venmo',
     fastlane = 'fastlane',
     paywithgoogle = 'paywithgoogle',
     /** Wallets */

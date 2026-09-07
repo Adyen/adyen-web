@@ -86,7 +86,7 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
             loadingContext: this.props.loadingContext ?? '',
             clientKey: this.props.clientKey ?? '',
             merchantId: this.props.configuration?.merchantId ?? '',
-            countryCode: paypalV6Props?.countryCode ?? '',
+            countryCode: paypalV6Props?.countryCode ?? this.props.countryCode,
             amount: this.props.amount,
             vault: Boolean(paypalV6Props?.vault),
             locale: paypalV6Props?.locale,
@@ -127,6 +127,12 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
         }
 
         return Promise.resolve();
+    }
+
+    protected override get sdkDataPaymentMethodConfiguration() {
+        return {
+            ...(this.props.usePayPalV6 && { supportsPayPalV6: true })
+        };
     }
 
     formatProps(props: PayPalConfiguration): PayPalConfiguration {

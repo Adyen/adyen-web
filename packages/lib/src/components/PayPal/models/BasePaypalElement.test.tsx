@@ -278,7 +278,7 @@ describe('BasePaypalElement', () => {
 
         test('should accept a paypal action even when the subclass declares another tx variant', () => {
             class VenmoLikeElement extends TestPaypalElement {
-                public static override readonly type = 'paypal_venmo';
+                public static override readonly type = 'venmo';
             }
             const element = new VenmoLikeElement(core);
 
