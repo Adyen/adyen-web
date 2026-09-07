@@ -13,10 +13,11 @@ export interface SdkDataObject {
     riskData: {
         clientData: string;
     };
-    paymentMethodConfiguration?: PaymentMethodConfiguration;
+    paymentMethodConfiguration?: SdkDataPaymentMethodConfiguration;
 }
 
-export interface PaymentMethodConfiguration {
+export interface SdkDataPaymentMethodConfiguration {
+    // PayPal component specific configuration
     supportsPayPalV6?: boolean;
 }
 
@@ -24,7 +25,7 @@ export interface CreateSdkDataParams {
     checkoutAttemptId: string;
     clientData: string | null;
     paymentMethodBehavior: PAYMENT_METHOD_BEHAVIOR;
-    paymentMethodConfiguration?: PaymentMethodConfiguration;
+    paymentMethodConfiguration?: SdkDataPaymentMethodConfiguration;
 }
 
 /**
