@@ -108,7 +108,7 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
             loadingContext: this.props.loadingContext ?? '',
             clientKey: this.props.clientKey ?? '',
             merchantId: this.props.configuration?.merchantId ?? '',
-            countryCode: paypalV6Props?.countryCode ?? '',
+            countryCode: this.props.countryCode ?? '',
             amount: this.props.amount,
             vault: Boolean(paypalV6Props?.vault),
             locale: paypalV6Props?.locale,

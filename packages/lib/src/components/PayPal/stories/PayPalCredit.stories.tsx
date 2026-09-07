@@ -16,7 +16,7 @@ export default meta;
 
 export const PayPalCredit: Story = {
     render: ({ componentConfiguration, ...checkoutConfig }) => (
-        <Checkout checkoutConfig={checkoutConfig}>
+        <Checkout checkoutConfig={{ ...checkoutConfig, splitPayPalButtons: true }}>
             {checkout => <ComponentContainer element={new PaypalCredit(checkout, componentConfiguration)} />}
         </Checkout>
     ),
