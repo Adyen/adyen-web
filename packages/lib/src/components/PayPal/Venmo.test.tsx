@@ -39,8 +39,8 @@ describe('Venmo', () => {
         isEligibleMock.mockReturnValue(true);
     });
 
-    test('should be registered under the paypal_venmo tx variant', () => {
-        expect(Venmo.type).toBe(TxVariants.paypal_venmo);
+    test('should be registered under the venmo tx variant', () => {
+        expect(Venmo.type).toBe(TxVariants.venmo);
     });
 
     test('should load the venmo SDK component on top of the paypal one', () => {

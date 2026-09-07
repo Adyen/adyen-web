@@ -16,7 +16,7 @@ export default meta;
 
 export const Venmo: Story = {
     render: ({ componentConfiguration, ...checkoutConfig }) => (
-        <Checkout checkoutConfig={checkoutConfig}>
+        <Checkout checkoutConfig={{ ...checkoutConfig, splitPayPalButtons: true }}>
             {checkout => <ComponentContainer element={new VenmoElement(checkout, componentConfiguration)} />}
         </Checkout>
     ),

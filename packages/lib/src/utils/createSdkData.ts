@@ -28,6 +28,15 @@ export interface CreateSdkDataParams {
     paymentMethodConfiguration?: SdkDataPaymentMethodConfiguration;
 }
 
+export interface CreateSdkDataParams {
+    checkoutAttemptId: string;
+    clientData: string | null;
+    paymentMethodBehavior: PAYMENT_METHOD_BEHAVIOR;
+    paymentMethodConfiguration?: {
+        supportsPayPalV6?: boolean;
+    };
+}
+
 /**
  * @param params - The parameters for creating the SDK data
  * @param params.checkoutAttemptId - The checkout attempt ID from analytics
