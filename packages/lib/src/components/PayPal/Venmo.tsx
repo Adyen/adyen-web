@@ -9,17 +9,13 @@ import { VenmoComponent } from './components/VenmoComponent';
 import { PayPalComponents } from './paypal-js-types';
 
 class VenmoElement extends BasePaypalElement<VenmoConfiguration> {
-    public static readonly type = TxVariants.paypal_venmo;
+    public static readonly type = TxVariants.venmo;
 
     protected override fundingSource: SupportedPayPalFundingSources = 'venmo';
     protected override elementName: string = 'Venmo';
 
     protected override get paypalComponents(): PayPalComponents {
         return ['paypal-payments', 'venmo-payments'];
-    }
-
-    public override get icon(): string {
-        return this.resources.getImage()('venmo');
     }
 
     protected override componentToRender(): h.JSX.Element | null {
