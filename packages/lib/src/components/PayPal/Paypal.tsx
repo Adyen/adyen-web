@@ -129,6 +129,12 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
         return Promise.resolve();
     }
 
+    protected override get sdkDataPaymentMethodConfiguration() {
+        return {
+            ...(this.props.usePayPalV6 && { supportsPayPalV6: true })
+        };
+    }
+
     formatProps(props: PayPalConfiguration): PayPalConfiguration {
         const merchantId = props.configuration?.merchantId;
         const intentFromConfig = props.configuration?.intent;

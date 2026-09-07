@@ -15,13 +15,24 @@ export interface SdkDataObject {
     };
 }
 
+export interface CreateSdkDataParams {
+    checkoutAttemptId: string;
+    clientData: string | null;
+    paymentMethodBehavior: PAYMENT_METHOD_BEHAVIOR;
+    paymentMethodConfiguration?: {
+        supportsPayPalV6?: boolean;
+    };
+}
+
 /**
- * Creates the sdkData object with analytics and risk information
- * @param checkoutAttemptId - The checkout attempt ID from analytics
- * @param clientData - The client data from risk module
+ * @param params - The parameters for creating the SDK data
+ * @param params.checkoutAttemptId - The checkout attempt ID from analytics
+ * @param params.clientData - The client data from risk module
+ * @param params.paymentMethodBehavior - The payment method behavior
+ * @param params.paymentMethodConfiguration - The payment method configuration
  * @returns Base64 encoded JSON string of the SDK data object
  */
-export function createSdkData(checkoutAttemptId: string, clientData: string | null, paymentMethodBehavior: PAYMENT_METHOD_BEHAVIOR): string {
+export function createSdkData({ checkoutAttemptId, clientData, paymentMethodBehavior, paymentMethodConfiguration }: CreateSdkDataParams): string {
     const sdkDataObject: SdkDataObject = {
         schemaVersion: 1,
         createdAt: Date.now(),
@@ -32,7 +43,8 @@ export function createSdkData(checkoutAttemptId: string, clientData: string | nu
         analytics: {
             checkoutAttemptId
         },
-        ...(clientData && { riskData: { clientData } })
+        ...(clientData && { riskData: { clientData } }),
+        ...(paymentMethodConfiguration && { paymentMethodConfiguration })
     };
 
     return base64.encode(JSON.stringify(sdkDataObject));
