@@ -6,6 +6,7 @@ import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { PayPalService } from './services/PayPalService';
 import { PayPalSdkLoader } from './services/PayPalSdkLoader';
 import requestPayPalOrderDetails from './services/request-paypal-order-details';
+import base64 from '../../utils/base64';
 import type { PayPalEligiblePaymentMethods, PayPalSdkInstance } from './paypal-js-types';
 import type { PayPalComponentV6Props } from './components/types';
 
@@ -26,6 +27,14 @@ const PayPalSdkLoaderMock = PayPalSdkLoader as jest.MockedClass<typeof PayPalSdk
 const requestPayPalOrderDetailsMock = requestPayPalOrderDetails as jest.Mock;
 
 const core = setupCoreMock();
+
+const decodeSdkData = (input: string) => {
+    const { data } = base64.decode(input);
+    if (!data) {
+        throw new Error('Failed to decode sdkData');
+    }
+    return JSON.parse(data);
+};
 
 describe('Paypal', () => {
     test('Returns a data object', () => {
@@ -158,6 +167,16 @@ describe('Paypal', () => {
         test('should not set usePayPalV6 when it is not provided', () => {
             const paypal = new Paypal(core);
             expect(paypal.props.usePayPalV6).toBeUndefined();
+        });
+    });
+
+    describe('sdkData', () => {
+        test('should not add paymentMethodConfiguration when usePayPalV6 is not set', () => {
+            const paypal = new Paypal(core);
+
+            const decodedSdkData = decodeSdkData(paypal.data.paymentMethod.sdkData);
+
+            expect(decodedSdkData.paymentMethodConfiguration).toBeUndefined();
         });
     });
 
@@ -499,6 +518,14 @@ describe('Paypal', () => {
                 );
 
                 expect(PayPalServiceMock.prototype.initialize).toHaveBeenCalledTimes(1);
+            });
+
+            test('should flag in the sdkData that PayPal v6 is supported', () => {
+                const paypal = new Paypal(core, { usePayPalV6: {} });
+
+                const decodedSdkData = decodeSdkData(paypal.data.paymentMethod.sdkData);
+
+                expect(decodedSdkData.paymentMethodConfiguration).toEqual({ supportsPayPalV6: true });
             });
 
             test('should default vault to false when not provided in usePayPalV6', () => {

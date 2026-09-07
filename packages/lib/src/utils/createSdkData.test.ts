@@ -104,4 +104,23 @@ describe('createSdkData', () => {
         const decoded = decodeSdkData(result);
         expect(decoded.riskData).toBeUndefined();
     });
+    test('should include paymentMethodConfiguration when it is provided', () => {
+        const result = createSdkData({
+            checkoutAttemptId: TEST_CHECKOUT_ATTEMPT_ID,
+            clientData: null,
+            paymentMethodBehavior: PAYMENT_METHOD_BEHAVIOR.NATIVE,
+            paymentMethodConfiguration: { supportsPayPalV6: true }
+        });
+        const decoded = decodeSdkData(result);
+        expect(decoded.paymentMethodConfiguration).toEqual({ supportsPayPalV6: true });
+    });
+    test('should not include paymentMethodConfiguration when it is not provided', () => {
+        const result = createSdkData({
+            checkoutAttemptId: TEST_CHECKOUT_ATTEMPT_ID,
+            clientData: null,
+            paymentMethodBehavior: PAYMENT_METHOD_BEHAVIOR.NATIVE
+        });
+        const decoded = decodeSdkData(result);
+        expect(decoded.paymentMethodConfiguration).toBeUndefined();
+    });
 });

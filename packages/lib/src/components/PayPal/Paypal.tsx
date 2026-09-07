@@ -130,9 +130,7 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
     }
 
     protected override get sdkDataPaymentMethodConfiguration() {
-        return {
-            ...(this.props.usePayPalV6 && { supportsPayPalV6: true })
-        };
+        return this.props.usePayPalV6 ? { supportsPayPalV6: true } : null;
     }
 
     formatProps(props: PayPalConfiguration): PayPalConfiguration {
