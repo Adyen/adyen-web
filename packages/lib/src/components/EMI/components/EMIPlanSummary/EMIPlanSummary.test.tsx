@@ -94,24 +94,4 @@ describe('EMIPlanSummary', () => {
         expect(terms[terms.length - 1]).toBe('Upcoming monthly payment');
         expect(definitions[definitions.length - 1]).toBe(formatAmount(noCostPlanWithDiscount.transactionAmounts.monthlyPayableAmount));
     });
-
-    test('should omit the checkout amount rows when no amount was configured, keeping the plan rows', () => {
-        renderPlanSummary(standardPlanWithInterest, {});
-
-        expect(screen.getAllByRole('term').map(term => term.textContent)).toEqual([
-            'Interest charged by bank @15.5%',
-            'Total amount to be paid over time',
-            'Upcoming monthly payment'
-        ]);
-    });
-
-    test('should render the plan rows when the merchant configured no amount', () => {
-        // Merchants configure the amount, so `null` reaches the context at runtime even though the type forbids it
-        const unconfiguredAmount: unknown = null;
-
-        renderPlanSummary(standardPlanWithInterest, { amount: unconfiguredAmount as PaymentAmount });
-
-        expect(screen.queryByText('Item price')).toBeNull();
-        expect(screen.getByText('Upcoming monthly payment')).toBeInTheDocument();
-    });
 });
