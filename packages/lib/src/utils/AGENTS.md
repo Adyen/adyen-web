@@ -21,9 +21,11 @@ debounce, script loading, storage, focus handling, and a few Preact hooks.
 The intent is that `utils/` is a leaf: `core/` and `components/` import from it, not the reverse.
 That is not literally true today, so know what you're walking into:
 
-- `utils/` legitimately imports from `core/` (`Context/Resources`, `Errors/AdyenCheckoutError`,
-  `Analytics`, `config`) and from `language/`.
-- A handful of files reach into `components/`, which is the direction we don't want:
+- `utils/` legitimately imports from `core/` (`Context/Resources`, `Context/useImage`,
+  `Context/CoreProvider`, `Errors/AdyenCheckoutError`, `Errors/constants`, `Analytics`, `config`)
+  and from `language/`. `useForm` pulling in `CoreProvider` is the heaviest of these — a Preact
+  context hook, not just a type.
+- Three production files reach into `components/`, which is the direction we don't want:
   `get-process-message-handler.ts`, `setFocus.ts`, and `Validator/defaultRules.ts`.
 
 **Rule for new code**: do not add a new import from `utils/` into `components/`. If a utility

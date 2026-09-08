@@ -35,6 +35,7 @@ Demo app for manually testing payment components end to end. Dev-only — never 
 
 ## Safety
 
-- Never add production dependencies — this package is dev-only.
+- Never add a third-party runtime dependency — this package is `private` and never published. Its
+  only `dependencies` entry is the workspace `@adyen/adyen-web` itself.
 - Never commit real API keys or merchant credentials; they belong in the server's environment.
 - Never put PCI-sensitive data in a demo configuration.

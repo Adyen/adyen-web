@@ -44,7 +44,7 @@ helper stays in its payment method folder.
 
 | Member                     | Required?                       | Purpose                                                                        |
 | -------------------------- | ------------------------------- | ------------------------------------------------------------------------------ |
-| `static readonly type`     | Required                        | `TxVariants.[method]` registry identifier                                      |
+| `static readonly type`     | Required by convention          | `TxVariants.[method]` registry identifier                                      |
 | `componentToRender()`      | Required (`protected abstract`) | Return the Preact JSX to render                                                |
 | `isValid` (getter)         | Override in practice            | Base returns `false`, so a component that doesn't override it can never submit |
 | `formatProps(props)`       | Optional                        | Normalize merchant config                                                      |
@@ -53,15 +53,25 @@ helper stays in its payment method folder.
 | `setStatus(status, props)` | Optional                        | Update visual state (loading/error/success)                                    |
 | `showValidation()`         | Optional                        | Trigger validation UI                                                          |
 
-`submit()` drives the whole flow — validate → `makePaymentsCall()` → `handleResponse()`. It is
-inherited and rarely overridden; don't change it without understanding the full payment lifecycle.
+`static readonly type` is the one "required" member the compiler can't enforce — TypeScript has no
+abstract statics. It's validated at registration instead: `core.registry.ts` `console.error`s and
+refuses to register a class without it, so a missing `type` shows up as a silently absent payment
+method at runtime, not a build failure.
+
+`submit()` drives the whole flow: validate (`showValidation()` and bail if invalid) → an `onReview`
+short-circuit that returns before any network call when that prop is set → `executePaymentsCall()`,
+which chains `makePaymentsCall()` → `sanitizeResponse` → `verifyPaymentDidNotFail` →
+`handleResponse()`. It is inherited and rarely overridden; don't change it without understanding
+the full payment lifecycle.
 
 ## SecuredFields (PCI-critical)
 
 - Card inputs render inside iframes served from `checkout.adyen.com`.
 - Communication is `postMessage` only. Never reach into iframe content.
 - `SecuredFieldsProvider` (SFP) orchestrates field creation, focus, validation, and styling.
-- `triggerBinLookUp()` sends the leading 6–11 digits to identify the card brand.
+- `triggerBinLookUp()` POSTs the iframe-produced `encryptedBin` to `v3/bin/binLookup` to identify
+  the brand. Raw PAN digits never reach this layer — the PAN-length threshold that decides when a
+  lookup fires is owned by the SecuredFields iframe, not by this code.
 
 ## Testing
 

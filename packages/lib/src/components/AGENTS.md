@@ -28,10 +28,14 @@ the closest one before building anything new.
 
 ## Component Folder Structure
 
+This is the **target** layout for new components, not a description of the current tree — most
+existing folders deviate, so match this rather than the folder next door:
+
 ```
 [Component]/
 ├── [Component].tsx          # UIElement subclass (default export)
-├── [Component]Component.tsx # Preact view (named export)
+├── components/
+│   └── [Component]Component.tsx  # Preact view (named export)
 ├── [Component].module.scss  # CSS Modules (new components)
 ├── [Component].test.tsx     # Unit tests
 ├── constants.ts
@@ -40,18 +44,31 @@ the closest one before building anything new.
 └── index.ts                 # Explicit named re-exports, never `export *`
 ```
 
-`index.ts` is the only entry point external files may import from:
+Known deviations across the existing tree: `[Component]Component.tsx` always sits under
+`components/` (never at the folder root), roughly 14 of ~78 payment-method stories use a
+`stories/` folder while the rest sit at the folder root, and no reference component has a
+`.module.scss` at its root.
 
-```ts
-export { default } from './Component';
-export type { ComponentConfiguration } from './types';
-```
+`index.ts` is the only entry point external files may import from. Re-export the default UIElement
+class explicitly (`export { default } from './Component';`) and add named `export type` lines only
+for config types a merchant needs — `Card`, `UPI` and `ApplePay` all export the default alone.
+
+Two standing exceptions, neither of which is precedent: `components-map.ts` and the barrel
+`components/index.ts` reach into deep paths directly (`./Card/Bancontact`), and four `internal/`
+folders (`BrandImage`, `SegmentedControl`, `Tooltip`, `Timeline`) still use `export *`.
 
 ## Registering a New Payment Method
 
 1. `tx-variants.ts` — add `[method] = '[method]'` to the `TxVariants` enum
-2. `components-map.ts` — map `[TxVariants.method]: Component`
-3. `components-name-map.ts` — map `[TxVariants.method]: 'Human Readable Name'` (used in warnings)
+2. `components-map.ts` — map `[TxVariants.method]: Component`. This map feeds the UMD
+   `createComponent` helper and the `PaymentMethods` type; runtime resolution on the ESM path goes
+   through `core.registry` (auto-registered from the `UIElement` constructor) and Drop-in's
+   `paymentMethodComponents`, so adding an entry here alone doesn't register anything at runtime.
+3. `components-name-map.ts` — map `[TxVariants.method]: 'ComponentClassName'`. Despite the file
+   name these are **component class names**, not display copy (`'WalletINElement'`,
+   `'PayByBankUS'`). Two consumers: Drop-in's "make sure to import the Class X" warning, and
+   `BaseElement`, which probes this map to classify a method as native vs generic in analytics
+   `sdkData` — so omitting an entry silently changes analytics, it isn't cosmetic.
 4. `index.ts` — `export { default as Component } from './Component';`
 
 ## Conventions
@@ -60,9 +77,12 @@ export type { ComponentConfiguration } from './types';
 - `formatProps(props)` normalizes merchant config; `isValid` reports validity; `submit()` starts
   the payment. Validate config in `formatProps()` and throw `AdyenCheckoutError` with
   `IMPLEMENTATION_ERROR` for merchant mistakes.
-- Wallets (ApplePay, GooglePay, AmazonPay) resolve availability in `isAvailable()`, never in the
-  constructor, and lazy-load their third-party SDK via dynamic import. Their external SDK types
-  live in colocated type files.
+- Wallets load their third-party SDK by injecting a `<script>` through `utils/Script`, not via a
+  dynamic `import()` — no wallet uses `import()` today. Resolve availability in `isAvailable()`
+  rather than the constructor: GooglePay and ApplePay override it, AmazonPay currently doesn't and
+  inherits the base no-op. ApplePay is the cautionary case — it kicks off its SDK load from the
+  constructor and `isAvailable()` merely awaits that promise, so "lazy" describes the check, not
+  the fetch. Prefer GooglePay as the model for new wallets.
 
 ## Styling
 
@@ -71,10 +91,12 @@ mixins — nothing component-specific goes there.
 
 - New components use CSS Modules: `ComponentName.module.scss`, camelCase class names, imported as
   `import styles from './ComponentName.module.scss'`. Legacy components use global SCSS with BEM
-  (`.adyen-checkout__[component]__[element]--[modifier]`). Never mix the two in one component.
+  (`.adyen-checkout__[component]__[element]--[modifier]`). Modules are the direction of travel, not
+  the norm yet — 7 of the 122 `.scss` files under `src/components/` are modules. Don't mix the two
+  in one component (Card already does, via `DualBrandSelector.module.scss`; don't copy that).
 - Reach shared SCSS through `@use` with a namespace, then call `variable-generator.token(...)`. A
   bare `token(...)` resolves only inside `variable-generator.scss` and will fail here. `@import` is
-  deprecated and appears nowhere in this codebase.
+  deprecated and appears in no `.scss` file in this repo — keep it that way.
 - Never hardcode a colour, spacing, or radius where a token exists, and never invent a token — they
   come from `@adyen/bento-design-tokens`.
 - Check `styles/mixins.scss` before hand-writing focus rings, typography, breakpoints, or resets.
@@ -83,7 +105,9 @@ mixins — nothing component-specific goes there.
 
 ## Stories
 
-Payment-method stories live in `[Component]/stories/`.
+New payment-method stories go in `[Component]/stories/`. Most existing ones sit at the folder root
+as `[Component].stories.tsx` — either location is picked up, so don't relocate an existing story
+just for consistency.
 
 - Every story must wrap the element in `Checkout` (initializes Core from the story args) and then
   `ComponentContainer`, both from `storybook/components/`. `ComponentContainer` sets
@@ -93,11 +117,12 @@ Payment-method stories live in `[Component]/stories/`.
   instance, calling `submit()` on it from the button.
 - Type stories with `MetaConfiguration<T>`, `StoryConfiguration<T>`, and
   `PaymentMethodStoryProps<T>` from `storybook/types.ts`.
-- The export name becomes the story ID (`CardSuccess` → `card-success`) and
-  `e2e-playwright/fixtures/URL_MAP.ts` is keyed on it. Renaming an export breaks the matching E2E
-  test — update both.
-- Log callbacks with `console.log`. `@storybook/addon-actions` is **not installed**; importing it
-  breaks the build.
+- The story ID is `{kebab-meta-title}--{kebab-export-name}` — the `Cards` meta title plus a
+  `Default` export gives `components-cards--default`, not `default`. The `URL_MAP.ts` fixture in
+  `e2e-playwright` is keyed on the full ID, so renaming either the export **or** the meta title
+  breaks the matching E2E test. Update both.
+- Log callbacks with `console.log`. `@storybook/addon-actions` is **not installed**, so importing
+  it fails to resolve. See `storybook/AGENTS.md` before reaching for an alternative.
 
 ## Testing
 
@@ -137,7 +162,11 @@ data to storage or cookies.
   brand and supported brands.
 - Dual branding: when a BIN matches multiple brands, render the brand selector and read the
   shopper's choice in `formatData()`.
-- ClickToPay is opt-out — enabled by default, disabled with `_disableClickToPay: true`.
+- ClickToPay is opt-out at the flag level (`_disableClickToPay` defaults to `false`), but three
+  further conditions gate whether it actually initializes: the guard reads the **raw constructor
+  props**, so `new CardElement(core)` with no props argument skips it entirely; a `prepaid`
+  `fundingSource` disables it; and `createClickToPayService` returns `null` unless the backend
+  supplies the scheme DPA IDs. "Enabled by default" describes the flag, not the real behaviour.
 - When Card is embedded inside another component, set `_disableClickToPay: true` and
   `showPayButton: false` on the child.
 
@@ -170,10 +199,11 @@ DropinElement constructor
   → on render:
     → splitPaymentMethods()          separates regular / stored / instant
     → createElements()               instantiates from the paymentMethods response
-    → createStoredElements()         stored payment methods
+        ↳ filters.ts                 drops unsupported, then unavailable, methods
+        ↳ getComponentConfiguration() merges paymentMethodsConfiguration overrides
     → createInstantPaymentElements() wallets, rendered above the list
-    → filters.ts                     drops unavailable methods
-    → getComponentConfiguration()    merges paymentMethodsConfiguration overrides
+    → createStoredElements()         stored payment methods
+    → fastlanePaymentElement         PayPal Fastlane, when present
 ```
 
 ### Conventions
@@ -203,15 +233,20 @@ DropinElement constructor
 Security-critical. Two separate flows, both driven by an iframe from Adyen's 3DS2 server and
 created by `Core.createFromAction()` when a response carries `action.type = 'threeDS2'`.
 
-| Component                   | TxVariant                   | Purpose                                                     |
-| --------------------------- | --------------------------- | ----------------------------------------------------------- |
-| `ThreeDS2Challenge`         | `threeDS2Challenge`         | Visible challenge (password/OTP) for shopper authentication |
-| `ThreeDS2DeviceFingerprint` | `threeDS2DeviceFingerprint` | Invisible fingerprint iframe for the frictionless flow      |
+| Component                   | Registry key                | `static type`         | Purpose                                                     |
+| --------------------------- | --------------------------- | --------------------- | ----------------------------------------------------------- |
+| `ThreeDS2Challenge`         | `threeDS2Challenge`         | `threeDS2Challenge`   | Visible challenge (password/OTP) for shopper authentication |
+| `ThreeDS2DeviceFingerprint` | `threeDS2DeviceFingerprint` | `threeDS2Fingerprint` | Invisible fingerprint iframe for the frictionless flow      |
+
+Note the fingerprint mismatch: it registers under `threeDS2DeviceFingerprint` (the key
+`actionTypes.ts` looks up) but its `static type` — and therefore its analytics `component` field —
+is `threeDS2Fingerprint`. Both enum members exist; don't "fix" one to match the other.
 
 ### Conventions
 
-- `ThreeDS2Challenge` deliberately sends no `rendered` analytics event — it would share a
-  timestamp with the "creq sent" event.
+- Both components deliberately suppress the `rendered` analytics event by overriding
+  `beforeRender()` with an empty body — the event would share a timestamp with "creq sent"
+  (Challenge) and "threeDSMethodData sent" (fingerprint). A regression test covers this.
 - Challenge `dataKey` defaults to `threeDSResult`.
 - `DEFAULT_CHALLENGE_WINDOW_SIZE` in `constants.ts` controls iframe dimensions.
 - `callSubmit3DS2Fingerprint.ts` owns fingerprint submission.

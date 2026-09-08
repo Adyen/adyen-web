@@ -45,13 +45,10 @@ Do not modify Core to satisfy a single component. Propose a component-level solu
 
 ## Lifecycle
 
-```
-AdyenCheckout(config) → new Core(config) → core.initialize()
-  → session setup (session-based flow only)
-  → Analytics.setUp() — requests checkoutAttemptId
-  → payment methods processing
-  → ready for component creation
-```
+`AdyenCheckout(config)` constructs `Core` and awaits `core.initialize()`, which sets up the session
+(session-based flow only), calls `Analytics.setUp()` to request the `checkoutAttemptId`, processes
+the payment methods response, and only then is ready for component creation. Nothing may create a
+component before `initialize()` resolves.
 
 ## Conventions
 
@@ -92,18 +89,19 @@ collect data, keep `paymentData`, then call `onAdditionalDetails`.
 ## Analytics
 
 - `Analytics.setUp()` requests the `checkoutAttemptId`. The initial `/analytics` call must not
-  include `flavor`, `component`, or `containerWidth`.
+  include `flavor` or `component`.
 - Send the flavor separately with `Analytics.sendFlavor('dropin' | 'components')` once a component
-  is instantiated.
-- `checkoutAttemptId` is cached in `sessionStorage` under `checkout-attempt-id` and reused only if
-  it was created less than 15 minutes ago.
+  is instantiated. It defers itself if the attempt ID isn't ready yet.
+- `checkoutAttemptId` is cached in `sessionStorage` and reused only if it was created less than 15
+  minutes ago. `Storage` prefixes every key, so the identifier in code is `checkout-attempt-id`
+  but the actual key on the object is `adyen-checkout__checkout-attempt-id`.
 - `Analytics.flush()` sends immediately, bypassing debounce.
 
-| Category | Debounce                             | Examples                                            |
-| -------- | ------------------------------------ | --------------------------------------------------- |
-| Info     | 10s in production, 5s in development | `clicked`, `rendered`, `selected`, `focus`, `input` |
-| Log      | `DEFAULT_DEBOUNCE_TIME_MS` (300ms)   | `Submit`, `Action`, `Redirect`, `ThreeDS2`          |
-| Error    | `DEFAULT_DEBOUNCE_TIME_MS` (300ms)   | `Network`, `ImplementationError`, `ApiError`        |
+| Category | Debounce                                            | Examples                                            |
+| -------- | --------------------------------------------------- | --------------------------------------------------- |
+| Info     | 5s when `NODE_ENV === 'development'`, 10s otherwise | `clicked`, `rendered`, `selected`, `focus`, `input` |
+| Log      | `DEFAULT_DEBOUNCE_TIME_MS` (300ms)                  | `Submit`, `Action`, `Redirect`, `ThreeDS2`          |
+| Error    | `DEFAULT_DEBOUNCE_TIME_MS` (300ms)                  | `Network`, `ImplementationError`, `ApiError`        |
 
 The container component owns analytics — don't emit events from internal primitives. Gate
 event-sending on a `sendAnalytics = false` parameter so programmatic calls stay silent, and test

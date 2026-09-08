@@ -14,7 +14,7 @@ Translation **copy** does not live here — it lives in `packages/server/transla
 
 ## Boundaries
 
-- **Owns**: `Language.ts`, `LanguageService.ts`, `constants.ts`, `utils.ts`, `types.ts`.
+- **Owns**: `Language.ts`, `LanguageService.ts`, `constants.ts`, `utils.ts`, `types.ts`, `index.ts`.
 - **Consumed by**: everything, via `core.modules.i18n`. `index.ts` exports `Language` only.
 - **Never touches**: component folders, or the translation JSON files themselves.
 
@@ -29,9 +29,11 @@ either direction**:
 
 So adding or removing a locale is always two edits, in two packages, in the same PR.
 
-The script parses the array with a regex anchored on `] as const;`. Reformatting the export or
-dropping `as const` makes it throw before it validates anything — the failure looks unrelated to
-what you changed.
+The script parses the array with a regex anchored on both `export const CDN_SUPPORTED_LOCALES = [`
+and `] as const;`. Reformatting the opening line or dropping `as const` makes it throw before it
+validates anything — the failure names the constant, not what you changed. Worse, it also parses
+one `'locale',` per line, so collapsing the array onto a single line yields a silently empty list
+instead of an error. Keep the formatting as-is.
 
 ## Safety
 

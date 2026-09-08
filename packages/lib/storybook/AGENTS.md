@@ -27,8 +27,11 @@ review page — belong in `storybook/stories/`.
 
 `Checkout` initializes the SDK Core from the story args and hands it to a render prop.
 
-`ComponentContainer` calls `addToWindow(element)` — which sets `globalThis.component` — then
-awaits `isAvailable()` before mounting, and unmounts on cleanup.
+`ComponentContainer` calls `addToWindow(element)` — which sets both `globalThis.component` and
+`globalThis.parent.window['component']`, the second being what makes the instance reachable from
+Playwright's top-level page while the story runs inside `iframe.html` — then awaits
+`isAvailable()` before mounting, and unmounts on cleanup. It renders into a
+`<div id="component-root">`, which is the selector `Base.a11yComponentSelector()` returns.
 
 **`globalThis.component` is what the E2E suite drives.** Changing how or when
 `ComponentContainer` sets it breaks every E2E spec at once, not just one component's.
@@ -37,15 +40,20 @@ awaits `isAvailable()` before mounting, and unmounts on cleanup.
 
 - `types.ts` exports the story types every payment method uses: `MetaConfiguration<T>`,
   `StoryConfiguration<T>`, `PaymentMethodStoryProps<T>`.
-- Storybook derives a story's ID from its export name (`CardSuccess` → `card-success`), and
-  `e2e-playwright/fixtures/URL_MAP.ts` is keyed on those IDs. Renaming an export breaks the
-  matching E2E test.
+- A story's ID is `{kebab-meta-title}--{kebab-export-name}` — the `Cards` meta title plus a
+  `Default` export yields `components-cards--default`. `e2e-playwright/fixtures/URL_MAP.ts` is
+  keyed on the full ID, so renaming either the export or the meta title breaks the matching E2E
+  test.
 - Opt a story out of automated visual regression with `tags: ['no-automated-visual-test']` (the tag
   is declared in `.storybook/main.ts`).
-- Available addons: `addon-a11y`, `addon-docs`, `msw-storybook-addon`. `@storybook/addon-actions`
-  is **not installed** and importing it breaks the build — log callbacks with `console.log`.
+- Addons: `addon-a11y` and `addon-docs` via the `addons` array in `.storybook/main.ts`;
+  `msw-storybook-addon` is wired separately as a loader in `.storybook/preview.tsx`.
+- Log callbacks with `console.log`. `@storybook/addon-actions` is **not installed**, so importing
+  it fails to resolve. Storybook 10 does ship an `action` helper in the core `storybook` package
+  (`storybook/actions`) which _would_ resolve — we deliberately don't use it, to keep one logging
+  convention across the repo rather than two.
 
 ## Safety
 
 - Never change the `ComponentContainer` mount contract without running the full E2E suite in CI.
-- Never import `@storybook/addon-actions`.
+- Never import `@storybook/addon-actions` or `storybook/actions`.
