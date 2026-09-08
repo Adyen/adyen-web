@@ -58,6 +58,16 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
         this.initializePayPalV6 = this.initializePayPalV6.bind(this);
 
         if (this.props.usePayPalV6) {
+            const { isExpress } = this.props;
+            const { onShippingAddressChange, onShippingOptionsChange } = this.props.usePayPalV6;
+
+            if (isExpress === false && (onShippingAddressChange || onShippingOptionsChange)) {
+                throw new AdyenCheckoutError(
+                    'IMPLEMENTATION_ERROR',
+                    'PayPal - You must set "isExpress" flag to "true" in order to use "onShippingAddressChange" and/or "onShippingOptionsChange" callbacks'
+                );
+            }
+
             this.initializePayPalV6();
         }
     }
@@ -275,23 +285,19 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
     private handleOnApproveV6(data: PayPalV6OnApproveData): Promise<void> {
         const onAuthorized = this.props.usePayPalV6?.onAuthorized;
 
-        let state: AdditionalDetailsData = {
-            data: {
-                details: data,
-                paymentData: this.paymentData ?? undefined
-            }
-        };
+        let state: AdditionalDetailsData | undefined;
 
         // 'orderId' is only present when the shopper approved a one-time payment session, meaning an actual
         // PayPal order was created. The SDK v6 keys are remapped to the casing expected by the /payments/details API.
         if ('orderId' in data) {
-            const { orderId, payerId, ...restData } = data;
+            // @ts-expect-error - fundingSource is not in the type but is present in the data
+            const { orderId, payerId, fundingSource } = data;
             state = {
                 data: {
                     details: {
                         orderID: orderId,
                         payerID: payerId,
-                        ...restData
+                        paymentSource: fundingSource
                     },
                     paymentData: this.paymentData ?? undefined
                 }
@@ -301,17 +307,23 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
         // 'vaultSetupToken' is only present when the shopper approved a save payment session (zero-auth
         // tokenization). No PayPal order exists in this flow, so the vault token is sent instead of an order id.
         if ('vaultSetupToken' in data) {
-            const { vaultSetupToken, payerId, ...restData } = data;
+            // @ts-expect-error - fundingSource is not in the type but is present in the data
+            const { vaultSetupToken, payerId, fundingSource } = data;
             state = {
                 data: {
                     details: {
                         vaultToken: vaultSetupToken,
                         payerID: payerId,
-                        ...restData
+                        paymentSource: fundingSource
                     },
                     paymentData: this.paymentData ?? undefined
                 }
             };
+        }
+
+        if (!state) {
+            this.handleError(new AdyenCheckoutError('ERROR', 'Missing `orderId` or `vaultSetupToken` in PayPal approval data'));
+            return Promise.resolve();
         }
 
         // The order details can only be fetched for a one-time payment session, since the save payment session
@@ -347,7 +359,9 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
                 );
             })
             .then(() => this.handleAdditionalDetails(state))
-            .catch(error => this.handleError(new AdyenCheckoutError('ERROR', 'Something went wrong while fetching PayPal Order', { cause: error })));
+            .catch(error =>
+                this.handleError(new AdyenCheckoutError('ERROR', 'Something went wrong with finalizing the PayPal order', { cause: error }))
+            );
     }
 
     handleResolve(token: string) {
