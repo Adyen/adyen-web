@@ -191,5 +191,3 @@ ADR in `packages/lib/docs/adr/`.
 ## Pointers
 
 - Nearest `AGENTS.md` — domain-specific commands, boundaries, and patterns.
-- `.windsurf/skills/` and `.factory/skills/` — step-by-step procedures (new payment method,
-  E2E test, Storybook story, TDD workflow, code review, PR description).
