@@ -1,58 +1,36 @@
 # Styles
 
-Design token system, shared mixins, and CSS custom property definitions. The foundation for both
-legacy global BEM styles and new CSS Modules.
+Design token generation and the shared mixin library. Four files, consumed by every `.scss` in the
+SDK.
 
 ## Commands
 
-| Task        | Command                               |
-| ----------- | ------------------------------------- |
-| Lint styles | `yarn --cwd packages/lib lint-styles` |
-| Auto-fix    | `yarn --cwd packages/lib styles:fix`  |
+| Task        | Command                                       |
+| ----------- | --------------------------------------------- |
+| Lint styles | `yarn workspace @adyen/adyen-web lint-styles` |
+| Auto-fix    | `yarn workspace @adyen/adyen-web styles:fix`  |
 
 ## Boundaries
 
 - **Owns**: `variable-generator.scss`, `mixins.scss`, `overrides.scss`, `index.scss`.
-- **Never touches**: component styles — those live next to their component.
+- **Never touches**: component styles.
 
 ## Design Tokens
 
 Tokens are **generated from `@adyen/bento-design-tokens`**, which `variable-generator.scss` pulls
-in (`aliases`, `definitions`, `components`). That's why you don't hand-write tokens here: the
-design system package is the source, and a locally invented token will not survive an upgrade and
-won't exist for consumers theming the SDK.
+in (`aliases`, `definitions`, `components`). The design system package is the source: a locally
+invented token will not survive an upgrade and won't exist for merchants theming the SDK.
 
-Consume them through the `token()` function, and emit CSS custom properties named
-`--adyen-sdk-[token-name]` for merchant overrides.
+`variable-generator.scss` emits them as CSS custom properties named `--adyen-sdk-[token-name]`,
+which is the surface merchants override, and exposes the `token()` function that the rest of the
+codebase consumes.
 
-## Writing Styles
-
-Use `@use` with a namespace. `@import` is deprecated in Sass and is not used anywhere in this
-codebase — don't reintroduce it.
-
-```scss
-@use 'styles/mixins';
-@use 'styles/variable-generator';
-
-.bankList {
-    padding-top: variable-generator.token(spacer-070);
-    color: variable-generator.token(color-label-primary);
-
-    @include mixins.adyen-checkout-text-caption;
-}
-```
-
-Note the namespace: it's `variable-generator.token(...)`, not a bare `token(...)`. The bare form
-only works inside `variable-generator.scss` itself.
-
-- **New components**: CSS Modules — `ComponentName.module.scss`, camelCase class names
-  (`.bankList`, `.errorMessage`), imported as `import styles from './ComponentName.module.scss'`.
-- **Legacy components**: global SCSS with BEM —
-  `.adyen-checkout__[component]__[element]--[modifier]`.
+The bare `token(...)` call form resolves only inside `variable-generator.scss` itself. Every other
+file in the repo reaches it through a `@use` namespace.
 
 ## Mixins
 
-`mixins.scss` covers more than you might expect — check it before writing anything by hand:
+`mixins.scss` is the shared library. Before adding one, check it isn't already covered:
 
 | Group           | Examples                                                                                            |
 | --------------- | --------------------------------------------------------------------------------------------------- |
@@ -62,12 +40,10 @@ only works inside `variable-generator.scss` itself.
 | Resets & layout | `b-link-reset`, `box-sizing-setter`, `adyen-checkout-input-wrapper-reset`, `fieldset-fields-layout` |
 | Misc            | `set-spinner-color`, `adyen-checkout-icon-shadow`, `adyen-checkout-component-loading`               |
 
+A mixin belongs here once 3+ components need it. A one-off stays with its component.
+
 ## Safety
 
 - Never add a new design token — use an existing one from `@adyen/bento-design-tokens`. If nothing
   fits, raise it rather than inventing one locally.
-- Never hardcode a colour, spacing, or radius value where a token exists.
-- Never use inline styles or CSS-in-JS.
-- Never mix CSS Modules and global SCSS in the same component.
-- Always support RTL with `[dir='rtl'] &` selectors.
-- Never add `stylelint-disable` in new styles — fix the violation, or ask.
+- Never add a selector here that targets a single component.

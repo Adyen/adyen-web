@@ -6,11 +6,11 @@ callback contract.
 
 ## Commands
 
-| Task       | Command                              |
-| ---------- | ------------------------------------ |
-| Unit tests | `yarn --cwd packages/lib test core`  |
-| Type check | `yarn --cwd packages/lib type-check` |
-| Lint       | `yarn --cwd packages/lib lint`       |
+| Task       | Command           |
+| ---------- | ----------------- |
+| Unit tests | `yarn test core`  |
+| Type check | `yarn type-check` |
+| Lint       | `yarn lint`       |
 
 ## Boundaries
 
@@ -61,8 +61,6 @@ AdyenCheckout(config) → new Core(config) → core.initialize()
   the type helper is designed to fail the build if you forget.
 - `Core.register()` / `registry.add()` maps `TxVariants` to component classes at runtime.
 - `resolveEnvironments()` in `Environment/` maps an environment name to its URLs.
-- Errors use `AdyenCheckoutError` with a typed code; `CancelError` is separate and represents
-  shopper-initiated cancellation, not a failure.
 
 ## Callback Contract (Public API)
 
@@ -109,7 +107,7 @@ collect data, keep `paymentData`, then call `onAdditionalDetails`.
 
 The container component owns analytics — don't emit events from internal primitives. Gate
 event-sending on a `sendAnalytics = false` parameter so programmatic calls stay silent, and test
-both paths. Never send PCI-sensitive data.
+both paths.
 
 ### Error codes are cross-SDK
 
@@ -123,5 +121,4 @@ collision — no CI job catches it. New codes are registered there before being 
 ## Safety
 
 - Never change `ICore` or a callback signature without a major-version plan.
-- Never log PCI-sensitive data in analytics or error messages.
-- Always use `AdyenCheckoutError` with `{ cause }` rather than a generic `Error`.
+- Never modify Core to satisfy one payment method.

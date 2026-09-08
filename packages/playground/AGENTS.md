@@ -9,8 +9,7 @@ Demo app for manually testing payment components end to end. Dev-only — never 
 | Start (playground + library watch) | `yarn start` from the repo root        |
 | Dev server                         | `localhost:3020`, override with `PORT` |
 
-Storybook also defaults to `3020`, so only one can run at a time. `yarn start` runs the library in
-watch mode alongside the playground, so library edits hot-reload.
+`yarn start` runs the library in watch mode alongside the playground, so library edits hot-reload.
 
 ## Boundaries
 

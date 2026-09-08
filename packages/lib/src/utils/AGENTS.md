@@ -5,10 +5,10 @@ debounce, script loading, storage, focus handling, and a few Preact hooks.
 
 ## Commands
 
-| Task       | Command                              |
-| ---------- | ------------------------------------ |
-| Unit tests | `yarn --cwd packages/lib test utils` |
-| Type check | `yarn --cwd packages/lib type-check` |
+| Task       | Command           |
+| ---------- | ----------------- |
+| Unit tests | `yarn test utils` |
+| Type check | `yarn type-check` |
 
 ## Boundaries
 
@@ -38,8 +38,10 @@ utility next to its consumer. Don't cite the existing exceptions as precedent.
 - Keep functions deterministic and injectable. Don't reach for `Date.now()` or randomness inside a
   helper without allowing it to be passed in — it makes the function untestable.
 - Colocate tests as `[name].test.ts` next to `[name].ts`. Every new utility needs one.
-- Hooks live here too (`useForm/`, `useAutoFocus.ts`, `useIsMobile.ts`, `hookUtils.ts`). They use
-  `preact/hooks` and follow the normal hooks rules.
+- General-purpose hooks live here (`useForm/`, `useAutoFocus.ts`, `useIsMobile.ts`,
+  `hookUtils.ts`). They use `preact/hooks` and follow the normal hooks rules. A hook that owns a
+  domain and its own state machine goes in `src/hooks/` instead (`usePaymentStatusTimer`) — the
+  split is "generic helper" versus "feature logic that happens to be a hook".
 - `constants/` holds values only, no logic. `Formatters/` handles string and data formatting.
   `Validator/` holds validation logic and rules.
 

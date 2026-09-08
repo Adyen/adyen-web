@@ -7,11 +7,11 @@ method. Covers Card, Drop-in, and 3DS2 specifics at the bottom.
 
 | Task                          | Command                                                                                        |
 | ----------------------------- | ---------------------------------------------------------------------------------------------- |
-| Unit tests                    | `yarn --cwd packages/lib test [ComponentName]`                                                 |
-| Type check                    | `yarn --cwd packages/lib type-check`                                                           |
+| Unit tests                    | `yarn test [ComponentName]`                                                                    |
+| Type check                    | `yarn type-check`                                                                              |
 | Strict TS scan, one component | `yarn workspace @adyen/adyen-web exec tsc -p tsconfig.strict.json 2>&1 \| grep -i [component]` |
-| Lint                          | `yarn --cwd packages/lib lint`                                                                 |
-| Lint styles                   | `yarn --cwd packages/lib lint-styles`                                                          |
+| Lint                          | `yarn lint`                                                                                    |
+| Lint styles                   | `yarn workspace @adyen/adyen-web lint-styles`                                                  |
 | E2E                           | `yarn test:e2e tests/e2e/[component]/[component].spec.ts --project=chromium`                   |
 
 ## Boundaries
@@ -64,21 +64,51 @@ export type { ComponentConfiguration } from './types';
   constructor, and lazy-load their third-party SDK via dynamic import. Their external SDK types
   live in colocated type files.
 
+## Styling
+
+Component styles live next to the component. `src/styles/` holds only token generation and shared
+mixins — nothing component-specific goes there.
+
+- New components use CSS Modules: `ComponentName.module.scss`, camelCase class names, imported as
+  `import styles from './ComponentName.module.scss'`. Legacy components use global SCSS with BEM
+  (`.adyen-checkout__[component]__[element]--[modifier]`). Never mix the two in one component.
+- Reach shared SCSS through `@use` with a namespace, then call `variable-generator.token(...)`. A
+  bare `token(...)` resolves only inside `variable-generator.scss` and will fail here. `@import` is
+  deprecated and appears nowhere in this codebase.
+- Never hardcode a colour, spacing, or radius where a token exists, and never invent a token — they
+  come from `@adyen/bento-design-tokens`.
+- Check `styles/mixins.scss` before hand-writing focus rings, typography, breakpoints, or resets.
+- Always support RTL with `[dir='rtl'] &` selectors.
+- Never add `stylelint-disable` in new styles — fix the violation, or ask.
+
+## Stories
+
+Payment-method stories live in `[Component]/stories/`.
+
+- Every story must wrap the element in `Checkout` (initializes Core from the story args) and then
+  `ComponentContainer`, both from `storybook/components/`. `ComponentContainer` sets
+  `globalThis.component`, which is what the Playwright suite drives — mount a UIElement directly
+  and every E2E test for that component breaks, with no local signal that anything is wrong.
+- For a component with an external pay button, keep the wrapper and hold your own reference to the
+  instance, calling `submit()` on it from the button.
+- Type stories with `MetaConfiguration<T>`, `StoryConfiguration<T>`, and
+  `PaymentMethodStoryProps<T>` from `storybook/types.ts`.
+- The export name becomes the story ID (`CardSuccess` → `card-success`) and
+  `e2e-playwright/fixtures/URL_MAP.ts` is keyed on it. Renaming an export breaks the matching E2E
+  test — update both.
+- Log callbacks with `console.log`. `@storybook/addon-actions` is **not installed**; importing it
+  breaks the build.
+
 ## Testing
 
-- Build the core context with `setupCoreMock()` from
-  `packages/lib/config/testMocks/setup-core-mock.ts`. Never use `global.core`, `global.i18n`, or
-  `global.resources`. Access modules through `core.modules.i18n`, `core.modules.resources`,
-  `core.modules.srPanel`, and pass those same instances to the `<CoreProvider>` /
-  `<SRPanelProvider>` wrappers in your render helper.
+- Take the module instances from `setupCoreMock()` — `core.modules.i18n`, `core.modules.resources`,
+  `core.modules.srPanel` — and pass those **same** instances to the `<CoreProvider>` /
+  `<SRPanelProvider>` wrappers in your render helper. A second set of instances silently desyncs.
 - When you touch a test file that still uses the `global.*` pattern, migrate it as part of your
   change.
 - Type mock responses explicitly — no implicit `any`. For service responses, use a plain inline
   type describing the mock shape (e.g. `{ payload?: string; resultCode?: string; error?: string }`)
   rather than fighting the production `ResultCode` union.
-- Query by accessible role: `getByRole` with an accessible name → `getByLabelText` → `getByText` →
-  keyboard/tab order. If an element is unreachable, that is an a11y gap — fix the markup with a
-  semantic element, `<label>`, or ARIA attribute. Do not add a `data-testid` to make a test pass.
 
 ---
 
@@ -122,8 +152,8 @@ data to storage or cookies.
 | `hasHolderName`          | `false` | Show the cardholder name field           |
 | `billingAddressRequired` | `false` | Require a billing address (AVS)          |
 
-`Card.tsx` sets `showFormInstruction`, `_disableClickToPay`, and `doBinLookup`; the rest are merged
-from `CardInput/defaultProps.ts`.
+`Card.tsx` sets `showFormInstruction`, `_disableClickToPay`, and `doBinLookup`. `showPayButton`
+comes from `UIElement`'s own defaults, and the rest are merged from `CardInput/defaultProps.ts`.
 
 ---
 

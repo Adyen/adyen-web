@@ -1,7 +1,7 @@
 # Adyen Web SDK
 
-Payment UI SDK shipped to millions of shoppers. This file is the single source of truth for
-repo-wide conventions. Domain-specific context lives in the nearest `AGENTS.md`.
+Payment UI SDK shipped to millions of shoppers. This file holds the conventions that apply
+everywhere. Domain-specific context lives in the nearest `AGENTS.md`.
 
 ## Priority Stack
 
@@ -48,7 +48,7 @@ Prioritize Storybook — it's what the E2E suite runs against.
 Scope every check to what you actually touched. CI runs the full matrix — don't reproduce it
 locally.
 
-1. `yarn --cwd packages/lib test <ComponentName>` — the affected unit tests
+1. `yarn test <ComponentName>` — the affected unit tests
 2. `yarn lint` and `yarn type-check`
 3. Strict TS, filtered to your files:
    `yarn workspace @adyen/adyen-web exec tsc -p tsconfig.strict.json 2>&1 | grep <file-name>`.
@@ -82,36 +82,30 @@ commit fails because of it, re-stage the modified files and commit again.
 
 ```
 packages/
-  lib/              # The SDK
-    src/core/       # SDK engine, session, analytics, environments
-    src/components/ # Payment method implementations
-    src/utils/      # Shared helpers
-    src/styles/     # Design tokens, mixins, global styles
-    src/language/   # i18n runtime (keys live in packages/server/translations)
-    src/types/      # SDK-wide shared types
-    storybook/      # Story infrastructure; also the E2E test target
-    docs/adr/       # Architecture Decision Records
-  playground/       # Manual test/demo app
-  server/           # Mock API + translation files
-  e2e-playwright/   # Playwright E2E tests
+  lib/                  # The SDK
+    src/core/           # SDK engine, session, analytics, environments
+    src/components/     # Payment method implementations (+ their styles and stories)
+    src/utils/          # Shared helpers, plus general-purpose hooks
+    src/hooks/          # Stateful hooks with their own domain (e.g. usePaymentStatusTimer)
+    src/styles/         # Design token generation and shared mixins
+    src/language/       # i18n runtime (copy lives in packages/server/translations)
+    src/types/          # SDK-wide shared types
+    config/testMocks/   # setupCoreMock and friends, used by every unit test
+    storybook/          # Story infrastructure; also the E2E test target
+    docs/adr/           # Architecture Decision Records
+  playground/           # Manual test/demo app
+  server/               # Mock API + translation files
+  e2e-playwright/       # Playwright E2E tests
 ```
-
-### Directory boundaries
-
-| Directory                  | Constraint                                                                              |
-| -------------------------- | --------------------------------------------------------------------------------------- |
-| `src/core/`                | Cross-cutting concerns only. Changes affect all components. Must stay payment-agnostic. |
-| `src/components/[Method]/` | Self-contained. Never import between payment method folders.                            |
-| `src/components/internal/` | Shared, payment-agnostic primitives. Extract here at 3+ consumers.                      |
-| `src/utils/`               | Shared helpers. Keep pure and side-effect-free wherever possible.                       |
-| `src/styles/`              | Tokens and mixins only. Component styles live with the component.                       |
 
 ### Where does new code go?
 
 1. Specific to one payment method → `src/components/[Method]/`
 2. Reused by 3+ components → `src/components/internal/`
 3. Pure logic, no UI → `src/utils/`
-4. SDK-wide concern → `src/core/` (propose a component-level solution first)
+4. A hook — general-purpose (`useIsMobile`) → `src/utils/`; owns a domain and its own state
+   machine (`usePaymentStatusTimer`) → `src/hooks/`
+5. SDK-wide concern → `src/core/` (propose a component-level solution first)
 
 External files must import a component only through its folder's `index.ts`, never a `.tsx`
 directly. Do not use `export *` in `index.ts` — it defeats tree-shaking.
@@ -131,26 +125,19 @@ directly. Do not use `export *` in `index.ts` — it defeats tree-shaking.
 ### UIElement pattern
 
 Every payment component extends `UIElement` and provides `static type` (a `TxVariants` value),
-`formatProps()`, `isValid`, and `submit()`. Validate merchant config in `formatProps()` and throw
-`AdyenCheckoutError` with `IMPLEMENTATION_ERROR` on misconfiguration. Never make API calls from a
-constructor — use `isAvailable()`. See `src/components/AGENTS.md`.
-
-### Styling
-
-- **New code**: CSS Modules — `ComponentName.module.scss`, camelCase class names.
-- **Legacy maintenance**: BEM — `.adyen-checkout__[component]__[element]--[modifier]`.
-- Always use `token()` for values; never hardcode. Support RTL via `[dir='rtl'] &`.
-- No inline styles, no CSS-in-JS, and never mix CSS Modules with global SCSS in one component.
+`formatProps()`, `isValid`, and `submit()`. Never make API calls from a constructor — use
+`isAvailable()`. See `src/components/AGENTS.md`.
 
 ### Localization
 
 Use `i18n.get('key')` for every user-facing string, with descriptive dot-notation keys
 (`card.number.label`). Pass the **resolved string** to child components, not the key.
 
-Translation copy is produced in a separate translations repo, not here. Add your new key to
-`packages/server/translations/en-US.json` so the feature works, and let the translation process
-supply the other locales — they normally land in this repo as one batch commit across all files.
-Don't hand-write or machine-translate a non-`en-US` locale to fill a gap.
+Translation copy is produced in a separate translations repo, not here. `en-US.json` is the source
+of truth: add your new key to `packages/server/translations/en-US.json` so the feature works, and
+let the translation process supply the other locales — they land as one batch commit across all
+files. Treat every non-`en-US` file as generated output. Don't hand-write or machine-translate one
+to fill a gap; it gets overwritten by the next batch, and until then it ships wrong copy.
 
 ### Error handling
 
@@ -158,22 +145,8 @@ Don't hand-write or machine-translate a non-`en-US` locale to fill a gap.
 - Codes: `IMPLEMENTATION_ERROR` (merchant mistake), `NETWORK_ERROR` (API/fetch), `ERROR` (runtime).
   `CancelError` is a separate type for shopper-initiated cancellation.
 - Wrap async work in try/catch. No empty catch blocks. Never put sensitive data in a message.
-
-#### Adding a new analytics error code
-
-The numeric codes in `core/Errors/constants.ts` (`SF_ErrorCodes`, `ErrorCodePrefixes`) and the
-`errorCodeMapping` in `core/Analytics/constants.ts` are **shared across all Adyen Checkout SDKs**
-(Web, iOS, Android). The registry lives in a different repo:
-
-[`adyen-checkout-sdk-meta` → `alignment/AnalyticsErrors.json`](https://github.com/Adyen/adyen-checkout-sdk-meta/blob/develop/alignment/AnalyticsErrors.json)
-
-Before introducing a code, check that registry: reuse the existing code if the error is already
-defined, and confirm your new number doesn't collide with another SDK's. A genuinely new code gets
-added there **first**, then implemented here.
-
-This is a manual process — no CI job enforces it, so nothing will stop you from shipping a
-conflicting code. If you need a new code, say so and stop rather than picking a free-looking
-number.
+- Numeric analytics error codes are shared with the iOS and Android SDKs and are **not** yours to
+  invent — they come from a cross-SDK registry.
 
 ### Async
 
@@ -194,6 +167,7 @@ context with `setupCoreMock()` from `packages/lib/config/testMocks/setup-core-mo
   iframes and is exchanged only via `postMessage`. Never log iframe traffic.
   Safe to log: masked numbers (`****1234`), payment method type, result codes.
 - **No `react` / `react-dom` imports.**
+- **No inline styles and no CSS-in-JS** — styling goes in a `.scss` file next to the component.
 - **No hardcoded credentials** — API keys, secrets, and tokens must never appear in source.
 - **No `console.log()` in production** — use `console.debug()` gated on `NODE_ENV`, or
   `console.warn()` for deprecations. Never log PCI data to analytics.

@@ -5,12 +5,12 @@ here ripple across all 60+ payment methods.
 
 ## Commands
 
-| Task           | Command                                  |
-| -------------- | ---------------------------------------- |
-| Unit tests     | `yarn --cwd packages/lib test UIElement` |
-| All unit tests | `yarn --cwd packages/lib test`           |
-| Type check     | `yarn --cwd packages/lib type-check`     |
-| Lint           | `yarn --cwd packages/lib lint`           |
+| Task           | Command               |
+| -------------- | --------------------- |
+| Unit tests     | `yarn test UIElement` |
+| All unit tests | `yarn test`           |
+| Type check     | `yarn type-check`     |
+| Lint           | `yarn lint`           |
 
 ## Boundaries
 
@@ -65,18 +65,13 @@ inherited and rarely overridden; don't change it without understanding the full 
 
 ## Testing
 
-- Build core context with `setupCoreMock()` from
-  `packages/lib/config/testMocks/setup-core-mock.ts`. Never use `global.core`, `global.i18n`, or
-  `global.resources`. Access modules via `core.modules.*`.
 - For spy-based a11y assertions, take `srPanel` from `setupCoreMock().modules.srPanel` — do not
   construct `new SRPanel(...)` yourself.
 - Migrate any `global.*` usage you encounter in a test file you're already editing.
 - Type mock responses explicitly; use a plain inline type matching the mock rather than the
   production union.
-- Query by accessible role first (`getByRole` with an accessible name → `getByLabelText` →
-  `getByText` → keyboard order). These primitives back every payment method, so an element that's
-  unreachable by role or label is a real a11y bug affecting shoppers — fix the markup instead of
-  adding a `data-testid`.
+- An element here that can't be reached by role or label is an a11y bug in **every** payment
+  method at once. Weight that accordingly when deciding whether to fix the markup.
 
 ## Safety
 
