@@ -18,7 +18,7 @@ function createPaymentMethodMock(id: string) {
 
 /** Mimics Drop-in list, where at most one payment method is selected at a time */
 function PaymentMethodListWrapper({ paymentMethodComponents }: Readonly<{ paymentMethodComponents: UIElement[] }>) {
-    const [selected, setSelected] = useState<UIElement>(null);
+    const [selected, setSelected] = useState<UIElement | null>(null);
     return (
         <div>
             {paymentMethodComponents.map(paymentMethodComponent => (
