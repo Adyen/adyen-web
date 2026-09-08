@@ -6,6 +6,9 @@ on:
 jobs:
   size:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
 
     steps:
       - name: Checkout Repo
@@ -20,7 +23,7 @@ jobs:
       - name: Enable Corepack
         run: corepack enable
 
-      - uses: andresz1/size-limit-action@master
+      - uses: andresz1/size-limit-action@94bc357df29c36c8f8d50ea497c3e225c3c95d1d # v1.8.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           directory: packages/lib

@@ -10,6 +10,8 @@ on:
 jobs:
   check-commit-message:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     outputs:
       trigger_release: ${{ steps.check_commit_message.outputs.trigger_release }}
     steps:

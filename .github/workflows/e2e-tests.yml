@@ -12,6 +12,8 @@ jobs:
   e2e-tests:
     timeout-minutes: 120
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     container:
       image: mcr.microsoft.com/playwright:v1.62.1-noble
       options: --user 1001

@@ -7,6 +7,8 @@ jobs:
   visual-tests:
     timeout-minutes: 60
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     container:
       image: mcr.microsoft.com/playwright:v1.62.1-noble
       options: --user 1001

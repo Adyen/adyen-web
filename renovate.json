@@ -1,6 +1,6 @@
 {
     "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-    "extends": ["config:recommended", ":disableDependencyDashboard"],
+    "extends": ["config:recommended", ":disableDependencyDashboard", "helpers:pinGitHubActionDigests"],
     "labels": ["dependencies"],
     "minimumReleaseAge": "21 days",
     "internalChecksFilter": "strict",

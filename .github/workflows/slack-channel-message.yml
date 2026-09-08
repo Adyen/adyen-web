@@ -26,6 +26,8 @@ on:
 jobs:
   send-channel-message:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     outputs:
       thread_ts: ${{ steps.send-message.outputs.thread_ts }}
     steps:

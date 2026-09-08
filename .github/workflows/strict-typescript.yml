@@ -6,6 +6,9 @@ on:
 jobs:
   strict-scan:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
 
     steps:
       - name: Use Node.js 24
@@ -162,29 +165,24 @@ jobs:
             echo 'EOF'
           } >> "$GITHUB_OUTPUT"
 
-      - name: Find existing comment
-        if: always() && github.event_name == 'pull_request'
-        uses: peter-evans/find-comment@v4
-        id: fc
-        with:
-          issue-number: ${{ github.event.pull_request.number }}
-          comment-author: 'github-actions[bot]'
-          body-includes: Strict TypeScript Scan Results
-
-      - name: Delete previous comment
-        if: always() && github.event_name == 'pull_request' && steps.fc.outputs.comment-id != '' && steps.fc.outputs.comment-id != '0'
-        uses: actions/github-script@v9
-        with:
-          script: |
-            await github.rest.issues.deleteComment({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              comment_id: Number('${{ steps.fc.outputs.comment-id }}')
-            });
-
       - name: Post scan summary
         if: always() && github.event_name == 'pull_request'
-        uses: peter-evans/create-or-update-comment@v5
+        uses: actions/github-script@v9
+        env:
+          COMMENT_BODY: ${{ steps.build-comment.outputs.body }}
         with:
-          issue-number: ${{ github.event.pull_request.number }}
-          body: ${{ steps.build-comment.outputs.body }}
+          script: |
+            const marker = 'Strict TypeScript Scan Results';
+            const { owner, repo } = context.repo;
+            const issue_number = context.payload.pull_request.number;
+
+            const comments = await github.paginate(github.rest.issues.listComments, { owner, repo, issue_number });
+            const previous = comments.find(
+              comment => comment.user?.login === 'github-actions[bot]' && (comment.body || '').includes(marker)
+            );
+
+            if (previous) {
+              await github.rest.issues.deleteComment({ owner, repo, comment_id: previous.id });
+            }
+
+            await github.rest.issues.createComment({ owner, repo, issue_number, body: process.env.COMMENT_BODY });

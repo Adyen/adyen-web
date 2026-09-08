@@ -9,6 +9,9 @@ jobs:
     if: github.event.label.name == 'screenshot'
     timeout-minutes: 60
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
     container:
       image: mcr.microsoft.com/playwright:v1.62.1-noble
       options: --user 1001
