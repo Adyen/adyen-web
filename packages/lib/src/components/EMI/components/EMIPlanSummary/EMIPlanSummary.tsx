@@ -32,7 +32,7 @@ export function EMIPlanSummary({ plan, labelledBy }: Readonly<EMIPlanSummaryProp
     const candidateRows: CandidateRow[] = [
         { key: 'itemPrice', label: i18n.get('emi.itemPrice'), amount },
         { key: 'discount', label: i18n.get('emi.discount'), amount: selectDisplayOffer(plan.offers)?.amount, isNegative: true },
-        { key: 'amountReservedOnCard', label: i18n.get('emi.amountReservedOnCard'), amount },
+        { key: 'amountReservedOnCard', label: i18n.get('emi.amountReservedOnCard'), amount: totalPayableAmount },
         {
             key: 'interest',
             label: i18n.get('emi.interestChargedByBank', {
