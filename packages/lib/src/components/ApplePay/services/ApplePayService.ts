@@ -85,7 +85,12 @@ class ApplePayService {
             })
             .catch(error => {
                 console.error(error);
-                this.session.abort();
+                try {
+                    this.session.abort();
+                } catch (abortError) {
+                    // Safari throws InvalidAccessError if the session is no longer active (e.g. merchant
+                    // validation exceeded its deadline) - onError must still be called
+                }
                 this.options.onError(error);
             });
     }
