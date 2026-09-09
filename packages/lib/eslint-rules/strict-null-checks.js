@@ -260,13 +260,11 @@ const STRICT_NULL_CHECKS_BACKLOG = [
     // src/components/Donation (4 errors)
     'src/components/Donation/components/DonationComponent.tsx',
     'src/components/Donation/components/FixedAmounts.tsx',
-    // src/components/Dragonpay (8 errors)
+    // src/components/Dragonpay (7 errors)
     'src/components/Dragonpay/components/DragonpayInput/DragonpayInput.tsx',
     'src/components/Dragonpay/components/DragonpayVoucherResult/DragonpayVoucherResult.tsx',
-    'src/components/Dragonpay/Dragonpay.tsx',
-    // src/components/Econtext (4 errors)
+    // src/components/Econtext (3 errors)
     'src/components/Econtext/components/EcontextVoucherResult/EcontextVoucherResult.tsx',
-    'src/components/Econtext/Econtext.tsx',
     // src/components/Giftcard (23 errors)
     'src/components/Giftcard/components/GiftcardComponent.tsx',
     'src/components/Giftcard/components/GiftcardFields.tsx',

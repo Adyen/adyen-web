@@ -82,7 +82,6 @@ export class PreAuthorizedDebitCanada extends UIElement<PreAuthorizedDebitCanada
             <PreAuthorizedDebitCanadaComponent
                 onChange={this.setState}
                 payButton={this.payButton}
-                showPayButton={this.props.showPayButton}
                 placeholders={this.props.placeholders}
                 setComponentRef={this.setComponentRef}
                 showContextualElement={this.props.showContextualElement}

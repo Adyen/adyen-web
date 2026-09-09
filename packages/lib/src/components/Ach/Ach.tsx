@@ -71,7 +71,6 @@ export class AchElement extends UIElement<AchConfiguration> {
             <AchComponent
                 onChange={this.setState}
                 payButton={this.payButton}
-                showPayButton={this.props.showPayButton}
                 hasHolderName={this.props.hasHolderName}
                 placeholders={this.props.placeholders}
                 data={this.props.data}

@@ -26,7 +26,6 @@ describe('IssuerList', () => {
             <CoreProvider i18n={core.modules.i18n} loadingContext="test" resources={core.modules.resources}>
                 <IssuerList
                     items={items}
-                    showPayButton={false}
                     onChange={jest.fn()}
                     payButton={() => <button>Pay</button>}
                     onSubmitAnalytics={() => {}}
@@ -55,7 +54,6 @@ describe('IssuerList', () => {
                 <IssuerList
                     items={items}
                     highlightedIds={highlightedIds}
-                    showPayButton={false}
                     onChange={jest.fn()}
                     payButton={() => <button>Pay</button>}
                     onSubmitAnalytics={() => {}}
@@ -86,7 +84,6 @@ describe('IssuerList', () => {
                 <IssuerList
                     items={items}
                     highlightedIds={highlightedIds}
-                    showPayButton={false}
                     onChange={onChangeCb}
                     payButton={() => <button>Pay</button>}
                     onSubmitAnalytics={() => {}}
@@ -127,7 +124,6 @@ describe('IssuerList', () => {
                 <IssuerList
                     items={items}
                     highlightedIds={highlightedIds}
-                    showPayButton={false}
                     onChange={jest.fn()}
                     payButton={() => <button>Pay</button>}
                     onSubmitAnalytics={() => {}}
@@ -156,7 +152,6 @@ describe('IssuerList', () => {
                 <IssuerList
                     items={items}
                     highlightedIds={highlightedIds}
-                    showPayButton={false}
                     onChange={jest.fn()}
                     payButton={() => <button>Pay</button>}
                     onSubmitAnalytics={() => {}}
@@ -191,7 +186,6 @@ describe('Analytics', () => {
                 <IssuerList
                     items={items}
                     highlightedIds={highlightedIds}
-                    showPayButton={false}
                     onChange={() => {}}
                     payButton={() => <button>Pay</button>}
                     onSubmitAnalytics={onSubmitAnalytics}
@@ -227,7 +221,6 @@ describe('Analytics', () => {
             <CoreProvider i18n={core.modules.i18n} loadingContext="test" resources={core.modules.resources}>
                 <IssuerList
                     items={items}
-                    showPayButton={false}
                     onChange={() => {}}
                     payButton={() => <button>Pay</button>}
                     onSubmitAnalytics={onSubmitAnalytics}

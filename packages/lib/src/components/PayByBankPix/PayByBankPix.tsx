@@ -3,6 +3,7 @@ import { PayByBankPixData, PayByBankPixConfiguration } from './types';
 import { TxVariants } from '../tx-variants';
 import UIElement from '../internal/UIElement';
 import RedirectButton from '../internal/RedirectButton';
+import PayButton, { PayButtonProps } from '../internal/PayButton/PayButton';
 import AdyenCheckoutError, { ERROR } from '../../core/Errors/AdyenCheckoutError';
 import { PasskeyService } from './services/PasskeyService';
 import { authorizeEnrollment } from './services/authorizeEnrollment';
@@ -215,6 +216,13 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
         }
     };
 
+    /**
+     * The enrollment flow is only rendered on the Adyen hosted page and it is always shown, regardless of the showPayButton configuration.
+     */
+    private readonly enrollmentPayButton = (props: PayButtonProps): h.JSX.Element => {
+        return <PayButton {...props} showPayButton={true} disclaimerMessage={this.props.disclaimerMessage} onClick={this.submit} />;
+    };
+
     protected override componentToRender(): h.JSX.Element {
         // Always render the redirect button on the merchant's page
         if (!this.props._isAdyenHosted) {
@@ -255,7 +263,7 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
                 onEnroll={this.authorizeEnrollment}
                 // Issuer List
                 issuers={this.props.issuers}
-                payButton={this.payButton}
+                payButton={this.enrollmentPayButton}
                 onChange={this.onIssuerSelected}
                 onSubmitAnalytics={this.submitAnalytics}
                 setComponentRef={this.setComponentRef}

@@ -11,7 +11,6 @@ interface IbanInputProps {
     holderName?: boolean;
     placeholders?: Omit<IbanData, 'countryCode'>;
     countryCode?: string;
-    showPayButton?: boolean;
     payButton?: any;
     onChange: (data) => void;
     label: string;

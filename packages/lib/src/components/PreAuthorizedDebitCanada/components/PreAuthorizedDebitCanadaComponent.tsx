@@ -41,7 +41,6 @@ interface PreAuthorizedDebitCanadaComponentProps {
     }): void;
     payButton: (props: PayButtonProps) => h.JSX.Element;
     setComponentRef: (ref: ComponentMethodsRef) => void;
-    showPayButton: boolean;
     enableStoreDetails: boolean;
     showContextualElement?: boolean;
     placeholders?: PreAuthorizedDebitCanadaPlaceholders;

@@ -46,7 +46,6 @@ interface AchComponentProps {
     payButton: (props: PayButtonProps) => h.JSX.Element;
     setComponentRef: (ref: ComponentMethodsRef) => void;
     hasHolderName: boolean;
-    showPayButton: boolean;
     enableStoreDetails: boolean;
     placeholders?: AchPlaceholders;
     data?: AchFormPrefillData;

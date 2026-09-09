@@ -138,7 +138,6 @@ export interface CardInputProps {
     setComponentRef?: (ref) => void;
     showBrandIcon?: boolean;
     showInstallmentAmounts?: boolean;
-    showPayButton: boolean;
     showStoreDetailsCheckbox?: boolean;
     showWarnings?: boolean;
     showContextualElement?: boolean;

@@ -26,7 +26,6 @@ export interface BoletoInputProps {
     billingAddressRequired?: boolean;
     showEmailAddress?: boolean;
     data?: BoletoInputDataState;
-    showPayButton?: boolean;
 }
 
 function BoletoInput(props: Readonly<BoletoInputProps>) {

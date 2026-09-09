@@ -11,7 +11,6 @@ interface GiftcardResultProps {
     status: string;
     makePayment: () => void;
     makeBalanceCheck: () => void;
-    showPayButton: boolean;
     payButton(props: PayButtonProps): h.JSX.Element;
 }
 
