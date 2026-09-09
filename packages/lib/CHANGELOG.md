@@ -1,5 +1,21 @@
 # @adyen/adyen-web
 
+## 6.45.0
+
+### Minor Changes
+
+- Improved: Add review page support for sessions via `onReview` callback ([#4044](https://github.com/Adyen/adyen-web/pull/4044))
+
+- New: Support Content Security Policy (CSP) nonce in Google Pay configuration and upgrade `@types/googlepay` to `0.7.12`. ([#4173](https://github.com/Adyen/adyen-web/pull/4173))
+
+### Patch Changes
+
+- Improved: restrictions on some special characters on address validation ([#3769](https://github.com/Adyen/adyen-web/pull/3769))
+
+- Fixed: Select dropdown spacing and secondary text color ([#4162](https://github.com/Adyen/adyen-web/pull/4162))
+
+- Fixed: Drop-in payment methods no longer lose their state when another payment method is selected in the list. ([#4176](https://github.com/Adyen/adyen-web/pull/4176))
+
 ## 6.44.0
 
 ### Minor Changes
