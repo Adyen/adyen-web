@@ -29,7 +29,6 @@ type UpiData = { app?: App };
 type OnChangeProps = { data: UpiData; valid?: { [key: string]: boolean }; errors?: { [key: string]: ValidationRuleResult }; isValid: boolean };
 interface UPIComponentProps {
     mode: UpiMode;
-    showPayButton: boolean;
     appsList: UPIAppList;
     mandate?: Mandate;
     setComponentRef: (ref: ComponentMethodsRef) => void;

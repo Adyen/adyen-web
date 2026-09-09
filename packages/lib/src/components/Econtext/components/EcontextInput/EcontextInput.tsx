@@ -14,7 +14,6 @@ interface EcontextInputProps {
     setComponentRef: (ref: ComponentMethodsRef) => void;
     personalDetailsRequired?: boolean;
     data?: PersonalDetailsSchema;
-    showPayButton: boolean;
     payButton: (props: PayButtonProps) => h.JSX.Element;
     onChange: (props: {
         data: {

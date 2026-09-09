@@ -6,7 +6,6 @@ import { PayButtonProps } from '../../internal/PayButton/PayButton';
 import styles from './IrisGenerateQRCode.module.scss';
 
 interface IrisGenerateQRCodeProps {
-    showPayButton?: boolean;
     payButton: (props: Partial<PayButtonProps>) => h.JSX.Element;
     status: UIElementStatus;
 }

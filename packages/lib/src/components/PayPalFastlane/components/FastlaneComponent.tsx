@@ -12,7 +12,6 @@ import { PayButtonProps } from '../../internal/PayButton/PayButton';
 interface FastlaneComponentProps {
     lastFour: string;
     brand: string;
-    showPayButton: boolean;
     setComponentRef(ref: ComponentMethodsRef): void;
     payButton(props: PayButtonProps): h.JSX.Element;
 }
