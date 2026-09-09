@@ -5,7 +5,6 @@ import { CoreProvider } from '../../../../core/Context/CoreProvider';
 import { setupCoreMock } from '../../../../../config/testMocks/setup-core-mock';
 
 const requiredPropsFromUiElement = {
-    showPayButton: false,
     setComponentRef: jest.fn()
 };
 

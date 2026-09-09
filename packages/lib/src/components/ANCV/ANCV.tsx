@@ -117,7 +117,6 @@ export class ANCVElement extends UIElement<ANCVConfiguration> {
                 onSubmit={this.submit}
                 onChange={this.setState}
                 payButton={this.payButton}
-                showPayButton={this.props.showPayButton}
             />
         );
     }

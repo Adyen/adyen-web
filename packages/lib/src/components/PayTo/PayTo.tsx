@@ -157,7 +157,6 @@ export class PayToElement extends UIElement<PayToConfiguration> {
                 setComponentRef={this.setComponentRef}
                 onChange={this.setState}
                 payButton={this.payButton}
-                showPayButton={this.props.showPayButton}
             />
         );
     }

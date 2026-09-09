@@ -17,7 +17,6 @@ export type PayToInputOption = 'payid-option' | 'bsb-option';
 export type PayToComponentData = { selectedInput: PayToInputOption };
 
 export interface PayToComponentProps {
-    showPayButton: boolean;
     onChange: (e) => void;
     setComponentRef: (ref: ComponentMethodsRef) => void;
     data: PayToData;

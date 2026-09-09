@@ -13,7 +13,6 @@ import { ValidationRuleResult } from '../../../utils/Validator/ValidationRuleRes
 
 export interface ANCVInputProps {
     setComponentRef: (ref: ComponentMethodsRef) => void;
-    showPayButton: boolean;
     onSubmit: () => void;
     payButton: (props: PayButtonProps) => h.JSX.Element;
     onChange: (data: {

@@ -26,7 +26,6 @@ const cardInputRequiredProps = {
     loadingContext: 'test',
     resources: global.resources,
     brandsIcons: [],
-    showPayButton: false,
     onSubmitAnalytics: jest.fn()
 };
 

@@ -50,7 +50,6 @@ export class DragonpayElement extends UIElement<DragonpayConfiguraton> {
                 setComponentRef={this.setComponentRef}
                 items={this.props.issuers}
                 {...this.props}
-                showPayButton={this.props.showPayButton}
                 onChange={this.setState}
                 onSubmit={this.submit}
                 payButton={this.payButton}
