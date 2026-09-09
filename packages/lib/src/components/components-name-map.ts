@@ -161,6 +161,10 @@ const ComponentsNameMap = {
     [TxVariants.upi_intent]: 'UPI',
     /** Await */
 
+    /** EMI */
+    [TxVariants.emi]: 'EMI',
+    /** EMI */
+
     /** Giftcard */
     [TxVariants.giftcard]: 'Giftcard',
     [TxVariants.mealVoucher_FR_natixis]: 'MealVoucherFR',
