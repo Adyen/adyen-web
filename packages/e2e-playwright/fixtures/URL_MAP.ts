@@ -22,6 +22,8 @@ export const URL_MAP = {
     dropinReviewPage: '/iframe.html?args=&globals=&id=demos-reviewpage--with-dropin&viewMode=story',
     dropinWithAdvancedIndia:
         '/iframe.html?id=drop-in-drop-in-component--default&viewMode=story&args=countryCode%3AIN%3Bamount%3A1005%3BuseSessions%3A!false',
+    // The plans response is mocked per test through `emiPlansMock`, since the E2E build runs with MSW disabled
+    dropinWithEmiPlans: '/iframe.html?args=&globals=&id=drop-in-drop-in-component--emi-plans&viewMode=story',
     /**
      * Card
      */

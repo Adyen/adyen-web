@@ -1,13 +1,9 @@
 import { test as base, expect } from '../../../fixtures/base-fixture';
 import { EMI } from '../../../models/emi';
 import { URL_MAP } from '../../../fixtures/URL_MAP';
-import {
-    PAYMENT_RESULT,
-    TEST_CVC_VALUE,
-    TEST_DATE_VALUE,
-    THREEDS2_FULL_FLOW_CARD,
-    THREEDS2_CHALLENGE_PASSWORD
-} from '../../utils/constants';
+import { emiPlansMock } from '../../../mocks/emiPlans/emiPlans.mock';
+import { emiPlansResponseMock } from '../../../../lib/src/components/EMI/stories/mocks';
+import { PAYMENT_RESULT, TEST_CVC_VALUE, TEST_DATE_VALUE, THREEDS2_FULL_FLOW_CARD, THREEDS2_CHALLENGE_PASSWORD } from '../../utils/constants';
 
 type Fixture = {
     emiPage: EMI;
@@ -17,6 +13,11 @@ const test = base.extend<Fixture>({
     emiPage: async ({ page }, use) => {
         await use(new EMI(page));
     }
+});
+
+// The story fetches its plans from the merchant backend, which the E2E build does not mock for it
+test.beforeEach(async ({ page }) => {
+    await emiPlansMock(page, emiPlansResponseMock);
 });
 
 test.describe('EMI - CardEmi (Native Pay Button)', () => {
@@ -44,21 +45,19 @@ test.describe('EMI - CardEmiWithCustomButton (Custom Pay Button)', () => {
 
         await expect(customButton).toBeVisible();
 
-        // Native pay button from the EMI wrapper should not be rendered (showPayButton: false)
-        // The only button with "pay" text should be the custom one
         const payButtons = emiPage.page.getByRole('button', { name: /pay/i });
         await expect(payButtons).toHaveCount(1);
 
         await customButton.click();
 
-        // Clicking submit on empty card fields triggers validation (fields show error state)
         await expect(emiPage.errorFields.first()).toBeVisible();
     });
 });
 
 test.describe('EMI - 3DS2 Full Flow', () => {
     test('should complete full 3DS2 flow (fingerprint & challenge)', async ({ page, emiPage }) => {
-        const makeDetailsCallResponsePromise = page.waitForResponse(response => response.url().includes('/paymentDetails'));
+        // Advanced flow: the details call goes to the mock server, not to a session endpoint
+        const makeDetailsCallResponsePromise = page.waitForResponse(response => response.url().includes('/payments/details'));
 
         await emiPage.goto(URL_MAP.emi);
 
