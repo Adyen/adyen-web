@@ -8,6 +8,7 @@ import requestPayPalOrderDetails from './services/request-paypal-order-details';
 import base64 from '../../utils/base64';
 import type { PayPalEligiblePaymentMethods, PayPalSdkInstance } from './paypal-js-types';
 import type { PayPalComponentV6Props } from './components/types';
+import type { PayPalPresentationModeOptions } from './types';
 
 jest.mock('./services/PayPalService');
 jest.mock('./services/PayPalSdkLoader');
@@ -175,6 +176,59 @@ describe('PayPal v6', () => {
 
         test('should not throw when the v5 shipping callbacks are used without isExpress', () => {
             expect(() => new Paypal(core, { onShippingAddressChange: jest.fn(), onShippingOptionsChange: jest.fn() })).not.toThrow();
+        });
+
+        test.each([['redirect'], ['direct-app-switch']])(
+            'should throw an implementation error when isExpress is true and the presentation mode is "%s"',
+            presentationMode => {
+                expect(
+                    () =>
+                        new Paypal(core, {
+                            isExpress: true,
+                            usePayPalV6: { presentationModeOptions: { presentationMode } as PayPalPresentationModeOptions }
+                        })
+                ).toThrow(`PayPal - Unsupported presentation mode: ${presentationMode} for express checkout`);
+
+                expect(PayPalServiceMock.prototype.initialize).not.toHaveBeenCalled();
+            }
+        );
+
+        test('should throw an AdyenCheckoutError of type IMPLEMENTATION_ERROR when an unsupported express presentation mode is used', () => {
+            let caughtError: unknown;
+
+            try {
+                new Paypal(core, { isExpress: true, usePayPalV6: { presentationModeOptions: { presentationMode: 'redirect' } } });
+            } catch (error) {
+                caughtError = error;
+            }
+
+            expect(caughtError).toBeInstanceOf(AdyenCheckoutError);
+            expect((caughtError as AdyenCheckoutError).name).toBe('IMPLEMENTATION_ERROR');
+        });
+
+        test.each([['popup'], ['modal'], ['payment-handler'], ['auto']])(
+            'should not throw when isExpress is true and the presentation mode is "%s"',
+            presentationMode => {
+                expect(
+                    () =>
+                        new Paypal(core, {
+                            isExpress: true,
+                            usePayPalV6: { presentationModeOptions: { presentationMode } as PayPalPresentationModeOptions }
+                        })
+                ).not.toThrow();
+
+                expect(PayPalServiceMock.prototype.initialize).toHaveBeenCalledTimes(1);
+            }
+        );
+
+        test('should not throw when an unsupported express presentation mode is used but isExpress is not set', () => {
+            expect(() => new Paypal(core, { usePayPalV6: { presentationModeOptions: { presentationMode: 'redirect' } } })).not.toThrow();
+
+            expect(PayPalServiceMock.prototype.initialize).toHaveBeenCalledTimes(1);
+        });
+
+        test('should not throw when isExpress is true and no presentation mode is provided', () => {
+            expect(() => new Paypal(core, { isExpress: true, usePayPalV6: {} })).not.toThrow();
         });
 
         test('should forward an AdyenCheckoutError as-is when initialization fails', async () => {

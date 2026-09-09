@@ -31,6 +31,7 @@ import { PayPalSdkLoader } from './services/PayPalSdkLoader';
 import { PayPalService } from './services/PayPalService';
 import { PayPalComponentV6 } from './components/PaypalComponentV6';
 import requestPayPalOrderDetails from './services/request-paypal-order-details';
+import { UNSUPPORTED_EXPRESS_PRESENTATION_MODE_OPTIONS } from './config';
 import './Paypal.scss';
 
 class PaypalElement extends UIElement<PayPalConfiguration> {
@@ -59,12 +60,23 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
 
         if (this.props.usePayPalV6) {
             const { isExpress } = this.props;
-            const { onShippingAddressChange, onShippingOptionsChange } = this.props.usePayPalV6;
+            const { onShippingAddressChange, onShippingOptionsChange, presentationModeOptions } = this.props.usePayPalV6;
 
-            if (isExpress === false && (onShippingAddressChange || onShippingOptionsChange)) {
+            if (!isExpress && (onShippingAddressChange || onShippingOptionsChange)) {
                 throw new AdyenCheckoutError(
                     'IMPLEMENTATION_ERROR',
                     'PayPal - You must set "isExpress" flag to "true" in order to use "onShippingAddressChange" and/or "onShippingOptionsChange" callbacks'
+                );
+            }
+
+            if (
+                isExpress &&
+                presentationModeOptions?.presentationMode &&
+                UNSUPPORTED_EXPRESS_PRESENTATION_MODE_OPTIONS.includes(presentationModeOptions.presentationMode)
+            ) {
+                throw new AdyenCheckoutError(
+                    'IMPLEMENTATION_ERROR',
+                    `PayPal - Unsupported presentation mode: ${presentationModeOptions.presentationMode} for express checkout`
                 );
             }
 
