@@ -41,7 +41,7 @@ class EMI extends UIElement<EMIConfiguration> {
         }
 
         if (this.props.plans && !Array.isArray(this.props.plans.issuers)) {
-            this.reportError(
+            this.trackError(
                 ErrorEventCode.EMI_MALFORMED_PLANS_RESPONSE,
                 'EMI: the `plans` configuration was provided but carries no `issuers` array'
             );
@@ -94,11 +94,11 @@ class EMI extends UIElement<EMIConfiguration> {
     }
 
     private rejectAsUnavailable(code: ErrorEventCode, message: string): Promise<void> {
-        this.reportError(code, message);
+        this.trackError(code, message);
         return Promise.reject(new Error(message));
     }
 
-    private reportError(code: ErrorEventCode, message: string): void {
+    private trackError(code: ErrorEventCode, message: string): void {
         const event = new AnalyticsErrorEvent({
             component: this.type,
             errorType: ErrorEventType.implementation,
@@ -150,9 +150,7 @@ class EMI extends UIElement<EMIConfiguration> {
             component: this.type,
             configData: {
                 showPayButton: this.props.showPayButton,
-                fundingSource: this.activeFundingSource ?? 'none',
-                issuerCount: this.issuers.length,
-                planCount: this.issuers.reduce((total, issuer) => total + (issuer.plans?.length ?? 0), 0)
+                fundingSource: this.activeFundingSource ?? 'none'
             }
         });
 
@@ -161,19 +159,54 @@ class EMI extends UIElement<EMIConfiguration> {
 
     private readonly onPlanSelect = (emiSelection: EmiSelection, target?: EmiSelectTarget): void => {
         this.setState({ emiSelection });
-        if (target) {
-            const event = new AnalyticsInfoEvent({
-                component: this.type,
-                type: InfoEventType.selected,
-                target,
-                issuer: emiSelection.issuer.issuerCode
-            });
-            this.submitAnalytics(event);
-        }
-        this.reportDiscountBanner(emiSelection);
+        this.trackSelection(emiSelection, target);
+        this.trackDiscountBanner(emiSelection);
     };
 
-    private reportDiscountBanner(emiSelection: EmiSelection): void {
+    private trackSelection(emiSelection: EmiSelection, target?: EmiSelectTarget): void {
+        if (!target) {
+            this.trackSelectDisplayed(
+                UiTarget.emiProvider,
+                this.issuers.map(issuer => issuer.issuerCode),
+                emiSelection.issuer.issuerCode
+            );
+            this.trackPlansDisplayed(emiSelection);
+            return;
+        }
+
+        const event = new AnalyticsInfoEvent({
+            component: this.type,
+            type: InfoEventType.selected,
+            target,
+            issuer: emiSelection.issuer.issuerCode
+        });
+        this.submitAnalytics(event);
+
+        if (target === UiTarget.emiProvider) {
+            this.trackPlansDisplayed(emiSelection);
+        }
+    }
+
+    private trackPlansDisplayed({ issuer, plan }: EmiSelection): void {
+        this.trackSelectDisplayed(
+            UiTarget.emiPlan,
+            issuer.plans.map(candidate => String(candidate.tenureMonths)),
+            String(plan.tenureMonths)
+        );
+    }
+
+    private trackSelectDisplayed(target: EmiSelectTarget, presentedValues: string[], selectedValue: string): void {
+        const event = new AnalyticsInfoEvent({
+            component: this.type,
+            type: InfoEventType.displayed,
+            target,
+            presentedValues,
+            selectedValue
+        });
+        this.submitAnalytics(event);
+    }
+
+    private trackDiscountBanner(emiSelection: EmiSelection): void {
         if (!this.activeFundingSourceElement || !selectDisplayOffer(emiSelection.plan.offers)) return;
         const event = new AnalyticsInfoEvent({
             component: this.type,
