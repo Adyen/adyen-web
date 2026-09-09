@@ -732,7 +732,7 @@ describe('EMI', () => {
             sendAnalytics.mock.calls.map(([event]) => event).filter(event => event.type === type);
 
         describe('rendered event', () => {
-            test('should describe the plans by their counts rather than carrying them', () => {
+            test('should track the funding source rendered', () => {
                 const { emi, sendAnalytics } = setupAnalytics();
                 render(emi.render());
                 expect(sendAnalytics).toHaveBeenCalledWith(
@@ -741,9 +741,7 @@ describe('EMI', () => {
                         component: TxVariants.emi,
                         configData: {
                             showPayButton: true,
-                            fundingSource: TxVariants.card,
-                            issuerCount: 4,
-                            planCount: 6
+                            fundingSource: TxVariants.card
                         }
                     })
                 );
@@ -758,7 +756,7 @@ describe('EMI', () => {
                 render(emi.render());
                 const [rendered] = eventsOfType(sendAnalytics, InfoEventType.rendered);
 
-                expect(Object.keys(rendered.configData).sort()).toEqual(['fundingSource', 'issuerCount', 'planCount', 'showPayButton']);
+                expect(Object.keys(rendered.configData).sort()).toEqual(['fundingSource', 'showPayButton']);
             });
 
             test('should report the absence of a funding source rather than omitting it', () => {
@@ -767,6 +765,54 @@ describe('EMI', () => {
                 render(emi.render());
                 expect(eventsOfType(sendAnalytics, InfoEventType.rendered)[0].configData).toHaveProperty('fundingSource', 'none');
                 warn.mockRestore();
+            });
+        });
+
+        describe('select displayed events', () => {
+            test('should report both selects together with the values preselected on the shopper behalf', () => {
+                const { emi, sendAnalytics } = setupAnalytics();
+                render(emi.render());
+                expect(eventsOfType(sendAnalytics, InfoEventType.displayed)).toEqual(
+                    expect.arrayContaining([
+                        expect.objectContaining({
+                            component: TxVariants.emi,
+                            target: UiTarget.emiProvider,
+                            presentedValues: emiPlansResponseMock.issuers.map(issuer => issuer.issuerCode),
+                            selectedValue: hdfc.issuerCode
+                        }),
+                        expect.objectContaining({
+                            component: TxVariants.emi,
+                            target: UiTarget.emiPlan,
+                            presentedValues: ['3', '6'],
+                            selectedValue: '3'
+                        })
+                    ])
+                );
+            });
+
+            test('should report the plans of a provider the shopper picks, with its first plan preselected', async () => {
+                const { emi, sendAnalytics } = setupAnalytics();
+                const [, icici] = emiPlansResponseMock.issuers;
+                render(emi.render());
+                await user.click(screen.getByLabelText('Provider'));
+                await user.click(within(screen.getAllByRole('listbox')[0]).getByRole('option', { name: new RegExp(icici.issuerName, 'i') }));
+                expect(sendAnalytics).toHaveBeenCalledWith(
+                    expect.objectContaining({
+                        type: InfoEventType.displayed,
+                        target: UiTarget.emiPlan,
+                        presentedValues: ['3', '9'],
+                        selectedValue: '3'
+                    })
+                );
+            });
+
+            test('should report the provider select once regardless of plan changes', async () => {
+                const { emi, sendAnalytics } = setupAnalytics();
+                render(emi.render());
+                await user.click(screen.getByLabelText('Plan'));
+                await user.click(within(screen.getAllByRole('listbox')[1]).getByRole('option', { name: /6 months/i }));
+                const providerEvents = eventsOfType(sendAnalytics, InfoEventType.displayed).filter(event => event.target === UiTarget.emiProvider);
+                expect(providerEvents).toHaveLength(1);
             });
         });
 
