@@ -40,6 +40,16 @@ describe('formatDisclaimerMessage', () => {
         });
     });
 
+    test('should return an empty message when message is not a string', () => {
+        expect(
+            formatDisclaimerMessage({
+                message: null,
+                linkText: 'terms and conditions',
+                link: 'https://www.adyen.com'
+            })
+        ).toEqual({ message: '', urls: [] });
+    });
+
     test('should return the message untouched when it holds no placeholder', () => {
         expect(
             formatDisclaimerMessage({
