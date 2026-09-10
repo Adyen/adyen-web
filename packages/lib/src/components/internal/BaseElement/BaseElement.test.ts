@@ -26,6 +26,12 @@ class NativeElement extends BaseElement<BaseElementProps> {
     }
 }
 
+class ElementWithPaymentMethodConfiguration extends MyElement {
+    protected override get sdkDataPaymentMethodConfiguration() {
+        return { supportsPayPalV6: true };
+    }
+}
+
 describe('BaseElement', () => {
     let core: ICore;
 
@@ -102,6 +108,24 @@ describe('BaseElement', () => {
             const decodedSdkData = decodeSdkData(sdkData);
 
             expect(decodedSdkData.paymentMethodBehavior).toEqual(PAYMENT_METHOD_BEHAVIOR.NATIVE);
+        });
+
+        test('should not add paymentMethodConfiguration to sdkData by default', () => {
+            const myElement = new MyElement(core);
+
+            const sdkData = myElement.data.paymentMethod.sdkData;
+            const decodedSdkData = decodeSdkData(sdkData);
+
+            expect(decodedSdkData.paymentMethodConfiguration).toBeUndefined();
+        });
+
+        test('should add paymentMethodConfiguration to sdkData when the component overrides it', () => {
+            const myElement = new ElementWithPaymentMethodConfiguration(core);
+
+            const sdkData = myElement.data.paymentMethod.sdkData;
+            const decodedSdkData = decodeSdkData(sdkData);
+
+            expect(decodedSdkData.paymentMethodConfiguration).toEqual({ supportsPayPalV6: true });
         });
     });
 

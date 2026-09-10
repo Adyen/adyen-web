@@ -8,7 +8,7 @@ import { getDeliveryMethods, getSelectedDeliveryMethodAmount } from './paypal-st
 import { PayPal } from '../../..';
 
 const meta: Meta = {
-    title: 'Components/Wallets/Paypal',
+    title: 'Components/Wallets/Paypal/Express',
     tags: ['no-automated-visual-test']
 };
 export default meta;
@@ -27,7 +27,7 @@ let SHOPPER_SHIPPING_COUNTRY_CODE = '';
  * This must be implemented on the backend side by the merchant for safety reasons.
  */
 
-export const ExpressWithAdvancedFlow: StoryObj = {
+export const WithAdvancedFlow: StoryObj = {
     render: () => {
         return <Component />;
     },
