@@ -51,7 +51,6 @@ class QRLoaderContainer<T extends QRLoaderConfiguration = QRLoaderConfiguration>
 
         return (
             <RedirectButton
-                showPayButton={this.props.showPayButton || false}
                 name={this.displayName}
                 onSubmit={this.submit}
                 payButton={this.payButton}

@@ -10,7 +10,6 @@ export interface RedirectButtonProps {
     payButton: Function;
     onSubmit: Function;
     name: string;
-    showPayButton: boolean;
     setComponentRef: (ref: ComponentMethodsRef) => void;
 }
 
@@ -20,7 +19,6 @@ function RedirectButton({
     payButton,
     onSubmit,
     name,
-    showPayButton,
     setComponentRef,
     ...props
 }: Readonly<RedirectButtonProps>) {
@@ -46,7 +44,6 @@ function RedirectButton({
         <Fragment>
             {payButton({
                 ...props,
-                showPayButton,
                 status,
                 icon,
                 classNameModifiers: ['standalone'],
