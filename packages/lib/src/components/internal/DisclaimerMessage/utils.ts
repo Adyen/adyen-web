@@ -18,6 +18,8 @@ const toArray = <T>(value: T | Array<T>): Array<T> => (Array.isArray(value) ? va
  * @returns the message with interpolation tokens and the urls matching the order of the tokens
  */
 export function formatDisclaimerMessage({ message, linkText, link }: DisclaimerMsgObject): DisclaimerMessageProps {
+    if (typeof message !== 'string') return { message: '', urls: [] };
+
     const linkTexts = toArray(linkText);
     const links = toArray(link);
     const urls: Array<string> = [];
