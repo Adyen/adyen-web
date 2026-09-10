@@ -82,8 +82,8 @@ abstract class BaseElement<P extends BaseElementProps> implements IBaseElement {
         this.state = { ...this.state, ...newState };
     }
 
-    protected get sdkDataPaymentMethodConfiguration(): CreateSdkDataParams['paymentMethodConfiguration'] | null {
-        return null;
+    protected get sdkDataPaymentMethodConfiguration(): CreateSdkDataParams['paymentMethodConfiguration'] {
+        return undefined;
     }
 
     /**
