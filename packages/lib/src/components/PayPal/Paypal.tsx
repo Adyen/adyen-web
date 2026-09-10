@@ -31,6 +31,7 @@ import { PayPalSdkLoader } from './services/PayPalSdkLoader';
 import { PayPalService } from './services/PayPalService';
 import { PayPalComponentV6 } from './components/PaypalComponentV6';
 import requestPayPalOrderDetails from './services/request-paypal-order-details';
+import { UNSUPPORTED_EXPRESS_PRESENTATION_MODE_OPTIONS } from './config';
 import './Paypal.scss';
 
 class PaypalElement extends UIElement<PayPalConfiguration> {
@@ -58,6 +59,27 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
         this.initializePayPalV6 = this.initializePayPalV6.bind(this);
 
         if (this.props.usePayPalV6) {
+            const { isExpress } = this.props;
+            const { onShippingAddressChange, onShippingOptionsChange, presentationModeOptions } = this.props.usePayPalV6;
+
+            if (!isExpress && (onShippingAddressChange || onShippingOptionsChange)) {
+                throw new AdyenCheckoutError(
+                    'IMPLEMENTATION_ERROR',
+                    'PayPal - You must set "isExpress" flag to "true" in order to use "onShippingAddressChange" and/or "onShippingOptionsChange" callbacks'
+                );
+            }
+
+            if (
+                isExpress &&
+                presentationModeOptions?.presentationMode &&
+                UNSUPPORTED_EXPRESS_PRESENTATION_MODE_OPTIONS.includes(presentationModeOptions.presentationMode)
+            ) {
+                throw new AdyenCheckoutError(
+                    'IMPLEMENTATION_ERROR',
+                    `PayPal - Unsupported presentation mode: ${presentationModeOptions.presentationMode} for express checkout`
+                );
+            }
+
             this.initializePayPalV6();
         }
     }
@@ -129,6 +151,10 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
         return Promise.resolve();
     }
 
+    protected override get sdkDataPaymentMethodConfiguration() {
+        return this.props.usePayPalV6 ? { supportsPayPalV6: true } : undefined;
+    }
+
     formatProps(props: PayPalConfiguration): PayPalConfiguration {
         const merchantId = props.configuration?.merchantId;
         const intentFromConfig = props.configuration?.intent;
@@ -178,14 +204,16 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
      * Formats the component data output
      */
     protected formatData() {
-        const { isExpress, userAction } = this.props;
+        const { isExpress, userAction, usePayPalV6 } = this.props;
+        const isZeroAuth = this.props.amount?.value === 0;
 
         return {
             paymentMethod: {
                 type: PaypalElement.type,
-                userAction,
-                subtype: isExpress ? 'express' : PaypalElement.subtype
-            }
+                subtype: isExpress ? 'express' : PaypalElement.subtype,
+                ...(!usePayPalV6 && { userAction })
+            },
+            ...(usePayPalV6 && (usePayPalV6.vault || isZeroAuth) && { storePaymentMethod: true })
         };
     }
 
@@ -271,23 +299,19 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
     private handleOnApproveV6(data: PayPalV6OnApproveData): Promise<void> {
         const onAuthorized = this.props.usePayPalV6?.onAuthorized;
 
-        let state: AdditionalDetailsData = {
-            data: {
-                details: data,
-                paymentData: this.paymentData ?? undefined
-            }
-        };
+        let state: AdditionalDetailsData | undefined;
 
         // 'orderId' is only present when the shopper approved a one-time payment session, meaning an actual
         // PayPal order was created. The SDK v6 keys are remapped to the casing expected by the /payments/details API.
         if ('orderId' in data) {
-            const { orderId, payerId, ...restData } = data;
+            // @ts-expect-error - fundingSource is not in the type but is present in the data
+            const { orderId, payerId, fundingSource } = data;
             state = {
                 data: {
                     details: {
                         orderID: orderId,
                         payerID: payerId,
-                        ...restData
+                        paymentSource: fundingSource
                     },
                     paymentData: this.paymentData ?? undefined
                 }
@@ -297,17 +321,23 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
         // 'vaultSetupToken' is only present when the shopper approved a save payment session (zero-auth
         // tokenization). No PayPal order exists in this flow, so the vault token is sent instead of an order id.
         if ('vaultSetupToken' in data) {
-            const { vaultSetupToken, payerId, ...restData } = data;
+            // @ts-expect-error - fundingSource is not in the type but is present in the data
+            const { vaultSetupToken, payerId, fundingSource } = data;
             state = {
                 data: {
                     details: {
                         vaultToken: vaultSetupToken,
                         payerID: payerId,
-                        ...restData
+                        paymentSource: fundingSource
                     },
                     paymentData: this.paymentData ?? undefined
                 }
             };
+        }
+
+        if (!state) {
+            this.handleError(new AdyenCheckoutError('ERROR', 'Missing `orderId` or `vaultSetupToken` in PayPal approval data'));
+            return Promise.resolve();
         }
 
         // The order details can only be fetched for a one-time payment session, since the save payment session
@@ -343,7 +373,9 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
                 );
             })
             .then(() => this.handleAdditionalDetails(state))
-            .catch(error => this.handleError(new AdyenCheckoutError('ERROR', 'Something went wrong while fetching PayPal Order', { cause: error })));
+            .catch(error =>
+                this.handleError(new AdyenCheckoutError('ERROR', 'Something went wrong with finalizing the PayPal order', { cause: error }))
+            );
     }
 
     handleResolve(token: string) {
@@ -441,8 +473,6 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
     }
 
     protected override componentToRender(): h.JSX.Element | null {
-        if (!this.props.showPayButton) return null;
-
         if (this.props.usePayPalV6) {
             const { usePayPalV6: paypalv6Props } = this.props;
 
@@ -468,6 +498,9 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
                 />
             );
         }
+
+        // TODO: remove this check in adyen-web v7 as the PayPal buttons do not support custom pay buttons
+        if (!this.props.showPayButton) return null;
 
         const { onShippingAddressChange, onShippingOptionsChange, ...rest } = this.props;
 
