@@ -67,7 +67,6 @@ export class PreAuthorizedDebitCanada extends UIElement<PreAuthorizedDebitCanada
             <Fragment>
                 <SettlementInfo />
                 <RedirectButton
-                    showPayButton={this.props.showPayButton}
                     icon={this.resources?.getImage({ imageFolder: 'components/' })(`bento_lock`)}
                     label={payAmountLabel(this.props.i18n, this.props.amount)}
                     name={this.displayName}
