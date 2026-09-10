@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { MetaConfiguration, StoryConfiguration } from '../../../../storybook/types';
+import { MetaConfiguration, SplitFundingSourceStoryConfiguration, StoryConfiguration } from '../../../../storybook/types';
 import { CardConfiguration } from '../types';
 import { CardWith3DS2Redirect } from './cardStoryHelpers/CardWith3DS2Redirect';
 import { createStoredCardComponent } from './cardStoryHelpers/createStoredCardComponent';
@@ -308,10 +308,17 @@ export const StandaloneStoredCard: CardStory = {
  * - Debit: Should render CtP, but NOT installments
  * - Prepaid: Should NOT render CtP or installments
  */
-export const SplitFundingSourceTest: CardStory = {
+export const SplitFundingSourceTest: SplitFundingSourceStoryConfiguration<CardConfiguration> = {
     tags: ['no-automated-visual-test'],
     render: SplitFundingSourceCards,
+    argTypes: {
+        applyFundingSourceValidation: {
+            control: 'boolean',
+            description: 'When enabled, each card only allows its own funding source (allowedFundingSources = [that card fundingSource])'
+        }
+    },
     args: {
+        applyFundingSourceValidation: false,
         countryCode: 'BR',
         componentConfiguration: {
             _disableClickToPay: true,

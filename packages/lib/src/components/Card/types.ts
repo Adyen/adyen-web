@@ -20,14 +20,7 @@ import type { ChallengeWindowSize } from '../ThreeDS2/types';
 import { InstallmentOptions } from './components/CardInput/components/Installments/Installments';
 
 type PlaceholderKeys =
-    | 'holderName'
-    | 'cardNumber'
-    | 'expiryDate'
-    | 'expiryMonth'
-    | 'expiryYear'
-    | 'securityCodeThreeDigits'
-    | 'securityCodeFourDigits'
-    | 'password';
+    'holderName' | 'cardNumber' | 'expiryDate' | 'expiryMonth' | 'expiryYear' | 'securityCodeThreeDigits' | 'securityCodeFourDigits' | 'password';
 
 export type FundingSourceKeys = 'credit' | 'debit' | 'prepaid';
 
@@ -90,6 +83,13 @@ export interface CardConfiguration extends UIElementProps {
      * - merchant set config option
      */
     brandsConfiguration?: CardBrandsConfiguration;
+
+    /**
+     * The funding sources this component accepts, normalized from configuration.allowedFundingSources
+     *
+     * @internal
+     */
+    allowedFundingSources?: FundingSourceKeys[];
 
     /**
      * Defines the size of the challenge Component
@@ -467,6 +467,9 @@ export interface CardBackendConfiguration {
     // Card?
     socialSecurityNumberMode?: SocialSecurityMode;
 
+    // Comma-separated list of funding sources the card is allowed to have (e.g. "debit,prepaid")
+    allowedFundingSources?: string;
+
     // Remove?
     icon?: string;
     brandsConfiguration?: CardBrandsConfiguration;
@@ -508,6 +511,7 @@ export interface BrandObject {
     panLength?: number;
     paymentMethodVariant?: string;
     healthcare?: boolean;
+    fundingSource?: FundingSourceKeys[];
 }
 
 export interface BinLookupResponseRaw {

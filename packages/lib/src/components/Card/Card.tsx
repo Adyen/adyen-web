@@ -3,6 +3,7 @@ import CardInput from './components/CardInput';
 import collectBrowserInfo from '../../utils/browserInfo';
 import { BinLookupResponse, CardElementData, CardConfiguration } from './types';
 import { triggerBinLookUp } from '../internal/SecuredFields/binLookup/triggerBinLookUp';
+import { parseAllowedFundingSources } from '../internal/SecuredFields/binLookup/fundingSource';
 import { CardBinLookupData, CardConfigSuccessData, CardFocusData } from '../internal/SecuredFields/lib/types';
 import { fieldTypeToSnakeCase, isSecuredField } from '../internal/SecuredFields/utils';
 import { notFalsy, reject } from '../../utils/commonUtils';
@@ -134,6 +135,7 @@ export class CardElement extends UIElement<CardConfiguration> {
                 ...props.configuration,
                 socialSecurityNumberMode: props.configuration?.socialSecurityNumberMode ?? 'auto'
             },
+            allowedFundingSources: parseAllowedFundingSources(props.configuration?.allowedFundingSources),
             brandsConfiguration: props.brandsConfiguration || props.configuration?.brandsConfiguration || {},
             icon: props.icon || props.configuration?.icon,
             installmentOptions: shownInstallmentOptions,

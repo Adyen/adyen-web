@@ -1,12 +1,15 @@
 import extensions, { cloneBrandsArr, containsExcludedBrand, removeExcludedBrand } from './extensions';
 import { BRAND_ICON_UI_EXCLUSION_LIST, CVC_POLICY_REQUIRED } from '../lib/constants';
+import { SF_ErrorCodes } from '../../../../core/Errors/constants';
+import { DualBrandSelectElement } from '../../../Card/types';
 
 let CIExtensions;
 
 // Mock sfp useRef
 const sfp = {
     current: {
-        processBinLookupResponse: () => {}
+        processBinLookupResponse: jest.fn(),
+        handleUnsupportedCard: jest.fn()
     }
 };
 
@@ -21,6 +24,9 @@ let setSelectedBrandValue;
 
 beforeEach(() => {
     console.log = jest.fn(() => {});
+
+    sfp.current.processBinLookupResponse.mockClear();
+    sfp.current.handleUnsupportedCard.mockClear();
 
     setIssuingCountryCode = jest.fn(countryCode => {
         issuingCountryCode = countryCode;
@@ -201,5 +207,91 @@ describe('Test mock binLookup results on CardInput.state', () => {
         const strippedArray = removeExcludedBrand(reversedBrandsArray);
         expect(strippedArray.length).toEqual(1);
         expect(strippedArray[0].brand).toEqual('visa');
+    });
+});
+
+describe('Funding source validation - the contract with SecuredFields', () => {
+    const brandObj = (brand: string, fundingSource?: string[]) => ({
+        brand,
+        cvcPolicy: CVC_POLICY_REQUIRED,
+        enableLuhnCheck: true,
+        showExpiryDate: true,
+        supported: true,
+        ...(fundingSource && { fundingSource })
+    });
+
+    const visaCredit = brandObj('visa', ['credit']);
+    const cbDebit = brandObj('cartebancaire', ['debit']);
+
+    // Local state, so this block does not read the mocks the other describes share and mutate
+    let selectElements: DualBrandSelectElement[] = [];
+    const setSelectElements = jest.fn((elements: DualBrandSelectElement[]) => {
+        selectElements = elements;
+    });
+
+    beforeEach(() => {
+        selectElements = [];
+        setSelectElements.mockClear();
+    });
+
+    // Rebuilt after every result, because handleDualBrandSelection closes over the selector elements the result created
+    const buildExtensions = (allowedFundingSources?: string[]) =>
+        extensions(
+            { allowedFundingSources },
+            { sfp },
+            {
+                dualBrandSelectElements: selectElements,
+                setSelectedBrandValue: jest.fn(),
+                setDualBrandSelectElements: setSelectElements,
+                issuingCountryCode: null,
+                setIssuingCountryCode: jest.fn()
+            },
+            { current: 0 }
+        );
+
+    const expectRejected = (detectedBrands: string[]) => {
+        expect(sfp.current.handleUnsupportedCard).toHaveBeenCalledWith({
+            type: 'card',
+            fieldType: 'encryptedCardNumber',
+            error: SF_ErrorCodes.ERROR_MSG_UNSUPPORTED_FUNDING_SOURCE,
+            detectedBrands
+        });
+    };
+
+    test('reports every evaluated brand on the error, and never tells SecuredFields about a card it rejects', () => {
+        buildExtensions(['debit']).processBinLookup({ issuingCountryCode: 'FR', supportedBrands: [visaCredit, brandObj('mc', ['credit'])] }, false);
+
+        expectRejected(['visa', 'mc']);
+        expect(sfp.current.processBinLookupResponse).not.toHaveBeenCalled();
+    });
+
+    test('reports the single brand on the error when a single-branded card is rejected', () => {
+        buildExtensions(['debit']).processBinLookup({ issuingCountryCode: 'US', supportedBrands: [visaCredit] }, false);
+
+        expectRejected(['visa']);
+        expect(sfp.current.processBinLookupResponse).not.toHaveBeenCalled();
+    });
+
+    test('reports the picked brand on the error when the shopper selects a disallowed funding source', () => {
+        buildExtensions(['debit']).processBinLookup({ issuingCountryCode: 'FR', supportedBrands: [visaCredit, cbDebit] }, false);
+        sfp.current.handleUnsupportedCard.mockClear();
+        sfp.current.processBinLookupResponse.mockClear();
+
+        buildExtensions(['debit']).handleDualBrandSelection('visa');
+
+        // Unlike a rejected card, the picked brand is still handed to SecuredFields - it becomes active, and is then flagged
+        expect(sfp.current.processBinLookupResponse).toHaveBeenCalledWith(
+            expect.objectContaining({ supportedBrands: [visaCredit], isDualBrandSelection: true })
+        );
+        expectRejected(['visa']);
+    });
+
+    test('raises no error when the picked brand has an allowed funding source', () => {
+        buildExtensions(['debit']).processBinLookup({ issuingCountryCode: 'FR', supportedBrands: [visaCredit, cbDebit] }, false);
+        sfp.current.handleUnsupportedCard.mockClear();
+
+        buildExtensions(['debit']).handleDualBrandSelection('cartebancaire');
+
+        expect(sfp.current.handleUnsupportedCard).not.toHaveBeenCalled();
     });
 });
