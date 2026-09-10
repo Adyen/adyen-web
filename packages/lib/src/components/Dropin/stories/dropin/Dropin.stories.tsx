@@ -39,21 +39,14 @@ const meta: MetaConfiguration<DropinConfiguration> = {
                 googlepay: {
                     buttonType: 'plain',
                     challengeWindowSize: '05'
-                },
-                card: {
-                    disclaimerMessage: {
-                        message: 'By continuing you agree with the %{terms}',
-                        linkText: 'terms and conditions',
-                        link: 'https://www.adyen.com'
-                    }
-                },
-                wechatpayQR: {
-                    disclaimerMessage: {
-                        message: 'By continuing you agree with the %{terms} of %{myStore}',
-                        linkText: ['terms and conditions', 'MyStore'],
-                        link: ['https://www.adyen.com', 'https://www.adyen.com/legal']
-                    }
                 }
+                // card: {
+                //     disclaimerMessage: {
+                //         message: 'By continuing you agree with the %{terms}',
+                //         linkText: 'terms and conditions',
+                //         link: 'https://www.adyen.com'
+                //     }
+                // },
             }
         }
     }
