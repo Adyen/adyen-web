@@ -7,7 +7,7 @@ import type { BaseElementProps, BaseElementState, IBaseElement } from './types';
 import type { PaymentData } from '../../../types/global-types';
 import { off, on } from '../../../utils/listenerUtils';
 import { AbstractAnalyticsEvent } from '../../../core/Analytics/events/AbstractAnalyticsEvent';
-import { createSdkData } from '../../../utils/createSdkData';
+import { createSdkData, CreateSdkDataParams } from '../../../utils/createSdkData';
 import getComponentNameOfPaymentType from '../../components-name-map';
 import { PAYMENT_METHOD_BEHAVIOR } from '../../../core/config';
 
@@ -82,6 +82,10 @@ abstract class BaseElement<P extends BaseElementProps, S extends BaseElementStat
         this.state = { ...this.state, ...newState };
     }
 
+    protected get sdkDataPaymentMethodConfiguration(): CreateSdkDataParams['paymentMethodConfiguration'] {
+        return undefined;
+    }
+
     /**
      * Returns the component payment data ready to submit to the Checkout API
      * Note: this does not ensure validity, check isValid first
@@ -94,7 +98,15 @@ abstract class BaseElement<P extends BaseElementProps, S extends BaseElementStat
         const checkoutAttemptId = this.core.modules.analytics.checkoutAttemptId ?? NO_CHECKOUT_ATTEMPT_ID;
         const paymentMethodBehavior = doesPaymentMethodHaveNativeComponent ? PAYMENT_METHOD_BEHAVIOR.NATIVE : PAYMENT_METHOD_BEHAVIOR.GENERIC;
 
-        const sdkData = createSdkData(checkoutAttemptId, clientData, paymentMethodBehavior);
+        const sdkDataPaymentMethodConfiguration = this.sdkDataPaymentMethodConfiguration;
+
+        const sdkData = createSdkData({
+            checkoutAttemptId,
+            clientData,
+            paymentMethodBehavior,
+            paymentMethodConfiguration: sdkDataPaymentMethodConfiguration
+        });
+
         if (componentData.paymentMethod && checkoutAttemptId) {
             componentData.paymentMethod.checkoutAttemptId = checkoutAttemptId;
         }
