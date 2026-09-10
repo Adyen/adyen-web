@@ -228,7 +228,6 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
         if (!this.props._isAdyenHosted) {
             return (
                 <RedirectButton
-                    showPayButton={this.props.showPayButton}
                     name={this.displayName}
                     label={this.props.i18n.get('paybybankpix.redirectBtn.label')}
                     payButton={this.payButton}

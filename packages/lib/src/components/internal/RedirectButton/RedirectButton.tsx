@@ -11,11 +11,10 @@ export interface RedirectButtonProps {
     payButton: Function;
     onSubmit: Function;
     name: string;
-    showPayButton: boolean;
     ref?: Ref<typeof RedirectButton>;
 }
 
-function RedirectButton({ label = null, icon = null, payButton, onSubmit, name, showPayButton, ...props }: Readonly<RedirectButtonProps>) {
+function RedirectButton({ label = null, icon = null, payButton, onSubmit, name, ...props }: Readonly<RedirectButtonProps>) {
     const { i18n } = useCoreContext();
     const [status, setStatus] = useState('ready');
     const { amount } = useAmount();
@@ -34,7 +33,6 @@ function RedirectButton({ label = null, icon = null, payButton, onSubmit, name, 
         <Fragment>
             {payButton({
                 ...props,
-                showPayButton,
                 status,
                 icon,
                 classNameModifiers: ['standalone'],

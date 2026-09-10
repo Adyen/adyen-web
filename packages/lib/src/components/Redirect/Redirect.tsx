@@ -59,7 +59,6 @@ class RedirectElement extends UIElement<RedirectConfiguration> {
         return (
             <RedirectButton
                 {...this.props}
-                showPayButton={this.props.showPayButton}
                 name={this.displayName}
                 onSubmit={this.submit}
                 payButton={this.payButton}

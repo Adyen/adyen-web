@@ -24,7 +24,6 @@ class TrustlyElement extends RedirectElement {
 
                 <RedirectButton
                     {...this.props}
-                    showPayButton={this.props.showPayButton}
                     name={this.displayName}
                     onSubmit={this.submit}
                     payButton={this.payButton}
