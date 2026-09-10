@@ -204,14 +204,16 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
      * Formats the component data output
      */
     protected formatData() {
-        const { isExpress, userAction } = this.props;
+        const { isExpress, userAction, usePayPalV6 } = this.props;
+        const isZeroAuth = this.props.amount?.value === 0;
 
         return {
             paymentMethod: {
                 type: PaypalElement.type,
-                userAction,
-                subtype: isExpress ? 'express' : PaypalElement.subtype
-            }
+                subtype: isExpress ? 'express' : PaypalElement.subtype,
+                ...(!usePayPalV6 && { userAction })
+            },
+            ...(usePayPalV6 && (usePayPalV6.vault || isZeroAuth) && { storePaymentMethod: true })
         };
     }
 
@@ -471,8 +473,6 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
     }
 
     protected override componentToRender(): h.JSX.Element | null {
-        if (!this.props.showPayButton) return null;
-
         if (this.props.usePayPalV6) {
             const { usePayPalV6: paypalv6Props } = this.props;
 
@@ -498,6 +498,9 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
                 />
             );
         }
+
+        // TODO: remove this check in adyen-web v7 as the PayPal buttons do not support custom pay buttons
+        if (!this.props.showPayButton) return null;
 
         const { onShippingAddressChange, onShippingOptionsChange, ...rest } = this.props;
 

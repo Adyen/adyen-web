@@ -34,7 +34,6 @@ export interface PayPalConfiguration extends UIElementProps {
          */
         intent?: Intent;
     };
-
     /**
      *  Identifies if the payment is Express. Also used for analytics
      *  @defaultValue false
