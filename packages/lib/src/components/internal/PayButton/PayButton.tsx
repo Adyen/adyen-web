@@ -57,10 +57,11 @@ const PayButton = ({
     const secondaryAmountLabel = createSecondaryLabel(i18n, secondaryAmount, isAmountValid(amount), isZeroAuth, label);
 
     const isDisabled = props.disabled || props.status === 'loading';
+    const formattedDisclaimerMessage = disclaimerMessage && formatDisclaimerMessage(disclaimerMessage);
 
     return (
         <Fragment>
-            {disclaimerMessage && <DisclaimerMessage {...formatDisclaimerMessage(disclaimerMessage)} />}
+            {formattedDisclaimerMessage?.message && <DisclaimerMessage {...formattedDisclaimerMessage} />}
             {showPayButton && (
                 <Button {...props} icon={buttonIcon} disabled={isDisabled} classNameModifiers={[...classNameModifiers, 'pay']} label={buttonLabel}>
                     {secondaryAmountLabel && <SecondaryButtonLabel label={secondaryAmountLabel} />}
