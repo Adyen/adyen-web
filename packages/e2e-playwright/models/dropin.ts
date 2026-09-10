@@ -71,6 +71,21 @@ class Dropin extends Base {
         await this.isComponentVisible();
     }
 
+    get instantPaymentMethodsList() {
+        return this.rootElement.locator('.adyen-checkout__instant-payment-methods-list');
+    }
+
+    get regularPaymentMethodsList() {
+        return this.rootElement.locator('.adyen-checkout__payment-methods-list--otherPayments');
+    }
+
+    /**
+     * Returns the tx variants rendered in the instant payments area, in the order they are displayed
+     */
+    async getInstantPaymentMethodTypes(): Promise<Array<string | undefined>> {
+        return this.instantPaymentMethodsList.locator('li').evaluateAll(items => items.map(item => (item as HTMLElement).dataset.testid));
+    }
+
     /**
      * Returns PaymentMethodHeader which manages the Drop-in payment method list item UI
      */
