@@ -348,7 +348,6 @@ const STRICT_NULL_CHECKS_BACKLOG = [
     'src/components/PayTo/components/validate.ts',
     'src/components/PayTo/PayTo.tsx',
     // src/components/Pix (3 errors)
-    'src/components/Pix/components/PixInput/PixInput.tsx',
     'src/components/Pix/Pix.tsx',
     // src/components/PreAuthorizedDebitCanada (11 errors)
     'src/components/PreAuthorizedDebitCanada/components/PreAuthorizedDebitCanadaComponent.tsx',
