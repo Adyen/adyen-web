@@ -19,7 +19,7 @@ export interface InstallmentsState {
 }
 
 export interface InstallmentOption {
-    values: number[];
+    values?: number[];
     plans?: InstallmentPlan[];
     preselectedValue?: number;
 }
@@ -34,14 +34,14 @@ export interface InstallmentsProps {
     type?: string;
 }
 
-function createRadioGroupItems(hasRadioButtonUI: boolean, plans?: InstallmentPlan[]): { id: string; name: string }[] {
+function createRadioGroupItems(hasRadioButtonUI: boolean, hasInstallmentValues: boolean, plans?: InstallmentPlan[]): { id: string; name: string }[] {
     if (!hasRadioButtonUI) {
         return [];
     }
 
     return [
         { id: 'onetime', name: 'installments.oneTime' },
-        { id: 'installments', name: 'installments.installments' },
+        ...(hasInstallmentValues ? [{ id: 'installments', name: 'installments.installments' }] : []),
         ...(plans?.includes('revolving') ? [{ id: 'revolving', name: 'installments.revolving' }] : []),
         ...(plans?.includes('bonus') ? [{ id: 'bonus', name: 'installments.bonus' }] : [])
     ];
@@ -52,12 +52,21 @@ function Installments(props: Readonly<InstallmentsProps>) {
     const { amount } = useAmount();
     const { brand, onChange, type } = props;
     const installmentOptions = props.installmentOptions[brand] || props.installmentOptions.card;
-    const readOnly = installmentOptions?.values?.length === 1;
-    const [installmentAmount, setInstallmentAmount] = useState(installmentOptions?.preselectedValue || installmentOptions?.values[0]);
+    // Primitive hook dependencies: a merchant may rebuild its configuration object on every render
+    const hasInstallmentOptions = !!installmentOptions;
+    const installmentPlansKey = installmentOptions?.plans?.join(',');
+    const installmentValues = installmentOptions?.values ?? [];
+    const hasInstallmentValues = installmentValues.length > 0;
+    const readOnly = installmentValues.length === 1;
+    const [installmentAmount, setInstallmentAmount] = useState<number | null>(installmentOptions?.preselectedValue ?? installmentValues[0] ?? null);
     const [radioBtnValue, setRadioBtnValue] = useState('onetime');
 
     const hasRadioButtonUI = installmentOptions?.plans?.includes('revolving') || installmentOptions?.plans?.includes('bonus');
-    const radioGroupItems = useMemo(() => createRadioGroupItems(hasRadioButtonUI, installmentOptions?.plans), [hasRadioButtonUI, installmentOptions]);
+    const radioGroupItems = useMemo(
+        () => createRadioGroupItems(hasRadioButtonUI, hasInstallmentValues, installmentOptions?.plans),
+        [hasRadioButtonUI, hasInstallmentValues, installmentPlansKey]
+    );
+    const selectedRadioValue = radioGroupItems.some(item => item.id === radioBtnValue) ? radioBtnValue : 'onetime';
 
     const onSelectInstallment = e => {
         const selectedInstallments = e.target.value;
@@ -90,23 +99,23 @@ function Installments(props: Readonly<InstallmentsProps>) {
     };
 
     useEffect(() => {
-        if (installmentOptions?.values?.includes(installmentAmount)) {
+        if (installmentAmount !== null && installmentValues.includes(installmentAmount)) {
             return;
         }
 
-        setInstallmentAmount(installmentOptions?.preselectedValue ?? installmentOptions?.values[0]);
+        setInstallmentAmount(installmentOptions?.preselectedValue ?? installmentValues[0] ?? null);
     }, [brand]);
 
     useEffect(() => {
         const state: InstallmentsState = {
             value: installmentAmount,
-            ...(hasRadioButtonUI && radioBtnValue === 'onetime' && { value: 1 }),
-            ...(hasRadioButtonUI && radioBtnValue === 'revolving' && { value: 1, plan: 'revolving' }),
-            ...(hasRadioButtonUI && radioBtnValue === 'bonus' && { value: 1, plan: 'bonus' })
+            ...(hasRadioButtonUI && selectedRadioValue === 'onetime' && { value: 1 }),
+            ...(hasRadioButtonUI && selectedRadioValue === 'revolving' && { value: 1, plan: 'revolving' }),
+            ...(hasRadioButtonUI && selectedRadioValue === 'bonus' && { value: 1, plan: 'bonus' })
         };
 
-        onChange(installmentOptions ? state : { value: null });
-    }, [onChange, hasRadioButtonUI, installmentAmount, installmentOptions, radioBtnValue]);
+        onChange(hasInstallmentOptions ? state : { value: null });
+    }, [onChange, hasRadioButtonUI, installmentAmount, hasInstallmentOptions, selectedRadioValue]);
 
     if (!installmentOptions) return null;
     if (!amount || amount.value === 0) return null;
@@ -123,37 +132,48 @@ function Installments(props: Readonly<InstallmentsProps>) {
                     renderAlternativeToLabel={alternativeLabelContent}
                 >
                     <Fieldset classNameModifiers={['revolving-plan']} label={''}>
-                        <RadioGroup items={radioGroupItems} onChange={onRadioSelect} value={radioBtnValue} ariaLabel={i18n.get('installments')} />
+                        <RadioGroup
+                            items={radioGroupItems}
+                            onChange={onRadioSelect}
+                            value={selectedRadioValue}
+                            ariaLabel={i18n.get('installments')}
+                        />
 
-                        <Field
-                            className={radioBtnValue !== 'installments' ? 'revolving-plan-installments__disabled' : 'revolving-plan-installments'}
-                            classNameModifiers={['revolving-plan-installments']}
-                            name={''}
-                            useLabelElement={false}
-                            showContextualElement={false}
-                        >
-                            <Select
-                                filterable={false}
-                                items={installmentOptions.values.map(installmentItemsMapper)}
-                                selectedValue={installmentAmount}
-                                onChange={onSelectInstallment}
-                                name={'installments'}
-                                disabled={radioBtnValue !== 'installments'}
-                            />
-                        </Field>
+                        {hasInstallmentValues && (
+                            <Field
+                                className={
+                                    selectedRadioValue !== 'installments' ? 'revolving-plan-installments__disabled' : 'revolving-plan-installments'
+                                }
+                                classNameModifiers={['revolving-plan-installments']}
+                                name={''}
+                                useLabelElement={false}
+                                showContextualElement={false}
+                            >
+                                <Select
+                                    filterable={false}
+                                    items={installmentValues.map(installmentItemsMapper)}
+                                    selectedValue={installmentAmount ?? undefined}
+                                    onChange={onSelectInstallment}
+                                    name={'installments'}
+                                    disabled={selectedRadioValue !== 'installments'}
+                                />
+                            </Field>
+                        )}
                     </Fieldset>
                 </Field>
             </div>
         );
     }
 
+    if (!hasInstallmentValues) return null;
+
     return (
         <div className="adyen-checkout__installments">
             <Field label={i18n.get('installments')} classNameModifiers={['installments']} name={'installments'} showContextualElement={false}>
                 <Select
                     filterable={false}
-                    items={installmentOptions.values.map(installmentItemsMapper)}
-                    selectedValue={installmentAmount}
+                    items={installmentValues.map(installmentItemsMapper)}
+                    selectedValue={installmentAmount ?? undefined}
                     onChange={onSelectInstallment}
                     name={'installments'}
                     readonly={readOnly}
