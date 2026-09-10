@@ -104,7 +104,7 @@ abstract class BaseElement<P extends BaseElementProps> implements IBaseElement {
             checkoutAttemptId,
             clientData,
             paymentMethodBehavior,
-            ...(sdkDataPaymentMethodConfiguration && { paymentMethodConfiguration: sdkDataPaymentMethodConfiguration })
+            paymentMethodConfiguration: sdkDataPaymentMethodConfiguration
         });
 
         if (componentData.paymentMethod && checkoutAttemptId) {

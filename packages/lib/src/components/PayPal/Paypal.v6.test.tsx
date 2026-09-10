@@ -669,7 +669,64 @@ describe('PayPal v6', () => {
         });
     });
 
+    describe('formatData', () => {
+        test('should not add userAction to the payment method data', () => {
+            const paypal = new Paypal(core, { usePayPalV6: {}, userAction: 'continue' });
+
+            expect(paypal.data.paymentMethod).not.toHaveProperty('userAction');
+            expect(paypal.data.paymentMethod).toMatchObject({ type: 'paypal', subtype: 'sdk' });
+        });
+
+        test('should set the subtype to express when isExpress is set', () => {
+            const paypal = new Paypal(core, { usePayPalV6: {}, isExpress: true });
+
+            expect(paypal.data.paymentMethod).toMatchObject({ type: 'paypal', subtype: 'express' });
+        });
+
+        test('should add storePaymentMethod when vault is set in usePayPalV6', () => {
+            const paypal = new Paypal(core, { usePayPalV6: { vault: true } });
+
+            expect(paypal.data.storePaymentMethod).toBe(true);
+        });
+
+        test('should add storePaymentMethod when the amount is zero (zero-auth)', () => {
+            const paypal = new Paypal(core, { usePayPalV6: {}, amount: { value: 0, currency: 'USD' } });
+
+            expect(paypal.data.storePaymentMethod).toBe(true);
+        });
+
+        test('should not add storePaymentMethod when vault is not set and the amount is not zero', () => {
+            const paypal = new Paypal(core, { usePayPalV6: {}, amount: { value: 1000, currency: 'USD' } });
+
+            expect(paypal.data).not.toHaveProperty('storePaymentMethod');
+        });
+
+        test('should not add storePaymentMethod when PayPal v6 is not used', () => {
+            const paypal = new Paypal(core, { amount: { value: 0, currency: 'USD' } });
+
+            expect(paypal.data).not.toHaveProperty('storePaymentMethod');
+        });
+    });
+
     describe('componentToRender', () => {
+        test('should render the PayPalComponentV6 even when showPayButton is false', () => {
+            const paypal = new Paypal(core, { showPayButton: false, usePayPalV6: {} });
+
+            render(paypal.render());
+
+            expect(mockPayPalComponentV6).toHaveBeenCalledTimes(1);
+        });
+
+        test('should not render anything when the PayPal service is not available', () => {
+            const paypal = new Paypal(core, { usePayPalV6: {} });
+            // @ts-ignore overriding private field
+            paypal.paypalService = undefined;
+
+            render(paypal.render());
+
+            expect(mockPayPalComponentV6).not.toHaveBeenCalled();
+        });
+
         test('should render the PayPalComponentV6 forwarding the usePayPalV6 configuration', () => {
             const style = { paypal: { type: 'pay' as const, class: 'paypal-gold' as const } };
             const presentationModeOptions = { presentationMode: 'modal' as const };
