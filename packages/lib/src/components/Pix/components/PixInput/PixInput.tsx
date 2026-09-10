@@ -8,7 +8,7 @@ import { BrazilPersonalDetail } from '../../../internal/SocialSecurityNumberBraz
 import { PixInputDataState, PixInputProps } from './types';
 import { ComponentMethodsRef } from '../../../types';
 
-function PixInput({ name, data: dataProps, personalDetailsRequired, showPayButton, onChange, payButton, setComponentRef }: Readonly<PixInputProps>) {
+function PixInput({ name, data: dataProps, personalDetailsRequired, onChange, payButton, setComponentRef }: Readonly<PixInputProps>) {
     const { i18n } = useCoreContext();
     const formSchema = ['firstName', 'lastName', 'socialSecurityNumber'];
 
@@ -45,7 +45,7 @@ function PixInput({ name, data: dataProps, personalDetailsRequired, showPayButto
     const buttonModifiers = personalDetailsRequired ? [] : ['standalone'];
 
     return (
-        <div className="adyen-checkout__pix-input__field" style={!showPayButton && !personalDetailsRequired ? { display: 'none' } : null}>
+        <div className="adyen-checkout__pix-input__field">
             {personalDetailsRequired && (
                 <BrazilPersonalDetail i18n={i18n} data={data} handleChangeFor={handleChangeFor} errors={errors} valid={valid} />
             )}
