@@ -11,7 +11,6 @@ aliases.$color: map.merge(
     aliases.$color,
     (
         // this color has been remapped for a11y reasons
-        color-label-highlight: #00112C,
         color-label-critical: map.get(aliases.$color, color-label-on-background-critical-weak),
         color-label-tertiary: map.get(aliases.$color, color-label-secondary),
         // label tertiary doesn't have enough contrast
