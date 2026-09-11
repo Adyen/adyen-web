@@ -258,7 +258,9 @@ export class BasePaypalElement<TProps extends BasePayPalConfiguration = BasePayP
             })
             .then(() => this.handleAdditionalDetails(state))
             .catch(error =>
-                this.handleError(new AdyenCheckoutError('ERROR', 'Something went wrong with finalizing the PayPal order', { cause: error }))
+                this.handleError(
+                    new AdyenCheckoutError('ERROR', `Something went wrong with finalizing the ${this.elementName} order`, { cause: error })
+                )
             );
     }
 
