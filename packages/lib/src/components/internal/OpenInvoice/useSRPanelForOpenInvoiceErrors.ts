@@ -63,7 +63,7 @@ const useSRPanelForOpenInvoiceErrors = ({ errors, data, props, isValidating, con
                 ...(typeof extractedBankAccountErrors === 'object' && extractedBankAccountErrors),
                 ...(typeof enhancedBillingAddressErrors === 'object' && enhancedBillingAddressErrors),
                 ...(typeof enhancedDeliveryAddressErrors === 'object' && enhancedDeliveryAddressErrors),
-                ...remainingErrors
+                ...(typeof remainingErrors.consentCheckbox === 'object' && { consentCheckbox: remainingErrors.consentCheckbox })
             };
 
             // Create layout

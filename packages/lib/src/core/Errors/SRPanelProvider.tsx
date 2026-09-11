@@ -4,7 +4,7 @@ import { useCoreContext } from '../Context/CoreProvider';
 import { partial } from '../../components/internal/SecuredFields/lib/utilities/commonUtils';
 import { setSRMessagesFromErrors } from './utils';
 import { SRPanel } from './SRPanel';
-import { SetSRMessagesReturnObject } from './types';
+import { ErrorObj, SetSRMessagesReturnObject } from './types';
 import { StringObject } from '../../components/internal/Address/types';
 
 type SRPanelProviderProps = {
@@ -13,9 +13,7 @@ type SRPanelProviderProps = {
 };
 
 interface SetSRMessagesReturnFnProps {
-    errors: {
-        [key: string]: any;
-    };
+    errors: ErrorObj;
     isValidating: boolean;
     layout?: string[];
     countrySpecificLabels?: StringObject;

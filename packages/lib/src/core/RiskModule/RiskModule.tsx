@@ -8,7 +8,7 @@ import type { ICore } from '../types';
 
 export interface RiskModuleOptions {
     enabled: boolean;
-    onComplete?: (data) => void;
+    onComplete?: (riskData: string | null) => void;
     onError?: (error) => void;
     node?: string;
 }
@@ -17,8 +17,6 @@ interface RiskModuleProps extends BaseElementProps {
     risk: RiskModuleOptions;
     loadingContext: string;
 }
-
-export type RiskData = string | boolean;
 
 export default class RiskElement extends BaseElement<RiskModuleProps> {
     public static readonly type = 'risk';
@@ -67,7 +65,7 @@ export default class RiskElement extends BaseElement<RiskModuleProps> {
     public onComplete = result => {
         const data = { ...this.state.data, [result.type]: result.value, persistentCookie: result.persistentCookie, components: result.components };
         this.setState({ data, isValid: true });
-        this.props.risk.onComplete(this.data);
+        this.props.risk.onComplete(this.riskData);
         this.cleanUp();
     };
 
@@ -80,13 +78,14 @@ export default class RiskElement extends BaseElement<RiskModuleProps> {
         return this.state.isValid;
     }
 
-    get data(): any {
-        if (this.isValid) {
-            const dataObj = { version: RISK_DATA_VERSION, ...this.state.data };
-            return base64.encode(JSON.stringify(dataObj));
-        }
+    /**
+     * Returns the base64 encoded device fingerprint data, or null if the fingerprinting did not complete
+     */
+    public get riskData(): string | null {
+        if (!this.isValid) return null;
 
-        return false;
+        const dataObj = { version: RISK_DATA_VERSION, ...this.state.data };
+        return base64.encode(JSON.stringify(dataObj));
     }
 
     public get enabled() {

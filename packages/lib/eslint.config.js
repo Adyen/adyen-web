@@ -162,7 +162,6 @@ const config = defineConfig(
             'src/components/internal/OpenInvoice/**',
 
             // ── Others ──
-            'src/core/**',
             'src/types/**'
         ],
         rules: {

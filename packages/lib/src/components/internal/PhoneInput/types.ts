@@ -28,3 +28,11 @@ export interface PhonePrefixes {
     phonePrefixes: DataSetItem[];
     loadingStatus: string;
 }
+
+/**
+ * Shape of the items in the 'phonenumbers' dataset
+ */
+export interface PhonePrefixDataSetItem {
+    id: string;
+    prefix: string;
+}
