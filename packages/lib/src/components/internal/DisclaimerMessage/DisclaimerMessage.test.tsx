@@ -16,6 +16,12 @@ describe('DisclaimerMessage', () => {
         expect(screen.getByRole('link', { name: 'terms and conditions' })).toHaveAttribute('href', 'https://www.adyen.com');
     });
 
+    test('Renders a plain-text DisclaimerMessage without a link', () => {
+        render(<DisclaimerMessage message="Payments are processed securely." />);
+        expect(screen.getByText('Payments are processed securely.')).toBeInTheDocument();
+        expect(screen.queryByRole('link')).not.toBeInTheDocument();
+    });
+
     test('Renders the DisclaimerMessage just with text before the link', () => {
         const nuMsg = { ...disclaimerMessage };
         nuMsg.message = 'By continuing you accept the %#terms and conditions%#';

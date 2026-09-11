@@ -27,7 +27,7 @@ describe('formatDisclaimerMessage', () => {
         });
     });
 
-    test('should leave placeholders without a matching linkText or link untouched', () => {
+    test('should remove placeholders without matching link configuration', () => {
         expect(
             formatDisclaimerMessage({
                 message: 'By continuing you accept the %{terms} of %{store}',
@@ -35,8 +35,20 @@ describe('formatDisclaimerMessage', () => {
                 link: ['https://www.adyen.com']
             })
         ).toEqual({
-            message: 'By continuing you accept the %#terms and conditions%# of %{store}',
+            message: 'By continuing you accept the %#terms and conditions%# of ',
             urls: ['https://www.adyen.com']
+        });
+    });
+
+    test('should render link text as plain text when its matching link is missing', () => {
+        expect(
+            formatDisclaimerMessage({
+                message: 'By continuing you accept the %{terms}',
+                linkText: 'terms and conditions'
+            })
+        ).toEqual({
+            message: 'By continuing you accept the terms and conditions',
+            urls: []
         });
     });
 
@@ -58,5 +70,13 @@ describe('formatDisclaimerMessage', () => {
                 link: ['https://www.adyen.com']
             })
         ).toEqual({ message: 'By continuing you accept the terms and conditions', urls: [] });
+    });
+
+    test('should support a plain-text message without link configuration', () => {
+        expect(
+            formatDisclaimerMessage({
+                message: 'Payments are processed securely.'
+            })
+        ).toEqual({ message: 'Payments are processed securely.', urls: [] });
     });
 });
