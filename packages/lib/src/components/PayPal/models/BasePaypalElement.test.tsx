@@ -485,7 +485,7 @@ describe('BasePaypalElement', () => {
                 expect(handleAdditionalDetailsSpy).not.toHaveBeenCalled();
                 expect(onErrorMock.mock.calls[0][0]).toBeInstanceOf(AdyenCheckoutError);
                 expect(onErrorMock.mock.calls[0][0]).toMatchObject({
-                    message: 'Something went wrong while fetching TestPayPal Order',
+                    message: 'Something went wrong with finalizing the TestPayPal order',
                     cause: requestError
                 });
             });
@@ -503,7 +503,7 @@ describe('BasePaypalElement', () => {
                 await approve(element, { orderId: 'order-1' });
 
                 expect(handleAdditionalDetailsSpy).not.toHaveBeenCalled();
-                expect(onErrorMock.mock.calls[0][0]).toMatchObject({ message: 'Something went wrong while fetching TestPayPal Order' });
+                expect(onErrorMock.mock.calls[0][0]).toMatchObject({ message: 'Something went wrong with finalizing the TestPayPal order' });
             });
         });
     });
