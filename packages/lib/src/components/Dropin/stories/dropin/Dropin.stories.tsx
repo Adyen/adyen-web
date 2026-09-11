@@ -104,7 +104,11 @@ export const DropInSplitPaypal: DropinStory = {
             }
         },
         sessionData: {
-            splitPayPalButtons: true
+            splitPayPalButtons: true,
+            recurringProcessingModel: 'CardOnFile'
+        },
+        paymentsOptions: {
+            recurringProcessingModel: 'CardOnFile'
         }
     }
 };
