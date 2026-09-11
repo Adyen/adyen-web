@@ -16,12 +16,18 @@ export default meta;
 
 export const Venmo: Story = {
     render: ({ componentConfiguration, ...checkoutConfig }) => (
-        <Checkout checkoutConfig={{ ...checkoutConfig, splitPayPalButtons: true }}>
+        <Checkout checkoutConfig={checkoutConfig}>
             {checkout => <ComponentContainer element={new VenmoElement(checkout, componentConfiguration)} />}
         </Checkout>
     ),
     args: {
         countryCode: 'US',
+        sessionData: {
+            splitPayPalButtons: true
+        },
+        paymentMethodsOptions: {
+            splitPayPalButtons: true
+        },
         componentConfiguration: {
             onAuthorized: (data, actions) => {
                 console.log('Venmo onAuthorized data', { data });

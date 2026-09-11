@@ -16,12 +16,18 @@ export default meta;
 
 export const PayPalCredit: Story = {
     render: ({ componentConfiguration, ...checkoutConfig }) => (
-        <Checkout checkoutConfig={{ ...checkoutConfig, splitPayPalButtons: true }}>
+        <Checkout checkoutConfig={checkoutConfig}>
             {checkout => <ComponentContainer element={new PaypalCredit(checkout, componentConfiguration)} />}
         </Checkout>
     ),
     args: {
         countryCode: 'US',
+        sessionData: {
+            splitPayPalButtons: true
+        },
+        paymentMethodsOptions: {
+            splitPayPalButtons: true
+        },
         componentConfiguration: {
             onAuthorized: (data, actions) => {
                 console.log('PayPal credit onAuthorized data', { data });
