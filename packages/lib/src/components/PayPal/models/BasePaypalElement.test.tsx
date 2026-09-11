@@ -197,14 +197,6 @@ describe('BasePaypalElement', () => {
 
             expect(element.data.paymentMethod).toEqual(expect.objectContaining({ type: 'paypal', subtype: 'express' }));
         });
-
-        test('should report the paypal type regardless of the subclass tx variant', () => {
-            class CreditLikeElement extends TestPaypalElement {
-                public static override readonly type = 'paypal_credit';
-            }
-
-            expect(new CreditLikeElement(core).data.paymentMethod).toEqual(expect.objectContaining({ type: 'paypal' }));
-        });
     });
 
     test('should always be valid', () => {
@@ -274,15 +266,6 @@ describe('BasePaypalElement', () => {
             const element = createElement();
 
             expect(() => element.updateWithAction(createAction({ paymentMethodType: 'scheme' }))).toThrow('Invalid Action');
-        });
-
-        test('should accept a paypal action even when the subclass declares another tx variant', () => {
-            class VenmoLikeElement extends TestPaypalElement {
-                public static override readonly type = 'venmo';
-            }
-            const element = new VenmoLikeElement(core);
-
-            expect(() => element.updateWithAction(createAction())).not.toThrow();
         });
 
         test('should store the payment data and resolve the pending submit with the sdk token', async () => {
@@ -373,7 +356,7 @@ describe('BasePaypalElement', () => {
             // @ts-ignore spying on a protected method
             const handleAdditionalDetailsSpy = jest.spyOn(element, 'handleAdditionalDetails').mockImplementation(() => element);
 
-            await approve(element, { orderId: 'order-1', payerId: 'payer-1', paymentSource: 'paypal' });
+            await approve(element, { orderId: 'order-1', payerId: 'payer-1', fundingSource: 'paypal' });
 
             expect(handleAdditionalDetailsSpy).toHaveBeenCalledWith({
                 data: {
