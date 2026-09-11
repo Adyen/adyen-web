@@ -9,7 +9,7 @@ import useImage from '../../../core/Context/useImage';
 import InputText from '../../internal/FormFields/InputText';
 import { ComponentMethodsRef, UIElementProps } from '../../internal/UIElement/types';
 import { PREFIX } from '../../internal/Icon/constants';
-import { PaymentData } from '../../../types';
+import { OnChangeDataErrors, PaymentData } from '../../../types';
 
 interface BlikInputProps extends UIElementProps {
     data?: BlikInputDataState;
@@ -39,7 +39,7 @@ function BlikInput(props: Readonly<BlikInputProps>) {
     });
 
     useEffect(() => {
-        props.onChange?.({ data: data as unknown as PaymentData, errors, valid, isValid: Boolean(isValid) }, this);
+        props.onChange?.({ data: data as unknown as PaymentData, errors: errors as OnChangeDataErrors, valid, isValid: Boolean(isValid) }, this);
     }, [data, valid, errors, isValid]);
 
     const [status, setStatus] = useState('ready');
@@ -59,7 +59,7 @@ function BlikInput(props: Readonly<BlikInputProps>) {
         <div className="adyen-checkout__blik">
             <p className="adyen-checkout__blik__helper">{i18n.get('blik.help')}</p>
             <Field
-                errorMessage={!!errors.blikCode && i18n.get(errors.blikCode.errorMessage)}
+                errorMessage={typeof errors.blikCode?.errorMessage === 'string' ? i18n.get(errors.blikCode.errorMessage) : false}
                 label={i18n.get('blik.code')}
                 classNameModifiers={['blikCode', '50']}
                 isValid={valid.blikCode}
