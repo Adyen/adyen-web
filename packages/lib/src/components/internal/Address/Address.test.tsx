@@ -76,6 +76,17 @@ describe('Address', () => {
         expect(await screen.findByLabelText('Country/Region')).toBeInTheDocument();
     });
 
+    test('should render with empty fields and no preselected country when data is null', async () => {
+        const requiredFields = ['street', 'houseNumberOrName', 'postalCode', 'country'];
+
+        customRender(<Address data={null} specifications={addressSpecificationsMock} requiredFields={requiredFields} />);
+
+        expect(screen.getByLabelText('Street')).toHaveValue('');
+        expect(screen.getByLabelText('House number')).toHaveValue('');
+        expect(screen.getByLabelText('Postal code')).toHaveValue('');
+        expect(await screen.findByLabelText('Country/Region')).toHaveValue('');
+    });
+
     test('should maintain spaces while typing but trim and collapse them on blur', async () => {
         const user = userEvent.setup();
         const requiredFields = ['street', 'houseNumberOrName', 'postalCode', 'country'];
@@ -306,7 +317,7 @@ describe('Address', () => {
             countryCode | raw                | expected
             ${'US'}     | ${'1234599999999'} | ${'12345'}
             ${'BR'}     | ${'12345678999'}   | ${'12345678'}
-            ${'GB'}     | ${'AA99&9AA'}      | ${'AA999AA'}
+            ${'GB'}     | ${'AA99😀9AA'}     | ${'AA999AA'}
             ${'PL'}     | ${'99-99999999'}   | ${'99-999'}
             ${'PT'}     | ${'1234AAAA567'}   | ${'1234567'}
         `('Format post code for specific countries', ({ countryCode, raw, expected }) => {

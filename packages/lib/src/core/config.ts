@@ -51,6 +51,8 @@ export const GENERIC_OPTIONS = [
     'beforeRedirect',
     'beforeSubmit',
     'onSubmit',
+    'onReview',
+    'onAction',
     'onActionHandled',
     'onAdditionalDetails',
     'onChange',

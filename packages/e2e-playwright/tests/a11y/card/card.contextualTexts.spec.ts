@@ -8,6 +8,7 @@ const EXPIRY_DATE_CONTEXTUAL_TEXT = LANG['creditCard.expiryDate.contextualText']
 const CVC_CONTEXTUAL_TEXT_3_DIGITS = LANG['creditCard.securityCode.contextualText.3digits'];
 const CVC_CONTEXTUAL_TEXT_4_DIGITS = LANG['creditCard.securityCode.contextualText.4digits'];
 const CVC_ERROR = LANG['cc.cvc.920'];
+const CVC_ERROR_AMEX = LANG['cc.cvc.920.amex'];
 
 test.describe('Card - Contextual text', () => {
     test('#1 Should inspect the card inputs and see they have contextual elements set', async ({ card }) => {
@@ -84,7 +85,29 @@ test.describe('Card - Contextual text', () => {
         await expect(card.cvcIframeContextualElement).toHaveText(CVC_CONTEXTUAL_TEXT_3_DIGITS);
     });
 
-    test('#3 Should find no contextualElements because the config says to not show them', async ({ card }) => {
+    test('#3 Should show the Amex-specific CVC error (4 digits/front of card) in both the checkout UI and the iframe aria-context element', async ({
+        card
+    }) => {
+        await card.goto(URL_MAP.card);
+
+        // Type an Amex number so the CVC field/iframe switch to the Amex-aware digit count & error copy
+        await card.typeCardNumber(AMEX_CARD);
+
+        await expect(card.cvcContextualElement).toHaveText(CVC_CONTEXTUAL_TEXT_4_DIGITS);
+        await expect(card.cvcIframeContextualElement).toHaveText(CVC_CONTEXTUAL_TEXT_4_DIGITS);
+
+        // press pay to generate errors
+        await card.pay();
+
+        // checkout security code error element - shows the Amex-specific text
+        await expect(card.cvcErrorElement).toBeVisible();
+        await expect(card.cvcErrorElement).toHaveText(CVC_ERROR_AMEX);
+
+        // iframe security code error (aria-context) element - should also show the Amex-specific text
+        await expect(card.cvcIframeContextualElement).toHaveText(CVC_ERROR_AMEX);
+    });
+
+    test('#4 Should find no contextualElements because the config says to not show them', async ({ card }) => {
         await card.goto(
             getStoryUrl({
                 baseUrl: URL_MAP.card,

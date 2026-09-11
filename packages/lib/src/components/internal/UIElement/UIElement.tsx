@@ -1,6 +1,7 @@
-import { createRef, h, RefObject } from 'preact';
+import { createRef, h, RefObject, TargetedKeyboardEvent } from 'preact';
 import { Resources } from '../../../core/Context/Resources';
 import AdyenCheckoutError, { NETWORK_ERROR } from '../../../core/Errors/AdyenCheckoutError';
+import getOrderStatus from '../../../core/Services/order-status';
 import { hasOwnProperty } from '../../../utils/hasOwnProperty';
 import BaseElement from '../BaseElement/BaseElement';
 import PayButton from '../PayButton';
@@ -13,7 +14,7 @@ import { AnalyticsLogEvent, LogEventType } from '../../../core/Analytics/events/
 import type { CheckoutSessionDetailsResponse, CheckoutSessionPaymentResponse } from '../../../core/CheckoutSession/types';
 import type { NewableComponent } from '../../../core/core.registry';
 import CancelError from '../../../core/Errors/CancelError';
-import type { AdditionalDetailsData, CoreConfiguration, ICore } from '../../../core/types';
+import type { AdditionalDetailsData, CoreConfiguration, ICore, ReviewDetails } from '../../../core/types';
 import type {
     ActionHandledReturnObject,
     CheckoutAdvancedFlowResponse,
@@ -40,7 +41,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     /**
      * componentRef is a ref to the primary component inside the subclass that extends UIElement e.g. CardInput.tsx (which sits inside Card.tsx)
      */
-    protected componentRef: any;
+    protected componentRef: ComponentMethodsRef | undefined;
 
     protected resources: Resources;
 
@@ -103,7 +104,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     private createBeforeRenderHook(configSetByMerchant: P): void {
         const originalRender = this.render;
 
-        this.render = (...args: any[]) => {
+        this.render = (...args: unknown[]) => {
             this.beforeRender(configSetByMerchant);
             return originalRender.apply(this, args);
         };
@@ -194,7 +195,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     }
 
     public showValidation(): this {
-        if (this.componentRef && this.componentRef.showValidation) this.componentRef.showValidation();
+        this.componentRef?.showValidation?.();
         return this;
     }
 
@@ -220,18 +221,16 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
      * - If Drop-in, will set status for Dropin component, and then it will propagate the new status for the active payment method component
      * - If Component, it will set its own status
      */
-    public setElementStatus(status: UIElementStatus, props?: any): this {
-        this.elementRef?.setStatus(status, props);
+    public setElementStatus(status: UIElementStatus): this {
+        this.elementRef?.setStatus?.(status);
         return this;
     }
 
     /**
      * componentRef is a ref to the primary component inside that subclass e.g. CardInput.tsx
      */
-    public setStatus(status: UIElementStatus, props?): this {
-        if (this.componentRef?.setStatus) {
-            this.componentRef.setStatus(status, props);
-        }
+    public setStatus(status: UIElementStatus): this {
+        this.componentRef?.setStatus?.(status);
         return this;
     }
 
@@ -257,6 +256,26 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
             return;
         }
 
+        if (this.props.onReview) {
+            const order = this.state.order ?? this.props.order;
+            const onReview = (reviewDetails: ReviewDetails = {}) => {
+                this.submitAnalytics(new AnalyticsLogEvent({ component: this.type, type: LogEventType.review, message: 'Review flow triggered' }));
+                this.props.onReview(this.data, this.elementRef, reviewDetails);
+            };
+            if (order) {
+                void getOrderStatus({ clientKey: this.props.clientKey, loadingContext: this.props.loadingContext }, order)
+                    .then(orderStatus => onReview({ orderStatus }))
+                    .catch(() => onReview());
+                return;
+            }
+            onReview();
+            return;
+        }
+
+        this.executePaymentsCall();
+    }
+
+    public executePaymentsCall(): void {
         this.makePaymentsCall()
             .then(sanitizeResponse)
             .then(verifyPaymentDidNotFail)
@@ -348,7 +367,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         // };
     }
 
-    protected onComplete(state): void {
+    protected onComplete(state: AdditionalDetailsData): void {
         this.handleAdditionalDetails(state);
     }
 
@@ -402,7 +421,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         );
     }
 
-    private async submitAdditionalDetailsUsingSessionsFlow(data: any): Promise<CheckoutSessionDetailsResponse> {
+    private async submitAdditionalDetailsUsingSessionsFlow(data: AdditionalDetailsData['data']): Promise<CheckoutSessionDetailsResponse> {
         try {
             return await this.core.session.submitDetails(data);
         } catch (error: unknown) {
@@ -510,7 +529,11 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
      */
     protected handleResponse(response: PaymentResponseData): void {
         if (response.action) {
-            this.elementRef.handleAction(response.action);
+            if (this.core.options?.onAction) {
+                this.core.options.onAction(this.core.createFromAction(response.action, { ...this.elementRef.props }));
+            } else {
+                this.elementRef.handleAction(response.action);
+            }
             return;
         }
 
@@ -524,7 +547,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         this.handleSuccessResult(response);
     }
 
-    protected handleKeyPress(e: h.JSX.TargetedKeyboardEvent<HTMLInputElement> | KeyboardEvent) {
+    protected handleKeyDown(e: TargetedKeyboardEvent<HTMLInputElement> | KeyboardEvent) {
         if (e.key === 'Enter' || e.code === 'Enter') {
             e.preventDefault(); // Prevent <form> submission if Component is placed inside a form
 
@@ -533,7 +556,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     }
 
     /**
-     * Handle Enter key pressed from a UIElement (called via handleKeyPress)
+     * Handle Enter key pressed from a UIElement (called via handleKeyDown)
      * @param obj
      */
     protected onEnterKeyPressed(activeElement: Element, component: UIElement) {
@@ -606,7 +629,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
      * Get the payButton component for the current element
      */
     protected payButton = (props: PayButtonProps) => {
-        return <PayButton {...props} onClick={this.submit} />;
+        return <PayButton {...props} onClick={this.submit} showReview={!!this.props.onReview} />;
     };
 
     /**

@@ -1,9 +1,9 @@
-import { ComponentChild, h, render } from 'preact';
+import { ComponentChild, h, render, TargetedKeyboardEvent } from 'preact';
 import uuid from '../../../utils/uuid';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 import { NO_CHECKOUT_ATTEMPT_ID } from '../../../core/Analytics/constants';
 import type { ICore } from '../../../core/types';
-import type { BaseElementProps, IBaseElement } from './types';
+import type { BaseElementProps, BaseElementState, IBaseElement } from './types';
 import type { PaymentData } from '../../../types/global-types';
 import { off, on } from '../../../utils/listenerUtils';
 import { AbstractAnalyticsEvent } from '../../../core/Analytics/events/AbstractAnalyticsEvent';
@@ -22,13 +22,13 @@ function assertIsCoreInstance(checkout: ICore): checkout is ICore {
     return isCoreObject;
 }
 
-abstract class BaseElement<P extends BaseElementProps> implements IBaseElement {
+abstract class BaseElement<P extends BaseElementProps, S extends BaseElementState = BaseElementState> implements IBaseElement<P> {
     public readonly _id = `${this.constructor['type']}-${uuid()}`;
     public readonly core: ICore;
 
     public props: P;
-    public state: any = {};
-    public _component;
+    public state: S = {} as S;
+    public _component: ComponentChild | undefined;
 
     protected _node: HTMLElement = null;
 
@@ -47,7 +47,7 @@ abstract class BaseElement<P extends BaseElementProps> implements IBaseElement {
         this.core = checkout;
         this.buildElementProps(props);
 
-        this.handleKeyPress = this.handleKeyPress.bind(this);
+        this.handleKeyDown = this.handleKeyDown.bind(this);
     }
 
     protected buildElementProps(componentProps?: P) {
@@ -66,26 +66,24 @@ abstract class BaseElement<P extends BaseElementProps> implements IBaseElement {
      * Executed on the `data` getter.
      * Returns the component data necessary for the /payments request
      */
-    protected formatData(): any {
-        return {};
+    protected formatData(): PaymentData {
+        return {} as PaymentData;
     }
 
-    /* eslint-disable-next-line */
-    protected submitAnalytics(analyticsObj?: AbstractAnalyticsEvent) {
+    protected submitAnalytics(_analyticsObj?: AbstractAnalyticsEvent) {
         return null;
     }
 
-    /* eslint-disable-next-line */
-    protected handleKeyPress(e: h.JSX.TargetedKeyboardEvent<HTMLInputElement>) {
+    protected handleKeyDown(_e: TargetedKeyboardEvent<HTMLInputElement>) {
         return null;
     }
 
-    protected setState(newState: object): void {
+    protected setState(newState: S): void {
         this.state = { ...this.state, ...newState };
     }
 
-    protected get sdkDataPaymentMethodConfiguration(): CreateSdkDataParams['paymentMethodConfiguration'] | null {
-        return null;
+    protected get sdkDataPaymentMethodConfiguration(): CreateSdkDataParams['paymentMethodConfiguration'] {
+        return undefined;
     }
 
     /**
@@ -105,7 +103,7 @@ abstract class BaseElement<P extends BaseElementProps> implements IBaseElement {
             checkoutAttemptId,
             clientData,
             paymentMethodBehavior,
-            ...(sdkDataPaymentMethodConfiguration && { paymentMethodConfiguration: sdkDataPaymentMethodConfiguration })
+            paymentMethodConfiguration: sdkDataPaymentMethodConfiguration
         });
 
         if (componentData.paymentMethod && checkoutAttemptId) {
@@ -155,8 +153,8 @@ abstract class BaseElement<P extends BaseElementProps> implements IBaseElement {
 
         this._node = node;
 
-        // Add listener for key press events, notably 'Enter' key presses
-        on(this._node, 'keypress', this.handleKeyPress, false);
+        // Add listener for key down events, notably 'Enter' key presses
+        on(this._node, 'keydown', this.handleKeyDown, false);
 
         this._component = this.render();
 
@@ -173,7 +171,7 @@ abstract class BaseElement<P extends BaseElementProps> implements IBaseElement {
      */
     public update(props: Partial<P>): this {
         this.props = this.formatProps({ ...this.props, ...props });
-        this.state = {};
+        this.state = {} as S;
 
         return this.unmount().mount(this._node); // for new mount fny
     }
@@ -183,7 +181,7 @@ abstract class BaseElement<P extends BaseElementProps> implements IBaseElement {
      */
     public unmount(): this {
         // Remove listener
-        off(this._node, 'keypress', this.handleKeyPress);
+        off(this._node, 'keydown', this.handleKeyDown);
 
         if (this._node) {
             render(null, this._node);

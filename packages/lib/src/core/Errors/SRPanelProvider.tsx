@@ -19,6 +19,12 @@ interface SetSRMessagesReturnFnProps {
     isValidating: boolean;
     layout?: string[];
     countrySpecificLabels?: StringObject;
+    /**
+     * Whether this form currently has errors of its own on display. The SR panel is shared with
+     * status reporters (loading, await, countdown), so a form must not clear it when it has
+     * nothing of its own to clear. Defaults to true to preserve existing caller behaviour.
+     */
+    hasDisplayedErrors?: boolean;
 }
 
 export type SetSRMessagesReturnFn = (props: SetSRMessagesReturnFnProps) => SetSRMessagesReturnObject;

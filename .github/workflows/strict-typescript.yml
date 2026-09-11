@@ -6,10 +6,13 @@ on:
 jobs:
   strict-scan:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
 
     steps:
       - name: Use Node.js 24
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
         with:
           node-version: 24
 
@@ -18,7 +21,7 @@ jobs:
 
       # ── Get baseline from main ──
       - name: Checkout main
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           ref: main
           fetch-depth: 1
@@ -42,14 +45,14 @@ jobs:
           echo "Main baseline — total: $TOTAL"
 
       # ── Check PR branch ──
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           clean: false
           fetch-depth: 1
 
       - name: Cache node modules
         id: node-modules-cache
-        uses: actions/cache@v6
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
         env:
           cache-name: node-modules-v1
         with:
@@ -97,12 +100,6 @@ jobs:
           PR_FILES='${{ steps.tsc-strict.outputs.files }}'
           [ -z "$PR_FILES" ] && PR_FILES='{}'
 
-          if [ "${{ steps.tsc-strict.outcome }}" = "success" ]; then
-            OVERALL_STATUS="✅ Pass"
-          else
-            OVERALL_STATUS="⚠️ Regression"
-          fi
-
           # Generate per-file table rows with jq (only files with increased errors)
           TABLE_ROWS=$(jq -r -n \
             --argjson baseline "$B_FILES" \
@@ -115,6 +112,16 @@ jobs:
           ')
 
           NUM_FILES=$(jq -n --argjson b "$B_FILES" --argjson p "$PR_FILES" '(($b | keys) + ($p | keys)) | unique | map({ file: ., b: ($b[.] // 0), p: ($p[.] // 0) }) | [ .[] | select(.p > .b) ] | length')
+
+          # Flag a regression whenever any file gained errors — even if the total went down —
+          # so reviewers notice it. Blocking the PR remains based on the total count only.
+          if [ "$NUM_FILES" -gt 0 ] || [ "${{ steps.tsc-strict.outcome }}" != "success" ]; then
+            OVERALL_STATUS="⚠️ Regression"
+            DETAILS_TAG="<details open>"
+          else
+            OVERALL_STATUS="✅ Pass"
+            DETAILS_TAG="<details>"
+          fi
 
           # Build a single grep pattern matching every regressed file's basename
           GREP_PATTERN=$(jq -r -n \
@@ -132,7 +139,7 @@ jobs:
             echo ''
             echo "**Total: ${PR_TOTAL} errors (baseline: ${B_TOTAL}) | ${OVERALL_STATUS}**"
             echo ''
-            echo '<details>'
+            echo "$DETAILS_TAG"
             echo "<summary>Files with regressions (${NUM_FILES} files)</summary>"
             echo ''
             echo '| File | PR | Baseline | Delta |'
@@ -158,29 +165,24 @@ jobs:
             echo 'EOF'
           } >> "$GITHUB_OUTPUT"
 
-      - name: Find existing comment
-        if: always() && github.event_name == 'pull_request'
-        uses: peter-evans/find-comment@v4
-        id: fc
-        with:
-          issue-number: ${{ github.event.pull_request.number }}
-          comment-author: 'github-actions[bot]'
-          body-includes: Strict TypeScript Scan Results
-
-      - name: Delete previous comment
-        if: always() && github.event_name == 'pull_request' && steps.fc.outputs.comment-id != '' && steps.fc.outputs.comment-id != '0'
-        uses: actions/github-script@v9
-        with:
-          script: |
-            await github.rest.issues.deleteComment({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              comment_id: Number('${{ steps.fc.outputs.comment-id }}')
-            });
-
       - name: Post scan summary
         if: always() && github.event_name == 'pull_request'
-        uses: peter-evans/create-or-update-comment@v5
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9
+        env:
+          COMMENT_BODY: ${{ steps.build-comment.outputs.body }}
         with:
-          issue-number: ${{ github.event.pull_request.number }}
-          body: ${{ steps.build-comment.outputs.body }}
+          script: |
+            const marker = 'Strict TypeScript Scan Results';
+            const { owner, repo } = context.repo;
+            const issue_number = context.payload.pull_request.number;
+
+            const comments = await github.paginate(github.rest.issues.listComments, { owner, repo, issue_number });
+            const previous = comments.find(
+              comment => comment.user?.login === 'github-actions[bot]' && (comment.body || '').includes(marker)
+            );
+
+            if (previous) {
+              await github.rest.issues.deleteComment({ owner, repo, comment_id: previous.id });
+            }
+
+            await github.rest.issues.createComment({ owner, repo, issue_number, body: process.env.COMMENT_BODY });

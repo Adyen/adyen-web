@@ -25,7 +25,7 @@ interface GiftcardComponentProps extends Partial<Pick<SFPProps, 'clientKey' | 'l
     expiryDateRequired?: boolean;
     fieldsLayoutComponent: FunctionComponent<GiftcardFieldsProps>;
     placeholders?: Placeholders;
-    handleKeyPress?: (o: KeyboardEvent) => void;
+    handleKeyDown?: (event: KeyboardEvent) => void;
     onSubmitAnalytics?: (event: AbstractAnalyticsEvent) => void;
 }
 
@@ -62,7 +62,7 @@ class Giftcard extends Component<Readonly<GiftcardComponentProps>> {
         return this.sfp.mapErrorsToValidationRuleResult();
     };
 
-    private updateTransformedErrors = (balanceCheckErrors?: Record<string, GiftCardValidationError>) => {
+    private readonly updateTransformedErrors = (balanceCheckErrors?: Record<string, GiftCardValidationError>) => {
         const transformedErrors = this.mapErrorsToValidationObjects();
 
         const mergedErrors = { ...transformedErrors, ...balanceCheckErrors };
@@ -225,7 +225,8 @@ class Giftcard extends Component<Readonly<GiftcardComponentProps>> {
                     this.props.payButton({
                         status: this.state.status,
                         onClick: this.props.makeBalanceCheck,
-                        label: i18n.get('applyGiftcard')
+                        label: i18n.get('applyGiftcard'),
+                        showReview: false
                     })}
             </div>
         );

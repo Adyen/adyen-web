@@ -9,20 +9,25 @@ import { AmountProvider, AmountProviderProps } from '../../../core/Context/Amoun
 import { ButtonProps } from '../Button/types';
 import { ILanguageService } from '../../../language/LanguageService';
 import { mock } from 'jest-mock-extended';
+import { setupCoreMock } from '../../../../config/testMocks/setup-core-mock';
+
+const core = setupCoreMock();
 
 const renderPayButton = ({
     payButtonProps = {},
     amountProviderProps = {},
-    i18n = global.i18n
+    i18n = core.modules.i18n,
+    showReview = false
 }: {
     payButtonProps?: Partial<PayButtonProps>;
     amountProviderProps?: Partial<AmountProviderProps>;
     i18n?: Language;
+    showReview?: boolean;
 } = {}) => {
     return render(
-        <CoreProvider i18n={i18n} loadingContext="test" resources={global.resources}>
+        <CoreProvider i18n={i18n} loadingContext="test" resources={core.modules.resources as any}>
             <AmountProvider amount={amountProviderProps.amount} secondaryAmount={amountProviderProps.secondaryAmount} providerRef={createRef()}>
-                <PayButton {...payButtonProps} />
+                <PayButton {...payButtonProps} showReview={showReview} />
             </AmountProvider>
         </CoreProvider>
     );
@@ -164,6 +169,32 @@ describe('PayButton', () => {
             expect.objectContaining({ type: 'click' }),
             expect.objectContaining({ complete: expect.any(Function) })
         );
+    });
+
+    test('should render "Continue" when showReview is true', () => {
+        renderPayButton({ showReview: true });
+        expect(screen.getByRole('button', { name: 'Continue' })).toBeInTheDocument();
+    });
+
+    test('should render "Continue" when showReview is true even when amount is provided', () => {
+        renderPayButton({ showReview: true, amountProviderProps: { amount: { currency: 'USD', value: 1000 } } });
+        expect(screen.getByRole('button', { name: 'Continue' })).toBeInTheDocument();
+        expect(screen.queryByText('$10.00')).not.toBeInTheDocument();
+    });
+
+    test('should render "Continue" when showReview is true even when a custom label is provided', () => {
+        renderPayButton({ showReview: true, payButtonProps: { label: 'Redirect to' } });
+        expect(screen.getByRole('button', { name: 'Continue' })).toBeInTheDocument();
+    });
+
+    test('should not render icon when showReview is true', () => {
+        renderPayButton({ showReview: true, payButtonProps: { icon: 'https://example.com/icon.svg' } });
+        expect(screen.queryByRole('img')).not.toBeInTheDocument();
+    });
+
+    test('should render icon when showReview is false', () => {
+        renderPayButton({ showReview: false, payButtonProps: { icon: 'https://example.com/icon.svg' } });
+        expect(screen.getByRole('img', { hidden: true })).toHaveAttribute('src', 'https://example.com/icon.svg');
     });
 
     test('should not call onClick handler when button is disabled', async () => {

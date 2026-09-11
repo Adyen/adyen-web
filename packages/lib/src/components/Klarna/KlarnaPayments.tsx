@@ -38,8 +38,16 @@ class KlarnaPayments extends UIElement<KlarnaConfiguration> {
         };
     }
 
+    public override submit(): void {
+        if (this.props.useKlarnaWidget) {
+            this.executePaymentsCall();
+            return;
+        }
+        super.submit();
+    }
+
     public payButton = (props: PayButtonProps) => {
-        return <PayButton onClick={this.submit} {...props} />;
+        return <PayButton onClick={this.submit} {...props} showReview={this.props.useKlarnaWidget ? false : !!this.props.onReview} />;
     };
 
     public override handleAction(action: KlarnaAction, props = {}): UIElement | null {

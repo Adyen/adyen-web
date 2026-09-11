@@ -139,12 +139,9 @@ type CheckoutThreeDS2Action = {
     authorisationToken: string;
 };
 
-export interface FingerprintResolveData {
-    data: {
-        [key: string]: string;
-        paymentData: string;
-    };
-}
+export type FingerprintResolveData = {
+    data: Omit<AdditionalDetailsData['data'], 'details'>;
+};
 
 export interface ChallengeResolveData {
     data: {
@@ -199,4 +196,5 @@ export type ThreeDS2ConfigProps = {
     readonly i18n?: Language;
 };
 
-export type ThreeDS2ActionProps = CardConfiguration & Pick<ThreeDS2ConfigProps, 'isMDFlow' | 'on3DS2RedirectFlowComplete' | 'usePasskeyIFrameAttributes'>;
+export type ThreeDS2ActionProps = CardConfiguration &
+    Pick<ThreeDS2ConfigProps, 'isMDFlow' | 'on3DS2RedirectFlowComplete' | 'usePasskeyIFrameAttributes'>;

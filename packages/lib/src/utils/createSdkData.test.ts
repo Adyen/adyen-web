@@ -23,7 +23,6 @@ describe('createSdkData', () => {
         expect(typeof result).toBe('string');
         expect(() => decodeSdkData(result)).not.toThrow();
     });
-
     test('should encode schemaVersion as 1', () => {
         const result = createSdkData({
             checkoutAttemptId: TEST_CHECKOUT_ATTEMPT_ID,
@@ -33,7 +32,6 @@ describe('createSdkData', () => {
         const decoded = decodeSdkData(result);
         expect(decoded.schemaVersion).toBe(1);
     });
-
     test('should encode channel as CHANNEL.WEB', () => {
         const result = createSdkData({
             checkoutAttemptId: TEST_CHECKOUT_ATTEMPT_ID,
@@ -43,7 +41,6 @@ describe('createSdkData', () => {
         const decoded = decodeSdkData(result);
         expect(decoded.channel).toBe(CHANNEL.WEB);
     });
-
     test('should encode platform as PLATFORM', () => {
         const result = createSdkData({
             checkoutAttemptId: TEST_CHECKOUT_ATTEMPT_ID,
@@ -53,7 +50,6 @@ describe('createSdkData', () => {
         const decoded = decodeSdkData(result);
         expect(decoded.platform).toBe(PLATFORM);
     });
-
     test('should encode sdkVersion from LIBRARY_VERSION', () => {
         const result = createSdkData({
             checkoutAttemptId: TEST_CHECKOUT_ATTEMPT_ID,
@@ -63,7 +59,6 @@ describe('createSdkData', () => {
         const decoded = decodeSdkData(result);
         expect(decoded.sdkVersion).toBe(LIBRARY_VERSION);
     });
-
     test('should encode checkoutAttemptId in the analytics field', () => {
         const result = createSdkData({
             checkoutAttemptId: TEST_CHECKOUT_ATTEMPT_ID,
@@ -73,7 +68,6 @@ describe('createSdkData', () => {
         const decoded = decodeSdkData(result);
         expect(decoded.analytics.checkoutAttemptId).toBe(TEST_CHECKOUT_ATTEMPT_ID);
     });
-
     test('should encode paymentMethodBehavior as NATIVE when PAYMENT_METHOD_BEHAVIOR.NATIVE is passed', () => {
         const result = createSdkData({
             checkoutAttemptId: TEST_CHECKOUT_ATTEMPT_ID,
@@ -83,7 +77,6 @@ describe('createSdkData', () => {
         const decoded = decodeSdkData(result);
         expect(decoded.paymentMethodBehavior).toBe(PAYMENT_METHOD_BEHAVIOR.NATIVE);
     });
-
     test('should encode paymentMethodBehavior as GENERIC when PAYMENT_METHOD_BEHAVIOR.GENERIC is passed', () => {
         const result = createSdkData({
             checkoutAttemptId: TEST_CHECKOUT_ATTEMPT_ID,
@@ -93,7 +86,6 @@ describe('createSdkData', () => {
         const decoded = decodeSdkData(result);
         expect(decoded.paymentMethodBehavior).toBe(PAYMENT_METHOD_BEHAVIOR.GENERIC);
     });
-
     test('should include riskData when clientData is provided', () => {
         const result = createSdkData({
             checkoutAttemptId: TEST_CHECKOUT_ATTEMPT_ID,
@@ -103,7 +95,6 @@ describe('createSdkData', () => {
         const decoded = decodeSdkData(result);
         expect(decoded.riskData).toEqual({ clientData: TEST_CLIENT_DATA });
     });
-
     test('should not include riskData when clientData is null', () => {
         const result = createSdkData({
             checkoutAttemptId: TEST_CHECKOUT_ATTEMPT_ID,
@@ -112,5 +103,24 @@ describe('createSdkData', () => {
         });
         const decoded = decodeSdkData(result);
         expect(decoded.riskData).toBeUndefined();
+    });
+    test('should include paymentMethodConfiguration when it is provided', () => {
+        const result = createSdkData({
+            checkoutAttemptId: TEST_CHECKOUT_ATTEMPT_ID,
+            clientData: null,
+            paymentMethodBehavior: PAYMENT_METHOD_BEHAVIOR.NATIVE,
+            paymentMethodConfiguration: { supportsPayPalV6: true }
+        });
+        const decoded = decodeSdkData(result);
+        expect(decoded.paymentMethodConfiguration).toEqual({ supportsPayPalV6: true });
+    });
+    test('should not include paymentMethodConfiguration when it is not provided', () => {
+        const result = createSdkData({
+            checkoutAttemptId: TEST_CHECKOUT_ATTEMPT_ID,
+            clientData: null,
+            paymentMethodBehavior: PAYMENT_METHOD_BEHAVIOR.NATIVE
+        });
+        const decoded = decodeSdkData(result);
+        expect(decoded.paymentMethodConfiguration).toBeUndefined();
     });
 });

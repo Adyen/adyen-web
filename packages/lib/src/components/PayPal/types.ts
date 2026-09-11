@@ -386,3 +386,18 @@ export type SupportedPayPalFundingSources = 'paypal' | 'credit' | 'paylater' | '
  * @deprecated Use {@link SupportedPayPalFundingSources} instead
  */
 export type FundingSource = SupportedPayPalFundingSources;
+
+/**
+ * @internal
+ */
+export type PayPalButtonType = 'pay' | 'checkout' | 'buynow' | 'subscribe';
+
+/**
+ * @internal
+ */
+export type PayPalButtonClass = 'paypal-gold' | 'paypal-blue' | 'paypal-white' | 'paypal-black';
+
+/**
+ * @internal
+ */
+export type VenmoButtonClass = 'venmo-blue' | 'venmo-black';

@@ -94,11 +94,13 @@ const CardInput = (props: Readonly<CardInputProps>) => {
     const showBillingAddress = props.billingAddressMode !== AddressModeOptions.none && props.billingAddressRequired;
 
     const partialAddressSchema = handlePartialAddressMode(props.billingAddressMode);
+    const initialBillingAddress = props.data?.billingAddress ?? null;
+
     // Keeps the value of the country set initially by the merchant, before the Address Component mutates it
-    const partialAddressCountry = useRef<string>(partialAddressSchema && props.data?.billingAddress?.country);
+    const partialAddressCountry = useRef<string | null>(partialAddressSchema ? (initialBillingAddress?.country?.toUpperCase() ?? null) : null);
 
     const [storePaymentMethod, setStorePaymentMethod] = useState(false);
-    const [billingAddress, setBillingAddress] = useState<AddressData>(showBillingAddress ? (props.data?.billingAddress ?? null) : null);
+    const [billingAddress, setBillingAddress] = useState<AddressData | null>(showBillingAddress ? initialBillingAddress : null);
     const [showSocialSecurityNumber, setShowSocialSecurityNumber] = useState(false);
     const [socialSecurityNumber, setSocialSecurityNumber] = useState('');
     const [installments, setInstallments] = useState<InstallmentsState>({ value: null });

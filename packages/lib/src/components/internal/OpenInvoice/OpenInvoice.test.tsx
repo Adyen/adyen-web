@@ -41,6 +41,15 @@ const renderOpenInvoice = (props: Partial<OpenInvoiceProps> = {}) => {
 };
 
 describe('OpenInvoice', () => {
+    test('should render empty personal details fields when personalDetails is null', () => {
+        renderOpenInvoice({
+            data: { personalDetails: null, billingAddress: {}, deliveryAddress: {} }
+        });
+
+        expect(screen.getByLabelText(/first name/i)).toHaveValue('');
+        expect(screen.getByLabelText(/last name/i)).toHaveValue('');
+    });
+
     test('should not display fieldsets set to hidden', () => {
         renderOpenInvoice({ visibility: { personalDetails: 'hidden' } });
         expect(screen.queryByLabelText(/first name/i)).not.toBeInTheDocument();

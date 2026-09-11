@@ -13,6 +13,19 @@ export interface SdkDataObject {
     riskData: {
         clientData: string;
     };
+    paymentMethodConfiguration?: SdkDataPaymentMethodConfiguration;
+}
+
+export interface SdkDataPaymentMethodConfiguration {
+    // PayPal component specific configuration
+    supportsPayPalV6?: boolean;
+}
+
+export interface CreateSdkDataParams {
+    checkoutAttemptId: string;
+    clientData: string | null;
+    paymentMethodBehavior: PAYMENT_METHOD_BEHAVIOR;
+    paymentMethodConfiguration?: SdkDataPaymentMethodConfiguration;
 }
 
 export interface CreateSdkDataParams {
@@ -25,10 +38,11 @@ export interface CreateSdkDataParams {
 }
 
 /**
- * @param checkoutAttemptId - The checkout attempt ID from analytics
- * @param clientData - The client data from risk module
- * @param paymentMethodBehavior - The payment method behavior
- * @param supportsPayPalV6 - Whether PayPal SDK v6 is supported
+ * @param params - The parameters for creating the SDK data
+ * @param params.checkoutAttemptId - The checkout attempt ID from analytics
+ * @param params.clientData - The client data from risk module
+ * @param params.paymentMethodBehavior - The payment method behavior
+ * @param params.paymentMethodConfiguration - The payment method configuration
  * @returns Base64 encoded JSON string of the SDK data object
  */
 export function createSdkData({ checkoutAttemptId, clientData, paymentMethodBehavior, paymentMethodConfiguration }: CreateSdkDataParams): string {

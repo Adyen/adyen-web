@@ -128,7 +128,6 @@ class PaymentMethodItem extends Component<Readonly<PaymentMethodItemProps>> {
                             inline
                             variant="link"
                             onClick={this.toggleDisableConfirmation}
-                            onKeyPress={stopPropagationForActionKeys}
                             onKeyDown={stopPropagationForActionKeys}
                             ariaExpanded={this.state.showDisableStoredPaymentMethodConfirmation}
                             ariaControls={disableConfirmationId}

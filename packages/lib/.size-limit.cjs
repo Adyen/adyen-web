@@ -42,7 +42,7 @@ module.exports = [
         name: 'Auto',
         path: 'auto/auto.js',
         import: '{ AdyenCheckout, Dropin }',
-        limit: '140 KB',
+        limit: '141 KB',
         running: false
     },
     /**
@@ -52,7 +52,7 @@ module.exports = [
         name: 'ESM - Core',
         path: 'dist/es/index.js',
         import: '{ AdyenCheckout }',
-        limit: '38 KB',
+        limit: '39 KB',
         running: false
     },
     {

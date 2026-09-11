@@ -1,7 +1,7 @@
 import { FormatterContext } from '../../../utils/Formatters/types';
 import { CountryFormatRules, FormatRules } from '../../../utils/Validator/types';
 import { Formatter } from '../../../utils/useForm/types';
-import { getFormattingRegEx, SPECIAL_CHARS } from '../../../utils/validator-utils';
+import { getFormattingRegEx, stripInvalidChars } from '../../../utils/validator-utils';
 
 const asCountryFormatRules = <T extends CountryFormatRules>(rules: T): T & CountryFormatRules => rules;
 
@@ -15,8 +15,7 @@ const createFormatByDigits = (digits: number): Formatter => {
     };
 };
 
-const specialCharsRegEx = getFormattingRegEx(SPECIAL_CHARS);
-const formattingFn = (val: string) => val.replace(specialCharsRegEx, '');
+const defaultFormattingFn = (val: string) => val;
 
 export const addressFormatters: FormatRules = {
     postalCode: {
@@ -34,13 +33,13 @@ export const addressFormatters: FormatRules = {
         }
     },
     street: {
-        formatterFn: formattingFn
+        formatterFn: defaultFormattingFn
     },
     houseNumberOrName: {
-        formatterFn: formattingFn
+        formatterFn: defaultFormattingFn
     },
     city: {
-        formatterFn: formattingFn
+        formatterFn: defaultFormattingFn
     }
 };
 
@@ -113,8 +112,7 @@ export const countrySpecificFormatters = asCountryFormatRules({
     },
     GB: {
         postalCode: {
-            // Disallow special chars & set to maxlength
-            formatterFn: val => val.replace(getFormattingRegEx(SPECIAL_CHARS), '').substring(0, 8),
+            formatterFn: val => stripInvalidChars(val).substring(0, 8),
             format: 'AA99 9AA or A99 9AA or A9 9AA',
             maxlength: 8
         }

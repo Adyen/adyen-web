@@ -9,7 +9,8 @@ import { usePayPalButtonEligibility } from '../hooks/usePayPalButtonEligibility'
 import { useCreateVaultSetupToken } from '../hooks/useCreateVaultSetupToken';
 import { usePayPalSaveSession } from '../hooks/usePayPalSaveSession';
 import { useAmount } from '../../../core/Context/AmountProvider';
-import { PayPalVenmoSavePaymentSessionOptions } from '../paypal-js-types';
+import { PayPalPresentationModeOptions, PayPalVenmoSavePaymentSessionOptions } from '../paypal-js-types';
+import { DEFAULT_PAYMENT_SESSION_OPTIONS } from '../config';
 
 export const VenmoButton = ({
     paypalService,
@@ -42,9 +43,9 @@ export const VenmoButton = ({
     const createOrder = useCreateOrder(onSubmit);
     const createVaultSetupToken = useCreateVaultSetupToken(onSubmit);
 
-    const presentationModeOptionsWithSandboxSupport = useMemo(
+    const presentationModeOptionsWithSandboxSupport = useMemo<PayPalPresentationModeOptions>(
         () => ({
-            ...presentationModeOptions,
+            ...(presentationModeOptions ?? DEFAULT_PAYMENT_SESSION_OPTIONS),
             sandboxSupport: {
                 enabled: true
             }
@@ -72,7 +73,7 @@ export const VenmoButton = ({
                 createVaultSetupToken,
                 onError
             }),
-            [payPalSDKInstance, saveSessionOptions, createVaultSetupToken]
+            [payPalSDKInstance, saveSessionOptions, createVaultSetupToken, presentationModeOptionsWithSandboxSupport]
         )
     );
 

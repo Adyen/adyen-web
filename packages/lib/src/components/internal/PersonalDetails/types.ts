@@ -11,7 +11,7 @@ export interface PersonalDetailsProps {
     namePrefix?: string;
     requiredFields?: string[];
     visibility?: FieldsetVisibility;
-    data: PersonalDetailsSchema;
+    data: PersonalDetailsSchema | null;
     onChange: (newState: object) => void;
     placeholders?: PersonalDetailsPlaceholders;
     readonly?: boolean;
@@ -41,9 +41,4 @@ export interface ReadOnlyPersonalDetailsProps {
     lastName?: string;
     shopperEmail?: string;
     telephoneNumber?: string;
-}
-
-export interface ValidationResult {
-    errorMessage: string;
-    isValid: boolean;
 }

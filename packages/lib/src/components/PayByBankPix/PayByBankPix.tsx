@@ -188,7 +188,7 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
         try {
             const { deviceId, ...riskSignals } = await this.passkeyService.captureRiskSignalsAuthentication();
             this.state = { ...this.state, ...{ data: { storedPaymentMethodId: this.props.storedPaymentMethodId, riskSignals, deviceId } } };
-            super.submit();
+            this.executePaymentsCall();
         } catch (error) {
             const errorMsg = error instanceof Error ? error.message : 'Unknown error in the payWithStoredPayment';
             this.handleError(error instanceof AdyenCheckoutError ? error : new AdyenCheckoutError(ERROR, errorMsg));
@@ -225,9 +225,7 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
                     label={this.props.i18n.get('paybybankpix.redirectBtn.label')}
                     payButton={this.payButton}
                     onSubmit={this.submit}
-                    ref={ref => {
-                        this.componentRef = ref;
-                    }}
+                    setComponentRef={this.setComponentRef}
                 />
             );
         }

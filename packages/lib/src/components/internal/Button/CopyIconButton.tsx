@@ -5,8 +5,8 @@ import { ButtonProps } from './types';
 import { useCoreContext } from '../../../core/Context/CoreProvider';
 import copyToClipboard from '../../../utils/clipboard';
 import { SingletonTooltipProvider, useTooltip } from '../Tooltip/SingletonTooltipProvider';
-import './CopyIconButton.scss';
 import { stopPropagationForActionKeys } from './stopPropagationForActionKeys';
+import './CopyIconButton.scss';
 
 export interface CopyIconButtonProps extends ButtonProps {
     /**
@@ -25,7 +25,6 @@ const CopyIconButton = (props: Readonly<CopyIconButtonProps>) => {
         showTooltip({ anchorRef, text: i18n.get('button.copied') });
     }, [props.text, i18n, showTooltip]);
 
-    // We need it because onKeyPress does not trigger for Esc key
     const onKeyDown = useCallback(
         (event: KeyboardEvent) => {
             stopPropagationForActionKeys(event);
@@ -53,8 +52,6 @@ const CopyIconButton = (props: Readonly<CopyIconButtonProps>) => {
             onFocus={handleShowTooltip}
             onBlur={hideTooltip}
             onClick={onClick}
-            // It's ok to have both, browsers will fire only one click event for enter/space key pressed.
-            onKeyPress={stopPropagationForActionKeys}
             onKeyDown={onKeyDown}
         >
             <svg

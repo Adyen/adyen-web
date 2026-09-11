@@ -85,17 +85,12 @@ class BlikElement extends UIElement<AwaitConfiguration> {
                 name={this.displayName}
                 payButton={this.payButton}
                 onSubmit={this.submit}
-                ref={ref => {
-                    this.componentRef = ref;
-                }}
+                setComponentRef={this.setComponentRef}
             />
         ) : (
             <BlikInput
-                // @ts-ignore Ref is used by preact component
-                ref={ref => {
-                    this.componentRef = ref;
-                }}
                 {...this.props}
+                setComponentRef={this.setComponentRef}
                 onChange={this.setState}
                 onSubmit={this.submit}
                 payButton={this.payButton}

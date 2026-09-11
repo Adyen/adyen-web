@@ -5,6 +5,7 @@ import { CardBrandsConfiguration, DualBrandSelectElement, DualBrandButtons, Dual
 import { mapDualBrandButtons } from '../utils';
 import styles from './DualBrandSelector.module.scss';
 import { useCoreContext } from '../../../../../core/Context/CoreProvider';
+import { stopPropagationForActionKeys } from '../../../../internal/Button/stopPropagationForActionKeys';
 
 interface DualBrandSelectorProps {
     dualBrandingElements: DualBrandSelectElement[];
@@ -28,14 +29,6 @@ export default function DualBrandSelector({
         dualBrandingChangeHandler(brandId);
     };
 
-    // override enter key to prevent submit form (default behavior)
-    const handleKeyDown = (e: KeyboardEvent, brandId: string) => {
-        if (e.key === 'Enter') {
-            e.preventDefault();
-            handleBrandSelect(brandId);
-        }
-    };
-
     return (
         <div className={styles.dualBrandSelector} role="group" aria-label={i18n.get('creditCard.dualBrand.description')}>
             {dualBrandItems.map((item: DualBrandButtons) => (
@@ -47,7 +40,7 @@ export default function DualBrandSelector({
                     })}
                     onMouseDown={e => e.preventDefault()}
                     onClick={() => handleBrandSelect(item.id)}
-                    onKeyDown={e => handleKeyDown(e, item.id)}
+                    onKeyDown={stopPropagationForActionKeys}
                     aria-label={item.altName}
                     aria-pressed={selectedBrand === item.id}
                 >

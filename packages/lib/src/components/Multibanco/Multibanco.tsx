@@ -42,9 +42,7 @@ export class MultibancoElement extends UIElement<VoucherConfiguration> {
                     name={this.displayName}
                     payButton={this.payButton}
                     onSubmit={this.submit}
-                    ref={ref => {
-                        this.componentRef = ref;
-                    }}
+                    setComponentRef={this.setComponentRef}
                 />
             );
         }

@@ -22,21 +22,22 @@ export const isEmpty = (input: string) => !!(input == null || /^[\s]*$/.test(inp
 export const isString = (input: unknown) => typeof input === 'string' || input instanceof String;
 export const hasText = (input: string) => isString(input) && !isEmpty(input);
 
-export const SPECIAL_CHARS = '?\\+_=!@#$%^&*(){}~<>\\[\\]\\\\'; // N.B. difficulty escaping \ (takes 3 backslashes!)
+// Block emojis and control/format characters, allow everything else
+const INVALID_CHARS_REGEX_SOURCE = '(?:[\\p{Extended_Pictographic}\\p{Regional_Indicator}\\p{Cc}\\p{Cf}]|[0-9#*]\\uFE0F?\\u20E3)';
+const [INVALID_CHARS_TEST, INVALID_CHARS_STRIP] = ((): [RegExp, RegExp] => {
+    try {
+        // This is inside a try/catch just in case the browser doesn't support Unicode property escapes
+        return [new RegExp(INVALID_CHARS_REGEX_SOURCE, 'u'), new RegExp(INVALID_CHARS_REGEX_SOURCE, 'gu')];
+    } catch {
+        // Fallback for browsers without Unicode property escapes - just block control chars
+        const fallbackRegex = '[\\u0000-\\u001F\\u007F-\\u009F]';
+        return [new RegExp(fallbackRegex), new RegExp(fallbackRegex, 'g')];
+    }
+})();
 
 // Generates a regEx ideal for use in a String.replace call for use in a formatter
 // e.g. getFormattingRegEx('^\\d', 'g') will generate: /[^\d]/g which is a regEx to match anything that is not a digit
 export const getFormattingRegEx = (specChars: string, flags = 'g') => new RegExp(`[${specChars}]`, flags);
-
-// Creates a regEx ideal for use in a RegExp.test call for use in a validator
-export const getValidatingRegEx = (specChars: string, exclude: boolean) => new RegExp(`^[${exclude ? '^' : ''}${specChars}]+$`);
-
-export const CHARACTER_PATTERNS: { [key: string]: RegExp } = {
-    digitsHyphen: /^[\d-]+$/,
-    noHtml: /^[^<>&]+$/,
-    alphaNum: /^\d[a-zA-Z0-9]{6,11}$/,
-    noSpecialChars: getValidatingRegEx(SPECIAL_CHARS, true)
-};
 
 export const exactLength = (input: string, length: number) => {
     if (isEmpty(input)) {
@@ -45,11 +46,13 @@ export const exactLength = (input: string, length: number) => {
     return input.length === length;
 };
 
-export const validateForSpecialChars = (name: string) => {
-    const hasNoLength = !name.length;
-    // RegEx .test, if run against empty string, will return false
-    return CHARACTER_PATTERNS.noSpecialChars.test(name) || hasNoLength;
+export const validateForSpecialChars = (text: string): boolean => {
+    if (!text.length) return true;
+    // Returns true if no invalid characters found
+    return !INVALID_CHARS_TEST.test(text);
 };
+
+export const stripInvalidChars = (text: string): string => text.replace(INVALID_CHARS_STRIP, '');
 
 // Trim both ends and never allow more than 1 space in between
 export const trimValWithOneSpace = (val: string) => val.trim().replace(/\s+/g, ' ');

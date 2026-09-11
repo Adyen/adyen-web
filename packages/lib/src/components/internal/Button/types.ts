@@ -27,7 +27,6 @@ export interface ButtonProps {
     rel?: string;
     onClick?: (e: TargetedMouseEvent<HTMLButtonElement | HTMLAnchorElement>, callbacks?: { complete?: () => void }) => void;
     onKeyDown?: (event: KeyboardEvent) => void;
-    onKeyPress?: (event: KeyboardEvent) => void;
     buttonRef?: Ref<HTMLButtonElement>;
     onMouseEnter?: (event: MouseEvent) => void;
     onMouseLeave?: (event: MouseEvent) => void;

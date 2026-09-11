@@ -58,7 +58,6 @@ export const OrderPaymentMethods = ({ order, orderStatus, onOrderCancel, brandLo
                                             : undefined
                                     }
                                     label={i18n.get('storedPaymentMethod.disable.button')}
-                                    onKeyPress={stopPropagationForActionKeys}
                                     onKeyDown={stopPropagationForActionKeys}
                                     onClick={() => {
                                         onOrderCancel({ order });

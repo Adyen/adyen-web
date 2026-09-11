@@ -1,4 +1,4 @@
-import { h } from 'preact';
+import { h, TargetedKeyboardEvent } from 'preact';
 import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
 import { loginValidationRules } from './validate';
 import { useCoreContext } from '../../../../../core/Context/CoreProvider';
@@ -58,8 +58,8 @@ const CtPLoginInput = (props: Readonly<CtPLoginInputProps>): h.JSX.Element => {
         props.onSetInputHandlers(loginInputHandlersRef.current);
     }, [validateInput, props.onSetInputHandlers]);
 
-    const handleOnKeyPress = useCallback(
-        (event: h.JSX.TargetedKeyboardEvent<HTMLInputElement>) => {
+    const handleOnKeyDown = useCallback(
+        (event: TargetedKeyboardEvent<HTMLInputElement>) => {
             if (event.key === 'Enter') {
                 void props.onPressEnter();
             }
@@ -76,7 +76,14 @@ const CtPLoginInput = (props: Readonly<CtPLoginInputProps>): h.JSX.Element => {
             <Field
                 name="shopperLogin"
                 label={i18n.get('ctp.login.inputLabel')}
-                errorMessage={isLoginInputDirty ? props.errorMessage || (errors.shopperLogin && i18n.get(errors.shopperLogin.errorMessage)) : null}
+                errorMessage={
+                    isLoginInputDirty
+                        ? props.errorMessage ||
+                          (errors.shopperLogin && typeof errors.shopperLogin?.errorMessage === 'string'
+                              ? i18n.get(errors.shopperLogin.errorMessage)
+                              : null)
+                        : null
+                }
                 classNameModifiers={['shopperLogin']}
                 errorLive={true}
             >
@@ -88,7 +95,7 @@ const CtPLoginInput = (props: Readonly<CtPLoginInputProps>): h.JSX.Element => {
                     disabled={props.disabled}
                     onInput={handleChangeFor('shopperLogin', 'input')}
                     onBlur={handleChangeFor('shopperLogin', 'blur')}
-                    onKeyPress={handleOnKeyPress}
+                    onKeyDown={handleOnKeyDown}
                     autocomplete={'email'}
                 />
             </Field>

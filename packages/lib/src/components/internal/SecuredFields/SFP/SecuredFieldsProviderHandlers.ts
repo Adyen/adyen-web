@@ -19,7 +19,7 @@ import {
     CardAutoCompleteData,
     CardConfigSuccessData,
     CardLoadData,
-    SFKeyPressObj
+    SFKeyDownObj
 } from '../lib/types';
 import { existy } from '../../../../utils/commonUtils';
 import AdyenCheckoutError from '../../../../core/Errors/AdyenCheckoutError';
@@ -222,15 +222,15 @@ function handleOnAutoComplete(cbObj: CardAutoCompleteData): void {
     this.props.onAutoComplete(cbObj);
 }
 
-function handleKeyPressed(obj: SFKeyPressObj): void {
+function handleKeyDown(obj: SFKeyDownObj): void {
     if (obj.action === 'enterKeyPressed') {
-        const kb = new KeyboardEvent('keypress', {
+        const kb = new KeyboardEvent('keydown', {
             bubbles: true,
             cancelable: true,
             key: 'Enter',
             code: 'Enter'
         });
-        this.props.handleKeyPress?.(kb);
+        this.props.handleKeyDown?.(kb);
     }
 }
 
@@ -253,5 +253,5 @@ export default {
     handleOnError,
     handleOnNoDataRequired,
     handleOnTouchstartIOS,
-    handleKeyPressed
+    handleKeyDown
 };

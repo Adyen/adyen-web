@@ -12,8 +12,8 @@ describe('addressFormatters', () => {
             expect(format?.('Main   Road')).toBe('Main   Road');
         });
 
-        test('should strip special characters without touching spaces', () => {
-            expect(format?.('  Main@ Ro#ad  ')).toBe('  Main Road  ');
+        test('should not strip special characters (invalid chars are flagged by validation, not stripped by formatting)', () => {
+            expect(format?.('  Main@ Ro#ad  ')).toBe('  Main@ Ro#ad  ');
         });
     });
 });

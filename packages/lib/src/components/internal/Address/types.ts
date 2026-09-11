@@ -16,7 +16,7 @@ export interface AddressProps {
     addressType?: AddressType;
     allowedCountries?: string[];
     countryCode?: string;
-    data?: object;
+    data?: AddressData | null;
     label?: string;
     onChange: (newState) => void;
     onAddressLookup?: OnAddressLookupType;

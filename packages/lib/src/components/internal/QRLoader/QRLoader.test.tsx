@@ -8,6 +8,7 @@ import SRPanelProvider from '../../../core/Errors/SRPanelProvider';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 import type { QRLoaderProps } from './types';
 import { AmountProvider, AmountProviderProps } from '../../../core/Context/AmountProvider';
+import { setupCoreMock } from '../../../../config/testMocks/setup-core-mock';
 
 jest.mock('../../../core/Services/payment-status');
 
@@ -15,12 +16,14 @@ const TIMEOUT_OFFSET = 200;
 
 const renderQRLoader = ({
     qrLoaderProps,
-    amountProviderProps
+    amountProviderProps,
+    srPanel: externalSrPanel
 }: {
     qrLoaderProps: Partial<QRLoaderProps>;
     amountProviderProps?: Partial<AmountProviderProps>;
+    srPanel?: SRPanel;
 }) => {
-    const srPanel = new SRPanel(global.core);
+    const srPanel = externalSrPanel ?? new SRPanel(global.core);
     const defaultProps: QRLoaderProps = {
         type: 'pix',
         brandLogo: 'logo.png',
@@ -161,5 +164,57 @@ describe('QRLoader', () => {
         await waitFor(() => expect(checkPaymentStatus).toHaveBeenCalledTimes(2), { timeout: delay + TIMEOUT_OFFSET });
         await waitFor(() => expect(checkPaymentStatus).toHaveBeenCalledTimes(3), { timeout: throttledInterval + TIMEOUT_OFFSET });
         expect(setTimeout).toHaveBeenCalledWith(expect.any(Function), throttledInterval);
+    });
+
+    describe('Accessibility', () => {
+        test('should report the loading status to the SRPanel while waiting for the initial payment status check', async () => {
+            const pendingResponse = { payload: 'Ab02b4c0!', resultCode: 'pending', type: 'complete' };
+            (checkPaymentStatus as jest.Mock).mockResolvedValue(pendingResponse);
+
+            const srPanel = setupCoreMock().modules.srPanel;
+            const setMessagesSpy = jest.spyOn(srPanel, 'setMessages');
+
+            renderQRLoader({ qrLoaderProps: {}, srPanel });
+
+            expect(setMessagesSpy).toHaveBeenCalledWith('Loading…');
+
+            await waitFor(() => {
+                expect(screen.getByText('Scan QR code')).toBeInTheDocument();
+            });
+        });
+
+        test('should supersede the loading message once the QR code is shown', async () => {
+            const pendingResponse = { payload: 'Ab02b4c0!', resultCode: 'pending', type: 'complete' };
+            (checkPaymentStatus as jest.Mock).mockResolvedValue(pendingResponse);
+
+            const srPanel = setupCoreMock().modules.srPanel;
+            const setMessagesSpy = jest.spyOn(srPanel, 'setMessages');
+
+            renderQRLoader({ qrLoaderProps: {}, srPanel });
+
+            expect(await screen.findByText('Scan QR code')).toBeInTheDocument();
+
+            // The SR panel is not cleared on unmount, so 'Loading…' would otherwise be left
+            // on display next to the QR code.
+            expect(setMessagesSpy).toHaveBeenLastCalledWith('Loaded');
+        });
+
+        /**
+         * loading and completed flip in the same state batch, so QRLoader re-renders to 'Loaded'
+         * at the same moment QRFinalState mounts and announces the result. The result must win.
+         */
+        test('should announce the payment result, not the generic loaded message, on completion', async () => {
+            const authorisedResponse = { payload: 'details-payload', resultCode: 'authorised', type: 'complete' };
+            (checkPaymentStatus as jest.Mock).mockResolvedValue(authorisedResponse);
+
+            const srPanel = setupCoreMock().modules.srPanel;
+            const setMessagesSpy = jest.spyOn(srPanel, 'setMessages');
+
+            const { onCompleteMock } = renderQRLoader({ qrLoaderProps: {}, srPanel });
+
+            await waitFor(() => expect(onCompleteMock).toHaveBeenCalledTimes(1));
+
+            expect(setMessagesSpy).toHaveBeenLastCalledWith('Payment Successful');
+        });
     });
 });

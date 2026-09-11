@@ -56,9 +56,7 @@ class QRLoaderContainer<T extends QRLoaderConfiguration = QRLoaderConfiguration>
                     name={this.displayName}
                     onSubmit={this.submit}
                     payButton={this.payButton}
-                    ref={ref => {
-                        this.componentRef = ref;
-                    }}
+                    setComponentRef={this.setComponentRef}
                 />
             );
         }
