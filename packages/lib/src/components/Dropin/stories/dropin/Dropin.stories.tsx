@@ -60,6 +60,59 @@ export const Default: DropinStory = {
     }
 };
 
+export const DropInSplitPaypal: DropinStory = {
+    render: ({ componentConfiguration, ...checkoutConfig }: PaymentMethodStoryProps<DropinConfiguration>) => {
+        AdyenCheckout.register(components.Dropin, components.PayPal, components.PayPalPayLater, components.PayPalCredit, components.Venmo);
+
+        return (
+            <Checkout checkoutConfig={checkoutConfig}>
+                {checkout => <ComponentContainer element={new DropinComponent(checkout, componentConfiguration)} />}
+            </Checkout>
+        );
+    },
+    args: {
+        paymentMethodsOptions: {
+            splitPayPalButtons: true
+        },
+        componentConfiguration: {
+            paymentMethodsConfiguration: {
+                paypal: {
+                    usePayPalV6: {
+                        blockPayPalCreditButton: true,
+                        blockPayPalPayLaterButton: true,
+                        blockPayPalVenmoButton: true
+                    }
+                },
+                paypal_paylater: {
+                    onAuthorized: (data, actions) => {
+                        console.log('PayPal PayLater onAuthorized data', { data });
+                        actions.resolve();
+                    }
+                },
+                paypal_credit: {
+                    onAuthorized: (data, actions) => {
+                        console.log('PayPal Credit onAuthorized data', { data });
+                        actions.resolve();
+                    }
+                },
+                venmo: {
+                    onAuthorized: (data, actions) => {
+                        console.log('Venmo onAuthorized data', { data });
+                        actions.resolve();
+                    }
+                }
+            }
+        },
+        sessionData: {
+            splitPayPalButtons: true,
+            recurringProcessingModel: 'CardOnFile'
+        },
+        paymentsOptions: {
+            recurringProcessingModel: 'CardOnFile'
+        }
+    }
+};
+
 export const StyleCustomization: DropinStory = {
     render: ({ componentConfiguration, ...checkoutConfig }: PaymentMethodStoryProps<DropinConfiguration>) => {
         // Register all Components

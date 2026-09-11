@@ -39,6 +39,9 @@ export const Default: Story = {
                 }
             }
         },
+        paymentsOptions: {
+            recurringProcessingModel: 'CardOnFile'
+        },
         sessionData: {
             recurringProcessingModel: 'CardOnFile'
         }
@@ -54,11 +57,11 @@ export const ZeroAuth: Story = {
     ),
     args: {
         amount: 0,
-        paymentsOptions: {
-            recurringProcessingModel: 'CardOnFile'
-        },
         componentConfiguration: {
             usePayPalV6: {}
+        },
+        paymentsOptions: {
+            recurringProcessingModel: 'CardOnFile'
         },
         sessionData: {
             recurringProcessingModel: 'CardOnFile'

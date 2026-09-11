@@ -97,7 +97,6 @@ abstract class BaseElement<P extends BaseElementProps, S extends BaseElementStat
         const clientData = this.core.modules.risk.data;
         const checkoutAttemptId = this.core.modules.analytics.checkoutAttemptId ?? NO_CHECKOUT_ATTEMPT_ID;
         const paymentMethodBehavior = doesPaymentMethodHaveNativeComponent ? PAYMENT_METHOD_BEHAVIOR.NATIVE : PAYMENT_METHOD_BEHAVIOR.GENERIC;
-
         const sdkDataPaymentMethodConfiguration = this.sdkDataPaymentMethodConfiguration;
 
         const sdkData = createSdkData({
