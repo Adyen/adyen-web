@@ -136,9 +136,9 @@ export class BasePaypalElement<TProps extends BasePayPalConfiguration = BasePayP
         return {
             paymentMethod: {
                 type: this.type,
-                subtype: isExpress ? 'express' : BasePaypalElement.subtype,
-                ...(vault || isZeroAuth ? { storePaymentMethod: true } : {})
-            }
+                subtype: isExpress ? 'express' : BasePaypalElement.subtype
+            },
+            ...(vault || isZeroAuth ? { storePaymentMethod: true } : {})
         };
     }
 
