@@ -612,7 +612,6 @@ const CardInput = (props: Readonly<CardInputProps>) => {
             )}
 
             {showCardUIElements &&
-                props.showPayButton &&
                 props.payButton({
                     status,
                     variant: props.isPayButtonPrimaryVariant ? 'primary' : 'secondary',

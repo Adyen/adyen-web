@@ -96,7 +96,6 @@ class IssuerListContainer<TProps extends IssuerListConfiguration = IssuerListCon
             />
         ) : (
             <RedirectButton
-                showPayButton={this.props.showPayButton}
                 name={this.props.name}
                 {...this.props}
                 onSubmit={this.submit}

@@ -14,7 +14,6 @@ interface EcontextInputProps {
     setComponentRef: (ref: ComponentMethodsRef) => void;
     personalDetailsRequired?: boolean;
     data?: PersonalDetailsSchema;
-    showPayButton: boolean;
     payButton: (props: PayButtonProps) => h.JSX.Element;
     onChange: (props: {
         data: {
@@ -32,14 +31,7 @@ interface EcontextInputProps {
     }) => void;
 }
 
-export default function EcontextInput({
-    data,
-    onChange,
-    showPayButton,
-    payButton,
-    setComponentRef,
-    personalDetailsRequired = true
-}: Readonly<EcontextInputProps>) {
+export default function EcontextInput({ data, onChange, payButton, setComponentRef, personalDetailsRequired = true }: Readonly<EcontextInputProps>) {
     const { i18n } = useCoreContext();
 
     const [status, setStatus] = useState('ready');
@@ -77,7 +69,7 @@ export default function EcontextInput({
                     />
                 </Fragment>
             )}
-            {showPayButton && payButton({ status, label: i18n.get('confirmPurchase') })}
+            {payButton({ status, label: i18n.get('confirmPurchase') })}
         </div>
     );
 }

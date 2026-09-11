@@ -81,7 +81,6 @@ class BlikElement extends UIElement<AwaitConfiguration> {
 
         return this.props.storedPaymentMethodId ? (
             <RedirectButton
-                showPayButton={this.props.showPayButton}
                 name={this.displayName}
                 payButton={this.payButton}
                 onSubmit={this.submit}

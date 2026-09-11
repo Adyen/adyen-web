@@ -7,7 +7,7 @@ import useForm from '../../../../utils/useForm';
 import { BrazilPersonalDetail } from '../../../internal/SocialSecurityNumberBrazil/BrazilPersonalDetail';
 import { PixInputDataState, PixInputProps } from './types';
 
-function PixInput({ name, data: dataProps, personalDetailsRequired, showPayButton, onChange, payButton }: Readonly<PixInputProps>) {
+function PixInput({ name, data: dataProps, personalDetailsRequired, onChange, payButton }: Readonly<PixInputProps>) {
     const { i18n } = useCoreContext();
     const formSchema = ['firstName', 'lastName', 'socialSecurityNumber'];
 
@@ -38,17 +38,16 @@ function PixInput({ name, data: dataProps, personalDetailsRequired, showPayButto
     const buttonModifiers = !personalDetailsRequired ? ['standalone'] : [];
 
     return (
-        <div className="adyen-checkout__pix-input__field" style={!showPayButton && !personalDetailsRequired ? { display: 'none' } : null}>
+        <div className="adyen-checkout__pix-input__field">
             {personalDetailsRequired && (
                 <BrazilPersonalDetail i18n={i18n} data={data} handleChangeFor={handleChangeFor} errors={errors} valid={valid} />
             )}
 
-            {showPayButton &&
-                payButton({
-                    status,
-                    label: `${i18n.get('continueTo')} ${name}`,
-                    classNameModifiers: buttonModifiers
-                })}
+            {payButton({
+                status,
+                label: `${i18n.get('continueTo')} ${name}`,
+                classNameModifiers: buttonModifiers
+            })}
         </div>
     );
 }

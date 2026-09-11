@@ -40,12 +40,10 @@ export default function DragonpayInput(props: Readonly<DragonpayInputProps>) {
     });
 
     const getIssuerIcon = getIssuerImageUrl({}, props.type, getImage);
-    const items = props.items.map(
-        (item: DragonpayInputIssuerItem): DragonpayInputIssuerItem => ({
-            ...item,
-            icon: getIssuerIcon(item.id && item.id.toLowerCase())
-        })
-    );
+    const items = props.items.map((item: DragonpayInputIssuerItem): DragonpayInputIssuerItem => ({
+        ...item,
+        icon: getIssuerIcon(item.id && item.id.toLowerCase())
+    }));
 
     const getIssuerSelectFieldKey = type => {
         if (type === 'dragonpay_otc_non_banking') {
@@ -93,7 +91,7 @@ export default function DragonpayInput(props: Readonly<DragonpayInputProps>) {
                 </Field>
             )}
 
-            {props.showPayButton && props.payButton({ status, label: i18n.get('confirmPurchase') })}
+            {props.payButton({ status, label: i18n.get('confirmPurchase') })}
         </div>
     );
 }

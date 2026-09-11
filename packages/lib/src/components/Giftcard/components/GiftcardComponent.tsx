@@ -19,7 +19,6 @@ interface GiftcardComponentProps extends Partial<Pick<SFPProps, 'clientKey' | 'l
     onBlur: (event) => void;
     makeBalanceCheck: (event) => void;
     makePayment: (event) => void;
-    showPayButton: boolean;
     payButton: (props: PayButtonProps) => h.JSX.Element;
     pinRequired: boolean;
     expiryDateRequired?: boolean;
@@ -174,7 +173,6 @@ class Giftcard extends Component<Readonly<GiftcardComponentProps>> {
                     makePayment={props.makePayment}
                     status={this.state.status}
                     makeBalanceCheck={props.makeBalanceCheck}
-                    showPayButton={this.props.showPayButton}
                     payButton={this.props.payButton}
                 />
             );
@@ -221,13 +219,12 @@ class Giftcard extends Component<Readonly<GiftcardComponentProps>> {
                     }
                 />
 
-                {this.props.showPayButton &&
-                    this.props.payButton({
-                        status: this.state.status,
-                        onClick: this.props.makeBalanceCheck,
-                        label: i18n.get('applyGiftcard'),
-                        showReview: false
-                    })}
+                {this.props.payButton({
+                    status: this.state.status,
+                    onClick: this.props.makeBalanceCheck,
+                    label: i18n.get('applyGiftcard'),
+                    showReview: false
+                })}
             </div>
         );
     }

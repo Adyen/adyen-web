@@ -245,8 +245,7 @@ const STRICT_NULL_CHECKS_BACKLOG = [
     'src/components/ANCV/components/ANCVInput.tsx',
     // src/components/BacsDD (5 errors)
     'src/components/BacsDD/components/BacsInput.tsx',
-    // src/components/BankTransfer (6 errors)
-    'src/components/BankTransfer/BankTransfer.tsx',
+    // src/components/BankTransfer (5 errors)
     'src/components/BankTransfer/components/BankTransferInput/BankTransferInput.tsx',
     'src/components/BankTransfer/components/BankTransferResult/BankTransferResult.tsx',
     // src/components/Blik (9 errors)
@@ -260,13 +259,11 @@ const STRICT_NULL_CHECKS_BACKLOG = [
     // src/components/Donation (4 errors)
     'src/components/Donation/components/DonationComponent.tsx',
     'src/components/Donation/components/FixedAmounts.tsx',
-    // src/components/Dragonpay (8 errors)
+    // src/components/Dragonpay (7 errors)
     'src/components/Dragonpay/components/DragonpayInput/DragonpayInput.tsx',
     'src/components/Dragonpay/components/DragonpayVoucherResult/DragonpayVoucherResult.tsx',
-    'src/components/Dragonpay/Dragonpay.tsx',
-    // src/components/Econtext (4 errors)
+    // src/components/Econtext (3 errors)
     'src/components/Econtext/components/EcontextVoucherResult/EcontextVoucherResult.tsx',
-    'src/components/Econtext/Econtext.tsx',
     // src/components/Giftcard (23 errors)
     'src/components/Giftcard/components/GiftcardComponent.tsx',
     'src/components/Giftcard/components/GiftcardFields.tsx',
@@ -275,11 +272,8 @@ const STRICT_NULL_CHECKS_BACKLOG = [
     'src/components/Giftcard/components/GiftcardResult.tsx',
     'src/components/Giftcard/components/useSRPanelForGiftcardErrors.ts',
     'src/components/Giftcard/Giftcard.tsx',
-    // src/components/Giropay (1 errors)
-    'src/components/Giropay/Giropay.tsx',
     // src/components/helpers (9 errors)
     'src/components/helpers/IssuerListContainer/IssuerListContainer.tsx',
-    'src/components/helpers/QRLoaderContainer/QRLoaderContainer.tsx',
     // src/components/internal/Await (2 errors)
     'src/components/internal/Await/Await.tsx',
     // src/components/internal/Button (4 errors)
@@ -287,8 +281,6 @@ const STRICT_NULL_CHECKS_BACKLOG = [
     'src/components/internal/Button/CopyIconButton.tsx',
     // src/components/internal/Countdown (2 errors)
     'src/components/internal/Countdown/useCountdownA11yReporter.ts',
-    // src/components/internal/DisclaimerMessage (2 errors)
-    'src/components/internal/DisclaimerMessage/DisclaimerMessage.tsx',
     // src/components/internal/IFrame (2 errors)
     'src/components/internal/IFrame/Iframe.tsx',
     // src/components/internal/Img (4 errors)
@@ -329,9 +321,8 @@ const STRICT_NULL_CHECKS_BACKLOG = [
     // src/components/MealVoucherFR (2 errors)
     'src/components/MealVoucherFR/components/MealVoucherFields.tsx',
     'src/components/MealVoucherFR/MealVoucherFR.tsx',
-    // src/components/Multibanco (2 errors)
+    // src/components/Multibanco (1 errors)
     'src/components/Multibanco/components/MultibancoVoucherResult/MultibancoVoucherResult.tsx',
-    'src/components/Multibanco/Multibanco.tsx',
     // src/components/Oxxo (2 errors)
     'src/components/Oxxo/Oxxo.tsx',
     // src/components/PayByBankPix (32 errors)
@@ -352,7 +343,6 @@ const STRICT_NULL_CHECKS_BACKLOG = [
     'src/components/PayTo/components/validate.ts',
     'src/components/PayTo/PayTo.tsx',
     // src/components/Pix (3 errors)
-    'src/components/Pix/components/PixInput/PixInput.tsx',
     'src/components/Pix/Pix.tsx',
     // src/components/PreAuthorizedDebitCanada (11 errors)
     'src/components/PreAuthorizedDebitCanada/components/PreAuthorizedDebitCanadaComponent.tsx',

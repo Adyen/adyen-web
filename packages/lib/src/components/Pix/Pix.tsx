@@ -70,7 +70,6 @@ class PixElement extends QRLoaderContainer<PixConfiguration> {
                     this.componentRef = ref;
                 }}
                 {...this.props}
-                showPayButton={this.props.showPayButton}
                 personalDetailsRequired={this.props.personalDetailsRequired}
                 name={this.displayName}
                 onChange={this.setState}

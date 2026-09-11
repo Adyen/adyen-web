@@ -26,7 +26,6 @@ export interface BoletoInputProps {
     billingAddressRequired?: boolean;
     showEmailAddress?: boolean;
     data?: BoletoInputDataState;
-    showPayButton?: boolean;
 }
 
 function BoletoInput(props: Readonly<BoletoInputProps>) {
@@ -119,12 +118,11 @@ function BoletoInput(props: Readonly<BoletoInputProps>) {
                 />
             )}
 
-            {props.showPayButton &&
-                props.payButton({
-                    status,
-                    label: i18n.get('boletobancario.btnLabel'),
-                    classNameModifiers: buttonModifiers
-                })}
+            {props.payButton({
+                status,
+                label: i18n.get('boletobancario.btnLabel'),
+                classNameModifiers: buttonModifiers
+            })}
         </div>
     );
 }

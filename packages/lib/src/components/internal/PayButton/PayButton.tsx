@@ -1,4 +1,4 @@
-import { h } from 'preact';
+import { Fragment, h } from 'preact';
 import Button from '../Button';
 import { useCoreContext } from '../../../core/Context/CoreProvider';
 import { ButtonProps } from '../Button/types';
@@ -7,6 +7,8 @@ import SecondaryButtonLabel from './components/SecondaryButtonLabel';
 import { useAmount, useSecondaryAmount } from '../../../core/Context/AmountProvider';
 import type { PaymentAmount } from '../../../types';
 import { isAmountValid } from '../../../utils/amount-util';
+import DisclaimerMessage, { formatDisclaimerMessage } from '../DisclaimerMessage';
+import type { DisclaimerMsgObject } from '../DisclaimerMessage';
 
 export interface PayButtonProps extends ButtonProps {
     /**
@@ -24,9 +26,28 @@ export interface PayButtonProps extends ButtonProps {
     disabled?: boolean;
     icon?: string;
     showReview?: boolean;
+    /**
+     * Disclaimer message displayed above the button
+     */
+    disclaimerMessage?: DisclaimerMsgObject;
+    /**
+     * Hides the button itself. The disclaimer message is still rendered, since it belongs to the
+     * payment step rather than to the button, and merchants hiding the button supply their own.
+     * @defaultValue `true`
+     */
+    showPayButton?: boolean;
 }
 
-const PayButton = ({ customAmount, classNameModifiers = [], label, icon, showReview, ...props }: Readonly<PayButtonProps>) => {
+const PayButton = ({
+    customAmount,
+    classNameModifiers = [],
+    label,
+    icon,
+    showReview,
+    disclaimerMessage,
+    showPayButton = true,
+    ...props
+}: Readonly<PayButtonProps>) => {
     const { amount, isZeroAuth } = useAmount();
     const { secondaryAmount } = useSecondaryAmount();
     const { i18n } = useCoreContext();
@@ -36,11 +57,17 @@ const PayButton = ({ customAmount, classNameModifiers = [], label, icon, showRev
     const secondaryAmountLabel = createSecondaryLabel(i18n, secondaryAmount, isAmountValid(amount), isZeroAuth, label);
 
     const isDisabled = props.disabled || props.status === 'loading';
+    const formattedDisclaimerMessage = disclaimerMessage && formatDisclaimerMessage(disclaimerMessage);
 
     return (
-        <Button {...props} icon={buttonIcon} disabled={isDisabled} classNameModifiers={[...classNameModifiers, 'pay']} label={buttonLabel}>
-            {secondaryAmountLabel && <SecondaryButtonLabel label={secondaryAmountLabel} />}
-        </Button>
+        <Fragment>
+            {formattedDisclaimerMessage?.message && <DisclaimerMessage {...formattedDisclaimerMessage} />}
+            {showPayButton && (
+                <Button {...props} icon={buttonIcon} disabled={isDisabled} classNameModifiers={[...classNameModifiers, 'pay']} label={buttonLabel}>
+                    {secondaryAmountLabel && <SecondaryButtonLabel label={secondaryAmountLabel} />}
+                </Button>
+            )}
+        </Fragment>
     );
 };
 

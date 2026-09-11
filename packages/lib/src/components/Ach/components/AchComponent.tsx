@@ -46,7 +46,6 @@ interface AchComponentProps {
     payButton: (props: PayButtonProps) => h.JSX.Element;
     setComponentRef: (ref: ComponentMethodsRef) => void;
     hasHolderName: boolean;
-    showPayButton: boolean;
     enableStoreDetails: boolean;
     placeholders?: AchPlaceholders;
     data?: AchFormPrefillData;
@@ -55,7 +54,6 @@ interface AchComponentProps {
 function AchComponent({
     onChange,
     payButton,
-    showPayButton,
     placeholders,
     data: defaultData,
     hasHolderName,
@@ -209,7 +207,7 @@ function AchComponent({
 
             {enableStoreDetails && <StoreDetails disabled={isFormDisabled} onChange={setStorePaymentMethod} />}
 
-            {showPayButton && payButton({ status, icon: getImage({ imageFolder: 'components/' })(`${PREFIX}lock`) })}
+            {payButton({ status, icon: getImage({ imageFolder: 'components/' })(`${PREFIX}lock`) })}
         </div>
     );
 }

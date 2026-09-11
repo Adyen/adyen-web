@@ -34,7 +34,6 @@ export interface DragonpayInputProps {
     type?: string;
     onChange: (state) => void;
     onSubmit?: (state, component) => void;
-    showPayButton: boolean;
     payButton: (props: PayButtonProps) => h.JSX.Element;
     setComponentRef: (ref: ComponentMethodsRef) => void;
 }

@@ -56,7 +56,6 @@ export class EcontextElement extends UIElement<EcontextConfiguration> {
                 setComponentRef={this.setComponentRef}
                 data={this.props.data}
                 personalDetailsRequired={this.props.personalDetailsRequired}
-                showPayButton={this.props.showPayButton}
                 onChange={this.setState}
                 payButton={this.payButton}
             />

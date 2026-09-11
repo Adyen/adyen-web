@@ -220,18 +220,15 @@ function BacsInput(props: Readonly<BacsInputProps>) {
                 />
             )}
 
-            {props.showPayButton &&
-                props.payButton({
-                    status,
-                    label:
-                        status === ENTER_STATE
-                            ? i18n.get('continue')
-                            : `${i18n.get('bacs.confirm')} ${
-                                  !!amount?.value && !!amount?.currency ? i18n.amount(amount.value, amount.currency) : ''
-                              }`,
-                    icon: getImage({ imageFolder: 'components/' })(`${PREFIX}lock`),
-                    onClick: handlePayButton
-                })}
+            {props.payButton({
+                status,
+                label:
+                    status === ENTER_STATE
+                        ? i18n.get('continue')
+                        : `${i18n.get('bacs.confirm')} ${!!amount?.value && !!amount?.currency ? i18n.amount(amount.value, amount.currency) : ''}`,
+                icon: getImage({ imageFolder: 'components/' })(`${PREFIX}lock`),
+                onClick: handlePayButton
+            })}
         </div>
     );
 }

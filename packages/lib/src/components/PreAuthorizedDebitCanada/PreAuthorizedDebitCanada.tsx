@@ -67,7 +67,6 @@ export class PreAuthorizedDebitCanada extends UIElement<PreAuthorizedDebitCanada
             <Fragment>
                 <SettlementInfo />
                 <RedirectButton
-                    showPayButton={this.props.showPayButton}
                     icon={this.resources?.getImage({ imageFolder: 'components/' })(`bento_lock`)}
                     label={payAmountLabel(this.props.i18n, this.props.amount)}
                     name={this.displayName}
@@ -82,7 +81,6 @@ export class PreAuthorizedDebitCanada extends UIElement<PreAuthorizedDebitCanada
             <PreAuthorizedDebitCanadaComponent
                 onChange={this.setState}
                 payButton={this.payButton}
-                showPayButton={this.props.showPayButton}
                 placeholders={this.props.placeholders}
                 setComponentRef={this.setComponentRef}
                 showContextualElement={this.props.showContextualElement}

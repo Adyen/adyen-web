@@ -16,7 +16,6 @@ export interface PixInputProps {
         socialSecurityNumber: string;
     };
     personalDetailsRequired: boolean;
-    showPayButton: boolean;
     onChange({ data, valid, errors, isValid }): void;
     payButton(props: PayButtonProps): h.JSX.Element;
     ref(ref: RefObject<typeof PixInput>): void;

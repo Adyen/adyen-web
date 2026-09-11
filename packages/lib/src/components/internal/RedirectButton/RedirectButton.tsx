@@ -11,11 +11,10 @@ export interface RedirectButtonProps {
     payButton: Function;
     onSubmit: Function;
     name: string;
-    showPayButton: boolean;
     ref?: Ref<typeof RedirectButton>;
 }
 
-function RedirectButton({ label = null, icon = null, payButton, onSubmit, name, showPayButton, ...props }: Readonly<RedirectButtonProps>) {
+function RedirectButton({ label = null, icon = null, payButton, onSubmit, name, ...props }: Readonly<RedirectButtonProps>) {
     const { i18n } = useCoreContext();
     const [status, setStatus] = useState('ready');
     const { amount } = useAmount();
@@ -29,10 +28,6 @@ function RedirectButton({ label = null, icon = null, payButton, onSubmit, name, 
         if (isZeroAuth) return `${i18n.get('preauthorizeWith')} ${name}`;
         return `${i18n.get('continueTo')} ${name}`;
     };
-
-    if (!showPayButton) {
-        return;
-    }
 
     return (
         <Fragment>

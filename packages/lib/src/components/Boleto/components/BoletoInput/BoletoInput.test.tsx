@@ -10,7 +10,8 @@ jest.mock('../../../../core/Services/get-dataset');
 
 describe('BoletoInput', () => {
     const boletoInputPropsMock = mock<BoletoInputProps>({
-        onChange: jest.fn()
+        onChange: jest.fn(),
+        payButton: () => null
     });
     const customRender = ui => {
         return render(

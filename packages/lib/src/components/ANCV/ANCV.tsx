@@ -78,7 +78,7 @@ export class ANCVElement extends UIElement<ANCVConfiguration> {
 
     // Reimplement payButton similar to GiftCard to allow to set onClick
     protected override payButton = (props: PayButtonProps): h.JSX.Element => {
-        return <PayButton {...props} />;
+        return <PayButton {...props} showPayButton={this.props.showPayButton} disclaimerMessage={this.props.disclaimerMessage} />;
     };
 
     get isValid(): boolean {
@@ -117,7 +117,6 @@ export class ANCVElement extends UIElement<ANCVConfiguration> {
                 onSubmit={this.submit}
                 onChange={this.setState}
                 payButton={this.payButton}
-                showPayButton={this.props.showPayButton}
             />
         );
     }
