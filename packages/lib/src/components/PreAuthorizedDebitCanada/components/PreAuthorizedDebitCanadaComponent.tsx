@@ -90,7 +90,7 @@ function PreAuthorizedDebitCanadaComponent({
             <Fieldset>
                 <Field
                     label={i18n.get('eftpad-canada.input.accountHolderName.label')}
-                    errorMessage={!!errors.ownerName && i18n.get(errors.ownerName.errorMessage)}
+                    errorMessage={typeof errors.ownerName?.errorMessage === 'string' ? i18n.get(errors.ownerName.errorMessage) : null}
                     isValid={!!valid.ownerName}
                     name={'ownerName'}
                 >
@@ -109,7 +109,7 @@ function PreAuthorizedDebitCanadaComponent({
 
                 <Field
                     label={i18n.get('eftpad-canada.input.accountNumber.label')}
-                    errorMessage={!!errors.bankAccountNumber && i18n.get(errors.bankAccountNumber.errorMessage)}
+                    errorMessage={typeof errors.bankAccountNumber?.errorMessage === 'string' ? i18n.get(errors.bankAccountNumber.errorMessage) : null}
                     name={'bankAccountNumber'}
                     isValid={!!valid.bankAccountNumber}
                     showContextualElement={showContextualElement}
@@ -131,7 +131,7 @@ function PreAuthorizedDebitCanadaComponent({
                 <Field
                     label={i18n.get('eftpad-canada.input.institutionNumber.label')}
                     classNameModifiers={['col-50']}
-                    errorMessage={!!errors.bankCode && i18n.get(errors.bankCode.errorMessage)}
+                    errorMessage={typeof errors.bankCode?.errorMessage === 'string' ? i18n.get(errors.bankCode.errorMessage) : null}
                     isValid={!!valid.bankCode}
                     name={'bankCode'}
                     showContextualElement={showContextualElement}
@@ -153,7 +153,7 @@ function PreAuthorizedDebitCanadaComponent({
                 <Field
                     label={i18n.get('eftpad-canada.input.transitNumber.label')}
                     classNameModifiers={['col-50']}
-                    errorMessage={!!errors.bankLocationId && i18n.get(errors.bankLocationId.errorMessage)}
+                    errorMessage={typeof errors.bankLocationId?.errorMessage === 'string' ? i18n.get(errors.bankLocationId.errorMessage) : null}
                     name={'bankLocationId'}
                     isValid={!!valid.bankLocationId}
                     showContextualElement={showContextualElement}

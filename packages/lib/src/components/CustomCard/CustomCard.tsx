@@ -10,6 +10,7 @@ import { TxVariants } from '../tx-variants';
 import { CustomCardConfiguration } from './types';
 import { AnalyticsInfoEvent, InfoEventType, UiTarget } from '../../core/Analytics/events/AnalyticsInfoEvent';
 import { DUAL_BRANDS_THAT_NEED_SELECTION_MECHANISM } from '../Card/constants';
+import type { CustomCardInputRef } from './CustomCardInput';
 
 const SELECTABLE_DUAL_BRANDED_SCENARIO = 'Dual Branded (Selectable): Regulation mandates that you must provide a brand selection mechanism';
 const DISPLAY_ONLY_DUAL_BRANDED_SCENARIO = 'Dual Branded (Display-only): No selection mechanism required';
@@ -17,12 +18,14 @@ const DISPLAY_ONLY_DUAL_BRANDED_SCENARIO = 'Dual Branded (Display-only): No sele
 export class CustomCard extends UIElement<CustomCardConfiguration> {
     public static readonly type = TxVariants.customCard;
 
+    protected componentRef: CustomCardInputRef | undefined;
+
     protected static readonly defaultProps = {
         onBinLookup: () => {},
         brandsConfiguration: {}
     };
 
-    private brand = TxVariants.card;
+    private readonly brand = TxVariants.card;
 
     formatProps(props: CustomCardConfiguration) {
         return {
@@ -36,10 +39,11 @@ export class CustomCard extends UIElement<CustomCardConfiguration> {
      */
     formatData() {
         const sfBrand = this.state.selectedBrandValue;
+        const securedFieldsData = this.state.data as Record<string, string>;
         return {
             paymentMethod: {
                 type: 'scheme',
-                ...this.state.data,
+                ...securedFieldsData,
                 ...(sfBrand && { brand: sfBrand })
             },
             browserInfo: this.browserInfo,
@@ -115,7 +119,7 @@ export class CustomCard extends UIElement<CustomCardConfiguration> {
         return collectBrowserInfo();
     }
 
-    private onFocus = (obj: CardFocusData) => {
+    private readonly onFocus = (obj: CardFocusData) => {
         const event = new AnalyticsInfoEvent({
             component: this.type,
             type: obj.focus === true ? InfoEventType.focus : InfoEventType.unfocus,

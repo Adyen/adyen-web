@@ -3,8 +3,8 @@ import Session from '../../../core/CheckoutSession';
 import Language from '../../../language';
 import UIElement from './UIElement';
 import type { PaymentAction, PaymentAmount } from '../../../types/global-types';
-import type { BaseElementProps } from '../BaseElement/types';
 import type { CoreConfiguration, CreateFromActionOptions } from '../../../core/types';
+import type { BaseElementProps, BaseElementState } from '../BaseElement/types';
 import { PayButtonProps } from '../PayButton/PayButton';
 
 type CoreCallbacks = Pick<
@@ -35,7 +35,7 @@ export type UIElementProps = {
         environment?: string;
         session?: Session;
 
-        onComplete?: (state, element: UIElement) => void;
+        onComplete?: (state: BaseElementState, element: UIElement) => void;
 
         isInstantPayment?: boolean;
 
@@ -89,7 +89,7 @@ export type UIElementProps = {
         clientKey?: string;
 
         /** @internal */
-        elementRef?: any;
+        elementRef?: UIElement;
 
         /** @internal */
         i18n?: Language;

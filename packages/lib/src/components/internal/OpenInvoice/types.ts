@@ -23,9 +23,9 @@ export interface BankDetailsSchema {
 
 export interface OpenInvoiceProps extends UIElementProps {
     allowedCountries?: string[];
-    consentCheckboxLabel: any;
+    consentCheckboxLabel?: any;
     countryCode?: string;
-    data: {
+    data?: {
         companyDetails?: CompanyDetailsSchema;
         personalDetails?: PersonalDetailsSchema | null;
         billingAddress?: AddressData;

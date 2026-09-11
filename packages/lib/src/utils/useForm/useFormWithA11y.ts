@@ -21,7 +21,7 @@ export interface FormWithA11yProps extends FormProps {
  * - Set `errorLive={true}` on the Field components inside the form so their error spans
  *   announce changes via aria-live="polite".
  */
-function useFormWithA11y<FormSchema>(props: FormWithA11yProps): Form<FormSchema> {
+function useFormWithA11y<FormSchema extends object>(props: FormWithA11yProps): Form<FormSchema> {
     const { formHolder, ...formProps } = props;
     const form = useForm<FormSchema>(formProps);
     const { focusFirstError } = useErrorFocus(formHolder);
@@ -32,7 +32,7 @@ function useFormWithA11y<FormSchema>(props: FormWithA11yProps): Form<FormSchema>
     const isValidating = useRef(false);
 
     const triggerValidation = useCallback(
-        (selectedSchema = null) => {
+        (selectedSchema?: string[]) => {
             isValidating.current = true;
             form.triggerValidation(selectedSchema);
         },

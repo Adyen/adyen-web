@@ -66,7 +66,7 @@ export default function BSBInput({ setComponentRef, defaultData, placeholders, o
             <Field
                 label={i18n.get('payto.bsb.label.bankAccountNumber')}
                 classNameModifiers={['col-60', 'bankAccountNumber']}
-                errorMessage={getErrorMessage(i18n, errors.bankAccountNumber, i18n.get('payto.bsb.label.bankAccountNumber'))}
+                errorMessage={getErrorMessage(i18n, errors.bankAccountNumber ?? undefined, i18n.get('payto.bsb.label.bankAccountNumber'))}
                 name={'bankAccountNumber'}
                 i18n={i18n}
                 errorLive={true}
@@ -86,7 +86,7 @@ export default function BSBInput({ setComponentRef, defaultData, placeholders, o
             <Field
                 label={i18n.get('Bank State Branch')}
                 classNameModifiers={['col-40', 'bsb']}
-                errorMessage={getErrorMessage(i18n, errors.bsb, i18n.get('Bank State Branch'))}
+                errorMessage={getErrorMessage(i18n, errors.bsb ?? undefined, i18n.get('Bank State Branch'))}
                 name={'bsb'}
                 i18n={i18n}
                 errorLive={true}

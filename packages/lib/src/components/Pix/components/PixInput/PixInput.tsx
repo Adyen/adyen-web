@@ -1,13 +1,14 @@
 import { h } from 'preact';
-import { useEffect, useState } from 'preact/hooks';
+import { useEffect, useRef, useState } from 'preact/hooks';
 import { pixValidationRules } from './validate';
 import { pixFormatters } from './utils';
 import { useCoreContext } from '../../../../core/Context/CoreProvider';
 import useForm from '../../../../utils/useForm';
 import { BrazilPersonalDetail } from '../../../internal/SocialSecurityNumberBrazil/BrazilPersonalDetail';
 import { PixInputDataState, PixInputProps } from './types';
+import { ComponentMethodsRef } from '../../../types';
 
-function PixInput({ name, data: dataProps, personalDetailsRequired, showPayButton, onChange, payButton }: Readonly<PixInputProps>) {
+function PixInput({ name, data: dataProps, personalDetailsRequired, showPayButton, onChange, payButton, setComponentRef }: Readonly<PixInputProps>) {
     const { i18n } = useCoreContext();
     const formSchema = ['firstName', 'lastName', 'socialSecurityNumber'];
 
@@ -25,17 +26,23 @@ function PixInput({ name, data: dataProps, personalDetailsRequired, showPayButto
     }, [personalDetailsRequired]);
 
     const [status, setStatus] = useState('ready');
-    this.setStatus = setStatus;
 
-    this.showValidation = () => {
-        triggerValidation();
-    };
+    const pixInputRef = useRef<ComponentMethodsRef>({
+        setStatus: setStatus,
+        showValidation: () => {
+            triggerValidation();
+        }
+    });
+
+    useEffect(() => {
+        setComponentRef(pixInputRef.current);
+    }, [setComponentRef]);
 
     useEffect(() => {
         onChange({ data, valid, errors, isValid });
     }, [onChange, data, valid, errors]);
 
-    const buttonModifiers = !personalDetailsRequired ? ['standalone'] : [];
+    const buttonModifiers = personalDetailsRequired ? [] : ['standalone'];
 
     return (
         <div className="adyen-checkout__pix-input__field" style={!showPayButton && !personalDetailsRequired ? { display: 'none' } : null}>
