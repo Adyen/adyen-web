@@ -99,16 +99,14 @@ $adyen-checkout-media-query-xl-min: 1280px;
 }
 
 @mixin adyen-checkout-link {
-    --text-decoration: none;
-
     color: variable-generator.token(color-label-highlight);
-    text-decoration: var(--text-decoration);
+    text-decoration: underline;
 
     @include b-link-reset;
 
     &:hover,
     &:active {
-        --text-decoration: underline;
+       font-weight: variable-generator.token(text-subtitle-font-weight);
     }
 
     &:focus-visible {
