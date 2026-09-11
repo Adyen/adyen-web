@@ -71,7 +71,9 @@ export const DropInSplitPaypal: DropinStory = {
         );
     },
     args: {
-        splitPayPalButtons: true,
+        paymentMethodsOptions: {
+            splitPayPalButtons: true
+        },
         componentConfiguration: {
             paymentMethodsConfiguration: {
                 paypal: {
@@ -100,6 +102,9 @@ export const DropInSplitPaypal: DropinStory = {
                     }
                 }
             }
+        },
+        sessionData: {
+            splitPayPalButtons: true
         }
     }
 };
