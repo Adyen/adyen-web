@@ -2,8 +2,18 @@ import Paypal from './Paypal';
 import { render, screen } from '@testing-library/preact';
 import { setupCoreMock, TEST_CHECKOUT_ATTEMPT_ID, TEST_RISK_DATA } from '../../../config/testMocks/setup-core-mock';
 import CancelError from '../../core/Errors/CancelError';
+import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
+import base64 from '../../utils/base64';
 
 const core = setupCoreMock();
+
+const decodeSdkData = (input: string) => {
+    const { data } = base64.decode(input);
+    if (!data) {
+        throw new Error('Failed to decode sdkData');
+    }
+    return JSON.parse(data);
+};
 
 describe('Paypal', () => {
     test('Returns a data object', () => {
@@ -75,7 +85,7 @@ describe('Paypal', () => {
         const onErrorMock = jest.fn();
         const paypal = new Paypal(core, { onError: onErrorMock });
         paypal.submit();
-        expect(onErrorMock).toHaveBeenCalled();
+        expect(onErrorMock).toHaveBeenCalledWith(expect.any(AdyenCheckoutError), expect.anything());
     });
 
     test('should pass the required callbacks to the Component', () => {
@@ -132,6 +142,21 @@ describe('Paypal', () => {
             const paypal = new Paypal(core, { vault: true, intent: 'capture' });
             expect(paypal.props.vault).toBe(true);
         });
+
+        test('should not set usePayPalV6 when it is not provided', () => {
+            const paypal = new Paypal(core);
+            expect(paypal.props.usePayPalV6).toBeUndefined();
+        });
+    });
+
+    describe('sdkData', () => {
+        test('should not add paymentMethodConfiguration when usePayPalV6 is not set', () => {
+            const paypal = new Paypal(core);
+
+            const decodedSdkData = decodeSdkData(paypal.data.paymentMethod.sdkData);
+
+            expect(decodedSdkData.paymentMethodConfiguration).toBeUndefined();
+        });
     });
 
     describe('updatePaymentData', () => {
@@ -186,7 +211,7 @@ describe('Paypal', () => {
             const onErrorMock = jest.fn();
             const paypal = new Paypal(core, { onError: onErrorMock });
             paypal.updateWithAction({ type: 'sdk', paymentMethodType: 'paypal', sdkData: { token: 'test-token' } });
-            expect(onErrorMock).toHaveBeenCalled();
+            expect(onErrorMock).toHaveBeenCalledWith(expect.any(AdyenCheckoutError), expect.anything());
         });
     });
 
@@ -231,6 +256,7 @@ describe('Paypal', () => {
                 expect.objectContaining({ message: 'PayPal order actions are not available' }),
                 expect.anything()
             );
+            expect(onErrorMock.mock.calls[0][0]).toBeInstanceOf(AdyenCheckoutError);
         });
 
         test('should get order details and call onAuthorized when provided', async () => {
@@ -273,6 +299,7 @@ describe('Paypal', () => {
                 expect.objectContaining({ message: 'Something went wrong while parsing PayPal Order' }),
                 expect.anything()
             );
+            expect(onErrorMock.mock.calls[0][0]).toBeInstanceOf(AdyenCheckoutError);
         });
     });
 
@@ -281,7 +308,7 @@ describe('Paypal', () => {
             const onErrorMock = jest.fn();
             const paypal = new Paypal(core, { onError: onErrorMock });
             paypal.handleReject('some error');
-            expect(onErrorMock).toHaveBeenCalled();
+            expect(onErrorMock).toHaveBeenCalledWith(expect.any(AdyenCheckoutError), expect.anything());
         });
     });
 

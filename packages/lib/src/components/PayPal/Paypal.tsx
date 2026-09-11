@@ -7,22 +7,31 @@ import { ERRORS } from './constants';
 import { TxVariants } from '../tx-variants';
 import { formatPaypalOrderContactToAdyenFormat } from './utils/format-paypal-order-contact-to-adyen-format';
 
-import type { ICore } from '../../core/types';
+import type { AdditionalDetailsData, ICore } from '../../core/types';
 import type { PaymentAction, PaymentResponseData } from '../../types/global-types';
 import type { Intent, PayPalConfiguration } from './types';
 import type {
+    PayPalComponents,
     PayPalOnApproveActions,
     PayPalOnApproveData,
     PayPalOnShippingAddressChangeActions,
     PayPalOnShippingAddressChangeData,
     PayPalOnShippingOptionsChangeActions,
     PayPalOnShippingOptionsChangeData,
-    PayPalOrderResponseBody
+    PayPalOrderResponseBody,
+    PayPalV6OnApproveData,
+    PayPalV6OnShippingAddressChangeData,
+    PayPalV6OnShippingOptionsChangeData
 } from './paypal-js-types';
 
 import { AnalyticsInfoEvent, InfoEventType } from '../../core/Analytics/events/AnalyticsInfoEvent';
 import { sanitizeResponse, verifyPaymentDidNotFail } from '../internal/UIElement/utils';
 import CancelError from '../../core/Errors/CancelError';
+import { PayPalSdkLoader } from './services/PayPalSdkLoader';
+import { PayPalService } from './services/PayPalService';
+import { PayPalComponentV6 } from './components/PaypalComponentV6';
+import requestPayPalOrderDetails from './services/request-paypal-order-details';
+import { UNSUPPORTED_EXPRESS_PRESENTATION_MODE_OPTIONS } from './config';
 import './Paypal.scss';
 
 class PaypalElement extends UIElement<PayPalConfiguration> {
@@ -36,11 +45,114 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
 
     protected static readonly defaultProps = defaultProps;
 
+    private paypalService?: PayPalService;
+
     constructor(checkout: ICore, props?: PayPalConfiguration) {
         super(checkout, props);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleOnShippingAddressChange = this.handleOnShippingAddressChange.bind(this);
         this.handleOnShippingOptionsChange = this.handleOnShippingOptionsChange.bind(this);
+        this.handleOnApprove = this.handleOnApprove.bind(this);
+        this.handleOnShippingAddressChangeV6 = this.handleOnShippingAddressChangeV6.bind(this);
+        this.handleOnShippingOptionsChangeV6 = this.handleOnShippingOptionsChangeV6.bind(this);
+        this.handleOnApproveV6 = this.handleOnApproveV6.bind(this);
+        this.initializePayPalV6 = this.initializePayPalV6.bind(this);
+
+        if (this.props.usePayPalV6) {
+            const { isExpress } = this.props;
+            const { onShippingAddressChange, onShippingOptionsChange, presentationModeOptions } = this.props.usePayPalV6;
+
+            if (!isExpress && (onShippingAddressChange || onShippingOptionsChange)) {
+                throw new AdyenCheckoutError(
+                    'IMPLEMENTATION_ERROR',
+                    'PayPal - You must set "isExpress" flag to "true" in order to use "onShippingAddressChange" and/or "onShippingOptionsChange" callbacks'
+                );
+            }
+
+            if (
+                isExpress &&
+                presentationModeOptions?.presentationMode &&
+                UNSUPPORTED_EXPRESS_PRESENTATION_MODE_OPTIONS.includes(presentationModeOptions.presentationMode)
+            ) {
+                throw new AdyenCheckoutError(
+                    'IMPLEMENTATION_ERROR',
+                    `PayPal - Unsupported presentation mode: ${presentationModeOptions.presentationMode} for express checkout`
+                );
+            }
+
+            this.initializePayPalV6();
+        }
+    }
+
+    private initializePayPalV6() {
+        const paypalV6Props = this.props.usePayPalV6;
+
+        const sdkLoader = new PayPalSdkLoader({
+            analytics: this.analytics,
+            environment: this.props.environment,
+            nonce: paypalV6Props?.nonce
+        });
+
+        const components: PayPalComponents = ['paypal-payments'];
+
+        if (!this.props?.usePayPalV6?.blockPayPalVenmoButton) {
+            components.push('venmo-payments');
+        }
+
+        if (this.props?.usePayPalV6?.onCreatePayPalMessages) {
+            components.push('paypal-messages');
+        }
+
+        this.paypalService = new PayPalService({
+            sdkLoader,
+            loadingContext: this.props.loadingContext ?? '',
+            clientKey: this.props.clientKey ?? '',
+            merchantId: this.props.configuration?.merchantId ?? '',
+            countryCode: this.props.countryCode ?? '',
+            amount: this.props.amount,
+            vault: Boolean(paypalV6Props?.vault),
+            locale: paypalV6Props?.locale,
+            pageType: paypalV6Props?.pageType,
+            environment: this.props.environment,
+            components
+        });
+
+        this.paypalService
+            .initialize()
+            .then(() => {
+                if (paypalV6Props?.onCreatePayPalMessages && this.paypalService?.getInstance()?.createPayPalMessages) {
+                    paypalV6Props.onCreatePayPalMessages(this.paypalService.getInstance().createPayPalMessages);
+                }
+            })
+            .catch(error => {
+                this.handleError(
+                    error instanceof AdyenCheckoutError
+                        ? error
+                        : new AdyenCheckoutError('ERROR', 'Something went wrong while initializing PayPal', { cause: error })
+                );
+            });
+    }
+
+    public override async isAvailable(): Promise<void> {
+        if (this.props.usePayPalV6) {
+            if (!this.paypalService) {
+                return Promise.reject(new AdyenCheckoutError('ERROR', 'PayPal is not available'));
+            }
+
+            await this.paypalService.isSdkLoaded();
+
+            if (!this.paypalService.getEligiblePaymentMethods().isEligible('paypal')) {
+                return Promise.reject(new AdyenCheckoutError('ERROR', 'PayPal is not available'));
+            }
+
+            return Promise.resolve();
+        }
+
+        return Promise.resolve();
+    }
+
+    protected override get sdkDataPaymentMethodConfiguration() {
+        return this.props.usePayPalV6 ? { supportsPayPalV6: true } : undefined;
     }
 
     formatProps(props: PayPalConfiguration): PayPalConfiguration {
@@ -92,14 +204,16 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
      * Formats the component data output
      */
     protected formatData() {
-        const { isExpress, userAction } = this.props;
+        const { isExpress, userAction, usePayPalV6 } = this.props;
+        const isZeroAuth = this.props.amount?.value === 0;
 
         return {
             paymentMethod: {
                 type: PaypalElement.type,
-                userAction,
-                subtype: isExpress ? 'express' : PaypalElement.subtype
-            }
+                subtype: isExpress ? 'express' : PaypalElement.subtype,
+                ...(!usePayPalV6 && { userAction })
+            },
+            ...(usePayPalV6 && (usePayPalV6.vault || isZeroAuth) && { storePaymentMethod: true })
         };
     }
 
@@ -134,7 +248,7 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
         return true;
     }
 
-    private readonly handleOnApprove = (data: PayPalOnApproveData, actions: PayPalOnApproveActions): Promise<void> => {
+    private handleOnApprove(data: PayPalOnApproveData, actions: PayPalOnApproveActions): Promise<void> {
         const { onAuthorized } = this.props;
         const state = { data: { details: data, paymentData: this.paymentData ?? undefined } };
 
@@ -173,7 +287,96 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
             })
             .then(() => this.handleAdditionalDetails(state))
             .catch(error => this.handleError(new AdyenCheckoutError('ERROR', 'Something went wrong while parsing PayPal Order', { cause: error })));
-    };
+    }
+
+    /**
+     * Handles the PayPal SDK v6 'onApprove' event. The shape of the data depends on which session type was started:
+     * a one-time payment session returns an 'orderId', whereas a save payment session (zero-auth) returns a
+     * 'vaultSetupToken'.
+     *
+     * @param data - Approve data from the PayPal SDK
+     */
+    private handleOnApproveV6(data: PayPalV6OnApproveData): Promise<void> {
+        const onAuthorized = this.props.usePayPalV6?.onAuthorized;
+
+        let state: AdditionalDetailsData | undefined;
+
+        // 'orderId' is only present when the shopper approved a one-time payment session, meaning an actual
+        // PayPal order was created. The SDK v6 keys are remapped to the casing expected by the /payments/details API.
+        if ('orderId' in data) {
+            // @ts-expect-error - fundingSource is not in the type but is present in the data
+            const { orderId, payerId, fundingSource } = data;
+            state = {
+                data: {
+                    details: {
+                        orderID: orderId,
+                        payerID: payerId,
+                        paymentSource: fundingSource
+                    },
+                    paymentData: this.paymentData ?? undefined
+                }
+            };
+        }
+
+        // 'vaultSetupToken' is only present when the shopper approved a save payment session (zero-auth
+        // tokenization). No PayPal order exists in this flow, so the vault token is sent instead of an order id.
+        if ('vaultSetupToken' in data) {
+            // @ts-expect-error - fundingSource is not in the type but is present in the data
+            const { vaultSetupToken, payerId, fundingSource } = data;
+            state = {
+                data: {
+                    details: {
+                        vaultToken: vaultSetupToken,
+                        payerID: payerId,
+                        paymentSource: fundingSource
+                    },
+                    paymentData: this.paymentData ?? undefined
+                }
+            };
+        }
+
+        if (!state) {
+            this.handleError(new AdyenCheckoutError('ERROR', 'Missing `orderId` or `vaultSetupToken` in PayPal approval data'));
+            return Promise.resolve();
+        }
+
+        // The order details can only be fetched for a one-time payment session, since the save payment session
+        // does not create a PayPal order. Therefore 'onAuthorized' is skipped in the zero-auth flow.
+        if (!onAuthorized || !('orderId' in data)) {
+            this.handleAdditionalDetails(state);
+            return Promise.resolve();
+        }
+
+        return requestPayPalOrderDetails(this.props.loadingContext ?? '', {
+            clientKey: this.props.clientKey ?? '',
+            merchantId: this.props.configuration?.merchantId ?? '',
+            orderId: data.orderId
+        })
+            .then(res => {
+                this.setState({
+                    authorizedEvent: res.payPalOrder,
+                    ...(res.billingAddress && { billingAddress: res.billingAddress }),
+                    ...(res.deliveryAddress && { deliveryAddress: res.deliveryAddress }),
+                    ...(res.shopperName && { shopperName: res.shopperName })
+                });
+
+                return new Promise<void>((resolve, reject) =>
+                    onAuthorized(
+                        {
+                            authorizedEvent: res.payPalOrder,
+                            ...(res.billingAddress && { billingAddress: res.billingAddress }),
+                            ...(res.deliveryAddress && { deliveryAddress: res.deliveryAddress }),
+                            ...(res.shopperName && { shopperName: res.shopperName })
+                        },
+                        { resolve, reject }
+                    )
+                );
+            })
+            .then(() => this.handleAdditionalDetails(state))
+            .catch(error =>
+                this.handleError(new AdyenCheckoutError('ERROR', 'Something went wrong with finalizing the PayPal order', { cause: error }))
+            );
+    }
 
     handleResolve(token: string) {
         if (!this.resolve) return this.handleError(new AdyenCheckoutError('ERROR', ERRORS.WRONG_INSTANCE));
@@ -239,7 +442,64 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
         return onShippingOptionsChange(data, actions, this);
     }
 
+    /**
+     * If the merchant provides the 'usePayPalV6' prop with an 'onShippingAddressChange' callback, then this method is used as a wrapper to it, in order
+     * to expose to the merchant the 'component' instance. The merchant needs the 'component' in order to manipulate the
+     * paymentData
+     *
+     * @param data - The shipping address change data
+     */
+    private handleOnShippingAddressChangeV6(data: PayPalV6OnShippingAddressChangeData): Promise<void> {
+        const { usePayPalV6 } = this.props;
+
+        if (!usePayPalV6?.onShippingAddressChange) return Promise.resolve();
+
+        return usePayPalV6.onShippingAddressChange(data, this);
+    }
+
+    /**
+     * If the merchant provides the 'usePayPalV6' prop with an 'onShippingOptionsChange' callback, then this method is used as a wrapper to it, in order
+     * to expose to the merchant the 'component' instance. The merchant needs the 'component' in order to manipulate the
+     * paymentData
+     *
+     * @param data - The shipping options change data
+     */
+    private handleOnShippingOptionsChangeV6(data: PayPalV6OnShippingOptionsChangeData): Promise<void> {
+        const { usePayPalV6 } = this.props;
+
+        if (!usePayPalV6?.onShippingOptionsChange) return Promise.resolve();
+
+        return usePayPalV6.onShippingOptionsChange(data, this);
+    }
+
     protected override componentToRender(): h.JSX.Element | null {
+        if (this.props.usePayPalV6) {
+            const { usePayPalV6: paypalv6Props } = this.props;
+
+            if (!this.paypalService) return null;
+
+            return (
+                <PayPalComponentV6
+                    setComponentRef={this.setComponentRef}
+                    paypalService={this.paypalService}
+                    {...(paypalv6Props.onShippingAddressChange && { onShippingAddressChange: this.handleOnShippingAddressChangeV6 })}
+                    {...(paypalv6Props.onShippingOptionsChange && { onShippingOptionsChange: this.handleOnShippingOptionsChangeV6 })}
+                    style={paypalv6Props.style}
+                    commit={paypalv6Props.commit}
+                    vault={paypalv6Props.vault}
+                    blockPayPalCreditButton={paypalv6Props.blockPayPalCreditButton}
+                    blockPayPalPayLaterButton={paypalv6Props.blockPayPalPayLaterButton}
+                    blockPayPalVenmoButton={paypalv6Props.blockPayPalVenmoButton}
+                    presentationModeOptions={paypalv6Props.presentationModeOptions}
+                    onSubmit={this.handleSubmit}
+                    onApprove={this.handleOnApproveV6}
+                    onCancel={() => this.handleError(new AdyenCheckoutError('CANCEL'))}
+                    onError={error => this.handleError(new AdyenCheckoutError('ERROR', String(error), { cause: error }))}
+                />
+            );
+        }
+
+        // TODO: remove this check in adyen-web v7 as the PayPal buttons do not support custom pay buttons
         if (!this.props.showPayButton) return null;
 
         const { onShippingAddressChange, onShippingOptionsChange, ...rest } = this.props;

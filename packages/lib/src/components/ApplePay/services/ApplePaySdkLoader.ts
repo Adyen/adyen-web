@@ -12,7 +12,7 @@ class ApplePaySdkLoader {
         this.analytics = analytics;
     }
 
-    public async load(): Promise<ApplePaySession> {
+    public async load(): Promise<typeof ApplePaySession> {
         try {
             const scriptElement = new Script({
                 src: APPLE_PAY_SDK_URL,
@@ -24,7 +24,9 @@ class ApplePaySdkLoader {
             this.sdkLoadingPromise = scriptElement.load();
             await this.sdkLoadingPromise;
 
-            return window?.ApplePaySession;
+            // `window.ApplePaySession` resolves to the type declared by @paypal/paypal-js (which wins
+            // the interface merge), so cast to the @types/applepayjs class we actually use at runtime.
+            return window?.ApplePaySession as unknown as typeof ApplePaySession;
         } catch (error) {
             throw new AdyenCheckoutError('SCRIPT_ERROR', 'ApplePaySDK failed to load', { cause: error });
         }

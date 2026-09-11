@@ -25,7 +25,7 @@ export const Default: Story = {
             blockPayPalPayLaterButton: false,
             blockPayPalVenmoButton: false,
             onAuthorized: (data, actions) => {
-                console.log({ data });
+                console.log('PayPal onAuthorized data', { data });
                 actions.resolve();
             }
         }
