@@ -47,7 +47,7 @@ export type CorePropsForComponent = Omit<GlobalOptions, 'session'> & {
     core: ICore;
     i18n: Language;
     modules: CoreModules;
-    session: Session;
+    session?: Session;
     loadingContext: string;
     cdnContext: string;
     createFromAction: ICore['createFromAction'];
