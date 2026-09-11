@@ -24,7 +24,7 @@ async function createAdvancedFlowCheckout(
         allowedPaymentTypes = [],
         paymentMethodsOverride,
         paymentsOptions,
-        splitPayPalButtons,
+        paymentMethodsOptions,
         srConfig = { showPanel: false, moveFocus: true },
         'srConfig.showPanel': showPanelOverride,
         ...restCheckoutProps
@@ -45,7 +45,7 @@ async function createAdvancedFlowCheckout(
         amount: paymentAmount,
         shopperLocale,
         countryCode,
-        splitPayPalButtons
+        ...(paymentMethodsOptions || {})
     });
 
     const paymentMethodsResponse = !paymentMethodsOverride
