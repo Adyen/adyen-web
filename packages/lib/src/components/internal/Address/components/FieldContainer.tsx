@@ -46,59 +46,60 @@ function FieldContainer(props: Readonly<FieldContainerProps>) {
     const label = `${i18n.get(labelKey)}${optionalLabel}`;
     const errorMessage = getErrorMessage(errors, fieldName, i18n, label);
 
-    switch (fieldName) {
-        case 'country':
-            return (
-                <CountryField
-                    allowedCountries={props.allowedCountries}
-                    classNameModifiers={classNameModifiers}
-                    label={label}
-                    errorMessage={errorMessage}
-                    onDropdownChange={props.onDropdownChange}
-                    value={value}
-                    required={!isOptional}
-                />
-            );
-        case 'stateOrProvince':
-            return (
-                <StateField
-                    classNameModifiers={classNameModifiers}
-                    label={label}
-                    errorMessage={errorMessage}
-                    onDropdownChange={props.onDropdownChange}
-                    selectedCountry={selectedCountry}
-                    specifications={props.specifications}
-                    value={value}
-                    required={!isOptional}
-                />
-            );
-        default:
-            return (
-                <Field
-                    label={label}
-                    classNameModifiers={classNameModifiers}
-                    errorMessage={errorMessage}
-                    isValid={valid[fieldName]}
-                    name={fieldName}
-                    i18n={i18n}
-                    onFocus={e => props.onFieldFocusAnalytics(fieldName, e)}
-                    onBlur={e => props.onFieldBlurAnalytics(fieldName, e)}
-                >
-                    <InputText
-                        name={fieldName}
-                        classNameModifiers={classNameModifiers}
-                        value={value}
-                        onInput={onInput}
-                        onBlur={onBlur}
-                        maxlength={maxLength}
-                        trimOnBlur={trimOnBlur}
-                        disabled={disabled}
-                        required={!isOptional}
-                        autocomplete={getAddressAutocomplete(fieldName, addressType)}
-                    />
-                </Field>
-            );
+    if (fieldName === 'country') {
+        return (
+            <CountryField
+                allowedCountries={props.allowedCountries}
+                classNameModifiers={classNameModifiers}
+                label={label}
+                errorMessage={errorMessage}
+                onDropdownChange={props.onDropdownChange}
+                value={value}
+                required={!isOptional}
+            />
+        );
     }
+
+    if (fieldName === 'stateOrProvince') {
+        return (
+            <StateField
+                classNameModifiers={classNameModifiers}
+                label={label}
+                errorMessage={errorMessage}
+                onDropdownChange={props.onDropdownChange}
+                selectedCountry={selectedCountry}
+                specifications={props.specifications}
+                value={value}
+                required={!isOptional}
+            />
+        );
+    }
+
+    return (
+        <Field
+            label={label}
+            classNameModifiers={classNameModifiers}
+            errorMessage={errorMessage}
+            isValid={valid[fieldName]}
+            name={fieldName}
+            i18n={i18n}
+            onFocus={e => props.onFieldFocusAnalytics(fieldName, e)}
+            onBlur={e => props.onFieldBlurAnalytics(fieldName, e)}
+        >
+            <InputText
+                name={fieldName}
+                classNameModifiers={classNameModifiers}
+                value={value}
+                onInput={onInput}
+                onBlur={onBlur}
+                maxlength={maxLength}
+                trimOnBlur={trimOnBlur}
+                disabled={disabled}
+                required={!isOptional}
+                autocomplete={getAddressAutocomplete(fieldName, addressType)}
+            />
+        </Field>
+    );
 }
 
 export default FieldContainer;
