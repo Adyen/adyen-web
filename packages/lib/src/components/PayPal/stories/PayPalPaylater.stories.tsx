@@ -16,12 +16,18 @@ export default meta;
 
 export const PayPalPaylater: Story = {
     render: ({ componentConfiguration, ...checkoutConfig }) => (
-        <Checkout checkoutConfig={{ ...checkoutConfig, splitPayPalButtons: true }}>
+        <Checkout checkoutConfig={checkoutConfig}>
             {checkout => <ComponentContainer element={new PaypalPaylater(checkout, componentConfiguration)} />}
         </Checkout>
     ),
     args: {
         countryCode: 'US',
+        sessionData: {
+            splitPayPalButtons: true
+        },
+        paymentMethodsOptions: {
+            splitPayPalButtons: true
+        },
         componentConfiguration: {
             hidePayPalMessaging: false,
             onAuthorized: (data, actions) => {
