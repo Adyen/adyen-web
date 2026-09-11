@@ -6,11 +6,12 @@ import Link from '../Link';
 
 export interface DisclaimerMsgObject {
     message: string;
-    linkText: string | Array<string>;
-    link: string | Array<string>;
+    linkText?: string | Array<string>;
+    link?: string | Array<string>;
 }
 
 export interface DisclaimerMessageProps {
+    id?: string;
     message: string;
     urls?: Array<string>;
 }
@@ -26,9 +27,9 @@ export interface DisclaimerMessageProps {
  *  through `formatDisclaimerMessage` to obtain these props.
  */
 
-export default function DisclaimerMessage({ message, urls = [] }: Readonly<DisclaimerMessageProps>) {
+export default function DisclaimerMessage({ id, message, urls = [] }: Readonly<DisclaimerMessageProps>) {
     return (
-        <span className="adyen-checkout-disclaimer__label">
+        <span id={id} className="adyen-checkout-disclaimer__label">
             <LabelOnlyDisclaimerMessage message={message} urls={urls} />
         </span>
     );
