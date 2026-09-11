@@ -189,7 +189,7 @@ test.describe('Test Card, & binLookup w. panLength property', () => {
         await card.isComponentVisible();
 
         await card.typeCardNumber(CARD_WITH_PAN_LENGTH);
-
+        await expect(card.expiryDateInput).toBeFocused();
         // Should be able to add more digits to the PAN
         await card.cardNumberInput.focus();
         await card.page.keyboard.press('End');
