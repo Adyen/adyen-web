@@ -62,12 +62,28 @@ describe('PayButton', () => {
         expect(screen.getByRole('link', { name: 'MyStore' })).toHaveAttribute('href', 'https://www.mystoredemo.io');
 
         const button = screen.getByRole('button');
-        expect(termsLink.compareDocumentPosition(button) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+        const disclaimer = screen.getByText('By continuing', { exact: false });
+        const disclaimerIdPattern = /^pay-button-disclaimer-/;
+        expect(disclaimer).toHaveAttribute('id', expect.stringMatching(disclaimerIdPattern));
+        expect(button).toHaveAttribute('aria-describedby', expect.stringMatching(disclaimerIdPattern));
     });
 
     test('should not render a disclaimer message when none is configured', () => {
         renderPayButton();
         expect(screen.queryByRole('link')).toBeNull();
+    });
+
+    test('should render the disclaimer without the pay button when showPayButton is false', () => {
+        renderPayButton({
+            payButtonProps: {
+                disclaimerMessage: {
+                    message: 'Payments are processed securely.'
+                },
+                showPayButton: false
+            }
+        });
+        expect(screen.getByText('Payments are processed securely.')).toBeInTheDocument();
+        expect(screen.queryByRole('button')).not.toBeInTheDocument();
     });
 
     test('should render a pay button with a secondary amount', () => {

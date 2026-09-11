@@ -1,4 +1,5 @@
 import { Fragment, h } from 'preact';
+import { useMemo } from 'preact/hooks';
 import Button from '../Button';
 import { useCoreContext } from '../../../core/Context/CoreProvider';
 import { ButtonProps } from '../Button/types';
@@ -7,6 +8,7 @@ import SecondaryButtonLabel from './components/SecondaryButtonLabel';
 import { useAmount, useSecondaryAmount } from '../../../core/Context/AmountProvider';
 import type { PaymentAmount } from '../../../types';
 import { isAmountValid } from '../../../utils/amount-util';
+import { getUniqueId } from '../../../utils/idGenerator';
 import DisclaimerMessage, { formatDisclaimerMessage } from '../DisclaimerMessage';
 import type { DisclaimerMsgObject } from '../DisclaimerMessage';
 
@@ -58,12 +60,22 @@ const PayButton = ({
 
     const isDisabled = props.disabled || props.status === 'loading';
     const formattedDisclaimerMessage = disclaimerMessage && formatDisclaimerMessage(disclaimerMessage);
+    const disclaimerId = useMemo(() => getUniqueId('pay-button-disclaimer'), []);
+    const ariaDescribedBy =
+        [props.ariaDescribedBy, formattedDisclaimerMessage?.message ? disclaimerId : undefined].filter(Boolean).join(' ') || undefined;
 
     return (
         <Fragment>
-            {formattedDisclaimerMessage?.message && <DisclaimerMessage {...formattedDisclaimerMessage} />}
+            {formattedDisclaimerMessage?.message && <DisclaimerMessage {...formattedDisclaimerMessage} id={disclaimerId} />}
             {showPayButton && (
-                <Button {...props} icon={buttonIcon} disabled={isDisabled} classNameModifiers={[...classNameModifiers, 'pay']} label={buttonLabel}>
+                <Button
+                    {...props}
+                    ariaDescribedBy={ariaDescribedBy}
+                    icon={buttonIcon}
+                    disabled={isDisabled}
+                    classNameModifiers={[...classNameModifiers, 'pay']}
+                    label={buttonLabel}
+                >
                     {secondaryAmountLabel && <SecondaryButtonLabel label={secondaryAmountLabel} />}
                 </Button>
             )}
