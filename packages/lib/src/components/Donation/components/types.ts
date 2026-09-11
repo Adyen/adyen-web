@@ -1,3 +1,4 @@
+import { ComponentMethodsRef } from '../../types';
 import type { CampaignContentProps } from './CampaignContent';
 
 export type Donation = RoundupDonation | FixedAmountsDonation;
@@ -41,4 +42,5 @@ export interface DonationComponentProps extends CampaignContentProps {
     onCancel?: (payload: DonationPayload) => void;
     onChange?: (payload: DonationPayload) => void;
     onAmountSelected: (payload: DonationPayload) => void;
+    setComponentRef: (ref: ComponentMethodsRef) => void;
 }

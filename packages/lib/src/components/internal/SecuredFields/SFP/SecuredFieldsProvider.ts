@@ -32,7 +32,7 @@ import { TxVariants } from '../../../tx-variants';
  * Initialises & handles the client-side part of SecuredFields
  */
 class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
-    private csfLoadFailTimeout: number;
+    private readonly csfLoadFailTimeout: number;
     private readonly csfLoadFailTimeoutMS: number;
     private readonly csfConfigFailTimeout: number;
     private readonly csfConfigFailTimeoutMS: number;
@@ -397,7 +397,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
         if (this.csf) this.csf.brandsFromBinLookup(binLookupResponse, mustResetDedicatedBrand ? resetObject : null);
     }
 
-    private setRootNode = (input: HTMLElement): void => {
+    private readonly setRootNode = (input: HTMLElement): void => {
         this.rootNode = input;
     };
 

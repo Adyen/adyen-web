@@ -1,10 +1,9 @@
-import { h, Fragment, Ref } from 'preact';
+import { h, Fragment } from 'preact';
 import { useCoreContext } from '../../../core/Context/CoreProvider';
-import { useState } from 'preact/hooks';
+import { useEffect, useRef, useState } from 'preact/hooks';
 import { useAmount } from '../../../core/Context/AmountProvider';
+import { ComponentMethodsRef } from '../UIElement/types';
 
-// TODO this should ideally be remove but we need let prop propagate down
-//  probably not worth changing this behaviour now
 export interface RedirectButtonProps {
     label?: string;
     icon?: string;
@@ -12,17 +11,30 @@ export interface RedirectButtonProps {
     onSubmit: Function;
     name: string;
     showPayButton: boolean;
-    ref?: Ref<typeof RedirectButton>;
+    setComponentRef: (ref: ComponentMethodsRef) => void;
 }
 
-function RedirectButton({ label = null, icon = null, payButton, onSubmit, name, showPayButton, ...props }: Readonly<RedirectButtonProps>) {
+function RedirectButton({
+    label = null,
+    icon = null,
+    payButton,
+    onSubmit,
+    name,
+    showPayButton,
+    setComponentRef,
+    ...props
+}: Readonly<RedirectButtonProps>) {
     const { i18n } = useCoreContext();
     const [status, setStatus] = useState('ready');
     const { amount } = useAmount();
 
-    this.setStatus = newStatus => {
-        setStatus(newStatus);
-    };
+    const redirectButtonRef = useRef<ComponentMethodsRef>({
+        setStatus: setStatus
+    });
+
+    useEffect(() => {
+        setComponentRef(redirectButtonRef.current);
+    }, [setComponentRef]);
 
     const payButtonLabel = () => {
         const isZeroAuth = amount && {}.hasOwnProperty.call(amount, 'value') && amount.value === 0;

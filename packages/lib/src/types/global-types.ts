@@ -291,7 +291,7 @@ export interface PaymentData extends PaymentMethodData {
         orderData: string;
         pspReference: string;
     };
-    clientStateDataIndicator: boolean;
+    clientStateDataIndicator?: boolean;
     sessionData?: string;
     storePaymentMethod?: boolean;
     billingAddress?: AddressData;

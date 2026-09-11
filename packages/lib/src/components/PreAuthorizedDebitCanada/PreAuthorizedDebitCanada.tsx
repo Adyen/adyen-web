@@ -73,9 +73,7 @@ export class PreAuthorizedDebitCanada extends UIElement<PreAuthorizedDebitCanada
                     name={this.displayName}
                     payButton={this.payButton}
                     onSubmit={this.submit}
-                    ref={ref => {
-                        this.componentRef = ref;
-                    }}
+                    setComponentRef={this.setComponentRef}
                 />
             </Fragment>
         ) : (
