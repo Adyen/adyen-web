@@ -113,6 +113,64 @@ describe('ApplePaySession', () => {
 
             expect(service['session'].completePayment).toHaveBeenCalledWith({ status: 0 });
         });
+
+        test('should not call "completePayment" with the thrown exception when the session is no longer completable', async () => {
+            const paymentRequest = mock<ApplePayJS.ApplePayPaymentRequest>();
+            const options = mock<ApplePayServiceOptions>({
+                onPaymentAuthorized: jest.fn().mockImplementation(resolve => {
+                    resolve({ status: 0 });
+                })
+            });
+            const event = mock<ApplePayJS.ApplePayPaymentAuthorizedEvent>();
+
+            const service = new ApplePayService(paymentRequest, options);
+            jest.mocked(service['session'].completePayment).mockImplementation(() => {
+                throw new DOMException('The object does not support the operation or argument.', 'InvalidAccessError');
+            });
+
+            await expect(service.onpaymentauthorized(event, options.onPaymentAuthorized)).resolves.toBeUndefined();
+
+            expect(service['session'].completePayment).toHaveBeenCalledTimes(1);
+            expect(service['session'].completePayment).toHaveBeenCalledWith({ status: 0 });
+        });
+
+        test('should not throw when the session can no longer complete a rejected payment', async () => {
+            const paymentRequest = mock<ApplePayJS.ApplePayPaymentRequest>();
+            const options = mock<ApplePayServiceOptions>({
+                onPaymentAuthorized: jest.fn().mockImplementation((resolve, reject) => {
+                    reject({ status: 0 });
+                })
+            });
+            const event = mock<ApplePayJS.ApplePayPaymentAuthorizedEvent>();
+
+            const service = new ApplePayService(paymentRequest, options);
+            jest.mocked(service['session'].completePayment).mockImplementation(() => {
+                throw new DOMException('The object does not support the operation or argument.', 'InvalidAccessError');
+            });
+
+            await expect(service.onpaymentauthorized(event, options.onPaymentAuthorized)).resolves.toBeUndefined();
+
+            expect(service['session'].completePayment).toHaveBeenCalledTimes(1);
+            expect(service['session'].completePayment).toHaveBeenCalledWith({ status: 0 });
+        });
+
+        test('should complete the payment as a failure when "onPaymentAuthorized" rejects without an authorization result', async () => {
+            const paymentRequest = mock<ApplePayJS.ApplePayPaymentRequest>();
+            const options = mock<ApplePayServiceOptions>({
+                onPaymentAuthorized: jest.fn().mockImplementation((resolve, reject) => {
+                    reject(new Error('Payment failed'));
+                })
+            });
+            const event = mock<ApplePayJS.ApplePayPaymentAuthorizedEvent>();
+
+            Object.assign(window.ApplePaySession, { STATUS_FAILURE: 1 });
+
+            const service = new ApplePayService(paymentRequest, options);
+
+            await expect(service.onpaymentauthorized(event, options.onPaymentAuthorized)).resolves.toBeUndefined();
+
+            expect(service['session'].completePayment).toHaveBeenCalledWith({ status: ApplePaySession.STATUS_FAILURE });
+        });
     });
 
     describe('oncancel()', () => {
