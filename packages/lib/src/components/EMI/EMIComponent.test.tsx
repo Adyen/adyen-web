@@ -30,7 +30,7 @@ const emiComponent = (issuers: EmiIssuer[], onPlanSelect: (selection: unknown) =
         <SRPanelProvider srPanel={core.modules.srPanel}>
             <AmountProvider amount={EMI_FIXTURE_CHECKOUT_AMOUNT} providerRef={createRef()}>
                 <EMIComponent
-                    activeFundingSourceElement={createCard()}
+                    activeSupportedPaymentMethodElement={createCard()}
                     issuers={issuers}
                     onPlanSelect={onPlanSelect}
                     showPayButton={true}
@@ -165,7 +165,7 @@ describe('EMIComponent', () => {
             expect(screen.getByText('Upcoming monthly payment')).toBeInTheDocument();
         });
 
-        test('should render the funding source form and the pay button', () => {
+        test('should render the supported payment method form and the pay button', () => {
             renderEmiComponent(emiPlansResponseMock.issuers);
 
             expect(screen.getByRole('form')).toBeInTheDocument();
@@ -184,7 +184,7 @@ describe('EMIComponent', () => {
             expect(screen.queryByText(/choose your preferred combination/i)).toBeNull();
         });
 
-        test('should still render the funding source form and the pay button', () => {
+        test('should still render the supported payment method form and the pay button', () => {
             renderEmiComponent([]);
 
             expect(screen.getByRole('form')).toBeInTheDocument();
