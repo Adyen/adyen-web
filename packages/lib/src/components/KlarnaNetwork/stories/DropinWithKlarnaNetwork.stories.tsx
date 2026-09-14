@@ -17,17 +17,22 @@ type Story = StoryObj<GlobalStoryProps>;
 const meta: Meta<GlobalStoryProps> = {
     title: 'Drop-in/Drop-in with Klarna Network',
     tags: ['no-automated-visual-test'],
+    parameters: {
+        docs: {
+            description: {
+                component: [
+                    'Drop-in renders Klarna Network from the real /paymentMethods response, which returns',
+                    "`{ name: 'Pay with Klarna', type: 'klarna_network' }`, so no paymentMethodsOverride is needed.",
+                    '',
+                    "Uses the default 'redirect' authorization flow, which completes a real payment. See",
+                    'Components/KlarnaNetwork for the SDK flow and the /payments gap that blocks it.'
+                ].join('\n')
+            }
+        }
+    },
     args: {
         // Klarna derives its regional endpoint from the currency, and the test accounts are NA only.
-        countryCode: COUNTRY_CODES.UnitedStates,
-        // 'klarna_network' is a synthetic tx variant that /paymentMethods never returns, and Drop-in
-        // only creates elements for entries present in the response.
-        paymentMethodsOverride: {
-            paymentMethods: [
-                { name: 'Credit Card', type: 'scheme' },
-                { name: 'Klarna', type: TxVariants.klarna_network }
-            ]
-        }
+        countryCode: COUNTRY_CODES.UnitedStates
     },
     render: checkoutConfig => (
         <Checkout checkoutConfig={checkoutConfig}>
