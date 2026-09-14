@@ -69,7 +69,8 @@ export function assertConfigurationPropertiesAreValid(propsSetByMerchant: CoreCo
         'onOrderUpdated',
         'loadingContext',
         'onEnterKeyPressed',
-        'afterAdditionalDetails'
+        'afterAdditionalDetails',
+        'suppressConfigWarnings'
     ]);
 
     Object.keys(propsSetByMerchant).forEach((prop: keyof CoreConfiguration) => {

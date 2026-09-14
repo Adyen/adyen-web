@@ -191,6 +191,11 @@ export interface CoreConfiguration {
     order?: Order;
 
     /**
+     * Suppress warnings about configuration issues. ATM this just relates to warnings about multiple instances of checkout on the same page.
+     */
+    suppressConfigWarnings?: boolean;
+
+    /**
      * Add @adyen/web metadata to the window object.
      * It helps to identify version number and bundle type in the merchant environment
      *
