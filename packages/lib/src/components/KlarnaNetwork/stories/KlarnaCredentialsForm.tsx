@@ -15,27 +15,26 @@ const EMPTY_KLARNA_CREDENTIALS: KlarnaCredentials = {
     partnerAccountId: ''
 };
 
-const FIELDS: ReadonlyArray<{ key: keyof KlarnaCredentials; label: string; hint: string }> = [
-    { key: 'clientId', label: 'Client id', hint: 'Required.' },
-    { key: 'paymentAccountId', label: 'Payment account id', hint: 'Optional.' },
-    { key: 'partnerAccountId', label: 'Partner account id', hint: 'Optional.' }
+const FIELDS: ReadonlyArray<{ key: keyof KlarnaCredentials; label: string }> = [
+    { key: 'clientId', label: 'Client id (required)' },
+    { key: 'paymentAccountId', label: 'Payment account id (optional)' },
+    { key: 'partnerAccountId', label: 'Partner account id (optional)' }
 ];
 
-export interface KlarnaCredentialsFormProps {
+interface KlarnaCredentialsFormProps {
     onApply(credentials: KlarnaCredentials): void;
 }
 
 /**
- * Storybook-only credential entry.
+ * Storybook-only credential entry. Deliberately not wired to Storybook `args`: Storybook mirrors
+ * changed args into the URL, so a credential pasted into the controls panel would end up in the
+ * address bar and in browser history. Nothing is seeded from the build either, so values typed here
+ * have to be re-entered after every reload.
  *
- * Deliberately not wired to Storybook `args`: Storybook mirrors changed args into the URL, so a
- * credential pasted into the controls panel would end up in the address bar, in browser history and
- * in any shared link or screenshot. Nothing is seeded from the build either, so values typed here
- * never leave this component's state and no credential is ever baked into a Storybook build.
+ * The fields are always masked so a credential cannot leak into a screen share or screenshot.
  */
-export function KlarnaCredentialsForm({ onApply }: Readonly<KlarnaCredentialsFormProps>) {
+function KlarnaCredentialsForm({ onApply }: Readonly<KlarnaCredentialsFormProps>) {
     const [draft, setDraft] = useState<KlarnaCredentials>(EMPTY_KLARNA_CREDENTIALS);
-    const [isVisible, setIsVisible] = useState(false);
 
     const handleSubmit = useCallback(
         (event: Event) => {
@@ -45,44 +44,25 @@ export function KlarnaCredentialsForm({ onApply }: Readonly<KlarnaCredentialsFor
         [draft, onApply]
     );
 
-    const handleClear = useCallback(() => {
-        setDraft(EMPTY_KLARNA_CREDENTIALS);
-        onApply({ ...EMPTY_KLARNA_CREDENTIALS });
-    }, [onApply]);
-
     return (
-        <form
-            onSubmit={handleSubmit}
-            style={{ display: 'grid', gap: '12px', marginBottom: '24px', maxWidth: '540px', fontFamily: 'sans-serif', fontSize: '13px' }}
-        >
+        <form onSubmit={handleSubmit} style={{ display: 'grid', gap: '12px', marginBottom: '24px', maxWidth: '540px', fontSize: '13px' }}>
             <strong>Klarna credentials</strong>
-            {FIELDS.map(({ key, label, hint }) => (
+            {FIELDS.map(({ key, label }) => (
                 <label key={key} style={{ display: 'grid', gap: '4px' }}>
                     <span>{label}</span>
                     <input
-                        type={isVisible ? 'text' : 'password'}
+                        type="password"
                         value={draft[key]}
                         autoComplete="off"
                         onInput={event => setDraft(current => ({ ...current, [key]: (event.target as HTMLInputElement).value }))}
                         style={{ padding: '6px 8px', font: 'inherit' }}
                     />
-                    <span style={{ color: '#5c687c' }}>{hint}</span>
                 </label>
             ))}
 
-            <label style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
-                <input type="checkbox" checked={isVisible} onChange={() => setIsVisible(visible => !visible)} />
-                <span>Show values</span>
-            </label>
-
-            <div style={{ display: 'flex', gap: '8px' }}>
-                <button type="submit" disabled={!draft.clientId}>
-                    Initialise Klarna
-                </button>
-                <button type="button" onClick={handleClear}>
-                    Clear
-                </button>
-            </div>
+            <button type="submit" disabled={!draft.clientId}>
+                Initialise Klarna
+            </button>
         </form>
     );
 }
@@ -100,9 +80,7 @@ export interface KlarnaCredentialsGateProps {
 export function KlarnaCredentialsGate({ children }: Readonly<KlarnaCredentialsGateProps>) {
     const [applied, setApplied] = useState<KlarnaCredentials | null>(null);
 
-    const handleApply = useCallback((credentials: KlarnaCredentials) => {
-        setApplied(credentials.clientId ? credentials : null);
-    }, []);
+    const handleApply = useCallback((credentials: KlarnaCredentials) => setApplied(credentials), []);
 
     return (
         <Fragment>
@@ -111,5 +89,3 @@ export function KlarnaCredentialsGate({ children }: Readonly<KlarnaCredentialsGa
         </Fragment>
     );
 }
-
-export default KlarnaCredentialsForm;
