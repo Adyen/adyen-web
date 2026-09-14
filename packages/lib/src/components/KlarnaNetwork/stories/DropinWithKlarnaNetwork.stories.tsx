@@ -24,8 +24,7 @@ const meta: Meta<GlobalStoryProps> = {
                     'Drop-in renders Klarna Network from the real /paymentMethods response, which returns',
                     "`{ name: 'Pay with Klarna', type: 'klarna_network' }`, so no paymentMethodsOverride is needed.",
                     '',
-                    "Uses the default 'redirect' authorization flow, which completes a real payment. See",
-                    'Components/KlarnaNetwork for the SDK flow and the /payments gap that blocks it.'
+                    'See KlarnaNetwork.md for the flow and the current backend limitation.'
                 ].join('\n')
             }
         }

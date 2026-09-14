@@ -38,27 +38,23 @@ export function KlarnaNetworkContainer({
     const messageContainerRef = useRef<HTMLDivElement>(null);
     const buttonContainerRef = useRef<HTMLDivElement>(null);
 
-    /** Loads the SDK, registers the completion handler and resolves the presentation. */
     useEffect(() => {
         let isActive = true;
         let payment: KlarnaPayment | undefined;
 
         const setUpKlarna = async () => {
-            // Klarna picks its regional endpoint from the currency, so it cannot be omitted.
             if (!currency) throw new Error('a valid amount with a currency is required');
 
             const klarna = await loadKlarnaSdk({
                 clientId,
                 products: ['PAYMENT'],
                 partnerAccountId,
-                // Klarna rejects an acquiring config that carries no account id.
                 ...(paymentAccountId && { acquiringConfig: { paymentAccountId } }),
                 locale: i18n.locale
             });
 
             if (!isActive) return;
 
-            // Klarna requires the event handlers to be registered before the pay button is mounted.
             payment = klarna.Payment;
             payment.on('complete', onKlarnaComplete);
 
@@ -85,17 +81,13 @@ export function KlarnaNetworkContainer({
             isActive = false;
             payment?.off('complete', onKlarnaComplete);
         };
-        // The callbacks and i18n are stable for the lifetime of the element, so only the values
-        // Klarna's presentation output depends on are listed as dependencies.
     }, [clientId, partnerAccountId, paymentAccountId, value, currency]);
 
-    /** Mounts the Klarna UI elements once their containers are in the DOM. */
     useEffect(() => {
         if (!paymentOption) return;
 
         const mountedElements: KlarnaUIElement[] = [];
 
-        // Only the message is mounted: Adyen owns the accordion header, the logo and the subheader.
         if (paymentOption.message && messageContainerRef.current) {
             mountedElements.push(paymentOption.message.component().mount(messageContainerRef.current));
         }
