@@ -1,29 +1,35 @@
 import type { UIElementProps } from '../internal/UIElement/types';
 import type CardElement from '../Card';
-import type { CardConfiguration } from '../Card/types';
+import type { CardConfiguration, FundingSourceKeys } from '../Card/types';
 import type { PaymentAmount } from '../../types/global-types';
 import type { UiTarget } from '../../core/Analytics/events/AnalyticsInfoEvent';
 import { TxVariants } from '../tx-variants';
 
-export enum EMIFundingSource {
+export enum EMISupportedPaymentMethod {
     CARD = TxVariants.card
 }
 
 /**
- * The concrete element class EMI owns per funding source. Typing the children concretely, rather than
- * as the abstract `UIElement`, is what lets EMI merge a child's payment data: `formatData()` is public
- * on the concrete classes and `protected` on the base. Extend this map when a new funding source ships.
+ * The concrete element class EMI owns per supported payment method. Typing the children concretely, rather
+ * than as the abstract `UIElement`, is what lets EMI merge a child's payment data: `formatData()` is public
+ * on the concrete classes and `protected` on the base. Extend this map when a new supported payment method ships.
  */
-export interface EMIFundingSourceElements {
-    [EMIFundingSource.CARD]: CardElement;
+export interface EMISupportedPaymentMethodElements {
+    [EMISupportedPaymentMethod.CARD]: CardElement;
 }
 
-export type EMIFundingSourceElement = EMIFundingSourceElements[EMIFundingSource];
+export type EMISupportedPaymentMethodElement = EMISupportedPaymentMethodElements[EMISupportedPaymentMethod];
 
 export interface SupportedPaymentMethod {
     type: string;
     name?: string;
     brands?: string[];
+    /**
+     * Present when `splitCardFundingSources` is configured, which splits one payment method into a
+     * credit, debit and prepaid entry. EMI does not read it: it is here so a response carrying split
+     * entries can be described without casting.
+     */
+    fundingSource?: FundingSourceKeys;
 }
 
 export type EmiPlanTypeKey = 'standard' | 'noCost' | 'lowCost';
@@ -103,7 +109,7 @@ export interface EMIConfiguration extends UIElementProps {
      * ships, at which point the SDK fetches the plans itself.
      */
     plans?: EmiPlansResponse;
-    fundingSourceConfiguration?: {
+    supportedPaymentMethodsConfiguration?: {
         card?: Partial<Omit<CardConfiguration, EMICardOverrides>>;
     };
 }

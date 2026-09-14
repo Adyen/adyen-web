@@ -39,8 +39,8 @@ export enum ErrorEventCode {
 
     /** See also API_ERROR_CODE object in /src/core/Services/sessions/constants.ts which uses codes in the range 620-628 */
 
-    /** None of the funding sources EMI was configured with is one the component implements */
-    EMI_NO_SUPPORTED_FUNDING_SOURCE = '630',
+    /** None of the payment methods EMI was configured with is one the component implements */
+    EMI_NO_SUPPORTED_PAYMENT_METHOD = '630',
 
     /** EMI has no installment plan to offer, so the shopper has nothing to select */
     EMI_NO_INSTALLMENT_PLANS = '631',
