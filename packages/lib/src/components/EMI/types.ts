@@ -1,6 +1,6 @@
 import type { UIElementProps } from '../internal/UIElement/types';
 import type CardElement from '../Card';
-import type { CardConfiguration, FundingSourceKeys } from '../Card/types';
+import type { CardConfiguration } from '../Card/types';
 import type { PaymentAmount } from '../../types/global-types';
 import type { UiTarget } from '../../core/Analytics/events/AnalyticsInfoEvent';
 import { TxVariants } from '../tx-variants';
@@ -24,12 +24,6 @@ export interface SupportedPaymentMethod {
     type: string;
     name?: string;
     brands?: string[];
-    /**
-     * Present when `splitCardFundingSources` is configured, which splits one payment method into a
-     * credit, debit and prepaid entry. EMI does not read it: it is here so a response carrying split
-     * entries can be described without casting.
-     */
-    fundingSource?: FundingSourceKeys;
 }
 
 export type EmiPlanTypeKey = 'standard' | 'noCost' | 'lowCost';
@@ -95,7 +89,7 @@ export interface EmiPlanPayload {
     appliedOfferIds?: string[];
 }
 
-type EMICardOverrides = 'showPayButton' | '_disableClickToPay';
+type EMICardOverrides = 'showPayButton' | '_disableClickToPay' | 'fundingSource';
 
 export interface EMIConfiguration extends UIElementProps {
     supportedPaymentMethods?: SupportedPaymentMethod[];

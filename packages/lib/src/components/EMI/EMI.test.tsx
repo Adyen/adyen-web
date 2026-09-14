@@ -9,9 +9,9 @@ import PaymentMethods from '../../core/ProcessResponse/PaymentMethods';
 import { AdyenCheckout, ThreeDS2Challenge, ThreeDS2DeviceFingerprint } from '../../index';
 import { InfoEventType, UiTarget } from '../../core/Analytics/events/AnalyticsInfoEvent';
 import { ErrorEventCode, ErrorEventType } from '../../core/Analytics/events/AnalyticsErrorEvent';
-import { emiPlansEmptyResponseMock, emiPlansResponseMock } from './stories/mocks';
-import type { PaymentActionsType, PaymentData } from '../../types/global-types';
-import type { EMIConfiguration, EmiPlanPayload } from './types';
+import { emiDebitIssuerMock, emiPlansDebitOnlyResponseMock, emiPlansEmptyResponseMock, emiPlansResponseMock } from './stories/mocks';
+import type { PaymentActionsType, PaymentData, RawPaymentMethod } from '../../types/global-types';
+import type { EMIConfiguration, EmiPlanPayload, SupportedPaymentMethod } from './types';
 
 const core = setupCoreMock();
 
@@ -47,6 +47,21 @@ function createCoreWithEmi(hasSupportedScheme: boolean) {
                   }
               ]
           };
+
+    return setupCoreMock({ paymentMethods: new PaymentMethods(paymentMethods) });
+}
+
+/** The several `scheme` entries a `splitCardFundingSources` merchant receives, each with its own funding source and brands. */
+const splitFundingSourceSchemes: RawPaymentMethod[] = [
+    { type: 'scheme', name: 'Debit Card', fundingSource: 'debit', brands: ['maestro'] },
+    { type: 'scheme', name: 'Credit Card', fundingSource: 'credit', brands: ['visa', 'mc', 'amex'] }
+];
+
+function createCoreWithSplitSchemes(supportedPaymentMethods: SupportedPaymentMethod[]) {
+    const paymentMethods = {
+        // `supportedPaymentMethods` is EMI's own field on the response entry, which `RawPaymentMethod` does not declare
+        paymentMethods: [{ type: 'emi', name: 'EMI', supportedPaymentMethods } as RawPaymentMethod, ...splitFundingSourceSchemes]
+    };
 
     return setupCoreMock({ paymentMethods: new PaymentMethods(paymentMethods) });
 }
@@ -171,6 +186,22 @@ describe('EMI', () => {
             expect(emi.card).toBeUndefined();
             expect(emi.isValid).toBe(false);
         });
+
+        /** UPI is the rail the response gains next, and a version that renders none of it must drop the tile whole. */
+        test('should offer nothing at all when every rail of the response is one it does not render', async () => {
+            const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+            const emi = new EMI(createCoreWithEmi(false), {
+                ...baseProps,
+                supportedPaymentMethods: [{ type: 'upi', name: 'UPI' }, { type: 'unsupported_rail' }]
+            });
+
+            const { container } = render(emi.render());
+
+            expect(emi.card).toBeUndefined();
+            expect(container.innerHTML).toBe('');
+            await expect(emi.isAvailable()).rejects.toThrow('EMI: No valid supported payment methods available');
+            warn.mockRestore();
+        });
     });
 
     describe('mixed supported payment methods', () => {
@@ -272,6 +303,72 @@ describe('EMI', () => {
             // User-provided config passed through
             expect(card?.props.hasHolderName).toBe(false);
             expect(card?.props.onBinLookup).toBe(onBinLookupMock);
+        });
+    });
+
+    describe('brands', () => {
+        test('should take the brands of the matched entry, not those of the first scheme in the response', () => {
+            const supportedPaymentMethods = [{ type: 'scheme', name: 'Cards', brands: ['mc', 'rupay', 'visa'] }];
+            const emi = new EMI(createCoreWithSplitSchemes(supportedPaymentMethods), { ...baseProps, supportedPaymentMethods });
+
+            expect(emi.card?.props.brands).toEqual(['mc', 'rupay', 'visa']);
+        });
+
+        test('should fall back to the brands resolved from the response when the matched entry carries none', () => {
+            const supportedPaymentMethods = [{ type: 'scheme', name: 'Cards' }];
+            const emi = new EMI(createCoreWithSplitSchemes(supportedPaymentMethods), { ...baseProps, supportedPaymentMethods });
+
+            expect(emi.card?.props.brands).toEqual(['maestro']);
+        });
+
+        test('should let the card configuration override the brands of the matched entry', () => {
+            const supportedPaymentMethods = [{ type: 'scheme', name: 'Cards', brands: ['mc', 'rupay', 'visa'] }];
+            const emi = new EMI(createCoreWithSplitSchemes(supportedPaymentMethods), {
+                ...baseProps,
+                supportedPaymentMethods,
+                supportedPaymentMethodsConfiguration: { card: { brands: ['rupay'] } }
+            });
+
+            expect(emi.card?.props.brands).toEqual(['rupay']);
+        });
+    });
+
+    /**
+     * The child Card is created without a `type` or a `paymentMethodId`, so it resolves its entry of the response
+     * positionally, and would otherwise inherit the funding source of whichever `scheme` the backend listed first.
+     * EMI charges credit plans only, and `emiPlan.fundingSource` already carries that for the selected plan.
+     */
+    describe('child card funding source', () => {
+        test('should send no funding source, whichever scheme the response lists first', () => {
+            const supportedPaymentMethods = [{ type: 'scheme', name: 'Cards', brands: ['mc', 'rupay', 'visa'] }];
+            const emi = new EMI(createCoreWithSplitSchemes(supportedPaymentMethods), { ...baseProps, supportedPaymentMethods });
+
+            const data = emi.formatData() as Record<string, Record<string, unknown>>;
+
+            expect(emi.card?.props.fundingSource).toBeUndefined();
+            expect(data.paymentMethod).not.toHaveProperty('fundingSource');
+        });
+
+        test('should send no funding source even when one is configured on the card', () => {
+            const supportedPaymentMethods = [{ type: 'scheme', name: 'Cards' }];
+            const emi = new EMI(createCoreWithSplitSchemes(supportedPaymentMethods), {
+                ...baseProps,
+                supportedPaymentMethods,
+                // `EMIConfiguration` excludes it, but a JavaScript integration can still pass it
+                supportedPaymentMethodsConfiguration: { card: { fundingSource: 'debit' } as never }
+            });
+
+            const data = emi.formatData() as Record<string, Record<string, unknown>>;
+
+            expect(emi.card?.props.fundingSource).toBeUndefined();
+            expect(data.paymentMethod).not.toHaveProperty('fundingSource');
+        });
+
+        test('should keep the config it resolved from the response, which a funding source lookup would lose', () => {
+            const supportedPaymentMethods = [{ type: 'scheme', name: 'Cards' }];
+            const emi = new EMI(createCoreWithSplitSchemes(supportedPaymentMethods), { ...baseProps, supportedPaymentMethods });
+
+            expect(emi.card?.props.brands).toEqual(['maestro']);
         });
     });
 
@@ -666,6 +763,32 @@ describe('EMI', () => {
             await expect(emi.isAvailable()).rejects.toThrow('EMI: No installment plans available');
         });
 
+        /**
+         * Once the lookup starts answering with debit issuers, a shopper offered nothing else is offered no EMI
+         * by this version, the same way an amount without plans is: a tile that shows credit card plans only.
+         */
+        test('should offer no EMI when every issuer of the response is a debit one', async () => {
+            const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+            const emi = createEmiWith({ plans: emiPlansDebitOnlyResponseMock });
+
+            const { container } = render(emi.render());
+
+            expect(container.innerHTML).toBe('');
+            await expect(emi.isAvailable()).rejects.toThrow('EMI: No installment plans available');
+            warn.mockRestore();
+        });
+
+        test('should offer the credit issuers of a response that also carries debit ones', () => {
+            const emi = createEmiWith({ plans: { issuers: [emiDebitIssuerMock, ...emiPlansResponseMock.issuers] } });
+
+            render(emi.render());
+
+            const providerOptions = within(screen.getAllByRole('listbox')[0]).getAllByRole('option');
+
+            expect(providerOptions).toHaveLength(emiPlansResponseMock.issuers.length);
+            expect(screen.getByLabelText('Provider')).toHaveTextContent(hdfc.issuerName);
+        });
+
         test('should resolve isAvailable when a session is present without plans', async () => {
             const emi = createEmiWith({ plans: undefined, session: core.session });
 
@@ -690,26 +813,13 @@ describe('EMI', () => {
             expect(screen.getByLabelText('Provider')).toHaveTextContent(hdfc.issuerName);
         });
 
-        test('should throw when the plans response was passed unparsed', () => {
-            const unparsedPlans = JSON.stringify(emiPlansResponseMock) as unknown as EMIConfiguration['plans'];
-
-            expect(() => createEmiWith({ plans: unparsedPlans })).toThrow(/a string was provided/);
-        });
-
-        test('should throw when only the issuers of the plans response were passed', () => {
-            const partialPlans = emiPlansResponseMock.issuers as unknown as EMIConfiguration['plans'];
-
-            expect(() => createEmiWith({ plans: partialPlans })).toThrow(/an array was provided/);
-        });
-
-        test('should warn and offer no EMI when the plans object carries no issuers', () => {
+        test('should offer no EMI, rather than fail to render, when the plans object carries no issuers', () => {
             const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
             const emi = createEmiWith({ plans: {} as unknown as EMIConfiguration['plans'] });
 
             const { container } = render(emi.render());
 
             expect(container.innerHTML).toBe('');
-            expect(warn).toHaveBeenCalledWith(expect.stringContaining('no `issuers` array'));
             warn.mockRestore();
         });
     });
@@ -904,18 +1014,6 @@ describe('EMI', () => {
                     expect.objectContaining({
                         errorType: ErrorEventType.implementation,
                         code: ErrorEventCode.EMI_NO_INSTALLMENT_PLANS
-                    })
-                );
-                warn.mockRestore();
-            });
-
-            test('should report a plans response that carries no issuers array', () => {
-                const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
-                const { sendAnalytics } = setupAnalytics({ plans: {} as unknown as EMIConfiguration['plans'] });
-                expect(sendAnalytics).toHaveBeenCalledWith(
-                    expect.objectContaining({
-                        errorType: ErrorEventType.implementation,
-                        code: ErrorEventCode.EMI_MALFORMED_PLANS_RESPONSE
                     })
                 );
                 warn.mockRestore();

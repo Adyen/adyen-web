@@ -1,5 +1,4 @@
-import type { EmiPlansResponse } from '../types';
-import type { PaymentMethodsResponse, RawPaymentMethod } from '../../../types/global-types';
+import type { EmiIssuer, EmiPlansResponse } from '../types';
 
 /** Minor units, mirroring the design screenshots (₹1,54,999.00 checkout amount). */
 export const EMI_FIXTURE_CHECKOUT_AMOUNT = { value: 15499900, currency: 'INR' };
@@ -73,7 +72,7 @@ export const emiPlansResponseMock: EmiPlansResponse = {
         {
             issuerName: 'Axis Bank',
             issuerCode: 'AXIS',
-            fundingSource: 'debit',
+            fundingSource: 'credit',
             plans: [
                 {
                     type: 'standard',
@@ -111,24 +110,24 @@ export const emiPlansResponseMock: EmiPlansResponse = {
 /** The backend answers with an empty list when no plan is available for the amount. */
 export const emiPlansEmptyResponseMock: EmiPlansResponse = { issuers: [] };
 
-/**
- * The two `scheme` entries a `splitCardFundingSources` merchant receives, reused as both EMI's
- * `supportedPaymentMethods` and the top-level entries, so the two always describe the same cards.
- */
-const splitFundingSourceSchemes: RawPaymentMethod[] = [
-    { type: 'scheme', name: 'Credit Card', fundingSource: 'credit', brands: ['visa', 'mc', 'amex'] },
-    { type: 'scheme', name: 'Debit Card', fundingSource: 'debit', brands: ['visa', 'maestro'] }
-];
-
-/**
- * `/paymentMethods` response for a `splitCardFundingSources` merchant, to drive EMI from the response
- * rather than from configuration. Which of the two entries EMI picks up, and the brands the Card
- * resolves for it, is what `EmiResolvedConfig` reports.
- */
-export const emiSplitFundingSourcesPaymentMethods: PaymentMethodsResponse = {
-    paymentMethods: [
-        // `supportedPaymentMethods` is EMI's own field on the response entry, which `RawPaymentMethod` does not declare
-        { type: 'emi', name: 'EMI', supportedPaymentMethods: splitFundingSourceSchemes } as RawPaymentMethod,
-        ...splitFundingSourceSchemes
+/** The shape the response takes once debit EMI ships. This version renders credit plans only, so it drops this issuer. */
+export const emiDebitIssuerMock: EmiIssuer = {
+    issuerName: 'Axis Bank',
+    issuerCode: 'AXIS',
+    fundingSource: 'debit',
+    plans: [
+        {
+            type: 'standard',
+            tenureMonths: 3,
+            interestRateBps: 1550,
+            transactionAmounts: {
+                monthlyPayableAmount: { value: 5410233, currency: 'INR' },
+                totalPayableAmount: { value: 16230700, currency: 'INR' },
+                totalInterestAmount: { value: 730800, currency: 'INR' }
+            }
+        }
     ]
 };
+
+/** A shopper offered debit plans only, by a version that renders none of them. */
+export const emiPlansDebitOnlyResponseMock: EmiPlansResponse = { issuers: [emiDebitIssuerMock] };

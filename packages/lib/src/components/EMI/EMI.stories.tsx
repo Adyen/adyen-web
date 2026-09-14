@@ -5,9 +5,7 @@ import { Checkout } from '../../../storybook/components/Checkout';
 import getCurrency from '../../../storybook/utils/get-currency';
 import EMI from './EMI';
 import { EmiPlansLoader } from './stories/EmiPlansLoader';
-import { EmiResolvedConfig } from './stories/EmiResolvedConfig';
 import { emiPlansHandlers } from './stories/handlers';
-import { emiSplitFundingSourcesPaymentMethods } from './stories/mocks';
 import type { ComponentChildren } from 'preact';
 import type { ICore } from '../../core/types';
 import type { EMIConfiguration, EmiPlansResponse } from './types';
@@ -91,61 +89,6 @@ export const CardEmiWithCustomButton: EMIStory = {
                     onBinLookup(data) {
                         console.log('onBinLookup', data);
                     }
-                }
-            }
-        }
-    }
-};
-
-const withResolvedConfigPanel = (storyProps: PaymentMethodStoryProps<EMIConfiguration>) =>
-    withPlans(storyProps, (checkout, configuration) => {
-        const emi = new EMI(checkout, configuration);
-        return (
-            <div>
-                <ComponentContainer element={emi} />
-                <EmiResolvedConfig emi={emi} />
-            </div>
-        );
-    });
-
-/**
- * A `splitCardFundingSources` merchant, driven entirely by the `/paymentMethods` response: EMI takes
- * its `supportedPaymentMethods` from the `emi` entry, so the credit and debit split arrives without
- * any component configuration.
- */
-export const CardEmiSplitFundingSources: EMIStory = {
-    render: withResolvedConfigPanel,
-    args: {
-        useSessions: false,
-        countryCode: 'IN',
-        paymentMethodsOverride: emiSplitFundingSourcesPaymentMethods,
-        componentConfiguration: {
-            showPayButton: true
-        }
-    }
-};
-
-/**
- * The same split, configured on the component instead. Edit `supportedPaymentMethods` and
- * `supportedPaymentMethodsConfiguration.card.fundingSource` in the controls: the Card resolves its
- * brands from the response entry matching the funding source it was given.
- */
-export const CardEmiSplitFundingSourcesViaConfig: EMIStory = {
-    render: withResolvedConfigPanel,
-    args: {
-        useSessions: false,
-        countryCode: 'IN',
-        paymentMethodsOverride: emiSplitFundingSourcesPaymentMethods,
-        componentConfiguration: {
-            showPayButton: true,
-            supportedPaymentMethods: [
-                { type: 'scheme', name: 'Debit Card', fundingSource: 'debit', brands: ['visa', 'maestro'] },
-                { type: 'scheme', name: 'Credit Card', fundingSource: 'credit', brands: ['visa', 'mc', 'amex'] }
-            ],
-            supportedPaymentMethodsConfiguration: {
-                card: {
-                    fundingSource: 'debit',
-                    hasHolderName: false
                 }
             }
         }
