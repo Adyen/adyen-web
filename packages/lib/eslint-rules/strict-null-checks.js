@@ -242,8 +242,6 @@ const STRICT_NULL_CHECKS_BACKLOG = [
     // src/components/ANCV (8 errors)
     'src/components/ANCV/ANCV.tsx',
     'src/components/ANCV/components/ANCVInput.tsx',
-    // src/components/BacsDD (5 errors)
-    'src/components/BacsDD/components/BacsInput.tsx',
     // src/components/BankTransfer (5 errors)
     'src/components/BankTransfer/components/BankTransferInput/BankTransferInput.tsx',
     'src/components/BankTransfer/components/BankTransferResult/BankTransferResult.tsx',
