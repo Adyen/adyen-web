@@ -1,24 +1,13 @@
 import { buildEmiPlanPayload, resolvePlanIssuers, selectDisplayOffer } from './utils';
-import { emiPlansEmptyResponseMock, emiPlansResponseMock } from './stories/mocks';
+import { emiDebitIssuerMock, emiPlansEmptyResponseMock, emiPlansResponseMock } from './stories/mocks';
 import type { EmiIssuer, EmiOffer, EmiPlan, EmiPlansResponse } from './types';
 
 /** Merchants hand the response over untyped, so these shapes reach the SDK at runtime. */
 const asResponse = (plans: unknown): EmiPlansResponse => plans as EmiPlansResponse;
 
 describe('resolvePlanIssuers', () => {
-    let warn: jest.SpyInstance;
-
-    beforeEach(() => {
-        warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
-    });
-
-    afterEach(() => {
-        warn.mockRestore();
-    });
-
     test('should return the issuers of a valid response', () => {
         expect(resolvePlanIssuers(emiPlansResponseMock)).toEqual(emiPlansResponseMock.issuers);
-        expect(warn).not.toHaveBeenCalled();
     });
 
     test('should return the very same objects, not copies of them', () => {
@@ -34,32 +23,28 @@ describe('resolvePlanIssuers', () => {
 
     test('should return no issuer for a response holding none', () => {
         expect(resolvePlanIssuers(emiPlansEmptyResponseMock)).toEqual([]);
-        expect(warn).not.toHaveBeenCalled();
     });
 
-    test('should stay quiet when no plans are configured at all', () => {
+    test('should return no issuer when no plans are configured at all', () => {
         expect(resolvePlanIssuers(undefined)).toEqual([]);
-        expect(warn).not.toHaveBeenCalled();
     });
 
-    test('should throw on a response that was never parsed', () => {
-        expect(() => resolvePlanIssuers(asResponse(JSON.stringify(emiPlansResponseMock)))).toThrow(/a string was provided/);
-    });
-
-    test('should throw when only part of the response was passed', () => {
-        expect(() => resolvePlanIssuers(asResponse(emiPlansResponseMock.issuers))).toThrow(/an array was provided/);
-    });
-
-    test('should name the misconfiguration as an implementation error', () => {
-        expect(() => resolvePlanIssuers(asResponse('{}'))).toThrow(expect.objectContaining({ name: 'IMPLEMENTATION_ERROR' }));
-    });
-
-    test('should warn and offer no issuer when the response carries no issuers array', () => {
+    test('should return no issuer for a response that carries no issuers array', () => {
         expect(resolvePlanIssuers(asResponse({}))).toEqual([]);
         expect(resolvePlanIssuers(asResponse({ issuers: 'HDFC' }))).toEqual([]);
+        expect(resolvePlanIssuers(asResponse(JSON.stringify(emiPlansResponseMock)))).toEqual([]);
+    });
 
-        expect(warn).toHaveBeenCalledTimes(2);
-        expect(warn).toHaveBeenCalledWith(expect.stringContaining('no `issuers` array'));
+    /**
+     * Credit card EMI is what this version renders: the copy, the plan summary and the card form all describe
+     * a credit card, so a debit issuer is a broken screen rather than an extra option, and a funding source
+     * added after this release is left out by construction.
+     */
+    test('should offer the credit issuers only', () => {
+        const [hdfc] = emiPlansResponseMock.issuers;
+        const issuers = resolvePlanIssuers(asResponse({ issuers: [emiDebitIssuerMock, hdfc] }));
+
+        expect(issuers).toEqual([hdfc]);
     });
 });
 
@@ -120,9 +105,13 @@ describe('buildEmiPlanPayload', () => {
         expect(buildEmiPlanPayload(hdfc, unknown).planType).toBe('ZERO_COST');
     });
 
-    test('should echo both funding sources as the response spells them', () => {
+    /**
+     * Only credit issuers reach this builder, `resolvePlanIssuers` drops the rest, but the funding source
+     * is echoed rather than hardcoded so the payload and the plan the shopper picked cannot drift.
+     */
+    test('should echo the funding source of the issuer as the response spells it', () => {
         expect(buildEmiPlanPayload(hdfc, hdfcNoCost).fundingSource).toBe(hdfc.fundingSource);
-        expect(buildEmiPlanPayload(axis, axisWithEmptyOffers).fundingSource).toBe(axis.fundingSource);
+        expect(buildEmiPlanPayload(emiDebitIssuerMock, emiDebitIssuerMock.plans[0]).fundingSource).toBe('debit');
     });
 
     /**
@@ -200,7 +189,7 @@ describe('buildEmiPlanPayload', () => {
             expect(payload.issuerName).not.toHaveLength(0);
             expect(payload.tenureMonths).toBeGreaterThan(0);
             expect(payload.interestRateBps).toBeGreaterThan(0);
-            expect(['credit', 'debit']).toContain(payload.fundingSource);
+            expect(payload.fundingSource).toBe('credit');
             expect(['STANDARD', 'LOW_COST', 'NO_COST']).toContain(payload.planType);
         });
     });

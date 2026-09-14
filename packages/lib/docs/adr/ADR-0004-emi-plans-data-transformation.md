@@ -61,6 +61,12 @@ Three of those are presentation. Three are policy — statements about what a ba
 
 The response carries no id, no flag for which plan to show first, and no flag for which offer of the two above the bank will honour. Those are the gaps.
 
+### What the SDK renders of it
+
+Credit issuers only. `resolvePlanIssuers` keeps the issuers whose `fundingSource` is `credit` and offers no other, an allowlist rather than a `debit` exclusion, so a funding source added after this release is left out by construction.
+
+That is a product constraint rather than validation: the copy, the plan summary and the card form underneath all describe a credit card, so a debit issuer in the provider select is a broken screen no matter how well formed the response is. The endpoint answers every SDK version alike, so the client is the only place the scoping can live. When no credit issuer is left, `isAvailable()` rejects and Drop-in drops the EMI tile, the same path an amount with no plans takes.
+
 ## Payment Request
 
 `emiPlan` sits next to `paymentMethod`, where Card puts `installments`.

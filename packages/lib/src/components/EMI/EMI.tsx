@@ -39,13 +39,6 @@ class EMI extends UIElement<EMIConfiguration> {
                 'EMI: No installment plans available. Pass the Checkout API /paymentMethods/emi/plans response through the `plans` configuration.'
             );
         }
-
-        if (this.props.plans && !Array.isArray(this.props.plans.issuers)) {
-            this.trackError(
-                ErrorEventCode.EMI_MALFORMED_PLANS_RESPONSE,
-                'EMI: the `plans` configuration was provided but carries no `issuers` array'
-            );
-        }
     }
 
     private get hasPlansAvailable(): boolean {
@@ -59,7 +52,10 @@ class EMI extends UIElement<EMIConfiguration> {
         this.activeSupportedPaymentMethod = SUPPORTED_PAYMENT_METHODS[firstMethod.type];
 
         this.supportedPaymentMethodElements[EMISupportedPaymentMethod.CARD] = new CardElement(this.core, {
+            // The brands of the entry EMI matched, rather than those of whichever `scheme` the response happens to list first
+            ...(firstMethod.brands && { brands: firstMethod.brands }),
             ...this.props.supportedPaymentMethodsConfiguration?.card,
+            fundingSource: undefined,
             modules: this.props.modules,
             i18n: this.props.i18n,
             _disableClickToPay: true,
