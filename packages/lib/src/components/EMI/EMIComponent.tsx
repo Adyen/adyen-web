@@ -15,7 +15,7 @@ import type { EmiIssuer, EmiSelection, EmiSelectTarget } from './types';
 import styles from './EMI.module.scss';
 
 interface EMIComponentProps {
-    activeFundingSourceElement: UIElement | null;
+    activeSupportedPaymentMethodElement: UIElement | null;
     issuers: EmiIssuer[];
     onPlanSelect(selection: EmiSelection, target?: EmiSelectTarget): void;
     showPayButton?: boolean;
@@ -30,7 +30,7 @@ const getDefaultSelection = (issuers: EmiIssuer[]): EmiSelection | null => {
 };
 
 export function EMIComponent({
-    activeFundingSourceElement,
+    activeSupportedPaymentMethodElement,
     issuers,
     onPlanSelect,
     showPayButton,
@@ -82,7 +82,7 @@ export function EMIComponent({
      */
     useA11yReporter(discountMessage);
 
-    if (!activeFundingSourceElement) {
+    if (!activeSupportedPaymentMethodElement) {
         return null;
     }
 
@@ -123,7 +123,7 @@ export function EMIComponent({
                 </Fragment>
             )}
 
-            <div className={styles.emiFundingSourceForm}>{activeFundingSourceElement.render()}</div>
+            <div className={styles.emiSupportedPaymentMethodForm}>{activeSupportedPaymentMethodElement.render()}</div>
             {/* The plan summary already itemises every figure, so the button label omits the amount */}
             {showPayButton && payButton({ status, label: i18n.get('payButton') })}
         </div>

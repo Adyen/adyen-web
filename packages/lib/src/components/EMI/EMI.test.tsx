@@ -174,7 +174,7 @@ describe('EMI', () => {
         });
     });
 
-    describe('mixed funding sources', () => {
+    describe('mixed supported payment methods', () => {
         const upiPaymentMethod = { type: 'upi', name: 'UPI' };
 
         test('should create Card when supportedPaymentMethods contains both scheme and upi', () => {
@@ -188,7 +188,7 @@ describe('EMI', () => {
             expect(emi.card).toBeInstanceOf(CardElement);
         });
 
-        test('should resolve isAvailable when at least one funding source is supported', async () => {
+        test('should resolve isAvailable when at least one payment method is supported', async () => {
             const coreWithEmi = createCoreWithEmi(true);
             const emi = new EMI(coreWithEmi, {
                 ...baseProps,
@@ -198,7 +198,7 @@ describe('EMI', () => {
             await expect(emi.isAvailable()).resolves.toBeUndefined();
         });
 
-        test('should render card form with mixed funding sources', () => {
+        test('should render card form with mixed supported payment methods', () => {
             const coreWithEmi = createCoreWithEmi(true);
             const emi = new EMI(coreWithEmi, {
                 ...baseProps,
@@ -254,7 +254,7 @@ describe('EMI', () => {
             const emi = new EMI(coreWithEmi, {
                 ...baseProps,
                 supportedPaymentMethods: [schemePaymentMethod],
-                fundingSourceConfiguration: {
+                supportedPaymentMethodsConfiguration: {
                     card: {
                         hasHolderName: false,
                         onBinLookup: onBinLookupMock
@@ -277,7 +277,7 @@ describe('EMI', () => {
     });
 
     describe('delegation', () => {
-        test('formatData delegates to the active funding source element', () => {
+        test('formatData delegates to the active supported payment method element', () => {
             const coreWithEmi = createCoreWithEmi(true);
             const emi = new EMI(coreWithEmi, {
                 ...baseProps,
@@ -382,7 +382,7 @@ describe('EMI', () => {
     });
 
     describe('isAvailable', () => {
-        test('should resolve when valid funding sources exist', async () => {
+        test('should resolve when valid supported payment methods exist', async () => {
             const coreWithEmi = createCoreWithEmi(true);
             const emi = new EMI(coreWithEmi, {
                 ...baseProps,
@@ -398,7 +398,7 @@ describe('EMI', () => {
                 ...baseProps
             });
 
-            await expect(emi.isAvailable()).rejects.toThrow('EMI: No valid funding sources available');
+            await expect(emi.isAvailable()).rejects.toThrow('EMI: No valid supported payment methods available');
         });
 
         test('should reject when supportedPaymentMethods contains unsupported rail', async () => {
@@ -408,7 +408,7 @@ describe('EMI', () => {
                 supportedPaymentMethods: [{ type: 'unsupported_rail' }]
             });
 
-            await expect(emi.isAvailable()).rejects.toThrow('EMI: No valid funding sources available');
+            await expect(emi.isAvailable()).rejects.toThrow('EMI: No valid supported payment methods available');
         });
     });
 
@@ -580,7 +580,7 @@ describe('EMI', () => {
             expect(data.paymentMethod).not.toHaveProperty('emiPlan');
         });
 
-        test('should leave the funding source data of the child untouched', () => {
+        test('should leave the payment data of the child untouched', () => {
             const data = mountEmi().formatData() as Record<string, Record<string, unknown>>;
 
             expect(data.paymentMethod).toHaveProperty('type', TxVariants.scheme);
@@ -751,7 +751,7 @@ describe('EMI', () => {
             test('should carry no merchant configuration at all, not even a configured amount', () => {
                 const { emi, sendAnalytics } = setupAnalytics({
                     amount: { value: 15499900, currency: 'INR' },
-                    fundingSourceConfiguration: { card: { hasHolderName: true } }
+                    supportedPaymentMethodsConfiguration: { card: { hasHolderName: true } }
                 });
 
                 render(emi.render());
@@ -882,16 +882,16 @@ describe('EMI', () => {
         });
 
         describe('error events', () => {
-            test('should report the dropped tile when no funding source is supported', async () => {
+            test('should report the dropped tile when no payment method is supported', async () => {
                 const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
                 const { emi, sendAnalytics } = setupAnalytics({}, false);
-                await expect(emi.isAvailable()).rejects.toThrow('EMI: No valid funding sources available');
+                await expect(emi.isAvailable()).rejects.toThrow('EMI: No valid supported payment methods available');
                 expect(sendAnalytics).toHaveBeenCalledWith(
                     expect.objectContaining({
                         component: TxVariants.emi,
                         errorType: ErrorEventType.implementation,
-                        code: ErrorEventCode.EMI_NO_SUPPORTED_FUNDING_SOURCE,
-                        message: 'EMI: No valid funding sources available'
+                        code: ErrorEventCode.EMI_NO_SUPPORTED_PAYMENT_METHOD,
+                        message: 'EMI: No valid supported payment methods available'
                     })
                 );
                 warn.mockRestore();
