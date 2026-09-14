@@ -79,6 +79,9 @@ export type UIElementProps = {
 
         /**
          * Disclaimer message displayed above the pay button
+         *
+         * Not supported by express/wallet components (PayPal, Apple Pay, Google Pay, Amazon Pay, Cash App Pay),
+         * which render their own branded button instead of the SDK pay button.
          */
         disclaimerMessage?: DisclaimerMsgObject;
 
