@@ -16,9 +16,9 @@ const EMPTY_KLARNA_CREDENTIALS: KlarnaCredentials = {
 };
 
 const FIELDS: ReadonlyArray<{ key: keyof KlarnaCredentials; label: string; hint: string }> = [
-    { key: 'clientId', label: 'Client id', hint: 'Required. Klarna derives playground vs production from the prefix.' },
-    { key: 'paymentAccountId', label: 'Payment account id', hint: 'Optional. Sent as acquiringConfig.paymentAccountId.' },
-    { key: 'partnerAccountId', label: 'Partner account id', hint: 'Optional. Only for Acquiring Partner account setups.' }
+    { key: 'clientId', label: 'Client id', hint: 'Required.' },
+    { key: 'paymentAccountId', label: 'Payment account id', hint: 'Optional.' },
+    { key: 'partnerAccountId', label: 'Partner account id', hint: 'Optional.' }
 ];
 
 export interface KlarnaCredentialsFormProps {
@@ -56,10 +56,6 @@ export function KlarnaCredentialsForm({ onApply }: Readonly<KlarnaCredentialsFor
             style={{ display: 'grid', gap: '12px', marginBottom: '24px', maxWidth: '540px', fontFamily: 'sans-serif', fontSize: '13px' }}
         >
             <strong>Klarna credentials</strong>
-            <span style={{ color: '#5c687c' }}>
-                Kept in this tab only: never written to the URL, to storage or to the deployed bundle. Re-enter them after a reload.
-            </span>
-
             {FIELDS.map(({ key, label, hint }) => (
                 <label key={key} style={{ display: 'grid', gap: '4px' }}>
                     <span>{label}</span>
