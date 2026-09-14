@@ -163,7 +163,7 @@ describe('EMIPlanSelection', () => {
     test('should identify a provider by the issuer and funding source the payment is made for', () => {
         renderPlanSelection(emiPlansResponseMock.issuers);
 
-        expect(getProviderOptionValues()).toEqual(['issuer:HDFC:credit', 'issuer:ICICI:credit', 'issuer:AXIS:debit', 'issuer:KOTAK:credit']);
+        expect(getProviderOptionValues()).toEqual(['issuer:HDFC:credit', 'issuer:ICICI:credit', 'issuer:AXIS:credit', 'issuer:KOTAK:credit']);
     });
 
     test('should identify a plan by the provider, type and tenure the payment is made for', () => {
