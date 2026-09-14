@@ -1,6 +1,6 @@
 import { TxVariants } from '../tx-variants';
-import { EMIFundingSource } from './types';
+import { EMISupportedPaymentMethod } from './types';
 
-export const SUPPORTED_FUNDING_SOURCES: Record<string, EMIFundingSource> = {
-    [TxVariants.scheme]: EMIFundingSource.CARD
+export const SUPPORTED_PAYMENT_METHODS: Record<string, EMISupportedPaymentMethod> = {
+    [TxVariants.scheme]: EMISupportedPaymentMethod.CARD
 };
