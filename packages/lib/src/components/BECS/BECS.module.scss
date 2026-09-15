@@ -1,0 +1,15 @@
+@use 'styles/variable-generator';
+
+.bankDetails {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: variable-generator.token(spacer-070);
+}
+
+.mandate {
+    margin: variable-generator.token(spacer-080) 0;
+    color: variable-generator.token(color-label-secondary);
+    font-weight: normal;
+    font-size: variable-generator.token(text-caption-font-size);
+    line-height: variable-generator.token(text-caption-line-height);
+}
