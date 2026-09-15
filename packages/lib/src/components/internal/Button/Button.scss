@@ -154,14 +154,14 @@
         background: transparent;
         border: variable-generator.token(border-width-s) solid transparent;
         color: variable-generator.token(color-label-highlight);
-        text-decoration: none;
+        text-decoration: underline;
         font-weight: variable-generator.token(text-body-font-weight);
         border-radius: variable-generator.token(border-radius-s);
         padding: variable-generator.token(spacer-010);
 
         &:hover {
             background: transparent;
-            text-decoration: underline;
+            font-weight: variable-generator.token(text-subtitle-font-weight);
         }
     }
 
