@@ -5,8 +5,15 @@ import { ComponentContainer } from '../../../../../storybook/components/Componen
 import { DropinConfiguration } from '../../types';
 import { Checkout } from '../../../../../storybook/components/Checkout';
 import { getComponentConfigFromUrl } from '../../../../../storybook/utils/get-configuration-from-url';
+import getCurrency from '../../../../../storybook/utils/get-currency';
 import DropinComponent from '../../Dropin';
+import CardElement from '../../../Card';
+import EMI from '../../../EMI';
+import { EmiPlansLoader } from '../../../EMI/stories/EmiPlansLoader';
+import { emiPlansHandlers } from '../../../EMI/stories/handlers';
 import type { NewableComponent } from '../../../../core/core.registry';
+import type { ICore } from '../../../../core/types';
+import type { PaymentAmount } from '../../../../types/global-types';
 import './customization.scss';
 
 type DropinStory = StoryConfiguration<DropinConfiguration>;
@@ -45,6 +52,27 @@ const meta: MetaConfiguration<DropinConfiguration> = {
     }
 };
 
+interface DropinWithEmiPlansProps {
+    checkout: ICore;
+    componentConfiguration: DropinConfiguration;
+    amount: PaymentAmount;
+}
+
+const DropinWithEmiPlans = ({ checkout, componentConfiguration, amount }: Readonly<DropinWithEmiPlansProps>) => (
+    <EmiPlansLoader amount={amount}>
+        {plans => (
+            <ComponentContainer
+                element={
+                    new DropinComponent(checkout, {
+                        ...componentConfiguration,
+                        paymentMethodsConfiguration: { ...componentConfiguration?.paymentMethodsConfiguration, emi: { plans } }
+                    })
+                }
+            />
+        )}
+    </EmiPlansLoader>
+);
+
 export const Default: DropinStory = {
     render: ({ componentConfiguration, ...checkoutConfig }: PaymentMethodStoryProps<DropinConfiguration>) => {
         // Register all Components
@@ -52,9 +80,21 @@ export const Default: DropinStory = {
         const Classes = Object.values(Components) as NewableComponent[];
         AdyenCheckout.register(...Classes);
 
+        const offersEmi = checkoutConfig.countryCode === 'IN';
+
         return (
             <Checkout checkoutConfig={checkoutConfig}>
-                {checkout => <ComponentContainer element={new DropinComponent(checkout, componentConfiguration)} />}
+                {checkout =>
+                    offersEmi ? (
+                        <DropinWithEmiPlans
+                            checkout={checkout}
+                            componentConfiguration={componentConfiguration}
+                            amount={{ value: checkoutConfig.amount, currency: getCurrency(checkoutConfig.countryCode) }}
+                        />
+                    ) : (
+                        <ComponentContainer element={new DropinComponent(checkout, componentConfiguration)} />
+                    )
+                }
             </Checkout>
         );
     }
@@ -207,6 +247,40 @@ export const SessionsDonationReparented: DropinStory = {
             </Fragment>
         );
     }
+};
+
+/**
+ * Merchants hand the plans to Drop-in the same way they configure any other payment method, through
+ * `paymentMethodsConfiguration.emi`. Advanced flow: the plans lookup is merchant-authenticated, so
+ * sessions integrations cannot offer plan selection until the sessions endpoint ships.
+ */
+export const EmiPlans: DropinStory = {
+    // The plans come from the merchant backend, which MSW stands in for. Playwright mocks the same
+    // endpoint itself, because the E2E Storybook build runs with MSW disabled.
+    parameters: { msw: { handlers: emiPlansHandlers } },
+
+    args: {
+        useSessions: false,
+        countryCode: 'IN',
+        amount: 15499900,
+        componentConfiguration: {
+            paymentMethodComponents: [EMI, CardElement]
+        }
+    },
+
+    render: ({ componentConfiguration, ...checkoutConfig }: PaymentMethodStoryProps<DropinConfiguration>) => (
+        <Checkout checkoutConfig={checkoutConfig}>
+            {checkout => (
+                <EmiPlansLoader amount={{ value: checkoutConfig.amount, currency: getCurrency(checkoutConfig.countryCode) }}>
+                    {plans => (
+                        <ComponentContainer
+                            element={new DropinComponent(checkout, { ...componentConfiguration, paymentMethodsConfiguration: { emi: { plans } } })}
+                        />
+                    )}
+                </EmiPlansLoader>
+            )}
+        </Checkout>
+    )
 };
 
 export default meta;
