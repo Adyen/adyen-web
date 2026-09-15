@@ -38,7 +38,7 @@ __metadata:
     css-loader: "npm:^6.0.0"
     dotenv: "npm:17.2.3"
     html-webpack-plugin: "npm:5.6.4"
-    postcss: "npm:8.5.23"
+    postcss: "npm:8.5.24"
     postcss-loader: "npm:^7.0.0"
     sass-loader: "npm:^10.2.0"
     source-map-loader: "npm:^1.1.3"
@@ -118,7 +118,7 @@ __metadata:
     jest-mock-extended: "npm:4.0.1"
     msw: "npm:2.15.0"
     msw-storybook-addon: "npm:3.0.0"
-    postcss: "npm:8.5.23"
+    postcss: "npm:8.5.24"
     preact: "npm:10.29.8"
     rollup: "npm:4.62.4"
     rollup-plugin-dts: "npm:6.5.1"
@@ -6065,11 +6065,11 @@ __metadata:
   linkType: hard
 
 "baseline-browser-mapping@npm:^2.11.12":
-  version: 2.11.13
-  resolution: "baseline-browser-mapping@npm:2.11.13"
+  version: 2.11.16
+  resolution: "baseline-browser-mapping@npm:2.11.16"
   bin:
     baseline-browser-mapping: dist/cli.cjs
-  checksum: 10c0/a02511614ebe0311d4831e7ba11e88e5997d5bf0733e5eadd7d97b4bb69d76f468a982862108cb90721e1a41f4ef36c1a5f9fa18569923702ad2875ca3abfe58
+  checksum: 10c0/55e667cc418f9f964cf1038ba7ccd5817dfba83ee8b5fe72f462caaa0dabc470508d0f0e06c5454382da13e45b13c5880fc131bb0c17cdc0cd251a85467bec94
   languageName: node
   linkType: hard
 
@@ -6621,9 +6621,9 @@ __metadata:
   linkType: hard
 
 "colord@npm:^2.9.1, colord@npm:^2.9.3":
-  version: 2.9.3
-  resolution: "colord@npm:2.9.3"
-  checksum: 10c0/9699e956894d8996b28c686afe8988720785f476f59335c80ce852ded76ab3ebe252703aec53d9bef54f6219aea6b960fb3d9a8300058a1d0c0d4026460cd110
+  version: 2.9.6
+  resolution: "colord@npm:2.9.6"
+  checksum: 10c0/e93bbe2f6928816958f16ad25229edb088f1d2f2f6631493590a2e9a7b56cfd695c0cee0cded013ce666403f6e4b903878f71591ac3095695401086d385a936f
   languageName: node
   linkType: hard
 
@@ -13534,14 +13534,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"postcss@npm:8.5.23":
-  version: 8.5.23
-  resolution: "postcss@npm:8.5.23"
+"postcss@npm:8.5.24":
+  version: 8.5.24
+  resolution: "postcss@npm:8.5.24"
   dependencies:
     nanoid: "npm:^3.3.16"
     picocolors: "npm:^1.1.1"
     source-map-js: "npm:^1.2.1"
-  checksum: 10c0/ed714e635b330bb42666ecdd0c0b4f30224ded15b0b0052d6bc2b92832f2cf17d1c1141359453f96f0a84f8fbf4c405a74df187f559163b8f31131b2535455aa
+  checksum: 10c0/b3854840ffee4604249a1bad97291105a974009d63b068b716dbee1d2e034bb965353a9fb4d6e957ede475b2acf4167cd4b1d41074f8dd3ce2fe488b60c8ce44
   languageName: node
   linkType: hard
 
