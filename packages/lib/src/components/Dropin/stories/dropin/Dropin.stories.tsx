@@ -40,6 +40,13 @@ const meta: MetaConfiguration<DropinConfiguration> = {
                     buttonType: 'plain',
                     challengeWindowSize: '05'
                 }
+                // card: {
+                //     disclaimerMessage: {
+                //         message: 'By continuing you agree with the %{terms}',
+                //         linkText: 'terms and conditions',
+                //         link: 'https://www.adyen.com'
+                //     }
+                // },
             }
         }
     }

@@ -133,8 +133,7 @@ export const extractPropsForCardFields = (props: CardInputProps) => {
         // Extract props for StoredCardFields
         lastFour: props.lastFour,
         expiryMonth: props.expiryMonth,
-        expiryYear: props.expiryYear,
-        disclaimerMessage: props.disclaimerMessage
+        expiryYear: props.expiryYear
     };
 };
 

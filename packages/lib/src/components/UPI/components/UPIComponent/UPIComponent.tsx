@@ -29,7 +29,6 @@ type UpiData = { app?: App };
 type OnChangeProps = { data: UpiData; valid?: { [key: string]: boolean }; errors?: { [key: string]: ValidationRuleResult }; isValid: boolean };
 interface UPIComponentProps {
     mode: UpiMode;
-    showPayButton: boolean;
     appsList: UPIAppList;
     mandate?: Mandate;
     setComponentRef: (ref: ComponentMethodsRef) => void;
@@ -43,7 +42,6 @@ export default function UPIComponent({
     onChange,
     payButton,
     setComponentRef,
-    showPayButton,
     mandate,
     appsList,
     onSubmitAnalytics
@@ -200,11 +198,10 @@ export default function UPIComponent({
                         </Fragment>
                     )}
                     {mandateComponent}
-                    {showPayButton &&
-                        payButton({
-                            label: i18n.get('continue'),
-                            status
-                        })}
+                    {payButton({
+                        label: i18n.get('continue'),
+                        status
+                    })}
                 </SegmentedControlRegion>
             )}
             {mode === UPI_MODE.QR_CODE && (
@@ -218,12 +215,11 @@ export default function UPIComponent({
                         remainingBrandsLabel={`+ ${i18n.get('paymentMethodBrand.other')}`}
                     />
                     {mandateComponent}
-                    {showPayButton &&
-                        payButton({
-                            label: i18n.get('generateQRCode'),
-                            icon: getImage({ imageFolder: 'components/' })('qr'),
-                            status
-                        })}
+                    {payButton({
+                        label: i18n.get('generateQRCode'),
+                        icon: getImage({ imageFolder: 'components/' })('qr'),
+                        status
+                    })}
                 </SegmentedControlRegion>
             )}
         </Fragment>

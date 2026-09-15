@@ -35,19 +35,14 @@ export class MultibancoElement extends UIElement<VoucherConfiguration> {
             return <MultibancoVoucherResult {...this.props} onActionHandled={this.onActionHandled} />;
         }
 
-        if (this.props.showPayButton) {
-            return (
-                <RedirectButton
-                    showPayButton={this.props.showPayButton}
-                    name={this.displayName}
-                    payButton={this.payButton}
-                    onSubmit={this.submit}
-                    setComponentRef={this.setComponentRef}
-                />
+        return (
+            <RedirectButton
+                name={this.displayName}
+                payButton={this.payButton}
+                onSubmit={this.submit}
+                setComponentRef={this.setComponentRef}
+            />
             );
-        }
-
-        return null;
     }
 }
 

@@ -25,7 +25,6 @@ import { CardErrorData, StylesObject } from '../../../internal/SecuredFields/lib
 import { Resources } from '../../../../core/Context/Resources';
 import { SRPanel } from '../../../../core/Errors/SRPanel';
 import RiskElement from '../../../../core/RiskModule';
-import { DisclaimerMsgObject } from '../../../internal/DisclaimerMessage/DisclaimerMessage';
 import { OnAddressLookupType, OnAddressSelectedType } from '../../../internal/Address/components/AddressSearch';
 import { ComponentMethodsRef } from '../../../internal/UIElement/types';
 import { AddressData } from '../../../../types/global-types';
@@ -141,7 +140,6 @@ export interface CardInputProps {
     setComponentRef?: (ref) => void;
     showBrandIcon?: boolean;
     showInstallmentAmounts?: boolean;
-    showPayButton?: boolean;
     showStoreDetailsCheckbox?: boolean;
     showWarnings?: boolean;
     showContextualElement?: boolean;
@@ -152,7 +150,6 @@ export interface CardInputProps {
     type: string;
     maskSecurityCode?: boolean;
     exposeExpiryDate?: boolean;
-    disclaimerMessage?: DisclaimerMsgObject;
 }
 
 export interface CardInputState {

@@ -7,7 +7,8 @@ import { setupCoreMock } from '../../../../config/testMocks/setup-core-mock';
 
 const defaultProps = {
     onChange: jest.fn(),
-    onSubmit: jest.fn()
+    onSubmit: jest.fn(),
+    payButton: () => null
 };
 
 const core = setupCoreMock();
