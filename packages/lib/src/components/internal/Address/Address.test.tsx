@@ -267,14 +267,18 @@ describe('Address', () => {
         const requiredFields = ['country', 'postalCode', 'stateOrProvince', 'city', 'street', 'houseNumberOrName'];
 
         test('should render the fields in the expected order: country, postalCode/prefecture, city, street, building', async () => {
-            customRender(<Address data={{ country: 'JP' }} requiredFields={requiredFields} onChange={jest.fn()} />);
+            const { container } = customRender(<Address data={{ country: 'JP' }} requiredFields={requiredFields} onChange={jest.fn()} />);
 
-            expect(await screen.findByLabelText('Country/Region')).toBeInTheDocument();
-            expect(screen.getByLabelText('Postal code')).toBeInTheDocument();
-            expect(await screen.findByRole('combobox', { name: 'Prefecture' })).toBeInTheDocument();
-            expect(screen.getByLabelText('City / Town')).toBeInTheDocument();
-            expect(screen.getByLabelText('Street name and block number')).toBeInTheDocument();
-            expect(screen.getByLabelText(/Building name, room number/)).toBeInTheDocument();
+            await screen.findByRole('combobox', { name: 'Prefecture' });
+
+            const expectedOrder = ['country', 'postalCode', 'stateOrProvince', 'city', 'street', 'houseNumberOrName'];
+            // eslint-disable-next-line testing-library/no-container,testing-library/no-node-access -- intentional allows to test for the order
+            const fieldElements = container.querySelectorAll('.adyen-checkout__field');
+            const actualOrder = Array.from(fieldElements).map(fieldElement =>
+                expectedOrder.find(fieldName => fieldElement.classList.contains(`adyen-checkout__field--${fieldName}`))
+            );
+
+            expect(actualOrder).toEqual(expectedOrder);
         });
 
         test('should render Prefecture as a dropdown backed by a dataset, like other countries with a state/province dataset', async () => {
