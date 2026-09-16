@@ -2,6 +2,7 @@ import { FormatterContext } from '../../../utils/Formatters/types';
 import { CountryFormatRules, FormatRules } from '../../../utils/Validator/types';
 import { Formatter } from '../../../utils/useForm/types';
 import { getFormattingRegEx, stripInvalidChars } from '../../../utils/validator-utils';
+import { convertFullToHalf } from '../FormFields/utils';
 
 const asCountryFormatRules = <T extends CountryFormatRules>(rules: T): T & CountryFormatRules => rules;
 
@@ -234,6 +235,9 @@ export const countrySpecificFormatters = asCountryFormatRules({
     },
     JP: {
         postalCode: {
+            // Formatter - converts full-width characters (common on Japanese keyboards, e.g. '１０７－００５２') to their
+            // half-width equivalent, then strips any remaining non-digit/hyphen characters (e.g. the postal mark '〒')
+            formatterFn: val => convertFullToHalf(val).replace(getFormattingRegEx('^\\d-', 'g'), '').substring(0, 8),
             format: '999-9999',
             maxlength: 8
         }
