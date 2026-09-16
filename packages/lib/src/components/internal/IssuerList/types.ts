@@ -2,6 +2,16 @@ import { PayButtonProps } from '../PayButton/PayButton';
 import { ComponentChildren } from 'preact';
 import { AbstractAnalyticsEvent } from '../../../core/Analytics/events/AbstractAnalyticsEvent';
 import { ComponentMethodsRef } from '../UIElement/types';
+import type { ValidationRuleResult } from '../../../utils/Validator/ValidationRuleResult';
+
+export interface IssuerListState {
+    data: {
+        issuer?: string | null;
+    };
+    valid: Record<string, boolean>;
+    errors: Record<string, ValidationRuleResult | null>;
+    isValid: boolean;
+}
 
 export interface IssuerListProps {
     items: IssuerItem[];
@@ -9,7 +19,7 @@ export interface IssuerListProps {
     type: string;
     showPayButton?: boolean;
     payButton(props: PayButtonProps): ComponentChildren;
-    onChange(payload: unknown): void;
+    onChange(payload: IssuerListState): void;
     highlightedIds?: string[];
     placeholder?: string;
     issuer?: string;
