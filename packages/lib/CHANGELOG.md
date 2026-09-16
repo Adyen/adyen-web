@@ -1,5 +1,15 @@
 # @adyen/adyen-web
 
+## 6.45.1
+
+### Patch Changes
+
+- Improved: Update link styles to match the latest design ([#4185](https://github.com/Adyen/adyen-web/pull/4185))
+
+- Fixed: Internal types for useForm hook ([#4150](https://github.com/Adyen/adyen-web/pull/4150))
+
+- Fixed: Internal TS explicit and implicit anys of BaseElement and UIElement ([#4149](https://github.com/Adyen/adyen-web/pull/4149))
+
 ## 6.45.0
 
 ### Minor Changes
