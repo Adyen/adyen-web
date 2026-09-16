@@ -6,6 +6,7 @@ import getCurrency from '../../../storybook/utils/get-currency';
 import EMI from './EMI';
 import { EmiPlansLoader } from './stories/EmiPlansLoader';
 import { emiPlansHandlers } from './stories/handlers';
+import { EMI_FIXTURE_CHECKOUT_AMOUNT } from './stories/mocks';
 import type { ComponentChildren } from 'preact';
 import type { ICore } from '../../core/types';
 import type { EMIConfiguration, EmiPlansResponse } from './types';
@@ -49,6 +50,8 @@ export const CardEmi: EMIStory = {
     args: {
         useSessions: false,
         countryCode: 'IN',
+        // The mocked lookup prices its plans for this amount, so the summary only adds up with it
+        amount: EMI_FIXTURE_CHECKOUT_AMOUNT.value,
         componentConfiguration: {
             showPayButton: true,
             supportedPaymentMethods: [{ type: 'scheme' }],
@@ -80,6 +83,7 @@ export const CardEmiWithCustomButton: EMIStory = {
     args: {
         useSessions: false,
         countryCode: 'IN',
+        amount: EMI_FIXTURE_CHECKOUT_AMOUNT.value,
         componentConfiguration: {
             showPayButton: false,
             supportedPaymentMethods: [{ type: 'scheme' }],

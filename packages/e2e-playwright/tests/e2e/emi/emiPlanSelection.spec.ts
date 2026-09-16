@@ -55,7 +55,9 @@ test.describe('EMI - plan selection', () => {
         await expect(planSelection.providerSelect).toContainText(hdfc.name);
         await expect(planSelection.planSelect).toContainText(hdfc.firstPlan);
 
-        await expect(planSelection.summaryLabels).toContainText([/Item price/, /Discount/, /Amount reserved on card/, /Interest charged by bank/]);
+        await expect(planSelection.summaryLabels).toContainText([/Item price/, /Amount reserved on card/, /Interest charged by bank/]);
+        // The offer of a no cost plan discounts the reserved amount and the interest, so it gets no row of its own
+        await expect(planSelection.summaryLabels.filter({ hasText: /^Discount$/ })).toHaveCount(0);
     });
 
     // The summary owns every figure, so the button must not repeat an amount the shopper would compare against it
