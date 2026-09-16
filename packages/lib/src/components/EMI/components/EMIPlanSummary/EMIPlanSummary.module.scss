@@ -45,6 +45,16 @@
     white-space: nowrap;
 }
 
+.rowValueOriginal {
+    color: variable-generator.token(color-label-secondary);
+    margin-inline-end: variable-generator.token(spacer-030);
+    text-decoration: line-through;
+}
+
+.rowValueDiscounted {
+    color: variable-generator.token(color-label-success);
+}
+
 .monthlyPayment {
     display: flex;
     align-items: baseline;
