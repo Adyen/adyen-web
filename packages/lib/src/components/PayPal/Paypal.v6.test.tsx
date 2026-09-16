@@ -705,6 +705,29 @@ describe('PayPal v6', () => {
 
             expect(paypal.data).not.toHaveProperty('storePaymentMethod');
         });
+
+        test('should add the browser info when PayPal v6 is used', () => {
+            const paypal = new Paypal(core, { usePayPalV6: {} });
+
+            expect(paypal.data.browserInfo).toEqual(
+                expect.objectContaining({
+                    acceptHeader: expect.any(String),
+                    colorDepth: expect.any(Number),
+                    javaEnabled: expect.any(Boolean),
+                    language: expect.any(String),
+                    screenHeight: expect.any(Number),
+                    screenWidth: expect.any(Number),
+                    timeZoneOffset: expect.any(Number),
+                    userAgent: expect.any(String)
+                })
+            );
+        });
+
+        test('should not add the browser info when PayPal v6 is not used', () => {
+            const paypal = new Paypal(core);
+
+            expect(paypal.data).not.toHaveProperty('browserInfo');
+        });
     });
 
     describe('componentToRender', () => {
