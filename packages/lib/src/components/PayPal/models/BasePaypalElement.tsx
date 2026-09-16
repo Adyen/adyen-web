@@ -131,9 +131,6 @@ export class BasePaypalElement<TProps extends BasePayPalConfiguration = BasePayP
         };
     }
 
-    /**
-     * Formats the component data output
-     */
     protected formatData() {
         const { isExpress, vault, amount } = this.props;
         const isZeroAuth = amount?.value === 0;
