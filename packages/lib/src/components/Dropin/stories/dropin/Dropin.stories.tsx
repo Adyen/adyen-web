@@ -60,7 +60,7 @@ export const Default: DropinStory = {
     }
 };
 
-export const DropInSplitPaypal: DropinStory = {
+export const SplitPaypalButtons: DropinStory = {
     render: ({ componentConfiguration, ...checkoutConfig }: PaymentMethodStoryProps<DropinConfiguration>) => {
         AdyenCheckout.register(components.Dropin, components.PayPal, components.PayPalPayLater, components.PayPalCredit, components.Venmo);
 

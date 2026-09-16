@@ -6,9 +6,8 @@ import { PayPalService } from './services/PayPalService';
 import { PayPalSdkLoader } from './services/PayPalSdkLoader';
 import requestPayPalOrderDetails from './services/request-paypal-order-details';
 import base64 from '../../utils/base64';
-import type { PayPalEligiblePaymentMethods, PayPalSdkInstance } from './paypal-js-types';
+import type { PayPalEligiblePaymentMethods, PayPalSdkInstance, PayPalPresentationModeOptions } from './paypal-js-types';
 import type { PayPalComponentV6Props } from './components/types';
-import type { PayPalPresentationModeOptions } from './types';
 
 jest.mock('./services/PayPalService');
 jest.mock('./services/PayPalSdkLoader');
