@@ -7,18 +7,7 @@ import Fieldset from '../FormFields/Fieldset';
 import { GenericError } from '../../../core/Errors/types';
 import InputText from '../FormFields/InputText';
 import { UIElementStatus } from '../UIElement/types';
-import { OnChangeData } from '../../../types';
-
-interface IbanInputProps {
-    holderName?: boolean;
-    placeholders?: Omit<IbanData, 'countryCode'>;
-    countryCode?: string;
-    showPayButton?: boolean;
-    payButton?: any;
-    onChange: (data: OnChangeData) => void;
-    label: string;
-    data?: IbanData;
-}
+import { PayButtonProps } from '../PayButton/PayButton';
 
 export interface IbanData {
     ownerName?: string;
@@ -26,10 +15,27 @@ export interface IbanData {
     countryCode?: string;
 }
 
+interface IbanInputOnChangeData {
+    data: IbanData;
+    isValid: boolean;
+    errors?: Record<string, GenericError | null>;
+}
+
+interface IbanInputProps {
+    holderName?: boolean;
+    placeholders?: Omit<IbanData, 'countryCode'>;
+    countryCode?: string;
+    showPayButton?: boolean;
+    payButton?: (props: PayButtonProps) => h.JSX.Element;
+    onChange: (data: IbanInputOnChangeData) => void;
+    label: string;
+    data?: IbanData;
+}
+
 interface IbanInputState {
-    data: any;
-    errors: any;
-    valid: any;
+    data: IbanData;
+    errors: Record<string, GenericError | null>;
+    valid: Record<string, boolean>;
     status: string;
     isValid: boolean;
     cursor: number;
@@ -48,8 +54,6 @@ const ibanErrorObj: GenericError = {
 };
 
 class IbanInput extends Component<Readonly<IbanInputProps>, IbanInputState> {
-    private ibanNumber: HTMLInputElement;
-
     constructor(props) {
         super(props);
 
@@ -102,16 +106,8 @@ class IbanInput extends Component<Readonly<IbanInputProps>, IbanInputState> {
         this.props.onChange(data);
     }
 
-    public setData = (key, value, cb?) => {
-        this.setState(prevState => ({ data: { ...prevState.data, [key]: value } }), cb);
-    };
-
     public setError = (key, value, cb?) => {
         this.setState(prevState => ({ errors: { ...prevState.errors, [key]: value } }), cb);
-    };
-
-    public setValid = (key, value, cb?) => {
-        this.setState(prevState => ({ valid: { ...prevState.valid, [key]: value } }), cb);
     };
 
     public handleHolderInput = holder => {
@@ -217,9 +213,6 @@ class IbanInput extends Component<Readonly<IbanInputProps>, IbanInputState> {
                     name={'ibanNumber'}
                 >
                     <InputText
-                        setRef={ref => {
-                            this.ibanNumber = ref;
-                        }}
                         name={'ibanNumber'}
                         className={'adyen-checkout__iban-input__iban-number'}
                         classNameModifiers={['large']}
