@@ -32,6 +32,7 @@ import { PayPalService } from './services/PayPalService';
 import { PayPalComponentV6 } from './components/PaypalComponentV6';
 import requestPayPalOrderDetails from './services/request-paypal-order-details';
 import { UNSUPPORTED_EXPRESS_PRESENTATION_MODE_OPTIONS } from './config';
+import collectBrowserInfo from '../../utils/browserInfo';
 import './Paypal.scss';
 
 class PaypalElement extends UIElement<PayPalConfiguration> {
@@ -95,11 +96,11 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
 
         const components: PayPalComponents = ['paypal-payments'];
 
-        if (!this.props?.usePayPalV6?.blockPayPalVenmoButton) {
+        if (!paypalV6Props?.blockPayPalVenmoButton) {
             components.push('venmo-payments');
         }
 
-        if (this.props?.usePayPalV6?.onCreatePayPalMessages) {
+        if (paypalV6Props?.onCreatePayPalMessages) {
             components.push('paypal-messages');
         }
 
@@ -200,6 +201,10 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
         this.paymentData = paymentData;
     }
 
+    private get browserInfo() {
+        return collectBrowserInfo();
+    }
+
     /**
      * Formats the component data output
      */
@@ -213,6 +218,7 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
                 subtype: isExpress ? 'express' : PaypalElement.subtype,
                 ...(!usePayPalV6 && { userAction })
             },
+            ...(usePayPalV6 && { browserInfo: this.browserInfo }),
             ...(usePayPalV6 && (usePayPalV6.vault || isZeroAuth) && { storePaymentMethod: true })
         };
     }

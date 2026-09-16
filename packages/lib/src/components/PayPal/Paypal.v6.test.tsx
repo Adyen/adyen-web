@@ -6,9 +6,8 @@ import { PayPalService } from './services/PayPalService';
 import { PayPalSdkLoader } from './services/PayPalSdkLoader';
 import requestPayPalOrderDetails from './services/request-paypal-order-details';
 import base64 from '../../utils/base64';
-import type { PayPalEligiblePaymentMethods, PayPalSdkInstance } from './paypal-js-types';
+import type { PayPalEligiblePaymentMethods, PayPalSdkInstance, PayPalPresentationModeOptions } from './paypal-js-types';
 import type { PayPalComponentV6Props } from './components/types';
-import type { PayPalPresentationModeOptions } from './types';
 
 jest.mock('./services/PayPalService');
 jest.mock('./services/PayPalSdkLoader');
@@ -705,6 +704,29 @@ describe('PayPal v6', () => {
             const paypal = new Paypal(core, { amount: { value: 0, currency: 'USD' } });
 
             expect(paypal.data).not.toHaveProperty('storePaymentMethod');
+        });
+
+        test('should add the browser info when PayPal v6 is used', () => {
+            const paypal = new Paypal(core, { usePayPalV6: {} });
+
+            expect(paypal.data.browserInfo).toEqual(
+                expect.objectContaining({
+                    acceptHeader: expect.any(String),
+                    colorDepth: expect.any(Number),
+                    javaEnabled: expect.any(Boolean),
+                    language: expect.any(String),
+                    screenHeight: expect.any(Number),
+                    screenWidth: expect.any(Number),
+                    timeZoneOffset: expect.any(Number),
+                    userAgent: expect.any(String)
+                })
+            );
+        });
+
+        test('should not add the browser info when PayPal v6 is not used', () => {
+            const paypal = new Paypal(core);
+
+            expect(paypal.data).not.toHaveProperty('browserInfo');
         });
     });
 
