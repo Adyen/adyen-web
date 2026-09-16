@@ -1,28 +1,11 @@
 import { h } from 'preact';
 import UIElement from '../internal/UIElement/UIElement';
-import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { TxVariants } from '../tx-variants';
 import { KlarnaNetworkContainer } from './components/KlarnaNetworkContainer/KlarnaNetworkContainer';
 
 import type { RawPaymentResponse } from '../../types/global-types';
 import type { KlarnaNetworkConfiguration } from './types';
-import type { KlarnaInitiateParams, PresentationInitiateResult } from './klarna-web-sdk-types';
-
-const MISSING_PAYMENT_ACCOUNT_ID =
-    "KlarnaNetwork: 'paymentAccountId' is required. /payments rejects the payment without " + "'klarnaNetworkPaymentAccountId'.";
-
-const NO_PAYMENT_REQUEST =
-    'KlarnaNetwork: /payments returned no Klarna payment request. Klarna only creates one when ' +
-    "authorize is called with step_up_config.method = 'SDK', which Adyen does not send yet. " +
-    'See KlarnaNetwork.md.';
-
-const getSdkHandover = (response: RawPaymentResponse): PresentationInitiateResult | undefined => {
-    const sdkData = response.action?.type === 'sdk' ? response.action.sdkData : undefined;
-
-    if (sdkData?.paymentRequestUrl) return { paymentRequestUrl: sdkData.paymentRequestUrl };
-    if (sdkData?.paymentRequestId) return { paymentRequestId: sdkData.paymentRequestId };
-    return undefined;
-};
+import type { KlarnaInitiateParams, KlarnaInitiateResult, KlarnaPaymentError } from './klarna-web-sdk-types';
 
 class KlarnaNetwork extends UIElement<KlarnaNetworkConfiguration> {
     public static readonly type = TxVariants.klarna_network;
@@ -48,38 +31,26 @@ class KlarnaNetwork extends UIElement<KlarnaNetworkConfiguration> {
         };
     }
 
-    private readonly authorize = async ({ klarnaNetworkSessionToken }: KlarnaInitiateParams): Promise<PresentationInitiateResult> => {
+    private readonly authorize = async ({ klarnaNetworkSessionToken }: KlarnaInitiateParams): Promise<KlarnaInitiateResult> => {
         this.klarnaNetworkSessionToken = klarnaNetworkSessionToken;
 
-        try {
-            if (!this.props.paymentAccountId) {
-                throw new AdyenCheckoutError('IMPLEMENTATION_ERROR', MISSING_PAYMENT_ACCOUNT_ID);
-            }
+        const response = (await this.makePaymentsCall()) as RawPaymentResponse;
 
-            const response = (await this.makePaymentsCall()) as RawPaymentResponse;
+        this.setElementStatus('ready');
 
-            this.setElementStatus('ready');
+        const paymentRequestUrl = response.action?.sdkData?.paymentRequestUrl ?? response.action?.url;
 
-            const handover = getSdkHandover(response);
-
-            if (!handover) {
-                console.error('KlarnaNetwork: raw /payments response', response);
-                throw new AdyenCheckoutError('ERROR', NO_PAYMENT_REQUEST);
-            }
-
-            return handover;
-        } catch (error: unknown) {
-            this.handleError(
-                error instanceof AdyenCheckoutError
-                    ? error
-                    : new AdyenCheckoutError('ERROR', 'KlarnaNetwork: the payment authorization failed', { cause: error })
-            );
-            throw error;
-        }
+        return { paymentRequestUrl };
     };
 
     private readonly handleKlarnaComplete = (paymentRequest: unknown): void => {
         console.log('KlarnaNetwork: Klarna reported the payment request as complete', paymentRequest);
+        this.setElementStatus('ready');
+    };
+
+    private readonly handleKlarnaError = (error: KlarnaPaymentError | Error, paymentRequest?: unknown): void => {
+        const { errorCode, errorMessage } = error as KlarnaPaymentError;
+        console.error('Adyen Web Catch wrapper for Klarna SDK error', { errorCode, errorMessage, error, paymentRequest });
         this.setElementStatus('ready');
     };
 
@@ -90,6 +61,7 @@ class KlarnaNetwork extends UIElement<KlarnaNetworkConfiguration> {
                 onAuthorize={this.authorize}
                 onError={this.handleError}
                 onKlarnaComplete={this.handleKlarnaComplete}
+                onKlarnaError={this.handleKlarnaError}
             />
         );
     }

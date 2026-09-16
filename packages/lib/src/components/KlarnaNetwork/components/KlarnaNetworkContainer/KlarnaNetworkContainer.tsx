@@ -7,12 +7,13 @@ import { useAmount } from '../../../../core/Context/AmountProvider';
 import { loadKlarnaSdk } from '../../utils/load-klarna-sdk';
 import './KlarnaNetworkContainer.scss';
 
-import type { KlarnaInitiateCallback, KlarnaPayment, KlarnaPaymentOption, KlarnaUIElement } from '../../klarna-web-sdk-types';
+import type { KlarnaInitiateCallback, KlarnaPayment, KlarnaPaymentError, KlarnaPaymentOption, KlarnaUIElement } from '../../klarna-web-sdk-types';
 
 export interface KlarnaNetworkContainerProps {
     onAuthorize: KlarnaInitiateCallback;
     onError(error: AdyenCheckoutError): void;
     onKlarnaComplete(paymentRequest: unknown): void;
+    onKlarnaError(error: KlarnaPaymentError | Error, paymentRequest?: unknown): void;
 
     clientId: string;
     partnerAccountId?: string;
@@ -23,6 +24,7 @@ export function KlarnaNetworkContainer({
     onAuthorize,
     onError,
     onKlarnaComplete,
+    onKlarnaError,
     clientId,
     partnerAccountId,
     paymentAccountId
@@ -57,6 +59,7 @@ export function KlarnaNetworkContainer({
 
             payment = klarna.Payment;
             payment.on('complete', onKlarnaComplete);
+            payment.on('error', onKlarnaError);
 
             const presentation = await payment.presentation({
                 amount: value,
@@ -80,6 +83,7 @@ export function KlarnaNetworkContainer({
         return () => {
             isActive = false;
             payment?.off('complete', onKlarnaComplete);
+            payment?.off('error', onKlarnaError);
         };
     }, [clientId, partnerAccountId, paymentAccountId, value, currency]);
 
