@@ -2,12 +2,12 @@ import { h } from 'preact';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { TxVariants } from '../tx-variants';
 
-import type { BasePayPalConfiguration, SupportedPayPalFundingSources } from './types';
+import type { PayPalCreditConfiguration, SupportedPayPalFundingSources } from './types';
 
 import { BasePaypalElement } from './models/BasePaypalElement';
 import { PaypalCreditComponent } from './components/PaypalCreditComponent';
 
-class PaypalCreditElement extends BasePaypalElement<BasePayPalConfiguration> {
+class PaypalCreditElement extends BasePaypalElement<PayPalCreditConfiguration> {
     public static readonly type = TxVariants.paypal_credit;
 
     protected override fundingSource: SupportedPayPalFundingSources = 'credit';
@@ -18,8 +18,6 @@ class PaypalCreditElement extends BasePaypalElement<BasePayPalConfiguration> {
     }
 
     protected override componentToRender(): h.JSX.Element | null {
-        if (!this.props.showPayButton) return null;
-
         const { onShippingAddressChange, onShippingOptionsChange } = this.props;
 
         if (!this.paypalService) return null;

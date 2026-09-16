@@ -68,13 +68,20 @@ export class BasePaypalElement<TProps extends BasePayPalConfiguration = BasePayP
             components: this.paypalComponents
         });
 
-        this.paypalService.initialize().catch(error => {
-            this.handleError(
-                error instanceof AdyenCheckoutError
-                    ? error
-                    : new AdyenCheckoutError('ERROR', `Something went wrong while initializing ${this.elementName}`, { cause: error })
-            );
-        });
+        this.paypalService
+            .initialize()
+            .then(() => {
+                if (this.props.onCreatePayPalMessages && this.paypalService?.getInstance()?.createPayPalMessages) {
+                    this.props.onCreatePayPalMessages(this.paypalService.getInstance().createPayPalMessages);
+                }
+            })
+            .catch(error => {
+                this.handleError(
+                    error instanceof AdyenCheckoutError
+                        ? error
+                        : new AdyenCheckoutError('ERROR', `Something went wrong while initializing ${this.elementName}`, { cause: error })
+                );
+            });
     }
 
     protected get paypalComponents(): PayPalComponents {

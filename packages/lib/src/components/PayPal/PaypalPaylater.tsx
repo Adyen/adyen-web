@@ -23,8 +23,6 @@ class PaypalPaylaterElement extends BasePaypalElement<PayPalPayLaterConfiguratio
     }
 
     protected override componentToRender(): h.JSX.Element | null {
-        if (!this.props.showPayButton) return null;
-
         const { onShippingAddressChange, onShippingOptionsChange } = this.props;
 
         if (!this.paypalService) return null;

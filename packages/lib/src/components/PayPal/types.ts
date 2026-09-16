@@ -363,21 +363,17 @@ export type PayPalPayLaterConfiguration = Omit<BasePayPalConfiguration, 'vault'>
      */
     hidePayPalMessaging?: boolean;
     /**
-     * Callback called when the PayPal messages component is created
-     * @param createPayPalMessages - Function to create the messages component
-     * @returns
-     */
-    onCreatePayPalMessages?: (createPayPalMessages: (messagesOptions?: PayPalMessagesOptions) => PayPalMessagesSession) => void;
-    /**
      * Options for fetching PayPal messages content
      * @see {@link https://docs.paypal.ai/reference/sdk/js/v6/reference#messagesinstance-fetchcontent-options}
      */
     messagingContentOptions?: Pick<PayPalFetchContentOptions, 'logoType' | 'logoPosition' | 'textColor'>;
 };
 
+export type PayPalCreditConfiguration = Omit<BasePayPalConfiguration, 'onCreatePayPalMessages'>;
+
 export type VenmoConfiguration = Omit<
     BasePayPalConfiguration,
-    'isExpress' | 'expressPage' | 'onShippingAddressChange' | 'onShippingOptionsChange'
+    'isExpress' | 'expressPage' | 'onShippingAddressChange' | 'onShippingOptionsChange' | 'onCreatePayPalMessages'
 > & {
     style?: PayPalVenmoButtonStyle;
 };
