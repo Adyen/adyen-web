@@ -190,13 +190,15 @@ test.describe('Test Card, & binLookup w. panLength property', () => {
 
         await card.typeCardNumber(CARD_WITH_PAN_LENGTH);
 
-        // Should be able to add more digits to the PAN
+        // Wait for the panLength to make focus jump, then refocus the number field
+        await expect(card.expiryDateInput).toBeFocused();
         await card.cardNumberInput.focus();
-        await card.page.keyboard.press('End');
-        await card.page.keyboard.type('6');
+        await expect(card.cardNumberInput).toBeFocused();
+        // Move to the end of the PAN and type the extra digit through the locator
+        await card.cardNumberInput.press('End');
+        await card.typeCardNumber('6');
 
         // Confirm PAN value has had chars added
-        let val = await card.cardNumberInput.inputValue();
-        expect(val).toEqual('4000 6200 0000 0007 6');
+        await expect(card.cardNumberInput).toHaveValue('4000 6200 0000 0007 6');
     });
 });
