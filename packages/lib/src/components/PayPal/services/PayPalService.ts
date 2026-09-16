@@ -82,7 +82,11 @@ class PayPalService {
                 return tokenData.clientToken;
             })
             .then(this.createPayPalSdkInstance)
-            .then(this.createEligibleMethods);
+            .then(this.createEligibleMethods)
+            .catch(error => {
+                this.loadingPromise = undefined;
+                throw error;
+            });
 
         return this.loadingPromise;
     }
