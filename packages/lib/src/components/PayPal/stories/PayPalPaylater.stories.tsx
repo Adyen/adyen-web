@@ -9,7 +9,7 @@ import { Checkout } from '../../../../storybook/components/Checkout';
 type Story = StoryObj<PaymentMethodStoryProps<PayPalPayLaterConfiguration>>;
 
 const meta: Meta = {
-    title: 'Components/Wallets/Paypal',
+    title: 'Components/Wallets/Paypal/V6',
     tags: ['no-automated-visual-test']
 };
 export default meta;
