@@ -196,7 +196,7 @@ test.describe('Test Card, & binLookup w. panLength property', () => {
         await expect(card.cardNumberInput).toBeFocused();
         // Move to the end of the PAN and type the extra digit through the locator
         await card.cardNumberInput.press('End');
-        await card.typeCardNumber('6');
+        await card.page.keyboard.type('6');
 
         // Confirm PAN value has had chars added
         await expect(card.cardNumberInput).toHaveValue('4000 6200 0000 0007 6');
