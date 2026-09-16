@@ -1,0 +1,22 @@
+@use 'styles/variable-generator';
+
+.adyen-checkout__klarna-network {
+    display: flex;
+    flex-direction: column;
+    gap: variable-generator.token(spacer-070);
+
+    &__message {
+        font-size: variable-generator.token(text-body-font-size);
+    }
+
+    &__button {
+        display: block;
+
+        // The Klarna button is a custom element that defaults to an intrinsic inline-block width.
+        // Stretching the host is enough: the button inside its shadow root follows.
+        klarna-payment-button {
+            display: block;
+            width: 100%;
+        }
+    }
+}
