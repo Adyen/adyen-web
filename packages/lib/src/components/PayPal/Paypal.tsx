@@ -33,6 +33,7 @@ import { PayPalComponentV6 } from './components/PaypalComponentV6';
 import requestPayPalOrderDetails from './services/request-paypal-order-details';
 import { UNSUPPORTED_EXPRESS_PRESENTATION_MODE_OPTIONS } from './config';
 import './Paypal.scss';
+import collectBrowserInfo from '../../utils/browserInfo';
 
 class PaypalElement extends UIElement<PayPalConfiguration> {
     public static readonly type = TxVariants.paypal;
@@ -200,6 +201,10 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
         this.paymentData = paymentData;
     }
 
+    private get browserInfo() {
+        return collectBrowserInfo();
+    }
+
     /**
      * Formats the component data output
      */
@@ -213,6 +218,7 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
                 subtype: isExpress ? 'express' : PaypalElement.subtype,
                 ...(!usePayPalV6 && { userAction })
             },
+            ...(usePayPalV6 && { browserInfo: this.browserInfo }),
             ...(usePayPalV6 && (usePayPalV6.vault || isZeroAuth) && { storePaymentMethod: true })
         };
     }

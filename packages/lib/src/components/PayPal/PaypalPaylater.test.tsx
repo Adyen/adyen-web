@@ -26,7 +26,7 @@ const PayPalServiceMock = PayPalService as jest.MockedClass<typeof PayPalService
 const core = setupCoreMock();
 const isEligibleMock = jest.fn();
 
-const createElement = (props?: PayPalPayLaterConfiguration) => new PaypalPaylater(core, { showPayButton: true, ...props });
+const createElement = (props?: PayPalPayLaterConfiguration) => new PaypalPaylater(core, props);
 
 describe('PaypalPaylater', () => {
     beforeEach(() => {
@@ -97,12 +97,12 @@ describe('PaypalPaylater', () => {
         );
     });
 
-    test('should not render anything when showPayButton is false', () => {
+    test('should render even when showPayButton is false', () => {
         const element = createElement({ showPayButton: false });
 
         render(element.render());
 
-        expect(mockPayPalPaylaterComponent).not.toHaveBeenCalled();
+        expect(mockPayPalPaylaterComponent).toHaveBeenCalled();
     });
 
     test('should not pass the shipping handlers when the merchant did not provide the callbacks', () => {

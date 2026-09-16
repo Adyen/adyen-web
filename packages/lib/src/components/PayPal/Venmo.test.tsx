@@ -26,7 +26,7 @@ const PayPalServiceMock = PayPalService as jest.MockedClass<typeof PayPalService
 const core = setupCoreMock();
 const isEligibleMock = jest.fn();
 
-const createElement = (props?: VenmoConfiguration) => new Venmo(core, { showPayButton: true, ...props });
+const createElement = (props?: VenmoConfiguration) => new Venmo(core, props);
 
 describe('Venmo', () => {
     beforeEach(() => {
@@ -43,10 +43,10 @@ describe('Venmo', () => {
         expect(Venmo.type).toBe(TxVariants.venmo);
     });
 
-    test('should load the venmo SDK component on top of the paypal one', () => {
+    test('should load only the venmo component', () => {
         createElement();
 
-        expect(PayPalServiceMock).toHaveBeenCalledWith(expect.objectContaining({ components: ['paypal-payments', 'venmo-payments'] }));
+        expect(PayPalServiceMock).toHaveBeenCalledWith(expect.objectContaining({ components: ['venmo-payments'] }));
     });
 
     test('should use the venmo icon', () => {
@@ -89,12 +89,12 @@ describe('Venmo', () => {
         );
     });
 
-    test('should not render anything when showPayButton is false', () => {
+    test('should render anything even when showPayButton is false', () => {
         const element = createElement({ showPayButton: false });
 
         render(element.render());
 
-        expect(mockVenmoComponent).not.toHaveBeenCalled();
+        expect(mockVenmoComponent).toHaveBeenCalled();
     });
 
     test('should report a CANCEL error when the shopper cancels', () => {

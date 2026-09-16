@@ -15,12 +15,10 @@ class VenmoElement extends BasePaypalElement<VenmoConfiguration> {
     protected override elementName: string = 'Venmo';
 
     protected override get paypalComponents(): PayPalComponents {
-        return ['paypal-payments', 'venmo-payments'];
+        return ['venmo-payments'];
     }
 
     protected override componentToRender(): h.JSX.Element | null {
-        if (!this.props.showPayButton) return null;
-
         if (!this.paypalService) return null;
 
         return (
