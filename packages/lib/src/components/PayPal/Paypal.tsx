@@ -32,8 +32,8 @@ import { PayPalService } from './services/PayPalService';
 import { PayPalComponentV6 } from './components/PaypalComponentV6';
 import requestPayPalOrderDetails from './services/request-paypal-order-details';
 import { UNSUPPORTED_EXPRESS_PRESENTATION_MODE_OPTIONS } from './config';
-import './Paypal.scss';
 import collectBrowserInfo from '../../utils/browserInfo';
+import './Paypal.scss';
 
 class PaypalElement extends UIElement<PayPalConfiguration> {
     public static readonly type = TxVariants.paypal;

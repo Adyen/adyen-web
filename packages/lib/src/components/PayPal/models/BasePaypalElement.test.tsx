@@ -188,6 +188,7 @@ describe('BasePaypalElement', () => {
                     checkoutAttemptId: TEST_CHECKOUT_ATTEMPT_ID,
                     sdkData: expect.any(String)
                 },
+                browserInfo: expect.objectContaining({ userAgent: expect.any(String) }),
                 riskData: { clientData: TEST_RISK_DATA }
             });
         });
@@ -196,6 +197,47 @@ describe('BasePaypalElement', () => {
             const element = createElement({ isExpress: true });
 
             expect(element.data.paymentMethod).toEqual(expect.objectContaining({ type: 'paypal', subtype: 'express' }));
+        });
+
+        test('should always collect the browser info', () => {
+            const element = createElement();
+
+            expect(element.data.browserInfo).toEqual(
+                expect.objectContaining({
+                    acceptHeader: expect.any(String),
+                    colorDepth: expect.any(Number),
+                    javaEnabled: expect.any(Boolean),
+                    language: expect.any(String),
+                    screenHeight: expect.any(Number),
+                    screenWidth: expect.any(Number),
+                    timeZoneOffset: expect.any(Number),
+                    userAgent: expect.any(String)
+                })
+            );
+        });
+
+        test('should add storePaymentMethod when vault is set', () => {
+            const element = createElement({ vault: true, amount: { value: 1000, currency: 'USD' } });
+
+            expect(element.data.storePaymentMethod).toBe(true);
+        });
+
+        test('should add storePaymentMethod when the amount is zero (zero-auth)', () => {
+            const element = createElement({ amount: { value: 0, currency: 'USD' } });
+
+            expect(element.data.storePaymentMethod).toBe(true);
+        });
+
+        test('should not add storePaymentMethod when vault is not set and the amount is not zero', () => {
+            const element = createElement({ amount: { value: 1000, currency: 'USD' } });
+
+            expect(element.data).not.toHaveProperty('storePaymentMethod');
+        });
+
+        test('should not add storePaymentMethod when vault is not set and there is no amount', () => {
+            const element = createElement();
+
+            expect(element.data).not.toHaveProperty('storePaymentMethod');
         });
     });
 

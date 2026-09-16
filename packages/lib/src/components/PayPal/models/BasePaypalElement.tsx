@@ -21,6 +21,7 @@ import { PayPalSdkLoader } from '../services/PayPalSdkLoader';
 import { PayPalService } from '../services/PayPalService';
 import requestPayPalOrderDetails from '../services/request-paypal-order-details';
 import '../Paypal.scss';
+import collectBrowserInfo from '../../../utils/browserInfo';
 
 export class BasePaypalElement<TProps extends BasePayPalConfiguration = BasePayPalConfiguration> extends UIElement<TProps> {
     public static readonly type: string = TxVariants.paypal;
@@ -140,8 +141,13 @@ export class BasePaypalElement<TProps extends BasePayPalConfiguration = BasePayP
                 type: this.type,
                 subtype: isExpress ? 'express' : BasePaypalElement.subtype
             },
+            browserInfo: this.browserInfo,
             ...(vault || isZeroAuth ? { storePaymentMethod: true } : {})
         };
+    }
+
+    private get browserInfo() {
+        return collectBrowserInfo();
     }
 
     public handleAction = (action: PaymentAction) => {
