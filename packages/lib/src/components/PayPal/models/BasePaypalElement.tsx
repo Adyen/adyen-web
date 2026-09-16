@@ -90,16 +90,14 @@ export class BasePaypalElement<TProps extends BasePayPalConfiguration = BasePayP
 
     public override async isAvailable(): Promise<void> {
         if (!this.paypalService) {
-            return Promise.reject(new AdyenCheckoutError('ERROR', `${this.elementName} is not available`));
+            throw new AdyenCheckoutError('ERROR', `${this.elementName} is not available`);
         }
 
         await this.paypalService.isSdkLoaded();
 
         if (!this.paypalService.getEligiblePaymentMethods().isEligible(this.fundingSource)) {
-            return Promise.reject(new AdyenCheckoutError('ERROR', `${this.elementName} is not available`));
+            throw new AdyenCheckoutError('ERROR', `${this.elementName} is not available`);
         }
-
-        return Promise.resolve();
     }
 
     protected override beforeRender(configSetByMerchant?: TProps) {
