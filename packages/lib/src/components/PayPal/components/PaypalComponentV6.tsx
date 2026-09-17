@@ -1,4 +1,4 @@
-import { h } from 'preact';
+import { Fragment, h } from 'preact';
 import { useMemo } from 'preact/hooks';
 
 import { usePayPalStatus } from '../hooks/usePayPalStatus';
@@ -15,6 +15,7 @@ const PayPalComponentV6 = ({
     style = {},
     commit = true,
     vault,
+    blockPayPalButtonVariants,
     blockPayPalCreditButton,
     blockPayPalPayLaterButton,
     blockPayPalVenmoButton,
@@ -71,22 +72,26 @@ const PayPalComponentV6 = ({
                 onShippingAddressChange={onShippingAddressChange}
                 onShippingOptionsChange={onShippingOptionsChange}
             />
-            {!blockPayPalPayLaterButton && (
-                <PayPalPayLaterButton
-                    {...commonProps}
-                    onShippingAddressChange={onShippingAddressChange}
-                    onShippingOptionsChange={onShippingOptionsChange}
-                />
+            {!blockPayPalButtonVariants && (
+                <Fragment>
+                    {!blockPayPalPayLaterButton && (
+                        <PayPalPayLaterButton
+                            {...commonProps}
+                            onShippingAddressChange={onShippingAddressChange}
+                            onShippingOptionsChange={onShippingOptionsChange}
+                        />
+                    )}
+                    {!blockPayPalCreditButton && (
+                        <PayPalCreditButton
+                            {...commonProps}
+                            vault={vault}
+                            onShippingAddressChange={onShippingAddressChange}
+                            onShippingOptionsChange={onShippingOptionsChange}
+                        />
+                    )}
+                    {!blockPayPalVenmoButton && <VenmoButton {...commonProps} style={style.venmo ?? {}} vault={vault} />}
+                </Fragment>
             )}
-            {!blockPayPalCreditButton && (
-                <PayPalCreditButton
-                    {...commonProps}
-                    vault={vault}
-                    onShippingAddressChange={onShippingAddressChange}
-                    onShippingOptionsChange={onShippingOptionsChange}
-                />
-            )}
-            {!blockPayPalVenmoButton && <VenmoButton {...commonProps} style={style.venmo ?? {}} vault={vault} />}
         </div>
     );
 };

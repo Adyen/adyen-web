@@ -42,7 +42,14 @@ export interface PayPalButtonsProps extends Omit<PayPalComponentProps, 'ref' | '
 
 export type PayPalComponentV6Props = Pick<
     NonNullable<PayPalConfiguration['usePayPalV6']>,
-    'commit' | 'vault' | 'style' | 'blockPayPalCreditButton' | 'blockPayPalPayLaterButton' | 'blockPayPalVenmoButton' | 'presentationModeOptions'
+    | 'commit'
+    | 'vault'
+    | 'style'
+    | 'blockPayPalButtonVariants'
+    | 'blockPayPalCreditButton'
+    | 'blockPayPalPayLaterButton'
+    | 'blockPayPalVenmoButton'
+    | 'presentationModeOptions'
 > & {
     paypalService: PayPalService;
     onSubmit: () => Promise<string>;
