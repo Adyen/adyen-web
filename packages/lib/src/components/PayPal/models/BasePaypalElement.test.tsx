@@ -10,7 +10,7 @@ import { PayPalSdkLoader } from '../services/PayPalSdkLoader';
 import requestPayPalOrderDetails from '../services/request-paypal-order-details';
 import type { IAnalytics } from '../../../core/Analytics/Analytics';
 import type { PaymentAction } from '../../../types/global-types';
-import type { PayPalComponents, PayPalEligiblePaymentMethods, PayPalV6OnApproveData } from '../paypal-js-types';
+import type { PayPalComponents, PayPalEligiblePaymentMethods, PayPalPresentationModeOptions, PayPalV6OnApproveData } from '../paypal-js-types';
 import type { BasePayPalConfiguration, SupportedPayPalFundingSources } from '../types';
 
 jest.mock('../services/PayPalService');
@@ -26,7 +26,9 @@ const requestPayPalOrderDetailsMock = requestPayPalOrderDetails as jest.Mock;
  * provides the minimum a concrete variant (PayPal, Venmo, ...) supplies, so the shared logic can be tested.
  */
 class TestPaypalElement extends BasePaypalElement {
-    protected override elementName = 'TestPayPal';
+    protected override get elementName(): string {
+        return 'TestPayPal';
+    }
 
     protected override componentToRender(): h.JSX.Element | null {
         return null;
@@ -96,8 +98,9 @@ describe('BasePaypalElement', () => {
                 }
             }
 
-            new MultiComponentElement(core);
+            const element = new MultiComponentElement(core);
 
+            expect(element).toBeInstanceOf(BasePaypalElement);
             expect(PayPalServiceMock).toHaveBeenCalledWith(expect.objectContaining({ components: ['paypal-payments', 'venmo-payments'] }));
         });
 
@@ -128,6 +131,68 @@ describe('BasePaypalElement', () => {
             await new Promise(process.nextTick);
 
             expect(onErrorMock).toHaveBeenCalledWith(initError, expect.anything());
+        });
+
+        test.each([
+            ['onShippingAddressChange', { onShippingAddressChange: jest.fn() }],
+            ['onShippingOptionsChange', { onShippingOptionsChange: jest.fn() }],
+            ['both shipping callbacks', { onShippingAddressChange: jest.fn(), onShippingOptionsChange: jest.fn() }]
+        ])('should throw an implementation error when %s is provided and isExpress is not set', (_name, shippingCallbacks) => {
+            expect(() => createElement({ ...shippingCallbacks })).toThrow(
+                'TestPayPal - You must set "isExpress" flag to "true" in order to use "onShippingAddressChange" and/or "onShippingOptionsChange" callbacks'
+            );
+            expect(PayPalServiceMock.prototype.initialize).not.toHaveBeenCalled();
+        });
+
+        test('should throw an AdyenCheckoutError of type IMPLEMENTATION_ERROR when the shipping callbacks are used without isExpress', () => {
+            let caughtError: unknown;
+
+            try {
+                createElement({ onShippingAddressChange: jest.fn() });
+            } catch (error) {
+                caughtError = error;
+            }
+
+            expect(caughtError).toBeInstanceOf(AdyenCheckoutError);
+            expect((caughtError as AdyenCheckoutError).name).toBe('IMPLEMENTATION_ERROR');
+        });
+
+        test('should not throw when the shipping callbacks are used and isExpress is true', () => {
+            expect(() => createElement({ isExpress: true, onShippingAddressChange: jest.fn(), onShippingOptionsChange: jest.fn() })).not.toThrow();
+
+            expect(PayPalServiceMock.prototype.initialize).toHaveBeenCalledTimes(1);
+        });
+
+        test.each([['redirect'], ['direct-app-switch']])(
+            'should throw an implementation error when isExpress is true and the presentation mode is "%s"',
+            presentationMode => {
+                expect(() =>
+                    createElement({ isExpress: true, presentationModeOptions: { presentationMode } as PayPalPresentationModeOptions })
+                ).toThrow(`TestPayPal - Unsupported presentation mode: ${presentationMode} for express checkout`);
+
+                expect(PayPalServiceMock.prototype.initialize).not.toHaveBeenCalled();
+            }
+        );
+
+        test.each([['popup'], ['modal'], ['payment-handler'], ['auto']])(
+            'should not throw when isExpress is true and the presentation mode is "%s"',
+            presentationMode => {
+                expect(() =>
+                    createElement({ isExpress: true, presentationModeOptions: { presentationMode } as PayPalPresentationModeOptions })
+                ).not.toThrow();
+
+                expect(PayPalServiceMock.prototype.initialize).toHaveBeenCalledTimes(1);
+            }
+        );
+
+        test('should not throw when an unsupported express presentation mode is used but isExpress is not set', () => {
+            expect(() => createElement({ presentationModeOptions: { presentationMode: 'redirect' } })).not.toThrow();
+
+            expect(PayPalServiceMock.prototype.initialize).toHaveBeenCalledTimes(1);
+        });
+
+        test('should not throw when isExpress is true and no presentation mode is provided', () => {
+            expect(() => createElement({ isExpress: true })).not.toThrow();
         });
     });
 
@@ -707,7 +772,7 @@ describe('BasePaypalElement', () => {
     describe('shipping change handlers', () => {
         test('should forward the shipping address change to the merchant along with the component', async () => {
             const onShippingAddressChangeMock = jest.fn().mockResolvedValue(undefined);
-            const element = createElement({ onShippingAddressChange: onShippingAddressChangeMock });
+            const element = createElement({ isExpress: true, onShippingAddressChange: onShippingAddressChangeMock });
             const data = { orderId: 'order-1', shippingAddress: { city: 'Amsterdam', countryCode: 'NL' } };
 
             // @ts-ignore accessing a protected method
@@ -725,7 +790,7 @@ describe('BasePaypalElement', () => {
 
         test('should forward the shipping options change to the merchant along with the component', async () => {
             const onShippingOptionsChangeMock = jest.fn().mockResolvedValue(undefined);
-            const element = createElement({ onShippingOptionsChange: onShippingOptionsChangeMock });
+            const element = createElement({ isExpress: true, onShippingOptionsChange: onShippingOptionsChangeMock });
             const data = { orderId: 'order-1', selectedShippingOption: { id: 'express' } };
 
             // @ts-ignore accessing a protected method

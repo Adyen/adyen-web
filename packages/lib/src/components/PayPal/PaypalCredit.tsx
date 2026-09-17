@@ -11,7 +11,9 @@ class PaypalCreditElement extends BasePaypalElement<PayPalCreditConfiguration> {
     public static readonly type = TxVariants.paypal_credit;
 
     protected override fundingSource: SupportedPayPalFundingSources = 'credit';
-    protected override elementName: string = 'PayPalCredit';
+    protected override get elementName(): string {
+        return 'PayPalCredit';
+    }
 
     public override get icon(): string {
         return this.resources.getImage()(TxVariants.paypal);
