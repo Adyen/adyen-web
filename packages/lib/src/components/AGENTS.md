@@ -12,7 +12,7 @@ method. Covers Card, Drop-in, and 3DS2 specifics at the bottom.
 | Strict TS scan, one component | `yarn workspace @adyen/adyen-web exec tsc -p tsconfig.strict.json 2>&1 \| grep -i [component]` |
 | Lint                          | `yarn lint`                                                                                    |
 | Lint styles                   | `yarn workspace @adyen/adyen-web lint-styles`                                                  |
-| E2E                           | `yarn test:e2e tests/e2e/[component]/[component].spec.ts --project=chromium`                   |
+| E2E                           | `yarn test:e2e [component] --project=chromium`                   |
 
 ## Boundaries
 
