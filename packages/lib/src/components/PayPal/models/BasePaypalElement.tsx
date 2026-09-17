@@ -20,8 +20,8 @@ import { sanitizeResponse, verifyPaymentDidNotFail } from '../../internal/UIElem
 import { PayPalSdkLoader } from '../services/PayPalSdkLoader';
 import { PayPalService } from '../services/PayPalService';
 import requestPayPalOrderDetails from '../services/request-paypal-order-details';
-import '../Paypal.scss';
 import collectBrowserInfo from '../../../utils/browserInfo';
+import '../Paypal.scss';
 
 export class BasePaypalElement<TProps extends BasePayPalConfiguration = BasePayPalConfiguration> extends UIElement<TProps> {
     public static readonly type: string = TxVariants.paypal;
