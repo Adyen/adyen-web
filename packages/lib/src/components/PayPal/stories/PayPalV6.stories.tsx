@@ -5,6 +5,7 @@ import { ComponentContainer } from '../../../../storybook/components/ComponentCo
 import Paypal from '..';
 import type { PayPalConfiguration } from '../types';
 import { Checkout } from '../../../../storybook/components/Checkout';
+import { PayPalV6ConfigurationUpdateDemo } from './PayPalV6ConfigurationUpdateDemo';
 
 type Story = StoryObj<PaymentMethodStoryProps<PayPalConfiguration>>;
 
@@ -92,6 +93,29 @@ export const WithPayPalV5: Story = {
     ),
     args: {
         componentConfiguration: {}
+    }
+};
+
+/**
+ * Showcases 'paypal.update(props)': the PayPal SDK instance and the eligible payment methods are re-created
+ * with the updated country code, currency, locale and payment flow.
+ */
+export const ConfigurationUpdate: Story = {
+    tags: ['no-automated-visual-test'],
+    render: ({ componentConfiguration, ...checkoutConfig }) => (
+        <Checkout checkoutConfig={checkoutConfig}>
+            {checkout => <PayPalV6ConfigurationUpdateDemo checkout={checkout} componentConfiguration={componentConfiguration} />}
+        </Checkout>
+    ),
+    args: {
+        componentConfiguration: {
+            usePayPalV6: {
+                onAuthorized: (data, actions) => {
+                    console.log('PaypalV6 onAuthorized data', { data });
+                    actions.resolve();
+                }
+            }
+        }
     }
 };
 

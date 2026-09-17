@@ -1,4 +1,4 @@
-import { PayPalService, PayPalServiceConfig } from './PayPalService';
+import { PayPalService, PayPalServiceConfig, PayPalServiceRefreshConfig } from './PayPalService';
 import { PayPalSdkLoader } from './PayPalSdkLoader';
 import requestPayPalOauthToken from './request-paypal-oauth-token';
 import { mock } from 'jest-mock-extended';
@@ -26,6 +26,11 @@ const createConfig = (overrides: Partial<PayPalServiceConfig> = {}): PayPalServi
     components: ['paypal-payments'],
     ...overrides
 });
+
+const createRefreshConfig = (overrides: Partial<PayPalServiceRefreshConfig> = {}): PayPalServiceRefreshConfig => {
+    const { sdkLoader: _sdkLoader, ...config } = createConfig();
+    return { ...config, ...overrides };
+};
 
 describe('PayPalService', () => {
     beforeEach(() => {
@@ -191,6 +196,100 @@ describe('PayPalService', () => {
             expect(config.sdkLoader.isSdkLoaded).toHaveBeenCalledTimes(1);
             expect(requestPayPalOauthTokenMock).toHaveBeenCalledTimes(1);
             expect(createInstanceMock).toHaveBeenCalledTimes(1);
+        });
+    });
+
+    describe('refresh()', () => {
+        test('should create a new SDK instance and re-evaluate the eligible payment methods with the new configuration', async () => {
+            const service = new PayPalService(createConfig());
+            await service.initialize();
+
+            await service.refresh(
+                createRefreshConfig({
+                    amount: { value: 5000, currency: 'GBP' },
+                    countryCode: 'GB',
+                    vault: true,
+                    locale: 'en_GB',
+                    components: ['paypal-payments', 'venmo-payments']
+                })
+            );
+
+            expect(createInstanceMock).toHaveBeenCalledTimes(2);
+            expect(createInstanceMock).toHaveBeenLastCalledWith(
+                expect.objectContaining({
+                    components: ['paypal-payments', 'venmo-payments'],
+                    locale: 'en-GB',
+                    testBuyerCountry: 'GB'
+                })
+            );
+            expect(findEligibleMethodsMock).toHaveBeenLastCalledWith({
+                currencyCode: 'GBP',
+                countryCode: 'GB',
+                paymentFlow: 'VAULT_WITH_PAYMENT'
+            });
+        });
+
+        test('should request a new client token', async () => {
+            const service = new PayPalService(createConfig());
+            await service.initialize();
+
+            await service.refresh(createRefreshConfig({ merchantId: 'other-merchant' }));
+
+            expect(requestPayPalOauthTokenMock).toHaveBeenCalledTimes(2);
+            expect(requestPayPalOauthTokenMock).toHaveBeenLastCalledWith(expect.any(String), {
+                clientKey: 'test_client_key',
+                merchantId: 'other-merchant'
+            });
+        });
+
+        test('should serve the previous SDK instance until the refresh completes', async () => {
+            const service = new PayPalService(createConfig());
+            await service.initialize();
+
+            const newEligibleMethods = mock<PayPalEligiblePaymentMethods>();
+            const newSdkInstance = { findEligibleMethods: jest.fn().mockResolvedValue(newEligibleMethods) } as unknown as PayPalSdkInstance;
+
+            let resolveCreateInstance: (instance: PayPalSdkInstance) => void;
+            createInstanceMock.mockReturnValueOnce(new Promise(resolve => (resolveCreateInstance = resolve)));
+
+            const refreshPromise = service.refresh(createRefreshConfig({ countryCode: 'NL' }));
+
+            let isSdkLoadedResolved = false;
+            void service.isSdkLoaded().then(() => (isSdkLoadedResolved = true));
+            await new Promise(process.nextTick);
+
+            expect(isSdkLoadedResolved).toBe(false);
+            expect(service.getInstance()).toBe(sdkInstance);
+
+            resolveCreateInstance(newSdkInstance);
+            await refreshPromise;
+            await new Promise(process.nextTick);
+
+            expect(isSdkLoadedResolved).toBe(true);
+            expect(service.getInstance()).toBe(newSdkInstance);
+            expect(service.getEligiblePaymentMethods()).toBe(newEligibleMethods);
+        });
+
+        test('should create the SDK instance when initialize() has not been called', async () => {
+            const service = new PayPalService(createConfig());
+
+            await service.refresh(createRefreshConfig());
+
+            expect(createInstanceMock).toHaveBeenCalledTimes(1);
+            expect(service.getInstance()).toBe(sdkInstance);
+        });
+
+        test('should reject and allow a later refresh to recover when it fails', async () => {
+            const service = new PayPalService(createConfig());
+            await service.initialize();
+
+            requestPayPalOauthTokenMock.mockRejectedValueOnce(new Error('Token request failed'));
+
+            await expect(service.refresh(createRefreshConfig())).rejects.toThrow('Token request failed');
+            await expect(service.isSdkLoaded()).rejects.toThrow('PayPal SDK not loaded');
+
+            await expect(service.refresh(createRefreshConfig())).resolves.toBeUndefined();
+            await expect(service.isSdkLoaded()).resolves.toBeUndefined();
         });
     });
 

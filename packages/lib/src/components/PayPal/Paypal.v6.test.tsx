@@ -41,6 +41,7 @@ describe('PayPal v6', () => {
     beforeEach(() => {
         jest.clearAllMocks();
         PayPalServiceMock.prototype.initialize.mockResolvedValue(undefined);
+        PayPalServiceMock.prototype.refresh.mockResolvedValue(undefined);
         PayPalServiceMock.prototype.isSdkLoaded.mockResolvedValue(undefined);
         PayPalServiceMock.prototype.getEligiblePaymentMethods.mockReturnValue({
             isEligible: isEligibleMock
@@ -333,6 +334,114 @@ describe('PayPal v6', () => {
             expect(onErrorMock.mock.calls[0][0]).toMatchObject({
                 message: 'Something went wrong while initializing PayPal',
                 cause: callbackError
+            });
+        });
+    });
+
+    describe('update', () => {
+        const mountPaypal = (props?: ConstructorParameters<typeof Paypal>[1]) => {
+            const paypal = new Paypal(core, props);
+            paypal.mount(document.createElement('div'));
+            return paypal;
+        };
+
+        test('should refresh the PayPal service with the updated configuration', () => {
+            const paypal = mountPaypal({
+                usePayPalV6: {},
+                configuration: { merchantId: 'merchant-1' },
+                countryCode: 'US',
+                amount: { value: 1000, currency: 'USD' }
+            });
+
+            paypal.update({ countryCode: 'GB', amount: { value: 5000, currency: 'GBP' } });
+
+            expect(PayPalServiceMock.prototype.refresh).toHaveBeenCalledTimes(1);
+            expect(PayPalServiceMock.prototype.refresh).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    merchantId: 'merchant-1',
+                    countryCode: 'GB',
+                    amount: { value: 5000, currency: 'GBP' },
+                    components: ['paypal-payments', 'venmo-payments']
+                })
+            );
+        });
+
+        test('should refresh the service with the updated usePayPalV6 configuration', () => {
+            const paypal = mountPaypal({ usePayPalV6: {} });
+
+            paypal.update({ usePayPalV6: { vault: true, locale: 'en_GB', blockPayPalVenmoButton: true } });
+
+            expect(PayPalServiceMock.prototype.refresh).toHaveBeenCalledWith(
+                expect.objectContaining({ vault: true, locale: 'en_GB', components: ['paypal-payments'] })
+            );
+        });
+
+        test('should not create a new PayPal service nor a new SDK loader', () => {
+            const paypal = mountPaypal({ usePayPalV6: {} });
+
+            paypal.update({ countryCode: 'GB' });
+
+            expect(PayPalServiceMock).toHaveBeenCalledTimes(1);
+            expect(PayPalSdkLoaderMock).toHaveBeenCalledTimes(1);
+        });
+
+        test('should re-render the component with the same PayPal service', () => {
+            const paypal = mountPaypal({ usePayPalV6: {} });
+            const paypalService = mockPayPalComponentV6.mock.calls[0][0].paypalService;
+            mockPayPalComponentV6.mockClear();
+
+            paypal.update({ countryCode: 'GB' });
+
+            expect(mockPayPalComponentV6).toHaveBeenCalledTimes(1);
+            expect(mockPayPalComponentV6).toHaveBeenLastCalledWith(expect.objectContaining({ paypalService }));
+        });
+
+        test('should not refresh the service when no prop it is derived from changed', () => {
+            const paypal = mountPaypal({ usePayPalV6: {}, countryCode: 'US', amount: { value: 1000, currency: 'USD' } });
+
+            paypal.update({ onError: jest.fn(), showPayButton: false });
+
+            expect(PayPalServiceMock.prototype.refresh).not.toHaveBeenCalled();
+        });
+
+        test('should not refresh the service when the amount is updated with the same value and currency', () => {
+            const paypal = mountPaypal({ usePayPalV6: {}, amount: { value: 1000, currency: 'USD' } });
+
+            paypal.update({ amount: { value: 1000, currency: 'USD' } });
+
+            expect(PayPalServiceMock.prototype.refresh).not.toHaveBeenCalled();
+        });
+
+        test('should refresh the service when the requested SDK components change', () => {
+            const paypal = mountPaypal({ usePayPalV6: {} });
+
+            paypal.update({ usePayPalV6: { blockPayPalVenmoButton: true } });
+
+            expect(PayPalServiceMock.prototype.refresh).toHaveBeenCalledWith(expect.objectContaining({ components: ['paypal-payments'] }));
+        });
+
+        test('should not refresh anything when usePayPalV6 is not set', () => {
+            const paypal = mountPaypal({ showPayButton: true });
+
+            paypal.update({ countryCode: 'GB' });
+
+            expect(PayPalServiceMock.prototype.refresh).not.toHaveBeenCalled();
+        });
+
+        test('should report the error via onError when the refresh fails', async () => {
+            const refreshError = new Error('Failed to load token');
+            const onErrorMock = jest.fn();
+            const paypal = mountPaypal({ usePayPalV6: {}, onError: onErrorMock });
+
+            PayPalServiceMock.prototype.refresh.mockRejectedValue(refreshError);
+
+            paypal.update({ countryCode: 'GB' });
+            await new Promise(process.nextTick);
+
+            expect(onErrorMock).toHaveBeenCalledTimes(1);
+            expect(onErrorMock.mock.calls[0][0]).toMatchObject({
+                message: 'Something went wrong while initializing PayPal',
+                cause: refreshError
             });
         });
     });
