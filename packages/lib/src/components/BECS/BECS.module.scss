@@ -1,3 +1,4 @@
+@use 'styles/mixins';
 @use 'styles/variable-generator';
 
 .bankDetails {
@@ -12,4 +13,24 @@
     font-weight: normal;
     font-size: variable-generator.token(text-caption-font-size);
     line-height: variable-generator.token(text-caption-line-height);
+}
+
+.actionsTitle {
+    @include mixins.adyen-checkout-text-body-strongest;
+
+    margin: 0;
+}
+
+.actionsMessage {
+    @include mixins.adyen-checkout-text-caption;
+
+    margin: variable-generator.token(spacer-030) 0 variable-generator.token(spacer-050);
+    color: variable-generator.token(color-label-secondary);
+}
+
+.actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: variable-generator.token(spacer-050);
 }

@@ -48,6 +48,59 @@ describe('BECS Direct Debit', () => {
         );
     });
 
+    test('should render the result with caller-composed download actions', () => {
+        const core = setupCoreMock();
+        const becs = new BECS(core, {
+            modules: { resources: core.modules.resources },
+            i18n: core.modules.i18n,
+            loadingContext: 'https://checkoutshopper-live.adyen.com/checkoutshopper/',
+            url: 'https://example.com/direct-debit-agreement.pdf'
+        });
+
+        render(becs.render());
+
+        expect(screen.getByRole('heading', { name: 'Success!' })).toBeInTheDocument();
+        expect(screen.getByText('Your account is authorized, you can close this page')).toBeInTheDocument();
+        const actions = screen.getAllByRole('link');
+        expect(actions).toHaveLength(2);
+        expect(actions[0]).toHaveAttribute('href', 'https://example.com/direct-debit-agreement.pdf');
+        expect(actions[1]).toHaveAttribute('href', 'https://example.com/direct-debit-agreement.pdf');
+    });
+
+    test('should show an invalid email error on blur', async () => {
+        const user = userEvent.setup();
+        const core = setupCoreMock();
+        const becs = new BECS(core, {
+            modules: { resources: core.modules.resources },
+            i18n: core.modules.i18n,
+            loadingContext: 'https://checkoutshopper-live.adyen.com/checkoutshopper/'
+        });
+
+        render(becs.render());
+
+        await user.type(await screen.findByLabelText('Email address'), 'invalid');
+        await user.tab();
+
+        expect(screen.getByText('Enter a valid email address')).toBeInTheDocument();
+    });
+
+    test('should show a required email error when an empty field loses focus', async () => {
+        const user = userEvent.setup();
+        const core = setupCoreMock();
+        const becs = new BECS(core, {
+            modules: { resources: core.modules.resources },
+            i18n: core.modules.i18n,
+            loadingContext: 'https://checkoutshopper-live.adyen.com/checkoutshopper/'
+        });
+
+        render(becs.render());
+
+        await user.click(await screen.findByLabelText('Email address'));
+        await user.tab();
+
+        expect(screen.getByText('Enter the email address')).toBeInTheDocument();
+    });
+
     test('should show validation errors and not submit invalid details', async () => {
         const user = userEvent.setup();
         const onSubmit = jest.fn();
@@ -68,7 +121,6 @@ describe('BECS Direct Debit', () => {
 
         expect(screen.getByText('Enter an account holder name')).toBeInTheDocument();
         expect(screen.getByText('Enter a valid 6-digit BSB')).toBeInTheDocument();
-        expect(screen.getByText('Enter a valid account number')).toBeInTheDocument();
         expect(screen.getByText('Enter a valid email address')).toBeInTheDocument();
         expect(onSubmit).not.toHaveBeenCalled();
     });

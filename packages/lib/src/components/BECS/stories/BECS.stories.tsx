@@ -8,6 +8,7 @@ import type { MetaConfiguration, PaymentMethodStoryProps, StoryConfiguration } f
 import type { BECSConfiguration } from '../types';
 
 type BECSStory = StoryConfiguration<BECSConfiguration>;
+const resultUrl = 'https://example.com/direct-debit-agreement.pdf';
 
 const meta: MetaConfiguration<BECSConfiguration> = {
     title: 'Components/BECS'
@@ -20,7 +21,23 @@ const render = ({ componentConfiguration, ...checkoutConfig }: PaymentMethodStor
 export const Default: BECSStory = {
     render,
     args: {
-        countryCode: 'AU'
+        countryCode: 'AU',
+        componentConfiguration: {
+            onSubmit: (state, component) => {
+                console.log({ state });
+                component.update({ url: resultUrl } as BECSConfiguration);
+            }
+        }
+    }
+};
+
+export const Success: BECSStory = {
+    render,
+    args: {
+        countryCode: 'AU',
+        componentConfiguration: {
+            url: resultUrl
+        }
     }
 };
 
