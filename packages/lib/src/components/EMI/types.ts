@@ -34,6 +34,17 @@ export interface EmiTransactionAmounts {
     totalPayableAmount: PaymentAmount;
     monthlyPayableAmount: PaymentAmount;
     totalInterestAmount: PaymentAmount;
+    /** Money taken off the authorisation up front. Absent until the lookup starts returning it. */
+    instantDiscountAmount?: PaymentAmount;
+}
+
+/** The processing fee the bank charges on top of the plan. `message` is shopper-facing copy the backend owns. */
+export interface EmiProcessingAmounts {
+    totalAmount: PaymentAmount;
+    feeAmount: PaymentAmount;
+    taxAmount: PaymentAmount;
+    type: string;
+    message: string;
 }
 
 export interface EmiOffer {
@@ -50,6 +61,7 @@ export interface EmiPlan {
     /** Basis points. 1599 = 15.99% p.a. */
     interestRateBps: number;
     transactionAmounts: EmiTransactionAmounts;
+    processingAmounts: EmiProcessingAmounts;
     offers?: EmiOffer[];
 }
 

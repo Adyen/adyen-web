@@ -11,8 +11,7 @@
     min-inline-size: 0;
 }
 
-.rows,
-.monthlyPayment {
+.rows {
     border: variable-generator.token(border-width-s) solid variable-generator.token(color-outline-primary);
     border-radius: variable-generator.token(border-radius-m);
     background: variable-generator.token(color-background-primary);
@@ -39,39 +38,18 @@
     @include mixins.adyen-checkout-text-body;
 }
 
+.rowLabel {
+    display: flex;
+    align-items: center;
+    gap: variable-generator.token(spacer-040);
+}
+
 .rowValue {
     margin: 0;
     text-align: end;
     white-space: nowrap;
 }
 
-.rowValueOriginal {
-    color: variable-generator.token(color-label-secondary);
-    margin-inline-end: variable-generator.token(spacer-030);
-    text-decoration: line-through;
-}
-
-.rowValueDiscounted {
+.rowValueDiscount {
     color: variable-generator.token(color-label-success);
-}
-
-.monthlyPayment {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: variable-generator.token(spacer-060);
-    padding: variable-generator.token(spacer-060) variable-generator.token(spacer-070);
-}
-
-.monthlyPaymentLabel,
-.monthlyPaymentValue {
-    color: variable-generator.token(color-label-primary);
-
-    @include mixins.adyen-checkout-text-body-strongest;
-}
-
-.monthlyPaymentValue {
-    margin: 0;
-    text-align: end;
-    white-space: nowrap;
 }

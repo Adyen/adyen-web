@@ -1,0 +1,546 @@
+{
+  "issuers": [
+    {
+      "issuerName": "HDFC Bank",
+      "issuerCode": "HDFC",
+      "fundingSource": "credit",
+      "plans": [
+        {
+          "type": "noCost",
+          "tenureMonths": 3,
+          "interestRateBps": 1800,
+          "transactionAmounts": {
+            "totalPayableAmount": {
+              "value": 15550943,
+              "currency": "INR"
+            },
+            "monthlyPayableAmount": {
+              "value": 5183648,
+              "currency": "INR"
+            },
+            "totalInterestAmount": {
+              "value": 455122,
+              "currency": "INR"
+            }
+          },
+          "offers": [
+            {
+              "offerId": "64f10036-01d1-4a92-b7b9-9f3b7991a545",
+              "amount": {
+                "value": 404079,
+                "currency": "INR"
+              }
+            }
+          ],
+          "processingAmounts": {
+            "totalAmount": {
+              "value": 35282,
+              "currency": "INR"
+            },
+            "feeAmount": {
+              "value": 29900,
+              "currency": "INR"
+            },
+            "taxAmount": {
+              "value": 5382,
+              "currency": "INR"
+            },
+            "type": "absolute",
+            "message": "299 + GST is Applicable"
+          }
+        },
+        {
+          "type": "noCost",
+          "tenureMonths": 6,
+          "interestRateBps": 1700,
+          "transactionAmounts": {
+            "totalPayableAmount": {
+              "value": 15544493,
+              "currency": "INR"
+            },
+            "monthlyPayableAmount": {
+              "value": 2590749,
+              "currency": "INR"
+            },
+            "totalInterestAmount": {
+              "value": 742533,
+              "currency": "INR"
+            }
+          },
+          "offers": [
+            {
+              "offerId": "64f10036-01d1-4a92-b7b9-9f3b7991a545",
+              "amount": {
+                "value": 697940,
+                "currency": "INR"
+              }
+            }
+          ],
+          "processingAmounts": {
+            "totalAmount": {
+              "value": 35282,
+              "currency": "INR"
+            },
+            "feeAmount": {
+              "value": 29900,
+              "currency": "INR"
+            },
+            "taxAmount": {
+              "value": 5382,
+              "currency": "INR"
+            },
+            "type": "absolute",
+            "message": "299 + GST is Applicable"
+          }
+        },
+        {
+          "type": "noCost",
+          "tenureMonths": 9,
+          "interestRateBps": 1700,
+          "transactionAmounts": {
+            "totalPayableAmount": {
+              "value": 15563202,
+              "currency": "INR"
+            },
+            "monthlyPayableAmount": {
+              "value": 1729245,
+              "currency": "INR"
+            },
+            "totalInterestAmount": {
+              "value": 1047477,
+              "currency": "INR"
+            }
+          },
+          "offers": [
+            {
+              "offerId": "64f10036-01d1-4a92-b7b9-9f3b7991a545",
+              "amount": {
+                "value": 984175,
+                "currency": "INR"
+              }
+            }
+          ],
+          "processingAmounts": {
+            "totalAmount": {
+              "value": 35282,
+              "currency": "INR"
+            },
+            "feeAmount": {
+              "value": 29900,
+              "currency": "INR"
+            },
+            "taxAmount": {
+              "value": 5382,
+              "currency": "INR"
+            },
+            "type": "absolute",
+            "message": "299 + GST is Applicable"
+          }
+        },
+        {
+          "type": "noCost",
+          "tenureMonths": 12,
+          "interestRateBps": 1700,
+          "transactionAmounts": {
+            "totalPayableAmount": {
+              "value": 15581670,
+              "currency": "INR"
+            },
+            "monthlyPayableAmount": {
+              "value": 1298472,
+              "currency": "INR"
+            },
+            "totalInterestAmount": {
+              "value": 1344775,
+              "currency": "INR"
+            }
+          },
+          "offers": [
+            {
+              "offerId": "64f10036-01d1-4a92-b7b9-9f3b7991a545",
+              "amount": {
+                "value": 1263005,
+                "currency": "INR"
+              }
+            }
+          ],
+          "processingAmounts": {
+            "totalAmount": {
+              "value": 35282,
+              "currency": "INR"
+            },
+            "feeAmount": {
+              "value": 29900,
+              "currency": "INR"
+            },
+            "taxAmount": {
+              "value": 5382,
+              "currency": "INR"
+            },
+            "type": "absolute",
+            "message": "299 + GST is Applicable"
+          }
+        },
+        {
+          "type": "noCost",
+          "tenureMonths": 18,
+          "interestRateBps": 1700,
+          "transactionAmounts": {
+            "totalPayableAmount": {
+              "value": 15617876,
+              "currency": "INR"
+            },
+            "monthlyPayableAmount": {
+              "value": 867660,
+              "currency": "INR"
+            },
+            "totalInterestAmount": {
+              "value": 1917284,
+              "currency": "INR"
+            }
+          },
+          "offers": [
+            {
+              "offerId": "64f10036-01d1-4a92-b7b9-9f3b7991a545",
+              "amount": {
+                "value": 1799308,
+                "currency": "INR"
+              }
+            }
+          ],
+          "processingAmounts": {
+            "totalAmount": {
+              "value": 35282,
+              "currency": "INR"
+            },
+            "feeAmount": {
+              "value": 29900,
+              "currency": "INR"
+            },
+            "taxAmount": {
+              "value": 5382,
+              "currency": "INR"
+            },
+            "type": "absolute",
+            "message": "299 + GST is Applicable"
+          }
+        },
+        {
+          "type": "noCost",
+          "tenureMonths": 24,
+          "interestRateBps": 1700,
+          "transactionAmounts": {
+            "totalPayableAmount": {
+              "value": 15653109,
+              "currency": "INR"
+            },
+            "monthlyPayableAmount": {
+              "value": 652213,
+              "currency": "INR"
+            },
+            "totalInterestAmount": {
+              "value": 2461705,
+              "currency": "INR"
+            }
+          },
+          "offers": [
+            {
+              "offerId": "64f10036-01d1-4a92-b7b9-9f3b7991a545",
+              "amount": {
+                "value": 2308496,
+                "currency": "INR"
+              }
+            }
+          ],
+          "processingAmounts": {
+            "totalAmount": {
+              "value": 35282,
+              "currency": "INR"
+            },
+            "feeAmount": {
+              "value": 29900,
+              "currency": "INR"
+            },
+            "taxAmount": {
+              "value": 5382,
+              "currency": "INR"
+            },
+            "type": "absolute",
+            "message": "299 + GST is Applicable"
+          }
+        }
+      ]
+    },
+    {
+      "issuerName": "ICICI Bank",
+      "issuerCode": "ICICI",
+      "fundingSource": "credit",
+      "plans": [
+        {
+          "type": "noCost",
+          "tenureMonths": 3,
+          "interestRateBps": 1599,
+          "transactionAmounts": {
+            "totalPayableAmount": {
+              "value": 15499900,
+              "currency": "INR"
+            },
+            "monthlyPayableAmount": {
+              "value": 5166633,
+              "currency": "INR"
+            },
+            "totalInterestAmount": {
+              "value": 404079,
+              "currency": "INR"
+            }
+          },
+          "offers": [
+            {
+              "offerId": "64f10036-01d1-4a92-b7b9-9f3b7991a545",
+              "amount": {
+                "value": 404079,
+                "currency": "INR"
+              }
+            }
+          ],
+          "processingAmounts": {
+            "totalAmount": {
+              "value": 35282,
+              "currency": "INR"
+            },
+            "feeAmount": {
+              "value": 29900,
+              "currency": "INR"
+            },
+            "taxAmount": {
+              "value": 5382,
+              "currency": "INR"
+            },
+            "type": "percentage",
+            "message": "2.99% or 299 (whichever is lower) +GST"
+          }
+        },
+        {
+          "type": "noCost",
+          "tenureMonths": 6,
+          "interestRateBps": 1599,
+          "transactionAmounts": {
+            "totalPayableAmount": {
+              "value": 15499900,
+              "currency": "INR"
+            },
+            "monthlyPayableAmount": {
+              "value": 2583317,
+              "currency": "INR"
+            },
+            "totalInterestAmount": {
+              "value": 697940,
+              "currency": "INR"
+            }
+          },
+          "offers": [
+            {
+              "offerId": "64f10036-01d1-4a92-b7b9-9f3b7991a545",
+              "amount": {
+                "value": 697940,
+                "currency": "INR"
+              }
+            }
+          ],
+          "processingAmounts": {
+            "totalAmount": {
+              "value": 35282,
+              "currency": "INR"
+            },
+            "feeAmount": {
+              "value": 29900,
+              "currency": "INR"
+            },
+            "taxAmount": {
+              "value": 5382,
+              "currency": "INR"
+            },
+            "type": "percentage",
+            "message": "2.99% or 299 (whichever is lower) +GST"
+          }
+        },
+        {
+          "type": "noCost",
+          "tenureMonths": 9,
+          "interestRateBps": 1599,
+          "transactionAmounts": {
+            "totalPayableAmount": {
+              "value": 15499900,
+              "currency": "INR"
+            },
+            "monthlyPayableAmount": {
+              "value": 1722211,
+              "currency": "INR"
+            },
+            "totalInterestAmount": {
+              "value": 984175,
+              "currency": "INR"
+            }
+          },
+          "offers": [
+            {
+              "offerId": "64f10036-01d1-4a92-b7b9-9f3b7991a545",
+              "amount": {
+                "value": 984175,
+                "currency": "INR"
+              }
+            }
+          ],
+          "processingAmounts": {
+            "totalAmount": {
+              "value": 35282,
+              "currency": "INR"
+            },
+            "feeAmount": {
+              "value": 29900,
+              "currency": "INR"
+            },
+            "taxAmount": {
+              "value": 5382,
+              "currency": "INR"
+            },
+            "type": "percentage",
+            "message": "2.99% or 299 (whichever is lower) +GST"
+          }
+        },
+        {
+          "type": "noCost",
+          "tenureMonths": 12,
+          "interestRateBps": 1599,
+          "transactionAmounts": {
+            "totalPayableAmount": {
+              "value": 15499900,
+              "currency": "INR"
+            },
+            "monthlyPayableAmount": {
+              "value": 1291658,
+              "currency": "INR"
+            },
+            "totalInterestAmount": {
+              "value": 1263005,
+              "currency": "INR"
+            }
+          },
+          "offers": [
+            {
+              "offerId": "64f10036-01d1-4a92-b7b9-9f3b7991a545",
+              "amount": {
+                "value": 1263005,
+                "currency": "INR"
+              }
+            }
+          ],
+          "processingAmounts": {
+            "totalAmount": {
+              "value": 35282,
+              "currency": "INR"
+            },
+            "feeAmount": {
+              "value": 29900,
+              "currency": "INR"
+            },
+            "taxAmount": {
+              "value": 5382,
+              "currency": "INR"
+            },
+            "type": "percentage",
+            "message": "2.99% or 299 (whichever is lower) +GST"
+          }
+        },
+        {
+          "type": "noCost",
+          "tenureMonths": 18,
+          "interestRateBps": 1599,
+          "transactionAmounts": {
+            "totalPayableAmount": {
+              "value": 15499900,
+              "currency": "INR"
+            },
+            "monthlyPayableAmount": {
+              "value": 861106,
+              "currency": "INR"
+            },
+            "totalInterestAmount": {
+              "value": 1799308,
+              "currency": "INR"
+            }
+          },
+          "offers": [
+            {
+              "offerId": "64f10036-01d1-4a92-b7b9-9f3b7991a545",
+              "amount": {
+                "value": 1799308,
+                "currency": "INR"
+              }
+            }
+          ],
+          "processingAmounts": {
+            "totalAmount": {
+              "value": 35282,
+              "currency": "INR"
+            },
+            "feeAmount": {
+              "value": 29900,
+              "currency": "INR"
+            },
+            "taxAmount": {
+              "value": 5382,
+              "currency": "INR"
+            },
+            "type": "percentage",
+            "message": "2.99% or 299 (whichever is lower) +GST"
+          }
+        },
+        {
+          "type": "noCost",
+          "tenureMonths": 24,
+          "interestRateBps": 1599,
+          "transactionAmounts": {
+            "totalPayableAmount": {
+              "value": 15499899,
+              "currency": "INR"
+            },
+            "monthlyPayableAmount": {
+              "value": 645829,
+              "currency": "INR"
+            },
+            "totalInterestAmount": {
+              "value": 2308495,
+              "currency": "INR"
+            }
+          },
+          "offers": [
+            {
+              "offerId": "64f10036-01d1-4a92-b7b9-9f3b7991a545",
+              "amount": {
+                "value": 2308496,
+                "currency": "INR"
+              }
+            }
+          ],
+          "processingAmounts": {
+            "totalAmount": {
+              "value": 35282,
+              "currency": "INR"
+            },
+            "feeAmount": {
+              "value": 29900,
+              "currency": "INR"
+            },
+            "taxAmount": {
+              "value": 5382,
+              "currency": "INR"
+            },
+            "type": "percentage",
+            "message": "2.99% or 299 (whichever is lower) +GST"
+          }
+        }
+      ]
+    }
+  ]
+}

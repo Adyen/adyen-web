@@ -1,5 +1,6 @@
 import { SUPPORTED_ISSUER_FUNDING_SOURCE } from './constants';
 import type { EmiIssuer, EmiOffer, EmiPlan, EmiPlanPayload, EmiPlansResponse } from './types';
+import type { PaymentAmount } from '../../types/global-types';
 
 /**
  * @internal
@@ -20,6 +21,19 @@ const higherOffer = (winner: EmiOffer, candidate: EmiOffer): EmiOffer => (candid
  */
 export const selectDisplayOffer = (offers: EmiOffer[] = []): EmiOffer | undefined =>
     offers.reduce<EmiOffer | undefined>((winner, candidate) => (winner ? higherOffer(winner, candidate) : candidate), undefined);
+
+/**
+ * @internal
+ * The largest instant discount among the plans given, which is what a provider row advertises. A plan row
+ * reads `transactionAmounts.instantDiscountAmount` directly. Ties keep the first plan in backend order.
+ */
+export const selectInstantDiscount = (plans: EmiPlan[] = []): PaymentAmount | undefined =>
+    plans.reduce<PaymentAmount | undefined>((winner, { transactionAmounts }) => {
+        const candidate = transactionAmounts?.instantDiscountAmount;
+        if (!candidate) return winner;
+
+        return !winner || candidate.value > winner.value ? candidate : winner;
+    }, undefined);
 
 const toPayloadPlanType = (type: string): string => type.replace(/([a-z0-9])([A-Z])/g, '$1_$2').toUpperCase();
 
