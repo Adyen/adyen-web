@@ -1,4 +1,4 @@
-import { PayPalPresentationModeOptions } from '@paypal/paypal-js/sdk-v6';
+import { PayPalPresentationModeOptions } from './paypal-js-types';
 
 const INTEGRATION_DATE = '2020-02-01';
 const PAYPAL_JS_URL_V5 = 'https://www.paypal.com/sdk/js';
