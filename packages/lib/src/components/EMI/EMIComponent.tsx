@@ -117,7 +117,9 @@ export function EMIComponent({
                     <EMIPlanSummary plan={selection.plan} labelledBy={planSummaryId} />
                     <EMITerms issuerCode={selection.issuer.issuerCode} processingMessage={selection.plan.processingAmounts?.message} />
 
-                    <h3 className={styles.emiSectionHeading}>{i18n.get('emi.cardDetails')}</h3>
+                    <h3 className={styles.emiTitle}>
+                        {selection.issuer.issuerName} {i18n.get('emi.cardDetails')}
+                    </h3>
                     <p className={styles.emiInstructions}>
                         {i18n.get('emi.cardDetailsInstructions', { values: { provider: selection.issuer.issuerName } })}
                     </p>

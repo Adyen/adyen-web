@@ -41,6 +41,11 @@ const meta: MetaConfiguration<DropinConfiguration> = {
         }
     },
     args: {
+        useSessions: false,
+        countryCode: 'IN',
+        amount: 15499900,
+        locale: 'en-IN',
+        translations: { 'en-IN': {} },
         componentConfiguration: getComponentConfigFromUrl() ?? {
             showRadioButton: false,
             instantPaymentTypes: ['googlepay', 'applepay'],
@@ -262,6 +267,8 @@ export const EmiPlans: DropinStory = {
         useSessions: false,
         countryCode: 'IN',
         amount: 15499900,
+        locale: 'en-IN',
+        translations: { 'en-IN': {} },
         componentConfiguration: {
             paymentMethodComponents: [EMI, CardElement]
         }
