@@ -10,13 +10,16 @@ import DropinComponent from '../../Dropin';
 import CardElement from '../../../Card';
 import EMI from '../../../EMI';
 import { EmiPlansLoader } from '../../../EMI/stories/EmiPlansLoader';
-import { emiPlansHandlers } from '../../../EMI/stories/handlers';
+import emiOffersFixture from '../../../EMI/stories/emiOffersWithInterestDiscount.json';
 import type { NewableComponent } from '../../../../core/core.registry';
 import type { ICore } from '../../../../core/types';
 import type { PaymentAmount } from '../../../../types/global-types';
+import type { EmiPlansResponse } from '../../../EMI/types';
 import './customization.scss';
 
 type DropinStory = StoryConfiguration<DropinConfiguration>;
+
+const emiOffersWithInterestDiscount = emiOffersFixture as EmiPlansResponse;
 
 const meta: MetaConfiguration<DropinConfiguration> = {
     title: 'Drop-in/Drop-in Component',
@@ -255,10 +258,6 @@ export const SessionsDonationReparented: DropinStory = {
  * sessions integrations cannot offer plan selection until the sessions endpoint ships.
  */
 export const EmiPlans: DropinStory = {
-    // The plans come from the merchant backend, which MSW stands in for. Playwright mocks the same
-    // endpoint itself, because the E2E Storybook build runs with MSW disabled.
-    parameters: { msw: { handlers: emiPlansHandlers } },
-
     args: {
         useSessions: false,
         countryCode: 'IN',
@@ -268,16 +267,19 @@ export const EmiPlans: DropinStory = {
         }
     },
 
+    // The plans normally come from the merchant backend. This story passes the fixture straight to the
+    // component instead, so it never depends on that lookup being available.
     render: ({ componentConfiguration, ...checkoutConfig }: PaymentMethodStoryProps<DropinConfiguration>) => (
         <Checkout checkoutConfig={checkoutConfig}>
             {checkout => (
-                <EmiPlansLoader amount={{ value: checkoutConfig.amount, currency: getCurrency(checkoutConfig.countryCode) }}>
-                    {plans => (
-                        <ComponentContainer
-                            element={new DropinComponent(checkout, { ...componentConfiguration, paymentMethodsConfiguration: { emi: { plans } } })}
-                        />
-                    )}
-                </EmiPlansLoader>
+                <ComponentContainer
+                    element={
+                        new DropinComponent(checkout, {
+                            ...componentConfiguration,
+                            paymentMethodsConfiguration: { emi: { plans: emiOffersWithInterestDiscount } }
+                        })
+                    }
+                />
             )}
         </Checkout>
     )

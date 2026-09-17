@@ -6,7 +6,7 @@ import { useCoreContext } from '../../core/Context/CoreProvider';
 import { useA11yReporter } from '../../core/Errors/useA11yReporter';
 import { EMIPlanSelection } from './components/EMIPlanSelection';
 import { EMIPlanSummary } from './components/EMIPlanSummary';
-import { selectDisplayOffer } from './utils';
+import { EMITerms } from './components/EMITerms';
 import { getUniqueId } from '../../utils/idGenerator';
 import type UIElement from '../internal/UIElement/UIElement';
 import type { ComponentMethodsRef, UIElementStatus } from '../internal/UIElement/types';
@@ -68,11 +68,11 @@ export function EMIComponent({
         setSelection(nextSelection);
     };
 
-    const offer = selection ? selectDisplayOffer(selection.plan.offers) : undefined;
+    const instantDiscount = selection?.plan.transactionAmounts.instantDiscountAmount;
     const discountMessage =
-        selection && offer
+        selection && instantDiscount
             ? i18n.get('emi.discountApplied', {
-                  values: { amount: i18n.amount(-offer.amount.value, offer.amount.currency), provider: selection.issuer.issuerName }
+                  values: { amount: i18n.amount(-instantDiscount.value, instantDiscount.currency), provider: selection.issuer.issuerName }
               })
             : null;
 
@@ -115,6 +115,7 @@ export function EMIComponent({
                         {i18n.get('emi.planSummary')}
                     </h3>
                     <EMIPlanSummary plan={selection.plan} labelledBy={planSummaryId} />
+                    <EMITerms issuerCode={selection.issuer.issuerCode} processingMessage={selection.plan.processingAmounts?.message} />
 
                     <h3 className={styles.emiSectionHeading}>{i18n.get('emi.cardDetails')}</h3>
                     <p className={styles.emiInstructions}>

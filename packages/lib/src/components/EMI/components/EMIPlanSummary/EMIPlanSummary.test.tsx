@@ -21,9 +21,21 @@ const offerOf = (plan: EmiPlan, index: number): PaymentAmount => (plan.offers ??
 const noCostOffer = offerOf(noCostPlanWithDiscount, 1);
 const lowCostOffer = offerOf(lowCostPlanWithDiscount, 0);
 
+/** The field is optional on the wire, so a fixture meant to carry one is asserted rather than defaulted */
+const instantDiscountOf = (plan: EmiPlan): PaymentAmount => {
+    const { instantDiscountAmount } = plan.transactionAmounts;
+    if (!instantDiscountAmount) throw new Error(`The ${plan.type} fixture carries no instant discount`);
+
+    return instantDiscountAmount;
+};
+
 const formatAmount = (amount: PaymentAmount) => i18n.amount(amount.value, amount.currency);
 
-const formatDiscounted = (amount: PaymentAmount, discount: PaymentAmount) => formatAmount({ ...amount, value: amount.value - discount.value });
+// The locale places the minus sign, the same way it places the currency symbol
+const formatDiscount = (amount: PaymentAmount) => i18n.amount(-amount.value, amount.currency);
+
+const formatReserved = (amount: PaymentAmount, ...discounts: PaymentAmount[]) =>
+    formatAmount({ ...amount, value: discounts.reduce((left, discount) => left - discount.value, amount.value) });
 
 const labels = () => screen.getAllByRole('term').map(term => term.textContent);
 const values = () => screen.getAllByRole('definition').map(definition => definition.textContent);
@@ -42,16 +54,16 @@ const renderPlanSummary = (plan: EmiPlan, { amount }: { amount?: PaymentAmount }
     );
 
 /** Both plan types spend their offer on the interest the bank charges, so both summarise it the same way */
-const plansDiscountingInterest: [planType: string, plan: EmiPlan, offer: PaymentAmount][] = [
-    ['no cost', noCostPlanWithDiscount, noCostOffer],
-    ['low cost', lowCostPlanWithDiscount, lowCostOffer]
+const plansDiscountingInterest: [planType: string, plan: EmiPlan, offer: PaymentAmount, instantDiscount: PaymentAmount, tag: string][] = [
+    ['no cost', noCostPlanWithDiscount, noCostOffer, instantDiscountOf(noCostPlanWithDiscount), 'No cost'],
+    ['low cost', lowCostPlanWithDiscount, lowCostOffer, instantDiscountOf(lowCostPlanWithDiscount), 'Low cost']
 ];
 
 describe('EMIPlanSummary', () => {
     test('should keep every row in a single group', () => {
         renderPlanSummary(noCostPlanWithDiscount);
 
-        expect(within(screen.getByRole('group')).getAllByRole('term')).toHaveLength(5);
+        expect(within(screen.getByRole('group')).getAllByRole('term')).toHaveLength(6);
     });
 
     test('should render every row of a complete plan, in the order of the design', () => {
@@ -59,111 +71,86 @@ describe('EMIPlanSummary', () => {
 
         expect(labels()).toEqual([
             'Item price',
+            'Instant discount',
+            // The plan type is tagged inside the label of the row its offer discounts
+            'Interest discountNo cost',
             'Amount reserved on card',
             'Interest charged by bank @15.5%',
-            'Total amount to be paid over time',
-            'Upcoming monthly payment'
+            'Total amount to be paid over time'
         ]);
     });
 
-    describe.each(plansDiscountingInterest)('%s plan', (_planType, plan, offer) => {
-        const { totalInterestAmount, totalPayableAmount, monthlyPayableAmount } = plan.transactionAmounts;
+    describe.each(plansDiscountingInterest)('%s plan', (_planType, plan, offer, instantDiscount, tag) => {
+        const { totalInterestAmount, totalPayableAmount } = plan.transactionAmounts;
 
-        test('should discount the offer off the reserved amount and off the interest, keeping the interest original', () => {
+        test('should take both the interest discount and the instant discount off the reserved amount, leaving the interest whole', () => {
             renderPlanSummary(plan);
 
             expect(values()).toEqual([
                 formatAmount(EMI_FIXTURE_CHECKOUT_AMOUNT),
-                formatDiscounted(EMI_FIXTURE_CHECKOUT_AMOUNT, offer),
-                // The struck-through original and the discounted value of the interest row, side by side
-                `${formatAmount(totalInterestAmount)}${formatDiscounted(totalInterestAmount, offer)}`,
-                formatAmount(totalPayableAmount),
-                formatAmount(monthlyPayableAmount)
+                formatDiscount(instantDiscount),
+                formatDiscount(offer),
+                formatReserved(EMI_FIXTURE_CHECKOUT_AMOUNT, instantDiscount, offer),
+                formatAmount(totalInterestAmount),
+                formatAmount(totalPayableAmount)
             ]);
         });
 
-        // The row announces the amount the shopper pays, and the strikethrough carries the discount visually
-        test('should strike the original interest through, hidden from assistive technology', () => {
+        test('should tag the interest discount with the plan type it comes with', () => {
             renderPlanSummary(plan);
 
-            const original = screen.getByText(formatAmount(totalInterestAmount));
-
-            expect(original.tagName).toBe('S');
-            expect(original).toHaveAttribute('aria-hidden', 'true');
-        });
-
-        test('should render no discount row, the offer being shown on the rows it discounts', () => {
-            renderPlanSummary(plan);
-
-            expect(screen.queryByText('Discount')).toBeNull();
+            expect(screen.getByText('Interest discount', { exact: false })).toHaveTextContent(tag);
         });
 
         test('should render the rows of the plan when no checkout amount is configured', () => {
             renderPlanSummary(plan, { amount: undefined });
 
             expect(labels()).toEqual([
+                'Instant discount',
+                `Interest discount${tag}`,
                 expect.stringMatching(/^Interest charged by bank @/),
-                'Total amount to be paid over time',
-                'Upcoming monthly payment'
+                'Total amount to be paid over time'
             ]);
-            expect(screen.getByText(formatDiscounted(totalInterestAmount, offer))).toBeInTheDocument();
         });
     });
 
-    test('should discount the interest no further than zero when the offer exceeds it', () => {
-        const { transactionAmounts } = noCostPlanWithDiscount;
-        const interestBelowOffer = { value: noCostOffer.value - 100, currency: noCostOffer.currency };
+    test('should reserve nothing on the card when the discounts exceed the checkout amount', () => {
+        const amount = { value: instantDiscountOf(noCostPlanWithDiscount).value - 100, currency: 'INR' };
 
-        renderPlanSummary({ ...noCostPlanWithDiscount, transactionAmounts: { ...transactionAmounts, totalInterestAmount: interestBelowOffer } });
+        renderPlanSummary(noCostPlanWithDiscount, { amount });
 
-        expect(screen.getByText(i18n.amount(0, interestBelowOffer.currency))).toBeInTheDocument();
+        expect(screen.getByText(i18n.amount(0, amount.currency))).toBeInTheDocument();
     });
 
-    test('should render the offer of a standard plan as a discount row of its own, leaving the other rows alone', () => {
+    // Only a tagged plan type buys its interest down, so the offer of a standard plan discounts nothing
+    test('should render no discount row for a standard plan carrying an offer', () => {
         const offer = { offerId: 'offer-axis', type: 'DISCOUNT', amount: { value: 100000, currency: 'INR' } };
-        const { totalInterestAmount, totalPayableAmount, monthlyPayableAmount } = standardPlanWithInterest.transactionAmounts;
+        const { totalInterestAmount, totalPayableAmount } = standardPlanWithInterest.transactionAmounts;
 
         renderPlanSummary({ ...standardPlanWithInterest, offers: [offer] });
 
-        expect(labels()).toEqual([
-            'Item price',
-            'Discount',
-            'Amount reserved on card',
-            'Interest charged by bank @15.5%',
-            'Total amount to be paid over time',
-            'Upcoming monthly payment'
-        ]);
-        // An exact match also proves that no struck-through original amount is rendered next to a value
+        expect(labels()).toEqual(['Item price', 'Amount reserved on card', 'Interest charged by bank @15.5%', 'Total amount to be paid over time']);
         expect(values()).toEqual([
             formatAmount(EMI_FIXTURE_CHECKOUT_AMOUNT),
-            // The locale places the minus sign, the same way it places the currency symbol
-            i18n.amount(-offer.amount.value, offer.amount.currency),
             formatAmount(EMI_FIXTURE_CHECKOUT_AMOUNT),
             formatAmount(totalInterestAmount),
-            formatAmount(totalPayableAmount),
-            formatAmount(monthlyPayableAmount)
+            formatAmount(totalPayableAmount)
         ]);
     });
 
-    test('should not render the discount row when the plan carries no offer', () => {
-        const { totalInterestAmount, totalPayableAmount, monthlyPayableAmount } = standardPlanWithInterest.transactionAmounts;
+    test('should not render the discount rows when the plan carries neither an offer nor an instant discount', () => {
+        const { totalInterestAmount, totalPayableAmount } = standardPlanWithInterest.transactionAmounts;
 
         renderPlanSummary(standardPlanWithInterest);
 
-        expect(screen.queryByText('Discount')).toBeNull();
-        expect(labels()).toEqual([
-            'Item price',
-            'Amount reserved on card',
-            'Interest charged by bank @15.5%',
-            'Total amount to be paid over time',
-            'Upcoming monthly payment'
-        ]);
+        expect(screen.queryByText('Instant discount')).toBeNull();
+        expect(screen.queryByText('Interest discount')).toBeNull();
+        expect(labels()).toEqual(['Item price', 'Amount reserved on card', 'Interest charged by bank @15.5%', 'Total amount to be paid over time']);
         expect(values()).toEqual([
             formatAmount(EMI_FIXTURE_CHECKOUT_AMOUNT),
             formatAmount(EMI_FIXTURE_CHECKOUT_AMOUNT),
             formatAmount(totalInterestAmount),
-            formatAmount(totalPayableAmount),
-            formatAmount(monthlyPayableAmount)
+            formatAmount(totalPayableAmount)
         ]);
     });
 
@@ -171,15 +158,5 @@ describe('EMIPlanSummary', () => {
         renderPlanSummary({ ...standardPlanWithInterest, interestRateBps: 1599 });
 
         expect(screen.getByText('Interest charged by bank @15.99%')).toBeInTheDocument();
-    });
-
-    test('should render the monthly payment with its own label, outside the row list', () => {
-        renderPlanSummary(noCostPlanWithDiscount);
-
-        const terms = labels();
-        const definitions = values();
-
-        expect(terms[terms.length - 1]).toBe('Upcoming monthly payment');
-        expect(definitions[definitions.length - 1]).toBe(formatAmount(noCostPlanWithDiscount.transactionAmounts.monthlyPayableAmount));
     });
 });

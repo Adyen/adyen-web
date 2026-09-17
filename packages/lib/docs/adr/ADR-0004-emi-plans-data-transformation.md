@@ -6,18 +6,19 @@ The installment plans available to a shopper are priced for a specific amount an
 
 One response drives two dropdowns, a discount banner, a summary table and the `emiPlan` object sent to `/payments`.
 
-The question this ADR answers is not whether to convert that response into a view model. It is **which side of the wire owns each value the screen shows**. Phase 2 shipped with the SDK deriving six of them:
+The question this ADR answers is not whether to convert that response into a view model. It is **which side of the wire owns each value the screen shows**. Phase 2 shipped with the SDK deriving seven of them:
 
-| Derived value                               | Where                                               |
-| ------------------------------------------- | --------------------------------------------------- |
-| A key for each row of the two dropdowns     | `getIssuerId` / `getPlanId`, `EMIPlanSelection.tsx` |
-| The tags on a provider row                  | `getIssuerTags`, `EMIPlanSelection.tsx`             |
-| The discount on a provider row              | `getIssuerDiscountText`, `EMIPlanSelection.tsx`     |
-| Which offer of a plan is shown, and charged | `selectDisplayOffer`, `utils.ts`                    |
-| Which plan is selected on first paint       | `getDefaultSelection`, `EMIComponent.tsx`           |
-| The amount reserved on the card             | `EMIPlanSummary.tsx`, read from the checkout amount |
+| Derived value                               | Where                                                                                      |
+| ------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| A key for each row of the two dropdowns     | `getIssuerId` / `getPlanId`, `EMIPlanSelection.tsx`                                        |
+| The tags on a provider row                  | `getIssuerTags`, `EMIPlanSelection.tsx`                                                    |
+| The discount on a provider row              | `selectInstantDiscount`, `utils.ts`, the largest `instantDiscountAmount` of its plans      |
+| Which offer of a plan is shown, and charged | `selectDisplayOffer`, `utils.ts`                                                           |
+| Which plan is selected on first paint       | `getDefaultSelection`, `EMIComponent.tsx`                                                  |
+| The amount reserved on the card             | `EMIPlanSummary.tsx`, the checkout amount less the interest offer and the instant discount |
+| The terms and conditions page of the bank   | `ISSUER_TERMS_URLS`, `constants.ts`, keyed by `issuerCode`                                 |
 
-Three of those are presentation. Three are policy — statements about what a bank offers and what the shopper will be charged — and the SDK has no authority to make them.
+Three of those are presentation. Four are policy — statements about what a bank offers and what the shopper will be charged — and the SDK has no authority to make them.
 
 ## What the lookup returns
 
@@ -36,7 +37,15 @@ Three of those are presentation. Three are policy — statements about what a ba
                     "transactionAmounts": {
                         "monthlyPayableAmount": { "value": 5880000, "currency": "INR" },
                         "totalPayableAmount": { "value": 16399900, "currency": "INR" },
-                        "totalInterestAmount": { "value": 0, "currency": "INR" }
+                        "totalInterestAmount": { "value": 0, "currency": "INR" },
+                        "instantDiscountAmount": { "value": 400000, "currency": "INR" }
+                    },
+                    "processingAmounts": {
+                        "totalAmount": { "value": 35282, "currency": "INR" },
+                        "feeAmount": { "value": 29900, "currency": "INR" },
+                        "taxAmount": { "value": 5382, "currency": "INR" },
+                        "type": "absolute",
+                        "message": "299 + GST is Applicable"
                     },
                     "offers": [
                         { "offerId": "offer-hdfc-cashback", "amount": { "value": 250000, "currency": "INR" }, "description": "Cashback" },
@@ -51,6 +60,13 @@ Three of those are presentation. Three are policy — statements about what a ba
                         "monthlyPayableAmount": { "value": 2940000, "currency": "INR" },
                         "totalPayableAmount": { "value": 16899900, "currency": "INR" },
                         "totalInterestAmount": { "value": 1400000, "currency": "INR" }
+                    },
+                    "processingAmounts": {
+                        "totalAmount": { "value": 35282, "currency": "INR" },
+                        "feeAmount": { "value": 29900, "currency": "INR" },
+                        "taxAmount": { "value": 5382, "currency": "INR" },
+                        "type": "absolute",
+                        "message": "299 + GST is Applicable"
                     }
                 }
             ]
@@ -59,7 +75,9 @@ Three of those are presentation. Three are policy — statements about what a ba
 }
 ```
 
-The response carries no id, no flag for which plan to show first, and no flag for which offer of the two above the bank will honour. Those are the gaps.
+The response carries no id, no flag for which plan to show first, no flag for which offer of the two above the bank will honour, and no link to the terms of the bank the summary points the shopper at. Those are the gaps.
+
+`instantDiscountAmount` is optional and comes off the authorisation up front, so the summary gives it a row of its own on any plan that carries one, and the provider row advertises the largest one the bank offers. `processingAmounts.message` is shopper-facing copy the backend words itself, rendered verbatim above the terms line and never translated by the SDK.
 
 ### What the SDK renders of it
 
@@ -210,18 +228,19 @@ The SDK continues to use the response directly.
 
 #### Ownership
 
-| Value                                 | Owner       | Source                                            |
-| ------------------------------------- | ----------- | ------------------------------------------------- |
-| Provider row identity                 | SDK         | `(issuerCode, fundingSource)`                     |
-| Plan row identity                     | SDK         | `(issuerCode, fundingSource, type, tenureMonths)` |
-| Provider plan-type tags               | API         | `issuer.availablePlanTypes`                       |
-| Provider discount                     | API         | `issuer.maxOfferAmount`                           |
-| Applied offers                        | API         | `offers[].applied`                                |
-| Plan discount, banner, and summary    | SDK         | Sum of applied offer amounts                      |
-| `appliedOfferIds` sent to `/payments` | SDK         | IDs of applied offers                             |
-| Default issuer and plan               | API and SDK | API order; SDK selects the first item             |
-| Labels and amount formatting          | SDK         | `i18n`                                            |
-| Amount reserved on the card           | SDK         | Checkout amount                                   |
+| Value                                 | Owner       | Source                                                           |
+| ------------------------------------- | ----------- | ---------------------------------------------------------------- |
+| Provider row identity                 | SDK         | `(issuerCode, fundingSource)`                                    |
+| Plan row identity                     | SDK         | `(issuerCode, fundingSource, type, tenureMonths)`                |
+| Provider plan-type tags               | API         | `issuer.availablePlanTypes`                                      |
+| Provider discount                     | API         | `issuer.maxOfferAmount`                                          |
+| Applied offers                        | API         | `offers[].applied`                                               |
+| Plan discount, banner, and summary    | SDK         | Sum of applied offer amounts                                     |
+| `appliedOfferIds` sent to `/payments` | SDK         | IDs of applied offers                                            |
+| Default issuer and plan               | API and SDK | API order; SDK selects the first item                            |
+| Labels and amount formatting          | SDK         | `i18n`                                                           |
+| Amount reserved on the card           | SDK         | Checkout amount less the applied offers and the instant discount |
+| Terms and conditions page of the bank | API         | An issuer field, replacing the SDK `ISSUER_TERMS_URLS` map       |
 
 #### Response Contract
 
@@ -233,7 +252,8 @@ The SDK continues to use the response directly.
 - Issuers and plans arrive in display order.
 - The first plan for an issuer is the default plan for that issuer.
 - Issuer and plan identity tuples are unique within one response.
-- `transactionAmounts` does not change as part of this decision.
+- `transactionAmounts` and `processingAmounts` do not change as part of this decision.
+- The issuer carries the terms and conditions URL of the bank, which the SDK links the terms copy to. Until it does, only the banks in `ISSUER_TERMS_URLS` are linked and the rest render that copy unlinked.
 - New enum values are additive. The SDK passes unknown selected values to `/payments` unchanged.
 - The API does not return shopper-facing labels or formatted amounts.
 

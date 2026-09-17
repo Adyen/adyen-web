@@ -1,15 +1,15 @@
 import { h } from 'preact';
 import Field from '../../../internal/FormFields/Field';
 import Select from '../../../internal/FormFields/Select';
-import { TagVariant } from '../../../internal/Tag/types';
 import { useCoreContext } from '../../../../core/Context/CoreProvider';
 import useImage from '../../../../core/Context/useImage';
 import getIssuerImageUrl from '../../../../utils/get-issuer-image';
 import { TxVariants } from '../../../tx-variants';
 import { getLocalisedPercentageFromBasisPoints } from '../../../../utils/percentage-util';
-import { selectDisplayOffer } from '../../utils';
+import { selectInstantDiscount } from '../../utils';
+import { PLAN_TAGS } from '../../constants';
 import { UiTarget } from '../../../../core/Analytics/events/AnalyticsInfoEvent';
-import type { EmiIssuer, EmiOffer, EmiPlan, EmiPlanTypeKey, EmiSelection, EmiSelectTarget } from '../../types';
+import type { EmiIssuer, EmiPlan, EmiPlanTypeKey, EmiSelection, EmiSelectTarget } from '../../types';
 import type { PaymentAmount } from '../../../../types/global-types';
 import type { SelectItem, SelectTargetObject } from '../../../internal/FormFields/Select/types';
 import type { TagProps } from '../../../internal/Tag/types';
@@ -22,11 +22,6 @@ interface EMIPlanSelectionProps {
     labelledBy?: string;
     describedBy?: string;
 }
-
-const PLAN_TAGS: { type: EmiPlanTypeKey; translationKey: string; variant: TagVariant }[] = [
-    { type: 'noCost', translationKey: 'emi.noCost', variant: TagVariant.SUCCESS },
-    { type: 'lowCost', translationKey: 'emi.lowCost', variant: TagVariant.INFO }
-];
 
 // See ADR-0004-emi-plans-data-transformation for the select-only identity and uniqueness rules.
 const toItemId = (prefix: string, segments: (string | number)[]): string =>
@@ -92,16 +87,14 @@ export function EMIPlanSelection({ issuers, selection, onSelectionChange, labell
     // The locale places the minus sign, the same way it places the currency symbol
     const formatDiscount = ({ value, currency }: PaymentAmount): string => i18n.amount(-value, currency);
 
-    const getDiscountText = (offers?: EmiOffer[]): string | undefined => {
-        const offer = selectDisplayOffer(offers);
-        return offer ? `${formatDiscount(offer.amount)} ${i18n.get('emi.discountAvailable')}` : undefined;
-    };
+    const getDiscountText = (discount?: PaymentAmount): string | undefined =>
+        discount ? i18n.get('emi.discountAvailable', { values: { discount: formatDiscount(discount) } }) : undefined;
 
-    const getPlanDiscountText = (plan: EmiPlan): string | undefined => getDiscountText(plan.offers);
+    const getPlanDiscountText = (plan: EmiPlan): string | undefined => getDiscountText(plan.transactionAmounts.instantDiscountAmount);
 
-    // The largest offer found anywhere among the provider's plans, provider-wide for the same reason
-    // its tags are. See ADR-0004-emi-plans-data-transformation.
-    const getIssuerDiscountText = (issuer: EmiIssuer): string | undefined => getDiscountText(issuer.plans.flatMap(plan => plan.offers ?? []));
+    // The largest instant discount found anywhere among the provider's plans, provider-wide for the same
+    // reason its tags are. See ADR-0004-emi-plans-data-transformation.
+    const getIssuerDiscountText = (issuer: EmiIssuer): string | undefined => getDiscountText(selectInstantDiscount(issuer.plans));
 
     const getIssuerIcon = getIssuerImageUrl({ loadingContext }, TxVariants.emi, getImage);
 
