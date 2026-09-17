@@ -22,9 +22,15 @@ method. Covers Card, Drop-in, and 3DS2 specifics at the bottom.
 - **Never touches**: `core/core.ts`, or another payment method folder. No cross-imports between
   payment methods — if two need the same code, it belongs in `internal/` or `utils/`.
 
-`UPI/`, `ApplePay/`, and `Card/` are the reference implementations — `UPI/` for a clean
-straightforward component, `ApplePay/` for a wallet, `Card/` for the full SecuredFields path. Read
-the closest one before building anything new.
+## Reference implementations
+
+`ApplePay/` - wallet implementation
+`Card/` - SecuredFields path
+`UPI/` - clean straightforward component
+`Swish/`  - QR loader implementation
+`MBWay/` - Await implementation
+`MealVoucherFR/` - Voucher implemetation
+
 
 ## Component Folder Structure
 
