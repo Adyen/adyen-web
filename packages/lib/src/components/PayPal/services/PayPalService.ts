@@ -20,51 +20,38 @@ interface PayPalServiceConfig {
     components: PayPalComponents;
 }
 
+/**
+ * Configuration accepted by 'PayPalService.refresh'. The SDK loader is excluded since the PayPal SDK script
+ * itself is loaded only once, and it is not affected by configuration changes.
+ */
+type PayPalServiceRefreshConfig = Omit<PayPalServiceConfig, 'sdkLoader'>;
+
 class PayPalService {
     private readonly sdkLoader: PayPalSdkLoader;
-    private readonly loadingContext: string;
-    private readonly clientKey: string;
-    private readonly merchantId: string;
-    private readonly amount?: PaymentAmount;
-    private readonly countryCode: string;
-    private readonly vault: boolean;
-    private readonly locale?: PayPalV6SupportedLocale;
-    private readonly pageType?: PayPalPageTypes;
-    private readonly environment?: string;
-    private readonly components: PayPalComponents;
+    private loadingContext: string;
+    private clientKey: string;
+    private merchantId: string;
+    private amount?: PaymentAmount;
+    private countryCode: string;
+    private vault: boolean;
+    private locale?: PayPalV6SupportedLocale;
+    private pageType?: PayPalPageTypes;
+    private environment?: string;
+    private components: PayPalComponents;
 
     private loadingPromise?: Promise<void>;
     private sdkInstance: PayPalSdkInstance;
     private eligiblePaymentMethods: PayPalEligiblePaymentMethods;
 
-    constructor({
-        sdkLoader,
-        loadingContext,
-        clientKey,
-        merchantId,
-        amount,
-        countryCode,
-        vault,
-        locale,
-        pageType,
-        environment,
-        components
-    }: PayPalServiceConfig) {
+    constructor({ sdkLoader, ...config }: PayPalServiceConfig) {
         this.sdkLoader = sdkLoader;
-        this.loadingContext = loadingContext;
-        this.clientKey = clientKey;
-        this.merchantId = merchantId;
-        this.amount = amount ? { ...amount } : undefined;
-        this.countryCode = countryCode;
-        this.vault = vault;
-        this.locale = getSupportedLocalePayPalV6(locale ?? '') ?? undefined;
-        this.pageType = pageType;
-        this.environment = environment;
-        this.components = components;
 
         this.createPayPalSdkInstance = this.createPayPalSdkInstance.bind(this);
         this.createEligibleMethods = this.createEligibleMethods.bind(this);
         this.initialize = this.initialize.bind(this);
+        this.refresh = this.refresh.bind(this);
+
+        this.applyConfig(config);
 
         void sdkLoader.load();
     }
@@ -74,6 +61,47 @@ class PayPalService {
             return this.loadingPromise;
         }
 
+        return this.load();
+    }
+
+    /**
+     * Re-creates the PayPal SDK instance and re-evaluates the eligible payment methods using the given
+     * configuration. It is used when the merchant updates the configuration of the component, since both the
+     * SDK instance and the eligible payment methods are derived from it.
+     *
+     * @remarks
+     * The internal loading promise is replaced synchronously, therefore this method must be called before the
+     * element re-mounts. The re-mounted component then awaits the new promise, instead of reading the outdated
+     * SDK instance.
+     *
+     * @param config - Configuration used to create the new SDK instance and eligible payment methods
+     */
+    public refresh(config: PayPalServiceRefreshConfig): Promise<void> {
+        this.applyConfig(config);
+        return this.load();
+    }
+
+    private applyConfig(config: PayPalServiceRefreshConfig): void {
+        this.loadingContext = config.loadingContext;
+        this.clientKey = config.clientKey;
+        this.merchantId = config.merchantId;
+        this.countryCode = config.countryCode;
+        this.amount = config.amount ? { ...config.amount } : undefined;
+        this.vault = config.vault;
+        this.locale = getSupportedLocalePayPalV6(config.locale ?? '') ?? undefined;
+        this.pageType = config.pageType;
+        this.environment = config.environment;
+        this.components = config.components;
+    }
+
+    /**
+     * Requests a client token and creates both the SDK instance and the eligible payment methods.
+     *
+     * @remarks
+     * Not declared as 'async' on purpose: the loading promise must be assigned synchronously, so that
+     * consumers calling 'isSdkLoaded' right after never observe a resolved promise of a previous load.
+     */
+    private load(): Promise<void> {
         const isSdkLoaderLoadedPromise = this.sdkLoader.isSdkLoaded();
         const tokenDataPromise = requestPayPalOauthToken(this.loadingContext, { clientKey: this.clientKey, merchantId: this.merchantId });
 
@@ -148,4 +176,4 @@ class PayPalService {
     }
 }
 
-export { PayPalService, type PayPalServiceConfig };
+export { PayPalService, type PayPalServiceConfig, type PayPalServiceRefreshConfig };
