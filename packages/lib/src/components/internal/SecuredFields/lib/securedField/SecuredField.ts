@@ -220,31 +220,10 @@ class SecuredField extends AbstractSecuredField {
         }
 
         // CHECK FOR EXPECTED PROPS
-        const hasAction: boolean = hasOwnProperty(feedbackObj, 'action');
-        const hasNumKey: boolean = hasOwnProperty(feedbackObj, 'numKey');
-        const hasAllMainProps: boolean = hasAction && hasNumKey;
+        const hasMainProps: boolean = hasOwnProperty(feedbackObj, 'action') && hasOwnProperty(feedbackObj, 'numKey');
 
-        if (!hasAllMainProps) {
+        if (!hasMainProps) {
             if (this.sfConfig.showWarnings) logger.warn('WARNING SecuredField :: postMessage listener for iframe :: data mismatch!');
-
-            // Needed for SF approach 2: sending a postMsg as early as possible
-            // This approach is actually slower because it blocks the main thread, and leads to duplication of postMsgs,
-            // so requires extra steps, both here and in SF, to remediate this
-            if (hasAction && feedbackObj.action === 'invalidHosting') {
-                console.log('### SecuredField::postMessageListenerFn:: INVALID HOSTING');
-                const event = new AnalyticsErrorEvent({
-                    component: this.componentType,
-                    code: feedbackObj.code,
-                    errorType: ErrorEventType.internal,
-                    message: `${feedbackObj.error}. Field=${this.sfConfig.fieldType}`
-                });
-
-                this.submitAnalytics?.(event);
-
-                // Remove the event listeners - otherwise, without the numKey, it will fire again for the other securedFields
-                this.destroy(false);
-            }
-
             return;
         }
 
@@ -321,12 +300,9 @@ class SecuredField extends AbstractSecuredField {
                 break;
             }
 
-            // Needed for SF approach 1: allowing the SF to initialise, knowing it is invalidly hosted,
-            // but waiting until the receive/send postMsg system is in place before reporting back.
-            // This approach is actually smoother and quicker and doesn't lead to multiple postMsgs
+            // Listen for actions indicating SF iframe has detected errors with how it's hosted
             case 'invalidHosting':
             case 'insecureMerchantDomain': {
-                console.log('### SecuredField::postMessageListenerFn::', feedbackObj.action.toUpperCase());
                 const event = new AnalyticsErrorEvent({
                     component: this.componentType,
                     code: feedbackObj.code,
@@ -357,14 +333,11 @@ class SecuredField extends AbstractSecuredField {
         }
     }
 
-    destroy(fullDestroy: boolean = true): void {
+    destroy(): void {
         off(window, 'message', this.postMessageListener, false);
         off(this.iframeRef, 'load', this.iframeOnLoadListener, false);
         this.iframeContentWindow = null;
-
-        if (fullDestroy) {
-            removeAllChildren(this.holderEl);
-        }
+        removeAllChildren(this.holderEl);
     }
 
     /**
