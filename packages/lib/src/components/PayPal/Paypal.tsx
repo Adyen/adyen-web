@@ -34,7 +34,7 @@ import { PayPalService } from './services/PayPalService';
 import { PayPalComponentV6 } from './components/PaypalComponentV6';
 import requestPayPalOrderDetails from './services/request-paypal-order-details';
 import { isPayPalServiceConfigEqual } from './utils/is-paypal-service-config-equal';
-import { UNSUPPORTED_EXPRESS_PRESENTATION_MODE_OPTIONS } from './config';
+import { SUPPORTED_EXPRESS_PRESENTATION_MODE_OPTIONS } from './config';
 import collectBrowserInfo from '../../utils/browserInfo';
 import './Paypal.scss';
 
@@ -76,7 +76,7 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
             if (
                 isExpress &&
                 presentationModeOptions?.presentationMode &&
-                UNSUPPORTED_EXPRESS_PRESENTATION_MODE_OPTIONS.includes(presentationModeOptions.presentationMode)
+                !SUPPORTED_EXPRESS_PRESENTATION_MODE_OPTIONS.includes(presentationModeOptions.presentationMode)
             ) {
                 throw new AdyenCheckoutError(
                     'IMPLEMENTATION_ERROR',

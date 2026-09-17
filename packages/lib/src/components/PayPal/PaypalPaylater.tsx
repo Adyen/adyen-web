@@ -12,7 +12,9 @@ class PaypalPaylaterElement extends BasePaypalElement<PayPalPayLaterConfiguratio
     public static readonly type = TxVariants.paypal_paylater;
 
     protected override fundingSource: SupportedPayPalFundingSources = 'paylater';
-    protected override elementName: string = 'PayPalPaylater';
+    protected override get elementName(): string {
+        return 'PayPalPaylater';
+    }
 
     public override get icon(): string {
         return this.resources.getImage()(TxVariants.paypal);

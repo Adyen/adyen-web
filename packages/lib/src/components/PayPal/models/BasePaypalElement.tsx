@@ -23,6 +23,7 @@ import { PayPalSdkLoader } from '../services/PayPalSdkLoader';
 import { PayPalService } from '../services/PayPalService';
 import requestPayPalOrderDetails from '../services/request-paypal-order-details';
 import { isPayPalServiceConfigEqual } from '../utils/is-paypal-service-config-equal';
+import { SUPPORTED_EXPRESS_PRESENTATION_MODE_OPTIONS } from '../config';
 import collectBrowserInfo from '../../../utils/browserInfo';
 import '../Paypal.scss';
 
@@ -31,7 +32,13 @@ export class BasePaypalElement<TProps extends BasePayPalConfiguration = BasePayP
     public static readonly subtype = 'sdk';
 
     protected readonly fundingSource: SupportedPayPalFundingSources = 'paypal';
-    protected readonly elementName: string = 'PayPal';
+    /**
+     * Human readable name of the variant, used in the error messages. It is a getter, and not a field, so that the
+     * value of the subclass is already available while the base constructor runs.
+     */
+    protected get elementName(): string {
+        return 'PayPal';
+    }
 
     public paymentData: string | null = null;
 
@@ -48,7 +55,37 @@ export class BasePaypalElement<TProps extends BasePayPalConfiguration = BasePayP
         this.handleOnApprove = this.handleOnApprove.bind(this);
         this.initialize = this.initialize.bind(this);
 
+        this.validateExpressConfiguration();
+
         this.initialize();
+    }
+
+    /**
+     * The express flow relies on the shipping callbacks and on a presentation mode that keeps the shopper on the
+     * merchant page. Therefore any combination that PayPal does not support in express is rejected upfront.
+     *
+     * @throws AdyenCheckoutError - IMPLEMENTATION_ERROR when the express configuration is not supported
+     */
+    private validateExpressConfiguration(): void {
+        const { isExpress, onShippingAddressChange, onShippingOptionsChange, presentationModeOptions } = this.props;
+
+        if (!isExpress && (onShippingAddressChange || onShippingOptionsChange)) {
+            throw new AdyenCheckoutError(
+                'IMPLEMENTATION_ERROR',
+                `${this.elementName} - You must set "isExpress" flag to "true" in order to use "onShippingAddressChange" and/or "onShippingOptionsChange" callbacks`
+            );
+        }
+
+        if (
+            isExpress &&
+            presentationModeOptions?.presentationMode &&
+            !SUPPORTED_EXPRESS_PRESENTATION_MODE_OPTIONS.includes(presentationModeOptions.presentationMode)
+        ) {
+            throw new AdyenCheckoutError(
+                'IMPLEMENTATION_ERROR',
+                `${this.elementName} - Unsupported presentation mode: ${presentationModeOptions.presentationMode} for express checkout`
+            );
+        }
     }
 
     private initialize() {

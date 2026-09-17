@@ -12,7 +12,9 @@ class VenmoElement extends BasePaypalElement<VenmoConfiguration> {
     public static readonly type = TxVariants.venmo;
 
     protected override fundingSource: SupportedPayPalFundingSources = 'venmo';
-    protected override elementName: string = 'Venmo';
+    protected override get elementName(): string {
+        return 'Venmo';
+    }
 
     protected override get paypalComponents(): PayPalComponents {
         return ['venmo-payments'];

@@ -23,6 +23,9 @@ export const Default: Story = {
     args: {
         componentConfiguration: {
             usePayPalV6: {
+                presentationModeOptions: {
+                    presentationMode: 'redirect'
+                },
                 style: {
                     paypal: {
                         type: 'buynow',
