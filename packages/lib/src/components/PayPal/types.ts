@@ -300,6 +300,11 @@ export interface PayPalConfiguration extends UIElementProps {
      */
     usePayPalV6?: PayPalV6Props<PaypalElement> & {
         /**
+         * Set to true to force the UI to only render the PayPal button (no variants like Credit, Pay Later, Venmo)
+         * @default false
+         */
+        blockPayPalButtonVariants?: boolean;
+        /**
          * Set to true to force the UI to not render PayPal Credit button
          * @default false
          */

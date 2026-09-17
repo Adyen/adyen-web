@@ -493,6 +493,7 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
                     style={paypalv6Props.style}
                     commit={paypalv6Props.commit}
                     vault={paypalv6Props.vault}
+                    blockPayPalButtonVariants={paypalv6Props.blockPayPalButtonVariants}
                     blockPayPalCreditButton={paypalv6Props.blockPayPalCreditButton}
                     blockPayPalPayLaterButton={paypalv6Props.blockPayPalPayLaterButton}
                     blockPayPalVenmoButton={paypalv6Props.blockPayPalVenmoButton}
