@@ -106,7 +106,7 @@ describe('PaypalCredit', () => {
     });
 
     test('should pass the shipping handlers when the merchant provided the callbacks', () => {
-        render(createElement({ onShippingAddressChange: jest.fn(), onShippingOptionsChange: jest.fn() }).render());
+        render(createElement({ isExpress: true, onShippingAddressChange: jest.fn(), onShippingOptionsChange: jest.fn() }).render());
 
         const props = mockPaypalCreditComponent.mock.calls[0][0];
         expect(props.onShippingAddressChange).toEqual(expect.any(Function));
