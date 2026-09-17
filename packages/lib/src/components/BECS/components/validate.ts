@@ -1,6 +1,6 @@
+import { ERROR_FIELD_REQUIRED } from '../../../core/Errors/constants';
 import { digitsOnlyFormatter } from '../../../utils/Formatters/formatters';
 import { validationRules } from '../../../utils/Validator/defaultRules';
-
 import type { ValidatorRules } from '../../../utils/Validator/types';
 
 export const formatBSB = (value: string): string => {
@@ -11,14 +11,17 @@ export const formatBSB = (value: string): string => {
 
 export const becsValidationRules: ValidatorRules = {
     bankBranchCode: {
-        modes: ['blur', 'input'],
+        modes: ['blur'],
         validate: value => /^\d{3}-\d{3}$/.test(value)
     },
-    bankAccountNumber: {
-        modes: ['blur', 'input'],
-        validate: value => /^\d{5,9}$/.test(value)
-    },
-    shopperEmail: validationRules.emailRule,
+    shopperEmail: [
+        {
+            modes: ['blur'],
+            validate: value => !!value,
+            errorMessage: ERROR_FIELD_REQUIRED
+        },
+        validationRules.emailRule
+    ],
     default: {
         modes: ['blur'],
         validate: value => !!value

@@ -3,6 +3,7 @@ import { h } from 'preact';
 import UIElement from '../internal/UIElement/UIElement';
 import { TxVariants } from '../tx-variants';
 import { BECSComponent } from './components/BECSComponent';
+import { BECSResult } from './components/BECSResult';
 
 import type { BECSConfiguration } from './types';
 
@@ -26,7 +27,9 @@ class BECS extends UIElement<BECSConfiguration> {
     }
 
     protected override componentToRender(): h.JSX.Element {
-        return (
+        return this.props.url ? (
+            <BECSResult icon={this.resources.getImage()('bankTransfer_IBAN')} url={this.props.url} />
+        ) : (
             <BECSComponent
                 data={this.props.data}
                 onChange={this.setState}

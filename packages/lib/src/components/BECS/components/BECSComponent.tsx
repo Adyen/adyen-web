@@ -114,7 +114,6 @@ export function BECSComponent({
                         onInput={handleChangeFor('bankAccountNumber', 'input')}
                         onBlur={handleChangeFor('bankAccountNumber', 'blur')}
                         required
-                        maxlength={9}
                         inputmode="numeric"
                         autocomplete={undefined}
                     />
