@@ -10,4 +10,5 @@ export interface BECSFormData {
 export interface BECSConfiguration extends UIElementProps {
     data?: BECSFormData;
     placeholders?: BECSFormData;
+    url?: string;
 }
