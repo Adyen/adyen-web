@@ -760,6 +760,7 @@ describe('PayPal v6', () => {
                     vault: true,
                     style,
                     presentationModeOptions,
+                    blockPayPalButtonVariants: false,
                     blockPayPalCreditButton: true,
                     blockPayPalPayLaterButton: false,
                     blockPayPalVenmoButton: true,
@@ -776,6 +777,7 @@ describe('PayPal v6', () => {
                     vault: true,
                     style,
                     presentationModeOptions,
+                    blockPayPalButtonVariants: false,
                     blockPayPalCreditButton: true,
                     blockPayPalPayLaterButton: false,
                     blockPayPalVenmoButton: true,
@@ -788,6 +790,14 @@ describe('PayPal v6', () => {
                     setComponentRef: expect.any(Function)
                 })
             );
+        });
+
+        test('should forward blockPayPalButtonVariants to the PayPalComponentV6', () => {
+            const paypal = new Paypal(core, { usePayPalV6: { blockPayPalButtonVariants: true } });
+
+            render(paypal.render());
+
+            expect(mockPayPalComponentV6).toHaveBeenCalledWith(expect.objectContaining({ blockPayPalButtonVariants: true }));
         });
 
         test('should map the onCancel prop to a CANCEL AdyenCheckoutError', () => {
