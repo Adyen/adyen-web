@@ -98,6 +98,42 @@ describe('PayPalComponentV6', () => {
         expect(screen.queryByTestId('venmo-button')).not.toBeInTheDocument();
     });
 
+    test('should only render the main PayPal button when all the button variants are blocked', async () => {
+        render(<PayPalComponentV6 {...createProps({ blockPayPalButtonVariants: true })} />);
+
+        expect(await screen.findByTestId('paypal-button')).toBeInTheDocument();
+        expect(screen.queryByTestId('paypal-pay-later-button')).not.toBeInTheDocument();
+        expect(screen.queryByTestId('paypal-credit-button')).not.toBeInTheDocument();
+        expect(screen.queryByTestId('venmo-button')).not.toBeInTheDocument();
+    });
+
+    test('should render the button variants when blockPayPalButtonVariants is false', async () => {
+        render(<PayPalComponentV6 {...createProps({ blockPayPalButtonVariants: false })} />);
+
+        expect(await screen.findByTestId('paypal-button')).toBeInTheDocument();
+        expect(screen.getByTestId('paypal-pay-later-button')).toBeInTheDocument();
+        expect(screen.getByTestId('paypal-credit-button')).toBeInTheDocument();
+        expect(screen.getByTestId('venmo-button')).toBeInTheDocument();
+    });
+
+    test('should block all the button variants regardless of the individual block props', async () => {
+        render(
+            <PayPalComponentV6
+                {...createProps({
+                    blockPayPalButtonVariants: true,
+                    blockPayPalPayLaterButton: false,
+                    blockPayPalCreditButton: false,
+                    blockPayPalVenmoButton: false
+                })}
+            />
+        );
+
+        expect(await screen.findByTestId('paypal-button')).toBeInTheDocument();
+        expect(screen.queryByTestId('paypal-pay-later-button')).not.toBeInTheDocument();
+        expect(screen.queryByTestId('paypal-credit-button')).not.toBeInTheDocument();
+        expect(screen.queryByTestId('venmo-button')).not.toBeInTheDocument();
+    });
+
     test('should keep showing the loader when the SDK fails to load', async () => {
         const paypalService = mock<PayPalService>();
         paypalService.isSdkLoaded.mockRejectedValue(new Error('PayPal SDK not loaded'));
