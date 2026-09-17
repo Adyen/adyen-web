@@ -115,6 +115,7 @@ working there.
 | `playground/`                  | ◆   | Manual test/demo app                                          |
 | `server/`                      |     | Mock API + translation files                                  |
 | `e2e-playwright/`              | ◆   | Playwright E2E tests                                          |
+| `docs`              |    | Documentation of unobvious flows and processes in the SDK                                         |
 
 ### Where does new code go?
 
