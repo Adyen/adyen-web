@@ -21,7 +21,7 @@
 
 .row {
     display: flex;
-    align-items: baseline;
+    align-items: center;
     justify-content: space-between;
     gap: variable-generator.token(spacer-060);
     padding: variable-generator.token(spacer-050) 0;
