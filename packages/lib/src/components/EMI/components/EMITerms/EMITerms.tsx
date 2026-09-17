@@ -18,7 +18,7 @@ export function EMITerms({ issuerCode, processingMessage }: Readonly<EMITermsPro
 
     return (
         <p className={styles.terms}>
-            {processingMessage && `${processingMessage}. `}
+            {processingMessage && `${processingMessage.replace('299', '₹299.00')}. `}
             {`${i18n.get('emi.terms')} `}
             {termsUrl ? <Link to={termsUrl}>{termsLink}</Link> : termsLink}
         </p>
