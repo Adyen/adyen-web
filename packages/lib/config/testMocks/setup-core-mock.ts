@@ -25,7 +25,7 @@ function setupCoreMock({ mockSessions = true, paymentMethods = null, analyticsMo
     const core = mock<ICore>({});
 
     const analytics = analyticsMock || mock<IAnalytics>({ checkoutAttemptId: TEST_CHECKOUT_ATTEMPT_ID });
-    const risk = riskMock || mock<RiskModule>({ data: TEST_RISK_DATA });
+    const risk = riskMock || mock<RiskModule>({ riskData: TEST_RISK_DATA });
 
     const resources = setupResourceMock();
 

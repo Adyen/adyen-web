@@ -310,6 +310,13 @@ export interface ApplePaySessionRequest {
     merchantIdentifier: string;
 }
 
+export interface ApplePaySessionResponse {
+    /**
+     * Base64 encoded Apple Pay merchant session
+     */
+    data: string;
+}
+
 export interface ApplePayWebConfiguration {
     renderApplePayCodeAs?: 'modal' | 'window';
     onApplePayCodeClose?(): void;

@@ -17,8 +17,8 @@ import { defaultProps } from './core.defaultProps';
 import { resolveEnvironments } from './Environment';
 import { LIBRARY_BUNDLE_TYPE, LIBRARY_VERSION } from './config';
 
-import type { PaymentAction, PaymentAmount, PaymentData, PaymentResponseData } from '../types/global-types';
-import type { CoreConfiguration, ICore, AdditionalDetailsData, CoreModules } from './types';
+import type { PaymentAction, PaymentAmount, PaymentData, PaymentMethodsResponse, PaymentResponseData } from '../types/global-types';
+import type { CoreConfiguration, ICore, AdditionalDetailsData, CoreModules, CorePropsForComponent, CreateFromActionOptions } from './types';
 import type { UIElementProps } from '../components/internal/UIElement/types';
 import { AnalyticsLogEvent, LogEventSubtype, LogEventType } from './Analytics/events/AnalyticsLogEvent';
 import CancelError from './Errors/CancelError';
@@ -226,7 +226,7 @@ class Core implements ICore {
      * @param options - options that will be merged to the global Checkout props
      * @returns new UIElement
      */
-    public createFromAction(action: PaymentAction, options = {}): UIElement {
+    public createFromAction(action: PaymentAction, options: CreateFromActionOptions = {}): UIElement {
         if (!action || !action.type) {
             if (hasOwnProperty(action, 'action') && hasOwnProperty(action, 'resultCode')) {
                 throw new Error(
@@ -353,7 +353,7 @@ class Core implements ICore {
      * @internal
      * @returns props for a new UIElement
      */
-    public getCorePropsForComponent(): any {
+    public getCorePropsForComponent(): CorePropsForComponent {
         const globalOptions = processGlobalOptions(this.options);
 
         return {
@@ -433,7 +433,7 @@ class Core implements ICore {
         throw new Error(errorMessage);
     }
 
-    private createPaymentMethodsList(paymentMethodsResponse?: PaymentMethods): void {
+    private createPaymentMethodsList(paymentMethodsResponse?: PaymentMethodsResponse): void {
         this.paymentMethodsResponse = new PaymentMethods(this.options.paymentMethodsResponse || paymentMethodsResponse, this.options);
     }
 

@@ -6,12 +6,19 @@ import { TxVariants } from '../components/tx-variants';
 import Donation from '../components/Donation/Donation';
 import type { ICore } from './types';
 
-function assertClassHasType(Class: any): Class is typeof UIElement {
-    const hasValidType = typeof Class.type === 'string' && !!Class.type;
+export type NewableComponent = new (checkout: ICore, props?) => UIElement;
+
+/**
+ * A Class that can be registered: besides being instantiable, it must expose the
+ * static members that the registry relies on to map it to its txVariants
+ */
+type RegisterableComponent = NewableComponent & Pick<typeof UIElement, 'type' | 'txVariants'>;
+
+function assertClassHasType(Class: NewableComponent): Class is RegisterableComponent {
+    const { type } = Class as Partial<RegisterableComponent>;
+    const hasValidType = typeof type === 'string' && !!type;
     return hasValidType;
 }
-
-export type NewableComponent = new (checkout: ICore, props?) => UIElement;
 
 export interface IRegistry {
     add(...items: NewableComponent[]): void;

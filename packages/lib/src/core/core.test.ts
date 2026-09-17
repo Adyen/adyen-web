@@ -23,8 +23,8 @@ const sessionSetupResponseMock: CheckoutSessionSetupResponse = {
     },
     expiresAt: '',
     paymentMethods: {
-        paymentMethods: [{}],
-        storedPaymentMethods: [{}]
+        paymentMethods: [],
+        storedPaymentMethods: []
     },
     returnUrl: '',
     configuration: {},
