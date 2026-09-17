@@ -75,7 +75,7 @@ describe('EMIPlanSummary', () => {
             // The plan type is tagged inside the label of the row its offer discounts
             'Interest discountNo cost',
             'Amount reserved on card',
-            'Interest charged by bank @15.5%',
+            'Interest charged by bank @15.5% p.a',
             'Total amount to be paid over time'
         ]);
     });
@@ -129,7 +129,12 @@ describe('EMIPlanSummary', () => {
 
         renderPlanSummary({ ...standardPlanWithInterest, offers: [offer] });
 
-        expect(labels()).toEqual(['Item price', 'Amount reserved on card', 'Interest charged by bank @15.5%', 'Total amount to be paid over time']);
+        expect(labels()).toEqual([
+            'Item price',
+            'Amount reserved on card',
+            'Interest charged by bank @15.5% p.a',
+            'Total amount to be paid over time'
+        ]);
         expect(values()).toEqual([
             formatAmount(EMI_FIXTURE_CHECKOUT_AMOUNT),
             formatAmount(EMI_FIXTURE_CHECKOUT_AMOUNT),
@@ -145,7 +150,12 @@ describe('EMIPlanSummary', () => {
 
         expect(screen.queryByText('Instant discount')).toBeNull();
         expect(screen.queryByText('Interest discount')).toBeNull();
-        expect(labels()).toEqual(['Item price', 'Amount reserved on card', 'Interest charged by bank @15.5%', 'Total amount to be paid over time']);
+        expect(labels()).toEqual([
+            'Item price',
+            'Amount reserved on card',
+            'Interest charged by bank @15.5% p.a',
+            'Total amount to be paid over time'
+        ]);
         expect(values()).toEqual([
             formatAmount(EMI_FIXTURE_CHECKOUT_AMOUNT),
             formatAmount(EMI_FIXTURE_CHECKOUT_AMOUNT),
@@ -157,6 +167,6 @@ describe('EMIPlanSummary', () => {
     test('should interpolate the plan interest rate into the interest label', () => {
         renderPlanSummary({ ...standardPlanWithInterest, interestRateBps: 1599 });
 
-        expect(screen.getByText('Interest charged by bank @15.99%')).toBeInTheDocument();
+        expect(screen.getByText('Interest charged by bank @15.99% p.a')).toBeInTheDocument();
     });
 });

@@ -66,7 +66,11 @@ describe('EMIComponent', () => {
         test('should render the plan sections as headings, in reading order', () => {
             renderEmiComponent(emiPlansResponseMock.issuers);
 
-            expect(screen.getAllByRole('heading').map(heading => heading.textContent)).toEqual(['EMI plan', 'Plan summary', 'Card details']);
+            expect(screen.getAllByRole('heading').map(heading => heading.textContent)).toEqual([
+                'EMI plan',
+                'Plan summary',
+                'HDFC Bank Card details'
+            ]);
         });
 
         test('should name both plan sections after their heading, and describe the selects', () => {
@@ -123,7 +127,7 @@ describe('EMIComponent', () => {
 
             expect(onPlanSelect).toHaveBeenLastCalledWith({ issuer: icici, plan: icici.plans[0] }, UiTarget.emiProvider);
             expect(screen.getByLabelText('Plan')).toHaveTextContent('₹52,366.50 x 3 months');
-            expect(screen.getByText('Interest charged by bank @7.5%')).toBeInTheDocument();
+            expect(screen.getByText('Interest charged by bank @7.5% p.a')).toBeInTheDocument();
             expect(screen.getByText(`Enter card details that are associated with a ${icici.issuerName} card`)).toBeInTheDocument();
         });
 
@@ -162,7 +166,7 @@ describe('EMIComponent', () => {
         test('should summarise the preselected plan', () => {
             renderEmiComponent(emiPlansResponseMock.issuers);
 
-            expect(screen.getByText('Interest charged by bank @15.5%')).toBeInTheDocument();
+            expect(screen.getByText('Interest charged by bank @15.5% p.a')).toBeInTheDocument();
             expect(screen.getByText('Total amount to be paid over time')).toBeInTheDocument();
         });
 

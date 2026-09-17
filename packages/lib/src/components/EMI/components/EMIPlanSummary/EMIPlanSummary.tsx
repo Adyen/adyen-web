@@ -42,6 +42,9 @@ export function EMIPlanSummary({ plan, labelledBy }: Readonly<EMIPlanSummaryProp
     // Both discounts come off the authorisation, and discounts larger than it leave nothing to reserve
     const reserved = (interestDiscount?.value ?? 0) + (instantDiscountAmount?.value ?? 0);
     const authAmount = amount ? { ...amount, value: Math.max(amount.value - reserved, 0) } : amount;
+    const interestLabel = `${i18n.get('emi.interestChargedByBank', {
+        values: { interest: getLocalisedPercentageFromBasisPoints(plan.interestRateBps, i18n.locale) }
+    })} ${i18n.get('emi.perAnnum')}`;
 
     const candidateRows: CandidateRow[] = [
         { key: 'itemPrice', label: i18n.get('emi.itemPrice'), amount },
@@ -56,9 +59,7 @@ export function EMIPlanSummary({ plan, labelledBy }: Readonly<EMIPlanSummaryProp
         { key: 'amountReservedOnCard', label: i18n.get('emi.amountReservedOnCard'), amount: authAmount },
         {
             key: 'interest',
-            label: i18n.get('emi.interestChargedByBank', {
-                values: { interest: getLocalisedPercentageFromBasisPoints(plan.interestRateBps, i18n.locale) }
-            }),
+            label: interestLabel,
             amount: totalInterestAmount
         },
         { key: 'totalOverTime', label: i18n.get('emi.totalAmountOverTime'), amount: totalPayableAmount }
