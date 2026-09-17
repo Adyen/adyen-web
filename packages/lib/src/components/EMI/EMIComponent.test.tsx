@@ -109,9 +109,10 @@ describe('EMIComponent', () => {
             await selectOption('Plan', /6 months/i);
 
             expect(onPlanSelect).toHaveBeenLastCalledWith({ issuer: hdfc, plan: hdfc.plans[1] }, UiTarget.emiPlan);
-            // The new plan carries no offer and a different monthly amount
-            expect(screen.getByText('₹28,166.50')).toBeInTheDocument();
-            expect(screen.queryByText('Discount')).toBeNull();
+            // The new plan totals a different amount over time, and carries no discount of either kind
+            expect(screen.getByText('₹168,999.00')).toBeInTheDocument();
+            expect(screen.queryByText('Instant discount')).toBeNull();
+            expect(screen.queryByText('Interest discount')).toBeNull();
         });
 
         test('should reset the plan and the summary to the first plan of a newly selected provider', async () => {
@@ -162,7 +163,7 @@ describe('EMIComponent', () => {
             renderEmiComponent(emiPlansResponseMock.issuers);
 
             expect(screen.getByText('Interest charged by bank @15.5%')).toBeInTheDocument();
-            expect(screen.getByText('Upcoming monthly payment')).toBeInTheDocument();
+            expect(screen.getByText('Total amount to be paid over time')).toBeInTheDocument();
         });
 
         test('should render the supported payment method form and the pay button', () => {

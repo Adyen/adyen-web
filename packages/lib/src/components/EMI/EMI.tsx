@@ -3,7 +3,7 @@ import UIElement from '../internal/UIElement';
 import CardElement from '../Card';
 import { EMIComponent } from './EMIComponent';
 import { TxVariants } from '../tx-variants';
-import { buildEmiPlanPayload, resolvePlanIssuers, selectDisplayOffer } from './utils';
+import { buildEmiPlanPayload, resolvePlanIssuers } from './utils';
 import { AnalyticsInfoEvent, InfoEventType, UiTarget } from '../../core/Analytics/events/AnalyticsInfoEvent';
 import { AnalyticsErrorEvent, ErrorEventCode, ErrorEventType } from '../../core/Analytics/events/AnalyticsErrorEvent';
 import type { ICore } from '../../core/types';
@@ -203,7 +203,7 @@ class EMI extends UIElement<EMIConfiguration> {
     }
 
     private trackDiscountBanner(emiSelection: EmiSelection): void {
-        if (!this.activeSupportedPaymentMethodElement || !selectDisplayOffer(emiSelection.plan.offers)) return;
+        if (!this.activeSupportedPaymentMethodElement || !emiSelection.plan.transactionAmounts.instantDiscountAmount) return;
         const event = new AnalyticsInfoEvent({
             component: this.type,
             type: InfoEventType.displayed,
