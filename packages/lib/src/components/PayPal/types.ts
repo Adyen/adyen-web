@@ -106,17 +106,6 @@ type PayPalV6Props<E extends PaypalElement | BasePaypalElement> = {
     presentationModeOptions?: PayPalPresentationModeOptions;
 };
 
-type PayPalInternalConfiguration = {
-    /**
-     * @see {@link https://developer.paypal.com/sdk/js/configuration/#merchant-id}
-     */
-    merchantId?: string;
-    /**
-     * @see {@link https://developer.paypal.com/sdk/js/configuration/#intent}
-     */
-    intent?: Intent;
-};
-
 export interface PayPalConfiguration extends UIElementProps {
     /**
      * Configuration returned by the backend
@@ -344,7 +333,12 @@ export type BasePayPalConfiguration = UIElementProps &
          * Configuration returned by the backend
          * @internal
          */
-        configuration?: PayPalInternalConfiguration;
+        configuration?: {
+            /**
+             * @see {@link https://developer.paypal.com/sdk/js/configuration/#merchant-id}
+             */
+            merchantId?: string;
+        };
         /**
          *  Identifies if the payment is Express. Also used for analytics
          *  @defaultValue false
