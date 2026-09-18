@@ -280,7 +280,7 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
             this.paymentData = action.paymentData;
         }
 
-        if (action.sdkData && action.sdkData.token) {
+        if (action?.sdkData?.token) {
             this.onActionHandled({ componentType: this.type, actionDescription: 'sdk-loaded', originalAction: action });
             this.handleResolve(action.sdkData.token);
         } else {
