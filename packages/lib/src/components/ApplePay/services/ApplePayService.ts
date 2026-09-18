@@ -104,11 +104,31 @@ class ApplePayService {
     ): Promise<void> {
         return new Promise((resolve, reject) => onPaymentAuthorized(resolve, reject, event))
             .then((result: ApplePayPaymentAuthorizationResult) => {
-                this.session.completePayment(result);
+                this.completePayment(result);
             })
-            .catch((result: ApplePayPaymentAuthorizationResult) => {
-                this.session.completePayment(result);
+            .catch((result: unknown) => {
+                this.completePayment(result);
             });
+    }
+
+    /**
+     * Completes the payment, telling the Apple Pay sheet whether it succeeded or failed.
+     * A rejection reason that is not an authorization result still completes the payment as a failure.
+     * If the session can no longer be completed — the shopper dismissed the sheet or the 30 second completion
+     * window elapsed — the thrown exception is swallowed, since there is nothing left to complete.
+     * @param result - The authorization result the payment is completed with.
+     */
+    private completePayment(result: unknown): void {
+        const authorizationResult: ApplePayPaymentAuthorizationResult =
+            typeof (result as ApplePayPaymentAuthorizationResult)?.status === 'number'
+                ? (result as ApplePayPaymentAuthorizationResult)
+                : { status: ApplePaySession.STATUS_FAILURE };
+
+        try {
+            this.session.completePayment(authorizationResult);
+        } catch {
+            // The session is no longer completable — nothing left to do.
+        }
     }
 
     /**
