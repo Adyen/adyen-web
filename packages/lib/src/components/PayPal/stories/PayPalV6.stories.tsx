@@ -24,7 +24,7 @@ export const Default: Story = {
         componentConfiguration: {
             usePayPalV6: {
                 presentationModeOptions: {
-                    presentationMode: 'redirect'
+                    presentationMode: 'auto'
                 },
                 style: {
                     paypal: {
