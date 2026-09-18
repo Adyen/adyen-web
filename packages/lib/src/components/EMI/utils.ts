@@ -4,12 +4,27 @@ import type { PaymentAmount } from '../../types/global-types';
 
 /**
  * @internal
+ * TEMPORARY. The design lists the plans of a provider by ascending tenure, and the lookup returns them in
+ * the order the bank sent them, so the shortest plan is what the component preselects and what both selects,
+ * the summary and the analytics order follow. Delete this together with its `map` call in `resolvePlanIssuers`
+ * once the lookup returns the plans in display order, which is what ADR-0004 contracts.
+ *
+ * The response belongs to the merchant, so the plans are sorted on a copy of the array. Plans tied on tenure
+ * keep the order the backend sent them in.
+ */
+const withPlansSortedByTenure = (issuer: EmiIssuer): EmiIssuer => ({
+    ...issuer,
+    plans: [...issuer.plans].sort((left, right) => left.tenureMonths - right.tenureMonths)
+});
+
+/**
+ * @internal
  * Returns the issuers that are supported by the SDK, filtered by funding source.
  */
 export const resolvePlanIssuers = (plans?: EmiPlansResponse): EmiIssuer[] => {
     const issuers = Array.isArray(plans?.issuers) ? plans.issuers : [];
 
-    return issuers.filter(issuer => issuer.fundingSource === SUPPORTED_ISSUER_FUNDING_SOURCE);
+    return issuers.filter(issuer => issuer.fundingSource === SUPPORTED_ISSUER_FUNDING_SOURCE).map(withPlansSortedByTenure);
 };
 
 /** Ties keep the first offer in backend order, so the same response always resolves the same way. */

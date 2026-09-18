@@ -261,6 +261,8 @@ The SDK continues to use the response directly.
 
 Until the backend fields are available, the Phase 2 SDK derivations remain in place. Moving to the fields in this ADR is handled by a separate implementation ticket.
 
+The display order of the plans is one of them: the lookup returns them in the order the bank sent them, so `withPlansSortedByTenure` in `utils.ts` sorts each issuer's plans by ascending tenure before the component preselects the first one. It is the only place that order is decided, and it goes away, together with its `map` call in `resolvePlanIssuers`, once plans arrive in display order.
+
 ---
 
 ## Comparison Summary

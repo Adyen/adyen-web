@@ -29,11 +29,6 @@
     &:not(:last-child) {
         border-bottom: variable-generator.token(border-width-s) solid variable-generator.token(color-outline-primary);
     }
-
-    &:last-child .rowLabel,
-    &:last-child .rowValue {
-        @include mixins.adyen-checkout-text-body-strongest;
-    }
 }
 
 .rowLabel,
@@ -41,6 +36,11 @@
     color: variable-generator.token(color-label-primary);
 
     @include mixins.adyen-checkout-text-body;
+}
+
+.rowStrong .rowLabel,
+.rowStrong .rowValue {
+    @include mixins.adyen-checkout-text-body-strongest;
 }
 
 .rowLabel {
