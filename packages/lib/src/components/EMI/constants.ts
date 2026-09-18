@@ -29,6 +29,6 @@ export const INTEREST_DISCOUNT_PLAN_TYPES: EmiPlanTypeKey[] = ['noCost', 'lowCos
  * TODO: drop this map once the plans lookup returns the terms URL per issuer.
  */
 export const ISSUER_TERMS_URLS: Record<string, string> = {
-    HDFC: 'https://www.hdfc.bank.in/content/dam/hdfcbankpws/in/en/personal-banking/discover-products/cards/smartemi/terms-and-conditions-smartemi-dial-an-emi.pdf',
-    ICICI: 'https://www.icici.bank.in/personal-banking/cards/credit-card/emi-credit-card/emi-on-call/terms-and-conditions'
+    HDFC: 'https://www.hdfc.bank.in/easyemi/credit-card',
+    ICICI: 'https://www.icici.bank.in/personal-banking/cards/credit-card/emi-products/instant-emi/terms-and-condition'
 };

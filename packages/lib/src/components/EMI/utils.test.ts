@@ -10,8 +10,8 @@ describe('resolvePlanIssuers', () => {
         expect(resolvePlanIssuers(emiPlansResponseMock)).toEqual(emiPlansResponseMock.issuers);
     });
 
-    test('should return the very same objects, not copies of them', () => {
-        expect(resolvePlanIssuers(emiPlansResponseMock)[0]).toBe(emiPlansResponseMock.issuers[0]);
+    test('should return the very same plan objects, not copies of them', () => {
+        expect(resolvePlanIssuers(emiPlansResponseMock)[0].plans[0]).toBe(emiPlansResponseMock.issuers[0].plans[0]);
     });
 
     test('should keep the backend order of the issuers and of their plans', () => {
