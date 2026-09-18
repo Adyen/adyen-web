@@ -81,7 +81,7 @@ export const WithAVS: CardStory = {
         componentConfiguration: {
             _disableClickToPay: true,
             billingAddressRequired: true,
-            billingAddressAllowedCountries: ['US', 'CA', 'GB'],
+            billingAddressAllowedCountries: ['US', 'CA', 'GB', 'JP', 'BR'],
             //billingAddressRequiredFields: ['postalCode', 'country'],
             data: {
                 billingAddress: {
