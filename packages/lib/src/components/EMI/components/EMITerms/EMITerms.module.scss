@@ -1,0 +1,9 @@
+@use 'styles/mixins';
+@use 'styles/variable-generator';
+
+.terms {
+    color: variable-generator.token(color-label-secondary);
+    margin: variable-generator.token(spacer-060) 0 variable-generator.token(spacer-070);
+
+    @include mixins.adyen-checkout-text-body;
+}
