@@ -1,5 +1,11 @@
 # @adyen/adyen-web
 
+## 6.46.0
+
+### Minor Changes
+
+- New: Updated the Address component for Japan with a localized field set including new Prefecture (stateOrProvince) selector. Minor Japanese translations updates. ([#4119](https://github.com/Adyen/adyen-web/pull/4119))
+
 ## 6.45.1
 
 ### Patch Changes
