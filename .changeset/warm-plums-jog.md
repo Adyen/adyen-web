@@ -2,4 +2,6 @@
 '@adyen/adyen-web': minor
 ---
 
-Fixed: improved Japanese translations for Card and updated the Address component for JP with a localized field set (country, postal code, prefecture, city, street, building name/room number)
+New: Updated the Address component for Japan with a localized field set including new Prefecture (stateOrProvince) selector 
+
+Minor Japanese translations fixes for Card and Address components
