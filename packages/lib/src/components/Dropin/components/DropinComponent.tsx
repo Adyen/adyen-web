@@ -17,6 +17,7 @@ import type {
     PaymentMethodDisplayMode
 } from '../types';
 import splitPaymentMethods from '../elements/splitPaymentMethods';
+import { DisplayMode } from '../constants';
 import { createAvailablePaymentsList, createUnavailablePaymentsList, type PaymentMethodDisplayModeEntry } from '../utils/paymentMethodsAnalytics';
 import UIElement from '../../internal/UIElement';
 import { AnalyticsInfoEvent, InfoEventType, UiTarget } from '../../../core/Analytics/events/AnalyticsInfoEvent';
@@ -84,10 +85,10 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
             );
 
             const paymentMethodDisplayModes: PaymentMethodDisplayModeEntry[] = [
-                { displayMode: 'fastlane', paymentMethods: fastlanePaymentMethod ? [fastlanePaymentMethod] : [] },
-                { displayMode: 'instant', paymentMethods: instantPaymentMethods },
-                { displayMode: 'stored', paymentMethods: storedPaymentMethods },
-                { displayMode: 'regular', paymentMethods: paymentMethods }
+                { displayMode: DisplayMode.fastlane, paymentMethods: fastlanePaymentMethod ? [fastlanePaymentMethod] : [] },
+                { displayMode: DisplayMode.instant, paymentMethods: instantPaymentMethods },
+                { displayMode: DisplayMode.stored, paymentMethods: storedPaymentMethods },
+                { displayMode: DisplayMode.regular, paymentMethods: paymentMethods }
             ];
 
             const availablePaymentMethods = createAvailablePaymentsList(
