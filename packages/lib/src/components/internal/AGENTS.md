@@ -14,14 +14,27 @@ here ripple across all 60+ payment methods.
 
 ## Boundaries
 
-- **Owns**: `BaseElement/`, `UIElement/`, `SecuredFields/`, `FormFields/`, `Address/`,
-  `ClickToPay/`, `PayButton/`, `Button/`, `QRLoader/`, `IssuerList/`, `Modal/`, `IFrame/`,
-  `Await/`, `Voucher/`, `OpenInvoice/`, and the rest of the shared primitives.
+- **Owns**: everything under `src/components/internal/` — the base classes and every shared
+  primitive.
 - **May read**: `core/` types and modules (i18n, analytics, resources, errors), `utils/`.
 - **Never touches**: individual payment method folders. No payment-specific logic here, ever.
 
 **Extraction rule**: code moves here only once **3+ payment components** need it. A single-use
 helper stays in its payment method folder.
+
+## Two kinds of code in here
+
+Worth knowing before you read the rest of this file, because the rules differ:
+
+- **`BaseElement/` and `UIElement/`** carry core logic — the payment lifecycle, analytics, and
+  rendering. Everything below about the class hierarchy, `submit()`, and the constructor contract
+  applies to these two and nothing else. (`SRPanel`, the third piece of that machinery, lives in
+  `core/Errors/` and is consumed from here through context.)
+- **Everything else** is presentational: props in, JSX out, no payment flow and no core calls
+  beyond i18n and images. Keep it that way, and add new primitives to this second group.
+
+A few current folders sit awkwardly between the two. The direction of travel is to move that logic
+out to `core/` or to the owning component, not to grow it here.
 
 ## Class Hierarchy
 

@@ -110,12 +110,12 @@ working there.
 | `lib/src/language/`            | ◆   | i18n runtime (copy lives in `packages/server/translations`)   |
 | `lib/src/types/`               |     | SDK-wide shared types                                         |
 | `lib/config/testMocks/`        |     | `setupCoreMock` and friends, used by every unit test          |
-| `lib/storybook/`               | ◆   | Story infrastructure; also the E2E test target                |
+| `lib/storybook/`               |     | Story infrastructure; also the E2E test target                |
 | `lib/docs/adr/`                |     | Architecture Decision Records                                 |
 | `playground/`                  | ◆   | Manual test/demo app                                          |
 | `server/`                      |     | Mock API + translation files                                  |
 | `e2e-playwright/`              | ◆   | Playwright E2E tests                                          |
-| `docs`              |    | Documentation of unobvious flows and processes in the SDK                                         |
+| `../docs/`                     |     | Unobvious flows and processes in the SDK (lives at repo root) |
 
 ### Where does new code go?
 
@@ -183,6 +183,9 @@ unreachable element as an a11y bug in the component, not a reason to add `data-t
 context with `setupCoreMock()` from `packages/lib/config/testMocks/setup-core-mock.ts` — never
 `global.core` / `global.i18n` / `global.resources`. Write a regression test before fixing a bug.
 
+`src/components/AGENTS.md` covers the rest: wiring mock modules into the render helper, and typing
+mock responses.
+
 ## Safety Boundaries
 
 - **PCI** — never read or store PAN, CVV, or PIN in JavaScript. Card data lives in SecuredFields
@@ -208,7 +211,7 @@ context with `setupCoreMock()` from `packages/lib/config/testMocks/setup-core-mo
 
 ## When Uncertain
 
-Don't guess. Search for an existing pattern (`UPI/`, `ApplePay/` and `Card/` are the reference
-implementations), check the constraints above, and ask. If you can't ask, state the assumption
-explicitly in your summary rather than burying it in a diff. Record significant design decisions
-as an ADR in `packages/lib/docs/adr/`.
+Don't guess. Search for an existing pattern — `src/components/AGENTS.md` lists the reference
+implementation for each component shape — check the constraints above, and ask. If you can't ask,
+state the assumption explicitly in your summary rather than burying it in a diff. Record
+significant design decisions as an ADR in `packages/lib/docs/adr/`.

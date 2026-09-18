@@ -24,6 +24,9 @@ are CI jobs with their own configs (`automated-ally.playwright.config.ts`,
 `--project=chromium` does not apply to them, and the visual suite compares platform-matched
 screenshots you won't have locally, so running it produces noise rather than signal.
 
+The a11y config filename really is spelled `ally`, not `a11y`. It looks like a typo and isn't one —
+don't "correct" it.
+
 Playwright's `webServer` builds and serves Storybook automatically, so don't start it by hand.
 The first run is slow because it runs a full Storybook build.
 

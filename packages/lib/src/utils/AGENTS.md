@@ -12,8 +12,7 @@ debounce, script loading, storage, focus handling, and a few Preact hooks.
 
 ## Boundaries
 
-- **Owns**: every file in this directory, plus `Formatters/`, `Validator/`, `constants/`,
-  `useForm/`.
+- **Owns**: everything under `src/utils/`, subdirectories included.
 - **Consumed by**: `core/` and `components/`. This is the shared bottom layer.
 
 ### Dependency direction

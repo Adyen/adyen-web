@@ -12,7 +12,13 @@ method. Covers Card, Drop-in, and 3DS2 specifics at the bottom.
 | Strict TS scan, one component | `yarn workspace @adyen/adyen-web exec tsc -p tsconfig.strict.json 2>&1 \| grep -i [component]` |
 | Lint                          | `yarn lint`                                                                                    |
 | Lint styles                   | `yarn workspace @adyen/adyen-web lint-styles`                                                  |
-| E2E                           | `yarn test:e2e [component] --project=chromium`                   |
+| E2E                           | `yarn test:e2e tests/e2e/[component] --project=chromium`                                       |
+| Storybook (the E2E target)    | `yarn start:storybook`                                                                         |
+| Build Storybook for E2E       | `yarn build:storybook:e2e`                                                                     |
+
+Keep the `tests/e2e/` prefix on the E2E command. Playwright treats a bare argument as a filename
+substring filter, so `yarn test:e2e card` also picks up the `tests/ui`, `tests/a11y`, and
+`tests/visual-regression` specs — the suites you should never run locally.
 
 ## Boundaries
 
@@ -24,13 +30,14 @@ method. Covers Card, Drop-in, and 3DS2 specifics at the bottom.
 
 ## Reference implementations
 
-`ApplePay/` - wallet implementation
-`Card/` - SecuredFields path
-`UPI/` - clean straightforward component
-`Swish/`  - QR loader implementation
-`MBWay/` - Await implementation
-`MealVoucherFR/` - Voucher implemetation
+Copy the one that matches the shape of what you're building:
 
+- `UPI/` — a plain, straightforward component
+- `Card/` — the SecuredFields path
+- `ApplePay/` — a wallet
+- `Swish/` — a QR loader
+- `MBWay/` — an Await flow
+- `MealVoucherFR/` — a voucher
 
 ## Component Folder Structure
 
@@ -111,14 +118,17 @@ mixins — nothing component-specific goes there.
 
 ## Stories
 
+Stories are test infrastructure, not just documentation: the Playwright suite runs against
+Storybook. `storybook/` itself — the wrappers, story types, and build config — is not yours to
+change; a story is.
+
 New payment-method stories go in `[Component]/stories/`. Most existing ones sit at the folder root
 as `[Component].stories.tsx` — either location is picked up, so don't relocate an existing story
-just for consistency.
+just for consistency. A cross-cutting demo that belongs to no single payment method (session
+patching, redirect result, the review page) is the exception: those live in `storybook/stories/`.
 
 - Every story must wrap the element in `Checkout` (initializes Core from the story args) and then
-  `ComponentContainer`, both from `storybook/components/`. `ComponentContainer` sets
-  `globalThis.component`, which is what the Playwright suite drives — mount a UIElement directly
-  and every E2E test for that component breaks, with no local signal that anything is wrong.
+  `ComponentContainer`, both from `storybook/components/`.
 - For a component with an external pay button, keep the wrapper and hold your own reference to the
   instance, calling `submit()` on it from the button.
 - Type stories with `MetaConfiguration<T>`, `StoryConfiguration<T>`, and
@@ -127,8 +137,23 @@ just for consistency.
   `Default` export gives `components-cards--default`, not `default`. The `URL_MAP.ts` fixture in
   `e2e-playwright` is keyed on the full ID, so renaming either the export **or** the meta title
   breaks the matching E2E test. Update both.
+- Opt a story out of automated visual regression with `tags: ['no-automated-visual-test']` (the tag
+  is declared in `.storybook/main.ts`).
 - Log callbacks with `console.log`. `@storybook/addon-actions` is **not installed**, so importing
-  it fails to resolve. See `storybook/AGENTS.md` before reaching for an alternative.
+  it fails to resolve. Storybook 10 does ship an `action` helper in the core `storybook` package
+  (`storybook/actions`) which _would_ resolve — we deliberately don't use it, to keep one logging
+  convention across the repo rather than two.
+
+### Why the wrappers are mandatory
+
+`ComponentContainer` calls `addToWindow(element)`, setting both `globalThis.component` and
+`globalThis.parent.window['component']` — the second is what makes the instance reachable from
+Playwright's top-level page while the story runs inside `iframe.html`. It then awaits
+`isAvailable()` before mounting, unmounts on cleanup, and renders into `<div id="component-root">`,
+the selector `Base.a11yComponentSelector()` returns.
+
+Mount a UIElement directly and every E2E test for that component breaks, with no local signal that
+anything is wrong.
 
 ## Testing
 
