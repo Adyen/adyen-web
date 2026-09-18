@@ -338,7 +338,9 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
                 );
             })
             .then(() => this.handleAdditionalDetails(state))
-            .catch(error => this.handleError(new AdyenCheckoutError('ERROR', 'Something went wrong while parsing PayPal Order', { cause: error })));
+            .catch(error =>
+                this.handleError(new AdyenCheckoutError('ERROR', 'Something went wrong with finalizing the PayPal order', { cause: error }))
+            );
     }
 
     /**
