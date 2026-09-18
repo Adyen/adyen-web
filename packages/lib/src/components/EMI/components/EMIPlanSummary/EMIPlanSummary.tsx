@@ -23,6 +23,8 @@ interface SummaryRow {
     /** Names the plan type the discount comes with, alongside the label of the row it discounts. */
     tag?: TagProps;
     isNegative?: boolean;
+    /** The two figures the design emphasises: what the card is charged now, and what the plan costs in total. */
+    isStrong?: boolean;
 }
 
 type CandidateRow = Omit<SummaryRow, 'amount'> & { amount?: PaymentAmount };
@@ -56,13 +58,13 @@ export function EMIPlanSummary({ plan, labelledBy }: Readonly<EMIPlanSummaryProp
             isNegative: true,
             ...(planTag && { tag: { label: i18n.get(planTag.translationKey), variant: planTag.variant } })
         },
-        { key: 'amountReservedOnCard', label: i18n.get('emi.amountReservedOnCard'), amount: authAmount },
+        { key: 'amountReservedOnCard', label: i18n.get('emi.amountReservedOnCard'), amount: authAmount, isStrong: true },
         {
             key: 'interest',
             label: interestLabel,
             amount: totalInterestAmount
         },
-        { key: 'totalOverTime', label: i18n.get('emi.totalAmountOverTime'), amount: totalPayableAmount }
+        { key: 'totalOverTime', label: i18n.get('emi.totalAmountOverTime'), amount: totalPayableAmount, isStrong: true }
     ];
 
     /**
@@ -75,7 +77,7 @@ export function EMIPlanSummary({ plan, labelledBy }: Readonly<EMIPlanSummaryProp
         <fieldset className={styles.planSummary} aria-labelledby={labelledBy}>
             <dl className={styles.rows}>
                 {rows.map(row => (
-                    <div key={row.key} className={styles.row}>
+                    <div key={row.key} className={cx(styles.row, { [styles.rowStrong]: row.isStrong })}>
                         <dt className={styles.rowLabel}>
                             {row.label}
                             {row.tag && <Tag label={row.tag.label} variant={row.tag.variant} />}
