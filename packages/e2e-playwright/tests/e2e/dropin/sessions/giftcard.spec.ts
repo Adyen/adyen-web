@@ -58,10 +58,13 @@ test.describe('Dropin - Sessions - GiftCards', () => {
 
         await expect(page.locator('.adyen-checkout__order-remaining-amount')).toBeVisible();
 
-        const cardPaymentMethodItem = dropinWithSession.getPaymentMethodHeader('Cards');
-        await cardPaymentMethodItem.rootElement.click();
-        
-        const cardBeforeGiftCardRemove = new Card(page, cardPaymentMethodItem.rootElement);
+        const selectCardPaymentMethod = async () => {
+            const item = dropinWithSession.getPaymentMethodHeader('Cards');
+            await item.rootElement.click();
+            return new Card(page, item.rootElement);
+        };
+
+        const cardBeforeGiftCardRemove = await selectCardPaymentMethod();
         await cardBeforeGiftCardRemove.isComponentVisible();
         await expect(cardBeforeGiftCardRemove.payButton).toContainText('Pay $209.00');
 
