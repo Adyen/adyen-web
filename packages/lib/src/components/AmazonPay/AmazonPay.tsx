@@ -2,7 +2,7 @@ import { h } from 'preact';
 import UIElement from '../internal/UIElement/UIElement';
 import collectBrowserInfo from '../../utils/browserInfo';
 import AmazonPayComponent from './components/AmazonPayComponent';
-import { AmazonPayElementData, AmazonPayConfiguration, CheckoutDetailsRequest, AmazonPayComponentRef } from './types';
+import { AmazonPayElementData, AmazonPayConfiguration, CheckoutDetailsRequest } from './types';
 import defaultProps from './defaultProps';
 import { getCheckoutDetails } from './services';
 import { TxVariants } from '../tx-variants';
@@ -16,14 +16,12 @@ export class AmazonPayElement extends UIElement<AmazonPayConfiguration> {
 
     protected static readonly defaultProps = defaultProps;
 
-    protected componentRef: AmazonPayComponentRef | undefined;
-
-    formatProps(props: AmazonPayConfiguration): AmazonPayConfiguration {
+    formatProps(props) {
         return {
             ...props,
             checkoutMode: props.isDropin ? 'ProcessOrder' : props.checkoutMode,
-            environment: props.environment?.toUpperCase(),
-            locale: props.locale?.replace('-', '_'),
+            environment: props.environment.toUpperCase(),
+            locale: props.locale.replace('-', '_'),
             productType: props.isDropin && !props.addressDetails ? 'PayOnly' : props.productType
         };
     }
@@ -61,11 +59,11 @@ export class AmazonPayElement extends UIElement<AmazonPayConfiguration> {
         const request: CheckoutDetailsRequest = {
             checkoutSessionId: amazonCheckoutSessionId,
             getDeliveryAddress: true,
-            publicKeyId: configuration?.publicKeyId || '',
+            publicKeyId: configuration.publicKeyId,
             region: configuration.region
         };
 
-        return getCheckoutDetails(loadingContext ?? '', clientKey ?? '', request);
+        return getCheckoutDetails(loadingContext, clientKey, request);
     }
 
     public handleDeclineFlow() {
@@ -75,17 +73,17 @@ export class AmazonPayElement extends UIElement<AmazonPayConfiguration> {
         const request: CheckoutDetailsRequest = {
             checkoutSessionId: amazonCheckoutSessionId,
             getDeclineFlowUrl: true,
-            publicKeyId: configuration.publicKeyId ?? '',
+            publicKeyId: configuration.publicKeyId,
             region: configuration.region
         };
 
-        getCheckoutDetails(loadingContext ?? '', clientKey ?? '', request)
+        getCheckoutDetails(loadingContext, clientKey, request)
             .then((response = {}) => {
                 if (!response?.declineFlowUrl) throw response;
                 window.location.assign(response.declineFlowUrl);
             })
             .catch(error => {
-                if (this.props.onError) this.props.onError(error, this);
+                if (this.props.onError) this.props.onError(error, this.componentRef);
             });
     }
 
@@ -98,7 +96,7 @@ export class AmazonPayElement extends UIElement<AmazonPayConfiguration> {
     }
 
     public submit(): void {
-        const amazonComponentSubmitFunction = this.componentRef?.getSubmitFunction?.() || null;
+        const amazonComponentSubmitFunction = this.componentRef?.getSubmitFunction() || null;
         if (amazonComponentSubmitFunction) {
             return amazonComponentSubmitFunction();
         }

@@ -63,7 +63,9 @@ export class AchElement extends UIElement<AchConfiguration> {
                 name={this.displayName}
                 payButton={this.payButton}
                 onSubmit={this.submit}
-                setComponentRef={this.setComponentRef}
+                ref={ref => {
+                    this.componentRef = ref;
+                }}
             />
         ) : (
             <AchComponent

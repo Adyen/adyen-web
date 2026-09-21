@@ -4,7 +4,7 @@ import { AddressSpecifications } from '../Address/types';
 import UIElement from '../UIElement/UIElement';
 import { GenericError, ValidationRuleErrorObj } from '../../../core/Errors/types';
 import { UIElementProps } from '../UIElement/types';
-import { h, ComponentChild } from 'preact';
+import { h } from 'preact';
 import { PayButtonProps } from '../PayButton/PayButton';
 
 type OpenInvoiceAddressSpecification = AddressSpecifications & { allowedCountries?: string[] };
@@ -25,9 +25,9 @@ export interface BankDetailsSchema {
 
 export interface OpenInvoiceProps extends UIElementProps {
     allowedCountries?: string[];
-    consentCheckboxLabel?: ComponentChild;
+    consentCheckboxLabel: any;
     countryCode?: string;
-    data?: {
+    data: {
         companyDetails?: CompanyDetailsSchema;
         personalDetails?: PersonalDetailsSchema | null;
         billingAddress?: AddressData;

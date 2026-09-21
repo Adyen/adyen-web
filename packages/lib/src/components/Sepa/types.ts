@@ -1,4 +1,3 @@
-import { IbanData } from '../internal/IbanInput/IbanInput';
 import { UIElementProps } from '../internal/UIElement/types';
 
 export interface SepaElementData {
@@ -9,6 +8,4 @@ export interface SepaElementData {
     };
 }
 
-export interface SepaConfiguration extends UIElementProps {
-    data?: IbanData;
-}
+export interface SepaConfiguration extends UIElementProps {}

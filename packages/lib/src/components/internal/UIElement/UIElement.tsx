@@ -41,7 +41,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     /**
      * componentRef is a ref to the primary component inside the subclass that extends UIElement e.g. CardInput.tsx (which sits inside Card.tsx)
      */
-    protected componentRef: ComponentMethodsRef | undefined;
+    protected componentRef: any;
 
     protected resources: Resources;
 
@@ -104,7 +104,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     private createBeforeRenderHook(configSetByMerchant: P): void {
         const originalRender = this.render;
 
-        this.render = (...args: unknown[]) => {
+        this.render = (...args: any[]) => {
             this.beforeRender(configSetByMerchant);
             return originalRender.apply(this, args);
         };
@@ -195,7 +195,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     }
 
     public showValidation(): this {
-        this.componentRef?.showValidation?.();
+        if (this.componentRef && this.componentRef.showValidation) this.componentRef.showValidation();
         return this;
     }
 
@@ -221,16 +221,18 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
      * - If Drop-in, will set status for Dropin component, and then it will propagate the new status for the active payment method component
      * - If Component, it will set its own status
      */
-    public setElementStatus(status: UIElementStatus): this {
-        this.elementRef?.setStatus?.(status);
+    public setElementStatus(status: UIElementStatus, props?: any): this {
+        this.elementRef?.setStatus(status, props);
         return this;
     }
 
     /**
      * componentRef is a ref to the primary component inside that subclass e.g. CardInput.tsx
      */
-    public setStatus(status: UIElementStatus): this {
-        this.componentRef?.setStatus?.(status);
+    public setStatus(status: UIElementStatus, props?): this {
+        if (this.componentRef?.setStatus) {
+            this.componentRef.setStatus(status, props);
+        }
         return this;
     }
 
@@ -367,7 +369,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         // };
     }
 
-    protected onComplete(state: AdditionalDetailsData): void {
+    protected onComplete(state): void {
         this.handleAdditionalDetails(state);
     }
 
@@ -421,7 +423,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         );
     }
 
-    private async submitAdditionalDetailsUsingSessionsFlow(data: AdditionalDetailsData['data']): Promise<CheckoutSessionDetailsResponse> {
+    private async submitAdditionalDetailsUsingSessionsFlow(data: any): Promise<CheckoutSessionDetailsResponse> {
         try {
             return await this.core.session.submitDetails(data);
         } catch (error: unknown) {

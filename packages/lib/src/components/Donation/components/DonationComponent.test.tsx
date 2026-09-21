@@ -4,7 +4,6 @@ import userEvent from '@testing-library/user-event';
 import DonationComponent from './DonationComponent';
 import { CoreProvider } from '../../../core/Context/CoreProvider';
 import type { DonationComponentProps, FixedAmountsDonation, RoundupDonation } from './types';
-import { setupCoreMock } from '../../../../config/testMocks/setup-core-mock';
 
 const onDonate = jest.fn();
 const onCancel = jest.fn();
@@ -25,19 +24,16 @@ const roundUp: RoundupDonation = {
 
 const commercialTxAmount = 1000;
 
-const core = setupCoreMock();
-
 const renderComponent = (props: Partial<DonationComponentProps> = {}) => {
     const defaultProps: DonationComponentProps = {
         commercialTxAmount,
         onDonate,
         donation: fixedAmounts,
-        onAmountSelected,
-        setComponentRef: jest.fn()
+        onAmountSelected
     };
 
     return render(
-        <CoreProvider i18n={core.modules.i18n} loadingContext="test" resources={core.modules.resources}>
+        <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
             <DonationComponent {...defaultProps} {...props} />
         </CoreProvider>
     );

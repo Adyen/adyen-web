@@ -3,21 +3,19 @@ import { render, screen, act } from '@testing-library/preact';
 import BacsInput from './BacsInput';
 import { CoreProvider } from '../../../core/Context/CoreProvider';
 import { AmountProvider } from '../../../core/Context/AmountProvider';
-import { setupCoreMock } from '../../../../config/testMocks/setup-core-mock';
 
 const defaultProps = {
-    onChange: jest.fn(),
-    onSubmit: jest.fn()
+    onChange: () => {},
+    onSubmit: () => {}
 };
-
-const core = setupCoreMock();
 
 const renderBacsInput = (props = {}) => {
     const bacsRef = createRef();
     render(
-        <CoreProvider i18n={core.modules.i18n} loadingContext="test" resources={core.modules.resources}>
+        <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
             <AmountProvider amount={{ currency: 'EUR', value: 1234 }} providerRef={createRef()}>
-                <BacsInput {...defaultProps} {...props} setComponentRef={ref => (bacsRef.current = ref)} />
+                {/* @ts-ignore ref is internal from the Component */}
+                <BacsInput ref={bacsRef} {...defaultProps} {...props} />
             </AmountProvider>
         </CoreProvider>
     );

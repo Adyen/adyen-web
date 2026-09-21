@@ -5,7 +5,6 @@ import config from './components/MBWayAwait/config';
 import { Await } from '../../components/internal/Await';
 import { TxVariants } from '../tx-variants';
 import { AwaitConfiguration } from '../internal/Await/types';
-import { PaymentData } from '../../types';
 
 export class MBWayElement extends UIElement<AwaitConfiguration> {
     public static readonly type = TxVariants.mbway;
@@ -28,7 +27,7 @@ export class MBWayElement extends UIElement<AwaitConfiguration> {
     /**
      * Formats the component data output
      */
-    formatData(): PaymentData {
+    formatData(): object {
         return {
             paymentMethod: {
                 type: MBWayElement.type,
@@ -70,6 +69,10 @@ export class MBWayElement extends UIElement<AwaitConfiguration> {
 
         return (
             <MBWayInput
+                /* @ts-ignore ref handled internally by Component */
+                ref={ref => {
+                    this.componentRef = ref;
+                }}
                 {...this.props}
                 setComponentRef={this.setComponentRef}
                 onChange={this.setState}

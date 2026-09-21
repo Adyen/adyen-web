@@ -19,7 +19,9 @@ class GiropayElement extends RedirectElement {
                     name={this.displayName}
                     onSubmit={this.submit}
                     payButton={this.payButton}
-                    setComponentRef={this.setComponentRef}
+                    ref={ref => {
+                        this.componentRef = ref;
+                    }}
                 />
             );
         }

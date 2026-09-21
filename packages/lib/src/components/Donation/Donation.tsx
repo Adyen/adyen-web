@@ -143,7 +143,10 @@ class DonationElement extends UIElement<DonationConfiguration> {
         return (
             <DonationComponent
                 {...this.props}
-                setComponentRef={this.setComponentRef}
+                // @ts-ignore ref is internal from the Component
+                ref={ref => {
+                    this.componentRef = ref;
+                }}
                 onChange={this.setState}
                 onDonate={this.donate}
                 onCancel={this.cancel}
