@@ -51,7 +51,7 @@ export class GiftcardElement extends UIElement<GiftCardConfiguration> {
         this.componentRef?.setBalanceCheckErrors?.(errorMessage);
     }
 
-    private readonly handleBalanceCheck = (data: GiftCardElementData): Promise<balanceCheckResponseType> => {
+    private handleBalanceCheck = (data: GiftCardElementData): Promise<balanceCheckResponseType> => {
         if (this.props.onBalanceCheck) {
             return new Promise((resolve, reject) => {
                 void this.props.onBalanceCheck(resolve, reject, data);
@@ -63,7 +63,7 @@ export class GiftcardElement extends UIElement<GiftCardConfiguration> {
         }
     };
 
-    private readonly onOrderRequest = data => {
+    private onOrderRequest = data => {
         if (this.props.onOrderRequest)
             return new Promise((resolve, reject) => {
                 void this.props.onOrderRequest(resolve, reject, data);
@@ -77,7 +77,7 @@ export class GiftcardElement extends UIElement<GiftCardConfiguration> {
         return this.onBalanceCheck();
     }
 
-    private readonly onBalanceCheck = (): void => {
+    private onBalanceCheck = (): void => {
         if (!this.isValid) {
             this.showValidation();
             return;
@@ -128,7 +128,7 @@ export class GiftcardElement extends UIElement<GiftCardConfiguration> {
     /**
      * Check if it should call onRequiringConfirmation
      */
-    private readonly handleOnRequiringConfirmation = (balance: PaymentAmount, transactionLimit: PaymentAmount): Promise<void> | void => {
+    private handleOnRequiringConfirmation = (balance: PaymentAmount, transactionLimit: PaymentAmount): Promise<void> | void => {
         this.componentRef.setBalance({ balance, transactionLimit });
         this.setStatus('ready');
 

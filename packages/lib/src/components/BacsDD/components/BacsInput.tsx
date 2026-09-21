@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { useState, useEffect, useRef } from 'preact/hooks';
+import { useState, useEffect } from 'preact/hooks';
 import classNames from 'classnames';
 import { useCoreContext } from '../../../core/Context/CoreProvider';
 import Field from '../../internal/FormFields/Field';
@@ -16,7 +16,6 @@ import FormInstruction from '../../internal/FormInstruction';
 import { getErrorMessage } from '../../../utils/getErrorMessage';
 import { PREFIX } from '../../internal/Icon/constants';
 import { useAmount } from '../../../core/Context/AmountProvider';
-import { ComponentMethodsRef, UIElementStatus } from '../../types';
 
 const ENTER_STATE = 'enter-data';
 const CONFIRM_STATE = 'confirm-data';
@@ -34,30 +33,21 @@ function BacsInput(props: Readonly<BacsInputProps>) {
     });
 
     const [status, setStatus] = useState(ENTER_STATE);
-
-    const bacsInputRef = useRef<ComponentMethodsRef>({
-        setStatus,
-        showValidation: () => {
-            triggerValidation();
-        }
-    });
-
-    useEffect(() => {
-        props.setComponentRef(bacsInputRef.current);
-    }, [props.setComponentRef]);
+    this.setStatus = setStatus;
+    this.showValidation = triggerValidation;
 
     const handlePayButton = () => {
-        if (!isValid) return bacsInputRef.current?.showValidation?.();
+        if (!isValid) return this.showValidation();
 
         if (status === ENTER_STATE) {
-            return bacsInputRef.current?.setStatus?.(CONFIRM_STATE as UIElementStatus);
+            return this.setStatus(CONFIRM_STATE);
         } else if (status === CONFIRM_STATE) {
             return props.onSubmit();
         }
     };
 
     const handleEdit = () => {
-        return bacsInputRef.current?.setStatus?.(ENTER_STATE as UIElementStatus);
+        return this.setStatus(ENTER_STATE);
     };
 
     useEffect(() => {
@@ -106,7 +96,7 @@ function BacsInput(props: Readonly<BacsInputProps>) {
                 <InputText
                     name={'bacs.accountHolderName'}
                     className={'adyen-checkout__bacs-input--holder-name'}
-                    placeholder={props.placeholders?.holderName}
+                    placeholder={props.placeholders.holderName}
                     value={data.holderName}
                     aria-invalid={!valid.holderName}
                     aria-label={i18n.get('bacs.accountHolderName')}
@@ -122,7 +112,7 @@ function BacsInput(props: Readonly<BacsInputProps>) {
 
             <div className="adyen-checkout__bacs__num-id adyen-checkout__field-wrapper">
                 <Field
-                    errorMessage={Boolean(errors.bankAccountNumber) && i18n.get('bacs.accountNumber.invalid')}
+                    errorMessage={!!errors.bankAccountNumber && i18n.get('bacs.accountNumber.invalid')}
                     label={i18n.get('bacs.accountNumber')}
                     className={classNames({
                         'adyen-checkout__bacs--bank-account-number': true,
@@ -136,7 +126,7 @@ function BacsInput(props: Readonly<BacsInputProps>) {
                     <InputText
                         value={data.bankAccountNumber}
                         className={'adyen-checkout__bacs-input--bank-account-number'}
-                        placeholder={props.placeholders?.bankAccountNumber}
+                        placeholder={props.placeholders.bankAccountNumber}
                         aria-invalid={!valid.bankAccountNumber}
                         aria-label={i18n.get('bacs.accountNumber')}
                         aria-required={'true'}
@@ -150,7 +140,7 @@ function BacsInput(props: Readonly<BacsInputProps>) {
                 </Field>
 
                 <Field
-                    errorMessage={Boolean(errors.bankLocationId) && i18n.get('bacs.bankLocationId.invalid')}
+                    errorMessage={!!errors.bankLocationId && i18n.get('bacs.bankLocationId.invalid')}
                     label={i18n.get('bacs.bankLocationId')}
                     className={classNames({
                         'adyen-checkout__bacs--bank-location-id': true,
@@ -164,7 +154,7 @@ function BacsInput(props: Readonly<BacsInputProps>) {
                     <InputText
                         value={data.bankLocationId}
                         className={'adyen-checkout__bacs-input--bank-location-id'}
-                        placeholder={props.placeholders?.bankLocationId}
+                        placeholder={props.placeholders.bankLocationId}
                         aria-invalid={!valid.bankLocationId}
                         aria-label={i18n.get('bacs.bankLocationId')}
                         aria-required={'true'}
@@ -179,7 +169,7 @@ function BacsInput(props: Readonly<BacsInputProps>) {
             </div>
 
             <Field
-                errorMessage={getErrorMessage(i18n, errors.shopperEmail ?? undefined, i18n.get('shopperEmail'))}
+                errorMessage={getErrorMessage(i18n, errors.shopperEmail, i18n.get('shopperEmail'))}
                 label={i18n.get('shopperEmail')}
                 className={classNames({
                     'adyen-checkout__bacs--shopper-email': true,
@@ -194,7 +184,7 @@ function BacsInput(props: Readonly<BacsInputProps>) {
                     name={'shopperEmail'}
                     className={'adyen-checkout__bacs-input--shopper-email'}
                     classNameModifiers={['large']}
-                    placeholder={props.placeholders?.shopperEmail}
+                    placeholder={props.placeholders.shopperEmail}
                     spellcheck={false}
                     aria-invalid={!valid.shopperEmail}
                     aria-label={i18n.get('shopperEmail')}
@@ -211,10 +201,10 @@ function BacsInput(props: Readonly<BacsInputProps>) {
             {status === ENTER_STATE && (
                 <ConsentCheckbox
                     classNameModifiers={['amountConsentCheckbox']}
-                    errorMessage={errors.amountConsentCheckbox}
+                    errorMessage={!!errors.amountConsentCheckbox}
                     label={i18n.get('bacs.consent.amount')}
                     onChange={handleChangeFor('amountConsentCheckbox')}
-                    checked={Boolean(data.amountConsentCheckbox)}
+                    checked={!!data.amountConsentCheckbox}
                     i18n={i18n}
                 />
             )}
@@ -222,16 +212,16 @@ function BacsInput(props: Readonly<BacsInputProps>) {
             {status === ENTER_STATE && (
                 <ConsentCheckbox
                     classNameModifiers={['accountConsentCheckbox']}
-                    errorMessage={errors.accountConsentCheckbox}
+                    errorMessage={!!errors.accountConsentCheckbox}
                     label={i18n.get('bacs.consent.account')}
                     onChange={handleChangeFor('accountConsentCheckbox')}
-                    checked={Boolean(data.accountConsentCheckbox)}
+                    checked={!!data.accountConsentCheckbox}
                     i18n={i18n}
                 />
             )}
 
             {props.showPayButton &&
-                props.payButton?.({
+                props.payButton({
                     status,
                     label:
                         status === ENTER_STATE

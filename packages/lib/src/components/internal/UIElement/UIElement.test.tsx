@@ -26,7 +26,7 @@ class MyElement extends UIElement<MyElementProps> {
         return false;
     }
     public callOnComplete() {
-        super.onComplete({ data: { details: {} } });
+        super.onComplete({});
     }
     public callOnChange() {
         super.onChange();

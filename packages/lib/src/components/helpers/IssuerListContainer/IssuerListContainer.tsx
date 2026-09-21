@@ -6,13 +6,10 @@ import { FALLBACK_CONTEXT } from '../../../core/config';
 import RedirectButton from '../../internal/RedirectButton';
 import { IssuerListConfiguration, IssuerListData } from './types';
 import type { ICore } from '../../../core/types';
-import { PaymentData, PaymentMethodBrand } from '../../../types/global-types';
+import { PaymentMethodBrand } from '../../../types/global-types';
 import { ImageOptions } from '../../../core/Context/Resources';
 
-class IssuerListContainer<
-    TProps extends IssuerListConfiguration = IssuerListConfiguration,
-    TData extends PaymentData = IssuerListData
-> extends UIElement<TProps> {
+class IssuerListContainer<TProps extends IssuerListConfiguration = IssuerListConfiguration, TData = IssuerListData> extends UIElement<TProps> {
     protected static readonly defaultProps = {
         showImage: true,
         issuers: [],
@@ -52,7 +49,7 @@ class IssuerListContainer<
                 type: this.type,
                 issuer: this.state?.data?.issuer
             }
-        } as unknown as TData;
+        } as TData;
     }
 
     /**
@@ -104,7 +101,9 @@ class IssuerListContainer<
                 {...this.props}
                 onSubmit={this.submit}
                 payButton={this.payButton}
-                setComponentRef={this.setComponentRef}
+                ref={ref => {
+                    this.componentRef = ref;
+                }}
             />
         );
     }

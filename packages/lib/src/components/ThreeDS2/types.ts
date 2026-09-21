@@ -139,9 +139,12 @@ type CheckoutThreeDS2Action = {
     authorisationToken: string;
 };
 
-export type FingerprintResolveData = {
-    data: Omit<AdditionalDetailsData['data'], 'details'>;
-};
+export interface FingerprintResolveData {
+    data: {
+        [key: string]: string;
+        paymentData: string;
+    };
+}
 
 export interface ChallengeResolveData {
     data: {

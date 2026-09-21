@@ -1,4 +1,4 @@
-import { ComponentMethodsRef, UIElementProps } from '../../internal/UIElement/types';
+import { UIElementProps } from '../../internal/UIElement/types';
 
 export interface BacsInputData {
     holderName?: string;
@@ -12,7 +12,7 @@ export interface BacsInputProps extends UIElementProps {
     placeholders?: BacsInputData;
     onChange: (state) => void;
     onSubmit: () => void;
-    setComponentRef: (ref: ComponentMethodsRef) => void;
+    onEdit: (e, revertToEnter) => void;
 }
 
 export interface BacsDataState {

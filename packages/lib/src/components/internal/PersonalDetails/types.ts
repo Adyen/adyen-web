@@ -42,3 +42,8 @@ export interface ReadOnlyPersonalDetailsProps {
     shopperEmail?: string;
     telephoneNumber?: string;
 }
+
+export interface ValidationResult {
+    errorMessage: string;
+    isValid: boolean;
+}

@@ -17,7 +17,7 @@ class SepaElement extends UIElement<SepaConfiguration> {
     /**
      * Formats props on construction time
      */
-    formatProps(props: SepaConfiguration): SepaConfiguration & { holderName: boolean } {
+    formatProps(props) {
         return {
             holderName: true,
             ...props
@@ -49,12 +49,14 @@ class SepaElement extends UIElement<SepaConfiguration> {
             <Fragment>
                 <FormInstruction />
 
+                {/* @ts-ignore TODO: add props */}
                 <IbanInput
                     ref={ref => {
                         this.componentRef = ref;
                     }}
                     {...this.props}
                     onChange={this.setState}
+                    // onSubmit={this.submit}
                     payButton={this.payButton}
                 />
             </Fragment>

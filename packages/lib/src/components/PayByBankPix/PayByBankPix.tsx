@@ -225,7 +225,9 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
                     label={this.props.i18n.get('paybybankpix.redirectBtn.label')}
                     payButton={this.payButton}
                     onSubmit={this.submit}
-                    setComponentRef={this.setComponentRef}
+                    ref={ref => {
+                        this.componentRef = ref;
+                    }}
                 />
             );
         }

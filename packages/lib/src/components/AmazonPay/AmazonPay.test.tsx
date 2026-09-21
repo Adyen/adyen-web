@@ -52,7 +52,7 @@ describe('AmazonPay', () => {
             const amazonPay = getElement(props);
             expect(amazonPay.props.environment).toBe('TEST');
             expect(amazonPay.props.locale).toBe('en_US');
-            expect(amazonPay.props.configuration?.region).toBe('EU');
+            expect(amazonPay.props.configuration.region).toBe('EU');
         });
 
         test('sets checkoutMode to ProcessOrder when isDropin is true', () => {
@@ -129,11 +129,11 @@ describe('AmazonPay', () => {
             expect(mockSubmitFn).toHaveBeenCalled();
         });
 
-        test('falls back to makePaymentsCall when getSubmitFunction returns nothing', () => {
+        test('falls back to makePaymentsCall when getSubmitFunction returns null', () => {
             const amazonPay = getElement();
             // @ts-ignore setting componentRef for testing
             amazonPay.componentRef = {
-                getSubmitFunction: jest.fn()
+                getSubmitFunction: () => null
             };
             // @ts-ignore accessing protected method for testing
             const makePaymentsCallSpy = jest.spyOn(amazonPay, 'makePaymentsCall').mockResolvedValue({ resultCode: 'Authorised' });

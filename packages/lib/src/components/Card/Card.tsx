@@ -3,14 +3,7 @@ import CardInput from './components/CardInput';
 import collectBrowserInfo from '../../utils/browserInfo';
 import { BinLookupResponse, CardElementData, CardConfiguration } from './types';
 import { triggerBinLookUp } from '../internal/SecuredFields/binLookup/triggerBinLookUp';
-import {
-    CardBinLookupData,
-    CardBrandData,
-    CardConfigSuccessData,
-    CardErrorData,
-    CardFocusData,
-    StylesObject
-} from '../internal/SecuredFields/lib/types';
+import { CardBinLookupData, CardConfigSuccessData, CardFocusData } from '../internal/SecuredFields/lib/types';
 import { fieldTypeToSnakeCase, isSecuredField } from '../internal/SecuredFields/utils';
 import { notFalsy, reject } from '../../utils/commonUtils';
 import { shouldIncludeInstallmentsInPaymentData } from './components/CardInput/utils';
@@ -28,14 +21,11 @@ import CardInputDefaultProps from './components/CardInput/defaultProps';
 import { PayButtonProps } from '../internal/PayButton/PayButton';
 import { AnalyticsInfoEvent, InfoEventType, UiTarget } from '../../core/Analytics/events/AnalyticsInfoEvent';
 import { InstallmentOptions } from './components/CardInput/components/Installments/Installments';
-import { AddressModeOptions, CardInputRef } from './components/CardInput/types';
 
 export class CardElement extends UIElement<CardConfiguration> {
     public static readonly type: TxVariants = TxVariants.scheme;
 
     private readonly clickToPayService: IClickToPayService | null;
-
-    protected componentRef: CardInputRef | undefined;
 
     /**
      * Reference to the 'ClickToPayComponent'
@@ -65,9 +55,9 @@ export class CardElement extends UIElement<CardConfiguration> {
         ...reject(['type', 'setComponentRef']).from(CardInputDefaultProps)
     };
 
-    public setStatus(status: UIElementStatus): this {
+    public setStatus(status: UIElementStatus, props?): this {
         if (this.componentRef?.setStatus) {
-            this.componentRef.setStatus(status);
+            this.componentRef.setStatus(status, props);
         }
         if (this.clickToPayRef?.setStatus) {
             this.clickToPayRef.setStatus(status);
@@ -216,17 +206,17 @@ export class CardElement extends UIElement<CardConfiguration> {
         this.analytics.sendAnalytics(event);
     }
 
-    updateStyles(stylesObj: StylesObject) {
+    updateStyles(stylesObj) {
         if (this.componentRef?.updateStyles) this.componentRef.updateStyles(stylesObj);
         return this;
     }
 
-    setFocusOn(fieldName: string) {
+    setFocusOn(fieldName) {
         if (this.componentRef?.setFocusOn) this.componentRef.setFocusOn(fieldName);
         return this;
     }
 
-    public onBrand = (event: CardBrandData) => {
+    public onBrand = event => {
         this.props.onBrand?.(event);
     };
 
@@ -235,7 +225,7 @@ export class CardElement extends UIElement<CardConfiguration> {
         return this;
     }
 
-    handleUnsupportedCard(errObj: CardErrorData) {
+    handleUnsupportedCard(errObj) {
         if (this.componentRef?.handleUnsupportedCard) this.componentRef.handleUnsupportedCard(errObj);
         return this;
     }
@@ -379,7 +369,6 @@ export class CardElement extends UIElement<CardConfiguration> {
                 setComponentRef={this.setComponentRef}
                 {...this.props}
                 {...this.state}
-                billingAddressMode={this.props.billingAddressMode as AddressModeOptions}
                 onSubmitAnalytics={this.submitAnalytics}
                 onChange={this.setState}
                 onSubmit={this.submit}

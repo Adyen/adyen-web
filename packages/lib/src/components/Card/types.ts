@@ -18,7 +18,6 @@ import type { OnAddressLookupType, OnAddressSelectedType } from '../internal/Add
 import type { FastlaneSignupConfiguration } from '../PayPalFastlane/types';
 import type { ChallengeWindowSize } from '../ThreeDS2/types';
 import { InstallmentOptions } from './components/CardInput/components/Installments/Installments';
-import { AddressModeOptions } from './components/CardInput/types';
 
 type PlaceholderKeys =
     'holderName' | 'cardNumber' | 'expiryDate' | 'expiryMonth' | 'expiryYear' | 'securityCodeThreeDigits' | 'securityCodeFourDigits' | 'password';
@@ -49,7 +48,7 @@ export interface CardConfiguration extends UIElementProps {
      *
      * - merchant set config option
      */
-    billingAddressMode?: `${AddressModeOptions}`;
+    billingAddressMode?: 'full' | 'partial' | 'none';
 
     /**
      * Show Address fields

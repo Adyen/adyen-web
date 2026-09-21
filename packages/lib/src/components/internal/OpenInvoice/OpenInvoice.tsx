@@ -1,6 +1,5 @@
 import { h } from 'preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
-import classNames from 'classnames';
 import { useCoreContext } from '../../../core/Context/CoreProvider';
 import CompanyDetails from '../CompanyDetails';
 import PersonalDetails from '../PersonalDetails';
@@ -16,13 +15,14 @@ import {
     OpenInvoiceStateError,
     OpenInvoiceStateValid
 } from './types';
+import './OpenInvoice.scss';
 import IbanInput from '../IbanInput';
 import { GenericError } from '../../../core/Errors/types';
 import Field from '../FormFields/Field';
 import FormInstruction from '../FormInstruction';
 import { ComponentMethodsRef } from '../UIElement/types';
 import useSRPanelForOpenInvoiceErrors from './useSRPanelForOpenInvoiceErrors';
-import './OpenInvoice.scss';
+import classNames from 'classnames';
 
 const consentCBErrorObj: GenericError = {
     isValid: false,
@@ -33,6 +33,13 @@ const consentCBErrorObj: GenericError = {
 export default function OpenInvoice(props: Readonly<OpenInvoiceProps>) {
     const { countryCode, visibility } = props;
     const { i18n } = useCoreContext();
+
+    /** An object by which to expose 'public' members to the parent UIElement */
+    const openInvoiceRef = useRef<ComponentMethodsRef>({});
+    // Just call once
+    if (!Object.keys(openInvoiceRef.current).length) {
+        props.setComponentRef?.(openInvoiceRef.current);
+    }
 
     const isValidating = useRef(false);
     const containerRef = useRef<HTMLDivElement>(null);
@@ -62,11 +69,7 @@ export default function OpenInvoice(props: Readonly<OpenInvoiceProps>) {
     const [valid, setValid] = useState<OpenInvoiceStateValid>({});
     const [status, setStatus] = useState('ready');
 
-    const openInvoiceRef = useRef<ComponentMethodsRef>({
-        setStatus,
-        showValidation: () => {}
-    });
-
+    // Expose methods expected by parent
     openInvoiceRef.current.showValidation = () => {
         isValidating.current = true;
         fieldsetsSchema.forEach(fieldset => {
@@ -78,9 +81,7 @@ export default function OpenInvoice(props: Readonly<OpenInvoiceProps>) {
         });
     };
 
-    useEffect(() => {
-        props.setComponentRef?.(openInvoiceRef.current);
-    }, [props.setComponentRef]);
+    openInvoiceRef.current.setStatus = setStatus;
 
     useSRPanelForOpenInvoiceErrors({ errors, data, props, isValidating, containerRef });
 

@@ -6,8 +6,8 @@ import getIssuerImageUrl from '../../utils/get-issuer-image';
 import PayButton from '../internal/PayButton';
 import { payAmountLabel } from '../internal/PayButton/utils';
 import { PaymentMethodBrand } from '../../types/global-types';
-import './PayByBankUS.scss';
 
+import './PayByBankUS.scss';
 export default class PayByBankUS extends RedirectElement {
     public static override readonly type: TxVariants = TxVariants.paybybank_AIS_DD;
 
@@ -85,7 +85,9 @@ export default class PayByBankUS extends RedirectElement {
                         name={this.displayName}
                         onSubmit={this.submit}
                         payButton={this.payButton}
-                        setComponentRef={this.setComponentRef}
+                        ref={ref => {
+                            this.componentRef = ref;
+                        }}
                     />
                 )}
             </Fragment>

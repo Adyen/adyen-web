@@ -1,4 +1,4 @@
-import UIElement from '.';
+import { UIElementStatus } from './types';
 import { RawPaymentResponse, PaymentResponseData, Order } from '../../../types/global-types';
 import { IDropin } from '../../Dropin/types';
 
@@ -36,6 +36,21 @@ export function cleanupFinalResult(paymentResponse?: PaymentResponseData): void 
     }
 }
 
+export function resolveFinalResult(result: PaymentResponseData): [status: UIElementStatus, statusProps?: any] {
+    switch (result.resultCode) {
+        case 'Authorised':
+        case 'Received':
+            return ['success'];
+        case 'Pending':
+            return ['success'];
+        case 'Cancelled':
+        case 'Error':
+        case 'Refused':
+            return ['error'];
+        default:
+    }
+}
+
 export function verifyPaymentDidNotFail(response: PaymentResponseData): Promise<PaymentResponseData> {
     if (['Cancelled', 'Error', 'Refused'].includes(response.resultCode)) {
         return Promise.reject(response);
@@ -44,18 +59,14 @@ export function verifyPaymentDidNotFail(response: PaymentResponseData): Promise<
     return Promise.resolve(response);
 }
 
-export function assertIsDropin(element?: UIElement): element is UIElement & IDropin {
+export function assertIsDropin(element: any): element is IDropin {
     if (!element) return false;
 
-    const isDropin =
-        `activePaymentMethod` in element &&
-        typeof element.activePaymentMethod === 'object' &&
-        `closeActivePaymentMethod` in element &&
-        typeof element.closeActivePaymentMethod === 'function';
+    const isDropin = typeof element.activePaymentMethod === 'object' && typeof element.closeActivePaymentMethod === 'function';
     return isDropin;
 }
 
-export function getRegulatoryDefaults(countryCode: string, isDropinInstance: boolean) {
+export function getRegulatoryDefaults(countryCode: string, isDropinInstance: boolean): Record<string, any> {
     switch (countryCode) {
         // Finnish regulations state that no payment method can be open by default
         case 'FI':

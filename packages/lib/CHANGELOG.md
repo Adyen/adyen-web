@@ -1,5 +1,11 @@
 # @adyen/adyen-web
 
+## 6.45.2
+
+### Patch Changes
+
+- Fixed: revert internal changes to remove implicit and explicit any from BaseElement and UIElement to fix issue with payment actions mounting
+
 ## 6.45.1
 
 ### Patch Changes

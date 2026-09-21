@@ -62,7 +62,7 @@ class Giftcard extends Component<Readonly<GiftcardComponentProps>> {
         return this.sfp.mapErrorsToValidationRuleResult();
     };
 
-    private readonly updateTransformedErrors = (balanceCheckErrors?: Record<string, GiftCardValidationError>) => {
+    private updateTransformedErrors = (balanceCheckErrors?: Record<string, GiftCardValidationError>) => {
         const transformedErrors = this.mapErrorsToValidationObjects();
 
         const mergedErrors = { ...transformedErrors, ...balanceCheckErrors };
