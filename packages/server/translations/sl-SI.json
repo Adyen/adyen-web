@@ -45,7 +45,6 @@
     "socialSecurityNumber": "Številka socialnega zavarovanja",
     "firstName": "Ime",
     "firstName.invalid": "Vnesite svoje ime",
-    "infix": "Naziv",
     "lastName": "Priimek",
     "lastName.invalid": "Vnesite svoj priimek",
     "mobileNumber": "Številka mobilnega telefona",

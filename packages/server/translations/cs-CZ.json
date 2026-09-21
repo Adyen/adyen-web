@@ -45,7 +45,6 @@
     "socialSecurityNumber": "Rodné číslo",
     "firstName": "Jméno",
     "firstName.invalid": "Zadejte své křestní jméno",
-    "infix": "Prefix",
     "lastName": "Příjmení",
     "lastName.invalid": "Zadejte své příjmení",
     "mobileNumber": "Číslo na mobil",

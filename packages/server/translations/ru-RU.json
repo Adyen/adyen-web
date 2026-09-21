@@ -45,7 +45,6 @@
     "socialSecurityNumber": "Номер социального страхования или ИНН",
     "firstName": "Имя",
     "firstName.invalid": "Введите имя",
-    "infix": "Приставка",
     "lastName": "Фамилия",
     "lastName.invalid": "Введите фамилию",
     "mobileNumber": "Мобильный телефон",

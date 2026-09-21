@@ -45,7 +45,6 @@
     "socialSecurityNumber": "Номер на социално осигуряване",
     "firstName": "Име",
     "firstName.invalid": "Въведете първото си име",
-    "infix": "Префикс",
     "lastName": "Фамилия",
     "lastName.invalid": "Въведете фамилията си",
     "mobileNumber": "Мобилен номер",

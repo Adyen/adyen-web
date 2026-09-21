@@ -45,7 +45,6 @@
     "socialSecurityNumber": "Numéro de sécurité sociale",
     "firstName": "Prénom",
     "firstName.invalid": "Entrez votre prénom",
-    "infix": "Préfixe",
     "lastName": "Nom de famille",
     "lastName.invalid": "Entrez votre nom",
     "mobileNumber": "Numéro de portable",
