@@ -74,10 +74,13 @@
     }
 }
 
+
+$pm-details-expand-duration: variable-generator.token(animation-duration-slow);
+
 .adyen-checkout-pm-details-wrapper {
     display: grid;
     grid-template-rows: 0fr;
-    transition: grid-template-rows 250ms ease;
+    transition: grid-template-rows $pm-details-expand-duration ease;
     visibility: hidden;
 }
 
@@ -85,7 +88,9 @@
     grid-template-rows: 1fr;
     visibility: visible;
 
-    .adyen-checkout__payment-method__details{
+    .adyen-checkout__payment-method__details {
         overflow: visible;
+        transition: overflow 0s $pm-details-expand-duration;
+        transition-behavior: allow-discrete;
     }
 }
