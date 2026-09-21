@@ -29,6 +29,11 @@
             "groupName": null
         },
         {
+            "description": "TypeScript 7.0 ships as a native Go port without an in-process JavaScript compiler API, breaking ts-jest, typescript-eslint, and ts-loader. Lift this restriction once TypeScript 7.1+ restores a JavaScript API and downstream tooling adds support. Ref: https://devblogs.microsoft.com/typescript/announcing-typescript-7-0/#running-side-by-side-with-typescript-6.0",
+            "matchPackageNames": ["typescript"],
+            "allowedVersions": "<7"
+        },
+        {
             "description": "Group example folder dependencies monthly on the first day of the month",
             "groupName": "Examples Dependencies",
             "matchFileNames": ["examples/**"],
