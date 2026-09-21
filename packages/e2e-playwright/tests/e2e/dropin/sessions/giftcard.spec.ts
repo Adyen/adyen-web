@@ -70,10 +70,7 @@ test.describe('Dropin - Sessions - GiftCards', () => {
 
         await page.getByRole('button', { name: 'Remove' }).click();
 
-        const cardPaymentMethodItemAfterRemove = dropinWithSession.getPaymentMethodHeader('Cards');
-        await cardPaymentMethodItemAfterRemove.rootElement.click();
-        
-        const cardAfterGiftCardRemove = new Card(page, cardPaymentMethodItemAfterRemove.rootElement);
+        const cardAfterGiftCardRemove = await selectCardPaymentMethod();
         await cardAfterGiftCardRemove.isComponentVisible();
         await expect(cardAfterGiftCardRemove.payButton).toContainText('Pay $259.00');
     });
