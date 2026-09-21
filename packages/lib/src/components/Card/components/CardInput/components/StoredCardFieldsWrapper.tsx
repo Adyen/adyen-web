@@ -2,7 +2,6 @@ import { h } from 'preact';
 import LoadingWrapper from '../../../../internal/LoadingWrapper';
 import StoredCardFields from './StoredCardFields';
 import Installments from './Installments';
-import DisclaimerMessage from '../../../../internal/DisclaimerMessage';
 
 export const StoredCardFieldsWrapper = ({
     // base (shared)
@@ -21,9 +20,7 @@ export const StoredCardFieldsWrapper = ({
     installmentOptions,
     lastFour,
     expiryMonth,
-    expiryYear,
-    // Card
-    disclaimerMessage
+    expiryYear
 }) => {
     return (
         <LoadingWrapper status={sfpState.status}>
@@ -47,13 +44,6 @@ export const StoredCardFieldsWrapper = ({
                     installmentOptions={installmentOptions}
                     onChange={handleInstallments}
                     type={showAmountsInInstallments ? 'amount' : 'months'}
-                />
-            )}
-
-            {disclaimerMessage && (
-                <DisclaimerMessage
-                    message={disclaimerMessage.message.replace('%{linkText}', `%#${disclaimerMessage.linkText}%#`)}
-                    urls={[disclaimerMessage.link]}
                 />
             )}
         </LoadingWrapper>

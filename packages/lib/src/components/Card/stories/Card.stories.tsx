@@ -38,7 +38,6 @@ export const Default: CardStory = {
             //     holderName: 'J. Smith'
             // },
             disableIOSArrowKeys: false,
-            // disclaimerMessage,
             // doBinLookup: false,
             enableStoreDetails: false,
             // exposeExpiryDate: true,
@@ -57,6 +56,20 @@ export const Default: CardStory = {
             showContextualElement: true
             // showPayButton: false,
             // styles: { base: { fontWeight: 300 } },
+        }
+    }
+};
+
+export const WithDisclaimer: CardStory = {
+    render: createCardComponent,
+    args: {
+        componentConfiguration: {
+            _disableClickToPay: true,
+            disclaimerMessage: {
+                message: 'By continuing you agree with the %{terms}',
+                linkText: 'terms and conditions',
+                link: 'https://www.adyen.com'
+            }
         }
     }
 };

@@ -22,16 +22,13 @@ class TrustlyElement extends RedirectElement {
                     </ul>
                 </div>
 
-                {this.props.showPayButton && (
-                    <RedirectButton
-                        {...this.props}
-                        showPayButton={this.props.showPayButton}
-                        name={this.displayName}
-                        onSubmit={this.submit}
-                        payButton={this.payButton}
-                        setComponentRef={this.setComponentRef}
-                    />
-                )}
+                <RedirectButton
+                    {...this.props}
+                    name={this.displayName}
+                    onSubmit={this.submit}
+                    payButton={this.payButton}
+                    setComponentRef={this.setComponentRef}
+                />
             </Fragment>
         );
     }

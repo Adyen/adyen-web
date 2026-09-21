@@ -73,7 +73,6 @@ class Fastlane extends UIElement<FastlaneConfiguration> {
                 brand={this.props.brand}
                 payButton={this.payButton}
                 setComponentRef={this.setComponentRef}
-                showPayButton={this.props.showPayButton}
             />
         );
     }
