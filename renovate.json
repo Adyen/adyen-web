@@ -34,6 +34,12 @@
             "allowedVersions": "<7"
         },
         {
+            "description": "The changesets release moves as one unit: @changesets/cli v3 requires changesets/action v2, and action v2 hard-throws on CLI v2, so neither is mergeable without the other. separateMajorMinor is off so a mixed major/minor never splits the group back apart.",
+            "matchPackageNames": ["@changesets/**", "changesets/action"],
+            "groupName": "Changesets release",
+            "separateMajorMinor": false
+        },
+        {
             "description": "Group example folder dependencies monthly on the first day of the month",
             "groupName": "Examples Dependencies",
             "matchFileNames": ["examples/**"],
