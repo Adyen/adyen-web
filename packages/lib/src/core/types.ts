@@ -94,18 +94,21 @@ export type BeforeSubmitActions = {
     reject: () => void;
 };
 
-export type OnChangeDataErrors = Record<
-    string,
-    { isValid: boolean; errorMessage: string; errorI18n: string; error?: string; rootNode?: HTMLElement }
->;
-
 export type OnChangeData = {
     data: PaymentData;
     isValid: boolean;
     valid?: {
         [fieldKey: string]: boolean;
     };
-    errors?: OnChangeDataErrors;
+    errors?: {
+        [fieldKey: string]: {
+            isValid: boolean;
+            errorMessage: string;
+            errorI18n: string;
+            error: string;
+            rootNode: HTMLElement;
+        };
+    };
 };
 
 export interface CoreConfiguration {

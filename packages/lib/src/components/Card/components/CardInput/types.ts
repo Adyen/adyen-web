@@ -7,6 +7,7 @@ import type {
     DualBrandSelectElement,
     CardPlaceholders
 } from '../../types';
+import { ValidationResult } from '../../../internal/PersonalDetails/types';
 import {
     CardAllValidData,
     CardAutoCompleteData,
@@ -38,7 +39,6 @@ import { InstallmentOptions } from './components/Installments/Installments';
 import type { Form } from '../../../../utils/useForm/types';
 import type { SecuredFieldsProviderRef } from '../../../internal/SecuredFields/SFP/types';
 import { AdyenCheckoutError } from '../../../../types';
-import { ValidationRuleResult } from '../../../../utils/Validator/ValidationRuleResult';
 
 export interface CardInputValidState {
     holderName?: boolean;
@@ -53,13 +53,13 @@ export interface CardInputValidState {
 }
 
 export interface CardInputErrorState {
-    holderName?: ValidationRuleResult;
-    billingAddress?: ValidationRuleResult;
-    socialSecurityNumber?: ValidationRuleResult;
+    holderName?: ValidationResult;
+    billingAddress?: ValidationResult;
+    socialSecurityNumber?: ValidationResult;
     encryptedCardNumber?: boolean;
     encryptedExpiryDate?: boolean;
     encryptedSecurityCode?: boolean;
-    taxNumber?: ValidationRuleResult;
+    taxNumber?: ValidationResult;
     encryptedPassword?: boolean;
 }
 

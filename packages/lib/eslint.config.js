@@ -153,6 +153,17 @@ const config = defineConfig(
             'src/components/Klarna/**',
             'src/components/PayTo/**',
 
+            // ── Internal Components ──
+            'src/components/internal/Address/**',
+            'src/components/internal/ClickToPay/**',
+            'src/components/internal/FormFields/**',
+            'src/components/internal/IbanInput/**',
+            'src/components/internal/IssuerList/**',
+            'src/components/internal/OpenInvoice/**',
+
+            // ── Utils ──
+            'src/utils/useForm/**',
+
             // ── Others ──
             'src/core/**',
             'src/types/**'

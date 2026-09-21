@@ -1,18 +1,21 @@
-import { h, Fragment, TargetedEvent } from 'preact';
+import { h, Fragment } from 'preact';
 import Field from '../../internal/FormFields/Field';
 import { getErrorMessage } from '../../../utils/getErrorMessage';
 import InputText from '../../internal/FormFields/InputText';
 import Language from '../../../language';
-import { FormStateErrors, HandleChangeForModeType } from '../../../utils/useForm/types';
+import { HandleChangeForModeType } from '../../../utils/useForm/types';
+import { ValidationRuleResult } from '../../../utils/Validator/ValidationRuleResult';
 
 export interface PayToNameFieldsProps {
     i18n: Language;
-    errors: FormStateErrors;
+    errors: {
+        [key: string]: ValidationRuleResult;
+    };
     data: {
         firstName: string;
         lastName: string;
     };
-    handleChangeFor: (key: string, mode?: HandleChangeForModeType) => (e: TargetedEvent<HTMLInputElement, Event>) => void;
+    handleChangeFor: (key: string, mode?: HandleChangeForModeType) => (e: h.JSX.TargetedEvent<HTMLInputElement, Event>) => void;
     placeholders: {
         firstName: string;
         lastName: string;
@@ -25,7 +28,7 @@ export default function PayToNameFields({ i18n, errors, data, handleChangeFor, p
             <Field
                 label={i18n.get('payto.label.firstName')}
                 classNameModifiers={['col-50', 'firstName']}
-                errorMessage={getErrorMessage(i18n, errors.firstName ?? undefined, i18n.get('firstName'))}
+                errorMessage={getErrorMessage(i18n, errors.firstName, i18n.get('firstName'))}
                 name={'firstName'}
                 i18n={i18n}
                 errorLive={true}
@@ -45,7 +48,7 @@ export default function PayToNameFields({ i18n, errors, data, handleChangeFor, p
             <Field
                 label={i18n.get('payto.label.lastName')}
                 classNameModifiers={['col-50', 'lastName']}
-                errorMessage={getErrorMessage(i18n, errors.lastName ?? undefined, i18n.get('lastName'))}
+                errorMessage={getErrorMessage(i18n, errors.lastName, i18n.get('lastName'))}
                 name={'lastName'}
                 i18n={i18n}
                 errorLive={true}
