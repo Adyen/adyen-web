@@ -45,7 +45,6 @@
     "socialSecurityNumber": "Burgerservicenummer",
     "firstName": "Voornaam",
     "firstName.invalid": "Voer je voornaam in",
-    "infix": "Voorvoegsel",
     "lastName": "Achternaam",
     "lastName.invalid": "Voer je achternaam in",
     "mobileNumber": "Telefoonnummer mobiel",

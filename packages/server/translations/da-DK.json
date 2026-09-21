@@ -45,7 +45,6 @@
     "socialSecurityNumber": "CPR-nummer",
     "firstName": "Fornavn",
     "firstName.invalid": "Indtast dit fornavn",
-    "infix": "Præfiks",
     "lastName": "Efternavn",
     "lastName.invalid": "Indtast dit efternavn",
     "mobileNumber": "Mobilnummer",

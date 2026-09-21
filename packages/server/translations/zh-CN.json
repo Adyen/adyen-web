@@ -45,7 +45,6 @@
     "socialSecurityNumber": "社会保险号码",
     "firstName": "名字",
     "firstName.invalid": "输入您的名字",
-    "infix": "前缀",
     "lastName": "姓氏",
     "lastName.invalid": "输入您的姓氏",
     "mobileNumber": "手机号",

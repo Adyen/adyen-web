@@ -45,7 +45,6 @@
     "socialSecurityNumber": "Kennitala",
     "firstName": "Fornafn",
     "firstName.invalid": "Sláðu inn fornafn",
-    "infix": "Forskeyti",
     "lastName": "Eftirnafn",
     "lastName.invalid": "Sláðu inn eftirnafn",
     "mobileNumber": "Farsímanúmer",

@@ -45,7 +45,6 @@
     "socialSecurityNumber": "ソーシャルセキュリティー番号",
     "firstName": "名",
     "firstName.invalid": "名を入力してください",
-    "infix": "敬称",
     "lastName": "姓",
     "lastName.invalid": "姓を入力してください",
     "mobileNumber": "携帯番号",

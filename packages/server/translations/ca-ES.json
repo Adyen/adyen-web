@@ -45,7 +45,6 @@
     "socialSecurityNumber": "Número de la seguretat social",
     "firstName": "Nom",
     "firstName.invalid": "Introduïu el vostre nom",
-    "infix": "Prefix",
     "lastName": "Cognom",
     "lastName.invalid": "Introduïu el vostre cognom",
     "mobileNumber": "Número de mòbil",

@@ -45,7 +45,6 @@
     "socialSecurityNumber": "Broj socijalnog osiguranja",
     "firstName": "Ime",
     "firstName.invalid": "Unesite svoje ime",
-    "infix": "Prefiks",
     "lastName": "Prezime",
     "lastName.invalid": "Unesite svoje prezime",
     "mobileNumber": "Broj mobilnog telefona",

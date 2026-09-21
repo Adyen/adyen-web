@@ -45,7 +45,6 @@
     "socialSecurityNumber": "Social security number",
     "firstName": "First name",
     "firstName.invalid": "Enter your first name",
-    "infix": "Prefix",
     "lastName": "Last name",
     "lastName.invalid": "Enter your last name",
     "mobileNumber": "Mobile number",

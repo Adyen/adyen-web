@@ -45,7 +45,6 @@
     "socialSecurityNumber": "Αριθμός φορολογικού μητρώου",
     "firstName": "Όνομα",
     "firstName.invalid": "Πληκτρολογήστε το όνομά σας",
-    "infix": "Πρόθεμα",
     "lastName": "Επώνυμο",
     "lastName.invalid": "Πληκτρολογήστε το επώνυμό σας",
     "mobileNumber": "Αριθμός κινητού",

@@ -45,7 +45,6 @@
     "socialSecurityNumber": "Sosiaaliturvatunnus",
     "firstName": "Etunimi",
     "firstName.invalid": "Syötä etunimesi",
-    "infix": "Etuliite",
     "lastName": "Sukunimi",
     "lastName.invalid": "Syötä sukunimesi",
     "mobileNumber": "Matkapuhelinnumero",

@@ -45,7 +45,6 @@
     "socialSecurityNumber": "Sotsiaalkindlustuse number",
     "firstName": "Eesnimi",
     "firstName.invalid": "Sisestage oma eesnimi",
-    "infix": "Eesliide",
     "lastName": "Perekonnanimi",
     "lastName.invalid": "Sisestage oma perekonnanimi",
     "mobileNumber": "Mobiiltelefoni number",

@@ -45,7 +45,6 @@
     "socialSecurityNumber": "Número de previdência social",
     "firstName": "Nome próprio",
     "firstName.invalid": "Introduza o seu nome próprio",
-    "infix": "Prefixo",
     "lastName": "Apelido",
     "lastName.invalid": "Introduza o seu apelido",
     "mobileNumber": "Número de telemóvel",

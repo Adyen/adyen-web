@@ -45,7 +45,6 @@
     "socialSecurityNumber": "Sociālās apdrošināšanas numurs",
     "firstName": "Vārds",
     "firstName.invalid": "Ievadiet savu vārdu",
-    "infix": "Priedēklis",
     "lastName": "Uzvārds",
     "lastName.invalid": "Ievadiet savu uzvārdu",
     "mobileNumber": "Mobilais tālruņa numurs",

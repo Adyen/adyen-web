@@ -45,7 +45,6 @@
     "socialSecurityNumber": "Numer dowodu osobistego",
     "firstName": "Imię",
     "firstName.invalid": "Wpisz imię",
-    "infix": "Prefiks",
     "lastName": "Nazwisko",
     "lastName.invalid": "Wpisz nazwisko",
     "mobileNumber": "Numer telefonu komórkowego",

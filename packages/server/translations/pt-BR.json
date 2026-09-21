@@ -45,7 +45,6 @@
     "socialSecurityNumber": "CPF",
     "firstName": "Nome",
     "firstName.invalid": "Digite seu nome",
-    "infix": "Prefixo",
     "lastName": "Sobrenome",
     "lastName.invalid": "Digite seu sobrenome",
     "mobileNumber": "Celular",

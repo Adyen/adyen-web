@@ -45,7 +45,6 @@
     "socialSecurityNumber": "Socialinio draudimo numeris",
     "firstName": "Vardas",
     "firstName.invalid": "Įveskite savo vardą",
-    "infix": "Kreipinys",
     "lastName": "Pavardė",
     "lastName.invalid": "Įveskite savo pavardę",
     "mobileNumber": "Mobiliojo telefono numeris",

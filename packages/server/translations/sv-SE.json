@@ -45,7 +45,6 @@
     "socialSecurityNumber": "Personnummer",
     "firstName": "Förnamn",
     "firstName.invalid": "Ange ditt förnamn",
-    "infix": "Prefix",
     "lastName": "Efternamn",
     "lastName.invalid": "Ange ditt efternamn",
     "mobileNumber": "Mobilnummer",

@@ -45,7 +45,6 @@
     "socialSecurityNumber": "Társadalombiztosítási azonosító (TAJ) szám",
     "firstName": "Keresztnév",
     "firstName.invalid": "Adja meg a keresztnevét",
-    "infix": "Előtag",
     "lastName": "Vezetéknév",
     "lastName.invalid": "Adja meg a vezetéknevét",
     "mobileNumber": "Mobiltelefonszám",

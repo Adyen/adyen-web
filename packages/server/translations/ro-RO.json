@@ -45,7 +45,6 @@
     "socialSecurityNumber": "Cod numeric personal",
     "firstName": "Prenume",
     "firstName.invalid": "Completați prenumele dvs.",
-    "infix": "Prefix telefonic",
     "lastName": "Nume de familie",
     "lastName.invalid": "Completați numele dvs. de familie",
     "mobileNumber": "Număr de mobil",

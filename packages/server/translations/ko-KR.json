@@ -45,7 +45,6 @@
     "socialSecurityNumber": "사회 보장 번호(주민등록번호)",
     "firstName": "이름",
     "firstName.invalid": "이름을 입력하세요.",
-    "infix": "명칭",
     "lastName": "성",
     "lastName.invalid": "성을 입력하세요.",
     "mobileNumber": "휴대폰 번호",

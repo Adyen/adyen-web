@@ -45,7 +45,6 @@
     "socialSecurityNumber": "رقم الضمان الاجتماعي",
     "firstName": "الاسم الأول",
     "firstName.invalid": "أدخل اسمك الأول",
-    "infix": "بادئة",
     "lastName": "الاسم الأخير",
     "lastName.invalid": "أدخل اسمك الأخير",
     "mobileNumber": "رقم الجوال",
