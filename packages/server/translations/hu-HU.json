@@ -42,7 +42,7 @@
     "companyDetails": "Cég adatai",
     "companyDetails.name": "Cégnév",
     "companyDetails.registrationNumber": "Cégjegyzékszám",
-    "socialSecurityNumber": "Személyi igazolvány száma",
+    "socialSecurityNumber": "Társadalombiztosítási azonosító (TAJ) szám",
     "firstName": "Keresztnév",
     "firstName.invalid": "Adja meg a keresztnevét",
     "infix": "Előtag",

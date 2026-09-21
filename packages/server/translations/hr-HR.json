@@ -445,7 +445,7 @@
     "upi.mandate.max.extraText": "Odobrit ćete veće ograničenje kako biste omogućili buduće promjene plana",
     "upi.mandate.upTo": "do %{amount}",
     "upi.mandate.frequency.monthly": "/mjesec",
-    "upi.mandate.frequency.weekly": "/trjedan",
+    "upi.mandate.frequency.weekly": "/tjedan",
     "upi.mandate.frequency.adhoc": " kako je predočeno",
     "bankList": "Popis banaka",
     "qrCode": "QR kôd",
