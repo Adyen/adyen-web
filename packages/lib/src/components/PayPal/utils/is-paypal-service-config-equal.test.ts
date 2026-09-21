@@ -1,17 +1,21 @@
 import { isPayPalServiceConfigEqual } from './is-paypal-service-config-equal';
 import type { PayPalServiceRefreshConfig } from '../services/PayPalService';
+import type { PaymentAmount } from '../../../types/global-types';
+
+const DEFAULT_AMOUNT: PaymentAmount = { value: 1000, currency: 'USD' };
+const DEFAULT_COMPONENTS: PayPalServiceRefreshConfig['components'] = ['paypal-payments', 'venmo-payments'];
 
 const createConfig = (overrides: Partial<PayPalServiceRefreshConfig> = {}): PayPalServiceRefreshConfig => ({
     loadingContext: 'https://checkoutshopper-test.adyen.com/checkoutshopper/',
     clientKey: 'test_client_key',
     merchantId: 'test_merchant',
     countryCode: 'US',
-    amount: { value: 1000, currency: 'USD' },
+    amount: DEFAULT_AMOUNT,
     vault: false,
     locale: 'en-US',
     pageType: 'checkout',
     environment: 'test',
-    components: ['paypal-payments', 'venmo-payments'],
+    components: DEFAULT_COMPONENTS,
     ...overrides
 });
 
@@ -23,10 +27,12 @@ describe('isPayPalServiceConfigEqual', () => {
     test('should not compare the amount and the components by reference', () => {
         const config = createConfig();
         const otherConfig = createConfig({
-            amount: { ...config.amount },
-            components: [...config.components]
+            amount: { ...DEFAULT_AMOUNT },
+            components: [...DEFAULT_COMPONENTS]
         });
 
+        expect(config.amount).not.toBe(otherConfig.amount);
+        expect(config.components).not.toBe(otherConfig.components);
         expect(isPayPalServiceConfigEqual(config, otherConfig)).toBe(true);
     });
 
