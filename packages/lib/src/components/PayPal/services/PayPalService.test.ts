@@ -249,7 +249,8 @@ describe('PayPalService', () => {
             const newEligibleMethods = mock<PayPalEligiblePaymentMethods>();
             const newSdkInstance = { findEligibleMethods: jest.fn().mockResolvedValue(newEligibleMethods) } as unknown as PayPalSdkInstance;
 
-            let resolveCreateInstance: (instance: PayPalSdkInstance) => void;
+            // The Promise executor runs synchronously, so the resolver is always assigned before it is used
+            let resolveCreateInstance!: (instance: PayPalSdkInstance) => void;
             createInstanceMock.mockReturnValueOnce(new Promise(resolve => (resolveCreateInstance = resolve)));
 
             const refreshPromise = service.refresh(createRefreshConfig({ countryCode: 'NL' }));
