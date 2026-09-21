@@ -12,10 +12,13 @@ test.describe('Dropin - Sessions - GiftCards', () => {
         async ({ dropinWithSession, page, browserName }) => {
             await dropinWithSession.goto(URL_MAP.dropinWithSession);
 
-            const cardPaymentMethodItem = dropinWithSession.getPaymentMethodHeader('Cards');
-            await cardPaymentMethodItem.rootElement.click();
+            const selectCardPaymentMethod = async () => {
+                const item = dropinWithSession.getPaymentMethodHeader('Cards');
+                await item.rootElement.click();
+                return new Card(page, item.rootElement);
+            };
 
-            const cardBeforeGiftCardRedeem = new Card(page, cardPaymentMethodItem.rootElement);
+            const cardBeforeGiftCardRedeem = await selectCardPaymentMethod();
             await cardBeforeGiftCardRedeem.isComponentVisible();
             await expect(cardBeforeGiftCardRedeem.payButton).toHaveText('Pay $259.00');
 
