@@ -99,7 +99,6 @@ class IssuerListContainer<
             />
         ) : (
             <RedirectButton
-                showPayButton={this.props.showPayButton}
                 name={this.props.name}
                 {...this.props}
                 onSubmit={this.submit}

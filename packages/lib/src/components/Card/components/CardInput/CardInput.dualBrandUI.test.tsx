@@ -15,7 +15,6 @@ const cardInputRequiredProps = {
     resources: global.resources,
     brandsIcons: [],
     brandsConfiguration: {},
-    showPayButton: false,
     onSubmitAnalytics: jest.fn(),
     setComponentRef: jest.fn(ref => {
         cardInputRef = ref;

@@ -106,7 +106,7 @@ $adyen-checkout-media-query-xl-min: 1280px;
 
     &:hover,
     &:active {
-       font-weight: variable-generator.token(text-subtitle-font-weight);
+        font-weight: variable-generator.token(text-subtitle-font-weight);
     }
 
     &:focus-visible {

@@ -3,9 +3,10 @@ import Session from '../../../core/CheckoutSession';
 import Language from '../../../language';
 import UIElement from './UIElement';
 import type { PaymentAction, PaymentAmount } from '../../../types/global-types';
+import type { CoreConfiguration, CreateFromActionOptions } from '../../../core/types';
 import type { BaseElementProps, BaseElementState } from '../BaseElement/types';
-import type { CoreConfiguration } from '../../../core/types';
 import { PayButtonProps } from '../PayButton/PayButton';
+import type { DisclaimerMsgObject } from '../DisclaimerMessage';
 
 type CoreCallbacks = Pick<
     CoreConfiguration,
@@ -76,6 +77,14 @@ export type UIElementProps = {
          */
         showPayButton?: boolean;
 
+        /**
+         * Disclaimer message displayed above the pay button
+         *
+         * Not supported by express/wallet components (PayPal, Apple Pay, Google Pay, Amazon Pay, Cash App Pay),
+         * which render their own branded button instead of the SDK pay button.
+         */
+        disclaimerMessage?: DisclaimerMsgObject;
+
         /** @internal */
         payButton?: (options: PayButtonProps) => h.JSX.Element;
 
@@ -83,7 +92,7 @@ export type UIElementProps = {
         loadingContext?: string;
 
         /** @internal */
-        createFromAction?: (action: PaymentAction, props: object) => UIElement;
+        createFromAction?: (action: PaymentAction, props: CreateFromActionOptions) => UIElement;
 
         /** @internal */
         clientKey?: string;

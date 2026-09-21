@@ -13,7 +13,6 @@ import { ValidationRuleResult } from '../../../utils/Validator/ValidationRuleRes
 
 export interface ANCVInputProps {
     setComponentRef: (ref: ComponentMethodsRef) => void;
-    showPayButton: boolean;
     onSubmit: () => void;
     payButton: (props: PayButtonProps) => h.JSX.Element;
     onChange: (data: {
@@ -26,7 +25,7 @@ export interface ANCVInputProps {
 
 type ANCVInputDataState = ANCVDataState;
 
-function ANCVInput({ showPayButton, payButton, onChange, onSubmit, setComponentRef }: Readonly<ANCVInputProps>) {
+function ANCVInput({ payButton, onChange, onSubmit, setComponentRef }: Readonly<ANCVInputProps>) {
     const { i18n } = useCoreContext();
 
     const { handleChangeFor, triggerValidation, data, valid, errors, isValid } = useForm<ANCVInputDataState>({
@@ -69,7 +68,7 @@ function ANCVInput({ showPayButton, payButton, onChange, onSubmit, setComponentR
                         autocomplete={undefined}
                     />
                 </Field>
-                {showPayButton && payButton({ status, label: i18n.get('confirmPurchase'), onClick: onSubmit })}
+                {payButton({ status, label: i18n.get('confirmPurchase'), onClick: onSubmit })}
             </div>
         </LoadingWrapper>
     );

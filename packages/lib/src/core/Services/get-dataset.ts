@@ -1,6 +1,7 @@
 import { httpGet } from './http';
+import type { DataSet } from './data-set';
 
-export default function getDataset(name: string, loadingContext, locale?) {
+export default function getDataset<T = DataSet>(name: string, loadingContext: string, locale?: string): Promise<T> {
     const options = {
         loadingContext,
         errorLevel: 'warn' as const,
@@ -8,5 +9,5 @@ export default function getDataset(name: string, loadingContext, locale?) {
         path: locale ? `datasets/${name}/${locale}.json` : `datasets/${name}.json`
     };
 
-    return httpGet(options);
+    return httpGet<T>(options);
 }

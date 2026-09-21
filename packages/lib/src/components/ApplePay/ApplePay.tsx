@@ -15,7 +15,13 @@ import { formatApplePayContactToAdyenAddressFormat } from './utils/format-applep
 import { mapBrands } from './utils/map-adyen-brands-to-applepay-brands';
 import ApplePaySdkLoader from './services/ApplePaySdkLoader';
 import { detectInIframe } from '../../utils/detectInIframe';
-import type { ApplePayConfiguration, ApplePayElementData, ApplePayPaymentOrderDetails, ApplePaySessionRequest } from './types';
+import type {
+    ApplePayConfiguration,
+    ApplePayElementData,
+    ApplePayPaymentOrderDetails,
+    ApplePaySessionRequest,
+    ApplePaySessionResponse
+} from './types';
 import type { ICore } from '../../core/types';
 import type { PaymentResponseData, RawPaymentResponse } from '../../types/global-types';
 import { AnalyticsInfoEvent, InfoEventType, UiTarget } from '../../core/Analytics/events/AnalyticsInfoEvent';
@@ -338,7 +344,7 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
         };
 
         try {
-            const response = await httpPost(options, request);
+            const response = await httpPost<ApplePaySessionResponse>(options, request);
             const decodedData: DecodeObject = base64.decode(response.data);
 
             if (!decodedData.success) {

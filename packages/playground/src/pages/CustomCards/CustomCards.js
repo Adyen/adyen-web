@@ -62,7 +62,7 @@ const configObj = {
     },
     risk: {
         enabled: true, // Means that "riskdata" will then show up in the data object sent to the onChange event
-        // Also accessible via checkout.modules.risk.data
+        // Also accessible via checkout.modules.risk.riskData
         node: '.merchant-checkout__form', // Element that DF iframe is briefly added to
         onComplete: handleOnRiskData,
         onError: console.error
@@ -228,7 +228,7 @@ function startPayment(component) {
 
     const allow3DS2 = paymentsConfig.authenticationData.attemptAuthentication || 'never';
 
-    const riskdata = checkout.modules.risk.data;
+    const riskdata = checkout.modules.risk.riskData;
 
     makePayment(component.data, {
         additionalData: { riskdata },

@@ -89,6 +89,22 @@ describe('validatePostalCode', () => {
         expect(result).toBe(true);
     });
 
+    // JP
+    it('should return true for a valid JP postal code with hyphen', () => {
+        const result = validatePostalCode('123-4567', 'JP', validatorRules);
+        expect(result).toBe(true);
+    });
+
+    it('should return true for a valid JP postal code without hyphen', () => {
+        const result = validatePostalCode('1234567', 'JP', validatorRules);
+        expect(result).toBe(true);
+    });
+
+    it('should return false for an invalid JP postal code', () => {
+        const result = validatePostalCode('12-34567', 'JP', validatorRules);
+        expect(result).toBe(false);
+    });
+
     // PT
     it('should return true for a valid PT postal code without hyphen', () => {
         const result = validatePostalCode('1234567', 'PT', validatorRules);

@@ -14,3 +14,8 @@
         padding-right: 0;
     }
 }
+
+/* Standalone pay buttons reset their top margin, so restore the gap when a disclaimer precedes them */
+.adyen-checkout-disclaimer__label + .adyen-checkout__button.adyen-checkout__button--standalone {
+    margin-top: variable-generator.token(spacer-070);
+}

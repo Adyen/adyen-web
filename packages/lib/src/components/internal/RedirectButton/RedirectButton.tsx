@@ -10,7 +10,6 @@ export interface RedirectButtonProps {
     payButton: Function;
     onSubmit: Function;
     name: string;
-    showPayButton: boolean;
     setComponentRef: (ref: ComponentMethodsRef) => void;
 }
 
@@ -20,7 +19,6 @@ function RedirectButton({
     payButton,
     onSubmit,
     name,
-    showPayButton,
     setComponentRef,
     ...props
 }: Readonly<RedirectButtonProps>) {
@@ -41,10 +39,6 @@ function RedirectButton({
         if (isZeroAuth) return `${i18n.get('preauthorizeWith')} ${name}`;
         return `${i18n.get('continueTo')} ${name}`;
     };
-
-    if (!showPayButton) {
-        return;
-    }
 
     return (
         <Fragment>

@@ -1,5 +1,9 @@
 @use 'styles/variable-generator';
 
+.adyen-checkout__pix-input__field:empty {
+    display: none;
+}
+
 .adyen-checkout__qr-loader--pix {
     padding-bottom: variable-generator.token(spacer-110);
 

@@ -230,8 +230,7 @@ function BacsInput(props: Readonly<BacsInputProps>) {
                 />
             )}
 
-            {props.showPayButton &&
-                props.payButton?.({
+            {props.payButton?.({
                     status,
                     label:
                         status === ENTER_STATE

@@ -15,7 +15,6 @@ const defaultProps = {
         { id: 'BPIA', name: 'Bank of the Philippine Islands' }
     ],
     onChange: jest.fn(),
-    showPayButton: false,
     payButton: jest.fn(),
     setComponentRef: jest.fn()
 };

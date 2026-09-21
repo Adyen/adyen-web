@@ -147,6 +147,20 @@ describe('PayByBankPix', () => {
             expect(await screen.findByRole('option', { name: /Iniciador Mock Bank/i })).toBeInTheDocument();
         });
 
+        test('should render the pay button on the hosted page even if showPayButton is false', async () => {
+            const core = setupCoreMock();
+
+            payByBankPixElement = new PayByBankPix(core, {
+                ...coreProps,
+                _isAdyenHosted: true,
+                issuers: [{ name: 'Iniciador Mock Bank', id: '123' }],
+                showPayButton: false
+            });
+
+            render(payByBankPixElement.render());
+            expect(await screen.findByRole('button', { name: /Continue/i })).toBeInTheDocument();
+        });
+
         test('should call captureRiskSignalsEnrollment and onChange after one issuer is selected', async () => {
             render(payByBankPixElement.render());
 

@@ -132,7 +132,6 @@ class UPI extends UIElement<UPIConfiguration> {
                         onChange={this.setState}
                         appsList={this.appsList}
                         mode={this.mode}
-                        showPayButton={this.props.showPayButton ?? true}
                         mandate={this.props.mandate}
                         onSubmitAnalytics={this.submitAnalytics}
                     />

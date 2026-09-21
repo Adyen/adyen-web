@@ -14,7 +14,7 @@ describe('DokuInput', () => {
     };
 
     test('should only render PersonalDetails by default', async () => {
-        customRender(<DokuInput />);
+        customRender(<DokuInput payButton={() => null} />);
         expect(await screen.findByText('First name')).toBeTruthy();
         expect(await screen.findByText('Last name')).toBeTruthy();
         expect(await screen.findByText('Email address')).toBeTruthy();

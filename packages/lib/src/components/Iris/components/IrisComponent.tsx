@@ -16,7 +16,6 @@ import useAnalytics from '../../../core/Analytics/useAnalytics';
 
 interface IrisComponentProps {
     defaultMode: IrisMode;
-    showPayButton?: boolean;
     issuers: IssuerItem[];
     issuerListUI: h.JSX.Element;
     onUpdateMode: (mode: IrisMode) => void;
@@ -75,7 +74,7 @@ export default function IrisComponent(props: Readonly<IrisComponentProps>) {
     }, [issuersAvailable]);
 
     if (!issuersAvailable) {
-        return <IrisGenerateQRCode showPayButton={props.showPayButton} payButton={props.payButton} status={status} />;
+        return <IrisGenerateQRCode payButton={props.payButton} status={status} />;
     }
 
     return (
@@ -97,7 +96,7 @@ export default function IrisComponent(props: Readonly<IrisComponentProps>) {
             )}
             {mode === IrisMode.QR_CODE && (
                 <SegmentedControlRegion id={IRIS_ALLY_LABELS.AreaId.QR_CODE} ariaLabelledBy={IRIS_ALLY_LABELS.ButtonId.QR_CODE}>
-                    <IrisGenerateQRCode showPayButton={props.showPayButton} payButton={props.payButton} status={status} />
+                    <IrisGenerateQRCode payButton={props.payButton} status={status} />
                 </SegmentedControlRegion>
             )}
         </div>

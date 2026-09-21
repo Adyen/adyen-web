@@ -154,7 +154,6 @@ const config = defineConfig(
             'src/components/PayTo/**',
 
             // ── Others ──
-            'src/core/**',
             'src/types/**'
         ],
         rules: {

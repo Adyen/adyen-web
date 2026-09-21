@@ -91,7 +91,6 @@ function Enrollment(props: Readonly<EnrollmentProps>) {
                         onSubmitAnalytics={props.onSubmitAnalytics}
                         onChange={props.onChange}
                         payButton={props.payButton}
-                        showPayButton={true}
                         setComponentRef={ref => {
                             issuerListRef.current = ref;
                         }}

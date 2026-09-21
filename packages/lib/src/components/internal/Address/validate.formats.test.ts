@@ -67,6 +67,30 @@ describe('countrySpecificFormatters', () => {
         });
     });
 
+    describe('JP postalCode formatterFn', () => {
+        const format = countrySpecificFormatters.JP.postalCode.formatterFn;
+
+        test('should convert full-width digits and hyphen to half-width', () => {
+            expect(format('１０７－００５２')).toBe('107-0052');
+        });
+
+        test('should strip the postal mark and other non-digit/hyphen characters', () => {
+            expect(format('〒107-0052')).toBe('107-0052');
+        });
+
+        test('should not alter a valid half-width input', () => {
+            expect(format('107-0052')).toBe('107-0052');
+        });
+
+        test('should truncate input beyond 8 characters', () => {
+            expect(format('1070052999')).toBe('10700529');
+        });
+
+        test('should handle empty string', () => {
+            expect(format('')).toBe('');
+        });
+    });
+
     describe('US postalCode formatterFn', () => {
         const format = countrySpecificFormatters.US.postalCode.formatterFn;
 
