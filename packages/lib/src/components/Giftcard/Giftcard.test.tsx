@@ -231,6 +231,55 @@ describe('Giftcard', () => {
         });
     });
 
+    describe('balance check button status', () => {
+        test('should show the pay button as loading while the balance check is pending', async () => {
+            let resolveBalanceCheck: (response: { balance: { value: number; currency: string } }) => void = () => {};
+            const onBalanceCheck = jest.fn(resolve => {
+                resolveBalanceCheck = resolve;
+            });
+            const core = setupCoreMock();
+
+            const giftcard = new Giftcard(core, {
+                ...baseProps,
+                onBalanceCheck
+            });
+            render(giftcard.render());
+            giftcard.setState({ isValid: true });
+
+            await user.click(await screen.findByRole('button', { name: 'Redeem' }));
+
+            expect(await screen.findByRole('button', { name: 'Loading…' })).toBeInTheDocument();
+
+            resolveBalanceCheck({ balance: { value: 2000, currency: 'EUR' } });
+            await flushPromises();
+        });
+
+        test('should reset the pay button to ready when the balance check fails', async () => {
+            let rejectBalanceCheck: (error: Error) => void = () => {};
+            const onBalanceCheck = jest.fn((resolve, reject) => {
+                rejectBalanceCheck = reject;
+            });
+            const core = setupCoreMock();
+
+            const giftcard = new Giftcard(core, {
+                ...baseProps,
+                onBalanceCheck,
+                onError: jest.fn()
+            });
+            render(giftcard.render());
+            giftcard.setState({ isValid: true });
+
+            await user.click(await screen.findByRole('button', { name: 'Redeem' }));
+
+            expect(await screen.findByRole('button', { name: 'Loading…' })).toBeInTheDocument();
+
+            rejectBalanceCheck(new Error('card-error'));
+            await flushPromises();
+
+            expect(await screen.findByRole('button', { name: 'Redeem' })).toBeInTheDocument();
+        });
+    });
+
     describe('onOrderRequest handling', () => {
         test('after creating an order we should call submit / payments endpoint', async () => {
             const onBalanceCheck = jest.fn(resolve =>

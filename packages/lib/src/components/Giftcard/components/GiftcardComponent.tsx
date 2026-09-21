@@ -12,6 +12,7 @@ import { PayButtonProps } from '../../internal/PayButton/PayButton';
 import { useAmount } from '../../../core/Context/AmountProvider';
 import type { AbstractAnalyticsEvent } from '../../../core/Analytics/events/AbstractAnalyticsEvent';
 import type { SFPProps } from '../../internal/SecuredFields/SFP/types';
+import type { UIElementStatus } from '../../internal/UIElement/types';
 
 interface GiftcardComponentProps extends Partial<Pick<SFPProps, 'clientKey' | 'loadingContext'>> {
     onChange: (state) => void;
@@ -149,6 +150,10 @@ class Giftcard extends Component<Readonly<GiftcardComponentProps>> {
 
     public setIsValidating = (val: boolean) => {
         this.setState({ isValidating: val });
+    };
+
+    public setStatus = (status: UIElementStatus) => {
+        this.setState({ status });
     };
 
     render(props, { focusedElement, balance, transactionLimit, isValidating, transformedErrors }) {

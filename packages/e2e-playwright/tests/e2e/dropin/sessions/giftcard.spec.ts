@@ -70,6 +70,8 @@ test.describe('Dropin - Sessions - GiftCards', () => {
 
         await page.getByRole('button', { name: 'Remove' }).click();
 
+        await expect(page.locator('.adyen-checkout__order-payment-methods-list')).toBeHidden();
+
         const cardAfterGiftCardRemove = await selectCardPaymentMethod();
         await cardAfterGiftCardRemove.isComponentVisible();
         await expect(cardAfterGiftCardRemove.payButton).toContainText('Pay $259.00');
