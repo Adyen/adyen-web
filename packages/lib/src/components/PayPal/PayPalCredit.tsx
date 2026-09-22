@@ -4,16 +4,13 @@ import { TxVariants } from '../tx-variants';
 
 import type { PayPalCreditConfiguration, SupportedPayPalFundingSources } from './types';
 
-import { BasePaypalElement } from './models/BasePaypalElement';
-import { PaypalCreditComponent } from './components/PaypalCreditComponent';
+import { BasePayPalElement } from './models/BasePayPalElement';
+import { PayPalCreditComponent } from './components/PayPalCreditComponent';
 
-class PaypalCreditElement extends BasePaypalElement<PayPalCreditConfiguration> {
+class PayPalCreditElement extends BasePayPalElement<PayPalCreditConfiguration> {
     public static readonly type = TxVariants.paypal_credit;
 
     protected override fundingSource: SupportedPayPalFundingSources = 'credit';
-    protected override get elementName(): string {
-        return 'PayPalCredit';
-    }
 
     public override get icon(): string {
         return this.resources.getImage()(TxVariants.paypal);
@@ -25,7 +22,7 @@ class PaypalCreditElement extends BasePaypalElement<PayPalCreditConfiguration> {
         if (!this.paypalService) return null;
 
         return (
-            <PaypalCreditComponent
+            <PayPalCreditComponent
                 setComponentRef={this.setComponentRef}
                 paypalService={this.paypalService}
                 {...(onShippingAddressChange && { onShippingAddressChange: this.handleOnShippingAddressChange })}
@@ -33,7 +30,6 @@ class PaypalCreditElement extends BasePaypalElement<PayPalCreditConfiguration> {
                 commit={this.props.commit}
                 vault={this.props.vault}
                 presentationModeOptions={this.props.presentationModeOptions}
-                countryCode={this.props.countryCode}
                 onSubmit={this.handleSubmit}
                 onApprove={this.handleOnApprove}
                 onCancel={() => this.handleError(new AdyenCheckoutError('CANCEL'))}
@@ -43,4 +39,4 @@ class PaypalCreditElement extends BasePaypalElement<PayPalCreditConfiguration> {
     }
 }
 
-export default PaypalCreditElement;
+export default PayPalCreditElement;

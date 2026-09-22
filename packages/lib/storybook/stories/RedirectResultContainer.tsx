@@ -35,12 +35,15 @@ export const RedirectResultContainer = ({ redirectResult, sessionId, countryCode
             }),
             onPaymentCompleted: (result, component) => {
                 handleFinalState(result, component);
+                setMessage('');
             },
             onPaymentFailed: (result, component) => {
                 handleFinalState(result, component);
+                setMessage('');
             },
             onError: (error, component) => {
                 handleError(error, component);
+                setMessage('');
             }
         }).then(checkout => {
             checkout.submitDetails({ details: { redirectResult } });

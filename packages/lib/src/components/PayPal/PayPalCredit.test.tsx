@@ -1,22 +1,22 @@
 import { h } from 'preact';
 import { render } from '@testing-library/preact';
 import { mock } from 'jest-mock-extended';
-import PaypalPaylater from './PaypalPaylater';
+import PayPalCredit from './PayPalCredit';
 import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { Resources } from '../../core/Context/Resources';
 import { TxVariants } from '../tx-variants';
 import { PayPalService } from './services/PayPalService';
 import type { PayPalEligiblePaymentMethods } from './paypal-js-types';
-import type { PayPalPayLaterConfiguration } from './types';
+import type { BasePayPalConfiguration } from './types';
 
 jest.mock('./services/PayPalService');
 jest.mock('./services/PayPalSdkLoader');
 
-const mockPayPalPaylaterComponent = jest.fn();
-jest.mock('./components/PaypalPaylaterComponent', () => ({
-    PayPalPaylaterComponent: (props: unknown) => {
-        mockPayPalPaylaterComponent(props);
+const mockPayPalCreditComponent = jest.fn();
+jest.mock('./components/PayPalCreditComponent', () => ({
+    PayPalCreditComponent: (props: unknown) => {
+        mockPayPalCreditComponent(props);
         return null;
     }
 }));
@@ -26,9 +26,9 @@ const PayPalServiceMock = PayPalService as jest.MockedClass<typeof PayPalService
 const core = setupCoreMock();
 const isEligibleMock = jest.fn();
 
-const createElement = (props?: PayPalPayLaterConfiguration) => new PaypalPaylater(core, props);
+const createElement = (props?: BasePayPalConfiguration) => new PayPalCredit(core, props);
 
-describe('PaypalPaylater', () => {
+describe('PayPalCredit', () => {
     beforeEach(() => {
         jest.clearAllMocks();
         PayPalServiceMock.prototype.initialize.mockResolvedValue(undefined);
@@ -39,14 +39,14 @@ describe('PaypalPaylater', () => {
         isEligibleMock.mockReturnValue(true);
     });
 
-    test('should be registered under the paypal_paylater tx variant', () => {
-        expect(PaypalPaylater.type).toBe(TxVariants.paypal_paylater);
+    test('should be registered under the paypal_credit tx variant', () => {
+        expect(PayPalCredit.type).toBe(TxVariants.paypal_credit);
     });
 
-    test('should load the messages SDK component on top of the paypal one', () => {
+    test('should only load the paypal SDK component', () => {
         createElement();
 
-        expect(PayPalServiceMock).toHaveBeenCalledWith(expect.objectContaining({ components: ['paypal-payments', 'paypal-messages'] }));
+        expect(PayPalServiceMock).toHaveBeenCalledWith(expect.objectContaining({ components: ['paypal-payments'] }));
     });
 
     test('should reuse the paypal icon', () => {
@@ -56,36 +56,28 @@ describe('PaypalPaylater', () => {
         expect(createElement({ modules: { resources } }).icon).toBe(`https://checkout-adyen.com/${TxVariants.paypal}`);
     });
 
-    test('should check the eligibility of the paylater funding source', async () => {
+    test('should check the eligibility of the credit funding source', async () => {
         await createElement().isAvailable();
 
-        expect(isEligibleMock).toHaveBeenCalledWith('paylater');
+        expect(isEligibleMock).toHaveBeenCalledWith('credit');
     });
 
-    test('should reject when paylater is not an eligible funding source', async () => {
+    test('should reject when credit is not an eligible funding source', async () => {
         isEligibleMock.mockReturnValue(false);
 
-        await expect(createElement().isAvailable()).rejects.toThrow('PayPalPaylater is not available');
+        await expect(createElement().isAvailable()).rejects.toThrow('PayPalCredit is not available');
     });
 
-    test('should render the PayPalPaylater component with the payment and messaging options', () => {
-        const messagingContentOptions = { logoType: 'WORDMARK', logoPosition: 'TOP', textColor: 'WHITE' } as const;
-        const element = createElement({
-            commit: false,
-            countryCode: 'US',
-            hidePayPalMessaging: true,
-            messagingContentOptions,
-            presentationModeOptions: { presentationMode: 'popup' }
-        });
+    test('should render the PayPalCredit component with the payment options', () => {
+        const element = createElement({ commit: false, vault: true, countryCode: 'US', presentationModeOptions: { presentationMode: 'popup' } });
 
         render(element.render());
 
-        expect(mockPayPalPaylaterComponent).toHaveBeenCalledWith(
+        expect(mockPayPalCreditComponent).toHaveBeenCalledWith(
             expect.objectContaining({
                 commit: false,
+                vault: true,
                 countryCode: 'US',
-                hidePayPalMessaging: true,
-                messagingContentOptions,
                 presentationModeOptions: { presentationMode: 'popup' },
                 paypalService: expect.any(PayPalService),
                 setComponentRef: expect.any(Function),
@@ -102,13 +94,13 @@ describe('PaypalPaylater', () => {
 
         render(element.render());
 
-        expect(mockPayPalPaylaterComponent).toHaveBeenCalled();
+        expect(mockPayPalCreditComponent).toHaveBeenCalled();
     });
 
     test('should not pass the shipping handlers when the merchant did not provide the callbacks', () => {
         render(createElement().render());
 
-        const props = mockPayPalPaylaterComponent.mock.calls[0][0];
+        const props = mockPayPalCreditComponent.mock.calls[0][0];
         expect(props.onShippingAddressChange).toBeUndefined();
         expect(props.onShippingOptionsChange).toBeUndefined();
     });
@@ -116,7 +108,7 @@ describe('PaypalPaylater', () => {
     test('should pass the shipping handlers when the merchant provided the callbacks', () => {
         render(createElement({ isExpress: true, onShippingAddressChange: jest.fn(), onShippingOptionsChange: jest.fn() }).render());
 
-        const props = mockPayPalPaylaterComponent.mock.calls[0][0];
+        const props = mockPayPalCreditComponent.mock.calls[0][0];
         expect(props.onShippingAddressChange).toEqual(expect.any(Function));
         expect(props.onShippingOptionsChange).toEqual(expect.any(Function));
     });
@@ -125,19 +117,19 @@ describe('PaypalPaylater', () => {
         const onErrorMock = jest.fn();
         render(createElement({ onError: onErrorMock }).render());
 
-        mockPayPalPaylaterComponent.mock.calls[0][0].onCancel();
+        mockPayPalCreditComponent.mock.calls[0][0].onCancel();
 
         expect(onErrorMock.mock.calls[0][0]).toBeInstanceOf(AdyenCheckoutError);
         expect(onErrorMock.mock.calls[0][0]).toMatchObject({ name: 'CANCEL' });
     });
 
-    test('should report the error raised by the PayPalPaylater component', () => {
+    test('should report the error raised by the PayPalCredit component', () => {
         const onErrorMock = jest.fn();
         render(createElement({ onError: onErrorMock }).render());
 
-        const sdkError = new Error('Pay later session failed');
-        mockPayPalPaylaterComponent.mock.calls[0][0].onError(sdkError);
+        const sdkError = new Error('Credit session failed');
+        mockPayPalCreditComponent.mock.calls[0][0].onError(sdkError);
 
-        expect(onErrorMock.mock.calls[0][0]).toMatchObject({ message: 'Error: Pay later session failed', cause: sdkError });
+        expect(onErrorMock.mock.calls[0][0]).toMatchObject({ message: 'Error: Credit session failed', cause: sdkError });
     });
 });

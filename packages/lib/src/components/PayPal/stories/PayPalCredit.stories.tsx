@@ -2,7 +2,7 @@ import { h } from 'preact';
 import { Meta, StoryObj } from '@storybook/preact-vite';
 import { PaymentMethodStoryProps } from '../../../../storybook/types';
 import { ComponentContainer } from '../../../../storybook/components/ComponentContainer';
-import PaypalCredit from '../PaypalCredit';
+import PayPalCreditElement from '../PayPalCredit';
 import type { BasePayPalConfiguration } from '../types';
 import { Checkout } from '../../../../storybook/components/Checkout';
 
@@ -17,7 +17,7 @@ export default meta;
 export const PayPalCredit: Story = {
     render: ({ componentConfiguration, ...checkoutConfig }) => (
         <Checkout checkoutConfig={checkoutConfig}>
-            {checkout => <ComponentContainer element={new PaypalCredit(checkout, componentConfiguration)} />}
+            {checkout => <ComponentContainer element={new PayPalCreditElement(checkout, componentConfiguration)} />}
         </Checkout>
     ),
     args: {

@@ -14,7 +14,7 @@ jest.mock('./services/PayPalSdkLoader');
 jest.mock('./services/request-paypal-order-details');
 
 const mockPayPalComponentV6 = jest.fn();
-jest.mock('./components/PaypalComponentV6', () => ({
+jest.mock('./components/PayPalComponentV6', () => ({
     PayPalComponentV6: (props: PayPalComponentV6Props) => {
         mockPayPalComponentV6(props);
         return null;
@@ -339,14 +339,14 @@ describe('PayPal v6', () => {
     });
 
     describe('update', () => {
-        const mountPaypal = (props?: ConstructorParameters<typeof Paypal>[1]) => {
+        const mountPayPal = (props?: ConstructorParameters<typeof Paypal>[1]) => {
             const paypal = new Paypal(core, props);
             paypal.mount(document.createElement('div'));
             return paypal;
         };
 
         test('should refresh the PayPal service with the updated configuration', () => {
-            const paypal = mountPaypal({
+            const paypal = mountPayPal({
                 usePayPalV6: {},
                 configuration: { merchantId: 'merchant-1' },
                 countryCode: 'US',
@@ -367,7 +367,7 @@ describe('PayPal v6', () => {
         });
 
         test('should refresh the service with the updated usePayPalV6 configuration', () => {
-            const paypal = mountPaypal({ usePayPalV6: {} });
+            const paypal = mountPayPal({ usePayPalV6: {} });
 
             paypal.update({ usePayPalV6: { vault: true, locale: 'en_GB', blockPayPalVenmoButton: true } });
 
@@ -377,7 +377,7 @@ describe('PayPal v6', () => {
         });
 
         test('should not create a new PayPal service nor a new SDK loader', () => {
-            const paypal = mountPaypal({ usePayPalV6: {} });
+            const paypal = mountPayPal({ usePayPalV6: {} });
 
             paypal.update({ countryCode: 'GB' });
 
@@ -386,7 +386,7 @@ describe('PayPal v6', () => {
         });
 
         test('should re-render the component with the same PayPal service', () => {
-            const paypal = mountPaypal({ usePayPalV6: {} });
+            const paypal = mountPayPal({ usePayPalV6: {} });
             const paypalService = mockPayPalComponentV6.mock.calls[0][0].paypalService;
             mockPayPalComponentV6.mockClear();
 
@@ -397,7 +397,7 @@ describe('PayPal v6', () => {
         });
 
         test('should not refresh the service when no prop it is derived from changed', () => {
-            const paypal = mountPaypal({ usePayPalV6: {}, countryCode: 'US', amount: { value: 1000, currency: 'USD' } });
+            const paypal = mountPayPal({ usePayPalV6: {}, countryCode: 'US', amount: { value: 1000, currency: 'USD' } });
 
             paypal.update({ onError: jest.fn(), showPayButton: false });
 
@@ -405,7 +405,7 @@ describe('PayPal v6', () => {
         });
 
         test('should not refresh the service when the amount is updated with the same value and currency', () => {
-            const paypal = mountPaypal({ usePayPalV6: {}, amount: { value: 1000, currency: 'USD' } });
+            const paypal = mountPayPal({ usePayPalV6: {}, amount: { value: 1000, currency: 'USD' } });
 
             paypal.update({ amount: { value: 1000, currency: 'USD' } });
 
@@ -413,7 +413,7 @@ describe('PayPal v6', () => {
         });
 
         test('should refresh the service when the requested SDK components change', () => {
-            const paypal = mountPaypal({ usePayPalV6: {} });
+            const paypal = mountPayPal({ usePayPalV6: {} });
 
             paypal.update({ usePayPalV6: { blockPayPalVenmoButton: true } });
 
@@ -421,7 +421,7 @@ describe('PayPal v6', () => {
         });
 
         test('should not refresh anything when usePayPalV6 is not set', () => {
-            const paypal = mountPaypal({ showPayButton: true });
+            const paypal = mountPayPal({ showPayButton: true });
 
             paypal.update({ countryCode: 'GB' });
 
@@ -431,7 +431,7 @@ describe('PayPal v6', () => {
         test('should report the error via onError when the refresh fails', async () => {
             const refreshError = new Error('Failed to load token');
             const onErrorMock = jest.fn();
-            const paypal = mountPaypal({ usePayPalV6: {}, onError: onErrorMock });
+            const paypal = mountPayPal({ usePayPalV6: {}, onError: onErrorMock });
 
             PayPalServiceMock.prototype.refresh.mockRejectedValue(refreshError);
 

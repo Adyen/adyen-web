@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import { act, render, screen, waitFor } from '@testing-library/preact';
 import { mock } from 'jest-mock-extended';
-import { PayPalPaylaterComponent } from './PaypalPaylaterComponent';
+import { PayPalPaylaterComponent } from './PayPalPaylaterComponent';
 import type { PayPalComponentV6Props } from './types';
 import type { PayPalService } from '../services/PayPalService';
 import type { PayPalFetchContentOptions } from '../paypal-js-types';
@@ -135,7 +135,7 @@ describe('PayPalPaylaterComponent', () => {
 
         await screen.findByTestId('paypal-paylater-component');
 
-        await setStatusThroughRef(props, 'processing' as UIElementStatus);
+        await setStatusThroughRef(props, 'processing');
 
         expect(screen.getByTestId('paypal-processing-spinner')).toBeInTheDocument();
         expect(screen.queryByTestId('paypal-messaging')).not.toBeInTheDocument();
@@ -148,7 +148,7 @@ describe('PayPalPaylaterComponent', () => {
 
         await screen.findByTestId('paypal-paylater-component');
 
-        await setStatusThroughRef(props, 'processing' as UIElementStatus);
+        await setStatusThroughRef(props, 'processing');
 
         expect(screen.getByTestId('paypal-processing-spinner')).toHaveAttribute('data-with-review-page', 'false');
     });

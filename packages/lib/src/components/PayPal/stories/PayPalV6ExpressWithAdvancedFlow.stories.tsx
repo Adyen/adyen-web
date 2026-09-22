@@ -1,8 +1,9 @@
 import { h } from 'preact';
 import { Meta, StoryObj } from '@storybook/preact-vite';
 import { useEffect, useRef } from 'preact/hooks';
+import { handleSubmit } from '../../../../storybook/helpers/checkout-handlers';
 import { patchPaypalOrder } from '../../../../storybook/helpers/checkout-api-calls';
-import { createSessionsCheckout } from '../../../../storybook/helpers/create-sessions-checkout';
+import { createAdvancedFlowCheckout } from '../../../../storybook/helpers/create-advanced-checkout';
 import { getDeliveryMethods, getSelectedDeliveryMethodAmount } from './paypal-stories-utils';
 import { PayPal } from '../../..';
 
@@ -19,12 +20,14 @@ const AMOUNT = {
 const COUNTRY_CODE = 'US';
 const SHOPPER_LOCALE = 'en-US';
 
+let SHOPPER_SHIPPING_COUNTRY_CODE = '';
+
 /**
  * We are handling delivery methods update, validations, and final amount calculation on the UI side for DEMO purposes.
  * This must be implemented on the backend side by the merchant for safety reasons.
  */
 
-export const V6ExpressWithSessionsFlow: StoryObj = {
+export const WithAdvancedFlow: StoryObj = {
     render: () => {
         return <Component />;
     },
@@ -47,14 +50,25 @@ export const V6ExpressWithSessionsFlow: StoryObj = {
     }
 };
 
-let SHOPPER_SHIPPING_COUNTRY_CODE = '';
+const createLocalStore = () => {
+    let pspReference: string | null = null;
+    return {
+        setPspReference(value: string) {
+            pspReference = value;
+        },
+        getPspReference() {
+            return pspReference;
+        }
+    };
+};
+const store = createLocalStore();
 
 const Component = () => {
     const container = useRef(null);
 
     useEffect(() => {
-        async function createPaypalComponent() {
-            const checkout = await createSessionsCheckout({
+        async function createPayPalComponent() {
+            const checkout = await createAdvancedFlowCheckout({
                 showPayButton: true,
                 amount: AMOUNT.value,
                 countryCode: COUNTRY_CODE,
@@ -67,21 +81,35 @@ const Component = () => {
 
             const paypal = new PayPal(checkout, {
                 isExpress: true,
+
+                onSubmit: async (state, component) => {
+                    const paymentData = {
+                        amount: AMOUNT,
+                        countryCode: COUNTRY_CODE,
+                        shopperLocale: SHOPPER_LOCALE
+                    };
+
+                    const { pspReference } = await handleSubmit(state, component, checkout, paymentData);
+                    store.setPspReference(pspReference);
+                },
+
                 usePayPalV6: {
-                    countryCode: COUNTRY_CODE,
+                    blockPayPalVenmoButton: true,
+                    blockPayPalCreditButton: true,
+                    blockPayPalPayLaterButton: true,
                     onShippingAddressChange: async (data, component) => {
                         // Store the country code value, so it can be used in the 'onShippingOptionsChange'
                         SHOPPER_SHIPPING_COUNTRY_CODE = data.shippingAddress.countryCode;
 
                         if (data.shippingAddress.countryCode !== 'US' && data.shippingAddress.countryCode !== 'NL') {
-                            throw new Error(data.errors.ADDRESS_ERROR);
+                            throw new Error(data.errors.COUNTRY_ERROR);
                         }
 
                         const patch = {
-                            sessionId: checkout.session?.id || '',
-                            paymentData: component.paymentData ?? '',
+                            pspReference: store.getPspReference() ?? undefined,
+                            paymentData: component.paymentData || '',
                             amount: {
-                                currency: AMOUNT.currency,
+                                currency: 'USD',
                                 value:
                                     AMOUNT.value +
                                     getSelectedDeliveryMethodAmount({ countryCode: data.shippingAddress.countryCode, deliveryMethodId: '1' })
@@ -102,10 +130,10 @@ const Component = () => {
                         }
 
                         const patch = {
-                            sessionId: checkout.session?.id,
-                            paymentData: component.paymentData ?? '',
+                            pspReference: store.getPspReference() ?? undefined,
+                            paymentData: component.paymentData || '',
                             amount: {
-                                currency: AMOUNT.currency,
+                                currency: 'USD',
                                 value:
                                     AMOUNT.value +
                                     getSelectedDeliveryMethodAmount({
@@ -135,7 +163,7 @@ const Component = () => {
             }
         }
 
-        void createPaypalComponent();
+        void createPayPalComponent();
     }, []);
 
     return <div ref={container} id="component-root" className="component-wrapper" />;
