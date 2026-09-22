@@ -73,7 +73,7 @@ export default function PaypalComponent({
 
     if (status === 'pending') {
         return (
-            <div className="adyen-checkout__paypal" aria-live="polite" aria-busy="true">
+            <div className="adyen-checkout__paypal">
                 <PayPalSpinner />
             </div>
         );

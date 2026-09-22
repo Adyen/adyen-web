@@ -29,34 +29,24 @@ export const VenmoComponent = ({
     });
 
     if (status === 'pending') {
-        return (
-            <div aria-live="polite" aria-busy="true">
-                <PayPalSpinner />
-            </div>
-        );
+        return <PayPalSpinner />;
     }
 
     if (status === 'processing') {
-        return (
-            <div aria-live="polite" aria-busy="true">
-                <PayPalProcessingSpinner withoutReviewPage={commit} />
-            </div>
-        );
+        return <PayPalProcessingSpinner withoutReviewPage={commit} />;
     }
 
     return (
-        <div data-testid="venmo-component">
-            <VenmoButton
-                paypalService={paypalService}
-                presentationModeOptions={presentationModeOptions}
-                commit={commit}
-                vault={vault}
-                onSubmit={onSubmit}
-                onApprove={handleOnApprove}
-                onError={onError}
-                onCancel={onCancel}
-                style={style ?? {}}
-            />
-        </div>
+        <VenmoButton
+            paypalService={paypalService}
+            presentationModeOptions={presentationModeOptions}
+            commit={commit}
+            vault={vault}
+            onSubmit={onSubmit}
+            onApprove={handleOnApprove}
+            onError={onError}
+            onCancel={onCancel}
+            style={style ?? {}}
+        />
     );
 };
