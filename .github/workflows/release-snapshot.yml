@@ -172,6 +172,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: yarn changeset version --snapshot alpha.${GITHUB_SHA::7}
 
+      - name: Update lockfile after versioning
+        run: yarn install
+
       - name: Read SDK version
         id: sdk-version
         run: echo "version=$(node -p "require('./packages/lib/package.json').version")" >> "$GITHUB_OUTPUT"
