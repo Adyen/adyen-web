@@ -8,6 +8,8 @@ import { PayPalSpinner } from './PayPalSpinner';
 import { PayPalComponentV6Props } from './types';
 import { PayPalFetchContentOptions } from '../paypal-js-types';
 
+import styles from './PayPalPaylaterComponent.module.scss';
+
 export const PayPalPaylaterComponent = ({
     paypalService,
     commit = true,
@@ -36,23 +38,15 @@ export const PayPalPaylaterComponent = ({
     });
 
     if (status === 'pending') {
-        return (
-            <div className="adyen-checkout__paypal" aria-live="polite" aria-busy="true">
-                <PayPalSpinner />
-            </div>
-        );
+        return <PayPalSpinner />;
     }
 
     if (status === 'processing') {
-        return (
-            <div className="adyen-checkout__paypal" aria-live="polite" aria-busy="true">
-                <PayPalProcessingSpinner withoutReviewPage={commit} />
-            </div>
-        );
+        return <PayPalProcessingSpinner withoutReviewPage={commit} />;
     }
 
     return (
-        <div className="adyen-checkout__paypal" data-testid="paypal-paylater-component">
+        <div className={styles.payPalPaylaterComponent}>
             {!hidePayPalMessaging && (
                 <PayPalMessaging paypalService={paypalService} countryCode={countryCode} messagingContentOptions={messagingContentOptions} />
             )}

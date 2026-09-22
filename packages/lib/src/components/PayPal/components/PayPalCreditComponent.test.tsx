@@ -59,14 +59,13 @@ describe('PayPalCreditComponent', () => {
         render(<PayPalCreditComponent {...createProps({ paypalService })} />);
 
         expect(screen.getByTestId('paypal-loader')).toBeInTheDocument();
-        expect(screen.queryByTestId('paypal-credit-component')).not.toBeInTheDocument();
+        expect(screen.queryByTestId('paypal-credit-button')).not.toBeInTheDocument();
     });
 
     test('should render the credit button once the SDK is loaded', async () => {
         render(<PayPalCreditComponent {...createProps()} />);
 
-        expect(await screen.findByTestId('paypal-credit-component')).toBeInTheDocument();
-        expect(screen.getByTestId('paypal-credit-button')).toBeInTheDocument();
+        expect(await screen.findByTestId('paypal-credit-button')).toBeInTheDocument();
     });
 
     test('should expose the component ref through setComponentRef on mount', () => {
@@ -80,7 +79,7 @@ describe('PayPalCreditComponent', () => {
         const props = createProps({ commit: false, vault: true, presentationModeOptions: { presentationMode: 'popup' } });
         render(<PayPalCreditComponent {...props} />);
 
-        await screen.findByTestId('paypal-credit-component');
+        await screen.findByTestId('paypal-credit-button');
 
         expect(mockPayPalCreditButton).toHaveBeenCalledWith(
             expect.objectContaining({
@@ -101,7 +100,7 @@ describe('PayPalCreditComponent', () => {
         const props = createProps();
         render(<PayPalCreditComponent {...props} />);
 
-        await screen.findByTestId('paypal-credit-component');
+        await screen.findByTestId('paypal-credit-button');
 
         await setStatusThroughRef(props, 'processing');
 
@@ -113,7 +112,7 @@ describe('PayPalCreditComponent', () => {
         const props = createProps({ commit: false });
         render(<PayPalCreditComponent {...props} />);
 
-        await screen.findByTestId('paypal-credit-component');
+        await screen.findByTestId('paypal-credit-button');
 
         await setStatusThroughRef(props, 'processing');
 
@@ -128,6 +127,6 @@ describe('PayPalCreditComponent', () => {
 
         await waitFor(() => expect(paypalService.isSdkLoaded).toHaveBeenCalled());
         expect(screen.getByTestId('paypal-loader')).toBeInTheDocument();
-        expect(screen.queryByTestId('paypal-credit-component')).not.toBeInTheDocument();
+        expect(screen.queryByTestId('paypal-credit-button')).not.toBeInTheDocument();
     });
 });

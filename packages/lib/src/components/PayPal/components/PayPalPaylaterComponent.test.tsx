@@ -71,23 +71,21 @@ describe('PayPalPaylaterComponent', () => {
         render(<PayPalPaylaterComponent {...createProps({ paypalService })} />);
 
         expect(screen.getByTestId('paypal-loader')).toBeInTheDocument();
-        expect(screen.queryByTestId('paypal-paylater-component')).not.toBeInTheDocument();
+        expect(screen.queryByTestId('paypal-pay-later-button')).not.toBeInTheDocument();
     });
 
     test('should render the messaging and the pay later button once the SDK is loaded', async () => {
         render(<PayPalPaylaterComponent {...createProps()} />);
 
-        expect(await screen.findByTestId('paypal-paylater-component')).toBeInTheDocument();
+        expect(await screen.findByTestId('paypal-pay-later-button')).toBeInTheDocument();
         expect(screen.getByTestId('paypal-messaging')).toBeInTheDocument();
-        expect(screen.getByTestId('paypal-pay-later-button')).toBeInTheDocument();
     });
 
     test('should not render the messaging when it is hidden by the merchant', async () => {
         render(<PayPalPaylaterComponent {...createProps({ hidePayPalMessaging: true })} />);
 
-        expect(await screen.findByTestId('paypal-paylater-component')).toBeInTheDocument();
+        expect(await screen.findByTestId('paypal-pay-later-button')).toBeInTheDocument();
         expect(screen.queryByTestId('paypal-messaging')).not.toBeInTheDocument();
-        expect(screen.getByTestId('paypal-pay-later-button')).toBeInTheDocument();
     });
 
     test('should expose the component ref through setComponentRef on mount', () => {
@@ -102,7 +100,7 @@ describe('PayPalPaylaterComponent', () => {
         const props = createProps({ countryCode: 'US', messagingContentOptions });
         render(<PayPalPaylaterComponent {...props} />);
 
-        await screen.findByTestId('paypal-paylater-component');
+        await screen.findByTestId('paypal-pay-later-button');
 
         expect(mockPayPalMessaging).toHaveBeenCalledWith(
             expect.objectContaining({ paypalService: props.paypalService, countryCode: 'US', messagingContentOptions })
@@ -113,7 +111,7 @@ describe('PayPalPaylaterComponent', () => {
         const props = createProps({ commit: false, presentationModeOptions: { presentationMode: 'popup' } });
         render(<PayPalPaylaterComponent {...props} />);
 
-        await screen.findByTestId('paypal-paylater-component');
+        await screen.findByTestId('paypal-pay-later-button');
 
         expect(mockPayPalPayLaterButton).toHaveBeenCalledWith(
             expect.objectContaining({
@@ -133,7 +131,7 @@ describe('PayPalPaylaterComponent', () => {
         const props = createProps();
         render(<PayPalPaylaterComponent {...props} />);
 
-        await screen.findByTestId('paypal-paylater-component');
+        await screen.findByTestId('paypal-pay-later-button');
 
         await setStatusThroughRef(props, 'processing');
 
@@ -146,7 +144,7 @@ describe('PayPalPaylaterComponent', () => {
         const props = createProps({ commit: false });
         render(<PayPalPaylaterComponent {...props} />);
 
-        await screen.findByTestId('paypal-paylater-component');
+        await screen.findByTestId('paypal-pay-later-button');
 
         await setStatusThroughRef(props, 'processing');
 
@@ -161,6 +159,6 @@ describe('PayPalPaylaterComponent', () => {
 
         await waitFor(() => expect(paypalService.isSdkLoaded).toHaveBeenCalled());
         expect(screen.getByTestId('paypal-loader')).toBeInTheDocument();
-        expect(screen.queryByTestId('paypal-paylater-component')).not.toBeInTheDocument();
+        expect(screen.queryByTestId('paypal-pay-later-button')).not.toBeInTheDocument();
     });
 });

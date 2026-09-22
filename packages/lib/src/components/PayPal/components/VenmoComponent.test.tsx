@@ -57,14 +57,13 @@ describe('VenmoComponent', () => {
         render(<VenmoComponent {...createProps({ paypalService })} />);
 
         expect(screen.getByTestId('paypal-loader')).toBeInTheDocument();
-        expect(screen.queryByTestId('venmo-component')).not.toBeInTheDocument();
+        expect(screen.queryByTestId('venmo-button')).not.toBeInTheDocument();
     });
 
     test('should render the venmo button once the SDK is loaded', async () => {
         render(<VenmoComponent {...createProps()} />);
 
-        expect(await screen.findByTestId('venmo-component')).toBeInTheDocument();
-        expect(screen.getByTestId('venmo-button')).toBeInTheDocument();
+        expect(await screen.findByTestId('venmo-button')).toBeInTheDocument();
     });
 
     test('should expose the component ref through setComponentRef on mount', () => {
@@ -78,7 +77,7 @@ describe('VenmoComponent', () => {
         const props = createProps({ commit: false, vault: true, presentationModeOptions: { presentationMode: 'popup' } });
         render(<VenmoComponent {...props} style={{ type: 'pay', class: 'venmo-blue' }} />);
 
-        await screen.findByTestId('venmo-component');
+        await screen.findByTestId('venmo-button');
 
         expect(mockVenmoButton).toHaveBeenCalledWith(
             expect.objectContaining({
@@ -97,7 +96,7 @@ describe('VenmoComponent', () => {
     test('should default the style to an empty object when the merchant does not provide one', async () => {
         render(<VenmoComponent {...createProps()} />);
 
-        await screen.findByTestId('venmo-component');
+        await screen.findByTestId('venmo-button');
 
         expect(mockVenmoButton).toHaveBeenCalledWith(expect.objectContaining({ style: {} }));
     });
@@ -106,9 +105,9 @@ describe('VenmoComponent', () => {
         const props = createProps();
         render(<VenmoComponent {...props} />);
 
-        await screen.findByTestId('venmo-component');
+        await screen.findByTestId('venmo-button');
 
-        await setStatusThroughRef(props, 'processing' as UIElementStatus);
+        await setStatusThroughRef(props, 'processing');
 
         expect(screen.getByTestId('paypal-processing-spinner')).toBeInTheDocument();
         expect(screen.queryByTestId('venmo-button')).not.toBeInTheDocument();
@@ -118,9 +117,9 @@ describe('VenmoComponent', () => {
         const props = createProps({ commit: false });
         render(<VenmoComponent {...props} />);
 
-        await screen.findByTestId('venmo-component');
+        await screen.findByTestId('venmo-button');
 
-        await setStatusThroughRef(props, 'processing' as UIElementStatus);
+        await setStatusThroughRef(props, 'processing');
 
         expect(screen.getByTestId('paypal-processing-spinner')).toHaveAttribute('data-with-review-page', 'false');
     });
@@ -133,6 +132,6 @@ describe('VenmoComponent', () => {
 
         await waitFor(() => expect(paypalService.isSdkLoaded).toHaveBeenCalled());
         expect(screen.getByTestId('paypal-loader')).toBeInTheDocument();
-        expect(screen.queryByTestId('venmo-component')).not.toBeInTheDocument();
+        expect(screen.queryByTestId('venmo-button')).not.toBeInTheDocument();
     });
 });

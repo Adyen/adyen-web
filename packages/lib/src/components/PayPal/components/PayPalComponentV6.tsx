@@ -10,6 +10,8 @@ import { PayPalSpinner } from './PayPalSpinner';
 import { PayPalComponentV6Props } from './types';
 import { VenmoButton } from './VenmoButton';
 
+import styles from './PayPalComponentV6.module.scss';
+
 const PayPalComponentV6 = ({
     paypalService,
     style = {},
@@ -48,23 +50,15 @@ const PayPalComponentV6 = ({
     );
 
     if (status === 'pending') {
-        return (
-            <div className="adyen-checkout__paypal" aria-live="polite" aria-busy="true">
-                <PayPalSpinner />
-            </div>
-        );
+        return <PayPalSpinner />;
     }
 
     if (status === 'processing') {
-        return (
-            <div className="adyen-checkout__paypal" aria-live="polite" aria-busy="true">
-                <PayPalProcessingSpinner withoutReviewPage={commit} />
-            </div>
-        );
+        return <PayPalProcessingSpinner withoutReviewPage={commit} />;
     }
 
     return (
-        <div className="adyen-checkout__paypal" data-testid="paypal-component">
+        <div className={styles.payPalComponent} data-testid="paypal-component">
             <PayPalButton
                 {...commonProps}
                 style={style.paypal ?? {}}

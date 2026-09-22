@@ -26,35 +26,25 @@ export const PayPalCreditComponent = ({
     });
 
     if (status === 'pending') {
-        return (
-            <div className="adyen-checkout__paypal" aria-live="polite" aria-busy="true">
-                <PayPalSpinner />
-            </div>
-        );
+        return <PayPalSpinner />;
     }
 
     if (status === 'processing') {
-        return (
-            <div className="adyen-checkout__paypal" aria-live="polite" aria-busy="true">
-                <PayPalProcessingSpinner withoutReviewPage={commit} />
-            </div>
-        );
+        return <PayPalProcessingSpinner withoutReviewPage={commit} />;
     }
 
     return (
-        <div className="adyen-checkout__paypal" data-testid="paypal-credit-component">
-            <PayPalCreditButton
-                paypalService={paypalService}
-                presentationModeOptions={presentationModeOptions}
-                commit={commit}
-                vault={vault}
-                onSubmit={onSubmit}
-                onApprove={handleOnApprove}
-                onError={onError}
-                onCancel={onCancel}
-                onShippingAddressChange={onShippingAddressChange}
-                onShippingOptionsChange={onShippingOptionsChange}
-            />
-        </div>
+        <PayPalCreditButton
+            paypalService={paypalService}
+            presentationModeOptions={presentationModeOptions}
+            commit={commit}
+            vault={vault}
+            onSubmit={onSubmit}
+            onApprove={handleOnApprove}
+            onError={onError}
+            onCancel={onCancel}
+            onShippingAddressChange={onShippingAddressChange}
+            onShippingOptionsChange={onShippingOptionsChange}
+        />
     );
 };
