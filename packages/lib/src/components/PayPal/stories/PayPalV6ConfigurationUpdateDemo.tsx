@@ -1,10 +1,13 @@
 import { Fragment, h } from 'preact';
 import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
+import { Checkout } from '../../../../storybook/components/Checkout';
 import { ComponentContainer } from '../../../../storybook/components/ComponentContainer';
 import Paypal from '..';
 
+import type { GlobalStoryProps } from '../../../../storybook/types';
 import type { ICore } from '../../../core/types';
 import type { PayPalConfiguration } from '../types';
+import styles from './PayPalV6ConfigurationUpdateDemo.module.scss';
 
 interface ConfigurationPreset {
     label: string;
@@ -18,6 +21,11 @@ interface ConfigurationPreset {
  * Each preset changes props the PayPal SDK instance and the eligible payment methods are derived from:
  * the 'locale' and the 'countryCode' are used to create the SDK instance, whereas the currency, the country
  * code and the payment flow are used to look up the eligible payment methods.
+ *
+ * @remarks
+ * These values only drive the PayPal SDK instance and the eligibility lookup. The payment itself is made
+ * with the amount and the currency of the session, which are fixed when the checkout is created from the
+ * story args, so switching preset does not change what the shopper is actually charged.
  */
 const CONFIGURATION_PRESETS: ConfigurationPreset[] = [
     { label: 'United States', countryCode: 'US', currency: 'USD', value: 2200, locale: 'en-US' },
@@ -30,57 +38,50 @@ const getPaymentFlow = (vault: boolean, isZeroAuth: boolean) => {
     return 'one-time payment';
 };
 
-const buttonStyle = (isSelected: boolean) => ({
-    padding: '8px 12px',
-    marginRight: '8px',
-    borderRadius: '4px',
-    border: `1px solid ${isSelected ? '#0abf53' : '#ddd'}`,
-    backgroundColor: isSelected ? '#e6f4ea' : '#fff',
-    fontWeight: isSelected ? 'bold' : 'normal',
-    cursor: 'pointer'
+const getConfiguration = (
+    componentConfiguration: PayPalConfiguration | undefined,
+    preset: ConfigurationPreset,
+    vault: boolean,
+    isZeroAuth: boolean
+): PayPalConfiguration => ({
+    ...componentConfiguration,
+    countryCode: preset.countryCode,
+    amount: { currency: preset.currency, value: isZeroAuth ? 0 : preset.value },
+    usePayPalV6: {
+        ...componentConfiguration?.usePayPalV6,
+        vault,
+        locale: preset.locale
+    }
 });
 
+const buttonClassName = (isSelected: boolean) => `${styles.optionButton} ${isSelected ? styles.optionButtonSelected : ''}`;
+
 /**
- * Demonstrates that 'paypal.update(props)' refreshes the PayPal SDK instance and the eligible payment methods.
- * Every control below updates props that PayPal derives its state from, so the component re-mounts and the
- * buttons are re-created against a brand new SDK instance.
+ * Creates the PayPal element once and routes every later configuration change through 'paypal.update(props)'.
  */
-export function PayPalV6ConfigurationUpdateDemo({
+function PayPalUpdatableElement({
     checkout,
-    componentConfiguration
+    componentConfiguration,
+    preset,
+    vault,
+    isZeroAuth,
+    onReady
 }: Readonly<{
     checkout: ICore;
     componentConfiguration?: PayPalConfiguration;
+    preset: ConfigurationPreset;
+    vault: boolean;
+    isZeroAuth: boolean;
+    onReady: () => void;
 }>) {
-    const [presetIndex, setPresetIndex] = useState(0);
-    const [vault, setVault] = useState(false);
-    const [isZeroAuth, setIsZeroAuth] = useState(false);
-    const [isReady, setIsReady] = useState(false);
-
-    const preset = CONFIGURATION_PRESETS[presetIndex];
-
-    const getConfiguration = (preset: ConfigurationPreset, vault: boolean, isZeroAuth: boolean): PayPalConfiguration => ({
-        ...componentConfiguration,
-        countryCode: preset.countryCode,
-        amount: { currency: preset.currency, value: isZeroAuth ? 0 : preset.value },
-        usePayPalV6: {
-            ...componentConfiguration?.usePayPalV6,
-            vault,
-            locale: preset.locale
-        }
-    });
-
     const paypal = useMemo(
-        () => new Paypal(checkout, getConfiguration(CONFIGURATION_PRESETS[0], false, false)),
+        () => new Paypal(checkout, getConfiguration(componentConfiguration, preset, vault, isZeroAuth)),
         // The component is created only once, every later configuration change goes through 'update'
         [checkout]
     );
 
     useEffect(() => {
-        paypal
-            .isAvailable()
-            .then(() => setIsReady(true))
-            .catch(() => setIsReady(true));
+        paypal.isAvailable().then(onReady).catch(onReady);
     }, [paypal]);
 
     const isInitialRenderRef = useRef(true);
@@ -92,30 +93,68 @@ export function PayPalV6ConfigurationUpdateDemo({
         }
 
         console.log('Updating the PayPal configuration', { countryCode: preset.countryCode, vault, isZeroAuth });
-        paypal.update(getConfiguration(preset, vault, isZeroAuth));
+        console.log('Configuration', getConfiguration(componentConfiguration, preset, vault, isZeroAuth));
+        paypal.update(getConfiguration(componentConfiguration, preset, vault, isZeroAuth));
     }, [paypal, preset, vault, isZeroAuth]);
+
+    return <ComponentContainer element={paypal} />;
+}
+
+/**
+ * Demonstrates that 'paypal.update(props)' refreshes the PayPal SDK instance and the eligible payment methods.
+ * The country and the vault controls update props that PayPal derives its state from, so the SDK instance is
+ * re-created and the buttons are re-rendered against it.
+ *
+ * Zero-auth is the exception: the PayPal save payment session exchanges the token returned by the '/payments'
+ * call for a vault setup token, and the backend only issues one for a zero-amount payment. That amount comes
+ * from the session, not from the component props, so toggling zero-auth re-creates the whole checkout with an
+ * amount of 0 instead of going through 'update'.
+ */
+export function PayPalV6ConfigurationUpdateDemo({
+    checkoutConfig,
+    componentConfiguration
+}: Readonly<{
+    checkoutConfig: GlobalStoryProps;
+    componentConfiguration?: PayPalConfiguration;
+}>) {
+    const [presetIndex, setPresetIndex] = useState(0);
+    const [vault, setVault] = useState(false);
+    const [isZeroAuth, setIsZeroAuth] = useState(false);
+    const [isReady, setIsReady] = useState(false);
+
+    const preset = CONFIGURATION_PRESETS[presetIndex];
+
+    const sessionCheckoutConfig = useMemo(
+        () => ({ ...checkoutConfig, amount: isZeroAuth ? 0 : checkoutConfig.amount }),
+        [checkoutConfig, isZeroAuth]
+    );
+
+    const toggleZeroAuth = () => {
+        setIsReady(false);
+        setIsZeroAuth(!isZeroAuth);
+    };
 
     return (
         <Fragment>
-            <div style={{ marginBottom: '20px', padding: '16px', border: '1px solid #001222', borderRadius: '8px', backgroundColor: '#f8f9fa' }}>
-                <div style={{ marginBottom: '12px' }}>
+            <div className={styles.configurationPanel}>
+                <div className={styles.controlRow}>
                     {CONFIGURATION_PRESETS.map((configurationPreset, index) => (
                         <button
                             key={configurationPreset.countryCode}
                             disabled={!isReady}
                             onClick={() => setPresetIndex(index)}
-                            style={buttonStyle(index === presetIndex)}
+                            className={buttonClassName(index === presetIndex)}
                         >
                             {configurationPreset.label}
                         </button>
                     ))}
                 </div>
 
-                <div style={{ marginBottom: '12px' }}>
-                    <button disabled={!isReady} onClick={() => setVault(!vault)} style={buttonStyle(vault)}>
+                <div className={styles.controlRow}>
+                    <button disabled={!isReady || isZeroAuth} onClick={() => setVault(!vault)} className={buttonClassName(vault)}>
                         Vault: {vault ? 'on' : 'off'}
                     </button>
-                    <button disabled={!isReady} onClick={() => setIsZeroAuth(!isZeroAuth)} style={buttonStyle(isZeroAuth)}>
+                    <button disabled={!isReady} onClick={toggleZeroAuth} className={buttonClassName(isZeroAuth)}>
                         Zero-auth: {isZeroAuth ? 'on' : 'off'}
                     </button>
                 </div>
@@ -129,7 +168,20 @@ export function PayPalV6ConfigurationUpdateDemo({
                 </div>
             </div>
 
-            <ComponentContainer element={paypal} />
+            {/* Keyed on the payment flow: switching to or from zero-auth needs a new session, so the whole
+                checkout is re-created instead of the props being updated. */}
+            <Checkout key={isZeroAuth ? 'zero-auth' : 'payment'} checkoutConfig={sessionCheckoutConfig}>
+                {checkout => (
+                    <PayPalUpdatableElement
+                        checkout={checkout}
+                        componentConfiguration={componentConfiguration}
+                        preset={preset}
+                        vault={vault}
+                        isZeroAuth={isZeroAuth}
+                        onReady={() => setIsReady(true)}
+                    />
+                )}
+            </Checkout>
         </Fragment>
     );
 }

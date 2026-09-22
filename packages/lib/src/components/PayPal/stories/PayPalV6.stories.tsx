@@ -101,14 +101,13 @@ export const WithPayPalV5: Story = {
 
 /**
  * Showcases 'paypal.update(props)': the PayPal SDK instance and the eligible payment methods are re-created
- * with the updated country code, currency, locale and payment flow.
+ * with the updated country code, currency, locale and payment flow. The demo owns the 'Checkout' wrapper,
+ * since the zero-auth flow needs a session created with a zero amount.
  */
 export const ConfigurationUpdate: Story = {
     tags: ['no-automated-visual-test'],
     render: ({ componentConfiguration, ...checkoutConfig }) => (
-        <Checkout checkoutConfig={checkoutConfig}>
-            {checkout => <PayPalV6ConfigurationUpdateDemo checkout={checkout} componentConfiguration={componentConfiguration} />}
-        </Checkout>
+        <PayPalV6ConfigurationUpdateDemo checkoutConfig={checkoutConfig} componentConfiguration={componentConfiguration} />
     ),
     args: {
         componentConfiguration: {
@@ -118,6 +117,12 @@ export const ConfigurationUpdate: Story = {
                     actions.resolve();
                 }
             }
+        },
+        paymentsOptions: {
+            recurringProcessingModel: 'CardOnFile'
+        },
+        sessionData: {
+            recurringProcessingModel: 'CardOnFile'
         }
     }
 };
