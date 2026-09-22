@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef, useCallback } from 'preact/hooks';
-import { ComponentMethodsRef } from '../../types';
+import { ComponentMethodsRef, UIElementStatus } from '../../types';
 import { PayPalService } from '../services/PayPalService';
 import { PayPalV6OnApproveData } from '../paypal-js-types';
 
@@ -12,7 +12,7 @@ export const usePayPalStatus = ({
     onApprove: (data: PayPalV6OnApproveData) => Promise<void>;
     setComponentRef: (ref: ComponentMethodsRef) => void;
 }) => {
-    const [status, setStatus] = useState('pending');
+    const [status, setStatus] = useState<UIElementStatus>('pending');
 
     const componentRef = useRef<ComponentMethodsRef>({
         setStatus: setStatus

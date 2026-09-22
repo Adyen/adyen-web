@@ -19,7 +19,6 @@ export const VenmoComponent = ({
     setComponentRef
 }: Readonly<
     Omit<PayPalComponentV6Props, 'style' | 'onShippingAddressChange' | 'onShippingOptionsChange'> & {
-        countryCode?: string;
         style?: PayPalVenmoButtonStyle;
     }
 >) => {
@@ -31,7 +30,7 @@ export const VenmoComponent = ({
 
     if (status === 'pending') {
         return (
-            <div className="adyen-checkout__paypal" aria-live="polite" aria-busy="true">
+            <div aria-live="polite" aria-busy="true">
                 <PayPalSpinner />
             </div>
         );
@@ -39,14 +38,14 @@ export const VenmoComponent = ({
 
     if (status === 'processing') {
         return (
-            <div className="adyen-checkout__paypal" aria-live="polite" aria-busy="true">
+            <div aria-live="polite" aria-busy="true">
                 <PayPalProcessingSpinner withoutReviewPage={commit} />
             </div>
         );
     }
 
     return (
-        <div className="adyen-checkout__paypal" data-testid="venmo-component">
+        <div data-testid="venmo-component">
             <VenmoButton
                 paypalService={paypalService}
                 presentationModeOptions={presentationModeOptions}

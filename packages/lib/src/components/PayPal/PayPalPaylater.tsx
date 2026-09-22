@@ -4,16 +4,25 @@ import { TxVariants } from '../tx-variants';
 
 import type { PayPalPayLaterConfiguration, SupportedPayPalFundingSources } from './types';
 
-import { BasePaypalElement } from './models/BasePaypalElement';
-import { PayPalPaylaterComponent } from './components/PaypalPaylaterComponent';
+import { BasePayPalElement } from './models/BasePayPalElement';
+import { PayPalPaylaterComponent } from './components/PayPalPaylaterComponent';
 import { PayPalComponents } from './paypal-js-types';
 
-class PaypalPaylaterElement extends BasePaypalElement<PayPalPayLaterConfiguration> {
+class PayPalPaylaterElement extends BasePayPalElement<PayPalPayLaterConfiguration> {
     public static readonly type = TxVariants.paypal_paylater;
 
     protected override fundingSource: SupportedPayPalFundingSources = 'paylater';
-    protected override get elementName(): string {
-        return 'PayPalPaylater';
+
+    protected formatData() {
+        const { isExpress } = this.props;
+
+        return {
+            paymentMethod: {
+                type: this.type,
+                subtype: isExpress ? 'express' : PayPalPaylaterElement.subtype
+            },
+            browserInfo: this.browserInfo
+        };
     }
 
     public override get icon(): string {
@@ -49,4 +58,4 @@ class PaypalPaylaterElement extends BasePaypalElement<PayPalPayLaterConfiguratio
     }
 }
 
-export default PaypalPaylaterElement;
+export default PayPalPaylaterElement;

@@ -27,18 +27,11 @@ import { SUPPORTED_EXPRESS_PRESENTATION_MODE_OPTIONS } from '../config';
 import collectBrowserInfo from '../../../utils/browserInfo';
 import '../Paypal.scss';
 
-export class BasePaypalElement<TProps extends BasePayPalConfiguration = BasePayPalConfiguration> extends UIElement<TProps> {
+export class BasePayPalElement<TProps extends BasePayPalConfiguration = BasePayPalConfiguration> extends UIElement<TProps> {
     public static readonly type: string = TxVariants.paypal;
     public static readonly subtype = 'sdk';
 
     protected readonly fundingSource: SupportedPayPalFundingSources = 'paypal';
-    /**
-     * Human readable name of the variant, used in the error messages. It is a getter, and not a field, so that the
-     * value of the subclass is already available while the base constructor runs.
-     */
-    protected get elementName(): string {
-        return 'PayPal';
-    }
 
     public paymentData: string | null = null;
 
@@ -72,7 +65,7 @@ export class BasePaypalElement<TProps extends BasePayPalConfiguration = BasePayP
         if (!isExpress && (onShippingAddressChange || onShippingOptionsChange)) {
             throw new AdyenCheckoutError(
                 'IMPLEMENTATION_ERROR',
-                `${this.elementName} - You must set "isExpress" flag to "true" in order to use "onShippingAddressChange" and/or "onShippingOptionsChange" callbacks`
+                `${this.displayName} - You must set "isExpress" flag to "true" in order to use "onShippingAddressChange" and/or "onShippingOptionsChange" callbacks`
             );
         }
 
@@ -83,7 +76,7 @@ export class BasePaypalElement<TProps extends BasePayPalConfiguration = BasePayP
         ) {
             throw new AdyenCheckoutError(
                 'IMPLEMENTATION_ERROR',
-                `${this.elementName} - Unsupported presentation mode: ${presentationModeOptions.presentationMode} for express checkout`
+                `${this.displayName} - Unsupported presentation mode: ${presentationModeOptions.presentationMode} for express checkout`
             );
         }
     }
@@ -165,7 +158,7 @@ export class BasePaypalElement<TProps extends BasePayPalConfiguration = BasePayP
                 this.handleError(
                     error instanceof AdyenCheckoutError
                         ? error
-                        : new AdyenCheckoutError('ERROR', `Something went wrong while initializing ${this.elementName}`, { cause: error })
+                        : new AdyenCheckoutError('ERROR', `Something went wrong while initializing ${this.displayName}`, { cause: error })
                 );
             });
     }
@@ -176,13 +169,13 @@ export class BasePaypalElement<TProps extends BasePayPalConfiguration = BasePayP
 
     public override async isAvailable(): Promise<void> {
         if (!this.paypalService) {
-            throw new AdyenCheckoutError('ERROR', `${this.elementName} is not available`);
+            throw new AdyenCheckoutError('ERROR', `${this.displayName} is not available`);
         }
 
         await this.paypalService.isSdkLoaded();
 
         if (!this.paypalService.getEligiblePaymentMethods().isEligible(this.fundingSource)) {
-            throw new AdyenCheckoutError('ERROR', `${this.elementName} is not available`);
+            throw new AdyenCheckoutError('ERROR', `${this.displayName} is not available`);
         }
     }
 
@@ -207,7 +200,7 @@ export class BasePaypalElement<TProps extends BasePayPalConfiguration = BasePayP
      * @param paymentData - Payment data value
      */
     public updatePaymentData(paymentData: string): void {
-        if (!paymentData) console.warn(`${this.elementName} - Updating payment data with an invalid value`);
+        if (!paymentData) console.warn(`${this.displayName} - Updating payment data with an invalid value`);
         this.paymentData = paymentData;
     }
 
@@ -224,14 +217,14 @@ export class BasePaypalElement<TProps extends BasePayPalConfiguration = BasePayP
         return {
             paymentMethod: {
                 type: this.type,
-                subtype: isExpress ? 'express' : BasePaypalElement.subtype
+                subtype: isExpress ? 'express' : BasePayPalElement.subtype
             },
             browserInfo: this.browserInfo,
             ...(vault || isZeroAuth ? { storePaymentMethod: true } : {})
         };
     }
 
-    private get browserInfo() {
+    protected get browserInfo() {
         return collectBrowserInfo();
     }
 
@@ -352,7 +345,7 @@ export class BasePaypalElement<TProps extends BasePayPalConfiguration = BasePayP
             .then(() => this.handleAdditionalDetails(state))
             .catch(error =>
                 this.handleError(
-                    new AdyenCheckoutError('ERROR', `Something went wrong with finalizing the ${this.elementName} order`, { cause: error })
+                    new AdyenCheckoutError('ERROR', `Something went wrong with finalizing the ${this.displayName} order`, { cause: error })
                 )
             );
     }

@@ -6,7 +6,7 @@ import { PayPalProcessingSpinner } from './PayPalProcessingSpinner';
 import { PayPalSpinner } from './PayPalSpinner';
 import { PayPalComponentV6Props } from './types';
 
-export const PaypalCreditComponent = ({
+export const PayPalCreditComponent = ({
     paypalService,
     commit = true,
     presentationModeOptions,
@@ -18,11 +18,7 @@ export const PaypalCreditComponent = ({
     onCancel,
     onError,
     setComponentRef
-}: Readonly<
-    Omit<PayPalComponentV6Props, 'style'> & {
-        countryCode?: string;
-    }
->) => {
+}: Readonly<Omit<PayPalComponentV6Props, 'style'>>) => {
     const { status, handleOnApprove } = usePayPalStatus({
         paypalService,
         onApprove,

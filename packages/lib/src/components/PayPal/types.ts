@@ -1,7 +1,7 @@
 import { AddressData } from '../../types/global-types';
 import { UIElementProps } from '../internal/UIElement/types';
 import { PayPalButtonStyle, PayPalVenmoButtonStyle } from './components/types';
-import { BasePaypalElement } from './models/BasePaypalElement';
+import { BasePayPalElement } from './models/BasePayPalElement';
 import PaypalElement from './Paypal';
 import type {
     PayPalFetchContentOptions,
@@ -18,7 +18,7 @@ import type {
 } from './paypal-js-types';
 import { PayPalOrderDetailsData } from './services/request-paypal-order-details';
 
-type PayPalV6Props<E extends PaypalElement | BasePaypalElement> = {
+type PayPalV6Props<E extends PaypalElement | BasePayPalElement> = {
     /**
      * The type of page where the SDK is being initialized. This helps PayPal optimize the payment experience and provide better analytics.
      * @see {@link https://docs.paypal.ai/developer/how-to/sdk/js/v6/configuration#parameters}
@@ -333,7 +333,7 @@ export interface PayPalConfiguration extends UIElementProps {
 }
 
 export type BasePayPalConfiguration = UIElementProps &
-    PayPalV6Props<BasePaypalElement> & {
+    PayPalV6Props<BasePayPalElement> & {
         /**
          * Configuration returned by the backend
          * @internal

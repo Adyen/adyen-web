@@ -16,8 +16,8 @@ import GooglePay from './GooglePay';
 import Econtext from './Econtext';
 import { FacilyPay3x, FacilyPay4x, FacilyPay6x, FacilyPay10x, FacilyPay12x } from './FacilyPay';
 import PayPal from './PayPal';
-import PayPalPayLater from './PayPal/PaypalPaylater';
-import PaypalCredit from './PayPal/PaypalCredit';
+import PayPalPayLater from './PayPal/PayPalPaylater';
+import PayPalCredit from './PayPal/PayPalCredit';
 import Venmo from './PayPal/Venmo';
 import Redirect from './Redirect';
 import CustomCard from './CustomCard';
@@ -153,7 +153,7 @@ export const ComponentsMap = {
     [TxVariants.googlepay]: GooglePay,
     [TxVariants.paypal]: PayPal,
     [TxVariants.paypal_paylater]: PayPalPayLater,
-    [TxVariants.paypal_credit]: PaypalCredit,
+    [TxVariants.paypal_credit]: PayPalCredit,
     [TxVariants.venmo]: Venmo,
     [TxVariants.fastlane]: Fastlane,
     [TxVariants.paywithgoogle]: GooglePay,

@@ -31,7 +31,7 @@ import { sanitizeResponse, verifyPaymentDidNotFail } from '../internal/UIElement
 import CancelError from '../../core/Errors/CancelError';
 import { PayPalSdkLoader } from './services/PayPalSdkLoader';
 import { PayPalService } from './services/PayPalService';
-import { PayPalComponentV6 } from './components/PaypalComponentV6';
+import { PayPalComponentV6 } from './components/PayPalComponentV6';
 import requestPayPalOrderDetails from './services/request-paypal-order-details';
 import { isPayPalServiceConfigEqual } from './utils/is-paypal-service-config-equal';
 import { SUPPORTED_EXPRESS_PRESENTATION_MODE_OPTIONS } from './config';

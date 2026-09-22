@@ -38,7 +38,7 @@ export const Default: Story = {
                 },
                 vault: false,
                 onAuthorized: (data, actions) => {
-                    console.log('PaypalV6 onAuthorized data', { data });
+                    console.log('PayPalV6 onAuthorized data', { data });
                     actions.resolve();
                 }
             }
@@ -114,7 +114,7 @@ export const ConfigurationUpdate: Story = {
         componentConfiguration: {
             usePayPalV6: {
                 onAuthorized: (data, actions) => {
-                    console.log('PaypalV6 onAuthorized data', { data });
+                    console.log('PayPalV6 onAuthorized data', { data });
                     actions.resolve();
                 }
             }

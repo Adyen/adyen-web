@@ -4,17 +4,14 @@ import { TxVariants } from '../tx-variants';
 
 import type { SupportedPayPalFundingSources, VenmoConfiguration } from './types';
 
-import { BasePaypalElement } from './models/BasePaypalElement';
+import { BasePayPalElement } from './models/BasePayPalElement';
 import { VenmoComponent } from './components/VenmoComponent';
 import { PayPalComponents } from './paypal-js-types';
 
-class VenmoElement extends BasePaypalElement<VenmoConfiguration> {
+class VenmoElement extends BasePayPalElement<VenmoConfiguration> {
     public static readonly type = TxVariants.venmo;
 
     protected override fundingSource: SupportedPayPalFundingSources = 'venmo';
-    protected override get elementName(): string {
-        return 'Venmo';
-    }
 
     protected override get paypalComponents(): PayPalComponents {
         return ['venmo-payments'];
@@ -30,7 +27,6 @@ class VenmoElement extends BasePaypalElement<VenmoConfiguration> {
                 commit={this.props.commit}
                 vault={this.props.vault}
                 presentationModeOptions={this.props.presentationModeOptions}
-                countryCode={this.props.countryCode}
                 onSubmit={this.handleSubmit}
                 onApprove={this.handleOnApprove}
                 onCancel={() => this.handleError(new AdyenCheckoutError('CANCEL'))}

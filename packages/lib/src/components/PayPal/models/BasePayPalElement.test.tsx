@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import { mock } from 'jest-mock-extended';
-import { BasePaypalElement } from './BasePaypalElement';
+import { BasePayPalElement } from './BasePayPalElement';
 import { setupCoreMock, TEST_CHECKOUT_ATTEMPT_ID, TEST_RISK_DATA } from '../../../../config/testMocks/setup-core-mock';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 import CancelError from '../../../core/Errors/CancelError';
@@ -22,14 +22,10 @@ const PayPalSdkLoaderMock = PayPalSdkLoader as jest.MockedClass<typeof PayPalSdk
 const requestPayPalOrderDetailsMock = requestPayPalOrderDetails as jest.Mock;
 
 /**
- * BasePaypalElement is never instantiated directly - 'componentToRender' throws by design. This subclass
+ * BasePayPalElement is never instantiated directly - 'componentToRender' throws by design. This subclass
  * provides the minimum a concrete variant (PayPal, Venmo, ...) supplies, so the shared logic can be tested.
  */
-class TestPaypalElement extends BasePaypalElement {
-    protected override get elementName(): string {
-        return 'TestPayPal';
-    }
-
+class TestPayPalElement extends BasePayPalElement {
     protected override componentToRender(): h.JSX.Element | null {
         return null;
     }
@@ -38,9 +34,9 @@ class TestPaypalElement extends BasePaypalElement {
 const core = setupCoreMock();
 const isEligibleMock = jest.fn();
 
-const createElement = (props?: BasePayPalConfiguration) => new TestPaypalElement(core, props);
+const createElement = (props?: BasePayPalConfiguration) => new TestPayPalElement(core, props);
 
-describe('BasePaypalElement', () => {
+describe('BasePayPalElement', () => {
     beforeEach(() => {
         jest.clearAllMocks();
         PayPalServiceMock.prototype.initialize.mockResolvedValue(undefined);
@@ -92,7 +88,7 @@ describe('BasePaypalElement', () => {
         });
 
         test('should let a subclass extend the requested SDK components', () => {
-            class MultiComponentElement extends TestPaypalElement {
+            class MultiComponentElement extends TestPayPalElement {
                 protected override get paypalComponents(): PayPalComponents {
                     return ['paypal-payments', 'venmo-payments'];
                 }
@@ -100,7 +96,7 @@ describe('BasePaypalElement', () => {
 
             const element = new MultiComponentElement(core);
 
-            expect(element).toBeInstanceOf(BasePaypalElement);
+            expect(element).toBeInstanceOf(BasePayPalElement);
             expect(PayPalServiceMock).toHaveBeenCalledWith(expect.objectContaining({ components: ['paypal-payments', 'venmo-payments'] }));
         });
 
@@ -207,7 +203,7 @@ describe('BasePaypalElement', () => {
         });
 
         test('should check the eligibility of the funding source declared by the subclass', async () => {
-            class VenmoLikeElement extends TestPaypalElement {
+            class VenmoLikeElement extends TestPayPalElement {
                 protected override fundingSource: SupportedPayPalFundingSources = 'venmo';
             }
 
@@ -326,7 +322,7 @@ describe('BasePaypalElement', () => {
     describe('beforeRender', () => {
         test('should send a rendered analytics event with the merchant configuration', () => {
             const analytics = mock<IAnalytics>({ checkoutAttemptId: TEST_CHECKOUT_ATTEMPT_ID });
-            const element = new TestPaypalElement(setupCoreMock({ analyticsMock: analytics }), { isExpress: true, expressPage: 'cart' });
+            const element = new TestPayPalElement(setupCoreMock({ analyticsMock: analytics }), { isExpress: true, expressPage: 'cart' });
 
             // @ts-ignore accessing a protected method
             element.beforeRender({ isExpress: true, expressPage: 'cart' });
@@ -568,7 +564,7 @@ describe('BasePaypalElement', () => {
     });
 
     describe('handleOnApprove', () => {
-        const approve = async (element: BasePaypalElement, data: unknown) => {
+        const approve = async (element: BasePayPalElement, data: unknown) => {
             // @ts-ignore accessing a protected method
             await element.handleOnApprove(data as PayPalV6OnApproveData);
         };
@@ -808,7 +804,7 @@ describe('BasePaypalElement', () => {
     });
 
     test('should throw when the subclass does not implement componentToRender', () => {
-        class IncompleteElement extends BasePaypalElement {}
+        class IncompleteElement extends BasePayPalElement {}
 
         // @ts-ignore accessing a protected method
         expect(() => new IncompleteElement(core).componentToRender()).toThrow('Method not implemented.');

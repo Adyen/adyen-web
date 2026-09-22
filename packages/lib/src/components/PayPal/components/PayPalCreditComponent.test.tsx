@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import { act, render, screen, waitFor } from '@testing-library/preact';
 import { mock } from 'jest-mock-extended';
-import { PaypalCreditComponent } from './PaypalCreditComponent';
+import { PayPalCreditComponent } from './PayPalCreditComponent';
 import type { PayPalComponentV6Props } from './types';
 import type { PayPalService } from '../services/PayPalService';
 import type { ComponentMethodsRef, UIElementStatus } from '../../types';
@@ -19,9 +19,9 @@ jest.mock('./PayPalProcessingSpinner', () => ({
     )
 }));
 
-type PaypalCreditComponentProps = Omit<PayPalComponentV6Props, 'style'>;
+type PayPalCreditComponentProps = Omit<PayPalComponentV6Props, 'style'>;
 
-const createProps = (overrides: Partial<PaypalCreditComponentProps> = {}): PaypalCreditComponentProps => {
+const createProps = (overrides: Partial<PayPalCreditComponentProps> = {}): PayPalCreditComponentProps => {
     const paypalService = mock<PayPalService>();
     paypalService.isSdkLoaded.mockResolvedValue(undefined);
 
@@ -40,7 +40,7 @@ const createProps = (overrides: Partial<PaypalCreditComponentProps> = {}): Paypa
     };
 };
 
-const setStatusThroughRef = async (props: PaypalCreditComponentProps, status: UIElementStatus) => {
+const setStatusThroughRef = async (props: PayPalCreditComponentProps, status: UIElementStatus) => {
     const setComponentRef = props.setComponentRef as jest.Mock;
     const componentRef: ComponentMethodsRef = setComponentRef.mock.calls[0][0];
     await act(() => {
@@ -48,7 +48,7 @@ const setStatusThroughRef = async (props: PaypalCreditComponentProps, status: UI
     });
 };
 
-describe('PaypalCreditComponent', () => {
+describe('PayPalCreditComponent', () => {
     beforeEach(() => jest.clearAllMocks());
 
     test('should render the loader while the SDK is still loading', () => {
@@ -56,14 +56,14 @@ describe('PaypalCreditComponent', () => {
         // Never resolves, so the component stays in the pending state
         paypalService.isSdkLoaded.mockReturnValue(new Promise(() => {}));
 
-        render(<PaypalCreditComponent {...createProps({ paypalService })} />);
+        render(<PayPalCreditComponent {...createProps({ paypalService })} />);
 
         expect(screen.getByTestId('paypal-loader')).toBeInTheDocument();
         expect(screen.queryByTestId('paypal-credit-component')).not.toBeInTheDocument();
     });
 
     test('should render the credit button once the SDK is loaded', async () => {
-        render(<PaypalCreditComponent {...createProps()} />);
+        render(<PayPalCreditComponent {...createProps()} />);
 
         expect(await screen.findByTestId('paypal-credit-component')).toBeInTheDocument();
         expect(screen.getByTestId('paypal-credit-button')).toBeInTheDocument();
@@ -71,14 +71,14 @@ describe('PaypalCreditComponent', () => {
 
     test('should expose the component ref through setComponentRef on mount', () => {
         const props = createProps();
-        render(<PaypalCreditComponent {...props} />);
+        render(<PayPalCreditComponent {...props} />);
 
         expect(props.setComponentRef).toHaveBeenCalledWith(expect.objectContaining({ setStatus: expect.any(Function) }));
     });
 
     test('should forward the payment options and the shipping callbacks to the credit button', async () => {
         const props = createProps({ commit: false, vault: true, presentationModeOptions: { presentationMode: 'popup' } });
-        render(<PaypalCreditComponent {...props} />);
+        render(<PayPalCreditComponent {...props} />);
 
         await screen.findByTestId('paypal-credit-component');
 
@@ -99,11 +99,11 @@ describe('PaypalCreditComponent', () => {
 
     test('should render the processing spinner and hide the button once the payment is approved', async () => {
         const props = createProps();
-        render(<PaypalCreditComponent {...props} />);
+        render(<PayPalCreditComponent {...props} />);
 
         await screen.findByTestId('paypal-credit-component');
 
-        await setStatusThroughRef(props, 'processing' as UIElementStatus);
+        await setStatusThroughRef(props, 'processing');
 
         expect(screen.getByTestId('paypal-processing-spinner')).toBeInTheDocument();
         expect(screen.queryByTestId('paypal-credit-button')).not.toBeInTheDocument();
@@ -111,11 +111,11 @@ describe('PaypalCreditComponent', () => {
 
     test('should tell the processing spinner there is no review page when commit is false', async () => {
         const props = createProps({ commit: false });
-        render(<PaypalCreditComponent {...props} />);
+        render(<PayPalCreditComponent {...props} />);
 
         await screen.findByTestId('paypal-credit-component');
 
-        await setStatusThroughRef(props, 'processing' as UIElementStatus);
+        await setStatusThroughRef(props, 'processing');
 
         expect(screen.getByTestId('paypal-processing-spinner')).toHaveAttribute('data-with-review-page', 'false');
     });
@@ -124,7 +124,7 @@ describe('PaypalCreditComponent', () => {
         const paypalService = mock<PayPalService>();
         paypalService.isSdkLoaded.mockRejectedValue(new Error('PayPal SDK not loaded'));
 
-        render(<PaypalCreditComponent {...createProps({ paypalService })} />);
+        render(<PayPalCreditComponent {...createProps({ paypalService })} />);
 
         await waitFor(() => expect(paypalService.isSdkLoaded).toHaveBeenCalled());
         expect(screen.getByTestId('paypal-loader')).toBeInTheDocument();
