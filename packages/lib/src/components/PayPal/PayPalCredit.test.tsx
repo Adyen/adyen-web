@@ -65,11 +65,11 @@ describe('PayPalCredit', () => {
     test('should reject when credit is not an eligible funding source', async () => {
         isEligibleMock.mockReturnValue(false);
 
-        await expect(createElement().isAvailable()).rejects.toThrow('PayPalCredit is not available');
+        await expect(createElement().isAvailable()).rejects.toThrow('paypal_credit is not available');
     });
 
     test('should render the PayPalCredit component with the payment options', () => {
-        const element = createElement({ commit: false, vault: true, countryCode: 'US', presentationModeOptions: { presentationMode: 'popup' } });
+        const element = createElement({ commit: false, vault: true, presentationModeOptions: { presentationMode: 'popup' } });
 
         render(element.render());
 
@@ -77,7 +77,6 @@ describe('PayPalCredit', () => {
             expect.objectContaining({
                 commit: false,
                 vault: true,
-                countryCode: 'US',
                 presentationModeOptions: { presentationMode: 'popup' },
                 paypalService: expect.any(PayPalService),
                 setComponentRef: expect.any(Function),

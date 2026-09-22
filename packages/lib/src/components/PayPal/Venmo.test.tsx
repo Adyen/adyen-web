@@ -65,11 +65,11 @@ describe('Venmo', () => {
     test('should reject when venmo is not an eligible funding source', async () => {
         isEligibleMock.mockReturnValue(false);
 
-        await expect(createElement().isAvailable()).rejects.toThrow('Venmo is not available');
+        await expect(createElement().isAvailable()).rejects.toThrow('venmo is not available');
     });
 
     test('should render the Venmo component with the payment options', () => {
-        const element = createElement({ commit: false, vault: true, countryCode: 'US', presentationModeOptions: { presentationMode: 'popup' } });
+        const element = createElement({ commit: false, vault: true, presentationModeOptions: { presentationMode: 'popup' } });
 
         render(element.render());
 
@@ -77,7 +77,6 @@ describe('Venmo', () => {
             expect.objectContaining({
                 commit: false,
                 vault: true,
-                countryCode: 'US',
                 presentationModeOptions: { presentationMode: 'popup' },
                 paypalService: expect.any(PayPalService),
                 setComponentRef: expect.any(Function),

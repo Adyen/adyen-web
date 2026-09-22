@@ -65,7 +65,7 @@ describe('PayPalPaylater', () => {
     test('should reject when paylater is not an eligible funding source', async () => {
         isEligibleMock.mockReturnValue(false);
 
-        await expect(createElement().isAvailable()).rejects.toThrow('PayPalPaylater is not available');
+        await expect(createElement().isAvailable()).rejects.toThrow('paypal_paylater is not available');
     });
 
     test('should render the PayPalPaylater component with the payment and messaging options', () => {

@@ -112,7 +112,7 @@ describe('BasePayPalElement', () => {
             expect(onErrorMock).toHaveBeenCalledTimes(1);
             expect(onErrorMock.mock.calls[0][0]).toBeInstanceOf(AdyenCheckoutError);
             expect(onErrorMock.mock.calls[0][0]).toMatchObject({
-                message: 'Something went wrong while initializing TestPayPal',
+                message: 'Something went wrong while initializing paypal',
                 cause: initError
             });
         });
@@ -135,7 +135,7 @@ describe('BasePayPalElement', () => {
             ['both shipping callbacks', { onShippingAddressChange: jest.fn(), onShippingOptionsChange: jest.fn() }]
         ])('should throw an implementation error when %s is provided and isExpress is not set', (_name, shippingCallbacks) => {
             expect(() => createElement({ ...shippingCallbacks })).toThrow(
-                'TestPayPal - You must set "isExpress" flag to "true" in order to use "onShippingAddressChange" and/or "onShippingOptionsChange" callbacks'
+                'paypal - You must set "isExpress" flag to "true" in order to use "onShippingAddressChange" and/or "onShippingOptionsChange" callbacks'
             );
             expect(PayPalServiceMock.prototype.initialize).not.toHaveBeenCalled();
         });
@@ -164,7 +164,7 @@ describe('BasePayPalElement', () => {
             presentationMode => {
                 expect(() =>
                     createElement({ isExpress: true, presentationModeOptions: { presentationMode } as PayPalPresentationModeOptions })
-                ).toThrow(`TestPayPal - Unsupported presentation mode: ${presentationMode} for express checkout`);
+                ).toThrow(`paypal - Unsupported presentation mode: ${presentationMode} for express checkout`);
 
                 expect(PayPalServiceMock.prototype.initialize).not.toHaveBeenCalled();
             }
@@ -217,7 +217,7 @@ describe('BasePayPalElement', () => {
             const element = createElement();
 
             await expect(element.isAvailable()).rejects.toBeInstanceOf(AdyenCheckoutError);
-            await expect(element.isAvailable()).rejects.toThrow('TestPayPal is not available');
+            await expect(element.isAvailable()).rejects.toThrow('paypal is not available');
         });
 
         test('should reject when the SDK fails to load', async () => {
@@ -233,7 +233,7 @@ describe('BasePayPalElement', () => {
             // @ts-ignore overriding a protected property to simulate a missing service
             element.paypalService = undefined;
 
-            await expect(element.isAvailable()).rejects.toThrow('TestPayPal is not available');
+            await expect(element.isAvailable()).rejects.toThrow('paypal is not available');
             expect(PayPalServiceMock.prototype.isSdkLoaded).not.toHaveBeenCalled();
         });
     });
@@ -352,7 +352,7 @@ describe('BasePayPalElement', () => {
 
             element.updatePaymentData('');
 
-            expect(consoleWarnSpy).toHaveBeenCalledWith('TestPayPal - Updating payment data with an invalid value');
+            expect(consoleWarnSpy).toHaveBeenCalledWith('paypal - Updating payment data with an invalid value');
             consoleWarnSpy.mockRestore();
         });
     });
@@ -466,7 +466,7 @@ describe('BasePayPalElement', () => {
 
             expect(onErrorMock).toHaveBeenCalledTimes(1);
             expect(onErrorMock.mock.calls[0][0]).toMatchObject({
-                message: 'Something went wrong while initializing TestPayPal',
+                message: 'Something went wrong while initializing paypal',
                 cause: refreshError
             });
         });
@@ -687,7 +687,7 @@ describe('BasePayPalElement', () => {
                 expect(handleAdditionalDetailsSpy).not.toHaveBeenCalled();
                 expect(onErrorMock.mock.calls[0][0]).toBeInstanceOf(AdyenCheckoutError);
                 expect(onErrorMock.mock.calls[0][0]).toMatchObject({
-                    message: 'Something went wrong with finalizing the TestPayPal order',
+                    message: 'Something went wrong with finalizing the paypal order',
                     cause: requestError
                 });
             });
@@ -705,7 +705,7 @@ describe('BasePayPalElement', () => {
                 await approve(element, { orderId: 'order-1' });
 
                 expect(handleAdditionalDetailsSpy).not.toHaveBeenCalled();
-                expect(onErrorMock.mock.calls[0][0]).toMatchObject({ message: 'Something went wrong with finalizing the TestPayPal order' });
+                expect(onErrorMock.mock.calls[0][0]).toMatchObject({ message: 'Something went wrong with finalizing the paypal order' });
             });
         });
     });
