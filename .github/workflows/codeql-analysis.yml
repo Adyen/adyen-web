@@ -20,8 +20,6 @@ jobs:
 
     strategy:
       fail-fast: false
-      matrix:
-        language: [ 'javascript', 'typescript' ]
 
     steps:
     - name: Checkout repository
@@ -30,10 +28,7 @@ jobs:
     - name: Initialize CodeQL
       uses: github/codeql-action/init@d8073367669608af8fbcc5f63dd0a0d52bb90cff # v4
       with:
-        languages: ${{ matrix.language }}
-
-    - name: Autobuild
-      uses: github/codeql-action/autobuild@d8073367669608af8fbcc5f63dd0a0d52bb90cff # v4
+        languages: javascript-typescript
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@d8073367669608af8fbcc5f63dd0a0d52bb90cff # v4
