@@ -5,6 +5,7 @@ import PayButton from '../internal/PayButton';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { PaymentAmount } from '../../types/global-types';
 import { GiftCardElementData, GiftCardConfiguration, balanceCheckResponseType, GiftCardBalanceCheckErrorType } from './types';
+import { resolveBalanceCheckError } from './utils';
 import { TxVariants } from '../tx-variants';
 import { PayButtonProps } from '../internal/PayButton/PayButton';
 
@@ -89,11 +90,11 @@ export class GiftcardElement extends UIElement<GiftCardConfiguration> {
 
         this.setStatus('loading');
 
+        // Clear any previous balance check errors at the start of every attempt
+        this.setBalanceCheckError(null);
+
         this.handleBalanceCheck(this.formatData())
             .then(({ balance, transactionLimit = {} as PaymentAmount }) => {
-                // Clear any previous balance check errors on success
-                this.setBalanceCheckError(null);
-
                 // We still need to throw these errors, otherwise it would be a breaking changing
                 if (!balance) throw new Error('card-error'); // card doesn't exist
                 if (balance?.currency !== this.props.amount?.currency) throw new Error('currency-error');
@@ -113,8 +114,7 @@ export class GiftcardElement extends UIElement<GiftCardConfiguration> {
                 }
             })
             .catch(error => {
-                // Simply pass the raw error message to setBalanceCheckError
-                this.setBalanceCheckError(error?.message);
+                this.setBalanceCheckError(resolveBalanceCheckError(error));
 
                 // Still call handleError for other side effects (analytics, onError callback)
                 if (error instanceof AdyenCheckoutError) {
