@@ -28,7 +28,8 @@ const PayPalComponentV6 = ({
     onShippingOptionsChange,
     onCancel,
     onError,
-    setComponentRef
+    setComponentRef,
+    environment
 }: Readonly<PayPalComponentV6Props>) => {
     const { status, handleOnApprove } = usePayPalStatus({
         paypalService,
@@ -83,7 +84,7 @@ const PayPalComponentV6 = ({
                             onShippingOptionsChange={onShippingOptionsChange}
                         />
                     )}
-                    {!blockPayPalVenmoButton && <VenmoButton {...commonProps} style={style.venmo ?? {}} vault={vault} />}
+                    {!blockPayPalVenmoButton && <VenmoButton {...commonProps} style={style.venmo ?? {}} vault={vault} environment={environment} />}
                 </Fragment>
             )}
         </div>

@@ -10,6 +10,7 @@ import { useCreateVaultSetupToken } from '../hooks/useCreateVaultSetupToken';
 import { usePayPalSaveSession } from '../hooks/usePayPalSaveSession';
 import { useAmount } from '../../../core/Context/AmountProvider';
 import { DEFAULT_PAYMENT_SESSION_OPTIONS } from '../config';
+import { isLiveEnvironment } from '../../../utils/is-live-environment';
 import type { PayPalPresentationModeOptions, PayPalVenmoSavePaymentSessionOptions } from '../paypal-js-types';
 
 export const VenmoButton = ({
@@ -21,7 +22,8 @@ export const VenmoButton = ({
     onApprove,
     onCancel,
     onError,
-    onSubmit
+    onSubmit,
+    environment
 }: Readonly<
     Omit<PayPalComponentV6Props, 'style' | 'setComponentRef'> & {
         style: PayPalVenmoButtonStyle;
@@ -43,14 +45,16 @@ export const VenmoButton = ({
     const createOrder = useCreateOrder(onSubmit);
     const createVaultSetupToken = useCreateVaultSetupToken(onSubmit);
 
+    const isLive = isLiveEnvironment(environment);
+
     const presentationModeOptionsWithSandboxSupport = useMemo<PayPalPresentationModeOptions>(
         () => ({
             ...(presentationModeOptions ?? DEFAULT_PAYMENT_SESSION_OPTIONS),
             sandboxSupport: {
-                enabled: true
+                enabled: !isLive
             }
         }),
-        [presentationModeOptions]
+        [presentationModeOptions, isLive]
     );
 
     const { onClick: oneTimePaymentClick } = usePayPalOneTimeSession(

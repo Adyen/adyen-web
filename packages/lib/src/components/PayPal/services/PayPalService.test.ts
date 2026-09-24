@@ -131,13 +131,16 @@ describe('PayPalService', () => {
             expect(createInstanceMock).toHaveBeenCalledWith(expect.objectContaining({ testBuyerCountry: 'NL' }));
         });
 
-        test('should not set the testBuyerCountry in the live environment', async () => {
-            const service = new PayPalService(createConfig({ environment: 'live', countryCode: 'NL' }));
+        test.each(['live', 'LIVE', 'live-us', 'live-au', 'live-apse', 'live-in', 'live-nea'])(
+            'should not set the testBuyerCountry in the %s environment',
+            async environment => {
+                const service = new PayPalService(createConfig({ environment, countryCode: 'NL' }));
 
-            await service.initialize();
+                await service.initialize();
 
-            expect(createInstanceMock).toHaveBeenCalledWith(expect.objectContaining({ testBuyerCountry: undefined }));
-        });
+                expect(createInstanceMock).toHaveBeenCalledWith(expect.objectContaining({ testBuyerCountry: undefined }));
+            }
+        );
 
         test('should use the "v6" namespace to create the instance when available', async () => {
             const v6CreateInstanceMock = jest.fn().mockResolvedValue(sdkInstance);

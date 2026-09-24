@@ -9,7 +9,13 @@ import type { ComponentMethodsRef } from '../../types';
 jest.mock('./PayPalButton', () => ({ PayPalButton: () => <div data-testid="paypal-button" /> }));
 jest.mock('./PayPalPayLaterButton', () => ({ PayPalPayLaterButton: () => <div data-testid="paypal-pay-later-button" /> }));
 jest.mock('./PayPalCreditButton', () => ({ PayPalCreditButton: () => <div data-testid="paypal-credit-button" /> }));
-jest.mock('./VenmoButton', () => ({ VenmoButton: () => <div data-testid="venmo-button" /> }));
+const mockVenmoButton = jest.fn();
+jest.mock('./VenmoButton', () => ({
+    VenmoButton: (props: unknown) => {
+        mockVenmoButton(props);
+        return <div data-testid="venmo-button" />;
+    }
+}));
 jest.mock('./PayPalProcessingSpinner', () => ({
     PayPalProcessingSpinner: ({ withoutReviewPage }: Readonly<{ withoutReviewPage: boolean }>) => (
         <div data-testid="paypal-processing-spinner" data-with-review-page={String(withoutReviewPage)} />
@@ -64,6 +70,14 @@ describe('PayPalComponentV6', () => {
         expect(screen.getByTestId('paypal-pay-later-button')).toBeInTheDocument();
         expect(screen.getByTestId('paypal-credit-button')).toBeInTheDocument();
         expect(screen.getByTestId('venmo-button')).toBeInTheDocument();
+    });
+
+    test('should forward the environment to the venmo button', async () => {
+        render(<PayPalComponentV6 {...createProps({ environment: 'live' })} />);
+
+        await screen.findByTestId('venmo-button');
+
+        expect(mockVenmoButton).toHaveBeenCalledWith(expect.objectContaining({ environment: 'live' }));
     });
 
     test('should not render the pay later button when blocked', async () => {

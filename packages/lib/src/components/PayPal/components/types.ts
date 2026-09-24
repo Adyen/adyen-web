@@ -59,6 +59,7 @@ export type PayPalComponentV6Props = Pick<
     onCancel: () => void;
     onError: (error: Error) => void;
     setComponentRef: (ref: ComponentMethodsRef) => void;
+    environment?: string;
 };
 
 /**
