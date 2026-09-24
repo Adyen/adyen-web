@@ -1,10 +1,8 @@
 import { h } from 'preact';
 import { render } from '@testing-library/preact';
-import { mock } from 'jest-mock-extended';
 import PayPalPaylater from './PayPalPaylater';
 import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
-import { Resources } from '../../core/Context/Resources';
 import { TxVariants } from '../tx-variants';
 import { PayPalService } from './services/PayPalService';
 import type { PayPalEligiblePaymentMethods } from './paypal-js-types';
@@ -47,13 +45,6 @@ describe('PayPalPaylater', () => {
         createElement();
 
         expect(PayPalServiceMock).toHaveBeenCalledWith(expect.objectContaining({ components: ['paypal-payments', 'paypal-messages'] }));
-    });
-
-    test('should reuse the paypal icon', () => {
-        const resources = mock<Resources>();
-        resources.getImage.mockReturnValue((icon: string) => `https://checkout-adyen.com/${icon}`);
-
-        expect(createElement({ modules: { resources } }).icon).toBe(`https://checkout-adyen.com/${TxVariants.paypal}`);
     });
 
     test('should check the eligibility of the paylater funding source', async () => {

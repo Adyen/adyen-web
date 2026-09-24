@@ -25,10 +25,6 @@ class PayPalPaylaterElement extends BasePayPalElement<PayPalPayLaterConfiguratio
         };
     }
 
-    public override get icon(): string {
-        return this.resources.getImage()(TxVariants.paypal);
-    }
-
     protected override get paypalComponents(): PayPalComponents {
         return ['paypal-payments', 'paypal-messages'];
     }
