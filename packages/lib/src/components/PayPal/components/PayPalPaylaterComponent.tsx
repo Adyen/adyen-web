@@ -48,7 +48,12 @@ export const PayPalPaylaterComponent = ({
     return (
         <div className={styles.payPalPaylaterComponent}>
             {!hidePayPalMessaging && (
-                <PayPalMessaging paypalService={paypalService} countryCode={countryCode} messagingContentOptions={messagingContentOptions} />
+                <PayPalMessaging
+                    paypalService={paypalService}
+                    countryCode={countryCode}
+                    messagingContentOptions={messagingContentOptions}
+                    onError={onError}
+                />
             )}
             <PayPalPayLaterButton
                 paypalService={paypalService}
