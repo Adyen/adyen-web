@@ -43,7 +43,7 @@ export const PayPalPayLaterButton = ({
                 createOrder,
                 onError
             }),
-            [payPalSDKInstance, oneTimeSessionOptions, createOrder]
+            [payPalSDKInstance, oneTimeSessionOptions, createOrder, onError, presentationModeOptions]
         )
     );
 

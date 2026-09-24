@@ -50,7 +50,7 @@ export const PayPalCreditButton = ({
                 createOrder,
                 onError
             }),
-            [payPalSDKInstance, oneTimeSessionOptions, createOrder]
+            [payPalSDKInstance, oneTimeSessionOptions, createOrder, onError, presentationModeOptions]
         )
     );
 
@@ -62,7 +62,7 @@ export const PayPalCreditButton = ({
                 createVaultSetupToken,
                 onError
             }),
-            [payPalSDKInstance, saveSessionOptions, createVaultSetupToken]
+            [payPalSDKInstance, saveSessionOptions, createVaultSetupToken, onError, presentationModeOptions]
         )
     );
 
