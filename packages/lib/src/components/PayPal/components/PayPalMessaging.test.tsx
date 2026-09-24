@@ -14,27 +14,35 @@ const core = setupCoreMock();
 const setup = ({
     amount = { value: 1000, currency: 'USD' },
     countryCode,
-    messagingContentOptions
+    messagingContentOptions,
+    onError = jest.fn(),
+    fetchContent = jest.fn().mockResolvedValue(undefined),
+    createPayPalMessages = jest.fn().mockReturnValue({ fetchContent })
 }: {
     amount?: PaymentAmount;
     countryCode?: string;
     messagingContentOptions?: Pick<PayPalFetchContentOptions, 'logoType' | 'logoPosition' | 'textColor'>;
+    onError?: (error: Error) => void;
+    fetchContent?: jest.Mock;
+    createPayPalMessages?: jest.Mock;
 } = {}) => {
-    const fetchContent = jest.fn().mockResolvedValue(undefined);
-    const createPayPalMessages = jest.fn().mockReturnValue({ fetchContent });
-
     const paypalService = mock<PayPalService>();
     paypalService.getInstance.mockReturnValue({ createPayPalMessages } as unknown as PayPalSdkInstance);
 
     const view = render(
         <CoreProvider i18n={core.modules.i18n} loadingContext="test" resources={core.modules.resources}>
             <AmountProvider amount={amount} providerRef={createRef<AmountProviderRef>()}>
-                <PayPalMessaging paypalService={paypalService} countryCode={countryCode} messagingContentOptions={messagingContentOptions} />
+                <PayPalMessaging
+                    paypalService={paypalService}
+                    countryCode={countryCode}
+                    messagingContentOptions={messagingContentOptions}
+                    onError={onError}
+                />
             </AmountProvider>
         </CoreProvider>
     );
 
-    return { ...view, paypalService, createPayPalMessages, fetchContent };
+    return { ...view, paypalService, createPayPalMessages, fetchContent, onError };
 };
 
 describe('PayPalMessaging', () => {
@@ -109,7 +117,7 @@ describe('PayPalMessaging', () => {
         render(
             <CoreProvider i18n={core.modules.i18n} loadingContext="test" resources={core.modules.resources}>
                 <AmountProvider providerRef={createRef<AmountProviderRef>()}>
-                    <PayPalMessaging paypalService={paypalService} />
+                    <PayPalMessaging paypalService={paypalService} onError={jest.fn()} />
                 </AmountProvider>
             </CoreProvider>
         );
@@ -131,6 +139,29 @@ describe('PayPalMessaging', () => {
         expect(setContent).toHaveBeenCalledWith('message-content');
     });
 
+    test('should call onError when fetching the content fails', async () => {
+        const error = new Error('fetchContent failed');
+        const onError = jest.fn();
+        setup({ onError, fetchContent: jest.fn().mockRejectedValue(error) });
+
+        await waitFor(() => expect(onError).toHaveBeenCalledTimes(1));
+        expect(onError).toHaveBeenCalledWith(error);
+    });
+
+    test('should call onError when the messages instance cannot be created', async () => {
+        const error = new Error('createPayPalMessages failed');
+        const onError = jest.fn();
+        setup({
+            onError,
+            createPayPalMessages: jest.fn().mockImplementation(() => {
+                throw error;
+            })
+        });
+
+        await waitFor(() => expect(onError).toHaveBeenCalledTimes(1));
+        expect(onError).toHaveBeenCalledWith(error);
+    });
+
     test('should refetch the content when the amount changes', async () => {
         const providerRef = createRef<AmountProviderRef>();
         const fetchContent = jest.fn().mockResolvedValue(undefined);
@@ -142,7 +173,7 @@ describe('PayPalMessaging', () => {
         render(
             <CoreProvider i18n={core.modules.i18n} loadingContext="test" resources={core.modules.resources}>
                 <AmountProvider amount={{ value: 1000, currency: 'USD' }} providerRef={providerRef}>
-                    <PayPalMessaging paypalService={paypalService} countryCode="US" />
+                    <PayPalMessaging paypalService={paypalService} countryCode="US" onError={jest.fn()} />
                 </AmountProvider>
             </CoreProvider>
         );
@@ -156,14 +187,14 @@ describe('PayPalMessaging', () => {
     });
 
     test('should not create a new messages instance on re-render when nothing changed', async () => {
-        const { paypalService, createPayPalMessages, rerender } = setup();
+        const { paypalService, createPayPalMessages, rerender, onError } = setup();
 
         await waitFor(() => expect(createPayPalMessages).toHaveBeenCalledTimes(1));
 
         rerender(
             <CoreProvider i18n={core.modules.i18n} loadingContext="test" resources={core.modules.resources}>
                 <AmountProvider amount={{ value: 1000, currency: 'USD' }} providerRef={createRef<AmountProviderRef>()}>
-                    <PayPalMessaging paypalService={paypalService} />
+                    <PayPalMessaging paypalService={paypalService} onError={onError} />
                 </AmountProvider>
             </CoreProvider>
         );
