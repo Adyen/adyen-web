@@ -909,6 +909,14 @@ describe('PayPal v6', () => {
             expect(mockPayPalComponentV6).toHaveBeenCalledWith(expect.objectContaining({ blockPayPalButtonVariants: true }));
         });
 
+        test('should forward the environment to the PayPalComponentV6', () => {
+            const paypal = new Paypal(core, { environment: 'live', usePayPalV6: {} });
+
+            render(paypal.render());
+
+            expect(mockPayPalComponentV6).toHaveBeenCalledWith(expect.objectContaining({ environment: 'live' }));
+        });
+
         test('should map the onCancel prop to a CANCEL AdyenCheckoutError', () => {
             const onErrorMock = jest.fn();
             const paypal = new Paypal(core, { showPayButton: true, usePayPalV6: {}, onError: onErrorMock });

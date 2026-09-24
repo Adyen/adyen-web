@@ -552,6 +552,7 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
                     blockPayPalPayLaterButton={paypalv6Props.blockPayPalPayLaterButton}
                     blockPayPalVenmoButton={paypalv6Props.blockPayPalVenmoButton}
                     presentationModeOptions={paypalv6Props.presentationModeOptions}
+                    environment={this.props.environment}
                     onSubmit={this.handleSubmit}
                     onApprove={this.handleOnApproveV6}
                     onCancel={() => this.handleError(new AdyenCheckoutError('CANCEL'))}

@@ -5,6 +5,7 @@ import type { PayPalComponents, PayPalEligiblePaymentMethods, PayPalPageTypes, P
 import requestPayPalOauthToken from './request-paypal-oauth-token';
 import { PayPalV6SupportedLocale } from '../utils/types';
 import { getSupportedLocalePayPalV6 } from '../utils/get-paypal-locale';
+import { isLiveEnvironment } from '../../../utils/is-live-environment';
 
 interface PayPalServiceConfig {
     sdkLoader: PayPalSdkLoader;
@@ -135,14 +136,13 @@ class PayPalService {
             throw new AdyenCheckoutError('ERROR', 'PayPal SDK `createInstance` is not available');
         }
 
-        const isLiveEnvironment = this.environment?.toLowerCase() === 'live';
         this.sdkInstance = await createInstance({
             clientToken,
             components: this.components,
             pageType: this.pageType,
             merchantId: this.merchantId,
             locale: this.locale,
-            testBuyerCountry: isLiveEnvironment ? undefined : this.countryCode
+            testBuyerCountry: isLiveEnvironment(this.environment) ? undefined : this.countryCode
         });
 
         return this.sdkInstance;

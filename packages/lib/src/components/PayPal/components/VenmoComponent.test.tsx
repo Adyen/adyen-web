@@ -93,6 +93,14 @@ describe('VenmoComponent', () => {
         );
     });
 
+    test('should forward the environment to the venmo button', async () => {
+        render(<VenmoComponent {...createProps()} environment="live" />);
+
+        await screen.findByTestId('venmo-button');
+
+        expect(mockVenmoButton).toHaveBeenCalledWith(expect.objectContaining({ environment: 'live' }));
+    });
+
     test('should default the style to an empty object when the merchant does not provide one', async () => {
         render(<VenmoComponent {...createProps()} />);
 

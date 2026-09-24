@@ -88,6 +88,14 @@ describe('Venmo', () => {
         );
     });
 
+    test('should pass the environment down to the Venmo component', () => {
+        const element = createElement({ environment: 'live' });
+
+        render(element.render());
+
+        expect(mockVenmoComponent).toHaveBeenCalledWith(expect.objectContaining({ environment: 'live' }));
+    });
+
     test('should render anything even when showPayButton is false', () => {
         const element = createElement({ showPayButton: false });
 

@@ -16,7 +16,8 @@ export const VenmoComponent = ({
     onApprove,
     onCancel,
     onError,
-    setComponentRef
+    setComponentRef,
+    environment
 }: Readonly<
     Omit<PayPalComponentV6Props, 'style' | 'onShippingAddressChange' | 'onShippingOptionsChange'> & {
         style?: PayPalVenmoButtonStyle;
@@ -47,6 +48,7 @@ export const VenmoComponent = ({
             onError={onError}
             onCancel={onCancel}
             style={style ?? {}}
+            environment={environment}
         />
     );
 };
