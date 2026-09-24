@@ -78,11 +78,44 @@ describe('PayPalMessaging', () => {
         );
     });
 
-    test('should pass the amount as a decimal string without a currency sign', async () => {
-        const { fetchContent } = setup({ amount: { value: 123450, currency: 'USD' } });
+    test.each([
+        ['USD', 123450, '1234.5'],
+        ['EUR', 1000, '10'],
+        ['CAD', 99, '0.99'],
+        ['JPY', 1000, '1000'],
+        ['PLN', 123450, '1234.5'],
+        ['AED', 2500, '25']
+    ])('should convert a %s minor units amount into a decimal string without a currency sign', async (currency, value, expected) => {
+        const { fetchContent } = setup({ amount: { value, currency } });
 
         await waitFor(() => expect(fetchContent).toHaveBeenCalledTimes(1));
-        expect(fetchContent).toHaveBeenCalledWith(expect.objectContaining({ amount: '1234.5' }));
+        expect(fetchContent).toHaveBeenCalledWith(expect.objectContaining({ amount: expected }));
+    });
+
+    test('should pass a zero amount instead of omitting it', async () => {
+        const { fetchContent } = setup({ amount: { value: 0, currency: 'USD' } });
+
+        await waitFor(() => expect(fetchContent).toHaveBeenCalledTimes(1));
+        expect(fetchContent).toHaveBeenCalledWith(expect.objectContaining({ amount: '0' }));
+    });
+
+    test('should not pass an amount when there is none', async () => {
+        const fetchContent = jest.fn().mockResolvedValue(undefined);
+        const paypalService = mock<PayPalService>();
+        paypalService.getInstance.mockReturnValue({
+            createPayPalMessages: jest.fn().mockReturnValue({ fetchContent })
+        } as unknown as PayPalSdkInstance);
+
+        render(
+            <CoreProvider i18n={core.modules.i18n} loadingContext="test" resources={core.modules.resources}>
+                <AmountProvider providerRef={createRef<AmountProviderRef>()}>
+                    <PayPalMessaging paypalService={paypalService} />
+                </AmountProvider>
+            </CoreProvider>
+        );
+
+        await waitFor(() => expect(fetchContent).toHaveBeenCalledTimes(1));
+        expect(fetchContent).toHaveBeenCalledWith(expect.objectContaining({ amount: undefined }));
     });
 
     test('should push the fetched content into the paypal-message element once it is ready', async () => {

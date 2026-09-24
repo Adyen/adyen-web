@@ -4,6 +4,7 @@ import { useMemo, useEffect, useRef } from 'preact/hooks';
 import { PayPalService } from '../services/PayPalService';
 import { useAmount } from '../../../core/Context/AmountProvider';
 import type { PayPalFetchContentOptions, PayPalMessageElement } from '../paypal-js-types';
+import { getDecimalAmount } from '../../../utils/amount-util';
 
 export const PayPalMessaging = ({
     paypalService,
@@ -25,7 +26,7 @@ export const PayPalMessaging = ({
                 currencyCode: amount?.currency
             });
 
-            const amountString = amount?.value ? String(amount.value / 100) : undefined;
+            const amountString = amount ? String(getDecimalAmount(amount.value, amount.currency)) : undefined;
 
             await messagesInstance.fetchContent({
                 textColor: messagingContentOptions?.textColor ?? 'BLACK',
