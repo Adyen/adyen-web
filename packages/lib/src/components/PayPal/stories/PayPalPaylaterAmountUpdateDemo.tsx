@@ -73,6 +73,10 @@ export function PayPalPaylaterAmountUpdateDemo({
     };
 
     const createPaylater = async () => {
+        if (!session) {
+            return;
+        }
+
         const checkout = await AdyenCheckout({
             clientKey: process.env.CLIENT_KEY,
             environment: process.env.CLIENT_ENV as CoreConfiguration['environment'],
@@ -83,10 +87,15 @@ export function PayPalPaylaterAmountUpdateDemo({
             },
 
             beforeSubmit: async (data, component, actions) => {
+                if (!sessionRef.current) {
+                    actions.resolve(data);
+                    return;
+                }
+
                 try {
                     // The amount is only picked on the client, so the session has to be patched with it before
                     // the payment is made. The ref holds the latest selection, since this callback is created once.
-                    const sessionData = await patchSessionAndMakePayable({ currency, value: amountValueRef.current }, component.core.session.session);
+                    const sessionData = await patchSessionAndMakePayable({ currency, value: amountValueRef.current }, sessionRef.current);
 
                     actions.resolve({ ...data, sessionData });
                 } catch (error) {
