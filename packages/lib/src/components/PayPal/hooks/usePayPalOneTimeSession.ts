@@ -4,15 +4,13 @@ import { useStartPayPalSession } from './useStartPayPalSession';
 
 export const usePayPalOneTimeSession = ({
     createSession,
-    createOrder,
+    onSubmit,
     onError,
     presentationModeOptions
 }: {
     presentationModeOptions?: PayPalPresentationModeOptions;
     createSession: () => PayPalOneTimePaymentSession | undefined;
-    createOrder: () => Promise<{
-        orderId: string;
-    }>;
+    onSubmit: () => Promise<string>;
     onError: (error: Error) => void;
 }) => {
     const [paymentSession, setPaymentSession] = useState<PayPalOneTimePaymentSession | undefined>();
@@ -22,6 +20,8 @@ export const usePayPalOneTimeSession = ({
     useEffect(() => {
         setPaymentSession(createSession());
     }, [createSession]);
+
+    const createOrder = useCallback(async () => ({ orderId: await onSubmit() }), [onSubmit]);
 
     const onClick = useCallback(async () => {
         if (!paymentSession) return;
