@@ -11,56 +11,64 @@ describe('usePayPalSaveSession', () => {
     test('should create the payment session on mount', () => {
         const session = createSessionMock();
         const createSession = jest.fn().mockReturnValue(session);
-        const createVaultSetupToken = jest.fn();
+        const onSubmit = jest.fn();
 
-        renderHook(() => usePayPalSaveSession({ createSession, createVaultSetupToken, onError: jest.fn(), presentationModeOptions }));
+        renderHook(() => usePayPalSaveSession({ createSession, onSubmit, onError: jest.fn(), presentationModeOptions }));
 
         expect(createSession).toHaveBeenCalledTimes(1);
     });
 
-    test('should start the session with the provided presentation mode options and the createVaultSetupToken promise when clicked', async () => {
+    test('should start the session with the provided presentation mode options and a vault setup token promise built from onSubmit when clicked', async () => {
         const session = createSessionMock();
         const createSession = jest.fn().mockReturnValue(session);
-        const tokenPromise = Promise.resolve({ vaultSetupToken: 'vault-token-1' });
-        const createVaultSetupToken = jest.fn().mockReturnValue(tokenPromise);
+        const onSubmit = jest.fn().mockResolvedValue('vault-token-1');
 
-        const { result } = renderHook(() =>
-            usePayPalSaveSession({ createSession, createVaultSetupToken, onError: jest.fn(), presentationModeOptions })
-        );
+        const { result } = renderHook(() => usePayPalSaveSession({ createSession, onSubmit, onError: jest.fn(), presentationModeOptions }));
 
         await result.current?.onClick();
 
-        expect(createVaultSetupToken).toHaveBeenCalledTimes(1);
-        expect(session.start).toHaveBeenCalledWith(presentationModeOptions, tokenPromise);
+        expect(onSubmit).toHaveBeenCalledTimes(1);
+        expect(session.start).toHaveBeenCalledWith(presentationModeOptions, expect.any(Promise));
+        await expect((session.start as jest.Mock).mock.calls[0][1]).resolves.toEqual({ vaultSetupToken: 'vault-token-1' });
+    });
+
+    test('should reject the vault setup token promise when onSubmit fails', async () => {
+        const session = createSessionMock();
+        const createSession = jest.fn().mockReturnValue(session);
+        const error = new Error('Could not create the vault setup token');
+        const onSubmit = jest.fn().mockRejectedValue(error);
+
+        const { result } = renderHook(() => usePayPalSaveSession({ createSession, onSubmit, onError: jest.fn(), presentationModeOptions }));
+
+        await result.current?.onClick();
+
+        await expect((session.start as jest.Mock).mock.calls[0][1]).rejects.toThrow('Could not create the vault setup token');
     });
 
     test('should forward custom presentation mode options to the session start', async () => {
         const session = createSessionMock();
         const createSession = jest.fn().mockReturnValue(session);
-        const tokenPromise = Promise.resolve({ vaultSetupToken: 'vault-token-1' });
-        const createVaultSetupToken = jest.fn().mockReturnValue(tokenPromise);
+        const onSubmit = jest.fn().mockResolvedValue('vault-token-1');
         const modalOptions: PayPalPresentationModeOptions = { presentationMode: 'modal' };
 
         const { result } = renderHook(() =>
-            usePayPalSaveSession({ createSession, createVaultSetupToken, onError: jest.fn(), presentationModeOptions: modalOptions })
+            usePayPalSaveSession({ createSession, onSubmit, onError: jest.fn(), presentationModeOptions: modalOptions })
         );
 
         await result.current?.onClick();
 
-        expect(session.start).toHaveBeenCalledWith(modalOptions, tokenPromise);
+        expect(session.start).toHaveBeenCalledWith(modalOptions, expect.any(Promise));
     });
 
     test('should do nothing when clicked before the session is created', async () => {
         const createSession = jest.fn().mockReturnValue(undefined);
-        const createVaultSetupToken = jest.fn();
+        const onSubmit = jest.fn();
 
-        const { result } = renderHook(() =>
-            usePayPalSaveSession({ createSession, createVaultSetupToken, onError: jest.fn(), presentationModeOptions })
-        );
+        const { result } = renderHook(() => usePayPalSaveSession({ createSession, onSubmit, onError: jest.fn(), presentationModeOptions }));
 
         await result.current?.onClick();
 
-        expect(createVaultSetupToken).not.toHaveBeenCalled();
+        expect(onSubmit).not.toHaveBeenCalled();
     });
 
     describe('error handling', () => {
@@ -80,13 +88,11 @@ describe('usePayPalSaveSession', () => {
             error.isRecoverable = true;
             const session = createFailingSessionMock(error);
             const createSession = jest.fn().mockReturnValue(session);
-            const createVaultSetupToken = jest.fn().mockResolvedValue({ vaultSetupToken: 'vault-token-1' });
+            const onSubmit = jest.fn().mockResolvedValue('vault-token-1');
             const onError = jest.fn();
             const modalOptions: PayPalPresentationModeOptions = { presentationMode: 'modal' };
 
-            const { result } = renderHook(() =>
-                usePayPalSaveSession({ createSession, createVaultSetupToken, onError, presentationModeOptions: modalOptions })
-            );
+            const { result } = renderHook(() => usePayPalSaveSession({ createSession, onSubmit, onError, presentationModeOptions: modalOptions }));
 
             await result.current?.onClick();
 
@@ -99,10 +105,10 @@ describe('usePayPalSaveSession', () => {
             const error = new Error('Session failed');
             const session = createFailingSessionMock(error);
             const createSession = jest.fn().mockReturnValue(session);
-            const createVaultSetupToken = jest.fn().mockResolvedValue({ vaultSetupToken: 'vault-token-1' });
+            const onSubmit = jest.fn().mockResolvedValue('vault-token-1');
             const onError = jest.fn();
 
-            const { result } = renderHook(() => usePayPalSaveSession({ createSession, createVaultSetupToken, onError, presentationModeOptions }));
+            const { result } = renderHook(() => usePayPalSaveSession({ createSession, onSubmit, onError, presentationModeOptions }));
 
             await result.current?.onClick();
 

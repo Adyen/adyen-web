@@ -3,10 +3,8 @@ import { useMemo } from 'preact/hooks';
 
 import type { PayPalVenmoButtonStyle, PayPalComponentV6Props } from './types';
 import { usePayPalSessionOptions } from '../hooks/usePayPalSessionOptions';
-import { useCreateOrder } from '../hooks/useCreateOrder';
 import { usePayPalOneTimeSession } from '../hooks/usePayPalOneTimeSession';
 import { usePayPalButtonEligibility } from '../hooks/usePayPalButtonEligibility';
-import { useCreateVaultSetupToken } from '../hooks/useCreateVaultSetupToken';
 import { usePayPalSaveSession } from '../hooks/usePayPalSaveSession';
 import { useAmount } from '../../../core/Context/AmountProvider';
 import { DEFAULT_PAYMENT_SESSION_OPTIONS } from '../config';
@@ -42,9 +40,6 @@ export const VenmoButton = ({
         vault
     });
 
-    const createOrder = useCreateOrder(onSubmit);
-    const createVaultSetupToken = useCreateVaultSetupToken(onSubmit);
-
     const isLive = isLiveEnvironment(environment);
 
     const presentationModeOptionsWithSandboxSupport = useMemo<PayPalPresentationModeOptions>(
@@ -62,10 +57,10 @@ export const VenmoButton = ({
             () => ({
                 presentationModeOptions: presentationModeOptionsWithSandboxSupport,
                 createSession: () => payPalSDKInstance.createVenmoOneTimePaymentSession(oneTimeSessionOptions),
-                createOrder,
+                onSubmit,
                 onError
             }),
-            [payPalSDKInstance, oneTimeSessionOptions, createOrder, onError, presentationModeOptionsWithSandboxSupport]
+            [payPalSDKInstance, oneTimeSessionOptions, onSubmit, onError, presentationModeOptionsWithSandboxSupport]
         )
     );
 
@@ -74,10 +69,10 @@ export const VenmoButton = ({
             () => ({
                 presentationModeOptions: presentationModeOptionsWithSandboxSupport,
                 createSession: () => payPalSDKInstance.createVenmoSavePaymentSession(saveSessionOptions as PayPalVenmoSavePaymentSessionOptions),
-                createVaultSetupToken,
+                onSubmit,
                 onError
             }),
-            [payPalSDKInstance, saveSessionOptions, createVaultSetupToken, onError, presentationModeOptionsWithSandboxSupport]
+            [payPalSDKInstance, saveSessionOptions, onSubmit, onError, presentationModeOptionsWithSandboxSupport]
         )
     );
 

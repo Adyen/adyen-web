@@ -3,7 +3,6 @@ import { useEffect, useMemo, useState } from 'preact/hooks';
 
 import type { PayPalComponentV6Props } from './types';
 import { usePayPalSessionOptions } from '../hooks/usePayPalSessionOptions';
-import { useCreateOrder } from '../hooks/useCreateOrder';
 import { usePayPalOneTimeSession } from '../hooks/usePayPalOneTimeSession';
 import { usePayPalButtonEligibility } from '../hooks/usePayPalButtonEligibility';
 
@@ -33,17 +32,15 @@ export const PayPalPayLaterButton = ({
         onError
     });
 
-    const createOrder = useCreateOrder(onSubmit);
-
     const { onClick } = usePayPalOneTimeSession(
         useMemo(
             () => ({
                 presentationModeOptions,
                 createSession: () => payPalSDKInstance.createPayLaterOneTimePaymentSession(oneTimeSessionOptions),
-                createOrder,
+                onSubmit,
                 onError
             }),
-            [payPalSDKInstance, oneTimeSessionOptions, createOrder, onError, presentationModeOptions]
+            [payPalSDKInstance, oneTimeSessionOptions, onSubmit, onError, presentationModeOptions]
         )
     );
 

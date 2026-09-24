@@ -5,14 +5,12 @@ import { useStartPayPalSession } from './useStartPayPalSession';
 export const usePayPalSaveSession = ({
     presentationModeOptions,
     createSession,
-    createVaultSetupToken,
+    onSubmit,
     onError
 }: {
     presentationModeOptions?: PayPalPresentationModeOptions;
     createSession: () => PayPalSavePaymentSession | undefined;
-    createVaultSetupToken: () => Promise<{
-        vaultSetupToken: string;
-    }>;
+    onSubmit: () => Promise<string>;
     onError: (error: Error) => void;
 }) => {
     const [paymentSession, setPaymentSession] = useState<PayPalSavePaymentSession | undefined>();
@@ -22,6 +20,8 @@ export const usePayPalSaveSession = ({
     useEffect(() => {
         setPaymentSession(createSession());
     }, [createSession]);
+
+    const createVaultSetupToken = useCallback(async () => ({ vaultSetupToken: await onSubmit() }), [onSubmit]);
 
     const onClick = useCallback(async () => {
         if (!paymentSession) return;
