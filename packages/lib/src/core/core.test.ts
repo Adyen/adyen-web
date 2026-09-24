@@ -567,7 +567,8 @@ describe('Core', () => {
                 _environmentUrls: {
                     api: 'https://localhost:8080/checkoutshopper/'
                 },
-                clientKey: 'devl_FX923810'
+                // Core rejects a 'test'/'live' prefixed key when the api URL does not contain that prefix
+                clientKey: 'xxxx'
             });
 
             expect(checkout.loadingContext).toBe('https://localhost:8080/checkoutshopper/');
@@ -581,7 +582,8 @@ describe('Core', () => {
                 _environmentUrls: {
                     api: 'https://localhost:8080/checkoutshopper/'
                 },
-                clientKey: 'devl_FX923810'
+                // Core rejects a 'test'/'live' prefixed key when the api URL does not contain that prefix
+                clientKey: 'xxxx'
             });
 
             void expect(async () => await core.initialize()).rejects.toThrow('You must specify a countryCode');
