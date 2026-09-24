@@ -65,7 +65,7 @@ export const VenmoButton = ({
                 createOrder,
                 onError
             }),
-            [payPalSDKInstance, oneTimeSessionOptions, createOrder, presentationModeOptionsWithSandboxSupport]
+            [payPalSDKInstance, oneTimeSessionOptions, createOrder, onError, presentationModeOptionsWithSandboxSupport]
         )
     );
 
@@ -77,7 +77,7 @@ export const VenmoButton = ({
                 createVaultSetupToken,
                 onError
             }),
-            [payPalSDKInstance, saveSessionOptions, createVaultSetupToken, presentationModeOptionsWithSandboxSupport]
+            [payPalSDKInstance, saveSessionOptions, createVaultSetupToken, onError, presentationModeOptionsWithSandboxSupport]
         )
     );
 
