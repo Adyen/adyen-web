@@ -12,10 +12,6 @@ class PayPalCreditElement extends BasePayPalElement<PayPalCreditConfiguration> {
 
     protected override fundingSource: SupportedPayPalFundingSources = 'credit';
 
-    public override get icon(): string {
-        return this.resources.getImage()(TxVariants.paypal);
-    }
-
     protected override componentToRender(): h.JSX.Element | null {
         const { onShippingAddressChange, onShippingOptionsChange } = this.props;
 
