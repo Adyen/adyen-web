@@ -1,0 +1,30 @@
+.configurationPanel {
+    padding: 16px;
+    margin-bottom: 20px;
+    border: 1px solid #001222;
+    border-radius: 8px;
+    background-color: #f8f9fa;
+}
+
+.controlRow {
+    margin-bottom: 12px;
+}
+
+.optionButton {
+    padding: 8px 12px;
+    margin-inline-end: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #fff;
+    cursor: pointer;
+
+    &:disabled {
+        cursor: not-allowed;
+    }
+}
+
+.optionButtonSelected {
+    border-color: #0abf53;
+    background-color: #e6f4ea;
+    font-weight: bold;
+}
