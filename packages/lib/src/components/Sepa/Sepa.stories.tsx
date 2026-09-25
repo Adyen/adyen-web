@@ -2,7 +2,7 @@ import { h } from 'preact';
 import { MetaConfiguration, PaymentMethodStoryProps, StoryConfiguration } from '../../../storybook/types';
 import { ComponentContainer } from '../../../storybook/components/ComponentContainer';
 import { Checkout } from '../../../storybook/components/Checkout';
-import Sepa from './Sepa';
+import { SepaDirectDebit as Sepa } from '@adyen/adyen-web';
 import { SepaConfiguration } from './types';
 
 type SepaStory = StoryConfiguration<SepaConfiguration>;

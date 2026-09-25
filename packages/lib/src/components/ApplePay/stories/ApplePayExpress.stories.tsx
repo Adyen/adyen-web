@@ -3,7 +3,7 @@ import { MetaConfiguration, StoryConfiguration } from '../../../../storybook/typ
 import { ComponentContainer } from '../../../../storybook/components/ComponentContainer';
 import { ApplePayConfiguration } from '../types';
 import getCurrency from '../../../../storybook/utils/get-currency';
-import ApplePay from '../ApplePay';
+import { ApplePay } from '@adyen/adyen-web';
 import { makePayment } from '../../../../storybook/helpers/checkout-api-calls';
 import { Checkout } from '../../../../storybook/components/Checkout';
 

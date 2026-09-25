@@ -4,7 +4,7 @@ import { useEffect, useRef } from 'preact/hooks';
 import { patchPaypalOrder } from '../../../../storybook/helpers/checkout-api-calls';
 import { createSessionsCheckout } from '../../../../storybook/helpers/create-sessions-checkout';
 import { getDeliveryMethods, getSelectedDeliveryMethodAmount } from './paypal-stories-utils';
-import { PayPal } from '../../..';
+import { PayPal } from '@adyen/adyen-web';
 
 const meta: Meta = {
     title: 'Components/Wallets/Paypal',

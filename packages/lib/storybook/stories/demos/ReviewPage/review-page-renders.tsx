@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
-import { AdyenCheckout, components } from '../../../../src';
+import { AdyenCheckout, Card, components, Dropin as DropinComponent } from '@adyen/adyen-web';
 import type { CoreConfiguration, ICore } from '../../../../src/core/types';
 import type { OrderStatus, PaymentData } from '../../../../src/types/global-types';
 import type { CardFieldValidData } from '../../../../src/types';
@@ -12,8 +12,6 @@ import { ReviewPage } from './ReviewPage';
 import { createSession } from '../../../helpers/checkout-api-calls';
 import getCurrency from '../../../utils/get-currency';
 import { RETURN_URL, SHOPPER_REFERENCE } from '../../../config/commonConfig';
-import DropinComponent from '../../../../src/components/Dropin/Dropin';
-import Card from '../../../../src/components/Card/Card';
 
 type MountFn<T> = (el: HTMLDivElement, checkout: ICore, config: T, endDigitsRef: { current: string | undefined }) => void;
 

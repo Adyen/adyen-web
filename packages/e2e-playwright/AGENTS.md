@@ -14,6 +14,7 @@ Run from the repo root.
 | Interactive UI mode                 | `yarn test:ui`                                                               |
 | One spec, all browsers              | `yarn test:e2e tests/e2e/[component]/[component].spec.ts`                    |
 | Update screenshots                  | `yarn test:e2e:update-screenshots`                                           |
+| Dist suite (same specs, built lib)  | `yarn test:e2e:dist tests/e2e/[component]/[component].spec.ts --project=chromium` |
 
 **Scope every run to the spec for the component you changed, on chromium.** A full-suite or
 all-browser run takes a long time and is flaky outside CI — let CI own the full matrix.
@@ -29,6 +30,23 @@ don't "correct" it.
 
 Playwright's `webServer` builds and serves Storybook automatically, so don't start it by hand.
 The first run is slow because it runs a full Storybook build.
+
+## Dist suite
+
+`yarn test:e2e:dist` runs the same specs, models and `URL_MAP` as the default suite, but the
+Storybook harness renders the built library (`dist/es`) instead of Vite-compiled source. The story
+layer imports `@adyen/adyen-web`, which resolves through the package exports map.
+
+- A cold run builds the library first (`yarn build`), so it is slow; the default suite stays the
+  local dev loop. `reuseExistingServer` keeps reruns cheap within one session, and
+  `SKIP_LIB_BUILD=1` skips the library build when only test code changed.
+- `dist.playwright.config.ts` inherits everything from `playwright.config.ts` except the
+  `webServer` command, which uses `build:storybook:e2e:dist` (`STORYBOOK_TARGET=dist` in
+  `packages/lib/.storybook/main.ts`).
+- Story migration is complete: stories import `@adyen/adyen-web`, so they can run against either
+  target.
+- CI runs the dist suite on every PR and in the merge queue (`e2e-dist-tests.yml`, chromium,
+  latest API version). It is advisory on PRs and blocking in the merge queue.
 
 ## Boundaries
 

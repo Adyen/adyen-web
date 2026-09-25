@@ -2,7 +2,7 @@ import { h } from 'preact';
 import { MetaConfiguration, StoryConfiguration } from '../../../storybook/types';
 import { OpenInvoiceConfiguration } from '../types';
 import { ComponentContainer } from '../../../storybook/components/ComponentContainer';
-import RatePayDirectDebit from './RatePayDirectDebit';
+import { RatePayDirectDebit } from '@adyen/adyen-web';
 import { Checkout } from '../../../storybook/components/Checkout';
 
 type RatePayDirectDebitStory = StoryConfiguration<OpenInvoiceConfiguration>;
