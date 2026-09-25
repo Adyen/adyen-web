@@ -3,7 +3,7 @@ import { MetaConfiguration, StoryConfiguration } from '../../../storybook/types'
 import { ComponentContainer } from '../../../storybook/components/ComponentContainer';
 import { IssuerListConfiguration } from '../helpers/IssuerListContainer/types';
 import { Checkout } from '../../../storybook/components/Checkout';
-import { OnlineBankingFI } from '../..';
+import { OnlineBankingFI } from '@adyen/adyen-web';
 
 type OnlineBankingFIStory = StoryConfiguration<IssuerListConfiguration>;
 

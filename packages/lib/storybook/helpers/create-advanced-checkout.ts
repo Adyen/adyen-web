@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
-import { AdyenCheckout } from '../../src/core/AdyenCheckout';
+import { AdyenCheckout } from '@adyen/adyen-web';
 import { cancelOrder, checkBalance, createOrder, getPaymentMethods, makeDetailsCall, makePayment } from './checkout-api-calls';
 import { handleError, handleFinalState } from './checkout-handlers';
 import getCurrency from '../utils/get-currency';
-import Checkout from '../../src/core/core';
+import type Checkout from '../../src/core/core';
 import { STORYBOOK_ENVIRONMENT_URLS } from '../config/commonConfig';
 
 import type { PaymentMethodsResponse } from '../../src/types';

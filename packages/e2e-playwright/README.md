@@ -18,6 +18,25 @@ yarn test:headed
 yarn test:ui
 ```
 
+## Dist Suite
+
+`yarn test:e2e:dist` runs the same specs, Page Object Models and story URLs as the default suite,
+but against a Storybook build that renders the **built library** (`dist/es`) instead of
+Vite-compiled source. Stories import `@adyen/adyen-web`, so the run exercises the bundle merchants install and catches build-only regressions.
+
+```bash
+# From repository root
+yarn test:e2e:dist tests/e2e/card/card.spec.ts --project=chromium   # one component, like the default suite
+SKIP_LIB_BUILD=1 yarn test:e2e:dist ...                            # library already built, only test code changed
+```
+
+The `webServer` in `dist.playwright.config.ts` builds the library, then the dist Storybook build
+(`build:storybook:e2e:dist`, selected by `STORYBOOK_TARGET=dist`), then serves it on port 3020.
+Only one Storybook target can run at a time. A cold run is slow because of the library build.
+
+CI runs this suite on every PR and in the merge queue using Chromium and the latest API version.
+It is advisory on PRs and blocking in the merge queue.
+
 ## Directory Structure
 
 ```
@@ -44,6 +63,7 @@ e2e-playwright/
 │       ├── assertions.ts  # Custom assertions (toHaveScreenshot)
 │       └── constants.ts   # Test constants and tags
 ├── playwright.config.ts           # Main E2E config
+├── dist.playwright.config.ts      # Same suite against the built library (dist/es)
 ├── automated-visual.playwright.config.ts  # Automated visual tests config
 └── automated-ally.playwright.config.ts    # Accessibility tests config
 ```
@@ -129,5 +149,6 @@ git push                                    # Push to trigger CI
 | File                                    | Purpose                                       |
 | --------------------------------------- | --------------------------------------------- |
 | `playwright.config.ts`                  | Main E2E tests (excludes `automated/` folder) |
+| `dist.playwright.config.ts`             | Same suite against the built library (dist)   |
 | `automated-visual.playwright.config.ts` | Automated visual regression tests             |
 | `automated-ally.playwright.config.ts`   | Automated accessibility tests                 |

@@ -5,7 +5,7 @@ import { handleSubmit } from '../../../../storybook/helpers/checkout-handlers';
 import { patchPaypalOrder } from '../../../../storybook/helpers/checkout-api-calls';
 import { createAdvancedFlowCheckout } from '../../../../storybook/helpers/create-advanced-checkout';
 import { getDeliveryMethods, getSelectedDeliveryMethodAmount } from './paypal-stories-utils';
-import { PayPal } from '../../..';
+import { PayPal } from '@adyen/adyen-web';
 
 const meta: Meta = {
     title: 'Components/Wallets/Paypal',

@@ -4,7 +4,7 @@ import { MetaConfiguration, PaymentMethodStoryProps, StoryConfiguration } from '
 import { PixConfiguration } from './types';
 import { ComponentContainer } from '../../../storybook/components/ComponentContainer';
 import { Checkout } from '../../../storybook/components/Checkout';
-import Pix from './Pix';
+import { Pix } from '@adyen/adyen-web';
 
 type PixStory = StoryConfiguration<PixConfiguration>;
 

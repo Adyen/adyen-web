@@ -2,10 +2,7 @@ import { h } from 'preact';
 import { useState } from 'preact/hooks';
 import { GlobalStoryProps } from '../../../../storybook/types';
 
-import Dropin from '../../Dropin';
-import Card from '../../Card';
-import PayPal from '../../PayPal';
-import Fastlane from '..';
+import { Dropin, Card, PayPal, Fastlane } from '@adyen/adyen-web';
 
 import { Checkout } from '../../../../storybook/components/Checkout';
 import { ComponentContainer } from '../../../../storybook/components/ComponentContainer';

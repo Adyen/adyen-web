@@ -1,10 +1,9 @@
 import { h, Fragment } from 'preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
-import Card from '../../Card';
+import { AdyenCheckout, Card } from '@adyen/adyen-web';
 import getCurrency from '../../../../../storybook/utils/get-currency';
 import { makeDetailsCall, makePayment } from '../../../../../storybook/helpers/checkout-api-calls';
 import { handleFinalState } from '../../../../../storybook/helpers/checkout-handlers';
-import { AdyenCheckout } from '../../../../core/AdyenCheckout';
 import { PaymentMethodStoryProps } from '../../../../../storybook/types';
 import { CardConfiguration } from '../../types';
 import './card3DS2CreateFromAction.scss';

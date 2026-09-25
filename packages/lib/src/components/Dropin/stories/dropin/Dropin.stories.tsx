@@ -1,11 +1,10 @@
 import { h, Fragment } from 'preact';
-import { AdyenCheckout, components, Donation } from '../../../..';
+import { AdyenCheckout, components, Donation, Dropin as DropinComponent } from '@adyen/adyen-web';
 import { MetaConfiguration, PaymentMethodStoryProps, StoryConfiguration } from '../../../../../storybook/types';
 import { ComponentContainer } from '../../../../../storybook/components/ComponentContainer';
 import { DropinConfiguration } from '../../types';
 import { Checkout } from '../../../../../storybook/components/Checkout';
 import { getComponentConfigFromUrl } from '../../../../../storybook/utils/get-configuration-from-url';
-import DropinComponent from '../../Dropin';
 import type { NewableComponent } from '../../../../core/core.registry';
 import './customization.scss';
 

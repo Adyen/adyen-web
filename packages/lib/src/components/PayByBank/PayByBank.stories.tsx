@@ -3,7 +3,7 @@ import { MetaConfiguration, PaymentMethodStoryProps, StoryConfiguration } from '
 import { IssuerListConfiguration } from '../types';
 import { ComponentContainer } from '../../../storybook/components/ComponentContainer';
 import { Checkout } from '../../../storybook/components/Checkout';
-import PayByBank from './PayByBank';
+import { PayByBank } from '@adyen/adyen-web';
 
 type PayByBankStory = StoryConfiguration<IssuerListConfiguration>;
 

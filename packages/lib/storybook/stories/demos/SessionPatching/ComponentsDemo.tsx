@@ -3,12 +3,10 @@ import { createSession, patchCheckoutSession } from '../../../helpers/checkout-a
 import { RETURN_URL, STORYBOOK_ENVIRONMENT_URLS } from '../../../config/commonConfig';
 import getCurrency from '../../../utils/get-currency';
 import { useEffect, useRef, useState } from 'preact/hooks';
-import { AdyenCheckout, Core } from '../../../../src';
+import { AdyenCheckout, Card as CardComponent, GooglePay as GooglePayComponent, Ach as AchComponent } from '@adyen/adyen-web';
+import type { Core } from '../../../../src';
 import { AmountUpdate } from './AmountUpdate';
 
-import CardComponent from '../../../../src/components/Card/Card';
-import GooglePayComponent from '../../../../src/components/GooglePay/GooglePay';
-import AchComponent from '../../../../src/components/Ach/Ach';
 import type { CheckoutSession, PaymentAmount } from '../../../../src/types';
 
 const ComponentsDemo = ({ amount, countryCode, shopperLocale }) => {
