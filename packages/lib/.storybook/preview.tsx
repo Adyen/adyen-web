@@ -1,5 +1,7 @@
 import './main.css';
+import { h, Fragment } from 'preact';
 import { Preview } from '@storybook/preact-vite';
+import { SRPanelDebugger } from '../storybook/components/SRPanelDebugger';
 import { DEFAULT_COUNTRY_CODE, DEFAULT_SHOPPER_LOCALE, DEFAULT_AMOUNT_VALUE, SHOPPER_LOCALES } from '../storybook/config/commonConfig';
 import { setupWorker } from 'msw/browser';
 import { mswLoader } from 'msw-storybook-addon/csf3';
@@ -29,6 +31,31 @@ if (!disableMsw) {
 }
 
 const preview: Preview = {
+    globalTypes: {
+        srPanelDebugger: {
+            description: 'Log every screen reader panel mutation and setMessages call on screen',
+            toolbar: {
+                title: 'SR panel debugger',
+                icon: 'accessibility',
+                items: [
+                    { value: false, title: 'SR debugger: off' },
+                    { value: true, title: 'SR debugger: on' }
+                ],
+                dynamicTitle: true
+            }
+        }
+    },
+    initialGlobals: {
+        srPanelDebugger: false
+    },
+    decorators: [
+        (Story, context) => (
+            <Fragment>
+                <Story />
+                {context.globals.srPanelDebugger && <SRPanelDebugger />}
+            </Fragment>
+        )
+    ],
     argTypes: {
         useSessions: {
             control: 'boolean'
