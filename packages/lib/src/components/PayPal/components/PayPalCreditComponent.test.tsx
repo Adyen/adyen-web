@@ -102,7 +102,7 @@ describe('PayPalCreditComponent', () => {
 
         await screen.findByTestId('paypal-credit-button');
 
-        await setStatusThroughRef(props, 'processing');
+        await setStatusThroughRef(props, 'processing' as UIElementStatus);
 
         expect(screen.getByTestId('paypal-processing-spinner')).toBeInTheDocument();
         expect(screen.queryByTestId('paypal-credit-button')).not.toBeInTheDocument();
@@ -114,7 +114,7 @@ describe('PayPalCreditComponent', () => {
 
         await screen.findByTestId('paypal-credit-button');
 
-        await setStatusThroughRef(props, 'processing');
+        await setStatusThroughRef(props, 'processing' as UIElementStatus);
 
         expect(screen.getByTestId('paypal-processing-spinner')).toHaveAttribute('data-with-review-page', 'false');
     });

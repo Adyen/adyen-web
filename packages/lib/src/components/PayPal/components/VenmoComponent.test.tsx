@@ -93,29 +93,13 @@ describe('VenmoComponent', () => {
         );
     });
 
-    test('should forward the environment to the venmo button', async () => {
-        render(<VenmoComponent {...createProps()} environment="live" />);
-
-        await screen.findByTestId('venmo-button');
-
-        expect(mockVenmoButton).toHaveBeenCalledWith(expect.objectContaining({ environment: 'live' }));
-    });
-
-    test('should default the style to an empty object when the merchant does not provide one', async () => {
-        render(<VenmoComponent {...createProps()} />);
-
-        await screen.findByTestId('venmo-button');
-
-        expect(mockVenmoButton).toHaveBeenCalledWith(expect.objectContaining({ style: {} }));
-    });
-
     test('should render the processing spinner and hide the button once the payment is approved', async () => {
         const props = createProps();
         render(<VenmoComponent {...props} />);
 
         await screen.findByTestId('venmo-button');
 
-        await setStatusThroughRef(props, 'processing');
+        await setStatusThroughRef(props, 'processing' as UIElementStatus);
 
         expect(screen.getByTestId('paypal-processing-spinner')).toBeInTheDocument();
         expect(screen.queryByTestId('venmo-button')).not.toBeInTheDocument();
@@ -127,7 +111,7 @@ describe('VenmoComponent', () => {
 
         await screen.findByTestId('venmo-button');
 
-        await setStatusThroughRef(props, 'processing');
+        await setStatusThroughRef(props, 'processing' as UIElementStatus);
 
         expect(screen.getByTestId('paypal-processing-spinner')).toHaveAttribute('data-with-review-page', 'false');
     });

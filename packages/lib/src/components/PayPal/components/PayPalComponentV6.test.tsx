@@ -4,7 +4,7 @@ import { mock } from 'jest-mock-extended';
 import { PayPalComponentV6 } from './PayPalComponentV6';
 import type { PayPalComponentV6Props } from './types';
 import type { PayPalService } from '../services/PayPalService';
-import type { ComponentMethodsRef } from '../../types';
+import type { ComponentMethodsRef, UIElementStatus } from '../../types';
 
 jest.mock('./PayPalButton', () => ({ PayPalButton: () => <div data-testid="paypal-button" /> }));
 jest.mock('./PayPalPayLaterButton', () => ({ PayPalPayLaterButton: () => <div data-testid="paypal-pay-later-button" /> }));
@@ -170,7 +170,7 @@ describe('PayPalComponentV6', () => {
         expect(await screen.findByTestId('paypal-component')).toBeInTheDocument();
 
         void act(() => {
-            componentRef?.setStatus?.('processing');
+            componentRef?.setStatus?.('processing' as UIElementStatus);
         });
 
         expect(screen.getByTestId('paypal-processing-spinner')).toBeInTheDocument();
@@ -189,7 +189,7 @@ describe('PayPalComponentV6', () => {
         expect(await screen.findByTestId('paypal-component')).toBeInTheDocument();
 
         void act(() => {
-            componentRef?.setStatus?.('processing');
+            componentRef?.setStatus?.('processing' as UIElementStatus);
         });
 
         expect(screen.getByTestId('paypal-processing-spinner')).toHaveAttribute('data-with-review-page', 'false');

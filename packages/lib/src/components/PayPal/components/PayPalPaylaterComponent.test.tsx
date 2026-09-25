@@ -133,7 +133,7 @@ describe('PayPalPaylaterComponent', () => {
 
         await screen.findByTestId('paypal-pay-later-button');
 
-        await setStatusThroughRef(props, 'processing');
+        await setStatusThroughRef(props, 'processing' as UIElementStatus);
 
         expect(screen.getByTestId('paypal-processing-spinner')).toBeInTheDocument();
         expect(screen.queryByTestId('paypal-messaging')).not.toBeInTheDocument();
@@ -146,7 +146,7 @@ describe('PayPalPaylaterComponent', () => {
 
         await screen.findByTestId('paypal-pay-later-button');
 
-        await setStatusThroughRef(props, 'processing');
+        await setStatusThroughRef(props, 'processing' as UIElementStatus);
 
         expect(screen.getByTestId('paypal-processing-spinner')).toHaveAttribute('data-with-review-page', 'false');
     });

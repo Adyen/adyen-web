@@ -11,7 +11,7 @@ import type {
     PayPalV6OnShippingOptionsChangeData
 } from '../paypal-js-types';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
-import { ComponentMethodsRef } from '../../types';
+import { ComponentMethodsRef, UIElementStatus } from '../../types';
 import { PayPalService } from '../services/PayPalService';
 
 export interface PayPalComponentProps extends Omit<PayPalConfiguration, 'onError' | 'onSubmit'> {
@@ -92,3 +92,8 @@ export type PayPalVenmoButtonStyle = {
     type?: PayPalButtonType;
     class?: VenmoButtonClass;
 };
+
+/**
+ * @internal
+ */
+export type PayPalUIElementStatus = UIElementStatus | 'pending' | 'processing';
