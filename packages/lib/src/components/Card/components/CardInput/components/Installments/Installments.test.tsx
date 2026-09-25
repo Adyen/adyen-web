@@ -165,6 +165,28 @@ describe('Installments', () => {
 
             expect(await screen.findByRole('combobox')).toHaveTextContent('1x $300.00');
         });
+
+        test('should default to one time if the selected payment option is not supported', async () => {
+            const onChange = jest.fn();
+            const installmentOptions: InstallmentOptions = {
+                visa: { values: [2], plans: ['regular', 'revolving'] },
+                card: { plans: ['bonus'] }
+            };
+            const { rerender } = renderInstallments({ installmentsProps: { installmentOptions, brand: 'visa', onChange } });
+
+            await user.click(screen.getByRole('radio', { name: 'Installments payment' }));
+
+            rerender(
+                <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+                    <AmountProvider amount={DEFAULT_AMOUNT} providerRef={createRef()}>
+                        <Installments brand="card" installmentOptions={installmentOptions} onChange={onChange} />
+                    </AmountProvider>
+                </CoreProvider>
+            );
+
+            expect(screen.getByRole('radio', { name: 'One time payment' })).toBeChecked();
+            expect(onChange).toHaveBeenLastCalledWith({ value: 1 });
+        });
     });
 
     describe('Revolving plans UI', () => {
@@ -229,6 +251,31 @@ describe('Installments', () => {
             expect(screen.getByRole('radio', { name: 'Installments payment' })).toBeVisible();
             expect(screen.getByRole('radio', { name: 'Revolving payment' })).toBeVisible();
             expect(screen.getByRole('radio', { name: 'Bonus payment' })).toBeVisible();
+        });
+    });
+
+    describe('Count-less plans', () => {
+        test('should render bonus and revolving without installment values', async () => {
+            const onChange = jest.fn();
+            const installmentOptions: InstallmentOptions = {
+                card: {
+                    plans: ['bonus', 'revolving']
+                }
+            };
+
+            renderInstallments({ installmentsProps: { installmentOptions, onChange } });
+
+            expect(screen.getByRole('radio', { name: 'One time payment' })).toBeVisible();
+            expect(screen.getByRole('radio', { name: 'Bonus payment' })).toBeVisible();
+            expect(screen.getByRole('radio', { name: 'Revolving payment' })).toBeVisible();
+            expect(screen.queryByRole('radio', { name: 'Installments payment' })).not.toBeInTheDocument();
+            expect(screen.queryByRole('combobox')).not.toBeInTheDocument();
+
+            await user.click(screen.getByRole('radio', { name: 'Bonus payment' }));
+            expect(onChange).toHaveBeenLastCalledWith({ value: 1, plan: 'bonus' });
+
+            await user.click(screen.getByRole('radio', { name: 'Revolving payment' }));
+            expect(onChange).toHaveBeenLastCalledWith({ value: 1, plan: 'revolving' });
         });
     });
 });
