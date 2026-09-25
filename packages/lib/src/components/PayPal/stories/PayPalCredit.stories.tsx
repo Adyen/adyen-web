@@ -23,12 +23,15 @@ export const PayPalCredit: Story = {
     args: {
         countryCode: 'US',
         sessionData: {
-            splitPayPalButtons: true
+            splitPayPalButtons: true,
+            recurringProcessingModel: 'CardOnFile'
         },
         paymentMethodsOptions: {
-            splitPayPalButtons: true
+            splitPayPalButtons: true,
+            recurringProcessingModel: 'CardOnFile'
         },
         componentConfiguration: {
+            vault: true,
             onAuthorized: (data, actions) => {
                 console.log('PayPal credit onAuthorized data', { data });
                 actions.resolve();
