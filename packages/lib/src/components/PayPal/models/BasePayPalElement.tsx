@@ -1,0 +1,418 @@
+import { h } from 'preact';
+import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
+import UIElement from '../../internal/UIElement/UIElement';
+import { TxVariants } from '../../tx-variants';
+import { ERRORS } from '../constants';
+
+import type { AdditionalDetailsData, ICore } from '../../../core/types';
+import type { PaymentAction, PaymentResponseData } from '../../../types/global-types';
+import type {
+    PayPalComponents,
+    PayPalV6OnApproveData,
+    PayPalV6OnShippingAddressChangeData,
+    PayPalV6OnShippingOptionsChangeData
+} from '../paypal-js-types';
+import type { BasePayPalConfiguration, SupportedPayPalFundingSources } from '../types';
+import type { BaseElementState } from '../../internal/BaseElement/types';
+import type { PayPalServiceRefreshConfig } from '../services/PayPalService';
+
+import { AnalyticsInfoEvent, InfoEventType } from '../../../core/Analytics/events/AnalyticsInfoEvent';
+import CancelError from '../../../core/Errors/CancelError';
+import { sanitizeResponse, verifyPaymentDidNotFail } from '../../internal/UIElement/utils';
+import { PayPalSdkLoader } from '../services/PayPalSdkLoader';
+import { PayPalService } from '../services/PayPalService';
+import requestPayPalOrderDetails from '../services/request-paypal-order-details';
+import { isPayPalServiceConfigEqual } from '../utils/is-paypal-service-config-equal';
+import { SUPPORTED_EXPRESS_PRESENTATION_MODE_OPTIONS } from '../config';
+import collectBrowserInfo from '../../../utils/browserInfo';
+import '../Paypal.scss';
+
+export class BasePayPalElement<TProps extends BasePayPalConfiguration = BasePayPalConfiguration> extends UIElement<TProps> {
+    public static readonly type: string = TxVariants.paypal;
+    public static readonly subtype = 'sdk';
+
+    protected readonly fundingSource: SupportedPayPalFundingSources = 'paypal';
+
+    public paymentData: string | null = null;
+
+    private resolve: ((value: string) => void) | null = null;
+    private reject: ((error?: Error) => void) | null = null;
+
+    protected paypalService?: PayPalService;
+
+    constructor(checkout: ICore, props?: TProps) {
+        super(checkout, props);
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleOnShippingAddressChange = this.handleOnShippingAddressChange.bind(this);
+        this.handleOnShippingOptionsChange = this.handleOnShippingOptionsChange.bind(this);
+        this.handleOnApprove = this.handleOnApprove.bind(this);
+        this.initialize = this.initialize.bind(this);
+
+        this.validateExpressConfiguration();
+
+        this.initialize();
+    }
+
+    /**
+     * The express flow relies on the shipping callbacks and on a presentation mode that keeps the shopper on the
+     * merchant page. Therefore any combination that PayPal does not support in express is rejected upfront.
+     *
+     * @throws AdyenCheckoutError - IMPLEMENTATION_ERROR when the express configuration is not supported
+     */
+    private validateExpressConfiguration(): void {
+        const { isExpress, onShippingAddressChange, onShippingOptionsChange, presentationModeOptions } = this.props;
+
+        if (!isExpress && (onShippingAddressChange || onShippingOptionsChange)) {
+            throw new AdyenCheckoutError(
+                'IMPLEMENTATION_ERROR',
+                `${this.displayName} - You must set "isExpress" flag to "true" in order to use "onShippingAddressChange" and/or "onShippingOptionsChange" callbacks`
+            );
+        }
+
+        if (
+            isExpress &&
+            presentationModeOptions?.presentationMode &&
+            !SUPPORTED_EXPRESS_PRESENTATION_MODE_OPTIONS.includes(presentationModeOptions.presentationMode)
+        ) {
+            throw new AdyenCheckoutError(
+                'IMPLEMENTATION_ERROR',
+                `${this.displayName} - Unsupported presentation mode: ${presentationModeOptions.presentationMode} for express checkout`
+            );
+        }
+    }
+
+    private initialize() {
+        const sdkLoader = new PayPalSdkLoader({
+            analytics: this.analytics,
+            environment: this.props.environment,
+            nonce: this.props?.nonce
+        });
+
+        this.paypalService = new PayPalService({ sdkLoader, ...this.paypalServiceConfig });
+
+        this.onPayPalServiceReady(this.paypalService.initialize());
+    }
+
+    /**
+     * Updates the props, refreshes the PayPal SDK instance and the eligible payment methods if needed, and then
+     * re-mounts the element. The refresh is needed because both the SDK instance and the eligible payment methods
+     * are derived from props that the merchant can update, like the amount, the country code or the locale.
+     *
+     * @param props - props to update
+     * @returns this - the element instance
+     */
+    public override update(props: Partial<TProps>): this {
+        const previousServiceConfig = this.paypalServiceConfig;
+
+        this.props = this.formatProps({ ...this.props, ...props });
+        this.state = {} as BaseElementState;
+
+        this.refreshPayPalService(previousServiceConfig);
+
+        return this.unmount().mount(this._node);
+    }
+
+    /**
+     * Re-creates the PayPal SDK instance and the eligible payment methods, but only if the updated props changed
+     * the configuration they are derived from. Any other prop change just re-renders the element.
+     *
+     * @param previousServiceConfig - The service configuration before the props were updated
+     */
+    private refreshPayPalService(previousServiceConfig: PayPalServiceRefreshConfig): void {
+        if (!this.paypalService) return;
+
+        const serviceConfig = this.paypalServiceConfig;
+
+        if (isPayPalServiceConfigEqual(previousServiceConfig, serviceConfig)) return;
+
+        this.onPayPalServiceReady(this.paypalService.refresh(serviceConfig));
+    }
+
+    /**
+     * Configuration used to create and to refresh the PayPal service. It is kept in a single place to guarantee
+     * that the service is always created and refreshed with the same set of props.
+     */
+    protected get paypalServiceConfig(): PayPalServiceRefreshConfig {
+        return {
+            loadingContext: this.props.loadingContext ?? '',
+            clientKey: this.props.clientKey ?? '',
+            merchantId: this.props.configuration?.merchantId ?? '',
+            countryCode: this.props.countryCode ?? '',
+            amount: this.props.amount,
+            vault: Boolean(this.props?.vault),
+            locale: this.props?.locale,
+            pageType: this.props?.pageType,
+            environment: this.props.environment,
+            components: this.paypalComponents
+        };
+    }
+
+    private onPayPalServiceReady(sdkReadyPromise: Promise<void>): void {
+        sdkReadyPromise
+            .then(() => {
+                if (this.props.onCreatePayPalMessages && this.paypalService?.getInstance()?.createPayPalMessages) {
+                    this.props.onCreatePayPalMessages(this.paypalService.getInstance().createPayPalMessages);
+                }
+            })
+            .catch(error => {
+                this.handleError(
+                    error instanceof AdyenCheckoutError
+                        ? error
+                        : new AdyenCheckoutError('ERROR', `Something went wrong while initializing ${this.displayName}`, { cause: error })
+                );
+            });
+    }
+
+    protected get paypalComponents(): PayPalComponents {
+        return ['paypal-payments'];
+    }
+
+    public override async isAvailable(): Promise<void> {
+        if (!this.paypalService) {
+            throw new AdyenCheckoutError('ERROR', `${this.displayName} is not available`);
+        }
+
+        await this.paypalService.isSdkLoaded();
+
+        if (!this.paypalService.getEligiblePaymentMethods().isEligible(this.fundingSource)) {
+            throw new AdyenCheckoutError('ERROR', `${this.displayName} is not available`);
+        }
+    }
+
+    protected override beforeRender(configSetByMerchant?: TProps) {
+        const event = new AnalyticsInfoEvent({
+            type: InfoEventType.rendered,
+            component: this.type,
+            configData: { ...configSetByMerchant, showPayButton: this.props.showPayButton },
+            ...(configSetByMerchant?.isExpress && { isExpress: configSetByMerchant.isExpress }),
+            ...(configSetByMerchant?.expressPage && { expressPage: configSetByMerchant.expressPage })
+        });
+
+        this.analytics.sendAnalytics(event);
+    }
+
+    public submit = () => {
+        this.handleError(new AdyenCheckoutError('IMPLEMENTATION_ERROR', ERRORS.SUBMIT_NOT_SUPPORTED));
+    };
+
+    /**
+     * Updates the paymentData value. It must be used in the PayPal Express flow, when patching the amount
+     * @param paymentData - Payment data value
+     */
+    public updatePaymentData(paymentData: string): void {
+        if (!paymentData) console.warn(`${this.displayName} - Updating payment data with an invalid value`);
+        this.paymentData = paymentData;
+    }
+
+    protected override get sdkDataPaymentMethodConfiguration() {
+        return {
+            supportsPayPalV6: true
+        };
+    }
+
+    protected formatData() {
+        const { isExpress, vault, amount } = this.props;
+        const isZeroAuth = amount?.value === 0;
+
+        return {
+            paymentMethod: {
+                type: this.type,
+                subtype: isExpress ? 'express' : BasePayPalElement.subtype
+            },
+            browserInfo: this.browserInfo,
+            ...(vault || isZeroAuth ? { storePaymentMethod: true } : {})
+        };
+    }
+
+    protected get browserInfo() {
+        return collectBrowserInfo();
+    }
+
+    public handleAction = (action: PaymentAction) => {
+        return this.updateWithAction(action);
+    };
+
+    public updateWithAction = (action: PaymentAction) => {
+        if (action.paymentMethodType !== this.type) throw new Error('Invalid Action');
+
+        if (action.paymentData) {
+            this.paymentData = action.paymentData;
+        }
+
+        if (action.sdkData?.token) {
+            this.onActionHandled({ componentType: this.type, actionDescription: 'sdk-loaded', originalAction: action });
+            this.handleResolve(action.sdkData.token);
+        } else {
+            this.handleReject(ERRORS.NO_TOKEN_PROVIDED);
+        }
+
+        return null;
+    };
+
+    /**
+     * Dropin Validation
+     *
+     * @remarks
+     * Paypal does not require any specific Dropin validation
+     */
+    get isValid() {
+        return true;
+    }
+
+    /**
+     * Handles the PayPal SDK v6 'onApprove' event. The shape of the data depends on which session type was started:
+     * a one-time payment session returns an 'orderId', whereas a save payment session (zero-auth) returns a
+     * 'vaultSetupToken'.
+     *
+     * @param data - Approve data from the PayPal SDK
+     */
+    protected handleOnApprove(data: PayPalV6OnApproveData): Promise<void> {
+        const { onAuthorized } = this.props;
+
+        let state: AdditionalDetailsData | undefined;
+
+        // 'orderId' is only present when the shopper approved a one-time payment session, meaning an actual
+        // PayPal order was created. The SDK v6 keys are remapped to the casing expected by the /payments/details API.
+        if ('orderId' in data) {
+            // @ts-expect-error - fundingSource is not in the type but is present in the data
+            const { orderId, payerId, fundingSource } = data;
+            state = {
+                data: {
+                    details: {
+                        orderID: orderId,
+                        payerID: payerId,
+                        paymentSource: fundingSource
+                    },
+                    paymentData: this.paymentData ?? undefined
+                }
+            };
+        }
+
+        // 'vaultSetupToken' is only present when the shopper approved a save payment session (zero-auth
+        // tokenization). No PayPal order exists in this flow, so the vault token is sent instead of an order id.
+        if ('vaultSetupToken' in data) {
+            // @ts-expect-error - fundingSource is not in the type but is present in the data
+            const { vaultSetupToken, payerId, fundingSource } = data;
+            state = {
+                data: {
+                    details: {
+                        vaultToken: vaultSetupToken,
+                        payerID: payerId,
+                        paymentSource: fundingSource
+                    },
+                    paymentData: this.paymentData ?? undefined
+                }
+            };
+        }
+
+        if (!state) {
+            this.handleError(new AdyenCheckoutError('ERROR', 'Missing `orderId` or `vaultSetupToken` in PayPal approval data'));
+            return Promise.resolve();
+        }
+
+        // The order details can only be fetched for a one-time payment session, since the save payment session
+        // does not create a PayPal order. Therefore 'onAuthorized' is skipped in the zero-auth flow.
+        if (!onAuthorized || !('orderId' in data)) {
+            this.handleAdditionalDetails(state);
+            return Promise.resolve();
+        }
+
+        return requestPayPalOrderDetails(this.props.loadingContext ?? '', {
+            clientKey: this.props.clientKey ?? '',
+            merchantId: this.props.configuration?.merchantId ?? '',
+            orderId: data.orderId
+        })
+            .then(res => {
+                this.setState({
+                    authorizedEvent: res.payPalOrder,
+                    ...(res.billingAddress && { billingAddress: res.billingAddress }),
+                    ...(res.deliveryAddress && { deliveryAddress: res.deliveryAddress }),
+                    ...(res.shopperName && { shopperName: res.shopperName })
+                });
+
+                return new Promise<void>((resolve, reject) =>
+                    onAuthorized(
+                        {
+                            authorizedEvent: res.payPalOrder,
+                            ...(res.billingAddress && { billingAddress: res.billingAddress }),
+                            ...(res.deliveryAddress && { deliveryAddress: res.deliveryAddress }),
+                            ...(res.shopperName && { shopperName: res.shopperName })
+                        },
+                        { resolve, reject }
+                    )
+                );
+            })
+            .then(() => this.handleAdditionalDetails(state))
+            .catch(error =>
+                this.handleError(
+                    new AdyenCheckoutError('ERROR', `Something went wrong with finalizing the ${this.displayName} order`, { cause: error })
+                )
+            );
+    }
+
+    handleResolve(token: string) {
+        if (!this.resolve) return this.handleError(new AdyenCheckoutError('ERROR', ERRORS.WRONG_INSTANCE));
+        this.resolve(token);
+    }
+
+    handleReject(errorMessage: string) {
+        if (!this.reject) return this.handleError(new AdyenCheckoutError('ERROR', ERRORS.WRONG_INSTANCE));
+        this.reject(new Error(errorMessage));
+    }
+
+    protected handleSubmit(): Promise<string> {
+        return new Promise((resolve, reject) => {
+            this.resolve = resolve;
+            this.reject = reject;
+
+            this.makePaymentsCall()
+                .then(sanitizeResponse)
+                .then(verifyPaymentDidNotFail)
+                .then(this.handleResponse)
+                .catch((e: PaymentResponseData | Error) => {
+                    if (e instanceof CancelError) {
+                        this.setElementStatus('ready');
+                        return;
+                    }
+                    this.handleFailedResult(e as PaymentResponseData);
+                    const errorDetail = e instanceof Error ? e.message : JSON.stringify(e);
+                    const errorMessage = e ? `: ${errorDetail}` : '';
+                    this.handleReject(`${ERRORS.PAYMENT_FAILED}${errorMessage}`);
+                });
+        });
+    }
+
+    /**
+     * If the merchant provides the 'onShippingAddressChange' callback, then this method is used as a wrapper to it, in order
+     * to expose to the merchant the 'component' instance. The merchant needs the 'component' in order to manipulate the
+     * paymentData
+     *
+     * @param data - The shipping address change data
+     */
+    protected handleOnShippingAddressChange(data: PayPalV6OnShippingAddressChangeData): Promise<void> {
+        const { onShippingAddressChange } = this.props;
+
+        if (!onShippingAddressChange) return Promise.resolve();
+
+        return onShippingAddressChange(data, this);
+    }
+
+    /**
+     * If the merchant provides the 'onShippingOptionsChange' callback, then this method is used as a wrapper to it, in order
+     * to expose to the merchant the 'component' instance. The merchant needs the 'component' in order to manipulate the
+     * paymentData
+     *
+     * @param data - The shipping options change data
+     */
+    protected handleOnShippingOptionsChange(data: PayPalV6OnShippingOptionsChangeData): Promise<void> {
+        const { onShippingOptionsChange } = this.props;
+
+        if (!onShippingOptionsChange) return Promise.resolve();
+
+        return onShippingOptionsChange(data, this);
+    }
+
+    protected override componentToRender(): h.JSX.Element | null {
+        throw new Error('Method not implemented.');
+    }
+}

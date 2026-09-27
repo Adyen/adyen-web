@@ -1,33 +1,35 @@
 import { useCallback, useEffect, useState } from 'preact/hooks';
-import { PayPalOneTimePaymentSession } from '../paypal-js-types';
-import { PayPalPresentationModeOptions } from '../types';
-import { DEFAULT_PAYMENT_SESSION_OPTIONS } from '../config';
+import { PayPalOneTimePaymentSession, PayPalPresentationModeOptions } from '../paypal-js-types';
+import { useStartPayPalSession } from './useStartPayPalSession';
 
 export const usePayPalOneTimeSession = ({
     createSession,
-    createOrder,
+    onSubmit,
+    onError,
     presentationModeOptions
 }: {
     presentationModeOptions?: PayPalPresentationModeOptions;
     createSession: () => PayPalOneTimePaymentSession | undefined;
-    createOrder: () => Promise<{
-        orderId: string;
-    }>;
+    onSubmit: () => Promise<string>;
+    onError: (error: Error) => void;
 }) => {
     const [paymentSession, setPaymentSession] = useState<PayPalOneTimePaymentSession | undefined>();
+
+    const startSession = useStartPayPalSession({ presentationModeOptions, onError });
 
     useEffect(() => {
         setPaymentSession(createSession());
     }, [createSession]);
 
+    const createOrder = useCallback(async () => ({ orderId: await onSubmit() }), [onSubmit]);
+
     const onClick = useCallback(async () => {
         if (!paymentSession) return;
 
-        await paymentSession.start(
-            presentationModeOptions?.presentationMode ? presentationModeOptions : DEFAULT_PAYMENT_SESSION_OPTIONS,
-            createOrder()
-        );
-    }, [paymentSession, createOrder, presentationModeOptions]);
+        const createOrderPromise = createOrder();
+
+        await startSession(sessionOptions => paymentSession.start(sessionOptions, createOrderPromise));
+    }, [paymentSession, createOrder, startSession]);
 
     return {
         onClick

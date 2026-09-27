@@ -3,8 +3,6 @@ import { useEffect, useMemo, useState } from 'preact/hooks';
 
 import type { PayPalComponentV6Props } from './types';
 import { usePayPalSessionOptions } from '../hooks/usePayPalSessionOptions';
-import { useCreateVaultSetupToken } from '../hooks/useCreateVaultSetupToken';
-import { useCreateOrder } from '../hooks/useCreateOrder';
 import { usePayPalOneTimeSession } from '../hooks/usePayPalOneTimeSession';
 import { usePayPalButtonEligibility } from '../hooks/usePayPalButtonEligibility';
 import { usePayPalSaveSession } from '../hooks/usePayPalSaveSession';
@@ -39,17 +37,15 @@ export const PayPalCreditButton = ({
         vault
     });
 
-    const createOrder = useCreateOrder(onSubmit);
-    const createVaultSetupToken = useCreateVaultSetupToken(onSubmit);
-
     const { onClick: oneTimePaymentClick } = usePayPalOneTimeSession(
         useMemo(
             () => ({
                 presentationModeOptions,
                 createSession: () => payPalSDKInstance.createPayPalCreditOneTimePaymentSession(oneTimeSessionOptions),
-                createOrder
+                onSubmit,
+                onError
             }),
-            [payPalSDKInstance, oneTimeSessionOptions, createOrder]
+            [payPalSDKInstance, oneTimeSessionOptions, onSubmit, onError, presentationModeOptions]
         )
     );
 
@@ -58,9 +54,10 @@ export const PayPalCreditButton = ({
             () => ({
                 presentationModeOptions,
                 createSession: () => payPalSDKInstance.createPayPalCreditSavePaymentSession(saveSessionOptions),
-                createVaultSetupToken
+                onSubmit,
+                onError
             }),
-            [payPalSDKInstance, saveSessionOptions, createVaultSetupToken]
+            [payPalSDKInstance, saveSessionOptions, onSubmit, onError, presentationModeOptions]
         )
     );
 

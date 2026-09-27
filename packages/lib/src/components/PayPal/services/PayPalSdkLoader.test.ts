@@ -59,6 +59,19 @@ describe('PayPalSdkLoader', () => {
         });
     });
 
+    test.each(['LIVE', 'live-us', 'live-au', 'live-apse', 'live-in', 'live-nea'])(
+        'should load the production SDK URL when the environment is %s',
+        async environment => {
+            // @ts-ignore 'Script' is mocked
+            Script.mockImplementation(() => ({ load: mockLoad }));
+
+            const liveLoader = new PayPalSdkLoader({ analytics: mockAnalytics, environment });
+
+            await expect(liveLoader.load()).resolves.toBe(window.paypal);
+            expect(Script).toHaveBeenCalledWith(expect.objectContaining({ src: PAYPAL_SDK_URL_PRODUCTION }));
+        }
+    );
+
     test('should load the sandbox SDK URL when the environment is not specified', async () => {
         // @ts-ignore 'Script' is mocked
         Script.mockImplementation(() => ({ load: mockLoad }));
