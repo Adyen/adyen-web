@@ -1,4 +1,4 @@
-import { PayPalPresentationModeOptions } from '@paypal/paypal-js/sdk-v6';
+import { PayPalPresentationModeOptions } from './paypal-js-types';
 
 const INTEGRATION_DATE = '2020-02-01';
 const PAYPAL_JS_URL_V5 = 'https://www.paypal.com/sdk/js';
@@ -68,9 +68,11 @@ const DEFAULT_PAYMENT_SESSION_OPTIONS = {
     presentationMode: 'auto'
 } as const;
 
-const UNSUPPORTED_EXPRESS_PRESENTATION_MODE_OPTIONS: Array<PayPalPresentationModeOptions['presentationMode']> = [
-    'redirect',
-    'direct-app-switch'
+const SUPPORTED_EXPRESS_PRESENTATION_MODE_OPTIONS: Array<PayPalPresentationModeOptions['presentationMode']> = [
+    'auto',
+    'popup',
+    'modal',
+    'payment-handler'
 ] as const;
 
 export {
@@ -84,5 +86,5 @@ export {
     PAYPAL_SDK_URL_PRODUCTION,
     PAYPAL_SDK_URL_SANDBOX,
     DEFAULT_PAYMENT_SESSION_OPTIONS,
-    UNSUPPORTED_EXPRESS_PRESENTATION_MODE_OPTIONS
+    SUPPORTED_EXPRESS_PRESENTATION_MODE_OPTIONS
 };

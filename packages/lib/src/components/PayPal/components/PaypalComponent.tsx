@@ -6,7 +6,7 @@ import { PayPalSpinner } from './PayPalSpinner';
 import { getPaypalUrl } from '../utils/get-paypal-url';
 import Script from '../../../utils/Script';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
-import type { PayPalComponentProps } from './types';
+import type { PayPalComponentProps, PayPalUIElementStatus } from './types';
 import useAnalytics from '../../../core/Analytics/useAnalytics';
 import { ComponentMethodsRef } from '../../types';
 import type { PayPalOnApproveActions, PayPalOnApproveData } from '../paypal-js-types';
@@ -20,7 +20,7 @@ export default function PaypalComponent({
     setComponentRef,
     ...props
 }: Readonly<PayPalComponentProps>) {
-    const [status, setStatus] = useState('pending');
+    const [status, setStatus] = useState<PayPalUIElementStatus>('pending');
     const { analytics } = useAnalytics();
 
     const paypalComponentRef = useRef<ComponentMethodsRef>({
@@ -73,7 +73,7 @@ export default function PaypalComponent({
 
     if (status === 'pending') {
         return (
-            <div className="adyen-checkout__paypal" aria-live="polite" aria-busy="true">
+            <div className="adyen-checkout__paypal">
                 <PayPalSpinner />
             </div>
         );

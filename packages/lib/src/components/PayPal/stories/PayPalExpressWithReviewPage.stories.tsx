@@ -70,7 +70,7 @@ const Component = () => {
     const container = useRef(null);
 
     useEffect(() => {
-        async function createPaypalComponent() {
+        async function createPayPalComponent() {
             const checkout = await createAdvancedFlowCheckout({
                 showPayButton: true,
                 amount: AMOUNT.value,
@@ -181,7 +181,7 @@ const Component = () => {
             }
         }
 
-        void createPaypalComponent();
+        void createPayPalComponent();
     }, []);
 
     return <div ref={container} id="component-root" className="component-wrapper" />;

@@ -1,0 +1,7 @@
+@use 'styles/variable-generator';
+
+.payPalPaylaterComponent {
+    display: flex;
+    flex-direction: column;
+    gap: variable-generator.token(spacer-070);
+}

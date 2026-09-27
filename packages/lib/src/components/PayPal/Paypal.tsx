@@ -23,15 +23,19 @@ import type {
     PayPalV6OnShippingAddressChangeData,
     PayPalV6OnShippingOptionsChangeData
 } from './paypal-js-types';
+import type { BaseElementState } from '../internal/BaseElement/types';
+import type { PayPalServiceRefreshConfig } from './services/PayPalService';
 
 import { AnalyticsInfoEvent, InfoEventType } from '../../core/Analytics/events/AnalyticsInfoEvent';
 import { sanitizeResponse, verifyPaymentDidNotFail } from '../internal/UIElement/utils';
 import CancelError from '../../core/Errors/CancelError';
 import { PayPalSdkLoader } from './services/PayPalSdkLoader';
 import { PayPalService } from './services/PayPalService';
-import { PayPalComponentV6 } from './components/PaypalComponentV6';
+import { PayPalComponentV6 } from './components/PayPalComponentV6';
 import requestPayPalOrderDetails from './services/request-paypal-order-details';
-import { UNSUPPORTED_EXPRESS_PRESENTATION_MODE_OPTIONS } from './config';
+import { isPayPalServiceConfigEqual } from './utils/is-paypal-service-config-equal';
+import { SUPPORTED_EXPRESS_PRESENTATION_MODE_OPTIONS } from './config';
+import collectBrowserInfo from '../../utils/browserInfo';
 import './Paypal.scss';
 
 class PaypalElement extends UIElement<PayPalConfiguration> {
@@ -72,7 +76,7 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
             if (
                 isExpress &&
                 presentationModeOptions?.presentationMode &&
-                UNSUPPORTED_EXPRESS_PRESENTATION_MODE_OPTIONS.includes(presentationModeOptions.presentationMode)
+                !SUPPORTED_EXPRESS_PRESENTATION_MODE_OPTIONS.includes(presentationModeOptions.presentationMode)
             ) {
                 throw new AdyenCheckoutError(
                     'IMPLEMENTATION_ERROR',
@@ -85,26 +89,70 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
     }
 
     private initializePayPalV6() {
-        const paypalV6Props = this.props.usePayPalV6;
-
         const sdkLoader = new PayPalSdkLoader({
             analytics: this.analytics,
             environment: this.props.environment,
-            nonce: paypalV6Props?.nonce
+            nonce: this.props.usePayPalV6?.nonce
         });
+
+        this.paypalService = new PayPalService({ sdkLoader, ...this.paypalServiceConfig });
+
+        this.onPayPalServiceReady(this.paypalService.initialize());
+    }
+
+    /**
+     * Updates the props, refreshes the PayPal SDK instance and the eligible payment methods if needed, and then
+     * re-mounts the element. The refresh is needed because both the SDK instance and the eligible payment methods
+     * are derived from props that the merchant can update, like the amount, the country code or the locale.
+     *
+     * @param props - props to update
+     * @returns this - the element instance
+     */
+    public override update(props: Partial<PayPalConfiguration>): this {
+        const previousServiceConfig = this.paypalServiceConfig;
+
+        this.props = this.formatProps({ ...this.props, ...props });
+        this.state = {} as BaseElementState;
+
+        this.refreshPayPalService(previousServiceConfig);
+
+        return this.unmount().mount(this._node);
+    }
+
+    /**
+     * Re-creates the PayPal SDK instance and the eligible payment methods, but only if the updated props changed
+     * the configuration they are derived from. Any other prop change just re-renders the element.
+     *
+     * @param previousServiceConfig - The service configuration before the props were updated
+     */
+    private refreshPayPalService(previousServiceConfig: PayPalServiceRefreshConfig): void {
+        if (!this.paypalService) return;
+
+        const serviceConfig = this.paypalServiceConfig;
+
+        if (isPayPalServiceConfigEqual(previousServiceConfig, serviceConfig)) return;
+
+        this.onPayPalServiceReady(this.paypalService.refresh(serviceConfig));
+    }
+
+    /**
+     * Configuration used to create and to refresh the PayPal service. It is kept in a single place to guarantee
+     * that the service is always created and refreshed with the same set of props.
+     */
+    private get paypalServiceConfig(): PayPalServiceRefreshConfig {
+        const paypalV6Props = this.props.usePayPalV6;
 
         const components: PayPalComponents = ['paypal-payments'];
 
-        if (!this.props?.usePayPalV6?.blockPayPalVenmoButton) {
+        if (!paypalV6Props?.blockPayPalVenmoButton) {
             components.push('venmo-payments');
         }
 
-        if (this.props?.usePayPalV6?.onCreatePayPalMessages) {
+        if (paypalV6Props?.onCreatePayPalMessages) {
             components.push('paypal-messages');
         }
 
-        this.paypalService = new PayPalService({
-            sdkLoader,
+        return {
             loadingContext: this.props.loadingContext ?? '',
             clientKey: this.props.clientKey ?? '',
             merchantId: this.props.configuration?.merchantId ?? '',
@@ -115,13 +163,16 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
             pageType: paypalV6Props?.pageType,
             environment: this.props.environment,
             components
-        });
+        };
+    }
 
-        this.paypalService
-            .initialize()
+    private onPayPalServiceReady(sdkReadyPromise: Promise<void>): void {
+        sdkReadyPromise
             .then(() => {
-                if (paypalV6Props?.onCreatePayPalMessages && this.paypalService?.getInstance()?.createPayPalMessages) {
-                    paypalV6Props.onCreatePayPalMessages(this.paypalService.getInstance().createPayPalMessages);
+                const { onCreatePayPalMessages } = this.props.usePayPalV6 ?? {};
+
+                if (onCreatePayPalMessages && this.paypalService?.getInstance()?.createPayPalMessages) {
+                    onCreatePayPalMessages(this.paypalService.getInstance().createPayPalMessages);
                 }
             })
             .catch(error => {
@@ -136,19 +187,15 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
     public override async isAvailable(): Promise<void> {
         if (this.props.usePayPalV6) {
             if (!this.paypalService) {
-                return Promise.reject(new AdyenCheckoutError('ERROR', 'PayPal is not available'));
+                throw new AdyenCheckoutError('ERROR', 'PayPal is not available');
             }
 
             await this.paypalService.isSdkLoaded();
 
             if (!this.paypalService.getEligiblePaymentMethods().isEligible('paypal')) {
-                return Promise.reject(new AdyenCheckoutError('ERROR', 'PayPal is not available'));
+                throw new AdyenCheckoutError('ERROR', 'PayPal is not available');
             }
-
-            return Promise.resolve();
         }
-
-        return Promise.resolve();
     }
 
     protected override get sdkDataPaymentMethodConfiguration() {
@@ -200,6 +247,10 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
         this.paymentData = paymentData;
     }
 
+    private get browserInfo() {
+        return collectBrowserInfo();
+    }
+
     /**
      * Formats the component data output
      */
@@ -213,6 +264,7 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
                 subtype: isExpress ? 'express' : PaypalElement.subtype,
                 ...(!usePayPalV6 && { userAction })
             },
+            ...(usePayPalV6 && { browserInfo: this.browserInfo }),
             ...(usePayPalV6 && (usePayPalV6.vault || isZeroAuth) && { storePaymentMethod: true })
         };
     }
@@ -228,7 +280,7 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
             this.paymentData = action.paymentData;
         }
 
-        if (action.sdkData && action.sdkData.token) {
+        if (action?.sdkData?.token) {
             this.onActionHandled({ componentType: this.type, actionDescription: 'sdk-loaded', originalAction: action });
             this.handleResolve(action.sdkData.token);
         } else {
@@ -292,7 +344,9 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
                 );
             })
             .then(() => this.handleAdditionalDetails(state))
-            .catch(error => this.handleError(new AdyenCheckoutError('ERROR', 'Something went wrong while parsing PayPal Order', { cause: error })));
+            .catch(error =>
+                this.handleError(new AdyenCheckoutError('ERROR', 'Something went wrong with finalizing the PayPal order', { cause: error }))
+            );
     }
 
     /**
@@ -493,10 +547,12 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
                     style={paypalv6Props.style}
                     commit={paypalv6Props.commit}
                     vault={paypalv6Props.vault}
+                    blockPayPalButtonVariants={paypalv6Props.blockPayPalButtonVariants}
                     blockPayPalCreditButton={paypalv6Props.blockPayPalCreditButton}
                     blockPayPalPayLaterButton={paypalv6Props.blockPayPalPayLaterButton}
                     blockPayPalVenmoButton={paypalv6Props.blockPayPalVenmoButton}
                     presentationModeOptions={paypalv6Props.presentationModeOptions}
+                    environment={this.props.environment}
                     onSubmit={this.handleSubmit}
                     onApprove={this.handleOnApproveV6}
                     onCancel={() => this.handleError(new AdyenCheckoutError('CANCEL'))}

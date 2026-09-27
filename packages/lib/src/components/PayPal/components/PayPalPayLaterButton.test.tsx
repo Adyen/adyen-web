@@ -55,6 +55,18 @@ describe('PayPalPayLaterButton', () => {
         await waitFor(() => expect(getWebComponent()).toBeInTheDocument());
     });
 
+    test('should start the session with the presentation mode of the latest render', async () => {
+        const { rerender, props, oneTimeSession } = setup();
+
+        rerender(<PayPalPayLaterButton {...props} presentationModeOptions={{ presentationMode: 'modal' }} />);
+
+        await waitFor(() => expect(getWebComponent()).toBeInTheDocument());
+        fireEvent.click(getWebComponent());
+
+        await waitFor(() => expect(oneTimeSession.start).toHaveBeenCalled());
+        expect(oneTimeSession.start).toHaveBeenCalledWith({ presentationMode: 'modal' }, expect.anything());
+    });
+
     test('should set the productCode attribute from the eligible method details', async () => {
         const { getDetailsMock } = setup();
 

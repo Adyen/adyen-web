@@ -296,7 +296,7 @@ describe('Paypal', () => {
             await paypal.handleOnApprove(data, actions);
 
             expect(onErrorMock).toHaveBeenCalledWith(
-                expect.objectContaining({ message: 'Something went wrong while parsing PayPal Order' }),
+                expect.objectContaining({ message: 'Something went wrong with finalizing the PayPal order' }),
                 expect.anything()
             );
             expect(onErrorMock.mock.calls[0][0]).toBeInstanceOf(AdyenCheckoutError);

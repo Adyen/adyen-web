@@ -3,13 +3,13 @@ import ButtonGroup from '../../internal/ButtonGroup';
 import Button from '../../internal/Button';
 import { getAmountLabel } from './utils';
 import { useCoreContext } from '../../../core/Context/CoreProvider';
-import { Status } from './types';
+import { UIElementStatus } from '../../types';
 
 interface FixedAmountsProps {
     selectedAmount: number;
     currency: string;
     values: Array<number>;
-    status: Status;
+    status: UIElementStatus;
     onAmountSelected: ({ target }) => void;
     onDonateButtonClicked: () => void;
 }

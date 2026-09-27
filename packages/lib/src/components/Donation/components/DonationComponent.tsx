@@ -4,14 +4,14 @@ import CampaignContent from './CampaignContent';
 import Button from '../../internal/Button';
 import Img from '../../internal/Img';
 import { useCoreContext } from '../../../core/Context/CoreProvider';
-import '../Donation.scss';
 import DisclaimerMessage from '../../internal/DisclaimerMessage';
-import { DonationAmount, DonationComponentProps, Status } from './types';
+import { DonationAmount, DonationComponentProps } from './types';
 import useImage from '../../../core/Context/useImage';
 import FixedAmounts from './FixedAmounts';
 import Roundup from './Roundup';
 import { getAmountLabel, getRoundupAmount, getRoundupAmountLabel } from './utils';
-import { ComponentMethodsRef } from '../../types';
+import { ComponentMethodsRef, UIElementStatus } from '../../types';
+import '../Donation.scss';
 
 export default function DonationComponent(props: Readonly<DonationComponentProps>) {
     const { donation, commercialTxAmount, onAmountSelected, onCancel, onDonate, showCancelButton = true, termsAndConditionsUrl } = props;
@@ -19,7 +19,7 @@ export default function DonationComponent(props: Readonly<DonationComponentProps
     const getImage = useImage();
     const { currency, type } = donation;
     const isRoundupDonation = type === 'roundup';
-    const [status, setStatus] = useState<Status>('ready');
+    const [status, setStatus] = useState<UIElementStatus>('ready');
     const [isValid, setIsValid] = useState<boolean>(isRoundupDonation);
     const [amount, setAmount] = useState<DonationAmount>({
         currency,
