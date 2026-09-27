@@ -3,8 +3,6 @@ import type { CampaignContentProps } from './CampaignContent';
 
 export type Donation = RoundupDonation | FixedAmountsDonation;
 
-export type Status = 'ready' | 'error' | 'loading' | 'success';
-
 export type DonationType = 'roundup' | 'fixedAmounts';
 
 export interface RoundupDonation {

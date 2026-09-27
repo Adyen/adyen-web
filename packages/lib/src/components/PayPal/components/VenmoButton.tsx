@@ -1,16 +1,15 @@
-import { useMemo } from 'preact/hooks';
 import { h } from 'preact';
+import { useMemo } from 'preact/hooks';
 
-import type { PayPalVenmoButtonStyle } from '../types';
-import type { PayPalComponentV6Props } from './types';
+import type { PayPalVenmoButtonStyle, PayPalComponentV6Props } from './types';
 import { usePayPalSessionOptions } from '../hooks/usePayPalSessionOptions';
-import { useCreateOrder } from '../hooks/useCreateOrder';
 import { usePayPalOneTimeSession } from '../hooks/usePayPalOneTimeSession';
 import { usePayPalButtonEligibility } from '../hooks/usePayPalButtonEligibility';
-import { useCreateVaultSetupToken } from '../hooks/useCreateVaultSetupToken';
 import { usePayPalSaveSession } from '../hooks/usePayPalSaveSession';
 import { useAmount } from '../../../core/Context/AmountProvider';
-import { PayPalVenmoSavePaymentSessionOptions } from '../paypal-js-types';
+import { DEFAULT_PAYMENT_SESSION_OPTIONS } from '../config';
+import { isLiveEnvironment } from '../../../utils/is-live-environment';
+import type { PayPalPresentationModeOptions, PayPalVenmoSavePaymentSessionOptions } from '../paypal-js-types';
 
 export const VenmoButton = ({
     paypalService,
@@ -21,7 +20,8 @@ export const VenmoButton = ({
     onApprove,
     onCancel,
     onError,
-    onSubmit
+    onSubmit,
+    environment
 }: Readonly<
     Omit<PayPalComponentV6Props, 'style' | 'setComponentRef'> & {
         style: PayPalVenmoButtonStyle;
@@ -40,28 +40,39 @@ export const VenmoButton = ({
         vault
     });
 
-    const createOrder = useCreateOrder(onSubmit);
-    const createVaultSetupToken = useCreateVaultSetupToken(onSubmit);
+    const isLive = isLiveEnvironment(environment);
+
+    const presentationModeOptionsWithSandboxSupport = useMemo<PayPalPresentationModeOptions>(
+        () => ({
+            ...(presentationModeOptions ?? DEFAULT_PAYMENT_SESSION_OPTIONS),
+            sandboxSupport: {
+                enabled: !isLive
+            }
+        }),
+        [presentationModeOptions, isLive]
+    );
 
     const { onClick: oneTimePaymentClick } = usePayPalOneTimeSession(
         useMemo(
             () => ({
-                presentationModeOptions,
+                presentationModeOptions: presentationModeOptionsWithSandboxSupport,
                 createSession: () => payPalSDKInstance.createVenmoOneTimePaymentSession(oneTimeSessionOptions),
-                createOrder
+                onSubmit,
+                onError
             }),
-            [payPalSDKInstance, oneTimeSessionOptions, createOrder]
+            [payPalSDKInstance, oneTimeSessionOptions, onSubmit, onError, presentationModeOptionsWithSandboxSupport]
         )
     );
 
     const { onClick: savePaymentClick } = usePayPalSaveSession(
         useMemo(
             () => ({
-                presentationModeOptions,
+                presentationModeOptions: presentationModeOptionsWithSandboxSupport,
                 createSession: () => payPalSDKInstance.createVenmoSavePaymentSession(saveSessionOptions as PayPalVenmoSavePaymentSessionOptions),
-                createVaultSetupToken
+                onSubmit,
+                onError
             }),
-            [payPalSDKInstance, saveSessionOptions, createVaultSetupToken]
+            [payPalSDKInstance, saveSessionOptions, onSubmit, onError, presentationModeOptionsWithSandboxSupport]
         )
     );
 
@@ -74,8 +85,8 @@ export const VenmoButton = ({
     return (
         <venmo-button
             onclick={isZeroAuth ? savePaymentClick : oneTimePaymentClick}
-            type={style.type}
-            class={style.class}
+            type={style?.type}
+            class={style?.class}
             data-testid="venmo-button"
         />
     );
