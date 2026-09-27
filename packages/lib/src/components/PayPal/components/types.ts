@@ -11,7 +11,7 @@ import type {
     PayPalV6OnShippingOptionsChangeData
 } from '../paypal-js-types';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
-import { ComponentMethodsRef } from '../../types';
+import { ComponentMethodsRef, UIElementStatus } from '../../types';
 import { PayPalService } from '../services/PayPalService';
 
 export interface PayPalComponentProps extends Omit<PayPalConfiguration, 'onError' | 'onSubmit'> {
@@ -42,7 +42,14 @@ export interface PayPalButtonsProps extends Omit<PayPalComponentProps, 'ref' | '
 
 export type PayPalComponentV6Props = Pick<
     NonNullable<PayPalConfiguration['usePayPalV6']>,
-    'commit' | 'vault' | 'style' | 'blockPayPalCreditButton' | 'blockPayPalPayLaterButton' | 'blockPayPalVenmoButton' | 'presentationModeOptions'
+    | 'commit'
+    | 'vault'
+    | 'style'
+    | 'blockPayPalButtonVariants'
+    | 'blockPayPalCreditButton'
+    | 'blockPayPalPayLaterButton'
+    | 'blockPayPalVenmoButton'
+    | 'presentationModeOptions'
 > & {
     paypalService: PayPalService;
     onSubmit: () => Promise<string>;
@@ -52,4 +59,41 @@ export type PayPalComponentV6Props = Pick<
     onCancel: () => void;
     onError: (error: Error) => void;
     setComponentRef: (ref: ComponentMethodsRef) => void;
+    environment?: string;
 };
+
+/**
+ * @internal
+ */
+export type PayPalButtonType = 'pay' | 'checkout' | 'buynow' | 'subscribe';
+
+/**
+ * @internal
+ */
+export type PayPalButtonClass = 'paypal-gold' | 'paypal-blue' | 'paypal-white' | 'paypal-black';
+
+/**
+ * @internal
+ */
+export type VenmoButtonClass = 'venmo-blue' | 'venmo-black';
+
+/**
+ * @internal
+ */
+export type PayPalButtonStyle = {
+    type?: PayPalButtonType;
+    class?: PayPalButtonClass;
+};
+
+/**
+ * @internal
+ */
+export type PayPalVenmoButtonStyle = {
+    type?: PayPalButtonType;
+    class?: VenmoButtonClass;
+};
+
+/**
+ * @internal
+ */
+export type PayPalUIElementStatus = UIElementStatus | 'pending' | 'processing';

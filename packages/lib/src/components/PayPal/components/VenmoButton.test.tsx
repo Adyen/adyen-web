@@ -12,7 +12,11 @@ const queryWebComponent = () => screen.queryByTestId('venmo-button');
 
 const createSessionMock = () => ({ start: jest.fn().mockResolvedValue(undefined) });
 
-const setup = ({ isEligible = true, amount = { value: 1000, currency: 'USD' } }: { isEligible?: boolean; amount?: PaymentAmount } = {}) => {
+const setup = ({
+    isEligible = true,
+    amount = { value: 1000, currency: 'USD' },
+    environment
+}: { isEligible?: boolean; amount?: PaymentAmount; environment?: string } = {}) => {
     const oneTimeSession = createSessionMock();
     const saveSession = createSessionMock();
 
@@ -37,7 +41,8 @@ const setup = ({ isEligible = true, amount = { value: 1000, currency: 'USD' } }:
         onShippingOptionsChange: jest.fn(),
         onCancel: jest.fn(),
         onError: jest.fn(),
-        onSubmit: jest.fn().mockResolvedValue('order-1')
+        onSubmit: jest.fn().mockResolvedValue('order-1'),
+        environment
     };
 
     const providerRef = createRef<AmountProviderRef>();
@@ -82,5 +87,37 @@ describe('VenmoButton', () => {
 
         expect(sdkInstance.createVenmoSavePaymentSession).toHaveBeenCalled();
         await waitFor(() => expect(saveSession.start).toHaveBeenCalled());
+    });
+
+    describe('sandbox support', () => {
+        test.each(['test', undefined])('should enable sandbox support when the environment is %s', async environment => {
+            const { oneTimeSession } = setup({ environment });
+
+            await waitFor(() => expect(getWebComponent()).toBeInTheDocument());
+            fireEvent.click(getWebComponent());
+
+            await waitFor(() => expect(oneTimeSession.start).toHaveBeenCalled());
+            expect(oneTimeSession.start).toHaveBeenCalledWith(expect.objectContaining({ sandboxSupport: { enabled: true } }), expect.anything());
+        });
+
+        test.each(['live', 'LIVE', 'live-us', 'live-au'])('should disable sandbox support when the environment is %s', async environment => {
+            const { oneTimeSession } = setup({ environment });
+
+            await waitFor(() => expect(getWebComponent()).toBeInTheDocument());
+            fireEvent.click(getWebComponent());
+
+            await waitFor(() => expect(oneTimeSession.start).toHaveBeenCalled());
+            expect(oneTimeSession.start).toHaveBeenCalledWith(expect.objectContaining({ sandboxSupport: { enabled: false } }), expect.anything());
+        });
+
+        test('should disable sandbox support for a zero-auth save payment session in live', async () => {
+            const { saveSession } = setup({ environment: 'live', amount: { value: 0, currency: 'USD' } });
+
+            await waitFor(() => expect(getWebComponent()).toBeInTheDocument());
+            fireEvent.click(getWebComponent());
+
+            await waitFor(() => expect(saveSession.start).toHaveBeenCalled());
+            expect(saveSession.start).toHaveBeenCalledWith(expect.objectContaining({ sandboxSupport: { enabled: false } }), expect.anything());
+        });
     });
 });

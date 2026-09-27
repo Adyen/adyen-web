@@ -59,6 +59,22 @@ describe('PayPalCreditButton', () => {
         expect(queryWebComponent()).not.toBeInTheDocument();
     });
 
+    test('should start the session with the presentation mode of the latest render', async () => {
+        const { rerender, props, oneTimeSession } = setup();
+
+        rerender(
+            <AmountProvider amount={{ value: 1000, currency: 'USD' }} providerRef={createRef<AmountProviderRef>()}>
+                <PayPalCreditButton {...props} presentationModeOptions={{ presentationMode: 'modal' }} />
+            </AmountProvider>
+        );
+
+        await waitFor(() => expect(getWebComponent()).toBeInTheDocument());
+        fireEvent.click(getWebComponent());
+
+        await waitFor(() => expect(oneTimeSession.start).toHaveBeenCalled());
+        expect(oneTimeSession.start).toHaveBeenCalledWith({ presentationMode: 'modal' }, expect.anything());
+    });
+
     test('should render the paypal-credit-button web component when eligible', async () => {
         setup();
         await waitFor(() => expect(getWebComponent()).toBeInTheDocument());

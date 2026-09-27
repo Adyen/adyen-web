@@ -2,6 +2,7 @@ import { IAnalytics } from '../../../core/Analytics/Analytics';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 import Script from '../../../utils/Script';
 import { PAYPAL_SDK_URL_PRODUCTION, PAYPAL_SDK_URL_SANDBOX } from '../config';
+import { isLiveEnvironment } from '../../../utils/is-live-environment';
 
 class PayPalSdkLoader {
     private sdkLoadingPromise: Promise<void>;
@@ -18,7 +19,7 @@ class PayPalSdkLoader {
     public async load(): Promise<typeof window.paypal> {
         try {
             const scriptElement = new Script({
-                src: this.environment?.toLowerCase() === 'live' ? PAYPAL_SDK_URL_PRODUCTION : PAYPAL_SDK_URL_SANDBOX,
+                src: isLiveEnvironment(this.environment) ? PAYPAL_SDK_URL_PRODUCTION : PAYPAL_SDK_URL_SANDBOX,
                 component: 'paypal',
                 attributes: { crossOrigin: 'anonymous', ...(this.nonce && { nonce: this.nonce }) },
                 analytics: this.analytics

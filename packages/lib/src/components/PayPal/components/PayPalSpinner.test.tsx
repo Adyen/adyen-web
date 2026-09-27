@@ -14,4 +14,13 @@ describe('PayPalSpinner', () => {
 
         expect(screen.getByTestId('spinner')).toBeInTheDocument();
     });
+
+    test('should expose the loader as a busy live region for screen readers', () => {
+        render(<PayPalSpinner />);
+
+        const loader = screen.getByTestId('paypal-loader');
+
+        expect(loader).toHaveAttribute('aria-live', 'polite');
+        expect(loader).toHaveAttribute('aria-busy', 'true');
+    });
 });
