@@ -3,7 +3,7 @@ import type { PaymentAmount } from '../../../types/global-types';
 
 export const PAY_BTN_DIVIDER = '/ ';
 
-const amountLabel = (i18n, amount: PaymentAmount) =>
+const amountLabel = (i18n: Language, amount: PaymentAmount) =>
     !!amount?.value && !!amount?.currency ? i18n.amount(amount.value, amount.currency, { currencyDisplay: amount.currencyDisplay || 'symbol' }) : '';
 
 const isAmountFirstFormat = (i18n: Language): boolean => {
