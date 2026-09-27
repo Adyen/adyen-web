@@ -5,6 +5,7 @@ import { ComponentContainer } from '../../../../storybook/components/ComponentCo
 import Paypal from '..';
 import type { PayPalConfiguration } from '../types';
 import { Checkout } from '../../../../storybook/components/Checkout';
+import { PayPalV6ConfigurationUpdateDemo } from './PayPalV6ConfigurationUpdateDemo';
 
 type Story = StoryObj<PaymentMethodStoryProps<PayPalConfiguration>>;
 
@@ -22,6 +23,9 @@ export const Default: Story = {
     args: {
         componentConfiguration: {
             usePayPalV6: {
+                presentationModeOptions: {
+                    presentationMode: 'auto'
+                },
                 style: {
                     paypal: {
                         type: 'buynow',
@@ -34,10 +38,13 @@ export const Default: Story = {
                 },
                 vault: false,
                 onAuthorized: (data, actions) => {
-                    console.log('PaypalV6 onAuthorized data', { data });
+                    console.log('PayPalV6 onAuthorized data', { data });
                     actions.resolve();
                 }
             }
+        },
+        paymentsOptions: {
+            recurringProcessingModel: 'CardOnFile'
         },
         sessionData: {
             recurringProcessingModel: 'CardOnFile'
@@ -54,11 +61,11 @@ export const ZeroAuth: Story = {
     ),
     args: {
         amount: 0,
-        paymentsOptions: {
-            recurringProcessingModel: 'CardOnFile'
-        },
         componentConfiguration: {
             usePayPalV6: {}
+        },
+        paymentsOptions: {
+            recurringProcessingModel: 'CardOnFile'
         },
         sessionData: {
             recurringProcessingModel: 'CardOnFile'
@@ -89,6 +96,34 @@ export const WithPayPalV5: Story = {
     ),
     args: {
         componentConfiguration: {}
+    }
+};
+
+/**
+ * Showcases 'paypal.update(props)': the PayPal SDK instance and the eligible payment methods are re-created
+ * with the updated country code, currency, locale and payment flow. The demo owns the 'Checkout' wrapper,
+ * since the zero-auth flow needs a session created with a zero amount.
+ */
+export const ConfigurationUpdate: Story = {
+    tags: ['no-automated-visual-test'],
+    render: ({ componentConfiguration, ...checkoutConfig }) => (
+        <PayPalV6ConfigurationUpdateDemo checkoutConfig={checkoutConfig} componentConfiguration={componentConfiguration} />
+    ),
+    args: {
+        componentConfiguration: {
+            usePayPalV6: {
+                onAuthorized: (data, actions) => {
+                    console.log('PayPalV6 onAuthorized data', { data });
+                    actions.resolve();
+                }
+            }
+        },
+        paymentsOptions: {
+            recurringProcessingModel: 'CardOnFile'
+        },
+        sessionData: {
+            recurringProcessingModel: 'CardOnFile'
+        }
     }
 };
 
