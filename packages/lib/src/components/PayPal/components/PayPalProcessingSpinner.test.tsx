@@ -32,4 +32,13 @@ describe('PayPalProcessingSpinner', () => {
 
         expect(screen.queryByText(core.modules.i18n.get('paypal.processingPayment'))).not.toBeInTheDocument();
     });
+
+    test('should expose the processing status as a busy live region for screen readers', () => {
+        renderWithCoreProvider(<PayPalProcessingSpinner withoutReviewPage={true} />);
+
+        const liveRegion = screen.getByText(core.modules.i18n.get('paypal.processingPayment'));
+
+        expect(liveRegion).toHaveAttribute('aria-live', 'polite');
+        expect(liveRegion).toHaveAttribute('aria-busy', 'true');
+    });
 });
