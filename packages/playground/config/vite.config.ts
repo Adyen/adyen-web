@@ -1,0 +1,158 @@
+import { defineConfig } from 'vite';
+import preact from '@preact/preset-vite';
+import fs from 'fs';
+import path from 'path';
+import type { Connect, Plugin } from 'vite';
+
+const root = path.resolve(__dirname, '../src/pages');
+const publicDir = path.resolve(__dirname, '../public');
+const libDistDir = path.resolve(__dirname, '../../lib/dist');
+
+const host = process.env.HOST || '0.0.0.0';
+const port = Number(process.env.PORT) || 3020;
+const isHttps = process.env.IS_HTTPS === 'true';
+const certPath = process.env.CERT_PATH ?? path.resolve(__dirname, 'localhost.pem');
+const certKeyPath = process.env.CERT_KEY_PATH ?? path.resolve(__dirname, 'localhost-key.pem');
+// The mock API (`@adyen/adyen-web-server`) always runs as its own process on port 3030 -
+// see the root `start` script. Proxying to it (rather than mounting Express as dev-server
+// middleware) also sidesteps a Vite/Node incompatibility: Vite's `server.https` upgrades to
+// HTTP/2, which crashes when an Express 5 app handles the request; configuring `server.proxy`
+// makes Vite downgrade to TLS-only, avoiding that entirely.
+const apiTarget = `${isHttps ? 'https' : 'http'}://localhost:3030`;
+
+// NOTE: The first page in the array will be considered the index page.
+const htmlPages = [
+    { name: 'Drop-in UMD', id: 'DropinUMD' },
+    { name: 'Drop-in Auto', id: 'DropinAuto' },
+    { name: 'Drop-in', id: 'Dropin' },
+    { name: 'Cards', id: 'Cards' },
+    { name: 'Components', id: 'Components' },
+    { name: 'Gift Cards', id: 'GiftCards' },
+    { name: 'Helpers', id: 'Helpers' },
+    { name: 'Issuer Lists', id: 'IssuerLists' },
+    { name: 'Open Invoices', id: 'OpenInvoices' },
+    { name: 'QR Codes', id: 'QRCodes' },
+    { name: 'Custom Cards', id: 'CustomCards' },
+    { name: 'ThreeDS2', id: 'ThreeDS' },
+    { name: 'Vouchers', id: 'Vouchers' },
+    { name: 'Wallets', id: 'Wallets' },
+    { name: 'Result', id: 'Result' }
+];
+
+// Replicates the webpack-dev-server "clean URL" routing (`/`, `/cards`, `/dropinauto`, ...)
+// by rewriting the request onto the page's physical .html file before Vite's own middlewares run.
+const cleanUrlToHtmlFile = (url: string): string | null => {
+    const cleanUrl = url.split('?')[0];
+    const index = htmlPages.findIndex((page, i) => cleanUrl === `/${i ? page.id.toLowerCase() : ''}`);
+    if (index === -1) return null;
+    const { id } = htmlPages[index];
+    return `/${id}/${id}.html`;
+};
+
+const adyenPlaygroundPlugin = (): Plugin => ({
+    name: 'adyen-playground',
+    configureServer(server) {
+        const cleanUrlMiddleware: Connect.NextHandleFunction = (req, res, next) => {
+            const rewritten = req.url && cleanUrlToHtmlFile(req.url);
+            if (rewritten) {
+                const [, search = ''] = (req.url as string).split('?');
+                req.url = search ? `${rewritten}?${search}` : rewritten;
+            }
+            next();
+        };
+
+        server.middlewares.use(cleanUrlMiddleware);
+
+        // `yarn start` rebuilds the library in watch mode concurrently. Rollup's rebuild writes
+        // many interdependent files (preserveModules) non-atomically, so letting Vite's own
+        // watcher granularly HMR-update each one as it's written races ahead of the build and can
+        // fetch a module before a file it imports has been rewritten ("does not provide an export").
+        // Instead we watch the dist output ourselves, debounce until the whole rebuild has settled,
+        // then force a single full reload.
+        // Vite's own watcher ignores node_modules, so its transform cache for these `/@fs/`
+        // modules is never invalidated on disk changes - clear it manually before reloading.
+        let reloadTimer: NodeJS.Timeout;
+        let distWatcher: fs.FSWatcher | undefined;
+        let waitForDistTimer: NodeJS.Timeout | undefined;
+
+        const watchDist = () => {
+            distWatcher = fs.watch(libDistDir, { recursive: true }, () => {
+                clearTimeout(reloadTimer);
+                reloadTimer = setTimeout(() => {
+                    server.moduleGraph.invalidateAll();
+                    server.ws.send({ type: 'full-reload' });
+                }, 300);
+            });
+        };
+
+        // On a clean checkout (or before the lib's very first build finishes) `dist` doesn't
+        // exist yet - fs.watch throws ENOENT synchronously and would otherwise crash the whole
+        // dev server. Poll until it appears, then start watching.
+        if (fs.existsSync(libDistDir)) {
+            watchDist();
+        } else {
+            waitForDistTimer = setInterval(() => {
+                if (fs.existsSync(libDistDir)) {
+                    clearInterval(waitForDistTimer);
+                    watchDist();
+                }
+            }, 1000);
+        }
+
+        server.httpServer?.once('close', () => {
+            clearInterval(waitForDistTimer);
+            distWatcher?.close();
+        });
+    },
+    transformIndexHtml(html) {
+        return html.replace(/<%=\s*JSON\.stringify\(htmlWebpackPlugin\.htmlPages\)\s*\|\|\s*''\s*%>/g, JSON.stringify(htmlPages));
+    }
+});
+
+export default defineConfig({
+    root,
+    publicDir,
+    // @preact/preset-vite's default `exclude` is only `[/node_modules/]`. The lib is consumed
+    // through a workspace symlink though, and Vite resolves it to its real path
+    // (packages/lib/dist/...), which doesn't match that pattern - so its whole pre-built output
+    // was being re-run through Preact's JSX/Prefresh Babel transform on every request.
+    plugins: [preact({ exclude: [/node_modules/, `${libDistDir}/**`] }), adyenPlaygroundPlugin()],
+
+    resolve: {
+        extensions: ['.js', '.jsx', '.ts', '.tsx', '.scss']
+    },
+
+    css: {
+        postcss: __dirname
+    },
+
+    define: {
+        'process.env.__SF_ENV__': JSON.stringify(process.env.SF_ENV || 'build'),
+        'process.env.__CLIENT_KEY__': JSON.stringify(process.env.CLIENT_KEY || null),
+        'process.env.__CLIENT_ENV__': JSON.stringify(process.env.CLIENT_ENV || 'test')
+    },
+
+    server: {
+        host,
+        port,
+        strictPort: true,
+        https: isHttps
+            ? {
+                  cert: fs.readFileSync(certPath),
+                  key: fs.readFileSync(certKeyPath)
+              }
+            : undefined,
+        proxy: {
+            '/api': { target: apiTarget, secure: false },
+            '/sdk': { target: apiTarget, secure: false }
+        },
+        watch: {
+            // Vite's default `ignored: ['**/node_modules/**']` doesn't match here: the lib is
+            // consumed through a workspace symlink, and Vite resolves it to its real path
+            // (packages/lib/dist/...), which doesn't contain "node_modules". Without this, Vite's
+            // own granular per-file HMR races ahead of rollup's non-atomic multi-file rebuild - see
+            // the plugin's own debounced full-reload watcher below.
+            ignored: [`${libDistDir}/**`]
+        }
+    }
+});
