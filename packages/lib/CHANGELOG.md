@@ -1,5 +1,11 @@
 # @adyen/adyen-web
 
+## 6.47.0-alpha.eada81f
+
+### Minor Changes
+
+- New: PayPal component support for SDK v6, Venmo component, PayPal Credit component and Pay Later component ([#4124](https://github.com/Adyen/adyen-web/pull/4124))
+
 ## 6.46.0
 
 ### Minor Changes
