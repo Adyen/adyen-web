@@ -27,7 +27,9 @@ jobs:
         uses: ./.github/workflows/automated-visual.yml
         secrets: inherit
 
+    # Merge queue only — the source suite covers PRs; this validates the built bundle.
     e2e-dist-tests:
+        if: github.event_name == 'merge_group'
         uses: ./.github/workflows/e2e-dist-tests.yml
         secrets: inherit
 
@@ -43,7 +45,7 @@ jobs:
     # This allows the PR author to attempt merge if they believe tests will pass in the merge queue.
     verify-pr:
         if: always()
-        needs: [unit-tests, e2e-tests, e2e-dist-tests, automated-a11y, automated-visual, validate-locales, strict-typescript]
+        needs: [unit-tests, e2e-tests, automated-a11y, automated-visual, validate-locales, strict-typescript]
         runs-on: ubuntu-latest
         permissions:
             contents: read

@@ -34,8 +34,8 @@ The `webServer` in `dist.playwright.config.ts` builds the library, then the dist
 (`build:storybook:e2e:dist`, selected by `STORYBOOK_TARGET=dist`), then serves it on port 3020.
 Only one Storybook target can run at a time. A cold run is slow because of the library build.
 
-CI runs this suite on every PR and in the merge queue using Chromium and the latest API version.
-It is advisory on PRs and blocking in the merge queue.
+CI runs this suite in the merge queue only, using Chromium and the latest API version,
+where it is blocking.
 
 ## Directory Structure
 

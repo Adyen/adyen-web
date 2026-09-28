@@ -45,8 +45,8 @@ layer imports `@adyen/adyen-web`, which resolves through the package exports map
   `packages/lib/.storybook/main.ts`).
 - Story migration is complete: stories import `@adyen/adyen-web`, so they can run against either
   target.
-- CI runs the dist suite on every PR and in the merge queue (`e2e-dist-tests.yml`, chromium,
-  latest API version). It is advisory on PRs and blocking in the merge queue.
+- CI runs the dist suite in the merge queue only (`e2e-dist-tests.yml`, chromium,
+  latest API version), where it is blocking.
 
 ## Boundaries
 
