@@ -32,7 +32,6 @@ __metadata:
   resolution: "@adyen/adyen-web-playground@workspace:packages/playground"
   dependencies:
     "@adyen/adyen-web": "npm:6.45.1"
-    "@adyen/adyen-web-server": "npm:1.0.0"
     "@preact/preset-vite": "npm:^2.10.1"
     autoprefixer: "npm:^10.4.9"
     core-js-pure: "npm:^3.25.3"
