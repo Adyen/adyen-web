@@ -21,7 +21,6 @@ export const GuestShopperForm = ({ onCheckoutStep }: GuestShopperFormProps) => {
 
     const loadFastlane = async () => {
         const sdk = await initializeFastlane({
-            // clientKey: 'test_JC3ZFTA6WFCCRN454MVDEYOWEI5D3LT2', // Joost clientkey
             clientKey: process.env.CLIENT_KEY,
             environment: 'test',
             forceConsentDetails: true

@@ -151,10 +151,10 @@ describe('UIElement', () => {
         test('should handle fingerprint action', async () => {
             const fingerprintAction = {
                 paymentData: 'Ab02b4c0!BQABAgCUeRP+3La4...',
-                authorisationToken: 'BQABAQCmFNEdaCE3rcbbB...',
+                authorisationToken: 'test',
                 paymentMethodType: 'scheme',
                 subtype: 'fingerprint',
-                token: 'eyJ0aHJlZURTTWV0aG9kTm90a...',
+                token: 'test',
                 type: 'threeDS2' as PaymentActionsType
             };
 
@@ -178,7 +178,7 @@ describe('UIElement', () => {
         test('should handle challenge action', async () => {
             const challengeAction = {
                 paymentData: 'Ab02b4c0!BQABAgCUeRP+3La4...',
-                authorisationToken: 'BQABAQCmFNEdaCE3rcbbB...',
+                authorisationToken: 'test',
                 subtype: 'challenge',
                 token: 'xxx',
                 paymentMethodType: 'scheme',
@@ -211,7 +211,7 @@ describe('UIElement', () => {
             const paymentResponse = {
                 action: {
                     paymentData: 'Ab02b4c0!BQABAgCUeRP+3La4...',
-                    authorisationToken: 'BQABAQCmFNEdaCE3rcbbB...',
+                    authorisationToken: 'test',
                     subtype: 'challenge',
                     token: 'xxx',
                     paymentMethodType: 'scheme',
