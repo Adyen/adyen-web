@@ -18,7 +18,7 @@ const DISPLAY_ONLY_DUAL_BRANDED_SCENARIO = 'Dual Branded (Display-only): No sele
 export class CustomCard extends UIElement<CustomCardConfiguration> {
     public static readonly type = TxVariants.customCard;
 
-    protected componentRef: CustomCardInputRef | undefined;
+    declare protected componentRef: CustomCardInputRef | undefined;
 
     protected static readonly defaultProps = {
         onBinLookup: () => {},

@@ -11,7 +11,7 @@ class KlarnaPayments extends UIElement<KlarnaConfiguration> {
     public static readonly type = TxVariants.klarna;
     public static readonly txVariants = [TxVariants.klarna, TxVariants.klarna_account, TxVariants.klarna_paynow, TxVariants.klarna_b2b];
 
-    public componentRef: KlarnaComponentRef;
+    declare public componentRef: KlarnaComponentRef;
 
     protected static readonly defaultProps = {
         useKlarnaWidget: false

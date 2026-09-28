@@ -16,7 +16,7 @@ export class AmazonPayElement extends UIElement<AmazonPayConfiguration> {
 
     protected static readonly defaultProps = defaultProps;
 
-    protected componentRef: AmazonPayComponentRef | undefined;
+    declare protected componentRef: AmazonPayComponentRef | undefined;
 
     formatProps(props: AmazonPayConfiguration): AmazonPayConfiguration {
         return {

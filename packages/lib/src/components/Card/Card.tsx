@@ -35,7 +35,7 @@ export class CardElement extends UIElement<CardConfiguration> {
 
     private readonly clickToPayService: IClickToPayService | null;
 
-    protected componentRef: CardInputRef | undefined;
+    declare protected componentRef: CardInputRef | undefined;
 
     /**
      * Reference to the 'ClickToPayComponent'

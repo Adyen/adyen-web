@@ -51,8 +51,8 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
     private readonly handleOnNoDataRequired: () => void;
     private readonly handleOnTouchstartIOS: (obj) => void;
     private readonly handleKeyDown: (obj: SFKeyDownObj) => void;
-    public state: SFPState;
-    public props: SFPProps;
+    declare public state: SFPState;
+    declare public props: SFPProps;
     private issuingCountryCode: string;
 
     constructor(props: SFPProps) {
