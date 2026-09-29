@@ -83,7 +83,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         this.setupSessionsDonation = this.setupSessionsDonation.bind(this);
 
         this.elementRef = (props && props.elementRef) || this;
-        this.resources = this.props.modules ? this.props.modules.resources : undefined;
+        this.resources = this.props.modules?.resources ?? this.core.modules.resources;
 
         this.storeElementRefOnCore(this.props);
 
@@ -101,7 +101,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
      * @param configSetByMerchant
      * @private
      */
-    private createBeforeRenderHook(configSetByMerchant: P): void {
+    private createBeforeRenderHook(configSetByMerchant?: P): void {
         const originalRender = this.render;
 
         this.render = (...args: unknown[]) => {
@@ -138,7 +138,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         return this.core.modules.srPanel;
     }
 
-    protected getPaymentMethodConfigFromResponse(componentProps: P) {
+    protected getPaymentMethodConfigFromResponse(componentProps?: P) {
         if (componentProps?.storedPaymentMethodId) return this.getStoredPaymentMethodDetails(componentProps.storedPaymentMethodId);
         return this.getPaymentMethodFromPaymentMethodsResponse(componentProps?.type, componentProps?.paymentMethodId);
     }
@@ -260,7 +260,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
             const order = this.state.order ?? this.props.order;
             const onReview = (reviewDetails: ReviewDetails = {}) => {
                 this.submitAnalytics(new AnalyticsLogEvent({ component: this.type, type: LogEventType.review, message: 'Review flow triggered' }));
-                this.props.onReview(this.data, this.elementRef, reviewDetails);
+                this.props.onReview?.(this.data, this.elementRef, reviewDetails);
             };
             if (order) {
                 void getOrderStatus({ clientKey: this.props.clientKey, loadingContext: this.props.loadingContext }, order)
@@ -299,7 +299,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         if (this.core.session) {
             const beforeSubmitEvent: Promise<PaymentData> = this.props.beforeSubmit
                 ? new Promise((resolve, reject) => {
-                      void this.props.beforeSubmit(this.data, this.elementRef, {
+                      void this.props.beforeSubmit?.(this.data, this.elementRef, {
                           resolve,
                           reject: () => reject(new CancelError('beforeSubmitRejected'))
                       });
@@ -309,12 +309,12 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
             return beforeSubmitEvent.then(this.submitUsingSessionsFlow);
         }
 
-        this.handleError(
-            new AdyenCheckoutError(
-                'IMPLEMENTATION_ERROR',
-                'It can not perform /payments call. Callback "onSubmit" is missing or Checkout session is not available'
-            )
+        const error = new AdyenCheckoutError(
+            'IMPLEMENTATION_ERROR',
+            'It can not perform /payments call. Callback "onSubmit" is missing or Checkout session is not available'
         );
+        this.handleError(error);
+        throw error;
     }
 
     private async submitUsingAdvancedFlow(): Promise<CheckoutAdvancedFlowResponse> {
@@ -326,7 +326,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         this.submitAnalytics(event);
 
         return new Promise<CheckoutAdvancedFlowResponse>((resolve, reject) => {
-            this.props.onSubmit(
+            this.props.onSubmit?.(
                 {
                     data: this.data,
                     isValid: this.isValid
@@ -346,6 +346,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         this.submitAnalytics(event);
 
         try {
+            if (!this.core.session) throw new AdyenCheckoutError('ERROR', 'Error when making /payments call');
             return await this.core.session.submitPayment(data);
         } catch (error: unknown) {
             if (error instanceof AdyenCheckoutError) {
@@ -396,7 +397,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     private makeAdditionalDetailsCall(state: AdditionalDetailsData): Promise<CheckoutSessionDetailsResponse | CheckoutAdvancedFlowResponse> {
         if (this.props.onAdditionalDetails) {
             return new Promise<CheckoutAdvancedFlowResponse>((resolve, reject) => {
-                this.props.onAdditionalDetails(state, this.elementRef, { resolve, reject });
+                this.props.onAdditionalDetails?.(state, this.elementRef, { resolve, reject });
             });
         }
 
@@ -404,16 +405,17 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
             return this.submitAdditionalDetailsUsingSessionsFlow(state.data);
         }
 
-        this.handleError(
-            new AdyenCheckoutError(
-                'IMPLEMENTATION_ERROR',
-                'It can not perform /payments/details call. Callback "onAdditionalDetails" is missing or Checkout session is not available'
-            )
+        const error = new AdyenCheckoutError(
+            'IMPLEMENTATION_ERROR',
+            'It can not perform /payments/details call. Callback "onAdditionalDetails" is missing or Checkout session is not available'
         );
+        this.handleError(error);
+        throw error;
     }
 
     private async submitAdditionalDetailsUsingSessionsFlow(data: AdditionalDetailsData['data']): Promise<CheckoutSessionDetailsResponse> {
         try {
+            if (!this.core.session) throw new AdyenCheckoutError('ERROR', 'Error when making /details call');
             return await this.core.session.submitDetails(data);
         } catch (error: unknown) {
             if (error instanceof AdyenCheckoutError) this.handleError(error);
@@ -441,7 +443,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
 
         if (paymentAction) {
             this.unmount();
-            return paymentAction.mount(this._node);
+            return paymentAction.mount(this.mountedNode);
         }
 
         return null;
@@ -451,7 +453,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         this.props?.onActionHandled?.({ originalAction: this.props.originalAction, ...actionHandledObj });
     }
 
-    protected handleOrder = (response: PaymentResponseData): void => {
+    protected handleOrder = (response: PaymentResponseData & { order: Order }): void => {
         const { order } = response;
 
         const updateCorePromise = this.core.session
@@ -470,10 +472,11 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
 
         // If merchant hasn't explicitly disabled autoMount by setting it to false
         if (donation?.autoMount !== false) {
-            const rootNode: HTMLElement = assertIsDropin(this.elementRef) ? this.elementRef._node : this._node;
+            const rootNode = assertIsDropin(this.elementRef) ? this.elementRef._node : this._node;
+            if (!rootNode) return;
 
             const DonationComponentRef = this.core.getComponent(TxVariants.donation) as typeof Donation;
-            new DonationComponentRef(this.core, { rootNode, commercialTxAmount: amount.value }); // NOSONAR: Instantiation triggers internal async initialization (fire-and-forget pattern)
+            new DonationComponentRef(this.core, { rootNode, commercialTxAmount: amount?.value }); // NOSONAR: Instantiation triggers internal async initialization (fire-and-forget pattern)
         }
     }
 
@@ -528,10 +531,11 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
             return;
         }
 
-        if (response.order?.remainingAmount?.value > 0) {
+        const { order } = response;
+        if (order && (order.remainingAmount?.value ?? 0) > 0) {
             // we don't want to call elementRef here, use the component handler
             // we do this way so the logic on handlingOrder is associated with payment method
-            this.handleOrder(response);
+            this.handleOrder({ ...response, order });
             return;
         }
 
@@ -542,7 +546,8 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         if (e.key === 'Enter' || e.code === 'Enter') {
             e.preventDefault(); // Prevent <form> submission if Component is placed inside a form
 
-            this.onEnterKeyPressed(document?.activeElement, this);
+            const activeElement = document?.activeElement;
+            if (activeElement) this.onEnterKeyPressed(activeElement, this);
         }
     }
 
@@ -605,7 +610,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     /**
      * Used to display the second line of a payment method item
      */
-    get additionalInfo(): string {
+    get additionalInfo(): string | null {
         return null;
     }
 
@@ -674,7 +679,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
                 // it would make this more consistent
                 return this.core.update({
                     ...(paymentMethodsResponse && { paymentMethodsResponse }),
-                    order,
+                    order: order ?? undefined,
                     amount: order ? order.remainingAmount : amount
                 });
             });
@@ -684,7 +689,12 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
 
     render() {
         return (
-            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources} analytics={this.analytics}>
+            <CoreProvider
+                i18n={this.props.i18n ?? this.core.modules.i18n}
+                loadingContext={this.props.loadingContext ?? ''}
+                resources={this.resources}
+                analytics={this.analytics}
+            >
                 <SRPanelProvider srPanel={this.srPanel}>
                     <AmountProvider amount={this.props.amount} secondaryAmount={this.props.secondaryAmount} providerRef={this.amountProviderRef}>
                         {this.componentToRender()}
