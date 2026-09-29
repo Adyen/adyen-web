@@ -60,6 +60,38 @@ export const Default: DropinStory = {
     }
 };
 
+export const CustomDisplayMode: DropinStory = {
+    args: {
+        useSessions: false,
+        paymentMethodsOverride: {
+            paymentMethods: [
+                { name: 'iDEAL', type: 'ideal', configuration: { displayMode: 'regular' } },
+                {
+                    name: 'Google Pay',
+                    type: 'googlepay',
+                    configuration: { merchantId: 'TestMerchantCheckout', gatewayMerchantId: 'TestMerchantCheckout' }
+                },
+                { name: 'Apple Pay', type: 'applepay', configuration: { merchantName: 'TestMerchantCheckout', displayMode: 'regular' } },
+                { name: 'Card', type: 'scheme' }
+            ]
+        },
+        componentConfiguration: {
+            instantPaymentTypes: ['googlepay']
+        }
+    },
+    render: ({ componentConfiguration, ...checkoutConfig }: PaymentMethodStoryProps<DropinConfiguration>) => {
+        const { Dropin, ...Components } = components;
+        const Classes = Object.values(Components) as NewableComponent[];
+        AdyenCheckout.register(...Classes);
+
+        return (
+            <Checkout checkoutConfig={checkoutConfig}>
+                {checkout => <ComponentContainer element={new DropinComponent(checkout, componentConfiguration)} />}
+            </Checkout>
+        );
+    }
+};
+
 export const StyleCustomization: DropinStory = {
     render: ({ componentConfiguration, ...checkoutConfig }: PaymentMethodStoryProps<DropinConfiguration>) => {
         // Register all Components
