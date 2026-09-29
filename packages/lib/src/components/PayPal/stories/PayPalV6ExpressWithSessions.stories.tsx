@@ -71,7 +71,6 @@ const Component = () => {
                     blockPayPalVenmoButton: true,
                     blockPayPalCreditButton: true,
                     blockPayPalPayLaterButton: true,
-                    countryCode: COUNTRY_CODE,
                     onShippingAddressChange: async (data, component) => {
                         // Store the country code value, so it can be used in the 'onShippingOptionsChange'
                         SHOPPER_SHIPPING_COUNTRY_CODE = data.shippingAddress.countryCode;
