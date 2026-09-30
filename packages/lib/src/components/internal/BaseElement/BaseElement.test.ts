@@ -1,3 +1,5 @@
+import { h } from 'preact';
+import { screen } from '@testing-library/preact';
 import BaseElement from './BaseElement';
 import { BaseElementProps } from './types';
 import { setupCoreMock, TEST_CHECKOUT_ATTEMPT_ID, TEST_RISK_DATA } from '../../../../config/testMocks/setup-core-mock';
@@ -23,6 +25,28 @@ class MyElement extends BaseElement<BaseElementProps> {
 class NativeElement extends BaseElement<BaseElementProps> {
     public override formatData() {
         return { paymentMethod: { type: TxVariants.scheme } };
+    }
+}
+
+const ROOT_NODE_NOT_FOUND = 'Component could not mount. Root node was not found.';
+
+interface MountableElementProps extends BaseElementProps {
+    label?: string;
+}
+
+const handleKeyDownMock = jest.fn();
+
+class MountableElement extends BaseElement<MountableElementProps> {
+    public override render() {
+        return h('div', null, this.props.label ?? 'mountable element');
+    }
+
+    protected override handleKeyDown() {
+        handleKeyDownMock();
+    }
+
+    public getMountedNode() {
+        return this.mountedNode;
     }
 }
 
@@ -109,6 +133,81 @@ describe('BaseElement', () => {
         test('does not render anything by default', () => {
             const baseElement = new MyElement(core);
             expect(() => baseElement.render()).toThrow();
+        });
+    });
+
+    describe('mounting lifecycle', () => {
+        let container: HTMLElement;
+
+        beforeEach(() => {
+            container = document.createElement('div');
+            document.body.appendChild(container);
+        });
+
+        afterEach(() => {
+            container.remove();
+            handleKeyDownMock.mockClear();
+        });
+
+        describe('mount()', () => {
+            test('should throw if the selector does not match any node', () => {
+                const element = new MountableElement(core);
+                expect(() => element.mount('#does-not-exist')).toThrow(ROOT_NODE_NOT_FOUND);
+            });
+
+            test('should render the element into the given node', () => {
+                new MountableElement(core).mount(container);
+                expect(screen.getByText('mountable element')).toBeInTheDocument();
+            });
+        });
+
+        describe('mountedNode', () => {
+            test('should throw the root node error if the element has not been mounted', () => {
+                const element = new MountableElement(core);
+                expect(() => element.getMountedNode()).toThrow(ROOT_NODE_NOT_FOUND);
+            });
+
+            test('should return the node the element is mounted into', () => {
+                const element = new MountableElement(core).mount(container);
+                expect(element.getMountedNode()).toBe(container);
+            });
+        });
+
+        describe('update()', () => {
+            test('should throw the root node error if the element has not been mounted', () => {
+                const element = new MountableElement(core);
+                expect(() => element.update({ label: 'updated' })).toThrow(ROOT_NODE_NOT_FOUND);
+            });
+
+            test('should re-render the element with the new props into the same node', () => {
+                const element = new MountableElement(core).mount(container);
+
+                element.update({ label: 'updated' });
+
+                expect(element.getMountedNode()).toBe(container);
+                expect(screen.getByText('updated')).toBeInTheDocument();
+                expect(screen.queryByText('mountable element')).not.toBeInTheDocument();
+            });
+        });
+
+        describe('unmount()', () => {
+            test('should not throw and return the element if it has not been mounted', () => {
+                const element = new MountableElement(core);
+                expect(element.unmount()).toBe(element);
+            });
+
+            test('should remove the rendered content and stop listening to keydown events', () => {
+                const element = new MountableElement(core).mount(container);
+
+                container.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+                expect(handleKeyDownMock).toHaveBeenCalledTimes(1);
+
+                element.unmount();
+                container.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+
+                expect(screen.queryByText('mountable element')).not.toBeInTheDocument();
+                expect(handleKeyDownMock).toHaveBeenCalledTimes(1);
+            });
         });
     });
 });
