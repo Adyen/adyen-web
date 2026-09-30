@@ -7,11 +7,11 @@ import ContentSeparator from '../../internal/ContentSeparator';
 import Button from '../../internal/Button';
 import { useCoreContext } from '../../../core/Context/CoreProvider';
 
-type ClickToPayWrapperProps = {
+export type ClickToPayHolderProps = {
     children(isCardPrimaryInput?: boolean): h.JSX.Element;
 };
 
-const ClickToPayHolder = ({ children }: Readonly<ClickToPayWrapperProps>) => {
+const ClickToPayHolder = ({ children }: Readonly<ClickToPayHolderProps>) => {
     const { i18n } = useCoreContext();
     const [isCardInputVisible, setIsCardInputVisible] = useState<boolean>(null);
     const { ctpState, isCtpPrimaryPaymentMethod, setIsCtpPrimaryPaymentMethod, status } = useClickToPayContext();

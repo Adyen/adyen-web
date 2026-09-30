@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { useEffect, useState } from 'preact/hooks';
+import { useEffect, useRef, useState } from 'preact/hooks';
 import CampaignContent from './CampaignContent';
 import Button from '../../internal/Button';
 import Img from '../../internal/Img';
@@ -11,6 +11,7 @@ import useImage from '../../../core/Context/useImage';
 import FixedAmounts from './FixedAmounts';
 import Roundup from './Roundup';
 import { getAmountLabel, getRoundupAmount, getRoundupAmountLabel } from './utils';
+import { ComponentMethodsRef } from '../../types';
 
 export default function DonationComponent(props: Readonly<DonationComponentProps>) {
     const { donation, commercialTxAmount, onAmountSelected, onCancel, onDonate, showCancelButton = true, termsAndConditionsUrl } = props;
@@ -25,9 +26,13 @@ export default function DonationComponent(props: Readonly<DonationComponentProps
         value: isRoundupDonation ? getRoundupAmount(donation.maxRoundupAmount, commercialTxAmount) : null
     });
 
-    this.setStatus = (status: Status) => {
-        setStatus(status);
-    };
+    const donationComponentRef = useRef<ComponentMethodsRef>({
+        setStatus: setStatus
+    });
+
+    useEffect(() => {
+        props.setComponentRef(donationComponentRef.current);
+    }, [props.setComponentRef]);
 
     const handleAmountSelected = ({ target }) => {
         const value = parseInt(target.value, 10);

@@ -35,7 +35,8 @@ export default function CardFields({
     const { i18n } = useCoreContext();
 
     const getError = (errors, fieldType) => {
-        return errors[fieldType] ? i18n.get(errors[fieldType]) : null;
+        const errorKey = errors[fieldType];
+        return errorKey ? i18n.get(errorKey) : null;
     };
 
     // A set of brands filtered to exclude those that can never appear in the UI
@@ -85,7 +86,7 @@ export default function CardFields({
                 {hasCVC && (
                     <CVC
                         classNameModifiers={['col-50']}
-                        error={getError(errors, ENCRYPTED_SECURITY_CODE)}
+                        errorCode={errors[ENCRYPTED_SECURITY_CODE]}
                         focused={focusedElement === ENCRYPTED_SECURITY_CODE}
                         cvcPolicy={cvcPolicy}
                         isValid={!!valid.encryptedSecurityCode}

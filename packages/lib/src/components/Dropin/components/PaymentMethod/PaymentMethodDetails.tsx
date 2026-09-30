@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { memo } from 'preact/compat';
+import { useRef } from 'preact/hooks';
 import UIElement from '../../../internal/UIElement';
 
 interface PaymentMethodDetailsProps {
@@ -8,25 +8,24 @@ interface PaymentMethodDetailsProps {
 }
 
 /**
- * The payment method 'render()' trigger analytics. If a Component is removed from the DOM, the state is reset.
- * In order to preserve the state and also trigger analytics when a Component is selected, we cache renders when
- * the 'isSelect' changes from true -> false
+ * The payment method 'render()' triggers analytics, therefore it must be called only when the payment method gets
+ * selected by the shopper. On any other re-render we re-use the vnode created by the previous 'render()' call, so that
+ * analytics events aren't duplicated and the Component isn't unmounted (which would reset its state).
  */
-function isComponentCached(oldProps: PaymentMethodDetailsProps, newProps: PaymentMethodDetailsProps) {
-    const isInitialRender = oldProps.isSelected === null;
+const PaymentMethodDetails = ({ paymentMethodComponent, isSelected }: Readonly<PaymentMethodDetailsProps>) => {
+    const renderedComponent = useRef<h.JSX.Element>(null);
+    const wasSelected = useRef<boolean>(false);
 
-    if (isInitialRender) return false;
+    if (isSelected && !wasSelected.current) {
+        renderedComponent.current = paymentMethodComponent.render();
+    }
+    wasSelected.current = isSelected;
 
-    const componentIsDeselected = oldProps.isSelected === true && newProps.isSelected === false;
-    return componentIsDeselected;
-}
-
-const PaymentMethodDetails = memo(({ paymentMethodComponent, isSelected }: Readonly<PaymentMethodDetailsProps>) => {
-    if (!isSelected) {
+    if (!renderedComponent.current) {
         return null;
     }
 
-    return <div className={'adyen-checkout__payment-method__details__content'}>{paymentMethodComponent.render()}</div>;
-}, isComponentCached);
+    return <div className={'adyen-checkout__payment-method__details__content'}>{renderedComponent.current}</div>;
+};
 
 export { PaymentMethodDetails };

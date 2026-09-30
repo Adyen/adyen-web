@@ -12,6 +12,7 @@ import { PayButtonProps } from '../../internal/PayButton/PayButton';
 import { useAmount } from '../../../core/Context/AmountProvider';
 import type { AbstractAnalyticsEvent } from '../../../core/Analytics/events/AbstractAnalyticsEvent';
 import type { SFPProps } from '../../internal/SecuredFields/SFP/types';
+import type { UIElementStatus } from '../../internal/UIElement/types';
 
 interface GiftcardComponentProps extends Partial<Pick<SFPProps, 'clientKey' | 'loadingContext'>> {
     onChange: (state) => void;
@@ -19,7 +20,6 @@ interface GiftcardComponentProps extends Partial<Pick<SFPProps, 'clientKey' | 'l
     onBlur: (event) => void;
     makeBalanceCheck: (event) => void;
     makePayment: (event) => void;
-    showPayButton: boolean;
     payButton: (props: PayButtonProps) => h.JSX.Element;
     pinRequired: boolean;
     expiryDateRequired?: boolean;
@@ -62,7 +62,7 @@ class Giftcard extends Component<Readonly<GiftcardComponentProps>> {
         return this.sfp.mapErrorsToValidationRuleResult();
     };
 
-    private updateTransformedErrors = (balanceCheckErrors?: Record<string, GiftCardValidationError>) => {
+    private readonly updateTransformedErrors = (balanceCheckErrors?: Record<string, GiftCardValidationError>) => {
         const transformedErrors = this.mapErrorsToValidationObjects();
 
         const mergedErrors = { ...transformedErrors, ...balanceCheckErrors };
@@ -151,6 +151,10 @@ class Giftcard extends Component<Readonly<GiftcardComponentProps>> {
         this.setState({ isValidating: val });
     };
 
+    public setStatus = (status: UIElementStatus) => {
+        this.setState({ status });
+    };
+
     render(props, { focusedElement, balance, transactionLimit, isValidating, transformedErrors }) {
         const { i18n } = useCoreContext();
         const { amount } = useAmount();
@@ -174,7 +178,6 @@ class Giftcard extends Component<Readonly<GiftcardComponentProps>> {
                     makePayment={props.makePayment}
                     status={this.state.status}
                     makeBalanceCheck={props.makeBalanceCheck}
-                    showPayButton={this.props.showPayButton}
                     payButton={this.props.payButton}
                 />
             );
@@ -221,12 +224,12 @@ class Giftcard extends Component<Readonly<GiftcardComponentProps>> {
                     }
                 />
 
-                {this.props.showPayButton &&
-                    this.props.payButton({
-                        status: this.state.status,
-                        onClick: this.props.makeBalanceCheck,
-                        label: i18n.get('applyGiftcard')
-                    })}
+                {this.props.payButton({
+                    status: this.state.status,
+                    onClick: this.props.makeBalanceCheck,
+                    label: i18n.get('applyGiftcard'),
+                    showReview: false
+                })}
             </div>
         );
     }

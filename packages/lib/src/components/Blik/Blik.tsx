@@ -81,21 +81,15 @@ class BlikElement extends UIElement<AwaitConfiguration> {
 
         return this.props.storedPaymentMethodId ? (
             <RedirectButton
-                showPayButton={this.props.showPayButton}
                 name={this.displayName}
                 payButton={this.payButton}
                 onSubmit={this.submit}
-                ref={ref => {
-                    this.componentRef = ref;
-                }}
+                setComponentRef={this.setComponentRef}
             />
         ) : (
             <BlikInput
-                // @ts-ignore Ref is used by preact component
-                ref={ref => {
-                    this.componentRef = ref;
-                }}
                 {...this.props}
+                setComponentRef={this.setComponentRef}
                 onChange={this.setState}
                 onSubmit={this.submit}
                 payButton={this.payButton}

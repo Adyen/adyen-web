@@ -179,7 +179,7 @@ export const sortErrorsByLayout = ({ errors, i18n, layout, countrySpecificLabels
  */
 export const setSRMessagesFromErrors = (
     { i18n, fieldTypeMappingFn, SRPanelRef },
-    { errors, isValidating, layout, countrySpecificLabels }
+    { errors, isValidating, layout, countrySpecificLabels, hasDisplayedErrors = true }
 ): SetSRMessagesReturnObject => {
     const currentErrorsSortedByLayout = sortErrorsByLayout({
         errors,
@@ -211,7 +211,14 @@ export const setSRMessagesFromErrors = (
         }
     } else {
         if (doLog) console.log('### setSRMessagesFromErrors::componentDidUpdate:: #4 clearing errors:: NO currentErrorsSortedByLayout');
-        SRPanelRef?.setMessages(null); // no errors - so clear SR panel
+        /**
+         * Only clear if we actually have errors on display to clear. The SR panel is shared with
+         * status reporters (loading, await, countdown); clearing it when this form has never shown
+         * an error wipes their messages instead - see PR #4098.
+         */
+        if (hasDisplayedErrors) {
+            SRPanelRef?.setMessages(null); // no errors - so clear SR panel
+        }
         return { currentErrorsSortedByLayout, action: 'none' };
     }
 };

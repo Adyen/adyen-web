@@ -4,7 +4,7 @@ import AdyenCheckoutError from '../Errors/AdyenCheckoutError';
 export interface HttpOptions {
     accept?: string;
     contentType?: string;
-    headers?;
+    headers?: Record<string, string>;
     loadingContext?: string;
     method?: string;
     path: string;
@@ -23,6 +23,12 @@ interface FetchErrorOptions {
 
 type ErrorLevel = 'silent' | 'info' | 'warn' | 'error' | 'fatal';
 
+/**
+ * @deprecated Temporary compatibility type. `http` resolves `undefined` for 204 responses and non-fatal errors.
+ * Replace with `Promise<T | undefined>` after all consumers handle missing responses.
+ */
+type LegacyHttpPromise<T> = Promise<T>;
+
 type AdyenApiErrorResponse = {
     errorCode: string;
     message: string;
@@ -30,11 +36,12 @@ type AdyenApiErrorResponse = {
     status: number;
 };
 
-function isAdyenApiErrorResponse(data: any): data is AdyenApiErrorResponse {
-    return data && data.errorCode && data.errorType && data.message && data.status;
+function isAdyenApiErrorResponse(data: unknown): data is AdyenApiErrorResponse {
+    const response = data as Partial<AdyenApiErrorResponse>;
+    return Boolean(data && response.errorCode && response.errorType && response.message && response.status);
 }
 
-export function http<T>(options: HttpOptions, payload?: any): Promise<T> {
+export function http<T>(options: HttpOptions, payload?: unknown): Promise<T> {
     const {
         headers = [],
         errorLevel = 'warn',
@@ -57,9 +64,12 @@ export function http<T>(options: HttpOptions, payload?: any): Promise<T> {
         },
         redirect: 'follow',
         referrerPolicy: 'no-referrer-when-downgrade',
-        ...(AbortSignal?.timeout && { signal: AbortSignal?.timeout(timeout) }),
-        ...(payload && { body: JSON.stringify(payload) })
+        ...(AbortSignal?.timeout && { signal: AbortSignal?.timeout(timeout) })
     };
+
+    if (payload) {
+        request.body = JSON.stringify(payload);
+    }
 
     const url = `${loadingContext}${path}`;
 
@@ -71,10 +81,10 @@ export function http<T>(options: HttpOptions, payload?: any): Promise<T> {
                     return;
                 }
 
-                const data = await response.json();
+                const data: unknown = await response.json();
 
                 if (response.ok) {
-                    return data;
+                    return data as T;
                 }
 
                 if (isAdyenApiErrorResponse(data)) {
@@ -103,7 +113,7 @@ export function http<T>(options: HttpOptions, payload?: any): Promise<T> {
                 // eslint-disable-next-line @typescript-eslint/no-base-to-string,@typescript-eslint/restrict-template-expressions
                 const errorMessage = options.errorMessage || `Call to ${url} failed. Error= ${error}`;
                 handleFetchError({ message: errorMessage, level: errorLevel, cause: error, code: errorCode });
-            })
+            }) as LegacyHttpPromise<T>
     );
 }
 
@@ -123,10 +133,10 @@ function handleFetchError({ message, level, cause, code }: FetchErrorOptions): v
     }
 }
 
-export function httpGet<T = any>(options: HttpOptions, data?: any): Promise<T> {
+export function httpGet<T = unknown>(options: HttpOptions, data?: unknown): Promise<T> {
     return http<T>({ ...options, method: 'GET' }, data);
 }
 
-export function httpPost<T = any>(options: HttpOptions, data?: any): Promise<T> {
+export function httpPost<T = unknown>(options: HttpOptions, data?: unknown): Promise<T> {
     return http<T>({ ...options, method: 'POST' }, data);
 }

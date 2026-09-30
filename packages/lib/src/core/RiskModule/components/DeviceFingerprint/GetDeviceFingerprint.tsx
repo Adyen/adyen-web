@@ -20,7 +20,7 @@ class GetDeviceFingerprint extends Component<GetDeviceFingerprintProps> {
         this.postMessageDomain = getOrigin(this.props.loadingContext) || this.props.loadingContext;
     }
 
-    getDfpPromise(): Promise<any> {
+    getDfpPromise(): Promise<unknown> {
         return new Promise((resolve, reject) => {
             /**
              * Listen for postMessage responses from the notification url

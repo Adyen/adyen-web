@@ -20,30 +20,24 @@ test.describe('Card - Testing resetting brand after binLookup has occurred', () 
         await page.waitForFunction(() => window['component'].data.paymentMethod.brand === undefined);
 
         // Check regEx recognises brand
-        let brandingIconSrc = await card.brandingIcon.getAttribute('src');
-        expect(brandingIconSrc).toContain('visa.svg');
+        await expect(card.brandingIcon).toHaveAttribute('src', /\/visa\.svg$/);
     });
 
     test('#2 Fill in regular MC card, see UI reflects it, then delete it, and see the brand is reset in the UI', async ({ card, page }) => {
         await card.goto(URL_MAP.card);
 
-        let brandingIconSrc = await card.brandingIcon.getAttribute('src');
-        expect(brandingIconSrc).toContain('nocard.svg');
+        await expect(card.brandingIcon).toHaveAttribute('src', /\/nocard\.svg$/);
 
         await card.typeCardNumber(REGULAR_TEST_CARD);
 
-        brandingIconSrc = await card.brandingIcon.getAttribute('src');
-        expect(brandingIconSrc).toContain('mc.svg');
+        await expect(card.brandingIcon).toHaveAttribute('src', /\/mc\.svg$/);
 
         await card.deleteCardNumber();
 
-        let cardData: any = await page.evaluate('window.component.data');
-
         // Check brand has been reset in paymentMethod data
-        expect(cardData.paymentMethod.brand).toBe(undefined);
+        await page.waitForFunction(() => window['component'].data.paymentMethod.brand === undefined);
 
         // Check brand is reset in the UI
-        brandingIconSrc = await card.brandingIcon.getAttribute('src');
-        expect(brandingIconSrc).toContain('nocard.svg');
+        await expect(card.brandingIcon).toHaveAttribute('src', /\/nocard\.svg$/);
     });
 });

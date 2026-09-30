@@ -146,15 +146,12 @@ export class CashAppPay extends UIElement<CashAppPayConfiguration> {
     protected override componentToRender(): h.JSX.Element {
         return this.props.storedPaymentMethodId ? (
             <RedirectButton
-                showPayButton={this.props.showPayButton}
                 label={payAmountLabel(this.props.i18n, this.props.amount)}
                 icon={this.resources?.getImage({ imageFolder: 'components/' })(`${PREFIX}lock`)}
                 name={this.displayName}
                 payButton={this.payButton}
                 onSubmit={this.submit}
-                ref={ref => {
-                    this.componentRef = ref;
-                }}
+                setComponentRef={this.setComponentRef}
             />
         ) : (
             <CashAppComponent

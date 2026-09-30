@@ -12,13 +12,14 @@ import {
 } from '../../../../internal/SecuredFields/lib/constants';
 import DataSfSpan from './DataSfSpan';
 import { alternativeLabelContent } from './FieldLabelAlternative';
+import { resolveCVCErrorKey } from '../utils';
 import './CVC.scss';
 
 export default function CVC(props: Readonly<CVCProps>) {
     const {
         label,
         onFocusField = () => {},
-        error = '',
+        errorCode = '',
         className = '',
         classNameModifiers = [],
         focused,
@@ -31,6 +32,8 @@ export default function CVC(props: Readonly<CVCProps>) {
     } = props;
     const { i18n } = useCoreContext();
 
+    const errorMessage = errorCode ? i18n.get(resolveCVCErrorKey(errorCode, frontCVC)) : '';
+
     const fieldClassnames = classNames(className, {
         'adyen-checkout__field__cvc': true,
         'adyen-checkout__card__cvc__input--hidden': cvcPolicy === CVC_POLICY_HIDDEN,
@@ -41,7 +44,7 @@ export default function CVC(props: Readonly<CVCProps>) {
         'adyen-checkout__input': true,
         'adyen-checkout__input--small': true,
         'adyen-checkout__card__cvc__input': true,
-        'adyen-checkout__input--error': error,
+        'adyen-checkout__input--error': errorMessage,
         'adyen-checkout__input--focus': focused,
         'adyen-checkout__input--valid': isValid
     });
@@ -60,7 +63,7 @@ export default function CVC(props: Readonly<CVCProps>) {
             classNameModifiers={[...classNameModifiers, 'securityCode']}
             onFocusField={() => onFocusField(ENCRYPTED_SECURITY_CODE)}
             className={fieldClassnames}
-            errorMessage={error}
+            errorMessage={errorMessage}
             isValid={isValid}
             dir={'ltr'}
             name={ENCRYPTED_SECURITY_CODE}

@@ -18,7 +18,7 @@ const componentConfig = {
         }
     }
 };
-const url = getStoryUrl({ baseUrl: URL_MAP.card, componentConfig });
+const url = getStoryUrl({ baseUrl: URL_MAP.cardWithAdvancedFlow, componentConfig });
 
 test.describe('Cards (Installments)', () => {
     test('#1 should not add installments property to payload if one-time payment is selected (default selection)', async ({ card, page }) => {

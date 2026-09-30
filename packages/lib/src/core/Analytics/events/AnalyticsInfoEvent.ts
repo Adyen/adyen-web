@@ -1,6 +1,13 @@
 import { AbstractAnalyticsEvent, AnalyticsEventCategory } from './AbstractAnalyticsEvent';
 import { mapErrorCodesForAnalytics } from '../utils';
 
+export type AnalyticsPaymentMethod<DisplayMode extends string = string> = {
+    paymentMethodType: string;
+    brands?: string[];
+    fundingSource?: 'debit' | 'credit' | 'prepaid';
+    displayMode: DisplayMode;
+};
+
 type AnalyticsInfoEventProps = {
     type: InfoEventType;
     component: string;
@@ -12,10 +19,12 @@ type AnalyticsInfoEventProps = {
     brand?: string;
     validationErrorCode?: string;
     validationErrorMessage?: string;
-    configData?: Record<string, any>;
+    configData?: unknown;
     cdnUrl?: string;
     selectedValue?: string;
     presentedValues?: Array<string>;
+    availablePaymentMethods?: AnalyticsPaymentMethod[];
+    unavailablePaymentMethods?: AnalyticsPaymentMethod[];
 };
 
 export enum UiTarget {
@@ -70,7 +79,8 @@ export enum InfoEventType {
     OtpFailed = 'otpFailed',
     AddressSelectorClicked = 'addressSelectorClicked',
     AddressSelectorClosed = 'addressSelectorClosed',
-    AddressChanged = 'addressChanged'
+    AddressChanged = 'addressChanged',
+    PaymentListDisplayed = 'paymentListDisplayed'
 }
 
 export class AnalyticsInfoEvent extends AbstractAnalyticsEvent {
@@ -94,6 +104,8 @@ export class AnalyticsInfoEvent extends AbstractAnalyticsEvent {
     private readonly validationErrorCode?: string;
     private readonly validationErrorMessage?: string;
     private readonly presentedValues?: string[];
+    private readonly availablePaymentMethods?: AnalyticsPaymentMethod[];
+    private readonly unavailablePaymentMethods?: AnalyticsPaymentMethod[];
 
     /**
      *  Third party script URL's (e.g. Apple Pay)
@@ -116,6 +128,8 @@ export class AnalyticsInfoEvent extends AbstractAnalyticsEvent {
         if (props.validationErrorCode) this.validationErrorCode = props.validationErrorCode;
         if (props.validationErrorMessage) this.validationErrorMessage = props.validationErrorMessage;
         if (props.presentedValues) this.presentedValues = props.presentedValues;
+        if (props.availablePaymentMethods) this.availablePaymentMethods = props.availablePaymentMethods;
+        if (props.unavailablePaymentMethods) this.unavailablePaymentMethods = props.unavailablePaymentMethods;
         if (this.type === InfoEventType.rendered) {
             this.configData = this.createAnalyticsConfigData(props?.configData);
         }
@@ -156,14 +170,14 @@ export class AnalyticsInfoEvent extends AbstractAnalyticsEvent {
      * Creates a serializable analytics payload from the given config object.
      * Functions are replaced with 'function', and objects/arrays are stringified.
      */
-    private createAnalyticsConfigData(config: Record<string, any>) {
-        if (!config) return {};
+    private createAnalyticsConfigData(config?: unknown): Record<string, string | boolean> {
+        if (!config || (typeof config !== 'object' && typeof config !== 'function')) return {};
 
         const MAX_STRING_LENGTH = 128;
-        const result: Record<string, string> = {};
+        const result: Record<string, string | boolean> = {};
 
         try {
-            for (const [key, value] of Object.entries(config)) {
+            for (const [key, value] of Object.entries(config) as [string, unknown][]) {
                 if (!this.configDataExcludedFields.includes(key)) {
                     if (typeof value === 'function') {
                         result[key] = 'function';
@@ -171,8 +185,12 @@ export class AnalyticsInfoEvent extends AbstractAnalyticsEvent {
                         result[key] = value.join(', ').substring(0, MAX_STRING_LENGTH);
                     } else if (typeof value === 'object' && value !== null) {
                         result[key] = JSON.stringify(value).substring(0, MAX_STRING_LENGTH);
-                    } else {
+                    } else if (typeof value === 'string' || typeof value === 'boolean') {
                         result[key] = value;
+                    } else if (typeof value === 'number' || typeof value === 'bigint' || typeof value === 'symbol') {
+                        result[key] = value.toString();
+                    } else {
+                        result[key] = 'undefined';
                     }
                 }
             }

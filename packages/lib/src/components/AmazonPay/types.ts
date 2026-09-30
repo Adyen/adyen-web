@@ -54,6 +54,7 @@ export interface AmazonPayConfiguration extends UIElementProps {
     buttonColor?: ButtonColor;
     cancelUrl?: string;
     chargePermissionType?: ChargePermissionType;
+    checkoutMode?: string;
     clientKey?: string;
     configuration?: AmazonPayBackendConfiguration;
     currency?: Currency;
@@ -96,12 +97,14 @@ export interface AmazonPayConfiguration extends UIElementProps {
     isExpress?: boolean;
 }
 
+export type AmazonPayComponentRef = ComponentMethodsRef & { getSubmitFunction?: () => () => void };
+
 export interface AmazonPayComponentProps extends AmazonPayConfiguration {
     showSignOutButton?: boolean;
     amazonCheckoutSessionId?: string;
     showOrderButton?: boolean;
     showChangePaymentDetailsButton?: boolean;
-    setComponentRef: (ref: ComponentMethodsRef & { getSubmitFunction?: () => () => void }) => void;
+    setComponentRef: (ref: AmazonPayComponentRef) => void;
 }
 
 export interface AmazonPayButtonProps {
@@ -250,7 +253,7 @@ export interface CheckoutDetailsRequest {
     getDeliveryAddress?: boolean;
     getDeclineFlowUrl?: boolean;
     publicKeyId: string;
-    region: Region;
+    region?: Region;
 }
 
 export interface UpdateAmazonCheckoutSessionRequest {

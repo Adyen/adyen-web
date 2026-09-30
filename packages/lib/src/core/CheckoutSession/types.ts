@@ -1,5 +1,5 @@
 import type { InstallmentOptions } from '../../components/Card/components/CardInput/components/Installments/Installments';
-import type { BrowserInfo, Order, PaymentAction, PaymentAmount, ResultCode } from '../../types/global-types';
+import type { BrowserInfo, Order, PaymentAction, PaymentAmount, PaymentMethodsResponse, ResultCode } from '../../types/global-types';
 import type { DonationCampaign } from '../../components/Donation/types';
 import type { DonationType } from '../../components/Donation/components/types';
 
@@ -22,7 +22,7 @@ export type CheckoutSessionSetupResponse = {
     countryCode?: string;
     amount: Omit<PaymentAmount, 'currencyDisplay'>;
     expiresAt: string;
-    paymentMethods: any;
+    paymentMethods: PaymentMethodsResponse;
     returnUrl: string;
     configuration: SessionConfiguration;
     /**

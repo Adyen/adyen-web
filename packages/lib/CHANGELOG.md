@@ -1,5 +1,107 @@
 # @adyen/adyen-web
 
+## 6.46.0
+
+### Minor Changes
+
+- New: Support configurable disclaimer message above Pay button ([#4179](https://github.com/Adyen/adyen-web/pull/4179))
+
+- New: Updated the Address component for Japan with a localized field set including new Prefecture (stateOrProvince) selector. Minor Japanese translations updates. ([#4119](https://github.com/Adyen/adyen-web/pull/4119))
+
+### Patch Changes
+
+- Fixed: Gift card pay button now shows a loading state while the balance check is in progress ([#4197](https://github.com/Adyen/adyen-web/pull/4197))
+
+- Fixed: Prevent inherited class properties from being overwritten during initialization. ([#4204](https://github.com/Adyen/adyen-web/pull/4204))
+
+## 6.45.1
+
+### Patch Changes
+
+- Improved: Update link styles to match the latest design ([#4185](https://github.com/Adyen/adyen-web/pull/4185))
+
+- Fixed: Internal types for useForm hook ([#4150](https://github.com/Adyen/adyen-web/pull/4150))
+
+- Fixed: Internal TS explicit and implicit anys of BaseElement and UIElement ([#4149](https://github.com/Adyen/adyen-web/pull/4149))
+
+## 6.45.0
+
+### Minor Changes
+
+- Improved: Add review page support for sessions via `onReview` callback ([#4044](https://github.com/Adyen/adyen-web/pull/4044))
+
+- New: Support Content Security Policy (CSP) nonce in Google Pay configuration and upgrade `@types/googlepay` to `0.7.12`. ([#4173](https://github.com/Adyen/adyen-web/pull/4173))
+
+### Patch Changes
+
+- Improved: restrictions on some special characters on address validation ([#3769](https://github.com/Adyen/adyen-web/pull/3769))
+
+- Fixed: Select dropdown spacing and secondary text color ([#4162](https://github.com/Adyen/adyen-web/pull/4162))
+
+- Fixed: Drop-in payment methods no longer lose their state when another payment method is selected in the list. ([#4176](https://github.com/Adyen/adyen-web/pull/4176))
+
+## 6.44.0
+
+### Minor Changes
+
+- Improved: replace deprecated keypress event with keydown event ([#4143](https://github.com/Adyen/adyen-web/pull/4143))
+
+- Fixed: Card expiry date and security code fields no longer lose their format guidance when they enter an error state ([#4091](https://github.com/Adyen/adyen-web/pull/4091))
+
+### Patch Changes
+
+- Fixed: Announce loading to screen readers for QR/redirect payment methods and for Card and stop these announcements being cleared from the shared screen reader panel before they can be read ([#4098](https://github.com/Adyen/adyen-web/pull/4098))
+
+- Fixed: Components crashing when `null` data was passed ([#4134](https://github.com/Adyen/adyen-web/pull/4134))
+
+## 6.43.0
+
+### Minor Changes
+
+- Improved: Select options can now carry informative `tags` (a coloured label), rendered both in the open list and on the collapsed button. As part of this, `secondaryText` now renders as supporting text underneath the option name instead of inline beside it, and it is no longer shown on the collapsed button. ([#4112](https://github.com/Adyen/adyen-web/pull/4112))
+
+## 6.42.0
+
+### Minor Changes
+
+- Improved: the 3DS2 iframe to add attributes which enable WebAuthn and SPC challenges. ([#4116](https://github.com/Adyen/adyen-web/pull/4116))
+
+- New: Drop-in emits a new `paymentListDisplayed` analytics event reporting the payment methods it rendered (`availablePaymentMethods`, each with `displayMode`) in display order, plus the `/paymentMethods` items it did not render (`unavailablePaymentMethods`). ([#4081](https://github.com/Adyen/adyen-web/pull/4081))
+
+### Patch Changes
+
+- Fixed: US postal code validation & postal code formatting for partial billing address mode ([#4111](https://github.com/Adyen/adyen-web/pull/4111))
+
+## 6.41.1
+
+### Patch Changes
+
+- Fixed: Internal types for triggerBinLookup and CardElement ([#4089](https://github.com/Adyen/adyen-web/pull/4089))
+
+- Fixed: focus moving to the wrong component when multiple OpenInvoice-based components (e.g. AfterPay, RatePay, FacilyPay, Atome) are rendered on the same page and a validation error occurs ([#4109](https://github.com/Adyen/adyen-web/pull/4109))
+
+- Fixed: Prevent payment submission when press enter inside active element (select, dualBrandSelector) ([#4114](https://github.com/Adyen/adyen-web/pull/4114))
+
+- Fixed: Duplicate characters when typing in address fields using an IME ([#4095](https://github.com/Adyen/adyen-web/pull/4095))
+
+## 6.41.0
+
+### Minor Changes
+
+- Improved: Propagate `healthcare` field to the `onBinLookup` callback ([#4084](https://github.com/Adyen/adyen-web/pull/4084))
+
+- Improved: Detect if 3DS2 challenge token is missing a valid domain for the threeDSNotificationURL. Without a valid domain we will never receive the postMessage telling us the 3DS2 process is complete. ([#4073](https://github.com/Adyen/adyen-web/pull/4073))
+
+- Improved: replace deprecated keypress event with keydown event ([#4066](https://github.com/Adyen/adyen-web/pull/4066))
+
+### Patch Changes
+
+- Fixed: Remove explicit any types from Dropin, ANCV, Giftcard and ThreeDS2 components ([#4080](https://github.com/Adyen/adyen-web/pull/4080))
+
+- Fixed:Stop displaying installments defined at the component level when in a sessions integration, and put a warning message in the console. This installment configuration could end up in being shown in the UI, but was then always ignored by the backend. ([#4079](https://github.com/Adyen/adyen-web/pull/4079))
+
+- Fixed: aria-checked missing in the Dropin payment method list if openFirstPaymentMethod set to false ([#4085](https://github.com/Adyen/adyen-web/pull/4085))
+
 ## 6.40.2
 
 ### Patch Changes

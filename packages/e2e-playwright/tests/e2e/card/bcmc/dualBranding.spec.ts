@@ -163,7 +163,7 @@ test.describe('Bcmc payments with dual branding', () => {
 
             await bcmc.pay();
 
-            await expect(bcmc.cvcErrorElement).toHaveText('Enter the security code');
+            await expect(bcmc.cvcErrorElement).toHaveText('Enter the security code. 3 digits on back of card.');
         });
 
         test('#4c should not submit the visa payment with invalid bcmc card number', async ({ bcmc, page }) => {
@@ -263,7 +263,7 @@ test.describe('Bcmc payments with dual branding', () => {
 
             await bcmc.pay();
 
-            await expect(bcmc.cvcErrorElement).toHaveText('Enter the security code');
+            await expect(bcmc.cvcErrorElement).toHaveText('Enter the security code. 3 digits on back of card.');
         });
 
         test('#6c should not submit the mc payment with invalid bcmc card number', async ({ bcmc, page }) => {
@@ -347,7 +347,7 @@ test.describe('Bcmc payments with dual branding', () => {
 
             await bcmc.pay();
 
-            await expect(bcmc.cvcErrorElement).toHaveText('Enter the security code');
+            await expect(bcmc.cvcErrorElement).toHaveText('Enter the security code. 3 digits on back of card.');
         });
     });
 });

@@ -22,6 +22,7 @@ import { CVC_POLICY_REQUIRED, DATE_POLICY_REQUIRED, DEDICATED_CARD_COMPONENTS, E
 import { BinLookupResponse } from '../../../Card/types';
 import AdyenCheckoutError from '../../../../core/Errors/AdyenCheckoutError';
 import { SFStateErrorObj } from '../../../Card/components/CardInput/types';
+import { resolveCVCErrorKey } from '../../../Card/components/CardInput/utils';
 import { getErrorMessageFromCode } from '../../../../core/Errors/utils';
 import { SF_ErrorCodes } from '../../../../core/Errors/constants';
 import { TxVariants } from '../../../tx-variants';
@@ -31,7 +32,7 @@ import { TxVariants } from '../../../tx-variants';
  * Initialises & handles the client-side part of SecuredFields
  */
 class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
-    private csfLoadFailTimeout: number;
+    private readonly csfLoadFailTimeout: number;
     private readonly csfLoadFailTimeoutMS: number;
     private readonly csfConfigFailTimeout: number;
     private readonly csfConfigFailTimeoutMS: number;
@@ -50,8 +51,8 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
     private readonly handleOnNoDataRequired: () => void;
     private readonly handleOnTouchstartIOS: (obj) => void;
     private readonly handleKeyDown: (obj: SFKeyDownObj) => void;
-    public state: SFPState;
-    public props: SFPProps;
+    declare public state: SFPState;
+    declare public props: SFPProps;
     private issuingCountryCode: string;
 
     constructor(props: SFPProps) {
@@ -329,7 +330,10 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
                     errorMessage: getErrorMessageFromCode(errorCode, SF_ErrorCodes), // this is the human-readable, untranslated, explanation of the error that will exist on the error object in card.state.errors
                     // For v5 the object found in state.errors should also contain the additional properties that used to be sent to the onError callback
                     // namely: translation, errorCode, a ref to rootNode &, in the case of failed binLookup, an array of the detectedBrands
-                    errorI18n: this.props.i18n.get(errorCode),
+                    // CVC's error copy is brand-dependent (Amex vs. others), so resolve the brand-aware
+                    // key here too - otherwise this errorI18n value (consumed by the SR-live-panel and
+                    // the public state.errors.<field>.errorI18n API) would always report the non-Amex text.
+                    errorI18n: this.props.i18n.get(resolveCVCErrorKey(errorCode, this.state.brand === 'amex')),
                     error: errorCode,
                     rootNode: this.rootNode,
                     ...(this.state.detectedUnsupportedBrands && { detectedBrands: this.state.detectedUnsupportedBrands })
@@ -393,7 +397,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
         if (this.csf) this.csf.brandsFromBinLookup(binLookupResponse, mustResetDedicatedBrand ? resetObject : null);
     }
 
-    private setRootNode = (input: HTMLElement): void => {
+    private readonly setRootNode = (input: HTMLElement): void => {
         this.rootNode = input;
     };
 

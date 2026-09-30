@@ -10,6 +10,7 @@ import { THREEDS2_FINGERPRINT, THREEDS2_FINGERPRINT_ERROR } from './constants';
 import { ActionHandledReturnObject } from '../../types/global-types';
 import { AnalyticsLogEvent, LogEventSubtype, LogEventType } from '../../core/Analytics/events/AnalyticsLogEvent';
 import { AnalyticsErrorEvent, ErrorEventCode, ErrorEventType } from '../../core/Analytics/events/AnalyticsErrorEvent';
+import { AdditionalDetailsData } from '../../types';
 
 class ThreeDS2DeviceFingerprint extends UIElement<ThreeDS2DeviceFingerprintConfiguration> {
     public static readonly type = TxVariants.threeDS2Fingerprint;
@@ -19,7 +20,7 @@ class ThreeDS2DeviceFingerprint extends UIElement<ThreeDS2DeviceFingerprintConfi
         type: THREEDS2_FINGERPRINT
     };
 
-    private callSubmit3DS2Fingerprint = callSubmit3DS2Fingerprint.bind(this); // New 3DS2 flow
+    private readonly callSubmit3DS2Fingerprint = callSubmit3DS2Fingerprint.bind(this); // New 3DS2 flow
 
     protected override beforeRender() {
         /* Do not send rendered events for ThreeDS2DeviceFingerprint - it will have the same timestamp as the "threeDSMethodData sent" event */
@@ -45,7 +46,7 @@ class ThreeDS2DeviceFingerprint extends UIElement<ThreeDS2DeviceFingerprintConfi
         if (this.props.isMDFlow) {
             this.props.on3DS2RedirectFlowComplete?.(state, this.elementRef);
         } else {
-            super.onComplete(state);
+            super.onComplete(state as AdditionalDetailsData);
         }
 
         this.unmount(); // re. fixing issue around back to back fingerprinting calls

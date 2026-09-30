@@ -1,21 +1,22 @@
-const omitKeys = (obj, omit) =>
+import { FormAction, FormInitArg, FormState, FormStateErrors, FormStateValid, ProcessFieldType } from './types';
+
+const omitKeys = <O extends object>(obj: O, omit: string[]): O =>
     Object.keys(obj)
         .filter(k => !omit.includes(k))
         .reduce((a, c) => {
             a[c] = obj[c];
             return a;
-        }, {});
+        }, {} as O);
 
-const addKeys = (obj, add, initialValue, defaultData, pendingData) =>
+const addKeys = <O extends object>(obj: O, add: string[], initialValue: unknown, defaultData?: NoInfer<O>, pendingData?: NoInfer<O>): O =>
     add.reduce((a, c) => ({ ...a, [c]: a[c] ?? pendingData?.[c] ?? defaultData?.[c] ?? initialValue }), obj);
 
 /**
  * Processes default data and sets as default in state
  */
-export function init({ schema, defaultData, processField, fieldProblems }) {
-    const getProcessedState = fieldKey => {
-        if (typeof defaultData[fieldKey] === 'undefined')
-            return { valid: false, errors: null, data: null, fieldProblems: fieldProblems?.[fieldKey] ?? null };
+export function init<FormSchema>({ schema, defaultData, processField, fieldProblems }: FormInitArg<FormSchema>): FormState<FormSchema> {
+    const getProcessedState = (fieldKey: string) => {
+        if (defaultData[fieldKey] === undefined) return { valid: false, errors: null, data: null, fieldProblems: fieldProblems?.[fieldKey] ?? null };
 
         const [formattedValue, validationResult] = processField(
             { key: fieldKey, value: defaultData[fieldKey], mode: 'blur' },
@@ -31,7 +32,7 @@ export function init({ schema, defaultData, processField, fieldProblems }) {
     };
 
     const formData = schema.reduce(
-        (acc: any, fieldKey) => {
+        (acc: Pick<FormState<FormSchema>, 'data' | 'valid' | 'errors' | 'fieldProblems'>, fieldKey) => {
             const { valid, errors, data, fieldProblems } = getProcessedState(fieldKey);
 
             return {
@@ -41,7 +42,7 @@ export function init({ schema, defaultData, processField, fieldProblems }) {
                 fieldProblems: { ...acc.fieldProblems, [fieldKey]: fieldProblems }
             };
         },
-        { data: {}, valid: {}, errors: {}, fieldProblems: {} }
+        { data: {} as FormSchema, valid: {}, errors: {}, fieldProblems: {} }
     );
 
     return {
@@ -53,36 +54,39 @@ export function init({ schema, defaultData, processField, fieldProblems }) {
     };
 }
 
-export function getReducer(processField) {
-    return function reducer(state, { type, key, value, mode, schema, defaultData, formValue, selectedSchema, fieldProblems, data }) {
-        const validationSchema: string[] = selectedSchema || state.schema;
-
-        switch (type) {
+export function getReducer<FormSchema extends object>(processField: ProcessFieldType) {
+    return function reducer(state: FormState<FormSchema>, action: FormAction<FormSchema>): FormState<FormSchema> {
+        switch (action.type) {
             case 'setData': {
+                const { key, value } = action;
                 return { ...state, data: { ...state['data'], [key]: value } };
             }
             case 'mergeData': {
-                return { ...state, data: { ...state['data'], ...data } };
+                return { ...state, data: { ...state['data'], ...action.data } };
             }
             case 'setValid': {
+                const { key, value } = action;
                 return { ...state, valid: { ...state['valid'], [key]: value } };
             }
             case 'setErrors': {
+                const { key, value } = action;
                 return { ...state, errors: { ...state['errors'], [key]: value } };
             }
             case 'setFieldProblems': {
+                const { fieldProblems } = action;
                 return (
                     state?.schema?.reduce(
                         (acc, key) => ({
                             ...acc,
                             fieldProblems: { ...state['fieldProblems'], [key]: fieldProblems?.[key] ?? null },
-                            valid: { ...state['valid'], [key]: state['valid']?.[key] && !fieldProblems[key] }
+                            valid: { ...state['valid'], [key]: state['valid']?.[key] && !fieldProblems?.[key] }
                         }),
                         state
                     ) ?? state
                 );
             }
             case 'updateField': {
+                const { key, value, mode } = action;
                 const [formattedValue, validation] = processField({ key, value, mode }, { state });
                 const oldValue = state.data[key];
                 const fieldProblems = { ...state.fieldProblems };
@@ -98,13 +102,14 @@ export function getReducer(processField) {
                 };
             }
             case 'mergeForm': {
+                const { formValue } = action;
                 // To provide a uniform result from forms even if there are multiple levels of nested forms are present
                 const mergedState = {
                     ...state,
-                    data: { ...state['data'], ...formValue['data'] },
-                    errors: { ...state['errors'], ...formValue['errors'] },
-                    valid: { ...state['valid'], ...formValue['valid'] },
-                    fieldProblems: { ...state['fieldProblems'], ...formValue['fieldProblems'] }
+                    data: { ...state['data'], ...formValue?.['data'] },
+                    errors: { ...state['errors'], ...formValue?.['errors'] },
+                    valid: { ...state['valid'], ...formValue?.['valid'] },
+                    fieldProblems: { ...state['fieldProblems'], ...formValue?.['fieldProblems'] }
                 };
                 if (mergedState['valid']) {
                     mergedState.isValid = Object.values(mergedState.valid).every(isValid => isValid);
@@ -112,9 +117,10 @@ export function getReducer(processField) {
                 return mergedState;
             }
             case 'setSchema': {
-                const defaultState = init({ schema, defaultData, processField, fieldProblems });
-                const removedSchemaFields = state.schema.filter(x => !schema.includes(x));
-                const newSchemaFields = schema.filter(x => !state.schema.includes(x));
+                const { schema, defaultData } = action;
+                const defaultState = init({ schema, defaultData, processField });
+                const removedSchemaFields = state.schema.filter(x => !schema?.includes(x));
+                const newSchemaFields = schema?.filter(x => !state.schema.includes(x));
 
                 // if we remove a key from the schema we also lost the latest value of the field
                 // to prevent this we have to store the value in a local state so we can recover it when the key is re-added to the schema
@@ -125,13 +131,32 @@ export function getReducer(processField) {
                 };
 
                 // reindex data and validation according to the new schema
-                const data = addKeys(omitKeys(state.data, removedSchemaFields), newSchemaFields, null, defaultState.data, state.local?.data);
-                const valid = addKeys(omitKeys(state.valid, removedSchemaFields), newSchemaFields, false, defaultState.valid, state.local?.valid);
-                const errors = addKeys(omitKeys(state.errors, removedSchemaFields), newSchemaFields, null, defaultState.errors, state.local?.errors);
+                const data = addKeys(
+                    omitKeys<FormSchema>(state.data, removedSchemaFields),
+                    newSchemaFields,
+                    null,
+                    defaultState.data,
+                    state.local?.data
+                );
+                const valid = addKeys(
+                    omitKeys<FormStateValid>(state.valid, removedSchemaFields),
+                    newSchemaFields,
+                    false,
+                    defaultState.valid,
+                    state.local?.valid
+                );
+                const errors = addKeys(
+                    omitKeys<FormStateErrors>(state.errors, removedSchemaFields),
+                    newSchemaFields,
+                    null,
+                    defaultState.errors,
+                    state.local?.errors
+                );
 
                 return { ...state, schema, data, valid, errors, local };
             }
             case 'validateForm': {
+                const validationSchema: string[] = action.selectedSchema || state.schema;
                 const formValidation = validationSchema.reduce(
                     (acc, cur) => {
                         const [, validation] = processField({ key: cur, value: state.data[cur], mode: 'blur' }, { state });

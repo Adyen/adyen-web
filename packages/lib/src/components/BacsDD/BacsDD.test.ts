@@ -10,8 +10,8 @@ describe('Bacs Direct Debit', () => {
         const core = setupCoreMock();
 
         const bacs = new BacsDD(core, {
-            modules: { resources: global.resources },
-            i18n: global.i18n,
+            modules: { resources: core.modules.resources },
+            i18n: core.modules.i18n,
             onSubmit: onSubmitMock,
             loadingContext: 'https://checkoutshopper-live.adyen.com/checkoutshopper/'
         });
@@ -71,8 +71,8 @@ describe('Bacs Direct Debit', () => {
         const onSubmitMock = jest.fn();
 
         const bacs = new BacsDD(core, {
-            modules: { resources: global.resources },
-            i18n: global.i18n,
+            modules: { resources: core.modules.resources },
+            i18n: core.modules.i18n,
             onSubmit: onSubmitMock,
             loadingContext: 'https://checkoutshopper-live.adyen.com/checkoutshopper/'
         });
@@ -107,8 +107,8 @@ describe('Bacs Direct Debit', () => {
         const onSubmitMock = jest.fn();
 
         const bacs = new BacsDD(core, {
-            modules: { analytics: global.analytics, resources: global.resources },
-            i18n: global.i18n,
+            modules: { analytics: core.modules.analytics, resources: core.modules.resources },
+            i18n: core.modules.i18n,
             onSubmit: onSubmitMock,
             loadingContext: 'https://checkoutshopper-live.adyen.com/checkoutshopper/'
         });
@@ -190,8 +190,8 @@ describe('Bacs Direct Debit', () => {
         const core = setupCoreMock();
 
         const bacs = new BacsDD(core, {
-            modules: { analytics: global.analytics, resources: global.resources },
-            i18n: global.i18n,
+            modules: { analytics: core.modules.analytics, resources: core.modules.resources },
+            i18n: core.modules.i18n,
             loadingContext: 'https://checkoutshopper-live.adyen.com/checkoutshopper/',
             url: 'https://test.adyen.com/hpp/generateDdi.shtml?pdfFields=%2BjXS7Uo2RhBavkz'
         });

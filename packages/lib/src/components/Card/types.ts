@@ -12,22 +12,15 @@ import {
 } from '../internal/SecuredFields/lib/types';
 import { CVCPolicyType, DatePolicyType, CardAllValidData } from '../internal/SecuredFields/lib/types';
 import { ClickToPayProps } from '../internal/ClickToPay/types';
-import { DisclaimerMsgObject } from '../internal/DisclaimerMessage/DisclaimerMessage';
 import { UIElementProps } from '../internal/UIElement/types';
 import type { OnAddressLookupType, OnAddressSelectedType } from '../internal/Address/components/AddressSearch';
 import type { FastlaneSignupConfiguration } from '../PayPalFastlane/types';
 import type { ChallengeWindowSize } from '../ThreeDS2/types';
 import { InstallmentOptions } from './components/CardInput/components/Installments/Installments';
+import { AddressModeOptions } from './components/CardInput/types';
 
 type PlaceholderKeys =
-    | 'holderName'
-    | 'cardNumber'
-    | 'expiryDate'
-    | 'expiryMonth'
-    | 'expiryYear'
-    | 'securityCodeThreeDigits'
-    | 'securityCodeFourDigits'
-    | 'password';
+    'holderName' | 'cardNumber' | 'expiryDate' | 'expiryMonth' | 'expiryYear' | 'securityCodeThreeDigits' | 'securityCodeFourDigits' | 'password';
 
 export type FundingSourceKeys = 'credit' | 'debit' | 'prepaid';
 
@@ -55,7 +48,7 @@ export interface CardConfiguration extends UIElementProps {
      *
      * - merchant set config option
      */
-    billingAddressMode?: 'full' | 'partial' | 'none';
+    billingAddressMode?: `${AddressModeOptions}`;
 
     /**
      * Show Address fields
@@ -152,12 +145,6 @@ export interface CardConfiguration extends UIElementProps {
      * - merchant set config option
      */
     disableIOSArrowKeys?: boolean;
-
-    /**
-     * Object to configure the message and text for a disclaimer message, added after the Card input fields
-     * - merchant set config option
-     */
-    disclaimerMessage?: DisclaimerMsgObject;
 
     /**
      * Allow binLookup process to occur
@@ -507,6 +494,7 @@ export interface BrandObject {
     brandImageUrl?: string;
     panLength?: number;
     paymentMethodVariant?: string;
+    healthcare?: boolean;
 }
 
 export interface BinLookupResponseRaw {

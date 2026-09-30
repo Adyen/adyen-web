@@ -83,4 +83,35 @@ describe('GooglePay environment resolution', () => {
 
         expect(getGooglePaymentsClientSpy).toHaveBeenCalledWith(expect.objectContaining({ environment: 'TEST' }));
     });
+
+    test('should pass nonce to getGooglePaymentsClient when nonce is provided', async () => {
+        const checkout = new AdyenCheckout({
+            environment: 'test',
+            clientKey: 'test_123456',
+            countryCode: 'US'
+        });
+        await checkout.initialize();
+
+        new GooglePay(checkout, {
+            configuration: { merchantId: 'merchant-id', gatewayMerchantId: 'gateway-id' },
+            nonce: 'csp-test-nonce'
+        });
+
+        expect(getGooglePaymentsClientSpy).toHaveBeenCalledWith(expect.objectContaining({ environment: 'TEST', nonce: 'csp-test-nonce' }));
+    });
+
+    test('should not include nonce in getGooglePaymentsClient when nonce is not provided', async () => {
+        const checkout = new AdyenCheckout({
+            environment: 'test',
+            clientKey: 'test_123456',
+            countryCode: 'US'
+        });
+        await checkout.initialize();
+
+        new GooglePay(checkout, {
+            configuration: { merchantId: 'merchant-id', gatewayMerchantId: 'gateway-id' }
+        });
+
+        expect(getGooglePaymentsClientSpy).toHaveBeenCalledWith(expect.not.objectContaining({ nonce: expect.anything() }));
+    });
 });

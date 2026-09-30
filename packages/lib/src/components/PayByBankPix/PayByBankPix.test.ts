@@ -147,6 +147,20 @@ describe('PayByBankPix', () => {
             expect(await screen.findByRole('option', { name: /Iniciador Mock Bank/i })).toBeInTheDocument();
         });
 
+        test('should render the pay button on the hosted page even if showPayButton is false', async () => {
+            const core = setupCoreMock();
+
+            payByBankPixElement = new PayByBankPix(core, {
+                ...coreProps,
+                _isAdyenHosted: true,
+                issuers: [{ name: 'Iniciador Mock Bank', id: '123' }],
+                showPayButton: false
+            });
+
+            render(payByBankPixElement.render());
+            expect(await screen.findByRole('button', { name: /Continue/i })).toBeInTheDocument();
+        });
+
         test('should call captureRiskSignalsEnrollment and onChange after one issuer is selected', async () => {
             render(payByBankPixElement.render());
 
@@ -324,6 +338,32 @@ describe('PayByBankPix', () => {
             expect(canUseStoredCredentialMock).toHaveBeenCalled();
         });
 
+        test('should bypass onReview and proceed to payment directly when paying with stored method', async () => {
+            const onReviewMock = jest.fn();
+            const core = setupCoreMock();
+
+            const element = new PayByBankPix(core, {
+                ...coreProps,
+                onSubmit: onSubmitMock,
+                onReview: onReviewMock,
+                _isAdyenHosted: true,
+                storedPaymentMethodId: 'mock-stored-payment-method-id',
+                payByBankPixDetails: {
+                    receiver: 'mock-receiver',
+                    ispb: 'mock-issuer',
+                    deviceId: 'mock-device'
+                },
+                amount: { value: 100, currency: 'BRL' }
+            });
+
+            render(element.render());
+            await user.click(screen.getByRole('button', { name: 'Continue to PIX through OpenBanking' }));
+            await new Promise(process.nextTick);
+
+            expect(onReviewMock).not.toHaveBeenCalled();
+            expect(onSubmitMock).toHaveBeenCalled();
+        });
+
         test('isAvailable should reject if canUseStoredCredential returns false', async () => {
             canUseStoredCredentialMock.mockResolvedValueOnce(false);
             await expect(payByBankPixElement.isAvailable()).rejects.toThrow(
@@ -333,7 +373,7 @@ describe('PayByBankPix', () => {
 
         test('should send the storedPaymentMethodId when the pay button is clicked', async () => {
             render(payByBankPixElement.render());
-            await user.click(screen.getByRole('button', { name: /Continue/i }));
+            await user.click(screen.getByRole('button', { name: 'Continue to PIX through OpenBanking' }));
             expect(onSubmitMock).toHaveBeenCalledWith(
                 {
                     data: {

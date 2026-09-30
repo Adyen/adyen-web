@@ -40,11 +40,5 @@
             text-decoration: line-through;
             opacity: 0.4;
         }
-
-        .adyen-checkout__dropdown__button__secondary-text {
-            color: variable-generator.token(color-label-tertiary);
-            font-weight: variable-generator.token(text-body-stronger-font-weight);
-            opacity: 1;
-        }
     }
 }

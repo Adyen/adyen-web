@@ -76,7 +76,10 @@ export enum ErrorEventCode {
     THREEDS2_NO_ACTION_FOR_CHALLENGE = '804',
 
     /** The challenge process has happened, an object has been returned, parsed & accepted as legit, but the result prop on that object is either missing or doesn't have a transStatus prop */
-    THREEDS2_CHALLENGE_RESOLVED_WITHOUT_RESULT_PROP = '805'
+    THREEDS2_CHALLENGE_RESOLVED_WITHOUT_RESULT_PROP = '805',
+
+    /** Decoded challenge token is missing a valid threeDSNotificationURL property. This means any challenge iframe that is presented will not be able to postMessage back to finalise the process, and trigger an onAdditionalDetails call. */
+    THREEDS2_CHALLENGE_TOKEN_IS_MISSING_THREEDSNOTIFICATIONURL = '806'
 }
 
 export class AnalyticsErrorEvent extends AbstractAnalyticsEvent {

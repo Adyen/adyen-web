@@ -3,12 +3,15 @@ import { render, screen, within, waitFor } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import Select from './Select';
 import { CoreProvider } from '../../../../core/Context/CoreProvider';
+import { setupCoreMock } from '../../../../../config/testMocks/setup-core-mock';
+
+const core = setupCoreMock();
 
 describe('Select', () => {
     const user = userEvent.setup();
     const renderSelect = (props: any) =>
         render(
-            <CoreProvider loadingContext={'test'} i18n={global.i18n} resources={global.resources}>
+            <CoreProvider loadingContext={'test'} i18n={core.modules.i18n} resources={core.modules.resources}>
                 <Select {...props} name={'mockSelect'} />
             </CoreProvider>
         );
@@ -253,6 +256,186 @@ describe('Select', () => {
             const combobox = screen.getByRole('combobox');
             expect(combobox).toHaveAttribute('aria-labelledby', 'test-select-label test-select-value');
             expect(within(combobox).getByText('Mobile')).toBeInTheDocument();
+        });
+    });
+
+    describe('combobox (filterable=true) click targets', () => {
+        const items = [
+            { name: 'Option 1', id: '1' },
+            { name: 'Option 2', id: '2' }
+        ];
+
+        //Since the chevron is a pseudo element, clicking the wrapper is equivalent
+        const getChevron = (): HTMLElement => {
+            // eslint-disable-next-line testing-library/no-node-access
+            const wrapper = screen.getByRole('combobox').closest<HTMLElement>('.adyen-checkout__dropdown__button');
+            if (!wrapper) throw new Error('The dropdown button wrapper was not found');
+            return wrapper;
+        };
+
+        test('clicking the chevron opens the list and moves focus to the filter input', async () => {
+            renderSelect({ items, filterable: true, selectedValue: '1' });
+            await user.click(getChevron());
+            expect(screen.getByRole('combobox')).toHaveAttribute('aria-expanded', 'true');
+            expect(screen.getByRole('combobox')).toHaveFocus();
+        });
+
+        test('clicking the chevron of an open list closes it again', async () => {
+            renderSelect({ items, filterable: true, selectedValue: '1' });
+            await user.click(getChevron());
+            expect(screen.getByRole('combobox')).toHaveAttribute('aria-expanded', 'true');
+            await user.click(getChevron());
+            expect(screen.getByRole('combobox')).toHaveAttribute('aria-expanded', 'false');
+        });
+
+        test('clicking the filter input of an open list keeps it open', async () => {
+            renderSelect({ items, filterable: true, selectedValue: '1' });
+            const combobox = screen.getByRole('combobox');
+            await user.click(combobox);
+            await user.click(combobox);
+            expect(combobox).toHaveAttribute('aria-expanded', 'true');
+        });
+    });
+
+    describe('selected item icon', () => {
+        const items = [
+            { name: 'Option 1', id: '1', icon: 'option-1.svg' },
+            { name: 'Option 2', id: '2', icon: 'option-2.svg' }
+        ];
+
+        test('renders the icon of the selected item inside the select-only button', () => {
+            renderSelect({ items, filterable: false, selectedValue: '1' });
+
+            expect(within(screen.getByRole('combobox')).getByRole('img', { name: 'Option 1' })).toBeInTheDocument();
+        });
+
+        test('renders the icon of the selected item in the collapsed combobox and drops it once the list opens', async () => {
+            renderSelect({ items, filterable: true, selectedValue: '1' });
+
+            // the collapsed combobox icon plus the icon of the matching option in the list
+            expect(screen.getAllByRole('img', { name: 'Option 1' })).toHaveLength(2);
+
+            await user.click(screen.getByRole('combobox'));
+
+            expect(screen.getAllByRole('img', { name: 'Option 1' })).toHaveLength(1);
+        });
+    });
+
+    describe('readonly', () => {
+        const items = [
+            { name: 'Option 1', id: '1' },
+            { name: 'Option 2', id: '2' }
+        ];
+
+        test('clicking a readonly select-only dropdown does not open the list', async () => {
+            const onChange = jest.fn();
+            renderSelect({ items, filterable: false, readonly: true, selectedValue: '1', onChange });
+
+            const combobox = screen.getByRole('combobox');
+            await user.click(combobox);
+
+            expect(combobox).toHaveAttribute('aria-expanded', 'false');
+            expect(combobox).toHaveAttribute('aria-disabled', 'true');
+            expect(onChange).not.toHaveBeenCalled();
+        });
+
+        test('clicking a readonly combobox does not open the list', async () => {
+            const onChange = jest.fn();
+            renderSelect({ items, filterable: true, readonly: true, selectedValue: '1', onChange });
+
+            const combobox = screen.getByRole('combobox');
+            await user.click(combobox);
+
+            expect(combobox).toHaveAttribute('aria-expanded', 'false');
+            expect(combobox).toHaveAttribute('aria-disabled', 'true');
+            expect(onChange).not.toHaveBeenCalled();
+        });
+    });
+
+    describe('selected option', () => {
+        const items = [
+            { name: 'Issuer 1', id: '1' },
+            { name: 'Issuer 2', id: '2' },
+            { name: 'Issuer 3', id: '3' }
+        ];
+
+        test('marks the selected option and the checkmark adds no text to its accessible name', async () => {
+            renderSelect({ items, filterable: false, selectedValue: '2' });
+
+            await user.click(screen.getByRole('combobox'));
+
+            const options = screen.getAllByRole('option');
+
+            expect(options[1]).toHaveAttribute('aria-selected', 'true');
+            expect(options[1]).toHaveAccessibleName('Issuer 2');
+        });
+
+        test('keeps exactly one option selected when the selection changes', async () => {
+            const view = renderSelect({ items, filterable: false, selectedValue: '1' });
+
+            await user.click(screen.getByRole('combobox'));
+            expect(screen.getByRole('option', { name: 'Issuer 1' })).toHaveAttribute('aria-selected', 'true');
+
+            view.rerender(
+                <CoreProvider loadingContext={'test'} i18n={core.modules.i18n} resources={core.modules.resources}>
+                    <Select items={items} filterable={false} selectedValue={'3'} name={'mockSelect'} />
+                </CoreProvider>
+            );
+
+            const selectedOptions = screen.getAllByRole('option').filter(option => option.getAttribute('aria-selected') === 'true');
+
+            expect(selectedOptions).toHaveLength(1);
+            expect(screen.getByRole('option', { name: 'Issuer 3' })).toHaveAttribute('aria-selected', 'true');
+        });
+    });
+
+    describe('filtering', () => {
+        test('does not match on secondaryText', async () => {
+            renderSelect({
+                items: [{ name: 'Apple', id: '1', secondaryText: 'Supporting text' }],
+                filterable: true,
+                selectedValue: '',
+                onChange: jest.fn()
+            });
+
+            await user.type(screen.getByRole('combobox'), 'Supporting');
+
+            expect(screen.queryAllByRole('option')).toHaveLength(0);
+            await waitFor(() => expect(screen.getByRole('status')).toHaveTextContent('No options found'));
+        });
+    });
+
+    describe('disabled option', () => {
+        const items = [
+            { name: 'Option 1', id: '1' },
+            { name: 'Option 2', id: '2' },
+            { name: 'Option 3', id: '3', disabled: true }
+        ];
+
+        test('cannot be selected by click', async () => {
+            const onChange = jest.fn();
+            renderSelect({ items, filterable: false, onChange });
+
+            await user.click(screen.getByRole('combobox'));
+            await user.click(screen.getByRole('option', { name: 'Option 3' }));
+
+            expect(onChange).not.toHaveBeenCalled();
+        });
+
+        test('cannot be selected by keyboard', async () => {
+            const onChange = jest.fn();
+            renderSelect({ items, filterable: false, onChange });
+
+            const combobox = screen.getByRole('combobox');
+            await user.click(combobox);
+            await user.keyboard('[ArrowDown][ArrowDown][ArrowDown]');
+
+            // Assert we actually landed on the disabled option, otherwise the expectation below passes vacuously
+            expect(combobox).toHaveAttribute('aria-activedescendant', 'listItem-3');
+
+            await user.keyboard('[Enter]');
+
+            expect(onChange).not.toHaveBeenCalled();
         });
     });
 });

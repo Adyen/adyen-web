@@ -7,7 +7,6 @@ import type {
     DualBrandSelectElement,
     CardPlaceholders
 } from '../../types';
-import { ValidationResult } from '../../../internal/PersonalDetails/types';
 import {
     CardAllValidData,
     CardAutoCompleteData,
@@ -26,7 +25,6 @@ import { CardErrorData, StylesObject } from '../../../internal/SecuredFields/lib
 import { Resources } from '../../../../core/Context/Resources';
 import { SRPanel } from '../../../../core/Errors/SRPanel';
 import RiskElement from '../../../../core/RiskModule';
-import { DisclaimerMsgObject } from '../../../internal/DisclaimerMessage/DisclaimerMessage';
 import { OnAddressLookupType, OnAddressSelectedType } from '../../../internal/Address/components/AddressSearch';
 import { ComponentMethodsRef } from '../../../internal/UIElement/types';
 import { AddressData } from '../../../../types/global-types';
@@ -38,6 +36,8 @@ import { h } from 'preact';
 import { InstallmentOptions } from './components/Installments/Installments';
 import type { Form } from '../../../../utils/useForm/types';
 import type { SecuredFieldsProviderRef } from '../../../internal/SecuredFields/SFP/types';
+import { AdyenCheckoutError } from '../../../../types';
+import { ValidationRuleResult } from '../../../../utils/Validator/ValidationRuleResult';
 
 export interface CardInputValidState {
     holderName?: boolean;
@@ -52,19 +52,19 @@ export interface CardInputValidState {
 }
 
 export interface CardInputErrorState {
-    holderName?: ValidationResult;
-    billingAddress?: ValidationResult;
-    socialSecurityNumber?: ValidationResult;
+    holderName?: ValidationRuleResult;
+    billingAddress?: ValidationRuleResult;
+    socialSecurityNumber?: ValidationRuleResult;
     encryptedCardNumber?: boolean;
     encryptedExpiryDate?: boolean;
     encryptedSecurityCode?: boolean;
-    taxNumber?: ValidationResult;
+    taxNumber?: ValidationRuleResult;
     encryptedPassword?: boolean;
 }
 
 export interface CardInputDataState {
     holderName?: string;
-    billingAddress?: AddressData;
+    billingAddress?: AddressData | null;
     socialSecurityNumber?: string;
     taxNumber?: string;
 }
@@ -84,7 +84,7 @@ export interface CardInputProps {
     brands?: string[];
     brandsConfiguration?: CardBrandsConfiguration;
     brandsIcons: Array<BrandConfiguration>;
-    clientKey: string;
+    clientKey?: string;
     configuration: CardBackendConfiguration;
     countryCode?: string;
     cvcPolicy?: CVCPolicyType;
@@ -105,14 +105,14 @@ export interface CardInputProps {
     installmentOptions?: InstallmentOptions;
     keypadFix?: boolean;
     lastFour?: string;
-    loadingContext: string;
+    loadingContext?: string;
     legacyInputMode?: boolean;
     minimumExpiryDate?: string;
     modules?: {
-        srPanel: SRPanel;
-        analytics: IAnalytics;
-        risk: RiskElement;
-        resources: Resources;
+        srPanel?: SRPanel;
+        analytics?: IAnalytics;
+        risk?: RiskElement;
+        resources?: Resources;
     };
     onAdditionalSFConfig?: () => void;
     onAdditionalSFRemoved?: () => void;
@@ -123,7 +123,7 @@ export interface CardInputProps {
     onBrand?: (o: CardBrandData) => void;
     onConfigSuccess?: (O: CardConfigSuccessData) => void;
     onChange: (state) => void;
-    onError?: () => void;
+    onError?: (e: AdyenCheckoutError) => void;
     onFieldValid?: (o: CardFieldValidData) => void;
     onFocus?: (e) => void;
     onLoad?: (o: CardLoadData) => void;
@@ -131,6 +131,7 @@ export interface CardInputProps {
     handleKeyDown?: (event: KeyboardEvent) => void;
     onAddressLookup?: OnAddressLookupType;
     onAddressSelected?: OnAddressSelectedType;
+    onSubmit?: () => void;
     addressSearchDebounceMs?: number;
     payButton?: (props: PayButtonProps) => h.JSX.Element;
     placeholders?: CardPlaceholders;
@@ -139,7 +140,6 @@ export interface CardInputProps {
     setComponentRef?: (ref) => void;
     showBrandIcon?: boolean;
     showInstallmentAmounts?: boolean;
-    showPayButton: boolean;
     showStoreDetailsCheckbox?: boolean;
     showWarnings?: boolean;
     showContextualElement?: boolean;
@@ -150,7 +150,6 @@ export interface CardInputProps {
     type: string;
     maskSecurityCode?: boolean;
     exposeExpiryDate?: boolean;
-    disclaimerMessage?: DisclaimerMsgObject;
 }
 
 export interface CardInputState {
@@ -173,7 +172,7 @@ export interface CardInputState {
 // An interface for the members exposed by CardInput to its parent Card/UIElement
 export interface CardInputRef extends ComponentMethodsRef {
     sfp?: SecuredFieldsProviderRef;
-    setFocusOn?: (who) => void;
+    setFocusOn?: (field: string) => void;
     processBinLookupResponse?: (binLookupResponse: BinLookupResponse, isReset: boolean) => void;
     updateStyles?: (stylesObj: StylesObject) => void;
     handleUnsupportedCard?: (errObj: CardErrorData) => boolean;

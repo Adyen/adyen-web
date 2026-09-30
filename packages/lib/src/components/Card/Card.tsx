@@ -2,17 +2,24 @@ import { h } from 'preact';
 import CardInput from './components/CardInput';
 import collectBrowserInfo from '../../utils/browserInfo';
 import { BinLookupResponse, CardElementData, CardConfiguration } from './types';
-import triggerBinLookUp from '../internal/SecuredFields/binLookup/triggerBinLookUp';
-import { CardBinLookupData, CardConfigSuccessData, CardFocusData } from '../internal/SecuredFields/lib/types';
+import { triggerBinLookUp } from '../internal/SecuredFields/binLookup/triggerBinLookUp';
+import {
+    CardBinLookupData,
+    CardBrandData,
+    CardConfigSuccessData,
+    CardErrorData,
+    CardFocusData,
+    StylesObject
+} from '../internal/SecuredFields/lib/types';
 import { fieldTypeToSnakeCase, isSecuredField } from '../internal/SecuredFields/utils';
-import { reject } from '../../utils/commonUtils';
+import { notFalsy, reject } from '../../utils/commonUtils';
 import { shouldIncludeInstallmentsInPaymentData } from './components/CardInput/utils';
 import createClickToPayService from '../internal/ClickToPay/services/create-clicktopay-service';
 import { ClickToPayCheckoutPayload, IClickToPayService } from '../internal/ClickToPay/services/types';
 import ClickToPayWrapper from './components/ClickToPayWrapper';
 import { ComponentFocusObject, PaymentMethodBrand } from '../../types/global-types';
 import { TxVariants } from '../tx-variants';
-import type { UIElementStatus } from '../internal/UIElement/types';
+import type { ComponentMethodsRef, UIElementStatus } from '../internal/UIElement/types';
 import UIElement from '../internal/UIElement';
 import PayButton from '../internal/PayButton';
 import type { ICore } from '../../core/types';
@@ -20,16 +27,20 @@ import AdyenCheckoutError, { IMPLEMENTATION_ERROR } from '../../core/Errors/Adye
 import CardInputDefaultProps from './components/CardInput/defaultProps';
 import { PayButtonProps } from '../internal/PayButton/PayButton';
 import { AnalyticsInfoEvent, InfoEventType, UiTarget } from '../../core/Analytics/events/AnalyticsInfoEvent';
+import { InstallmentOptions } from './components/CardInput/components/Installments/Installments';
+import { AddressModeOptions, CardInputRef } from './components/CardInput/types';
 
 export class CardElement extends UIElement<CardConfiguration> {
     public static readonly type: TxVariants = TxVariants.scheme;
 
     private readonly clickToPayService: IClickToPayService | null;
 
+    declare protected componentRef: CardInputRef | undefined;
+
     /**
      * Reference to the 'ClickToPayComponent'
      */
-    private clickToPayRef = null;
+    private clickToPayRef: ComponentMethodsRef | null = null;
 
     constructor(checkout: ICore, props?: CardConfiguration) {
         super(checkout, props);
@@ -54,17 +65,17 @@ export class CardElement extends UIElement<CardConfiguration> {
         ...reject(['type', 'setComponentRef']).from(CardInputDefaultProps)
     };
 
-    public setStatus(status: UIElementStatus, props?): this {
+    public setStatus(status: UIElementStatus): this {
         if (this.componentRef?.setStatus) {
-            this.componentRef.setStatus(status, props);
+            this.componentRef.setStatus(status);
         }
         if (this.clickToPayRef?.setStatus) {
-            this.clickToPayRef.setStatus(status, props);
+            this.clickToPayRef.setStatus(status);
         }
         return this;
     }
 
-    private setClickToPayRef = ref => {
+    private readonly setClickToPayRef = (ref: ComponentMethodsRef) => {
         this.clickToPayRef = ref;
     };
 
@@ -97,6 +108,23 @@ export class CardElement extends UIElement<CardConfiguration> {
             );
         }
 
+        // Take the configuration set on the card component - which is either merchant defined or default (empty object)
+        // @ts-ignore 'installmentOptions' is optional on CardConfiguration (the merchant-facing type), but by this point
+        // UIElement.buildElementProps has already merged CardInputDefaultProps.installmentOptions ({}) into props
+        // before formatProps() is called, so the value is always defined here.
+        const merchantInstallmentOptions: InstallmentOptions = props.installmentOptions;
+
+        if (props.session && notFalsy(merchantInstallmentOptions)) {
+            console.warn(
+                'WARNING: You have defined installments configuration on the Card component, but you are using a /sessions integration.\nWith this integration, installments configuration must be defined when you create the session. Any configuration defined elsewhere will be ignored.\n\n'
+            );
+        }
+
+        // In a session scenario, only the session's own installments configuration is used; otherwise fall back to the merchant configuration / default
+        const shownInstallmentOptions: InstallmentOptions = props.session
+            ? (props.session?.configuration?.installmentOptions ?? CardInputDefaultProps.installmentOptions)
+            : merchantInstallmentOptions;
+
         return {
             ...props,
             // Mismatch between hasHolderName & holderNameRequired which can mean card can never be valid
@@ -118,8 +146,7 @@ export class CardElement extends UIElement<CardConfiguration> {
             },
             brandsConfiguration: props.brandsConfiguration || props.configuration?.brandsConfiguration || {},
             icon: props.icon || props.configuration?.icon,
-            // installmentOptions of a session should be used before falling back to the merchant configuration
-            installmentOptions: props.session?.configuration?.installmentOptions || props.installmentOptions,
+            installmentOptions: shownInstallmentOptions,
             enableStoreDetails,
             showStoreDetailsCheckbox,
             /**
@@ -189,31 +216,31 @@ export class CardElement extends UIElement<CardConfiguration> {
         this.analytics.sendAnalytics(event);
     }
 
-    updateStyles(stylesObj) {
+    updateStyles(stylesObj: StylesObject) {
         if (this.componentRef?.updateStyles) this.componentRef.updateStyles(stylesObj);
         return this;
     }
 
-    setFocusOn(fieldName) {
+    setFocusOn(fieldName: string) {
         if (this.componentRef?.setFocusOn) this.componentRef.setFocusOn(fieldName);
         return this;
     }
 
-    public onBrand = event => {
+    public onBrand = (event: CardBrandData) => {
         this.props.onBrand?.(event);
     };
 
-    processBinLookupResponse(binLookupResponse: BinLookupResponse, isReset = false) {
+    processBinLookupResponse(binLookupResponse: BinLookupResponse | null, isReset = false) {
         if (this.componentRef?.processBinLookupResponse) this.componentRef.processBinLookupResponse(binLookupResponse, isReset);
         return this;
     }
 
-    handleUnsupportedCard(errObj) {
+    handleUnsupportedCard(errObj: CardErrorData) {
         if (this.componentRef?.handleUnsupportedCard) this.componentRef.handleUnsupportedCard(errObj);
         return this;
     }
 
-    private handleClickToPaySubmit = (payload: ClickToPayCheckoutPayload) => {
+    private readonly handleClickToPaySubmit = (payload: ClickToPayCheckoutPayload) => {
         this.setState({ data: { ...payload }, valid: {}, errors: {}, isValid: true });
         this.submit();
     };
@@ -226,14 +253,14 @@ export class CardElement extends UIElement<CardConfiguration> {
         }
     }
 
-    private onConfigSuccess = (obj: CardConfigSuccessData) => {
+    private readonly onConfigSuccess = (obj: CardConfigSuccessData) => {
         const event = new AnalyticsInfoEvent({ component: this.type, type: InfoEventType.configured });
         this.submitAnalytics(event);
 
         this.props.onConfigSuccess?.(obj);
     };
 
-    private onFocus = (obj: ComponentFocusObject) => {
+    private readonly onFocus = (obj: ComponentFocusObject) => {
         const event = new AnalyticsInfoEvent({
             component: this.type,
             type: InfoEventType.focus,
@@ -249,7 +276,7 @@ export class CardElement extends UIElement<CardConfiguration> {
         }
     };
 
-    private onBlur = (obj: ComponentFocusObject) => {
+    private readonly onBlur = (obj: ComponentFocusObject) => {
         const event = new AnalyticsInfoEvent({
             component: this.type,
             type: InfoEventType.unfocus,
@@ -336,7 +363,16 @@ export class CardElement extends UIElement<CardConfiguration> {
     protected override payButton = (props: PayButtonProps): h.JSX.Element => {
         const isZeroAuth = this.props.amount?.value === 0;
         const isStoredCard = this.props.storedPaymentMethodId?.length > 0;
-        return <PayButton {...props} label={isZeroAuth && !isStoredCard ? this.props.i18n.get('payButton.saveDetails') : ''} onClick={this.submit} />;
+        return (
+            <PayButton
+                {...props}
+                showPayButton={this.props.showPayButton}
+                disclaimerMessage={this.props.disclaimerMessage}
+                label={isZeroAuth && !isStoredCard ? this.props.i18n.get('payButton.saveDetails') : ''}
+                onClick={this.submit}
+                showReview={!!this.props.onReview}
+            />
+        );
     };
 
     private renderCardInput(isCardPrimaryInput = true): h.JSX.Element {
@@ -345,6 +381,7 @@ export class CardElement extends UIElement<CardConfiguration> {
                 setComponentRef={this.setComponentRef}
                 {...this.props}
                 {...this.state}
+                billingAddressMode={this.props.billingAddressMode as AddressModeOptions}
                 onSubmitAnalytics={this.submitAnalytics}
                 onChange={this.setState}
                 onSubmit={this.submit}

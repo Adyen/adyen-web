@@ -4,7 +4,7 @@ import { useCoreContext } from '../Context/CoreProvider';
 import { partial } from '../../components/internal/SecuredFields/lib/utilities/commonUtils';
 import { setSRMessagesFromErrors } from './utils';
 import { SRPanel } from './SRPanel';
-import { SetSRMessagesReturnObject } from './types';
+import { ErrorObj, SetSRMessagesReturnObject } from './types';
 import { StringObject } from '../../components/internal/Address/types';
 
 type SRPanelProviderProps = {
@@ -13,12 +13,16 @@ type SRPanelProviderProps = {
 };
 
 interface SetSRMessagesReturnFnProps {
-    errors: {
-        [key: string]: any;
-    };
+    errors: ErrorObj;
     isValidating: boolean;
     layout?: string[];
     countrySpecificLabels?: StringObject;
+    /**
+     * Whether this form currently has errors of its own on display. The SR panel is shared with
+     * status reporters (loading, await, countdown), so a form must not clear it when it has
+     * nothing of its own to clear. Defaults to true to preserve existing caller behaviour.
+     */
+    hasDisplayedErrors?: boolean;
 }
 
 export type SetSRMessagesReturnFn = (props: SetSRMessagesReturnFnProps) => SetSRMessagesReturnObject;

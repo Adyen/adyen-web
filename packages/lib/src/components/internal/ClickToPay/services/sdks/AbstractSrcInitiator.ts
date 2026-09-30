@@ -1,5 +1,6 @@
 import {
     CustomSdkConfiguration,
+    ISchemeSdk,
     SrcCheckoutParams,
     SrciCheckoutResponse,
     SrciCompleteIdentityValidationResponse,
@@ -32,7 +33,7 @@ export interface ISrcInitiator {
 }
 
 export default abstract class AbstractSrcInitiator implements ISrcInitiator {
-    public schemeSdk: any;
+    public schemeSdk: ISchemeSdk;
     public abstract readonly schemeName: ClickToPayScheme;
 
     protected readonly customSdkConfiguration: CustomSdkConfiguration;

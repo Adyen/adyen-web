@@ -16,14 +16,13 @@ export interface AddressProps {
     addressType?: AddressType;
     allowedCountries?: string[];
     countryCode?: string;
-    data?: object;
+    data?: AddressData | null;
     label?: string;
     onChange: (newState) => void;
     onAddressLookup?: OnAddressLookupType;
     onAddressSelected?: OnAddressSelectedType;
     addressSearchDebounceMs?: number;
     requiredFields?: string[];
-    ref?: any;
     specifications?: AddressSpecifications;
     validationRules?: ValidatorRules;
     visibility?: string;

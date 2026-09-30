@@ -17,7 +17,6 @@ export type PayToInputOption = 'payid-option' | 'bsb-option';
 export type PayToComponentData = { selectedInput: PayToInputOption };
 
 export interface PayToComponentProps {
-    showPayButton: boolean;
     onChange: (e) => void;
     setComponentRef: (ref: ComponentMethodsRef) => void;
     data: PayToData;
@@ -97,7 +96,7 @@ export default function PayToComponent(props: Readonly<PayToComponentProps>) {
                 </SegmentedControlRegion>
             )}
 
-            {props.showPayButton && props.payButton({ status, label: i18n.get('continue') })}
+            {props.payButton({ status, label: i18n.get('continue') })}
         </div>
     );
 }

@@ -256,7 +256,7 @@ test.describe('Card - Dual branding UI after binLookup gives a dual brand result
         // Remove one digit — drops below binLookup threshold, regex best match returns to visa
         await card.cardNumberInput.press('Backspace');
 
-        await expect(card.isDualBrandSelectionVisible()).resolves.toBe(false);
+        await expect(card.dualBrandSelector).not.toBeVisible();
         await expect(card.brandingIcon).toHaveAttribute('alt', /visa/i);
 
         // Fill the rest of the PAN — dual brand selector reappears

@@ -8,6 +8,7 @@ export interface DoChallenge3DS2Props extends ChallengeData {
     onErrorChallenge: (rejectObject: ThreeDS2FlowObject) => void;
     onActionHandled: (rtnObj: ActionHandledReturnObject) => void;
     onFormSubmit: (msg: string) => void;
+    usePasskeyIFrameAttributes?: boolean;
 }
 
 export interface DoChallenge3DS2State {

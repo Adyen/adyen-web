@@ -1,6 +1,6 @@
 {
     "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-    "extends": ["config:recommended", ":disableDependencyDashboard"],
+    "extends": ["config:recommended", ":disableDependencyDashboard", "helpers:pinGitHubActionDigests"],
     "labels": ["dependencies"],
     "minimumReleaseAge": "21 days",
     "internalChecksFilter": "strict",
@@ -27,6 +27,17 @@
         {
             "matchPackageNames": ["preact", "@swc/core", "@playwright/test", "sass"],
             "groupName": null
+        },
+        {
+            "description": "TypeScript 7.0 ships as a native Go port without an in-process JavaScript compiler API, breaking ts-jest, typescript-eslint, and ts-loader. Lift this restriction once TypeScript 7.1+ restores a JavaScript API and downstream tooling adds support. Ref: https://devblogs.microsoft.com/typescript/announcing-typescript-7-0/#running-side-by-side-with-typescript-6.0",
+            "matchPackageNames": ["typescript"],
+            "allowedVersions": "<7"
+        },
+        {
+            "description": "The changesets release moves as one unit: @changesets/cli v3 requires changesets/action v2, and action v2 hard-throws on CLI v2, so neither is mergeable without the other. separateMajorMinor is off so a mixed major/minor never splits the group back apart.",
+            "matchPackageNames": ["@changesets/**", "changesets/action"],
+            "groupName": "Changesets release",
+            "separateMajorMinor": false
         },
         {
             "description": "Group example folder dependencies monthly on the first day of the month",

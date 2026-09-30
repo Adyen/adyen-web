@@ -51,6 +51,8 @@ export const GENERIC_OPTIONS = [
     'beforeRedirect',
     'beforeSubmit',
     'onSubmit',
+    'onReview',
+    'onAction',
     'onActionHandled',
     'onAdditionalDetails',
     'onChange',
@@ -61,7 +63,7 @@ export const GENERIC_OPTIONS = [
     'onOrderRequest',
     'onOrderUpdated',
     'onPaymentMethodsRequest'
-];
+] as const;
 
 export const DEFAULT_HTTP_TIMEOUT = 60000;
 

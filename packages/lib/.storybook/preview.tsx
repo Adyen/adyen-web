@@ -1,7 +1,8 @@
 import './main.css';
 import { Preview } from '@storybook/preact-vite';
 import { DEFAULT_COUNTRY_CODE, DEFAULT_SHOPPER_LOCALE, DEFAULT_AMOUNT_VALUE, SHOPPER_LOCALES } from '../storybook/config/commonConfig';
-import { initialize, mswLoader } from 'msw-storybook-addon';
+import { setupWorker } from 'msw/browser';
+import { mswLoader } from 'msw-storybook-addon/csf3';
 import { COUNTRY_CODES } from '../storybook/constants/countries';
 
 /*
@@ -15,8 +16,16 @@ const disableMsw = process.env.DISABLE_MSW === 'true';
 let loaders = {};
 
 if (!disableMsw) {
-    initialize({ onUnhandledRequest: 'bypass' });
-    loaders = { loaders: [mswLoader] };
+    loaders = {
+        loaders: [
+            mswLoader(async () => {
+                const worker = setupWorker();
+                await worker.start({ onUnhandledRequest: 'bypass' });
+
+                return worker;
+            })
+        ]
+    };
 }
 
 const preview: Preview = {

@@ -4,26 +4,17 @@ import { getStoryUrl } from '../../../utils/getStoryUrl';
 
 test('#1 By default expect all securedFields to have inputs with type="text" & inputmode="numeric"', async ({ card }) => {
     await card.goto(URL_MAP.card);
-    const panInputType = await card.cardNumberInput.getAttribute('type');
-    await expect(panInputType).toEqual('text');
+    await expect(card.cardNumberInput).toHaveAttribute('type', 'text');
+    await expect(card.cardNumberInput).toHaveAttribute('inputmode', 'numeric');
 
-    const panInputMode = await card.cardNumberInput.getAttribute('inputmode');
-    await expect(panInputMode).toEqual('numeric');
+    await expect(card.expiryDateInput).toHaveAttribute('type', 'text');
+    await expect(card.expiryDateInput).toHaveAttribute('inputmode', 'numeric');
 
-    const expiryDateInputType = await card.expiryDateInput.getAttribute('type');
-    await expect(expiryDateInputType).toEqual('text');
-
-    const expiryDateInputMode = await card.expiryDateInput.getAttribute('inputmode');
-    await expect(expiryDateInputMode).toEqual('numeric');
-
-    const cvcInputType = await card.cvcInput.getAttribute('type');
-    await expect(cvcInputType).toEqual('text');
-
-    const cvcInputMode = await card.cvcInput.getAttribute('inputmode');
-    await expect(cvcInputMode).toEqual('numeric');
+    await expect(card.cvcInput).toHaveAttribute('type', 'text');
+    await expect(card.cvcInput).toHaveAttribute('inputmode', 'numeric');
 });
 
-test('#2 Set legacyInputMode and expect all securedFields to have inputs with type="tel"', async ({ page, card }) => {
+test('#2 Set legacyInputMode and expect all securedFields to have inputs with type="tel"', async ({ card }) => {
     await card.goto(
         getStoryUrl({
             baseUrl: URL_MAP.card,
@@ -33,21 +24,12 @@ test('#2 Set legacyInputMode and expect all securedFields to have inputs with ty
         })
     );
 
-    const panInputType = await card.cardNumberInput.getAttribute('type');
-    await expect(panInputType).toEqual('tel');
+    await expect(card.cardNumberInput).toHaveAttribute('type', 'tel');
+    await expect(card.cardNumberInput).not.toHaveAttribute('inputmode');
 
-    const panInputMode = await card.cardNumberInput.getAttribute('inputmode');
-    await expect(panInputMode).toBeNull();
+    await expect(card.expiryDateInput).toHaveAttribute('type', 'tel');
+    await expect(card.expiryDateInput).not.toHaveAttribute('inputmode');
 
-    const expiryDateInputType = await card.expiryDateInput.getAttribute('type');
-    await expect(expiryDateInputType).toEqual('tel');
-
-    const expiryDateInputMode = await card.expiryDateInput.getAttribute('inputmode');
-    await expect(expiryDateInputMode).toBeNull();
-
-    const cvcInputType = await card.cvcInput.getAttribute('type');
-    await expect(cvcInputType).toEqual('tel');
-
-    const cvcInputMode = await card.cvcInput.getAttribute('inputmode');
-    await expect(cvcInputMode).toBeNull();
+    await expect(card.cvcInput).toHaveAttribute('type', 'tel');
+    await expect(card.cvcInput).not.toHaveAttribute('inputmode');
 });

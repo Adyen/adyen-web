@@ -44,7 +44,10 @@ cert
 
 # Windsurf
 .windsurf/workflows/
+.windsurf/skills/
 
+# Devin
+.devin/workflows/
 
 # AI agents
 .claude

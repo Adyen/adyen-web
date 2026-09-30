@@ -1,4 +1,4 @@
-import { h } from 'preact';
+import { ComponentChildren, h } from 'preact';
 import { CtpState } from '../services/ClickToPayService';
 import { ClickToPayContext } from './ClickToPayContext';
 import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
@@ -6,7 +6,7 @@ import { ClickToPayCheckoutPayload, IClickToPayService, IdentityLookupParams } f
 import ShopperCard from '../models/ShopperCard';
 import { ClickToPayProps } from '../types';
 import AdyenCheckoutError from '../../../../core/Errors/AdyenCheckoutError';
-import { UIElementStatus } from '../../UIElement/types';
+import { ComponentMethodsRef, UIElementStatus } from '../../UIElement/types';
 
 type ClickToPayProviderRef = {
     setStatus?(status: UIElementStatus): void;
@@ -16,8 +16,8 @@ export type ClickToPayProviderProps = {
     isStandaloneComponent: boolean;
     clickToPayService: IClickToPayService | null;
     configuration: ClickToPayProps;
-    children: any;
-    setClickToPayRef(ref): void;
+    children: ComponentChildren;
+    setClickToPayRef(ref: ComponentMethodsRef): void;
     onSubmit(payload: ClickToPayCheckoutPayload): void;
     onSetStatus(status: UIElementStatus): void;
     onError(error: AdyenCheckoutError): void;
@@ -37,12 +37,14 @@ const ClickToPayProvider = ({
     const [ctpState, setCtpState] = useState<CtpState>(clickToPayService?.state || CtpState.NotAvailable);
     const [isCtpPrimaryPaymentMethod, setIsCtpPrimaryPaymentMethod] = useState<boolean>(true);
     const [status, setStatus] = useState<UIElementStatus>('ready');
-    const clickToPayRef = useRef<ClickToPayProviderRef>({});
     const isOnReadyInvoked = useRef<boolean>(false);
+
+    const clickToPayRef = useRef<ClickToPayProviderRef>({
+        setStatus
+    });
 
     useEffect(() => {
         setClickToPayRef(clickToPayRef.current);
-        clickToPayRef.current.setStatus = setStatus;
     }, []);
 
     useEffect(() => {

@@ -57,7 +57,12 @@ export interface CardNumberProps {
 export interface CVCProps {
     className?: string;
     classNameModifiers?: string[];
-    error?: string;
+    /**
+     * Untranslated error translation key (e.g. 'cc.cvc.920'), not pre-translated text.
+     * CVC resolves this itself (picking the Amex-specific variant when `frontCVC` is true) since the
+     * correct copy depends on card brand, which only CVC/its caller's `frontCVC` flag captures.
+     */
+    errorCode?: string;
     filled?: boolean;
     focused?: boolean;
     frontCVC?: boolean;

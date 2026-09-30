@@ -3,6 +3,7 @@ import { PayByBankPixData, PayByBankPixConfiguration } from './types';
 import { TxVariants } from '../tx-variants';
 import UIElement from '../internal/UIElement';
 import RedirectButton from '../internal/RedirectButton';
+import PayButton, { PayButtonProps } from '../internal/PayButton/PayButton';
 import AdyenCheckoutError, { ERROR } from '../../core/Errors/AdyenCheckoutError';
 import { PasskeyService } from './services/PasskeyService';
 import { authorizeEnrollment } from './services/authorizeEnrollment';
@@ -188,7 +189,7 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
         try {
             const { deviceId, ...riskSignals } = await this.passkeyService.captureRiskSignalsAuthentication();
             this.state = { ...this.state, ...{ data: { storedPaymentMethodId: this.props.storedPaymentMethodId, riskSignals, deviceId } } };
-            super.submit();
+            this.executePaymentsCall();
         } catch (error) {
             const errorMsg = error instanceof Error ? error.message : 'Unknown error in the payWithStoredPayment';
             this.handleError(error instanceof AdyenCheckoutError ? error : new AdyenCheckoutError(ERROR, errorMsg));
@@ -215,19 +216,23 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
         }
     };
 
+    /**
+     * The enrollment flow is only rendered on the Adyen hosted page and it is always shown, regardless of the showPayButton configuration.
+     */
+    private readonly enrollmentPayButton = (props: PayButtonProps): h.JSX.Element => {
+        return <PayButton {...props} showPayButton={true} disclaimerMessage={this.props.disclaimerMessage} onClick={this.submit} />;
+    };
+
     protected override componentToRender(): h.JSX.Element {
         // Always render the redirect button on the merchant's page
         if (!this.props._isAdyenHosted) {
             return (
                 <RedirectButton
-                    showPayButton={this.props.showPayButton}
                     name={this.displayName}
                     label={this.props.i18n.get('paybybankpix.redirectBtn.label')}
                     payButton={this.payButton}
                     onSubmit={this.submit}
-                    ref={ref => {
-                        this.componentRef = ref;
-                    }}
+                    setComponentRef={this.setComponentRef}
                 />
             );
         }
@@ -255,7 +260,7 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
                 onEnroll={this.authorizeEnrollment}
                 // Issuer List
                 issuers={this.props.issuers}
-                payButton={this.payButton}
+                payButton={this.enrollmentPayButton}
                 onChange={this.onIssuerSelected}
                 onSubmitAnalytics={this.submitAnalytics}
                 setComponentRef={this.setComponentRef}

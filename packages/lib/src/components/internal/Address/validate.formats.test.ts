@@ -1,4 +1,22 @@
-import { countrySpecificFormatters } from './validate.formats';
+import { addressFormatters, countrySpecificFormatters } from './validate.formats';
+
+describe('addressFormatters', () => {
+    describe.each(['street', 'houseNumberOrName', 'city'])('%s formatterFn', field => {
+        const format = addressFormatters[field].formatterFn;
+
+        test('should not trim trailing or leading spaces', () => {
+            expect(format?.('  Main Road  ')).toBe('  Main Road  ');
+        });
+
+        test('should not collapse consecutive spaces', () => {
+            expect(format?.('Main   Road')).toBe('Main   Road');
+        });
+
+        test('should not strip special characters (invalid chars are flagged by validation, not stripped by formatting)', () => {
+            expect(format?.('  Main@ Ro#ad  ')).toBe('  Main@ Ro#ad  ');
+        });
+    });
+});
 
 describe('countrySpecificFormatters', () => {
     describe('BR postalCode formatterFn', () => {
@@ -42,6 +60,30 @@ describe('countrySpecificFormatters', () => {
 
         test('should truncate hyphenated input beyond 6 characters', () => {
             expect(format('12-3456')).toBe('12-345');
+        });
+
+        test('should handle empty string', () => {
+            expect(format('')).toBe('');
+        });
+    });
+
+    describe('JP postalCode formatterFn', () => {
+        const format = countrySpecificFormatters.JP.postalCode.formatterFn;
+
+        test('should convert full-width digits and hyphen to half-width', () => {
+            expect(format('１０７－００５２')).toBe('107-0052');
+        });
+
+        test('should strip the postal mark and other non-digit/hyphen characters', () => {
+            expect(format('〒107-0052')).toBe('107-0052');
+        });
+
+        test('should not alter a valid half-width input', () => {
+            expect(format('107-0052')).toBe('107-0052');
+        });
+
+        test('should truncate input beyond 8 characters', () => {
+            expect(format('1070052999')).toBe('10700529');
         });
 
         test('should handle empty string', () => {

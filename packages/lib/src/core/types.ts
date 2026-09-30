@@ -5,6 +5,7 @@ import UIElement from '../components/internal/UIElement';
 import type { CustomTranslations } from '../language/types';
 import type {
     Order,
+    OrderStatus,
     PaymentAction,
     PaymentMethodsResponse,
     ActionHandledReturnObject,
@@ -13,7 +14,6 @@ import type {
     SessionsResponse,
     ResultCode,
     PaymentData,
-    AddressData,
     PaymentAmount
 } from '../types/global-types';
 import type { AnalyticsOptions } from './Analytics/types';
@@ -27,18 +27,46 @@ import Language from '../language';
 import { SRPanel } from './Errors/SRPanel';
 import { IAnalytics } from './Analytics/Analytics';
 import type { DonationOptions } from '../components/Donation/types';
+import type { GENERIC_OPTIONS } from './config';
+import type { UIElementProps } from '../components/internal/UIElement/types';
+import type { ThreeDS2ConfigProps } from '../components/ThreeDS2/types';
 
 export { CheckoutSession } from './CheckoutSession/types';
+
+/**
+ * The subset of the merchant configuration that is forwarded to every Component (see GENERIC_OPTIONS).
+ * Every property is optional, since only the ones set by the merchant are forwarded
+ */
+export type GlobalOptions = Partial<Pick<CoreConfiguration, Extract<keyof CoreConfiguration, (typeof GENERIC_OPTIONS)[number]>>>;
+
+/**
+ * @internal
+ * The props that the Core provides to every Component it creates
+ */
+export type CorePropsForComponent = Omit<GlobalOptions, 'session'> & {
+    core: ICore;
+    i18n: Language;
+    modules: CoreModules;
+    session?: Session;
+    loadingContext: string;
+    cdnContext: string;
+    createFromAction: ICore['createFromAction'];
+};
+
+export type CreateFromActionOptions = Partial<UIElementProps> &
+    Pick<ThreeDS2ConfigProps, 'challengeWindowSize' | 'isMDFlow' | 'on3DS2RedirectFlowComplete' | 'usePasskeyIFrameAttributes'>;
+
 export interface ICore {
     initialize(): Promise<ICore>;
     register(...items: NewableComponent[]): void;
     update(props: Partial<CoreConfiguration>, options?: { shouldReinitializeCheckout?: boolean }): Promise<ICore>;
     remove(component): ICore;
     submitDetails(details: AdditionalDetailsData['data']): void;
-    getCorePropsForComponent(): any;
+    getCorePropsForComponent(): CorePropsForComponent;
     getComponent(txVariant: string): NewableComponent | undefined;
-    createFromAction(action: PaymentAction, options?: any): UIElement;
+    createFromAction(action: PaymentAction, options?: CreateFromActionOptions): UIElement;
     storeElementReference(element: UIElement): void;
+    processPayment(data: PaymentData): void;
     options: CoreConfiguration;
     modules: CoreModules;
     paymentMethodsResponse: PaymentMethods;
@@ -53,7 +81,7 @@ export type CoreModules = Readonly<{
     srPanel: SRPanel;
 }>;
 
-export type PaymentCompletedData = SessionsResponse | { resultCode: ResultCode; donationToken?: string };
+export type PaymentCompletedData = SessionsResponse | { resultCode: ResultCode; donationToken?: string; askDonation?: boolean };
 
 export type PaymentFailedData = SessionsResponse | { resultCode: ResultCode };
 
@@ -67,12 +95,16 @@ export type SubmitActions = {
     reject: (error?: Pick<CheckoutAdvancedFlowResponse, 'error'>) => void;
 };
 
+export type ReviewDetails = {
+    orderStatus?: OrderStatus;
+};
+
 export type AdditionalDetailsData = {
     data: {
         details: {
             redirectResult?: string;
             threeDSResult?: string;
-            [key: string]: any;
+            [key: string]: string | undefined;
         };
         paymentData?: string;
         sessionData?: string;
@@ -85,11 +117,14 @@ export type AdditionalDetailsActions = {
 };
 
 export type BeforeSubmitActions = {
-    resolve: (
-        data: PaymentData & { billingAddress?: AddressData; deliveryAddress?: AddressData; shopperEmail?: string; shopperName?: string }
-    ) => void;
+    resolve: (data: PaymentData) => void;
     reject: () => void;
 };
+
+export type OnChangeDataErrors = Record<
+    string,
+    { isValid: boolean; errorMessage: string; errorI18n: string; error?: string; rootNode?: HTMLElement }
+>;
 
 export type OnChangeData = {
     data: PaymentData;
@@ -97,15 +132,7 @@ export type OnChangeData = {
     valid?: {
         [fieldKey: string]: boolean;
     };
-    errors?: {
-        [fieldKey: string]: {
-            isValid: boolean;
-            errorMessage: string;
-            errorI18n: string;
-            error: string;
-            rootNode: HTMLElement;
-        };
-    };
+    errors?: OnChangeDataErrors;
 };
 
 export interface CoreConfiguration {
@@ -217,7 +244,7 @@ export interface CoreConfiguration {
         redirectData: {
             url: string;
             method: string;
-            data?: any;
+            data?: Record<string, unknown>;
         }
     ): void;
 
@@ -267,6 +294,18 @@ export interface CoreConfiguration {
     onSubmit?(state: SubmitData, component: UIElement, actions: SubmitActions): void;
 
     /**
+     * Called before the payment is submitted, allowing the shopper to review their payment details.
+     *
+     * Note: payment methods that manage their own payment submission internally (e.g. Klarna (Klarna widget flow), PayPal, Apple Pay, Google Pay, AmazonPay, ANCV, PayByBankPix)
+     * bypass this callback internally to avoid interrupting their native experiences.
+     *
+     * @param state
+     * @param component
+     * @param reviewDetails - Additional data relevant to the review page. Currently holds the 'orderStatus', when a partial payment order is in progress.
+     */
+    onReview?(state: PaymentData, component: UIElement, reviewDetails: ReviewDetails): void;
+
+    /**
      * Callback used in the Advanced flow to perform the /payments/details API call.
      *
      * The payment response must be passed to the 'resolve' function, even if the payment wasn't authorized (Ex: resultCode = Refused).
@@ -288,6 +327,13 @@ export interface CoreConfiguration {
      * @internal - used by PBL
      */
     afterAdditionalDetails?(component: UIElement): void;
+
+    /**
+     * Callback called when an action (for example a QR code or 3D Secure 2 authentication screen) needs to be mounted by the merchant.
+     *
+     * @param actionElement - The UIElement representing the action, which needs to get mounted on the page for the user to interact with.
+     */
+    onAction?(actionElement: UIElement): void;
 
     /**
      * Callback called when an action (for example a QR code or 3D Secure 2 authentication screen) is shown to the shopper.

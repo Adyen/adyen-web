@@ -85,7 +85,6 @@ export class Iris extends IssuerListContainer<IrisConfiguration, IrisData> {
                     this.setState({ mode });
                 }}
                 issuerListUI={this.renderIssuerList()}
-                showPayButton={this.props.showPayButton}
                 payButton={this.payButton}
                 issuers={this.props.issuers || []}
             />
