@@ -19,18 +19,19 @@ const port = Number(process.env.PORT) || 3020;
 const isHttps = process.env.IS_HTTPS === 'true';
 const certPath = process.env.CERT_PATH ?? path.resolve(__dirname, 'localhost.pem');
 const certKeyPath = process.env.CERT_KEY_PATH ?? path.resolve(__dirname, 'localhost-key.pem');
-// The mock API (`@adyen/adyen-web-server`) always runs as its own process on port 3030 -
-// see the root `start` script. Proxying to it (rather than mounting Express as dev-server
-// middleware) also sidesteps a Vite/Node incompatibility: Vite's `server.https` upgrades to
-// HTTP/2, which crashes when an Express 5 app handles the request; configuring `server.proxy`
-// makes Vite downgrade to TLS-only, avoiding that entirely.
+
+// The mock API (`@adyen/adyen-web-server`) always runs as its own process on port 3030 - see the root `start` script.
+// We set apiTarget here, pointing to localhost:3030, and then proxy to it (see around line 151 we set server.proxy).
+// By doing this (rather than mounting Express as dev-server middleware), we sidestep a Vite/Node incompatibility where Vite's `server.https` upgrades to
+// HTTP/2, which crashes when an Express 5 app handles the request.
+// Configuring `server.proxy` makes Vite downgrade to TLS-only, avoiding that entirely.
 const apiTarget = `${isHttps ? 'https' : 'http'}://localhost:3030`;
 
 // NOTE: The first page in the array will be considered the index page.
 const htmlPages = [
+    { name: 'Drop-in', id: 'Dropin' },
     { name: 'Drop-in UMD', id: 'DropinUMD' },
     { name: 'Drop-in Auto', id: 'DropinAuto' },
-    { name: 'Drop-in', id: 'Dropin' },
     { name: 'Cards', id: 'Cards' },
     { name: 'Components', id: 'Components' },
     { name: 'Gift Cards', id: 'GiftCards' },
@@ -72,7 +73,7 @@ const adyenPlaygroundPlugin = (): Plugin => ({
         // `yarn start` rebuilds the library in watch mode concurrently. Rollup's rebuild writes
         // many interdependent files (preserveModules) non-atomically, so letting Vite's own
         // watcher granularly HMR-update each one as it's written races ahead of the build and can
-        // fetch a module before a file it imports has been rewritten ("does not provide an export").
+        // fetch a module before a file it imports has been rewritten (leads to a "does not provide an export" error).
         // Instead we watch the dist output ourselves, debounce until the whole rebuild has settled,
         // then force a single full reload.
         // Vite's own watcher ignores node_modules, so its transform cache for these `/@fs/`
@@ -157,7 +158,7 @@ export default defineConfig({
             // consumed through a workspace symlink, and Vite resolves it to its real path
             // (packages/lib/dist/...), which doesn't contain "node_modules". Without this, Vite's
             // own granular per-file HMR races ahead of rollup's non-atomic multi-file rebuild - see
-            // the plugin's own debounced full-reload watcher below.
+            // the plugin's own debounced full-reload watcher, above.
             ignored: [`${libDistDir}/**`]
         }
     }
