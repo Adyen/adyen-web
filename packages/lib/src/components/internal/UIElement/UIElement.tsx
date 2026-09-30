@@ -36,6 +36,7 @@ import { PayButtonProps } from '../PayButton/PayButton';
 import { TxVariants } from '../../tx-variants';
 import Donation from '../../Donation/Donation';
 import './UIElement.scss';
+import Language from '../../../language';
 
 export abstract class UIElement<P extends UIElementProps = UIElementProps> extends BaseElement<P> {
     /**
@@ -44,6 +45,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     protected componentRef: ComponentMethodsRef | undefined;
 
     protected resources: Resources;
+    protected i18n: Language;
 
     /**
      * elementRef is a ref to the subclass that extends UIElement e.g. Card.tsx or Dropin.tsx
@@ -84,6 +86,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
 
         this.elementRef = (props && props.elementRef) || this;
         this.resources = this.props.modules?.resources ?? this.core.modules.resources;
+        this.i18n = this.props.i18n ?? this.core.modules.i18n;
 
         this.storeElementRefOnCore(this.props);
 
@@ -313,7 +316,9 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
             'IMPLEMENTATION_ERROR',
             'It can not perform /payments call. Callback "onSubmit" is missing or Checkout session is not available'
         );
+
         this.handleError(error);
+
         throw error;
     }
 
@@ -409,7 +414,9 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
             'IMPLEMENTATION_ERROR',
             'It can not perform /payments/details call. Callback "onAdditionalDetails" is missing or Checkout session is not available'
         );
+
         this.handleError(error);
+
         throw error;
     }
 
@@ -689,12 +696,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
 
     render() {
         return (
-            <CoreProvider
-                i18n={this.props.i18n ?? this.core.modules.i18n}
-                loadingContext={this.props.loadingContext ?? ''}
-                resources={this.resources}
-                analytics={this.analytics}
-            >
+            <CoreProvider i18n={this.i18n} loadingContext={this.props.loadingContext ?? ''} resources={this.resources} analytics={this.analytics}>
                 <SRPanelProvider srPanel={this.srPanel}>
                     <AmountProvider amount={this.props.amount} secondaryAmount={this.props.secondaryAmount} providerRef={this.amountProviderRef}>
                         {this.componentToRender()}
