@@ -319,7 +319,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
 
         this.handleError(error);
 
-        throw error;
+        return Promise.reject(error);
     }
 
     private async submitUsingAdvancedFlow(): Promise<CheckoutAdvancedFlowResponse> {
@@ -417,7 +417,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
 
         this.handleError(error);
 
-        throw error;
+        return Promise.reject(error);
     }
 
     private async submitAdditionalDetailsUsingSessionsFlow(data: AdditionalDetailsData['data']): Promise<CheckoutSessionDetailsResponse> {
