@@ -8,7 +8,7 @@ import type { Connect, Plugin } from 'vite';
 // Mirrors packages/lib/config/rollup.dev.js and packages/server/index.js - loads IS_HTTPS,
 // CERT_PATH, CERT_KEY_PATH, CLIENT_KEY, SF_ENV, CLIENT_ENV etc. from the repo-root .env. Without
 // this, those env vars are only picked up if exported inline in the shell.
-dotenv.config({ path: path.resolve('../../', '.env') });
+dotenv.config({ path: path.resolve(__dirname, '../../../', '.env') });
 
 const root = path.resolve(__dirname, '../src/pages');
 const publicDir = path.resolve(__dirname, '../public');
