@@ -31,7 +31,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@adyen/adyen-web-playground@workspace:packages/playground"
   dependencies:
-    "@adyen/adyen-web": "npm:6.45.1"
+    "@adyen/adyen-web": "npm:6.46.0"
     "@preact/preset-vite": "npm:^2.10.1"
     autoprefixer: "npm:^10.4.9"
     core-js-pure: "npm:^3.25.3"
@@ -5467,13 +5467,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"basic-ftp@npm:^5.0.2":
-  version: 5.3.1
-  resolution: "basic-ftp@npm:5.3.1"
-  checksum: 10c0/03511b488cd292abfa82a8c0ea3b9573b40d12d2f1518d6f41a9461b012b3376d3e6d50679b38d9b2b4f48fd6e8e0418ac196312ee7e2da13cb801169940d1c3
-  languageName: node
-  linkType: hard
-
 "better-path-resolve@npm:1.0.0":
   version: 1.0.0
   resolution: "better-path-resolve@npm:1.0.0"
@@ -5892,13 +5885,6 @@ __metadata:
   version: 2.9.3
   resolution: "colord@npm:2.9.3"
   checksum: 10c0/9699e956894d8996b28c686afe8988720785f476f59335c80ce852ded76ab3ebe252703aec53d9bef54f6219aea6b960fb3d9a8300058a1d0c0d4026460cd110
-  languageName: node
-  linkType: hard
-
-"commander@npm:12.0.0":
-  version: 12.0.0
-  resolution: "commander@npm:12.0.0"
-  checksum: 10c0/e51cac1d1d0aa1f76581981d2256a9249497e08f5a370bf63b0dfc7e76a647fc8cbc3ddd507928f2bdca6c514c83834e87e2687ace2fe2fc7cc7e631bf80f83d
   languageName: node
   linkType: hard
 
@@ -6506,17 +6492,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"degenerator@npm:^5.0.0":
-  version: 5.0.1
-  resolution: "degenerator@npm:5.0.1"
-  dependencies:
-    ast-types: "npm:^0.13.4"
-    escodegen: "npm:^2.1.0"
-    esprima: "npm:^4.0.1"
-  checksum: 10c0/e48d8a651edeb512a648711a09afec269aac6de97d442a4bb9cf121a66877e0eec11b9727100a10252335c0666ae1c84a8bc1e3a3f47788742c975064d2c7b1c
-  languageName: node
-  linkType: hard
-
 "depd@npm:^2.0.0, depd@npm:~2.0.0":
   version: 2.0.0
   resolution: "depd@npm:2.0.0"
@@ -6549,13 +6524,6 @@ __metadata:
   version: 3.1.0
   resolution: "detect-newline@npm:3.1.0"
   checksum: 10c0/c38cfc8eeb9fda09febb44bcd85e467c970d4e3bf526095394e5a4f18bc26dd0cf6b22c69c1fa9969261521c593836db335c2795218f6d781a512aea2fb8209d
-  languageName: node
-  linkType: hard
-
-"devtools-protocol@npm:0.0.1495869":
-  version: 0.0.1495869
-  resolution: "devtools-protocol@npm:0.0.1495869"
-  checksum: 10c0/ef3f35ddd914f07112a4e9417cc6afbd82550976cdb30096710a3024db303d29d13a09c63cb7ef4e0f38e70986a90cb50b39f0f0bcf0fd30937e5a0cba3c521b
   languageName: node
   linkType: hard
 
@@ -6738,15 +6706,6 @@ __metadata:
   version: 2.0.0
   resolution: "encodeurl@npm:2.0.0"
   checksum: 10c0/5d317306acb13e6590e28e27924c754163946a2480de11865c991a3a7eed4315cd3fba378b543ca145829569eefe9b899f3d84bb09870f675ae60bc924b01ceb
-  languageName: node
-  linkType: hard
-
-"end-of-stream@npm:^1.1.0":
-  version: 1.4.5
-  resolution: "end-of-stream@npm:1.4.5"
-  dependencies:
-    once: "npm:^1.4.0"
-  checksum: 10c0/b0701c92a10b89afb1cb45bf54a5292c6f008d744eb4382fa559d54775ff31617d1d7bc3ef617575f552e24fad2c7c1a1835948c66b3f3a4be0a6c1f35c883d8
   languageName: node
   linkType: hard
 
@@ -7736,15 +7695,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"find-chrome-bin@npm:2.0.4":
-  version: 2.0.4
-  resolution: "find-chrome-bin@npm:2.0.4"
-  dependencies:
-    "@puppeteer/browsers": "npm:2.10.10"
-  checksum: 10c0/c1d082c4c5789907de8ae75b245674176c6582a5e3ee59d01deda240dc86e46f9cb6578801760e3a343bbd8409ec213e0a9ef90b97fa17d243dc9680886f2251
-  languageName: node
-  linkType: hard
-
 "find-up@npm:^4.0.0, find-up@npm:^4.1.0":
   version: 4.1.0
   resolution: "find-up@npm:4.1.0"
@@ -8029,17 +7979,6 @@ __metadata:
   dependencies:
     resolve-pkg-maps: "npm:^1.0.0"
   checksum: 10c0/abc2b9275468eb589079a0b7a95eb5107c14fdd0ca6dda1bff116fe774ea1f79975421dcb22a0c86b4f820fcc69a7655dddf9b6d6a8a2c06fcb59e19794c0724
-  languageName: node
-  linkType: hard
-
-"get-uri@npm:^6.0.1":
-  version: 6.0.5
-  resolution: "get-uri@npm:6.0.5"
-  dependencies:
-    basic-ftp: "npm:^5.0.2"
-    data-uri-to-buffer: "npm:^6.0.2"
-    debug: "npm:^4.3.4"
-  checksum: 10c0/c7ff5d5d55de53d23ecce7c5108cc3ed0db1174db43c9aa15506d640283d36ee0956fd8ba1fc50b06a718466cc85794ae9d8860193f91318afe846e3e7010f3a
   languageName: node
   linkType: hard
 
@@ -8348,7 +8287,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"http-proxy-agent@npm:^7.0.0, http-proxy-agent@npm:^7.0.1, http-proxy-agent@npm:^7.0.2":
+"http-proxy-agent@npm:^7.0.0, http-proxy-agent@npm:^7.0.2":
   version: 7.0.2
   resolution: "http-proxy-agent@npm:7.0.2"
   dependencies:
@@ -10399,13 +10338,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"netmask@npm:^2.0.2":
-  version: 2.1.1
-  resolution: "netmask@npm:2.1.1"
-  checksum: 10c0/c78e31869b0578fb0a9874a0c0fdf0e1f8b3492392d1043355fb11d9ea42ef94e0216c6aee7d8e15db39d1a8caf331f9b144ae3ee43fd951b73a66837711fb09
-  languageName: node
-  linkType: hard
-
 "node-addon-api@npm:^7.0.0":
   version: 7.1.1
   resolution: "node-addon-api@npm:7.1.1"
@@ -10636,7 +10568,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"once@npm:^1.3.1, once@npm:^1.4.0":
+"once@npm:^1.4.0":
   version: 1.4.0
   resolution: "once@npm:1.4.0"
   dependencies:
@@ -12020,13 +11952,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"progress@npm:^2.0.3":
-  version: 2.0.3
-  resolution: "progress@npm:2.0.3"
-  checksum: 10c0/1697e07cb1068055dbe9fe858d242368ff5d2073639e652b75a7eb1f2a1a8d4afd404d719de23c7b48481a6aa0040686310e2dac2f53d776daa2176d3f96369c
-  languageName: node
-  linkType: hard
-
 "promise-polyfill@npm:^8.3.0":
   version: 8.3.0
   resolution: "promise-polyfill@npm:8.3.0"
@@ -12059,39 +11984,6 @@ __metadata:
     forwarded: "npm:0.2.0"
     ipaddr.js: "npm:1.9.1"
   checksum: 10c0/c3eed999781a35f7fd935f398b6d8920b6fb00bbc14287bc6de78128ccc1a02c89b95b56742bf7cf0362cc333c61d138532049c7dedc7a328ef13343eff81210
-  languageName: node
-  linkType: hard
-
-"proxy-agent@npm:^6.5.0":
-  version: 6.5.0
-  resolution: "proxy-agent@npm:6.5.0"
-  dependencies:
-    agent-base: "npm:^7.1.2"
-    debug: "npm:^4.3.4"
-    http-proxy-agent: "npm:^7.0.1"
-    https-proxy-agent: "npm:^7.0.6"
-    lru-cache: "npm:^7.14.1"
-    pac-proxy-agent: "npm:^7.1.0"
-    proxy-from-env: "npm:^1.1.0"
-    socks-proxy-agent: "npm:^8.0.5"
-  checksum: 10c0/7fd4e6f36bf17098a686d4aee3b8394abfc0b0537c2174ce96b0a4223198b9fafb16576c90108a3fcfc2af0168bd7747152bfa1f58e8fee91d3780e79aab7fd8
-  languageName: node
-  linkType: hard
-
-"proxy-from-env@npm:^1.1.0":
-  version: 1.1.0
-  resolution: "proxy-from-env@npm:1.1.0"
-  checksum: 10c0/fe7dd8b1bdbbbea18d1459107729c3e4a2243ca870d26d34c2c1bcd3e4425b7bcc5112362df2d93cc7fb9746f6142b5e272fd1cc5c86ddf8580175186f6ad42b
-  languageName: node
-  linkType: hard
-
-"pump@npm:^3.0.0":
-  version: 3.0.4
-  resolution: "pump@npm:3.0.4"
-  dependencies:
-    end-of-stream: "npm:^1.1.0"
-    once: "npm:^1.3.1"
-  checksum: 10c0/2780e66b5471c19e3e3e1063b84f3f6a3a08367f24c5ed552f98cd5901e6ada27c7ad6495d4244f553fd03b01884a4561933064f053f47c8994d84fd352768ea
   languageName: node
   linkType: hard
 
@@ -13103,7 +12995,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"socks-proxy-agent@npm:^8.0.3, socks-proxy-agent@npm:^8.0.5":
+"socks-proxy-agent@npm:^8.0.3":
   version: 8.0.5
   resolution: "socks-proxy-agent@npm:8.0.5"
   dependencies:
@@ -13790,15 +13682,6 @@ __metadata:
     glob: "npm:^10.4.1"
     minimatch: "npm:^10.2.2"
   checksum: 10c0/b79b855af9168c6a362146015ccf40f5e3a25e307304ba9bea930818507f6319d230380d5d7b5baa659c981ccc11f1bd21b6f012f85606353dec07e02dee67c9
-  languageName: node
-  linkType: hard
-
-"text-decoder@npm:^1.1.0":
-  version: 1.2.7
-  resolution: "text-decoder@npm:1.2.7"
-  dependencies:
-    b4a: "npm:^1.6.4"
-  checksum: 10c0/929938ed154fbadb660a7f3d1aca30b7e53649a731af7583168fcfba0c158046325d35d945926e2a512bb62d1a49a7818151c987ea38b48853f01e1615722fc5
   languageName: node
   linkType: hard
 
@@ -14511,13 +14394,6 @@ __metadata:
   dependencies:
     graceful-fs: "npm:^4.1.2"
   checksum: 10c0/8290e89f03e1e7136e1ef9b8d04bd03822963fa4b442781a40999e7b9ba29ab333a7a5285312b2d4f3e91bc8c5c526cf1f91f5ce0e857dafe56db28ab1c17dca
-  languageName: node
-  linkType: hard
-
-"webdriver-bidi-protocol@npm:0.2.11":
-  version: 0.2.11
-  resolution: "webdriver-bidi-protocol@npm:0.2.11"
-  checksum: 10c0/de03680e6c061801d730243eb8dead6d5cb1ea4eda63546528b52f25f9c7a3cc56709b0de689e155a3d070c3a97269d9b203aef010349ee5b0df9582929bd8bb
   languageName: node
   linkType: hard
 
