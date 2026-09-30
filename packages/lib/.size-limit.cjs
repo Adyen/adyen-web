@@ -32,8 +32,7 @@ module.exports = [
     {
         name: 'UMD',
         path: 'dist/umd/adyen.js',
-        limit: '131 KB',
-        running: false
+        limit: '131 KB'
     },
     /**
      * 'auto' bundle with all Components included, excluding Languages
@@ -42,8 +41,7 @@ module.exports = [
         name: 'Auto',
         path: 'auto/auto.js',
         import: '{ AdyenCheckout, Dropin }',
-        limit: '139 KB',
-        running: false
+        limit: '139 KB'
     },
     /**
      * ES modules (tree-shake)
@@ -52,21 +50,18 @@ module.exports = [
         name: 'ESM - Core',
         path: 'dist/es/index.js',
         import: '{ AdyenCheckout }',
-        limit: '39 KB',
-        running: false
+        limit: '39 KB'
     },
     {
         name: 'ESM - Core + Card',
         path: 'dist/es/index.js',
         import: '{ AdyenCheckout, Card }',
-        limit: '81 KB',
-        running: false
+        limit: '81 KB'
     },
     {
         name: 'ESM - Core + Dropin with Card',
         path: 'dist/es/index.js',
         import: '{ AdyenCheckout, Dropin, Card }',
-        limit: '87 KB',
-        running: false
+        limit: '87 KB'
     }
 ];
