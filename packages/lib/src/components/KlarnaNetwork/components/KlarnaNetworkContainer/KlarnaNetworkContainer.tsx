@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { useEffect, useRef, useState } from 'preact/hooks';
+import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
 import Spinner from '../../../internal/Spinner';
 import AdyenCheckoutError from '../../../../core/Errors/AdyenCheckoutError';
 import { useCoreContext } from '../../../../core/Context/CoreProvider';
@@ -7,27 +7,51 @@ import { useAmount } from '../../../../core/Context/AmountProvider';
 import { loadKlarnaSdk } from '../../utils/load-klarna-sdk';
 import './KlarnaNetworkContainer.scss';
 
-import type { KlarnaInitiateCallback, KlarnaPayment, KlarnaPaymentError, KlarnaPaymentOption, KlarnaUIElement } from '../../klarna-web-sdk-types';
+import type {
+    KlarnaInitiateParams,
+    KlarnaInitiateResult,
+    KlarnaPayment,
+    KlarnaPaymentError,
+    KlarnaPaymentOption,
+    KlarnaShippingAddressChangeHandler,
+    KlarnaShippingConfig,
+    KlarnaShippingOptionSelectHandler,
+    KlarnaUIElement
+} from '../../klarna-web-sdk-types';
+
+export interface KlarnaNetworkAuthorizeResult {
+    paymentRequestUrl?: string;
+}
 
 export interface KlarnaNetworkContainerProps {
-    onAuthorize: KlarnaInitiateCallback;
+    onAuthorize(params: KlarnaInitiateParams): Promise<KlarnaNetworkAuthorizeResult>;
     onError(error: AdyenCheckoutError): void;
-    onKlarnaComplete(paymentRequest: unknown): void;
     onKlarnaError(error: KlarnaPaymentError | Error, paymentRequest?: unknown): void;
+    onShippingAddressChange?: KlarnaShippingAddressChangeHandler;
+    onShippingOptionSelect?: KlarnaShippingOptionSelectHandler;
 
     clientId: string;
     partnerAccountId?: string;
     paymentAccountId?: string;
+    shippingConfig?: KlarnaShippingConfig;
+}
+
+async function fetchPaymentRequestId(payment: KlarnaPayment, paymentRequestUrl: string): Promise<string> {
+    const paymentRequest = await payment.fetch(paymentRequestUrl);
+    if (!paymentRequest?.paymentRequestId) throw new Error('Payment.fetch(url) did not return a paymentRequestId');
+    return paymentRequest.paymentRequestId;
 }
 
 export function KlarnaNetworkContainer({
     onAuthorize,
     onError,
-    onKlarnaComplete,
     onKlarnaError,
+    onShippingAddressChange,
+    onShippingOptionSelect,
     clientId,
     partnerAccountId,
-    paymentAccountId
+    paymentAccountId,
+    shippingConfig
 }: Readonly<KlarnaNetworkContainerProps>) {
     const { i18n } = useCoreContext();
     const { amount } = useAmount();
@@ -39,6 +63,29 @@ export function KlarnaNetworkContainer({
 
     const messageContainerRef = useRef<HTMLDivElement>(null);
     const buttonContainerRef = useRef<HTMLDivElement>(null);
+    // initiate is created outside the setup effect, so it reaches klarna.Payment through this ref
+    const paymentRef = useRef<KlarnaPayment | null>(null);
+
+    const initiate = useCallback(
+        async (params: KlarnaInitiateParams): Promise<KlarnaInitiateResult> => {
+            const { paymentRequestUrl } = await onAuthorize(params);
+
+            if (!paymentRequestUrl) throw new Error('/payments did not return a Klarna payment request URL');
+
+            if (shippingConfig && paymentRef.current) {
+                try {
+                    const paymentRequestId = await fetchPaymentRequestId(paymentRef.current, paymentRequestUrl);
+                    console.log('Payment.requestId', paymentRequestId);
+                    await paymentRef.current.request(paymentRequestId).update({ shippingConfig });
+                } catch (error: unknown) {
+                    console.error('Payment.request().update(shippingConfig) failed', error);
+                }
+            }
+
+            return { paymentRequestUrl };
+        },
+        [onAuthorize, shippingConfig]
+    );
 
     useEffect(() => {
         let isActive = true;
@@ -58,8 +105,14 @@ export function KlarnaNetworkContainer({
             if (!isActive) return;
 
             payment = klarna.Payment;
-            payment.on('complete', onKlarnaComplete);
+            paymentRef.current = payment;
+            console.log('Klarna SDK initialised available klarna props', klarna);
+            console.info('Klarna SDK initialised available props in payment', {
+                payment
+            });
             payment.on('error', onKlarnaError);
+            if (onShippingAddressChange) payment.on('shippingaddresschange', onShippingAddressChange);
+            if (onShippingOptionSelect) payment.on('shippingoptionselect', onShippingOptionSelect);
 
             const presentation = await payment.presentation({
                 amount: value,
@@ -77,13 +130,15 @@ export function KlarnaNetworkContainer({
         void setUpKlarna().catch((error: unknown) => {
             if (!isActive) return;
             setIsLoading(false);
-            onError(new AdyenCheckoutError('ERROR', 'KlarnaNetwork: failed to initialise Klarna', { cause: error }));
+            onError(new AdyenCheckoutError('ERROR', 'failed to initialise Klarna', { cause: error }));
         });
 
         return () => {
             isActive = false;
-            payment?.off('complete', onKlarnaComplete);
             payment?.off('error', onKlarnaError);
+            if (onShippingAddressChange) payment?.off('shippingaddresschange', onShippingAddressChange);
+            if (onShippingOptionSelect) payment?.off('shippingoptionselect', onShippingOptionSelect);
+            paymentRef.current = null;
         };
     }, [clientId, partnerAccountId, paymentAccountId, value, currency]);
 
@@ -97,12 +152,12 @@ export function KlarnaNetworkContainer({
         }
 
         if (buttonContainerRef.current) {
-            const button = paymentOption.paymentButton.component({ intent: 'PAY', initiate: onAuthorize });
+            const button = paymentOption.paymentButton.component({ intent: 'PAY', initiate });
             mountedElements.push(button.mount(buttonContainerRef.current));
         }
 
         return () => mountedElements.forEach(element => element.unmount());
-    }, [paymentOption, onAuthorize]);
+    }, [paymentOption, initiate]);
 
     if (isLoading) {
         return (

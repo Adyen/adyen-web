@@ -15,6 +15,19 @@ const EMPTY_KLARNA_CREDENTIALS: KlarnaCredentials = {
     partnerAccountId: ''
 };
 
+/**
+ * Values are injected by .storybook/main.ts in dev mode only, and are empty strings in static builds.
+ */
+export function getKlarnaEnvCredentials(): KlarnaCredentials | null {
+    const clientId = process.env.KLARNA_CLIENT_ID ?? '';
+    const paymentAccountId = process.env.KLARNA_PAYMENT_ACCOUNT_ID ?? '';
+    const partnerAccountId = process.env.KLARNA_PARTNER_ID ?? '';
+
+    if (!clientId || !paymentAccountId || !partnerAccountId) return null;
+
+    return { clientId, paymentAccountId, partnerAccountId };
+}
+
 const FIELDS: ReadonlyArray<{ key: keyof KlarnaCredentials; label: string }> = [
     { key: 'clientId', label: 'Client id (required)' },
     { key: 'paymentAccountId', label: 'Payment account id (required)' },
@@ -22,11 +35,12 @@ const FIELDS: ReadonlyArray<{ key: keyof KlarnaCredentials; label: string }> = [
 ];
 
 interface KlarnaCredentialsFormProps {
+    initialCredentials: KlarnaCredentials | null;
     onApply(credentials: KlarnaCredentials): void;
 }
 
-function KlarnaCredentialsForm({ onApply }: Readonly<KlarnaCredentialsFormProps>) {
-    const [draft, setDraft] = useState<KlarnaCredentials>(EMPTY_KLARNA_CREDENTIALS);
+function KlarnaCredentialsForm({ initialCredentials, onApply }: Readonly<KlarnaCredentialsFormProps>) {
+    const [draft, setDraft] = useState<KlarnaCredentials>(initialCredentials ?? EMPTY_KLARNA_CREDENTIALS);
 
     const handleSubmit = useCallback(
         (event: Event) => {
@@ -39,6 +53,7 @@ function KlarnaCredentialsForm({ onApply }: Readonly<KlarnaCredentialsFormProps>
     return (
         <form onSubmit={handleSubmit} style={{ display: 'grid', gap: '12px', marginBottom: '24px', maxWidth: '540px', fontSize: '13px' }}>
             <strong>Klarna credentials</strong>
+            {initialCredentials && <span>Loaded from .env (dev only)</span>}
             {FIELDS.map(({ key, label }) => (
                 <label key={key} style={{ display: 'grid', gap: '4px' }}>
                     <span>{label}</span>
@@ -52,7 +67,7 @@ function KlarnaCredentialsForm({ onApply }: Readonly<KlarnaCredentialsFormProps>
                 </label>
             ))}
 
-            <button type="submit" disabled={!draft.clientId || !draft.paymentAccountId}>
+            <button type="submit" disabled={!draft.clientId || !draft.paymentAccountId || !draft.partnerAccountId}>
                 Initialise Klarna
             </button>
         </form>
@@ -64,14 +79,19 @@ export interface KlarnaCredentialsGateProps {
 }
 
 export function KlarnaCredentialsGate({ children }: Readonly<KlarnaCredentialsGateProps>) {
-    const [applied, setApplied] = useState<KlarnaCredentials | null>(null);
+    const [envCredentials] = useState(getKlarnaEnvCredentials);
+    const [applied, setApplied] = useState<KlarnaCredentials | null>(envCredentials);
 
     const handleApply = useCallback((credentials: KlarnaCredentials) => setApplied(credentials), []);
 
     return (
         <Fragment>
-            <KlarnaCredentialsForm onApply={handleApply} />
-            {applied ? children(applied) : <span>Enter a client id and payment account id above to initialise the Klarna Web SDK.</span>}
+            <KlarnaCredentialsForm initialCredentials={envCredentials} onApply={handleApply} />
+            {applied ? (
+                children(applied)
+            ) : (
+                <span>Enter a client id, payment account id and partner account id above to initialise the Klarna Web SDK.</span>
+            )}
         </Fragment>
     );
 }
