@@ -1,0 +1,60 @@
+@use 'styles/mixins';
+@use 'styles/variable-generator';
+
+.planSummary {
+    display: flex;
+    flex-direction: column;
+    gap: variable-generator.token(spacer-060);
+    border: 0;
+    margin: 0;
+    padding: 0;
+    min-inline-size: 0;
+}
+
+.rows {
+    border: variable-generator.token(border-width-s) solid variable-generator.token(color-outline-primary);
+    border-radius: variable-generator.token(border-radius-m);
+    background: variable-generator.token(color-background-primary);
+    margin: 0;
+    padding: 0 variable-generator.token(spacer-070);
+}
+
+.row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: variable-generator.token(spacer-060);
+    padding: variable-generator.token(spacer-050) 0;
+
+    &:not(:last-child) {
+        border-bottom: variable-generator.token(border-width-s) solid variable-generator.token(color-outline-primary);
+    }
+}
+
+.rowLabel,
+.rowValue {
+    color: variable-generator.token(color-label-primary);
+
+    @include mixins.adyen-checkout-text-body;
+}
+
+.rowStrong .rowLabel,
+.rowStrong .rowValue {
+    @include mixins.adyen-checkout-text-body-strongest;
+}
+
+.rowLabel {
+    display: flex;
+    align-items: center;
+    gap: variable-generator.token(spacer-040);
+}
+
+.rowValue {
+    margin: 0;
+    text-align: end;
+    white-space: nowrap;
+}
+
+.rowValueDiscount {
+    color: variable-generator.token(color-label-success);
+}
