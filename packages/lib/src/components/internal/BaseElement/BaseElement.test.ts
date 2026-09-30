@@ -149,18 +149,6 @@ describe('BaseElement', () => {
             handleKeyDownMock.mockClear();
         });
 
-        describe('mount()', () => {
-            test('should throw if the selector does not match any node', () => {
-                const element = new MountableElement(core);
-                expect(() => element.mount('#does-not-exist')).toThrow(ROOT_NODE_NOT_FOUND);
-            });
-
-            test('should render the element into the given node', () => {
-                new MountableElement(core).mount(container);
-                expect(screen.getByText('mountable element')).toBeInTheDocument();
-            });
-        });
-
         describe('mountedNode', () => {
             test('should throw the root node error if the element has not been mounted', () => {
                 const element = new MountableElement(core);

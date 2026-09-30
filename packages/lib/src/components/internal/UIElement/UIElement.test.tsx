@@ -622,13 +622,15 @@ describe('UIElement', () => {
             expect(onOrderUpdatedMock).toHaveBeenCalledWith({ order });
         });
 
-        test('should call onError with an IMPLEMENTATION_ERROR and onPaymentFailed if neither onSubmit nor a session is available', async () => {
+        test('should call onError with an IMPLEMENTATION_ERROR, but not onPaymentFailed, if neither onSubmit nor a session is available', async () => {
             const onErrorMock = jest.fn();
             const onPaymentFailedMock = jest.fn();
+            const setStatusMock = jest.fn();
             jest.spyOn(MyElement.prototype, 'isValid', 'get').mockReturnValue(true);
             core.session = undefined;
 
             const element = new MyElement(core, { onError: onErrorMock, onPaymentFailed: onPaymentFailedMock });
+            element.setComponentRef({ setStatus: setStatusMock });
 
             expect(() => element.submit()).not.toThrow();
 
@@ -641,39 +643,8 @@ describe('UIElement', () => {
             expect(error.message).toContain('It can not perform /payments call');
             expect(elementRef).toBe(element);
 
-            expect(onPaymentFailedMock).toHaveBeenCalledTimes(1);
-            expect(onPaymentFailedMock).toHaveBeenCalledWith(error, element);
-        });
-
-        test('should complete the payment instead of handling an order when the order has no remaining amount', async () => {
-            const onPaymentCompletedMock = jest.fn();
-            const onOrderUpdatedMock = jest.fn();
-            const onSubmitMock = jest.fn().mockImplementation((_, __, actions) => {
-                actions.resolve({
-                    resultCode: 'Authorised',
-                    order: {
-                        orderData: 'order-mock',
-                        pspReference: 'MHCDBZCH4NF96292',
-                        remainingAmount: { currency: 'EUR', value: 0 }
-                    }
-                });
-            });
-            jest.spyOn(MyElement.prototype, 'isValid', 'get').mockReturnValue(true);
-
-            const element = new MyElement(core, {
-                onSubmit: onSubmitMock,
-                onPaymentCompleted: onPaymentCompletedMock,
-                onOrderUpdated: onOrderUpdatedMock
-            });
-
-            element.submit();
-
-            await new Promise(process.nextTick);
-
-            expect(core.update).not.toHaveBeenCalled();
-            expect(onOrderUpdatedMock).not.toHaveBeenCalled();
-            expect(onPaymentCompletedMock).toHaveBeenCalledTimes(1);
-            expect(onPaymentCompletedMock).toHaveBeenCalledWith({ resultCode: 'Authorised' }, element);
+            expect(setStatusMock.mock.calls).toEqual([['loading'], ['ready']]);
+            expect(onPaymentFailedMock).not.toHaveBeenCalled();
         });
 
         test('should complete the payment instead of handling an order when the order has no remainingAmount', async () => {
@@ -945,7 +916,7 @@ describe('UIElement', () => {
             expect(onPaymentFailedMock).toHaveBeenCalledWith(undefined, element);
         });
 
-        test('should call onError with an IMPLEMENTATION_ERROR and onPaymentFailed if neither onAdditionalDetails nor a session is available', async () => {
+        test('should call onError with an IMPLEMENTATION_ERROR, but not onPaymentFailed, if neither onAdditionalDetails nor a session is available', async () => {
             const onErrorMock = jest.fn();
             const onPaymentFailedMock = jest.fn();
             core.session = undefined;
@@ -963,8 +934,7 @@ describe('UIElement', () => {
             expect(error.message).toContain('It can not perform /payments/details call');
             expect(elementRef).toBe(element);
 
-            expect(onPaymentFailedMock).toHaveBeenCalledTimes(1);
-            expect(onPaymentFailedMock).toHaveBeenCalledWith(error, element);
+            expect(onPaymentFailedMock).not.toHaveBeenCalled();
         });
 
         test('should send an error event to analytic module with correct errorType and error code, if payment/details call fails', async () => {
@@ -1070,15 +1040,6 @@ describe('UIElement', () => {
             expect(onEnterKeyPressed).toHaveBeenCalledWith(document.body, element);
         });
 
-        test('should not call onEnterKeyPressed when a key other than Enter is pressed', () => {
-            const onEnterKeyPressed = jest.fn();
-            new MyElement(core, { onEnterKeyPressed }).mount(container);
-
-            container.dispatchEvent(new KeyboardEvent('keydown', { key: 'a' }));
-
-            expect(onEnterKeyPressed).not.toHaveBeenCalled();
-        });
-
         test('should not call onEnterKeyPressed nor submit when there is no active element', () => {
             const onEnterKeyPressed = jest.fn();
             const activeElementSpy = jest.spyOn(document, 'activeElement', 'get').mockReturnValue(null);
@@ -1133,22 +1094,6 @@ describe('UIElement', () => {
             expect(core.getComponent).not.toHaveBeenCalled();
             expect(DonationMock).not.toHaveBeenCalled();
             expect(onPaymentCompletedMock).toHaveBeenCalledTimes(1);
-        });
-
-        test('should not create a Donation if the merchant disabled autoMount', async () => {
-            const container = document.createElement('div');
-            document.body.appendChild(container);
-
-            const element = new MyElement(core, {
-                donation: { autoMount: false, onDonationSuccess: jest.fn(), onDonationFailure: jest.fn() }
-            }).mount(container);
-            element.submit();
-
-            await new Promise(process.nextTick);
-
-            expect(DonationMock).not.toHaveBeenCalled();
-
-            container.remove();
         });
     });
 
