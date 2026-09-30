@@ -174,7 +174,8 @@ class EMI extends UIElement<EMIConfiguration> {
             component: this.type,
             type: InfoEventType.selected,
             target,
-            issuer: emiSelection.issuer.issuerCode
+            selectedValue: target === UiTarget.emiPlan ? String(emiSelection.plan.tenureMonths) : emiSelection.issuer.issuerCode,
+            issuer: target === UiTarget.emiPlan ? emiSelection.issuer.issuerCode : undefined
         });
         this.submitAnalytics(event);
 
