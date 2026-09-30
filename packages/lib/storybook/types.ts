@@ -57,6 +57,18 @@ export type AdyenCheckoutProps = {
     amount: number;
     sessionData?: SessionsRequestData;
     allowedPaymentTypes?: string[];
+    /**
+     * Sent on the `/paymentMethods` request, so the backend does the filtering. Unlike
+     * `allowedPaymentTypes`, which trims the response after it arrives, these exercise the real
+     * allow/block pipeline, including the edits it makes inside a payment method's own sub-arrays.
+     *
+     * Storybook drops the inline array syntax from URL args, so several types have to be indexed
+     * (`blockedPaymentMethods[0]:scheme;blockedPaymentMethods[1]:upi`) and a single one arrives as
+     * a plain string (`blockedPaymentMethods:emi`).
+     */
+    blockedPaymentMethods?: string[] | string;
+    /** Request-side counterpart of `blockedPaymentMethods`; see the note above on URL-arg syntax. */
+    allowedPaymentMethods?: string[] | string;
     paymentMethodsOverride?: PaymentMethodsResponse;
     paymentsOptions?: {}; // TODO we don't have proper type for this right now
     onPaymentCompleted?: (data: unknown, element?: UIElement) => void;
