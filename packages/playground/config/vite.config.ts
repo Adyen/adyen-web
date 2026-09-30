@@ -56,65 +56,54 @@ const cleanUrlToHtmlFile = (url: string): string | null => {
     return `/${id}/${id}.html`;
 };
 
-const adyenPlaygroundPlugin = (): Plugin => ({
-    name: 'adyen-playground',
-    configureServer(server) {
-        const cleanUrlMiddleware: Connect.NextHandleFunction = (req, res, next) => {
-            const rewritten = req.url && cleanUrlToHtmlFile(req.url);
-            if (rewritten) {
-                const [, search = ''] = (req.url as string).split('?');
-                req.url = search ? `${rewritten}?${search}` : rewritten;
-            }
-            next();
-        };
+const adyenPlaygroundPlugin = (): Plugin => {
+    // `yarn start` rebuilds the library in watch mode concurrently. Rollup's rebuild writes many
+    // interdependent files (preserveModules) non-atomically, so letting Vite's own watcher
+    // granularly HMR-update each one as it's written races ahead of the build and can fetch a
+    // module before a file it imports has been rewritten (leads to a "does not provide an
+    // export" error). Instead we debounce until the whole rebuild has settled, then force a
+    // single full reload. Shared between `configureServer` and `handleHotUpdate` below.
+    let reloadTimer: NodeJS.Timeout;
 
-        server.middlewares.use(cleanUrlMiddleware);
+    return {
+        name: 'adyen-playground',
+        configureServer(server) {
+            const cleanUrlMiddleware: Connect.NextHandleFunction = (req, res, next) => {
+                const rewritten = req.url && cleanUrlToHtmlFile(req.url);
+                if (rewritten) {
+                    const [, search = ''] = (req.url as string).split('?');
+                    req.url = search ? `${rewritten}?${search}` : rewritten;
+                }
+                next();
+            };
 
-        // `yarn start` rebuilds the library in watch mode concurrently. Rollup's rebuild writes
-        // many interdependent files (preserveModules) non-atomically, so letting Vite's own
-        // watcher granularly HMR-update each one as it's written races ahead of the build and can
-        // fetch a module before a file it imports has been rewritten (leads to a "does not provide an export" error).
-        // Instead we watch the dist output ourselves, debounce until the whole rebuild has settled,
-        // then force a single full reload.
-        // Vite's own watcher ignores node_modules, so its transform cache for these `/@fs/`
-        // modules is never invalidated on disk changes - clear it manually before reloading.
-        let reloadTimer: NodeJS.Timeout;
-        let distWatcher: fs.FSWatcher | undefined;
-        let waitForDistTimer: NodeJS.Timeout | undefined;
+            server.middlewares.use(cleanUrlMiddleware);
 
-        const watchDist = () => {
-            distWatcher = fs.watch(libDistDir, { recursive: true }, () => {
+            // `libDistDir` is outside the project root, so Vite's watcher doesn't pick it up by
+            // default - add it explicitly. Chokidar handles a `dist` that doesn't exist yet (e.g.
+            // clean checkout, or before the lib's first build finishes) and starts watching once
+            // it's created, so no manual existence polling is needed.
+            server.watcher.add(libDistDir);
+        },
+        handleHotUpdate({ file, server }) {
+            if (file.startsWith(libDistDir)) {
                 clearTimeout(reloadTimer);
                 reloadTimer = setTimeout(() => {
+                    // Vite's transform cache for these `/@fs/` modules is never invalidated by the
+                    // rebuild itself - clear it manually before reloading.
                     server.moduleGraph.invalidateAll();
                     server.ws.send({ type: 'full-reload' });
                 }, 300);
-            });
-        };
-
-        // On a clean checkout (or before the lib's very first build finishes) `dist` doesn't
-        // exist yet - fs.watch throws ENOENT synchronously and would otherwise crash the whole
-        // dev server. Poll until it appears, then start watching.
-        if (fs.existsSync(libDistDir)) {
-            watchDist();
-        } else {
-            waitForDistTimer = setInterval(() => {
-                if (fs.existsSync(libDistDir)) {
-                    clearInterval(waitForDistTimer);
-                    watchDist();
-                }
-            }, 1000);
+                // Prevents Vite's default granular HMR for these files from racing ahead of the
+                // (still in-progress) build - see comment above.
+                return [];
+            }
+        },
+        transformIndexHtml(html) {
+            return html.replace(/<%=\s*JSON\.stringify\(htmlWebpackPlugin\.htmlPages\)\s*\|\|\s*''\s*%>/g, JSON.stringify(htmlPages));
         }
-
-        server.httpServer?.once('close', () => {
-            clearInterval(waitForDistTimer);
-            distWatcher?.close();
-        });
-    },
-    transformIndexHtml(html) {
-        return html.replace(/<%=\s*JSON\.stringify\(htmlWebpackPlugin\.htmlPages\)\s*\|\|\s*''\s*%>/g, JSON.stringify(htmlPages));
-    }
-});
+    };
+};
 
 export default defineConfig({
     root,
@@ -152,14 +141,6 @@ export default defineConfig({
         proxy: {
             '/api': { target: apiTarget, secure: false },
             '/sdk': { target: apiTarget, secure: false }
-        },
-        watch: {
-            // Vite's default `ignored: ['**/node_modules/**']` doesn't match here: the lib is
-            // consumed through a workspace symlink, and Vite resolves it to its real path
-            // (packages/lib/dist/...), which doesn't contain "node_modules". Without this, Vite's
-            // own granular per-file HMR races ahead of rollup's non-atomic multi-file rebuild - see
-            // the plugin's own debounced full-reload watcher, above.
-            ignored: [`${libDistDir}/**`]
         }
     }
 });
