@@ -7,7 +7,7 @@ import { SplitFundingSourceCards } from './cardStoryHelpers/SplitFundingSourceCa
 import { createCardComponent } from './cardStoryHelpers/createCardComponent';
 import { getComponentConfigFromUrl } from '../../../../storybook/utils/get-configuration-from-url';
 import { CardWith3DS2CreateFromAction } from './cardStoryHelpers/CardWith3DS2CreateFromAction';
-import { AdditionalDetailsActions, AdditionalDetailsData } from '../../../core/types';
+import type { AdditionalDetailsActions, AdditionalDetailsData } from '../../../core/types';
 import { displayResultMessage } from '../../../../storybook/helpers/checkout-handlers';
 import { makeDetailsCall } from '../../../../storybook/helpers/checkout-api-calls';
 

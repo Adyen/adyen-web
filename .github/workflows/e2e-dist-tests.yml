@@ -1,0 +1,61 @@
+name: E2E Tests (dist)
+
+on:
+  workflow_call:
+
+jobs:
+  e2e-dist-tests:
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    container:
+      image: mcr.microsoft.com/playwright:v1.62.1-noble
+      options: --user 1001
+    env:
+      CHECKOUT_API_KEY: ${{secrets.ADYEN_CHECKOUT_API_KEY}}
+      MERCHANT_ACCOUNT: ${{secrets.ADYEN_CHECKOUT_MERCHANT_ACCOUNT}}
+      CLIENT_KEY: ${{secrets.ADYEN_CHECKOUT_CLIENT_KEY}}
+      CLIENT_ENV: test
+      TESTING_ENVIRONMENT: https://checkout-test.adyen.com/checkout/v72
+      API_VERSION: v72
+    steps:
+    - name: Checkout
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+    - name: Setup Node
+      uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+      with:
+        node-version: 24
+        package-manager-cache: false
+
+    - name: Cache node modules
+      id: node-modules-cache
+      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
+      env:
+        cache-name: node-modules-v1
+      with:
+        path: node_modules
+        key: ${{ runner.os }}-cache-${{ env.cache-name }}-yarn-${{ hashFiles('**/yarn.lock') }}
+
+    - name: Enable Corepack
+      run: corepack enable
+
+    - name: Install Project Dependencies
+      if: steps.node-modules-cache.outputs.cache-hit != 'true'
+      run: yarn install --immutable
+
+    # Chromium only, latest API version: the source matrix in e2e-tests.yml covers the
+    # browser and API-version breadth. This run's job is the bundle itself — it builds the
+    # library, serves the dist-flavored Storybook, and runs the same e2e specs against it.
+    - name: Run E2E Tests (dist)
+      run: yarn test:e2e:dist tests/e2e --project=chromium
+
+    - name: Archive test result artifacts
+      id: upload-artifact
+      if: always()
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+      with:
+        name: playwright-report-dist-${{ github.sha }}
+        path: packages/e2e-playwright/playwright-report
+        retention-days: 5

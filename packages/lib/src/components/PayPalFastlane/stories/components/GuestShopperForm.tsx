@@ -4,7 +4,7 @@ import { useEffect, useState } from 'preact/hooks';
 import { CollectEmail } from './CollectEmail';
 import { Shipping } from './Shipping';
 import { ShippingWithFastlane } from './ShippingWithFastlane';
-import initializeFastlane from '../../initializeFastlane';
+import { initializeFastlane } from '@adyen/adyen-web';
 import FastlaneSDK from '../../FastlaneSDK';
 import type { FastlaneAuthenticatedCustomerResult, FastlaneShipping } from '../../types';
 import { ShippingAddress } from './types';

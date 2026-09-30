@@ -1,10 +1,9 @@
 import { h } from 'preact';
 import { MetaConfiguration, PaymentMethodStoryProps } from '../../../../storybook/types';
 import { DropinConfiguration } from '../../Dropin/types';
-import { AdyenCheckout, components } from '../../..';
+import { AdyenCheckout, components, Dropin as DropinComponent } from '@adyen/adyen-web';
 import { Checkout } from '../../../../storybook/components/Checkout';
 import { ComponentContainer } from '../../../../storybook/components/ComponentContainer';
-import DropinComponent from '../../Dropin/Dropin';
 
 const meta: MetaConfiguration<DropinConfiguration> = {
     title: 'Components/PayTo/Dropin',

@@ -6,6 +6,7 @@
     "license": "MIT",
     "scripts": {
         "test:headless": "npx playwright test",
+        "test:dist": "npx playwright test --config=dist.playwright.config.ts",
         "test:headed": "npx playwright test --headed",
         "test:ui": "npx playwright test --ui",
         "test:update-screenshots": "npx playwright test --update-snapshots --grep @screenshot",

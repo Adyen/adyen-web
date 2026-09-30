@@ -3,10 +3,7 @@ import { MetaConfiguration, StoryConfiguration } from '../../../../storybook/typ
 import { FastlaneInSinglePageApp } from './FastlaneInSinglePageApp';
 import { ComponentContainer } from '../../../../storybook/components/ComponentContainer';
 
-import Dropin from '../../Dropin/Dropin';
-import Card from '../../Card/Card';
-import PayPal from '../../PayPal/Paypal';
-import Fastlane from '../Fastlane';
+import { Dropin, Card, PayPal, Fastlane } from '@adyen/adyen-web';
 import { Checkout } from '../../../../storybook/components/Checkout';
 
 type FastlaneStory = StoryConfiguration<{}>;

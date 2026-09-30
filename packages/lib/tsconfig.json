@@ -8,6 +8,11 @@
         "moduleResolution": "Bundler",
         "module": "ESNext",
 
+        /* The story layer imports the library through the package name */
+        "paths": {
+            "@adyen/adyen-web": ["./src/index.ts"]
+        },
+
         /* Base Options: */
         "allowSyntheticDefaultImports": true,
         "esModuleInterop": true,

@@ -1,5 +1,5 @@
 import { Fragment, h } from 'preact';
-import PayByBankPix from '..';
+import { PayByBankPix } from '@adyen/adyen-web';
 import { PayByBankPixConfiguration } from '../types';
 import { http, HttpResponse } from 'msw';
 import SimulatedIssuer from './SimulatedIssuer';
