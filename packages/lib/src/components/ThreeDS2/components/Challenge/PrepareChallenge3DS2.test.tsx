@@ -33,6 +33,7 @@ let onError: any;
 let errorMessage: string;
 
 const baseAnalyticsError = {
+    component: THREEDS2_FULL,
     errorType: ErrorEventType.threeDS2,
     timestamp: expect.any(String),
     id: expect.any(String)
@@ -84,6 +85,7 @@ describe('PrepareChallenge3DS2 - Happy flow', () => {
         expect(onError.mock.calls.length).toBe(0);
 
         expect(onSubmitAnalytics).toHaveBeenCalledWith({
+            component: THREEDS2_FULL,
             type: THREEDS2_FULL,
             message: 'creq sent',
             subType: LogEventSubtype.challengeDataSentWeb,
@@ -103,6 +105,7 @@ describe('PrepareChallenge3DS2 - Happy flow', () => {
 
         // analytics to say process is complete
         expect(onSubmitAnalytics).toHaveBeenCalledWith({
+            component: THREEDS2_FULL,
             type: THREEDS2_FULL,
             message: '3DS2 challenge has completed',
             subType: LogEventSubtype.challengeCompleted,
@@ -137,6 +140,7 @@ describe('PrepareChallenge3DS2 - flow completes with errors that are considered 
 
         // analytics for error
         expect(onSubmitAnalytics).toHaveBeenCalledWith({
+            component: THREEDS2_FULL,
             message: 'threeDS2Challenge: timeout',
             code: ErrorEventCode.THREEDS2_TIMEOUT,
             errorType: ErrorEventType.threeDS2,
@@ -146,6 +150,7 @@ describe('PrepareChallenge3DS2 - flow completes with errors that are considered 
 
         // analytics to say process is complete
         expect(onSubmitAnalytics).toHaveBeenCalledWith({
+            component: THREEDS2_FULL,
             type: THREEDS2_FULL,
             message: '3DS2 challenge has completed',
             subType: LogEventSubtype.challengeCompleted,
@@ -170,6 +175,7 @@ describe('PrepareChallenge3DS2 - flow completes with errors that are considered 
 
         // analytics for error
         expect(onSubmitAnalytics).toHaveBeenCalledWith({
+            component: THREEDS2_FULL,
             message: `${THREEDS2_CHALLENGE_ERROR}: no transStatus could be retrieved`,
             code: ErrorEventCode.THREEDS2_NO_TRANSSTATUS,
             errorType: ErrorEventType.threeDS2,
@@ -179,6 +185,7 @@ describe('PrepareChallenge3DS2 - flow completes with errors that are considered 
 
         // analytics to say process is complete
         expect(onSubmitAnalytics).toHaveBeenCalledWith({
+            component: THREEDS2_FULL,
             type: THREEDS2_FULL,
             message: '3DS2 challenge has completed',
             subType: LogEventSubtype.challengeCompleted,

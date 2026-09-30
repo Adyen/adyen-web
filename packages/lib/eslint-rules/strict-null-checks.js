@@ -180,7 +180,6 @@ const STRICT_NULL_CHECKS_BACKLOG = [
     'src/components/Dropin/elements/createElements.ts',
 
     // ── Ticket 7: ThreeDS2 (41 errors) ──
-    // 'src/components/ThreeDS2/components/Challenge/PrepareChallenge3DS2.tsx',
     'src/components/ThreeDS2/components/DeviceFingerprint/DoFingerprint3DS2.tsx',
     'src/components/ThreeDS2/components/DeviceFingerprint/PrepareFingerprint3DS2.tsx',
     'src/components/ThreeDS2/components/Form/ThreeDS2Form.tsx',

@@ -12,6 +12,7 @@ import {
     DEFAULT_CHALLENGE_WINDOW_SIZE,
     THREEDS2_CHALLENGE,
     THREEDS2_CHALLENGE_ERROR,
+    THREEDS2_FULL,
     THREEDS2_NUM,
     MISSING_TOKEN_IN_ACTION_MSG
 } from '../../constants';
@@ -21,12 +22,6 @@ import { AnalyticsLogEvent, LogEventSubtype, LogEventType } from '../../../../co
 import { AnalyticsErrorEvent, ErrorEventCode, ErrorEventType } from '../../../../core/Analytics/events/AnalyticsErrorEvent';
 import { AbstractAnalyticsEvent } from '../../../../core/Analytics/events/AbstractAnalyticsEvent';
 
-function getStringValue(value: string): string;
-function getStringValue(value: string | undefined): string;
-function getStringValue(value: string | undefined): string | undefined {
-    return value;
-}
-
 class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareChallenge3DS2State> {
     public static readonly defaultProps = {
         onComplete: () => {},
@@ -35,7 +30,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
     };
 
     private get component(): string {
-        return getStringValue(this.props.type);
+        return this.props.type ?? THREEDS2_FULL;
     }
 
     constructor(props: PrepareChallenge3DS2Props) {
@@ -101,7 +96,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                 // Set UI error & call onError callback
                 this.setError(
                     {
-                        errorInfo: `${errorCode}: ${this.props.i18n?.get('err.gen.9102')}` //
+                        errorInfo: `${errorCode}: ${this.props.i18n?.get('err.gen.9102') ?? ''}` //
                     },
                     true
                 );
@@ -128,7 +123,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                 // Set UI error & call onError callback
                 this.setError(
                     {
-                        errorInfo: `${ErrorEventCode.THREEDS2_TOKEN_IS_MISSING_OTHER_PROPS}: ${this.props.i18n?.get('err.gen.9102')}`
+                        errorInfo: `${ErrorEventCode.THREEDS2_TOKEN_IS_MISSING_OTHER_PROPS}: ${this.props.i18n?.get('err.gen.9102') ?? ''}`
                     },
                     true
                 );
@@ -161,7 +156,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
             // Set UI error & call onError callback
             this.setError(
                 {
-                    errorInfo: `${errorCode}: ${this.props.i18n?.get('err.gen.9102')}`
+                    errorInfo: `${errorCode}: ${this.props.i18n?.get('err.gen.9102') ?? ''}`
                     // errorObj: this.state.challengeData // TODO Decide if we want to expose this data
                 },
                 true
@@ -181,11 +176,11 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
         }
     }
 
-    setStatusComplete(resultObj: ResultObject, errorCodeObject?: ErrorCodeObject) {
+    setStatusComplete(resultObj?: ResultObject, errorCodeObject?: ErrorCodeObject) {
         this.setState({ status: 'complete' }, () => {
             const data: ChallengeResolveData = createChallengeResolveData(
                 this.props.dataKey ?? 'threeDSResult',
-                resultObj.transStatus ?? '',
+                resultObj?.transStatus ?? '',
                 this.props.paymentData ?? ''
             );
 
@@ -197,7 +192,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
 
             /** Are we in an "error" i.e. timeout or no transStatus, scenario? If so, submit analytics about it */
             const finalResObject = errorCodeObject ? errorCodeObject : resultObj;
-            if (finalResObject.errorCode) {
+            if (finalResObject?.errorCode) {
                 const errorTypeAndCode = {
                     code: finalResObject.errorCode === 'timeout' ? ErrorEventCode.THREEDS2_TIMEOUT : ErrorEventCode.THREEDS2_NO_TRANSSTATUS,
                     errorType: ErrorEventType.threeDS2
@@ -219,7 +214,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
             /** Calculate "result" for analytics */
             let result = 'unknown';
 
-            switch (resultObj.transStatus) {
+            switch (resultObj?.transStatus) {
                 case 'Y':
                     result = 'success';
                     break;
@@ -287,9 +282,11 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                         if (!challenge.result) {
                             this.setError(
                                 {
-                                    errorInfo: `${THREEDS2_CHALLENGE_ERROR}:  ${this.props.i18n?.get('3ds.chal.805', {
-                                        values: { result: '"result"' }
-                                    })}`,
+                                    errorInfo: `${THREEDS2_CHALLENGE_ERROR}:  ${
+                                        this.props.i18n?.get('3ds.chal.805', {
+                                            values: { result: '"result"' }
+                                        }) ?? ''
+                                    }`,
                                     errorObj: challenge as unknown as ErrorObject
                                 },
                                 true
@@ -385,7 +382,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                         alt={''}
                     />
                     <div className="adyen-checkout__status__text">
-                        {this.state.errorInfo ? this.state.errorInfo : this.props.i18n?.get('error.message.unknown')}
+                        {this.state.errorInfo ? this.state.errorInfo : (this.props.i18n?.get('error.message.unknown') ?? '')}
                     </div>
                 </div>
             );
