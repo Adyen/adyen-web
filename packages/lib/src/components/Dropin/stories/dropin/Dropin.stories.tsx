@@ -32,6 +32,14 @@ const meta: MetaConfiguration<DropinConfiguration> = {
             control: 'object',
             if: { arg: 'useSessions', truthy: false }
         },
+        blockedPaymentMethods: {
+            control: 'object',
+            if: { arg: 'useSessions', truthy: false }
+        },
+        allowedPaymentMethods: {
+            control: 'object',
+            if: { arg: 'useSessions', truthy: false }
+        },
         sessionData: {
             control: 'object',
             if: { arg: 'useSessions', truthy: true }
