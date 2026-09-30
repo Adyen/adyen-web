@@ -280,7 +280,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
 
     public executePaymentsCall(): void {
         this.makePaymentsCall()
-            .then(sanitizeResponse)
+            ?.then(sanitizeResponse)
             .then(verifyPaymentDidNotFail)
             .then(this.handleResponse)
             .catch((e: PaymentResponseData | Error) => {
@@ -292,7 +292,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
             });
     }
 
-    protected makePaymentsCall(): Promise<CheckoutAdvancedFlowResponse | CheckoutSessionPaymentResponse> {
+    protected makePaymentsCall(): Promise<CheckoutAdvancedFlowResponse | CheckoutSessionPaymentResponse> | undefined {
         this.setElementStatus('loading');
 
         if (this.props.onSubmit) {
@@ -318,8 +318,6 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         );
 
         this.handleError(error);
-
-        return Promise.reject(error);
     }
 
     private async submitUsingAdvancedFlow(): Promise<CheckoutAdvancedFlowResponse> {
@@ -393,13 +391,15 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
 
     protected handleAdditionalDetails(state: AdditionalDetailsData): void {
         this.makeAdditionalDetailsCall(state)
-            .then(sanitizeResponse)
+            ?.then(sanitizeResponse)
             .then(verifyPaymentDidNotFail)
             .then(this.handleResponse)
             .catch(this.handleFailedResult);
     }
 
-    private makeAdditionalDetailsCall(state: AdditionalDetailsData): Promise<CheckoutSessionDetailsResponse | CheckoutAdvancedFlowResponse> {
+    private makeAdditionalDetailsCall(
+        state: AdditionalDetailsData
+    ): Promise<CheckoutSessionDetailsResponse | CheckoutAdvancedFlowResponse> | undefined {
         if (this.props.onAdditionalDetails) {
             return new Promise<CheckoutAdvancedFlowResponse>((resolve, reject) => {
                 this.props.onAdditionalDetails?.(state, this.elementRef, { resolve, reject });
@@ -416,8 +416,6 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         );
 
         this.handleError(error);
-
-        return Promise.reject(error);
     }
 
     private async submitAdditionalDetailsUsingSessionsFlow(data: AdditionalDetailsData['data']): Promise<CheckoutSessionDetailsResponse> {
