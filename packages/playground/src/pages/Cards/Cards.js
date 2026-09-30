@@ -9,7 +9,7 @@ import '../../style.scss';
 import { MockReactApp } from './MockReactApp';
 import { searchFunctionExample } from '../../utils';
 
-const onlyShowCard = true;
+const onlyShowCard = false;
 
 const showComps = {
     clickToPay: true,
@@ -81,7 +81,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
 
     if (onlyShowCard || showComps.card) {
         window.card = new Card(checkout, {
-            _disableClickToPay: true,
+            _disableClickToPay: true
             // autoFocus: false,
             // billingAddressAllowedCountries: ['US', 'PR'],
             // billingAddressMode: 'partial',
