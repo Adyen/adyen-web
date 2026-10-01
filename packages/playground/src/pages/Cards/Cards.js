@@ -135,9 +135,9 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
             // onError: obj => {
             //     console.log('### Cards::onError:: obj=', obj);
             // },
-            onBinLookup: obj => {
-                console.log('### Cards::onBinLookup:: obj=', obj);
-            }
+            // onBinLookup: obj => {
+            //     console.log('### Cards::onBinLookup:: obj=', obj);
+            // }
         }).mount('.card-field');
     }
 
