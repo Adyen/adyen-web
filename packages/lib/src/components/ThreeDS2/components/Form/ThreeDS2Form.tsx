@@ -11,18 +11,19 @@ interface ThreeDS2FormProps {
 }
 
 export default class ThreeDS2Form extends Component<Readonly<ThreeDS2FormProps>> {
-    protected formEl;
+    protected formEl: HTMLFormElement;
 
     componentDidMount() {
         this.formEl.submit();
         this.props.onFormSubmit(`${this.props.inputName} sent`);
     }
 
-    render({ name, action, target, inputName, inputValue }) {
+    render() {
+        const { name, action, target, inputName, inputValue } = this.props;
         return (
             <form
                 ref={ref => {
-                    this.formEl = ref;
+                    if (ref) this.formEl = ref;
                 }}
                 method="POST"
                 className={classNames(['adyen-checkout__threeds2__form', `adyen-checkout__threeds2__form--${name}`])}
