@@ -17,9 +17,9 @@ export interface SelectTargetObject {
 }
 
 export interface SelectProps {
-    className: string;
-    classNameModifiers: string[];
-    filterable: boolean;
+    className?: string;
+    classNameModifiers?: string[];
+    filterable?: boolean;
     isInvalid?: boolean;
     isValid?: boolean;
     items: SelectItem[];
@@ -33,7 +33,7 @@ export interface SelectProps {
     ) => void;
     onInput?: (value: string) => void;
     placeholder?: string;
-    readonly: boolean;
+    readonly?: boolean;
     required?: boolean;
     selectedValue?: string | number;
     uniqueId?: string;
