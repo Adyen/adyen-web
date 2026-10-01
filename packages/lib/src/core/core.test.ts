@@ -38,9 +38,16 @@ const setupSessionSpy = jest.spyOn(Session.prototype, 'setupSession').mockImplem
 
 let analyticsSetupSpy: jest.SpyInstance;
 
+let multipleInstanceWarnMsg = '';
+jest.spyOn(console, 'warn').mockImplementation(message => {
+    multipleInstanceWarnMsg = message;
+});
+
 describe('Core', () => {
     beforeEach(() => {
         analyticsSetupSpy = jest.spyOn(Analytics.prototype, 'setUp').mockResolvedValue();
+        AdyenCheckout.metadata.numberOfInitialisedCheckouts = 0;
+        multipleInstanceWarnMsg = '';
     });
 
     afterEach(() => {
@@ -99,6 +106,55 @@ describe('Core', () => {
     });
 
     describe('initialize', () => {
+        test('should count the number of checkout instances', () => {
+            new AdyenCheckout({
+                countryCode: 'US',
+                environment: 'test',
+                clientKey: 'test_123456'
+            });
+
+            expect(AdyenCheckout.metadata.numberOfInitialisedCheckouts).toBe(1);
+        });
+
+        test('Creating a second instance of Checkout should warn that too many checkout instances exist', () => {
+            new AdyenCheckout({
+                countryCode: 'US',
+                environment: 'test',
+                clientKey: 'test_123456'
+            });
+
+            new AdyenCheckout({
+                countryCode: 'US',
+                environment: 'test',
+                clientKey: 'test_123456'
+            });
+
+            expect(AdyenCheckout.metadata.numberOfInitialisedCheckouts).toBe(2);
+
+            expect(multipleInstanceWarnMsg).toBe(
+                '\nMultiple instances of AdyenCheckout detected on the same page. This is not recommended and may lead to unexpected behaviour.\nIf this is intentional you can suppress this warning by setting "suppressConfigWarnings: true" in your Checkout config.\n'
+            );
+        });
+
+        test('Creating a second instance of Checkout should not warn that too many checkout instances exist if we deliberately suppress the warning', () => {
+            new AdyenCheckout({
+                countryCode: 'US',
+                environment: 'test',
+                clientKey: 'test_123456'
+            });
+
+            new AdyenCheckout({
+                countryCode: 'US',
+                environment: 'test',
+                clientKey: 'test_123456',
+                suppressConfigWarnings: true
+            });
+
+            expect(AdyenCheckout.metadata.numberOfInitialisedCheckouts).toBe(2);
+
+            expect(multipleInstanceWarnMsg).toBe('');
+        });
+
         test('should do the setup call with the correct session data for the session flow', async () => {
             const checkout = new AdyenCheckout({
                 countryCode: 'US',
