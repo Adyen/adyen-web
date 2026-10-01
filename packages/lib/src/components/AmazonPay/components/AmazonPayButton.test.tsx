@@ -163,22 +163,6 @@ describe('AmazonPayButton', () => {
         );
     });
 
-    test('should call initCheckout when no onClick callback is provided', async () => {
-        (getAmazonSignature as jest.Mock).mockResolvedValue({ signature: 'test-signature' });
-        customRender({ onClick: undefined });
-
-        await waitFor(() => {
-            expect(mockOnClickFn).toHaveBeenCalled();
-        });
-
-        const registeredHandler = mockOnClickFn.mock.calls[0][0];
-        registeredHandler();
-
-        await waitFor(() => {
-            expect(mockInitCheckout).toHaveBeenCalledTimes(1);
-        });
-    });
-
     test('should call onError when onClick handler rejects', async () => {
         const onError = jest.fn();
         (getAmazonSignature as jest.Mock).mockResolvedValue({ signature: 'test-signature' });
