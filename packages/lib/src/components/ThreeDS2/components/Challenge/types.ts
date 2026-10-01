@@ -2,11 +2,12 @@ import { ChallengeData, ThreeDS2ChallengeConfiguration, ThreeDS2FlowObject, Chal
 import { ActionHandledReturnObject } from '../../../../types/global-types';
 import { ErrorObject } from '../../../../core/Errors/types';
 import { AbstractAnalyticsEvent } from '../../../../core/Analytics/events/AbstractAnalyticsEvent';
+import type Language from '../../../../language';
 
 export interface DoChallenge3DS2Props extends ChallengeData {
     onCompleteChallenge: (resolveObject: ThreeDS2FlowObject) => void;
     onErrorChallenge: (rejectObject: ThreeDS2FlowObject) => void;
-    onActionHandled: (rtnObj: ActionHandledReturnObject) => void;
+    onActionHandled?: (rtnObj: ActionHandledReturnObject) => void;
     onFormSubmit: (msg: string) => void;
     usePasskeyIFrameAttributes?: boolean;
 }
@@ -17,6 +18,7 @@ export interface DoChallenge3DS2State {
 }
 
 export interface PrepareChallenge3DS2Props extends ThreeDS2ChallengeConfiguration {
+    i18n: Language;
     onComplete?: (data: ChallengeResolveData) => void;
     onSubmitAnalytics: (aObj: AbstractAnalyticsEvent) => void;
     environment?: string;

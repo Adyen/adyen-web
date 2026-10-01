@@ -39,7 +39,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
         if (this.props.token) {
             const challengeData: ChallengeData | ErrorObject = prepareChallengeData({
                 token: this.props.token,
-                size: this.props.challengeWindowSize || this.props.size || DEFAULT_CHALLENGE_WINDOW_SIZE // TODO confirm that this.props.size is legacy and can be removed
+                size: this.props.challengeWindowSize || this.props.size || DEFAULT_CHALLENGE_WINDOW_SIZE // TODO For v7 remove this.props.size as legacy code
             });
 
             this.state = {
@@ -96,7 +96,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                 // Set UI error & call onError callback
                 this.setError(
                     {
-                        errorInfo: `${errorCode}: ${this.props.i18n?.get('err.gen.9102') ?? ''}` //
+                        errorInfo: `${errorCode}: ${this.props.i18n.get('err.gen.9102')}` //
                     },
                     true
                 );
@@ -123,7 +123,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                 // Set UI error & call onError callback
                 this.setError(
                     {
-                        errorInfo: `${ErrorEventCode.THREEDS2_TOKEN_IS_MISSING_OTHER_PROPS}: ${this.props.i18n?.get('err.gen.9102') ?? ''}`
+                        errorInfo: `${ErrorEventCode.THREEDS2_TOKEN_IS_MISSING_OTHER_PROPS}: ${this.props.i18n.get('err.gen.9102')}`
                     },
                     true
                 );
@@ -156,7 +156,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
             // Set UI error & call onError callback
             this.setError(
                 {
-                    errorInfo: `${errorCode}: ${this.props.i18n?.get('err.gen.9102') ?? ''}`
+                    errorInfo: `${errorCode}: ${this.props.i18n.get('err.gen.9102')}`
                     // errorObj: this.state.challengeData // TODO Decide if we want to expose this data
                 },
                 true
@@ -282,11 +282,9 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                         if (!challenge.result) {
                             this.setError(
                                 {
-                                    errorInfo: `${THREEDS2_CHALLENGE_ERROR}:  ${
-                                        this.props.i18n?.get('3ds.chal.805', {
-                                            values: { result: '"result"' }
-                                        }) ?? ''
-                                    }`,
+                                    errorInfo: `${THREEDS2_CHALLENGE_ERROR}:  ${this.props.i18n.get('3ds.chal.805', {
+                                        values: { result: '"result"' }
+                                    })}`,
                                     errorObj: challenge as unknown as ErrorObject
                                 },
                                 true
@@ -364,7 +362,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                         }
                     }}
                     {...challengeData}
-                    onActionHandled={this.props.onActionHandled ?? (() => {})}
+                    onActionHandled={this.props.onActionHandled}
                     onFormSubmit={this.onFormSubmit}
                     usePasskeyIFrameAttributes={this.props.usePasskeyIFrameAttributes}
                 />
@@ -382,7 +380,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                         alt={''}
                     />
                     <div className="adyen-checkout__status__text">
-                        {this.state.errorInfo ? this.state.errorInfo : (this.props.i18n?.get('error.message.unknown') ?? '')}
+                        {this.state.errorInfo ? this.state.errorInfo : this.props.i18n.get('error.message.unknown')}
                     </div>
                 </div>
             );
