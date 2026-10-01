@@ -100,7 +100,7 @@ function Select({
     };
 
     const extractItemFromEvent = (e: Event): SelectItem | undefined => {
-        const value = (e.currentTarget as HTMLInputElement).getAttribute('data-value');
+        const value = (e.currentTarget as HTMLElement).getAttribute('data-value');
         return filteredItems.find(listItem => listItem.id == value);
     };
 
@@ -348,14 +348,5 @@ function Select({
         </div>
     );
 }
-
-Select.defaultProps = {
-    className: '',
-    classNameModifiers: [],
-    filterable: true,
-    items: [],
-    readonly: false,
-    onChange: () => {}
-};
 
 export default Select;
