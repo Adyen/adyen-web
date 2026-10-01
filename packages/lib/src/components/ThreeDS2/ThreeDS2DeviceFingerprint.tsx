@@ -52,13 +52,13 @@ class ThreeDS2DeviceFingerprint extends UIElement<ThreeDS2DeviceFingerprintConfi
         this.unmount(); // re. fixing issue around back to back fingerprinting calls
     }
 
-    protected override componentToRender(): h.JSX.Element {
+    protected override componentToRender(): h.JSX.Element | null {
         /**
          * In the regular components (aka "native") flow we can't proceed because something has gone wrong with the payment if paymentData is missing from the threeDS2 action.
          * In the MDFlow the paymentData is always present (albeit an empty string, which is why we use 'existy' since we should be allowed to proceed with this)
          */
         if (!existy(this.props.paymentData)) {
-            this.props.onError(new AdyenCheckoutError(API_ERROR, `No paymentData received. 3DS2 Fingerprint cannot proceed`));
+            this.props.onError?.(new AdyenCheckoutError(API_ERROR, `No paymentData received. 3DS2 Fingerprint cannot proceed`));
 
             // TODO - check logs to see if this *ever* happens
             const event = new AnalyticsErrorEvent({
