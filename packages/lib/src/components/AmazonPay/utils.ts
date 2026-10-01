@@ -105,7 +105,7 @@ export function getPayloadJSON(props, amount?: PaymentAmount): PayloadJSON {
     const { addressDetails, cancelUrl, checkoutMode, deliverySpecifications, returnUrl, merchantMetadata, chargePermissionType, recurringMetadata } =
         props;
 
-    const { storeId } = props.configuration;
+    const storeId = props.configuration?.storeId;
     const isPayNow = checkoutMode === 'ProcessOrder';
     let finalAmount: ChargeAmount | null = null;
 
