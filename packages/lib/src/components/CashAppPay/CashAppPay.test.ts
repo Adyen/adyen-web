@@ -60,9 +60,9 @@ describe('CashAppPay', () => {
         const core = setupCoreMock();
 
         const cashAppPayElement = new CashAppPay(core, {
-            i18n: global.i18n,
+            i18n: core.modules.i18n,
             loadingContext: 'test',
-            modules: { resources: global.resources }
+            modules: { resources: core.modules.resources }
         });
         render(cashAppPayElement.render());
 
@@ -76,9 +76,9 @@ describe('CashAppPay', () => {
 
         const cashAppPayElement = new CashAppPay(core, {
             onClick,
-            i18n: global.i18n,
+            i18n: core.modules.i18n,
             loadingContext: 'test',
-            modules: { resources: global.resources }
+            modules: { resources: core.modules.resources }
         });
         render(cashAppPayElement.render());
 
@@ -163,9 +163,9 @@ describe('CashAppPay', () => {
 
         const cashAppPayElement = new CashAppPay(core, {
             onClick,
-            i18n: global.i18n,
+            i18n: core.modules.i18n,
             loadingContext: 'test',
-            modules: { resources: global.resources }
+            modules: { resources: core.modules.resources }
         });
         render(cashAppPayElement.render());
 
