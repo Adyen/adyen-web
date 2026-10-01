@@ -2,7 +2,7 @@ import { h } from 'preact';
 import { Meta, StoryObj } from '@storybook/preact-vite';
 import { PaymentMethodStoryProps } from '../../../../storybook/types';
 import { ComponentContainer } from '../../../../storybook/components/ComponentContainer';
-import PayPalCreditElement from '../PayPalCredit';
+import { PayPalCredit as PayPalCreditElement } from '@adyen/adyen-web';
 import type { BasePayPalConfiguration } from '../types';
 import { Checkout } from '../../../../storybook/components/Checkout';
 

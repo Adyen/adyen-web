@@ -1,8 +1,8 @@
 import { Fragment, h } from 'preact';
 import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
+import { PayPal } from '@adyen/adyen-web';
 import { Checkout } from '../../../../storybook/components/Checkout';
 import { ComponentContainer } from '../../../../storybook/components/ComponentContainer';
-import Paypal from '..';
 
 import type { GlobalStoryProps } from '../../../../storybook/types';
 import type { ICore } from '../../../core/types';
@@ -75,7 +75,7 @@ function PayPalUpdatableElement({
     onReady: () => void;
 }>) {
     const paypal = useMemo(
-        () => new Paypal(checkout, getConfiguration(componentConfiguration, preset, vault, isZeroAuth)),
+        () => new PayPal(checkout, getConfiguration(componentConfiguration, preset, vault, isZeroAuth)),
         // The component is created only once, every later configuration change goes through 'update'
         [checkout]
     );
