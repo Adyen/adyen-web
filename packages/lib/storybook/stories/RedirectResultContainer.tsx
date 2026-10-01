@@ -6,12 +6,11 @@ import { makeDetailsCall } from '../helpers/checkout-api-calls';
 import { handleError, handleFinalState } from '../helpers/checkout-handlers';
 
 export const RedirectResultContainer = ({ redirectResult, sessionId, countryCode }) => {
-    const [isRedirecting, setIsRedirecting] = useState<boolean>(true);
-    let message = isRedirecting ? 'Submitting details...' : '';
+    const [message, setMessage] = useState<string>('Submitting details...');
 
     useEffect(() => {
         if (!redirectResult) {
-            message = 'There is no redirectResult provided';
+            setMessage('There is no redirectResult provided');
             return;
         }
 
@@ -35,19 +34,18 @@ export const RedirectResultContainer = ({ redirectResult, sessionId, countryCode
                 }
             }),
             onPaymentCompleted: (result, component) => {
-                setIsRedirecting(false);
                 handleFinalState(result, component);
+                setMessage('');
             },
             onPaymentFailed: (result, component) => {
-                setIsRedirecting(false);
                 handleFinalState(result, component);
+                setMessage('');
             },
             onError: (error, component) => {
-                setIsRedirecting(false);
                 handleError(error, component);
+                setMessage('');
             }
         }).then(checkout => {
-            setIsRedirecting(true);
             checkout.submitDetails({ details: { redirectResult } });
         });
     }, [sessionId, redirectResult]);

@@ -189,7 +189,6 @@ const STRICT_NULL_CHECKS_BACKLOG = [
 
     // ── Ticket 8: Google Pay and Apple Pay (85 errors) ──
     'src/components/ApplePay/ApplePay.tsx',
-    'src/components/ApplePay/services/ApplePaySdkLoader.ts',
     'src/components/ApplePay/services/ApplePayService.ts',
     'src/components/ApplePay/utils/map-adyen-brands-to-applepay-brands.ts',
     'src/components/ApplePay/utils/payment-request.ts',
