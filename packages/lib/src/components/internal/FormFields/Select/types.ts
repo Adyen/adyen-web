@@ -1,4 +1,4 @@
-import { Ref, RefObject, HTMLAttributes, TargetedKeyboardEvent } from 'preact';
+import { Ref, RefObject, HTMLAttributes, TargetedKeyboardEvent, KeyboardEventHandler, MouseEventHandler } from 'preact';
 import type { TagProps } from '../../Tag/types';
 
 export interface SelectItem {
@@ -46,26 +46,26 @@ export interface SelectProps {
 }
 
 export interface SelectButtonProps {
-    inputText: string;
+    inputText: string | null;
     active: SelectItem;
     selected: SelectItem;
     filterInputRef: RefObject<HTMLInputElement>;
     filterable: boolean;
-    isInvalid: boolean;
+    isInvalid?: boolean;
     isValid?: boolean;
-    onButtonKeyDown: (e: KeyboardEvent) => void;
+    onButtonKeyDown: KeyboardEventHandler<HTMLButtonElement>;
     onFocus?: (e: Event) => void;
     onInput: (e: Event) => void;
-    placeholder: string;
+    placeholder?: string;
     readonly: boolean;
-    required: boolean;
+    required?: boolean;
     selectListId: string;
     showList: boolean;
     toggleButtonRef: Ref<HTMLElement>;
     toggleList: (e: Event) => void;
-    id?: string;
-    ariaDescribedBy: string;
-    disabled: boolean;
+    id: string | undefined;
+    ariaDescribedBy?: string;
+    disabled?: boolean;
 }
 
 export interface SelectListProps {
@@ -80,14 +80,14 @@ export interface SelectListProps {
 }
 
 export interface SelectButtonElementProps extends Omit<HTMLAttributes<HTMLElement>, 'onClick' | 'onKeyDown'> {
-    disabled: boolean;
+    disabled?: boolean;
     filterable: boolean;
     readonly?: boolean;
     selectListId: string;
     showList: boolean;
     toggleButtonRef: Ref<HTMLElement>;
-    onClick: ((e: Event) => void) | null;
-    onKeyDown: ((e: KeyboardEvent) => void) | null;
+    onClick?: MouseEventHandler<HTMLDivElement | HTMLButtonElement>;
+    onKeyDown?: KeyboardEventHandler<HTMLDivElement | HTMLButtonElement>;
 }
 
 export interface SelectItemProps {
