@@ -1,11 +1,11 @@
 import { Fragment, h, TargetedInputEvent, TargetedSubmitEvent } from 'preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
+import { PayPalPayLater } from '@adyen/adyen-web';
 import { ComponentContainer } from '../../../../storybook/components/ComponentContainer';
 import { createSession, patchCheckoutSession } from '../../../../storybook/helpers/checkout-api-calls';
 import { RETURN_URL, STORYBOOK_ENVIRONMENT_URLS } from '../../../../storybook/config/commonConfig';
 import getCurrency from '../../../../storybook/utils/get-currency';
 import { AdyenCheckout, Core } from '../../../index';
-import PayPalPaylaterElement from '../PayPalPaylater';
 
 import type { CheckoutSession, CoreConfiguration, PaymentAmount } from '../../../types';
 import styles from './PayPalPaylaterAmountUpdateDemo.module.scss';
@@ -36,7 +36,7 @@ export function PayPalPaylaterAmountUpdateDemo({
     const currency = getCurrency(countryCode);
 
     const [session, setSession] = useState<{ id: string; sessionData: string }>();
-    const [paylater, setPaylater] = useState<PayPalPaylaterElement>();
+    const [paylater, setPaylater] = useState<PayPalPayLater>();
     const [amountValue, setAmountValue] = useState(INITIAL_AMOUNT_VALUE);
     const [inputValue, setInputValue] = useState(String(INITIAL_AMOUNT_VALUE));
 
@@ -123,7 +123,7 @@ export function PayPalPaylaterAmountUpdateDemo({
         checkoutRef.current = checkout;
 
         setPaylater(
-            new PayPalPaylaterElement(checkout, {
+            new PayPalPayLater(checkout, {
                 onAuthorized: (data, actions) => {
                     console.log('PayPal paylater onAuthorized data', { data });
                     actions.resolve();
