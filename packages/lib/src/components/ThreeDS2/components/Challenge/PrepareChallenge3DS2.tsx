@@ -12,7 +12,6 @@ import {
     DEFAULT_CHALLENGE_WINDOW_SIZE,
     THREEDS2_CHALLENGE,
     THREEDS2_CHALLENGE_ERROR,
-    THREEDS2_FULL,
     THREEDS2_NUM,
     MISSING_TOKEN_IN_ACTION_MSG
 } from '../../constants';
@@ -30,7 +29,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
     };
 
     private get component(): string {
-        return this.props.type ?? THREEDS2_FULL;
+        return this.props.type ?? THREEDS2_CHALLENGE;
     }
 
     constructor(props: PrepareChallenge3DS2Props) {
