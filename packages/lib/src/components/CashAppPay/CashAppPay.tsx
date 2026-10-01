@@ -110,7 +110,9 @@ export class CashAppPay extends UIElement<CashAppPayConfiguration> {
 
         let onClickPromiseRejected = false;
 
-        new Promise<void>((resolve, reject) => onClick?.({ resolve, reject }))
+        const clickPromise = onClick ? new Promise<void>((resolve, reject) => onClick({ resolve, reject })) : Promise.resolve();
+
+        clickPromise
             .catch(() => {
                 onClickPromiseRejected = true;
                 throw new Error('onClick rejected');
