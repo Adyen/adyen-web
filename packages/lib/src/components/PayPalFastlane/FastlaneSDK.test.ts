@@ -268,6 +268,26 @@ describe('FastlaneSDK', () => {
         });
     });
 
+    test('should return Card configuration if the shopper email is not known, even when the auth result has a card', async () => {
+        fastlaneMock.ConsentComponent.mockResolvedValue({
+            getRenderState: jest.fn().mockResolvedValue({ showConsent: false })
+        });
+
+        const fastlane = await initializeFastlane({
+            clientKey: 'test_xxx',
+            environment: 'test'
+        });
+
+        const config = await fastlane.getComponentConfiguration({
+            authenticationState: 'succeeded',
+            profileData: mock<FastlaneProfile>({
+                card: { id: 'xxxx', paymentSource: { card: { brand: 'visa', lastDigits: '1111' } } }
+            })
+        });
+
+        expect(config.paymentType).toBe('card');
+    });
+
     test('should return card component configuration if shopper does not have profile', async () => {
         const customerContextId = 'customer-context-id';
         fastlaneMock.identity.lookupCustomerByEmail.mockResolvedValue({

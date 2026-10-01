@@ -144,6 +144,19 @@ describe('CashAppPay', () => {
         expect(spy).toHaveBeenCalled();
     });
 
+    test('should create customer request and begin CashApp flow when no onClick callback is provided', async () => {
+        const core = setupCoreMock();
+
+        const cashAppPayElement = new CashAppPay(core, { onClick: undefined });
+
+        cashAppPayElement.submit();
+
+        await new Promise(process.nextTick);
+
+        expect(mockCreateCustomerRequest).toHaveBeenCalledTimes(1);
+        expect(mockBegin).toHaveBeenCalledTimes(1);
+    });
+
     test('should not begin CashApp flow when onClick rejects', async () => {
         const onClick = jest.fn().mockImplementation(actions => actions.reject());
         const core = setupCoreMock();
