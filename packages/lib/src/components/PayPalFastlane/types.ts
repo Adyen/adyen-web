@@ -117,7 +117,7 @@ export interface FastlaneProfile {
 type FastlaneComponentConfiguration = {
     paymentType: 'fastlane';
     configuration: {
-        fastlaneSessionId?: string;
+        fastlaneSessionId: string;
         email: string;
         tokenId: string;
         lastFour: string;
@@ -169,7 +169,7 @@ export interface FastlaneConfiguration extends UIElementProps {
     /**
      * Fastlane session ID
      */
-    fastlaneSessionId?: string;
+    fastlaneSessionId: string;
     /**
      * Initial last four digits displayed once the Component is rendered
      */

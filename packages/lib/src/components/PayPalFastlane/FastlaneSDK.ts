@@ -266,7 +266,7 @@ class FastlaneSDK {
         return {
             paymentType: 'fastlane',
             configuration: {
-                fastlaneSessionId: this.fastlaneSessionId,
+                fastlaneSessionId: this.fastlaneSessionId ?? '',
                 email,
                 tokenId: card.id,
                 lastFour: card.paymentSource.card.lastDigits,
