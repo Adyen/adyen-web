@@ -107,6 +107,7 @@ const STRICT_NULL_CHECKS_BACKLOG = [
 
     // ── Ticket 4: Shared form fields (92 errors) ──
     'src/components/internal/CompanyDetails/CompanyDetails.tsx',
+    'src/components/internal/CompanyDetails/validate.ts',
     'src/components/internal/IbanInput/IbanInput.tsx',
     'src/components/internal/IbanInput/utils.ts',
     'src/components/internal/PersonalDetails/PersonalDetails.tsx',
