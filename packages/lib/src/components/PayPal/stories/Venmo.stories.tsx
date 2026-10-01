@@ -1,8 +1,8 @@
 import { h } from 'preact';
 import { Meta, StoryObj } from '@storybook/preact-vite';
+import { Venmo as VenmoElement } from '@adyen/adyen-web';
 import { PaymentMethodStoryProps } from '../../../../storybook/types';
 import { ComponentContainer } from '../../../../storybook/components/ComponentContainer';
-import VenmoElement from '../Venmo';
 import type { VenmoConfiguration } from '../types';
 import { Checkout } from '../../../../storybook/components/Checkout';
 
