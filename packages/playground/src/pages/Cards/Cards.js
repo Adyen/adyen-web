@@ -1,4 +1,4 @@
-import { AdyenCheckout, Card, Bancontact, nl_NL } from '@adyen/adyen-web';
+import { AdyenCheckout, Card, Bancontact } from '@adyen/adyen-web';
 import '@adyen/adyen-web/styles/adyen.css';
 
 import { getPaymentMethods } from '../../services';
