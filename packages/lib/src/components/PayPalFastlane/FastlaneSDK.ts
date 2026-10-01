@@ -8,6 +8,7 @@ import {
     FastlaneAuthenticatedCustomerResult,
     FastlaneConsentRenderState,
     FastlanePaymentMethodConfiguration,
+    FastlaneProfile,
     FastlaneSDKConfiguration,
     FastlaneShippingAddressSelectorResult,
     FastlaneSignupConfiguration,
@@ -132,12 +133,11 @@ class FastlaneSDK {
 
         this.analytics.flush();
 
-        const isAuthSuccess = authResult.authenticationState === 'succeeded';
-        const hasCardData = !!authResult.profileData?.card;
-        const hasShopperDetails = !!this.latestShopperDetails?.email;
+        const card = authResult.authenticationState === 'succeeded' ? authResult.profileData?.card : undefined;
+        const email = this.latestShopperDetails?.email;
 
-        if (isAuthSuccess && hasCardData && hasShopperDetails) {
-            return this.createFastlaneComponentConfiguration(authResult);
+        if (card && email) {
+            return this.createFastlaneComponentConfiguration(card, email);
         }
 
         return this.createCardComponentConfiguration();
@@ -209,6 +209,7 @@ class FastlaneSDK {
      */
     private async fetchSessionIdAsync(): Promise<void> {
         try {
+            if (!this.fastlaneSdk) throw new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'fetchSessionIdAsync(): Fastlane SDK is not initialized');
             const { sessionId } = await this.fastlaneSdk.identity.getSession();
             this.fastlaneSessionId = sessionId;
         } catch (error) {
@@ -223,6 +224,7 @@ class FastlaneSDK {
      */
     private async fetchConsentDetails(): Promise<FastlaneConsentRenderState> {
         try {
+            if (!this.fastlaneSdk) throw new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'fetchConsentDetails(): Fastlane SDK is not initialized');
             const consentComponent = await this.fastlaneSdk.ConsentComponent();
             return await consentComponent.getRenderState();
         } catch (error) {
@@ -232,7 +234,10 @@ class FastlaneSDK {
 
     private async initializeFastlaneInstance(): Promise<void> {
         try {
-            this.fastlaneSdk = await window.paypal.Fastlane({
+            const { paypal } = window;
+            if (!paypal?.Fastlane) throw new AdyenCheckoutError('ERROR', 'Fastlane SDK: window.paypal.Fastlane is not available');
+
+            this.fastlaneSdk = await paypal.Fastlane({
                 intendedExperience: 'externalProcessorCustomConsent',
                 ...(this.forceConsentDetails && {
                     metadata: {
@@ -253,18 +258,19 @@ class FastlaneSDK {
     /**
      * Creates the configuration for the Fastlane component
      *
-     * @param authResult
+     * @param card - card from the authenticated shopper's Fastlane profile
+     * @param email - email of the authenticated shopper
      * @private
      */
-    private createFastlaneComponentConfiguration(authResult: FastlaneAuthenticatedCustomerResult): FastlanePaymentMethodConfiguration {
+    private createFastlaneComponentConfiguration(card: NonNullable<FastlaneProfile['card']>, email: string): FastlanePaymentMethodConfiguration {
         return {
             paymentType: 'fastlane',
             configuration: {
                 fastlaneSessionId: this.fastlaneSessionId,
-                email: this.latestShopperDetails.email,
-                tokenId: authResult.profileData.card.id,
-                lastFour: authResult.profileData.card.paymentSource.card.lastDigits,
-                brand: authResult.profileData.card.paymentSource.card.brand.toLowerCase()
+                email,
+                tokenId: card.id,
+                lastFour: card.paymentSource.card.lastDigits,
+                brand: card.paymentSource.card.brand.toLowerCase()
             }
         };
     }

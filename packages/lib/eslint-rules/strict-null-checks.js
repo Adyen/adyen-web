@@ -185,13 +185,6 @@ const STRICT_NULL_CHECKS_BACKLOG = [
     'src/components/GooglePay/models/PaymentDataRequest.ts',
     'src/components/GooglePay/requests.ts',
 
-    // ── Ticket 9: Amazon Pay, PayPal and Cash App Pay (79 errors) ──
-    'src/components/CashAppPay/CashAppPay.tsx',
-    'src/components/CashAppPay/components/CashAppComponent.tsx',
-    'src/components/PayPal/utils/get-paypal-settings.ts',
-    'src/components/PayPalFastlane/Fastlane.tsx',
-    'src/components/PayPalFastlane/FastlaneSDK.ts',
-
     // ── Ticket 10: Click to Pay (98 errors) ──
     'src/components/ClickToPay/ClickToPay.tsx',
     'src/components/internal/ClickToPay/ClickToPayComponent.tsx',
