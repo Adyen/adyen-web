@@ -67,7 +67,7 @@ class ThreeDS2Challenge extends UIElement<ThreeDS2ChallengeConfiguration> {
                 component: this.type,
                 code: ErrorEventCode.THREEDS2_ACTION_IS_MISSING_PAYMENT_DATA,
                 errorType: ErrorEventType.threeDS2,
-                message: `${THREEDS2_CHALLENGE_ERROR}: Missing 'paymentData' property from threeDS2 action`
+                message: `${THREEDS2_CHALLENGE_ERROR}: Missing '${dataTypeForError}' property from threeDS2 action`
             });
 
             this.submitAnalytics(event);
