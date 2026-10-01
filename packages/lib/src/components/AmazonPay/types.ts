@@ -97,7 +97,7 @@ export interface AmazonPayConfiguration extends UIElementProps {
     isExpress?: boolean;
 }
 
-export type AmazonPayComponentRef = ComponentMethodsRef & { getSubmitFunction?: () => (() => void) | null };
+export type AmazonPayComponentRef = ComponentMethodsRef & { getSubmitFunction?: () => () => void };
 
 export interface AmazonPayComponentProps extends AmazonPayConfiguration {
     showSignOutButton?: boolean;
@@ -119,19 +119,19 @@ export interface AmazonPayButtonProps {
     design?: string;
     environment?: string;
     locale?: string;
-    onClick?: (resolve: (value?: unknown) => void, reject: () => void) => Promise<void>;
+    onClick: (resolve: (value?: unknown) => void, reject: () => void) => Promise<void>;
     onError?: (error: AdyenCheckoutError, component: UIElement) => void;
     placement?: Placement;
     productType?: ProductType;
     recurringMetadata?: RecurringMetadata;
     ref: RefObject<{ initCheckout(): void }>;
     returnUrl?: string;
-    showPayButton?: boolean;
+    showPayButton: boolean;
 }
 
 export interface SignOutButtonProps {
     amazonRef: AmazonWindowObject;
-    onSignOut?: (resolve: (value?: unknown) => void, reject: () => void) => Promise<void>;
+    onSignOut: (resolve: (value?: unknown) => void, reject: () => void) => Promise<void>;
 }
 
 export interface ChangePaymentDetailsButtonProps {
@@ -146,14 +146,14 @@ export interface ChangeActionOptions {
 
 export interface OrderButtonProps {
     amazonCheckoutSessionId: string;
-    clientKey?: string;
+    clientKey: string;
     chargePermissionType?: ChargePermissionType;
-    onError?: (error: AdyenCheckoutError, component: UIElement) => void;
-    recurringMetadata?: RecurringMetadata;
+    onError: (error: AdyenCheckoutError, component: UIElement) => void;
+    recurringMetadata: RecurringMetadata;
     ref: RefObject<{ createOrder(): void }>;
-    region?: Region;
-    returnUrl?: string;
-    publicKeyId?: string;
+    region: Region;
+    returnUrl: string;
+    publicKeyId: string;
 }
 
 export interface AmazonPayElementData {
@@ -166,11 +166,11 @@ export interface AmazonPayElementData {
 
 export interface AmazonPayButtonSettings {
     buttonColor?: ButtonColor;
-    design?: string | null;
+    design?: string;
     /**
      * Amazon Pay merchant account identifier
      */
-    merchantId?: string;
+    merchantId: string;
 
     /**
      * Sets button to Sandbox environment
@@ -180,12 +180,12 @@ export interface AmazonPayButtonSettings {
     /**
      * Product type selected for checkout
      */
-    productType?: ProductType;
+    productType: ProductType;
 
     /**
      * Placement of the Amazon Pay button on your website
      */
-    placement?: Placement;
+    placement: Placement;
 
     /**
      * Language used to render the button and text on Amazon Pay hosted pages. Please note that supported language(s) is dependent on the region that your Amazon Pay account was registered for
@@ -257,20 +257,20 @@ export interface CheckoutDetailsRequest {
 }
 
 export interface UpdateAmazonCheckoutSessionRequest {
-    amount?: PaymentAmount;
+    amount: PaymentAmount;
     chargePermissionType?: ChargePermissionType;
     checkoutCancelUrl?: string;
-    checkoutResultReturnUrl?: string;
+    checkoutResultReturnUrl: string;
     checkoutSessionId: string;
-    publicKeyId?: string;
+    publicKeyId: string;
     recurringMetadata?: RecurringMetadata;
-    region?: Region;
+    region: Region;
 }
 
 export interface CheckoutSessionConfig {
     payloadJSON: string;
-    signature: string | null;
-    publicKeyId?: string;
+    signature: string;
+    publicKeyId: string;
 }
 
 export interface DeliverySpecifications {

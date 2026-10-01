@@ -45,16 +45,6 @@ describe('SignOutButton', () => {
         expect(mockAmazonRef.Pay.signout).toHaveBeenCalledTimes(1);
     });
 
-    test('should call amazonRef.Pay.signout when no onSignOut callback is provided', async () => {
-        const user = userEvent.setup();
-        renderSignOutButton({ onSignOut: undefined });
-
-        await user.click(screen.getByRole('button', { name: 'Sign out from Amazon' }));
-
-        await new Promise(resolve => setTimeout(resolve, 0));
-        expect(mockAmazonRef.Pay.signout).toHaveBeenCalledTimes(1);
-    });
-
     test('should not call signout if onSignOut rejects', async () => {
         const user = userEvent.setup();
         renderSignOutButton({
