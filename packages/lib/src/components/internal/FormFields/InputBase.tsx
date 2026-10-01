@@ -34,7 +34,7 @@ export interface InputBaseProps extends InputHTMLAttributes {
     label?: string;
     onBlurHandler?: GenericEventHandler<HTMLInputElement>;
     onFocusHandler?: GenericEventHandler<HTMLInputElement>;
-    maxlength?: number | null;
+    maxlength?: number;
     addContextualElement?: boolean;
     type?: string;
     /**
@@ -46,7 +46,7 @@ export interface InputBaseProps extends InputHTMLAttributes {
 }
 
 export default function InputBase({ setRef, ...props }: Readonly<InputBaseProps>) {
-    const { autoCorrect, classNameModifiers, isInvalid, isValid, readonly = null, spellcheck, type, uniqueId, disabled } = props;
+    const { autoCorrect, classNameModifiers, isInvalid, isValid, readonly, spellcheck, type, uniqueId, disabled } = props;
     const className = props.className;
 
     /**
@@ -115,9 +115,9 @@ export default function InputBase({ setRef, ...props }: Readonly<InputBaseProps>
         ...restProps
     } = props;
 
-    const internalDescribedBy = uniqueId ? `${uniqueId}${isInvalid ? ARIA_ERROR_SUFFIX : ARIA_CONTEXT_SUFFIX}` : null;
-    const extraDescribedBy = typeof ariaDescribedByProp === 'string' && ariaDescribedByProp ? ariaDescribedByProp : null;
-    const mergedAriaDescribedBy = [extraDescribedBy, internalDescribedBy].filter(Boolean).join(' ') || null;
+    const internalDescribedBy = uniqueId ? `${uniqueId}${isInvalid ? ARIA_ERROR_SUFFIX : ARIA_CONTEXT_SUFFIX}` : undefined;
+    const extraDescribedBy = typeof ariaDescribedByProp === 'string' && ariaDescribedByProp ? ariaDescribedByProp : undefined;
+    const mergedAriaDescribedBy = [extraDescribedBy, internalDescribedBy].filter(Boolean).join(' ') || undefined;
 
     return (
         <input
