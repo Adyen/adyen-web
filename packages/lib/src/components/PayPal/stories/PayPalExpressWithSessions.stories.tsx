@@ -1,10 +1,10 @@
 import { h } from 'preact';
 import { Meta, StoryObj } from '@storybook/preact-vite';
 import { useEffect, useRef } from 'preact/hooks';
+import { PayPal } from '@adyen/adyen-web';
 import { patchPaypalOrder } from '../../../../storybook/helpers/checkout-api-calls';
 import { createSessionsCheckout } from '../../../../storybook/helpers/create-sessions-checkout';
 import { getDeliveryMethods, getSelectedDeliveryMethodAmount } from './paypal-stories-utils';
-import { PayPal } from '@adyen/adyen-web';
 
 const meta: Meta = {
     title: 'Components/Wallets/Paypal/Express',
