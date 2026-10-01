@@ -1,8 +1,8 @@
 import { h } from 'preact';
 import { Meta, StoryObj } from '@storybook/preact-vite';
+import { PayPalPayLater } from '@adyen/adyen-web';
 import { PaymentMethodStoryProps } from '../../../../storybook/types';
 import { ComponentContainer } from '../../../../storybook/components/ComponentContainer';
-import PayPalPaylaterElement from '../PayPalPaylater';
 import type { PayPalPayLaterConfiguration } from '../types';
 import { Checkout } from '../../../../storybook/components/Checkout';
 import { PayPalPaylaterAmountUpdateDemo } from './PayPalPaylaterAmountUpdateDemo';
@@ -18,7 +18,7 @@ export default meta;
 export const PayPalPaylater: Story = {
     render: ({ componentConfiguration, ...checkoutConfig }) => (
         <Checkout checkoutConfig={checkoutConfig}>
-            {checkout => <ComponentContainer element={new PayPalPaylaterElement(checkout, componentConfiguration)} />}
+            {checkout => <ComponentContainer element={new PayPalPayLater(checkout, componentConfiguration)} />}
         </Checkout>
     ),
     args: {

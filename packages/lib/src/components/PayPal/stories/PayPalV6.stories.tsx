@@ -1,8 +1,8 @@
 import { Fragment, h } from 'preact';
 import { Meta, StoryObj } from '@storybook/preact-vite';
+import { PayPal } from '@adyen/adyen-web';
 import { PaymentMethodStoryProps } from '../../../../storybook/types';
 import { ComponentContainer } from '../../../../storybook/components/ComponentContainer';
-import Paypal from '..';
 import type { PayPalConfiguration } from '../types';
 import { Checkout } from '../../../../storybook/components/Checkout';
 import { PayPalV6ConfigurationUpdateDemo } from './PayPalV6ConfigurationUpdateDemo';
@@ -17,7 +17,7 @@ export default meta;
 export const Default: Story = {
     render: ({ componentConfiguration, ...checkoutConfig }) => (
         <Checkout checkoutConfig={checkoutConfig}>
-            {checkout => <ComponentContainer element={new Paypal(checkout, componentConfiguration)} />}
+            {checkout => <ComponentContainer element={new PayPal(checkout, componentConfiguration)} />}
         </Checkout>
     ),
     args: {
@@ -56,7 +56,7 @@ export const ZeroAuth: Story = {
     tags: ['no-automated-visual-test'],
     render: ({ componentConfiguration, ...checkoutConfig }) => (
         <Checkout checkoutConfig={checkoutConfig}>
-            {checkout => <ComponentContainer element={new Paypal(checkout, componentConfiguration)} />}
+            {checkout => <ComponentContainer element={new PayPal(checkout, componentConfiguration)} />}
         </Checkout>
     ),
     args: {
@@ -79,12 +79,12 @@ export const WithPayPalV5: Story = {
             {checkout => (
                 <div id="component-root">
                     <h3>PayPal V5</h3>
-                    <ComponentContainer id="paypal-v5" element={new Paypal(checkout)} />
+                    <ComponentContainer id="paypal-v5" element={new PayPal(checkout)} />
                     <h3>PayPal V6</h3>
                     <ComponentContainer
                         id="paypal-v6"
                         element={
-                            new Paypal(checkout, {
+                            new PayPal(checkout, {
                                 ...componentConfiguration,
                                 usePayPalV6: {}
                             })
@@ -134,7 +134,7 @@ export const Messaging: Story = {
             {checkout => (
                 <Fragment>
                     <paypal-message id="paypal-message"></paypal-message>
-                    <ComponentContainer element={new Paypal(checkout, componentConfiguration)} />
+                    <ComponentContainer element={new PayPal(checkout, componentConfiguration)} />
                 </Fragment>
             )}
         </Checkout>
