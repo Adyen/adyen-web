@@ -10,12 +10,12 @@ export default function AmazonPayButton(props: Readonly<AmazonPayButtonProps>) {
     const { amount } = useAmount();
     const { loadingContext } = useCoreContext();
     const { amazonRef, configuration = {} } = props;
-    const [signature, setSignature] = useState<string>(null);
+    const [signature, setSignature] = useState<string | null>(null);
     const payloadJSON: PayloadJSON = getPayloadJSON(props, amount);
     const settings = getAmazonPaySettings(props, amount);
 
     const handleOnClick = () => {
-        return new Promise((resolve, reject) => void props.onClick(resolve, reject)).then(this.initCheckout).catch(error => {
+        return new Promise((resolve, reject) => void props.onClick?.(resolve, reject)).then(this.initCheckout).catch(error => {
             if (props.onError) props.onError(error, this.componentRef);
         });
     };
@@ -41,7 +41,7 @@ export default function AmazonPayButton(props: Readonly<AmazonPayButtonProps>) {
     useEffect(() => {
         const { clientKey } = props;
 
-        getAmazonSignature(loadingContext, clientKey, payloadJSON)
+        getAmazonSignature(loadingContext, clientKey ?? '', payloadJSON)
             .then(response => {
                 if (!response?.signature) return console.error('Could not get AmazonPay signature');
                 setSignature(response.signature);

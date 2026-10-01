@@ -23,8 +23,8 @@ export default class CashAppService implements ICashAppService {
         }
     }
 
-    private isOneTimePayment(amount: PaymentAmount): boolean {
-        return amount?.value > 0;
+    private isOneTimePayment(amount?: PaymentAmount): boolean {
+        return (amount?.value ?? 0) > 0;
     }
 
     private isOnFilePayment(): boolean {
@@ -71,7 +71,7 @@ export default class CashAppService implements ICashAppService {
         };
     }
 
-    public async createCustomerRequest(amount: PaymentAmount): Promise<void> {
+    public async createCustomerRequest(amount?: PaymentAmount): Promise<void> {
         try {
             const { referenceId, scopeId, redirectURL = window.location.href } = this.configuration;
 

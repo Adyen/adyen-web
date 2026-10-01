@@ -12,8 +12,8 @@ import useAnalytics from '../../../core/Analytics/useAnalytics';
 
 export default function AmazonPayComponent(props: Readonly<AmazonPayComponentProps>) {
     const [status, setStatus] = useState('pending');
-    const amazonPayButtonRef = useRef(null);
-    const orderButtonRef = useRef(null);
+    const amazonPayButtonRef = useRef<{ initCheckout(): void }>(null);
+    const orderButtonRef = useRef<{ createOrder(): void }>(null);
     const { analytics } = useAnalytics();
 
     const handleLoad = () => {
@@ -22,8 +22,8 @@ export default function AmazonPayComponent(props: Readonly<AmazonPayComponentPro
 
     const amazonPayRef = useRef({
         getSubmitFunction: () => {
-            if (amazonPayButtonRef.current?.initCheckout) return () => amazonPayButtonRef.current.initCheckout();
-            if (orderButtonRef.current?.createOrder) return () => orderButtonRef.current.createOrder();
+            if (amazonPayButtonRef.current?.initCheckout) return () => amazonPayButtonRef.current?.initCheckout();
+            if (orderButtonRef.current?.createOrder) return () => orderButtonRef.current?.createOrder();
             return null;
         }
     });
@@ -33,7 +33,7 @@ export default function AmazonPayComponent(props: Readonly<AmazonPayComponentPro
     }, [props.setComponentRef]);
 
     useEffect(() => {
-        const src = getAmazonPayUrl(props.configuration.region);
+        const src = getAmazonPayUrl(props.configuration?.region);
         const script = new Script({
             src,
             component: 'amazonpay',
@@ -51,7 +51,9 @@ export default function AmazonPayComponent(props: Readonly<AmazonPayComponentPro
         };
     }, [analytics]);
 
-    if (status === 'pending') {
+    const amazonRef = window.amazon;
+
+    if (status === 'pending' || !amazonRef) {
         return (
             <div className="adyen-checkout__amazonpay">
                 <div className="adyen-checkout__amazonpay__status adyen-checkout__amazonpay__status--pending">
@@ -64,7 +66,7 @@ export default function AmazonPayComponent(props: Readonly<AmazonPayComponentPro
     if (props.showSignOutButton) {
         return (
             <div className="adyen-checkout__amazonpay">
-                <SignOutButton amazonRef={window.amazon} onSignOut={props.onSignOut} />
+                <SignOutButton amazonRef={amazonRef} onSignOut={props.onSignOut} />
             </div>
         );
     }
@@ -87,7 +89,7 @@ export default function AmazonPayComponent(props: Readonly<AmazonPayComponentPro
                 )}
 
                 {props.showChangePaymentDetailsButton && (
-                    <ChangePaymentDetailsButton amazonCheckoutSessionId={props.amazonCheckoutSessionId} amazonRef={window.amazon} />
+                    <ChangePaymentDetailsButton amazonCheckoutSessionId={props.amazonCheckoutSessionId} amazonRef={amazonRef} />
                 )}
             </div>
         );
@@ -97,7 +99,7 @@ export default function AmazonPayComponent(props: Readonly<AmazonPayComponentPro
         <div className="adyen-checkout__amazonpay">
             <AmazonPayButton
                 showPayButton={props.showPayButton}
-                amazonRef={window.amazon}
+                amazonRef={amazonRef}
                 ref={amazonPayButtonRef}
                 buttonColor={props.buttonColor}
                 cancelUrl={props.cancelUrl}
