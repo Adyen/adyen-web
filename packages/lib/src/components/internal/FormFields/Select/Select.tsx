@@ -264,8 +264,6 @@ function Select({
          * @param e - MouseEvent
          */
         function handleClickOutside(e: MouseEvent) {
-            // use composedPath so it can also check when inside a web component
-            // if composedPath is not available fallback to e.target
             const clickIsOutside = selectContainerRef.current && !e.composedPath().includes(selectContainerRef.current);
             if (clickIsOutside) {
                 closeList();
