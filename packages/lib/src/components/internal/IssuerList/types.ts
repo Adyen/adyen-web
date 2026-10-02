@@ -33,7 +33,7 @@ export interface IssuerListProps {
 export interface IssuerItem {
     id: string;
     name: string;
-    icon?: string | null;
+    icon?: string;
 }
 export interface TermsAndConditions {
     translationKey: string;

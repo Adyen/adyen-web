@@ -7,7 +7,7 @@ import { PayButtonProps } from '../internal/PayButton/PayButton';
 export interface DragonpayInputIssuerItem {
     id: string;
     name: string;
-    icon?: string | null;
+    icon?: string;
 }
 
 export interface DragonpayConfiguraton extends UIElementProps {
