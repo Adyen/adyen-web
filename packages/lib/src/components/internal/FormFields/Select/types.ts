@@ -3,7 +3,7 @@ import type { TagProps } from '../../Tag/types';
 
 export interface SelectItem {
     disabled?: boolean;
-    icon?: string | null;
+    icon?: string;
     id: string | number;
     name: string;
     secondaryText?: string;

@@ -16,8 +16,8 @@ export const buildIssuerImageUrl =
 
 const getIssuerImageUrl =
     (options: object, type: string, getImage: UseImageHookType) =>
-    (issuer: string | undefined): string | null => {
-        if (!issuer) return null;
+    (issuer: string | undefined): string | undefined => {
+        if (!issuer) return undefined;
 
         return buildIssuerImageUrl(options, type, getImage)(issuer);
     };

@@ -8,7 +8,7 @@ interface IssuerButtonProps {
     id: string;
     selected: boolean;
     onClick: (event: UIEvent) => void;
-    icon?: string | null;
+    icon?: string;
 }
 
 function IssuerButton({ name, id, icon, onClick, selected = false }: Readonly<IssuerButtonProps>) {
