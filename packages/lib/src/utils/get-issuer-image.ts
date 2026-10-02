@@ -3,7 +3,7 @@ import { UseImageHookType } from '../core/Context/useImage';
 
 const getIssuerImageUrl =
     (options: object, type: string, getImage: UseImageHookType) =>
-    (issuer: string): string => {
+    (issuer: string): string | null => {
         if (!issuer) return null;
 
         const imageOptions: ImageOptions = {
