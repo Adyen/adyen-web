@@ -10,16 +10,8 @@ export class ValidationResult {
     }
 
     /** Checks if all validation rules have passed */
-    get isValid(): boolean | null {
-        // Not `=== false`: some rules read an untyped `context` and can return `undefined` at runtime,
-        // which must still count as a failure.
-        if (this.validationResults.some(result => !result.isValid && result.isValid !== null)) {
-            return false;
-        }
-        if (this.validationResults.some(result => result.isValid === null)) {
-            return null;
-        }
-        return true;
+    get isValid(): boolean {
+        return this.validationResults.every(result => !!result.isValid);
     }
 
     /** Checks if any validation rule returned an error */
