@@ -179,12 +179,6 @@ const STRICT_NULL_CHECKS_BACKLOG = [
     'src/components/Dropin/Dropin.tsx',
     'src/components/Dropin/elements/createElements.ts',
 
-    // ── Ticket 7: ThreeDS2 (41 errors) ──
-    'src/components/ThreeDS2/components/DeviceFingerprint/DoFingerprint3DS2.tsx',
-    'src/components/ThreeDS2/components/DeviceFingerprint/PrepareFingerprint3DS2.tsx',
-    'src/components/ThreeDS2/components/Form/ThreeDS2Form.tsx',
-    'src/components/ThreeDS2/ThreeDS2DeviceFingerprint.tsx',
-
     // ── Ticket 8: Google Pay and Apple Pay (85 errors) ──
     'src/components/ApplePay/ApplePay.tsx',
     'src/components/ApplePay/services/ApplePaySdkLoader.ts',
