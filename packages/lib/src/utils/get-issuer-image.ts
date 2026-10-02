@@ -3,12 +3,12 @@ import { UseImageHookType } from '../core/Context/useImage';
 
 const getIssuerImageUrl =
     (options: object, type: string, getImage: UseImageHookType) =>
-    (issuer: string): string => {
-        if (!issuer) return null;
+    (issuer: string | undefined): string | undefined => {
+        if (!issuer) return undefined;
 
         const imageOptions: ImageOptions = {
-            parentFolder: issuer ? `${type}/` : '',
-            type: issuer || type,
+            parentFolder: `${type}/`,
+            type: issuer,
             ...options
         };
 

@@ -161,7 +161,7 @@ export interface AmazonPayElementData {
         type: string;
         checkoutSessionId?: string;
     };
-    browserInfo: BrowserInfo;
+    browserInfo: BrowserInfo | undefined;
 }
 
 export interface AmazonPayButtonSettings {

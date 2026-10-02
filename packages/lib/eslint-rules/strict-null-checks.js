@@ -80,10 +80,7 @@ const STRICT_NULL_CHECKS_BACKLOG = [
     'src/core/RiskModule/components/DeviceFingerprint/DeviceFingerprint.tsx',
     'src/core/RiskModule/components/DeviceFingerprint/GetDeviceFingerprint.tsx',
     'src/core/RiskModule/RiskModule.tsx',
-    'src/utils/browserInfo.ts',
     'src/utils/clipboard.ts',
-    'src/utils/get-issuer-image.ts',
-    'src/utils/getOrigin.ts',
 
     // ── Ticket 3: SecuredFields and CSF (161 errors) ──
     'src/components/internal/SecuredFields/binLookup/extensions.ts',
@@ -154,7 +151,6 @@ const STRICT_NULL_CHECKS_BACKLOG = [
     'src/components/Card/components/Fastlane/InfoButton.tsx',
     'src/components/Card/components/Fastlane/InfoModal.tsx',
     'src/components/Card/components/Fastlane/USOnlyPhoneInput.tsx',
-    'src/components/Card/components/Fastlane/utils/validate-configuration.ts',
     'src/components/CustomCard/CustomCard.tsx',
     'src/components/CustomCard/CustomCardInput/CustomCardInput.tsx',
 
