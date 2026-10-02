@@ -19,8 +19,7 @@ import {
     CVCPolicyType,
     DatePolicyType
 } from '../../../internal/SecuredFields/lib/types';
-import Specifications from '../../../internal/Address/Specifications';
-import { AddressSchema } from '../../../internal/Address/types';
+import { AddressSchema, AddressSpecifications } from '../../../internal/Address/types';
 import { CardErrorData, StylesObject } from '../../../internal/SecuredFields/lib/types';
 import { Resources } from '../../../../core/Context/Resources';
 import { SRPanel } from '../../../../core/Errors/SRPanel';
@@ -143,7 +142,7 @@ export interface CardInputProps {
     showStoreDetailsCheckbox?: boolean;
     showWarnings?: boolean;
     showContextualElement?: boolean;
-    specifications?: Specifications;
+    specifications?: AddressSpecifications;
     storedPaymentMethodId?: string;
     styles?: StylesObject;
     trimTrailingSeparator?: boolean;
