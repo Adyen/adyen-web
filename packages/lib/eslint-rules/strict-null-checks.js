@@ -225,8 +225,6 @@ const STRICT_NULL_CHECKS_BACKLOG = [
     'src/components/Ach/Ach.tsx',
     'src/components/Ach/components/AchComponent.tsx',
     'src/components/Ach/components/useSRPanelForACHErrors.ts',
-    // src/components/AfterPay (1 errors)
-    'src/components/AfterPay/AfterPay.tsx',
     // src/components/ANCV (8 errors)
     'src/components/ANCV/ANCV.tsx',
     'src/components/ANCV/components/ANCVInput.tsx',
