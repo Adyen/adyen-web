@@ -17,6 +17,7 @@ describe('retrieving browser info from browser should', () => {
         });
 
         const browserInfo = collectBrowserInfo();
+        if (!browserInfo) throw new Error('expected browser info in jsdom');
 
         expect(browserInfo.colorDepth).toEqual(expect.any(Number));
         expect(browserInfo.javaEnabled).toEqual(expect.any(Boolean));
@@ -36,7 +37,7 @@ describe('collectBrowserInfo outside a browser', () => {
     const loadWithoutWindow = () => {
         const source = readFileSync(join(__dirname, 'browserInfo.ts'), 'utf8');
         const { outputText } = transpileModule(source, { compilerOptions: { module: ModuleKind.CommonJS } });
-        const moduleObject = { exports: { default: undefined } };
+        const moduleObject: { exports: { default?: () => unknown } } = { exports: {} };
         const context = createContext({ module: moduleObject, exports: moduleObject.exports });
         runInContext(outputText, context);
         return { context, collect: moduleObject.exports.default };
@@ -47,6 +48,7 @@ describe('collectBrowserInfo outside a browser', () => {
 
         expect(runInContext('typeof window', context)).toBe('undefined');
         expect(typeof collect).toBe('function');
+        if (!collect) throw new Error('expected browserInfo to export a default function');
 
         let result: unknown = 'not called';
         expect(() => {

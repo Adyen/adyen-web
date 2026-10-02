@@ -151,7 +151,6 @@ const STRICT_NULL_CHECKS_BACKLOG = [
     'src/components/Card/components/Fastlane/InfoButton.tsx',
     'src/components/Card/components/Fastlane/InfoModal.tsx',
     'src/components/Card/components/Fastlane/USOnlyPhoneInput.tsx',
-    'src/components/Card/components/Fastlane/utils/validate-configuration.ts',
     'src/components/CustomCard/CustomCard.tsx',
     'src/components/CustomCard/CustomCardInput/CustomCardInput.tsx',
 
