@@ -122,23 +122,19 @@ const STRICT_NULL_CHECKS_BACKLOG = [
     'src/components/internal/SecuredFields/SFP/SFPUtils.ts',
 
     // ── Ticket 4: Shared form fields (92 errors) ──
-    'src/components/internal/Address/Address.tsx',
-    'src/components/internal/Address/components/AddressSearch.tsx',
-    'src/components/internal/Address/components/FieldContainer.tsx',
-    'src/components/internal/Address/Specifications.ts',
-    'src/components/internal/Address/utils.ts',
-    'src/components/internal/Address/validate.formats.ts',
-    'src/components/internal/Address/validate.ts',
     'src/components/internal/CompanyDetails/CompanyDetails.tsx',
-    'src/components/internal/CompanyDetails/validate.ts',
     'src/components/internal/IbanInput/IbanInput.tsx',
     'src/components/internal/IbanInput/utils.ts',
-    'src/components/internal/IbanInput/validate.ts',
     'src/components/internal/PersonalDetails/PersonalDetails.tsx',
     'src/components/internal/PersonalDetails/validate.ts',
     'src/components/internal/PhoneInput/PhoneInputFields.tsx',
     'src/components/internal/PhoneInput/PhoneInputForm.tsx',
+
+    // Ticket 4 but handle in a different ticket after ticket 2 gets merged
+    'src/components/internal/Address/validate.ts',
+    'src/components/internal/CompanyDetails/validate.ts',
     'src/components/internal/PhoneInput/validate.ts',
+    'src/components/internal/IbanInput/validate.ts',
 
     // ── Ticket 5: Card, Card Input and Custom Card (100 errors) ──
     'src/components/Card/Card.tsx',
