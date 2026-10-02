@@ -1,5 +1,15 @@
 # @adyen/adyen-web
 
+## 6.47.0
+
+### Minor Changes
+
+- New: Detect when multiple instances of AdyenCheckout are created on the same page, and generate suppressible console.warning ([#4077](https://github.com/Adyen/adyen-web/pull/4077))
+
+### Patch Changes
+
+- Fixed: Card installment plans that do not provide installment values. ([#4207](https://github.com/Adyen/adyen-web/pull/4207))
+
 ## 6.46.0
 
 ### Minor Changes
