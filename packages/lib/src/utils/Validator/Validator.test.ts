@@ -54,6 +54,28 @@ describe('Validator', () => {
         expect(result.isValid).toBeNull();
     });
 
+    describe('isValid', () => {
+        const validateWith = (...outcomes: Array<boolean | null>) => {
+            const rules = outcomes.map(outcome => ({ validate: () => outcome, modes: ['blur' as const] }));
+            return new Validator({ aField: rules }, i18n).validate({ key: 'aField', value: 'x' }).isValid;
+        };
+
+        test('should return false when any rule fails, regardless of rule order', () => {
+            expect(validateWith(null, false)).toBe(false);
+            expect(validateWith(false, null)).toBe(false);
+            expect(validateWith(true, null, false)).toBe(false);
+        });
+
+        test('should return null when no rule fails and at least one rule is not validated', () => {
+            expect(validateWith(true, null)).toBeNull();
+            expect(validateWith(null, true)).toBeNull();
+        });
+
+        test('should return true when every rule passes', () => {
+            expect(validateWith(true, true)).toBe(true);
+        });
+    });
+
     describe('errorI18n', () => {
         test('should set errorI18n from string errorMessage', () => {
             const validator = new Validator(
