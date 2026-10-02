@@ -10,8 +10,8 @@ export class ValidationResult {
     }
 
     /** Checks if all validation rules have passed */
-    get isValid(): boolean {
-        return this.validationResults.reduce((acc, result) => acc && result.isValid, true);
+    get isValid(): boolean | null {
+        return this.validationResults.reduce<boolean | null>((acc, result) => acc && result.isValid, true);
     }
 
     /** Checks if any validation rule returned an error */

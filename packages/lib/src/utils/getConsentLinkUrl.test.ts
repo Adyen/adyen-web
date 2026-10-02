@@ -47,5 +47,9 @@ describe('getConsentLinkUrl', () => {
             getConsentUrl('nl', 'fr', rivertyConsentUrlMap);
             expect(console.warn).toHaveBeenCalled();
         });
+        test('should return undefined when no consent url is found', () => {
+            expect(getConsentUrl('WRONG', 'en', rivertyConsentUrlMap)).toBeUndefined();
+            expect(console.warn).toHaveBeenCalledTimes(1);
+        });
     });
 });
