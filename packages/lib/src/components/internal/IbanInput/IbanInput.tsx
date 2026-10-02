@@ -9,11 +9,7 @@ import InputText from '../FormFields/InputText';
 import { UIElementStatus } from '../UIElement/types';
 import { PayButtonProps } from '../PayButton/PayButton';
 
-export interface IbanData {
-    ownerName?: string;
-    ibanNumber?: string;
-    countryCode?: string;
-}
+export type IbanData = Partial<IbanInputData>;
 
 interface IbanInputOnChangeData {
     data: IbanData;
@@ -32,8 +28,15 @@ interface IbanInputProps {
     data?: IbanData;
 }
 
+/** Unlike `IbanData` (the external, optional prop shape), the component's own state always normalizes these to strings in the constructor. */
+interface IbanInputData {
+    ownerName: string;
+    ibanNumber: string;
+    countryCode: string;
+}
+
 interface IbanInputState {
-    data: IbanData;
+    data: IbanInputData;
     errors: Record<string, GenericError | null>;
     valid: Record<string, boolean>;
     status: string;
@@ -173,7 +176,7 @@ class IbanInput extends Component<Readonly<IbanInputProps>, IbanInputState> {
         this.setError('holder', holderErr, this.onChange); // add callback param to force propagation of state to parent comp
     }
 
-    render({ placeholders }: IbanInputProps, { data, errors, valid }) {
+    render({ placeholders }: IbanInputProps, { data, errors, valid }: IbanInputState) {
         const { i18n } = useCoreContext();
         return (
             <Fieldset classNameModifiers={['iban-input']} label={this.props.label}>
@@ -181,7 +184,7 @@ class IbanInput extends Component<Readonly<IbanInputProps>, IbanInputState> {
                     <Field
                         className={'adyen-checkout__field--owner-name'}
                         label={i18n.get('sepa.ownerName')}
-                        filled={data['ownerName'] && data['ownerName'].length}
+                        filled={!!data['ownerName'].length}
                         errorMessage={errors.holder ? i18n.get(errors.holder.error) : false}
                         dir={'ltr'}
                         i18n={i18n}
@@ -205,7 +208,7 @@ class IbanInput extends Component<Readonly<IbanInputProps>, IbanInputState> {
                     className={'adyen-checkout__field--iban-number'}
                     label={i18n.get('sepa.ibanNumber')}
                     errorMessage={errors.iban ? i18n.get(errors.iban.error) : false}
-                    filled={data['ibanNumber'] && data['ibanNumber'].length}
+                    filled={!!data['ibanNumber'].length}
                     isValid={valid.iban}
                     onBlur={this.handleIbanBlur}
                     dir={'ltr'}
