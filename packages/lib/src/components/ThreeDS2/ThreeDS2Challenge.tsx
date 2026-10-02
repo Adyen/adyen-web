@@ -52,7 +52,7 @@ class ThreeDS2Challenge extends UIElement<ThreeDS2ChallengeConfiguration> {
         this.unmount(); // re. fixing issue around back to back challenge calls
     }
 
-    protected override componentToRender(): h.JSX.Element {
+    protected override componentToRender(): h.JSX.Element | null {
         // existy used because threeds2InMDFlow might send an empty string for paymentData and we should be allowed to proceed with this
         if (!existy(this.props.paymentData)) {
             /**
@@ -61,13 +61,13 @@ class ThreeDS2Challenge extends UIElement<ThreeDS2ChallengeConfiguration> {
              */
             const dataTypeForError = hasOwnProperty(this.props, 'isMDFlow') ? 'paymentData' : 'authorisationToken';
 
-            this.props.onError(new AdyenCheckoutError(API_ERROR, `No ${dataTypeForError} received. 3DS2 Challenge cannot proceed`));
+            this.props.onError?.(new AdyenCheckoutError(API_ERROR, `No ${dataTypeForError} received. 3DS2 Challenge cannot proceed`));
 
             const event = new AnalyticsErrorEvent({
                 component: this.type,
                 code: ErrorEventCode.THREEDS2_ACTION_IS_MISSING_PAYMENT_DATA,
                 errorType: ErrorEventType.threeDS2,
-                message: `${THREEDS2_CHALLENGE_ERROR}: Missing 'paymentData' property from threeDS2 action`
+                message: `${THREEDS2_CHALLENGE_ERROR}: Missing '${dataTypeForError}' property from threeDS2 action`
             });
 
             this.submitAnalytics(event);
@@ -78,6 +78,7 @@ class ThreeDS2Challenge extends UIElement<ThreeDS2ChallengeConfiguration> {
         return (
             <PrepareChallenge
                 {...this.props}
+                i18n={this.core.modules.i18n}
                 onComplete={this.onComplete}
                 onSubmitAnalytics={this.submitAnalytics}
                 onActionHandled={this.onActionHandled}

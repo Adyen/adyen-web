@@ -11,14 +11,17 @@ interface ThreeDS2FormProps {
 }
 
 export default class ThreeDS2Form extends Component<Readonly<ThreeDS2FormProps>> {
-    protected formEl;
+    protected formEl: HTMLFormElement | null = null;
 
     componentDidMount() {
-        this.formEl.submit();
-        this.props.onFormSubmit(`${this.props.inputName} sent`);
+        this.formEl?.submit();
+        if (this.formEl) {
+            this.props.onFormSubmit(`${this.props.inputName} sent`);
+        }
     }
 
-    render({ name, action, target, inputName, inputValue }) {
+    render() {
+        const { name, action, target, inputName, inputValue } = this.props;
         return (
             <form
                 ref={ref => {
