@@ -1,6 +1,6 @@
 import { Component, h } from 'preact';
 import DoFingerprint3DS2 from './DoFingerprint3DS2';
-import { createFingerprintResolveData, isErrorObject, prepareFingerPrintData } from '../utils';
+import { createFingerprintResolveData, isFingerPrintData, prepareFingerPrintData } from '../utils';
 import { PrepareFingerprint3DS2Props, PrepareFingerprint3DS2State } from './types';
 import { FingerPrintData, ResultObject, ErrorCodeObject, FingerprintResolveData } from '../../types';
 import { ErrorObject } from '../../../../core/Errors/types';
@@ -57,7 +57,7 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
 
     componentDidMount() {
         const { fingerPrintData } = this.state;
-        const hasFingerPrintData = !!fingerPrintData && !isErrorObject(fingerPrintData);
+        const hasFingerPrintData = isFingerPrintData(fingerPrintData);
 
         if (hasFingerPrintData) {
             const shouldAllowHttpDomains =
@@ -72,7 +72,7 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
             /**
              * Check the structure of the created fingerPrintData
              */
-            const { threeDSMethodURL, threeDSMethodNotificationURL, postMessageDomain, threeDSServerTransID } = fingerPrintData as FingerPrintData;
+            const { threeDSMethodURL, threeDSMethodNotificationURL, postMessageDomain, threeDSServerTransID } = fingerPrintData;
 
             const hasValid3DSMethodURL = isValidHttpUrl(threeDSMethodURL, shouldAllowHttpDomains);
 
@@ -127,7 +127,7 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
         } else {
             // Only render component if we have fingerPrintData. Otherwise, complete with threeDSCompInd: 'N'
 
-            const errorMsg: string = (fingerPrintData as ErrorObject).error;
+            const errorMsg: string = fingerPrintData?.error ?? MISSING_TOKEN_IN_ACTION_MSG;
 
             const errorCode = errorMsg.includes(MISSING_TOKEN_IN_ACTION_MSG)
                 ? ErrorEventCode.THREEDS2_ACTION_IS_MISSING_TOKEN
@@ -231,7 +231,7 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
     }
 
     render({ showSpinner }: PrepareFingerprint3DS2Props, { status, fingerPrintData }: PrepareFingerprint3DS2State) {
-        if (status === 'retrievingFingerPrint') {
+        if (status === 'retrievingFingerPrint' && isFingerPrintData(fingerPrintData)) {
             return (
                 <DoFingerprint3DS2
                     onCompleteFingerprint={fingerprint => {
@@ -249,7 +249,7 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
                         this.setStatusComplete(fingerprint.result, timeoutObject); // fingerprint.result = threeDSCompInd: 'N'
                     }}
                     showSpinner={showSpinner}
-                    {...(fingerPrintData as FingerPrintData)}
+                    {...fingerPrintData}
                     onActionHandled={this.props.onActionHandled}
                     onFormSubmit={this.onFormSubmit}
                 />

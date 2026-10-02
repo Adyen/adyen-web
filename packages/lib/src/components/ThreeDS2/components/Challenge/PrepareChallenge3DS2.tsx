@@ -1,6 +1,6 @@
 import { Component, h } from 'preact';
 import DoChallenge3DS2 from './DoChallenge3DS2';
-import { createChallengeResolveData, prepareChallengeData, isErrorObject } from '../utils';
+import { createChallengeResolveData, prepareChallengeData, isChallengeData } from '../utils';
 import { PrepareChallenge3DS2Props, PrepareChallenge3DS2State, StatusErrorInfoObject } from './types';
 import { ChallengeData, ResultObject, ThreeDS2FlowObject, ErrorCodeObject, ChallengeResolveData } from '../../types';
 import '../../ThreeDS2.scss';
@@ -65,7 +65,8 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
     };
 
     componentDidMount() {
-        const hasChallengeData = !isErrorObject(this.state.challengeData);
+        const { challengeData } = this.state;
+        const hasChallengeData = isChallengeData(challengeData);
 
         if (hasChallengeData) {
             const shouldAllowHttpDomains =
@@ -80,7 +81,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
             /**
              * Check the structure of the created challengeData
              */
-            const { acsURL, postMessageDomain } = this.state.challengeData as ChallengeData;
+            const { acsURL, postMessageDomain } = challengeData;
             const hasValidAcsURL = isValidHttpUrl(acsURL, shouldAllowHttpDomains);
             const hasValidPostMessageDomain = isValidHttpUrl(postMessageDomain, shouldAllowHttpDomains);
 
@@ -115,7 +116,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                 return;
             }
 
-            const { acsTransID, messageVersion, threeDSServerTransID } = (this.state.challengeData as ChallengeData).cReqData;
+            const { acsTransID, messageVersion, threeDSServerTransID } = challengeData.cReqData;
 
             // Only render component if we have a acsTransID, messageVersion & threeDSServerTransID
             if (!acsTransID || !messageVersion || !threeDSServerTransID) {
@@ -146,7 +147,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
             this.setState({ status: 'performingChallenge' });
             //
         } else {
-            const errorMsg: string = (this.state.challengeData as ErrorObject).error;
+            const errorMsg: string = challengeData.error;
 
             const errorCode = errorMsg.includes(MISSING_TOKEN_IN_ACTION_MSG)
                 ? ErrorEventCode.THREEDS2_ACTION_IS_MISSING_TOKEN
@@ -266,9 +267,8 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
     }
 
     render(_: PrepareChallenge3DS2Props, { challengeData: stateChallengeData }: PrepareChallenge3DS2State) {
-        const challengeData = stateChallengeData as ChallengeData;
         const getImage = useImage();
-        if (this.state.status === 'performingChallenge') {
+        if (this.state.status === 'performingChallenge' && isChallengeData(stateChallengeData)) {
             return (
                 <DoChallenge3DS2
                     onCompleteChallenge={(challenge: ThreeDS2FlowObject) => {
@@ -360,7 +360,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                             return;
                         }
                     }}
-                    {...challengeData}
+                    {...stateChallengeData}
                     onActionHandled={this.props.onActionHandled}
                     onFormSubmit={this.onFormSubmit}
                     usePasskeyIFrameAttributes={this.props.usePasskeyIFrameAttributes}
