@@ -378,7 +378,7 @@ describe('Select', () => {
 
             view.rerender(
                 <CoreProvider loadingContext={'test'} i18n={core.modules.i18n} resources={core.modules.resources}>
-                    <Select items={items} filterable={false} selectedValue={'3'} name={'mockSelect'} />
+                    <Select items={items} filterable={false} selectedValue={'3'} name={'mockSelect'} onChange={() => {}} />
                 </CoreProvider>
             );
 
