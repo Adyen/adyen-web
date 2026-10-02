@@ -22,7 +22,16 @@ import './PersonalDetails.scss';
 export const PERSONAL_DETAILS_SCHEMA = ['firstName', 'lastName', 'dateOfBirth', 'shopperEmail', 'telephoneNumber'];
 
 export default function PersonalDetails(props: Readonly<PersonalDetailsProps>) {
-    const { label = '', namePrefix, placeholders, requiredFields, visibility } = props;
+    const {
+        label = '',
+        namePrefix,
+        placeholders = {},
+        requiredFields = PERSONAL_DETAILS_SCHEMA,
+        visibility = 'editable',
+        data: initialData = {},
+        onChange = () => {},
+        validationRules = personalDetailsValidationRules
+    } = props;
 
     const { i18n } = useCoreContext();
 
@@ -30,8 +39,8 @@ export default function PersonalDetails(props: Readonly<PersonalDetailsProps>) {
     const { handleChangeFor, triggerValidation, data, valid, errors, isValid } = useForm<PersonalDetailsSchema>({
         schema: requiredFields,
         // Ensure any passed validation rules are merged with the default ones
-        rules: { ...personalDetailsValidationRules, ...props.validationRules },
-        defaultData: props.data
+        rules: { ...personalDetailsValidationRules, ...validationRules },
+        defaultData: initialData
     });
 
     const personalDetailsRef = useRef<ComponentMethodsRef>({
@@ -41,7 +50,7 @@ export default function PersonalDetails(props: Readonly<PersonalDetailsProps>) {
     });
 
     useEffect(() => {
-        props.setComponentRef(personalDetailsRef.current);
+        props.setComponentRef?.(personalDetailsRef.current);
     }, [props.setComponentRef]);
 
     const eventHandler =
@@ -50,6 +59,7 @@ export default function PersonalDetails(props: Readonly<PersonalDetailsProps>) {
             const { name } = e.target as HTMLInputElement;
             const key = name.split(`${namePrefix}.`).pop();
 
+            if (!key) return;
             handleChangeFor(key, mode)(e);
         };
 
@@ -57,7 +67,7 @@ export default function PersonalDetails(props: Readonly<PersonalDetailsProps>) {
 
     useEffect(() => {
         const formattedData = getFormattedData(data);
-        props.onChange({ data: formattedData, valid, errors, isValid });
+        onChange({ data: formattedData, valid, errors, isValid });
     }, [data, valid, errors, isValid]);
 
     if (visibility === 'hidden') return null;
@@ -114,7 +124,7 @@ export default function PersonalDetails(props: Readonly<PersonalDetailsProps>) {
                     label={i18n.get('dateOfBirth')}
                     classNameModifiers={['col-50', 'dateOfBirth']}
                     errorMessage={getErrorMessage(i18n, errors.dateOfBirth, i18n.get('dateOfBirth'))}
-                    helper={isDateInputSupported ? null : i18n.get('dateOfBirth.format')}
+                    helper={isDateInputSupported ? undefined : i18n.get('dateOfBirth.format')}
                     name={'dateOfBirth'}
                     i18n={i18n}
                 >
@@ -177,12 +187,3 @@ export default function PersonalDetails(props: Readonly<PersonalDetailsProps>) {
         </Fieldset>
     );
 }
-
-PersonalDetails.defaultProps = {
-    data: {},
-    onChange: () => {},
-    placeholders: {},
-    requiredFields: PERSONAL_DETAILS_SCHEMA,
-    validationRules: personalDetailsValidationRules,
-    visibility: 'editable'
-};

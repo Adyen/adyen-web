@@ -15,12 +15,20 @@ import { HandleChangeForModeType } from '../../../utils/useForm/types';
 export const COMPANY_DETAILS_SCHEMA = ['name', 'registrationNumber'];
 
 export default function CompanyDetails(props: Readonly<CompanyDetailsProps>) {
-    const { label = '', namePrefix, requiredFields, visibility } = props;
+    const {
+        label = '',
+        namePrefix,
+        requiredFields = COMPANY_DETAILS_SCHEMA,
+        visibility = 'editable',
+        data: initialData = {},
+        onChange = () => {},
+        validationRules = companyDetailsValidationRules
+    } = props;
     const { i18n } = useCoreContext();
     const { handleChangeFor, triggerValidation, data, valid, errors, isValid } = useForm<CompanyDetailsSchema>({
         schema: requiredFields,
-        rules: { ...companyDetailsValidationRules, ...props.validationRules },
-        defaultData: props.data
+        rules: { ...companyDetailsValidationRules, ...validationRules },
+        defaultData: initialData
     });
 
     /** An object by which to expose 'public' members to the parent UIElement */
@@ -43,6 +51,7 @@ export default function CompanyDetails(props: Readonly<CompanyDetailsProps>) {
             const { name } = e.target as HTMLInputElement;
             const key = name.split(`${namePrefix}.`).pop();
 
+            if (!key) return;
             handleChangeFor(key, mode)(e);
         };
 
@@ -52,12 +61,13 @@ export default function CompanyDetails(props: Readonly<CompanyDetailsProps>) {
             const { name } = e.target as HTMLInputElement;
             const key = name.split(`${namePrefix}.`).pop();
 
+            if (!key) return;
             handleChangeFor(key, mode)(e);
         };
 
     useEffect(() => {
         const formattedData = getFormattedData(data);
-        props.onChange({ data: formattedData, valid, errors, isValid });
+        onChange({ data: formattedData, valid, errors, isValid });
     }, [data, valid, errors, isValid]);
 
     if (visibility === 'hidden') return null;
@@ -107,11 +117,3 @@ export default function CompanyDetails(props: Readonly<CompanyDetailsProps>) {
         </Fieldset>
     );
 }
-
-CompanyDetails.defaultProps = {
-    data: {},
-    onChange: () => {},
-    visibility: 'editable',
-    requiredFields: COMPANY_DETAILS_SCHEMA,
-    validationRules: companyDetailsValidationRules
-};
