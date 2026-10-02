@@ -20,7 +20,7 @@ export type FormatRules = { [field: string]: Formatter };
 
 export type CountryFormatRules = { [country: string]: FormatRules };
 
-export type ValidateFunction = (value: string, context) => boolean;
+export type ValidateFunction = (value: string, context) => boolean | null;
 
 export interface ValidatorRule {
     validate: ValidateFunction;

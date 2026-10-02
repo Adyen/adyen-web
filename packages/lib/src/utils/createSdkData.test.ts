@@ -73,4 +73,10 @@ describe('createSdkData', () => {
         const decoded = decodeSdkData(result);
         expect(decoded.riskData).toBeUndefined();
     });
+
+    test('should not include riskData when clientData is an empty string', () => {
+        const result = createSdkData(TEST_CHECKOUT_ATTEMPT_ID, '', PAYMENT_METHOD_BEHAVIOR.NATIVE);
+        const decoded = decodeSdkData(result);
+        expect(decoded).not.toHaveProperty('riskData');
+    });
 });

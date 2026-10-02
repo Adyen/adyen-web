@@ -1,4 +1,5 @@
 import Validator from './Validator';
+import { validationRules } from './defaultRules';
 import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 import enUS from '../../../../server/translations/en-US.json';
 
@@ -41,6 +42,38 @@ describe('Validator', () => {
         expect(validator.validate({ key: 'aNewField', value: '123' }).hasError()).toBe(false);
         expect(validator.validate({ key: 'aNewField', value: null }).hasError()).toBe(false);
         expect(validator.validate({ key: 'shopperEmail', value: 'test@test.com' }).hasError()).toBe(false);
+    });
+
+    test('should not report an empty email as an error unless the form is validated', () => {
+        const validator = new Validator({ shopperEmail: validationRules.emailRule }, i18n);
+
+        const result = validator.validate({ key: 'shopperEmail', value: '' });
+
+        expect(result.hasError()).toBe(false);
+        expect(result.hasError(true)).toBe(true);
+        expect(result.isValid).toBe(false);
+    });
+
+    describe('isValid', () => {
+        const validateWith = (...outcomes: Array<boolean | null>) => {
+            const rules = outcomes.map(outcome => ({ validate: () => outcome, modes: ['blur' as const] }));
+            return new Validator({ aField: rules }, i18n).validate({ key: 'aField', value: 'x' }).isValid;
+        };
+
+        test('should return false when any rule fails, regardless of rule order', () => {
+            expect(validateWith(null, false)).toBe(false);
+            expect(validateWith(false, null)).toBe(false);
+            expect(validateWith(true, null, false)).toBe(false);
+        });
+
+        test('should return false when a rule is not validated yet', () => {
+            expect(validateWith(true, null)).toBe(false);
+            expect(validateWith(null, true)).toBe(false);
+        });
+
+        test('should return true when every rule passes', () => {
+            expect(validateWith(true, true)).toBe(true);
+        });
     });
 
     describe('errorI18n', () => {

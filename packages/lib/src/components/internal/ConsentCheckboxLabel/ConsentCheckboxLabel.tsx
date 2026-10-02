@@ -2,7 +2,7 @@ import { Fragment, h } from 'preact';
 import { useCoreContext } from '../../../core/Context/CoreProvider';
 
 interface ConsentCheckboxLabelProps {
-    url: string;
+    url?: string;
 }
 
 export default function ConsentCheckboxLabel(props: Readonly<ConsentCheckboxLabelProps>) {
