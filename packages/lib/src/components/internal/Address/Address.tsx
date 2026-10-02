@@ -30,6 +30,7 @@ export default function Address(props: Readonly<AddressProps>) {
         visibility = 'editable',
         iOSFocusedField = null,
         showContextualElement,
+        specifications: specificationsProp,
         onChange = () => {},
         onFieldFocusAnalytics = () => {},
         onFieldBlurAnalytics = () => {}
@@ -43,7 +44,7 @@ export default function Address(props: Readonly<AddressProps>) {
         props.setComponentRef?.(addressRef.current);
     }
 
-    const specifications = useMemo(() => new Specifications(props.specifications), [props.specifications]);
+    const specifications = useMemo(() => new Specifications(specificationsProp), [specificationsProp]);
 
     const requiredFieldsSchema = specifications.getAddressSchemaForCountryFlat(props.countryCode).filter(field => requiredFields.includes(field));
 
