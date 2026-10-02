@@ -4,7 +4,7 @@ type UrlMap = {
     };
 };
 
-function getConsentUrl(countryCode: string, locale: string, urlMap: UrlMap): string {
+function getConsentUrl(countryCode: string, locale: string, urlMap: UrlMap): string | undefined {
     const languageCode = locale?.toLowerCase().slice(0, 2);
     const consentLink = urlMap[countryCode?.toLowerCase()]?.[languageCode];
     if (!consentLink) {

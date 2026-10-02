@@ -1,4 +1,5 @@
 import Validator from './Validator';
+import { validationRules } from './defaultRules';
 import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 import enUS from '../../../../server/translations/en-US.json';
 
@@ -41,6 +42,16 @@ describe('Validator', () => {
         expect(validator.validate({ key: 'aNewField', value: '123' }).hasError()).toBe(false);
         expect(validator.validate({ key: 'aNewField', value: null }).hasError()).toBe(false);
         expect(validator.validate({ key: 'shopperEmail', value: 'test@test.com' }).hasError()).toBe(false);
+    });
+
+    test('should not report an empty email as an error unless the form is validated', () => {
+        const validator = new Validator({ shopperEmail: validationRules.emailRule }, i18n);
+
+        const result = validator.validate({ key: 'shopperEmail', value: '' });
+
+        expect(result.hasError()).toBe(false);
+        expect(result.hasError(true)).toBe(true);
+        expect(result.isValid).toBeNull();
     });
 
     describe('errorI18n', () => {

@@ -64,7 +64,7 @@ export function QRLoader(props: Readonly<QRLoaderProps>) {
         });
     };
 
-    const qrSubtitleRef = useAutoFocus();
+    const qrSubtitleRef = useAutoFocus<HTMLParagraphElement>();
 
     /**
      * Reported from here rather than from the child states: QRLoaderPendingState unmounts as soon

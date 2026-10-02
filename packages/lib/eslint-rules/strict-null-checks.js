@@ -75,18 +75,10 @@ const STRICT_NULL_CHECKS_BACKLOG = [
     'src/core/RiskModule/components/DeviceFingerprint/DeviceFingerprint.tsx',
     'src/core/RiskModule/components/DeviceFingerprint/GetDeviceFingerprint.tsx',
     'src/core/RiskModule/RiskModule.tsx',
-    'src/hooks/usePaymentStatusTimer/usePaymentStatusTimer.tsx',
     'src/utils/browserInfo.ts',
     'src/utils/clipboard.ts',
-    'src/utils/createSdkData.ts',
     'src/utils/get-issuer-image.ts',
-    'src/utils/getConsentUrl.ts',
     'src/utils/getOrigin.ts',
-    'src/utils/promiseTimeout.ts',
-    'src/utils/Script.ts',
-    'src/utils/useAutoFocus.ts',
-    'src/utils/Validator/defaultRules.ts',
-    'src/utils/Validator/Validator.ts',
 
     // ── Ticket 3: SecuredFields and CSF (161 errors) ──
     'src/components/internal/SecuredFields/binLookup/extensions.ts',
@@ -123,7 +115,6 @@ const STRICT_NULL_CHECKS_BACKLOG = [
     'src/components/internal/Address/Specifications.ts',
     'src/components/internal/Address/utils.ts',
     'src/components/internal/Address/validate.formats.ts',
-    'src/components/internal/Address/validate.ts',
     'src/components/internal/CompanyDetails/CompanyDetails.tsx',
     'src/components/internal/CompanyDetails/validate.ts',
     'src/components/internal/FormFields/Field/Field.tsx',
@@ -139,7 +130,6 @@ const STRICT_NULL_CHECKS_BACKLOG = [
     'src/components/internal/PersonalDetails/validate.ts',
     'src/components/internal/PhoneInput/PhoneInputFields.tsx',
     'src/components/internal/PhoneInput/PhoneInputForm.tsx',
-    'src/components/internal/PhoneInput/validate.ts',
 
     // ── Ticket 5: Card, Card Input and Custom Card (100 errors) ──
     'src/components/Card/Card.tsx',
@@ -154,7 +144,6 @@ const STRICT_NULL_CHECKS_BACKLOG = [
     'src/components/Card/components/CardInput/handlers.ts',
     'src/components/Card/components/CardInput/useSRPanelForCardInputErrors.ts',
     'src/components/Card/components/CardInput/utils.ts',
-    'src/components/Card/components/CardInput/validate.ts',
     'src/components/Card/components/ClickToPayHolder.tsx',
     'src/components/Card/components/Fastlane/FastlaneSignup.tsx',
     'src/components/Card/components/Fastlane/InfoButton.tsx',
@@ -219,7 +208,6 @@ const STRICT_NULL_CHECKS_BACKLOG = [
     'src/components/Ach/Ach.tsx',
     'src/components/Ach/components/AchComponent.tsx',
     'src/components/Ach/components/useSRPanelForACHErrors.ts',
-    'src/components/Ach/components/validate.ts',
     // src/components/AfterPay (1 errors)
     'src/components/AfterPay/AfterPay.tsx',
     // src/components/ANCV (8 errors)
@@ -325,7 +313,6 @@ const STRICT_NULL_CHECKS_BACKLOG = [
     'src/components/Pix/Pix.tsx',
     // src/components/PreAuthorizedDebitCanada (11 errors)
     'src/components/PreAuthorizedDebitCanada/components/PreAuthorizedDebitCanadaComponent.tsx',
-    'src/components/PreAuthorizedDebitCanada/components/validate.ts',
     'src/components/PreAuthorizedDebitCanada/PreAuthorizedDebitCanada.tsx',
     // src/components/Redirect (7 errors)
     'src/components/Redirect/components/RedirectShopper/RedirectShopper.tsx',
