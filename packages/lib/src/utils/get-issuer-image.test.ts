@@ -18,5 +18,12 @@ describe('Get issuer image', () => {
         test('Prepares options when there is no issuer ID', () => {
             expect(getIssuerImage(options, type, getImage)('')).toBe(null);
         });
+
+        test('should return null without calling getImage when the issuer is undefined', () => {
+            const getImageMock = jest.fn();
+
+            expect(getIssuerImage(options, type, getImageMock)(undefined)).toBe(null);
+            expect(getImageMock).toHaveBeenCalledTimes(0);
+        });
     });
 });
