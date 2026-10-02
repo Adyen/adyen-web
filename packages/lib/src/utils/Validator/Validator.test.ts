@@ -51,7 +51,7 @@ describe('Validator', () => {
 
         expect(result.hasError()).toBe(false);
         expect(result.hasError(true)).toBe(true);
-        expect(result.isValid).toBeNull();
+        expect(result.isValid).toBe(false);
     });
 
     describe('isValid', () => {
@@ -66,9 +66,9 @@ describe('Validator', () => {
             expect(validateWith(true, null, false)).toBe(false);
         });
 
-        test('should return null when no rule fails and at least one rule is not validated', () => {
-            expect(validateWith(true, null)).toBeNull();
-            expect(validateWith(null, true)).toBeNull();
+        test('should return false when a rule is not validated yet', () => {
+            expect(validateWith(true, null)).toBe(false);
+            expect(validateWith(null, true)).toBe(false);
         });
 
         test('should return true when every rule passes', () => {
