@@ -1,4 +1,4 @@
-import getIssuerImage, { buildIssuerImageUrl } from './get-issuer-image';
+import getIssuerImage from './get-issuer-image';
 import { Resources } from '../core/Context/Resources';
 
 describe('Get issuer image', () => {
@@ -24,19 +24,6 @@ describe('Get issuer image', () => {
 
             expect(getIssuerImage(options, type, getImageMock)(undefined)).toBeUndefined();
             expect(getImageMock).toHaveBeenCalledTimes(0);
-        });
-    });
-
-    describe('buildIssuerImageUrl', () => {
-        const loadingContext = 'http://adyen.com/';
-        const resources = new Resources(loadingContext);
-        const getImage = resources.getImage.bind(resources);
-
-        test('should build the same url as getIssuerImage for an issuer ID', () => {
-            const options = { loadingContext };
-
-            expect(buildIssuerImageUrl(options, 'ideal', getImage)('123')).toBe(getIssuerImage(options, 'ideal', getImage)('123'));
-            expect(buildIssuerImageUrl({}, 'paybybank', getImage)('US-1')).toBe('http://adyen.com/images/logos/paybybank/US-1.svg');
         });
     });
 });
