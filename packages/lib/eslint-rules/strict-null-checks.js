@@ -195,11 +195,6 @@ const STRICT_NULL_CHECKS_BACKLOG = [
     'src/components/AmazonPay/components/AmazonPayComponent.tsx',
     'src/components/AmazonPay/components/OrderButton.tsx',
     'src/components/AmazonPay/utils.ts',
-    'src/components/CashAppPay/CashAppPay.tsx',
-    'src/components/CashAppPay/components/CashAppComponent.tsx',
-    'src/components/PayPal/utils/get-paypal-settings.ts',
-    'src/components/PayPalFastlane/Fastlane.tsx',
-    'src/components/PayPalFastlane/FastlaneSDK.ts',
 
     // ── Ticket 10: Click to Pay (98 errors) ──
     'src/components/ClickToPay/ClickToPay.tsx',

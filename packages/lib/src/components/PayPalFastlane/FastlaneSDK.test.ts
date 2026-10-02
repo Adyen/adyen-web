@@ -268,6 +268,26 @@ describe('FastlaneSDK', () => {
         });
     });
 
+    test('should return Card configuration if the shopper email is not known, even when the auth result has a card', async () => {
+        fastlaneMock.ConsentComponent.mockResolvedValue({
+            getRenderState: jest.fn().mockResolvedValue({ showConsent: false })
+        });
+
+        const fastlane = await initializeFastlane({
+            clientKey: 'test_xxx',
+            environment: 'test'
+        });
+
+        const config = await fastlane.getComponentConfiguration({
+            authenticationState: 'succeeded',
+            profileData: mock<FastlaneProfile>({
+                card: { id: 'xxxx', paymentSource: { card: { brand: 'visa', lastDigits: '1111' } } }
+            })
+        });
+
+        expect(config.paymentType).toBe('card');
+    });
+
     test('should return card component configuration if shopper does not have profile', async () => {
         const customerContextId = 'customer-context-id';
         fastlaneMock.identity.lookupCustomerByEmail.mockResolvedValue({
@@ -427,6 +447,25 @@ describe('FastlaneSDK', () => {
         });
 
         expect(mock).toHaveBeenLastCalledWith('Fastlane SDK: Failed to fetch session ID', {});
+    });
+
+    test('should use an empty fastlaneSessionId in the Fastlane configuration if fetching the session ID fails', async () => {
+        jest.spyOn(console, 'warn').mockImplementation();
+        fastlaneMock.identity.getSession.mockRejectedValue({});
+        fastlaneMock.identity.lookupCustomerByEmail.mockResolvedValue({ customerContextId: 'customer-context-id' });
+        fastlaneMock.identity.triggerAuthenticationFlow.mockResolvedValue({
+            authenticationState: 'succeeded',
+            profileData: mock<FastlaneProfile>({
+                card: { id: 'xxxx', paymentSource: { card: { brand: 'visa', lastDigits: '1111' } } }
+            })
+        });
+
+        const fastlane = await initializeFastlane({ clientKey: 'test_xxx', environment: 'test' });
+        const authResult = await fastlane.authenticate('test@adyen.com');
+        const config = await fastlane.getComponentConfiguration(authResult);
+
+        expect(config.paymentType).toBe('fastlane');
+        expect(config.configuration).toEqual(expect.objectContaining({ fastlaneSessionId: '' }));
     });
 
     test('should throw error if Fastlane does not get created', async () => {
