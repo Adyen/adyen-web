@@ -118,7 +118,7 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
         if (paymentAction) {
             this.unmount();
             void paymentAction.isAvailable().then(() => {
-                paymentAction.mount(this._node);
+                paymentAction.mount(this.mountedNode);
             });
             return paymentAction;
         }

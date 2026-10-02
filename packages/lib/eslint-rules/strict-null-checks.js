@@ -58,11 +58,6 @@ const canonicalPath = fileName => (ts.sys.useCaseSensitiveFileNames ? fileName :
 // list may only shrink. A listed file with no errors left is reported as an obsolete entry.
 // ══════════════════════════════════════════════════════════
 const STRICT_NULL_CHECKS_BACKLOG = [
-    // ── Ticket 1: UIElement and BaseElement (25 errors) ──
-    'src/components/internal/BaseElement/BaseElement.ts',
-    'src/components/internal/UIElement/UIElement.tsx',
-    'src/components/internal/UIElement/utils.ts',
-
     // ── Ticket 2: Core, utils and hooks (89 errors) ──
     'src/core/Analytics/Analytics.ts',
     'src/core/Analytics/events/AnalyticsInfoEvent.ts',
