@@ -14,8 +14,8 @@ export interface PhoneInputFormProps {
     onChange: (data: {
         data: PhoneInputSchema;
         valid: { [p: string]: boolean };
-        errors: { [p: string]: ValidationRuleResult };
-        isValid: boolean;
+        errors: { [p: string]: ValidationRuleResult | null };
+        isValid?: boolean;
     }) => void;
     phoneNumberKey?: string;
     phonePrefixErrorKey?: string;

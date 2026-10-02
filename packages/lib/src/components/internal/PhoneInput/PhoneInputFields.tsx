@@ -80,7 +80,7 @@ export default function PhoneInputFields({
                     label={props.phoneNumberKey ? i18n.get(props.phoneNumberKey) : i18n.get('telephoneNumber')}
                     errorMessage={getError('phoneNumber')}
                     isValid={valid.phoneNumber}
-                    filled={data?.phoneNumber?.length > 0}
+                    filled={!!data.phoneNumber?.length}
                     dir={'ltr'}
                     i18n={i18n}
                     name={'phoneNumber'}

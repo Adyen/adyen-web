@@ -122,15 +122,9 @@ const STRICT_NULL_CHECKS_BACKLOG = [
     'src/components/internal/SecuredFields/SFP/SFPUtils.ts',
 
     // ── Ticket 4: Shared form fields (92 errors) ──
-    'src/components/internal/CompanyDetails/CompanyDetails.tsx',
-    'src/components/internal/IbanInput/IbanInput.tsx',
-    'src/components/internal/IbanInput/utils.ts',
-    'src/components/internal/PersonalDetails/PersonalDetails.tsx',
-    'src/components/internal/PersonalDetails/validate.ts',
-    'src/components/internal/PhoneInput/PhoneInputFields.tsx',
-    'src/components/internal/PhoneInput/PhoneInputForm.tsx',
 
     // Ticket 4 but handle in a different ticket after ticket 2 gets merged
+    'src/components/internal/PersonalDetails/validate.ts',
     'src/components/internal/Address/validate.ts',
     'src/components/internal/CompanyDetails/validate.ts',
     'src/components/internal/PhoneInput/validate.ts',
