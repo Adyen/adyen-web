@@ -1,5 +1,6 @@
 import Specifications from './Specifications';
-import { PARTIAL_ADDRESS_SCHEMA } from './constants';
+import { ADDRESS_SPECIFICATIONS, PARTIAL_ADDRESS_SCHEMA } from './constants';
+import type { AddressSpecifications } from './types';
 
 describe('Specifications', () => {
     const addressSpecificationsMock = {
@@ -29,7 +30,7 @@ describe('Specifications', () => {
             },
             schema: ['country', 'city', 'postalCode']
         }
-    };
+    } satisfies AddressSpecifications;
     const specifications = new Specifications(addressSpecificationsMock);
 
     test('countryHasDataset', () => {
@@ -48,6 +49,39 @@ describe('Specifications', () => {
         expect(specifications.getAddressSchemaForCountry('NL')).toBe(addressSpecificationsMock.default.schema);
     });
 
+    test('should fall back to the built-in default schema when the provided default has no schema', () => {
+        const withoutSchema = new Specifications({ default: {} });
+        expect(withoutSchema.getAddressSchemaForCountry('NL')).toBe(ADDRESS_SPECIFICATIONS.default.schema);
+    });
+
+    test('should fall back to the built-in default schema when the provided default is not an object', () => {
+        // The type does not allow this, but merchants calling from plain JavaScript can still pass it
+        const invalidSpecifications: unknown = { default: undefined };
+        const withEmptyDefault = new Specifications(invalidSpecifications as AddressSpecifications);
+        expect(withEmptyDefault.getAddressSchemaForCountry('NL')).toBe(ADDRESS_SPECIFICATIONS.default.schema);
+    });
+
+    test('should return the default schema when no country is provided', () => {
+        expect(specifications.getAddressSchemaForCountry(undefined)).toBe(addressSpecificationsMock.default.schema);
+    });
+
+    test('getOptionalFieldsForCountry', () => {
+        expect(specifications.getOptionalFieldsForCountry('US')).toBe(addressSpecificationsMock.US.optionalFields);
+        expect(specifications.getOptionalFieldsForCountry('NL')).toStrictEqual([]);
+        expect(specifications.getOptionalFieldsForCountry(undefined)).toStrictEqual([]);
+    });
+
+    test('getAddressLabelsForCountry', () => {
+        expect(specifications.getAddressLabelsForCountry('US')).toBe(addressSpecificationsMock.US.labels);
+        expect(specifications.getAddressLabelsForCountry('NL')).toBeUndefined();
+        expect(specifications.getAddressLabelsForCountry(undefined)).toBeUndefined();
+    });
+
+    test('should use the labels of the provided default for countries without their own labels', () => {
+        const withDefaultLabels = new Specifications({ default: { labels: { postalCode: 'postCode' }, schema: ['country'] } });
+        expect(withDefaultLabels.getAddressLabelsForCountry('NL')).toStrictEqual({ postalCode: 'postCode' });
+    });
+
     test('getKeyForField', () => {
         expect(specifications.getKeyForField('postalCode', 'US')).toBe(addressSpecificationsMock.US.labels.postalCode);
         expect(specifications.getKeyForField('country', 'US')).toBe('country');
@@ -59,6 +93,11 @@ describe('Specifications', () => {
         expect(specifications.getPlaceholderKeyForField('stateOrProvince', 'US')).toBe(
             addressSpecificationsMock.default.placeholders.stateOrProvince
         );
+    });
+
+    test('should return undefined when no placeholder is defined for the field', () => {
+        expect(specifications.getPlaceholderKeyForField('city', 'US')).toBeUndefined();
+        expect(specifications.getPlaceholderKeyForField('city', 'NL')).toBeUndefined();
     });
 
     test('getFlatSchemaForCountry', () => {

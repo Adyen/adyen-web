@@ -22,7 +22,19 @@ const EMPTY_ADDRESS_DATA: Readonly<AddressData> = {};
 export default function Address(props: Readonly<AddressProps>) {
     const { i18n } = useCoreContext();
 
-    const { label = '', requiredFields, visibility, iOSFocusedField = null, showContextualElement } = props;
+    // default some props, this is preferred over "defaultProps"
+    const {
+        allowedCountries = [],
+        label = '',
+        requiredFields = ADDRESS_SCHEMA,
+        visibility = 'editable',
+        iOSFocusedField = null,
+        showContextualElement,
+        specifications: specificationsProp,
+        onChange = () => {},
+        onFieldFocusAnalytics = () => {},
+        onFieldBlurAnalytics = () => {}
+    } = props;
     const addressType: AddressType = getAddressTypeFromLabel(props.addressType, label);
 
     /** An object by which to expose 'public' members to the parent UIElement */
@@ -32,7 +44,7 @@ export default function Address(props: Readonly<AddressProps>) {
         props.setComponentRef?.(addressRef.current);
     }
 
-    const specifications = useMemo(() => new Specifications(props.specifications), [props.specifications]);
+    const specifications = useMemo(() => new Specifications(specificationsProp), [specificationsProp]);
 
     const requiredFieldsSchema = specifications.getAddressSchemaForCountryFlat(props.countryCode).filter(field => requiredFields.includes(field));
 
@@ -120,7 +132,7 @@ export default function Address(props: Readonly<AddressProps>) {
             return;
         }
 
-        const stateOrProvince = specifications.countryHasDataset(data.country) ? '' : FALLBACK_VALUE;
+        const stateOrProvince = data.country && specifications.countryHasDataset(data.country) ? '' : FALLBACK_VALUE;
         const newData = { ...data, stateOrProvince };
 
         requiredFields.forEach(fieldName => {
@@ -159,19 +171,19 @@ export default function Address(props: Readonly<AddressProps>) {
             return acc;
         }, {});
 
-        props.onChange({ data: processedData, valid, errors, isValid });
+        onChange({ data: processedData, valid, errors, isValid });
     }, [data, valid, errors, isValid]);
 
     if (visibility === 'hidden') return null;
     if (visibility === 'readOnly') return <ReadOnlyAddress data={data} label={label} />;
 
-    const getComponent = (fieldName: string, { classNameModifiers = [] }) => {
+    const getComponent = (fieldName: string, { classNameModifiers = [] }: { classNameModifiers?: string[] }) => {
         if (!requiredFields.includes(fieldName)) return null;
 
         return (
             <FieldContainer
                 key={fieldName}
-                allowedCountries={props.allowedCountries}
+                allowedCountries={allowedCountries}
                 classNameModifiers={[...classNameModifiers, fieldName]}
                 data={data}
                 errors={errors}
@@ -185,8 +197,8 @@ export default function Address(props: Readonly<AddressProps>) {
                 trimOnBlur={true}
                 disabled={!enabledFields.includes(fieldName)}
                 addressType={addressType}
-                onFieldFocusAnalytics={props.onFieldFocusAnalytics}
-                onFieldBlurAnalytics={props.onFieldBlurAnalytics}
+                onFieldFocusAnalytics={onFieldFocusAnalytics}
+                onFieldBlurAnalytics={onFieldBlurAnalytics}
             />
         );
     };
@@ -222,15 +234,3 @@ export default function Address(props: Readonly<AddressProps>) {
         </Fragment>
     );
 }
-
-Address.defaultProps = {
-    countryCode: null,
-    validationRules: null,
-    data: {},
-    onChange: () => {},
-    visibility: 'editable',
-    requiredFields: ADDRESS_SCHEMA,
-    specifications: {},
-    onFieldFocusAnalytics: () => {},
-    onFieldBlurAnalytics: () => {}
-};
