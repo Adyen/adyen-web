@@ -314,7 +314,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
 
         const error = new AdyenCheckoutError(
             'IMPLEMENTATION_ERROR',
-            'It can not perform /payments call. Callback "onSubmit" is missing or Checkout session is not available'
+            'Cannot perform /payments call. Callback "onSubmit" is missing or Checkout session is not available'
         );
 
         this.handleError(error);
@@ -349,7 +349,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         this.submitAnalytics(event);
 
         try {
-            if (!this.core.session) throw new AdyenCheckoutError('ERROR', 'Error when making /payments call');
+            if (!this.core.session) throw new AdyenCheckoutError('ERROR', 'Cannot perform /payments call. Checkout session is not available');
             return await this.core.session.submitPayment(data);
         } catch (error: unknown) {
             if (error instanceof AdyenCheckoutError) {
@@ -412,7 +412,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
 
         const error = new AdyenCheckoutError(
             'IMPLEMENTATION_ERROR',
-            'It can not perform /payments/details call. Callback "onAdditionalDetails" is missing or Checkout session is not available'
+            'Cannot perform /payments/details call. Callback "onAdditionalDetails" is missing or Checkout session is not available'
         );
 
         this.handleError(error);
