@@ -1,4 +1,4 @@
-import { Component, h } from 'preact';
+import { Component, createRef, h } from 'preact';
 import classNames from 'classnames';
 
 import { PaymentMethodDetails } from '../PaymentMethodDetails';
@@ -42,6 +42,56 @@ class PaymentMethodItem extends Component<Readonly<PaymentMethodItemProps>> {
         showDisableStoredPaymentMethodConfirmation: false
     };
 
+    private readonly headerRef = createRef<HTMLDivElement>();
+
+    /**
+     * Selecting a payment method can change the height of content above the header (e.g. a previously open
+     * payment method collapsing), which shifts this header's position on screen. The browser doesn't reliably
+     * compensate for that shift on its own, so for the duration of the resulting layout change we actively
+     * keep this header pinned to the viewport position it had at the moment it was clicked.
+     */
+    private pinRafId: number | null = null;
+
+    private readonly stopPinningHeaderPosition = () => {
+        if (this.pinRafId !== null) {
+            cancelAnimationFrame(this.pinRafId);
+            this.pinRafId = null;
+        }
+    };
+
+    private readonly pinHeaderPosition = () => {
+        const header = this.headerRef.current;
+        if (!header) {
+            return;
+        }
+
+        this.stopPinningHeaderPosition();
+
+        const targetTop = header.getBoundingClientRect().top;
+        const deadline = performance.now() + 400; // covers the 250ms collapse/expand transition, plus a buffer
+
+        const step = () => {
+            const node = this.headerRef.current;
+            if (!node || performance.now() > deadline) {
+                this.pinRafId = null;
+                return;
+            }
+
+            const delta = node.getBoundingClientRect().top - targetTop;
+            if (Math.abs(delta) > 0.5) {
+                window.scrollBy(0, delta);
+            }
+
+            this.pinRafId = requestAnimationFrame(step);
+        };
+
+        this.pinRafId = requestAnimationFrame(step);
+    };
+
+    public componentWillUnmount() {
+        this.stopPinningHeaderPosition();
+    }
+
     public toggleDisableConfirmation = () => {
         this.setState({ showDisableStoredPaymentMethodConfirmation: !this.state.showDisableStoredPaymentMethodConfirmation });
     };
@@ -53,6 +103,7 @@ class PaymentMethodItem extends Component<Readonly<PaymentMethodItemProps>> {
 
     private readonly handleOnListItemClick = (): void => {
         const { onSelect, paymentMethod } = this.props;
+        this.pinHeaderPosition();
         onSelect(paymentMethod);
     };
 
@@ -89,7 +140,7 @@ class PaymentMethodItem extends Component<Readonly<PaymentMethodItemProps>> {
         return (
             // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions
             <div key={paymentMethod._id} className={paymentMethodClassnames} onClick={this.handleOnListItemClick}>
-                <div className="adyen-checkout__payment-method__header">
+                <div className="adyen-checkout__payment-method__header" ref={this.headerRef}>
                     <ExpandButton
                         className="adyen-checkout__payment-method__header__content"
                         buttonId={buttonId}
