@@ -3,19 +3,13 @@ import checkPaymentStatus from '../../core/Services/payment-status';
 import { processPaymentStatusResponse } from '../../core/ProcessResponse/PaymentStatus';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { CountdownTime } from '../../components/internal/Countdown/types';
-import { PaymentStatusTimerActions, PaymentStatusTimerState, UsePaymentStatusTimerProps } from './types';
+import { NetworkErrorPaymentStatus, PaymentStatusTimerActions, PaymentStatusTimerState, UsePaymentStatusTimerProps } from './types';
 import {
     DEFAULT_PAYMENT_STATUS_TIMER_DELAY_MS,
     DEFAULT_PAYMENT_STATUS_TIMER_THROTTLE_INTERVAL_MS,
     DEFAULT_PAYMENT_STATUS_TIMER_THROTTLE_TIME_MS
 } from './constants';
 import { AdditionalDetailsData, ProcessedPaymentStatusResponse } from '../../types';
-
-/** A failed poll stores whatever was rejected, which may not be an object */
-interface NetworkErrorPaymentStatus {
-    type: 'network-error';
-    props: unknown;
-}
 
 export function usePaymentStatusTimer(props: Readonly<UsePaymentStatusTimerProps>): {
     state: PaymentStatusTimerState;
