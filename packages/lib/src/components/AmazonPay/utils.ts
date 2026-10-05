@@ -10,13 +10,14 @@ import {
 import { AmazonPayButtonProps, AmazonPayButtonSettings, ChargeAmount, Currency, PayloadJSON, Region, SupportedLocale } from './types';
 import { PaymentAmount } from '../../types/global-types';
 import { getDecimalAmount } from '../../utils/amount-util';
+import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 
 /**
  * Returns the AmazonPay script URL for passed region.
  * @param region - Two-letter country code in ISO 3166 format
  * @returns the AmazonPay script URL
  */
-export function getAmazonPayUrl(region: Region): string {
+export function getAmazonPayUrl(region?: Region): string {
     return region === 'US' ? AMAZONPAY_URL_US : AMAZONPAY_URL_EU;
 }
 
@@ -26,12 +27,13 @@ export function getAmazonPayUrl(region: Region): string {
  * @returns the AmazonPay button settings
  */
 export function getAmazonPaySettings(props: AmazonPayButtonProps, amount?: PaymentAmount): AmazonPayButtonSettings {
+    const region = props.configuration?.region;
     return {
         ...(props.buttonColor && { buttonColor: props.buttonColor }),
         ...(props.design && { design: getDesignCode(props.design) }),
-        checkoutLanguage: getCheckoutLocale(props.locale, props.configuration.region),
-        ledgerCurrency: LEDGER_CURRENCIES_PER_REGION[props.configuration.region] || props.currency || (amount?.currency as Currency),
-        merchantId: props.configuration.merchantId,
+        checkoutLanguage: getCheckoutLocale(props.locale, region),
+        ledgerCurrency: (region && LEDGER_CURRENCIES_PER_REGION[region]) || props.currency || (amount?.currency as Currency),
+        merchantId: props.configuration?.merchantId,
         productType: props.productType,
         placement: props.placement,
         sandbox: props.environment === 'TEST'
@@ -43,7 +45,7 @@ export function getAmazonPaySettings(props: AmazonPayButtonProps, amount?: Payme
  * @param region - Two-letter country code in ISO 3166 format
  * @returns A fallback locale
  */
-export function getFallbackLocale(region: Region): SupportedLocale {
+export function getFallbackLocale(region?: Region): SupportedLocale {
     return region === 'US' ? FALLBACK_LOCALE_US : FALLBACK_LOCALE_EU;
 }
 
@@ -52,7 +54,7 @@ export function getFallbackLocale(region: Region): SupportedLocale {
  * @param region - Two-letter country code in ISO 3166 format
  * @returns An array of supported locales
  */
-export function getSupportedLocales(region: Region): SupportedLocale[] {
+export function getSupportedLocales(region?: Region): SupportedLocale[] {
     const supportedLocales = region === 'US' ? SUPPORTED_LOCALES_US : SUPPORTED_LOCALES_EU;
     return supportedLocales as unknown as SupportedLocale[];
 }
@@ -64,7 +66,7 @@ export function getSupportedLocales(region: Region): SupportedLocale[] {
  * @param region - Two-letter country code in ISO 3166 format
  * @returns A supported locale
  */
-export function getCheckoutLocale(locale: string, region: Region): SupportedLocale {
+export function getCheckoutLocale(locale?: string, region?: Region): SupportedLocale {
     const supportedLocales = getSupportedLocales(region);
     const isSupportedLocale = supportedLocales.includes(locale as SupportedLocale);
     const checkoutLocale = isSupportedLocale ? locale : getFallbackLocale(region);
@@ -77,7 +79,7 @@ export function getCheckoutLocale(locale: string, region: Region): SupportedLoca
  * @param design - The alias of one of the possible designs.
  * @returns A design code
  */
-export function getDesignCode(design: string): string {
+export function getDesignCode(design: string): string | null {
     if (design === 'noTagline') return 'C0001';
     return null;
 }
@@ -99,13 +101,20 @@ export function getChargeAmount(amount: PaymentAmount): ChargeAmount {
  * @param props -
  * @returns PayloadJSON
  */
-export function getPayloadJSON(props, amount: PaymentAmount): PayloadJSON {
+export function getPayloadJSON(props, amount?: PaymentAmount): PayloadJSON {
     const { addressDetails, cancelUrl, checkoutMode, deliverySpecifications, returnUrl, merchantMetadata, chargePermissionType, recurringMetadata } =
         props;
 
     const storeId = props.configuration?.storeId;
     const isPayNow = checkoutMode === 'ProcessOrder';
-    const finalAmount = isPayNow ? getChargeAmount(amount) : null;
+    let finalAmount: ChargeAmount | null = null;
+
+    if (isPayNow) {
+        if (!amount) {
+            throw new AdyenCheckoutError('IMPLEMENTATION_ERROR', "AmazonPay: 'amount' is required when checkoutMode is 'ProcessOrder'");
+        }
+        finalAmount = getChargeAmount(amount);
+    }
 
     return {
         storeId,
@@ -115,7 +124,7 @@ export function getPayloadJSON(props, amount: PaymentAmount): PayloadJSON {
             ...(cancelUrl && { checkoutCancelUrl: cancelUrl }),
             ...(isPayNow && { checkoutMode })
         },
-        ...(isPayNow && {
+        ...(finalAmount && {
             paymentDetails: {
                 chargeAmount: finalAmount,
                 paymentIntent: 'Confirm',
