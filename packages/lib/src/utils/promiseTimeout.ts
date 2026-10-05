@@ -6,7 +6,7 @@
  * @param timeOutObject - the object that the promiseTimeout will reject with if the passed promise doesn't settle in time
  */
 const promiseTimeout = <T>(ms: number, promise: Promise<T>, timeOutObject: object): { promise: Promise<T>; cancel: () => void } => {
-    let timer: NodeJS.Timeout | null;
+    let timer: NodeJS.Timeout;
 
     const promiseTimer: Promise<T> = new Promise((resolve, reject): void => {
         // Create a timeout to reject promise if not resolved

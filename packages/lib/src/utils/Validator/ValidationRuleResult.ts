@@ -6,11 +6,11 @@ import Language from '../../language';
  */
 export class ValidationRuleResult {
     private readonly shouldValidate: boolean;
-    public isValid: boolean;
+    public isValid: boolean | null;
     public errorMessage: string | ErrorMessageObject | undefined;
     public errorI18n: string;
 
-    constructor(rule: ValidatorRule, value: string, mode: ValidatorMode, context: FieldContext, i18n: Language) {
+    constructor(rule: ValidatorRule, value: string, mode: ValidatorMode, context: FieldContext | undefined, i18n: Language) {
         this.shouldValidate = rule.modes.includes(mode);
         this.isValid = rule.validate(value, context);
         this.errorMessage = rule.errorMessage;
