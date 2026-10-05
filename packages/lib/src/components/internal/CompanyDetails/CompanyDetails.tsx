@@ -49,7 +49,7 @@ export default function CompanyDetails(props: Readonly<CompanyDetailsProps>) {
         (mode: HandleChangeForModeType): FocusEventHandler<HTMLInputElement> =>
         (e): void => {
             const { name } = e.target as HTMLInputElement;
-            const key = name.split(`${namePrefix}.`).pop();
+            const key = namePrefix ? name.split(`${namePrefix}.`).pop() : name;
 
             if (!key) return;
             handleChangeFor(key, mode)(e);
@@ -59,7 +59,7 @@ export default function CompanyDetails(props: Readonly<CompanyDetailsProps>) {
         (mode: HandleChangeForModeType): InputEventHandler<HTMLInputElement> =>
         (e): void => {
             const { name } = e.target as HTMLInputElement;
-            const key = name.split(`${namePrefix}.`).pop();
+            const key = namePrefix ? name.split(`${namePrefix}.`).pop() : name;
 
             if (!key) return;
             handleChangeFor(key, mode)(e);

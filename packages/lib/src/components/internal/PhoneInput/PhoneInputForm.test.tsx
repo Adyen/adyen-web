@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { fireEvent, render, screen } from '@testing-library/preact';
+import { fireEvent, render, screen, waitFor } from '@testing-library/preact';
 import { CoreProvider } from '../../../core/Context/CoreProvider';
 import userEvent from '@testing-library/user-event';
 import PhoneInputForm from './PhoneInputForm';
@@ -40,6 +40,30 @@ describe('PhoneInput', () => {
         fireEvent.blur(phoneNumberEle);
         // @ts-ignore TODO: Fix jest types
         expect(await screen.findByText(/invalid mobile number/i)).toBeInTheDocument();
+    });
+
+    test('should not show an error message before the shopper interacts with the field', async () => {
+        renderPhoneInput();
+        const phoneNumberEle = await screen.findByRole('textbox');
+
+        expect(phoneNumberEle).not.toHaveAttribute('aria-invalid', 'true');
+        expect(screen.queryByText(/invalid mobile number/i)).not.toBeInTheDocument();
+    });
+
+    test('should clear the error message once the input becomes valid', async () => {
+        const user = userEvent.setup({ delay: 100 });
+        renderPhoneInput();
+        const phoneNumberEle = await screen.findByRole('textbox');
+
+        await user.type(phoneNumberEle, '1');
+        fireEvent.blur(phoneNumberEle);
+        expect(await screen.findByText(/invalid mobile number/i)).toBeInTheDocument();
+
+        await user.type(phoneNumberEle, '23456');
+        fireEvent.blur(phoneNumberEle);
+        await waitFor(() => {
+            expect(screen.queryByText(/invalid mobile number/i)).not.toBeInTheDocument();
+        });
     });
 
     test('should show a success icon for the valid input', async () => {

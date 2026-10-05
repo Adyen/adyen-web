@@ -57,7 +57,7 @@ export default function PersonalDetails(props: Readonly<PersonalDetailsProps>) {
         (mode: HandleChangeForModeType): GenericEventHandler<EventTarget> =>
         (e: Event): void => {
             const { name } = e.target as HTMLInputElement;
-            const key = name.split(`${namePrefix}.`).pop();
+            const key = namePrefix ? name.split(`${namePrefix}.`).pop() : name;
 
             if (!key) return;
             handleChangeFor(key, mode)(e);
