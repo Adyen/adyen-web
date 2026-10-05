@@ -640,7 +640,7 @@ describe('UIElement', () => {
             const [error, elementRef] = onErrorMock.mock.calls[0];
             expect(error).toBeInstanceOf(AdyenCheckoutError);
             expect(error.name).toBe('IMPLEMENTATION_ERROR');
-            expect(error.message).toContain('It can not perform /payments call');
+            expect(error.message).toContain('Cannot perform /payments call');
             expect(elementRef).toBe(element);
 
             expect(setStatusMock.mock.calls).toEqual([['loading'], ['ready']]);
@@ -931,7 +931,7 @@ describe('UIElement', () => {
             const [error, elementRef] = onErrorMock.mock.calls[0];
             expect(error).toBeInstanceOf(AdyenCheckoutError);
             expect(error.name).toBe('IMPLEMENTATION_ERROR');
-            expect(error.message).toContain('It can not perform /payments/details call');
+            expect(error.message).toContain('Cannot perform /payments/details call');
             expect(elementRef).toBe(element);
 
             expect(onPaymentFailedMock).not.toHaveBeenCalled();
