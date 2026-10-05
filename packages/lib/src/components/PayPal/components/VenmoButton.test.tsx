@@ -4,7 +4,7 @@ import { mock } from 'jest-mock-extended';
 import { VenmoButton } from './VenmoButton';
 import { AmountProvider, AmountProviderRef } from '../../../core/Context/AmountProvider';
 import type { PayPalService } from '../services/PayPalService';
-import type { PayPalEligiblePaymentMethods, PayPalSdkInstance } from '../paypal-js-types';
+import type { PayPalEligiblePaymentMethods, PayPalPresentationModeOptions, PayPalSdkInstance } from '../paypal-js-types';
 import type { PaymentAmount } from '../../../types';
 
 const getWebComponent = () => screen.getByTestId('venmo-button');
@@ -15,8 +15,9 @@ const createSessionMock = () => ({ start: jest.fn().mockResolvedValue(undefined)
 const setup = ({
     isEligible = true,
     amount = { value: 1000, currency: 'USD' },
-    environment
-}: { isEligible?: boolean; amount?: PaymentAmount; environment?: string } = {}) => {
+    environment,
+    presentationModeOptions
+}: { isEligible?: boolean; amount?: PaymentAmount; environment?: string; presentationModeOptions?: PayPalPresentationModeOptions } = {}) => {
     const oneTimeSession = createSessionMock();
     const saveSession = createSessionMock();
 
@@ -42,7 +43,8 @@ const setup = ({
         onCancel: jest.fn(),
         onError: jest.fn(),
         onSubmit: jest.fn().mockResolvedValue('order-1'),
-        environment
+        environment,
+        presentationModeOptions
     };
 
     const providerRef = createRef<AmountProviderRef>();
@@ -87,6 +89,31 @@ describe('VenmoButton', () => {
 
         expect(sdkInstance.createVenmoSavePaymentSession).toHaveBeenCalled();
         await waitFor(() => expect(saveSession.start).toHaveBeenCalled());
+    });
+
+    describe('presentation mode', () => {
+        test.each(['redirect', 'direct-app-switch', 'payment-handler'] as const)(
+            'should fall back to the auto mode when the %s mode is passed',
+            async presentationMode => {
+                const { oneTimeSession } = setup({ presentationModeOptions: { presentationMode } });
+
+                await waitFor(() => expect(getWebComponent()).toBeInTheDocument());
+                fireEvent.click(getWebComponent());
+
+                await waitFor(() => expect(oneTimeSession.start).toHaveBeenCalled());
+                expect(oneTimeSession.start).toHaveBeenCalledWith(expect.objectContaining({ presentationMode: 'auto' }), expect.anything());
+            }
+        );
+
+        test('should use the passed presentation mode when it is supported', async () => {
+            const { oneTimeSession } = setup({ presentationModeOptions: { presentationMode: 'popup' } });
+
+            await waitFor(() => expect(getWebComponent()).toBeInTheDocument());
+            fireEvent.click(getWebComponent());
+
+            await waitFor(() => expect(oneTimeSession.start).toHaveBeenCalled());
+            expect(oneTimeSession.start).toHaveBeenCalledWith(expect.objectContaining({ presentationMode: 'popup' }), expect.anything());
+        });
     });
 
     describe('sandbox support', () => {
