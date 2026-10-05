@@ -1,5 +1,5 @@
-import { ImageOptions } from '../core/Context/Resources';
-import { UseImageHookType } from '../core/Context/useImage';
+import type { ImageOptions } from '../core/Context/Resources';
+import type { UseImageHookType } from '../core/Context/useImage';
 
 /**
  * USAGE:
@@ -8,7 +8,7 @@ import { UseImageHookType } from '../core/Context/useImage';
  */
 
 const getIssuerImageUrl =
-    (options: object, type: string, getImage: UseImageHookType) =>
+    (options: ImageOptions, type: string, getImage: UseImageHookType) =>
     (issuer: string | undefined): string | undefined => {
         if (!issuer) return undefined;
 

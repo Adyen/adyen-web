@@ -27,7 +27,7 @@ class IssuerListContainer<
         const getImage = (props: ImageOptions) => this.resources.getImage(props);
 
         if (this.props.showImage) {
-            const getIssuerIcon = getIssuerImageUrl({ loadingContext: this.props.loadingContext }, this.constructor['type'], getImage);
+            const getIssuerIcon = getIssuerImageUrl({}, this.constructor['type'], getImage);
 
             this.props.issuers = this.props.issuers.map(item => ({
                 ...item,

@@ -6,7 +6,7 @@ describe('Get issuer image', () => {
         const issuer = '123';
         const type = 'ideal';
         const loadingContext = 'http://adyen.com/';
-        const options = { loadingContext };
+        const options = {};
 
         const getImage = props => new Resources(loadingContext).getImage(props);
 
