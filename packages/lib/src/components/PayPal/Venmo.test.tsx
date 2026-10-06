@@ -88,6 +88,17 @@ describe('Venmo', () => {
         );
     });
 
+    test('should only accept the presentation modes supported by Venmo', () => {
+        // Fails type-check if a mode is added to or removed from the Venmo presentation modes
+        const supportedModes: Record<NonNullable<VenmoConfiguration['presentationModeOptions']>['presentationMode'], true> = {
+            auto: true,
+            popup: true,
+            modal: true
+        };
+
+        expect(Object.keys(supportedModes)).toEqual(['auto', 'popup', 'modal']);
+    });
+
     test('should pass the environment down to the Venmo component', () => {
         const element = createElement({ environment: 'live' });
 

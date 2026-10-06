@@ -372,9 +372,16 @@ export type PayPalCreditConfiguration = Omit<BasePayPalConfiguration, 'onCreateP
 
 export type VenmoConfiguration = Omit<
     BasePayPalConfiguration,
-    'isExpress' | 'expressPage' | 'onShippingAddressChange' | 'onShippingOptionsChange' | 'onCreatePayPalMessages'
+    'isExpress' | 'expressPage' | 'onShippingAddressChange' | 'onShippingOptionsChange' | 'onCreatePayPalMessages' | 'presentationModeOptions'
 > & {
     style?: PayPalVenmoButtonStyle;
+    /**
+     * Configuration for how the payment UI is presented. Venmo does not support the 'redirect', 'direct-app-switch' and 'payment-handler' modes.
+     *
+     * @see {@link https://docs.paypal.ai/reference/sdk/js/v6/reference#paymentsession-start-options-orderpromise}
+     * @default  presentationMode: 'auto'
+     */
+    presentationModeOptions?: Exclude<PayPalPresentationModeOptions, { presentationMode: 'redirect' | 'direct-app-switch' | 'payment-handler' }>;
 };
 
 /**
