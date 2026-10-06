@@ -109,7 +109,7 @@ export class BasePayPalElement<TProps extends BasePayPalConfiguration = BasePayP
 
         this.refreshPayPalService(previousServiceConfig);
 
-        return this.unmount().mount(this._node);
+        return this.unmount().mount(this.mountedNode);
     }
 
     /**
@@ -366,7 +366,7 @@ export class BasePayPalElement<TProps extends BasePayPalConfiguration = BasePayP
             this.reject = reject;
 
             this.makePaymentsCall()
-                .then(sanitizeResponse)
+                ?.then(sanitizeResponse)
                 .then(verifyPaymentDidNotFail)
                 .then(this.handleResponse)
                 .catch((e: PaymentResponseData | Error) => {
