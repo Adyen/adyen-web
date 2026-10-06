@@ -10,8 +10,7 @@ import { PayPalPaylaterAmountUpdateDemo } from './PayPalPaylaterAmountUpdateDemo
 type Story = StoryObj<PaymentMethodStoryProps<PayPalPayLaterConfiguration>>;
 
 const meta: Meta = {
-    title: 'Components/Wallets/Paypal/V6',
-    tags: ['no-automated-visual-test']
+    title: 'Components/Wallets/Paypal/V6'
 };
 export default meta;
 
@@ -45,6 +44,7 @@ export const PayPalPaylater: Story = {
  * do not apply here.
  */
 export const PayPalPaylaterAmountUpdate: Story = {
+    tags: ['no-automated-visual-test'],
     render: ({ countryCode, shopperLocale }) => <PayPalPaylaterAmountUpdateDemo countryCode={countryCode} shopperLocale={shopperLocale} />,
     args: {
         countryCode: 'US'
