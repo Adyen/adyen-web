@@ -116,7 +116,7 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
 
         this.refreshPayPalService(previousServiceConfig);
 
-        return this.unmount().mount(this._node);
+        return this.unmount().mount(this.mountedNode);
     }
 
     /**
