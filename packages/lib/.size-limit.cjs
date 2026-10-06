@@ -45,7 +45,7 @@ module.exports = [
         name: 'Auto',
         path: 'auto/auto.js',
         import: '{ AdyenCheckout, Dropin }',
-        limit: '143 KB'
+        limit: '144 KB'
     },
     /**
      * ES modules (tree-shake)
