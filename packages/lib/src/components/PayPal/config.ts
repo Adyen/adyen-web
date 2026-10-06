@@ -75,11 +75,7 @@ const SUPPORTED_EXPRESS_PRESENTATION_MODE_OPTIONS: Array<PayPalPresentationModeO
     'payment-handler'
 ] as const;
 
-const UNSUPPORTED_VENMO_PRESENTATION_MODE_OPTIONS: Array<PayPalPresentationModeOptions['presentationMode']> = [
-    'redirect',
-    'direct-app-switch',
-    'payment-handler'
-];
+const SUPPORTED_VENMO_PRESENTATION_MODE_OPTIONS: Array<PayPalPresentationModeOptions['presentationMode']> = ['auto', 'popup', 'modal'] as const;
 
 export {
     INTEGRATION_DATE,
@@ -93,5 +89,5 @@ export {
     PAYPAL_SDK_URL_SANDBOX,
     DEFAULT_PAYMENT_SESSION_OPTIONS,
     SUPPORTED_EXPRESS_PRESENTATION_MODE_OPTIONS,
-    UNSUPPORTED_VENMO_PRESENTATION_MODE_OPTIONS
+    SUPPORTED_VENMO_PRESENTATION_MODE_OPTIONS
 };

@@ -7,7 +7,7 @@ import { usePayPalOneTimeSession } from '../hooks/usePayPalOneTimeSession';
 import { usePayPalButtonEligibility } from '../hooks/usePayPalButtonEligibility';
 import { usePayPalSaveSession } from '../hooks/usePayPalSaveSession';
 import { useAmount } from '../../../core/Context/AmountProvider';
-import { DEFAULT_PAYMENT_SESSION_OPTIONS, UNSUPPORTED_VENMO_PRESENTATION_MODE_OPTIONS } from '../config';
+import { DEFAULT_PAYMENT_SESSION_OPTIONS, SUPPORTED_VENMO_PRESENTATION_MODE_OPTIONS } from '../config';
 import { isLiveEnvironment } from '../../../utils/is-live-environment';
 import type { PayPalPresentationModeOptions, PayPalVenmoSavePaymentSessionOptions } from '../paypal-js-types';
 
@@ -45,7 +45,7 @@ export const VenmoButton = ({
     // Venmo does not support the 'redirect', 'direct-app-switch' and 'payment-handler' modes. The Venmo component already omits them from its types,
     // so this fallback to 'auto' is only needed because the PayPal component passes its own presentation mode options to this button.
     const isSupportedPresentationMode =
-        presentationModeOptions && !UNSUPPORTED_VENMO_PRESENTATION_MODE_OPTIONS.includes(presentationModeOptions.presentationMode);
+        presentationModeOptions && SUPPORTED_VENMO_PRESENTATION_MODE_OPTIONS.includes(presentationModeOptions.presentationMode);
 
     const presentationModeOptionsWithSandboxSupport = useMemo<PayPalPresentationModeOptions>(
         () => ({
