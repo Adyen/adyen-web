@@ -11,6 +11,8 @@ import { createSdkData, CreateSdkDataParams } from '../../../utils/createSdkData
 import getComponentNameOfPaymentType from '../../components-name-map';
 import { PAYMENT_METHOD_BEHAVIOR } from '../../../core/config';
 
+const ROOT_NODE_NOT_FOUND = 'Component could not mount. Root node was not found.';
+
 /**
  * Verify if the first parameter is instance of Core.
  * We do not use 'instanceof' to avoid importing the Core class directly into this class.
@@ -30,7 +32,7 @@ abstract class BaseElement<P extends BaseElementProps, S extends BaseElementStat
     public state: S = {} as S;
     public _component: ComponentChild | undefined;
 
-    protected _node: HTMLElement = null;
+    protected _node: HTMLElement | null = null;
 
     protected static readonly defaultProps = {};
 
@@ -70,12 +72,23 @@ abstract class BaseElement<P extends BaseElementProps, S extends BaseElementStat
         return {} as PaymentData;
     }
 
-    protected submitAnalytics(_analyticsObj?: AbstractAnalyticsEvent) {
-        return null;
+    protected submitAnalytics(_analyticsObj?: AbstractAnalyticsEvent): void {
+        return;
     }
 
-    protected handleKeyDown(_e: TargetedKeyboardEvent<HTMLInputElement>) {
-        return null;
+    protected handleKeyDown(_e: TargetedKeyboardEvent<HTMLInputElement>): void {
+        return;
+    }
+
+    /**
+     * The node the element is currently mounted into.
+     * Throws the same error as `mount()` when the element has not been mounted yet.
+     */
+    protected get mountedNode(): HTMLElement {
+        if (!this._node) {
+            throw new Error(ROOT_NODE_NOT_FOUND);
+        }
+        return this._node;
     }
 
     protected setState(newState: S): void {
@@ -144,7 +157,7 @@ abstract class BaseElement<P extends BaseElementProps, S extends BaseElementStat
         const node = typeof domNode === 'string' ? document.querySelector<HTMLElement>(domNode) : domNode;
 
         if (!node) {
-            throw new Error('Component could not mount. Root node was not found.');
+            throw new Error(ROOT_NODE_NOT_FOUND);
         }
 
         if (this._node) {
@@ -173,17 +186,16 @@ abstract class BaseElement<P extends BaseElementProps, S extends BaseElementStat
         this.props = this.formatProps({ ...this.props, ...props });
         this.state = {} as S;
 
-        return this.unmount().mount(this._node); // for new mount fny
+        return this.unmount().mount(this.mountedNode); // for new mount fny
     }
 
     /**
      * Unmounts a payment element from the DOM
      */
     public unmount(): this {
-        // Remove listener
-        off(this._node, 'keydown', this.handleKeyDown);
-
         if (this._node) {
+            // Remove listener
+            off(this._node, 'keydown', this.handleKeyDown);
             render(null, this._node);
         }
 

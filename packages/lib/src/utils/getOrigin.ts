@@ -7,7 +7,7 @@
  *  @param url - URL
  *  @returns The origin of the url
  */
-export const getOrigin = (url: string): string => {
+export const getOrigin = (url: string): string | null => {
     const originRegex = /^(?:([A-Za-z]+):)?(\/{0,3})([0-9.\-A-Za-z]+)(?::(\d+))?(?:\/([^?#]*))?(?:\?([^#]*))?(?:#(.*))?$/;
     const matches = originRegex.exec(url);
 

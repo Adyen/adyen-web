@@ -58,11 +58,6 @@ const canonicalPath = fileName => (ts.sys.useCaseSensitiveFileNames ? fileName :
 // list may only shrink. A listed file with no errors left is reported as an obsolete entry.
 // ══════════════════════════════════════════════════════════
 const STRICT_NULL_CHECKS_BACKLOG = [
-    // ── Ticket 1: UIElement and BaseElement (25 errors) ──
-    'src/components/internal/BaseElement/BaseElement.ts',
-    'src/components/internal/UIElement/UIElement.tsx',
-    'src/components/internal/UIElement/utils.ts',
-
     // ── Ticket 2: Core, utils and hooks (89 errors) ──
     'src/core/Analytics/Analytics.ts',
     'src/core/Analytics/events/AnalyticsInfoEvent.ts',
@@ -80,18 +75,7 @@ const STRICT_NULL_CHECKS_BACKLOG = [
     'src/core/RiskModule/components/DeviceFingerprint/DeviceFingerprint.tsx',
     'src/core/RiskModule/components/DeviceFingerprint/GetDeviceFingerprint.tsx',
     'src/core/RiskModule/RiskModule.tsx',
-    'src/hooks/usePaymentStatusTimer/usePaymentStatusTimer.tsx',
-    'src/utils/browserInfo.ts',
     'src/utils/clipboard.ts',
-    'src/utils/createSdkData.ts',
-    'src/utils/get-issuer-image.ts',
-    'src/utils/getConsentUrl.ts',
-    'src/utils/getOrigin.ts',
-    'src/utils/promiseTimeout.ts',
-    'src/utils/Script.ts',
-    'src/utils/useAutoFocus.ts',
-    'src/utils/Validator/defaultRules.ts',
-    'src/utils/Validator/Validator.ts',
 
     // ── Ticket 3: SecuredFields and CSF (161 errors) ──
     'src/components/internal/SecuredFields/binLookup/extensions.ts',
@@ -128,7 +112,6 @@ const STRICT_NULL_CHECKS_BACKLOG = [
     'src/components/internal/Address/Specifications.ts',
     'src/components/internal/Address/utils.ts',
     'src/components/internal/Address/validate.formats.ts',
-    'src/components/internal/Address/validate.ts',
     'src/components/internal/CompanyDetails/CompanyDetails.tsx',
     'src/components/internal/CompanyDetails/validate.ts',
     'src/components/internal/FormFields/Field/Field.tsx',
@@ -144,7 +127,6 @@ const STRICT_NULL_CHECKS_BACKLOG = [
     'src/components/internal/PersonalDetails/validate.ts',
     'src/components/internal/PhoneInput/PhoneInputFields.tsx',
     'src/components/internal/PhoneInput/PhoneInputForm.tsx',
-    'src/components/internal/PhoneInput/validate.ts',
 
     // ── Ticket 5: Card, Card Input and Custom Card (100 errors) ──
     'src/components/Card/Card.tsx',
@@ -159,13 +141,11 @@ const STRICT_NULL_CHECKS_BACKLOG = [
     'src/components/Card/components/CardInput/handlers.ts',
     'src/components/Card/components/CardInput/useSRPanelForCardInputErrors.ts',
     'src/components/Card/components/CardInput/utils.ts',
-    'src/components/Card/components/CardInput/validate.ts',
     'src/components/Card/components/ClickToPayHolder.tsx',
     'src/components/Card/components/Fastlane/FastlaneSignup.tsx',
     'src/components/Card/components/Fastlane/InfoButton.tsx',
     'src/components/Card/components/Fastlane/InfoModal.tsx',
     'src/components/Card/components/Fastlane/USOnlyPhoneInput.tsx',
-    'src/components/Card/components/Fastlane/utils/validate-configuration.ts',
     'src/components/CustomCard/CustomCard.tsx',
     'src/components/CustomCard/CustomCardInput/CustomCardInput.tsx',
 
@@ -188,13 +168,6 @@ const STRICT_NULL_CHECKS_BACKLOG = [
     'src/components/GooglePay/GooglePay.tsx',
     'src/components/GooglePay/models/PaymentDataRequest.ts',
     'src/components/GooglePay/requests.ts',
-
-    // ── Ticket 9: Amazon Pay, PayPal and Cash App Pay (79 errors) ──
-    'src/components/CashAppPay/CashAppPay.tsx',
-    'src/components/CashAppPay/components/CashAppComponent.tsx',
-    'src/components/PayPal/utils/get-paypal-settings.ts',
-    'src/components/PayPalFastlane/Fastlane.tsx',
-    'src/components/PayPalFastlane/FastlaneSDK.ts',
 
     // ── Ticket 10: Click to Pay (98 errors) ──
     'src/components/ClickToPay/ClickToPay.tsx',
@@ -223,9 +196,6 @@ const STRICT_NULL_CHECKS_BACKLOG = [
     'src/components/Ach/Ach.tsx',
     'src/components/Ach/components/AchComponent.tsx',
     'src/components/Ach/components/useSRPanelForACHErrors.ts',
-    'src/components/Ach/components/validate.ts',
-    // src/components/AfterPay (1 errors)
-    'src/components/AfterPay/AfterPay.tsx',
     // src/components/ANCV (8 errors)
     'src/components/ANCV/ANCV.tsx',
     'src/components/ANCV/components/ANCVInput.tsx',
@@ -329,7 +299,6 @@ const STRICT_NULL_CHECKS_BACKLOG = [
     'src/components/Pix/Pix.tsx',
     // src/components/PreAuthorizedDebitCanada (11 errors)
     'src/components/PreAuthorizedDebitCanada/components/PreAuthorizedDebitCanadaComponent.tsx',
-    'src/components/PreAuthorizedDebitCanada/components/validate.ts',
     'src/components/PreAuthorizedDebitCanada/PreAuthorizedDebitCanada.tsx',
     // src/components/Redirect (7 errors)
     'src/components/Redirect/components/RedirectShopper/RedirectShopper.tsx',

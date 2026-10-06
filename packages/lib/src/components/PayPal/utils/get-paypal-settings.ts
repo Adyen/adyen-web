@@ -12,13 +12,13 @@ export const getPaypalSettings = ({
     debug,
     environment = '',
     locale,
-    configuration,
+    configuration = {},
     commit,
     vault,
     enableMessages
 }: Partial<PayPalComponentProps>): PaypalSettings => {
     const shopperLocale: PayPalV5SupportedLocale = getSupportedLocalePayPalV5(locale);
-    const currency: string = amount ? amount.currency : null;
+    const currency: string | null = amount ? amount.currency : null;
     const isTestEnvironment: boolean = environment.toLowerCase() === 'test';
     const clientId: string = isTestEnvironment ? ADYEN_CLIENTID_V5_TEST : ADYEN_CLIENTID_V5_LIVE;
     const { merchantId, intent } = configuration;

@@ -138,6 +138,25 @@ describe('CustomCard', () => {
             );
         });
 
+        test('should pass an undefined rootNode when the component has not been mounted', () => {
+            customCard.onBinLookup({ isReset: true });
+
+            expect(onBinLookupMock).toHaveBeenCalledWith(expect.objectContaining({ rootNode: undefined }));
+        });
+
+        test('should pass the node the component is mounted into as rootNode', () => {
+            const container = document.createElement('div');
+            document.body.appendChild(container);
+            customCard.mount(container);
+
+            customCard.onBinLookup({ isReset: true });
+
+            expect(onBinLookupMock).toHaveBeenCalledWith(expect.objectContaining({ rootNode: container }));
+
+            customCard.unmount();
+            container.remove();
+        });
+
         test('should not set dualBrandingType when isReset is true', () => {
             const binLookupData: Partial<CardBinLookupData> = {
                 supportedBrandsRaw: [createBrandObject('visa'), createBrandObject('cartebancaire')],

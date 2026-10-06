@@ -104,6 +104,17 @@ describe('createSdkData', () => {
         const decoded = decodeSdkData(result);
         expect(decoded.riskData).toBeUndefined();
     });
+
+    test('should not include riskData when clientData is an empty string', () => {
+        const result = createSdkData({
+            checkoutAttemptId: TEST_CHECKOUT_ATTEMPT_ID,
+            clientData: '',
+            paymentMethodBehavior: PAYMENT_METHOD_BEHAVIOR.NATIVE
+        });
+        const decoded = decodeSdkData(result);
+        expect(decoded).not.toHaveProperty('riskData');
+    });
+    
     test('should include paymentMethodConfiguration when it is provided', () => {
         const result = createSdkData({
             checkoutAttemptId: TEST_CHECKOUT_ATTEMPT_ID,

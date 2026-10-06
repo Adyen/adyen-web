@@ -78,7 +78,7 @@ export class CustomCard extends UIElement<CustomCardConfiguration> {
 
     onBinLookup(obj: CardBinLookupData) {
         const nuObj = { ...obj };
-        nuObj.rootNode = this._node;
+        nuObj.rootNode = this._node ?? undefined;
 
         if (!nuObj.isReset) {
             // Add brandImage urls, first checking if the merchant has configured their own one for the brand
@@ -145,7 +145,7 @@ export class CustomCard extends UIElement<CustomCardConfiguration> {
                 {...this.props}
                 {...this.state}
                 handleKeyDown={this.handleKeyDown}
-                rootNode={this._node}
+                rootNode={this._node ?? undefined}
                 onChange={this.setState}
                 onBinValue={this.onBinValue}
                 implementationType={'custom'}

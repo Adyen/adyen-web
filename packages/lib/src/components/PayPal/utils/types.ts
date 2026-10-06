@@ -4,7 +4,7 @@ import { SUPPORTED_LOCALES_PAYPAL_V5, SUPPORTED_LOCALES_PAYPAL_V6 } from '../con
 export interface PaypalSettings {
     'merchant-id'?: string;
     locale?: string;
-    'buyer-country': string;
+    'buyer-country'?: string;
     currency?: string;
     debug?: boolean;
     intent?: Intent;
