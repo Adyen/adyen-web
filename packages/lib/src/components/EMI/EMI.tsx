@@ -211,7 +211,7 @@ class EMI extends UIElement<EMIConfiguration> {
     }
 
     private trackDiscountBanner(emiSelection: EmiSelection): void {
-        if (!this.activeSupportedPaymentMethodElement || !emiSelection.plan.transactionAmounts.instantDiscountAmount) return;
+        if (!this.activeSupportedPaymentMethodElement || !emiSelection.plan.transactionAmounts.totalInstantDiscountAmount) return;
         const event = new AnalyticsInfoEvent({
             component: this.type,
             type: InfoEventType.displayed,

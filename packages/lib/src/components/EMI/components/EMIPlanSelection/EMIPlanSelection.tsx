@@ -6,7 +6,6 @@ import useImage from '../../../../core/Context/useImage';
 import getIssuerImageUrl from '../../../../utils/get-issuer-image';
 import { TxVariants } from '../../../tx-variants';
 import { getLocalisedPercentageFromBasisPoints } from '../../../../utils/percentage-util';
-import { selectInstantDiscount } from '../../utils';
 import { PLAN_TAGS } from '../../constants';
 import { UiTarget } from '../../../../core/Analytics/events/AnalyticsInfoEvent';
 import type { EmiIssuer, EmiPlan, EmiPlanTypeKey, EmiSelection, EmiSelectTarget } from '../../types';
@@ -82,19 +81,11 @@ export function EMIPlanSelection({ issuers, selection, onSelectionChange, labell
 
     // Every tagged plan type the provider offers, so the tag advertises what is available at that bank
     // instead of tracking the selection. See ADR-0004-emi-plans-data-transformation for that rule.
-    const getIssuerTags = (issuer: EmiIssuer): TagProps[] | undefined => toTags(issuer.plans.map(plan => plan.type));
+    const getIssuerTags = (issuer: EmiIssuer): TagProps[] | undefined => toTags(issuer.availablePlanTypes ?? []);
 
-    // The locale places the minus sign, the same way it places the currency symbol
-    const formatDiscount = ({ value, currency }: PaymentAmount): string => i18n.amount(-value, currency);
-
+    // Shown as available rather than subtracted, so the amount reads positive
     const getDiscountText = (discount?: PaymentAmount): string | undefined =>
-        discount ? i18n.get('emi.discountAvailable', { values: { discount: formatDiscount(discount) } }) : undefined;
-
-    const getPlanDiscountText = (plan: EmiPlan): string | undefined => getDiscountText(plan.transactionAmounts.instantDiscountAmount);
-
-    // The largest instant discount found anywhere among the provider's plans, provider-wide for the same
-    // reason its tags are. See ADR-0004-emi-plans-data-transformation.
-    const getIssuerDiscountText = (issuer: EmiIssuer): string | undefined => getDiscountText(selectInstantDiscount(issuer.plans));
+        discount ? i18n.get('emi.additionalDiscountAvailable', { values: { amount: i18n.amount(discount.value, discount.currency) } }) : undefined;
 
     const getIssuerIcon = getIssuerImageUrl({}, TxVariants.emi, getImage);
 
@@ -103,14 +94,14 @@ export function EMIPlanSelection({ issuers, selection, onSelectionChange, labell
         name: issuer.issuerName,
         icon: getIssuerIcon(issuer.issuerCode.toLowerCase()),
         tags: getIssuerTags(issuer),
-        secondaryText: getIssuerDiscountText(issuer)
+        secondaryText: getDiscountText(issuer.bestOffer)
     }));
 
     const planItems: SelectItem[] = selectedIssuer.plans.map(plan => ({
         id: getPlanId(selectedIssuer, plan),
         name: getPlanLabel(plan),
         tags: getPlanTags(plan),
-        secondaryText: getPlanDiscountText(plan)
+        secondaryText: getDiscountText(plan.transactionAmounts.totalInstantDiscountAmount)
     }));
 
     return (
