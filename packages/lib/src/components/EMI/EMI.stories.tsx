@@ -3,20 +3,13 @@ import { EMI } from '@adyen/adyen-web';
 import { MetaConfiguration, PaymentMethodStoryProps, StoryConfiguration } from '../../../storybook/types';
 import { ComponentContainer } from '../../../storybook/components/ComponentContainer';
 import { Checkout } from '../../../storybook/components/Checkout';
-import { emiPlansHandlers } from './stories/handlers';
-import { EMI_FIXTURE_CHECKOUT_AMOUNT } from './stories/mocks';
 import type { EMIConfiguration } from './types';
 
 type EMIStory = StoryConfiguration<EMIConfiguration>;
 
-/**
- * The `emi` entry of the payment methods response brings `supportedPaymentMethods` and the `emiToken`; the
- * component then fetches the plans itself, answered here by the MSW handler.
- */
 const meta: MetaConfiguration<EMIConfiguration> = {
     title: 'Components/EMI',
     tags: ['no-automated-visual-test'],
-    parameters: { msw: { handlers: emiPlansHandlers } },
     argTypes: {
         componentConfiguration: {
             control: 'object'
@@ -35,8 +28,7 @@ export const CardEmi: EMIStory = {
     args: {
         useSessions: false,
         countryCode: 'IN',
-        // The mocked lookup prices its plans for this amount, so the summary only adds up with it
-        amount: EMI_FIXTURE_CHECKOUT_AMOUNT.value,
+        amount: 15499900,
         componentConfiguration: {
             showPayButton: true,
             supportedPaymentMethodsConfiguration: {
@@ -70,7 +62,7 @@ export const CardEmiWithCustomButton: EMIStory = {
     args: {
         useSessions: false,
         countryCode: 'IN',
-        amount: EMI_FIXTURE_CHECKOUT_AMOUNT.value,
+        amount: 15499900,
         componentConfiguration: {
             showPayButton: false,
             supportedPaymentMethodsConfiguration: {

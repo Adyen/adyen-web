@@ -21,8 +21,7 @@ const processingAmounts: EmiProcessingAmounts = {
 };
 
 /**
- * Raw checkoutShopper `POST utility/v1/emi/plans` response, and the single fixture behind the Storybook handler
- * and the unit tests. Plans are in display order, ascending tenure, as the backend sorts them.
+ * Raw checkoutShopper `POST utility/v1/emi/plans` response, the fixture behind the unit tests. Plans are in display order, ascending tenure, as the backend sorts them.
  */
 export const emiPlansResponseMock: EmiPlansResponse = {
     issuers: [
