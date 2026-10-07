@@ -19,16 +19,3 @@ export const PLAN_TAGS: { type: EmiPlanTypeKey; translationKey: string; variant:
     { type: 'noCost', translationKey: 'emi.noCost', variant: TagVariant.SUCCESS },
     { type: 'lowCost', translationKey: 'emi.lowCost', variant: TagVariant.INFO }
 ];
-
-/** Only a tagged plan can carry an interest discount: the offer is what buys the interest down. */
-export const INTEREST_DISCOUNT_PLAN_TYPES: EmiPlanTypeKey[] = ['noCost', 'lowCost'];
-
-/**
- * Terms of the bank whose plan the shopper selected, keyed by `EmiIssuer.issuerCode`. An issuer that is
- * absent renders the terms copy unlinked.
- * TODO: drop this map once the plans lookup returns the terms URL per issuer.
- */
-export const ISSUER_TERMS_URLS: Record<string, string> = {
-    HDFC: 'https://www.hdfc.bank.in/easyemi/credit-card',
-    ICICI: 'https://www.icici.bank.in/personal-banking/cards/credit-card/emi-products/instant-emi/terms-and-condition'
-};

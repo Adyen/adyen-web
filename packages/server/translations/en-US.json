@@ -476,7 +476,7 @@
     "emi.discountApplied": "%{amount} discount offer applied for using %{provider}",
     "emi.noCost": "No cost",
     "emi.lowCost": "Low cost",
-    "emi.discountAvailable": "Additional %{discount} discount available",
+    "emi.additionalDiscountAvailable": "Additional %{amount} discount available",
     "emi.perAnnum": "p.a",
     "emi.cardDetailsInstructions": "Enter card details that are associated with a %{provider} card",
     "emi.cardDetails": "Card details",

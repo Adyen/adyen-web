@@ -1,8 +1,8 @@
-import { buildEmiPlanPayload, resolvePlanIssuers, selectDisplayOffer } from './utils';
+import { buildEmiPlanPayload, resolvePlanIssuers } from './utils';
 import { emiDebitIssuerMock, emiPlansEmptyResponseMock, emiPlansResponseMock } from './stories/mocks';
-import type { EmiIssuer, EmiOffer, EmiPlan, EmiPlansResponse } from './types';
+import type { EmiIssuer, EmiPlan, EmiPlansResponse } from './types';
 
-/** Merchants hand the response over untyped, so these shapes reach the SDK at runtime. */
+/** The response is parsed JSON, so these shapes can reach the SDK at runtime. */
 const asResponse = (plans: unknown): EmiPlansResponse => plans as EmiPlansResponse;
 
 describe('resolvePlanIssuers', () => {
@@ -46,29 +46,13 @@ describe('resolvePlanIssuers', () => {
 
         expect(issuers).toEqual([hdfc]);
     });
-});
 
-describe('selectDisplayOffer', () => {
-    const offer = (offerId: string, value: number): EmiOffer => ({ offerId, amount: { value, currency: 'INR' } });
+    /** The backend does not guarantee a non-empty `plans` list, and an issuer without plans has nothing to select. */
+    test('should drop an issuer that carries no plans', () => {
+        const [hdfc] = emiPlansResponseMock.issuers;
+        const issuers = resolvePlanIssuers(asResponse({ issuers: [{ ...hdfc, plans: [] }, { ...hdfc, plans: null }, hdfc] }));
 
-    test('should show the largest discount', () => {
-        expect(selectDisplayOffer([offer('small', 100000), offer('largest', 400000), offer('medium', 250000)])).toEqual(offer('largest', 400000));
-    });
-
-    test('should keep the first of two offers tied on amount', () => {
-        expect(selectDisplayOffer([offer('first', 400000), offer('second', 400000)])).toEqual(offer('first', 400000));
-    });
-
-    test('should show the only offer there is', () => {
-        expect(selectDisplayOffer([offer('only', 100000)])).toEqual(offer('only', 100000));
-    });
-
-    test('should show nothing when the plan carries no offer', () => {
-        expect(selectDisplayOffer([])).toBeUndefined();
-    });
-
-    test('should show nothing when the plan carries no offers field at all', () => {
-        expect(selectDisplayOffer()).toBeUndefined();
+        expect(issuers).toEqual([hdfc]);
     });
 });
 
@@ -87,7 +71,7 @@ describe('buildEmiPlanPayload', () => {
             fundingSource: 'credit',
             planType: 'NO_COST',
             interestRateBps: 1550,
-            appliedOfferIds: ['offer-hdfc-nocost']
+            appliedOfferIds: ['offer-hdfc-cashback', 'offer-hdfc-nocost']
         });
     });
 
@@ -140,16 +124,10 @@ describe('buildEmiPlanPayload', () => {
         expect(typeof payload.interestRateBps).toBe('number');
     });
 
-    test('should apply the largest offer of the plan, the one the shopper was shown', () => {
-        const shownOffer = selectDisplayOffer(hdfcNoCost.offers);
-
-        expect(shownOffer?.amount.value).toBe(400000);
-        expect(buildEmiPlanPayload(hdfc, hdfcNoCost).appliedOfferIds).toEqual([shownOffer?.offerId]);
-    });
-
-    test('should apply a single offer even when the plan carries several', () => {
+    /** Every offer the plan lists was priced into it, so the SDK chooses none of them. */
+    test('should apply every offer of a plan carrying several, in the order the response lists them', () => {
         expect(hdfcNoCost.offers).toHaveLength(2);
-        expect(buildEmiPlanPayload(hdfc, hdfcNoCost).appliedOfferIds).toHaveLength(1);
+        expect(buildEmiPlanPayload(hdfc, hdfcNoCost).appliedOfferIds).toEqual(hdfcNoCost.offers?.map(offer => offer.offerId));
     });
 
     test('should apply the only offer of a plan carrying one', () => {

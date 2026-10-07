@@ -652,7 +652,7 @@ describe('EMI', () => {
                 fundingSource: 'credit',
                 planType: 'NO_COST',
                 interestRateBps: 1550,
-                appliedOfferIds: ['offer-hdfc-nocost']
+                appliedOfferIds: ['offer-hdfc-cashback', 'offer-hdfc-nocost']
             });
         });
     });
