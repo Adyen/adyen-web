@@ -13,37 +13,17 @@ const i18n = core.modules.i18n;
 
 const [hdfc, icici, , kotak] = emiPlansResponseMock.issuers;
 
-/**
- * One issuer offering a plan type at a tenure another of its plans also carries: the pair
- * (`type`, `tenureMonths`) tells them apart, neither field on its own does.
- */
 const issuerWithSimilarPlans: EmiIssuer = {
     ...hdfc,
-    plans: [
-        // noCost, 3 months
-        hdfc.plans[0],
-        // The tenure of the first plan, at the type of the last
-        { ...hdfc.plans[1], tenureMonths: 3 },
-        // standard, 6 months
-        hdfc.plans[1]
-    ]
+    plans: [hdfc.plans[0], { ...hdfc.plans[1], tenureMonths: 3 }, hdfc.plans[1]]
 };
 
-/**
- * One issuer advertising both tagged plan types. Its untagged plan comes first, so neither the
- * preselected plan nor the plan order can be mistaken for the source of the provider tags.
- */
 const issuerWithEveryPlanType: EmiIssuer = {
     ...hdfc,
     availablePlanTypes: ['standard', 'lowCost', 'noCost'],
     plans: [hdfc.plans[1], icici.plans[0], hdfc.plans[0]]
 };
 
-/**
- * The component is controlled: it renders the selection it is given and reports the one it is asked to
- * change to. EMIComponent owns the state, the discount banner and its announcement, so all of that is
- * covered in `EMIComponent.test.tsx`.
- */
 const renderPlanSelection = (issuers: EmiIssuer[], selection?: EmiSelection) => {
     const onSelectionChange = jest.fn();
 
@@ -79,7 +59,6 @@ const getOptionValues = (list: HTMLElement) =>
 const getProviderOptionValues = () => getOptionValues(screen.getAllByRole('listbox')[0]);
 const getPlanOptionValues = () => getOptionValues(screen.getAllByRole('listbox')[1]);
 
-// Anchored, so only the tag itself matches and not every row that contains one
 const TAG_LABEL = /^(No cost|Low cost)$/;
 
 const getTagsWithin = (element: HTMLElement) =>
@@ -100,7 +79,6 @@ describe('EMIPlanSelection', () => {
         expect(getPlanSelect()).toBeInTheDocument();
     });
 
-    // EMIComponent owns the heading and the copy the group is named and described by, and asserts those
     test('should keep both selects in a single group', () => {
         renderPlanSelection(emiPlansResponseMock.issuers);
 
@@ -182,7 +160,6 @@ describe('EMIPlanSelection', () => {
         expect(getPlanOptionValues()).toEqual(['plan:HDFC:credit:standard:6', 'plan:HDFC:credit:noCost:3']);
     });
 
-    // Both lists live in one document, where positions made every first row answer to `listItem-0`
     test('should give no two rows of the two lists the same id', () => {
         renderPlanSelection(emiPlansResponseMock.issuers);
 
@@ -226,11 +203,6 @@ describe('EMIPlanSelection', () => {
         expect(getPlanOptions()[0]).toContain('Additional ₹4,000.00 discount available');
     });
 
-    /**
-     * A provider row describes the provider and not the selection, so its tag and its discount hold
-     * still while the shopper moves through that bank's plans. Only the plan rows track the selection.
-     * See ADR-0004-emi-plans-data-transformation for the whole rule.
-     */
     describe('provider rows', () => {
         test('should keep the tag of the provider while a plan without one is selected', () => {
             renderPlanSelection([hdfc], { issuer: hdfc, plan: hdfc.plans[1] });
@@ -245,7 +217,6 @@ describe('EMIPlanSelection', () => {
             expect(getTagsWithin(getProviderOption(issuerWithEveryPlanType.issuerName))).toEqual(['No cost', 'Low cost']);
         });
 
-        /** The backend derives `availablePlanTypes` from the plans, so the SDK reads it rather than deriving it again. */
         test('should tag a provider with the plan types the response advertises, not those of its plans', () => {
             renderPlanSelection([{ ...hdfc, availablePlanTypes: ['lowCost'] }]);
 
