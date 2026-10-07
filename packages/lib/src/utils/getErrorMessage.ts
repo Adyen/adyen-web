@@ -2,7 +2,12 @@ import { ERROR_FIELD_INVALID, ERROR_FIELD_REQUIRED } from '../core/Errors/consta
 import Language from '../language';
 import { ValidationRuleResult } from './Validator/ValidationRuleResult';
 
-export const getErrorMessage = (i18n: Language, error?: ValidationRuleResult, label?: string, lowerCaseLabel: boolean = true): string | boolean => {
+export const getErrorMessage = (
+    i18n: Language,
+    error?: ValidationRuleResult | null,
+    label?: string,
+    lowerCaseLabel: boolean = true
+): string | boolean => {
     if (error?.errorMessage && typeof error.errorMessage === 'string') {
         const errorKey = error.errorMessage;
         const shouldBuildErrorMessage = [ERROR_FIELD_REQUIRED, ERROR_FIELD_INVALID].includes(errorKey);
