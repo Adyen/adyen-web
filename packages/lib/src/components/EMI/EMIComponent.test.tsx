@@ -32,7 +32,6 @@ interface RenderOptions {
 
 const ready = (issuers: EmiIssuer[]): EmiPlansOutcome => ({ status: 'ready', issuers });
 
-/** Most tests start from a settled lookup, the state a re-render of the element starts from. */
 const renderEmiComponent = ({ loadPlans = jest.fn(), initialOutcome }: RenderOptions = { initialOutcome: ready(emiPlansResponseMock.issuers) }) => {
     const onPlanSelect = jest.fn();
     const setMessages = jest.spyOn(core.modules.srPanel, 'setMessages');
@@ -65,7 +64,6 @@ const selectOption = async (label: string, option: RegExp) => {
 };
 
 describe('EMIComponent', () => {
-    // The SR panel is shared, so its spy is removed between tests rather than accumulating calls
     afterEach(() => {
         jest.restoreAllMocks();
     });
@@ -107,7 +105,6 @@ describe('EMIComponent', () => {
             expect(screen.getByLabelText('Plan')).toHaveTextContent('₹51,666.33 x 3 months');
         });
 
-        /** No target: the container tells a preselection apart from a shopper action by its absence. */
         test('should announce the default selection once, without waiting for an interaction', () => {
             const { onPlanSelect } = renderEmiComponent();
 
@@ -121,7 +118,6 @@ describe('EMIComponent', () => {
             await selectOption('Plan', /6 months/i);
 
             expect(onPlanSelect).toHaveBeenLastCalledWith({ issuer: hdfc, plan: hdfc.plans[1] }, UiTarget.emiPlan);
-            // The new plan totals a different amount over time, and carries no discount of either kind
             expect(screen.getByText('₹168,999.00')).toBeInTheDocument();
             expect(screen.queryByText('Instant discount')).toBeNull();
             expect(screen.queryByText('Interest discount')).toBeNull();
@@ -139,7 +135,6 @@ describe('EMIComponent', () => {
             expect(screen.getByText(`Enter card details that are associated with a ${icici.issuerName} card`)).toBeInTheDocument();
         });
 
-        /** Switching provider moves both selects, and is still the one action the shopper took. */
         test('should report a provider the shopper picks once, not as a provider and a plan change', async () => {
             const { onPlanSelect } = renderEmiComponent();
 
@@ -202,7 +197,6 @@ describe('EMIComponent', () => {
             expect(loadPlans).toHaveBeenCalledTimes(1);
         });
 
-        // The card form is not rendered while loading, so the only spinner on screen is the one of EMI
         test('should show only a spinner while the plans load, announcing it to screen readers', () => {
             const { setMessages } = renderEmiComponent({ loadPlans: () => deferred().promise });
 
@@ -226,7 +220,6 @@ describe('EMIComponent', () => {
             await waitFor(() => expect(setMessages).toHaveBeenCalledWith('Loaded'));
         });
 
-        /** No error screen yet: the shopper can pick another payment method in Drop-in. */
         test('should keep the spinner, and render no form, when the plans are unavailable', async () => {
             const { promise, resolve } = deferred();
             const { onPlanSelect } = renderEmiComponent({ loadPlans: () => promise });

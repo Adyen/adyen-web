@@ -22,7 +22,6 @@ interface EMIPlanSelectionProps {
     describedBy?: string;
 }
 
-// See ADR-0004-emi-plans-data-transformation for the select-only identity and uniqueness rules.
 const toItemId = (prefix: string, segments: (string | number)[]): string =>
     [prefix, ...segments].map(segment => encodeURIComponent(segment)).join(':');
 
@@ -40,7 +39,6 @@ export function EMIPlanSelection({ issuers, selection, onSelectionChange, labell
     const selectedIssuerId = getIssuerId(selectedIssuer);
     const selectedPlanId = getPlanId(selectedIssuer, selectedPlan);
 
-    // Switching provider activates that provider's first plan, so the two selects stay consistent
     const selectIssuer = (id: string) => {
         const issuer = issuers.find(candidate => getIssuerId(candidate) === id);
         if (!issuer) return;
@@ -60,7 +58,6 @@ export function EMIPlanSelection({ issuers, selection, onSelectionChange, labell
         const tenure = i18n.get('installmentOptionMonths', { values: { times: String(plan.tenureMonths) } });
         const label = `${i18n.amount(monthlyPayableAmount.value, monthlyPayableAmount.currency)} x ${tenure}`;
 
-        // A no-cost plan carries the bank rate for the summary, but the shopper is not charged it
         if (plan.type === 'noCost') return label;
 
         const interestRate = getLocalisedPercentageFromBasisPoints(plan.interestRateBps, i18n.locale);
@@ -79,11 +76,8 @@ export function EMIPlanSelection({ issuers, selection, onSelectionChange, labell
 
     const getPlanTags = (plan: EmiPlan): TagProps[] | undefined => toTags([plan.type]);
 
-    // Every tagged plan type the provider offers, so the tag advertises what is available at that bank
-    // instead of tracking the selection. See ADR-0004-emi-plans-data-transformation for that rule.
     const getIssuerTags = (issuer: EmiIssuer): TagProps[] | undefined => toTags(issuer.availablePlanTypes);
 
-    // Shown as available rather than subtracted, so the amount reads positive
     const getDiscountText = (discount?: PaymentAmount): string | undefined =>
         discount ? i18n.get('emi.additionalDiscountAvailable', { values: { amount: i18n.amount(discount.value, discount.currency) } }) : undefined;
 
@@ -118,7 +112,6 @@ export function EMIPlanSelection({ issuers, selection, onSelectionChange, labell
 
             <Field name={'emiPlan'} label={i18n.get('emi.plan')}>
                 <Select
-                    // Remounted per issuer, so the list never keeps a highlighted plan that is gone
                     key={selectedIssuerId}
                     name={'emiPlan'}
                     filterable={false}
