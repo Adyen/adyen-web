@@ -1,9 +1,7 @@
 import type { EmiIssuer, EmiPaymentMethodEntry, EmiPlansResponse, EmiProcessingAmounts } from '../types';
 
-/** Minor units, mirroring the design screenshots (₹1,54,999.00 checkout amount). */
 export const EMI_FIXTURE_CHECKOUT_AMOUNT = { value: 15499900, currency: 'INR' };
 
-/** The `emi` entry of the payment methods response: the backend owns both the supported payment methods and the token. */
 export const emiPaymentMethodMock: { type: 'emi'; name: string } & EmiPaymentMethodEntry = {
     type: 'emi',
     name: 'EMI',
@@ -11,7 +9,6 @@ export const emiPaymentMethodMock: { type: 'emi'; name: string } & EmiPaymentMet
     configuration: { emiToken: 'test-emi-token' }
 };
 
-/** The lookup quotes the same processing fee on every plan, and words the shopper-facing sentence itself. */
 const processingAmounts: EmiProcessingAmounts = {
     totalAmount: { value: 35282, currency: 'INR' },
     feeAmount: { value: 29900, currency: 'INR' },
@@ -20,9 +17,6 @@ const processingAmounts: EmiProcessingAmounts = {
     message: '299 + GST is Applicable'
 };
 
-/**
- * Raw checkoutShopper `POST utility/v1/emi/plans` response, the fixture behind the unit tests. Plans are in display order, ascending tenure, as the backend sorts them.
- */
 export const emiPlansResponseMock: EmiPlansResponse = {
     issuers: [
         {
@@ -46,7 +40,6 @@ export const emiPlansResponseMock: EmiPlansResponse = {
                         interestDiscountAmount: { value: 400000, currency: 'INR' }
                     },
                     processingAmounts,
-                    // Both offers were priced into the plan, so the payment request applies both
                     offers: [
                         { offerId: 'offer-hdfc-cashback', type: 'CASHBACK', description: 'Cashback' },
                         { offerId: 'offer-hdfc-nocost', type: 'DISCOUNT', description: 'No cost EMI' }
@@ -108,7 +101,6 @@ export const emiPlansResponseMock: EmiPlansResponse = {
             issuerCode: 'AXIS',
             fundingSource: 'credit',
             availablePlanTypes: ['standard'],
-            // No `termLink`, so the terms of this bank render unlinked
             plans: [
                 {
                     type: 'standard',
@@ -148,10 +140,8 @@ export const emiPlansResponseMock: EmiPlansResponse = {
     ]
 };
 
-/** The backend answers with an empty list when no plan is available for the amount. */
 export const emiPlansEmptyResponseMock: EmiPlansResponse = { issuers: [] };
 
-/** A debit issuer, for the funding source the payment request echoes. */
 export const emiDebitIssuerMock: EmiIssuer = {
     issuerName: 'Axis Bank',
     issuerCode: 'AXIS',

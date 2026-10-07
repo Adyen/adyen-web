@@ -18,9 +18,7 @@ import styles from './EMI.module.scss';
 
 interface EMIComponentProps {
     activeSupportedPaymentMethodElement: UIElement;
-    /** Memoized by the element, so calling it again returns the same lookup. */
     loadPlans(): Promise<EmiPlansOutcome>;
-    /** The outcome of an earlier render, so a re-render starts from it rather than from the spinner. */
     initialOutcome?: EmiPlansOutcome;
     onPlanSelect(selection: EmiSelection, target?: EmiSelectTarget): void;
     showPayButton?: boolean;
@@ -39,11 +37,6 @@ const getDefaultSelection = (issuers: EmiIssuer[]): EmiSelection | null => {
     return issuer ? { issuer, plan: issuer.plans[0] } : null;
 };
 
-/**
- * Loads the plans when it mounts, which is when the shopper opens the tile in Drop-in and when the standalone
- * component is mounted. Anything but plans to select keeps the spinner: there is no error screen yet, the same as
- * PayPal and AmazonPay, and the card form and pay button stay hidden so nothing can be paid without a plan.
- */
 export function EMIComponent({ loadPlans, initialOutcome, setComponentRef, ...formProps }: Readonly<EMIComponentProps>): h.JSX.Element {
     const [outcome, setOutcome] = useState<EmiPlansOutcome | undefined>(initialOutcome);
     const [status, setStatus] = useState<UIElementStatus>('ready');
@@ -72,7 +65,6 @@ export function EMIComponent({ loadPlans, initialOutcome, setComponentRef, ...fo
 
     const issuers = outcome?.status === 'ready' ? outcome.issuers : null;
 
-    // The spinner has no accessible name, and this component stays mounted across the transition
     useLoadingA11yReporter(!issuers);
 
     if (!issuers) {
@@ -95,7 +87,6 @@ function EMIPlansForm({
     status
 }: Readonly<EMIPlansFormProps>): h.JSX.Element {
     const { i18n } = useCoreContext();
-    // Preselected during the first render, so the very first paint already shows a complete plan
     const [selection, setSelection] = useState<EmiSelection | null>(() => getDefaultSelection(issuers));
 
     const titleId = useMemo(() => getUniqueId('adyen-checkout-emi-title'), []);
@@ -104,12 +95,10 @@ function EMIPlansForm({
 
     const selectTarget = useRef<EmiSelectTarget | undefined>(undefined);
 
-    // The container needs every selection for the payment request, including the preselected one
     useEffect(() => {
         if (selection) onPlanSelect(selection, selectTarget.current);
     }, [selection]);
 
-    // Names the select the shopper changed, and stays empty for the selection made on their behalf
     const handleSelectionChange = (nextSelection: EmiSelection, target: EmiSelectTarget): void => {
         selectTarget.current = target;
         setSelection(nextSelection);
@@ -123,10 +112,6 @@ function EMIPlansForm({
               })
             : null;
 
-    /**
-     * The banner below is mounted together with its own text, which no screen reader announces
-     * reliably, so the message goes through the SR panel that is always present instead.
-     */
     useA11yReporter(discountMessage);
 
     return (
@@ -170,7 +155,6 @@ function EMIPlansForm({
             )}
 
             <div className={styles.emiSupportedPaymentMethodForm}>{activeSupportedPaymentMethodElement.render()}</div>
-            {/* The plan summary already itemises every figure, so the button label omits the amount */}
             {showPayButton && payButton({ status, label: i18n.get('payButton') })}
         </div>
     );

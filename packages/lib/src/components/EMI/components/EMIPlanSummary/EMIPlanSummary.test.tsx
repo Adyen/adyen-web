@@ -16,7 +16,6 @@ const noCostPlanWithDiscount = hdfc.plans[0];
 const lowCostPlanWithDiscount = icici.plans[0];
 const standardPlanWithInterest = axis.plans[0];
 
-/** The fields are optional on the wire, so a fixture meant to carry one is asserted rather than defaulted */
 const requireAmount = (amount: PaymentAmount | undefined, field: string, plan: EmiPlan): PaymentAmount => {
     if (!amount) throw new Error(`The ${plan.type} fixture carries no ${field}`);
 
@@ -25,16 +24,11 @@ const requireAmount = (amount: PaymentAmount | undefined, field: string, plan: E
 
 const formatAmount = (amount: PaymentAmount) => i18n.amount(amount.value, amount.currency);
 
-// The locale places the minus sign, the same way it places the currency symbol
 const formatDiscount = (amount: PaymentAmount) => i18n.amount(-amount.value, amount.currency);
 
 const labels = () => screen.getAllByRole('term').map(term => term.textContent);
 const values = () => screen.getAllByRole('definition').map(definition => definition.textContent);
 
-/**
- * The checkout amount comes from context, the plan from props. EMIComponent owns the heading the group
- * is named after, so that naming is asserted in `EMIComponent.test.tsx`.
- */
 const renderPlanSummary = (plan: EmiPlan, { amount }: { amount?: PaymentAmount } = { amount: EMI_FIXTURE_CHECKOUT_AMOUNT }) =>
     render(
         <CoreProvider i18n={i18n} loadingContext={'test'} resources={core.modules.resources}>
@@ -44,7 +38,6 @@ const renderPlanSummary = (plan: EmiPlan, { amount }: { amount?: PaymentAmount }
         </CoreProvider>
     );
 
-/** Both plan types spend their offer on the interest the bank charges, so both summarise it the same way */
 const plansDiscountingInterest: [planType: string, plan: EmiPlan, tag: string][] = [
     ['no cost', noCostPlanWithDiscount, 'No cost'],
     ['low cost', lowCostPlanWithDiscount, 'Low cost']
@@ -63,7 +56,6 @@ describe('EMIPlanSummary', () => {
         expect(labels()).toEqual([
             'Item price',
             'Instant discount',
-            // The plan type is tagged inside the label of the row its offer discounts
             'Interest discountNo cost',
             'Amount reserved on card',
             'Interest charged by bank @15.5% p.a',
@@ -107,7 +99,6 @@ describe('EMIPlanSummary', () => {
         });
     });
 
-    /** The reserved amount is the backend's figure, so it no longer depends on the merchant's checkout amount */
     test('should reserve the authorisation amount of the response, whatever the checkout amount', () => {
         const amount = { value: 100, currency: 'INR' };
 
@@ -124,7 +115,6 @@ describe('EMIPlanSummary', () => {
             transactionAmounts: { ...standardPlanWithInterest.transactionAmounts, interestDiscountAmount }
         });
 
-        // A standard plan has no tag, so the label carries none
         expect(labels()).toContain('Interest discount');
         expect(values()).toContain(formatDiscount(interestDiscountAmount));
     });

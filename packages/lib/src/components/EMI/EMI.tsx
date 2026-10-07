@@ -29,7 +29,6 @@ class EMI extends UIElement<EMIConfiguration> {
     private readonly supportedPaymentMethodElements: Partial<EMISupportedPaymentMethodElements> = {};
     private activeSupportedPaymentMethod: EMISupportedPaymentMethod | null = null;
 
-    /** Set once the lookup settles, so a later render, such as re-opening the Drop-in tile, starts from it. */
     private plansOutcome?: EmiPlansOutcome;
     private plansPromise?: Promise<EmiPlansOutcome>;
 
@@ -39,10 +38,6 @@ class EMI extends UIElement<EMIConfiguration> {
         this.initSupportedPaymentMethods();
     }
 
-    /**
-     * Read from the response rather than from `this.props`: merchant props are spread over the response entry,
-     * so a merchant-passed `supportedPaymentMethods` would otherwise silently win over the backend's.
-     */
     private get paymentMethodEntry(): EmiPaymentMethodEntry | undefined {
         return this.getPaymentMethodFromPaymentMethodsResponse(EMI.type, this.props.paymentMethodId);
     }
@@ -54,7 +49,6 @@ class EMI extends UIElement<EMIConfiguration> {
         this.activeSupportedPaymentMethod = SUPPORTED_PAYMENT_METHODS[firstMethod.type];
 
         this.supportedPaymentMethodElements[EMISupportedPaymentMethod.CARD] = new CardElement(this.core, {
-            // The brands of the entry EMI matched, rather than those of whichever `scheme` the response happens to list first
             ...(firstMethod.brands && { brands: firstMethod.brands }),
             ...this.props.supportedPaymentMethodsConfiguration?.card,
             fundingSource: undefined,
@@ -79,7 +73,6 @@ class EMI extends UIElement<EMIConfiguration> {
         return this.activeSupportedPaymentMethod ? this.supportedPaymentMethodElements[this.activeSupportedPaymentMethod] : undefined;
     }
 
-    /** Configuration only. The plans load when the component renders, so a Drop-in shopper who never opens EMI fetches none. */
     public override isAvailable(): Promise<void> {
         if (!this.activeSupportedPaymentMethod) {
             return this.rejectAsUnavailable(ErrorEventCode.EMI_NO_SUPPORTED_PAYMENT_METHOD, 'EMI: No valid supported payment methods available');
@@ -104,14 +97,12 @@ class EMI extends UIElement<EMIConfiguration> {
         this.submitAnalytics(event);
     }
 
-    /** Memoized, and never rejects: a failure resolves as `unavailable`, and its analytics are sent exactly once. */
     private readonly loadPlans = (): Promise<EmiPlansOutcome> => {
         this.plansPromise ??= this.requestPlans().then(outcome => (this.plansOutcome = outcome));
         return this.plansPromise;
     };
 
     private async requestPlans(): Promise<EmiPlansOutcome> {
-        // Sent even without a token: the backend rejects it, and keeps a trace of the misconfiguration
         const emiToken = this.paymentMethodEntry?.configuration?.emiToken;
 
         try {
@@ -125,13 +116,11 @@ class EMI extends UIElement<EMIConfiguration> {
 
             return issuers.length ? { status: 'ready', issuers } : this.noPlans();
         } catch (error) {
-            // Fixed message only: the token and the backend's error body never reach analytics
             this.trackError(ErrorEventType.network, classifyEmiPlansError(error), 'EMI: Installment plans request failed');
             return { status: 'unavailable' };
         }
     }
 
-    /** The backend answered with an empty issuers list. */
     private noPlans(): EmiPlansOutcome {
         const event = new AnalyticsInfoEvent({
             component: this.type,
@@ -148,7 +137,6 @@ class EMI extends UIElement<EMIConfiguration> {
         return this.plansOutcome?.status === 'ready' ? this.plansOutcome.issuers : [];
     }
 
-    /** Without a selection the payment request would carry no `emiPlan`, so a custom pay button cannot submit before the plans load. */
     public get isValid(): boolean {
         return !!this.emiSelection && (this.activeSupportedPaymentMethodElement?.isValid ?? false);
     }

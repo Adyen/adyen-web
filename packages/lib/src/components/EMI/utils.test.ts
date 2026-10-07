@@ -23,30 +23,23 @@ describe('buildEmiPlanPayload', () => {
         });
     });
 
-    /** `/payments` rejects the casing the lookup returns: `noCost` is answered with a 400. */
     test('should send every plan type in upper snake case', () => {
         expect(buildEmiPlanPayload(hdfc, hdfcNoCost).planType).toBe('NO_COST');
         expect(buildEmiPlanPayload(hdfc, hdfcStandard).planType).toBe('STANDARD');
         expect(buildEmiPlanPayload(icici, iciciLowCost).planType).toBe('LOW_COST');
     });
 
-    /** A plan type the backend adds later has to reach `/payments` without an SDK release. */
     test('should send a plan type it does not know in the same casing', () => {
         const unknown = { ...hdfcNoCost, type: 'zeroCost' } as unknown as EmiPlan;
 
         expect(buildEmiPlanPayload(hdfc, unknown).planType).toBe('ZERO_COST');
     });
 
-    /** Echoed rather than hardcoded, so the payload and the plan the shopper picked cannot drift. */
     test('should echo the funding source of the issuer as the response spells it', () => {
         expect(buildEmiPlanPayload(hdfc, hdfcNoCost).fundingSource).toBe(hdfc.fundingSource);
         expect(buildEmiPlanPayload(emiDebitIssuerMock, emiDebitIssuerMock.plans[0]).fundingSource).toBe('debit');
     });
 
-    /**
-     * `issuerName` is the only issuer field the payment request defines, and the backend matches its value
-     * against the card BIN by string equality, so it carries the code rather than the row's display name.
-     */
     test('should send the issuer code under issuerName, not the name the provider row displays', () => {
         const payload = buildEmiPlanPayload(hdfc, hdfcNoCost);
 
@@ -61,7 +54,6 @@ describe('buildEmiPlanPayload', () => {
         );
     });
 
-    /** `tenureMonths` and `interestRateBps` are integers on the wire, and the backend rejects strings. */
     test('should send the tenure and the rate as JSON numbers', () => {
         const payload = JSON.parse(JSON.stringify(buildEmiPlanPayload(hdfc, hdfcNoCost)));
 
@@ -69,7 +61,6 @@ describe('buildEmiPlanPayload', () => {
         expect(typeof payload.interestRateBps).toBe('number');
     });
 
-    /** Every offer the plan lists was priced into it, so the SDK chooses none of them. */
     test('should apply every offer of a plan carrying several, in the order the response lists them', () => {
         expect(hdfcNoCost.offers).toHaveLength(2);
         expect(buildEmiPlanPayload(hdfc, hdfcNoCost).appliedOfferIds).toEqual(hdfcNoCost.offers?.map(offer => offer.offerId));
@@ -102,7 +93,6 @@ describe('buildEmiPlanPayload', () => {
         ]);
     });
 
-    /** Every plan of every issuer the lookup can return has to produce a payload the backend accepts. */
     test('should build a complete payload for every plan of the fixture', () => {
         const payloads = emiPlansResponseMock.issuers.flatMap((issuer: EmiIssuer) =>
             issuer.plans.map((plan: EmiPlan) => buildEmiPlanPayload(issuer, plan))
@@ -119,7 +109,6 @@ describe('buildEmiPlanPayload', () => {
 });
 
 describe('classifyEmiPlansError', () => {
-    /** `http()` keeps the error body checkoutShopper answered with in `cause`. */
     const apiError = (body: { status: number; errorCode: string; errorType: string; message: string; invalidFields?: { name: string }[] }) =>
         new AdyenCheckoutError('NETWORK_ERROR', body.message, { cause: body });
 

@@ -26,7 +26,6 @@ export const buildEmiPlanPayload = (issuer: EmiIssuer, plan: EmiPlan): EmiPlanPa
     };
 };
 
-/** The error body checkoutShopper answers with. `invalidFields` is present on validation errors only. */
 interface AdyenApiError {
     errorCode: string;
     errorType: string;
@@ -35,13 +34,11 @@ interface AdyenApiError {
     invalidFields?: { name?: string }[];
 }
 
-/** Mirrors the guard `core/Services/http.ts` keeps private, which is the only way an API error reaches `cause`. */
 const isAdyenApiError = (value: unknown): value is AdyenApiError => {
     const error = value as Partial<AdyenApiError> | null | undefined;
     return Boolean(error?.errorCode && error.errorType && error.message && error.status);
 };
 
-/** A missing, malformed or undecodable `emiToken` is a validation error that names the token field. */
 const isEmiTokenValidationError = ({ errorType, message, invalidFields }: AdyenApiError): boolean =>
     errorType === 'validation' &&
     ((Array.isArray(invalidFields) && invalidFields.some(field => field?.name === EMI_TOKEN_FIELD)) || message.includes(EMI_TOKEN_FIELD));

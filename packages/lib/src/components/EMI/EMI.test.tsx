@@ -40,7 +40,6 @@ const schemePaymentMethod = {
 };
 const upiPaymentMethod = { type: 'upi', name: 'UPI' };
 
-/** The `emi` entry of the payment methods response is what owns the supported payment methods and the token. */
 function createCoreWithEmi(hasSupportedScheme = true, entry: EmiPaymentMethodEntry = {}) {
     const emiEntry = {
         ...emiPaymentMethodMock,
@@ -66,7 +65,6 @@ const createEmi = (props: Partial<EMIConfiguration> = {}, hasSupportedScheme = t
     };
 };
 
-/** The several `scheme` entries a `splitCardFundingSources` merchant receives, each with its own funding source and brands. */
 const splitFundingSourceSchemes: RawPaymentMethod[] = [
     {
         type: 'scheme',
@@ -84,31 +82,26 @@ const splitFundingSourceSchemes: RawPaymentMethod[] = [
 
 function createCoreWithSplitSchemes(supportedPaymentMethods: SupportedPaymentMethod[]) {
     const paymentMethods = {
-        // `supportedPaymentMethods` is EMI's own field on the response entry, which `RawPaymentMethod` does not declare
         paymentMethods: [{ ...emiPaymentMethodMock, supportedPaymentMethods } as RawPaymentMethod, ...splitFundingSourceSchemes]
     };
 
     return setupCoreMock({ paymentMethods: new PaymentMethods(paymentMethods) });
 }
 
-/** The Card child, for the tests that need one to exist. */
 const cardOf = (emi: EMI): CardElement => {
     const { card } = emi;
     if (!card) throw new Error('EMI created no Card child');
     return card;
 };
 
-/** Renders the element, then waits for the plans it fetched on mount and for the plan preselected from them. */
 const renderWithPlans = async (emi: EMI) => {
     const view = render(emi.render());
     await screen.findByLabelText('Provider');
-    // The preselected plan reaches the element from an effect, which runs only after the plans have been painted
     await waitFor(() => expect(emi.formatData()).toHaveProperty('emiPlan'));
 
     return view;
 };
 
-/** The error body checkoutShopper answers a rejected request with, as `http()` keeps it in `cause`. */
 const apiError = (body: { status: number; errorCode: string; errorType: string; message: string; invalidFields?: { name: string }[] }) =>
     new AdyenCheckoutError('NETWORK_ERROR', body.message, { cause: body });
 
@@ -152,7 +145,6 @@ describe('EMI', () => {
             });
         });
 
-        /** The plan is preselected once the plans have loaded, so an unrendered component has no selection yet. */
         test('should not include emiPlan while no plan has been selected', () => {
             const { emi } = createEmi();
 
@@ -173,7 +165,6 @@ describe('EMI', () => {
             expect(emi.isValid).toBe(false);
         });
 
-        /** A custom pay button can submit at any time, and the payment request needs an `emiPlan`. */
         test('should return false without a selected plan, even when the card is valid', () => {
             const { emi } = createEmi();
             jest.spyOn(cardOf(emi), 'isValid', 'get').mockReturnValue(true);
@@ -246,7 +237,6 @@ describe('EMI', () => {
             expect(emi.isValid).toBe(false);
         });
 
-        /** UPI is the rail the response gains next, and a version that renders none of it must drop the tile whole. */
         test('should offer nothing at all when every rail of the response is one it does not render', async () => {
             const { emi } = createEmi({}, true, {
                 supportedPaymentMethods: [upiPaymentMethod, { type: 'unsupported_rail' }]
@@ -301,10 +291,6 @@ describe('EMI', () => {
         });
     });
 
-    /**
-     * Merchant props are spread over the response entry, so a `supportedPaymentMethods` passed as configuration
-     * would win if the component read it from its props. The backend owns the field.
-     */
     describe('backend-owned fields', () => {
         test('should ignore supportedPaymentMethods passed as configuration when the entry lists none', async () => {
             const { emi } = createEmi(
@@ -370,11 +356,9 @@ describe('EMI', () => {
             expect(card).toBeDefined();
             expect(card).toBeInstanceOf(CardElement);
 
-            // Forced overrides set by EMI
             expect(card?.props._disableClickToPay).toBe(true);
             expect(card?.props.showPayButton).toBe(false);
 
-            // User-provided config passed through
             expect(card?.props.hasHolderName).toBe(false);
             expect(card?.props.onBinLookup).toBe(onBinLookupMock);
         });
@@ -406,11 +390,6 @@ describe('EMI', () => {
         });
     });
 
-    /**
-     * The child Card is created without a `type` or a `paymentMethodId`, so it resolves its entry of the response
-     * positionally, and would otherwise inherit the funding source of whichever `scheme` the backend listed first.
-     * EMI charges credit plans only, and `emiPlan.fundingSource` already carries that for the selected plan.
-     */
     describe('child card funding source', () => {
         test('should send no funding source, whichever scheme the response lists first', () => {
             const supportedPaymentMethods = [{ type: 'scheme', name: 'Cards', brands: ['mc', 'rupay', 'visa'] }];
@@ -426,7 +405,6 @@ describe('EMI', () => {
             const supportedPaymentMethods = [{ type: 'scheme', name: 'Cards' }];
             const emi = new EMI(createCoreWithSplitSchemes(supportedPaymentMethods), {
                 ...baseProps,
-                // `EMIConfiguration` excludes it, but a JavaScript integration can still pass it
                 supportedPaymentMethodsConfiguration: {
                     card: { fundingSource: 'debit' } as never
                 }
@@ -472,10 +450,6 @@ describe('EMI', () => {
             showValidationSpy.mockRestore();
         });
 
-        /**
-         * The plan summary already itemises the transaction amount, the discount and the interest,
-         * so repeating the amount on the button only invites the shopper to compare figures.
-         */
         test('native pay button omits the amount', async () => {
             const { emi } = createEmi({ amount: { value: 100000, currency: 'INR' } });
 
@@ -537,7 +511,6 @@ describe('EMI', () => {
             await expect(emi.isAvailable()).rejects.toThrow('EMI: No valid supported payment methods available');
         });
 
-        /** Availability does not know about plans: a shopper with nothing to select still sees the tile. */
         test('should resolve even when the backend has no plans to offer', async () => {
             mockedGetEmiPlans.mockResolvedValue(emiPlansEmptyResponseMock);
             const { emi } = createEmi();
@@ -569,7 +542,6 @@ describe('EMI', () => {
             });
         });
 
-        /** Drop-in renders the element again every time the shopper re-opens the tile. */
         test('should not request the plans again on a second render, and show them without a spinner', async () => {
             const { emi } = createEmi();
 
@@ -601,7 +573,6 @@ describe('EMI', () => {
             expect(errorEvents(sendAnalytics)).toHaveLength(1);
         });
 
-        /** The backend rejects the request and keeps a trace of the misconfiguration, so it is sent all the same. */
         test('should request the plans without a token when the entry carries none', async () => {
             mockedGetEmiPlans.mockRejectedValue(tokenValidationError());
             const { emi, sendAnalytics } = createEmi({}, true, { configuration: {} });
@@ -617,7 +588,6 @@ describe('EMI', () => {
             );
         });
 
-        // The card form is not rendered while loading, so the only spinner on screen is the one of EMI
         test('should show a spinner first, and the plans and the card form once they arrive', async () => {
             const { emi } = createEmi();
 
@@ -771,7 +741,6 @@ describe('EMI', () => {
             return emi;
         };
 
-        /** `emiPlan` is a sibling of `paymentMethod`, the position Card gives `installments`. */
         test('should place emiPlan next to paymentMethod, never inside it', async () => {
             const data = (await mountEmi()).formatData();
 
@@ -834,7 +803,6 @@ describe('EMI', () => {
             });
         });
 
-        /** The `data` getter is what both submission paths read, so the payload has to survive it. */
         test('should expose emiPlan on the data getter, alongside the wrapping it adds', async () => {
             const data: PaymentData & { emiPlan?: EmiPlanPayload } = (await mountEmi()).data;
 
@@ -1060,7 +1028,6 @@ describe('EMI', () => {
 
             test.each<[string, () => unknown, ErrorEventCode]>([
                 ['an invalid token', tokenValidationError, ErrorEventCode.EMI_PLANS_TOKEN_INVALID],
-                // Until the backend answers expiry with its own errorCode, an expired token is the same validation error
                 ['an expired token', tokenValidationError, ErrorEventCode.EMI_PLANS_TOKEN_INVALID],
                 [
                     'another API error',

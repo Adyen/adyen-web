@@ -19,10 +19,8 @@ interface SummaryRow {
     key: string;
     label: string;
     amount: PaymentAmount;
-    /** Names the plan type the discount comes with, alongside the label of the row it discounts. */
     tag?: TagProps;
     isNegative?: boolean;
-    /** The two figures the design emphasises: what the card is charged now, and what the plan costs in total. */
     isStrong?: boolean;
 }
 
@@ -35,7 +33,6 @@ export function EMIPlanSummary({ plan, labelledBy }: Readonly<EMIPlanSummaryProp
         plan.transactionAmounts;
     const planTag = PLAN_TAGS.find(({ type }) => type === plan.type);
 
-    // The locale places the minus sign, the same way it places the currency symbol
     const formatAmount = ({ value, currency }: PaymentAmount, isNegative = false): string => i18n.amount(isNegative ? -value : value, currency);
 
     const interestLabel = `${i18n.get('emi.interestChargedByBank', {
@@ -61,11 +58,6 @@ export function EMIPlanSummary({ plan, labelledBy }: Readonly<EMIPlanSummaryProp
         { key: 'totalOverTime', label: i18n.get('emi.totalAmountOverTime'), amount: totalPayableAmount, isStrong: true }
     ];
 
-    /**
-     * Every row but the item price is a figure the response carries, rendered as it arrived. The checkout
-     * amount is the merchant's, so `null` reaches here when none was configured, and a discount row is
-     * dropped for a plan whose response carries no such discount.
-     */
     const rows = candidateRows.filter((row): row is SummaryRow => row.amount != null);
 
     return (
