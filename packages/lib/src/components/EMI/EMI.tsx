@@ -3,7 +3,7 @@ import UIElement from '../internal/UIElement';
 import CardElement from '../Card';
 import { EMIComponent } from './EMIComponent';
 import { TxVariants } from '../tx-variants';
-import { buildEmiPlanPayload, classifyEmiPlansError, resolvePlanIssuers } from './utils';
+import { buildEmiPlanPayload, classifyEmiPlansError } from './utils';
 import { getEmiPlans } from './services/getEmiPlans';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { AnalyticsInfoEvent, InfoEventType, UiTarget } from '../../core/Analytics/events/AnalyticsInfoEvent';
@@ -121,7 +121,7 @@ class EMI extends UIElement<EMIConfiguration> {
                 loadingContext: this.props.loadingContext,
                 timeout: EMI_PLANS_TIMEOUT_MS
             });
-            const issuers = resolvePlanIssuers(response);
+            const { issuers } = response;
 
             return issuers.length ? { status: 'ready', issuers } : this.noPlans();
         } catch (error) {
@@ -131,7 +131,7 @@ class EMI extends UIElement<EMIConfiguration> {
         }
     }
 
-    /** The backend answered, and has no credit issuer with plans to offer. */
+    /** The backend answered with an empty issuers list. */
     private noPlans(): EmiPlansOutcome {
         const event = new AnalyticsInfoEvent({
             component: this.type,

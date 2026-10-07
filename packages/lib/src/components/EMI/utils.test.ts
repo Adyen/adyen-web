@@ -1,62 +1,8 @@
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { ErrorEventCode } from '../../core/Analytics/events/AnalyticsErrorEvent';
-import { buildEmiPlanPayload, classifyEmiPlansError, resolvePlanIssuers } from './utils';
-import { emiDebitIssuerMock, emiPlansEmptyResponseMock, emiPlansResponseMock } from './stories/mocks';
-import type { EmiIssuer, EmiPlan, EmiPlansResponse } from './types';
-
-/** The response is parsed JSON, so these shapes can reach the SDK at runtime. */
-const asResponse = (plans: unknown): EmiPlansResponse => plans as EmiPlansResponse;
-
-describe('resolvePlanIssuers', () => {
-    test('should return the issuers of a valid response', () => {
-        expect(resolvePlanIssuers(emiPlansResponseMock)).toEqual(emiPlansResponseMock.issuers);
-    });
-
-    test('should return the very same plan objects, not copies of them', () => {
-        expect(resolvePlanIssuers(emiPlansResponseMock)[0].plans[0]).toBe(emiPlansResponseMock.issuers[0].plans[0]);
-    });
-
-    test('should keep the backend order of the issuers and of their plans', () => {
-        const issuers = resolvePlanIssuers(emiPlansResponseMock);
-
-        expect(issuers.map(issuer => issuer.issuerCode)).toEqual(['HDFC', 'ICICI', 'AXIS', 'KOTAK']);
-        expect(issuers[0].plans.map(plan => plan.tenureMonths)).toEqual([3, 6]);
-    });
-
-    test('should return no issuer for a response holding none', () => {
-        expect(resolvePlanIssuers(emiPlansEmptyResponseMock)).toEqual([]);
-    });
-
-    test('should return no issuer when no plans are configured at all', () => {
-        expect(resolvePlanIssuers(undefined)).toEqual([]);
-    });
-
-    test('should return no issuer for a response that carries no issuers array', () => {
-        expect(resolvePlanIssuers(asResponse({}))).toEqual([]);
-        expect(resolvePlanIssuers(asResponse({ issuers: 'HDFC' }))).toEqual([]);
-        expect(resolvePlanIssuers(asResponse(JSON.stringify(emiPlansResponseMock)))).toEqual([]);
-    });
-
-    /**
-     * Credit card EMI is what this version renders: the copy, the plan summary and the card form all describe
-     * a credit card, so a debit issuer is a broken screen rather than an extra option, and a funding source
-     * added after this release is left out by construction.
-     */
-    test('should offer the credit issuers only', () => {
-        const [hdfc] = emiPlansResponseMock.issuers;
-        const issuers = resolvePlanIssuers(asResponse({ issuers: [emiDebitIssuerMock, hdfc] }));
-
-        expect(issuers).toEqual([hdfc]);
-    });
-
-    /** The backend does not guarantee a non-empty `plans` list, and an issuer without plans has nothing to select. */
-    test('should drop an issuer that carries no plans', () => {
-        const [hdfc] = emiPlansResponseMock.issuers;
-        const issuers = resolvePlanIssuers(asResponse({ issuers: [{ ...hdfc, plans: [] }, { ...hdfc, plans: null }, hdfc] }));
-
-        expect(issuers).toEqual([hdfc]);
-    });
-});
+import { buildEmiPlanPayload, classifyEmiPlansError } from './utils';
+import { emiDebitIssuerMock, emiPlansResponseMock } from './stories/mocks';
+import type { EmiIssuer, EmiPlan } from './types';
 
 describe('buildEmiPlanPayload', () => {
     const [hdfc, icici, axis, kotak] = emiPlansResponseMock.issuers;
@@ -91,10 +37,7 @@ describe('buildEmiPlanPayload', () => {
         expect(buildEmiPlanPayload(hdfc, unknown).planType).toBe('ZERO_COST');
     });
 
-    /**
-     * Only credit issuers reach this builder, `resolvePlanIssuers` drops the rest, but the funding source
-     * is echoed rather than hardcoded so the payload and the plan the shopper picked cannot drift.
-     */
+    /** Echoed rather than hardcoded, so the payload and the plan the shopper picked cannot drift. */
     test('should echo the funding source of the issuer as the response spells it', () => {
         expect(buildEmiPlanPayload(hdfc, hdfcNoCost).fundingSource).toBe(hdfc.fundingSource);
         expect(buildEmiPlanPayload(emiDebitIssuerMock, emiDebitIssuerMock.plans[0]).fundingSource).toBe('debit');

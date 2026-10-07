@@ -21,7 +21,7 @@ const processingAmounts: EmiProcessingAmounts = {
 };
 
 /**
- * Raw checkoutShopper `POST v1/emi/plans` response, and the single fixture behind the Storybook handler
+ * Raw checkoutShopper `POST utility/v1/emi/plans` response, and the single fixture behind the Storybook handler
  * and the unit tests. Plans are in display order, ascending tenure, as the backend sorts them.
  */
 export const emiPlansResponseMock: EmiPlansResponse = {
@@ -152,7 +152,7 @@ export const emiPlansResponseMock: EmiPlansResponse = {
 /** The backend answers with an empty list when no plan is available for the amount. */
 export const emiPlansEmptyResponseMock: EmiPlansResponse = { issuers: [] };
 
-/** The shape the response takes once debit EMI ships. This version renders credit plans only, so it drops this issuer. */
+/** A debit issuer, for the funding source the payment request echoes. */
 export const emiDebitIssuerMock: EmiIssuer = {
     issuerName: 'Axis Bank',
     issuerCode: 'AXIS',
@@ -173,6 +173,3 @@ export const emiDebitIssuerMock: EmiIssuer = {
         }
     ]
 };
-
-/** A shopper offered debit plans only, by a version that renders none of them. */
-export const emiPlansDebitOnlyResponseMock: EmiPlansResponse = { issuers: [emiDebitIssuerMock] };

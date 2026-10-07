@@ -1,17 +1,7 @@
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { ErrorEventCode } from '../../core/Analytics/events/AnalyticsErrorEvent';
-import { EMI_TOKEN_EXPIRED_ERROR_CODE, EMI_TOKEN_FIELD, SUPPORTED_ISSUER_FUNDING_SOURCE } from './constants';
-import type { EmiIssuer, EmiPlan, EmiPlanPayload, EmiPlansResponse } from './types';
-
-/**
- * @internal
- * Returns the issuers that are supported by the SDK, filtered by funding source. The backend does not
- * guarantee a non-empty `plans` list, so an issuer without plans is dropped too.
- */
-export const resolvePlanIssuers = (plans?: EmiPlansResponse): EmiIssuer[] =>
-    (Array.isArray(plans?.issuers) ? plans.issuers : []).filter(
-        issuer => issuer.fundingSource === SUPPORTED_ISSUER_FUNDING_SOURCE && issuer.plans?.length > 0
-    );
+import { EMI_TOKEN_EXPIRED_ERROR_CODE, EMI_TOKEN_FIELD } from './constants';
+import type { EmiIssuer, EmiPlan, EmiPlanPayload } from './types';
 
 const toPayloadPlanType = (type: string): string => type.replace(/([a-z0-9])([A-Z])/g, '$1_$2').toUpperCase();
 
