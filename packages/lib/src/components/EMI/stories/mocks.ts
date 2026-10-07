@@ -8,7 +8,7 @@ export const emiPaymentMethodMock: { type: 'emi'; name: string } & EmiPaymentMet
     type: 'emi',
     name: 'EMI',
     supportedPaymentMethods: [{ type: 'scheme', name: 'Cards', brands: ['visa', 'mc'] }],
-    configuration: { emiToken: 'test-emi-token', minAmount: '100000', maxAmount: '50000000' }
+    configuration: { emiToken: 'test-emi-token' }
 };
 
 /** The lookup quotes the same processing fee on every plan, and words the shopper-facing sentence itself. */
