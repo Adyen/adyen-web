@@ -108,7 +108,6 @@ const STRICT_NULL_CHECKS_BACKLOG = [
     // ── Ticket 4: Shared form fields (92 errors) ──
 
     // Ticket 4 but handle in a different ticket after ticket 2 gets merged
-    'src/components/internal/CompanyDetails/validate.ts',
     'src/components/internal/IbanInput/validate.ts',
 
     // ── Ticket 5: Card, Card Input and Custom Card (100 errors) ──

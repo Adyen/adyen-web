@@ -5,9 +5,7 @@ import { validationRules } from '../../../utils/Validator/defaultRules';
 
 export const personalDetailsValidationRules: ValidatorRules = {
     default: {
-        validate: value => {
-            return value && value.length > 0;
-        },
+        validate: value => value?.length > 0,
         errorMessage: ERROR_FIELD_REQUIRED,
         modes: ['blur']
     },

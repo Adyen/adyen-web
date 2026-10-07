@@ -4,9 +4,7 @@ import { SF_ErrorCodes } from '../../../core/Errors/constants';
 
 export const companyDetailsValidationRules: ValidatorRules = {
     default: {
-        validate: value => {
-            return value && value.length > 0;
-        },
+        validate: value => value?.length > 0,
         modes: ['blur'],
         errorMessage: SF_ErrorCodes.ERROR_MSG_INCOMPLETE_FIELD // = 'err-gen-9100'
     },
