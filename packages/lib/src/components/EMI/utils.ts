@@ -1,4 +1,6 @@
-import { SUPPORTED_ISSUER_FUNDING_SOURCE } from './constants';
+import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
+import { ErrorEventCode } from '../../core/Analytics/events/AnalyticsErrorEvent';
+import { EMI_TOKEN_EXPIRED_ERROR_CODE, EMI_TOKEN_FIELD, SUPPORTED_ISSUER_FUNDING_SOURCE } from './constants';
 import type { EmiIssuer, EmiPlan, EmiPlanPayload, EmiPlansResponse } from './types';
 
 /**
@@ -32,4 +34,39 @@ export const buildEmiPlanPayload = (issuer: EmiIssuer, plan: EmiPlan): EmiPlanPa
         interestRateBps: plan.interestRateBps,
         ...(appliedOfferIds?.length && { appliedOfferIds })
     };
+};
+
+/** The error body checkoutShopper answers with. `invalidFields` is present on validation errors only. */
+interface AdyenApiError {
+    errorCode: string;
+    errorType: string;
+    message: string;
+    status: number;
+    invalidFields?: { name?: string }[];
+}
+
+/** Mirrors the guard `core/Services/http.ts` keeps private, which is the only way an API error reaches `cause`. */
+const isAdyenApiError = (value: unknown): value is AdyenApiError => {
+    const error = value as Partial<AdyenApiError> | null | undefined;
+    return Boolean(error?.errorCode && error.errorType && error.message && error.status);
+};
+
+/** A missing, malformed or undecodable `emiToken` is a validation error that names the token field. */
+const isEmiTokenValidationError = ({ errorType, message, invalidFields }: AdyenApiError): boolean =>
+    errorType === 'validation' &&
+    ((Array.isArray(invalidFields) && invalidFields.some(field => field?.name === EMI_TOKEN_FIELD)) || message.includes(EMI_TOKEN_FIELD));
+
+/**
+ * @internal
+ * Maps a rejected plans request to the analytics code it is reported with. Anything that is not an Adyen API
+ * error naming the token, such as a timeout, a network or CORS failure, or an unreadable body, is a failed fetch.
+ */
+export const classifyEmiPlansError = (error: unknown): ErrorEventCode => {
+    const cause = error instanceof AdyenCheckoutError ? error.options?.cause : undefined;
+
+    if (!isAdyenApiError(cause)) return ErrorEventCode.EMI_PLANS_FETCH_FAILED;
+    if (EMI_TOKEN_EXPIRED_ERROR_CODE && cause.errorCode === EMI_TOKEN_EXPIRED_ERROR_CODE) return ErrorEventCode.EMI_PLANS_TOKEN_EXPIRED;
+    if (isEmiTokenValidationError(cause)) return ErrorEventCode.EMI_PLANS_TOKEN_INVALID;
+
+    return ErrorEventCode.EMI_PLANS_FETCH_FAILED;
 };

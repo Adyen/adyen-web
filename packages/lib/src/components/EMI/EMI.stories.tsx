@@ -9,6 +9,10 @@ import type { EMIConfiguration } from './types';
 
 type EMIStory = StoryConfiguration<EMIConfiguration>;
 
+/**
+ * The `emi` entry of the payment methods response brings `supportedPaymentMethods` and the `emiToken`; the
+ * component then fetches the plans itself, answered here by the MSW handler.
+ */
 const meta: MetaConfiguration<EMIConfiguration> = {
     title: 'Components/EMI',
     tags: ['no-automated-visual-test'],
@@ -35,7 +39,6 @@ export const CardEmi: EMIStory = {
         amount: EMI_FIXTURE_CHECKOUT_AMOUNT.value,
         componentConfiguration: {
             showPayButton: true,
-            supportedPaymentMethods: [{ type: 'scheme' }],
             supportedPaymentMethodsConfiguration: {
                 card: {
                     hasHolderName: false,
@@ -70,7 +73,6 @@ export const CardEmiWithCustomButton: EMIStory = {
         amount: EMI_FIXTURE_CHECKOUT_AMOUNT.value,
         componentConfiguration: {
             showPayButton: false,
-            supportedPaymentMethods: [{ type: 'scheme' }],
             supportedPaymentMethodsConfiguration: {
                 card: {
                     hasHolderName: false,
