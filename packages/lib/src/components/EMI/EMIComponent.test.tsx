@@ -9,7 +9,7 @@ import SRPanelProvider from '../../core/Errors/SRPanelProvider';
 import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 import { UiTarget } from '../../core/Analytics/events/AnalyticsInfoEvent';
 import { EMI_FIXTURE_CHECKOUT_AMOUNT, emiPlansResponseMock } from './stories/mocks';
-import type { EmiIssuer } from './types';
+import type { EmiIssuer, EmiPlansOutcome } from './types';
 
 const core = setupCoreMock();
 const i18n = core.modules.i18n;
@@ -25,29 +25,37 @@ const createCard = () =>
         showPayButton: false
     });
 
-const emiComponent = (issuers: EmiIssuer[], onPlanSelect: (selection: unknown) => void): h.JSX.Element => (
-    <CoreProvider i18n={i18n} loadingContext={'test'} resources={core.modules.resources}>
-        <SRPanelProvider srPanel={core.modules.srPanel}>
-            <AmountProvider amount={EMI_FIXTURE_CHECKOUT_AMOUNT} providerRef={createRef()}>
-                <EMIComponent
-                    activeSupportedPaymentMethodElement={createCard()}
-                    issuers={issuers}
-                    onPlanSelect={onPlanSelect}
-                    showPayButton={true}
-                    payButton={() => <button type={'button'}>Pay</button>}
-                    setComponentRef={() => {}}
-                />
-            </AmountProvider>
-        </SRPanelProvider>
-    </CoreProvider>
-);
+interface RenderOptions {
+    loadPlans?: () => Promise<EmiPlansOutcome>;
+    initialOutcome?: EmiPlansOutcome;
+}
 
-const renderEmiComponent = (issuers: EmiIssuer[]) => {
+const ready = (issuers: EmiIssuer[]): EmiPlansOutcome => ({ status: 'ready', issuers });
+
+/** Most tests start from a settled lookup, the state a re-render of the element starts from. */
+const renderEmiComponent = ({ loadPlans = jest.fn(), initialOutcome }: RenderOptions = { initialOutcome: ready(emiPlansResponseMock.issuers) }) => {
     const onPlanSelect = jest.fn();
     const setMessages = jest.spyOn(core.modules.srPanel, 'setMessages');
-    render(emiComponent(issuers, onPlanSelect));
 
-    return { onPlanSelect, setMessages };
+    render(
+        <CoreProvider i18n={i18n} loadingContext={'test'} resources={core.modules.resources}>
+            <SRPanelProvider srPanel={core.modules.srPanel}>
+                <AmountProvider amount={EMI_FIXTURE_CHECKOUT_AMOUNT} providerRef={createRef()}>
+                    <EMIComponent
+                        activeSupportedPaymentMethodElement={createCard()}
+                        loadPlans={loadPlans}
+                        initialOutcome={initialOutcome}
+                        onPlanSelect={onPlanSelect}
+                        showPayButton={true}
+                        payButton={() => <button type={'button'}>Pay</button>}
+                        setComponentRef={() => {}}
+                    />
+                </AmountProvider>
+            </SRPanelProvider>
+        </CoreProvider>
+    );
+
+    return { onPlanSelect, setMessages, loadPlans };
 };
 
 const selectOption = async (label: string, option: RegExp) => {
@@ -64,7 +72,7 @@ describe('EMIComponent', () => {
 
     describe('with plans', () => {
         test('should render the plan sections as headings, in reading order', () => {
-            renderEmiComponent(emiPlansResponseMock.issuers);
+            renderEmiComponent();
 
             expect(screen.getAllByRole('heading').map(heading => heading.textContent)).toEqual([
                 'EMI plan',
@@ -74,26 +82,26 @@ describe('EMIComponent', () => {
         });
 
         test('should name both plan sections after their heading, and describe the selects', () => {
-            renderEmiComponent(emiPlansResponseMock.issuers);
+            renderEmiComponent();
 
             expect(screen.getByRole('group', { name: 'EMI plan' })).toHaveAccessibleDescription(/choose your preferred combination/i);
             expect(screen.getByRole('group', { name: 'Plan summary' })).toBeInTheDocument();
         });
 
         test('should render the plan instructions above the selects', () => {
-            renderEmiComponent(emiPlansResponseMock.issuers);
+            renderEmiComponent();
 
             expect(screen.getByText(/choose your preferred combination/i)).toBeInTheDocument();
         });
 
         test('should name the preselected provider in the card details instructions', () => {
-            renderEmiComponent(emiPlansResponseMock.issuers);
+            renderEmiComponent();
 
             expect(screen.getByText(`Enter card details that are associated with a ${hdfc.issuerName} card`)).toBeInTheDocument();
         });
 
         test('should preselect the first issuer and its first plan', () => {
-            renderEmiComponent(emiPlansResponseMock.issuers);
+            renderEmiComponent();
 
             expect(screen.getByLabelText('Provider')).toHaveTextContent(hdfc.issuerName);
             expect(screen.getByLabelText('Plan')).toHaveTextContent('₹51,666.33 x 3 months');
@@ -101,14 +109,14 @@ describe('EMIComponent', () => {
 
         /** No target: the container tells a preselection apart from a shopper action by its absence. */
         test('should announce the default selection once, without waiting for an interaction', () => {
-            const { onPlanSelect } = renderEmiComponent(emiPlansResponseMock.issuers);
+            const { onPlanSelect } = renderEmiComponent();
 
             expect(onPlanSelect).toHaveBeenCalledTimes(1);
             expect(onPlanSelect).toHaveBeenCalledWith({ issuer: hdfc, plan: hdfc.plans[0] }, undefined);
         });
 
         test('should report a plan the shopper picks, and re-render the summary for it', async () => {
-            const { onPlanSelect } = renderEmiComponent(emiPlansResponseMock.issuers);
+            const { onPlanSelect } = renderEmiComponent();
 
             await selectOption('Plan', /6 months/i);
 
@@ -120,7 +128,7 @@ describe('EMIComponent', () => {
         });
 
         test('should reset the plan and the summary to the first plan of a newly selected provider', async () => {
-            const { onPlanSelect } = renderEmiComponent(emiPlansResponseMock.issuers);
+            const { onPlanSelect } = renderEmiComponent();
 
             await selectOption('Plan', /6 months/i);
             await selectOption('Provider', new RegExp(icici.issuerName, 'i'));
@@ -133,7 +141,7 @@ describe('EMIComponent', () => {
 
         /** Switching provider moves both selects, and is still the one action the shopper took. */
         test('should report a provider the shopper picks once, not as a provider and a plan change', async () => {
-            const { onPlanSelect } = renderEmiComponent(emiPlansResponseMock.issuers);
+            const { onPlanSelect } = renderEmiComponent();
 
             await selectOption('Provider', new RegExp(icici.issuerName, 'i'));
 
@@ -142,13 +150,13 @@ describe('EMIComponent', () => {
         });
 
         test('should show a discount banner for the selected plan', () => {
-            renderEmiComponent(emiPlansResponseMock.issuers);
+            renderEmiComponent();
 
             expect(screen.getByText('-₹4,000.00 discount offer applied for using HDFC Bank')).toBeInTheDocument();
         });
 
         test('should drop the discount banner when the shopper picks a plan without an offer', async () => {
-            renderEmiComponent(emiPlansResponseMock.issuers);
+            renderEmiComponent();
 
             await selectOption('Plan', /6 months/i);
 
@@ -156,7 +164,7 @@ describe('EMIComponent', () => {
         });
 
         test('should announce the discount of a plan the shopper picks', async () => {
-            const { setMessages } = renderEmiComponent(emiPlansResponseMock.issuers);
+            const { setMessages } = renderEmiComponent();
 
             await selectOption('Provider', new RegExp(icici.issuerName, 'i'));
 
@@ -164,42 +172,86 @@ describe('EMIComponent', () => {
         });
 
         test('should summarise the preselected plan', () => {
-            renderEmiComponent(emiPlansResponseMock.issuers);
+            renderEmiComponent();
 
             expect(screen.getByText('Interest charged by bank @15.5% p.a')).toBeInTheDocument();
             expect(screen.getByText('Total amount to be paid over time')).toBeInTheDocument();
         });
 
         test('should render the supported payment method form and the pay button', () => {
-            renderEmiComponent(emiPlansResponseMock.issuers);
+            renderEmiComponent();
 
             expect(screen.getByRole('form')).toBeInTheDocument();
             expect(screen.getByRole('button', { name: 'Pay' })).toBeInTheDocument();
         });
     });
 
-    describe('without plans', () => {
-        test('should render no plan selection UI at all', () => {
-            renderEmiComponent([]);
+    describe('loading the plans', () => {
+        const deferred = () => {
+            let resolve: (outcome: EmiPlansOutcome) => void = () => {};
+            const promise = new Promise<EmiPlansOutcome>(settle => {
+                resolve = settle;
+            });
 
-            expect(screen.queryAllByRole('heading')).toHaveLength(0);
-            expect(screen.queryByLabelText('Provider')).toBeNull();
-            expect(screen.queryByLabelText('Plan')).toBeNull();
-            expect(screen.queryByText('Plan summary')).toBeNull();
-            expect(screen.queryByText(/choose your preferred combination/i)).toBeNull();
+            return { promise, resolve };
+        };
+
+        test('should load the plans once when it mounts', () => {
+            const { loadPlans } = renderEmiComponent({ loadPlans: jest.fn(() => deferred().promise) });
+
+            expect(loadPlans).toHaveBeenCalledTimes(1);
         });
 
-        test('should still render the supported payment method form and the pay button', () => {
-            renderEmiComponent([]);
+        // The card form is not rendered while loading, so the only spinner on screen is the one of EMI
+        test('should show only a spinner while the plans load, announcing it to screen readers', () => {
+            const { setMessages } = renderEmiComponent({ loadPlans: () => deferred().promise });
 
+            expect(screen.getByTestId('spinner')).toBeInTheDocument();
+            expect(screen.queryByLabelText('Provider')).toBeNull();
+            expect(screen.queryByRole('form')).toBeNull();
+            expect(screen.queryByRole('button', { name: 'Pay' })).toBeNull();
+            expect(setMessages).toHaveBeenCalledWith('Loading…');
+        });
+
+        test('should render the plans, the form and the pay button once the plans arrive', async () => {
+            const { promise, resolve } = deferred();
+            const { onPlanSelect, setMessages } = renderEmiComponent({ loadPlans: () => promise });
+
+            resolve(ready(emiPlansResponseMock.issuers));
+
+            expect(await screen.findByLabelText('Provider')).toHaveTextContent(hdfc.issuerName);
             expect(screen.getByRole('form')).toBeInTheDocument();
             expect(screen.getByRole('button', { name: 'Pay' })).toBeInTheDocument();
+            await waitFor(() => expect(onPlanSelect).toHaveBeenCalledWith({ issuer: hdfc, plan: hdfc.plans[0] }, undefined));
+            await waitFor(() => expect(setMessages).toHaveBeenCalledWith('Loaded'));
         });
 
-        test('should not report a selection', () => {
-            const { onPlanSelect } = renderEmiComponent([]);
+        /** No error screen yet: the shopper can pick another payment method in Drop-in. */
+        test('should keep the spinner, and render no form, when the plans are unavailable', async () => {
+            const { promise, resolve } = deferred();
+            const { onPlanSelect } = renderEmiComponent({ loadPlans: () => promise });
 
+            resolve({ status: 'unavailable' });
+            await promise;
+
+            expect(screen.getByTestId('spinner')).toBeInTheDocument();
+            expect(screen.queryByRole('form')).toBeNull();
+            expect(screen.queryByRole('button', { name: 'Pay' })).toBeNull();
             expect(onPlanSelect).not.toHaveBeenCalled();
+        });
+
+        test('should start from the outcome it is given, without loading again', () => {
+            const { loadPlans } = renderEmiComponent({ initialOutcome: ready(emiPlansResponseMock.issuers) });
+
+            expect(loadPlans).not.toHaveBeenCalled();
+            expect(screen.getByLabelText('Provider')).toHaveTextContent(hdfc.issuerName);
+        });
+
+        test('should keep the spinner when it is given an unavailable outcome, without loading again', () => {
+            const { loadPlans } = renderEmiComponent({ initialOutcome: { status: 'unavailable' } });
+
+            expect(loadPlans).not.toHaveBeenCalled();
+            expect(screen.getByTestId('spinner')).toBeInTheDocument();
         });
     });
 });

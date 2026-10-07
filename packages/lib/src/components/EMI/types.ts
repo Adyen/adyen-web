@@ -127,19 +127,30 @@ export interface EMIPaymentData extends PaymentData {
 
 type EMICardOverrides = 'showPayButton' | '_disableClickToPay' | 'fundingSource';
 
+/**
+ * Configuration of the EMI component. The installment plans and the payment methods they can be paid with are
+ * owned by the backend: the component reads `supportedPaymentMethods` and `configuration.emiToken` from the
+ * `emi` entry of the payment methods response, and fetches the plans itself.
+ */
 export interface EMIConfiguration extends UIElementProps {
-    supportedPaymentMethods?: SupportedPaymentMethod[];
-    /**
-     * Installment plans, as returned by the Checkout API `POST /paymentMethods/emi/plans` endpoint.
-     * Pass the response verbatim.
-     *
-     * Required in the advanced flow: the SDK holds a client key and cannot call that
-     * merchant-authenticated endpoint itself. Without it, EMI offers no plan selection and Drop-in
-     * drops the EMI tile. It becomes optional for sessions integrations once the sessions endpoint
-     * ships, at which point the SDK fetches the plans itself.
-     */
-    plans?: EmiPlansResponse;
+    /** Merchant configuration of the embedded payment method forms, such as `hasHolderName` on the card. */
     supportedPaymentMethodsConfiguration?: {
         card?: Partial<Omit<CardConfiguration, EMICardOverrides>>;
     };
 }
+
+/**
+ * @internal
+ * Fields the `emi` entry of the payment methods response carries. The backend owns them; they are not configuration.
+ */
+export interface EmiPaymentMethodEntry {
+    supportedPaymentMethods?: SupportedPaymentMethod[];
+    configuration?: { emiToken?: string; minAmount?: string; maxAmount?: string };
+}
+
+/**
+ * @internal
+ * What the plans lookup settled to. Carries no error code: the analytics are sent where the outcome is
+ * produced, so the view only needs to know whether there is something to render.
+ */
+export type EmiPlansOutcome = { status: 'ready'; issuers: EmiIssuer[] } | { status: 'unavailable' };

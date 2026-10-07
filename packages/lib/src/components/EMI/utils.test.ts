@@ -1,4 +1,6 @@
-import { buildEmiPlanPayload, resolvePlanIssuers } from './utils';
+import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
+import { ErrorEventCode } from '../../core/Analytics/events/AnalyticsErrorEvent';
+import { buildEmiPlanPayload, classifyEmiPlansError, resolvePlanIssuers } from './utils';
 import { emiDebitIssuerMock, emiPlansEmptyResponseMock, emiPlansResponseMock } from './stories/mocks';
 import type { EmiIssuer, EmiPlan, EmiPlansResponse } from './types';
 
@@ -170,5 +172,61 @@ describe('buildEmiPlanPayload', () => {
             expect(payload.fundingSource).toBe('credit');
             expect(['STANDARD', 'LOW_COST', 'NO_COST']).toContain(payload.planType);
         });
+    });
+});
+
+describe('classifyEmiPlansError', () => {
+    /** `http()` keeps the error body checkoutShopper answered with in `cause`. */
+    const apiError = (body: { status: number; errorCode: string; errorType: string; message: string; invalidFields?: { name: string }[] }) =>
+        new AdyenCheckoutError('NETWORK_ERROR', body.message, { cause: body });
+
+    test('should classify a validation error naming the token in invalidFields as an invalid token', () => {
+        const error = apiError({
+            status: 422,
+            errorCode: '14_030',
+            errorType: 'validation',
+            message: 'Invalid request',
+            invalidFields: [{ name: 'emiToken' }]
+        });
+
+        expect(classifyEmiPlansError(error)).toBe(ErrorEventCode.EMI_PLANS_TOKEN_INVALID);
+    });
+
+    test('should classify a validation error naming the token in its message as an invalid token', () => {
+        const error = apiError({
+            status: 422,
+            errorCode: '14_030',
+            errorType: 'validation',
+            message: 'Field emiToken: EMI token cannot be decoded.'
+        });
+
+        expect(classifyEmiPlansError(error)).toBe(ErrorEventCode.EMI_PLANS_TOKEN_INVALID);
+    });
+
+    test('should classify a validation error about another field as a failed fetch', () => {
+        const error = apiError({
+            status: 422,
+            errorCode: '14_030',
+            errorType: 'validation',
+            message: 'Field amount is invalid',
+            invalidFields: [{ name: 'amount' }]
+        });
+
+        expect(classifyEmiPlansError(error)).toBe(ErrorEventCode.EMI_PLANS_FETCH_FAILED);
+    });
+
+    test('should classify an API error that is not a validation error as a failed fetch', () => {
+        const error = apiError({ status: 500, errorCode: '905', errorType: 'internal', message: 'emiToken lookup failed' });
+
+        expect(classifyEmiPlansError(error)).toBe(ErrorEventCode.EMI_PLANS_FETCH_FAILED);
+    });
+
+    test('should classify an AdyenCheckoutError without an API error body, such as a timeout, as a failed fetch', () => {
+        expect(classifyEmiPlansError(new AdyenCheckoutError('NETWORK_ERROR', 'Request timed out'))).toBe(ErrorEventCode.EMI_PLANS_FETCH_FAILED);
+    });
+
+    test('should classify an error that is not an AdyenCheckoutError as a failed fetch', () => {
+        expect(classifyEmiPlansError(new TypeError('Failed to fetch'))).toBe(ErrorEventCode.EMI_PLANS_FETCH_FAILED);
+        expect(classifyEmiPlansError(undefined)).toBe(ErrorEventCode.EMI_PLANS_FETCH_FAILED);
     });
 });

@@ -1,7 +1,15 @@
-import type { EmiIssuer, EmiPlansResponse, EmiProcessingAmounts } from '../types';
+import type { EmiIssuer, EmiPaymentMethodEntry, EmiPlansResponse, EmiProcessingAmounts } from '../types';
 
 /** Minor units, mirroring the design screenshots (₹1,54,999.00 checkout amount). */
 export const EMI_FIXTURE_CHECKOUT_AMOUNT = { value: 15499900, currency: 'INR' };
+
+/** The `emi` entry of the payment methods response: the backend owns both the supported payment methods and the token. */
+export const emiPaymentMethodMock: { type: 'emi'; name: string } & EmiPaymentMethodEntry = {
+    type: 'emi',
+    name: 'EMI',
+    supportedPaymentMethods: [{ type: 'scheme', name: 'Cards', brands: ['visa', 'mc'] }],
+    configuration: { emiToken: 'test-emi-token', minAmount: '100000', maxAmount: '50000000' }
+};
 
 /** The lookup quotes the same processing fee on every plan, and words the shopper-facing sentence itself. */
 const processingAmounts: EmiProcessingAmounts = {
