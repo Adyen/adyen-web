@@ -57,6 +57,7 @@ export type AdyenCheckoutProps = {
     amount: number;
     sessionData?: SessionsRequestData;
     allowedPaymentTypes?: string[];
+    // TODO: remove blockedPaymentMethods/allowedPaymentMethods once the EMI backend filtering is validated (revert c3a070cb5)
     /**
      * Sent on the `/paymentMethods` request, so the backend does the filtering. Unlike
      * `allowedPaymentTypes`, which trims the response after it arrives, these exercise the real

@@ -22,6 +22,7 @@ async function createAdvancedFlowCheckout(
         shopperLocale,
         amount,
         allowedPaymentTypes = [],
+        // TODO: remove blockedPaymentMethods/allowedPaymentMethods once the EMI backend filtering is validated (revert c3a070cb5)
         blockedPaymentMethods = [],
         allowedPaymentMethods = [],
         paymentMethodsOverride,
