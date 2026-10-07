@@ -1,7 +1,7 @@
 import type { UIElementProps } from '../internal/UIElement/types';
 import type CardElement from '../Card';
 import type { CardConfiguration } from '../Card/types';
-import type { PaymentAmount } from '../../types/global-types';
+import type { PaymentAmount, PaymentData } from '../../types/global-types';
 import type { UiTarget } from '../../core/Analytics/events/AnalyticsInfoEvent';
 import { TxVariants } from '../tx-variants';
 
@@ -99,6 +99,10 @@ export interface EmiPlanPayload {
     planType: string;
     interestRateBps: number;
     appliedOfferIds?: string[];
+}
+
+export interface EMIPaymentData extends PaymentData {
+    emiPlan?: EmiPlanPayload;
 }
 
 type EMICardOverrides = 'showPayButton' | '_disableClickToPay' | 'fundingSource';
