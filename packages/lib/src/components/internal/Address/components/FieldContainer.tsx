@@ -40,9 +40,9 @@ function FieldContainer(props: Readonly<FieldContainerProps>) {
     const { classNameModifiers = [], data, errors, valid, fieldName, onInput, onBlur, trimOnBlur, maxLength, disabled, addressType } = props;
 
     const value: string = data[fieldName];
-    const selectedCountry: string = data.country;
-    const isOptional: boolean = props.specifications.countryHasOptionalField(selectedCountry, fieldName as AddressField);
-    const labelKey: string = props.specifications.getKeyForField(fieldName, selectedCountry);
+    const selectedCountry = data.country;
+    const isOptional = selectedCountry ? props.specifications.countryHasOptionalField(selectedCountry, fieldName as AddressField) : false;
+    const labelKey = props.specifications.getKeyForField(fieldName, selectedCountry);
     const optionalLabel = isOptional ? ` ${i18n.get('field.title.optional')}` : '';
     const label = `${i18n.get(labelKey)}${optionalLabel}`;
     const errorMessage = getErrorMessage(errors, fieldName, i18n, label);
@@ -84,8 +84,8 @@ function FieldContainer(props: Readonly<FieldContainerProps>) {
             isValid={valid[fieldName]}
             name={fieldName}
             i18n={i18n}
-            onFocus={e => props.onFieldFocusAnalytics(fieldName, e)}
-            onBlur={e => props.onFieldBlurAnalytics(fieldName, e)}
+            onFocus={e => props.onFieldFocusAnalytics?.(fieldName, e)}
+            onBlur={e => props.onFieldBlurAnalytics?.(fieldName, e)}
         >
             <InputText
                 name={fieldName}

@@ -5,9 +5,9 @@ import { AddressField } from '../../../types/global-types';
 const SCHEMA_MAX_DEPTH = 2;
 
 class Specifications {
-    private specifications: AddressSpecifications;
+    private specifications: Partial<AddressSpecifications>;
 
-    constructor(specifications?) {
+    constructor(specifications?: AddressSpecifications) {
         this.specifications = { ...ADDRESS_SPECIFICATIONS, ...specifications };
     }
 
@@ -35,8 +35,8 @@ class Specifications {
      * @param country - The selected country
      * @returns AddressSchema
      */
-    getAddressSchemaForCountry(country: string): AddressSchema {
-        return this.specifications?.[country]?.schema || this.specifications.default.schema;
+    getAddressSchemaForCountry(country?: string): AddressSchema {
+        return (country && this.specifications?.[country]?.schema) || this.specifications?.default?.schema || ADDRESS_SPECIFICATIONS.default.schema;
     }
 
     /**
@@ -44,8 +44,8 @@ class Specifications {
      * @param country - The selected country
      * @returns StringObject
      */
-    getAddressLabelsForCountry(country: string): StringObject {
-        return this.specifications?.[country]?.labels || this.specifications.default.labels;
+    getAddressLabelsForCountry(country?: string): StringObject | undefined {
+        return (country && this.specifications?.[country]?.labels) || this.specifications?.default?.labels;
     }
 
     /**
@@ -53,8 +53,8 @@ class Specifications {
      * @param country - The selected country
      * @returns Optional fields array
      */
-    getOptionalFieldsForCountry(country: string): string[] {
-        return this.specifications?.[country]?.optionalFields || this.specifications.default?.optionalFields || [];
+    getOptionalFieldsForCountry(country?: string): string[] {
+        return (country && this.specifications?.[country]?.optionalFields) || this.specifications?.default?.optionalFields || [];
     }
 
     /**
@@ -62,8 +62,8 @@ class Specifications {
      * @param fieldName - The field to be searched
      * @param country - The selected country
      */
-    getKeyForField(fieldName: string, country: string): string {
-        return this.specifications?.[country]?.labels?.[fieldName] || this.specifications?.default?.labels?.[fieldName] || fieldName;
+    getKeyForField(fieldName: string, country?: string): string {
+        return (country && this.specifications?.[country]?.labels?.[fieldName]) || this.specifications?.default?.labels?.[fieldName] || fieldName;
     }
 
     /**
@@ -71,7 +71,7 @@ class Specifications {
      * @param fieldName - The field to be searched
      * @param country - The selected country
      */
-    getPlaceholderKeyForField(fieldName: string, country: string): string {
+    getPlaceholderKeyForField(fieldName: string, country: string): string | undefined {
         return this.specifications?.[country]?.placeholders?.[fieldName] || this.specifications?.default?.placeholders?.[fieldName];
     }
 
@@ -81,7 +81,7 @@ class Specifications {
      * @param country - The selected country
      * @returns Array
      */
-    getAddressSchemaForCountryFlat(country: string): AddressField[] {
+    getAddressSchemaForCountryFlat(country?: string): AddressField[] {
         return this.getAddressSchemaForCountry(country)
             .flat(SCHEMA_MAX_DEPTH)
             .filter((element): element is AddressField => typeof element === 'string');
