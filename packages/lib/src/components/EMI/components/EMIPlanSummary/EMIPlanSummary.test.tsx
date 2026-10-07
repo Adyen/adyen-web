@@ -16,26 +16,17 @@ const noCostPlanWithDiscount = hdfc.plans[0];
 const lowCostPlanWithDiscount = icici.plans[0];
 const standardPlanWithInterest = axis.plans[0];
 
-const offerOf = (plan: EmiPlan, index: number): PaymentAmount => (plan.offers ?? [])[index].amount;
-/** The larger of the two offers the no cost plan carries, which is the one the design shows */
-const noCostOffer = offerOf(noCostPlanWithDiscount, 1);
-const lowCostOffer = offerOf(lowCostPlanWithDiscount, 0);
+/** The fields are optional on the wire, so a fixture meant to carry one is asserted rather than defaulted */
+const requireAmount = (amount: PaymentAmount | undefined, field: string, plan: EmiPlan): PaymentAmount => {
+    if (!amount) throw new Error(`The ${plan.type} fixture carries no ${field}`);
 
-/** The field is optional on the wire, so a fixture meant to carry one is asserted rather than defaulted */
-const instantDiscountOf = (plan: EmiPlan): PaymentAmount => {
-    const { instantDiscountAmount } = plan.transactionAmounts;
-    if (!instantDiscountAmount) throw new Error(`The ${plan.type} fixture carries no instant discount`);
-
-    return instantDiscountAmount;
+    return amount;
 };
 
 const formatAmount = (amount: PaymentAmount) => i18n.amount(amount.value, amount.currency);
 
 // The locale places the minus sign, the same way it places the currency symbol
 const formatDiscount = (amount: PaymentAmount) => i18n.amount(-amount.value, amount.currency);
-
-const formatReserved = (amount: PaymentAmount, ...discounts: PaymentAmount[]) =>
-    formatAmount({ ...amount, value: discounts.reduce((left, discount) => left - discount.value, amount.value) });
 
 const labels = () => screen.getAllByRole('term').map(term => term.textContent);
 const values = () => screen.getAllByRole('definition').map(definition => definition.textContent);
@@ -54,9 +45,9 @@ const renderPlanSummary = (plan: EmiPlan, { amount }: { amount?: PaymentAmount }
     );
 
 /** Both plan types spend their offer on the interest the bank charges, so both summarise it the same way */
-const plansDiscountingInterest: [planType: string, plan: EmiPlan, offer: PaymentAmount, instantDiscount: PaymentAmount, tag: string][] = [
-    ['no cost', noCostPlanWithDiscount, noCostOffer, instantDiscountOf(noCostPlanWithDiscount), 'No cost'],
-    ['low cost', lowCostPlanWithDiscount, lowCostOffer, instantDiscountOf(lowCostPlanWithDiscount), 'Low cost']
+const plansDiscountingInterest: [planType: string, plan: EmiPlan, tag: string][] = [
+    ['no cost', noCostPlanWithDiscount, 'No cost'],
+    ['low cost', lowCostPlanWithDiscount, 'Low cost']
 ];
 
 describe('EMIPlanSummary', () => {
@@ -80,17 +71,18 @@ describe('EMIPlanSummary', () => {
         ]);
     });
 
-    describe.each(plansDiscountingInterest)('%s plan', (_planType, plan, offer, instantDiscount, tag) => {
-        const { totalInterestAmount, totalPayableAmount } = plan.transactionAmounts;
+    describe.each(plansDiscountingInterest)('%s plan', (_planType, plan, tag) => {
+        const { authorizationAmount, totalInstantDiscountAmount, interestDiscountAmount, totalInterestAmount, totalPayableAmount } =
+            plan.transactionAmounts;
 
-        test('should take both the interest discount and the instant discount off the reserved amount, leaving the interest whole', () => {
+        test('should render every amount as the response carries it, without arithmetic', () => {
             renderPlanSummary(plan);
 
             expect(values()).toEqual([
                 formatAmount(EMI_FIXTURE_CHECKOUT_AMOUNT),
-                formatDiscount(instantDiscount),
-                formatDiscount(offer),
-                formatReserved(EMI_FIXTURE_CHECKOUT_AMOUNT, instantDiscount, offer),
+                formatDiscount(requireAmount(totalInstantDiscountAmount, 'instant discount', plan)),
+                formatDiscount(requireAmount(interestDiscountAmount, 'interest discount', plan)),
+                formatAmount(authorizationAmount),
                 formatAmount(totalInterestAmount),
                 formatAmount(totalPayableAmount)
             ]);
@@ -108,43 +100,37 @@ describe('EMIPlanSummary', () => {
             expect(labels()).toEqual([
                 'Instant discount',
                 `Interest discount${tag}`,
+                'Amount reserved on card',
                 expect.stringMatching(/^Interest charged by bank @/),
                 'Total amount to be paid over time'
             ]);
         });
     });
 
-    test('should reserve nothing on the card when the discounts exceed the checkout amount', () => {
-        const amount = { value: instantDiscountOf(noCostPlanWithDiscount).value - 100, currency: 'INR' };
+    /** The reserved amount is the backend's figure, so it no longer depends on the merchant's checkout amount */
+    test('should reserve the authorisation amount of the response, whatever the checkout amount', () => {
+        const amount = { value: 100, currency: 'INR' };
 
         renderPlanSummary(noCostPlanWithDiscount, { amount });
 
-        expect(screen.getByText(i18n.amount(0, amount.currency))).toBeInTheDocument();
+        expect(values()[3]).toBe(formatAmount(noCostPlanWithDiscount.transactionAmounts.authorizationAmount));
     });
 
-    // Only a tagged plan type buys its interest down, so the offer of a standard plan discounts nothing
-    test('should render no discount row for a standard plan carrying an offer', () => {
-        const offer = { offerId: 'offer-axis', type: 'DISCOUNT', amount: { value: 100000, currency: 'INR' } };
-        const { totalInterestAmount, totalPayableAmount } = standardPlanWithInterest.transactionAmounts;
+    test('should render the interest discount of a standard plan when the response carries one', () => {
+        const interestDiscountAmount = { value: 100000, currency: 'INR' };
 
-        renderPlanSummary({ ...standardPlanWithInterest, offers: [offer] });
+        renderPlanSummary({
+            ...standardPlanWithInterest,
+            transactionAmounts: { ...standardPlanWithInterest.transactionAmounts, interestDiscountAmount }
+        });
 
-        expect(labels()).toEqual([
-            'Item price',
-            'Amount reserved on card',
-            'Interest charged by bank @15.5% p.a',
-            'Total amount to be paid over time'
-        ]);
-        expect(values()).toEqual([
-            formatAmount(EMI_FIXTURE_CHECKOUT_AMOUNT),
-            formatAmount(EMI_FIXTURE_CHECKOUT_AMOUNT),
-            formatAmount(totalInterestAmount),
-            formatAmount(totalPayableAmount)
-        ]);
+        // A standard plan has no tag, so the label carries none
+        expect(labels()).toContain('Interest discount');
+        expect(values()).toContain(formatDiscount(interestDiscountAmount));
     });
 
-    test('should not render the discount rows when the plan carries neither an offer nor an instant discount', () => {
-        const { totalInterestAmount, totalPayableAmount } = standardPlanWithInterest.transactionAmounts;
+    test('should not render the discount rows when the plan carries neither discount', () => {
+        const { authorizationAmount, totalInterestAmount, totalPayableAmount } = standardPlanWithInterest.transactionAmounts;
 
         renderPlanSummary(standardPlanWithInterest);
 
@@ -158,7 +144,7 @@ describe('EMIPlanSummary', () => {
         ]);
         expect(values()).toEqual([
             formatAmount(EMI_FIXTURE_CHECKOUT_AMOUNT),
-            formatAmount(EMI_FIXTURE_CHECKOUT_AMOUNT),
+            formatAmount(authorizationAmount),
             formatAmount(totalInterestAmount),
             formatAmount(totalPayableAmount)
         ]);

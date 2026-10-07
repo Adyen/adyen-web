@@ -68,7 +68,7 @@ export function EMIComponent({
         setSelection(nextSelection);
     };
 
-    const instantDiscount = selection?.plan.transactionAmounts.instantDiscountAmount;
+    const instantDiscount = selection?.plan.transactionAmounts.totalInstantDiscountAmount;
     const discountMessage =
         selection && instantDiscount
             ? i18n.get('emi.discountApplied', {
@@ -115,7 +115,7 @@ export function EMIComponent({
                         {i18n.get('emi.planSummary')}
                     </h3>
                     <EMIPlanSummary plan={selection.plan} labelledBy={planSummaryId} />
-                    <EMITerms issuerCode={selection.issuer.issuerCode} processingMessage={selection.plan.processingAmounts?.message} />
+                    <EMITerms termLink={selection.issuer.termLink} processingMessage={selection.plan.processingAmounts?.message} />
 
                     <h3 className={styles.emiTitle}>
                         {selection.issuer.issuerName} {i18n.get('emi.cardDetails')}
