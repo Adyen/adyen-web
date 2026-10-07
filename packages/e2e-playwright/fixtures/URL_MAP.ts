@@ -20,8 +20,7 @@ export const URL_MAP = {
     dropinWithSession_donations_reparented_autoMountTrue:
         '/iframe.html?args=donation.autoMount:!true;donation.delay:0&globals=&id=drop-in-drop-in-component--sessions-donation-reparented&viewMode=story',
     dropinReviewPage: '/iframe.html?args=&globals=&id=demos-reviewpage--with-dropin&viewMode=story',
-    dropinWithAdvancedIndia:
-        '/iframe.html?id=drop-in-drop-in-component--default&viewMode=story&args=countryCode%3AIN%3Bamount%3A1005%3BuseSessions%3A!false',
+
     /**
      * Card
      */
