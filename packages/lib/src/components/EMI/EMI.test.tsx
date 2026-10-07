@@ -12,13 +12,7 @@ import { InfoEventType, UiTarget } from '../../core/Analytics/events/AnalyticsIn
 import { AnalyticsErrorEvent, ErrorEventCode, ErrorEventType } from '../../core/Analytics/events/AnalyticsErrorEvent';
 import { getEmiPlans } from './services/getEmiPlans';
 import { EMI_NO_INSTALLMENT_PLANS, EMI_PLANS_TIMEOUT_MS } from './constants';
-import {
-    emiDebitIssuerMock,
-    emiPaymentMethodMock,
-    emiPlansDebitOnlyResponseMock,
-    emiPlansEmptyResponseMock,
-    emiPlansResponseMock
-} from './stories/mocks';
+import { emiPaymentMethodMock, emiPlansEmptyResponseMock, emiPlansResponseMock } from './stories/mocks';
 import type { PaymentActionsType, PaymentData, RawPaymentMethod } from '../../types/global-types';
 import type { EMIConfiguration, EmiPaymentMethodEntry, EmiPlanPayload, EmiPlansResponse, SupportedPaymentMethod } from './types';
 
@@ -638,7 +632,6 @@ describe('EMI', () => {
 
         test.each<[string, () => void]>([
             ['the response holds no issuer', () => mockedGetEmiPlans.mockResolvedValue(emiPlansEmptyResponseMock)],
-            ['every issuer of the response is a debit one', () => mockedGetEmiPlans.mockResolvedValue(emiPlansDebitOnlyResponseMock)],
             ['the token is rejected', () => mockedGetEmiPlans.mockRejectedValue(tokenValidationError())],
             ['the request fails', () => mockedGetEmiPlans.mockRejectedValue(new AdyenCheckoutError('NETWORK_ERROR', 'Call failed'))]
         ])('should keep the spinner, and render no card form, when %s', async (_case, arrange) => {
@@ -653,20 +646,6 @@ describe('EMI', () => {
             expect(screen.queryByLabelText('Provider')).toBeNull();
             expect(screen.queryByRole('button', { name: 'Pay' })).toBeNull();
             expect(emi.formatData()).not.toHaveProperty('emiPlan');
-        });
-
-        test('should offer the credit issuers of a response that also carries debit ones', async () => {
-            mockedGetEmiPlans.mockResolvedValue({
-                issuers: [emiDebitIssuerMock, ...emiPlansResponseMock.issuers]
-            });
-            const { emi } = createEmi();
-
-            await renderWithPlans(emi);
-
-            const providerOptions = within(screen.getAllByRole('listbox')[0]).getAllByRole('option');
-
-            expect(providerOptions).toHaveLength(emiPlansResponseMock.issuers.length);
-            expect(screen.getByLabelText('Provider')).toHaveTextContent(hdfc.issuerName);
         });
     });
 
@@ -1061,14 +1040,8 @@ describe('EMI', () => {
                 expect(validationErrorEvents(sendAnalytics)).toHaveLength(0);
             });
 
-            // Typed `unknown`, as the parsed body is, so the malformed shapes need no cast
-            test.each<[string, unknown]>([
-                ['an empty issuers list', emiPlansEmptyResponseMock],
-                ['null issuers', { issuers: null }],
-                ['no credit issuer', emiPlansDebitOnlyResponseMock],
-                ['no body at all', undefined]
-            ])('should send one no-plans info event, and no error, for %s', async (_case, response) => {
-                mockedGetEmiPlans.mockResolvedValue(response as EmiPlansResponse);
+            test('should send one no-plans info event, and no error, for an empty issuers list', async () => {
+                mockedGetEmiPlans.mockResolvedValue(emiPlansEmptyResponseMock);
                 const { emi, sendAnalytics } = createEmi();
 
                 render(emi.render());

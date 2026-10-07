@@ -92,14 +92,9 @@ line and never translated by the SDK. It is un-localised today and is being rewo
 
 ### What the SDK renders of it
 
-Credit issuers only. `resolvePlanIssuers` keeps the issuers whose `fundingSource` is `credit` and offers no
-other, an allowlist rather than a `debit` exclusion, so a funding source added after this release is left out
-by construction.
-
-That is a product constraint rather than validation: the copy, the plan summary and the card form underneath
-all describe a credit card, so a debit issuer in the provider select is a broken screen no matter how well
-formed the response is. The endpoint answers every SDK version alike, so the client is the only place the
-scoping can live. When no credit issuer is left, the outcome is the same as an amount with no plans: see
+Every issuer of the response, in the order it arrives. The SDK does not filter by `fundingSource` or drop
+issuers: which issuers a shopper is offered is policy, and the backend returns only those this version can
+render. An empty `issuers` list is the same outcome as an amount with no plans: see
 [Loading and failure handling](#loading-and-failure-handling).
 
 ## Payment Request
@@ -209,7 +204,7 @@ display order, and the SDK consumes it directly.
 | `appliedOfferIds` sent to `/payments` | SDK   | Every `offerId` of `plan.offers`, unchanged                                  |
 | Issuer and plan display order         | API   | Response order, plans ascending by `tenureMonths`                            |
 | Default issuer and plan               | SDK   | The first issuer, and that issuer's first plan                               |
-| Which funding sources are rendered    | SDK   | `credit` only, `resolvePlanIssuers`                                          |
+| Which issuers are offered             | API   | Every issuer of `issuers`, unfiltered                                        |
 | Labels and amount formatting          | SDK   | `i18n`                                                                       |
 | Terms and conditions page of the bank | API   | `issuer.termLink`, linked only when it is an `https` URL                     |
 
@@ -219,6 +214,8 @@ display order, and the SDK consumes it directly.
 - The SDK displays only plan types it knows. Unknown types remain selectable.
 - `bestOffer` is the largest `totalInstantDiscountAmount` among the issuer's plans, and is the discount shown
   on the provider row.
+- `issuers` is always an array, empty when no plan is available for the amount, and lists only issuers the
+  shopper can be offered.
 - Every issuer carries at least one plan. An issuer with no plans is not returned.
 - Issuers arrive in display order, and an issuer's plans arrive in display order, ascending by `tenureMonths`.
   The order is stable across identical requests.
@@ -297,7 +294,7 @@ path covers both contexts and Drop-in needs no change. The request is made once 
 memoized, and a later render, such as re-opening the tile, starts from the settled outcome without a spinner.
 
 The request posts `{ "emiToken": "..." }`, taken from `configuration.emiToken` of the `emi` entry, with the
-client key as a query parameter, and times out after 10 seconds rather than the 60-second default, because the
+client key as a query parameter, to `utility/v1/emi/plans` on checkoutShopper, and times out after 10 seconds rather than the 60-second default, because the
 shopper is watching a spinner while it runs. A missing token is still sent, so the backend records the
 misconfiguration.
 
@@ -310,13 +307,13 @@ check: it rejects when the `emi` entry lists no payment method the SDK renders, 
 
 ### Outcomes
 
-| Outcome                                        | Screen                               | Analytics                                                          |
-| ---------------------------------------------- | ------------------------------------ | ------------------------------------------------------------------ |
-| At least one credit issuer with plans          | The plan selection and the card form | `selected` and `displayed` events, unchanged                       |
-| Empty or `null` `issuers`, or no credit issuer | The spinner stays                    | Info event `validationError`, code 949                             |
-| Token rejected as expired                      | The spinner stays                    | Error event, network, code 629 (once the backend distinguishes it) |
-| Token rejected as missing or invalid           | The spinner stays                    | Error event, network, code 630                                     |
-| Any other failure, including the timeout       | The spinner stays                    | Error event, network, code 631                                     |
+| Outcome                                  | Screen                               | Analytics                                                          |
+| ---------------------------------------- | ------------------------------------ | ------------------------------------------------------------------ |
+| At least one issuer                      | The plan selection and the card form | `selected` and `displayed` events, unchanged                       |
+| An empty `issuers` list                  | The spinner stays                    | Info event `validationError`, code 949                             |
+| Token rejected as expired                | The spinner stays                    | Error event, network, code 629 (once the backend distinguishes it) |
+| Token rejected as missing or invalid     | The spinner stays                    | Error event, network, code 630                                     |
+| Any other failure, including the timeout | The spinner stays                    | Error event, network, code 631                                     |
 
 Every analytics message is a fixed string: neither the token nor the backend's error body reaches analytics.
 Until the backend answers an expired token with its own `errorCode`, an expired token is reported as 630.

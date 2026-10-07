@@ -81,7 +81,7 @@ export function EMIPlanSelection({ issuers, selection, onSelectionChange, labell
 
     // Every tagged plan type the provider offers, so the tag advertises what is available at that bank
     // instead of tracking the selection. See ADR-0004-emi-plans-data-transformation for that rule.
-    const getIssuerTags = (issuer: EmiIssuer): TagProps[] | undefined => toTags(issuer.availablePlanTypes ?? []);
+    const getIssuerTags = (issuer: EmiIssuer): TagProps[] | undefined => toTags(issuer.availablePlanTypes);
 
     // Shown as available rather than subtracted, so the amount reads positive
     const getDiscountText = (discount?: PaymentAmount): string | undefined =>
