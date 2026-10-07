@@ -82,10 +82,9 @@ scan.
 
 Any change under `packages/lib/src/**` needs a changeset.
 
-Generating and validating one is owned by a dedicated skill — use it rather than writing the file
+Generating and validating one is owned by the `generate-changeset` skill
+(`.agents/skills/generate-changeset/SKILL.md`) - use it rather than writing the file
 by hand, since the accepted prefixes and format are validated only in CI.
-
-<!-- TODO: link the changeset skill here once it lands. -->
 
 Never edit `package.json` versions by hand — Changesets owns that.
 
