@@ -99,8 +99,8 @@ by construction.
 That is a product constraint rather than validation: the copy, the plan summary and the card form underneath
 all describe a credit card, so a debit issuer in the provider select is a broken screen no matter how well
 formed the response is. The endpoint answers every SDK version alike, so the client is the only place the
-scoping can live. When no credit issuer is left, `isAvailable()` rejects and Drop-in drops the EMI tile, the
-same path an amount with no plans takes.
+scoping can live. When no credit issuer is left, the outcome is the same as an amount with no plans: see
+[Loading and failure handling](#loading-and-failure-handling).
 
 ## Payment Request
 
@@ -211,7 +211,7 @@ display order, and the SDK consumes it directly.
 | Default issuer and plan               | SDK   | The first issuer, and that issuer's first plan                               |
 | Which funding sources are rendered    | SDK   | `credit` only, `resolvePlanIssuers`                                          |
 | Labels and amount formatting          | SDK   | `i18n`                                                                       |
-| Terms and conditions page of the bank | API   | An issuer field, replacing the SDK `ISSUER_TERMS_URLS` map                   |
+| Terms and conditions page of the bank | API   | `issuer.termLink`, linked only when it is an `https` URL                     |
 
 #### Response Contract
 
@@ -279,19 +279,64 @@ The Phase 2 derivations listed at the top are deleted rather than reworked:
 `getDefaultSelection` stays. Preselecting the first row is a presentation rule, and keeping it on the SDK
 means the API expresses the default by ordering rather than by a flag that would need its own validation.
 
-`ISSUER_TERMS_URLS` stays until the issuer carries its terms URL. Until then, only the banks in that map are
-linked and the rest render the terms copy unlinked.
+`ISSUER_TERMS_URLS` goes too. The terms copy links `issuer.termLink` when the issuer carries an `https` URL, and
+renders unlinked otherwise, so the link appears without an SDK release once the backend returns it.
 
-The `plans` configuration prop goes. The SDK fetches the plans itself on component initialization, in both
-flows, so merchants no longer proxy the Checkout API lookup. `EMIConfiguration` loses the prop rather than
-deprecating it, because EMI has not shipped publicly.
+The `plans` and `supportedPaymentMethods` configuration props go. The SDK fetches the plans itself, in both
+flows, so merchants no longer proxy the Checkout API lookup, and reads the supported payment methods and the
+`emiToken` from the `emi` entry of the payment methods response. `EMIConfiguration` loses both props rather
+than deprecating them, because EMI has not shipped publicly.
+
+## Loading and failure handling
+
+### When the plans load
+
+The plans load when the EMI view mounts: when the shopper opens the EMI tile in Drop-in, and when the
+standalone component is mounted. Drop-in renders a payment method only once its tile is selected, so one code
+path covers both contexts and Drop-in needs no change. The request is made once per element: the promise is
+memoized, and a later render, such as re-opening the tile, starts from the settled outcome without a spinner.
+
+The request posts `{ "emiToken": "..." }`, taken from `configuration.emiToken` of the `emi` entry, with the
+client key as a query parameter, and times out after 10 seconds rather than the 60-second default, because the
+shopper is watching a spinner while it runs. A missing token is still sent, so the backend records the
+misconfiguration.
+
+### Why not in `isAvailable()`
+
+Drop-in races every element's `isAvailable()` against a timeout and silently drops the ones that reject.
+Fetching there would remove the EMI tile whenever the endpoint fails, and would fetch for every shopper who
+loads Drop-in, including those who never open EMI. `isAvailable()` keeps only its synchronous configuration
+check: it rejects when the `emi` entry lists no payment method the SDK renders, and resolves otherwise.
+
+### Outcomes
+
+| Outcome                                        | Screen                               | Analytics                                                          |
+| ---------------------------------------------- | ------------------------------------ | ------------------------------------------------------------------ |
+| At least one credit issuer with plans          | The plan selection and the card form | `selected` and `displayed` events, unchanged                       |
+| Empty or `null` `issuers`, or no credit issuer | The spinner stays                    | Info event `validationError`, code 949                             |
+| Token rejected as expired                      | The spinner stays                    | Error event, network, code 629 (once the backend distinguishes it) |
+| Token rejected as missing or invalid           | The spinner stays                    | Error event, network, code 630                                     |
+| Any other failure, including the timeout       | The spinner stays                    | Error event, network, code 631                                     |
+
+Every analytics message is a fixed string: neither the token nor the backend's error body reaches analytics.
+Until the backend answers an expired token with its own `errorCode`, an expired token is reported as 630.
+
+### Why the spinner stays
+
+No component in the SDK renders a "payment method unavailable" screen when its dependency fails. PayPal and
+AmazonPay keep their spinner when their script fails to load, and EMI follows them rather than inventing a
+screen. The card form and the pay button stay hidden while the spinner is shown, so nothing can be paid
+without a plan, and in Drop-in the shopper can still pick another method. There is no retry and no `onError`:
+adding `onError` later is additive for merchants, while removing it after release would change behaviour they
+may rely on. The error screens, and whether to retry, are left to Phase 4.
 
 ### Open at the time of writing
 
 Tracked in the backend review of the checkoutShopper endpoint, and none of them changes the decision above:
 
-- the exact field carrying the plans token on `/paymentMethods` and on the sessions setup response;
+- whether the sessions setup response carries the `emiToken` on its `emi` entry, as `/paymentMethods` does;
+- a distinct `errorCode` for an expired token, which enables code 629;
 - whether `/payments` honours several applied offers on one plan, now that the SDK sends every id rather
   than the largest one;
-- `issuer.termsAndConditionsUrl`;
+- when the backend starts returning `issuer.termLink`;
 - the rework of `processingAmounts.message`, which the SDK renders verbatim until then.
