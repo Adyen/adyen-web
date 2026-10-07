@@ -344,7 +344,7 @@ describe('EMI', () => {
             const supportedPaymentMethods = [{ type: 'scheme', name: 'Cards', brands: ['mc', 'rupay', 'visa'] }];
             const emi = new EMI(createCoreWithSplitSchemes(supportedPaymentMethods), { ...baseProps, supportedPaymentMethods });
 
-            const data = emi.formatData() as Record<string, Record<string, unknown>>;
+            const data = emi.formatData();
 
             expect(emi.card?.props.fundingSource).toBeUndefined();
             expect(data.paymentMethod).not.toHaveProperty('fundingSource');
@@ -359,7 +359,7 @@ describe('EMI', () => {
                 supportedPaymentMethodsConfiguration: { card: { fundingSource: 'debit' } as never }
             });
 
-            const data = emi.formatData() as Record<string, Record<string, unknown>>;
+            const data = emi.formatData();
 
             expect(emi.card?.props.fundingSource).toBeUndefined();
             expect(data.paymentMethod).not.toHaveProperty('fundingSource');
@@ -671,14 +671,14 @@ describe('EMI', () => {
 
         /** `emiPlan` is a sibling of `paymentMethod`, the position Card gives `installments`. */
         test('should place emiPlan next to paymentMethod, never inside it', () => {
-            const data = mountEmi().formatData() as Record<string, Record<string, unknown>>;
+            const data = mountEmi().formatData();
 
             expect(data.emiPlan).toBeDefined();
             expect(data.paymentMethod).not.toHaveProperty('emiPlan');
         });
 
         test('should leave the payment data of the child untouched', () => {
-            const data = mountEmi().formatData() as Record<string, Record<string, unknown>>;
+            const data = mountEmi().formatData();
 
             expect(data.paymentMethod).toHaveProperty('type', TxVariants.scheme);
             expect(data).toHaveProperty('browserInfo');

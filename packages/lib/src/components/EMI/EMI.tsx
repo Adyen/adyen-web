@@ -9,7 +9,14 @@ import { AnalyticsErrorEvent, ErrorEventCode, ErrorEventType } from '../../core/
 import type { ICore } from '../../core/types';
 import type { UIElementStatus } from '../internal/UIElement/types';
 import { EMIConfiguration, EMISupportedPaymentMethod } from './types';
-import type { EmiIssuer, EmiSelection, EmiSelectTarget, EMISupportedPaymentMethodElement, EMISupportedPaymentMethodElements } from './types';
+import type {
+    EmiIssuer,
+    EMIPaymentData,
+    EmiSelection,
+    EmiSelectTarget,
+    EMISupportedPaymentMethodElement,
+    EMISupportedPaymentMethodElements
+} from './types';
 import { SUPPORTED_PAYMENT_METHODS } from './constants';
 
 class EMI extends UIElement<EMIConfiguration> {
@@ -113,8 +120,8 @@ class EMI extends UIElement<EMIConfiguration> {
         return this.state.emiSelection;
     }
 
-    public formatData() {
-        if (!this.activeSupportedPaymentMethodElement) return {};
+    public formatData(): EMIPaymentData {
+        if (!this.activeSupportedPaymentMethodElement) return { paymentMethod: { type: EMI.type } };
 
         const selection = this.emiSelection;
 
@@ -132,7 +139,7 @@ class EMI extends UIElement<EMIConfiguration> {
 
     public override setStatus(status: UIElementStatus): this {
         super.setStatus(status);
-        this.activeFundingSourceElement?.setStatus(status);
+        this.activeSupportedPaymentMethodElement?.setStatus(status);
         return this;
     }
 

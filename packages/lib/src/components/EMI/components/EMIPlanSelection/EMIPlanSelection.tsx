@@ -33,7 +33,7 @@ const getPlanId = (issuer: EmiIssuer, plan: EmiPlan): string =>
     toItemId('plan', [issuer.issuerCode, issuer.fundingSource, plan.type, plan.tenureMonths]);
 
 export function EMIPlanSelection({ issuers, selection, onSelectionChange, labelledBy, describedBy }: Readonly<EMIPlanSelectionProps>): h.JSX.Element {
-    const { i18n, loadingContext } = useCoreContext();
+    const { i18n } = useCoreContext();
     const getImage = useImage();
 
     const { issuer: selectedIssuer, plan: selectedPlan } = selection;
@@ -96,7 +96,7 @@ export function EMIPlanSelection({ issuers, selection, onSelectionChange, labell
     // reason its tags are. See ADR-0004-emi-plans-data-transformation.
     const getIssuerDiscountText = (issuer: EmiIssuer): string | undefined => getDiscountText(selectInstantDiscount(issuer.plans));
 
-    const getIssuerIcon = getIssuerImageUrl({ loadingContext }, TxVariants.emi, getImage);
+    const getIssuerIcon = getIssuerImageUrl({}, TxVariants.emi, getImage);
 
     const issuerItems: SelectItem[] = issuers.map(issuer => ({
         id: getIssuerId(issuer),
