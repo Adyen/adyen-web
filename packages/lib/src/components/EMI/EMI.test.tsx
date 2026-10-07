@@ -1,4 +1,4 @@
-import { render, screen, within } from '@testing-library/preact';
+import { render, screen, waitFor, within } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import EMI from './EMI';
 import CardElement from '../Card';
@@ -6,74 +6,144 @@ import { TxVariants } from '../tx-variants';
 import { Resources } from '../../core/Context/Resources';
 import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 import PaymentMethods from '../../core/ProcessResponse/PaymentMethods';
+import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { AdyenCheckout, ThreeDS2Challenge, ThreeDS2DeviceFingerprint } from '../../index';
 import { InfoEventType, UiTarget } from '../../core/Analytics/events/AnalyticsInfoEvent';
-import { ErrorEventCode, ErrorEventType } from '../../core/Analytics/events/AnalyticsErrorEvent';
-import { emiDebitIssuerMock, emiPlansDebitOnlyResponseMock, emiPlansEmptyResponseMock, emiPlansResponseMock } from './stories/mocks';
+import { AnalyticsErrorEvent, ErrorEventCode, ErrorEventType } from '../../core/Analytics/events/AnalyticsErrorEvent';
+import { getEmiPlans } from './services/getEmiPlans';
+import { EMI_NO_INSTALLMENT_PLANS, EMI_PLANS_TIMEOUT_MS } from './constants';
+import {
+    emiDebitIssuerMock,
+    emiPaymentMethodMock,
+    emiPlansDebitOnlyResponseMock,
+    emiPlansEmptyResponseMock,
+    emiPlansResponseMock
+} from './stories/mocks';
 import type { PaymentActionsType, PaymentData, RawPaymentMethod } from '../../types/global-types';
-import type { EMIConfiguration, EmiPlanPayload, SupportedPaymentMethod } from './types';
+import type { EMIConfiguration, EmiPaymentMethodEntry, EmiPlanPayload, EmiPlansResponse, SupportedPaymentMethod } from './types';
+
+jest.mock('./services/getEmiPlans');
+
+const mockedGetEmiPlans = getEmiPlans as jest.MockedFunction<typeof getEmiPlans>;
 
 const core = setupCoreMock();
 
-/** EMI only offers itself once it has plans, so every construction here starts from a valid response. */
+const CLIENT_KEY = 'test_clientkey';
+
 const baseProps = {
     i18n: core.modules.i18n,
+    clientKey: CLIENT_KEY,
     loadingContext: 'test',
-    modules: { resources: new Resources('test') },
-    plans: emiPlansResponseMock
+    modules: { resources: new Resources('test') }
 };
 
-const [hdfc] = emiPlansResponseMock.issuers;
+const [hdfc, icici] = emiPlansResponseMock.issuers;
 
-const schemePaymentMethod = { type: 'scheme', name: 'Card', brands: ['visa', 'mc'] };
+const schemePaymentMethod = {
+    type: 'scheme',
+    name: 'Card',
+    brands: ['visa', 'mc']
+};
+const upiPaymentMethod = { type: 'upi', name: 'UPI' };
 
-function createCoreWithEmi(hasSupportedScheme: boolean) {
-    const paymentMethods = hasSupportedScheme
-        ? {
-              paymentMethods: [
-                  {
-                      type: 'emi',
-                      name: 'EMI',
-                      supportedPaymentMethods: [schemePaymentMethod]
-                  },
-                  schemePaymentMethod
-              ]
-          }
-        : {
-              paymentMethods: [
-                  {
-                      type: 'emi',
-                      name: 'EMI'
-                  }
-              ]
-          };
+/** The `emi` entry of the payment methods response is what owns the supported payment methods and the token. */
+function createCoreWithEmi(hasSupportedScheme = true, entry: EmiPaymentMethodEntry = {}) {
+    const emiEntry = {
+        ...emiPaymentMethodMock,
+        ...(!hasSupportedScheme && { supportedPaymentMethods: undefined }),
+        ...entry
+    } as RawPaymentMethod;
 
-    return setupCoreMock({ paymentMethods: new PaymentMethods(paymentMethods) });
+    return setupCoreMock({
+        paymentMethods: new PaymentMethods({
+            paymentMethods: [emiEntry, schemePaymentMethod]
+        })
+    });
 }
+
+const createEmi = (props: Partial<EMIConfiguration> = {}, hasSupportedScheme = true, entry: EmiPaymentMethodEntry = {}) => {
+    const coreWithEmi = createCoreWithEmi(hasSupportedScheme, entry);
+    const emi = new EMI(coreWithEmi, { ...baseProps, ...props });
+
+    return {
+        emi,
+        coreWithEmi,
+        sendAnalytics: coreWithEmi.modules.analytics.sendAnalytics as jest.Mock
+    };
+};
 
 /** The several `scheme` entries a `splitCardFundingSources` merchant receives, each with its own funding source and brands. */
 const splitFundingSourceSchemes: RawPaymentMethod[] = [
-    { type: 'scheme', name: 'Debit Card', fundingSource: 'debit', brands: ['maestro'] },
-    { type: 'scheme', name: 'Credit Card', fundingSource: 'credit', brands: ['visa', 'mc', 'amex'] }
+    {
+        type: 'scheme',
+        name: 'Debit Card',
+        fundingSource: 'debit',
+        brands: ['maestro']
+    },
+    {
+        type: 'scheme',
+        name: 'Credit Card',
+        fundingSource: 'credit',
+        brands: ['visa', 'mc', 'amex']
+    }
 ];
 
 function createCoreWithSplitSchemes(supportedPaymentMethods: SupportedPaymentMethod[]) {
     const paymentMethods = {
         // `supportedPaymentMethods` is EMI's own field on the response entry, which `RawPaymentMethod` does not declare
-        paymentMethods: [{ type: 'emi', name: 'EMI', supportedPaymentMethods } as RawPaymentMethod, ...splitFundingSourceSchemes]
+        paymentMethods: [{ ...emiPaymentMethodMock, supportedPaymentMethods } as RawPaymentMethod, ...splitFundingSourceSchemes]
     };
 
     return setupCoreMock({ paymentMethods: new PaymentMethods(paymentMethods) });
 }
 
+/** The Card child, for the tests that need one to exist. */
+const cardOf = (emi: EMI): CardElement => {
+    const { card } = emi;
+    if (!card) throw new Error('EMI created no Card child');
+    return card;
+};
+
+/** Renders the element, then waits for the plans it fetched on mount and for the plan preselected from them. */
+const renderWithPlans = async (emi: EMI) => {
+    const view = render(emi.render());
+    await screen.findByLabelText('Provider');
+    // The preselected plan reaches the element from an effect, which runs only after the plans have been painted
+    await waitFor(() => expect(emi.formatData()).toHaveProperty('emiPlan'));
+
+    return view;
+};
+
+/** The error body checkoutShopper answers a rejected request with, as `http()` keeps it in `cause`. */
+const apiError = (body: { status: number; errorCode: string; errorType: string; message: string; invalidFields?: { name: string }[] }) =>
+    new AdyenCheckoutError('NETWORK_ERROR', body.message, { cause: body });
+
+const tokenValidationError = () =>
+    apiError({
+        status: 422,
+        errorCode: '14_030',
+        errorType: 'validation',
+        message: 'Field emiToken: EMI token cannot be decoded.',
+        invalidFields: [{ name: 'emiToken' }]
+    });
+
+const errorEvents = (sendAnalytics: jest.Mock) =>
+    sendAnalytics.mock.calls.map(([event]) => event).filter((event): event is AnalyticsErrorEvent => event instanceof AnalyticsErrorEvent);
+
+const eventsOfType = (sendAnalytics: jest.Mock, type: InfoEventType) =>
+    sendAnalytics.mock.calls.map(([event]) => event).filter(event => event.type === type);
+
+const validationErrorEvents = (sendAnalytics: jest.Mock) => eventsOfType(sendAnalytics, InfoEventType.validationError);
+
 describe('EMI', () => {
+    beforeEach(() => {
+        mockedGetEmiPlans.mockReset();
+        mockedGetEmiPlans.mockResolvedValue(emiPlansResponseMock);
+    });
+
     describe('formatData', () => {
         test('should delegate to Card formatData when scheme is supported', () => {
-            const coreWithEmi = createCoreWithEmi(true);
-            const emi = new EMI(coreWithEmi, {
-                ...baseProps,
-                supportedPaymentMethods: [schemePaymentMethod]
-            });
+            const { emi } = createEmi();
 
             const data = emi.formatData();
             expect(data).toHaveProperty('paymentMethod');
@@ -81,23 +151,16 @@ describe('EMI', () => {
         });
 
         test('should return only the EMI payment method type when scheme is not supported', () => {
-            const coreWithEmi = createCoreWithEmi(false);
-            const emi = new EMI(coreWithEmi, {
-                ...baseProps
-            });
+            const { emi } = createEmi({}, false);
 
             expect(emi.formatData()).toEqual({
                 paymentMethod: { type: TxVariants.emi }
             });
         });
 
-        /** The plan is preselected by the first render, so an unrendered component has no selection yet. */
+        /** The plan is preselected once the plans have loaded, so an unrendered component has no selection yet. */
         test('should not include emiPlan while no plan has been selected', () => {
-            const coreWithEmi = createCoreWithEmi(true);
-            const emi = new EMI(coreWithEmi, {
-                ...baseProps,
-                supportedPaymentMethods: [schemePaymentMethod]
-            });
+            const { emi } = createEmi();
 
             expect(emi.formatData()).not.toHaveProperty('emiPlan');
         });
@@ -105,20 +168,38 @@ describe('EMI', () => {
 
     describe('isValid', () => {
         test('should return false when no scheme is supported', () => {
-            const coreWithEmi = createCoreWithEmi(false);
-            const emi = new EMI(coreWithEmi, {
-                ...baseProps
-            });
+            const { emi } = createEmi({}, false);
 
             expect(emi.isValid).toBe(false);
         });
 
         test('should return false initially when scheme is supported (card not yet filled)', () => {
-            const coreWithEmi = createCoreWithEmi(true);
-            const emi = new EMI(coreWithEmi, {
-                ...baseProps,
-                supportedPaymentMethods: [schemePaymentMethod]
-            });
+            const { emi } = createEmi();
+
+            expect(emi.isValid).toBe(false);
+        });
+
+        /** A custom pay button can submit at any time, and the payment request needs an `emiPlan`. */
+        test('should return false without a selected plan, even when the card is valid', () => {
+            const { emi } = createEmi();
+            jest.spyOn(cardOf(emi), 'isValid', 'get').mockReturnValue(true);
+
+            expect(emi.isValid).toBe(false);
+        });
+
+        test('should return true once a plan is selected and the card is valid', async () => {
+            const { emi } = createEmi();
+            jest.spyOn(cardOf(emi), 'isValid', 'get').mockReturnValue(true);
+
+            await renderWithPlans(emi);
+
+            expect(emi.isValid).toBe(true);
+        });
+
+        test('should return false with a selected plan while the card is invalid', async () => {
+            const { emi } = createEmi();
+
+            await renderWithPlans(emi);
 
             expect(emi.isValid).toBe(false);
         });
@@ -126,20 +207,13 @@ describe('EMI', () => {
 
     describe('showValidation', () => {
         test('should not throw when no scheme is supported', () => {
-            const coreWithEmi = createCoreWithEmi(false);
-            const emi = new EMI(coreWithEmi, {
-                ...baseProps
-            });
+            const { emi } = createEmi({}, false);
 
             expect(() => emi.showValidation()).not.toThrow();
         });
 
         test('should delegate to card when scheme is supported', () => {
-            const coreWithEmi = createCoreWithEmi(true);
-            const emi = new EMI(coreWithEmi, {
-                ...baseProps,
-                supportedPaymentMethods: [schemePaymentMethod]
-            });
+            const { emi } = createEmi();
 
             expect(() => emi.showValidation()).not.toThrow();
         });
@@ -147,40 +221,30 @@ describe('EMI', () => {
 
     describe('setStatus', () => {
         test('should not throw when no scheme is supported', () => {
-            const coreWithEmi = createCoreWithEmi(false);
-            const emi = new EMI(coreWithEmi, {
-                ...baseProps
-            });
+            const { emi } = createEmi({}, false);
 
             expect(() => emi.setStatus('loading')).not.toThrow();
         });
     });
 
     describe('unsupported scheme rail', () => {
-        test('should not create Card child when supportedPaymentMethods has no scheme', () => {
-            const coreWithEmi = createCoreWithEmi(false);
-            const emi = new EMI(coreWithEmi, {
-                ...baseProps
-            });
+        test('should not create Card child when the entry lists no scheme', () => {
+            const { emi } = createEmi({}, false);
 
             expect(emi.card).toBeUndefined();
             expect(emi.isValid).toBe(false);
         });
 
-        test('should render empty body when scheme is not supported', () => {
-            const coreWithEmi = createCoreWithEmi(false);
-            const emi = new EMI(coreWithEmi, {
-                ...baseProps
-            });
+        test('should render empty body, and fetch no plans, when scheme is not supported', () => {
+            const { emi } = createEmi({}, false);
 
             const { container } = render(emi.render());
             expect(container.innerHTML).toBe('');
+            expect(mockedGetEmiPlans).not.toHaveBeenCalled();
         });
 
-        test('should not initialize card when supportedPaymentMethods contains unsupported rail', () => {
-            const coreWithEmi = createCoreWithEmi(false);
-            const emi = new EMI(coreWithEmi, {
-                ...baseProps,
+        test('should not initialize card when the entry lists an unsupported rail only', () => {
+            const { emi } = createEmi({}, true, {
                 supportedPaymentMethods: [{ type: 'unsupported_rail' }]
             });
 
@@ -190,10 +254,8 @@ describe('EMI', () => {
 
         /** UPI is the rail the response gains next, and a version that renders none of it must drop the tile whole. */
         test('should offer nothing at all when every rail of the response is one it does not render', async () => {
-            const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
-            const emi = new EMI(createCoreWithEmi(false), {
-                ...baseProps,
-                supportedPaymentMethods: [{ type: 'upi', name: 'UPI' }, { type: 'unsupported_rail' }]
+            const { emi } = createEmi({}, true, {
+                supportedPaymentMethods: [upiPaymentMethod, { type: 'unsupported_rail' }]
             });
 
             const { container } = render(emi.render());
@@ -201,17 +263,12 @@ describe('EMI', () => {
             expect(emi.card).toBeUndefined();
             expect(container.innerHTML).toBe('');
             await expect(emi.isAvailable()).rejects.toThrow('EMI: No valid supported payment methods available');
-            warn.mockRestore();
         });
     });
 
     describe('mixed supported payment methods', () => {
-        const upiPaymentMethod = { type: 'upi', name: 'UPI' };
-
-        test('should create Card when supportedPaymentMethods contains both scheme and upi', () => {
-            const coreWithEmi = createCoreWithEmi(true);
-            const emi = new EMI(coreWithEmi, {
-                ...baseProps,
+        test('should create Card when the entry lists both scheme and upi', () => {
+            const { emi } = createEmi({}, true, {
                 supportedPaymentMethods: [schemePaymentMethod, upiPaymentMethod]
             });
 
@@ -220,58 +277,83 @@ describe('EMI', () => {
         });
 
         test('should resolve isAvailable when at least one payment method is supported', async () => {
-            const coreWithEmi = createCoreWithEmi(true);
-            const emi = new EMI(coreWithEmi, {
-                ...baseProps,
+            const { emi } = createEmi({}, true, {
                 supportedPaymentMethods: [schemePaymentMethod, upiPaymentMethod]
             });
 
             await expect(emi.isAvailable()).resolves.toBeUndefined();
         });
 
-        test('should render card form with mixed supported payment methods', () => {
-            const coreWithEmi = createCoreWithEmi(true);
-            const emi = new EMI(coreWithEmi, {
-                ...baseProps,
+        test('should render card form with mixed supported payment methods', async () => {
+            const { emi } = createEmi({}, true, {
                 supportedPaymentMethods: [schemePaymentMethod, upiPaymentMethod]
             });
 
-            const { container } = render(emi.render());
-            expect(container.innerHTML).not.toBe('');
+            await renderWithPlans(emi);
+
+            expect(screen.getByRole('form')).toBeInTheDocument();
         });
 
-        test('should initialize Card even when scheme is not the first entry', () => {
-            const coreWithEmi = createCoreWithEmi(true);
-            const emi = new EMI(coreWithEmi, {
-                ...baseProps,
+        test('should initialize Card even when scheme is not the first entry', async () => {
+            const { emi } = createEmi({}, true, {
                 supportedPaymentMethods: [upiPaymentMethod, schemePaymentMethod]
             });
 
             expect(emi.card).toBeDefined();
             expect(emi.card).toBeInstanceOf(CardElement);
 
-            const { container } = render(emi.render());
-            expect(container.innerHTML).not.toBe('');
+            await renderWithPlans(emi);
+            expect(screen.getByRole('form')).toBeInTheDocument();
+        });
+    });
+
+    /**
+     * Merchant props are spread over the response entry, so a `supportedPaymentMethods` passed as configuration
+     * would win if the component read it from its props. The backend owns the field.
+     */
+    describe('backend-owned fields', () => {
+        test('should ignore supportedPaymentMethods passed as configuration when the entry lists none', async () => {
+            const { emi } = createEmi(
+                {
+                    supportedPaymentMethods: [schemePaymentMethod]
+                } as Partial<EMIConfiguration>,
+                false
+            );
+
+            expect(emi.card).toBeUndefined();
+            await expect(emi.isAvailable()).rejects.toThrow('EMI: No valid supported payment methods available');
+        });
+
+        test('should keep the supported payment methods of the entry over those passed as configuration', () => {
+            const { emi } = createEmi({
+                supportedPaymentMethods: [upiPaymentMethod]
+            } as Partial<EMIConfiguration>);
+
+            expect(emi.card).toBeInstanceOf(CardElement);
+        });
+
+        test('should ignore plans passed as configuration, and fetch them instead', async () => {
+            mockedGetEmiPlans.mockResolvedValue({ issuers: [icici] });
+            const { emi } = createEmi({
+                plans: emiPlansResponseMock
+            } as Partial<EMIConfiguration>);
+
+            await renderWithPlans(emi);
+
+            expect(screen.getByLabelText('Provider')).toHaveTextContent(icici.issuerName);
         });
     });
 
     describe('card getter', () => {
         test('should return CardElement when scheme is supported', () => {
-            const coreWithEmi = createCoreWithEmi(true);
-            const emi = new EMI(coreWithEmi, {
-                ...baseProps,
-                supportedPaymentMethods: [schemePaymentMethod]
-            });
+            const { emi } = createEmi();
 
             expect(emi.card).toBeDefined();
             expect((emi.card?.constructor as { type?: string })?.type).toBe(TxVariants.scheme);
         });
 
         test('should return undefined when scheme is not supported', () => {
-            const coreWithEmi = createCoreWithEmi(false);
-            const emi = new EMI(coreWithEmi, {
-                ...baseProps
-            });
+            const { emi } = createEmi({}, false);
 
             expect(emi.card).toBeUndefined();
         });
@@ -279,12 +361,9 @@ describe('EMI', () => {
 
     describe('prop overrides', () => {
         test('should pass forced overrides to CardElement alongside user config', () => {
-            const coreWithEmi = createCoreWithEmi(true);
             const onBinLookupMock = jest.fn();
 
-            const emi = new EMI(coreWithEmi, {
-                ...baseProps,
-                supportedPaymentMethods: [schemePaymentMethod],
+            const { emi } = createEmi({
                 supportedPaymentMethodsConfiguration: {
                     card: {
                         hasHolderName: false,
@@ -310,14 +389,14 @@ describe('EMI', () => {
     describe('brands', () => {
         test('should take the brands of the matched entry, not those of the first scheme in the response', () => {
             const supportedPaymentMethods = [{ type: 'scheme', name: 'Cards', brands: ['mc', 'rupay', 'visa'] }];
-            const emi = new EMI(createCoreWithSplitSchemes(supportedPaymentMethods), { ...baseProps, supportedPaymentMethods });
+            const emi = new EMI(createCoreWithSplitSchemes(supportedPaymentMethods), baseProps);
 
             expect(emi.card?.props.brands).toEqual(['mc', 'rupay', 'visa']);
         });
 
         test('should fall back to the brands resolved from the response when the matched entry carries none', () => {
             const supportedPaymentMethods = [{ type: 'scheme', name: 'Cards' }];
-            const emi = new EMI(createCoreWithSplitSchemes(supportedPaymentMethods), { ...baseProps, supportedPaymentMethods });
+            const emi = new EMI(createCoreWithSplitSchemes(supportedPaymentMethods), baseProps);
 
             expect(emi.card?.props.brands).toEqual(['maestro']);
         });
@@ -326,7 +405,6 @@ describe('EMI', () => {
             const supportedPaymentMethods = [{ type: 'scheme', name: 'Cards', brands: ['mc', 'rupay', 'visa'] }];
             const emi = new EMI(createCoreWithSplitSchemes(supportedPaymentMethods), {
                 ...baseProps,
-                supportedPaymentMethods,
                 supportedPaymentMethodsConfiguration: { card: { brands: ['rupay'] } }
             });
 
@@ -342,7 +420,7 @@ describe('EMI', () => {
     describe('child card funding source', () => {
         test('should send no funding source, whichever scheme the response lists first', () => {
             const supportedPaymentMethods = [{ type: 'scheme', name: 'Cards', brands: ['mc', 'rupay', 'visa'] }];
-            const emi = new EMI(createCoreWithSplitSchemes(supportedPaymentMethods), { ...baseProps, supportedPaymentMethods });
+            const emi = new EMI(createCoreWithSplitSchemes(supportedPaymentMethods), baseProps);
 
             const data = emi.formatData();
 
@@ -354,9 +432,10 @@ describe('EMI', () => {
             const supportedPaymentMethods = [{ type: 'scheme', name: 'Cards' }];
             const emi = new EMI(createCoreWithSplitSchemes(supportedPaymentMethods), {
                 ...baseProps,
-                supportedPaymentMethods,
                 // `EMIConfiguration` excludes it, but a JavaScript integration can still pass it
-                supportedPaymentMethodsConfiguration: { card: { fundingSource: 'debit' } as never }
+                supportedPaymentMethodsConfiguration: {
+                    card: { fundingSource: 'debit' } as never
+                }
             });
 
             const data = emi.formatData();
@@ -367,7 +446,7 @@ describe('EMI', () => {
 
         test('should keep the config it resolved from the response, which a funding source lookup would lose', () => {
             const supportedPaymentMethods = [{ type: 'scheme', name: 'Cards' }];
-            const emi = new EMI(createCoreWithSplitSchemes(supportedPaymentMethods), { ...baseProps, supportedPaymentMethods });
+            const emi = new EMI(createCoreWithSplitSchemes(supportedPaymentMethods), baseProps);
 
             expect(emi.card?.props.brands).toEqual(['maestro']);
         });
@@ -375,11 +454,7 @@ describe('EMI', () => {
 
     describe('delegation', () => {
         test('formatData delegates to the active supported payment method element', () => {
-            const coreWithEmi = createCoreWithEmi(true);
-            const emi = new EMI(coreWithEmi, {
-                ...baseProps,
-                supportedPaymentMethods: [schemePaymentMethod]
-            });
+            const { emi } = createEmi();
 
             const card = emi.card;
             expect(card).toBeDefined();
@@ -389,26 +464,11 @@ describe('EMI', () => {
 
             expect(emiFormatData).toEqual(cardFormatData);
         });
-
-        test('isValid reflects the underlying CardElement validity', () => {
-            const coreWithEmi = createCoreWithEmi(true);
-            const emi = new EMI(coreWithEmi, {
-                ...baseProps,
-                supportedPaymentMethods: [schemePaymentMethod]
-            });
-
-            expect(emi.isValid).toBe(emi.card?.isValid);
-        });
     });
 
     describe('submit and custom payment button', () => {
         test('submit triggers showValidation when card is invalid', () => {
-            const coreWithEmi = createCoreWithEmi(true);
-            const emi = new EMI(coreWithEmi, {
-                ...baseProps,
-                showPayButton: false,
-                supportedPaymentMethods: [schemePaymentMethod]
-            });
+            const { emi } = createEmi({ showPayButton: false });
 
             const showValidationSpy = jest.spyOn(emi, 'showValidation');
 
@@ -422,42 +482,27 @@ describe('EMI', () => {
          * The plan summary already itemises the transaction amount, the discount and the interest,
          * so repeating the amount on the button only invites the shopper to compare figures.
          */
-        test('native pay button omits the amount', () => {
-            const coreWithEmi = createCoreWithEmi(true);
-            const emi = new EMI(coreWithEmi, {
-                ...baseProps,
-                amount: { value: 100000, currency: 'INR' },
-                supportedPaymentMethods: [schemePaymentMethod]
-            });
+        test('native pay button omits the amount', async () => {
+            const { emi } = createEmi({ amount: { value: 100000, currency: 'INR' } });
 
-            render(emi.render());
+            await renderWithPlans(emi);
 
             expect(screen.getByRole('button', { name: 'Pay' })).toBeInTheDocument();
         });
 
-        test('native pay button is not rendered when showPayButton is false', () => {
-            const coreWithEmi = createCoreWithEmi(true);
-            const emi = new EMI(coreWithEmi, {
-                ...baseProps,
-                showPayButton: false,
-                supportedPaymentMethods: [schemePaymentMethod]
-            });
+        test('native pay button is not rendered when showPayButton is false', async () => {
+            const { emi } = createEmi({ showPayButton: false });
 
-            render(emi.render());
+            await renderWithPlans(emi);
             expect(screen.queryByRole('button', { name: /pay/i })).toBeNull();
         });
     });
 
     describe('onChange', () => {
         test('should call onChange prop on EMI when Card child state changes', () => {
-            const coreWithEmi = createCoreWithEmi(true);
             const onChangeMock = jest.fn();
 
-            const emi = new EMI(coreWithEmi, {
-                ...baseProps,
-                supportedPaymentMethods: [schemePaymentMethod],
-                onChange: onChangeMock
-            });
+            const { emi } = createEmi({ onChange: onChangeMock });
 
             expect(emi.card).toBeDefined();
 
@@ -467,49 +512,167 @@ describe('EMI', () => {
         });
 
         test('should not throw when onChange is not provided', () => {
-            const coreWithEmi = createCoreWithEmi(true);
-
-            const emi = new EMI(coreWithEmi, {
-                ...baseProps,
-                supportedPaymentMethods: [schemePaymentMethod]
-            });
+            const { emi } = createEmi();
 
             expect(() => emi.card?.setState({ data: {} })).not.toThrow();
         });
     });
 
     describe('isAvailable', () => {
-        test('should resolve when valid supported payment methods exist', async () => {
-            const coreWithEmi = createCoreWithEmi(true);
-            const emi = new EMI(coreWithEmi, {
-                ...baseProps,
-                supportedPaymentMethods: [schemePaymentMethod]
-            });
+        test('should resolve when valid supported payment methods exist, without fetching the plans', async () => {
+            const { emi } = createEmi();
 
             await expect(emi.isAvailable()).resolves.toBeUndefined();
+            expect(mockedGetEmiPlans).not.toHaveBeenCalled();
         });
 
-        test('should reject when no supportedPaymentMethods are provided', async () => {
-            const coreWithEmi = createCoreWithEmi(false);
-            const emi = new EMI(coreWithEmi, {
-                ...baseProps
-            });
+        test('should reject with an AdyenCheckoutError when the entry lists no supported payment methods', async () => {
+            const { emi } = createEmi({}, false);
 
-            await expect(emi.isAvailable()).rejects.toThrow('EMI: No valid supported payment methods available');
+            const rejection = emi.isAvailable();
+
+            await expect(rejection).rejects.toBeInstanceOf(AdyenCheckoutError);
+            await expect(rejection).rejects.toThrow('EMI: No valid supported payment methods available');
         });
 
-        test('should reject when supportedPaymentMethods contains unsupported rail', async () => {
-            const coreWithEmi = createCoreWithEmi(false);
-            const emi = new EMI(coreWithEmi, {
-                ...baseProps,
+        test('should reject when the entry lists an unsupported rail only', async () => {
+            const { emi } = createEmi({}, true, {
                 supportedPaymentMethods: [{ type: 'unsupported_rail' }]
             });
 
             await expect(emi.isAvailable()).rejects.toThrow('EMI: No valid supported payment methods available');
         });
+
+        /** Availability does not know about plans: a shopper with nothing to select still sees the tile. */
+        test('should resolve even when the backend has no plans to offer', async () => {
+            mockedGetEmiPlans.mockResolvedValue(emiPlansEmptyResponseMock);
+            const { emi } = createEmi();
+
+            await expect(emi.isAvailable()).resolves.toBeUndefined();
+        });
+    });
+
+    describe('loading the plans', () => {
+        test('should not request the plans before the component renders', async () => {
+            const { emi } = createEmi();
+
+            await emi.isAvailable();
+
+            expect(mockedGetEmiPlans).not.toHaveBeenCalled();
+        });
+
+        test('should request the plans once on the first render, with the token of the entry', async () => {
+            const { emi } = createEmi();
+
+            await renderWithPlans(emi);
+
+            expect(mockedGetEmiPlans).toHaveBeenCalledTimes(1);
+            expect(mockedGetEmiPlans).toHaveBeenCalledWith({
+                emiToken: emiPaymentMethodMock.configuration?.emiToken,
+                clientKey: CLIENT_KEY,
+                loadingContext: 'test',
+                timeout: EMI_PLANS_TIMEOUT_MS
+            });
+        });
+
+        /** Drop-in renders the element again every time the shopper re-opens the tile. */
+        test('should not request the plans again on a second render, and show them without a spinner', async () => {
+            const { emi } = createEmi();
+
+            const { unmount } = await renderWithPlans(emi);
+            unmount();
+
+            render(emi.render());
+
+            expect(screen.getByLabelText('Provider')).toHaveTextContent(hdfc.issuerName);
+            expect(mockedGetEmiPlans).toHaveBeenCalledTimes(1);
+        });
+
+        test('should not request the plans again on a second render after a failure', async () => {
+            mockedGetEmiPlans.mockRejectedValue(
+                new AdyenCheckoutError('NETWORK_ERROR', 'failed', {
+                    cause: new TypeError('Failed to fetch')
+                })
+            );
+            const { emi, sendAnalytics } = createEmi();
+
+            const { unmount } = render(emi.render());
+            await waitFor(() => expect(errorEvents(sendAnalytics)).toHaveLength(1));
+            unmount();
+
+            render(emi.render());
+
+            expect(screen.getByTestId('spinner')).toBeInTheDocument();
+            expect(mockedGetEmiPlans).toHaveBeenCalledTimes(1);
+            expect(errorEvents(sendAnalytics)).toHaveLength(1);
+        });
+
+        /** The backend rejects the request and keeps a trace of the misconfiguration, so it is sent all the same. */
+        test('should request the plans without a token when the entry carries none', async () => {
+            mockedGetEmiPlans.mockRejectedValue(tokenValidationError());
+            const { emi, sendAnalytics } = createEmi({}, true, { configuration: {} });
+
+            render(emi.render());
+
+            await waitFor(() => expect(errorEvents(sendAnalytics)).toHaveLength(1));
+            expect(mockedGetEmiPlans).toHaveBeenCalledWith(expect.objectContaining({ emiToken: undefined }));
+            expect(errorEvents(sendAnalytics)[0]).toEqual(
+                expect.objectContaining({
+                    code: ErrorEventCode.EMI_PLANS_TOKEN_INVALID
+                })
+            );
+        });
+
+        // The card form is not rendered while loading, so the only spinner on screen is the one of EMI
+        test('should show a spinner first, and the plans and the card form once they arrive', async () => {
+            const { emi } = createEmi();
+
+            render(emi.render());
+
+            expect(screen.getByTestId('spinner')).toBeInTheDocument();
+            expect(screen.queryByRole('form')).toBeNull();
+
+            expect(await screen.findByLabelText('Provider')).toHaveTextContent(hdfc.issuerName);
+            expect(screen.getByRole('form')).toBeInTheDocument();
+        });
+
+        test.each<[string, () => void]>([
+            ['the response holds no issuer', () => mockedGetEmiPlans.mockResolvedValue(emiPlansEmptyResponseMock)],
+            ['every issuer of the response is a debit one', () => mockedGetEmiPlans.mockResolvedValue(emiPlansDebitOnlyResponseMock)],
+            ['the token is rejected', () => mockedGetEmiPlans.mockRejectedValue(tokenValidationError())],
+            ['the request fails', () => mockedGetEmiPlans.mockRejectedValue(new AdyenCheckoutError('NETWORK_ERROR', 'Call failed'))]
+        ])('should keep the spinner, and render no card form, when %s', async (_case, arrange) => {
+            arrange();
+            const { emi, sendAnalytics } = createEmi();
+
+            render(emi.render());
+            await waitFor(() => expect([...errorEvents(sendAnalytics), ...validationErrorEvents(sendAnalytics)]).toHaveLength(1));
+
+            expect(screen.getByTestId('spinner')).toBeInTheDocument();
+            expect(screen.queryByRole('form')).toBeNull();
+            expect(screen.queryByLabelText('Provider')).toBeNull();
+            expect(screen.queryByRole('button', { name: 'Pay' })).toBeNull();
+            expect(emi.formatData()).not.toHaveProperty('emiPlan');
+        });
+
+        test('should offer the credit issuers of a response that also carries debit ones', async () => {
+            mockedGetEmiPlans.mockResolvedValue({
+                issuers: [emiDebitIssuerMock, ...emiPlansResponseMock.issuers]
+            });
+            const { emi } = createEmi();
+
+            await renderWithPlans(emi);
+
+            const providerOptions = within(screen.getAllByRole('listbox')[0]).getAllByRole('option');
+
+            expect(providerOptions).toHaveLength(emiPlansResponseMock.issuers.length);
+            expect(screen.getByLabelText('Provider')).toHaveTextContent(hdfc.issuerName);
+        });
     });
 
     describe('handleAction (3DS)', () => {
+        const paymentMethodsResponse = { paymentMethods: [emiPaymentMethodMock as RawPaymentMethod, schemePaymentMethod] };
+
         test('should handle fingerprint action via elementRef propagation', async () => {
             const fingerprintAction = {
                 paymentData: 'Ab02b4c0!BQABAgCUeRP+3La4...',
@@ -523,12 +686,11 @@ describe('EMI', () => {
             const checkout = await AdyenCheckout({
                 countryCode: 'IN',
                 environment: 'test',
-                clientKey: 'test_123456'
+                clientKey: 'test_123456',
+                paymentMethodsResponse
             });
 
-            const emi = new EMI(checkout, {
-                supportedPaymentMethods: [schemePaymentMethod]
-            }).mount('body');
+            const emi = new EMI(checkout).mount('body');
 
             const actionComponent = emi.handleAction(fingerprintAction);
             expect(actionComponent instanceof ThreeDS2DeviceFingerprint).toBe(true);
@@ -549,12 +711,11 @@ describe('EMI', () => {
                 environment: 'test',
                 clientKey: 'test_123456',
                 analytics: { enabled: false },
-                srConfig: { enabled: false }
+                srConfig: { enabled: false },
+                paymentMethodsResponse
             });
 
-            const emi = new EMI(checkout, {
-                supportedPaymentMethods: [schemePaymentMethod]
-            }).mount('body');
+            const emi = new EMI(checkout).mount('body');
 
             const actionComponent = emi.handleAction(challengeAction);
             expect(actionComponent instanceof ThreeDS2Challenge).toBe(true);
@@ -562,89 +723,52 @@ describe('EMI', () => {
     });
 
     describe('UI Rendering', () => {
-        test('should render card form when scheme is supported', () => {
-            const coreWithEmi = createCoreWithEmi(true);
-            const emi = new EMI(coreWithEmi, {
-                ...baseProps,
-                supportedPaymentMethods: [schemePaymentMethod]
-            });
+        test('should render card form when scheme is supported', async () => {
+            const { emi } = createEmi();
 
-            const { container } = render(emi.render());
-            expect(container.innerHTML).not.toBe('');
+            await renderWithPlans(emi);
+            expect(screen.getByRole('form')).toBeInTheDocument();
         });
 
         test('should render nothing when scheme is not supported', () => {
-            const coreWithEmi = createCoreWithEmi(false);
-            const emi = new EMI(coreWithEmi, {
-                ...baseProps
-            });
+            const { emi } = createEmi({}, false);
 
             const { container } = render(emi.render());
             expect(container.innerHTML).toBe('');
         });
 
         test('should expose subtitle via additionalInfo for Drop-in', () => {
-            const coreWithEmi = createCoreWithEmi(true);
-            const emi = new EMI(coreWithEmi, {
-                ...baseProps,
-                supportedPaymentMethods: [schemePaymentMethod]
-            });
+            const { emi } = createEmi();
 
             expect(emi.additionalInfo).toMatch(/installment plans on credit cards/i);
         });
     });
 
     describe('plan selection', () => {
-        test('should preselect the first issuer and its first plan from the plans prop', () => {
-            const coreWithEmi = createCoreWithEmi(true);
-            const emi = new EMI(coreWithEmi, {
-                ...baseProps,
-                supportedPaymentMethods: [schemePaymentMethod]
-            });
+        test('should preselect the first issuer and its first plan of the response', async () => {
+            const { emi } = createEmi();
 
-            render(emi.render());
+            await renderWithPlans(emi);
 
             expect(screen.getByLabelText('Provider')).toHaveTextContent(hdfc.issuerName);
             expect(screen.getByLabelText('Plan')).toHaveTextContent('₹51,666.33 x 3 months');
             expect(screen.getByRole('form')).toBeInTheDocument();
         });
 
-        test('should offer every issuer the response carries', () => {
-            const coreWithEmi = createCoreWithEmi(true);
-            const emi = new EMI(coreWithEmi, {
-                ...baseProps,
-                supportedPaymentMethods: [schemePaymentMethod]
-            });
+        test('should offer every issuer the response carries', async () => {
+            const { emi } = createEmi();
 
-            render(emi.render());
+            await renderWithPlans(emi);
 
             const providerOptions = within(screen.getAllByRole('listbox')[0]).getAllByRole('option');
 
             expect(providerOptions).toHaveLength(emiPlansResponseMock.issuers.length);
         });
 
-        test('should not issue a network request while rendering', () => {
-            const fetchSpy = jest.spyOn(globalThis, 'fetch');
-            const coreWithEmi = createCoreWithEmi(true);
-            const emi = new EMI(coreWithEmi, {
-                ...baseProps,
-                supportedPaymentMethods: [schemePaymentMethod]
-            });
+        test('should include the emiPlan of the preselected plan in formatData', async () => {
+            const { emi } = createEmi();
 
-            render(emi.render());
-
-            expect(fetchSpy).not.toHaveBeenCalled();
-            fetchSpy.mockRestore();
-        });
-
-        test('should include the emiPlan of the preselected plan in formatData', () => {
-            const coreWithEmi = createCoreWithEmi(true);
-            const emi = new EMI(coreWithEmi, {
-                ...baseProps,
-                supportedPaymentMethods: [schemePaymentMethod]
-            });
-
-            render(emi.render());
+            await renderWithPlans(emi);
 
             expect(emi.formatData()).toHaveProperty('emiPlan', {
                 tenureMonths: 3,
@@ -660,41 +784,47 @@ describe('EMI', () => {
     describe('payment data', () => {
         const user = userEvent.setup();
 
-        const mountEmi = (props: Partial<EMIConfiguration> = {}) => {
-            const coreWithEmi = createCoreWithEmi(true);
-            const emi = new EMI(coreWithEmi, { ...baseProps, supportedPaymentMethods: [schemePaymentMethod], ...props });
+        const mountEmi = async (props: Partial<EMIConfiguration> = {}) => {
+            const { emi } = createEmi(props);
 
-            render(emi.render());
+            await renderWithPlans(emi);
 
             return emi;
         };
 
         /** `emiPlan` is a sibling of `paymentMethod`, the position Card gives `installments`. */
-        test('should place emiPlan next to paymentMethod, never inside it', () => {
-            const data = mountEmi().formatData();
+        test('should place emiPlan next to paymentMethod, never inside it', async () => {
+            const data = (await mountEmi()).formatData();
 
             expect(data.emiPlan).toBeDefined();
             expect(data.paymentMethod).not.toHaveProperty('emiPlan');
         });
 
-        test('should leave the payment data of the child untouched', () => {
-            const data = mountEmi().formatData();
+        test('should leave the payment data of the child untouched', async () => {
+            const data = (await mountEmi()).formatData();
 
             expect(data.paymentMethod).toHaveProperty('type', TxVariants.scheme);
             expect(data).toHaveProperty('browserInfo');
         });
 
-        test('should send no emiPlan when no plans were configured', () => {
-            const emi = mountEmi({ plans: undefined, session: core.session });
+        test('should send no emiPlan while the plans are loading', () => {
+            mockedGetEmiPlans.mockReturnValue(new Promise<EmiPlansResponse>(() => {}));
+            const { emi } = createEmi();
+
+            render(emi.render());
 
             expect(emi.formatData()).not.toHaveProperty('emiPlan');
         });
 
         test('should send the plan the shopper switched to', async () => {
-            const emi = mountEmi();
+            const emi = await mountEmi();
 
             await user.click(screen.getByLabelText('Plan'));
-            await user.click(within(screen.getAllByRole('listbox')[1]).getByRole('option', { name: /6 months/i }));
+            await user.click(
+                within(screen.getAllByRole('listbox')[1]).getByRole('option', {
+                    name: /6 months/i
+                })
+            );
 
             expect(emi.formatData()).toHaveProperty('emiPlan', {
                 tenureMonths: 6,
@@ -706,11 +836,14 @@ describe('EMI', () => {
         });
 
         test('should send the provider the shopper switched to, with that provider first plan', async () => {
-            const emi = mountEmi();
-            const [, icici] = emiPlansResponseMock.issuers;
+            const emi = await mountEmi();
 
             await user.click(screen.getByLabelText('Provider'));
-            await user.click(within(screen.getAllByRole('listbox')[0]).getByRole('option', { name: new RegExp(icici.issuerName, 'i') }));
+            await user.click(
+                within(screen.getAllByRole('listbox')[0]).getByRole('option', {
+                    name: new RegExp(icici.issuerName, 'i')
+                })
+            );
 
             expect(emi.formatData()).toHaveProperty('emiPlan', {
                 tenureMonths: 3,
@@ -723,8 +856,8 @@ describe('EMI', () => {
         });
 
         /** The `data` getter is what both submission paths read, so the payload has to survive it. */
-        test('should expose emiPlan on the data getter, alongside the wrapping it adds', () => {
-            const data: PaymentData & { emiPlan?: EmiPlanPayload } = mountEmi().data;
+        test('should expose emiPlan on the data getter, alongside the wrapping it adds', async () => {
+            const data: PaymentData & { emiPlan?: EmiPlanPayload } = (await mountEmi()).data;
 
             expect(data.emiPlan).toEqual(expect.objectContaining({ issuerName: 'HDFC', planType: 'NO_COST' }));
             expect(data.paymentMethod).toHaveProperty('type', TxVariants.scheme);
@@ -733,119 +866,13 @@ describe('EMI', () => {
         });
     });
 
-    describe('plans configuration', () => {
-        const createEmiWith = (props: Partial<EMIConfiguration>) => {
-            const coreWithEmi = createCoreWithEmi(true);
-
-            return new EMI(coreWithEmi, { ...baseProps, supportedPaymentMethods: [schemePaymentMethod], ...props });
-        };
-
-        test('should render nothing and warn when there are no plans and no session', () => {
-            const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
-            const emi = createEmiWith({ plans: undefined });
-
-            const { container } = render(emi.render());
-
-            expect(container.innerHTML).toBe('');
-            expect(warn).toHaveBeenCalledTimes(1);
-            expect(warn).toHaveBeenCalledWith(expect.stringContaining('No installment plans available'));
-            warn.mockRestore();
-        });
-
-        test('should reject isAvailable when there are no plans and no session', async () => {
-            const emi = createEmiWith({ plans: undefined });
-
-            await expect(emi.isAvailable()).rejects.toThrow('EMI: No installment plans available');
-        });
-
-        test('should reject isAvailable when the response holds no usable plan', async () => {
-            const emi = createEmiWith({ plans: emiPlansEmptyResponseMock });
-
-            await expect(emi.isAvailable()).rejects.toThrow('EMI: No installment plans available');
-        });
-
-        /**
-         * Once the lookup starts answering with debit issuers, a shopper offered nothing else is offered no EMI
-         * by this version, the same way an amount without plans is: a tile that shows credit card plans only.
-         */
-        test('should offer no EMI when every issuer of the response is a debit one', async () => {
-            const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
-            const emi = createEmiWith({ plans: emiPlansDebitOnlyResponseMock });
-
-            const { container } = render(emi.render());
-
-            expect(container.innerHTML).toBe('');
-            await expect(emi.isAvailable()).rejects.toThrow('EMI: No installment plans available');
-            warn.mockRestore();
-        });
-
-        test('should offer the credit issuers of a response that also carries debit ones', () => {
-            const emi = createEmiWith({ plans: { issuers: [emiDebitIssuerMock, ...emiPlansResponseMock.issuers] } });
-
-            render(emi.render());
-
-            const providerOptions = within(screen.getAllByRole('listbox')[0]).getAllByRole('option');
-
-            expect(providerOptions).toHaveLength(emiPlansResponseMock.issuers.length);
-            expect(screen.getByLabelText('Provider')).toHaveTextContent(hdfc.issuerName);
-        });
-
-        test('should resolve isAvailable when a session is present without plans', async () => {
-            const emi = createEmiWith({ plans: undefined, session: core.session });
-
-            await expect(emi.isAvailable()).resolves.toBeUndefined();
-        });
-
-        test('should render the Phase 1 card form when a session is present without plans', () => {
-            const emi = createEmiWith({ plans: undefined, session: core.session });
-
-            render(emi.render());
-
-            expect(screen.queryAllByRole('heading')).toHaveLength(0);
-            expect(screen.queryByLabelText('Provider')).toBeNull();
-            expect(screen.getByRole('form')).toBeInTheDocument();
-        });
-
-        test('should use the plans prop rather than the session, so no second lookup is ever needed', () => {
-            const emi = createEmiWith({ session: core.session });
-
-            render(emi.render());
-
-            expect(screen.getByLabelText('Provider')).toHaveTextContent(hdfc.issuerName);
-        });
-
-        test('should offer no EMI, rather than fail to render, when the plans object carries no issuers', () => {
-            const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
-            const emi = createEmiWith({ plans: {} as unknown as EMIConfiguration['plans'] });
-
-            const { container } = render(emi.render());
-
-            expect(container.innerHTML).toBe('');
-            warn.mockRestore();
-        });
-    });
-
     describe('analytics', () => {
         const user = userEvent.setup();
 
-        const setupAnalytics = (props: Partial<EMIConfiguration> = {}, hasSupportedScheme = true) => {
-            const coreWithEmi = createCoreWithEmi(hasSupportedScheme);
-            const emi = new EMI(coreWithEmi, {
-                ...baseProps,
-                ...(hasSupportedScheme && { supportedPaymentMethods: [schemePaymentMethod] }),
-                ...props
-            });
-
-            return { emi, sendAnalytics: coreWithEmi.modules.analytics.sendAnalytics as jest.Mock };
-        };
-
-        const eventsOfType = (sendAnalytics: jest.Mock, type: InfoEventType) =>
-            sendAnalytics.mock.calls.map(([event]) => event).filter(event => event.type === type);
-
         describe('rendered event', () => {
-            test('should track the funding source rendered', () => {
-                const { emi, sendAnalytics } = setupAnalytics();
-                render(emi.render());
+            test('should track the funding source rendered', async () => {
+                const { emi, sendAnalytics } = createEmi();
+                await renderWithPlans(emi);
                 expect(sendAnalytics).toHaveBeenCalledWith(
                     expect.objectContaining({
                         type: InfoEventType.rendered,
@@ -858,31 +885,31 @@ describe('EMI', () => {
                 );
             });
 
-            test('should carry no merchant configuration at all, not even a configured amount', () => {
-                const { emi, sendAnalytics } = setupAnalytics({
+            test('should carry no merchant configuration at all, not even a configured amount', async () => {
+                const { emi, sendAnalytics } = createEmi({
                     amount: { value: 15499900, currency: 'INR' },
-                    supportedPaymentMethodsConfiguration: { card: { hasHolderName: true } }
+                    supportedPaymentMethodsConfiguration: {
+                        card: { hasHolderName: true }
+                    }
                 });
 
-                render(emi.render());
+                await renderWithPlans(emi);
                 const [rendered] = eventsOfType(sendAnalytics, InfoEventType.rendered);
 
                 expect(Object.keys(rendered.configData).sort()).toEqual(['fundingSource', 'showPayButton']);
             });
 
             test('should report the absence of a funding source rather than omitting it', () => {
-                const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
-                const { emi, sendAnalytics } = setupAnalytics({}, false);
+                const { emi, sendAnalytics } = createEmi({}, false);
                 render(emi.render());
                 expect(eventsOfType(sendAnalytics, InfoEventType.rendered)[0].configData).toHaveProperty('fundingSource', 'none');
-                warn.mockRestore();
             });
         });
 
         describe('select displayed events', () => {
-            test('should report both selects together with the values preselected on the shopper behalf', () => {
-                const { emi, sendAnalytics } = setupAnalytics();
-                render(emi.render());
+            test('should report both selects together with the values preselected on the shopper behalf', async () => {
+                const { emi, sendAnalytics } = createEmi();
+                await renderWithPlans(emi);
                 expect(eventsOfType(sendAnalytics, InfoEventType.displayed)).toEqual(
                     expect.arrayContaining([
                         expect.objectContaining({
@@ -902,11 +929,14 @@ describe('EMI', () => {
             });
 
             test('should report the plans of a provider the shopper picks, with its first plan preselected', async () => {
-                const { emi, sendAnalytics } = setupAnalytics();
-                const [, icici] = emiPlansResponseMock.issuers;
-                render(emi.render());
+                const { emi, sendAnalytics } = createEmi();
+                await renderWithPlans(emi);
                 await user.click(screen.getByLabelText('Provider'));
-                await user.click(within(screen.getAllByRole('listbox')[0]).getByRole('option', { name: new RegExp(icici.issuerName, 'i') }));
+                await user.click(
+                    within(screen.getAllByRole('listbox')[0]).getByRole('option', {
+                        name: new RegExp(icici.issuerName, 'i')
+                    })
+                );
                 expect(sendAnalytics).toHaveBeenCalledWith(
                     expect.objectContaining({
                         type: InfoEventType.displayed,
@@ -918,58 +948,71 @@ describe('EMI', () => {
             });
 
             test('should report the provider select once regardless of plan changes', async () => {
-                const { emi, sendAnalytics } = setupAnalytics();
-                render(emi.render());
+                const { emi, sendAnalytics } = createEmi();
+                await renderWithPlans(emi);
                 await user.click(screen.getByLabelText('Plan'));
-                await user.click(within(screen.getAllByRole('listbox')[1]).getByRole('option', { name: /6 months/i }));
+                await user.click(
+                    within(screen.getAllByRole('listbox')[1]).getByRole('option', {
+                        name: /6 months/i
+                    })
+                );
                 const providerEvents = eventsOfType(sendAnalytics, InfoEventType.displayed).filter(event => event.target === UiTarget.emiProvider);
                 expect(providerEvents).toHaveLength(1);
             });
         });
 
         describe('selection events', () => {
-            test('should send no selected event for the plan the component preselects', () => {
-                const { emi, sendAnalytics } = setupAnalytics();
-                render(emi.render());
+            test('should send no selected event for the plan the component preselects', async () => {
+                const { emi, sendAnalytics } = createEmi();
+                await renderWithPlans(emi);
                 expect(eventsOfType(sendAnalytics, InfoEventType.selected)).toHaveLength(0);
             });
 
             test('should report a plan the shopper picks', async () => {
-                const { emi, sendAnalytics } = setupAnalytics();
-                render(emi.render());
+                const { emi, sendAnalytics } = createEmi();
+                await renderWithPlans(emi);
                 await user.click(screen.getByLabelText('Plan'));
-                await user.click(within(screen.getAllByRole('listbox')[1]).getByRole('option', { name: /6 months/i }));
+                await user.click(
+                    within(screen.getAllByRole('listbox')[1]).getByRole('option', {
+                        name: /6 months/i
+                    })
+                );
                 expect(sendAnalytics).toHaveBeenCalledWith(
                     expect.objectContaining({
                         type: InfoEventType.selected,
                         component: TxVariants.emi,
                         target: UiTarget.emiPlan,
-                        issuer: hdfc.issuerCode
+                        issuer: hdfc.issuerCode,
+                        selectedValue: '6'
                     })
                 );
             });
 
             test('should report a provider the shopper picks exactly once', async () => {
-                const { emi, sendAnalytics } = setupAnalytics();
-                const [, icici] = emiPlansResponseMock.issuers;
-                render(emi.render());
+                const { emi, sendAnalytics } = createEmi();
+                await renderWithPlans(emi);
                 await user.click(screen.getByLabelText('Provider'));
-                await user.click(within(screen.getAllByRole('listbox')[0]).getByRole('option', { name: new RegExp(icici.issuerName, 'i') }));
+                await user.click(
+                    within(screen.getAllByRole('listbox')[0]).getByRole('option', {
+                        name: new RegExp(icici.issuerName, 'i')
+                    })
+                );
                 const selected = eventsOfType(sendAnalytics, InfoEventType.selected);
                 expect(selected).toHaveLength(1);
                 expect(selected[0]).toEqual(
                     expect.objectContaining({
                         target: UiTarget.emiProvider,
-                        issuer: icici.issuerCode
+                        issuer: icici.issuerCode,
+                        selectedValue: icici.issuerCode
                     })
                 );
             });
         });
 
         describe('discount banner event', () => {
-            test('should report the banner shown for the preselected plan', () => {
-                const { emi, sendAnalytics } = setupAnalytics();
-                render(emi.render());
+            test('should report the banner shown for the preselected plan', async () => {
+                const { emi, sendAnalytics } = createEmi();
+                await renderWithPlans(emi);
                 expect(sendAnalytics).toHaveBeenCalledWith(
                     expect.objectContaining({
                         type: InfoEventType.displayed,
@@ -980,21 +1023,24 @@ describe('EMI', () => {
                 );
             });
 
-            test('should report nothing when the shopper picks a plan carrying no offer', async () => {
-                const { emi, sendAnalytics } = setupAnalytics();
-                render(emi.render());
+            test('should report nothing when the shopper picks a plan carrying no instant discount', async () => {
+                const { emi, sendAnalytics } = createEmi();
+                await renderWithPlans(emi);
                 const bannersOnMount = eventsOfType(sendAnalytics, InfoEventType.displayed).length;
                 await user.click(screen.getByLabelText('Plan'));
-                await user.click(within(screen.getAllByRole('listbox')[1]).getByRole('option', { name: /6 months/i }));
-                expect(hdfc.plans[1].offers).toBeUndefined();
+                await user.click(
+                    within(screen.getAllByRole('listbox')[1]).getByRole('option', {
+                        name: /6 months/i
+                    })
+                );
+                expect(hdfc.plans[1].transactionAmounts.totalInstantDiscountAmount).toBeUndefined();
                 expect(eventsOfType(sendAnalytics, InfoEventType.displayed)).toHaveLength(bannersOnMount);
             });
         });
 
         describe('error events', () => {
             test('should report the dropped tile when no payment method is supported', async () => {
-                const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
-                const { emi, sendAnalytics } = setupAnalytics({}, false);
+                const { emi, sendAnalytics } = createEmi({}, false);
                 await expect(emi.isAvailable()).rejects.toThrow('EMI: No valid supported payment methods available');
                 expect(sendAnalytics).toHaveBeenCalledWith(
                     expect.objectContaining({
@@ -1004,28 +1050,114 @@ describe('EMI', () => {
                         message: 'EMI: No valid supported payment methods available'
                     })
                 );
-                warn.mockRestore();
             });
 
-            test('should report the dropped tile when no installment plan is available', async () => {
-                const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
-                const { emi, sendAnalytics } = setupAnalytics({ plans: undefined });
-                await expect(emi.isAvailable()).rejects.toThrow('EMI: No installment plans available');
-                expect(sendAnalytics).toHaveBeenCalledWith(
+            test('should send no error and no validation event when the plans arrive', async () => {
+                const { emi, sendAnalytics } = createEmi();
+
+                await renderWithPlans(emi);
+
+                expect(errorEvents(sendAnalytics)).toHaveLength(0);
+                expect(validationErrorEvents(sendAnalytics)).toHaveLength(0);
+            });
+
+            // Typed `unknown`, as the parsed body is, so the malformed shapes need no cast
+            test.each<[string, unknown]>([
+                ['an empty issuers list', emiPlansEmptyResponseMock],
+                ['null issuers', { issuers: null }],
+                ['no credit issuer', emiPlansDebitOnlyResponseMock],
+                ['no body at all', undefined]
+            ])('should send one no-plans info event, and no error, for %s', async (_case, response) => {
+                mockedGetEmiPlans.mockResolvedValue(response as EmiPlansResponse);
+                const { emi, sendAnalytics } = createEmi();
+
+                render(emi.render());
+
+                await waitFor(() => expect(validationErrorEvents(sendAnalytics)).toHaveLength(1));
+                expect(validationErrorEvents(sendAnalytics)[0]).toEqual(
                     expect.objectContaining({
-                        errorType: ErrorEventType.implementation,
-                        code: ErrorEventCode.EMI_NO_INSTALLMENT_PLANS
+                        component: TxVariants.emi,
+                        type: InfoEventType.validationError,
+                        validationErrorCode: EMI_NO_INSTALLMENT_PLANS,
+                        validationErrorMessage: 'EMI: No installment plans available'
                     })
                 );
-                warn.mockRestore();
+                expect(errorEvents(sendAnalytics)).toHaveLength(0);
+            });
+
+            test.each<[string, () => unknown, ErrorEventCode]>([
+                ['an invalid token', tokenValidationError, ErrorEventCode.EMI_PLANS_TOKEN_INVALID],
+                // Until the backend answers expiry with its own errorCode, an expired token is the same validation error
+                ['an expired token', tokenValidationError, ErrorEventCode.EMI_PLANS_TOKEN_INVALID],
+                [
+                    'another API error',
+                    () =>
+                        apiError({
+                            status: 500,
+                            errorCode: '901',
+                            errorType: 'internal',
+                            message: 'Internal error'
+                        }),
+                    ErrorEventCode.EMI_PLANS_FETCH_FAILED
+                ],
+                [
+                    'a network failure',
+                    () =>
+                        new AdyenCheckoutError('NETWORK_ERROR', 'Call failed', {
+                            cause: new TypeError('Failed to fetch')
+                        }),
+                    ErrorEventCode.EMI_PLANS_FETCH_FAILED
+                ],
+                [
+                    'a timeout',
+                    () =>
+                        new AdyenCheckoutError('NETWORK_ERROR', 'Call failed', {
+                            cause: new DOMException('Timed out', 'TimeoutError')
+                        }),
+                    ErrorEventCode.EMI_PLANS_FETCH_FAILED
+                ]
+            ])('should send one network error event for %s', async (_case, createError, code) => {
+                mockedGetEmiPlans.mockRejectedValue(createError());
+                const { emi, sendAnalytics } = createEmi();
+
+                render(emi.render());
+
+                await waitFor(() => expect(errorEvents(sendAnalytics)).toHaveLength(1));
+                expect(errorEvents(sendAnalytics)[0]).toEqual(
+                    expect.objectContaining({
+                        component: TxVariants.emi,
+                        errorType: ErrorEventType.network,
+                        code,
+                        message: 'EMI: Installment plans request failed'
+                    })
+                );
+                expect(validationErrorEvents(sendAnalytics)).toHaveLength(0);
+            });
+
+            test('should put neither the token nor the backend error message into the event', async () => {
+                mockedGetEmiPlans.mockRejectedValue(tokenValidationError());
+                const { emi, sendAnalytics } = createEmi();
+
+                render(emi.render());
+
+                await waitFor(() => expect(errorEvents(sendAnalytics)).toHaveLength(1));
+                const payload = JSON.stringify(sendAnalytics.mock.calls.map(([event]) => event));
+                expect(payload).not.toContain(emiPaymentMethodMock.configuration?.emiToken);
+                expect(payload).not.toContain('cannot be decoded');
             });
         });
 
         test('should carry no amount, and no data of the card the shopper is filling in', async () => {
-            const { emi, sendAnalytics } = setupAnalytics({ amount: { value: 15499900, currency: 'INR' } });
-            render(emi.render());
+            const { emi, sendAnalytics } = createEmi({
+                amount: { value: 15499900, currency: 'INR' }
+            });
+            await renderWithPlans(emi);
             await user.click(screen.getByLabelText('Provider'));
-            await user.click(within(screen.getAllByRole('listbox')[0]).getByRole('option', { name: new RegExp(hdfc.issuerName, 'i') }));
+            await user.click(
+                within(screen.getAllByRole('listbox')[0]).getByRole('option', {
+                    name: new RegExp(hdfc.issuerName, 'i')
+                })
+            );
             const payload = JSON.stringify(sendAnalytics.mock.calls.map(([event]) => event));
             expect(payload).not.toContain('5166633');
             expect(payload).not.toContain('INR');
