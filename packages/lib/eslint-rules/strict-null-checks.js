@@ -115,9 +115,7 @@ const STRICT_NULL_CHECKS_BACKLOG = [
     'src/components/internal/PhoneInput/PhoneInputForm.tsx',
 
     // Ticket 4 but handle in a different ticket after ticket 2 gets merged
-    'src/components/internal/Address/validate.ts',
     'src/components/internal/CompanyDetails/validate.ts',
-    'src/components/internal/PhoneInput/validate.ts',
     'src/components/internal/IbanInput/validate.ts',
 
     // ── Ticket 5: Card, Card Input and Custom Card (100 errors) ──
