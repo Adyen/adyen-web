@@ -12,7 +12,7 @@ class ApplePaySdkLoader {
         this.analytics = analytics;
     }
 
-    public async load(): Promise<ApplePaySession> {
+    public async load(): Promise<typeof ApplePaySession | undefined> {
         try {
             const scriptElement = new Script({
                 src: APPLE_PAY_SDK_URL,
