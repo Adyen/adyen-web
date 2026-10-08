@@ -76,7 +76,7 @@
     }
 }
 
-$pm-details-expand-duration: variable-generator.token(animation-duration-slow);
+$pm-details-expand-duration: variable-generator.token(animation-duration-moderate);
 
 .adyen-checkout-pm-details-wrapper {
     display: grid;
