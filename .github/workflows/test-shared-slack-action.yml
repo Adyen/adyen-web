@@ -1,6 +1,9 @@
 name: Test shared Slack action
 
 on:
+    push:
+        branches:
+            - test/shared-slack-action
     workflow_dispatch:
 
 permissions:
@@ -16,13 +19,13 @@ jobs:
               uses: Adyen/github-actions/slack/app/send-message@fd9a035cadd3ed37c97453ce4075a32b20292d73 # feat/add-slack-actions
               with:
                   bot-token: ${{ secrets.SLACK_BOT_TOKEN }}
-                  channel: ${{ vars.CHECKOUT_WEB_CHANNEL_ID }}
+                  channel: ${{ secrets.DIMITRA_CHANNEL_ID }}
                   message: 'Testing the shared Slack action from ${{ github.repository }}.'
 
             - name: Send thread reply
               uses: Adyen/github-actions/slack/app/send-message@fd9a035cadd3ed37c97453ce4075a32b20292d73 # feat/add-slack-actions
               with:
                   bot-token: ${{ secrets.SLACK_BOT_TOKEN }}
-                  channel: ${{ vars.CHECKOUT_WEB_CHANNEL_ID }}
+                  channel: ${{ secrets.DIMITRA_CHANNEL_ID }}
                   message: 'Thread reply sent successfully by the shared Slack action.'
                   thread-ts: ${{ steps.parent-message.outputs.thread-ts }}
