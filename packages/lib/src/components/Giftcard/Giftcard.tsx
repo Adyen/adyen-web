@@ -11,7 +11,7 @@ import { PayButtonProps } from '../internal/PayButton/PayButton';
 export class GiftcardElement extends UIElement<GiftCardConfiguration> {
     public static readonly type: TxVariants = TxVariants.giftcard;
 
-    protected componentRef: GiftcardComponent | undefined;
+    declare protected componentRef: GiftcardComponent | undefined;
 
     protected static readonly defaultProps = {
         brandsConfiguration: {}

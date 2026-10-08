@@ -21,5 +21,5 @@ export type ClickToPayPaymentData = {
         type: string;
     };
     origin: string;
-    browserInfo: BrowserInfo;
+    browserInfo: BrowserInfo | undefined;
 };

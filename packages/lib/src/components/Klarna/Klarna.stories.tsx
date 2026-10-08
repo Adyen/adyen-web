@@ -2,7 +2,7 @@ import { h } from 'preact';
 import { MetaConfiguration, StoryConfiguration } from '../../../storybook/types';
 import { ComponentContainer } from '../../../storybook/components/ComponentContainer';
 import { KlarnaConfiguration } from './types';
-import Klarna from './KlarnaPayments';
+import { Klarna } from '@adyen/adyen-web';
 import { Checkout } from '../../../storybook/components/Checkout';
 import { COUNTRY_CODES } from '../../../storybook/constants/countries';
 

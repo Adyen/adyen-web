@@ -2,7 +2,7 @@ import { h } from 'preact';
 import { MetaConfiguration, PaymentMethodStoryProps, StoryConfiguration } from '../../../storybook/types';
 import { ComponentContainer } from '../../../storybook/components/ComponentContainer';
 import { Checkout } from '../../../storybook/components/Checkout';
-import MealVoucherFR from './MealVoucherFR';
+import { MealVoucherFR } from '@adyen/adyen-web';
 import { GiftCardConfiguration } from '../types';
 
 type MealVoucherFRStory = StoryConfiguration<GiftCardConfiguration>;

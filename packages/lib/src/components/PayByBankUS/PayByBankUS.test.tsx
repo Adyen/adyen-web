@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/preact';
 import PayByBankUS from './PayByBankUS';
 import userEvent from '@testing-library/user-event';
+import { Resources } from '../../core/Context/Resources';
 import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 
 describe('PayByBank US', () => {
@@ -16,9 +17,9 @@ describe('PayByBank US', () => {
         const core = setupCoreMock();
 
         const pbb = new PayByBankUS(core, {
-            i18n: global.i18n,
+            i18n: core.modules.i18n,
             loadingContext: 'test',
-            modules: { resources: global.resources }
+            modules: { resources: core.modules.resources }
         });
 
         render(pbb.render());
@@ -31,9 +32,9 @@ describe('PayByBank US', () => {
 
         const pbb = new PayByBankUS(core, {
             onSubmit: onSubmitMock,
-            i18n: global.i18n,
+            i18n: core.modules.i18n,
             loadingContext: 'test',
-            modules: { resources: global.resources }
+            modules: { resources: core.modules.resources }
         });
 
         render(pbb.render());
@@ -50,9 +51,9 @@ describe('PayByBank US', () => {
 
         const pbb = new PayByBankUS(core, {
             onSubmit: onSubmitMock,
-            i18n: global.i18n,
+            i18n: core.modules.i18n,
             loadingContext: 'test',
-            modules: { resources: global.resources },
+            modules: { resources: core.modules.resources },
             showPayButton: false
         });
 
@@ -69,9 +70,9 @@ describe('PayByBank US', () => {
 
         const pbb = new PayByBankUS(core, {
             storedPaymentMethodId: 'MOCK_ID',
-            i18n: global.i18n,
+            i18n: core.modules.i18n,
             loadingContext: 'test',
-            modules: { resources: global.resources }
+            modules: { resources: core.modules.resources }
         });
 
         render(pbb.render());
@@ -84,9 +85,9 @@ describe('PayByBank US', () => {
 
         const pbb = new PayByBankUS(core, {
             storedPaymentMethodId: 'MOCK_ID',
-            i18n: global.i18n,
+            i18n: core.modules.i18n,
             loadingContext: 'test',
-            modules: { resources: global.resources }
+            modules: { resources: core.modules.resources }
         });
 
         render(pbb.render());
@@ -99,11 +100,27 @@ describe('PayByBank US', () => {
         const pbb = new PayByBankUS(core, {
             storedPaymentMethodId: 'MOCK_ID',
             label: 'Label mock',
-            i18n: global.i18n,
+            i18n: core.modules.i18n,
             loadingContext: 'test',
-            modules: { resources: global.resources }
+            modules: { resources: core.modules.resources }
         });
 
         expect(pbb.displayName).toBe('Label mock');
+    });
+
+    test('should build the brand logo urls from the paybybank image folder', () => {
+        const core = setupCoreMock();
+
+        const pbb = new PayByBankUS(core, {
+            i18n: core.modules.i18n,
+            modules: { resources: new Resources('https://cdn.adyen.com/') }
+        });
+
+        expect(pbb.brands).toEqual([
+            { icon: 'https://cdn.adyen.com/images/logos/paybybank/US-1.svg', name: 'Wells Fargo' },
+            { icon: 'https://cdn.adyen.com/images/logos/paybybank/US-2.svg', name: 'Bank of America' },
+            { icon: 'https://cdn.adyen.com/images/logos/paybybank/US-3.svg', name: 'Chase' },
+            { icon: 'https://cdn.adyen.com/images/logos/paybybank/US-4.svg', name: 'Citi' }
+        ]);
     });
 });

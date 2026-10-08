@@ -76,7 +76,7 @@ export interface ChallengeData {
     acsURL: string;
     cReqData: CReqData;
     iframeSizeArr: string[];
-    postMessageDomain: string;
+    postMessageDomain: string | null;
 }
 
 export interface ResultObject {
@@ -116,7 +116,7 @@ export interface FingerPrintData {
     threeDSServerTransID: string;
     threeDSMethodURL: string;
     threeDSMethodNotificationURL: string;
-    postMessageDomain: string;
+    postMessageDomain: string | null;
 }
 
 export type ThreeDS2FingerprintResponse = {

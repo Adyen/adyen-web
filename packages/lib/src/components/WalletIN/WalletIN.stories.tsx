@@ -3,7 +3,7 @@ import { MetaConfiguration, PaymentMethodStoryProps, StoryConfiguration } from '
 import { ComponentContainer } from '../../../storybook/components/ComponentContainer';
 import { Checkout } from '../../../storybook/components/Checkout';
 import { IssuerListConfiguration } from '../types';
-import WalletIN from './index';
+import { WalletIN } from '@adyen/adyen-web';
 
 type WalletINStory = StoryConfiguration<IssuerListConfiguration>;
 

@@ -2,7 +2,7 @@ import { h } from 'preact';
 import { MetaConfiguration, StoryConfiguration } from '../../../storybook/types';
 import { ComponentContainer } from '../../../storybook/components/ComponentContainer';
 import { Checkout } from '../../../storybook/components/Checkout';
-import Iris from './Iris';
+import { Iris } from '@adyen/adyen-web';
 import { IrisConfiguration } from '../types';
 
 type IrisStory = StoryConfiguration<IrisConfiguration>;

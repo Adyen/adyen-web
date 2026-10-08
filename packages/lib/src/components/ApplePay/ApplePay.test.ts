@@ -275,7 +275,7 @@ describe('ApplePay', () => {
             const event = mock<ApplePayJS.ApplePayPaymentAuthorizedEvent>({
                 payment: {
                     token: {
-                        paymentData: 'payment-data'
+                        paymentData: 'test'
                     }
                 }
             });
@@ -321,7 +321,7 @@ describe('ApplePay', () => {
             const event = mock<ApplePayJS.ApplePayPaymentAuthorizedEvent>({
                 payment: {
                     token: {
-                        paymentData: 'payment-data'
+                        paymentData: 'test'
                     }
                 }
             });
@@ -364,7 +364,7 @@ describe('ApplePay', () => {
             const event = mock<ApplePayJS.ApplePayPaymentAuthorizedEvent>({
                 payment: {
                     token: {
-                        paymentData: 'payment-data'
+                        paymentData: 'test'
                     }
                 }
             });
@@ -421,7 +421,7 @@ describe('ApplePay', () => {
             const event = mock<ApplePayJS.ApplePayPaymentAuthorizedEvent>({
                 payment: {
                     token: {
-                        paymentData: 'payment-data'
+                        paymentData: 'test'
                     }
                 }
             });
@@ -466,7 +466,7 @@ describe('ApplePay', () => {
             const event = mock<ApplePayJS.ApplePayPaymentAuthorizedEvent>({
                 payment: {
                     token: {
-                        paymentData: 'payment-data'
+                        paymentData: 'test'
                     }
                 }
             });
@@ -541,7 +541,7 @@ describe('ApplePay', () => {
                         subLocality: ''
                     },
                     token: {
-                        paymentData: 'payment-data'
+                        paymentData: 'test'
                     }
                 }
             });
@@ -595,7 +595,7 @@ describe('ApplePay', () => {
                     street: '1 Infinite Loop Unit 100'
                 },
                 paymentMethod: {
-                    applePayToken: 'InBheW1lbnQtZGF0YSI=',
+                    applePayToken: expect.any(String),
                     checkoutAttemptId: TEST_CHECKOUT_ATTEMPT_ID,
                     sdkData: expect.any(String),
                     type: 'applepay'
@@ -604,6 +604,9 @@ describe('ApplePay', () => {
                     clientData: TEST_RISK_DATA
                 }
             });
+
+            // applePayToken is the base64 of the Apple Pay paymentData, so assert the round-trip
+            expect(JSON.parse(atob(onChangeMock.mock.calls[0][0].data.paymentMethod.applePayToken))).toBe('test');
 
             const data = onAuthorizedMock.mock.calls[0][0];
             expect(data.authorizedEvent).toBe(event);

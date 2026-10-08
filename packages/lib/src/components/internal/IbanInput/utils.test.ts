@@ -28,6 +28,11 @@ describe('IBAN Utils', () => {
             expect(getIbanPlaceHolder(noCountryCode)).toBe('AB00 1234 5678 9012 3456 7890');
             expect(getIbanPlaceHolder()).toBe('AB00 1234 5678 9012 3456 7890');
         });
+
+        test('Returns the generic example for null and for an unknown country', () => {
+            expect(getIbanPlaceHolder(null)).toBe('AB00 1234 5678 9012 3456 7890');
+            expect(getIbanPlaceHolder('XX')).toBe('AB00 1234 5678 9012 3456 7890');
+        });
     });
 
     describe('getNextCursorPosition', () => {

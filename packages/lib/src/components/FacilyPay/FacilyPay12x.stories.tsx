@@ -2,7 +2,7 @@ import { h } from 'preact';
 import { MetaConfiguration, StoryConfiguration } from '../../../storybook/types';
 import { OpenInvoiceConfiguration } from '../types';
 import { ComponentContainer } from '../../../storybook/components/ComponentContainer';
-import FacilyPay12x from './FacilyPay12x';
+import { FacilPay12x as FacilyPay12x } from '@adyen/adyen-web';
 import { Checkout } from '../../../storybook/components/Checkout';
 
 type FacilyPay12xStory = StoryConfiguration<OpenInvoiceConfiguration>;

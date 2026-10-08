@@ -2,7 +2,6 @@ import { Fragment, h } from 'preact';
 import RedirectElement from '../Redirect';
 import RedirectButton from '../internal/RedirectButton';
 import { TxVariants } from '../tx-variants';
-import getIssuerImageUrl from '../../utils/get-issuer-image';
 import PayButton from '../internal/PayButton';
 import { payAmountLabel } from '../internal/PayButton/utils';
 import { PaymentMethodBrand } from '../../types/global-types';
@@ -47,9 +46,8 @@ export default class PayByBankUS extends RedirectElement {
     Hardcode US brands 
     */
     get brands(): PaymentMethodBrand[] {
-        const getImage = props => this.resources.getImage(props);
         // paybybank_AIS_DD / tx_variant not used here since images are kept in paybybank subfolder
-        const getIssuerIcon = getIssuerImageUrl({}, 'paybybank', getImage);
+        const getIssuerIcon = this.resources.getImage({ parentFolder: 'paybybank/' });
 
         // hardcoding
         return [

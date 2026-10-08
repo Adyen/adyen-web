@@ -12,8 +12,8 @@ export interface CompanyDetailsProps {
     namePrefix?: string;
     requiredFields?: string[];
     visibility?: FieldsetVisibility;
-    data: CompanyDetailsSchema;
-    onChange: (newState: object) => void;
+    data?: CompanyDetailsSchema;
+    onChange?: (newState: object) => void;
     readonly?: boolean;
     validationRules?: ValidatorRules;
     setComponentRef?: (ref: ComponentMethodsRef) => void;

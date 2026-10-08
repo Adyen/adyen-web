@@ -1,9 +1,9 @@
+import { AdyenCheckout } from '@adyen/adyen-web';
 import { createSession } from './checkout-api-calls';
 import { RETURN_URL, SHOPPER_REFERENCE, STORYBOOK_ENVIRONMENT_URLS } from '../config/commonConfig';
 import { handleError, handleFinalState } from './checkout-handlers';
 import getCurrency from '../utils/get-currency';
-import Checkout from '../../src/core/core';
-import { AdyenCheckout } from '../../src/core/AdyenCheckout';
+import type Checkout from '../../src/core/core';
 
 import type { AdyenCheckoutProps, ShopperDetails } from '../types';
 

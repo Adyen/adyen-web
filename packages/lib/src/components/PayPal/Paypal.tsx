@@ -197,7 +197,7 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
             this.reject = reject;
 
             this.makePaymentsCall()
-                .then(sanitizeResponse)
+                ?.then(sanitizeResponse)
                 .then(verifyPaymentDidNotFail)
                 .then(this.handleResponse)
                 .catch((e: PaymentResponseData | Error) => {

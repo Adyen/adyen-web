@@ -13,7 +13,7 @@ describe('ThreeDS2DeviceFingerprint', () => {
             const fingerprintComponent = new ThreeDS2DeviceFingerprint(core, {
                 paymentData: 'payment-data',
                 token: 'xxx',
-                showSpinner: null
+                showSpinner: false
             });
             render(fingerprintComponent.render());
 
@@ -30,12 +30,12 @@ describe('ThreeDS2DeviceFingerprint', () => {
             const fingerprintComponent = new ThreeDS2DeviceFingerprint(core, {
                 token: 'xxx',
                 onError: () => {},
-                showSpinner: null
+                showSpinner: false
             });
             render(fingerprintComponent.render());
 
             expect(core.modules.analytics.sendAnalytics).toHaveBeenCalledWith({
-                component: fingerprintComponent.constructor['type'],
+                component: ThreeDS2DeviceFingerprint.type,
                 errorType: ErrorEventType.threeDS2,
                 message: `${THREEDS2_FINGERPRINT_ERROR}: Missing 'paymentData' property from threeDS2 action`,
                 code: ErrorEventCode.THREEDS2_ACTION_IS_MISSING_PAYMENT_DATA,
@@ -52,7 +52,7 @@ describe('ThreeDS2DeviceFingerprint', () => {
             const fingerprintComponent = new ThreeDS2DeviceFingerprint(core, {
                 token: 'xxx',
                 onError: () => {},
-                showSpinner: null
+                showSpinner: false
             });
 
             // @ts-ignore - spying internal method
@@ -71,7 +71,7 @@ describe('ThreeDS2DeviceFingerprint', () => {
             const fingerprintComponent = new ThreeDS2DeviceFingerprint(core, {
                 token: 'xxx',
                 onError: () => {},
-                showSpinner: null,
+                showSpinner: false,
                 on3DS2RedirectFlowComplete,
                 isMDFlow: true
             });

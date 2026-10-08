@@ -42,6 +42,7 @@ Run from the repo root unless noted.
 | Strict TS scan           | `yarn validate:strict`                                                                      |
 | Strict TS scan, one file | `yarn workspace @adyen/adyen-web exec tsc -p tsconfig.strict.json 2>&1 \| grep <file-name>` |
 | E2E, one component       | `yarn test:e2e tests/e2e/<component>/<component>.spec.ts --project=chromium`                |
+| E2E dist, one component  | `yarn test:e2e:dist tests/e2e/<component>/<component>.spec.ts --project=chromium` (slow — builds the library first) |
 | Validate locales         | `yarn validate:locales`                                                                     |
 | Bundle size              | `yarn workspace @adyen/adyen-web size`                                                      |
 | Auto-fix formatting      | `yarn format`                                                                               |

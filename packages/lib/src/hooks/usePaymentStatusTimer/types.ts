@@ -42,3 +42,9 @@ export interface UsePaymentStatusTimerProps {
     pollStatus?: () => Promise<RawPaymentResponse | RawPaymentStatusResponse>;
     onActionHandled?: (payload: ActionHandledReturnObject) => void;
 }
+
+/** A failed poll stores whatever was rejected, which may not be an object */
+export interface NetworkErrorPaymentStatus {
+    type: 'network-error';
+    props: unknown;
+}

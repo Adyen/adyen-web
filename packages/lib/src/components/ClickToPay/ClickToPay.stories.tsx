@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import { Checkout } from '../../../storybook/components/Checkout';
 import { ComponentContainer } from '../../../storybook/components/ComponentContainer';
-import ClickToPay from './ClickToPay';
+import { ClickToPay } from '@adyen/adyen-web';
 
 import type { MetaConfiguration, StoryConfiguration } from '../../../storybook/types';
 import type { ClickToPayConfiguration } from './types';

@@ -23,7 +23,7 @@ describe('ThreeDS2Challenge', () => {
             expect(wasCalledWithRenderedEvent).toBe(false);
         });
 
-        test('should generate analytics error event if not initiated with paymentData', () => {
+        test('should generate analytics error event if not initiated with an authorisationToken', () => {
             const core = setupCoreMock();
 
             const threeDS2Challenge = new ThreeDS2Challenge(core, {
@@ -35,7 +35,7 @@ describe('ThreeDS2Challenge', () => {
             expect(core.modules.analytics.sendAnalytics).toHaveBeenCalledWith({
                 component: 'threeDS2Challenge',
                 errorType: ErrorEventType.threeDS2,
-                message: `${THREEDS2_CHALLENGE_ERROR}: Missing 'paymentData' property from threeDS2 action`,
+                message: `${THREEDS2_CHALLENGE_ERROR}: Missing 'authorisationToken' property from threeDS2 action`,
                 code: ErrorEventCode.THREEDS2_ACTION_IS_MISSING_PAYMENT_DATA,
                 timestamp: expect.any(String),
                 id: expect.any(String)

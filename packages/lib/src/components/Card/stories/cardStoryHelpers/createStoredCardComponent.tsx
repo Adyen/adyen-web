@@ -1,8 +1,8 @@
 import { Fragment, h } from 'preact';
+import { Card } from '@adyen/adyen-web';
 import { PaymentMethodStoryProps } from '../../../../../storybook/types';
 import { CardConfiguration } from '../../types';
 import { Checkout } from '../../../../../storybook/components/Checkout';
-import Card from '../../Card';
 import { ComponentContainer } from '../../../../../storybook/components/ComponentContainer';
 import './storedCard.style.scss';
 

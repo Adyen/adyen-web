@@ -2,9 +2,7 @@ import { h } from 'preact';
 import { Checkout } from '../../../storybook/components/Checkout';
 import { ComponentContainer } from '../../../storybook/components/ComponentContainer';
 
-import { AdyenCheckout } from '../../core/AdyenCheckout';
-import Dropin from '../Dropin';
-import Ach from './Ach';
+import { AdyenCheckout, Dropin, Ach } from '@adyen/adyen-web';
 
 import type { MetaConfiguration, StoryConfiguration } from '../../../storybook/types';
 import type { AchConfiguration } from './types';

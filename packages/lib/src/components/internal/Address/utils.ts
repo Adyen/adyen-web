@@ -7,8 +7,10 @@ import { StringObject, AddressType } from './types';
  * Used by the SRPanel sorting function to tell it whether we need to prepend the field type to the SR panel message, and, if so, we retrieve the correct translation for the field type.
  * (Whether we need to prepend the field type depends on whether we know that the error message correctly reflects the label of the field. Ultimately all error messages should do this
  * and this mapping fn will become redundant)
+ *
+ * TODO: This function should probably be using Specifications instead of hardcoded ADDRESS_SCHEMA
  */
-export const mapFieldKey = (key: string, i18n: Language, countrySpecificLabels: StringObject): string => {
+export const mapFieldKey = (key: string, i18n: Language, countrySpecificLabels: StringObject): string | null => {
     if (ADDRESS_SCHEMA.includes(key as AddressField)) {
         return countrySpecificLabels?.[key] ? i18n.get(countrySpecificLabels?.[key]) : i18n.get(key);
     }

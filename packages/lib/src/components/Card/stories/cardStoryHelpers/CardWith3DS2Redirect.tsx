@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import Card from '../..';
+import { Card } from '@adyen/adyen-web';
 import getCurrency from '../../../../../storybook/utils/get-currency';
 import { makePayment } from '../../../../../storybook/helpers/checkout-api-calls';
 import { PaymentMethodStoryProps } from '../../../../../storybook/types';

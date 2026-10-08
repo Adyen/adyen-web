@@ -3,7 +3,7 @@ import checkPaymentStatus from '../../core/Services/payment-status';
 import { processPaymentStatusResponse } from '../../core/ProcessResponse/PaymentStatus';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { CountdownTime } from '../../components/internal/Countdown/types';
-import { PaymentStatusTimerActions, PaymentStatusTimerState, UsePaymentStatusTimerProps } from './types';
+import { NetworkErrorPaymentStatus, PaymentStatusTimerActions, PaymentStatusTimerState, UsePaymentStatusTimerProps } from './types';
 import {
     DEFAULT_PAYMENT_STATUS_TIMER_DELAY_MS,
     DEFAULT_PAYMENT_STATUS_TIMER_THROTTLE_INTERVAL_MS,
@@ -37,7 +37,7 @@ export function usePaymentStatusTimer(props: Readonly<UsePaymentStatusTimerProps
         setCompleted(true);
         setLoading(false);
 
-        if (status.props.payload) {
+        if (status.props?.payload) {
             const additionalDetailsData: AdditionalDetailsData = {
                 data: {
                     details: { payload: status.props.payload },
@@ -55,7 +55,7 @@ export function usePaymentStatusTimer(props: Readonly<UsePaymentStatusTimerProps
         setExpired(true);
         setLoading(false);
 
-        if (status.props.payload) {
+        if (status.props?.payload) {
             const additionalDetailsData: AdditionalDetailsData = {
                 data: {
                     details: { payload: status.props.payload },
@@ -81,13 +81,11 @@ export function usePaymentStatusTimer(props: Readonly<UsePaymentStatusTimerProps
 
         return pollStatusFunction()
             .then(processPaymentStatusResponse)
-            .catch(
-                (error: unknown): ProcessedPaymentStatusResponse => ({
-                    type: 'network-error',
-                    props: error
-                })
-            )
-            .then((status: ProcessedPaymentStatusResponse) => {
+            .catch((error: unknown): NetworkErrorPaymentStatus => ({
+                type: 'network-error',
+                props: error
+            }))
+            .then((status: ProcessedPaymentStatusResponse | NetworkErrorPaymentStatus) => {
                 switch (status.type) {
                     case 'success':
                         onComplete(status);
@@ -127,12 +125,13 @@ export function usePaymentStatusTimer(props: Readonly<UsePaymentStatusTimerProps
             }
         };
 
-        timeoutRef.current = setTimeout(() => {
+        const timeoutId = setTimeout(() => {
             void statusInterval();
         }, delay);
+        timeoutRef.current = timeoutId;
 
         return () => {
-            clearTimeout(timeoutRef.current);
+            clearTimeout(timeoutId);
         };
     }, [expired, completed, loading, delay, props.throttleTime, props.throttleInterval, timePassed]);
 

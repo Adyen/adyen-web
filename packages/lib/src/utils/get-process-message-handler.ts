@@ -14,7 +14,7 @@ import { PostMsgParseErrorObject } from '../components/ThreeDS2/types';
 
 const getProcessMessageHandler =
     (
-        domain: string,
+        domain: string | null,
         resolve: (value: unknown) => void,
         reject: (reason?: unknown) => void,
         expectedType: string

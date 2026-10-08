@@ -3,7 +3,7 @@ import { MetaConfiguration, PaymentMethodStoryProps, StoryConfiguration } from '
 import { ComponentContainer } from '../../../../storybook/components/ComponentContainer';
 import { Checkout } from '../../../../storybook/components/Checkout';
 import { RedirectConfiguration } from '../types';
-import RedirectElement from '..';
+import { Redirect as RedirectElement } from '@adyen/adyen-web';
 
 type RedirectStory = StoryConfiguration<RedirectConfiguration>;
 

@@ -72,8 +72,10 @@ const withCore = (children: h.JSX.Element) => (
 
 type RenderSelectProps = Partial<SelectProps> & { items: SelectItem[] };
 
-const renderSelect = (props: RenderSelectProps) =>
-    render(withCore(<Select className="" classNameModifiers={[]} readonly={false} name={SELECT_NAME} {...props} />));
+const renderSelect = (props: RenderSelectProps) => {
+    const onChange = props.onChange ? props.onChange : () => {};
+    return render(withCore(<Select className="" classNameModifiers={[]} readonly={false} name={SELECT_NAME} onChange={onChange} {...props} />));
+};
 
 interface ControlledSelectProps {
     items: SelectItem[];
@@ -82,7 +84,7 @@ interface ControlledSelectProps {
 const ControlledSelect = ({ items }: Readonly<ControlledSelectProps>) => {
     const [selectedValue, setSelectedValue] = useState<string | number | undefined>('');
 
-    const props: RenderSelectProps = {
+    const props = {
         items,
         filterable: false,
         selectedValue,

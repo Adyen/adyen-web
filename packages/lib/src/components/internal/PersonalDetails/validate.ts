@@ -5,9 +5,7 @@ import { validationRules } from '../../../utils/Validator/defaultRules';
 
 export const personalDetailsValidationRules: ValidatorRules = {
     default: {
-        validate: value => {
-            return value && value.length > 0;
-        },
+        validate: value => (isEmpty(value) ? null : true), // valid, if there are chars other than spaces
         errorMessage: ERROR_FIELD_REQUIRED,
         modes: ['blur']
     },

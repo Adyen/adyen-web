@@ -73,7 +73,7 @@ class DoFingerprint3DS2 extends Component<DoFingerprint3DS2Props, DoFingerprint3
         window.removeEventListener('message', this.processMessageHandler);
     }
 
-    render({ threeDSMethodURL, onActionHandled, onFormSubmit }, { base64URLencodedData }) {
+    render({ threeDSMethodURL, onActionHandled, onFormSubmit }: DoFingerprint3DS2Props, { base64URLencodedData }: DoFingerprint3DS2State) {
         return (
             <div className="adyen-checkout__3ds2-device-fingerprint">
                 {this.props.showSpinner && <Spinner />}

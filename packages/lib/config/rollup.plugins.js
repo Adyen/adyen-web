@@ -70,6 +70,7 @@ export const compileJavascript = ({ target, sourceMaps = false } = {}) => {
                     syntax: 'typescript'
                 },
                 transform: {
+                    useDefineForClassFields: true,
                     react: {
                         pragma: 'h',
                         pragmaFrag: 'Fragment'

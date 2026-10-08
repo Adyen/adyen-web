@@ -98,6 +98,30 @@ test('should create a customer request with on file action', async () => {
     });
 });
 
+test('should create a customer request without one time action when no amount is provided', async () => {
+    const sdkLoader = mock<ICashAppSdkLoader>();
+    const cashAppWindowObject = mock<ICashAppWindowObject>();
+    const cashAppSdk = mock<ICashAppSDK>();
+
+    sdkLoader.load.mockResolvedValue(cashAppWindowObject);
+    cashAppWindowObject.pay.mockResolvedValue(cashAppSdk);
+
+    const service = new CashAppService(sdkLoader, { ...configuration, storePaymentMethod: true });
+
+    await service.initialize();
+    await service.createCustomerRequest();
+
+    expect(cashAppSdk.customerRequest).toHaveBeenCalledWith({
+        referenceId: configuration.referenceId,
+        redirectURL: configuration.redirectURL,
+        actions: {
+            onFile: {
+                scopeId: configuration.scopeId
+            }
+        }
+    });
+});
+
 test('should create a customer request with on file AND one time actions', async () => {
     const sdkLoader = mock<ICashAppSdkLoader>();
     const cashAppWindowObject = mock<ICashAppWindowObject>();

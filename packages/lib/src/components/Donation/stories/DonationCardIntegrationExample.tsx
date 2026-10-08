@@ -1,9 +1,7 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { h } from 'preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
-import { AdyenCheckout } from '../../../core/AdyenCheckout';
-import Card from '../../Card/Card';
-import Donation from '../Donation';
+import { AdyenCheckout, Card, Donation } from '@adyen/adyen-web';
 import { DonationConfiguration } from '../types';
 import { AdditionalDetailsData } from '../../../core/types';
 import { PaymentMethodStoryProps } from '../../../../storybook/types';

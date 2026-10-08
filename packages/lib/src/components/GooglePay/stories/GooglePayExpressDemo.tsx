@@ -3,7 +3,7 @@ import { useEffect, useState } from 'preact/hooks';
 import { ComponentContainer } from '../../../../storybook/components/ComponentContainer';
 import getCurrency from '../../../../storybook/utils/get-currency';
 import { makePayment } from '../../../../storybook/helpers/checkout-api-calls';
-import GooglePay from '../GooglePay';
+import { GooglePay } from '@adyen/adyen-web';
 import { createGooglePayAmountHelper, getShippingOptions, getTransactionInfo, EXPRESS_DEMO_SETTINGS } from './googlePayExpressUtils';
 import { InfoBox } from './GooglePayExpressDemoInfo';
 import type { ICore } from '../../../types';

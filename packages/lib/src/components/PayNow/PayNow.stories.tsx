@@ -3,7 +3,7 @@ import { MetaConfiguration, PaymentMethodStoryProps, StoryConfiguration } from '
 import { QRLoaderConfiguration } from '../../types';
 import { ComponentContainer } from '../../../storybook/components/ComponentContainer';
 import { Checkout } from '../../../storybook/components/Checkout';
-import PayNow from './PayNow';
+import { PayNow } from '@adyen/adyen-web';
 
 type PayNowStory = StoryConfiguration<QRLoaderConfiguration>;
 

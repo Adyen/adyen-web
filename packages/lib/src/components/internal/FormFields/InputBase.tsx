@@ -1,5 +1,6 @@
 import {
     h,
+    HTMLInputTypeAttribute,
     RefCallback,
     InputHTMLAttributes,
     GenericEventHandler,
@@ -20,23 +21,17 @@ export interface InputBaseProps extends InputHTMLAttributes {
     classNameModifiers?: string[];
     isInvalid?: boolean;
     isValid?: boolean;
-    readonly?: boolean;
     uniqueId?: string;
-    disabled?: boolean;
     className?: string;
+    type?: HTMLInputTypeAttribute; // We force the type here because InputHTMLAttributes allows any string
     placeholder?: string;
-    value?: string;
-    name?: string;
-    checked?: boolean;
     setRef?: RefCallback<HTMLInputElement>;
     trimOnBlur?: boolean;
     i18n?: Language;
     label?: string;
     onBlurHandler?: GenericEventHandler<HTMLInputElement>;
     onFocusHandler?: GenericEventHandler<HTMLInputElement>;
-    maxlength?: number | null;
     addContextualElement?: boolean;
-    type?: string;
     /**
      * WCAG 2.2 autocomplete token for browser autofill.
      * Pass undefined to omit the attribute entirely.
@@ -45,8 +40,8 @@ export interface InputBaseProps extends InputHTMLAttributes {
     autocomplete: AutocompleteValue;
 }
 
-export default function InputBase({ setRef, ...props }: Readonly<InputBaseProps>) {
-    const { autoCorrect, classNameModifiers, isInvalid, isValid, readonly = null, spellcheck, type, uniqueId, disabled } = props;
+export default function InputBase({ setRef, type = 'text', classNameModifiers = [], ...props }: Readonly<InputBaseProps>) {
+    const { autoCorrect, isInvalid, isValid, readonly, spellcheck, uniqueId, disabled } = props;
     const className = props.className;
 
     /**
@@ -100,12 +95,11 @@ export default function InputBase({ setRef, ...props }: Readonly<InputBaseProps>
             'adyen-checkout__input--invalid': isInvalid,
             'adyen-checkout__input--valid': isValid
         },
-        (classNameModifiers ?? []).map(m => `adyen-checkout__input--${m}`)
+        classNameModifiers.map(m => `adyen-checkout__input--${m}`)
     );
 
     // Don't spread classNameModifiers etc to input element (it ends up as an attribute on the element itself)
     const {
-        classNameModifiers: cnm,
         uniqueId: uid,
         isInvalid: iiv,
         isValid: iv,
@@ -115,9 +109,9 @@ export default function InputBase({ setRef, ...props }: Readonly<InputBaseProps>
         ...restProps
     } = props;
 
-    const internalDescribedBy = uniqueId ? `${uniqueId}${isInvalid ? ARIA_ERROR_SUFFIX : ARIA_CONTEXT_SUFFIX}` : null;
-    const extraDescribedBy = typeof ariaDescribedByProp === 'string' && ariaDescribedByProp ? ariaDescribedByProp : null;
-    const mergedAriaDescribedBy = [extraDescribedBy, internalDescribedBy].filter(Boolean).join(' ') || null;
+    const internalDescribedBy = uniqueId ? `${uniqueId}${isInvalid ? ARIA_ERROR_SUFFIX : ARIA_CONTEXT_SUFFIX}` : undefined;
+    const extraDescribedBy = typeof ariaDescribedByProp === 'string' && ariaDescribedByProp ? ariaDescribedByProp : undefined;
+    const mergedAriaDescribedBy = [extraDescribedBy, internalDescribedBy].filter(Boolean).join(' ') || undefined;
 
     return (
         <input
@@ -143,8 +137,3 @@ export default function InputBase({ setRef, ...props }: Readonly<InputBaseProps>
         />
     );
 }
-
-InputBase.defaultProps = {
-    type: 'text',
-    classNameModifiers: []
-};

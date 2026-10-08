@@ -79,4 +79,19 @@ describe('getProcessMessageHandler', () => {
         expect(processEvent(event)).toBe('Event data has "type" but the object is not in the expected form');
         expect(resolveFunction.mock.calls.length).toBe(0);
     });
+
+    test('should ignore every message when the expected domain is null', () => {
+        const resolveFunction = jest.fn();
+        const rejectFunction = jest.fn();
+
+        const event = {
+            origin: 'http://fake-domain.com',
+            data
+        };
+
+        const processEvent = getProcessMessageHandler(null, resolveFunction, rejectFunction, expectedType);
+        expect(processEvent(event)).toBe('Message was not sent from the expected domain');
+        expect(resolveFunction).toHaveBeenCalledTimes(0);
+        expect(rejectFunction).toHaveBeenCalledTimes(0);
+    });
 });

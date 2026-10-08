@@ -1,4 +1,4 @@
-import { sanitizeResponse } from './utils';
+import { getRegulatoryDefaults, sanitizeResponse } from './utils';
 
 describe('components utils', () => {
     describe('getSanitizedResponse', () => {
@@ -17,6 +17,12 @@ describe('components utils', () => {
             expect(sanitizedResponse.resultCode).toBeTruthy();
             expect(sanitizedResponse.sessionResult).toBeTruthy();
             expect((sanitizedResponse as any).someBackendProperty).toBeUndefined();
+        });
+    });
+
+    describe('getRegulatoryDefaults', () => {
+        test('should return no defaults when the country code is undefined', () => {
+            expect(getRegulatoryDefaults(undefined, true)).toEqual({});
         });
     });
 });

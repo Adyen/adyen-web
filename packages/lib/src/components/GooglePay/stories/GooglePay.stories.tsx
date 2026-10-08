@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import { ComponentContainer } from '../../../../storybook/components/ComponentContainer';
-import GooglePay from '../GooglePay';
+import { GooglePay } from '@adyen/adyen-web';
 import { Checkout } from '../../../../storybook/components/Checkout';
 import { GooglePayExpressDemo } from './GooglePayExpressDemo';
 import { GooglePayExpressSessionsDemo } from './GooglePayExpressSessionsDemo';

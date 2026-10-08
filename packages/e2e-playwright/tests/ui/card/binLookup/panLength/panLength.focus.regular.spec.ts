@@ -192,7 +192,8 @@ test.describe('Test Card, & binLookup w. panLength property', () => {
 
         // Wait for the panLength to make focus jump, then refocus the number field
         await expect(card.expiryDateInput).toBeFocused();
-        await card.cardNumberInput.focus();
+        // Force focus to the field
+        await card.cardNumberLabelElement.click();
         await expect(card.cardNumberInput).toBeFocused();
         // Move to the end of the PAN and type the extra digit through the locator
         await card.cardNumberInput.press('End');

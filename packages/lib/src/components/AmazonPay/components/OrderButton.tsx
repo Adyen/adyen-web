@@ -22,10 +22,10 @@ export default function OrderButton(props: Readonly<OrderButtonProps>) {
             region
         };
 
-        updateAmazonCheckoutSession(loadingContext, clientKey, request)
+        updateAmazonCheckoutSession(loadingContext, clientKey ?? '', request)
             .then(response => {
                 if (!response?.action?.type) return console.error(response.errorMessage || 'Could not get the AmazonPay URL');
-                if (response.action.type === 'redirect') window.location.assign(response.action.url);
+                if (response.action.type === 'redirect' && response.action.url) window.location.assign(response.action.url);
             })
             .catch(error => {
                 if (props.onError) props.onError(error, this.componentRef);

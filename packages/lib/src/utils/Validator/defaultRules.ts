@@ -29,6 +29,7 @@ const isDateOfBirthValid = (value: string, validationRule: ValidatorRule): boole
     }
     validationRule.errorMessage = 'dateOfBirth.invalid';
     const rawValue = unformatDate(value);
+    if (!rawValue) return false;
     const ageDiff = Date.now() - Date.parse(rawValue);
     const age = new Date(ageDiff).getFullYear() - 1970;
     return age >= 18;

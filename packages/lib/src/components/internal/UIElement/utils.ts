@@ -5,7 +5,7 @@ import { IDropin } from '../../Dropin/types';
 const ALLOWED_PROPERTIES = ['action', 'resultCode', 'sessionData', 'order', 'sessionResult', 'donationToken', 'error', 'askDonation'];
 
 export function sanitizeResponse(response: RawPaymentResponse): PaymentResponseData {
-    const removedProperties = [];
+    const removedProperties: string[] = [];
 
     const sanitizedObject = Object.keys(response).reduce((acc, cur) => {
         if (!ALLOWED_PROPERTIES.includes(cur)) {
@@ -55,7 +55,7 @@ export function assertIsDropin(element?: UIElement): element is UIElement & IDro
     return isDropin;
 }
 
-export function getRegulatoryDefaults(countryCode: string, isDropinInstance: boolean) {
+export function getRegulatoryDefaults(countryCode: string | undefined, isDropinInstance: boolean) {
     switch (countryCode) {
         // Finnish regulations state that no payment method can be open by default
         case 'FI':

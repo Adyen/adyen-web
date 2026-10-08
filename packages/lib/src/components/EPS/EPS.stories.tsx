@@ -2,7 +2,7 @@ import { h } from 'preact';
 import { MetaConfiguration, PaymentMethodStoryProps, StoryConfiguration } from '../../../storybook/types';
 import { ComponentContainer } from '../../../storybook/components/ComponentContainer';
 import { Checkout } from '../../../storybook/components/Checkout';
-import EPS from './index';
+import { EPS } from '@adyen/adyen-web';
 import { IssuerListConfiguration } from '../types';
 
 type EPSStory = StoryConfiguration<IssuerListConfiguration>;

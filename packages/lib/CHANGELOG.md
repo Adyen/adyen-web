@@ -1,5 +1,19 @@
 # @adyen/adyen-web
 
+## 6.46.0
+
+### Minor Changes
+
+- New: Support configurable disclaimer message above Pay button ([#4179](https://github.com/Adyen/adyen-web/pull/4179))
+
+- New: Updated the Address component for Japan with a localized field set including new Prefecture (stateOrProvince) selector. Minor Japanese translations updates. ([#4119](https://github.com/Adyen/adyen-web/pull/4119))
+
+### Patch Changes
+
+- Fixed: Gift card pay button now shows a loading state while the balance check is in progress ([#4197](https://github.com/Adyen/adyen-web/pull/4197))
+
+- Fixed: Prevent inherited class properties from being overwritten during initialization. ([#4204](https://github.com/Adyen/adyen-web/pull/4204))
+
 ## 6.45.1
 
 ### Patch Changes

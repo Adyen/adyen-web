@@ -28,7 +28,7 @@ const paypalAuthorizedEvent: any = {
                     brand_name: 'TestMerchantCheckout'
                 }
             },
-            custom_id: 'TestMerchantCheckout:pub.v2.8115658705713940.a4Emqe6G-EueTjFogWUNHbARjs036ujUj8pgkf0Qbnw:58499:GMZ7B4X28BL4QM65:paypal',
+            custom_id: 'TestMerchantCheckout:mock-client-key:58499:GMZ7B4X28BL4QM65:paypal',
             invoice_id: 'GMZ7B4X28BL4QM65',
             soft_descriptor: '387-checkout-component',
             shipping: {

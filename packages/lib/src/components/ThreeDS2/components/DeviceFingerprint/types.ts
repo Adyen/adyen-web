@@ -7,7 +7,7 @@ export interface DoFingerprint3DS2Props extends FingerPrintData {
     onCompleteFingerprint: (resolveObject: ThreeDS2FlowObject) => void;
     onErrorFingerprint: (rejectObject: ThreeDS2FlowObject) => void;
     showSpinner: boolean;
-    onActionHandled: (rtnObj: ActionHandledReturnObject) => void;
+    onActionHandled?: (rtnObj: ActionHandledReturnObject) => void;
     onFormSubmit: (msg: string) => void;
 }
 

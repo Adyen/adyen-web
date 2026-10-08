@@ -12,7 +12,7 @@ export default function DragonpayVoucherResult(props: Readonly<DragonpayVoucherR
     const { i18n } = useCoreContext();
     const getImage = useImage();
     const issuerImageUrl =
-        paymentMethodType !== 'dragonpay_otc_philippines' ? getIssuerImageUrl({}, paymentMethodType, getImage)(issuer.toLowerCase()) : null;
+        paymentMethodType !== 'dragonpay_otc_philippines' ? getIssuerImageUrl({}, paymentMethodType, getImage)(issuer.toLowerCase()) : undefined;
 
     return (
         <Voucher

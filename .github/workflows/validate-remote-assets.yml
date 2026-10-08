@@ -10,7 +10,7 @@ on:
 
 jobs:
   check-secured-fields-assets:
-    if: contains(github.head_ref, 'changeset-release')
+    if: github.repository == 'adyen/adyen-web' && contains(github.head_ref, 'changeset-release')
 
     runs-on: ubuntu-latest
     permissions:
@@ -22,7 +22,8 @@ jobs:
 
       - name: Getting SF_VERSION in the codebase
         run: |
-          echo "SF_VERSION=$(grep -e 'SF_VERSION' packages/lib/src/components/internal/SecuredFields/lib/constants.ts | cut -d "'" -f2)" >> $GITHUB_ENV
+          SF_VERSION=$(grep -e 'SF_VERSION' packages/lib/src/components/internal/SecuredFields/lib/constants.ts | cut -d "'" -f2)
+          echo "SF_VERSION=$SF_VERSION" >> "$GITHUB_ENV"
 
       - name: Encoding test origin URL to base64
         env:
@@ -45,18 +46,22 @@ jobs:
       - name: Comment PR that request failed
         if: failure()
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9
+        env:
+          SF_VERSION: ${{ env.SF_VERSION }}
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const { issue: { number: issue_number }, repo: { owner, repo }  } = context;
-            await github.rest.issues.createComment({ issue_number, owner, repo, body: '⚠️ WARNING: SecuredFields v${{ env.SF_VERSION }} might not be available live ⚠️' });
+            await github.rest.issues.createComment({ issue_number, owner, repo, body: `⚠️ WARNING: SecuredFields v${process.env.SF_VERSION} might not be available live ⚠️` });
 
 
       - name: Comment PR that request succeeded
         if: success()
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9
+        env:
+          SF_VERSION: ${{ env.SF_VERSION }}
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const { issue: { number: issue_number }, repo: { owner, repo }  } = context;
-            await github.rest.issues.createComment({ issue_number, owner, repo, body: '✅ SecuredFields v${{ env.SF_VERSION }} are available live' });
+            await github.rest.issues.createComment({ issue_number, owner, repo, body: `✅ SecuredFields v${process.env.SF_VERSION} are available live` });

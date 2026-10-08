@@ -23,7 +23,7 @@ class DropinElement extends UIElement<DropinConfiguration> implements IDropin {
 
     public dropinRef = null;
 
-    public elementRef: DropinElement;
+    declare public elementRef: DropinElement;
 
     private readonly paymentMethodsConfiguration: PaymentMethodsConfiguration;
     /**

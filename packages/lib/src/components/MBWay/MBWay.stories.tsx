@@ -3,7 +3,7 @@ import { http, HttpResponse } from 'msw';
 import { MetaConfiguration, PaymentMethodStoryProps, StoryConfiguration } from '../../../storybook/types';
 import { ComponentContainer } from '../../../storybook/components/ComponentContainer';
 import { Checkout } from '../../../storybook/components/Checkout';
-import MBWay from './MBWay';
+import { MBWay } from '@adyen/adyen-web';
 import { AwaitConfiguration } from '../types';
 
 type MBWayStory = StoryConfiguration<AwaitConfiguration>;

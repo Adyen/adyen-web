@@ -25,7 +25,7 @@ export type OnAddressSelectedType = (
 ) => Promise<void>;
 
 interface AddressSearchProps {
-    onAddressLookup?: OnAddressLookupType;
+    onAddressLookup: OnAddressLookupType;
     onAddressSelected?: OnAddressSelectedType;
     onSelect: (addressItem: AddressData) => void;
     onManualAddress: () => void;
@@ -93,6 +93,7 @@ export default function AddressSearch({
             return;
         }
         const value = originalData.find(item => item.id === event.target.value);
+        if (!value) return;
 
         // 1. in case we don't get a function just select item
         if (typeof onAddressSelected !== 'function') {

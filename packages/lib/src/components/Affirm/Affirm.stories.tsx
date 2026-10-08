@@ -2,7 +2,7 @@ import { h } from 'preact';
 import { MetaConfiguration, PaymentMethodStoryProps, StoryConfiguration } from '../../../storybook/types';
 import { ComponentContainer } from '../../../storybook/components/ComponentContainer';
 import { Checkout } from '../../../storybook/components/Checkout';
-import Affirm from './Affirm';
+import { Affirm } from '@adyen/adyen-web';
 import type { AffirmConfiguration } from './types';
 
 type AffirmStory = StoryConfiguration<AffirmConfiguration>;

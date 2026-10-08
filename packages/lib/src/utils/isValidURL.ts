@@ -1,4 +1,6 @@
-export const isValidHttpUrl = (httpUrl: string, allowHttp = false) => {
+export const isValidHttpUrl = (httpUrl: string | null | undefined, allowHttp = false) => {
+    if (!httpUrl) return false;
+
     let url: URL;
     try {
         url = new URL(httpUrl);

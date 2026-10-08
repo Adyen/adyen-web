@@ -24,7 +24,7 @@ export const addressFormatters: FormatRules = {
             const country = context.state.data.country;
 
             // Country specific formatting rule
-            const specificRule = countrySpecificFormatters[country]?.postalCode.formatterFn;
+            const specificRule = country ? countrySpecificFormatters[country]?.postalCode.formatterFn : undefined;
             if (specificRule) {
                 return specificRule(val);
             }

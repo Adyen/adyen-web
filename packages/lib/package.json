@@ -1,6 +1,6 @@
 {
     "name": "@adyen/adyen-web",
-    "version": "6.45.1",
+    "version": "6.46.0",
     "license": "MIT",
     "homepage": "https://docs.adyen.com/checkout",
     "type": "module",
@@ -91,7 +91,8 @@
         "@rollup/plugin-node-resolve": "16.0.3",
         "@rollup/plugin-replace": "6.0.3",
         "@rollup/plugin-terser": "1.0.0",
-        "@size-limit/preset-big-lib": "13.0.3",
+        "@size-limit/file": "13.0.3",
+        "@size-limit/webpack": "13.0.3",
         "@storybook/addon-a11y": "10.5.10",
         "@storybook/addon-docs": "10.5.10",
         "@storybook/preact-vite": "10.5.10",
@@ -102,7 +103,7 @@
         "@testing-library/user-event": "14.6.6",
         "@types/jest": "30.0.0",
         "autoprefixer": "10.5.4",
-        "cssnano": "8.0.10",
+        "cssnano": "9.0.1",
         "dotenv": "17.4.2",
         "eslint": "10.9.1",
         "eslint-plugin-import": "2.32.0",
@@ -137,7 +138,7 @@
         "whatwg-fetch": "3.6.20"
     },
     "dependencies": {
-        "@paypal/paypal-js": "10.1.0",
+        "@paypal/paypal-js": "11.0.0",
         "@types/applepayjs": "14.0.9",
         "@types/googlepay": "0.7.12",
         "classnames": "2.5.1",

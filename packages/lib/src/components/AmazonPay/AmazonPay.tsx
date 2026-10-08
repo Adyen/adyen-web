@@ -16,7 +16,7 @@ export class AmazonPayElement extends UIElement<AmazonPayConfiguration> {
 
     protected static readonly defaultProps = defaultProps;
 
-    protected componentRef: AmazonPayComponentRef | undefined;
+    declare protected componentRef: AmazonPayComponentRef | undefined;
 
     formatProps(props: AmazonPayConfiguration): AmazonPayConfiguration {
         return {
@@ -102,7 +102,7 @@ export class AmazonPayElement extends UIElement<AmazonPayConfiguration> {
         if (amazonComponentSubmitFunction) {
             return amazonComponentSubmitFunction();
         }
-        this.makePaymentsCall().then(sanitizeResponse).then(verifyPaymentDidNotFail).then(this.handleResponse).catch(this.handleFailedResult);
+        this.makePaymentsCall()?.then(sanitizeResponse).then(verifyPaymentDidNotFail).then(this.handleResponse).catch(this.handleFailedResult);
     }
 
     protected override componentToRender(): h.JSX.Element {

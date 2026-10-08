@@ -1,8 +1,8 @@
 import { Fragment, h } from 'preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
+import { CustomCard } from '@adyen/adyen-web';
 import { createAdvancedFlowCheckout } from '../../../../../storybook/helpers/create-advanced-checkout';
 import { createSessionsCheckout } from '../../../../../storybook/helpers/create-sessions-checkout';
-import CustomCard from '../../../CustomCard/CustomCard';
 import { setUpUtils, createPayButton } from './customCard.utils';
 import Spinner from '../../../internal/Spinner';
 import { CardConfigSuccessData } from '../../../../types';

@@ -28,7 +28,7 @@ export interface ICashAppService {
     setStorePaymentMethod(store: boolean): void;
     renderButton(target: HTMLElement): Promise<void>;
     restart(): Promise<void>;
-    createCustomerRequest(amount: PaymentAmount): Promise<void>;
+    createCustomerRequest(amount?: PaymentAmount): Promise<void>;
     subscribeToEvent(eventType: CashAppPayEvents, callback: Function): Function;
 }
 

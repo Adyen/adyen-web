@@ -313,7 +313,7 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
         return this.googlePay.prefetchPaymentData(this.props, this.core.options.countryCode);
     };
 
-    get browserInfo(): BrowserInfo {
+    get browserInfo(): BrowserInfo | undefined {
         return collectBrowserInfo();
     }
 

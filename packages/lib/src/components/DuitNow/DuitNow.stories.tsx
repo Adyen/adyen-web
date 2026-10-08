@@ -2,7 +2,7 @@ import { h } from 'preact';
 import { MetaConfiguration, PaymentMethodStoryProps, StoryConfiguration } from '../../../storybook/types';
 import { ComponentContainer } from '../../../storybook/components/ComponentContainer';
 import { Checkout } from '../../../storybook/components/Checkout';
-import DuitNow from './DuitNow';
+import { DuitNow } from '@adyen/adyen-web';
 import { QRLoaderConfiguration } from '../types';
 
 type DuitNowStory = StoryConfiguration<QRLoaderConfiguration>;

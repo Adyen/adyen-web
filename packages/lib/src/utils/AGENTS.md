@@ -45,6 +45,8 @@ utility next to its consumer. Don't cite the existing exceptions as precedent.
   split is "generic helper" versus "feature logic that happens to be a hook".
 - `constants/` holds values only, no logic. `Formatters/` handles string and data formatting.
   `Validator/` holds validation logic and rules.
+- `get-issuer-image.ts` is only for issuer-list logos (`logos/{txVariant}/{issuer}.svg`). For a
+  single named asset, use `useImage()` or `Resources.getImage()` directly.
 
 ## Safety
 

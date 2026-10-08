@@ -1,4 +1,4 @@
-import { h, Fragment, Ref } from 'preact';
+import { h, Fragment, Ref, MouseEventHandler } from 'preact';
 import cx from 'classnames';
 import { SelectButtonElementProps, SelectButtonProps } from '../types';
 import Img from '../../../Img';
@@ -67,8 +67,8 @@ function SelectButton(props: Readonly<SelectButtonProps>) {
     // 1. If readonly we ignore the click action
     // 2. If filterable we want to toggle the list and focus on the input
     // 3. Otherwise we just toggle the list
-    const getOnClickHandler = (): ((e: Event) => void) | null => {
-        if (readonly) return null;
+    const getOnClickHandler = (): MouseEventHandler<HTMLDivElement | HTMLButtonElement> | undefined => {
+        if (readonly) return undefined;
 
         if (props.filterable) return handleClick;
 
@@ -92,7 +92,7 @@ function SelectButton(props: Readonly<SelectButtonProps>) {
             filterable={props.filterable}
             readonly={readonly}
             onClick={getOnClickHandler()}
-            onKeyDown={!readonly ? props.onButtonKeyDown : null}
+            onKeyDown={!readonly ? props.onButtonKeyDown : undefined}
             toggleButtonRef={props.toggleButtonRef}
             id={props.id}
             showList={showList}

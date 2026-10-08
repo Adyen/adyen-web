@@ -4,6 +4,7 @@ import { ValidatorRules } from '../../../utils/Validator/types';
 import { ValidationRuleResult } from '../../../utils/Validator/ValidationRuleResult';
 import { OnAddressLookupType, OnAddressSelectedType } from './components/AddressSearch';
 import { SelectTargetObject } from '../FormFields/Select/types';
+import type { FormStateValid } from '../../../utils/useForm/types';
 
 // Describes an object with unknown keys whose value is always a string
 export type StringObject = {
@@ -18,11 +19,11 @@ export interface AddressProps {
     countryCode?: string;
     data?: AddressData | null;
     label?: string;
-    onChange: (newState) => void;
+    onChange?: (newState) => void;
     onAddressLookup?: OnAddressLookupType;
     onAddressSelected?: OnAddressSelectedType;
     addressSearchDebounceMs?: number;
-    requiredFields?: string[];
+    requiredFields?: readonly string[];
     specifications?: AddressSpecifications;
     validationRules?: ValidatorRules;
     visibility?: string;
@@ -56,13 +57,13 @@ export interface FieldContainerProps {
     errors: AddressStateError;
     fieldName: string;
     key: string;
-    valid?: object;
+    valid: FormStateValid;
     onInput?: (e: Event) => void;
     onBlur?: (e: Event) => void;
     onDropdownChange: (e: { target: SelectTargetObject }) => void;
     readOnly?: boolean;
     specifications: Specifications;
-    maxLength?: number;
+    maxLength: number | undefined;
     trimOnBlur?: boolean;
     disabled?: boolean;
     addressType?: AddressType;
@@ -98,7 +99,7 @@ export interface StateFieldProps {
     onDropdownChange: (e: { target: SelectTargetObject }) => void;
     readOnly?: boolean;
     required?: boolean;
-    selectedCountry: string;
+    selectedCountry?: string;
     specifications: Specifications;
     value: string;
 }
