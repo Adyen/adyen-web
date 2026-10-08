@@ -74,27 +74,27 @@
             }
         }
     }
-}
 
-$pm-details-expand-duration: variable-generator.token(animation-duration-moderate);
+    $pm-details-expand-duration: variable-generator.token(animation-duration-slow);
 
-.adyen-checkout-pm-details-wrapper {
-    display: grid;
-    grid-template-rows: 0fr;
-    transition: grid-template-rows $pm-details-expand-duration ease;
-    visibility: hidden;
-}
+    .adyen-checkout-pm-details-wrapper {
+        display: grid;
+        grid-template-rows: 0fr;
+        transition: grid-template-rows $pm-details-expand-duration ease;
+        visibility: hidden;
+    }
 
-.adyen-checkout-pm-details-wrapper[aria-hidden='false'] {
-    grid-template-rows: 1fr;
-    visibility: visible;
+    .adyen-checkout-pm-details-wrapper[aria-hidden='false'] {
+        grid-template-rows: 1fr;
+        visibility: visible;
 
-    .adyen-checkout__payment-method__details {
-        animation: adyen-checkout-show-overflow 0s $pm-details-expand-duration forwards;
+        .adyen-checkout__payment-method__details {
+            animation: adyen-checkout-show-overflow 0s $pm-details-expand-duration forwards;
 
-        @keyframes adyen-checkout-show-overflow {
-            to {
-                overflow: visible;
+            @keyframes adyen-checkout-show-overflow {
+                to {
+                    overflow: visible;
+                }
             }
         }
     }
