@@ -815,10 +815,12 @@ describe('Core', () => {
                 onError: mockOnError
             });
             await core.initialize();
+            // submitPayment is mocked, so emulate the session storing the new data blob
+            (core.session as unknown as { data: string }).data = 'dummySessionData';
             core.processPayment(paymentData);
             const flushPromises = () => new Promise(process.nextTick);
             await flushPromises();
-            expect(mockOnOrderUpdated).toHaveBeenCalledWith({ order });
+            expect(mockOnOrderUpdated).toHaveBeenCalledWith({ order, sessionData: 'dummySessionData' });
             expect(mockOnPaymentCompleted).not.toHaveBeenCalled();
         });
     });

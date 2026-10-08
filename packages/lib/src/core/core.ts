@@ -412,7 +412,7 @@ class Core implements ICore {
                 }
                 const order = response.order;
                 if (order && (order.remainingAmount?.value ?? 0) > 0) {
-                    this.options.onOrderUpdated?.({ order });
+                    this.options.onOrderUpdated?.({ order, sessionData: this.session?.data });
                     return;
                 }
                 cleanupFinalResult(response);
