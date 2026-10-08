@@ -4,7 +4,7 @@ import { GlobalStoryProps, MetaConfiguration, PaymentMethodStoryProps } from '..
 import { UPIConfiguration } from './types';
 import { ComponentContainer } from '../../../storybook/components/ComponentContainer';
 import { Checkout } from '../../../storybook/components/Checkout';
-import UPI from './UPI';
+import { UPI } from '@adyen/adyen-web';
 import type { Mandate } from './components/UPIMandate/UPIMandate';
 
 interface ExtendedStoryArgs extends PaymentMethodStoryProps<UPIConfiguration> {

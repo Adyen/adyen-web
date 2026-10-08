@@ -32,18 +32,20 @@ export class CashAppPay extends UIElement<CashAppPayConfiguration> {
             return;
         }
 
+        const environment = this.props.environment ?? '';
+
         const sdkLoader = new CashAppSdkLoader({
-            environment: this.props.environment,
+            environment,
             analytics: this.analytics
         });
 
         this.cashAppService = new CashAppService(sdkLoader, {
-            storePaymentMethod: this.props.storePaymentMethod,
-            useCashAppButtonUi: this.props.showPayButton,
-            environment: this.props.environment,
+            storePaymentMethod: this.props.storePaymentMethod ?? false,
+            useCashAppButtonUi: this.props.showPayButton ?? false,
+            environment,
             redirectURL: this.props.redirectURL,
-            clientId: this.props.configuration?.clientId,
-            scopeId: this.props.configuration?.scopeId,
+            clientId: this.props.configuration?.clientId ?? '',
+            scopeId: this.props.configuration?.scopeId ?? '',
             button: this.props.button,
             referenceId: this.props.referenceId
         });
@@ -91,7 +93,7 @@ export class CashAppPay extends UIElement<CashAppPayConfiguration> {
         if (this.props.storedPaymentMethodId && this.props.cashtag) {
             return this.props.cashtag;
         }
-        return this.props.name;
+        return this.props.name ?? '';
     }
 
     get additionalInfo() {
@@ -108,16 +110,18 @@ export class CashAppPay extends UIElement<CashAppPayConfiguration> {
 
         let onClickPromiseRejected = false;
 
-        new Promise<void>((resolve, reject) => onClick({ resolve, reject }))
+        const clickPromise = onClick ? new Promise<void>((resolve, reject) => onClick({ resolve, reject })) : Promise.resolve();
+
+        clickPromise
             .catch(() => {
                 onClickPromiseRejected = true;
                 throw new Error('onClick rejected');
             })
             .then(() => {
-                return this.cashAppService.createCustomerRequest(this.props.amount);
+                return this.cashAppService?.createCustomerRequest(this.props.amount);
             })
             .then(() => {
-                this.cashAppService.begin();
+                this.cashAppService?.begin();
             })
             .catch(error => {
                 if (onClickPromiseRejected) {
@@ -143,17 +147,23 @@ export class CashAppPay extends UIElement<CashAppPayConfiguration> {
         super.submit();
     };
 
-    protected override componentToRender(): h.JSX.Element {
-        return this.props.storedPaymentMethodId ? (
-            <RedirectButton
-                label={payAmountLabel(this.props.i18n, this.props.amount)}
-                icon={this.resources?.getImage({ imageFolder: 'components/' })(`${PREFIX}lock`)}
-                name={this.displayName}
-                payButton={this.payButton}
-                onSubmit={this.submit}
-                setComponentRef={this.setComponentRef}
-            />
-        ) : (
+    protected override componentToRender(): h.JSX.Element | null {
+        if (this.props.storedPaymentMethodId) {
+            return (
+                <RedirectButton
+                    label={payAmountLabel(this.props.i18n ?? this.core.modules.i18n, this.props.amount)}
+                    icon={this.resources?.getImage({ imageFolder: 'components/' })(`${PREFIX}lock`)}
+                    name={this.displayName}
+                    payButton={this.payButton}
+                    onSubmit={this.submit}
+                    setComponentRef={this.setComponentRef}
+                />
+            );
+        }
+
+        if (!this.cashAppService) return null;
+
+        return (
             <CashAppComponent
                 setComponentRef={this.setComponentRef}
                 enableStoreDetails={this.props.enableStoreDetails}

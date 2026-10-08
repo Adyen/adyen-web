@@ -3,7 +3,7 @@ import { MetaConfiguration, PaymentMethodStoryProps, StoryConfiguration } from '
 import { QRLoaderConfiguration } from '../../types';
 import { ComponentContainer } from '../../../storybook/components/ComponentContainer';
 import { Checkout } from '../../../storybook/components/Checkout';
-import BcmcMobile from './BcmcMobile';
+import { BcmcMobile } from '@adyen/adyen-web';
 
 type BcmcMobileStory = StoryConfiguration<QRLoaderConfiguration>;
 

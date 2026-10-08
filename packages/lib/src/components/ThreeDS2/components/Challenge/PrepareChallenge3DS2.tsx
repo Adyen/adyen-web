@@ -1,15 +1,20 @@
 import { Component, h } from 'preact';
 import DoChallenge3DS2 from './DoChallenge3DS2';
-import { createChallengeResolveData, prepareChallengeData, isErrorObject } from '../utils';
+import { createChallengeResolveData, prepareChallengeData, isChallengeData } from '../utils';
 import { PrepareChallenge3DS2Props, PrepareChallenge3DS2State, StatusErrorInfoObject } from './types';
 import { ChallengeData, ResultObject, ThreeDS2FlowObject, ErrorCodeObject, ChallengeResolveData } from '../../types';
 import '../../ThreeDS2.scss';
 import Img from '../../../internal/Img';
 import './challenge.scss';
-import { hasOwnProperty } from '../../../../utils/hasOwnProperty';
 import useImage from '../../../../core/Context/useImage';
 import AdyenCheckoutError, { ERROR } from '../../../../core/Errors/AdyenCheckoutError';
-import { THREEDS2_CHALLENGE, THREEDS2_CHALLENGE_ERROR, THREEDS2_NUM, MISSING_TOKEN_IN_ACTION_MSG } from '../../constants';
+import {
+    DEFAULT_CHALLENGE_WINDOW_SIZE,
+    THREEDS2_CHALLENGE,
+    THREEDS2_CHALLENGE_ERROR,
+    THREEDS2_NUM,
+    MISSING_TOKEN_IN_ACTION_MSG
+} from '../../constants';
 import { isValidHttpUrl } from '../../../../utils/isValidURL';
 import { ErrorObject } from '../../../../core/Errors/types';
 import { AnalyticsLogEvent, LogEventSubtype, LogEventType } from '../../../../core/Analytics/events/AnalyticsLogEvent';
@@ -23,13 +28,17 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
         isMDFlow: false
     };
 
-    constructor(props) {
+    private get component(): string {
+        return this.props.type ?? THREEDS2_CHALLENGE;
+    }
+
+    constructor(props: PrepareChallenge3DS2Props) {
         super(props);
 
         if (this.props.token) {
             const challengeData: ChallengeData | ErrorObject = prepareChallengeData({
                 token: this.props.token,
-                size: this.props.challengeWindowSize || this.props.size // TODO confirm that this.props.size is legacy and can be removed
+                size: this.props.challengeWindowSize || this.props.size || DEFAULT_CHALLENGE_WINDOW_SIZE // TODO For v7 remove this.props.size as legacy code
             });
 
             this.state = {
@@ -46,7 +55,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
 
     public onFormSubmit = (msg: string) => {
         const event = new AnalyticsLogEvent({
-            component: this.props.type,
+            component: this.component,
             type: LogEventType.threeDS2,
             subType: LogEventSubtype.challengeDataSentWeb,
             message: msg
@@ -56,7 +65,8 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
     };
 
     componentDidMount() {
-        const hasChallengeData = !isErrorObject(this.state.challengeData);
+        const { challengeData } = this.state;
+        const hasChallengeData = isChallengeData(challengeData);
 
         if (hasChallengeData) {
             const shouldAllowHttpDomains =
@@ -71,7 +81,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
             /**
              * Check the structure of the created challengeData
              */
-            const { acsURL, postMessageDomain } = this.state.challengeData as ChallengeData;
+            const { acsURL, postMessageDomain } = challengeData;
             const hasValidAcsURL = isValidHttpUrl(acsURL, shouldAllowHttpDomains);
             const hasValidPostMessageDomain = isValidHttpUrl(postMessageDomain, shouldAllowHttpDomains);
 
@@ -93,7 +103,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
 
                 // Send error to analytics endpoint // TODO - check logs to see if this *ever* happens
                 const event = new AnalyticsErrorEvent({
-                    component: this.props.type,
+                    component: this.component,
                     code: errorCode,
                     errorType: ErrorEventType.threeDS2,
                     message: `${THREEDS2_CHALLENGE_ERROR}: Decoded token is missing a valid ${missingProperty} property`
@@ -106,7 +116,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                 return;
             }
 
-            const { acsTransID, messageVersion, threeDSServerTransID } = (this.state.challengeData as ChallengeData).cReqData;
+            const { acsTransID, messageVersion, threeDSServerTransID } = challengeData.cReqData;
 
             // Only render component if we have a acsTransID, messageVersion & threeDSServerTransID
             if (!acsTransID || !messageVersion || !threeDSServerTransID) {
@@ -120,7 +130,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
 
                 // Send error to analytics endpoint // TODO - check logs to see if this *ever* happens
                 const event = new AnalyticsErrorEvent({
-                    component: this.props.type,
+                    component: this.component,
                     code: ErrorEventCode.THREEDS2_TOKEN_IS_MISSING_OTHER_PROPS,
                     errorType: ErrorEventType.threeDS2,
                     message: `${THREEDS2_CHALLENGE_ERROR}: Decoded token is missing one or more of the following properties (acsTransID | messageVersion | threeDSServerTransID)`
@@ -137,7 +147,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
             this.setState({ status: 'performingChallenge' });
             //
         } else {
-            const errorMsg: string = (this.state.challengeData as ErrorObject).error;
+            const errorMsg: string = challengeData.error;
 
             const errorCode = errorMsg.includes(MISSING_TOKEN_IN_ACTION_MSG)
                 ? ErrorEventCode.THREEDS2_ACTION_IS_MISSING_TOKEN
@@ -154,7 +164,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
 
             // Send error to analytics endpoint // TODO - check logs to see if the base64 decoding errors *ever* happen
             const event = new AnalyticsErrorEvent({
-                component: this.props.type,
+                component: this.component,
                 code: errorCode,
                 errorType: ErrorEventType.threeDS2,
                 message: `${THREEDS2_CHALLENGE_ERROR}: ${errorMsg}` // can be: 'Missing "token" property from threeDS2 action', 'not base64', 'malformed URI sequence' or 'Could not JSON parse token'
@@ -166,9 +176,13 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
         }
     }
 
-    setStatusComplete(resultObj: ResultObject, errorCodeObject: ErrorCodeObject = null) {
+    setStatusComplete(resultObj?: ResultObject, errorCodeObject?: ErrorCodeObject) {
         this.setState({ status: 'complete' }, () => {
-            const data: ChallengeResolveData = createChallengeResolveData(this.props.dataKey, resultObj.transStatus, this.props.paymentData);
+            const data: ChallengeResolveData = createChallengeResolveData(
+                this.props.dataKey ?? 'threeDSResult',
+                resultObj?.transStatus ?? '',
+                this.props.paymentData ?? ''
+            );
 
             if (errorCodeObject) {
                 console.debug('### PrepareChallenge3DS2::errorCodeObject::', errorCodeObject);
@@ -178,7 +192,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
 
             /** Are we in an "error" i.e. timeout or no transStatus, scenario? If so, submit analytics about it */
             const finalResObject = errorCodeObject ? errorCodeObject : resultObj;
-            if (finalResObject.errorCode) {
+            if (finalResObject?.errorCode) {
                 const errorTypeAndCode = {
                     code: finalResObject.errorCode === 'timeout' ? ErrorEventCode.THREEDS2_TIMEOUT : ErrorEventCode.THREEDS2_NO_TRANSSTATUS,
                     errorType: ErrorEventType.threeDS2
@@ -188,7 +202,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                 // or, It's an error reported by the backend 'cos no transStatus could be retrieved // TODO - check logs to see if this *ever* happens
 
                 event = new AnalyticsErrorEvent({
-                    component: this.props.type,
+                    component: this.component,
                     message: (finalResObject as ErrorCodeObject).message,
                     ...errorTypeAndCode
                 });
@@ -198,7 +212,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
             }
 
             /** Calculate "result" for analytics */
-            let result: string;
+            let result = 'unknown';
 
             switch (resultObj?.transStatus) {
                 case 'Y':
@@ -219,7 +233,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
             /** Create log object - the process is completed, one way or another */
 
             event = new AnalyticsLogEvent({
-                component: this.props.type,
+                component: this.component,
                 type: LogEventType.threeDS2,
                 subType: LogEventSubtype.challengeCompleted,
                 message: `${THREEDS2_NUM} challenge has completed`,
@@ -232,7 +246,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
             /**
              * Equals call to onAdditionalDetails (except for in 3DS2InMDFlow)
              */
-            this.props.onComplete(data);
+            this.props.onComplete?.(data);
         });
     }
 
@@ -248,48 +262,17 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
 
         // Decide whether to call this.props.onError
         if (isFatal) {
-            this.props.onError(new AdyenCheckoutError(ERROR, errorInfoObj.errorInfo, { cause: errorInfoObj.errorObj }));
+            this.props.onError?.(new AdyenCheckoutError(ERROR, errorInfoObj.errorInfo, { cause: errorInfoObj.errorObj }));
         }
     }
 
-    render(_, { challengeData: stateChallengeData }: PrepareChallenge3DS2State) {
-        const challengeData = stateChallengeData as ChallengeData;
+    render(_: PrepareChallenge3DS2Props, { challengeData: stateChallengeData }: PrepareChallenge3DS2State) {
         const getImage = useImage();
-        if (this.state.status === 'performingChallenge') {
+        if (this.state.status === 'performingChallenge' && isChallengeData(stateChallengeData)) {
             return (
                 <DoChallenge3DS2
                     onCompleteChallenge={(challenge: ThreeDS2FlowObject) => {
-                        let errorCodeObject: ErrorCodeObject = null;
-
-                        // Challenge has resulted in an error (no transStatus could be retrieved) - but we still treat this as a valid scenario
-                        if (hasOwnProperty(challenge.result, 'errorCode') && challenge.result.errorCode.length) {
-                            // Tell the merchant there's been an error
-                            errorCodeObject = {
-                                errorCode: challenge.result.errorCode,
-                                message: `${THREEDS2_CHALLENGE_ERROR}: ${
-                                    challenge.result.errorDescription ? challenge.result.errorDescription : 'no transStatus could be retrieved'
-                                }`
-                            };
-
-                            /**
-                             * NOTE: we can now use this.props.isMDFlow to decide if we want to send any of these errors to the onError handler
-                             *  - this is problematic in the regular flow since merchants tend to treat any calls to their onError handler as 'fatal',
-                             *   but in the MDFlow we control what the onError handler does.
-                             */
-                            if (this.props.isMDFlow) {
-                                this.props.onError(
-                                    new AdyenCheckoutError(
-                                        ERROR,
-                                        `${THREEDS2_CHALLENGE_ERROR}: ${
-                                            challenge.result.errorDescription
-                                                ? challenge.result.errorDescription
-                                                : 'no transStatus could be retrieved'
-                                        }`,
-                                        { cause: challenge.result.errorCode }
-                                    )
-                                );
-                            }
-                        }
+                        let errorCodeObject: ErrorCodeObject | undefined;
 
                         /**
                          * An object has been returned, parsed & accepted as legit (according to the rules in getProcessMessageHandler),
@@ -308,7 +291,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
 
                             // Send error to analytics endpoint
                             const event = new AnalyticsErrorEvent({
-                                component: this.props.type,
+                                component: this.component,
                                 code: ErrorEventCode.THREEDS2_CHALLENGE_RESOLVED_WITHOUT_RESULT_PROP,
                                 errorType: ErrorEventType.threeDS2,
                                 message: `${THREEDS2_CHALLENGE_ERROR}: challenge resolved without a "result" object`
@@ -321,6 +304,36 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                             return;
                         }
 
+                        // Challenge has resulted in an error (no transStatus could be retrieved) - but we still treat this as a valid scenario
+                        if (challenge.result.errorCode) {
+                            // Tell the merchant there's been an error
+                            errorCodeObject = {
+                                errorCode: challenge.result.errorCode,
+                                message: `${THREEDS2_CHALLENGE_ERROR}: ${
+                                    challenge.result.errorDescription ? challenge.result.errorDescription : 'no transStatus could be retrieved'
+                                }`
+                            };
+
+                            /**
+                             * NOTE: we can now use this.props.isMDFlow to decide if we want to send any of these errors to the onError handler
+                             *  - this is problematic in the regular flow since merchants tend to treat any calls to their onError handler as 'fatal',
+                             *   but in the MDFlow we control what the onError handler does.
+                             */
+                            if (this.props.isMDFlow) {
+                                this.props.onError?.(
+                                    new AdyenCheckoutError(
+                                        ERROR,
+                                        `${THREEDS2_CHALLENGE_ERROR}: ${
+                                            challenge.result.errorDescription
+                                                ? challenge.result.errorDescription
+                                                : 'no transStatus could be retrieved'
+                                        }`,
+                                        { cause: challenge.result.errorCode }
+                                    )
+                                );
+                            }
+                        }
+
                         // Proceed with call to onAdditionalDetails (except for in 3DS2InMDFlow)
                         this.setStatusComplete(challenge.result, errorCodeObject);
                     }}
@@ -328,7 +341,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                         /**
                          * Called when challenge times-out (which is still a valid scenario)...
                          */
-                        if (hasOwnProperty(challenge, 'errorCode')) {
+                        if (challenge.errorCode) {
                             const timeoutObject: ErrorCodeObject = {
                                 errorCode: challenge.errorCode,
                                 message: `${THREEDS2_CHALLENGE}: ${challenge.errorCode}`
@@ -336,7 +349,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
 
                             // see comment in onCompleteChallenge code block
                             if (this.props.isMDFlow) {
-                                this.props.onError(
+                                this.props.onError?.(
                                     new AdyenCheckoutError(ERROR, `${THREEDS2_CHALLENGE_ERROR}: '3DS2 challenge timed out'`, {
                                         cause: challenge.errorCode
                                     })
@@ -347,7 +360,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                             return;
                         }
                     }}
-                    {...challengeData}
+                    {...stateChallengeData}
                     onActionHandled={this.props.onActionHandled}
                     onFormSubmit={this.onFormSubmit}
                     usePasskeyIFrameAttributes={this.props.usePasskeyIFrameAttributes}

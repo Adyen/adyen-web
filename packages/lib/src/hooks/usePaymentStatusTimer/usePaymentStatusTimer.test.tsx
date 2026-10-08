@@ -217,6 +217,54 @@ describe('usePaymentStatusTimer', () => {
                 expect(setTimeout).toHaveBeenCalledWith(expect.any(Function), DEFAULT_PAYMENT_STATUS_TIMER_DELAY_MS);
             });
         });
+
+        test('should not call onComplete or onError when the poll rejects with a non-Error value', async () => {
+            (checkPaymentStatus as jest.Mock).mockRejectedValue(undefined);
+            jest.spyOn(globalThis, 'setTimeout');
+
+            const { result } = renderHook(() => usePaymentStatusTimer(defaultProps));
+
+            await waitFor(() => {
+                expect(setTimeout).toHaveBeenCalledWith(expect.any(Function), DEFAULT_PAYMENT_STATUS_TIMER_DELAY_MS);
+            });
+
+            expect(result.current.state).toEqual({
+                completed: false,
+                expired: false,
+                loading: false,
+                percentage: 100,
+                timePassed: 0
+            });
+            expect(defaultProps.onComplete).toHaveBeenCalledTimes(0);
+            expect(defaultProps.onError).toHaveBeenCalledTimes(0);
+        });
+
+        test('should treat a poll resolving undefined as a network error', async () => {
+            (checkPaymentStatus as jest.Mock).mockResolvedValue(undefined);
+            jest.spyOn(globalThis, 'setTimeout');
+
+            const { result } = renderHook(() => usePaymentStatusTimer(defaultProps));
+
+            await waitFor(() => {
+                expect(setTimeout).toHaveBeenCalledWith(expect.any(Function), DEFAULT_PAYMENT_STATUS_TIMER_DELAY_MS);
+            });
+
+            expect(result.current.state.loading).toBe(false);
+            expect(result.current.state.expired).toBe(false);
+            expect(result.current.state.completed).toBe(false);
+            expect(checkPaymentStatus).toHaveBeenCalledTimes(1);
+
+            void act(() => {
+                jest.advanceTimersByTime(DEFAULT_PAYMENT_STATUS_TIMER_DELAY_MS);
+            });
+
+            await waitFor(() => {
+                expect(checkPaymentStatus).toHaveBeenCalledTimes(2);
+            });
+
+            expect(defaultProps.onComplete).toHaveBeenCalledTimes(0);
+            expect(defaultProps.onError).toHaveBeenCalledTimes(0);
+        });
     });
 
     describe('throttling behavior', () => {

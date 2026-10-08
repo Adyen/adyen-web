@@ -2,7 +2,7 @@ import { h } from 'preact';
 import { MetaConfiguration, StoryConfiguration } from '../../../../storybook/types';
 import { ComponentContainer } from '../../../../storybook/components/ComponentContainer';
 import { ApplePayConfiguration } from '../types';
-import ApplePay from '../ApplePay';
+import { ApplePay } from '@adyen/adyen-web';
 import { Checkout } from '../../../../storybook/components/Checkout';
 import { ApplePayCouponCodeDemo } from './ApplePayCouponCodeDemo';
 

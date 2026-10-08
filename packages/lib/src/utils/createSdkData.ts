@@ -10,7 +10,7 @@ export interface SdkDataObject {
     analytics: {
         checkoutAttemptId: string;
     };
-    riskData: {
+    riskData?: {
         clientData: string;
     };
 }

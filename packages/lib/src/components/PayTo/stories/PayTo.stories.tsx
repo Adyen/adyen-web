@@ -3,7 +3,7 @@ import { Meta, StoryObj } from '@storybook/preact-vite';
 import { GlobalStoryProps, PaymentMethodStoryProps } from '../../../../storybook/types';
 import { ComponentContainer } from '../../../../storybook/components/ComponentContainer';
 import { Checkout } from '../../../../storybook/components/Checkout';
-import PayTo from '../PayTo';
+import { PayTo } from '@adyen/adyen-web';
 import { http, HttpResponse } from 'msw';
 import { MandateType, PayToConfiguration } from '../types';
 

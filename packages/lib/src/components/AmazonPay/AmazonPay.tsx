@@ -102,7 +102,7 @@ export class AmazonPayElement extends UIElement<AmazonPayConfiguration> {
         if (amazonComponentSubmitFunction) {
             return amazonComponentSubmitFunction();
         }
-        this.makePaymentsCall().then(sanitizeResponse).then(verifyPaymentDidNotFail).then(this.handleResponse).catch(this.handleFailedResult);
+        this.makePaymentsCall()?.then(sanitizeResponse).then(verifyPaymentDidNotFail).then(this.handleResponse).catch(this.handleFailedResult);
     }
 
     protected override componentToRender(): h.JSX.Element {

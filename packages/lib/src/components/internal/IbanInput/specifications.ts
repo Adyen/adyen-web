@@ -2,7 +2,7 @@
  * @internal
  * IBAN Countries, length, structure and examples
  */
-const countries = {
+const countries: Record<string, { length: number; structure: string; example: string }> = {
     AD: {
         length: 24,
         structure: 'F04F04A12',

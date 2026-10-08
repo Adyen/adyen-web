@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
-import AmazonPay from '../AmazonPay';
+import { AmazonPay } from '@adyen/adyen-web';
 import { AmazonPayConfiguration } from '../types';
 import { PaymentMethodStoryProps } from '../../../../storybook/types';
 import { createSessionsCheckout } from '../../../../storybook/helpers/create-sessions-checkout';

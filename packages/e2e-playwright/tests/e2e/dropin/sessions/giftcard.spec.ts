@@ -3,7 +3,7 @@ import { URL_MAP } from '../../../../fixtures/URL_MAP';
 import { Card } from '../../../../models/card';
 import { GiftCard } from '../../../../models/giftcard';
 import { toHaveScreenshot } from '../../../utils/assertions';
-import { TAGS } from '../../../utils/constants';
+import { CARD_HEADER_LABEL, TAGS } from '../../../utils/constants';
 
 test.describe('Dropin - Sessions - GiftCards', () => {
     test(
@@ -13,7 +13,7 @@ test.describe('Dropin - Sessions - GiftCards', () => {
             await dropinWithSession.goto(URL_MAP.dropinWithSession);
 
             const selectCardPaymentMethod = async () => {
-                const item = dropinWithSession.getPaymentMethodHeader('Cards');
+                const item = dropinWithSession.getPaymentMethodHeader(CARD_HEADER_LABEL);
                 await item.rootElement.click();
                 return new Card(page, item.rootElement);
             };
@@ -59,7 +59,7 @@ test.describe('Dropin - Sessions - GiftCards', () => {
         await expect(page.locator('.adyen-checkout__order-remaining-amount')).toBeVisible();
 
         const selectCardPaymentMethod = async () => {
-            const item = dropinWithSession.getPaymentMethodHeader('Cards');
+            const item = dropinWithSession.getPaymentMethodHeader(CARD_HEADER_LABEL);
             await item.rootElement.click();
             return new Card(page, item.rootElement);
         };

@@ -1,6 +1,6 @@
 import { Component, h } from 'preact';
 import DoFingerprint3DS2 from './DoFingerprint3DS2';
-import { createFingerprintResolveData, isErrorObject, prepareFingerPrintData } from '../utils';
+import { createFingerprintResolveData, isFingerPrintData, prepareFingerPrintData } from '../utils';
 import { PrepareFingerprint3DS2Props, PrepareFingerprint3DS2State } from './types';
 import { FingerPrintData, ResultObject, ErrorCodeObject, FingerprintResolveData } from '../../types';
 import { ErrorObject } from '../../../../core/Errors/types';
@@ -21,7 +21,11 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
         isMDFlow: false
     };
 
-    constructor(props) {
+    private get component(): string {
+        return this.props.type ?? THREEDS2_FINGERPRINT;
+    }
+
+    constructor(props: PrepareFingerprint3DS2Props) {
         super(props);
         const { token, notificationURL } = this.props; // See comments on prepareFingerPrintData regarding notificationURL
 
@@ -42,7 +46,7 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
 
     public onFormSubmit = (msg: string) => {
         const event = new AnalyticsLogEvent({
-            component: this.props.type,
+            component: this.component,
             type: LogEventType.threeDS2,
             subType: LogEventSubtype.fingerprintDataSentWeb,
             message: msg
@@ -52,7 +56,8 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
     };
 
     componentDidMount() {
-        const hasFingerPrintData = !isErrorObject(this.state.fingerPrintData);
+        const { fingerPrintData } = this.state;
+        const hasFingerPrintData = isFingerPrintData(fingerPrintData);
 
         if (hasFingerPrintData) {
             const shouldAllowHttpDomains =
@@ -67,8 +72,7 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
             /**
              * Check the structure of the created fingerPrintData
              */
-            const { threeDSMethodURL, threeDSMethodNotificationURL, postMessageDomain, threeDSServerTransID } = this.state
-                .fingerPrintData as FingerPrintData;
+            const { threeDSMethodURL, threeDSMethodNotificationURL, postMessageDomain, threeDSServerTransID } = fingerPrintData;
 
             const hasValid3DSMethodURL = isValidHttpUrl(threeDSMethodURL, shouldAllowHttpDomains);
 
@@ -123,7 +127,7 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
         } else {
             // Only render component if we have fingerPrintData. Otherwise, complete with threeDSCompInd: 'N'
 
-            const errorMsg: string = (this.state.fingerPrintData as ErrorObject).error;
+            const errorMsg: string = fingerPrintData?.error ?? MISSING_TOKEN_IN_ACTION_MSG;
 
             const errorCode = errorMsg.includes(MISSING_TOKEN_IN_ACTION_MSG)
                 ? ErrorEventCode.THREEDS2_ACTION_IS_MISSING_TOKEN
@@ -141,9 +145,13 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
         }
     }
 
-    setStatusComplete(resultObj: ResultObject, errorCodeObject: ErrorCodeObject = null) {
+    setStatusComplete(resultObj: ResultObject, errorCodeObject?: ErrorCodeObject) {
         this.setState({ status: 'complete' }, () => {
-            const data: FingerprintResolveData = createFingerprintResolveData(this.props.dataKey, resultObj, this.props.paymentData);
+            const data: FingerprintResolveData = createFingerprintResolveData(
+                this.props.dataKey ?? 'fingerprintResult',
+                resultObj,
+                this.props.paymentData ?? ''
+            );
 
             let event: AbstractAnalyticsEvent;
 
@@ -169,7 +177,7 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
                  */
 
                 event = new AnalyticsErrorEvent({
-                    component: this.props.type,
+                    component: this.component,
                     message: (finalResObject as ErrorCodeObject).message,
                     ...errorTypeAndCode
                 });
@@ -179,9 +187,9 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
             }
 
             /** Calculate "result" for analytics */
-            let result: string;
+            let result = 'unknown';
 
-            switch (resultObj?.threeDSCompInd) {
+            switch (resultObj.threeDSCompInd) {
                 case 'Y':
                     result = 'success';
                     break;
@@ -206,7 +214,7 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
              */
 
             event = new AnalyticsLogEvent({
-                component: this.props.type,
+                component: this.component,
                 type: LogEventType.threeDS2,
                 subType: LogEventSubtype.fingerprintCompleted,
                 message: `${THREEDS2_NUM} fingerprinting has completed`,
@@ -222,8 +230,8 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
         });
     }
 
-    render({ showSpinner }, { status, fingerPrintData }) {
-        if (status === 'retrievingFingerPrint') {
+    render({ showSpinner }: PrepareFingerprint3DS2Props, { status, fingerPrintData }: PrepareFingerprint3DS2State) {
+        if (status === 'retrievingFingerPrint' && isFingerPrintData(fingerPrintData)) {
             return (
                 <DoFingerprint3DS2
                     onCompleteFingerprint={fingerprint => {
@@ -234,7 +242,7 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
                          * Called when fingerprint times-out (which is still a valid scenario)...
                          */
                         const timeoutObject: ErrorCodeObject = {
-                            errorCode: fingerprint.errorCode, // 'timeout'
+                            errorCode: fingerprint.errorCode ?? '', // 'timeout'
                             message: `${THREEDS2_FINGERPRINT}: ${fingerprint.errorCode}`
                         };
 

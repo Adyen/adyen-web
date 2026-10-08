@@ -42,6 +42,7 @@ Run from the repo root unless noted.
 | Strict TS scan           | `yarn validate:strict`                                                                      |
 | Strict TS scan, one file | `yarn workspace @adyen/adyen-web exec tsc -p tsconfig.strict.json 2>&1 \| grep <file-name>` |
 | E2E, one component       | `yarn test:e2e tests/e2e/<component>/<component>.spec.ts --project=chromium`                |
+| E2E dist, one component  | `yarn test:e2e:dist tests/e2e/<component>/<component>.spec.ts --project=chromium` (slow — builds the library first) |
 | Validate locales         | `yarn validate:locales`                                                                     |
 | Bundle size              | `yarn workspace @adyen/adyen-web size`                                                      |
 | Auto-fix formatting      | `yarn format`                                                                               |
@@ -81,10 +82,9 @@ scan.
 
 Any change under `packages/lib/src/**` needs a changeset.
 
-Generating and validating one is owned by a dedicated skill — use it rather than writing the file
+Generating and validating one is owned by the `generate-changeset` skill
+(`.agents/skills/generate-changeset/SKILL.md`) - use it rather than writing the file
 by hand, since the accepted prefixes and format are validated only in CI.
-
-<!-- TODO: link the changeset skill here once it lands. -->
 
 Never edit `package.json` versions by hand — Changesets owns that.
 

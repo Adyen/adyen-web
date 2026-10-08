@@ -62,6 +62,11 @@ describe('Fastlane', () => {
         expect(fastlane.props.keepBrandsVisible).toBeTruthy();
     });
 
+    test('should return no brands when the backend does not send any', () => {
+        const fastlane = new Fastlane(core);
+        expect(fastlane.brands).toEqual([]);
+    });
+
     test('should return encoded blob to process the payment', () => {
         const fastlane = new Fastlane(core, {
             tokenId: 'token-id',

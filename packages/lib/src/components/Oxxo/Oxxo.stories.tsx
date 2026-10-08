@@ -2,7 +2,7 @@ import { h } from 'preact';
 import { MetaConfiguration, StoryConfiguration } from '../../../storybook/types';
 import { VoucherConfiguration } from '../types';
 import { ComponentContainer } from '../../../storybook/components/ComponentContainer';
-import Oxxo from './Oxxo';
+import { Oxxo } from '@adyen/adyen-web';
 import { Checkout } from '../../../storybook/components/Checkout';
 import { TxVariants } from '../tx-variants';
 

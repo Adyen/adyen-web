@@ -11,7 +11,7 @@ import type { BrowserInfo } from '../types/global-types';
  *
  * @returns An object containing the retrieved browser properties
  */
-export default function collectBrowserInfo(): BrowserInfo {
+export default function collectBrowserInfo(): BrowserInfo | undefined {
     if (typeof window === 'undefined') {
         return;
     }

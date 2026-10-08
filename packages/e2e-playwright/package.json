@@ -6,6 +6,7 @@
     "license": "MIT",
     "scripts": {
         "test:headless": "npx playwright test",
+        "test:dist": "npx playwright test --config=dist.playwright.config.ts",
         "test:headed": "npx playwright test --headed",
         "test:ui": "npx playwright test --ui",
         "test:update-screenshots": "npx playwright test --update-snapshots --grep @screenshot",
@@ -20,7 +21,7 @@
     "devDependencies": {
         "@adyen/adyen-web-server": "1.0.0",
         "@axe-core/playwright": "^4.10.1",
-        "@playwright/test": "1.62.1",
+        "@playwright/test": "1.63.0",
         "dotenv": "17.4.2",
         "ts-loader": "9.6.2",
         "typescript": "6.0.3"

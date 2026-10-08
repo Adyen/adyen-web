@@ -13,6 +13,13 @@ import { fileURLToPath } from 'node:url';
 import strictNullChecks from './eslint-rules/strict-null-checks.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
+const restrictedImportPaths = [
+    {
+        name: 'preact/compat',
+        importNames: ['forwardRef'],
+        message: 'forwardRef might lead to unexpected behaviors in preact/compat.'
+    }
+];
 
 const config = defineConfig(
     {
@@ -52,13 +59,7 @@ const config = defineConfig(
             'no-restricted-imports': [
                 'error',
                 {
-                    paths: [
-                        {
-                            name: 'preact/compat',
-                            importNames: ['forwardRef'],
-                            message: 'forwardRef might lead to unexpected behaviors in preact/compat.'
-                        }
-                    ]
+                    paths: restrictedImportPaths
                 }
             ],
             '@typescript-eslint/no-unsafe-assignment': 'off',
@@ -121,6 +122,32 @@ const config = defineConfig(
         files: ['**/?(*.)+(stories).[jt]s?(x)'],
         rules: {
             '@typescript-eslint/no-misused-promises': 'off'
+        }
+    },
+    {
+        name: 'Payment method component story imports',
+        files: ['src/components/**/?(*.)+(stories).[jt]s?(x)'],
+        ignores: ['src/components/internal/**'],
+        rules: {
+            'no-restricted-imports': [
+                'error',
+                {
+                    paths: restrictedImportPaths,
+                    patterns: [
+                        {
+                            group: ['@adyen/adyen-web/src/**'],
+                            message:
+                                'Import payment method components from @adyen/adyen-web. Direct source imports bypass the built package in dist Storybook tests.'
+                        },
+                        {
+                            regex: '^\\.\\.?/(?!SimulatedIssuer$)[A-Z][A-Za-z0-9]*(?:\\.tsx)?$',
+                            importNames: ['default'],
+                            message:
+                                'Import payment method components from @adyen/adyen-web. Direct source imports bypass the built package in dist Storybook tests.'
+                        }
+                    ]
+                }
+            ]
         }
     },
     {

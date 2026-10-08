@@ -47,5 +47,28 @@ describe('getConsentLinkUrl', () => {
             getConsentUrl('nl', 'fr', rivertyConsentUrlMap);
             expect(console.warn).toHaveBeenCalled();
         });
+        test('should return undefined when no consent url is found', () => {
+            expect(getConsentUrl('WRONG', 'en', rivertyConsentUrlMap)).toBeUndefined();
+            expect(console.warn).toHaveBeenCalledTimes(1);
+        });
+        test('should return undefined when no country code is provided', () => {
+            expect(getConsentUrl(undefined, 'en', rivertyConsentUrlMap)).toBeUndefined();
+        });
+    });
+    describe('the shopper locale is not supported for the country', () => {
+        beforeEach(() => {
+            console.warn = jest.fn();
+        });
+        test('should fall back to the english URL of the country', () => {
+            expect(getConsentUrl('nl', 'fr', rivertyConsentUrlMap)).toBe(rivertyConsentUrlMap.nl.en);
+            expect(getConsentUrl('be', 'de-DE', rivertyConsentUrlMap)).toBe(rivertyConsentUrlMap.be.en);
+        });
+        test('should fall back to the english URL of the country when no locale is provided', () => {
+            expect(getConsentUrl('nl', undefined, rivertyConsentUrlMap)).toBe(rivertyConsentUrlMap.nl.en);
+        });
+        test('should warn about the fallback', () => {
+            getConsentUrl('nl', 'fr', rivertyConsentUrlMap);
+            expect(console.warn).toHaveBeenCalledTimes(1);
+        });
     });
 });

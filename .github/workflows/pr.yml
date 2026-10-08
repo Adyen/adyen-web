@@ -27,6 +27,12 @@ jobs:
         uses: ./.github/workflows/automated-visual.yml
         secrets: inherit
 
+    # Merge queue only — the source suite covers PRs; this validates the built bundle.
+    e2e-dist-tests:
+        if: github.event_name == 'merge_group'
+        uses: ./.github/workflows/e2e-dist-tests.yml
+        secrets: inherit
+
     validate-locales:
         uses: ./.github/workflows/validate-locales.yml
         secrets: inherit
@@ -59,7 +65,7 @@ jobs:
     # Stricter gateway check for merge queue — all jobs must pass
     verify-merge-queue:
         if: always() && github.event_name == 'merge_group'
-        needs: [unit-tests, e2e-tests, automated-a11y, automated-visual, validate-locales, strict-typescript]
+        needs: [unit-tests, e2e-tests, e2e-dist-tests, automated-a11y, automated-visual, validate-locales, strict-typescript]
         runs-on: ubuntu-latest
         permissions:
             contents: read
@@ -71,6 +77,7 @@ jobs:
                       {
                         "unit-tests": "${{ needs.unit-tests.result }}",
                         "e2e-tests": "${{ needs.e2e-tests.result }}",
+                        "e2e-dist-tests": "${{ needs.e2e-dist-tests.result }}",
                         "automated-a11y": "${{ needs.automated-a11y.result }}",
                         "automated-visual": "${{ needs.automated-visual.result }}",
                         "validate-locales": "${{ needs.validate-locales.result }}",

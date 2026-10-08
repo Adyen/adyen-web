@@ -127,6 +127,9 @@ as `[Component].stories.tsx` — either location is picked up, so don't relocate
 just for consistency. A cross-cutting demo that belongs to no single payment method (session
 patching, redirect result, the review page) is the exception: those live in `storybook/stories/`.
 
+- Import payment method component classes from `@adyen/adyen-web`, not from relative source paths.
+  Source Storybook aliases the package to `src/index.ts`, while dist Storybook resolves it to the
+  built package.
 - Every story must wrap the element in `Checkout` (initializes Core from the story args) and then
   `ComponentContainer`, both from `storybook/components/`.
 - For a component with an external pay button, keep the wrapper and hold your own reference to the

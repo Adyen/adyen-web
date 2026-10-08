@@ -3,7 +3,7 @@ import { MetaConfiguration, StoryConfiguration } from '../../../storybook/types'
 import { ComponentContainer } from '../../../storybook/components/ComponentContainer';
 import { IssuerListConfiguration } from '../helpers/IssuerListContainer/types';
 import { Checkout } from '../../../storybook/components/Checkout';
-import MolPayEBankingMY from './MolPayEBankingMY';
+import { MolPayEBankingMY } from '@adyen/adyen-web';
 
 type MolPayEBankingMYStory = StoryConfiguration<IssuerListConfiguration>;
 

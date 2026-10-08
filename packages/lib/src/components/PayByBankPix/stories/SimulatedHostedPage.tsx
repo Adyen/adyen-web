@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { h, Fragment } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
-import { AdyenCheckout } from '../../..';
+import { AdyenCheckout, PayByBankPix } from '@adyen/adyen-web';
 import { AdditionalDetailsData } from '../../../core/types';
-import PayByBankPix from '../PayByBankPix';
 import { PayByBankPixConfiguration } from '../types';
 import UIElement from '../../internal/UIElement';
 import { mockEnrollmentPayload } from './mocks';

@@ -32,17 +32,21 @@ concurrency:
 
 jobs:
   release-snapshot:
-    if: github.repository == 'adyen/adyen-web' && github.event_name == 'pull_request' && github.event.label.name == 'release-snapshot'
+    if: >-
+      github.repository == 'adyen/adyen-web' &&
+      (github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'pull_request' && github.event.label.name == 'release-snapshot'))
     name: Build Snapshot
     runs-on: ubuntu-latest
     permissions:
       contents: write # create git tag and GitHub Release
-      pull-requests: write # comment the release link on the PR
+      pull-requests: write # PR flow only: comment the release link and remove the label
     steps:
       # An alpha build is published publicly, so require a human approval on the
       # PR first. A review that was later dismissed or superseded by a newer
       # review from the same person does not count.
       - name: Require an approved pull request
+        if: github.event_name == 'pull_request'
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
@@ -62,7 +66,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
+          ref: ${{ github.event.pull_request.head.sha || github.ref }}
           fetch-depth: 0
 
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
@@ -74,103 +78,13 @@ jobs:
         run: corepack enable
 
       - name: Install Project Dependencies
-        run: yarn install
+        run: yarn install --immutable
 
       - name: Version snapshot
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
-        run: yarn changeset version --snapshot alpha.${HEAD_SHA::7}
-
-      - name: Read SDK version
-        id: sdk-version
-        run: echo "version=$(node -p "require('./packages/lib/package.json').version")" >> "$GITHUB_OUTPUT"
-
-      - name: Build
-        run: cd packages/lib && yarn build
-        env:
-          CI: true
-
-      - name: Bundle UMD and translations
-        run: |
-          cp packages/server/translations/ packages/lib/dist/umd -r
-          cd packages/lib/dist/umd && zip -r /tmp/adyen-web-sdk-umd-and-translations-${{ steps.sdk-version.outputs.version }}.zip .
-
-      - name: Upload UMD and translations artifact
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
-        with:
-          name: adyen-web-sdk-umd-and-translations-${{ steps.sdk-version.outputs.version }}
-          path: packages/lib/dist/umd
-
-      # Tag the snapshot version. This commits the version bump only to a detached
-      # commit that the tag points at, so the feature branch itself stays clean.
-      - name: Create Git tag
-        run: |
-          TAG="v${{ steps.sdk-version.outputs.version }}"
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git commit -am "[ci] snapshot ${TAG}"
-          git tag "$TAG"
-          git push origin "$TAG"
-
-      - name: Create GitHub Prerelease
-        id: release
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          gh release create "v${{ steps.sdk-version.outputs.version }}" \
-            --title "${{ steps.sdk-version.outputs.version }}" \
-            --notes "Snapshot preview build from pull request [#${{ github.event.pull_request.number }}](${{ github.event.pull_request.html_url }})." \
-            --prerelease \
-            "/tmp/adyen-web-sdk-umd-and-translations-${{ steps.sdk-version.outputs.version }}.zip"
-          echo "url=${{ github.server_url }}/${{ github.repository }}/releases/tag/v${{ steps.sdk-version.outputs.version }}" >> "$GITHUB_OUTPUT"
-
-      - name: Comment release link on the pull request
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          gh pr comment "${{ github.event.pull_request.number }}" \
-            --body "Alpha release [\`${{ steps.sdk-version.outputs.version }}\`](${{ steps.release.outputs.url }}) is ready."
-
-      # Always drop the label, whether the run succeeded or failed, so the label
-      # can be added again to trigger another build.
-      - name: Remove the release-snapshot label
-        if: always()
-        env:
-          GH_TOKEN: ${{ github.token }}
-          GH_REPO: ${{ github.repository }}
-        run: gh pr edit "${{ github.event.pull_request.number }}" --remove-label release-snapshot
-
-  # Same build as above, but triggered manually on a branch. Use this when the
-  # branch has no pull request, or when the pull request conflicts with main and
-  # should not be rebased yet.
-  release-snapshot-manual:
-    if: github.repository == 'adyen/adyen-web' && github.event_name == 'workflow_dispatch'
-    name: Build Snapshot (manual)
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write # create git tag and GitHub Release
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-        with:
-          fetch-depth: 0
-
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
-        with:
-          node-version: 24
-          package-manager-cache: false
-
-      - name: Enable Corepack
-        run: corepack enable
-
-      - name: Install Project Dependencies
-        run: yarn install
-
-      - name: Version snapshot
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: yarn changeset version --snapshot alpha.${GITHUB_SHA::7}
+          SNAPSHOT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: yarn changeset version --snapshot alpha.${SNAPSHOT_SHA::7}
 
       - name: Update lockfile after versioning
         run: yarn install
@@ -207,11 +121,39 @@ jobs:
           git push origin "$TAG"
 
       - name: Create GitHub Prerelease
+        id: release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EVENT_NAME: ${{ github.event_name }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          BRANCH_NAME: ${{ github.ref_name }}
+        run: |
+          if [ "$EVENT_NAME" = "pull_request" ]; then
+            NOTES="Snapshot preview build from pull request [#${PR_NUMBER}](${PR_URL})."
+          else
+            NOTES="Snapshot preview build from branch [${BRANCH_NAME}](${{ github.server_url }}/${{ github.repository }}/tree/${BRANCH_NAME})."
+          fi
+          gh release create "v${{ steps.sdk-version.outputs.version }}" \
+            --title "${{ steps.sdk-version.outputs.version }}" \
+            --notes "$NOTES" \
+            --prerelease \
+            "/tmp/adyen-web-sdk-umd-and-translations-${{ steps.sdk-version.outputs.version }}.zip"
+          echo "url=${{ github.server_url }}/${{ github.repository }}/releases/tag/v${{ steps.sdk-version.outputs.version }}" >> "$GITHUB_OUTPUT"
+
+      - name: Comment release link on the pull request
+        if: github.event_name == 'pull_request'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create "v${{ steps.sdk-version.outputs.version }}" \
-            --title "${{ steps.sdk-version.outputs.version }}" \
-            --notes "Snapshot preview build from branch [${{ github.ref_name }}](${{ github.server_url }}/${{ github.repository }}/tree/${{ github.ref_name }})." \
-            --prerelease \
-            "/tmp/adyen-web-sdk-umd-and-translations-${{ steps.sdk-version.outputs.version }}.zip"
+          gh pr comment "${{ github.event.pull_request.number }}" \
+            --body "Alpha release [\`${{ steps.sdk-version.outputs.version }}\`](${{ steps.release.outputs.url }}) is ready."
+
+      # Always drop the label, whether the run succeeded or failed, so the label
+      # can be added again to trigger another build.
+      - name: Remove the release-snapshot label
+        if: always() && github.event_name == 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: gh pr edit "${{ github.event.pull_request.number }}" --remove-label release-snapshot
