@@ -57,6 +57,10 @@
 .adyen-checkout__payment-method {
     display: block;
 
+    &:not(.adyen-checkout__payment-method--selected) {
+        overflow-anchor: none;
+    }
+
     &__details {
         overflow: hidden;
     }
@@ -75,7 +79,7 @@
 }
 
 
-$pm-details-expand-duration: variable-generator.token(animation-duration-moderate);
+$pm-details-expand-duration: variable-generator.token(animation-duration-slow);
 
 .adyen-checkout-pm-details-wrapper {
     display: grid;
