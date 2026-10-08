@@ -47,8 +47,8 @@
         "concurrently": "10.0.5",
         "cross-env": "10.1.0",
         "husky": "9.1.7",
-        "lint-staged": "17.4.1",
-        "prettier": "3.9.6"
+        "lint-staged": "17.5.1",
+        "prettier": "3.9.7"
     },
     "resolutions": {
         "shell-quote": "1.10.0",
