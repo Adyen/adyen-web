@@ -80,20 +80,25 @@
     .adyen-checkout-pm-details-wrapper {
         display: grid;
         grid-template-rows: 0fr;
-        transition: grid-template-rows $pm-details-expand-duration ease;
         visibility: hidden;
+
+        @media not (prefers-reduced-motion: reduce) {
+            transition: grid-template-rows $pm-details-expand-duration ease;
+        }
     }
 
     .adyen-checkout-pm-details-wrapper[aria-hidden='false'] {
         grid-template-rows: 1fr;
         visibility: visible;
 
-        .adyen-checkout__payment-method__details {
-            animation: adyen-checkout-show-overflow 0s $pm-details-expand-duration forwards;
+        @media not (prefers-reduced-motion: reduce) {
+            .adyen-checkout__payment-method__details {
+                animation: adyen-checkout-show-overflow 0s $pm-details-expand-duration forwards;
 
-            @keyframes adyen-checkout-show-overflow {
-                to {
-                    overflow: visible;
+                @keyframes adyen-checkout-show-overflow {
+                    to {
+                        overflow: visible;
+                    }
                 }
             }
         }
