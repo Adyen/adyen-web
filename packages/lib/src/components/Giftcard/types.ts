@@ -1,7 +1,7 @@
 import { FunctionComponent } from 'preact';
 import { GiftcardFieldsProps } from './components/types';
 import { UIElementProps } from '../internal/UIElement/types';
-import { Order, PaymentAmount, PaymentData } from '../../types/global-types';
+import { Order, OrderUpdatedData, PaymentAmount, PaymentData } from '../../types/global-types';
 import type { CardBrandsConfiguration } from '../internal/SecuredFields/lib/types';
 
 export interface GiftCardElementData {
@@ -27,7 +27,7 @@ export type onBalanceCheckCallbackType = (
     data: GiftCardElementData
 ) => Promise<void>;
 
-export type onOrderUpdatedCallbackType = (data: { order: Order }) => void;
+export type onOrderUpdatedCallbackType = (data: OrderUpdatedData) => void;
 
 export type onRequiringConfirmationCallbackType = (resolve: () => void, reject: (error: Error) => void) => Promise<void>;
 

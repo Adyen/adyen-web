@@ -36,6 +36,7 @@ export const GiftcardExample = ({ contextArgs, renderCard = true }: Readonly<Gif
               });
 
         const onOrderUpdated = data => {
+            console.log('onOrderUpdated sessionData', data.sessionData);
             setRemainingAmount(data.order?.remainingAmount?.value);
             if (renderCard && checkout.current) {
                 const card = new Card(checkout.current, {
