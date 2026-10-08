@@ -12,7 +12,9 @@ import ApplePaySdkLoader from './services/ApplePaySdkLoader';
 import { mock } from 'jest-mock-extended';
 import { render, screen } from '@testing-library/preact';
 import { setupCoreMock, TEST_CHECKOUT_ATTEMPT_ID, TEST_RISK_DATA } from '../../../config/testMocks/setup-core-mock';
+import Language from '../../language/Language';
 import { ICore } from '../../types';
+import type { ILanguageService } from '../../language/LanguageService';
 
 jest.mock('../../core/Services/http');
 jest.mock('./services/ApplePayService');
@@ -106,6 +108,20 @@ describe('ApplePay', () => {
             const applepay = new ApplePay(core);
             render(applepay.render());
             expect(screen.getByTestId('apple-pay-button')).toBeInTheDocument();
+        });
+    });
+
+    describe('buttonLocale', () => {
+        test('should use the locale of the checkout when buttonLocale is not set', () => {
+            const i18n = new Language({ locale: 'en-GB', service: mock<ILanguageService>({}) });
+            const applepay = new ApplePay(core, { i18n });
+            expect(applepay.props.buttonLocale).toBe('en-GB');
+        });
+
+        test('should use buttonLocale when it is set', () => {
+            const i18n = new Language({ locale: 'en-GB', service: mock<ILanguageService>({}) });
+            const applepay = new ApplePay(core, { i18n, buttonLocale: 'fr-CA' });
+            expect(applepay.props.buttonLocale).toBe('fr-CA');
         });
     });
 

@@ -9,6 +9,9 @@ import { Placeholders as GiftcardPlaceholders } from '../../../../Giftcard/compo
 import * as logger from '../utilities/logger';
 import { CardPlaceholders } from '../../../../Card/types';
 import { ErrorEventCode, ErrorEventType } from '../../../../../core/Analytics/events/AnalyticsErrorEvent';
+import { setupCoreMock } from '../../../../../../config/testMocks/setup-core-mock';
+
+const { i18n } = setupCoreMock().modules;
 
 const ENCRYPTED_CARD_NUMBER = 'encryptedCardNumber';
 const ENCRYPTED_EXPIRY_DATE = 'encryptedExpiryDate';
@@ -91,7 +94,7 @@ describe('SecuredField generates console.error and analytics event...', () => {
         setupObj.submitAnalytics = jest.fn(() => {});
     });
     test("...because it doesn't have an actual iframe", () => {
-        new SecuredField(setupObj, global.i18n);
+        new SecuredField(setupObj, i18n);
         expect(errorMsg.includes('Trying to initialise a securedField iframe, but the iframe.contentWindow is undefined')).toEqual(true);
 
         expect(setupObj.submitAnalytics).toHaveBeenCalledWith({
@@ -109,36 +112,36 @@ describe('SecuredField generates console.error and analytics event...', () => {
  * AriaConfig
  */
 describe('SecuredField handling ariaConfig object - should set defaults', () => {
-    test('Card number field should get translated title, label & error props plus a lang prop that equals the i18n.locale', () => {
-        const card = new SecuredField(setupObj, global.i18n);
+    test('Card number field should get translated title, label & error props plus a lang prop that equals the i18n.translationsLocale', () => {
+        const card = new SecuredField(setupObj, i18n);
 
         expect(card.sfConfig.iframeUIConfig.ariaConfig[ENCRYPTED_CARD_NUMBER].iframeTitle).toEqual(TRANSLATED_NUMBER_IFRAME_TITLE);
         expect(card.sfConfig.iframeUIConfig.ariaConfig[ENCRYPTED_CARD_NUMBER].label).toEqual(TRANSLATED_NUMBER_IFRAME_LABEL);
         expect(card.sfConfig.iframeUIConfig.ariaConfig[ENCRYPTED_CARD_NUMBER].error[ERROR_MSG_LUHN_CHECK_FAILED]).toEqual(
             TRANSLATED_LUHN_CHECK_FAILED_ERROR
         );
-        expect(card.sfConfig.iframeUIConfig.ariaConfig.lang).toEqual(global.i18n.locale); // = 'en-US'
+        expect(card.sfConfig.iframeUIConfig.ariaConfig.lang).toEqual(i18n.translationsLocale); // = 'en-US'
     });
 
-    test('Date field should get translated title, label & error props plus a lang prop that equals the i18n.locale', () => {
+    test('Date field should get translated title, label & error props plus a lang prop that equals the i18n.translationsLocale', () => {
         setupObj.fieldType = ENCRYPTED_EXPIRY_DATE;
 
-        const card = new SecuredField(setupObj, global.i18n);
+        const card = new SecuredField(setupObj, i18n);
 
         expect(card.sfConfig.iframeUIConfig.ariaConfig[ENCRYPTED_EXPIRY_DATE].iframeTitle).toEqual(TRANSLATED_DATE_IFRAME_TITLE);
         expect(card.sfConfig.iframeUIConfig.ariaConfig[ENCRYPTED_EXPIRY_DATE].label).toEqual(TRANSLATED_DATE_IFRAME_LABEL);
         expect(card.sfConfig.iframeUIConfig.ariaConfig[ENCRYPTED_EXPIRY_DATE].error[CARD_TOO_OLD_ERROR_CODE]).toEqual(TRANSLATED_CARD_TOO_OLD_ERROR);
-        expect(card.sfConfig.iframeUIConfig.ariaConfig.lang).toEqual(global.i18n.locale);
+        expect(card.sfConfig.iframeUIConfig.ariaConfig.lang).toEqual(i18n.translationsLocale);
     });
 
-    test('CVC field should get translated title, label & error props plus a lang prop that equals the i18n.locale', () => {
+    test('CVC field should get translated title, label & error props plus a lang prop that equals the i18n.translationsLocale', () => {
         setupObj.fieldType = ENCRYPTED_SECURITY_CODE;
 
-        const card = new SecuredField(setupObj, global.i18n);
+        const card = new SecuredField(setupObj, i18n);
 
         expect(card.sfConfig.iframeUIConfig.ariaConfig[ENCRYPTED_SECURITY_CODE].iframeTitle).toEqual(TRANSLATED_CVC_IFRAME_TITLE);
         expect(card.sfConfig.iframeUIConfig.ariaConfig[ENCRYPTED_SECURITY_CODE].label).toEqual(TRANSLATED_CVC_IFRAME_LABEL);
-        expect(card.sfConfig.iframeUIConfig.ariaConfig.lang).toEqual(global.i18n.locale);
+        expect(card.sfConfig.iframeUIConfig.ariaConfig.lang).toEqual(i18n.translationsLocale);
     });
 });
 
@@ -147,7 +150,7 @@ describe('SecuredField handling ariaConfig object - should trim the config objec
         setupObj.fieldType = ENCRYPTED_CARD_NUMBER;
         setupObj.iframeUIConfig.ariaConfig = {};
 
-        const card = new SecuredField(setupObj, global.i18n);
+        const card = new SecuredField(setupObj, i18n);
 
         expect(card.sfConfig.iframeUIConfig.ariaConfig[ENCRYPTED_CARD_NUMBER]).not.toBe(undefined);
         expect(card.sfConfig.iframeUIConfig.ariaConfig[ENCRYPTED_EXPIRY_DATE]).toBe(undefined);
@@ -156,7 +159,7 @@ describe('SecuredField handling ariaConfig object - should trim the config objec
 
     test('cvc field, with default ariaConfig, should only have a property related to the cvc and nothing for date or number', () => {
         setupObj.fieldType = ENCRYPTED_SECURITY_CODE;
-        const card = new SecuredField(setupObj, global.i18n);
+        const card = new SecuredField(setupObj, i18n);
 
         expect(card.sfConfig.iframeUIConfig.ariaConfig[ENCRYPTED_SECURITY_CODE]).not.toBe(undefined);
         expect(card.sfConfig.iframeUIConfig.ariaConfig[ENCRYPTED_CARD_NUMBER]).toBe(undefined);
@@ -167,7 +170,7 @@ describe('SecuredField handling ariaConfig object - should trim the config objec
         setupObj.fieldType = ENCRYPTED_CARD_NUMBER;
         setupObj.iframeUIConfig.ariaConfig = {};
 
-        const card = new SecuredField(setupObj, global.i18n);
+        const card = new SecuredField(setupObj, i18n);
 
         expect(card.sfConfig.iframeUIConfig.ariaConfig[ENCRYPTED_CARD_NUMBER].error[ERROR_MSG_LUHN_CHECK_FAILED]).not.toBe(undefined);
 
@@ -177,14 +180,14 @@ describe('SecuredField handling ariaConfig object - should trim the config objec
 
     test('date field, with default ariaConfig, should have expected, translated, error strings', () => {
         setupObj.fieldType = ENCRYPTED_EXPIRY_DATE;
-        const card = new SecuredField(setupObj, global.i18n);
+        const card = new SecuredField(setupObj, i18n);
 
         expect(card.sfConfig.iframeUIConfig.ariaConfig[ENCRYPTED_EXPIRY_DATE].error[ERROR_MSG_CARD_TOO_OLD]).toEqual(TRANSLATED_CARD_TOO_OLD_ERROR);
     });
 
     test('cvc field, with default ariaConfig, should include both the base and the Amex-specific translated error strings', () => {
         setupObj.fieldType = ENCRYPTED_SECURITY_CODE;
-        const card = new SecuredField(setupObj, global.i18n);
+        const card = new SecuredField(setupObj, i18n);
 
         const cvcErrors = card.sfConfig.iframeUIConfig.ariaConfig[ENCRYPTED_SECURITY_CODE].error;
 
@@ -197,10 +200,10 @@ describe('SecuredField handling ariaConfig object - should trim the config objec
     test('Card number field with default ariaConfig should have an error object containing certain keys whose values are the correct translations', () => {
         setupObj.fieldType = ENCRYPTED_CARD_NUMBER;
         setupObj.iframeUIConfig.ariaConfig = {};
-        const card = new SecuredField(setupObj, global.i18n);
+        const card = new SecuredField(setupObj, i18n);
 
         const errorCode = ERROR_MSG_LUHN_CHECK_FAILED;
-        expect(card.sfConfig.iframeUIConfig.ariaConfig[ENCRYPTED_CARD_NUMBER].error[errorCode]).toEqual(global.i18n.get(errorCode));
+        expect(card.sfConfig.iframeUIConfig.ariaConfig[ENCRYPTED_CARD_NUMBER].error[errorCode]).toEqual(i18n.get(errorCode));
     });
 });
 
@@ -210,7 +213,7 @@ describe('SecuredField handling ariaConfig object - should trim the config objec
 describe('SecuredField handling no placeholders config object - should set defaults', () => {
     test('Card number field with no placeholders config should set all placeholders to be an empty string', () => {
         // @ts-ignore ignore
-        const card = new SecuredField({ ...setupObj, placeholders: {} }, global.i18n);
+        const card = new SecuredField({ ...setupObj, placeholders: {} }, i18n);
         const allPlaceholders = Object.values(card.sfConfig.iframeUIConfig.placeholders);
         expect(allPlaceholders.every(placeholder => placeholder === '')).toBe(true);
     });
@@ -221,7 +224,7 @@ describe('SecuredField handling placeholders from the placeholders config', () =
 
     test('should set placeholders for txVariant gift card (cardNumber field)', () => {
         // @ts-ignore ignore
-        const giftCard = new SecuredField({ ...setupObj, txVariant: GIFT_CARD }, global.i18n, giftCardPlaceholders);
+        const giftCard = new SecuredField({ ...setupObj, txVariant: GIFT_CARD }, i18n, giftCardPlaceholders);
         expect(giftCard.sfConfig.iframeUIConfig.placeholders[ENCRYPTED_CARD_NUMBER]).toBe(giftCardPlaceholders.cardNumber);
     });
 
@@ -229,7 +232,7 @@ describe('SecuredField handling placeholders from the placeholders config', () =
         // @ts-ignore ignore
         const giftCard = new SecuredField(
             { ...setupObj, txVariant: GIFT_CARD, fieldType: ENCRYPTED_EXPIRY_DATE, placeholders: giftCardPlaceholders },
-            global.i18n
+            i18n
         );
         expect(giftCard.sfConfig.iframeUIConfig.placeholders[ENCRYPTED_EXPIRY_DATE]).toBe(giftCardPlaceholders.expiryDate);
     });
@@ -238,33 +241,33 @@ describe('SecuredField handling placeholders from the placeholders config', () =
         // @ts-ignore ignore
         const giftCard = new SecuredField(
             { ...setupObj, txVariant: GIFT_CARD, fieldType: ENCRYPTED_SECURITY_CODE, placeholders: giftCardPlaceholders },
-            global.i18n
+            i18n
         );
         expect(giftCard.sfConfig.iframeUIConfig.placeholders[ENCRYPTED_SECURITY_CODE]).toBe(giftCardPlaceholders.securityCode);
     });
 
     test('should set placeholders for cardNumber field for txVariant default (card)', () => {
         // @ts-ignore ignore
-        const card = new SecuredField(setupObj, global.i18n, cardPlaceholders);
+        const card = new SecuredField(setupObj, i18n, cardPlaceholders);
         expect(card.sfConfig.iframeUIConfig.placeholders[ENCRYPTED_CARD_NUMBER]).toBe(cardPlaceholders.cardNumber);
     });
 
     test('should set placeholders for expiryDate field for txVariant default (card)', () => {
         // @ts-ignore ignore
-        const card = new SecuredField({ ...setupObj, fieldType: ENCRYPTED_EXPIRY_DATE }, global.i18n);
+        const card = new SecuredField({ ...setupObj, fieldType: ENCRYPTED_EXPIRY_DATE }, i18n);
         expect(card.sfConfig.iframeUIConfig.placeholders[ENCRYPTED_EXPIRY_DATE]).toBe(cardPlaceholders.expiryDate);
     });
 
     test('should set placeholders for securityCode field for txVariant default (card)', () => {
         // @ts-ignore ignore
-        const card = new SecuredField({ ...setupObj, fieldType: ENCRYPTED_SECURITY_CODE }, global.i18n);
+        const card = new SecuredField({ ...setupObj, fieldType: ENCRYPTED_SECURITY_CODE }, i18n);
         expect(card.sfConfig.iframeUIConfig.placeholders[ENCRYPTED_SECURITY_CODE_3_DIGITS]).toBe(cardPlaceholders.securityCodeThreeDigits);
         expect(card.sfConfig.iframeUIConfig.placeholders[ENCRYPTED_SECURITY_CODE_4_DIGITS]).toBe(cardPlaceholders.securityCodeFourDigits);
     });
 
     test('should set placeholders for password field for txVariant default (card)', () => {
         // @ts-ignore ignore
-        const card = new SecuredField({ ...setupObj, fieldType: ENCRYPTED_PWD_FIELD }, global.i18n);
+        const card = new SecuredField({ ...setupObj, fieldType: ENCRYPTED_PWD_FIELD }, i18n);
         expect(card.sfConfig.iframeUIConfig.placeholders[ENCRYPTED_PWD_FIELD]).toBe(cardPlaceholders.password);
     });
 
@@ -281,7 +284,7 @@ describe('SecuredField handling placeholders from the placeholders config', () =
 
         beforeEach(() => {
             setupObj.loadingContext = 'https://checkoutshopper-test.adyen.com/checkoutshopper/';
-            card = new SecuredField({ ...setupObj }, global.i18n);
+            card = new SecuredField({ ...setupObj }, i18n);
             data = {
                 action: '',
                 fieldType: 'encryptedSecurityCode',
@@ -432,7 +435,7 @@ describe('SecuredField handling placeholders from the placeholders config', () =
                     fieldType: ENCRYPTED_SECURITY_CODE,
                     submitAnalytics: submitAnalyticsSpy
                 },
-                global.i18n
+                i18n
             );
 
             const feedbackObj = {

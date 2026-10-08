@@ -68,6 +68,33 @@ describe('Core', () => {
             expect(checkout.options.locale).toBe('es-ES');
             expect(checkout.modules.i18n.locale).toBe('es-ES');
         });
+
+        test('should keep a locale that has no translations available', async () => {
+            const checkout = new AdyenCheckout({
+                countryCode: 'GB',
+                environment: 'test',
+                clientKey: 'test_123456',
+                locale: 'en-GB'
+            });
+            await checkout.initialize();
+
+            expect(checkout.options.locale).toBe('en-GB');
+            expect(checkout.modules.i18n.locale).toBe('en-GB');
+            expect(checkout.modules.i18n.translationsLocale).toBe('en-US');
+        });
+
+        test('should fall back to en-US when the locale is not supported by Intl', async () => {
+            const checkout = new AdyenCheckout({
+                countryCode: 'US',
+                environment: 'test',
+                clientKey: 'test_123456',
+                locale: 'xx-YY'
+            });
+            await checkout.initialize();
+
+            expect(checkout.options.locale).toBe('en-US');
+            expect(checkout.modules.i18n.locale).toBe('en-US');
+        });
     });
 
     describe('Setting environment', () => {
