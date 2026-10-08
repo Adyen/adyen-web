@@ -91,8 +91,12 @@
         grid-template-rows: 1fr;
         visibility: visible;
 
-        @media not (prefers-reduced-motion: reduce) {
-            .adyen-checkout__payment-method__details {
+        .adyen-checkout__payment-method__details {
+            @media (prefers-reduced-motion: reduce) {
+                overflow: visible;
+            }
+
+            @media not (prefers-reduced-motion: reduce) {
                 animation: adyen-checkout-show-overflow 0s $pm-details-expand-duration forwards;
 
                 @keyframes adyen-checkout-show-overflow {
