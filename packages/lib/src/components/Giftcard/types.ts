@@ -61,4 +61,17 @@ export interface GiftCardValidationError {
     error?: string; // Original error code
 }
 
-export type GiftCardBalanceCheckErrorType = 'no-balance' | 'card-error' | 'currency-error';
+/**
+ * Errors synthesized client-side from a successful (2xx) balance check response.
+ * These are rendered inline, next to the gift card number field.
+ */
+export const BALANCE_CHECK_ERRORS = ['no-balance', 'card-error', 'currency-error'] as const;
+
+export type KnownBalanceCheckError = (typeof BALANCE_CHECK_ERRORS)[number];
+
+/**
+ * `unknown-error` covers everything we cannot attribute to the card itself
+ * (5xx, network, CORS, timeout, a merchant calling `reject()`) and is rendered
+ * as a banner rather than an inline field error.
+ */
+export type GiftCardBalanceCheckErrorType = KnownBalanceCheckError | 'unknown-error';

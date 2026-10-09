@@ -29,7 +29,7 @@ type ErrorLevel = 'silent' | 'info' | 'warn' | 'error' | 'fatal';
  */
 type LegacyHttpPromise<T> = Promise<T>;
 
-type AdyenApiErrorResponse = {
+export type AdyenApiErrorResponse = {
     errorCode: string;
     message: string;
     errorType: string;
