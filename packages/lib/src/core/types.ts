@@ -5,6 +5,7 @@ import UIElement from '../components/internal/UIElement';
 import type { CustomTranslations } from '../language/types';
 import type {
     Order,
+    OrderUpdatedData,
     OrderStatus,
     PaymentAction,
     PaymentMethodsResponse,
@@ -383,9 +384,11 @@ export interface CoreConfiguration {
     /**
      * Called when the gift card balance is less than the transaction amount.
      * Returns an Order object that includes the remaining amount to be paid.
+     * In the Sessions flow, it also returns the latest `sessionData`, which should be persisted
+     * by the merchant (e.g. to restore the session after a page reload).
      * https://docs.adyen.com/payment-methods/gift-cards/web-component?tab=config-sessions_1
      */
-    onOrderUpdated?(data: { order: Order }): void;
+    onOrderUpdated?(data: OrderUpdatedData): void;
 
     /**
      * @internal
