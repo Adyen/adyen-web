@@ -11,7 +11,6 @@
     align-self: start;
 }
 
-
 .adyen-checkout-payment-methods-container {
     display: flex;
     flex-direction: column;
@@ -38,7 +37,6 @@
     }
 }
 
-
 .adyen-checkout__instant-payment-methods-list {
     $instant-pm-gap: variable-generator.token(spacer-070);
 
@@ -57,6 +55,10 @@
 .adyen-checkout__payment-method {
     display: block;
 
+    &:not(.adyen-checkout__payment-method--selected) {
+        overflow-anchor: none;
+    }
+
     &__details {
         overflow: hidden;
     }
@@ -72,20 +74,37 @@
             }
         }
     }
-}
 
-.adyen-checkout-pm-details-wrapper {
-    display: grid;
-    grid-template-rows: 0fr;
-    transition: grid-template-rows 250ms ease;
-    visibility: hidden;
-}
+    $pm-details-expand-duration: variable-generator.token(animation-duration-slow);
 
-.adyen-checkout-pm-details-wrapper[aria-hidden='false'] {
-    grid-template-rows: 1fr;
-    visibility: visible;
+    .adyen-checkout-pm-details-wrapper {
+        display: grid;
+        grid-template-rows: 0fr;
+        visibility: hidden;
 
-    .adyen-checkout__payment-method__details{
-        overflow: visible;
+        @media not (prefers-reduced-motion: reduce) {
+            transition: grid-template-rows $pm-details-expand-duration ease;
+        }
+    }
+
+    .adyen-checkout-pm-details-wrapper[aria-hidden='false'] {
+        grid-template-rows: 1fr;
+        visibility: visible;
+
+        .adyen-checkout__payment-method__details {
+            @media (prefers-reduced-motion: reduce) {
+                overflow: visible;
+            }
+
+            @media not (prefers-reduced-motion: reduce) {
+                animation: adyen-checkout-show-overflow 0s $pm-details-expand-duration forwards;
+
+                @keyframes adyen-checkout-show-overflow {
+                    to {
+                        overflow: visible;
+                    }
+                }
+            }
+        }
     }
 }
