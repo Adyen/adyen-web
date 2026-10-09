@@ -5,16 +5,20 @@ export const DEFAULT_COUNTRY_CODE = 'US';
 export const DEFAULT_AMOUNT_VALUE = 25900;
 export const SHOPPER_REFERENCE = 'newshoppert';
 export const RETURN_URL = `${protocol}//${host}/iframe.html?globals=&id=helpers-redirectresult--redirect-result&viewMode=story`;
-export const SHOPPER_LOCALES = [
+
+export const STORYBOOK_SHOPPERLOCALES = [
     'ar',
     'bg-BG',
     'ca-ES',
     'cs-CZ',
     'da-DK',
+    'de-CH',
     'de-DE',
     'el-GR',
+    'en-IN',
     'en-US',
     'es-ES',
+    'es-MX',
     'et-EE',
     'fi-FI',
     'fr-FR',

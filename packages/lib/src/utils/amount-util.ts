@@ -27,7 +27,6 @@ export const getLocalisedAmount = (amount: number, locale: string, currencyCode:
     const stringAmount = amount.toString(); // Changing amount to string to avoid 0-value from returning false
 
     const decimalAmount = getDecimalAmount(stringAmount, currencyCode);
-    const formattedLocale = locale.replace('_', '-');
 
     const modifiedOptions = currencyMinorUnitsConfig[currencyCode] ? { ...options, ...currencyMinorUnitsConfig[currencyCode] } : options;
 
@@ -39,7 +38,7 @@ export const getLocalisedAmount = (amount: number, locale: string, currencyCode:
     };
 
     try {
-        return decimalAmount.toLocaleString(formattedLocale, localeOptions);
+        return decimalAmount.toLocaleString(locale, localeOptions);
     } catch (e) {
         return stringAmount;
     }
