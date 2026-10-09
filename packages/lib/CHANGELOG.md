@@ -1,5 +1,31 @@
 # @adyen/adyen-web
 
+## 6.47.0
+
+### Minor Changes
+
+- New: Detect when multiple instances of AdyenCheckout are created on the same page, and generate suppressible console.warning ([#4077](https://github.com/Adyen/adyen-web/pull/4077))
+
+### Patch Changes
+
+- Improved: Null-safety in the shared Address component ([#4228](https://github.com/Adyen/adyen-web/pull/4228))
+
+- Improved: Null-safety in Amazon Pay ([#4222](https://github.com/Adyen/adyen-web/pull/4222))
+
+- Improved: Null-safety in browser info collection, Click to Pay, Google Pay, Dragonpay and 3DS2 challenge and fingerprint types. ([#4226](https://github.com/Adyen/adyen-web/pull/4226))
+
+- Fixed: Gift card balance check failures are now surfaced to the shopper instead of failing silently. ([#4206](https://github.com/Adyen/adyen-web/pull/4206))
+
+- Improved: Null-safety in Cash App Pay, PayPal and Fastlane ([#4221](https://github.com/Adyen/adyen-web/pull/4221))
+
+- Improved: Null-safety in shared form fields (Field, InputBase, InputDate, Select) ([#4223](https://github.com/Adyen/adyen-web/pull/4223))
+
+- Improved: Payment components handle missing optional callbacks and unmounted root nodes more safely ([#4217](https://github.com/Adyen/adyen-web/pull/4217))
+
+- Fixed: Card installment plans that do not provide installment values. ([#4207](https://github.com/Adyen/adyen-web/pull/4207))
+
+- Improved: Added validation null-safety and fixed untranslated Riverty consent links by falling back to English payment conditions. ([#4225](https://github.com/Adyen/adyen-web/pull/4225))
+
 ## 6.46.0
 
 ### Minor Changes
