@@ -42,13 +42,13 @@
     },
     "devDependencies": {
         "@adyen/adyen-web-server": "1.0.0",
-        "@changesets/cli": "2.31.1",
-        "@changesets/get-github-info": "0.8.0",
+        "@changesets/cli": "3.0.3",
+        "@changesets/get-github-info": "1.0.1",
         "concurrently": "10.0.5",
         "cross-env": "10.1.0",
         "husky": "9.1.7",
-        "lint-staged": "17.4.1",
-        "prettier": "3.9.6"
+        "lint-staged": "17.5.1",
+        "prettier": "3.9.8"
     },
     "resolutions": {
         "shell-quote": "1.10.0",
