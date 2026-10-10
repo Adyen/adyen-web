@@ -51,7 +51,7 @@ __metadata:
     "@adyen/adyen-web-server": "npm:1.0.0"
     "@axe-core/playwright": "npm:^4.10.1"
     "@playwright/test": "npm:1.63.0"
-    dotenv: "npm:17.4.2"
+    dotenv: "npm:18.0.1"
     ts-loader: "npm:9.6.2"
     typescript: "npm:6.0.3"
   languageName: unknown
@@ -61,7 +61,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@adyen/adyen-web-server@workspace:packages/server"
   dependencies:
-    dotenv: "npm:17.4.2"
+    dotenv: "npm:18.0.1"
     express: "npm:^5.0.0"
     serverless-http: "npm:^4.0.0"
   languageName: unknown
@@ -97,7 +97,7 @@ __metadata:
     autoprefixer: "npm:10.6.1"
     classnames: "npm:2.5.1"
     cssnano: "npm:9.0.5"
-    dotenv: "npm:17.4.2"
+    dotenv: "npm:18.0.1"
     eslint: "npm:10.10.0"
     eslint-plugin-import: "npm:2.32.0"
     eslint-plugin-jsx-a11y: "npm:6.10.2"
@@ -6576,10 +6576,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dotenv@npm:17.4.2":
-  version: 17.4.2
-  resolution: "dotenv@npm:17.4.2"
-  checksum: 10c0/164f8e77a646c8446867d5b588d26ea6005c8ea7c5eb41cf926f6113d23f2191355f6e0cfd95ea9bab98394a5b0a3f1e51a8399711b666fe55cc7b0bd745f942
+"dotenv@npm:18.0.1":
+  version: 18.0.1
+  resolution: "dotenv@npm:18.0.1"
+  bin:
+    dotenv: dist/index.cjs
+  checksum: 10c0/85f1f3e7e666ea59a50bb9cdcafa989529519e03c3d0bc396ff25fb226930d79beb256210c910a6ffceaa081c35aba7d1c058e667b796dfc0c2cecda9790ce64
   languageName: node
   linkType: hard
 
