@@ -230,6 +230,15 @@ display order, and the SDK consumes it directly.
 - New enum values are additive. The SDK passes unknown selected values to `/payments` unchanged.
 - The API does not return shopper-facing labels or formatted amounts, other than
   `processingAmounts.message`.
+- Absent optional fields are omitted, not `null`: an issuer without a discount has no `bestOffer`, and a plan
+  without offers has no `offers`.
+- `processingAmounts.type` is `absolute` or `percentage`. A `percentage` fee also carries `maxAmount`, the cap
+  the fee is held to. The SDK renders the fee through `processingAmounts.message` only.
+- Errors are problem details: `type`, `title`, `status`, `errorCode`, an optional `detail`, and, for a field
+  the backend rejects, `invalidFields` entries of `name`, `value` and `message`. They carry no `errorType` and
+  no `message`. A token the backend cannot decode, expired ones included, answers 422 `999_422_001` with
+  `invalidFields` naming `emiToken`. A missing or blank token answers 422, either `29_001` naming `emiToken` or
+  `999_422_000` naming no field; the test environment returns both.
 
 #### Typing
 
@@ -307,16 +316,21 @@ check: it rejects when the `emi` entry lists no payment method the SDK renders, 
 
 ### Outcomes
 
-| Outcome                                  | Screen                               | Analytics                                                          |
-| ---------------------------------------- | ------------------------------------ | ------------------------------------------------------------------ |
-| At least one issuer                      | The plan selection and the card form | `selected` and `displayed` events, unchanged                       |
-| An empty `issuers` list                  | The spinner stays                    | Info event `validationError`, code 949                             |
-| Token rejected as expired                | The spinner stays                    | Error event, network, code 629 (once the backend distinguishes it) |
-| Token rejected as missing or invalid     | The spinner stays                    | Error event, network, code 630                                     |
-| Any other failure, including the timeout | The spinner stays                    | Error event, network, code 631                                     |
+| Outcome                                                         | Screen                               | Analytics                                    |
+| --------------------------------------------------------------- | ------------------------------------ | -------------------------------------------- |
+| At least one issuer                                             | The plan selection and the card form | `selected` and `displayed` events, unchanged |
+| An empty `issuers` list                                         | The spinner stays                    | Info event `validationError`, code 949       |
+| Token rejected as missing, forged or expired (names `emiToken`) | The spinner stays                    | Error event, network, code 629               |
+| Any other failure, including the timeout                        | The spinner stays                    | Error event, network, code 630               |
 
-Every analytics message is a fixed string: neither the token nor the backend's error body reaches analytics.
-Until the backend answers an expired token with its own `errorCode`, an expired token is reported as 630.
+An expired token has no code of its own. The backend answers it exactly as it answers a forged one, so that a
+caller cannot probe which tokens were ever valid, and the SDK reports both as 629.
+
+The error event's `message` is a fixed prefix followed by the backend `title`, for example
+`EMI: Installment plans request failed: Missing or invalid input fields`. Without a backend answer, such as a
+timeout or a network failure, it is the prefix alone. The `requestId` is left out so that events group by
+message, and field values and `detail` are never forwarded, because the backend has echoed the full token in
+`invalidFields[].value`.
 
 ### Why the spinner stays
 
@@ -331,8 +345,14 @@ may rely on. The error screens, and whether to retry, are left to Phase 4.
 
 Tracked in the backend review of the checkoutShopper endpoint, and none of them changes the decision above:
 
-- whether the sessions setup response carries the `emiToken` on its `emi` entry, as `/paymentMethods` does;
-- a distinct `errorCode` for an expired token, which enables code 629;
+- the sessions setup response carries the `emiToken` on its `emi` entry but not `supportedPaymentMethods`,
+  so `isAvailable()` rejects EMI in the sessions flow until the backend adds it;
+- a missing or blank token answers `999_422_000` naming no field on some requests, which reports as 630
+  rather than 629;
+- `/paymentMethods` returns the `emi` entry for an amount below its `configuration.minAmount`, and the plans
+  request then answers an empty `issuers` list, so the shopper sees the spinner and the SDK sends 949;
+- `blockedPaymentMethods: ["emi"]` leaves the `emi` entry in place, and the entry follows the methods it
+  wraps: it is dropped only when no `supportedPaymentMethods` survive the allow and block lists;
 - whether `/payments` honours several applied offers on one plan, now that the SDK sends every id rather
   than the largest one;
 - when the backend starts returning `issuer.termLink`;

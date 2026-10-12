@@ -20,4 +20,4 @@ export const EMI_NO_INSTALLMENT_PLANS = '949';
 
 export const EMI_TOKEN_FIELD = 'emiToken';
 
-export const EMI_TOKEN_EXPIRED_ERROR_CODE: string | undefined = undefined;
+export const EMI_PLANS_ERROR_MESSAGE = 'EMI: Installment plans request failed';
