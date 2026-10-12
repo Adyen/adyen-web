@@ -104,18 +104,9 @@ export interface EMIConfiguration extends UIElementProps {
     };
 }
 
-/**
- * @internal
- * Fields the `emi` entry of the payment methods response carries. The backend owns them; they are not configuration.
- */
 export interface EmiPaymentMethodEntry {
     supportedPaymentMethods?: SupportedPaymentMethod[];
     configuration?: { emiToken?: string };
 }
 
-/**
- * @internal
- * What the plans lookup settled to. Carries no error code: the analytics are sent where the outcome is
- * produced, so the view only needs to know whether there is something to render.
- */
-export type EmiPlansOutcome = { status: 'ready'; issuers: EmiIssuer[] } | { status: 'unavailable' };
+export type EmiPlansState = { status: 'ready'; issuers: EmiIssuer[] } | { status: 'unavailable' };

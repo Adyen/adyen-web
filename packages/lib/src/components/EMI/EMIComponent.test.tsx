@@ -9,7 +9,7 @@ import SRPanelProvider from '../../core/Errors/SRPanelProvider';
 import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 import { UiTarget } from '../../core/Analytics/events/AnalyticsInfoEvent';
 import { EMI_FIXTURE_CHECKOUT_AMOUNT, emiPlansResponseMock } from './stories/mocks';
-import type { EmiIssuer, EmiPlansOutcome } from './types';
+import type { EmiIssuer, EmiPlansState } from './types';
 
 const core = setupCoreMock();
 const i18n = core.modules.i18n;
@@ -26,13 +26,13 @@ const createCard = () =>
     });
 
 interface RenderOptions {
-    loadPlans?: () => Promise<EmiPlansOutcome>;
-    initialOutcome?: EmiPlansOutcome;
+    loadPlans?: () => Promise<EmiPlansState>;
+    initialPlans?: EmiPlansState;
 }
 
-const ready = (issuers: EmiIssuer[]): EmiPlansOutcome => ({ status: 'ready', issuers });
+const ready = (issuers: EmiIssuer[]): EmiPlansState => ({ status: 'ready', issuers });
 
-const renderEmiComponent = ({ loadPlans = jest.fn(), initialOutcome }: RenderOptions = { initialOutcome: ready(emiPlansResponseMock.issuers) }) => {
+const renderEmiComponent = ({ loadPlans = jest.fn(), initialPlans }: RenderOptions = { initialPlans: ready(emiPlansResponseMock.issuers) }) => {
     const onPlanSelect = jest.fn();
     const setMessages = jest.spyOn(core.modules.srPanel, 'setMessages');
 
@@ -43,7 +43,7 @@ const renderEmiComponent = ({ loadPlans = jest.fn(), initialOutcome }: RenderOpt
                     <EMIComponent
                         activeSupportedPaymentMethodElement={createCard()}
                         loadPlans={loadPlans}
-                        initialOutcome={initialOutcome}
+                        initialPlans={initialPlans}
                         onPlanSelect={onPlanSelect}
                         showPayButton={true}
                         payButton={() => <button type={'button'}>Pay</button>}
@@ -183,9 +183,9 @@ describe('EMIComponent', () => {
 
     describe('loading the plans', () => {
         const deferred = () => {
-            let resolve: (outcome: EmiPlansOutcome) => void = () => {};
-            const promise = new Promise<EmiPlansOutcome>(settle => {
-                resolve = settle;
+            let resolve: (plans: EmiPlansState) => void = () => {};
+            const promise = new Promise<EmiPlansState>(resolvePromise => {
+                resolve = resolvePromise;
             });
 
             return { promise, resolve };
@@ -233,15 +233,15 @@ describe('EMIComponent', () => {
             expect(onPlanSelect).not.toHaveBeenCalled();
         });
 
-        test('should start from the outcome it is given, without loading again', () => {
-            const { loadPlans } = renderEmiComponent({ initialOutcome: ready(emiPlansResponseMock.issuers) });
+        test('should start from the plans it is given, without loading again', () => {
+            const { loadPlans } = renderEmiComponent({ initialPlans: ready(emiPlansResponseMock.issuers) });
 
             expect(loadPlans).not.toHaveBeenCalled();
             expect(screen.getByLabelText('Provider')).toHaveTextContent(hdfc.issuerName);
         });
 
-        test('should keep the spinner when it is given an unavailable outcome, without loading again', () => {
-            const { loadPlans } = renderEmiComponent({ initialOutcome: { status: 'unavailable' } });
+        test('should keep the spinner when it is given unavailable plans, without loading again', () => {
+            const { loadPlans } = renderEmiComponent({ initialPlans: { status: 'unavailable' } });
 
             expect(loadPlans).not.toHaveBeenCalled();
             expect(screen.getByTestId('spinner')).toBeInTheDocument();
