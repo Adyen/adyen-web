@@ -7,6 +7,7 @@
     border-radius: variable-generator.token(border-radius-m);
     color: variable-generator.token(color-label-on-color);
     cursor: pointer;
+    font-family: inherit;
     font-size: variable-generator.token(text-title-font-size);
     font-weight: variable-generator.token(text-body-stronger-font-weight);
     height: variable-generator.token(spacer-120);
@@ -138,6 +139,7 @@
         background: variable-generator.token(color-background-always-dark);
         border: variable-generator.token(border-width-s) solid transparent;
         color: variable-generator.token(color-label-on-color);
+        height: variable-generator.token(spacer-120);
 
         &:hover {
             background: variable-generator.token(color-background-inverse-primary-hover);

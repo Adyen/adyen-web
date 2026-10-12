@@ -3,6 +3,7 @@
 
 .adyen-checkout__payment-method {
     position: relative;
+    -webkit-tap-highlight-color: transparent;
     background: variable-generator.token(color-background-primary);
     border: variable-generator.token(border-width-s) solid variable-generator.token(color-outline-primary);
     cursor: pointer;
