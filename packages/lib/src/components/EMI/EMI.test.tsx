@@ -102,16 +102,25 @@ const renderWithPlans = async (emi: EMI) => {
     return view;
 };
 
-const apiError = (body: { status: number; errorCode: string; errorType: string; message: string; invalidFields?: { name: string }[] }) =>
-    new AdyenCheckoutError('NETWORK_ERROR', body.message, { cause: body });
+const apiError = (body: {
+    type: string;
+    title: string;
+    status: number;
+    errorCode: string;
+    detail?: string;
+    requestId?: string;
+    invalidFields?: { name: string; value: string; message: string }[];
+}) => new AdyenCheckoutError('NETWORK_ERROR', 'Service is not available', { cause: body });
 
 const tokenValidationError = () =>
     apiError({
+        type: 'https://docs.adyen.com/errors/unprocessable-entity',
+        errorCode: '999_422_001',
+        title: 'Missing or invalid input fields',
+        detail: '',
+        requestId: '2918b6b202e24fd91e0689b804e74ee4',
         status: 422,
-        errorCode: '14_030',
-        errorType: 'validation',
-        message: 'Field emiToken: EMI token cannot be decoded.',
-        invalidFields: [{ name: 'emiToken' }]
+        invalidFields: [{ name: 'emiToken', value: '***REDACTED***', message: 'EMI token cannot be decoded.' }]
     });
 
 const errorEvents = (sendAnalytics: jest.Mock) =>
@@ -1026,19 +1035,22 @@ describe('EMI', () => {
                 expect(errorEvents(sendAnalytics)).toHaveLength(0);
             });
 
-            test.each<[string, () => unknown, ErrorEventCode]>([
-                ['an invalid token', tokenValidationError, ErrorEventCode.EMI_PLANS_TOKEN_INVALID],
-                ['an expired token', tokenValidationError, ErrorEventCode.EMI_PLANS_TOKEN_INVALID],
+            const tokenRejectedMessage = 'EMI: Installment plans request failed: Missing or invalid input fields';
+
+            test.each<[string, () => unknown, ErrorEventCode, string]>([
+                ['an invalid token', tokenValidationError, ErrorEventCode.EMI_PLANS_TOKEN_INVALID, tokenRejectedMessage],
+                ['an expired token', tokenValidationError, ErrorEventCode.EMI_PLANS_TOKEN_INVALID, tokenRejectedMessage],
                 [
                     'another API error',
                     () =>
                         apiError({
-                            status: 500,
-                            errorCode: '901',
-                            errorType: 'internal',
-                            message: 'Internal error'
+                            type: 'https://docs.adyen.com/errors/internal',
+                            errorCode: '00_500',
+                            title: 'Internal error',
+                            status: 500
                         }),
-                    ErrorEventCode.EMI_PLANS_FETCH_FAILED
+                    ErrorEventCode.EMI_PLANS_FETCH_FAILED,
+                    'EMI: Installment plans request failed: Internal error'
                 ],
                 [
                     'a network failure',
@@ -1046,7 +1058,8 @@ describe('EMI', () => {
                         new AdyenCheckoutError('NETWORK_ERROR', 'Call failed', {
                             cause: new TypeError('Failed to fetch')
                         }),
-                    ErrorEventCode.EMI_PLANS_FETCH_FAILED
+                    ErrorEventCode.EMI_PLANS_FETCH_FAILED,
+                    'EMI: Installment plans request failed'
                 ],
                 [
                     'a timeout',
@@ -1054,9 +1067,10 @@ describe('EMI', () => {
                         new AdyenCheckoutError('NETWORK_ERROR', 'Call failed', {
                             cause: new DOMException('Timed out', 'TimeoutError')
                         }),
-                    ErrorEventCode.EMI_PLANS_FETCH_FAILED
+                    ErrorEventCode.EMI_PLANS_FETCH_FAILED,
+                    'EMI: Installment plans request failed'
                 ]
-            ])('should send one network error event for %s', async (_case, createError, code) => {
+            ])('should send one network error event for %s', async (_case, createError, code, message) => {
                 mockedGetEmiPlans.mockRejectedValue(createError());
                 const { emi, sendAnalytics } = createEmi();
 
@@ -1068,22 +1082,37 @@ describe('EMI', () => {
                         component: TxVariants.emi,
                         errorType: ErrorEventType.network,
                         code,
-                        message: 'EMI: Installment plans request failed'
+                        message
                     })
                 );
                 expect(validationErrorEvents(sendAnalytics)).toHaveLength(0);
             });
 
-            test('should put neither the token nor the backend error message into the event', async () => {
-                mockedGetEmiPlans.mockRejectedValue(tokenValidationError());
+            test('should forward the backend error title but never the token the backend echoes in a field value', async () => {
+                const emiToken = emiPaymentMethodMock.configuration?.emiToken ?? '';
+                mockedGetEmiPlans.mockRejectedValue(
+                    apiError({
+                        type: 'https://docs.adyen.com/errors/bad-request',
+                        errorCode: '00_400',
+                        title: 'Bad request',
+                        detail: 'Size of string value is above allowed limit',
+                        requestId: '0dc47c14a735c3d66997fbaf0cbe031c',
+                        status: 400,
+                        invalidFields: [{ name: 'emiToken', value: emiToken, message: 'Input value violates constraint value 1000' }]
+                    })
+                );
                 const { emi, sendAnalytics } = createEmi();
 
                 render(emi.render());
 
                 await waitFor(() => expect(errorEvents(sendAnalytics)).toHaveLength(1));
                 const payload = JSON.stringify(sendAnalytics.mock.calls.map(([event]) => event));
-                expect(payload).not.toContain(emiPaymentMethodMock.configuration?.emiToken);
-                expect(payload).not.toContain('cannot be decoded');
+                expect(errorEvents(sendAnalytics)[0]).toEqual(
+                    expect.objectContaining({
+                        message: 'EMI: Installment plans request failed: Bad request'
+                    })
+                );
+                expect(payload).not.toContain(emiToken);
             });
         });
 

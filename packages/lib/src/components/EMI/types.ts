@@ -39,6 +39,7 @@ export interface EmiProcessingAmounts {
     totalAmount: PaymentAmount;
     feeAmount: PaymentAmount;
     taxAmount: PaymentAmount;
+    maxAmount?: PaymentAmount;
     type: string;
     message: string;
 }

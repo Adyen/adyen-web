@@ -17,6 +17,15 @@ const processingAmounts: EmiProcessingAmounts = {
     message: '299 + GST is Applicable'
 };
 
+const percentageProcessingAmounts: EmiProcessingAmounts = {
+    totalAmount: { value: 35282, currency: 'INR' },
+    feeAmount: { value: 29900, currency: 'INR' },
+    taxAmount: { value: 5382, currency: 'INR' },
+    maxAmount: { value: 29900, currency: 'INR' },
+    type: 'percentage',
+    message: '2.99% or 299 (whichever is lower) +GST'
+};
+
 export const emiPlansResponseMock: EmiPlansResponse = {
     issuers: [
         {
@@ -79,7 +88,7 @@ export const emiPlansResponseMock: EmiPlansResponse = {
                         totalInstantDiscountAmount: { value: 210050, currency: 'INR' },
                         interestDiscountAmount: { value: 210050, currency: 'INR' }
                     },
-                    processingAmounts,
+                    processingAmounts: percentageProcessingAmounts,
                     offers: [{ offerId: 'offer-icici-lowcost', type: 'DISCOUNT' }]
                 },
                 {
@@ -92,7 +101,7 @@ export const emiPlansResponseMock: EmiPlansResponse = {
                         totalPayableAmount: { value: 17399900, currency: 'INR' },
                         totalInterestAmount: { value: 1900000, currency: 'INR' }
                     },
-                    processingAmounts
+                    processingAmounts: percentageProcessingAmounts
                 }
             ]
         },
