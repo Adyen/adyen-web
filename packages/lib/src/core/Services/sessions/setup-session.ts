@@ -15,6 +15,12 @@ function setupSession(session: Session, options: SetupSessionOptions): Promise<C
             : {})
     };
 
+    console.log('[DEBUG giftcard-reload] /setup request', {
+        sessionId: session.id,
+        sessionDataTail: session.data?.slice(-16),
+        orderSent: data.order
+    });
+
     return httpPost<CheckoutSessionSetupResponse>(
         {
             loadingContext: session.loadingContext,
@@ -22,7 +28,16 @@ function setupSession(session: Session, options: SetupSessionOptions): Promise<C
             errorLevel: 'fatal'
         },
         data
-    );
+    ).then(response => {
+        console.log('[DEBUG giftcard-reload] /setup response', {
+            responseKeys: JSON.stringify(Object.keys(response)),
+            order: (response as { order?: unknown }).order,
+            amount: JSON.stringify(response.amount),
+            sessionDataTail: response.sessionData?.slice(-16),
+            hasPaymentMethods: !!response.paymentMethods
+        });
+        return response;
+    });
 }
 
 export default setupSession;

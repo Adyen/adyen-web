@@ -134,6 +134,13 @@ class Core implements ICore {
                 .then(sessionResponse => {
                     const { amount, shopperLocale, countryCode, paymentMethods, ...rest } = sessionResponse;
 
+                    console.log('[DEBUG giftcard-reload] core.initializeCore', {
+                        optionsOrderBeforeSetOptions: this.options.order,
+                        orderFromSetupResponse: (rest as { order?: unknown }).order,
+                        amountFromSetupResponse: JSON.stringify(amount),
+                        amountThatWillBeUsed: JSON.stringify(this.options.order ? this.options.order.remainingAmount : amount)
+                    });
+
                     this.setOptions({
                         ...rest,
                         amount: this.options.order ? this.options.order.remainingAmount : amount,
@@ -412,7 +419,8 @@ class Core implements ICore {
                 }
                 const order = response.order;
                 if (order && (order.remainingAmount?.value ?? 0) > 0) {
-                    this.options.onOrderUpdated?.({ order, sessionData: this.session?.data });
+                    const sessionData = this.session?.data;
+                    this.options.onOrderUpdated?.({ order, ...(sessionData && { sessionData }) });
                     return;
                 }
                 cleanupFinalResult(response);

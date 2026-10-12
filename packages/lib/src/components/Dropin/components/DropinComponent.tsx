@@ -43,6 +43,7 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
     public prepareDropinData = () => {
         const { order, clientKey, loadingContext } = this.props;
         const [storedElementsPromises, elementsPromises, instantPaymentsPromises, fastlanePaymentElementPromise] = this.props.onCreateElements();
+        console.log('[DEBUG giftcard-reload] DropinComponent.prepareDropinData order prop', order);
         const orderStatusPromise = order ? getOrderStatus({ clientKey, loadingContext }, order) : null;
 
         void Promise.all([storedElementsPromises, elementsPromises, instantPaymentsPromises, fastlanePaymentElementPromise, orderStatusPromise])
@@ -66,7 +67,8 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
                     regular: elements
                 });
             })
-            .catch(() => {
+            .catch(error => {
+                console.log('[DEBUG giftcard-reload] DropinComponent.prepareDropinData failed', error);
                 this.setStatus('error');
             });
 
