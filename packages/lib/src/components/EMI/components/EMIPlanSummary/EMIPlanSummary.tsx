@@ -3,8 +3,7 @@ import cx from 'classnames';
 import { Tag } from '../../../internal/Tag';
 import { useCoreContext } from '../../../../core/Context/CoreProvider';
 import { useAmount } from '../../../../core/Context/AmountProvider';
-import { getLocalisedPercentageFromBasisPoints } from '../../../../utils/percentage-util';
-import { PLAN_TAGS } from '../../constants';
+import { formatInterestRate, getPlanTags } from '../../utils';
 import type { EmiPlan } from '../../types';
 import type { PaymentAmount } from '../../../../types/global-types';
 import type { TagProps } from '../../../internal/Tag/types';
@@ -31,13 +30,11 @@ export function EMIPlanSummary({ plan, labelledBy }: Readonly<EMIPlanSummaryProp
     const { amount } = useAmount();
     const { authorizationAmount, totalInstantDiscountAmount, interestDiscountAmount, totalInterestAmount, totalPayableAmount } =
         plan.transactionAmounts;
-    const planTag = PLAN_TAGS.find(({ type }) => type === plan.type);
+    const planTag = getPlanTags([plan.type], i18n)?.[0];
 
     const formatAmount = ({ value, currency }: PaymentAmount, isNegative = false): string => i18n.amount(isNegative ? -value : value, currency);
 
-    const interestLabel = `${i18n.get('emi.interestChargedByBank', {
-        values: { interest: getLocalisedPercentageFromBasisPoints(plan.interestRateBps, i18n.locale) }
-    })} ${i18n.get('emi.perAnnum')}`;
+    const interestLabel = i18n.get('emi.interestChargedByBank', { values: { interest: formatInterestRate(plan.interestRateBps, i18n) } });
 
     const candidateRows: CandidateRow[] = [
         { key: 'itemPrice', label: i18n.get('emi.itemPrice'), amount },
@@ -47,7 +44,7 @@ export function EMIPlanSummary({ plan, labelledBy }: Readonly<EMIPlanSummaryProp
             label: i18n.get('emi.discount'),
             amount: interestDiscountAmount,
             isNegative: true,
-            ...(planTag && { tag: { label: i18n.get(planTag.translationKey), variant: planTag.variant } })
+            ...(planTag && { tag: planTag })
         },
         { key: 'amountReservedOnCard', label: i18n.get('emi.amountReservedOnCard'), amount: authorizationAmount, isStrong: true },
         {
