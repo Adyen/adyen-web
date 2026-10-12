@@ -13,20 +13,20 @@ import { getUniqueId } from '../../utils/idGenerator';
 import type UIElement from '../internal/UIElement/UIElement';
 import type { ComponentMethodsRef, UIElementStatus } from '../internal/UIElement/types';
 import type { PayButtonProps } from '../internal/PayButton/PayButton';
-import type { EmiIssuer, EmiPlansOutcome, EmiSelection, EmiSelectTarget } from './types';
+import type { EmiIssuer, EmiPlansState, EmiSelection, EmiSelectTarget } from './types';
 import styles from './EMI.module.scss';
 
 interface EMIComponentProps {
     activeSupportedPaymentMethodElement: UIElement;
-    loadPlans(): Promise<EmiPlansOutcome>;
-    initialOutcome?: EmiPlansOutcome;
+    loadPlans(): Promise<EmiPlansState>;
+    initialPlans?: EmiPlansState;
     onPlanSelect(selection: EmiSelection, target?: EmiSelectTarget): void;
     showPayButton?: boolean;
     payButton(props: PayButtonProps): h.JSX.Element;
     setComponentRef: (ref: ComponentMethodsRef) => void;
 }
 
-interface EMIPlansFormProps extends Omit<EMIComponentProps, 'loadPlans' | 'initialOutcome' | 'setComponentRef'> {
+interface EMIPlansFormProps extends Omit<EMIComponentProps, 'loadPlans' | 'initialPlans' | 'setComponentRef'> {
     issuers: EmiIssuer[];
     status: UIElementStatus;
 }
@@ -37,8 +37,8 @@ const getDefaultSelection = (issuers: EmiIssuer[]): EmiSelection | null => {
     return issuer ? { issuer, plan: issuer.plans[0] } : null;
 };
 
-export function EMIComponent({ loadPlans, initialOutcome, setComponentRef, ...formProps }: Readonly<EMIComponentProps>): h.JSX.Element {
-    const [outcome, setOutcome] = useState<EmiPlansOutcome | undefined>(initialOutcome);
+export function EMIComponent({ loadPlans, initialPlans, setComponentRef, ...formProps }: Readonly<EMIComponentProps>): h.JSX.Element {
+    const [plans, setPlans] = useState<EmiPlansState | undefined>(initialPlans);
     const [status, setStatus] = useState<UIElementStatus>('ready');
 
     const emiRef = useRef<ComponentMethodsRef>({
@@ -51,11 +51,11 @@ export function EMIComponent({ loadPlans, initialOutcome, setComponentRef, ...fo
     }, [setComponentRef]);
 
     useEffect(() => {
-        if (outcome) return undefined;
+        if (plans) return undefined;
 
         let isMounted = true;
-        void loadPlans().then(result => {
-            if (isMounted) setOutcome(result);
+        void loadPlans().then(loadedPlans => {
+            if (isMounted) setPlans(loadedPlans);
         });
 
         return () => {
@@ -63,7 +63,7 @@ export function EMIComponent({ loadPlans, initialOutcome, setComponentRef, ...fo
         };
     }, []);
 
-    const issuers = outcome?.status === 'ready' ? outcome.issuers : null;
+    const issuers = plans?.status === 'ready' ? plans.issuers : null;
 
     useLoadingA11yReporter(!issuers);
 

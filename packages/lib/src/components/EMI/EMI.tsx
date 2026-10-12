@@ -15,7 +15,7 @@ import type {
     EmiIssuer,
     EmiPaymentMethodEntry,
     EMIPaymentData,
-    EmiPlansOutcome,
+    EmiPlansState,
     EmiSelection,
     EmiSelectTarget,
     EMISupportedPaymentMethodElement,
@@ -29,8 +29,8 @@ class EMI extends UIElement<EMIConfiguration> {
     private readonly supportedPaymentMethodElements: Partial<EMISupportedPaymentMethodElements> = {};
     private activeSupportedPaymentMethod: EMISupportedPaymentMethod | null = null;
 
-    private plansOutcome?: EmiPlansOutcome;
-    private plansPromise?: Promise<EmiPlansOutcome>;
+    private plans?: EmiPlansState;
+    private plansPromise?: Promise<EmiPlansState>;
 
     constructor(checkout: ICore, props?: EMIConfiguration) {
         super(checkout, props);
@@ -97,12 +97,12 @@ class EMI extends UIElement<EMIConfiguration> {
         this.submitAnalytics(event);
     }
 
-    private readonly loadPlans = (): Promise<EmiPlansOutcome> => {
-        this.plansPromise ??= this.requestPlans().then(outcome => (this.plansOutcome = outcome));
+    private readonly loadPlans = (): Promise<EmiPlansState> => {
+        this.plansPromise ??= this.requestPlans().then(plans => (this.plans = plans));
         return this.plansPromise;
     };
 
-    private async requestPlans(): Promise<EmiPlansOutcome> {
+    private async requestPlans(): Promise<EmiPlansState> {
         const emiToken = this.paymentMethodEntry?.configuration?.emiToken;
 
         try {
@@ -121,7 +121,7 @@ class EMI extends UIElement<EMIConfiguration> {
         }
     }
 
-    private noPlans(): EmiPlansOutcome {
+    private noPlans(): EmiPlansState {
         const event = new AnalyticsInfoEvent({
             component: this.type,
             type: InfoEventType.validationError,
@@ -134,7 +134,7 @@ class EMI extends UIElement<EMIConfiguration> {
     }
 
     private get issuers(): EmiIssuer[] {
-        return this.plansOutcome?.status === 'ready' ? this.plansOutcome.issuers : [];
+        return this.plans?.status === 'ready' ? this.plans.issuers : [];
     }
 
     public get isValid(): boolean {
@@ -254,7 +254,7 @@ class EMI extends UIElement<EMIConfiguration> {
             <EMIComponent
                 activeSupportedPaymentMethodElement={element}
                 loadPlans={this.loadPlans}
-                initialOutcome={this.plansOutcome}
+                initialPlans={this.plans}
                 onPlanSelect={this.onPlanSelect}
                 showPayButton={this.props.showPayButton}
                 payButton={this.payButton}
