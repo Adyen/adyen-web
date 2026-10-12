@@ -20,13 +20,14 @@ interface EMIComponentProps {
     activeSupportedPaymentMethodElement: UIElement;
     loadPlans(): Promise<EmiPlansState>;
     initialPlans?: EmiPlansState;
-    onPlanSelect(selection: EmiSelection, target?: EmiSelectTarget): void;
+    onPlansDisplayed(selection: EmiSelection): void;
+    onPlanSelect(selection: EmiSelection, target: EmiSelectTarget): void;
     showPayButton?: boolean;
     payButton(props: PayButtonProps): h.JSX.Element;
     setComponentRef: (ref: ComponentMethodsRef) => void;
 }
 
-interface EMIPlansFormProps extends Omit<EMIComponentProps, 'loadPlans' | 'initialPlans' | 'setComponentRef'> {
+interface EMIPlansProps extends Omit<EMIComponentProps, 'loadPlans' | 'initialPlans' | 'setComponentRef'> {
     issuers: EmiIssuer[];
     status: UIElementStatus;
 }
@@ -37,7 +38,7 @@ const getDefaultSelection = (issuers: EmiIssuer[]): EmiSelection | null => {
     return issuer ? { issuer, plan: issuer.plans[0] } : null;
 };
 
-export function EMIComponent({ loadPlans, initialPlans, setComponentRef, ...formProps }: Readonly<EMIComponentProps>): h.JSX.Element {
+export function EMIComponent({ loadPlans, initialPlans, setComponentRef, ...plansProps }: Readonly<EMIComponentProps>): h.JSX.Element {
     const [plans, setPlans] = useState<EmiPlansState | undefined>(initialPlans);
     const [status, setStatus] = useState<UIElementStatus>('ready');
 
@@ -75,17 +76,18 @@ export function EMIComponent({ loadPlans, initialPlans, setComponentRef, ...form
         );
     }
 
-    return <EMIPlansForm {...formProps} issuers={issuers} status={status} />;
+    return <EMIPlans {...plansProps} issuers={issuers} status={status} />;
 }
 
-function EMIPlansForm({
+function EMIPlans({
     activeSupportedPaymentMethodElement,
     issuers,
+    onPlansDisplayed,
     onPlanSelect,
     showPayButton,
     payButton,
     status
-}: Readonly<EMIPlansFormProps>): h.JSX.Element {
+}: Readonly<EMIPlansProps>): h.JSX.Element {
     const { i18n } = useCoreContext();
     const [selection, setSelection] = useState<EmiSelection | null>(() => getDefaultSelection(issuers));
 
@@ -93,15 +95,13 @@ function EMIPlansForm({
     const instructionsId = useMemo(() => getUniqueId('adyen-checkout-emi-instructions'), []);
     const planSummaryId = useMemo(() => getUniqueId('adyen-checkout-emi-plan-summary'), []);
 
-    const selectTarget = useRef<EmiSelectTarget | undefined>(undefined);
-
     useEffect(() => {
-        if (selection) onPlanSelect(selection, selectTarget.current);
-    }, [selection]);
+        if (selection) onPlansDisplayed(selection);
+    }, []);
 
     const handleSelectionChange = (nextSelection: EmiSelection, target: EmiSelectTarget): void => {
-        selectTarget.current = target;
         setSelection(nextSelection);
+        onPlanSelect(nextSelection, target);
     };
 
     const instantDiscount = selection?.plan.transactionAmounts.totalInstantDiscountAmount;

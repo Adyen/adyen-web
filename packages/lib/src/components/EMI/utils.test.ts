@@ -1,6 +1,8 @@
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { ErrorEventCode } from '../../core/Analytics/events/AnalyticsErrorEvent';
-import { buildEmiPlanPayload, classifyEmiPlansError, describeEmiPlansError } from './utils';
+import { TagVariant } from '../internal/Tag/types';
+import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
+import { buildEmiPlanPayload, formatInterestRate, getEmiPlansError, getPlanTags } from './utils';
 import { emiDebitIssuerMock, emiPlansResponseMock } from './stories/mocks';
 import type { EmiIssuer, EmiPlan } from './types';
 
@@ -120,105 +122,132 @@ type ApiProblem = {
 
 const apiError = (body: ApiProblem) => new AdyenCheckoutError('NETWORK_ERROR', 'Service is not available', { cause: body });
 
-describe('classifyEmiPlansError', () => {
-    test('should classify a token the backend cannot decode as an invalid token', () => {
-        const error = apiError({
-            type: 'https://docs.adyen.com/errors/unprocessable-entity',
-            errorCode: '999_422_001',
-            title: 'Missing or invalid input fields',
-            detail: '',
-            status: 422,
-            invalidFields: [{ name: 'emiToken', value: '***REDACTED***', message: 'EMI token cannot be decoded.' }]
+describe('getEmiPlansError', () => {
+    describe('code', () => {
+        test('should classify a token the backend cannot decode as an invalid token', () => {
+            const error = apiError({
+                type: 'https://docs.adyen.com/errors/unprocessable-entity',
+                errorCode: '999_422_001',
+                title: 'Missing or invalid input fields',
+                detail: '',
+                status: 422,
+                invalidFields: [{ name: 'emiToken', value: '***REDACTED***', message: 'EMI token cannot be decoded.' }]
+            });
+
+            expect(getEmiPlansError(error).code).toBe(ErrorEventCode.EMI_PLANS_TOKEN_INVALID);
         });
 
-        expect(classifyEmiPlansError(error)).toBe(ErrorEventCode.EMI_PLANS_TOKEN_INVALID);
-    });
+        test('should classify a blank token the backend names as an invalid token', () => {
+            const error = apiError({
+                type: 'https://docs.adyen.com/errors/validation',
+                errorCode: '29_001',
+                title: 'The request is missing required fields or contains invalid data.',
+                status: 422,
+                invalidFields: [{ name: 'emiToken', value: 'null', message: 'must not be blank' }]
+            });
 
-    test('should classify a blank token the backend names as an invalid token', () => {
-        const error = apiError({
-            type: 'https://docs.adyen.com/errors/validation',
-            errorCode: '29_001',
-            title: 'The request is missing required fields or contains invalid data.',
-            status: 422,
-            invalidFields: [{ name: 'emiToken', value: 'null', message: 'must not be blank' }]
+            expect(getEmiPlansError(error).code).toBe(ErrorEventCode.EMI_PLANS_TOKEN_INVALID);
         });
 
-        expect(classifyEmiPlansError(error)).toBe(ErrorEventCode.EMI_PLANS_TOKEN_INVALID);
-    });
+        test('should classify a validation failure that names no field as a failed fetch', () => {
+            const error = apiError({
+                type: 'https://docs.adyen.com/errors/unprocessable-entity',
+                errorCode: '999_422_000',
+                title: 'Validation failure',
+                detail: 'Input data validation failed',
+                status: 422
+            });
 
-    test('should classify a validation failure that names no field as a failed fetch', () => {
-        const error = apiError({
-            type: 'https://docs.adyen.com/errors/unprocessable-entity',
-            errorCode: '999_422_000',
-            title: 'Validation failure',
-            detail: 'Input data validation failed',
-            status: 422
+            expect(getEmiPlansError(error).code).toBe(ErrorEventCode.EMI_PLANS_FETCH_FAILED);
         });
 
-        expect(classifyEmiPlansError(error)).toBe(ErrorEventCode.EMI_PLANS_FETCH_FAILED);
-    });
+        test('should classify a validation error about another field as a failed fetch', () => {
+            const error = apiError({
+                type: 'https://docs.adyen.com/errors/validation',
+                errorCode: '29_001',
+                title: 'The request is missing required fields or contains invalid data.',
+                status: 422,
+                invalidFields: [{ name: 'amount', value: 'null', message: 'must not be null' }]
+            });
 
-    test('should classify a validation error about another field as a failed fetch', () => {
-        const error = apiError({
-            type: 'https://docs.adyen.com/errors/validation',
-            errorCode: '29_001',
-            title: 'The request is missing required fields or contains invalid data.',
-            status: 422,
-            invalidFields: [{ name: 'amount', value: 'null', message: 'must not be null' }]
+            expect(getEmiPlansError(error).code).toBe(ErrorEventCode.EMI_PLANS_FETCH_FAILED);
         });
 
-        expect(classifyEmiPlansError(error)).toBe(ErrorEventCode.EMI_PLANS_FETCH_FAILED);
+        test('should classify an API error that names no invalid field as a failed fetch', () => {
+            const error = apiError({ type: 'https://docs.adyen.com/errors/forbidden', errorCode: '00_403', title: 'Forbidden', status: 403 });
+
+            expect(getEmiPlansError(error).code).toBe(ErrorEventCode.EMI_PLANS_FETCH_FAILED);
+        });
+
+        test('should classify an AdyenCheckoutError without an API error body, such as a timeout, as a failed fetch', () => {
+            expect(getEmiPlansError(new AdyenCheckoutError('NETWORK_ERROR', 'Request timed out')).code).toBe(ErrorEventCode.EMI_PLANS_FETCH_FAILED);
+        });
+
+        test('should classify an error that is not an AdyenCheckoutError as a failed fetch', () => {
+            expect(getEmiPlansError(new TypeError('Failed to fetch')).code).toBe(ErrorEventCode.EMI_PLANS_FETCH_FAILED);
+            expect(getEmiPlansError(undefined).code).toBe(ErrorEventCode.EMI_PLANS_FETCH_FAILED);
+        });
     });
 
-    test('should classify an API error that names no invalid field as a failed fetch', () => {
-        const error = apiError({ type: 'https://docs.adyen.com/errors/forbidden', errorCode: '00_403', title: 'Forbidden', status: 403 });
+    describe('message', () => {
+        test('should forward the title of the backend answer', () => {
+            const error = apiError({
+                type: 'https://docs.adyen.com/errors/unprocessable-entity',
+                errorCode: '999_422_001',
+                title: 'Missing or invalid input fields',
+                detail: '',
+                requestId: '2918b6b202e24fd91e0689b804e74ee4',
+                status: 422,
+                invalidFields: [{ name: 'emiToken', value: '***REDACTED***', message: 'EMI token cannot be decoded.' }]
+            });
 
-        expect(classifyEmiPlansError(error)).toBe(ErrorEventCode.EMI_PLANS_FETCH_FAILED);
-    });
+            expect(getEmiPlansError(error).message).toBe('EMI: Installment plans request failed: Missing or invalid input fields');
+        });
 
-    test('should classify an AdyenCheckoutError without an API error body, such as a timeout, as a failed fetch', () => {
-        expect(classifyEmiPlansError(new AdyenCheckoutError('NETWORK_ERROR', 'Request timed out'))).toBe(ErrorEventCode.EMI_PLANS_FETCH_FAILED);
-    });
+        test('should forward neither the request id nor a field value, which can echo the token', () => {
+            const error = apiError({
+                type: 'https://docs.adyen.com/errors/bad-request',
+                errorCode: '00_400',
+                title: 'Bad request',
+                requestId: '0dc47c14a735c3d66997fbaf0cbe031c',
+                status: 400,
+                invalidFields: [{ name: 'emiToken', value: 'Ab02b4c0!secret-token', message: 'Input value violates constraint value 1000' }]
+            });
 
-    test('should classify an error that is not an AdyenCheckoutError as a failed fetch', () => {
-        expect(classifyEmiPlansError(new TypeError('Failed to fetch'))).toBe(ErrorEventCode.EMI_PLANS_FETCH_FAILED);
-        expect(classifyEmiPlansError(undefined)).toBe(ErrorEventCode.EMI_PLANS_FETCH_FAILED);
+            expect(getEmiPlansError(error).message).toBe('EMI: Installment plans request failed: Bad request');
+        });
+
+        test('should send the fixed message when there is no backend answer', () => {
+            expect(
+                getEmiPlansError(new AdyenCheckoutError('NETWORK_ERROR', 'Call failed', { cause: new TypeError('Failed to fetch') })).message
+            ).toBe('EMI: Installment plans request failed');
+            expect(getEmiPlansError(new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'No clientKey')).message).toBe(
+                'EMI: Installment plans request failed'
+            );
+            expect(getEmiPlansError(undefined).message).toBe('EMI: Installment plans request failed');
+        });
     });
 });
 
-describe('describeEmiPlansError', () => {
-    test('should forward the title of the backend answer', () => {
-        const error = apiError({
-            type: 'https://docs.adyen.com/errors/unprocessable-entity',
-            errorCode: '999_422_001',
-            title: 'Missing or invalid input fields',
-            detail: '',
-            requestId: '2918b6b202e24fd91e0689b804e74ee4',
-            status: 422,
-            invalidFields: [{ name: 'emiToken', value: '***REDACTED***', message: 'EMI token cannot be decoded.' }]
-        });
+describe('getPlanTags', () => {
+    const { i18n } = setupCoreMock().modules;
 
-        expect(describeEmiPlansError(error)).toBe('EMI: Installment plans request failed: Missing or invalid input fields');
+    test('should return the tags of the given plan types, in the order the SDK defines', () => {
+        expect(getPlanTags(['lowCost', 'standard', 'noCost'], i18n)).toEqual([
+            { label: 'No cost', variant: TagVariant.SUCCESS },
+            { label: 'Low cost', variant: TagVariant.INFO }
+        ]);
     });
 
-    test('should forward neither the request id nor a field value, which can echo the token', () => {
-        const error = apiError({
-            type: 'https://docs.adyen.com/errors/bad-request',
-            errorCode: '00_400',
-            title: 'Bad request',
-            requestId: '0dc47c14a735c3d66997fbaf0cbe031c',
-            status: 400,
-            invalidFields: [{ name: 'emiToken', value: 'Ab02b4c0!secret-token', message: 'Input value violates constraint value 1000' }]
-        });
-
-        expect(describeEmiPlansError(error)).toBe('EMI: Installment plans request failed: Bad request');
+    test('should return nothing for plan types without a tag', () => {
+        expect(getPlanTags(['standard'], i18n)).toBeUndefined();
     });
+});
 
-    test('should send the fixed message when there is no backend answer', () => {
-        expect(describeEmiPlansError(new AdyenCheckoutError('NETWORK_ERROR', 'Call failed', { cause: new TypeError('Failed to fetch') }))).toBe(
-            'EMI: Installment plans request failed'
-        );
-        expect(describeEmiPlansError(new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'No clientKey'))).toBe('EMI: Installment plans request failed');
-        expect(describeEmiPlansError(undefined)).toBe('EMI: Installment plans request failed');
+describe('formatInterestRate', () => {
+    test('should format basis points as a yearly percentage', () => {
+        const { i18n } = setupCoreMock().modules;
+
+        expect(formatInterestRate(1599, i18n)).toBe('15.99% p.a');
     });
 });

@@ -33,6 +33,7 @@ interface RenderOptions {
 const ready = (issuers: EmiIssuer[]): EmiPlansState => ({ status: 'ready', issuers });
 
 const renderEmiComponent = ({ loadPlans = jest.fn(), initialPlans }: RenderOptions = { initialPlans: ready(emiPlansResponseMock.issuers) }) => {
+    const onPlansDisplayed = jest.fn();
     const onPlanSelect = jest.fn();
     const setMessages = jest.spyOn(core.modules.srPanel, 'setMessages');
 
@@ -44,6 +45,7 @@ const renderEmiComponent = ({ loadPlans = jest.fn(), initialPlans }: RenderOptio
                         activeSupportedPaymentMethodElement={createCard()}
                         loadPlans={loadPlans}
                         initialPlans={initialPlans}
+                        onPlansDisplayed={onPlansDisplayed}
                         onPlanSelect={onPlanSelect}
                         showPayButton={true}
                         payButton={() => <button type={'button'}>Pay</button>}
@@ -54,7 +56,7 @@ const renderEmiComponent = ({ loadPlans = jest.fn(), initialPlans }: RenderOptio
         </CoreProvider>
     );
 
-    return { onPlanSelect, setMessages, loadPlans };
+    return { onPlansDisplayed, onPlanSelect, setMessages, loadPlans };
 };
 
 const selectOption = async (label: string, option: RegExp) => {
@@ -105,11 +107,12 @@ describe('EMIComponent', () => {
             expect(screen.getByLabelText('Plan')).toHaveTextContent('₹51,666.33 x 3 months');
         });
 
-        test('should announce the default selection once, without waiting for an interaction', () => {
-            const { onPlanSelect } = renderEmiComponent();
+        test('should report the default selection as displayed once, without waiting for an interaction', () => {
+            const { onPlansDisplayed, onPlanSelect } = renderEmiComponent();
 
-            expect(onPlanSelect).toHaveBeenCalledTimes(1);
-            expect(onPlanSelect).toHaveBeenCalledWith({ issuer: hdfc, plan: hdfc.plans[0] }, undefined);
+            expect(onPlansDisplayed).toHaveBeenCalledTimes(1);
+            expect(onPlansDisplayed).toHaveBeenCalledWith({ issuer: hdfc, plan: hdfc.plans[0] });
+            expect(onPlanSelect).not.toHaveBeenCalled();
         });
 
         test('should report a plan the shopper picks, and re-render the summary for it', async () => {
@@ -140,8 +143,8 @@ describe('EMIComponent', () => {
 
             await selectOption('Provider', new RegExp(icici.issuerName, 'i'));
 
-            expect(onPlanSelect).toHaveBeenCalledTimes(2);
-            expect(onPlanSelect.mock.calls.map(([, target]) => target)).toEqual([undefined, UiTarget.emiProvider]);
+            expect(onPlanSelect).toHaveBeenCalledTimes(1);
+            expect(onPlanSelect).toHaveBeenCalledWith({ issuer: icici, plan: icici.plans[0] }, UiTarget.emiProvider);
         });
 
         test('should show a discount banner for the selected plan', () => {
@@ -209,20 +212,20 @@ describe('EMIComponent', () => {
 
         test('should render the plans, the form and the pay button once the plans arrive', async () => {
             const { promise, resolve } = deferred();
-            const { onPlanSelect, setMessages } = renderEmiComponent({ loadPlans: () => promise });
+            const { onPlansDisplayed, setMessages } = renderEmiComponent({ loadPlans: () => promise });
 
             resolve(ready(emiPlansResponseMock.issuers));
 
             expect(await screen.findByLabelText('Provider')).toHaveTextContent(hdfc.issuerName);
             expect(screen.getByRole('form')).toBeInTheDocument();
             expect(screen.getByRole('button', { name: 'Pay' })).toBeInTheDocument();
-            await waitFor(() => expect(onPlanSelect).toHaveBeenCalledWith({ issuer: hdfc, plan: hdfc.plans[0] }, undefined));
+            await waitFor(() => expect(onPlansDisplayed).toHaveBeenCalledWith({ issuer: hdfc, plan: hdfc.plans[0] }));
             await waitFor(() => expect(setMessages).toHaveBeenCalledWith('Loaded'));
         });
 
         test('should keep the spinner, and render no form, when the plans are unavailable', async () => {
             const { promise, resolve } = deferred();
-            const { onPlanSelect } = renderEmiComponent({ loadPlans: () => promise });
+            const { onPlansDisplayed } = renderEmiComponent({ loadPlans: () => promise });
 
             resolve({ status: 'unavailable' });
             await promise;
@@ -230,7 +233,7 @@ describe('EMIComponent', () => {
             expect(screen.getByTestId('spinner')).toBeInTheDocument();
             expect(screen.queryByRole('form')).toBeNull();
             expect(screen.queryByRole('button', { name: 'Pay' })).toBeNull();
-            expect(onPlanSelect).not.toHaveBeenCalled();
+            expect(onPlansDisplayed).not.toHaveBeenCalled();
         });
 
         test('should start from the plans it is given, without loading again', () => {

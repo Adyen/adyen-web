@@ -3,7 +3,7 @@ import UIElement from '../internal/UIElement';
 import CardElement from '../Card';
 import { EMIComponent } from './EMIComponent';
 import { TxVariants } from '../tx-variants';
-import { buildEmiPlanPayload, classifyEmiPlansError, describeEmiPlansError } from './utils';
+import { buildEmiPlanPayload, getEmiPlansError } from './utils';
 import { getEmiPlans } from './services/getEmiPlans';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { AnalyticsInfoEvent, InfoEventType, UiTarget } from '../../core/Analytics/events/AnalyticsInfoEvent';
@@ -21,7 +21,13 @@ import type {
     EMISupportedPaymentMethodElement,
     EMISupportedPaymentMethodElements
 } from './types';
-import { EMI_NO_INSTALLMENT_PLANS, EMI_PLANS_TIMEOUT_MS, SUPPORTED_PAYMENT_METHODS } from './constants';
+import {
+    EMI_NO_INSTALLMENT_PLANS,
+    EMI_NO_INSTALLMENT_PLANS_MESSAGE,
+    EMI_NO_SUPPORTED_PAYMENT_METHOD_MESSAGE,
+    EMI_PLANS_TIMEOUT_MS,
+    SUPPORTED_PAYMENT_METHODS
+} from './constants';
 
 class EMI extends UIElement<EMIConfiguration> {
     public static readonly type = TxVariants.emi;
@@ -74,16 +80,10 @@ class EMI extends UIElement<EMIConfiguration> {
     }
 
     public override isAvailable(): Promise<void> {
-        if (!this.activeSupportedPaymentMethod) {
-            return this.rejectAsUnavailable(ErrorEventCode.EMI_NO_SUPPORTED_PAYMENT_METHOD, 'EMI: No valid supported payment methods available');
-        }
+        if (this.activeSupportedPaymentMethod) return Promise.resolve();
 
-        return Promise.resolve();
-    }
-
-    private rejectAsUnavailable(code: ErrorEventCode, message: string): Promise<void> {
-        this.trackError(ErrorEventType.implementation, code, message);
-        return Promise.reject(new AdyenCheckoutError('ERROR', message));
+        this.trackError(ErrorEventType.implementation, ErrorEventCode.EMI_NO_SUPPORTED_PAYMENT_METHOD, EMI_NO_SUPPORTED_PAYMENT_METHOD_MESSAGE);
+        return Promise.reject(new AdyenCheckoutError('ERROR', EMI_NO_SUPPORTED_PAYMENT_METHOD_MESSAGE));
     }
 
     private trackError(errorType: ErrorEventType, code: ErrorEventCode, message: string): void {
@@ -113,24 +113,25 @@ class EMI extends UIElement<EMIConfiguration> {
                 timeout: EMI_PLANS_TIMEOUT_MS
             });
             const { issuers } = response;
+            if (issuers.length) return { status: 'ready', issuers };
 
-            return issuers.length ? { status: 'ready', issuers } : this.noPlans();
+            this.trackNoPlans();
         } catch (error) {
-            this.trackError(ErrorEventType.network, classifyEmiPlansError(error), describeEmiPlansError(error));
-            return { status: 'unavailable' };
+            const { code, message } = getEmiPlansError(error);
+            this.trackError(ErrorEventType.network, code, message);
         }
+
+        return { status: 'unavailable' };
     }
 
-    private noPlans(): EmiPlansState {
+    private trackNoPlans(): void {
         const event = new AnalyticsInfoEvent({
             component: this.type,
             type: InfoEventType.validationError,
             validationErrorCode: EMI_NO_INSTALLMENT_PLANS,
-            validationErrorMessage: 'EMI: No installment plans available'
+            validationErrorMessage: EMI_NO_INSTALLMENT_PLANS_MESSAGE
         });
         this.submitAnalytics(event);
-
-        return { status: 'unavailable' };
     }
 
     private get issuers(): EmiIssuer[] {
@@ -138,17 +139,13 @@ class EMI extends UIElement<EMIConfiguration> {
     }
 
     public get isValid(): boolean {
-        return !!this.emiSelection && (this.activeSupportedPaymentMethodElement?.isValid ?? false);
-    }
-
-    private get emiSelection(): EmiSelection | undefined {
-        return this.state.emiSelection;
+        return !!this.state.emiSelection && (this.activeSupportedPaymentMethodElement?.isValid ?? false);
     }
 
     public formatData(): EMIPaymentData {
         if (!this.activeSupportedPaymentMethodElement) return { paymentMethod: { type: EMI.type } };
 
-        const selection = this.emiSelection;
+        const selection: EmiSelection | undefined = this.state.emiSelection;
 
         return {
             ...this.activeSupportedPaymentMethodElement.formatData(),
@@ -185,22 +182,19 @@ class EMI extends UIElement<EMIConfiguration> {
         this.submitAnalytics(event);
     }
 
-    private readonly onPlanSelect = (emiSelection: EmiSelection, target?: EmiSelectTarget): void => {
+    private readonly onPlansDisplayed = (emiSelection: EmiSelection): void => {
         this.setState({ emiSelection });
-        this.trackSelection(emiSelection, target);
+        this.trackSelectDisplayed(
+            UiTarget.emiProvider,
+            this.issuers.map(issuer => issuer.issuerCode),
+            emiSelection.issuer.issuerCode
+        );
+        this.trackPlansDisplayed(emiSelection);
         this.trackDiscountBanner(emiSelection);
     };
 
-    private trackSelection(emiSelection: EmiSelection, target?: EmiSelectTarget): void {
-        if (!target) {
-            this.trackSelectDisplayed(
-                UiTarget.emiProvider,
-                this.issuers.map(issuer => issuer.issuerCode),
-                emiSelection.issuer.issuerCode
-            );
-            this.trackPlansDisplayed(emiSelection);
-            return;
-        }
+    private readonly onPlanSelect = (emiSelection: EmiSelection, target: EmiSelectTarget): void => {
+        this.setState({ emiSelection });
 
         const event = new AnalyticsInfoEvent({
             component: this.type,
@@ -211,10 +205,9 @@ class EMI extends UIElement<EMIConfiguration> {
         });
         this.submitAnalytics(event);
 
-        if (target === UiTarget.emiProvider) {
-            this.trackPlansDisplayed(emiSelection);
-        }
-    }
+        if (target === UiTarget.emiProvider) this.trackPlansDisplayed(emiSelection);
+        this.trackDiscountBanner(emiSelection);
+    };
 
     private trackPlansDisplayed({ issuer, plan }: EmiSelection): void {
         this.trackSelectDisplayed(
@@ -236,7 +229,7 @@ class EMI extends UIElement<EMIConfiguration> {
     }
 
     private trackDiscountBanner(emiSelection: EmiSelection): void {
-        if (!this.activeSupportedPaymentMethodElement || !emiSelection.plan.transactionAmounts.totalInstantDiscountAmount) return;
+        if (!emiSelection.plan.transactionAmounts.totalInstantDiscountAmount) return;
         const event = new AnalyticsInfoEvent({
             component: this.type,
             type: InfoEventType.displayed,
@@ -255,6 +248,7 @@ class EMI extends UIElement<EMIConfiguration> {
                 activeSupportedPaymentMethodElement={element}
                 loadPlans={this.loadPlans}
                 initialPlans={this.plans}
+                onPlansDisplayed={this.onPlansDisplayed}
                 onPlanSelect={this.onPlanSelect}
                 showPayButton={this.props.showPayButton}
                 payButton={this.payButton}

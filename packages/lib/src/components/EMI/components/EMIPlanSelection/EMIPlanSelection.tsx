@@ -5,13 +5,11 @@ import { useCoreContext } from '../../../../core/Context/CoreProvider';
 import useImage from '../../../../core/Context/useImage';
 import getIssuerImageUrl from '../../../../utils/get-issuer-image';
 import { TxVariants } from '../../../tx-variants';
-import { getLocalisedPercentageFromBasisPoints } from '../../../../utils/percentage-util';
-import { PLAN_TAGS } from '../../constants';
+import { formatInterestRate, getPlanTags } from '../../utils';
 import { UiTarget } from '../../../../core/Analytics/events/AnalyticsInfoEvent';
-import type { EmiIssuer, EmiPlan, EmiPlanTypeKey, EmiSelection, EmiSelectTarget } from '../../types';
+import type { EmiIssuer, EmiPlan, EmiSelection, EmiSelectTarget } from '../../types';
 import type { PaymentAmount } from '../../../../types/global-types';
 import type { SelectItem, SelectTargetObject } from '../../../internal/FormFields/Select/types';
-import type { TagProps } from '../../../internal/Tag/types';
 import styles from './EMIPlanSelection.module.scss';
 
 interface EMIPlanSelectionProps {
@@ -60,23 +58,8 @@ export function EMIPlanSelection({ issuers, selection, onSelectionChange, labell
 
         if (plan.type === 'noCost') return label;
 
-        const interestRate = getLocalisedPercentageFromBasisPoints(plan.interestRateBps, i18n.locale);
-
-        return `${label} | @${interestRate} ${i18n.get('emi.perAnnum')}`;
+        return `${label} | @${formatInterestRate(plan.interestRateBps, i18n)}`;
     };
-
-    const toTags = (types: EmiPlanTypeKey[]): TagProps[] | undefined => {
-        const tags = PLAN_TAGS.filter(({ type }) => types.includes(type)).map(({ translationKey, variant }) => ({
-            label: i18n.get(translationKey),
-            variant
-        }));
-
-        return tags.length ? tags : undefined;
-    };
-
-    const getPlanTags = (plan: EmiPlan): TagProps[] | undefined => toTags([plan.type]);
-
-    const getIssuerTags = (issuer: EmiIssuer): TagProps[] | undefined => toTags(issuer.availablePlanTypes);
 
     const getDiscountText = (discount?: PaymentAmount): string | undefined =>
         discount ? i18n.get('emi.additionalDiscountAvailable', { values: { amount: i18n.amount(discount.value, discount.currency) } }) : undefined;
@@ -87,14 +70,14 @@ export function EMIPlanSelection({ issuers, selection, onSelectionChange, labell
         id: getIssuerId(issuer),
         name: issuer.issuerName,
         icon: getIssuerIcon(issuer.issuerCode.toLowerCase()),
-        tags: getIssuerTags(issuer),
+        tags: getPlanTags(issuer.availablePlanTypes, i18n),
         secondaryText: getDiscountText(issuer.bestOffer)
     }));
 
     const planItems: SelectItem[] = selectedIssuer.plans.map(plan => ({
         id: getPlanId(selectedIssuer, plan),
         name: getPlanLabel(plan),
-        tags: getPlanTags(plan),
+        tags: getPlanTags([plan.type], i18n),
         secondaryText: getDiscountText(plan.transactionAmounts.totalInstantDiscountAmount)
     }));
 
