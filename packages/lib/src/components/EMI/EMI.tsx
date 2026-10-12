@@ -3,7 +3,7 @@ import UIElement from '../internal/UIElement';
 import CardElement from '../Card';
 import { EMIComponent } from './EMIComponent';
 import { TxVariants } from '../tx-variants';
-import { buildEmiPlanPayload, classifyEmiPlansError } from './utils';
+import { buildEmiPlanPayload, classifyEmiPlansError, describeEmiPlansError } from './utils';
 import { getEmiPlans } from './services/getEmiPlans';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { AnalyticsInfoEvent, InfoEventType, UiTarget } from '../../core/Analytics/events/AnalyticsInfoEvent';
@@ -116,7 +116,7 @@ class EMI extends UIElement<EMIConfiguration> {
 
             return issuers.length ? { status: 'ready', issuers } : this.noPlans();
         } catch (error) {
-            this.trackError(ErrorEventType.network, classifyEmiPlansError(error), 'EMI: Installment plans request failed');
+            this.trackError(ErrorEventType.network, classifyEmiPlansError(error), describeEmiPlansError(error));
             return { status: 'unavailable' };
         }
     }

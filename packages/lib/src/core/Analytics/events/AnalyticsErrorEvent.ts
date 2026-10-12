@@ -42,20 +42,17 @@ export enum ErrorEventCode {
      * The EMI codes from 629 on are pending registration in adyen-checkout-sdk-meta `alignment/AnalyticsErrors.json`.
      */
 
-    /** The EMI plans request was rejected because its `emiToken` expired. Unreachable until the backend tells expiry apart from invalidity. */
-    EMI_PLANS_TOKEN_EXPIRED = '629',
-
-    /** The EMI plans request was rejected because its `emiToken` is missing or failed validation */
-    EMI_PLANS_TOKEN_INVALID = '630',
+    /** The EMI plans request was rejected because its `emiToken` is missing, expired or forged */
+    EMI_PLANS_TOKEN_INVALID = '629',
 
     /** The EMI plans request failed for any other reason: timeout, network or CORS failure, server error, unreadable body */
-    EMI_PLANS_FETCH_FAILED = '631',
+    EMI_PLANS_FETCH_FAILED = '630',
 
     /**
      * None of the payment methods EMI was configured with is one the component implements.
-     * TODO: confirm 632 against the registry; it is the candidate the EMI plan names, not a registered code yet.
+     * TODO: confirm 631 against the registry; it is the candidate the EMI plan names, not a registered code yet.
      */
-    EMI_NO_SUPPORTED_PAYMENT_METHOD = '632',
+    EMI_NO_SUPPORTED_PAYMENT_METHOD = '631',
 
     /**  Missing 'paymentData' property from threeDS2 action */
     THREEDS2_ACTION_IS_MISSING_PAYMENT_DATA = '700',

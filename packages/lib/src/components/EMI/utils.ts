@@ -1,6 +1,6 @@
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { ErrorEventCode } from '../../core/Analytics/events/AnalyticsErrorEvent';
-import { EMI_TOKEN_EXPIRED_ERROR_CODE, EMI_TOKEN_FIELD } from './constants';
+import { EMI_PLANS_ERROR_MESSAGE, EMI_TOKEN_FIELD } from './constants';
 import type { EmiIssuer, EmiPlan, EmiPlanPayload } from './types';
 
 const toPayloadPlanType = (type: string): string => type.replace(/([a-z0-9])([A-Z])/g, '$1_$2').toUpperCase();
@@ -26,34 +26,20 @@ export const buildEmiPlanPayload = (issuer: EmiIssuer, plan: EmiPlan): EmiPlanPa
     };
 };
 
-interface AdyenApiError {
-    errorCode: string;
-    errorType: string;
-    message: string;
-    status: number;
+interface EmiPlansErrorBody {
+    title?: string;
     invalidFields?: { name?: string }[];
 }
 
-const isAdyenApiError = (value: unknown): value is AdyenApiError => {
-    const error = value as Partial<AdyenApiError> | null | undefined;
-    return Boolean(error?.errorCode && error.errorType && error.message && error.status);
-};
+const getErrorBody = (error: unknown) =>
+    (error instanceof AdyenCheckoutError ? error.options?.cause : undefined) as EmiPlansErrorBody | null | undefined;
 
-const isEmiTokenValidationError = ({ errorType, message, invalidFields }: AdyenApiError): boolean =>
-    errorType === 'validation' &&
-    ((Array.isArray(invalidFields) && invalidFields.some(field => field?.name === EMI_TOKEN_FIELD)) || message.includes(EMI_TOKEN_FIELD));
+export const classifyEmiPlansError = (error: unknown): ErrorEventCode =>
+    getErrorBody(error)?.invalidFields?.some(field => field?.name === EMI_TOKEN_FIELD)
+        ? ErrorEventCode.EMI_PLANS_TOKEN_INVALID
+        : ErrorEventCode.EMI_PLANS_FETCH_FAILED;
 
-/**
- * @internal
- * Maps a rejected plans request to the analytics code it is reported with. Anything that is not an Adyen API
- * error naming the token, such as a timeout, a network or CORS failure, or an unreadable body, is a failed fetch.
- */
-export const classifyEmiPlansError = (error: unknown): ErrorEventCode => {
-    const cause = error instanceof AdyenCheckoutError ? error.options?.cause : undefined;
-
-    if (!isAdyenApiError(cause)) return ErrorEventCode.EMI_PLANS_FETCH_FAILED;
-    if (EMI_TOKEN_EXPIRED_ERROR_CODE && cause.errorCode === EMI_TOKEN_EXPIRED_ERROR_CODE) return ErrorEventCode.EMI_PLANS_TOKEN_EXPIRED;
-    if (isEmiTokenValidationError(cause)) return ErrorEventCode.EMI_PLANS_TOKEN_INVALID;
-
-    return ErrorEventCode.EMI_PLANS_FETCH_FAILED;
+export const describeEmiPlansError = (error: unknown): string => {
+    const title = getErrorBody(error)?.title;
+    return title ? `${EMI_PLANS_ERROR_MESSAGE}: ${title}` : EMI_PLANS_ERROR_MESSAGE;
 };
