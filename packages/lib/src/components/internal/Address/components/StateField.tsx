@@ -19,7 +19,7 @@ export default function StateField(props: Readonly<StateFieldProps>) {
             return;
         }
 
-        getDataset<StateFieldItem[]>(`states/${selectedCountry}`, loadingContext, i18n.locale)
+        getDataset<StateFieldItem[]>(`states/${selectedCountry}`, loadingContext, i18n.translationsLocale)
             .then(response => {
                 const newStates = response && response.length ? response : [];
                 setStates(newStates);
