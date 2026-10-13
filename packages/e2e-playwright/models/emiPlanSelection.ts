@@ -1,4 +1,4 @@
-import { Locator, Page } from '@playwright/test';
+import { expect, Locator, Page } from '@playwright/test';
 
 /** Plan selection and plan summary UI of the EMI component, reached through `EMI.planSelection`. */
 class EMIPlanSelection {
@@ -47,6 +47,8 @@ class EMIPlanSelection {
     // resolves its own options even while the other list is still in the DOM
     private async openList(select: Locator): Promise<Locator> {
         await select.click();
+        // Retries until the open select links its list, so a missing link fails here instead of querying [id="null"]
+        await expect(select).toHaveAttribute('aria-controls', /.+/);
         const listId = await select.getAttribute('aria-controls');
         return this.rootElement.locator(`[id="${listId}"]`).getByRole('option');
     }
