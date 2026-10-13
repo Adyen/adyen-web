@@ -51,18 +51,20 @@ describe('EMI', () => {
                 supportedPaymentMethods: [schemePaymentMethod]
             });
 
-            const data = emi.formatData() as Record<string, Record<string, unknown>>;
+            const data = emi.formatData();
             expect(data).toHaveProperty('paymentMethod');
             expect(data.paymentMethod).toHaveProperty('type', TxVariants.scheme);
         });
 
-        test('should return empty object when scheme is not supported', () => {
+        test('should return only the EMI payment method type when scheme is not supported', () => {
             const coreWithEmi = createCoreWithEmi(false);
             const emi = new EMI(coreWithEmi, {
                 ...baseProps
             });
 
-            expect(emi.formatData()).toEqual({});
+            expect(emi.formatData()).toEqual({
+                paymentMethod: { type: TxVariants.emi }
+            });
         });
 
         test('should not include emiPlan in formatData', () => {
@@ -72,8 +74,7 @@ describe('EMI', () => {
                 supportedPaymentMethods: [schemePaymentMethod]
             });
 
-            const data = emi.formatData() as Record<string, unknown>;
-            expect(data).not.toHaveProperty('emiPlan');
+            expect(emi.formatData()).not.toHaveProperty('emiPlan');
         });
     });
 
