@@ -20,7 +20,7 @@ export const EMI_NO_INSTALLMENT_PLANS = '949';
 
 export const EMI_TOKEN_FIELD = 'emiToken';
 
-export const EMI_PLANS_ERROR_MESSAGE = 'EMI: Installment plans request failed';
+export const EMI_PLANS_ERROR_PREFIX = `EMI: /${EMI_PLANS_PATH}`;
 
 export const EMI_NO_INSTALLMENT_PLANS_MESSAGE = 'EMI: No installment plans available';
 
