@@ -1,8 +1,8 @@
 import { h } from 'preact';
+import { EMI } from '@adyen/adyen-web';
 import { MetaConfiguration, PaymentMethodStoryProps, StoryConfiguration } from '../../../storybook/types';
 import { ComponentContainer } from '../../../storybook/components/ComponentContainer';
 import { Checkout } from '../../../storybook/components/Checkout';
-import EMI from './EMI';
 import type { EMIConfiguration } from './types';
 
 type EMIStory = StoryConfiguration<EMIConfiguration>;
