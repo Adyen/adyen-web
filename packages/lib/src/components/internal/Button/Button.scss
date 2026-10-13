@@ -79,6 +79,7 @@
         background: none;
         border: 0;
         color: variable-generator.token(color-label-primary);
+        text-decoration: underline;
 
         .adyen-checkout__spinner {
             @include index.set-spinner-color;
@@ -86,6 +87,7 @@
 
         &:hover {
             background: variable-generator.token(color-background-secondary-hover);
+            text-decoration: none;
         }
 
         &:active {
@@ -161,7 +163,7 @@
 
         &:hover {
             background: transparent;
-            font-weight: variable-generator.token(text-subtitle-font-weight);
+            text-decoration: none;
         }
     }
 
