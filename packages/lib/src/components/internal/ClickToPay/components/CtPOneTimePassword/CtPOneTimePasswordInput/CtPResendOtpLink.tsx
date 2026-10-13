@@ -98,10 +98,9 @@ const CtPResendOtpLink = ({ onError, onResendCode, disabled }: Readonly<CtPResen
             onClick={handleResendCodeClick}
             variant="link"
             inline={true}
+            label={i18n.get('ctp.otp.resendCode')}
             disabled={disabled}
-        >
-            {i18n.get('ctp.otp.resendCode')}
-        </Button>
+        />
     );
 };
 

@@ -127,13 +127,12 @@ class PaymentMethodItem extends Component<Readonly<PaymentMethodItemProps>> {
                         <Button
                             inline
                             variant="link"
+                            label={i18n.get('storedPaymentMethod.disable.button')}
                             onClick={this.toggleDisableConfirmation}
                             onKeyDown={stopPropagationForActionKeys}
                             ariaExpanded={this.state.showDisableStoredPaymentMethodConfirmation}
                             ariaControls={disableConfirmationId}
-                        >
-                            {i18n.get('storedPaymentMethod.disable.button')}
-                        </Button>
+                        />
                     )}
                 </div>
 
