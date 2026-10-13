@@ -35,6 +35,22 @@ export const WithGiftcard: GifcardStory = {
     args: baseArgs
 };
 
+export const WithBrandPlaceholders: GifcardStory = {
+    render: args => {
+        return <GiftcardExample contextArgs={args} />;
+    },
+    args: {
+        ...baseArgs,
+        componentConfiguration: {
+            brand: 'givex',
+            placeholders: { cardNumber: '2207 8500 1234 5678 0000 1', securityCode: '1234' },
+            brandsConfiguration: {
+                givex: { placeholders: { cardNumber: '6006 4912 3456 7890 1234 5', securityCode: '1234' } }
+            }
+        }
+    },
+};
+
 export const NoBalanceError: GifcardStory = {
     render: args => {
         return <GiftcardExample contextArgs={args} />;
