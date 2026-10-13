@@ -5,6 +5,7 @@ import { EMIComponent } from './EMIComponent';
 import { TxVariants } from '../tx-variants';
 import type { ICore } from '../../core/types';
 import type { UIElementStatus } from '../internal/UIElement/types';
+import type { PaymentData } from '../../types/global-types';
 import { EMIFundingSource } from './types';
 import type { EMIConfiguration, EMIFundingSourceData, EMIFundingSourceElement } from './types';
 import { SUPPORTED_FUNDING_SOURCES } from './constants';
@@ -70,8 +71,8 @@ class EMI extends UIElement<EMIConfiguration> {
         return this.activeFundingSourceElement?.isValid ?? false;
     }
 
-    public formatData(): EMIFundingSourceData | Record<string, never> {
-        if (!this.activeFundingSourceElement) return {};
+    public formatData(): EMIFundingSourceData | PaymentData {
+        if (!this.activeFundingSourceElement) return { paymentMethod: { type: EMI.type } };
         return this.activeFundingSourceElement.formatData();
     }
 
@@ -81,9 +82,9 @@ class EMI extends UIElement<EMIConfiguration> {
         return this;
     }
 
-    public override setStatus(status: UIElementStatus, props?: Record<string, unknown>): this {
-        super.setStatus(status, props);
-        this.activeFundingSourceElement?.setStatus(status, props);
+    public override setStatus(status: UIElementStatus): this {
+        super.setStatus(status);
+        this.activeFundingSourceElement?.setStatus(status);
         return this;
     }
 
