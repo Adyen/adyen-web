@@ -11,14 +11,7 @@ import type { OrderUpdatedData } from '../../../../src/types';
 const { Dropin, ...Components } = components;
 AdyenCheckout.register(...(Object.values(Components) as NewableComponent[]));
 
-const STORAGE_KEY = 'adyen-web-storybook:giftcard-reload-session';
-
-interface PersistedSession {
-    id: string;
-    sessionData: string;
-    countryCode: string;
-    amount: number;
-}
+const STORAGE_KEY = 'adyen-web-storybook:giftcard-reload-session-id';
 
 interface GiftcardReloadDemoProps {
     amount: number;
@@ -26,53 +19,25 @@ interface GiftcardReloadDemoProps {
     shopperLocale: string;
 }
 
-const isPersistedSession = (value: unknown): value is PersistedSession => {
-    if (typeof value !== 'object' || value === null) return false;
-    const candidate = value as Record<string, unknown>;
-    return (
-        typeof candidate.id === 'string' &&
-        typeof candidate.sessionData === 'string' &&
-        typeof candidate.countryCode === 'string' &&
-        typeof candidate.amount === 'number'
-    );
-};
-
-const readPersistedSession = (): PersistedSession | null => {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return null;
-
-    try {
-        const parsed: unknown = JSON.parse(raw);
-        return isPersistedSession(parsed) ? parsed : null;
-    } catch (error: unknown) {
-        console.warn('GiftcardReload: could not parse the persisted session', error);
-        return null;
-    }
-};
-
-const writePersistedSession = (session: PersistedSession): void => localStorage.setItem(STORAGE_KEY, JSON.stringify(session));
-
-const clearPersistedSession = (): void => localStorage.removeItem(STORAGE_KEY);
-
 /**
- * Simulates a merchant that persists the latest `sessionData` (received in `onOrderUpdated`) and passes it
- * back when the checkout is initialised again, instead of creating a new session on every page load.
+ * Simulates a merchant that only persists the session id. When the checkout is initialised again with just the id,
+ * the SDK restores the latest `sessionData` for that session instead of a new session being created on every page load.
  */
 export const GiftcardReloadDemo = ({ amount, countryCode, shopperLocale }: Readonly<GiftcardReloadDemoProps>) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const [initializationKey, setInitializationKey] = useState(0);
-    const [persisted, setPersisted] = useState<PersistedSession | null>(readPersistedSession);
+    const [persistedSessionId, setPersistedSessionId] = useState<string | null>(() => localStorage.getItem(STORAGE_KEY));
     const [sessionOrigin, setSessionOrigin] = useState<'new' | 'restored' | null>(null);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-    const persist = (session: PersistedSession): void => {
-        writePersistedSession(session);
-        setPersisted(session);
+    const persistSessionId = (sessionId: string): void => {
+        localStorage.setItem(STORAGE_KEY, sessionId);
+        setPersistedSessionId(sessionId);
     };
 
-    const discardPersisted = (): void => {
-        clearPersistedSession();
-        setPersisted(null);
+    const discardSessionId = (): void => {
+        localStorage.removeItem(STORAGE_KEY);
+        setPersistedSessionId(null);
     };
 
     useEffect(() => {
@@ -83,13 +48,11 @@ export const GiftcardReloadDemo = ({ amount, countryCode, shopperLocale }: Reado
             setErrorMessage(null);
             setSessionOrigin(null);
 
-            const stored = readPersistedSession();
-            const canRestore = stored?.countryCode === countryCode && stored.amount === Number(amount);
+            const storedSessionId = localStorage.getItem(STORAGE_KEY);
+            let session: { id: string; sessionData?: string };
 
-            let session: PersistedSession;
-
-            if (stored && canRestore) {
-                session = stored;
+            if (storedSessionId) {
+                session = { id: storedSessionId };
             } else {
                 const response = await createSession({
                     amount: { currency: getCurrency(countryCode), value: Number(amount) },
@@ -100,8 +63,8 @@ export const GiftcardReloadDemo = ({ amount, countryCode, shopperLocale }: Reado
                     shopperReference: SHOPPER_REFERENCE,
                     shopperEmail: 'shopper.ctp1@adyen.com'
                 });
-                session = { id: response.id, sessionData: response.sessionData, countryCode, amount: Number(amount) };
-                persist(session);
+                session = { id: response.id, sessionData: response.sessionData };
+                persistSessionId(response.id);
             }
 
             const checkout = await AdyenCheckout({
@@ -109,19 +72,13 @@ export const GiftcardReloadDemo = ({ amount, countryCode, shopperLocale }: Reado
                 environment: process.env.CLIENT_ENV as CoreConfiguration['environment'],
                 countryCode,
                 locale: shopperLocale,
-                session: { id: session.id, sessionData: session.sessionData },
+                session,
                 onOrderUpdated: (data: OrderUpdatedData) => {
                     console.log('onOrderUpdated', data);
-
-                    if (!data.sessionData) {
-                        console.warn('GiftcardReload: onOrderUpdated did not return sessionData');
-                        return;
-                    }
-                    persist({ ...session, sessionData: data.sessionData });
                 },
                 onPaymentCompleted: result => {
                     console.log('onPaymentCompleted', result);
-                    discardPersisted();
+                    discardSessionId();
                 },
                 onPaymentFailed: result => {
                     console.log('onPaymentFailed', result);
@@ -137,15 +94,15 @@ export const GiftcardReloadDemo = ({ amount, countryCode, shopperLocale }: Reado
 
             dropin = new DropinComponent(checkout);
             dropin.mount(containerRef.current);
-            setSessionOrigin(stored && canRestore ? 'restored' : 'new');
+            setSessionOrigin(storedSessionId ? 'restored' : 'new');
         };
 
         init().catch((error: unknown) => {
             console.error('GiftcardReload: failed to initialise the checkout', error);
             if (cancelled) return;
             // A persisted session can expire. Drop it so the next attempt creates a fresh one
-            discardPersisted();
-            setErrorMessage('Could not initialise the checkout. The persisted session was cleared, use "Reload Drop-in" to start again.');
+            discardSessionId();
+            setErrorMessage('Could not initialise the checkout. The persisted session id was cleared, use "Reload Drop-in" to start again.');
         });
 
         return () => {
@@ -157,15 +114,16 @@ export const GiftcardReloadDemo = ({ amount, countryCode, shopperLocale }: Reado
     const reloadDropin = () => setInitializationKey(key => key + 1);
 
     const startNewSession = () => {
-        discardPersisted();
+        discardSessionId();
         reloadDropin();
     };
 
     return (
         <div>
             <p>
-                1. Pay with a gift card for less than the total. 2. Reload the page (or use &quot;Reload Drop-in&quot;). The Drop-in is initialised
-                with the <code>sessionData</code> received in <code>onOrderUpdated</code>, and the applied gift card should be displayed.
+                1. Pay with a gift card for less than the total. 2. Reload the page (or use &quot;Reload Drop-in&quot;). Only the session id is
+                persisted, and the applied gift card should be displayed after the reload. Use &quot;Start new session&quot; after changing the amount
+                or country.
             </p>
             <div>
                 <button type="button" onClick={reloadDropin}>
@@ -179,9 +137,7 @@ export const GiftcardReloadDemo = ({ amount, countryCode, shopperLocale }: Reado
                 <dt>Session</dt>
                 <dd data-testid="session-origin">{sessionOrigin ?? 'loading...'}</dd>
                 <dt>Persisted session id</dt>
-                <dd data-testid="persisted-session-id">{persisted?.id ?? 'none'}</dd>
-                <dt>Persisted sessionData (last 16 chars)</dt>
-                <dd data-testid="persisted-session-data">{persisted ? `...${persisted.sessionData.slice(-16)}` : 'none'}</dd>
+                <dd data-testid="persisted-session-id">{persistedSessionId ?? 'none'}</dd>
             </dl>
             {errorMessage && <div role="alert">{errorMessage}</div>}
             <div ref={containerRef} id="component-root" className="component-wrapper" />

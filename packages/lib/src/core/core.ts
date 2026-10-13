@@ -134,13 +134,6 @@ class Core implements ICore {
                 .then(sessionResponse => {
                     const { amount, shopperLocale, countryCode, paymentMethods, ...rest } = sessionResponse;
 
-                    console.log('[DEBUG giftcard-reload] core.initializeCore', {
-                        optionsOrderBeforeSetOptions: this.options.order,
-                        orderFromSetupResponse: (rest as { order?: unknown }).order,
-                        amountFromSetupResponse: JSON.stringify(amount),
-                        amountThatWillBeUsed: JSON.stringify(this.options.order ? this.options.order.remainingAmount : amount)
-                    });
-
                     this.setOptions({
                         ...rest,
                         amount: this.options.order ? this.options.order.remainingAmount : amount,
