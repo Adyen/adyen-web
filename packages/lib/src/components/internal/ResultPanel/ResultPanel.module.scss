@@ -43,7 +43,6 @@
 .description {
     @include mixins.adyen-checkout-text-body;
 
-    margin: variable-generator.token(spacer-050) 0 0;
     color: variable-generator.token(color-label-primary);
 }
 
