@@ -326,11 +326,26 @@ check: it rejects when the `emi` entry lists no payment method the SDK renders, 
 An expired token has no code of its own. The backend answers it exactly as it answers a forged one, so that a
 caller cannot probe which tokens were ever valid, and the SDK reports both as 629.
 
-The error event's `message` is a fixed prefix followed by the backend `title`, for example
-`EMI: Installment plans request failed: Missing or invalid input fields`. Without a backend answer, such as a
-timeout or a network failure, it is the prefix alone. The `requestId` is left out so that events group by
-message, and field values and `detail` are never forwarded, because the backend has echoed the full token in
-`invalidFields[].value`.
+The error event's `message` always names the endpoint, `EMI: /utility/v1/emi/plans`, followed by what is known
+about the failure:
+
+| Failure                               | Message                                                        |
+| ------------------------------------- | -------------------------------------------------------------- |
+| A backend answer                      | `EMI: /utility/v1/emi/plans (500): An internal error happened` |
+| The 10-second timeout                 | `EMI: /utility/v1/emi/plans: signal timed out`                 |
+| A network or CORS failure             | `EMI: /utility/v1/emi/plans: Failed to fetch`                  |
+| An error page that is not JSON        | `EMI: /utility/v1/emi/plans: Unexpected token '<', ...`        |
+| No `clientKey`, so no request is made | `EMI: /utility/v1/emi/plans`                                   |
+
+The status and `title` come from the backend answer. The status tells a backend failure (5xx) from a rejected
+request (4xx) within code 630. An error page that is not JSON carries no readable status, because `http` does
+not pass the HTTP status on. The `requestId` is left out so that events group by message, and field values and
+`detail` are never forwarded, because the backend has echoed the full token in `invalidFields[].value`.
+
+When the request gets no readable answer, the message forwards the `message` of the error the fetch rejected
+with. That text is written by the browser, so the same failure reads differently per browser: a network
+failure is `Failed to fetch` in Chrome and `Load failed` in Safari. Chrome's `SyntaxError` quotes the first
+characters of the body it could not parse.
 
 ### Why the spinner stays
 

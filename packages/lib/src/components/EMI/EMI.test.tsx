@@ -1035,7 +1035,7 @@ describe('EMI', () => {
                 expect(errorEvents(sendAnalytics)).toHaveLength(0);
             });
 
-            const tokenRejectedMessage = 'EMI: Installment plans request failed: Missing or invalid input fields';
+            const tokenRejectedMessage = 'EMI: /utility/v1/emi/plans (422): Missing or invalid input fields';
 
             test.each<[string, () => unknown, ErrorEventCode, string]>([
                 ['an invalid token', tokenValidationError, ErrorEventCode.EMI_PLANS_TOKEN_INVALID, tokenRejectedMessage],
@@ -1050,7 +1050,7 @@ describe('EMI', () => {
                             status: 500
                         }),
                     ErrorEventCode.EMI_PLANS_FETCH_FAILED,
-                    'EMI: Installment plans request failed: Internal error'
+                    'EMI: /utility/v1/emi/plans (500): Internal error'
                 ],
                 [
                     'a network failure',
@@ -1059,7 +1059,7 @@ describe('EMI', () => {
                             cause: new TypeError('Failed to fetch')
                         }),
                     ErrorEventCode.EMI_PLANS_FETCH_FAILED,
-                    'EMI: Installment plans request failed'
+                    'EMI: /utility/v1/emi/plans: Failed to fetch'
                 ],
                 [
                     'a timeout',
@@ -1068,7 +1068,7 @@ describe('EMI', () => {
                             cause: new DOMException('Timed out', 'TimeoutError')
                         }),
                     ErrorEventCode.EMI_PLANS_FETCH_FAILED,
-                    'EMI: Installment plans request failed'
+                    'EMI: /utility/v1/emi/plans: Timed out'
                 ]
             ])('should send one network error event for %s', async (_case, createError, code, message) => {
                 mockedGetEmiPlans.mockRejectedValue(createError());
@@ -1109,7 +1109,7 @@ describe('EMI', () => {
                 const payload = JSON.stringify(sendAnalytics.mock.calls.map(([event]) => event));
                 expect(errorEvents(sendAnalytics)[0]).toEqual(
                     expect.objectContaining({
-                        message: 'EMI: Installment plans request failed: Bad request'
+                        message: 'EMI: /utility/v1/emi/plans (400): Bad request'
                     })
                 );
                 expect(payload).not.toContain(emiToken);
