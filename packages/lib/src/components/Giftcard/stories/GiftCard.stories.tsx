@@ -49,7 +49,6 @@ export const WithBrandPlaceholders: GifcardStory = {
             }
         }
     },
-    tags: ['no-automated-visual-test']
 };
 
 export const NoBalanceError: GifcardStory = {
