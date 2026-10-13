@@ -1,5 +1,6 @@
 import { h } from 'preact';
 import { useCoreContext } from '../../../core/Context/CoreProvider';
+import useImage from '../../../core/Context/useImage';
 import {
     usePaymentStatusTimer,
     DEFAULT_PAYMENT_STATUS_TIMER_COUNTDOWN_TIME_MIN,
@@ -12,8 +13,8 @@ import Button from '../Button';
 import ContentSeparator from '../ContentSeparator';
 import { AnalyticsInfoEvent, InfoEventType, UiTarget } from '../../../core/Analytics/events/AnalyticsInfoEvent';
 import { CountdownTime } from '../Countdown/types';
+import { ResultPanel } from '../ResultPanel';
 import { QRDetails } from './components/QRDetails';
-import { QRFinalState } from './components/QRFinalState';
 import { QRLoaderPendingState } from './components/QRLoaderPendingState';
 import { useLoadingA11yReporter } from '../../../core/Errors/useLoadingA11yReporter';
 import { QRLoaderDetailsProvider } from './QRLoaderDetailsProvider';
@@ -26,6 +27,7 @@ const QRCODE_URL = 'utility/v1/barcode.png?type=qrCode&data=';
 
 export function QRLoader(props: Readonly<QRLoaderProps>) {
     const { i18n, loadingContext } = useCoreContext();
+    const getImage = useImage();
 
     const { state: timerState, actions: timerActions } = usePaymentStatusTimer({
         loadingContext,
@@ -69,7 +71,7 @@ export function QRLoader(props: Readonly<QRLoaderProps>) {
     /**
      * Reported from here rather than from the child states: QRLoaderPendingState unmounts as soon
      * as the QR code arrives and so cannot announce that loading has finished, and a reporter in
-     * QRFinalState would be overwritten by this one, since child effects run first and `loading`
+     * the final result would be overwritten by this one, since child effects run first and `loading`
      * flips in the same batch as `completed`/`expired`.
      */
     let finalStateMessage: string | undefined;
@@ -77,12 +79,23 @@ export function QRLoader(props: Readonly<QRLoaderProps>) {
     if (completed) finalStateMessage = i18n.get('creditCard.success');
     useLoadingA11yReporter(loading, finalStateMessage);
 
-    if (expired) {
-        return <QRFinalState image="error" message={i18n.get('error.subtitle.payment')} />;
-    }
+    if (expired || completed) {
+        const message = expired ? i18n.get('error.subtitle.payment') : i18n.get('creditCard.success');
+        const image = expired ? 'error' : 'success';
 
-    if (completed) {
-        return <QRFinalState image="success" message={i18n.get('creditCard.success')} />;
+        return (
+            <ResultPanel
+                classNames={{
+                    root: 'adyen-checkout__qr-loader adyen-checkout__qr-loader--result',
+                    icon: 'adyen-checkout__qr-loader__icon adyen-checkout__qr-loader__icon--result',
+                    description: 'adyen-checkout__qr-loader__subtitle'
+                }}
+                description={message}
+                icon={getImage({ imageFolder: 'components/' })(image)}
+                iconAlt={message}
+                wrapIcon={false}
+            />
+        );
     }
 
     if (loading) {

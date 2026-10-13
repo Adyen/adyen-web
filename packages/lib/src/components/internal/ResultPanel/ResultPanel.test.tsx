@@ -24,4 +24,19 @@ describe('ResultPanel', () => {
         expect(screen.getByText('Payment details')).toBeInTheDocument();
         expect(screen.getByRole('button', { name: 'Download agreement' })).toBeInTheDocument();
     });
+
+    test('should preserve caller-provided classes', () => {
+        render(
+            <ResultPanel
+                classNames={{ root: 'legacy-result', icon: 'legacy-icon', description: 'legacy-description' }}
+                description="Payment successful"
+                icon="success.svg"
+                iconAlt="Payment successful"
+                wrapIcon={false}
+            />
+        );
+
+        expect(screen.getByRole('img', { name: 'Payment successful' })).toHaveClass('legacy-icon');
+        expect(screen.getByText('Payment successful')).toHaveClass('legacy-description');
+    });
 });
