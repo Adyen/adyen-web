@@ -468,7 +468,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
             : this.handleAdvanceFlowPaymentMethodsUpdate(order);
 
         void updateCorePromise.then(core => {
-            const { session } = core;
+            const session = core?.session;
             // The resolved core already ran /setup, so its session holds a newer blob than /payments returned
             this.props.onOrderUpdated?.({ order, ...(session?.data && { sessionData: session.data }) });
         });
