@@ -221,7 +221,11 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
 
     /**
      * Set status using elementRef, which:
-     * - If Drop-in, will set status for Dropin component, and then it will propagate the new status for the active payment method component
+     *
+     * - If Drop-in, will set status for Dropin component, and then it will propagate the
+     *   new status for the active payment method componen. This is triggered via componentDidUpdate
+     *   on DropinComponent.tsx and it will not push the state if it hasn't changed.
+     *
      * - If Component, it will set its own status
      */
     public setElementStatus(status: UIElementStatus): this {
