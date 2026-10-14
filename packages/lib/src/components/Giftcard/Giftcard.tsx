@@ -88,7 +88,7 @@ export class GiftcardElement extends UIElement<GiftCardConfiguration> {
         const hasBalanceCheck = this.props.session || this.props.onBalanceCheck;
         if (!hasBalanceCheck) return super.submit();
 
-        this.setStatus('loading');
+        this.setElementStatus('loading');
 
         // Clear any previous balance check errors at the start of every attempt
         this.setBalanceCheckError(null);
@@ -130,7 +130,7 @@ export class GiftcardElement extends UIElement<GiftCardConfiguration> {
      */
     private readonly handleOnRequiringConfirmation = (balance: PaymentAmount, transactionLimit: PaymentAmount): Promise<void> | void => {
         this.componentRef.setBalance({ balance, transactionLimit });
-        this.setStatus('ready');
+        this.setElementStatus('ready');
 
         // 1. if we show pay button we don't need to ask for confirmation
         if (this.props.showPayButton) {

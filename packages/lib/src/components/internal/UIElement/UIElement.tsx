@@ -221,7 +221,11 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
 
     /**
      * Set status using elementRef, which:
-     * - If Drop-in, will set status for Dropin component, and then it will propagate the new status for the active payment method component
+     *
+     * - If Drop-in, will set status for Dropin component, and then it will propagate the
+     *   new status for the active payment method componen. This is triggered via componentDidUpdate
+     *   on DropinComponent.tsx and it will not push the state if it hasn't changed.
+     *
      * - If Component, it will set its own status
      */
     public setElementStatus(status: UIElementStatus): this {
@@ -231,6 +235,10 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
 
     /**
      * componentRef is a ref to the primary component inside that subclass e.g. CardInput.tsx
+     *
+     * This bypasses elementRef, so inside Drop-in it only changes the view of this component, never Drop-in's own status.
+     * handleError resets the status with setElementStatus('ready'), and Drop-in drops that as "no change" if it never left 'ready'.
+     * So a status that setElementStatus will reset must also be set with setElementStatus.
      */
     public setStatus(status: UIElementStatus): this {
         this.componentRef?.setStatus?.(status);
@@ -371,6 +379,8 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
          * Set status using elementRef, which:
          * - If Drop-in, will set status for Dropin component, and then it will propagate the new status for the active payment method component
          * - If Component, it will set its own status
+         *
+         * This only resets a status that was set with setElementStatus. A status set with setStatus is not reset inside Drop-in.
          */
         this.setElementStatus('ready');
 
