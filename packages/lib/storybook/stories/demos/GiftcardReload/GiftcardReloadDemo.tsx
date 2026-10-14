@@ -135,9 +135,9 @@ export const GiftcardReloadDemo = ({ amount, countryCode, shopperLocale }: Reado
             </div>
             <dl>
                 <dt>Session</dt>
-                <dd data-testid="session-origin">{sessionOrigin ?? 'loading...'}</dd>
+                <dd>{sessionOrigin ?? 'loading...'}</dd>
                 <dt>Persisted session id</dt>
-                <dd data-testid="persisted-session-id">{persistedSessionId ?? 'none'}</dd>
+                <dd>{persistedSessionId ?? 'none'}</dd>
             </dl>
             {errorMessage && <div role="alert">{errorMessage}</div>}
             <div ref={containerRef} id="component-root" className="component-wrapper" />
