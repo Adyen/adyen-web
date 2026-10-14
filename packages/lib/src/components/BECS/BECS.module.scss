@@ -15,6 +15,11 @@
     line-height: variable-generator.token(text-caption-line-height);
 }
 
+.resultIcon {
+    border-radius: variable-generator.token(border-radius-m);
+    box-shadow: variable-generator.token(shadow-low);
+}
+
 .actionsTitle {
     @include mixins.adyen-checkout-text-body-strongest;
 

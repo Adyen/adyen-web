@@ -64,7 +64,6 @@ export function Await(props: Readonly<AwaitComponentProps>) {
                 description={message}
                 icon={getImage({ imageFolder: 'components/' })(image)}
                 iconAlt={message}
-                wrapIcon={false}
             />
         );
     }

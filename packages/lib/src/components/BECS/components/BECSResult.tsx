@@ -19,6 +19,7 @@ export function BECSResult({ icon, url }: Readonly<BECSResultProps>) {
 
     return (
         <ResultPanel
+            classNames={{ icon: styles.resultIcon }}
             icon={icon}
             iconAlt={i18n.get('becs.success.iconAlt')}
             title={i18n.get('becs.success.title')}
@@ -44,7 +45,6 @@ export function BECSResult({ icon, url }: Readonly<BECSResultProps>) {
                         inline
                         variant="ghost"
                         href={url}
-                        icon={downloadIcon}
                         label={i18n.get('becs.success.action.serviceAgreement')}
                         target="_blank"
                         rel="noopener noreferrer"

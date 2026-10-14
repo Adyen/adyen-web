@@ -12,20 +12,6 @@
     text-align: center;
 }
 
-.iconWrapper {
-    display: block;
-    position: relative;
-    border-radius: variable-generator.token(border-radius-m);
-}
-
-.iconWrapper::after {
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    box-shadow: variable-generator.token(shadow-low);
-    content: '';
-}
-
 .icon {
     display: block;
     width: 64px;
