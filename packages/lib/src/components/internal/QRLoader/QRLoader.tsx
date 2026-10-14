@@ -93,7 +93,6 @@ export function QRLoader(props: Readonly<QRLoaderProps>) {
                 description={message}
                 icon={getImage({ imageFolder: 'components/' })(image)}
                 iconAlt={message}
-                wrapIcon={false}
             />
         );
     }

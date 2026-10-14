@@ -7,18 +7,6 @@
     position: relative;
 }
 
-.adyen-checkout__bank-transfer-result {
-    align-items: stretch;
-    padding: 0;
-    border: 0;
-}
-
-.adyen-checkout__bank-transfer-result__top,
-.adyen-checkout__bank-transfer-result__bottom {
-    width: auto;
-    margin-top: 0;
-}
-
 .adyen-checkout__voucher-result--bankTransfer {
     .adyen-checkout__voucher-result-title {
         @include index.adyen-checkout-text-title;

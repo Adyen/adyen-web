@@ -32,7 +32,6 @@ describe('ResultPanel', () => {
                 description="Payment successful"
                 icon="success.svg"
                 iconAlt="Payment successful"
-                wrapIcon={false}
             />
         );
 

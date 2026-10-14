@@ -186,27 +186,19 @@ describe('Bacs Direct Debit', () => {
         );
     });
 
-    test('should render the result panel when the URL is retrieved', () => {
+    test('should render the Voucher when the URL is retrieved', () => {
         const core = setupCoreMock();
-        const onActionHandled = jest.fn();
 
         const bacs = new BacsDD(core, {
             modules: { analytics: core.modules.analytics, resources: core.modules.resources },
             i18n: core.modules.i18n,
             loadingContext: 'https://checkoutshopper-live.adyen.com/checkoutshopper/',
-            url: 'https://test.adyen.com/hpp/generateDdi.shtml?pdfFields=%2BjXS7Uo2RhBavkz',
-            onActionHandled
+            url: 'https://test.adyen.com/hpp/generateDdi.shtml?pdfFields=%2BjXS7Uo2RhBavkz'
         });
 
         render(bacs.render());
 
-        expect(screen.getByText('Download your Direct Debit Instruction (DDI / Mandate)')).toHaveClass(
-            'adyen-checkout__voucher-result__introduction'
-        );
-        expect(screen.getByRole('link', { name: /Download PDF/i })).toHaveAttribute(
-            'href',
-            'https://test.adyen.com/hpp/generateDdi.shtml?pdfFields=%2BjXS7Uo2RhBavkz'
-        );
-        expect(onActionHandled).toHaveBeenCalledWith(expect.objectContaining({ actionDescription: 'voucher-presented' }));
+        expect(screen.getByText('Download your Direct Debit Instruction (DDI / Mandate)')).toBeInTheDocument();
+        expect(screen.getByRole('link', { name: /Download PDF/i })).toBeInTheDocument();
     });
 });

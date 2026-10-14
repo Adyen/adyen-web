@@ -1,14 +1,10 @@
-import { Fragment, h } from 'preact';
-
+import { h } from 'preact';
 import { useCoreContext } from '../../../../core/Context/CoreProvider';
 import useImage from '../../../../core/Context/useImage';
 import DetailsTable from '../../../internal/DetailsTable';
-import { ResultPanel } from '../../../internal/ResultPanel';
 import { BankTransferResultInstructions } from './BankTransferResultInstructions';
-
+import BankTransferVoucher from './BankTransferVoucher';
 import type { ActionHandledReturnObject } from '../../../../types/global-types';
-
-import './BankTransferResult.scss';
 
 export interface BankTransferResultProps {
     paymentMethodType?: string;
@@ -42,37 +38,14 @@ export default function BankTransferResult(props: Readonly<BankTransferResultPro
         { label: i18n.get('bankTransfer.bic'), value: props.bic }
     ];
 
-    const imageUrl = getImage()(props.paymentMethodType);
-
-    props.onActionHandled?.({ componentType: props.paymentMethodType, actionDescription: 'voucher-presented' });
-
     return (
-        <ResultPanel
-            classNames={{
-                root: `adyen-checkout__bank-transfer-result adyen-checkout__voucher-result adyen-checkout__voucher-result--bankTransfer adyen-checkout__voucher-result--${props.paymentMethodType}`,
-                details: 'adyen-checkout__bank-transfer-result__top adyen-checkout__voucher-result__top',
-                actions: 'adyen-checkout__bank-transfer-result__bottom adyen-checkout__voucher-result__bottom'
-            }}
-            details={
-                <Fragment>
-                    <div className="adyen-checkout__voucher-result__image">
-                        {!!imageUrl && (
-                            <span className="adyen-checkout__voucher-result__image__wrapper">
-                                <img alt={props.paymentMethodType} className="adyen-checkout__voucher-result__image__brand" src={imageUrl} />
-                            </span>
-                        )}
-                    </div>
-                    <div className="adyen-checkout__voucher-result__amount">{i18n.amount(props.totalAmount.value, props.totalAmount.currency)}</div>
-                    <div className="adyen-checkout__voucher-result-title">{i18n.get('bankTransfer.instruction.title')}</div>
-                    <BankTransferResultInstructions />
-                </Fragment>
-            }
-            actions={
-                <Fragment>
-                    <div className="adyen-checkout__voucher-result-title">{i18n.get('bankTransfer.details.title')}</div>
-                    <DetailsTable shouldShowCopyButton tableFields={tableFields} />
-                </Fragment>
-            }
+        <BankTransferVoucher
+            paymentMethodType={props.paymentMethodType}
+            imageUrl={getImage()(props.paymentMethodType)}
+            onActionHandled={props.onActionHandled}
+            amount={i18n.amount(props.totalAmount.value, props.totalAmount.currency)}
+            instructions={<BankTransferResultInstructions />}
+            voucherDetails={<DetailsTable shouldShowCopyButton tableFields={tableFields} />}
         />
     );
 }
