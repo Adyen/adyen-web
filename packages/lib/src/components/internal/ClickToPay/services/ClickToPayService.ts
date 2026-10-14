@@ -145,7 +145,7 @@ class ClickToPayService implements IClickToPayService {
             const { maskedValidationChannel } = await this.validationSchemeSdk.initiateIdentityValidation();
 
             this.identityValidationData = {
-                maskedShopperContact: maskedValidationChannel.replaceAll('*', '•'),
+                maskedShopperContact: maskedValidationChannel.replace(/\*/g, '•'),
                 selectedNetwork: SchemeNames[this.validationSchemeSdk.schemeName]
             };
 
@@ -310,7 +310,7 @@ class ClickToPayService implements IClickToPayService {
 
                 const profilesWithScheme: SrcProfileWithScheme[] = srcProfilesResponses
                     .map((promiseResult, index) => createProfileWithScheme(promiseResult, index))
-                    .filter(profile => !!profile);
+                    .filter((profile): profile is SrcProfileWithScheme => !!profile);
 
                 this.shopperCards = createShopperCardsList(profilesWithScheme);
                 resolve();

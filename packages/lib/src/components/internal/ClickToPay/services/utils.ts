@@ -45,7 +45,9 @@ function createShopperMaskedCardsData(memo: ShopperCard[], srcProfile: SrcProfil
 }
 
 function sortCardByLastTimeUsed(card1: ShopperCard, card2: ShopperCard) {
-    return new Date(card2.dateOfCardLastUsed ?? '').getTime() - new Date(card1.dateOfCardLastUsed ?? '').getTime();
+    const time2 = card2.dateOfCardLastUsed ? new Date(card2.dateOfCardLastUsed).getTime() : 0;
+    const time1 = card1.dateOfCardLastUsed ? new Date(card1.dateOfCardLastUsed).getTime() : 0;
+    return time2 - time1;
 }
 
 function sortCardByLastTimeCreated(card1: ShopperCard, card2: ShopperCard) {
