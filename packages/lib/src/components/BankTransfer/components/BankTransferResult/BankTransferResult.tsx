@@ -8,7 +8,7 @@ import { BankTransferResultInstructions } from './BankTransferResultInstructions
 
 import type { ActionHandledReturnObject } from '../../../../types/global-types';
 
-import './BankTransferVoucher.scss';
+import './BankTransferResult.scss';
 
 export interface BankTransferResultProps {
     paymentMethodType?: string;
