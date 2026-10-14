@@ -8,6 +8,7 @@ import ThreeDS2Challenge from '../ThreeDS2/ThreeDS2Challenge';
 import Dropin from './Dropin';
 import Fastlane from '../PayPalFastlane';
 import Card from '../Card';
+import Giftcard from '../Giftcard';
 import { SRPanel } from '../../core/Errors/SRPanel';
 
 import type { CoreConfiguration, ICore } from '../../core/types';
@@ -729,6 +730,81 @@ describe('Dropin', () => {
             await userEvent.click(screen.getByRole('button', { name: /Remove/i }));
 
             expect(cancelOrderMock).toHaveBeenCalledTimes(1);
+        });
+    });
+
+    describe('Gift card balance check', () => {
+        type BalanceCheckResponse = { balance?: { value: number; currency: string } };
+
+        const mountDropinWithGiftcard = async (onBalanceCheck: jest.Mock) => {
+            const config = getAdyenCheckoutConfiguration({
+                paymentMethodsResponse: {
+                    paymentMethods: [{ name: 'Generic GiftCard', type: 'giftcard', brand: 'genericgiftcard' }]
+                }
+            });
+            const checkout = await createAdyenCheckout(config);
+            const dropin = new Dropin(checkout, {
+                paymentMethodComponents: [Giftcard],
+                openFirstPaymentMethod: true,
+                paymentMethodsConfiguration: { giftcard: { onBalanceCheck } }
+            });
+
+            render(dropin.render());
+
+            const redeemButton = await screen.findByRole('button', { name: 'Redeem' });
+            const giftcard = dropin.activePaymentMethod as Giftcard;
+            // The card fields live in SecuredFields iframes, so validity is set directly
+            giftcard.setState({ isValid: true });
+
+            return { dropin, giftcard, redeemButton };
+        };
+
+        // While loading, the button content is aria-hidden, so it has no accessible name: keep hold of the element instead of re-querying it
+        test('should disable the pay button while the balance check is pending', async () => {
+            const onBalanceCheck = jest.fn();
+            const { dropin, redeemButton } = await mountDropinWithGiftcard(onBalanceCheck);
+
+            await userEvent.click(redeemButton);
+
+            await waitFor(() => expect(redeemButton).toBeDisabled());
+            expect(onBalanceCheck).toHaveBeenCalledTimes(1);
+            expect(dropin.dropinRef.state.status.type).toBe('loading');
+        });
+
+        test('should re-enable the pay button when onBalanceCheck rejects', async () => {
+            const onBalanceCheck = jest.fn((resolve, reject) => reject());
+            const { dropin, redeemButton } = await mountDropinWithGiftcard(onBalanceCheck);
+
+            await userEvent.click(redeemButton);
+
+            await waitFor(() => expect(onBalanceCheck).toHaveBeenCalledTimes(1));
+            await waitFor(() => expect(redeemButton).toBeEnabled());
+            expect(dropin.dropinRef.state.status.type).toBe('ready');
+        });
+
+        test.each<[string, BalanceCheckResponse]>([
+            ['has zero balance', { balance: { value: 0, currency: 'USD' } }],
+            ['is in a different currency', { balance: { value: 5000, currency: 'EUR' } }],
+            ['has no balance', {}]
+        ])('should re-enable the pay button when the card %s', async (_, response) => {
+            const onBalanceCheck = jest.fn(resolve => resolve(response));
+            const { dropin, redeemButton } = await mountDropinWithGiftcard(onBalanceCheck);
+
+            await userEvent.click(redeemButton);
+
+            await waitFor(() => expect(onBalanceCheck).toHaveBeenCalledTimes(1));
+            await waitFor(() => expect(redeemButton).toBeEnabled());
+            expect(dropin.dropinRef.state.status.type).toBe('ready');
+        });
+
+        test('should end in the ready status when the balance covers the full amount', async () => {
+            const onBalanceCheck = jest.fn(resolve => resolve({ balance: { value: 5000, currency: 'USD' } }));
+            const { dropin, redeemButton } = await mountDropinWithGiftcard(onBalanceCheck);
+
+            await userEvent.click(redeemButton);
+
+            await waitFor(() => expect(screen.getByRole('button', { name: /Pay \$29.99/i })).toBeEnabled());
+            expect(dropin.dropinRef.state.status.type).toBe('ready');
         });
     });
 });
