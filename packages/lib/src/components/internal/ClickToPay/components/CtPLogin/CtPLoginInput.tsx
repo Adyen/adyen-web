@@ -7,7 +7,7 @@ import Field from '../../../FormFields/Field';
 import InputEmail from '../../../FormFields/InputEmail';
 import { setFocusOnField } from '../../../../../utils/setFocus';
 
-type OnChangeProps = { data: CtPLoginInputDataState; valid; errors; isValid: boolean };
+type OnChangeProps = { data: CtPLoginInputDataState; valid; errors; isValid: boolean | undefined };
 
 interface CtPLoginInputProps {
     disabled: boolean;
@@ -23,7 +23,6 @@ interface CtPLoginInputDataState {
 
 export type CtPLoginInputHandlers = {
     validateInput(): void;
-    focusInput(): void;
 };
 
 const CtPLoginInput = (props: Readonly<CtPLoginInputProps>): h.JSX.Element => {
@@ -35,13 +34,14 @@ const CtPLoginInput = (props: Readonly<CtPLoginInputProps>): h.JSX.Element => {
         rules: loginValidationRules,
         formHolder: containerRef
     });
-    const loginInputHandlersRef = useRef<CtPLoginInputHandlers>({ validateInput: null, focusInput: null });
     const [isLoginInputDirty, setIsLoginInputDirty] = useState<boolean>(false);
 
     const validateInput = useCallback(() => {
         setIsLoginInputDirty(true);
         triggerValidation();
     }, [triggerValidation]);
+
+    const loginInputHandlersRef = useRef<CtPLoginInputHandlers>({ validateInput });
 
     useEffect(() => {
         if (containerRef.current && props.errorMessage) {
@@ -81,8 +81,8 @@ const CtPLoginInput = (props: Readonly<CtPLoginInputProps>): h.JSX.Element => {
                         ? props.errorMessage ||
                           (errors.shopperLogin && typeof errors.shopperLogin?.errorMessage === 'string'
                               ? i18n.get(errors.shopperLogin.errorMessage)
-                              : null)
-                        : null
+                              : undefined)
+                        : undefined
                 }
                 classNameModifiers={['shopperLogin']}
                 errorLive={true}

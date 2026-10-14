@@ -13,7 +13,7 @@ type ClickToPayComponentProps = {
     onDisplayCardComponent?(): void;
 };
 
-const ClickToPayComponent = ({ onDisplayCardComponent }: Readonly<ClickToPayComponentProps>): h.JSX.Element => {
+const ClickToPayComponent = ({ onDisplayCardComponent }: Readonly<ClickToPayComponentProps>): h.JSX.Element | null => {
     const { ctpState, onReady, startIdentityValidation, logoutShopper } = useClickToPayContext();
 
     useEffect(() => {

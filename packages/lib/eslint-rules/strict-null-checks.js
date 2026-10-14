@@ -126,7 +126,6 @@ const STRICT_NULL_CHECKS_BACKLOG = [
     'src/components/Card/components/ClickToPayHolder.tsx',
     'src/components/Card/components/Fastlane/FastlaneSignup.tsx',
     'src/components/Card/components/Fastlane/InfoButton.tsx',
-    'src/components/Card/components/Fastlane/InfoModal.tsx',
     'src/components/Card/components/Fastlane/USOnlyPhoneInput.tsx',
     'src/components/CustomCard/CustomCard.tsx',
     'src/components/CustomCard/CustomCardInput/CustomCardInput.tsx',
@@ -151,28 +150,6 @@ const STRICT_NULL_CHECKS_BACKLOG = [
     'src/components/GooglePay/GooglePay.tsx',
     'src/components/GooglePay/models/PaymentDataRequest.ts',
     'src/components/GooglePay/requests.ts',
-
-    // ── Ticket 10: Click to Pay (98 errors) ──
-    'src/components/ClickToPay/ClickToPay.tsx',
-    'src/components/internal/ClickToPay/ClickToPayComponent.tsx',
-    'src/components/internal/ClickToPay/components/CtPCards/CtPCards.tsx',
-    'src/components/internal/ClickToPay/components/CtPCards/CtPCardsList/CtPCardsList.tsx',
-    'src/components/internal/ClickToPay/components/CtPInfo/CtPInfo.tsx',
-    'src/components/internal/ClickToPay/components/CtPInfo/CtPInfoModal/CtPInfoModal.tsx',
-    'src/components/internal/ClickToPay/components/CtPLogin/CtPLogin.tsx',
-    'src/components/internal/ClickToPay/components/CtPLogin/CtPLoginInput.tsx',
-    'src/components/internal/ClickToPay/components/CtPOneTimePassword/CtPOneTimePassword.tsx',
-    'src/components/internal/ClickToPay/components/CtPOneTimePassword/CtPOneTimePasswordInput/CtPOneTimePasswordInput.tsx',
-    'src/components/internal/ClickToPay/components/CtPOneTimePassword/CtPOneTimePasswordInput/CtPResendOtpLink.tsx',
-    'src/components/internal/ClickToPay/context/ClickToPayContext.ts',
-    'src/components/internal/ClickToPay/context/ClickToPayProvider.tsx',
-    'src/components/internal/ClickToPay/models/ShopperCard.ts',
-    'src/components/internal/ClickToPay/services/ClickToPayService.ts',
-    'src/components/internal/ClickToPay/services/create-clicktopay-service.ts',
-    'src/components/internal/ClickToPay/services/execute-with-timeout.ts',
-    'src/components/internal/ClickToPay/services/sdks/AbstractSrcInitiator.ts',
-    'src/components/internal/ClickToPay/services/sdks/SrcSdkLoader.ts',
-    'src/components/internal/ClickToPay/services/utils.ts',
 
     // ── No ticket yet (316 errors) ──
     // src/components/Ach (19 errors)

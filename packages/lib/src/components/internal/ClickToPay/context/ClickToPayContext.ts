@@ -19,8 +19,8 @@ export interface IClickToPayContext extends Pick<
     ctpState: CtpState;
     cards: ShopperCard[];
     schemes: string[];
-    otpMaskedContact: string;
-    otpNetwork: string;
+    otpMaskedContact: string | undefined;
+    otpNetwork: string | undefined;
     configuration: ClickToPayProps;
     status: UIElementStatus;
     onSubmit(payload: ClickToPayCheckoutPayload): void;
@@ -29,28 +29,30 @@ export interface IClickToPayContext extends Pick<
     onReady(): void;
 }
 
+const noop = (): void => undefined;
+
 const ClickToPayContext = createContext<IClickToPayContext>({
-    status: null,
-    onSubmit: null,
-    onSetStatus: null,
-    onError: null,
-    onReady: null,
-    configuration: null,
-    isStandaloneComponent: null,
-    isCtpPrimaryPaymentMethod: null,
+    status: 'ready',
+    onSubmit: noop,
+    onSetStatus: noop,
+    onError: noop,
+    onReady: noop,
+    configuration: {},
+    isStandaloneComponent: false,
+    isCtpPrimaryPaymentMethod: true,
     isStoringCookies: false,
-    setIsCtpPrimaryPaymentMethod: null,
-    logoutShopper: null,
-    updateStoreCookiesConsent: null,
-    ctpState: null,
+    setIsCtpPrimaryPaymentMethod: noop,
+    logoutShopper: () => Promise.resolve(),
+    updateStoreCookiesConsent: noop,
+    ctpState: CtpState.NotAvailable,
     cards: [],
     schemes: [],
-    otpMaskedContact: null,
-    otpNetwork: null,
-    checkout: null,
-    verifyIfShopperIsEnrolled: null,
-    startIdentityValidation: null,
-    finishIdentityValidation: null
+    otpMaskedContact: undefined,
+    otpNetwork: undefined,
+    checkout: () => Promise.reject(new AdyenCheckoutError('ERROR', 'ClickToPay checkout is not available')),
+    verifyIfShopperIsEnrolled: () => Promise.reject(new AdyenCheckoutError('ERROR', 'ClickToPay is not available')),
+    startIdentityValidation: () => Promise.reject(new AdyenCheckoutError('ERROR', 'ClickToPay is not available')),
+    finishIdentityValidation: () => Promise.reject(new AdyenCheckoutError('ERROR', 'ClickToPay is not available'))
 });
 
 export { ClickToPayContext };

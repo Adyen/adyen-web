@@ -5,8 +5,8 @@ import { ClickToPayScheme } from '../types';
 
 export interface IClickToPayService {
     state: CtpState;
-    shopperCards: ShopperCard[];
-    identityValidationData: IdentityValidationData;
+    shopperCards: ShopperCard[] | null;
+    identityValidationData: IdentityValidationData | null;
     schemes: string[];
     shopperAccountFound: boolean;
     storeCookies: boolean;
