@@ -10,6 +10,8 @@ import { mock } from 'jest-mock-extended';
 import { AmountProvider } from '../../core/Context/AmountProvider';
 import { ICore } from '../../types';
 import { FALLBACK_VALUE } from '../internal/Address/constants';
+import Language from '../../language/Language';
+import type { ILanguageService } from '../../language/LanguageService';
 
 describe('Card', () => {
     const core = setupCoreMock();
@@ -34,6 +36,18 @@ describe('Card', () => {
         test('should format countryCode to lowerCase', () => {
             const card = new CardElement(core, { countryCode: 'KR' });
             expect(card.props.countryCode).toEqual('kr');
+        });
+
+        test('should set the Click to Pay locale from the locale of the checkout', () => {
+            const i18n = new Language({ locale: 'en-GB', service: mock<ILanguageService>({}) });
+            const card = new CardElement(core, { i18n });
+            expect(card.props.clickToPayConfiguration?.locale).toEqual('en_GB');
+        });
+
+        test('should not override the Click to Pay locale when it is configured', () => {
+            const i18n = new Language({ locale: 'en-GB', service: mock<ILanguageService>({}) });
+            const card = new CardElement(core, { i18n, clickToPayConfiguration: { locale: 'fr_CA' } });
+            expect(card.props.clickToPayConfiguration?.locale).toEqual('fr_CA');
         });
 
         test('should return false for showStoreDetailsCheckbox in case of zero-auto transaction, whilst preserving the original value of enableStoreDetail', () => {
