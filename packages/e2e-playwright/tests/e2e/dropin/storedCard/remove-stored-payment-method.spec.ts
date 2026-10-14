@@ -22,7 +22,7 @@ test.describe('Dropin - Remove stored payment method', () => {
             );
             const paymentMethodItem = paymentMethodDetailsLocator.locator('..');
 
-            const removeButton = paymentMethodItem.getByRole('button', { name: 'Remove' });
+            const removeButton = paymentMethodItem.getByRole('button', { name: 'Remove', exact: true });
             await removeButton.click();
             await expect(removeButton).toHaveAttribute('aria-expanded', 'true');
 
