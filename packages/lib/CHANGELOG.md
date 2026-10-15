@@ -1,5 +1,11 @@
 # @adyen/adyen-web
 
+## 6.48.0
+
+### Minor Changes
+
+- New: `onOrderUpdated` now also returns the latest `sessionData` in Sessions flow. ([#4235](https://github.com/Adyen/adyen-web/pull/4235))
+
 ## 6.47.0
 
 ### Minor Changes
