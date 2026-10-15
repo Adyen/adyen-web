@@ -107,8 +107,7 @@ export const IRIS_ISSUERS = [
 // EMI plan labels, derived from mocks/emiPlans/emiPlans.data.ts
 export const EMI_PLANS = {
     hdfc: { name: 'HDFC Bank', firstPlan: /₹51,666.33 x 3 months/, secondPlan: /₹28,166.50 x 6 months/ },
-    icici: { name: 'ICICI Bank', firstPlan: /₹52,366.50 x 3 months/, secondPlan: /₹19,333.22 x 9 months/, tag: 'Low cost' },
-    discountBanner: '-₹4,000.00 discount offer applied for using HDFC Bank'
+    icici: { name: 'ICICI Bank', firstPlan: /₹52,366.50 x 3 months/, secondPlan: /₹19,333.22 x 9 months/, tag: 'Low cost' }
 };
 
 export const TAGS = {
