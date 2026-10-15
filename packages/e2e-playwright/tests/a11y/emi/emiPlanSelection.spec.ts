@@ -2,6 +2,7 @@ import { test, expect } from '../../../fixtures/emi.fixture';
 import { URL_MAP } from '../../../fixtures/URL_MAP';
 import { emiPlansMock } from '../../../mocks/emiPlans/emiPlans.mock';
 import { emiPlansResponseMock } from '../../../mocks/emiPlans/emiPlans.data';
+import { EMI_PLANS } from '../../utils/constants';
 
 test.describe('EMI - Accessibility', () => {
     test.beforeEach(async ({ page, emi }) => {
@@ -35,5 +36,17 @@ test.describe('EMI - Accessibility', () => {
 
         await page.keyboard.press('Tab');
         await expect(emi.planSelection.planSelect).toBeFocused();
+    });
+
+    test('should announce the plan the shopper picks, with the amount reserved on the card and the total paid over time', async ({ emi }) => {
+        await emi.planSelection.selectPlan(EMI_PLANS.hdfc.secondPlan);
+
+        await expect(emi.srLog).toContainText(EMI_PLANS.hdfc.secondPlanAnnouncement);
+    });
+
+    test('should announce the plan a newly selected provider resets to', async ({ emi }) => {
+        await emi.planSelection.selectProvider(EMI_PLANS.icici.name);
+
+        await expect(emi.srLog).toContainText(EMI_PLANS.icici.firstPlanAnnouncement);
     });
 });
