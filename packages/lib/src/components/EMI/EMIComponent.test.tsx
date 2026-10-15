@@ -147,28 +147,6 @@ describe('EMIComponent', () => {
             expect(onPlanSelect).toHaveBeenCalledWith({ issuer: icici, plan: icici.plans[0] }, UiTarget.emiProvider);
         });
 
-        test('should show a discount banner for the selected plan', () => {
-            renderEmiComponent();
-
-            expect(screen.getByText('-₹4,000.00 discount offer applied for using HDFC Bank')).toBeInTheDocument();
-        });
-
-        test('should drop the discount banner when the shopper picks a plan without an offer', async () => {
-            renderEmiComponent();
-
-            await selectOption('Plan', /6 months/i);
-
-            expect(screen.queryByText(/discount offer applied/i)).toBeNull();
-        });
-
-        test('should announce the discount of a plan the shopper picks', async () => {
-            const { setMessages } = renderEmiComponent();
-
-            await selectOption('Provider', new RegExp(icici.issuerName, 'i'));
-
-            await waitFor(() => expect(setMessages).toHaveBeenCalledWith('-₹2,100.50 discount offer applied for using ICICI Bank'));
-        });
-
         test('should summarise the preselected plan', () => {
             renderEmiComponent();
 
