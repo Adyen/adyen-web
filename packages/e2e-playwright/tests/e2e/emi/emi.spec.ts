@@ -38,9 +38,9 @@ test.describe('EMI - CardEmi (native pay button)', () => {
 
         // The first ICICI plan of mocks/emiPlans/emiPlans.data.ts
         expect(emiPlan).toEqual({
-            issuerName: 'ICICI',
+            issuerCode: 'ICICI',
             fundingSource: 'credit',
-            planType: 'LOW_COST',
+            planType: 'lowCost',
             tenureMonths: 3,
             interestRateBps: 750,
             appliedOfferIds: ['offer-icici-lowcost']
