@@ -31,6 +31,24 @@ export const getPlanTags = (types: EmiPlanTypeKey[], i18n: Language): TagProps[]
 export const formatInterestRate = (interestRateBps: number, i18n: Language): string =>
     `${getLocalisedPercentageFromBasisPoints(interestRateBps, i18n.locale)} ${i18n.get('emi.perAnnum')}`;
 
+export const getPlanLabel = (plan: EmiPlan, i18n: Language): string => {
+    const { monthlyPayableAmount } = plan.transactionAmounts;
+    const tenure = i18n.get('installmentOptionMonths', { values: { times: String(plan.tenureMonths) } });
+    const label = `${i18n.amount(monthlyPayableAmount.value, monthlyPayableAmount.currency)} x ${tenure}`;
+
+    if (plan.type === 'noCost') return label;
+
+    return `${label} | @${formatInterestRate(plan.interestRateBps, i18n)}`;
+};
+
+export const getSelectionAnnouncement = (plan: EmiPlan, i18n: Language): string => {
+    const { authorizationAmount, totalPayableAmount } = plan.transactionAmounts;
+    const reservedAmount = i18n.amount(authorizationAmount.value, authorizationAmount.currency);
+    const totalAmount = i18n.amount(totalPayableAmount.value, totalPayableAmount.currency);
+
+    return `${getPlanLabel(plan, i18n)}. ${i18n.get('emi.amountReservedOnCard')}: ${reservedAmount}. ${i18n.get('emi.totalAmountOverTime')}: ${totalAmount}`;
+};
+
 interface EmiPlansErrorCause {
     title?: string;
     status?: number;

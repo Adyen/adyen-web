@@ -2,11 +2,13 @@ import { h, Fragment } from 'preact';
 import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
 import Spinner from '../internal/Spinner';
 import { useCoreContext } from '../../core/Context/CoreProvider';
+import { useA11yReporter } from '../../core/Errors/useA11yReporter';
 import { useLoadingA11yReporter } from '../../core/Errors/useLoadingA11yReporter';
 import { EMIPlanSelection } from './components/EMIPlanSelection';
 import { EMIPlanSummary } from './components/EMIPlanSummary';
 import { EMITerms } from './components/EMITerms';
 import { getUniqueId } from '../../utils/idGenerator';
+import { getSelectionAnnouncement } from './utils';
 import type UIElement from '../internal/UIElement/UIElement';
 import type { ComponentMethodsRef, UIElementStatus } from '../internal/UIElement/types';
 import type { PayButtonProps } from '../internal/PayButton/PayButton';
@@ -87,6 +89,9 @@ function EMIPlans({
 }: Readonly<EMIPlansProps>): h.JSX.Element {
     const { i18n } = useCoreContext();
     const [selection, setSelection] = useState<EmiSelection | null>(() => getDefaultSelection(issuers));
+    const [announcement, setAnnouncement] = useState<string>();
+
+    useA11yReporter(announcement);
 
     const titleId = useMemo(() => getUniqueId('adyen-checkout-emi-title'), []);
     const instructionsId = useMemo(() => getUniqueId('adyen-checkout-emi-instructions'), []);
@@ -98,6 +103,7 @@ function EMIPlans({
 
     const handleSelectionChange = (nextSelection: EmiSelection, target: EmiSelectTarget): void => {
         setSelection(nextSelection);
+        setAnnouncement(getSelectionAnnouncement(nextSelection.plan, i18n));
         onPlanSelect(nextSelection, target);
     };
 
