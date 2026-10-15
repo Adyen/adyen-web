@@ -6,7 +6,7 @@ The installment plans available to a shopper are priced for a specific amount an
 endpoint the SDK calls itself, in both the sessions and the advanced flow, authenticated by the client key and
 an opaque token delivered on the `emi` entry of the payment methods list.
 
-One response drives two dropdowns, a discount banner, a summary table and the `emiPlan` object sent to
+One response drives two dropdowns, a summary table and the `emiPlan` object sent to
 `/payments`.
 
 The question this ADR answers is not whether to convert that response into a view model. It is **which side of
@@ -199,7 +199,7 @@ display order, and the SDK consumes it directly.
 | Provider plan-type tags               | API   | `issuer.availablePlanTypes`                                                  |
 | Provider discount                     | API   | `issuer.bestOffer`                                                           |
 | Applied offers                        | API   | `plan.offers`, whose membership means applied                                |
-| Plan discount, banner, and summary    | API   | `transactionAmounts.totalInstantDiscountAmount` and `interestDiscountAmount` |
+| Plan discount and summary             | API   | `transactionAmounts.totalInstantDiscountAmount` and `interestDiscountAmount` |
 | Amount reserved on the card           | API   | `transactionAmounts.authorizationAmount`                                     |
 | `appliedOfferIds` sent to `/payments` | SDK   | Every `offerId` of `plan.offers`, unchanged                                  |
 | Issuer and plan display order         | API   | Response order, plans ascending by `tenureMonths`                            |
