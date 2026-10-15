@@ -24,12 +24,15 @@ test.describe('EMI - plan selection', () => {
         ]);
         // The interest discount is tagged with the plan type whose offer buys the interest down
         await expect(planSelection.summaryLabels.filter({ hasText: /Interest discount/ })).toContainText('No cost');
+        await expect(planSelection.summaryValue(/^Instant discount/)).toHaveText(hdfc.instantDiscount);
+        await expect(planSelection.summaryValue(/^Interest discount/)).toHaveText(hdfc.interestDiscount);
 
         const planOptions = await planSelection.openPlanList();
         await expect(planOptions).toHaveCount(2);
         await planOptions.filter({ hasText: hdfc.secondPlan }).click();
 
         await expect(planSelection.planSelect).toContainText(hdfc.secondPlan);
+        await expect(planSelection.summaryLabels.filter({ hasText: /^Instant discount/ })).toHaveCount(0);
 
         await planSelection.selectProvider(icici.name);
 

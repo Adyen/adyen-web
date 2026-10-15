@@ -85,7 +85,7 @@ const emiPlansResponseMock: EmiPlansResponseMock = {
                         totalPayableAmount: { value: 15499900, currency: 'INR' },
                         totalInterestAmount: { value: 400000, currency: 'INR' },
                         totalInstantDiscountAmount: { value: 400000, currency: 'INR' },
-                        interestDiscountAmount: { value: 400000, currency: 'INR' }
+                        interestDiscountAmount: { value: 250000, currency: 'INR' }
                     },
                     processingAmounts,
                     offers: [
