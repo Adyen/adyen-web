@@ -23,6 +23,13 @@ class EMIPlanSelection {
         this.summaryValues = this.planSummaryGroup.getByRole('definition');
     }
 
+    summaryValue(label: string | RegExp): Locator {
+        return this.planSummaryGroup
+            .locator('div')
+            .filter({ has: this.page.getByRole('term').filter({ hasText: label }) })
+            .getByRole('definition');
+    }
+
     async openProviderList(): Promise<Locator> {
         return this.openList(this.providerSelect);
     }
