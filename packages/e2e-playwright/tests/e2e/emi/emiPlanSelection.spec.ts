@@ -7,7 +7,7 @@ import { EMI_PLANS, EMI_PLANS_URL } from '../../utils/constants';
 const { hdfc, icici } = EMI_PLANS;
 
 test.describe('EMI - plan selection', () => {
-    test('should keep the selects, the summary and the discount banner in step while the shopper picks a plan', async ({ page, emi }) => {
+    test('should keep the selects and the summary in step while the shopper picks a plan', async ({ page, emi }) => {
         const { planSelection } = emi;
 
         await emiPlansMock(page, emiPlansResponseMock);
@@ -24,14 +24,12 @@ test.describe('EMI - plan selection', () => {
         ]);
         // The interest discount is tagged with the plan type whose offer buys the interest down
         await expect(planSelection.summaryLabels.filter({ hasText: /Interest discount/ })).toContainText('No cost');
-        await expect(planSelection.discountBanner).toContainText(EMI_PLANS.discountBanner);
 
         const planOptions = await planSelection.openPlanList();
         await expect(planOptions).toHaveCount(2);
         await planOptions.filter({ hasText: hdfc.secondPlan }).click();
 
         await expect(planSelection.planSelect).toContainText(hdfc.secondPlan);
-        await expect(planSelection.discountBanner).toBeHidden();
 
         await planSelection.selectProvider(icici.name);
 

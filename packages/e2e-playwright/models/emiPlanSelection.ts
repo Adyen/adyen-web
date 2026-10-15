@@ -6,7 +6,6 @@ class EMIPlanSelection {
     readonly planSelect: Locator;
     readonly planGroup: Locator;
     readonly planSummaryGroup: Locator;
-    readonly discountBanner: Locator;
     readonly summaryLabels: Locator;
     readonly summaryValues: Locator;
 
@@ -20,7 +19,6 @@ class EMIPlanSelection {
         this.planSelect = this.rootElement.getByRole('combobox', { name: 'Plan' });
         this.planGroup = this.rootElement.getByRole('group', { name: 'EMI plan' });
         this.planSummaryGroup = this.rootElement.getByRole('group', { name: 'Plan summary' });
-        this.discountBanner = this.rootElement.getByText(/discount offer applied for using/i);
         this.summaryLabels = this.planSummaryGroup.getByRole('term');
         this.summaryValues = this.planSummaryGroup.getByRole('definition');
     }
