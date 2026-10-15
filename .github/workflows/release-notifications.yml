@@ -64,23 +64,34 @@ jobs:
   queue-new-thread:
     needs: [resolve-version, load-thread-ts]
     if: github.event.action == 'enqueued' && contains(github.head_ref, 'changeset-release') && needs.load-thread-ts.outputs.thread_ts == ''
-    uses: ./.github/workflows/slack-channel-message.yml
-    with:
-      channel: ${{ vars.CHECKOUT_WEB_CHANNEL_ID }}
-      message: "Starting Release ${{ needs.resolve-version.outputs.version }}..."
-    secrets:
-      SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      thread_ts: ${{ steps.send-message.outputs.thread-ts }}
+    steps:
+      - name: Send Slack message
+        id: send-message
+        uses: Adyen/github-actions/slack-app-send-message@66cba28775090b2aa2c6d5bfbbde24264b549d15
+        with:
+          bot-token: ${{ secrets.SLACK_BOT_TOKEN }}
+          channel: ${{ vars.CHECKOUT_WEB_CHANNEL_ID }}
+          message: "Starting Release ${{ needs.resolve-version.outputs.version }}"
 
   queue-retry:
     needs: [resolve-version, load-thread-ts]
     if: github.event.action == 'enqueued' && contains(github.head_ref, 'changeset-release') && needs.load-thread-ts.outputs.thread_ts != ''
-    uses: ./.github/workflows/slack-channel-message.yml
-    with:
-      channel: ${{ vars.CHECKOUT_WEB_CHANNEL_ID }}
-      message: "Release ${{ needs.resolve-version.outputs.version }} PR is re-entering the merge queue"
-      thread_ts: ${{ needs.load-thread-ts.outputs.thread_ts }}
-    secrets:
-      SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Send Slack message
+        uses: Adyen/github-actions/slack-app-send-message@66cba28775090b2aa2c6d5bfbbde24264b549d15
+        with:
+          bot-token: ${{ secrets.SLACK_BOT_TOKEN }}
+          channel: ${{ vars.CHECKOUT_WEB_CHANNEL_ID }}
+          message: "Release ${{ needs.resolve-version.outputs.version }} PR is re-entering the merge queue"
+          thread-ts: ${{ needs.load-thread-ts.outputs.thread_ts }}
 
   save-thread-state:
     needs: [resolve-version, queue-new-thread]
@@ -106,78 +117,106 @@ jobs:
   removed-from-queue:
     needs: [resolve-version, load-thread-ts]
     if: github.event.action == 'dequeued' && github.event.reason != 'MERGE' && github.event.reason != 'ALREADY_MERGED' && contains(github.head_ref, 'changeset-release')
-    uses: ./.github/workflows/slack-channel-message.yml
-    with:
-      channel: ${{ vars.CHECKOUT_WEB_CHANNEL_ID }}
-      message: "Release ${{ needs.resolve-version.outputs.version }} PR was removed from the merge queue and will be re-queued"
-      thread_ts: ${{ needs.load-thread-ts.outputs.thread_ts }}
-    secrets:
-      SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Send Slack message
+        uses: Adyen/github-actions/slack-app-send-message@66cba28775090b2aa2c6d5bfbbde24264b549d15
+        with:
+          bot-token: ${{ secrets.SLACK_BOT_TOKEN }}
+          channel: ${{ vars.CHECKOUT_WEB_CHANNEL_ID }}
+          message: "Release ${{ needs.resolve-version.outputs.version }} PR was removed from the merge queue and will be re-queued"
+          thread-ts: ${{ needs.load-thread-ts.outputs.thread_ts }}
 
   merged:
     needs: [resolve-version, load-thread-ts]
     if: github.event.action == 'closed' && github.event.pull_request.merged && contains(github.head_ref, 'changeset-release')
-    uses: ./.github/workflows/slack-channel-message.yml
-    with:
-      channel: ${{ vars.CHECKOUT_WEB_CHANNEL_ID }}
-      message: "Release ${{ needs.resolve-version.outputs.version }} branch has been merged into main."
-      thread_ts: ${{ needs.load-thread-ts.outputs.thread_ts }}
-    secrets:
-      SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Send Slack message
+        uses: Adyen/github-actions/slack-app-send-message@66cba28775090b2aa2c6d5bfbbde24264b549d15
+        with:
+          bot-token: ${{ secrets.SLACK_BOT_TOKEN }}
+          channel: ${{ vars.CHECKOUT_WEB_CHANNEL_ID }}
+          message: "Release ${{ needs.resolve-version.outputs.version }} branch has been merged into main."
+          thread-ts: ${{ needs.load-thread-ts.outputs.thread_ts }}
 
   gh-release:
     needs: [resolve-version, load-thread-ts]
     if: github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success' && (github.event.workflow_run.name == 'GitHub Release' || (github.event.workflow_run.name == 'Check Commit Message' && contains(github.event.workflow_run.head_commit.message, '[ci] release')))
-    uses: ./.github/workflows/slack-channel-message.yml
-    with:
-      channel: ${{ vars.CHECKOUT_WEB_CHANNEL_ID }}
-      message: "GitHub release ${{ needs.resolve-version.outputs.version }} has been created. You can check it here: https://github.com/Adyen/adyen-web/releases/tag/v${{ needs.resolve-version.outputs.version }}"
-      thread_ts: ${{ needs.load-thread-ts.outputs.thread_ts }}
-    secrets:
-      SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Send Slack message
+        uses: Adyen/github-actions/slack-app-send-message@66cba28775090b2aa2c6d5bfbbde24264b549d15
+        with:
+          bot-token: ${{ secrets.SLACK_BOT_TOKEN }}
+          channel: ${{ vars.CHECKOUT_WEB_CHANNEL_ID }}
+          message: "GitHub release ${{ needs.resolve-version.outputs.version }} has been created. You can check it here: https://github.com/Adyen/adyen-web/releases/tag/v${{ needs.resolve-version.outputs.version }}"
+          thread-ts: ${{ needs.load-thread-ts.outputs.thread_ts }}
 
   gh-release-failed:
     needs: [resolve-version, load-thread-ts]
     if: github.event_name == 'workflow_run' && github.event.workflow_run.conclusion != 'success' && (github.event.workflow_run.name == 'GitHub Release' || (github.event.workflow_run.name == 'Check Commit Message' && contains(github.event.workflow_run.head_commit.message, '[ci] release')))
-    uses: ./.github/workflows/slack-channel-message.yml
-    with:
-      channel: ${{ vars.CHECKOUT_WEB_CHANNEL_ID }}
-      message: "GitHub Release workflow failed for ${{ needs.resolve-version.outputs.version }}."
-      thread_ts: ${{ needs.load-thread-ts.outputs.thread_ts }}
-    secrets:
-      SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Send Slack message
+        uses: Adyen/github-actions/slack-app-send-message@66cba28775090b2aa2c6d5bfbbde24264b549d15
+        with:
+          bot-token: ${{ secrets.SLACK_BOT_TOKEN }}
+          channel: ${{ vars.CHECKOUT_WEB_CHANNEL_ID }}
+          message: "GitHub Release workflow failed for ${{ needs.resolve-version.outputs.version }}."
+          thread-ts: ${{ needs.load-thread-ts.outputs.thread_ts }}
 
   npm-publish:
     needs: [resolve-version, load-thread-ts]
     if: github.event_name == 'workflow_run' && github.event.workflow_run.name == 'Publish Package' && github.event.workflow_run.conclusion == 'success'
-    uses: ./.github/workflows/slack-channel-message.yml
-    with:
-      channel: ${{ vars.CHECKOUT_WEB_CHANNEL_ID }}
-      message: "Release ${{ needs.resolve-version.outputs.version }} has been successfully published to npm! You can find it here: https://www.npmjs.com/package/@adyen/adyen-web/v/${{ needs.resolve-version.outputs.version }}"
-      thread_ts: ${{ needs.load-thread-ts.outputs.thread_ts }}
-    secrets:
-      SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Send Slack message
+        uses: Adyen/github-actions/slack-app-send-message@66cba28775090b2aa2c6d5bfbbde24264b549d15
+        with:
+          bot-token: ${{ secrets.SLACK_BOT_TOKEN }}
+          channel: ${{ vars.CHECKOUT_WEB_CHANNEL_ID }}
+          message: "Release ${{ needs.resolve-version.outputs.version }} has been successfully published to npm! You can find it here: https://www.npmjs.com/package/@adyen/adyen-web/v/${{ needs.resolve-version.outputs.version }}"
+          thread-ts: ${{ needs.load-thread-ts.outputs.thread_ts }}
 
   npm-publish-failed:
     needs: [resolve-version, load-thread-ts]
     if: github.event_name == 'workflow_run' && github.event.workflow_run.name == 'Publish Package' && github.event.workflow_run.conclusion != 'success'
-    uses: ./.github/workflows/slack-channel-message.yml
-    with:
-      channel: ${{ vars.CHECKOUT_WEB_CHANNEL_ID }}
-      message: "Publish Package workflow failed for ${{ needs.resolve-version.outputs.version }}."
-      thread_ts: ${{ needs.load-thread-ts.outputs.thread_ts }}
-    secrets:
-      SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Send Slack message
+        uses: Adyen/github-actions/slack-app-send-message@66cba28775090b2aa2c6d5bfbbde24264b549d15
+        with:
+          bot-token: ${{ secrets.SLACK_BOT_TOKEN }}
+          channel: ${{ vars.CHECKOUT_WEB_CHANNEL_ID }}
+          message: "Publish Package workflow failed for ${{ needs.resolve-version.outputs.version }}."
+          thread-ts: ${{ needs.load-thread-ts.outputs.thread_ts }}
 
   npm-publish-release-notes:
     needs: resolve-version
     if: github.event_name == 'workflow_run' && github.event.workflow_run.name == 'Publish Package' && github.event.workflow_run.conclusion == 'success'
-    uses: ./.github/workflows/slack-channel-message.yml
-    with:
-      channel: ${{ vars.WEB_RELEASE_NOTES_CHANNEL_ID }}
-      message: "Hello team! We released a new SDK version. The release notes are available here: https://github.com/Adyen/adyen-web/releases/tag/v${{ needs.resolve-version.outputs.version }}"
-    secrets:
-      SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Send Slack message
+        uses: Adyen/github-actions/slack-app-send-message@66cba28775090b2aa2c6d5bfbbde24264b549d15
+        with:
+          bot-token: ${{ secrets.SLACK_BOT_TOKEN }}
+          channel: ${{ vars.WEB_RELEASE_NOTES_CHANNEL_ID }}
+          message: "Hello team! We released a new SDK version. The release notes are available here: https://github.com/Adyen/adyen-web/releases/tag/v${{ needs.resolve-version.outputs.version }}"
 
   cleanup-after-npm-publish:
     needs: [resolve-version, load-thread-ts, npm-publish]
