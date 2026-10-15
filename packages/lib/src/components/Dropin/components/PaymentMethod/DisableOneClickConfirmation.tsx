@@ -2,6 +2,7 @@ import { h } from 'preact';
 import classNames from 'classnames';
 
 import { useCoreContext } from '../../../../core/Context/CoreProvider';
+import Button from '../../../internal/Button';
 import { stopPropagationForActionKeys } from '../../../internal/Button/stopPropagationForActionKeys';
 import './DisableOneClickConfirmation.scss';
 
@@ -19,32 +20,20 @@ const DisableOneClickConfirmation = ({ id, open, onDisable, onCancel }) => {
             <div className="adyen-checkout__payment-method__disable-confirmation__content">
                 {i18n.get('storedPaymentMethod.disable.confirmation')}
                 <div className="adyen-checkout__payment-method__disable-confirmation__buttons">
-                    <button
-                        type="button"
-                        className={classNames(
-                            'adyen-checkout__button',
-                            'adyen-checkout__payment-method__disable-confirmation__button',
-                            'adyen-checkout__payment-method__disable-confirmation__button--remove'
-                        )}
+                    <Button
+                        classNameModifiers={['disable-confirmation', 'disable-confirmation-remove']}
                         disabled={!open}
                         onClick={onDisable}
                         onKeyDown={stopPropagationForActionKeys}
-                    >
-                        {i18n.get('storedPaymentMethod.disable.confirmButton')}
-                    </button>
-                    <button
-                        type="button"
-                        className={classNames(
-                            'adyen-checkout__button',
-                            'adyen-checkout__payment-method__disable-confirmation__button',
-                            'adyen-checkout__payment-method__disable-confirmation__button--cancel'
-                        )}
+                        label={i18n.get('storedPaymentMethod.disable.confirmButton')}
+                    />
+                    <Button
+                        classNameModifiers={['disable-confirmation', 'disable-confirmation-cancel']}
                         disabled={!open}
                         onClick={onCancel}
                         onKeyDown={stopPropagationForActionKeys}
-                    >
-                        {i18n.get('storedPaymentMethod.disable.cancelButton')}
-                    </button>
+                        label={i18n.get('storedPaymentMethod.disable.cancelButton')}
+                    />
                 </div>
             </div>
         </div>

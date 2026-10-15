@@ -46,40 +46,40 @@ $color-alert: variable-generator.token(color-background-critical-strong, false);
 
 .adyen-checkout__payment-method__disable-confirmation__buttons {
     display: flex;
-}
 
-.adyen-checkout__payment-method__disable-confirmation__button {
-    font-size: variable-generator.token(text-body-font-size);
-    background: variable-generator.token(color-background-critical-strong);
-    border: variable-generator.token(border-width-s) solid transparent;
-    border-radius: variable-generator.token(border-radius-m);
-    color: variable-generator.token(color-label-on-color);
-    cursor: pointer;
-    display: block;
-    height: auto;
-    margin: 0 0 0 variable-generator.token(spacer-040);
-    padding: variable-generator.token(spacer-040);
-    width: auto;
+    .adyen-checkout__button--disable-confirmation {
+        font-size: variable-generator.token(text-body-font-size);
+        background: variable-generator.token(color-background-critical-strong);
+        border: variable-generator.token(border-width-s) solid transparent;
+        border-radius: variable-generator.token(border-radius-m);
+        color: variable-generator.token(color-label-on-color);
+        cursor: pointer;
+        display: block;
+        height: auto;
+        margin: 0 0 0 variable-generator.token(spacer-040);
+        padding: variable-generator.token(spacer-040);
+        width: auto;
 
-    &:hover,
-    &:hover:focus {
-        box-shadow: none;
-        background: color.adjust($color-alert, $lightness: -5%);
+        &:hover,
+        &:hover:focus {
+            box-shadow: none;
+            background: color.adjust($color-alert, $lightness: -5%);
+        }
+
+        &:active,
+        &:hover:active {
+            background: color.adjust($color-alert, $lightness: -10%);
+            box-shadow: none;
+        }
+
+        &-remove,
+        &-remove:disabled {
+            border-color: variable-generator.token(color-label-on-color);
+        }
+
+        &-cancel,
+        &-cancel:disabled {
+            border-color: transparent;
+        }
     }
-
-    &:active,
-    &:hover:active {
-        background: color.adjust($color-alert, $lightness: -10%);
-        box-shadow: none;
-    }
-}
-
-.adyen-checkout__payment-method__disable-confirmation__button--remove,
-.adyen-checkout__payment-method__disable-confirmation__button--remove:disabled {
-    border-color: variable-generator.token(color-label-on-color);
-}
-
-.adyen-checkout__payment-method__disable-confirmation__button--cancel,
-.adyen-checkout__payment-method__disable-confirmation__button--cancel:disabled {
-    border-color: transparent;
 }
