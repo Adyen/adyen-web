@@ -17,24 +17,18 @@ describe('buildEmiPlanPayload', () => {
     test('should build the payment request object of the selected plan', () => {
         expect(buildEmiPlanPayload(hdfc, hdfcNoCost)).toEqual({
             tenureMonths: 3,
-            issuerName: 'HDFC',
+            issuerCode: 'HDFC',
             fundingSource: 'credit',
-            planType: 'NO_COST',
+            planType: 'noCost',
             interestRateBps: 1550,
             appliedOfferIds: ['offer-hdfc-cashback', 'offer-hdfc-nocost']
         });
     });
 
-    test('should send every plan type in upper snake case', () => {
-        expect(buildEmiPlanPayload(hdfc, hdfcNoCost).planType).toBe('NO_COST');
-        expect(buildEmiPlanPayload(hdfc, hdfcStandard).planType).toBe('STANDARD');
-        expect(buildEmiPlanPayload(icici, iciciLowCost).planType).toBe('LOW_COST');
-    });
-
-    test('should send a plan type it does not know in the same casing', () => {
-        const unknown = { ...hdfcNoCost, type: 'zeroCost' } as unknown as EmiPlan;
-
-        expect(buildEmiPlanPayload(hdfc, unknown).planType).toBe('ZERO_COST');
+    test('should echo every plan type as the response spells it', () => {
+        expect(buildEmiPlanPayload(hdfc, hdfcNoCost).planType).toBe(hdfcNoCost.type);
+        expect(buildEmiPlanPayload(hdfc, hdfcStandard).planType).toBe(hdfcStandard.type);
+        expect(buildEmiPlanPayload(icici, iciciLowCost).planType).toBe(iciciLowCost.type);
     });
 
     test('should echo the funding source of the issuer as the response spells it', () => {
@@ -42,12 +36,12 @@ describe('buildEmiPlanPayload', () => {
         expect(buildEmiPlanPayload(emiDebitIssuerMock, emiDebitIssuerMock.plans[0]).fundingSource).toBe('debit');
     });
 
-    test('should send the issuer code under issuerName, not the name the provider row displays', () => {
+    test('should send the issuer code, not the name the provider row displays', () => {
         const payload = buildEmiPlanPayload(hdfc, hdfcNoCost);
 
-        expect(payload.issuerName).toBe(hdfc.issuerCode);
-        expect(payload.issuerName).not.toBe(hdfc.issuerName);
-        expect(payload).not.toHaveProperty('issuerCode');
+        expect(payload.issuerCode).toBe(hdfc.issuerCode);
+        expect(payload.issuerCode).not.toBe(hdfc.issuerName);
+        expect(payload).not.toHaveProperty('issuerName');
     });
 
     test('should echo the tenure and the rate of the selected plan', () => {
@@ -89,7 +83,7 @@ describe('buildEmiPlanPayload', () => {
             'appliedOfferIds',
             'fundingSource',
             'interestRateBps',
-            'issuerName',
+            'issuerCode',
             'planType',
             'tenureMonths'
         ]);
@@ -101,11 +95,11 @@ describe('buildEmiPlanPayload', () => {
         );
 
         payloads.forEach(payload => {
-            expect(payload.issuerName).not.toHaveLength(0);
+            expect(payload.issuerCode).not.toHaveLength(0);
             expect(payload.tenureMonths).toBeGreaterThan(0);
             expect(payload.interestRateBps).toBeGreaterThan(0);
             expect(payload.fundingSource).toBe('credit');
-            expect(['STANDARD', 'LOW_COST', 'NO_COST']).toContain(payload.planType);
+            expect(['standard', 'lowCost', 'noCost']).toContain(payload.planType);
         });
     });
 });

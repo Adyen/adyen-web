@@ -6,16 +6,14 @@ import type Language from '../../language/Language';
 import type { TagProps } from '../internal/Tag/types';
 import type { EmiIssuer, EmiPlan, EmiPlanPayload, EmiPlanTypeKey } from './types';
 
-const toPayloadPlanType = (type: string): string => type.replace(/([a-z0-9])([A-Z])/g, '$1_$2').toUpperCase();
-
 export const buildEmiPlanPayload = (issuer: EmiIssuer, plan: EmiPlan): EmiPlanPayload => {
     const appliedOfferIds = plan.offers?.map(offer => offer.offerId);
 
     return {
         tenureMonths: plan.tenureMonths,
-        issuerName: issuer.issuerCode,
+        issuerCode: issuer.issuerCode,
         fundingSource: issuer.fundingSource,
-        planType: toPayloadPlanType(plan.type),
+        planType: plan.type,
         interestRateBps: plan.interestRateBps,
         ...(appliedOfferIds?.length && { appliedOfferIds })
     };
