@@ -28,6 +28,10 @@ const formatDiscount = (amount: PaymentAmount) => i18n.amount(-amount.value, amo
 
 const labels = () => screen.getAllByRole('term').map(term => term.textContent);
 const values = () => screen.getAllByRole('definition').map(definition => definition.textContent);
+const valuesByLabel = () => {
+    const rowValues = values();
+    return Object.fromEntries(labels().map((label, index) => [label, rowValues[index]]));
+};
 
 const renderPlanSummary = (plan: EmiPlan, { amount }: { amount?: PaymentAmount } = { amount: EMI_FIXTURE_CHECKOUT_AMOUNT }) =>
     render(
@@ -38,9 +42,9 @@ const renderPlanSummary = (plan: EmiPlan, { amount }: { amount?: PaymentAmount }
         </CoreProvider>
     );
 
-const plansDiscountingInterest: [planType: string, plan: EmiPlan, tag: string][] = [
-    ['no cost', noCostPlanWithDiscount, 'No cost'],
-    ['low cost', lowCostPlanWithDiscount, 'Low cost']
+const plansDiscountingInterest: [planType: string, plan: EmiPlan, tag: string, instantDiscount: string, interestDiscount: string][] = [
+    ['no cost', noCostPlanWithDiscount, 'No cost', '-₹4,000.00', '-₹2,500.00'],
+    ['low cost', lowCostPlanWithDiscount, 'Low cost', '-₹2,100.50', '-₹1,500.00']
 ];
 
 describe('EMIPlanSummary', () => {
@@ -63,7 +67,7 @@ describe('EMIPlanSummary', () => {
         ]);
     });
 
-    describe.each(plansDiscountingInterest)('%s plan', (_planType, plan, tag) => {
+    describe.each(plansDiscountingInterest)('%s plan', (_planType, plan, tag, instantDiscount, interestDiscount) => {
         const { authorizationAmount, totalInstantDiscountAmount, interestDiscountAmount, totalInterestAmount, totalPayableAmount } =
             plan.transactionAmounts;
 
@@ -78,6 +82,17 @@ describe('EMIPlanSummary', () => {
                 formatAmount(totalInterestAmount),
                 formatAmount(totalPayableAmount)
             ]);
+        });
+
+        test('should show each discount as a negative amount against its own row', () => {
+            renderPlanSummary(plan);
+
+            expect(valuesByLabel()).toEqual(
+                expect.objectContaining({
+                    'Instant discount': instantDiscount,
+                    [`Interest discount${tag}`]: interestDiscount
+                })
+            );
         });
 
         test('should tag the interest discount with the plan type it comes with', () => {
@@ -117,6 +132,16 @@ describe('EMIPlanSummary', () => {
 
         expect(labels()).toContain('Interest discount');
         expect(values()).toContain(formatDiscount(interestDiscountAmount));
+    });
+
+    test('should render the instant discount of a plan that carries no interest discount', () => {
+        renderPlanSummary({
+            ...standardPlanWithInterest,
+            transactionAmounts: { ...standardPlanWithInterest.transactionAmounts, totalInstantDiscountAmount: { value: 100000, currency: 'INR' } }
+        });
+
+        expect(labels()).not.toContain('Interest discount');
+        expect(valuesByLabel()).toEqual(expect.objectContaining({ 'Instant discount': '-₹1,000.00' }));
     });
 
     test('should not render the discount rows when the plan carries neither discount', () => {
