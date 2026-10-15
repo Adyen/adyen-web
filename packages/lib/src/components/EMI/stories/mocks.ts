@@ -46,7 +46,7 @@ export const emiPlansResponseMock: EmiPlansResponse = {
                         totalPayableAmount: { value: 15499900, currency: 'INR' },
                         totalInterestAmount: { value: 400000, currency: 'INR' },
                         totalInstantDiscountAmount: { value: 400000, currency: 'INR' },
-                        interestDiscountAmount: { value: 400000, currency: 'INR' }
+                        interestDiscountAmount: { value: 250000, currency: 'INR' }
                     },
                     processingAmounts,
                     offers: [
@@ -86,7 +86,7 @@ export const emiPlansResponseMock: EmiPlansResponse = {
                         totalPayableAmount: { value: 15709950, currency: 'INR' },
                         totalInterestAmount: { value: 420100, currency: 'INR' },
                         totalInstantDiscountAmount: { value: 210050, currency: 'INR' },
-                        interestDiscountAmount: { value: 210050, currency: 'INR' }
+                        interestDiscountAmount: { value: 150000, currency: 'INR' }
                     },
                     processingAmounts: percentageProcessingAmounts,
                     offers: [{ offerId: 'offer-icici-lowcost', type: 'DISCOUNT' }]

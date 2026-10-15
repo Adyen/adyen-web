@@ -65,6 +65,15 @@ const selectOption = async (label: string, option: RegExp) => {
     await userEvent.click(within(list).getByRole('option', { name: option }));
 };
 
+const getSummaryValue = (label: string): string | null => {
+    const summary = screen.getByRole('group', { name: 'Plan summary' });
+    const index = within(summary)
+        .getAllByRole('term')
+        .findIndex(term => term.textContent === label);
+
+    return index === -1 ? null : within(summary).getAllByRole('definition')[index].textContent;
+};
+
 describe('EMIComponent', () => {
     afterEach(() => {
         jest.restoreAllMocks();
@@ -145,6 +154,18 @@ describe('EMIComponent', () => {
 
             expect(onPlanSelect).toHaveBeenCalledTimes(1);
             expect(onPlanSelect).toHaveBeenCalledWith({ issuer: icici, plan: icici.plans[0] }, UiTarget.emiProvider);
+        });
+
+        test('should keep the instant discount row in step with the plan and provider the shopper picks', async () => {
+            renderEmiComponent();
+
+            expect(getSummaryValue('Instant discount')).toBe('-₹4,000.00');
+
+            await selectOption('Plan', /6 months/i);
+            expect(getSummaryValue('Instant discount')).toBeNull();
+
+            await selectOption('Provider', new RegExp(icici.issuerName, 'i'));
+            expect(getSummaryValue('Instant discount')).toBe('-₹2,100.50');
         });
 
         test('should summarise the preselected plan', () => {
