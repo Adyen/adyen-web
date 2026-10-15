@@ -110,9 +110,9 @@ render. An empty `issuers` list is the same outcome as an amount with no plans: 
     },
     "emiPlan": {
         "tenureMonths": 3,
-        "issuerName": "HDFC",
+        "issuerCode": "HDFC",
         "fundingSource": "credit",
-        "planType": "NO_COST",
+        "planType": "noCost",
         "interestRateBps": 1550,
         "appliedOfferIds": ["offer-hdfc-nocost"]
     },
@@ -125,10 +125,9 @@ The SDK builds `emiPlan` from the selected issuer and plan:
 
 - `tenureMonths` and `interestRateBps` are copied as numbers.
 - `fundingSource` is copied unchanged.
-- `issuerName` carries `EmiIssuer.issuerCode` (`HDFC`, not `HDFC Bank`). The request field is named after the
-  name but holds the code, because the backend matches it against the card BIN by string equality.
-- `planType` is the upper snake case of the lookup's plan type: `noCost` travels as `NO_COST`. The payments
-  contract is being aligned to accept the lookup's spelling; the conversion goes away when it does.
+- `issuerCode` is copied unchanged (`HDFC`, not `HDFC Bank`), because the backend matches it against the card
+  BIN by string equality.
+- `planType` is copied unchanged, in the lookup's spelling (`noCost`).
 - `appliedOfferIds` is every `offerId` of the plan's `offers`, in the order they arrived, and is omitted when
   the plan carries none. The SDK chooses nothing: everything the plan lists was priced into its amounts.
 

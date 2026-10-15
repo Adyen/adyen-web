@@ -730,9 +730,9 @@ describe('EMI', () => {
 
             expect(emi.formatData()).toHaveProperty('emiPlan', {
                 tenureMonths: 3,
-                issuerName: 'HDFC',
+                issuerCode: 'HDFC',
                 fundingSource: 'credit',
-                planType: 'NO_COST',
+                planType: 'noCost',
                 interestRateBps: 1550,
                 appliedOfferIds: ['offer-hdfc-cashback', 'offer-hdfc-nocost']
             });
@@ -785,9 +785,9 @@ describe('EMI', () => {
 
             expect(emi.formatData()).toHaveProperty('emiPlan', {
                 tenureMonths: 6,
-                issuerName: 'HDFC',
+                issuerCode: 'HDFC',
                 fundingSource: 'credit',
-                planType: 'STANDARD',
+                planType: 'standard',
                 interestRateBps: 1550
             });
         });
@@ -804,9 +804,9 @@ describe('EMI', () => {
 
             expect(emi.formatData()).toHaveProperty('emiPlan', {
                 tenureMonths: 3,
-                issuerName: 'ICICI',
+                issuerCode: 'ICICI',
                 fundingSource: 'credit',
-                planType: 'LOW_COST',
+                planType: 'lowCost',
                 interestRateBps: 750,
                 appliedOfferIds: ['offer-icici-lowcost']
             });
@@ -815,7 +815,7 @@ describe('EMI', () => {
         test('should expose emiPlan on the data getter, alongside the wrapping it adds', async () => {
             const data: PaymentData & { emiPlan?: EmiPlanPayload } = (await mountEmi()).data;
 
-            expect(data.emiPlan).toEqual(expect.objectContaining({ issuerName: 'HDFC', planType: 'NO_COST' }));
+            expect(data.emiPlan).toEqual(expect.objectContaining({ issuerCode: 'HDFC', planType: 'noCost' }));
             expect(data.paymentMethod).toHaveProperty('type', TxVariants.scheme);
             expect(data.paymentMethod).toHaveProperty('checkoutAttemptId');
             expect(data).toHaveProperty('clientStateDataIndicator', true);

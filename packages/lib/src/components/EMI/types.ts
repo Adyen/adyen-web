@@ -83,11 +83,9 @@ export type EmiSelectTarget = UiTarget.emiProvider | UiTarget.emiPlan;
 
 export interface EmiPlanPayload {
     tenureMonths: number;
-    /** Carries `EmiIssuer.issuerCode`, e.g. `HDFC`, not the display name. */
-    issuerName: string;
+    issuerCode: string;
     fundingSource: EmiIssuerFundingSource;
-    /** Upper snake case of the plan type: `noCost` is sent as `NO_COST`. */
-    planType: string;
+    planType: EmiPlanTypeKey;
     interestRateBps: number;
     appliedOfferIds?: string[];
 }
