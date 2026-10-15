@@ -183,6 +183,47 @@ describe('EMIComponent', () => {
         });
     });
 
+    describe('announcing the selection to screen readers', () => {
+        const hdfcSixMonthsAnnouncement =
+            '₹28,166.50 x 6 months | @15.5% p.a. Amount reserved on card: ₹154,999.00. Total amount to be paid over time: ₹168,999.00';
+
+        test('should announce nothing about the preselected plan, which the shopper has not changed', () => {
+            const { setMessages } = renderEmiComponent();
+
+            expect(setMessages).not.toHaveBeenCalledWith(expect.stringContaining('Amount reserved on card'));
+        });
+
+        test('should announce the plan the shopper picks, with the amount reserved on the card and the total paid over time', async () => {
+            const { setMessages } = renderEmiComponent();
+
+            await selectOption('Plan', /6 months/i);
+
+            await waitFor(() => expect(setMessages).toHaveBeenCalledWith(hdfcSixMonthsAnnouncement));
+        });
+
+        test('should announce the plan a newly selected provider resets to', async () => {
+            const { setMessages } = renderEmiComponent();
+
+            await selectOption('Provider', new RegExp(icici.issuerName, 'i'));
+
+            await waitFor(() =>
+                expect(setMessages).toHaveBeenCalledWith(
+                    '₹52,366.50 x 3 months | @7.5% p.a. Amount reserved on card: ₹150,798.00. Total amount to be paid over time: ₹157,099.50'
+                )
+            );
+        });
+
+        test('should not announce again when the shopper picks the plan that is already selected', async () => {
+            const { setMessages } = renderEmiComponent();
+
+            await selectOption('Plan', /6 months/i);
+            await selectOption('Plan', /6 months/i);
+
+            await waitFor(() => expect(setMessages).toHaveBeenCalledWith(hdfcSixMonthsAnnouncement));
+            expect(setMessages.mock.calls.filter(([message]) => message === hdfcSixMonthsAnnouncement)).toHaveLength(1);
+        });
+    });
+
     describe('loading the plans', () => {
         const deferred = () => {
             let resolve: (plans: EmiPlansState) => void = () => {};

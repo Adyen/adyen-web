@@ -2,7 +2,7 @@ import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { ErrorEventCode } from '../../core/Analytics/events/AnalyticsErrorEvent';
 import { TagVariant } from '../internal/Tag/types';
 import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
-import { buildEmiPlanPayload, formatInterestRate, getEmiPlansError, getPlanTags } from './utils';
+import { buildEmiPlanPayload, formatInterestRate, getEmiPlansError, getPlanLabel, getPlanTags, getSelectionAnnouncement } from './utils';
 import { emiDebitIssuerMock, emiPlansResponseMock } from './stories/mocks';
 import type { EmiIssuer, EmiPlan } from './types';
 
@@ -265,5 +265,29 @@ describe('formatInterestRate', () => {
         const { i18n } = setupCoreMock().modules;
 
         expect(formatInterestRate(1599, i18n)).toBe('15.99% p.a');
+    });
+});
+
+describe('getPlanLabel', () => {
+    const { i18n } = setupCoreMock().modules;
+    const [hdfcNoCost, hdfcStandard] = emiPlansResponseMock.issuers[0].plans;
+
+    test('should label a no cost plan by its monthly amount and tenure only', () => {
+        expect(getPlanLabel(hdfcNoCost, i18n)).toBe('₹51,666.33 x 3 months');
+    });
+
+    test('should add the yearly interest rate to the label of a plan that charges interest', () => {
+        expect(getPlanLabel(hdfcStandard, i18n)).toBe('₹28,166.50 x 6 months | @15.5% p.a');
+    });
+});
+
+describe('getSelectionAnnouncement', () => {
+    const { i18n } = setupCoreMock().modules;
+    const [hdfcNoCost] = emiPlansResponseMock.issuers[0].plans;
+
+    test('should announce the plan with the amount reserved on the card and the total paid over time', () => {
+        expect(getSelectionAnnouncement(hdfcNoCost, i18n)).toBe(
+            '₹51,666.33 x 3 months. Amount reserved on card: ₹146,999.00. Total amount to be paid over time: ₹154,999.00'
+        );
     });
 });
