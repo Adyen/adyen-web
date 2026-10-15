@@ -12,9 +12,10 @@ class EMI extends Base {
     readonly planSelection: EMIPlanSelection;
     readonly errorFields: Locator;
     readonly threeDs2Challenge: ThreeDs2Challenge;
-    readonly payButton: Locator;
+    declare readonly payButton: Locator;
     readonly customPayButton: Locator;
     readonly spinner: Locator;
+    readonly srLog: Locator;
     readonly loadingAnnouncement: Locator;
 
     constructor(
@@ -34,7 +35,8 @@ class EMI extends Base {
         this.customPayButton = this.page.getByRole('button', { name: 'Pay with EMI', exact: true });
         this.spinner = this.rootElement.locator('.adyen-checkout__spinner__wrapper');
         // The SR panel is mounted outside the component root
-        this.loadingAnnouncement = this.page.getByRole('log').getByText(LANG['loading'], { exact: true });
+        this.srLog = this.page.getByRole('log');
+        this.loadingAnnouncement = this.srLog.getByText(LANG['loading'], { exact: true });
     }
 
     get cardNumberField(): Locator {
