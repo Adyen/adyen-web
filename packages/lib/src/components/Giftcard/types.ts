@@ -1,7 +1,7 @@
 import { FunctionComponent } from 'preact';
 import { GiftcardFieldsProps } from './components/types';
 import { UIElementProps } from '../internal/UIElement/types';
-import { Order, PaymentAmount, PaymentData } from '../../types/global-types';
+import { Order, OrderUpdatedData, PaymentAmount, PaymentData } from '../../types/global-types';
 import type { BrandConfiguration } from '../internal/SecuredFields/lib/types';
 import type { Placeholders } from './components/types';
 
@@ -13,6 +13,7 @@ export interface GiftCardBrandConfiguration extends BrandConfiguration {
 }
 
 export type GiftCardBrandsConfiguration = Record<string, GiftCardBrandConfiguration>;
+
 
 export interface GiftCardElementData {
     paymentMethod: {
@@ -37,7 +38,7 @@ export type onBalanceCheckCallbackType = (
     data: GiftCardElementData
 ) => Promise<void>;
 
-export type onOrderUpdatedCallbackType = (data: { order: Order }) => void;
+export type onOrderUpdatedCallbackType = (data: OrderUpdatedData) => void;
 
 export type onRequiringConfirmationCallbackType = (resolve: () => void, reject: (error: Error) => void) => Promise<void>;
 

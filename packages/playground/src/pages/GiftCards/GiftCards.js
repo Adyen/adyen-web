@@ -91,8 +91,8 @@ import '../../style.scss';
     window.giftcard = new Giftcard(sessionCheckout, {
         type: 'giftcard',
         brand: 'svs',
-        onOrderUpdated: () => {
-            console.log('onOrderUpdated');
+        onOrderUpdated: data => {
+            console.log('onOrderUpdated', data);
         },
         onRequiringConfirmation: (resolve, reject) => {
             checkoutCardButton.removeEventListener('click', cardSubmit);
