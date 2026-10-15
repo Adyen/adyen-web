@@ -5,7 +5,7 @@ import { useCoreContext } from '../../../../core/Context/CoreProvider';
 import useImage from '../../../../core/Context/useImage';
 import getIssuerImageUrl from '../../../../utils/get-issuer-image';
 import { TxVariants } from '../../../tx-variants';
-import { formatInterestRate, getPlanTags } from '../../utils';
+import { getPlanLabel, getPlanTags } from '../../utils';
 import { UiTarget } from '../../../../core/Analytics/events/AnalyticsInfoEvent';
 import type { EmiIssuer, EmiPlan, EmiSelection, EmiSelectTarget } from '../../types';
 import type { PaymentAmount } from '../../../../types/global-types';
@@ -51,16 +51,6 @@ export function EMIPlanSelection({ issuers, selection, onSelectionChange, labell
         onSelectionChange({ issuer: selectedIssuer, plan }, UiTarget.emiPlan);
     };
 
-    const getPlanLabel = (plan: EmiPlan): string => {
-        const { monthlyPayableAmount } = plan.transactionAmounts;
-        const tenure = i18n.get('installmentOptionMonths', { values: { times: String(plan.tenureMonths) } });
-        const label = `${i18n.amount(monthlyPayableAmount.value, monthlyPayableAmount.currency)} x ${tenure}`;
-
-        if (plan.type === 'noCost') return label;
-
-        return `${label} | @${formatInterestRate(plan.interestRateBps, i18n)}`;
-    };
-
     const getDiscountText = (discount?: PaymentAmount): string | undefined =>
         discount ? i18n.get('emi.additionalDiscountAvailable', { values: { amount: i18n.amount(discount.value, discount.currency) } }) : undefined;
 
@@ -76,7 +66,7 @@ export function EMIPlanSelection({ issuers, selection, onSelectionChange, labell
 
     const planItems: SelectItem[] = selectedIssuer.plans.map(plan => ({
         id: getPlanId(selectedIssuer, plan),
-        name: getPlanLabel(plan),
+        name: getPlanLabel(plan, i18n),
         tags: getPlanTags([plan.type], i18n),
         secondaryText: getDiscountText(plan.transactionAmounts.totalInstantDiscountAmount)
     }));
