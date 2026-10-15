@@ -54,6 +54,16 @@ export type CardTypes = {
     expiredCards: ShopperCard[];
 };
 
+/**
+ * A card the shopper has paid with at least once, therefore 'dateOfCardLastUsed' is guaranteed to be set
+ */
+export type UsedShopperCard = ShopperCard & Required<Pick<ShopperCard, 'dateOfCardLastUsed'>>;
+
+export type CardsByUsage = {
+    usedCards: UsedShopperCard[];
+    unusedCards: ShopperCard[];
+};
+
 export type SchemesConfiguration = Partial<Record<ClickToPayScheme, SrcInitParams>>;
 
 export type ClickToPayCheckoutPayload = VisaCheckout | MastercardCheckout;
