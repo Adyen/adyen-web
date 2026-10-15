@@ -22,10 +22,6 @@ const meta: Meta = {
         icon: {
             options: ['cross', 'info', 'info', 'success'],
             control: { type: 'radio' }
-        },
-        iconPosition: {
-            options: ['start', 'end'],
-            control: { type: 'radio' }
         }
     }
 };
@@ -52,8 +48,7 @@ export const Default: StoryObj = {
     },
     args: {
         type: 'error',
-        icon: 'cross',
-        iconPosition: 'start'
+        icon: 'cross'
     }
 };
 export default meta;

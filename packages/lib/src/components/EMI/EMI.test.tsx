@@ -965,35 +965,6 @@ describe('EMI', () => {
             });
         });
 
-        describe('discount banner event', () => {
-            test('should report the banner shown for the preselected plan', async () => {
-                const { emi, sendAnalytics } = createEmi();
-                await renderWithPlans(emi);
-                expect(sendAnalytics).toHaveBeenCalledWith(
-                    expect.objectContaining({
-                        type: InfoEventType.displayed,
-                        component: TxVariants.emi,
-                        target: UiTarget.emiDiscountBanner,
-                        issuer: hdfc.issuerCode
-                    })
-                );
-            });
-
-            test('should report nothing when the shopper picks a plan carrying no instant discount', async () => {
-                const { emi, sendAnalytics } = createEmi();
-                await renderWithPlans(emi);
-                const bannersOnMount = eventsOfType(sendAnalytics, InfoEventType.displayed).length;
-                await user.click(screen.getByLabelText('Plan'));
-                await user.click(
-                    within(screen.getAllByRole('listbox')[1]).getByRole('option', {
-                        name: /6 months/i
-                    })
-                );
-                expect(hdfc.plans[1].transactionAmounts.totalInstantDiscountAmount).toBeUndefined();
-                expect(eventsOfType(sendAnalytics, InfoEventType.displayed)).toHaveLength(bannersOnMount);
-            });
-        });
-
         describe('error events', () => {
             test('should report the dropped tile when no payment method is supported', async () => {
                 const { emi, sendAnalytics } = createEmi({}, false);

@@ -190,7 +190,6 @@ class EMI extends UIElement<EMIConfiguration> {
             emiSelection.issuer.issuerCode
         );
         this.trackPlansDisplayed(emiSelection);
-        this.trackDiscountBanner(emiSelection);
     };
 
     private readonly onPlanSelect = (emiSelection: EmiSelection, target: EmiSelectTarget): void => {
@@ -206,7 +205,6 @@ class EMI extends UIElement<EMIConfiguration> {
         this.submitAnalytics(event);
 
         if (target === UiTarget.emiProvider) this.trackPlansDisplayed(emiSelection);
-        this.trackDiscountBanner(emiSelection);
     };
 
     private trackPlansDisplayed({ issuer, plan }: EmiSelection): void {
@@ -224,17 +222,6 @@ class EMI extends UIElement<EMIConfiguration> {
             target,
             presentedValues,
             selectedValue
-        });
-        this.submitAnalytics(event);
-    }
-
-    private trackDiscountBanner(emiSelection: EmiSelection): void {
-        if (!emiSelection.plan.transactionAmounts.totalInstantDiscountAmount) return;
-        const event = new AnalyticsInfoEvent({
-            component: this.type,
-            type: InfoEventType.displayed,
-            target: UiTarget.emiDiscountBanner,
-            issuer: emiSelection.issuer.issuerCode
         });
         this.submitAnalytics(event);
     }

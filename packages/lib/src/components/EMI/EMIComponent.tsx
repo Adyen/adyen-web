@@ -1,10 +1,7 @@
 import { h, Fragment } from 'preact';
 import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
-import Alert from '../internal/Alert';
 import Spinner from '../internal/Spinner';
-import { PREFIX } from '../internal/Icon/constants';
 import { useCoreContext } from '../../core/Context/CoreProvider';
-import { useA11yReporter } from '../../core/Errors/useA11yReporter';
 import { useLoadingA11yReporter } from '../../core/Errors/useLoadingA11yReporter';
 import { EMIPlanSelection } from './components/EMIPlanSelection';
 import { EMIPlanSummary } from './components/EMIPlanSummary';
@@ -104,16 +101,6 @@ function EMIPlans({
         onPlanSelect(nextSelection, target);
     };
 
-    const instantDiscount = selection?.plan.transactionAmounts.totalInstantDiscountAmount;
-    const discountMessage =
-        selection && instantDiscount
-            ? i18n.get('emi.discountApplied', {
-                  values: { amount: i18n.amount(-instantDiscount.value, instantDiscount.currency), provider: selection.issuer.issuerName }
-              })
-            : null;
-
-    useA11yReporter(discountMessage);
-
     return (
         <div className={styles.emiWrapper}>
             {selection && (
@@ -132,12 +119,6 @@ function EMIPlans({
                         labelledBy={titleId}
                         describedBy={instructionsId}
                     />
-
-                    {discountMessage && (
-                        <Alert type={'success'} icon={`${PREFIX}checkmark`} iconPosition={'end'} classNames={[styles.emiDiscountBanner]}>
-                            {discountMessage}
-                        </Alert>
-                    )}
 
                     <h3 id={planSummaryId} className={styles.emiSectionHeading}>
                         {i18n.get('emi.planSummary')}

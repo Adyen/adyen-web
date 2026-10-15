@@ -44,8 +44,7 @@ export enum UiTarget {
     securityCode = 'security_code',
     donationAmountButton = 'donation_amount_button',
     emiProvider = 'emi_provider',
-    emiPlan = 'emi_plan',
-    emiDiscountBanner = 'emi_discount_banner'
+    emiPlan = 'emi_plan'
 }
 
 export enum InfoEventType {
