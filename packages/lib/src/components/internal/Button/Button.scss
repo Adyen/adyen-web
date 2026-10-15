@@ -7,6 +7,7 @@
     border-radius: variable-generator.token(border-radius-m);
     color: variable-generator.token(color-label-on-color);
     cursor: pointer;
+    font-family: inherit;
     font-size: variable-generator.token(text-title-font-size);
     font-weight: variable-generator.token(text-body-stronger-font-weight);
     height: variable-generator.token(spacer-120);
@@ -79,6 +80,7 @@
         background: none;
         border: 0;
         color: variable-generator.token(color-label-primary);
+        text-decoration: underline;
 
         .adyen-checkout__spinner {
             @include index.set-spinner-color;
@@ -86,6 +88,7 @@
 
         &:hover {
             background: variable-generator.token(color-background-secondary-hover);
+            text-decoration: none;
         }
 
         &:active {
@@ -138,6 +141,7 @@
         background: variable-generator.token(color-background-always-dark);
         border: variable-generator.token(border-width-s) solid transparent;
         color: variable-generator.token(color-label-on-color);
+        height: variable-generator.token(spacer-120);
 
         &:hover {
             background: variable-generator.token(color-background-inverse-primary-hover);
@@ -154,14 +158,14 @@
         background: transparent;
         border: variable-generator.token(border-width-s) solid transparent;
         color: variable-generator.token(color-label-highlight);
-        text-decoration: none;
+        text-decoration: underline;
         font-weight: variable-generator.token(text-body-font-weight);
         border-radius: variable-generator.token(border-radius-s);
         padding: variable-generator.token(spacer-010);
 
         &:hover {
             background: transparent;
-            text-decoration: underline;
+            text-decoration: none;
         }
     }
 

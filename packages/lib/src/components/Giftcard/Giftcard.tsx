@@ -5,7 +5,7 @@ import PayButton from '../internal/PayButton';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { PaymentAmount } from '../../types/global-types';
 import { GiftCardElementData, GiftCardConfiguration, balanceCheckResponseType, GiftCardBalanceCheckErrorType } from './types';
-import { resolveBalanceCheckError } from './utils';
+import { resolveBalanceCheckError, resolvePlaceholders } from './utils';
 import { TxVariants } from '../tx-variants';
 import { PayButtonProps } from '../internal/PayButton/PayButton';
 
@@ -88,7 +88,7 @@ export class GiftcardElement extends UIElement<GiftCardConfiguration> {
         const hasBalanceCheck = this.props.session || this.props.onBalanceCheck;
         if (!hasBalanceCheck) return super.submit();
 
-        this.setStatus('loading');
+        this.setElementStatus('loading');
 
         // Clear any previous balance check errors at the start of every attempt
         this.setBalanceCheckError(null);
@@ -130,7 +130,7 @@ export class GiftcardElement extends UIElement<GiftCardConfiguration> {
      */
     private readonly handleOnRequiringConfirmation = (balance: PaymentAmount, transactionLimit: PaymentAmount): Promise<void> | void => {
         this.componentRef.setBalance({ balance, transactionLimit });
-        this.setStatus('ready');
+        this.setElementStatus('ready');
 
         // 1. if we show pay button we don't need to ask for confirmation
         if (this.props.showPayButton) {
@@ -182,6 +182,7 @@ export class GiftcardElement extends UIElement<GiftCardConfiguration> {
                     this.componentRef = ref;
                 }}
                 {...this.props}
+                placeholders={resolvePlaceholders(this.props.brand, this.props.brandsConfiguration, this.props.placeholders)}
                 handleKeyDown={this.handleKeyDown}
                 onChange={this.setState}
                 makeBalanceCheck={() => this.onBalanceCheck()}

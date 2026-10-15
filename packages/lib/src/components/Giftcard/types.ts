@@ -2,7 +2,17 @@ import { FunctionComponent } from 'preact';
 import { GiftcardFieldsProps } from './components/types';
 import { UIElementProps } from '../internal/UIElement/types';
 import { Order, PaymentAmount, PaymentData } from '../../types/global-types';
-import type { CardBrandsConfiguration } from '../internal/SecuredFields/lib/types';
+import type { BrandConfiguration } from '../internal/SecuredFields/lib/types';
+import type { Placeholders } from './components/types';
+
+export interface GiftCardBrandConfiguration extends BrandConfiguration {
+    /**
+     * Placeholders for this gift card brand. Keys not set here fall back to the top-level `placeholders`.
+     */
+    placeholders?: Placeholders;
+}
+
+export type GiftCardBrandsConfiguration = Record<string, GiftCardBrandConfiguration>;
 
 export interface GiftCardElementData {
     paymentMethod: {
@@ -37,7 +47,11 @@ export type onOrderRequestCallbackType = (resolve: (order: Order) => void, rejec
 export interface GiftCardConfiguration extends UIElementProps {
     pinRequired?: boolean;
     expiryDateRequired?: boolean;
-    brandsConfiguration?: CardBrandsConfiguration;
+    brandsConfiguration?: GiftCardBrandsConfiguration;
+    /**
+     * Placeholders for the gift card fields. Used for every brand, unless a brand sets its own in `brandsConfiguration`.
+     */
+    placeholders?: Placeholders;
     brand?: string;
     onOrderUpdated?: onOrderUpdatedCallbackType;
     onBalanceCheck?: onBalanceCheckCallbackType;

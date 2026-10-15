@@ -1,6 +1,6 @@
 import './main.css';
 import { Preview } from '@storybook/preact-vite';
-import { DEFAULT_COUNTRY_CODE, DEFAULT_SHOPPER_LOCALE, DEFAULT_AMOUNT_VALUE, SHOPPER_LOCALES } from '../storybook/config/commonConfig';
+import { DEFAULT_COUNTRY_CODE, DEFAULT_SHOPPER_LOCALE, DEFAULT_AMOUNT_VALUE, STORYBOOK_SHOPPERLOCALES } from '../storybook/config/commonConfig';
 import { setupWorker } from 'msw/browser';
 import { mswLoader } from 'msw-storybook-addon/csf3';
 import { COUNTRY_CODES } from '../storybook/constants/countries';
@@ -39,7 +39,7 @@ const preview: Preview = {
         },
         shopperLocale: {
             control: 'select',
-            options: SHOPPER_LOCALES
+            options: STORYBOOK_SHOPPERLOCALES
         },
         amount: {
             control: 'number'
