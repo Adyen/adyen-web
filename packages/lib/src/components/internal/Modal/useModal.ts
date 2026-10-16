@@ -5,8 +5,8 @@ type UseModalProps = {
     modalElement?: HTMLElement;
     isOpen: boolean;
     isDismissible: boolean;
-    focusFirst: HTMLElement;
-    focusAfterClose: HTMLElement;
+    focusFirst: HTMLElement | undefined;
+    focusAfterClose: HTMLElement | null;
     onClose(): void;
 };
 
@@ -24,7 +24,7 @@ const useModal = ({ modalElement, isOpen, isDismissible, focusFirst, focusAfterC
     useTrapFocus({ rootElement: modalElement, shouldTrap: isOpen, focusFirst });
 
     const closeModal = useCallback(() => {
-        focusAfterClose.focus();
+        focusAfterClose?.focus();
         onClose();
     }, [onClose, focusAfterClose]);
 

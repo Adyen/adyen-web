@@ -11,7 +11,7 @@ import './CtPOneTimePasswordInput.scss';
 import InputText from '../../../../FormFields/InputText';
 import { getErrorMessage } from '../../../../../../utils/getErrorMessage';
 
-type OnChangeProps = { data: CtPOneTimePasswordInputDataState; valid; errors; isValid: boolean };
+type OnChangeProps = { data: CtPOneTimePasswordInputDataState; valid; errors; isValid: boolean | undefined };
 
 interface CtPOneTimePasswordInputProps {
     hideResendOtpButton: boolean;
@@ -39,14 +39,13 @@ const CtPOneTimePasswordInput = (props: Readonly<CtPOneTimePasswordInputProps>):
     } = useClickToPayContext();
 
     const formSchema = ['otp'];
-    const [resendOtpError, setResendOtpError] = useState<string>(null);
+    const [resendOtpError, setResendOtpError] = useState<string | null>(null);
     const containerRef = useRef<HTMLDivElement>(null);
     const { handleChangeFor, data, triggerValidation, valid, errors, isValid, setData } = useFormWithA11y<CtPOneTimePasswordInputDataState>({
         schema: formSchema,
         rules: otpValidationRules,
         formHolder: containerRef
     });
-    const otpInputHandlersRef = useRef<CtPOneTimePasswordInputHandlers>({ validateInput: null });
     const inputRef = useRef<HTMLInputElement>(null);
     const [isOtpFielDirty, setIsOtpFieldDirty] = useState<boolean>(false);
 
@@ -54,6 +53,8 @@ const CtPOneTimePasswordInput = (props: Readonly<CtPOneTimePasswordInputProps>):
         setIsOtpFieldDirty(true);
         triggerValidation();
     }, [triggerValidation]);
+
+    const otpInputHandlersRef = useRef<CtPOneTimePasswordInputHandlers>({ validateInput });
 
     /**
      * If shopper changes the value of the OTP fields, input becomes dirty
@@ -83,7 +84,7 @@ const CtPOneTimePasswordInput = (props: Readonly<CtPOneTimePasswordInputProps>):
         setData('otp', '');
         setResendOtpError(null);
         if (!disableOtpAutoFocus) {
-            inputRef.current.focus();
+            inputRef.current?.focus();
         }
         props.onResendCode();
     }, [props.onResendCode, inputRef.current, disableOtpAutoFocus]);
@@ -110,7 +111,7 @@ const CtPOneTimePasswordInput = (props: Readonly<CtPOneTimePasswordInputProps>):
     }, [data, valid, errors]);
 
     const getOtpErrorMessage = useCallback(() => {
-        if (!isOtpFielDirty) return null;
+        if (!isOtpFielDirty) return undefined;
 
         return resendOtpError || props.errorMessage || getErrorMessage(i18n, errors.otp, i18n.get('ctp.otp.fieldLabel'));
     }, [isOtpFielDirty, resendOtpError, props.errorMessage, errors.otp, i18n]);

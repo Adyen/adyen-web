@@ -1,4 +1,4 @@
-import { CardTypes, ClickToPayCheckoutPayload, SrcProfileWithScheme } from './types';
+import { CardsByUsage, CardTypes, ClickToPayCheckoutPayload, SrcProfileWithScheme, UsedShopperCard } from './types';
 import { SrciCheckoutResponse } from './sdks/types';
 import ShopperCard from '../models/ShopperCard';
 import SrciError from './sdks/SrciError';
@@ -44,7 +44,7 @@ function createShopperMaskedCardsData(memo: ShopperCard[], srcProfile: SrcProfil
     return [...memo, ...cards];
 }
 
-function sortCardByLastTimeUsed(card1: ShopperCard, card2: ShopperCard) {
+function sortCardByLastTimeUsed(card1: UsedShopperCard, card2: UsedShopperCard) {
     return new Date(card2.dateOfCardLastUsed).getTime() - new Date(card1.dateOfCardLastUsed).getTime();
 }
 
@@ -58,21 +58,39 @@ function splitAvailableAndExpiredCards(memo: CardTypes, card: ShopperCard): Card
     return memo;
 }
 
-function splitUnusedAndUsedCards(memo: { unusedCards: ShopperCard[]; usedCards: ShopperCard[] }, card: ShopperCard) {
-    if (card.dateOfCardLastUsed) memo.usedCards.push(card);
-    else memo.unusedCards.push(card);
-    return memo;
+function hasBeenUsed(card: ShopperCard): card is UsedShopperCard {
+    return !!card.dateOfCardLastUsed;
+}
+
+function splitCardsByUsage(cards: ShopperCard[]): CardsByUsage {
+    return cards.reduce<CardsByUsage>(
+        (memo, card) => {
+            if (hasBeenUsed(card)) memo.usedCards.push(card);
+            else memo.unusedCards.push(card);
+            return memo;
+        },
+        { usedCards: [], unusedCards: [] }
+    );
 }
 
 /**
  * Creates the Shopper card list. The available cards are placed before the expired cards
  */
 function createShopperCardsList(srcProfiles: SrcProfileWithScheme[]): ShopperCard[] {
-    const cards: ShopperCard[] = srcProfiles.reduce(createShopperMaskedCardsData, []);
-    const { availableCards, expiredCards } = cards.reduce(splitAvailableAndExpiredCards, { availableCards: [], expiredCards: [] });
-    const { unusedCards, usedCards } = availableCards.reduce(splitUnusedAndUsedCards, { unusedCards: [], usedCards: [] });
+    const cards: ShopperCard[] = srcProfiles.reduce<ShopperCard[]>((memo, srcProfile) => createShopperMaskedCardsData(memo, srcProfile), []);
+    const { availableCards, expiredCards } = cards.reduce<CardTypes>((memo, card) => splitAvailableAndExpiredCards(memo, card), {
+        availableCards: [],
+        expiredCards: []
+    });
+    const available = splitCardsByUsage(availableCards);
+    const expired = splitCardsByUsage(expiredCards);
 
-    return [...usedCards.sort(sortCardByLastTimeUsed), ...unusedCards.sort(sortCardByLastTimeCreated), ...expiredCards.sort(sortCardByLastTimeUsed)];
+    return [
+        ...available.usedCards.sort(sortCardByLastTimeUsed),
+        ...available.unusedCards.sort(sortCardByLastTimeCreated),
+        ...expired.usedCards.sort(sortCardByLastTimeUsed),
+        ...expired.unusedCards
+    ];
 }
 
 function isSrciError(error: unknown): error is SrciError {
