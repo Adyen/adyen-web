@@ -46,8 +46,6 @@ export interface EmiProcessingAmounts {
 
 export interface EmiOffer {
     offerId: string;
-    type?: string;
-    description?: string;
 }
 
 export interface EmiPlan {

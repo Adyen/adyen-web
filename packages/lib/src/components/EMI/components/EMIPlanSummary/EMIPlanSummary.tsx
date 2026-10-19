@@ -28,7 +28,7 @@ type CandidateRow = Omit<SummaryRow, 'amount'> & { amount?: PaymentAmount };
 export function EMIPlanSummary({ plan, labelledBy }: Readonly<EMIPlanSummaryProps>): h.JSX.Element {
     const { i18n } = useCoreContext();
     const { amount } = useAmount();
-    const { authorizationAmount, totalInstantDiscountAmount, interestDiscountAmount, totalInterestAmount, totalPayableAmount } =
+    const { authorizationAmount, additionalDiscountAmount, interestDiscountAmount, totalInterestAmount, totalPayableAmount } =
         plan.transactionAmounts;
     const planTag = getPlanTags([plan.type], i18n)?.[0];
 
@@ -38,7 +38,7 @@ export function EMIPlanSummary({ plan, labelledBy }: Readonly<EMIPlanSummaryProp
 
     const candidateRows: CandidateRow[] = [
         { key: 'itemPrice', label: i18n.get('emi.itemPrice'), amount },
-        { key: 'instantDiscount', label: i18n.get('emi.instantDiscount'), amount: totalInstantDiscountAmount, isNegative: true },
+        { key: 'instantDiscount', label: i18n.get('emi.instantDiscount'), amount: additionalDiscountAmount, isNegative: true },
         {
             key: 'interestDiscount',
             label: i18n.get('emi.discount'),
