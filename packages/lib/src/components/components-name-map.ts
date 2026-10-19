@@ -137,6 +137,7 @@ const ComponentsNameMap = {
     [TxVariants.klarna_account]: 'Klarna',
     [TxVariants.klarna_paynow]: 'Klarna',
     [TxVariants.klarna_b2b]: 'Klarna',
+    [TxVariants.klarna_network]: 'KlarnaNetwork',
     /** Klarna */
 
     /** QRLoader */

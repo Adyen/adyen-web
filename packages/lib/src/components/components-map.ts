@@ -46,6 +46,7 @@ import BacsDD from './BacsDD';
 import Address from './Address';
 import PersonalDetails from './PersonalDetails';
 import Klarna from './Klarna';
+import KlarnaNetwork from './KlarnaNetwork';
 import Twint from './Twint';
 import MealVoucherFR from './MealVoucherFR';
 import OnlineBankingIN from './OnlineBankingIN';
@@ -224,6 +225,7 @@ export const ComponentsMap = {
     [TxVariants.klarna_account]: Klarna,
     [TxVariants.klarna_paynow]: Klarna,
     [TxVariants.klarna_b2b]: Klarna,
+    [TxVariants.klarna_network]: KlarnaNetwork,
     /** Klarna */
 
     /** QRLoader */

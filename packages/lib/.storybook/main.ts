@@ -1,6 +1,6 @@
 import { fileURLToPath } from 'url';
 import { join } from 'path';
-import { mergeConfig } from 'vite';
+import { loadEnv, mergeConfig } from 'vite';
 import stylelint from 'vite-plugin-stylelint';
 import preact from '@preact/preset-vite';
 import generateEnvironmentVariables from '../config/environment-variables.js';
@@ -41,7 +41,11 @@ const config: StorybookConfig = {
 
     // we are using JSON.stringify to ensure the value is a string, relevant for preview.tsx
     // also makes it consistent to what we do we generateEnvironmentVariables
-    viteFinal(config) {
+    viteFinal(config, { configType }) {
+        // Klarna Network POC credentials must never end up in a static Storybook build, so they are only read in dev.
+        // They are always defined (empty in builds) because an undefined `process.env.X` throws in the browser.
+        const klarnaEnv = configType === 'DEVELOPMENT' ? loadEnv('development', join(dirname, '../../..'), 'KLARNA_') : {};
+
         const finalConfig = mergeConfig(config, {
             // Mirror Rollup's CSS processing exactly
             css: {
@@ -72,6 +76,9 @@ const config: StorybookConfig = {
 
             define: {
                 'process.env.DISABLE_MSW': JSON.stringify(process.env.DISABLE_MSW),
+                'process.env.KLARNA_CLIENT_ID': JSON.stringify(klarnaEnv.KLARNA_CLIENT_ID ?? ''),
+                'process.env.KLARNA_PAYMENT_ACCOUNT_ID': JSON.stringify(klarnaEnv.KLARNA_PAYMENT_ACCOUNT_ID ?? ''),
+                'process.env.KLARNA_PARTNER_ID': JSON.stringify(klarnaEnv.KLARNA_PARTNER_ID ?? ''),
                 ...generateEnvironmentVariables(process.env.NODE_ENV)
             },
 
