@@ -14,13 +14,12 @@ import type {
     KlarnaPaymentError,
     KlarnaPaymentOption,
     KlarnaShippingAddressChangeHandler,
-    KlarnaShippingConfig,
     KlarnaShippingOptionSelectHandler,
     KlarnaUIElement
 } from '../../klarna-web-sdk-types';
 
 export interface KlarnaNetworkAuthorizeResult {
-    paymentRequestUrl?: string;
+    paymentRequestId?: string;
 }
 
 export interface KlarnaNetworkContainerProps {
@@ -33,13 +32,6 @@ export interface KlarnaNetworkContainerProps {
     clientId: string;
     partnerAccountId?: string;
     paymentAccountId?: string;
-    shippingConfig?: KlarnaShippingConfig;
-}
-
-async function fetchPaymentRequestId(payment: KlarnaPayment, paymentRequestUrl: string): Promise<string> {
-    const paymentRequest = await payment.fetch(paymentRequestUrl);
-    if (!paymentRequest?.paymentRequestId) throw new Error('Payment.fetch(url) did not return a paymentRequestId');
-    return paymentRequest.paymentRequestId;
 }
 
 export function KlarnaNetworkContainer({
@@ -50,8 +42,7 @@ export function KlarnaNetworkContainer({
     onShippingOptionSelect,
     clientId,
     partnerAccountId,
-    paymentAccountId,
-    shippingConfig
+    paymentAccountId
 }: Readonly<KlarnaNetworkContainerProps>) {
     const { i18n } = useCoreContext();
     const { amount } = useAmount();
@@ -63,28 +54,16 @@ export function KlarnaNetworkContainer({
 
     const messageContainerRef = useRef<HTMLDivElement>(null);
     const buttonContainerRef = useRef<HTMLDivElement>(null);
-    // initiate is created outside the setup effect, so it reaches klarna.Payment through this ref
-    const paymentRef = useRef<KlarnaPayment | null>(null);
 
     const initiate = useCallback(
         async (params: KlarnaInitiateParams): Promise<KlarnaInitiateResult> => {
-            const { paymentRequestUrl } = await onAuthorize(params);
+            const { paymentRequestId } = await onAuthorize(params);
 
-            if (!paymentRequestUrl) throw new Error('/payments did not return a Klarna payment request URL');
+            if (!paymentRequestId) throw new Error('/payments did not return action.sdkData.paymentRequestId');
 
-            if (shippingConfig && paymentRef.current) {
-                try {
-                    const paymentRequestId = await fetchPaymentRequestId(paymentRef.current, paymentRequestUrl);
-                    console.log('Payment.requestId', paymentRequestId);
-                    await paymentRef.current.request(paymentRequestId).update({ shippingConfig });
-                } catch (error: unknown) {
-                    console.error('Payment.request().update(shippingConfig) failed', error);
-                }
-            }
-
-            return { paymentRequestUrl };
+            return { paymentRequestId };
         },
-        [onAuthorize, shippingConfig]
+        [onAuthorize]
     );
 
     useEffect(() => {
@@ -105,7 +84,6 @@ export function KlarnaNetworkContainer({
             if (!isActive) return;
 
             payment = klarna.Payment;
-            paymentRef.current = payment;
             console.log('Klarna SDK initialised available klarna props', klarna);
             console.info('Klarna SDK initialised available props in payment', {
                 payment
@@ -138,7 +116,6 @@ export function KlarnaNetworkContainer({
             payment?.off('error', onKlarnaError);
             if (onShippingAddressChange) payment?.off('shippingaddresschange', onShippingAddressChange);
             if (onShippingOptionSelect) payment?.off('shippingoptionselect', onShippingOptionSelect);
-            paymentRef.current = null;
         };
     }, [clientId, partnerAccountId, paymentAccountId, value, currency]);
 

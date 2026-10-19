@@ -58,6 +58,7 @@ export interface KlarnaNetworkConfiguration extends UIElementProps {
 
     /**
      * Lets the shopper edit the shipping address inside Klarna (Express flow).
+     * Not sent to Klarna yet: Klarna has not shared how to pass it through the initiate callback.
      */
     shippingConfig?: KlarnaShippingConfig;
 

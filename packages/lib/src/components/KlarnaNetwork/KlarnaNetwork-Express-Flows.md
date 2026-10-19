@@ -2,7 +2,7 @@
 
 This page compares two ways to run the Klarna Express flow (the shopper picks or edits the shipping address inside Klarna) with Adyen Web.
 
-- **Option A: authorize first.** The flow from Klarna's diagram in the "Adyen - Discovery (External)" session on Sep 22, 2026. Adyen creates the Klarna payment request before the popup opens, and the browser then turns on editable shipping with `Payment.request(id).update()`. The POC follows this flow, and editable shipping does not work yet.
+- **Option A: authorize first.** The flow from Klarna's diagram in the "Adyen - Discovery (External)" session on Sep 22, 2026. Adyen creates the Klarna payment request before the popup opens, and the browser then turns on editable shipping. Klarna will provide documentation for this step later; it is going to be related to the `initiate` callback. The POC follows this flow, and editable shipping does not work yet.
 - **Option B: authorize last.** The flow from Klarna's public Web SDK docs. The Klarna Web SDK creates the payment request in the browser with `shippingConfig`, and Adyen Web calls `/payments` only after the shopper has approved in Klarna.
 
 Status markers used below:
@@ -40,7 +40,7 @@ sequenceDiagram
     Note over Adyen,Klarna: step_up_config.method = SDK<br/>acquiring_config
     Klarna-->>Adyen: STEP_UP_REQUIRED + payment_request (SUBMITTED)
     Adyen-->>Component: payment_request_id, payment_request_url
-    Component->>SDK: Payment.request(id).update(shippingConfig EDITABLE)
+    Component->>SDK: Turn on editable shipping (related to initiate, docs pending from Klarna)
     Note over Component,SDK: shipping_config.mode = EDITABLE
     Component-->>SDK: return { paymentRequestUrl }
     SDK->>Klarna: Launch purchase journey
@@ -75,7 +75,7 @@ sequenceDiagram
 | 9     | `step_up_config.method = SDK` and `acquiring_config`                                | The created request has `stateContext.customerInteraction.method = "HANDOVER"`                                                                                                                                                    | ❌ does not match             |
 | 10    | `STEP_UP_REQUIRED` with a `SUBMITTED` payment request                               | `/payments` returns `RedirectShopper`, and the request is `SUBMITTED`                                                                                                                                                             | ✅                            |
 | 11    | Adyen returns `payment_request_id` and `payment_request_url`                        | Only the URL, inside `action.url`. The local server unwraps it from the Adyen redirect page. The backend plans to return both values in the payment response; until then the POC reads the id from the URL with `Payment.fetch()` | ❓ URL only today; id planned |
-| 12    | `Payment.request(id).update(shippingConfig EDITABLE)`                               | `Payment.request` is `undefined` in SDK v2.0.420, so the call throws and shipping never becomes `EDITABLE`                                                                                                                        | ❌                            |
+| 12    | Turn on editable shipping (`shippingConfig EDITABLE`)                               | Not implemented. Klarna will provide documentation for this step later; it is going to be related to the `initiate` callback.                                                                                                     | ❓ docs pending               |
 | 13–14 | Return `{ paymentRequestUrl }`; the SDK launches the purchase journey               | Same. The popup opens. Reading the SDK code, its update carries only `acquiringConfig` and internal feature flags, never `shippingConfig`                                                                                         | ✅                            |
 | 15–26 | Shipping address and shipping option events, priced by the sub-partner              | Handlers are wired to `onShippingAddressChange` and `onShippingOptionSelected`, but no shipping event fired in any live test                                                                                                      | ❌                            |
 | 27    | The customer approves                                                               | Same                                                                                                                                                                                                                              | ✅                            |
@@ -83,9 +83,9 @@ sequenceDiagram
 
 ### What Option A needs
 
-- **From Klarna:** a released `Payment.request(id).update()`, or another client-side way to set `shippingConfig` on a request that the Adyen server created. We also need to know whether step 9 must use `method = SDK` for this to work.
+- **From Klarna:** the documentation for step 12, which sets `shippingConfig` on a request that the Adyen server created. Klarna will provide it later, and it is going to be related to the `initiate` callback. We also need to know whether step 9 must use `method = SDK` for this to work.
 - **From the Adyen backend:** send `step_up_config.method = SDK` if Klarna requires it, return `payment_request_id` and `payment_request_url` in the `/payments` response (step 11, planned), and confirm how steps 28–29 map to today's `/payments/details` flow.
-- **In Adyen Web:** once the backend returns the id, use it directly and drop the `Payment.fetch()` lookup. Step 12 is already called in `initiate` and starts working as soon as the SDK has `request()`.
+- **In Adyen Web:** once the backend returns the id, use it directly and drop the `Payment.fetch()` lookup. Step 12 is not implemented yet and waits for Klarna's documentation.
 
 ## Option B: authorize last (Klarna's public docs)
 
@@ -154,15 +154,15 @@ Nothing in Option B has been tested live yet, so every step is ❓. The steps co
 | -------------------------------------- | -------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------ |
 | Who creates the Klarna payment request | Adyen server, during the first authorize                                                                       | Klarna web SDK, in the browser                         |
 | When Adyen calls Klarna authorize      | Before the popup opens (step 9), and again after approval (step 29)                                            | Once, after the customer approves in Klarna            |
-| How editable shipping is turned on     | `Payment.request(id).update({ shippingConfig })`                                                               | `shippingConfig` in the `initiate` return value        |
-| Public Klarna API                      | No. `request()` is only in Klarna's diagram and missing from SDK v2.0.420                                      | Yes. `PaymentRequestData.shippingConfig` is documented |
+| How editable shipping is turned on     | Related to the `initiate` callback; Klarna will provide the documentation later                                | `shippingConfig` in the `initiate` return value        |
+| Public Klarna API                      | Not yet. Klarna will document the step 12 API later                                                            | Yes. `PaymentRequestData.shippingConfig` is documented |
 | How the payment finishes               | Diagram: completed webhook to the Adyen server, then a second authorize. POC: redirect and `/payments/details` | `complete` event, then `/payments` with the token      |
 | Backend change                         | `step_up_config.method = SDK` if required, return `payment_request_id` (planned), steps 28–29                  | Authorize a completed request's token without step-up  |
 | Works today                            | Payment yes; editable shipping no                                                                              | Not tested                                             |
 
 ## Open questions for Klarna
 
-1. Is `Payment.request(id).update()` planned? If so, in which SDK version, and is it behind a flag for our client id or partner account?
+1. When will the documentation for step 12 (editable shipping through the `initiate` callback) be available, and in which SDK version?
 2. Does step 9 have to use `step_up_config.method = SDK`? Our requests are created with `HANDOVER`.
 3. Your diagram ends at step 29 in our screenshots. What happens after the second authorize, and how does the browser learn the final result? Today the POC gets it through the `returnUrl` redirect and `/payments/details`.
 4. Is Option B (client-side creation with `shippingConfig`, authorize on `complete`) the supported Express flow for acquiring partners today?

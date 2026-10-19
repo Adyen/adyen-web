@@ -37,6 +37,7 @@ class KlarnaNetwork extends UIElement<KlarnaNetworkConfiguration> {
         return {
             paymentMethod: {
                 type: KlarnaNetwork.type,
+                subtype: 'sdk',
                 klarnaNetworkSessionToken: this.klarnaNetworkSessionToken,
                 klarnaNetworkPaymentAccountId: this.props.paymentAccountId
             }
@@ -50,9 +51,9 @@ class KlarnaNetwork extends UIElement<KlarnaNetworkConfiguration> {
 
         this.setElementStatus('ready');
 
-        const paymentRequestUrl = response.action?.sdkData?.paymentRequestUrl ?? response.action?.url;
+        const paymentRequestId = response.action?.sdkData?.paymentRequestId as string | undefined;
 
-        return { paymentRequestUrl };
+        return { paymentRequestId };
     };
 
     private readonly handleKlarnaShippingAddressChange = async (

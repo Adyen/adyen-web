@@ -103,15 +103,9 @@ export type KlarnaShippingAddressChangeHandler = (paymentRequest: unknown, addre
 
 export type KlarnaShippingOptionSelectHandler = (paymentRequest: unknown, option: KlarnaShippingOption) => KlarnaShippingHandlerResult;
 
-export interface KlarnaPaymentRequest {
-    update(data: { shippingConfig: KlarnaShippingConfig }): Promise<unknown>;
-}
-
 export interface KlarnaPayment {
     presentation(data: { amount?: number; currency: string; locale?: string; intent?: string }): Promise<PaymentPresentation | undefined>;
     fetch(paymentRequestUrl: string): Promise<{ paymentRequestId?: string } | undefined>;
-    /** From step 12 of Klarna's Express diagram. Not in SDK v2.0.420 yet, so calling it throws a TypeError. */
-    request(paymentRequestId: string): KlarnaPaymentRequest;
     on(event: 'complete', callback: (paymentRequest: unknown) => void): unknown;
     on(event: 'error', callback: (error: KlarnaPaymentError | Error, paymentRequest?: unknown) => void): unknown;
     on(event: 'shippingaddresschange', callback: KlarnaShippingAddressChangeHandler): unknown;

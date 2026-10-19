@@ -98,7 +98,6 @@ function KlarnaExpress({ checkout, credentials, shippingMode }: Readonly<KlarnaE
 export const Express: StoryObj<ExpressStoryProps> = {
     args: {
         countryCode: COUNTRY_CODES.UnitedStates,
-        // Advanced flow only: the local server unwraps the Adyen gluepage URL in /api/payments, sessions don't go through it.
         // /payments/details runs on the returnUrl page (RedirectResult story) with the redirectResult.
         useSessions: false,
         shippingMode: 'EDITABLE'
