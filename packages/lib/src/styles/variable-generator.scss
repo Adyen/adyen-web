@@ -45,10 +45,7 @@ aliases.$color: map.merge(
             definitions.$spacer,
             definitions.$shadow,
             definitions.$animation,
-            components.$toggle,
-            components.$button,
             components.$tooltip,
-            components.$alert,
             overrides.$text-overrides
         );
     } @else {
@@ -60,10 +57,7 @@ aliases.$color: map.merge(
             definitions.$spacer,
             definitions.$shadow,
             definitions.$animation,
-            components.$toggle,
-            components.$button,
             components.$tooltip,
-            components.$alert,
             overrides.$text-overrides
         );
     }
