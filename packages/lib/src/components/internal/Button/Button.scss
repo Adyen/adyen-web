@@ -1,12 +1,10 @@
 @use 'styles/index';
 @use 'styles/variable-generator';
 
-// DEPRECATED: `color-background-always-dark-primary`, `color-background-always-dark-hover` and `color-background-always-dark-active`
-// are deprecated in Bento v2 and will be removed in a future release. They are used temporarily to keep the navy primary button
-// and its lighter hover/active states. Replace with `color-background-inverse-primary*` before they are removed.
-$button-primary-background: variable-generator.token(color-background-always-dark-primary);
-$button-primary-background-hover: variable-generator.token(color-background-always-dark-hover);
-$button-primary-background-active: variable-generator.token(color-background-always-dark-active);
+// `button-token()` falls back to the deprecated `color-background-always-dark*` variables merchants could set before Bento v2.
+$button-primary-background: variable-generator.button-token(color-background-inverse-primary);
+$button-primary-background-hover: variable-generator.button-token(color-background-inverse-primary-hover);
+$button-primary-background-active: variable-generator.button-token(color-background-inverse-primary-active);
 
 .adyen-checkout__button {
     background: $button-primary-background;
