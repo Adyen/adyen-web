@@ -73,7 +73,7 @@ export function handleConfig(props: CSFSetupObject): void {
 
     // TODO###### FOR QUICK LOCAL TESTING of sf
     if (process.env.NODE_ENV === 'development' && process.env.__SF_ENV__ !== 'build') {
-        this.config.iframeSrc = `${process.env.__SF_ENV__}securedFields.html?type=${sfBundleType}`;
+        this.config.iframeSrc = `${process.env.__SF_ENV__}securedFields.html?type=${sfBundleType}&vn=${SF_VERSION}`;
     }
     // TODO######
 }
