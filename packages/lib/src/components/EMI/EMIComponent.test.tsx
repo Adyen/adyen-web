@@ -113,7 +113,7 @@ describe('EMIComponent', () => {
             renderEmiComponent();
 
             expect(screen.getByLabelText('Provider')).toHaveTextContent(hdfc.issuerName);
-            expect(screen.getByLabelText('Plan')).toHaveTextContent('₹51,666.33 x 3 months');
+            expect(screen.getByLabelText('Plan')).toHaveTextContent('₹46,499.70 x 3 months');
         });
 
         test('should report the default selection as displayed once, without waiting for an interaction', () => {
@@ -159,19 +159,22 @@ describe('EMIComponent', () => {
         test('should keep the instant discount row in step with the plan and provider the shopper picks', async () => {
             renderEmiComponent();
 
-            expect(getSummaryValue('Instant discount')).toBe('-₹4,000.00');
+            expect(getSummaryValue('Instant discount')).toBe('-₹15,499.90');
 
             await selectOption('Plan', /6 months/i);
             expect(getSummaryValue('Instant discount')).toBeNull();
 
             await selectOption('Provider', new RegExp(icici.issuerName, 'i'));
-            expect(getSummaryValue('Instant discount')).toBe('-₹2,100.50');
+            expect(getSummaryValue('Instant discount')).toBeNull();
+
+            await selectOption('Provider', new RegExp(hdfc.issuerName, 'i'));
+            expect(getSummaryValue('Instant discount')).toBe('-₹15,499.90');
         });
 
         test('should summarise the preselected plan', () => {
             renderEmiComponent();
 
-            expect(screen.getByText('Interest charged by bank @15.5% p.a')).toBeInTheDocument();
+            expect(screen.getByText('Interest charged by bank @18% p.a')).toBeInTheDocument();
             expect(screen.getByText('Total amount to be paid over time')).toBeInTheDocument();
         });
 

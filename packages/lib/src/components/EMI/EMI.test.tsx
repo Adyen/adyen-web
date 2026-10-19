@@ -709,7 +709,7 @@ describe('EMI', () => {
             await renderWithPlans(emi);
 
             expect(screen.getByLabelText('Provider')).toHaveTextContent(hdfc.issuerName);
-            expect(screen.getByLabelText('Plan')).toHaveTextContent('₹51,666.33 x 3 months');
+            expect(screen.getByLabelText('Plan')).toHaveTextContent('₹46,499.70 x 3 months');
             expect(screen.getByRole('form')).toBeInTheDocument();
         });
 
@@ -733,7 +733,7 @@ describe('EMI', () => {
                 issuerCode: 'HDFC',
                 fundingSource: 'credit',
                 planType: 'noCost',
-                interestRateBps: 1550,
+                interestRateBps: 1800,
                 appliedOfferIds: ['offer-hdfc-cashback', 'offer-hdfc-nocost']
             });
         });

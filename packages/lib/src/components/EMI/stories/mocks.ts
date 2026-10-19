@@ -33,26 +33,24 @@ export const emiPlansResponseMock: EmiPlansResponse = {
             issuerCode: 'HDFC',
             fundingSource: 'credit',
             availablePlanTypes: ['noCost', 'standard'],
-            bestOffer: { value: 400000, currency: 'INR' },
+            bestOffer: { value: 1958255, currency: 'INR' },
             termLink: 'https://www.hdfc.bank.in/easyemi/credit-card',
             plans: [
                 {
                     type: 'noCost',
                     tenureMonths: 3,
-                    interestRateBps: 1550,
+                    interestRateBps: 1800,
                     transactionAmounts: {
-                        authorizationAmount: { value: 14699900, currency: 'INR' },
-                        monthlyPayableAmount: { value: 5166633, currency: 'INR' },
-                        totalPayableAmount: { value: 15499900, currency: 'INR' },
-                        totalInterestAmount: { value: 400000, currency: 'INR' },
-                        totalInstantDiscountAmount: { value: 400000, currency: 'INR' },
-                        interestDiscountAmount: { value: 250000, currency: 'INR' }
+                        authorizationAmount: { value: 13541645, currency: 'INR' },
+                        totalPayableAmount: { value: 13949910, currency: 'INR' },
+                        monthlyPayableAmount: { value: 4649970, currency: 'INR' },
+                        totalInterestAmount: { value: 408265, currency: 'INR' },
+                        totalInstantDiscountAmount: { value: 1958255, currency: 'INR' },
+                        interestDiscountAmount: { value: 408265, currency: 'INR' },
+                        additionalDiscountAmount: { value: 1549990, currency: 'INR' }
                     },
                     processingAmounts,
-                    offers: [
-                        { offerId: 'offer-hdfc-cashback', type: 'CASHBACK', description: 'Cashback' },
-                        { offerId: 'offer-hdfc-nocost', type: 'DISCOUNT', description: 'No cost EMI' }
-                    ]
+                    offers: [{ offerId: 'offer-hdfc-cashback' }, { offerId: 'offer-hdfc-nocost' }]
                 },
                 {
                     type: 'standard',
@@ -89,7 +87,7 @@ export const emiPlansResponseMock: EmiPlansResponse = {
                         interestDiscountAmount: { value: 150000, currency: 'INR' }
                     },
                     processingAmounts: percentageProcessingAmounts,
-                    offers: [{ offerId: 'offer-icici-lowcost', type: 'DISCOUNT' }]
+                    offers: [{ offerId: 'offer-icici-lowcost' }]
                 },
                 {
                     type: 'standard',

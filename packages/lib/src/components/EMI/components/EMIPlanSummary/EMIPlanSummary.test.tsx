@@ -42,9 +42,9 @@ const renderPlanSummary = (plan: EmiPlan, { amount }: { amount?: PaymentAmount }
         </CoreProvider>
     );
 
-const plansDiscountingInterest: [planType: string, plan: EmiPlan, tag: string, instantDiscount: string, interestDiscount: string][] = [
-    ['no cost', noCostPlanWithDiscount, 'No cost', '-₹4,000.00', '-₹2,500.00'],
-    ['low cost', lowCostPlanWithDiscount, 'Low cost', '-₹2,100.50', '-₹1,500.00']
+const plansDiscountingInterest: [planType: string, plan: EmiPlan, tag: string, interestDiscount: string][] = [
+    ['no cost', noCostPlanWithDiscount, 'No cost', '-₹4,082.65'],
+    ['low cost', lowCostPlanWithDiscount, 'Low cost', '-₹1,500.00']
 ];
 
 describe('EMIPlanSummary', () => {
@@ -62,55 +62,66 @@ describe('EMIPlanSummary', () => {
             'Instant discount',
             'Interest discountNo cost',
             'Amount reserved on card',
-            'Interest charged by bank @15.5% p.a',
+            'Interest charged by bank @18% p.a',
             'Total amount to be paid over time'
         ]);
     });
 
-    describe.each(plansDiscountingInterest)('%s plan', (_planType, plan, tag, instantDiscount, interestDiscount) => {
-        const { authorizationAmount, totalInstantDiscountAmount, interestDiscountAmount, totalInterestAmount, totalPayableAmount } =
-            plan.transactionAmounts;
+    test('should render every amount of a complete plan as the response carries it, without arithmetic', () => {
+        const { authorizationAmount, additionalDiscountAmount, interestDiscountAmount, totalInterestAmount, totalPayableAmount } =
+            noCostPlanWithDiscount.transactionAmounts;
 
-        test('should render every amount as the response carries it, without arithmetic', () => {
+        renderPlanSummary(noCostPlanWithDiscount);
+
+        expect(values()).toEqual([
+            formatAmount(EMI_FIXTURE_CHECKOUT_AMOUNT),
+            formatDiscount(requireAmount(additionalDiscountAmount, 'additional discount', noCostPlanWithDiscount)),
+            formatDiscount(requireAmount(interestDiscountAmount, 'interest discount', noCostPlanWithDiscount)),
+            formatAmount(authorizationAmount),
+            formatAmount(totalInterestAmount),
+            formatAmount(totalPayableAmount)
+        ]);
+    });
+
+    test('should show the additional discount as the instant discount, not the total instant discount', () => {
+        const { totalInstantDiscountAmount } = noCostPlanWithDiscount.transactionAmounts;
+
+        renderPlanSummary(noCostPlanWithDiscount);
+
+        expect(valuesByLabel()).toEqual(expect.objectContaining({ 'Instant discount': '-₹15,499.90' }));
+        expect(values()).not.toContain(formatDiscount(requireAmount(totalInstantDiscountAmount, 'total instant discount', noCostPlanWithDiscount)));
+    });
+
+    test('should not render the instant discount row for a plan without an additional discount', () => {
+        renderPlanSummary(lowCostPlanWithDiscount);
+
+        expect(lowCostPlanWithDiscount.transactionAmounts.totalInstantDiscountAmount).toBeDefined();
+        expect(labels()).not.toContain('Instant discount');
+    });
+
+    test('should render the rows of the plan when no checkout amount is configured', () => {
+        renderPlanSummary(noCostPlanWithDiscount, { amount: undefined });
+
+        expect(labels()).toEqual([
+            'Instant discount',
+            'Interest discountNo cost',
+            'Amount reserved on card',
+            'Interest charged by bank @18% p.a',
+            'Total amount to be paid over time'
+        ]);
+    });
+
+    describe.each(plansDiscountingInterest)('%s plan', (_planType, plan, tag, interestDiscount) => {
+        test('should show the interest discount as a negative amount against its own row', () => {
             renderPlanSummary(plan);
 
-            expect(values()).toEqual([
-                formatAmount(EMI_FIXTURE_CHECKOUT_AMOUNT),
-                formatDiscount(requireAmount(totalInstantDiscountAmount, 'instant discount', plan)),
-                formatDiscount(requireAmount(interestDiscountAmount, 'interest discount', plan)),
-                formatAmount(authorizationAmount),
-                formatAmount(totalInterestAmount),
-                formatAmount(totalPayableAmount)
-            ]);
-        });
-
-        test('should show each discount as a negative amount against its own row', () => {
-            renderPlanSummary(plan);
-
-            expect(valuesByLabel()).toEqual(
-                expect.objectContaining({
-                    'Instant discount': instantDiscount,
-                    [`Interest discount${tag}`]: interestDiscount
-                })
-            );
+            expect(valuesByLabel()).toEqual(expect.objectContaining({ [`Interest discount${tag}`]: interestDiscount }));
         });
 
         test('should tag the interest discount with the plan type it comes with', () => {
             renderPlanSummary(plan);
 
             expect(screen.getByText('Interest discount', { exact: false })).toHaveTextContent(tag);
-        });
-
-        test('should render the rows of the plan when no checkout amount is configured', () => {
-            renderPlanSummary(plan, { amount: undefined });
-
-            expect(labels()).toEqual([
-                'Instant discount',
-                `Interest discount${tag}`,
-                'Amount reserved on card',
-                expect.stringMatching(/^Interest charged by bank @/),
-                'Total amount to be paid over time'
-            ]);
         });
     });
 
@@ -137,7 +148,7 @@ describe('EMIPlanSummary', () => {
     test('should render the instant discount of a plan that carries no interest discount', () => {
         renderPlanSummary({
             ...standardPlanWithInterest,
-            transactionAmounts: { ...standardPlanWithInterest.transactionAmounts, totalInstantDiscountAmount: { value: 100000, currency: 'INR' } }
+            transactionAmounts: { ...standardPlanWithInterest.transactionAmounts, additionalDiscountAmount: { value: 100000, currency: 'INR' } }
         });
 
         expect(labels()).not.toContain('Interest discount');

@@ -92,7 +92,7 @@ describe('EMIPlanSelection', () => {
         renderPlanSelection(emiPlansResponseMock.issuers);
 
         expect(getProviderSelect()).toHaveTextContent(hdfc.issuerName);
-        expect(getPlanSelect()).toHaveTextContent('₹51,666.33 x 3 months');
+        expect(getPlanSelect()).toHaveTextContent('₹46,499.70 x 3 months');
     });
 
     test('should list only the plans of the selected issuer', () => {
@@ -200,7 +200,7 @@ describe('EMIPlanSelection', () => {
     test('should offer the discount of a plan as supporting text', () => {
         renderPlanSelection([hdfc]);
 
-        expect(getPlanOptions()[0]).toContain('Additional ₹4,000.00 discount available');
+        expect(getPlanOptions()[0]).toContain('Additional ₹19,582.55 discount available');
     });
 
     describe('provider rows', () => {
@@ -233,7 +233,7 @@ describe('EMIPlanSelection', () => {
         test('should offer the largest discount of the provider as supporting text, whichever plan is selected', () => {
             renderPlanSelection([hdfc], { issuer: hdfc, plan: hdfc.plans[1] });
 
-            expect(getProviderOption(hdfc.issuerName)).toHaveTextContent('Additional ₹4,000.00 discount available');
+            expect(getProviderOption(hdfc.issuerName)).toHaveTextContent('Additional ₹19,582.55 discount available');
         });
 
         test('should offer the best offer of the response as the provider discount, not one of its plans', () => {

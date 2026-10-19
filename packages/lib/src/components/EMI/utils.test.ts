@@ -20,7 +20,7 @@ describe('buildEmiPlanPayload', () => {
             issuerCode: 'HDFC',
             fundingSource: 'credit',
             planType: 'noCost',
-            interestRateBps: 1550,
+            interestRateBps: 1800,
             appliedOfferIds: ['offer-hdfc-cashback', 'offer-hdfc-nocost']
         });
     });
@@ -273,7 +273,7 @@ describe('getPlanLabel', () => {
     const [hdfcNoCost, hdfcStandard] = emiPlansResponseMock.issuers[0].plans;
 
     test('should label a no cost plan by its monthly amount and tenure only', () => {
-        expect(getPlanLabel(hdfcNoCost, i18n)).toBe('₹51,666.33 x 3 months');
+        expect(getPlanLabel(hdfcNoCost, i18n)).toBe('₹46,499.70 x 3 months');
     });
 
     test('should add the yearly interest rate to the label of a plan that charges interest', () => {
@@ -287,7 +287,7 @@ describe('getSelectionAnnouncement', () => {
 
     test('should announce the plan with the amount reserved on the card and the total paid over time', () => {
         expect(getSelectionAnnouncement(hdfcNoCost, i18n)).toBe(
-            '₹51,666.33 x 3 months. Amount reserved on card: ₹146,999.00. Total amount to be paid over time: ₹154,999.00'
+            '₹46,499.70 x 3 months. Amount reserved on card: ₹135,416.45. Total amount to be paid over time: ₹139,499.10'
         );
     });
 });

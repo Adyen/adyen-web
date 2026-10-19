@@ -56,7 +56,7 @@ will be charged — and the SDK has no authority to make them.
                         "type": "absolute",
                         "message": "299 + GST is Applicable"
                     },
-                    "offers": [{ "offerId": "offer-hdfc-nocost", "type": "DISCOUNT", "description": "No cost EMI" }]
+                    "offers": [{ "offerId": "offer-hdfc-nocost" }]
                 },
                 {
                     "type": "standard",
@@ -83,7 +83,7 @@ will be charged — and the SDK has no authority to make them.
 ```
 
 Every amount on a plan is quoted by the acquirer and rendered as it arrives. The SDK performs no arithmetic on
-them: `authorizationAmount` is what the card is charged now, `totalInstantDiscountAmount` and
+them: `authorizationAmount` is what the card is charged now, `additionalDiscountAmount` and
 `interestDiscountAmount` are the two discount rows of the summary, and `totalPayableAmount` is what the plan
 costs over its tenure.
 
@@ -191,21 +191,21 @@ display order, and the SDK consumes it directly.
 
 #### Ownership
 
-| Value                                 | Owner | Source                                                                       |
-| ------------------------------------- | ----- | ---------------------------------------------------------------------------- |
-| Provider row identity                 | SDK   | `(issuerCode, fundingSource)`                                                |
-| Plan row identity                     | SDK   | `(issuerCode, fundingSource, type, tenureMonths)`                            |
-| Provider plan-type tags               | API   | `issuer.availablePlanTypes`                                                  |
-| Provider discount                     | API   | `issuer.bestOffer`                                                           |
-| Applied offers                        | API   | `plan.offers`, whose membership means applied                                |
-| Plan discount and summary             | API   | `transactionAmounts.totalInstantDiscountAmount` and `interestDiscountAmount` |
-| Amount reserved on the card           | API   | `transactionAmounts.authorizationAmount`                                     |
-| `appliedOfferIds` sent to `/payments` | SDK   | Every `offerId` of `plan.offers`, unchanged                                  |
-| Issuer and plan display order         | API   | Response order, plans ascending by `tenureMonths`                            |
-| Default issuer and plan               | SDK   | The first issuer, and that issuer's first plan                               |
-| Which issuers are offered             | API   | Every issuer of `issuers`, unfiltered                                        |
-| Labels and amount formatting          | SDK   | `i18n`                                                                       |
-| Terms and conditions page of the bank | API   | `issuer.termLink`, linked only when it is an `https` URL                     |
+| Value                                 | Owner | Source                                                                     |
+| ------------------------------------- | ----- | -------------------------------------------------------------------------- |
+| Provider row identity                 | SDK   | `(issuerCode, fundingSource)`                                              |
+| Plan row identity                     | SDK   | `(issuerCode, fundingSource, type, tenureMonths)`                          |
+| Provider plan-type tags               | API   | `issuer.availablePlanTypes`                                                |
+| Provider discount                     | API   | `issuer.bestOffer`                                                         |
+| Applied offers                        | API   | `plan.offers`, whose membership means applied                              |
+| Plan discount and summary             | API   | `transactionAmounts.additionalDiscountAmount` and `interestDiscountAmount` |
+| Amount reserved on the card           | API   | `transactionAmounts.authorizationAmount`                                   |
+| `appliedOfferIds` sent to `/payments` | SDK   | Every `offerId` of `plan.offers`, unchanged                                |
+| Issuer and plan display order         | API   | Response order, plans ascending by `tenureMonths`                          |
+| Default issuer and plan               | SDK   | The first issuer, and that issuer's first plan                             |
+| Which issuers are offered             | API   | Every issuer of `issuers`, unfiltered                                      |
+| Labels and amount formatting          | SDK   | `i18n`                                                                     |
+| Terms and conditions page of the bank | API   | `issuer.termLink`, linked only when it is an `https` URL                   |
 
 #### Response Contract
 
@@ -223,7 +223,7 @@ display order, and the SDK consumes it directly.
 - Every offer a plan lists was priced into that plan's amounts. There is no `applied` flag: membership of
   `offers` is what says the offer applies. The SDK never chooses among them and never derives a discount from
   them, because the amounts are authoritative; it echoes every `offerId` to `/payments` unchanged.
-- An offer carries no amount. `type` and `description` are informational and the SDK renders neither.
+- An offer carries only its `offerId`: no amount, type, or description.
 - Issuer and plan identity tuples are unique within one response.
 - Amounts are minor units and every plan in one response is quoted in the request's currency.
 - New enum values are additive. The SDK passes unknown selected values to `/payments` unchanged.
@@ -244,7 +244,7 @@ display order, and the SDK consumes it directly.
 Every field the contract above guarantees is typed as required, with no optional marker and no defensive
 branch behind it. `EmiIssuer.plans` is non-empty, `EmiSelection` always resolves, and the summary renders
 every amount it is given rather than filtering absent ones. Only genuinely conditional values —
-`totalInstantDiscountAmount`, `interestDiscountAmount`, `offers` — stay optional, because a plan without a
+`totalInstantDiscountAmount`, `interestDiscountAmount`, `additionalDiscountAmount`, `offers` — stay optional, because a plan without a
 discount or an offer is a real state rather than a missing field.
 
 ---
@@ -274,7 +274,7 @@ the UI and `/payments`.
 The Phase 2 derivations listed at the top are deleted rather than reworked:
 
 - `selectDisplayOffer` and `selectInstantDiscount` go, together with `INTEREST_DISCOUNT_PLAN_TYPES`. The
-  summary reads `interestDiscountAmount` and `totalInstantDiscountAmount`, the provider row reads
+  summary reads `interestDiscountAmount` and `additionalDiscountAmount`, the provider row reads
   `bestOffer`, and the payload maps every `offerId` instead of picking the largest offer.
 - `withPlansSortedByTenure` goes. The response arrives in display order, which is the one place that order is
   decided.
