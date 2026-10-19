@@ -14,19 +14,19 @@
 }
 
 .adyen-checkout__alert-message--error {
-    background: variable-generator.token(alert-critical-background-color);
+    background: variable-generator.token(color-background-critical-weak);
 }
 
 .adyen-checkout__alert-message--warning {
-    background: variable-generator.token(alert-warning-background-color);
+    background: variable-generator.token(color-background-warning-weak);
 }
 
 .adyen-checkout__alert-message--info {
-    background: variable-generator.token(alert-highlight-background-color);
+    background: variable-generator.token(color-background-highlight-weak);
 }
 
 .adyen-checkout__alert-message--success {
-    background: variable-generator.token(alert-success-background-color);
+    background: variable-generator.token(color-background-success-weak);
 }
 
 .adyen-checkout__alert-message__icon {
