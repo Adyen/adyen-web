@@ -4,7 +4,7 @@
 
 .adyen-checkout__qr-loader {
     background: variable-generator.token(color-background-primary);
-    padding: variable-generator.token(spacer-40) 16px;
+    padding: variable-generator.token(spacer-040) variable-generator.token(spacer-070);
     border: variable-generator.token(border-width-s) solid variable-generator.token(color-outline-secondary);
     border-radius: variable-generator.token(border-radius-m);
     display: flex;

@@ -62,5 +62,9 @@ aliases.$color: map.merge(
         );
     }
 
+    @if not map.has-key($adyen-tokens-map, '#{$token}') {
+        @error 'Unknown design token: #{$token}';
+    }
+
     @return map.get($adyen-tokens-map, '#{$token}');
 }
