@@ -1,8 +1,14 @@
 @use 'styles/index';
 @use 'styles/variable-generator';
 
+// DEPRECATED: `color-background-always-dark-primary*` are deprecated in Bento v2 and will be removed in a future release.
+// They are used temporarily to keep the navy primary button. Replace with `color-background-inverse-primary*` before they are removed.
+$button-primary-background: variable-generator.token(color-background-always-dark-primary);
+$button-primary-background-hover: variable-generator.token(color-background-always-dark-primary-hover);
+$button-primary-background-active: variable-generator.token(color-background-always-dark-primary-active);
+
 .adyen-checkout__button {
-    background: variable-generator.token(color-background-inverse-primary);
+    background: $button-primary-background;
     border: 0;
     border-radius: variable-generator.token(border-radius-m);
     color: variable-generator.token(color-label-on-color);
@@ -27,11 +33,11 @@
     }
 
     &:hover {
-        background: variable-generator.token(color-background-inverse-primary-hover);
+        background: $button-primary-background-hover;
     }
 
     &:active {
-        background: variable-generator.token(color-background-inverse-primary-active);
+        background: $button-primary-background-active;
     }
 
     &:disabled,
@@ -138,18 +144,18 @@
 
     &.adyen-checkout__button--action {
         padding: variable-generator.token(spacer-050) variable-generator.token(spacer-060);
-        background: variable-generator.token(color-background-inverse-primary);
+        background: $button-primary-background;
         border: variable-generator.token(border-width-s) solid transparent;
         color: variable-generator.token(color-label-on-color);
         height: variable-generator.token(spacer-120);
 
         &:hover {
-            background: variable-generator.token(color-background-inverse-primary-hover);
+            background: $button-primary-background-hover;
         }
 
         &:active,
         &:active:hover {
-            background: variable-generator.token(color-background-inverse-primary-active);
+            background: $button-primary-background-active;
             box-shadow: none;
         }
     }
