@@ -108,12 +108,12 @@ export const IRIS_ISSUERS = [
 export const EMI_PLANS = {
     hdfc: {
         name: 'HDFC Bank',
-        firstPlan: /₹51,666.33 x 3 months/,
+        firstPlan: /₹46,499.70 x 3 months/,
         secondPlan: /₹28,166.50 x 6 months/,
         secondPlanAnnouncement:
             '₹28,166.50 x 6 months | @15.5% p.a. Amount reserved on card: ₹154,999.00. Total amount to be paid over time: ₹168,999.00',
-        instantDiscount: '-₹4,000.00',
-        interestDiscount: '-₹2,500.00'
+        instantDiscount: '-₹15,499.90',
+        interestDiscount: '-₹4,082.65'
     },
     icici: {
         name: 'ICICI Bank',
