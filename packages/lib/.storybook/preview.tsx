@@ -1,4 +1,4 @@
-import './main.css';
+import './main.scss';
 import { Preview } from '@storybook/preact-vite';
 import { DEFAULT_COUNTRY_CODE, DEFAULT_SHOPPER_LOCALE, DEFAULT_AMOUNT_VALUE, STORYBOOK_SHOPPERLOCALES } from '../storybook/config/commonConfig';
 import { setupWorker } from 'msw/browser';

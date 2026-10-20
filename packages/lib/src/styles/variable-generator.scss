@@ -2,18 +2,29 @@
 @use '~@adyen/bento-design-tokens/dist/scss-map/bento/aliases';
 @use '~@adyen/bento-design-tokens/dist/scss-map/bento/definitions';
 @use '~@adyen/bento-design-tokens/dist/scss-map/bento/components';
+@use '~@adyen/bento-design-tokens/dist/scss-map/bento/aliases-dark';
+@use '~@adyen/bento-design-tokens/dist/scss-map/bento/definitions-dark';
 @use 'overrides';
 
 
 
 // simple re-mapping
-aliases.$color: map.merge(
+$color: map.merge(
     aliases.$color,
     (
         color-label-highlight: map.get(aliases.$color, color-label-primary),
         color-outline-tertiary: map.get(aliases.$color, color-decorative-grey),
          // We don't use color alone for hover, so we use the active color. This change is in line on what bento does.
         color-outline-tertiary-hover: map.get(aliases.$color, color-outline-tertiary-active),
+    )
+);
+
+// The same re-mapping for dark mode. Bento has no dark `color-decorative-grey`, so `color-outline-tertiary` keeps its dark Bento value.
+$dark-color: map.merge(
+    aliases-dark.$color,
+    (
+        color-label-highlight: map.get(aliases-dark.$color, color-label-primary),
+        color-outline-tertiary-hover: map.get(aliases-dark.$color, color-outline-tertiary-active),
     )
 );
 
@@ -62,7 +73,7 @@ $adyen-tokens-map: ();
 
 @each $map
     in (
-        aliases.$color,
+        $color,
         aliases.$text,
         aliases.$focus-ring,
         definitions.$border,
@@ -76,18 +87,49 @@ $adyen-tokens-map: ();
     $adyen-tokens-map: map.merge($adyen-tokens-map, $map);
 }
 
+// Tokens whose dark value differs from the light one. Declared as private `--adyen-dark-*` properties by `dark-color-scheme()`.
+$adyen-dark-tokens-map: ();
+
+@each $map in ($dark-color, definitions-dark.$shadow) {
+    @each $name, $value in $map {
+        @if map.has-key($adyen-tokens-map, $name) and map.get($adyen-tokens-map, $name) != $value {
+            $adyen-dark-tokens-map: map.merge($adyen-dark-tokens-map, ($name: $value));
+        }
+    }
+}
+
+@function default-value($token) {
+    $value: token($token, false);
+
+    @if map.has-key($adyen-dark-tokens-map, '#{$token}') {
+        @return var(--adyen-dark-#{$token}, #{$value});
+    }
+
+    @return $value;
+}
+
 @function token($token, $generate-css-var: true) {
     @if not map.has-key($adyen-tokens-map, '#{$token}') {
         @error 'Unknown design token: #{$token}';
     }
 
-    $value: map.get($adyen-tokens-map, '#{$token}');
-
     @if $generate-css-var {
-        @return var(--adyen-sdk-#{$token}, #{$value});
+        @return var(--adyen-sdk-#{$token}, #{default-value($token)});
     }
 
-    @return $value;
+    @return map.get($adyen-tokens-map, '#{$token}');
+}
+
+// Switches every token to its dark default when the OS prefers a dark colour scheme.
+// Merchant overrides still win, since `--adyen-sdk-*` is resolved before the dark default.
+@mixin dark-color-scheme {
+    @media (prefers-color-scheme: dark) {
+        :root {
+            @each $name, $value in $adyen-dark-tokens-map {
+                --adyen-dark-#{$name}: #{$value};
+            }
+        }
+    }
 }
 
 @function component-token($token, $component) {
@@ -97,5 +139,5 @@ $adyen-tokens-map: ();
         @error 'No deprecated CSS variable for `#{$token}` in `#{$component}`, use `token()` instead';
     }
 
-    @return var(--adyen-sdk-#{$token}, var(--adyen-sdk-#{$deprecated-name}, #{token($token, false)}));
+    @return var(--adyen-sdk-#{$token}, var(--adyen-sdk-#{$deprecated-name}, #{default-value($token)}));
 }

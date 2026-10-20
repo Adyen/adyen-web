@@ -4,7 +4,7 @@
     width: 100%;
     height: variable-generator.token(spacer-110);
     margin: 0;
-    background-color: white;
+    background-color: variable-generator.token(color-background-primary);
     border: none;
     border-radius: variable-generator.token(spacer-020);
     margin-bottom: variable-generator.token(spacer-080);

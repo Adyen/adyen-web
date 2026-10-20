@@ -3,7 +3,7 @@
 
 .adyen-checkout-ctp__section {
     position: relative;
-    background-color: white;
+    background-color: variable-generator.token(color-background-primary);
     box-shadow:
         0 6px 12px rgb(0 17 44 / 8%),
         0 2px 4px rgb(0 17 44 / 4%);

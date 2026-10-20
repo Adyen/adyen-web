@@ -1,3 +1,4 @@
+@use 'styles/variable-generator';
 @import 'https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap';
 
 html,
@@ -9,23 +10,23 @@ body {
     text-rendering: optimizelegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    background-color: #fbfbfb;
+    background-color: variable-generator.token(color-background-primary);
 }
 
 .component-wrapper {
-    background: #fff;
-    border: 1px solid #edf0f3;
+    background: variable-generator.token(color-background-primary);
+    border: variable-generator.token(border-width-s) solid variable-generator.token(color-separator-primary);
     max-width: 600px;
-    padding: 24px;
+    padding: variable-generator.token(spacer-090);
     margin: auto;
 }
 
 .storybook-status-container {
     align-items: center;
-    background-color: #fff;
-    border: 1px solid #c9cdd3;
-    border-radius: 8px;
-    color: #00112c;
+    background-color: variable-generator.token(color-background-primary);
+    border: variable-generator.token(border-width-s) solid variable-generator.token(color-separator-primary);
+    border-radius: variable-generator.token(spacer-020);
+    color: variable-generator.token(color-label-primary);
     display: flex;
     flex-direction: column;
     font-size: 1rem;
