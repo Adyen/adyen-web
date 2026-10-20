@@ -21,10 +21,15 @@ import { useEffect, useRef, useState } from 'preact/hooks';
 
 const SR_PANEL_SELECTOR = '[class^="adyen-checkout-sr-panel"]';
 
+// Entries arriving more than this long after the previous one start a new group.
+const SR_GROUP_DEBOUNCE_MS = 500;
+
+const GROUP_SEPARATOR = '=========';
+
 interface LogEntry {
     id: number;
     t: string;
-    kind: 'ATTR' | 'CHILD' | 'TEXT' | 'INFO';
+    kind: 'ATTR' | 'CHILD' | 'TEXT' | 'INFO' | 'SEPARATOR';
     text: string;
     changed: boolean;
 }
@@ -33,7 +38,8 @@ const COLORS: Record<LogEntry['kind'], string> = {
     ATTR: '#d32f2f',
     CHILD: '#2e7d32',
     TEXT: '#1565c0',
-    INFO: '#777'
+    INFO: '#777',
+    SEPARATOR: '#777'
 };
 
 export const SRPanelDebugger = () => {
@@ -46,9 +52,20 @@ export const SRPanelDebugger = () => {
         let cancelled = false;
         const start = performance.now();
 
+        let lastOutputTime = 0;
+
         const push = (kind: LogEntry['kind'], text: string, changed = false) => {
+            const now = performance.now();
+            const t = ((now - start) / 1000).toFixed(2) + 's';
+            const startsNewGroup = lastOutputTime !== 0 && now - lastOutputTime > SR_GROUP_DEBOUNCE_MS;
+            lastOutputTime = now;
+
             setEntries(prev =>
-                [...prev, { id: idRef.current++, t: ((performance.now() - start) / 1000).toFixed(2) + 's', kind, text, changed }].slice(-200)
+                [
+                    ...prev,
+                    ...(startsNewGroup ? [{ id: idRef.current++, t, kind: 'SEPARATOR' as const, text: GROUP_SEPARATOR, changed: false }] : []),
+                    { id: idRef.current++, t, kind, text, changed }
+                ].slice(-200)
             );
         };
 
@@ -133,18 +150,24 @@ export const SRPanelDebugger = () => {
                     fontWeight: 'bold'
                 }}
             >
-                <span>SR panel mutations ({entries.length})</span>
+                <span>SR panel mutations ({entries.filter(e => e.kind !== 'SEPARATOR').length})</span>
                 <button type="button" onClick={() => setEntries([])} style={{ fontFamily: 'monospace', fontSize: '11px', cursor: 'pointer' }}>
                     clear
                 </button>
             </div>
             <div ref={listRef} style={{ overflowY: 'auto', padding: '4px 8px' }}>
                 {entries.length === 0 && <div style={{ color: '#999' }}>no mutations yet…</div>}
-                {entries.map(e => (
-                    <div key={e.id} style={{ color: COLORS[e.kind], fontWeight: e.changed ? 'bold' : 'normal', whiteSpace: 'pre-wrap' }}>
-                        {e.t} {e.kind} {e.text}
-                    </div>
-                ))}
+                {entries.map(e =>
+                    e.kind === 'SEPARATOR' ? (
+                        <div key={e.id} style={{ color: COLORS.SEPARATOR }}>
+                            {e.text}
+                        </div>
+                    ) : (
+                        <div key={e.id} style={{ color: COLORS[e.kind], fontWeight: e.changed ? 'bold' : 'normal', whiteSpace: 'pre-wrap' }}>
+                            {e.t} {e.kind} {e.text}
+                        </div>
+                    )
+                )}
             </div>
         </div>
     );
