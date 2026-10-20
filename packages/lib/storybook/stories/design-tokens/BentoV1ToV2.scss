@@ -1,7 +1,7 @@
 @use 'styles/mixins';
 @use 'styles/variable-generator';
 
-.css-variables-diff {
+.bento-v1-to-v2 {
     color: variable-generator.token(color-label-primary);
     margin: 0 auto;
     max-width: 1100px;
