@@ -7,7 +7,7 @@ import Button from '../../../src/components/internal/Button';
 import Alert from '../../../src/components/internal/Alert';
 import Field from '../../../src/components/internal/FormFields/Field';
 import InputText from '../../../src/components/internal/FormFields/InputText';
-import { componentVariableChanges, defaultValueChanges, newVariables, payButtonChanges, toCssVariable, v1CssVariables } from './bento-v1-to-v2';
+import { defaultValueChanges, newVariables, payButtonChanges, toCssVariable, v1CssVariables } from './bento-v1-to-v2';
 import type { ILanguageService } from '../../../src/language/LanguageService';
 import type { TokenKind } from './bento-v1-to-v2';
 import './BentoV1ToV2.scss';
@@ -223,32 +223,10 @@ const BentoV1ToV2Page = () => (
 
         <h2>Component variables</h2>
         <p>
-            Bento v1 shipped component tokens for the alert, toggle and icon-only button. Bento v2 replaces them with core tokens. Where a core token
-            replaces a single component variable, that variable still applies as a fallback within its component. If both are set, the core token
-            wins. Other component variables are no longer applied.
+            Bento v1 shipped component tokens for the alert, toggle and icon-only button. Bento v2 replaces them with core tokens. Some of the Bento
+            v1 component variables still apply as fallbacks within their component; if both are set, the core token wins. The variables that still
+            apply are listed in <code>$deprecated-css-variables</code> in <code>variable-generator.scss</code>.
         </p>
-        <table className="bento-v1-to-v2__table">
-            <thead>
-                <tr>
-                    <th scope="col">Bento v1 variable</th>
-                    <th scope="col">Bento v2 value</th>
-                    <th scope="col">Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                {componentVariableChanges.map(change => (
-                    <tr key={change.variable}>
-                        <td>
-                            <code>{change.variable}</code>
-                        </td>
-                        <td>
-                            <code>{change.replacement}</code>
-                        </td>
-                        <td>{change.appliedAsFallback ? 'Applied as a fallback' : 'No longer applied'}</td>
-                    </tr>
-                ))}
-            </tbody>
-        </table>
     </div>
 );
 

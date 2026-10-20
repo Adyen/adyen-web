@@ -10,6 +10,7 @@
 aliases.$color: map.merge(
     aliases.$color,
     (
+        color-label-highlight: map.get(aliases.$color, color-label-primary),
         color-outline-tertiary: map.get(aliases.$color, color-decorative-grey),
          // We don't use color alone for hover, so we use the active color. This change is in line on what bento does.
         color-outline-tertiary-hover: map.get(aliases.$color, color-outline-tertiary-active),
