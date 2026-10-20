@@ -1,10 +1,10 @@
 @use 'styles/index';
 @use 'styles/variable-generator';
 
-// `button-token()` falls back to the deprecated `color-background-always-dark*` variables merchants could set before Bento v2.
-$button-primary-background: variable-generator.button-token(color-background-inverse-primary);
-$button-primary-background-hover: variable-generator.button-token(color-background-inverse-primary-hover);
-$button-primary-background-active: variable-generator.button-token(color-background-inverse-primary-active);
+// `component-token()` falls back to the deprecated `color-background-always-dark*` variables merchants could set before Bento v2.
+$button-primary-background: variable-generator.component-token(color-background-inverse-primary, button);
+$button-primary-background-hover: variable-generator.token(color-background-inverse-primary-hover);
+$button-primary-background-active: variable-generator.component-token(color-background-inverse-primary-active, button);
 
 .adyen-checkout__button {
     background: $button-primary-background;
@@ -226,9 +226,9 @@ $button-primary-background-active: variable-generator.button-token(color-backgro
         align-items: center;
         width: auto;
         height: auto;
-        padding: variable-generator.token(spacer-050);
+        padding: variable-generator.component-token(spacer-050, button);
         background: transparent;
-        color: variable-generator.token(color-label-primary);
+        color: variable-generator.component-token(color-label-primary, button);
         border-radius: variable-generator.token(border-radius-m);
         box-shadow: inset 0 0 0 variable-generator.token(border-width-s) transparent;
 
@@ -237,7 +237,7 @@ $button-primary-background-active: variable-generator.button-token(color-backgro
         }
 
         &:active {
-            color: variable-generator.token(color-label-primary-active);
+            color: variable-generator.component-token(color-label-primary-active, button);
             background-color: transparent;
         }
 
