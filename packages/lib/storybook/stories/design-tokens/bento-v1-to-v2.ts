@@ -21,12 +21,6 @@ export interface NewVariable {
     scope: string;
 }
 
-export interface ComponentVariableChange {
-    variable: string;
-    replacement: string;
-    appliedAsFallback: boolean;
-}
-
 export const payButtonChanges: PayButtonChange[] = [
     {
         v1Variable: 'color-background-always-dark',
@@ -57,7 +51,7 @@ export const defaultValueChanges: DefaultValueChange[] = [
     { variable: 'color-label-tertiary', kind: 'color', before: '#5c687c', after: 'rgba(17, 17, 17, 0.45)' },
     { variable: 'color-label-disabled', kind: 'color', before: '#8d95a3', after: 'rgba(17, 17, 17, 0.38)' },
     { variable: 'color-label-critical', kind: 'color', before: '#c72727', after: '#ce3401' },
-    { variable: 'color-label-highlight', kind: 'color', before: '#00112c', after: '#006bd7' },
+    { variable: 'color-label-highlight', kind: 'color', before: '#00112c', after: '#111111' },
     { variable: 'color-background-secondary', kind: 'color', before: '#f7f7f8', after: 'rgba(17, 17, 16, 0.04)' },
     { variable: 'color-background-secondary-hover', kind: 'color', before: '#eeeff1', after: 'rgba(17, 17, 16, 0.07)' },
     { variable: 'color-background-secondary-active', kind: 'color', before: '#e3e5e9', after: 'rgba(17, 17, 16, 0.11)' },
@@ -96,59 +90,6 @@ export const newVariables: NewVariable[] = [
     },
     { variable: 'color-background-critical-weak', value: '#ffeae3', scope: 'Error alert background' },
     { variable: 'color-background-warning-weak', value: '#ffecd0', scope: 'Warning alert background' }
-];
-
-export const componentVariableChanges: ComponentVariableChange[] = [
-    { variable: 'alert-critical-background-color', replacement: 'color-background-critical-weak', appliedAsFallback: true },
-    { variable: 'alert-warning-background-color', replacement: 'color-background-warning-weak', appliedAsFallback: true },
-    { variable: 'alert-highlight-background-color', replacement: 'color-background-highlight-weak', appliedAsFallback: true },
-    { variable: 'alert-success-background-color', replacement: 'color-background-success-weak', appliedAsFallback: true },
-    { variable: 'button-icon-only-padding', replacement: 'spacer-050', appliedAsFallback: true },
-    { variable: 'button-tertiary-color', replacement: 'color-label-primary', appliedAsFallback: true },
-    { variable: 'button-tertiary-active-color', replacement: 'color-label-primary-active', appliedAsFallback: true },
-    { variable: 'button-tertiary-box-shadow', replacement: 'inset 0 0 0 border-width-s transparent', appliedAsFallback: false },
-    { variable: 'button-tertiary-active-background-color', replacement: 'transparent', appliedAsFallback: false },
-    { variable: 'toggle-label-padding', replacement: 'spacer-070', appliedAsFallback: true },
-    { variable: 'toggle-track-background-color', replacement: 'color-background-primary', appliedAsFallback: true },
-    { variable: 'toggle-track-border', replacement: 'border-width-s solid color-outline-tertiary', appliedAsFallback: false },
-    { variable: 'toggle-track-border-radius', replacement: 'border-radius-xl', appliedAsFallback: true },
-    { variable: 'toggle-track-height', replacement: 'spacer-080', appliedAsFallback: true },
-    { variable: 'toggle-track-width', replacement: '36px', appliedAsFallback: false },
-    { variable: 'toggle-track-padding', replacement: 'spacer-010 spacer-020', appliedAsFallback: false },
-    { variable: 'toggle-track-hover-background-color', replacement: 'color-background-primary-hover', appliedAsFallback: true },
-    { variable: 'toggle-track-hover-border-color', replacement: 'color-outline-tertiary-hover', appliedAsFallback: true },
-    { variable: 'toggle-track-active-background-color', replacement: 'color-background-primary-active', appliedAsFallback: true },
-    { variable: 'toggle-track-active-border-color', replacement: 'color-outline-tertiary-active', appliedAsFallback: true },
-    { variable: 'toggle-track-disabled-background-color', replacement: 'color-background-secondary', appliedAsFallback: true },
-    { variable: 'toggle-track-disabled-border-color', replacement: 'color-outline-disabled', appliedAsFallback: true },
-    { variable: 'toggle-track-readonly-background-color', replacement: 'color-background-secondary', appliedAsFallback: false },
-    { variable: 'toggle-track-readonly-border-color', replacement: 'color-outline-disabled', appliedAsFallback: false },
-    { variable: 'toggle-track-toggled-background-color', replacement: 'color-background-inverse-primary', appliedAsFallback: true },
-    { variable: 'toggle-track-toggled-border', replacement: '0', appliedAsFallback: false },
-    { variable: 'toggle-track-toggled-padding', replacement: 'spacer-010', appliedAsFallback: true },
-    { variable: 'toggle-track-toggled-hover-background-color', replacement: 'color-background-inverse-primary-hover', appliedAsFallback: true },
-    { variable: 'toggle-track-toggled-active-background-color', replacement: 'color-background-inverse-primary-active', appliedAsFallback: true },
-    { variable: 'toggle-track-toggled-disabled-background-color', replacement: 'color-background-tertiary-active', appliedAsFallback: true },
-    { variable: 'toggle-track-toggled-readonly-background-color', replacement: 'color-background-tertiary-active', appliedAsFallback: false },
-    { variable: 'toggle-handle-background-color', replacement: 'color-background-inverse-primary', appliedAsFallback: false },
-    { variable: 'toggle-handle-border-radius', replacement: 'border-radius-xl', appliedAsFallback: false },
-    { variable: 'toggle-handle-toggled-color', replacement: 'color-label-primary', appliedAsFallback: true },
-    { variable: 'toggle-handle-height', replacement: 'spacer-060', appliedAsFallback: true },
-    { variable: 'toggle-handle-width', replacement: 'spacer-060', appliedAsFallback: false },
-    {
-        variable: 'toggle-handle-transition',
-        replacement: 'transform animation-duration-moderate animation-easing-standard',
-        appliedAsFallback: false
-    },
-    { variable: 'toggle-handle-disabled-background-color', replacement: 'color-label-disabled', appliedAsFallback: true },
-    { variable: 'toggle-handle-toggled-background-color', replacement: 'color-background-primary', appliedAsFallback: false },
-    { variable: 'toggle-handle-toggled-height', replacement: 'spacer-070', appliedAsFallback: false },
-    { variable: 'toggle-handle-toggled-width', replacement: 'spacer-070', appliedAsFallback: false },
-    { variable: 'toggle-handle-toggled-disabled-background-color', replacement: 'color-background-disabled', appliedAsFallback: true },
-    { variable: 'toggle-handle-toggled-disabled-color', replacement: 'color-label-disabled', appliedAsFallback: false },
-    { variable: 'toggle-handle-toggled-readonly-background-color', replacement: 'color-background-disabled', appliedAsFallback: false },
-    { variable: 'toggle-description-color', replacement: 'color-label-secondary', appliedAsFallback: true },
-    { variable: 'toggle-description-padding', replacement: 'spacer-020', appliedAsFallback: true }
 ];
 
 export const toCssVariable = (name: string): string => `--adyen-sdk-${name}`;
