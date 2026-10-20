@@ -3,7 +3,7 @@
 
 .adyen-checkout-toggle {
   $component-root: &;
-  $label-padding: variable-generator.token(spacer-070);
+  $label-padding: variable-generator.component-token(spacer-070, toggle);
 
   color: inherit;
   cursor: pointer;
@@ -35,11 +35,11 @@
 
   &__track {
     align-items: center;
-    background-color: variable-generator.token(color-background-primary);
+    background-color: variable-generator.component-token(color-background-primary, toggle);
     border: variable-generator.token(border-width-s) solid variable-generator.token(color-outline-tertiary);
-    border-radius: variable-generator.token(border-radius-xl);
+    border-radius: variable-generator.component-token(border-radius-xl, toggle);
     display: flex;
-    height: variable-generator.token(spacer-080);
+    height: variable-generator.component-token(spacer-080, toggle);
     min-width: 36px;
     padding: variable-generator.token(spacer-010) variable-generator.token(spacer-020);
     position: relative;
@@ -49,18 +49,18 @@
     }
 
     #{$component-root}__input:hover:enabled + & {
-      background-color: variable-generator.token(color-background-primary-hover);
-      border-color: variable-generator.token(color-outline-tertiary-hover);
+      background-color: variable-generator.component-token(color-background-primary-hover, toggle);
+      border-color: variable-generator.component-token(color-outline-tertiary-hover, toggle);
     }
 
     #{$component-root}__input:active:enabled + & {
-      background-color: variable-generator.token(color-background-primary-active);
-      border-color: variable-generator.token(color-outline-tertiary-active);
+      background-color: variable-generator.component-token(color-background-primary-active, toggle);
+      border-color: variable-generator.component-token(color-outline-tertiary-active, toggle);
     }
 
     #{$component-root}__input:disabled + & {
-      background-color: variable-generator.token(color-background-secondary);
-      border-color: variable-generator.token(color-outline-disabled);
+      background-color: variable-generator.component-token(color-background-secondary, toggle);
+      border-color: variable-generator.component-token(color-outline-disabled, toggle);
       cursor: not-allowed;
 
       path {
@@ -74,21 +74,21 @@
     }
 
     #{$component-root}__input:checked + & {
-      background-color: variable-generator.token(color-background-inverse-primary);
+      background-color: variable-generator.component-token(color-background-inverse-primary, toggle);
       border: 0;
-      padding: variable-generator.token(spacer-010);
+      padding: variable-generator.component-token(spacer-010, toggle);
     }
 
     #{$component-root}__input:checked:hover:enabled + & {
-      background-color: variable-generator.token(color-background-inverse-primary-hover);
+      background-color: variable-generator.component-token(color-background-inverse-primary-hover, toggle);
     }
 
     #{$component-root}__input:checked:active:enabled + & {
-      background-color: variable-generator.token(color-background-inverse-primary-active);
+      background-color: variable-generator.component-token(color-background-inverse-primary-active, toggle);
     }
 
     #{$component-root}__input:checked:disabled + & {
-      background-color: variable-generator.token(color-background-tertiary-active);
+      background-color: variable-generator.component-token(color-background-tertiary-active, toggle);
     }
 
     #{$component-root}--readonly #{$component-root}__input:checked + & {
@@ -100,15 +100,15 @@
     align-content: center;
     background-color: variable-generator.token(color-background-inverse-primary);
     border-radius: variable-generator.token(border-radius-xl);
-    color: variable-generator.token(color-label-primary);
+    color: variable-generator.component-token(color-label-primary, toggle);
     display: inline-flex;
-    height: variable-generator.token(spacer-060);
+    height: variable-generator.component-token(spacer-060, toggle);
     justify-content: center;
     transition: transform variable-generator.token(animation-duration-moderate) variable-generator.token(animation-easing-standard);
     width: variable-generator.token(spacer-060);
 
     #{$component-root}__input:disabled + * & {
-      background-color: variable-generator.token(color-label-disabled);
+      background-color: variable-generator.component-token(color-label-disabled, toggle);
       cursor: not-allowed;
     }
 
@@ -120,7 +120,7 @@
     }
 
     #{$component-root}__input:checked:disabled + * & {
-      background-color: variable-generator.token(color-background-disabled);
+      background-color: variable-generator.component-token(color-background-disabled, toggle);
       color: variable-generator.token(color-label-disabled);
       cursor: not-allowed;
     }
@@ -150,8 +150,8 @@
   }
 
   &__description {
-    color: variable-generator.token(color-label-secondary);
-    padding-top: variable-generator.token(spacer-020);
+    color: variable-generator.component-token(color-label-secondary, toggle);
+    padding-top: variable-generator.component-token(spacer-020, toggle);
 
     @include mixins.adyen-checkout-text-body;
   }

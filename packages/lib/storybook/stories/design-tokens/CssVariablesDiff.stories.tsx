@@ -150,8 +150,8 @@ const CssVariablesDiffPage = () => (
         <h2>Pay button variables</h2>
         <p>
             The pay button now uses the Bento v2 <code>inverse-primary</code> tokens. The <code>main</code> variables still apply to the pay button as
-            fallbacks through <code>button-token()</code> in <code>variable-generator.scss</code>, and only there. If both are set, the new variable
-            wins.
+            fallbacks through <code>component-token()</code> in <code>variable-generator.scss</code>, and only there. If both are set, the new
+            variable wins.
         </p>
         <table className="css-variables-diff__table">
             <thead>

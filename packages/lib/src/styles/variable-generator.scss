@@ -16,12 +16,46 @@ aliases.$color: map.merge(
     )
 );
 
-// DEPRECATED: button CSS variables merchants could override before Bento v2, mapped to the token that replaces them.
-// Only applied through `button-token()`, so other components using the replacement token ignore the deprecated variables.
-// Hover has no entry: the button already used `color-background-inverse-primary-hover` before Bento v2, so its name is unchanged.
-$deprecated-button-css-variables: (
-    color-background-inverse-primary: color-background-always-dark,
-    color-background-inverse-primary-active: color-background-always-dark-active,
+// DEPRECATED: CSS variables merchants could override before Bento v2, keyed by component and then by the token that replaces them.
+// Only applied through `component-token()`, so other components using the replacement token ignore the deprecated variables.
+// A replacement token maps to a single deprecated variable per component, and multi-token values have no entry.
+$deprecated-css-variables: (
+    alert: (
+        color-background-critical-weak: alert-critical-background-color,
+        color-background-warning-weak: alert-warning-background-color,
+        color-background-highlight-weak: alert-highlight-background-color,
+        color-background-success-weak: alert-success-background-color,
+    ),
+    button: (
+        color-background-inverse-primary: color-background-always-dark,
+        color-background-inverse-primary-active: color-background-always-dark-active,
+        color-label-primary: button-tertiary-color,
+        color-label-primary-active: button-tertiary-active-color,
+        spacer-050: button-icon-only-padding,
+    ),
+    toggle: (
+        spacer-070: toggle-label-padding,
+        color-background-primary: toggle-track-background-color,
+        border-radius-xl: toggle-track-border-radius,
+        spacer-080: toggle-track-height,
+        color-background-primary-hover: toggle-track-hover-background-color,
+        color-outline-tertiary-hover: toggle-track-hover-border-color,
+        color-background-primary-active: toggle-track-active-background-color,
+        color-outline-tertiary-active: toggle-track-active-border-color,
+        color-background-secondary: toggle-track-disabled-background-color,
+        color-outline-disabled: toggle-track-disabled-border-color,
+        color-background-inverse-primary: toggle-track-toggled-background-color,
+        spacer-010: toggle-track-toggled-padding,
+        color-background-inverse-primary-hover: toggle-track-toggled-hover-background-color,
+        color-background-inverse-primary-active: toggle-track-toggled-active-background-color,
+        color-background-tertiary-active: toggle-track-toggled-disabled-background-color,
+        color-label-primary: toggle-handle-toggled-color,
+        spacer-060: toggle-handle-height,
+        color-label-disabled: toggle-handle-disabled-background-color,
+        color-background-disabled: toggle-handle-toggled-disabled-background-color,
+        color-label-secondary: toggle-description-color,
+        spacer-020: toggle-description-padding,
+    ),
 );
 $adyen-tokens-map: ();
 
@@ -55,13 +89,12 @@ $adyen-tokens-map: ();
     @return $value;
 }
 
-@function button-token($token) {
-    $value: token($token, false);
+@function component-token($token, $component) {
+    $deprecated-name: map.get($deprecated-css-variables, $component, $token);
 
-    @if map.has-key($deprecated-button-css-variables, $token) {
-        $deprecated-name: map.get($deprecated-button-css-variables, $token);
-        $value: var(--adyen-sdk-#{$deprecated-name}, #{$value});
+    @if not $deprecated-name {
+        @error 'No deprecated CSS variable for `#{$token}` in `#{$component}`, use `token()` instead';
     }
 
-    @return var(--adyen-sdk-#{$token}, #{$value});
+    @return var(--adyen-sdk-#{$token}, var(--adyen-sdk-#{$deprecated-name}, #{token($token, false)}));
 }
