@@ -170,6 +170,7 @@ class SecuredField extends AbstractSecuredField {
         if (window._b$dl) console.log('### SecuredField:::: onIframeLoaded:: created configObj=', configObj);
 
         postMessageToIframe(configObj, this.iframeContentWindow, this.loadingContext);
+        // postMessageToIframe(configObj, window, this.loadingContext);
         //--
 
         // Callback to say iframe loaded
@@ -220,10 +221,33 @@ class SecuredField extends AbstractSecuredField {
         }
 
         // CHECK FOR EXPECTED PROPS
-        const hasMainProps: boolean = hasOwnProperty(feedbackObj, 'action') && hasOwnProperty(feedbackObj, 'numKey');
+        const hasAction: boolean = hasOwnProperty(feedbackObj, 'action');
+        const hasNumKey: boolean = hasOwnProperty(feedbackObj, 'numKey');
+        const hasAllMainProps: boolean = hasAction && hasNumKey;
 
-        if (!hasMainProps) {
+        if (!hasAllMainProps) {
             if (this.sfConfig.showWarnings) logger.warn('WARNING SecuredField :: postMessage listener for iframe :: data mismatch!');
+
+            if (hasAction && feedbackObj.action === 'configFailure') {
+                console.log('\n### SecuredField::postMessageListenerFn::fail:: this.sfConfig.fieldType', this.sfConfig.fieldType);
+                console.log('### SecuredField::postMessageListenerFn::fail:: feedbackObj', feedbackObj);
+
+                const event = new AnalyticsErrorEvent({
+                    component: this.componentType,
+                    code: feedbackObj.code,
+                    errorType: ErrorEventType.internal,
+                    message: `${feedbackObj.error}. Field=${this.sfConfig.fieldType}. Log=${JSON.stringify(feedbackObj.configLog)} `
+                });
+
+                // console.log('### SecuredField::postMessageListenerFn:: event', event);
+
+                this.submitAnalytics?.(event);
+
+                // Remove the event listeners (otherwise, without having a numKey to act as a filter, it will fire again for the other securedFields)
+                // We want to remove the listeners but leave the DOM element intact for the message that it gives in the UI
+                this.destroy(false);
+            }
+
             return;
         }
 
@@ -333,11 +357,16 @@ class SecuredField extends AbstractSecuredField {
         }
     }
 
-    destroy(): void {
+    destroy(fullDestroy: boolean = true): void {
+        // Remove listening/messaging capabilities
         off(window, 'message', this.postMessageListener, false);
         off(this.iframeRef, 'load', this.iframeOnLoadListener, false);
         this.iframeContentWindow = null;
-        removeAllChildren(this.holderEl);
+
+        // Remove the UI element from the DOM
+        if (fullDestroy) {
+            removeAllChildren(this.holderEl);
+        }
     }
 
     /**
