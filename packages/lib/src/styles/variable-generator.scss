@@ -10,12 +10,7 @@
 aliases.$color: map.merge(
     aliases.$color,
     (
-        // this color has been remapped for a11y reasons
-        color-label-highlight: #00112C,
-        color-label-critical: map.get(aliases.$color, color-label-on-background-critical-weak),
-        color-label-tertiary: map.get(aliases.$color, color-label-secondary),
-        // label tertiary doesn't have enough contrast
-        color-outline-tertiary: #848D96,
+        color-outline-tertiary: map.get(aliases.$color, color-decorative-grey),
          // We don't use color alone for hover, so we use the active color. This change is in line on what bento does.
         color-outline-tertiary-hover: map.get(aliases.$color, color-outline-tertiary-active),
     )
@@ -28,53 +23,36 @@ $deprecated-button-css-variables: (
     color-background-inverse-primary: color-background-always-dark,
     color-background-inverse-primary-active: color-background-always-dark-active,
 );
+$adyen-tokens-map: ();
 
-@function adyen-sdk-generate-css-variables($maps...) {
-    $adyen-output-map: ();
-
-    @each $map in $maps {
-        @each $name, $value in $map {
-            $adyen-output-map: map.merge($adyen-output-map, (#{$name}: var(--adyen-sdk-#{$name}, #{$value})));
-        }
-    }
-
-    @return $adyen-output-map;
+@each $map
+    in (
+        aliases.$color,
+        aliases.$text,
+        aliases.$focus-ring,
+        definitions.$border,
+        definitions.$spacer,
+        definitions.$shadow,
+        definitions.$animation,
+        components.$tooltip,
+        overrides.$text-overrides
+    )
+{
+    $adyen-tokens-map: map.merge($adyen-tokens-map, $map);
 }
 
 @function token($token, $generate-css-var: true) {
-    $adyen-tokens-map: ();
-
-    @if $generate-css-var {
-        $adyen-tokens-map: adyen-sdk-generate-css-variables(
-            aliases.$color,
-            aliases.$text,
-            aliases.$focus-ring,
-            definitions.$border,
-            definitions.$spacer,
-            definitions.$shadow,
-            definitions.$animation,
-            components.$tooltip,
-            overrides.$text-overrides
-        );
-    } @else {
-        $adyen-tokens-map: map.merge(
-            aliases.$color,
-            aliases.$text,
-            aliases.$focus-ring,
-            definitions.$border,
-            definitions.$spacer,
-            definitions.$shadow,
-            definitions.$animation,
-            components.$tooltip,
-            overrides.$text-overrides
-        );
-    }
-
     @if not map.has-key($adyen-tokens-map, '#{$token}') {
         @error 'Unknown design token: #{$token}';
     }
 
-    @return map.get($adyen-tokens-map, '#{$token}');
+    $value: map.get($adyen-tokens-map, '#{$token}');
+
+    @if $generate-css-var {
+        @return var(--adyen-sdk-#{$token}, #{$value});
+    }
+
+    @return $value;
 }
 
 @function button-token($token) {
