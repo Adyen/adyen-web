@@ -52,9 +52,9 @@ export const payButtonChanges: PayButtonChange[] = [
 export const defaultValueChanges: DefaultValueChange[] = [
     { variable: 'color-label-primary', kind: 'color', before: '#00112c', after: '#111111' },
     { variable: 'color-label-secondary', kind: 'color', before: '#5c687c', after: 'rgba(17, 17, 17, 0.64)' },
-    { variable: 'color-label-tertiary', kind: 'color', before: '#8d95a3', after: 'rgba(17, 17, 17, 0.64)' },
+    { variable: 'color-label-tertiary', kind: 'color', before: '#8d95a3', after: 'rgba(17, 17, 17, 0.45)' },
     { variable: 'color-label-disabled', kind: 'color', before: '#8d95a3', after: 'rgba(17, 17, 17, 0.38)' },
-    { variable: 'color-label-critical', kind: 'color', before: '#e22d2d', after: '#b42e01' },
+    { variable: 'color-label-critical', kind: 'color', before: '#e22d2d', after: '#ce3401' },
     { variable: 'color-background-secondary', kind: 'color', before: '#f7f7f8', after: 'rgba(17, 17, 16, 0.04)' },
     { variable: 'color-background-secondary-hover', kind: 'color', before: '#eeeff1', after: 'rgba(17, 17, 16, 0.07)' },
     { variable: 'color-background-secondary-active', kind: 'color', before: '#e3e5e9', after: 'rgba(17, 17, 16, 0.11)' },
@@ -99,10 +99,6 @@ export const thingsToCheck: { title: string; description: string }[] = [
     {
         title: 'Inconsistent hex case.',
         description: '`#00112C` and `#848D96` are uppercase, matching the overrides in `variable-generator.scss`; every other hex value is lowercase.'
-    },
-    {
-        title: 'Same value for secondary and tertiary labels.',
-        description: '`label-secondary` and `label-tertiary` now share `rgba(17, 17, 17, 0.64)`.'
     }
 ];
 
