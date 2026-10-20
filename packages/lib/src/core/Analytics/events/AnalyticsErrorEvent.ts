@@ -38,6 +38,11 @@ export enum ErrorEventCode {
      */
     SECURED_FIELDS_CONFIG_FAILURE = '503',
 
+    /**
+     * Generated bu SecuredFieldsProvider if it hasn't had confirmation that the securedFields have all loaded within the timeout period
+     */
+    SECURED_FIELDS_LOAD_FAILURE = '504',
+
     /** */
     REDIRECT = '600',
     /**
