@@ -5,7 +5,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: variable-generator.token(spacer-140);
+    padding: variable-generator.token(spacer-100) variable-generator.token(spacer-130);
     border: variable-generator.token(border-width-s) solid variable-generator.token(color-outline-secondary);
     border-radius: variable-generator.token(border-radius-m);
     background: variable-generator.token(color-background-primary);
@@ -35,5 +35,5 @@
 .details,
 .actions {
     width: 100%;
-    margin-top: variable-generator.token(spacer-090);
+    margin-top: variable-generator.token(spacer-050);
 }

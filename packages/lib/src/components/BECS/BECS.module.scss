@@ -33,9 +33,13 @@
     color: variable-generator.token(color-label-secondary);
 }
 
+.details {
+    margin-top: 0;
+    padding: 0 calc(variable-generator.token(spacer-140) + variable-generator.token(spacer-110));
+}
+
 .actions {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: variable-generator.token(spacer-050);
 }

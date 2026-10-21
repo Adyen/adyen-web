@@ -21,13 +21,7 @@ const render = ({ componentConfiguration, ...checkoutConfig }: PaymentMethodStor
 export const Default: BECSStory = {
     render,
     args: {
-        countryCode: 'AU',
-        componentConfiguration: {
-            onSubmit: (state, component) => {
-                console.log({ state });
-                component.update({ url: resultUrl } as BECSConfiguration);
-            }
-        }
+        countryCode: 'AU'
     }
 };
 

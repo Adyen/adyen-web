@@ -25,7 +25,7 @@ export function BECSResult({ icon, url }: Readonly<BECSResultProps>) {
             title={i18n.get('becs.success.title')}
             description={i18n.get('becs.success.message')}
             details={
-                <div>
+                <div className={styles.details}>
                     <h3 className={styles.actionsTitle}>{i18n.get('becs.success.actions.title')}</h3>
                     <p className={styles.actionsMessage}>{i18n.get('becs.success.actions.message')}</p>
                 </div>

@@ -252,7 +252,7 @@
     "becs.accountNumber": "Account number",
     "becs.accountNumber.invalid": "Enter a valid account number",
     "becs.shopperEmail.contextualText": "This email may be used by the merchant to send you documentation",
-    "becs.mandate": "By providing your bank account details and clicking confirm, you agree that you are authorised to act on the nominated account, and request and authorise Adyen Australia Pty Ltd (ACN 162 682 411) (User ID XXXXX) to arrange for funds to be debited from your nominated account in accordance with the Direct Debit Request Service Agreement.",
+    "becs.mandate": "By providing your bank account details and clicking confirm, you agree that you are authorised to act on the nominated account, and request and authorise Adyen Australia Pty Ltd (ACN %{acn}) (User ID %{userId}) to arrange for funds to be debited from your nominated account in accordance with the Direct Debit Request Service Agreement.",
     "becs.confirm": "Confirm",
     "becs.success.iconAlt": "Direct Debit Australia",
     "becs.success.title": "Success!",
