@@ -9,6 +9,7 @@ import InputText from '../../internal/FormFields/InputText';
 import FormInstruction from '../../internal/FormInstruction';
 import { getErrorMessage } from '../../../utils/getErrorMessage';
 import { becsFormatters, becsValidationRules } from './validate';
+import { BECS_MANDATE_ACN, BECS_MANDATE_USER_ID } from '../constants';
 
 import type { ComponentMethodsRef } from '../../internal/UIElement/types';
 import type { PayButtonProps } from '../../internal/PayButton/PayButton';
@@ -140,7 +141,7 @@ export function BECSComponent({
                 />
             </Field>
 
-            <p className={styles.mandate}>{i18n.get('becs.mandate')}</p>
+            <p className={styles.mandate}>{i18n.get('becs.mandate', { values: { acn: BECS_MANDATE_ACN, userId: BECS_MANDATE_USER_ID } })}</p>
 
             {showPayButton && payButton({ status, label: i18n.get('becs.confirm') })}
         </div>
