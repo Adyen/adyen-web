@@ -15,9 +15,13 @@ export class Automated extends Base {
         return storyId.includes('internal-elements-');
     }
 
+    screenshotTarget(storyId: string): Locator {
+        return this.isInternalStory(storyId) ? this.page.locator('#storybook-root') : this.page.getByTestId('checkout-component');
+    }
+
     protected a11yComponentSelector() {
         const storyUrl = this.page.url();
-        if (storyUrl && storyUrl.includes('internal-elements-')) {
+        if (storyUrl?.includes('internal-elements-')) {
             return '#storybook-root';
         }
         return '#component-root';
