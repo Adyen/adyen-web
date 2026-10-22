@@ -142,6 +142,9 @@ patching, redirect result, the review page) is the exception: those live in `sto
   breaks the matching E2E test. Update both.
 - Opt a story out of automated visual regression with `tags: ['no-automated-visual-test']` (the tag
   is declared in `.storybook/main.ts`).
+- Internal element screenshots shrink to fit their content. Tag a story whose element fills its
+  container (`width: 100%`, a `1fr` grid) with `tags: ['automated-visual-test-full-width']` so it
+  is captured at a 600px width instead.
 - Log callbacks with `console.log`. `@storybook/addon-actions` is **not installed**, so importing
   it fails to resolve. Storybook 10 does ship an `action` helper in the core `storybook` package
   (`storybook/actions`) which _would_ resolve — we deliberately don't use it, to keep one logging

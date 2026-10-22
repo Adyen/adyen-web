@@ -53,6 +53,7 @@ const coreProps = {
 };
 
 export const Default: StoryObj<ButtonProps> = {
+    tags: ['automated-visual-test-full-width'],
     render: args => {
         return (
             <CoreProvider {...coreProps}>
