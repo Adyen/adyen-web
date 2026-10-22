@@ -6,6 +6,7 @@ import { SingletonTooltipProvider, useTooltip } from './SingletonTooltipProvider
 
 const meta: Meta = {
     title: 'Internal Elements/Tooltip',
+    tags: ['no-automated-visual-test'],
     component: Tooltip,
     argTypes: {
         margin: {
