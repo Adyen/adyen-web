@@ -22,7 +22,7 @@
         "start:storybook": "node start.js storybook"
     },
     "devDependencies": {
-        "dotenv": "18.0.3",
+        "dotenv": "18.0.5",
         "express": "^5.0.0"
     },
     "dependencies": {
