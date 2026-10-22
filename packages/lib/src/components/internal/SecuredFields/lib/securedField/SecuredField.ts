@@ -303,9 +303,14 @@ class SecuredField extends AbstractSecuredField {
             // Listen for actions indicating SF iframe has detected errors with how it's hosted
             case 'invalidHosting':
             case 'insecureMerchantDomain': {
+                const fallbackCode =
+                    feedbackObj.action === 'invalidHosting'
+                        ? ErrorEventCode.SECURED_FIELDS_INVALID_HOSTING
+                        : ErrorEventCode.SECURED_FIELDS_INSECURE_MERCHANT_DOMAIN;
+
                 const event = new AnalyticsErrorEvent({
                     component: this.componentType,
-                    code: feedbackObj.code,
+                    code: feedbackObj.code ?? fallbackCode,
                     errorType: ErrorEventType.internal,
                     message: `${feedbackObj.error}. Field=${this.sfConfig.fieldType}`
                 });
