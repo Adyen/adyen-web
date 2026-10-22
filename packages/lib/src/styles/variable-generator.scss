@@ -12,6 +12,8 @@ aliases.$color: map.merge(
     (
         color-label-highlight: map.get(aliases.$color, color-label-primary),
         color-outline-tertiary: map.get(aliases.$color, color-decorative-grey),
+        // label tertiary doesn't have enough contrast
+        color-label-tertiary: map.get(aliases.$color, color-label-secondary),
          // We don't use color alone for hover, so we use the active color. This change is in line on what bento does.
         color-outline-tertiary-hover: map.get(aliases.$color, color-outline-tertiary-active),
     )
