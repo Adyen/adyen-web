@@ -468,6 +468,7 @@ describe('SecuredField handling placeholders from the placeholders config', () =
             const submitAnalyticsSpy = jest.fn(() => {});
 
             const localCard = new SecuredField(
+                // @ts-ignore test-only
                 {
                     ...setupObj,
                     fieldType: ENCRYPTED_SECURITY_CODE,
@@ -506,6 +507,7 @@ describe('SecuredField handling placeholders from the placeholders config', () =
             const submitAnalyticsSpy = jest.fn(() => {});
 
             const localCard = new SecuredField(
+                // @ts-ignore test only
                 {
                     ...setupObj,
                     fieldType: ENCRYPTED_SECURITY_CODE,

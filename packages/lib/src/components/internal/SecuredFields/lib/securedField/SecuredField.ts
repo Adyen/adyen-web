@@ -291,7 +291,9 @@ class SecuredField extends AbstractSecuredField {
             case 'encryptionError': {
                 const event = new AnalyticsErrorEvent({
                     component: this.componentType,
-                    code: feedbackObj.code,
+                    // Strictly speaking code could be 608, 609 or 610. But it *will* always be present, so falling back to 610
+                    // (SECURED_FIELDS_ENCRYPTION_ERROR) will keep TS happy
+                    code: feedbackObj.code ?? ErrorEventCode.SECURED_FIELDS_ENCRYPTION_ERROR,
                     errorType: ErrorEventType.internal,
                     message: `${feedbackObj.error}. Field= ${this.sfConfig.fieldType}`
                 });
