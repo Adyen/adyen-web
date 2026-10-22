@@ -2,6 +2,8 @@ import type { Page, Locator } from '@playwright/test';
 import { expect } from '@playwright/test';
 import { Base } from './base';
 
+const FULL_WIDTH_VISUAL_TEST_TAG = 'automated-visual-test-full-width';
+
 export class Automated extends Base {
     readonly component: Locator;
 
@@ -15,11 +17,12 @@ export class Automated extends Base {
         return storyId.includes('internal-elements-');
     }
 
-    async screenshotTarget(storyId: string): Promise<Locator> {
+    async screenshotTarget(storyId: string, tags: string[] = []): Promise<Locator> {
         if (!this.isInternalStory(storyId)) {
             return this.page.getByTestId('checkout-component');
         }
-        await this.page.addStyleTag({ content: '#storybook-root { width: fit-content; max-width: 600px; }' });
+        const width = tags.includes(FULL_WIDTH_VISUAL_TEST_TAG) ? '600px' : 'fit-content';
+        await this.page.addStyleTag({ content: `#storybook-root { width: ${width}; max-width: 600px; }` });
         return this.page.locator('#storybook-root');
     }
 
