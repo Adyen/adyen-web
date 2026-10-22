@@ -28,7 +28,7 @@ test.describe('Automated visual testing', () => {
             const automatedModel = new Automated(page);
             await automatedModel.gotoStory(storyId);
 
-            await toHaveScreenshot(page.getByTestId('checkout-component'), browserName, `${storyId}.png`, {
+            await toHaveScreenshot(automatedModel.screenshotTarget(storyId), browserName, `${storyId}.png`, {
                 mask: [page.getByRole('timer'), page.getByTestId('stored-card-info')]
             });
         });
