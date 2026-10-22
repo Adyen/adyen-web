@@ -248,11 +248,15 @@ function Select({
         if (showList) {
             // clean the value in the input when opening the list so can start typing fresh
             setInputText(null);
-        } else {
+        }
+    }, [showList, preserveInput]);
+
+    useEffect(() => {
+        if (!showList) {
             // clean the text filter when closing the list
             setTextFilter(null);
         }
-    }, [showList, preserveInput]);
+    }, [showList]);
 
     /**
      * Focus on the input if filterable
