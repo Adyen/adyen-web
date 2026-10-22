@@ -48,7 +48,7 @@ export const payButtonChanges: PayButtonChange[] = [
 export const defaultValueChanges: DefaultValueChange[] = [
     { variable: 'color-label-primary', kind: 'color', before: '#00112c', after: '#111111' },
     { variable: 'color-label-secondary', kind: 'color', before: '#5c687c', after: 'rgba(17, 17, 17, 0.64)' },
-    { variable: 'color-label-tertiary', kind: 'color', before: '#5c687c', after: 'rgba(17, 17, 17, 0.45)' },
+    { variable: 'color-label-tertiary', kind: 'color', before: '#5c687c', after: 'rgba(17, 17, 17, 0.64)' },
     { variable: 'color-label-disabled', kind: 'color', before: '#8d95a3', after: 'rgba(17, 17, 17, 0.38)' },
     { variable: 'color-label-critical', kind: 'color', before: '#c72727', after: '#ce3401' },
     { variable: 'color-label-highlight', kind: 'color', before: '#00112c', after: '#111111' },
