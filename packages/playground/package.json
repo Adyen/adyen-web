@@ -25,10 +25,10 @@
         "autoprefixer": "^10.4.9",
         "core-js-pure": "^3.25.3",
         "dotenv": "17.2.3",
-        "postcss": "8.5.23",
+        "postcss": "8.5.24",
         "sass": "^1.83.0",
         "typescript": "^4.4.4",
-        "vite": "^6.3.5",
+        "vite": "^6.4.4",
         "whatwg-fetch": "^3.6.2"
     },
     "dependencies": {
