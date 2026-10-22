@@ -12,4 +12,8 @@ describe('mapBrands()', () => {
         const applePayBrands = mapBrands(backofficeBrands);
         expect(applePayBrands).toStrictEqual(['visa', 'amex']);
     });
+
+    test('should map cup to the Apple Pay chinaUnionPay network', () => {
+        expect(mapBrands(['visa', 'cup'])).toStrictEqual(['visa', 'chinaUnionPay']);
+    });
 });

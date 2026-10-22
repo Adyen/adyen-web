@@ -1,3 +1,5 @@
+export const CHINA_UNION_PAY_NETWORK = 'chinaUnionPay';
+
 export function mapBrands(brands: string[]) {
     const brandMapping: Record<string, string> = {
         mc: 'masterCard',
@@ -12,7 +14,8 @@ export function mapBrands(brands: string[]) {
         maestro: 'maestro',
         girocard: 'girocard',
         cartebancaire: 'cartesBancaires',
-        eftpos_australia: 'eftpos'
+        eftpos_australia: 'eftpos',
+        cup: CHINA_UNION_PAY_NETWORK
     };
 
     return brands.reduce((accumulator, item) => {

@@ -13,6 +13,7 @@ import { sanitizeResponse, verifyPaymentDidNotFail } from '../internal/UIElement
 import { resolveSupportedVersion } from './utils/resolve-supported-version';
 import { formatApplePayContactToAdyenAddressFormat } from './utils/format-applepay-contact-to-adyen-format';
 import { mapBrands } from './utils/map-adyen-brands-to-applepay-brands';
+import { resolveMerchantCapabilities } from './utils/resolve-merchant-capabilities';
 import ApplePaySdkLoader from './services/ApplePaySdkLoader';
 import { detectInIframe } from '../../utils/detectInIframe';
 import type {
@@ -78,6 +79,7 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
             ...props,
             configuration: props.configuration,
             supportedNetworks,
+            merchantCapabilities: resolveMerchantCapabilities(props.merchantCapabilities, supportedNetworks),
             buttonLocale: props.buttonLocale ?? props.i18n?.locale,
             totalPriceLabel: props.totalPriceLabel || props.configuration?.merchantName,
             renderApplePayCodeAs: props.renderApplePayCodeAs ?? (detectInIframe() ? 'window' : 'modal')
@@ -330,7 +332,7 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
             });
     }
 
-    private async validateMerchant(resolve: (merchantSession: unknown) => void, reject: (error: string) => void) {
+    private async validateMerchant(resolve: (merchantSession: unknown) => void, reject: (error: string) => void, validationURL?: string) {
         const { hostname } = window.location;
         const { clientKey, configuration, loadingContext, initiative, domainName } = this.props;
         const { merchantName, merchantId } = configuration;
@@ -340,7 +342,8 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
             displayName: merchantName,
             domainName: domainName || hostname,
             initiative,
-            merchantIdentifier: merchantId
+            merchantIdentifier: merchantId,
+            ...(validationURL && { validationURL })
         };
 
         try {

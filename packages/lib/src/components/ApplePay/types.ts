@@ -91,6 +91,7 @@ export interface ApplePayConfiguration extends UIElementProps {
     /**
      * The payment capabilities supported by the merchant.
      * The value must at least contain ApplePayMerchantCapability.supports3DS.
+     * 'supportsEMV' is added automatically when 'chinaUnionPay' is one of the supported networks.
      * @default ['supports3DS']
      */
     merchantCapabilities?: ApplePayJS.ApplePayMerchantCapability[];
@@ -118,6 +119,7 @@ export interface ApplePayConfiguration extends UIElementProps {
 
     /**
      * The payment networks supported by the merchant.
+     * When the /paymentMethods response contains 'brands', they take precedence and are mapped to Apple Pay networks (e.g. 'cup' becomes 'chinaUnionPay').
      */
     supportedNetworks?: string[];
 
@@ -308,6 +310,11 @@ export interface ApplePaySessionRequest {
     domainName: string;
     initiative: Initiative;
     merchantIdentifier: string;
+    /**
+     * The Apple Pay validation URL provided by the 'onvalidatemerchant' event. Used to route the session request to the right Apple Pay gateway (e.g. China UnionPay)
+     * @see {@link https://developer.apple.com/documentation/applepayontheweb/applepaysession/onvalidatemerchant onvalidatemerchant docs}
+     */
+    validationURL?: string;
 }
 
 export interface ApplePaySessionResponse {

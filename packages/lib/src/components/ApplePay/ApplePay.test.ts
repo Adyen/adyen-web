@@ -13,6 +13,7 @@ import { mock } from 'jest-mock-extended';
 import { render, screen } from '@testing-library/preact';
 import { setupCoreMock, TEST_CHECKOUT_ATTEMPT_ID, TEST_RISK_DATA } from '../../../config/testMocks/setup-core-mock';
 import Language from '../../language/Language';
+import PaymentMethods from '../../core/ProcessResponse/PaymentMethods';
 import { ICore } from '../../types';
 import type { ILanguageService } from '../../language/LanguageService';
 
@@ -266,6 +267,26 @@ describe('ApplePay', () => {
             await new Promise(process.nextTick);
 
             expect(rejectMock).toHaveBeenCalledWith('Could not get Apple Pay session');
+        });
+
+        test('should forward the Apple Pay validationURL in the session request', () => {
+            const applepay = new ApplePay(core, {
+                configuration: configurationMock,
+                amount: { currency: 'EUR', value: 2000 }
+            });
+
+            applepay.submit();
+
+            const onValidateMerchant = jest.mocked(ApplePayService).mock.calls[0][1].onValidateMerchant;
+            void onValidateMerchant?.(jest.fn(), jest.fn(), 'https://cn-apple-pay-gateway.apple.com/paymentservices/startSession');
+
+            expect(mockedHttpPost).toHaveBeenCalledWith(expect.anything(), {
+                displayName: 'TestMerchant',
+                domainName: 'adyen.dev',
+                initiative: 'web',
+                merchantIdentifier: 'test-merchant',
+                validationURL: 'https://cn-apple-pay-gateway.apple.com/paymentservices/startSession'
+            });
         });
     });
 
@@ -681,6 +702,46 @@ describe('ApplePay', () => {
                 totalPriceLabel: 'Total'
             });
             expect(applepay.props.totalPriceLabel).toEqual('Total');
+        });
+
+        describe('China UnionPay', () => {
+            const createCore = (brands: string[]) =>
+                setupCoreMock({
+                    paymentMethods: new PaymentMethods({
+                        paymentMethods: [{ type: 'applepay', name: 'Apple Pay', brands, configuration: configurationMock }]
+                    })
+                });
+
+            test('should add chinaUnionPay network and supportsEMV capability when cup is in the brands', () => {
+                const applepay = new ApplePay(createCore(['visa', 'cup']));
+
+                expect(applepay.props.supportedNetworks).toStrictEqual(['visa', 'chinaUnionPay']);
+                expect(applepay.props.merchantCapabilities).toStrictEqual(['supports3DS', 'supportsEMV']);
+            });
+
+            test('should not add chinaUnionPay network nor supportsEMV capability when cup is not in the brands', () => {
+                const applepay = new ApplePay(createCore(['visa', 'mc']));
+
+                expect(applepay.props.supportedNetworks).toStrictEqual(['visa', 'masterCard']);
+                expect(applepay.props.merchantCapabilities).toStrictEqual(['supports3DS']);
+            });
+
+            test('should keep merchant capabilities when adding supportsEMV', () => {
+                const applepay = new ApplePay(createCore(['cup']), { merchantCapabilities: ['supports3DS', 'supportsDebit'] });
+
+                expect(applepay.props.merchantCapabilities).toStrictEqual(['supports3DS', 'supportsDebit', 'supportsEMV']);
+            });
+
+            test('should pass supportsEMV and chinaUnionPay to the Apple Pay payment request', async () => {
+                const applepay = new ApplePay(createCore(['visa', 'cup']), { amount: { currency: 'CNY', value: 2000 } });
+
+                applepay.submit();
+                await new Promise(process.nextTick);
+
+                const paymentRequest = jest.mocked(ApplePayService).mock.calls[0][0];
+                expect(paymentRequest.supportedNetworks).toStrictEqual(['visa', 'chinaUnionPay']);
+                expect(paymentRequest.merchantCapabilities).toStrictEqual(['supports3DS', 'supportsEMV']);
+            });
         });
     });
 
