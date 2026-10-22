@@ -36,6 +36,7 @@ const ComponentsNameMap = {
     /** Direct debit */
     [TxVariants.ach]: 'Ach',
     [TxVariants.directdebit_GB]: 'BacsDirectDebit',
+    [TxVariants.directdebit_AU]: 'BECS',
     [TxVariants.sepadirectdebit]: 'SepaDirectDebit',
     [TxVariants.eft_directdebit_CA]: 'PreAuthorizedDebitCanada',
     /** Direct debit */
