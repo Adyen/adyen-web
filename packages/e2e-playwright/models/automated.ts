@@ -15,8 +15,12 @@ export class Automated extends Base {
         return storyId.includes('internal-elements-');
     }
 
-    screenshotTarget(storyId: string): Locator {
-        return this.isInternalStory(storyId) ? this.page.locator('#storybook-root') : this.page.getByTestId('checkout-component');
+    async screenshotTarget(storyId: string): Promise<Locator> {
+        if (!this.isInternalStory(storyId)) {
+            return this.page.getByTestId('checkout-component');
+        }
+        await this.page.addStyleTag({ content: '#storybook-root { width: fit-content; max-width: 600px; }' });
+        return this.page.locator('#storybook-root');
     }
 
     protected a11yComponentSelector() {
