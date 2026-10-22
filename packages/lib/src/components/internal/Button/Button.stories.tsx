@@ -47,7 +47,7 @@ i18n['_translations'] = {
 };
 
 const coreProps = {
-    loadingContext: process.env.CLIENT_ENV,
+    loadingContext: process.env.CLIENT_ENV ?? 'test',
     i18n,
     resources: new Resources(resolveEnvironments(process.env.CLIENT_ENV as CoreConfiguration['environment']).cdnImagesUrl)
 };
