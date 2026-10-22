@@ -58,7 +58,7 @@ export function EMIPlanSummary({ plan, labelledBy }: Readonly<EMIPlanSummaryProp
     const rows = candidateRows.filter((row): row is SummaryRow => row.amount != null);
 
     return (
-        <div className={styles.planSummary} role="group" aria-labelledby={labelledBy}>
+        <fieldset className={styles.planSummary} aria-labelledby={labelledBy}>
             <dl className={styles.rows}>
                 {rows.map(row => (
                     <div key={row.key} className={cx(styles.row, { [styles.rowStrong]: row.isStrong })}>
@@ -72,6 +72,6 @@ export function EMIPlanSummary({ plan, labelledBy }: Readonly<EMIPlanSummaryProp
                     </div>
                 ))}
             </dl>
-        </div>
+        </fieldset>
     );
 }
