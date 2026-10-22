@@ -2,6 +2,10 @@
 @use 'styles/variable-generator';
 
 .planSummary {
+    border: 0;
+    margin: 0;
+    padding: 0;
+    min-width: 0;
     display: flex;
     flex-direction: column;
     gap: variable-generator.token(spacer-060);
