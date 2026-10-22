@@ -464,6 +464,82 @@ describe('SecuredField handling placeholders from the placeholders config', () =
             });
         });
 
+        test('Check analytics event is submitted after "invalidHosting" action', () => {
+            const submitAnalyticsSpy = jest.fn(() => {});
+
+            const localCard = new SecuredField(
+                {
+                    ...setupObj,
+                    fieldType: ENCRYPTED_SECURITY_CODE,
+                    submitAnalytics: submitAnalyticsSpy
+                },
+                i18n
+            );
+
+            const feedbackObj = {
+                action: 'invalidHosting',
+                fieldType: ENCRYPTED_SECURITY_CODE,
+                numKey: localCard.numKey,
+                code: ErrorEventCode.SECURED_FIELDS_INVALID_HOSTING,
+                error: 'Invalid hosting'
+            };
+
+            const messageEvent = {
+                origin,
+                data: JSON.stringify(feedbackObj)
+            };
+
+            // @ts-ignore event type
+            localCard.postMessageListenerFn(messageEvent);
+
+            expect(submitAnalyticsSpy).toHaveBeenCalledWith({
+                timestamp: expect.any(String),
+                id: expect.any(String),
+                component: 'scheme',
+                errorType: ErrorEventType.internal,
+                code: ErrorEventCode.SECURED_FIELDS_INVALID_HOSTING,
+                message: 'Invalid hosting. Field=encryptedSecurityCode'
+            });
+        });
+
+        test('Check analytics event is submitted after "insecureMerchantDomain" action', () => {
+            const submitAnalyticsSpy = jest.fn(() => {});
+
+            const localCard = new SecuredField(
+                {
+                    ...setupObj,
+                    fieldType: ENCRYPTED_SECURITY_CODE,
+                    submitAnalytics: submitAnalyticsSpy
+                },
+                i18n
+            );
+
+            const feedbackObj = {
+                action: 'insecureMerchantDomain',
+                fieldType: ENCRYPTED_SECURITY_CODE,
+                numKey: localCard.numKey,
+                code: ErrorEventCode.SECURED_FIELDS_INSECURE_MERCHANT_DOMAIN,
+                error: 'Insecure merchant domain'
+            };
+
+            const messageEvent = {
+                origin,
+                data: JSON.stringify(feedbackObj)
+            };
+
+            // @ts-ignore event type
+            localCard.postMessageListenerFn(messageEvent);
+
+            expect(submitAnalyticsSpy).toHaveBeenCalledWith({
+                timestamp: expect.any(String),
+                id: expect.any(String),
+                component: 'scheme',
+                errorType: ErrorEventType.internal,
+                code: ErrorEventCode.SECURED_FIELDS_INSECURE_MERCHANT_DOMAIN,
+                message: 'Insecure merchant domain. Field=encryptedSecurityCode'
+            });
+        });
+
         test('Check callback is called after "focus" action', () => {
             card.onFocus(myCallback);
 
