@@ -29,6 +29,7 @@ function Select({
     disabled,
     disableTextFilter,
     clearOnSelect,
+    preserveInput = false,
     blurOnClose,
     onListToggle,
     required,
@@ -230,19 +231,28 @@ function Select({
     const toggleList = (e: Event) => {
         e.preventDefault();
         if (!showList) {
-            setInputText(null);
+            if (!preserveInput) {
+                setInputText(null);
+            }
             openList();
         } else {
-            setInputText(selectedOption.name);
+            if (!preserveInput) {
+                setInputText(selectedOption.name);
+            }
             closeList();
         }
     };
 
     useEffect(() => {
+        if (preserveInput) return;
         if (showList) {
             // clean the value in the input when opening the list so can start typing fresh
             setInputText(null);
-        } else {
+        }
+    }, [showList, preserveInput]);
+
+    useEffect(() => {
+        if (!showList) {
             // clean the text filter when closing the list
             setTextFilter(null);
         }
@@ -301,6 +311,7 @@ function Select({
         >
             <SelectButton
                 inputText={inputText}
+                preserveInput={preserveInput}
                 id={uniqueId}
                 active={activeOption}
                 selected={selectedOption}

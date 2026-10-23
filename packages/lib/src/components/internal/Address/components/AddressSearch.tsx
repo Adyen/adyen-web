@@ -136,6 +136,8 @@ export default function AddressSearch({
                     onChange={onSelectItem}
                     disableTextFilter={true}
                     blurOnClose={true}
+                    preserveInput={true}
+                    clearOnSelect={true}
                 />
             </Field>
             {!hideManualButton && (
