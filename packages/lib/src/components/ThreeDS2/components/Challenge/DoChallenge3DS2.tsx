@@ -54,17 +54,35 @@ class DoChallenge3DS2 extends Component<DoChallenge3DS2Props, DoChallenge3DS2Sta
         });
     }
 
+    /**
+     * Confirm if the component's root node is still attached to the DOM, r.e. component being torn down incorrectly
+     * (without going through Preact's unmount lifecycle)
+     */
+    private isDetachedFromDOM(): boolean {
+        return !this.base || !document.contains(this.base);
+    }
+
     componentDidMount() {
         // Render challenge
         this.challengePromise = promiseTimeout(CHALLENGE_TIMEOUT, this.get3DS2ChallengePromise(), CHALLENGE_TIMEOUT_REJECT_OBJECT);
         this.challengePromise.promise
             .then((resolveObject: ThreeDS2FlowObject) => {
                 window.removeEventListener('message', this.processMessageHandler);
+
+                if (this.isDetachedFromDOM()) {
+                    return;
+                }
+
                 this.props.onCompleteChallenge(resolveObject);
             })
             /** Catch, for when Challenge times-out */
             .catch((rejectObject: ThreeDS2FlowObject) => {
                 window.removeEventListener('message', this.processMessageHandler);
+
+                if (this.isDetachedFromDOM()) {
+                    return;
+                }
+
                 this.props.onErrorChallenge(rejectObject);
             });
     }

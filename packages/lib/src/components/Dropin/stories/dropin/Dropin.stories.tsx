@@ -208,4 +208,35 @@ export const SessionsDonationReparented: DropinStory = {
     }
 };
 
+/**
+ * Renders two independent Drop-in instances side by side.
+ * Used to test scenarios where one Drop-in instance is torn down (e.g. via raw DOM manipulation
+ * that bypasses Preact's unmount lifecycle) while a second, sibling instance is still in use -
+ * see DoChallenge3DS2's stale postMessage listener handling.
+ */
+export const TwoInstances: DropinStory = {
+    args: {
+        componentConfiguration: {
+            showStoredPaymentMethods: false
+        }
+    },
+    render: ({ componentConfiguration, ...checkoutConfig }: PaymentMethodStoryProps<DropinConfiguration>) => {
+        // Register all Components
+        const { Dropin, ...Components } = components;
+        const Classes = Object.values(Components) as NewableComponent[];
+        AdyenCheckout.register(...Classes);
+
+        return (
+            <Fragment>
+                <Checkout checkoutConfig={checkoutConfig}>
+                    {checkout => <ComponentContainer id="component-root-1" element={new DropinComponent(checkout, componentConfiguration)} />}
+                </Checkout>
+                <Checkout checkoutConfig={checkoutConfig}>
+                    {checkout => <ComponentContainer id="component-root-2" element={new DropinComponent(checkout, componentConfiguration)} />}
+                </Checkout>
+            </Fragment>
+        );
+    }
+};
+
 export default meta;
