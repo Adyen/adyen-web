@@ -6,15 +6,17 @@
 
 
 
-// simple re-mapping
+// Bento colour aliases the SDK maps to a different Bento value, mostly to meet WCAG 2.1 AA contrast
 aliases.$color: map.merge(
     aliases.$color,
     (
+        // Links use the regular text colour and are told apart by their underline
         color-label-highlight: map.get(aliases.$color, color-label-primary),
+        // Darker grey, so the outline keeps a 3:1 non-text contrast against the selected payment method background in Drop-in
         color-outline-tertiary: map.get(aliases.$color, color-decorative-grey),
-        // label tertiary doesn't have enough contrast
+        // Bento's tertiary label is below the 4.5:1 text contrast, so it uses the secondary label colour
         color-label-tertiary: map.get(aliases.$color, color-label-secondary),
-         // We don't use color alone for hover, so we use the active color. This change is in line on what bento does.
+        // Bento's hover outline lacks contrast, so hover uses the active outline, as Bento's own components do
         color-outline-tertiary-hover: map.get(aliases.$color, color-outline-tertiary-active),
     )
 );
