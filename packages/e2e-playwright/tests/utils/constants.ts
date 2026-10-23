@@ -23,7 +23,7 @@ export const THREEDS2_CHALLENGE_ONLY_CARD = '4212345678910006';
 export const THREEDS2_CHALLENGE_PASSWORD = 'password';
 export const MULTI_LUHN_MAESTRO = '6771830999991239343'; // maestro that passes luhn check at 16, 18 & 19 digits
 export const THREEDS2_MAESTRO_CARD = '5000550000000029';
-export const EMI_TEST_CARD = '4988080000000018'; // HDFC-issued; /payments rejects other test cards with 1086_101 (issuer mismatch)
+export const EMI_TEST_CARD = '5548370000000013'; // HDFC-issued; /payments rejects other test cards with 1086_101 (issuer mismatch)
 export const EMI_TEST_CARD_PROVIDER = 'HDFC Bank';
 
 export const UNKNOWN_BIN_CARD = '135410014004955'; // card that is not in the test DBs (uatp)
