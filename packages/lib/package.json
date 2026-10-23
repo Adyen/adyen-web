@@ -63,6 +63,7 @@
         "dev-server": "rollup --watch --config config/rollup.dev.js",
         "build": "rm -rf dist/ && yarn run lint && yarn run lint-styles && yarn run type-check && yarn run build:types && rollup --config config/rollup.prod.js && rm -rf dist/temp-types",
         "build:types": "tsc --emitDeclarationOnly && node scripts/add-type-references.cjs",
+        "build:size": "rm -rf dist/ && rollup --config config/rollup.size.js",
         "docs:generate": "typedoc --out docs src --exclude \"**/*+(index|.test).ts\"",
         "start:storybook": "node .storybook/run.cjs",
         "build:storybook": "storybook build --disable-telemetry",
