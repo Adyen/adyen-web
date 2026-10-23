@@ -41,7 +41,7 @@ export function EMIPlanSummary({ plan, labelledBy }: Readonly<EMIPlanSummaryProp
         { key: 'instantDiscount', label: i18n.get('emi.instantDiscount'), amount: additionalDiscountAmount, isNegative: true },
         {
             key: 'interestDiscount',
-            label: i18n.get('emi.discount'),
+            label: i18n.get('emi.interestDiscount'),
             amount: interestDiscountAmount,
             isNegative: true,
             ...(planTag && { tag: planTag })
