@@ -1,5 +1,15 @@
 # @adyen/adyen-web
 
+## 6.48.0
+
+### Minor Changes
+
+- New: `onOrderUpdated` now also returns the latest `sessionData` in Sessions flow. ([#4235](https://github.com/Adyen/adyen-web/pull/4235))
+
+### Patch Changes
+
+- Fixed: Preserve the address lookup query when focus leaves the search field. ([#4266](https://github.com/Adyen/adyen-web/pull/4266))
+
 ## 6.47.0
 
 ### Minor Changes
