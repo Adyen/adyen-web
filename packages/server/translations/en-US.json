@@ -472,11 +472,16 @@
     "emi.totalAmountOverTime": "Total amount to be paid over time",
     "emi.upcomingMonthlyPayment": "Upcoming monthly payment",
     "emi.discount": "Discount",
+    "emi.interestDiscount": "Interest discount",
+    "emi.instantDiscount": "Instant discount",
     "emi.discountApplied": "%{amount} discount offer applied for using %{provider}",
     "emi.noCost": "No cost",
     "emi.lowCost": "Low cost",
     "emi.discountAvailable": "discount available",
+    "emi.additionalDiscountAvailable": "Additional %{amount} discount available",
     "emi.perAnnum": "p.a",
     "emi.cardDetailsInstructions": "Enter card details that are associated with a %{provider} card",
-    "emi.cardDetails": "Card details"
+    "emi.cardDetails": "Card details",
+    "emi.terms": "By continuing you agree to the",
+    "emi.termsLink": "terms and conditions"
 }
