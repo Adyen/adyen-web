@@ -10,6 +10,8 @@ export const URL_MAP = {
         '/iframe.html?globals=&args=amount:0;sessionData.recurringProcessingModel:CardOnFile;sessionData.storePaymentMethodMode:askForConsent;sessionData.enableOneClick:!true&id=drop-in-drop-in-component--default&viewMode=story',
     dropinWithSession_BCMC_noStoredPms: '/iframe.html?args=countryCode:BE&globals=&id=drop-in-drop-in-component--default&viewMode=story',
     dropinSessionsIndia: '/iframe.html?id=drop-in-drop-in-component--default&viewMode=story&args=countryCode%3AIN%3Bamount%3A1005',
+    // EMI needs an INR amount inside the plan limits of the test merchant
+    dropinSessionsIndiaEmi: '/iframe.html?id=drop-in-drop-in-component--default&viewMode=story&args=countryCode%3AIN%3Bamount%3A15499900',
     dropinSessionsGreece: '/iframe.html?id=drop-in-drop-in-component--default&viewMode=story&args=countryCode%3AGR%3Bamount%3A1001',
     dropinWithSession_donations: '/iframe.html?args=&globals=&id=drop-in-drop-in-component--sessions-donation&viewMode=story',
     dropinWithSession_donations_noDelay: '/iframe.html?args=donation.delay:0&globals=&id=drop-in-drop-in-component--sessions-donation&viewMode=story',
@@ -61,6 +63,12 @@ export const URL_MAP = {
      */
     upi: '/iframe.html?globals=&id=components-upi--default&viewMode=story',
     upiAutoPay: '/iframe.html?globals=&id=components-upi--auto-pay-session&viewMode=story',
+
+    /**
+     * EMI
+     */
+    emi: '/iframe.html?args=&globals=&id=components-emi--card-emi&viewMode=story',
+    emiWithCustomButton: '/iframe.html?args=&globals=&id=components-emi--card-emi-with-custom-button&viewMode=story',
 
     /**
      * Vouchers
