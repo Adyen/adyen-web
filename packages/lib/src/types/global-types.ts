@@ -239,6 +239,14 @@ export interface Order {
     remainingAmount?: PaymentAmount;
 }
 
+export interface OrderUpdatedData {
+    order: Order;
+    /**
+     * The latest session data. Only present in the Sessions flow.
+     */
+    sessionData?: string;
+}
+
 export interface OrderStatus {
     expiresAt: string;
     paymentMethods: {

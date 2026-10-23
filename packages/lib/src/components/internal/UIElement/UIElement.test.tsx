@@ -478,9 +478,13 @@ describe('UIElement', () => {
             };
 
             const onOrderUpdatedMock = jest.fn();
+            const sessionDataAfterUpdate = 'session-data-after-update';
 
             jest.spyOn(MyElement.prototype, 'isValid', 'get').mockReturnValue(true);
-            (core.update as jest.Mock).mockResolvedValue(core);
+            (core.update as jest.Mock).mockImplementation(() => {
+                (core.session as unknown as { data: string }).data = sessionDataAfterUpdate;
+                return Promise.resolve(core);
+            });
             (core.session?.submitPayment as jest.Mock).mockResolvedValue({
                 resultCode: 'Pending',
                 // @ts-ignore  ADD ORDER TO SESSION CHECKOUT RESPONSE
@@ -501,7 +505,7 @@ describe('UIElement', () => {
             expect(core.update).toHaveBeenCalledWith({ order });
 
             expect(onOrderUpdatedMock).toHaveBeenCalledTimes(1);
-            expect(onOrderUpdatedMock).toHaveBeenCalledWith({ order });
+            expect(onOrderUpdatedMock).toHaveBeenCalledWith({ order, sessionData: sessionDataAfterUpdate });
         });
 
         test('should trigger onPaymentMethodsRequest if there is a pending order when using advanced flow', async () => {
@@ -568,7 +572,7 @@ describe('UIElement', () => {
             });
 
             expect(onOrderUpdatedMock).toHaveBeenCalledTimes(1);
-            expect(onOrderUpdatedMock).toHaveBeenCalledWith({ order });
+            expect(onOrderUpdatedMock.mock.calls[0][0]).toStrictEqual({ order });
         });
 
         test('should NOT throw an error if onPaymentMethodsRequest is not implemented, and the flow should continue', async () => {
@@ -619,7 +623,7 @@ describe('UIElement', () => {
             });
 
             expect(onOrderUpdatedMock).toHaveBeenCalledTimes(1);
-            expect(onOrderUpdatedMock).toHaveBeenCalledWith({ order });
+            expect(onOrderUpdatedMock.mock.calls[0][0]).toStrictEqual({ order });
         });
 
         test('should call onError with an IMPLEMENTATION_ERROR, but not onPaymentFailed, if neither onSubmit nor a session is available', async () => {

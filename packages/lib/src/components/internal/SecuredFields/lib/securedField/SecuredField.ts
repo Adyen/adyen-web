@@ -315,7 +315,9 @@ class SecuredField extends AbstractSecuredField {
             case 'encryptionError': {
                 const event = new AnalyticsErrorEvent({
                     component: this.componentType,
-                    code: feedbackObj.code,
+                    // Strictly speaking code could be 608, 609 or 610. But it *will* always be present, so falling back to 610
+                    // (SECURED_FIELDS_ENCRYPTION_ERROR) will keep TS happy
+                    code: feedbackObj.code ?? ErrorEventCode.SECURED_FIELDS_ENCRYPTION_ERROR,
                     errorType: ErrorEventType.internal,
                     message: `${feedbackObj.error}. Field= ${this.sfConfig.fieldType}`
                 });
@@ -327,9 +329,14 @@ class SecuredField extends AbstractSecuredField {
             // Listen for actions indicating SF iframe has detected errors with how it's hosted
             case 'invalidHosting':
             case 'insecureMerchantDomain': {
+                const fallbackCode =
+                    feedbackObj.action === 'invalidHosting'
+                        ? ErrorEventCode.SECURED_FIELDS_INVALID_HOSTING
+                        : ErrorEventCode.SECURED_FIELDS_INSECURE_MERCHANT_DOMAIN;
+
                 const event = new AnalyticsErrorEvent({
                     component: this.componentType,
-                    code: feedbackObj.code,
+                    code: feedbackObj.code ?? fallbackCode,
                     errorType: ErrorEventType.internal,
                     message: `${feedbackObj.error}. Field=${this.sfConfig.fieldType}`
                 });
