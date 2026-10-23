@@ -54,7 +54,7 @@ class Card extends Base {
     readonly selectorList: Locator;
     readonly threeDs2Challenge: ThreeDs2Challenge;
 
-    readonly payButton: Locator;
+    declare readonly payButton: Locator;
 
     constructor(
         public readonly page: Page,
@@ -127,8 +127,13 @@ class Card extends Base {
 
         this.threeDs2Challenge = new ThreeDs2Challenge(page);
 
-        // Regex needs to be this complex other wise it matches Google Pay in the Dropin
-        this.payButton = this.page.getByRole('button', { name: /(Pay .*)|(Save details)/ });
+        // Regex needs to be this complex other wise it matches Google Pay in the Dropin.
+        // When a custom root Locator is passed in (e.g. a Drop-in payment method's details wrapper, which
+        // contains its own Pay button), scope to it - so that multiple Card instances on the same page
+        // (e.g. multiple Drop-in instances) don't collide. The default string selector is only ever used for
+        // the standalone Card component, where the Pay button is a DOM sibling rather than a descendant.
+        const payButtonScope = typeof selector === 'string' ? this.page : this.rootElement;
+        this.payButton = payButtonScope.getByRole('button', { name: /(Pay .*)|(Save details)/ });
     }
 
     // The list of card brands as displayed under the CardNumber field

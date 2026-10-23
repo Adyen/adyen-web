@@ -30,7 +30,7 @@ class Dropin extends Base {
 
     readonly pmList: Locator;
     readonly saveDetailsButton: Locator;
-    readonly payButton: Locator;
+    declare readonly payButton: Locator;
 
     protected _paymentMethods: Array<{ name: string; type: string }>;
     protected _storedPaymentMethods: Array<{ name: string; type: string; brand: string }>;

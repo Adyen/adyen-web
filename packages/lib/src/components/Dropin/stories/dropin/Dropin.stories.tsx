@@ -209,10 +209,10 @@ export const SessionsDonationReparented: DropinStory = {
 };
 
 /**
- * Renders two independent Drop-in instances side by side.
- * Used to test scenarios where one Drop-in instance is torn down (e.g. via raw DOM manipulation
- * that bypasses Preact's unmount lifecycle) while a second, sibling instance is still in use -
- * see DoChallenge3DS2's stale postMessage listener handling.
+ * Renders two independent Drop-in instances, both created against the *same* Checkout/session,
+ * side by side. Used to test scenarios where one Drop-in instance is torn down (e.g. via raw DOM
+ * manipulation that bypasses Preact's unmount lifecycle) while a second, sibling instance - sharing
+ * the same session - is still in use. See DoChallenge3DS2's stale postMessage listener handling.
  */
 export const TwoInstances: DropinStory = {
     args: {
@@ -227,14 +227,14 @@ export const TwoInstances: DropinStory = {
         AdyenCheckout.register(...Classes);
 
         return (
-            <Fragment>
-                <Checkout checkoutConfig={checkoutConfig}>
-                    {checkout => <ComponentContainer id="component-root-1" element={new DropinComponent(checkout, componentConfiguration)} />}
-                </Checkout>
-                <Checkout checkoutConfig={checkoutConfig}>
-                    {checkout => <ComponentContainer id="component-root-2" element={new DropinComponent(checkout, componentConfiguration)} />}
-                </Checkout>
-            </Fragment>
+            <Checkout checkoutConfig={checkoutConfig}>
+                {checkout => (
+                    <Fragment>
+                        <ComponentContainer id="component-root-1" element={new DropinComponent(checkout, componentConfiguration)} />
+                        <ComponentContainer id="component-root-2" element={new DropinComponent(checkout, componentConfiguration)} />
+                    </Fragment>
+                )}
+            </Checkout>
         );
     }
 };
