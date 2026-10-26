@@ -52,7 +52,7 @@ function SelectButton(props: Readonly<SelectButtonProps>) {
     // hide it and show the "selected" value when collapsed
     // When list is open, show user's typed input (or empty); otherwise show selected value
     const textWhenListOpen = inputText ?? '';
-    const displayInputText = showList ? textWhenListOpen : displayText;
+    const displayInputText = showList || (props.preserveInput && inputText !== null) ? textWhenListOpen : displayText;
 
     const handleClick = (e: Event) => {
         e.preventDefault();
