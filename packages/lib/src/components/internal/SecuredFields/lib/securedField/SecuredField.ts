@@ -81,6 +81,7 @@ class SecuredField extends AbstractSecuredField {
         this.cvcPolicy = pSetupObj.cvcPolicy;
         this.expiryDatePolicy = pSetupObj.expiryDatePolicy;
 
+        /* istanbul ignore next -- dev-only debug logging, gated behind a hardcoded `false` flag */
         if (process.env.NODE_ENV === 'development' && doLog) {
             logger.log(
                 '### SecuredField::constructor:: this.sfConfig.fieldType=',
@@ -185,6 +186,7 @@ class SecuredField extends AbstractSecuredField {
         // TODO - for debugging purposes this would always be useful to see
         //        logger.log('\n',this.sfConfig.fieldType,'### CSF SecuredField::postMessageListener:: event.data=',event.data);
 
+        /* istanbul ignore next -- dev-only debug logging, gated behind a hardcoded `false` flag */
         if (process.env.NODE_ENV === 'development' && logPostMsg) {
             logger.log(
                 '\n###CSF SecuredField::postMessageListener:: DOMAIN & ORIGIN MATCH, NO WEBPACK WEIRDNESS fieldType=',
@@ -204,6 +206,7 @@ class SecuredField extends AbstractSecuredField {
         if (!this.isFeedbackObjValid(feedbackObj)) return;
 
         // VALIDATION CHECKS PASSED - DECIDE ON COURSE OF ACTION
+        /* istanbul ignore next -- dev-only debug logging, gated behind a hardcoded `false` flag */
         if (process.env.NODE_ENV === 'development' && logPostMsg) {
             logger.log(
                 '### SecuredField::postMessageListener:: numkeys match PROCEED WITH POST MESSAGE PROCESSING fieldType=',
@@ -246,6 +249,7 @@ class SecuredField extends AbstractSecuredField {
             return false;
         }
 
+        /* istanbul ignore next -- dev-only debug logging, gated behind a hardcoded `false` flag */
         if (process.env.NODE_ENV === 'development' && logPostMsg) {
             logger.log('### SecuredField::postMessageListener:: feedbackObj.numKey=', feedbackObj.numKey);
         }
@@ -509,6 +513,7 @@ class SecuredField extends AbstractSecuredField {
         // Only set if value has changed
         if (value === this.cvcPolicy) return;
 
+        /* istanbul ignore next -- dev-only debug logging, gated behind a hardcoded `false` flag */
         if (process.env.NODE_ENV === 'development' && doLog) logger.log(this.sfConfig.fieldType, '### SecuredField::cvcPolicy:: value=', value);
 
         this._cvcPolicy = value;
@@ -537,6 +542,7 @@ class SecuredField extends AbstractSecuredField {
         // Only set if value has changed
         if (value === this.expiryDatePolicy) return;
 
+        /* istanbul ignore next -- dev-only debug logging, gated behind a hardcoded `false` flag */
         if (process.env.NODE_ENV === 'development' && doLog) logger.log(this.sfConfig.fieldType, '### SecuredField:expiryDatePolicy:: value=', value);
 
         this._expiryDatePolicy = value;
