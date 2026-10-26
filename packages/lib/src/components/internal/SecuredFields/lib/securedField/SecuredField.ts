@@ -206,7 +206,6 @@ class SecuredField extends AbstractSecuredField {
         // CHECK FOR EXPECTED PROPS & MATCHING numKey
         if (!this.isFeedbackObjValid(feedbackObj)) return;
 
-        // VALIDATION CHECKS PASSED - DECIDE ON COURSE OF ACTION
         /* istanbul ignore next -- dev-only debug logging, gated behind a hardcoded `false` flag */
         if (process.env.NODE_ENV === 'development' && logPostMsg) {
             logger.log(
@@ -217,6 +216,7 @@ class SecuredField extends AbstractSecuredField {
             );
         }
 
+        // VALIDATION CHECKS PASSED - DECIDE ON COURSE OF ACTION
         this.handleFeedbackAction(feedbackObj);
     }
 
