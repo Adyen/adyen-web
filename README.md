@@ -10,7 +10,7 @@ You can integrate with Adyen Web in two ways:
 
 -   [Web Drop-in](https://docs.adyen.com/online-payments/web-drop-in/): an all-in-one solution, the quickest way to accept payments on your website.
 -   [Web Components](https://docs.adyen.com/online-payments/web-components): one Component per payment method and combine with your own payments form logic.
-
+ 
 ## Prerequisites
 
 -   [Adyen test account](https://www.adyen.com/signup)
