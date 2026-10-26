@@ -4,7 +4,7 @@ import Iframe from '../../../internal/IFrame';
 import Spinner from '../../../internal/Spinner';
 import ThreeDS2Form from '../Form';
 import getProcessMessageHandler from '../../../../utils/get-process-message-handler';
-import { encodeBase64URL } from '../utils';
+import { encodeBase64URL, isDetachedFromDOM } from '../utils';
 import promiseTimeout from '../../../../utils/promiseTimeout';
 import {
     CHALLENGE_TIMEOUT,
@@ -54,14 +54,6 @@ class DoChallenge3DS2 extends Component<DoChallenge3DS2Props, DoChallenge3DS2Sta
         });
     }
 
-    /**
-     * Confirm if the component's root node is still attached to the DOM, r.e. component being torn down incorrectly
-     * (without going through Preact's unmount lifecycle)
-     */
-    private isDetachedFromDOM(): boolean {
-        return !this.base || !document.contains(this.base);
-    }
-
     componentDidMount() {
         // Render challenge
         this.challengePromise = promiseTimeout(CHALLENGE_TIMEOUT, this.get3DS2ChallengePromise(), CHALLENGE_TIMEOUT_REJECT_OBJECT);
@@ -69,7 +61,7 @@ class DoChallenge3DS2 extends Component<DoChallenge3DS2Props, DoChallenge3DS2Sta
             .then((resolveObject: ThreeDS2FlowObject) => {
                 window.removeEventListener('message', this.processMessageHandler);
 
-                if (this.isDetachedFromDOM()) {
+                if (isDetachedFromDOM(this.base)) {
                     return;
                 }
 
@@ -79,7 +71,7 @@ class DoChallenge3DS2 extends Component<DoChallenge3DS2Props, DoChallenge3DS2Sta
             .catch((rejectObject: ThreeDS2FlowObject) => {
                 window.removeEventListener('message', this.processMessageHandler);
 
-                if (this.isDetachedFromDOM()) {
+                if (isDetachedFromDOM(this.base)) {
                     return;
                 }
 
