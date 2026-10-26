@@ -69,4 +69,34 @@ const setupWithAncvOrderMockData = {
     sessionData: SESSION_DATA_MOCK
 };
 
-export { setupMockData, setupWithAncvOrderMockData };
+const setupWithCustomDisplayMode = (googlePayDisplayMode: 'instant' | 'regular') => ({
+    amount: { currency: 'EUR', value: 2000 },
+    countryCode: 'NL',
+    expiresAt: '2023-10-10T14:27:12+02:00',
+    id: 'CSFF69355B6EAD2F68',
+    returnUrl: `${protocol}://localhost:3020/`,
+    shopperLocale: 'en-US',
+    configuration: { enableStoreDetails: false },
+    paymentMethods: {
+        paymentMethods: [
+            { name: 'iDEAL', type: 'ideal', configuration: { displayMode: 'regular' } },
+            {
+                name: 'Google Pay',
+                type: 'googlepay',
+                configuration: {
+                    displayMode: googlePayDisplayMode,
+                    merchantId: 'TestMerchantCheckout',
+                    gatewayMerchantId: 'TestMerchantCheckout'
+                }
+            },
+            { brands: ['visa', 'mc', 'amex'], name: 'Credit Card', type: 'scheme', configuration: { displayMode: 'regular' } }
+        ],
+        storedPaymentMethods: []
+    },
+    sessionData: SESSION_DATA_MOCK
+});
+
+const setupWithGooglePayAsInstantMockData = setupWithCustomDisplayMode('instant');
+const setupWithGooglePayAsRegularMockData = setupWithCustomDisplayMode('regular');
+
+export { setupMockData, setupWithAncvOrderMockData, setupWithGooglePayAsInstantMockData, setupWithGooglePayAsRegularMockData };
