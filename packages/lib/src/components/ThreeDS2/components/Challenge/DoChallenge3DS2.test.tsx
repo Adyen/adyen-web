@@ -1,7 +1,13 @@
 import { h } from 'preact';
 import { render } from '@testing-library/preact';
 import DoChallenge3DS2 from './DoChallenge3DS2';
-import { PASSKEY_3DS2_IFRAME_ALLOW, PASSKEY_VISA_IFRAME_ALLOW, PASSKEY_VISA_IFRAME_SANDBOX } from '../../constants';
+import {
+    CHALLENGE_TIMEOUT,
+    CHALLENGE_TIMEOUT_REJECT_OBJECT,
+    PASSKEY_3DS2_IFRAME_ALLOW,
+    PASSKEY_VISA_IFRAME_ALLOW,
+    PASSKEY_VISA_IFRAME_SANDBOX
+} from '../../constants';
 
 let mockIframeProps: any = {};
 
@@ -97,6 +103,39 @@ describe('DoChallenge3DS2', () => {
             await flushPromiseChain();
 
             expect(defaultProps.onCompleteChallenge).not.toHaveBeenCalled();
+        });
+    });
+
+    describe('Handling a challenge timeout after the component has been torn down outside of Preact', () => {
+        beforeEach(() => {
+            jest.useFakeTimers();
+            defaultProps.onCompleteChallenge.mockClear();
+            defaultProps.onErrorChallenge.mockClear();
+        });
+
+        afterEach(() => {
+            jest.useRealTimers();
+        });
+
+        test('should call onErrorChallenge when the challenge times out while still mounted', async () => {
+            render(<DoChallenge3DS2 {...defaultProps} />);
+
+            await jest.advanceTimersByTimeAsync(CHALLENGE_TIMEOUT);
+
+            expect(defaultProps.onErrorChallenge).toHaveBeenCalledTimes(1);
+            expect(defaultProps.onErrorChallenge).toHaveBeenCalledWith(CHALLENGE_TIMEOUT_REJECT_OBJECT);
+        });
+
+        test('should not call onErrorChallenge when the challenge times out after the root node was removed from the DOM without going through Preact\'s unmount lifecycle (e.g. a merchant doing el.innerHTML = "")', async () => {
+            const { container } = render(<DoChallenge3DS2 {...defaultProps} />);
+
+            // Detach without going through Preact's unmount lifecycle - componentWillUnmount never runs.
+            // eslint-disable-next-line testing-library/no-container -- intentionally need raw DOM access to simulate a non-Preact-mediated removal
+            container.remove();
+
+            await jest.advanceTimersByTimeAsync(CHALLENGE_TIMEOUT);
+
+            expect(defaultProps.onErrorChallenge).not.toHaveBeenCalled();
         });
     });
 });

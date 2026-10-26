@@ -1,6 +1,7 @@
 import { h } from 'preact';
 import { render } from '@testing-library/preact';
 import DoFingerprint3DS2 from './DoFingerprint3DS2';
+import { THREEDS_METHOD_TIMEOUT, FAILED_METHOD_STATUS_RESOLVE_OBJECT_TIMEOUT } from '../../constants';
 
 jest.mock('../../../internal/IFrame', () => ({
     __esModule: true,
@@ -61,6 +62,39 @@ describe('DoFingerprint3DS2', () => {
             await flushPromiseChain();
 
             expect(defaultProps.onCompleteFingerprint).not.toHaveBeenCalled();
+        });
+    });
+
+    describe('Handling a fingerprint timeout after the component has been torn down outside of Preact', () => {
+        beforeEach(() => {
+            jest.useFakeTimers();
+            defaultProps.onCompleteFingerprint.mockClear();
+            defaultProps.onErrorFingerprint.mockClear();
+        });
+
+        afterEach(() => {
+            jest.useRealTimers();
+        });
+
+        test('should call onErrorFingerprint when the fingerprint times out while still mounted', async () => {
+            render(<DoFingerprint3DS2 {...defaultProps} />);
+
+            await jest.advanceTimersByTimeAsync(THREEDS_METHOD_TIMEOUT);
+
+            expect(defaultProps.onErrorFingerprint).toHaveBeenCalledTimes(1);
+            expect(defaultProps.onErrorFingerprint).toHaveBeenCalledWith(FAILED_METHOD_STATUS_RESOLVE_OBJECT_TIMEOUT);
+        });
+
+        test('should not call onErrorFingerprint when the fingerprint times out after the root node was removed from the DOM without going through Preact\'s unmount lifecycle (e.g. a merchant doing el.innerHTML = "")', async () => {
+            const { container } = render(<DoFingerprint3DS2 {...defaultProps} />);
+
+            // Detach without going through Preact's unmount lifecycle - componentWillUnmount never runs.
+            // eslint-disable-next-line testing-library/no-container -- intentionally need raw DOM access to simulate a non-Preact-mediated removal
+            container.remove();
+
+            await jest.advanceTimersByTimeAsync(THREEDS_METHOD_TIMEOUT);
+
+            expect(defaultProps.onErrorFingerprint).not.toHaveBeenCalled();
         });
     });
 });
