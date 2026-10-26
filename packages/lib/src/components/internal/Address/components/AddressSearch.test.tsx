@@ -3,6 +3,9 @@ import userEvent from '@testing-library/user-event';
 import { render, screen, waitFor } from '@testing-library/preact';
 import AddressSearch from './AddressSearch';
 import { CoreProvider } from '../../../../core/Context/CoreProvider';
+import { setupCoreMock } from '../../../../../config/testMocks/setup-core-mock';
+
+const core = setupCoreMock();
 
 const ADDRESS_LOOKUP_RESULT = [
     {
@@ -24,7 +27,7 @@ const ADDRESS_LOOKUP_RESULT = [
 
 const customRender = (ui: h.JSX.Element) => {
     return render(
-        <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+        <CoreProvider i18n={core.modules.i18n} loadingContext="test" resources={core.modules.resources}>
             {ui}
         </CoreProvider>
     );
@@ -92,6 +95,55 @@ test('onAddressLookupMock should be triggered when typing', async () => {
     // Test if the return of the function is displayed
     const resultList = screen.getByRole('listbox');
     expect(resultList).toHaveTextContent('Road 1, 2000, UK');
+});
+
+describe('address query persistence', () => {
+    test('should preserve the query and matching suggestions after clicking outside and reopening', async () => {
+        const user = userEvent.setup();
+        const onSelect = jest.fn();
+        const onAddressLookup = jest.fn(onAddressLookupMockFn);
+
+        customRender(
+            <div>
+                <AddressSearch
+                    onSelect={onSelect}
+                    onManualAddress={() => {}}
+                    externalErrorMessage={''}
+                    onAddressLookup={onAddressLookup}
+                    hideManualButton={true}
+                    addressSearchDebounceMs={0}
+                />
+                <button type="button">Outside</button>
+            </div>
+        );
+
+        const input = screen.getByRole('combobox');
+        await user.type(input, 'Road');
+        await waitFor(() => expect(screen.getByRole('listbox')).toHaveTextContent('Road 1, 2000, UK'));
+        await user.click(screen.getByRole('button', { name: 'Outside' }));
+        expect(input).toHaveValue('Road');
+        expect(input).toHaveAttribute('aria-expanded', 'false');
+
+        await user.click(input);
+        expect(input).toHaveValue('Road');
+        expect(screen.getByRole('listbox')).toHaveTextContent('Road 1, 2000, UK');
+        expect(onSelect).not.toHaveBeenCalled();
+
+        await user.keyboard('[Escape]');
+        expect(input).not.toHaveFocus();
+        expect(input).toHaveValue('Road');
+        expect(input).toHaveAttribute('aria-expanded', 'false');
+
+        await user.click(input);
+        await user.tab();
+        expect(input).toHaveAttribute('aria-expanded', 'false');
+        expect(input).toHaveValue('Road');
+
+        await user.click(input);
+        await user.click(screen.getByRole('option', { name: 'Road 1, 2000, UK' }));
+        expect(onSelect).toHaveBeenCalledWith(ADDRESS_LOOKUP_RESULT[0]);
+        expect(input).toHaveValue('');
+    });
 });
 
 test('onSelect is triggered with correct data', async () => {

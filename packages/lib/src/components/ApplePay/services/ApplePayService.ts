@@ -16,6 +16,14 @@ export interface ApplePayServiceOptions {
     ) => void;
 }
 
+/**
+ * An authorization result always carries a numeric 'status'. Anything else reaching the completion of a
+ * payment is a rejection reason that is not a result - an exception thrown by the payment chain, typically.
+ */
+function isAuthorizationResult(value: unknown): value is ApplePayPaymentAuthorizationResult {
+    return typeof (value as ApplePayPaymentAuthorizationResult)?.status === 'number';
+}
+
 class ApplePayService {
     private session: ApplePaySession;
     private readonly options: ApplePayServiceOptions;
@@ -84,8 +92,13 @@ class ApplePayService {
                 this.session.completeMerchantValidation(response);
             })
             .catch(error => {
-                console.error(error);
-                this.session.abort();
+                try {
+                    this.session.abort();
+                } catch (abortError) {
+                    // The session was already canceled, and the 'oncancel' event has reported it. No need to call 'onError' again
+                    console.warn('ApplePayService: onvalidatemerchant session.abort() failed', abortError);
+                    return;
+                }
                 this.options.onError(error);
             });
     }
@@ -104,11 +117,29 @@ class ApplePayService {
     ): Promise<void> {
         return new Promise((resolve, reject) => onPaymentAuthorized(resolve, reject, event))
             .then((result: ApplePayPaymentAuthorizationResult) => {
-                this.session.completePayment(result);
+                this.completePayment(result);
             })
-            .catch((result: ApplePayPaymentAuthorizationResult) => {
-                this.session.completePayment(result);
+            .catch((resultOrError: unknown) => {
+                const result = isAuthorizationResult(resultOrError) ? resultOrError : { status: ApplePaySession.STATUS_FAILURE };
+                this.completePayment(result);
             });
+    }
+
+    /**
+     * Completes the payment, telling the Apple Pay sheet whether it succeeded or failed.
+     *
+     * The session throws when it can no longer be completed (the shopper dismissed the sheet or the 30 second
+     * completion window elapsed), or when it rejects the result. The exception is logged here rather than
+     * escaping as an unhandled rejection.
+     *
+     * @param result - The authorization result to complete the payment with
+     */
+    private completePayment(result: ApplePayPaymentAuthorizationResult): void {
+        try {
+            this.session.completePayment(result);
+        } catch (error) {
+            console.warn('ApplePayService: onpaymentauthorized session.completePayment() failed', error);
+        }
     }
 
     /**

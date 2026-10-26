@@ -40,6 +40,7 @@ export interface SelectProps {
     disabled?: boolean;
     disableTextFilter?: boolean;
     clearOnSelect?: boolean;
+    preserveInput?: boolean;
     blurOnClose?: boolean;
     onListToggle?: (isOpen: boolean) => void;
     additionalDescribedBy?: string;
@@ -47,6 +48,7 @@ export interface SelectProps {
 
 export interface SelectButtonProps {
     inputText: string | null;
+    preserveInput?: boolean;
     active: SelectItem;
     selected: SelectItem;
     filterInputRef: RefObject<HTMLInputElement>;

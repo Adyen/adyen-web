@@ -389,6 +389,27 @@ describe('Select', () => {
         });
     });
 
+    test('should reset the query and show all options when a default select is reopened', async () => {
+        renderSelect({
+            items: [
+                { id: '1', name: 'Apple' },
+                { id: '2', name: 'Banana' }
+            ],
+            placeholder: 'Choose a fruit'
+        });
+
+        const input = screen.getByRole('combobox');
+        await user.type(input, 'Apple');
+        expect(screen.queryByRole('option', { name: 'Banana' })).not.toBeInTheDocument();
+        await user.click(document.body);
+        expect(input).toHaveValue('Choose a fruit');
+
+        await user.click(input);
+        expect(input).toHaveValue('');
+        expect(screen.getByRole('option', { name: 'Apple' })).toBeVisible();
+        expect(screen.getByRole('option', { name: 'Banana' })).toBeVisible();
+    });
+
     describe('filtering', () => {
         test('does not match on secondaryText', async () => {
             renderSelect({
