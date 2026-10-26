@@ -16,7 +16,7 @@ class ShopperCard {
     private readonly panExpirationMonth: string;
     private readonly panExpirationYear: string;
     private readonly descriptorName?: string;
-    private readonly status?: DigitalCardStatus = null;
+    private readonly status?: DigitalCardStatus | null = null;
 
     constructor(maskedCard: SrcCard, scheme: ClickToPayScheme, srcCorrelationId: string) {
         this.dateOfCardLastUsed = maskedCard.dateOfCardLastUsed;
@@ -44,7 +44,7 @@ class ShopperCard {
     }
 
     private confirmCardIsExpired(): boolean {
-        if (!['ACTIVE', 'PENDING'].includes(this.status)) return true;
+        if (!this.status || !['ACTIVE', 'PENDING'].includes(this.status)) return true;
 
         if (!this.panExpirationYear && !this.panExpirationMonth) return false;
 

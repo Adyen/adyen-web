@@ -13,13 +13,14 @@ import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 
 jest.mock('../internal/ClickToPay/services/create-clicktopay-service');
 
+const createClickToPayServiceMock = createClickToPayService as jest.MockedFunction<typeof createClickToPayService>;
+
 const core = setupCoreMock();
 
 test('should initialize ClickToPayService when creating the element', () => {
     const mockCtpService = mock<IClickToPayService>();
     mockCtpService.initialize.mockImplementation(() => Promise.resolve());
-    // @ts-ignore mockImplementation not inferred
-    createClickToPayService.mockImplementation(() => mockCtpService);
+    createClickToPayServiceMock.mockImplementation(() => mockCtpService);
 
     const configuration = {
         visaSrcInitiatorId: '$123456$',
@@ -29,10 +30,10 @@ test('should initialize ClickToPayService when creating the element', () => {
         shopperEmail: 'shopper@example.com'
     };
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const element = new ClickToPayElement(core, { environment: 'test', configuration, ...ctpConfiguration });
 
-    expect(createClickToPayService).toHaveBeenCalledWith(configuration, ctpConfiguration, 'test', core.modules.analytics);
+    expect(element.props.shopperEmail).toBe('shopper@example.com');
+    expect(createClickToPayServiceMock).toHaveBeenCalledWith(configuration, ctpConfiguration, 'test', core.modules.analytics);
     expect(mockCtpService.initialize).toHaveBeenCalledTimes(1);
 });
 
@@ -63,7 +64,11 @@ test('should formatData() to click to pay /payment request format', () => {
 });
 
 test('should get shopperEmail from session if available', () => {
-    const modifiedCore = { ...core, options: { ...core.options, session: { ...core.options.session, shopperEmail: 'shopper@example.com' } } };
+    const modifiedCore = setupCoreMock();
+    modifiedCore.options = {
+        ...modifiedCore.options,
+        session: { ...modifiedCore.options.session, id: 'session-id', shopperEmail: 'shopper@example.com' }
+    };
 
     const element = new ClickToPayElement(modifiedCore);
 
@@ -73,8 +78,7 @@ test('should get shopperEmail from session if available', () => {
 test('should resolve isAvailable if shopper account is found', async () => {
     const mockCtpService = mock<IClickToPayService>();
     mockCtpService.initialize.mockImplementation(() => Promise.resolve());
-    // @ts-ignore mockImplementation not inferred
-    createClickToPayService.mockImplementation(() => mockCtpService);
+    createClickToPayServiceMock.mockImplementation(() => mockCtpService);
 
     Object.defineProperty(mockCtpService, 'shopperAccountFound', {
         get: jest.fn(() => true)
@@ -88,8 +92,7 @@ test('should resolve isAvailable if shopper account is found', async () => {
 test('should reject isAvailable if shopper account is not found', async () => {
     const mockCtpService = mock<IClickToPayService>();
     mockCtpService.initialize.mockImplementation(() => Promise.resolve());
-    // @ts-ignore mockImplementation not inferred
-    createClickToPayService.mockImplementation(() => mockCtpService);
+    createClickToPayServiceMock.mockImplementation(() => mockCtpService);
 
     mockCtpService.subscribeOnStateChange.mockImplementation(callback => {
         callback(CtpState.NotAvailable);
@@ -118,8 +121,7 @@ describe('Click to Pay: ENTER keydown should perform an action only within the C
             callback(CtpState.Login);
         });
 
-        // @ts-ignore mockImplementation not inferred
-        createClickToPayService.mockImplementation(() => mockCtpService);
+        createClickToPayServiceMock.mockImplementation(() => mockCtpService);
 
         const resources = mock<Resources>();
         resources.getImage.mockReturnValue((icon: string) => `https://checkout-adyen.com/${icon}`);
@@ -157,8 +159,7 @@ describe('Click to Pay: ENTER keydown should perform an action only within the C
             callback(CtpState.OneTimePassword);
         });
 
-        // @ts-ignore mockImplementation not inferred
-        createClickToPayService.mockImplementation(() => mockCtpService);
+        createClickToPayServiceMock.mockImplementation(() => mockCtpService);
 
         const resources = mock<Resources>();
         resources.getImage.mockReturnValue((icon: string) => `https://checkout-adyen.com/${icon}`);
@@ -195,7 +196,7 @@ describe('Click to Pay: ENTER keydown should perform an action only within the C
         mockCtpService.subscribeOnStateChange.mockImplementation(callback => {
             callback(CtpState.Ready);
         });
-        mockCtpService.shopperCards = [
+        const shopperCards: ShopperCard[] = [
             new ShopperCard(
                 {
                     srcDigitalCardId: '654321',
@@ -216,14 +217,14 @@ describe('Click to Pay: ENTER keydown should perform an action only within the C
                 '1234566'
             )
         ];
+        mockCtpService.shopperCards = shopperCards;
         mockCtpService.checkout.mockResolvedValue({
             srcDigitalCardId: 'xxxx',
             srcCorrelationId: 'yyyy',
             srcScheme: 'visa'
         });
 
-        // @ts-ignore mockImplementation not inferred by Typescript
-        createClickToPayService.mockImplementation(() => mockCtpService);
+        createClickToPayServiceMock.mockImplementation(() => mockCtpService);
 
         const resources = mock<Resources>();
         resources.getImage.mockReturnValue((icon: string) => `https://checkout-adyen.com/${icon}`);
@@ -248,7 +249,7 @@ describe('Click to Pay: ENTER keydown should perform an action only within the C
         await user.keyboard('[Enter]');
 
         await waitFor(() => {
-            expect(mockCtpService.checkout).toHaveBeenCalledWith(mockCtpService.shopperCards[0]);
+            expect(mockCtpService.checkout).toHaveBeenCalledWith(shopperCards[0]);
         });
 
         expect(onSubmitMock).toHaveBeenCalled();

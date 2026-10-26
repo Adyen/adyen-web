@@ -1,16 +1,15 @@
 import SrcSdkLoader from './sdks/SrcSdkLoader';
 import ClickToPayService from './ClickToPayService';
-import { IClickToPayService, IdentityLookupParams } from './types';
-import { SrcInitParams } from './sdks/types';
+import { IClickToPayService, IdentityLookupParams, SchemesConfiguration } from './types';
 import { CardBackendConfiguration } from '../../../Card/types';
-import { ClickToPayProps, ClickToPayScheme } from '../types';
+import { ClickToPayProps } from '../types';
 import type { IAnalytics } from '../../../../core/Analytics/Analytics';
 
 /**
  * Creates the Click to Pay service in case the required configuration is provided
  */
 export default function createClickToPayService(
-    configuration: CardBackendConfiguration,
+    configuration: CardBackendConfiguration | undefined,
     clickToPayConfiguration: ClickToPayProps | undefined,
     environment: string,
     analytics: IAnalytics
@@ -33,7 +32,7 @@ export default function createClickToPayService(
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const createShopperIdentityObject = (shopperEmail: string, telephoneNumber: string): IdentityLookupParams | null => {
+const createShopperIdentityObject = (shopperEmail: string | undefined, telephoneNumber: string | undefined): IdentityLookupParams | null => {
     const identityLookup = {
         ...(shopperEmail && { shopperEmail })
         // ...(telephoneNumber && { telephoneNumber }) telephoneNumber not supported yet
@@ -46,14 +45,14 @@ const createShopperIdentityObject = (shopperEmail: string, telephoneNumber: stri
  * Parses 'configuration' object that comes from the Card payment method config, and try to create the Click to Pay
  * initialization object in case the values are provided.
  */
-const createSchemesInitConfiguration = (configuration: CardBackendConfiguration): Record<ClickToPayScheme, SrcInitParams> => {
+const createSchemesInitConfiguration = (configuration: CardBackendConfiguration | undefined): SchemesConfiguration | null => {
     if (!configuration) {
         return null;
     }
 
     const { visaSrciDpaId, visaSrcInitiatorId, mcDpaId, mcSrcClientId } = configuration;
 
-    const schemesConfig: Record<ClickToPayScheme, SrcInitParams> = {
+    const schemesConfig: SchemesConfiguration = {
         ...(mcDpaId && mcSrcClientId && { mc: { srciDpaId: mcDpaId, srcInitiatorId: mcSrcClientId } }),
         ...(visaSrciDpaId &&
             visaSrcInitiatorId && {

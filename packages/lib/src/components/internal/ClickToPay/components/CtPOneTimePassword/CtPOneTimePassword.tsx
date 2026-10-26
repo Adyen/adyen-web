@@ -17,11 +17,11 @@ type CtPOneTimePasswordProps = {
 const CtPOneTimePassword = ({ onDisplayCardComponent }: Readonly<CtPOneTimePasswordProps>): h.JSX.Element => {
     const { i18n } = useCoreContext();
     const { finishIdentityValidation, otpMaskedContact, otpNetwork, isCtpPrimaryPaymentMethod } = useClickToPayContext();
-    const [otp, setOtp] = useState<string>(null);
+    const [otp, setOtp] = useState<string>('');
     const [isValid, setIsValid] = useState<boolean>(false);
     const [isValidatingOtp, setIsValidatingOtp] = useState<boolean>(false);
-    const [errorCode, setErrorCode] = useState<string>(null);
-    const [otpInputHandlers, setOtpInputHandlers] = useState<CtPOneTimePasswordInputHandlers>(null);
+    const [errorCode, setErrorCode] = useState<string | null>(null);
+    const [otpInputHandlers, setOtpInputHandlers] = useState<CtPOneTimePasswordInputHandlers | null>(null);
     const [isAccountLocked, setIsAccountLocked] = useState<boolean>(false);
 
     const onSetOtpInputHandlers = useCallback((handlers: CtPOneTimePasswordInputHandlers) => {
@@ -41,7 +41,7 @@ const CtPOneTimePassword = ({ onDisplayCardComponent }: Readonly<CtPOneTimePassw
         setErrorCode(null);
 
         if (!isValid) {
-            otpInputHandlers.validateInput();
+            otpInputHandlers?.validateInput();
             return;
         }
 
@@ -91,7 +91,7 @@ const CtPOneTimePassword = ({ onDisplayCardComponent }: Readonly<CtPOneTimePassw
                 onChange={onChangeOtpInput}
                 onSetInputHandlers={onSetOtpInputHandlers}
                 disabled={isValidatingOtp}
-                errorMessage={errorCode && i18n.get(`ctp.errors.${errorCode}`)}
+                errorMessage={errorCode ? i18n.get(`ctp.errors.${errorCode}`) : undefined}
                 onPressEnter={onSubmitPassword}
                 onResendCode={onResendCode}
                 isValidatingOtp={isValidatingOtp}
@@ -104,7 +104,7 @@ const CtPOneTimePassword = ({ onDisplayCardComponent }: Readonly<CtPOneTimePassw
                 label={i18n.get('continue')}
                 variant={isCtpPrimaryPaymentMethod ? 'primary' : 'secondary'}
                 onClick={onSubmitPassword}
-                status={isValidatingOtp && 'loading'}
+                status={isValidatingOtp ? 'loading' : undefined}
                 onKeyDown={handleButtonKeyDown}
             />
         </Fragment>

@@ -1,4 +1,4 @@
-import { h, TargetedKeyboardEvent } from 'preact';
+import { ComponentChildren, h, TargetedKeyboardEvent } from 'preact';
 import classnames from 'classnames';
 import CtPLogoutLink from './CtPLogoutLink';
 import { CtPBrand } from '../CtPBrand';
@@ -7,7 +7,7 @@ import './CtPSection.scss';
 
 interface CtPSectionProps {
     onEnterKeyPress: (event: TargetedKeyboardEvent<HTMLInputElement>) => void;
-    children?: h.JSX.Element[];
+    children?: ComponentChildren;
 }
 
 const CtPSection = ({ children, onEnterKeyPress }: Readonly<CtPSectionProps>): h.JSX.Element => {

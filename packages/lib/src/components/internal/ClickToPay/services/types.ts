@@ -5,8 +5,8 @@ import { ClickToPayScheme } from '../types';
 
 export interface IClickToPayService {
     state: CtpState;
-    shopperCards: ShopperCard[];
-    identityValidationData: IdentityValidationData;
+    shopperCards: ShopperCard[] | null;
+    identityValidationData: IdentityValidationData | null;
     schemes: string[];
     shopperAccountFound: boolean;
     storeCookies: boolean;
@@ -52,6 +52,16 @@ export interface SrcProfileWithScheme extends SrcProfile {
 export type CardTypes = {
     availableCards: ShopperCard[];
     expiredCards: ShopperCard[];
+};
+
+/**
+ * A card the shopper has paid with at least once, therefore 'dateOfCardLastUsed' is guaranteed to be set
+ */
+export type UsedShopperCard = ShopperCard & Required<Pick<ShopperCard, 'dateOfCardLastUsed'>>;
+
+export type CardsByUsage = {
+    usedCards: UsedShopperCard[];
+    unusedCards: ShopperCard[];
 };
 
 export type SchemesConfiguration = Partial<Record<ClickToPayScheme, SrcInitParams>>;

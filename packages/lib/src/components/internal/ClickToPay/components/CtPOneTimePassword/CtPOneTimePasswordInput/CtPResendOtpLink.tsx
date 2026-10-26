@@ -28,7 +28,7 @@ const CtPResendOtpLink = ({ onError, onResendCode, disabled }: Readonly<CtPResen
 
     useEffect(() => {
         let timeout: ReturnType<typeof setTimeout> | undefined;
-        if (counter > 0) {
+        if (counter !== null && counter > 0) {
             timeout = setTimeout(() => setCounter(counter - 1), 1000);
         }
         if (counter === RESEND_OTP_COUNTDOWN_SECONDS) {
@@ -83,7 +83,7 @@ const CtPResendOtpLink = ({ onError, onResendCode, disabled }: Readonly<CtPResen
         );
     }
 
-    if (counter > 0) {
+    if (counter !== null && counter > 0) {
         return (
             <div role="timer" className="adyen-checkout-ctp__otp-resend-code--disabled">
                 {i18n.get('ctp.otp.resendCode')} -{' '}

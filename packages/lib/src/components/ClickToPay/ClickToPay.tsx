@@ -30,7 +30,12 @@ export class ClickToPayElement extends UIElement<ClickToPayConfiguration> {
             onTimeout: this.props.onTimeout
         };
 
-        this.clickToPayService = createClickToPayService(this.props.configuration, this.ctpConfiguration, this.props.environment, this.analytics);
+        this.clickToPayService = createClickToPayService(
+            this.props.configuration,
+            this.ctpConfiguration,
+            this.props.environment ?? '',
+            this.analytics
+        );
 
         this.clickToPayService?.initialize().catch(error => {
             this.handleError(new AdyenCheckoutError('ERROR', error.toString(), { cause: error }));
@@ -82,17 +87,18 @@ export class ClickToPayElement extends UIElement<ClickToPayConfiguration> {
      * Rejects Promise if account isn't found or if Login screen is triggered
      */
     public override async isAvailable(): Promise<void> {
-        if (!this.clickToPayService) {
+        const ctpService = this.clickToPayService;
+        if (!ctpService) {
             return Promise.reject();
         }
 
-        if (this.clickToPayService.shopperAccountFound) {
+        if (ctpService.shopperAccountFound) {
             return Promise.resolve();
         }
 
         return new Promise((resolve, reject) => {
-            this.clickToPayService.subscribeOnStateChange((state: CtpState) => {
-                if (this.clickToPayService.shopperAccountFound) resolve();
+            ctpService.subscribeOnStateChange((state: CtpState) => {
+                if (ctpService.shopperAccountFound) resolve();
                 if (state === CtpState.NotAvailable || state === CtpState.Login || state === CtpState.Idle) reject();
             });
         });
