@@ -17,10 +17,15 @@
     gap: variable-generator.token(spacer-090);
 }
 
+.adyen-checkout__qr-loader__brand-logos {
+    display: flex;
+    gap: variable-generator.token(spacer-070);
+    margin-bottom: variable-generator.token(spacer-090);
+}
+
 .adyen-checkout__qr-loader__brand-logo-wrapper {
     border-radius: variable-generator.token(border-radius-s);
     box-shadow: variable-generator.token(shadow-low);
-    margin-bottom: variable-generator.token(spacer-090);
     overflow: hidden;
 }
 

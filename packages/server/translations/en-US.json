@@ -261,7 +261,7 @@
     "twint.saved": "saved",
     "orPayWith": "or pay with",
     "invalid.format.expects": "%{label} Invalid format. Expected format: %{format}",
-    "upi.qrCodeWaitingMessage": "Scan the QR code using your preferred UPI app to complete the payment",
+    "upi.qrCodeWaitingMessage": "Scan and pay with any UPI app",
     "upi.vpaWaitingMessage": "Open your UPI app to confirm the payment",
     "upi.modeSelection": "How would you like to use UPI?",
     "upi.completePayment": "Complete your payment",

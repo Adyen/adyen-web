@@ -16,7 +16,7 @@ export type QRLoaderProps = Pick<
     showAmount?: boolean;
     i18n?: Language;
     classNameModifiers?: string[];
-    brandLogo: string;
+    brandLogo: string | string[];
     brandName: string;
     buttonLabel?: string;
     redirectIntroduction?: string;
