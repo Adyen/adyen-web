@@ -4,7 +4,7 @@ import Iframe from '../../../internal/IFrame';
 import Spinner from '../../../internal/Spinner';
 import ThreeDS2Form from '../Form';
 import getProcessMessageHandler from '../../../../utils/get-process-message-handler';
-import { encodeBase64URL } from '../utils';
+import { encodeBase64URL, isDetachedFromDOM } from '../utils';
 import promiseTimeout from '../../../../utils/promiseTimeout';
 import {
     CHALLENGE_TIMEOUT,
@@ -60,11 +60,21 @@ class DoChallenge3DS2 extends Component<DoChallenge3DS2Props, DoChallenge3DS2Sta
         this.challengePromise.promise
             .then((resolveObject: ThreeDS2FlowObject) => {
                 window.removeEventListener('message', this.processMessageHandler);
+
+                if (isDetachedFromDOM(this.base)) {
+                    return;
+                }
+
                 this.props.onCompleteChallenge(resolveObject);
             })
             /** Catch, for when Challenge times-out */
             .catch((rejectObject: ThreeDS2FlowObject) => {
                 window.removeEventListener('message', this.processMessageHandler);
+
+                if (isDetachedFromDOM(this.base)) {
+                    return;
+                }
+
                 this.props.onErrorChallenge(rejectObject);
             });
     }
