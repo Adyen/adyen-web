@@ -5,7 +5,7 @@ import ThreeDS2Form from '../Form';
 import promiseTimeout from '../../../../utils/promiseTimeout';
 import getProcessMessageHandler from '../../../../utils/get-process-message-handler';
 import { THREEDS_METHOD_TIMEOUT, FAILED_METHOD_STATUS_RESOLVE_OBJECT_TIMEOUT, THREEDS2_NUM } from '../../constants';
-import { encodeBase64URL, isDetachedFromDOM } from '../utils';
+import { encodeBase64URL, getOwnIframeWindow, isDetachedFromDOM } from '../utils';
 import { DoFingerprint3DS2Props, DoFingerprint3DS2State } from './types';
 import { ThreeDS2FlowObject } from '../../types';
 
@@ -43,12 +43,21 @@ class DoFingerprint3DS2 extends Component<DoFingerprint3DS2Props, DoFingerprint3
         this.state = { base64URLencodedData };
     }
 
+    /** Only accept the fingerPrintResult posted from this component's own (hidden) 3DS Method iframe */
+    private getOwnIframeWindow = (): Window | null => getOwnIframeWindow(this.base, iframeName);
+
     get3DS2MethodPromise(): Promise<ThreeDS2FlowObject> {
         return new Promise((resolve, reject) => {
             /**
              * Listen for postMessage responses from the notification url
              */
-            this.processMessageHandler = getProcessMessageHandler(this.props.postMessageDomain, resolve, reject, 'fingerPrintResult');
+            this.processMessageHandler = getProcessMessageHandler(
+                this.props.postMessageDomain,
+                resolve,
+                reject,
+                'fingerPrintResult',
+                this.getOwnIframeWindow
+            );
 
             window.addEventListener('message', this.processMessageHandler);
         });

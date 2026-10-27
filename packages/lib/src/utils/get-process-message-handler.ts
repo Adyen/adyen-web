@@ -8,24 +8,40 @@
  * @param reject - the reject function from the Promise that called this function
  * @param parseErrorObj - an error object to log in the case of unparseable data (albeit from a valid origin)
  * @param expectedType - string to check that the message event's data has the expected type
+ * @param getExpectedSource - optional getter for the window the postMessage must originate from (e.g. a component's own
+ *  iframe.contentWindow). When provided, messages from any other window - such as another component instance's iframe on the
+ *  same page - are ignored, even if they come from the expected domain and have the expected type.
+ *  It is a getter (rather than a value) so that it is evaluated when the message arrives: an iframe's WindowProxy is stable
+ *  across navigations, but is null once the iframe has been removed from the DOM.
  */
 import { hasOwnProperty } from './hasOwnProperty';
 import { PostMsgParseErrorObject } from '../components/ThreeDS2/types';
+
+export type ProcessableMessageEvent = Pick<MessageEvent, 'origin' | 'data'> & Partial<Pick<MessageEvent, 'source'>>;
 
 const getProcessMessageHandler =
     (
         domain: string | null,
         resolve: (value: unknown) => void,
         reject: (reason?: unknown) => void,
-        expectedType: string
-    ): ((event: Pick<MessageEvent, 'origin' | 'data'>) => string | boolean) =>
-    (event: Pick<MessageEvent, 'origin' | 'data'>): string | boolean => {
+        expectedType: string,
+        getExpectedSource?: () => MessageEventSource | null | undefined
+    ): ((event: ProcessableMessageEvent) => string | boolean) =>
+    (event: ProcessableMessageEvent): string | boolean => {
         const parseErrorObj: PostMsgParseErrorObject = {};
         const origin = event.origin;
 
         if (origin !== domain) {
             // FAIL SILENTLY: if it's not from the expected domain then it's not our traffic
             return 'Message was not sent from the expected domain';
+        }
+
+        if (getExpectedSource) {
+            const expectedSource = getExpectedSource();
+            if (!expectedSource || event.source !== expectedSource) {
+                // FAIL SILENTLY: right domain, but posted by a different window - e.g. another (or an orphaned) instance's iframe
+                return 'Message was not sent from the expected source';
+            }
         }
 
         /**

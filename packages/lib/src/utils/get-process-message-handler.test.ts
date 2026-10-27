@@ -94,4 +94,36 @@ describe('getProcessMessageHandler', () => {
         expect(resolveFunction).toHaveBeenCalledTimes(0);
         expect(rejectFunction).toHaveBeenCalledTimes(0);
     });
+
+    describe('with a getExpectedSource getter', () => {
+        const ownWindow = {} as Window;
+        const otherWindow = {} as Window;
+
+        test('should resolve when the message comes from the expected source', () => {
+            const resolveFunction = jest.fn();
+            const processEvent = getProcessMessageHandler('http://fake-domain.com', resolveFunction, jest.fn(), expectedType, () => ownWindow);
+
+            expect(processEvent({ origin: 'http://fake-domain.com', data, source: ownWindow })).toBe(true);
+            expect(resolveFunction).toHaveBeenCalledTimes(1);
+        });
+
+        test('should not resolve when the message comes from a different source', () => {
+            const resolveFunction = jest.fn();
+            const processEvent = getProcessMessageHandler('http://fake-domain.com', resolveFunction, jest.fn(), expectedType, () => ownWindow);
+
+            expect(processEvent({ origin: 'http://fake-domain.com', data, source: otherWindow })).toBe(
+                'Message was not sent from the expected source'
+            );
+            expect(processEvent({ origin: 'http://fake-domain.com', data })).toBe('Message was not sent from the expected source');
+            expect(resolveFunction).not.toHaveBeenCalled();
+        });
+
+        test('should not resolve when the expected source can no longer be found (e.g. its iframe was removed from the DOM)', () => {
+            const resolveFunction = jest.fn();
+            const processEvent = getProcessMessageHandler('http://fake-domain.com', resolveFunction, jest.fn(), expectedType, () => null);
+
+            expect(processEvent({ origin: 'http://fake-domain.com', data, source: null })).toBe('Message was not sent from the expected source');
+            expect(resolveFunction).not.toHaveBeenCalled();
+        });
+    });
 });

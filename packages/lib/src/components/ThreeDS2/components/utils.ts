@@ -193,6 +193,22 @@ export const isDetachedFromDOM = (base: Element | Text | undefined): boolean => 
 };
 
 /**
+ * Returns the contentWindow of the named iframe rendered *inside* a component's root node, or null if it can't be found
+ * (not rendered yet, or the iframe has been removed from the DOM - a detached iframe's contentWindow is null).
+ *
+ * Scoping the lookup to the component's own root (rather than e.g. window.frames[name]) matters because every challenge
+ * iframe on the page shares the same name.
+ *
+ * @param base - a Preact Component's `base` property, i.e. its rendered root DOM node
+ * @param iframeName - the iframe's name attribute
+ */
+export const getOwnIframeWindow = (base: Element | Text | undefined, iframeName: string): Window | null => {
+    if (!(base instanceof Element)) return null;
+    const iframe = base.querySelector<HTMLIFrameElement>(`iframe[name="${iframeName}"]`);
+    return iframe?.contentWindow ?? null;
+};
+
+/**
  * Add props specifically needed for the type of 3DS2 flow: fingerprint or challenge
  *
  * @param actionSubtype - 3DS2 flow type: fingerprint or challenge

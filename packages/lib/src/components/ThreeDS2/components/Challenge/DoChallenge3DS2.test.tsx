@@ -9,13 +9,24 @@ import {
     PASSKEY_VISA_IFRAME_SANDBOX
 } from '../../constants';
 
+// Rendered <iframe> elements, in render order - lets tests post messages from a specific instance's iframe
+let mockIframeEls: HTMLIFrameElement[] = [];
 let mockIframeProps: any = {};
 
 jest.mock('../../../internal/IFrame', () => ({
     __esModule: true,
-    default: function MockIframe(props: Record<string, unknown>) {
+    default: function MockIframe(props: Record<string, any>) {
         mockIframeProps = props;
-        return null;
+        // Render a real <iframe> so the component can resolve its own contentWindow as the expected postMessage source
+        return (
+            <iframe
+                name={props.name}
+                title="mock 3DS2 iframe"
+                ref={el => {
+                    if (el) mockIframeEls.push(el);
+                }}
+            />
+        );
     }
 }));
 
@@ -65,11 +76,14 @@ describe('DoChallenge3DS2', () => {
     });
 
     describe('Handling the challengeResult postMessage after the component has been torn down outside of Preact', () => {
-        const dispatchChallengeResultMessage = () => {
+        const lastIframeWindow = (): Window => mockIframeEls[mockIframeEls.length - 1].contentWindow;
+
+        const dispatchChallengeResultMessage = (source: Window) => {
             window.dispatchEvent(
                 new MessageEvent('message', {
                     origin: defaultProps.postMessageDomain,
-                    data: JSON.stringify({ type: 'challengeResult', transStatus: 'Y' })
+                    data: JSON.stringify({ type: 'challengeResult', transStatus: 'Y' }),
+                    source
                 })
             );
         };
@@ -86,7 +100,7 @@ describe('DoChallenge3DS2', () => {
         test('should call onCompleteChallenge when the challengeResult arrives while still mounted', async () => {
             render(<DoChallenge3DS2 {...defaultProps} />);
 
-            dispatchChallengeResultMessage();
+            dispatchChallengeResultMessage(lastIframeWindow());
             await flushPromiseChain();
 
             expect(defaultProps.onCompleteChallenge).toHaveBeenCalledTimes(1);
@@ -94,15 +108,68 @@ describe('DoChallenge3DS2', () => {
 
         test('should not call onCompleteChallenge when the challengeResult arrives after the root node was removed from the DOM without going through Preact\'s unmount lifecycle (e.g. a merchant doing el.innerHTML = "")', async () => {
             const { container } = render(<DoChallenge3DS2 {...defaultProps} />);
+            const ownIframeWindow = lastIframeWindow();
 
             // Detach without going through Preact's unmount lifecycle - componentWillUnmount never runs.
             // eslint-disable-next-line testing-library/no-container -- intentionally need raw DOM access to simulate a non-Preact-mediated removal
             container.remove();
 
-            dispatchChallengeResultMessage();
+            dispatchChallengeResultMessage(ownIframeWindow);
             await flushPromiseChain();
 
             expect(defaultProps.onCompleteChallenge).not.toHaveBeenCalled();
+        });
+    });
+
+    describe('Only accepting the challengeResult postMessage from its own iframe', () => {
+        const dispatchChallengeResultMessage = (source: MessageEventSource | null) => {
+            window.dispatchEvent(
+                new MessageEvent('message', {
+                    origin: defaultProps.postMessageDomain,
+                    data: JSON.stringify({ type: 'challengeResult', transStatus: 'Y' }),
+                    source
+                })
+            );
+        };
+
+        const flushPromiseChain = () => new Promise(resolve => setTimeout(resolve, 0));
+
+        beforeEach(() => {
+            defaultProps.onCompleteChallenge.mockClear();
+            defaultProps.onErrorChallenge.mockClear();
+        });
+
+        test('should ignore a challengeResult from the expected domain that was posted by a different window', async () => {
+            render(<DoChallenge3DS2 {...defaultProps} />);
+
+            const otherIframe = document.createElement('iframe');
+            document.body.appendChild(otherIframe);
+
+            dispatchChallengeResultMessage(otherIframe.contentWindow);
+            dispatchChallengeResultMessage(window);
+            dispatchChallengeResultMessage(null);
+            await flushPromiseChain();
+
+            expect(defaultProps.onCompleteChallenge).not.toHaveBeenCalled();
+            otherIframe.remove();
+        });
+
+        test("with two attached instances, a challengeResult from one instance's iframe should only complete that instance", async () => {
+            const onCompleteA = jest.fn();
+            const onCompleteB = jest.fn();
+
+            mockIframeEls = [];
+            render(<DoChallenge3DS2 {...defaultProps} onCompleteChallenge={onCompleteA} />);
+            render(<DoChallenge3DS2 {...defaultProps} onCompleteChallenge={onCompleteB} />);
+            const [iframeA, iframeB] = mockIframeEls;
+
+            // Both instances stay attached - the isConnected guard alone would not tell them apart
+            dispatchChallengeResultMessage(iframeB.contentWindow);
+            await flushPromiseChain();
+
+            expect(onCompleteA).not.toHaveBeenCalled();
+            expect(onCompleteB).toHaveBeenCalledTimes(1);
+            expect(iframeA.isConnected).toBe(true);
         });
     });
 

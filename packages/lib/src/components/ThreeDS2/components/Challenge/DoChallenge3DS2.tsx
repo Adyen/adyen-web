@@ -3,8 +3,8 @@ import classNames from 'classnames';
 import Iframe from '../../../internal/IFrame';
 import Spinner from '../../../internal/Spinner';
 import ThreeDS2Form from '../Form';
-import getProcessMessageHandler from '../../../../utils/get-process-message-handler';
-import { encodeBase64URL, isDetachedFromDOM } from '../utils';
+import getProcessMessageHandler, { ProcessableMessageEvent } from '../../../../utils/get-process-message-handler';
+import { encodeBase64URL, getOwnIframeWindow, isDetachedFromDOM } from '../utils';
 import promiseTimeout from '../../../../utils/promiseTimeout';
 import {
     CHALLENGE_TIMEOUT,
@@ -20,7 +20,7 @@ import { ThreeDS2FlowObject } from '../../types';
 const iframeName = 'threeDSIframe';
 
 class DoChallenge3DS2 extends Component<DoChallenge3DS2Props, DoChallenge3DS2State> {
-    private processMessageHandler: (event: Pick<MessageEvent, 'origin' | 'data'>) => string | boolean;
+    private processMessageHandler: (event: ProcessableMessageEvent) => string | boolean;
     private challengePromise: { promise: Promise<ThreeDS2FlowObject>; cancel: () => void };
 
     constructor(props: DoChallenge3DS2Props) {
@@ -43,12 +43,25 @@ class DoChallenge3DS2 extends Component<DoChallenge3DS2Props, DoChallenge3DS2Sta
         }
     };
 
+    /**
+     * The challenge result is posted by the notification page, which loads inside *this* component's iframe.
+     * Only accept messages from that window, so that a stale listener (e.g. from an instance torn down without being unmounted)
+     * or a sibling instance can never act on another instance's challengeResult.
+     */
+    private getOwnIframeWindow = (): Window | null => getOwnIframeWindow(this.base, iframeName);
+
     private get3DS2ChallengePromise(): Promise<ThreeDS2FlowObject> {
         return new Promise((resolve, reject) => {
             /**
              * Listen for postMessage responses from the notification url
              */
-            this.processMessageHandler = getProcessMessageHandler(this.props.postMessageDomain, resolve, reject, 'challengeResult');
+            this.processMessageHandler = getProcessMessageHandler(
+                this.props.postMessageDomain,
+                resolve,
+                reject,
+                'challengeResult',
+                this.getOwnIframeWindow
+            );
 
             window.addEventListener('message', this.processMessageHandler);
         });
