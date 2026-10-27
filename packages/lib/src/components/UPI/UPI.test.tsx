@@ -212,6 +212,21 @@ describe('UPI', () => {
             expect(QRLoaderMock).toHaveBeenCalledWith(expect.objectContaining({ qrCodeData: encodeURIComponent('test data') }), expect.anything());
         });
 
+        test('should render QRLoader with the UPI and BHIM logos by default', () => {
+            const upi = new UPI(core, { ...props, type: 'qrCode' });
+            render(upi.render());
+            expect(QRLoaderMock).toHaveBeenCalledWith(
+                expect.objectContaining({ brandLogo: [expect.stringContaining('images/logos/bhim.svg'), upi.icon] }),
+                expect.anything()
+            );
+        });
+
+        test('should render QRLoader with the merchant brandLogo when provided', () => {
+            const upi = new UPI(core, { ...props, type: 'qrCode', brandLogo: 'custom-logo.svg' });
+            render(upi.render());
+            expect(QRLoaderMock).toHaveBeenCalledWith(expect.objectContaining({ brandLogo: 'custom-logo.svg' }), expect.anything());
+        });
+
         test('should render Await with provided paymentMethodType and clientKey', () => {
             const upi = new UPI(core, {
                 ...props,

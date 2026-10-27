@@ -166,6 +166,14 @@ describe('QRLoader', () => {
         expect(setTimeout).toHaveBeenCalledWith(expect.any(Function), throttledInterval);
     });
 
+    test('should render every brand logo when brandLogo is an array', async () => {
+        (checkPaymentStatus as jest.Mock).mockResolvedValue({ resultCode: 'pending' });
+        renderQRLoader({ qrLoaderProps: { brandLogo: ['first-logo.png', 'second-logo.png'] } });
+        expect(await screen.findByText('Scan QR code')).toBeInTheDocument();
+        expect(screen.getByRole('img', { name: 'Pix' })).toHaveAttribute('src', 'first-logo.png');
+        expect(screen.getByRole('img', { name: '' })).toHaveAttribute('src', 'second-logo.png');
+    });
+
     describe('Accessibility', () => {
         test('should report the loading status to the SRPanel while waiting for the initial payment status check', async () => {
             const pendingResponse = { payload: 'Ab02b4c0!', resultCode: 'pending', type: 'complete' };

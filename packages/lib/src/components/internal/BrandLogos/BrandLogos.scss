@@ -1,0 +1,7 @@
+@use 'styles/variable-generator';
+
+.adyen-checkout__brand-logos-separator {
+    align-self: stretch;
+    width: variable-generator.token(border-width-s);
+    background: variable-generator.token(color-outline-secondary);
+}

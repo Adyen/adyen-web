@@ -14,6 +14,7 @@ import Button from '../Button';
 import ContentSeparator from '../ContentSeparator';
 import Countdown from '../Countdown';
 import { AwaitFinalState } from './components/AwaitFinalState';
+import { BrandLogos } from '../BrandLogos';
 import { AwaitComponentProps } from './types';
 import { redirectToApp } from '../../../utils/urls';
 import './Await.scss';
@@ -59,7 +60,7 @@ export function Await(props: Readonly<AwaitComponentProps>) {
     if (loading) {
         return (
             <div className="adyen-checkout__await">
-                {props.brandLogo && <img src={props.brandLogo} alt={props.brandName ?? props.type} className="adyen-checkout__await__brand-logo" />}
+                <BrandLogos brandLogo={props.brandLogo} alt={props.brandName ?? props.type} classNamePrefix="adyen-checkout__await" />
                 <Spinner inline={false} size="large" />
             </div>
         );
@@ -75,7 +76,7 @@ export function Await(props: Readonly<AwaitComponentProps>) {
                 props.classNameModifiers.map(m => `adyen-checkout__await--${m}`)
             )}
         >
-            {props.brandLogo && <img src={props.brandLogo} alt={props.brandName ?? props.type} className="adyen-checkout__await__brand-logo" />}
+            <BrandLogos brandLogo={props.brandLogo} alt={props.brandName ?? props.type} classNamePrefix="adyen-checkout__await" />
 
             {/* Everything is wrapped in !! so we evaluate the result as boolean,
              otherwise we might just print the value or object as mistake */}
