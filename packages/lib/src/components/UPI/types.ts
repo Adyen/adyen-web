@@ -37,7 +37,7 @@ export interface UPIConfiguration extends UIElementProps {
     paymentData?: string;
     // QR code
     qrCodeData?: string;
-    brandLogo?: string | string[];
+    brandLogo?: string;
     /**
      * The duration in minutes before the await/QR code expires.
      */

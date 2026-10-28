@@ -168,10 +168,34 @@ describe('QRLoader', () => {
 
     test('should render every brand logo when brandLogo is an array', async () => {
         (checkPaymentStatus as jest.Mock).mockResolvedValue({ resultCode: 'pending' });
-        renderQRLoader({ qrLoaderProps: { brandLogo: ['first-logo.png', 'second-logo.png'] } });
+        renderQRLoader({
+            qrLoaderProps: {
+                brandLogo: [
+                    { src: 'first-logo.png', alt: 'First brand' },
+                    { src: 'second-logo.png', alt: 'Second brand' }
+                ]
+            }
+        });
         expect(await screen.findByText('Scan QR code')).toBeInTheDocument();
-        expect(screen.getByRole('img', { name: 'Pix' })).toHaveAttribute('src', 'first-logo.png');
-        expect(screen.getByRole('img', { name: '' })).toHaveAttribute('src', 'second-logo.png');
+        expect(screen.getByRole('img', { name: 'First brand' })).toHaveAttribute('src', 'first-logo.png');
+        expect(screen.getByRole('img', { name: 'Second brand' })).toHaveAttribute('src', 'second-logo.png');
+    });
+
+    test('should render a single brand logo string with brandName as its alt text', async () => {
+        (checkPaymentStatus as jest.Mock).mockResolvedValue({ resultCode: 'pending' });
+        renderQRLoader({ qrLoaderProps: {} });
+        expect(await screen.findByText('Scan QR code')).toBeInTheDocument();
+        expect(screen.getByRole('img', { name: 'Pix' })).toHaveAttribute('src', 'logo.png');
+    });
+
+    test.each([
+        ['an empty string', ''],
+        ['undefined', undefined]
+    ])('should render no brand logo when brandLogo is %s', async (_, brandLogo) => {
+        (checkPaymentStatus as jest.Mock).mockResolvedValue({ resultCode: 'pending' });
+        renderQRLoader({ qrLoaderProps: { brandLogo } });
+        expect(await screen.findByText('Scan QR code')).toBeInTheDocument();
+        expect(screen.queryByRole('img', { name: 'Pix' })).not.toBeInTheDocument();
     });
 
     describe('Accessibility', () => {
