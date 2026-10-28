@@ -1,8 +1,9 @@
-import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
+import AdyenCheckoutError, { NETWORK_ERROR, IMPLEMENTATION_ERROR } from '../../core/Errors/AdyenCheckoutError';
 import { ErrorEventCode } from '../../core/Analytics/events/AnalyticsErrorEvent';
 import { TagVariant } from '../internal/Tag/types';
 import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 import { buildEmiPlanPayload, formatInterestRate, getEmiPlansError, getPlanLabel, getPlanTags, getSelectionAnnouncement } from './utils';
+import { EMI_MISSING_CLIENT_KEY_MESSAGE, EMI_PLANS_ERROR_PREFIX } from './constants';
 import { emiDebitIssuerMock, emiPlansResponseMock } from './stories/mocks';
 import type { EmiIssuer, EmiPlan } from './types';
 
@@ -114,7 +115,7 @@ type ApiProblem = {
     invalidFields?: { name: string; value: string; message: string }[];
 };
 
-const apiError = (body: ApiProblem) => new AdyenCheckoutError('NETWORK_ERROR', 'Service is not available', { cause: body });
+const apiError = (body: ApiProblem) => new AdyenCheckoutError(NETWORK_ERROR, 'Service is not available', { cause: body });
 
 describe('getEmiPlansError', () => {
     describe('code', () => {
@@ -174,7 +175,7 @@ describe('getEmiPlansError', () => {
         });
 
         test('should classify an AdyenCheckoutError without an API error body, such as a timeout, as a failed fetch', () => {
-            expect(getEmiPlansError(new AdyenCheckoutError('NETWORK_ERROR', 'Request timed out')).code).toBe(ErrorEventCode.EMI_PLANS_FETCH_FAILED);
+            expect(getEmiPlansError(new AdyenCheckoutError(NETWORK_ERROR, 'Request timed out')).code).toBe(ErrorEventCode.EMI_PLANS_FETCH_FAILED);
         });
 
         test('should classify an error that is not an AdyenCheckoutError as a failed fetch', () => {
@@ -193,7 +194,7 @@ describe('getEmiPlansError', () => {
                 status: 500
             });
 
-            expect(getEmiPlansError(error).message).toBe('EMI: /utility/v1/emi/plans (500): An internal error happened');
+            expect(getEmiPlansError(error).message).toBe(`${EMI_PLANS_ERROR_PREFIX} (500): An internal error happened`);
         });
 
         test('should forward the title of the backend answer', () => {
@@ -207,7 +208,7 @@ describe('getEmiPlansError', () => {
                 invalidFields: [{ name: 'emiToken', value: '***REDACTED***', message: 'EMI token cannot be decoded.' }]
             });
 
-            expect(getEmiPlansError(error).message).toBe('EMI: /utility/v1/emi/plans (422): Missing or invalid input fields');
+            expect(getEmiPlansError(error).message).toBe(`${EMI_PLANS_ERROR_PREFIX} (422): Missing or invalid input fields`);
         });
 
         test('should forward neither the request id nor a field value, which can echo the token', () => {
@@ -220,27 +221,38 @@ describe('getEmiPlansError', () => {
                 invalidFields: [{ name: 'emiToken', value: 'Ab02b4c0!secret-token', message: 'Input value violates constraint value 1000' }]
             });
 
-            expect(getEmiPlansError(error).message).toBe('EMI: /utility/v1/emi/plans (400): Bad request');
+            expect(getEmiPlansError(error).message).toBe(`${EMI_PLANS_ERROR_PREFIX} (400): Bad request`);
         });
 
         test.each<[string, Error | DOMException, string]>([
-            ['a timeout', new DOMException('signal timed out', 'TimeoutError'), 'EMI: /utility/v1/emi/plans: signal timed out'],
-            ['a network failure', new TypeError('Failed to fetch'), 'EMI: /utility/v1/emi/plans: Failed to fetch']
+            ['a timeout', new DOMException('signal timed out', 'TimeoutError'), `${EMI_PLANS_ERROR_PREFIX}: signal timed out`],
+            ['a network failure', new TypeError('Failed to fetch'), `${EMI_PLANS_ERROR_PREFIX}: Failed to fetch`]
         ])('should forward the message of the error behind %s', (_case, cause, message) => {
-            expect(getEmiPlansError(new AdyenCheckoutError('NETWORK_ERROR', 'Call failed', { cause })).message).toBe(message);
+            expect(getEmiPlansError(new AdyenCheckoutError(NETWORK_ERROR, 'Call failed', { cause })).message).toBe(message);
         });
 
         test('should prefer the formatted backend answer over the message of the cause', () => {
             const cause = Object.assign(new Error('Service is not available'), { status: 503, title: 'Service unavailable' });
 
-            expect(getEmiPlansError(new AdyenCheckoutError('NETWORK_ERROR', 'Call failed', { cause })).message).toBe(
-                'EMI: /utility/v1/emi/plans (503): Service unavailable'
+            expect(getEmiPlansError(new AdyenCheckoutError(NETWORK_ERROR, 'Call failed', { cause })).message).toBe(
+                `${EMI_PLANS_ERROR_PREFIX} (503): Service unavailable`
             );
         });
 
-        test('should name only the endpoint when there is no cause', () => {
-            expect(getEmiPlansError(new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'No clientKey')).message).toBe('EMI: /utility/v1/emi/plans');
-            expect(getEmiPlansError(undefined).message).toBe('EMI: /utility/v1/emi/plans');
+        test('should forward the message of an implementation error, which the SDK writes itself', () => {
+            expect(getEmiPlansError(new AdyenCheckoutError(IMPLEMENTATION_ERROR, EMI_MISSING_CLIENT_KEY_MESSAGE)).message).toBe(
+                `${EMI_PLANS_ERROR_PREFIX}: ${EMI_MISSING_CLIENT_KEY_MESSAGE}`
+            );
+        });
+
+        test('should name only the endpoint for a network error without a cause, whose message can carry the request URL', () => {
+            const error = new AdyenCheckoutError(NETWORK_ERROR, 'Call to https://test/utility/v1/emi/plans?clientKey=test_clientkey failed');
+
+            expect(getEmiPlansError(error).message).toBe(EMI_PLANS_ERROR_PREFIX);
+        });
+
+        test('should name only the endpoint when there is no error at all', () => {
+            expect(getEmiPlansError(undefined).message).toBe(EMI_PLANS_ERROR_PREFIX);
         });
     });
 });

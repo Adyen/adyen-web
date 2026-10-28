@@ -6,12 +6,19 @@ import { TxVariants } from '../tx-variants';
 import { Resources } from '../../core/Context/Resources';
 import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 import PaymentMethods from '../../core/ProcessResponse/PaymentMethods';
-import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
+import AdyenCheckoutError, { NETWORK_ERROR, IMPLEMENTATION_ERROR, ERROR } from '../../core/Errors/AdyenCheckoutError';
 import { AdyenCheckout, ThreeDS2Challenge, ThreeDS2DeviceFingerprint } from '../../index';
 import { InfoEventType, UiTarget } from '../../core/Analytics/events/AnalyticsInfoEvent';
 import { AnalyticsErrorEvent, ErrorEventCode, ErrorEventType } from '../../core/Analytics/events/AnalyticsErrorEvent';
 import { getEmiPlans } from './services/getEmiPlans';
-import { EMI_NO_INSTALLMENT_PLANS, EMI_PLANS_TIMEOUT_MS } from './constants';
+import {
+    EMI_MISSING_CLIENT_KEY_MESSAGE,
+    EMI_NO_INSTALLMENT_PLANS,
+    EMI_NO_INSTALLMENT_PLANS_MESSAGE,
+    EMI_NO_SUPPORTED_PAYMENT_METHOD_MESSAGE,
+    EMI_PLANS_ERROR_PREFIX,
+    EMI_PLANS_TIMEOUT_MS
+} from './constants';
 import { emiPaymentMethodMock, emiPlansEmptyResponseMock, emiPlansResponseMock } from './stories/mocks';
 import type { PaymentActionsType, PaymentData, RawPaymentMethod } from '../../types/global-types';
 import type { EMIConfiguration, EmiPaymentMethodEntry, EmiPlanPayload, EmiPlansResponse, SupportedPaymentMethod } from './types';
@@ -110,7 +117,7 @@ const apiError = (body: {
     detail?: string;
     requestId?: string;
     invalidFields?: { name: string; value: string; message: string }[];
-}) => new AdyenCheckoutError('NETWORK_ERROR', 'Service is not available', { cause: body });
+}) => new AdyenCheckoutError(NETWORK_ERROR, 'Service is not available', { cause: body });
 
 const tokenValidationError = () =>
     apiError({
@@ -255,7 +262,7 @@ describe('EMI', () => {
 
             expect(emi.card).toBeUndefined();
             expect(container.innerHTML).toBe('');
-            await expect(emi.isAvailable()).rejects.toThrow('EMI: No valid supported payment methods available');
+            await expect(emi.isAvailable()).rejects.toThrow(EMI_NO_SUPPORTED_PAYMENT_METHOD_MESSAGE);
         });
     });
 
@@ -310,7 +317,7 @@ describe('EMI', () => {
             );
 
             expect(emi.card).toBeUndefined();
-            await expect(emi.isAvailable()).rejects.toThrow('EMI: No valid supported payment methods available');
+            await expect(emi.isAvailable()).rejects.toThrow(EMI_NO_SUPPORTED_PAYMENT_METHOD_MESSAGE);
         });
 
         test('should keep the supported payment methods of the entry over those passed as configuration', () => {
@@ -509,7 +516,7 @@ describe('EMI', () => {
             const rejection = emi.isAvailable();
 
             await expect(rejection).rejects.toBeInstanceOf(AdyenCheckoutError);
-            await expect(rejection).rejects.toThrow('EMI: No valid supported payment methods available');
+            await expect(rejection).rejects.toThrow(EMI_NO_SUPPORTED_PAYMENT_METHOD_MESSAGE);
         });
 
         test('should reject when the entry lists an unsupported rail only', async () => {
@@ -517,7 +524,7 @@ describe('EMI', () => {
                 supportedPaymentMethods: [{ type: 'unsupported_rail' }]
             });
 
-            await expect(emi.isAvailable()).rejects.toThrow('EMI: No valid supported payment methods available');
+            await expect(emi.isAvailable()).rejects.toThrow(EMI_NO_SUPPORTED_PAYMENT_METHOD_MESSAGE);
         });
 
         test('should resolve even when the backend has no plans to offer', async () => {
@@ -565,7 +572,7 @@ describe('EMI', () => {
 
         test('should not request the plans again on a second render after a failure', async () => {
             mockedGetEmiPlans.mockRejectedValue(
-                new AdyenCheckoutError('NETWORK_ERROR', 'failed', {
+                new AdyenCheckoutError(NETWORK_ERROR, 'failed', {
                     cause: new TypeError('Failed to fetch')
                 })
             );
@@ -612,7 +619,7 @@ describe('EMI', () => {
         test.each<[string, () => void]>([
             ['the response holds no issuer', () => mockedGetEmiPlans.mockResolvedValue(emiPlansEmptyResponseMock)],
             ['the token is rejected', () => mockedGetEmiPlans.mockRejectedValue(tokenValidationError())],
-            ['the request fails', () => mockedGetEmiPlans.mockRejectedValue(new AdyenCheckoutError('NETWORK_ERROR', 'Call failed'))]
+            ['the request fails', () => mockedGetEmiPlans.mockRejectedValue(new AdyenCheckoutError(NETWORK_ERROR, 'Call failed'))]
         ])('should keep the spinner, and render no card form, when %s', async (_case, arrange) => {
             arrange();
             const { emi, sendAnalytics } = createEmi();
@@ -968,13 +975,13 @@ describe('EMI', () => {
         describe('error events', () => {
             test('should report the dropped tile when no payment method is supported', async () => {
                 const { emi, sendAnalytics } = createEmi({}, false);
-                await expect(emi.isAvailable()).rejects.toThrow('EMI: No valid supported payment methods available');
+                await expect(emi.isAvailable()).rejects.toThrow(EMI_NO_SUPPORTED_PAYMENT_METHOD_MESSAGE);
                 expect(sendAnalytics).toHaveBeenCalledWith(
                     expect.objectContaining({
                         component: TxVariants.emi,
                         errorType: ErrorEventType.implementation,
                         code: ErrorEventCode.EMI_NO_SUPPORTED_PAYMENT_METHOD,
-                        message: 'EMI: No valid supported payment methods available'
+                        message: EMI_NO_SUPPORTED_PAYMENT_METHOD_MESSAGE
                     })
                 );
             });
@@ -1000,13 +1007,13 @@ describe('EMI', () => {
                         component: TxVariants.emi,
                         type: InfoEventType.validationError,
                         validationErrorCode: EMI_NO_INSTALLMENT_PLANS,
-                        validationErrorMessage: 'EMI: No installment plans available'
+                        validationErrorMessage: EMI_NO_INSTALLMENT_PLANS_MESSAGE
                     })
                 );
                 expect(errorEvents(sendAnalytics)).toHaveLength(0);
             });
 
-            const tokenRejectedMessage = 'EMI: /utility/v1/emi/plans (422): Missing or invalid input fields';
+            const tokenRejectedMessage = `${EMI_PLANS_ERROR_PREFIX} (422): Missing or invalid input fields`;
 
             test.each<[string, () => unknown, ErrorEventCode, string]>([
                 ['an invalid token', tokenValidationError, ErrorEventCode.EMI_PLANS_TOKEN_INVALID, tokenRejectedMessage],
@@ -1021,25 +1028,25 @@ describe('EMI', () => {
                             status: 500
                         }),
                     ErrorEventCode.EMI_PLANS_FETCH_FAILED,
-                    'EMI: /utility/v1/emi/plans (500): Internal error'
+                    `${EMI_PLANS_ERROR_PREFIX} (500): Internal error`
                 ],
                 [
                     'a network failure',
                     () =>
-                        new AdyenCheckoutError('NETWORK_ERROR', 'Call failed', {
+                        new AdyenCheckoutError(NETWORK_ERROR, 'Call failed', {
                             cause: new TypeError('Failed to fetch')
                         }),
                     ErrorEventCode.EMI_PLANS_FETCH_FAILED,
-                    'EMI: /utility/v1/emi/plans: Failed to fetch'
+                    `${EMI_PLANS_ERROR_PREFIX}: Failed to fetch`
                 ],
                 [
                     'a timeout',
                     () =>
-                        new AdyenCheckoutError('NETWORK_ERROR', 'Call failed', {
+                        new AdyenCheckoutError(NETWORK_ERROR, 'Call failed', {
                             cause: new DOMException('Timed out', 'TimeoutError')
                         }),
                     ErrorEventCode.EMI_PLANS_FETCH_FAILED,
-                    'EMI: /utility/v1/emi/plans: Timed out'
+                    `${EMI_PLANS_ERROR_PREFIX}: Timed out`
                 ]
             ])('should send one network error event for %s', async (_case, createError, code, message) => {
                 mockedGetEmiPlans.mockRejectedValue(createError());
@@ -1080,10 +1087,130 @@ describe('EMI', () => {
                 const payload = JSON.stringify(sendAnalytics.mock.calls.map(([event]) => event));
                 expect(errorEvents(sendAnalytics)[0]).toEqual(
                     expect.objectContaining({
-                        message: 'EMI: /utility/v1/emi/plans (400): Bad request'
+                        message: `${EMI_PLANS_ERROR_PREFIX} (400): Bad request`
                     })
                 );
                 expect(payload).not.toContain(emiToken);
+            });
+
+            describe('onError', () => {
+                const onErrorCall = (onError: jest.Mock) => {
+                    expect(onError).toHaveBeenCalledTimes(1);
+                    const [error, element] = onError.mock.calls[0] as [AdyenCheckoutError, unknown];
+                    return { error, element };
+                };
+
+                test.each<[string, () => unknown, string]>([
+                    ['a rejected token', tokenValidationError, tokenRejectedMessage],
+                    [
+                        'another API error',
+                        () =>
+                            apiError({
+                                type: 'https://docs.adyen.com/errors/internal',
+                                errorCode: '00_500',
+                                title: 'Internal error',
+                                status: 500
+                            }),
+                        `${EMI_PLANS_ERROR_PREFIX} (500): Internal error`
+                    ],
+                    [
+                        'a timeout',
+                        () =>
+                            new AdyenCheckoutError(NETWORK_ERROR, 'Call failed', {
+                                cause: new DOMException('Timed out', 'TimeoutError')
+                            }),
+                        `${EMI_PLANS_ERROR_PREFIX}: Timed out`
+                    ],
+                    [
+                        'a missing clientKey',
+                        () => new AdyenCheckoutError(IMPLEMENTATION_ERROR, EMI_MISSING_CLIENT_KEY_MESSAGE),
+                        `${EMI_PLANS_ERROR_PREFIX}: ${EMI_MISSING_CLIENT_KEY_MESSAGE}`
+                    ],
+                    ['an unexpected error', () => new TypeError('Cannot read properties of undefined'), EMI_PLANS_ERROR_PREFIX]
+                ])('should call onError once with a network error matching the analytics event for %s', async (_case, createError, message) => {
+                    mockedGetEmiPlans.mockRejectedValue(createError());
+                    const onError = jest.fn();
+                    const { emi, sendAnalytics } = createEmi({ onError });
+
+                    render(emi.render());
+
+                    await waitFor(() => expect(onError).toHaveBeenCalled());
+                    const { error, element } = onErrorCall(onError);
+                    expect(error).toBeInstanceOf(AdyenCheckoutError);
+                    expect(error.name).toBe(NETWORK_ERROR);
+                    expect(error.message).toBe(message);
+                    expect(errorEvents(sendAnalytics)).toHaveLength(1);
+                    expect(errorEvents(sendAnalytics)[0]).toEqual(
+                        expect.objectContaining({ errorType: ErrorEventType.network, message: error.message })
+                    );
+                    expect(error.cause).toBeUndefined();
+                    expect(element).toBe(emi);
+                    expect(screen.getByTestId('spinner')).toBeInTheDocument();
+                });
+
+                test('should never pass the backend answer, which can echo the token, to onError', async () => {
+                    const emiToken = emiPaymentMethodMock.configuration?.emiToken ?? '';
+                    mockedGetEmiPlans.mockRejectedValue(
+                        apiError({
+                            type: 'https://docs.adyen.com/errors/bad-request',
+                            errorCode: '00_400',
+                            title: 'Bad request',
+                            requestId: '0dc47c14a735c3d66997fbaf0cbe031c',
+                            status: 400,
+                            invalidFields: [{ name: 'emiToken', value: emiToken, message: 'Input value violates constraint value 1000' }]
+                        })
+                    );
+                    const onError = jest.fn();
+                    const { emi } = createEmi({ onError });
+
+                    render(emi.render());
+
+                    await waitFor(() => expect(onError).toHaveBeenCalled());
+                    const { error } = onErrorCall(onError);
+                    expect(error.message).toBe(`${EMI_PLANS_ERROR_PREFIX} (400): Bad request`);
+                    expect(error.options).toEqual({});
+                    expect(JSON.stringify({ ...error, message: error.message })).not.toContain(emiToken);
+                });
+
+                test('should call onError once when the backend has no plans to offer', async () => {
+                    mockedGetEmiPlans.mockResolvedValue(emiPlansEmptyResponseMock);
+                    const onError = jest.fn();
+                    const { emi } = createEmi({ onError });
+
+                    render(emi.render());
+
+                    await waitFor(() => expect(onError).toHaveBeenCalled());
+                    const { error, element } = onErrorCall(onError);
+                    expect(error).toBeInstanceOf(AdyenCheckoutError);
+                    expect(error.name).toBe(ERROR);
+                    expect(error.message).toBe(EMI_NO_INSTALLMENT_PLANS_MESSAGE);
+                    expect(element).toBe(emi);
+                    expect(screen.getByTestId('spinner')).toBeInTheDocument();
+                });
+
+                test('should not call onError when the plans arrive', async () => {
+                    const onError = jest.fn();
+                    const { emi } = createEmi({ onError });
+
+                    await renderWithPlans(emi);
+
+                    expect(onError).not.toHaveBeenCalled();
+                });
+
+                test('should not call onError again on a second render after a failure', async () => {
+                    mockedGetEmiPlans.mockRejectedValue(tokenValidationError());
+                    const onError = jest.fn();
+                    const { emi } = createEmi({ onError });
+
+                    const { unmount } = render(emi.render());
+                    await waitFor(() => expect(onError).toHaveBeenCalled());
+                    unmount();
+
+                    render(emi.render());
+
+                    expect(screen.getByTestId('spinner')).toBeInTheDocument();
+                    expect(onError).toHaveBeenCalledTimes(1);
+                });
             });
         });
 

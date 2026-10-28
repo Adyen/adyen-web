@@ -1,7 +1,7 @@
 import { httpPost } from '../../../core/Services/http';
 import { getEmiPlans } from './getEmiPlans';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
-import { EMI_PLANS_PATH } from '../constants';
+import { EMI_MISSING_CLIENT_KEY_MESSAGE, EMI_PLANS_PATH } from '../constants';
 
 jest.mock('../../../core/Services/http');
 
@@ -41,7 +41,10 @@ describe('getEmiPlans', () => {
     });
 
     test('should reject without requesting anything when there is no clientKey', async () => {
-        await expect(getEmiPlans({ emiToken: 'token', loadingContext: 'https://test/', timeout: 10000 })).rejects.toBeInstanceOf(AdyenCheckoutError);
+        const request = getEmiPlans({ emiToken: 'token', loadingContext: 'https://test/', timeout: 10000 });
+
+        await expect(request).rejects.toBeInstanceOf(AdyenCheckoutError);
+        await expect(request).rejects.toThrow(EMI_MISSING_CLIENT_KEY_MESSAGE);
         expect(httpPostMock).not.toHaveBeenCalled();
     });
 });

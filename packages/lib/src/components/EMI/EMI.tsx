@@ -5,7 +5,7 @@ import { EMIComponent } from './EMIComponent';
 import { TxVariants } from '../tx-variants';
 import { buildEmiPlanPayload, getEmiPlansError } from './utils';
 import { getEmiPlans } from './services/getEmiPlans';
-import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
+import AdyenCheckoutError, { NETWORK_ERROR, ERROR } from '../../core/Errors/AdyenCheckoutError';
 import { AnalyticsInfoEvent, InfoEventType, UiTarget } from '../../core/Analytics/events/AnalyticsInfoEvent';
 import { AnalyticsErrorEvent, ErrorEventCode, ErrorEventType } from '../../core/Analytics/events/AnalyticsErrorEvent';
 import type { ICore } from '../../core/types';
@@ -83,7 +83,7 @@ class EMI extends UIElement<EMIConfiguration> {
         if (this.activeSupportedPaymentMethod) return Promise.resolve();
 
         this.trackError(ErrorEventType.implementation, ErrorEventCode.EMI_NO_SUPPORTED_PAYMENT_METHOD, EMI_NO_SUPPORTED_PAYMENT_METHOD_MESSAGE);
-        return Promise.reject(new AdyenCheckoutError('ERROR', EMI_NO_SUPPORTED_PAYMENT_METHOD_MESSAGE));
+        return Promise.reject(new AdyenCheckoutError(ERROR, EMI_NO_SUPPORTED_PAYMENT_METHOD_MESSAGE));
     }
 
     private trackError(errorType: ErrorEventType, code: ErrorEventCode, message: string): void {
@@ -116,9 +116,11 @@ class EMI extends UIElement<EMIConfiguration> {
             if (issuers.length) return { status: 'ready', issuers };
 
             this.trackNoPlans();
+            this.handleError(new AdyenCheckoutError(ERROR, EMI_NO_INSTALLMENT_PLANS_MESSAGE));
         } catch (error) {
             const { code, message } = getEmiPlansError(error);
             this.trackError(ErrorEventType.network, code, message);
+            this.handleError(new AdyenCheckoutError(NETWORK_ERROR, message));
         }
 
         return { status: 'unavailable' };

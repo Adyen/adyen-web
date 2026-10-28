@@ -22,6 +22,8 @@ export const EMI_TOKEN_FIELD = 'emiToken';
 
 export const EMI_PLANS_ERROR_PREFIX = `EMI: /${EMI_PLANS_PATH}`;
 
-export const EMI_NO_INSTALLMENT_PLANS_MESSAGE = 'EMI: No installment plans available';
+export const EMI_NO_INSTALLMENT_PLANS_MESSAGE = `${EMI_PLANS_ERROR_PREFIX}: No installment plans available`;
 
 export const EMI_NO_SUPPORTED_PAYMENT_METHOD_MESSAGE = 'EMI: No valid supported payment methods available';
+
+export const EMI_MISSING_CLIENT_KEY_MESSAGE = 'A clientKey is required to request the installment plans';
