@@ -8,7 +8,9 @@ interface QRBrandLogosProps {
 export const QRBrandLogos = ({ brandLogos }: Readonly<QRBrandLogosProps>) => {
     const items = brandLogos.map((logo, index) => (
         <Fragment key={logo.src}>
-            {index > 0 && <span className="adyen-checkout__qr-loader__brand-logos-separator" role="separator" aria-hidden="true" />}
+            {index > 0 && (
+                <span className="adyen-checkout__qr-loader__brand-logos-separator" aria-hidden="true" data-testid="qr-brand-logos-separator" />
+            )}
             <div className="adyen-checkout__qr-loader__brand-logo-wrapper">
                 <img src={logo.src} alt={logo.alt} className="adyen-checkout__qr-loader__brand-logo" />
             </div>

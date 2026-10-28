@@ -22,8 +22,9 @@ describe('QRBrandLogos', () => {
         );
         expect(screen.getAllByRole('img').map(img => img.getAttribute('alt'))).toEqual(['A', 'B', 'C']);
         expect(screen.getByRole('img', { name: 'B' })).toHaveAttribute('src', 'b.svg');
-        expect(screen.getAllByRole('separator', { hidden: true })).toHaveLength(2);
-        expect(screen.queryByRole('separator')).not.toBeInTheDocument();
+        const separators = screen.getAllByTestId('qr-brand-logos-separator');
+        expect(separators).toHaveLength(2);
+        separators.forEach(separator => expect(separator).toHaveAttribute('aria-hidden', 'true'));
     });
 
     test('should render nothing when there is no logo', () => {
