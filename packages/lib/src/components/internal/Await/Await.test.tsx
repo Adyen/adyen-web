@@ -87,12 +87,6 @@ describe('Await', () => {
             expect(image.src).toContain(defaultProps.brandLogo);
         });
 
-        test('should show every brand logo when brandLogo is an array', async () => {
-            renderAwait({ awaitProps: { ...defaultProps, brandLogo: ['first-logo.png', 'second-logo.png'] }, amountProviderProps });
-            expect(await screen.findByRole('img', { name: brandName })).toHaveAttribute('src', 'first-logo.png');
-            expect(screen.getByRole('img', { name: '' })).toHaveAttribute('src', 'second-logo.png');
-        });
-
         test('should show a countdown timer', async () => {
             renderAwait({ awaitProps: defaultProps, amountProviderProps });
             expect(await screen.findByRole('timer')).toBeTruthy();

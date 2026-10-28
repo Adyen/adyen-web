@@ -13,12 +13,6 @@
     padding: 100px;
 }
 
-.adyen-checkout__await__brand-logos {
-    display: flex;
-    justify-content: center;
-    gap: variable-generator.token(spacer-070);
-}
-
 .adyen-checkout__await__brand-logo {
     width: 74px;
     border-radius: 3px;
