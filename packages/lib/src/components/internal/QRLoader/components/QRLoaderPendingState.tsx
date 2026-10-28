@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import Spinner from '../../Spinner';
-import { BrandLogos } from '../../BrandLogos';
+import { QRBrandLogos } from './QRBrandLogos';
 
 interface QRLoaderPendingStateProps {
     brandLogo?: string | string[];
@@ -15,7 +15,7 @@ interface QRLoaderPendingStateProps {
 export const QRLoaderPendingState = ({ brandLogo, brandName }: Readonly<QRLoaderPendingStateProps>) => {
     return (
         <div className="adyen-checkout__qr-loader">
-            <BrandLogos brandLogo={brandLogo} alt={brandName} classNamePrefix="adyen-checkout__qr-loader" />
+            <QRBrandLogos brandLogo={brandLogo} alt={brandName} />
             <Spinner />
         </div>
     );
