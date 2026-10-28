@@ -346,6 +346,8 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
             ...(validationURL && { validationURL })
         };
 
+        console.log('validateMerchant', { request });
+
         try {
             const response = await httpPost<ApplePaySessionResponse>(options, request);
             const decodedData: DecodeObject = base64.decode(response.data);
