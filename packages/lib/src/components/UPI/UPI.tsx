@@ -88,13 +88,13 @@ class UPI extends UIElement<UPIConfiguration> {
         const { type, url, paymentMethodType } = this.props;
 
         const isAutoPay = !!this.props.mandate;
-        const qrBrandLogos = [
-            { src: this.resources.getImage()('bhim'), alt: 'BHIM' },
-            { src: this.icon, alt: this.displayName }
-        ];
 
         switch (type) {
-            case 'qrCode':
+            case 'qrCode': {
+                const qrBrandLogos = [
+                    { src: this.resources.getImage()('bhim'), alt: 'BHIM' },
+                    { src: this.icon, alt: this.displayName }
+                ];
                 return (
                     <QRLoader
                         {...this.props}
@@ -110,6 +110,7 @@ class UPI extends UIElement<UPIConfiguration> {
                         showAmount={!isAutoPay}
                     />
                 );
+            }
             case 'await':
                 return (
                     <Await

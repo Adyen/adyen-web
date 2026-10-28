@@ -181,6 +181,21 @@ describe('QRLoader', () => {
         expect(screen.getByRole('img', { name: 'Second brand' })).toHaveAttribute('src', 'second-logo.png');
     });
 
+    test('should skip array brand logos without a src', async () => {
+        (checkPaymentStatus as jest.Mock).mockResolvedValue({ resultCode: 'pending' });
+        renderQRLoader({
+            qrLoaderProps: {
+                brandLogo: [
+                    { src: '', alt: 'Empty brand' },
+                    { src: 'second-logo.png', alt: 'Second brand' }
+                ]
+            }
+        });
+        expect(await screen.findByText('Scan QR code')).toBeInTheDocument();
+        expect(screen.queryByRole('img', { name: 'Empty brand' })).not.toBeInTheDocument();
+        expect(screen.getByRole('img', { name: 'Second brand' })).toHaveAttribute('src', 'second-logo.png');
+    });
+
     test('should render a single brand logo string with brandName as its alt text', async () => {
         (checkPaymentStatus as jest.Mock).mockResolvedValue({ resultCode: 'pending' });
         renderQRLoader({ qrLoaderProps: {} });

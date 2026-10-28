@@ -46,7 +46,7 @@ export function QRLoader(props: Readonly<QRLoaderProps>) {
 
     const { showAmount, url, brandLogo, brandName, countdownTime, type, onActionHandled } = props;
     const { amount } = useAmount();
-    const brandLogos = Array.isArray(brandLogo) ? brandLogo : [{ src: brandLogo, alt: brandName }].filter(logo => logo.src);
+    const brandLogos = (Array.isArray(brandLogo) ? brandLogo : [{ src: brandLogo, alt: brandName }]).filter(logo => logo.src);
 
     const qrCodeImage = props.qrCodeData ? `${loadingContext}${QRCODE_URL}${props.qrCodeData}&clientKey=${props.clientKey}` : props.qrCodeImage;
 
