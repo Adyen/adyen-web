@@ -1,4 +1,4 @@
-import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
+import AdyenCheckoutError, { IMPLEMENTATION_ERROR } from '../../core/Errors/AdyenCheckoutError';
 import { ErrorEventCode } from '../../core/Analytics/events/AnalyticsErrorEvent';
 import { getLocalisedPercentageFromBasisPoints } from '../../utils/percentage-util';
 import { EMI_PLANS_ERROR_PREFIX, EMI_TOKEN_FIELD, PLAN_TAGS } from './constants';
@@ -56,18 +56,20 @@ interface EmiPlansErrorCause {
     invalidFields?: { name?: string }[];
 }
 
-const getEmiPlansErrorMessage = ({ status, title, message }: EmiPlansErrorCause = {}): string => {
-    if (status) return `${EMI_PLANS_ERROR_PREFIX} (${status}): ${title}`;
-    if (message) return `${EMI_PLANS_ERROR_PREFIX}: ${message}`;
-    return EMI_PLANS_ERROR_PREFIX;
+const getEmiPlansErrorCause = (error: unknown): EmiPlansErrorCause => {
+    if (!(error instanceof AdyenCheckoutError)) return {};
+    // Only the SDK writes an IMPLEMENTATION_ERROR message; the message of a NETWORK_ERROR can carry the request URL.
+    if (error.name === IMPLEMENTATION_ERROR) return { message: error.message };
+    return error.options.cause ?? {};
 };
 
 export const getEmiPlansError = (error: unknown): { code: ErrorEventCode; message: string } => {
-    const cause = (error instanceof AdyenCheckoutError ? error.options?.cause : undefined) as EmiPlansErrorCause | undefined;
-    const isTokenRejected = cause?.invalidFields?.some(field => field?.name === EMI_TOKEN_FIELD);
+    const { status, title, message, invalidFields } = getEmiPlansErrorCause(error);
+    const isTokenRejected = invalidFields?.some(field => field?.name === EMI_TOKEN_FIELD);
+    const detail = status ? ` (${status}): ${title}` : message && `: ${message}`;
 
     return {
         code: isTokenRejected ? ErrorEventCode.EMI_PLANS_TOKEN_INVALID : ErrorEventCode.EMI_PLANS_FETCH_FAILED,
-        message: getEmiPlansErrorMessage(cause)
+        message: `${EMI_PLANS_ERROR_PREFIX}${detail || ''}`
     };
 };
