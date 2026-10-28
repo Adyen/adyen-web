@@ -15,7 +15,7 @@ import { CountdownTime } from '../Countdown/types';
 import { QRDetails } from './components/QRDetails';
 import { QRFinalState } from './components/QRFinalState';
 import { QRLoaderPendingState } from './components/QRLoaderPendingState';
-import { BrandLogos } from '../BrandLogos';
+import { QRBrandLogos } from './components/QRBrandLogos';
 import { useLoadingA11yReporter } from '../../../core/Errors/useLoadingA11yReporter';
 import { QRLoaderDetailsProvider } from './QRLoaderDetailsProvider';
 import { QRLoaderProps } from './types';
@@ -94,7 +94,7 @@ export function QRLoader(props: Readonly<QRLoaderProps>) {
 
     return (
         <div className={`adyen-checkout__qr-loader adyen-checkout__qr-loader--${type} ${classnames.join(' ')}`} data-testid={`${type}-qr-loader`}>
-            <BrandLogos brandLogo={brandLogo} alt={brandName} classNamePrefix="adyen-checkout__qr-loader" />
+            <QRBrandLogos brandLogo={brandLogo} alt={brandName} />
 
             {showAmount && amount && amount.value !== null && !!amount.currency && (
                 <h1 className="adyen-checkout__qr-loader__payment_amount">{i18n.amount(amount.value, amount.currency)}</h1>
