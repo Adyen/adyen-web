@@ -216,7 +216,12 @@ describe('UPI', () => {
             const upi = new UPI(core, { ...props, type: 'qrCode' });
             render(upi.render());
             expect(QRLoaderMock).toHaveBeenCalledWith(
-                expect.objectContaining({ brandLogo: [expect.stringContaining('images/logos/bhim.svg'), upi.icon] }),
+                expect.objectContaining({
+                    brandLogo: [
+                        { src: expect.stringContaining('images/logos/bhim.svg'), alt: 'BHIM' },
+                        { src: upi.icon, alt: upi.displayName }
+                    ]
+                }),
                 expect.anything()
             );
         });

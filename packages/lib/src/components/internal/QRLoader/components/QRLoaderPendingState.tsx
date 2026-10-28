@@ -1,10 +1,10 @@
 import { h } from 'preact';
 import Spinner from '../../Spinner';
 import { QRBrandLogos } from './QRBrandLogos';
+import type { QRBrandLogo } from '../types';
 
 interface QRLoaderPendingStateProps {
-    brandLogo?: string | string[];
-    brandName?: string;
+    brandLogos: QRBrandLogo[];
 }
 
 /**
@@ -12,10 +12,10 @@ interface QRLoaderPendingStateProps {
  * The loading status is announced by QRLoader, which stays mounted across the transition and so
  * can also announce that loading has finished.
  */
-export const QRLoaderPendingState = ({ brandLogo, brandName }: Readonly<QRLoaderPendingStateProps>) => {
+export const QRLoaderPendingState = ({ brandLogos }: Readonly<QRLoaderPendingStateProps>) => {
     return (
         <div className="adyen-checkout__qr-loader">
-            <QRBrandLogos brandLogo={brandLogo} alt={brandName} />
+            <QRBrandLogos brandLogos={brandLogos} />
             <Spinner />
         </div>
     );
