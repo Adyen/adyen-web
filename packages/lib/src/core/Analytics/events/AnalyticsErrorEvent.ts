@@ -37,10 +37,7 @@ export enum ErrorEventCode {
      */
     SECURED_FIELDS_ENCRYPTION_ERROR = '610',
 
-    /**
-     * See also API_ERROR_CODE object in /src/core/Services/sessions/constants.ts which uses codes in the range 620-628.
-     * The EMI codes from 629 on are pending registration in adyen-checkout-sdk-meta `alignment/AnalyticsErrors.json`.
-     */
+    /** See also API_ERROR_CODE object in /src/core/Services/sessions/constants.ts which uses codes in the range 620-628 */
 
     /** The EMI plans request was rejected because its `emiToken` is missing, expired or forged */
     EMI_PLANS_TOKEN_INVALID = '629',
@@ -48,10 +45,7 @@ export enum ErrorEventCode {
     /** The EMI plans request failed for any other reason: timeout, network or CORS failure, server error, unreadable body */
     EMI_PLANS_FETCH_FAILED = '630',
 
-    /**
-     * None of the payment methods EMI was configured with is one the component implements.
-     * TODO: confirm 631 against the registry; it is the candidate the EMI plan names, not a registered code yet.
-     */
+    /** None of the payment methods EMI was configured with is one the component implements */
     EMI_NO_SUPPORTED_PAYMENT_METHOD = '631',
 
     /**  Missing 'paymentData' property from threeDS2 action */
