@@ -106,7 +106,7 @@ class UPI extends UIElement<UPIConfiguration> {
                         introduction={this.props.i18n?.get('upi.qrCodeWaitingMessage') ?? ''}
                         countdownTime={this.props.countdownTime}
                         onActionHandled={this.onActionHandled}
-                        timeToPay={this.props.i18n?.get('payme.timeToPay') ?? ''}
+                        timeToPay="payme.timeToPay"
                         showAmount={!isAutoPay}
                     />
                 );
