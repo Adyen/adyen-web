@@ -4,6 +4,11 @@ import { AbstractAnalyticsEvent } from '../../../core/Analytics/events/AbstractA
 import { CountdownTime } from '../Countdown/types';
 import { UsePaymentStatusTimerProps } from '../../../hooks/usePaymentStatusTimer/types';
 
+export interface QRBrandLogo {
+    src: string;
+    alt: string;
+}
+
 export type QRLoaderProps = Pick<
     UsePaymentStatusTimerProps,
     'loadingContext' | 'paymentData' | 'clientKey' | 'delay' | 'throttleTime' | 'type' | 'onError' | 'onComplete' | 'onActionHandled'
@@ -16,7 +21,7 @@ export type QRLoaderProps = Pick<
     showAmount?: boolean;
     i18n?: Language;
     classNameModifiers?: string[];
-    brandLogo: string;
+    brandLogo: string | QRBrandLogo[];
     brandName: string;
     buttonLabel?: string;
     redirectIntroduction?: string;

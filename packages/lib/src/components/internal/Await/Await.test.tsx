@@ -42,7 +42,6 @@ const renderAwait = ({
 };
 
 describe('Await', () => {
-
     const brandName = 'MBWay';
 
     const defaultProps: AwaitComponentProps = {

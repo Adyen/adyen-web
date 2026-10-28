@@ -1,0 +1,9 @@
+.adyen-checkout__qr-loader--upi_qr > img {
+    width: 293px;
+    height: auto;
+    max-width: 100%;
+
+    // Fallback for older Firefox versions
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
+}
