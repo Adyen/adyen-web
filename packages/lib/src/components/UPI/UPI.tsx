@@ -88,6 +88,7 @@ class UPI extends UIElement<UPIConfiguration> {
         const { type, url, paymentMethodType } = this.props;
 
         const isAutoPay = !!this.props.mandate;
+        const qrBrandLogos = [this.resources.getImage()('bhim'), this.icon];
 
         switch (type) {
             case 'qrCode':
@@ -96,7 +97,7 @@ class UPI extends UIElement<UPIConfiguration> {
                         {...this.props}
                         qrCodeData={this.props.qrCodeData ? encodeURIComponent(this.props.qrCodeData) : undefined}
                         type={TxVariants.upi_qr}
-                        brandLogo={this.props.brandLogo || [this.icon]}
+                        brandLogo={this.props.brandLogo || qrBrandLogos}
                         brandName={this.displayName}
                         onComplete={this.onComplete}
                         introduction={this.props.i18n?.get('upi.qrCodeWaitingMessage') ?? ''}
@@ -122,7 +123,7 @@ class UPI extends UIElement<UPIConfiguration> {
                         messageText={this.props.i18n?.get('upi.vpaWaitingMessage') ?? ''}
                         awaitText={this.props.i18n?.get('await.waitForConfirmation') ?? ''}
                         onComplete={this.onComplete}
-                        brandLogo={[this.resources.getImage()('bhim'), this.icon]}
+                        brandLogo={this.icon}
                         brandName={this.displayName}
                     />
                 );
