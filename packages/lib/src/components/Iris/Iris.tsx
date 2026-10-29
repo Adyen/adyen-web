@@ -77,6 +77,12 @@ export class Iris extends IssuerListContainer<IrisConfiguration, IrisData> {
             );
         }
 
+        const issuers = this.props.issuers || [];
+
+        if (this.defaultMode === IrisMode.BANK_LIST && issuers.length > 0) {
+            return this.renderIssuerList();
+        }
+
         return (
             <IrisComponent
                 setComponentRef={this.setComponentRef}
@@ -86,7 +92,7 @@ export class Iris extends IssuerListContainer<IrisConfiguration, IrisData> {
                 }}
                 issuerListUI={this.renderIssuerList()}
                 payButton={this.payButton}
-                issuers={this.props.issuers || []}
+                issuers={issuers}
             />
         );
     }

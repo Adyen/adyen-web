@@ -52,14 +52,31 @@ describe('Iris', () => {
         expect(await screen.findByRole('button', { name: /Generate QR code/i })).toBeInTheDocument();
     });
 
-    test('should pre-select "Bank List" mode on Mobile', async () => {
+    test('should render Bank List without segmented control on Mobile', async () => {
         isMobileMock.mockReturnValue(true);
         const iris = createIris();
         render(iris.render());
 
-        const bankListTab = await screen.findByRole('tab', { name: 'Bank list' });
-        expect(bankListTab).toHaveAttribute('aria-selected', 'true');
+        expect(await screen.findByRole('option', { name: /Piraeus Bank/i })).toBeInTheDocument();
+        expect(screen.queryByRole('tab', { name: 'Bank list' })).not.toBeInTheDocument();
+        expect(screen.queryByRole('tab', { name: 'QR code' })).not.toBeInTheDocument();
         expect(screen.queryByRole('button', { name: /Generate QR code/i })).not.toBeInTheDocument();
+    });
+
+    test('should have QR code as fallback on Mobile when issuer list is empty', async () => {
+        isMobileMock.mockReturnValue(true);
+        const iris = createIris({ issuers: [], showPayButton: true, onSubmit: onSubmitMock });
+        render(iris.render());
+        const generateQrButton = await screen.findByRole('button', { name: /Generate QR code/i });
+        expect(screen.queryByRole('tab', { name: 'QR code' })).not.toBeInTheDocument();
+        expect(screen.queryByRole('tab', { name: 'Bank list' })).not.toBeInTheDocument();
+        await user.click(generateQrButton);
+        await waitFor(() => {
+            expect(onSubmitMock).toHaveBeenCalled();
+        });
+        const submitCall = onSubmitMock.mock.calls[0][0];
+        expect(submitCall.data.paymentMethod).not.toHaveProperty('issuer');
+        expect(submitCall.data.paymentMethod.type).toBe('iris');
     });
 
     test('should trigger validation error if issuer is not selected', async () => {
@@ -127,9 +144,11 @@ describe('Iris', () => {
     });
 
     test('should NOT include issuer in payload when switching from Bank List to QR Code mode', async () => {
-        isMobileMock.mockReturnValue(true);
         const iris = createIris({ showPayButton: true, onSubmit: onSubmitMock });
         render(iris.render());
+
+        const bankListTab = await screen.findByRole('tab', { name: 'Bank list' });
+        await user.click(bankListTab);
 
         const issuerOption = await screen.findByRole('option', { name: /Piraeus Bank/i });
         await user.click(issuerOption);
@@ -186,17 +205,15 @@ describe('Iris', () => {
     });
 
     describe('Analytics', () => {
-        test('should send analytics info event with default mode of segmented control on Mobile', () => {
+        test('should not send segmented control analytics events on Mobile', async () => {
             isMobileMock.mockReturnValue(true);
             const iris = createIris();
             render(iris.render());
 
-            expect(core.modules.analytics.sendAnalytics).toHaveBeenCalledWith(
+            expect(await screen.findByRole('option', { name: /Piraeus Bank/i })).toBeInTheDocument();
+            expect(core.modules.analytics.sendAnalytics).not.toHaveBeenCalledWith(
                 expect.objectContaining({
-                    type: InfoEventType.displayed,
-                    target: UiTarget.segmentedControl,
-                    component: 'iris',
-                    selectedValue: IrisMode.BANK_LIST
+                    target: UiTarget.segmentedControl
                 })
             );
         });
@@ -255,12 +272,11 @@ describe('Iris', () => {
         });
 
         test('should send analytics info event when clicking on QR code segmented control option', async () => {
-            isMobileMock.mockReturnValue(true); // Start in Bank List mode
             const iris = createIris();
             render(iris.render());
 
-            // Verify Bank list is initially selected
             const bankListTab = await screen.findByRole('tab', { name: 'Bank list' });
+            await user.click(bankListTab);
             expect(bankListTab).toHaveAttribute('aria-selected', 'true');
 
             // Click on QR code
