@@ -7,9 +7,21 @@ import type { EMIConfiguration } from './types';
 
 type EMIStory = StoryConfiguration<EMIConfiguration>;
 
+// TODO: revert to the default Storybook amount after the backend test
+const EMI_STORY_AMOUNT = 15499900;
+
 const meta: MetaConfiguration<EMIConfiguration> = {
     title: 'Components/EMI',
-    tags: ['no-automated-visual-test']
+    tags: ['no-automated-visual-test'],
+    argTypes: {
+        componentConfiguration: {
+            control: 'object'
+        },
+        paymentMethodsOverride: {
+            control: 'object',
+            if: { arg: 'useSessions', truthy: false }
+        }
+    }
 };
 
 export const CardEmi: EMIStory = {
@@ -17,16 +29,14 @@ export const CardEmi: EMIStory = {
         <Checkout checkoutConfig={checkoutConfig}>{checkout => <ComponentContainer element={new EMI(checkout, componentConfiguration)} />}</Checkout>
     ),
     args: {
+        useSessions: false,
         countryCode: 'IN',
+        amount: EMI_STORY_AMOUNT,
         componentConfiguration: {
             showPayButton: true,
-            supportedPaymentMethods: [{ type: 'scheme' }],
-            fundingSourceConfiguration: {
+            supportedPaymentMethodsConfiguration: {
                 card: {
-                    hasHolderName: false,
-                    onBinLookup(data) {
-                        console.log('onBinLookup', data);
-                    }
+                    hasHolderName: false
                 }
             }
         }
@@ -50,16 +60,14 @@ export const CardEmiWithCustomButton: EMIStory = {
         </Checkout>
     ),
     args: {
+        useSessions: false,
         countryCode: 'IN',
+        amount: EMI_STORY_AMOUNT,
         componentConfiguration: {
             showPayButton: false,
-            supportedPaymentMethods: [{ type: 'scheme' }],
-            fundingSourceConfiguration: {
+            supportedPaymentMethodsConfiguration: {
                 card: {
-                    hasHolderName: false,
-                    onBinLookup(data) {
-                        console.log('onBinLookup', data);
-                    }
+                    hasHolderName: false
                 }
             }
         }
