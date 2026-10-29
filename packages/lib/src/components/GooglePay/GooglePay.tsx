@@ -37,7 +37,7 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
 
     /**
      * Whether the shopper is eligible for accelerated checkout.
-     * Set during the availability check. Used to determine the mode AND to place GooglePay on top of the Drop-in
+     * Set during the availability check. Used to determine the mode.
      */
     public isShopperEligibleForAcceleratedCheckout: boolean = false;
 

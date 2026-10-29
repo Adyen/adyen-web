@@ -4,7 +4,6 @@ import type UIElement from '../../internal/UIElement';
 import type { PaymentMethod, StoredPaymentMethod } from '../../../core/ProcessResponse/PaymentMethods/PaymentMethods';
 import type { PaymentMethodDisplayMode } from '../types';
 import type { AnalyticsPaymentMethod } from '../../../core/Analytics/events/AnalyticsInfoEvent';
-import { isGooglePayTxVariant } from '../../GooglePay/utils';
 
 export interface PaymentMethodDisplayModeEntry {
     displayMode: PaymentMethodDisplayMode;
@@ -68,9 +67,7 @@ export function createAvailablePaymentsList(
     return orderedDisplayModes.flatMap(displayMode =>
         (elementsByDisplayMode[displayMode] || [])
             .map(element => {
-                // TODO: Remove GooglePay check when we stopping the GAC
-                const isStored = displayMode === 'stored' && !isGooglePayTxVariant(element.type);
-
+                const isStored = displayMode === 'stored';
                 const id = isStored ? element.props.storedPaymentMethodId : element.props.paymentMethodId;
                 if (!id) return undefined;
 

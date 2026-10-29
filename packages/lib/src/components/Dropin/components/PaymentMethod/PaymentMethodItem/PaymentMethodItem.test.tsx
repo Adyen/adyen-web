@@ -87,14 +87,14 @@ describe('PaymentMethodItem', () => {
     });
 
     describe('showRemovePaymentMethodButton', () => {
-        const createStoredPaymentMethod = (type: string, oneClick = true) =>
+        const createStoredPaymentMethod = (type: string) =>
             mock<UIElement>({
                 _id: 'stored-1',
                 displayName: 'Stored payment method',
                 showDropinHeaderWhenSelected: true,
                 props: {
                     type,
-                    oneClick
+                    oneClick: true
                 },
                 render: jest.fn()
             });
@@ -115,47 +115,6 @@ describe('PaymentMethodItem', () => {
 
             expect(getRemoveButton()).toBeInTheDocument();
             expect(getDisableConfirmation(container)).toBeInTheDocument();
-        });
-
-        test.each(['googlepay', 'paywithgoogle'])('should not render the remove button for a stored %s payment method', type => {
-            const { container } = customRender(
-                <PaymentMethodItem
-                    {...requiredProps}
-                    paymentMethod={createStoredPaymentMethod(type)}
-                    showRemovePaymentMethodButton={true}
-                    isSelected={true}
-                />
-            );
-
-            expect(getRemoveButton()).not.toBeInTheDocument();
-            expect(getDisableConfirmation(container)).not.toBeInTheDocument();
-        });
-
-        test('should not render the remove button for a non stored googlepay payment method', () => {
-            const { container } = customRender(
-                <PaymentMethodItem
-                    {...requiredProps}
-                    paymentMethod={createStoredPaymentMethod('googlepay', false)}
-                    showRemovePaymentMethodButton={true}
-                    isSelected={true}
-                />
-            );
-
-            expect(getRemoveButton()).not.toBeInTheDocument();
-            expect(getDisableConfirmation(container)).not.toBeInTheDocument();
-        });
-
-        test('should not render the remove button for a stored googlepay payment method even when it is not selected', () => {
-            customRender(
-                <PaymentMethodItem
-                    {...requiredProps}
-                    paymentMethod={createStoredPaymentMethod('googlepay')}
-                    showRemovePaymentMethodButton={true}
-                    isSelected={false}
-                />
-            );
-
-            expect(getRemoveButton()).not.toBeInTheDocument();
         });
     });
 
