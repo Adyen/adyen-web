@@ -979,7 +979,7 @@ describe('EMI', () => {
                 expect(sendAnalytics).toHaveBeenCalledWith(
                     expect.objectContaining({
                         component: TxVariants.emi,
-                        errorType: ErrorEventType.implementation,
+                        errorType: ErrorEventType.apiError,
                         code: ErrorEventCode.EMI_NO_SUPPORTED_PAYMENT_METHOD,
                         message: EMI_NO_SUPPORTED_PAYMENT_METHOD_MESSAGE
                     })
@@ -1048,7 +1048,7 @@ describe('EMI', () => {
                     ErrorEventCode.EMI_PLANS_FETCH_FAILED,
                     `${EMI_PLANS_ERROR_PREFIX}: Timed out`
                 ]
-            ])('should send one network error event for %s', async (_case, createError, code, message) => {
+            ])('should send one API error event for %s', async (_case, createError, code, message) => {
                 mockedGetEmiPlans.mockRejectedValue(createError());
                 const { emi, sendAnalytics } = createEmi();
 
@@ -1058,7 +1058,7 @@ describe('EMI', () => {
                 expect(errorEvents(sendAnalytics)[0]).toEqual(
                     expect.objectContaining({
                         component: TxVariants.emi,
-                        errorType: ErrorEventType.network,
+                        errorType: ErrorEventType.apiError,
                         code,
                         message
                     })
@@ -1141,7 +1141,7 @@ describe('EMI', () => {
                     expect(error.message).toBe(message);
                     expect(errorEvents(sendAnalytics)).toHaveLength(1);
                     expect(errorEvents(sendAnalytics)[0]).toEqual(
-                        expect.objectContaining({ errorType: ErrorEventType.network, message: error.message })
+                        expect.objectContaining({ errorType: ErrorEventType.apiError, message: error.message })
                     );
                     expect(error.cause).toBeUndefined();
                     expect(element).toBe(emi);
