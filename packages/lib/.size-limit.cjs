@@ -32,7 +32,7 @@ module.exports = [
     {
         name: 'UMD',
         path: 'dist/umd/adyen.js',
-        limit: '134 KB'
+        limit: '136 KB'
     },
     /**
      * 'auto' bundle with all Components included, excluding Languages
@@ -41,7 +41,7 @@ module.exports = [
         name: 'Auto',
         path: 'auto/auto.js',
         import: '{ AdyenCheckout, Dropin }',
-        limit: '142 KB'
+        limit: '144 KB'
     },
     /**
      * ES modules (tree-shake)

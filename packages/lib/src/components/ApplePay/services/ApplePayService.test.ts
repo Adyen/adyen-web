@@ -28,7 +28,7 @@ describe('ApplePaySession', () => {
         // Status codes are static members of the Apple Pay session
         Object.assign(applePaySessionMock, { STATUS_SUCCESS: 0, STATUS_FAILURE: 1 });
 
-        window.ApplePaySession = applePaySessionMock as unknown as ApplePaySession;
+        window.ApplePaySession = applePaySessionMock as unknown as Window['ApplePaySession'];
     });
 
     afterEach(() => {
