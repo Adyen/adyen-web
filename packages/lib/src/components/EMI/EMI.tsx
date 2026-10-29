@@ -82,14 +82,14 @@ class EMI extends UIElement<EMIConfiguration> {
     public override isAvailable(): Promise<void> {
         if (this.activeSupportedPaymentMethod) return Promise.resolve();
 
-        this.trackError(ErrorEventType.implementation, ErrorEventCode.EMI_NO_SUPPORTED_PAYMENT_METHOD, EMI_NO_SUPPORTED_PAYMENT_METHOD_MESSAGE);
+        this.trackError(ErrorEventCode.EMI_NO_SUPPORTED_PAYMENT_METHOD, EMI_NO_SUPPORTED_PAYMENT_METHOD_MESSAGE);
         return Promise.reject(new AdyenCheckoutError(ERROR, EMI_NO_SUPPORTED_PAYMENT_METHOD_MESSAGE));
     }
 
-    private trackError(errorType: ErrorEventType, code: ErrorEventCode, message: string): void {
+    private trackError(code: ErrorEventCode, message: string): void {
         const event = new AnalyticsErrorEvent({
             component: this.type,
-            errorType,
+            errorType: ErrorEventType.apiError,
             code,
             message
         });
@@ -119,7 +119,7 @@ class EMI extends UIElement<EMIConfiguration> {
             this.handleError(new AdyenCheckoutError(ERROR, EMI_NO_INSTALLMENT_PLANS_MESSAGE));
         } catch (error) {
             const { code, message } = getEmiPlansError(error);
-            this.trackError(ErrorEventType.network, code, message);
+            this.trackError(code, message);
             this.handleError(new AdyenCheckoutError(NETWORK_ERROR, message));
         }
 
