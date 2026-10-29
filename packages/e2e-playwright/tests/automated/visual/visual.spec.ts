@@ -13,7 +13,7 @@ const index = JSON.parse(rawData) as StorybookIndex;
 const allEntries = Object.values(index.entries);
 
 // Filter out non-story entries, docs, and explicitly excluded stories
-const storyIds = allEntries.filter(entry => entry.type === 'story' && !entry.tags.includes('no-automated-visual-test')).map(entry => entry.id); // Extract the IDs
+const stories = allEntries.filter(entry => entry.type === 'story' && !entry.tags.includes('no-automated-visual-test'));
 
 const getTestTitle = (storyId: string) => {
     return `Visual Test: ${storyId.replace(/[^a-zA-Z0-9_.-]/g, '_')}`;
@@ -21,14 +21,14 @@ const getTestTitle = (storyId: string) => {
 
 test.describe('Automated visual testing', () => {
     // Dynamically generate tests for each story
-    for (const storyId of storyIds) {
+    for (const { id: storyId, tags } of stories) {
         const testTitle = getTestTitle(storyId);
 
         test(testTitle, async ({ page, browserName }) => {
             const automatedModel = new Automated(page);
             await automatedModel.gotoStory(storyId);
 
-            await toHaveScreenshot(page.getByTestId('checkout-component'), browserName, `${storyId}.png`, {
+            await toHaveScreenshot(await automatedModel.screenshotTarget(storyId, tags), browserName, `${storyId}.png`, {
                 mask: [page.getByRole('timer'), page.getByTestId('stored-card-info')]
             });
         });

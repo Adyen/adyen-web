@@ -18,7 +18,6 @@ const languageServiceStub: ILanguageService = {
 
 const meta: Meta<SelectProps> = {
     title: 'Internal Elements/Select',
-    tags: ['no-automated-visual-test'],
     component: Select,
     argTypes: {
         filterable: { control: 'boolean' },
