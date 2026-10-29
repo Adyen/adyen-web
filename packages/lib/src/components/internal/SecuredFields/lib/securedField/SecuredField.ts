@@ -171,7 +171,7 @@ class SecuredField extends AbstractSecuredField {
         if (window._b$dl) console.log('### SecuredField:::: onIframeLoaded:: created configObj=', configObj);
 
         postMessageToIframe(configObj, this.iframeContentWindow, this.loadingContext);
-        // postMessageToIframe(configObj, window, this.loadingContext);
+        // postMessageToIframe(configObj, window, this.loadingContext); // For testing - to force the configFail on the SF
         //--
 
         // Callback to say iframe loaded
@@ -243,27 +243,10 @@ class SecuredField extends AbstractSecuredField {
     }
 
     private isFeedbackObjValid(feedbackObj: SFFeedbackObj): boolean {
-        const hasAction: boolean = hasOwnProperty(feedbackObj, 'action');
-        const hasNumKey: boolean = hasOwnProperty(feedbackObj, 'numKey');
-        const hasAllMainProps: boolean = hasAction && hasNumKey;
+        const hasMainProps: boolean = hasOwnProperty(feedbackObj, 'action') && hasOwnProperty(feedbackObj, 'numKey');
 
-        if (!hasAllMainProps) {
+        if (!hasMainProps) {
             if (this.sfConfig.showWarnings) logger.warn('WARNING SecuredField :: postMessage listener for iframe :: data mismatch!');
-
-            if (hasAction && feedbackObj.action === 'configFailure') {
-                console.log('\n### SecuredField::postMessageListenerFn::fail:: this.sfConfig.fieldType', this.sfConfig.fieldType);
-                console.log('### SecuredField::postMessageListenerFn::fail:: feedbackObj', feedbackObj);
-
-                this.submitFeedbackErrorAnalytics(
-                    feedbackObj.code ?? ErrorEventCode.SECURED_FIELDS_CONFIG_FAILURE,
-                    `${feedbackObj.error}. Field=${this.sfConfig.fieldType}. Log=${JSON.stringify(feedbackObj.configLog)} `
-                );
-
-                // Remove the event listeners (otherwise, without having a numKey to act as a filter, it will fire again for the other securedFields)
-                // We want to remove the listeners but leave the DOM element intact for the message that it gives in the UI
-                this.destroy(false);
-            }
-
             return false;
         }
 
@@ -273,12 +256,20 @@ class SecuredField extends AbstractSecuredField {
         }
 
         if (this.numKey !== feedbackObj.numKey) {
-            if (this.sfConfig.showWarnings) {
-                logger.warn(
-                    'WARNING SecuredField :: postMessage listener for iframe :: data mismatch! (Probably a message from an unrelated securedField)'
-                );
+            // Check for numKey indicating stalled config
+            if (feedbackObj.numKey === 999999) {
+                // Remove the event listeners (otherwise, without having a securedField specific numKey to act as a filter, it will fire again for the other securedFields)
+                // We want to remove the listeners but leave the DOM element intact for the message that it gives in the UI
+                // Then let the flow proceed - we will handle the 'configFail' action below, in the regular way
+                this.destroy(false);
+            } else {
+                if (this.sfConfig.showWarnings) {
+                    logger.warn(
+                        'WARNING SecuredField :: postMessage listener for iframe :: data mismatch! (Probably a message from an unrelated securedField)'
+                    );
+                }
+                return false;
             }
-            return false;
         }
 
         return true;
@@ -341,6 +332,15 @@ class SecuredField extends AbstractSecuredField {
                         : ErrorEventCode.SECURED_FIELDS_INSECURE_MERCHANT_DOMAIN;
 
                 this.submitFeedbackErrorAnalytics(feedbackObj.code ?? fallbackCode, `${feedbackObj.error}. Field=${this.sfConfig.fieldType}`);
+                break;
+            }
+
+            // Listen for the SF iframe indicating it failed to configure (JS didn't load, or loaded but failed to complete)
+            case 'configFailure': {
+                this.submitFeedbackErrorAnalytics(
+                    feedbackObj.code ?? ErrorEventCode.SECURED_FIELDS_CONFIG_FAILURE,
+                    `${feedbackObj.error}. Field=${this.sfConfig.fieldType}. Log=${JSON.stringify(feedbackObj.configLog)} `
+                );
                 break;
             }
 

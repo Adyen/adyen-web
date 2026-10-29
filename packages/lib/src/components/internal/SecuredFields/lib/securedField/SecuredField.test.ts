@@ -542,6 +542,46 @@ describe('SecuredField handling placeholders from the placeholders config', () =
             });
         });
 
+        test('Check analytics event is submitted after "configFailure" action', () => {
+            const submitAnalyticsSpy = jest.fn(() => {});
+
+            const localCard = new SecuredField(
+                // @ts-ignore test only
+                {
+                    ...setupObj,
+                    fieldType: ENCRYPTED_SECURITY_CODE,
+                    submitAnalytics: submitAnalyticsSpy
+                },
+                i18n
+            );
+
+            const feedbackObj = {
+                action: 'configFailure',
+                fieldType: ENCRYPTED_SECURITY_CODE,
+                numKey: localCard.numKey,
+                code: ErrorEventCode.SECURED_FIELDS_CONFIG_FAILURE,
+                error: 'Config failure',
+                configLog: 'some-config-log'
+            };
+
+            const messageEvent = {
+                origin,
+                data: JSON.stringify(feedbackObj)
+            };
+
+            // @ts-ignore event type
+            localCard.postMessageListenerFn(messageEvent);
+
+            expect(submitAnalyticsSpy).toHaveBeenCalledWith({
+                timestamp: expect.any(String),
+                id: expect.any(String),
+                component: 'scheme',
+                errorType: ErrorEventType.internal,
+                code: ErrorEventCode.SECURED_FIELDS_CONFIG_FAILURE,
+                message: 'Config failure. Field=encryptedSecurityCode. Log="some-config-log" '
+            });
+        });
+
         test('Check callback is called after "focus" action', () => {
             card.onFocus(myCallback);
 
