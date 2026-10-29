@@ -79,6 +79,7 @@ export const AcceleratedCheckout: GooglePayStory = {
                         element={
                             new DropinComponent(checkout, {
                                 showRemovePaymentMethodButton: true,
+                                instantPaymentTypes: ['applepay'],
                                 onDisableStoredPaymentMethod: (_stored, _resolve, reject) => {
                                     alert('Not implemented');
                                     reject();
@@ -96,7 +97,7 @@ export const AcceleratedCheckout: GooglePayStory = {
         countryCode: 'BR',
         componentConfiguration: {
             configuration: {
-                gatewayMerchantId: 'TestMerchantCheckout',
+                gatewayMerchantId: 'CheckoutWeb',
                 merchantId: '50',
                 acceleratedCheckoutExperiment: 'enabled'
             }

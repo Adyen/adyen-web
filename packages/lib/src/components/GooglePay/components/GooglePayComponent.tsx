@@ -11,7 +11,7 @@ interface Props {
     defaultMode: GooglePaymentMode;
     onUpdateMode: (mode: GooglePaymentMode) => void;
     googleButtonClient: GooglePayService;
-    googleAcceleratedCheckoutClient: GoogleAcceleratedCheckoutClient;
+    googleAcceleratedCheckoutClient?: GoogleAcceleratedCheckoutClient;
     showPayButton: boolean;
     googleButtonProps: {
         buttonColor: google.payments.api.ButtonColor;
@@ -39,7 +39,7 @@ const GooglePayComponent = ({
         onUpdateMode(GooglePaymentMode.STANDARD_BUTTON);
     }, [onUpdateMode]);
 
-    if (activeMode === GooglePaymentMode.ACCELERATED_CHECKOUT) {
+    if (activeMode === GooglePaymentMode.ACCELERATED_CHECKOUT && googleAcceleratedCheckoutClient) {
         if (!showPayButton) {
             console.warn('GooglePay: showPayButton=false is not compatible with Google Accelerated Checkout');
         }

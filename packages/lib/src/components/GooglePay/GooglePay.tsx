@@ -31,7 +31,7 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
     public static readonly defaultProps = defaultProps;
 
     private readonly googleButtonClient: GooglePayService;
-    private readonly googleAcceleratedCheckoutClient: GoogleAcceleratedCheckoutClient;
+    private readonly googleAcceleratedCheckoutClient?: GoogleAcceleratedCheckoutClient;
 
     public mode: GooglePaymentMode = GooglePaymentMode.STANDARD_BUTTON;
 
@@ -62,8 +62,18 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
             );
         }
 
-        const paymentDataRequest = new PaymentDataRequest(this.props);
+        // Instant payment buttons in Drop-in must always use the standard button, so the experiment is skipped entirely
+        if (!this.props.isInstantPayment) {
+            this.googleAcceleratedCheckoutClient = this.createAcceleratedCheckoutClient();
+        }
 
+        this.googleButtonClient = new GooglePayService(this.props.environment, this.analytics, {
+            ...(isExpress && paymentDataCallbacks?.onPaymentDataChanged && { onPaymentDataChanged: paymentDataCallbacks.onPaymentDataChanged }),
+            onPaymentAuthorized: this.onPaymentAuthorized
+        });
+    }
+
+    private createAcceleratedCheckoutClient(): GoogleAcceleratedCheckoutClient {
         const acceleratedOptions: AcceleratedCheckoutOptions = {
             environment: resolveEnvironmentForAcceleratedCheckout(this.props.environment),
             acceleratedCheckoutConfig: {
@@ -73,18 +83,13 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
             paymentDataCallbacks: {
                 onPaymentAuthorized: this.onPaymentAuthorized
             },
-            checkoutRequest: paymentDataRequest
+            checkoutRequest: new PaymentDataRequest(this.props)
         };
 
-        this.googleAcceleratedCheckoutClient = new GoogleAcceleratedCheckoutClient(
+        return new GoogleAcceleratedCheckoutClient(
             acceleratedOptions,
             new Script({ src: URL_GOOGLE_PAY_ACCELERATED_CHECKOUT, component: 'googlepay', analytics: this.analytics })
         );
-
-        this.googleButtonClient = new GooglePayService(this.props.environment, this.analytics, {
-            ...(isExpress && paymentDataCallbacks?.onPaymentDataChanged && { onPaymentDataChanged: paymentDataCallbacks.onPaymentDataChanged }),
-            onPaymentAuthorized: this.onPaymentAuthorized
-        });
     }
 
     /**
@@ -158,6 +163,11 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
      * Determine a shopper's ability to return a form of payment from the Google Pay API.
      */
     public override async isAvailable(): Promise<void> {
+        if (!this.googleAcceleratedCheckoutClient) {
+            const [googleButtonResult] = await Promise.allSettled([this.googleButtonClient.isReadyToPay(this.props)]);
+            return this.assertGoogleButtonAvailability(googleButtonResult);
+        }
+
         const [acceleratedCheckoutResult, googleButtonResult] = await Promise.allSettled([
             this.googleAcceleratedCheckoutClient.isAvailable(),
             this.googleButtonClient.isReadyToPay(this.props)
@@ -189,6 +199,10 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
             );
         }
 
+        return this.assertGoogleButtonAvailability(googleButtonResult);
+    }
+
+    private assertGoogleButtonAvailability(googleButtonResult: PromiseSettledResult<google.payments.api.IsReadyToPayResponse>): void {
         if (googleButtonResult.status === 'fulfilled') {
             const isReadyToPayResponse = googleButtonResult.value;
 
