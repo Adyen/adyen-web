@@ -11,6 +11,7 @@ import DropinComponent from '../../Dropin';
 import type { NewableComponent } from '../../../core/core.registry';
 import type { MetaConfiguration, StoryConfiguration } from '../../../../storybook/types';
 import type { GooglePayConfiguration } from '../types';
+import type { DropinConfiguration } from '../../Dropin/types';
 
 type GooglePayStory = StoryConfiguration<GooglePayConfiguration>;
 
@@ -66,7 +67,7 @@ export const ExpressOnSessions: GooglePayStory = {
     }
 };
 
-export const AcceleratedCheckout: GooglePayStory = {
+export const AcceleratedCheckout: StoryConfiguration<DropinConfiguration> = {
     render: ({ componentConfiguration, ...checkoutConfig }) => {
         const { Dropin, ...Components } = components;
         const Classes = Object.values(Components) as NewableComponent[];
@@ -78,13 +79,11 @@ export const AcceleratedCheckout: GooglePayStory = {
                     <ComponentContainer
                         element={
                             new DropinComponent(checkout, {
-                                showRemovePaymentMethodButton: true,
-                                instantPaymentTypes: ['applepay'],
                                 onDisableStoredPaymentMethod: (_stored, _resolve, reject) => {
                                     alert('Not implemented');
                                     reject();
                                 },
-                                paymentMethodsConfiguration: { googlepay: { ...componentConfiguration } }
+                                ...componentConfiguration
                             })
                         }
                     />
@@ -92,14 +91,25 @@ export const AcceleratedCheckout: GooglePayStory = {
             </Checkout>
         );
     },
+    argTypes: {
+        componentConfiguration: {
+            control: 'object'
+        }
+    },
     args: {
         useSessions: true,
         countryCode: 'BR',
         componentConfiguration: {
-            configuration: {
-                gatewayMerchantId: 'CheckoutWeb',
-                merchantId: '50',
-                acceleratedCheckoutExperiment: 'enabled'
+            showRemovePaymentMethodButton: true,
+            instantPaymentTypes: ['googlepay', 'applepay'],
+            paymentMethodsConfiguration: {
+                googlepay: {
+                    configuration: {
+                        gatewayMerchantId: 'CheckoutWeb',
+                        merchantId: '50',
+                        acceleratedCheckoutExperiment: 'enabled'
+                    }
+                }
             }
         }
     }
