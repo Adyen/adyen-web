@@ -1,0 +1,248 @@
+# Cuts a patch release from a hotfix branch.
+#
+#   1. Checks the hotfix branch: named hotfix/vX.Y.Z, cut from the previous release tag,
+#      only patch changesets for @adyen/adyen-web, and newer than every released version.
+#   2. Runs `changeset version` (bumps the patch version and writes the changelog) and
+#      commits the result back to the hotfix branch.
+#   3. Tags the commit and creates the GitHub release (with the UMD build) using gh-release.yml.
+#   4. Opens a PR that merges the hotfix branch back into main and posts the next steps to Slack.
+#
+# npm is NOT published here. After syncing the CDN, run "Publish Package" (npm-publish.yml)
+# from the new tag, as for a normal release.
+#
+# Run this workflow from main ("Use workflow from: main") and enter the hotfix branch as input.
+# Hotfix branches are cut from an old release tag, which may not contain this workflow or the
+# current gh-release.yml.
+
+name: Hotfix Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      hotfix-branch:
+        description: 'Hotfix branch, e.g. hotfix/v6.47.1'
+        required: true
+        type: string
+      open-merge-back-pr:
+        description: 'Open a PR that merges the hotfix branch back into main'
+        required: true
+        type: boolean
+        default: true
+
+concurrency:
+  group: hotfix-release
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  version:
+    if: github.repository == 'adyen/adyen-web'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # push the version commit to the hotfix branch
+      pull-requests: read # changelog generation looks up PR info
+    outputs:
+      version: ${{ steps.bump.outputs.version }}
+      sha: ${{ steps.commit.outputs.sha }}
+    env:
+      BRANCH: ${{ inputs.hotfix-branch }}
+    steps:
+      - name: Check workflow ref and branch name
+        id: branch
+        run: |
+          set -euo pipefail
+          if [ "$GITHUB_REF" != "refs/heads/main" ]; then
+            echo "::error::Run this workflow from main (Use workflow from: main) and pass the hotfix branch as input."
+            exit 1
+          fi
+          if [[ ! "$BRANCH" =~ ^hotfix/v([0-9]+)\.([0-9]+)\.([0-9]+)$ ]]; then
+            echo "::error::Branch '$BRANCH' must be named hotfix/vX.Y.Z (the version you are about to release), e.g. hotfix/v6.47.1."
+            exit 1
+          fi
+          echo "expected=${BASH_REMATCH[1]}.${BASH_REMATCH[2]}.${BASH_REMATCH[3]}" >> "$GITHUB_OUTPUT"
+
+      - name: Checkout hotfix branch
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: ${{ inputs.hotfix-branch }}
+          fetch-depth: 0 # tags and history for the checks below
+
+      - name: Check the branch is ready to release
+        id: preflight
+        env:
+          EXPECTED: ${{ steps.branch.outputs.expected }}
+        run: |
+          set -euo pipefail
+          fail() { echo "::error::$1"; exit 1; }
+
+          CURRENT=$(node -p "require('./packages/lib/package.json').version")
+          [[ "$CURRENT" =~ ^([0-9]+)\.([0-9]+)\.([0-9]+)$ ]] \
+            || fail "packages/lib is at '$CURRENT'. Hotfixes of prereleases are not supported."
+          NEXT="${BASH_REMATCH[1]}.${BASH_REMATCH[2]}.$(( BASH_REMATCH[3] + 1 ))"
+
+          git rev-parse -q --verify "refs/tags/v$CURRENT" > /dev/null \
+            || fail "Tag v$CURRENT not found. packages/lib/package.json should be at the version you are patching."
+          git merge-base --is-ancestor "v$CURRENT" HEAD \
+            || fail "$BRANCH was not cut from tag v$CURRENT. Create it with: git switch -c $BRANCH v$CURRENT"
+
+          [ "$NEXT" = "$EXPECTED" ] \
+            || fail "The next patch after $CURRENT is $NEXT, but the branch is named for $EXPECTED. Rename the branch to hotfix/v$NEXT."
+
+          if git rev-parse -q --verify "refs/tags/v$NEXT" > /dev/null; then
+            fail "Tag v$NEXT already exists."
+          fi
+
+          HIGHEST=$(git tag -l 'v*' | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | sed 's/^v//' | sort -V | tail -1)
+          if [ "$(printf '%s\n%s\n' "$HIGHEST" "$NEXT" | sort -V | tail -1)" != "$NEXT" ]; then
+            fail "v$HIGHEST is newer than v$NEXT. This workflow only patches the newest release line; publishing v$NEXT would move npm 'latest' backwards."
+          fi
+
+          [ ! -f .changeset/pre.json ] || fail "Changesets is in prerelease mode (.changeset/pre.json). Not supported for hotfixes."
+
+          mapfile -t CHANGESETS < <(find .changeset -maxdepth 1 -name '*.md' ! -name 'README.md' | sort)
+          [ "${#CHANGESETS[@]}" -gt 0 ] || fail "No changeset found. Add one to the fix PR with 'yarn changeset' (patch, 'Fixed: ...')."
+
+          for FILE in "${CHANGESETS[@]}"; do
+            FRONTMATTER=$(awk '/^---[[:space:]]*$/{n++; next} n==1{print}' "$FILE" | sed '/^[[:space:]]*$/d')
+            [ -n "$FRONTMATTER" ] || fail "$FILE is an empty changeset. A hotfix needs a 'patch' changeset for @adyen/adyen-web."
+            while IFS= read -r LINE; do
+              echo "$LINE" | grep -qE "^[\"']?@adyen/adyen-web[\"']?:[[:space:]]*patch[[:space:]]*$" \
+                || fail "$FILE: hotfixes may only contain '@adyen/adyen-web': patch. Found: $LINE"
+            done <<< "$FRONTMATTER"
+          done
+
+          {
+            echo "### Hotfix release $CURRENT -> $NEXT"
+            echo "Changesets:"
+            for FILE in "${CHANGESETS[@]}"; do echo "- \`$FILE\`"; done
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          echo "current=$CURRENT" >> "$GITHUB_OUTPUT"
+          echo "next=$NEXT" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: 24
+          package-manager-cache: false
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install Dependencies
+        run: yarn install --immutable
+
+      - name: Bump version and changelog
+        id: bump
+        env:
+          GITHUB_TOKEN: ${{ github.token }} # used by .changeset/changelog-config.js for PR links
+          NEXT: ${{ steps.preflight.outputs.next }}
+        run: |
+          set -euo pipefail
+          yarn run version
+
+          VERSION=$(node -p "require('./packages/lib/package.json').version")
+          CHANGELOG_VERSION=$(awk '/^## [0-9]/{print $2; exit}' packages/lib/CHANGELOG.md)
+
+          if [ "$VERSION" != "$NEXT" ] || [ "$CHANGELOG_VERSION" != "$NEXT" ]; then
+            echo "::error::Expected $NEXT, got package.json=$VERSION, CHANGELOG=$CHANGELOG_VERSION."
+            exit 1
+          fi
+
+          {
+            echo
+            echo "Changelog entry:"
+            echo '```'
+            awk '/^## [0-9]/{n++; if (n==2) exit} n==1{print}' packages/lib/CHANGELOG.md
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Commit and push to the hotfix branch
+        id: commit
+        env:
+          VERSION: ${{ steps.bump.outputs.version }}
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git status --short
+          git commit -m "[ci] hotfix release v$VERSION"
+          git push origin "HEAD:refs/heads/$BRANCH"
+          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+  github-release:
+    needs: version
+    uses: ./.github/workflows/gh-release.yml
+    permissions:
+      contents: write
+    with:
+      ref: ${{ needs.version.outputs.sha }}
+
+  follow-up:
+    needs: [version, github-release]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      BRANCH: ${{ inputs.hotfix-branch }}
+      VERSION: ${{ needs.version.outputs.version }}
+      RELEASE_URL: ${{ github.server_url }}/${{ github.repository }}/releases/tag/v${{ needs.version.outputs.version }}
+    steps:
+      - name: Open merge-back PR
+        id: pr
+        if: inputs.open-merge-back-pr
+        run: |
+          set -euo pipefail
+          EXISTING=$(gh pr list --repo "$GITHUB_REPOSITORY" --head "$BRANCH" --base main --state open --json url --jq '.[0].url // empty')
+          if [ -n "$EXISTING" ]; then
+            echo "url=$EXISTING" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          cat > /tmp/pr-body.md <<EOF
+          Merges hotfix **v$VERSION** back into \`main\`, so that \`main\` has the fix, the bumped version and the v$VERSION changelog entry.
+
+          - [ ] The fix is still correct on \`main\` (resolve any conflicts in the fix itself).
+          - [ ] \`packages/lib/CHANGELOG.md\`: the v$VERSION section sits above the previous release section, newest first.
+          - [ ] \`packages/lib/package.json\` is at \`$VERSION\`. Pending changesets bump it at the next release.
+          - [ ] No changeset for this fix remains in \`.changeset/\`. It was used by the hotfix release; a leftover would repeat the entry in the next release.
+
+          Created by the Hotfix Release workflow. CI does not start on PRs opened by GitHub Actions: close and reopen this PR to run the checks.
+          EOF
+
+          URL=$(gh pr create --repo "$GITHUB_REPOSITORY" --base main --head "$BRANCH" \
+            --title "[ci] Merge hotfix v$VERSION back into main" \
+            --body-file /tmp/pr-body.md)
+          echo "url=$URL" >> "$GITHUB_OUTPUT"
+          echo "Merge-back PR: $URL" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Build Slack message
+        id: message
+        env:
+          PR_URL: ${{ steps.pr.outputs.url }}
+        run: |
+          set -euo pipefail
+          MSG="Hotfix GitHub release <$RELEASE_URL|v$VERSION> has been created from \`$BRANCH\`."
+          MSG+=$'\n'"Next steps:"
+          MSG+=$'\n'"1. Sync the UMD build and translations to adyen-main and the CDN."
+          MSG+=$'\n'"2. Run *Publish Package* from tag \`v$VERSION\`."
+          MSG+=$'\n'"3. Re-run *Flag Affected Release* and *Retract npm Version* with the fixed version."
+          if [ -n "$PR_URL" ]; then
+            MSG+=$'\n'"4. Review and merge <$PR_URL|the merge-back PR>."
+          else
+            MSG+=$'\n'"4. Merge \`$BRANCH\` back into main."
+          fi
+          { echo "text<<EOF"; echo "$MSG"; echo "EOF"; } >> "$GITHUB_OUTPUT"
+
+      - name: Notify team channel
+        uses: Adyen/github-actions/slack-app-send-message@66cba28775090b2aa2c6d5bfbbde24264b549d15
+        with:
+          bot-token: ${{ secrets.SLACK_BOT_TOKEN }}
+          channel: ${{ vars.CHECKOUT_WEB_CHANNEL_ID }}
+          message: ${{ steps.message.outputs.text }}

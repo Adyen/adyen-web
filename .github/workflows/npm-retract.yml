@@ -1,0 +1,245 @@
+# Retracts a broken @adyen/adyen-web version from npm.
+#
+# mode = auto (default)
+#   - published less than UNPUBLISH_WINDOW_HOURS ago -> try `npm unpublish`; if npm refuses, deprecate instead
+#   - otherwise -> `npm deprecate`
+# mode = deprecate  -> always deprecate (safe to run straight away; re-running updates the message)
+# mode = unpublish  -> unpublish or fail; never falls back
+#
+# `retag-latest-to` moves the npm `latest` dist-tag first, so a fresh `npm install @adyen/adyen-web`
+# stops resolving to the broken version. Unpublishing the version `latest` points at is refused
+# unless you move the tag.
+#
+# Notes:
+#   - Unpublishing breaks installs for anyone whose lockfile already pins the version, and the
+#     version number can never be published again. Prefer deprecating unless the version must disappear.
+#   - npm trusted publishing (OIDC) does not cover deprecate/unpublish, so this needs a granular
+#     access token (NPM_TOKEN) with read/write on @adyen/adyen-web, stored in the `npm-retract`
+#     environment. Configure required reviewers on that environment.
+
+name: Retract npm Version
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Broken version, without "v" (e.g. 6.47.0)'
+        required: true
+        type: string
+      confirm-version:
+        description: 'Type the version again to confirm'
+        required: true
+        type: string
+      mode:
+        description: 'auto = unpublish if < 72h old, else deprecate'
+        required: true
+        type: choice
+        default: auto
+        options:
+          - auto
+          - deprecate
+          - unpublish
+      reason:
+        description: 'Deprecation message shown by npm install (e.g. "Critical bug in card payments. Upgrade to 6.47.1 or later.")'
+        required: true
+        type: string
+      retag-latest-to:
+        description: 'Optional: move the npm "latest" tag to this version first (the fix, or the last good version)'
+        required: false
+        type: string
+
+concurrency:
+  group: npm-retract-${{ inputs.version }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+env:
+  PACKAGE: '@adyen/adyen-web'
+  UNPUBLISH_WINDOW_HOURS: 71 # npm's limit is 72h; keep an hour of margin
+
+jobs:
+  retract:
+    if: github.repository == 'adyen/adyen-web'
+    runs-on: ubuntu-latest
+    environment: npm-retract # holds NPM_TOKEN; add required reviewers to this environment
+    outputs:
+      action: ${{ steps.retract.outputs.action }}
+    env:
+      VERSION: ${{ inputs.version }}
+      CONFIRM_VERSION: ${{ inputs.confirm-version }}
+      MODE: ${{ inputs.mode }}
+      REASON: ${{ inputs.reason }}
+      RETAG_TO: ${{ inputs.retag-latest-to }}
+    steps:
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org/
+          package-manager-cache: false
+
+      - name: Validate inputs
+        id: info
+        run: |
+          set -euo pipefail
+          SEMVER='^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$'
+
+          if [[ ! "$VERSION" =~ $SEMVER ]]; then
+            echo "::error::version '$VERSION' is not a version like 6.47.0 (no leading 'v')."; exit 1
+          fi
+          if [ "$VERSION" != "$CONFIRM_VERSION" ]; then
+            echo "::error::confirm-version ('$CONFIRM_VERSION') does not match version ('$VERSION')."; exit 1
+          fi
+          if [ -z "$REASON" ]; then
+            echo "::error::reason is required."; exit 1
+          fi
+
+          PUBLISHED=$(npm view "$PACKAGE" time --json | jq -r --arg v "$VERSION" '.[$v] // empty')
+          if [ -z "$PUBLISHED" ]; then
+            echo "::error::$PACKAGE@$VERSION is not on npm (never published, or already unpublished)."; exit 1
+          fi
+
+          AGE_HOURS=$(( ( $(date -u +%s) - $(date -u -d "$PUBLISHED" +%s) ) / 3600 ))
+          LATEST=$(npm view "$PACKAGE" dist-tags.latest)
+
+          if [ -n "$RETAG_TO" ]; then
+            if [[ ! "$RETAG_TO" =~ $SEMVER ]]; then
+              echo "::error::retag-latest-to '$RETAG_TO' is not a valid version."; exit 1
+            fi
+            if [ "$RETAG_TO" = "$VERSION" ]; then
+              echo "::error::retag-latest-to cannot be the version being retracted."; exit 1
+            fi
+            if ! npm view "$PACKAGE@$RETAG_TO" version > /dev/null 2>&1; then
+              echo "::error::$PACKAGE@$RETAG_TO is not on npm. Publish the fix first, or pick the last good version."; exit 1
+            fi
+            if [ -n "$(npm view "$PACKAGE@$RETAG_TO" deprecated)" ]; then
+              echo "::error::$PACKAGE@$RETAG_TO is deprecated; pick a healthy version."; exit 1
+            fi
+          fi
+
+          if [ "$MODE" = "unpublish" ] || { [ "$MODE" = "auto" ] && [ "$AGE_HOURS" -lt "$UNPUBLISH_WINDOW_HOURS" ]; }; then
+            PLAN=unpublish
+          else
+            PLAN=deprecate
+          fi
+
+          if [ "$PLAN" = "unpublish" ] && [ "$LATEST" = "$VERSION" ] && [ -z "$RETAG_TO" ]; then
+            echo "::error::npm 'latest' points at $VERSION. Set retag-latest-to (the fix or the last good version) before unpublishing it."
+            exit 1
+          fi
+
+          {
+            echo "### Retract $PACKAGE@$VERSION"
+            echo "- Published: $PUBLISHED ($AGE_HOURS h ago)"
+            echo "- Current npm latest: $LATEST"
+            echo "- Mode: $MODE -> plan: $PLAN"
+            if [ -n "$RETAG_TO" ]; then echo "- Move latest to: $RETAG_TO"; fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          echo "plan=$PLAN" >> "$GITHUB_OUTPUT"
+
+      - name: Move npm "latest" tag
+        if: inputs.retag-latest-to != ''
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          set -euo pipefail
+          npm dist-tag add "$PACKAGE@$RETAG_TO" latest
+          echo "- Moved latest -> $RETAG_TO" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Unpublish or deprecate
+        id: retract
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          PLAN: ${{ steps.info.outputs.plan }}
+        run: |
+          set -euo pipefail
+          ACTION=deprecated
+
+          if [ "$PLAN" = "unpublish" ]; then
+            if npm unpublish "$PACKAGE@$VERSION"; then
+              ACTION=unpublished
+            elif [ "$MODE" = "unpublish" ]; then
+              echo "::error::npm refused to unpublish $PACKAGE@$VERSION (see log above)."; exit 1
+            else
+              echo "::warning::npm refused to unpublish $PACKAGE@$VERSION. Deprecating instead."
+            fi
+          fi
+
+          if [ "$ACTION" = "deprecated" ]; then
+            npm deprecate "$PACKAGE@$VERSION" "$REASON"
+          fi
+
+          echo "action=$ACTION" >> "$GITHUB_OUTPUT"
+          echo "- Result: **$ACTION**" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Verify on the registry
+        env:
+          ACTION: ${{ steps.retract.outputs.action }}
+        run: |
+          set -euo pipefail
+          # The registry can take a short while to reflect changes.
+          for _ in 1 2 3 4 5 6; do
+            if [ "$ACTION" = "unpublished" ]; then
+              if ! npm view "$PACKAGE@$VERSION" version > /dev/null 2>&1; then OK=1; else OK=0; fi
+            else
+              if [ -n "$(npm view "$PACKAGE@$VERSION" deprecated 2>/dev/null)" ]; then OK=1; else OK=0; fi
+            fi
+            if [ "$OK" = 1 ]; then break; fi
+            sleep 10
+          done
+
+          echo "- npm latest is now: $(npm view "$PACKAGE" dist-tags.latest)" >> "$GITHUB_STEP_SUMMARY"
+          if [ "$OK" != 1 ]; then
+            echo "::warning::The registry does not show $PACKAGE@$VERSION as $ACTION yet. Check https://www.npmjs.com/package/$PACKAGE?activeTab=versions"
+          fi
+
+  notify:
+    needs: retract
+    if: always() && needs.retract.result != 'skipped'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Build messages
+        id: messages
+        env:
+          VERSION: ${{ inputs.version }}
+          ACTION: ${{ needs.retract.outputs.action }}
+          RESULT: ${{ needs.retract.result }}
+          REASON: ${{ inputs.reason }}
+          RETAG_TO: ${{ inputs.retag-latest-to }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          if [ "$RESULT" != "success" ]; then
+            TEAM=":x: Retract npm Version failed for $PACKAGE@$VERSION. <$RUN_URL|Workflow run>"
+            DOCS=""
+          else
+            TEAM="$PACKAGE@$VERSION has been *$ACTION* on npm."
+            if [ -n "$RETAG_TO" ]; then TEAM+=" npm latest now points to $RETAG_TO."; fi
+            DOCS="FYI: adyen-web v$VERSION has been *$ACTION* on npm. Message shown to users: \"$REASON\""
+            if [ "$ACTION" = "unpublished" ]; then
+              DOCS+=$'\n'"The version can no longer be installed from npm. Please make sure the docs do not recommend or link to installing v$VERSION."
+            fi
+          fi
+          {
+            echo "team<<EOF"; echo "$TEAM"; echo "EOF"
+            echo "docs<<EOF"; echo "$DOCS"; echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Notify team channel
+        uses: Adyen/github-actions/slack-app-send-message@66cba28775090b2aa2c6d5bfbbde24264b549d15
+        with:
+          bot-token: ${{ secrets.SLACK_BOT_TOKEN }}
+          channel: ${{ vars.CHECKOUT_WEB_CHANNEL_ID }}
+          message: ${{ steps.messages.outputs.team }}
+
+      - name: Notify Docs team
+        if: needs.retract.result == 'success'
+        uses: Adyen/github-actions/slack-app-send-message@66cba28775090b2aa2c6d5bfbbde24264b549d15
+        with:
+          bot-token: ${{ secrets.SLACK_BOT_TOKEN }}
+          channel: ${{ vars.WEB_RELEASE_NOTES_CHANNEL_ID }}
+          message: ${{ steps.messages.outputs.docs }}

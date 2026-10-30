@@ -1,0 +1,151 @@
+# Removes an npm deprecation that was added by mistake (for example the wrong version was
+# entered in "Retract npm Version"). Optionally moves the npm `latest` tag back as well.
+#
+# `npm deprecate <pkg>@<version> ""` (an empty message) is how npm removes a deprecation.
+# An unpublished version cannot be restored this way: npm never allows a version to come back.
+#
+# Uses the same `npm-retract` environment (NPM_TOKEN, required reviewers) as npm-retract.yml.
+
+name: Undeprecate npm Version
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to undeprecate, without "v" (e.g. 6.47.0)'
+        required: true
+        type: string
+      confirm-version:
+        description: 'Type the version again to confirm'
+        required: true
+        type: string
+      restore-latest:
+        description: 'Also point the npm "latest" tag back at this version'
+        required: true
+        type: boolean
+        default: false
+      reason:
+        description: 'Why the deprecation is being removed (shown in Slack)'
+        required: true
+        type: string
+
+concurrency:
+  group: npm-retract-${{ inputs.version }} # shared with npm-retract.yml so they never run at once
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+env:
+  PACKAGE: '@adyen/adyen-web'
+
+jobs:
+  undeprecate:
+    if: github.repository == 'adyen/adyen-web'
+    runs-on: ubuntu-latest
+    environment: npm-retract
+    env:
+      VERSION: ${{ inputs.version }}
+      CONFIRM_VERSION: ${{ inputs.confirm-version }}
+      RESTORE_LATEST: ${{ inputs.restore-latest }}
+    steps:
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org/
+          package-manager-cache: false
+
+      - name: Validate inputs
+        run: |
+          set -euo pipefail
+          if [[ ! "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$ ]]; then
+            echo "::error::version '$VERSION' is not a version like 6.47.0 (no leading 'v')."; exit 1
+          fi
+          if [ "$VERSION" != "$CONFIRM_VERSION" ]; then
+            echo "::error::confirm-version ('$CONFIRM_VERSION') does not match version ('$VERSION')."; exit 1
+          fi
+          if ! npm view "$PACKAGE@$VERSION" version > /dev/null 2>&1; then
+            echo "::error::$PACKAGE@$VERSION is not on npm. If it was unpublished, it cannot be restored; publish a new patch version instead."; exit 1
+          fi
+
+          CURRENT=$(npm view "$PACKAGE@$VERSION" deprecated)
+          LATEST=$(npm view "$PACKAGE" dist-tags.latest)
+          {
+            echo "### Undeprecate $PACKAGE@$VERSION"
+            echo "- Current deprecation message: ${CURRENT:-<none>}"
+            echo "- Current npm latest: $LATEST"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          if [ -z "$CURRENT" ] && [ "$RESTORE_LATEST" != "true" ]; then
+            echo "::error::$PACKAGE@$VERSION is not deprecated, and restore-latest is off. Nothing to do."; exit 1
+          fi
+
+      - name: Remove deprecation
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          set -euo pipefail
+          npm deprecate "$PACKAGE@$VERSION" ""
+          echo "- Removed deprecation" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Restore npm "latest" tag
+        if: inputs.restore-latest
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          set -euo pipefail
+          npm dist-tag add "$PACKAGE@$VERSION" latest
+          echo "- Moved latest -> $VERSION" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Verify on the registry
+        run: |
+          set -euo pipefail
+          for _ in 1 2 3 4 5 6; do
+            if [ -z "$(npm view "$PACKAGE@$VERSION" deprecated)" ]; then OK=1; break; fi
+            OK=0
+            sleep 10
+          done
+          echo "- npm latest is now: $(npm view "$PACKAGE" dist-tags.latest)" >> "$GITHUB_STEP_SUMMARY"
+          if [ "$OK" != 1 ]; then
+            echo "::warning::The registry still shows $PACKAGE@$VERSION as deprecated. Check https://www.npmjs.com/package/$PACKAGE?activeTab=versions"
+          fi
+
+  notify:
+    needs: undeprecate
+    if: always() && needs.undeprecate.result != 'skipped'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Build message
+        id: message
+        env:
+          VERSION: ${{ inputs.version }}
+          RESULT: ${{ needs.undeprecate.result }}
+          RESTORE_LATEST: ${{ inputs.restore-latest }}
+          REASON: ${{ inputs.reason }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          if [ "$RESULT" = "success" ]; then
+            MSG="The npm deprecation of $PACKAGE@$VERSION has been removed. Reason: $REASON"
+            if [ "$RESTORE_LATEST" = "true" ]; then MSG+=" npm latest points to $VERSION again."; fi
+          else
+            MSG=":x: Undeprecate npm Version failed for $PACKAGE@$VERSION. <$RUN_URL|Workflow run>"
+          fi
+          { echo "text<<EOF"; echo "$MSG"; echo "EOF"; } >> "$GITHUB_OUTPUT"
+
+      - name: Notify team channel
+        uses: Adyen/github-actions/slack-app-send-message@66cba28775090b2aa2c6d5bfbbde24264b549d15
+        with:
+          bot-token: ${{ secrets.SLACK_BOT_TOKEN }}
+          channel: ${{ vars.CHECKOUT_WEB_CHANNEL_ID }}
+          message: ${{ steps.message.outputs.text }}
+
+      - name: Notify Docs team
+        if: needs.undeprecate.result == 'success'
+        uses: Adyen/github-actions/slack-app-send-message@66cba28775090b2aa2c6d5bfbbde24264b549d15
+        with:
+          bot-token: ${{ secrets.SLACK_BOT_TOKEN }}
+          channel: ${{ vars.WEB_RELEASE_NOTES_CHANNEL_ID }}
+          message: 'Correction: adyen-web v${{ inputs.version }} was deprecated on npm by mistake and has been restored. Please remove any warning added for it.'
