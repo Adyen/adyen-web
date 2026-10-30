@@ -7,24 +7,16 @@ describe('getIrisSegmentedControlOptions', () => {
     const core = setupCoreMock();
     const { i18n } = core.modules;
 
-    test('should return options with QR_CODE first when defaultMode is QR_CODE', () => {
-        const result = getIrisSegmentedControlOptions(i18n, IrisMode.QR_CODE);
+    test('should return options with QR_CODE first', () => {
+        const result = getIrisSegmentedControlOptions(i18n);
 
         expect(result).toHaveLength(2);
         expect(result[0].value).toBe(IrisMode.QR_CODE);
         expect(result[1].value).toBe(IrisMode.BANK_LIST);
     });
 
-    test('should return options with BANK_LIST first when defaultMode is BANK_LIST', () => {
-        const result = getIrisSegmentedControlOptions(i18n, IrisMode.BANK_LIST);
-
-        expect(result).toHaveLength(2);
-        expect(result[0].value).toBe(IrisMode.BANK_LIST);
-        expect(result[1].value).toBe(IrisMode.QR_CODE);
-    });
-
     test('should return options with correct accessibility IDs and controls', () => {
-        const result = getIrisSegmentedControlOptions(i18n, IrisMode.QR_CODE);
+        const result = getIrisSegmentedControlOptions(i18n);
 
         const [qrCodeOption, bankListOption] = result;
 
@@ -40,7 +32,7 @@ describe('getIrisSegmentedControlOptions', () => {
     });
 
     test('should return all required properties for each option', () => {
-        const result = getIrisSegmentedControlOptions(i18n, IrisMode.QR_CODE);
+        const result = getIrisSegmentedControlOptions(i18n);
 
         result.forEach(option => {
             expect(option).toHaveProperty('label');
