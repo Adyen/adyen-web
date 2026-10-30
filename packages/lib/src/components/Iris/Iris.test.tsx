@@ -70,6 +70,7 @@ describe('Iris', () => {
         const generateQrButton = await screen.findByRole('button', { name: /Generate QR code/i });
         expect(screen.queryByRole('tab', { name: 'QR code' })).not.toBeInTheDocument();
         expect(screen.queryByRole('tab', { name: 'Bank list' })).not.toBeInTheDocument();
+        expect(iris.isValid).toBe(true);
         await user.click(generateQrButton);
         await waitFor(() => {
             expect(onSubmitMock).toHaveBeenCalled();

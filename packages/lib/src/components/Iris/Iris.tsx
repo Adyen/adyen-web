@@ -11,7 +11,7 @@ import { DEFAULT_IRIS_COUNTDOWN_TIME } from './constants';
 export class Iris extends IssuerListContainer<IrisConfiguration, IrisData> {
     public static readonly type = TxVariants.iris;
 
-    private readonly defaultMode = isMobile() ? IrisMode.BANK_LIST : IrisMode.QR_CODE;
+    private readonly defaultMode = isMobile() && !!this.props.issuers?.length ? IrisMode.BANK_LIST : IrisMode.QR_CODE;
 
     public state: IrisState = {
         isValid: this.defaultMode === IrisMode.QR_CODE,
@@ -77,22 +77,19 @@ export class Iris extends IssuerListContainer<IrisConfiguration, IrisData> {
             );
         }
 
-        const issuers = this.props.issuers || [];
-
-        if (this.defaultMode === IrisMode.BANK_LIST && issuers.length > 0) {
+        if (this.defaultMode === IrisMode.BANK_LIST) {
             return this.renderIssuerList();
         }
 
         return (
             <IrisComponent
                 setComponentRef={this.setComponentRef}
-                defaultMode={this.defaultMode}
                 onUpdateMode={mode => {
                     this.setState({ mode });
                 }}
                 issuerListUI={this.renderIssuerList()}
                 payButton={this.payButton}
-                issuers={issuers}
+                issuers={this.props.issuers || []}
             />
         );
     }

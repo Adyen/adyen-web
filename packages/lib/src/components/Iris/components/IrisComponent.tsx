@@ -15,7 +15,6 @@ import { TxVariants } from '../../tx-variants';
 import useAnalytics from '../../../core/Analytics/useAnalytics';
 
 interface IrisComponentProps {
-    defaultMode: IrisMode;
     issuers: IssuerItem[];
     issuerListUI: h.JSX.Element;
     onUpdateMode: (mode: IrisMode) => void;
@@ -27,24 +26,22 @@ export default function IrisComponent(props: Readonly<IrisComponentProps>) {
     const { i18n } = useCoreContext();
     const { analytics } = useAnalytics();
 
-    const [mode, setMode] = useState<IrisMode>(props.defaultMode);
+    const [mode, setMode] = useState<IrisMode>(IrisMode.QR_CODE);
     const [status, setStatus] = useState<UIElementStatus>('ready');
-    const segmentedControlOptions = useMemo(() => getIrisSegmentedControlOptions(i18n, props.defaultMode), [i18n, props.defaultMode]);
+    const segmentedControlOptions = useMemo(() => getIrisSegmentedControlOptions(i18n), [i18n]);
 
     const issuersAvailable = props.issuers.length > 0;
 
-    const handleModeChange = (mode: IrisMode, sendAnalytics = false) => {
+    const handleModeChange = (mode: IrisMode) => {
         setMode(mode);
         props.onUpdateMode(mode);
-        if (sendAnalytics) {
-            const event = new AnalyticsInfoEvent({
-                type: InfoEventType.selected,
-                target: UiTarget.segmentedControl,
-                component: TxVariants.iris,
-                selectedValue: mode
-            });
-            analytics.sendAnalytics(event);
-        }
+        const event = new AnalyticsInfoEvent({
+            type: InfoEventType.selected,
+            target: UiTarget.segmentedControl,
+            component: TxVariants.iris,
+            selectedValue: mode
+        });
+        analytics.sendAnalytics(event);
     };
 
     const irisRef = useRef<ComponentMethodsRef>({
@@ -61,17 +58,11 @@ export default function IrisComponent(props: Readonly<IrisComponentProps>) {
                 type: InfoEventType.displayed,
                 target: UiTarget.segmentedControl,
                 component: TxVariants.iris,
-                selectedValue: props.defaultMode
+                selectedValue: IrisMode.QR_CODE
             });
             analytics.sendAnalytics(event);
         }
     }, []);
-
-    useEffect(() => {
-        if (!issuersAvailable) {
-            handleModeChange(IrisMode.QR_CODE);
-        }
-    }, [issuersAvailable]);
 
     if (!issuersAvailable) {
         return <IrisGenerateQRCode payButton={props.payButton} status={status} />;
@@ -80,7 +71,7 @@ export default function IrisComponent(props: Readonly<IrisComponentProps>) {
     return (
         <div>
             <SegmentedControl
-                onChange={mode => handleModeChange(mode, true)}
+                onChange={mode => handleModeChange(mode)}
                 selectedValue={mode}
                 disabled={status === 'loading'}
                 options={segmentedControlOptions}
