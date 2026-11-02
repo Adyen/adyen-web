@@ -24,7 +24,7 @@ jest.mock('./PayPalProcessingSpinner', () => ({
 
 const createProps = (overrides: Partial<PayPalComponentV6Props> = {}): PayPalComponentV6Props => {
     const paypalService = mock<PayPalService>();
-    paypalService.isSdkLoaded.mockResolvedValue(undefined);
+    paypalService.isFundingSourceEligibilityReady.mockResolvedValue(undefined);
 
     return {
         paypalService,
@@ -46,7 +46,7 @@ describe('PayPalComponentV6', () => {
     test('should render the loader while the SDK is still loading', () => {
         const paypalService = mock<PayPalService>();
         // Never resolves, so the component stays in the pending state
-        paypalService.isSdkLoaded.mockReturnValue(new Promise(() => {}));
+        paypalService.isFundingSourceEligibilityReady.mockReturnValue(new Promise(() => {}));
 
         render(<PayPalComponentV6 {...createProps({ paypalService })} />);
 
@@ -150,11 +150,11 @@ describe('PayPalComponentV6', () => {
 
     test('should keep showing the loader when the SDK fails to load', async () => {
         const paypalService = mock<PayPalService>();
-        paypalService.isSdkLoaded.mockRejectedValue(new Error('PayPal SDK not loaded'));
+        paypalService.isFundingSourceEligibilityReady.mockRejectedValue(new Error('PayPal SDK not loaded'));
 
         render(<PayPalComponentV6 {...createProps({ paypalService })} />);
 
-        await waitFor(() => expect(paypalService.isSdkLoaded).toHaveBeenCalled());
+        await waitFor(() => expect(paypalService.isFundingSourceEligibilityReady).toHaveBeenCalled());
         expect(screen.getByTestId('paypal-loader')).toBeInTheDocument();
         expect(screen.queryByTestId('paypal-component')).not.toBeInTheDocument();
     });

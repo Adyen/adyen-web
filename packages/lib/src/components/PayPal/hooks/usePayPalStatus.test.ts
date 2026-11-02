@@ -6,39 +6,62 @@ import type { PayPalService } from '../services/PayPalService';
 import type { PayPalV6OnApproveData } from '../paypal-js-types';
 
 const createParams = ({
+    isFundingSourceEligibilityReady = Promise.resolve(undefined),
     isSdkLoaded = Promise.resolve(undefined),
-    onApprove = jest.fn().mockResolvedValue(undefined)
-}: { isSdkLoaded?: Promise<void>; onApprove?: jest.Mock } = {}) => {
+    onApprove = jest.fn().mockResolvedValue(undefined),
+    waitForEligibility
+}: { isFundingSourceEligibilityReady?: Promise<void>; isSdkLoaded?: Promise<void>; onApprove?: jest.Mock; waitForEligibility?: boolean } = {}) => {
     const paypalService = mock<PayPalService>();
+    paypalService.isFundingSourceEligibilityReady.mockReturnValue(isFundingSourceEligibilityReady);
     paypalService.isSdkLoaded.mockReturnValue(isSdkLoaded);
 
     return {
         paypalService,
         onApprove,
-        setComponentRef: jest.fn()
+        setComponentRef: jest.fn(),
+        waitForEligibility
     };
 };
 
 describe('usePayPalStatus', () => {
-    test('should start in the pending status while the SDK is loading', () => {
+    test('should start in the pending status while the eligible payment methods are being checked', () => {
         // Never resolves, so the hook stays in the pending state
-        const params = createParams({ isSdkLoaded: new Promise<void>(() => {}) });
+        const params = createParams({ isFundingSourceEligibilityReady: new Promise<void>(() => {}) });
 
         const { result } = renderHook(() => usePayPalStatus(params));
 
         expect(result.current?.status).toBe('pending');
     });
 
-    test('should move to the ready status once the SDK is loaded', async () => {
+    test('should move to the ready status once the eligible payment methods are checked', async () => {
         const params = createParams();
 
         const { result } = renderHook(() => usePayPalStatus(params));
 
         await waitFor(() => expect(result.current?.status).toBe('ready'));
+        expect(params.paypalService.isSdkLoaded).not.toHaveBeenCalled();
     });
 
-    test('should stay in the pending status when the SDK fails to load', async () => {
-        const params = createParams({ isSdkLoaded: Promise.reject(new Error('PayPal SDK not loaded')) });
+    test('should stay in the pending status when the eligibility check fails', async () => {
+        const params = createParams({ isFundingSourceEligibilityReady: Promise.reject(new Error('PayPal eligible payment methods not checked')) });
+
+        const { result } = renderHook(() => usePayPalStatus(params));
+
+        await waitFor(() => expect(params.paypalService.isFundingSourceEligibilityReady).toHaveBeenCalled());
+        expect(result.current?.status).toBe('pending');
+    });
+
+    test('should move to the ready status once the SDK is loaded when not waiting for the eligibility check', async () => {
+        const params = createParams({ isFundingSourceEligibilityReady: new Promise<void>(() => {}), waitForEligibility: false });
+
+        const { result } = renderHook(() => usePayPalStatus(params));
+
+        await waitFor(() => expect(result.current?.status).toBe('ready'));
+        expect(params.paypalService.isFundingSourceEligibilityReady).not.toHaveBeenCalled();
+    });
+
+    test('should stay in the pending status when the SDK fails to load and not waiting for the eligibility check', async () => {
+        const params = createParams({ isSdkLoaded: Promise.reject(new Error('PayPal SDK not loaded')), waitForEligibility: false });
 
         const { result } = renderHook(() => usePayPalStatus(params));
 

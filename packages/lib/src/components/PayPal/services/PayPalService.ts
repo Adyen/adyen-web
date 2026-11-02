@@ -53,6 +53,7 @@ class PayPalService {
     private components: PayPalComponents;
 
     private loadingPromise?: Promise<void>;
+    private sdkInstancePromise?: Promise<void>;
     private sdkInstance: PayPalSdkInstance;
     private eligiblePaymentMethods: PayPalEligiblePaymentMethods;
 
@@ -111,23 +112,27 @@ class PayPalService {
      * Requests a client token and creates both the SDK instance and the eligible payment methods.
      *
      * @remarks
-     * Not declared as 'async' on purpose: the loading promise must be assigned synchronously, so that
-     * consumers calling 'isSdkLoaded' right after never observe a resolved promise of a previous load.
+     * Not declared as 'async' on purpose: the loading promises must be assigned synchronously, so that
+     * consumers calling 'isSdkLoaded' or 'isFundingSourceEligibilityReady' right after never observe a resolved promise
+     * of a previous load.
      */
     private load(): Promise<void> {
         const isSdkLoaderLoadedPromise = this.sdkLoader.isSdkLoaded();
         const tokenDataPromise = this.requestOauthToken();
 
-        this.loadingPromise = Promise.all([isSdkLoaderLoadedPromise, tokenDataPromise])
-            .then(([_loadedSdk, tokenData]) => {
-                return tokenData.clientToken;
+        this.sdkInstancePromise = Promise.all([isSdkLoaderLoadedPromise, tokenDataPromise])
+            .then(async ([_loadedSdk, tokenData]) => {
+                await this.createPayPalSdkInstance(tokenData.clientToken);
             })
-            .then(this.createPayPalSdkInstance)
-            .then(this.createEligibleMethods)
             .catch(error => {
-                this.loadingPromise = undefined;
+                this.sdkInstancePromise = undefined;
                 throw error;
             });
+
+        this.loadingPromise = this.sdkInstancePromise.then(this.createEligibleMethods).catch(error => {
+            this.loadingPromise = undefined;
+            throw error;
+        });
 
         return this.loadingPromise;
     }
@@ -156,9 +161,24 @@ class PayPalService {
         return PayPalService.oauthTokenRequest;
     }
 
+    /**
+     * Resolves once the PayPal SDK script is loaded and the SDK instance is created. It does not wait for the
+     * eligible payment methods, so it must only be used by consumers that do not depend on them.
+     */
     public async isSdkLoaded(): Promise<void> {
-        if (this.loadingPromise === undefined) {
+        if (this.sdkInstancePromise === undefined) {
             return Promise.reject(new Error('PayPal SDK not loaded'));
+        }
+
+        return this.sdkInstancePromise;
+    }
+
+    /**
+     * Resolves once the SDK instance is created and the eligible payment methods have been evaluated.
+     */
+    public async isFundingSourceEligibilityReady(): Promise<void> {
+        if (this.loadingPromise === undefined) {
+            return Promise.reject(new Error('PayPal eligible payment methods not checked'));
         }
 
         return this.loadingPromise;

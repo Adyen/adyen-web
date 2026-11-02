@@ -7,11 +7,17 @@ import { PayPalUIElementStatus } from '../components/types';
 export const usePayPalStatus = ({
     paypalService,
     onApprove,
-    setComponentRef
+    setComponentRef,
+    waitForEligibility = true
 }: {
     paypalService: PayPalService;
     onApprove: (data: PayPalV6OnApproveData) => Promise<void>;
     setComponentRef: (ref: ComponentMethodsRef) => void;
+    /**
+     * When 'false', the status becomes 'ready' as soon as the SDK instance is created, without waiting for the
+     * eligible payment methods check
+     */
+    waitForEligibility?: boolean;
 }) => {
     const [status, setStatus] = useState<PayPalUIElementStatus>('pending');
 
@@ -24,15 +30,16 @@ export const usePayPalStatus = ({
     }, [setComponentRef]);
 
     useEffect(() => {
-        paypalService
-            .isSdkLoaded()
+        const readyPromise = waitForEligibility ? paypalService.isFundingSourceEligibilityReady() : paypalService.isSdkLoaded();
+
+        readyPromise
             .then(() => {
                 setStatus('ready');
             })
             .catch(() => {
                 // SDK failed to load, but we don't need to handle it here
             });
-    }, [paypalService]);
+    }, [paypalService, waitForEligibility]);
 
     const handleOnApprove = useCallback(
         (data: PayPalV6OnApproveData) => {

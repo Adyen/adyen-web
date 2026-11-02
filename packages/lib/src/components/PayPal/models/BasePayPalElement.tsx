@@ -172,7 +172,7 @@ export class BasePayPalElement<TProps extends BasePayPalConfiguration = BasePayP
             throw new AdyenCheckoutError('ERROR', `${this.displayName} is not available`);
         }
 
-        await this.paypalService.isSdkLoaded();
+        await this.paypalService.isFundingSourceEligibilityReady();
 
         if (!this.paypalService.getEligiblePaymentMethods().isEligible(this.fundingSource)) {
             throw new AdyenCheckoutError('ERROR', `${this.displayName} is not available`);

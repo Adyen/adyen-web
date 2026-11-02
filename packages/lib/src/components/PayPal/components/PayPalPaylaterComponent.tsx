@@ -1,4 +1,5 @@
 import { h } from 'preact';
+import { useEffect, useState } from 'preact/hooks';
 
 import { usePayPalStatus } from '../hooks/usePayPalStatus';
 import { PayPalMessaging } from './PayPalMessaging';
@@ -34,8 +35,21 @@ export const PayPalPaylaterComponent = ({
     const { status, handleOnApprove } = usePayPalStatus({
         paypalService,
         onApprove,
-        setComponentRef
+        setComponentRef,
+        waitForEligibility: false
     });
+    const [isFundingSourceEligibilityReady, setIsFundingSourceEligibilityReady] = useState<boolean>(false);
+
+    useEffect(() => {
+        paypalService
+            .isFundingSourceEligibilityReady()
+            .then(() => {
+                setIsFundingSourceEligibilityReady(true);
+            })
+            .catch(() => {
+                // Eligibility check failed, but we don't need to handle it here
+            });
+    }, [paypalService]);
 
     if (status === 'pending') {
         return <PayPalSpinner />;
@@ -55,17 +69,21 @@ export const PayPalPaylaterComponent = ({
                     onError={onError}
                 />
             )}
-            <PayPalPayLaterButton
-                paypalService={paypalService}
-                presentationModeOptions={presentationModeOptions}
-                commit={commit}
-                onSubmit={onSubmit}
-                onApprove={handleOnApprove}
-                onError={onError}
-                onCancel={onCancel}
-                onShippingAddressChange={onShippingAddressChange}
-                onShippingOptionsChange={onShippingOptionsChange}
-            />
+            {isFundingSourceEligibilityReady ? (
+                <PayPalPayLaterButton
+                    paypalService={paypalService}
+                    presentationModeOptions={presentationModeOptions}
+                    commit={commit}
+                    onSubmit={onSubmit}
+                    onApprove={handleOnApprove}
+                    onError={onError}
+                    onCancel={onCancel}
+                    onShippingAddressChange={onShippingAddressChange}
+                    onShippingOptionsChange={onShippingOptionsChange}
+                />
+            ) : (
+                <PayPalSpinner />
+            )}
         </div>
     );
 };

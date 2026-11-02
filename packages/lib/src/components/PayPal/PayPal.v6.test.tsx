@@ -42,7 +42,7 @@ describe('PayPal v6', () => {
         jest.clearAllMocks();
         PayPalServiceMock.prototype.initialize.mockResolvedValue(undefined);
         PayPalServiceMock.prototype.refresh.mockResolvedValue(undefined);
-        PayPalServiceMock.prototype.isSdkLoaded.mockResolvedValue(undefined);
+        PayPalServiceMock.prototype.isFundingSourceEligibilityReady.mockResolvedValue(undefined);
         PayPalServiceMock.prototype.getEligiblePaymentMethods.mockReturnValue({
             isEligible: isEligibleMock
         } as unknown as PayPalEligiblePaymentMethods);
@@ -451,7 +451,7 @@ describe('PayPal v6', () => {
             const paypal = new Paypal(core);
 
             await expect(paypal.isAvailable()).resolves.toBeUndefined();
-            expect(PayPalServiceMock.prototype.isSdkLoaded).not.toHaveBeenCalled();
+            expect(PayPalServiceMock.prototype.isFundingSourceEligibilityReady).not.toHaveBeenCalled();
         });
 
         test('should wait for the SDK and resolve when PayPal is eligible', async () => {
@@ -460,7 +460,7 @@ describe('PayPal v6', () => {
 
             await expect(paypal.isAvailable()).resolves.toBeUndefined();
 
-            expect(PayPalServiceMock.prototype.isSdkLoaded).toHaveBeenCalledTimes(1);
+            expect(PayPalServiceMock.prototype.isFundingSourceEligibilityReady).toHaveBeenCalledTimes(1);
             expect(isEligibleMock).toHaveBeenCalledWith('paypal');
         });
 
@@ -473,7 +473,7 @@ describe('PayPal v6', () => {
         });
 
         test('should reject when the SDK fails to load', async () => {
-            PayPalServiceMock.prototype.isSdkLoaded.mockRejectedValue(new Error('PayPal SDK not loaded'));
+            PayPalServiceMock.prototype.isFundingSourceEligibilityReady.mockRejectedValue(new Error('PayPal SDK not loaded'));
             const paypal = new Paypal(core, { usePayPalV6: {} });
 
             await expect(paypal.isAvailable()).rejects.toThrow('PayPal SDK not loaded');
