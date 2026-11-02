@@ -14,11 +14,11 @@ class BECS extends UIElement<BECSConfiguration> {
         return {
             paymentMethod: {
                 type: BECS.type,
-                holderName: this.state.data.holderName,
-                bankAccountNumber: this.state.data.bankAccountNumber,
-                bankBranchCode: this.state.data.bankBranchCode.replace('-', '')
+                ...(this.state.data?.holderName && { holderName: this.state.data.holderName }),
+                ...(this.state.data?.bankAccountNumber && { bankAccountNumber: this.state.data.bankAccountNumber }),
+                ...(this.state.data?.bankBranchCode && { bankBranchCode: this.state.data.bankBranchCode.replace('-', '') })
             },
-            shopperEmail: this.state.data.shopperEmail
+            ...(this.state.data?.shopperEmail && { shopperEmail: this.state.data.shopperEmail })
         };
     }
 
@@ -28,7 +28,12 @@ class BECS extends UIElement<BECSConfiguration> {
 
     protected override componentToRender(): h.JSX.Element {
         return this.props.url ? (
-            <BECSResult icon={this.resources.getImage()('bankTransfer_IBAN')} url={this.props.url} />
+            <BECSResult
+                icon={this.props.icon ?? this.resources.getImage()('bankTransfer_IBAN')}
+                onActionHandled={this.onActionHandled}
+                paymentMethodType={this.type}
+                url={this.props.url}
+            />
         ) : (
             <BECSComponent
                 data={this.props.data}

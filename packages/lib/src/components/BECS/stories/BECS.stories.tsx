@@ -1,8 +1,8 @@
 import { h } from 'preact';
+import { BECS } from '@adyen/adyen-web';
 
 import { Checkout } from '../../../../storybook/components/Checkout';
 import { ComponentContainer } from '../../../../storybook/components/ComponentContainer';
-import BECS from '..';
 
 import type { MetaConfiguration, PaymentMethodStoryProps, StoryConfiguration } from '../../../../storybook/types';
 import type { BECSConfiguration } from '../types';
