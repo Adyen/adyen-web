@@ -35,7 +35,7 @@
 
 .details {
     margin-top: 0;
-    padding: 0 calc(variable-generator.token(spacer-140) + variable-generator.token(spacer-110));
+    padding: 0 variable-generator.token(spacer-140);
 }
 
 .actions {
