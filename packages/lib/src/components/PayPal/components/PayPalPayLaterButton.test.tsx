@@ -80,6 +80,15 @@ describe('PayPalPayLaterButton', () => {
         await waitFor(() => expect(getWebComponent()).toHaveAttribute('countryCode', 'US'));
     });
 
+    test('should call onSubmit with the paylater funding source on click', async () => {
+        const { props } = setup();
+
+        await waitFor(() => expect(getWebComponent()).toBeInTheDocument());
+        fireEvent.click(getWebComponent());
+
+        await waitFor(() => expect(props.onSubmit).toHaveBeenCalledWith('paylater'));
+    });
+
     test('should start a one-time payment session on click', async () => {
         const { sdkInstance, oneTimeSession } = setup();
 
