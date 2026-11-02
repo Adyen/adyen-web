@@ -23,7 +23,7 @@ export default defineConfig({
     testEnvironment: 'jest-fixed-jsdom',
     verbose: true,
     setupFilesAfterEnv: ['<rootDir>/config/setupTests.ts'],
-    transformIgnorePatterns: ['node_modules/(?!(preact|@testing-library|until-async|@open-draft|rettime|msw)/)'],
+    transformIgnorePatterns: ['node_modules/(?!(preact|@testing-library)/)'],
     transform: {
         '^.+\\.(js|ts|tsx)$': 'ts-jest',
         '^.+\\.mjs$': '<rootDir>/config/esbuild-jest-transformer.cjs'

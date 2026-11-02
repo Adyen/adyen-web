@@ -1,25 +1,19 @@
 import Boleto from './Boleto';
 import { render, screen, waitFor } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
-import { http, HttpResponse } from 'msw';
-import { setupServer } from 'msw/node';
+import getDataset from '../../core/Services/get-dataset';
 import { setupCoreMock, TEST_CHECKOUT_ATTEMPT_ID, TEST_RISK_DATA } from '../../../config/testMocks/setup-core-mock';
 
-const server = setupServer(
-    http.get('https://checkoutshopper-live.adyen.com/checkoutshopper/datasets/countries/en-US.json', () => {
-        return HttpResponse.json([{ id: 'BR', name: 'Brazil' }]);
-    }) as any,
-    http.get('https://checkoutshopper-live.adyen.com/checkoutshopper/datasets/states/BR/en-US.json', () => {
-        return HttpResponse.json([
-            { id: 'MG', name: 'Minas Gerais' },
-            { id: 'SP', name: 'Sao Paulo' }
-        ]);
-    }) as any
-);
+const DATASETS: Record<string, { id: string; name: string }[]> = {
+    countries: [{ id: 'BR', name: 'Brazil' }],
+    'states/BR': [
+        { id: 'MG', name: 'Minas Gerais' },
+        { id: 'SP', name: 'Sao Paulo' }
+    ]
+};
 
-beforeAll(() => server.listen());
-afterEach(() => server.resetHandlers());
-afterAll(() => server.close());
+jest.mock('../../core/Services/get-dataset');
+(getDataset as jest.Mock).mockImplementation((dataset: string) => Promise.resolve(DATASETS[dataset] ?? []));
 
 describe('Boleto', () => {
     test('should make a Boleto payment', async () => {
