@@ -191,7 +191,7 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
                 throw new AdyenCheckoutError('ERROR', 'PayPal is not available');
             }
 
-            await this.paypalService.isSdkLoaded();
+            await this.paypalService.isFundingSourceEligibilityReady();
 
             if (!this.paypalService.getEligiblePaymentMethods().isEligible('paypal')) {
                 throw new AdyenCheckoutError('ERROR', 'PayPal is not available');
