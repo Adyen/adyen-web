@@ -8,14 +8,17 @@
 }
 
 .mandate {
+    @include mixins.adyen-checkout-text-caption;
+
     margin: variable-generator.token(spacer-080) 0;
     color: variable-generator.token(color-label-secondary);
-    font-weight: normal;
-    font-size: variable-generator.token(text-caption-font-size);
-    line-height: variable-generator.token(text-caption-line-height);
 }
 
 .resultIcon {
+    display: block;
+    width: 64px;
+    height: 64px;
+    object-fit: contain;
     border-radius: variable-generator.token(border-radius-m);
     box-shadow: variable-generator.token(shadow-low);
 }
@@ -34,12 +37,18 @@
 }
 
 .details {
-    margin-top: 0;
-    padding: 0 variable-generator.token(spacer-140);
+    align-self: stretch;
+    margin-top: variable-generator.token(spacer-050);
+
+    @include mixins.media-m-and-up {
+        padding: 0 variable-generator.token(spacer-140);
+    }
 }
 
 .actions {
     display: flex;
     flex-direction: column;
+    align-self: stretch;
     align-items: center;
+    margin-top: variable-generator.token(spacer-050);
 }

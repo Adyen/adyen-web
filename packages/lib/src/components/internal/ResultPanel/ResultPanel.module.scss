@@ -5,11 +5,15 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: variable-generator.token(spacer-100) variable-generator.token(spacer-130);
+    padding: variable-generator.token(spacer-100) variable-generator.token(spacer-080);
     border: variable-generator.token(border-width-s) solid variable-generator.token(color-outline-secondary);
     border-radius: variable-generator.token(border-radius-m);
     background: variable-generator.token(color-background-primary);
     text-align: center;
+
+    @include mixins.media-s-and-up {
+        padding: variable-generator.token(spacer-100) variable-generator.token(spacer-130);
+    }
 }
 
 .icon {

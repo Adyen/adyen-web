@@ -1,13 +1,13 @@
 import { h } from 'preact';
 
-import cx from 'classnames';
-
 import type { ComponentChildren } from 'preact';
 
 import styles from './ResultPanel.module.scss';
 
 interface ResultPanelClassNames {
+    actions?: string;
     description?: string;
+    details?: string;
     icon?: string;
     root?: string;
 }
@@ -24,12 +24,12 @@ interface ResultPanelProps {
 
 export function ResultPanel({ actions, classNames, description, details, icon, iconAlt, title }: Readonly<ResultPanelProps>) {
     return (
-        <div className={cx(styles.panel, classNames?.root)}>
-            {icon && <img className={cx(styles.icon, 'adyen-checkout__result-panel__icon', classNames?.icon)} src={icon} alt={iconAlt ?? ''} />}
+        <div className={classNames?.root ?? styles.panel}>
+            {icon && <img className={classNames?.icon ?? styles.icon} src={icon} alt={iconAlt ?? ''} />}
             {title && <h2 className={styles.title}>{title}</h2>}
-            {description && <p className={cx(styles.description, classNames?.description)}>{description}</p>}
-            {details && <div className={styles.details}>{details}</div>}
-            {actions && <div className={styles.actions}>{actions}</div>}
+            {description && <p className={classNames?.description ?? styles.description}>{description}</p>}
+            {details && <div className={classNames?.details ?? styles.details}>{details}</div>}
+            {actions && <div className={classNames?.actions ?? styles.actions}>{actions}</div>}
         </div>
     );
 }
