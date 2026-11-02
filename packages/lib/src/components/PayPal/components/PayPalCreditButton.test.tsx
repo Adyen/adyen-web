@@ -97,6 +97,15 @@ describe('PayPalCreditButton', () => {
         await waitFor(() => expect(oneTimeSession.start).toHaveBeenCalled());
     });
 
+    test('should call onSubmit with the credit funding source on click', async () => {
+        const { props } = setup();
+
+        await waitFor(() => expect(getWebComponent()).toBeInTheDocument());
+        fireEvent.click(getWebComponent());
+
+        await waitFor(() => expect(props.onSubmit).toHaveBeenCalledWith('credit'));
+    });
+
     test('should start a save payment session on click for a zero-auth transaction', async () => {
         const { sdkInstance, saveSession } = setup({ amount: { value: 0, currency: 'USD' } });
 

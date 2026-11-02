@@ -9,7 +9,7 @@ import { formatPaypalOrderContactToAdyenFormat } from './utils/format-paypal-ord
 
 import type { AdditionalDetailsData, ICore } from '../../core/types';
 import type { PaymentAction, PaymentResponseData } from '../../types/global-types';
-import type { Intent, PayPalConfiguration } from './types';
+import type { Intent, PayPalConfiguration, SupportedPayPalFundingSources } from './types';
 import type {
     PayPalComponents,
     PayPalOnApproveActions,
@@ -54,6 +54,7 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
     constructor(checkout: ICore, props?: PayPalConfiguration) {
         super(checkout, props);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleSubmitV6 = this.handleSubmitV6.bind(this);
         this.handleOnShippingAddressChange = this.handleOnShippingAddressChange.bind(this);
         this.handleOnShippingOptionsChange = this.handleOnShippingOptionsChange.bind(this);
         this.handleOnApprove = this.handleOnApprove.bind(this);
@@ -256,13 +257,15 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
      */
     protected formatData() {
         const { isExpress, userAction, usePayPalV6 } = this.props;
+        const { payerSelected } = this.state;
         const isZeroAuth = this.props.amount?.value === 0;
 
         return {
             paymentMethod: {
                 type: PaypalElement.type,
                 subtype: isExpress ? 'express' : PaypalElement.subtype,
-                ...(!usePayPalV6 && { userAction })
+                ...(!usePayPalV6 && { userAction }),
+                ...(usePayPalV6 && payerSelected && { payerSelected })
             },
             ...(usePayPalV6 && { browserInfo: this.browserInfo }),
             ...(usePayPalV6 && (usePayPalV6.vault || isZeroAuth) && { storePaymentMethod: true })
@@ -469,6 +472,17 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
     }
 
     /**
+     * Handles the click on one of the PayPal SDK v6 buttons. The funding source of the clicked button is stored in the
+     * state before making the payments call, so it is sent as 'paymentMethod.payerSelected' in the payment data.
+     *
+     * @param fundingSource - Funding source of the clicked button
+     */
+    private handleSubmitV6(fundingSource?: SupportedPayPalFundingSources): Promise<string> {
+        this.setState({ payerSelected: fundingSource });
+        return this.handleSubmit();
+    }
+
+    /**
      * If the merchant provides the 'onShippingAddressChange' callback, then this method is used as a wrapper to it, in order
      * to expose to the merchant the 'component' instance. The merchant needs the 'component' in order to manipulate the
      * paymentData
@@ -551,7 +565,7 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
                     blockPayPalVenmoButton={paypalv6Props.blockPayPalVenmoButton}
                     presentationModeOptions={paypalv6Props.presentationModeOptions}
                     environment={this.props.environment}
-                    onSubmit={this.handleSubmit}
+                    onSubmit={this.handleSubmitV6}
                     onApprove={this.handleOnApproveV6}
                     onCancel={() => this.handleError(new AdyenCheckoutError('CANCEL'))}
                     onError={error => this.handleError(new AdyenCheckoutError('ERROR', String(error), { cause: error }))}

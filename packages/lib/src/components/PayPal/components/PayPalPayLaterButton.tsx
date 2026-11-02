@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { useEffect, useMemo, useState } from 'preact/hooks';
+import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
 
 import type { PayPalComponentV6Props } from './types';
 import { usePayPalSessionOptions } from '../hooks/usePayPalSessionOptions';
@@ -17,6 +17,7 @@ export const PayPalPayLaterButton = ({
     onError,
     onSubmit
 }: Readonly<Omit<PayPalComponentV6Props, 'style' | 'setComponentRef'>>) => {
+    const fundingSource = 'paylater';
     const [countryCode, setCountryCode] = useState<string>('');
     const [productCode, setProductCode] = useState<string>('');
 
@@ -32,24 +33,26 @@ export const PayPalPayLaterButton = ({
         onError
     });
 
+    const handleSubmit = useCallback(() => onSubmit(fundingSource), [onSubmit]);
+
     const { onClick } = usePayPalOneTimeSession(
         useMemo(
             () => ({
                 presentationModeOptions,
                 createSession: () => payPalSDKInstance.createPayLaterOneTimePaymentSession(oneTimeSessionOptions),
-                onSubmit,
+                onSubmit: handleSubmit,
                 onError
             }),
-            [payPalSDKInstance, oneTimeSessionOptions, onSubmit, onError, presentationModeOptions]
+            [payPalSDKInstance, oneTimeSessionOptions, handleSubmit, onError, presentationModeOptions]
         )
     );
 
-    const { isEligible } = usePayPalButtonEligibility(paypalService, 'paylater');
+    const { isEligible } = usePayPalButtonEligibility(paypalService, fundingSource);
 
     useEffect(() => {
         if (!isEligible) return;
 
-        const details = paypalService.getEligiblePaymentMethods().getDetails('paylater');
+        const details = paypalService.getEligiblePaymentMethods().getDetails(fundingSource);
         setProductCode(details?.productCode);
         setCountryCode(details?.countryCode);
     }, [isEligible, paypalService]);
