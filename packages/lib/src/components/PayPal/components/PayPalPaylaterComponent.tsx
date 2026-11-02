@@ -66,6 +66,7 @@ export const PayPalPaylaterComponent = ({
                     paypalService={paypalService}
                     countryCode={countryCode}
                     messagingContentOptions={messagingContentOptions}
+                    className={isFundingSourceEligibilityReady ? undefined : styles.payPalMessagingHidden}
                     onError={onError}
                 />
             )}
