@@ -10,11 +10,13 @@ export const PayPalMessaging = ({
     paypalService,
     countryCode,
     messagingContentOptions,
+    className,
     onError
 }: Readonly<{
     paypalService: PayPalService;
     countryCode?: string;
     messagingContentOptions?: Pick<PayPalFetchContentOptions, 'logoType' | 'logoPosition' | 'textColor'>;
+    className?: string;
     onError: (error: Error) => void;
 }>) => {
     const payPalSDKInstance = useMemo(() => paypalService.getInstance(), [paypalService]);
@@ -48,5 +50,5 @@ export const PayPalMessaging = ({
         void fetchMessageContent();
     }, [payPalSDKInstance, countryCode, amount?.currency, amount?.value, onError]);
 
-    return <paypal-message id="paypal-message" ref={messageElementRef} data-testid="paypal-message"></paypal-message>;
+    return <paypal-message id="paypal-message" class={className} ref={messageElementRef} data-testid="paypal-message"></paypal-message>;
 };
