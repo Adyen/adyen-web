@@ -21,6 +21,8 @@
     width: 64px;
     height: 64px;
     object-fit: contain;
+    border-radius: variable-generator.token(border-radius-m);
+    box-shadow: variable-generator.token(shadow-low);
 }
 
 .title {
@@ -38,6 +40,18 @@
 
 .details,
 .actions {
-    width: 100%;
+    align-self: stretch;
     margin-top: variable-generator.token(spacer-050);
+}
+
+.details {
+    @include mixins.media-m-and-up {
+        padding: 0 variable-generator.token(spacer-140);
+    }
+}
+
+.actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }

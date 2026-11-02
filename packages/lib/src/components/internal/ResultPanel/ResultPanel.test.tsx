@@ -28,14 +28,16 @@ describe('ResultPanel', () => {
     test('should preserve caller-provided classes', () => {
         render(
             <ResultPanel
-                classNames={{ root: 'legacy-result', icon: 'legacy-icon', description: 'legacy-description' }}
+                classNames={{ root: 'legacy-result', icon: 'legacy-icon', title: 'legacy-title', description: 'legacy-description' }}
                 description="Payment successful"
                 icon="success.svg"
                 iconAlt="Payment successful"
+                title="Success!"
             />
         );
 
         expect(screen.getByRole('img', { name: 'Payment successful' })).toHaveClass('legacy-icon');
+        expect(screen.getByRole('heading', { name: 'Success!' })).toHaveClass('legacy-title');
         expect(screen.getByText('Payment successful')).toHaveClass('legacy-description');
     });
 });
