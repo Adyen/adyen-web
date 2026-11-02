@@ -10,6 +10,7 @@ interface ResultPanelClassNames {
     details?: string;
     icon?: string;
     root?: string;
+    title?: string;
 }
 
 interface ResultPanelProps {
@@ -26,7 +27,7 @@ export function ResultPanel({ actions, classNames, description, details, icon, i
     return (
         <div className={classNames?.root ?? styles.panel}>
             {icon && <img className={classNames?.icon ?? styles.icon} src={icon} alt={iconAlt ?? ''} />}
-            {title && <h2 className={styles.title}>{title}</h2>}
+            {title && <h2 className={classNames?.title ?? styles.title}>{title}</h2>}
             {description && <p className={classNames?.description ?? styles.description}>{description}</p>}
             {details && <div className={classNames?.details ?? styles.details}>{details}</div>}
             {actions && <div className={classNames?.actions ?? styles.actions}>{actions}</div>}

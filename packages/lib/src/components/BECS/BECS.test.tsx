@@ -8,8 +8,7 @@ import type { BECSConfiguration } from './types';
 
 const RESULT_URL = 'https://example.com/direct-debit-agreement.pdf';
 
-const renderBECS = (props: BECSConfiguration = {}) => {
-    const core = setupCoreMock();
+const renderBECS = (props: BECSConfiguration = {}, core = setupCoreMock()) => {
     const becs = new BECS(core, {
         modules: { resources: core.modules.resources },
         i18n: core.modules.i18n,
@@ -78,6 +77,13 @@ describe('BECS Direct Debit', () => {
         );
     });
 
+    test('should announce the success message to screen readers when the result is presented', () => {
+        const core = setupCoreMock();
+        const setMessagesSpy = jest.spyOn(core.modules.srPanel, 'setMessages');
+        renderBECS({ url: RESULT_URL }, core);
+        expect(setMessagesSpy).toHaveBeenCalledWith('Your account is authorized, you can close this page');
+    });
+
     test('should show an invalid email error on blur', async () => {
         const user = userEvent.setup();
         renderBECS();
@@ -96,6 +102,14 @@ describe('BECS Direct Debit', () => {
         await user.tab();
 
         expect(screen.getByText('Enter the email address')).toBeInTheDocument();
+    });
+
+    test('should reject an account holder name containing only spaces', async () => {
+        const user = userEvent.setup();
+        renderBECS();
+        await user.type(await screen.findByLabelText('Account holder name'), '   ');
+        await user.tab();
+        expect(screen.getByText('Enter an account holder name')).toBeInTheDocument();
     });
 
     test('should show validation errors and not submit invalid details', async () => {

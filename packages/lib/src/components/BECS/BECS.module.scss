@@ -14,15 +14,6 @@
     color: variable-generator.token(color-label-secondary);
 }
 
-.resultIcon {
-    display: block;
-    width: 64px;
-    height: 64px;
-    object-fit: contain;
-    border-radius: variable-generator.token(border-radius-m);
-    box-shadow: variable-generator.token(shadow-low);
-}
-
 .actionsTitle {
     @include mixins.adyen-checkout-text-body-strongest;
 
@@ -34,21 +25,4 @@
 
     margin: variable-generator.token(spacer-030) 0 variable-generator.token(spacer-050);
     color: variable-generator.token(color-label-secondary);
-}
-
-.details {
-    align-self: stretch;
-    margin-top: variable-generator.token(spacer-050);
-
-    @include mixins.media-m-and-up {
-        padding: 0 variable-generator.token(spacer-140);
-    }
-}
-
-.actions {
-    display: flex;
-    flex-direction: column;
-    align-self: stretch;
-    align-items: center;
-    margin-top: variable-generator.token(spacer-050);
 }
