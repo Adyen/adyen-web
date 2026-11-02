@@ -70,12 +70,7 @@ export default function IrisComponent(props: Readonly<IrisComponentProps>) {
 
     return (
         <div>
-            <SegmentedControl
-                onChange={mode => handleModeChange(mode)}
-                selectedValue={mode}
-                disabled={status === 'loading'}
-                options={segmentedControlOptions}
-            />
+            <SegmentedControl onChange={handleModeChange} selectedValue={mode} disabled={status === 'loading'} options={segmentedControlOptions} />
             {mode === IrisMode.BANK_LIST && (
                 <SegmentedControlRegion
                     id={IRIS_ALLY_LABELS.AreaId.BANK_LIST}
