@@ -1,9 +1,9 @@
 import { h } from 'preact';
 
 import { useCoreContext } from '../../../core/Context/CoreProvider';
-import useImage from '../../../core/Context/useImage';
 import Button from '../../internal/Button';
 import { ResultPanel } from '../../internal/ResultPanel';
+import { BECS_SERVICE_AGREEMENT_URL } from '../constants';
 
 import styles from '../BECS.module.scss';
 
@@ -14,8 +14,6 @@ interface BECSResultProps {
 
 export function BECSResult({ icon, url }: Readonly<BECSResultProps>) {
     const { i18n } = useCoreContext();
-    const getImage = useImage();
-    const downloadIcon = getImage({ imageFolder: 'components/' })('download');
 
     return (
         <ResultPanel
@@ -36,7 +34,6 @@ export function BECSResult({ icon, url }: Readonly<BECSResultProps>) {
                         inline
                         variant="ghost"
                         href={url}
-                        icon={downloadIcon}
                         label={i18n.get('becs.success.action.authorisedRequest')}
                         target="_blank"
                         rel="noopener noreferrer"
@@ -44,7 +41,7 @@ export function BECSResult({ icon, url }: Readonly<BECSResultProps>) {
                     <Button
                         inline
                         variant="ghost"
-                        href={url}
+                        href={BECS_SERVICE_AGREEMENT_URL}
                         label={i18n.get('becs.success.action.serviceAgreement')}
                         target="_blank"
                         rel="noopener noreferrer"

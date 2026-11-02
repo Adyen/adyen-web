@@ -61,10 +61,15 @@ describe('BECS Direct Debit', () => {
 
         expect(screen.getByRole('heading', { name: 'Success!' })).toBeInTheDocument();
         expect(screen.getByText('Your account is authorized, you can close this page')).toBeInTheDocument();
-        const actions = screen.getAllByRole('link');
-        expect(actions).toHaveLength(2);
-        expect(actions[0]).toHaveAttribute('href', 'https://example.com/direct-debit-agreement.pdf');
-        expect(actions[1]).toHaveAttribute('href', 'https://example.com/direct-debit-agreement.pdf');
+        expect(screen.getAllByRole('link')).toHaveLength(2);
+        expect(screen.getByRole('link', { name: 'Download Authorised Direct Debit Request' })).toHaveAttribute(
+            'href',
+            'https://example.com/direct-debit-agreement.pdf'
+        );
+        expect(screen.getByRole('link', { name: 'Read Direct Debit Request Service Agreement' })).toHaveAttribute(
+            'href',
+            'https://www.adyen.com/en_AU/legal/'
+        );
     });
 
     test('should show an invalid email error on blur', async () => {
