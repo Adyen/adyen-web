@@ -1,14 +1,20 @@
-import { ImageOptions } from '../core/Context/Resources';
-import { UseImageHookType } from '../core/Context/useImage';
+import type { ImageOptions } from '../core/Context/Resources';
+import type { UseImageHookType } from '../core/Context/useImage';
+
+/**
+ * USAGE:
+ * Use getIssuerImageUrl() when rendering a list of issuer logos under logos/{txVariant}/{issuer}.svg
+ * For anything else, like when you just need a single, named, asset - use Resources.getImage()
+ */
 
 const getIssuerImageUrl =
-    (options: object, type: string, getImage: UseImageHookType) =>
-    (issuer: string): string => {
-        if (!issuer) return null;
+    (options: ImageOptions, type: string, getImage: UseImageHookType) =>
+    (issuer: string | undefined): string | undefined => {
+        if (!issuer) return undefined;
 
         const imageOptions: ImageOptions = {
-            parentFolder: issuer ? `${type}/` : '',
-            type: issuer || type,
+            parentFolder: `${type}/`,
+            type: issuer,
             ...options
         };
 

@@ -2,7 +2,7 @@ import { h } from 'preact';
 import { MetaConfiguration, PaymentMethodStoryProps, StoryConfiguration } from '../../../storybook/types';
 import { ComponentContainer } from '../../../storybook/components/ComponentContainer';
 import { Checkout } from '../../../storybook/components/Checkout';
-import Econtext from './Econtext';
+import { Econtext } from '@adyen/adyen-web';
 import { EcontextConfiguration } from './types';
 import { TxVariants } from '../tx-variants';
 

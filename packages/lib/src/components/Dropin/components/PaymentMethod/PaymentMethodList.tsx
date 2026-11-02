@@ -7,6 +7,7 @@ import { useCoreContext } from '../../../../core/Context/CoreProvider';
 import { useBrandLogoConfiguration } from './useBrandLogoConfiguration';
 import PaymentMethodsContainer, { PaymentMethodsContainerProps } from './PaymentMethodsContainer';
 import { useEffect } from 'preact/hooks';
+import { onOrderCancelInternalCallback } from '../../types';
 
 interface PaymentMethodListProps extends Omit<PaymentMethodsContainerProps, 'label' | 'classNameModifiers'> {
     instantPaymentMethods?: UIElement[];
@@ -18,7 +19,7 @@ interface PaymentMethodListProps extends Omit<PaymentMethodsContainerProps, 'lab
     };
     order?: Order;
     orderStatus?: OrderStatus;
-    onOrderCancel?: (order) => void;
+    onOrderCancel?: onOrderCancelInternalCallback;
 }
 
 const PaymentMethodList = ({

@@ -20,8 +20,8 @@ test('#1 avsCard error fields and inputs should have correct aria attributes', a
 test('#2 Click pay with empty fields and error panel in avsCard is populated', async ({ page, cardWithAvs, srPanel }) => {
     const expectedSRPanelTexts = [
         'Enter the card number-sr',
-        'Enter the expiry date-sr',
-        'Enter the security code-sr',
+        'Enter the expiry date. Front of card in MM/YY format.-sr',
+        'Enter the security code. 3 digits on back of card.-sr',
         'Enter the Country/Region-sr',
         'Enter the Street-sr',
         'Enter the House number-sr',
@@ -75,8 +75,8 @@ test('#4 Switch country to US, click pay with empty fields and error panel in av
 }) => {
     const expectedSRPanelTexts = [
         'Enter the card number-sr',
-        'Enter the expiry date-sr',
-        'Enter the security code-sr',
+        'Enter the expiry date. Front of card in MM/YY format.-sr',
+        'Enter the security code. 3 digits on back of card.-sr',
         'Enter the Address-sr',
         'Enter the City-sr',
         'Enter the State-sr',
@@ -128,8 +128,8 @@ test('#6 Switch country to UK, click pay with empty fields and error panel in av
 }) => {
     const expectedSRPanelTexts = [
         'Enter the card number-sr',
-        'Enter the expiry date-sr',
-        'Enter the security code-sr',
+        'Enter the expiry date. Front of card in MM/YY format.-sr',
+        'Enter the security code. 3 digits on back of card.-sr',
         'Enter the House number-sr',
         'Enter the Street-sr',
         'Enter the City / Town-sr',

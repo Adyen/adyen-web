@@ -3,7 +3,7 @@ import { MetaConfiguration, PaymentMethodStoryProps, StoryConfiguration } from '
 import { RedirectConfiguration } from '../../types';
 import { ComponentContainer } from '../../../storybook/components/ComponentContainer';
 import { Checkout } from '../../../storybook/components/Checkout';
-import PayByBankUS from './PayByBankUS';
+import { PayByBankUS } from '@adyen/adyen-web';
 
 type PayByBankUSStory = StoryConfiguration<RedirectConfiguration>;
 

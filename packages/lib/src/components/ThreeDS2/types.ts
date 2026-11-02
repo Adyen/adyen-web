@@ -32,15 +32,18 @@ interface ThreeDS2Configuration extends UIElementProps {
     modules?: { analytics: IAnalytics };
     notificationURL?: string;
     onActionHandled?: (rtnObj: ActionHandledReturnObject) => void;
-    on3DS2RedirectFlowComplete?: (
-        state: LegacyChallengeResolveData | ChallengeResolveData | LegacyFingerprintResolveData | FingerprintResolveData,
-        component: UIElement
-    ) => void;
+    on3DS2RedirectFlowComplete?: (state: ChallengeResolveData | FingerprintResolveData, component: UIElement) => void;
     onError?: (error: AdyenCheckoutError, element?: UIElement) => void;
     paymentData?: string;
     token?: string;
     type?: string;
     challengeWindowSize?: ChallengeWindowSize;
+    /**
+     * @internal Visa Passkey only. Requires isMDFlow.
+     * When true, adds sandbox and allow attributes to the challenge iframe
+     * for WebAuthn credential creation/retrieval.
+     */
+    usePasskeyIFrameAttributes?: boolean;
 }
 
 export interface ThreeDS2DeviceFingerprintConfiguration extends ThreeDS2Configuration {
@@ -73,7 +76,7 @@ export interface ChallengeData {
     acsURL: string;
     cReqData: CReqData;
     iframeSizeArr: string[];
-    postMessageDomain: string;
+    postMessageDomain: string | null;
 }
 
 export interface ResultObject {
@@ -113,7 +116,7 @@ export interface FingerPrintData {
     threeDSServerTransID: string;
     threeDSMethodURL: string;
     threeDSMethodNotificationURL: string;
-    postMessageDomain: string;
+    postMessageDomain: string | null;
 }
 
 export type ThreeDS2FingerprintResponse = {
@@ -136,36 +139,15 @@ type CheckoutThreeDS2Action = {
     authorisationToken: string;
 };
 
-export interface FingerprintResolveData {
-    data: {
-        [key: string]: string;
-        paymentData: string;
-    };
-}
-
-export interface LegacyFingerprintResolveData {
-    data: {
-        details: {
-            [key: string]: string;
-        };
-        paymentData: string;
-    };
-}
+export type FingerprintResolveData = {
+    data: Omit<AdditionalDetailsData['data'], 'details'>;
+};
 
 export interface ChallengeResolveData {
     data: {
         details: {
             [key: string]: string;
         };
-    };
-}
-
-export interface LegacyChallengeResolveData {
-    data: {
-        details: {
-            [key: string]: string;
-        };
-        paymentData: string;
     };
 }
 
@@ -187,7 +169,7 @@ export type ThreeDS2ConfigProps = {
     readonly token: string;
     readonly paymentData: string;
     readonly onActionHandled?: (rtnObj: ActionHandledReturnObject) => void;
-    readonly on3DS2RedirectFlowComplete?: (state: LegacyChallengeResolveData | ChallengeResolveData, component: UIElement) => void;
+    readonly on3DS2RedirectFlowComplete?: (state: ChallengeResolveData | FingerprintResolveData, component: UIElement) => void;
     readonly onAdditionalDetails?: (state: AdditionalDetailsData, component: UIElement, actions: AdditionalDetailsActions) => void;
     readonly onError?: (error: AdyenCheckoutError, element?: UIElement) => void;
     readonly isDropin?: boolean;
@@ -195,6 +177,12 @@ export type ThreeDS2ConfigProps = {
     readonly clientKey: string;
     readonly paymentMethodType: string;
     readonly challengeWindowSize?: ChallengeWindowSize;
+    /**
+     * @internal Visa Passkey only. Requires isMDFlow.
+     * When true, adds sandbox and allow attributes to the challenge iframe
+     * for WebAuthn credential creation/retrieval.
+     */
+    readonly usePasskeyIFrameAttributes?: boolean;
     readonly isMDFlow?: boolean;
     readonly modules?: {
         readonly analytics?: IAnalytics;
@@ -208,4 +196,5 @@ export type ThreeDS2ConfigProps = {
     readonly i18n?: Language;
 };
 
-export type ThreeDS2ActionProps = CardConfiguration & Pick<ThreeDS2ConfigProps, 'isMDFlow' | 'on3DS2RedirectFlowComplete'>;
+export type ThreeDS2ActionProps = CardConfiguration &
+    Pick<ThreeDS2ConfigProps, 'isMDFlow' | 'on3DS2RedirectFlowComplete' | 'usePasskeyIFrameAttributes'>;

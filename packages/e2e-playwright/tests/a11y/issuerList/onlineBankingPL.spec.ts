@@ -1,8 +1,10 @@
 import { test, expect } from '../../../fixtures/issuer-list.fixture';
+import { toHaveScreenshot } from '../../utils/assertions';
+import { TAGS } from '../../utils/constants';
 import { pressEnter, pressKeyboardToNextItem } from '../../utils/keyboard';
 
 test.describe('Issuer list - onlineBankingPL keyboard navigation', () => {
-    test('it should be able to filter and select using the keyboard', async ({ page, onlineBankingPL }) => {
+    test('it should be able to filter and select using the keyboard', { tag: [TAGS.SCREENSHOT] }, async ({ page, onlineBankingPL, browserName }) => {
         await expect(onlineBankingPL.payButton).toHaveText('Continue');
 
         await onlineBankingPL.clickOnSelector();
@@ -25,6 +27,8 @@ test.describe('Issuer list - onlineBankingPL keyboard navigation', () => {
         await pressEnter(page);
 
         await expect(onlineBankingPL.payButton).toHaveText(`Continue to ${secondIssuer}`);
+
+        await toHaveScreenshot(onlineBankingPL.rootElement, browserName, 'online-banking-pl-keyboard-navigation-selected.png');
     });
 
     test('it should load a default, from the filtered items, when pressing enter', async ({ page, onlineBankingPL }) => {

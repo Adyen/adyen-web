@@ -13,18 +13,20 @@
         "packages/*"
     ],
     "scripts": {
-        "start": "concurrently --kill-others-on-fail \"yarn workspace @adyen/adyen-web start\"  \"yarn workspace @adyen/adyen-web-playground start\" --names \"lib,playground\"",
+        "start": "concurrently --kill-others-on-fail \"yarn workspace @adyen/adyen-web-server start\" \"yarn workspace @adyen/adyen-web start\"  \"yarn workspace @adyen/adyen-web-playground start\" --names \"api,lib,playground\"",
         "start:storybook": "concurrently --kill-others-on-fail  \"yarn workspace @adyen/adyen-web-server start\"  \"yarn workspace @adyen/adyen-web start:storybook\" --names \"express-server,storybook\"",
         "start:prod-storybook": "yarn workspace @adyen/adyen-web-server start:storybook",
         "build": "yarn workspace @adyen/adyen-web build",
         "build:storybook": "yarn workspace @adyen/adyen-web build:storybook",
         "build:storybook:e2e": "cross-env DISABLE_MSW=true yarn workspace @adyen/adyen-web build:storybook",
+        "build:storybook:e2e:dist": "cross-env DISABLE_MSW=true STORYBOOK_TARGET=dist yarn workspace @adyen/adyen-web build:storybook",
         "format": "yarn workspace @adyen/adyen-web format",
         "lint": "yarn workspace @adyen/adyen-web lint",
         "test": "yarn workspace @adyen/adyen-web test",
         "test:watch": "yarn workspace @adyen/adyen-web test:watch",
         "test:coverage": "yarn workspace @adyen/adyen-web test:coverage",
         "test:e2e": "yarn workspace @adyen/adyen-web-playwright test:headless",
+        "test:e2e:dist": "yarn workspace @adyen/adyen-web-playwright test:dist",
         "test:ui": "yarn workspace @adyen/adyen-web-playwright test:ui",
         "test:e2e:update-screenshots": "yarn workspace @adyen/adyen-web-playwright test:update-screenshots",
         "test:automated-a11y": "yarn workspace @adyen/adyen-web-playwright test:automated-a11y:headless",
@@ -40,16 +42,17 @@
     },
     "devDependencies": {
         "@adyen/adyen-web-server": "1.0.0",
-        "@changesets/cli": "2.31.0",
-        "@changesets/get-github-info": "0.8.0",
-        "concurrently": "10.0.3",
+        "@changesets/cli": "3.0.3",
+        "@changesets/get-github-info": "1.0.1",
+        "concurrently": "10.0.6",
         "cross-env": "10.1.0",
         "husky": "9.1.7",
-        "lint-staged": "17.0.7",
-        "prettier": "3.8.3"
+        "lint-staged": "17.6.0",
+        "prettier": "3.9.9"
     },
     "resolutions": {
+        "shell-quote": "1.12.0",
         "tar-fs": "^3.0.9"
     },
-    "packageManager": "yarn@4.16.0"
+    "packageManager": "yarn@4.18.1"
 }

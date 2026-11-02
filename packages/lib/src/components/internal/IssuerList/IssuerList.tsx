@@ -175,11 +175,10 @@ function IssuerList({
                 </div>
             )}
 
-            {props.showPayButton &&
-                props.payButton({
-                    status,
-                    label: payButtonLabel({ issuer: data['issuer'], items: [...items, ...highlightedItems] }, i18n)
-                })}
+            {props.payButton({
+                status,
+                label: payButtonLabel({ issuer: data['issuer'], items: [...items, ...highlightedItems] }, i18n)
+            })}
         </div>
     );
 }

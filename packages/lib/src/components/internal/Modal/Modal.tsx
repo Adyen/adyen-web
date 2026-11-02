@@ -23,11 +23,11 @@ type ModalProps = {
     /**
      * Reference to the element that should be focused when the modal is opened
      */
-    focusFirst: HTMLElement;
+    focusFirst: HTMLElement | undefined;
     /**
      * Reference to the element that should be focused when the modal is closed
      */
-    focusAfterClose: HTMLElement;
+    focusAfterClose: HTMLElement | null;
 };
 
 const Modal = ({
@@ -59,13 +59,13 @@ const Modal = ({
     useEffect(() => {
         if (!modalContainerRef.current) return;
 
-        const suppressKeyPress = (event: KeyboardEvent) => {
+        const suppressKeyDown = (event: KeyboardEvent) => {
             if (event.key === 'Enter' || event.code === 'Enter') event.stopPropagation();
         };
 
-        modalContainerRef.current.addEventListener('keypress', suppressKeyPress, { capture: true });
+        modalContainerRef.current.addEventListener('keydown', suppressKeyDown, { capture: true });
         return () => {
-            modalContainerRef.current.removeEventListener('keypress', suppressKeyPress);
+            modalContainerRef.current.removeEventListener('keydown', suppressKeyDown);
         };
     }, [modalContainerRef.current]);
 

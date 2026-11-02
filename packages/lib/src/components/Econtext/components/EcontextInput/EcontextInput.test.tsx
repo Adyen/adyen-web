@@ -5,7 +5,6 @@ import { CoreProvider } from '../../../../core/Context/CoreProvider';
 import { setupCoreMock } from '../../../../../config/testMocks/setup-core-mock';
 
 const requiredPropsFromUiElement = {
-    showPayButton: false,
     setComponentRef: jest.fn()
 };
 
@@ -28,11 +27,6 @@ describe('Econtext: EcontextInput', () => {
     test('hide PersonalDetails form if prop personalDetailsRequired is set to false', () => {
         renderEcontextInput({ personalDetailsRequired: false });
         expect(screen.queryByLabelText('First name')).not.toBeInTheDocument();
-    });
-
-    test('hide PayButton if showPayButton is set to false', () => {
-        renderEcontextInput({ personalDetailsRequired: false, showPayButton: false });
-        expect(screen.queryByRole('button', { name: 'Continue purchase' })).not.toBeInTheDocument();
     });
 
     test('hide form instruction if personalDetailsRequired sets to false', () => {

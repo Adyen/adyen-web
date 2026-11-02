@@ -1,10 +1,11 @@
 import { test, expect } from '../../../fixtures/card.fixture';
 import { getStoryUrl } from '../../utils/getStoryUrl';
 import { URL_MAP } from '../../../fixtures/URL_MAP';
-import { BCMC_DUAL_BRANDED_VISA } from '../../utils/constants';
+import { BCMC_DUAL_BRANDED_VISA, TAGS } from '../../utils/constants';
 import LANG from '../../../../server/translations/en-US.json';
 import { binLookupMock } from '../../../mocks/binLookup/binLookup.mock';
 import { dualBrandedVisaAndBcmc } from '../../../mocks/binLookup/binLookup.data';
+import { toHaveScreenshot } from '../../utils/assertions';
 
 const DUAL_BRAND_CONTEXTUAL_TEXT = LANG['creditCard.dualBrand.description'];
 
@@ -58,7 +59,7 @@ test.describe('Card - Dual Branding Accessibility', () => {
             await expect(visaButton).toBeFocused();
         });
 
-        test('should toggle brand selection with Space key', async ({ card, page }) => {
+        test('should toggle brand selection with Space key', { tag: [TAGS.SCREENSHOT] }, async ({ card, page, browserName }) => {
             await binLookupMock(page, dualBrandedVisaAndBcmc);
             await card.goto(getStoryUrl({ baseUrl: URL_MAP.card, componentConfig }));
 
@@ -83,9 +84,11 @@ test.describe('Card - Dual Branding Accessibility', () => {
             // Bancontact should now be selected
             await expect(bancontactButton).toHaveAttribute('aria-pressed', 'true');
             await expect(visaButton).toHaveAttribute('aria-pressed', 'false');
+
+            await toHaveScreenshot(card.rootElement, browserName, 'card-dual-branding-space-key-selected.png');
         });
 
-        test('should toggle brand selection with Enter key', async ({ card, page }) => {
+        test('should toggle brand selection with Enter key', { tag: [TAGS.SCREENSHOT] }, async ({ card, page, browserName }) => {
             await binLookupMock(page, dualBrandedVisaAndBcmc);
             await card.goto(getStoryUrl({ baseUrl: URL_MAP.card, componentConfig }));
 
@@ -106,6 +109,8 @@ test.describe('Card - Dual Branding Accessibility', () => {
             // Bancontact should now be selected
             await expect(bancontactButton).toHaveAttribute('aria-pressed', 'true');
             await expect(visaButton).toHaveAttribute('aria-pressed', 'false');
+
+            await toHaveScreenshot(card.rootElement, browserName, 'card-dual-branding-enter-key-selected.png');
         });
 
         test('should have both brand buttons in tab order', async ({ card, page }) => {

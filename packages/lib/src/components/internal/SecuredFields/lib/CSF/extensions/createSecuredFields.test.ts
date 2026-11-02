@@ -21,7 +21,7 @@ const myCSF = {
     callbacks: {
         onLoad: jest.fn(() => {}),
         onTouchstartIOS: jest.fn(() => {}),
-        onKeyPressed: jest.fn(() => {})
+        onKeyDown: jest.fn(() => {})
     },
     createSecuredFields,
     setupSecuredField,
@@ -68,7 +68,7 @@ describe('Testing CSFs setupSecuredField functionality', () => {
             onEncryptionCallback: null,
             onValidationCallback: null,
             onAutoCompleteCallback: null,
-            onKeyPressedCallback: null,
+            onKeyDownCallback: null,
             onIframeLoaded: cbFn => {
                 MySecuredField.onIframeLoadedCallback = cbFn;
                 return MySecuredField;
@@ -105,8 +105,8 @@ describe('Testing CSFs setupSecuredField functionality', () => {
                 MySecuredField.onAutoCompleteCallback = cbFn;
                 return MySecuredField;
             },
-            onKeyPressed: cbFn => {
-                MySecuredField.onKeyPressedCallback = cbFn;
+            onKeyDown: cbFn => {
+                MySecuredField.onKeyDownCallback = cbFn;
                 return MySecuredField;
             }
         };
@@ -127,11 +127,11 @@ describe('Testing CSFs setupSecuredField functionality', () => {
 
         expect(numIframes).toEqual(0);
 
-        expect(console.warn).toBeCalledWith(
+        expect(console.warn).toHaveBeenCalledWith(
             `WARNING: 'encryptedCustomField' is not a valid type for the '${DATA_ENCRYPTED_FIELD_ATTR}' attribute. A SecuredField will not be created for this element.`
         );
 
-        expect(myCSF.createNonCardSecuredFields).toBeCalledWith([]);
+        expect(myCSF.createNonCardSecuredFields).toHaveBeenCalledWith([]);
     });
 
     test('Calling setupSecuredField to see that an "encryptedCardNumber" SF is created and stored in state', () => {
@@ -312,10 +312,10 @@ describe('Testing CSFs setupSecuredField functionality', () => {
         MySecuredField.onAutoCompleteCallback(dummyObj);
         expect(myCSF.processAutoComplete).toHaveBeenCalledWith(dummyObj);
 
-        // onKeyPressedCallback
-        expect(MySecuredField.onKeyPressedCallback).not.toEqual(null);
+        // onKeyDownCallback
+        expect(MySecuredField.onKeyDownCallback).not.toEqual(null);
 
-        MySecuredField.onKeyPressedCallback(dummyObjWithNumKey);
-        expect(myCSF.callbacks.onKeyPressed).toHaveBeenCalledWith(dummyObj); // checking that numKey prop gets removed
+        MySecuredField.onKeyDownCallback(dummyObjWithNumKey);
+        expect(myCSF.callbacks.onKeyDown).toHaveBeenCalledWith(dummyObj); // checking that numKey prop gets removed
     });
 });

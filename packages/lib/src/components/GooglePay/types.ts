@@ -6,6 +6,13 @@ export interface GooglePayConfiguration extends UIElementProps {
     type?: 'googlepay' | 'paywithgoogle';
 
     /**
+     * Optional Content Security Policy (CSP) nonce to apply to all dynamically injected styles and scripts.
+     *
+     * @see https://developers.google.com/pay/api/web/reference/request-objects#PaymentOptions
+     */
+    nonce?: string;
+
+    /**
      * List of brands accepted by the component. Values are configured on the Backoffice and returned in the /paymentMethodsResponse data
      * @internal
      */

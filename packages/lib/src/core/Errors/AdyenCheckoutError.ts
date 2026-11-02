@@ -1,5 +1,5 @@
 interface CheckoutErrorOptions {
-    cause?: any;
+    cause?: unknown;
     code?: string;
 }
 

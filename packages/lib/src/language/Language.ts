@@ -1,4 +1,4 @@
-import { formatCustomTranslations, getTranslation, parseLocale } from './utils';
+import { formatCustomTranslations, getTranslation, parseLocale, resolveFormattingLocale } from './utils';
 import { getLocalisedAmount } from '../utils/amount-util';
 import { CDN_SUPPORTED_LOCALES, DEFAULT_LOCALE } from './constants';
 import enUS from '../../../server/translations/en-US.json';
@@ -7,9 +7,18 @@ import type { CustomTranslations, LanguageOptions, Translations } from './types'
 import type { ILanguageService } from './LanguageService';
 
 export class Language {
-    public readonly locale: string;
     public readonly languageCode: string;
     private readonly service: ILanguageService;
+
+    /**
+     * Locale used to format amounts and dates, and to be passed on to third-party SDKs
+     */
+    private readonly _formattingLocale: string;
+
+    /**
+     * Locale of the translations that are loaded
+     */
+    private readonly _translationsLocale: string;
 
     private readonly customTranslations: CustomTranslations;
 
@@ -47,19 +56,36 @@ export class Language {
         this.customTranslations = formatCustomTranslations(customTranslations);
         this.supportedLocales = this.createSupportedLocalesList(this.customTranslations);
 
-        this.locale = parseLocale(locale || DEFAULT_LOCALE, this.supportedLocales);
-        this.languageCode = this.locale.split('-')[0];
+        this._translationsLocale = parseLocale(locale || DEFAULT_LOCALE, this.supportedLocales);
+        this._formattingLocale = resolveFormattingLocale(locale || DEFAULT_LOCALE);
+        this.languageCode = this._translationsLocale.split('-')[0];
 
-        this.timeAndDateFormatter = Intl.DateTimeFormat(this.locale, this.timeAndDateFormatOptions);
+        this.timeAndDateFormatter = Intl.DateTimeFormat(this._formattingLocale, this.timeAndDateFormatOptions);
+    }
+
+    /**
+     * Returns the locale requested by the merchant, in the format Intl accepts.
+     * Unlike {@link Language.translationsLocale}, it is not limited to the locales we ship translations for.
+     */
+    public get locale(): string {
+        return this._formattingLocale;
+    }
+
+    /**
+     * Returns the locale of the translations that are loaded.
+     * Limited to the locales we ship translations for, so a request for an unsupported one resolves to the closest match.
+     */
+    public get translationsLocale(): string {
+        return this._translationsLocale;
     }
 
     public async requestTranslations(): Promise<void> {
-        const translations = await this.service.fetchTranslationsFromCdn(this.locale);
+        const translations = await this.service.fetchTranslationsFromCdn(this._translationsLocale);
 
         this._translations = {
             ...enUS,
             ...translations,
-            ...(Boolean(this.customTranslations[this.locale]) && this.customTranslations[this.locale])
+            ...(Boolean(this.customTranslations[this._translationsLocale]) && this.customTranslations[this._translationsLocale])
         };
     }
 
@@ -68,7 +94,7 @@ export class Language {
     }
 
     /**
-     * Returns a translated string from a key in the current {@link Language.locale}
+     * Returns a translated string from a key in the current {@link Language.translationsLocale}
      * @param key - Translation key
      * @param options - Translation options
      * @returns Translated string
@@ -89,7 +115,7 @@ export class Language {
      * @param options - Options for String.prototype.toLocaleString
      */
     public amount(amount: number, currencyCode: string, options?: object): string {
-        return getLocalisedAmount(amount, this.locale, currencyCode, options);
+        return getLocalisedAmount(amount, this._formattingLocale, currencyCode, options);
     }
 
     /**
@@ -100,7 +126,7 @@ export class Language {
     public date(date: string, options: Intl.DateTimeFormatOptions = {}) {
         if (date === undefined) return '';
         const dateOptions: Intl.DateTimeFormatOptions = { year: 'numeric', month: '2-digit', day: '2-digit', ...options };
-        return new Date(date).toLocaleDateString(this.locale, dateOptions);
+        return new Date(date).toLocaleDateString(this._formattingLocale, dateOptions);
     }
 
     /**

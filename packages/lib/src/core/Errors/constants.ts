@@ -14,6 +14,7 @@ export const ERROR_ACTION_FOCUS_FIELD = 'focusField';
 export const ERROR_ACTION_BLUR_SCENARIO = 'notValidating:blurScenario';
 export const ERROR_FIELD_REQUIRED = 'field.error.required';
 export const ERROR_FIELD_INVALID = 'field.error.invalid';
+export const ERROR_INVALID_CHARACTERS = 'field.error.invalidCharacters';
 
 export const ERROR_INVALID_FORMAT_EXPECTS = 'invalid.format.expects';
 export const CREDITCARD_HOLDER_NAME_INVALID = 'creditCard.holderName.invalid';
@@ -56,6 +57,9 @@ export enum SF_ErrorCodes {
 
     ERROR_MSG_EMPTY_CVC = `${ErrorCodePrefixes.CC_CVC}.920`,
     ERROR_MSG_INCORRECTLY_FILLED_CVC = `${ErrorCodePrefixes.CC_CVC}.921`,
+
+    ERROR_MSG_EMPTY_CVC_AMEX = `${ErrorCodePrefixes.CC_CVC}.920.amex`,
+    ERROR_MSG_INCORRECTLY_FILLED_CVC_AMEX = `${ErrorCodePrefixes.CC_CVC}.921.amex`,
 
     ERROR_MSG_EMPTY_KCP_PWD = `${ErrorCodePrefixes.KCP_PWD}.940`,
     ERROR_MSG_INCORRECTLY_FILLED_KCP_PWD = `${ErrorCodePrefixes.KCP_PWD}.941`

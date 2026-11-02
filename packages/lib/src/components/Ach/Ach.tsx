@@ -59,19 +59,15 @@ export class AchElement extends UIElement<AchConfiguration> {
     protected override componentToRender(): h.JSX.Element {
         return this.props.storedPaymentMethodId ? (
             <RedirectButton
-                showPayButton={this.props.showPayButton}
                 name={this.displayName}
                 payButton={this.payButton}
                 onSubmit={this.submit}
-                ref={ref => {
-                    this.componentRef = ref;
-                }}
+                setComponentRef={this.setComponentRef}
             />
         ) : (
             <AchComponent
                 onChange={this.setState}
                 payButton={this.payButton}
-                showPayButton={this.props.showPayButton}
                 hasHolderName={this.props.hasHolderName}
                 placeholders={this.props.placeholders}
                 data={this.props.data}

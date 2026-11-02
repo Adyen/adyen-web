@@ -62,8 +62,8 @@ class Fastlane extends UIElement<FastlaneConfiguration> {
      * Used to display the payment method supported brands within Drop-in
      */
     public get brands(): PaymentMethodBrand[] {
-        const { brands } = this.props;
-        return brands.map(brand => ({ icon: this.props.modules.resources.getImage()(brand), name: brand }));
+        const { brands = [] } = this.props;
+        return brands.map(brand => ({ icon: this.resources.getImage()(brand), name: brand }));
     }
 
     protected override componentToRender(): h.JSX.Element {
@@ -73,7 +73,6 @@ class Fastlane extends UIElement<FastlaneConfiguration> {
                 brand={this.props.brand}
                 payButton={this.payButton}
                 setComponentRef={this.setComponentRef}
-                showPayButton={this.props.showPayButton}
             />
         );
     }

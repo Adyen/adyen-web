@@ -4,8 +4,7 @@ import { ComponentContainer } from '../../../../storybook/components/ComponentCo
 import getCurrency from '../../../../storybook/utils/get-currency';
 import { createSession, patchCheckoutSession } from '../../../../storybook/helpers/checkout-api-calls';
 import { RETURN_URL, STORYBOOK_ENVIRONMENT_URLS } from '../../../../storybook/config/commonConfig';
-import GooglePay from '../GooglePay';
-import { AdyenCheckout } from '../../../core/AdyenCheckout';
+import { GooglePay, AdyenCheckout } from '@adyen/adyen-web';
 import { createGooglePayAmountHelper, getShippingOptions, getTransactionInfo, EXPRESS_DEMO_SETTINGS } from './googlePayExpressUtils';
 import { InfoBox } from './GooglePayExpressDemoInfo';
 import type { PaymentAmount } from '../../../types/global-types';

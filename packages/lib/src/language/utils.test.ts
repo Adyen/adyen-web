@@ -1,13 +1,25 @@
-import { formatCustomTranslations, formatLocaleToLanguageCountryLocale, getTranslation, interpolateElement, matchLocale, parseLocale } from './utils';
+import {
+    formatCustomTranslations,
+    formatLocaleToLanguageCountryLocale,
+    getTranslation,
+    interpolateElement,
+    matchLocale,
+    parseLocale,
+    resolveFormattingLocale
+} from './utils';
 import { createElement } from 'preact';
 import { DEFAULT_LOCALE } from './constants';
 
 describe('matchLocale()', () => {
-    const supportedLocales = ['en-US', 'es-ES', 'fr-FR', 'de-DE', 'nl-NL'];
+    const supportedLocales = ['en-US', 'es-ES', 'fr-FR', 'de-DE', 'nl-NL', 'pt-BR', 'pt-PT', 'zh-CN', 'zh-TW'];
 
     test('should match locale with exact match in supported locales', () => {
         expect(matchLocale('en-US', supportedLocales)).toBe('en-US');
         expect(matchLocale('es-ES', supportedLocales)).toBe('es-ES');
+        expect(matchLocale('pt-BR', supportedLocales)).toBe('pt-BR');
+        expect(matchLocale('pt-PT', supportedLocales)).toBe('pt-PT');
+        expect(matchLocale('zh-CN', supportedLocales)).toBe('zh-CN');
+        expect(matchLocale('zh-TW', supportedLocales)).toBe('zh-TW');
     });
 
     test('should match locale with same language code but different country code', () => {
@@ -19,11 +31,12 @@ describe('matchLocale()', () => {
     test('should match locale case-insensitively', () => {
         expect(matchLocale('EN-US', supportedLocales)).toBe('en-US');
         expect(matchLocale('Es-ES', supportedLocales)).toBe('es-ES');
+        expect(matchLocale('pt-pt', supportedLocales)).toBe('pt-PT');
+        expect(matchLocale('zh-tw', supportedLocales)).toBe('zh-TW');
     });
 
     test('should return null when no match is found', () => {
         expect(matchLocale('ja-JP', supportedLocales)).toBe(null);
-        expect(matchLocale('zh-CN', supportedLocales)).toBe(null);
     });
 
     test('should return null when locale is null', () => {
@@ -172,6 +185,53 @@ describe('parseLocale()', () => {
         const localesWithVariants = ['en-US', 'en-GB'];
         expect(parseLocale('en-GB', localesWithVariants)).toBe('en-GB');
         expect(parseLocale('en-US', localesWithVariants)).toBe('en-US');
+    });
+});
+
+describe('resolveFormattingLocale()', () => {
+    test('should keep the locale when translations are available for it', () => {
+        expect(resolveFormattingLocale('en-US')).toBe('en-US');
+        expect(resolveFormattingLocale('es-ES')).toBe('es-ES');
+        expect(resolveFormattingLocale('ar')).toBe('ar');
+    });
+
+    test('should keep the locale when there are no translations available but Intl supports it', () => {
+        expect(resolveFormattingLocale('en-GB')).toBe('en-GB');
+        expect(resolveFormattingLocale('en-IN')).toBe('en-IN');
+        expect(resolveFormattingLocale('es-MX')).toBe('es-MX');
+        expect(resolveFormattingLocale('de-CH')).toBe('de-CH');
+    });
+
+    test('should keep locales longer than five characters', () => {
+        expect(resolveFormattingLocale('zh-Hans-CN')).toBe('zh-Hans-CN');
+    });
+
+    test('should format the locale the way Intl expects it', () => {
+        expect(resolveFormattingLocale('en_us')).toBe('en-US');
+        expect(resolveFormattingLocale('PT_br')).toBe('pt-BR');
+    });
+
+    test('should drop the subtags that Intl rejects', () => {
+        expect(resolveFormattingLocale('zh-Foo-CN')).toBe('zh');
+        expect(resolveFormattingLocale('nl-nl-nl')).toBe('nl-NL');
+    });
+
+    test('should return DEFAULT_LOCALE when Intl does not support the locale', () => {
+        expect(resolveFormattingLocale('xx-YY')).toBe(DEFAULT_LOCALE);
+    });
+
+    test('should return DEFAULT_LOCALE when the locale is malformed', () => {
+        expect(resolveFormattingLocale('!!')).toBe(DEFAULT_LOCALE);
+        expect(resolveFormattingLocale('invalid locale')).toBe(DEFAULT_LOCALE);
+    });
+
+    test('should return DEFAULT_LOCALE when the locale is missing or not a string', () => {
+        expect(resolveFormattingLocale()).toBe(DEFAULT_LOCALE);
+        expect(resolveFormattingLocale('')).toBe(DEFAULT_LOCALE);
+        // @ts-ignore Testing edge case when the locale is not a string
+        expect(resolveFormattingLocale(123)).toBe(DEFAULT_LOCALE);
+        // @ts-ignore Testing edge case when the locale is null
+        expect(resolveFormattingLocale(null)).toBe(DEFAULT_LOCALE);
     });
 });
 

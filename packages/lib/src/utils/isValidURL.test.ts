@@ -19,4 +19,12 @@ describe('isValidHttpUrl', () => {
     test('empty string is not valid', () => {
         expect(isValidHttpUrl('')).toEqual(false);
     });
+    test('should return false for a null url', () => {
+        expect(isValidHttpUrl(null)).toEqual(false);
+        expect(isValidHttpUrl(null, true)).toEqual(false);
+    });
+    test('should return false for an undefined url', () => {
+        expect(isValidHttpUrl(undefined)).toEqual(false);
+        expect(isValidHttpUrl(undefined, true)).toEqual(false);
+    });
 });

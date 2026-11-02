@@ -3,8 +3,8 @@ import { createSession, patchCheckoutSession } from '../../../helpers/checkout-a
 import { RETURN_URL, STORYBOOK_ENVIRONMENT_URLS } from '../../../config/commonConfig';
 import getCurrency from '../../../utils/get-currency';
 import { useEffect, useRef, useState } from 'preact/hooks';
-import { AdyenCheckout, components, Core } from '../../../../src';
-import DropinComponent from '../../../../src/components/Dropin/Dropin';
+import { AdyenCheckout, components, Dropin as DropinComponent } from '@adyen/adyen-web';
+import type { Core } from '../../../../src';
 import { AmountUpdate } from './AmountUpdate';
 import type { CheckoutSession, PaymentAmount } from '../../../../src/types';
 

@@ -3,7 +3,7 @@ import { MetaConfiguration, PaymentMethodStoryProps, StoryConfiguration } from '
 import { RedirectConfiguration } from '../types';
 import { ComponentContainer } from '../../../storybook/components/ComponentContainer';
 import { Checkout } from '../../../storybook/components/Checkout';
-import Trustly from './Trustly';
+import { Trustly } from '@adyen/adyen-web';
 
 type TrustlyStory = StoryConfiguration<RedirectConfiguration>;
 

@@ -251,4 +251,48 @@ describe('Script', () => {
 
         addEventListenerSpy.mockRestore();
     });
+
+    test('should not throw when remove() is called before load()', async () => {
+        const scriptElement = document.createElement('script');
+        jest.spyOn(document, 'createElement').mockImplementation(() => scriptElement);
+
+        const script = new Script({ src: SCRIPT_SRC, component: 'example-sdk', analytics: mockAnalytics });
+
+        expect(() => script.remove()).not.toThrow();
+
+        const loadPromise = script.load();
+        expect(document.body.querySelector(`script[src="${SCRIPT_SRC}"]`)).toBe(scriptElement);
+
+        scriptElement.dispatchEvent(new Event('load'));
+        await expect(loadPromise).resolves.toBeUndefined();
+    });
+
+    test('should not throw when remove() is called after all retries failed', async () => {
+        jest.useFakeTimers();
+        const analytics = mock<IAnalytics>();
+
+        const attemptScripts = [document.createElement('script'), document.createElement('script'), document.createElement('script')];
+        jest.spyOn(document, 'createElement')
+            .mockImplementationOnce(() => attemptScripts[0])
+            .mockImplementationOnce(() => attemptScripts[1])
+            .mockImplementationOnce(() => attemptScripts[2]);
+
+        const script = new Script({ src: SCRIPT_SRC, component: 'example-sdk', analytics });
+        const loadPromise = script.load();
+
+        attemptScripts[0].dispatchEvent(new Event('error'));
+        await jest.advanceTimersByTimeAsync(Script.RETRY_DELAY);
+        attemptScripts[1].dispatchEvent(new Event('error'));
+        await jest.advanceTimersByTimeAsync(Script.RETRY_DELAY);
+        attemptScripts[2].dispatchEvent(new Event('error'));
+
+        await expect(loadPromise).rejects.toBeInstanceOf(AdyenCheckoutError);
+        // initiated + 3 x failed + aborted
+        expect(analytics.sendAnalytics).toHaveBeenCalledTimes(5);
+
+        expect(() => script.remove()).not.toThrow();
+        expect(analytics.sendAnalytics).toHaveBeenCalledTimes(5);
+
+        jest.useRealTimers();
+    });
 });

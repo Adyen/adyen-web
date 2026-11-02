@@ -18,6 +18,9 @@ const certKeyPath = process.env.CERT_KEY_PATH ?? join(dirname, 'localhost-key.pe
 
 const isHttps = process.env.IS_HTTPS === 'true';
 
+// STORYBOOK_TARGET selects source (default) or the built package (dist).
+const isDistTarget = process.env.STORYBOOK_TARGET === 'dist';
+
 const config: StorybookConfig = {
     stories: ['../**/*.docs.mdx', '../**/*.stories.@(js|jsx|ts|tsx)'],
 
@@ -32,6 +35,9 @@ const config: StorybookConfig = {
     // public added for msw: https://github.com/mswjs/msw-storybook-addon?tab=readme-ov-file#start-storybook
     // '../storybook/public'
     staticDirs: ['../storybook/assets', '../storybook/public'],
+
+    // Load bundled styles only for the dist target.
+    previewAnnotations: isDistTarget ? [join(dirname, '../storybook/dist-styles.ts')] : [],
 
     // we are using JSON.stringify to ensure the value is a string, relevant for preview.tsx
     // also makes it consistent to what we do we generateEnvironmentVariables
@@ -71,6 +77,15 @@ const config: StorybookConfig = {
 
             resolve: {
                 alias: [
+                    ...(isDistTarget
+                        ? []
+                        : [
+                              {
+                                  // Point package imports to source so Storybook works without a build.
+                                  find: /^@adyen\/adyen-web$/,
+                                  replacement: join(dirname, '../src/index.ts')
+                              }
+                          ]),
                     {
                         // this is required for the SCSS modules
                         find: /^~(.*)$/,

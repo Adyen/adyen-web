@@ -95,7 +95,7 @@ export class SRPanel extends BaseElement<SRPanelProps> {
     }
 
     // A method we can expose to allow comps to set messages in this panel
-    public setMessages = (messages: string[] | string): void => {
+    public setMessages = (messages: string[] | string | null): void => {
         if (!this.props.enabled) return;
 
         let panelMessages = null;

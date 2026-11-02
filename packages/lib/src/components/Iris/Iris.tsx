@@ -11,7 +11,7 @@ import { DEFAULT_IRIS_COUNTDOWN_TIME } from './constants';
 export class Iris extends IssuerListContainer<IrisConfiguration, IrisData> {
     public static readonly type = TxVariants.iris;
 
-    private readonly defaultMode = isMobile() ? IrisMode.BANK_LIST : IrisMode.QR_CODE;
+    private readonly defaultMode = isMobile() && !!this.props.issuers?.length ? IrisMode.BANK_LIST : IrisMode.QR_CODE;
 
     public state: IrisState = {
         isValid: this.defaultMode === IrisMode.QR_CODE,
@@ -61,6 +61,7 @@ export class Iris extends IssuerListContainer<IrisConfiguration, IrisData> {
                 <QRLoader
                     type={TxVariants.iris}
                     brandLogo={this.icon}
+                    brandName={this.displayName}
                     clientKey={this.props.clientKey}
                     qrCodeData={this.props.qrCodeData ? encodeURIComponent(this.props.qrCodeData) : undefined}
                     countdownTime={this.props.countdownTime}
@@ -76,15 +77,17 @@ export class Iris extends IssuerListContainer<IrisConfiguration, IrisData> {
             );
         }
 
+        if (this.defaultMode === IrisMode.BANK_LIST) {
+            return this.renderIssuerList();
+        }
+
         return (
             <IrisComponent
                 setComponentRef={this.setComponentRef}
-                defaultMode={this.defaultMode}
                 onUpdateMode={mode => {
                     this.setState({ mode });
                 }}
                 issuerListUI={this.renderIssuerList()}
-                showPayButton={this.props.showPayButton}
                 payButton={this.payButton}
                 issuers={this.props.issuers || []}
             />

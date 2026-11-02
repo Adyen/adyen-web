@@ -115,5 +115,19 @@ describe('IbanInput', () => {
 
             expect(inputEl).toHaveValue('Hello World');
         });
+
+        test('should render empty fields when no data is provided', async () => {
+            renderIbanInput({ data: undefined });
+
+            expect(await screen.findByLabelText('Holder Name')).toHaveValue('');
+            expect(await screen.findByLabelText('Account Number (IBAN)')).toHaveValue('');
+        });
+
+        test('should render empty fields when `null` is provided', async () => {
+            renderIbanInput({ data: null });
+
+            expect(await screen.findByLabelText('Holder Name')).toHaveValue('');
+            expect(await screen.findByLabelText('Account Number (IBAN)')).toHaveValue('');
+        });
     });
 });

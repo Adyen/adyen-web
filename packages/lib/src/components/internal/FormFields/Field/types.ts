@@ -30,7 +30,7 @@ export interface FieldProps {
     useLabelElement?: boolean;
     i18n?: Language;
     contextVisibleToScreenReader?: boolean;
-    renderAlternativeToLabel?: (defaultWrapperProps, children, uniqueId) => any;
+    renderAlternativeToLabel?: (defaultWrapperProps, children, uniqueId) => h.JSX.Element | null;
     /**
      * Callback that reports when there is a click on the input field parent container
      */

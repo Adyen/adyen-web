@@ -57,9 +57,9 @@ function PhoneInputForm(props: Readonly<PhoneInputFormProps>) {
             if (errors[field]) {
                 const propsField = field === 'phoneNumber' ? 'phoneNumberErrorKey' : 'phonePrefixErrorKey';
                 const key = props[propsField] ? props[propsField] : errors[field].errorMessage;
-                return i18n.get(key) ?? null;
+                return typeof key === 'string' ? i18n.get(key) : false;
             }
-            return null;
+            return false;
         },
         [errors]
     );

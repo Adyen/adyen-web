@@ -2,7 +2,6 @@ import { test } from '../../../fixtures/base-fixture';
 import fs from 'node:fs';
 import { Automated } from '../../../models/automated';
 import { toHaveScreenshot } from '../../utils/assertions';
-import { waitForImageLoaded } from '../../utils/image';
 import { StorybookIndex } from '../types';
 
 // This is relative to playwright root: adyen-web/lib/e2e-playwright/
@@ -28,8 +27,6 @@ test.describe('Automated visual testing', () => {
         test(testTitle, async ({ page, browserName }) => {
             const automatedModel = new Automated(page);
             await automatedModel.gotoStory(storyId);
-
-            await waitForImageLoaded(page);
 
             await toHaveScreenshot(page.getByTestId('checkout-component'), browserName, `${storyId}.png`, {
                 mask: [page.getByRole('timer'), page.getByTestId('stored-card-info')]

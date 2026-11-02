@@ -1,6 +1,8 @@
 export const URL_MAP = {
     /* Drop-in */
     dropinWithSession: '/iframe.html?args=&globals=&id=drop-in-drop-in-component--default&viewMode=story',
+    dropinWithSession_executeThreeD:
+        '/iframe.html?args=sessionData.additionalData.executeThreeD:true&globals=&id=drop-in-drop-in-component--default&viewMode=story',
     dropinWithAdvanced: '/iframe.html?globals=&args=useSessions:!false&id=drop-in-drop-in-component--default&viewMode=story',
     dropinSessions_zeroAuthCard_success:
         '/iframe.html?globals=&args=amount:0;sessionData.recurringProcessingModel:CardOnFile;sessionData.storePaymentMethodMode:askForConsent&id=drop-in-drop-in-component--default&viewMode=story',
@@ -17,11 +19,15 @@ export const URL_MAP = {
         '/iframe.html?args=donation.autoMount:!false;donation.delay:0&globals=&id=drop-in-drop-in-component--sessions-donation-reparented&viewMode=story',
     dropinWithSession_donations_reparented_autoMountTrue:
         '/iframe.html?args=donation.autoMount:!true;donation.delay:0&globals=&id=drop-in-drop-in-component--sessions-donation-reparented&viewMode=story',
+    dropinReviewPage: '/iframe.html?args=&globals=&id=demos-reviewpage--with-dropin&viewMode=story',
+    dropin_twoInstances_executeThreeD:
+        '/iframe.html?args=sessionData.additionalData.executeThreeD:true&globals=&id=drop-in-drop-in-component--two-instances&viewMode=story',
 
     /**
      * Card
      */
     card: '/iframe.html?args=&id=components-cards--default&viewMode=story',
+    card_executeThreeD: '/iframe.html?args=sessionData.additionalData.executeThreeD:true&globals=&id=components-cards--default&viewMode=story',
     cardWithVisibleSrPanel: '/iframe.html?args=srConfig.showPanel:!true&globals=&id=components-cards--default&viewMode=story',
     cardWithSsn: '/iframe.html?globals=&id=components-cards--with-ssn&viewMode=story',
     cardWithAdvancedFlow: '/iframe.html?args=useSessions:!false&globals=&id=components-cards--default&viewMode=story',

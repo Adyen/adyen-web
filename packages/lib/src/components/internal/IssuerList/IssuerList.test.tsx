@@ -2,7 +2,6 @@ import { render, screen, waitFor } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import { h } from 'preact';
 import IssuerList from './IssuerList';
-import PayButton from '../PayButton';
 import { CoreProvider } from '../../../core/Context/CoreProvider';
 import { InfoEventType, UiTarget } from '../../../core/Analytics/events/AnalyticsInfoEvent';
 import { setupCoreMock } from '../../../../config/testMocks/setup-core-mock';
@@ -27,9 +26,8 @@ describe('IssuerList', () => {
             <CoreProvider i18n={core.modules.i18n} loadingContext="test" resources={core.modules.resources}>
                 <IssuerList
                     items={items}
-                    showPayButton={false}
                     onChange={jest.fn()}
-                    payButton={props => <PayButton {...props} />}
+                    payButton={() => <button>Pay</button>}
                     onSubmitAnalytics={() => {}}
                     type={'onlineBanking_PL'}
                     setComponentRef={jest.fn()}
@@ -56,9 +54,8 @@ describe('IssuerList', () => {
                 <IssuerList
                     items={items}
                     highlightedIds={highlightedIds}
-                    showPayButton={false}
                     onChange={jest.fn()}
-                    payButton={props => <PayButton {...props} />}
+                    payButton={() => <button>Pay</button>}
                     onSubmitAnalytics={() => {}}
                     type={'onlineBanking_PL'}
                     setComponentRef={jest.fn()}
@@ -80,16 +77,15 @@ describe('IssuerList', () => {
         const highlightedIds = ['2', '3'];
         const onChangeCb = jest.fn();
 
-        expect(onChangeCb).toBeCalledTimes(0);
+        expect(onChangeCb).toHaveBeenCalledTimes(0);
 
         render(
             <CoreProvider i18n={core.modules.i18n} loadingContext="test" resources={core.modules.resources}>
                 <IssuerList
                     items={items}
                     highlightedIds={highlightedIds}
-                    showPayButton={false}
                     onChange={onChangeCb}
-                    payButton={props => <PayButton {...props} />}
+                    payButton={() => <button>Pay</button>}
                     onSubmitAnalytics={() => {}}
                     type={'onlineBanking_PL'}
                     setComponentRef={jest.fn()}
@@ -99,7 +95,7 @@ describe('IssuerList', () => {
 
         let callbackData = { data: { issuer: null }, valid: { issuer: false }, errors: { issuer: null }, isValid: false };
 
-        expect(onChangeCb).toBeCalledTimes(2);
+        expect(onChangeCb).toHaveBeenCalledTimes(2);
         expect(onChangeCb.mock.calls[0][0]).toStrictEqual(callbackData);
         expect(onChangeCb.mock.calls[1][0]).toStrictEqual(callbackData);
 
@@ -110,7 +106,7 @@ describe('IssuerList', () => {
         callbackData = { data: { issuer: '3' }, valid: { issuer: true }, errors: { issuer: null }, isValid: true };
 
         await waitFor(() => {
-            expect(onChangeCb).toBeCalledTimes(3);
+            expect(onChangeCb).toHaveBeenCalledTimes(3);
         });
         expect(onChangeCb.mock.calls[2][0]).toStrictEqual(callbackData);
     });
@@ -128,9 +124,8 @@ describe('IssuerList', () => {
                 <IssuerList
                     items={items}
                     highlightedIds={highlightedIds}
-                    showPayButton={false}
                     onChange={jest.fn()}
-                    payButton={props => <PayButton {...props} />}
+                    payButton={() => <button>Pay</button>}
                     onSubmitAnalytics={() => {}}
                     type={'onlineBanking_PL'}
                     setComponentRef={jest.fn()}
@@ -157,9 +152,8 @@ describe('IssuerList', () => {
                 <IssuerList
                     items={items}
                     highlightedIds={highlightedIds}
-                    showPayButton={false}
                     onChange={jest.fn()}
-                    payButton={props => <PayButton {...props} />}
+                    payButton={() => <button>Pay</button>}
                     onSubmitAnalytics={() => {}}
                     type={'onlineBanking_PL'}
                     setComponentRef={jest.fn()}
@@ -192,9 +186,8 @@ describe('Analytics', () => {
                 <IssuerList
                     items={items}
                     highlightedIds={highlightedIds}
-                    showPayButton={false}
                     onChange={() => {}}
-                    payButton={props => <PayButton {...props} />}
+                    payButton={() => <button>Pay</button>}
                     onSubmitAnalytics={onSubmitAnalytics}
                     type={'onlineBanking_PL'}
                     setComponentRef={jest.fn()}
@@ -228,9 +221,8 @@ describe('Analytics', () => {
             <CoreProvider i18n={core.modules.i18n} loadingContext="test" resources={core.modules.resources}>
                 <IssuerList
                     items={items}
-                    showPayButton={false}
                     onChange={() => {}}
-                    payButton={props => <PayButton {...props} />}
+                    payButton={() => <button>Pay</button>}
                     onSubmitAnalytics={onSubmitAnalytics}
                     type={'onlineBanking_PL'}
                     setComponentRef={jest.fn()}

@@ -4,19 +4,26 @@ import Iframe from '../../../internal/IFrame';
 import Spinner from '../../../internal/Spinner';
 import ThreeDS2Form from '../Form';
 import getProcessMessageHandler from '../../../../utils/get-process-message-handler';
-import { encodeBase64URL } from '../utils';
+import { encodeBase64URL, isDetachedFromDOM } from '../utils';
 import promiseTimeout from '../../../../utils/promiseTimeout';
-import { CHALLENGE_TIMEOUT, CHALLENGE_TIMEOUT_REJECT_OBJECT, THREEDS2_NUM } from '../../constants';
+import {
+    CHALLENGE_TIMEOUT,
+    CHALLENGE_TIMEOUT_REJECT_OBJECT,
+    THREEDS2_NUM,
+    PASSKEY_VISA_IFRAME_ALLOW,
+    PASSKEY_3DS2_IFRAME_ALLOW,
+    PASSKEY_VISA_IFRAME_SANDBOX
+} from '../../constants';
 import { DoChallenge3DS2Props, DoChallenge3DS2State } from './types';
 import { ThreeDS2FlowObject } from '../../types';
 
 const iframeName = 'threeDSIframe';
 
 class DoChallenge3DS2 extends Component<DoChallenge3DS2Props, DoChallenge3DS2State> {
-    private processMessageHandler;
-    private challengePromise: { cancel: () => void; promise: Promise<any> };
+    private processMessageHandler: (event: Pick<MessageEvent, 'origin' | 'data'>) => string | boolean;
+    private challengePromise: { promise: Promise<ThreeDS2FlowObject>; cancel: () => void };
 
-    constructor(props) {
+    constructor(props: DoChallenge3DS2Props) {
         super(props);
 
         /**
@@ -36,7 +43,7 @@ class DoChallenge3DS2 extends Component<DoChallenge3DS2Props, DoChallenge3DS2Sta
         }
     };
 
-    private get3DS2ChallengePromise(): Promise<any> {
+    private get3DS2ChallengePromise(): Promise<ThreeDS2FlowObject> {
         return new Promise((resolve, reject) => {
             /**
              * Listen for postMessage responses from the notification url
@@ -53,11 +60,21 @@ class DoChallenge3DS2 extends Component<DoChallenge3DS2Props, DoChallenge3DS2Sta
         this.challengePromise.promise
             .then((resolveObject: ThreeDS2FlowObject) => {
                 window.removeEventListener('message', this.processMessageHandler);
+
+                if (isDetachedFromDOM(this.base)) {
+                    return;
+                }
+
                 this.props.onCompleteChallenge(resolveObject);
             })
             /** Catch, for when Challenge times-out */
             .catch((rejectObject: ThreeDS2FlowObject) => {
                 window.removeEventListener('message', this.processMessageHandler);
+
+                if (isDetachedFromDOM(this.base)) {
+                    return;
+                }
+
                 this.props.onErrorChallenge(rejectObject);
             });
     }
@@ -67,7 +84,10 @@ class DoChallenge3DS2 extends Component<DoChallenge3DS2Props, DoChallenge3DS2Sta
         window.removeEventListener('message', this.processMessageHandler);
     }
 
-    render({ acsURL, cReqData, iframeSizeArr, onFormSubmit }, { base64URLencodedData, status }) {
+    render(
+        { acsURL, cReqData, iframeSizeArr, onFormSubmit, usePasskeyIFrameAttributes }: DoChallenge3DS2Props,
+        { base64URLencodedData, status }: DoChallenge3DS2State
+    ) {
         const [width, height] = iframeSizeArr;
 
         return (
@@ -79,13 +99,20 @@ class DoChallenge3DS2 extends Component<DoChallenge3DS2Props, DoChallenge3DS2Sta
             >
                 {status !== 'iframeLoaded' && <Spinner />}
 
-                <Iframe name={iframeName} width={width} height={height} callback={this.iframeCallback} />
+                <Iframe
+                    name={iframeName}
+                    width={width}
+                    height={height}
+                    callback={this.iframeCallback}
+                    allow={usePasskeyIFrameAttributes ? PASSKEY_VISA_IFRAME_ALLOW : PASSKEY_3DS2_IFRAME_ALLOW}
+                    sandbox={usePasskeyIFrameAttributes ? PASSKEY_VISA_IFRAME_SANDBOX : undefined}
+                />
                 <ThreeDS2Form
                     name={'cReqForm'}
                     action={acsURL}
                     target={iframeName}
                     inputName={'creq'}
-                    inputValue={base64URLencodedData}
+                    inputValue={base64URLencodedData ?? ''}
                     onFormSubmit={onFormSubmit}
                 />
             </div>

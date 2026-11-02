@@ -60,9 +60,9 @@ describe('CashAppPay', () => {
         const core = setupCoreMock();
 
         const cashAppPayElement = new CashAppPay(core, {
-            i18n: global.i18n,
+            i18n: core.modules.i18n,
             loadingContext: 'test',
-            modules: { resources: global.resources }
+            modules: { resources: core.modules.resources }
         });
         render(cashAppPayElement.render());
 
@@ -76,9 +76,9 @@ describe('CashAppPay', () => {
 
         const cashAppPayElement = new CashAppPay(core, {
             onClick,
-            i18n: global.i18n,
+            i18n: core.modules.i18n,
             loadingContext: 'test',
-            modules: { resources: global.resources }
+            modules: { resources: core.modules.resources }
         });
         render(cashAppPayElement.render());
 
@@ -144,15 +144,28 @@ describe('CashAppPay', () => {
         expect(spy).toHaveBeenCalled();
     });
 
+    test('should create customer request and begin CashApp flow when no onClick callback is provided', async () => {
+        const core = setupCoreMock();
+
+        const cashAppPayElement = new CashAppPay(core, { onClick: undefined });
+
+        cashAppPayElement.submit();
+
+        await new Promise(process.nextTick);
+
+        expect(mockCreateCustomerRequest).toHaveBeenCalledTimes(1);
+        expect(mockBegin).toHaveBeenCalledTimes(1);
+    });
+
     test('should not begin CashApp flow when onClick rejects', async () => {
         const onClick = jest.fn().mockImplementation(actions => actions.reject());
         const core = setupCoreMock();
 
         const cashAppPayElement = new CashAppPay(core, {
             onClick,
-            i18n: global.i18n,
+            i18n: core.modules.i18n,
             loadingContext: 'test',
-            modules: { resources: global.resources }
+            modules: { resources: core.modules.resources }
         });
         render(cashAppPayElement.render());
 

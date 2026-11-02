@@ -2,7 +2,7 @@ import { h } from 'preact';
 import { MetaConfiguration, StoryConfiguration } from '../../../storybook/types';
 import { ComponentContainer } from '../../../storybook/components/ComponentContainer';
 import { CashAppPayConfiguration } from './types';
-import CashAppPay from './CashAppPay';
+import { CashAppPay } from '@adyen/adyen-web';
 import { Checkout } from '../../../storybook/components/Checkout';
 
 type CashAppPayStory = StoryConfiguration<CashAppPayConfiguration>;

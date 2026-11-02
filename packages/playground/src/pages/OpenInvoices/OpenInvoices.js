@@ -1,4 +1,4 @@
-import { AdyenCheckout, RatePay, Riverty, RatePayDirectDebit, AfterPay, AfterPayB2B, FacilPay3x, Affirm, Atome, en_US } from '@adyen/adyen-web';
+import { AdyenCheckout, RatePay, Riverty, RatePayDirectDebit, AfterPay, AfterPayB2B, FacilPay3x, Affirm, Atome } from '@adyen/adyen-web';
 import '@adyen/adyen-web/styles/adyen.css';
 import { getPaymentMethods } from '../../services';
 import { handleChange, handleOnPaymentCompleted, handleOnPaymentFailed, handleSubmit } from '../../handlers';

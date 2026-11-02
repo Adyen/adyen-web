@@ -7,14 +7,20 @@ import { SplitFundingSourceCards } from './cardStoryHelpers/SplitFundingSourceCa
 import { createCardComponent } from './cardStoryHelpers/createCardComponent';
 import { getComponentConfigFromUrl } from '../../../../storybook/utils/get-configuration-from-url';
 import { CardWith3DS2CreateFromAction } from './cardStoryHelpers/CardWith3DS2CreateFromAction';
-import { AdditionalDetailsActions, AdditionalDetailsData } from '../../../core/types';
+import type { AdditionalDetailsActions, AdditionalDetailsData } from '../../../core/types';
 import { displayResultMessage } from '../../../../storybook/helpers/checkout-handlers';
 import { makeDetailsCall } from '../../../../storybook/helpers/checkout-api-calls';
 
 type CardStory = StoryConfiguration<CardConfiguration>;
 
 const meta: MetaConfiguration<CardConfiguration> = {
-    title: 'Components/Cards'
+    title: 'Components/Cards',
+    argTypes: {
+        sessionData: {
+            control: 'object',
+            if: { arg: 'useSessions', truthy: true }
+        }
+    }
 };
 
 export const Default: CardStory = {
@@ -32,7 +38,6 @@ export const Default: CardStory = {
             //     holderName: 'J. Smith'
             // },
             disableIOSArrowKeys: false,
-            // disclaimerMessage,
             // doBinLookup: false,
             enableStoreDetails: false,
             // exposeExpiryDate: true,
@@ -51,6 +56,20 @@ export const Default: CardStory = {
             showContextualElement: true
             // showPayButton: false,
             // styles: { base: { fontWeight: 300 } },
+        }
+    }
+};
+
+export const WithDisclaimer: CardStory = {
+    render: createCardComponent,
+    args: {
+        componentConfiguration: {
+            _disableClickToPay: true,
+            disclaimerMessage: {
+                message: 'By continuing you agree with the %{terms}',
+                linkText: 'terms and conditions',
+                link: 'https://www.adyen.com'
+            }
         }
     }
 };
@@ -75,7 +94,7 @@ export const WithAVS: CardStory = {
         componentConfiguration: {
             _disableClickToPay: true,
             billingAddressRequired: true,
-            billingAddressAllowedCountries: ['US', 'CA', 'GB'],
+            billingAddressAllowedCountries: ['US', 'CA', 'GB', 'JP', 'BR'],
             //billingAddressRequiredFields: ['postalCode', 'country'],
             data: {
                 billingAddress: {
@@ -148,7 +167,7 @@ export const WithAVSAddressLookup: CardStory = {
                     )
                     .catch(error => {
                         console.log('ERROR:', error);
-                        actions.reject('Something went wrong, try adding manually.');
+                        actions.reject({ errorMessage: 'Something went wrong, try adding manually.' });
                     });
                 actions.resolve(formattedData);
             }

@@ -23,8 +23,8 @@ const sessionSetupResponseMock: CheckoutSessionSetupResponse = {
     },
     expiresAt: '',
     paymentMethods: {
-        paymentMethods: [{}],
-        storedPaymentMethods: [{}]
+        paymentMethods: [],
+        storedPaymentMethods: []
     },
     returnUrl: '',
     configuration: {},
@@ -38,9 +38,16 @@ const setupSessionSpy = jest.spyOn(Session.prototype, 'setupSession').mockImplem
 
 let analyticsSetupSpy: jest.SpyInstance;
 
+let multipleInstanceWarnMsg = '';
+jest.spyOn(console, 'warn').mockImplementation(message => {
+    multipleInstanceWarnMsg = message;
+});
+
 describe('Core', () => {
     beforeEach(() => {
         analyticsSetupSpy = jest.spyOn(Analytics.prototype, 'setUp').mockResolvedValue();
+        AdyenCheckout.metadata.numberOfInitialisedCheckouts = 0;
+        multipleInstanceWarnMsg = '';
     });
 
     afterEach(() => {
@@ -67,6 +74,33 @@ describe('Core', () => {
 
             expect(checkout.options.locale).toBe('es-ES');
             expect(checkout.modules.i18n.locale).toBe('es-ES');
+        });
+
+        test('should keep a locale that has no translations available', async () => {
+            const checkout = new AdyenCheckout({
+                countryCode: 'GB',
+                environment: 'test',
+                clientKey: 'test_123456',
+                locale: 'en-GB'
+            });
+            await checkout.initialize();
+
+            expect(checkout.options.locale).toBe('en-GB');
+            expect(checkout.modules.i18n.locale).toBe('en-GB');
+            expect(checkout.modules.i18n.translationsLocale).toBe('en-US');
+        });
+
+        test('should fall back to en-US when the locale is not supported by Intl', async () => {
+            const checkout = new AdyenCheckout({
+                countryCode: 'US',
+                environment: 'test',
+                clientKey: 'test_123456',
+                locale: 'xx-YY'
+            });
+            await checkout.initialize();
+
+            expect(checkout.options.locale).toBe('en-US');
+            expect(checkout.modules.i18n.locale).toBe('en-US');
         });
     });
 
@@ -99,6 +133,55 @@ describe('Core', () => {
     });
 
     describe('initialize', () => {
+        test('should count the number of checkout instances', () => {
+            new AdyenCheckout({
+                countryCode: 'US',
+                environment: 'test',
+                clientKey: 'test_123456'
+            });
+
+            expect(AdyenCheckout.metadata.numberOfInitialisedCheckouts).toBe(1);
+        });
+
+        test('Creating a second instance of Checkout should warn that too many checkout instances exist', () => {
+            new AdyenCheckout({
+                countryCode: 'US',
+                environment: 'test',
+                clientKey: 'test_123456'
+            });
+
+            new AdyenCheckout({
+                countryCode: 'US',
+                environment: 'test',
+                clientKey: 'test_123456'
+            });
+
+            expect(AdyenCheckout.metadata.numberOfInitialisedCheckouts).toBe(2);
+
+            expect(multipleInstanceWarnMsg).toBe(
+                '\nMultiple instances of AdyenCheckout detected on the same page. This is not recommended and may lead to unexpected behaviour.\nIf this is intentional you can suppress this warning by setting "suppressConfigWarnings: true" in your Checkout config.\n'
+            );
+        });
+
+        test('Creating a second instance of Checkout should not warn that too many checkout instances exist if we deliberately suppress the warning', () => {
+            new AdyenCheckout({
+                countryCode: 'US',
+                environment: 'test',
+                clientKey: 'test_123456'
+            });
+
+            new AdyenCheckout({
+                countryCode: 'US',
+                environment: 'test',
+                clientKey: 'test_123456',
+                suppressConfigWarnings: true
+            });
+
+            expect(AdyenCheckout.metadata.numberOfInitialisedCheckouts).toBe(2);
+
+            expect(multipleInstanceWarnMsg).toBe('');
+        });
+
         test('should do the setup call with the correct session data for the session flow', async () => {
             const checkout = new AdyenCheckout({
                 countryCode: 'US',
@@ -567,7 +650,8 @@ describe('Core', () => {
                 _environmentUrls: {
                     api: 'https://localhost:8080/checkoutshopper/'
                 },
-                clientKey: 'devl_FX923810'
+                // Core rejects a 'test'/'live' prefixed key when the api URL does not contain that prefix
+                clientKey: 'xxxx'
             });
 
             expect(checkout.loadingContext).toBe('https://localhost:8080/checkoutshopper/');
@@ -581,7 +665,8 @@ describe('Core', () => {
                 _environmentUrls: {
                     api: 'https://localhost:8080/checkoutshopper/'
                 },
-                clientKey: 'devl_FX923810'
+                // Core rejects a 'test'/'live' prefixed key when the api URL does not contain that prefix
+                clientKey: 'xxxx'
             });
 
             void expect(async () => await core.initialize()).rejects.toThrow('You must specify a countryCode');
@@ -609,6 +694,161 @@ describe('Core', () => {
 
             await expect(checkout.initialize()).resolves.toBe(checkout);
             expect(checkout.options.countryCode).toBe('US');
+        });
+    });
+
+    describe('processPayment', () => {
+        const paymentData = { paymentMethod: { type: 'scheme' }, clientStateDataIndicator: true as const };
+        const mockOnPaymentCompleted = jest.fn();
+        const mockOnPaymentFailed = jest.fn();
+        const mockOnOrderUpdated = jest.fn();
+        const mockOnAction = jest.fn();
+        const mockOnError = jest.fn();
+
+        beforeEach(() => {
+            jest.clearAllMocks();
+        });
+
+        test('calls onError with IMPLEMENTATION_ERROR when no session is configured', async () => {
+            const core = new AdyenCheckout({
+                countryCode: 'US',
+                clientKey: 'test_CLIENT_KEY',
+                environment: 'test',
+                exposeLibraryMetadata: false,
+                onError: mockOnError
+            });
+            await core.initialize();
+            core.processPayment(paymentData);
+            expect(mockOnError).toHaveBeenCalledWith(expect.objectContaining({ name: 'IMPLEMENTATION_ERROR' }));
+        });
+
+        test('calls onPaymentCompleted for a successful payment', async () => {
+            const submitPaymentRes = { resultCode: 'Authorised' as const, sessionData: 'dummySessionData', sessionResult: 'dummySessionResult' };
+            jest.spyOn(Session.prototype, 'submitPayment').mockResolvedValueOnce(submitPaymentRes);
+
+            const core = new AdyenCheckout({
+                countryCode: 'US',
+                clientKey: 'test_CLIENT_KEY',
+                session: { id: 'session-id' },
+                environment: 'test',
+                exposeLibraryMetadata: false,
+                onPaymentCompleted: mockOnPaymentCompleted,
+                onError: mockOnError
+            });
+            await core.initialize();
+            core.processPayment(paymentData);
+            const flushPromises = () => new Promise(process.nextTick);
+            await flushPromises();
+            expect(mockOnPaymentCompleted).toHaveBeenCalledWith(submitPaymentRes);
+        });
+
+        test('calls onAction when response contains an action', async () => {
+            const submitPaymentRes = {
+                resultCode: 'RedirectShopper' as const,
+                sessionData: 'dummySessionData',
+                action: { type: 'redirect', paymentMethodType: 'ideal', paymentData: 'mock' },
+                sessionResult: 'dummySessionResult'
+            };
+            // @ts-ignore: testing
+            jest.spyOn(Session.prototype, 'submitPayment').mockResolvedValueOnce(submitPaymentRes);
+
+            const core = new AdyenCheckout({
+                countryCode: 'US',
+                clientKey: 'test_CLIENT_KEY',
+                session: { id: 'session-id' },
+                environment: 'test',
+                exposeLibraryMetadata: false,
+                onAction: mockOnAction,
+                onPaymentCompleted: mockOnPaymentCompleted,
+                onError: mockOnError
+            });
+            await core.initialize();
+            jest.spyOn(core, 'createFromAction').mockReturnValue({} as any);
+            core.processPayment(paymentData);
+            const flushPromises = () => new Promise(process.nextTick);
+            await flushPromises();
+            expect(mockOnAction).toHaveBeenCalled();
+            expect(mockOnPaymentCompleted).not.toHaveBeenCalled();
+        });
+
+        test('calls onError with IMPLEMENTATION_ERROR when response has an action but onAction is not configured', async () => {
+            const submitPaymentRes = {
+                resultCode: 'RedirectShopper' as const,
+                sessionData: 'dummySessionData',
+                action: { type: 'redirect', paymentMethodType: 'ideal', paymentData: 'mock' },
+                sessionResult: 'dummySessionResult'
+            };
+            // @ts-ignore: testing
+            jest.spyOn(Session.prototype, 'submitPayment').mockResolvedValueOnce(submitPaymentRes);
+
+            const core = new AdyenCheckout({
+                countryCode: 'US',
+                clientKey: 'test_CLIENT_KEY',
+                session: { id: 'session-id' },
+                environment: 'test',
+                exposeLibraryMetadata: false,
+                onPaymentCompleted: mockOnPaymentCompleted,
+                onError: mockOnError
+            });
+            await core.initialize();
+            core.processPayment(paymentData);
+            const flushPromises = () => new Promise(process.nextTick);
+            await flushPromises();
+            expect(mockOnError).toHaveBeenCalledWith(expect.objectContaining({ name: 'IMPLEMENTATION_ERROR' }));
+            expect(mockOnPaymentCompleted).not.toHaveBeenCalled();
+        });
+
+        test('calls onPaymentFailed when the payment is refused', async () => {
+            const submitPaymentRes = { resultCode: 'Refused' as const, sessionData: 'dummySessionData' };
+            // @ts-ignore: testing purpose
+            jest.spyOn(Session.prototype, 'submitPayment').mockResolvedValueOnce(submitPaymentRes);
+
+            const core = new AdyenCheckout({
+                countryCode: 'US',
+                clientKey: 'test_CLIENT_KEY',
+                session: { id: 'session-id' },
+                environment: 'test',
+                exposeLibraryMetadata: false,
+                onPaymentCompleted: mockOnPaymentCompleted,
+                onPaymentFailed: mockOnPaymentFailed,
+                onError: mockOnError
+            });
+            await core.initialize();
+            core.processPayment(paymentData);
+            const flushPromises = () => new Promise(process.nextTick);
+            await flushPromises();
+            expect(mockOnPaymentFailed).toHaveBeenCalledWith(submitPaymentRes);
+            expect(mockOnPaymentCompleted).not.toHaveBeenCalled();
+        });
+
+        test('calls onOrderUpdated when response has a remaining amount, and does not call onPaymentCompleted', async () => {
+            const order = {
+                orderData: 'mock-order-data',
+                pspReference: 'mock-psp',
+                remainingAmount: { value: 500, currency: 'USD' }
+            };
+            const submitPaymentRes = { resultCode: 'Authorised' as const, sessionData: 'dummySessionData', order };
+            // @ts-ignore: testing
+            jest.spyOn(Session.prototype, 'submitPayment').mockResolvedValueOnce(submitPaymentRes);
+
+            const core = new AdyenCheckout({
+                countryCode: 'US',
+                clientKey: 'test_CLIENT_KEY',
+                session: { id: 'session-id' },
+                environment: 'test',
+                exposeLibraryMetadata: false,
+                onPaymentCompleted: mockOnPaymentCompleted,
+                onOrderUpdated: mockOnOrderUpdated,
+                onError: mockOnError
+            });
+            await core.initialize();
+            // submitPayment is mocked, so emulate the session storing the new data blob
+            (core.session as unknown as { data: string }).data = 'dummySessionData';
+            core.processPayment(paymentData);
+            const flushPromises = () => new Promise(process.nextTick);
+            await flushPromises();
+            expect(mockOnOrderUpdated).toHaveBeenCalledWith({ order, sessionData: 'dummySessionData' });
+            expect(mockOnPaymentCompleted).not.toHaveBeenCalled();
         });
     });
 

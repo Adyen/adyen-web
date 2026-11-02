@@ -82,7 +82,7 @@ test.describe('Card with 3DS2', () => {
                 if (request.url().includes('/submitThreeDS2Fingerprint')) submitFingerprintRequestWasMade = true;
             });
 
-            await card.goto(URL_MAP.card);
+            await card.goto(URL_MAP.card_executeThreeD);
 
             await card.typeCardNumber(THREEDS2_CHALLENGE_ONLY_CARD);
             await card.typeCvc(TEST_CVC_VALUE);
@@ -99,7 +99,7 @@ test.describe('Card with 3DS2', () => {
 
     test.describe('Different 3DS2 challenge window sizes', () => {
         test('should use the default window size', async ({ card }) => {
-            await card.goto(URL_MAP.card);
+            await card.goto(URL_MAP.card_executeThreeD);
 
             await card.typeCardNumber(THREEDS2_CHALLENGE_ONLY_CARD);
             await card.typeCvc(TEST_CVC_VALUE);
@@ -115,7 +115,7 @@ test.describe('Card with 3DS2', () => {
         test('should be possible to use a custom window size', async ({ card }) => {
             await card.goto(
                 getStoryUrl({
-                    baseUrl: URL_MAP.card,
+                    baseUrl: URL_MAP.card_executeThreeD,
                     componentConfig: {
                         challengeWindowSize: '04'
                     }

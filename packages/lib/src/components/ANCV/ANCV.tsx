@@ -27,7 +27,7 @@ export class ANCVElement extends UIElement<ANCVConfiguration> {
     private onOrderRequest = data => {
         if (this.props.onOrderRequest)
             return new Promise((resolve, reject) => {
-                this.props.onOrderRequest(resolve, reject, data);
+                void this.props.onOrderRequest(resolve, reject, data);
             });
 
         if (this.props.session) {
@@ -78,7 +78,7 @@ export class ANCVElement extends UIElement<ANCVConfiguration> {
 
     // Reimplement payButton similar to GiftCard to allow to set onClick
     protected override payButton = (props: PayButtonProps): h.JSX.Element => {
-        return <PayButton {...props} />;
+        return <PayButton {...props} showPayButton={this.props.showPayButton} disclaimerMessage={this.props.disclaimerMessage} />;
     };
 
     get isValid(): boolean {
@@ -98,6 +98,7 @@ export class ANCVElement extends UIElement<ANCVConfiguration> {
                     onError={this.props.onError}
                     onComplete={this.onActionComplete}
                     brandLogo={this.icon}
+                    brandName={this.displayName}
                     type={this.constructor['type']}
                     messageText={this.props.i18n.get('ancv.confirmPayment')}
                     awaitText={this.props.i18n.get('await.waitForConfirmation')}
@@ -111,14 +112,11 @@ export class ANCVElement extends UIElement<ANCVConfiguration> {
 
         return (
             <ANCVInput
-                ref={ref => {
-                    this.componentRef = ref;
-                }}
                 {...this.props}
+                setComponentRef={this.setComponentRef}
                 onSubmit={this.submit}
                 onChange={this.setState}
                 payButton={this.payButton}
-                showPayButton={this.props.showPayButton}
             />
         );
     }

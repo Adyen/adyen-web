@@ -33,9 +33,8 @@ const CtPLogoutLink = () => {
             onClick={logoutShopper}
             variant="link"
             inline={true}
-        >
-            {label}
-        </Button>
+            label={label}
+        />
     );
 };
 

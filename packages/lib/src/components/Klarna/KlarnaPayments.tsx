@@ -11,7 +11,7 @@ class KlarnaPayments extends UIElement<KlarnaConfiguration> {
     public static readonly type = TxVariants.klarna;
     public static readonly txVariants = [TxVariants.klarna, TxVariants.klarna_account, TxVariants.klarna_paynow, TxVariants.klarna_b2b];
 
-    public componentRef: KlarnaComponentRef;
+    declare public componentRef: KlarnaComponentRef;
 
     protected static readonly defaultProps = {
         useKlarnaWidget: false
@@ -38,8 +38,16 @@ class KlarnaPayments extends UIElement<KlarnaConfiguration> {
         };
     }
 
+    public override submit(): void {
+        if (this.props.useKlarnaWidget) {
+            this.executePaymentsCall();
+            return;
+        }
+        super.submit();
+    }
+
     public payButton = (props: PayButtonProps) => {
-        return <PayButton onClick={this.submit} {...props} />;
+        return <PayButton onClick={this.submit} {...props} showReview={this.props.useKlarnaWidget ? false : !!this.props.onReview} />;
     };
 
     public override handleAction(action: KlarnaAction, props = {}): UIElement | null {

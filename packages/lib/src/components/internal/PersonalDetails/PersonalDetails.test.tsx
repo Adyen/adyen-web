@@ -1,5 +1,6 @@
 import { h } from 'preact';
-import { render, screen, waitFor } from '@testing-library/preact';
+import { fireEvent, render, screen, waitFor } from '@testing-library/preact';
+import userEvent from '@testing-library/user-event';
 import PersonalDetails from './PersonalDetails';
 import { CoreProvider } from '../../../core/Context/CoreProvider';
 import { PersonalDetailsProps } from './types';
@@ -96,5 +97,72 @@ describe('PersonalDetails', () => {
         // Assert that the original top-level keys are no longer present
         expect(formattedData.firstName).toBeUndefined();
         expect(formattedData.lastName).toBeUndefined();
+    });
+
+    test('should render nothing if visibility is "hidden"', () => {
+        renderPersonalDetails({ visibility: 'hidden' });
+
+        expect(screen.queryByRole('textbox')).not.toBeInTheDocument();
+    });
+
+    test('should update the data when the shopper types without a namePrefix', async () => {
+        const user = userEvent.setup();
+        const onChange = jest.fn();
+        renderPersonalDetails({ requiredFields: ['firstName'], onChange });
+
+        const firstNameInput = screen.getByLabelText(/first name/i);
+        expect(firstNameInput).toHaveAttribute('name', 'firstName');
+
+        await user.type(firstNameInput, 'John');
+
+        await waitFor(() => {
+            const { data } = onChange.mock.lastCall[0];
+            expect(data.shopperName.firstName).toBe('John');
+        });
+    });
+
+    test('should prefix the input names and still update the data when a namePrefix is provided', async () => {
+        const user = userEvent.setup();
+        const onChange = jest.fn();
+        renderPersonalDetails({ requiredFields: ['firstName'], namePrefix: 'shopper', onChange });
+
+        const firstNameInput = screen.getByLabelText(/first name/i);
+        expect(firstNameInput).toHaveAttribute('name', 'shopper.firstName');
+
+        await user.type(firstNameInput, 'John');
+
+        await waitFor(() => {
+            const { data } = onChange.mock.lastCall[0];
+            expect(data.shopperName.firstName).toBe('John');
+        });
+    });
+
+    test('should ignore events coming from an input without a name', () => {
+        const onChange = jest.fn();
+        renderPersonalDetails({ requiredFields: ['firstName'], onChange });
+
+        const callCountAfterRender = onChange.mock.calls.length;
+        const firstNameInput = screen.getByLabelText<HTMLInputElement>(/first name/i);
+        firstNameInput.name = '';
+
+        fireEvent.input(firstNameInput, { target: { value: 'John' } });
+        fireEvent.blur(firstNameInput);
+
+        expect(onChange).toHaveBeenCalledTimes(callCountAfterRender);
+    });
+
+    test('should show an error for an empty required field when validation is triggered through the component ref', async () => {
+        const setComponentRef = jest.fn();
+        renderPersonalDetails({ requiredFields: ['firstName'], setComponentRef });
+
+        await waitFor(() => {
+            expect(setComponentRef).toHaveBeenCalled();
+        });
+
+        setComponentRef.mock.calls[0][0].showValidation();
+
+        await waitFor(() => {
+            expect(screen.getByLabelText(/first name/i)).toHaveAttribute('aria-invalid', 'true');
+        });
     });
 });

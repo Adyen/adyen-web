@@ -2,7 +2,7 @@ import { h } from 'preact';
 import { render, act } from '@testing-library/preact';
 import PrepareChallenge3DS2 from './PrepareChallenge3DS2';
 import { CoreProvider } from '../../../../core/Context/CoreProvider';
-import { THREEDS2_FULL, THREEDS2_CHALLENGE_ERROR, TIMEOUT } from '../../constants';
+import { THREEDS2_FULL, THREEDS2_CHALLENGE, THREEDS2_CHALLENGE_ERROR, TIMEOUT } from '../../constants';
 import { LogEventSubtype } from '../../../../core/Analytics/events/AnalyticsLogEvent';
 import { ErrorEventCode, ErrorEventType } from '../../../../core/Analytics/events/AnalyticsErrorEvent';
 
@@ -33,6 +33,7 @@ let onError: any;
 let errorMessage: string;
 
 const baseAnalyticsError = {
+    component: THREEDS2_CHALLENGE,
     errorType: ErrorEventType.threeDS2,
     timestamp: expect.any(String),
     id: expect.any(String)
@@ -44,9 +45,12 @@ const completeFunction = jest.fn();
 
 let mockCallbacks: any = {};
 
+let mockDoChallengeProps: any = {};
+
 jest.mock('./DoChallenge3DS2', () => ({
     __esModule: true,
     default: function MockDoChallenge(props) {
+        mockDoChallengeProps = props;
         mockCallbacks = {
             onCompleteChallenge: props.onCompleteChallenge,
             onErrorChallenge: props.onErrorChallenge
@@ -62,7 +66,7 @@ const renderPrepareChallenge = props => {
             {/*@ts-ignore Ignore typing on props*/}
             <PrepareChallenge3DS2
                 {...props}
-                isMDFlow={false}
+                isMDFlow={props.isMDFlow ?? false}
                 on3DS2ChallengeComplete={completeFunction}
                 onSubmitAnalytics={onSubmitAnalytics}
                 onError={onError}
@@ -76,6 +80,7 @@ describe('PrepareChallenge3DS2 - Happy flow', () => {
         onError = jest.fn();
         onSubmitAnalytics = jest.fn();
         mockCallbacks = {};
+        mockDoChallengeProps = {};
     });
 
     test('should not throw an error when passing correct properties', () => {
@@ -86,12 +91,28 @@ describe('PrepareChallenge3DS2 - Happy flow', () => {
         expect(onError.mock.calls.length).toBe(0);
 
         expect(onSubmitAnalytics).toHaveBeenCalledWith({
+            component: THREEDS2_CHALLENGE,
             type: THREEDS2_FULL,
             message: 'creq sent',
             subType: LogEventSubtype.challengeDataSentWeb,
             timestamp: expect.any(String),
             id: expect.any(String)
         });
+    });
+
+    test('should use the default completion callback', async () => {
+        prepareProps();
+        render(
+            <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+                <PrepareChallenge3DS2 {...propsMaster} onSubmitAnalytics={onSubmitAnalytics} />
+            </CoreProvider>
+        );
+
+        await act(() => {
+            mockCallbacks.onCompleteChallenge({ result: { transStatus: 'Y' } });
+        });
+
+        expect(onSubmitAnalytics).toHaveBeenCalledWith(expect.objectContaining({ result: 'success' }));
     });
 
     test('should fire completion analytics when challenge completes successfully', async () => {
@@ -105,6 +126,7 @@ describe('PrepareChallenge3DS2 - Happy flow', () => {
 
         // analytics to say process is complete
         expect(onSubmitAnalytics).toHaveBeenCalledWith({
+            component: THREEDS2_CHALLENGE,
             type: THREEDS2_FULL,
             message: '3DS2 challenge has completed',
             subType: LogEventSubtype.challengeCompleted,
@@ -122,6 +144,7 @@ describe('PrepareChallenge3DS2 - flow completes with errors that are considered 
         onError = jest.fn();
         onSubmitAnalytics = jest.fn();
         mockCallbacks = {};
+        mockDoChallengeProps = {};
     });
 
     test('should fire timeout analytics when challenge times out', async () => {
@@ -138,6 +161,7 @@ describe('PrepareChallenge3DS2 - flow completes with errors that are considered 
 
         // analytics for error
         expect(onSubmitAnalytics).toHaveBeenCalledWith({
+            component: THREEDS2_CHALLENGE,
             message: 'threeDS2Challenge: timeout',
             code: ErrorEventCode.THREEDS2_TIMEOUT,
             errorType: ErrorEventType.threeDS2,
@@ -147,6 +171,7 @@ describe('PrepareChallenge3DS2 - flow completes with errors that are considered 
 
         // analytics to say process is complete
         expect(onSubmitAnalytics).toHaveBeenCalledWith({
+            component: THREEDS2_CHALLENGE,
             type: THREEDS2_FULL,
             message: '3DS2 challenge has completed',
             subType: LogEventSubtype.challengeCompleted,
@@ -171,6 +196,7 @@ describe('PrepareChallenge3DS2 - flow completes with errors that are considered 
 
         // analytics for error
         expect(onSubmitAnalytics).toHaveBeenCalledWith({
+            component: THREEDS2_CHALLENGE,
             message: `${THREEDS2_CHALLENGE_ERROR}: no transStatus could be retrieved`,
             code: ErrorEventCode.THREEDS2_NO_TRANSSTATUS,
             errorType: ErrorEventType.threeDS2,
@@ -180,6 +206,7 @@ describe('PrepareChallenge3DS2 - flow completes with errors that are considered 
 
         // analytics to say process is complete
         expect(onSubmitAnalytics).toHaveBeenCalledWith({
+            component: THREEDS2_CHALLENGE,
             type: THREEDS2_FULL,
             message: '3DS2 challenge has completed',
             subType: LogEventSubtype.challengeCompleted,
@@ -189,6 +216,88 @@ describe('PrepareChallenge3DS2 - flow completes with errors that are considered 
         });
 
         expect(onSubmitAnalytics).toHaveBeenCalledTimes(3);
+    });
+
+    test('should report a failed challenge', async () => {
+        prepareProps();
+        renderPrepareChallenge(propsMaster);
+
+        await act(() => {
+            mockCallbacks.onCompleteChallenge({ result: { transStatus: 'N' } });
+        });
+
+        expect(onSubmitAnalytics).toHaveBeenCalledWith(
+            expect.objectContaining({
+                component: THREEDS2_CHALLENGE,
+                subType: LogEventSubtype.challengeCompleted,
+                result: 'failed'
+            })
+        );
+    });
+
+    test('should report a cancelled challenge', async () => {
+        prepareProps();
+        renderPrepareChallenge(propsMaster);
+
+        await act(() => {
+            mockCallbacks.onCompleteChallenge({ result: { transStatus: 'U' } });
+        });
+
+        expect(onSubmitAnalytics).toHaveBeenCalledWith(
+            expect.objectContaining({
+                component: THREEDS2_CHALLENGE,
+                subType: LogEventSubtype.challengeCompleted,
+                result: 'cancelled'
+            })
+        );
+    });
+
+    test('should handle a challenge response without a result', async () => {
+        prepareProps();
+        renderPrepareChallenge(propsMaster);
+        completeFunction.mockClear();
+
+        await act(() => {
+            mockCallbacks.onCompleteChallenge({ type: 'challengeResult' });
+        });
+
+        expect(onError).toHaveBeenCalledWith(
+            expect.objectContaining({ message: '3DS2Challenge_Error:  Challenge resolved without a "result" object' })
+        );
+        expect(onSubmitAnalytics).toHaveBeenCalledWith(
+            expect.objectContaining({
+                code: ErrorEventCode.THREEDS2_CHALLENGE_RESOLVED_WITHOUT_RESULT_PROP,
+                message: '3DS2Challenge_Error: challenge resolved without a "result" object'
+            })
+        );
+        expect(completeFunction).not.toHaveBeenCalled();
+    });
+
+    test('should notify the merchant about a challenge error in MD flow', async () => {
+        prepareProps();
+        renderPrepareChallenge({ ...propsMaster, isMDFlow: true });
+
+        await act(() => {
+            mockCallbacks.onCompleteChallenge({ result: { errorCode: 'challenge-error', errorDescription: 'Challenge failed' } });
+        });
+
+        expect(onError).toHaveBeenCalledWith(expect.objectContaining({ message: '3DS2Challenge_Error: Challenge failed' }));
+    });
+
+    test('should notify the merchant about a timeout in MD flow', async () => {
+        prepareProps();
+        renderPrepareChallenge({ ...propsMaster, isMDFlow: true });
+
+        await act(() => {
+            mockCallbacks.onErrorChallenge({ errorCode: 'timeout' });
+        });
+
+        expect(onError).toHaveBeenCalledWith(expect.objectContaining({ message: "3DS2Challenge_Error: '3DS2 challenge timed out'" }));
+        expect(onSubmitAnalytics).toHaveBeenCalledWith(
+            expect.objectContaining({
+                code: ErrorEventCode.THREEDS2_TIMEOUT
+            })
+        );
     });
 });
 
@@ -201,6 +310,21 @@ describe('PrepareChallenge3DS2 - unhappy flows', () => {
         });
 
         onSubmitAnalytics = jest.fn(() => {});
+        mockDoChallengeProps = {};
+    });
+
+    test('should use the default error callback when token is missing', () => {
+        prepareProps();
+        const propsMock = { ...propsMaster };
+        delete propsMock.token;
+
+        expect(() =>
+            render(
+                <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+                    <PrepareChallenge3DS2 {...propsMock} onSubmitAnalytics={onSubmitAnalytics} />
+                </CoreProvider>
+            )
+        ).not.toThrow();
     });
 
     test('should call onError and onSubmitAnalytics when token is missing from props', () => {
@@ -259,6 +383,28 @@ describe('PrepareChallenge3DS2 - unhappy flows', () => {
             ...baseAnalyticsError,
             code: ErrorEventCode.THREEDS2_TOKEN_IS_MISSING_ACSURL,
             message: '3DS2Challenge_Error: Decoded token is missing a valid acsURL property'
+        };
+        expect(onSubmitAnalytics).toHaveBeenCalledWith(analyticsError);
+
+        expect(onSubmitAnalytics).toHaveBeenCalledTimes(1);
+    });
+
+    test('should call onError and onSubmitAnalytics when postMessageDomain is not valid', () => {
+        const alteredToken = { ...challengeToken };
+        alteredToken.threeDSNotificationURL = '';
+
+        prepareProps(alteredToken);
+
+        const propsMock = { ...propsMaster };
+
+        renderPrepareChallenge(propsMock);
+
+        expect(errorMessage).toBe(`${ErrorEventCode.THREEDS2_CHALLENGE_TOKEN_IS_MISSING_THREEDSNOTIFICATIONURL}: Data parsing error`);
+
+        const analyticsError = {
+            ...baseAnalyticsError,
+            code: ErrorEventCode.THREEDS2_CHALLENGE_TOKEN_IS_MISSING_THREEDSNOTIFICATIONURL,
+            message: '3DS2Challenge_Error: Decoded token is missing a valid threeDSNotificationURL property'
         };
         expect(onSubmitAnalytics).toHaveBeenCalledWith(analyticsError);
 
@@ -332,5 +478,38 @@ describe('PrepareChallenge3DS2 - unhappy flows', () => {
         expect(onSubmitAnalytics).toHaveBeenCalledWith(analyticsError);
 
         expect(onSubmitAnalytics).toHaveBeenCalledTimes(1);
+    });
+});
+
+describe('PrepareChallenge3DS2 - usePasskeyIFrameAttributes', () => {
+    beforeEach(() => {
+        onError = jest.fn();
+        onSubmitAnalytics = jest.fn();
+        mockCallbacks = {};
+        mockDoChallengeProps = {};
+    });
+
+    test('should pass usePasskeyIFrameAttributes to DoChallenge3DS2 when set to true', () => {
+        prepareProps();
+
+        renderPrepareChallenge({ ...propsMaster, usePasskeyIFrameAttributes: true });
+
+        expect(mockDoChallengeProps.usePasskeyIFrameAttributes).toBe(true);
+    });
+
+    test('should pass usePasskeyIFrameAttributes to DoChallenge3DS2 when set to false', () => {
+        prepareProps();
+
+        renderPrepareChallenge({ ...propsMaster, usePasskeyIFrameAttributes: false });
+
+        expect(mockDoChallengeProps.usePasskeyIFrameAttributes).toBe(false);
+    });
+
+    test('should not pass usePasskeyIFrameAttributes to DoChallenge3DS2 when not set', () => {
+        prepareProps();
+
+        renderPrepareChallenge(propsMaster);
+
+        expect(mockDoChallengeProps.usePasskeyIFrameAttributes).toBeUndefined();
     });
 });

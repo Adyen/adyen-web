@@ -2,7 +2,7 @@ import { h } from 'preact';
 import { MetaConfiguration, StoryConfiguration } from '../../../storybook/types';
 import { VoucherConfiguration } from '../types';
 import { ComponentContainer } from '../../../storybook/components/ComponentContainer';
-import Boleto from './Boleto';
+import { Boleto } from '@adyen/adyen-web';
 import { Checkout } from '../../../storybook/components/Checkout';
 
 type BoletoStory = StoryConfiguration<VoucherConfiguration>;

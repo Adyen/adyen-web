@@ -10,6 +10,7 @@ import './Select.scss';
 import { ARIA_CONTEXT_SUFFIX, ARIA_ERROR_SUFFIX } from '../../../../core/Errors/constants';
 import { simulateFocusScroll } from '../utils';
 import { useCoreContext } from '../../../../core/Context/CoreProvider';
+import { stopPropagationForActionKeys } from '../../Button/stopPropagationForActionKeys';
 
 function Select({
     items = [],
@@ -28,23 +29,26 @@ function Select({
     disabled,
     disableTextFilter,
     clearOnSelect,
+    preserveInput = false,
     blurOnClose,
     onListToggle,
-    required
+    required,
+    additionalDescribedBy
 }: Readonly<SelectProps>) {
     const { i18n } = useCoreContext();
-    const filterInputRef = useRef(null);
-    const selectContainerRef = useRef(null);
-    const toggleButtonRef = useRef(null);
-    const selectListRef = useRef(null);
-    const [textFilter, setTextFilter] = useState<string>(null);
+    const filterInputRef = useRef<HTMLInputElement>(null);
+    const selectContainerRef = useRef<HTMLDivElement>(null);
+    const toggleButtonRef = useRef<HTMLElement>(null);
+    const selectListRef = useRef<HTMLUListElement>(null);
+    const [textFilter, setTextFilter] = useState<string | null>(null);
     const [showList, setShowList] = useState<boolean>(false);
     const [statusMessage, setStatusMessage] = useState<string | null>(null);
     const selectListId: string = useMemo(() => `select-${uuid()}`, []);
 
     const active: SelectItem = items.find(i => i.id === selectedValue) || ({} as SelectItem);
 
-    const [inputText, setInputText] = useState<string>();
+    // the value that's on the input field (when filterable)
+    const [inputText, setInputText] = useState<string | null>(null);
 
     const [activeOption, setActiveOption] = useState<SelectItem>(active);
 
@@ -53,7 +57,8 @@ function Select({
     const filteredItems = disableTextFilter ? items : items.filter(item => !textFilter || item.name.toLowerCase().includes(textFilter.toLowerCase()));
 
     const suffix = isInvalid ? ARIA_ERROR_SUFFIX : ARIA_CONTEXT_SUFFIX;
-    const ariaDescribedBy = uniqueId ? `${uniqueId}${suffix}` : null;
+    const baseDescribedBy = uniqueId ? `${uniqueId}${suffix}` : null;
+    const ariaDescribedBy = [baseDescribedBy, additionalDescribedBy].filter(Boolean).join(' ') || undefined;
 
     const setNextActive = () => {
         if (!filteredItems || filteredItems.length < 1) return;
@@ -76,6 +81,7 @@ function Select({
     const scrollToItem = (item: SelectItem) => {
         if (!item) return;
         const nextElement = document.getElementById(`listItem-${item.id}`);
+        if (!nextElement) return;
         simulateFocusScroll(nextElement);
     };
 
@@ -85,7 +91,7 @@ function Select({
     const closeList = () => {
         //blurs the field when the list is closed, makes for a better UX for most users, needs more testing
         if (blurOnClose) {
-            filterInputRef.current.blur();
+            filterInputRef.current?.blur();
         }
         setShowList(false);
     };
@@ -94,8 +100,8 @@ function Select({
         setShowList(true);
     };
 
-    const extractItemFromEvent = (e: Event): SelectItem => {
-        const value = (e.currentTarget as HTMLInputElement).getAttribute('data-value');
+    const extractItemFromEvent = (e: Event): SelectItem | undefined => {
+        const value = (e.currentTarget as HTMLElement).getAttribute('data-value');
         return filteredItems.find(listItem => listItem.id == value);
     };
 
@@ -145,7 +151,7 @@ function Select({
     const handleHover = (e: Event) => {
         e.preventDefault();
         const item = extractItemFromEvent(e);
-        setActiveOption(item);
+        if (item) setActiveOption(item);
     };
 
     /**
@@ -154,6 +160,7 @@ function Select({
      * @param e - KeyboardEvent
      */
     const handleButtonKeyDown = (e: KeyboardEvent) => {
+        stopPropagationForActionKeys(e);
         if (e.key === keys.enter && filterable && showList && textFilter) {
             handleSelect(e);
         } else if (e.key === keys.escape) {
@@ -224,18 +231,29 @@ function Select({
     const toggleList = (e: Event) => {
         e.preventDefault();
         if (!showList) {
-            setInputText(null);
+            if (!preserveInput) {
+                setInputText(null);
+            }
             openList();
         } else {
-            setInputText(selectedOption.name);
+            if (!preserveInput) {
+                setInputText(selectedOption.name);
+            }
             closeList();
         }
     };
 
     useEffect(() => {
+        if (preserveInput) return;
         if (showList) {
+            // clean the value in the input when opening the list so can start typing fresh
             setInputText(null);
-        } else {
+        }
+    }, [showList, preserveInput]);
+
+    useEffect(() => {
+        if (!showList) {
+            // clean the text filter when closing the list
             setTextFilter(null);
         }
     }, [showList]);
@@ -256,11 +274,7 @@ function Select({
          * @param e - MouseEvent
          */
         function handleClickOutside(e: MouseEvent) {
-            // use composedPath so it can also check when inside a web component
-            // if composedPath is not available fallback to e.target
-            const clickIsOutside = e.composedPath
-                ? !e.composedPath().includes(selectContainerRef.current)
-                : !selectContainerRef.current.contains(e.target);
+            const clickIsOutside = selectContainerRef.current && !e.composedPath().includes(selectContainerRef.current);
             if (clickIsOutside) {
                 closeList();
             }
@@ -297,7 +311,8 @@ function Select({
         >
             <SelectButton
                 inputText={inputText}
-                id={uniqueId ?? null}
+                preserveInput={preserveInput}
+                id={uniqueId}
                 active={activeOption}
                 selected={selectedOption}
                 filterInputRef={filterInputRef}
@@ -335,21 +350,12 @@ function Select({
                 // What happens otherwise is that just the first status message is announced
                 // tested on VoiceOver on Chrome
                 aria-relevant="additions text"
-                className="adyen-checkout-sr-panel--sr-only"
+                className="adyen-checkout__dropdown__status"
             >
                 {statusMessage}
             </div>
         </div>
     );
 }
-
-Select.defaultProps = {
-    className: '',
-    classNameModifiers: [],
-    filterable: true,
-    items: [],
-    readonly: false,
-    onChange: () => {}
-};
 
 export default Select;

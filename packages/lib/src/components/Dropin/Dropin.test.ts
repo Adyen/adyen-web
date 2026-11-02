@@ -6,13 +6,20 @@ import { AdyenCheckout } from '../../index';
 import ThreeDS2DeviceFingerprint from '../ThreeDS2/ThreeDS2DeviceFingerprint';
 import ThreeDS2Challenge from '../ThreeDS2/ThreeDS2Challenge';
 import Dropin from './Dropin';
+import type { DropinComponent } from './components/DropinComponent';
 import Fastlane from '../PayPalFastlane';
+import Card from '../Card';
+import Giftcard from '../Giftcard';
 import { SRPanel } from '../../core/Errors/SRPanel';
 
 import type { CoreConfiguration, ICore } from '../../core/types';
-import type { PaymentActionsType } from '../../types/global-types';
+import type { OrderStatus, PaymentActionsType } from '../../types/global-types';
 import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 import { InfoEventType } from '../../core/Analytics/events/AnalyticsInfoEvent';
+import PaymentMethods from '../../core/ProcessResponse/PaymentMethods';
+import getOrderStatus from '../../core/Services/order-status';
+
+jest.mock('../../core/Services/order-status');
 
 async function createAdyenCheckout(configuration) {
     return await AdyenCheckout(configuration);
@@ -112,7 +119,7 @@ describe('Dropin', () => {
                 paymentData: 'Ab02b4c0!BQABAgCUeRP+3La4...',
                 paymentMethodType: 'scheme',
                 subtype: 'fingerprint',
-                token: 'eyJ0aHJlZURTTWV0aG9kTm90aWZpY2F0aW9uVVJMIjoiaHR0cHM6XC9cL2NoZWNrb3V0c2hvcHBlci10ZXN0LmFkeWVuLmNvbVwvY2hlY2tvdXRzaG9wcGVyXC90aHJlZURTTWV0aG9kTm90aWZpY2F0aW9uLnNodG1sP29yaWdpbktleT1wdWIudjIuODExNTY1ODcwNTcxMzk0MC5hSFIwY0hNNkx5OXdhSEF0TnpFdGMybHRiMjR1YzJWaGJXeGxjM010WTJobFkydHZkWFF1WTI5dC50VnJIV3B4UktWVTVPMENiNUg5TVFlUnJKdmZRQ1lnbXR6VTY1WFhzZ2NvIiwidGhyZWVEU01ldGhvZFVybCI6Imh0dHBzOlwvXC9wYWwtdGVzdC5hZHllbi5jb21cL3RocmVlZHMyc2ltdWxhdG9yXC9hY3NcL3N0YXJ0TWV0aG9kLnNodG1sIiwidGhyZWVEU1NlcnZlclRyYW5zSUQiOiI5MzI2ZjNiOS00MTc3LTQ4ZTktYmM2Mi1kOTliYzVkZDA2Y2IifQ==',
+                token: 'test',
                 type: 'threeDS2' as PaymentActionsType
             };
 
@@ -210,6 +217,16 @@ describe('Dropin', () => {
             dropin.setStatus('error');
             expect(await screen.findByText(/An unknown error occurred/i)).toBeTruthy();
         });
+
+        test('should show the Error status when preparing Drop-in data fails', async () => {
+            (getOrderStatus as jest.Mock).mockRejectedValueOnce(new Error('Network request failed'));
+
+            const dropin = new Dropin(checkout, { order: { orderData: 'xxx', pspReference: 'yyy' } });
+            render(dropin.render());
+
+            expect(await screen.findByText(/An unknown error occurred/i)).toBeTruthy();
+            expect(screen.queryByText(/Network request failed/i)).not.toBeInTheDocument();
+        });
     });
 
     describe('Complying with local regulations', () => {
@@ -301,6 +318,229 @@ describe('Dropin', () => {
             const core = setupCoreMock();
             const dropin = new Dropin(core, {});
             expect(dropin.core.modules.analytics.sendFlavor).toHaveBeenCalledWith('dropin');
+        });
+
+        test('should report all baseline PMs as unavailable on "ready" event when no component handles them', async () => {
+            const core = setupCoreMock({
+                paymentMethods: new PaymentMethods({
+                    paymentMethods: [
+                        { name: 'AliPay', type: 'alipay' },
+                        { name: 'KakaoPay', type: 'kakaopay' }
+                    ]
+                })
+            });
+
+            const dropin = new Dropin(core);
+            render(dropin.render());
+
+            await waitFor(() =>
+                expect(core.modules.analytics.sendAnalytics).toHaveBeenCalledWith(
+                    expect.objectContaining({
+                        type: InfoEventType.PaymentListDisplayed,
+                        component: 'dropin',
+                        availablePaymentMethods: [],
+                        unavailablePaymentMethods: [
+                            expect.objectContaining({ paymentMethodType: 'alipay', displayMode: 'regular' }),
+                            expect.objectContaining({ paymentMethodType: 'kakaopay', displayMode: 'regular' })
+                        ]
+                    })
+                )
+            );
+        });
+
+        test('should not include PII fields on stored payment method entries on "ready" event', async () => {
+            const core = setupCoreMock({
+                paymentMethods: new PaymentMethods({
+                    paymentMethods: [],
+                    storedPaymentMethods: [
+                        {
+                            id: 'stored-1',
+                            type: 'scheme',
+                            name: 'Visa',
+                            supportedShopperInteractions: ['Ecommerce'],
+                            lastFour: '1234',
+                            holderName: 'John Doe',
+                            shopperEmail: 'john@example.com'
+                        }
+                    ]
+                })
+            });
+
+            const dropin = new Dropin(core);
+            render(dropin.render());
+
+            await waitFor(() =>
+                expect(core.modules.analytics.sendAnalytics).toHaveBeenCalledWith(
+                    expect.objectContaining({
+                        type: InfoEventType.PaymentListDisplayed,
+                        component: 'dropin',
+                        unavailablePaymentMethods: [{ paymentMethodType: 'scheme', displayMode: 'stored' }]
+                    })
+                )
+            );
+        });
+
+        test('should emit the "ready" event exactly once per mount', async () => {
+            const core = setupCoreMock();
+            const dropin = new Dropin(core);
+            render(dropin.render());
+
+            await waitFor(() =>
+                expect(core.modules.analytics.sendAnalytics).toHaveBeenCalledWith(
+                    expect.objectContaining({ type: InfoEventType.PaymentListDisplayed })
+                )
+            );
+
+            const readyCallCount = jest
+                .mocked(core.modules.analytics.sendAnalytics)
+                .mock.calls.filter(([event]) => (event as { type?: InfoEventType }).type === InfoEventType.PaymentListDisplayed).length;
+            expect(readyCallCount).toBe(1);
+        });
+
+        test('should report filtered-out stored PMs as unavailable and kept ones as rendered in the "ready" event', async () => {
+            const config = getAdyenCheckoutConfiguration({
+                paymentMethodsResponse: {
+                    paymentMethods: [],
+                    storedPaymentMethods: [
+                        {
+                            id: 'stored-visa',
+                            type: 'scheme',
+                            name: 'VISA',
+                            brand: 'visa',
+                            lastFour: '1111',
+                            expiryMonth: '03',
+                            expiryYear: '2030',
+                            supportedShopperInteractions: ['Ecommerce', 'ContAuth']
+                        },
+                        {
+                            id: 'stored-mc',
+                            type: 'scheme',
+                            name: 'Mastercard',
+                            brand: 'mc',
+                            lastFour: '4444',
+                            expiryMonth: '12',
+                            expiryYear: '2028',
+                            supportedShopperInteractions: ['Ecommerce', 'ContAuth']
+                        },
+                        {
+                            id: 'stored-ach',
+                            type: 'ach',
+                            name: 'ACH Direct Debit',
+                            supportedShopperInteractions: ['Ecommerce']
+                        }
+                    ]
+                }
+            });
+            const checkout = await createAdyenCheckout(config);
+            const sendAnalyticsSpy = jest.spyOn(checkout.modules.analytics, 'sendAnalytics');
+
+            const dropin = new Dropin(checkout, {
+                paymentMethodComponents: [Card],
+                filterStoredPaymentMethods: pms => pms.filter(pm => pm.type === 'scheme')
+            });
+            render(dropin.render());
+
+            const flushPromises = () => new Promise(process.nextTick);
+            await flushPromises();
+
+            await waitFor(() =>
+                expect(sendAnalyticsSpy).toHaveBeenCalledWith(
+                    expect.objectContaining({
+                        type: InfoEventType.PaymentListDisplayed,
+                        component: 'dropin',
+                        availablePaymentMethods: [
+                            { paymentMethodType: 'scheme', brands: ['visa'], displayMode: 'stored' },
+                            { paymentMethodType: 'scheme', brands: ['mc'], displayMode: 'stored' }
+                        ],
+                        unavailablePaymentMethods: [{ paymentMethodType: 'ach', displayMode: 'stored' }]
+                    })
+                )
+            );
+        });
+
+        test('should report paymentMethods in render order, not API response order', async () => {
+            const config = getAdyenCheckoutConfiguration({
+                paymentMethodsResponse: {
+                    paymentMethods: [],
+                    storedPaymentMethods: [
+                        {
+                            id: 'stored-visa',
+                            type: 'scheme',
+                            name: 'VISA',
+                            brand: 'visa',
+                            supportedShopperInteractions: ['Ecommerce', 'ContAuth']
+                        },
+                        {
+                            id: 'stored-mc',
+                            type: 'scheme',
+                            name: 'Mastercard',
+                            brand: 'mc',
+                            supportedShopperInteractions: ['Ecommerce', 'ContAuth']
+                        }
+                    ]
+                }
+            });
+            const checkout = await createAdyenCheckout(config);
+            const sendAnalyticsSpy = jest.spyOn(checkout.modules.analytics, 'sendAnalytics');
+
+            const dropin = new Dropin(checkout, {
+                paymentMethodComponents: [Card],
+                filterStoredPaymentMethods: pms => [...pms].reverse()
+            });
+            render(dropin.render());
+
+            const flushPromises = () => new Promise(process.nextTick);
+            await flushPromises();
+
+            await waitFor(() =>
+                expect(sendAnalyticsSpy).toHaveBeenCalledWith(
+                    expect.objectContaining({
+                        type: InfoEventType.PaymentListDisplayed,
+                        component: 'dropin',
+                        availablePaymentMethods: [
+                            { paymentMethodType: 'scheme', brands: ['mc'], displayMode: 'stored' },
+                            { paymentMethodType: 'scheme', brands: ['visa'], displayMode: 'stored' }
+                        ]
+                    })
+                )
+            );
+        });
+
+        test('should ignore properties injected via filterStoredPaymentMethods in the "ready" event', async () => {
+            const config = getAdyenCheckoutConfiguration({
+                paymentMethodsResponse: {
+                    paymentMethods: [],
+                    storedPaymentMethods: [
+                        {
+                            id: 'stored-visa',
+                            type: 'scheme',
+                            name: 'VISA',
+                            supportedShopperInteractions: ['Ecommerce', 'ContAuth']
+                        }
+                    ]
+                }
+            });
+            const checkout = await createAdyenCheckout(config);
+            const sendAnalyticsSpy = jest.spyOn(checkout.modules.analytics, 'sendAnalytics');
+
+            const dropin = new Dropin(checkout, {
+                paymentMethodComponents: [Card],
+                filterStoredPaymentMethods: pms => pms.map(pm => ({ ...pm, injectedField: 'should-be-ignored' }))
+            });
+            render(dropin.render());
+
+            const flushPromises = () => new Promise(process.nextTick);
+            await flushPromises();
+
+            await waitFor(() =>
+                expect(sendAnalyticsSpy).toHaveBeenCalledWith(
+                    expect.objectContaining({
+                        type: InfoEventType.PaymentListDisplayed,
+                        component: 'dropin',
+                        availablePaymentMethods: [{ paymentMethodType: 'scheme', displayMode: 'stored' }]
+                    })
+                )
+            );
         });
     });
 
@@ -429,7 +669,7 @@ describe('Dropin', () => {
             await waitFor(() => expect(screen.getByRole('button', { name: 'Continue to AliPay' })).toBeVisible());
 
             const alipayHeader = screen.getByText('AliPay');
-            fireEvent.keyPress(alipayHeader, { key: 'Enter', code: 'Enter', charCode: 13 });
+            fireEvent.keyDown(alipayHeader, { key: 'Enter', code: 'Enter', charCode: 13 });
 
             expect(onEnterKeyPressedMock).toHaveBeenCalledTimes(1);
         });
@@ -458,6 +698,116 @@ describe('Dropin', () => {
             dropin.paymentMethodElements.forEach(element => {
                 expect(element.props.amount).toEqual(newAmount);
             });
+        });
+    });
+
+    describe('Session-based order cancel', () => {
+        test('should call session.cancelOrder when the order cancel button is clicked', async () => {
+            const cancelOrderMock = jest.fn().mockResolvedValue({});
+
+            const mockOrderStatus: OrderStatus = {
+                expiresAt: '2030-01-01T00:00:00Z',
+                pspReference: 'mockPsp',
+                reference: 'mockRef',
+                paymentMethods: [{ type: 'visa', lastFour: '1234', amount: { value: 1000, currency: 'EUR' } }],
+                remainingAmount: { value: 0, currency: 'EUR' }
+            };
+
+            (getOrderStatus as jest.Mock).mockResolvedValue(mockOrderStatus);
+
+            const config = getAdyenCheckoutConfiguration();
+            const sessionCheckout = await createAdyenCheckout(config);
+
+            const dropin = new Dropin(sessionCheckout, {
+                order: { orderData: 'mockOrderData', pspReference: 'mockPsp' },
+                // @ts-ignore test only
+                session: { cancelOrder: cancelOrderMock }
+            });
+
+            render(dropin.render());
+
+            await waitFor(() => expect(screen.getByRole('button', { name: /Remove/i })).toBeVisible());
+
+            await userEvent.click(screen.getByRole('button', { name: /Remove/i }));
+
+            expect(cancelOrderMock).toHaveBeenCalledTimes(1);
+        });
+    });
+
+    describe('Gift card balance check', () => {
+        type BalanceCheckResponse = { balance?: { value: number; currency: string } };
+
+        const getDropinStatus = (dropin: Dropin) => (dropin.dropinRef as DropinComponent | null)?.state.status.type;
+
+        const mountDropinWithGiftcard = async (onBalanceCheck: jest.Mock) => {
+            const config = getAdyenCheckoutConfiguration({
+                paymentMethodsResponse: {
+                    paymentMethods: [{ name: 'Generic GiftCard', type: 'giftcard', brand: 'genericgiftcard' }]
+                }
+            });
+            const checkout = await createAdyenCheckout(config);
+            const dropin = new Dropin(checkout, {
+                paymentMethodComponents: [Giftcard],
+                openFirstPaymentMethod: true,
+                paymentMethodsConfiguration: { giftcard: { onBalanceCheck } }
+            });
+
+            render(dropin.render());
+
+            const redeemButton = await screen.findByRole('button', { name: 'Redeem' });
+            const giftcard = dropin.activePaymentMethod as Giftcard;
+            // The card fields live in SecuredFields iframes, so validity is set directly
+            giftcard.setState({ isValid: true });
+
+            return { dropin, giftcard, redeemButton };
+        };
+
+        // While loading, the button content is aria-hidden, so it has no accessible name: keep hold of the element instead of re-querying it
+        test('should disable the pay button while the balance check is pending', async () => {
+            const onBalanceCheck = jest.fn();
+            const { dropin, redeemButton } = await mountDropinWithGiftcard(onBalanceCheck);
+
+            await userEvent.click(redeemButton);
+
+            await waitFor(() => expect(redeemButton).toBeDisabled());
+            expect(onBalanceCheck).toHaveBeenCalledTimes(1);
+            expect(getDropinStatus(dropin)).toBe('loading');
+        });
+
+        test('should re-enable the pay button when onBalanceCheck rejects', async () => {
+            const onBalanceCheck = jest.fn((resolve, reject) => reject());
+            const { dropin, redeemButton } = await mountDropinWithGiftcard(onBalanceCheck);
+
+            await userEvent.click(redeemButton);
+
+            await waitFor(() => expect(onBalanceCheck).toHaveBeenCalledTimes(1));
+            await waitFor(() => expect(redeemButton).toBeEnabled());
+            expect(getDropinStatus(dropin)).toBe('ready');
+        });
+
+        test.each<[string, BalanceCheckResponse]>([
+            ['has zero balance', { balance: { value: 0, currency: 'USD' } }],
+            ['is in a different currency', { balance: { value: 5000, currency: 'EUR' } }],
+            ['has no balance', {}]
+        ])('should re-enable the pay button when the card %s', async (_, response) => {
+            const onBalanceCheck = jest.fn(resolve => resolve(response));
+            const { dropin, redeemButton } = await mountDropinWithGiftcard(onBalanceCheck);
+
+            await userEvent.click(redeemButton);
+
+            await waitFor(() => expect(onBalanceCheck).toHaveBeenCalledTimes(1));
+            await waitFor(() => expect(redeemButton).toBeEnabled());
+            expect(getDropinStatus(dropin)).toBe('ready');
+        });
+
+        test('should end in the ready status when the balance covers the full amount', async () => {
+            const onBalanceCheck = jest.fn(resolve => resolve({ balance: { value: 5000, currency: 'USD' } }));
+            const { dropin, redeemButton } = await mountDropinWithGiftcard(onBalanceCheck);
+
+            await userEvent.click(redeemButton);
+
+            await waitFor(() => expect(screen.getByRole('button', { name: /Pay \$29.99/i })).toBeEnabled());
+            expect(getDropinStatus(dropin)).toBe('ready');
         });
     });
 });

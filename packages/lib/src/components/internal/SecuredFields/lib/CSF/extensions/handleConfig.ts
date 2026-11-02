@@ -72,8 +72,9 @@ export function handleConfig(props: CSFSetupObject): void {
     this.config.iframeSrc = `${this.config.loadingContext}securedfields/${props.clientKey}/${SF_VERSION}/securedFields.html?type=${bundleType}&d=${d}`;
 
     // TODO###### FOR QUICK LOCAL TESTING of sf
+    /* istanbul ignore next -- dev-only local-testing override, NODE_ENV is 'test' under Jest so this never runs */
     if (process.env.NODE_ENV === 'development' && process.env.__SF_ENV__ !== 'build') {
-        this.config.iframeSrc = `${process.env.__SF_ENV__}securedFields.${SF_VERSION}.html?type=${sfBundleType}`;
+        this.config.iframeSrc = `${process.env.__SF_ENV__}securedFields.html?type=${sfBundleType}&vn=${SF_VERSION}`;
     }
     // TODO######
 }

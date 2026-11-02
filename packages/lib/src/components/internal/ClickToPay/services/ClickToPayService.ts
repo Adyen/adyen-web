@@ -34,7 +34,7 @@ export enum CtpState {
 class ClickToPayService implements IClickToPayService {
     private readonly sdkLoader: ISrcSdkLoader;
     private readonly schemesConfig: SchemesConfiguration;
-    private readonly shopperIdentity?: IdentityLookupParams;
+    private readonly shopperIdentity?: IdentityLookupParams | null;
     private readonly environment: string;
     private readonly analytics: IAnalytics;
 
@@ -46,12 +46,12 @@ class ClickToPayService implements IClickToPayService {
     private readonly srciTransactionId: string = uuidv4();
 
     private sdks: ISrcInitiator[];
-    private validationSchemeSdk: ISrcInitiator = null;
+    private validationSchemeSdk: ISrcInitiator | null = null;
     private stateSubscriber: CallbackStateSubscriber;
 
     public state: CtpState = CtpState.Idle;
-    public shopperCards: ShopperCard[] = null;
-    public identityValidationData: IdentityValidationData = null;
+    public shopperCards: ShopperCard[] | null = null;
+    public identityValidationData: IdentityValidationData | null = null;
 
     /**
      * Indicates if the shopper opted for saving cookies during the transaction
@@ -63,7 +63,7 @@ class ClickToPayService implements IClickToPayService {
         sdkLoader: ISrcSdkLoader,
         environment: string,
         analytics: IAnalytics,
-        shopperIdentity?: IdentityLookupParams,
+        shopperIdentity?: IdentityLookupParams | null,
         onTimeout?: (error: TimeoutError) => void
     ) {
         this.sdkLoader = sdkLoader;
@@ -93,9 +93,9 @@ class ClickToPayService implements IClickToPayService {
             this.sdks = await this.sdkLoader.load(this.environment, this.analytics);
             await this.initiateSdks();
 
-            const { recognized = false, idTokens = null } = await this.verifyIfShopperIsRecognized();
+            const { recognized = false, idTokens } = await this.verifyIfShopperIsRecognized();
 
-            if (recognized) {
+            if (recognized && idTokens) {
                 await this.getShopperProfile(idTokens);
                 this.setState(CtpState.Ready);
                 return;
@@ -139,7 +139,7 @@ class ClickToPayService implements IClickToPayService {
      **/
     public async startIdentityValidation(): Promise<void> {
         if (!this.validationSchemeSdk) {
-            throw Error('startIdentityValidation: No ValidationSDK set for the validation process');
+            throw new Error('startIdentityValidation: No ValidationSDK set for the validation process');
         }
         try {
             const { maskedValidationChannel } = await this.validationSchemeSdk.initiateIdentityValidation();
@@ -162,7 +162,7 @@ class ClickToPayService implements IClickToPayService {
      */
     public async finishIdentityValidation(otpCode: string): Promise<void> {
         if (!this.validationSchemeSdk) {
-            throw Error('finishIdentityValidation: No ValidationSDK set for the validation process');
+            throw new Error('finishIdentityValidation: No ValidationSDK set for the validation process');
         }
 
         const validationToken = await this.validationSchemeSdk.completeIdentityValidation(otpCode);
@@ -176,10 +176,13 @@ class ClickToPayService implements IClickToPayService {
      */
     public async checkout(card: ShopperCard): Promise<ClickToPayCheckoutPayload> {
         if (!card) {
-            throw Error('ClickToPayService # checkout: Missing card data');
+            throw new Error('ClickToPayService # checkout: Missing card data');
         }
 
         const checkoutSdk = this.sdks.find(sdk => sdk.schemeName === card.scheme);
+        if (!checkoutSdk) {
+            throw new AdyenCheckoutError('ERROR', `ClickToPayService # checkout: No SDK available for scheme ${card.scheme}`);
+        }
 
         const checkoutResponse = await checkoutSdk.checkout({
             srcDigitalCardId: card.srcDigitalCardId,
@@ -230,6 +233,7 @@ class ClickToPayService implements IClickToPayService {
      */
     public verifyIfShopperIsEnrolled(shopperIdentity: IdentityLookupParams): Promise<{ isEnrolled: boolean }> {
         const { shopperEmail } = shopperIdentity;
+        if (!shopperEmail) return Promise.resolve({ isEnrolled: false });
 
         return new Promise((resolve, reject) => {
             const lookupPromises = this.sdks.map(sdk => {
@@ -279,11 +283,11 @@ class ClickToPayService implements IClickToPayService {
                 : error;
 
         if (timeoutError.scheme === 'visa') {
-            timeoutError.setCorrelationId(window.VISA_SDK?.correlationId);
+            timeoutError.setCorrelationId(globalThis.VISA_SDK?.correlationId);
 
             // Visa srciDpaId must be passed when there is no correlation ID available
-            if (window.VISA_SDK?.correlationId) window.VISA_SDK?.buildClientProfile?.();
-            else window.VISA_SDK?.buildClientProfile?.(this.schemesConfig.visa.srciDpaId);
+            if (globalThis.VISA_SDK?.correlationId) globalThis.VISA_SDK?.buildClientProfile?.();
+            else globalThis.VISA_SDK?.buildClientProfile?.(this.schemesConfig.visa?.srciDpaId);
         }
         this.onTimeout?.(timeoutError);
     }
@@ -304,7 +308,9 @@ class ClickToPayService implements IClickToPayService {
                 const createProfileWithScheme = (promiseResult: PromiseSettledResult<SrcProfile>, index) =>
                     isFulfilled(promiseResult) && { ...promiseResult.value, scheme: this.sdks[index].schemeName };
 
-                const profilesWithScheme: SrcProfileWithScheme[] = srcProfilesResponses.map(createProfileWithScheme).filter(profile => !!profile);
+                const profilesWithScheme: SrcProfileWithScheme[] = srcProfilesResponses
+                    .map((promiseResult, index) => createProfileWithScheme(promiseResult, index))
+                    .filter((profile): profile is SrcProfileWithScheme => !!profile);
 
                 this.shopperCards = createShopperCardsList(profilesWithScheme);
                 resolve();
@@ -349,6 +355,9 @@ class ClickToPayService implements IClickToPayService {
     private initiateSdks(): Promise<void[]> {
         const initPromises = this.sdks.map(sdk => {
             const cfg = this.schemesConfig[sdk.schemeName];
+            if (!cfg) {
+                throw new AdyenCheckoutError('ERROR', `ClickToPayService # init: Missing configuration for scheme ${sdk.schemeName}`);
+            }
 
             return executeWithTimeout<void>(
                 () => sdk.init(cfg, this.srciTransactionId),

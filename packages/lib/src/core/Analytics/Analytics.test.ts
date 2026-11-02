@@ -3,10 +3,12 @@ import { AnalyticsEventQueue } from './AnalyticsEventQueue';
 import { AnalyticsInfoEvent, InfoEventType } from './events/AnalyticsInfoEvent';
 import { AnalyticsErrorEvent, ErrorEventType } from './events/AnalyticsErrorEvent';
 import { AnalyticsLogEvent, LogEventType } from './events/AnalyticsLogEvent';
+import { mapErrorCodesForAnalytics } from './utils';
 import Storage from '../../utils/Storage';
 import type { IAnalyticsService } from './AnalyticsService';
 import { DEFAULT_DEBOUNCE_TIME_MS } from '../../utils/debounce';
 import { CHANNEL, PLATFORM } from '../config';
+import { ERROR_INVALID_CHARACTERS } from '../Errors/constants';
 
 jest.mock('../../utils/Storage');
 
@@ -19,6 +21,12 @@ const createMockService = (): jest.Mocked<IAnalyticsService> => ({
 });
 
 const MOCK_CHECKOUT_ATTEMPT_ID = 'test-checkout-attempt-id';
+
+describe('mapErrorCodesForAnalytics', () => {
+    test('should map invalid address characters to error code 937', () => {
+        expect(mapErrorCodesForAnalytics(ERROR_INVALID_CHARACTERS, 'street')).toBe('937');
+    });
+});
 
 describe('Analytics', () => {
     let mockService: jest.Mocked<IAnalyticsService>;

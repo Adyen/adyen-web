@@ -3,7 +3,7 @@ import type { PaymentAmount } from '../../../types/global-types';
 
 export const PAY_BTN_DIVIDER = '/ ';
 
-const amountLabel = (i18n, amount: PaymentAmount) =>
+const amountLabel = (i18n, amount?: PaymentAmount) =>
     !!amount?.value && !!amount?.currency ? i18n.amount(amount.value, amount.currency, { currencyDisplay: amount.currencyDisplay || 'symbol' }) : '';
 
 const isAmountFirstFormat = (i18n: Language): boolean => {
@@ -12,7 +12,7 @@ const isAmountFirstFormat = (i18n: Language): boolean => {
     return tokenIndex >= 0 && format.substring(tokenIndex + 2).trim().length > 0;
 };
 
-const payAmountLabel = (i18n: Language, amount: PaymentAmount, secondaryAmount?: PaymentAmount) => {
+const payAmountLabel = (i18n: Language, amount?: PaymentAmount, secondaryAmount?: PaymentAmount) => {
     const amountLabelValue = amountLabel(i18n, amount);
     if (!amountLabelValue) {
         return i18n.get('payButton');
@@ -39,12 +39,26 @@ const formatSecondaryAmountLabel = (i18n: Language, secondaryAmount: PaymentAmou
 
 function createButtonLabel(
     i18n: Language,
-    customLabel: string,
-    amount: PaymentAmount,
-    isZeroAuth: boolean,
-    customAmount?: PaymentAmount,
-    secondaryAmount?: PaymentAmount
+    {
+        customLabel,
+        amount,
+        isZeroAuth,
+        customAmount,
+        secondaryAmount,
+        showReview
+    }: {
+        customLabel: string;
+        amount: PaymentAmount;
+        isZeroAuth: boolean;
+        customAmount?: PaymentAmount;
+        secondaryAmount?: PaymentAmount;
+        showReview?: boolean;
+    }
 ): string {
+    if (showReview) {
+        return i18n.get('continue');
+    }
+
     if (customLabel) {
         return customLabel;
     }

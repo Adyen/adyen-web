@@ -62,8 +62,7 @@ class Button extends Component<ButtonProps, ButtonState> {
             onMouseLeave,
             onFocus,
             onBlur,
-            onKeyDown,
-            onKeyPress
+            onKeyDown
         }: ButtonProps = this.props;
         const { completed } = this.state;
         const { i18n } = useCoreContext();
@@ -149,7 +148,6 @@ class Button extends Component<ButtonProps, ButtonState> {
                 onKeyDown={onKeyDown}
                 onFocus={onFocus}
                 onBlur={onBlur}
-                onKeyPress={onKeyPress}
             >
                 {buttonText}
                 {status !== 'loading' && status !== 'redirect' && this.props.children}

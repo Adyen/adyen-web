@@ -1,0 +1,238 @@
+name: Release Notifications
+
+on:
+  pull_request:
+    types: [enqueued, dequeued, closed]
+    branches:
+      - main
+      - next-v*
+    paths:
+      - '**/CHANGELOG.md'
+  workflow_run:
+    workflows: ["GitHub Release", "Publish Package", "Check Commit Message"]
+    types: [completed]
+
+jobs:
+  resolve-version:
+    if: github.repository == 'adyen/adyen-web'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      version: ${{ steps.read-version.outputs.value }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version: 24
+      - name: Read SDK version
+        id: read-version
+        run: echo "value=$(node -p "require('./packages/lib/package.json').version")" >> "$GITHUB_OUTPUT"
+
+  load-thread-ts:
+    needs: resolve-version
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+    outputs:
+      thread_ts: ${{ steps.read.outputs.thread_ts }}
+    steps:
+      - name: Download thread state artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          ARTIFACT_ID=$(gh api "repos/${{ github.repository }}/actions/artifacts?name=release-state-${{ needs.resolve-version.outputs.version }}&per_page=10" \
+            --jq '[.artifacts[] | select(.expired == false)] | sort_by(.created_at) | last | .id // empty' \
+            2>/dev/null || echo "")
+
+          if [ -n "$ARTIFACT_ID" ]; then
+            gh api "repos/${{ github.repository }}/actions/artifacts/$ARTIFACT_ID/zip" > state.zip \
+              && unzip -o state.zip || true
+          fi
+
+      - name: Read state
+        id: read
+        run: |
+          if [ -f release-state.json ]; then
+            echo "thread_ts=$(jq -r '.thread_ts // empty' release-state.json)" >> "$GITHUB_OUTPUT"
+          else
+            echo "thread_ts=" >> "$GITHUB_OUTPUT"
+          fi
+
+  queue-new-thread:
+    needs: [resolve-version, load-thread-ts]
+    if: github.event.action == 'enqueued' && contains(github.head_ref, 'changeset-release') && needs.load-thread-ts.outputs.thread_ts == ''
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      thread_ts: ${{ steps.send-message.outputs.thread-ts }}
+    steps:
+      - name: Send Slack message
+        id: send-message
+        uses: Adyen/github-actions/slack-app-send-message@66cba28775090b2aa2c6d5bfbbde24264b549d15
+        with:
+          bot-token: ${{ secrets.SLACK_BOT_TOKEN }}
+          channel: ${{ vars.CHECKOUT_WEB_CHANNEL_ID }}
+          message: "Starting Release ${{ needs.resolve-version.outputs.version }}"
+
+  queue-retry:
+    needs: [resolve-version, load-thread-ts]
+    if: github.event.action == 'enqueued' && contains(github.head_ref, 'changeset-release') && needs.load-thread-ts.outputs.thread_ts != ''
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Send Slack message
+        uses: Adyen/github-actions/slack-app-send-message@66cba28775090b2aa2c6d5bfbbde24264b549d15
+        with:
+          bot-token: ${{ secrets.SLACK_BOT_TOKEN }}
+          channel: ${{ vars.CHECKOUT_WEB_CHANNEL_ID }}
+          message: "Release ${{ needs.resolve-version.outputs.version }} PR is re-entering the merge queue"
+          thread-ts: ${{ needs.load-thread-ts.outputs.thread_ts }}
+
+  save-thread-state:
+    needs: [resolve-version, queue-new-thread]
+    if: needs.queue-new-thread.result == 'success'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Write state file
+        run: |
+          printf '{"version":"%s","thread_ts":"%s"}\n' \
+            "${{ needs.resolve-version.outputs.version }}" \
+            "${{ needs.queue-new-thread.outputs.thread_ts }}" \
+            > release-state.json
+      - name: Upload state artifact
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        with:
+          name: release-state-${{ needs.resolve-version.outputs.version }}
+          path: release-state.json
+          retention-days: 30
+          overwrite: true
+
+  removed-from-queue:
+    needs: [resolve-version, load-thread-ts]
+    if: github.event.action == 'dequeued' && github.event.reason != 'MERGE' && github.event.reason != 'ALREADY_MERGED' && contains(github.head_ref, 'changeset-release')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Send Slack message
+        uses: Adyen/github-actions/slack-app-send-message@66cba28775090b2aa2c6d5bfbbde24264b549d15
+        with:
+          bot-token: ${{ secrets.SLACK_BOT_TOKEN }}
+          channel: ${{ vars.CHECKOUT_WEB_CHANNEL_ID }}
+          message: "Release ${{ needs.resolve-version.outputs.version }} PR was removed from the merge queue and will be re-queued"
+          thread-ts: ${{ needs.load-thread-ts.outputs.thread_ts }}
+
+  merged:
+    needs: [resolve-version, load-thread-ts]
+    if: github.event.action == 'closed' && github.event.pull_request.merged && contains(github.head_ref, 'changeset-release')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Send Slack message
+        uses: Adyen/github-actions/slack-app-send-message@66cba28775090b2aa2c6d5bfbbde24264b549d15
+        with:
+          bot-token: ${{ secrets.SLACK_BOT_TOKEN }}
+          channel: ${{ vars.CHECKOUT_WEB_CHANNEL_ID }}
+          message: "Release ${{ needs.resolve-version.outputs.version }} branch has been merged into main."
+          thread-ts: ${{ needs.load-thread-ts.outputs.thread_ts }}
+
+  gh-release:
+    needs: [resolve-version, load-thread-ts]
+    if: github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success' && (github.event.workflow_run.name == 'GitHub Release' || (github.event.workflow_run.name == 'Check Commit Message' && contains(github.event.workflow_run.head_commit.message, '[ci] release')))
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Send Slack message
+        uses: Adyen/github-actions/slack-app-send-message@66cba28775090b2aa2c6d5bfbbde24264b549d15
+        with:
+          bot-token: ${{ secrets.SLACK_BOT_TOKEN }}
+          channel: ${{ vars.CHECKOUT_WEB_CHANNEL_ID }}
+          message: "GitHub release ${{ needs.resolve-version.outputs.version }} has been created. You can check it here: https://github.com/Adyen/adyen-web/releases/tag/v${{ needs.resolve-version.outputs.version }}"
+          thread-ts: ${{ needs.load-thread-ts.outputs.thread_ts }}
+
+  gh-release-failed:
+    needs: [resolve-version, load-thread-ts]
+    if: github.event_name == 'workflow_run' && github.event.workflow_run.conclusion != 'success' && (github.event.workflow_run.name == 'GitHub Release' || (github.event.workflow_run.name == 'Check Commit Message' && contains(github.event.workflow_run.head_commit.message, '[ci] release')))
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Send Slack message
+        uses: Adyen/github-actions/slack-app-send-message@66cba28775090b2aa2c6d5bfbbde24264b549d15
+        with:
+          bot-token: ${{ secrets.SLACK_BOT_TOKEN }}
+          channel: ${{ vars.CHECKOUT_WEB_CHANNEL_ID }}
+          message: "GitHub Release workflow failed for ${{ needs.resolve-version.outputs.version }}."
+          thread-ts: ${{ needs.load-thread-ts.outputs.thread_ts }}
+
+  npm-publish:
+    needs: [resolve-version, load-thread-ts]
+    if: github.event_name == 'workflow_run' && github.event.workflow_run.name == 'Publish Package' && github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Send Slack message
+        uses: Adyen/github-actions/slack-app-send-message@66cba28775090b2aa2c6d5bfbbde24264b549d15
+        with:
+          bot-token: ${{ secrets.SLACK_BOT_TOKEN }}
+          channel: ${{ vars.CHECKOUT_WEB_CHANNEL_ID }}
+          message: "Release ${{ needs.resolve-version.outputs.version }} has been successfully published to npm! You can find it here: https://www.npmjs.com/package/@adyen/adyen-web/v/${{ needs.resolve-version.outputs.version }}"
+          thread-ts: ${{ needs.load-thread-ts.outputs.thread_ts }}
+
+  npm-publish-failed:
+    needs: [resolve-version, load-thread-ts]
+    if: github.event_name == 'workflow_run' && github.event.workflow_run.name == 'Publish Package' && github.event.workflow_run.conclusion != 'success'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Send Slack message
+        uses: Adyen/github-actions/slack-app-send-message@66cba28775090b2aa2c6d5bfbbde24264b549d15
+        with:
+          bot-token: ${{ secrets.SLACK_BOT_TOKEN }}
+          channel: ${{ vars.CHECKOUT_WEB_CHANNEL_ID }}
+          message: "Publish Package workflow failed for ${{ needs.resolve-version.outputs.version }}."
+          thread-ts: ${{ needs.load-thread-ts.outputs.thread_ts }}
+
+  npm-publish-release-notes:
+    needs: resolve-version
+    if: github.event_name == 'workflow_run' && github.event.workflow_run.name == 'Publish Package' && github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Send Slack message
+        uses: Adyen/github-actions/slack-app-send-message@66cba28775090b2aa2c6d5bfbbde24264b549d15
+        with:
+          bot-token: ${{ secrets.SLACK_BOT_TOKEN }}
+          channel: ${{ vars.WEB_RELEASE_NOTES_CHANNEL_ID }}
+          message: "Hello team! We released a new SDK version. The release notes are available here: https://github.com/Adyen/adyen-web/releases/tag/v${{ needs.resolve-version.outputs.version }}"
+
+  cleanup-after-npm-publish:
+    needs: [resolve-version, load-thread-ts, npm-publish]
+    if: needs.npm-publish.result == 'success' && needs.load-thread-ts.outputs.thread_ts != ''
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+    steps:
+      - name: Delete release state artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api "repos/${{ github.repository }}/actions/artifacts?name=release-state-${{ needs.resolve-version.outputs.version }}&per_page=10" \
+            --jq '.artifacts[].id' | \
+            while read ARTIFACT_ID; do
+              gh api -X DELETE "repos/${{ github.repository }}/actions/artifacts/$ARTIFACT_ID" \
+                && echo "Deleted artifact $ARTIFACT_ID" \
+                || echo "Failed to delete artifact $ARTIFACT_ID (already gone?)"
+            done

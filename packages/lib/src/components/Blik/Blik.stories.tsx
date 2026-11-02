@@ -2,7 +2,7 @@ import { h } from 'preact';
 import { MetaConfiguration, PaymentMethodStoryProps, StoryConfiguration } from '../../../storybook/types';
 import { ComponentContainer } from '../../../storybook/components/ComponentContainer';
 import { Checkout } from '../../../storybook/components/Checkout';
-import Blik from './Blik';
+import { Blik } from '@adyen/adyen-web';
 import { AwaitConfiguration } from '../types';
 
 type BlikStory = StoryConfiguration<AwaitConfiguration>;

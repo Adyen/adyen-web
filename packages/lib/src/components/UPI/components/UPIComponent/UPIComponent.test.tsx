@@ -50,7 +50,6 @@ describe('UPIComponent', () => {
                     mode={UPI_MODE.INTENT}
                     onChange={jest.fn()}
                     setComponentRef={jest.fn()}
-                    showPayButton={false}
                     payButton={() => <button className="pay-button" />}
                     onSubmitAnalytics={jest.fn()}
                 />
@@ -66,7 +65,6 @@ describe('UPIComponent', () => {
                     appsList={allApps}
                     mode={UPI_MODE.INTENT}
                     onChange={jest.fn()}
-                    showPayButton={false}
                     setComponentRef={jest.fn()}
                     payButton={() => <button className="pay-button" />}
                     onSubmitAnalytics={jest.fn()}
@@ -87,7 +85,6 @@ describe('UPIComponent', () => {
                     appsList={priorityApps}
                     mode={UPI_MODE.INTENT}
                     onChange={jest.fn()}
-                    showPayButton={false}
                     payButton={() => <button className="pay-button" />}
                     setComponentRef={jest.fn()}
                     onSubmitAnalytics={jest.fn()}
@@ -99,13 +96,12 @@ describe('UPIComponent', () => {
             expect(screen.queryByRole('combobox', { name: /UPI apps/i })).not.toBeInTheDocument();
         });
 
-        test('should show a pay button if showPayButton is true', async () => {
+        test('should show a pay button', async () => {
             customRender(
                 <UPIComponent
                     appsList={[gpayApp]}
                     mode={UPI_MODE.INTENT}
                     onChange={jest.fn()}
-                    showPayButton={true}
                     payButton={() => <button>Pay</button>}
                     setComponentRef={jest.fn()}
                     onSubmitAnalytics={jest.fn()}
@@ -123,7 +119,6 @@ describe('UPIComponent', () => {
                     appsList={[gpayApp]}
                     mode={UPI_MODE.INTENT}
                     onChange={jest.fn()}
-                    showPayButton={true}
                     payButton={payButtonMock}
                     setComponentRef={jest.fn()}
                     onSubmitAnalytics={jest.fn()}
@@ -145,7 +140,6 @@ describe('UPIComponent', () => {
                 <UPIComponent
                     appsList={[gpayApp]}
                     mode={UPI_MODE.INTENT}
-                    showPayButton={false}
                     onChange={onChangeMock}
                     payButton={() => <button className="pay-button" />}
                     setComponentRef={jest.fn()}
@@ -178,7 +172,6 @@ describe('UPIComponent', () => {
                 <UPIComponent
                     appsList={allApps}
                     mode={UPI_MODE.INTENT}
-                    showPayButton={false}
                     onChange={onChangeMock}
                     payButton={() => <button className="pay-button" />}
                     setComponentRef={jest.fn()}
@@ -209,7 +202,6 @@ describe('UPIComponent', () => {
                     appsList={allApps}
                     mode={UPI_MODE.INTENT}
                     onChange={jest.fn()}
-                    showPayButton={false}
                     payButton={() => <button className="pay-button" />}
                     onSubmitAnalytics={onSubmitAnalyticsMock}
                     setComponentRef={jest.fn()}

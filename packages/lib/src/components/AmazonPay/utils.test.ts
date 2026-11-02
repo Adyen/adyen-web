@@ -27,4 +27,14 @@ describe('getPayloadJSON', () => {
         expect(getPayloadJSON({ ...props, checkoutMode: 'ProcessOrder' }, amount).paymentDetails).toBeDefined();
         expect(getPayloadJSON({ ...props }, amount).paymentDetails).not.toBeDefined();
     });
+
+    test('should throw an implementation error when checkoutMode is ProcessOrder and amount is missing', () => {
+        const props = { configuration: { storeId: '123' }, checkoutMode: 'ProcessOrder' };
+        expect(() => getPayloadJSON(props, undefined)).toThrow("AmazonPay: 'amount' is required when checkoutMode is 'ProcessOrder'");
+    });
+
+    test('should not require amount when checkoutMode is not ProcessOrder', () => {
+        const props = { configuration: { storeId: '123' } };
+        expect(getPayloadJSON(props, undefined).paymentDetails).not.toBeDefined();
+    });
 });

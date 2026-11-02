@@ -76,6 +76,20 @@ describe('LanguageService', () => {
                 );
             });
 
+            test('should perform exact locale matching before making a request (e.g. zh-TW to zh-TW)', async () => {
+                const mockTranslations: Translations = { 'pay.button': '支付' };
+                mockHttpGet.mockResolvedValueOnce(mockTranslations);
+
+                const result = await service.fetchTranslationsFromCdn('zh-TW');
+
+                expect(result).toEqual(mockTranslations);
+                expect(mockHttpGet).toHaveBeenCalledWith(
+                    expect.objectContaining({
+                        path: `sdk/${sdkVersion}/translations/zh-TW.json`
+                    })
+                );
+            });
+
             test('should use provided sdkVersion and cdnUrl', async () => {
                 const customVersion = '6.1.2';
                 const customCdnUrl = 'https://custom-cdn.example.com/';

@@ -15,10 +15,7 @@ test.describe('Custom Card - Single branding reset', () => {
         await expect(customCard.dualBrandsHolder).not.toBeVisible();
 
         // mc brand
-        const brand = customCard.singleBrand;
-
-        const brandingIconSrc = await brand.getAttribute('src');
-        expect(brandingIconSrc).toContain('mc.svg');
+        await expect(customCard.singleBrand).toHaveAttribute('src', /\/mc\.svg$/);
 
         // Check brand has been set in paymentMethod data
         await page.waitForFunction(() => window['customCardSeparate'].data.paymentMethod.brand === 'mc');
@@ -36,9 +33,7 @@ test.describe('Custom Card - Single branding reset', () => {
             await page.waitForFunction(() => window['customCardSeparate'].data.paymentMethod.brand === undefined);
 
             // Check regEx recognises brand and sets it in the UI
-            const brand = customCard.singleBrand;
-            const brandingIconSrc = await brand.getAttribute('src');
-            expect(brandingIconSrc).toContain('visa.svg');
+            await expect(customCard.singleBrand).toHaveAttribute('src', /\/visa\.svg$/);
         }
     );
 
@@ -53,8 +48,6 @@ test.describe('Custom Card - Single branding reset', () => {
         await page.waitForFunction(() => window['customCardSeparate'].data.paymentMethod.brand === undefined);
 
         // Check regEx recognises brand and sets it in the UI
-        const brand = customCard.singleBrand;
-        const brandingIconSrc = await brand.getAttribute('src');
-        expect(brandingIconSrc).toContain('nocard.svg');
+        await expect(customCard.singleBrand).toHaveAttribute('src', /\/nocard\.svg$/);
     });
 });

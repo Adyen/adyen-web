@@ -12,7 +12,11 @@ test('#1 Error panel is present at start, when there are no errors, but is empty
 });
 
 test('#2 Click pay with empty fields and error panel is populated', async ({ card, srPanel, page, browserName }) => {
-    const expectedSRPanelTexts = ['Enter the card number-sr', 'Enter the expiry date-sr', 'Enter the security code-sr'];
+    const expectedSRPanelTexts = [
+        'Enter the card number-sr',
+        'Enter the expiry date. Front of card in MM/YY format.-sr',
+        'Enter the security code. 3 digits on back of card.-sr'
+    ];
     await card.goto(URL_MAP.cardWithVisibleSrPanel);
     await card.pay();
     // Wait for all sr panel messages
@@ -33,7 +37,10 @@ test('#2 Click pay with empty fields and error panel is populated', async ({ car
 });
 
 test('#3 Fill out PAN & see that first error in error panel is date related', async ({ card, srPanel, page, browserName }) => {
-    const expectedSRPanelTexts = ['Enter the expiry date-sr', 'Enter the security code-sr'];
+    const expectedSRPanelTexts = [
+        'Enter the expiry date. Front of card in MM/YY format.-sr',
+        'Enter the security code. 3 digits on back of card.-sr'
+    ];
     await card.goto(URL_MAP.cardWithVisibleSrPanel);
     await card.fillCardNumber(REGULAR_TEST_CARD);
     await card.pay();

@@ -1,6 +1,7 @@
 import { ADDRESS_SCHEMA } from '../components/internal/Address/constants';
 import actionTypes from '../core/ProcessResponse/PaymentAction/actionTypes';
 import { CardFocusData } from '../components/internal/SecuredFields/lib/types';
+import { BankDetailsSchema } from '../components/internal/OpenInvoice/types';
 
 export type PaymentActionsType = keyof typeof actionTypes;
 
@@ -238,6 +239,14 @@ export interface Order {
     remainingAmount?: PaymentAmount;
 }
 
+export interface OrderUpdatedData {
+    order: Order;
+    /**
+     * The latest session data. Only present in the Sessions flow.
+     */
+    sessionData?: string;
+}
+
 export interface OrderStatus {
     expiresAt: string;
     paymentMethods: {
@@ -290,11 +299,19 @@ export interface PaymentData extends PaymentMethodData {
         orderData: string;
         pspReference: string;
     };
-    clientStateDataIndicator: boolean;
+    clientStateDataIndicator?: boolean;
     sessionData?: string;
     storePaymentMethod?: boolean;
     billingAddress?: AddressData;
     deliveryAddress?: AddressData;
+    socialSecurityNumber?: string;
+    installments?: { value: number };
+    shopperEmail?: string;
+    shopperName?: { firstName: string; lastName: string };
+    telephoneNumber?: string;
+    dateOfBirth?: string;
+    bankAccount?: BankDetailsSchema;
+    beneficiaryId?: string;
 }
 
 export type ResultCode =
@@ -316,6 +333,7 @@ export type SessionsResponse = {
     sessionData: string;
     sessionResult: string;
     resultCode: ResultCode;
+    askDonation?: boolean;
 };
 
 export interface PaymentMethodsRequestData {

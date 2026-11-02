@@ -1,7 +1,7 @@
 import { useRef, useEffect } from 'preact/hooks';
 
-const useAutoFocus = () => {
-    const ref = useRef(null);
+const useAutoFocus = <T extends HTMLElement = HTMLElement>() => {
+    const ref = useRef<T | null>(null);
 
     useEffect(() => {
         ref.current?.focus();

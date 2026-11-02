@@ -1,15 +1,17 @@
-import { ComponentChild, h, render } from 'preact';
+import { ComponentChild, h, render, TargetedKeyboardEvent } from 'preact';
 import uuid from '../../../utils/uuid';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 import { NO_CHECKOUT_ATTEMPT_ID } from '../../../core/Analytics/constants';
 import type { ICore } from '../../../core/types';
-import type { BaseElementProps, IBaseElement } from './types';
+import type { BaseElementProps, BaseElementState, IBaseElement } from './types';
 import type { PaymentData } from '../../../types/global-types';
 import { off, on } from '../../../utils/listenerUtils';
 import { AbstractAnalyticsEvent } from '../../../core/Analytics/events/AbstractAnalyticsEvent';
 import { createSdkData } from '../../../utils/createSdkData';
 import getComponentNameOfPaymentType from '../../components-name-map';
 import { PAYMENT_METHOD_BEHAVIOR } from '../../../core/config';
+
+const ROOT_NODE_NOT_FOUND = 'Component could not mount. Root node was not found.';
 
 /**
  * Verify if the first parameter is instance of Core.
@@ -22,15 +24,15 @@ function assertIsCoreInstance(checkout: ICore): checkout is ICore {
     return isCoreObject;
 }
 
-abstract class BaseElement<P extends BaseElementProps> implements IBaseElement {
+abstract class BaseElement<P extends BaseElementProps, S extends BaseElementState = BaseElementState> implements IBaseElement<P> {
     public readonly _id = `${this.constructor['type']}-${uuid()}`;
     public readonly core: ICore;
 
     public props: P;
-    public state: any = {};
-    public _component;
+    public state: S = {} as S;
+    public _component: ComponentChild | undefined;
 
-    protected _node: HTMLElement = null;
+    protected _node: HTMLElement | null = null;
 
     protected static readonly defaultProps = {};
 
@@ -47,7 +49,7 @@ abstract class BaseElement<P extends BaseElementProps> implements IBaseElement {
         this.core = checkout;
         this.buildElementProps(props);
 
-        this.handleKeyPress = this.handleKeyPress.bind(this);
+        this.handleKeyDown = this.handleKeyDown.bind(this);
     }
 
     protected buildElementProps(componentProps?: P) {
@@ -66,21 +68,30 @@ abstract class BaseElement<P extends BaseElementProps> implements IBaseElement {
      * Executed on the `data` getter.
      * Returns the component data necessary for the /payments request
      */
-    protected formatData(): any {
-        return {};
+    protected formatData(): PaymentData {
+        return {} as PaymentData;
     }
 
-    /* eslint-disable-next-line */
-    protected submitAnalytics(analyticsObj?: AbstractAnalyticsEvent) {
-        return null;
+    protected submitAnalytics(_analyticsObj?: AbstractAnalyticsEvent): void {
+        return;
     }
 
-    /* eslint-disable-next-line */
-    protected handleKeyPress(e: h.JSX.TargetedKeyboardEvent<HTMLInputElement>) {
-        return null;
+    protected handleKeyDown(_e: TargetedKeyboardEvent<HTMLInputElement>): void {
+        return;
     }
 
-    protected setState(newState: object): void {
+    /**
+     * The node the element is currently mounted into.
+     * Throws the same error as `mount()` when the element has not been mounted yet.
+     */
+    protected get mountedNode(): HTMLElement {
+        if (!this._node) {
+            throw new Error(ROOT_NODE_NOT_FOUND);
+        }
+        return this._node;
+    }
+
+    protected setState(newState: S): void {
         this.state = { ...this.state, ...newState };
     }
 
@@ -92,7 +103,7 @@ abstract class BaseElement<P extends BaseElementProps> implements IBaseElement {
         const order = this.state.order || this.props.order;
         const componentData = this.formatData();
         const doesPaymentMethodHaveNativeComponent = Boolean(getComponentNameOfPaymentType(componentData.paymentMethod?.type));
-        const clientData = this.core.modules.risk.data;
+        const clientData = this.core.modules.risk.riskData;
         const checkoutAttemptId = this.core.modules.analytics.checkoutAttemptId ?? NO_CHECKOUT_ATTEMPT_ID;
         const paymentMethodBehavior = doesPaymentMethodHaveNativeComponent ? PAYMENT_METHOD_BEHAVIOR.NATIVE : PAYMENT_METHOD_BEHAVIOR.GENERIC;
 
@@ -135,7 +146,7 @@ abstract class BaseElement<P extends BaseElementProps> implements IBaseElement {
         const node = typeof domNode === 'string' ? document.querySelector<HTMLElement>(domNode) : domNode;
 
         if (!node) {
-            throw new Error('Component could not mount. Root node was not found.');
+            throw new Error(ROOT_NODE_NOT_FOUND);
         }
 
         if (this._node) {
@@ -144,8 +155,8 @@ abstract class BaseElement<P extends BaseElementProps> implements IBaseElement {
 
         this._node = node;
 
-        // Add listener for key press events, notably 'Enter' key presses
-        on(this._node, 'keypress', this.handleKeyPress, false);
+        // Add listener for key down events, notably 'Enter' key presses
+        on(this._node, 'keydown', this.handleKeyDown, false);
 
         this._component = this.render();
 
@@ -162,19 +173,18 @@ abstract class BaseElement<P extends BaseElementProps> implements IBaseElement {
      */
     public update(props: Partial<P>): this {
         this.props = this.formatProps({ ...this.props, ...props });
-        this.state = {};
+        this.state = {} as S;
 
-        return this.unmount().mount(this._node); // for new mount fny
+        return this.unmount().mount(this.mountedNode); // for new mount fny
     }
 
     /**
      * Unmounts a payment element from the DOM
      */
     public unmount(): this {
-        // Remove listener
-        off(this._node, 'keypress', this.handleKeyPress);
-
         if (this._node) {
+            // Remove listener
+            off(this._node, 'keydown', this.handleKeyDown);
             render(null, this._node);
         }
 

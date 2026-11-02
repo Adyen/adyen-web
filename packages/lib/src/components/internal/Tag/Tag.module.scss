@@ -1,0 +1,23 @@
+@use 'styles/variable-generator';
+
+.tag {
+    display: inline-flex;
+    align-items: center;
+    padding: variable-generator.token(spacer-010) variable-generator.token(spacer-040);
+    font-size: variable-generator.token(text-caption-font-size);
+    font-weight: variable-generator.token(text-caption-stronger-font-weight);
+    line-height: variable-generator.token(text-caption-line-height);
+    white-space: nowrap;
+}
+
+.tag.success {
+    border-radius: variable-generator.token(border-radius-s);
+    background: variable-generator.token(color-background-success-weak);
+    color: variable-generator.token(color-label-on-background-success-weak);
+}
+
+.tag.info {
+    border-radius: variable-generator.token(border-radius-s);
+    background: variable-generator.token(color-background-highlight-weak);
+    color: variable-generator.token(color-label-on-background-highlight-weak);
+}

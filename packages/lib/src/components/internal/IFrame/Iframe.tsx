@@ -12,6 +12,7 @@ interface IframeProps {
     allow?: string;
     name?: string;
     title?: string;
+    sandbox?: string;
     classNameModifiers?: string[];
     callback?: (contentWindow) => void;
 }
@@ -58,7 +59,7 @@ class Iframe extends Component<Readonly<IframeProps>> {
         }
     }
 
-    render({ name, src, width, height, minWidth, minHeight, allow, title, classNameModifiers }: IframeProps) {
+    render({ name, src, width, height, minWidth, minHeight, allow, title, sandbox, classNameModifiers }: IframeProps) {
         const validClassNameModifiers = classNameModifiers.filter(m => !!m);
 
         return (
@@ -82,6 +83,7 @@ class Iframe extends Component<Readonly<IframeProps>> {
                 referrerpolicy="origin"
                 min-width={minWidth}
                 min-height={minHeight}
+                sandbox={sandbox}
                 /* eslint-enable react/no-unknown-property */
             />
         );

@@ -44,7 +44,7 @@ function BankTransferInput(props: Readonly<BankTransferInputProps>) {
                 <Field
                     label={emailOptionalLabel}
                     classNameModifiers={['shopperEmail']}
-                    errorMessage={!!errors.shopperEmail && getErrorMessage(i18n, errors.shopperEmail, i18n.get('shopperEmail'))}
+                    errorMessage={Boolean(errors.shopperEmail) && getErrorMessage(i18n, errors.shopperEmail, i18n.get('shopperEmail'))}
                     isValid={valid.shopperEmail}
                     name={'shopperEmail'}
                     showContextualElement={props.showContextualElement}

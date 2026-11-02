@@ -1,3 +1,10 @@
+/**
+ * @jest-environment-options {"url": "https://adyen.dev/"}
+ *
+ * jsdom v26 makes window.location unforgeable, so location.protocol/hostname can no longer be
+ * mocked at runtime. The secure (https) origin is set here via the jsdom `url` environment option.
+ * The insecure-context scenario lives in ApplePay.insecureContext.test.ts.
+ */
 import { httpPost } from '../../core/Services/http';
 import ApplePay from './ApplePay';
 import ApplePayService from './services/ApplePayService';
@@ -5,7 +12,9 @@ import ApplePaySdkLoader from './services/ApplePaySdkLoader';
 import { mock } from 'jest-mock-extended';
 import { render, screen } from '@testing-library/preact';
 import { setupCoreMock, TEST_CHECKOUT_ATTEMPT_ID, TEST_RISK_DATA } from '../../../config/testMocks/setup-core-mock';
+import Language from '../../language/Language';
 import { ICore } from '../../types';
+import type { ILanguageService } from '../../language/LanguageService';
 
 jest.mock('../../core/Services/http');
 jest.mock('./services/ApplePayService');
@@ -67,13 +76,6 @@ const configurationMock = {
 describe('ApplePay', () => {
     describe('constructor()', () => {
         test('should load the SDK and define the apple pay version/applepay web options', async () => {
-            Object.defineProperty(window, 'location', {
-                writable: true,
-                value: {
-                    protocol: 'https:'
-                }
-            });
-
             const onApplePayCodeCloseMock = jest.fn();
             new ApplePay(core, {
                 onApplePayCodeClose: onApplePayCodeCloseMock
@@ -109,40 +111,28 @@ describe('ApplePay', () => {
         });
     });
 
+    describe('buttonLocale', () => {
+        test('should use the locale of the checkout when buttonLocale is not set', () => {
+            const i18n = new Language({ locale: 'en-GB', service: mock<ILanguageService>({}) });
+            const applepay = new ApplePay(core, { i18n });
+            expect(applepay.props.buttonLocale).toBe('en-GB');
+        });
+
+        test('should use buttonLocale when it is set', () => {
+            const i18n = new Language({ locale: 'en-GB', service: mock<ILanguageService>({}) });
+            const applepay = new ApplePay(core, { i18n, buttonLocale: 'fr-CA' });
+            expect(applepay.props.buttonLocale).toBe('fr-CA');
+        });
+    });
+
     describe('isAvailable()', () => {
         test('should use canMakePayments() API', async () => {
-            Object.defineProperty(window, 'location', {
-                writable: true,
-                value: {
-                    protocol: 'https:'
-                }
-            });
-
             const applepay = new ApplePay(core);
             await expect(applepay.isAvailable()).resolves.toBeUndefined();
             expect(ApplePaySession.canMakePayments).toHaveBeenCalledTimes(1);
         });
 
-        test('should reject if the page is not https', async () => {
-            Object.defineProperty(window, 'location', {
-                writable: true,
-                value: {
-                    protocol: 'http:'
-                }
-            });
-
-            const applepay = new ApplePay(core);
-            await expect(applepay.isAvailable()).rejects.toThrow('Trying to start an Apple Pay session from an insecure document');
-        });
-
         test('should reject if canMakePayments() returns false', async () => {
-            Object.defineProperty(window, 'location', {
-                writable: true,
-                value: {
-                    protocol: 'https:'
-                }
-            });
-
             const applepay = new ApplePay(core);
             await new Promise(process.nextTick);
 
@@ -152,13 +142,6 @@ describe('ApplePay', () => {
         });
 
         test('should reject if something fails when loading the SDK', async () => {
-            Object.defineProperty(window, 'location', {
-                writable: true,
-                value: {
-                    protocol: 'https:'
-                }
-            });
-
             const applepay = new ApplePay(core);
             await new Promise(process.nextTick);
 
@@ -218,12 +201,7 @@ describe('ApplePay', () => {
         });
 
         test('should use the current URL as default', () => {
-            const originalHostname = window.location.hostname;
-            Object.defineProperty(window.location, 'hostname', {
-                value: 'adyen.dev',
-                configurable: true
-            });
-
+            // Hostname is provided by the jsdom `url` environment option (https://adyen.dev/).
             const applepay = new ApplePay(core, {
                 configuration: configurationMock,
                 amount: { currency: 'EUR', value: 2000 }
@@ -240,12 +218,6 @@ describe('ApplePay', () => {
                 domainName: 'adyen.dev',
                 initiative: 'web',
                 merchantIdentifier: 'test-merchant'
-            });
-
-            // Restoring original value
-            Object.defineProperty(window.location, 'hostname', {
-                value: originalHostname,
-                configurable: true
             });
         });
 
@@ -319,7 +291,7 @@ describe('ApplePay', () => {
             const event = mock<ApplePayJS.ApplePayPaymentAuthorizedEvent>({
                 payment: {
                     token: {
-                        paymentData: 'payment-data'
+                        paymentData: 'test'
                     }
                 }
             });
@@ -365,7 +337,7 @@ describe('ApplePay', () => {
             const event = mock<ApplePayJS.ApplePayPaymentAuthorizedEvent>({
                 payment: {
                     token: {
-                        paymentData: 'payment-data'
+                        paymentData: 'test'
                     }
                 }
             });
@@ -408,7 +380,7 @@ describe('ApplePay', () => {
             const event = mock<ApplePayJS.ApplePayPaymentAuthorizedEvent>({
                 payment: {
                     token: {
-                        paymentData: 'payment-data'
+                        paymentData: 'test'
                     }
                 }
             });
@@ -465,7 +437,7 @@ describe('ApplePay', () => {
             const event = mock<ApplePayJS.ApplePayPaymentAuthorizedEvent>({
                 payment: {
                     token: {
-                        paymentData: 'payment-data'
+                        paymentData: 'test'
                     }
                 }
             });
@@ -510,7 +482,7 @@ describe('ApplePay', () => {
             const event = mock<ApplePayJS.ApplePayPaymentAuthorizedEvent>({
                 payment: {
                     token: {
-                        paymentData: 'payment-data'
+                        paymentData: 'test'
                     }
                 }
             });
@@ -585,7 +557,7 @@ describe('ApplePay', () => {
                         subLocality: ''
                     },
                     token: {
-                        paymentData: 'payment-data'
+                        paymentData: 'test'
                     }
                 }
             });
@@ -639,7 +611,7 @@ describe('ApplePay', () => {
                     street: '1 Infinite Loop Unit 100'
                 },
                 paymentMethod: {
-                    applePayToken: 'InBheW1lbnQtZGF0YSI=',
+                    applePayToken: expect.any(String),
                     checkoutAttemptId: TEST_CHECKOUT_ATTEMPT_ID,
                     sdkData: expect.any(String),
                     type: 'applepay'
@@ -648,6 +620,9 @@ describe('ApplePay', () => {
                     clientData: TEST_RISK_DATA
                 }
             });
+
+            // applePayToken is the base64 of the Apple Pay paymentData, so assert the round-trip
+            expect(JSON.parse(atob(onChangeMock.mock.calls[0][0].data.paymentMethod.applePayToken))).toBe('test');
 
             const data = onAuthorizedMock.mock.calls[0][0];
             expect(data.authorizedEvent).toBe(event);

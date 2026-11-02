@@ -2,7 +2,7 @@ import { h } from 'preact';
 import { MetaConfiguration, StoryConfiguration } from '../../../../storybook/types';
 import { DonationConfiguration } from '../types';
 import { ComponentContainer } from '../../../../storybook/components/ComponentContainer';
-import Donation from '../Donation';
+import { Donation } from '@adyen/adyen-web';
 import { Checkout } from '../../../../storybook/components/Checkout';
 import { getSearchParameter } from '../../../../storybook/utils/get-query-parameters';
 import { DonationCardIntegrationExample } from './DonationCardIntegrationExample';

@@ -12,11 +12,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
         with:
           node-version: 24
           registry-url: https://registry.npmjs.org/
@@ -26,7 +26,7 @@ jobs:
         run: corepack enable
 
       - name: Install Project Dependencies
-        run: yarn install
+        run: yarn install --immutable
 
       - name: Build
         run: cd packages/lib && yarn build
@@ -43,7 +43,7 @@ jobs:
           cd packages/lib/dist/umd && zip -r /tmp/adyen-web-sdk-umd-and-translations-${{ steps.sdk-version.outputs.version }}.zip .
 
       - name: Upload UMD and translations artifact
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         with:
           name: adyen-web-sdk-umd-and-translations-${{ steps.sdk-version.outputs.version }}
           path: packages/lib/dist/umd
@@ -65,6 +65,12 @@ jobs:
 
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
           echo "tag=${TAG_PREFIX}${VERSION}" >> "$GITHUB_OUTPUT"
+
+          if echo "$VERSION" | grep -qE '(alpha|beta|rc)'; then
+            echo "prerelease=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "prerelease=false" >> "$GITHUB_OUTPUT"
+          fi
 
           # Extract the body for the latest version (between first and second ## heading)
           BODY=$(awk '
@@ -137,8 +143,15 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
+          RELEASE_FLAG=""
+          if [ "${{ steps.changelog.outputs.prerelease }}" = "true" ]; then
+            RELEASE_FLAG="--prerelease"
+          else
+            RELEASE_FLAG="--latest"
+          fi
+
           gh release create "${{ steps.changelog.outputs.tag }}" \
             --title "${{ steps.changelog.outputs.version }}" \
             --notes-file /tmp/release-body.md \
-            --latest \
+            $RELEASE_FLAG \
             "/tmp/adyen-web-sdk-umd-and-translations-${{ steps.sdk-version.outputs.version }}.zip"

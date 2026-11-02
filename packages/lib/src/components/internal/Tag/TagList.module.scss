@@ -1,0 +1,8 @@
+@use 'styles/variable-generator';
+
+.tagList {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    gap: variable-generator.token(spacer-020);
+}

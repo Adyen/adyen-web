@@ -13,7 +13,7 @@ export const ADDRESS_FIELD_TOKEN_MAP: Record<string, string> = {
 };
 
 // prettier-ignore
-export const ADDRESS_SPECIFICATIONS: AddressSpecifications = {
+export const ADDRESS_SPECIFICATIONS = {
     AU: {
         hasDataset: true,
         labels: {
@@ -52,6 +52,17 @@ export const ADDRESS_SPECIFICATIONS: AddressSpecifications = {
         },
         schema: [COUNTRY, [[HOUSE_NUMBER_OR_NAME, 30], [STREET, 70]], [[CITY, 70], [POSTAL_CODE, 30]], STATE_OR_PROVINCE]
     },
+    JP: {
+        hasDataset: true,
+        labels: {
+            [STATE_OR_PROVINCE]: 'prefecture',
+            [CITY]: 'cityTown',
+            [STREET]: 'streetNameAndBlockNumber',
+            [HOUSE_NUMBER_OR_NAME]: 'buildingNameRoomNumber'
+        },
+        optionalFields: [HOUSE_NUMBER_OR_NAME],
+        schema: [COUNTRY, [[POSTAL_CODE, 50], [STATE_OR_PROVINCE, 50]], CITY, STREET, HOUSE_NUMBER_OR_NAME]
+    },
     US: {
         hasDataset: true,
         labels: {
@@ -73,7 +84,7 @@ export const ADDRESS_SPECIFICATIONS: AddressSpecifications = {
         },
         schema: [COUNTRY, [[STREET, 70], [HOUSE_NUMBER_OR_NAME, 30]], [[POSTAL_CODE, 30], [CITY, 70]], STATE_OR_PROVINCE],
     }
-};
+} satisfies AddressSpecifications;
 
 export const PARTIAL_ADDRESS_SCHEMA: AddressSpecifications = Object.keys(ADDRESS_SPECIFICATIONS).reduce((acc, countryCode) => {
     acc[countryCode] = {

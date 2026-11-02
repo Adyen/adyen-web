@@ -80,15 +80,20 @@ test.describe('Card payments with full avs', () => {
     });
 
     test.describe('When switching to a different delivery country', () => {
-        test('should make a successful card payment', async ({ cardWithAvs }) => {
+        test('should make a successful card payment', async ({ cardWithAvs, page }) => {
             const url =
                 '/iframe.html?globals=&args=componentConfiguration.billingAddressAllowedCountries:!undefined;componentConfiguration.data.billingAddress.postalCode:A9A9A9&id=components-cards--with-avs&viewMode=story';
             await cardWithAvs.goto(url);
             await expect(cardWithAvs.billingAddress.postalCodeError).toContainText('Invalid format. Expected format');
             await cardWithAvs.billingAddress.selectCountry({ name: 'Japan' });
+            await cardWithAvs.billingAddress.fillInPostCode('123-4567');
+            await cardWithAvs.billingAddress.selectPrefecture({ name: 'Tokyo' });
+            await cardWithAvs.billingAddress.fillInCity('Shibuya');
+            await cardWithAvs.billingAddress.fillInStreet('1-2-3 Jingumae');
             await cardWithAvs.typeCardNumber(REGULAR_TEST_CARD);
             await cardWithAvs.typeExpiryDate(TEST_DATE_VALUE);
             await cardWithAvs.typeCvc(TEST_CVC_VALUE);
+            await page.waitForFunction(() => globalThis.component.isValid === true);
             await cardWithAvs.pay();
             await cardWithAvs.paymentResult.waitFor({ state: 'visible' });
             await expect(cardWithAvs.paymentResult).toContainText(PAYMENT_RESULT.authorised);

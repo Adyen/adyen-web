@@ -5,6 +5,7 @@ import { httpPost } from '../../core/Services/http';
 import { mock } from 'jest-mock-extended';
 import { AmazonPayConfiguration } from './types';
 import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
+import { mockLocationAssign } from '../../../config/testMocks/mockLocationAssign';
 
 jest.mock('../../core/Services/http');
 
@@ -51,7 +52,7 @@ describe('AmazonPay', () => {
             const amazonPay = getElement(props);
             expect(amazonPay.props.environment).toBe('TEST');
             expect(amazonPay.props.locale).toBe('en_US');
-            expect(amazonPay.props.configuration.region).toBe('EU');
+            expect(amazonPay.props.configuration?.region).toBe('EU');
         });
 
         test('sets checkoutMode to ProcessOrder when isDropin is true', () => {
@@ -128,11 +129,11 @@ describe('AmazonPay', () => {
             expect(mockSubmitFn).toHaveBeenCalled();
         });
 
-        test('falls back to makePaymentsCall when getSubmitFunction returns null', () => {
+        test('falls back to makePaymentsCall when getSubmitFunction returns nothing', () => {
             const amazonPay = getElement();
             // @ts-ignore setting componentRef for testing
             amazonPay.componentRef = {
-                getSubmitFunction: () => null
+                getSubmitFunction: jest.fn()
             };
             // @ts-ignore accessing protected method for testing
             const makePaymentsCallSpy = jest.spyOn(amazonPay, 'makePaymentsCall').mockResolvedValue({ resultCode: 'Authorised' });
@@ -166,14 +167,13 @@ describe('AmazonPay', () => {
         });
 
         test('redirects the shopper if a declineFlowUrl is received', async () => {
-            Object.defineProperty(window, 'location', {
-                writable: true,
-                value: { assign: jest.fn() }
-            });
+            const assignSpy = mockLocationAssign();
             const amazonPay = getElement({ amazonCheckoutSessionId: 'ABC123' });
             /* eslint-disable @typescript-eslint/await-thenable */
             void (await amazonPay.handleDeclineFlow());
-            expect(window.location.assign).toHaveBeenCalledTimes(1);
+            expect(assignSpy).toHaveBeenCalledTimes(1);
+            expect(assignSpy).toHaveBeenCalledWith('https://example.com');
+            assignSpy.mockRestore();
         });
 
         test('calls onError if declineFlowUrl is missing from response', async () => {

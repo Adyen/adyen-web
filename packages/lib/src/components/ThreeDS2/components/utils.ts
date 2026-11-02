@@ -18,8 +18,16 @@ import type { ErrorObject } from '../../../core/Errors/types';
  * Check if we have been passed an ErrorObject because either base64 decoding or JSON.parse failed
  * @param obj -
  */
-export const isErrorObject = (obj: ErrorObject | ThreeDS2Token): boolean => {
-    return 'success' in obj && !obj.success;
+export const isErrorObject = (obj: ErrorObject | ThreeDS2Token | ChallengeData | FingerPrintData | undefined): obj is ErrorObject => {
+    return !!obj && 'success' in obj && !obj.success;
+};
+
+export const isFingerPrintData = (obj: FingerPrintData | ErrorObject | undefined): obj is FingerPrintData => {
+    return !!obj && !isErrorObject(obj);
+};
+
+export const isChallengeData = (obj: ChallengeData | ErrorObject | undefined): obj is ChallengeData => {
+    return !!obj && !isErrorObject(obj);
 };
 
 export const decodeAndParseToken = (token: string): ThreeDS2Token | ErrorObject => {
@@ -80,10 +88,10 @@ export const prepareChallengeData = ({ token, size }: { token: string; size: str
     const decodedChallengeToken = decodeAndParseToken(token);
 
     if (isErrorObject(decodedChallengeToken)) {
-        return decodedChallengeToken as ErrorObject;
+        return decodedChallengeToken;
     }
 
-    const { acsTransID, acsURL, messageVersion, threeDSNotificationURL, threeDSServerTransID } = decodedChallengeToken as ThreeDS2Token;
+    const { acsTransID, acsURL, messageVersion, threeDSNotificationURL, threeDSServerTransID } = decodedChallengeToken;
     const notificationURLOrigin = getOrigin(threeDSNotificationURL ?? '');
 
     return {
@@ -117,10 +125,10 @@ export const prepareFingerPrintData = ({ token, notificationURL }: { token: stri
     const decodedFingerPrintToken = decodeAndParseToken(token);
 
     if (isErrorObject(decodedFingerPrintToken)) {
-        return decodedFingerPrintToken as ErrorObject;
+        return decodedFingerPrintToken;
     }
 
-    const { threeDSMethodNotificationURL, threeDSMethodUrl: threeDSMethodURL, threeDSServerTransID } = decodedFingerPrintToken as ThreeDS2Token;
+    const { threeDSMethodNotificationURL, threeDSMethodUrl: threeDSMethodURL, threeDSServerTransID } = decodedFingerPrintToken;
     const receivedNotificationURL = notificationURL ?? threeDSMethodNotificationURL ?? '';
     const notificationURLOrigin = getOrigin(receivedNotificationURL);
 
@@ -169,6 +177,19 @@ export const encodeBase64URL = (dataStr: string): string => {
     base64url = base64url.replace(/\//g, '_'); // 63rd char of encoding
 
     return base64url;
+};
+
+/**
+ * Confirm if a component's root node is still connected to the DOM, r.e. the component being torn down
+ * incorrectly (without going through Preact's unmount lifecycle, e.g. a parent doing `el.innerHTML = ''`).
+ *
+ * Uses Node.isConnected rather than document.contains(), since the latter does not look into shadow roots
+ * and would always report "detached" for a component mounted inside an (attached) shadow tree.
+ *
+ * @param base - a Preact Component's `base` property, i.e. its rendered root DOM node
+ */
+export const isDetachedFromDOM = (base: Element | Text | undefined): boolean => {
+    return !base?.isConnected;
 };
 
 /**

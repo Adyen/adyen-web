@@ -13,7 +13,7 @@ export default function InputDate(props: Readonly<InputDateProps>) {
     const handleInput = e => {
         const { value } = e.target;
         e.target.value = formatDate(value);
-        props.onInput(e);
+        props.onInput?.(e);
     };
 
     if (isDateInputSupported) {

@@ -14,6 +14,7 @@ interface FieldsetProps {
     readonly?: boolean;
     id?: string;
     renderLabelAsSectionHeading?: boolean;
+    descriptionId?: string;
 }
 
 export default function Fieldset({
@@ -24,11 +25,13 @@ export default function Fieldset({
     readonly = false,
     description,
     id,
-    renderLabelAsSectionHeading = false
+    renderLabelAsSectionHeading = false,
+    descriptionId: externalDescriptionId
 }: Readonly<FieldsetProps>) {
     const { i18n } = useCoreContext();
 
-    const describedById = useMemo(() => getUniqueId('fieldset-description'), []);
+    const generatedDescriptionId = useMemo(() => getUniqueId('fieldset-description'), []);
+    const describedById = externalDescriptionId ?? generatedDescriptionId;
 
     return (
         <fieldset
@@ -38,7 +41,6 @@ export default function Fieldset({
                 ...classNameFieldsetModifiers.map(m => `adyen-checkout__fieldset--${m}`),
                 { 'adyen-checkout__fieldset--readonly': readonly }
             ])}
-            aria-describedby={description ? describedById : null}
         >
             {label && (
                 <legend className="adyen-checkout__fieldset__title">

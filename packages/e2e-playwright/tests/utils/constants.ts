@@ -13,7 +13,7 @@ export const BCMC_DUAL_BRANDED_VISA = '4871049999999910'; // dual branded visa &
 export const BCMC_DUAL_BRANDED_MC = '5127880999999990'; // dual branded mc & bcmc
 export const DUAL_BRANDED_CARD_EXCLUDED = '4001230000000004'; // dual branded visa/star
 export const CARD_WITH_PAN_LENGTH = '4000620000000007';
-
+export const CARD_WITH_HEALTHCARE = '2292240000000005';
 export const DUAL_BRANDED_EFTPOS = '4687380100010006';
 
 export const THREEDS2_FRICTIONLESS_CARD = '5201281505129736';

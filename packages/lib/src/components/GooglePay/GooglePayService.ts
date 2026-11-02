@@ -10,13 +10,14 @@ class GooglePayService {
 
     public readonly paymentsClient: Promise<google.payments.api.PaymentsClient>;
 
-    constructor(environment: string, analytics: IAnalytics, paymentDataCallbacks: google.payments.api.PaymentDataCallbacks) {
+    constructor(environment: string, analytics: IAnalytics, paymentDataCallbacks: google.payments.api.PaymentDataCallbacks, nonce?: string) {
         const googlePayEnvironment = resolveEnvironment(environment);
 
         this.analytics = analytics;
         this.paymentsClient = this.getGooglePaymentsClient({
             environment: googlePayEnvironment,
-            paymentDataCallbacks
+            paymentDataCallbacks,
+            ...(nonce && { nonce })
         });
     }
 
@@ -28,7 +29,12 @@ class GooglePayService {
      */
     async getGooglePaymentsClient(paymentOptions: google.payments.api.PaymentOptions): Promise<google.payments.api.PaymentsClient> {
         if (!window.google?.payments) {
-            const script = new Script({ src: config.URL, component: 'googlepay', analytics: this.analytics });
+            const script = new Script({
+                src: config.URL,
+                component: 'googlepay',
+                analytics: this.analytics,
+                ...(paymentOptions.nonce && { attributes: { nonce: paymentOptions.nonce } })
+            });
             await script.load();
         }
 

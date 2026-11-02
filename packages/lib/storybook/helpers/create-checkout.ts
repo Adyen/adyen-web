@@ -1,6 +1,6 @@
 import { createSessionsCheckout } from './create-sessions-checkout';
 import { createAdvancedFlowCheckout } from './create-advanced-checkout';
-import Core from '../../src/core';
+import type Core from '../../src/core';
 
 import type { GlobalStoryProps, ShopperDetails } from '../types';
 

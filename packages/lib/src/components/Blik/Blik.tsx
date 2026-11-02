@@ -60,6 +60,7 @@ class BlikElement extends UIElement<AwaitConfiguration> {
                     onError={this.handleError}
                     onComplete={this.onActionComplete}
                     brandLogo={this.icon}
+                    brandName={this.displayName}
                     type={config.type}
                     messageText={this.props.i18n.get(config.messageTextId)}
                     awaitText={this.props.i18n.get(config.awaitTextId)}
@@ -74,22 +75,11 @@ class BlikElement extends UIElement<AwaitConfiguration> {
         }
 
         return this.props.storedPaymentMethodId ? (
-            <RedirectButton
-                showPayButton={this.props.showPayButton}
-                name={this.displayName}
-                payButton={this.payButton}
-                onSubmit={this.submit}
-                ref={ref => {
-                    this.componentRef = ref;
-                }}
-            />
+            <RedirectButton name={this.displayName} payButton={this.payButton} onSubmit={this.submit} setComponentRef={this.setComponentRef} />
         ) : (
             <BlikInput
-                // @ts-ignore Ref is used by preact component
-                ref={ref => {
-                    this.componentRef = ref;
-                }}
                 {...this.props}
+                setComponentRef={this.setComponentRef}
                 onChange={this.setState}
                 onSubmit={this.submit}
                 payButton={this.payButton}

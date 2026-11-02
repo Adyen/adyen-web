@@ -14,7 +14,8 @@ import {
     StylesObject
 } from '../lib/types';
 import { AddressData } from '../../../../types/global-types';
-import { CardBrandsConfiguration, CardPlaceholders } from '../../../Card/types';
+import { CardBrandsConfiguration } from '../lib/types';
+import { CardPlaceholders } from '../../../Card/types';
 import Language from '../../../../language';
 import { Resources } from '../../../../core/Context/Resources';
 import { TouchStartEventObj } from '../../../Card/components/CardInput/components/types';
@@ -61,7 +62,7 @@ export interface SFPProps {
     onLoad?: (cbObj: CardLoadData) => void;
     onStateUpdate?: (obj: SFPState) => void;
     onSubmitAnalytics?: (event: AbstractAnalyticsEvent) => void;
-    handleKeyPress?: (obj: KeyboardEvent) => void;
+    handleKeyDown?: (event: KeyboardEvent) => void;
     rootNode?: HTMLElement; // Specific to SecuredFieldsInput
     showWarnings?: boolean;
     styles?: StylesObject;

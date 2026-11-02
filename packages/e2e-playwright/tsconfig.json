@@ -21,7 +21,7 @@
         "noImplicitOverride": false,
         "strictPropertyInitialization": false,
         "strictNullChecks": false,
-        "useDefineForClassFields": false,
+        "useDefineForClassFields": true,
 
         /* Include types for the browser: window, document, etc */
         "lib": ["es2022", "dom", "dom.iterable"]

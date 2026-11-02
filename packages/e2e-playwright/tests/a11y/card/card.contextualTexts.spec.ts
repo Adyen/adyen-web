@@ -8,6 +8,7 @@ const EXPIRY_DATE_CONTEXTUAL_TEXT = LANG['creditCard.expiryDate.contextualText']
 const CVC_CONTEXTUAL_TEXT_3_DIGITS = LANG['creditCard.securityCode.contextualText.3digits'];
 const CVC_CONTEXTUAL_TEXT_4_DIGITS = LANG['creditCard.securityCode.contextualText.4digits'];
 const CVC_ERROR = LANG['cc.cvc.920'];
+const CVC_ERROR_AMEX = LANG['cc.cvc.920.amex'];
 
 test.describe('Card - Contextual text', () => {
     test('#1 Should inspect the card inputs and see they have contextual elements set', async ({ card }) => {
@@ -15,16 +16,14 @@ test.describe('Card - Contextual text', () => {
 
         // checkout expiryDate element
         await expect(card.expiryDateContextualElement).toHaveText(EXPIRY_DATE_CONTEXTUAL_TEXT);
-        const expiryDateAriaHidden = await card.expiryDateContextualElement.getAttribute('aria-hidden');
-        await expect(expiryDateAriaHidden).toEqual('true');
+        await expect(card.expiryDateContextualElement).toHaveAttribute('aria-hidden', 'true');
 
         // iframe expiryDate element
         await expect(card.expiryDateIframeContextualElement).toHaveText(EXPIRY_DATE_CONTEXTUAL_TEXT);
 
         // checkout security code contextual element
         await expect(card.cvcContextualElement).toHaveText(CVC_CONTEXTUAL_TEXT_3_DIGITS);
-        const cvcAriaHidden = await card.cvcContextualElement.getAttribute('aria-hidden');
-        await expect(cvcAriaHidden).toEqual('true');
+        await expect(card.cvcContextualElement).toHaveAttribute('aria-hidden', 'true');
 
         // iframe security code element
         await expect(card.cvcIframeContextualElement).toHaveText(CVC_CONTEXTUAL_TEXT_3_DIGITS);
@@ -46,8 +45,7 @@ test.describe('Card - Contextual text', () => {
         await card.goto(URL_MAP.card);
         // checkout security code contextual element
         await expect(card.cvcContextualElement).toHaveText(CVC_CONTEXTUAL_TEXT_3_DIGITS);
-        let cvcAriaHidden = await card.cvcContextualElement.getAttribute('aria-hidden');
-        await expect(cvcAriaHidden).toEqual('true');
+        await expect(card.cvcContextualElement).toHaveAttribute('aria-hidden', 'true');
 
         // error element hidden
         await expect(card.cvcErrorElement).not.toBeVisible();
@@ -61,8 +59,7 @@ test.describe('Card - Contextual text', () => {
         // checkout security code error element
         await expect(card.cvcErrorElement).toBeVisible();
         await expect(card.cvcErrorElement).toHaveText(CVC_ERROR);
-        cvcAriaHidden = await card.cvcErrorElement.getAttribute('aria-hidden');
-        await expect(cvcAriaHidden).toEqual('true');
+        await expect(card.cvcErrorElement).toHaveAttribute('aria-hidden', 'true');
 
         // contextual element being hidden
         await expect(card.cvcContextualElement).not.toBeVisible();
@@ -70,7 +67,10 @@ test.describe('Card - Contextual text', () => {
         // iframe contextual (error) element
         await expect(card.cvcIframeContextualElement).toHaveText(CVC_ERROR);
 
-        // Allow default focusing after validation to happen
+        // Allow default focusing after validation to happen.
+        // useSRPanelForCardInputErrors resets isValidating on a 300ms timer; while it is still true any
+        // further error change re-triggers ERROR_ACTION_FOCUS_FIELD and steals focus back to the PAN field,
+        // which would swallow the digits typed below. There is no DOM signal for that timer.
         await page.waitForTimeout(1000);
 
         // type
@@ -85,7 +85,29 @@ test.describe('Card - Contextual text', () => {
         await expect(card.cvcIframeContextualElement).toHaveText(CVC_CONTEXTUAL_TEXT_3_DIGITS);
     });
 
-    test('#3 Should find no contextualElements because the config says to not show them', async ({ card }) => {
+    test('#3 Should show the Amex-specific CVC error (4 digits/front of card) in both the checkout UI and the iframe aria-context element', async ({
+        card
+    }) => {
+        await card.goto(URL_MAP.card);
+
+        // Type an Amex number so the CVC field/iframe switch to the Amex-aware digit count & error copy
+        await card.typeCardNumber(AMEX_CARD);
+
+        await expect(card.cvcContextualElement).toHaveText(CVC_CONTEXTUAL_TEXT_4_DIGITS);
+        await expect(card.cvcIframeContextualElement).toHaveText(CVC_CONTEXTUAL_TEXT_4_DIGITS);
+
+        // press pay to generate errors
+        await card.pay();
+
+        // checkout security code error element - shows the Amex-specific text
+        await expect(card.cvcErrorElement).toBeVisible();
+        await expect(card.cvcErrorElement).toHaveText(CVC_ERROR_AMEX);
+
+        // iframe security code error (aria-context) element - should also show the Amex-specific text
+        await expect(card.cvcIframeContextualElement).toHaveText(CVC_ERROR_AMEX);
+    });
+
+    test('#4 Should find no contextualElements because the config says to not show them', async ({ card }) => {
         await card.goto(
             getStoryUrl({
                 baseUrl: URL_MAP.card,

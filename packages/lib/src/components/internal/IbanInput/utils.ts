@@ -19,7 +19,7 @@ export const parseStructure = (structure, countryCode) => {
     const passedStructure = countries[countryCode].structure;
 
     // split in blocks of 3 chars
-    const regex = passedStructure.match(/(.{3})/g).map(block => {
+    const regex = (passedStructure.match(/(.{3})/g) ?? []).map(block => {
         // parse each structure block (1-char + 2-digits)
         const pattern = block.slice(0, 1);
         const repeats = parseInt(block.slice(1), 10);
@@ -138,7 +138,7 @@ export const iso7064Mod97_10 = iban => {
  *  @param countryCode -
  *  @returns Example of IBAN Number
  */
-export const getIbanPlaceHolder = (countryCode = null) => {
+export const getIbanPlaceHolder = (countryCode: string | null = null) => {
     if (countryCode && countries[countryCode] && countries[countryCode].example) {
         return formatIban(countries[countryCode].example);
     }

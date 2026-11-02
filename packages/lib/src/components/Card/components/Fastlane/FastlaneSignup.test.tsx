@@ -75,7 +75,7 @@ test('should send "consentShown:true" flag if the shopper saw the consent UI at 
     expect(screen.queryByText('Mobile number')).toBeNull();
 
     await waitFor(() => {
-        expect(onChangeMock).lastCalledWith({
+        expect(onChangeMock).toHaveBeenLastCalledWith({
             fastlaneData: {
                 consentGiven: false,
                 consentShown: true,
@@ -116,7 +116,7 @@ test('should return phone number formatted (without spaces and without prefix)',
     await user.keyboard('8005550199');
 
     await waitFor(() => {
-        expect(onChangeMock).lastCalledWith({
+        expect(onChangeMock).toHaveBeenLastCalledWith({
             fastlaneData: {
                 consentGiven: true,
                 consentShown: true,

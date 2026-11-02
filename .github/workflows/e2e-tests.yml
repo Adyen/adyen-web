@@ -2,20 +2,27 @@ name: E2E Tests
 
 on:
   workflow_call:
+    inputs:
+      all-api-versions:
+        description: 'Run all supported API versions. Defaults to the latest API version only, for fast PR feedback.'
+        type: boolean
+        default: false
 
 jobs:
   e2e-tests:
     timeout-minutes: 120
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     container:
-      image: mcr.microsoft.com/playwright:v1.50.0-noble
+      image: mcr.microsoft.com/playwright:v1.63.0-noble
       options: --user 1001
     strategy:
       fail-fast: false
       matrix:
-        api-version: ["v69", "v70", "v71"]
+        api-version: ${{ inputs.all-api-versions && fromJSON('["v69", "v70", "v71", "v72"]') || fromJSON('["v72"]') }}
         runner-browser: ["chromium", "firefox", "webkit"]
-        test-group: ["e2e", "ui"]
+        test-group: ["e2e", "ui", "a11y"]
     env:
       CHECKOUT_API_KEY: ${{secrets.ADYEN_CHECKOUT_API_KEY}}
       MERCHANT_ACCOUNT: ${{secrets.ADYEN_CHECKOUT_MERCHANT_ACCOUNT}}
@@ -25,17 +32,17 @@ jobs:
       API_VERSION: ${{matrix.api-version}}
     steps:
     - name: Checkout
-      uses: actions/checkout@v6
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
     - name: Setup Node
-      uses: actions/setup-node@v6
+      uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
       with:
         node-version: 24
         package-manager-cache: false
 
     - name: Cache node modules
       id: node-modules-cache
-      uses: actions/cache@v5
+      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
       env:
         cache-name: node-modules-v1
       with:
@@ -55,7 +62,7 @@ jobs:
     - name: Archive test result artifacts
       id: upload-artifact
       if: always()
-      uses: actions/upload-artifact@v7
+      uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
       with:
         name: playwright-report-${{matrix.api-version}}-${{matrix.runner-browser}}-${{matrix.test-group}}-${{ github.sha }}
         path: packages/e2e-playwright/playwright-report

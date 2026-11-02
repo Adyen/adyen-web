@@ -26,14 +26,14 @@ class Script implements IScript {
     private readonly src: string;
     private readonly component: string;
     private readonly node: string;
-    private readonly attributes: Partial<HTMLScriptElement>;
-    private readonly dataAttributes: Record<string, string | undefined>;
+    private readonly attributes: Partial<HTMLScriptElement> | undefined;
+    private readonly dataAttributes: Record<string, string | undefined> | undefined;
     private readonly analytics: IAnalytics;
     private readonly baseUrl: string;
 
-    private script: HTMLScriptElement;
+    private script: HTMLScriptElement | null;
     private loadPromise: Promise<void> | null = null;
-    private rejectLoadPromise: (reason?: unknown) => void | null = null;
+    private rejectLoadPromise: ((reason?: unknown) => void) | null = null;
     private resolveLoadScript: (() => void) | null = null;
     private rejectLoadScript: ((reason?: unknown) => void) | null = null;
 

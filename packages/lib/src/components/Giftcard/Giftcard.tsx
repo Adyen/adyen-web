@@ -5,13 +5,14 @@ import PayButton from '../internal/PayButton';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { PaymentAmount } from '../../types/global-types';
 import { GiftCardElementData, GiftCardConfiguration, balanceCheckResponseType, GiftCardBalanceCheckErrorType } from './types';
+import { resolveBalanceCheckError, resolvePlaceholders } from './utils';
 import { TxVariants } from '../tx-variants';
 import { PayButtonProps } from '../internal/PayButton/PayButton';
 
 export class GiftcardElement extends UIElement<GiftCardConfiguration> {
     public static readonly type: TxVariants = TxVariants.giftcard;
 
-    protected componentRef: GiftcardComponent | undefined;
+    declare protected componentRef: GiftcardComponent | undefined;
 
     protected static readonly defaultProps = {
         brandsConfiguration: {}
@@ -51,7 +52,7 @@ export class GiftcardElement extends UIElement<GiftCardConfiguration> {
         this.componentRef?.setBalanceCheckErrors?.(errorMessage);
     }
 
-    private handleBalanceCheck = (data: GiftCardElementData): Promise<balanceCheckResponseType> => {
+    private readonly handleBalanceCheck = (data: GiftCardElementData): Promise<balanceCheckResponseType> => {
         if (this.props.onBalanceCheck) {
             return new Promise((resolve, reject) => {
                 void this.props.onBalanceCheck(resolve, reject, data);
@@ -63,7 +64,7 @@ export class GiftcardElement extends UIElement<GiftCardConfiguration> {
         }
     };
 
-    private onOrderRequest = data => {
+    private readonly onOrderRequest = data => {
         if (this.props.onOrderRequest)
             return new Promise((resolve, reject) => {
                 void this.props.onOrderRequest(resolve, reject, data);
@@ -77,7 +78,7 @@ export class GiftcardElement extends UIElement<GiftCardConfiguration> {
         return this.onBalanceCheck();
     }
 
-    private onBalanceCheck = (): void => {
+    private readonly onBalanceCheck = (): void => {
         if (!this.isValid) {
             this.showValidation();
             return;
@@ -87,13 +88,13 @@ export class GiftcardElement extends UIElement<GiftCardConfiguration> {
         const hasBalanceCheck = this.props.session || this.props.onBalanceCheck;
         if (!hasBalanceCheck) return super.submit();
 
-        this.setStatus('loading');
+        this.setElementStatus('loading');
+
+        // Clear any previous balance check errors at the start of every attempt
+        this.setBalanceCheckError(null);
 
         this.handleBalanceCheck(this.formatData())
             .then(({ balance, transactionLimit = {} as PaymentAmount }) => {
-                // Clear any previous balance check errors on success
-                this.setBalanceCheckError(null);
-
                 // We still need to throw these errors, otherwise it would be a breaking changing
                 if (!balance) throw new Error('card-error'); // card doesn't exist
                 if (balance?.currency !== this.props.amount?.currency) throw new Error('currency-error');
@@ -101,20 +102,19 @@ export class GiftcardElement extends UIElement<GiftCardConfiguration> {
 
                 if (this.props.amount.value > balance.value || this.props.amount.value > transactionLimit.value) {
                     if (this.props.order) {
-                        return this.makeSubmitCall();
+                        return this.executePaymentsCall();
                     }
 
                     return this.onOrderRequest(this.data).then((order: { orderData: string; pspReference: string }) => {
                         this.setState({ order: { orderData: order.orderData, pspReference: order.pspReference } });
-                        return this.makeSubmitCall();
+                        return this.executePaymentsCall();
                     });
                 } else {
                     return this.handleOnRequiringConfirmation(balance, transactionLimit);
                 }
             })
             .catch(error => {
-                // Simply pass the raw error message to setBalanceCheckError
-                this.setBalanceCheckError(error?.message);
+                this.setBalanceCheckError(resolveBalanceCheckError(error));
 
                 // Still call handleError for other side effects (analytics, onError callback)
                 if (error instanceof AdyenCheckoutError) {
@@ -128,9 +128,9 @@ export class GiftcardElement extends UIElement<GiftCardConfiguration> {
     /**
      * Check if it should call onRequiringConfirmation
      */
-    private handleOnRequiringConfirmation = (balance, transactionLimit): Promise<any> => {
+    private readonly handleOnRequiringConfirmation = (balance: PaymentAmount, transactionLimit: PaymentAmount): Promise<void> | void => {
         this.componentRef.setBalance({ balance, transactionLimit });
-        this.setStatus('ready');
+        this.setElementStatus('ready');
 
         // 1. if we show pay button we don't need to ask for confirmation
         if (this.props.showPayButton) {
@@ -165,7 +165,14 @@ export class GiftcardElement extends UIElement<GiftCardConfiguration> {
 
     // Giftcards override the regular payButton flow
     protected override payButton = (props: PayButtonProps) => {
-        return <PayButton {...props} />;
+        return (
+            <PayButton
+                {...props}
+                showPayButton={this.props.showPayButton}
+                disclaimerMessage={this.props.disclaimerMessage}
+                showReview={props.showReview ?? !!this.props.onReview}
+            />
+        );
     };
 
     protected override componentToRender(): h.JSX.Element {
@@ -175,8 +182,8 @@ export class GiftcardElement extends UIElement<GiftCardConfiguration> {
                     this.componentRef = ref;
                 }}
                 {...this.props}
-                handleKeyPress={this.handleKeyPress}
-                showPayButton={this.props.showPayButton}
+                placeholders={resolvePlaceholders(this.props.brand, this.props.brandsConfiguration, this.props.placeholders)}
+                handleKeyDown={this.handleKeyDown}
                 onChange={this.setState}
                 makeBalanceCheck={() => this.onBalanceCheck()}
                 makePayment={() => this.makeSubmitCall()}

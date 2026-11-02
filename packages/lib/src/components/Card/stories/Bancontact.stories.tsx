@@ -1,7 +1,7 @@
 import { h } from 'preact';
+import { Bancontact } from '@adyen/adyen-web';
 import { MetaConfiguration, StoryConfiguration } from '../../../../storybook/types';
 import { CardConfiguration } from '../types';
-import Bancontact from '../Bancontact';
 import { ComponentContainer } from '../../../../storybook/components/ComponentContainer';
 import { Checkout } from '../../../../storybook/components/Checkout';
 

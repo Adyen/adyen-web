@@ -3,7 +3,7 @@ import { MetaConfiguration, PaymentMethodStoryProps, StoryConfiguration } from '
 import { RedirectConfiguration } from '../types';
 import { ComponentContainer } from '../../../storybook/components/ComponentContainer';
 import { Checkout } from '../../../storybook/components/Checkout';
-import Vipps from './Vipps';
+import { Vipps } from '@adyen/adyen-web';
 
 type VippsStory = StoryConfiguration<RedirectConfiguration>;
 

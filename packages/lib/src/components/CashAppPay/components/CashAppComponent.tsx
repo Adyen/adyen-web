@@ -41,6 +41,11 @@ export function CashAppComponent({
     }, [setComponentRef]);
 
     const initializeCashAppSdk = useCallback(async () => {
+        const renderButton = async () => {
+            if (!cashAppRef.current) throw new AdyenCheckoutError('ERROR', 'CashAppPay button container is not available');
+            await cashAppService.renderButton(cashAppRef.current);
+        };
+
         try {
             await cashAppService.initialize();
 
@@ -51,7 +56,7 @@ export function CashAppComponent({
                 cashAppService.subscribeToEvent(CashAppPayEvents.CustomerRequestDeclined, async () => {
                     onError(new AdyenCheckoutError('ERROR', 'Payment declined by CashAppPay'));
                     await cashAppService.restart();
-                    await cashAppService.renderButton(cashAppRef.current);
+                    await renderButton();
                 }),
 
                 cashAppService.subscribeToEvent(CashAppPayEvents.CustomerRequestApproved, ({ customerProfile, grants }) => {
@@ -69,7 +74,7 @@ export function CashAppComponent({
                 })
             ];
 
-            await cashAppService.renderButton(cashAppRef.current);
+            await renderButton();
 
             setStatus('ready');
         } catch (error) {

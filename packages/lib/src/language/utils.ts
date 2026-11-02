@@ -27,7 +27,14 @@ const isLocaleLenghtValid = (locale: string): boolean =>
  */
 export function matchLocale(locale: string, supportedLocales: readonly string[]): string | null {
     if (!locale || typeof locale !== 'string') return null;
-    return supportedLocales.find(supLoc => toTwoLetterCode(supLoc) === toTwoLetterCode(locale)) || null;
+
+    const lowerLocale = locale.toLowerCase();
+    const exactMatch = supportedLocales.find(supLoc => supLoc.toLowerCase() === lowerLocale);
+
+    if (exactMatch) return exactMatch;
+
+    const localeTwoLetter = toTwoLetterCode(locale);
+    return supportedLocales.find(supLoc => toTwoLetterCode(supLoc) === localeTwoLetter) || null;
 }
 
 /**
@@ -56,6 +63,42 @@ export function formatLocaleToLanguageCountryLocale(localeParam: string): string
     const fullLocale = [languageCode.toLowerCase(), countryCode.toUpperCase()].join('-');
 
     return fullLocale.length === 5 ? fullLocale : null;
+}
+
+/**
+ * Returns the locale as Intl spells it ('en_us' -> 'en-US'), or null when Intl has no data for it.
+ */
+const findIntlLocale = (locale: string): string | null => {
+    try {
+        return Intl.NumberFormat.supportedLocalesOf([locale])[0] ?? null;
+    } catch {
+        // Intl throws a RangeError on a malformed tag instead of returning an empty list
+        return null;
+    }
+};
+
+/**
+ * Resolves the locale used for Intl formatting and for third-party SDKs. Unlike the translations
+ * locale, it is not limited to the locales we ship translations for.
+ *
+ * Subtags are dropped one at a time, most specific first, because Intl rejects a tag outright when
+ * any of its subtags is malformed. Dropping them keeps the part that Intl does understand, so
+ * 'zh-Foo-CN' resolves to 'zh' instead of falling all the way back to the default.
+ *
+ * @param locale - Locale requested by the merchant
+ */
+export function resolveFormattingLocale(locale?: string): string {
+    if (!locale || typeof locale !== 'string') return DEFAULT_LOCALE;
+
+    const subtags = locale.replace(/_/g, '-').split('-');
+
+    while (subtags.length) {
+        const match = findIntlLocale(subtags.join('-'));
+        if (match) return match;
+        subtags.pop();
+    }
+
+    return DEFAULT_LOCALE;
 }
 
 export function parseLocale(locale: string, supportedLocales: readonly string[]): string {

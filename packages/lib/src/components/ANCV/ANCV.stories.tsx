@@ -3,7 +3,7 @@ import { Meta, StoryObj } from '@storybook/preact-vite';
 import { PaymentMethodStoryProps } from '../../../storybook/types';
 import { ComponentContainer } from '../../../storybook/components/ComponentContainer';
 import { ANCVConfiguration } from './types';
-import ANCV from './ANCV';
+import { ANCV } from '@adyen/adyen-web';
 import { Checkout } from '../../../storybook/components/Checkout';
 
 type ANCVStory = StoryObj<PaymentMethodStoryProps<ANCVConfiguration>>;

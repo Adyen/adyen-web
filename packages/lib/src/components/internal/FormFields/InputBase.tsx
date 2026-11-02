@@ -1,5 +1,6 @@
 import {
     h,
+    HTMLInputTypeAttribute,
     RefCallback,
     InputHTMLAttributes,
     GenericEventHandler,
@@ -11,6 +12,7 @@ import {
 import { useCallback } from 'preact/hooks';
 import classNames from 'classnames';
 import { ARIA_CONTEXT_SUFFIX, ARIA_ERROR_SUFFIX } from '../../../core/Errors/constants';
+import { trimValWithOneSpace } from '../../../utils/validator-utils';
 import Language from '../../../language';
 import { AutocompleteValue } from './types';
 import './FormFields.scss';
@@ -19,23 +21,17 @@ export interface InputBaseProps extends InputHTMLAttributes {
     classNameModifiers?: string[];
     isInvalid?: boolean;
     isValid?: boolean;
-    readonly?: boolean;
     uniqueId?: string;
-    disabled?: boolean;
     className?: string;
+    type?: HTMLInputTypeAttribute; // We force the type here because InputHTMLAttributes allows any string
     placeholder?: string;
-    value?: string;
-    name?: string;
-    checked?: boolean;
     setRef?: RefCallback<HTMLInputElement>;
     trimOnBlur?: boolean;
     i18n?: Language;
     label?: string;
     onBlurHandler?: GenericEventHandler<HTMLInputElement>;
     onFocusHandler?: GenericEventHandler<HTMLInputElement>;
-    maxlength?: number | null;
     addContextualElement?: boolean;
-    type?: string;
     /**
      * WCAG 2.2 autocomplete token for browser autofill.
      * Pass undefined to omit the attribute entirely.
@@ -44,8 +40,8 @@ export interface InputBaseProps extends InputHTMLAttributes {
     autocomplete: AutocompleteValue;
 }
 
-export default function InputBase({ setRef, ...props }: Readonly<InputBaseProps>) {
-    const { autoCorrect, classNameModifiers, isInvalid, isValid, readonly = null, spellcheck, type, uniqueId, disabled } = props;
+export default function InputBase({ setRef, type = 'text', classNameModifiers = [], ...props }: Readonly<InputBaseProps>) {
+    const { autoCorrect, isInvalid, isValid, readonly, spellcheck, uniqueId, disabled } = props;
     const className = props.className;
 
     /**
@@ -58,36 +54,16 @@ export default function InputBase({ setRef, ...props }: Readonly<InputBaseProps>
 
     const handleInput = useCallback(
         (event: TargetedInputEvent<HTMLInputElement>) => {
-            props.onInput(event);
+            props.onInput?.(event);
         },
         [props.onInput]
     );
 
-    /**
-     *  Event is fired when a key that produces a character value is pressed down.
-     *  ENTER keypress also triggers this event.
-     *
-     *  TODO: 'keypress' event is deprecated
-     *  https://developer.mozilla.org/en-US/docs/Web/API/Element/keypress_event
-     */
-    const handleKeyPress = useCallback(
+    const handleKeyDown = useCallback(
         (event: TargetedKeyboardEvent<HTMLInputElement>) => {
-            if (props?.onKeyPress) props.onKeyPress(event);
+            if (props?.onKeyDown) props.onKeyDown(event);
         },
-        [props?.onKeyPress]
-    );
-
-    /**
-     * Event is fired when certain keys are pressed (keys that do not output characters):
-     * Backspace, Arrow keys, Shift, Ctrl, Command, Option, Esc
-     *
-     * Exception: ENTER keypress triggers 'onKeyPress' AND 'onKeyUp'
-     */
-    const handleKeyUp = useCallback(
-        (event: TargetedKeyboardEvent<HTMLInputElement>) => {
-            if (props?.onKeyUp) props.onKeyUp(event);
-        },
-        [props?.onKeyUp]
+        [props?.onKeyDown]
     );
 
     const handleBlur = useCallback(
@@ -95,7 +71,8 @@ export default function InputBase({ setRef, ...props }: Readonly<InputBaseProps>
             props?.onBlurHandler?.(event); // From Field component
 
             if (props.trimOnBlur) {
-                (event.target as HTMLInputElement).value = (event.target as HTMLInputElement).value.trim(); // needed to trim trailing spaces in field (leading spaces can be done via formatting)
+                const input = event.target as HTMLInputElement;
+                input.value = trimValWithOneSpace(input.value);
             }
 
             props?.onBlur?.(event);
@@ -122,7 +99,19 @@ export default function InputBase({ setRef, ...props }: Readonly<InputBaseProps>
     );
 
     // Don't spread classNameModifiers etc to input element (it ends up as an attribute on the element itself)
-    const { classNameModifiers: cnm, uniqueId: uid, isInvalid: iiv, isValid: iv, addContextualElement: ace, autocomplete, ...restProps } = props;
+    const {
+        uniqueId: uid,
+        isInvalid: iiv,
+        isValid: iv,
+        addContextualElement: ace,
+        'aria-describedby': ariaDescribedByProp,
+        autocomplete,
+        ...restProps
+    } = props;
+
+    const internalDescribedBy = uniqueId ? `${uniqueId}${isInvalid ? ARIA_ERROR_SUFFIX : ARIA_CONTEXT_SUFFIX}` : undefined;
+    const extraDescribedBy = typeof ariaDescribedByProp === 'string' && ariaDescribedByProp ? ariaDescribedByProp : undefined;
+    const mergedAriaDescribedBy = [extraDescribedBy, internalDescribedBy].filter(Boolean).join(' ') || undefined;
 
     return (
         <input
@@ -137,20 +126,14 @@ export default function InputBase({ setRef, ...props }: Readonly<InputBaseProps>
             // eslint-disable-next-line react/no-unknown-property -- Preact uses lowercase 'spellcheck'
             spellcheck={spellcheck}
             autoCorrect={autoCorrect}
-            aria-describedby={`${uniqueId}${isInvalid ? ARIA_ERROR_SUFFIX : ARIA_CONTEXT_SUFFIX}`}
+            aria-describedby={mergedAriaDescribedBy}
             aria-invalid={isInvalid}
             onInput={handleInput}
             onBlur={handleBlur}
             onFocus={handleFocus}
-            onKeyUp={handleKeyUp}
-            onKeyPress={handleKeyPress}
+            onKeyDown={handleKeyDown}
             disabled={disabled}
             ref={setRef}
         />
     );
 }
-
-InputBase.defaultProps = {
-    type: 'text',
-    classNameModifiers: []
-};

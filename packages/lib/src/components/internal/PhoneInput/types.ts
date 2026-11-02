@@ -14,8 +14,8 @@ export interface PhoneInputFormProps {
     onChange: (data: {
         data: PhoneInputSchema;
         valid: { [p: string]: boolean };
-        errors: { [p: string]: ValidationRuleResult };
-        isValid: boolean;
+        errors: { [p: string]: ValidationRuleResult | null };
+        isValid?: boolean;
     }) => void;
     phoneNumberKey?: string;
     phonePrefixErrorKey?: string;
@@ -27,4 +27,12 @@ export interface PhoneInputFormProps {
 export interface PhonePrefixes {
     phonePrefixes: DataSetItem[];
     loadingStatus: string;
+}
+
+/**
+ * Shape of the items in the 'phonenumbers' dataset
+ */
+export interface PhonePrefixDataSetItem {
+    id: string;
+    prefix: string;
 }

@@ -1,7 +1,19 @@
 import { FunctionComponent } from 'preact';
 import { GiftcardFieldsProps } from './components/types';
 import { UIElementProps } from '../internal/UIElement/types';
-import { Order, PaymentAmount, PaymentData } from '../../types/global-types';
+import { Order, OrderUpdatedData, PaymentAmount, PaymentData } from '../../types/global-types';
+import type { BrandConfiguration } from '../internal/SecuredFields/lib/types';
+import type { Placeholders } from './components/types';
+
+export interface GiftCardBrandConfiguration extends BrandConfiguration {
+    /**
+     * Placeholders for this gift card brand. Keys not set here fall back to the top-level `placeholders`.
+     */
+    placeholders?: Placeholders;
+}
+
+export type GiftCardBrandsConfiguration = Record<string, GiftCardBrandConfiguration>;
+
 
 export interface GiftCardElementData {
     paymentMethod: {
@@ -26,6 +38,8 @@ export type onBalanceCheckCallbackType = (
     data: GiftCardElementData
 ) => Promise<void>;
 
+export type onOrderUpdatedCallbackType = (data: OrderUpdatedData) => void;
+
 export type onRequiringConfirmationCallbackType = (resolve: () => void, reject: (error: Error) => void) => Promise<void>;
 
 export type onOrderRequestCallbackType = (resolve: (order: Order) => void, reject: (error: Error) => void, data: PaymentData) => Promise<void>;
@@ -34,9 +48,13 @@ export type onOrderRequestCallbackType = (resolve: (order: Order) => void, rejec
 export interface GiftCardConfiguration extends UIElementProps {
     pinRequired?: boolean;
     expiryDateRequired?: boolean;
-    brandsConfiguration?: any;
+    brandsConfiguration?: GiftCardBrandsConfiguration;
+    /**
+     * Placeholders for the gift card fields. Used for every brand, unless a brand sets its own in `brandsConfiguration`.
+     */
+    placeholders?: Placeholders;
     brand?: string;
-    onOrderUpdated?: (data) => void;
+    onOrderUpdated?: onOrderUpdatedCallbackType;
     onBalanceCheck?: onBalanceCheckCallbackType;
     onOrderRequest?: onOrderRequestCallbackType;
 
@@ -58,4 +76,17 @@ export interface GiftCardValidationError {
     error?: string; // Original error code
 }
 
-export type GiftCardBalanceCheckErrorType = 'no-balance' | 'card-error' | 'currency-error';
+/**
+ * Errors synthesized client-side from a successful (2xx) balance check response.
+ * These are rendered inline, next to the gift card number field.
+ */
+export const BALANCE_CHECK_ERRORS = ['no-balance', 'card-error', 'currency-error'] as const;
+
+export type KnownBalanceCheckError = (typeof BALANCE_CHECK_ERRORS)[number];
+
+/**
+ * `unknown-error` covers everything we cannot attribute to the card itself
+ * (5xx, network, CORS, timeout, a merchant calling `reject()`) and is rendered
+ * as a banner rather than an inline field error.
+ */
+export type GiftCardBalanceCheckErrorType = KnownBalanceCheckError | 'unknown-error';

@@ -1,6 +1,5 @@
 import { h } from 'preact';
-import { IssuerItem } from '../../../internal/IssuerList/types';
-import { OnChangeData } from '../../../../core/types';
+import { IssuerItem, IssuerListState } from '../../../internal/IssuerList/types';
 import { IPayByBankPixAwait } from './components/PayByBankPixAwait';
 import { AbstractAnalyticsEvent } from '../../../../core/Analytics/events/AbstractAnalyticsEvent';
 import { AdyenCheckoutError } from '../../../../types';
@@ -30,7 +29,7 @@ export interface IssuerListProps extends BaseEnrollmentProps {
      * @internal
      */
     onSubmitAnalytics?: (aObj: AbstractAnalyticsEvent) => void;
-    onChange?(payload: OnChangeData): void;
+    onChange?(payload: IssuerListState): void;
 }
 
 export type EnrollmentProps = AwaitProps | IssuerListProps;

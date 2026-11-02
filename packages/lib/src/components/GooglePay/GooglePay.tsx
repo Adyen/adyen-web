@@ -45,10 +45,15 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
             );
         }
 
-        this.googlePay = new GooglePayService(this.props.environment, this.analytics, {
-            ...(isExpress && paymentDataCallbacks?.onPaymentDataChanged && { onPaymentDataChanged: paymentDataCallbacks.onPaymentDataChanged }),
-            onPaymentAuthorized: this.onPaymentAuthorized
-        });
+        this.googlePay = new GooglePayService(
+            this.props.environment,
+            this.analytics,
+            {
+                ...(isExpress && paymentDataCallbacks?.onPaymentDataChanged && { onPaymentDataChanged: paymentDataCallbacks.onPaymentDataChanged }),
+                onPaymentAuthorized: this.onPaymentAuthorized
+            },
+            this.props.nonce
+        );
     }
 
     /**
@@ -308,7 +313,7 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
         return this.googlePay.prefetchPaymentData(this.props, this.core.options.countryCode);
     };
 
-    get browserInfo(): BrowserInfo {
+    get browserInfo(): BrowserInfo | undefined {
         return collectBrowserInfo();
     }
 

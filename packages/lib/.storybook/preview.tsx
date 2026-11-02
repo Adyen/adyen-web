@@ -1,7 +1,10 @@
 import './main.css';
+import { h, Fragment } from 'preact';
 import { Preview } from '@storybook/preact-vite';
-import { DEFAULT_COUNTRY_CODE, DEFAULT_SHOPPER_LOCALE, DEFAULT_AMOUNT_VALUE, SHOPPER_LOCALES } from '../storybook/config/commonConfig';
-import { initialize, mswLoader } from 'msw-storybook-addon';
+import { SRPanelDebugger } from '../storybook/components/SRPanelDebugger';
+import { DEFAULT_COUNTRY_CODE, DEFAULT_SHOPPER_LOCALE, DEFAULT_AMOUNT_VALUE, STORYBOOK_SHOPPERLOCALES } from '../storybook/config/commonConfig';
+import { setupWorker } from 'msw/browser';
+import { mswLoader } from 'msw-storybook-addon/csf3';
 import { COUNTRY_CODES } from '../storybook/constants/countries';
 
 /*
@@ -15,11 +18,44 @@ const disableMsw = process.env.DISABLE_MSW === 'true';
 let loaders = {};
 
 if (!disableMsw) {
-    initialize({ onUnhandledRequest: 'bypass' });
-    loaders = { loaders: [mswLoader] };
+    loaders = {
+        loaders: [
+            mswLoader(async () => {
+                const worker = setupWorker();
+                await worker.start({ onUnhandledRequest: 'bypass' });
+
+                return worker;
+            })
+        ]
+    };
 }
 
 const preview: Preview = {
+    globalTypes: {
+        srPanelDebugger: {
+            description: 'Log every screen reader panel mutation and setMessages call on screen',
+            toolbar: {
+                title: 'SR panel debugger',
+                icon: 'accessibility',
+                items: [
+                    { value: false, title: 'SR debugger: off' },
+                    { value: true, title: 'SR debugger: on' }
+                ],
+                dynamicTitle: true
+            }
+        }
+    },
+    initialGlobals: {
+        srPanelDebugger: false
+    },
+    decorators: [
+        (Story, context) => (
+            <Fragment>
+                <Story />
+                {context.globals.srPanelDebugger && <SRPanelDebugger />}
+            </Fragment>
+        )
+    ],
     argTypes: {
         useSessions: {
             control: 'boolean'
@@ -30,7 +66,7 @@ const preview: Preview = {
         },
         shopperLocale: {
             control: 'select',
-            options: SHOPPER_LOCALES
+            options: STORYBOOK_SHOPPERLOCALES
         },
         amount: {
             control: 'number'

@@ -17,10 +17,10 @@ import { defaultProps } from './core.defaultProps';
 import { resolveEnvironments } from './Environment';
 import { LIBRARY_BUNDLE_TYPE, LIBRARY_VERSION } from './config';
 
-import type { PaymentAction, PaymentAmount, PaymentResponseData } from '../types/global-types';
-import type { CoreConfiguration, ICore, AdditionalDetailsData, CoreModules } from './types';
+import type { PaymentAction, PaymentAmount, PaymentData, PaymentMethodsResponse, PaymentResponseData } from '../types/global-types';
+import type { CoreConfiguration, ICore, AdditionalDetailsData, CoreModules, CorePropsForComponent, CreateFromActionOptions } from './types';
 import type { UIElementProps } from '../components/internal/UIElement/types';
-import { AnalyticsLogEvent, LogEventType } from './Analytics/events/AnalyticsLogEvent';
+import { AnalyticsLogEvent, LogEventSubtype, LogEventType } from './Analytics/events/AnalyticsLogEvent';
 import CancelError from './Errors/CancelError';
 import { AnalyticsService } from './Analytics/AnalyticsService';
 import { AnalyticsEventQueue } from './Analytics/AnalyticsEventQueue';
@@ -40,15 +40,20 @@ class Core implements ICore {
 
     private components: UIElement[] = [];
 
-    public static readonly metadata: { version: string; bundleType: string } = {
+    public static readonly metadata: { version: string; bundleType: string; numberOfInitialisedCheckouts: number } = {
         version: LIBRARY_VERSION,
-        bundleType: LIBRARY_BUNDLE_TYPE
+        bundleType: LIBRARY_BUNDLE_TYPE,
+        numberOfInitialisedCheckouts: 0
     };
 
     public static readonly registry = registry;
 
     public static setBundleType(type: string): void {
         Core.metadata.bundleType = type;
+    }
+
+    public static increaseInitialisationCount(): void {
+        Core.metadata.numberOfInitialisedCheckouts += 1;
     }
 
     public static register(...items: NewableComponent[]) {
@@ -97,6 +102,13 @@ class Core implements ICore {
         if (clientKeyType === 'pub.') {
             console.debug(
                 `The value you are passing as your "clientKey" looks like an originKey (${this.options.clientKey?.substring(0, 12)}..). Although this is supported it is not the recommended way to integrate. To generate a clientKey, see the documentation (https://docs.adyen.com/development-resources/client-side-authentication/migrate-from-origin-key-to-client-key/) for more details.`
+            );
+        }
+
+        Core.increaseInitialisationCount();
+        if (Core.metadata.numberOfInitialisedCheckouts > 1 && !this.options.suppressConfigWarnings) {
+            console.warn(
+                '\nMultiple instances of AdyenCheckout detected on the same page. This is not recommended and may lead to unexpected behaviour.\nIf this is intentional you can suppress this warning by setting "suppressConfigWarnings: true" in your Checkout config.\n'
             );
         }
 
@@ -226,7 +238,7 @@ class Core implements ICore {
      * @param options - options that will be merged to the global Checkout props
      * @returns new UIElement
      */
-    public createFromAction(action: PaymentAction, options = {}): UIElement {
+    public createFromAction(action: PaymentAction, options: CreateFromActionOptions = {}): UIElement {
         if (!action || !action.type) {
             if (hasOwnProperty(action, 'action') && hasOwnProperty(action, 'resultCode')) {
                 throw new Error(
@@ -353,7 +365,7 @@ class Core implements ICore {
      * @internal
      * @returns props for a new UIElement
      */
-    public getCorePropsForComponent(): any {
+    public getCorePropsForComponent(): CorePropsForComponent {
         const globalOptions = processGlobalOptions(this.options);
 
         return {
@@ -366,6 +378,52 @@ class Core implements ICore {
             cdnContext: this.cdnImagesUrl,
             createFromAction: this.createFromAction
         };
+    }
+
+    public processPayment(data: PaymentData): void {
+        if (!this.session) {
+            this.options.onError?.(new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'processPayment requires a session to be configured'));
+            return;
+        }
+
+        const event = new AnalyticsLogEvent({
+            type: LogEventType.submit,
+            subType: LogEventSubtype.review,
+            message: 'Shopper clicked pay',
+            component: data.paymentMethod?.type
+        });
+
+        this.modules.analytics.sendAnalytics(event);
+
+        this.session
+            .submitPayment(data)
+            .then(sanitizeResponse)
+            .then(verifyPaymentDidNotFail)
+            .then((response: PaymentResponseData) => {
+                if (response.action) {
+                    if (this.options.onAction) {
+                        this.options.onAction(this.createFromAction(response.action));
+                    } else {
+                        this.options.onError?.(
+                            new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'onAction callback is required to handle payment actions')
+                        );
+                    }
+                    return;
+                }
+                const order = response.order;
+                if (order && (order.remainingAmount?.value ?? 0) > 0) {
+                    const sessionData = this.session?.data;
+                    this.options.onOrderUpdated?.({ order, ...(sessionData && { sessionData }) });
+                    return;
+                }
+                cleanupFinalResult(response);
+                this.options.onPaymentCompleted?.(response);
+            })
+            .catch((e: PaymentResponseData | Error) => {
+                if (e instanceof CancelError) return;
+                cleanupFinalResult(e as PaymentResponseData);
+                this.options.onPaymentFailed?.(e as PaymentResponseData);
+            });
     }
 
     public storeElementReference(element: UIElement) {
@@ -388,7 +446,7 @@ class Core implements ICore {
         throw new Error(errorMessage);
     }
 
-    private createPaymentMethodsList(paymentMethodsResponse?: PaymentMethods): void {
+    private createPaymentMethodsList(paymentMethodsResponse?: PaymentMethodsResponse): void {
         this.paymentMethodsResponse = new PaymentMethods(this.options.paymentMethodsResponse || paymentMethodsResponse, this.options);
     }
 

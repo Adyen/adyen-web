@@ -7,7 +7,6 @@ import StoreDetails from '../../../../internal/StoreDetails';
 import Address from '../../../../internal/Address';
 import CardHolderName from './CardHolderName';
 import Installments from './Installments';
-import DisclaimerMessage from '../../../../internal/DisclaimerMessage';
 
 export const CardFieldsWrapper = ({
     // vars created in CardInput:
@@ -65,7 +64,6 @@ export const CardFieldsWrapper = ({
     showContextualElement,
     //
     iOSFocusedField,
-    disclaimerMessage,
     //
     onFieldFocusAnalytics,
     onFieldBlurAnalytics
@@ -174,13 +172,6 @@ export const CardFieldsWrapper = ({
                     addressSearchDebounceMs={addressSearchDebounceMs}
                     onFieldFocusAnalytics={onFieldFocusAnalytics}
                     onFieldBlurAnalytics={onFieldBlurAnalytics}
-                />
-            )}
-
-            {disclaimerMessage && (
-                <DisclaimerMessage
-                    message={disclaimerMessage.message.replace('%{linkText}', `%#${disclaimerMessage.linkText}%#`)}
-                    urls={[disclaimerMessage.link]}
                 />
             )}
         </LoadingWrapper>

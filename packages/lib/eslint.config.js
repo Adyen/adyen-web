@@ -10,7 +10,16 @@ import globals from 'globals';
 import { dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import strictNullChecks from './eslint-rules/strict-null-checks.js';
+
 const __dirname = dirname(fileURLToPath(import.meta.url));
+const restrictedImportPaths = [
+    {
+        name: 'preact/compat',
+        importNames: ['forwardRef'],
+        message: 'forwardRef might lead to unexpected behaviors in preact/compat.'
+    }
+];
 
 const config = defineConfig(
     {
@@ -24,6 +33,7 @@ const config = defineConfig(
             'auto/*',
             'postcss.config.cjs',
             'eslint.config.js',
+            'eslint-rules/*',
             'lint-staged.config.js',
             '**/*_*.*'
         ]
@@ -49,13 +59,7 @@ const config = defineConfig(
             'no-restricted-imports': [
                 'error',
                 {
-                    paths: [
-                        {
-                            name: 'preact/compat',
-                            importNames: ['forwardRef'],
-                            message: 'forwardRef might lead to unexpected behaviors in preact/compat.'
-                        }
-                    ]
+                    paths: restrictedImportPaths
                 }
             ],
             '@typescript-eslint/no-unsafe-assignment': 'off',
@@ -104,6 +108,9 @@ const config = defineConfig(
                     allow: ['arrowFunctions']
                 }
             ],
+            // Guardrail for the strictNullChecks migration: `!` silences the compiler without
+            // making the value any less nullable at runtime.
+            '@typescript-eslint/no-non-null-assertion': 'error',
             'react/react-in-jsx-scope': 'off',
             'react/prop-types': 'off',
             'react/prefer-read-only-props': 'error',
@@ -115,6 +122,32 @@ const config = defineConfig(
         files: ['**/?(*.)+(stories).[jt]s?(x)'],
         rules: {
             '@typescript-eslint/no-misused-promises': 'off'
+        }
+    },
+    {
+        name: 'Payment method component story imports',
+        files: ['src/components/**/?(*.)+(stories).[jt]s?(x)'],
+        ignores: ['src/components/internal/**'],
+        rules: {
+            'no-restricted-imports': [
+                'error',
+                {
+                    paths: restrictedImportPaths,
+                    patterns: [
+                        {
+                            group: ['@adyen/adyen-web/src/**'],
+                            message:
+                                'Import payment method components from @adyen/adyen-web. Direct source imports bypass the built package in dist Storybook tests.'
+                        },
+                        {
+                            regex: '^\\.\\.?/(?!SimulatedIssuer$)[A-Z][A-Za-z0-9]*(?:\\.tsx)?$',
+                            importNames: ['default'],
+                            message:
+                                'Import payment method components from @adyen/adyen-web. Direct source imports bypass the built package in dist Storybook tests.'
+                        }
+                    ]
+                }
+            ]
         }
     },
     {
@@ -144,32 +177,34 @@ const config = defineConfig(
             'src/**/*.spec.tsx',
 
             // ── Components
-            'src/components/ANCV/**',
-            'src/components/Dropin/**',
-            'src/components/Giftcard/**',
             'src/components/Klarna/**',
             'src/components/PayTo/**',
-            'src/components/ThreeDS2/**',
-
-            // ── Internal Components ──
-            'src/components/internal/Address/**',
-            'src/components/internal/BaseElement/**',
-            'src/components/internal/ClickToPay/**',
-            'src/components/internal/FormFields/**',
-            'src/components/internal/IbanInput/**',
-            'src/components/internal/IssuerList/**',
-            'src/components/internal/OpenInvoice/**',
-            'src/components/internal/UIElement/**',
-
-            // ── Utils ──
-            'src/utils/useForm/**',
 
             // ── Others ──
-            'src/core/**',
             'src/types/**'
         ],
         rules: {
             '@typescript-eslint/no-explicit-any': 'error'
+        }
+    },
+    {
+        name: 'Strict null checks',
+        files: ['src/**/*.ts', 'src/**/*.tsx'],
+        ignores: [
+            // Not in scope yet — the final migration ticket brings these in.
+            'src/**/*.test.ts',
+            'src/**/*.test.tsx',
+            'src/**/*.spec.ts',
+            'src/**/*.spec.tsx',
+            'src/**/stories/**',
+            'src/**/*.stories.tsx'
+        ],
+        plugins: {
+            'strict-null-checks': strictNullChecks
+        },
+        rules: {
+            'strict-null-checks/enforce': 'error',
+            'strict-null-checks/no-suppression': 'error'
         }
     },
     {

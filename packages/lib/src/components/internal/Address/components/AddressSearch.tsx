@@ -12,7 +12,7 @@ export type OnAddressLookupType = (
     value: string,
     actions: {
         resolve: (value: Array<AddressLookupItem>) => void;
-        reject: (reason?: any) => void;
+        reject: (reason?: RejectionReason) => void;
     }
 ) => Promise<void>;
 
@@ -20,15 +20,15 @@ export type OnAddressSelectedType = (
     value: AddressLookupItem,
     actions: {
         resolve: (value: AddressLookupItem) => void;
-        reject: (reason?: any) => void;
+        reject: (reason?: RejectionReason) => void;
     }
 ) => Promise<void>;
 
 interface AddressSearchProps {
-    onAddressLookup?: OnAddressLookupType;
+    onAddressLookup: OnAddressLookupType;
     onAddressSelected?: OnAddressSelectedType;
     onSelect: (addressItem: AddressData) => void;
-    onManualAddress: any;
+    onManualAddress: () => void;
     externalErrorMessage: string;
     hideManualButton: boolean;
     showContextualElement?: boolean;
@@ -93,6 +93,7 @@ export default function AddressSearch({
             return;
         }
         const value = originalData.find(item => item.id === event.target.value);
+        if (!value) return;
 
         // 1. in case we don't get a function just select item
         if (typeof onAddressSelected !== 'function') {
@@ -135,6 +136,8 @@ export default function AddressSearch({
                     onChange={onSelectItem}
                     disableTextFilter={true}
                     blurOnClose={true}
+                    preserveInput={true}
+                    clearOnSelect={true}
                 />
             </Field>
             {!hideManualButton && (

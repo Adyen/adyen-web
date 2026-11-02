@@ -54,14 +54,16 @@ class Card extends Base {
     readonly selectorList: Locator;
     readonly threeDs2Challenge: ThreeDs2Challenge;
 
-    readonly payButton: Locator;
+    declare readonly payButton: Locator;
+
+    static readonly DEFAULT_ROOT_SELECTOR = '.adyen-checkout__card-input';
 
     constructor(
         public readonly page: Page,
         public readonly rootElementSelector?: Locator | string
     ) {
         super(page);
-        const selector = rootElementSelector ?? '.adyen-checkout__card-input';
+        const selector = rootElementSelector ?? Card.DEFAULT_ROOT_SELECTOR;
         this.rootElement = typeof selector === 'string' ? this.page.locator(selector) : selector;
 
         /**
@@ -127,8 +129,13 @@ class Card extends Base {
 
         this.threeDs2Challenge = new ThreeDs2Challenge(page);
 
-        // Regex needs to be this complex other wise it matches Google Pay in the Dropin
-        this.payButton = this.page.getByRole('button', { name: /(Pay .*)|(Save details)/ });
+        // Regex needs to be this complex other wise it matches Google Pay in the Dropin.
+        // Scope to rootElement whenever a custom root was passed in (Locator, or a custom string selector) -
+        // e.g. a Drop-in payment method's details wrapper, which contains its own Pay button - so that multiple
+        // Card instances on the same page (e.g. multiple Drop-in instances) don't collide. Only the default
+        // selector falls back to page-scope, since standalone Card's Pay button is a DOM sibling, not a descendant.
+        const payButtonScope = selector === Card.DEFAULT_ROOT_SELECTOR ? this.page : this.rootElement;
+        this.payButton = payButtonScope.getByRole('button', { name: /(Pay .*)|(Save details)/ });
     }
 
     // The list of card brands as displayed under the CardNumber field

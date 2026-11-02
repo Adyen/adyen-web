@@ -1,4 +1,4 @@
-import { AdyenCheckout, Card, Bancontact, nl_NL } from '@adyen/adyen-web';
+import { AdyenCheckout, Card, Bancontact } from '@adyen/adyen-web';
 import '@adyen/adyen-web/styles/adyen.css';
 
 import { getPaymentMethods } from '../../services';
@@ -81,7 +81,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
 
     if (onlyShowCard || showComps.card) {
         window.card = new Card(checkout, {
-            _disableClickToPay: true,
+            _disableClickToPay: true
             // autoFocus: false,
             // billingAddressAllowedCountries: ['US', 'PR'],
             // billingAddressMode: 'partial',
@@ -135,9 +135,9 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
             // onError: obj => {
             //     console.log('### Cards::onError:: obj=', obj);
             // },
-            onBinLookup: obj => {
-                console.log('### Cards::onBinLookup:: obj=', obj);
-            }
+            // onBinLookup: obj => {
+            //     console.log('### Cards::onBinLookup:: obj=', obj);
+            // }
         }).mount('.card-field');
     }
 

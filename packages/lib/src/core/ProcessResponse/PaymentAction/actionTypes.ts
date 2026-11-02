@@ -67,6 +67,7 @@ const actionTypes = {
             clientKey: props.clientKey,
             paymentMethodType: props.paymentMethodType,
             challengeWindowSize: props.challengeWindowSize, // always pass challengeWindowSize in case it's been set directly in the handleAction config object
+            usePasskeyIFrameAttributes: props.usePasskeyIFrameAttributes,
             isMDFlow: props.isMDFlow,
             modules: {
                 analytics: props.modules?.analytics,

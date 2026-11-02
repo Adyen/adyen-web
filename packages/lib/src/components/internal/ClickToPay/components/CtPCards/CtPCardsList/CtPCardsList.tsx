@@ -12,13 +12,13 @@ import Select from '../../../../FormFields/Select';
 
 type CtPCardsListProps = {
     cards: ShopperCard[];
-    cardSelected: ShopperCard;
+    cardSelected?: ShopperCard;
     errorMessage?: string;
-    onChangeCard(card: ShopperCard): void;
+    onChangeCard(card: ShopperCard | undefined): void;
 };
 
 type CardsSelectorDataState = {
-    srcDigitalCardId: string;
+    srcDigitalCardId?: string;
 };
 
 const schema = ['srcDigitalCardId'];
@@ -29,14 +29,14 @@ const CtPCardsList = ({ cardSelected, cards, errorMessage, onChangeCard }: Reado
     const { status } = useClickToPayContext();
     const { handleChangeFor, data } = useForm<CardsSelectorDataState>({
         schema,
-        defaultData: { srcDigitalCardId: cardSelected.srcDigitalCardId }
+        defaultData: { srcDigitalCardId: cardSelected?.srcDigitalCardId }
     });
 
     const items = useMemo(() => {
         return cards.map(card => ({
             icon: card.artUri || getImage()(card.scheme),
             name: `${isMobile() ? '' : card.title} •••• ${card.panLastFour} `,
-            secondaryText: card.isExpired && i18n.get('ctp.cards.expiredCard'),
+            secondaryText: card.isExpired ? i18n.get('ctp.cards.expiredCard') : undefined,
             id: card.srcDigitalCardId,
             disabled: card.isExpired
         }));

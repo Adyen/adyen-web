@@ -42,6 +42,10 @@ export const FAILED_METHOD_STATUS_RESOLVE_OBJECT_TIMEOUT: ThreeDS2FlowObject = {
     errorCode: TIMEOUT
 };
 
+export const PASSKEY_3DS2_IFRAME_ALLOW = 'payment *; publickey-credentials-get *';
+export const PASSKEY_VISA_IFRAME_ALLOW = 'payment *; publickey-credentials-get *; publickey-credentials-create *';
+export const PASSKEY_VISA_IFRAME_SANDBOX = 'allow-forms allow-same-origin allow-scripts allow-pointer-lock allow-popups';
+
 // Re. EMV 3-D Specification: EMVCo_3DS_Spec_210_1017.pdf
 export const CHALLENGE_WINDOW_SIZES = {
     '01': ['250px', '400px'],

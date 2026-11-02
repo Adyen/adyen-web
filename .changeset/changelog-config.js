@@ -1,6 +1,6 @@
 // @ts-check
 const { config } = require('dotenv');
-const { getInfo, getInfoFromPullRequest } = require('@changesets/get-github-info');
+const { getCommitInfo, getPullRequestInfo } = require('@changesets/get-github-info');
 
 config();
 
@@ -14,11 +14,11 @@ const changelogFunctions = {
             await Promise.all(
                 changesets.map(async cs => {
                     if (cs.commit) {
-                        let { links } = await getInfo({
+                        const info = await getCommitInfo({
                             repo,
                             commit: cs.commit
                         });
-                        return links.commit;
+                        return info?.commit.markdownLink;
                     }
                 })
             )
@@ -50,10 +50,14 @@ const changelogFunctions = {
 
         const links = await (async () => {
             if (prFromSummary !== undefined) {
-                let { links } = await getInfoFromPullRequest({
+                const info = await getPullRequestInfo({
                     repo,
                     pull: prFromSummary
                 });
+                let links = {
+                    commit: info?.commit?.markdownLink ?? null,
+                    pull: info?.pull.markdownLink ?? null
+                };
                 if (commitFromSummary) {
                     links = {
                         ...links,
@@ -64,11 +68,14 @@ const changelogFunctions = {
             }
             const commitToFetchFrom = commitFromSummary || changeset.commit;
             if (commitToFetchFrom) {
-                let { links } = await getInfo({
+                const info = await getCommitInfo({
                     repo,
                     commit: commitToFetchFrom
                 });
-                return links;
+                return {
+                    commit: info?.commit.markdownLink ?? null,
+                    pull: info?.pull?.markdownLink ?? null
+                };
             }
             return {
                 commit: null,

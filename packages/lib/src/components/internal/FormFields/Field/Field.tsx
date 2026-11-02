@@ -13,14 +13,14 @@ import uuid from '../../../../utils/uuid';
 const Field: FunctionalComponent<Readonly<FieldProps>> = props => {
     const {
         children,
-        className,
+        className = '',
         classNameModifiers,
         dir,
         disabled,
         readOnly,
         errorMessage,
         helper,
-        inputWrapperModifiers,
+        inputWrapperModifiers = [],
         isLoading,
         isValid,
         label,
@@ -33,9 +33,9 @@ const Field: FunctionalComponent<Readonly<FieldProps>> = props => {
         // TODO should rename it to make its purpose clear => setFocusOnSecuredField
         onFocusField,
         showValidIcon,
-        useLabelElement,
-        showErrorElement,
-        showContextualElement,
+        useLabelElement = true,
+        showErrorElement = true,
+        showContextualElement = true,
         staticValue,
         contextualText,
         // Redeclare prop names to avoid internal clashes
@@ -43,7 +43,7 @@ const Field: FunctionalComponent<Readonly<FieldProps>> = props => {
         focused: propsFocused,
         i18n,
         contextVisibleToScreenReader,
-        renderAlternativeToLabel,
+        renderAlternativeToLabel = () => null,
         onInputContainerClick,
         errorLive
     } = props;
@@ -55,7 +55,7 @@ const Field: FunctionalComponent<Readonly<FieldProps>> = props => {
     const showContext = showContextualElement && !showError && contextualText && contextualText.length > 0;
 
     const uniqueId = useRef(getUniqueId(`adyen-checkout-${name}`));
-    const staticValueId = useMemo(() => (staticValue ? `input-static-value-${uuid()}` : null), [staticValue]);
+    const staticValueId = useMemo(() => (staticValue ? `input-static-value-${uuid()}` : undefined), [staticValue]);
 
     const [focused, setFocused] = useState(false);
     const [filled, setFilled] = useState(false);
@@ -259,16 +259,6 @@ const Field: FunctionalComponent<Readonly<FieldProps>> = props => {
             {renderInputRelatedElements()}
         </div>
     );
-};
-
-Field.defaultProps = {
-    className: '',
-    classNameModifiers: [],
-    inputWrapperModifiers: [],
-    useLabelElement: true,
-    showErrorElement: true,
-    showContextualElement: true,
-    renderAlternativeToLabel: () => null
 };
 
 export default Field;

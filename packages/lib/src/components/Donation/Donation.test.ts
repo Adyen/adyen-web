@@ -42,7 +42,7 @@ describe('Donation element', () => {
             render(donationElement.render());
             const donateBtn = await screen.findByRole('button', { name: 'Donate €1.00' });
             await user.click(donateBtn);
-            expect(onDonate).toBeCalledWith({ data: { amount: { currency: 'EUR', value: 100 } }, isValid: true }, expect.any(Object));
+            expect(onDonate).toHaveBeenCalledWith({ data: { amount: { currency: 'EUR', value: 100 } }, isValid: true }, expect.any(Object));
         });
 
         test('should call onCancel with the donation data', async () => {
@@ -56,7 +56,7 @@ describe('Donation element', () => {
             render(donationElement.render());
             const cancelBtn = await screen.findByRole('button', { name: /not now/i });
             await user.click(cancelBtn);
-            expect(onCancel).toBeCalledWith({ data: { amount: { currency: 'EUR', value: 100 } }, isValid: true });
+            expect(onCancel).toHaveBeenCalledWith({ data: { amount: { currency: 'EUR', value: 100 } }, isValid: true });
         });
     });
 
@@ -97,7 +97,7 @@ describe('Donation element', () => {
             render(donationElement.render());
             const cancelBtn = await screen.findByRole('button', { name: /not now/i });
             await user.click(cancelBtn);
-            expect(onCancel).toBeCalledWith({ data: { amount: { currency, value: null } }, isValid: false });
+            expect(onCancel).toHaveBeenCalledWith({ data: { amount: { currency, value: null } }, isValid: false });
         });
     });
 

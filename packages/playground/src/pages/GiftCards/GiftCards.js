@@ -1,4 +1,4 @@
-import { AdyenCheckout, Giftcard, MealVoucherFR, Card, fr_FR } from '@adyen/adyen-web';
+import { AdyenCheckout, Giftcard, MealVoucherFR, Card } from '@adyen/adyen-web';
 import '@adyen/adyen-web/styles/adyen.css';
 import { handleChange, handleOnPaymentCompleted, handleOnPaymentFailed, handleSubmit } from '../../handlers';
 import { amount, shopperLocale, countryCode, returnUrl, shopperReference, environmentUrlsOverride } from '../../config/commonConfig';
@@ -91,8 +91,8 @@ import '../../style.scss';
     window.giftcard = new Giftcard(sessionCheckout, {
         type: 'giftcard',
         brand: 'svs',
-        onOrderUpdated: () => {
-            console.log('onOrderUpdated');
+        onOrderUpdated: data => {
+            console.log('onOrderUpdated', data);
         },
         onRequiringConfirmation: (resolve, reject) => {
             checkoutCardButton.removeEventListener('click', cardSubmit);

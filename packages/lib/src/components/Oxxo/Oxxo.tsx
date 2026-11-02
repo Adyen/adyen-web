@@ -27,13 +27,12 @@ export class OxxoElement extends UIElement<VoucherConfiguration> {
         return this.props.reference ? (
             <OxxoVoucherResult {...this.props} onActionHandled={this.onActionHandled} />
         ) : (
-            this.props.showPayButton &&
-                this.payButton({
-                    ...this.props,
-                    classNameModifiers: ['standalone'],
-                    label: `${this.props.i18n.get('continueTo')} ${this.props.name}`,
-                    onClick: this.submit
-                })
+            this.payButton({
+                ...this.props,
+                classNameModifiers: ['standalone'],
+                label: `${this.props.i18n.get('continueTo')} ${this.props.name}`,
+                onClick: this.submit
+            })
         );
     }
 }

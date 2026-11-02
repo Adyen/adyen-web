@@ -7,11 +7,22 @@ import { GIFT_CARD } from '../../internal/SecuredFields/lib/constants';
 import { GiftCardFields } from './GiftcardFields';
 import { GiftcardFieldsProps, Placeholders } from './types';
 import { useSRPanelForGiftcardErrors } from './useSRPanelForGiftcardErrors';
-import { GiftCardBalanceCheckErrorType } from '../types';
 import { PayButtonProps } from '../../internal/PayButton/PayButton';
 import { useAmount } from '../../../core/Context/AmountProvider';
 import type { AbstractAnalyticsEvent } from '../../../core/Analytics/events/AbstractAnalyticsEvent';
 import type { SFPProps } from '../../internal/SecuredFields/SFP/types';
+import type { UIElementStatus } from '../../internal/UIElement/types';
+import type { GiftCardBalanceCheckErrorType, GiftCardValidationError, KnownBalanceCheckError } from '../types';
+
+/**
+ * Explicit key map so that adding a member to KnownBalanceCheckError is a compile error until a translation key exists.
+ * An interpolated key cannot be verified by TS and a missing one renders the raw key to the shopper.
+ */
+const INLINE_ERROR_TRANSLATION_KEYS: Record<KnownBalanceCheckError, string> = {
+    'no-balance': 'error.giftcard.no-balance',
+    'card-error': 'error.giftcard.card-error',
+    'currency-error': 'error.giftcard.currency-error'
+};
 
 interface GiftcardComponentProps extends Partial<Pick<SFPProps, 'clientKey' | 'loadingContext'>> {
     onChange: (state) => void;
@@ -19,13 +30,12 @@ interface GiftcardComponentProps extends Partial<Pick<SFPProps, 'clientKey' | 'l
     onBlur: (event) => void;
     makeBalanceCheck: (event) => void;
     makePayment: (event) => void;
-    showPayButton: boolean;
     payButton: (props: PayButtonProps) => h.JSX.Element;
     pinRequired: boolean;
     expiryDateRequired?: boolean;
     fieldsLayoutComponent: FunctionComponent<GiftcardFieldsProps>;
     placeholders?: Placeholders;
-    handleKeyPress?: (o: KeyboardEvent) => void;
+    handleKeyDown?: (event: KeyboardEvent) => void;
     onSubmitAnalytics?: (event: AbstractAnalyticsEvent) => void;
 }
 
@@ -39,7 +49,8 @@ class Giftcard extends Component<Readonly<GiftcardComponentProps>> {
         isValid: false,
         sfpState: {},
         isValidating: false,
-        transformedErrors: {}
+        transformedErrors: {},
+        showUnknownError: false
     };
 
     public static readonly defaultProps = {
@@ -62,7 +73,7 @@ class Giftcard extends Component<Readonly<GiftcardComponentProps>> {
         return this.sfp.mapErrorsToValidationRuleResult();
     };
 
-    private updateTransformedErrors = (balanceCheckErrors?: Record<string, any>) => {
+    private readonly updateTransformedErrors = (balanceCheckErrors?: Record<string, GiftCardValidationError>) => {
         const transformedErrors = this.mapErrorsToValidationObjects();
 
         const mergedErrors = { ...transformedErrors, ...balanceCheckErrors };
@@ -98,21 +109,21 @@ class Giftcard extends Component<Readonly<GiftcardComponentProps>> {
      * Generates balance check errors in the same format as SFP errors
      * Compatible with the transformedErrors structure
      */
-    private generateBalanceCheckErrors(errorType?: GiftCardBalanceCheckErrorType | null): Record<string, any> {
-        const balanceCheckErrors: Record<string, any> = {};
+    private generateBalanceCheckErrors(errorType: KnownBalanceCheckError | null): Record<string, GiftCardValidationError> {
+        const balanceCheckErrors: Record<string, GiftCardValidationError> = {};
 
         // This is the field that the error is associated with, only used for SR logic
         const fieldToAnnounce = 'encryptedCardNumber';
 
-        // If errorType is null, clear errors
-        if (errorType === null) {
+        // If there is no errorType, clear errors
+        if (errorType == null) {
             return balanceCheckErrors;
         }
 
         // Create error in the same format as SFP errors for consistency
         balanceCheckErrors[fieldToAnnounce] = {
             isValid: false,
-            errorMessage: `error.giftcard.${errorType}`,
+            errorMessage: INLINE_ERROR_TRANSLATION_KEYS[errorType],
             error: errorType
         };
 
@@ -120,24 +131,18 @@ class Giftcard extends Component<Readonly<GiftcardComponentProps>> {
     }
 
     /**
-     * Checks if a status represents a balance check error
-     */
-    private isBalanceCheckError(status: string): boolean {
-        return ['no-balance', 'card-error', 'currency-error'].includes(status);
-    }
-
-    /**
      * Method called by GiftcardElement to set balance check errors only
      */
     public setBalanceCheckErrors = (errorType: GiftCardBalanceCheckErrorType | null): void => {
-        // Check if the errors should be displayed
-        if (this.isBalanceCheckError(errorType)) {
-            // Generate balance check errors in the style of useForm
-            // This is usefull because then we can use the same logic for SF and balance check errors
-            // Also we can use the same logic for SRPanel errors
-            const balanceCheckErrors = this.generateBalanceCheckErrors(errorType);
-            this.updateTransformedErrors(balanceCheckErrors);
-        }
+        // Errors we cannot attribute to the card itself are shown as a banner instead of an inline field error
+        const inlineError = errorType != null && errorType !== 'unknown-error' ? errorType : null;
+
+        this.setState({ showUnknownError: errorType === 'unknown-error' });
+
+        // Generate balance check errors in the style of useForm
+        // This is usefull because then we can use the same logic for SF and balance check errors
+        // Also we can use the same logic for SRPanel errors
+        this.updateTransformedErrors(this.generateBalanceCheckErrors(inlineError));
     };
 
     public showValidation = () => {
@@ -151,7 +156,11 @@ class Giftcard extends Component<Readonly<GiftcardComponentProps>> {
         this.setState({ isValidating: val });
     };
 
-    render(props, { focusedElement, balance, transactionLimit, isValidating, transformedErrors }) {
+    public setStatus = (status: UIElementStatus) => {
+        this.setState({ status });
+    };
+
+    render(props, { focusedElement, balance, transactionLimit, isValidating, transformedErrors, showUnknownError }) {
         const { i18n } = useCoreContext();
         const { amount } = useAmount();
 
@@ -174,7 +183,6 @@ class Giftcard extends Component<Readonly<GiftcardComponentProps>> {
                     makePayment={props.makePayment}
                     status={this.state.status}
                     makeBalanceCheck={props.makeBalanceCheck}
-                    showPayButton={this.props.showPayButton}
                     payButton={this.props.payButton}
                 />
             );
@@ -194,7 +202,7 @@ class Giftcard extends Component<Readonly<GiftcardComponentProps>> {
 
         return (
             <div className="adyen-checkout__giftcard">
-                {this.state.status === 'error' && <Alert icon={'cross'}>{i18n.get('error.message.unknown')}</Alert>}
+                {showUnknownError && <Alert icon={'cross'}>{i18n.get('error.message.unknown')}</Alert>}
 
                 <SecuredFieldsProvider
                     {...this.props}
@@ -221,12 +229,12 @@ class Giftcard extends Component<Readonly<GiftcardComponentProps>> {
                     }
                 />
 
-                {this.props.showPayButton &&
-                    this.props.payButton({
-                        status: this.state.status,
-                        onClick: this.props.makeBalanceCheck,
-                        label: i18n.get('applyGiftcard')
-                    })}
+                {this.props.payButton({
+                    status: this.state.status,
+                    onClick: this.props.makeBalanceCheck,
+                    label: i18n.get('applyGiftcard'),
+                    showReview: false
+                })}
             </div>
         );
     }

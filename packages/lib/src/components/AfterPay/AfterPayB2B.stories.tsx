@@ -2,7 +2,7 @@ import { h } from 'preact';
 import { MetaConfiguration, StoryConfiguration } from '../../../storybook/types';
 import { OpenInvoiceConfiguration } from '../types';
 import { ComponentContainer } from '../../../storybook/components/ComponentContainer';
-import AfterPayB2B from './AfterPayB2B';
+import { AfterPayB2B } from '@adyen/adyen-web';
 import { Checkout } from '../../../storybook/components/Checkout';
 
 type AfterPayStoryB2B = StoryConfiguration<OpenInvoiceConfiguration>;

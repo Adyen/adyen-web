@@ -106,6 +106,66 @@ describe('MealVoucherFR Error Handling', () => {
             expect(screen.getByText('Gift cards are only valid in the currency they were issued in')).toBeInTheDocument();
             expect(onError).toHaveBeenCalled();
         });
+
+        test('should display the "card-error" inline message when the API rejects the card details', async () => {
+            const core = setupCoreMock();
+
+            const onBalanceCheck = jest.fn((resolve, reject) => {
+                reject(
+                    new AdyenCheckoutError('NETWORK_ERROR', 'Unable To Process', {
+                        cause: { errorCode: '904', message: 'Unable To Process', errorType: 'validation', status: 422 }
+                    })
+                );
+            });
+
+            const onError = jest.fn();
+            const mealVoucher = new MealVoucherFR(core, {
+                ...baseProps,
+                onBalanceCheck,
+                onError
+            });
+
+            render(mealVoucher.render());
+            mealVoucher.setState({ isValid: true });
+
+            const payButton = await screen.findByRole('button');
+            await user.click(payButton);
+            await flushPromises();
+
+            expect(screen.getByText('In our records we have no gift card with this number')).toBeInTheDocument();
+            expect(screen.queryByRole('alert')).not.toBeInTheDocument();
+            expect(onError).toHaveBeenCalled();
+        });
+
+        test('should display a banner when the API fails with a server error', async () => {
+            const core = setupCoreMock();
+
+            const onBalanceCheck = jest.fn((resolve, reject) => {
+                reject(
+                    new AdyenCheckoutError('NETWORK_ERROR', 'Internal error', {
+                        cause: { errorCode: '903', message: 'Internal error', errorType: 'internal', status: 500 }
+                    })
+                );
+            });
+
+            const onError = jest.fn();
+            const mealVoucher = new MealVoucherFR(core, {
+                ...baseProps,
+                onBalanceCheck,
+                onError
+            });
+
+            render(mealVoucher.render());
+            mealVoucher.setState({ isValid: true });
+
+            const payButton = await screen.findByRole('button');
+            await user.click(payButton);
+            await flushPromises();
+
+            expect(screen.getByRole('alert')).toHaveTextContent('An unknown error occurred');
+            expect(screen.queryByText('In our records we have no gift card with this number')).not.toBeInTheDocument();
+            expect(onError).toHaveBeenCalled();
+        });
     });
 
     describe('Error State Persistence for MealVoucher', () => {

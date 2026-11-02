@@ -2,8 +2,8 @@ import { ValidatorRules, ValidatorRule, FieldContext, FieldData } from './types'
 import { ValidationRuleResult } from './ValidationRuleResult';
 import type Language from '../../language';
 
-class ValidationResult {
-    private validationResults: ValidationRuleResult[];
+export class ValidationResult {
+    private readonly validationResults: ValidationRuleResult[];
 
     constructor(results: ValidationRuleResult[]) {
         this.validationResults = results;
@@ -11,7 +11,7 @@ class ValidationResult {
 
     /** Checks if all validation rules have passed */
     get isValid(): boolean {
-        return this.validationResults.reduce((acc, result) => acc && result.isValid, true);
+        return this.validationResults.every(result => !!result.isValid);
     }
 
     /** Checks if any validation rule returned an error */
@@ -20,8 +20,8 @@ class ValidationResult {
     }
 
     /** Returns the first validation result that returned an error */
-    getError(isValidatingForm = false) {
-        return this.validationResults.find(result => result.hasError(isValidatingForm));
+    getError(isValidatingForm = false): ValidationRuleResult | null {
+        return this.validationResults.find(result => result.hasError(isValidatingForm)) ?? null;
     }
 
     /** Returns all validation results that returned an error */
@@ -45,7 +45,7 @@ class Validator {
         this.i18n = i18n;
     }
 
-    setRules(newRules) {
+    setRules(newRules: ValidatorRules) {
         this.rules = {
             ...this.rules,
             ...newRules

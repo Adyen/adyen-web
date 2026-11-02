@@ -2,7 +2,7 @@ import { h } from 'preact';
 import { MetaConfiguration, StoryConfiguration } from '../../../storybook/types';
 import { ComponentContainer } from '../../../storybook/components/ComponentContainer';
 import { Checkout } from '../../../storybook/components/Checkout';
-import Multibanco from './Multibanco';
+import { Multibanco } from '@adyen/adyen-web';
 import { VoucherConfiguration } from '../types';
 
 type MultibancoStory = StoryConfiguration<VoucherConfiguration>;

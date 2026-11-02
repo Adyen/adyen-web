@@ -105,12 +105,11 @@ describe('Giftcard Error Handling', () => {
             expect(onError).toHaveBeenCalled();
         });
 
-        test('should not display any message for unknown errors', async () => {
+        test('should display a banner, and no inline error, when the merchant rejects with an arbitrary error', async () => {
             const core = setupCoreMock();
 
             const onBalanceCheck = jest.fn((resolve, reject) => {
-                // Simulate the balance check rejecting with an unknown error
-                reject(new Error('unknown-error'));
+                reject(new Error('something went wrong'));
             });
 
             const onError = jest.fn();
@@ -127,10 +126,70 @@ describe('Giftcard Error Handling', () => {
             await user.click(payButton);
             await flushPromises();
 
-            // Should not display any specific error message for unknown errors
-            expect(screen.queryByText('This gift card has zero balance')).not.toBeInTheDocument();
+            expect(screen.getByRole('alert')).toHaveTextContent('An unknown error occurred');
+
+            // A generic failure is not a card number problem, so no inline error
             expect(screen.queryByText('In our records we have no gift card with this number')).not.toBeInTheDocument();
-            expect(screen.queryByText('Gift cards are only valid in the currency they were issued in')).not.toBeInTheDocument();
+            expect(onError).toHaveBeenCalled();
+        });
+
+        test('should display the "card-error" inline message when the API rejects the card details', async () => {
+            const core = setupCoreMock();
+
+            const onBalanceCheck = jest.fn((resolve, reject) => {
+                reject(
+                    new AdyenCheckoutError('NETWORK_ERROR', 'Unable To Process', {
+                        cause: { errorCode: '904', message: 'Unable To Process', errorType: 'validation', status: 422 }
+                    })
+                );
+            });
+
+            const onError = jest.fn();
+            const giftcard = new Giftcard(core, {
+                ...baseProps,
+                onBalanceCheck,
+                onError
+            });
+
+            render(giftcard.render());
+            giftcard.setState({ isValid: true });
+
+            const payButton = await screen.findByRole('button');
+            await user.click(payButton);
+            await flushPromises();
+
+            expect(screen.getByText('In our records we have no gift card with this number')).toBeInTheDocument();
+            expect(screen.queryByRole('alert')).not.toBeInTheDocument();
+            expect(onError).toHaveBeenCalled();
+        });
+
+        test('should display a banner when the API fails with a server error', async () => {
+            const core = setupCoreMock();
+
+            const onBalanceCheck = jest.fn((resolve, reject) => {
+                reject(
+                    new AdyenCheckoutError('NETWORK_ERROR', 'Internal error', {
+                        cause: { errorCode: '903', message: 'Internal error', errorType: 'internal', status: 500 }
+                    })
+                );
+            });
+
+            const onError = jest.fn();
+            const giftcard = new Giftcard(core, {
+                ...baseProps,
+                onBalanceCheck,
+                onError
+            });
+
+            render(giftcard.render());
+            giftcard.setState({ isValid: true });
+
+            const payButton = await screen.findByRole('button');
+            await user.click(payButton);
+            await flushPromises();
+
+            expect(screen.getByRole('alert')).toHaveTextContent('An unknown error occurred');
+            expect(screen.queryByText('In our records we have no gift card with this number')).not.toBeInTheDocument();
             expect(onError).toHaveBeenCalled();
         });
     });
@@ -230,47 +289,72 @@ describe('Giftcard Error Handling', () => {
         });
     });
 
+    /**
+     * Each attempt clears both channels up front. Asserting this across two *failing* attempts, rather than a
+     * succeeding one, keeps GiftcardResult from swapping the view out and masking whether clearing really happened.
+     */
     describe('Error Message Clearing', () => {
-        test('error message should clear when balance check succeeds', async () => {
+        test('should clear an inline error when a later attempt produces a banner', async () => {
             const core = setupCoreMock();
 
-            let shouldFail = true;
-            const onBalanceCheck = jest.fn(resolve => {
-                if (shouldFail) {
-                    // First call: resolve with zero balance to trigger no-balance error
+            let isFirstAttempt = true;
+            const onBalanceCheck = jest.fn((resolve, reject) => {
+                if (isFirstAttempt) {
+                    isFirstAttempt = false;
+                    // Zero balance triggers the inline no-balance error
                     resolve({ balance: { value: 0, currency: 'EUR' } });
-                } else {
-                    // Second call: resolve with valid balance
-                    resolve({ balance: { value: 2000, currency: 'EUR' } });
+                    return;
                 }
+                reject(new Error('something went wrong'));
             });
 
-            const onError = jest.fn();
-            const giftcard = new Giftcard(core, {
-                ...baseProps,
-                onBalanceCheck,
-                onError
-            });
+            const giftcard = new Giftcard(core, { ...baseProps, onBalanceCheck, onError: jest.fn() });
 
             render(giftcard.render());
             giftcard.setState({ isValid: true });
 
-            // First attempt - should fail
             const payButton = await screen.findByRole('button');
             await user.click(payButton);
             await flushPromises();
 
             expect(screen.getByText('This gift card has zero balance')).toBeInTheDocument();
 
-            // Second attempt - should succeed
-            shouldFail = false;
             await user.click(payButton);
             await flushPromises();
 
-            // Error message should be cleared
             expect(screen.queryByText('This gift card has zero balance')).not.toBeInTheDocument();
-            // Should show balance confirmation instead
-            expect(screen.getByText('Gift card balance')).toBeInTheDocument();
+            expect(screen.getByRole('alert')).toHaveTextContent('An unknown error occurred');
+        });
+
+        test('should clear a banner when a later attempt produces an inline error', async () => {
+            const core = setupCoreMock();
+
+            let isFirstAttempt = true;
+            const onBalanceCheck = jest.fn((resolve, reject) => {
+                if (isFirstAttempt) {
+                    isFirstAttempt = false;
+                    reject(new Error('something went wrong'));
+                    return;
+                }
+                resolve({ balance: { value: 0, currency: 'EUR' } });
+            });
+
+            const giftcard = new Giftcard(core, { ...baseProps, onBalanceCheck, onError: jest.fn() });
+
+            render(giftcard.render());
+            giftcard.setState({ isValid: true });
+
+            const payButton = await screen.findByRole('button');
+            await user.click(payButton);
+            await flushPromises();
+
+            expect(screen.getByRole('alert')).toBeInTheDocument();
+
+            await user.click(payButton);
+            await flushPromises();
+
+            expect(screen.queryByRole('alert')).not.toBeInTheDocument();
+            expect(screen.getByText('This gift card has zero balance')).toBeInTheDocument();
         });
     });
 });

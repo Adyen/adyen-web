@@ -18,11 +18,11 @@ function getUniqueId() {
 type CtPInfoModalProps = {
     isOpen: boolean;
     onClose(): void;
-    focusAfterClose: HTMLElement;
+    focusAfterClose: HTMLElement | null;
 };
 
 const CtPInfoModal = ({ isOpen, onClose, focusAfterClose }: Readonly<CtPInfoModalProps>) => {
-    const focusFirstElement = useRef<HTMLParagraphElement>();
+    const focusFirstElement = useRef<HTMLParagraphElement>(null);
     const { i18n } = useCoreContext();
     const getImage = useImage();
 
@@ -36,7 +36,7 @@ const CtPInfoModal = ({ isOpen, onClose, focusAfterClose }: Readonly<CtPInfoModa
             classNameModifiers={['ctp']}
             labelledBy={labelledBy}
             describedBy={describedBy}
-            focusFirst={focusFirstElement.current}
+            focusFirst={focusFirstElement.current ?? undefined}
             focusAfterClose={focusAfterClose}
         >
             {({ onCloseModal }) => (
