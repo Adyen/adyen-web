@@ -62,7 +62,7 @@ describe('KlarnaPayments', () => {
         await waitFor(() => klarna.componentRef);
 
         // @ts-ignore to test
-        klarna.onKlarnaComplete();
+        klarna.onActionComplete();
 
         expect(onAdditionalDetailsMock).toHaveBeenCalled();
     });
