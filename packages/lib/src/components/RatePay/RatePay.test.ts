@@ -1,23 +1,11 @@
 import RatePay from './RatePay';
 import { render, screen, waitFor, within } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
-import { setupServer } from 'msw/node';
-import { http, HttpResponse } from 'msw';
+import getDataset from '../../core/Services/get-dataset';
 import { setupCoreMock, TEST_CHECKOUT_ATTEMPT_ID, TEST_RISK_DATA } from '../../../config/testMocks/setup-core-mock';
 
-const server = setupServer(
-    http.get('https://checkoutshopper-live.adyen.com/checkoutshopper/datasets/countries/en-US.json', () => {
-        return HttpResponse.json([{ id: 'DE', name: 'Germany' }]);
-    }) as any
-);
-
-beforeAll(() => server.listen());
-afterEach(() => server.resetHandlers());
-afterAll(() => server.close());
-
-server.events.on('request:start', ({ request }) => {
-    console.log('MSW intercepted:', request.method, request.url);
-});
+jest.mock('../../core/Services/get-dataset');
+(getDataset as jest.Mock).mockImplementation((dataset: string) => Promise.resolve(dataset === 'countries' ? [{ id: 'DE', name: 'Germany' }] : []));
 
 describe('RatePay Direct Debit', () => {
     afterEach(() => {
