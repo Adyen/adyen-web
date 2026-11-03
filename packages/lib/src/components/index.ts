@@ -77,6 +77,7 @@ export { default as PayByBankPix } from './PayByBankPix';
 
 /** Klarna */
 export { default as Klarna } from './Klarna';
+export { default as KlarnaNetwork } from './KlarnaNetwork';
 
 /** QRLoader */
 export { default as BcmcMobile } from './BcmcMobile';
