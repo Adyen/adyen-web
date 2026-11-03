@@ -1,4 +1,5 @@
 import { optionallyFilterUpiSubTxVariants } from '../elements/filters';
+import { DisplayMode } from '../constants';
 import type { ICore } from '../../../core/types';
 import type UIElement from '../../internal/UIElement';
 import type { PaymentMethod, StoredPaymentMethod } from '../../../core/ProcessResponse/PaymentMethods/PaymentMethods';
@@ -38,7 +39,7 @@ export function createUnavailablePaymentsList(
     elementsByDisplayMode: Record<PaymentMethodDisplayMode, UIElement[]>
 ): AnalyticsPaymentMethod<PaymentMethodDisplayMode>[] {
     return displayModeEntries.flatMap(entry => {
-        const isStored = entry.displayMode === 'stored';
+        const isStored = entry.displayMode === DisplayMode.stored;
 
         const readyIds = new Set(
             (elementsByDisplayMode[entry.displayMode] || []).map(element =>
@@ -67,7 +68,7 @@ export function createAvailablePaymentsList(
     return orderedDisplayModes.flatMap(displayMode =>
         (elementsByDisplayMode[displayMode] || [])
             .map(element => {
-                const isStored = displayMode === 'stored';
+                const isStored = displayMode === DisplayMode.stored;
                 const id = isStored ? element.props.storedPaymentMethodId : element.props.paymentMethodId;
                 if (!id) return undefined;
 
