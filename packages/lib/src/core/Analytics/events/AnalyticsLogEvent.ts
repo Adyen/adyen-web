@@ -29,7 +29,7 @@ export enum LogEventSubtype {
     threeDS2 = 'threeDS2',
     redirect = 'redirect',
     voucher = 'voucher',
-    await = 'awat',
+    await = 'await',
     qrCode = 'qrCode',
     bankTransfer = 'bankTransfer',
     sdk = 'sdk',
