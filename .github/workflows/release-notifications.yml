@@ -26,7 +26,7 @@ jobs:
           ref: ${{ github.event.workflow_run.head_sha || github.sha }}
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
         with:
-          node-version: 24
+          node-version: 26
       - name: Read SDK version
         id: read-version
         run: echo "value=$(node -p "require('./packages/lib/package.json').version")" >> "$GITHUB_OUTPUT"
