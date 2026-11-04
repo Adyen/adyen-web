@@ -84,6 +84,14 @@ export const SHOPPER_DATA = {
         JP: '7012341234'
     }
 };
+
+export const BECS_DATA = {
+    bsb: '123456',
+    formattedBsb: '123-456',
+    authorisedRequestUrl: 'https://example.com/direct-debit-agreement.pdf',
+    serviceAgreementUrl: 'https://www.adyen.com/en_AU/legal/'
+};
+
 // Issuer List Mocks
 export const ONLINE_BANKING_PL_ISSUERS = [
     { id: '154', name: 'BLIK' },

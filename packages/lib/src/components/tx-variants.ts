@@ -50,6 +50,7 @@ export enum TxVariants {
     /** Direct debit */
     ach = 'ach',
     directdebit_GB = 'directdebit_GB',
+    directdebit_AU = 'directdebit_AU',
     sepadirectdebit = 'sepadirectdebit',
     eft_directdebit_CA = 'eft_directdebit_CA',
     /** Direct debit */

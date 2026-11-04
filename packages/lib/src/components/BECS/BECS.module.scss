@@ -1,0 +1,28 @@
+@use 'styles/mixins';
+@use 'styles/variable-generator';
+
+.bankDetails {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: variable-generator.token(spacer-070);
+}
+
+.mandate {
+    @include mixins.adyen-checkout-text-caption;
+
+    margin: variable-generator.token(spacer-080) 0;
+    color: variable-generator.token(color-label-secondary);
+}
+
+.actionsTitle {
+    @include mixins.adyen-checkout-text-body-strongest;
+
+    margin: 0;
+}
+
+.actionsMessage {
+    @include mixins.adyen-checkout-text-caption;
+
+    margin: variable-generator.token(spacer-030) 0 variable-generator.token(spacer-050);
+    color: variable-generator.token(color-label-secondary);
+}
