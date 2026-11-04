@@ -1,9 +1,22 @@
 @use 'styles/variable-generator';
 
 .adyen-checkout__ctp-modal {
+    &-header {
+        display: flex;
+        align-items: center;
+        height: 64px;
+        padding: 0 variable-generator.token(spacer-090);
+        border-bottom: variable-generator.token(border-width-s) solid variable-generator.token(color-separator-primary);
+    }
+
+    &-content {
+        padding: variable-generator.token(spacer-090);
+        color: variable-generator.token(color-label-primary);
+    }
+
     &-header-image {
         display: block;
-        margin: auto;
+        margin: 0 auto variable-generator.token(spacer-090);
     }
 
     &-title {
@@ -11,34 +24,43 @@
         font-size: variable-generator.token(text-title-m-font-size);
         line-height: variable-generator.token(spacer-090);
         padding: 0;
-        margin: 0 0 variable-generator.token(spacer-060);
+        margin: 0 0 variable-generator.token(spacer-070);
     }
 
     &-text {
         font-weight: variable-generator.token(text-body-font-weight);
         font-size: variable-generator.token(text-body-font-size);
         line-height: variable-generator.token(text-caption-line-height);
-        margin-bottom: variable-generator.token(spacer-070);
+        margin: 0 0 variable-generator.token(spacer-070);
+    }
+
+    &-description {
+        color: variable-generator.token(color-label-secondary);
     }
 
     &-benefits {
-        margin-left: 0;
+        margin: 0 0 variable-generator.token(spacer-090);
         padding-left: variable-generator.token(spacer-080);
 
+        [dir='rtl'] & {
+            padding-left: 0;
+            padding-right: variable-generator.token(spacer-080);
+        }
+
         & li {
-            margin-bottom: variable-generator.token(spacer-070);
+            margin-bottom: variable-generator.token(spacer-040);
             list-style: disc;
+
+            &:last-child {
+                margin-bottom: 0;
+            }
         }
     }
 }
 
-// Classname modifier that set max size of CTP modal
+// The header and content set their own spacing, so the header divider can run edge to edge
 .adyen-checkout__modal-wrapper--ctp .adyen-checkout__modal {
-    max-width: 464px;
-}
-
-// Classname modifier that align brands inside CTP modal
-.adyen_checkout-ctp__brand-wrapper--popup {
-    justify-content: center;
-    margin-bottom: variable-generator.token(spacer-090);
+    width: 100%;
+    max-width: 448px;
+    padding: 0;
 }
