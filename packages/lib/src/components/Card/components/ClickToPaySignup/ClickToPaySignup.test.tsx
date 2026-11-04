@@ -85,7 +85,7 @@ describe('ClickToPaySignup', () => {
     test('should group the sign-up fields under an accessible name, leaving the consent checkbox outside', async () => {
         renderSignup({ defaultChecked: true });
 
-        const group = screen.getByRole('group', { name: 'Click to Pay details' });
+        const group = screen.getByRole('group', { name: 'Click to Pay sign up details' });
 
         expect(within(group).getByRole('textbox', { name: 'First name' })).toBeInTheDocument();
         expect(within(group).getByRole('textbox', { name: 'Last name' })).toBeInTheDocument();
