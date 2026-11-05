@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { useMemo } from 'preact/hooks';
+import { useCallback, useMemo } from 'preact/hooks';
 
 import type { PayPalVenmoButtonStyle, PayPalComponentV6Props } from './types';
 import { usePayPalSessionOptions } from '../hooks/usePayPalSessionOptions';
@@ -27,9 +27,12 @@ export const VenmoButton = ({
         style: PayPalVenmoButtonStyle;
     }
 >) => {
+    const fundingSource = 'venmo';
     const payPalSDKInstance = useMemo(() => paypalService.getInstance(), [paypalService]);
 
     const { isZeroAuth } = useAmount();
+
+    const handleSubmit = useCallback(() => onSubmit(fundingSource), [onSubmit, fundingSource]);
 
     const { oneTimeSessionOptions, saveSessionOptions } = usePayPalSessionOptions({
         paypalService,
@@ -62,10 +65,10 @@ export const VenmoButton = ({
             () => ({
                 presentationModeOptions: presentationModeOptionsWithSandboxSupport,
                 createSession: () => payPalSDKInstance.createVenmoOneTimePaymentSession(oneTimeSessionOptions),
-                onSubmit,
+                onSubmit: handleSubmit,
                 onError
             }),
-            [payPalSDKInstance, oneTimeSessionOptions, onSubmit, onError, presentationModeOptionsWithSandboxSupport]
+            [payPalSDKInstance, oneTimeSessionOptions, handleSubmit, onError, presentationModeOptionsWithSandboxSupport]
         )
     );
 
@@ -74,14 +77,14 @@ export const VenmoButton = ({
             () => ({
                 presentationModeOptions: presentationModeOptionsWithSandboxSupport,
                 createSession: () => payPalSDKInstance.createVenmoSavePaymentSession(saveSessionOptions as PayPalVenmoSavePaymentSessionOptions),
-                onSubmit,
+                onSubmit: handleSubmit,
                 onError
             }),
-            [payPalSDKInstance, saveSessionOptions, onSubmit, onError, presentationModeOptionsWithSandboxSupport]
+            [payPalSDKInstance, saveSessionOptions, handleSubmit, onError, presentationModeOptionsWithSandboxSupport]
         )
     );
 
-    const { isEligible } = usePayPalButtonEligibility(paypalService, 'venmo');
+    const { isEligible } = usePayPalButtonEligibility(paypalService, fundingSource);
 
     if (!isEligible) {
         return null;

@@ -1,6 +1,6 @@
 import type { PayPalButtonOnError, PayPalNamespace } from '@paypal/paypal-js';
 
-import type { PayPalConfiguration } from '../types';
+import type { PayPalConfiguration, SupportedPayPalFundingSources } from '../types';
 import type {
     PayPalOnApproveActions,
     PayPalOnApproveData,
@@ -18,7 +18,7 @@ export interface PayPalComponentProps extends Omit<PayPalConfiguration, 'onError
     onApprove: (data: PayPalOnApproveData, actions: PayPalOnApproveActions) => Promise<void>;
     onCancel: () => void;
     onError: PayPalButtonOnError;
-    onSubmit: () => Promise<string>;
+    onSubmit: (fundingSource?: SupportedPayPalFundingSources) => Promise<string>;
     setComponentRef: (ref: ComponentMethodsRef) => void;
     onScriptLoadFailure(error: AdyenCheckoutError): void;
 
@@ -52,7 +52,7 @@ export type PayPalComponentV6Props = Pick<
     | 'presentationModeOptions'
 > & {
     paypalService: PayPalService;
-    onSubmit: () => Promise<string>;
+    onSubmit: (fundingSource?: SupportedPayPalFundingSources) => Promise<string>;
     onApprove: (data: PayPalV6OnApproveData) => Promise<void>;
     onShippingAddressChange?: (data: PayPalV6OnShippingAddressChangeData) => Promise<void>;
     onShippingOptionsChange?: (data: PayPalV6OnShippingOptionsChangeData) => Promise<void>;

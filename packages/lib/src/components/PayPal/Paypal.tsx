@@ -9,7 +9,7 @@ import { formatPaypalOrderContactToAdyenFormat } from './utils/format-paypal-ord
 
 import type { AdditionalDetailsData, ICore } from '../../core/types';
 import type { PaymentAction, PaymentResponseData } from '../../types/global-types';
-import type { Intent, PayPalConfiguration } from './types';
+import type { Intent, PayPalConfiguration, SupportedPayPalFundingSources } from './types';
 import type {
     PayPalComponents,
     PayPalOnApproveActions,
@@ -190,7 +190,7 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
                 throw new AdyenCheckoutError('ERROR', 'PayPal is not available');
             }
 
-            await this.paypalService.isSdkLoaded();
+            await this.paypalService.isFundingSourceEligibilityReady();
 
             if (!this.paypalService.getEligiblePaymentMethods().isEligible('paypal')) {
                 throw new AdyenCheckoutError('ERROR', 'PayPal is not available');
@@ -256,13 +256,15 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
      */
     protected formatData() {
         const { isExpress, userAction, usePayPalV6 } = this.props;
+        const { payerSelected } = this.state;
         const isZeroAuth = this.props.amount?.value === 0;
 
         return {
             paymentMethod: {
                 type: PaypalElement.type,
                 subtype: isExpress ? 'express' : PaypalElement.subtype,
-                ...(!usePayPalV6 && { userAction })
+                ...(!usePayPalV6 && { userAction }),
+                ...(payerSelected && { payerSelected })
             },
             ...(usePayPalV6 && { browserInfo: this.browserInfo }),
             ...(usePayPalV6 && (usePayPalV6.vault || isZeroAuth) && { storePaymentMethod: true })
@@ -446,7 +448,15 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
         this.reject(new Error(errorMessage));
     }
 
-    private handleSubmit(): Promise<string> {
+    /**
+     * Handles the click on one of the PayPal buttons (SDK v5 or v6). The funding source of the clicked button is stored in the
+     * state before making the payments call, so it is sent as 'paymentMethod.payerSelected' in the payment data.
+     *
+     * @param fundingSource - Funding source of the clicked button
+     */
+    private handleSubmit(fundingSource?: SupportedPayPalFundingSources): Promise<string> {
+        this.setState({ payerSelected: fundingSource });
+
         return new Promise((resolve, reject) => {
             this.resolve = resolve;
             this.reject = reject;

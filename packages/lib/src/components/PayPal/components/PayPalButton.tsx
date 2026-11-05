@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { useMemo } from 'preact/hooks';
+import { useCallback, useMemo } from 'preact/hooks';
 
 import type { PayPalButtonStyle, PayPalComponentV6Props } from './types';
 import { usePayPalSessionOptions } from '../hooks/usePayPalSessionOptions';
@@ -25,9 +25,12 @@ export const PayPalButton = ({
         style: PayPalButtonStyle;
     }
 >) => {
+    const fundingSource = 'paypal';
     const payPalSDKInstance = useMemo(() => paypalService.getInstance(), [paypalService]);
 
     const { isZeroAuth } = useAmount();
+
+    const handleSubmit = useCallback(() => onSubmit(fundingSource), [onSubmit, fundingSource]);
 
     const { oneTimeSessionOptions, saveSessionOptions } = usePayPalSessionOptions({
         paypalService,
@@ -45,10 +48,10 @@ export const PayPalButton = ({
             () => ({
                 presentationModeOptions,
                 createSession: () => payPalSDKInstance.createPayPalOneTimePaymentSession(oneTimeSessionOptions),
-                onSubmit,
+                onSubmit: handleSubmit,
                 onError
             }),
-            [payPalSDKInstance, oneTimeSessionOptions, onSubmit, onError, presentationModeOptions]
+            [payPalSDKInstance, oneTimeSessionOptions, handleSubmit, onError, presentationModeOptions]
         )
     );
 
@@ -57,14 +60,14 @@ export const PayPalButton = ({
             () => ({
                 presentationModeOptions,
                 createSession: () => payPalSDKInstance.createPayPalSavePaymentSession(saveSessionOptions),
-                onSubmit,
+                onSubmit: handleSubmit,
                 onError
             }),
-            [payPalSDKInstance, saveSessionOptions, onSubmit, onError, presentationModeOptions]
+            [payPalSDKInstance, saveSessionOptions, handleSubmit, onError, presentationModeOptions]
         )
     );
 
-    const { isEligible } = usePayPalButtonEligibility(paypalService, 'paypal');
+    const { isEligible } = usePayPalButtonEligibility(paypalService, fundingSource);
 
     if (!isEligible) {
         return null;

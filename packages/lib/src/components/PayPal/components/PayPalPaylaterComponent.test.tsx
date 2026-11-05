@@ -37,6 +37,7 @@ type PayPalPaylaterComponentProps = Omit<PayPalComponentV6Props, 'style' | 'vaul
 const createProps = (overrides: Partial<PayPalPaylaterComponentProps> = {}): PayPalPaylaterComponentProps => {
     const paypalService = mock<PayPalService>();
     paypalService.isSdkLoaded.mockResolvedValue(undefined);
+    paypalService.isFundingSourceEligibilityReady.mockResolvedValue(undefined);
 
     return {
         paypalService,
@@ -67,18 +68,59 @@ describe('PayPalPaylaterComponent', () => {
         const paypalService = mock<PayPalService>();
         // Never resolves, so the component stays in the pending state
         paypalService.isSdkLoaded.mockReturnValue(new Promise(() => {}));
+        paypalService.isFundingSourceEligibilityReady.mockReturnValue(new Promise(() => {}));
 
         render(<PayPalPaylaterComponent {...createProps({ paypalService })} />);
 
         expect(screen.getByTestId('paypal-loader')).toBeInTheDocument();
+        expect(screen.queryByTestId('paypal-messaging')).not.toBeInTheDocument();
         expect(screen.queryByTestId('paypal-pay-later-button')).not.toBeInTheDocument();
     });
 
-    test('should render the messaging and the pay later button once the SDK is loaded', async () => {
+    test('should render the messaging without waiting for the eligible payment methods check', async () => {
+        const paypalService = mock<PayPalService>();
+        paypalService.isSdkLoaded.mockResolvedValue(undefined);
+        // Never resolves, so the eligible payment methods are never checked
+        paypalService.isFundingSourceEligibilityReady.mockReturnValue(new Promise(() => {}));
+
+        render(<PayPalPaylaterComponent {...createProps({ paypalService })} />);
+
+        expect(await screen.findByTestId('paypal-messaging')).toBeInTheDocument();
+        expect(screen.getByTestId('paypal-loader')).toBeInTheDocument();
+        expect(screen.queryByTestId('paypal-pay-later-button')).not.toBeInTheDocument();
+    });
+
+    test('should render the messaging and the pay later button once the eligible payment methods are checked', async () => {
         render(<PayPalPaylaterComponent {...createProps()} />);
 
         expect(await screen.findByTestId('paypal-pay-later-button')).toBeInTheDocument();
         expect(screen.getByTestId('paypal-messaging')).toBeInTheDocument();
+    });
+
+    test('should ignore the eligibility check of a previous paypalService', async () => {
+        let resolvePrevious: () => void = () => {};
+        const previousService = mock<PayPalService>();
+        previousService.isSdkLoaded.mockResolvedValue(undefined);
+        previousService.isFundingSourceEligibilityReady.mockReturnValue(
+            new Promise<void>(resolve => {
+                resolvePrevious = resolve;
+            })
+        );
+        const nextService = mock<PayPalService>();
+        nextService.isSdkLoaded.mockResolvedValue(undefined);
+        nextService.isFundingSourceEligibilityReady.mockReturnValue(new Promise(() => {}));
+        const props = createProps();
+
+        const { rerender } = render(<PayPalPaylaterComponent {...props} paypalService={previousService} />);
+        rerender(<PayPalPaylaterComponent {...props} paypalService={nextService} />);
+
+        await act(async () => {
+            resolvePrevious();
+            await Promise.resolve();
+        });
+
+        expect(await screen.findByTestId('paypal-messaging')).toBeInTheDocument();
+        expect(screen.queryByTestId('paypal-pay-later-button')).not.toBeInTheDocument();
     });
 
     test('should not render the messaging when it is hidden by the merchant', async () => {
@@ -154,10 +196,25 @@ describe('PayPalPaylaterComponent', () => {
     test('should keep showing the loader when the SDK fails to load', async () => {
         const paypalService = mock<PayPalService>();
         paypalService.isSdkLoaded.mockRejectedValue(new Error('PayPal SDK not loaded'));
+        paypalService.isFundingSourceEligibilityReady.mockRejectedValue(new Error('PayPal eligible payment methods not checked'));
 
         render(<PayPalPaylaterComponent {...createProps({ paypalService })} />);
 
         await waitFor(() => expect(paypalService.isSdkLoaded).toHaveBeenCalled());
+        expect(screen.getByTestId('paypal-loader')).toBeInTheDocument();
+        expect(screen.queryByTestId('paypal-messaging')).not.toBeInTheDocument();
+        expect(screen.queryByTestId('paypal-pay-later-button')).not.toBeInTheDocument();
+    });
+
+    test('should keep showing the loader in place of the pay later button when the eligibility check fails', async () => {
+        const paypalService = mock<PayPalService>();
+        paypalService.isSdkLoaded.mockResolvedValue(undefined);
+        paypalService.isFundingSourceEligibilityReady.mockRejectedValue(new Error('PayPal eligible payment methods not checked'));
+
+        render(<PayPalPaylaterComponent {...createProps({ paypalService })} />);
+
+        expect(await screen.findByTestId('paypal-messaging')).toBeInTheDocument();
+        await waitFor(() => expect(paypalService.isFundingSourceEligibilityReady).toHaveBeenCalled());
         expect(screen.getByTestId('paypal-loader')).toBeInTheDocument();
         expect(screen.queryByTestId('paypal-pay-later-button')).not.toBeInTheDocument();
     });
