@@ -23,10 +23,10 @@ function suppressRollupPureAnnotationWarning(level, log, handler) {
     handler(level, log);
 }
 
-export default () => {
-    return [
+export default ({ configBundle }) => {
+    const bundles = {
         // ESM
-        {
+        es: {
             input: 'src/index.ts',
             plugins: [
                 resolveExtensions(),
@@ -58,7 +58,7 @@ export default () => {
         },
 
         // ESM-Legacy (Webpack 4)
-        {
+        'es-legacy': {
             input: 'src/index.ts',
             plugins: [
                 resolveExtensions(),
@@ -91,7 +91,7 @@ export default () => {
         },
 
         // UMD build
-        {
+        umd: {
             input: 'src/index.umd.ts',
             plugins: [
                 resolveExtensions(),
@@ -112,7 +112,7 @@ export default () => {
         },
 
         // CJS build
-        {
+        cjs: {
             input: 'src/index.ts',
             plugins: [
                 resolveExtensions(),
@@ -132,20 +132,32 @@ export default () => {
             }
         },
 
-        // Types CJS
-        {
-            input: 'dist/temp-types/src/types.d.ts',
-            output: [{ file: './dist/cjs/index.d.cts', format: 'commonjs' }],
-            external: [/\.scss$/u],
-            plugins: [generateTypes()]
-        },
+        types: [
+            // Types CJS
+            {
+                input: 'dist/temp-types/src/types.d.ts',
+                output: [{ file: './dist/cjs/index.d.cts', format: 'commonjs' }],
+                external: [/\.scss$/u],
+                plugins: [generateTypes()]
+            },
 
-        // Types ES
-        {
-            input: 'dist/temp-types/src/types.d.ts',
-            output: [{ file: './dist/es/index.d.ts', format: 'es' }],
-            external: [/\.scss$/u, /\.json$/u],
-            plugins: [generateTypes()]
-        }
-    ];
+            // Types ES
+            {
+                input: 'dist/temp-types/src/types.d.ts',
+                output: [{ file: './dist/es/index.d.ts', format: 'es' }],
+                external: [/\.scss$/u, /\.json$/u],
+                plugins: [generateTypes()]
+            }
+        ]
+    };
+
+    if (!configBundle) {
+        return Object.values(bundles).flat();
+    }
+
+    if (!Object.hasOwn(bundles, configBundle)) {
+        throw Error(`Rollup config: unknown --configBundle "${configBundle}". Expected one of: ${Object.keys(bundles).join(', ')}`);
+    }
+
+    return [bundles[configBundle]].flat();
 };
