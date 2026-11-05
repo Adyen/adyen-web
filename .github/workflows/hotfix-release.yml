@@ -232,7 +232,7 @@ jobs:
           MSG+=$'\n'"Next steps:"
           MSG+=$'\n'"1. Sync the UMD build and translations to adyen-main and the CDN."
           MSG+=$'\n'"2. Run *Publish Package* from tag \`v$VERSION\`."
-          MSG+=$'\n'"3. Re-run *Flag Affected Release* and *Retract npm Version* with the fixed version."
+          MSG+=$'\n'"3. Re-run *Flag Affected Release* with the fixed version, and ask in #help-npm to update the npm deprecation message."
           if [ -n "$PR_URL" ]; then
             MSG+=$'\n'"4. Review and merge <$PR_URL|the merge-back PR>."
           else
