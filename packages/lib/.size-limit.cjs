@@ -1,3 +1,7 @@
+/**
+ * `yarn build:size` builds only the bundles measured here: es, es-legacy (imported by auto/auto.js) and umd.
+ * When measuring a new output, add its bundle to that script.
+ */
 module.exports = [
     /**
      * UMD
