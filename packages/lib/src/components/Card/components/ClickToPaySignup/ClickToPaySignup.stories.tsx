@@ -43,7 +43,7 @@ const render = ({ componentConfiguration, ...checkoutConfig }: PaymentMethodStor
                 /* mimic the ComponentContainer markup so the a11y tests can find the component */
                 <div id="component-root" className="component-wrapper">
                     <CoreProvider
-                        loadingContext={checkout.session.loadingContext ?? ''}
+                        loadingContext={checkout.session?.loadingContext ?? ''}
                         i18n={checkout.modules.i18n}
                         resources={checkout.modules.resources}
                     >
