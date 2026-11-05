@@ -96,6 +96,7 @@ __metadata:
     "@types/jest": "npm:30.0.0"
     autoprefixer: "npm:10.6.1"
     classnames: "npm:2.5.1"
+    concurrently: "npm:10.0.6"
     cssnano: "npm:9.8.0"
     dotenv: "npm:18.0.8"
     eslint: "npm:10.12.0"
