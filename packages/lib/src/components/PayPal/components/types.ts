@@ -18,7 +18,7 @@ export interface PayPalComponentProps extends Omit<PayPalConfiguration, 'onError
     onApprove: (data: PayPalOnApproveData, actions: PayPalOnApproveActions) => Promise<void>;
     onCancel: () => void;
     onError: PayPalButtonOnError;
-    onSubmit: () => Promise<string>;
+    onSubmit: (fundingSource?: SupportedPayPalFundingSources) => Promise<string>;
     setComponentRef: (ref: ComponentMethodsRef) => void;
     onScriptLoadFailure(error: AdyenCheckoutError): void;
 

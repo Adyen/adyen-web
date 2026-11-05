@@ -54,7 +54,6 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
     constructor(checkout: ICore, props?: PayPalConfiguration) {
         super(checkout, props);
         this.handleSubmit = this.handleSubmit.bind(this);
-        this.handleSubmitV6 = this.handleSubmitV6.bind(this);
         this.handleOnShippingAddressChange = this.handleOnShippingAddressChange.bind(this);
         this.handleOnShippingOptionsChange = this.handleOnShippingOptionsChange.bind(this);
         this.handleOnApprove = this.handleOnApprove.bind(this);
@@ -265,7 +264,7 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
                 type: PaypalElement.type,
                 subtype: isExpress ? 'express' : PaypalElement.subtype,
                 ...(!usePayPalV6 && { userAction }),
-                ...(usePayPalV6 && payerSelected && { payerSelected })
+                ...(payerSelected && { payerSelected })
             },
             ...(usePayPalV6 && { browserInfo: this.browserInfo }),
             ...(usePayPalV6 && (usePayPalV6.vault || isZeroAuth) && { storePaymentMethod: true })
@@ -449,7 +448,15 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
         this.reject(new Error(errorMessage));
     }
 
-    private handleSubmit(): Promise<string> {
+    /**
+     * Handles the click on one of the PayPal buttons (SDK v5 or v6). The funding source of the clicked button is stored in the
+     * state before making the payments call, so it is sent as 'paymentMethod.payerSelected' in the payment data.
+     *
+     * @param fundingSource - Funding source of the clicked button
+     */
+    private handleSubmit(fundingSource?: SupportedPayPalFundingSources): Promise<string> {
+        this.setState({ payerSelected: fundingSource });
+
         return new Promise((resolve, reject) => {
             this.resolve = resolve;
             this.reject = reject;
@@ -469,17 +476,6 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
                     this.handleReject(`${ERRORS.PAYMENT_FAILED}${errorMessage}`);
                 });
         });
-    }
-
-    /**
-     * Handles the click on one of the PayPal SDK v6 buttons. The funding source of the clicked button is stored in the
-     * state before making the payments call, so it is sent as 'paymentMethod.payerSelected' in the payment data.
-     *
-     * @param fundingSource - Funding source of the clicked button
-     */
-    private handleSubmitV6(fundingSource?: SupportedPayPalFundingSources): Promise<string> {
-        this.setState({ payerSelected: fundingSource });
-        return this.handleSubmit();
     }
 
     /**
@@ -565,7 +561,7 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
                     blockPayPalVenmoButton={paypalv6Props.blockPayPalVenmoButton}
                     presentationModeOptions={paypalv6Props.presentationModeOptions}
                     environment={this.props.environment}
-                    onSubmit={this.handleSubmitV6}
+                    onSubmit={this.handleSubmit}
                     onApprove={this.handleOnApproveV6}
                     onCancel={() => this.handleError(new AdyenCheckoutError('CANCEL'))}
                     onError={error => this.handleError(new AdyenCheckoutError('ERROR', String(error), { cause: error }))}

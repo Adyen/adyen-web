@@ -850,31 +850,25 @@ describe('PayPal v6', () => {
 
             expect(paypal.data.paymentMethod).not.toHaveProperty('payerSelected');
         });
-
-        test('should not add payerSelected to the payment method data when PayPal v6 is not used', () => {
-            const paypal = new Paypal(core);
-            paypal.setState({ payerSelected: 'paypal' });
-
-            expect(paypal.data.paymentMethod).not.toHaveProperty('payerSelected');
-        });
     });
 
     describe('onSubmit', () => {
         test.each([['paypal'], ['paylater'], ['credit'], ['venmo']])(
             'should store "%s" as payerSelected and make the payments call when the button is clicked',
-            async fundingSource => {
+            fundingSource => {
                 const paypal = new Paypal(core, { usePayPalV6: {} });
-                const handleSubmitSpy = jest
-                    .spyOn(paypal as unknown as { handleSubmit: () => Promise<string> }, 'handleSubmit')
-                    .mockResolvedValue('token-1');
+                const makePaymentsCallSpy = jest
+                    .spyOn(paypal as unknown as { makePaymentsCall: () => Promise<unknown> }, 'makePaymentsCall')
+                    .mockReturnValue(new Promise(() => {}));
                 render(paypal.render());
 
                 const { onSubmit } = mockPayPalComponentV6.mock.calls[0][0];
 
-                await expect(onSubmit(fundingSource)).resolves.toBe('token-1');
+                void onSubmit(fundingSource);
+
                 expect(paypal.state.payerSelected).toBe(fundingSource);
                 expect(paypal.data.paymentMethod.payerSelected).toBe(fundingSource);
-                expect(handleSubmitSpy).toHaveBeenCalledTimes(1);
+                expect(makePaymentsCallSpy).toHaveBeenCalledTimes(1);
             }
         );
     });

@@ -149,6 +149,39 @@ describe('Paypal', () => {
         });
     });
 
+    describe('payerSelected', () => {
+        test('should add payerSelected to the payment method data when it is set in the state', () => {
+            const paypal = new Paypal(core);
+            paypal.setState({ payerSelected: 'paylater' });
+
+            expect(paypal.data.paymentMethod).toMatchObject({ type: 'paypal', userAction: 'pay', payerSelected: 'paylater' });
+        });
+
+        test('should not add payerSelected to the payment method data when no button was clicked', () => {
+            const paypal = new Paypal(core);
+
+            expect(paypal.data.paymentMethod).not.toHaveProperty('payerSelected');
+        });
+
+        test.each([['paypal'], ['paylater'], ['credit'], ['venmo']])(
+            'should store "%s" as payerSelected and make the payments call when the button is clicked',
+            fundingSource => {
+                const paypal = new Paypal(core);
+                const paypalInternals = paypal as unknown as {
+                    makePaymentsCall: () => Promise<unknown>;
+                    handleSubmit: (fundingSource: string) => Promise<string>;
+                };
+                const makePaymentsCallSpy = jest.spyOn(paypalInternals, 'makePaymentsCall').mockReturnValue(new Promise(() => {}));
+
+                void paypalInternals.handleSubmit(fundingSource);
+
+                expect(paypal.state.payerSelected).toBe(fundingSource);
+                expect(paypal.data.paymentMethod.payerSelected).toBe(fundingSource);
+                expect(makePaymentsCallSpy).toHaveBeenCalledTimes(1);
+            }
+        );
+    });
+
     describe('sdkData', () => {
         test('should not add paymentMethodConfiguration when usePayPalV6 is not set', () => {
             const paypal = new Paypal(core);
