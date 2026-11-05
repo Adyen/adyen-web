@@ -97,6 +97,32 @@ describe('PayPalPaylaterComponent', () => {
         expect(screen.getByTestId('paypal-messaging')).toBeInTheDocument();
     });
 
+    test('should ignore the eligibility check of a previous paypalService', async () => {
+        let resolvePrevious: () => void = () => {};
+        const previousService = mock<PayPalService>();
+        previousService.isSdkLoaded.mockResolvedValue(undefined);
+        previousService.isFundingSourceEligibilityReady.mockReturnValue(
+            new Promise<void>(resolve => {
+                resolvePrevious = resolve;
+            })
+        );
+        const nextService = mock<PayPalService>();
+        nextService.isSdkLoaded.mockResolvedValue(undefined);
+        nextService.isFundingSourceEligibilityReady.mockReturnValue(new Promise(() => {}));
+        const props = createProps();
+
+        const { rerender } = render(<PayPalPaylaterComponent {...props} paypalService={previousService} />);
+        rerender(<PayPalPaylaterComponent {...props} paypalService={nextService} />);
+
+        await act(async () => {
+            resolvePrevious();
+            await Promise.resolve();
+        });
+
+        expect(await screen.findByTestId('paypal-messaging')).toBeInTheDocument();
+        expect(screen.queryByTestId('paypal-pay-later-button')).not.toBeInTheDocument();
+    });
+
     test('should not render the messaging when it is hidden by the merchant', async () => {
         render(<PayPalPaylaterComponent {...createProps({ hidePayPalMessaging: true })} />);
 
