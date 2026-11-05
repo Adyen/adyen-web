@@ -28,9 +28,11 @@ export default function PaypalButtons({
     const venmoButtonRef = useRef<HTMLDivElement>(null);
 
     const createButton = (fundingSource: SupportedPayPalFundingSources, buttonRef: RefObject<HTMLDivElement>) => {
+        const handleCreateOrderOrBillingAgreement = () => onSubmit(fundingSource);
+
         const configuration = {
-            ...(isTokenize && { createBillingAgreement: onSubmit }),
-            ...(!isTokenize && { createOrder: onSubmit }),
+            ...(isTokenize && { createBillingAgreement: handleCreateOrderOrBillingAgreement }),
+            ...(!isTokenize && { createOrder: handleCreateOrderOrBillingAgreement }),
             ...(!isTokenize && fundingSource !== 'venmo' && onShippingAddressChange && { onShippingAddressChange }),
             ...(!isTokenize && fundingSource !== 'venmo' && onShippingOptionsChange && { onShippingOptionsChange }),
             fundingSource,

@@ -4,6 +4,9 @@ import { render } from '@testing-library/preact';
 import { CoreProvider } from '../../../core/Context/CoreProvider';
 import { mock } from 'jest-mock-extended';
 import { PayPalButtonsProps } from './types';
+import { setupCoreMock } from '../../../../config/testMocks/setup-core-mock';
+
+const core = setupCoreMock();
 
 const paypalIsEligibleMock = jest.fn(() => true);
 const paypalRenderMock = jest.fn((_el: HTMLElement) => Promise.resolve());
@@ -39,9 +42,9 @@ const getRenderedButtons = (calls: [e: HTMLElement][]) => {
     return calls.map(callArgs => callArgs[0].classList[1]?.split('--')[1]).filter(Boolean);
 };
 
-const renderWithCoreProvider = ui => {
+const renderWithCoreProvider = (ui: h.JSX.Element) => {
     return render(
-        <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+        <CoreProvider i18n={core.modules.i18n} loadingContext="test" resources={core.modules.resources}>
             {ui}
         </CoreProvider>
     );
@@ -153,7 +156,7 @@ describe('PaypalButtons', () => {
             onShippingAddressChange,
             onShippingOptionsChange,
             onApprove,
-            createOrder,
+            createOrder: expect.any(Function),
             onClick,
             onCancel,
             onError,
@@ -161,5 +164,33 @@ describe('PaypalButtons', () => {
             style,
             fundingSource: 'paypal'
         });
+    });
+
+    test.each([
+        ['paypal', 'createOrder', 'authorize'],
+        ['credit', 'createOrder', 'authorize'],
+        ['paylater', 'createOrder', 'authorize'],
+        ['venmo', 'createOrder', 'authorize'],
+        ['paypal', 'createBillingAgreement', 'tokenize']
+    ] as const)('should pass "%s" as the funding source to onSubmit when %s is called', async (fundingSource, callbackName, intent) => {
+        const onSubmit = jest.fn().mockResolvedValue('token-1');
+
+        renderWithCoreProvider(
+            <PaypalButtons
+                {...mock<PayPalButtonsProps>()}
+                configuration={{ intent, merchantId: 'xxxx' }}
+                paypalRef={paypalRefMock}
+                isProcessingPayment={false}
+                onSubmit={onSubmit}
+            />
+        );
+
+        const buttonConfiguration = (paypalRefMock.Buttons.mock.calls as unknown as [Record<string, unknown>][])
+            .map(([configuration]) => configuration)
+            .find(configuration => configuration.fundingSource === fundingSource);
+        const handleCreateOrderOrBillingAgreement = buttonConfiguration?.[callbackName] as () => Promise<string>;
+
+        await expect(handleCreateOrderOrBillingAgreement()).resolves.toBe('token-1');
+        expect(onSubmit).toHaveBeenCalledWith(fundingSource);
     });
 });
