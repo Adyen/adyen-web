@@ -32,7 +32,7 @@ export const VenmoButton = ({
 
     const { isZeroAuth } = useAmount();
 
-    const handleSubmit = useCallback(() => onSubmit(fundingSource), [onSubmit]);
+    const handleSubmit = useCallback(() => onSubmit(fundingSource), [onSubmit, fundingSource]);
 
     const { oneTimeSessionOptions, saveSessionOptions } = usePayPalSessionOptions({
         paypalService,

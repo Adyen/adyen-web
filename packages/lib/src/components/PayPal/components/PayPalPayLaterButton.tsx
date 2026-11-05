@@ -33,7 +33,7 @@ export const PayPalPayLaterButton = ({
         onError
     });
 
-    const handleSubmit = useCallback(() => onSubmit(fundingSource), [onSubmit]);
+    const handleSubmit = useCallback(() => onSubmit(fundingSource), [onSubmit, fundingSource]);
 
     const { onClick } = usePayPalOneTimeSession(
         useMemo(

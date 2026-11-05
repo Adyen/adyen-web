@@ -30,15 +30,22 @@ export const usePayPalStatus = ({
     }, [setComponentRef]);
 
     useEffect(() => {
+        let isCurrent = true;
         const readyPromise = waitForEligibility ? paypalService.isFundingSourceEligibilityReady() : paypalService.isSdkLoaded();
 
         readyPromise
             .then(() => {
-                setStatus('ready');
+                if (isCurrent) {
+                    setStatus('ready');
+                }
             })
             .catch(() => {
                 // SDK failed to load, but we don't need to handle it here
             });
+
+        return () => {
+            isCurrent = false;
+        };
     }, [paypalService, waitForEligibility]);
 
     const handleOnApprove = useCallback(

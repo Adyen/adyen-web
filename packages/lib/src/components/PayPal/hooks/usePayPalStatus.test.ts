@@ -69,6 +69,28 @@ describe('usePayPalStatus', () => {
         expect(result.current?.status).toBe('pending');
     });
 
+    test('should ignore the ready promise of a previous paypalService', async () => {
+        let resolvePrevious: () => void = () => {};
+        const previousParams = createParams({
+            isFundingSourceEligibilityReady: new Promise<void>(resolve => {
+                resolvePrevious = resolve;
+            })
+        });
+        const nextParams = createParams({ isFundingSourceEligibilityReady: new Promise<void>(() => {}) });
+
+        let params = previousParams;
+        const { result, rerender } = renderHook(() => usePayPalStatus(params));
+        params = nextParams;
+        rerender();
+
+        await act(async () => {
+            resolvePrevious();
+            await Promise.resolve();
+        });
+
+        expect(result.current?.status).toBe('pending');
+    });
+
     test('should expose a component ref holding the status setter', () => {
         const params = createParams();
 

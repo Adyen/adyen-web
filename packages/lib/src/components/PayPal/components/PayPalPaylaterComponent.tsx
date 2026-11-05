@@ -41,14 +41,22 @@ export const PayPalPaylaterComponent = ({
     const [isFundingSourceEligibilityReady, setIsFundingSourceEligibilityReady] = useState<boolean>(false);
 
     useEffect(() => {
+        let isCurrent = true;
+
         paypalService
             .isFundingSourceEligibilityReady()
             .then(() => {
-                setIsFundingSourceEligibilityReady(true);
+                if (isCurrent) {
+                    setIsFundingSourceEligibilityReady(true);
+                }
             })
             .catch(() => {
                 // Eligibility check failed, but we don't need to handle it here
             });
+
+        return () => {
+            isCurrent = false;
+        };
     }, [paypalService]);
 
     if (status === 'pending') {
