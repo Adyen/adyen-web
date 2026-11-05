@@ -24,6 +24,22 @@
     overflow: hidden;
 }
 
+.adyen-checkout__qr-loader__brand-logos {
+    display: flex;
+    gap: variable-generator.token(spacer-070);
+    margin-bottom: variable-generator.token(spacer-090);
+
+    .adyen-checkout__qr-loader__brand-logo-wrapper {
+        margin-bottom: 0;
+    }
+}
+
+.adyen-checkout__qr-loader__brand-logos-separator {
+    align-self: stretch;
+    width: variable-generator.token(border-width-s);
+    background: variable-generator.token(color-outline-secondary);
+}
+
 .adyen-checkout__qr-loader__brand-logo {
     width: 80px;
     display: block;

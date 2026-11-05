@@ -15,6 +15,7 @@ import { CountdownTime } from '../Countdown/types';
 import { QRDetails } from './components/QRDetails';
 import { QRFinalState } from './components/QRFinalState';
 import { QRLoaderPendingState } from './components/QRLoaderPendingState';
+import { QRBrandLogos } from './components/QRBrandLogos';
 import { useLoadingA11yReporter } from '../../../core/Errors/useLoadingA11yReporter';
 import { QRLoaderDetailsProvider } from './QRLoaderDetailsProvider';
 import { QRLoaderProps } from './types';
@@ -45,6 +46,7 @@ export function QRLoader(props: Readonly<QRLoaderProps>) {
 
     const { showAmount, url, brandLogo, brandName, countdownTime, type, onActionHandled } = props;
     const { amount } = useAmount();
+    const brandLogos = (Array.isArray(brandLogo) ? brandLogo : [{ src: brandLogo, alt: brandName }]).filter(logo => logo.src);
 
     const qrCodeImage = props.qrCodeData ? `${loadingContext}${QRCODE_URL}${props.qrCodeData}&clientKey=${props.clientKey}` : props.qrCodeImage;
 
@@ -86,18 +88,14 @@ export function QRLoader(props: Readonly<QRLoaderProps>) {
     }
 
     if (loading) {
-        return <QRLoaderPendingState brandLogo={brandLogo} brandName={brandName} />;
+        return <QRLoaderPendingState brandLogos={brandLogos} />;
     }
 
     const classnames = props.classNameModifiers.map(m => `adyen-checkout__qr-loader--${m}`);
 
     return (
         <div className={`adyen-checkout__qr-loader adyen-checkout__qr-loader--${type} ${classnames.join(' ')}`} data-testid={`${type}-qr-loader`}>
-            {brandLogo && (
-                <div className="adyen-checkout__qr-loader__brand-logo-wrapper">
-                    <img src={brandLogo} alt={brandName} className="adyen-checkout__qr-loader__brand-logo" />
-                </div>
-            )}
+            <QRBrandLogos brandLogos={brandLogos} />
 
             {showAmount && amount && amount.value !== null && !!amount.currency && (
                 <h1 className="adyen-checkout__qr-loader__payment_amount">{i18n.amount(amount.value, amount.currency)}</h1>
