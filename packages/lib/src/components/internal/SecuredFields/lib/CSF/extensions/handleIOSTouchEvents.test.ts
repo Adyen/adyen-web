@@ -3,7 +3,7 @@ import handleIOSTouchEvents from './handleIOSTouchEvents';
 import ua from '../utils/userAgent';
 
 const myCSF = {
-    state: { type: 'card', registerFieldForIos: null },
+    state: { type: 'card', registerFieldForIos: null, securedFields: {} as Record<string, { iframeRef: HTMLIFrameElement }> },
     props: { rootNode: { appendChild: jest.fn(() => {}), removeChild: jest.fn(() => {}) } },
     callbacks: {
         onTouchstartIOS: null
@@ -89,6 +89,10 @@ describe("Testing CSF's handleIOSTouchEvents' handleTouchend functionality", () 
         myCSF.state.registerFieldForIos = false;
     });
 
+    afterEach(() => {
+        document.body.removeEventListener('touchend', myCSF.touchendListener);
+    });
+
     test('Calling handleTouchend will set registerFieldForIos = true', () => {
         myCSF.handleTouchend();
 
@@ -144,15 +148,20 @@ describe("Testing CSF's handleIOSTouchEvents' touchendListener functionality", (
     );
 
     test(
-        'Calling handleTouchend and passing it an element that is not an input, when config.keypadFix = true, will see that destroyTouchendListener & postMessageToAllIframes are called, ' +
+        'Calling handleTouchend and passing it an element that is not an input, when config.keypadFix = true and a securedField has focus, will see that destroyTouchendListener & postMessageToAllIframes are called, ' +
             'registerFieldForIos is set to false, and rootNode.appendChild & .removeChild are called',
         () => {
             myCSF.config.keypadFix = true;
+            const securedFieldIframe = document.createElement('iframe');
+            myCSF.state.securedFields = { encryptedCardNumber: { iframeRef: securedFieldIframe } };
+            document.body.appendChild(securedFieldIframe);
+            securedFieldIframe.focus();
 
             const myElement = makeElementWithAttribute('div', 'data-id', 'myInput');
 
             // @ts-ignore - it's just a test!
             myCSF.touchendListener({ target: myElement });
+            securedFieldIframe.remove();
 
             expect(myCSF.props.rootNode.appendChild).toHaveBeenCalled();
             expect(myCSF.props.rootNode.removeChild).toHaveBeenCalled();
@@ -164,6 +173,49 @@ describe("Testing CSF's handleIOSTouchEvents' touchendListener functionality", (
             expect(myCSF.postMessageToAllIframes).toHaveBeenCalledWith({ fieldType: 'webInternalElement', fieldClick: true });
         }
     );
+});
+
+describe("Testing CSF's handleIOSTouchEvents' keypadFix focus handling", () => {
+    const wasIOS = ua.__IS_IOS;
+    let paymentMethodButton: HTMLButtonElement;
+    let csf;
+
+    beforeEach(() => {
+        ua.__IS_IOS = true;
+        const rootNode = document.createElement('div');
+        const sfIframe = document.createElement('iframe');
+        rootNode.appendChild(sfIframe);
+        paymentMethodButton = document.createElement('button');
+        document.body.append(rootNode, paymentMethodButton);
+        csf = {
+            state: { registerFieldForIos: false, securedFields: { encryptedCardNumber: { iframeRef: sfIframe } } },
+            props: { rootNode },
+            config: { keypadFix: true },
+            postMessageToAllIframes: jest.fn(),
+            touchendListener: handleIOSTouchEvents.touchendListener,
+            destroyTouchendListener: handleIOSTouchEvents.destroyTouchendListener
+        };
+        csf.touchendListener = csf.touchendListener.bind(csf);
+        csf.destroyTouchendListener = csf.destroyTouchendListener.bind(csf);
+        handleIOSTouchEvents.handleTouchend.call(csf);
+    });
+
+    afterEach(() => {
+        csf.destroyTouchendListener();
+        ua.__IS_IOS = wasIOS;
+        document.body.innerHTML = '';
+    });
+
+    test.each([
+        ['an unrelated iframe inside the root', () => csf.props.rootNode.appendChild(document.createElement('iframe'))],
+        ['an unrelated iframe outside the root', () => document.body.appendChild(document.createElement('iframe'))],
+        ['the activated element', () => paymentMethodButton]
+    ])('should keep focus on %s when no securedField has focus', (_, getFocusedEl) => {
+        const focusedEl = getFocusedEl();
+        focusedEl.focus();
+        paymentMethodButton.dispatchEvent(new Event('touchend', { bubbles: true }));
+        expect(document.activeElement).toBe(focusedEl);
+    });
 });
 
 describe("Testing CSF's handleIOSTouchEvents' destroyTouchendListener functionality", () => {
