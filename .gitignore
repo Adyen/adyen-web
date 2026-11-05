@@ -52,3 +52,7 @@ cert
 # AI agents
 .claude
 .factory
+
+# Personal skills
+!.agents/skills/generate-changeset
+.agents/skills
