@@ -2,6 +2,7 @@ import type { ICore } from '../../core/types';
 import { DonationCampaign, DonationConfiguration, DonationCampaignOptions } from './types';
 import type { DonationPayload } from './components/types';
 import type {
+    CheckoutSessionCancelDonationResponse,
     CheckoutSessionDonationCampaignsResponse,
     CheckoutSessionDonationsRequestData,
     CheckoutSessionDonationsResponse
@@ -67,10 +68,8 @@ class DonationCampaignService {
         const donationComponentProps: DonationConfiguration = {
             ...(restDonationCampaignProps as DonationConfiguration),
 
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            onCancel: (state: DonationPayload) => {
-                // Call merchant defined onDonationCompleted callback
-                this.onDonationCompleted?.({ didDonate: false });
+            onCancel: () => {
+                void this.callSessionsCancelDonation();
             },
             onDonate: (state: DonationPayload, component: Donation) => {
                 // Make the request
@@ -112,6 +111,16 @@ class DonationCampaignService {
         }
     }
 
+    private async callSessionsCancelDonation(): Promise<void> {
+        try {
+            await this.makeSessionCancelDonationCall();
+        } catch (error: unknown) {
+            // The shopper has already declined and the component is unmounted, so the failure is not surfaced to the merchant
+            console.warn('Donation cancellation request failed', error instanceof Error ? error.message : '');
+        }
+        this.onDonationCompleted?.({ didDonate: false });
+    }
+
     private async makeSessionsDonationCampaignsCall(): Promise<CheckoutSessionDonationCampaignsResponse> {
         if (!this.core.session) {
             throw new Error('DonationCampaignService requires a session to be configured');
@@ -124,6 +133,13 @@ class DonationCampaignService {
             throw new Error('DonationCampaignService requires a session to be configured');
         }
         return await this.core.session.makeDonation(donationRequestData);
+    }
+
+    private async makeSessionCancelDonationCall(): Promise<CheckoutSessionCancelDonationResponse> {
+        if (!this.core.session) {
+            throw new Error('DonationCampaignService requires a session to be configured');
+        }
+        return await this.core.session.cancelDonation();
     }
 }
 

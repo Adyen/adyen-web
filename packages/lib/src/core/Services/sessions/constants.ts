@@ -7,5 +7,6 @@ export const API_ERROR_CODE = {
     submitThreeDS2Fingerprint: '622',
     createOrder: '624',
     donationCampaigns: '627',
-    donations: '628'
+    donations: '628',
+    cancelDonation: '629'
 };
