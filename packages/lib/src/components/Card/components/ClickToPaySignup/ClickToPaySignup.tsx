@@ -76,11 +76,11 @@ export function ClickToPaySignup({
         );
         if (phonePrefix) setData('phonePrefix', phonePrefix);
         if (phoneNumber) setData('phoneNumber', phoneNumber);
-    }, [loadingStatus]);
+    }, [loadingStatus, telephoneNumber, countryCode, setData, phonePrefixes]);
 
     useEffect(() => {
         onDetailsChange(getSignupDetails(data));
-    }, [data]);
+    }, [data, onDetailsChange]);
 
     const handleConsentChange = useCallback(() => {
         onConsentChange(!checked);
