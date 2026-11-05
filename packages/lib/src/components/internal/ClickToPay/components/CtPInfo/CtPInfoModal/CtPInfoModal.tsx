@@ -1,5 +1,5 @@
 import { Fragment, h } from 'preact';
-import { useRef } from 'preact/hooks';
+import { useMemo, useRef } from 'preact/hooks';
 import { CtPBrand } from '../../CtPBrand';
 import useClickToPayContext from '../../../context/useClickToPayContext';
 import { useCoreContext } from '../../../../../../core/Context/CoreProvider';
@@ -33,8 +33,8 @@ const CtPInfoModal = ({ isOpen, onClose, focusAfterClose }: Readonly<CtPInfoModa
     const { schemes } = useClickToPayContext();
     const getImage = useImage();
 
-    const labelledBy = getUniqueId();
-    const describedBy = getUniqueId();
+    const labelledBy = useMemo(() => getUniqueId(), []);
+    const describedBy = useMemo(() => getUniqueId(), []);
 
     return (
         <Modal
