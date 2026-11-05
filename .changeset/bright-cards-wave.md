@@ -1,5 +1,5 @@
 ---
-'@adyen/adyen-web': patch
+'@adyen/adyen-web': minor
 ---
 
-Improved: the Click to Pay information modal follows the updated design, with the Click to Pay and card brand logos in a header bar and refreshed text styles.
+New: Card adds an opt-in Click to Pay sign-up flow for eligible Mastercard shoppers to save their contact details for faster checkout.
