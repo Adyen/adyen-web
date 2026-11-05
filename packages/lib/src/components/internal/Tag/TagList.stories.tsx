@@ -5,7 +5,6 @@ import { TagListProps, TagVariant } from './types';
 
 const meta: Meta<TagListProps> = {
     title: 'Internal Elements/TagList',
-    tags: ['no-automated-visual-test'],
     component: TagList
 };
 

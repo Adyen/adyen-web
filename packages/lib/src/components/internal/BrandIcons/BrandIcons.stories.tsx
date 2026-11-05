@@ -15,7 +15,6 @@ const sampleBrands: BrandIcon[] = [
 
 const meta: Meta<BrandIconsProp> = {
     title: 'Internal Elements/BrandIcons',
-    tags: ['no-automated-visual-test'],
     component: BrandIcons
 };
 

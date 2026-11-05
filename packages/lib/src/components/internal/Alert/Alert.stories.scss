@@ -1,0 +1,17 @@
+.alert-story-customization {
+    max-width: 400px;
+}
+
+.alert-story-customization--css-variables {
+    --adyen-sdk-color-background-critical-weak: #ffd6d6;
+    --adyen-sdk-color-background-warning-weak: #fff1c2;
+    --adyen-sdk-color-background-highlight-weak: #d6e6ff;
+    --adyen-sdk-color-background-success-weak: #d4f5dd;
+}
+
+.alert-story-customization--deprecated-css-variables {
+    --adyen-sdk-alert-critical-background-color: #ffd6d6;
+    --adyen-sdk-alert-warning-background-color: #fff1c2;
+    --adyen-sdk-alert-highlight-background-color: #d6e6ff;
+    --adyen-sdk-alert-success-background-color: #d4f5dd;
+}

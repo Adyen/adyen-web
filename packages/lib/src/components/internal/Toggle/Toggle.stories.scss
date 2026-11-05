@@ -1,0 +1,64 @@
+.toggle-story-customization {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-width: 400px;
+}
+
+.toggle-story-customization--css-variables .adyen-checkout-toggle {
+    --adyen-sdk-spacer-070: 18px;
+    --adyen-sdk-color-background-primary: #fff4e5;
+    --adyen-sdk-color-outline-tertiary: #ffb74d;
+    --adyen-sdk-border-radius-xl: 4px;
+    --adyen-sdk-spacer-080: 24px;
+    --adyen-sdk-color-background-primary-hover: #ffe0b2;
+    --adyen-sdk-color-outline-tertiary-hover: #e65100;
+    --adyen-sdk-color-background-primary-active: #ffcc80;
+    --adyen-sdk-color-outline-tertiary-active: #bf360c;
+    --adyen-sdk-color-background-secondary: #eee;
+    --adyen-sdk-color-outline-disabled: #bdbdbd;
+    --adyen-sdk-color-background-inverse-primary: #e65100;
+    --adyen-sdk-spacer-010: 3px;
+    --adyen-sdk-spacer-020: 8px;
+    --adyen-sdk-color-background-inverse-primary-hover: #bf360c;
+    --adyen-sdk-color-background-inverse-primary-active: #8d2a00;
+    --adyen-sdk-color-background-tertiary-active: #ffccbc;
+    --adyen-sdk-color-label-primary: #e65100;
+    --adyen-sdk-spacer-060: 14px;
+    --adyen-sdk-color-label-disabled: #9e9e9e;
+    --adyen-sdk-color-background-disabled: #f5f5f5;
+    --adyen-sdk-color-label-secondary: #6d4c41;
+}
+
+.toggle-story-customization--deprecated-css-variables {
+    --adyen-sdk-toggle-label-padding: 18px;
+    --adyen-sdk-toggle-track-background-color: #fff4e5;
+    --adyen-sdk-toggle-track-border: 1px solid #ffb74d;
+    --adyen-sdk-toggle-track-border-radius: 4px;
+    --adyen-sdk-toggle-track-height: 24px;
+    --adyen-sdk-toggle-track-padding: 3px 8px;
+    --adyen-sdk-toggle-track-hover-background-color: #ffe0b2;
+    --adyen-sdk-toggle-track-hover-border-color: #e65100;
+    --adyen-sdk-toggle-track-active-background-color: #ffcc80;
+    --adyen-sdk-toggle-track-active-border-color: #bf360c;
+    --adyen-sdk-toggle-track-disabled-background-color: #eee;
+    --adyen-sdk-toggle-track-disabled-border-color: #bdbdbd;
+    --adyen-sdk-toggle-track-toggled-background-color: #e65100;
+    --adyen-sdk-toggle-track-toggled-padding: 3px;
+    --adyen-sdk-toggle-track-toggled-hover-background-color: #bf360c;
+    --adyen-sdk-toggle-track-toggled-active-background-color: #8d2a00;
+    --adyen-sdk-toggle-track-toggled-disabled-background-color: #ffccbc;
+    --adyen-sdk-toggle-handle-background-color: #e65100;
+    --adyen-sdk-toggle-handle-border-radius: 4px;
+    --adyen-sdk-toggle-handle-height: 14px;
+    --adyen-sdk-toggle-handle-width: 14px;
+    --adyen-sdk-toggle-handle-disabled-background-color: #9e9e9e;
+    --adyen-sdk-toggle-handle-toggled-color: #e65100;
+    --adyen-sdk-toggle-handle-toggled-background-color: #fff4e5;
+    --adyen-sdk-toggle-handle-toggled-height: 18px;
+    --adyen-sdk-toggle-handle-toggled-width: 18px;
+    --adyen-sdk-toggle-handle-toggled-disabled-background-color: #f5f5f5;
+    --adyen-sdk-toggle-handle-toggled-disabled-color: #9e9e9e;
+    --adyen-sdk-toggle-description-color: #6d4c41;
+    --adyen-sdk-toggle-description-padding: 8px;
+}

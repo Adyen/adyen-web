@@ -5,7 +5,6 @@ import { TagProps, TagVariant } from './types';
 
 const meta: Meta<TagProps> = {
     title: 'Internal Elements/Tag',
-    tags: ['no-automated-visual-test'],
     component: Tag
 };
 
