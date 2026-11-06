@@ -178,7 +178,14 @@ describe("Testing CSF's handleIOSTouchEvents' touchendListener functionality", (
 describe("Testing CSF's handleIOSTouchEvents' keypadFix focus handling", () => {
     const wasIOS = ua.__IS_IOS;
     let paymentMethodButton: HTMLButtonElement;
-    let csf;
+    let csf: {
+        state: { registerFieldForIos: boolean; securedFields: Record<string, { iframeRef: HTMLIFrameElement }> };
+        props: { rootNode: HTMLElement };
+        config: { keypadFix: boolean };
+        postMessageToAllIframes: jest.Mock;
+        touchendListener: (e: Event) => void;
+        destroyTouchendListener: () => boolean;
+    };
 
     beforeEach(() => {
         ua.__IS_IOS = true;
