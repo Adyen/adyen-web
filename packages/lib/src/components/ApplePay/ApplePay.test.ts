@@ -374,6 +374,50 @@ describe('ApplePay', () => {
             expect(onPaymentFailedMock).toHaveBeenCalledTimes(1);
             expect(onPaymentFailedMock).toHaveBeenCalledWith({ error: { applePayError: undefined } }, applepay);
         });
+
+        test('should close the Apple Pay sheet without calling onPaymentFailed if beforeSubmit is rejected', async () => {
+            const onPaymentFailedMock = jest.fn();
+            const beforeSubmitMock = jest.fn().mockImplementation((_data, _component, actions) => {
+                actions.reject();
+            });
+            const event = mock<ApplePayJS.ApplePayPaymentAuthorizedEvent>({
+                payment: {
+                    token: {
+                        paymentData: 'test'
+                    }
+                }
+            });
+
+            const applepay = new ApplePay(core, {
+                configuration: configurationMock,
+                amount: { currency: 'EUR', value: 2000 },
+                beforeSubmit: beforeSubmitMock,
+                onPaymentFailed: onPaymentFailedMock
+            });
+            const setElementStatusSpy = jest.spyOn(applepay, 'setElementStatus');
+
+            applepay.submit();
+
+            // Session initialized
+            await new Promise(process.nextTick);
+            expect(jest.spyOn(ApplePayService.prototype, 'begin')).toHaveBeenCalledTimes(1);
+
+            // Trigger ApplePayService onPaymentAuthorized property
+            // @ts-ignore ApplePayService is mocked
+            const onPaymentAuthorized = ApplePayService.mock.calls[0][1].onPaymentAuthorized;
+            const resolveMock = jest.fn();
+            const rejectMock = jest.fn();
+            onPaymentAuthorized(resolveMock, rejectMock, event);
+
+            await new Promise(process.nextTick);
+
+            expect(beforeSubmitMock).toHaveBeenCalledTimes(1);
+            expect(core.session.submitPayment).not.toHaveBeenCalled();
+            expect(resolveMock).not.toHaveBeenCalled();
+            expect(rejectMock).toHaveBeenCalledWith({ status: 0 });
+            expect(setElementStatusSpy).toHaveBeenLastCalledWith('ready');
+            expect(onPaymentFailedMock).not.toHaveBeenCalled();
+        });
     });
     describe('onOrderTrackingRequest()', () => {
         test('should collect order details and pass it to Apple', async () => {

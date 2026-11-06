@@ -7,6 +7,7 @@ import defaultProps from './defaultProps';
 import { httpPost } from '../../core/Services/http';
 import { preparePaymentRequest } from './utils/payment-request';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
+import CancelError from '../../core/Errors/CancelError';
 import { DecodeObject } from '../../types/global-types';
 import { TxVariants } from '../tx-variants';
 import { sanitizeResponse, verifyPaymentDidNotFail } from '../internal/UIElement/utils';
@@ -245,7 +246,14 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
                     .then(paymentResponse => {
                         this.handleResponse(paymentResponse);
                     })
-                    .catch((paymentResponse?: RawPaymentResponse) => {
+                    .catch((paymentResponse?: RawPaymentResponse | CancelError) => {
+                        // 'beforeSubmit' was rejected by the merchant: no payment was made, so it did not fail
+                        if (paymentResponse instanceof CancelError) {
+                            reject({ status: ApplePaySession.STATUS_FAILURE });
+                            this.setElementStatus('ready');
+                            return;
+                        }
+
                         const errors = paymentResponse?.error?.applePayError;
 
                         reject({
