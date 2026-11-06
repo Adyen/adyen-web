@@ -39,7 +39,7 @@ export class ANCVElement extends UIElement<ANCVConfiguration> {
      * Otherwise createOrder and then Resolve.
      */
     public createOrder = (): Promise<void> => {
-        this.setStatus('loading');
+        this.setElementStatus('loading');
 
         // allow for multiple ANCV payments, follow giftcard logic and just use order if it exists
         if (this.props.order) {
@@ -67,7 +67,12 @@ export class ANCVElement extends UIElement<ANCVConfiguration> {
             return false;
         }
 
-        void this.createOrder().then(() => this.executePaymentsCall());
+        void this.createOrder().then(() => {
+            // createOrder() reports a failed order through onError and resolves anyway, so there is nothing to pay with
+            if (!this.state.order && !this.props.order) return;
+
+            this.executePaymentsCall();
+        });
     }
 
     // Reimplement payButton similar to GiftCard to allow to set onClick
