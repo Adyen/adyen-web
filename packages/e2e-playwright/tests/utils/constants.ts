@@ -84,6 +84,26 @@ export const SHOPPER_DATA = {
         JP: '7012341234'
     }
 };
+export const CLICK_TO_PAY_DPA_CONFIGURATION = {
+    mc: {
+        mcDpaId: '6d41d4d6-45b1-42c3-a5d0-a28c0e69d4b1_dpa2',
+        mcSrcClientId: '6d41d4d6-45b1-42c3-a5d0-a28c0e69d4b1'
+    },
+    visa: {
+        visaSrciDpaId: '8e6e347c-254e-863f-0e6a-196bf2d9df02',
+        visaSrcInitiatorId: 'B9SECVKIQX2SOBQ6J9X721dVBBKHhJJl1nxxVbemHGn5oB6S8'
+    }
+};
+
+export const CLICK_TO_PAY_SIGNUP_PHONE = {
+    // Storybook defaults to countryCode 'US', so a typed number gets the '+1' prefix
+    defaultPrefix: '+1',
+    typedNumber: '2025550123',
+    prefilledTelephoneNumber: '+31612345678',
+    prefilledPrefix: '+31',
+    prefilledNumber: '612345678'
+};
+
 // Issuer List Mocks
 export const ONLINE_BANKING_PL_ISSUERS = [
     { id: '154', name: 'BLIK' },
