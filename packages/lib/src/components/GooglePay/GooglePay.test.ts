@@ -336,6 +336,39 @@ describe('GooglePay', () => {
                 gpay
             );
         });
+
+        test('should pass error to GooglePay without calling onPaymentFailed if beforeSubmit is rejected', async () => {
+            const beforeSubmitMock = jest.fn().mockImplementation((_data, _component, actions) => {
+                actions.reject();
+            });
+            const onPaymentFailedMock = jest.fn();
+
+            const gpay = new GooglePay(core, {
+                configuration: { merchantId: 'merchant-id', gatewayMerchantId: 'gateway-id' },
+                i18n: core.modules.i18n,
+                beforeSubmit: beforeSubmitMock,
+                onPaymentFailed: onPaymentFailedMock
+            });
+            const setElementStatusSpy = jest.spyOn(gpay, 'setElementStatus');
+            const onPaymentAuthorized = getOnPaymentAuthorizedCallback();
+            const promise = onPaymentAuthorized(googlePaymentData);
+
+            await expect(promise).resolves.toEqual({
+                error: {
+                    intent: 'PAYMENT_AUTHORIZATION',
+                    message: 'Payment failed',
+                    reason: 'OTHER_ERROR'
+                },
+                transactionState: 'ERROR'
+            });
+
+            await new Promise(process.nextTick);
+
+            expect(beforeSubmitMock).toHaveBeenCalledTimes(1);
+            expect(core.session.submitPayment).not.toHaveBeenCalled();
+            expect(setElementStatusSpy).toHaveBeenLastCalledWith('ready');
+            expect(onPaymentFailedMock).not.toHaveBeenCalled();
+        });
     });
 
     describe('onAuthorized()', () => {

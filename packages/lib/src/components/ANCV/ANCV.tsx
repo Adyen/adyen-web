@@ -6,7 +6,6 @@ import { Await } from '../../components/internal/Await';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import PayButton from '../internal/PayButton';
 import { ANCVConfiguration } from './types';
-import { sanitizeResponse, verifyPaymentDidNotFail } from '../internal/UIElement/utils';
 import { PayButtonProps } from '../internal/PayButton/PayButton';
 
 export class ANCVElement extends UIElement<ANCVConfiguration> {
@@ -68,12 +67,7 @@ export class ANCVElement extends UIElement<ANCVConfiguration> {
             return false;
         }
 
-        this.createOrder()
-            .then(this.makePaymentsCall)
-            .then(sanitizeResponse)
-            .then(verifyPaymentDidNotFail)
-            .then(this.handleResponse)
-            .catch(this.handleFailedResult);
+        void this.createOrder().then(() => this.executePaymentsCall());
     }
 
     // Reimplement payButton similar to GiftCard to allow to set onClick
