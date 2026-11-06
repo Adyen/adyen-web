@@ -1,4 +1,4 @@
-import { ComponentFocusObject, AddressData, BrowserInfo } from '../../types/global-types';
+import { ComponentFocusObject, AddressData, BrowserInfo, PaymentData } from '../../types/global-types';
 import type { CardBrandsConfiguration } from '../internal/SecuredFields/lib/types';
 import {
     CardBinValueData,
@@ -471,6 +471,10 @@ interface CardPaymentMethodData {
     encryptedExpiryMonth?: string;
     encryptedExpiryYear?: string;
     encryptedSecurityCode?: string;
+    /**
+     * Set when the shopper consents to create a Click to Pay profile
+     */
+    storeClickToPayProfile?: boolean;
 }
 
 export interface CardElementData {
@@ -478,6 +482,9 @@ export interface CardElementData {
     billingAddress?: AddressData;
     installments?: { value: number };
     storePaymentMethod?: boolean;
+    shopperName?: PaymentData['shopperName'];
+    shopperEmail?: string;
+    telephoneNumber?: string;
     browserInfo: BrowserInfo;
     origin?: string;
 }

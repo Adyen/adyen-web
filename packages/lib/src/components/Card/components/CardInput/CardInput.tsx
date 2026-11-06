@@ -35,6 +35,10 @@ import { CardBrandData, CardFocusData } from '../../../internal/SecuredFields/li
 import { PREFIX } from '../../../internal/Icon/constants';
 import useSRPanelForCardInputErrors from './useSRPanelForCardInputErrors';
 import FastlaneSignup from '../Fastlane/FastlaneSignup';
+import { ClickToPaySignup } from '../ClickToPaySignup';
+import type { ClickToPaySignupDetails } from '../ClickToPaySignup';
+import useClickToPayContext from '../../../internal/ClickToPay/context/useClickToPayContext';
+import { CtpState } from '../../../internal/ClickToPay/services/ClickToPayService';
 import { fieldTypeToSnakeCase } from '../../../internal/SecuredFields/utils';
 import { getErrorMessageFromCode } from '../../../../core/Errors/utils';
 import { SF_ErrorCodes } from '../../../../core/Errors/constants';
@@ -104,6 +108,8 @@ const CardInput = (props: Readonly<CardInputProps>) => {
     const [showSocialSecurityNumber, setShowSocialSecurityNumber] = useState(false);
     const [socialSecurityNumber, setSocialSecurityNumber] = useState('');
     const [installments, setInstallments] = useState<InstallmentsState>({ value: null });
+    const [clickToPaySignupConsent, setClickToPaySignupConsent] = useState<boolean>(false);
+    const [clickToPaySignupDetails, setClickToPaySignupDetails] = useState<ClickToPaySignupDetails>({});
 
     // re. Disable arrows for iOS: The name of the element calling for other elements to be disabled
     // - either a securedField type (like 'encryptedCardNumber') when call is coming from SF
@@ -159,6 +165,12 @@ const CardInput = (props: Readonly<CardInputProps>) => {
     const showBrazilianSSN: boolean =
         (showSocialSecurityNumber && props.configuration.socialSecurityNumberMode === 'auto') ||
         props.configuration.socialSecurityNumberMode === 'show';
+
+    const { ctpState } = useClickToPayContext();
+    // For dual branded cards only the brand the shopper selected counts, not the one detected by the regEx
+    const activeBrand = dualBrandSelectElements.length > 0 ? selectedBrandValue : selectedBrandValue || internallyDetectedBrand;
+    // Any state other than NotAvailable means that the shopper is (or might be) recognized by Click to Pay
+    const showClickToPaySignup: boolean = !!props.isClickToPaySignupAvailable && ctpState === CtpState.NotAvailable && activeBrand === 'mc';
 
     /**
      * HANDLERS
@@ -498,6 +510,21 @@ const CardInput = (props: Readonly<CardInputProps>) => {
         }
     }, [dualBrandSelectElements]);
 
+    useEffect(() => {
+        if (!showClickToPaySignup) setClickToPaySignupConsent(false);
+    }, [showClickToPaySignup]);
+
+    useEffect(() => {
+        if (!props.isClickToPaySignupAvailable) return;
+
+        props.onChange({
+            clickToPaySignup: {
+                consentGiven: showClickToPaySignup && clickToPaySignupConsent,
+                details: clickToPaySignupDetails
+            }
+        });
+    }, [props.isClickToPaySignupAvailable, showClickToPaySignup, clickToPaySignupConsent, clickToPaySignupDetails]);
+
     const previousSelectedBrandValue = usePrevious(selectedBrandValue);
 
     /**
@@ -601,7 +628,20 @@ const CardInput = (props: Readonly<CardInputProps>) => {
                 )}
             />
 
-            {props.fastlaneConfiguration && (
+            {showClickToPaySignup && (
+                <ClickToPaySignup
+                    firstName={props.clickToPayConfiguration?.firstName}
+                    lastName={props.clickToPayConfiguration?.lastName}
+                    shopperEmail={props.clickToPayConfiguration?.shopperEmail}
+                    telephoneNumber={props.clickToPayConfiguration?.telephoneNumber}
+                    countryCode={props.countryCode}
+                    checked={clickToPaySignupConsent}
+                    onConsentChange={setClickToPaySignupConsent}
+                    onDetailsChange={setClickToPaySignupDetails}
+                />
+            )}
+
+            {props.fastlaneConfiguration && !props.isClickToPaySignupAvailable && (
                 <FastlaneSignup
                     {...props.fastlaneConfiguration}
                     currentDetectedBrand={internallyDetectedBrand}
