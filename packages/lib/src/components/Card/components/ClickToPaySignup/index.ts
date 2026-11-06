@@ -1,2 +1,3 @@
 export { ClickToPaySignup } from './ClickToPaySignup';
-export type { ClickToPaySignupDetails, ClickToPaySignupProps } from './types';
+export { formatClickToPaySignupData } from './utils';
+export type { ClickToPaySignupDetails, ClickToPaySignupProps, ClickToPaySignupState } from './types';

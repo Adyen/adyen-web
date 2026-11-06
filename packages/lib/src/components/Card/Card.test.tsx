@@ -12,6 +12,7 @@ import { ICore } from '../../types';
 import { FALLBACK_VALUE } from '../internal/Address/constants';
 import Language from '../../language/Language';
 import type { ILanguageService } from '../../language/LanguageService';
+import type CheckoutSession from '../../core/CheckoutSession';
 
 describe('Card', () => {
     const core = setupCoreMock();
@@ -593,6 +594,109 @@ describe('Card', () => {
             const core = setupCoreMock();
             const card = new CardElement(core, {});
             expect(card['clickToPayService']).toBeDefined();
+        });
+    });
+
+    describe('Click to Pay sign up', () => {
+        const MC_CONFIGURATION = { mcDpaId: 'mc-dpa-id', mcSrcClientId: 'mc-src-client-id' };
+        const VISA_CONFIGURATION = { visaSrciDpaId: 'visa-dpa-id', visaSrcInitiatorId: 'visa-initiator-id' };
+        const SIGNUP_PROPS = { configuration: MC_CONFIGURATION, clickToPayConfiguration: { enableSignup: true } };
+        const STORED_CARD_PROPS = { storedPaymentMethodId: 'xxx', supportedShopperInteractions: ['Ecommerce'] };
+
+        const FULL_DETAILS = {
+            firstName: 'Jane',
+            lastName: 'Doe',
+            shopperEmail: 'jane.doe@example.com',
+            telephoneNumber: '+31612345678'
+        };
+
+        let core: ICore;
+
+        beforeEach(() => {
+            core = setupCoreMock();
+        });
+
+        test('should add the consent and the shopper details when the shopper signs up', () => {
+            const card = new CardElement(core, SIGNUP_PROPS);
+            card.setState({ clickToPaySignup: { consentGiven: true, details: FULL_DETAILS } });
+
+            expect(card.data.paymentMethod.storeClickToPayProfile).toBe(true);
+            expect(card.data.shopperName).toEqual({ firstName: 'Jane', lastName: 'Doe' });
+            expect(card.data.shopperEmail).toBe('jane.doe@example.com');
+            expect(card.data.telephoneNumber).toBe('+31612345678');
+        });
+
+        test('should add only the filled in shopper details', () => {
+            const card = new CardElement(core, SIGNUP_PROPS);
+            card.setState({ clickToPaySignup: { consentGiven: true, details: { lastName: 'Doe', telephoneNumber: '+31612345678' } } });
+
+            expect(card.data.paymentMethod.storeClickToPayProfile).toBe(true);
+            expect(card.data.shopperName).toEqual({ lastName: 'Doe' });
+            expect(card.data).not.toHaveProperty('shopperEmail');
+            expect(card.data.telephoneNumber).toBe('+31612345678');
+        });
+
+        test('should add only the consent when the shopper details are empty', () => {
+            const card = new CardElement(core, SIGNUP_PROPS);
+            card.setState({ clickToPaySignup: { consentGiven: true, details: {} } });
+
+            expect(card.data.paymentMethod.storeClickToPayProfile).toBe(true);
+            expect(card.data).not.toHaveProperty('shopperName');
+            expect(card.data).not.toHaveProperty('shopperEmail');
+            expect(card.data).not.toHaveProperty('telephoneNumber');
+        });
+
+        test('should not add sign up data when the shopper did not give consent', () => {
+            const card = new CardElement(core, SIGNUP_PROPS);
+            card.setState({ clickToPaySignup: { consentGiven: false, details: FULL_DETAILS } });
+
+            expect(card.data.paymentMethod).not.toHaveProperty('storeClickToPayProfile');
+            expect(card.data).not.toHaveProperty('shopperName');
+            expect(card.data).not.toHaveProperty('shopperEmail');
+            expect(card.data).not.toHaveProperty('telephoneNumber');
+        });
+
+        test.each([
+            ['enableSignup is not set', { configuration: MC_CONFIGURATION, clickToPayConfiguration: {} }],
+            ['enableSignup is false', { configuration: MC_CONFIGURATION, clickToPayConfiguration: { enableSignup: false } }],
+            ['only the Visa configuration is provided', { configuration: VISA_CONFIGURATION, clickToPayConfiguration: { enableSignup: true } }],
+            ['Click to Pay is disabled', { ...SIGNUP_PROPS, _disableClickToPay: true }],
+            ['the funding source is prepaid', { ...SIGNUP_PROPS, fundingSource: 'prepaid' as const }],
+            ['it is a stored card', { ...SIGNUP_PROPS, ...STORED_CARD_PROPS }]
+        ])('should not make the sign up available, nor add sign up data, when %s', (_, props) => {
+            const card = new CardElement(core, props);
+            card.setState({ clickToPaySignup: { consentGiven: true, details: FULL_DETAILS } });
+
+            expect(card['isClickToPaySignupAvailable']).toBe(false);
+            expect(card.data.paymentMethod).not.toHaveProperty('storeClickToPayProfile');
+            expect(card.data).not.toHaveProperty('shopperName');
+            expect(card.data).not.toHaveProperty('shopperEmail');
+            expect(card.data).not.toHaveProperty('telephoneNumber');
+        });
+
+        test('should make the sign up available when the Mastercard configuration is provided and enableSignup is true', () => {
+            const card = new CardElement(core, SIGNUP_PROPS);
+            expect(card['isClickToPaySignupAvailable']).toBe(true);
+        });
+
+        test('should not add storePaymentMethod because of the sign up when the session stores the payment method', () => {
+            const card = new CardElement(core, {
+                ...SIGNUP_PROPS,
+                amount: { value: 1000, currency: 'USD' },
+                session: mock<CheckoutSession>({ configuration: { enableStoreDetails: false } })
+            });
+            card.setState({ clickToPaySignup: { consentGiven: true, details: FULL_DETAILS } });
+
+            expect(card.data.paymentMethod.storeClickToPayProfile).toBe(true);
+            expect(card.data).not.toHaveProperty('storePaymentMethod');
+        });
+
+        test('should keep storePaymentMethod independent from the sign up consent', () => {
+            const card = new CardElement(core, { ...SIGNUP_PROPS, enableStoreDetails: true });
+            card.setState({ storePaymentMethod: false, clickToPaySignup: { consentGiven: true, details: {} } });
+
+            expect(card.data.storePaymentMethod).toBe(false);
+            expect(card.data.paymentMethod.storeClickToPayProfile).toBe(true);
         });
     });
 });
