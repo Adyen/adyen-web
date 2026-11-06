@@ -10,6 +10,8 @@ import type { DropinComponent } from './components/DropinComponent';
 import Fastlane from '../PayPalFastlane';
 import Card from '../Card';
 import Giftcard from '../Giftcard';
+import ANCV from '../ANCV';
+import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { SRPanel } from '../../core/Errors/SRPanel';
 
 import type { CoreConfiguration, ICore } from '../../core/types';
@@ -808,6 +810,63 @@ describe('Dropin', () => {
 
             await waitFor(() => expect(screen.getByRole('button', { name: /Pay \$29.99/i })).toBeEnabled());
             expect(getDropinStatus(dropin)).toBe('ready');
+        });
+    });
+
+    describe('ANCV order creation', () => {
+        test('should re-enable the pay button and skip the payment when onOrderRequest rejects', async () => {
+            const onOrderRequest = jest.fn((_resolve, reject) => reject(new AdyenCheckoutError('NETWORK_ERROR', 'Order could not be created')));
+            const onSubmit = jest.fn();
+            const onError = jest.fn();
+            const config = getAdyenCheckoutConfiguration({
+                paymentMethodsResponse: { paymentMethods: [{ name: 'ANCV', type: 'ancv' }] },
+                onSubmit,
+                onError
+            });
+            const checkout = await createAdyenCheckout(config);
+            const dropin = new Dropin(checkout, {
+                paymentMethodComponents: [ANCV],
+                openFirstPaymentMethod: true,
+                paymentMethodsConfiguration: { ancv: { onOrderRequest } }
+            });
+
+            render(dropin.render());
+
+            const payButton = await screen.findByRole('button', { name: 'Confirm purchase' });
+            const user = userEvent.setup();
+            await user.type(screen.getByLabelText(/Your ANCV identification/i), '12345678901');
+            await user.click(payButton);
+
+            await waitFor(() => expect(onError).toHaveBeenCalledTimes(1));
+            await waitFor(() => expect(payButton).toBeEnabled());
+            expect((dropin.dropinRef as DropinComponent | null)?.state.status.type).toBe('ready');
+            expect(onSubmit).not.toHaveBeenCalled();
+        });
+
+        test('should make the payment with the created order when onOrderRequest resolves', async () => {
+            const onOrderRequest = jest.fn(resolve => resolve({ orderData: 'order-data', pspReference: 'order-psp' }));
+            const onSubmit = jest.fn();
+            const config = getAdyenCheckoutConfiguration({
+                paymentMethodsResponse: { paymentMethods: [{ name: 'ANCV', type: 'ancv' }] },
+                onSubmit
+            });
+            const checkout = await createAdyenCheckout(config);
+            const dropin = new Dropin(checkout, {
+                paymentMethodComponents: [ANCV],
+                openFirstPaymentMethod: true,
+                paymentMethodsConfiguration: { ancv: { onOrderRequest } }
+            });
+
+            render(dropin.render());
+
+            const payButton = await screen.findByRole('button', { name: 'Confirm purchase' });
+            const user = userEvent.setup();
+            await user.type(screen.getByLabelText(/Your ANCV identification/i), '12345678901');
+            await user.click(payButton);
+
+            await waitFor(() => expect(onSubmit).toHaveBeenCalledTimes(1));
+            expect(onSubmit.mock.calls[0][0].data.order).toEqual({ orderData: 'order-data', pspReference: 'order-psp' });
+            expect((dropin.dropinRef as DropinComponent | null)?.state.status.type).toBe('loading');
         });
     });
 });
