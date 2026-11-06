@@ -42,11 +42,11 @@ class ThreeDS2DeviceFingerprint extends UIElement<ThreeDS2DeviceFingerprintConfi
     /**
      * Can be called directly from PrepareFingerprint (MDFlow) or after the call to /submitThreeDS2Fingerprint endpoint (native flow)
      */
-    onComplete(state: FingerprintResolveData) {
+    onActionComplete(state: FingerprintResolveData) {
         if (this.props.isMDFlow) {
             this.props.on3DS2RedirectFlowComplete?.(state, this.elementRef);
         } else {
-            super.onComplete(state as AdditionalDetailsData);
+            super.onActionComplete(state as AdditionalDetailsData);
         }
 
         this.unmount(); // re. fixing issue around back to back fingerprinting calls
@@ -81,7 +81,7 @@ class ThreeDS2DeviceFingerprint extends UIElement<ThreeDS2DeviceFingerprintConfi
             <PrepareFingerprint
                 {...this.props}
                 // For MDFlow will bypass the /submitThreeDS2Fingerprint endpoint
-                onComplete={this.props.isMDFlow ? this.onComplete : this.callSubmit3DS2Fingerprint}
+                on3DS2FingerprintComplete={this.props.isMDFlow ? this.onActionComplete : this.callSubmit3DS2Fingerprint}
                 onSubmitAnalytics={this.submitAnalytics}
                 onActionHandled={this.onActionHandled}
             />

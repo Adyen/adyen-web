@@ -25,8 +25,8 @@ class MyElement extends UIElement<MyElementProps> {
     public get isValid(): boolean {
         return false;
     }
-    public callOnComplete() {
-        super.onComplete({ data: { details: {} } });
+    public callOnActionComplete() {
+        super.onActionComplete({ data: { details: {} } });
     }
     public callOnChange() {
         super.onChange();
