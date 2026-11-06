@@ -61,7 +61,7 @@ export function handleConfig(props: CSFSetupObject): void {
 
     /**
      * Don't allow compat version on Live - it is only for if the merchant wants to *test* with a custom http url.
-     * Otherwise, set it passed on the config prop
+     * Otherwise, set it based on the config prop
      */
     const needsJWECompatVersion = this.config.loadingContext.includes('live') ? false : props.forceCompat;
 
