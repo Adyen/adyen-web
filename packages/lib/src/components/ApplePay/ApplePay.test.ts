@@ -412,7 +412,7 @@ describe('ApplePay', () => {
             await new Promise(process.nextTick);
 
             expect(beforeSubmitMock).toHaveBeenCalledTimes(1);
-            expect(core.session.submitPayment).not.toHaveBeenCalled();
+            expect(core.session?.submitPayment).not.toHaveBeenCalled();
             expect(resolveMock).not.toHaveBeenCalled();
             expect(rejectMock).toHaveBeenCalledWith({ status: 0 });
             expect(setElementStatusSpy).toHaveBeenLastCalledWith('ready');

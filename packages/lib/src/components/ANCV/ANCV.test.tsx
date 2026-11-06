@@ -111,7 +111,7 @@ describe('ANCV', () => {
             await waitFor(() => expect(beforeSubmitMock).toHaveBeenCalledTimes(1));
             await new Promise(process.nextTick);
 
-            expect(core.session.submitPayment).not.toHaveBeenCalled();
+            expect(core.session?.submitPayment).not.toHaveBeenCalled();
             expect(setElementStatusSpy).toHaveBeenLastCalledWith('ready');
             expect(onPaymentFailedMock).not.toHaveBeenCalled();
         });
