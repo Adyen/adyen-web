@@ -6,6 +6,7 @@ import defaultProps from './defaultProps';
 import { formatGooglePayContactToAdyenAddressFormat, getGooglePayLocale } from './utils';
 import collectBrowserInfo from '../../utils/browserInfo';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
+import CancelError from '../../core/Errors/CancelError';
 import { TxVariants } from '../tx-variants';
 import { sanitizeResponse, verifyPaymentDidNotFail } from '../internal/UIElement/utils';
 
@@ -211,10 +212,10 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
                 .then(paymentResponse => {
                     this.handleResponse(paymentResponse);
                 })
-                .catch((paymentResponse?: RawPaymentResponse) => {
+                .catch((paymentResponse?: RawPaymentResponse | CancelError) => {
                     this.setElementStatus('ready');
 
-                    const googlePayError = paymentResponse?.error?.googlePayError;
+                    const googlePayError = paymentResponse instanceof CancelError ? undefined : paymentResponse?.error?.googlePayError;
                     const fallbackMessage = this.props.i18n.get('error.subtitle.payment');
 
                     const error: google.payments.api.PaymentDataError =
@@ -234,6 +235,9 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
                         transactionState: 'ERROR',
                         error
                     });
+
+                    // 'beforeSubmit' was rejected by the merchant: no payment was made, so it did not fail
+                    if (paymentResponse instanceof CancelError) return;
 
                     const responseWithError = {
                         ...paymentResponse,
