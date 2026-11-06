@@ -1,0 +1,100 @@
+@use 'styles/mixins';
+@use 'styles/variable-generator';
+
+.clickToPaySignup {
+    display: flex;
+    flex-direction: column;
+    gap: variable-generator.token(spacer-060);
+    margin-top: variable-generator.token(spacer-070);
+    padding: variable-generator.token(spacer-060) variable-generator.token(spacer-070);
+    background: variable-generator.token(color-background-primary);
+    border: variable-generator.token(border-width-s) solid variable-generator.token(color-outline-primary);
+    border-radius: variable-generator.token(border-radius-m);
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: variable-generator.token(spacer-070);
+}
+
+.consent {
+    display: flex;
+    align-items: center;
+    gap: variable-generator.token(spacer-060);
+}
+
+.infoButton {
+    @include mixins.adyen-checkout-link;
+
+    padding: 0;
+    border: none;
+    background: none;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+}
+
+.logo {
+    width: 27px;
+    height: 18px;
+}
+
+.fields {
+    display: flex;
+    flex-direction: column;
+    gap: variable-generator.token(spacer-070);
+}
+
+.nameRow,
+.phoneRow {
+    display: flex;
+    flex-direction: column;
+    gap: variable-generator.token(spacer-070);
+
+    @include mixins.media-s-and-up {
+        flex-direction: row;
+        gap: variable-generator.token(spacer-040);
+    }
+}
+
+// Spacing comes from the flex gaps, so the default Field margin is removed
+.fields .field,
+.fields .phoneRow > * {
+    margin-bottom: 0;
+}
+
+// Drops the fixed widths PhoneInput gives its fields, so they follow this layout
+.fields .phoneRow > * {
+    flex: none;
+    width: auto;
+}
+
+@include mixins.media-s-and-up {
+    .firstName {
+        flex: 5 1 0;
+    }
+
+    .lastName {
+        flex: 7 1 0;
+    }
+
+    .fields .phoneRow > :first-child:not(:last-child) {
+        flex: 4 1 0;
+    }
+
+    .fields .phoneRow > :last-child {
+        flex: 13 1 0;
+    }
+}
+
+.caption {
+    margin: 0;
+    color: variable-generator.token(color-label-secondary);
+
+    @include mixins.adyen-checkout-text-caption;
+
+    a {
+        color: inherit;
+    }
+}
