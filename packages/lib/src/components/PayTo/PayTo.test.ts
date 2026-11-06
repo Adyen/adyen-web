@@ -1,13 +1,13 @@
 import { render, screen } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
-import { http, HttpResponse } from 'msw';
-import { setupServer } from 'msw/node';
 import getDataset from '../../core/Services/get-dataset';
+import checkPaymentStatus from '../../core/Services/payment-status';
 import PayTo from './PayTo';
 import { MandateType } from './types';
 import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 
 jest.mock('../../core/Services/get-dataset');
+jest.mock('../../core/Services/payment-status');
 (getDataset as jest.Mock).mockImplementation(
     jest.fn(() => {
         return Promise.resolve([{ id: 'AUS', prefix: '+61' }]);
@@ -254,19 +254,14 @@ describe('PayTo', () => {
     });
 
     describe('PayTo await screen', () => {
-        const server = setupServer(
-            http.post('https://checkoutshopper-test.adyen.com/checkoutshopper/services/PaymentInitiation/v1/status', () => {
-                return HttpResponse.json({
-                    payload: 'mockPaymentData',
-                    resultCode: 'pending',
-                    type: 'pending'
-                });
-            }) as any
-        );
-
-        beforeAll(() => server.listen());
-        afterEach(() => server.resetHandlers());
-        afterAll(() => server.close());
+        beforeEach(() => {
+            const pendingStatus: { payload: string; resultCode: string; type: string } = {
+                payload: 'mockPaymentData',
+                resultCode: 'pending',
+                type: 'pending'
+            };
+            (checkPaymentStatus as jest.Mock).mockResolvedValue(pendingStatus);
+        });
 
         test('should render await screen and transaction and mandate amount should be different', async () => {
             const core = setupCoreMock();

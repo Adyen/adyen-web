@@ -38,7 +38,9 @@ class SrcSdkLoader implements ISrcSdkLoader {
         }
 
         return new Promise((resolve, reject) => {
-            const sdks: ISrcInitiator[] = this.schemes.map(scheme => getSchemeSdk(scheme, environment, this.customSdkConfiguration, analytics));
+            const sdks: ISrcInitiator[] = this.schemes
+                .map(scheme => getSchemeSdk(scheme, environment, this.customSdkConfiguration, analytics))
+                .filter((sdk): sdk is ISrcInitiator => sdk !== null);
             const loadScriptPromises = sdks.map(sdk => sdk.loadSdkScript());
 
             void Promise.allSettled(loadScriptPromises).then(loadScriptResponses => {

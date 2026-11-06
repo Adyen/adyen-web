@@ -5,7 +5,7 @@ import ThreeDS2Form from '../Form';
 import promiseTimeout from '../../../../utils/promiseTimeout';
 import getProcessMessageHandler from '../../../../utils/get-process-message-handler';
 import { THREEDS_METHOD_TIMEOUT, FAILED_METHOD_STATUS_RESOLVE_OBJECT_TIMEOUT, THREEDS2_NUM } from '../../constants';
-import { encodeBase64URL } from '../utils';
+import { encodeBase64URL, isDetachedFromDOM } from '../utils';
 import { DoFingerprint3DS2Props, DoFingerprint3DS2State } from './types';
 import { ThreeDS2FlowObject } from '../../types';
 
@@ -60,10 +60,20 @@ class DoFingerprint3DS2 extends Component<DoFingerprint3DS2Props, DoFingerprint3
         this.fingerPrintPromise.promise
             .then((resolveObject: ThreeDS2FlowObject) => {
                 window.removeEventListener('message', this.processMessageHandler);
+
+                if (isDetachedFromDOM(this.base)) {
+                    return;
+                }
+
                 this.props.onCompleteFingerprint(resolveObject);
             })
             .catch((rejectObject: ThreeDS2FlowObject) => {
                 window.removeEventListener('message', this.processMessageHandler);
+
+                if (isDetachedFromDOM(this.base)) {
+                    return;
+                }
+
                 this.props.onErrorFingerprint(rejectObject);
             });
     }

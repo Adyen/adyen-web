@@ -30,7 +30,7 @@ class Dropin extends Base {
 
     readonly pmList: Locator;
     readonly saveDetailsButton: Locator;
-    readonly payButton: Locator;
+    declare readonly payButton: Locator;
 
     protected _paymentMethods: Array<{ name: string; type: string }>;
     protected _storedPaymentMethods: Array<{ name: string; type: string; brand: string }>;
@@ -50,6 +50,19 @@ class Dropin extends Base {
 
     async isComponentVisible() {
         await this.pmList.waitFor({ state: 'visible' });
+    }
+
+    /**
+     * For a second (or further) Drop-in instance rendered on the same page as one already navigated
+     * to via goto() - lets it reuse the already-fetched payment methods instead of triggering its
+     * own navigation/sessions call.
+     */
+    setPaymentMethods(
+        paymentMethods: Array<{ name: string; type: string }>,
+        storedPaymentMethods: Array<{ name: string; type: string; brand: string }>
+    ) {
+        this._paymentMethods = paymentMethods;
+        this._storedPaymentMethods = storedPaymentMethods;
     }
 
     async goto(url?: string) {
@@ -92,7 +105,7 @@ class Dropin extends Base {
     async selectNonStoredPaymentMethod(pmType: string): Promise<{ paymentMethodDetailsLocator: Locator }> {
         const pmLabel = this.paymentMethods.find((pm: { type: string }) => pm.type === pmType).name;
 
-        const paymentMethodHeaderLocator = this.page
+        const paymentMethodHeaderLocator = this.rootElement
             .locator('.adyen-checkout__payment-methods-list--otherPayments')
             .getByRole('radio', { name: pmLabel })
             .filter({ has: this.page.getByText(pmLabel, { exact: true }) });

@@ -180,6 +180,19 @@ export const encodeBase64URL = (dataStr: string): string => {
 };
 
 /**
+ * Confirm if a component's root node is still connected to the DOM, r.e. the component being torn down
+ * incorrectly (without going through Preact's unmount lifecycle, e.g. a parent doing `el.innerHTML = ''`).
+ *
+ * Uses Node.isConnected rather than document.contains(), since the latter does not look into shadow roots
+ * and would always report "detached" for a component mounted inside an (attached) shadow tree.
+ *
+ * @param base - a Preact Component's `base` property, i.e. its rendered root DOM node
+ */
+export const isDetachedFromDOM = (base: Element | Text | undefined): boolean => {
+    return !base?.isConnected;
+};
+
+/**
  * Add props specifically needed for the type of 3DS2 flow: fingerprint or challenge
  *
  * @param actionSubtype - 3DS2 flow type: fingerprint or challenge

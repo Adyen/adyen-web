@@ -43,7 +43,7 @@ export default abstract class AbstractSrcInitiator implements ISrcInitiator {
     private scriptElement: Script | null = null;
 
     protected constructor(sdkUrl: string, customSdkConfiguration: CustomSdkConfiguration, analytics: IAnalytics) {
-        if (!sdkUrl) throw Error('AbstractSrcInitiator: Invalid SDK URL');
+        if (!sdkUrl) throw new Error('AbstractSrcInitiator: Invalid SDK URL');
 
         this.sdkUrl = sdkUrl;
         this.customSdkConfiguration = customSdkConfiguration;
@@ -64,7 +64,7 @@ export default abstract class AbstractSrcInitiator implements ISrcInitiator {
     }
 
     public removeSdkScript(): void {
-        this.scriptElement.remove();
+        this.scriptElement?.remove();
     }
 
     /**

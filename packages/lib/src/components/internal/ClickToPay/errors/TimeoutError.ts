@@ -21,7 +21,7 @@ class TimeoutError extends Error {
         this.isTimeoutTriggeredBySchemeSdk = options.isTimeoutTriggeredBySchemeSdk;
     }
 
-    public setCorrelationId(correlationId: string): void {
+    public setCorrelationId(correlationId: string | undefined): void {
         this.correlationId = correlationId;
     }
 

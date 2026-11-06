@@ -8,7 +8,7 @@ import './CtPInfo.scss';
 
 const CtPInfo = () => {
     const [isInfoModalOpen, setIsInfoModalOpen] = useState<boolean>(false);
-    const buttonRef = useRef<HTMLButtonElement>();
+    const buttonRef = useRef<HTMLButtonElement>(null);
     const { i18n } = useCoreContext();
     const getImage = useImage();
     const url = getImage({ imageFolder: 'components/' })('info');

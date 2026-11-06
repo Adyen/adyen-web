@@ -24,21 +24,21 @@ type CtPCardsProps = {
     onDisplayCardComponent?(): void;
 };
 
-function getErrorLabel(errorCode: string, i18n: Language): string {
-    if (!errorCode) return null;
+function getErrorLabel(errorCode: string | null, i18n: Language): string | undefined {
+    if (!errorCode) return undefined;
 
     const errorLabel = i18n.get(`ctp.errors.${errorCode}`);
     if (errorLabel.includes('ctp.errors')) return i18n.get(`ctp.errors.UNKNOWN_ERROR`);
     return errorLabel;
 }
 
-function getPayButtonLabel(i18n: Language, amount: PaymentAmount, checkoutCard?: ShopperCard): string | null {
+function getPayButtonLabel(i18n: Language, amount: PaymentAmount | undefined, checkoutCard?: ShopperCard): string | undefined {
     if (!checkoutCard) return i18n.get('payButton');
     if (!isMobile())
         return i18n.get('payButton.with', {
             values: { value: amountLabel(i18n, amount), maskedData: `•••• ${checkoutCard?.panLastFour}` }
         });
-    return null;
+    return undefined;
 }
 
 const CtPCards = ({ onDisplayCardComponent }: Readonly<CtPCardsProps>) => {
@@ -46,7 +46,7 @@ const CtPCards = ({ onDisplayCardComponent }: Readonly<CtPCardsProps>) => {
     const getImage = useImage();
     const { cards, checkout, isCtpPrimaryPaymentMethod, status, onSubmit, onSetStatus, onError } = useClickToPayContext();
     const [checkoutCard, setCheckoutCard] = useState<ShopperCard | undefined>(cards.find(card => !card.isExpired) || cards[0]);
-    const [errorCode, setErrorCode] = useState<string>(null);
+    const [errorCode, setErrorCode] = useState<string | null>(null);
     const isEveryCardExpired = cards.every(card => card.isExpired);
     const [isShopperCheckingOutWithCtp, setIsShopperCheckingOutWithCtp] = useState<boolean>(false);
     const { amount } = useAmount();
@@ -78,7 +78,7 @@ const CtPCards = ({ onDisplayCardComponent }: Readonly<CtPCardsProps>) => {
         }
     }, [checkout, checkoutCard]);
 
-    const handleOnChangeCard = useCallback((card: ShopperCard) => {
+    const handleOnChangeCard = useCallback((card: ShopperCard | undefined) => {
         setCheckoutCard(card);
     }, []);
 
@@ -125,8 +125,9 @@ const CtPCards = ({ onDisplayCardComponent }: Readonly<CtPCardsProps>) => {
                         status={status}
                         variant={isCtpPrimaryPaymentMethod ? 'primary' : 'secondary'}
                         icon={
-                            cards.length !== 0 &&
-                            getImage({ imageFolder: 'components/' })(isCtpPrimaryPaymentMethod ? `${PREFIX}lock` : `${PREFIX}lock_black`)
+                            cards.length !== 0
+                                ? getImage({ imageFolder: 'components/' })(isCtpPrimaryPaymentMethod ? `${PREFIX}lock` : `${PREFIX}lock_black`)
+                                : undefined
                         }
                         onClick={doCheckout}
                         onKeyDown={handlePayButtonKeyDown}

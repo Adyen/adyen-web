@@ -73,14 +73,16 @@ const ClickToPayProvider = ({
 
     const checkout = useCallback(
         async (card: ShopperCard) => {
-            return await ctpService?.checkout(card);
+            if (!ctpService) throw new AdyenCheckoutError('ERROR', 'ClickToPay service is not initialized');
+            return await ctpService.checkout(card);
         },
         [ctpService]
     );
 
     const verifyIfShopperIsEnrolled = useCallback(
         async (shopperIdentity: IdentityLookupParams) => {
-            return await ctpService?.verifyIfShopperIsEnrolled(shopperIdentity);
+            if (!ctpService) throw new AdyenCheckoutError('ERROR', 'ClickToPay service is not initialized');
+            return await ctpService.verifyIfShopperIsEnrolled(shopperIdentity);
         },
         [ctpService]
     );
@@ -91,7 +93,7 @@ const ClickToPayProvider = ({
 
     const updateStoreCookiesConsent = useCallback(
         (shouldStore: boolean) => {
-            ctpService.updateStoreCookiesConsent(shouldStore);
+            ctpService?.updateStoreCookiesConsent(shouldStore);
         },
         [ctpService]
     );
@@ -104,14 +106,14 @@ const ClickToPayProvider = ({
                 onError,
                 onSetStatus,
                 configuration,
-                isStoringCookies: ctpService?.storeCookies,
+                isStoringCookies: ctpService?.storeCookies ?? false,
                 isStandaloneComponent,
                 isCtpPrimaryPaymentMethod,
                 setIsCtpPrimaryPaymentMethod,
                 ctpState,
                 verifyIfShopperIsEnrolled,
-                cards: ctpService?.shopperCards,
-                schemes: ctpService?.schemes,
+                cards: ctpService?.shopperCards ?? [],
+                schemes: ctpService?.schemes ?? [],
                 otpMaskedContact: ctpService?.identityValidationData?.maskedShopperContact,
                 otpNetwork: ctpService?.identityValidationData?.selectedNetwork,
                 checkout,

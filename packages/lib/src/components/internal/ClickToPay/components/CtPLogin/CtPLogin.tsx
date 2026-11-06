@@ -14,11 +14,11 @@ import { isSrciError } from '../../services/utils';
 const CtPLogin = (): h.JSX.Element => {
     const { i18n } = useCoreContext();
     const { isCtpPrimaryPaymentMethod, setIsCtpPrimaryPaymentMethod, verifyIfShopperIsEnrolled, startIdentityValidation } = useClickToPayContext();
-    const [shopperLogin, setShopperLogin] = useState<string>(null);
+    const [shopperLogin, setShopperLogin] = useState<string>('');
     const [isValid, setIsValid] = useState<boolean>(false);
-    const [errorCode, setErrorCode] = useState<string>(null);
+    const [errorCode, setErrorCode] = useState<string | null>(null);
     const [isLoggingIn, setIsLoggingIn] = useState<boolean>(false);
-    const [loginInputHandlers, setLoginInputHandlers] = useState<CtPLoginInputHandlers>(null);
+    const [loginInputHandlers, setLoginInputHandlers] = useState<CtPLoginInputHandlers | null>(null);
 
     const onSetLoginInputHandlers = useCallback((handlers: CtPLoginInputHandlers) => {
         setLoginInputHandlers(handlers);
@@ -38,7 +38,7 @@ const CtPLogin = (): h.JSX.Element => {
         setErrorCode(null);
 
         if (!isValid) {
-            loginInputHandlers.validateInput();
+            loginInputHandlers?.validateInput();
             return;
         }
 
@@ -82,14 +82,14 @@ const CtPLogin = (): h.JSX.Element => {
                 onChange={handleOnLoginChange}
                 onSetInputHandlers={onSetLoginInputHandlers}
                 disabled={isLoggingIn}
-                errorMessage={errorCode && i18n.get(`ctp.errors.${errorCode}`)}
+                errorMessage={errorCode ? i18n.get(`ctp.errors.${errorCode}`) : undefined}
                 onPressEnter={handleOnLoginButtonClick}
             />
 
             <Button
                 label={i18n.get('continue')}
                 variant={isCtpPrimaryPaymentMethod ? 'primary' : 'secondary'}
-                status={isLoggingIn && 'loading'}
+                status={isLoggingIn ? 'loading' : undefined}
                 onClick={() => {
                     void handleOnLoginButtonClick();
                 }}

@@ -23,11 +23,11 @@ type ModalProps = {
     /**
      * Reference to the element that should be focused when the modal is opened
      */
-    focusFirst: HTMLElement;
+    focusFirst: HTMLElement | undefined;
     /**
      * Reference to the element that should be focused when the modal is closed
      */
-    focusAfterClose: HTMLElement;
+    focusAfterClose: HTMLElement | null;
 };
 
 const Modal = ({
