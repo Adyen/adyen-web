@@ -153,7 +153,7 @@ describe('AmazonPay', () => {
             await new Promise(process.nextTick);
 
             expect(beforeSubmitMock).toHaveBeenCalledTimes(1);
-            expect(core.session.submitPayment).not.toHaveBeenCalled();
+            expect(core.session?.submitPayment).not.toHaveBeenCalled();
             expect(setElementStatusSpy).toHaveBeenLastCalledWith('ready');
             expect(onPaymentFailedMock).not.toHaveBeenCalled();
         });
