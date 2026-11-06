@@ -7,6 +7,6 @@ interface IGetStoryUrl {
 }
 
 export const getStoryUrl = ({ baseUrl, componentConfig, checkoutConfig }: IGetStoryUrl) => {
-    const query = (config, key) => (config ? `&${key}=${JSON.stringify(config)}` : '');
+    const query = (config, key) => (config ? `&${key}=${encodeURIComponent(JSON.stringify(config))}` : '');
     return `${baseUrl}${query(checkoutConfig, 'checkoutConfiguration')}${query(componentConfig, 'componentConfiguration')}`;
 };
