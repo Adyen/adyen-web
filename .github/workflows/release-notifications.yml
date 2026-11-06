@@ -206,7 +206,7 @@ jobs:
 
   npm-publish-release-notes:
     needs: resolve-version
-    if: github.event_name == 'workflow_run' && github.event.workflow_run.name == 'Publish Package' && github.event.workflow_run.conclusion == 'success'
+    if: github.event_name == 'workflow_run' && github.event.workflow_run.name == 'Publish Package' && github.event.workflow_run.conclusion == 'success' && !contains(needs.resolve-version.outputs.version, 'alpha')
     runs-on: ubuntu-latest
     permissions:
       contents: read
