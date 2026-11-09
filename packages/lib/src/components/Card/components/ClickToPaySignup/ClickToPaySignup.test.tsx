@@ -45,11 +45,17 @@ const SignupWithState = ({
 const renderSignup = (props: SignupTestProps = {}) => {
     const core = setupCoreMock();
 
-    return render(
+    const renderTree = (treeProps: SignupTestProps) => (
         <CoreProvider i18n={core.modules.i18n} loadingContext="test" resources={core.modules.resources}>
-            <SignupWithState onSubmitAnalytics={jest.fn()} {...props} />
+            <SignupWithState onSubmitAnalytics={jest.fn()} {...treeProps} />
         </CoreProvider>
     );
+
+    const { rerender } = render(renderTree(props));
+
+    return {
+        rerenderWith: (newProps: SignupTestProps) => rerender(renderTree(newProps))
+    };
 };
 
 const getConsentCheckbox = () => screen.getByRole('checkbox', { name: /Save my information with Click to Pay/ });
@@ -262,6 +268,17 @@ describe('ClickToPaySignup', () => {
             await user.type(screen.getByRole('textbox', { name: 'Last name' }), 'Doe');
 
             expect(getSignupEvents(onSubmitAnalytics, InfoEventType.displayed)).toHaveLength(1);
+        });
+
+        test('should not send another displayed event when the analytics callback changes while visible', () => {
+            const firstOnSubmitAnalytics = jest.fn();
+            const secondOnSubmitAnalytics = jest.fn();
+            const { rerenderWith } = renderSignup({ onSubmitAnalytics: firstOnSubmitAnalytics });
+
+            rerenderWith({ onSubmitAnalytics: secondOnSubmitAnalytics });
+
+            expect(getSignupEvents(firstOnSubmitAnalytics, InfoEventType.displayed)).toHaveLength(1);
+            expect(getSignupEvents(secondOnSubmitAnalytics, InfoEventType.displayed)).toHaveLength(0);
         });
 
         test('should send a clicked event with the new consent value when the consent is toggled', async () => {
