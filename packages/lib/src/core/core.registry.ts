@@ -69,7 +69,7 @@ class Registry implements IRegistry {
                 return memo;
             }
 
-            const supportedTxVariants = [component.type, ...component.txVariants].filter(txVariant => txVariant);
+            const supportedTxVariants = [component.type, ...component.txVariants].filter((txVariant): txVariant is string => !!txVariant);
 
             supportedTxVariants.forEach(txVariant => {
                 memo = {

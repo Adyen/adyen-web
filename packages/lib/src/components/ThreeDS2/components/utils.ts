@@ -198,7 +198,7 @@ export const isDetachedFromDOM = (base: Element | Text | undefined): boolean => 
  * @param actionSubtype - 3DS2 flow type: fingerprint or challenge
  * @param props - object from which to extract particular properties
  */
-export const get3DS2FlowProps = (actionSubtype: string, props: ThreeDS2ActionProps): ThreeDS2FlowProps => {
+export const get3DS2FlowProps = (actionSubtype: string | undefined, props: ThreeDS2ActionProps): ThreeDS2FlowProps => {
     if (actionSubtype === 'fingerprint') {
         return {
             showSpinner: !props.isDropin,

@@ -174,11 +174,11 @@ class Core implements ICore {
      * @param details - Details object containing the redirectResult
      */
     public submitDetails(details: AdditionalDetailsData['data']): void {
-        let promise = null;
+        let promise: Promise<unknown> | null = null;
 
         if (this.options.onAdditionalDetails) {
             promise = new Promise((resolve, reject) => {
-                this.options.onAdditionalDetails({ data: details }, undefined, { resolve, reject });
+                this.options.onAdditionalDetails?.({ data: details }, undefined, { resolve, reject });
             });
         }
 
@@ -189,7 +189,7 @@ class Core implements ICore {
             });
         }
 
-        if (!promise) {
+        if (promise === null) {
             this.options.onError?.(
                 new AdyenCheckoutError(
                     'IMPLEMENTATION_ERROR',
@@ -313,8 +313,8 @@ class Core implements ICore {
      * @param secondaryAmount - Optional secondary amount for display purposes (e.g., converted currency)
      * @internal
      */
-    private triggerAmountUpdate(amount: PaymentAmount, secondaryAmount?: PaymentAmount): void {
-        if (!isAmountValid(amount)) {
+    private triggerAmountUpdate(amount: PaymentAmount | undefined, secondaryAmount?: PaymentAmount): void {
+        if (!amount || !isAmountValid(amount)) {
             console.warn('Core update(): Update canceled. Invalid amount object');
             return;
         }

@@ -61,16 +61,14 @@ describe('PaymentMethodsResponse', () => {
             const pmResponse = new PaymentMethods(splitFundingResponse);
             // eslint-disable-next-line testing-library/await-async-queries
             const result = pmResponse.findByFundingSource('card', 'credit');
-            expect(result.name).toBe('Credit Card');
-            expect(result.fundingSource).toBe('credit');
+            expect(result).toMatchObject({ name: 'Credit Card', fundingSource: 'credit' });
         });
 
         test('should return the debit payment method when fundingSource is debit', () => {
             const pmResponse = new PaymentMethods(splitFundingResponse);
             // eslint-disable-next-line testing-library/await-async-queries
             const result = pmResponse.findByFundingSource('card', 'debit');
-            expect(result.name).toBe('Debit Card');
-            expect(result.fundingSource).toBe('debit');
+            expect(result).toMatchObject({ name: 'Debit Card', fundingSource: 'debit' });
         });
     });
 });
