@@ -17,10 +17,10 @@ export const toHaveScreenshot = async (
         skipWaitForImages?: boolean;
 
         /**
-         * When true, skips moving the mouse to (0, 0) before taking the screenshot.
-         * Use this when the screenshot intentionally captures a state with mouse hover.
+         * Whether to move the mouse to (0, 0) before taking the screenshot to avoid hover states.
+         * Defaults to true. Set to false if the screenshot intentionally captures a hover state.
          */
-        disableMousePositionReset?: boolean;
+        resetMousePosition?: boolean;
 
         /**
          * When set to `"disabled"`, stops CSS animations, CSS transitions and Web Animations. Animations get different
