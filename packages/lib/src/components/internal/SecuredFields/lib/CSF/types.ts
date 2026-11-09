@@ -12,7 +12,7 @@ export interface CSFReturnObject {
     setFocusOnFrame: (pFieldType: SFFieldType) => void;
     isValidated: (pFieldType: SFFieldType, code: string) => void;
     destroy: () => void;
-    brandsFromBinLookup: (binLookupResponse: BinLookupResponse, resetObj: SingleBrandResetObject) => void;
+    brandsFromBinLookup: (binLookupResponse: BinLookupResponse, resetObj: SingleBrandResetObject | null) => void;
     hasUnsupportedCard: (pFieldType: SFFieldType, code: string) => void;
     addSecuredField: (pFieldType: SFFieldType) => void;
     removeSecuredField: (pFieldType: SFFieldType) => void;

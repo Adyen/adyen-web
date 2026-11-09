@@ -32,14 +32,14 @@ import { TxVariants } from '../../../tx-variants';
  * Initialises & handles the client-side part of SecuredFields
  */
 class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
-    private readonly csfLoadFailTimeout: number;
+    private readonly csfLoadFailTimeout: number | null;
     private readonly csfLoadFailTimeoutMS: number;
-    private readonly csfConfigFailTimeout: number;
+    private readonly csfConfigFailTimeout: number | null;
     private readonly csfConfigFailTimeoutMS: number;
     private numCharsInField: object;
     private rootNode: HTMLElement;
     private numDateFields: number;
-    private csf: CSFReturnObject;
+    private csf: CSFReturnObject | null;
     private readonly handleOnLoad: (obj: CardLoadData) => void;
     private readonly handleOnConfigSuccess: (obj: CardConfigSuccessData) => void;
     private readonly handleOnFieldValid: (obj: CardFieldValidData) => void;
@@ -145,8 +145,8 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
 
     public componentWillUnmount(): void {
         this.csf = null;
-        clearTimeout(this.csfLoadFailTimeout);
-        clearTimeout(this.csfConfigFailTimeout);
+        clearTimeout(this.csfLoadFailTimeout ?? undefined);
+        clearTimeout(this.csfConfigFailTimeout ?? undefined);
     }
 
     private initializeCSF(root: HTMLElement): void {
@@ -154,7 +154,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
 
         // For loading securedFields from local server during development
         if (process.env.NODE_ENV === 'development' && process.env.__SF_ENV__ !== 'build') {
-            loadingContext = process.env.__SF_ENV__;
+            loadingContext = process.env.__SF_ENV__ ?? loadingContext;
         }
 
         const csfSetupObj: CSFSetupObject = {
@@ -192,12 +192,12 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
             legacyInputMode: this.props.legacyInputMode,
             minimumExpiryDate: this.props.minimumExpiryDate,
             implementationType: this.props.implementationType || 'components', // to distinguish between 'regular' and 'custom' card component
-            forceCompat: this.props.forceCompat,
-            maskSecurityCode: this.props.maskSecurityCode,
-            exposeExpiryDate: this.props.exposeExpiryDate,
+            forceCompat: !!this.props.forceCompat,
+            maskSecurityCode: !!this.props.maskSecurityCode,
+            exposeExpiryDate: !!this.props.exposeExpiryDate,
             shouldDisableIOSArrowKeys: !!this.props.disableIOSArrowKeys, // convert whether function has been defined into a boolean
             placeholders: this.props.placeholders ?? {},
-            showContextualElement: this.props.showContextualElement
+            showContextualElement: !!this.props.showContextualElement
         };
 
         this.csf = initCSF(csfSetupObj);
@@ -213,7 +213,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
                 // Hide the spinner
                 this.setState({ status: 'csfLoadFailure' });
                 // Report the error
-                this.props.onError(new AdyenCheckoutError('ERROR', 'secured field iframes have failed to load'));
+                this.props.onError?.(new AdyenCheckoutError('ERROR', 'secured field iframes have failed to load'));
             }
         }, this.csfLoadFailTimeoutMS);
     }
@@ -235,11 +235,13 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
             });
 
             this.setState(setRemovedFieldState, () => {
-                this.props.onChange(this.state);
+                this.props.onChange?.(this.state);
             });
 
-            this.csf.removeSecuredField(ENCRYPTED_PWD_FIELD);
-            this.csf.setKCPStatus(false);
+            if (this.csf) {
+                this.csf.removeSecuredField(ENCRYPTED_PWD_FIELD);
+                this.csf.setKCPStatus(false);
+            }
         }
 
         // Wasn't korean, now is - show password field
@@ -251,11 +253,13 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
             });
 
             this.setState(setAddedFieldState, () => {
-                this.props.onChange(this.state);
+                this.props.onChange?.(this.state);
             });
 
-            this.csf.addSecuredField(ENCRYPTED_PWD_FIELD);
-            this.csf.setKCPStatus(true);
+            if (this.csf) {
+                this.csf.addSecuredField(ENCRYPTED_PWD_FIELD);
+                this.csf.setKCPStatus(true);
+            }
         }
     }
 
@@ -289,7 +293,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
     }
 
     public sfIsOptionalOrHidden(fieldType: string): boolean {
-        return this.csf.sfIsOptionalOrHidden(fieldType as SFFieldType);
+        return this.csf?.sfIsOptionalOrHidden(fieldType as SFFieldType) ?? false;
     }
 
     public destroy(): void {
@@ -320,10 +324,10 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
      * Map SF errors to ValidationRuleResult-like objects, for CardInput component
      */
     public mapErrorsToValidationRuleResult(): SFStateErrorObj {
-        const fieldNames: string[] = Object.keys(this.state.errors);
+        const fieldNames: string[] = Object.keys(this.state.errors ?? {});
 
         const sfStateErrorsObj = fieldNames.reduce((acc, fieldName) => {
-            const errorCode = this.state.errors[fieldName];
+            const errorCode = this.state.errors?.[fieldName];
             if (errorCode) {
                 acc[fieldName] = {
                     isValid: false,
@@ -333,7 +337,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
                     // CVC's error copy is brand-dependent (Amex vs. others), so resolve the brand-aware
                     // key here too - otherwise this errorI18n value (consumed by the SR-live-panel and
                     // the public state.errors.<field>.errorI18n API) would always report the non-Amex text.
-                    errorI18n: this.props.i18n.get(resolveCVCErrorKey(errorCode, this.state.brand === 'amex')),
+                    errorI18n: this.props.i18n?.get(resolveCVCErrorKey(errorCode, this.state.brand === 'amex')),
                     error: errorCode,
                     rootNode: this.rootNode,
                     ...(this.state.detectedUnsupportedBrands && { detectedBrands: this.state.detectedUnsupportedBrands })
@@ -381,7 +385,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
         if (mustResetDedicatedBrand) {
             // resetObject.brand will be the value of the brand whose logo we want to reshow in the UI
             this.setState(resetObject, () => {
-                this.props.onChange(this.state);
+                this.props.onChange?.(this.state);
             });
         }
 
