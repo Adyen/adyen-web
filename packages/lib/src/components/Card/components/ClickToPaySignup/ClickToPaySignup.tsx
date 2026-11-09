@@ -85,7 +85,13 @@ export function ClickToPaySignup({
         onDetailsChange(getSignupDetails(data));
     }, [data, onDetailsChange]);
 
+    // Guards the displayed event to once per mount, since a new onSubmitAnalytics identity re-runs the effect
+    const hasSentDisplayedEventRef = useRef<boolean>(false);
+
     useEffect(() => {
+        if (hasSentDisplayedEventRef.current) return;
+        hasSentDisplayedEventRef.current = true;
+
         onSubmitAnalytics(
             new AnalyticsInfoEvent({
                 component: TxVariants.scheme,
@@ -94,7 +100,7 @@ export function ClickToPaySignup({
                 brand: CLICK_TO_PAY_SIGNUP_BRAND
             })
         );
-    }, []);
+    }, [onSubmitAnalytics]);
 
     const handleConsentChange = useCallback(() => {
         const newValue = !checked;
