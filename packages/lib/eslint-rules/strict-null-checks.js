@@ -100,7 +100,7 @@ const STRICT_NULL_CHECKS_BACKLOG = [
     'src/components/internal/SecuredFields/lib/CSF/utils/tabbing/tabScenarioGiftCard.ts',
     'src/components/internal/SecuredFields/lib/CSF/utils/tabbing/tabScenarioKCP.ts',
     'src/components/internal/SecuredFields/lib/CSF/utils/tabbing/utils.ts',
-    'src/components/internal/SecuredFields/lib/securedField/SecuredField.ts',
+    // 'src/components/internal/SecuredFields/lib/securedField/SecuredField.ts',
     // 'src/components/internal/SecuredFields/SFP/SecuredFieldsProvider.ts',
     // 'src/components/internal/SecuredFields/SFP/SecuredFieldsProviderHandlers.ts',
     // 'src/components/internal/SecuredFields/SFP/SFPUtils.ts',
