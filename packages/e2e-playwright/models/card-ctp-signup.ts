@@ -1,3 +1,4 @@
+import { expect } from '@playwright/test';
 import type { Locator, Page } from '@playwright/test';
 import LANG from '../../server/translations/en-US.json';
 import { Card } from './card';
@@ -93,9 +94,11 @@ class CardWithClickToPaySignup extends Card {
     }
 
     private async setSignupConsent(checked: boolean) {
-        if ((await this.signupConsentCheckbox.isChecked()) === checked) return;
-        await this.signupConsentCheckbox.focus();
-        await this.page.keyboard.press('Space');
+        await expect(this.signupConsentCheckbox).toBeVisible();
+        if ((await this.signupConsentCheckbox.isChecked()) !== checked) {
+            await this.signupConsentCheckbox.press('Space');
+        }
+        await expect(this.signupConsentCheckbox).toBeChecked({ checked });
     }
 
     async fillSignupDetails({ firstName, lastName, shopperEmail, mobileNumber }: ClickToPaySignupFields) {
@@ -109,6 +112,7 @@ class CardWithClickToPaySignup extends Card {
      * Reads the payment data the Card would submit, through the Storybook window bridge, without submitting a payment
      */
     async getClickToPaySignupPayload(): Promise<ClickToPaySignupPayload> {
+        await this.page.waitForFunction(() => Boolean(globalThis.component?.data?.paymentMethod));
         return this.page.evaluate(() => {
             const { paymentMethod, shopperName, shopperEmail, telephoneNumber } = globalThis.component.data;
             return {
