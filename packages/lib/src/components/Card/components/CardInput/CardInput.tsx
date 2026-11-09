@@ -647,6 +647,7 @@ const CardInput = (props: Readonly<CardInputProps>) => {
                     checked={clickToPaySignupConsent}
                     onConsentChange={setClickToPaySignupConsent}
                     onDetailsChange={setClickToPaySignupDetails}
+                    onSubmitAnalytics={props.onSubmitAnalytics}
                 />
             )}
 

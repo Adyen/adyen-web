@@ -5,6 +5,7 @@ import { useCoreContext } from '../../../../core/Context/CoreProvider';
 import useImage from '../../../../core/Context/useImage';
 import useForm from '../../../../utils/useForm';
 import { interpolateElement } from '../../../../language/utils';
+import { AnalyticsInfoEvent, InfoEventType, UiTarget } from '../../../../core/Analytics/events/AnalyticsInfoEvent';
 import Checkbox from '../../../internal/FormFields/Checkbox';
 import Field from '../../../internal/FormFields/Field';
 import InputText from '../../../internal/FormFields/InputText';
@@ -14,7 +15,8 @@ import { PhoneInputFields, usePhonePrefixes } from '../../../internal/PhoneInput
 import { phoneFormatters } from '../../../internal/PhoneInput/validate';
 import { CtPInfoModal } from '../../../internal/ClickToPay/components/CtPInfo/CtPInfoModal';
 import { LabelOnlyDisclaimerMessage } from '../../../internal/DisclaimerMessage/DisclaimerMessage';
-import { MASTERCARD_PRIVACY_NOTICE_URL, MASTERCARD_TERMS_URL } from './constants';
+import { TxVariants } from '../../../tx-variants';
+import { CLICK_TO_PAY_SIGNUP_BRAND, MASTERCARD_PRIVACY_NOTICE_URL, MASTERCARD_TERMS_URL } from './constants';
 import { getPhonePrefixForCountry, getSignupDetails, splitTelephoneNumber } from './utils';
 import type { ValidatorRules } from '../../../../utils/Validator/types';
 import type { ClickToPaySignupFormData, ClickToPaySignupProps } from './types';
@@ -43,7 +45,8 @@ export function ClickToPaySignup({
     countryCode,
     checked,
     onConsentChange,
-    onDetailsChange
+    onDetailsChange,
+    onSubmitAnalytics
 }: Readonly<ClickToPaySignupProps>) {
     const { i18n, loadingContext } = useCoreContext();
     const getImage = useImage();
@@ -82,9 +85,31 @@ export function ClickToPaySignup({
         onDetailsChange(getSignupDetails(data));
     }, [data, onDetailsChange]);
 
+    useEffect(() => {
+        onSubmitAnalytics(
+            new AnalyticsInfoEvent({
+                component: TxVariants.scheme,
+                type: InfoEventType.displayed,
+                target: UiTarget.clickToPaySignupConsentToggle,
+                brand: CLICK_TO_PAY_SIGNUP_BRAND
+            })
+        );
+    }, []);
+
     const handleConsentChange = useCallback(() => {
-        onConsentChange(!checked);
-    }, [checked, onConsentChange]);
+        const newValue = !checked;
+        onConsentChange(newValue);
+
+        onSubmitAnalytics(
+            new AnalyticsInfoEvent({
+                component: TxVariants.scheme,
+                type: InfoEventType.clicked,
+                target: UiTarget.clickToPaySignupConsentToggle,
+                brand: CLICK_TO_PAY_SIGNUP_BRAND,
+                selectedValue: newValue ? 'checked' : 'unchecked'
+            })
+        );
+    }, [checked, onConsentChange, onSubmitAnalytics]);
 
     const openInfoModal = useCallback((event: h.JSX.TargetedMouseEvent<HTMLButtonElement>) => {
         // The button sits inside the checkbox label, so the click must not also toggle the checkbox

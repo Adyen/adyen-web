@@ -10,6 +10,7 @@ import { setupCoreMock } from '../../../../../config/testMocks/setup-core-mock';
 import initCSF from '../../../internal/SecuredFields/lib/CSF';
 import { ClickToPayContext, IClickToPayContext } from '../../../internal/ClickToPay/context/ClickToPayContext';
 import { CtpState } from '../../../internal/ClickToPay/services/ClickToPayService';
+import { InfoEventType, UiTarget } from '../../../../core/Analytics/events/AnalyticsInfoEvent';
 import type { CardInputProps, CardInputRef } from './types';
 import type { BinLookupResponse } from '../../types';
 import type { FastlaneSignupConfiguration } from '../../../PayPalFastlane/types';
@@ -319,6 +320,63 @@ describe('CardInput - Click to Pay sign up', () => {
             await processBinLookup(MC_RESPONSE);
 
             expect(getLastClickToPaySignupState()).toBeUndefined();
+        });
+    });
+
+    describe('analytics', () => {
+        const getDisplayedEvents = (onSubmitAnalytics: jest.Mock) =>
+            onSubmitAnalytics.mock.calls.filter(
+                ([event]) => event.type === InfoEventType.displayed && event.target === UiTarget.clickToPaySignupConsentToggle
+            );
+
+        test('should send a displayed event when the sign up is shown', async () => {
+            const onSubmitAnalytics = jest.fn();
+            renderCardInput({ onSubmitAnalytics });
+            await processBinLookup(MC_RESPONSE);
+
+            expect(getDisplayedEvents(onSubmitAnalytics)).toHaveLength(1);
+            expect(onSubmitAnalytics).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    component: 'scheme',
+                    type: InfoEventType.displayed,
+                    target: UiTarget.clickToPaySignupConsentToggle,
+                    brand: 'mc'
+                })
+            );
+        });
+
+        test('should send one displayed event for each change from hidden to visible', async () => {
+            const onSubmitAnalytics = jest.fn();
+            renderCardInput({ onSubmitAnalytics });
+
+            await processBinLookup(MC_RESPONSE);
+            await processBinLookup(VISA_RESPONSE);
+            await processBinLookup(MC_RESPONSE);
+
+            expect(getDisplayedEvents(onSubmitAnalytics)).toHaveLength(2);
+        });
+
+        test('should not send another displayed event when re-rendered while visible', async () => {
+            const onSubmitAnalytics = jest.fn();
+            const { rerenderWith } = renderCardInput({ onSubmitAnalytics });
+            await processBinLookup(MC_RESPONSE);
+
+            rerenderWith(CtpState.NotAvailable, { onSubmitAnalytics });
+            await processBinLookup(MC_RESPONSE);
+
+            expect(getDisplayedEvents(onSubmitAnalytics)).toHaveLength(1);
+        });
+
+        test.each([
+            ['a brand other than Mastercard is detected', {}, CtpState.NotAvailable, VISA_RESPONSE],
+            ['the sign up is not available', { isClickToPaySignupAvailable: false }, CtpState.NotAvailable, MC_RESPONSE],
+            ['the shopper is recognized by Click to Pay', {}, CtpState.Ready, MC_RESPONSE]
+        ])('should not send sign up events while hidden because %s', async (_, props, ctpState, response) => {
+            const onSubmitAnalytics = jest.fn();
+            renderCardInput({ ...props, ctpState, onSubmitAnalytics });
+            await processBinLookup(response);
+
+            expect(onSubmitAnalytics).not.toHaveBeenCalledWith(expect.objectContaining({ target: UiTarget.clickToPaySignupConsentToggle }));
         });
     });
 
