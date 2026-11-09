@@ -239,7 +239,7 @@ class Core implements ICore {
      * @returns new UIElement
      */
     public createFromAction(action: PaymentAction, options: CreateFromActionOptions = {}): UIElement {
-        if (!action || !action.type) {
+        if (!action?.type) {
             if (hasOwnProperty(action, 'action') && hasOwnProperty(action, 'resultCode')) {
                 throw new Error(
                     'createFromAction::Invalid Action - the passed action object itself has an "action" property and ' +
@@ -249,27 +249,22 @@ class Core implements ICore {
             throw new Error('createFromAction::Invalid Action - the passed action object does not have a "type" property');
         }
 
-        if (action.type) {
-            // 'threeDS2' OR 'qrCode', 'voucher', 'redirect', 'await', 'bankTransfer`
-            const component = action.type === THREEDS2_FULL ? `${action.type}${action.subtype}` : action.paymentMethodType;
+        const component = action.type === THREEDS2_FULL ? `${action.type}${action.subtype}` : action.paymentMethodType;
 
-            const event = new AnalyticsLogEvent({
-                type: LogEventType.action,
-                subType: AnalyticsLogEvent.getSubtypeFromActionType(action.type),
-                message: `${component} action was handled by the SDK`,
-                component
-            });
-            this.modules.analytics.sendAnalytics(event);
+        const event = new AnalyticsLogEvent({
+            type: LogEventType.action,
+            subType: AnalyticsLogEvent.getSubtypeFromActionType(action.type),
+            message: `${component} action was handled by the SDK`,
+            component
+        });
+        this.modules.analytics.sendAnalytics(event);
 
-            const props = {
-                ...this.getCorePropsForComponent(),
-                ...options
-            };
+        const props = {
+            ...this.getCorePropsForComponent(),
+            ...options
+        };
 
-            return getComponentForAction(this, registry, action, props);
-        }
-
-        return this.handleCreateError();
+        return getComponentForAction(this, registry, action, props);
     }
 
     /**
@@ -353,7 +348,7 @@ class Core implements ICore {
      * @internal
      * Create or update the config object passed when AdyenCheckout is initialised (environment, clientKey, etc...)
      */
-    private setOptions = (options: CoreConfiguration): void => {
+    private readonly setOptions = (options: CoreConfiguration): void => {
         this.options = {
             ...this.options,
             ...options,
@@ -432,20 +427,6 @@ class Core implements ICore {
         if (element) {
             this.components.push(element);
         }
-    }
-
-    /**
-     * @internal
-     */
-    private handleCreateError(paymentMethod?): never {
-        const paymentMethodName = paymentMethod?.name ?? 'The passed payment method';
-        const errorMessage = paymentMethod
-            ? `${paymentMethodName} is not a valid Checkout Component. What was passed as a txVariant was: ${JSON.stringify(
-                  paymentMethod
-              )}. Check if this payment method is configured in the Backoffice or if the txVariant is a valid one`
-            : 'No Payment Method component was passed';
-
-        throw new Error(errorMessage);
     }
 
     private createPaymentMethodsList(paymentMethodsResponse?: PaymentMethodsResponse): void {
