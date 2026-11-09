@@ -104,13 +104,13 @@ export const toHaveScreenshot = async (
         return;
     }
 
-    const { skipWaitForImages, disableMousePositionReset, ...screenshotOptions } = options ?? {};
+    const { skipWaitForImages, resetMousePosition = true, ...screenshotOptions } = options ?? {};
 
     if (!skipWaitForImages) {
         await waitForImageLoaded(locator);
     }
 
-    if (!disableMousePositionReset) {
+    if (resetMousePosition) {
         await locator.page().mouse.move(0, 0);
     }
 
