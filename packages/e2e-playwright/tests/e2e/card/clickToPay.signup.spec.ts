@@ -2,7 +2,7 @@ import { test, expect } from '../../../fixtures/card.fixture';
 import { URL_MAP } from '../../../fixtures/URL_MAP';
 import { getStoryUrl } from '../../utils/getStoryUrl';
 import { toHaveScreenshot } from '../../utils/assertions';
-import { clickToPaySdksMock } from '../../../mocks/clickToPay/clickToPay.mock';
+import { mastercardClickToPaySdkMock } from '../../../mocks/clickToPay/clickToPay.mock';
 import { binLookupMock } from '../../../mocks/binLookup/binLookup.mock';
 import { dualBrandedBcmcAndMc } from '../../../mocks/binLookup/binLookup.data';
 import {
@@ -34,7 +34,7 @@ const DUAL_BRAND_CONFIGURATION = {
 test.describe('Card - Click to Pay sign up', () => {
     test.describe('when the shopper is not recognized by Click to Pay', () => {
         test.beforeEach(async ({ page }) => {
-            await clickToPaySdksMock(page, { recognized: false });
+            await mastercardClickToPaySdkMock(page, { recognized: false });
         });
 
         test.describe('visibility by card brand', () => {
@@ -131,9 +131,13 @@ test.describe('Card - Click to Pay sign up', () => {
                 await expect(cardWithCtpSignup.storeDetailsCheckbox).toBeVisible();
                 await expect(cardWithCtpSignup.signupConsentCheckbox).toBeVisible();
 
-                const storeDetailsBox = await cardWithCtpSignup.storeDetailsCheckbox.boundingBox();
-                const signupBox = await cardWithCtpSignup.signupConsentCheckbox.boundingBox();
-                expect(signupBox.y).toBeGreaterThan(storeDetailsBox.y);
+                await expect
+                    .poll(async () => {
+                        const storeDetailsBox = await cardWithCtpSignup.storeDetailsCheckbox.boundingBox();
+                        const signupBox = await cardWithCtpSignup.signupConsentCheckbox.boundingBox();
+                        return storeDetailsBox !== null && signupBox !== null && signupBox.y > storeDetailsBox.y;
+                    })
+                    .toBe(true);
             });
 
             test('#2 should show the sign up when enableStoreDetails is false', async ({ cardWithCtpSignup }) => {
@@ -160,12 +164,14 @@ test.describe('Card - Click to Pay sign up', () => {
                     mobileNumber: CLICK_TO_PAY_SIGNUP_PHONE.typedNumber
                 });
 
-                expect(await cardWithCtpSignup.getClickToPaySignupPayload()).toEqual({
-                    storeClickToPayProfile: true,
-                    shopperName: { firstName: SHOPPER_DATA.firstName, lastName: SHOPPER_DATA.lastName },
-                    shopperEmail: SHOPPER_DATA.email,
-                    telephoneNumber: `${CLICK_TO_PAY_SIGNUP_PHONE.defaultPrefix}${CLICK_TO_PAY_SIGNUP_PHONE.typedNumber}`
-                });
+                await expect
+                    .poll(() => cardWithCtpSignup.getClickToPaySignupPayload())
+                    .toEqual({
+                        storeClickToPayProfile: true,
+                        shopperName: { firstName: SHOPPER_DATA.firstName, lastName: SHOPPER_DATA.lastName },
+                        shopperEmail: SHOPPER_DATA.email,
+                        telephoneNumber: `${CLICK_TO_PAY_SIGNUP_PHONE.defaultPrefix}${CLICK_TO_PAY_SIGNUP_PHONE.typedNumber}`
+                    });
             });
 
             test('#2 should prefill the details from clickToPayConfiguration and add them when the shopper signs up', async ({
@@ -193,12 +199,14 @@ test.describe('Card - Click to Pay sign up', () => {
                 await expect(cardWithCtpSignup.signupPhonePrefixInput).toHaveValue(CLICK_TO_PAY_SIGNUP_PHONE.prefilledPrefix);
                 await expect(cardWithCtpSignup.signupMobileNumberInput).toHaveValue(CLICK_TO_PAY_SIGNUP_PHONE.prefilledNumber);
 
-                expect(await cardWithCtpSignup.getClickToPaySignupPayload()).toEqual({
-                    storeClickToPayProfile: true,
-                    shopperName: { firstName: SHOPPER_DATA.firstName, lastName: SHOPPER_DATA.lastName },
-                    shopperEmail: SHOPPER_DATA.email,
-                    telephoneNumber: CLICK_TO_PAY_SIGNUP_PHONE.prefilledTelephoneNumber
-                });
+                await expect
+                    .poll(() => cardWithCtpSignup.getClickToPaySignupPayload())
+                    .toEqual({
+                        storeClickToPayProfile: true,
+                        shopperName: { firstName: SHOPPER_DATA.firstName, lastName: SHOPPER_DATA.lastName },
+                        shopperEmail: SHOPPER_DATA.email,
+                        telephoneNumber: CLICK_TO_PAY_SIGNUP_PHONE.prefilledTelephoneNumber
+                    });
             });
 
             test('#3 should add only the consent when the shopper signs up with empty details', async ({ cardWithCtpSignup }) => {
@@ -208,7 +216,7 @@ test.describe('Card - Click to Pay sign up', () => {
                 await cardWithCtpSignup.checkSignupConsent();
                 await expect(cardWithCtpSignup.signupDetailsGroup).toBeVisible();
 
-                expect(await cardWithCtpSignup.getClickToPaySignupPayload()).toEqual({ storeClickToPayProfile: true });
+                await expect.poll(() => cardWithCtpSignup.getClickToPaySignupPayload()).toEqual({ storeClickToPayProfile: true });
             });
 
             test('#4 should add only the details that were filled in', async ({ cardWithCtpSignup }) => {
@@ -222,11 +230,13 @@ test.describe('Card - Click to Pay sign up', () => {
                     mobileNumber: CLICK_TO_PAY_SIGNUP_PHONE.typedNumber
                 });
 
-                expect(await cardWithCtpSignup.getClickToPaySignupPayload()).toEqual({
-                    storeClickToPayProfile: true,
-                    shopperName: { firstName: SHOPPER_DATA.firstName },
-                    telephoneNumber: `${CLICK_TO_PAY_SIGNUP_PHONE.defaultPrefix}${CLICK_TO_PAY_SIGNUP_PHONE.typedNumber}`
-                });
+                await expect
+                    .poll(() => cardWithCtpSignup.getClickToPaySignupPayload())
+                    .toEqual({
+                        storeClickToPayProfile: true,
+                        shopperName: { firstName: SHOPPER_DATA.firstName },
+                        telephoneNumber: `${CLICK_TO_PAY_SIGNUP_PHONE.defaultPrefix}${CLICK_TO_PAY_SIGNUP_PHONE.typedNumber}`
+                    });
             });
 
             test('#5 should not add sign up data when the shopper does not check the consent', async ({ cardWithCtpSignup }) => {
@@ -234,7 +244,7 @@ test.describe('Card - Click to Pay sign up', () => {
                 await cardWithCtpSignup.typeCardNumber(REGULAR_TEST_CARD);
                 await expect(cardWithCtpSignup.signupConsentCheckbox).toBeVisible();
 
-                expect(await cardWithCtpSignup.getClickToPaySignupPayload()).toEqual({});
+                await expect.poll(() => cardWithCtpSignup.getClickToPaySignupPayload()).toEqual({});
             });
 
             test('#6 should remove the sign up data when the shopper unchecks the consent after filling in the details', async ({
@@ -249,7 +259,7 @@ test.describe('Card - Click to Pay sign up', () => {
                 await cardWithCtpSignup.uncheckSignupConsent();
                 await expect(cardWithCtpSignup.signupDetailsGroup).toBeHidden();
 
-                expect(await cardWithCtpSignup.getClickToPaySignupPayload()).toEqual({});
+                await expect.poll(() => cardWithCtpSignup.getClickToPaySignupPayload()).toEqual({});
             });
 
             test('#7 should remove the sign up data when the card number changes to a brand other than Mastercard', async ({ cardWithCtpSignup }) => {
@@ -264,7 +274,7 @@ test.describe('Card - Click to Pay sign up', () => {
                 await expect(cardWithCtpSignup.brandingIcon).toHaveAttribute('alt', /visa/i);
                 await expect(cardWithCtpSignup.signupConsentCheckbox).toBeHidden();
 
-                expect(await cardWithCtpSignup.getClickToPaySignupPayload()).toEqual({});
+                await expect.poll(() => cardWithCtpSignup.getClickToPaySignupPayload()).toEqual({});
             });
 
             test('#8 should remove the sign up data when the shopper selects the other brand of a dual branded card', async ({
@@ -283,7 +293,7 @@ test.describe('Card - Click to Pay sign up', () => {
                 await cardWithCtpSignup.selectBrand(/bancontact/i);
                 await expect(cardWithCtpSignup.signupConsentCheckbox).toBeHidden();
 
-                expect(await cardWithCtpSignup.getClickToPaySignupPayload()).toEqual({});
+                await expect.poll(() => cardWithCtpSignup.getClickToPaySignupPayload()).toEqual({});
             });
         });
 
@@ -302,7 +312,7 @@ test.describe('Card - Click to Pay sign up', () => {
 
     test.describe('when the shopper is recognized by Click to Pay', () => {
         test.beforeEach(async ({ page }) => {
-            await clickToPaySdksMock(page, { recognized: true });
+            await mastercardClickToPaySdkMock(page, { recognized: true });
         });
 
         test('#1 should not show the sign up after the shopper chooses manual card entry and enters a Mastercard number', async ({
@@ -315,7 +325,7 @@ test.describe('Card - Click to Pay sign up', () => {
             await expect(cardWithCtpSignup.brandingIcon).toHaveAttribute('alt', MASTERCARD_ICON_ALT);
             await expect(cardWithCtpSignup.signupConsentCheckbox).toBeHidden();
 
-            expect(await cardWithCtpSignup.getClickToPaySignupPayload()).toEqual({});
+            await expect.poll(() => cardWithCtpSignup.getClickToPaySignupPayload()).toEqual({});
         });
     });
 });
