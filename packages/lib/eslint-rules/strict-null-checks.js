@@ -78,7 +78,7 @@ const STRICT_NULL_CHECKS_BACKLOG = [
     'src/utils/clipboard.ts',
 
     // ── Ticket 3: SecuredFields and CSF (161 errors) ──
-    'src/components/internal/SecuredFields/binLookup/extensions.ts',
+    // 'src/components/internal/SecuredFields/binLookup/extensions.ts',
     'src/components/internal/SecuredFields/lib/CSF/CSF.ts',
     'src/components/internal/SecuredFields/lib/CSF/extensions/createSecuredFields.ts',
     'src/components/internal/SecuredFields/lib/CSF/extensions/handleBrandFromBinLookup.ts',
