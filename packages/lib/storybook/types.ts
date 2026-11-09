@@ -48,6 +48,7 @@ export type SessionsRequestData = {
     shopperInteraction?: 'Ecommerce' | 'ContAuth' | 'Moto' | 'POS';
     recurringProcessingModel?: 'Subscription' | 'CardOnFile' | 'UnscheduledCardOnFile';
     enableOneClick?: boolean;
+    splitPayPalButtons?: boolean;
 };
 
 export type AdyenCheckoutProps = {
@@ -58,7 +59,8 @@ export type AdyenCheckoutProps = {
     sessionData?: SessionsRequestData;
     allowedPaymentTypes?: string[];
     paymentMethodsOverride?: PaymentMethodsResponse;
-    paymentsOptions?: {}; // TODO we don't have proper type for this right now
+    paymentsOptions?: Record<string, unknown>;
+    paymentMethodsOptions?: Record<string, unknown>;
     onPaymentCompleted?: (data: unknown, element?: UIElement) => void;
     srConfig: { showPanel: boolean; moveFocus: boolean };
 };
