@@ -331,7 +331,7 @@ export class CardElement extends UIElement<CardConfiguration> {
         return (
             this.props.clickToPayConfiguration?.enableSignup === true &&
             !this.props.storedPaymentMethodId &&
-            !!this.clickToPayService?.schemes.includes('mc')
+            !!this.clickToPayService?.schemes?.includes('mc')
         );
     }
 
