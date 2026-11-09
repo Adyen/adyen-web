@@ -2301,7 +2301,7 @@ __metadata:
 
 "@oxc-project/types@npm:=0.154.0":
   version: 0.154.0
-  resolution: "@oxc-project/types@npm:0.154.0::__archiveUrl=https%3A%2F%2Fartifacts-cache.is.adyen.com%3A443%2Fartifactory%2Fapi%2Fnpm%2Ffrontend-npm-virtual%2F%40oxc-project%2Ftypes%2F-%2Ftypes-0.154.0.tgz"
+  resolution: "@oxc-project/types@npm:0.154.0"
   checksum: 10c0/fa91599d087ea4d37c5a3b40dd8e2cb431a7d37730116069f2577dee0b104dc5abb06c96b931c517c8b86f618df1e0c7a37d24086f3cfe39d81eb6db59e70add
   languageName: node
   linkType: hard
@@ -2831,112 +2831,112 @@ __metadata:
 
 "@rolldown/binding-android-arm-eabi@npm:1.2.14":
   version: 1.2.14
-  resolution: "@rolldown/binding-android-arm-eabi@npm:1.2.14::__archiveUrl=https%3A%2F%2Fartifacts-cache.is.adyen.com%3A443%2Fartifactory%2Fapi%2Fnpm%2Ffrontend-npm-virtual%2F%40rolldown%2Fbinding-android-arm-eabi%2F-%2Fbinding-android-arm-eabi-1.2.14.tgz"
+  resolution: "@rolldown/binding-android-arm-eabi@npm:1.2.14"
   conditions: os=android & cpu=arm
   languageName: node
   linkType: hard
 
 "@rolldown/binding-android-arm64@npm:1.2.14":
   version: 1.2.14
-  resolution: "@rolldown/binding-android-arm64@npm:1.2.14::__archiveUrl=https%3A%2F%2Fartifacts-cache.is.adyen.com%3A443%2Fartifactory%2Fapi%2Fnpm%2Ffrontend-npm-virtual%2F%40rolldown%2Fbinding-android-arm64%2F-%2Fbinding-android-arm64-1.2.14.tgz"
+  resolution: "@rolldown/binding-android-arm64@npm:1.2.14"
   conditions: os=android & cpu=arm64
   languageName: node
   linkType: hard
 
 "@rolldown/binding-darwin-arm64@npm:1.2.14":
   version: 1.2.14
-  resolution: "@rolldown/binding-darwin-arm64@npm:1.2.14::__archiveUrl=https%3A%2F%2Fartifacts-cache.is.adyen.com%3A443%2Fartifactory%2Fapi%2Fnpm%2Ffrontend-npm-virtual%2F%40rolldown%2Fbinding-darwin-arm64%2F-%2Fbinding-darwin-arm64-1.2.14.tgz"
+  resolution: "@rolldown/binding-darwin-arm64@npm:1.2.14"
   conditions: os=darwin & cpu=arm64
   languageName: node
   linkType: hard
 
 "@rolldown/binding-darwin-x64@npm:1.2.14":
   version: 1.2.14
-  resolution: "@rolldown/binding-darwin-x64@npm:1.2.14::__archiveUrl=https%3A%2F%2Fartifacts-cache.is.adyen.com%3A443%2Fartifactory%2Fapi%2Fnpm%2Ffrontend-npm-virtual%2F%40rolldown%2Fbinding-darwin-x64%2F-%2Fbinding-darwin-x64-1.2.14.tgz"
+  resolution: "@rolldown/binding-darwin-x64@npm:1.2.14"
   conditions: os=darwin & cpu=x64
   languageName: node
   linkType: hard
 
 "@rolldown/binding-freebsd-x64@npm:1.2.14":
   version: 1.2.14
-  resolution: "@rolldown/binding-freebsd-x64@npm:1.2.14::__archiveUrl=https%3A%2F%2Fartifacts-cache.is.adyen.com%3A443%2Fartifactory%2Fapi%2Fnpm%2Ffrontend-npm-virtual%2F%40rolldown%2Fbinding-freebsd-x64%2F-%2Fbinding-freebsd-x64-1.2.14.tgz"
+  resolution: "@rolldown/binding-freebsd-x64@npm:1.2.14"
   conditions: os=freebsd & cpu=x64
   languageName: node
   linkType: hard
 
 "@rolldown/binding-linux-arm-gnueabihf@npm:1.2.14":
   version: 1.2.14
-  resolution: "@rolldown/binding-linux-arm-gnueabihf@npm:1.2.14::__archiveUrl=https%3A%2F%2Fartifacts-cache.is.adyen.com%3A443%2Fartifactory%2Fapi%2Fnpm%2Ffrontend-npm-virtual%2F%40rolldown%2Fbinding-linux-arm-gnueabihf%2F-%2Fbinding-linux-arm-gnueabihf-1.2.14.tgz"
+  resolution: "@rolldown/binding-linux-arm-gnueabihf@npm:1.2.14"
   conditions: os=linux & cpu=arm
   languageName: node
   linkType: hard
 
 "@rolldown/binding-linux-arm64-gnu@npm:1.2.14":
   version: 1.2.14
-  resolution: "@rolldown/binding-linux-arm64-gnu@npm:1.2.14::__archiveUrl=https%3A%2F%2Fartifacts-cache.is.adyen.com%3A443%2Fartifactory%2Fapi%2Fnpm%2Ffrontend-npm-virtual%2F%40rolldown%2Fbinding-linux-arm64-gnu%2F-%2Fbinding-linux-arm64-gnu-1.2.14.tgz"
+  resolution: "@rolldown/binding-linux-arm64-gnu@npm:1.2.14"
   conditions: os=linux & cpu=arm64 & libc=glibc
   languageName: node
   linkType: hard
 
 "@rolldown/binding-linux-arm64-musl@npm:1.2.14":
   version: 1.2.14
-  resolution: "@rolldown/binding-linux-arm64-musl@npm:1.2.14::__archiveUrl=https%3A%2F%2Fartifacts-cache.is.adyen.com%3A443%2Fartifactory%2Fapi%2Fnpm%2Ffrontend-npm-virtual%2F%40rolldown%2Fbinding-linux-arm64-musl%2F-%2Fbinding-linux-arm64-musl-1.2.14.tgz"
+  resolution: "@rolldown/binding-linux-arm64-musl@npm:1.2.14"
   conditions: os=linux & cpu=arm64 & libc=musl
   languageName: node
   linkType: hard
 
 "@rolldown/binding-linux-ppc64-gnu@npm:1.2.14":
   version: 1.2.14
-  resolution: "@rolldown/binding-linux-ppc64-gnu@npm:1.2.14::__archiveUrl=https%3A%2F%2Fartifacts-cache.is.adyen.com%3A443%2Fartifactory%2Fapi%2Fnpm%2Ffrontend-npm-virtual%2F%40rolldown%2Fbinding-linux-ppc64-gnu%2F-%2Fbinding-linux-ppc64-gnu-1.2.14.tgz"
+  resolution: "@rolldown/binding-linux-ppc64-gnu@npm:1.2.14"
   conditions: os=linux & cpu=ppc64 & libc=glibc
   languageName: node
   linkType: hard
 
 "@rolldown/binding-linux-s390x-gnu@npm:1.2.14":
   version: 1.2.14
-  resolution: "@rolldown/binding-linux-s390x-gnu@npm:1.2.14::__archiveUrl=https%3A%2F%2Fartifacts-cache.is.adyen.com%3A443%2Fartifactory%2Fapi%2Fnpm%2Ffrontend-npm-virtual%2F%40rolldown%2Fbinding-linux-s390x-gnu%2F-%2Fbinding-linux-s390x-gnu-1.2.14.tgz"
+  resolution: "@rolldown/binding-linux-s390x-gnu@npm:1.2.14"
   conditions: os=linux & cpu=s390x & libc=glibc
   languageName: node
   linkType: hard
 
 "@rolldown/binding-linux-x64-gnu@npm:1.2.14":
   version: 1.2.14
-  resolution: "@rolldown/binding-linux-x64-gnu@npm:1.2.14::__archiveUrl=https%3A%2F%2Fartifacts-cache.is.adyen.com%3A443%2Fartifactory%2Fapi%2Fnpm%2Ffrontend-npm-virtual%2F%40rolldown%2Fbinding-linux-x64-gnu%2F-%2Fbinding-linux-x64-gnu-1.2.14.tgz"
+  resolution: "@rolldown/binding-linux-x64-gnu@npm:1.2.14"
   conditions: os=linux & cpu=x64 & libc=glibc
   languageName: node
   linkType: hard
 
 "@rolldown/binding-linux-x64-musl@npm:1.2.14":
   version: 1.2.14
-  resolution: "@rolldown/binding-linux-x64-musl@npm:1.2.14::__archiveUrl=https%3A%2F%2Fartifacts-cache.is.adyen.com%3A443%2Fartifactory%2Fapi%2Fnpm%2Ffrontend-npm-virtual%2F%40rolldown%2Fbinding-linux-x64-musl%2F-%2Fbinding-linux-x64-musl-1.2.14.tgz"
+  resolution: "@rolldown/binding-linux-x64-musl@npm:1.2.14"
   conditions: os=linux & cpu=x64 & libc=musl
   languageName: node
   linkType: hard
 
 "@rolldown/binding-openharmony-arm64@npm:1.2.14":
   version: 1.2.14
-  resolution: "@rolldown/binding-openharmony-arm64@npm:1.2.14::__archiveUrl=https%3A%2F%2Fartifacts-cache.is.adyen.com%3A443%2Fartifactory%2Fapi%2Fnpm%2Ffrontend-npm-virtual%2F%40rolldown%2Fbinding-openharmony-arm64%2F-%2Fbinding-openharmony-arm64-1.2.14.tgz"
+  resolution: "@rolldown/binding-openharmony-arm64@npm:1.2.14"
   conditions: os=openharmony & cpu=arm64
   languageName: node
   linkType: hard
 
 "@rolldown/binding-win32-arm64-msvc@npm:1.2.14":
   version: 1.2.14
-  resolution: "@rolldown/binding-win32-arm64-msvc@npm:1.2.14::__archiveUrl=https%3A%2F%2Fartifacts-cache.is.adyen.com%3A443%2Fartifactory%2Fapi%2Fnpm%2Ffrontend-npm-virtual%2F%40rolldown%2Fbinding-win32-arm64-msvc%2F-%2Fbinding-win32-arm64-msvc-1.2.14.tgz"
+  resolution: "@rolldown/binding-win32-arm64-msvc@npm:1.2.14"
   conditions: os=win32 & cpu=arm64
   languageName: node
   linkType: hard
 
 "@rolldown/binding-win32-x64-msvc@npm:1.2.14":
   version: 1.2.14
-  resolution: "@rolldown/binding-win32-x64-msvc@npm:1.2.14::__archiveUrl=https%3A%2F%2Fartifacts-cache.is.adyen.com%3A443%2Fartifactory%2Fapi%2Fnpm%2Ffrontend-npm-virtual%2F%40rolldown%2Fbinding-win32-x64-msvc%2F-%2Fbinding-win32-x64-msvc-1.2.14.tgz"
+  resolution: "@rolldown/binding-win32-x64-msvc@npm:1.2.14"
   conditions: os=win32 & cpu=x64
   languageName: node
   linkType: hard
 
 "@rolldown/pluginutils@npm:^1.0.0":
   version: 1.0.1
-  resolution: "@rolldown/pluginutils@npm:1.0.1::__archiveUrl=https%3A%2F%2Fartifacts-cache.is.adyen.com%3A443%2Fartifactory%2Fapi%2Fnpm%2Ffrontend-npm-virtual%2F%40rolldown%2Fpluginutils%2F-%2Fpluginutils-1.0.1.tgz"
+  resolution: "@rolldown/pluginutils@npm:1.0.1"
   checksum: 10c0/99d9b06d90196823e4d8c841f258db7a16e5dbba5824a2962b05d907b79f1ba929d56f22dd744fd530936e568c865ee56a719dc31e57e13bc0a8eb4764a8d8dd
   languageName: node
   linkType: hard
@@ -9226,84 +9226,84 @@ __metadata:
 
 "lightningcss-android-arm64@npm:1.33.0":
   version: 1.33.0
-  resolution: "lightningcss-android-arm64@npm:1.33.0::__archiveUrl=https%3A%2F%2Fartifacts-cache.is.adyen.com%3A443%2Fartifactory%2Fapi%2Fnpm%2Ffrontend-npm-virtual%2Flightningcss-android-arm64%2F-%2Flightningcss-android-arm64-1.33.0.tgz"
+  resolution: "lightningcss-android-arm64@npm:1.33.0"
   conditions: os=android & cpu=arm64
   languageName: node
   linkType: hard
 
 "lightningcss-darwin-arm64@npm:1.33.0":
   version: 1.33.0
-  resolution: "lightningcss-darwin-arm64@npm:1.33.0::__archiveUrl=https%3A%2F%2Fartifacts-cache.is.adyen.com%3A443%2Fartifactory%2Fapi%2Fnpm%2Ffrontend-npm-virtual%2Flightningcss-darwin-arm64%2F-%2Flightningcss-darwin-arm64-1.33.0.tgz"
+  resolution: "lightningcss-darwin-arm64@npm:1.33.0"
   conditions: os=darwin & cpu=arm64
   languageName: node
   linkType: hard
 
 "lightningcss-darwin-x64@npm:1.33.0":
   version: 1.33.0
-  resolution: "lightningcss-darwin-x64@npm:1.33.0::__archiveUrl=https%3A%2F%2Fartifacts-cache.is.adyen.com%3A443%2Fartifactory%2Fapi%2Fnpm%2Ffrontend-npm-virtual%2Flightningcss-darwin-x64%2F-%2Flightningcss-darwin-x64-1.33.0.tgz"
+  resolution: "lightningcss-darwin-x64@npm:1.33.0"
   conditions: os=darwin & cpu=x64
   languageName: node
   linkType: hard
 
 "lightningcss-freebsd-x64@npm:1.33.0":
   version: 1.33.0
-  resolution: "lightningcss-freebsd-x64@npm:1.33.0::__archiveUrl=https%3A%2F%2Fartifacts-cache.is.adyen.com%3A443%2Fartifactory%2Fapi%2Fnpm%2Ffrontend-npm-virtual%2Flightningcss-freebsd-x64%2F-%2Flightningcss-freebsd-x64-1.33.0.tgz"
+  resolution: "lightningcss-freebsd-x64@npm:1.33.0"
   conditions: os=freebsd & cpu=x64
   languageName: node
   linkType: hard
 
 "lightningcss-linux-arm-gnueabihf@npm:1.33.0":
   version: 1.33.0
-  resolution: "lightningcss-linux-arm-gnueabihf@npm:1.33.0::__archiveUrl=https%3A%2F%2Fartifacts-cache.is.adyen.com%3A443%2Fartifactory%2Fapi%2Fnpm%2Ffrontend-npm-virtual%2Flightningcss-linux-arm-gnueabihf%2F-%2Flightningcss-linux-arm-gnueabihf-1.33.0.tgz"
+  resolution: "lightningcss-linux-arm-gnueabihf@npm:1.33.0"
   conditions: os=linux & cpu=arm
   languageName: node
   linkType: hard
 
 "lightningcss-linux-arm64-gnu@npm:1.33.0":
   version: 1.33.0
-  resolution: "lightningcss-linux-arm64-gnu@npm:1.33.0::__archiveUrl=https%3A%2F%2Fartifacts-cache.is.adyen.com%3A443%2Fartifactory%2Fapi%2Fnpm%2Ffrontend-npm-virtual%2Flightningcss-linux-arm64-gnu%2F-%2Flightningcss-linux-arm64-gnu-1.33.0.tgz"
+  resolution: "lightningcss-linux-arm64-gnu@npm:1.33.0"
   conditions: os=linux & cpu=arm64 & libc=glibc
   languageName: node
   linkType: hard
 
 "lightningcss-linux-arm64-musl@npm:1.33.0":
   version: 1.33.0
-  resolution: "lightningcss-linux-arm64-musl@npm:1.33.0::__archiveUrl=https%3A%2F%2Fartifacts-cache.is.adyen.com%3A443%2Fartifactory%2Fapi%2Fnpm%2Ffrontend-npm-virtual%2Flightningcss-linux-arm64-musl%2F-%2Flightningcss-linux-arm64-musl-1.33.0.tgz"
+  resolution: "lightningcss-linux-arm64-musl@npm:1.33.0"
   conditions: os=linux & cpu=arm64 & libc=musl
   languageName: node
   linkType: hard
 
 "lightningcss-linux-x64-gnu@npm:1.33.0":
   version: 1.33.0
-  resolution: "lightningcss-linux-x64-gnu@npm:1.33.0::__archiveUrl=https%3A%2F%2Fartifacts-cache.is.adyen.com%3A443%2Fartifactory%2Fapi%2Fnpm%2Ffrontend-npm-virtual%2Flightningcss-linux-x64-gnu%2F-%2Flightningcss-linux-x64-gnu-1.33.0.tgz"
+  resolution: "lightningcss-linux-x64-gnu@npm:1.33.0"
   conditions: os=linux & cpu=x64 & libc=glibc
   languageName: node
   linkType: hard
 
 "lightningcss-linux-x64-musl@npm:1.33.0":
   version: 1.33.0
-  resolution: "lightningcss-linux-x64-musl@npm:1.33.0::__archiveUrl=https%3A%2F%2Fartifacts-cache.is.adyen.com%3A443%2Fartifactory%2Fapi%2Fnpm%2Ffrontend-npm-virtual%2Flightningcss-linux-x64-musl%2F-%2Flightningcss-linux-x64-musl-1.33.0.tgz"
+  resolution: "lightningcss-linux-x64-musl@npm:1.33.0"
   conditions: os=linux & cpu=x64 & libc=musl
   languageName: node
   linkType: hard
 
 "lightningcss-win32-arm64-msvc@npm:1.33.0":
   version: 1.33.0
-  resolution: "lightningcss-win32-arm64-msvc@npm:1.33.0::__archiveUrl=https%3A%2F%2Fartifacts-cache.is.adyen.com%3A443%2Fartifactory%2Fapi%2Fnpm%2Ffrontend-npm-virtual%2Flightningcss-win32-arm64-msvc%2F-%2Flightningcss-win32-arm64-msvc-1.33.0.tgz"
+  resolution: "lightningcss-win32-arm64-msvc@npm:1.33.0"
   conditions: os=win32 & cpu=arm64
   languageName: node
   linkType: hard
 
 "lightningcss-win32-x64-msvc@npm:1.33.0":
   version: 1.33.0
-  resolution: "lightningcss-win32-x64-msvc@npm:1.33.0::__archiveUrl=https%3A%2F%2Fartifacts-cache.is.adyen.com%3A443%2Fartifactory%2Fapi%2Fnpm%2Ffrontend-npm-virtual%2Flightningcss-win32-x64-msvc%2F-%2Flightningcss-win32-x64-msvc-1.33.0.tgz"
+  resolution: "lightningcss-win32-x64-msvc@npm:1.33.0"
   conditions: os=win32 & cpu=x64
   languageName: node
   linkType: hard
 
 "lightningcss@npm:^1.33.0":
   version: 1.33.0
-  resolution: "lightningcss@npm:1.33.0::__archiveUrl=https%3A%2F%2Fartifacts-cache.is.adyen.com%3A443%2Fartifactory%2Fapi%2Fnpm%2Ffrontend-npm-virtual%2Flightningcss%2F-%2Flightningcss-1.33.0.tgz"
+  resolution: "lightningcss@npm:1.33.0"
   dependencies:
     detect-libc: "npm:^2.0.3"
     lightningcss-android-arm64: "npm:1.33.0"
@@ -11417,7 +11417,7 @@ __metadata:
 
 "postcss@npm:^8.5.29":
   version: 8.5.31
-  resolution: "postcss@npm:8.5.31::__archiveUrl=https%3A%2F%2Fartifacts-cache.is.adyen.com%3A443%2Fartifactory%2Fapi%2Fnpm%2Ffrontend-npm-virtual%2Fpostcss%2F-%2Fpostcss-8.5.31.tgz"
+  resolution: "postcss@npm:8.5.31"
   dependencies:
     nanoid: "npm:^3.3.20"
     picocolors: "npm:^1.1.1"
@@ -11819,7 +11819,7 @@ __metadata:
 
 "rolldown@npm:~1.2.12":
   version: 1.2.14
-  resolution: "rolldown@npm:1.2.14::__archiveUrl=https%3A%2F%2Fartifacts-cache.is.adyen.com%3A443%2Fartifactory%2Fapi%2Fnpm%2Ffrontend-npm-virtual%2Frolldown%2F-%2Frolldown-1.2.14.tgz"
+  resolution: "rolldown@npm:1.2.14"
   dependencies:
     "@oxc-project/types": "npm:=0.154.0"
     "@rolldown/binding-android-arm-eabi": "npm:1.2.14"
@@ -13229,7 +13229,7 @@ __metadata:
 
 "tinyglobby@npm:^0.2.17":
   version: 0.2.17
-  resolution: "tinyglobby@npm:0.2.17::__archiveUrl=https%3A%2F%2Fartifacts-cache.is.adyen.com%3A443%2Fartifactory%2Fapi%2Fnpm%2Ffrontend-npm-virtual%2Ftinyglobby%2F-%2Ftinyglobby-0.2.17.tgz"
+  resolution: "tinyglobby@npm:0.2.17"
   dependencies:
     fdir: "npm:^6.5.0"
     picomatch: "npm:^4.0.4"
@@ -13854,7 +13854,7 @@ __metadata:
 
 "vite@npm:8.3.4, vite@npm:^8.3.4":
   version: 8.3.4
-  resolution: "vite@npm:8.3.4::__archiveUrl=https%3A%2F%2Fartifacts-cache.is.adyen.com%3A443%2Fartifactory%2Fapi%2Fnpm%2Ffrontend-npm-virtual%2Fvite%2F-%2Fvite-8.3.4.tgz"
+  resolution: "vite@npm:8.3.4"
   dependencies:
     fsevents: "npm:~2.3.3"
     lightningcss: "npm:^1.33.0"
