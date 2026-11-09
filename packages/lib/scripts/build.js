@@ -24,7 +24,7 @@ if (unknown.length > 0) {
 try {
     await concurrently(
         names.map(name => ({ name, command: TASKS[name] })),
-        { killOthersOn: ['failure'], outputStream: process.stderr, prefixColors: 'auto' }
+        { killOthersOn: ['failure'], outputStream: process.stderr, prefixColors: 'auto', timings: true }
     ).result;
 } catch {
     process.exitCode = 1;
