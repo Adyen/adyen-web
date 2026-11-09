@@ -6,6 +6,10 @@ import type { AnalyticsOptions } from './types';
 export const mapErrorCodesForAnalytics = (errorCode: string, target?: string) => {
     // Some of the more generic error codes required combination with target to retrieve a specific code
     if (errorCode === ERROR_FIELD_REQUIRED || errorCode === ERROR_INVALID_FORMAT_EXPECTS) {
+        if (!target) {
+            return errorCode;
+        }
+
         return errorCodeMapping[`${errorCode}.${target}`] ?? errorCode;
     }
 

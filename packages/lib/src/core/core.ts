@@ -309,12 +309,14 @@ class Core implements ICore {
     /**
      * Validates and propagates amount updates to all mounted components.
      *
-     * @param amount - Primary payment amount object (required)
+     * @param amount - Primary payment amount object
      * @param secondaryAmount - Optional secondary amount for display purposes (e.g., converted currency)
      * @internal
      */
     private triggerAmountUpdate(amount: PaymentAmount | undefined, secondaryAmount?: PaymentAmount): void {
-        if (!amount || !isAmountValid(amount)) {
+        const resolvedAmount = amount ?? this.options.amount;
+
+        if (!resolvedAmount || !isAmountValid(resolvedAmount)) {
             console.warn('Core update(): Update canceled. Invalid amount object');
             return;
         }
@@ -325,12 +327,12 @@ class Core implements ICore {
         }
 
         this.setOptions({
-            amount,
+            amount: resolvedAmount,
             ...(secondaryAmount && { secondaryAmount })
         });
 
         this.components.forEach(component => {
-            component.updateAmount(amount, secondaryAmount);
+            component.updateAmount(resolvedAmount, secondaryAmount);
         });
     }
 
