@@ -27,7 +27,8 @@ const config: StorybookConfig = {
     framework: '@storybook/preact-vite',
 
     tags: {
-        'no-automated-visual-test': {}
+        'no-automated-visual-test': {},
+        'automated-visual-test-full-width': {}
     },
 
     addons: ['@storybook/addon-a11y', '@storybook/addon-docs'],

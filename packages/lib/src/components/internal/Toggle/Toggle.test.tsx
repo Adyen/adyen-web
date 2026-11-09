@@ -26,6 +26,11 @@ test('should render as disabled', () => {
     expect(screen.getByRole('switch')).toBeDisabled();
 });
 
+test('should render the tick in the current text colour so it follows the handle colour', () => {
+    render(<Toggle checked />);
+    expect(screen.getByRole('img', { hidden: true })).toHaveAttribute('fill', 'currentColor');
+});
+
 test('should render description', () => {
     render(<Toggle checked={false} label="Save details" description="Save all details" />);
     expect(screen.getByText('Save all details')).toBeTruthy();
