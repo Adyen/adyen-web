@@ -63,7 +63,7 @@ const config: StorybookConfig = {
             // Single CSS file like Rollup's extract behavior
             build: {
                 cssCodeSplit: false,
-                rollupOptions: {
+                rolldownOptions: {
                     output: {
                         assetFileNames: 'adyen.[ext]' // Matches Rollup's extract: 'adyen.css'
                     }
