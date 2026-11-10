@@ -39,7 +39,7 @@ const buildCSF = (stateOverrides: Record<string, unknown> = {}, configOverrides:
     };
 };
 
-const createReturnObject = (csf): CSFReturnObject => CSF.prototype.createReturnObject.call(csf);
+const createReturnObject = (csf: ReturnType<typeof buildCSF>): CSFReturnObject => CSF.prototype.createReturnObject.call(csf);
 
 describe('CSF.createReturnObject', () => {
     beforeEach(() => {
