@@ -50,8 +50,6 @@ class CSF extends AbstractCSF {
          */
         super(setupObj);
 
-        console.log('CSF constructor this.props.type:', this.props.type);
-
         this.state = {
             /**
              *  For generic card will always be 'card'.
