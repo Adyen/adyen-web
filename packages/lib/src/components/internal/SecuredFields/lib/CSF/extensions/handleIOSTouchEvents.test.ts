@@ -128,6 +128,28 @@ describe("Testing CSF's handleIOSTouchEvents' touchendListener functionality", (
     );
 
     test(
+        'Calling touchendListener and passing it an input element whose selectionStart getter throws (e.g. type="number") will not throw, and ' +
+            'will still see destroyTouchendListener & postMessageToAllIframes called',
+        () => {
+            const myElement = makeElementWithAttribute('input', 'name', 'myInput');
+            Object.defineProperty(myElement, 'selectionStart', {
+                get() {
+                    throw new DOMException("Failed to read the 'selectionStart' property", 'InvalidStateError');
+                }
+            });
+
+            expect(() => {
+                // @ts-ignore - it's just a test!
+                myCSF.touchendListener({ target: myElement });
+            }).not.toThrow();
+
+            expect(myCSF.destroyTouchendListener).toHaveBeenCalled();
+
+            expect(myCSF.postMessageToAllIframes).toHaveBeenCalledWith({ fieldType: 'webInternalElement', fieldClick: true });
+        }
+    );
+
+    test(
         'Calling handleTouchend and passing it an element that is not an input, when config.keypadFix = false, will see that destroyTouchendListener & postMessageToAllIframes are called, ' +
             'registerFieldForIos is set to false, and rootNode.appendChild & .removeChild are not called',
         () => {

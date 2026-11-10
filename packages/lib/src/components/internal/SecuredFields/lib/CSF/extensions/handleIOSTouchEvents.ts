@@ -4,8 +4,13 @@ import { on, off } from '../../../../../../utils/listenerUtils';
 import type { SecuredFields } from '../../types';
 
 const getCaretPos = (pNode: HTMLInputElement | HTMLTextAreaElement): number => {
-    if ('selectionStart' in pNode) {
-        return pNode.selectionStart ?? 0;
+    try {
+        if ('selectionStart' in pNode) {
+            return pNode.selectionStart ?? 0;
+        }
+        /* eslint-disable-next-line */
+    } catch (e) {
+        // selectionStart throws on input types that don't support text selection (e.g. number, email)
     }
     return 0;
 };
