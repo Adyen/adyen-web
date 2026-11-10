@@ -302,6 +302,40 @@ describe('<SecuredFieldsProvider /> handling an binLookup response', () => {
             expect(brandsFromBinLookup).toHaveBeenCalledTimes(2);
         }
     );
+
+    it('should reset state to the dedicated brand and notify onChange when receiving a reset object for a dedicated card component', async () => {
+        nodeHolder.innerHTML = mockNode;
+        const onChange = jest.fn();
+        renderSFP({ onChange });
+
+        sfp.csf = mockCSF;
+
+        await act(() => {
+            sfp.processBinLookupResponse(null, { brand: 'bcmc', cvcPolicy: 'required' });
+        });
+
+        expect(sfp.state.brand).toEqual('bcmc');
+        expect(onChange).toHaveBeenCalled();
+    });
+});
+
+describe('<SecuredFieldsProvider /> sfIsOptionalOrHidden', () => {
+    it('should delegate to csf.sfIsOptionalOrHidden when csf is available', () => {
+        nodeHolder.innerHTML = mockNode;
+        renderSFP();
+        sfp.csf = { sfIsOptionalOrHidden: jest.fn(() => true) };
+
+        expect(sfp.sfIsOptionalOrHidden('encryptedCardNumber')).toBe(true);
+        expect(sfp.csf.sfIsOptionalOrHidden).toHaveBeenCalledWith('encryptedCardNumber');
+    });
+
+    it('should return false when csf is not available', () => {
+        nodeHolder.innerHTML = mockNode;
+        renderSFP();
+        sfp.csf = null;
+
+        expect(sfp.sfIsOptionalOrHidden('encryptedCardNumber')).toBe(false);
+    });
 });
 
 describe('<SecuredFieldsProvider /> mapErrorsToValidationRuleResult', () => {
