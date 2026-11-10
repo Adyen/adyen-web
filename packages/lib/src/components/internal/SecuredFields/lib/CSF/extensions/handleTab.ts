@@ -42,7 +42,7 @@ function handleShiftTab(fieldType: SFFieldType): void {
     }
 }
 
-const eligibleForTabFix = (): boolean => ua.__IS_FIREFOX || (ua.__IS_IE && ua.__IS_IE <= 11);
+const eligibleForTabFix = (): boolean => !!ua.__IS_FIREFOX || (!!ua.__IS_IE && ua.__IS_IE <= 11);
 
 function handleSFShiftTab(fieldType: SFFieldType): void {
     if (eligibleForTabFix()) {
