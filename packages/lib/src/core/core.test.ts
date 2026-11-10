@@ -651,8 +651,6 @@ describe('Core', () => {
             });
 
             test('should not update the secondary amount if there is no amount to pair it with', async () => {
-                console.warn = jest.fn();
-
                 const checkout = new AdyenCheckout({
                     countryCode: 'US',
                     environment: 'test',
@@ -668,7 +666,7 @@ describe('Core', () => {
 
                 expect(spy).not.toHaveBeenCalled();
                 expect(checkout.options.secondaryAmount).toBeUndefined();
-                expect(console.warn).toHaveBeenCalledWith('Core update(): Update canceled. Invalid amount object');
+                expect(component.props.secondaryAmount).toBeUndefined();
             });
         });
 

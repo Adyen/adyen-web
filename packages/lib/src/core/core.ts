@@ -294,8 +294,11 @@ class Core implements ICore {
 
         const { amount, secondaryAmount } = props;
 
-        if (amount || secondaryAmount) {
-            this.triggerAmountUpdate(amount, secondaryAmount);
+        // Use the provided amount or fallback to the current options amount to prevent setting an undefined amount
+        const amountToUpdate = amount ?? this.options.amount;
+
+        if (amountToUpdate && (amount || secondaryAmount)) {
+            this.triggerAmountUpdate(amountToUpdate, secondaryAmount);
         }
 
         return Promise.resolve(this);
@@ -308,10 +311,8 @@ class Core implements ICore {
      * @param secondaryAmount - Optional secondary amount for display purposes (e.g., converted currency)
      * @internal
      */
-    private triggerAmountUpdate(amount: PaymentAmount | undefined, secondaryAmount?: PaymentAmount): void {
-        const resolvedAmount = amount ?? this.options.amount;
-
-        if (!resolvedAmount || !isAmountValid(resolvedAmount)) {
+    private triggerAmountUpdate(amount: PaymentAmount, secondaryAmount?: PaymentAmount): void {
+        if (!isAmountValid(amount)) {
             console.warn('Core update(): Update canceled. Invalid amount object');
             return;
         }
@@ -322,12 +323,12 @@ class Core implements ICore {
         }
 
         this.setOptions({
-            amount: resolvedAmount,
+            ...(amount && { amount }),
             ...(secondaryAmount && { secondaryAmount })
         });
 
         this.components.forEach(component => {
-            component.updateAmount(resolvedAmount, secondaryAmount);
+            component.updateAmount(amount, secondaryAmount);
         });
     }
 
@@ -337,7 +338,7 @@ class Core implements ICore {
      * @returns this - the element instance
      * // TODO: Do we need this?
      */
-    public remove = (component): this => {
+    public remove = (component: UIElement): this => {
         this.components = this.components.filter(c => c._id !== component._id);
         component.unmount();
 
