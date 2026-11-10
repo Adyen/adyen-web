@@ -12,6 +12,8 @@ import { CSFThisObject } from '../types';
  * @param pFeedbackObj -
  */
 export function handleIframeConfigFeedback({ csfState, csfCallbacks }: CSFThisObject, isConfigured, pFeedbackObj): boolean {
+    if (!csfState) return false;
+
     csfState.iframeConfigCount += 1;
 
     if (window._b$dl)
@@ -30,7 +32,7 @@ export function handleIframeConfigFeedback({ csfState, csfCallbacks }: CSFThisOb
         }
     } else {
         const callbackObj: CardAdditionalSFData = { additionalIframeConfigured: true, fieldType: pFeedbackObj.fieldType, type: csfState.type };
-        csfCallbacks.onAdditionalSFConfig(callbackObj);
+        csfCallbacks?.onAdditionalSFConfig?.(callbackObj);
     }
 
     return false;

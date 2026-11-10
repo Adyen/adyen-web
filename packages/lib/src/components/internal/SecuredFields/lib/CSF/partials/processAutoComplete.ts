@@ -14,6 +14,8 @@ import { CSFThisObject } from '../types';
  * @param pFeedbackObj -
  */
 export function processAutoComplete({ csfState, csfConfig, csfCallbacks }: CSFThisObject, pFeedbackObj: SFFeedbackObj): boolean {
+    if (!csfState) return false;
+
     /**
      * NOTE: It seems Chrome has started autofilling across cross-origin iframes. Have tested as far back as v104 but have no resources to test further back
      * So, in theory for Chrome \>= v104 we don't need to do any of this, including having special listeners in the securedFields
@@ -24,13 +26,13 @@ export function processAutoComplete({ csfState, csfConfig, csfCallbacks }: CSFTh
         const feedbackObj: SFFeedbackObj = { ...pFeedbackObj };
         delete feedbackObj.numKey;
         const ACFeedbackObj: CardAutoCompleteData = feedbackObj as CardAutoCompleteData;
-        csfCallbacks.onAutoComplete(ACFeedbackObj);
+        csfCallbacks?.onAutoComplete?.(ACFeedbackObj);
         return true;
     }
 
     // Send date info to relevant secured fields (needed for Safari whose Security model won't allow direct population of fields in 3rd party iframes)
     if (pFeedbackObj.name === 'cc-exp') {
-        const splittableDateVal = pFeedbackObj.value.replace(/[^0-9]/gi, '/'); // Replace any non-digits with a fwd-slash so we can always split it
+        const splittableDateVal = (pFeedbackObj.value ?? '').replace(/[^0-9]/gi, '/'); // Replace any non-digits with a fwd-slash so we can always split it
 
         const dateValArr: string[] = splittableDateVal.split('/');
 
@@ -58,9 +60,9 @@ export function processAutoComplete({ csfState, csfConfig, csfCallbacks }: CSFTh
                 txVariant: csfState.type,
                 fieldType: ENCRYPTED_EXPIRY_DATE,
                 autoComplete: acDateVal,
-                numKey: csfState.securedFields[ENCRYPTED_EXPIRY_DATE].numKey
+                numKey: csfState.securedFields[ENCRYPTED_EXPIRY_DATE]?.numKey
             };
-            postMessageToIframe(dataObj, getIframeContentWin(csfState, ENCRYPTED_EXPIRY_DATE), csfConfig.loadingContext);
+            postMessageToIframe(dataObj, getIframeContentWin(csfState, ENCRYPTED_EXPIRY_DATE), csfConfig?.loadingContext ?? '');
             return true;
         }
 
@@ -69,9 +71,9 @@ export function processAutoComplete({ csfState, csfConfig, csfCallbacks }: CSFTh
                 txVariant: csfState.type,
                 fieldType: ENCRYPTED_EXPIRY_MONTH,
                 autoComplete: acMonthVal,
-                numKey: csfState.securedFields[ENCRYPTED_EXPIRY_MONTH].numKey
+                numKey: csfState.securedFields[ENCRYPTED_EXPIRY_MONTH]?.numKey
             };
-            postMessageToIframe(dataObj, getIframeContentWin(csfState, ENCRYPTED_EXPIRY_MONTH), csfConfig.loadingContext);
+            postMessageToIframe(dataObj, getIframeContentWin(csfState, ENCRYPTED_EXPIRY_MONTH), csfConfig?.loadingContext ?? '');
         }
 
         if (hasOwnProperty(csfState.securedFields, ENCRYPTED_EXPIRY_YEAR)) {
@@ -81,9 +83,9 @@ export function processAutoComplete({ csfState, csfConfig, csfCallbacks }: CSFTh
                     txVariant: csfState.type,
                     fieldType: ENCRYPTED_EXPIRY_YEAR,
                     autoComplete: acYearVal,
-                    numKey: csfState.securedFields[ENCRYPTED_EXPIRY_YEAR].numKey
+                    numKey: csfState.securedFields[ENCRYPTED_EXPIRY_YEAR]?.numKey
                 };
-                postMessageToIframe(dataObj, getIframeContentWin(csfState, ENCRYPTED_EXPIRY_YEAR), csfConfig.loadingContext);
+                postMessageToIframe(dataObj, getIframeContentWin(csfState, ENCRYPTED_EXPIRY_YEAR), csfConfig?.loadingContext ?? '');
             }, 0);
         }
         return true;

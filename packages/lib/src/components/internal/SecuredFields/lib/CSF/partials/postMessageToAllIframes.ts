@@ -13,6 +13,8 @@ import { SFFieldType } from '../../types';
  * @param pDataObj -
  */
 export function postMessageToAllIframes({ csfState, csfConfig }: CSFThisObject, pDataObj: object): boolean {
+    if (!csfState) return false;
+
     const objKeys: string[] = Object.keys(pDataObj || {});
     if (!objKeys.length) {
         // pDataObj is an object with the 'special' key(s) that represent the reason for making this postMessage
@@ -22,10 +24,12 @@ export function postMessageToAllIframes({ csfState, csfConfig }: CSFThisObject, 
 
     const securedFieldKeys: string[] = Object.keys(csfState.securedFields);
     securedFieldKeys.forEach((pFieldType: SFFieldType) => {
+        if (!csfState) return;
+
         const dataObj: object = {
             txVariant: csfState.type,
             fieldType: pFieldType,
-            numKey: csfState.securedFields[pFieldType].numKey
+            numKey: csfState.securedFields[pFieldType]?.numKey
         };
 
         // Copy across 'special' properties from passed data object
@@ -33,7 +37,7 @@ export function postMessageToAllIframes({ csfState, csfConfig }: CSFThisObject, 
             dataObj[pKey] = pDataObj[pKey];
         });
 
-        postMessageToIframe(dataObj, getIframeContentWin(csfState, pFieldType), csfConfig.loadingContext);
+        postMessageToIframe(dataObj, getIframeContentWin(csfState, pFieldType), csfConfig?.loadingContext ?? '');
     });
     return true;
 }

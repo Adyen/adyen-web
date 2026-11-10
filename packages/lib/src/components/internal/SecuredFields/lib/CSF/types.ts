@@ -103,7 +103,7 @@ export interface CSFStateObject {
     iframeConfigCount: number;
     isConfigured: boolean;
     hasSeparateDateFields: boolean;
-    currentFocusObject: string;
+    currentFocusObject: string | null;
     registerFieldForIos: boolean;
     securedFields: SecuredFields;
     isKCP: boolean;
