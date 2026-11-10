@@ -78,8 +78,6 @@ const STRICT_NULL_CHECKS_BACKLOG = [
     'src/utils/clipboard.ts',
 
     // ── Ticket 3: SecuredFields and CSF (161 errors) ──
-    // 'src/components/internal/SecuredFields/binLookup/extensions.ts',
-    // 'src/components/internal/SecuredFields/lib/CSF/CSF.ts',
     'src/components/internal/SecuredFields/lib/CSF/extensions/createSecuredFields.ts',
     'src/components/internal/SecuredFields/lib/CSF/extensions/handleBrandFromBinLookup.ts',
     'src/components/internal/SecuredFields/lib/CSF/extensions/handleEncryption.ts',
@@ -100,10 +98,6 @@ const STRICT_NULL_CHECKS_BACKLOG = [
     'src/components/internal/SecuredFields/lib/CSF/utils/tabbing/tabScenarioGiftCard.ts',
     'src/components/internal/SecuredFields/lib/CSF/utils/tabbing/tabScenarioKCP.ts',
     'src/components/internal/SecuredFields/lib/CSF/utils/tabbing/utils.ts',
-    // 'src/components/internal/SecuredFields/lib/securedField/SecuredField.ts',
-    // 'src/components/internal/SecuredFields/SFP/SecuredFieldsProvider.ts',
-    // 'src/components/internal/SecuredFields/SFP/SecuredFieldsProviderHandlers.ts',
-    // 'src/components/internal/SecuredFields/SFP/SFPUtils.ts',
 
     // ── Ticket 4: Shared form fields (92 errors) ──
 
