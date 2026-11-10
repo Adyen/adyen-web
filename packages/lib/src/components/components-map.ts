@@ -52,6 +52,7 @@ import OnlineBankingIN from './OnlineBankingIN';
 import OnlineBankingPL from './OnlineBankingPL';
 import RatePayDirectDebit from './RatePay/RatePayDirectDebit';
 import UPI from './UPI';
+import EMI from './EMI';
 import WalletINElement from './WalletIN';
 import OnlineBankingCZ from './OnlineBankingCZ';
 import OnlineBankingSK from './OnlineBankingSK';
@@ -247,6 +248,10 @@ export const ComponentsMap = {
     [TxVariants.upi_qr]: UPI, // also QR
     [TxVariants.upi_intent]: UPI,
     /** Await */
+
+    /** EMI */
+    [TxVariants.emi]: EMI,
+    /** EMI */
 
     /** Giftcard */
     [TxVariants.giftcard]: Giftcard,
