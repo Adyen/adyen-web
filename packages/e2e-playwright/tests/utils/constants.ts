@@ -1,4 +1,5 @@
 export const API_VERSION = Number(process.env.API_VERSION.substring(1));
+export const EMI_MIN_API_VERSION = 72; // /payments rejects the emiPlan field before v72
 
 export const BIN_LOOKUP_VERSION = 'v3';
 
@@ -22,6 +23,8 @@ export const THREEDS2_CHALLENGE_ONLY_CARD = '4212345678910006';
 export const THREEDS2_CHALLENGE_PASSWORD = 'password';
 export const MULTI_LUHN_MAESTRO = '6771830999991239343'; // maestro that passes luhn check at 16, 18 & 19 digits
 export const THREEDS2_MAESTRO_CARD = '5000550000000029';
+export const EMI_TEST_CARD = '5548370000000013'; // HDFC-issued; /payments rejects other test cards with 1086_101 (issuer mismatch)
+export const EMI_TEST_CARD_PROVIDER = 'HDFC Bank';
 
 export const UNKNOWN_BIN_CARD = '135410014004955'; // card that is not in the test DBs (uatp)
 export const UNKNOWN_BIN_CARD_REGEX_VISA = '4354100140049554'; // card that is not in the test DBs but which our regEx will recognise as Visa
@@ -42,6 +45,8 @@ export const TEST_CVC_VALUE = '737';
 export const TEST_POSTCODE = '60607'; // adyen chicago office postcode
 
 export const BIN_LOOKUP_URL = `https://checkoutshopper-test.adyen.com/checkoutshopper/${BIN_LOOKUP_VERSION}/bin/binLookup?token=${process.env.CLIENT_KEY}`;
+
+export const EMI_PLANS_URL = '**/utility/v1/emi/plans**';
 
 export const USER_TYPE_DELAY = 150;
 export const KEYBOARD_DELAY = 300;
@@ -98,6 +103,27 @@ export const IRIS_ISSUERS = [
     { id: 'PRXBGRAA', name: 'Viva' },
     { id: 'ATTIGRAA', name: 'CrediaBank' }
 ];
+
+// EMI plan labels, derived from mocks/emiPlans/emiPlans.data.ts
+export const EMI_PLANS = {
+    hdfc: {
+        name: 'HDFC Bank',
+        firstPlan: /₹46,499.70 x 3 months/,
+        secondPlan: /₹28,166.50 x 6 months/,
+        secondPlanAnnouncement:
+            '₹28,166.50 x 6 months | @15.5% p.a. Amount reserved on card: ₹154,999.00. Total amount to be paid over time: ₹168,999.00',
+        instantDiscount: '-₹15,499.90',
+        interestDiscount: '-₹4,082.65'
+    },
+    icici: {
+        name: 'ICICI Bank',
+        firstPlan: /₹52,366.50 x 3 months/,
+        firstPlanAnnouncement:
+            '₹52,366.50 x 3 months | @7.5% p.a. Amount reserved on card: ₹150,798.00. Total amount to be paid over time: ₹157,099.50',
+        secondPlan: /₹19,333.22 x 9 months/,
+        tag: 'Low cost'
+    }
+};
 
 export const TAGS = {
     SCREENSHOT: '@screenshot'
