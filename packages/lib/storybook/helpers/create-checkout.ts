@@ -12,7 +12,8 @@ async function createCheckout(checkoutConfig: GlobalStoryProps, shopperDetails?:
     const hasPaymentOverridden = overriddenPaymentMethodsAmount > 0;
 
     if (useSessions) {
-        if (!hasPaymentOverridden && !rest.allowedPaymentTypes) {
+        // TODO: remove blockedPaymentMethods/allowedPaymentMethods once the EMI backend filtering is validated (revert c3a070cb5)
+        if (!hasPaymentOverridden && !rest.allowedPaymentTypes && !rest.blockedPaymentMethods?.length && !rest.allowedPaymentMethods?.length) {
             return await createSessionsCheckout(rest, shopperDetails);
         } else {
             console.warn('🟢 Checkout Storybook: Forcing advance flow.');

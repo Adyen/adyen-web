@@ -21,6 +21,15 @@ const meta: MetaConfiguration<DropinConfiguration> = {
             control: 'object',
             if: { arg: 'useSessions', truthy: false }
         },
+        // TODO: remove blockedPaymentMethods/allowedPaymentMethods once the EMI backend filtering is validated (revert c3a070cb5)
+        blockedPaymentMethods: {
+            control: 'object',
+            if: { arg: 'useSessions', truthy: false }
+        },
+        allowedPaymentMethods: {
+            control: 'object',
+            if: { arg: 'useSessions', truthy: false }
+        },
         sessionData: {
             control: 'object',
             if: { arg: 'useSessions', truthy: true }

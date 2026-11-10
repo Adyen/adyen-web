@@ -22,6 +22,9 @@ async function createAdvancedFlowCheckout(
         shopperLocale,
         amount,
         allowedPaymentTypes = [],
+        // TODO: remove blockedPaymentMethods/allowedPaymentMethods once the EMI backend filtering is validated (revert c3a070cb5)
+        blockedPaymentMethods = [],
+        allowedPaymentMethods = [],
         paymentMethodsOverride,
         paymentsOptions,
         srConfig = { showPanel: false, moveFocus: true },
@@ -40,10 +43,15 @@ async function createAdvancedFlowCheckout(
         value: Number(amount)
     };
 
+    const blockedTypes = typeof blockedPaymentMethods === 'string' ? [blockedPaymentMethods] : blockedPaymentMethods;
+    const allowedTypes = typeof allowedPaymentMethods === 'string' ? [allowedPaymentMethods] : allowedPaymentMethods;
+
     const _paymentMethodsResponse: PaymentMethodsResponse = await getPaymentMethods({
         amount: paymentAmount,
         shopperLocale,
-        countryCode
+        countryCode,
+        ...(blockedTypes.length > 0 && { blockedPaymentMethods: blockedTypes }),
+        ...(allowedTypes.length > 0 && { allowedPaymentMethods: allowedTypes })
     });
 
     const paymentMethodsResponse = !paymentMethodsOverride

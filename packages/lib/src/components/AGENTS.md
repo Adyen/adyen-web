@@ -83,6 +83,10 @@ folders (`BrandImage`, `SegmentedControl`, `Tooltip`, `Timeline`) still use `exp
    `BaseElement`, which probes this map to classify a method as native vs generic in analytics
    `sdkData` — so omitting an entry silently changes analytics, it isn't cosmetic.
 4. `index.ts` — `export { default as Component } from './Component';`
+5. `types.ts` — `export type { ComponentConfiguration } from './Component/types';`, naming only the
+   types a merchant needs. This barrel is the package's public typings, so `export *` would publish
+   internal types and enums as a merchant contract. The existing `export *` lines are legacy, to be
+   narrowed to named exports in a future major; don't copy them.
 
 ## Conventions
 

@@ -49,6 +49,15 @@ export enum ErrorEventCode {
 
     /** See also API_ERROR_CODE object in /src/core/Services/sessions/constants.ts which uses codes in the range 620-628 */
 
+    /** The EMI plans request was rejected because its `emiToken` is missing, expired or forged */
+    EMI_PLANS_TOKEN_INVALID = '629',
+
+    /** The EMI plans request failed for any other reason: timeout, network or CORS failure, server error, unreadable body */
+    EMI_PLANS_FETCH_FAILED = '630',
+
+    /** None of the payment methods EMI was configured with is one the component implements */
+    EMI_NO_SUPPORTED_PAYMENT_METHOD = '631',
+
     /**  Missing 'paymentData' property from threeDS2 action */
     THREEDS2_ACTION_IS_MISSING_PAYMENT_DATA = '700',
 
