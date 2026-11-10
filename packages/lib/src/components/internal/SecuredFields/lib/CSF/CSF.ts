@@ -26,7 +26,6 @@ import * as logger from '../utilities/logger';
 import { selectOne } from '../utilities/dom';
 import { on } from '../../../../../utils/listenerUtils';
 import { partial } from '../utilities/commonUtils';
-import { hasOwnProperty } from '../../../../../utils/hasOwnProperty';
 import ua from './utils/userAgent';
 import { SingleBrandResetObject } from '../../SFP/types';
 
@@ -51,6 +50,8 @@ class CSF extends AbstractCSF {
          */
         super(setupObj);
 
+        console.log('CSF constructor this.props.type:', this.props.type);
+
         this.state = {
             /**
              *  For generic card will always be 'card'.
@@ -62,7 +63,10 @@ class CSF extends AbstractCSF {
              *  For generic card will change as shopper types
              *  For non-generic card will be fixed
              */
-            brand: this.props.type !== 'card' ? { brand: this.props.type, cvcPolicy: 'required' } : { brand: null, cvcPolicy: 'required' },
+            brand:
+                this.props.type !== 'card'
+                    ? { brand: this.props.type, cvcPolicy: 'required', expiryDatePolicy: 'required' }
+                    : { brand: null, cvcPolicy: 'required', expiryDatePolicy: 'required' },
             allValid: undefined,
             numIframes: 0,
             originalNumIframes: 0,
@@ -74,7 +78,7 @@ class CSF extends AbstractCSF {
             registerFieldForIos: false,
             securedFields: {},
             isKCP: false
-        } as CSFStateObject;
+        };
 
         // Create object of references to properties on 'this', that can be used to set up the partials
         const thisObj: CSFThisObject = { csfState: this.state, csfConfig: this.config, csfProps: this.props, csfCallbacks: this.callbacks };
@@ -179,7 +183,7 @@ class CSF extends AbstractCSF {
             // function as a way to notify the CSF that a field is in error
             isValidated: (pFieldType: SFFieldType, code: string): void => {
                 if (this.state.isConfigured) {
-                    if (hasOwnProperty(this.state.securedFields, pFieldType)) {
+                    if (this.state.securedFields[pFieldType]) {
                         this.state.securedFields[pFieldType].hasError = true;
 
                         // If there's not already an errorType, set one
@@ -205,7 +209,7 @@ class CSF extends AbstractCSF {
             },
             hasUnsupportedCard: (pFieldType: SFFieldType, code: string): void => {
                 if (this.state.isConfigured) {
-                    if (hasOwnProperty(this.state.securedFields, pFieldType)) {
+                    if (this.state.securedFields[pFieldType]) {
                         //
                         this.state.securedFields[pFieldType].hasError = !!code;
                         this.state.securedFields[pFieldType].errorType = code;
@@ -232,7 +236,7 @@ class CSF extends AbstractCSF {
                 }
             },
             brandsFromBinLookup: (binLookupResponse: BinLookupResponse, resetObj: SingleBrandResetObject): void => {
-                if (!this.config.isCreditCardType) return null;
+                if (!this.config.isCreditCardType) return;
 
                 if (this.state.isConfigured) {
                     this.handleBrandFromBinLookup(binLookupResponse, resetObj);
@@ -255,7 +259,7 @@ class CSF extends AbstractCSF {
                     this.state.iframeCount -= 1;
 
                     const callbackObj: CardAdditionalSFData = { additionalIframeRemoved: true, fieldType: pFieldType, type: this.state.type };
-                    this.callbacks.onAdditionalSFRemoved(callbackObj);
+                    this.callbacks.onAdditionalSFRemoved?.(callbackObj);
                 }
             },
             setKCPStatus: (isKCP: boolean): void => {

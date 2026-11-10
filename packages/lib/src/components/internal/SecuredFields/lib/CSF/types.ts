@@ -96,14 +96,15 @@ export interface CSFCallbacksConfig {
 export interface CSFStateObject {
     type: string;
     brand: BrandStorageObject;
-    allValid: boolean;
+    // undefined initially, so the first validation broadcasts onAllValid even when it starts out invalid (see validateForm.ts)
+    allValid: boolean | undefined;
     numIframes: number;
     originalNumIframes: number;
     iframeCount: number;
     iframeConfigCount: number;
     isConfigured: boolean;
     hasSeparateDateFields: boolean;
-    currentFocusObject: string;
+    currentFocusObject: string | null;
     registerFieldForIos: boolean;
     securedFields: SecuredFields;
     isKCP: boolean;
