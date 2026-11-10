@@ -9,7 +9,9 @@ import ThreeDS2Challenge from '../components/ThreeDS2/ThreeDS2Challenge';
 import Redirect from '../components/Redirect';
 import { PaymentActionsType } from '../types/global-types';
 import Analytics from './Analytics';
+import { setupCoreMock } from '../../config/testMocks/setup-core-mock';
 import type { CoreConfiguration } from './types';
+import type { PaymentAction } from '../types/global-types';
 import type { DropinComponent } from '../components/Dropin/components/DropinComponent';
 
 jest.mock('./CheckoutSession');
@@ -314,6 +316,26 @@ describe('Core', () => {
             expect(paymentAction.props.url).toBe('https://example.com');
         });
 
+        test('should throw when the action has no type', async () => {
+            const checkout = new AdyenCheckout({ countryCode: 'US', environment: 'test', clientKey: 'test_123456' });
+            await checkout.initialize();
+
+            const actionWithoutType = { paymentMethodType: 'alipay' } as PaymentAction;
+
+            expect(() => checkout.createFromAction(actionWithoutType)).toThrow(
+                'createFromAction::Invalid Action - the passed action object does not have a "type" property'
+            );
+        });
+
+        test('should throw a helpful error when the whole payment response is passed instead of the action', async () => {
+            const checkout = new AdyenCheckout({ countryCode: 'US', environment: 'test', clientKey: 'test_123456' });
+            await checkout.initialize();
+
+            const paymentResponse = { resultCode: 'RedirectShopper', action: { type: 'redirect' } } as unknown as PaymentAction;
+
+            expect(() => checkout.createFromAction(paymentResponse)).toThrow('have you passed in the whole response object by mistake?');
+        });
+
         test('should handle threeDS2 subtype "fingerprint" action', async () => {
             const checkout = new AdyenCheckout({
                 countryCode: 'US',
@@ -602,6 +624,51 @@ describe('Core', () => {
                 expect(component.props.secondaryAmount).toBeUndefined();
 
                 expect(console.warn).toHaveBeenCalledWith('Core update(): Update canceled. Invalid secondary amount object');
+            });
+
+            test('should keep the current amount when only the secondary amount is updated', async () => {
+                const initialAmount = { currency: 'USD', value: 5000 };
+                const checkout = new AdyenCheckout({
+                    amount: initialAmount,
+                    countryCode: 'US',
+                    environment: 'test',
+                    clientKey: 'test_123456',
+                    analytics: { enabled: false }
+                });
+                await checkout.initialize();
+
+                const component = new Redirect(checkout);
+                const spy = jest.spyOn(component, 'updateAmount');
+
+                const secondaryAmount = { currency: 'EUR', value: 4500 };
+
+                await checkout.update({ secondaryAmount }, { shouldReinitializeCheckout: false });
+
+                expect(spy).toHaveBeenCalledWith(initialAmount, secondaryAmount);
+                expect(checkout.options.amount).toEqual(initialAmount);
+                expect(checkout.options.secondaryAmount).toEqual(secondaryAmount);
+                expect(component.props.secondaryAmount).toEqual(secondaryAmount);
+            });
+
+            test('should not update the secondary amount if there is no amount to pair it with', async () => {
+                console.warn = jest.fn();
+
+                const checkout = new AdyenCheckout({
+                    countryCode: 'US',
+                    environment: 'test',
+                    clientKey: 'test_123456',
+                    analytics: { enabled: false }
+                });
+                await checkout.initialize();
+
+                const component = new Redirect(checkout);
+                const spy = jest.spyOn(component, 'updateAmount');
+
+                await checkout.update({ secondaryAmount: { currency: 'EUR', value: 4500 } }, { shouldReinitializeCheckout: false });
+
+                expect(spy).not.toHaveBeenCalled();
+                expect(checkout.options.secondaryAmount).toBeUndefined();
+                expect(console.warn).toHaveBeenCalledWith('Core update(): Update canceled. Invalid amount object');
             });
         });
 
@@ -908,13 +975,61 @@ describe('Core', () => {
             });
 
             await core.initialize();
-            core.modules = global.commonCoreProps.modules;
+            core.modules = setupCoreMock().modules;
             core.submitDetails(details);
 
             const flushPromises = () => new Promise(process.nextTick);
             await flushPromises();
 
             expect(mockAfterAdditionalDetails).toHaveBeenCalled();
+        });
+
+        test('calls onAdditionalDetails without a component on the advanced flow', async () => {
+            const onAdditionalDetails = jest.fn((_state, _component, actions) => actions.resolve({ resultCode: 'Authorised' }));
+            const onPaymentCompleted = jest.fn();
+
+            const core = new AdyenCheckout({
+                countryCode: 'US',
+                clientKey: 'test_CLIENT_KEY',
+                environment: 'test',
+                analytics: { enabled: false },
+                onAdditionalDetails,
+                onPaymentCompleted
+            });
+            await core.initialize();
+            core.submitDetails(details);
+
+            const flushPromises = () => new Promise(process.nextTick);
+            await flushPromises();
+
+            expect(onAdditionalDetails).toHaveBeenCalledWith(
+                { data: details },
+                undefined,
+                expect.objectContaining({ resolve: expect.any(Function) })
+            );
+            expect(onPaymentCompleted).toHaveBeenCalledWith({ resultCode: 'Authorised' });
+        });
+
+        test('calls onError with IMPLEMENTATION_ERROR when neither onAdditionalDetails nor a session is configured', async () => {
+            const onError = jest.fn();
+            const onPaymentCompleted = jest.fn();
+
+            const core = new AdyenCheckout({
+                countryCode: 'US',
+                clientKey: 'test_CLIENT_KEY',
+                environment: 'test',
+                analytics: { enabled: false },
+                onError,
+                onPaymentCompleted
+            });
+            await core.initialize();
+            core.submitDetails(details);
+
+            const flushPromises = () => new Promise(process.nextTick);
+            await flushPromises();
+
+            expect(onError).toHaveBeenCalledWith(expect.objectContaining({ name: 'IMPLEMENTATION_ERROR' }));
+            expect(onPaymentCompleted).not.toHaveBeenCalled();
         });
     });
 });
