@@ -153,6 +153,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
         let loadingContext = this.props.loadingContext;
 
         // For loading securedFields from local server during development
+        /* istanbul ignore next -- dev-only local-testing override */
         if (process.env.NODE_ENV === 'development' && process.env.__SF_ENV__ !== 'build') {
             loadingContext = process.env.__SF_ENV__ ?? loadingContext;
         }
