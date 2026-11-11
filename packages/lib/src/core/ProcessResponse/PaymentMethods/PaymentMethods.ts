@@ -25,7 +25,7 @@ class PaymentMethods {
     public paymentMethods: PaymentMethod[] = [];
     public storedPaymentMethods: StoredPaymentMethod[] = [];
 
-    constructor(response: PaymentMethodsResponse, options = {}) {
+    constructor(response?: PaymentMethodsResponse, options = {}) {
         checkPaymentMethodsResponse(response);
 
         this.paymentMethods = response ? processPaymentMethods(response.paymentMethods, options) : [];
@@ -43,7 +43,7 @@ class PaymentMethods {
         return Boolean(this.paymentMethods.find(pm => pm.type === this.mapCreatedComponentType(paymentMethod)));
     }
 
-    find(paymentMethod: string): PaymentMethod {
+    find(paymentMethod: string): PaymentMethod | undefined {
         return this.paymentMethods.find(pm => pm.type === this.mapCreatedComponentType(paymentMethod));
     }
 
@@ -53,16 +53,16 @@ class PaymentMethods {
      * of the same type but with different fundingSource values (e.g. credit, debit, prepaid).
      * Falls back to the first match by type if no funding source match is found.
      */
-    findByFundingSource(paymentMethod: string, fundingSource: string): PaymentMethod {
+    findByFundingSource(paymentMethod: string, fundingSource: string): PaymentMethod | undefined {
         const mappedType = this.mapCreatedComponentType(paymentMethod);
         return this.paymentMethods.find(pm => pm.type === mappedType && pm.fundingSource === fundingSource);
     }
 
-    findById(paymentMethodId: string): PaymentMethod {
+    findById(paymentMethodId: string): PaymentMethod | undefined {
         return this.paymentMethods.find(pm => pm._id === paymentMethodId);
     }
 
-    findStoredPaymentMethod(storedPaymentMethodId: string): StoredPaymentMethod {
+    findStoredPaymentMethod(storedPaymentMethodId: string): StoredPaymentMethod | undefined {
         return this.storedPaymentMethods.find(pm => pm.id === storedPaymentMethodId);
     }
 }

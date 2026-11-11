@@ -14,7 +14,7 @@ export interface RequestAttemptIdPayload {
     version: string;
     channel: CHANNEL;
     platform: string;
-    locale: string;
+    locale?: string;
     checkoutStage: 'precheckout' | 'checkout';
     referrer: string;
     screenWidth: number;
@@ -41,10 +41,10 @@ export interface AnalyticsFlavorPayload {
 const ANALYTICS_PATH = 'v3/analytics';
 
 class AnalyticsService implements IAnalyticsService {
-    private readonly clientKey: string;
+    private readonly clientKey: string | undefined;
     private readonly analyticsContext: string;
 
-    constructor({ clientKey, analyticsContext }: { clientKey: string; analyticsContext: string }) {
+    constructor({ clientKey, analyticsContext }: { clientKey: string | undefined; analyticsContext: string }) {
         this.clientKey = clientKey;
         this.analyticsContext = analyticsContext;
     }

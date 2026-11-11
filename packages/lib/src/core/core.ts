@@ -17,7 +17,14 @@ import { defaultProps } from './core.defaultProps';
 import { resolveEnvironments } from './Environment';
 import { LIBRARY_BUNDLE_TYPE, LIBRARY_VERSION } from './config';
 
-import type { PaymentAction, PaymentAmount, PaymentData, PaymentMethodsResponse, PaymentResponseData } from '../types/global-types';
+import type {
+    CheckoutAdvancedFlowResponse,
+    PaymentAction,
+    PaymentAmount,
+    PaymentData,
+    PaymentMethodsResponse,
+    PaymentResponseData
+} from '../types/global-types';
 import type { CoreConfiguration, ICore, AdditionalDetailsData, CoreModules, CorePropsForComponent, CreateFromActionOptions } from './types';
 import type { UIElementProps } from '../components/internal/UIElement/types';
 import { AnalyticsLogEvent, LogEventSubtype, LogEventType } from './Analytics/events/AnalyticsLogEvent';
@@ -26,6 +33,7 @@ import { AnalyticsService } from './Analytics/AnalyticsService';
 import { AnalyticsEventQueue } from './Analytics/AnalyticsEventQueue';
 import { isAmountValid } from '../utils/amount-util';
 import { LanguageService } from '../language/LanguageService';
+import { CheckoutSessionDetailsResponse } from './CheckoutSession/types';
 
 class Core implements ICore {
     public session?: Session;
@@ -174,11 +182,11 @@ class Core implements ICore {
      * @param details - Details object containing the redirectResult
      */
     public submitDetails(details: AdditionalDetailsData['data']): void {
-        let promise = null;
+        let promise: Promise<CheckoutAdvancedFlowResponse | CheckoutSessionDetailsResponse> | null = null;
 
         if (this.options.onAdditionalDetails) {
             promise = new Promise((resolve, reject) => {
-                this.options.onAdditionalDetails({ data: details }, undefined, { resolve, reject });
+                this.options.onAdditionalDetails?.({ data: details }, undefined, { resolve, reject });
             });
         }
 
@@ -189,7 +197,7 @@ class Core implements ICore {
             });
         }
 
-        if (!promise) {
+        if (promise === null) {
             this.options.onError?.(
                 new AdyenCheckoutError(
                     'IMPLEMENTATION_ERROR',
@@ -239,7 +247,7 @@ class Core implements ICore {
      * @returns new UIElement
      */
     public createFromAction(action: PaymentAction, options: CreateFromActionOptions = {}): UIElement {
-        if (!action || !action.type) {
+        if (!action?.type) {
             if (hasOwnProperty(action, 'action') && hasOwnProperty(action, 'resultCode')) {
                 throw new Error(
                     'createFromAction::Invalid Action - the passed action object itself has an "action" property and ' +
@@ -249,27 +257,22 @@ class Core implements ICore {
             throw new Error('createFromAction::Invalid Action - the passed action object does not have a "type" property');
         }
 
-        if (action.type) {
-            // 'threeDS2' OR 'qrCode', 'voucher', 'redirect', 'await', 'bankTransfer`
-            const component = action.type === THREEDS2_FULL ? `${action.type}${action.subtype}` : action.paymentMethodType;
+        const component = action.type === THREEDS2_FULL ? `${action.type}${action.subtype}` : action.paymentMethodType;
 
-            const event = new AnalyticsLogEvent({
-                type: LogEventType.action,
-                subType: AnalyticsLogEvent.getSubtypeFromActionType(action.type),
-                message: `${component} action was handled by the SDK`,
-                component
-            });
-            this.modules.analytics.sendAnalytics(event);
+        const event = new AnalyticsLogEvent({
+            type: LogEventType.action,
+            subType: AnalyticsLogEvent.getSubtypeFromActionType(action.type),
+            message: `${component} action was handled by the SDK`,
+            component
+        });
+        this.modules.analytics.sendAnalytics(event);
 
-            const props = {
-                ...this.getCorePropsForComponent(),
-                ...options
-            };
+        const props = {
+            ...this.getCorePropsForComponent(),
+            ...options
+        };
 
-            return getComponentForAction(this, registry, action, props);
-        }
-
-        return this.handleCreateError();
+        return getComponentForAction(this, registry, action, props);
     }
 
     /**
@@ -299,8 +302,11 @@ class Core implements ICore {
 
         const { amount, secondaryAmount } = props;
 
-        if (amount || secondaryAmount) {
-            this.triggerAmountUpdate(amount, secondaryAmount);
+        // Use the provided amount or fallback to the current options amount to prevent setting an undefined amount
+        const amountToUpdate = amount ?? this.options.amount;
+
+        if (amountToUpdate && (amount || secondaryAmount)) {
+            this.triggerAmountUpdate(amountToUpdate, secondaryAmount);
         }
 
         return Promise.resolve(this);
@@ -309,7 +315,7 @@ class Core implements ICore {
     /**
      * Validates and propagates amount updates to all mounted components.
      *
-     * @param amount - Primary payment amount object (required)
+     * @param amount - Primary payment amount object
      * @param secondaryAmount - Optional secondary amount for display purposes (e.g., converted currency)
      * @internal
      */
@@ -325,7 +331,7 @@ class Core implements ICore {
         }
 
         this.setOptions({
-            amount,
+            ...(amount && { amount }),
             ...(secondaryAmount && { secondaryAmount })
         });
 
@@ -340,7 +346,7 @@ class Core implements ICore {
      * @returns this - the element instance
      * // TODO: Do we need this?
      */
-    public remove = (component): this => {
+    public remove = (component: UIElement): this => {
         this.components = this.components.filter(c => c._id !== component._id);
         component.unmount();
 
@@ -351,7 +357,7 @@ class Core implements ICore {
      * @internal
      * Create or update the config object passed when AdyenCheckout is initialised (environment, clientKey, etc...)
      */
-    private setOptions = (options: CoreConfiguration): void => {
+    private readonly setOptions = (options: CoreConfiguration): void => {
         this.options = {
             ...this.options,
             ...options,
@@ -430,20 +436,6 @@ class Core implements ICore {
         if (element) {
             this.components.push(element);
         }
-    }
-
-    /**
-     * @internal
-     */
-    private handleCreateError(paymentMethod?): never {
-        const paymentMethodName = paymentMethod?.name ?? 'The passed payment method';
-        const errorMessage = paymentMethod
-            ? `${paymentMethodName} is not a valid Checkout Component. What was passed as a txVariant was: ${JSON.stringify(
-                  paymentMethod
-              )}. Check if this payment method is configured in the Backoffice or if the txVariant is a valid one`
-            : 'No Payment Method component was passed';
-
-        throw new Error(errorMessage);
     }
 
     private createPaymentMethodsList(paymentMethodsResponse?: PaymentMethodsResponse): void {

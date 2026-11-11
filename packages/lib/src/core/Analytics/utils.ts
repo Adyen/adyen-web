@@ -3,9 +3,13 @@ import { digitsOnlyFormatter } from '../../utils/Formatters/formatters';
 import { ERROR_FIELD_REQUIRED, ERROR_INVALID_FORMAT_EXPECTS } from '../Errors/constants';
 import type { AnalyticsOptions } from './types';
 
-export const mapErrorCodesForAnalytics = (errorCode: string, target: string) => {
+export const mapErrorCodesForAnalytics = (errorCode: string, target?: string) => {
     // Some of the more generic error codes required combination with target to retrieve a specific code
     if (errorCode === ERROR_FIELD_REQUIRED || errorCode === ERROR_INVALID_FORMAT_EXPECTS) {
+        if (!target) {
+            return errorCode;
+        }
+
         return errorCodeMapping[`${errorCode}.${target}`] ?? errorCode;
     }
 
@@ -21,11 +25,11 @@ export const mapErrorCodesForAnalytics = (errorCode: string, target: string) => 
 };
 
 export const processAnalyticsData = (analyticsData?: AnalyticsOptions['analyticsData']): AnalyticsOptions['analyticsData'] => {
-    const ALLOWED_ANALYTICS_DATA: Array<keyof AnalyticsOptions['analyticsData']> = ['applicationInfo', 'checkoutAttemptId'];
+    const ALLOWED_ANALYTICS_DATA: Array<keyof NonNullable<AnalyticsOptions['analyticsData']>> = ['applicationInfo', 'checkoutAttemptId'];
 
     if (!analyticsData) return {};
 
-    return ALLOWED_ANALYTICS_DATA.reduce<AnalyticsOptions['analyticsData']>((acc, prop) => {
+    return ALLOWED_ANALYTICS_DATA.reduce<NonNullable<AnalyticsOptions['analyticsData']>>((acc, prop) => {
         if (prop === 'applicationInfo') {
             if (analyticsData.applicationInfo !== undefined) acc.applicationInfo = analyticsData.applicationInfo;
             return acc;

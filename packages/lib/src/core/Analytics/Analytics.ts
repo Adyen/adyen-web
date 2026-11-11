@@ -107,7 +107,7 @@ class Analytics implements IAnalytics {
 
             this.storage.set({
                 id: this.checkoutAttemptId,
-                timestamp: isSessionReusable ? checkoutAttemptIdSession.timestamp : Date.now()
+                timestamp: isSessionReusable && checkoutAttemptIdSession ? checkoutAttemptIdSession.timestamp : Date.now()
             });
         } catch (error: unknown) {
             this.enabled = false;

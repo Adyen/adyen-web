@@ -59,19 +59,9 @@ const canonicalPath = fileName => (ts.sys.useCaseSensitiveFileNames ? fileName :
 // ══════════════════════════════════════════════════════════
 const STRICT_NULL_CHECKS_BACKLOG = [
     // ── Ticket 2: Core, utils and hooks (89 errors) ──
-    'src/core/Analytics/Analytics.ts',
-    'src/core/Analytics/events/AnalyticsInfoEvent.ts',
-    'src/core/Analytics/utils.ts',
-    'src/core/Context/AmountProvider.tsx',
-    'src/core/Context/CoreProvider.tsx',
-    'src/core/core.registry.ts',
-    'src/core/core.ts',
-    'src/core/Environment/Environment.ts',
     'src/core/Errors/SRPanel.tsx',
     'src/core/Errors/SRPanelContext.ts',
     'src/core/Errors/utils.ts',
-    'src/core/ProcessResponse/PaymentAction/actionTypes.ts',
-    'src/core/ProcessResponse/PaymentMethods/PaymentMethods.ts',
     'src/core/RiskModule/components/DeviceFingerprint/DeviceFingerprint.tsx',
     'src/core/RiskModule/components/DeviceFingerprint/GetDeviceFingerprint.tsx',
     'src/core/RiskModule/RiskModule.tsx',

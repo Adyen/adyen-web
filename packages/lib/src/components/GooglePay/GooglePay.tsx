@@ -64,7 +64,7 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
      * @param paymentMethodId - Unique internal payment method ID
      * @returns
      */
-    protected override getPaymentMethodFromPaymentMethodsResponse(type?: string, paymentMethodId?: string): RawPaymentMethod {
+    protected override getPaymentMethodFromPaymentMethodsResponse(type?: string, paymentMethodId?: string): RawPaymentMethod | undefined {
         if (paymentMethodId) return this.core.paymentMethodsResponse.findById(paymentMethodId);
 
         return (
