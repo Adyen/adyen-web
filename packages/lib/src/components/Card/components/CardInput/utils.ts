@@ -37,16 +37,16 @@ export const getCardImageUrl = (brand: string, getImage: UseImageHookType): stri
  * More about it here: COWEB-1070
  */
 export const shouldIncludeInstallmentsInPaymentData = (installment?: InstallmentsState): boolean => {
-    return ['revolving', 'bonus'].includes(installment?.plan) || installment?.value > 1;
+    if (!installment) return false;
+
+    const { plan, value } = installment;
+
+    if (plan === 'revolving' || plan === 'bonus') return true;
+
+    return value !== null && value > 1;
 };
 
-export const getLayout = ({
-    props,
-    showKCP,
-    showBrazilianSSN,
-    countrySpecificSchemas = null,
-    billingAddressRequiredFields = null
-}: LayoutObj): string[] => {
+export const getLayout = ({ props, showKCP, showBrazilianSSN, countrySpecificSchemas, billingAddressRequiredFields }: LayoutObj): string[] => {
     let layout = CREDIT_CARD;
     const hasRequiredHolderName = props.hasHolderName && props.holderNameRequired;
 
@@ -109,7 +109,7 @@ export const mapFieldKey = (key: string, i18n: Language, countrySpecificLabels: 
             return countrySpecificLabels?.[key] ? i18n.get(countrySpecificLabels?.[key]) : i18n.get(key);
         // We know that the translated error messages do contain a reference to the field they refer to, so we won't need to map them (currently applies mostly to SecuredFields related errors)
         default:
-            return null;
+            return ''; // in line with fallback in core/Error.ts
     }
 };
 
@@ -137,7 +137,7 @@ export const extractPropsForCardFields = (props: CardInputProps) => {
     };
 };
 
-export const extractPropsForSFP = (props: CardInputProps): Pick<SFPProps, 'clientKey' | 'loadingContext'> & Partial<SFPProps> => {
+export const extractPropsForSFP = (props: CardInputProps): Partial<SFPProps> => {
     return {
         autoFocus: props.autoFocus,
         brands: props.brands,
