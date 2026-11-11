@@ -182,7 +182,7 @@ const detectCard = (pCardNumber: string, pCardGroupTypes?: string[]): CardObject
         matchedCards = CardType.cards
             .filter(card => pCardGroupTypes.includes(card.cardType))
             // Further filter them to those with a regEx pattern that matches pCardNumber
-            .filter(card => card.pattern !== undefined && pCardNumber.match(card.pattern));
+            .filter(card => card.pattern !== undefined && card.pattern.test(pCardNumber));
 
         // If we have matched cards: if there's only one - return it; else return the one with the longest startingRule
         if (matchedCards.length) {
