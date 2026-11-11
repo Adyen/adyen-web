@@ -16,7 +16,7 @@ const mockState = {
 
 let callbackFnCalled = false;
 
-const rootNode = null as unknown as HTMLElement;
+const rootNode = document.createElement('div');
 
 const onError = () => {
     callbackFnCalled = true;
