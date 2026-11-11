@@ -1,11 +1,13 @@
-import { render, screen } from '@testing-library/preact';
+import { render, screen, waitFor } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
+import { mock } from 'jest-mock-extended';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import ANCV from './ANCV';
 import { ANCVConfiguration } from './types';
 import { ICore } from '../../core/types';
 import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 import { ErrorEventType } from '../../core/Analytics/events/AnalyticsErrorEvent';
+import type CheckoutSession from '../../core/CheckoutSession';
 
 const BENEFICIARY_ID_LABEL = /Your ANCV identification/i;
 
@@ -90,6 +92,68 @@ describe('ANCV', () => {
                 expect.anything(),
                 expect.anything()
             );
+        });
+    });
+
+    describe('submit', () => {
+        test('should not call onPaymentFailed if beforeSubmit is rejected', async () => {
+            const user = userEvent.setup();
+            const core = setupCoreMock();
+            const beforeSubmitMock = jest.fn().mockImplementation((_data, _component, actions) => {
+                actions.reject();
+            });
+            const onPaymentFailedMock = jest.fn();
+            const onOrderRequest = jest.fn(resolve => resolve({ orderData: 'mock', pspReference: 'mock' }));
+            const ancv = setupANCV(core, { beforeSubmit: beforeSubmitMock, onOrderRequest, onPaymentFailed: onPaymentFailedMock });
+            const setElementStatusSpy = jest.spyOn(ancv, 'setElementStatus');
+
+            await typeBeneficiaryId(user, '12345678901');
+            await user.click(screen.getByRole('button', { name: 'Confirm purchase' }));
+
+            await waitFor(() => expect(beforeSubmitMock).toHaveBeenCalledTimes(1));
+            await new Promise(process.nextTick);
+
+            expect(core.session?.submitPayment).not.toHaveBeenCalled();
+            expect(setElementStatusSpy).toHaveBeenLastCalledWith('ready');
+            expect(onPaymentFailedMock).not.toHaveBeenCalled();
+        });
+
+        test('should not make the payments call if onOrderRequest is rejected', async () => {
+            const user = userEvent.setup();
+            const onSubmitMock = jest.fn();
+            const onErrorMock = jest.fn();
+            const onOrderRequest = jest.fn((_resolve, reject) => reject(new AdyenCheckoutError('NETWORK_ERROR', 'Order could not be created')));
+            const ancv = setupANCV(setupCoreMock(), { onSubmit: onSubmitMock, onError: onErrorMock, onOrderRequest });
+            const setElementStatusSpy = jest.spyOn(ancv, 'setElementStatus');
+
+            await typeBeneficiaryId(user, '12345678901');
+            await user.click(screen.getByRole('button', { name: 'Confirm purchase' }));
+
+            await waitFor(() => expect(onErrorMock).toHaveBeenCalledTimes(1));
+            await new Promise(process.nextTick);
+
+            expect(onErrorMock).toHaveBeenCalledWith(expect.objectContaining({ name: 'NETWORK_ERROR' }), ancv);
+            expect(onSubmitMock).not.toHaveBeenCalled();
+            expect(setElementStatusSpy).toHaveBeenLastCalledWith('ready');
+        });
+
+        test('should not make the payments call if the session order could not be created', async () => {
+            const user = userEvent.setup();
+            const session = mock<CheckoutSession>();
+            session.createOrder.mockRejectedValue(new AdyenCheckoutError('NETWORK_ERROR', 'Order could not be created'));
+            const core = setupCoreMock();
+            core.session = session;
+            const onErrorMock = jest.fn();
+            setupANCV(core, { session, onError: onErrorMock });
+
+            await typeBeneficiaryId(user, '12345678901');
+            await user.click(screen.getByRole('button', { name: 'Confirm purchase' }));
+
+            await waitFor(() => expect(onErrorMock).toHaveBeenCalledTimes(1));
+            await new Promise(process.nextTick);
+
+            expect(session.createOrder).toHaveBeenCalledTimes(1);
+            expect(session.submitPayment).not.toHaveBeenCalled();
         });
     });
 
