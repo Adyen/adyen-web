@@ -8,8 +8,8 @@ export const RedirectResultContainer = ({ redirectResult, sessionId, countryCode
     let message = isRedirecting ? 'Submitting details...' : '';
 
     useEffect(() => {
-        if (!redirectResult) {
-            message = 'There is no redirectResult provided';
+        if (!redirectResult || !sessionId) {
+            message = 'There is no redirectResult or session ID provided';
             return;
         }
 
