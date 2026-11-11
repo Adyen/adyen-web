@@ -17,7 +17,14 @@ import { defaultProps } from './core.defaultProps';
 import { resolveEnvironments } from './Environment';
 import { LIBRARY_BUNDLE_TYPE, LIBRARY_VERSION } from './config';
 
-import type { PaymentAction, PaymentAmount, PaymentData, PaymentMethodsResponse, PaymentResponseData } from '../types/global-types';
+import type {
+    CheckoutAdvancedFlowResponse,
+    PaymentAction,
+    PaymentAmount,
+    PaymentData,
+    PaymentMethodsResponse,
+    PaymentResponseData
+} from '../types/global-types';
 import type { CoreConfiguration, ICore, AdditionalDetailsData, CoreModules, CorePropsForComponent, CreateFromActionOptions } from './types';
 import type { UIElementProps } from '../components/internal/UIElement/types';
 import { AnalyticsLogEvent, LogEventSubtype, LogEventType } from './Analytics/events/AnalyticsLogEvent';
@@ -26,6 +33,7 @@ import { AnalyticsService } from './Analytics/AnalyticsService';
 import { AnalyticsEventQueue } from './Analytics/AnalyticsEventQueue';
 import { isAmountValid } from '../utils/amount-util';
 import { LanguageService } from '../language/LanguageService';
+import { CheckoutSessionDetailsResponse } from './CheckoutSession/types';
 
 class Core implements ICore {
     public session?: Session;
@@ -174,7 +182,7 @@ class Core implements ICore {
      * @param details - Details object containing the redirectResult
      */
     public submitDetails(details: AdditionalDetailsData['data']): void {
-        let promise: Promise<unknown> | null = null;
+        let promise: Promise<CheckoutAdvancedFlowResponse | CheckoutSessionDetailsResponse> | null = null;
 
         if (this.options.onAdditionalDetails) {
             promise = new Promise((resolve, reject) => {
