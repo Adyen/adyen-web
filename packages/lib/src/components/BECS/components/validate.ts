@@ -19,6 +19,10 @@ export const becsValidationRules: ValidatorRules = {
         modes: ['blur'],
         validate: value => /^\d{3}-\d{3}$/.test(value)
     },
+    bankAccountNumber: {
+        modes: ['blur'],
+        validate: value => /^\d{1,9}$/.test(value)
+    },
     shopperEmail: [
         {
             modes: ['blur'],
@@ -33,7 +37,9 @@ export const becsValidationRules: ValidatorRules = {
     }
 };
 
+export const formatAccountNumber = (value: string): string => digitsOnlyFormatter(value).slice(0, 9);
+
 export const becsFormatters = {
     bankBranchCode: formatBSB,
-    bankAccountNumber: digitsOnlyFormatter
+    bankAccountNumber: formatAccountNumber
 };

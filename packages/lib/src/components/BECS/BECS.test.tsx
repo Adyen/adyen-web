@@ -112,6 +112,25 @@ describe('BECS Direct Debit', () => {
         expect(screen.getByText('Enter an account holder name')).toBeInTheDocument();
     });
 
+    test('should limit the account number to 9 digits', async () => {
+        const user = userEvent.setup();
+        renderBECS();
+
+        const accountNumberInput = await screen.findByLabelText('Account number');
+        await user.type(accountNumberInput, '1234567890');
+        expect(accountNumberInput).toHaveValue('123456789');
+    });
+
+    test('should show an account number error when an empty field loses focus', async () => {
+        const user = userEvent.setup();
+        renderBECS();
+
+        await user.click(await screen.findByLabelText('Account number'));
+        await user.tab();
+
+        expect(screen.getByText('Enter a valid account number')).toBeInTheDocument();
+    });
+
     test('should show validation errors and not submit invalid details', async () => {
         const user = userEvent.setup();
         const onSubmit = jest.fn();
