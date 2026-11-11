@@ -1,6 +1,10 @@
 // Pass 2 arrays of similar objects - and compare for differences
-export function getArrayDifferences<A, S extends string>(currentArray: A[], previousArray: A[], comparisonKey?: S): A[] {
-    let difference;
+export function getArrayDifferences<A, S extends string>(
+    currentArray: A[],
+    previousArray: A[] | null | undefined,
+    comparisonKey?: S
+): A[] | undefined {
+    let difference: A[] | undefined;
 
     const compKey = comparisonKey || 'id';
 
@@ -9,7 +13,7 @@ export function getArrayDifferences<A, S extends string>(currentArray: A[], prev
         difference = currentArray;
     }
     // .. else, find the difference: what's in the new array that wasn't in the old array?
-    if (currentArray.length > previousArray?.length) {
+    if (previousArray && currentArray.length > previousArray.length) {
         difference = currentArray.filter(({ [compKey]: id1 }) => !previousArray.some(({ [compKey]: id2 }) => id2 === id1));
     }
     return difference;

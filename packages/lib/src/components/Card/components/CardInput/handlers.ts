@@ -12,11 +12,11 @@ import { isSecuredField } from '../../../internal/SecuredFields/utils';
  * Helper for CardInput - gets a field name and sets focus on it
  */
 export const setFocusOnFirstField = (isValidating: boolean, sfp: SecuredFieldsProviderRef, fieldToFocus: string) => {
-    if (isValidating) {
+    if (isValidating && !!sfp.current) {
         // Fix for iOS scrolling issues: can't programmatically set focus on a cross-origin element on iOS, so we scroll to it's label instead, so at least the element is in view
         if (ua.__IS_IOS) {
             const rootNode = sfp.current.getRootNode?.();
-            const elementToScrollTo: HTMLElement = rootNode?.querySelector(`[data-id="${fieldToFocus}"]`);
+            const elementToScrollTo: HTMLElement | null = rootNode?.querySelector(`[data-id="${fieldToFocus}"]`);
             windowScrollTo(elementToScrollTo);
         }
 
@@ -56,6 +56,7 @@ export const getAutoJumpHandler = (isAutoJumping: MutableRef<boolean>, sfp: Secu
             // e.g. if field was in error (error + fieldValid) or other SFs are optional (fieldValid + allValid) etc
             // - so make async to avoid double setFocus call
             void Promise.resolve().then(() => {
+                const sfpInstance = sfp.current;
                 const panIndex = layout.findIndex(elem => elem === ENCRYPTED_CARD_NUMBER);
                 const subsequentFields = layout.slice(panIndex + 1);
 
@@ -65,9 +66,11 @@ export const getAutoJumpHandler = (isAutoJumping: MutableRef<boolean>, sfp: Secu
                 for (const field of subsequentFields) {
                     // Is the next field a credit card related securedField?
                     if (isSecuredField(field)) {
-                        const isOptionalOrHidden = sfp.current.sfIsOptionalOrHidden(field);
+                        if (!sfpInstance) break;
+
+                        const isOptionalOrHidden = sfpInstance.sfIsOptionalOrHidden(field);
                         if (!isOptionalOrHidden) {
-                            sfp.current.setFocusOn(field);
+                            sfpInstance.setFocusOn(field);
                             break;
                         }
                     } else {
@@ -89,7 +92,7 @@ const setFocusOnNonSF = (fieldName: string, sfp: SecuredFieldsProviderRef, shoul
     // the value by which the field is referred to internally ('taxNumber')
     if (fieldName === 'taxNumber') fieldName = 'kcpTaxNumberOrDOB';
 
-    const rootNode = sfp.current.getRootNode?.();
+    const rootNode = sfp.current?.getRootNode?.();
 
     if (fieldName === 'country' || fieldName === 'stateOrProvince') {
         // Set focus on dropdown
