@@ -7,6 +7,7 @@ import { CoreProvider } from '../../../../core/Context/CoreProvider';
 import { AmountProvider } from '../../../../core/Context/AmountProvider';
 import getDataset from '../../../../core/Services/get-dataset';
 import { setupCoreMock } from '../../../../../config/testMocks/setup-core-mock';
+import initCSF from '../../../internal/SecuredFields/lib/CSF';
 import { ClickToPayContext, IClickToPayContext } from '../../../internal/ClickToPay/context/ClickToPayContext';
 import { CtpState } from '../../../internal/ClickToPay/services/ClickToPayService';
 import type { CardInputProps, CardInputRef } from './types';
@@ -36,6 +37,18 @@ const BCMC_AND_MC_RESPONSE = {
 const MC_AND_BCMC_RESPONSE = {
     issuingCountryCode: 'BE',
     supportedBrands: [createBrand('mc', 'MasterCard'), createBrand('bcmc', 'Bancontact card')]
+} as unknown as BinLookupResponse;
+const MC_AND_ACCEL_RESPONSE = {
+    issuingCountryCode: 'US',
+    supportedBrands: [createBrand('mc', 'MasterCard'), createBrand('accel', 'Accel')]
+} as unknown as BinLookupResponse;
+const ACCEL_AND_MC_RESPONSE = {
+    issuingCountryCode: 'US',
+    supportedBrands: [createBrand('accel', 'Accel'), createBrand('mc', 'MasterCard')]
+} as unknown as BinLookupResponse;
+const VISA_AND_ACCEL_RESPONSE = {
+    issuingCountryCode: 'US',
+    supportedBrands: [createBrand('visa', 'VISA'), createBrand('accel', 'Accel')]
 } as unknown as BinLookupResponse;
 
 const FASTLANE_CONFIGURATION: FastlaneSignupConfiguration = {
@@ -96,6 +109,14 @@ const processBinLookup = async (response: BinLookupResponse) => {
 // An empty response is how a BIN lookup reset reaches CardInput
 const resetBinLookup = () => processBinLookup({} as BinLookupResponse);
 
+// Emits the brand detected by the regex inside the SecuredFields iframe, before or without a BIN lookup result
+const detectBrandByRegex = async (brand: string) => {
+    const [{ callbacks }] = (initCSF as jest.Mock).mock.calls.at(-1);
+    await act(() => {
+        callbacks.onBrand({ brand, cvcPolicy: 'required', expiryDatePolicy: 'required' });
+    });
+};
+
 const querySignupCheckbox = () => screen.queryByRole('checkbox', { name: /Save my information with Click to Pay/ });
 const getSignupCheckbox = () => screen.getByRole('checkbox', { name: /Save my information with Click to Pay/ });
 
@@ -137,6 +158,49 @@ describe('CardInput - Click to Pay sign up', () => {
         test('should hide the sign up when the detected brand is reset', async () => {
             renderCardInput();
             await processBinLookup(MC_RESPONSE);
+            expect(querySignupCheckbox()).toBeInTheDocument();
+
+            await resetBinLookup();
+            expect(querySignupCheckbox()).not.toBeInTheDocument();
+        });
+
+        test('should not show the sign up when only the regex detects Mastercard', async () => {
+            renderCardInput();
+            await detectBrandByRegex('mc');
+
+            expect(querySignupCheckbox()).not.toBeInTheDocument();
+        });
+
+        test('should hide the sign up when the BIN lookup resets, even if the regex still detects Mastercard', async () => {
+            renderCardInput();
+            await detectBrandByRegex('mc');
+            await processBinLookup(MC_RESPONSE);
+            expect(querySignupCheckbox()).toBeInTheDocument();
+
+            await resetBinLookup();
+            expect(querySignupCheckbox()).not.toBeInTheDocument();
+        });
+
+        test.each([
+            ['Mastercard first', MC_AND_ACCEL_RESPONSE],
+            ['the debit network first', ACCEL_AND_MC_RESPONSE]
+        ])('should show the sign up for a Mastercard card co-branded with a US debit network (%s)', async (_, response) => {
+            renderCardInput();
+            await processBinLookup(response);
+
+            expect(querySignupCheckbox()).toBeInTheDocument();
+        });
+
+        test('should not show the sign up for a Visa card co-branded with a US debit network', async () => {
+            renderCardInput();
+            await processBinLookup(VISA_AND_ACCEL_RESPONSE);
+
+            expect(querySignupCheckbox()).not.toBeInTheDocument();
+        });
+
+        test('should hide the sign up when a co-branded Mastercard card is reset', async () => {
+            renderCardInput();
+            await processBinLookup(MC_AND_ACCEL_RESPONSE);
             expect(querySignupCheckbox()).toBeInTheDocument();
 
             await resetBinLookup();

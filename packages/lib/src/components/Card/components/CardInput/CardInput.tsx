@@ -125,6 +125,12 @@ const CardInput = (props: Readonly<CardInputProps>) => {
     const [internallyDetectedBrand, setInternallyDetectedBrand] = useState('card');
 
     /**
+     * The single brand confirmed by /binLookup, including when a brand from BRAND_ICON_UI_EXCLUSION_LIST was removed
+     * (in which case selectedBrandValue stays empty). Empty when there is no /binLookup result or the card is dual branded.
+     */
+    const [binLookupBrand, setBinLookupBrand] = useState('');
+
+    /**
      * Used tho show and hide the pay button and instructions text
      * Should mimic the same logic as CardInput loading wrapper
      */
@@ -167,8 +173,8 @@ const CardInput = (props: Readonly<CardInputProps>) => {
         props.configuration.socialSecurityNumberMode === 'show';
 
     const { ctpState } = useClickToPayContext();
-    // For dual branded cards only the brand the shopper selected counts, not the one detected by the regEx
-    const activeBrand = dualBrandSelectElements.length > 0 ? selectedBrandValue : selectedBrandValue || internallyDetectedBrand;
+    // Only the brand confirmed by /binLookup counts, never the one detected by the regEx. For dual branded cards that is the brand the shopper selected
+    const activeBrand = selectedBrandValue || binLookupBrand;
     // Any state other than NotAvailable means that the shopper is (or might be) recognized by Click to Pay
     const showClickToPaySignup: boolean = !!props.isClickToPaySignupAvailable && ctpState === CtpState.NotAvailable && activeBrand === 'mc';
 
@@ -318,6 +324,7 @@ const CardInput = (props: Readonly<CardInputProps>) => {
                     dualBrandSelectElements,
                     setDualBrandSelectElements,
                     setSelectedBrandValue,
+                    setBinLookupBrand,
                     issuingCountryCode,
                     setIssuingCountryCode
                 },
