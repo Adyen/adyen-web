@@ -1,8 +1,7 @@
 import { ApplePayConfiguration, ApplePayPaymentAuthorizationResult } from '../types';
-import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 
 export interface ApplePayServiceOptions {
-    version?: number;
+    version: number;
     onError: (error?: unknown) => void;
     onCancel?: (event: ApplePayJS.Event) => void;
     onValidateMerchant: NonNullable<ApplePayConfiguration['onValidateMerchant']>;
@@ -40,10 +39,6 @@ class ApplePayService {
             onShippingMethodSelected,
             onCouponCodeChanged
         } = options;
-
-        if (!options.version) {
-            throw new AdyenCheckoutError('ERROR', 'Apple Pay is not available on this device');
-        }
 
         this.session = new ApplePaySession(options.version, paymentRequest);
         this.session.onvalidatemerchant = event => {

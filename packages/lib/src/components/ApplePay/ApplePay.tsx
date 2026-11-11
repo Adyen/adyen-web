@@ -197,6 +197,12 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
 
     private startSession() {
         const { onValidateMerchant, onPaymentMethodSelected, onShippingMethodSelected, onShippingContactSelected, onCouponCodeChanged } = this.props;
+        const version = this.applePayVersionNumber;
+
+        if (!version) {
+            this.handleError(new AdyenCheckoutError('ERROR', 'Apple Pay is not available on this device'));
+            return Promise.resolve();
+        }
 
         const paymentRequest = preparePaymentRequest({
             companyName: this.props.configuration?.merchantName,
@@ -205,7 +211,7 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
         });
 
         const session = new ApplePayService(paymentRequest, {
-            version: this.applePayVersionNumber,
+            version,
             onError: (error: unknown) => {
                 this.handleError(
                     new AdyenCheckoutError('ERROR', 'ApplePay - Something went wrong on ApplePayService', {
