@@ -30,7 +30,7 @@ export const processErrors = (
     }
 
     // Add props to error callback object
-    dataObj.error = isError ? (pFeedbackObj.error ?? '') : '';
+    dataObj.error = pFeedbackObj.error || '';
     dataObj.type = type;
 
     // Set error state & type on securedField instance
