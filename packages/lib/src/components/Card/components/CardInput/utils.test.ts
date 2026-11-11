@@ -1,4 +1,4 @@
-import { resolveCVCErrorKey, shouldShowInstallmentsComponent } from './utils';
+import { resolveCVCErrorKey, shouldIncludeInstallmentsInPaymentData, shouldShowInstallmentsComponent } from './utils';
 
 describe('shouldShowInstallmentsComponent', () => {
     const amount = { value: 1000, currency: 'EUR' };
@@ -63,5 +63,35 @@ describe('resolveCVCErrorKey', () => {
     it('should return the original error code unchanged when it has no Amex variant, regardless of brand', () => {
         expect(resolveCVCErrorKey('cc.num.902', true)).toBe('cc.num.902');
         expect(resolveCVCErrorKey('cc.num.902', false)).toBe('cc.num.902');
+    });
+});
+
+describe('shouldIncludeInstallmentsInPaymentData', () => {
+    test('should return false when there is no installment state', () => {
+        expect(shouldIncludeInstallmentsInPaymentData(undefined)).toBe(false);
+    });
+
+    test('should return false when the value is null and there is no plan', () => {
+        expect(shouldIncludeInstallmentsInPaymentData({ value: null })).toBe(false);
+    });
+
+    test('should return false for a single payment without a plan', () => {
+        expect(shouldIncludeInstallmentsInPaymentData({ value: 1 })).toBe(false);
+    });
+
+    test('should return true for a value greater than 1 without a plan', () => {
+        expect(shouldIncludeInstallmentsInPaymentData({ value: 3 })).toBe(true);
+    });
+
+    test('should return true for a value greater than 1 with a regular plan', () => {
+        expect(shouldIncludeInstallmentsInPaymentData({ value: 3, plan: 'regular' })).toBe(true);
+    });
+
+    test('should return true for a revolving plan, even when the value is 1', () => {
+        expect(shouldIncludeInstallmentsInPaymentData({ value: 1, plan: 'revolving' })).toBe(true);
+    });
+
+    test('should return true for a bonus plan, even when the value is 1', () => {
+        expect(shouldIncludeInstallmentsInPaymentData({ value: 1, plan: 'bonus' })).toBe(true);
     });
 });
