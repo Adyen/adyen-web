@@ -4,8 +4,12 @@ import { on, off } from '../../../../../../utils/listenerUtils';
 import type { SecuredFields } from '../../types';
 
 const getCaretPos = (pNode: HTMLInputElement | HTMLTextAreaElement): number => {
-    if ('selectionStart' in pNode) {
-        return pNode.selectionStart;
+    try {
+        if ('selectionStart' in pNode) {
+            return pNode.selectionStart ?? 0;
+        }
+    } catch {
+        // selectionStart throws on input types that don't support text selection (e.g. number, email)
     }
     return 0;
 };
@@ -26,7 +30,7 @@ const hasSecuredFieldFocus = (securedFields: SecuredFields): boolean => {
  * @param e -
  */
 function touchendListener(e: Event): void {
-    const targetEl: EventTarget = e.target;
+    const targetEl: EventTarget | null = e.target;
 
     // If other element is Input or TextArea
     if (targetEl instanceof HTMLInputElement || (HTMLTextAreaElement && targetEl instanceof HTMLTextAreaElement)) {
@@ -104,7 +108,7 @@ function touchendListener(e: Event): void {
  */
 function touchstartListener(e: Event): void {
     this.hasGenuineTouchEvents = true;
-    const targetEl: EventTarget = e.target;
+    const targetEl: EventTarget | null = e.target;
     // If other element is Input or Span (i.e. label text) TODO apply to other types of el?
     if (targetEl instanceof HTMLInputElement || targetEl instanceof HTMLSpanElement) {
         this.postMessageToAllIframes({ fieldType: 'webInternalElement', checkoutTouchEvent: true });
