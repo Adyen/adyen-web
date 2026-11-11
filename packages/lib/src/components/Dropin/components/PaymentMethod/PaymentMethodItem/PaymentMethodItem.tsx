@@ -76,7 +76,7 @@ class PaymentMethodItem extends Component<Readonly<PaymentMethodItemProps>> {
             'adyen-checkout__payment-method--confirming': this.state.showDisableStoredPaymentMethodConfirmation,
             'adyen-checkout__payment-method--standalone': standalone,
             [paymentMethod._id]: true,
-            [this.props.className]: true
+            [this.props.className ?? '']: true
         });
 
         const showRemovePaymentMethodButton = this.props.showRemovePaymentMethodButton && paymentMethod.props.oneClick && isSelected;

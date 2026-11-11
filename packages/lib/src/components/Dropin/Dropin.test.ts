@@ -10,10 +10,12 @@ import type { DropinComponent } from './components/DropinComponent';
 import Fastlane from '../PayPalFastlane';
 import Card from '../Card';
 import Giftcard from '../Giftcard';
+import PaypalElement from '../PayPal';
 import { SRPanel } from '../../core/Errors/SRPanel';
 
 import type { CoreConfiguration, ICore } from '../../core/types';
-import type { OrderStatus, PaymentActionsType } from '../../types/global-types';
+import type { Order, OrderStatus, PaymentActionsType } from '../../types/global-types';
+import type UIElement from '../internal/UIElement/UIElement';
 import { setupCoreMock } from '../../../config/testMocks/setup-core-mock';
 import { InfoEventType } from '../../core/Analytics/events/AnalyticsInfoEvent';
 import PaymentMethods from '../../core/ProcessResponse/PaymentMethods';
@@ -62,9 +64,7 @@ describe('Dropin', () => {
         test('should not set the Dropin status if disableFinalAnimation is set to true', () => {
             const dropin = new Dropin(checkout, { disableFinalAnimation: true });
             const setStatusMock = jest.fn();
-            dropin.dropinRef = {
-                setStatus: setStatusMock
-            };
+            dropin.dropinRef = mock<DropinComponent>({ setStatus: setStatusMock });
             dropin.displayFinalAnimation('success');
 
             expect(dropin.props.disableFinalAnimation).toBeTruthy();
@@ -74,9 +74,7 @@ describe('Dropin', () => {
         test('should set the Dropin final status if configuration is not provided', () => {
             const dropin = new Dropin(checkout);
             const setStatusMock = jest.fn();
-            dropin.dropinRef = {
-                setStatus: setStatusMock
-            };
+            dropin.dropinRef = mock<DropinComponent>({ setStatus: setStatusMock });
             dropin.displayFinalAnimation('success');
 
             expect(dropin.props.disableFinalAnimation).toBeFalsy();
@@ -89,6 +87,13 @@ describe('Dropin', () => {
         test('should fail if no activePaymentMethod', () => {
             const dropin = new Dropin(checkout);
             expect(dropin.isValid).toEqual(false);
+        });
+    });
+
+    describe('data', () => {
+        test('should return null if no activePaymentMethod', () => {
+            const dropin = new Dropin(checkout);
+            expect(dropin.data).toBeNull();
         });
     });
 
@@ -126,10 +131,8 @@ describe('Dropin', () => {
             const dropin = new Dropin(checkout);
 
             dropin.handleAction(fingerprintAction);
-            expect(dropin.componentFromAction instanceof ThreeDS2DeviceFingerprint).toEqual(true);
-            expect((dropin.componentFromAction as unknown as ThreeDS2DeviceFingerprint).props.showSpinner).toEqual(false);
-            expect(dropin.componentFromAction.props.statusType).toEqual('loading');
-            expect(dropin.componentFromAction.props.isDropin).toBe(true);
+            expect(dropin.componentFromAction).toBeInstanceOf(ThreeDS2DeviceFingerprint);
+            expect(dropin.componentFromAction?.props).toMatchObject({ showSpinner: false, statusType: 'loading', isDropin: true });
         });
 
         test('should handle new challenge action', () => {
@@ -144,10 +147,8 @@ describe('Dropin', () => {
             const dropin = new Dropin(checkout);
 
             dropin.handleAction(challengeAction);
-            expect(dropin.componentFromAction instanceof ThreeDS2Challenge).toEqual(true);
-            expect(dropin.componentFromAction.props.statusType).toEqual('custom');
-            expect(dropin.componentFromAction.props.isDropin).toBe(true);
-            expect((dropin.componentFromAction as unknown as ThreeDS2Challenge).props.size).toEqual('02');
+            expect(dropin.componentFromAction).toBeInstanceOf(ThreeDS2Challenge);
+            expect(dropin.componentFromAction?.props).toMatchObject({ statusType: 'custom', isDropin: true, size: '02' });
         });
 
         test('new challenge action gets challengeWindowSize from paymentMethodsConfiguration', async () => {
@@ -167,11 +168,16 @@ describe('Dropin', () => {
             });
 
             const dropin = new Dropin(checkout, { paymentMethodsConfiguration: { card: { challengeWindowSize: '02' } } });
-            jest.spyOn(dropin, 'activePaymentMethod', 'get').mockReturnValue({ props: { challengeWindowSize: '02' } });
+            jest.spyOn(dropin, 'activePaymentMethod', 'get').mockReturnValue(
+                mock<UIElement & { props: { challengeWindowSize?: string }; updateWithAction?: undefined }>({
+                    props: { challengeWindowSize: '02' },
+                    updateWithAction: undefined
+                })
+            );
 
             dropin.handleAction(challengeAction);
-            expect(dropin.componentFromAction instanceof ThreeDS2Challenge).toEqual(true);
-            expect((dropin.componentFromAction as unknown as ThreeDS2Challenge).props.challengeWindowSize).toEqual('02');
+            expect(dropin.componentFromAction).toBeInstanceOf(ThreeDS2Challenge);
+            expect(dropin.componentFromAction?.props).toMatchObject({ challengeWindowSize: '02' });
         });
 
         test('new challenge action gets challengeWindowSize from handleAction config', () => {
@@ -188,8 +194,20 @@ describe('Dropin', () => {
             dropin.handleAction(challengeAction, {
                 challengeWindowSize: '03'
             });
-            expect(dropin.componentFromAction instanceof ThreeDS2Challenge).toEqual(true);
-            expect((dropin.componentFromAction as unknown as ThreeDS2Challenge).props.challengeWindowSize).toEqual('03');
+            expect(dropin.componentFromAction).toBeInstanceOf(ThreeDS2Challenge);
+            expect(dropin.componentFromAction?.props).toMatchObject({ challengeWindowSize: '03' });
+        });
+    });
+
+    describe('handleAction() for payment methods implementing updateWithAction', () => {
+        test('should let the activePaymentMethod handle the action', () => {
+            const dropin = new Dropin(checkout);
+            const updateWithAction = jest.fn();
+            jest.spyOn(dropin, 'activePaymentMethod', 'get').mockReturnValue(mock<PaypalElement>({ updateWithAction }));
+            const sdkAction = { type: 'sdk' as PaymentActionsType, paymentMethodType: 'paypal', sdkData: { token: 'token' } };
+            expect(dropin.handleAction(sdkAction)).toBeNull();
+            expect(updateWithAction).toHaveBeenCalledWith(sdkAction);
+            expect(dropin.componentFromAction).toBeUndefined();
         });
     });
 
@@ -734,10 +752,51 @@ describe('Dropin', () => {
         });
     });
 
+    describe('Advanced flow order cancel', () => {
+        const mockOrderStatus: OrderStatus = {
+            expiresAt: '2030-01-01T00:00:00Z',
+            pspReference: 'mockPsp',
+            reference: 'mockRef',
+            paymentMethods: [{ type: 'visa', lastFour: '1234', amount: { value: 1000, currency: 'EUR' } }],
+            remainingAmount: { value: 0, currency: 'EUR' }
+        };
+
+        test('should call onOrderCancel with the sanitized order when the remove button is clicked', async () => {
+            const onOrderCancelMock = jest.fn();
+            (getOrderStatus as jest.Mock).mockResolvedValue(mockOrderStatus);
+            const config = getAdyenCheckoutConfiguration({ onOrderCancel: onOrderCancelMock });
+            const orderCheckout = await createAdyenCheckout(config);
+            const dropin = new Dropin(orderCheckout, {
+                order: { orderData: 'mockOrderData', pspReference: 'mockPsp' }
+            });
+            render(dropin.render());
+            await waitFor(() => expect(screen.getByRole('button', { name: /Remove/i })).toBeVisible());
+            await userEvent.click(screen.getByRole('button', { name: /Remove/i }));
+            expect(onOrderCancelMock).toHaveBeenCalledTimes(1);
+            expect(onOrderCancelMock).toHaveBeenCalledWith(
+                { order: { orderData: 'mockOrderData', pspReference: 'mockPsp' } },
+                expect.objectContaining({ resolve: expect.any(Function), reject: expect.any(Function) })
+            );
+        });
+
+        test('should not call onOrderCancel when the order has no pspReference', async () => {
+            const onOrderCancelMock = jest.fn();
+            const incompleteOrder: Order = { orderData: 'mockOrderData', pspReference: '' };
+            (getOrderStatus as jest.Mock).mockResolvedValue(mockOrderStatus);
+            const config = getAdyenCheckoutConfiguration({ onOrderCancel: onOrderCancelMock });
+            const orderCheckout = await createAdyenCheckout(config);
+            const dropin = new Dropin(orderCheckout, { order: incompleteOrder });
+            render(dropin.render());
+            await waitFor(() => expect(screen.getByRole('button', { name: /Remove/i })).toBeVisible());
+            await userEvent.click(screen.getByRole('button', { name: /Remove/i }));
+            expect(onOrderCancelMock).not.toHaveBeenCalled();
+        });
+    });
+
     describe('Gift card balance check', () => {
         type BalanceCheckResponse = { balance?: { value: number; currency: string } };
 
-        const getDropinStatus = (dropin: Dropin) => (dropin.dropinRef as DropinComponent | null)?.state.status.type;
+        const getDropinStatus = (dropin: Dropin) => dropin.dropinRef?.state.status.type;
 
         const mountDropinWithGiftcard = async (onBalanceCheck: jest.Mock) => {
             const config = getAdyenCheckoutConfiguration({
