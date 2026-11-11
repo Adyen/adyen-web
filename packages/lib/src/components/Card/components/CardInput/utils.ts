@@ -137,7 +137,7 @@ export const extractPropsForCardFields = (props: CardInputProps) => {
     };
 };
 
-export const extractPropsForSFP = (props: CardInputProps): Partial<SFPProps> => {
+export const extractPropsForSFP = (props: CardInputProps): Pick<SFPProps, 'clientKey' | 'loadingContext'> & Partial<SFPProps> => {
     return {
         autoFocus: props.autoFocus,
         brands: props.brands,
