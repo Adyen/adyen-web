@@ -8,8 +8,7 @@ const getCaretPos = (pNode: HTMLInputElement | HTMLTextAreaElement): number => {
         if ('selectionStart' in pNode) {
             return pNode.selectionStart ?? 0;
         }
-        /* eslint-disable-next-line */
-    } catch (e) {
+    } catch {
         // selectionStart throws on input types that don't support text selection (e.g. number, email)
     }
     return 0;
