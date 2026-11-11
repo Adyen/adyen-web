@@ -10,7 +10,7 @@ export const processErrors = (
     type: string,
     rootNode: HTMLElement,
     callbackFn: RtnType_callbackFn
-): CardErrorData => {
+): CardErrorData | null => {
     if (!hasOwnProperty(pFeedbackObj, 'error')) return null;
 
     const fieldType: string = pFeedbackObj.fieldType;
@@ -18,7 +18,7 @@ export const processErrors = (
     const field: SecuredField = securedField;
 
     // Initialise error callback object
-    const dataObj: CardErrorData = { rootNode, fieldType, error: null, type: null };
+    const dataObj: CardErrorData = { rootNode, fieldType, error: '', type: '' };
 
     const isError: boolean = pFeedbackObj.error !== '';
 
@@ -30,7 +30,7 @@ export const processErrors = (
     }
 
     // Add props to error callback object
-    dataObj.error = isError ? pFeedbackObj.error : '';
+    dataObj.error = isError ? (pFeedbackObj.error ?? '') : '';
     dataObj.type = type;
 
     // Set error state & type on securedField instance

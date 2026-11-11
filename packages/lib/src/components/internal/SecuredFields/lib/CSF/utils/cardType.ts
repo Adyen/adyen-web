@@ -1,17 +1,16 @@
 import { CardObject } from '../../types';
-import { hasOwnProperty } from '../../../../../../utils/hasOwnProperty';
 
 let shortestPermittedCardLength;
 
 interface CardType {
-    __NO_BRAND?: string;
-    cards?: CardObject[];
+    __NO_BRAND: string;
+    cards: CardObject[];
 }
 
-const CardType: CardType = {};
-CardType.__NO_BRAND = 'noBrand';
-
-CardType.cards = [];
+const CardType: CardType = {
+    __NO_BRAND: 'noBrand',
+    cards: []
+};
 
 CardType.cards.push({
     cardType: 'mc',
@@ -183,7 +182,7 @@ const detectCard = (pCardNumber: string, pCardGroupTypes?: string[]): CardObject
         matchedCards = CardType.cards
             .filter(card => pCardGroupTypes.includes(card.cardType))
             // Further filter them to those with a regEx pattern that matches pCardNumber
-            .filter(card => hasOwnProperty(card, 'pattern') && pCardNumber.match(card.pattern));
+            .filter(card => card.pattern !== undefined && pCardNumber.match(card.pattern));
 
         // If we have matched cards: if there's only one - return it; else return the one with the longest startingRule
         if (matchedCards.length) {
@@ -257,7 +256,7 @@ const detectCardLength = (pCard, pUnformattedVal) => {
 
 const getShortestPermittedCardLength = () => {
     if (!shortestPermittedCardLength) {
-        let permittedLengthsArray = [];
+        let permittedLengthsArray: number[] = [];
 
         CardType.cards.forEach(pItem => {
             permittedLengthsArray = permittedLengthsArray.concat(pItem.permittedLengths ?? []);
