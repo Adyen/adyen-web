@@ -7,10 +7,14 @@ jest.mock('../utils/iframes/postMessageToIframe');
 
 const mockedPostMessageToIframe = postMessageToIframe as jest.Mock;
 
-const csfState = { brand: { brand: null, cvcPolicy: 'required' }, type: null, securedFields: { encryptedSecurityCode: { numKey: 654321 } } };
+const csfState = {
+    brand: { brand: null, cvcPolicy: 'required' },
+    type: null as string | null,
+    securedFields: { encryptedSecurityCode: { numKey: 654321 } }
+};
 const csfProps = { rootNode: 'div' };
 const csfConfig = {};
-const csfCallbacks = { onBrand: null };
+const csfCallbacks: { onBrand: jest.Mock | null } = { onBrand: null };
 
 const CSFObj = {
     csfState,
@@ -27,7 +31,7 @@ const sfFeedbackObj: SFFeedbackObj = {
     cvcPolicy: 'required',
     expiryDatePolicy: 'required',
     showSocialSecurityNumber: false,
-    type: null
+    type: undefined
 };
 
 const expectedPostMsgDataObj = {
