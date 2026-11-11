@@ -1,5 +1,11 @@
 # @adyen/adyen-web
 
+## 6.48.2
+
+### Patch Changes
+
+- Fixed: iOS keypadFix no longer steals focus from unrelated elements when no SecuredField has focus ([#4296](https://github.com/Adyen/adyen-web/pull/4296))
+
 ## 6.48.1
 
 ### Patch Changes
