@@ -1,5 +1,2 @@
 ---
-'@adyen/adyen-web': patch
 ---
-
-

@@ -9,9 +9,14 @@ import { CSFThisObject } from '../types';
  * @param csfProps - comes from initial, partial, implementation
  * @param csfCallbacks - comes from initial, partial, implementation
  *
+ * @param handleIOSTouchEvents - bound touchend handler, called to register the iOS-specific focus workaround
  * @param pFeedbackObj -
  */
-export function handleFocus({ csfState, csfProps, csfCallbacks }: CSFThisObject, handleIOSTouchEvents, pFeedbackObj: SFFeedbackObj): void {
+export function handleFocus(
+    { csfState, csfProps, csfCallbacks }: CSFThisObject,
+    handleIOSTouchEvents: () => void,
+    pFeedbackObj: SFFeedbackObj
+): void {
     if (!csfState) return;
 
     const feedbackObj: SFFeedbackObj = { ...pFeedbackObj };
