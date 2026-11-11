@@ -9,7 +9,7 @@ import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { TxVariants } from '../tx-variants';
 import { sanitizeResponse, verifyPaymentDidNotFail } from '../internal/UIElement/utils';
 
-import type { AddressData, BrowserInfo, RawPaymentMethod, PaymentResponseData, RawPaymentResponse } from '../../types/global-types';
+import type { BrowserInfo, RawPaymentMethod, PaymentResponseData, RawPaymentResponse } from '../../types/global-types';
 import type { GooglePayConfiguration } from './types';
 import type { ICore } from '../../core/types';
 import { AnalyticsInfoEvent, InfoEventType, UiTarget } from '../../core/Analytics/events/AnalyticsInfoEvent';
@@ -38,7 +38,7 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
             );
         }
 
-        if (!this.props.configuration.merchantId) {
+        if (!this.props.configuration?.merchantId) {
             throw new AdyenCheckoutError(
                 'IMPLEMENTATION_ERROR',
                 'GooglePay - Missing merchantId. Please ensure that it is correctly configured in your customer area.'
@@ -76,7 +76,7 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
         const buttonSizeMode = props.buttonSizeMode ?? (props.isDropin ? 'fill' : 'static');
         const buttonLocale = getGooglePayLocale(props.buttonLocale ?? props.i18n?.locale);
 
-        const callbackIntents: google.payments.api.CallbackIntent[] = [...props.callbackIntents, 'PAYMENT_AUTHORIZATION'];
+        const callbackIntents: google.payments.api.CallbackIntent[] = [...(props.callbackIntents ?? []), 'PAYMENT_AUTHORIZATION'];
 
         const allowedCardNetworks = this.createAllowedCardNetworksValues({
             allowedCardNetworks: props.allowedCardNetworks,
@@ -88,7 +88,7 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
             allowedCardNetworks,
             configuration: props.configuration,
             buttonSizeMode,
-            buttonLocale,
+            buttonLocale: buttonLocale ?? undefined,
             callbackIntents
         };
     }
@@ -133,8 +133,8 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
         allowedCardNetworks?: google.payments.api.CardNetwork[];
         brands?: string[];
     }): google.payments.api.CardNetwork[] {
-        if (allowedCardNetworks?.length > 0) return allowedCardNetworks;
-        if (brands?.length > 0) return mapGooglePayBrands(brands);
+        if (allowedCardNetworks?.length) return allowedCardNetworks;
+        if (brands?.length) return mapGooglePayBrands(brands);
 
         return DEFAULT_ALLOWED_CARD_NETWORKS;
     }
@@ -177,9 +177,11 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
             this.submitAnalytics(event);
         }
 
-        new Promise<void>((resolve, reject) => this.props.onClick(resolve, reject)).then(this.showGooglePayPaymentSheet).catch(() => {
-            // Swallow exception triggered by onClick reject
-        });
+        new Promise<void>((resolve, reject) => (this.props.onClick ?? defaultProps.onClick)?.(resolve, reject))
+            .then(this.showGooglePayPaymentSheet)
+            .catch(() => {
+                // Swallow exception triggered by onClick reject
+            });
     };
 
     /**
@@ -188,13 +190,13 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
      * @see https://developers.google.com/pay/api/web/reference/client#onPaymentAuthorized
      **/
     private onPaymentAuthorized = async (paymentData: google.payments.api.PaymentData): Promise<google.payments.api.PaymentAuthorizationResult> => {
-        const billingAddress: AddressData = formatGooglePayContactToAdyenAddressFormat(paymentData.paymentMethodData.info.billingAddress);
-        const deliveryAddress: AddressData = formatGooglePayContactToAdyenAddressFormat(paymentData.shippingAddress, true);
+        const billingAddress = formatGooglePayContactToAdyenAddressFormat(paymentData.paymentMethodData.info?.billingAddress);
+        const deliveryAddress = formatGooglePayContactToAdyenAddressFormat(paymentData.shippingAddress, true);
 
         this.setState({
             authorizedEvent: paymentData,
             googlePayToken: paymentData.paymentMethodData.tokenizationData.token,
-            googlePayCardNetwork: paymentData.paymentMethodData.info.cardNetwork,
+            googlePayCardNetwork: paymentData.paymentMethodData.info?.cardNetwork,
             ...(billingAddress && { billingAddress }),
             ...(deliveryAddress && { deliveryAddress })
         });
@@ -211,18 +213,18 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
                 .then(paymentResponse => {
                     this.handleResponse(paymentResponse);
                 })
-                .catch((paymentResponse?: RawPaymentResponse) => {
+                .catch((paymentResponse: RawPaymentResponse) => {
                     this.setElementStatus('ready');
 
                     const googlePayError = paymentResponse?.error?.googlePayError;
-                    const fallbackMessage = this.props.i18n.get('error.subtitle.payment');
+                    const fallbackMessage = this.i18n.get('error.subtitle.payment');
 
                     const error: google.payments.api.PaymentDataError =
-                        typeof googlePayError === 'string' || undefined
+                        typeof googlePayError === 'string'
                             ? {
                                   intent: 'PAYMENT_AUTHORIZATION',
                                   reason: 'OTHER_ERROR',
-                                  message: (googlePayError as string) || fallbackMessage
+                                  message: googlePayError || fallbackMessage
                               }
                             : {
                                   intent: googlePayError?.intent || 'PAYMENT_AUTHORIZATION',
@@ -254,7 +256,7 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
     private async handleAuthorization(): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             if (!this.props.onAuthorized) {
-                resolve();
+                return resolve();
             }
 
             const { authorizedEvent, billingAddress, deliveryAddress } = this.state;
@@ -321,7 +323,7 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
         return this.props.icon ?? this.resources.getImage()('googlepay');
     }
 
-    protected override componentToRender(): h.JSX.Element {
+    protected override componentToRender(): h.JSX.Element | null {
         if (this.props.showPayButton) {
             return (
                 <GooglePayButton

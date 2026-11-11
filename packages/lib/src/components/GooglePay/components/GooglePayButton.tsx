@@ -3,10 +3,10 @@ import { useEffect, useRef } from 'preact/hooks';
 import './GooglePayButton.scss';
 
 interface GooglePayButtonProps {
-    buttonColor: google.payments.api.ButtonColor;
-    buttonType: google.payments.api.ButtonType;
-    buttonSizeMode: google.payments.api.ButtonSizeMode;
-    buttonLocale: string;
+    buttonColor?: google.payments.api.ButtonColor;
+    buttonType?: google.payments.api.ButtonType;
+    buttonSizeMode?: google.payments.api.ButtonSizeMode;
+    buttonLocale?: string;
     buttonRadius?: number;
     buttonRootNode?: HTMLDocument | ShadowRoot;
     paymentsClient: Promise<google.payments.api.PaymentsClient>;
@@ -14,7 +14,7 @@ interface GooglePayButtonProps {
 }
 
 const GooglePayButton = (props: Readonly<GooglePayButtonProps>) => {
-    const googlePayWrapperRef = useRef<HTMLDivElement | undefined>(undefined);
+    const googlePayWrapperRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         const { onClick, buttonRadius, buttonColor, buttonType, buttonLocale, buttonSizeMode, buttonRootNode, paymentsClient } = props;
