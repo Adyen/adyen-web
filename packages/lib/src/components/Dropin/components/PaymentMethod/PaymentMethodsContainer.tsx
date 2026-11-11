@@ -10,7 +10,7 @@ export interface PaymentMethodsContainerProps {
     label?: string;
     classNameModifiers?: string[];
     paymentMethods: UIElement[];
-    activePaymentMethod?: UIElement;
+    activePaymentMethod?: UIElement | null;
     showRemovePaymentMethodButton?: boolean;
     onSelect?: (paymentMethod: UIElement) => void;
     onDisableStoredPaymentMethod?: (storedPaymentMethod) => void;
@@ -26,9 +26,9 @@ function PaymentMethodsContainer({
     activePaymentMethod = null,
     isLoading = false,
     isDisablingPaymentMethod = false,
-    showRemovePaymentMethodButton,
+    showRemovePaymentMethodButton = false,
     onDisableStoredPaymentMethod = () => {},
-    onSelect,
+    onSelect = () => {},
     showRadioButton
 }: Readonly<PaymentMethodsContainerProps>) {
     const { i18n } = useCoreContext();

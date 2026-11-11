@@ -10,7 +10,7 @@ import { stopPropagationForActionKeys } from '../../../internal/Button/stopPropa
 type OrderPaymentMethodsProps = {
     order: Order;
     orderStatus: OrderStatus;
-    onOrderCancel: onOrderCancelInternalCallback;
+    onOrderCancel?: onOrderCancelInternalCallback;
     brandLogoConfiguration: BrandConfiguration;
 };
 
@@ -40,7 +40,7 @@ export const OrderPaymentMethods = ({ order, orderStatus, onOrderCancel, brandLo
                                 }
                             >
                                 <PaymentMethodIcon
-                                    alt={orderPaymentMethod.name}
+                                    alt={orderPaymentMethod.name ?? orderPaymentMethod.type}
                                     type={orderPaymentMethod.type}
                                     src={brandLogoConfiguration[orderPaymentMethod.type] || getImage()(orderPaymentMethod.type)}
                                 />
@@ -69,7 +69,7 @@ export const OrderPaymentMethods = ({ order, orderStatus, onOrderCancel, brandLo
                             <div className="adyen-checkout__order-payment-method__deducted-amount">
                                 <span className="adyen-checkout__order-payment-method__deducted-amount__label">{i18n.get('deductedBalance')}</span>
                                 <span className="adyen-checkout__order-payment-method__deducted-amount__value">
-                                    {i18n.amount(orderPaymentMethod.amount.value, orderPaymentMethod.amount.currency)}
+                                    {orderPaymentMethod.amount && i18n.amount(orderPaymentMethod.amount.value, orderPaymentMethod.amount.currency)}
                                 </span>
                             </div>
                         </div>

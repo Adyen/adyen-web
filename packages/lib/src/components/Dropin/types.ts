@@ -179,11 +179,11 @@ export interface DropinComponentState {
     instantPaymentElements: UIElement[];
     storedPaymentElements: UIElement[];
     status: DropinStatus;
-    activePaymentMethod: UIElement;
+    activePaymentMethod: UIElement | null;
     cachedPaymentMethods: Record<string, boolean>;
     showDefaultPaymentMethodList: boolean;
     isDisabling: boolean;
-    orderStatus: OrderStatus;
+    orderStatus: OrderStatus | null;
 }
 
 export interface IDropin {
@@ -194,6 +194,6 @@ export interface IDropin {
      * @param type - animation type
      */
     displayFinalAnimation(type: 'success' | 'error'): void;
-    activePaymentMethod: () => null;
+    activePaymentMethod: UIElement | null;
     closeActivePaymentMethod: () => void;
 }
