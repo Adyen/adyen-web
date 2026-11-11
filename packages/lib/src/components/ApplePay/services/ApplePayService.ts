@@ -1,10 +1,11 @@
 import { ApplePayConfiguration, ApplePayPaymentAuthorizationResult } from '../types';
+import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 
 export interface ApplePayServiceOptions {
-    version: number;
+    version?: number;
     onError: (error?: unknown) => void;
     onCancel?: (event: ApplePayJS.Event) => void;
-    onValidateMerchant: ApplePayConfiguration['onValidateMerchant'];
+    onValidateMerchant: NonNullable<ApplePayConfiguration['onValidateMerchant']>;
     onCouponCodeChanged?: ApplePayConfiguration['onCouponCodeChanged'];
     onPaymentMethodSelected?: ApplePayConfiguration['onPaymentMethodSelected'];
     onShippingMethodSelected?: ApplePayConfiguration['onShippingMethodSelected'];
@@ -21,7 +22,7 @@ export interface ApplePayServiceOptions {
  * payment is a rejection reason that is not a result - an exception thrown by the payment chain, typically.
  */
 function isAuthorizationResult(value: unknown): value is ApplePayPaymentAuthorizationResult {
-    return typeof (value as ApplePayPaymentAuthorizationResult)?.status === 'number';
+    return typeof value === 'object' && value !== null && 'status' in value && typeof value.status === 'number';
 }
 
 class ApplePayService {
@@ -30,40 +31,53 @@ class ApplePayService {
 
     constructor(paymentRequest: ApplePayJS.ApplePayPaymentRequest, options: ApplePayServiceOptions) {
         this.options = options;
+        const {
+            onValidateMerchant,
+            onPaymentAuthorized,
+            onCancel,
+            onPaymentMethodSelected,
+            onShippingContactSelected,
+            onShippingMethodSelected,
+            onCouponCodeChanged
+        } = options;
+
+        if (!options.version) {
+            throw new AdyenCheckoutError('ERROR', 'Apple Pay is not available on this device');
+        }
 
         this.session = new ApplePaySession(options.version, paymentRequest);
         this.session.onvalidatemerchant = event => {
-            void this.onvalidatemerchant(event, options.onValidateMerchant);
+            void this.onvalidatemerchant(event, onValidateMerchant);
         };
         this.session.onpaymentauthorized = event => {
-            void this.onpaymentauthorized(event, options.onPaymentAuthorized);
+            void this.onpaymentauthorized(event, onPaymentAuthorized);
         };
 
         this.session.oncancel = event => {
-            this.oncancel(event, options.onCancel);
+            this.oncancel(event, onCancel);
         };
 
-        if (typeof options.onPaymentMethodSelected === 'function') {
+        if (typeof onPaymentMethodSelected === 'function') {
             this.session.onpaymentmethodselected = event => {
-                void this.onpaymentmethodselected(event, options.onPaymentMethodSelected);
+                void this.onpaymentmethodselected(event, onPaymentMethodSelected);
             };
         }
 
-        if (typeof options.onShippingContactSelected === 'function') {
+        if (typeof onShippingContactSelected === 'function') {
             this.session.onshippingcontactselected = event => {
-                void this.onshippingcontactselected(event, options.onShippingContactSelected);
+                void this.onshippingcontactselected(event, onShippingContactSelected);
             };
         }
 
-        if (typeof options.onShippingMethodSelected === 'function') {
+        if (typeof onShippingMethodSelected === 'function') {
             this.session.onshippingmethodselected = event => {
-                void this.onshippingmethodselected(event, options.onShippingMethodSelected);
+                void this.onshippingmethodselected(event, onShippingMethodSelected);
             };
         }
 
-        if (typeof options.onCouponCodeChanged === 'function') {
+        if (typeof onCouponCodeChanged === 'function') {
             this.session.oncouponcodechanged = event => {
-                void this.oncouponcodechanged(event, options.onCouponCodeChanged);
+                void this.oncouponcodechanged(event, onCouponCodeChanged);
             };
         }
     }
@@ -84,7 +98,7 @@ class ApplePayService {
      * @param onValidateMerchant - A function implemented by the merchant that will resolve with the merchantSession
      * @see {@link https://developer.apple.com/documentation/applepayontheweb/applepaysession/onvalidatemerchant}
      */
-    onvalidatemerchant(event: ApplePayJS.ApplePayValidateMerchantEvent, onValidateMerchant: ApplePayConfiguration['onValidateMerchant']) {
+    onvalidatemerchant(event: ApplePayJS.ApplePayValidateMerchantEvent, onValidateMerchant: ApplePayServiceOptions['onValidateMerchant']) {
         return new Promise<unknown>((resolve, reject) => {
             void onValidateMerchant(resolve, reject, event.validationURL);
         })
@@ -152,7 +166,7 @@ class ApplePayService {
      */
     onpaymentmethodselected(
         event: ApplePayJS.ApplePayPaymentMethodSelectedEvent,
-        onPaymentMethodSelected: ApplePayServiceOptions['onPaymentMethodSelected']
+        onPaymentMethodSelected: NonNullable<ApplePayServiceOptions['onPaymentMethodSelected']>
     ) {
         return new Promise((resolve, reject) => onPaymentMethodSelected(resolve, reject, event))
             .then((paymentMethodUpdate: ApplePayJS.ApplePayPaymentMethodUpdate) => {
@@ -172,7 +186,7 @@ class ApplePayService {
      */
     onshippingcontactselected(
         event: ApplePayJS.ApplePayShippingContactSelectedEvent,
-        onShippingContactSelected: ApplePayConfiguration['onShippingContactSelected']
+        onShippingContactSelected: NonNullable<ApplePayServiceOptions['onShippingContactSelected']>
     ) {
         return new Promise((resolve, reject) => onShippingContactSelected(resolve, reject, event))
             .then((shippingContactUpdate: ApplePayJS.ApplePayShippingContactUpdate) => {
@@ -192,7 +206,7 @@ class ApplePayService {
      */
     onshippingmethodselected(
         event: ApplePayJS.ApplePayShippingMethodSelectedEvent,
-        onShippingMethodSelected: ApplePayConfiguration['onShippingMethodSelected']
+        onShippingMethodSelected: NonNullable<ApplePayServiceOptions['onShippingMethodSelected']>
     ) {
         return new Promise((resolve, reject) => onShippingMethodSelected(resolve, reject, event))
             .then((shippingMethodUpdate: ApplePayJS.ApplePayShippingMethodUpdate) => {
@@ -210,7 +224,10 @@ class ApplePayService {
      * @param onCouponCodeChanged - A function that will complete the entry or update of a coupon code with an update.
      * @see {@link https://developer.apple.com/documentation/applepayontheweb/applepaysession/oncouponcodechanged}
      */
-    oncouponcodechanged(event: ApplePayJS.ApplePayCouponCodeChangedEvent, onCouponCodeChanged: ApplePayConfiguration['onCouponCodeChanged']) {
+    oncouponcodechanged(
+        event: ApplePayJS.ApplePayCouponCodeChangedEvent,
+        onCouponCodeChanged: NonNullable<ApplePayServiceOptions['onCouponCodeChanged']>
+    ) {
         return new Promise((resolve, reject) => onCouponCodeChanged(resolve, reject, event))
             .then((couponCodeUpdate: ApplePayJS.ApplePayCouponCodeUpdate) => {
                 this.session.completeCouponCodeChange(couponCodeUpdate);
@@ -227,8 +244,8 @@ class ApplePayService {
      * @param onCancel - A function that will complete the cancellation of the payment.
      * @see {@link https://developer.apple.com/documentation/applepayontheweb/applepaysession/oncancel}
      */
-    oncancel(event: ApplePayJS.Event, onCancel: (event: ApplePayJS.Event) => void): void {
-        onCancel(event);
+    oncancel(event: ApplePayJS.Event, onCancel?: (event: ApplePayJS.Event) => void): void {
+        onCancel?.(event);
     }
 }
 

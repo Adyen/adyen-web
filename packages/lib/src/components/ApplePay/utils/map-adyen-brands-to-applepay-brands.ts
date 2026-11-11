@@ -15,7 +15,7 @@ export function mapBrands(brands: string[]) {
         eftpos_australia: 'eftpos'
     };
 
-    return brands.reduce((accumulator, item) => {
+    return brands.reduce<string[]>((accumulator, item) => {
         if (!!brandMapping[item] && !accumulator.includes(brandMapping[item])) {
             accumulator.push(brandMapping[item]);
         }

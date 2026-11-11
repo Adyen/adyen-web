@@ -2,20 +2,26 @@ import { preparePaymentRequest } from './payment-request';
 import defaultProps from '../defaultProps';
 
 describe('preparePaymentRequest', () => {
-    test('should warn if country code is missing', () => {
-        console.warn = jest.fn();
+    test('should throw an implementation error if country code is missing', () => {
+        expect(() =>
+            preparePaymentRequest({
+                countryCode: '',
+                companyName: 'Company Name',
+                amount: { value: 115800, currency: 'EUR' },
+                supportedNetworks: ['amex', 'discover', 'masterCard', 'visa'],
+                totalPriceLabel: 'Amount'
+            })
+        ).toThrow(expect.objectContaining({ name: 'IMPLEMENTATION_ERROR' }));
+    });
 
-        preparePaymentRequest({
-            countryCode: '',
-            companyName: 'Company Name',
-            amount: { value: 115800, currency: 'EUR' },
-            supportedNetworks: ['amex', 'discover', 'masterCard', 'visa'],
-            totalPriceLabel: 'Amount'
-        });
-
-        expect(console.warn).toHaveBeenCalledWith(
-            'Apple Pay - Make sure to set the countryCode in the AdyenCheckout configuration or in the Checkout Session creation'
-        );
+    test('should throw an implementation error if the total price label is missing', () => {
+        expect(() =>
+            preparePaymentRequest({
+                countryCode: 'NL',
+                companyName: 'Company Name',
+                amount: { value: 115800, currency: 'EUR' }
+            })
+        ).toThrow(expect.objectContaining({ name: 'IMPLEMENTATION_ERROR' }));
     });
 
     test('formats the payment object', () => {
@@ -53,7 +59,8 @@ describe('preparePaymentRequest', () => {
         const paymentRequest = preparePaymentRequest({
             countryCode: 'NL',
             amount: { value: 1158123, currency: 'BHD' },
-            companyName: 'Test'
+            companyName: 'Test',
+            totalPriceLabel: 'Amount'
         });
 
         expect(paymentRequest.total.amount).toBe('1158.123');
@@ -66,7 +73,8 @@ describe('preparePaymentRequest', () => {
             const paymentRequest = preparePaymentRequest({
                 ...defaultProps,
                 countryCode: 'US',
-                companyName: 'Test'
+                companyName: 'Test',
+                totalPriceLabel: 'Test'
             });
 
             expect(paymentRequest.total.amount).toBe('0');

@@ -27,6 +27,7 @@ let core: ICore;
 
 beforeEach(() => {
     core = setupCoreMock();
+    core.options.countryCode = 'NL';
     const mockApplePaySdkLoaderLoadFunction = jest.fn().mockImplementation(() => {
         mockApplePaySession = mock<ApplePaySession>({
             // @ts-ignore The following methods are not recognized as static members
