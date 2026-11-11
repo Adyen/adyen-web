@@ -2,13 +2,17 @@ import { expect } from '@playwright/test';
 import type { Locator, Page } from '@playwright/test';
 import LANG from '../../server/translations/en-US.json';
 import { Card } from './card';
-import { USER_TYPE_DELAY } from '../tests/utils/constants';
+import { BIN_LOOKUP_URL, USER_TYPE_DELAY } from '../tests/utils/constants';
 
 const CONSENT_CHECKBOX_LABEL = LANG['ctp.signup.consentLabel'].replace(/%#/g, '');
 const DETAILS_GROUP_LABEL = LANG['ctp.signup.a11y.detailsGroup'];
 const STORE_DETAILS_LABEL = LANG['storeDetails'];
 const CLICK_TO_PAY_CARDS_TITLE = LANG['ctp.cards.title'];
 const MANUAL_CARD_ENTRY_LABEL = LANG['ctp.manualCardEntry'];
+
+type BinLookupResponseBody = {
+    brands?: { brand: string; supported: boolean }[];
+};
 
 type ClickToPaySignupFields = {
     firstName?: string;
@@ -79,6 +83,24 @@ class CardWithClickToPaySignup extends Card {
     async openManualCardEntry() {
         await this.manualCardEntryButton.click();
         await this.cardNumberInput.waitFor({ state: 'visible' });
+    }
+
+    /**
+     * The sign-up depends on the brand confirmed by the BIN lookup, not on the brand icon,
+     * which the card number iframe already sets from the first digits
+     */
+    async typeCardNumberAndWaitForBinLookup(cardNumber: string): Promise<BinLookupResponseBody> {
+        const binLookupResponse = this.page.waitForResponse(response => response.url() === BIN_LOOKUP_URL);
+        await this.typeCardNumber(cardNumber);
+        return (await binLookupResponse).json();
+    }
+
+    /**
+     * The Card adds the brand to the payment data only after processing a single brand BIN lookup result,
+     * or the shopper's choice for a dual branded card, so this tells when the sign-up visibility is final
+     */
+    async getPaymentMethodBrand(): Promise<string | undefined> {
+        return this.page.evaluate(() => globalThis.component?.data?.paymentMethod?.brand);
     }
 
     /**

@@ -10,14 +10,13 @@ import {
     BCMC_DUAL_BRANDED_MC,
     CLICK_TO_PAY_DPA_CONFIGURATION,
     CLICK_TO_PAY_SIGNUP_PHONE,
+    MC_PULSE_DEBIT_CARD,
     REGULAR_TEST_CARD,
     SHOPPER_DATA,
     TAGS,
     THREEDS2_MAESTRO_CARD,
     VISA_CARD
 } from '../../utils/constants';
-
-const MASTERCARD_ICON_ALT = /mastercard/i;
 
 const signupConfiguration = {
     configuration: { ...CLICK_TO_PAY_DPA_CONFIGURATION.mc },
@@ -44,8 +43,8 @@ test.describe('Card - Click to Pay sign up', () => {
                 await cardWithCtpSignup.goto(signupUrl());
                 await expect(cardWithCtpSignup.signupConsentCheckbox).toBeHidden();
 
-                await cardWithCtpSignup.typeCardNumber(REGULAR_TEST_CARD);
-                await expect(cardWithCtpSignup.brandingIcon).toHaveAttribute('alt', MASTERCARD_ICON_ALT);
+                await cardWithCtpSignup.typeCardNumberAndWaitForBinLookup(REGULAR_TEST_CARD);
+                await expect.poll(() => cardWithCtpSignup.getPaymentMethodBrand()).toBe('mc');
                 await expect(cardWithCtpSignup.signupConsentCheckbox).toBeVisible();
                 await expect(cardWithCtpSignup.signupConsentCheckbox).not.toBeChecked();
                 await expect(cardWithCtpSignup.signupDetailsGroup).toBeHidden();
@@ -55,17 +54,17 @@ test.describe('Card - Click to Pay sign up', () => {
             });
 
             const ineligibleCards = [
-                { brand: 'Visa', cardNumber: VISA_CARD, iconAlt: /visa/i },
-                { brand: 'Maestro', cardNumber: THREEDS2_MAESTRO_CARD, iconAlt: /maestro/i },
-                { brand: 'American Express', cardNumber: AMEX_CARD, iconAlt: /american express/i }
+                { brand: 'Visa', cardNumber: VISA_CARD, brandId: 'visa' },
+                { brand: 'Maestro', cardNumber: THREEDS2_MAESTRO_CARD, brandId: 'maestro' },
+                { brand: 'American Express', cardNumber: AMEX_CARD, brandId: 'amex' }
             ];
 
-            for (const { brand, cardNumber, iconAlt } of ineligibleCards) {
+            for (const { brand, cardNumber, brandId } of ineligibleCards) {
                 test(`#2 should not show the sign up for a ${brand} card`, async ({ cardWithCtpSignup }) => {
                     await cardWithCtpSignup.goto(signupUrl());
 
-                    await cardWithCtpSignup.typeCardNumber(cardNumber);
-                    await expect(cardWithCtpSignup.brandingIcon).toHaveAttribute('alt', iconAlt);
+                    await cardWithCtpSignup.typeCardNumberAndWaitForBinLookup(cardNumber);
+                    await expect.poll(() => cardWithCtpSignup.getPaymentMethodBrand()).toBe(brandId);
                     await expect(cardWithCtpSignup.signupConsentCheckbox).toBeHidden();
                 });
             }
@@ -77,11 +76,11 @@ test.describe('Card - Click to Pay sign up', () => {
                 await binLookupMock(page, dualBrandedBcmcAndMc);
                 await cardWithCtpSignup.goto(signupUrl(DUAL_BRAND_CONFIGURATION));
 
-                await cardWithCtpSignup.typeCardNumber(BCMC_DUAL_BRANDED_MC);
+                await cardWithCtpSignup.typeCardNumberAndWaitForBinLookup(BCMC_DUAL_BRANDED_MC);
                 await expect(cardWithCtpSignup.dualBrandSelector).toBeVisible();
 
                 // Bancontact comes first in the BIN lookup response, so it is selected by default
-                await expect(cardWithCtpSignup.isBrandSelected(/bancontact/i)).resolves.toBe(true);
+                await expect(cardWithCtpSignup.getBrandButton(/bancontact/i)).toHaveAttribute('aria-pressed', 'true');
                 await expect(cardWithCtpSignup.signupConsentCheckbox).toBeHidden();
 
                 await cardWithCtpSignup.selectBrand(/mastercard/i);
@@ -89,6 +88,19 @@ test.describe('Card - Click to Pay sign up', () => {
 
                 await cardWithCtpSignup.selectBrand(/bancontact/i);
                 await expect(cardWithCtpSignup.signupConsentCheckbox).toBeHidden();
+            });
+
+            test('#4 should show the sign up for a Mastercard debit card co-branded with Pulse', async ({ cardWithCtpSignup }) => {
+                // The BIN lookup only returns Pulse when it is one of the Card brands
+                await cardWithCtpSignup.goto(signupUrl({ ...signupConfiguration, brands: ['mc', 'visa', 'pulse'] }));
+
+                const binLookupResponse = await cardWithCtpSignup.typeCardNumberAndWaitForBinLookup(MC_PULSE_DEBIT_CARD);
+                const supportedBrands = binLookupResponse.brands?.filter(({ supported }) => supported).map(({ brand }) => brand);
+                expect(supportedBrands?.sort()).toEqual(['mc', 'pulse']);
+
+                await expect(cardWithCtpSignup.signupConsentCheckbox).toBeVisible();
+                await cardWithCtpSignup.checkSignupConsent();
+                await expect.poll(() => cardWithCtpSignup.getClickToPaySignupPayload()).toEqual({ storeClickToPayProfile: true });
             });
         });
 
@@ -116,8 +128,8 @@ test.describe('Card - Click to Pay sign up', () => {
                 test(`should not show the sign up for a Mastercard card when ${description}`, async ({ cardWithCtpSignup }) => {
                     await cardWithCtpSignup.goto(signupUrl(componentConfig));
 
-                    await cardWithCtpSignup.typeCardNumber(REGULAR_TEST_CARD);
-                    await expect(cardWithCtpSignup.brandingIcon).toHaveAttribute('alt', MASTERCARD_ICON_ALT);
+                    await cardWithCtpSignup.typeCardNumberAndWaitForBinLookup(REGULAR_TEST_CARD);
+                    await expect.poll(() => cardWithCtpSignup.getPaymentMethodBrand()).toBe('mc');
                     await expect(cardWithCtpSignup.signupConsentCheckbox).toBeHidden();
                 });
             }
@@ -127,7 +139,7 @@ test.describe('Card - Click to Pay sign up', () => {
             test('#1 should show the sign up below the store details checkbox when enableStoreDetails is true', async ({ cardWithCtpSignup }) => {
                 await cardWithCtpSignup.goto(signupUrl({ ...signupConfiguration, enableStoreDetails: true }));
 
-                await cardWithCtpSignup.typeCardNumber(REGULAR_TEST_CARD);
+                await cardWithCtpSignup.typeCardNumberAndWaitForBinLookup(REGULAR_TEST_CARD);
                 await expect(cardWithCtpSignup.storeDetailsCheckbox).toBeVisible();
                 await expect(cardWithCtpSignup.signupConsentCheckbox).toBeVisible();
 
@@ -143,7 +155,7 @@ test.describe('Card - Click to Pay sign up', () => {
             test('#2 should show the sign up when enableStoreDetails is false', async ({ cardWithCtpSignup }) => {
                 await cardWithCtpSignup.goto(signupUrl({ ...signupConfiguration, enableStoreDetails: false }));
 
-                await cardWithCtpSignup.typeCardNumber(REGULAR_TEST_CARD);
+                await cardWithCtpSignup.typeCardNumberAndWaitForBinLookup(REGULAR_TEST_CARD);
                 await expect(cardWithCtpSignup.signupConsentCheckbox).toBeVisible();
                 await expect(cardWithCtpSignup.storeDetailsCheckbox).toBeHidden();
             });
@@ -152,7 +164,7 @@ test.describe('Card - Click to Pay sign up', () => {
         test.describe('payment data', () => {
             test('#1 should add the consent and the typed details when the shopper signs up', async ({ cardWithCtpSignup }) => {
                 await cardWithCtpSignup.goto(signupUrl());
-                await cardWithCtpSignup.typeCardNumber(REGULAR_TEST_CARD);
+                await cardWithCtpSignup.typeCardNumberAndWaitForBinLookup(REGULAR_TEST_CARD);
 
                 await cardWithCtpSignup.checkSignupConsent();
                 await expect(cardWithCtpSignup.signupPhonePrefixInput).toHaveValue(CLICK_TO_PAY_SIGNUP_PHONE.defaultPrefix);
@@ -189,7 +201,7 @@ test.describe('Card - Click to Pay sign up', () => {
                         }
                     })
                 );
-                await cardWithCtpSignup.typeCardNumber(REGULAR_TEST_CARD);
+                await cardWithCtpSignup.typeCardNumberAndWaitForBinLookup(REGULAR_TEST_CARD);
 
                 await cardWithCtpSignup.checkSignupConsent();
 
@@ -211,7 +223,7 @@ test.describe('Card - Click to Pay sign up', () => {
 
             test('#3 should add only the consent when the shopper signs up with empty details', async ({ cardWithCtpSignup }) => {
                 await cardWithCtpSignup.goto(signupUrl());
-                await cardWithCtpSignup.typeCardNumber(REGULAR_TEST_CARD);
+                await cardWithCtpSignup.typeCardNumberAndWaitForBinLookup(REGULAR_TEST_CARD);
 
                 await cardWithCtpSignup.checkSignupConsent();
                 await expect(cardWithCtpSignup.signupDetailsGroup).toBeVisible();
@@ -221,7 +233,7 @@ test.describe('Card - Click to Pay sign up', () => {
 
             test('#4 should add only the details that were filled in', async ({ cardWithCtpSignup }) => {
                 await cardWithCtpSignup.goto(signupUrl());
-                await cardWithCtpSignup.typeCardNumber(REGULAR_TEST_CARD);
+                await cardWithCtpSignup.typeCardNumberAndWaitForBinLookup(REGULAR_TEST_CARD);
 
                 await cardWithCtpSignup.checkSignupConsent();
                 await expect(cardWithCtpSignup.signupPhonePrefixInput).toHaveValue(CLICK_TO_PAY_SIGNUP_PHONE.defaultPrefix);
@@ -241,7 +253,7 @@ test.describe('Card - Click to Pay sign up', () => {
 
             test('#5 should not add sign up data when the shopper does not check the consent', async ({ cardWithCtpSignup }) => {
                 await cardWithCtpSignup.goto(signupUrl());
-                await cardWithCtpSignup.typeCardNumber(REGULAR_TEST_CARD);
+                await cardWithCtpSignup.typeCardNumberAndWaitForBinLookup(REGULAR_TEST_CARD);
                 await expect(cardWithCtpSignup.signupConsentCheckbox).toBeVisible();
 
                 await expect.poll(() => cardWithCtpSignup.getClickToPaySignupPayload()).toEqual({});
@@ -251,7 +263,7 @@ test.describe('Card - Click to Pay sign up', () => {
                 cardWithCtpSignup
             }) => {
                 await cardWithCtpSignup.goto(signupUrl());
-                await cardWithCtpSignup.typeCardNumber(REGULAR_TEST_CARD);
+                await cardWithCtpSignup.typeCardNumberAndWaitForBinLookup(REGULAR_TEST_CARD);
 
                 await cardWithCtpSignup.checkSignupConsent();
                 await cardWithCtpSignup.fillSignupDetails({ firstName: SHOPPER_DATA.firstName, shopperEmail: SHOPPER_DATA.email });
@@ -264,14 +276,14 @@ test.describe('Card - Click to Pay sign up', () => {
 
             test('#7 should remove the sign up data when the card number changes to a brand other than Mastercard', async ({ cardWithCtpSignup }) => {
                 await cardWithCtpSignup.goto(signupUrl());
-                await cardWithCtpSignup.typeCardNumber(REGULAR_TEST_CARD);
+                await cardWithCtpSignup.typeCardNumberAndWaitForBinLookup(REGULAR_TEST_CARD);
 
                 await cardWithCtpSignup.checkSignupConsent();
                 await cardWithCtpSignup.fillSignupDetails({ firstName: SHOPPER_DATA.firstName, shopperEmail: SHOPPER_DATA.email });
 
                 await cardWithCtpSignup.deleteCardNumber();
-                await cardWithCtpSignup.typeCardNumber(VISA_CARD);
-                await expect(cardWithCtpSignup.brandingIcon).toHaveAttribute('alt', /visa/i);
+                await cardWithCtpSignup.typeCardNumberAndWaitForBinLookup(VISA_CARD);
+                await expect.poll(() => cardWithCtpSignup.getPaymentMethodBrand()).toBe('visa');
                 await expect(cardWithCtpSignup.signupConsentCheckbox).toBeHidden();
 
                 await expect.poll(() => cardWithCtpSignup.getClickToPaySignupPayload()).toEqual({});
@@ -284,7 +296,7 @@ test.describe('Card - Click to Pay sign up', () => {
                 await binLookupMock(page, dualBrandedBcmcAndMc);
                 await cardWithCtpSignup.goto(signupUrl(DUAL_BRAND_CONFIGURATION));
 
-                await cardWithCtpSignup.typeCardNumber(BCMC_DUAL_BRANDED_MC);
+                await cardWithCtpSignup.typeCardNumberAndWaitForBinLookup(BCMC_DUAL_BRANDED_MC);
                 await cardWithCtpSignup.selectBrand(/mastercard/i);
 
                 await cardWithCtpSignup.checkSignupConsent();
@@ -299,7 +311,7 @@ test.describe('Card - Click to Pay sign up', () => {
 
         test('should match the screenshot of the expanded sign up', { tag: [TAGS.SCREENSHOT] }, async ({ cardWithCtpSignup, page, browserName }) => {
             await cardWithCtpSignup.goto(signupUrl());
-            await cardWithCtpSignup.typeCardNumber(REGULAR_TEST_CARD);
+            await cardWithCtpSignup.typeCardNumberAndWaitForBinLookup(REGULAR_TEST_CARD);
 
             await cardWithCtpSignup.checkSignupConsent();
             await expect(cardWithCtpSignup.signupDetailsGroup).toBeVisible();
@@ -321,8 +333,8 @@ test.describe('Card - Click to Pay sign up', () => {
             await cardWithCtpSignup.gotoAsRecognizedShopper(signupUrl());
             await cardWithCtpSignup.openManualCardEntry();
 
-            await cardWithCtpSignup.typeCardNumber(REGULAR_TEST_CARD);
-            await expect(cardWithCtpSignup.brandingIcon).toHaveAttribute('alt', MASTERCARD_ICON_ALT);
+            await cardWithCtpSignup.typeCardNumberAndWaitForBinLookup(REGULAR_TEST_CARD);
+            await expect.poll(() => cardWithCtpSignup.getPaymentMethodBrand()).toBe('mc');
             await expect(cardWithCtpSignup.signupConsentCheckbox).toBeHidden();
 
             await expect.poll(() => cardWithCtpSignup.getClickToPaySignupPayload()).toEqual({});

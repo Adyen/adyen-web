@@ -12,6 +12,7 @@ export const DUAL_BRANDED_CARD = '4035501000000008'; // dual branded visa & cart
 export const BCMC_DUAL_BRANDED_VISA = '4871049999999910'; // dual branded visa & bcmc
 export const BCMC_DUAL_BRANDED_MC = '5127880999999990'; // dual branded mc & bcmc
 export const DUAL_BRANDED_CARD_EXCLUDED = '4001230000000004'; // dual branded visa/star
+export const MC_PULSE_DEBIT_CARD = '5413330033003303'; // dual branded mc/pulse debit card. binLookup only returns pulse when it is one of the Card brands
 export const CARD_WITH_PAN_LENGTH = '4000620000000007';
 export const CARD_WITH_HEALTHCARE = '2292240000000005';
 export const DUAL_BRANDED_EFTPOS = '4687380100010006';
