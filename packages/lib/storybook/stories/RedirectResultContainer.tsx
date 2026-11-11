@@ -1,8 +1,6 @@
+import { Core } from '@adyen/adyen-web';
 import { h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
-import { AdyenCheckout } from '@adyen/adyen-web';
-import { AdditionalDetailsData } from '../../src/core/types';
-import { makeDetailsCall } from '../helpers/checkout-api-calls';
 import { handleError, handleFinalState } from '../helpers/checkout-handlers';
 
 export const RedirectResultContainer = ({ redirectResult, sessionId, countryCode }) => {
@@ -15,25 +13,14 @@ export const RedirectResultContainer = ({ redirectResult, sessionId, countryCode
             return;
         }
 
-        void AdyenCheckout({
+        setIsRedirecting(true);
+
+        const core = new Core({
             clientKey: process.env.CLIENT_KEY,
             // @ts-ignore CLIENT_ENV has valid value
             environment: process.env.CLIENT_ENV,
             countryCode,
-            ...(sessionId && { session: { id: sessionId, countryCode } }),
-            // Advanced flow
-            ...(!sessionId && {
-                onAdditionalDetails: (state: AdditionalDetailsData, _, actions) => {
-                    makeDetailsCall(state.data)
-                        .then(res => {
-                            actions.resolve(res);
-                        })
-                        .catch(e => {
-                            console.error({ e });
-                            actions.reject();
-                        });
-                }
-            }),
+            session: { id: sessionId },
             onPaymentCompleted: (result, component) => {
                 setIsRedirecting(false);
                 handleFinalState(result, component);
@@ -46,10 +33,9 @@ export const RedirectResultContainer = ({ redirectResult, sessionId, countryCode
                 setIsRedirecting(false);
                 handleError(error, component);
             }
-        }).then(checkout => {
-            setIsRedirecting(true);
-            checkout.submitDetails({ details: { redirectResult } });
         });
+
+        core.submitDetails({ details: { redirectResult } });
     }, [sessionId, redirectResult]);
 
     return (
