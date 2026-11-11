@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/preact';
+import { render, screen, waitFor } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import ANCV from './ANCV';
@@ -90,6 +90,30 @@ describe('ANCV', () => {
                 expect.anything(),
                 expect.anything()
             );
+        });
+    });
+
+    describe('submit', () => {
+        test('should not call onPaymentFailed if beforeSubmit is rejected', async () => {
+            const user = userEvent.setup();
+            const core = setupCoreMock();
+            const beforeSubmitMock = jest.fn().mockImplementation((_data, _component, actions) => {
+                actions.reject();
+            });
+            const onPaymentFailedMock = jest.fn();
+            const onOrderRequest = jest.fn(resolve => resolve({ orderData: 'mock', pspReference: 'mock' }));
+            const ancv = setupANCV(core, { beforeSubmit: beforeSubmitMock, onOrderRequest, onPaymentFailed: onPaymentFailedMock });
+            const setElementStatusSpy = jest.spyOn(ancv, 'setElementStatus');
+
+            await typeBeneficiaryId(user, '12345678901');
+            await user.click(screen.getByRole('button', { name: 'Confirm purchase' }));
+
+            await waitFor(() => expect(beforeSubmitMock).toHaveBeenCalledTimes(1));
+            await new Promise(process.nextTick);
+
+            expect(core.session?.submitPayment).not.toHaveBeenCalled();
+            expect(setElementStatusSpy).toHaveBeenLastCalledWith('ready');
+            expect(onPaymentFailedMock).not.toHaveBeenCalled();
         });
     });
 
