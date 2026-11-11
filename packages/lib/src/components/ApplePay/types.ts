@@ -38,6 +38,12 @@ export type ApplePayButtonStyle = 'black' | 'white' | 'white-outline';
 
 export interface ApplePayConfiguration extends UIElementProps {
     /**
+     * Brands returned by the payment methods response.
+     * @internal
+     */
+    brands?: string[];
+
+    /**
      * Enables the ApplePay Express Flow & also used for analytics
      * @defaultValue false
      */

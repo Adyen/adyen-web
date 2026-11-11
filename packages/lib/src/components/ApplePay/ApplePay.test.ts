@@ -27,6 +27,7 @@ let core: ICore;
 
 beforeEach(() => {
     core = setupCoreMock();
+    core.options.countryCode = 'NL';
     const mockApplePaySdkLoaderLoadFunction = jest.fn().mockImplementation(() => {
         mockApplePaySession = mock<ApplePaySession>({
             // @ts-ignore The following methods are not recognized as static members
@@ -72,6 +73,9 @@ const configurationMock = {
     merchantName: 'TestMerchant',
     merchantId: 'test-merchant'
 };
+
+// The constructor loads the SDK asynchronously, and the Apple Pay version a session needs is only set once it resolves
+const waitForSdkLoad = () => new Promise(process.nextTick);
 
 describe('ApplePay', () => {
     describe('constructor()', () => {
@@ -183,6 +187,7 @@ describe('ApplePay', () => {
                 amount: { currency: 'EUR', value: 2000 }
             });
 
+            await waitForSdkLoad();
             applepay.submit();
 
             // Session initialized
@@ -200,13 +205,14 @@ describe('ApplePay', () => {
             expect(resolveMock).toHaveBeenCalledWith({ token: 'apple-pay-session' });
         });
 
-        test('should use the current URL as default', () => {
+        test('should use the current URL as default', async () => {
             // Hostname is provided by the jsdom `url` environment option (https://adyen.dev/).
             const applepay = new ApplePay(core, {
                 configuration: configurationMock,
                 amount: { currency: 'EUR', value: 2000 }
             });
 
+            await waitForSdkLoad();
             applepay.submit();
 
             // @ts-ignore ApplePayService is mocked. Trigger ApplePayService onValidateMerchant property
@@ -221,13 +227,14 @@ describe('ApplePay', () => {
             });
         });
 
-        test('should use custom domainName if set in the component configuration', () => {
+        test('should use custom domainName if set in the component configuration', async () => {
             const applepay = new ApplePay(core, {
                 configuration: configurationMock,
                 domainName: 'https://pay.example.com',
                 amount: { currency: 'EUR', value: 2000 }
             });
 
+            await waitForSdkLoad();
             applepay.submit();
 
             // @ts-ignore ApplePayService is mocked. Trigger ApplePayService onValidateMerchant property
@@ -250,6 +257,7 @@ describe('ApplePay', () => {
                 amount: { currency: 'EUR', value: 2000 }
             });
 
+            await waitForSdkLoad();
             applepay.submit();
 
             // Session initialized
@@ -285,6 +293,25 @@ describe('ApplePay', () => {
     });
 
     describe('submit()', () => {
+        test('should report an error and not start a session when no Apple Pay version is available', async () => {
+            const onErrorMock = jest.fn();
+            const applepay = new ApplePay(core, {
+                configuration: configurationMock,
+                amount: { currency: 'EUR', value: 2000 },
+                onError: onErrorMock
+            });
+            await waitForSdkLoad();
+            applepay['applePayVersionNumber'] = undefined;
+
+            applepay.submit();
+
+            expect(ApplePayService).not.toHaveBeenCalled();
+            expect(onErrorMock).toHaveBeenCalledWith(
+                expect.objectContaining({ name: 'ERROR', message: 'Apple Pay is not available on this device' }),
+                applepay
+            );
+        });
+
         test('should forward apple pay error (if available) to ApplePay if payment fails', async () => {
             const onPaymentFailedMock = jest.fn();
             const error = mock<ApplePayJS.ApplePayError>();
@@ -310,6 +337,7 @@ describe('ApplePay', () => {
                 }
             });
 
+            await waitForSdkLoad();
             applepay.submit();
 
             // Session initialized
@@ -352,6 +380,7 @@ describe('ApplePay', () => {
                 }
             });
 
+            await waitForSdkLoad();
             applepay.submit();
 
             // Session initialized
@@ -406,6 +435,7 @@ describe('ApplePay', () => {
                 resultCode: 'Authorized'
             });
 
+            await waitForSdkLoad();
             applepay.submit();
 
             await new Promise(process.nextTick);
@@ -457,6 +487,7 @@ describe('ApplePay', () => {
                 resultCode: 'Authorized'
             });
 
+            await waitForSdkLoad();
             applepay.submit();
 
             await new Promise(process.nextTick);
@@ -502,6 +533,7 @@ describe('ApplePay', () => {
                 resultCode: 'Authorized'
             });
 
+            await waitForSdkLoad();
             applepay.submit();
 
             await new Promise(process.nextTick);
@@ -576,6 +608,7 @@ describe('ApplePay', () => {
                 onPaymentFailed: onPaymentFailedMock
             });
 
+            await waitForSdkLoad();
             applepay.submit();
 
             // Session initialized
@@ -700,6 +733,7 @@ describe('ApplePay', () => {
                 supportsCouponCode: true
             });
 
+            await waitForSdkLoad();
             applepay.submit();
 
             await new Promise(process.nextTick);
@@ -716,6 +750,7 @@ describe('ApplePay', () => {
                 amount: { currency: 'EUR', value: 2000 }
             });
 
+            await waitForSdkLoad();
             applepay.submit();
 
             await new Promise(process.nextTick);
@@ -736,6 +771,7 @@ describe('ApplePay', () => {
                 onCouponCodeChanged: onCouponCodeChangeMock
             });
 
+            await waitForSdkLoad();
             applepay.submit();
 
             await new Promise(process.nextTick);
@@ -751,6 +787,7 @@ describe('ApplePay', () => {
                 amount: { currency: 'EUR', value: 2000 }
             });
 
+            await waitForSdkLoad();
             applepay.submit();
 
             await new Promise(process.nextTick);
@@ -774,6 +811,7 @@ describe('ApplePay', () => {
                 }
             });
 
+            await waitForSdkLoad();
             applepay.submit();
 
             await new Promise(process.nextTick);
@@ -801,6 +839,7 @@ describe('ApplePay', () => {
                 }
             });
 
+            await waitForSdkLoad();
             applepay.submit();
 
             await new Promise(process.nextTick);

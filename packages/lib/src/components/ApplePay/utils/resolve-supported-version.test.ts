@@ -19,11 +19,11 @@ describe('resolveSupportedVersion', () => {
         expect(version).toBe(10);
     });
 
-    test('should return null if ApplePaySession is not available', () => {
+    test('should return undefined if ApplePaySession is not available', () => {
         // @ts-ignore Mocking 'supportsVersion'
         window.ApplePaySession.supportsVersion = null;
 
         const version = resolveSupportedVersion(14);
-        expect(version).toBeNull();
+        expect(version).toBeUndefined();
     });
 });
