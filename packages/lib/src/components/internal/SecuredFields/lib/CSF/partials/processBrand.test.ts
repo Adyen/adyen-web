@@ -117,4 +117,14 @@ describe('Testing processBrand fny', () => {
 
         expect(csfCallbacks.onBrand).not.toHaveBeenCalled();
     });
+
+    test('Calling processBrand with an undefined cvcPolicy on the feedback object should fall back to CVC_POLICY_REQUIRED in the postMessage payload', () => {
+        csfState.type = 'card';
+        sfFeedbackObj.brand = 'visa';
+        sfFeedbackObj.cvcPolicy = undefined;
+
+        callProcessBrand();
+
+        expect(postMessageToIframeMock).toHaveBeenCalledWith(expect.objectContaining({ brand: 'visa', cvcPolicy: 'required' }));
+    });
 });

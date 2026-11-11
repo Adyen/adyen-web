@@ -60,7 +60,7 @@ export default function processBrand({ csfState, csfConfig, csfProps, csfCallbac
                     txVariant: csfState.type,
                     brand: newBrandObj.brand,
                     fieldType: ENCRYPTED_SECURITY_CODE,
-                    cvcPolicy: pFeedbackObj.cvcPolicy,
+                    cvcPolicy: newBrandObj.cvcPolicy,
                     numKey: csfState.securedFields[ENCRYPTED_SECURITY_CODE]?.numKey
                 };
                 postMessageToIframe(dataObj, getIframeContentWin(csfState, ENCRYPTED_SECURITY_CODE), csfConfig.loadingContext ?? '');
