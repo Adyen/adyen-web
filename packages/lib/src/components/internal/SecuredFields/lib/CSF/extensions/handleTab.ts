@@ -32,8 +32,8 @@ function handleShiftTab(fieldType: SFFieldType): void {
             break;
     }
 
-    const fieldToFocus: string = shiftTabObj.fieldToFocus;
-    const additionalField: HTMLElement = shiftTabObj.additionalField;
+    const fieldToFocus: string | undefined = shiftTabObj.fieldToFocus;
+    const additionalField: HTMLElement | undefined = shiftTabObj.additionalField;
 
     if (fieldToFocus) {
         this.setFocusOnFrame(fieldToFocus, logTab);
@@ -42,7 +42,7 @@ function handleShiftTab(fieldType: SFFieldType): void {
     }
 }
 
-const eligibleForTabFix = (): boolean => !!ua.__IS_FIREFOX || (!!ua.__IS_IE && ua.__IS_IE <= 11);
+const eligibleForTabFix = (): boolean => ua.__IS_FIREFOX || (typeof ua.__IS_IE === 'number' && ua.__IS_IE <= 11);
 
 function handleSFShiftTab(fieldType: SFFieldType): void {
     if (eligibleForTabFix()) {
