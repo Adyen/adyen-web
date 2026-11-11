@@ -13,7 +13,8 @@ import { SFFieldType } from '../../types';
  * @param pDataObj -
  */
 export function postMessageToAllIframes({ csfState, csfConfig }: CSFThisObject, pDataObj: object): boolean {
-    if (!csfState) return false;
+    // Purely need for TS, in production these props will always be defined
+    if (!csfState || !csfConfig) return false;
 
     const objKeys: string[] = Object.keys(pDataObj || {});
     if (!objKeys.length) {
@@ -24,8 +25,6 @@ export function postMessageToAllIframes({ csfState, csfConfig }: CSFThisObject, 
 
     const securedFieldKeys: string[] = Object.keys(csfState.securedFields);
     securedFieldKeys.forEach((pFieldType: SFFieldType) => {
-        if (!csfState) return;
-
         const dataObj: object = {
             txVariant: csfState.type,
             fieldType: pFieldType,
@@ -37,7 +36,7 @@ export function postMessageToAllIframes({ csfState, csfConfig }: CSFThisObject, 
             dataObj[pKey] = pDataObj[pKey];
         });
 
-        postMessageToIframe(dataObj, getIframeContentWin(csfState, pFieldType), csfConfig?.loadingContext ?? '');
+        postMessageToIframe(dataObj, getIframeContentWin(csfState, pFieldType), csfConfig.loadingContext ?? '');
     });
     return true;
 }

@@ -26,7 +26,8 @@ const checkForBrandChange = (pBrand: BrandStorageObject, storedBrand: BrandStora
  * @param pFeedbackObj -
  */
 export default function processBrand({ csfState, csfConfig, csfProps, csfCallbacks }: CSFThisObject, pFeedbackObj: SFFeedbackObj): boolean {
-    if (!csfState) return false;
+    // Purely need for TS, in production these props will always be defined
+    if (!csfState || !csfConfig || !csfProps || !csfCallbacks) return false;
 
     const fieldType: SFFieldType = pFeedbackObj.fieldType;
 
@@ -62,7 +63,7 @@ export default function processBrand({ csfState, csfConfig, csfProps, csfCallbac
                     cvcPolicy: pFeedbackObj.cvcPolicy,
                     numKey: csfState.securedFields[ENCRYPTED_SECURITY_CODE]?.numKey
                 };
-                postMessageToIframe(dataObj, getIframeContentWin(csfState, ENCRYPTED_SECURITY_CODE), csfConfig?.loadingContext ?? '');
+                postMessageToIframe(dataObj, getIframeContentWin(csfState, ENCRYPTED_SECURITY_CODE), csfConfig.loadingContext ?? '');
             }
         }
 
@@ -74,10 +75,10 @@ export default function processBrand({ csfState, csfConfig, csfProps, csfCallbac
         if (brandInfoObj && brandInfoObj.brand) {
             const callbackObj: CardBrandData = brandInfoObj as CardBrandData;
             callbackObj.type = csfState.type;
-            callbackObj.rootNode = csfProps?.rootNode as HTMLElement;
+            callbackObj.rootNode = csfProps.rootNode as HTMLElement;
 
             // ...and call SFPHandlers.handleOnBrand
-            csfCallbacks?.onBrand?.(callbackObj);
+            csfCallbacks.onBrand?.(callbackObj);
         }
 
         return true;

@@ -14,6 +14,7 @@ interface DestructuredFeedbackObj {
  * @param pFeedbackObj -
  */
 export function handleBinValue({ csfState, csfCallbacks }: CSFThisObject, pFeedbackObj: SFFeedbackObj): void {
+    // Purely need for TS, in production this prop will always be defined
     if (!csfState) return;
 
     const { binValue, encryptedBin, uuid }: DestructuredFeedbackObj = pFeedbackObj;

@@ -17,13 +17,14 @@ export function handleFocus(
     handleIOSTouchEvents: () => void,
     pFeedbackObj: SFFeedbackObj
 ): void {
-    if (!csfState) return;
+    // Purely need for TS, in production these props will always be defined
+    if (!csfState || !csfProps || !csfCallbacks) return;
 
     const feedbackObj: SFFeedbackObj = { ...pFeedbackObj };
 
     delete feedbackObj.numKey;
 
-    feedbackObj.rootNode = csfProps?.rootNode as HTMLElement;
+    feedbackObj.rootNode = csfProps.rootNode as HTMLElement;
     feedbackObj.type = csfState.type;
 
     // Store which field has focus
@@ -50,5 +51,5 @@ export function handleFocus(
     // Call callback (SecuredFieldsProviderHandlers > onFocus)
     const callbackObj: CardFocusData = feedbackObj as CardFocusData;
     callbackObj.currentFocusObject = csfState.currentFocusObject;
-    csfCallbacks?.onFocus?.(callbackObj);
+    csfCallbacks.onFocus?.(callbackObj);
 }

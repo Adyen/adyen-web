@@ -12,16 +12,17 @@ import { CSFThisObject } from '../types';
  * @param validateForm - comes from initial, partial, implementation
  */
 export function isConfigured({ csfState, csfConfig, csfProps, csfCallbacks }: CSFThisObject, validateForm: () => void): boolean {
-    if (!csfState) return false;
+    // Purely need for TS, in production these props will always be defined
+    if (!csfState || !csfConfig || !csfProps || !csfCallbacks) return false;
 
     csfState.isConfigured = true;
 
-    const callbackObj: CardConfigSuccessData = { iframesConfigured: true, type: csfState.type, rootNode: csfProps?.rootNode as HTMLElement };
+    const callbackObj: CardConfigSuccessData = { iframesConfigured: true, type: csfState.type, rootNode: csfProps.rootNode as HTMLElement };
 
-    csfCallbacks?.onConfigSuccess?.(callbackObj);
+    csfCallbacks.onConfigSuccess?.(callbackObj);
 
     // If a recurring card
-    if (csfState.numIframes === 1 && csfConfig?.isCreditCardType) {
+    if (csfState.numIframes === 1 && csfConfig.isCreditCardType) {
         if (csfState.type === 'card') {
             logger.error(
                 "ERROR: Payment method with a single secured field - but 'brands' has not been set to an array containing the specific card brand"

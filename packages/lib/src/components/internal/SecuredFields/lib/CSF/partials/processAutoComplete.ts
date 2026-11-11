@@ -14,7 +14,8 @@ import { CSFThisObject } from '../types';
  * @param pFeedbackObj -
  */
 export function processAutoComplete({ csfState, csfConfig, csfCallbacks }: CSFThisObject, pFeedbackObj: SFFeedbackObj): boolean {
-    if (!csfState) return false;
+    // Purely need for TS, in production these props will always be defined
+    if (!csfState || !csfConfig || !csfCallbacks) return false;
 
     /**
      * NOTE: It seems Chrome has started autofilling across cross-origin iframes. Have tested as far back as v104 but have no resources to test further back
@@ -26,7 +27,7 @@ export function processAutoComplete({ csfState, csfConfig, csfCallbacks }: CSFTh
         const feedbackObj: SFFeedbackObj = { ...pFeedbackObj };
         delete feedbackObj.numKey;
         const ACFeedbackObj: CardAutoCompleteData = feedbackObj as CardAutoCompleteData;
-        csfCallbacks?.onAutoComplete?.(ACFeedbackObj);
+        csfCallbacks.onAutoComplete?.(ACFeedbackObj);
         return true;
     }
 
@@ -62,7 +63,7 @@ export function processAutoComplete({ csfState, csfConfig, csfCallbacks }: CSFTh
                 autoComplete: acDateVal,
                 numKey: csfState.securedFields[ENCRYPTED_EXPIRY_DATE]?.numKey
             };
-            postMessageToIframe(dataObj, getIframeContentWin(csfState, ENCRYPTED_EXPIRY_DATE), csfConfig?.loadingContext ?? '');
+            postMessageToIframe(dataObj, getIframeContentWin(csfState, ENCRYPTED_EXPIRY_DATE), csfConfig.loadingContext ?? '');
             return true;
         }
 
@@ -73,7 +74,7 @@ export function processAutoComplete({ csfState, csfConfig, csfCallbacks }: CSFTh
                 autoComplete: acMonthVal,
                 numKey: csfState.securedFields[ENCRYPTED_EXPIRY_MONTH]?.numKey
             };
-            postMessageToIframe(dataObj, getIframeContentWin(csfState, ENCRYPTED_EXPIRY_MONTH), csfConfig?.loadingContext ?? '');
+            postMessageToIframe(dataObj, getIframeContentWin(csfState, ENCRYPTED_EXPIRY_MONTH), csfConfig.loadingContext ?? '');
         }
 
         if (hasOwnProperty(csfState.securedFields, ENCRYPTED_EXPIRY_YEAR)) {
@@ -85,7 +86,7 @@ export function processAutoComplete({ csfState, csfConfig, csfCallbacks }: CSFTh
                     autoComplete: acYearVal,
                     numKey: csfState.securedFields[ENCRYPTED_EXPIRY_YEAR]?.numKey
                 };
-                postMessageToIframe(dataObj, getIframeContentWin(csfState, ENCRYPTED_EXPIRY_YEAR), csfConfig?.loadingContext ?? '');
+                postMessageToIframe(dataObj, getIframeContentWin(csfState, ENCRYPTED_EXPIRY_YEAR), csfConfig.loadingContext ?? '');
             }, 0);
         }
         return true;

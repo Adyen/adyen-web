@@ -12,7 +12,8 @@ import { CSFThisObject } from '../types';
  * @param doLog -
  */
 export function setFocusOnFrame({ csfState, csfConfig }: CSFThisObject, pFieldType: SFFieldType, doLog?: boolean): void {
-    if (!csfState) return;
+    // Purely need for TS, in production these props will always be defined
+    if (!csfState || !csfConfig) return;
 
     // Check destroySecuredFields hasn't been called (thus clearing the state's securedFields object)
     if (!hasOwnProperty(csfState.securedFields, pFieldType)) return;
@@ -27,5 +28,5 @@ export function setFocusOnFrame({ csfState, csfConfig }: CSFThisObject, pFieldTy
         numKey: csfState.securedFields[pFieldType]?.numKey
     };
 
-    postMessageToIframe(focusData, getIframeContentWin(csfState, pFieldType), csfConfig?.loadingContext ?? '');
+    postMessageToIframe(focusData, getIframeContentWin(csfState, pFieldType), csfConfig.loadingContext ?? '');
 }
