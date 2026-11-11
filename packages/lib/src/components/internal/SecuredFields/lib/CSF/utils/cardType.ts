@@ -178,11 +178,10 @@ const detectCard = (pCardNumber: string, pCardGroupTypes?: string[]): CardObject
     let matchedCards: CardObject[];
 
     if (pCardGroupTypes) {
-        // Filter CardType.cards down to those that are found in pAvailableCards
-        matchedCards = CardType.cards
-            .filter(card => pCardGroupTypes.includes(card.cardType))
-            // Further filter them to those with a regEx pattern that matches pCardNumber
-            .filter(card => card.pattern !== undefined && card.pattern.test(pCardNumber));
+        // Filter CardType.cards down to those found in pCardGroupTypes with a regEx pattern that matches pCardNumber
+        matchedCards = CardType.cards.filter(
+            card => pCardGroupTypes.includes(card.cardType) && card.pattern !== undefined && card.pattern.test(pCardNumber)
+        );
 
         // If we have matched cards: if there's only one - return it; else return the one with the longest startingRule
         if (matchedCards.length) {
@@ -256,11 +255,7 @@ const detectCardLength = (pCard, pUnformattedVal) => {
 
 const getShortestPermittedCardLength = () => {
     if (!shortestPermittedCardLength) {
-        let permittedLengthsArray: number[] = [];
-
-        CardType.cards.forEach(pItem => {
-            permittedLengthsArray = permittedLengthsArray.concat(pItem.permittedLengths ?? []);
-        });
+        const permittedLengthsArray = CardType.cards.flatMap(pItem => pItem.permittedLengths ?? []);
 
         shortestPermittedCardLength = Math.min.apply(null, permittedLengthsArray);
     }
