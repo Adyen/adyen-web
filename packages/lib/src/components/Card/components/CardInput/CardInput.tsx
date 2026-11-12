@@ -17,6 +17,7 @@ import {
     extractPropsForSFP,
     getLayout,
     shouldShowInstallmentsComponent,
+    shouldShowClickToPaySignup,
     requiresDualBrandSelection
 } from './utils';
 import Specifications from '../../../internal/Address/Specifications';
@@ -38,7 +39,6 @@ import FastlaneSignup from '../Fastlane/FastlaneSignup';
 import { ClickToPaySignup } from '../ClickToPaySignup';
 import type { ClickToPaySignupDetails } from '../ClickToPaySignup';
 import useClickToPayContext from '../../../internal/ClickToPay/context/useClickToPayContext';
-import { CtpState } from '../../../internal/ClickToPay/services/ClickToPayService';
 import { fieldTypeToSnakeCase } from '../../../internal/SecuredFields/utils';
 import { getErrorMessageFromCode } from '../../../../core/Errors/utils';
 import { SF_ErrorCodes } from '../../../../core/Errors/constants';
@@ -173,10 +173,12 @@ const CardInput = (props: Readonly<CardInputProps>) => {
         props.configuration.socialSecurityNumberMode === 'show';
 
     const { ctpState } = useClickToPayContext();
-    // Only the brand confirmed by /binLookup counts, never the one detected by the regEx. For dual branded cards that is the brand the shopper selected
-    const activeBrand = selectedBrandValue || binLookupBrand;
-    // Any state other than NotAvailable means that the shopper is (or might be) recognized by Click to Pay
-    const showClickToPaySignup: boolean = !!props.isClickToPaySignupAvailable && ctpState === CtpState.NotAvailable && activeBrand === 'mc';
+    const showClickToPaySignup = shouldShowClickToPaySignup({
+        isClickToPaySignupAvailable: props.isClickToPaySignupAvailable,
+        ctpState,
+        selectedBrandValue,
+        binLookupBrand
+    });
 
     /**
      * HANDLERS

@@ -31,6 +31,7 @@ import { InstallmentOptions } from './components/CardInput/components/Installmen
 import { AddressModeOptions, CardInputRef } from './components/CardInput/types';
 import { formatClickToPaySignupData } from './components/ClickToPaySignup';
 import type { ClickToPaySignupDetails, ClickToPaySignupState } from './components/ClickToPaySignup';
+import { CLICK_TO_PAY_SIGNUP_BRAND } from './components/ClickToPaySignup/constants';
 
 export class CardElement extends UIElement<CardConfiguration> {
     public static readonly type: TxVariants = TxVariants.scheme;
@@ -331,7 +332,7 @@ export class CardElement extends UIElement<CardConfiguration> {
         return (
             this.props.clickToPayConfiguration?.enableSignup === true &&
             !this.props.storedPaymentMethodId &&
-            !!this.clickToPayService?.schemes?.includes('mc')
+            !!this.clickToPayService?.schemes?.includes(CLICK_TO_PAY_SIGNUP_BRAND)
         );
     }
 

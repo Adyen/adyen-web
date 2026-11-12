@@ -20,6 +20,8 @@ import useImage, { UseImageHookType } from '../../../../core/Context/useImage';
 import { SF_ErrorCodes } from '../../../../core/Errors/constants';
 import { BrandObject, CardBrandsConfiguration, DualBrandSelectElement, DualBrandButtons } from '../../types';
 import { PaymentAmount } from '../../../../types';
+import { CtpState } from '../../../internal/ClickToPay/services/ClickToPayService';
+import { CLICK_TO_PAY_SIGNUP_BRAND } from '../ClickToPaySignup/constants';
 
 export const getCardImageUrl = (brand: string, getImage: UseImageHookType): string => {
     const imageOptions = {
@@ -270,4 +272,33 @@ export const shouldShowInstallmentsComponent = ({
     if (fundingSource && fundingSource !== 'credit') return false;
 
     return true;
+};
+
+/**
+ * Determines whether the Click to Pay sign-up should be rendered.
+ *
+ * Only the brand confirmed by /binLookup counts, never the one detected by the regEx.
+ * Any Click to Pay state other than NotAvailable means that the shopper is (or might be) recognized by Click to Pay.
+ *
+ * @param params.isClickToPaySignupAvailable - Whether the merchant configuration allows the sign-up
+ * @param params.ctpState - The current Click to Pay state
+ * @param params.selectedBrandValue - The single brand from /binLookup, or the brand the shopper selected for a dual branded card
+ * @param params.binLookupBrand - The single brand from /binLookup, also set when a brand from BRAND_ICON_UI_EXCLUSION_LIST was removed
+ * @returns Whether the Click to Pay sign-up should be rendered
+ */
+export const shouldShowClickToPaySignup = ({
+    isClickToPaySignupAvailable,
+    ctpState,
+    selectedBrandValue,
+    binLookupBrand
+}: {
+    isClickToPaySignupAvailable?: boolean;
+    ctpState: CtpState;
+    selectedBrandValue?: string;
+    binLookupBrand: string;
+}): boolean => {
+    if (!isClickToPaySignupAvailable || ctpState !== CtpState.NotAvailable) return false;
+
+    const activeBrand = selectedBrandValue || binLookupBrand;
+    return activeBrand === CLICK_TO_PAY_SIGNUP_BRAND;
 };
