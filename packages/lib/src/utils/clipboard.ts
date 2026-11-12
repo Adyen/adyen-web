@@ -31,10 +31,6 @@ export async function copyToClipboard(value) {
             document.body.removeChild(copyInput);
         }
     }
-
-    if (!copyInput) {
-        throw new TypeError('Fallback: Unable to create the copy input');
-    }
 }
 
 export default copyToClipboard;
