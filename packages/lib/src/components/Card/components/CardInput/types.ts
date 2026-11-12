@@ -1,12 +1,5 @@
 import Language from '../../../../language/Language';
-import type {
-    BinLookupResponse,
-    BrandConfiguration,
-    CardBrandsConfiguration,
-    CardBackendConfiguration,
-    DualBrandSelectElement,
-    CardPlaceholders
-} from '../../types';
+import type { BinLookupResponse, CardBrandsConfiguration, CardBackendConfiguration, DualBrandSelectElement, CardPlaceholders } from '../../types';
 import {
     CardAllValidData,
     CardAutoCompleteData,
@@ -26,7 +19,7 @@ import { SRPanel } from '../../../../core/Errors/SRPanel';
 import RiskElement from '../../../../core/RiskModule';
 import { OnAddressLookupType, OnAddressSelectedType } from '../../../internal/Address/components/AddressSearch';
 import { ComponentMethodsRef } from '../../../internal/UIElement/types';
-import { AddressData } from '../../../../types/global-types';
+import { AddressData, PaymentMethodBrand } from '../../../../types/global-types';
 import type { FastlaneSignupConfiguration } from '../../../PayPalFastlane/types';
 import type { AbstractAnalyticsEvent } from '../../../../core/Analytics/events/AbstractAnalyticsEvent';
 import { IAnalytics } from '../../../../core/Analytics/Analytics';
@@ -82,7 +75,7 @@ export interface CardInputProps {
     brand?: string;
     brands?: string[];
     brandsConfiguration?: CardBrandsConfiguration;
-    brandsIcons: Array<BrandConfiguration>;
+    brandsIcons: Array<PaymentMethodBrand>;
     clientKey?: string;
     configuration: CardBackendConfiguration;
     countryCode?: string;
