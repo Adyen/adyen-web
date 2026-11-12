@@ -7,12 +7,12 @@ import { useCoreContext } from '../../../../core/Context/CoreProvider';
 import mobileNumberFormatter from './utils/mobile-number-formatter';
 
 interface USOnlyPhoneInputStateData {
-    mobileNumber?: string;
+    mobileNumber: string;
 }
 
 interface USOnlyPhoneInputProps {
     onChange(mobileNumber: string): void;
-    initialValue?: string;
+    initialValue: string;
 }
 
 const USOnlyPhoneInput = ({ initialValue, onChange }: Readonly<USOnlyPhoneInputProps>) => {

@@ -13,7 +13,7 @@ export type ClickToPayHolderProps = {
 
 const ClickToPayHolder = ({ children }: Readonly<ClickToPayHolderProps>) => {
     const { i18n } = useCoreContext();
-    const [isCardInputVisible, setIsCardInputVisible] = useState<boolean>(null);
+    const [isCardInputVisible, setIsCardInputVisible] = useState<boolean | null>(null);
     const { ctpState, isCtpPrimaryPaymentMethod, setIsCtpPrimaryPaymentMethod, status } = useClickToPayContext();
 
     const areFieldsNotSet = isCardInputVisible === null && isCtpPrimaryPaymentMethod === null;

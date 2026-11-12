@@ -10,7 +10,7 @@ const InfoButton = () => {
     const [isInfoModalOpen, setIsInfoModalOpen] = useState<boolean>(false);
     const { i18n } = useCoreContext();
     const getImage = useImage();
-    const buttonRef = useRef();
+    const buttonRef = useRef<HTMLButtonElement>(null);
 
     const handleOnClose = useCallback(() => {
         setIsInfoModalOpen(false);
