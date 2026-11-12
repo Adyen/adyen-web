@@ -27,9 +27,7 @@ export async function copyToClipboard(value) {
     } catch (err) {
         console.error('Fallback: Unable to copy', err);
     } finally {
-        if (copyInput) {
-            document.body.removeChild(copyInput);
-        }
+        copyInput?.remove();
     }
 }
 
