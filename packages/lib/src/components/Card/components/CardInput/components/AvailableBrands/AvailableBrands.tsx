@@ -2,15 +2,15 @@ import { h } from 'preact';
 import { useMemo } from 'preact/hooks';
 import cn from 'classnames';
 
-import { BrandConfiguration } from '../../../../types';
+import type { PaymentMethodBrand } from '../../../../../../types/global-types';
 import { getFullBrandName } from '../../utils';
 import { BrandIcons } from '../../../../../internal/BrandIcons/BrandIcons';
 import './AvailableBrands.scss';
 
-type AvailableBrands = Array<BrandConfiguration>;
+type AvailableBrands = Array<PaymentMethodBrand>;
 
 interface PaymentMethodBrandsProps {
-    brands: AvailableBrands;
+    brands?: AvailableBrands;
     activeBrand: string;
 }
 

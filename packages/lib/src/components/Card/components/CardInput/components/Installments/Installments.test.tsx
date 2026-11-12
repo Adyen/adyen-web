@@ -57,6 +57,50 @@ describe('Installments', () => {
         expect(screen.queryByText('Number of installments')).not.toBeInTheDocument();
     });
 
+    describe('onChange when nothing is rendered', () => {
+        test('should still call onChange with a null value when the brand has no installment options', () => {
+            const onChange = jest.fn();
+            renderInstallments({ installmentsProps: { installmentOptions: { mc: { values: [1, 2, 3] } }, brand: 'visa', onChange } });
+
+            expect(screen.queryByText('Number of installments')).not.toBeInTheDocument();
+            expect(onChange).toHaveBeenLastCalledWith({ value: null });
+        });
+
+        test('should clear the selection when the brand changes to one without installment options', () => {
+            const onChange = jest.fn();
+            const installmentOptions: InstallmentOptions = { visa: { values: [2, 3] } };
+            const { rerender } = renderInstallments({ installmentsProps: { installmentOptions, brand: 'visa', onChange } });
+            expect(onChange).toHaveBeenLastCalledWith({ value: 2 });
+
+            rerender(
+                <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+                    <AmountProvider amount={DEFAULT_AMOUNT} providerRef={createRef()}>
+                        <Installments brand="mc" installmentOptions={installmentOptions} onChange={onChange} />
+                    </AmountProvider>
+                </CoreProvider>
+            );
+
+            expect(screen.queryByText('Number of installments')).not.toBeInTheDocument();
+            expect(onChange).toHaveBeenLastCalledWith({ value: null });
+        });
+
+        test('should still call onChange when the passed amount is 0', () => {
+            const onChange = jest.fn();
+            renderInstallments({ installmentsProps: { onChange }, amountProviderProps: { amount: { value: 0, currency: 'EUR' } } });
+
+            expect(screen.queryByText('Number of installments')).not.toBeInTheDocument();
+            expect(onChange).toHaveBeenCalledTimes(1);
+        });
+
+        test('should still call onChange when no amount is available', () => {
+            const onChange = jest.fn();
+            renderInstallments({ installmentsProps: { onChange }, amountProviderProps: { amount: undefined } });
+
+            expect(screen.queryByText('Number of installments')).not.toBeInTheDocument();
+            expect(onChange).toHaveBeenCalledTimes(1);
+        });
+    });
+
     test('should render as readonly if only one option is passed', () => {
         const installmentOptions: InstallmentOptions = {
             card: { values: [3] }
@@ -86,7 +130,7 @@ describe('Installments', () => {
         rerender(
             <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
                 <AmountProvider amount={DEFAULT_AMOUNT} providerRef={createRef()}>
-                    <Installments brand="mc" installmentOptions={{ mc: { values: [1, 2, 3] } }} />
+                    <Installments brand="mc" installmentOptions={{ mc: { values: [1, 2, 3] } }} onChange={jest.fn()} />
                 </AmountProvider>
             </CoreProvider>
         );
@@ -96,7 +140,7 @@ describe('Installments', () => {
         rerender(
             <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
                 <AmountProvider amount={DEFAULT_AMOUNT} providerRef={createRef()}>
-                    <Installments brand="visa" installmentOptions={{ visa: { values: [1, 2, 3, 4] } }} />
+                    <Installments brand="visa" installmentOptions={{ visa: { values: [1, 2, 3, 4] } }} onChange={jest.fn()} />
                 </AmountProvider>
             </CoreProvider>
         );
@@ -118,7 +162,7 @@ describe('Installments', () => {
             rerender(
                 <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
                     <AmountProvider amount={DEFAULT_AMOUNT} providerRef={createRef()}>
-                        <Installments brand={'visa'} type={'amount'} installmentOptions={installmentOptions} />
+                        <Installments brand={'visa'} type={'amount'} installmentOptions={installmentOptions} onChange={jest.fn()} />
                     </AmountProvider>
                 </CoreProvider>
             );
@@ -138,7 +182,7 @@ describe('Installments', () => {
             rerender(
                 <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
                     <AmountProvider amount={DEFAULT_AMOUNT} providerRef={createRef()}>
-                        <Installments type={'amount'} brand="visa" installmentOptions={installmentOptions} />
+                        <Installments type={'amount'} brand="visa" installmentOptions={installmentOptions} onChange={jest.fn()} />
                     </AmountProvider>
                 </CoreProvider>
             );
@@ -158,7 +202,7 @@ describe('Installments', () => {
             rerender(
                 <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
                     <AmountProvider amount={DEFAULT_AMOUNT} providerRef={createRef()}>
-                        <Installments brand="visa" installmentOptions={installmentOptions} type={'amount'} />
+                        <Installments brand="visa" installmentOptions={installmentOptions} type={'amount'} onChange={jest.fn()} />
                     </AmountProvider>
                 </CoreProvider>
             );

@@ -22,7 +22,7 @@ export default function StoredCardFields({
     showContextualElement
 }: Readonly<StoredCardFieldsProps>) {
     const { i18n } = useCoreContext();
-    const storedCardDescription = i18n.get('creditCard.storedCard.description.ariaLabel').replace('%@', lastFour);
+    const storedCardDescription = i18n.get('creditCard.storedCard.description.ariaLabel').replace('%@', lastFour ?? '');
     const storedCardDescriptionSuffix = expiryMonth && expiryYear ? ` ${i18n.get('creditCard.expiryDate.label')} ${expiryMonth}/${expiryYear}` : '';
     const ariaLabel = `${storedCardDescription}${storedCardDescriptionSuffix}`;
     const isAmex = brand === 'amex';

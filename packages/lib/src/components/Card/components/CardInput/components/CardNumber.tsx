@@ -15,7 +15,7 @@ import DualBrandSelector from './DualBrandSelector';
 export default function CardNumber(props: Readonly<CardNumberProps>) {
     const { i18n } = useCoreContext();
     const {
-        error = '',
+        error,
         isValid = false,
         onFocusField = () => {},
         dualBrandingElements,

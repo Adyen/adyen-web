@@ -23,7 +23,7 @@ export default function ExpirationDate(props: Readonly<ExpirationDateProps>) {
         onFocusField,
         className = '',
         classNameModifiers = [],
-        error = '',
+        error,
         isValid = false,
         expiryDatePolicy = DATE_POLICY_REQUIRED,
         showContextualElement,
