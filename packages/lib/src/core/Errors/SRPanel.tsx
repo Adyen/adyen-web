@@ -5,6 +5,8 @@ import { SRMessages, SRMessagesRef } from './SRMessages';
 import type { ICore } from '../types';
 import './SRPanel.scss';
 
+const DEFAULT_NODE = 'body';
+
 /**
  * A panel meant to hold messages that will be read out by ScreenReaders on an aria-live="polite" basis
  * Expects a string or string array of message to add to the panel to be read out
@@ -15,7 +17,7 @@ export class SRPanel extends BaseElement<SRPanelProps> {
 
     public static readonly defaultProps: Partial<SRPanelProps> = {
         enabled: true,
-        node: 'body',
+        node: DEFAULT_NODE,
         showPanel: false,
         id: 'ariaLiveSRPanel',
         ariaAttributes: {
@@ -45,7 +47,8 @@ export class SRPanel extends BaseElement<SRPanelProps> {
         if (this.props.enabled) {
             this._enabled = true;
 
-            const panelParent = this.props.node == null ? null : document.querySelector(this.props.node);
+            // An explicit `node: undefined` in srConfig overrides defaultProps, so fall back to the default here too
+            const panelParent = document.querySelector(this.props.node ?? DEFAULT_NODE);
 
             if (panelParent) {
                 const preExistingSRPanel = document.getElementById(this.id);

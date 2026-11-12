@@ -90,8 +90,17 @@ describe('SRPanel', () => {
             expect(panel).toHaveAttribute('aria-atomic', 'true');
         });
 
-        test('should throw the root-node error when node is undefined', () => {
-            expect(() => new SRPanel(core, { node: undefined })).toThrow('Component could not mount. Root node was not found.');
+        test('should mount the panel in the body when node is undefined', async () => {
+            let srPanel: SRPanel | undefined;
+
+            expect(() => {
+                srPanel = new SRPanel(core, { node: undefined });
+            }).not.toThrow();
+
+            const panel = screen.getByTestId('ariaLiveSRPanel');
+            srPanel?.setMessages('message1');
+
+            await waitFor(() => expect(within(panel).getByText('message1')).toBeInTheDocument());
         });
 
         test('logs error if panel is not found', () => {
