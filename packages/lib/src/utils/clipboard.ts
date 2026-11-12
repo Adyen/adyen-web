@@ -16,7 +16,7 @@ export async function copyToClipboard(value) {
         }
     }
 
-    let copyInput: HTMLInputElement;
+    let copyInput: HTMLInputElement | undefined;
     try {
         copyInput = createInput(value);
         copyInput.select();
@@ -27,7 +27,13 @@ export async function copyToClipboard(value) {
     } catch (err) {
         console.error('Fallback: Unable to copy', err);
     } finally {
-        document.body.removeChild(copyInput);
+        if (copyInput) {
+            document.body.removeChild(copyInput);
+        }
+    }
+
+    if (!copyInput) {
+        throw new TypeError('Fallback: Unable to create the copy input');
     }
 }
 

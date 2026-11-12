@@ -34,4 +34,16 @@ describe('copyToClipboard fallback', () => {
         expect(execCommandMock).toHaveBeenCalledWith('copy');
         expect(document.body.querySelector('textarea')).toBeNull();
     });
+
+    test('should log, remove the fallback input and resolve when execCommand throws', async () => {
+        execCommandMock.mockImplementation(() => {
+            throw new Error('execCommand failed');
+        });
+        const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+
+        await expect(copyToClipboard('text')).resolves.toBeUndefined();
+
+        expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
+        expect(document.body.querySelector('textarea')).toBeNull();
+    });
 });
