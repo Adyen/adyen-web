@@ -19,7 +19,7 @@ const useSRPanelForCardInputErrors = ({ errors, props, isValidating, retrieveLay
 
     const partialAddressSchema = handlePartialAddressMode(props.billingAddressMode);
 
-    const [sortedErrorList, setSortedErrorList] = useState<SortedErrorObject[] | null | undefined>(null);
+    const [sortedErrorList, setSortedErrorList] = useState<SortedErrorObject[] | null>(null);
 
     // Get the previous list of errors
     const previousSortedErrors = usePrevious(sortedErrorList);
@@ -47,7 +47,7 @@ const useSRPanelForCardInputErrors = ({ errors, props, isValidating, retrieveLay
             });
 
             // Store the array of sorted error objects separately so that we can use it to make comparisons between the old and new arrays
-            const currentErrorsSortedByLayout = srPanelResp?.currentErrorsSortedByLayout;
+            const currentErrorsSortedByLayout = srPanelResp?.currentErrorsSortedByLayout ?? null;
             setSortedErrorList(currentErrorsSortedByLayout);
 
             /**
