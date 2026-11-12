@@ -1,6 +1,7 @@
 import { handleFocus } from './handleFocus';
 import ua from '../utils/userAgent';
 import { ENCRYPTED_CARD_NUMBER, ENCRYPTED_SECURITY_CODE } from '../../constants';
+import { SFFeedbackObj } from '../../types';
 
 ua.__IS_IOS = false;
 
@@ -14,7 +15,7 @@ const CSFObj = {
     csfCallbacks
 };
 
-const feedbackObj = {
+const feedbackObj: SFFeedbackObj = {
     action: 'focus',
     focus: true,
     numChars: 0,
