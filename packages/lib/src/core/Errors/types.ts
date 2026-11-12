@@ -17,7 +17,7 @@ export interface ValidationRuleErrorObj {
     [key: string]: ValidationRuleResult;
 }
 
-export type FieldTypeMappingFn = (key: string, i18n: Language, countrySpecificLabels?: StringObject) => string;
+export type FieldTypeMappingFn = (key: string, i18n: Language, countrySpecificLabels?: StringObject) => string | null;
 
 export interface SortErrorsObj {
     errors: ErrorObj;
