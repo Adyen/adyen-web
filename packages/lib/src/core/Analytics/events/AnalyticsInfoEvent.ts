@@ -31,6 +31,7 @@ export enum UiTarget {
     instantPaymentButton = 'instant_payment_button',
     dualBrandButton = 'dual_brand_button',
     fastlaneSignupConsentToggle = 'fastlane_signup_consent_toggle',
+    clickToPaySignupConsentToggle = 'click_to_pay_signup_consent_toggle',
     otherPaymentMethodButton = 'otherpaymentmethod_button',
     featuredIssuer = 'featured_issuer',
     list = 'list',

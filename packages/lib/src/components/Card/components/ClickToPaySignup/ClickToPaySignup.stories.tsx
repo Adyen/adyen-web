@@ -30,6 +30,7 @@ const ClickToPaySignupWithState = ({ defaultChecked = false, ...details }: Reado
                 setChecked(consentGiven);
             }}
             onDetailsChange={signupDetails => console.log('onDetailsChange', signupDetails)}
+            onSubmitAnalytics={event => console.log('onSubmitAnalytics', event)}
         />
     );
 };

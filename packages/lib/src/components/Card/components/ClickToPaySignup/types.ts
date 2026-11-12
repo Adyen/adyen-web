@@ -1,4 +1,5 @@
 import type { PhoneInputSchema } from '../../../internal/PhoneInput/types';
+import type { AbstractAnalyticsEvent } from '../../../../core/Analytics/events/AbstractAnalyticsEvent';
 
 export interface ClickToPaySignupDetails {
     firstName?: string;
@@ -24,6 +25,7 @@ export interface ClickToPaySignupProps extends ClickToPaySignupDetails {
      * Called with the current details, leaving out empty fields
      */
     onDetailsChange(details: ClickToPaySignupDetails): void;
+    onSubmitAnalytics(event: AbstractAnalyticsEvent): void;
 }
 
 export interface ClickToPaySignupFormData extends PhoneInputSchema {
