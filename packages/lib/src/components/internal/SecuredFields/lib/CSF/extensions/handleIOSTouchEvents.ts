@@ -1,12 +1,18 @@
 import { selectOne } from '../../utilities/dom';
 import ua from '../utils/userAgent';
 import { on, off } from '../../../../../../utils/listenerUtils';
+import type { SecuredFields } from '../../types';
 
 const getCaretPos = (pNode: HTMLInputElement | HTMLTextAreaElement): number => {
     if ('selectionStart' in pNode) {
         return pNode.selectionStart;
     }
     return 0;
+};
+
+const hasSecuredFieldFocus = (securedFields: SecuredFields): boolean => {
+    const { activeElement } = document;
+    return Object.values(securedFields).some(field => field.iframeRef === activeElement);
 };
 
 /**
@@ -66,7 +72,7 @@ function touchendListener(e: Event): void {
          * Workaround for iOS/Safari bug where keypad doesn't retract when SF paymentMethod is no longer active
          */
         const hasKeypadFix: boolean = this.config.keypadFix; // to avoid linting no-lonely-if
-        if (hasKeypadFix) {
+        if (hasKeypadFix && hasSecuredFieldFocus(this.state.securedFields)) {
             // Create an input we can add focus to.
             // Otherwise 2nd & sub times the caret gets left in the SF even though it has lost focus and cannot be typed into
             const rootNode: HTMLElement = this.props.rootNode;

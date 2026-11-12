@@ -8,17 +8,17 @@ import type { Connect, Plugin } from 'vite';
 // Mirrors packages/lib/config/rollup.dev.js and packages/server/index.js - loads IS_HTTPS,
 // CERT_PATH, CERT_KEY_PATH, CLIENT_KEY, SF_ENV, CLIENT_ENV etc. from the repo-root .env. Without
 // this, those env vars are only picked up if exported inline in the shell.
-dotenv.config({ path: path.resolve(__dirname, '../../../', '.env') });
+dotenv.config({ path: path.resolve(import.meta.dirname, '../../../', '.env') });
 
-const root = path.resolve(__dirname, '../src/pages');
-const publicDir = path.resolve(__dirname, '../public');
-const libDistDir = path.resolve(__dirname, '../../lib/dist');
+const root = path.resolve(import.meta.dirname, '../src/pages');
+const publicDir = path.resolve(import.meta.dirname, '../public');
+const libDistDir = path.resolve(import.meta.dirname, '../../lib/dist');
 
 const host = process.env.HOST || '0.0.0.0';
 const port = Number(process.env.PORT) || 3020;
 const isHttps = process.env.IS_HTTPS === 'true';
-const certPath = process.env.CERT_PATH ?? path.resolve(__dirname, 'localhost.pem');
-const certKeyPath = process.env.CERT_KEY_PATH ?? path.resolve(__dirname, 'localhost-key.pem');
+const certPath = process.env.CERT_PATH ?? path.resolve(import.meta.dirname, 'localhost.pem');
+const certKeyPath = process.env.CERT_KEY_PATH ?? path.resolve(import.meta.dirname, 'localhost-key.pem');
 
 // The mock API (`@adyen/adyen-web-server`) always runs as its own process on port 3030 - see the root `start` script.
 // We set apiTarget here, pointing to localhost:3030, and then proxy to it (see around line 151 we set server.proxy).
@@ -119,7 +119,7 @@ export default defineConfig({
     },
 
     css: {
-        postcss: __dirname
+        postcss: import.meta.dirname
     },
 
     define: {

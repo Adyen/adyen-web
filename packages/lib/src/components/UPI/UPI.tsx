@@ -9,6 +9,7 @@ import isMobile from '../../utils/isMobile';
 import { UPI_COUNTDOWN_TIME, UPI_MODE } from './constants';
 import { PaymentMethodBrand } from '../../types/global-types';
 import { ICore } from '../../types';
+import './UPI.scss';
 
 /**
  * For mobile:
@@ -89,21 +90,27 @@ class UPI extends UIElement<UPIConfiguration> {
         const isAutoPay = !!this.props.mandate;
 
         switch (type) {
-            case 'qrCode':
+            case 'qrCode': {
+                const qrBrandLogos = [
+                    { src: this.resources.getImage()('bhim'), alt: 'BHIM' },
+                    { src: this.icon, alt: this.displayName }
+                ];
                 return (
                     <QRLoader
                         {...this.props}
                         qrCodeData={this.props.qrCodeData ? encodeURIComponent(this.props.qrCodeData) : undefined}
                         type={TxVariants.upi_qr}
-                        brandLogo={this.props.brandLogo || this.icon}
+                        brandLogo={this.props.brandLogo || qrBrandLogos}
                         brandName={this.displayName}
                         onComplete={this.onComplete}
                         introduction={this.props.i18n?.get('upi.qrCodeWaitingMessage') ?? ''}
                         countdownTime={this.props.countdownTime}
                         onActionHandled={this.onActionHandled}
+                        timeToPay="payme.timeToPay"
                         showAmount={!isAutoPay}
                     />
                 );
+            }
             case 'await':
                 return (
                     <Await

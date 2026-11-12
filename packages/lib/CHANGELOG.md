@@ -1,5 +1,15 @@
 # @adyen/adyen-web
 
+## 6.48.1
+
+### Patch Changes
+
+- Improved: Display only the bank list for IRIS on mobile, without the QR code option. ([#4282](https://github.com/Adyen/adyen-web/pull/4282))
+
+- Fixed: new securedFields url validation also allows checkoutshopper-beta environments ([#4291](https://github.com/Adyen/adyen-web/pull/4291))
+
+- Improved: Update UPI to meet latest regulatory requirements. ([#4279](https://github.com/Adyen/adyen-web/pull/4279))
+
 ## 6.48.0
 
 ### Minor Changes

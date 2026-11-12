@@ -17,6 +17,12 @@ export const toHaveScreenshot = async (
         skipWaitForImages?: boolean;
 
         /**
+         * Whether to move the mouse to (0, 0) before taking the screenshot to avoid hover states.
+         * Defaults to true. Set to false if the screenshot intentionally captures a hover state.
+         */
+        resetMousePosition?: boolean;
+
+        /**
          * When set to `"disabled"`, stops CSS animations, CSS transitions and Web Animations. Animations get different
          * treatment depending on their duration:
          * - finite animations are fast-forwarded to completion, so they'll fire `transitionend` event.
@@ -98,10 +104,14 @@ export const toHaveScreenshot = async (
         return;
     }
 
-    const { skipWaitForImages, ...screenshotOptions } = options ?? {};
+    const { skipWaitForImages, resetMousePosition = true, ...screenshotOptions } = options ?? {};
 
     if (!skipWaitForImages) {
         await waitForImageLoaded(locator);
+    }
+
+    if (resetMousePosition) {
+        await locator.page().mouse.move(0, 0);
     }
 
     return expect(locator).toHaveScreenshot(name, { ...screenshotOptions });
