@@ -54,7 +54,7 @@ interface SortedErrorObject {
  */
 const useSRPanelForGiftcardErrors = ({ errors, isValidating, setIsValidating, sfp }: UseSRPanelForGiftcardErrorsProps) => {
     // Track sorted list of errors for comparison with previous state
-    const [sortedErrorList, setSortedErrorList] = useState<SortedErrorObject[] | null>(null);
+    const [sortedErrorList, setSortedErrorList] = useState<SortedErrorObject[] | null | undefined>(null);
     // Track previous error list for detecting changes
     const previousSortedErrors = usePrevious(sortedErrorList);
 
@@ -68,11 +68,11 @@ const useSRPanelForGiftcardErrors = ({ errors, isValidating, setIsValidating, sf
     useEffect(() => {
         try {
             // Create a partial function for setting SR messages with fixed configuration
-            const setMessages: SetSRMessagesReturnFn = setSRMessagesFromObjects?.({});
+            const setMessages: SetSRMessagesReturnFn | undefined = setSRMessagesFromObjects?.({});
             // Set messages with current errors and layout
 
             // Unlike Card SR Panel, isValidating is a boolean
-            const srPanelResp: SetSRMessagesReturnObject = setMessages?.({
+            const srPanelResp: SetSRMessagesReturnObject | undefined = setMessages?.({
                 errors,
                 isValidating,
                 layout
@@ -113,10 +113,10 @@ const useSRPanelForGiftcardErrors = ({ errors, isValidating, setIsValidating, sf
                         // Only announce blur-based errors to screen reader
                         const isBlurBasedError = true;
                         const latestSRError = isBlurBasedError ? latestErrorMsg.errorMessage : null;
-                        setSRMessagesFromStrings(latestSRError);
+                        setSRMessagesFromStrings?.(latestSRError);
                     } else {
                         // Clear SR panel if there are no more errors
-                        clearSRPanel();
+                        clearSRPanel?.();
                     }
                     break;
                 }

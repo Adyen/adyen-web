@@ -58,13 +58,6 @@ const canonicalPath = fileName => (ts.sys.useCaseSensitiveFileNames ? fileName :
 // list may only shrink. A listed file with no errors left is reported as an obsolete entry.
 // ══════════════════════════════════════════════════════════
 const STRICT_NULL_CHECKS_BACKLOG = [
-    // ── Ticket 2: Core, utils and hooks (89 errors) ──
-    'src/core/Errors/SRPanel.tsx',
-    'src/core/Errors/SRPanelContext.ts',
-    'src/core/Errors/utils.ts',
-    'src/core/RiskModule/components/DeviceFingerprint/DeviceFingerprint.tsx',
-    'src/core/RiskModule/components/DeviceFingerprint/GetDeviceFingerprint.tsx',
-    'src/core/RiskModule/RiskModule.tsx',
 
     // ── Ticket 4: Shared form fields (92 errors) ──
 

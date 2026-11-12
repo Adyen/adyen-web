@@ -28,7 +28,7 @@ const useSRPanelForOpenInvoiceErrors = ({ errors, data, props, isValidating, con
     const previousSortedErrors = usePrevious(sortedErrorList);
     const { setSRMessagesFromObjects, setSRMessagesFromStrings, clearSRPanel, shouldMoveFocusSR } = useSRPanelContext();
     // Generate a setSRMessages function - implemented as a partial, since the initial set of arguments don't change.
-    const setSRMessages: SetSRMessagesReturnFn = setSRMessagesFromObjects?.({
+    const setSRMessages: SetSRMessagesReturnFn | undefined = setSRMessagesFromObjects?.({
         fieldTypeMappingFn: mapFieldKey
     });
 
@@ -94,7 +94,7 @@ const useSRPanelForOpenInvoiceErrors = ({ errors, data, props, isValidating, con
             const countrySpecificLabels_delivery = deliveryAddressSpecifications.getAddressLabelsForCountry(data.deliveryAddress?.country);
 
             // Set messages: Pass dynamic props (errors, layout etc) to SRPanel via partial
-            const srPanelResp: SetSRMessagesReturnObject = setSRMessages?.({
+            const srPanelResp: SetSRMessagesReturnObject | undefined = setSRMessages?.({
                 errors: errorsForPanel,
                 isValidating: isValidating.current,
                 layout: fullLayout,
@@ -151,10 +151,10 @@ const useSRPanelForOpenInvoiceErrors = ({ errors, data, props, isValidating, con
 
                         // Only add blur based errors to the error panel - doing this step prevents the non-blur based errors from being read out twice
                         const latestSRError = isBlurBasedError ? latestErrorMsg.errorMessage : null;
-                        setSRMessagesFromStrings(latestSRError);
+                        setSRMessagesFromStrings?.(latestSRError);
                     } else {
                         // called when previousSortedErrors.length >= currentErrorsSortedByLayout.length
-                        clearSRPanel();
+                        clearSRPanel?.();
                     }
 
                     break;
