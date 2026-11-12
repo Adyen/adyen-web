@@ -152,15 +152,10 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
 
     private handleDisableStoredPaymentMethod = storedPaymentMethod => {
         const { onDisableStoredPaymentMethod } = this.props;
+        if (!onDisableStoredPaymentMethod) return;
         this.setState({ isDisabling: true });
 
-        new Promise((resolve, reject) => {
-            if (!onDisableStoredPaymentMethod) {
-                reject(new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'onDisableStoredPaymentMethod is not defined'));
-                return;
-            }
-            onDisableStoredPaymentMethod(storedPaymentMethod.props.storedPaymentMethodId, resolve, reject);
-        })
+        new Promise((resolve, reject) => onDisableStoredPaymentMethod(storedPaymentMethod.props.storedPaymentMethodId, resolve, reject))
             .then(() => {
                 this.setState(prevState => ({
                     storedPaymentElements: prevState.storedPaymentElements.filter(pm => pm._id !== storedPaymentMethod._id)
@@ -252,8 +247,8 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
             default:
                 return (
                     <div className={`adyen-checkout__dropin adyen-checkout__dropin--${status.type}`}>
-                        {isRedirecting && status.props?.component && status.props.component.render()}
-                        {isLoading && status.props && status.props.component && status.props.component.render()}
+                        {isRedirecting && status.props?.component?.render()}
+                        {isLoading && status.props?.component?.render()}
 
                         {!showDefaultPaymentMethodList && (
                             <Fragment>
