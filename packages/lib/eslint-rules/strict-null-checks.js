@@ -114,10 +114,6 @@ const STRICT_NULL_CHECKS_BACKLOG = [
     'src/components/Card/Card.tsx',
     'src/components/Card/components/CardInput/CardInput.tsx',
     'src/components/Card/components/CardInput/utils.ts',
-    'src/components/Card/components/ClickToPayHolder.tsx',
-    'src/components/Card/components/Fastlane/FastlaneSignup.tsx',
-    'src/components/Card/components/Fastlane/InfoButton.tsx',
-    'src/components/Card/components/Fastlane/USOnlyPhoneInput.tsx',
     'src/components/CustomCard/CustomCard.tsx',
     'src/components/CustomCard/CustomCardInput/CustomCardInput.tsx',
 

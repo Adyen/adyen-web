@@ -1,4 +1,4 @@
-function mobileNumberFormatter(value: string): string {
+function mobileNumberFormatter(value?: string): string {
     if (!value) {
         return '';
     }
