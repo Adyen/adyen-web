@@ -70,6 +70,10 @@ export type CheckoutSessionDonationsResponse = {
     sessionData: string;
 };
 
+export type CheckoutSessionCancelDonationResponse = {
+    sessionData: string;
+};
+
 export type CheckoutSessionDonationsRequestData = {
     donationCampaignId: string;
     donationType: DonationType;
