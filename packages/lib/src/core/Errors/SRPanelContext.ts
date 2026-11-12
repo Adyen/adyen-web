@@ -10,11 +10,11 @@ interface SetSRMessagesFromObjectsFnProps {
 type SetSRMessagesFromObjectsFn = (props: SetSRMessagesFromObjectsFnProps) => SetSRMessagesReturnFn;
 
 export interface ISRPanelContext {
-    srPanel: SRPanel;
-    setSRMessagesFromObjects: SetSRMessagesFromObjectsFn;
-    setSRMessagesFromStrings: (strs) => void;
-    clearSRPanel: () => void;
-    shouldMoveFocusSR: boolean;
+    srPanel: SRPanel | null;
+    setSRMessagesFromObjects: SetSRMessagesFromObjectsFn | null;
+    setSRMessagesFromStrings: ((strs) => void) | null;
+    clearSRPanel: (() => void) | null;
+    shouldMoveFocusSR: boolean | null;
 }
 
 // Will be needed once PersonalDetails & Address have ability to administer their own SRPanel

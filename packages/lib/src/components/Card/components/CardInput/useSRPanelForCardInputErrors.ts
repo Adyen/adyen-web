@@ -13,13 +13,13 @@ const useSRPanelForCardInputErrors = ({ errors, props, isValidating, retrieveLay
     const { setSRMessagesFromObjects, setSRMessagesFromStrings, clearSRPanel, shouldMoveFocusSR } = useSRPanelContext();
 
     // Generate a setSRMessages function - implemented as a partial, since the initial set of arguments don't change.
-    const setSRMessages: SetSRMessagesReturnFn = setSRMessagesFromObjects?.({
+    const setSRMessages: SetSRMessagesReturnFn | undefined = setSRMessagesFromObjects?.({
         fieldTypeMappingFn: mapFieldKey
     });
 
     const partialAddressSchema = handlePartialAddressMode(props.billingAddressMode);
 
-    const [sortedErrorList, setSortedErrorList] = useState<SortedErrorObject[]>(null);
+    const [sortedErrorList, setSortedErrorList] = useState<SortedErrorObject[] | undefined>(null);
 
     // Get the previous list of errors
     const previousSortedErrors = usePrevious(sortedErrorList);
@@ -35,7 +35,7 @@ const useSRPanelForCardInputErrors = ({ errors, props, isValidating, retrieveLay
             const errorsForPanel = { ...errorsWithoutAddress, ...extractedAddressErrors };
 
             // Pass dynamic props (errors, layout etc) to SRPanel via partial
-            const srPanelResp: SetSRMessagesReturnObject = setSRMessages?.({
+            const srPanelResp: SetSRMessagesReturnObject | undefined = setSRMessages?.({
                 errors: errorsForPanel,
                 isValidating: isValidating.current,
                 layout: retrieveLayout(),
@@ -84,11 +84,11 @@ const useSRPanelForCardInputErrors = ({ errors, props, isValidating, retrieveLay
                          */
                         const latestSRError = isBlurBasedError ? latestErrorMsg.errorMessage : null;
                         // console.log('### CardInput2::componentDidUpdate:: #2 (not validating) single error:: latestSRError', latestSRError);
-                        setSRMessagesFromStrings(latestSRError);
+                        setSRMessagesFromStrings?.(latestSRError);
                     } else {
                         // called when previousSortedErrors.length >= currentErrorsSortedByLayout.length
                         // console.log('### CardInput2::componentDidUpdate:: #3(not validating) clearing errors:: NO latestErrorMsg');
-                        clearSRPanel();
+                        clearSRPanel?.();
                     }
                     break;
                 }

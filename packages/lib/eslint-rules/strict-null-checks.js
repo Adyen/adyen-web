@@ -67,14 +67,8 @@ const STRICT_NULL_CHECKS_BACKLOG = [
     'src/core/core.registry.ts',
     'src/core/core.ts',
     'src/core/Environment/Environment.ts',
-    'src/core/Errors/SRPanel.tsx',
-    'src/core/Errors/SRPanelContext.ts',
-    'src/core/Errors/utils.ts',
     'src/core/ProcessResponse/PaymentAction/actionTypes.ts',
     'src/core/ProcessResponse/PaymentMethods/PaymentMethods.ts',
-    'src/core/RiskModule/components/DeviceFingerprint/DeviceFingerprint.tsx',
-    'src/core/RiskModule/components/DeviceFingerprint/GetDeviceFingerprint.tsx',
-    'src/core/RiskModule/RiskModule.tsx',
     'src/utils/clipboard.ts',
 
     // ── Ticket 3: SecuredFields and CSF (161 errors) ──

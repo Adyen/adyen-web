@@ -10,6 +10,7 @@ export const useCountdownA11yReporter = (time: CountdownTime): void => {
     const reporter = useRef<CountdownA11yReporter>(null);
 
     useEffect(() => {
+        if (!srPanel) return;
         reporter.current = new CountdownA11yReporter({ i18n, srPanel });
         return () => {
             reporter.current.tearDown();

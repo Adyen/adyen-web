@@ -25,7 +25,7 @@ export class SRPanel extends BaseElement<SRPanelProps> {
         }
     };
 
-    private readonly srPanelContainer = null;
+    private readonly srPanelContainer: HTMLDivElement | null = null;
 
     private readonly id;
     private readonly showPanel;
@@ -45,7 +45,7 @@ export class SRPanel extends BaseElement<SRPanelProps> {
         if (this.props.enabled) {
             this._enabled = true;
 
-            const panelParent = document.querySelector(this.props.node);
+            const panelParent = this.props.node == null ? null : document.querySelector(this.props.node);
 
             if (panelParent) {
                 const preExistingSRPanel = document.getElementById(this.id);
@@ -53,13 +53,14 @@ export class SRPanel extends BaseElement<SRPanelProps> {
                     panelParent.removeChild(preExistingSRPanel);
                 }
 
-                this.srPanelContainer = document.createElement('div');
-                this.srPanelContainer.className = 'sr-panel-holder';
-                this.srPanelContainer.id = this.id;
+                const srPanelContainer = document.createElement('div');
+                this.srPanelContainer = srPanelContainer;
+                srPanelContainer.className = 'sr-panel-holder';
+                srPanelContainer.id = this.id;
 
-                panelParent.appendChild(this.srPanelContainer);
+                panelParent.appendChild(srPanelContainer);
 
-                this.mount(this.srPanelContainer);
+                this.mount(srPanelContainer);
             } else {
                 throw new Error('Component could not mount. Root node was not found.');
             }
@@ -98,13 +99,13 @@ export class SRPanel extends BaseElement<SRPanelProps> {
     public setMessages = (messages: string[] | string | null): void => {
         if (!this.props.enabled) return;
 
-        let panelMessages = null;
+        let panelMessages: string[] | null = null;
         if (messages) {
             // Ensure panelMessages is an array
             panelMessages = Array.isArray(messages) ? messages : [messages];
         }
 
-        this.componentRef.setMessages(panelMessages);
+        this.componentRef.setMessages?.(panelMessages);
     };
 
     render() {

@@ -90,6 +90,10 @@ describe('SRPanel', () => {
             expect(panel).toHaveAttribute('aria-atomic', 'true');
         });
 
+        test('should throw the root-node error when node is undefined', () => {
+            expect(() => new SRPanel(core, { node: undefined })).toThrow('Component could not mount. Root node was not found.');
+        });
+
         test('logs error if panel is not found', () => {
             const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
 
