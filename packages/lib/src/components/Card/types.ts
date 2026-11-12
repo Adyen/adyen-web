@@ -24,6 +24,15 @@ type PlaceholderKeys =
 
 export type FundingSourceKeys = 'credit' | 'debit' | 'prepaid';
 
+export type CardClickToPayConfiguration = ClickToPayProps & {
+    /**
+     * Shows the Click to Pay sign-up for shoppers paying with a Mastercard card who are not recognized by Click to Pay.
+     * Requires the Mastercard Click to Pay configuration.
+     * @defaultValue false
+     */
+    enableSignup?: boolean;
+};
+
 export type CardPlaceholders = Partial<Record<PlaceholderKeys, string>>;
 
 export interface CardConfiguration extends UIElementProps {
@@ -103,7 +112,7 @@ export interface CardConfiguration extends UIElementProps {
      * Configuration for Click to Pay
      * - merchant set config option
      */
-    clickToPayConfiguration?: ClickToPayProps;
+    clickToPayConfiguration?: CardClickToPayConfiguration;
 
     /**
      * Configuration for displaying the Fastlane consent UI.

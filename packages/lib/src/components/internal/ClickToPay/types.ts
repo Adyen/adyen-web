@@ -27,12 +27,6 @@ export type ClickToPayProps = {
      */
     disableOtpAutoFocus?: boolean;
     /**
-     * Shows the Click to Pay sign-up for shoppers paying with a Mastercard card who are not recognized by Click to Pay.
-     * Requires the Mastercard Click to Pay configuration.
-     * @defaultValue false
-     */
-    enableSignup?: boolean;
-    /**
      * Shopper first name used to prefill the Click to Pay sign-up
      */
     firstName?: string;

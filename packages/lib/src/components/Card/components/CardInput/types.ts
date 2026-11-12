@@ -28,7 +28,7 @@ import { OnAddressLookupType, OnAddressSelectedType } from '../../../internal/Ad
 import { ComponentMethodsRef } from '../../../internal/UIElement/types';
 import { AddressData } from '../../../../types/global-types';
 import type { FastlaneSignupConfiguration } from '../../../PayPalFastlane/types';
-import type { ClickToPayProps } from '../../../internal/ClickToPay/types';
+import type { CardClickToPayConfiguration } from '../../types';
 import type { AbstractAnalyticsEvent } from '../../../../core/Analytics/events/AbstractAnalyticsEvent';
 import { IAnalytics } from '../../../../core/Analytics/Analytics';
 import { PayButtonProps } from '../../../internal/PayButton/PayButton';
@@ -85,7 +85,7 @@ export interface CardInputProps {
     brandsConfiguration?: CardBrandsConfiguration;
     brandsIcons: Array<BrandConfiguration>;
     clientKey?: string;
-    clickToPayConfiguration?: ClickToPayProps;
+    clickToPayConfiguration?: CardClickToPayConfiguration;
     configuration: CardBackendConfiguration;
     countryCode?: string;
     cvcPolicy?: CVCPolicyType;
