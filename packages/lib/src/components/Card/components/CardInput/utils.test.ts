@@ -1,4 +1,5 @@
-import { resolveCVCErrorKey, shouldShowInstallmentsComponent } from './utils';
+import { resolveCVCErrorKey, shouldShowClickToPaySignup, shouldShowInstallmentsComponent } from './utils';
+import { CtpState } from '../../../internal/ClickToPay/services/ClickToPayService';
 
 describe('shouldShowInstallmentsComponent', () => {
     const amount = { value: 1000, currency: 'EUR' };
@@ -63,5 +64,46 @@ describe('resolveCVCErrorKey', () => {
     it('should return the original error code unchanged when it has no Amex variant, regardless of brand', () => {
         expect(resolveCVCErrorKey('cc.num.902', true)).toBe('cc.num.902');
         expect(resolveCVCErrorKey('cc.num.902', false)).toBe('cc.num.902');
+    });
+});
+
+describe('shouldShowClickToPaySignup', () => {
+    const baseParams = {
+        isClickToPaySignupAvailable: true,
+        ctpState: CtpState.NotAvailable,
+        selectedBrandValue: 'mc',
+        binLookupBrand: 'mc'
+    };
+
+    it('should return false if the sign-up is not available', () => {
+        expect(shouldShowClickToPaySignup({ ...baseParams, isClickToPaySignupAvailable: false })).toBe(false);
+        expect(shouldShowClickToPaySignup({ ...baseParams, isClickToPaySignupAvailable: undefined })).toBe(false);
+    });
+
+    it.each([CtpState.Idle, CtpState.Loading, CtpState.ShopperIdentified, CtpState.OneTimePassword, CtpState.Ready, CtpState.Login])(
+        'should return false if the Click to Pay state is %s',
+        ctpState => {
+            expect(shouldShowClickToPaySignup({ ...baseParams, ctpState })).toBe(false);
+        }
+    );
+
+    it('should return true if the selected brand is Mastercard', () => {
+        expect(shouldShowClickToPaySignup({ ...baseParams, binLookupBrand: '' })).toBe(true);
+    });
+
+    it('should return true if there is no selected brand and the BIN lookup brand is Mastercard', () => {
+        expect(shouldShowClickToPaySignup({ ...baseParams, selectedBrandValue: '' })).toBe(true);
+    });
+
+    it('should prefer the selected brand over the BIN lookup brand', () => {
+        expect(shouldShowClickToPaySignup({ ...baseParams, selectedBrandValue: 'bcmc', binLookupBrand: 'mc' })).toBe(false);
+    });
+
+    it('should return false if the active brand is not Mastercard', () => {
+        expect(shouldShowClickToPaySignup({ ...baseParams, selectedBrandValue: 'visa', binLookupBrand: 'visa' })).toBe(false);
+    });
+
+    it('should return false if no brand has been confirmed', () => {
+        expect(shouldShowClickToPaySignup({ ...baseParams, selectedBrandValue: '', binLookupBrand: '' })).toBe(false);
     });
 });

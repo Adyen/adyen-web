@@ -1,6 +1,6 @@
 import type { DataSetItem } from '../../../../core/Services/data-set';
 import type { PhoneInputSchema } from '../../../internal/PhoneInput/types';
-import type { ClickToPaySignupDetails, ClickToPaySignupFormData } from './types';
+import type { ClickToPaySignupDetails, ClickToPaySignupFormData, ClickToPaySignupPaymentData } from './types';
 
 const removeWhitespace = (value: string): string => value.replace(/\s/g, '');
 const removeNonDigits = (value: string): string => value.replace(/\D/g, '');
@@ -47,6 +47,27 @@ export function getSignupDetails({ firstName, lastName, shopperEmail, phonePrefi
         ...(trimmedFirstName && { firstName: trimmedFirstName }),
         ...(trimmedLastName && { lastName: trimmedLastName }),
         ...(trimmedEmail && { shopperEmail: trimmedEmail }),
+        ...(telephoneNumber && { telephoneNumber })
+    };
+}
+
+/**
+ * Maps the sign-up details to the top-level payment data fields, leaving out the missing ones
+ */
+export function formatClickToPaySignupData({
+    firstName,
+    lastName,
+    shopperEmail,
+    telephoneNumber
+}: ClickToPaySignupDetails): ClickToPaySignupPaymentData {
+    return {
+        ...((firstName || lastName) && {
+            shopperName: {
+                ...(firstName && { firstName }),
+                ...(lastName && { lastName })
+            }
+        }),
+        ...(shopperEmail && { shopperEmail }),
         ...(telephoneNumber && { telephoneNumber })
     };
 }

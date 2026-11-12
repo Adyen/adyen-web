@@ -1,4 +1,4 @@
-import { ComponentFocusObject, AddressData, BrowserInfo } from '../../types/global-types';
+import { ComponentFocusObject, AddressData, BrowserInfo, PaymentData } from '../../types/global-types';
 import type { CardBrandsConfiguration } from '../internal/SecuredFields/lib/types';
 import {
     CardBinValueData,
@@ -23,6 +23,15 @@ type PlaceholderKeys =
     'holderName' | 'cardNumber' | 'expiryDate' | 'expiryMonth' | 'expiryYear' | 'securityCodeThreeDigits' | 'securityCodeFourDigits' | 'password';
 
 export type FundingSourceKeys = 'credit' | 'debit' | 'prepaid';
+
+export type CardClickToPayConfiguration = ClickToPayProps & {
+    /**
+     * Shows the Click to Pay sign-up for shoppers paying with a Mastercard card who are not recognized by Click to Pay.
+     * Requires the Mastercard Click to Pay configuration.
+     * @defaultValue false
+     */
+    enableSignup?: boolean;
+};
 
 export type CardPlaceholders = Partial<Record<PlaceholderKeys, string>>;
 
@@ -103,7 +112,7 @@ export interface CardConfiguration extends UIElementProps {
      * Configuration for Click to Pay
      * - merchant set config option
      */
-    clickToPayConfiguration?: ClickToPayProps;
+    clickToPayConfiguration?: CardClickToPayConfiguration;
 
     /**
      * Configuration for displaying the Fastlane consent UI.
@@ -471,6 +480,10 @@ interface CardPaymentMethodData {
     encryptedExpiryMonth?: string;
     encryptedExpiryYear?: string;
     encryptedSecurityCode?: string;
+    /**
+     * Set when the shopper consents to create a Click to Pay profile
+     */
+    storeClickToPayProfile?: boolean;
 }
 
 export interface CardElementData {
@@ -478,6 +491,9 @@ export interface CardElementData {
     billingAddress?: AddressData;
     installments?: { value: number };
     storePaymentMethod?: boolean;
+    shopperName?: PaymentData['shopperName'];
+    shopperEmail?: string;
+    telephoneNumber?: string;
     browserInfo: BrowserInfo;
     origin?: string;
 }

@@ -29,6 +29,9 @@ import { PayButtonProps } from '../internal/PayButton/PayButton';
 import { AnalyticsInfoEvent, InfoEventType, UiTarget } from '../../core/Analytics/events/AnalyticsInfoEvent';
 import { InstallmentOptions } from './components/CardInput/components/Installments/Installments';
 import { AddressModeOptions, CardInputRef } from './components/CardInput/types';
+import { formatClickToPaySignupData } from './components/ClickToPaySignup';
+import type { ClickToPaySignupDetails, ClickToPaySignupState } from './components/ClickToPaySignup';
+import { CLICK_TO_PAY_SIGNUP_BRAND } from './components/ClickToPaySignup/constants';
 
 export class CardElement extends UIElement<CardConfiguration> {
     public static readonly type: TxVariants = TxVariants.scheme;
@@ -175,6 +178,7 @@ export class CardElement extends UIElement<CardConfiguration> {
          *  - or, in the case of a storedCard
          */
         const cardBrand = this.state.selectedBrandValue;
+        const clickToPaySignupDetails = this.clickToPaySignupDetails;
 
         return {
             paymentMethod: {
@@ -186,10 +190,12 @@ export class CardElement extends UIElement<CardConfiguration> {
                 }),
                 ...(cardBrand && { brand: cardBrand }),
                 ...(this.props.fundingSource && { fundingSource: this.props.fundingSource }),
-                ...(this.state.fastlaneData && { fastlaneData: btoa(JSON.stringify(this.state.fastlaneData)) })
+                ...(this.state.fastlaneData && { fastlaneData: btoa(JSON.stringify(this.state.fastlaneData)) }),
+                ...(clickToPaySignupDetails && { storeClickToPayProfile: true })
             },
             ...(this.state.billingAddress && { billingAddress: this.state.billingAddress }),
             ...(this.state.socialSecurityNumber && { socialSecurityNumber: this.state.socialSecurityNumber }),
+            ...(clickToPaySignupDetails && formatClickToPaySignupData(clickToPaySignupDetails)),
             ...this.storePaymentMethodPayload,
             ...(shouldIncludeInstallmentsInPaymentData(this.state.installments) && { installments: this.state.installments }),
             browserInfo: this.browserInfo,
@@ -318,6 +324,26 @@ export class CardElement extends UIElement<CardConfiguration> {
         return includeStorePaymentMethod ? { storePaymentMethod: Boolean(this.state.storePaymentMethod) } : {};
     }
 
+    /**
+     * Whether the merchant configuration allows the Click to Pay sign-up. Shopper recognition and the card brand are checked by CardInput.
+     * The Click to Pay service is not created for prepaid cards or when Click to Pay is disabled.
+     */
+    private get isClickToPaySignupAvailable(): boolean {
+        return (
+            this.props.clickToPayConfiguration?.enableSignup === true &&
+            !this.props.storedPaymentMethodId &&
+            !!this.clickToPayService?.schemes?.includes(CLICK_TO_PAY_SIGNUP_BRAND)
+        );
+    }
+
+    /**
+     * The sign-up details, only when the sign-up is available and the shopper gave consent
+     */
+    private get clickToPaySignupDetails(): ClickToPaySignupDetails | null {
+        const signup: ClickToPaySignupState | undefined = this.state.clickToPaySignup;
+        return this.isClickToPaySignupAvailable && signup?.consentGiven ? signup.details : null;
+    }
+
     get isValid() {
         return !!this.state.isValid;
     }
@@ -396,6 +422,7 @@ export class CardElement extends UIElement<CardConfiguration> {
                 onFocus={this.onFocus}
                 onBlur={this.onBlur}
                 onConfigSuccess={this.onConfigSuccess}
+                isClickToPaySignupAvailable={this.isClickToPaySignupAvailable}
             />
         );
     }
