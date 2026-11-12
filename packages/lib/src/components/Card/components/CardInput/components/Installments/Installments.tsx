@@ -100,7 +100,7 @@ function Installments(props: Readonly<InstallmentsProps>) {
         onChange(hasInstallmentOptions ? state : { value: null });
     }, [onChange, hasRadioButtonUI, installmentAmount, hasInstallmentOptions, selectedRadioValue]);
 
-    // Do not return early, parent expects onChange to be called to clear installments selection
+    // Keep the onChange effect above these returns: the parent relies on it to clear the installments selection when nothing renders
     if (!installmentOptions) return null;
     if (!amount || amount.value === 0) return null;
 
