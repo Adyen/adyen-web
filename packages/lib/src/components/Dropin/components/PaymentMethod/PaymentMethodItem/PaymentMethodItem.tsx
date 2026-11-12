@@ -66,18 +66,20 @@ class PaymentMethodItem extends Component<Readonly<PaymentMethodItemProps>> {
 
         const isCard = paymentMethod.props.type === 'card' || paymentMethod.props.type === 'scheme';
 
-        const paymentMethodClassnames = classNames({
-            'adyen-checkout__payment-method': true,
-            [`adyen-checkout__payment-method--${paymentMethod.props.type}`]: true,
-            ...(isCard && { [`adyen-checkout__payment-method--${paymentMethod.props.fundingSource ?? 'credit'}`]: true }),
-            'adyen-checkout__payment-method--selected': isSelected,
-            'adyen-checkout__payment-method--loading': isLoading,
-            'adyen-checkout__payment-method--disabling': isDisablingPaymentMethod,
-            'adyen-checkout__payment-method--confirming': this.state.showDisableStoredPaymentMethodConfirmation,
-            'adyen-checkout__payment-method--standalone': standalone,
-            [paymentMethod._id]: true,
-            [this.props.className ?? '']: true
-        });
+        const paymentMethodClassnames = classNames(
+            {
+                'adyen-checkout__payment-method': true,
+                [`adyen-checkout__payment-method--${paymentMethod.props.type}`]: true,
+                ...(isCard && { [`adyen-checkout__payment-method--${paymentMethod.props.fundingSource ?? 'credit'}`]: true }),
+                'adyen-checkout__payment-method--selected': isSelected,
+                'adyen-checkout__payment-method--loading': isLoading,
+                'adyen-checkout__payment-method--disabling': isDisablingPaymentMethod,
+                'adyen-checkout__payment-method--confirming': this.state.showDisableStoredPaymentMethodConfirmation,
+                'adyen-checkout__payment-method--standalone': standalone,
+                [paymentMethod._id]: true
+            },
+            this.props.className
+        );
 
         const showRemovePaymentMethodButton = this.props.showRemovePaymentMethodButton && paymentMethod.props.oneClick && isSelected;
         const disableConfirmationId = `remove-${paymentMethod._id}`;
