@@ -1,7 +1,8 @@
-import { BrandConfiguration, CardBrandsConfiguration, DualBrandSelectElement, DualBrandingChangeHandler } from '../../../types';
+import { CardBrandsConfiguration, DualBrandSelectElement, DualBrandingChangeHandler } from '../../../types';
 import { ComponentChildren } from 'preact';
 import { CVCPolicyType, DatePolicyType } from '../../../../internal/SecuredFields/lib/types';
 import { SFPErrorMap, SFPValid } from '../../../../internal/SecuredFields/SFP/types';
+import type { PaymentMethodBrand } from '../../../../../types/global-types';
 
 export interface BrandIconProps {
     brand: string;
@@ -10,7 +11,7 @@ export interface BrandIconProps {
 
 export interface CardFieldsProps {
     brand: string;
-    brandsIcons?: Array<BrandConfiguration>;
+    brandsIcons?: Array<PaymentMethodBrand>;
     brandsConfiguration?: CardBrandsConfiguration;
     dualBrandingChangeHandler: DualBrandingChangeHandler;
     dualBrandingElements?: DualBrandSelectElement[];
@@ -20,7 +21,7 @@ export interface CardFieldsProps {
     hasCVC?: boolean;
     cvcPolicy?: CVCPolicyType;
     expiryDatePolicy?: DatePolicyType;
-    onFocusField?: (field: string) => void;
+    onFocusField: (field: string) => void;
     showBrandIcon?: boolean;
     valid: SFPValid;
     showContextualElement?: boolean;
@@ -35,8 +36,8 @@ export interface CardHolderNameProps {
     required?: boolean;
     value?: string;
     disabled?: boolean;
-    onFieldFocusAnalytics?: (who: string, event: Event) => void;
-    onFieldBlurAnalytics?: (who: string, event: Event) => void;
+    onFieldFocusAnalytics: (who: string, event: Event) => void;
+    onFieldBlurAnalytics: (who: string, event: Event) => void;
 }
 
 export interface CardNumberProps {
@@ -45,13 +46,13 @@ export interface CardNumberProps {
     dualBrandingChangeHandler: DualBrandingChangeHandler;
     dualBrandingElements?: DualBrandSelectElement[];
     selectedBrandValue: string;
-    error: string;
+    error?: string;
     filled: boolean;
     focused: boolean;
     isValid: boolean;
     label: string;
     onFocusField: (field: string) => void;
-    showBrandIcon: boolean;
+    showBrandIcon?: boolean;
 }
 
 export interface CVCProps {
@@ -119,8 +120,8 @@ export interface KCPProps {
     value: string;
     disabled?: boolean;
     placeholder?: string;
-    onFieldFocusAnalytics?: (who: string, event: Event) => void;
-    onFieldBlurAnalytics?: (who: string, event: Event) => void;
+    onFieldFocusAnalytics: (who: string, event: Event) => void;
+    onFieldBlurAnalytics: (who: string, event: Event) => void;
 }
 
 export type RtnType_ParamBooleanFn = (tn) => boolean;
@@ -129,8 +130,8 @@ export type RtnType_ParamVoidFn = (e) => void;
 export interface StoredCardFieldsProps {
     brand: string;
     errors: SFPErrorMap;
-    expiryMonth?: string;
-    expiryYear?: string;
+    expiryMonth?: string | null;
+    expiryYear?: string | null;
     focusedElement: string;
     hasCVC: boolean;
     cvcPolicy: CVCPolicyType;

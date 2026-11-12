@@ -36,7 +36,7 @@ export default function CardFields({
 
     const getError = (errors, fieldType) => {
         const errorKey = errors[fieldType];
-        return errorKey ? i18n.get(errorKey) : null;
+        return errorKey ? i18n.get(errorKey) : undefined;
     };
 
     // A set of brands filtered to exclude those that can never appear in the UI
