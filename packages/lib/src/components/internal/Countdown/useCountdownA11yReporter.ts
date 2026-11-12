@@ -13,7 +13,7 @@ export const useCountdownA11yReporter = (time: CountdownTime): void => {
         if (!srPanel) return;
         reporter.current = new CountdownA11yReporter({ i18n, srPanel });
         return () => {
-            reporter.current.tearDown();
+            reporter.current?.tearDown();
         };
     }, []);
 
