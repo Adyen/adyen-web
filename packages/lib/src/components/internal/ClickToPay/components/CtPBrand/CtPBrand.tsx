@@ -8,11 +8,16 @@ import './CtPBrand.scss';
 
 type CtPBrandProps = {
     classNameModifiers?: string[];
+    /**
+     * Overrides the schemes from the Click to Pay context
+     */
+    schemes?: string[];
 };
 
-const CtPBrand = ({ classNameModifiers = [] }: Readonly<CtPBrandProps>) => {
+const CtPBrand = ({ classNameModifiers = [], schemes: schemesOverride }: Readonly<CtPBrandProps>) => {
     const getImage = useImage();
-    const { schemes } = useClickToPayContext();
+    const { schemes: contextSchemes } = useClickToPayContext();
+    const schemes = schemesOverride ?? contextSchemes;
 
     const ctpImageUrl = getImage()('ctp');
     const pipeImageUrl = getImage({ imageFolder: 'components/' })('pipe');
