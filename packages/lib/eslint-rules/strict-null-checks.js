@@ -113,13 +113,6 @@ const STRICT_NULL_CHECKS_BACKLOG = [
     // ── Ticket 5: Card, Card Input and Custom Card (100 errors) ──
     'src/components/Card/Card.tsx',
     'src/components/Card/components/CardInput/CardInput.tsx',
-    'src/components/Card/components/CardInput/components/AvailableBrands/AvailableBrands.tsx',
-    'src/components/Card/components/CardInput/components/CardFields.tsx',
-    'src/components/Card/components/CardInput/components/CardFieldsWrapper.tsx',
-    'src/components/Card/components/CardInput/components/CardHolderName.tsx',
-    'src/components/Card/components/CardInput/components/Installments/Installments.tsx',
-    'src/components/Card/components/CardInput/components/KCPAuthentication.tsx',
-    'src/components/Card/components/CardInput/components/StoredCardFields.tsx',
     'src/components/Card/components/CardInput/utils.ts',
     'src/components/Card/components/ClickToPayHolder.tsx',
     'src/components/Card/components/Fastlane/FastlaneSignup.tsx',
