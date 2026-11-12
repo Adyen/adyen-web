@@ -13,9 +13,6 @@ import { SFFieldType } from '../../types';
  * @param pDataObj -
  */
 export function postMessageToAllIframes({ csfState, csfConfig }: CSFThisObject, pDataObj: object): boolean {
-    // Purely need for TS, in production these props will always be defined
-    if (!csfState || !csfConfig) return false;
-
     const objKeys: string[] = Object.keys(pDataObj || {});
     if (!objKeys.length) {
         // pDataObj is an object with the 'special' key(s) that represent the reason for making this postMessage

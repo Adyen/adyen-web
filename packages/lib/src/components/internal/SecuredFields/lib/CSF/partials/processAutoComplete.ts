@@ -14,9 +14,6 @@ import { CSFThisObject } from '../types';
  * @param pFeedbackObj -
  */
 export function processAutoComplete({ csfState, csfConfig, csfCallbacks }: CSFThisObject, pFeedbackObj: SFFeedbackObj): boolean {
-    // Purely need for TS, in production these props will always be defined
-    if (!csfState || !csfConfig || !csfCallbacks) return false;
-
     /**
      * NOTE: It seems Chrome has started autofilling across cross-origin iframes. Have tested as far back as v104 but have no resources to test further back
      * So, in theory for Chrome \>= v104 we don't need to do any of this, including having special listeners in the securedFields
@@ -46,10 +43,7 @@ export function processAutoComplete({ csfState, csfConfig, csfCallbacks }: CSFTh
  *
  * @param pFeedbackObj -
  */
-function processExpiryDateAutoComplete(
-    { csfState, csfConfig }: Required<Pick<CSFThisObject, 'csfState' | 'csfConfig'>>,
-    pFeedbackObj: SFFeedbackObj
-): boolean {
+function processExpiryDateAutoComplete({ csfState, csfConfig }: Pick<CSFThisObject, 'csfState' | 'csfConfig'>, pFeedbackObj: SFFeedbackObj): boolean {
     const splittableDateVal = (pFeedbackObj.value ?? '').replace(/\D/gi, '/'); // Replace any non-digits with a fwd-slash so we can always split it
 
     const dateValArr: string[] = splittableDateVal.split('/');

@@ -16,8 +16,6 @@ export function handleIframeConfigFeedback(
     isConfigured: () => boolean,
     pFeedbackObj: SFFeedbackObj
 ): boolean {
-    if (!csfState) return false;
-
     csfState.iframeConfigCount += 1;
 
     if (window._b$dl)
@@ -36,7 +34,7 @@ export function handleIframeConfigFeedback(
         }
     } else {
         const callbackObj: CardAdditionalSFData = { additionalIframeConfigured: true, fieldType: pFeedbackObj.fieldType, type: csfState.type };
-        csfCallbacks?.onAdditionalSFConfig?.(callbackObj);
+        csfCallbacks.onAdditionalSFConfig?.(callbackObj);
     }
 
     return false;

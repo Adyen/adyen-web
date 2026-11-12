@@ -17,9 +17,6 @@ export function handleFocus(
     handleIOSTouchEvents: () => void,
     pFeedbackObj: SFFeedbackObj
 ): void {
-    // Purely need for TS, in production these props will always be defined
-    if (!csfState || !csfProps || !csfCallbacks) return;
-
     const feedbackObj: SFFeedbackObj = { ...pFeedbackObj };
 
     delete feedbackObj.numKey;

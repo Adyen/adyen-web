@@ -14,9 +14,6 @@ interface DestructuredFeedbackObj {
  * @param pFeedbackObj -
  */
 export function handleBinValue({ csfState, csfCallbacks }: CSFThisObject, pFeedbackObj: SFFeedbackObj): void {
-    // Purely need for TS, in production this prop will always be defined
-    if (!csfState) return;
-
     const { binValue, encryptedBin, uuid }: DestructuredFeedbackObj = pFeedbackObj;
 
     const callbacksObj: CardBinValueData = { binValue: binValue ?? '', type: csfState.type };
@@ -26,5 +23,5 @@ export function handleBinValue({ csfState, csfCallbacks }: CSFThisObject, pFeedb
         callbacksObj.uuid = uuid;
     }
 
-    csfCallbacks?.onBinValue?.(callbacksObj);
+    csfCallbacks.onBinValue?.(callbacksObj);
 }

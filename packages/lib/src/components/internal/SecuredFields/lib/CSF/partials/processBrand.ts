@@ -26,9 +26,6 @@ const checkForBrandChange = (pBrand: BrandStorageObject, storedBrand: BrandStora
  * @param pFeedbackObj -
  */
 export default function processBrand({ csfState, csfConfig, csfProps, csfCallbacks }: CSFThisObject, pFeedbackObj: SFFeedbackObj): boolean {
-    // Purely need for TS, in production these props will always be defined
-    if (!csfState || !csfConfig || !csfProps || !csfCallbacks) return false;
-
     const fieldType: SFFieldType = pFeedbackObj.fieldType;
 
     if (fieldType === ENCRYPTED_CARD_NUMBER) {

@@ -12,9 +12,6 @@ import { CSFThisObject } from '../types';
  * @param validateForm - comes from initial, partial, implementation
  */
 export function isConfigured({ csfState, csfConfig, csfProps, csfCallbacks }: CSFThisObject, validateForm: () => void): boolean {
-    // Purely need for TS, in production these props will always be defined
-    if (!csfState || !csfConfig || !csfProps || !csfCallbacks) return false;
-
     csfState.isConfigured = true;
 
     const callbackObj: CardConfigSuccessData = { iframesConfigured: true, type: csfState.type, rootNode: csfProps.rootNode as HTMLElement };

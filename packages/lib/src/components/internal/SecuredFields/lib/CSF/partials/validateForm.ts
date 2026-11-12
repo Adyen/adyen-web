@@ -20,9 +20,6 @@ const checkFormIsValid = (pSecuredFields: SecuredFields): boolean => {
  * @param csfCallbacks - comes from initial, partial, implementation
  */
 export default function validateForm({ csfState, csfProps, csfCallbacks }: CSFThisObject): void {
-    // Purely need for TS, in production these props will always be defined
-    if (!csfState || !csfProps || !csfCallbacks) return;
-
     const isValid: boolean = checkFormIsValid(csfState.securedFields);
 
     const validityHasChanged: boolean = isValid !== csfState.allValid;
