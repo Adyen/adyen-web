@@ -12,6 +12,7 @@ export const DUAL_BRANDED_CARD = '4035501000000008'; // dual branded visa & cart
 export const BCMC_DUAL_BRANDED_VISA = '4871049999999910'; // dual branded visa & bcmc
 export const BCMC_DUAL_BRANDED_MC = '5127880999999990'; // dual branded mc & bcmc
 export const DUAL_BRANDED_CARD_EXCLUDED = '4001230000000004'; // dual branded visa/star
+export const MC_PULSE_DEBIT_CARD = '5413330033003303'; // dual branded mc/pulse debit card. binLookup only returns pulse when it is one of the Card brands
 export const CARD_WITH_PAN_LENGTH = '4000620000000007';
 export const CARD_WITH_HEALTHCARE = '2292240000000005';
 export const DUAL_BRANDED_EFTPOS = '4687380100010006';
@@ -84,6 +85,26 @@ export const SHOPPER_DATA = {
         JP: '7012341234'
     }
 };
+export const CLICK_TO_PAY_DPA_CONFIGURATION = {
+    mc: {
+        mcDpaId: '6d41d4d6-45b1-42c3-a5d0-a28c0e69d4b1_dpa2',
+        mcSrcClientId: '6d41d4d6-45b1-42c3-a5d0-a28c0e69d4b1'
+    },
+    visa: {
+        visaSrciDpaId: '8e6e347c-254e-863f-0e6a-196bf2d9df02',
+        visaSrcInitiatorId: 'B9SECVKIQX2SOBQ6J9X721dVBBKHhJJl1nxxVbemHGn5oB6S8'
+    }
+};
+
+export const CLICK_TO_PAY_SIGNUP_PHONE = {
+    // Storybook defaults to countryCode 'US', so a typed number gets the '+1' prefix
+    defaultPrefix: '+1',
+    typedNumber: '2025550123',
+    prefilledTelephoneNumber: '+31612345678',
+    prefilledPrefix: '+31',
+    prefilledNumber: '612345678'
+};
+
 // Issuer List Mocks
 export const ONLINE_BANKING_PL_ISSUERS = [
     { id: '154', name: 'BLIK' },

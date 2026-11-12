@@ -5,6 +5,7 @@ import { CardWithAvs } from '../models/card-avs';
 import { CardWithKCP } from '../models/card-kcp';
 import { CardWithSSN } from '../models/card-ssn';
 import { CardWithFastlane } from '../models/card-fastlane';
+import { CardWithClickToPaySignup } from '../models/card-ctp-signup';
 
 type Fixture = {
     card: Card;
@@ -12,6 +13,7 @@ type Fixture = {
     cardWithKCP: CardWithKCP;
     cardWithSSN: CardWithSSN;
     cardWithFastlane: CardWithFastlane;
+    cardWithCtpSignup: CardWithClickToPaySignup;
     bcmc: BCMC;
 };
 
@@ -22,6 +24,10 @@ const test = base.extend<Fixture>({
     },
     cardWithFastlane: async ({ page }, use) => {
         const cardPage = new CardWithFastlane(page);
+        await use(cardPage);
+    },
+    cardWithCtpSignup: async ({ page }, use) => {
+        const cardPage = new CardWithClickToPaySignup(page);
         await use(cardPage);
     },
     cardWithAvs: async ({ page }, use) => {
