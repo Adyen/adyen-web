@@ -139,7 +139,7 @@ describe('CheckoutSession', () => {
                     loadingContext: 'test',
                     path: `v1/sessions/${rawSessionMock.id}/donations/cancel?clientKey=${clientKeyMock}`,
                     errorLevel: 'fatal',
-                    errorCode: '629'
+                    errorCode: '632'
                 },
                 { sessionData: rawSessionMock.sessionData }
             );

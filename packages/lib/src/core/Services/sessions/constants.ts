@@ -8,5 +8,5 @@ export const API_ERROR_CODE = {
     createOrder: '624',
     donationCampaigns: '627',
     donations: '628',
-    cancelDonation: '629'
+    cancelDonation: '632'
 };
