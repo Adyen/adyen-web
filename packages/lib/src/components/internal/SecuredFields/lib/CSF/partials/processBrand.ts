@@ -75,7 +75,11 @@ export default function processBrand({ csfState, csfConfig, csfProps, csfCallbac
             callbackObj.rootNode = csfProps.rootNode as HTMLElement;
 
             // ...and call SFPHandlers.handleOnBrand
-            csfCallbacks.onBrand?.(callbackObj);
+            csfCallbacks.onBrand?.({
+                ...callbackObj,
+                cvcPolicy: callbackObj.cvcPolicy ?? CVC_POLICY_REQUIRED,
+                cvcText: callbackObj.cvcText ?? ''
+            });
         }
 
         return true;

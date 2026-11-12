@@ -97,4 +97,14 @@ describe('Testing CSFs handleFocus functionality', () => {
         expect(csfCallbacks.onFocus).toHaveBeenCalledTimes(1);
         expect(csfCallbacks.onFocus).toHaveBeenCalledWith(expectedCallbackObj);
     });
+
+    test('handleFocus should fall back action to an empty string and numChars to 0 when they are undefined on the feedback object', () => {
+        feedbackObj.focus = true;
+        feedbackObj.action = undefined;
+        feedbackObj.numChars = undefined;
+
+        callOnFocus();
+
+        expect(csfCallbacks.onFocus).toHaveBeenCalledWith(expect.objectContaining({ action: '', focus: true, numChars: 0 }));
+    });
 });

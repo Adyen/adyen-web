@@ -45,6 +45,7 @@ const expectedPostMsgDataObj = {
 const expectedCallbackObj = {
     brand: 'amex',
     cvcPolicy: 'required',
+    cvcText: '',
     expiryDatePolicy: 'required',
     showSocialSecurityNumber: false,
     type: 'card',
@@ -130,5 +131,16 @@ describe('Testing processBrand fny', () => {
         callProcessBrand();
 
         expect(postMessageToIframeMock).toHaveBeenCalledWith(expect.objectContaining({ brand: 'visa', cvcPolicy: 'required' }));
+    });
+
+    test('Calling processBrand with an undefined cvcPolicy and cvcText on the feedback object should fall back to CVC_POLICY_REQUIRED and an empty string in the onBrand callback object', () => {
+        csfState.type = 'card';
+        sfFeedbackObj.brand = 'mc';
+        sfFeedbackObj.cvcPolicy = undefined;
+        sfFeedbackObj.cvcText = undefined;
+
+        callProcessBrand();
+
+        expect(csfCallbacks.onBrand).toHaveBeenCalledWith(expect.objectContaining({ brand: 'mc', cvcPolicy: 'required', cvcText: '' }));
     });
 });
