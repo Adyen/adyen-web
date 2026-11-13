@@ -44,26 +44,43 @@ const createReturnObject = (csf: ReturnType<typeof buildCSF>): CSFReturnObject =
 describe('CSF.createReturnObject', () => {
     beforeEach(() => {
         mockedPostMessageToIframe.mockClear();
-        /* @ts-ignore prefer-const */
-        logger.warn = jest.fn();
+        jest.spyOn(logger, 'warn')
+            .mockClear()
+            .mockImplementation(() => {});
     });
 
-    describe('when the secured fields are not yet configured', () => {
-        test('updateStyles should warn instead of posting a message to the iframes', () => {
+    describe('updateStyles()', () => {
+        test('should warn instead of posting a message to the iframes when not yet configured', () => {
             const csf = buildCSF();
             createReturnObject(csf).updateStyles({});
             expect(csf.postMessageToAllIframes).not.toHaveBeenCalled();
             expect(logger.warn).toHaveBeenCalled();
         });
 
-        test('setFocusOnFrame should warn instead of setting focus', () => {
+        test('should post the style object to all iframes when configured', () => {
+            const csf = buildCSF({ isConfigured: true });
+            createReturnObject(csf).updateStyles({ base: {} });
+            expect(csf.postMessageToAllIframes).toHaveBeenCalledWith({ styleObject: { base: {} } });
+        });
+    });
+
+    describe('setFocusOnFrame()', () => {
+        test('should warn instead of setting focus when not yet configured', () => {
             const csf = buildCSF();
             createReturnObject(csf).setFocusOnFrame('encryptedCardNumber');
             expect(csf.setFocusOnFrame).not.toHaveBeenCalled();
             expect(logger.warn).toHaveBeenCalled();
         });
 
-        test('isValidated should warn instead of flagging the field as having an error', () => {
+        test('should set focus on the given field when configured', () => {
+            const csf = buildCSF({ isConfigured: true });
+            createReturnObject(csf).setFocusOnFrame('encryptedCardNumber');
+            expect(csf.setFocusOnFrame).toHaveBeenCalledWith('encryptedCardNumber');
+        });
+    });
+
+    describe('isValidated()', () => {
+        test('should warn instead of flagging the field as having an error when not yet configured', () => {
             const csf = buildCSF();
             createReturnObject(csf).isValidated('encryptedCardNumber', 'some.error.code');
             expect(csf.state.securedFields.encryptedCardNumber.hasError).toBe(false);
@@ -71,43 +88,7 @@ describe('CSF.createReturnObject', () => {
             expect(logger.warn).toHaveBeenCalled();
         });
 
-        test('hasUnsupportedCard should warn instead of flagging the field as having an error', () => {
-            const csf = buildCSF();
-            createReturnObject(csf).hasUnsupportedCard('encryptedCardNumber', 'mc');
-            expect(csf.state.securedFields.encryptedCardNumber.hasError).toBe(false);
-            expect(mockedPostMessageToIframe).not.toHaveBeenCalled();
-            expect(logger.warn).toHaveBeenCalled();
-        });
-
-        test('destroy should warn instead of destroying the secured fields', () => {
-            const csf = buildCSF();
-            createReturnObject(csf).destroy();
-            expect(csf.destroySecuredFields).not.toHaveBeenCalled();
-            expect(logger.warn).toHaveBeenCalled();
-        });
-
-        test('brandsFromBinLookup should warn instead of delegating to handleBrandFromBinLookup', () => {
-            const csf = buildCSF();
-            createReturnObject(csf).brandsFromBinLookup({ issuingCountryCode: 'US' }, null);
-            expect(csf.handleBrandFromBinLookup).not.toHaveBeenCalled();
-            expect(logger.warn).toHaveBeenCalled();
-        });
-    });
-
-    describe('when the secured fields are configured', () => {
-        test('updateStyles should post the style object to all iframes', () => {
-            const csf = buildCSF({ isConfigured: true });
-            createReturnObject(csf).updateStyles({ base: {} });
-            expect(csf.postMessageToAllIframes).toHaveBeenCalledWith({ styleObject: { base: {} } });
-        });
-
-        test('setFocusOnFrame should set focus on the given field', () => {
-            const csf = buildCSF({ isConfigured: true });
-            createReturnObject(csf).setFocusOnFrame('encryptedCardNumber');
-            expect(csf.setFocusOnFrame).toHaveBeenCalledWith('encryptedCardNumber');
-        });
-
-        test('isValidated should flag an existing field as having an error and inform the iframe', () => {
+        test('should flag an existing field as having an error and inform the iframe when configured', () => {
             const csf = buildCSF({ isConfigured: true });
             createReturnObject(csf).isValidated('encryptedCardNumber', 'some.error.code');
 
@@ -121,7 +102,7 @@ describe('CSF.createReturnObject', () => {
             );
         });
 
-        test('isValidated should not set an errorType if one is already present', () => {
+        test('should not set an errorType if one is already present', () => {
             const csf = buildCSF({ isConfigured: true });
             csf.state.securedFields.encryptedCardNumber.errorType = 'existingError';
 
@@ -130,13 +111,23 @@ describe('CSF.createReturnObject', () => {
             expect(csf.state.securedFields.encryptedCardNumber.errorType).toBe('existingError');
         });
 
-        test('isValidated should do nothing for a field that does not exist', () => {
+        test('should do nothing for a field that does not exist', () => {
             const csf = buildCSF({ isConfigured: true });
             createReturnObject(csf).isValidated('encryptedExpiryDate', 'some.error.code');
             expect(mockedPostMessageToIframe).not.toHaveBeenCalled();
         });
+    });
 
-        test('hasUnsupportedCard should flag an existing field as having an error when passed a code', () => {
+    describe('hasUnsupportedCard()', () => {
+        test('should warn instead of flagging the field as having an error when not yet configured', () => {
+            const csf = buildCSF();
+            createReturnObject(csf).hasUnsupportedCard('encryptedCardNumber', 'mc');
+            expect(csf.state.securedFields.encryptedCardNumber.hasError).toBe(false);
+            expect(mockedPostMessageToIframe).not.toHaveBeenCalled();
+            expect(logger.warn).toHaveBeenCalled();
+        });
+
+        test('should flag an existing field as having an error when passed a code', () => {
             const csf = buildCSF({ isConfigured: true });
             createReturnObject(csf).hasUnsupportedCard('encryptedCardNumber', 'mc');
 
@@ -150,7 +141,7 @@ describe('CSF.createReturnObject', () => {
             );
         });
 
-        test('hasUnsupportedCard should clear the error from an existing field when passed an empty code', () => {
+        test('should clear the error from an existing field when passed an empty code', () => {
             const csf = buildCSF({ isConfigured: true });
             csf.state.securedFields.encryptedCardNumber.hasError = true;
             csf.state.securedFields.encryptedCardNumber.errorType = 'mc';
@@ -162,32 +153,52 @@ describe('CSF.createReturnObject', () => {
             expect(field.errorType).toBe('');
         });
 
-        test('hasUnsupportedCard should do nothing for a field that does not exist', () => {
+        test('should do nothing for a field that does not exist', () => {
             const csf = buildCSF({ isConfigured: true });
             createReturnObject(csf).hasUnsupportedCard('encryptedExpiryDate', 'mc');
             expect(mockedPostMessageToIframe).not.toHaveBeenCalled();
         });
+    });
 
-        test('destroy should destroy the secured fields', () => {
+    describe('destroy()', () => {
+        test('should warn instead of destroying the secured fields when not yet configured', () => {
+            const csf = buildCSF();
+            createReturnObject(csf).destroy();
+            expect(csf.destroySecuredFields).not.toHaveBeenCalled();
+            expect(logger.warn).toHaveBeenCalled();
+        });
+
+        test('should destroy the secured fields when configured', () => {
             const csf = buildCSF({ isConfigured: true });
             createReturnObject(csf).destroy();
             expect(csf.destroySecuredFields).toHaveBeenCalled();
         });
+    });
 
-        test('brandsFromBinLookup should delegate to handleBrandFromBinLookup for a credit card type', () => {
+    describe('brandsFromBinLookup()', () => {
+        test('should warn instead of delegating to handleBrandFromBinLookup when not yet configured', () => {
+            const csf = buildCSF();
+            createReturnObject(csf).brandsFromBinLookup({ issuingCountryCode: 'US' }, null);
+            expect(csf.handleBrandFromBinLookup).not.toHaveBeenCalled();
+            expect(logger.warn).toHaveBeenCalled();
+        });
+
+        test('should delegate to handleBrandFromBinLookup for a credit card type', () => {
             const csf = buildCSF({ isConfigured: true }, { isCreditCardType: true });
             createReturnObject(csf).brandsFromBinLookup({ issuingCountryCode: 'US' }, null);
             expect(csf.handleBrandFromBinLookup).toHaveBeenCalledWith({ issuingCountryCode: 'US' }, null);
         });
 
-        test('brandsFromBinLookup should return early for a non credit card type, regardless of being configured', () => {
+        test('should return early for a non credit card type, regardless of being configured', () => {
             const csf = buildCSF({ isConfigured: true }, { isCreditCardType: false });
             createReturnObject(csf).brandsFromBinLookup({ issuingCountryCode: 'US' }, null);
             expect(csf.handleBrandFromBinLookup).not.toHaveBeenCalled();
             expect(logger.warn).not.toHaveBeenCalled();
         });
+    });
 
-        test('addSecuredField should set up a new secured field and increment numIframes when found in the rootNode', () => {
+    describe('addSecuredField()', () => {
+        test('should set up a new secured field and increment numIframes when found in the rootNode', () => {
             const csf = buildCSF({ isConfigured: true, numIframes: 2 });
             createReturnObject(csf).addSecuredField('encryptedSecurityCode');
 
@@ -195,15 +206,17 @@ describe('CSF.createReturnObject', () => {
             expect(csf.setupSecuredField).toHaveBeenCalledWith(csf.props.rootNode.querySelector('[data-cse="encryptedSecurityCode"]'));
         });
 
-        test('addSecuredField should do nothing when the field cannot be found in the rootNode', () => {
+        test('should do nothing when the field cannot be found in the rootNode', () => {
             const csf = buildCSF({ isConfigured: true, numIframes: 2 });
             createReturnObject(csf).addSecuredField('encryptedPassword');
 
             expect(csf.state.numIframes).toBe(2);
             expect(csf.setupSecuredField).not.toHaveBeenCalled();
         });
+    });
 
-        test('removeSecuredField should destroy & remove an existing field, decrement counts and notify the callback', () => {
+    describe('removeSecuredField()', () => {
+        test('should destroy & remove an existing field, decrement counts and notify the callback', () => {
             const csf = buildCSF({ isConfigured: true, numIframes: 2, iframeCount: 2 });
             const field = csf.state.securedFields.encryptedCardNumber;
 
@@ -220,7 +233,7 @@ describe('CSF.createReturnObject', () => {
             });
         });
 
-        test('removeSecuredField should do nothing for a field that does not exist', () => {
+        test('should do nothing for a field that does not exist', () => {
             const csf = buildCSF({ isConfigured: true, numIframes: 2, iframeCount: 2 });
 
             createReturnObject(csf).removeSecuredField('encryptedExpiryDate');
@@ -229,14 +242,18 @@ describe('CSF.createReturnObject', () => {
             expect(csf.state.iframeCount).toBe(2);
             expect(csf.callbacks.onAdditionalSFRemoved).not.toHaveBeenCalled();
         });
+    });
 
-        test('setKCPStatus should update the isKCP flag in state', () => {
+    describe('setKCPStatus()', () => {
+        test('should update the isKCP flag in state', () => {
             const csf = buildCSF({ isConfigured: true, isKCP: false });
             createReturnObject(csf).setKCPStatus(true);
             expect(csf.state.isKCP).toBe(true);
         });
+    });
 
-        test('sfIsOptionalOrHidden should delegate to the secured field of the given type', () => {
+    describe('sfIsOptionalOrHidden()', () => {
+        test('should delegate to the secured field of the given type', () => {
             const csf = buildCSF({ isConfigured: true });
             const result = createReturnObject(csf).sfIsOptionalOrHidden('encryptedCardNumber');
 

@@ -2,20 +2,14 @@ import { h } from 'preact';
 import { render, screen } from '@testing-library/preact';
 import { MealVoucherExpiryField } from './MealVoucherExpiryField';
 import { CoreProvider } from '../../../core/Context/CoreProvider';
+import { setupCoreMock } from '../../../../config/testMocks/setup-core-mock';
 
-const i18n = global.i18n;
+const { i18n, resources } = setupCoreMock().modules;
 
 const renderField = (sfpState = { errors: {}, valid: {}, data: {} }) => {
     return render(
-        <CoreProvider i18n={i18n} loadingContext="test" resources={global.resources}>
-            <MealVoucherExpiryField
-                i18n={i18n}
-                // @ts-ignore - only the properties consumed by this component are relevant for the test
-                sfpState={sfpState}
-                getCardErrorMessage={() => null}
-                focusedElement={''}
-                setFocusOn={() => {}}
-            />
+        <CoreProvider i18n={i18n} loadingContext="test" resources={resources}>
+            <MealVoucherExpiryField i18n={i18n} sfpState={sfpState} getCardErrorMessage={() => null} focusedElement={''} setFocusOn={() => {}} />
         </CoreProvider>
     );
 };

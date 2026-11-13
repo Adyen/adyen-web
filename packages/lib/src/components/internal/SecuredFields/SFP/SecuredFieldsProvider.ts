@@ -32,9 +32,9 @@ import { TxVariants } from '../../../tx-variants';
  * Initialises & handles the client-side part of SecuredFields
  */
 class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
-    private readonly csfLoadFailTimeout: number | null;
+    private csfLoadFailTimeout: ReturnType<typeof setTimeout> | null;
     private readonly csfLoadFailTimeoutMS: number;
-    private readonly csfConfigFailTimeout: number | null;
+    private csfConfigFailTimeout: ReturnType<typeof setTimeout> | null;
     private readonly csfConfigFailTimeoutMS: number;
     private numCharsInField: object;
     private rootNode: HTMLElement;
@@ -208,7 +208,6 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
          * - if this hasn't happened then something has happened to interrupt the loading of the securedFields
          * So we need to clear the loading spinner to see if the securedFields are reporting anything
          */
-        // @ts-ignore - timout 'type' is a number
         this.csfLoadFailTimeout = setTimeout(() => {
             if (this.state.status !== 'ready') {
                 // Hide the spinner
