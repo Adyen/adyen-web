@@ -15,14 +15,15 @@ export function setFocusOnFrame({ csfState, csfConfig }: CSFThisObject, pFieldTy
     // Check destroySecuredFields hasn't been called (thus clearing the state's securedFields object)
     if (!hasOwnProperty(csfState.securedFields, pFieldType)) return;
 
+    /* istanbul ignore next -- dev-only local-testing override, NODE_ENV is 'test' under Jest so this never runs */
     if (process.env.NODE_ENV === 'development' && doLog) console.log('\n### setFocusOnFrame:: (SHIFT_TAB) place focus on:', pFieldType);
 
     const focusData = {
         txVariant: csfState.type,
         fieldType: pFieldType,
         focus: true,
-        numKey: csfState.securedFields[pFieldType].numKey
+        numKey: csfState.securedFields[pFieldType]?.numKey
     };
 
-    postMessageToIframe(focusData, getIframeContentWin(csfState, pFieldType), csfConfig.loadingContext);
+    postMessageToIframe(focusData, getIframeContentWin(csfState, pFieldType), csfConfig.loadingContext ?? '');
 }

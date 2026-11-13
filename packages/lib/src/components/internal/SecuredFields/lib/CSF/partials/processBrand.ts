@@ -1,7 +1,7 @@
-import { ENCRYPTED_CARD_NUMBER, ENCRYPTED_SECURITY_CODE } from '../../constants';
+import { CVC_POLICY_REQUIRED, DATE_POLICY_REQUIRED, ENCRYPTED_CARD_NUMBER, ENCRYPTED_SECURITY_CODE } from '../../constants';
 import postMessageToIframe from '../utils/iframes/postMessageToIframe';
 import { objectsDeepEqual } from '../../utilities/commonUtils';
-import { BrandStorageObject, CardBrandData, SFFeedbackObj, SFFieldType } from '../../types';
+import { BrandModeType, BrandStorageObject, CardBrandData, SFFeedbackObj, SFFieldType } from '../../types';
 import { pick } from '../../../../../../utils/commonUtils';
 import { hasOwnProperty } from '../../../../../../utils/hasOwnProperty';
 import getIframeContentWin from '../utils/iframes/getIframeContentWin';
@@ -31,15 +31,15 @@ export default function processBrand({ csfState, csfConfig, csfProps, csfCallbac
     if (fieldType === ENCRYPTED_CARD_NUMBER) {
         // Check for new brand...
         const newBrandObj: BrandStorageObject = {
-            brand: pFeedbackObj.brand,
-            cvcPolicy: pFeedbackObj.cvcPolicy,
-            expiryDatePolicy: pFeedbackObj.expiryDatePolicy,
+            brand: pFeedbackObj.brand ?? '',
+            cvcPolicy: pFeedbackObj.cvcPolicy ?? CVC_POLICY_REQUIRED,
+            expiryDatePolicy: pFeedbackObj.expiryDatePolicy ?? DATE_POLICY_REQUIRED,
             showSocialSecurityNumber: pFeedbackObj.showSocialSecurityNumber
         };
         const newBrand: boolean = checkForBrandChange(newBrandObj, csfState.brand);
 
         if (!newBrand) {
-            return null;
+            return false;
         }
 
         // Now BCMC can dual brand with Visa it must also be treated as a generic card so we can show/hide the CVC field
@@ -57,10 +57,10 @@ export default function processBrand({ csfState, csfConfig, csfProps, csfCallbac
                     txVariant: csfState.type,
                     brand: newBrandObj.brand,
                     fieldType: ENCRYPTED_SECURITY_CODE,
-                    cvcPolicy: pFeedbackObj.cvcPolicy,
-                    numKey: csfState.securedFields[ENCRYPTED_SECURITY_CODE].numKey
+                    cvcPolicy: newBrandObj.cvcPolicy,
+                    numKey: csfState.securedFields[ENCRYPTED_SECURITY_CODE]?.numKey
                 };
-                postMessageToIframe(dataObj, getIframeContentWin(csfState, ENCRYPTED_SECURITY_CODE), csfConfig.loadingContext);
+                postMessageToIframe(dataObj, getIframeContentWin(csfState, ENCRYPTED_SECURITY_CODE), csfConfig.loadingContext ?? '');
             }
         }
 
@@ -70,12 +70,19 @@ export default function processBrand({ csfState, csfConfig, csfProps, csfCallbac
             : null;
 
         if (brandInfoObj && brandInfoObj.brand) {
-            const callbackObj: CardBrandData = brandInfoObj as CardBrandData;
-            callbackObj.type = csfState.type;
-            callbackObj.rootNode = csfProps.rootNode as HTMLElement;
+            const callbackObj: CardBrandData = {
+                type: csfState.type,
+                rootNode: csfProps.rootNode as HTMLElement,
+                brand: brandInfoObj.brand,
+                cvcPolicy: brandInfoObj.cvcPolicy ?? CVC_POLICY_REQUIRED,
+                cvcText: brandInfoObj.cvcText ?? '',
+                expiryDatePolicy: brandInfoObj.expiryDatePolicy,
+                showSocialSecurityNumber: brandInfoObj.showSocialSecurityNumber,
+                mode: brandInfoObj.mode as BrandModeType | undefined
+            };
 
             // ...and call SFPHandlers.handleOnBrand
-            csfCallbacks.onBrand(callbackObj);
+            csfCallbacks.onBrand?.(callbackObj);
         }
 
         return true;

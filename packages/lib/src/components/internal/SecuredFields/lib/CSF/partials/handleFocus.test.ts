@@ -1,6 +1,7 @@
 import { handleFocus } from './handleFocus';
 import ua from '../utils/userAgent';
 import { ENCRYPTED_CARD_NUMBER, ENCRYPTED_SECURITY_CODE } from '../../constants';
+import { SFFeedbackObj } from '../../types';
 
 ua.__IS_IOS = false;
 
@@ -14,7 +15,7 @@ const CSFObj = {
     csfCallbacks
 };
 
-const feedbackObj = {
+const feedbackObj: SFFeedbackObj = {
     action: 'focus',
     focus: true,
     numChars: 0,
@@ -96,5 +97,15 @@ describe('Testing CSFs handleFocus functionality', () => {
 
         expect(csfCallbacks.onFocus).toHaveBeenCalledTimes(1);
         expect(csfCallbacks.onFocus).toHaveBeenCalledWith(expectedCallbackObj);
+    });
+
+    test('handleFocus should fall back action to an empty string and numChars to 0 when they are undefined on the feedback object', () => {
+        feedbackObj.focus = true;
+        feedbackObj.action = undefined;
+        feedbackObj.numChars = undefined;
+
+        callOnFocus();
+
+        expect(csfCallbacks.onFocus).toHaveBeenCalledWith(expect.objectContaining({ action: '', focus: true, numChars: 0 }));
     });
 });
