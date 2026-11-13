@@ -41,7 +41,6 @@ class BECS extends UIElement<BECSConfiguration> {
                 payButton={this.payButton}
                 placeholders={this.props.placeholders}
                 setComponentRef={this.setComponentRef}
-                showPayButton={this.props.showPayButton}
             />
         );
     }

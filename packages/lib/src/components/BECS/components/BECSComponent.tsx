@@ -24,17 +24,9 @@ interface BECSComponentProps {
     payButton: (props: PayButtonProps) => h.JSX.Element;
     placeholders?: BECSFormData;
     setComponentRef: (ref: ComponentMethodsRef) => void;
-    showPayButton?: boolean;
 }
 
-export function BECSComponent({
-    data: defaultData,
-    onChange,
-    payButton,
-    placeholders,
-    setComponentRef,
-    showPayButton
-}: Readonly<BECSComponentProps>) {
+export function BECSComponent({ data: defaultData, onChange, payButton, placeholders, setComponentRef }: Readonly<BECSComponentProps>) {
     const { i18n } = useCoreContext();
     const [status, setStatus] = useState('ready');
     const { data, errors, handleChangeFor, isValid, triggerValidation, valid } = useForm<BECSFormData>({
@@ -144,7 +136,7 @@ export function BECSComponent({
 
             <p className={styles.mandate}>{i18n.get('becs.mandate', { values: { acn: BECS_MANDATE_ACN, userId: BECS_MANDATE_USER_ID } })}</p>
 
-            {showPayButton && payButton({ status, label: i18n.get('becs.confirm') })}
+            {payButton({ status, label: i18n.get('becs.confirm') })}
         </div>
     );
 }

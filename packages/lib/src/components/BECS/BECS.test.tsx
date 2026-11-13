@@ -55,6 +55,18 @@ describe('BECS Direct Debit', () => {
         );
     });
 
+    test('should not render the pay button when showPayButton is false', async () => {
+        renderBECS({ showPayButton: false });
+        expect(await screen.findByLabelText('Account holder name')).toBeInTheDocument();
+        expect(screen.queryByRole('button', { name: 'Confirm' })).not.toBeInTheDocument();
+    });
+
+    test('should still render the disclaimer message when showPayButton is false', async () => {
+        renderBECS({ showPayButton: false, disclaimerMessage: { message: 'Some disclaimer' } });
+        expect(await screen.findByText('Some disclaimer')).toBeInTheDocument();
+        expect(screen.queryByRole('button', { name: 'Confirm' })).not.toBeInTheDocument();
+    });
+
     test('should render the result with caller-composed download actions', () => {
         renderBECS({ url: RESULT_URL });
 
