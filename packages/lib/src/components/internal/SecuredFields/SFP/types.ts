@@ -72,7 +72,7 @@ export interface SFPProps {
     resources?: Resources;
     maskSecurityCode?: boolean;
     exposeExpiryDate?: boolean;
-    disableIOSArrowKeys?: (obj: TouchStartEventObj) => void | null;
+    disableIOSArrowKeys?: ((obj: TouchStartEventObj) => void) | null;
     placeholders?: Placeholders;
     showContextualElement?: boolean;
 }
@@ -86,7 +86,7 @@ export interface SFPState {
     valid: SFPValid;
     data: object;
     cvcPolicy?: CVCPolicyType;
-    isSfpValid?: boolean;
+    isSfpValid: boolean;
     autoCompleteName?: string;
     billingAddress?: AddressData;
     detectedUnsupportedBrands?: string[];

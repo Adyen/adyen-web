@@ -39,16 +39,16 @@ export interface CustomCardInputRef extends ComponentMethodsRef {
 
 interface SecuredFieldsProps {
     autoFocus?: boolean;
-    brand?: string;
+    brand: string;
     brands?: string[];
     brandsConfiguration?: CardBrandsConfiguration;
-    clientKey?: string;
+    clientKey: string;
     countryCode?: string;
     forceCompat?: boolean;
     i18n?: Language;
     implementationType?: 'components' | 'custom';
     keypadFix?: boolean;
-    loadingContext?: string;
+    loadingContext: string;
     legacyInputMode?: boolean;
     minimumExpiryDate?: string;
     onAdditionalSFConfig?: () => void;
@@ -58,7 +58,7 @@ interface SecuredFieldsProps {
     onBinValue?: (data: CardBinValueData) => void;
     onBrand?: (data: CardBrandData) => void;
     onConfigSuccess?: (data: CardConfigSuccessData) => void;
-    onChange?: (data) => void;
+    onChange: (data) => void;
     onSubmitAnalytics?: (event: AbstractAnalyticsEvent) => void;
     handleKeyDown?: (event: KeyboardEvent) => void;
     onError?: (error: AdyenCheckoutError, component?: UIElement) => void;
@@ -71,7 +71,7 @@ interface SecuredFieldsProps {
     showWarnings?: boolean;
     styles?: StylesObject;
     trimTrailingSeparator?: boolean;
-    type?: string;
+    type: string;
     maskSecurityCode?: boolean;
     ref?: Ref<CustomCardInputRef>;
 }
@@ -83,7 +83,7 @@ const defaultProps = {
 };
 
 function CustomCardInput(props: Readonly<SecuredFieldsProps>) {
-    const sfp = useRef(null);
+    const sfp = useRef<SecuredFieldsProvider>(null);
 
     const [errors, setErrors] = useState({});
     const [valid, setValid] = useState({});
@@ -125,18 +125,24 @@ function CustomCardInput(props: Readonly<SecuredFieldsProps>) {
     this.dualBrandingChangeHandler = extensions.handleDualBrandSelection;
 
     useEffect(() => {
-        this.setFocusOn = sfp.current.setFocusOn;
-        this.updateStyles = sfp.current.updateStyles;
-        this.showValidation = sfp.current.showValidation;
-        this.handleUnsupportedCard = sfp.current.handleUnsupportedCard;
+        const sfpInstance = sfp.current;
+        if (!sfpInstance) return;
+
+        this.setFocusOn = sfpInstance.setFocusOn;
+        this.updateStyles = sfpInstance.updateStyles;
+        this.showValidation = sfpInstance.showValidation;
+        this.handleUnsupportedCard = sfpInstance.handleUnsupportedCard;
 
         return () => {
-            sfp.current.destroy();
+            sfpInstance.destroy();
         };
     }, []);
 
     useEffect(() => {
-        const sfStateErrorsObj = sfp.current.mapErrorsToValidationRuleResult();
+        const sfpInstance = sfp.current;
+        if (!sfpInstance) return;
+
+        const sfStateErrorsObj = sfpInstance.mapErrorsToValidationRuleResult();
 
         const mappedErrors = { ...errors, ...sfStateErrorsObj }; // maps sfErrors
 
