@@ -54,7 +54,7 @@ export default function StoredCardFields({
                 {hasCVC && (
                     <CVC
                         cvcPolicy={cvcPolicy}
-                        errorCode={errors[ENCRYPTED_SECURITY_CODE]}
+                        errorCode={errors[ENCRYPTED_SECURITY_CODE] ?? undefined}
                         focused={focusedElement === 'encryptedSecurityCode'}
                         filled={!!valid.encryptedSecurityCode || !!errors.encryptedSecurityCode}
                         isValid={!!valid.encryptedSecurityCode}

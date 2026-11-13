@@ -120,7 +120,7 @@ function handleOnFieldValid(fieldObj: CardFieldValidData): boolean {
     return true;
 }
 
-function fieldIsInError(fieldType: string, policy: string, numCharsObj: object, errorsObj) {
+function fieldIsInError(fieldType: string, policy: string | undefined, numCharsObj: object, errorsObj) {
     return (policy === OPTIONAL || policy === HIDDEN) && numCharsObj[fieldType] === 0 ? false : errorsObj[fieldType];
 }
 
@@ -183,7 +183,7 @@ function handleOnBrand(cardInfo: CardBrandData): void {
 /**
  * Handles validation errors
  */
-function handleOnError(cbObj: CardErrorData, hasUnsupportedCard: boolean = null): boolean {
+function handleOnError(cbObj: CardErrorData, hasUnsupportedCard: boolean = false): boolean {
     const errorCode = cbObj.error;
 
     this.setState(
