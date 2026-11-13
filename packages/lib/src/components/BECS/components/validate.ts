@@ -21,7 +21,7 @@ export const becsValidationRules: ValidatorRules = {
     },
     bankAccountNumber: {
         modes: ['blur'],
-        validate: value => /^\d{1,9}$/.test(value)
+        validate: value => /^\d{6,9}$/.test(value)
     },
     shopperEmail: [
         {

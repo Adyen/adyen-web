@@ -131,6 +131,16 @@ describe('BECS Direct Debit', () => {
         expect(screen.getByText('Enter a valid account number')).toBeInTheDocument();
     });
 
+    test('should show an account number error when fewer than 6 digits are entered', async () => {
+        const user = userEvent.setup();
+        renderBECS();
+
+        await user.type(await screen.findByLabelText('Account number'), '12345');
+        await user.tab();
+
+        expect(screen.getByText('Enter a valid account number')).toBeInTheDocument();
+    });
+
     test('should show validation errors and not submit invalid details', async () => {
         const user = userEvent.setup();
         const onSubmit = jest.fn();
@@ -143,6 +153,7 @@ describe('BECS Direct Debit', () => {
 
         expect(screen.getByText('Enter an account holder name')).toBeInTheDocument();
         expect(screen.getByText('Enter a valid 6-digit BSB')).toBeInTheDocument();
+        expect(screen.getByText('Enter a valid account number')).toBeInTheDocument();
         expect(screen.getByText('Enter a valid email address')).toBeInTheDocument();
         expect(onSubmit).not.toHaveBeenCalled();
     });
