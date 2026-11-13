@@ -15,8 +15,15 @@ import type { CustomCardInputRef } from './CustomCardInput';
 const SELECTABLE_DUAL_BRANDED_SCENARIO = 'Dual Branded (Selectable): Regulation mandates that you must provide a brand selection mechanism';
 const DISPLAY_ONLY_DUAL_BRANDED_SCENARIO = 'Dual Branded (Display-only): No selection mechanism required';
 
+type CustomCardProps = CustomCardConfiguration &
+    Required<Pick<CustomCardConfiguration, 'onBinLookup' | 'brandsConfiguration' | 'type' | 'loadingContext'>> & {
+        clientKey: string; // not in CustomCardConfiguration, only optional in UIElementProps
+    };
+
 export class CustomCard extends UIElement<CustomCardConfiguration> {
     public static readonly type = TxVariants.customCard;
+
+    declare public props: CustomCardProps;
 
     declare protected componentRef: CustomCardInputRef | undefined;
 
@@ -91,11 +98,10 @@ export class CustomCard extends UIElement<CustomCardConfiguration> {
             let isDualBrandedScenario = false;
             let isSelectableDualBrandedScenario = false;
 
-            if (obj.supportedBrandsRaw?.length > 1) {
+            if ((obj.supportedBrandsRaw?.length ?? 0) > 1) {
                 isDualBrandedScenario = true;
-                isSelectableDualBrandedScenario = obj.detectedBrands.some(item =>
-                    (DUAL_BRANDS_THAT_NEED_SELECTION_MECHANISM as readonly string[]).includes(item)
-                );
+                isSelectableDualBrandedScenario =
+                    obj.detectedBrands?.some(item => (DUAL_BRANDS_THAT_NEED_SELECTION_MECHANISM as readonly string[]).includes(item)) ?? false;
             }
 
             // Set the dual branding type
@@ -140,7 +146,7 @@ export class CustomCard extends UIElement<CustomCardConfiguration> {
         return (
             <CustomCardInput
                 ref={ref => {
-                    this.componentRef = ref;
+                    this.componentRef = ref ?? undefined;
                 }}
                 {...this.props}
                 {...this.state}
