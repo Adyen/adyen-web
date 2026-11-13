@@ -70,7 +70,7 @@ describe('BECS Direct Debit', () => {
 
     test('should call onActionHandled once when the result is presented', () => {
         const onActionHandled = jest.fn();
-        renderBECS({ url: RESULT_URL, onActionHandled });
+        renderBECS({ type: 'voucher', paymentMethodType: 'directdebit_AU', url: RESULT_URL, onActionHandled });
         expect(onActionHandled).toHaveBeenCalledTimes(1);
         expect(onActionHandled).toHaveBeenCalledWith(
             expect.objectContaining({ componentType: 'directdebit_AU', actionDescription: 'voucher-presented' })

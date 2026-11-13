@@ -29,9 +29,9 @@ class BECS extends UIElement<BECSConfiguration> {
     protected override componentToRender(): h.JSX.Element {
         return this.props.url ? (
             <BECSResult
-                icon={this.props.icon ?? this.resources.getImage()('bankTransfer_IBAN')}
+                icon={this.icon}
                 onActionHandled={this.onActionHandled}
-                paymentMethodType={this.type}
+                paymentMethodType={this.props.paymentMethodType ?? BECS.type}
                 url={this.props.url}
             />
         ) : (
