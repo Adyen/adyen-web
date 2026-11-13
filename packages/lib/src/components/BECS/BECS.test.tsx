@@ -131,11 +131,11 @@ describe('BECS Direct Debit', () => {
         expect(screen.getByText('Enter a valid account number')).toBeInTheDocument();
     });
 
-    test('should show an account number error when fewer than 6 digits are entered', async () => {
+    test('should show an account number error when fewer than 4 digits are entered', async () => {
         const user = userEvent.setup();
         renderBECS();
 
-        await user.type(await screen.findByLabelText('Account number'), '12345');
+        await user.type(await screen.findByLabelText('Account number'), '123');
         await user.tab();
 
         expect(screen.getByText('Enter a valid account number')).toBeInTheDocument();
