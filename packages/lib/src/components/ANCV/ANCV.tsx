@@ -96,7 +96,7 @@ export class ANCVElement extends UIElement<ANCVConfiguration> {
                     clientKey={this.props.clientKey}
                     paymentData={this.props.paymentData}
                     onError={this.props.onError}
-                    onComplete={this.onComplete}
+                    onComplete={this.onActionComplete}
                     brandLogo={this.icon}
                     brandName={this.displayName}
                     type={this.constructor['type']}

@@ -284,8 +284,8 @@ is `threeDS2Fingerprint`. Both enum members exist; don't "fix" one to match the 
 - Challenge `dataKey` defaults to `threeDSResult`.
 - `DEFAULT_CHALLENGE_WINDOW_SIZE` in `constants.ts` controls iframe dimensions.
 - `callSubmit3DS2Fingerprint.ts` owns fingerprint submission.
-- `onComplete` routes to `onAdditionalDetails` in the native flow, or to a custom `onComplete` in
-  the 3DS2-in-MD flow.
+- `onActionComplete` routes to `onAdditionalDetails` in the native flow, or to a custom `onComplete` in
+  the 3DS2-in-MD flow (which was renamed to `on3DS2RedirectFlowComplete` in v6.37.0).
 - Never read iframe content or log authentication data and challenge responses.
 - Handle shopper abandonment — the challenge can time out. Test both frictionless and challenge
   paths.

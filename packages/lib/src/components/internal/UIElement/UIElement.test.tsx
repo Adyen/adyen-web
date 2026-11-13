@@ -25,8 +25,8 @@ class MyElement extends UIElement<MyElementProps> {
     public get isValid(): boolean {
         return false;
     }
-    public callOnComplete() {
-        super.onComplete({ data: { details: {} } });
+    public callOnActionComplete() {
+        super.onActionComplete({ data: { details: {} } });
     }
     public callOnChange() {
         super.onChange();
@@ -67,6 +67,18 @@ describe('UIElement', () => {
 
             expect(typeSpy).toHaveBeenCalledTimes(1);
             expect(iconUrl).toBe(`https://checkout-adyen.com/${txVariant}`);
+        });
+    });
+
+    describe('onActionComplete()', () => {
+        test('should call handleAdditionalDetails when onActionComplete is called', () => {
+            const element = new MyElement(core);
+            const handleAdditionalDetails = jest.spyOn(element, 'handleAdditionalDetails').mockImplementation(() => {});
+
+            element.callOnActionComplete();
+
+            expect(handleAdditionalDetails).toHaveBeenCalledTimes(1);
+            expect(handleAdditionalDetails).toHaveBeenCalledWith({ data: { details: {} } });
         });
     });
 

@@ -19,7 +19,7 @@ export interface DoChallenge3DS2State {
 
 export interface PrepareChallenge3DS2Props extends ThreeDS2ChallengeConfiguration {
     i18n: Language;
-    onComplete?: (data: ChallengeResolveData) => void;
+    on3DS2ChallengeComplete?: (data: ChallengeResolveData) => void;
     onSubmitAnalytics: (aObj: AbstractAnalyticsEvent) => void;
     environment?: string;
     _environmentUrls?: {

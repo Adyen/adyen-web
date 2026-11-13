@@ -67,7 +67,7 @@ const renderPrepareChallenge = props => {
             <PrepareChallenge3DS2
                 {...props}
                 isMDFlow={props.isMDFlow ?? false}
-                onComplete={completeFunction}
+                on3DS2ChallengeComplete={completeFunction}
                 onSubmitAnalytics={onSubmitAnalytics}
                 onError={onError}
             />
