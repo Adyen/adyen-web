@@ -2,6 +2,7 @@ import classnames from 'classnames';
 import { h } from 'preact';
 import { useEffect } from 'preact/hooks';
 import { useCoreContext } from '../../../core/Context/CoreProvider';
+import useImage from '../../../core/Context/useImage';
 import {
     usePaymentStatusTimer,
     DEFAULT_PAYMENT_STATUS_TIMER_COUNTDOWN_TIME_MIN,
@@ -13,7 +14,7 @@ import Spinner from '../../internal/Spinner';
 import Button from '../Button';
 import ContentSeparator from '../ContentSeparator';
 import Countdown from '../Countdown';
-import { AwaitFinalState } from './components/AwaitFinalState';
+import { ResultPanel } from '../ResultPanel';
 import { AwaitComponentProps } from './types';
 import { redirectToApp } from '../../../utils/urls';
 import './Await.scss';
@@ -22,6 +23,7 @@ import { useA11yReporter } from '../../../core/Errors/useA11yReporter';
 
 export function Await(props: Readonly<AwaitComponentProps>) {
     const { i18n, loadingContext } = useCoreContext();
+    const getImage = useImage();
     useA11yReporter(props.awaitText);
 
     const { state: timerState, actions: timerActions } = usePaymentStatusTimer({
@@ -48,12 +50,22 @@ export function Await(props: Readonly<AwaitComponentProps>) {
         }
     }, [props.shouldRedirectAutomatically, props.url]);
 
-    if (expired) {
-        return <AwaitFinalState image="error" message={i18n.get('error.subtitle.payment')} />;
-    }
+    if (expired || completed) {
+        const message = expired ? i18n.get('error.subtitle.payment') : i18n.get('creditCard.success');
+        const image = expired ? 'error' : 'success';
 
-    if (completed) {
-        return <AwaitFinalState image="success" message={i18n.get('creditCard.success')} />;
+        return (
+            <ResultPanel
+                classNames={{
+                    root: 'adyen-checkout__await adyen-checkout__await--result',
+                    icon: 'adyen-checkout__await__icon adyen-checkout__await__icon--result',
+                    description: 'adyen-checkout__await__subtitle adyen-checkout__await__subtitle--result'
+                }}
+                description={message}
+                icon={getImage({ imageFolder: 'components/' })(image)}
+                iconAlt={message}
+            />
+        );
     }
 
     if (loading) {
