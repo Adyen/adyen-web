@@ -147,7 +147,7 @@ describe('BECS Direct Debit', () => {
         renderBECS({ onSubmit });
 
         await user.type(await screen.findByLabelText('BSB'), '12345');
-        await user.type(screen.getByLabelText('Account number'), '1234');
+        await user.type(screen.getByLabelText('Account number'), '123');
         await user.type(screen.getByLabelText('Email address'), 'invalid');
         await user.click(screen.getByRole('button', { name: 'Confirm' }));
 
