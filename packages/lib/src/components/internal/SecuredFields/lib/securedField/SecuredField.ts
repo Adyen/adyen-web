@@ -171,7 +171,7 @@ class SecuredField extends AbstractSecuredField {
         if (window._b$dl) console.log('### SecuredField:::: onIframeLoaded:: created configObj=', configObj);
 
         postMessageToIframe(configObj, this.iframeContentWindow, this.loadingContext);
-        // postMessageToIframe(configObj, window, this.loadingContext); // For testing - to force the configFail on the SF
+        // postMessageToIframe(configObj, window, this.loadingContext); // TODO:For testing - to force the configFail on the SF
         //--
 
         // Callback to say iframe loaded
@@ -255,21 +255,14 @@ class SecuredField extends AbstractSecuredField {
             logger.log('### SecuredField::postMessageListener:: feedbackObj.numKey=', feedbackObj.numKey);
         }
 
-        if (this.numKey !== feedbackObj.numKey) {
-            // Check for numKey indicating stalled config
-            if (feedbackObj.numKey === 999999) {
-                // Remove the event listeners (otherwise, without having a securedField specific numKey to act as a filter, it will fire again for the other securedFields)
-                // We want to remove the listeners but leave the DOM element intact for the message that it gives in the UI
-                // Then let the flow proceed - we will handle the 'configFail' action below, in the regular way
-                this.destroy(false);
-            } else {
-                if (this.sfConfig.showWarnings) {
-                    logger.warn(
-                        'WARNING SecuredField :: postMessage listener for iframe :: data mismatch! (Probably a message from an unrelated securedField)'
-                    );
-                }
-                return false;
+        // Check for the numKey linked to this particular securedFields OR for one indicating a stalled config
+        if (this.numKey !== feedbackObj.numKey && feedbackObj.numKey !== 999999) {
+            if (this.sfConfig.showWarnings) {
+                logger.warn(
+                    'WARNING SecuredField :: postMessage listener for iframe :: data mismatch! (Probably a message from an unrelated securedField)'
+                );
             }
+            return false;
         }
 
         return true;
@@ -337,9 +330,16 @@ class SecuredField extends AbstractSecuredField {
 
             // Listen for the SF iframe indicating it failed to configure (JS didn't load, or loaded but failed to complete)
             case 'configFailure': {
+                // Remove the event listeners (otherwise, without having a securedField-specific numKey to act as a filter, it will fire again for the other securedFields)
+                // We want to remove the listeners but leave the DOM element intact for the message that it gives in the UI
+                this.destroy(false);
+
+                // Get the last logged step
+                const { configLog } = feedbackObj;
+
                 this.submitFeedbackErrorAnalytics(
                     feedbackObj.code ?? ErrorEventCode.SECURED_FIELDS_CONFIG_FAILURE,
-                    `${feedbackObj.error}. Field=${this.sfConfig.fieldType}. Log=${JSON.stringify(feedbackObj.configLog)} `
+                    `${feedbackObj.error}. Field=${this.sfConfig.fieldType}.${configLog ? ` Log=${JSON.stringify(configLog)}` : ''}`
                 );
                 break;
             }
