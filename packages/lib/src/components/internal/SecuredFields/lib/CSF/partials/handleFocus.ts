@@ -46,12 +46,15 @@ export function handleFocus(
     }
 
     // Call callback (SecuredFieldsProviderHandlers > onFocus)
-    const callbackObj: CardFocusData = feedbackObj as CardFocusData;
-    callbackObj.currentFocusObject = csfState.currentFocusObject;
-    csfCallbacks.onFocus?.({
-        ...callbackObj,
-        action: callbackObj.action ?? '',
-        focus: callbackObj.focus ?? false,
-        numChars: callbackObj.numChars ?? 0
-    });
+    const callbackObj: CardFocusData = {
+        fieldType: feedbackObj.fieldType,
+        rootNode: feedbackObj.rootNode,
+        type: feedbackObj.type,
+        action: feedbackObj.action ?? '',
+        focus: feedbackObj.focus ?? false,
+        numChars: feedbackObj.numChars ?? 0,
+        currentFocusObject: csfState.currentFocusObject
+    };
+
+    csfCallbacks.onFocus?.(callbackObj);
 }
