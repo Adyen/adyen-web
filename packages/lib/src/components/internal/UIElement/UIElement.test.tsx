@@ -70,6 +70,18 @@ describe('UIElement', () => {
         });
     });
 
+    describe('onActionComplete()', () => {
+        test('should call handleAdditionalDetails when onActionComplete is called', () => {
+            const element = new MyElement(core);
+            const handleAdditionalDetails = jest.spyOn(element, 'handleAdditionalDetails').mockImplementation(() => {});
+
+            element.callOnActionComplete();
+
+            expect(handleAdditionalDetails).toHaveBeenCalledTimes(1);
+            expect(handleAdditionalDetails).toHaveBeenCalledWith({ data: { details: {} } });
+        });
+    });
+
     describe('onChange()', () => {
         test('should call "onChange" prop if available', () => {
             const onChange = jest.fn();
