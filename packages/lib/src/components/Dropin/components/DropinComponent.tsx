@@ -151,9 +151,11 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
     };
 
     private handleDisableStoredPaymentMethod = storedPaymentMethod => {
+        const { onDisableStoredPaymentMethod } = this.props;
+        if (!onDisableStoredPaymentMethod) return;
         this.setState({ isDisabling: true });
 
-        new Promise((resolve, reject) => this.props.onDisableStoredPaymentMethod(storedPaymentMethod.props.storedPaymentMethodId, resolve, reject))
+        new Promise((resolve, reject) => onDisableStoredPaymentMethod(storedPaymentMethod.props.storedPaymentMethodId, resolve, reject))
             .then(() => {
                 this.setState(prevState => ({
                     storedPaymentElements: prevState.storedPaymentElements.filter(pm => pm._id !== storedPaymentMethod._id)
@@ -176,7 +178,7 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
             component: 'dropin'
         });
 
-        this.props.modules?.analytics.sendAnalytics(event);
+        this.props.modules?.analytics?.sendAnalytics(event);
     };
 
     closeActivePaymentMethod() {
@@ -187,24 +189,26 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
      * getOnOrderCancel decides which onOrderCancel logic should be used, manual or sessions
      */
     private readonly getOnOrderCancel = (): ((data: onOrderCancelData) => void) | null => {
-        if (this.props.onOrderCancel) {
+        const { onOrderCancel, session } = this.props;
+        if (onOrderCancel) {
             return (data: onOrderCancelData) => {
                 const order = sanitizeOrder(data.order);
+                if (!order) return;
                 new Promise<{ amount: PaymentAmount }>((resolve, reject) => {
-                    this.props.onOrderCancel({ order }, { resolve, reject });
+                    onOrderCancel({ order }, { resolve, reject });
                 })
                     // @ts-ignore - handleAdvanceFlowPaymentMethodsUpdate is protected but we need to call it from here
-                    .then(({ amount }) => this.props.elementRef.handleAdvanceFlowPaymentMethodsUpdate(null, amount))
+                    .then(({ amount }) => this.props.elementRef?.handleAdvanceFlowPaymentMethodsUpdate(null, amount))
                     .catch(error => {
                         throw new AdyenCheckoutError('NETWORK_ERROR', error);
                     });
             };
         }
-        if (this.props.session) {
+        if (session) {
             return (data: onOrderCancelData) =>
-                void this.props.session
+                void session
                     .cancelOrder(data)
-                    .then(() => this.props.core.update({ order: null }))
+                    .then(() => this.props.core.update({ order: undefined }))
                     .catch(error => {
                         console.error(error);
                         this.setStatus(error?.message || 'error');
@@ -243,8 +247,8 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
             default:
                 return (
                     <div className={`adyen-checkout__dropin adyen-checkout__dropin--${status.type}`}>
-                        {isRedirecting && status.props.component && status.props.component.render()}
-                        {isLoading && status.props && status.props.component && status.props.component.render()}
+                        {isRedirecting && status.props?.component?.render()}
+                        {isLoading && status.props?.component?.render()}
 
                         {!showDefaultPaymentMethodList && (
                             <Fragment>

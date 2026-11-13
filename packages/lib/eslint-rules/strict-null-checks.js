@@ -130,16 +130,6 @@ const STRICT_NULL_CHECKS_BACKLOG = [
     'src/components/CustomCard/CustomCard.tsx',
     'src/components/CustomCard/CustomCardInput/CustomCardInput.tsx',
 
-    // ── Ticket 6: Drop-in (48 errors) ──
-    'src/components/Dropin/components/DropinComponent.tsx',
-    'src/components/Dropin/components/PaymentMethod/OrderPaymentMethods.tsx',
-    'src/components/Dropin/components/PaymentMethod/PaymentMethodBrands/PaymentMethodBrands.tsx',
-    'src/components/Dropin/components/PaymentMethod/PaymentMethodItem/PaymentMethodItem.tsx',
-    'src/components/Dropin/components/PaymentMethod/PaymentMethodList.tsx',
-    'src/components/Dropin/components/PaymentMethod/PaymentMethodsContainer.tsx',
-    'src/components/Dropin/Dropin.tsx',
-    'src/components/Dropin/elements/createElements.ts',
-
     // ── Ticket 8: Google Pay and Apple Pay (85 errors) ──
     'src/components/ApplePay/ApplePay.tsx',
     'src/components/ApplePay/services/ApplePaySdkLoader.ts',

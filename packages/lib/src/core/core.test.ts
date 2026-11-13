@@ -10,7 +10,6 @@ import Redirect from '../components/Redirect';
 import { PaymentActionsType } from '../types/global-types';
 import Analytics from './Analytics';
 import type { CoreConfiguration } from './types';
-import type { DropinComponent } from '../components/Dropin/components/DropinComponent';
 
 jest.mock('./CheckoutSession');
 
@@ -468,9 +467,9 @@ describe('Core', () => {
             const flushPromises = () => new Promise(process.nextTick);
             await flushPromises();
 
-            const ach = (dropin.dropinRef as DropinComponent).state.elements[0];
+            const ach = dropin.dropinRef?.state.elements[0];
 
-            expect(ach.props.onAdditionalDetails).toBe(onAdditionalDetailsPaymentMethodConfig);
+            expect(ach?.props.onAdditionalDetails).toBe(onAdditionalDetailsPaymentMethodConfig);
         });
 
         test('createFromAction - should use local onAdditionalDetails property instead of global configuration property', async () => {

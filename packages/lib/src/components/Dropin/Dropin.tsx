@@ -9,7 +9,7 @@ import splitPaymentMethods from './elements/splitPaymentMethods';
 import { TxVariants } from '../tx-variants';
 
 import type { DropinComponentProps, DropinConfiguration, InstantPaymentTypes, PaymentMethodsConfiguration } from './types';
-import type { PaymentAction, PaymentAmount, PaymentResponseData } from '../../types/global-types';
+import type { PaymentAction, PaymentAmount, PaymentData, PaymentResponseData } from '../../types/global-types';
 import type { ICore } from '../../core/types';
 import type { IDropin } from './types';
 import { UIElementStatus } from '../types';
@@ -21,7 +21,7 @@ class DropinElement extends UIElement<DropinConfiguration> implements IDropin {
 
     protected static readonly defaultProps = defaultProps;
 
-    public dropinRef = null;
+    public dropinRef: DropinComponent | null = null;
 
     declare public elementRef: DropinElement;
 
@@ -42,7 +42,7 @@ class DropinElement extends UIElement<DropinConfiguration> implements IDropin {
         this.handleAction = this.handleAction.bind(this);
         this.handleElementsCreated = this.handleElementsCreated.bind(this);
 
-        this.props.paymentMethodComponents.forEach(PaymentMethod => this.core.register(PaymentMethod));
+        this.props.paymentMethodComponents?.forEach(PaymentMethod => this.core.register(PaymentMethod));
         this.paymentMethodsConfiguration = this.props.paymentMethodsConfiguration || {};
     }
 
@@ -68,7 +68,7 @@ class DropinElement extends UIElement<DropinConfiguration> implements IDropin {
     }
 
     showValidation() {
-        if (this.dropinRef.state.activePaymentMethod) {
+        if (this.dropinRef?.state.activePaymentMethod) {
             this.dropinRef.state.activePaymentMethod.showValidation();
         }
 
@@ -93,12 +93,13 @@ class DropinElement extends UIElement<DropinConfiguration> implements IDropin {
         return this.dropinRef.state.activePaymentMethod;
     }
 
-    get data() {
+    get data(): PaymentData {
         if (!this.activePaymentMethod) {
+            // @ts-ignore - Public API gap, will be addressed in v7
             return null;
         }
 
-        return this.dropinRef.state.activePaymentMethod.data;
+        return this.activePaymentMethod.data;
     }
 
     public displayFinalAnimation(type: 'success' | 'error') {
@@ -117,10 +118,6 @@ class DropinElement extends UIElement<DropinConfiguration> implements IDropin {
 
         if (!this.activePaymentMethod.isValid) {
             this.activePaymentMethod.showValidation();
-        }
-
-        if (this.activePaymentMethod.isInstantPayment) {
-            this.closeActivePaymentMethod();
         }
 
         this.activePaymentMethod.submit();
@@ -162,7 +159,7 @@ class DropinElement extends UIElement<DropinConfiguration> implements IDropin {
      * Creates the Drop-in elements
      */
     private readonly handleCreate = (): ReturnType<DropinComponentProps['onCreateElements']> => {
-        const { paymentMethodsConfiguration, showStoredPaymentMethods, showPaymentMethods, instantPaymentTypes } = this.props;
+        const { paymentMethodsConfiguration = {}, showStoredPaymentMethods, showPaymentMethods, instantPaymentTypes = [] } = this.props;
 
         const { paymentMethods, storedPaymentMethods, instantPaymentMethods, fastlanePaymentMethod } = splitPaymentMethods(
             this.core.paymentMethodsResponse,
@@ -204,8 +201,15 @@ class DropinElement extends UIElement<DropinConfiguration> implements IDropin {
             throw new Error('handleAction::Invalid Action - the passed action object does not have a "type" property');
         }
 
-        if (action.type !== 'redirect' && this.activePaymentMethod?.updateWithAction) {
-            return this.activePaymentMethod.updateWithAction(action);
+        const { activePaymentMethod } = this;
+        if (
+            action.type !== 'redirect' &&
+            activePaymentMethod &&
+            'updateWithAction' in activePaymentMethod &&
+            typeof activePaymentMethod.updateWithAction === 'function'
+        ) {
+            activePaymentMethod.updateWithAction(action);
+            return null;
         }
 
         if (this.elementRef instanceof DropinElement) {
@@ -239,7 +243,7 @@ class DropinElement extends UIElement<DropinConfiguration> implements IDropin {
     };
 
     closeActivePaymentMethod() {
-        this.dropinRef.closeActivePaymentMethod();
+        this.dropinRef?.closeActivePaymentMethod();
     }
 
     protected handleKeyDown(e: TargetedKeyboardEvent<HTMLInputElement> | KeyboardEvent) {
@@ -256,6 +260,7 @@ class DropinElement extends UIElement<DropinConfiguration> implements IDropin {
     protected onEnterKeyPressed(activeElement: Element, component: UIElement) {
         // We want to have a ref to the activePM, if we can; not a ref to the Dropin
         const pmComponent = this.activePaymentMethod ?? component;
+        // @ts-ignore - Will be refactored in v7; See ADR-0001-uielement-keyboard-event-propagation-workaround
         this.activePaymentMethod?.onEnterKeyPressed(activeElement, pmComponent);
     }
 
