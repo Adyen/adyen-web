@@ -114,8 +114,6 @@ const STRICT_NULL_CHECKS_BACKLOG = [
     'src/components/Card/Card.tsx',
     'src/components/Card/components/CardInput/CardInput.tsx',
     'src/components/Card/components/CardInput/utils.ts',
-    'src/components/CustomCard/CustomCard.tsx',
-    'src/components/CustomCard/CustomCardInput/CustomCardInput.tsx',
 
     // ── Ticket 6: Drop-in (48 errors) ──
     'src/components/Dropin/components/DropinComponent.tsx',

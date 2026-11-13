@@ -184,6 +184,13 @@ export type CustomCardConfiguration = CoreCallbacks & {
      * - merchant set config option
      */
     styles?: StylesObject;
+
+    /**
+     * type will always be "card" (generic card, stored card)
+     * except for a single branded card when it will be the same as the brand prop
+     * @internal
+     */
+    type?: string;
 };
 
 export type ValidationError = SFError & {
