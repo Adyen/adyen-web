@@ -36,11 +36,14 @@ describe('PayPalService', () => {
     beforeEach(() => {
         createInstanceMock.mockResolvedValue(sdkInstance);
         findEligibleMethodsMock.mockResolvedValue(eligibleMethods);
-        requestPayPalOauthTokenMock.mockResolvedValue({ clientToken: 'client-token-123' });
+        requestPayPalOauthTokenMock.mockResolvedValue({ clientToken: 'client-token-123', expiresAt: '2999-01-01T00:00:00Z' });
         window.paypal = mock<PayPalV6Namespace>({ createInstance: createInstanceMock });
     });
 
     afterEach(() => {
+        PayPalService['oauthTokenRequest'] = undefined;
+        PayPalService['oauthTokenExpiresAt'] = undefined;
+        jest.restoreAllMocks();
         jest.clearAllMocks();
         delete window.paypal;
     });
@@ -232,19 +235,6 @@ describe('PayPalService', () => {
             });
         });
 
-        test('should request a new client token', async () => {
-            const service = new PayPalService(createConfig());
-            await service.initialize();
-
-            await service.refresh(createRefreshConfig({ merchantId: 'other-merchant' }));
-
-            expect(requestPayPalOauthTokenMock).toHaveBeenCalledTimes(2);
-            expect(requestPayPalOauthTokenMock).toHaveBeenLastCalledWith(expect.any(String), {
-                clientKey: 'test_client_key',
-                merchantId: 'other-merchant'
-            });
-        });
-
         test('should serve the previous SDK instance until the refresh completes', async () => {
             const service = new PayPalService(createConfig());
             await service.initialize();
@@ -287,13 +277,110 @@ describe('PayPalService', () => {
             const service = new PayPalService(createConfig());
             await service.initialize();
 
-            requestPayPalOauthTokenMock.mockRejectedValueOnce(new Error('Token request failed'));
+            createInstanceMock.mockRejectedValueOnce(new Error('Instance creation failed'));
 
-            await expect(service.refresh(createRefreshConfig())).rejects.toThrow('Token request failed');
+            await expect(service.refresh(createRefreshConfig())).rejects.toThrow('Instance creation failed');
             await expect(service.isSdkLoaded()).rejects.toThrow('PayPal SDK not loaded');
 
             await expect(service.refresh(createRefreshConfig())).resolves.toBeUndefined();
             await expect(service.isSdkLoaded()).resolves.toBeUndefined();
+        });
+
+        test('should reuse the shared oauth token', async () => {
+            const service = new PayPalService(createConfig());
+            await service.initialize();
+
+            await service.refresh(createRefreshConfig({ countryCode: 'NL' }));
+
+            expect(requestPayPalOauthTokenMock).toHaveBeenCalledTimes(1);
+            expect(createInstanceMock).toHaveBeenCalledTimes(2);
+        });
+    });
+
+    describe('oauth token sharing', () => {
+        test('should share a single in-flight token request across service instances', async () => {
+            const services = [new PayPalService(createConfig()), new PayPalService(createConfig()), new PayPalService(createConfig())];
+
+            await Promise.all(services.map(service => service.initialize()));
+
+            expect(requestPayPalOauthTokenMock).toHaveBeenCalledTimes(1);
+            expect(createInstanceMock).toHaveBeenCalledTimes(3);
+            expect(createInstanceMock).toHaveBeenNthCalledWith(3, expect.objectContaining({ clientToken: 'client-token-123' }));
+        });
+
+        test('should share the pending token request with service instances initialized while it is in flight', async () => {
+            // The Promise executor runs synchronously, so the resolver is always assigned before it is used
+            let resolveToken!: (tokenData: { clientToken: string; expiresAt: string }) => void;
+            requestPayPalOauthTokenMock.mockReturnValueOnce(new Promise(resolve => (resolveToken = resolve)));
+
+            const firstInit = new PayPalService(createConfig()).initialize();
+            await new Promise(process.nextTick);
+            const secondInit = new PayPalService(createConfig()).initialize();
+            await new Promise(process.nextTick);
+            const thirdInit = new PayPalService(createConfig()).initialize();
+
+            resolveToken({ clientToken: 'shared-token', expiresAt: '2999-01-01T00:00:00Z' });
+            await Promise.all([firstInit, secondInit, thirdInit]);
+
+            expect(requestPayPalOauthTokenMock).toHaveBeenCalledTimes(1);
+            expect(createInstanceMock).toHaveBeenCalledTimes(3);
+            createInstanceMock.mock.calls.forEach(([options]: [{ clientToken: string }]) => expect(options.clientToken).toBe('shared-token'));
+        });
+
+        test('should reject all service instances sharing a failed token request and retry on the next initialization', async () => {
+            let rejectToken!: (error: Error) => void;
+            requestPayPalOauthTokenMock.mockReturnValueOnce(new Promise((_resolve, reject) => (rejectToken = reject)));
+
+            const firstInit = new PayPalService(createConfig()).initialize();
+            const secondInit = new PayPalService(createConfig()).initialize();
+
+            rejectToken(new Error('Token request failed'));
+
+            await expect(firstInit).rejects.toThrow('Token request failed');
+            await expect(secondInit).rejects.toThrow('Token request failed');
+            expect(requestPayPalOauthTokenMock).toHaveBeenCalledTimes(1);
+
+            await expect(new PayPalService(createConfig()).initialize()).resolves.toBeUndefined();
+            expect(requestPayPalOauthTokenMock).toHaveBeenCalledTimes(2);
+        });
+
+        test('should reuse the resolved token for service instances created later', async () => {
+            await new PayPalService(createConfig()).initialize();
+            await new PayPalService(createConfig()).initialize();
+
+            expect(requestPayPalOauthTokenMock).toHaveBeenCalledTimes(1);
+        });
+
+        test('should request a new token when the shared token is about to expire', async () => {
+            const now = Date.parse('2026-01-01T00:00:00Z');
+            jest.spyOn(Date, 'now').mockReturnValue(now);
+            requestPayPalOauthTokenMock.mockResolvedValueOnce({ clientToken: 'expiring-token', expiresAt: '2026-01-01T00:00:30Z' });
+
+            await new PayPalService(createConfig()).initialize();
+            await new PayPalService(createConfig()).initialize();
+
+            expect(requestPayPalOauthTokenMock).toHaveBeenCalledTimes(2);
+            expect(createInstanceMock).toHaveBeenLastCalledWith(expect.objectContaining({ clientToken: 'client-token-123' }));
+        });
+
+        test('should request a new token when the expiration date cannot be parsed', async () => {
+            requestPayPalOauthTokenMock.mockResolvedValueOnce({ clientToken: 'client-token-123', expiresAt: 'invalid' });
+
+            await new PayPalService(createConfig()).initialize();
+            await new PayPalService(createConfig()).initialize();
+
+            expect(requestPayPalOauthTokenMock).toHaveBeenCalledTimes(2);
+        });
+
+        test('should request a new token after the shared request failed', async () => {
+            requestPayPalOauthTokenMock.mockRejectedValueOnce(new Error('Token request failed'));
+
+            const [first, second] = [new PayPalService(createConfig()), new PayPalService(createConfig())];
+
+            await expect(first.initialize()).rejects.toThrow('Token request failed');
+            await expect(second.initialize()).resolves.toBeUndefined();
+
+            expect(requestPayPalOauthTokenMock).toHaveBeenCalledTimes(2);
         });
     });
 

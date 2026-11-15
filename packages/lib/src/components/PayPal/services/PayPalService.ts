@@ -2,7 +2,7 @@ import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 import type { PaymentAmount } from '../../../types';
 import { PayPalSdkLoader } from './PayPalSdkLoader';
 import type { PayPalComponents, PayPalEligiblePaymentMethods, PayPalPageTypes, PayPalPaymentFlow, PayPalSdkInstance } from '../paypal-js-types';
-import requestPayPalOauthToken from './request-paypal-oauth-token';
+import requestPayPalOauthToken, { type PayPalOauthTokenData } from './request-paypal-oauth-token';
 import { PayPalV6SupportedLocale } from '../utils/types';
 import { getSupportedLocalePayPalV6 } from '../utils/get-paypal-locale';
 import { isLiveEnvironment } from '../../../utils/is-live-environment';
@@ -27,7 +27,19 @@ interface PayPalServiceConfig {
  */
 type PayPalServiceRefreshConfig = Omit<PayPalServiceConfig, 'sdkLoader'>;
 
+/**
+ * Safety margin applied to the token expiration, so that a token about to expire is not handed to the PayPal SDK
+ */
+const TOKEN_EXPIRATION_MARGIN_MS = 60_000;
+
 class PayPalService {
+    /**
+     * Oauth token request shared across all service instances. It avoids requesting one token per PayPal
+     * component when multiple components are rendered on the same page.
+     */
+    private static oauthTokenRequest?: Promise<PayPalOauthTokenData>;
+    private static oauthTokenExpiresAt?: number;
+
     private readonly sdkLoader: PayPalSdkLoader;
     private loadingContext: string;
     private clientKey: string;
@@ -104,7 +116,7 @@ class PayPalService {
      */
     private load(): Promise<void> {
         const isSdkLoaderLoadedPromise = this.sdkLoader.isSdkLoaded();
-        const tokenDataPromise = requestPayPalOauthToken(this.loadingContext, { clientKey: this.clientKey, merchantId: this.merchantId });
+        const tokenDataPromise = this.requestOauthToken();
 
         this.loadingPromise = Promise.all([isSdkLoaderLoadedPromise, tokenDataPromise])
             .then(([_loadedSdk, tokenData]) => {
@@ -118,6 +130,30 @@ class PayPalService {
             });
 
         return this.loadingPromise;
+    }
+
+    /**
+     * Returns the oauth token shared by all service instances. A new token is requested only if there is none,
+     * the previous request failed, or the token is about to expire.
+     */
+    private requestOauthToken(): Promise<PayPalOauthTokenData> {
+        const expiresAt = PayPalService.oauthTokenExpiresAt;
+        const isExpired = expiresAt !== undefined && expiresAt - TOKEN_EXPIRATION_MARGIN_MS <= Date.now();
+
+        if (PayPalService.oauthTokenRequest === undefined || isExpired) {
+            PayPalService.oauthTokenExpiresAt = undefined;
+            PayPalService.oauthTokenRequest = requestPayPalOauthToken(this.loadingContext, { clientKey: this.clientKey, merchantId: this.merchantId })
+                .then(tokenData => {
+                    PayPalService.oauthTokenExpiresAt = Date.parse(tokenData.expiresAt) || 0;
+                    return tokenData;
+                })
+                .catch(error => {
+                    PayPalService.oauthTokenRequest = undefined;
+                    throw error;
+                });
+        }
+
+        return PayPalService.oauthTokenRequest;
     }
 
     public async isSdkLoaded(): Promise<void> {

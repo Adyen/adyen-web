@@ -20,6 +20,7 @@ import type {
     SavePaymentSessionOptions,
     OnApproveDataOneTimePayments,
     OneTimePaymentSession,
+    PayPalOneTimePaymentSessionOptions,
     SavePaymentSession,
     VenmoSavePaymentSessionOptions,
     PageTypes,
@@ -62,6 +63,11 @@ export type PayPalV6OnApproveData = OnApproveDataOneTimePayments | OnApproveData
  * Error rejected by the PayPal SDK. It extends `Error` with the PayPal specific `code`, `name` and `isRecoverable` fields.
  */
 export type PayPalError = OnErrorData;
+/**
+ * One-time session options with a required `onApprove`, so they can be passed to both the PayPal and the Venmo session factories.
+ */
+export type PayPalV6OneTimePaymentSessionOptions = PayPalOneTimePaymentSessionOptions &
+    Required<Pick<PayPalOneTimePaymentSessionOptions, 'onApprove'>>;
 export type PayPalSavePaymentSessionOptions = SavePaymentSessionOptions;
 export type PayPalOneTimePaymentSession = OneTimePaymentSession;
 export type PayPalSavePaymentSession = SavePaymentSession;
