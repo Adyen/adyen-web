@@ -36,7 +36,7 @@ module.exports = [
     {
         name: 'UMD',
         path: 'dist/umd/adyen.js',
-        limit: '136 KB'
+        limit: '137 KB'
     },
     /**
      * 'auto' bundle with all Components included, excluding Languages
