@@ -96,6 +96,6 @@ describe('usePayPalStatus', () => {
 
         await waitFor(() => expect(result.current?.status).toBe('ready'));
 
-        await expect(result.current?.handleOnApprove({ orderId: 'order-1' })).resolves.toBeUndefined();
+        await expect(result.current?.handleOnApprove({ orderId: 'order-1', fundingSource: 'paypal' })).resolves.toBeUndefined();
     });
 });

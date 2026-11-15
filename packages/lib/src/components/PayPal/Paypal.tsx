@@ -364,7 +364,6 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
         // 'orderId' is only present when the shopper approved a one-time payment session, meaning an actual
         // PayPal order was created. The SDK v6 keys are remapped to the casing expected by the /payments/details API.
         if ('orderId' in data) {
-            // @ts-expect-error - fundingSource is not in the type but is present in the data
             const { orderId, payerId, fundingSource } = data;
             state = {
                 data: {
@@ -381,7 +380,6 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
         // 'vaultSetupToken' is only present when the shopper approved a save payment session (zero-auth
         // tokenization). No PayPal order exists in this flow, so the vault token is sent instead of an order id.
         if ('vaultSetupToken' in data) {
-            // @ts-expect-error - fundingSource is not in the type but is present in the data
             const { vaultSetupToken, payerId, fundingSource } = data;
             state = {
                 data: {

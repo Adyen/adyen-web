@@ -1,5 +1,5 @@
 import { useMemo } from 'preact/hooks';
-import { PayPalOneTimePaymentSessionOptions, PayPalSavePaymentSessionOptions } from '../paypal-js-types';
+import { PayPalV6OneTimePaymentSessionOptions, PayPalSavePaymentSessionOptions } from '../paypal-js-types';
 import { PayPalComponentV6Props } from '../components/types';
 
 export const usePayPalSessionOptions = ({
@@ -11,7 +11,7 @@ export const usePayPalSessionOptions = ({
     commit,
     vault
 }: Omit<PayPalComponentV6Props, 'onSubmit' | 'style' | 'setComponentRef'>) => {
-    const oneTimeSessionOptions: PayPalOneTimePaymentSessionOptions = useMemo(
+    const oneTimeSessionOptions: PayPalV6OneTimePaymentSessionOptions = useMemo(
         () => ({
             onApprove,
             onShippingAddressChange,
