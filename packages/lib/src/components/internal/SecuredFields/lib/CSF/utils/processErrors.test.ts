@@ -151,19 +151,15 @@ describe('A suite of tests for processError (errors sent from securedFields) - f
     );
 
     // #4b
-    test(
-        'Should treat a present-but-undefined error the same as an empty string: do nothing since the field is not already in error ' +
-            '(an "error" key with an undefined value is not the same as an error being absent, but should still be treated as "no error")',
-        () => {
-            const field = mockState.securedFields.encryptedCardNumber as SecuredField;
+    test('Should do nothing when error is undefined && field is not already in error (treated like an empty string)', () => {
+        const field = mockState.securedFields.encryptedCardNumber as SecuredField;
 
-            const dataObj = processErrors(undefinedErrorObj, field, 'card', rootNode, onError);
+        const dataObj = processErrors(undefinedErrorObj, field, 'card', rootNode, onError);
 
-            expect(dataObj).toBe(null);
-            expect(callbackFnCalled).toBe(false);
-            expect(field).toHaveProperty('hasError', false);
-        }
-    );
+        expect(dataObj).toBe(null);
+        expect(callbackFnCalled).toBe(false);
+        expect(field).toHaveProperty('hasError', false);
+    });
 
     // #5
     test('Should set an error normally, on a date field', () => {

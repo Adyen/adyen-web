@@ -77,13 +77,6 @@ const STRICT_NULL_CHECKS_BACKLOG = [
     'src/core/RiskModule/RiskModule.tsx',
     'src/utils/clipboard.ts',
 
-    // ── Ticket 3: SecuredFields and CSF (161 errors) ──
-    'src/components/internal/SecuredFields/lib/CSF/extensions/createSecuredFields.ts',
-    'src/components/internal/SecuredFields/lib/CSF/extensions/handleBrandFromBinLookup.ts',
-    'src/components/internal/SecuredFields/lib/CSF/extensions/handleEncryption.ts',
-    'src/components/internal/SecuredFields/lib/CSF/extensions/handleIOSTouchEvents.ts',
-    'src/components/internal/SecuredFields/lib/CSF/extensions/handleTab.ts',
-
     // ── Ticket 4: Shared form fields (92 errors) ──
 
     // Ticket 4 but handle in a different ticket after ticket 2 gets merged
