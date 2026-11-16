@@ -67,7 +67,7 @@ class SecuredField extends AbstractSecuredField {
         this.loadingContext = pSetupObj.loadingContext;
         this.holderEl = pSetupObj.holderEl;
         this.submitAnalytics = pSetupObj.submitAnalytics;
-        this.componentType = pSetupObj.componentType;
+        this.componentType = pSetupObj.componentType ?? '';
 
         /**
          * Initiate other values on 'this' through setters
@@ -97,7 +97,7 @@ class SecuredField extends AbstractSecuredField {
         return this.init(i18n, iframeSrc, placeholders, showContextualElement);
     }
 
-    init(i18n: Language, iframeSrc: string, placeholders: Placeholders, showContextualElement: boolean): SecuredField {
+    init(i18n: Language, iframeSrc: string, placeholders: Placeholders, showContextualElement: boolean | undefined): SecuredField {
         /**
          * Ensure all fields have a related ariaConfig object containing, at minimum, an iframeTitle property and a (translated) errors object
          */
@@ -553,10 +553,10 @@ class SecuredField extends AbstractSecuredField {
         }
     }
 
-    get iframeContentWindow(): Window {
+    get iframeContentWindow(): Window | null {
         return this._iframeContentWindow;
     }
-    set iframeContentWindow(value: Window) {
+    set iframeContentWindow(value: Window | null) {
         this._iframeContentWindow = value;
     }
 

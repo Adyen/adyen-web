@@ -85,7 +85,7 @@ export default function extensions(props, refs, states, hasPanLengthRef: Partial
                     });
 
                     // Store the fact the binLookup obj has a panLength prop
-                    if (switcherObj.leadBrand.panLength > 0) {
+                    if ((switcherObj.leadBrand.panLength ?? 0) > 0) {
                         hasPanLengthRef.current = switcherObj.leadBrand.panLength;
                     }
 
@@ -106,7 +106,7 @@ export default function extensions(props, refs, states, hasPanLengthRef: Partial
                     });
 
                     // Store the fact the binLookup obj has a panLength prop
-                    if (supportedBrands[0].panLength > 0) {
+                    if ((supportedBrands[0].panLength ?? 0) > 0) {
                         hasPanLengthRef.current = supportedBrands[0].panLength;
                     }
                 }

@@ -52,7 +52,7 @@ const mapDateFields = (field: string, numDateFields: number) => {
 /**
  * Skip generating an error for an optional field, unless it is already in error
  */
-const skipOptionalFields = (field: string, state: SFPState, fieldNames: string[]) => {
+const skipOptionalFields = (field: string | null, state: SFPState, fieldNames: string[]) => {
     const { isFieldOfType, fieldIsValid } = fieldNames.reduce(
         (acc: { isFieldOfType: boolean; fieldIsValid: boolean }, fieldName: string) => {
             if (!acc.isFieldOfType) {
