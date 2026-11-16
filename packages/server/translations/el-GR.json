@@ -495,5 +495,10 @@
     "emi.discountAvailable": "διαθέσιμη έκπτωση",
     "emi.perAnnum": "ανά έτος",
     "emi.cardDetailsInstructions": "Εισαγάγετε τα στοιχεία της κάρτας που σχετίζονται με μια κάρτα %{provider}",
-    "emi.cardDetails": "Στοιχεία κάρτας"
+    "emi.cardDetails": "Στοιχεία κάρτας",
+    "emi.terms": "Συνεχίζοντας, αποδέχεστε τους",
+    "emi.termsLink": "όρους και προϋποθέσεις",
+    "emi.interestDiscount": "Έκπτωση τόκων",
+    "emi.instantDiscount": "Άμεση έκπτωση",
+    "emi.additionalDiscountAvailable": "Διατίθεται επιπλέον έκπτωση %{amount}"
 }

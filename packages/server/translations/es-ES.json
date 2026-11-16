@@ -477,7 +477,7 @@
     "upi.intent.apps.dropdown.placeholder": "Elija la aplicación que prefiera",
     "emi.subtitle": "Planes de pago a plazos con tarjetas de crédito",
     "emi.title": "Plan EMI",
-    "emi.instructions": "Elige tu combinación preferida de las opciones enumeradas a continuación y continúa para ingresar los detalles de tu tarjeta",
+    "emi.instructions": "Elija su combinación preferida entre las opciones que aparecen a continuación y continúe para introducir los datos de su tarjeta",
     "emi.provider": "Proveedor",
     "emi.plan": "Plan",
     "emi.planSummary": "Resumen del plan",
@@ -492,6 +492,11 @@
     "emi.lowCost": "Bajo coste",
     "emi.discountAvailable": "descuento disponible",
     "emi.perAnnum": "p.a",
-    "emi.cardDetailsInstructions": "Ingresar los datos de la tarjeta asociados a una tarjeta %{provider}",
-    "emi.cardDetails": "Detalles de la tarjeta"
+    "emi.cardDetailsInstructions": "Introduzca los datos de una tarjeta %{provider}",
+    "emi.cardDetails": "Detalles de la tarjeta",
+    "emi.terms": "Al continuar, acepta los",
+    "emi.termsLink": "términos y condiciones",
+    "emi.interestDiscount": "Descuento de intereses",
+    "emi.instantDiscount": "Descuento instantáneo",
+    "emi.additionalDiscountAvailable": "Descuento adicional del %{amount} disponible"
 }

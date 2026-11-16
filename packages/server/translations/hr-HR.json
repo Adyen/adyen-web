@@ -495,5 +495,10 @@
     "emi.discountAvailable": "popust je dostupan",
     "emi.perAnnum": "godišnje",
     "emi.cardDetailsInstructions": "Unesite podatke o kartici koji su povezani s %{provider} karticom",
-    "emi.cardDetails": "Podaci o kartici"
+    "emi.cardDetails": "Podaci o kartici",
+    "emi.terms": "Nastavkom prihvaćate dokument",
+    "emi.termsLink": "uvjete i odredbe",
+    "emi.interestDiscount": "Popust na kamatu",
+    "emi.instantDiscount": "Trenutni popust",
+    "emi.additionalDiscountAvailable": "Dostupan je dodatni popust od %{amount}"
 }
