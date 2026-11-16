@@ -23,6 +23,10 @@ interface ResultPanelProps {
     title?: string;
 }
 
+/**
+ * Generic result screen.
+ * Each element uses its default styling unless a class is provided for it in `classNames`, which replaces the default.
+ */
 export function ResultPanel({ actions, classNames, description, details, icon, iconAlt, title }: Readonly<ResultPanelProps>) {
     return (
         <div className={classNames?.root ?? styles.panel}>
